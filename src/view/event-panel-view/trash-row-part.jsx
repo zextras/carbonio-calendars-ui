@@ -1,0 +1,89 @@
+/*
+ * SPDX-FileCopyrightText: 2021 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+import React, { useMemo } from 'react';
+import { Container, Text, Icon, Divider, Row, Padding } from '@zextras/zapp-ui';
+import moment from 'moment';
+import styled from 'styled-components';
+import { reduce } from 'lodash';
+import { useSelector } from 'react-redux';
+import { selectInstanceInvite } from '../../store/selectors/invites';
+
+const TitleText = styled(Text)`
+	display: inline-block;
+	color: black;
+`;
+
+function findAttachments(parts, acc) {
+	return reduce(
+		parts,
+		(found, part) => {
+			if (part.disposition === 'attachment') {
+				found.push(part);
+			}
+			return findAttachments(part.parts, found);
+		},
+		acc
+	);
+}
+
+export default function TrashRow({ event }) {
+	const { inviteId, ridZ, participationStatus } = event.resource;
+	const invite = useSelector((state) => selectInstanceInvite(state, inviteId, ridZ));
+
+	const attachments = useMemo(() => findAttachments(invite.parts, []), [invite]);
+
+	return (
+		<Container takeAvailableSpace padding={{ all: 'small' }}>
+			<Row orientation="horizontal" width="100%" mainAlignment="flex-start">
+				<Row width="auto%">
+					<Text size="large" overflow="break-word">
+						{moment(event.start).format(
+							`DD/MM/YYYY, [${moment(event.start).format(`HH:MM`)}]-[${moment(event.end).format(
+								`HH:MM`
+							)}]`
+						)}
+					</Text>
+				</Row>
+				<Row width="5%">
+					<Icon icon="TrashOutline" />
+				</Row>
+				<Row width="60%" orientation="horizontal">
+					<Text color="secondary">
+						<TitleText weight="bold">{event.title} </TitleText>
+						{event.resource.fragment && event.resource.fragment.length > 0 && (
+							<>&nbsp; -{event.resource.fragment}</>
+						)}
+					</Text>
+				</Row>
+				<Row
+					width="5%"
+					orientation="horizontal"
+					mainAlignment="baseline"
+					padding={{ horizontal: 'large' }}
+				>
+					<Icon icon="Pricetags" customColor={event.resource.calendar.color.color} />
+					<Padding horizontal="extrasmall">
+						{' '}
+						{attachments.length > 0 && <Icon icon="AttachOutline" />}
+					</Padding>
+				</Row>
+				<Row width="10%" orientation="horizontal">
+					{event.resource.location && event.resource.location.length > 0 && (
+						<Text size="large" wieght="bold">
+							{event.resource.location}
+						</Text>
+					)}
+				</Row>
+				<Row width="5%" orientation="horizontal">
+					{participationStatus === 'AC' && <Icon icon="CheckmarkOutline" />}
+					{participationStatus === 'TE' && <Icon icon="QuestionMarkOutline" />}
+					{participationStatus === 'DE' && <Icon icon="CloseOutline" />}
+				</Row>
+			</Row>
+			<Divider />
+		</Container>
+	);
+}
