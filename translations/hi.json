@@ -1,0 +1,497 @@
+{
+    "calendar": {
+        "modal": {
+            "custom_schedule": {
+                "footer": "बदलाव करें",
+                "title": "कार्य समय बदलें"
+            }
+        }
+    },
+    "label": {
+        "cancel": "कैंसल करें",
+        "attachment": "अटैचमेंट",
+        "attachment_plural": "",
+        "busy": "व्यस्त",
+        "dismiss_capitalize": "छोड़ें",
+        "download": "डाऊनलोड करें",
+        "download_plural": "",
+        "edit": "बदलाव करें",
+        "edit_share": "शेयर में बदलाव करें",
+        "end": "समाप्त",
+        "free": "फ्री",
+        "general": "सामान्य",
+        "month": "माह",
+        "of": "में से",
+        "permissions": "परमीशन",
+        "remove": "डिलीट करें",
+        "remove_plural": "",
+        "save": "सेव करें",
+        "share": "शेयर करें",
+        "subject": "विषय",
+        "custom": "कस्टम",
+        "now": "अभी",
+        "all_day": "पूरा दिन",
+        "to": "इन्हें भेजें",
+        "all_calendars": "सभी कैलेंडर",
+        "attendee_plural": "उपस्थित जन",
+        "add_share": "सहभाजी जोड़ें",
+        "apple_ical": "ऐपल आइकैल",
+        "day": "दिन",
+        "auto_add_rcvd_app": "आमंत्रण को कैलेंडर में स्वतः जोड़ें",
+        "calendar": "कैलेंडर",
+        "calendar_color": "कैलेंडर का रंग",
+        "calendar_setting": "कैलेंडर सेटिंग",
+        "cancelled": "रद्द",
+        "create_appt_settings": "समयादेश बनाएँ",
+        "create_new_calendar": "नया कैलेंडर बनाएँ",
+        "custom_repeat": "अपने अनुकूल दोहराना",
+        "days": "दिन",
+        "default_appt_vsblty": "डिफ़ॉल्ट समयादेश दृश्यता",
+        "default_view": "डिफ़ॉल्ट दृश्य",
+        "delete_permanently": "सदा के लिए मिटाएँ",
+        "invitation_not_sent": "आपने अभी तक आमंत्रण नहीं भेजा है",
+        "every_year_on": "हर वर्ष",
+        "edit_access": "{{name}} के ऐक्सेस में संशोधन",
+        "edit_properties": "{{name}} के गुण में संशोधन",
+        "email_input_message": "ई-संदेश पता लिखें",
+        "enable_dlgtn_for_ical": "ऐपल आइकैल कैल्डैव के लिए प्रतिनिधित्व सक्रिय करें",
+        "end_after": "अंत करें",
+        "end_date": "अंत की तिथि",
+        "end_date_and_time": "अंत की तिथि और समय",
+        "every": "हर",
+        "every_day": "हर दिन",
+        "every_weekday": "हर कार्य-दिवस",
+        "filter_sharer_user": "साझाकर्ता को फ़िल्टर करें",
+        "find_shares": "कैलेंडर वृक्ष में प्रदर्शित कैलेंडर का चयन",
+        "free_busy": "ख़ाली/व्यस्त",
+        "from": "प्रेषक",
+        "ics_url": "आई॰सी॰एस॰ यू॰आर॰एल॰",
+        "instance": "दृष्टांत",
+        "invites": "आमंत्रण",
+        "location": "स्थान",
+        "months": "महीने",
+        "no_end_date": "कोई अंतिम तिथि नहीं",
+        "no_subject": "कोई विषय नहीं",
+        "notify_organizer": "ऑर्गनाइज़र को सूचित करें",
+        "number": "संख्या",
+        "occurrences": "कब आता है",
+        "of_every": "हर में से",
+        "of_the_month,_every": "महीने के हर",
+        "ongoing": "चलता हुआ",
+        "optional": "वैकल्पिक",
+        "optional_plural": "वैकल्पिक",
+        "out_of_office": "कार्यालय के बाहर",
+        "outlook_url": "आउट्लुक यू॰आर॰एल॰",
+        "private": "निजी",
+        "proposal_declined": "प्रस्ताव निरस्त",
+        "regular": "नियमित",
+        "reminder": "याद दिलाने वाला",
+        "repeat": "दोहराएँ",
+        "required": "अपेक्षित",
+        "resend": "दोबारा भेजें",
+        "restore_calednar": "कैलेंडर वापस लाएँ",
+        "revoke": "बंद करें",
+        "revoke_share": "{{title}} का साझा वापस लें",
+        "series": "क्रम",
+        "share_calendar_url": "{{title}} ऐक्सेस शेयर",
+        "shares_items": "{{value}} के सहभाजी कैलेंडर",
+        "show": "दिखाएं",
+        "show_plural": "सभी दिखाएं",
+        "show_declined_meetings": "अस्वीकृत मीटिंग दिखाएं",
+        "start_date": "प्रारम्भ तिथि",
+        "dismiss": "ख़ारिज करना",
+        "dismiss_plural": "सब ख़ारिज करें",
+        "display": "प्रदर्शित करना",
+        "set_new_time": "नया समय रखें",
+        "sharing_of_this_folder": "इस फ़ोल्डर का साझाकरण",
+        "start_date_and_time": "प्रारम्भ तिथि और समय",
+        "tentative": "संभावित",
+        "timezone_pref_msg": "टाइमिंग आपके टाइमज़ोन की पसंद के अनुसार होती हैं।",
+        "start_week_of": "इस सप्ताह का प्रारम्भ करें",
+        "the": "यह",
+        "time_zones": "टाइम ज़ोन",
+        "type_name_here": "कैलेंडर नाम",
+        "view_url": "URL देखें",
+        "week": {
+            "friday": "शुक्रवार",
+            "monday": "सोमवार",
+            "saturday": "शनिवार",
+            "sunday": "रविवार",
+            "thursday": "गुरुवार",
+            "tuesday": "मंगलवार",
+            "wednesday": "बुधवार"
+        },
+        "weeks_on": "हफ्ते",
+        "work_hour": "काम घंटा",
+        "work_week": "कार्य सप्ताह",
+        "your_pref_timezone_msg": "आपका पसंदीदा टाइमज़ोन है: GMT +1.00 एम्स्टर्डैम, बर्लिन, बर्न, रॉम,स्टॉकहोम, विएना।"
+    },
+    "action": {
+        "delete": "डिलीट करें",
+        "download": "डाऊनलोड करें",
+        "create": "बनाएँ",
+        "save": "सेव करें",
+        "send": "भेजें",
+        "empty_trash": "कूड़ेदान को ख़ाली करें",
+        "delete_calendar": "कैलेंडर मिटाएँ",
+        "save_to_preview": "झलक में सुरक्षित रखें",
+        "preview": "दूसरे टैब में झलक देखने के लिए क्लिक करें",
+        "new_calendar": "नया कैलेंडर",
+        "send_cancellation": "रद्द करने के लिए भेजें",
+        "calendar_access_share": "कैलेंडर ऐक्सेस शेयर",
+        "delete_permanently": "सदा के लिए मिटाएँ",
+        "edit_calendar_properties": "कैलेंडर प्रॉपर्टी संशोधन",
+        "edit_message": "संदेश संशोधन",
+        "move_to_root": "मूल पर ले जाएँ",
+        "share_calendar": "कैलेंडर साझा करें"
+    },
+    "message": {
+        "you": "आप",
+        "have_not_sent_invitation": "आपने अभी तक आमंत्रण नहीं भेजा है",
+        "snackbar": {
+            "settings_saved": "बदलाव ठीक से सेव हो गए",
+            "appt_moved": "एपोइंटमेंट यहाँ भेजा गया",
+            "appointment_permanently_deleted_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+            "calendar_delete_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें।",
+            "calendar_moved_to_trash": "कैलेंडर रद्दी में भेजा गया",
+            "edit_calendar_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+            "new_calendar_create_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+            "appointment_permanently_deleted_succesfully": "परमानेंट डिलीट हो गया",
+            "appt_deleted_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें।",
+            "appt_moved_error": "कुछ गड़बड़ हुई, एपाइंटमेंट नहीं गया, दोबारा कोशिश करें।",
+            "appt_moved_to_trash": "एपाइंटमेंट रद्दी में भेजा गया",
+            "appt_restored": "एपाइंटमेंट यहाँ वापस लाया गया",
+            "calendar_deleted_successfully": "कैलेंडर डिलीट किया गया।",
+            "calendar_moved_to_root_folder": "कैलेंडर रूट फोल्डर में भेजा गया",
+            "calendar_moved_to_root_folder_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+            "calendar_moved_to_trash_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+            "edit_calendar": "बदलाव ठीक से सेव हो गए",
+            "invite": {
+                "accept": "आपने स्वीकार किया है जबाब दिया है",
+                "error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें।",
+                "tentative": "आपने जबाब दिया: संभावित",
+                "decline": "आपने जबाब दिया: अस्वीकार"
+            },
+            "new_calendar_created": "नया कैलेंडर बन गया"
+        },
+        "somebody_is_organizer": "ऑर्गनाइज़र <strong>{{somebody}}</strong> है",
+        "are_organizer": "वाक्य इस तरह से माना जाएगा मानो आप ऑर्गनाइज़र हों",
+        "sure_to_delete_appointment_permanently": "क्या आप वाकई में इस एपाइंटमेंट को परमानेंट डिलीट करना चाहते हैं?",
+        "delete_future_occurences": "इसे डिलीट करें और भविष्य में दिखने वाले सभी को भी डिलीट करें",
+        "invite_has_no_message": "इस इनवाइट में कोई टेक्स्ट मैसेज नहीं है",
+        "modal": {
+            "delete": {
+                "sure_delete_appointment_permanently": "इस एपोइंटमेंट को परमानेंट डिलीट करके आप इसे फिर वापस नहीं ला पाएंगे, जारी रखेंगे?",
+                "sure_delete_appointment_all_instances_permanently": "इससे भविष्य में जितनी बार एपाइंटमेंट आना है सब डिलीट हो जाएगा और आप इसे वापस नहीं ला पाएंगे, जारी रखें?"
+            }
+        },
+        "share_calendar_url_note": "केवल आपके साथ टीम में काम करने वाले इन URL से आपका डाटा एक्सेस कर सकेंगे।",
+        "share_calendar_url_note2": "केवल आपके साथ टीम में काम करने वाले इन URL से आपका डाटा एक्सेस कर सकेंगे।<br/>आप ये लिंक अपनी कैलेंडर लिस्ट में राइट-क्लिक करके भी ढूंढ सकते हैं।",
+        "delete_future_occurences_warning": "इससे सीरीज़ में सभी अपवाद भी डिलीट हो जाएंगे (इस मौके के पहले और बाद)",
+        "invited_you": "ने आपको किसी ईवेंट में इन्वाइट किया",
+        "meeting_canceled": "निम्नलिखित मीटिंग कैंसल कर दी गई है",
+        "share_calendar_url_msg": "आप {{title}} को जल्दी से अपनी टीम में काम करने वालों से इनमें से एक URL चुनकर शेयर कर सकते हैं:",
+        "somebody_invited_you": "<strong>{{somebody}}</strong> ने आपको इन्वाइट किया है",
+        "sure_to_delete_appointment": "क्या आप वाकई में इस एपाइंटमेंट को डिलीट करना चाहते हैं?",
+        "want_to_edit_cancellation_msg": "क्या आप एपाइंटमेंट कैंसल मैसेज को बदलना चाहते हैं?",
+        "delete_all_occurences": "जितनी बार आना है डिलीट करें",
+        "want_to_send_cancellation_msg": "क्या आप भाग लेने वालों को एक नया कैन्सेलेशन मैसेज भेजना चाहते हैं?",
+        "you_are_organizer": "ऑर्गनाइज़र आप हैं",
+        "you_sure_move_calendar_trash": "क्या आप वाकई में \"{{name}}\"कैलेंडर को डिलीट करना चाहते हैं?",
+        "you_sure_delete_calendar": "क्या आप वाकई में \"{{name}}\"कैलेंडर को परमानेंट डिलीट करना चाहते हैं?",
+        "you_will_see_the_subject_here": "आपको एपाइंटमेंट का सबजेक्ट यहाँ दिखेगा",
+        "sure_to_delete_all_occurences_appointment": "क्या आप वाकई में इस एपाइंटमेंट के भविष्य में आने को पूरा डिलीट करना चाहते हैं?"
+    },
+    "create": "बनाएँ",
+    "delete": "डिलीट करें",
+    "event": {
+        "action": {
+            "no": "नहीं",
+            "yes": "हाँ",
+            "accept": "स्वीकार करें",
+            "edit": "बदलाव करें",
+            "move": "ले जाएँ",
+            "restore": "वापस लाएँ",
+            "trash": "डिलीट करें",
+            "tentative": "संभावित",
+            "decline": "अस्वीकृत",
+            "expand": "डिस्प्ले में देखें"
+        }
+    },
+    "folder": {
+        "modal": {
+            "delete": {
+                "footer": "डिलीट करें",
+                "title": "डिलीट करें"
+            },
+            "restore": {
+                "title": "वापस लाएँ",
+                "footer": "बनाएँ और वापस लाएँ"
+            },
+            "move": {
+                "title": "ले जाएँ",
+                "body": {
+                    "message3": "विचाराधीन समयादेश को रखने के लिए एक कैलेंडर चयनित करें:"
+                },
+                "footer": "रिक्त",
+                "input": {
+                    "filter": "कैलेंडरों की छटनी करें"
+                },
+                "new": "नया कैलेंडर"
+            },
+            "footer": {
+                "go_back": "वापस जाएँ"
+            },
+            "item": {
+                "empty": "रिक्त"
+            },
+            "new": {
+                "duplicate_warning": "इसी नाम का एक और कैलेंडर पहले से ही है",
+                "footer": "बनाएँ",
+                "title2": "नए कैलेंडर की रचना"
+            }
+        },
+        "share_info": "जानकारी बाँटें"
+    },
+    "months": {
+        "april": "अप्रैल",
+        "august": "अगस्त",
+        "december": "दिसम्बर",
+        "february": "फरवरी",
+        "july": "जुलाई",
+        "june": "जून",
+        "march": "मार्च",
+        "may": "मई",
+        "november": "नवम्बर",
+        "october": "अक्तूबर",
+        "september": "सितंबर",
+        "january": "जनवरी"
+    },
+    "of": "में से",
+    "owner": "ओनर",
+    "read": "पढ़ें",
+    "reminder": {
+        "never": "कभी नहीं",
+        "hour_before": "{{count}} घंटा पहले",
+        "hour_before_plural": "{{count}} घंटे पहले",
+        "at_time_of_event": "ईवेंट के टाइम पर",
+        "day_before": "{{count}} दिन पहले",
+        "day_before_plural": "{{count}} दिन पहले",
+        "minute_before": "{{count}} मिनट पहले",
+        "minute_before_plural": "{{count}} मिनट पहले",
+        "week_before": "{{count}} सप्ताह पहले",
+        "week_before_plural": "{{count}} सप्ताह पहले"
+    },
+    "repeat": {
+        "custom": "कस्टम",
+        "none": "कोई नहीं",
+        "daily": "प्रतिदिन",
+        "monthly": "मासिक",
+        "weekly": "साप्ताहिक",
+        "yearly": "वार्षिक",
+        "everyWeek": "हर सप्ताह",
+        "customize": "कस्टमाइज़ करें",
+        "everyDay": "रोज",
+        "everyMonth": "हर महीने",
+        "everyYear": "हर साल"
+    },
+    "settings": {
+        "options": {
+            "dflt_vsblty_opt": {
+                "public": "पब्लिक",
+                "private": "निजी"
+            },
+            "show_reminder": {
+                "never": "कभी नहीं",
+                "week_before": "1 सप्ताह पहले",
+                "week_before_plural": "{{count}} सप्ताह पहले",
+                "all_time": "ईवेंट के पूरे टाइम पर",
+                "day_before": "1 दिन पहले",
+                "day_before_plural": "{{count}} दिन पहले",
+                "hour_before": "1 घंटा पहले",
+                "hour_before_plural": "{{count}} घंटे पहले",
+                "minute_before": "1 मिनट पहले",
+                "minute_before_plural": "{{count}} मिनट पहले"
+            },
+            "default_cal_opts": {
+                "calendar": "कैलेंडर"
+            },
+            "free_busy_opts": {
+                "allow_all": "आंतरिक और बाहरी दोनों यूजरों को मेरी फ्री/व्यस्त जानकारी देखने दें",
+                "allow_following": "सिर्फ इन आंतरिक यूजरों को मेरी फ्री/व्यस्त जानकारी देखने दें",
+                "allow_domain": "सिर्फ मेरे डोमेन के यूजरों को मेरी फ्री/व्यस्त जानकारी देखने दें",
+                "allow_internal": "सिर्फ आंतरिक डोमेन के यूजरों को मेरी फ्री/व्यस्त जानकारी देखने दें",
+                "allow_none": "किसी को भी मेरी फ्री/व्यस्त जानकारी न देखने दें"
+            },
+            "invt_opts": {
+                "allow_all": "आंतरिक और बाहरी दोनों यूजरों को मुझे मीटिंगों में इन्वाइट करने दें",
+                "allow_following": "सिर्फ इन आंतरिक यूज़रों को मुझे मीटिंगों में इन्वाइट करने दें",
+                "allow_none": "किसी को भी मुझे मीटिगों में इन्वाइट न करने दें",
+                "allow_internal": "सिर्फ आंतरिक यूज़रों को मुझे मीटिंगों में इन्वाइट करने दें"
+            },
+            "timezones": {
+                "amsterdam": "GMT +01:00 एम्स्टर्डैम,बर्लिन,बर्न,रॉम,स्टॉकहोम,विएना",
+                "chennai": "GMT +05:30 चेन्नई,कोलकाता,मुंबई,नई दिल्ली",
+                "egypt": "GMT +02:00 मिस्र"
+            },
+            "default_view": {
+                "day": "दिन का व्यू",
+                "list": "लिस्ट व्यू",
+                "month": "माह व्यू",
+                "week": "सप्ताह व्यू",
+                "work_week": "कार्य सप्ताह व्यू"
+            },
+            "weekdays": {
+                "friday": "शुक्रवार",
+                "monday": "सोमवार",
+                "saturday": "शनिवार",
+                "sunday": "रविवार",
+                "thursday": "गुरुवार",
+                "tuesday": "मंगलवार",
+                "wednesday": "बुधवार"
+            }
+        },
+        "invalid_email": "एक मान्य ईमेल नहीं है",
+        "label": {
+            "default_appt_dur": "एपाइंटमेंट की डिफ़ाल्ट अवधि",
+            "forward_invites": "इन्वाइट फॉरवर्ड करें",
+            "span_time": "स्पान टाइम",
+            "enable_reminder_sound": "आवाज़ बजाएँ (इसके लिए QuickTime या Windows Media प्लगइन की जरूरत होती है)",
+            "enter_email": "ई-मेल एड्रेस एंटर करें",
+            "show_rmndr_past_due_meetings": "जिन मीटिंग का टाइम निकल चुका है उनके लिए रिमाइन्डर दिखाएँ",
+            "snd_autorply_users": "जिन यूज़र को मुझे इन्वाइट करने की अनुमति नहीं है उन्हें ऑटो-रिप्लाई भेजें",
+            "default_calendar": "डिफ़ाल्ट कैलेंडर",
+            "delete_invt_on_rply": "जबाब देने पर इन्वाइट को डिलीट कर दें",
+            "flash_browser_title": "ब्राउज़र का शीर्षक फ्लैश करें",
+            "invitation_response": "इन्विटेशन जबाब",
+            "show_popup_notification": "पॉपअप नोटिफिकेशन दिखाएँ",
+            "show_reminders": "रिमाइन्डर दिखाएँ",
+            "show_timezones": "नया एपाइंटमेंट बनाते समय टाइम-ज़ोन दिखाएँ"
+        },
+        "ical_note": "Apple iCal को आपके कैलेंडर में एक्सेस के लिए CalDAV प्रोटोकॉल का इस्तेमाल करके कॉन्फ़िगर किया जा सकता है। जब यह प्रेफेरेंस बंद हो तो शेयर किए कैलेंडर ical अकाउंट की Deligation टैब में दिखते हैं ताकि आप अपने कैलेंडर की एक्सेस दूसरे यूज़र्स को दे सकें।",
+        "permissions_note": "ये यूज़र इस ईमेल सिस्टम में होने चाहिए (zextras.com). आप पूरा ईमेल एड्रेस इस्तेमाल कर सकते हैं या सिर्फ यूज़रनेम।"
+    },
+    "share": {
+        "options": {
+            "share_calendar_role": {
+                "none": "कोई नहीं",
+                "admin": "एडमिन (देख,बदल,जोड़,हटा और एडमिनिस्टर कर सकता है)",
+                "manager": "मैनेजर (देख,बदल,जोड़ और हटा सकता है)",
+                "viewer": "व्यूअर (देख सकता है)"
+            },
+            "share_calendar_with": {
+                "external_guests": "बाहरी गेस्ट (सिर्फ देख सकते हैं)",
+                "internal_users_groups": "आंतरिक यूज़र या ग्रुप",
+                "public": "पब्लिक (केवल देख सकते हैं, किसी पासवर्ड की जरूरत नहीं)"
+            }
+        },
+        "note": {
+            "share_note": "स्टैंडर्ड मैसेज आपका नाम, शेयर किए आइटम का नाम, पाने वालों को दी गईं अनुमतियाँ और साइन-इन जानकारी दिखाता है।"
+        },
+        "placeholder": {
+            "recipients_address": "पाने वाले के ईमेल एड्रेस",
+            "standard_message": "स्टैंडर्ड मैसेज में कोई नोट जोड़ें"
+        },
+        "label": {
+            "allow_to_see_private_appt": "यूज़र (रों) को मेरे प्राइवेट एपाइंटमेंट देखने दें",
+            "send_notification": "इस शेयर के बारे में नोटिफिकेशन भेजें"
+        }
+    },
+    "snackbar": {
+        "invite": {
+            "error": "त्रुटि"
+        },
+        "error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+        "new_time_proposed_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+        "share_folder_success": "कैलेंडर शेयर किया गया",
+        "new_time_proposed_succes": "नया टाइम दिया गया",
+        "proposed_time_accepted": "आपने दिए टाइम को स्वीकार कर लिया",
+        "proposed_time_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+        "url_copied": "{{title}} कॉपी किया गया"
+    },
+    "success": "सफलता",
+    "type": "टाइप करें",
+    "items": {
+        "second": "सेकंड",
+        "first": "प्रथम",
+        "fourth": "चौथा",
+        "last": "अंतिम",
+        "third": "तीसरा",
+        "weekend_day": "सप्ताहांत दिन",
+        "working_day": "कार्य दिवस",
+        "day": "दिन"
+    },
+    "add": "जोड़ें",
+    "appointments": "अपॉइंट्मेंट",
+    "participants": {
+        "Accepted": "स्वीकार्य",
+        "NE_with_count": "संभावित",
+        "NE_with_count_plural": "",
+        "TE_with_count": "अस्वीकृत",
+        "TE_with_count_plural": "",
+        "Declined": "अस्वीकृत",
+        "DE_with_count": "जबाब नहीं दिया (1)",
+        "DE_with_count_plural": "जबाब नहीं दिया ({{count}})",
+        "Tentative": "सभावित है के साथ स्वीकार किया",
+        "AC_with_count": "स्वीकार किया गया",
+        "AC_with_count_plural": "{count}}) स्वीकार किए गए",
+        "Attendees_accepted_count": "<strong>1 व्यक्ति </strong> ने स्वीकार किया",
+        "Attendees_accepted_count_plural": "<strong>{{count}} व्यक्तियों </strong> ने स्वीकार किया",
+        "Attendees_declined_count": "<strong>1 व्यक्ति</strong> ने अस्वीकार कर दिया",
+        "Attendees_declined_count_plural": "<strong>{{count}} व्यक्तियों </strong> ने अस्वीकार कर दिया",
+        "Attendees_not_answered_count": "<strong>1 व्यक्ति</strong> ने जबाब नहीं दिया",
+        "Attendees_not_answered_count_plural": "<strong>{{count}} व्यक्तियों </strong> ने जबाब नहीं दिया",
+        "Attendees_tentative_count": "<strong>1 व्यक्ति </strong> ने जबाब दिया कि संभावित है",
+        "Attendees_tentative_count_plural": "<strong>{{count}} व्यक्तियों </strong> ने जबाब दिया कि संभावित है",
+        "Invited_Visitor": "को इन्वाइट किया गया है",
+        "Not_answered": "जबाब नहीं दिया",
+        "visitors": "और दूसरे {{others}} व्यक्ति"
+    },
+    "button": {
+        "customize_modal": "अनुरूप बनाने का मोडल खोलें"
+    },
+    "administer": "प्रशासन",
+    "allowed_actions": "अनुमत्त क्रियाएँ",
+    "composer": {
+        "attachment": {
+            "drive": "ड्राइव से लाएँ",
+            "contactsMod": "सम्पर्क कार्ड बनाएँ",
+            "draganddrop": {
+                "content": "आपके अटैचमेंट यहाँ गिराएं समयादेश में लगाने के लिए",
+                "title": "उठा के गिराएं"
+            },
+            "local": "लोकल से लगाएँ"
+        }
+    },
+    "cannot_edit_name": "आप सिस्टम कैलेंडर का नाम नहीं बदल सकते",
+    "edit_share_properties": "शेयर गुणों में संशोधन",
+    "find_calendar_shares": "साझा कैलेंडर खोजें",
+    "find_shares": "सहभाजी खोजें",
+    "freebusy": "ख़ाली व्यस्त",
+    "insert": "सम्मिलित करना",
+    "private": "निजी",
+    "search": {
+        "results_for": "इसके नतीजे:",
+        "organized_by": "इनके द्वारा ऑर्गनाइज़"
+    },
+    "revoke_without_notification": "बिना किसी सूचना के एक्सेस खत्म करें",
+    "tooltip": {
+        "enable_disable_rich_text": "रिच टेक्स्ट एडिटर चालू/बंद करें",
+        "add_attachments": "अटैचमेंट लगाएं",
+        "copy_ics_url": "ICS यूआरएल कॉपी करें",
+        "copy_outlook_url": "Outlook यूआरएल कॉपी करें",
+        "copy_vector_url": "व्यू यूआरएल कॉपी करें",
+        "show_optionals": "वैकल्पिक दिखाएं"
+    },
+    "remove_from_this_list": "इस लिस्ट से हटाएँ",
+    "resend_mail_notification_about_this_share": "इस शेयर के बारे में मेल नोटिफिकेशन भेजें",
+    "revoke_access": "एक्सेस रद्द करें",
+    "revoke_with_custom_message": "एक कस्टम नोटिफिकेशन भेजकर एक्सेस बंद करें",
+    "revoke_without_custom_message": "एक स्टैंडर्ड नोटिफिकेशन भेजकर एक्सेस बंद करें",
+    "workflow": "वर्कफ़्लो",
+    "write": "लिखें",
+    "share_invite_resent": "शेयर इन्वाइट भेजा गया",
+    "shared_folders": "शेयर किए कैलेंडर",
+    "shared_items": "शेयर किए आइटम",
+    "shares_info": "शेयर की जानकारी"
+}

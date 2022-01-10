@@ -1,0 +1,497 @@
+{
+    "action": {
+        "create": "Creëren",
+        "save": "Opslaan",
+        "send": "Versturen",
+        "download": "Downloaden",
+        "delete": "Verwijderen",
+        "delete_permanently": "Permanent Verwijderen",
+        "edit_message": "Bericht Bewerken",
+        "delete_calendar": "Kalender verwijderen",
+        "preview": "Klik om te bekijken in een ander tabblad",
+        "save_to_preview": "Naar voorbeeld opslaan",
+        "calendar_access_share": "Kalender toegang delen",
+        "edit_calendar_properties": "Kalendereigenschappen bewerken",
+        "empty_trash": "Prullenbak leegmaken",
+        "move_to_root": "Naar root verplaatsen",
+        "new_calendar": "Nieuwe kalender",
+        "send_cancellation": "Annulering verzenden",
+        "share_calendar": "Kalender delen"
+    },
+    "reminder": {
+        "never": "Nooit",
+        "week_before": "{{count}} week voordien",
+        "week_before_plural": "{{count}} weken voordien",
+        "at_time_of_event": "Op het moment van de gebeurtenis",
+        "day_before": "{{count}} dag voordien",
+        "day_before_plural": "{{count}} dagen voordien",
+        "hour_before": "{{count}} uur voordien",
+        "hour_before_plural": "{{count}} uren voordien",
+        "minute_before": "{{count}} minuut voordien",
+        "minute_before_plural": "{{count}} minuten voordien"
+    },
+    "label": {
+        "attachment": "Bijlage",
+        "attachment_plural": "{{count}} Bijlagen",
+        "busy": "Bezet",
+        "days": "Dagen",
+        "cancel": "Annuleren",
+        "custom": "Op maat",
+        "delete_permanently": "Permanent Verwijderen",
+        "dismiss_capitalize": "Weigeren",
+        "edit": "Bewerken",
+        "edit_share": "Gedeeld bestand bewerken",
+        "end": "Eindigen",
+        "from": "Van",
+        "general": "Algemeen",
+        "month": "Maand",
+        "months": "Maanden",
+        "now": "Nu",
+        "of": "van",
+        "permissions": "Machtigingen",
+        "save": "Opslaan",
+        "share": "Delen",
+        "start_date": "Startdatum",
+        "subject": "Onderwerp",
+        "week": {
+            "monday": "Maandag",
+            "saturday": "Zaterdag",
+            "sunday": "Zondag",
+            "thursday": "Donderdag",
+            "tuesday": "Dinsdag",
+            "wednesday": "Woensdag",
+            "friday": "Vrijdag"
+        },
+        "free": "Gratis",
+        "optional": "Keuzemogelijkheid",
+        "optional_plural": "Keuzemogelijkheden",
+        "download": "Downloaden",
+        "download_plural": "Alles downloaden",
+        "remove": "Verwijderen",
+        "remove_plural": "Alles verwijderen",
+        "invitation_not_sent": "U heeft de uitnodiging nog niet naar de deelnemers gestuurd",
+        "all_day": "Hele dag",
+        "all_calendars": "Alle Kalenders",
+        "calendar": "Kalender",
+        "cancelled": "Geannuleerd",
+        "attendee_plural": "Aanwezigen",
+        "tentative": "Voorlopig",
+        "timezone_pref_msg": "De tijdstippen volgen uw tijdzonevoorkeuren.",
+        "custom_repeat": "Aangepaste herhaling",
+        "day": "Dag",
+        "create_appt_settings": "Afspraak creëren",
+        "enable_dlgtn_for_ical": "Delegatie inschakelen voor Apple iCal CalDAV Client",
+        "apple_ical": "Apple iCal",
+        "auto_add_rcvd_app": "Automatisch ontvangen afspraken toevoegen aan kalender",
+        "add_share": "Delen toevoegen",
+        "calendar_color": "Kalender kleur",
+        "calendar_setting": "Kalenderinstellingen",
+        "end_date": "Einddatum",
+        "end_date_and_time": "Einddatum en -tijd",
+        "every": "Elke",
+        "every_day": "Elke dag",
+        "every_weekday": "Elke weekdag",
+        "every_year_on": "Elk jaar op",
+        "filter_sharer_user": "Filter deler gebruiker",
+        "find_shares": "Selecteer welke kalenders u wilt zien in de kalenderstructuur",
+        "free_busy": "Vrij/Bezet",
+        "type_name_here": "Naam kalender",
+        "weeks_on": "Weken op",
+        "work_hour": "Werkuur",
+        "work_week": "Werkweek",
+        "your_pref_timezone_msg": "Uw voorkeurstijdzone is: GMT +01:00 Amsterdam, Berlijn, Bern, Rome, Stockholm, Wenen.",
+        "create_new_calendar": "Een nieuwe kalender creëren",
+        "default_view": "Standaard weergave",
+        "edit_access": "Toegang van {{name}} bewerken",
+        "dismiss": "VERWIJDEREN",
+        "dismiss_plural": "ALLES VERWIJDEREN",
+        "display": "Weergeven",
+        "edit_properties": "Eigenschappen van {{name}} bewerken",
+        "email_input_message": "E-mailadressen ingeven",
+        "end_after": "Eindigen na",
+        "ics_url": "ICS URL",
+        "instance": "Geval",
+        "invites": "Uitgenodigden",
+        "no_end_date": "Geen einddatum",
+        "no_subject": "Geen onderwerp",
+        "notify_organizer": "Organisator verwittigen",
+        "number": "Nummer",
+        "occurrences": "Voorval(len)",
+        "of_every": "van elke",
+        "of_the_month,_every": "van de maand, elke",
+        "ongoing": "Aan de gang",
+        "resend": "Opnieuw verzenden",
+        "revoke": "Intrekken",
+        "show": "Weergeven",
+        "show_plural": "Alles weergeven",
+        "out_of_office": "Niet op kantoor",
+        "outlook_url": "Outlook URL",
+        "private": "Privé",
+        "proposal_declined": "Voorstel afgewezen",
+        "regular": "Normaal",
+        "reminder": "Herinnering",
+        "repeat": "Herhalen",
+        "required": "Vereist",
+        "revoke_share": "Delen van {{title}} herroepen",
+        "series": "Serie",
+        "set_new_time": "Nieuwe tijd instellen",
+        "share_calendar_url": "{{title}} toegang delen",
+        "shares_items": "gedeelde kalenders van {{value}}",
+        "sharing_of_this_folder": "Delen van deze map",
+        "show_declined_meetings": "Geweigerde meetings tonen",
+        "start_week_of": "Start week van",
+        "the": "De",
+        "time_zones": "Tijdzones",
+        "to": "Aan",
+        "view_url": "URL bekijken",
+        "default_appt_vsblty": "Standaard zichtbaarheid afspraak",
+        "location": "Locatie",
+        "restore_calednar": "Kalender herstellen",
+        "start_date_and_time": "Startdatum en -tijd"
+    },
+    "event": {
+        "action": {
+            "accept": "Aanvaarden",
+            "edit": "Bewerken",
+            "move": "Verplaatsen",
+            "no": "Nee",
+            "restore": "Herstellen",
+            "trash": "Verwijderen",
+            "yes": "Ja",
+            "decline": "Weigeren",
+            "expand": "In Displayer openen",
+            "tentative": "Voorlopig"
+        }
+    },
+    "items": {
+        "second": "Seconde",
+        "day": "Dag",
+        "first": "Eerst",
+        "fourth": "Vierde",
+        "last": "Laatste",
+        "third": "Derde",
+        "working_day": "Werkdag",
+        "weekend_day": "Weekenddag"
+    },
+    "add": "Toevoegen",
+    "appointments": "Afspraken",
+    "create": "Creëren",
+    "delete": "Verwijderen",
+    "folder": {
+        "modal": {
+            "delete": {
+                "footer": "Verwijderen",
+                "title": "Verwijderen"
+            },
+            "move": {
+                "title": "Verplaatsen",
+                "body": {
+                    "message3": "Selecteer een kalender om de overwogen afspraak naar te verplaatsen:"
+                },
+                "footer": "Leeg",
+                "input": {
+                    "filter": "Kalenders filteren"
+                },
+                "new": "Nieuwe kalender"
+            },
+            "restore": {
+                "title": "Herstellen",
+                "footer": "Aanmaken en herstellen"
+            },
+            "new": {
+                "duplicate_warning": "Een kalender met dezelfde naam bestaat al",
+                "footer": "CREËREN",
+                "title2": "Creatie nieuwe kalender"
+            },
+            "item": {
+                "empty": "Leeg"
+            },
+            "footer": {
+                "go_back": "Teruggaan"
+            }
+        },
+        "share_info": "Delen info"
+    },
+    "message": {
+        "snackbar": {
+            "invite": {
+                "error": "Er is iets misgegaan, probeer het opnieuw.",
+                "accept": "U hebt geantwoord als Aanvaard",
+                "decline": "U hebt geantwoord als Geweigerd",
+                "tentative": "U hebt geantwoord als: Voorlopig"
+            },
+            "appt_deleted_error": "Er is iets misgegaan, probeer het opnieuw.",
+            "settings_saved": "Bewerkingen correct opgeslagen",
+            "appt_moved": "Afspraak met succes verplaatst naar",
+            "appt_moved_error": "Er ging iets mis, afspraak niet verplaatst, probeer het opnieuw.",
+            "appointment_permanently_deleted_error": "Er is iets misgegaan, probeer het opnieuw",
+            "appointment_permanently_deleted_succesfully": "Definitieve verwijdering met succes voltooid",
+            "appt_moved_to_trash": "Afspraak verplaatst naar prullenbak",
+            "appt_restored": "Afspraak met succes hersteld naar",
+            "calendar_delete_error": "Er is iets misgegaan, probeer het opnieuw.",
+            "calendar_deleted_successfully": "Kalender met succes verwijderd.",
+            "calendar_moved_to_root_folder": "Kalender verplaatst naar Root-map",
+            "calendar_moved_to_trash": "Kalender verplaatst naar prullenbak",
+            "edit_calendar": "Bewerkingen correct opgeslagen",
+            "edit_calendar_error": "Er ging iets mis, probeer het nog eens",
+            "new_calendar_create_error": "Er ging iets mis, probeer het nog eens",
+            "new_calendar_created": "Nieuwe kalender gecreëerd",
+            "calendar_moved_to_root_folder_error": "Er ging iets mis, probeer het nog eens",
+            "calendar_moved_to_trash_error": "Er is iets misgegaan, probeer het opnieuw"
+        },
+        "you": "U",
+        "are_organizer": "zijn de organisator",
+        "somebody_is_organizer": "<strong>{{somebody}}</strong> is de organisator",
+        "you_will_see_the_subject_here": "U zult het onderwerp van deze afspraak hier zien",
+        "share_calendar_url_note2": "Alleen uw medewerkers hebben toegang tot uw gegevens via deze URL's. <br/> U kunt deze links ook vinden door rechts te klikken op uw kalenderlijst.",
+        "delete_all_occurences": "Alle voorvallen verwijderen",
+        "delete_future_occurences": "Dit voorval en alle toekomstige voorvallen verwijderen",
+        "delete_future_occurences_warning": "Dit zal ook alle uitzonderingen (voor en na deze instantie) in de reeks verwijderen",
+        "have_not_sent_invitation": "U heeft de uitnodiging nog niet naar de deelnemers gestuurd",
+        "invite_has_no_message": "Deze uitnodiging heeft geen tekstbericht",
+        "invited_you": "nodigde u uit voor een evenement",
+        "meeting_canceled": "De volgende meeting is geannuleerd",
+        "modal": {
+            "delete": {
+                "sure_delete_appointment_permanently": "Door deze afspraak definitief te wissen, kunt u hem niet meer terughalen, verdergaan?",
+                "sure_delete_appointment_all_instances_permanently": "Dit zal alle voorvallen van deze afspraak wissen en u zult niet in staat zijn om het opnieuw te herstellen, verder?"
+            }
+        },
+        "share_calendar_url_note": "Alleen uw medewerkers hebben toegang tot uw gegevens via deze URL's.",
+        "somebody_invited_you": "<strong>{{somebody}}</strong> nodigde u uit",
+        "sure_to_delete_appointment": "Weet u zeker dat u de afspraak wilt verwijderen ?",
+        "sure_to_delete_appointment_permanently": "Weet u zeker dat u deze afspraak permanent wilt verwijderen?",
+        "want_to_edit_cancellation_msg": "Wilt u het bericht over het annuleren van een afspraak bewerken?",
+        "you_are_organizer": "U bent de organisator",
+        "you_sure_move_calendar_trash": "Weet u zeker dat u de \"{{name}}\" kalender wilt verwijderen?",
+        "sure_to_delete_all_occurences_appointment": "Weet u zeker dat u alle voorvallen van deze afspraak wilt verwijderen?",
+        "want_to_send_cancellation_msg": "Wilt u een annuleringsbericht naar de aanwezigen sturen?",
+        "you_sure_delete_calendar": "Weet u zeker dat u de \"{{name}}\" kalender permanent wilt verwijderen?",
+        "share_calendar_url_msg": "U kunt snel {{title}} delen met uw medewerkers met behulp van een van deze URL:"
+    },
+    "months": {
+        "april": "April",
+        "august": "Augustus",
+        "december": "December",
+        "february": "Februari",
+        "january": "Januari",
+        "july": "Juli",
+        "june": "Jni",
+        "march": "Maart",
+        "may": "Mei",
+        "november": "November",
+        "october": "Oktober",
+        "september": "September"
+    },
+    "of": "van",
+    "owner": "Eigenaar",
+    "read": "Gelezen",
+    "repeat": {
+        "custom": "Op maat",
+        "none": "Geen",
+        "customize": "Personaliseren",
+        "daily": "Dagelijks",
+        "everyDay": "Elke dag",
+        "everyMonth": "Elke maand",
+        "everyWeek": "Elke week",
+        "everyYear": "Elk jaar",
+        "monthly": "Maandelijks",
+        "yearly": "Jaarlijks",
+        "weekly": "Wekelijks"
+    },
+    "settings": {
+        "options": {
+            "dflt_vsblty_opt": {
+                "public": "Publiek",
+                "private": "Privé"
+            },
+            "show_reminder": {
+                "never": "Nooit",
+                "all_time": "De hele tijd van het evenement",
+                "day_before": "1 dag voordien",
+                "day_before_plural": "{{count}} dagen voordien",
+                "hour_before": "1 uur voordien",
+                "hour_before_plural": "{{count}} uren voordien",
+                "week_before": "1 week voordien",
+                "week_before_plural": "{{count}} weken voordien",
+                "minute_before": "1 minuut voordien",
+                "minute_before_plural": "{{count}} minuten voordien"
+            },
+            "weekdays": {
+                "friday": "Vrijdag",
+                "monday": "Maandag",
+                "saturday": "Zaterdag",
+                "sunday": "Zondag",
+                "thursday": "Donderdag",
+                "tuesday": "Dinsdag",
+                "wednesday": "Woensdag"
+            },
+            "default_cal_opts": {
+                "calendar": "Kalender"
+            },
+            "default_view": {
+                "day": "Dagweergave",
+                "list": "Lijstweergave",
+                "month": "Maandweergave",
+                "week": "Weekweergave",
+                "work_week": "Werkweekweergave"
+            },
+            "free_busy_opts": {
+                "allow_all": "Zowel interne als externe gebruikers toestaan mijn vrije/bezette informatie te zien",
+                "allow_following": "Alleen de volgende interne gebruikers mogen mijn vrij/bezet informatie zien",
+                "allow_internal": "Enkel gebruikers van interne domeinen mogen mijn vrij/bezet informatie zien",
+                "allow_none": "Laat niemand mijn vrij/bezet informatie zien",
+                "allow_domain": "Enkel gebruikers van mijn domein kunnen mijn vrij/bezet informatie zien"
+            },
+            "invt_opts": {
+                "allow_following": "Alleen de volgende interne gebruikers mogen mij uitnodigen voor meetings",
+                "allow_internal": "Alleen interne gebruikers toelaten om mij uit te nodigen voor meetings",
+                "allow_none": "Laat niemand me uitnodigen voor meetings",
+                "allow_all": "Laat zowel interne als externe gebruikers toe om mij uit te nodigen voor meetings"
+            },
+            "timezones": {
+                "amsterdam": "GMT +01:00 Amsterdam, Berlijn, Bern, Rome, Stockholm, Wenen",
+                "chennai": "GMT +05:30 Chennai,Kolkata,Mumbai,New Delhi",
+                "egypt": "GMT +02:00 Egypte"
+            }
+        },
+        "label": {
+            "snd_autorply_users": "Automatisch antwoord sturen naar gebruikers die mij niet kunnen uitnodigen",
+            "flash_browser_title": "Flash de titel van de browser",
+            "forward_invites": "Uitnodigingen doorsturen",
+            "invitation_response": "Reactie op de uitnodiging",
+            "show_popup_notification": "Een popup-melding weergeven",
+            "show_reminders": "Herinneringen tonen",
+            "show_rmndr_past_due_meetings": "Herinneringen voor achterstallige meetings",
+            "show_timezones": "Tijdzone tonen bij het maken van nieuwe afspraak",
+            "default_appt_dur": "Standaard afspraak duur",
+            "default_calendar": "Standaard kalender",
+            "delete_invt_on_rply": "Uitnodiging verwijderen bij antwoord",
+            "enable_reminder_sound": "Een geluid afspelen (QuickTime of Windows Media plugin vereist)",
+            "enter_email": "E-mailadres ingeven",
+            "span_time": "Tijdspanne"
+        },
+        "permissions_note": "Onderstaande gebruikers moeten op dit e-mail systeem (zextras.com) zitten. U mag het volledige e-mail adres gebruiken of alleen de gebruikersnaam.",
+        "invalid_email": "Geen geldige e-mail",
+        "ical_note": "Apple iCal kan worden geconfigureerd om toegang te krijgen tot uw agenda's met behulp van het CalDAV-protocol. Als deze voorkeur is ingeschakeld, worden gedeelde agenda's weergegeven op het tabblad Delegatie van de ical-account, zodat u toegang tot uw agenda's kunt delegeren aan andere gebruikers."
+    },
+    "share": {
+        "options": {
+            "share_calendar_role": {
+                "none": "Geen",
+                "admin": "Admin (kan bekijken, bewerken, toevoegen, verwijderen en beheren)",
+                "manager": "Manager (kan bekijken, bewerken, toevoegen en verwijderen)",
+                "viewer": "Kijker (kan bekijken)"
+            },
+            "share_calendar_with": {
+                "external_guests": "Externe gasten (alleen bekijken)",
+                "public": "Publiek (alleen bekijken, geen wachtwoord nodig)",
+                "internal_users_groups": "Interne gebruikers of groepen"
+            }
+        },
+        "note": {
+            "share_note": "Het standaardbericht toont uw naam, de naam van het gedeelde item, de machtigingen die aan de ontvangers zijn verleend en, indien nodig."
+        },
+        "label": {
+            "allow_to_see_private_appt": "Gebruiker(s) toestaan mijn privé afspraken te zien",
+            "send_notification": "Bericht over dit aandeel verzenden"
+        },
+        "placeholder": {
+            "recipients_address": "E-mailadressen ontvangers",
+            "standard_message": "Een opmerking aan een standaardbericht toevoegen"
+        }
+    },
+    "snackbar": {
+        "invite": {
+            "error": "Fout"
+        },
+        "new_time_proposed_error": "Er is iets misgegaan, probeer het opnieuw",
+        "proposed_time_error": "Er is iets misgegaan, probeer het opnieuw",
+        "error": "Er ging iets mis, probeer het opnieuw",
+        "new_time_proposed_succes": "Nieuwe tijd voorgesteld",
+        "proposed_time_accepted": "U aanvaardde de voorgestelde tijd",
+        "url_copied": "{{title}} gekopieerd",
+        "share_folder_success": "Deze kalender is gedeeld"
+    },
+    "success": "Succes",
+    "type": "Type",
+    "calendar": {
+        "modal": {
+            "custom_schedule": {
+                "footer": "Bewerken",
+                "title": "Werkuren aanpassen"
+            }
+        }
+    },
+    "search": {
+        "results_for": "Resultaten voor:",
+        "organized_by": "georganiseerd door"
+    },
+    "participants": {
+        "Accepted": "aanvaard",
+        "Declined": "geweigerd",
+        "Invited_Visitor": "zijn uitgenodigd",
+        "NE_with_count": "Voorlopig",
+        "NE_with_count_plural": "Voorlopige ({{count}})",
+        "Not_answered": "antwoordde niet",
+        "TE_with_count": "Geweigerd",
+        "TE_with_count_plural": "Geweigerd ({{count}})",
+        "Tentative": "als voorlopig aanvaard",
+        "AC_with_count": "Aanvaard",
+        "AC_with_count_plural": "Aanvaard ({{count}})",
+        "Attendees_accepted_count": "<strong>1 aanwezige </strong> heeft aanvaard",
+        "Attendees_accepted_count_plural": "<strong>1 aanwezigen </strong> hebben aanvaard",
+        "Attendees_declined_count": "<strong>1 aanwezige </strong> heeft geweigerd",
+        "Attendees_declined_count_plural": "<strong>1 aanwezigen </strong> hebben geweigerd",
+        "Attendees_not_answered_count": "<strong>1 aanwezige </strong> heeft niet geantwoord",
+        "Attendees_not_answered_count_plural": "<strong>1 aanwezigen </strong> hebben niet geantwoord",
+        "Attendees_tentative_count": "<strong>1 aanwezige </strong> heeft als voorlopig aanvaard",
+        "Attendees_tentative_count_plural": "<strong>{{count}} aanwezigen</strong> hebben als voorlopig aanvaard",
+        "DE_with_count": "Antwoordde niet (1)",
+        "DE_with_count_plural": "Antwoordden niet ({{count}})",
+        "visitors": "en andere {{others}} aanwezigen"
+    },
+    "tooltip": {
+        "enable_disable_rich_text": "Rich text editor inschakelen/uitschakelen",
+        "copy_ics_url": "Kopie ICS url",
+        "copy_outlook_url": "Kopie Outlook url",
+        "copy_vector_url": "Kopie Weergave url",
+        "show_optionals": "Optiemogelijkheden weergeven",
+        "add_attachments": "Bijlagen toevoegen"
+    },
+    "button": {
+        "customize_modal": "Modal aanpassen openen"
+    },
+    "composer": {
+        "attachment": {
+            "drive": "Toevoegen vanaf Drive",
+            "local": "Toevoegen van lokaal",
+            "contactsMod": "contactfiche toevoegen",
+            "draganddrop": {
+                "title": "Drag&Drop-modus",
+                "content": "Drop hier uw bijlagen om ze snel aan de afspraak toe te voegen"
+            }
+        }
+    },
+    "administer": "Beheren",
+    "allowed_actions": "Toegelaten acties",
+    "freebusy": "Vrij Bezig",
+    "insert": "Invoegen",
+    "find_shares": "Delen zoeken",
+    "cannot_edit_name": "U kunt de naam van een systeemkalender niet wijzigen",
+    "edit_share_properties": "Deeleigenschappen bewerken",
+    "find_calendar_shares": "Kalender Delen Zoeken",
+    "resend_mail_notification_about_this_share": "Bericht over dit aandeel verzenden",
+    "revoke_access": "Toegang intrekken",
+    "revoke_without_custom_message": "Toegang intrekken met een standaardkennisgeving",
+    "revoke_without_notification": "Toegang intrekken zonder een melding te sturen",
+    "share_invite_resent": "Delen uitnodigen opnieuw versturen",
+    "shared_folders": "Gedeelde kalenders",
+    "shares_info": "Delen info",
+    "workflow": "Workflow",
+    "write": "Schrijven",
+    "private": "Privé",
+    "remove_from_this_list": "Uit deze lijst verwijderen",
+    "revoke_with_custom_message": "Toegang intrekken door een aangepaste melding te verzenden",
+    "shared_items": "Gedeelde items"
+}
