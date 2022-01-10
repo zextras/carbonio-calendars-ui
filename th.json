@@ -1,0 +1,474 @@
+{
+    "participants": {
+        "AC_with_count": "ยอมรับ",
+        "TE_with_count": "ปฏิเสธ ({{count}})",
+        "visitors": "และผู้เข้าร่วมอีก {{others}} คน",
+        "Invited_Visitor": "ได้รับเชิญ",
+        "NE_with_count": "ยังไม่แน่นอน ({{count}})",
+        "Tentative": "ตอบรับเบื้องต้นว่ายังไม่แน่นอน",
+        "Not_answered": "ยังไม่ตอบ",
+        "Accepted": "ยอมรับ",
+        "Attendees_accepted_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ยอมรับแล้ว",
+        "Attendees_declined_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ปฏิเสธ",
+        "Attendees_not_answered_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ยังไม่ได้ตอบ",
+        "DE_with_count": "ไม่ตอบ ({{count}})",
+        "Declined": "ปฏิเสธ",
+        "Attendees_tentative_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ได้ตอบรับเบื้องต้นว่ายังไม่แน่นอน"
+    },
+    "label": {
+        "subject": "หัวข้อ",
+        "cancel": "ยกเลิก",
+        "custom": "กำหนดเอง",
+        "attachment": "สิ่งที่แนบมา",
+        "busy": "ไม่ว่าง",
+        "dismiss_capitalize": "ยกเลิก",
+        "download": "ดาวน์โหลด",
+        "edit": "แก้ไข",
+        "edit_share": "แก้ไขการแชร์",
+        "end": "จบ",
+        "free": "ฟรี",
+        "general": "ทั่วไป",
+        "month": "เดือน",
+        "now": "ตอนนี้",
+        "of": "ของ",
+        "permissions": "การอนุญาต",
+        "remove": "ลบ",
+        "save": "บันทึก",
+        "share": "แชร์",
+        "invitation_not_sent": "คุณยังไม่ได้ส่งคำเชิญไปยังผู้เข้าร่วม",
+        "all_calendars": "ปฏิทินทั้งหมด",
+        "all_day": "ทั้งวัน",
+        "tentative": "ไม่แน่นอน",
+        "required": "ที่จำเป็น",
+        "start_date": "วันที่เริ่มต้น",
+        "reminder": "เตือนความจำ",
+        "calendar_setting": "การตั้งค่าปฏิทิน",
+        "apple_ical": "Apple iCal",
+        "auto_add_rcvd_app": "เพิ่มการนัดหมายที่ได้รับไปยังปฏิทินโดยอัตโนมัติ",
+        "every_weekday": "ทุกสัปดาห์",
+        "week": {
+            "thursday": "วันพฤหัสบดี",
+            "tuesday": "วันอังคาร",
+            "wednesday": "วันพุธ",
+            "friday": "วันศุกร์",
+            "monday": "วันจันทร์",
+            "saturday": "วันเสาร์",
+            "sunday": "วันอาทิตย์"
+        },
+        "weeks_on": "สัปดาห์ใน",
+        "add_share": "เพิ่มการแชร์",
+        "attendee_plural": "ผู้เข้าร่วม",
+        "calendar": "ปฏิทิน",
+        "calendar_color": "สีปฏิทิน",
+        "cancelled": "ยกเลิกแล้ว",
+        "create_appt_settings": "สร้างการนัดหมาย",
+        "create_new_calendar": "สร้างปฏิทินใหม่",
+        "day": "วัน",
+        "days": "วัน",
+        "default_appt_vsblty": "การเปิดเผยการนัดหมายเริ่มต้น",
+        "default_view": "มุมมองเริ่มต้น",
+        "edit_access": "แก้ไขการเข้าถึงของ {{name}}",
+        "delete_permanently": "ลบอย่างถาวร",
+        "dismiss": "ยกเลิกทั้งหมด",
+        "display": "แสดง",
+        "edit_properties": "แก้ไขคุณสมบัติของ {{name}}",
+        "email_input_message": "ใส่ที่อยู่อีเมล",
+        "enable_dlgtn_for_ical": "เปิดใช้การมอบหมายงานสำหรับ Apple iCal CalDAV Client",
+        "end_after": "สิ้นสุดหลังจาก",
+        "end_date": "วันที่สุดท้าย",
+        "end_date_and_time": "วันที่และเวลาสิ้นสุด",
+        "every": "ทุก",
+        "every_day": "ทุกวัน",
+        "every_year_on": "ทุกปีใน",
+        "filter_sharer_user": "กรองผู้ใช้ที่แชร์",
+        "find_shares": "เลือกปฏิทินที่คุณต้องการดูในแผนผังปฏิทิน",
+        "free_busy": "ว่าง/ไม่ว่าง",
+        "from": "จาก",
+        "ics_url": "ICS URL",
+        "instance": "กรณีตัวอย่าง",
+        "invites": "คำเชิญ",
+        "resend": "ส่งซ้ำ",
+        "revoke": "เพิกถอน",
+        "months": "เดือน",
+        "no_end_date": "ไม่มีกำหนดสิ้นสุด",
+        "no_subject": "ไม่มีหัวข้อ",
+        "notify_organizer": "แจ้งผู้จัดงาน",
+        "number": "หมายเลข",
+        "occurrences": "เหตุการณ์",
+        "of_every": "ของทุกๆ",
+        "of_the_month,_every": "ของเดือน ทุกๆ",
+        "ongoing": "ต่อเนื่อง",
+        "optional": "ไม่จำเป็น",
+        "out_of_office": "ไม่อยู่",
+        "outlook_url": "Outlook URL",
+        "private": "ส่วนตัว",
+        "proposal_declined": "ข้อเสนอถูกปฏิเสธ",
+        "regular": "ปกติ",
+        "repeat": "ทำซ้ำ",
+        "restore_calednar": "กู้คืนปฏิทิน",
+        "revoke_share": "ถอนการแชร์ของ {{title}}",
+        "series": "ซีรีส์",
+        "set_new_time": "ตั้งเวลาใหม่",
+        "share_calendar_url": "{{title}} แชร์การเข้าถึง",
+        "sharing_of_this_folder": "การแชร์ของโฟลเดอร์นี้",
+        "show": "แสดงทั้งหมด",
+        "show_declined_meetings": "แสดงการปฏิเสธการประชุม",
+        "start_week_of": "เริ่มสัปดาห์ของ",
+        "time_zones": "โซนเวลา",
+        "to": "ถึง",
+        "type_name_here": "ชื่อปฏิทิน",
+        "view_url": "ดู URL",
+        "work_hour": "ชั่วโมงทำงาน",
+        "location": "สถานที่",
+        "shares_items": "ปฏิทินที่แชร์ของ {{value}}",
+        "custom_repeat": "ทำซ้ำแบบกำหนดเอง",
+        "start_date_and_time": "วันที่และเวลาเริ่มต้น",
+        "timezone_pref_msg": "การกำหนดเวลาเป็นไปตามการตั้งค่าเขตเวลาของคุณ",
+        "work_week": "สัปดาห์การทำงาน",
+        "your_pref_timezone_msg": "เขตเวลาที่คุณต้องการคือ: GMT +01:00 อัมสเตอร์ดัม, เบอร์ลิน, เบิร์น, โรม, สตอกโฮล์ม, เวียนนา"
+    },
+    "calendar": {
+        "modal": {
+            "custom_schedule": {
+                "footer": "แก้ไข",
+                "title": "กำหนดชั่วโมงการทำงาน"
+            }
+        }
+    },
+    "action": {
+        "delete": "ลบ",
+        "download": "ดาวน์โหลด",
+        "create": "สร้าง",
+        "save": "บันทึก",
+        "send": "ส่ง",
+        "preview": "คลิกเพื่อดูตัวอย่างในแท็บอื่น",
+        "delete_permanently": "ลบอย่างถาวร",
+        "delete_calendar": "ลบปฏิทิน",
+        "edit_message": "แก้ไขข้อความ",
+        "empty_trash": "ถังขยะว่างเปล่า",
+        "move_to_root": "ย้ายไปที่รูท",
+        "new_calendar": "ปฏิทินใหม่",
+        "send_cancellation": "ส่งการยกเลิก",
+        "share_calendar": "แชร์ปฏิทิน",
+        "calendar_access_share": "แชร์การเข้าถึงปฏิทิน",
+        "edit_calendar_properties": "แก้ไขคุณสมบัติของปฏิทิน",
+        "save_to_preview": "บันทึกเพื่อดูตัวอย่าง"
+    },
+    "event": {
+        "action": {
+            "accept": "ยอมรับ",
+            "edit": "แก้ไข",
+            "move": "ย้าย",
+            "restore": "การกู้คืนข้อมูล (Restore)",
+            "trash": "ลบ",
+            "no": "ไม่",
+            "yes": "ใช่",
+            "tentative": "ไม่แน่นอน",
+            "decline": "ปฏิเสธ",
+            "expand": "เปิดใน Displayer"
+        }
+    },
+    "settings": {
+        "options": {
+            "show_reminder": {
+                "never": "ไม่มี",
+                "all_time": "ตลอดช่วงเวลาของเหตุการณ์",
+                "day_before": "{{count}} วันก่อน",
+                "hour_before": "{{count}} ชั่วโมงก่อน",
+                "week_before": "{{count}} สัปดาห์ก่อน",
+                "minute_before": "{{count}} นาทีก่อน"
+            },
+            "dflt_vsblty_opt": {
+                "public": "สาธารณะ",
+                "private": "ส่วนตัว"
+            },
+            "default_cal_opts": {
+                "calendar": "ปฏิทิน"
+            },
+            "default_view": {
+                "list": "มุมมองรายการ",
+                "month": "มุมมองรายเดือน",
+                "day": "มุมมองรายวัน",
+                "week": "มุมมองรายสัปดาห์",
+                "work_week": "มุมมองสัปดาห์การทำงาน"
+            },
+            "free_busy_opts": {
+                "allow_following": "อนุญาตให้ผู้ใช้ภายในต่อไปนี้เท่านั้นที่สามารถเห็นข้อมูลว่าง/ไม่ว่างของฉันได้",
+                "allow_none": "ไม่ให้ใครเห็นข้อมูลว่าง/ไม่ว่างของฉัน",
+                "allow_all": "อนุญาตให้ผู้ใช้ทั้งภายในและภายนอกเห็นข้อมูลว่าง/ไม่ว่างของฉันได้",
+                "allow_domain": "อนุญาตให้เฉพาะผู้ใช้โดเมนของฉันเท่านั้นที่สามารถมองเห็นข้อมูลว่าง/ไม่ว่างของฉันได้",
+                "allow_internal": "อนุญาตให้เฉพาะผู้ใช้โดเมนภายในเท่านั้นที่สามารถเห็นข้อมูลว่าง/ไม่ว่างของฉันได้"
+            },
+            "invt_opts": {
+                "allow_following": "อนุญาตให้เฉพาะผู้ใช้ภายในต่อไปนี้เท่านั้นที่สามารถเชิญฉันเข้าร่วมการประชุมได้",
+                "allow_none": "ไม่ให้ใครชวนฉันเข้าประชุม",
+                "allow_all": "อนุญาตให้ผู้ใช้ทั้งภายในและภายนอกสามารถเชิญฉันเข้าร่วมการประชุมได้",
+                "allow_internal": "อนุญาตเฉพาะผู้ใช้ภายในเท่านั้นที่สามารถเชิญฉันเข้าร่วมการประชุมได้"
+            },
+            "timezones": {
+                "chennai": "GMT +05:30 เจนไน, โกลกาตา, มุมไบ, นิวเดลี",
+                "egypt": "GMT +02:00 อียิปต์",
+                "amsterdam": "GMT +01:00 อัมสเตอร์ดัม, เบอร์ลิน, เบิร์น, โรม, สตอกโฮล์ม, เวียนนา"
+            },
+            "weekdays": {
+                "friday": "วันศุกร์",
+                "monday": "วันจันทร์",
+                "saturday": "วันเสาร์",
+                "sunday": "วันอาทิตย์",
+                "thursday": "วันพฤหัสบดี",
+                "tuesday": "วันอังคาร",
+                "wednesday": "วันพุธ"
+            }
+        },
+        "label": {
+            "flash_browser_title": "แฟลชชื่อเบราว์เซอร์",
+            "forward_invites": "ส่งต่อคำเชิญ",
+            "default_appt_dur": "ระยะเวลาการนัดหมายเริ่มต้น",
+            "default_calendar": "ปฏิทินเริ่มต้น",
+            "delete_invt_on_rply": "ลบคำเชิญเมื่อตอบกลับ",
+            "enter_email": "ใส่ที่อยู่อีเมล",
+            "invitation_response": "การตอบรับคำเชิญ",
+            "show_popup_notification": "แสดงการแจ้งเตือนแบบป๊อปอัป",
+            "show_reminders": "แสดงการเตือนความจำ",
+            "show_timezones": "แสดงเขตเวลาขณะสร้างการนัดหมายใหม่",
+            "span_time": "ช่วงเวลา",
+            "enable_reminder_sound": "เล่นเสียง (จำเป็นต้องใช้ปลั๊กอิน QuickTime หรือ Windows Media)",
+            "show_rmndr_past_due_meetings": "แสดงการเตือนความจำสำหรับการประชุมที่เลยกำหนด",
+            "snd_autorply_users": "ส่งการตอบกลับอัตโนมัติไปยังผู้ใช้ที่ถูกปฏิเสธไม่ให้ส่งคำเชิญถึงฉัน"
+        },
+        "invalid_email": "อีเมลไม่ถูกต้อง",
+        "ical_note": "Apple iCal สามารถกำหนดค่าการเข้าถึงปฏิทินของคุณโดยใช้โปรโตคอล CalDAV เมื่อเปิดใช้งานการตั้งค่านี้ ปฏิทินที่แชร์จะแสดงในแท็บ Deligation ของบัญชี ical ดังนั้นคุณจึงสามารถมอบสิทธิ์การเข้าถึงปฏิทินของคุณให้กับผู้ใช้รายอื่นได้",
+        "permissions_note": "ผู้ใช้ด้านล่างต้องอยู่ในระบบอีเมลนี้ (zextras.com) คุณสามารถใช้ที่อยู่อีเมลแบบเต็มหรือเพียงแค่ชื่อผู้ใช้ก็ได้"
+    },
+    "folder": {
+        "modal": {
+            "move": {
+                "title": "ย้าย",
+                "body": {
+                    "message3": "เลือกปฏิทินเพื่อย้ายการนัดหมายไปที่:"
+                },
+                "footer": "ว่างเปล่า",
+                "input": {
+                    "filter": "กรองปฏิทิน"
+                },
+                "new": "ปฏิทินใหม่"
+            },
+            "restore": {
+                "title": "การกู้คืนข้อมูล (Restore)",
+                "footer": "สร้างและกู้คืน"
+            },
+            "delete": {
+                "footer": "ลบ",
+                "title": "ลบ"
+            },
+            "new": {
+                "duplicate_warning": "มีปฏิทินชื่อนี้แล้ว",
+                "footer": "สร้าง",
+                "title2": "การสร้างปฏิทินใหม่"
+            },
+            "item": {
+                "empty": "ว่างเปล่า"
+            },
+            "footer": {
+                "go_back": "ย้อนกลับ"
+            }
+        },
+        "share_info": "แชร์ข้อมูล"
+    },
+    "items": {
+        "second": "วินาที",
+        "day": "วัน",
+        "first": "ลำดับแรก",
+        "fourth": "อันดับสี่",
+        "last": "สุดท้าย",
+        "third": "ลำดับสาม",
+        "weekend_day": "วันสุดสัปดาห์",
+        "working_day": "วันทำงาน"
+    },
+    "months": {
+        "december": "ธันวาคม",
+        "february": "กุมภาพันธ์",
+        "july": "กรกฎาคม",
+        "june": "มิถุนายน",
+        "march": "มีนาคม",
+        "may": "พฤษภาคม",
+        "november": "พฤศจิกายน",
+        "october": "ตุลาคม",
+        "september": "กันยายน",
+        "january": "มกราคม",
+        "april": "เมษายน",
+        "august": "สิงหาคม"
+    },
+    "of": "ของ",
+    "owner": "เจ้าของ",
+    "read": "อ่าน",
+    "reminder": {
+        "never": "ไม่มี",
+        "at_time_of_event": "ในช่วงเวลาของเหตุการณ์",
+        "day_before": "{{count}} วันก่อน",
+        "hour_before": "{{count}} ชั่วโมงก่อน",
+        "minute_before": "{{count}} นาทีก่อน",
+        "week_before": "{{count}} สัปดาห์ก่อน"
+    },
+    "repeat": {
+        "custom": "กำหนดเอง",
+        "none": "ไม่มี",
+        "customize": "กำหนดเอง",
+        "daily": "ทุกวัน",
+        "everyDay": "ทุกวัน",
+        "everyWeek": "ทุกสัปดาห์",
+        "everyYear": "ทุกปี",
+        "monthly": "ทุกเดือน",
+        "weekly": "ทุกสัปดาห์",
+        "yearly": "ทุกปี",
+        "everyMonth": "ทุกเดือน"
+    },
+    "snackbar": {
+        "invite": {
+            "error": "ผิดพลาด"
+        },
+        "error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+        "new_time_proposed_succes": "เสนอเวลาใหม่",
+        "proposed_time_accepted": "คุณยอมรับเวลาที่เสนอ",
+        "proposed_time_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+        "share_folder_success": "ปฏิทินนี้ถูกแชร์",
+        "url_copied": "{{title}} คัดลอกแล้ว",
+        "new_time_proposed_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง"
+    },
+    "success": "สำเร็จ",
+    "add": "เพิ่ม",
+    "appointments": "การนัดหมาย",
+    "create": "สร้าง",
+    "delete": "ลบ",
+    "share": {
+        "options": {
+            "share_calendar_role": {
+                "none": "ไม่มี",
+                "admin": "ผู้ดูแลระบบ (สามารถดู, แก้ไข, เพิ่ม, ลบ, และจัดการได้)",
+                "manager": "ผู้จัดการ (สามารถดู, แก้ไข, เพิ่ม, และลบ)",
+                "viewer": "ผู้ชม (สามารถดูได้)"
+            },
+            "share_calendar_with": {
+                "internal_users_groups": "ผู้ใช้ภายในหรือกลุ่ม",
+                "external_guests": "ผู้ใช้ภายนอก (ดูเท่านั้น)",
+                "public": "สาธารณะ (ดูเท่านั้น, ไม่ต้องใช้รหัสผ่าน)"
+            }
+        },
+        "note": {
+            "share_note": "ข้อความมาตรฐานจะแสดงชื่อของคุณ, ชื่อของรายการที่แชร์, สิทธิ์ที่มอบให้กับผู้รับ, และข้อมูลการลงชื่อเข้าใช้งาน หากจำเป็น"
+        },
+        "label": {
+            "send_notification": "ส่งการแจ้งเตือนเกี่ยวกับการแชร์นี้",
+            "allow_to_see_private_appt": "อนุญาตให้ผู้ใช้เหล่านี้ดูการนัดหมายส่วนตัวของฉันได้"
+        },
+        "placeholder": {
+            "recipients_address": "ที่อยู่อีเมลของผู้รับ",
+            "standard_message": "เพิ่มบันทึกในข้อความมาตรฐาน"
+        }
+    },
+    "message": {
+        "you": "คุณ",
+        "you_sure_move_calendar_trash": "คุณแน่ใจหรือไม่ว่าต้องการลบปฏิทิน \"{{name}}\"?",
+        "are_organizer": "เป็นผู้จัด",
+        "snackbar": {
+            "appointment_permanently_deleted_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+            "appt_moved": "ย้ายการนัดหมายไปที่ เรียบร้อยแล้ว ",
+            "appointment_permanently_deleted_succesfully": "การลบอย่างถาวรเสร็จสมบูรณ์แล้ว",
+            "appt_deleted_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+            "appt_moved_to_trash": "ย้ายการนัดหมายไปที่ถังขยะแล้ว",
+            "calendar_delete_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+            "calendar_deleted_successfully": "ลบปฏิทินเรียบร้อยแล้ว",
+            "calendar_moved_to_root_folder_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+            "calendar_moved_to_trash": "ปฏิทินย้ายไปที่ถังขยะแล้ว",
+            "edit_calendar": "บันทึกการแก้ไขอย่างถูกต้อง",
+            "edit_calendar_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+            "invite": {
+                "accept": "คุณได้ตอบกลับว่ายอมรับ",
+                "error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+                "decline": "คุณได้ตอบกลับว่า: ปฏิเสธ",
+                "tentative": "คุณได้ตอบกลับว่า: ไม่แน่นอน"
+            },
+            "new_calendar_created": "สร้างปฏิทินใหม่แล้ว",
+            "settings_saved": "บันทึกการแก้ไขอย่างถูกต้อง",
+            "appt_moved_error": "เกิดข้อผิดพลาดบางอย่าง การนัดหมายไม่ถูกย้าย โปรดลองใหม่อีกครั้ง",
+            "appt_restored": "กู้คืนการนัดหมายไปที่ เรียบร้อยแล้ว",
+            "calendar_moved_to_root_folder": "ปฏิทินย้ายไปที่โฟลเดอร์รูทแล้ว",
+            "calendar_moved_to_trash_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+            "new_calendar_create_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง"
+        },
+        "share_calendar_url_note2": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้ <br/> คุณสามารถค้นหาลิงก์เหล่านั้นได้ด้วยการคลิกขวาที่รายการปฏิทินของคุณ",
+        "delete_all_occurences": "ลบเหตุการณ์ทั้งหมด",
+        "delete_future_occurences": "ลบอินสแตนซ์นี้และเหตุการณ์ในอนาคตทั้งหมด",
+        "have_not_sent_invitation": "คุณยังไม่ได้ส่งคำเชิญไปยังผู้เข้าร่วม",
+        "invite_has_no_message": "คำเชิญนี้ไม่มีข้อความ",
+        "invited_you": "เชิญคุณเข้าร่วมกิจกรรมแล้ว",
+        "meeting_canceled": "การประชุมต่อไปนี้ถูกยกเลิกแล้ว",
+        "modal": {
+            "delete": {
+                "sure_delete_appointment_permanently": "การลบการนัดหมายนี้อย่างถาวร คุณจะไม่สามารถกู้คืนได้อีก ดำเนินการต่อหรือไม่?",
+                "sure_delete_appointment_all_instances_permanently": "ซึ่งจะลบการนัดหมายนี้ทั้งหมดและคุณจะไม่สามารถกู้คืนได้อีก ดำเนินการต่อหรือไม่?"
+            }
+        },
+        "somebody_invited_you": "<strong>{{somebody}}</strong> ส่งคำเชิญให้คุณ",
+        "sure_to_delete_all_occurences_appointment": "คุณแน่ใจหรือไม่ว่าต้องการลบการนัดหมายนี้ทั้งหมด?",
+        "sure_to_delete_appointment_permanently": "คุณแน่ใจหรือไม่ว่าต้องการลบการนัดหมายนี้อย่างถาวร?",
+        "want_to_send_cancellation_msg": "คุณต้องการส่งข้อความยกเลิกไปยังผู้เข้าร่วมหรือไม่?",
+        "you_are_organizer": "คุณเป็นผู้จัดงาน",
+        "you_will_see_the_subject_here": "คุณจะเห็นหัวข้อของการนัดหมายนี้ที่นี่",
+        "delete_future_occurences_warning": "ซึ่งจะลบข้อยกเว้นทั้งหมด (ก่อนและหลังอินสแตนซ์นี้) ในซีรีส์ด้วย",
+        "share_calendar_url_note": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้",
+        "somebody_is_organizer": "<strong>{{somebody}}</strong> เป็นผู้จัดงาน",
+        "sure_to_delete_appointment": "คุณแน่ใจหรือไม่ว่าต้องการลบการนัดหมาย?",
+        "want_to_edit_cancellation_msg": "คุณต้องการแก้ไขข้อความยกเลิกการนัดหมายหรือไม่?",
+        "you_sure_delete_calendar": "คุณแน่ใจหรือไม่ว่าต้องการลบปฏิทิน \"{{name}}\" อย่างถาวร?",
+        "share_calendar_url_msg": "คุณสามารถแชร์ {{title}} กับผู้ร่วมงานได้อย่างรวดเร็ว โดยใช้ URL เหล่านี้:"
+    },
+    "type": "รูปแบบ",
+    "tooltip": {
+        "show_optionals": "แสดงตัวเลือก",
+        "add_attachments": "เพิ่มไฟล์แนบ",
+        "copy_outlook_url": "คัดลอก URL ของ Outlook",
+        "copy_vector_url": "คัดลอก URL ของ View",
+        "copy_ics_url": "คัดลอก URL ICS",
+        "enable_disable_rich_text": "เปิด/ปิดการใช้งานตัวแก้ไข Rich Text"
+    },
+    "button": {
+        "customize_modal": "เปิด Customize Modal"
+    },
+    "composer": {
+        "attachment": {
+            "drive": "เพิ่มจาก Drive",
+            "contactsMod": "เพิ่มบัตรผู้ติดต่อ",
+            "draganddrop": {
+                "content": "วางไฟล์แนบของคุณที่นี่ เพื่อเพิ่มลงในการนัดหมายได้อย่างรวดเร็ว",
+                "title": "โหมด Drag&Drop"
+            },
+            "local": "เพิ่มจาก local"
+        }
+    },
+    "administer": "ดูแล",
+    "allowed_actions": "การกระทำที่ได้รับอนุญาต",
+    "find_shares": "ค้นหาการแชร์",
+    "edit_share_properties": "แก้ไขคุณสมบัติการแชร์",
+    "find_calendar_shares": "ค้นหาการแชร์ปฏิทิน",
+    "shared_folders": "ปฏิทินที่ใช้ร่วมกัน",
+    "cannot_edit_name": "คุณไม่สามารถแก้ไขชื่อปฏิทินระบบได้",
+    "freebusy": "FreeBusy",
+    "insert": "ใส่",
+    "private": "ส่วนตัว",
+    "search": {
+        "results_for": "ผลลัพธ์สำหรับ:",
+        "organized_by": "จัดโดย"
+    },
+    "remove_from_this_list": "ลบออกจากรายการนี้",
+    "revoke_access": "เพิกถอนการเข้าถึง",
+    "revoke_with_custom_message": "ถอนการเข้าถึงโดยส่งการแจ้งเตือนแบบกำหนดเอง",
+    "revoke_without_notification": "ถอนการเข้าถึงโดยไม่ต้องส่งการแจ้งเตือน",
+    "workflow": "เวิร์กโฟลว์",
+    "write": "เขียน",
+    "share_invite_resent": "ส่งการแชร์คำเชิญอีกครั้ง",
+    "shared_items": "รายการที่แชร์",
+    "shares_info": "แชร์ข้อมูล",
+    "resend_mail_notification_about_this_share": "ส่งการแจ้งเตือนทางอีเมลเกี่ยวกับการแชร์นี้อีกครั้ง",
+    "revoke_without_custom_message": "ถอนการเข้าถึงโดยส่งการแจ้งเตือนแบบมาตรฐาน"
+}
