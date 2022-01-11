@@ -48,9 +48,6 @@ export default function EditorSmallView({
 	proposeNewTime
 }) {
 	const [t] = useTranslation();
-
-	const [firstTime, setFirstTime] = useState(true);
-
 	const title = useMemo(() => (data && data.title !== '' ? data.title : 'No Subject'), [data]);
 	const settings = useUserSettings();
 	const account = useUserAccount();
@@ -192,12 +189,6 @@ export default function EditorSmallView({
 		},
 		[account, callbacks, list]
 	);
-
-	useEffect(() => {
-		if (firstTime && data?.resource?.richText) {
-			setFirstTime(false);
-		}
-	}, [data, firstTime]);
 
 	const textAreaLabel = useMemo(
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
