@@ -24,7 +24,7 @@ import {
 	Select,
 	Text
 } from '@zextras/zapp-ui';
-import { map, find, filter, flatten, findIndex } from 'lodash';
+import { map, find, filter, flatten, findIndex, throttle } from 'lodash';
 import { useIntegratedComponent, useUserAccount, useUserSettings } from '@zextras/zapp-shell';
 import SaveSendButtons from './components/save-send-buttons';
 import DataRecap from './components/data-recap';
@@ -282,6 +282,16 @@ export default function EditorCompleteView({
 			setTitle(title);
 		}
 	}, [title, setTitle]);
+
+	const updateInputField = useCallback(
+		(fn) =>
+			throttle(fn, 250, {
+				trailing: true,
+				leading: false
+			}),
+		[]
+	);
+
 	return (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large', top: 'small' }}
@@ -344,12 +354,12 @@ export default function EditorCompleteView({
 							<InputRow
 								label={t('label.event_title', 'Event title')}
 								defaultValue={data.title}
-								onChange={callbacks.onSubjectChange}
+								onChange={updateInputField(callbacks.onSubjectChange)}
 							/>
 							<InputRow
 								label={t('label.location', 'Location')}
 								defaultValue={data.resource.location}
-								onChange={callbacks.onLocationChange}
+								onChange={updateInputField(callbacks.onLocationChange)}
 							/>
 							<ShiftedRow>
 								<AttendeesContainer>
@@ -453,19 +463,23 @@ export default function EditorCompleteView({
 					<Container minHeight="200px" padding={{ vertical: 'large' }}>
 						{data.resource.isRichText ? (
 							<EditorWrapper>
-								<RichTextEditor value={richText} onEditorChange={onEditorChange} minHeight={200} />
+								<RichTextEditor
+									value={richText}
+									onEditorChange={updateInputField(onEditorChange)}
+									minHeight={200}
+								/>
 							</EditorWrapper>
 						) : (
 							<TextArea
 								placeholder={textAreaLabel}
 								value={data.resource.plainText}
-								onChange={(ev) => {
+								onChange={updateInputField((ev) => {
 									// eslint-disable-next-line no-param-reassign
 									ev.target.style.height = 'auto';
 									// eslint-disable-next-line no-param-reassign
 									ev.target.style.height = `${25 + ev.target.scrollHeight}px`;
 									callbacks.onTextChange([ev.target.value, ev.target.value]);
-								}}
+								})}
 							/>
 						)}
 					</Container>

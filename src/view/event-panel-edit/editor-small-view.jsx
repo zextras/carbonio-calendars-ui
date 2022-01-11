@@ -390,9 +390,7 @@ export default function EditorSmallView({
 									<EditorWrapper>
 										<RichTextEditor
 											value={data.resource.richText}
-											onEditorChange={updateInputField((ev) => {
-												callbacks.onTextChange(ev);
-											})}
+											onEditorChange={updateInputField(callbacks.onTextChange)}
 											minHeight={200}
 										/>
 									</EditorWrapper>
