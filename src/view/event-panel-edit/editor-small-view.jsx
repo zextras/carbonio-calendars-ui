@@ -50,10 +50,6 @@ export default function EditorSmallView({
 	const [t] = useTranslation();
 
 	const [firstTime, setFirstTime] = useState(true);
-	const [description, setDescription] = useState([
-		data?.resource.plainText,
-		data?.resource.richText
-	]);
 
 	const title = useMemo(() => (data && data.title !== '' ? data.title : 'No Subject'), [data]);
 	const settings = useUserSettings();
@@ -178,18 +174,6 @@ export default function EditorSmallView({
 		setDropZoneEnable(false);
 	};
 
-	const editorTextChange = useMemo(
-		() =>
-			throttle((text) => callbacks.onTextChange(text), 250, {
-				trailing: true,
-				leading: false
-			}),
-		[callbacks]
-	);
-	const updateDescription = useCallback((text) => {
-		setDescription(text);
-	}, []);
-
 	const onOrganizerChange = useCallback(
 		(val) => {
 			const selectedOrganizer = find(list, { value: val });
@@ -211,7 +195,6 @@ export default function EditorSmallView({
 
 	useEffect(() => {
 		if (firstTime && data?.resource?.richText) {
-			setDescription([data?.resource.plainText, data?.resource.richText]);
 			setFirstTime(false);
 		}
 	}, [data, firstTime]);
@@ -220,6 +203,16 @@ export default function EditorSmallView({
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
 		[t]
 	);
+
+	const updateInputField = useCallback(
+		(fn) =>
+			throttle(fn, 250, {
+				trailing: true,
+				leading: false
+			}),
+		[]
+	);
+
 	return (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large' }}
@@ -282,14 +275,14 @@ export default function EditorSmallView({
 							<InputRow
 								label={t('label.event_title', 'Event title')}
 								defaultValue={data.title}
-								onChange={callbacks.onSubjectChange}
+								onChange={updateInputField(callbacks.onSubjectChange)}
 								disabled={updateAppTime}
 							/>
 
 							<InputRow
 								label={t('label.location', 'Location')}
 								defaultValue={data.resource.location}
-								onChange={callbacks.onLocationChange}
+								onChange={updateInputField(callbacks.onLocationChange)}
 								disabled={updateAppTime}
 							/>
 
@@ -396,26 +389,24 @@ export default function EditorSmallView({
 								{data.resource.isRichText ? (
 									<EditorWrapper>
 										<RichTextEditor
-											value={description[1]}
-											onEditorChange={(ev) => {
-												updateDescription(ev);
-												editorTextChange(ev);
-											}}
+											value={data.resource.richText}
+											onEditorChange={updateInputField((ev) => {
+												callbacks.onTextChange(ev);
+											})}
 											minHeight={200}
 										/>
 									</EditorWrapper>
 								) : (
 									<TextArea
 										placeholder={textAreaLabel}
-										value={description[0]}
-										onChange={(ev) => {
+										value={data.resource.plainText}
+										onChange={updateInputField((ev) => {
 											// eslint-disable-next-line no-param-reassign
 											ev.target.style.height = 'auto';
 											// eslint-disable-next-line no-param-reassign
 											ev.target.style.height = `${25 + ev.target.scrollHeight}px`;
-											updateDescription([ev.target.value, ev.target.value]);
 											callbacks.onTextChange([ev.target.value, ev.target.value]);
-										}}
+										})}
 									/>
 								)}
 							</Container>
