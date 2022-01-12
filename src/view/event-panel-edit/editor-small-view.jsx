@@ -53,6 +53,7 @@ export default function EditorSmallView({
 	const account = useUserAccount();
 	const utils = useContext(EventContext);
 	const [dropZoneEnable, setDropZoneEnable] = useState(false);
+
 	useLayoutEffect(() => {
 		setTitle && setTitle(title);
 	}, [title, setTitle, data, callbacks]);
@@ -62,6 +63,11 @@ export default function EditorSmallView({
 		event.preventDefault();
 		setDropZoneEnable(true);
 	};
+
+	useEffect(() => {
+		console.clear();
+		console.log(data);
+	}, [data]);
 
 	const [defaultIdentity, setDefaultIdentity] = useState({});
 	const [list, setList] = useState([]);
@@ -195,15 +201,6 @@ export default function EditorSmallView({
 		[t]
 	);
 
-	const updateInputField = useCallback(
-		(fn) =>
-			throttle(fn, 250, {
-				trailing: true,
-				leading: false
-			}),
-		[]
-	);
-
 	return (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large' }}
@@ -266,14 +263,14 @@ export default function EditorSmallView({
 							<InputRow
 								label={t('label.event_title', 'Event title')}
 								defaultValue={data.title}
-								onChange={updateInputField(callbacks.onSubjectChange)}
+								onChange={callbacks.onSubjectChange}
 								disabled={updateAppTime}
 							/>
 
 							<InputRow
 								label={t('label.location', 'Location')}
 								defaultValue={data.resource.location}
-								onChange={updateInputField(callbacks.onLocationChange)}
+								onChange={callbacks.onLocationChange}
 								disabled={updateAppTime}
 							/>
 
@@ -381,7 +378,7 @@ export default function EditorSmallView({
 									<EditorWrapper>
 										<RichTextEditor
 											value={data.resource.richText}
-											onEditorChange={updateInputField(callbacks.onTextChange)}
+											onEditorChange={callbacks.onTextChange}
 											minHeight={200}
 										/>
 									</EditorWrapper>
@@ -389,13 +386,13 @@ export default function EditorSmallView({
 									<TextArea
 										placeholder={textAreaLabel}
 										value={data.resource.plainText}
-										onChange={updateInputField((ev) => {
+										onChange={(ev) => {
 											// eslint-disable-next-line no-param-reassign
 											ev.target.style.height = 'auto';
 											// eslint-disable-next-line no-param-reassign
 											ev.target.style.height = `${25 + ev.target.scrollHeight}px`;
 											callbacks.onTextChange([ev.target.value, ev.target.value]);
-										})}
+										}}
 									/>
 								)}
 							</Container>

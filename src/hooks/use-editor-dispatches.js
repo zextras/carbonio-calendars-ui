@@ -9,9 +9,10 @@ import {
 	useUserAccounts
 } from '@zextras/zapp-shell';
 import { useDispatch } from 'react-redux';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { SnackbarManagerContext } from '@zextras/zapp-ui';
 import { useTranslation } from 'react-i18next';
+import { throttle } from 'lodash';
 import { uploadParts } from '../store/actions/upload-parts';
 import {
 	editAppointmentData,
@@ -31,14 +32,25 @@ export const useEditorDispatches = (id, close) => {
 	const accounts = useUserAccounts();
 	const { onSave, onSend } = useOnSaveAndOnSend(id, close);
 
-	const onSubjectChange = useCallback(
-		(e) => {
-			dispatch(editAppointmentData({ id, mod: { title: e.target.value } }));
-		},
+	const onSubjectChange = useMemo(
+		() =>
+			throttle((e) => dispatch(editAppointmentData({ id, mod: { title: e.target.value } })), 250, {
+				trailing: true,
+				leading: false
+			}),
 		[dispatch, id]
 	);
-	const onLocationChange = useCallback(
-		(e) => dispatch(editAppointmentData({ id, mod: { resource: { location: e.target.value } } })),
+	const onLocationChange = useMemo(
+		() =>
+			throttle(
+				(e) =>
+					dispatch(editAppointmentData({ id, mod: { resource: { location: e.target.value } } })),
+				250,
+				{
+					trailing: true,
+					leading: false
+				}
+			),
 		[dispatch, id]
 	);
 	const onOrganizerChange = useCallback(
@@ -156,9 +168,17 @@ export const useEditorDispatches = (id, close) => {
 		[dispatch, id]
 	);
 
-	const onTextChange = useCallback(
-		([plainText, richText]) =>
-			dispatch(editAppointmentData({ id, mod: { resource: { richText, plainText } } })),
+	const onTextChange = useMemo(
+		() =>
+			throttle(
+				([plainText, richText]) =>
+					dispatch(editAppointmentData({ id, mod: { resource: { richText, plainText } } })),
+				250,
+				{
+					trailing: true,
+					leading: false
+				}
+			),
 		[dispatch, id]
 	);
 
