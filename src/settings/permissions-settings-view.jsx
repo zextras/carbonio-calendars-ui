@@ -42,7 +42,7 @@ export default function PermisionsSettings({
 					<Text overflow="break-word">
 						{t(
 							'settings.permissions_note',
-							'Users provide below must be on this mail system (zextras.com).You may use the full e-mail address, or just the username.'
+							'Users provide below must be on this mail system (zextras.com). You may use the full e-mail address or just the username.'
 						)}
 					</Text>
 				</Row>
@@ -196,7 +196,7 @@ export default function PermisionsSettings({
 					}
 					label={t(
 						'settings.label.snd_autorply_users',
-						'Send auto-reply to users who are denied from inviting me'
+						'Send auto-reply to users who are not allowed to invite me'
 					)}
 				/>
 			</Row>

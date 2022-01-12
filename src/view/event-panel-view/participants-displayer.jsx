@@ -133,7 +133,7 @@ export default function ParticipantsDisplayer({ participants }) {
 			<Dropdown
 				label={t('participants.DE_with_count', {
 					count: participants.DE?.length ?? 0,
-					defaultValue: "Didn't answer (1)",
+					defaultValue: "Didn't answer ({{count}})",
 					defaultValue_plural: "Didn't answer ({{count}})"
 				}).toUpperCase()}
 				participants={participants.DE}

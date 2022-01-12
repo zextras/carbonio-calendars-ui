@@ -200,7 +200,7 @@ export default function ParticipantsDisplayer({ participants = [], event }) {
 								i18nKey="participants.Attendees_accepted_count"
 								count={participants.AC?.length ?? 0}
 								values={{ count: participants.AC?.length ?? 0 }}
-								defaults="<strong>1 attendee </strong> have accepted"
+								defaults="<strong>{{count}} attendee </strong> has accepted"
 							/>
 						}
 						t={t}
@@ -217,7 +217,7 @@ export default function ParticipantsDisplayer({ participants = [], event }) {
 								i18nKey="participants.Attendees_not_answered_count"
 								count={participants.NE?.length ?? 0}
 								values={{ count: participants.NE?.length ?? 0 }}
-								defaults="<strong>1 attendee </strong> has not answered"
+								defaults="<strong>{{count}} attendee </strong> has not answered"
 							/>
 						}
 						t={t}
@@ -234,7 +234,7 @@ export default function ParticipantsDisplayer({ participants = [], event }) {
 								i18nKey="participants.Attendees_tentative_count"
 								count={participants.TE?.length ?? 0}
 								values={{ count: participants.TE?.length ?? 0 }}
-								defaults="<strong>1 attendee </strong> has accepted as tentative"
+								defaults="<strong>{{count}} attendee </strong> has accepted as tentative"
 							/>
 						}
 						t={t}
@@ -251,7 +251,7 @@ export default function ParticipantsDisplayer({ participants = [], event }) {
 								i18nKey="participants.Attendees_declined_count"
 								count={participants.DE?.length ?? 0}
 								values={{ count: participants.DE?.length ?? 0 }}
-								defaults="<strong>1 attendee </strong> has declined"
+								defaults="<strong>{{count}} attendee </strong> has declined"
 							/>
 						}
 						t={t}

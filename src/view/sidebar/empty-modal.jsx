@@ -22,9 +22,9 @@ export const EmptyModal = ({ onClose }) => {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'success',
+					type: 'info',
 					hideButton: true,
-					label: t('success', 'Success'),
+					label: t('label.trash_emptied', 'Trash emptied successfully'),
 					autoHideTimeout: 3000
 				});
 			} else {
@@ -33,7 +33,7 @@ export const EmptyModal = ({ onClose }) => {
 					replace: true,
 					type: 'error',
 					hideButton: true,
-					label: t('snackbar.invite.error', 'Error'),
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000
 				});
 			}
