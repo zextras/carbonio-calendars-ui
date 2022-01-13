@@ -23,7 +23,9 @@ const generateAppointmentDeletedSnackbar = (
 			key: 'send',
 			replace: true,
 			type: 'info',
-			label: t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash'),
+			label: undoAction
+				? t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash')
+				: t('message.snackbar.appointment_permanently_deleted', 'Appointment permanently deleted'),
 			autoHideTimeout: 3000,
 			hideButton: undoAction,
 			actionLabel: t('label.undo', 'Undo'),
