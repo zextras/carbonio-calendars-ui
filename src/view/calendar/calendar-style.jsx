@@ -323,7 +323,7 @@ export default createGlobalStyle`
 
 	.rbc-timeslot-group {
 		border-bottom: 1px solid ${({ theme }) => theme.palette.gray6.regular};
-		min-height: 40px;
+		min-height: 80px;
 		display: flex;
 		flex-flow: column nowrap; }
 
