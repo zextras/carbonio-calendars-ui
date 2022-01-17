@@ -8,26 +8,34 @@ import moment from 'moment';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { TFunction } from 'i18next';
 import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
 import { deleteEvent, sendResponse } from './delete-actions';
 import { moveAppointmentRequest } from '../../../store/actions/move-appointment';
+import { SnackbarArgumentType } from '../../../types/delete-appointment';
+import { EventType } from '../../../types/event';
+import { Invite } from '../../../types/store/invite';
 
 const generateAppointmentDeletedSnackbar = (
-	res: any,
-	t: any,
-	createSnackbar: any,
+	res: { type: string | string[] },
+	t: TFunction,
+	createSnackbar: (obj: SnackbarArgumentType) => void,
 	undoAction?: () => void
-): any => {
+): void => {
 	if (res.type.includes('fulfilled')) {
 		createSnackbar({
 			key: 'send',
 			replace: true,
 			type: 'info',
-			label: undoAction
-				? t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash')
-				: t('message.snackbar.appointment_permanently_deleted', 'Appointment permanently deleted'),
+			label:
+				undoAction === undefined
+					? t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash')
+					: t(
+							'message.snackbar.appointment_permanently_deleted',
+							'Appointment permanently deleted'
+					  ),
 			autoHideTimeout: 3000,
-			hideButton: undoAction,
+			hideButton: undoAction === undefined,
 			actionLabel: t('label.undo', 'Undo'),
 			onActionClick: () => (undoAction ? undoAction() : null)
 		});
@@ -45,9 +53,9 @@ const generateAppointmentDeletedSnackbar = (
 
 const generateAppointmentRestoredSnackbar = (
 	res: { type: string | string[] },
-	t: any,
-	createSnackbar: any
-): any => {
+	t: TFunction,
+	createSnackbar: (obj: SnackbarArgumentType) => void
+): void => {
 	if (res.type.includes('fulfilled')) {
 		createSnackbar({
 			key: 'send',
@@ -69,11 +77,29 @@ const generateAppointmentRestoredSnackbar = (
 	}
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const useDeleteActions = (event: any, invite: any, context: any): any => {
+type AccountContext = {
+	isInstance: boolean;
+	onClose: () => void;
+};
+
+type UseDeleteActionsType = {
+	deleteNonRecurrentEvent: (newMessage: object) => void;
+	deleteRecurrentInstance: (newMessage: object) => void;
+	deleteRecurrentSerie: (newMessage: object) => void;
+	toggleNotifyOrganizer: () => void;
+	toggleDeleteAll: () => void;
+	deleteAll: boolean;
+	notifyOrganizer: boolean;
+};
+
+export const useDeleteActions = (
+	event: EventType,
+	invite: Invite,
+	context: AccountContext
+): UseDeleteActionsType => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useContext(SnackbarManagerContext) as (obj: SnackbarArgumentType) => void;
 	const [deleteAll, setDeleteAll] = useState(true);
 	const [notifyOrganizer, setNotifyOrganizer] = useState(false);
 
@@ -98,7 +124,7 @@ export const useDeleteActions = (event: any, invite: any, context: any): any => 
 				)
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
-					.then((res: any) => {
+					.then((res: { type: string | string[] }) => {
 						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 					});
 			};
@@ -111,7 +137,7 @@ export const useDeleteActions = (event: any, invite: any, context: any): any => 
 				newMessage: newMessage?.text?.[0]
 			};
 			deleteEvent(event, invite, ctxt)
-				.then((res: any) => {
+				.then((res: { type: string | string[] }) => {
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreAppointment);
 				})
 				.then(
@@ -138,7 +164,7 @@ export const useDeleteActions = (event: any, invite: any, context: any): any => 
 				)
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
-					.then((res: any) => {
+					.then((res: { type: string | string[] }) => {
 						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 					});
 			};
@@ -184,7 +210,7 @@ export const useDeleteActions = (event: any, invite: any, context: any): any => 
 			deleteFunction()
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				.then((res: any) => {
+				.then((res: { type: string | string[] }) => {
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreRecurrentSeries);
 				})
 				.then(
@@ -218,7 +244,7 @@ export const useDeleteActions = (event: any, invite: any, context: any): any => 
 				s: moment(event.start).valueOf()
 			};
 			deleteEvent(event, invite, ctxt)
-				.then((res: any) => {
+				.then((res: { type: string | string[] }) => {
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar);
 				})
 				.then(
