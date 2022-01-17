@@ -4,10 +4,17 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { isNil } from 'lodash';
 import { ZimbraFolder } from '../types/zimbra';
 import { ZIMBRA_STANDARD_COLORS } from '../commons/zimbra-standard-colors';
 import { Calendar } from '../types/store/calendars';
 import { setCalendarColor } from './normalizations-utils';
+
+const setCalendarIcon = (folder: ZimbraFolder): string => {
+	if (folder.owner) return 'Share';
+	if (/#/.test(folder.f)) return 'Calendar2';
+	return 'CalendarOutline';
+};
 
 export const normalizeCalendar = (folder: ZimbraFolder): Calendar => ({
 	checked: /#/.test(folder.f),
@@ -21,15 +28,15 @@ export const normalizeCalendar = (folder: ZimbraFolder): Calendar => ({
 	parent: folder.l,
 	rid: folder.rid,
 	owner: folder.owner, // It's specified only if It's not the current user
-	icon: folder.owner ? 'Share' : 'Calendar2',
+	icon: setCalendarIcon(folder),
 	zid: folder.zid,
 	acl: folder.acl,
 	isShared: !!folder.owner
 });
 
 export const normalizePartialCalendar = (folder: ZimbraFolder): any => ({
-	checked: folder.f ? /#/.test(folder.f) : undefined,
-	freeBusy: folder.f ? /b/.test(folder.f) : undefined,
+	checked: !isNil(folder.f) ? /#/.test(folder.f) : undefined,
+	freeBusy: !isNil(folder.f) ? /b/.test(folder.f) : undefined,
 	appointments: folder.appt ?? [{ ids: '' }],
 	deletable: folder.deletable,
 	absFolderPath: folder.absFolderPath,
@@ -39,7 +46,7 @@ export const normalizePartialCalendar = (folder: ZimbraFolder): any => ({
 	parent: folder.l,
 	rid: folder.rid,
 	owner: folder.owner, // It's specified only if It's not the current user
-	icon: folder.owner ? 'Share' : 'Calendar2',
+	icon: setCalendarIcon(folder),
 	zid: folder.zid,
 	acl: folder.acl,
 	isShared: !!folder.owner

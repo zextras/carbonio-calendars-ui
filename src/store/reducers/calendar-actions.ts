@@ -73,8 +73,6 @@ export function folderActionPending(state: CalendarSlice, { payload, meta }: any
 			break;
 		case '!check':
 		case 'check':
-			state.calendars[id].checked = changes.checked;
-			state.status = 'updating';
 			break;
 		case '!grant': {
 			const newAcl = filter(state.calendars[id].acl.grant, (rights) => rights.zid !== zid);

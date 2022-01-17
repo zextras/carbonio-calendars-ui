@@ -70,7 +70,7 @@ const SharesItem = ({ item }) => (
 	</Container>
 );
 
-export default function SetMainMenuItems({ expanded }) {
+export default function OldSetMainMenuItems({ expanded }) {
 	const [t] = useTranslation();
 	const allCalendars = useSelector(selectAllCalendars);
 	const calendars = useSelector(selectCalendars);
@@ -87,7 +87,7 @@ export default function SetMainMenuItems({ expanded }) {
 		},
 		[appointments]
 	);
-
+	/* seems good */
 	const checkUncheckCalendarCbk = useCallback(
 		(data) =>
 			dispatch(folderAction(data)).then((res) => {
