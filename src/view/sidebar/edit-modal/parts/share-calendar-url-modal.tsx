@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, ReactElement, useContext } from 'react';
-import { useUserAccounts } from '@zextras/zapp-shell';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { Container, SnackbarManagerContext, Text, Padding } from '@zextras/carbonio-design-system';
 import { Trans } from 'react-i18next';
 import { ShareCalendarUrlProps } from '../../../../types/share-calendar';

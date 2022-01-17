@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
-import { useIntegratedComponent } from '@zextras/zapp-shell';
+import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { AttendeesContainer } from '../view/event-panel-edit/editor-complete-view';
 
 export default function PermisionsSettings({

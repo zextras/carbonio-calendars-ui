@@ -5,7 +5,7 @@
  */
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useCallback } from 'react';
-import { useAddBoardCallback } from '@zextras/zapp-shell';
+import { useAddBoardCallback } from '@zextras/carbonio-shell-ui';
 import { closeEventFn, editEventFn, moveToBardFn, openEventFn } from '../utils/actions-fn';
 
 export const useSearchActionsFn = (event) => {

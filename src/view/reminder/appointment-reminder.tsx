@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/zapp-shell';
+import { useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
 /* eslint-disable import/extensions */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */

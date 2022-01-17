@@ -5,7 +5,7 @@
  */
 import { pickBy, identity } from 'lodash';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/zapp-shell';
+import { soapFetch } from '@zextras/carbonio-shell-ui';
 
 export const getInvite = createAsyncThunk(
 	'invites/get invite',

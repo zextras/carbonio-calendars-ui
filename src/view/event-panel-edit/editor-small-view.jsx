@@ -23,7 +23,11 @@ import {
 	Text
 } from '@zextras/carbonio-design-system';
 import { map, throttle, find, filter, flatten, findIndex } from 'lodash';
-import { useUserAccount, useIntegratedComponent, useUserSettings } from '@zextras/zapp-shell';
+import {
+	useUserAccount,
+	useIntegratedComponent,
+	useUserSettings
+} from '@zextras/carbonio-shell-ui';
 import { AttendeesContainer, TextArea, EditorWrapper } from './editor-complete-view';
 
 import ExpandedButtons, { addAttachments } from './components/expanded-buttons';

@@ -9,7 +9,7 @@ import {
 	useRemoveCurrentBoard,
 	useReplaceHistoryCallback,
 	useUserAccount
-} from '@zextras/zapp-shell';
+} from '@zextras/carbonio-shell-ui';
 import { startsWith } from 'lodash';
 import { editAppointmentData } from '../store/slices/editor-slice';
 import { selectEditor } from '../store/selectors/editor';

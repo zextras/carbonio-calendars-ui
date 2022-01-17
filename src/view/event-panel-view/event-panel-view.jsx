@@ -7,7 +7,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Container } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { useReplaceHistoryCallback } from '@zextras/zapp-shell';
+import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import ParticipantsPart from './participants-part';
 import MessagePart from './message-part';

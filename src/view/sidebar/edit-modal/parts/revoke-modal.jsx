@@ -5,7 +5,7 @@
  */
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useUserAccounts } from '@zextras/zapp-shell';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import {
 	Checkbox,

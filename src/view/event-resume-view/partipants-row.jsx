@@ -5,7 +5,7 @@
  */
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useUserAccounts } from '@zextras/zapp-shell';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { Avatar, Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 

@@ -12,7 +12,7 @@ import {
 	Button,
 	Divider
 } from '@zextras/carbonio-design-system';
-import { useIntegratedFunction, useUserAccounts } from '@zextras/zapp-shell';
+import { useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';

@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useState } from 'react';
 import { Checkbox, Container, CustomModal, Padding, Text } from '@zextras/carbonio-design-system';
-import { Spinner } from '@zextras/zapp-shell';
+import { Spinner } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useInvite } from '../../hooks/use-invite';

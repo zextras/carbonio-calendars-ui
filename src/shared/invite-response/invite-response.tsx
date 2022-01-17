@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
 import { useTranslation } from 'react-i18next';
-import { useAddBoardCallback } from '@zextras/zapp-shell';
+import { useAddBoardCallback } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';

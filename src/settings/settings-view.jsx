@@ -9,7 +9,7 @@ import {
 	useReplaceHistoryCallback,
 	soapFetch,
 	editSettings
-} from '@zextras/zapp-shell';
+} from '@zextras/carbonio-shell-ui';
 import {
 	Container,
 	Padding,

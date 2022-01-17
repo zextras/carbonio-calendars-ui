@@ -6,7 +6,7 @@
 import { Container, Row, Text } from '@zextras/carbonio-design-system';
 import { useTranslation, Trans } from 'react-i18next';
 import React, { useMemo } from 'react';
-import { useUserAccounts } from '@zextras/zapp-shell';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 
 function calculateSize(participants) {

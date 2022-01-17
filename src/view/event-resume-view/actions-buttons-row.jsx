@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Button, Dropdown, Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import React, { useContext, useState, useCallback } from 'react';
 import { map, toUpper } from 'lodash';
-import { useReplaceHistoryCallback } from '@zextras/zapp-shell';
+import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { EventContext } from '../../commons/event-context';
