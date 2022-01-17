@@ -15,7 +15,7 @@ import {
 	SnackbarManagerContext,
 	Text,
 	Tooltip
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { ModalHeader } from '../../../../commons/modal-header';

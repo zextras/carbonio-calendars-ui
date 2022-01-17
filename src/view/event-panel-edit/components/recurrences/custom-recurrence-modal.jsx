@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo, useState } from 'react';
-import { Container, CustomModal, Padding, Select, Text } from '@zextras/zapp-ui';
+import { Container, CustomModal, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { pickBy, identity, toUpper, isNaN } from 'lodash';
 import { useTranslation } from 'react-i18next';

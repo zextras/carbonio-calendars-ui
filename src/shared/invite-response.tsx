@@ -15,7 +15,7 @@ import {
 	Icon,
 	Text,
 	SnackbarManagerContext
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';

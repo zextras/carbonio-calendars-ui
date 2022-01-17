@@ -8,7 +8,7 @@ import { useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/zapp-shell'
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { FC, ReactElement, useCallback, useState, useEffect, useMemo } from 'react';
-import { CustomModal } from '@zextras/zapp-ui';
+import { CustomModal } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';

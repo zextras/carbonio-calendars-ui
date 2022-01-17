@@ -5,7 +5,7 @@
  */
 import React, { FC, ReactElement, useContext } from 'react';
 import { useUserAccounts } from '@zextras/zapp-shell';
-import { Container, SnackbarManagerContext, Text, Padding } from '@zextras/zapp-ui';
+import { Container, SnackbarManagerContext, Text, Padding } from '@zextras/carbonio-design-system';
 import { Trans } from 'react-i18next';
 import { ShareCalendarUrlProps } from '../../../../types/share-calendar';
 import { ModalHeader } from '../../../../commons/modal-header';

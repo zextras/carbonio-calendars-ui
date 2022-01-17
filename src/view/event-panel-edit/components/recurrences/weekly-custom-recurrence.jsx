@@ -5,7 +5,7 @@
  */
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useState } from 'react';
-import { Container, Padding, Text } from '@zextras/zapp-ui';
+import { Container, Padding, Text } from '@zextras/carbonio-design-system';
 import { IntervalInput, WeekdayCheckboxes, WeekDaySelector } from './options-components';
 
 export const WeeklyCustomRecurrence = ({

@@ -21,7 +21,7 @@ import {
 	FormSubSection,
 	SnackbarManagerContext,
 	Shimmer
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { map, filter, isEqual } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import CustomScheduleModal from './custom-schedule-modal';

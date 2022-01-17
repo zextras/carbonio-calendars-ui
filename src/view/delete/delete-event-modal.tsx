@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useCallback, useState } from 'react';
-import { Checkbox, Container, CustomModal, Padding, Text } from '@zextras/zapp-ui';
+import { Checkbox, Container, CustomModal, Padding, Text } from '@zextras/carbonio-design-system';
 import { Spinner } from '@zextras/zapp-shell';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';

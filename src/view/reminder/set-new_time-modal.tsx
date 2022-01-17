@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement } from 'react';
-import { Container, Text, Padding } from '@zextras/zapp-ui';
+import { Container, Text, Padding } from '@zextras/carbonio-design-system';
 import ModalFooter from '../../commons/modal-footer';
 // @ts-ignore
 import { ModalHeader } from '../../commons/modal-header';

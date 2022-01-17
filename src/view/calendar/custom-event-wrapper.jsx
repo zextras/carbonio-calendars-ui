@@ -6,7 +6,7 @@
 import React, { useRef, cloneElement, useCallback, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { setLightness } from 'polished';
-import { Container } from '@zextras/zapp-ui';
+import { Container } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
 import { EventResumeView } from '../event-resume-view/event-resume';
 import { EventContext } from '../../commons/event-context';

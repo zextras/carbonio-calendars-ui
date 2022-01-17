@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { SnackbarManagerContext } from '@zextras/zapp-ui';
+import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

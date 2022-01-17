@@ -8,7 +8,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { remove, forEach, map, filter, every, uniqWith, isEqual } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { Accordion, Button, Container, ModalManagerContext } from '@zextras/zapp-ui';
+import { Accordion, Button, Container, ModalManagerContext } from '@zextras/carbonio-design-system';
 import CustomAccordion from './accordion-calendar';
 import CollapsedSidebarItems from './collapsed-sidebar-items';
 import {

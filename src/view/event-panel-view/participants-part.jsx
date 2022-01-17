@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
-import { Avatar, Container, Row, Text } from '@zextras/zapp-ui';
+import { Avatar, Container, Row, Text } from '@zextras/carbonio-design-system';
 import { useTranslation, Trans } from 'react-i18next';
 import { useUserAccounts } from '@zextras/zapp-shell';
 import ParticipantsDisplayer from './participants-displayer';

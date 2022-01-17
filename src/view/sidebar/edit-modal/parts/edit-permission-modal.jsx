@@ -15,7 +15,7 @@ import {
 	Select,
 	SnackbarManagerContext,
 	Text
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { replace, split } from 'lodash';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';

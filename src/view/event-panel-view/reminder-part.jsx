@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Button, Dropdown } from '@zextras/zapp-ui';
+import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';

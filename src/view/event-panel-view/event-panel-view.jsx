@@ -5,7 +5,7 @@
  */
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Container } from '@zextras/zapp-ui';
+import { Container } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { useReplaceHistoryCallback } from '@zextras/zapp-shell';
 import { useDispatch, useSelector } from 'react-redux';

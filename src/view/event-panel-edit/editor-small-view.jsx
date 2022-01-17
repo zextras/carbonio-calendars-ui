@@ -21,7 +21,7 @@ import {
 	Padding,
 	Select,
 	Text
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { map, throttle, find, filter, flatten, findIndex } from 'lodash';
 import { useUserAccount, useIntegratedComponent, useUserSettings } from '@zextras/zapp-shell';
 import { AttendeesContainer, TextArea, EditorWrapper } from './editor-complete-view';

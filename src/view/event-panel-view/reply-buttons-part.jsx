@@ -5,7 +5,7 @@
  */
 import { useDispatch } from 'react-redux';
 import React, { useCallback } from 'react';
-import { Button, Container, Padding } from '@zextras/zapp-ui';
+import { Button, Container, Padding } from '@zextras/carbonio-design-system';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../../store/slices/appointments-slice';
 

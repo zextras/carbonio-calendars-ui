@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Container, Popover } from '@zextras/zapp-ui';
+import { Container, Popover } from '@zextras/carbonio-design-system';
 import { TitleRow } from './title-row';
 import { NeverSentWarningRow } from './never-sent-warning-row';
 import { CalendarInfoRow } from './calendar-info-row';

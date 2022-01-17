@@ -16,7 +16,7 @@ import {
 	SnackbarManagerContext,
 	Text,
 	Tooltip
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { filter, includes, isEmpty, map, find } from 'lodash';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

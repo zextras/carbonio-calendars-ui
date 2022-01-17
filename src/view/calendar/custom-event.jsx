@@ -14,7 +14,7 @@ import {
 	ModalManagerContext,
 	SnackbarManagerContext,
 	Padding
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useReplaceHistoryCallback } from '@zextras/zapp-shell';

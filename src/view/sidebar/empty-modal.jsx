@@ -4,7 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useContext } from 'react';
-import { Text, Container, Padding, Divider, SnackbarManagerContext } from '@zextras/zapp-ui';
+import {
+	Text,
+	Container,
+	Padding,
+	Divider,
+	SnackbarManagerContext
+} from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { folderAction } from '../../store/actions/calendar-actions';

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Text } from '@zextras/zapp-ui';
+import { Text } from '@zextras/carbonio-design-system';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { getInvite } from '../store/actions/get-invite';
 import MoveAppointment from '../view/move/move-appt-view';
