@@ -198,7 +198,7 @@ const ParticipantsDisplayerSmall = ({ participants = [], event }) => {
 								i18nKey="participants.Attendees_accepted_count"
 								count={participants.AC?.length ?? 0}
 								values={{ count: participants.AC?.length ?? 0 }}
-								defaults="<strong>1 attendee </strong> have accepted"
+								defaults="<strong>{{count}} attendee </strong> has accepted"
 							/>
 						}
 						t={t}

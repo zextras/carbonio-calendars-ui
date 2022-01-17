@@ -55,7 +55,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 					replace: true,
 					type: 'success',
 					hideButton: true,
-					label: t('success', 'Success'),
+					label: t('label.calendar_shared', 'Calendar shared successfully'),
 					autoHideTimeout: 3000
 				});
 				sendNotification &&
@@ -75,7 +75,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 								replace: true,
 								type: 'error',
 								hideButton: true,
-								label: t('snackbar.invite.error', 'Error'),
+								label: t('label.error_try_again', 'Something went wrong, please try again'),
 								autoHideTimeout: 3000
 							});
 						}
@@ -183,7 +183,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 					<Text overflow="break-word" size="small" color="secondary">
 						{t(
 							'share.note.share_note',
-							'The standard message displays your name, the name of the shared item, pemissions granted to the recipients, and sign in information, if necessary.'
+							'The standard message displays your name, the name of the shared item, pemissions granted to the recipients, and sign in information.'
 						)}
 					</Text>
 				</Row>

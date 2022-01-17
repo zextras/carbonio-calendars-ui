@@ -246,6 +246,7 @@
         "share_calendar_url_note": "Only your collaborators can access your data using these URLs.",
         "share_calendar_url_note2": "Only your collaborators can access your data using these URLs.<br/> You can find these links also right-clicking your calendars list.",
         "snackbar": {
+            "appointment_permanently_deleted": "Appointment permanently deleted",
             "appointment_permanently_deleted_succesfully": "Permanent deletion completed successfully",
             "appt_moved": "Appointment moved successfully to",
             "appt_moved_to_trash": "Appointment moved to trash",

@@ -175,9 +175,9 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
-						type: 'info',
+						type: 'success',
 						hideButton: true,
-						label: t('label.edits_saved', 'Edits saved correctly'),
+						label: t('label.changes_saved', 'Changes saved'),
 						autoHideTimeout: 3000
 					});
 				} else {
@@ -234,7 +234,7 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 						replace: true,
 						type: 'error',
 						hideButton: true,
-						label: t('snackbar.invite.error', 'Error'),
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000
 					});
 				}
@@ -409,7 +409,7 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 								<Tooltip
 									label={t(
 										'resend_mail_notification_about_this_share',
-										'Resend mail notification about this share'
+										'Send e-mail notification about this share'
 									)}
 									placement="top"
 									maxWidth="fit"

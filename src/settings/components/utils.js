@@ -160,7 +160,7 @@ export const DefaultCalendarOptions = (t) => [
 export const TimeZonesOptions = (t) => [
 	{
 		value: 'Etc/GMT+12',
-		label: t('timezone.dateline', { value: 'GMT -12:00 ', defaultValue: '{{value}} Dateline' })
+		label: t('timezone.dateline', { value: 'GMT -12:00', defaultValue: '{{value}} Dateline' })
 	},
 	{
 		value: 'Pacific/Midway',
@@ -227,7 +227,7 @@ export const TimeZonesOptions = (t) => [
 	{
 		value: 'America/Mexico_City',
 		label: t('timezone.guadalajara_mexico_city_monterrey ', {
-			value: 'GMT -06:00 ',
+			value: 'GMT -06:00',
 			defaultValue: '{{value}} Guadalajara, Mexico City, Monterrey '
 		})
 	},
@@ -295,7 +295,7 @@ export const TimeZonesOptions = (t) => [
 	},
 	{
 		value: 'America/Asuncion',
-		label: t('timezone.asuncion', { value: 'GMT -04:00 ', defaultValue: '{{value}} Asuncion' })
+		label: t('timezone.asuncion', { value: 'GMT -04:00', defaultValue: '{{value}} Asuncion' })
 	},
 	{
 		value: 'America/St_Johns',
@@ -388,7 +388,7 @@ export const TimeZonesOptions = (t) => [
 	{
 		value: 'Europe/Brussels',
 		label: t('timezone.brussels_copenhagen_madrid_paris ', {
-			value: 'GMT +01:00 ',
+			value: 'GMT +01:00',
 			defaultValue: '{{value}} Brussels, Copenhagen, Madrid, Paris '
 		})
 	},
@@ -550,7 +550,7 @@ export const TimeZonesOptions = (t) => [
 	},
 	{
 		value: 'Asia/Yangon',
-		label: t('timezone.yangon', { value: 'GMT +06:30 ', defaultValue: '{{value}} Yangon' })
+		label: t('timezone.yangon', { value: 'GMT +06:30', defaultValue: '{{value}} Yangon' })
 	},
 	{
 		value: 'Asia/Bangkok',
@@ -590,11 +590,11 @@ export const TimeZonesOptions = (t) => [
 	},
 	{
 		value: 'Asia/Pyongyang',
-		label: t('timezone.pyongyang', { value: 'GMT +08:30 ', defaultValue: '{{value}} Pyongyang' })
+		label: t('timezone.pyongyang', { value: 'GMT +08:30', defaultValue: '{{value}} Pyongyang' })
 	},
 	{
 		value: 'Asia/Seoul',
-		label: t('timezone.korea', { value: 'GMT +09:00 ', defaultValue: '{{value}} Korea' })
+		label: t('timezone.korea', { value: 'GMT +09:00', defaultValue: '{{value}} Korea' })
 	},
 	{
 		value: 'Australia/Darwin',
@@ -793,7 +793,10 @@ export const ShareCalendarRoleOptions = (t) => [
 		value: 'rwidxa'
 	},
 	{
-		label: t('share.options.share_calendar_role.manager', 'Manager (can view,edit,add and remove)'),
+		label: t(
+			'share.options.share_calendar_role.manager',
+			'Manager (can view, edit, add and remove)'
+		),
 		value: 'rwidx'
 	}
 ];

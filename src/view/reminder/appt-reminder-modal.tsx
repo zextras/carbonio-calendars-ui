@@ -31,7 +31,13 @@ const ApptReminderModal: FC<ApptReminderModalProps> = ({
 			height="fit"
 			width="100%"
 		>
-			<ModalHeader title={t(`label.appt_reminder`, { count: events.length || 1 })} />
+			<ModalHeader
+				title={t(`label.appt_reminder`, {
+					count: events.length || 1,
+					defaultValue: 'Appointment Reminder',
+					defaultValue_Plural: 'Appointment Reminders'
+				})}
+			/>
 			<Container maxHeight={320} style={{ overflow: 'auto', display: 'block' }}>
 				{map(events, (appt) => (
 					<ApptReminderCard

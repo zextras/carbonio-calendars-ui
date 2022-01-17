@@ -72,9 +72,9 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 					createSnackbar({
 						key: 'proposedTimeAccepted',
 						replace: true,
-						type: 'info',
+						type: 'success',
 						hideButton: true,
-						label: `${t('snackbar.proposed_time_accepted', 'You accepted the proposed time')}`,
+						label: t('snackbar.proposed_time_accepted', 'You accepted the proposed time'),
 						autoHideTimeout: 3000
 					});
 				} else {

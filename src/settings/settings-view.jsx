@@ -307,8 +307,8 @@ export default function CalendarSettingsView() {
 				createSnackbar({
 					key: `new`,
 					replace: true,
-					type: 'info',
-					label: t('label.edits_saved', 'Edits saved correctly'),
+					type: 'success',
+					label: t('label.settings_saved', 'Settings saved'),
 					autoHideTimeout: 3000,
 					hideButton: true
 				});

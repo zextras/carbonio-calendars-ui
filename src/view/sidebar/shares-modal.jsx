@@ -152,7 +152,7 @@ export const SharesModal = ({ calendars, onClose }) => {
 			</Row>
 			<Row padding={{ top: 'small', bottom: 'large' }} width="fill">
 				<Input
-					label={t('label.filter_sharer_user', 'Filter sharer user')}
+					label={t('label.filter_sharer_user', 'Foder owner')}
 					backgroundColor="gray5"
 					CustomIcon={({ hasFocus }) => (
 						<Icon icon="FunnelOutline" size="large" color={hasFocus ? 'primary' : 'text'} />

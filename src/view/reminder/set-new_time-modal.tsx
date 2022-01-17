@@ -18,7 +18,7 @@ const SetNewTimeModal: FC<SetNewTimeModalProps> = ({
 	setNewTime
 }): ReactElement => (
 	<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
-		<ModalHeader title={t('label.set_new_time')} />
+		<ModalHeader title={t('label.set_new_time', 'Set new time')} />
 		<Padding vertical="extrasmall" />
 		<Container padding={{ vertical: 'medium' }}>
 			<Text overflow="break-word">{t('reminder.modal.set_new_time_message')}</Text>

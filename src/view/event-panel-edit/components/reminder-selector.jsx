@@ -11,7 +11,7 @@ import styled from 'styled-components';
 
 const getReminderItems = (t) => [
 	{ label: t('reminder.never', 'Never'), value: 'never' },
-	{ label: t('reminder.at_time_of_event', 'At time of the event'), value: '0' },
+	{ label: t('reminder.at_time_of_event', 'At the time of the event'), value: '0' },
 	{
 		label: t('reminder.minute_before', {
 			count: 1,

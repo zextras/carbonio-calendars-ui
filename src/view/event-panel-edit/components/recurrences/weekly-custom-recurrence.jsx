@@ -72,7 +72,7 @@ export const WeeklyCustomRecurrence = ({
 					<Text>{t('label.every', 'Every')}</Text>
 				</Padding>
 				<IntervalInput
-					label={t('label.weeks_on', 'Weeks on')}
+					label={t('label.weeks_on', 'Week(s) on')}
 					interval={interval}
 					setInterval={setInterval}
 					customRepeatValue={customRepeatValue}
