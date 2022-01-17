@@ -64,11 +64,6 @@ export default function EditorSmallView({
 		setDropZoneEnable(true);
 	};
 
-	useEffect(() => {
-		console.clear();
-		console.log(data);
-	}, [data]);
-
 	const [defaultIdentity, setDefaultIdentity] = useState({});
 	const [list, setList] = useState([]);
 
