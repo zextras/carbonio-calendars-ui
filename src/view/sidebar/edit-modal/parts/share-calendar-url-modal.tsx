@@ -39,7 +39,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 			createSnackbar({
 				key: `folder-action-success`,
 				replace: true,
-				type: 'info',
+				type: 'success',
 				hideButton: true,
 				label: t('snackbar.url_copied', { title, defaultValue: '{{title}} copied' }),
 				autoHideTimeout: 3000
@@ -61,7 +61,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 						{t('message.share_calendar_url_msg', {
 							title: folders[folder].name,
 							defaultValue:
-								'You can quick share {{title}} with your collaborators using one of those URL:'
+								'You can quickly share {{title}} with your collaborators using one of these URLs:'
 						})}
 					</Text>
 				</Container>
@@ -91,12 +91,12 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 						{isFromEditModal ? (
 							<Trans
 								i18nKey="message.share_calendar_url_note2"
-								defaults="Only your collaborators can access your data using these urls.<br/> You can find those links also right-clicking your calendars list."
+								defaults="Only your collaborators can access your data using these URLs.<br/> You can find these links also right-clicking your calendars list."
 							/>
 						) : (
 							t(
 								'message.share_calendar_url_note',
-								'Only your collaborators can access your data using these urls.'
+								'Only your collaborators can access your data using these URLs.'
 							)
 						)}
 					</Text>

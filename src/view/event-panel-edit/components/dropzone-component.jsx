@@ -90,7 +90,7 @@ export default function DropZoneAttachment({ onDragOverEvent, onDropEvent, onDra
 										>
 											{t(
 												'composer.attachment.draganddrop.content',
-												'Drop here your attachments to quick-add them to appointment'
+												'Drop here your attachements to quickly add them to the appointment'
 											)}
 										</DetailText>
 									</Container>

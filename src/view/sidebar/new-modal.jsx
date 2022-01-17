@@ -138,7 +138,7 @@ export const NewModal = ({ folders, onClose }) => {
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
-						type: 'info',
+						type: 'success',
 						hideButton: true,
 						label: t('message.snackbar.new_calendar_created', 'New calendar created'),
 						autoHideTimeout: 3000

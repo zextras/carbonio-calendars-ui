@@ -41,7 +41,7 @@ export default function ReminderPart({ alarmString, event }) {
 	const getReminderItems = [
 		{
 			id: '1',
-			label: t('reminder.at_time_of_event', 'At time of the event'),
+			label: t('reminder.at_time_of_event', 'At the time of the event'),
 			click: () => setSnooze(0)
 		},
 		{
