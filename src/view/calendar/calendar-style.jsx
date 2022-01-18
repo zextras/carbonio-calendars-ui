@@ -100,7 +100,10 @@ export default createGlobalStyle`
 		z-index: 4; }
 
 	.rbc-today {
-		background-color: ${({ theme }) => theme.palette.highlight.regular}; }
+		background-color: ${({ theme }) => theme.palette.highlight.regular};
+		color: ${({ theme }) => theme.palette.primary.regular};
+		font-weight: bold; }
+
 
 	.rbc-toolbar {
 		display: flex;
