@@ -10,12 +10,6 @@ import { ZIMBRA_STANDARD_COLORS } from '../commons/zimbra-standard-colors';
 import { Calendar } from '../types/store/calendars';
 import { setCalendarColor } from './normalizations-utils';
 
-const setCalendarIcon = (folder: ZimbraFolder): string => {
-	if (folder.owner) return 'Share';
-	if (/#/.test(folder.f)) return 'Calendar2';
-	return 'CalendarOutline';
-};
-
 export const normalizeCalendar = (folder: ZimbraFolder): Calendar => ({
 	checked: /#/.test(folder.f),
 	freeBusy: /b/.test(folder.f),
@@ -28,7 +22,6 @@ export const normalizeCalendar = (folder: ZimbraFolder): Calendar => ({
 	parent: folder.l,
 	rid: folder.rid,
 	owner: folder.owner, // It's specified only if It's not the current user
-	icon: setCalendarIcon(folder),
 	zid: folder.zid,
 	acl: folder.acl,
 	isShared: !!folder.owner
@@ -46,8 +39,7 @@ export const normalizePartialCalendar = (folder: ZimbraFolder): any => ({
 	parent: folder.l,
 	rid: folder.rid,
 	owner: folder.owner, // It's specified only if It's not the current user
-	icon: setCalendarIcon(folder),
 	zid: folder.zid,
 	acl: folder.acl,
-	isShared: !!folder.owner
+	isShared: !isNil(folder.owner) ? !!folder.owner : undefined
 });

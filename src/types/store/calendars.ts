@@ -17,7 +17,6 @@ export type Calendar = {
 	deletable: boolean;
 	absFolderPath: string;
 	appointments: { ids: Array<string> };
-	icon: string;
 	zid: string;
 	acl: any;
 	isShared?: boolean;

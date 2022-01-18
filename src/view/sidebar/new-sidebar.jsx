@@ -3,45 +3,27 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Accordion, Container, Icon, Padding, Text, Tooltip } from '@zextras/zapp-ui';
-import React, { useCallback, useMemo } from 'react';
+import {
+	Accordion,
+	AccordionItem,
+	Button,
+	Container,
+	Divider,
+	Icon,
+	ModalManagerContext,
+	Padding,
+	Text,
+	Tooltip
+} from '@zextras/zapp-ui';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { every, filter, map, reduce, remove } from 'lodash';
-import styled, { css } from 'styled-components';
+import { every, filter, isEqual, map, reduce, remove, uniqWith } from 'lodash';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { setSearchRange } from '../../store/actions/set-search-range';
-
-function pseudoClasses(theme, color) {
-	return css`
-		transition: background 0.2s ease-out;
-		&:focus {
-			outline: none;
-			background: ${theme.palette[color].focus};
-		}
-		&:hover {
-			outline: none;
-			background: ${theme.palette[color].hover};
-		}
-		&:active {
-			outline: none;
-			background: ${theme.palette[color].active};
-		}
-	`;
-}
-
-const AccordionContainerEl = styled(Container)`
-	padding: ${(props) => `
-		${props.level === 0 ? props.theme.sizes.padding.large : props.theme.sizes.padding.medium}
-		${props.theme.sizes.padding.large}
-		${props.level === 0 ? props.theme.sizes.padding.large : props.theme.sizes.padding.medium}
-		calc(${props.theme.sizes.padding.large} + ${
-		props.level > 1 ? props.theme.sizes.padding.medium : '0px'
-	})
-	`};
-	${({ theme }) => pseudoClasses(theme, 'gray5')};
-`;
+import { getShareInfo } from '../../store/actions/get-share-info';
+import { SharesModal } from './shares-modal';
 
 const nest = (items, id) =>
 	map(
@@ -53,8 +35,36 @@ const nest = (items, id) =>
 		})
 	);
 
+const SharesItem = ({ item }) => {
+	const createModal = useContext(ModalManagerContext);
+	const dispatch = useDispatch();
+	const onClick = useCallback(
+		() =>
+			dispatch(getShareInfo()).then((res) => {
+				if (res.type.includes('fulfilled')) {
+					const calendars = uniqWith(
+						filter(res?.payload?.share ?? [], ['view', 'appointment']),
+						isEqual
+					);
+					const closeModal = createModal(
+						{
+							children: <SharesModal calendars={calendars} onClose={() => closeModal()} />
+						},
+						true
+					);
+				}
+			}),
+		[createModal, dispatch]
+	);
+	return (
+		<AccordionItem item={item}>
+			<Button type="outlined" label={item.label} color="primary" size="fill" onClick={onClick} />
+		</AccordionItem>
+	);
+};
+
 const Component = ({ item }) => {
-	const { name, id, checked, color, icon, ...rest } = item;
+	const { name, checked, color } = item;
 	const dispatch = useDispatch();
 	const calendars = useSelector(selectAllCalendars);
 	const start = useSelector(selectStart);
@@ -92,84 +102,73 @@ const Component = ({ item }) => {
 		});
 	}, [calendars, checked, dispatch, end, item, start]);
 
+	const icon = useMemo(() => {
+		if (item.owner) return item.checked ? 'Share' : 'ShareOutline';
+		if (item.checked) return 'Calendar2';
+		return 'CalendarOutline';
+	}, [item.checked, item.owner]);
+
 	return (
-		<Container
-			orientation="vertical"
-			width="fill"
-			height="fit"
-			background="gray5"
-			onContextMenu={(e) => {
-				e.preventDefault();
-				console.log('contextmenu');
-			}}
-			// eslint-disable-next-line react/jsx-props-no-spreading
-			{...rest}
-		>
-			<Tooltip label={name} placement="right" maxWidth="100%">
-				<AccordionContainerEl
-					orientation="horizontal"
-					width="fill"
-					height="fit"
-					mainAlignment="space-between"
-					tabIndex={0}
-				>
-					<Container
-						orientation="horizontal"
-						mainAlignment="flex-start"
-						padding={{ right: 'small' }}
-						style={{ minWidth: 0, flexBasis: 0, flexGrow: 1 }}
-					>
-						<Padding right="small">
-							<Icon
-								icon={icon}
-								customColor={color?.color}
-								size="large"
-								onClick={recursiveToggleCheck}
-							/>
-						</Padding>
-						<Text size="large" weight="bold" style={{ minWidth: 0, flexBasis: 0, flexGrow: 1 }}>
-							{name}
-						</Text>
-					</Container>
-				</AccordionContainerEl>
-			</Tooltip>
-		</Container>
+		<Tooltip label={name} placement="right" maxWidth="100%">
+			<AccordionItem item={item}>
+				<Padding right="small">
+					<Icon
+						icon={icon}
+						customColor={color?.color}
+						size="large"
+						onClick={recursiveToggleCheck}
+					/>
+				</Padding>
+				<Text style={{ minWidth: 0, flexBasis: 0, flexGrow: 1 }}>{name}</Text>
+			</AccordionItem>
+		</Tooltip>
 	);
 };
 
 const useSidebarItems = () => {
 	const calendars = useSelector(selectAllCalendars);
-	const nestedCalendars = useMemo(() => nest(calendars, '1'), [calendars]);
 	const [t] = useTranslation();
 
 	const allItems = useMemo(() => {
-		const trashItem = remove(nestedCalendars, (c) => c.id === '3'); // move Trash folder to the end
-		return map(nestedCalendars.concat(trashItem) ?? [], (folder) => ({
-			id: folder.id,
-			name: folder.name,
-			color: folder.color,
-			icon: folder.icon,
-			checked: folder.checked,
+		const normalized = map(calendars ?? [], (folder) => ({
+			...folder,
 			open: true,
 			CustomComponent: Component
 		}));
-	}, [nestedCalendars]);
+		return nest(normalized, '1');
+	}, [calendars]);
+	const trashItem = useMemo(() => remove(allItems, ['id', '3']), [allItems]);
+	const sharedItems = useMemo(() => remove(allItems, 'owner'), [allItems]);
 
+	const shares = useMemo(
+		() => ({
+			id: 'shares',
+			label: t('shared_folders', 'Shared Calendars'),
+			icon: 'Share',
+			open: false,
+			items: sharedItems.concat({
+				label: t('find_shares', 'Find shares'),
+				CustomComponent: SharesItem
+			}),
+			divider: true
+		}),
+		[sharedItems, t]
+	);
 	const allCalendarsItem = useMemo(() => {
 		const checked = every(
-			filter(nestedCalendars, (c) => c.id !== '3' && !c.isShared),
+			filter(calendars, (c) => c.id !== '3' && !c.isShared),
 			['checked', true]
 		);
 
 		return {
 			name: t('label.all_calendars', 'All calendars'),
-			icon: checked ? 'Calendar2' : 'CalendarOutline',
 			id: 'all',
 			checked,
-			onIconClick: () => null
+			onIconClick: () => null,
+			CustomComponent: Component
 		};
-	}, [nestedCalendars, t]);
-	return [allCalendarsItem, ...allItems];
+	}, [calendars, t]);
+	return [allCalendarsItem, ...allItems, ...trashItem, shares];
 };
 
 export default function SetMainMenuItems({ expanded }) {
