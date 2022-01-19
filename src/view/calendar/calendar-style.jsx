@@ -100,7 +100,10 @@ export default createGlobalStyle`
 		z-index: 4; }
 
 	.rbc-today {
-		background-color: ${({ theme }) => theme.palette.highlight.regular}; }
+		background-color: ${({ theme }) => theme.palette.highlight.regular};
+		color: ${({ theme }) => theme.palette.primary.regular};
+		font-weight: bold; }
+
 
 	.rbc-toolbar {
 		display: flex;
@@ -323,7 +326,7 @@ export default createGlobalStyle`
 
 	.rbc-timeslot-group {
 		border-bottom: 1px solid ${({ theme }) => theme.palette.gray6.regular};
-		min-height: 40px;
+		min-height: 80px;
 		display: flex;
 		flex-flow: column nowrap; }
 
