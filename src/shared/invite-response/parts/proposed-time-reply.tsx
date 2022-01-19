@@ -5,8 +5,14 @@
  */
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement, useCallback, useContext } from 'react';
-import { SnackbarManagerContext, Container, Padding, Button, Divider } from '@zextras/zapp-ui';
-import { useIntegratedFunction, useUserAccounts } from '@zextras/zapp-shell';
+import {
+	SnackbarManagerContext,
+	Container,
+	Padding,
+	Button,
+	Divider
+} from '@zextras/carbonio-design-system';
+import { useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
@@ -66,9 +72,9 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 					createSnackbar({
 						key: 'proposedTimeAccepted',
 						replace: true,
-						type: 'info',
+						type: 'success',
 						hideButton: true,
-						label: `${t('snackbar.proposed_time_accepted', 'You accepted the proposed time')}`,
+						label: t('snackbar.proposed_time_accepted', 'You accepted the proposed time'),
 						autoHideTimeout: 3000
 					});
 				} else {

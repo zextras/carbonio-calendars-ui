@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
-import { Container, Padding, Text, Row, Checkbox, Select } from '@zextras/zapp-ui';
+import { Container, Padding, Text, Row, Checkbox, Select } from '@zextras/carbonio-design-system';
 import { DefaultCalendarOptions } from './components/utils';
 
 export default function CreatingAppointmentSettings({ t, settingsObj, updateSettings }) {

@@ -3,19 +3,103 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { SnackbarManagerContext } from '@zextras/zapp-ui';
+import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { TFunction } from 'i18next';
 import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
-import { deleteEvent, generateSnackbar, sendResponse } from './delete-actions';
+import { deleteEvent, sendResponse } from './delete-actions';
+import { moveAppointmentRequest } from '../../../store/actions/move-appointment';
+import { SnackbarArgumentType } from '../../../types/delete-appointment';
+import { EventType } from '../../../types/event';
+import { Invite } from '../../../types/store/invite';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const useDeleteActions = (event: any, invite: any, context: any): any => {
+const generateAppointmentDeletedSnackbar = (
+	res: { type: string | string[] },
+	t: TFunction,
+	createSnackbar: (obj: SnackbarArgumentType) => void,
+	undoAction?: () => void
+): void => {
+	if (res.type.includes('fulfilled')) {
+		createSnackbar({
+			key: 'send',
+			replace: true,
+			type: 'info',
+			label:
+				undoAction === undefined
+					? t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash')
+					: t(
+							'message.snackbar.appointment_permanently_deleted',
+							'Appointment permanently deleted'
+					  ),
+			autoHideTimeout: 3000,
+			hideButton: undoAction === undefined,
+			actionLabel: t('label.undo', 'Undo'),
+			onActionClick: () => (undoAction ? undoAction() : null)
+		});
+	} else {
+		createSnackbar({
+			key: `delete`,
+			replace: true,
+			type: 'error',
+			label: t('label.error_try_again', 'Something went wrong, please try again'),
+			autoHideTimeout: 3000,
+			hideButton: true
+		});
+	}
+};
+
+const generateAppointmentRestoredSnackbar = (
+	res: { type: string | string[] },
+	t: TFunction,
+	createSnackbar: (obj: SnackbarArgumentType) => void
+): void => {
+	if (res.type.includes('fulfilled')) {
+		createSnackbar({
+			key: 'send',
+			replace: true,
+			type: 'success',
+			label: t('appt_restored_successfully', 'Appointment restored successfully'),
+			autoHideTimeout: 3000,
+			hideButton: true
+		});
+	} else {
+		createSnackbar({
+			key: `delete`,
+			replace: true,
+			type: 'error',
+			label: t('label.error_try_again', 'Something went wrong, please try again'),
+			autoHideTimeout: 3000,
+			hideButton: true
+		});
+	}
+};
+
+type AccountContext = {
+	isInstance: boolean;
+	onClose: () => void;
+};
+
+type UseDeleteActionsType = {
+	deleteNonRecurrentEvent: (newMessage: object) => void;
+	deleteRecurrentInstance: (newMessage: object) => void;
+	deleteRecurrentSerie: (newMessage: object) => void;
+	toggleNotifyOrganizer: () => void;
+	toggleDeleteAll: () => void;
+	deleteAll: boolean;
+	notifyOrganizer: boolean;
+};
+
+export const useDeleteActions = (
+	event: EventType,
+	invite: Invite,
+	context: AccountContext
+): UseDeleteActionsType => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useContext(SnackbarManagerContext) as (obj: SnackbarArgumentType) => void;
 	const [deleteAll, setDeleteAll] = useState(true);
 	const [notifyOrganizer, setNotifyOrganizer] = useState(false);
 
@@ -30,52 +114,39 @@ export const useDeleteActions = (event: any, invite: any, context: any): any => 
 	const deleteNonRecurrentEvent = useCallback(
 		(newMessage) => {
 			let isCanceled = false;
-			// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-			const infoSnackbar = (hideButton = false) => {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				createSnackbar({
-					key: 'send',
-					replace: true,
-					type: 'info',
-					label: t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash'),
-					autoHideTimeout: 3000,
-					hideButton,
-					actionLabel: 'Undo',
-					onActionClick: () => {
-						isCanceled = true;
-					}
-				});
+			const restoreAppointment = (): void => {
+				isCanceled = true;
+				dispatch(
+					moveAppointmentRequest({
+						id: event.resource.id,
+						l: event.resource.calendar.id
+					})
+				)
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					.then((res: { type: string | string[] }) => {
+						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
+					});
 			};
-
-			infoSnackbar();
-
-			setTimeout(() => {
-				if (!isCanceled) {
-					const ctxt = {
-						dispatch,
-						t,
-						isInstance: context.isInstance,
-						createSnackbar,
-						newMessage: newMessage?.text?.[0]
-					};
-					if (notifyOrganizer) {
-						sendResponse(event, invite, ctxt).then(() => {
-							deleteEvent(event, invite, ctxt).then((res: any) => {
-								generateSnackbar({
-									res,
-									t: context.t,
-									createSnackbar: context.createSnackbar,
-									isTrash: true
-								});
-							});
-						});
-					} else {
-						deleteEvent(event, invite, ctxt);
-					}
-				}
-			}, 3000);
 			context.onClose();
+			const ctxt = {
+				dispatch,
+				t,
+				isInstance: context.isInstance,
+				createSnackbar,
+				newMessage: newMessage?.text?.[0]
+			};
+			deleteEvent(event, invite, ctxt)
+				.then((res: { type: string | string[] }) => {
+					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreAppointment);
+				})
+				.then(
+					setTimeout(() => {
+						if (notifyOrganizer && !isCanceled) {
+							sendResponse(event, invite, ctxt);
+						}
+					}, 5000)
+				);
 		},
 		[context, createSnackbar, dispatch, event, invite, notifyOrganizer, t]
 	);
@@ -83,56 +154,46 @@ export const useDeleteActions = (event: any, invite: any, context: any): any => 
 	const deleteRecurrentSerie = useCallback(
 		(newMessage) => {
 			let isCanceled = false;
-			// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-			const infoSnackbar = (hideButton = false) => {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				createSnackbar({
-					key: 'send',
-					replace: true,
-					type: 'info',
-					label: t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash'),
-					autoHideTimeout: 3000,
-					hideButton,
-					actionLabel: 'Undo',
-					onActionClick: () => {
-						isCanceled = true;
-					}
-				});
+			const restoreRecurrentSeries = (): void => {
+				isCanceled = true;
+				dispatch(
+					moveAppointmentRequest({
+						id: event.resource.id,
+						l: event.resource.calendar.id
+					})
+				)
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					.then((res: { type: string | string[] }) => {
+						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
+					});
 			};
-
-			infoSnackbar();
-
-			setTimeout(() => {
-				if (!isCanceled) {
-					const ctxt = {
-						dispatch,
-						t,
-						newMessage: newMessage?.text?.[0],
-						isInstance: context.isInstance,
-						createSnackbar
-					};
-					// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-					const deleteFunction = () =>
-						!deleteAll
-							? dispatch(
-									modifyAppointment({
-										invite: {
-											...invite,
-											recurrenceRule: [
+			context.onClose();
+			const ctxt = {
+				dispatch,
+				t,
+				isInstance: context.isInstance,
+				createSnackbar,
+				newMessage: newMessage?.text?.[0]
+			};
+			const deleteFunction = (): void =>
+				!deleteAll
+					? dispatch(
+							modifyAppointment({
+								invite: {
+									...invite,
+									recurrenceRule: [
+										{
+											add: [
 												{
-													add: [
+													rule: [
 														{
-															rule: [
+															...invite?.recurrenceRule[0]?.add[0]?.rule[0],
+															until: [
 																{
-																	...invite?.recurrenceRule[0]?.add[0]?.rule[0],
-																	until: [
-																		{
-																			d: moment(event?.resource?.ridZ)
-																				.subtract(1, 'day')
-																				.format('YYYYMMDD')
-																		}
-																	]
+																	d: moment(event?.resource?.ridZ)
+																		.subtract(1, 'day')
+																		.format('YYYYMMDD')
 																}
 															]
 														}
@@ -140,93 +201,59 @@ export const useDeleteActions = (event: any, invite: any, context: any): any => 
 												}
 											]
 										}
-									})
-							  )
-							: deleteEvent(event, invite, ctxt);
-					if (notifyOrganizer) {
-						sendResponse(event, invite, ctxt).then(() => {
-							deleteFunction().then((res: any) => {
-								generateSnackbar({
-									res,
-									t: context.t,
-									createSnackbar: context.createSnackbar,
-									isTrash: true
-								});
-							});
-						});
-					} else {
-						deleteFunction().then((res: any) => {
-							generateSnackbar({
-								res,
-								t: context.t,
-								createSnackbar: context.createSnackbar,
-								isTrash: true
-							});
-						});
-					}
-				}
-			}, 3000);
-			context.onClose();
+									]
+								}
+							})
+					  )
+					: deleteEvent(event, invite, ctxt);
+
+			deleteFunction()
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				.then((res: { type: string | string[] }) => {
+					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreRecurrentSeries);
+				})
+				.then(
+					setTimeout(() => {
+						if (notifyOrganizer && !isCanceled) {
+							sendResponse(event, invite, ctxt);
+						}
+					}, 5000)
+				);
 		},
+
 		[context, createSnackbar, deleteAll, dispatch, event, invite, notifyOrganizer, t]
 	);
 
 	const deleteRecurrentInstance = useCallback(
 		(newMessage) => {
-			let isCanceled = false;
-			// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-			const infoSnackbar = (hideButton = false) => {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				createSnackbar({
-					key: 'send',
-					replace: true,
-					type: 'info',
-					label: t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash'),
-					autoHideTimeout: 3000,
-					hideButton,
-					actionLabel: 'Undo',
-					onActionClick: () => {
-						isCanceled = true;
-					}
-				});
-			};
-
-			infoSnackbar();
-
-			setTimeout(() => {
-				if (!isCanceled) {
-					const ctxt = {
-						dispatch,
-						newMessage: newMessage?.text?.[0],
-						t,
-						isInstance: context.isInstance,
-						createSnackbar,
-						inst: {
-							d: invite?.start?.tz
-								? moment(event.start).format('YYYYMMDD[T]HHmmss')
-								: moment(event.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
-							tz: invite?.start?.tz
-						},
-						s: moment(event.start).valueOf()
-					};
-					if (notifyOrganizer) {
-						sendResponse(event, invite, ctxt).then(() => {
-							deleteEvent(event, invite, ctxt).then((res: any) => {
-								generateSnackbar({
-									res,
-									t: context.t,
-									createSnackbar: context.createSnackbar,
-									isTrash: true
-								});
-							});
-						});
-					} else {
-						deleteEvent(event, invite, ctxt);
-					}
-				}
-			}, 3000);
+			const isCanceled = false;
 			context.onClose();
+			const ctxt = {
+				dispatch,
+				newMessage: newMessage?.text?.[0],
+				t,
+				isInstance: context.isInstance,
+				createSnackbar,
+				inst: {
+					d: invite?.start?.tz
+						? moment(event.start).format('YYYYMMDD[T]HHmmss')
+						: moment(event.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+					tz: invite?.start?.tz
+				},
+				s: moment(event.start).valueOf()
+			};
+			deleteEvent(event, invite, ctxt)
+				.then((res: { type: string | string[] }) => {
+					generateAppointmentDeletedSnackbar(res, t, createSnackbar);
+				})
+				.then(
+					setTimeout(() => {
+						if (notifyOrganizer && !isCanceled) {
+							sendResponse(event, invite, ctxt);
+						}
+					}, 5000)
+				);
 		},
 		[context, createSnackbar, dispatch, event, invite, notifyOrganizer, t]
 	);

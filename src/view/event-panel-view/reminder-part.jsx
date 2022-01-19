@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Button, Dropdown } from '@zextras/zapp-ui';
+import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
@@ -41,7 +41,7 @@ export default function ReminderPart({ alarmString, event }) {
 	const getReminderItems = [
 		{
 			id: '1',
-			label: t('reminder.at_time_of_event', 'At time of the event'),
+			label: t('reminder.at_time_of_event', 'At the time of the event'),
 			click: () => setSnooze(0)
 		},
 		{

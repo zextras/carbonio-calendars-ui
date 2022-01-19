@@ -4,7 +4,16 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo, useState } from 'react';
-import { Container, Input, Padding, Select, Text, Checkbox, Row, Icon } from '@zextras/zapp-ui';
+import {
+	Container,
+	Input,
+	Padding,
+	Select,
+	Text,
+	Checkbox,
+	Row,
+	Icon
+} from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';

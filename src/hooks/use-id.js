@@ -5,7 +5,7 @@
  */
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { useUserAccounts } from '@zextras/zapp-shell';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { selectCalendars } from '../store/selectors/calendars';
 import { selectAppointment, selectAppointmentInstance } from '../store/selectors/appointments';
 import { selectInstanceInvite } from '../store/selectors/invites';

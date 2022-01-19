@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, List } from '@zextras/zapp-ui';
+import { Container, List } from '@zextras/carbonio-design-system';
 import React, { ReactComponentElement } from 'react';
 import { useParams } from 'react-router-dom';
 import { sortBy } from 'lodash';

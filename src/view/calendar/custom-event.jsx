@@ -14,10 +14,10 @@ import {
 	ModalManagerContext,
 	SnackbarManagerContext,
 	Padding
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { useReplaceHistoryCallback } from '@zextras/zapp-shell';
+import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { EventContext } from '../../commons/event-context';

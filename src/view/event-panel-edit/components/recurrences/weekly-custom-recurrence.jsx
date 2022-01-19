@@ -5,7 +5,7 @@
  */
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useState } from 'react';
-import { Container, Padding, Text } from '@zextras/zapp-ui';
+import { Container, Padding, Text } from '@zextras/carbonio-design-system';
 import { IntervalInput, WeekdayCheckboxes, WeekDaySelector } from './options-components';
 
 export const WeeklyCustomRecurrence = ({
@@ -72,7 +72,7 @@ export const WeeklyCustomRecurrence = ({
 					<Text>{t('label.every', 'Every')}</Text>
 				</Padding>
 				<IntervalInput
-					label={t('label.weeks_on', 'Weeks on')}
+					label={t('label.weeks_on', 'Week(s) on')}
 					interval={interval}
 					setInterval={setInterval}
 					customRepeatValue={customRepeatValue}

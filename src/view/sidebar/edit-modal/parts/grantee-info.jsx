@@ -5,7 +5,7 @@
  */
 import React, { useContext, useMemo } from 'react';
 import { replace, split, capitalize } from 'lodash';
-import { Chip, Container } from '@zextras/zapp-ui';
+import { Chip, Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { findLabel } from '../../../../settings/components/utils';
 import { EditModalContext } from '../../../../commons/edit-modal-context';

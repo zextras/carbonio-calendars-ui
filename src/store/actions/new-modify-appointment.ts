@@ -5,7 +5,7 @@
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/zapp-shell';
+import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

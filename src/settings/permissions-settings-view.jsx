@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Container, Text, Row, Checkbox } from '@zextras/zapp-ui';
-import { useIntegratedComponent } from '@zextras/zapp-shell';
+import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
+import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { AttendeesContainer } from '../view/event-panel-edit/editor-complete-view';
 
 export default function PermisionsSettings({
@@ -42,7 +42,7 @@ export default function PermisionsSettings({
 					<Text overflow="break-word">
 						{t(
 							'settings.permissions_note',
-							'Users provide below must be on this mail system (zextras.com).You may use the full e-mail address, or just the username.'
+							'Users provide below must be on this mail system (zextras.com). You may use the full e-mail address or just the username.'
 						)}
 					</Text>
 				</Row>
@@ -196,7 +196,7 @@ export default function PermisionsSettings({
 					}
 					label={t(
 						'settings.label.snd_autorply_users',
-						'Send auto-reply to users who are denied from inviting me'
+						'Send auto-reply to users who are not allowed to invite me'
 					)}
 				/>
 			</Row>

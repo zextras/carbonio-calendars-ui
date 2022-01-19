@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Text } from '@zextras/zapp-ui';
+import { Text } from '@zextras/carbonio-design-system';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { getInvite } from '../store/actions/get-invite';
 import MoveAppointment from '../view/move/move-appt-view';
@@ -95,7 +96,9 @@ export const moveAppointment = (event, context, t) => ({
 	id: EventActionsEnum.MOVE,
 	icon: 'MoveOutline',
 	label:
-		event.resource.calendar.id === '3' ? t('label.restore', 'Restore') : t('label.move', 'Move'),
+		event.resource.calendar.id === FOLDERS.TRASH
+			? t('label.restore', 'Restore')
+			: t('label.move', 'Move'),
 	disabled: !event.permission,
 	click: (ev) => {
 		if (ev) ev.preventDefault();
@@ -103,12 +106,12 @@ export const moveAppointment = (event, context, t) => ({
 			context.dispatch(moveAppointmentRequest(data)).then((res) => {
 				if (res.type.includes('fulfilled')) {
 					context.createSnackbar({
-						key: event.resource.calendar.id === '3' ? 'restore' : 'move',
+						key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
 						replace: true,
 						type: 'info',
 						hideButton: true,
 						label:
-							event.resource.calendar.id === '3'
+							event.resource.calendar.id === FOLDERS.TRASH
 								? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
 										data.destinationCalendarName
 								  }`
@@ -119,7 +122,7 @@ export const moveAppointment = (event, context, t) => ({
 					});
 				} else {
 					context.createSnackbar({
-						key: event.resource.calendar.id === '3' ? 'restore' : 'move',
+						key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
 						replace: true,
 						type: 'error',
 						hideButton: true,
@@ -169,7 +172,7 @@ export const deletePermanently = ({ event, context, t }) => ({
 		const closeModal = context.createModal({
 			title: t(
 				'message.sure_to_delete_appointment_permanently',
-				'Are you sure, you want to delete this appointment permanently ?'
+				'Are you sure you want to delete this appointment permanently?'
 			),
 			confirmLabel: t('label.delete_permanently', 'Delete permanently'),
 			onConfirm: () => {
@@ -188,7 +191,7 @@ export const deletePermanently = ({ event, context, t }) => ({
 							context.createSnackbar({
 								key: `delete-permanently`,
 								replace: true,
-								type: 'success',
+								type: 'info',
 								hideButton: true,
 								label: t(
 									'message.snackbar.appointment_permanently_deleted_succesfully',
@@ -268,7 +271,7 @@ export const moveInstanceToTrash = (event, context, t) => ({
 export const ActionsRetriever = (event, context, t) =>
 	// eslint-disable-next-line no-nested-ternary
 	!event.resource.iAmOrganizer
-		? event.resource.calendar.id === '3'
+		? event.resource.calendar.id === FOLDERS.TRASH
 			? [
 					deletePermanently({ event, context, t }),
 					moveAppointment(event, context, t),
@@ -283,7 +286,7 @@ export const ActionsRetriever = (event, context, t) =>
 					moveApptToTrash(event, context, t),
 					editAppointment(event, context, t)
 			  ]
-		: event.resource.calendar.id === '3'
+		: event.resource.calendar.id === FOLDERS.TRASH
 		? [
 				deletePermanently({ event, context, t }),
 				moveAppointment(event, context, t),
@@ -297,7 +300,7 @@ export const ActionsRetriever = (event, context, t) =>
 		  ];
 
 export const RecurrentActionRetriever = (event, context, t) =>
-	event.resource.calendar.id === '3'
+	event.resource.calendar.id === FOLDERS.TRASH
 		? [
 				deletePermanently({ event, context, t }),
 				moveAppointment(event, context, t),

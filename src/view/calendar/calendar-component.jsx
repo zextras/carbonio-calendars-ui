@@ -6,7 +6,7 @@
 import React, { useCallback, useMemo, useContext, useEffect } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/zapp-shell';
+import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { minBy, map, sortBy } from 'lodash';

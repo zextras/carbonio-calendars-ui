@@ -23,9 +23,14 @@ import {
 	Padding,
 	Select,
 	Text
-} from '@zextras/zapp-ui';
+
+} from '@zextras/carbonio-design-system';
 import { map, find, filter, flatten, findIndex, throttle } from 'lodash';
-import { useIntegratedComponent, useUserAccount, useUserSettings } from '@zextras/zapp-shell';
+import {
+	useIntegratedComponent,
+	useUserAccount,
+	useUserSettings
+} from '@zextras/carbonio-shell-ui';
 import SaveSendButtons from './components/save-send-buttons';
 import DataRecap from './components/data-recap';
 import InputRow from './components/input-row';

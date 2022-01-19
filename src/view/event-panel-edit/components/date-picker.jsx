@@ -5,7 +5,7 @@
  */
 import React, { useMemo } from 'react';
 import momentLocalizer from 'react-widgets-moment';
-import { Container, Padding, Select } from '@zextras/zapp-ui';
+import { Container, Padding, Select } from '@zextras/carbonio-design-system';
 import Styler from './date-picker-style';
 import AllDayCheckbox from './all-day-checkbox';
 import EndDatePicker from './end-date-picker';

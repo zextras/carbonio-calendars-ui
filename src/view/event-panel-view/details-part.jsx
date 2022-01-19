@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/zapp-ui';
+import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';

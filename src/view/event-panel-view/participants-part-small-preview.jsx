@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Avatar, Container, Row, Text, Padding } from '@zextras/zapp-ui';
+import { Avatar, Container, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation, Trans } from 'react-i18next';
-import { useUserAccounts } from '@zextras/zapp-shell';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import ParticipantsDisplayerSmall from './participants-displayer-small';
 
 export default function ParticipantsPart({ event, organizer, participants }) {

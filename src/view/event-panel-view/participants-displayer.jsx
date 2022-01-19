@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Avatar, Container, IconButton, Row, Text } from '@zextras/zapp-ui';
+import { Avatar, Container, IconButton, Row, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useMemo, useState } from 'react';
 
@@ -133,7 +133,7 @@ export default function ParticipantsDisplayer({ participants }) {
 			<Dropdown
 				label={t('participants.DE_with_count', {
 					count: participants.DE?.length ?? 0,
-					defaultValue: "Didn't answer (1)",
+					defaultValue: "Didn't answer ({{count}})",
 					defaultValue_plural: "Didn't answer ({{count}})"
 				}).toUpperCase()}
 				participants={participants.DE}

@@ -5,7 +5,7 @@
  */
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useUserAccounts } from '@zextras/zapp-shell';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import {
 	Checkbox,
@@ -15,7 +15,7 @@ import {
 	SnackbarManagerContext,
 	Text,
 	Tooltip
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { ModalHeader } from '../../../../commons/modal-header';
@@ -58,9 +58,9 @@ export const RevokeModal = ({ folder, grant, onGoBack, folders }) => {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'success',
+					type: 'info',
 					hideButton: true,
-					label: t('success', 'Success'),
+					label: t('label.access_revoked', 'Access revoked'),
 					autoHideTimeout: 3000
 				});
 			} else {
@@ -69,7 +69,7 @@ export const RevokeModal = ({ folder, grant, onGoBack, folders }) => {
 					replace: true,
 					type: 'error',
 					hideButton: true,
-					label: t('snackbar.invite.error', 'Error'),
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000
 				});
 			}
@@ -151,7 +151,7 @@ export const RevokeModal = ({ folder, grant, onGoBack, folders }) => {
 					<Text overflow="break-word" size="small" color="secondary">
 						{t(
 							'share.note.share_note',
-							'The standard message displays your name, the name of the shared item, pemissions granted to the recipients, and sign in information, if necessary.'
+							'The standard message displays your name, the name of the shared item, pemissions granted to the recipients, and sign in information.'
 						)}
 					</Text>
 				</Row>

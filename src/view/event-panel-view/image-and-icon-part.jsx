@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Avatar, Container } from '@zextras/zapp-ui';
+import { Avatar, Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 
 const OuterContainer = styled(Container)`

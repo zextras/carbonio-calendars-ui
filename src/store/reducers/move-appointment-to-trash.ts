@@ -27,12 +27,7 @@ export const moveAppointmentToTrashFulfilled = (state: any, { meta }: any): void
 	state.status = 'fulFilled';
 	const { inviteId, ridZ, deleteSingleInstance, isRecurrent, id } = meta.arg;
 	if (state.invites) {
-		deleteSingleInstance
-			? (state.invites.instances[inviteId] = omit(state.invites.instances[inviteId], [
-					'ridZ',
-					ridZ
-			  ]))
-			: delete state?.invites?.series?.[inviteId];
+		if (!deleteSingleInstance) delete state?.invites?.[inviteId];
 	}
 
 	if (state.appointments && isRecurrent) {

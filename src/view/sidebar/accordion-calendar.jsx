@@ -18,7 +18,7 @@ import {
 	ModalManagerContext,
 	SnackbarManagerContext,
 	Tooltip
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -354,7 +354,7 @@ export const retrievePropertyFolder = (
 		{
 			id: 'share_url',
 			icon: 'Copy',
-			label: t('action.calendar_access_share', 'Calendar access share'),
+			label: t('action.calendar_access_share', 'Calendar’s access share'),
 			disabled: !folders?.[id]?.acl?.grant,
 			click: (e) => {
 				const closeModal = createModal(
