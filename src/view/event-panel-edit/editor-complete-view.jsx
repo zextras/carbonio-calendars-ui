@@ -23,9 +23,8 @@ import {
 	Padding,
 	Select,
 	Text
-
 } from '@zextras/carbonio-design-system';
-import { map, find, filter, flatten, findIndex, throttle } from 'lodash';
+import { map, find, filter, flatten, findIndex } from 'lodash';
 import {
 	useIntegratedComponent,
 	useUserAccount,
