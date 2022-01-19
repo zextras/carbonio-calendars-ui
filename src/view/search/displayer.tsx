@@ -5,7 +5,7 @@
  */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { Container } from '@zextras/zapp-ui';
+import { Container } from '@zextras/carbonio-design-system';
 import React, { ComponentProps, ReactComponentElement, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { Header } from '../event-panel-view/header';

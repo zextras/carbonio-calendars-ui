@@ -17,8 +17,8 @@ import {
 	ChipInput,
 	SnackbarManagerContext,
 	ModalManagerContext
-} from '@zextras/zapp-ui';
-import { useIntegratedComponent, useUserAccounts } from '@zextras/zapp-shell';
+} from '@zextras/carbonio-design-system';
+import { useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import { useDispatch } from 'react-redux';
 import {

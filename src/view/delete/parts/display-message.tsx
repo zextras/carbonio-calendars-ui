@@ -6,7 +6,7 @@
 import { size } from 'lodash';
 import React, { ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text } from '@zextras/zapp-ui';
+import { Text } from '@zextras/carbonio-design-system';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const DisplayMessage = ({

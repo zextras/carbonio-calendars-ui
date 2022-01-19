@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useLayoutEffect, useMemo } from 'react';
-import { Checkbox, Container } from '@zextras/zapp-ui';
+import { Checkbox, Container } from '@zextras/carbonio-design-system';
 import momentLocalizer from 'react-widgets-moment';
 import { useTranslation } from 'react-i18next';
 

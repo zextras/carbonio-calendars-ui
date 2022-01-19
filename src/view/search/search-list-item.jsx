@@ -7,7 +7,16 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { Container, Row, Avatar, Icon, Divider, Text, Padding, Tooltip } from '@zextras/zapp-ui';
+import {
+	Container,
+	Row,
+	Avatar,
+	Icon,
+	Divider,
+	Text,
+	Padding,
+	Tooltip
+} from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import styled from 'styled-components';
 import { selectCalendars } from '../../store/selectors/calendars';

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback } from 'react';
-import { Row, IconButton, Padding, Tooltip } from '@zextras/zapp-ui';
+import { Row, IconButton, Padding, Tooltip } from '@zextras/carbonio-design-system';
 
 const CollapsedSidebarItems = function Accordion({ item }) {
 	const { id, name, color, icon, checked = undefined, check } = item;

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useContext, useMemo } from 'react';
-import { Container, SnackbarManagerContext, Text } from '@zextras/zapp-ui';
-import { FOLDERS } from '@zextras/zapp-shell';
+import { Container, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { folderAction } from '../../store/actions/calendar-actions';

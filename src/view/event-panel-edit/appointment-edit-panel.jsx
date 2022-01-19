@@ -5,7 +5,7 @@
  */
 import React, { useContext, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useReplaceHistoryCallback } from '@zextras/zapp-shell';
+import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import Panel from '../../commons/panel';
 import EditorController from './editor-controller';

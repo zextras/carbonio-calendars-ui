@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { Suspense, lazy, useEffect, useState, useCallback } from 'react';
-import { Container, Text, SnackbarManager } from '@zextras/zapp-ui';
+import { Container, Text, SnackbarManager } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';

@@ -14,7 +14,7 @@ import {
 	Row,
 	Icon,
 	SnackbarManagerContext
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';

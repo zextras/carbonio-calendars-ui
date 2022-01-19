@@ -5,7 +5,7 @@
  */
 import React, { useCallback } from 'react';
 import styled, { css } from 'styled-components';
-import { Container, Button, IconButton } from '@zextras/zapp-ui';
+import { Container, Button, IconButton } from '@zextras/carbonio-design-system';
 
 const MultiButton = styled(Button)`
 	border-radius: ${({ position }) => {

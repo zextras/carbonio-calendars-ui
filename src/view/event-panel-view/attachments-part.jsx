@@ -7,7 +7,16 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { map, filter, reduce } from 'lodash';
-import { Container, Icon, IconButton, Padding, Link, Row, Text, Tooltip } from '@zextras/zapp-ui';
+import {
+	Container,
+	Icon,
+	IconButton,
+	Padding,
+	Link,
+	Row,
+	Text,
+	Tooltip
+} from '@zextras/carbonio-design-system';
 
 function getSizeLabel(size) {
 	let value = '';

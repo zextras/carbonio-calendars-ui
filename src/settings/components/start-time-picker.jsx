@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo } from 'react';
-import { Container, Icon, Padding, Text } from '@zextras/zapp-ui';
+import { Container, Icon, Padding, Text } from '@zextras/carbonio-design-system';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import momentLocalizer from 'react-widgets-moment';
 import { useTranslation } from 'react-i18next';

@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import momentLocalizer from 'react-widgets-moment';
-import { Container } from '@zextras/zapp-ui';
+import { Container } from '@zextras/carbonio-design-system';
 import Styler from './date-picker-style';
 // import EndDatePicker from './end-date-picker';
 import StartTimePicker from './start-time-picker';

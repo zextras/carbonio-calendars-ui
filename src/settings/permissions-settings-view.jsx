@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Container, Text, Row, Checkbox } from '@zextras/zapp-ui';
-import { useIntegratedComponent } from '@zextras/zapp-shell';
+import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
+import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { AttendeesContainer } from '../view/event-panel-edit/editor-complete-view';
 
 export default function PermisionsSettings({

@@ -7,10 +7,10 @@ import {
 	useReplaceHistoryCallback,
 	useRemoveCurrentBoard,
 	useUserAccounts
-} from '@zextras/zapp-shell';
+} from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { useCallback, useContext } from 'react';
-import { SnackbarManagerContext } from '@zextras/zapp-ui';
+import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { uploadParts } from '../store/actions/upload-parts';
 import {

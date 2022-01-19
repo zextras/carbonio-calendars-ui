@@ -5,7 +5,7 @@
  */
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useUserAccounts } from '@zextras/zapp-shell';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import {
 	Checkbox,
@@ -15,7 +15,7 @@ import {
 	SnackbarManagerContext,
 	Text,
 	Tooltip
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { ModalHeader } from '../../../../commons/modal-header';

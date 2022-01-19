@@ -6,7 +6,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { FC, ReactElement } from 'react';
-import { Container } from '@zextras/zapp-ui';
+import { Container } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import { ApptReminderModalProps } from '../../types/appointment-reminder';
 import ApptReminderCard from './reminder-card';

@@ -18,7 +18,7 @@ import {
 	ModalManagerContext,
 	SnackbarManagerContext,
 	Tooltip
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { folderAction } from '../../store/actions/calendar-actions';

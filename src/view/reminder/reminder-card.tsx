@@ -16,7 +16,7 @@ import {
 	Padding,
 	Dropdown,
 	Container
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../../store/actions/snooze-appointment-reminder';
