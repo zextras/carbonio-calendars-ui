@@ -11,15 +11,12 @@ import { folderAction } from '../../store/actions/calendar-actions';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
 
-export const DeleteModal = ({ folder, onClose, allCalendars }) => {
+export const DeleteModal = ({ folder, onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const dispatch = useDispatch();
 	const [t] = useTranslation();
-	const onConfirm = () => {
-		let parentFolder = allCalendars[folder].parent;
-		while (parentFolder === '3' && parentFolder === '1')
-			parentFolder = allCalendars[parentFolder].parent;
 
+	const onConfirm = () => {
 		let notCanceled = true;
 		const infoSnackbar = (hideButton = false) => {
 			createSnackbar({
@@ -27,7 +24,7 @@ export const DeleteModal = ({ folder, onClose, allCalendars }) => {
 				replace: true,
 				type: 'info',
 				label:
-					parentFolder === '1'
+					folder.parent === '1'
 						? t('message.snackbar.calendar_moved_to_trash', 'Calendar moved to trash')
 						: t('message.snackbar.calendar_deleted_successfully', 'Calendar deleted successfully.'),
 				autoHideTimeout: 3000,
@@ -39,73 +36,28 @@ export const DeleteModal = ({ folder, onClose, allCalendars }) => {
 			});
 		};
 		infoSnackbar();
+		onClose();
 		setTimeout(() => {
 			if (notCanceled) {
-				dispatch(folderAction({ id: folder, op: parentFolder === '1' ? 'trash' : 'delete' })).then(
-					(res) => {
-						if (!res.type.includes('fulfilled')) {
-							createSnackbar({
-								key: 'send',
-								replace: true,
-								type: 'error',
-								label:
-									parentFolder === '1'
-										? t('label.error_try_again', 'Something went wrong, please try again')
-										: t('label.error_try_again', 'Something went wrong, please try again'),
-								autoHideTimeout: 3000,
-								hideButton: true
-							});
-						}
+				dispatch(
+					folderAction({ id: folder.id, op: folder.parent === '1' ? 'trash' : 'delete' })
+				).then((res) => {
+					if (!res.type.includes('fulfilled')) {
+						createSnackbar({
+							key: 'send',
+							replace: true,
+							type: 'error',
+							label:
+								folder.parent === '1'
+									? t('label.error_try_again', 'Something went wrong, please try again')
+									: t('label.error_try_again', 'Something went wrong, please try again'),
+							autoHideTimeout: 3000,
+							hideButton: true
+						});
 					}
-				);
+				});
 			}
 		}, 3000);
-
-		/* if (parentFolder === '1') {
-			dispatch(folderAction({ id: folder, op: 'trash' })).then((res) => {
-				if (res.type.includes('fulfilled')) {
-					createSnackbar({
-						key: `folder-action-success`,
-						replace: true,
-						type: 'success',
-						hideButton: true,
-						label: t('success', "Success"),
-						autoHideTimeout: 3000
-					});
-				} else {
-					createSnackbar({
-						key: `folder-action-success`,
-						replace: true,
-						type: 'error',
-						hideButton: true,
-						label: t('snackbar.invite.error', "Error"),
-						autoHideTimeout: 3000
-					});
-				}
-			});
-		} else {
-			dispatch(folderAction({ id: folder, op: 'delete' })).then((res) => {
-				if (res.type.includes('fulfilled')) {
-					createSnackbar({
-						key: `folder-action-success`,
-						replace: true,
-						type: 'success',
-						hideButton: true,
-						label: t('success', "Success"),
-						autoHideTimeout: 3000
-					});
-				} else {
-					createSnackbar({
-						key: `folder-action-success`,
-						replace: true,
-						type: 'error',
-						hideButton: true,
-						label: t('snackbar.invite.error', "Error"),
-						autoHideTimeout: 3000
-					});
-				}
-			});
-		} */
 	};
 
 	const title = useMemo(() => t('label.delete', 'Delete'), [t]);
@@ -119,17 +71,17 @@ export const DeleteModal = ({ folder, onClose, allCalendars }) => {
 				height="fit"
 			>
 				<Text overflow="break-word">
-					{allCalendars[folder].parent === '1' ? (
+					{folder.parent === '1' ? (
 						<Trans
 							i18nKey="message.you_sure_move_calendar_trash"
 							defaults={'Are you sure you want to  delete the "{{name}}" calendar?'}
-							values={{ name: allCalendars[folder].name }}
+							values={{ name: folder.name }}
 						/>
 					) : (
 						<Trans
 							i18nKey="message.you_sure_delete_calendar"
 							defaults={'Are you sure you want to permanently delete the "{{name}}" calendar?'}
-							values={{ name: allCalendars[folder].name }}
+							values={{ name: folder.name }}
 						/>
 					)}
 				</Text>

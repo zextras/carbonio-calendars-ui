@@ -10,7 +10,6 @@ import {
 	Icon,
 	ModalManagerContext,
 	Padding,
-	Container,
 	Dropdown,
 	Text,
 	Tooltip,
@@ -35,17 +34,17 @@ import { getFolder } from '../../store/actions/get-folder';
 import { SharesInfoModal } from './shares-info-modal';
 import { ShareCalendarModal } from './share-calendar-modal';
 import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
+import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../../constants/sidebar';
 
 const useDropdownActions = (item) => {
 	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const calendars = useSelector(selectAllCalendars);
 
-	return [
+	const actions = [
 		{
-			id: 'new',
+			id: FOLDER_ACTIONS.NEW,
 			icon: 'CalendarOutline',
 			label: t('label.new_calendar', 'New calendar'),
 			click: (e) => {
@@ -54,53 +53,53 @@ const useDropdownActions = (item) => {
 				}
 				const closeModal = createModal(
 					{
-						children: <NewModal folders={calendars} onClose={() => closeModal()} />
+						children: <NewModal onClose={() => closeModal()} />
 					},
 					true
 				);
 			}
 		},
 		{
-			id: 'moveToRoot',
+			id: FOLDER_ACTIONS.MOVE_TO_ROOT,
 			icon: 'MoveOutline',
 			label: t('action.move_to_root', 'Move to root'),
 			click: (e) => {
 				if (e) {
 					e.stopPropagation();
 				}
-				dispatch(folderAction({ id: item.id, op: 'move', changes: { parent: '1' } })).then(
-					(res) => {
-						if (res.type.includes('fulfilled')) {
-							createSnackbar({
-								key: `calendar-moved-root`,
-								replace: true,
-								type: calendars?.[item.id]?.parent === '3' ? 'success' : 'info',
-								hideButton: true,
-								label:
-									calendars?.[item.id]?.parent === '3'
-										? t('label.error_try_again', 'Something went wrong, please try again')
-										: t(
-												'message.snackbar.calendar_moved_to_root_folder',
-												'Calendar moved to Root folder'
-										  ),
-								autoHideTimeout: 3000
-							});
-						} else {
-							createSnackbar({
-								key: `calendar-moved-root-error`,
-								replace: true,
-								type: 'error',
-								hideButton: true,
-								label: t('label.error_try_again', 'Something went wrong, please try again'),
-								autoHideTimeout: 3000
-							});
-						}
+				dispatch(
+					folderAction({ id: item.id, op: 'move', changes: { parent: FOLDERS.USER_ROOT } })
+				).then((res) => {
+					if (res.type.includes('fulfilled')) {
+						createSnackbar({
+							key: `calendar-moved-root`,
+							replace: true,
+							type: item?.parent === FOLDERS.TRASH ? 'success' : 'info',
+							hideButton: true,
+							label:
+								item?.parent === FOLDERS.TRASH
+									? t('label.error_try_again', 'Something went wrong, please try again')
+									: t(
+											'message.snackbar.calendar_moved_to_root_folder',
+											'Calendar moved to Root folder'
+									  ),
+							autoHideTimeout: 3000
+						});
+					} else {
+						createSnackbar({
+							key: `calendar-moved-root-error`,
+							replace: true,
+							type: 'error',
+							hideButton: true,
+							label: t('label.error_try_again', 'Something went wrong, please try again'),
+							autoHideTimeout: 3000
+						});
 					}
-				);
+				});
 			}
 		},
 		{
-			id: 'emptyTrash',
+			id: FOLDER_ACTIONS.EMPTY_TRASH,
 			icon: 'SlashOutline',
 			label: t('action.empty_trash', 'Empty Trash'),
 			click: (e) => {
@@ -114,10 +113,10 @@ const useDropdownActions = (item) => {
 					true
 				);
 			},
-			disabled: item.id !== '3'
+			disabled: item.id !== FOLDERS.TRASH
 		},
 		{
-			id: 'edit',
+			id: FOLDER_ACTIONS.EDIT,
 			icon: 'Edit2Outline',
 			label: t('action.edit_calendar_properties', 'Edit calendar properties'),
 			click: (e) => {
@@ -128,13 +127,10 @@ const useDropdownActions = (item) => {
 					{
 						children: (
 							<EditModal
-								folder={item.id}
-								folders={calendars}
-								grant={calendars[item.id].acl?.grant}
-								allCalendars={calendars}
+								folder={item}
+								grant={item.acl?.grant}
 								totalAppointments={item.n}
 								onClose={() => closeModal()}
-								t={t}
 							/>
 						),
 						maxHeight: '70vh',
@@ -145,7 +141,7 @@ const useDropdownActions = (item) => {
 			}
 		},
 		{
-			id: 'delete',
+			id: FOLDER_ACTIONS.DELETE,
 			icon: 'Trash2Outline',
 			label: t('action.delete_calendar', 'Delete calendar'),
 			click: (e) => {
@@ -154,27 +150,25 @@ const useDropdownActions = (item) => {
 				}
 				const closeModal = createModal(
 					{
-						children: (
-							<DeleteModal folder={item.id} allCalendars={calendars} onClose={() => closeModal()} />
-						)
+						children: <DeleteModal folder={item} onClose={() => closeModal()} />
 					},
 					true
 				);
 			}
 		},
 		{
-			id: 'removeFromList',
+			id: FOLDER_ACTIONS.REMOVE_FROM_LIST,
 			icon: 'CloseOutline',
 			label: t('remove_from_this_list', 'Remove from this list'),
 			click: (e) => {
 				if (e) {
 					e.stopPropagation();
-					dispatch(folderAction({ id: item.id, op: 'delete' }));
+					dispatch(folderAction({ id: item.id, op: FOLDER_ACTIONS.DELETE }));
 				}
 			}
 		},
 		{
-			id: 'sharesInfo',
+			id: FOLDER_ACTIONS.SHARES_INFO,
 			icon: 'InfoOutline',
 			label: t('shares_info', 'Shares Info'),
 			click: (e) => {
@@ -198,7 +192,7 @@ const useDropdownActions = (item) => {
 			}
 		},
 		{
-			id: 'share',
+			id: FOLDER_ACTIONS.SHARE,
 			icon: 'SharedCalendarOutline',
 			label: t('action.share_calendar', 'Share Calendar'),
 			click: (e) => {
@@ -207,12 +201,9 @@ const useDropdownActions = (item) => {
 						children: (
 							<>
 								<ShareCalendarModal
-									folder={item.id}
-									folders={calendars}
-									allCalendars={calendars}
+									folder={item}
 									totalAppointments={item.n}
 									closeFn={() => closeModal()}
-									t={t}
 								/>
 							</>
 						),
@@ -223,21 +214,16 @@ const useDropdownActions = (item) => {
 			}
 		},
 		{
-			id: 'share_url',
+			id: FOLDER_ACTIONS.SHARE_URL,
 			icon: 'Copy',
 			label: t('action.calendar_access_share', 'Calendar access share'),
-			disabled: !calendars?.[item.id]?.acl?.grant,
+			disabled: !item?.acl?.grant,
 			click: (e) => {
 				const closeModal = createModal(
 					{
 						children: (
 							<>
-								<ShareCalendarUrlModal
-									t={t}
-									folder={item.id}
-									onClose={() => closeModal()}
-									folders={calendars}
-								/>
+								<ShareCalendarUrlModal folder={item} onClose={() => closeModal()} />
 							</>
 						),
 						maxHeight: '70vh',
@@ -248,6 +234,79 @@ const useDropdownActions = (item) => {
 			}
 		}
 	];
+	switch (item.id) {
+		case FOLDERS.CALENDAR:
+			return actions
+				.filter(
+					(action) =>
+						action.id !== FOLDER_ACTIONS.EMPTY_TRASH &&
+						action.id !== FOLDER_ACTIONS.REMOVE_FROM_LIST &&
+						action.id !== FOLDER_ACTIONS.SHARES_INFO
+				)
+				.map((action) =>
+					action.id !== FOLDER_ACTIONS.NEW &&
+					action.id !== FOLDER_ACTIONS.EDIT &&
+					action.id !== FOLDER_ACTIONS.SHARE
+						? { ...action, disabled: true }
+						: action
+				);
+		case SIDEBAR_ITEMS.ALL_CALENDAR:
+			return actions
+				.filter(
+					(action) =>
+						action.id !== FOLDER_ACTIONS.EMPTY_TRASH &&
+						action.id !== FOLDER_ACTIONS.REMOVE_FROM_LIST &&
+						action.id !== FOLDER_ACTIONS.SHARES_INFO
+				)
+				.map((action) =>
+					action.id !== FOLDER_ACTIONS.NEW || action.id === FOLDER_ACTIONS.DELETE
+						? { ...action, disabled: true }
+						: action
+				);
+		// trash
+		case FOLDERS.TRASH:
+			return actions
+				.filter(
+					(action) =>
+						action.id !== FOLDER_ACTIONS.REMOVE_FROM_LIST &&
+						action.id !== FOLDER_ACTIONS.SHARES_INFO
+				)
+				.map((action) =>
+					action.id === FOLDER_ACTIONS.EMPTY_TRASH ? action : { ...action, disabled: true }
+				);
+		// customizable folders
+		default:
+			return item?.owner
+				? actions
+						.filter(
+							(action) =>
+								action.id === FOLDER_ACTIONS.SHARES_INFO ||
+								action.id === FOLDER_ACTIONS.REMOVE_FROM_LIST ||
+								action.id === FOLDER_ACTIONS.EDIT
+						)
+						.map((action) => {
+							if (action.id === FOLDER_ACTIONS.MOVE_TO_ROOT || action.id === FOLDER_ACTIONS.NEW) {
+								return { ...action, disabled: true };
+							}
+							return action;
+						})
+				: actions
+						.filter(
+							(action) =>
+								action.id !== FOLDER_ACTIONS.EMPTY_TRASH &&
+								action.id !== FOLDER_ACTIONS.REMOVE_FROM_LIST &&
+								action.id !== FOLDER_ACTIONS.SHARES_INFO
+						)
+						.map((action) => {
+							if (item?.parent === FOLDERS.USER_ROOT && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
+								return { ...action, disabled: true };
+							}
+							if (item?.parent === FOLDERS.TRASH && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
+								return { ...action, label: t('label.restore_calendar', 'Restore calendar') };
+							}
+							return action;
+						});
+	}
 };
 
 const nest = (items, id) =>
@@ -267,13 +326,9 @@ const SharesItem = ({ item }) => {
 		() =>
 			dispatch(getShareInfo()).then((res) => {
 				if (res.type.includes('fulfilled')) {
-					const calendars = uniqWith(
-						filter(res?.payload?.share ?? [], ['view', 'appointment']),
-						isEqual
-					);
 					const closeModal = createModal(
 						{
-							children: <SharesModal calendars={calendars} onClose={() => closeModal()} />
+							children: <SharesModal onClose={() => closeModal()} />
 						},
 						true
 					);
@@ -381,7 +436,7 @@ export default function SetMainMenuItems({ expanded }) {
 
 	const sharesItem = useMemo(
 		() => ({
-			id: 'shares',
+			id: SIDEBAR_ITEMS.SHARES,
 			label: t('shared_folders', 'Shared Calendars'),
 			icon: 'Share',
 			open: false,
@@ -398,7 +453,7 @@ export default function SetMainMenuItems({ expanded }) {
 		const checked = every(acccountItems, 'checked');
 		return {
 			name: t('label.all_calendars', 'All calendars'),
-			id: 'all',
+			id: SIDEBAR_ITEMS.ALL_CALENDAR,
 			checked,
 			recursiveToggleCheck: () => recursiveToggleCheck(allItems, checked),
 			CustomComponent: Component

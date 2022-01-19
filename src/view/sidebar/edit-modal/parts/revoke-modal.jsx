@@ -6,16 +6,8 @@
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useUserAccounts } from '@zextras/zapp-shell';
-import { useDispatch } from 'react-redux';
-import {
-	Checkbox,
-	Container,
-	Input,
-	Row,
-	SnackbarManagerContext,
-	Text,
-	Tooltip
-} from '@zextras/zapp-ui';
+import { useDispatch, useSelector } from 'react-redux';
+import { Checkbox, Container, Input, Row, SnackbarManagerContext, Text } from '@zextras/zapp-ui';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { ModalHeader } from '../../../../commons/modal-header';
@@ -23,7 +15,7 @@ import ModalFooter from '../../../../commons/modal-footer';
 import { GranteeInfo } from './grantee-info';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 
-export const RevokeModal = ({ folder, grant, onGoBack, folders }) => {
+export const RevokeModal = ({ folder, grant, onGoBack }) => {
 	const [t] = useTranslation();
 	const [sendNotification, setSendNotification] = useState(false);
 	const [standardMessage, setStandardMessage] = useState('');
@@ -43,7 +35,7 @@ export const RevokeModal = ({ folder, grant, onGoBack, folders }) => {
 	}, [sendNotification, standardMessage, t]);
 
 	const onConfirm = useCallback(() => {
-		dispatch(folderAction({ id: folder, zid: grant.zid, op: '!grant' })).then((res) => {
+		dispatch(folderAction({ id: folder.id, zid: grant.zid, op: '!grant' })).then((res) => {
 			if (res.type.includes('fulfilled')) {
 				sendNotification &&
 					dispatch(
@@ -51,7 +43,7 @@ export const RevokeModal = ({ folder, grant, onGoBack, folders }) => {
 							sendNotification,
 							standardMessage,
 							contacts: [{ email: grant.d }],
-							folder,
+							folder: folder.id,
 							accounts
 						})
 					);
@@ -92,7 +84,7 @@ export const RevokeModal = ({ folder, grant, onGoBack, folders }) => {
 		<Container padding="8px 8px 24px">
 			<ModalHeader
 				title={t('label.revoke_share', {
-					title: folders[folder].name,
+					title: folder.name,
 					defaultValue: 'Revoke share of {{title}}'
 				})}
 				onClose={onClose}

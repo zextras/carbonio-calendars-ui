@@ -1,0 +1,24 @@
+/*
+ * SPDX-FileCopyrightText: 2021 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+// eslint-disable-next-line no-shadow
+export enum FOLDER_ACTIONS {
+	MOVE_TO_ROOT = 'moveToRoot',
+	EMPTY_TRASH = 'emptyTrash',
+	REMOVE_FROM_LIST = 'removeFromList',
+	SHARES_INFO = 'sharesInfo',
+	EDIT = 'edit',
+	NEW = 'new',
+	DELETE = 'delete',
+	SHARE = 'share',
+	SHARE_URL = 'share_url'
+}
+
+// eslint-disable-next-line no-shadow
+export enum SIDEBAR_ITEMS {
+	ALL_CALENDAR = 'all',
+	SHARES = 'shares'
+}

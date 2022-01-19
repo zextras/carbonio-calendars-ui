@@ -19,7 +19,8 @@ import {
 	ModalManagerContext
 } from '@zextras/zapp-ui';
 import { useIntegratedComponent, useUserAccounts } from '@zextras/zapp-shell';
-import { filter, map } from 'lodash';
+import { map } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import {
 	ShareCalendarWithOptions,
@@ -37,14 +38,12 @@ import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
 
 export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	folder,
-	allCalendars,
 	closeFn,
 	onGoBack,
-	secondaryLabel,
-	t
+	secondaryLabel
 }): ReactElement => {
 	const dispatch = useDispatch();
-
+	const [t] = useTranslation();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
@@ -53,22 +52,14 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 
 	const [sendNotification, setSendNotification] = useState(true);
 	const [standardMessage, setStandardMessage] = useState('');
-	const [contacts, setContacts] = useState([{ email: 'abhishek.kumar@zextras.com' }]);
+	const [contacts, setContacts] = useState([]);
 	const [shareWithUserType, setshareWithUserType] = useState('usr');
 	const [shareWithUserRole, setshareWithUserRole] = useState('r');
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
 	const createModal = useContext(ModalManagerContext);
 	const accounts = useUserAccounts();
 
-	const currentCalendar = useMemo(
-		() => filter(allCalendars, { id: folder }),
-		[allCalendars, folder]
-	);
-
-	const title = useMemo(
-		() => `${t('label.share', 'Share')} ${currentCalendar[0]?.name}`,
-		[t, currentCalendar]
-	);
+	const title = useMemo(() => `${t('label.share', 'Share')} ${folder?.name}`, [folder?.name, t]);
 
 	const onShareWithChange = useCallback((shareWith) => {
 		setshareWithUserType(shareWith);
@@ -87,8 +78,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 						<ShareCalendarUrlModal
 							folder={folder}
 							onClose={(): void => closeModal()}
-							folders={allCalendars}
-							t={t}
 							isFromEditModal
 						/>
 					</>
@@ -109,7 +98,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				contacts,
 				shareWithUserType,
 				shareWithUserRole,
-				folder,
+				folder: folder.id,
 				accounts,
 				allowToSeePrvtAppt
 			}) // @ts-ignore
@@ -134,7 +123,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							contacts,
 							shareWithUserType,
 							shareWithUserRole,
-							folder,
+							folder: folder.id,
 							accounts
 						}) // @ts-ignore
 					).then((res2: any) => {
@@ -297,7 +286,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('action.share_calendar', 'Share Calendar')}
-				disabled={contacts.length < 1}
+				disabled={contacts?.length < 1}
 				secondaryAction={onGoBack}
 				secondaryLabel={secondaryLabel}
 			/>

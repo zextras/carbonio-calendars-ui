@@ -11,6 +11,7 @@ export type Calendar = {
 	color: ZimbraColor;
 	id: string;
 	rid?: string;
+	n: number;
 	name: string;
 	parent: string;
 	owner: string;

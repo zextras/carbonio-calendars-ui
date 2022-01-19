@@ -19,6 +19,7 @@ export const normalizeCalendar = (folder: ZimbraFolder): Calendar => ({
 	color: folder.color ? ZIMBRA_STANDARD_COLORS[folder.color] : setCalendarColor(folder),
 	id: folder.id,
 	name: folder.name,
+	n: folder.n,
 	parent: folder.l,
 	rid: folder.rid,
 	owner: folder.owner, // It's specified only if It's not the current user
@@ -38,6 +39,7 @@ export const normalizePartialCalendar = (folder: ZimbraFolder): any => ({
 	name: folder.name,
 	parent: folder.l,
 	rid: folder.rid,
+	n: folder.n,
 	owner: folder.owner, // It's specified only if It's not the current user
 	zid: folder.zid,
 	acl: folder.acl,

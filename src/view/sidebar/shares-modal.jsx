@@ -31,10 +31,11 @@ import {
 } from 'lodash';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
 import { createMountpoint } from '../../store/actions/create-mountpoint';
+import { selectAllCalendars } from '../../store/selectors/calendars';
 
 const ContainerEl = styled(Container)`
 	overflow-y: auto;
@@ -79,11 +80,13 @@ const CustomItem = ({ item }) => {
 	);
 };
 
-export const SharesModal = ({ calendars, onClose }) => {
+export const SharesModal = ({ onClose }) => {
 	const [links, setLinks] = useState([]);
 	const [data, setData] = useState();
 	const dispatch = useDispatch();
 	const [t] = useTranslation();
+
+	const calendars = useSelector(selectAllCalendars);
 
 	const onConfirm = useCallback(() => {
 		dispatch(createMountpoint(links));

@@ -8,6 +8,7 @@ export type ZimbraFolder = {
 	folder: ZimbraFolder;
 	color: any;
 	id: string;
+	n: number;
 	name: string;
 	l: string;
 	owner?: any;
