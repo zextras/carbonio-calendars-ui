@@ -78,7 +78,7 @@ export const normalizeEditor = (
 		isRichText: !!invite.htmlDescription,
 		richText: extractHtmlBody(invite.htmlDescription?.[0]._content) ?? '',
 		plainText: extractBody(invite.textDescription?.[0]._content) ?? '',
-		freeBusy: event.resource.freebusy,
+		freeBusy: event.resource.freeBusy,
 		inviteId: event.resource.inviteId,
 		ms: event.resource.ms || undefined,
 		rev: event.resource.rev || undefined,

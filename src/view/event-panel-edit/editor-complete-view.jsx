@@ -286,6 +286,7 @@ export default function EditorCompleteView({
 			setTitle(title);
 		}
 	}, [title, setTitle]);
+
 	return (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large', top: 'small' }}

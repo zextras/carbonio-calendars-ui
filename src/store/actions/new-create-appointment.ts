@@ -142,7 +142,7 @@ const generateInvite = (editorData: any): any => {
 						: undefined,
 				at,
 				allDay: editorData.allDay ? '1' : '0',
-				fb: editorData.resource.freeBusy,
+				fb: editorData.allDay ? 'F' : editorData.resource.freeBusy,
 				loc: editorData.resource.location,
 				name: editorData.title,
 				or: {
