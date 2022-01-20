@@ -25,7 +25,7 @@ const LazySettingsView = lazy(() =>
 	import(/* webpackChunkName: "settings-view" */ './settings/settings-view')
 );
 const LazySidebarView = lazy(() =>
-	import(/* webpackChunkName: "sidebar-view" */ './view/sidebar/new-sidebar')
+	import(/* webpackChunkName: "sidebar-view" */ './view/sidebar/sidebar')
 );
 const LazySearchView = lazy(() =>
 	import(/* webpackChunkName: "search-view" */ './view/search/search-view')

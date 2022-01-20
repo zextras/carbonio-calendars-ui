@@ -3,40 +3,23 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-	Accordion,
-	AccordionItem,
-	Button,
-	Icon,
-	ModalManagerContext,
-	Padding,
-	Dropdown,
-	Text,
-	Tooltip,
-	SnackbarManagerContext
-} from '@zextras/zapp-ui';
-import React, { useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { every, filter, isEqual, map, reduce, remove, uniqWith } from 'lodash';
+import React, { useContext } from 'react';
+import { ModalManagerContext, SnackbarManagerContext } from '@zextras/zapp-ui';
+import { useDispatch } from 'react-redux';
 import { FOLDERS } from '@zextras/zapp-shell';
-import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
-import { folderAction } from '../../store/actions/calendar-actions';
-import { setSearchRange } from '../../store/actions/set-search-range';
-import { getShareInfo } from '../../store/actions/get-share-info';
-import { SharesModal } from './shares-modal';
-import { CollapsedItems } from './collapsed-sidebar-items';
-import { NewModal } from './new-modal';
-import { EmptyModal } from './empty-modal';
-import { EditModal } from './edit-modal/edit-modal';
-import { DeleteModal } from './delete-modal';
-import { getFolder } from '../../store/actions/get-folder';
-import { SharesInfoModal } from './shares-info-modal';
-import { ShareCalendarModal } from './share-calendar-modal';
-import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
-import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../../constants/sidebar';
+import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
+import { NewModal } from '../view/sidebar/new-modal';
+import { folderAction } from '../store/actions/calendar-actions';
+import { EmptyModal } from '../view/sidebar/empty-modal';
+import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
+import { DeleteModal } from '../view/sidebar/delete-modal';
+import { getFolder } from '../store/actions/get-folder';
+import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
+import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
+import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
 
-const useDropdownActions = (item) => {
+export const useCalendarActions = (item) => {
 	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
@@ -195,7 +178,7 @@ const useDropdownActions = (item) => {
 			id: FOLDER_ACTIONS.SHARE,
 			icon: 'SharedCalendarOutline',
 			label: t('action.share_calendar', 'Share Calendar'),
-			click: (e) => {
+			click: () => {
 				const closeModal = createModal(
 					{
 						children: (
@@ -218,7 +201,7 @@ const useDropdownActions = (item) => {
 			icon: 'Copy',
 			label: t('action.calendar_access_share', 'Calendar access share'),
 			disabled: !item?.acl?.grant,
-			click: (e) => {
+			click: () => {
 				const closeModal = createModal(
 					{
 						children: (
@@ -308,167 +291,3 @@ const useDropdownActions = (item) => {
 						});
 	}
 };
-
-const nest = (items, id) =>
-	map(
-		filter(items, (item) => item.parent === id),
-		(item) => ({
-			...item,
-			absParent: item.absParent ?? item.parent,
-			items: nest(items, item.id)
-		})
-	);
-
-const SharesItem = ({ item }) => {
-	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch();
-	const onClick = useCallback(
-		() =>
-			dispatch(getShareInfo()).then((res) => {
-				if (res.type.includes('fulfilled')) {
-					const closeModal = createModal(
-						{
-							children: <SharesModal onClose={() => closeModal()} />
-						},
-						true
-					);
-				}
-			}),
-		[createModal, dispatch]
-	);
-	return (
-		<AccordionItem item={item}>
-			<Button type="outlined" label={item.label} color="primary" size="fill" onClick={onClick} />
-		</AccordionItem>
-	);
-};
-
-const Component = ({ item }) => {
-	const { name, checked, color, recursiveToggleCheck } = item;
-
-	const ddItems = useDropdownActions(item);
-
-	const icon = useMemo(() => {
-		if (item.owner) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
-		if (checked) return 'Calendar2';
-		return 'CalendarOutline';
-	}, [checked, item.owner]);
-
-	return (
-		<Dropdown items={ddItems} contextMenu width="100%" display="block">
-			<AccordionItem item={item}>
-				<Padding right="small">
-					<Icon
-						icon={icon}
-						customColor={color?.color}
-						size="large"
-						onClick={recursiveToggleCheck}
-					/>
-				</Padding>
-				<Tooltip label={name} placement="right" maxWidth="100%">
-					<Text style={{ minWidth: 0, flexBasis: 0, flexGrow: 1 }}>{name}</Text>
-				</Tooltip>
-			</AccordionItem>
-		</Dropdown>
-	);
-};
-
-export default function SetMainMenuItems({ expanded }) {
-	const calendars = useSelector(selectAllCalendars);
-	const [t] = useTranslation();
-	const dispatch = useDispatch();
-	const start = useSelector(selectStart);
-	const end = useSelector(selectEnd);
-
-	const acccountItems = useMemo(
-		() => filter(calendars, (c) => c.id !== FOLDERS.TRASH && !c.isShared),
-		[calendars]
-	);
-
-	const recursiveToggleCheck = useCallback(
-		(item, checked) => {
-			const applyToChildren = (folderArr) =>
-				reduce(
-					folderArr,
-					(acc, v) => {
-						const value = filter(calendars, (f) => f.parent === v.id);
-						if (value.length > 0) {
-							return v.checked !== checked
-								? [...acc, ...applyToChildren(value)]
-								: [...acc, v.id, ...applyToChildren(value)];
-						}
-						return v.checked !== checked ? acc : [...acc, v.id];
-					},
-					''
-				);
-			const toToggle = applyToChildren(item);
-			dispatch(
-				folderAction({
-					id: toToggle,
-					changes: { checked },
-					op: checked ? '!check' : 'check'
-				})
-			).then((res) => {
-				if (res?.meta?.arg?.op === 'check') {
-					dispatch(
-						setSearchRange({
-							rangeStart: start,
-							rangeEnd: end
-						})
-					);
-				}
-			});
-		},
-		[calendars, dispatch, end, start]
-	);
-
-	const allItems = useMemo(() => {
-		const normalized = map(calendars ?? [], (folder) => ({
-			...folder,
-			recursiveToggleCheck: () => recursiveToggleCheck([folder], folder.checked),
-			CustomComponent: Component
-		}));
-		return nest(normalized, FOLDERS.USER_ROOT);
-	}, [calendars, recursiveToggleCheck]);
-
-	const trashItem = useMemo(() => remove(allItems, ['id', FOLDERS.TRASH]), [allItems]);
-	const sharedSubItems = useMemo(() => remove(allItems, 'owner'), [allItems]);
-
-	const sharesItem = useMemo(
-		() => ({
-			id: SIDEBAR_ITEMS.SHARES,
-			label: t('shared_folders', 'Shared Calendars'),
-			icon: 'Share',
-			open: false,
-			items: sharedSubItems.concat({
-				label: t('find_shares', 'Find shares'),
-				CustomComponent: SharesItem
-			}),
-			divider: true
-		}),
-		[sharedSubItems, t]
-	);
-
-	const allCalendarsItem = useMemo(() => {
-		const checked = every(acccountItems, 'checked');
-		return {
-			name: t('label.all_calendars', 'All calendars'),
-			id: SIDEBAR_ITEMS.ALL_CALENDAR,
-			checked,
-			recursiveToggleCheck: () => recursiveToggleCheck(allItems, checked),
-			CustomComponent: Component
-		};
-	}, [acccountItems, allItems, recursiveToggleCheck, t]);
-
-	const items = [allCalendarsItem, ...allItems, ...trashItem, sharesItem];
-
-	return (
-		<>
-			{expanded ? (
-				<Accordion items={items} />
-			) : (
-				<CollapsedItems items={items} onClick={recursiveToggleCheck} />
-			)}
-		</>
-	);
-}

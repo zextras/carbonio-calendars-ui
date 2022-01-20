@@ -6,7 +6,7 @@
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useUserAccounts } from '@zextras/zapp-shell';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Checkbox, Container, Input, Row, SnackbarManagerContext, Text } from '@zextras/zapp-ui';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { folderAction } from '../../../../store/actions/calendar-actions';
