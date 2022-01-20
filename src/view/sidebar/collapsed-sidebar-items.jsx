@@ -11,6 +11,7 @@ import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { setSearchRange } from '../../store/actions/set-search-range';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
+import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 
 const CollapsedSidebarItems = ({ item }) => {
 	const { name, color, checked = undefined } = item;
@@ -21,7 +22,7 @@ const CollapsedSidebarItems = ({ item }) => {
 
 	const recursiveToggleCheck = useCallback(() => {
 		const selectedItem =
-			item.id === 'all'
+			item.id === SIDEBAR_ITEMS.ALL_CALENDAR
 				? filter(
 						calendars,
 						(c) => c.id !== FOLDERS.TRASH && !c.owner && c.parent === FOLDERS.USER_ROOT
@@ -59,10 +60,10 @@ const CollapsedSidebarItems = ({ item }) => {
 	}, [calendars, checked, dispatch, end, item, start]);
 
 	const icon = useMemo(() => {
-		if (item.owner) return item.checked ? 'SharedCalendar' : 'SharedCalendarOutline';
-		if (item.checked) return 'Calendar2';
-		return 'CalendarOutline';
-	}, [item.checked, item.owner]);
+		if (item.id === FOLDERS.TRASH) return checked ? 'Trash2' : 'Trash2Outline';
+		if (item.owner) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
+		return checked ? 'Calendar2' : 'CalendarOutline';
+	}, [checked, item.id, item.owner]);
 
 	return (
 		<Row>
