@@ -17,6 +17,7 @@ export const DeleteModal = ({ folder, onClose }) => {
 	const dispatch = useDispatch();
 	const [t] = useTranslation();
 	const onConfirm = () => {
+		onClose();
 		const restoreEvent = () => {
 			dispatch(folderAction({ id: folder.id, op: 'move', changes: folder })).then((res) => {
 				if (res.type.includes('fulfilled')) {
