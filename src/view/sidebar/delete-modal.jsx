@@ -41,7 +41,7 @@ export const DeleteModal = ({ folder, onClose }) => {
 			});
 		};
 		dispatch(
-			folderAction({ id: folder, op: folder.parent === FOLDERS.USER_ROOT ? 'trash' : 'delete' })
+			folderAction({ id: folder.id, op: folder.parent === FOLDERS.USER_ROOT ? 'trash' : 'delete' })
 		).then((res) => {
 			if (res.type.includes('fulfilled')) {
 				createSnackbar({

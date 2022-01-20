@@ -7,7 +7,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Accordion } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
-import { map, filter, reduce, remove, every } from 'lodash';
+import { map, filter, reduce, remove, every, reject, head } from 'lodash';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -32,11 +32,6 @@ export default function SetMainMenuItems({ expanded }) {
 	const dispatch = useDispatch();
 	const start = useSelector(selectStart);
 	const end = useSelector(selectEnd);
-
-	const acccountItems = useMemo(
-		() => filter(calendars, (c) => c.id !== FOLDERS.TRASH && !c.isShared),
-		[calendars]
-	);
 
 	const recursiveToggleCheck = useCallback(
 		(item, checked) => {
@@ -103,7 +98,12 @@ export default function SetMainMenuItems({ expanded }) {
 	);
 
 	const allCalendarsItem = useMemo(() => {
-		const checked = every(acccountItems, 'checked');
+		// Every controllable folders by All Calendars
+		const subItems = reject(
+			calendars,
+			(c) => c?.absFolderPath?.includes(head(trashItem)?.label) || c.isShared
+		);
+		const checked = every(subItems, 'checked');
 		return {
 			name: t('label.all_calendars', 'All calendars'),
 			id: SIDEBAR_ITEMS.ALL_CALENDAR,
@@ -111,7 +111,7 @@ export default function SetMainMenuItems({ expanded }) {
 			recursiveToggleCheck: () => recursiveToggleCheck(allItems, checked),
 			CustomComponent: FoldersComponent
 		};
-	}, [acccountItems, allItems, recursiveToggleCheck, t]);
+	}, [allItems, calendars, recursiveToggleCheck, t, trashItem]);
 
 	const items = [allCalendarsItem, ...allItems, ...trashItem, sharesItem];
 
