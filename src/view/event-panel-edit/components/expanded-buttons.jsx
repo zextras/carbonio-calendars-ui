@@ -6,7 +6,14 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { reduce, map } from 'lodash';
 import styled from 'styled-components';
-import { Padding, Tooltip, IconCheckbox, Icon, Text, Dropdown } from '@zextras/zapp-ui';
+import {
+	Padding,
+	Tooltip,
+	IconCheckbox,
+	Icon,
+	Text,
+	Dropdown
+} from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 const ResizedIconCheckbox = styled(IconCheckbox)`

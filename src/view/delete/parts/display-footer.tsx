@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useIntegratedFunction } from '@zextras/zapp-shell';
+import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { map, reduce, size } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

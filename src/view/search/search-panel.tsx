@@ -5,7 +5,7 @@
  */
 import React, { ComponentProps, ReactComponentElement } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
-import { Container, Padding, Text, Icon } from '@zextras/zapp-ui';
+import { Container, Padding, Text, Icon } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import Displayer from './displayer';

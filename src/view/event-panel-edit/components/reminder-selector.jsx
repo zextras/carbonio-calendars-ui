@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Select, Icon, Row, Container, Text } from '@zextras/zapp-ui';
+import { Select, Icon, Row, Container, Text } from '@zextras/carbonio-design-system';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { find } from 'lodash';
@@ -11,7 +11,7 @@ import styled from 'styled-components';
 
 const getReminderItems = (t) => [
 	{ label: t('reminder.never', 'Never'), value: 'never' },
-	{ label: t('reminder.at_time_of_event', 'At time of the event'), value: '0' },
+	{ label: t('reminder.at_time_of_event', 'At the time of the event'), value: '0' },
 	{
 		label: t('reminder.minute_before', {
 			count: 1,

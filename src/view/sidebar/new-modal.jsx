@@ -14,7 +14,7 @@ import {
 	Row,
 	Icon,
 	SnackbarManagerContext
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -142,7 +142,7 @@ export const NewModal = ({ onClose }) => {
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
-						type: 'info',
+						type: 'success',
 						hideButton: true,
 						label: t('message.snackbar.new_calendar_created', 'New calendar created'),
 						autoHideTimeout: 3000

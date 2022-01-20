@@ -6,7 +6,7 @@
 import React, { useCallback, useMemo, useContext, useEffect } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/zapp-shell';
+import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { minBy, map, sortBy } from 'lodash';
@@ -100,14 +100,11 @@ export default function CalendarComponent() {
 				moment(date).tz(timeZone).format('HHmm') >= workingSchedule[moment(date).day()].start &&
 				moment(date).tz(timeZone).format('HHmm') < workingSchedule[moment(date).day()].end
 			) {
-				if (moment().isSame(moment(date), 'day')) {
-					return theme.palette.highlight.regular;
-				}
 				return theme.palette.gray6.regular;
 			}
-			return theme.palette.gray3.regular;
+			return theme.palette.gray5.regular;
 		}
-		return theme.palette.gray3.regular;
+		return theme.palette.gray5.regular;
 	};
 
 	const slotDayBorderColor = (date) => {
@@ -248,7 +245,7 @@ export default function CalendarComponent() {
 				slotPropGetter={slotPropGetter}
 				workingSchedule={workingSchedule}
 				onSelectSlot={(e) => handleSelect(e)}
-				scrollToTime={new Date(0, 0, 0, startHour, 0, 0)}
+				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
 				onEventDrop={onEventDrop}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				draggableAccessor={(event) => event.resource.iAmOrganizer}

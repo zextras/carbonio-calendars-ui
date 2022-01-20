@@ -6,7 +6,7 @@
 import { useDispatch } from 'react-redux';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { Padding, Row, Dropdown, Icon, Text } from '@zextras/zapp-ui';
+import { Padding, Row, Dropdown, Icon, Text } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../../store/slices/appointments-slice';

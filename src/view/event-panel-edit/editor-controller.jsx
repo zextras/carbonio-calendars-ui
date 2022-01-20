@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useBoardConfig } from '@zextras/zapp-shell';
+import { useBoardConfig } from '@zextras/carbonio-shell-ui';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { useQueryParam } from '../../commons/useQueryParam';
 import { useId } from '../../hooks/use-id';

@@ -5,9 +5,9 @@
  */
 import { useTranslation } from 'react-i18next';
 import React, { useContext } from 'react';
-import { ModalManagerContext, SnackbarManagerContext } from '@zextras/zapp-ui';
+import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
-import { FOLDERS } from '@zextras/zapp-shell';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import { NewModal } from '../view/sidebar/new-modal';
 import { folderAction } from '../store/actions/calendar-actions';

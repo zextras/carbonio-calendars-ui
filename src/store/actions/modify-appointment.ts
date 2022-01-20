@@ -5,7 +5,7 @@
  */
 import moment from 'moment';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/zapp-shell';
+import { soapFetch } from '@zextras/carbonio-shell-ui';
 
 function generateBodyRequest(
 	app: {

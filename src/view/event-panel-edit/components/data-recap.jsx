@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
-import { Row, Avatar, Text, Container, Icon } from '@zextras/zapp-ui';
+import { Row, Avatar, Text, Container, Icon } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';

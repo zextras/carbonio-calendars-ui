@@ -15,7 +15,7 @@ import {
 	Icon,
 	Text,
 	SnackbarManagerContext
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
@@ -145,7 +145,7 @@ const InviteResponse: FC<InviteResponse> = ({
 					createSnackbar({
 						key: `invite_accepted`,
 						replace: true,
-						type: 'info',
+						type: 'success',
 						label: t('message.snackbar.invite.accepted', 'You’ve replied as Accepted'),
 						autoHideTimeout: 3000
 					});

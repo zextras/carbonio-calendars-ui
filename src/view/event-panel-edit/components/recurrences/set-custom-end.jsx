@@ -5,7 +5,7 @@
  */
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Container, Input, Padding, Text } from '@zextras/zapp-ui';
+import { Container, Input, Padding, Text } from '@zextras/carbonio-design-system';
 import { isNaN } from 'lodash';
 import { SimplifiedCustomDatePicker } from '../simplified-custom-date-picker';
 import Styler from '../../../../settings/components/date-picker-style';

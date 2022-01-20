@@ -9,7 +9,7 @@ import {
 	Spinner,
 	getBridgedFunctions,
 	registerComponents
-} from '@zextras/zapp-shell';
+} from '@zextras/carbonio-shell-ui';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';

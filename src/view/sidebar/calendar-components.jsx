@@ -14,9 +14,9 @@ import {
 	Padding,
 	Text,
 	Tooltip
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
-import { FOLDERS } from '@zextras/zapp-shell';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { getShareInfo } from '../../store/actions/get-share-info';
 import { SharesModal } from './shares-modal';
 import { useCalendarActions } from '../../hooks/use-calendar-actions';

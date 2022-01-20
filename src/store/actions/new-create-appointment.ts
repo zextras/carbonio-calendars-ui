@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/zapp-shell';
+import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 
@@ -142,7 +142,7 @@ const generateInvite = (editorData: any): any => {
 						: undefined,
 				at,
 				allDay: editorData.allDay ? '1' : '0',
-				fb: editorData.resource.freeBusy,
+				fb: editorData.allDay ? 'F' : editorData.resource.freeBusy,
 				loc: editorData.resource.location,
 				name: editorData.title,
 				or: {

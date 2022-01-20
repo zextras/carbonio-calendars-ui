@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Container, Text, Row, Checkbox } from '@zextras/zapp-ui';
+import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
 
 export default function AppleIcalSettings({ t, settingsObj, updateSettings }) {
 	return (

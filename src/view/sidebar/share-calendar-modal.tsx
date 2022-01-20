@@ -17,10 +17,10 @@ import {
 	ChipInput,
 	SnackbarManagerContext,
 	ModalManagerContext
-} from '@zextras/zapp-ui';
-import { useIntegratedComponent, useUserAccounts } from '@zextras/zapp-shell';
+} from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
+import { useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import {
 	ShareCalendarWithOptions,
@@ -34,6 +34,7 @@ import ModalFooter from '../../commons/modal-footer';
 // @ts-ignore
 import { ModalHeader } from '../../commons/modal-header';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
+// eslint-disable-next-line import/no-named-as-default,import/no-named-as-default-member
 import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
 
 export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
@@ -108,9 +109,9 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'info',
+					type: 'success',
 					hideButton: true,
-					label: t('snackbar.share_folder_success', 'This Calendar has been shared'),
+					label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
 					autoHideTimeout: 3000
 				});
 				// @ts-ignore
@@ -134,7 +135,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 								replace: true,
 								type: 'error',
 								hideButton: true,
-								label: t('snackbar.invite.error', 'Error'),
+								label: t('label.error_try_again', 'Something went wrong, please try again'),
 								autoHideTimeout: 3000
 							});
 						}
@@ -278,7 +279,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					<Text overflow="break-word" size="small" color="secondary">
 						{t(
 							'share.note.share_note',
-							'The standard message displays your name, the name of the shared item, pemissions granted to the recipients, and sign in information, if necessary.'
+							'The standard message displays your name, the name of the shared item, pemissions granted to the recipients, and sign in information.'
 						)}
 					</Text>
 				</Row>

@@ -3,12 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Accordion } from '@zextras/zapp-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Accordion } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
-import { every, filter, map, reduce, remove } from 'lodash';
-import { FOLDERS } from '@zextras/zapp-shell';
+import { map, filter, reduce, remove } from 'lodash';
+import { every } from 'core-js/internals/array-iteration';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { setSearchRange } from '../../store/actions/set-search-range';

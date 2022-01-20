@@ -4,7 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
-import { Container, Text, CustomModal, Divider, Row, Checkbox } from '@zextras/zapp-ui';
+import {
+	Container,
+	Text,
+	CustomModal,
+	Divider,
+	Row,
+	Checkbox
+} from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import TimePicker from './components/time-picker';
 import { getWeekDay } from './components/utils';

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
-import { Container, Icon, Padding } from '@zextras/zapp-ui';
+import { Container, Icon, Padding } from '@zextras/carbonio-design-system';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import momentLocalizer from 'react-widgets-moment';
 import Styler from './date-picker-style';

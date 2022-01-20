@@ -21,9 +21,13 @@ import {
 	Padding,
 	Select,
 	Text
-} from '@zextras/zapp-ui';
+} from '@zextras/carbonio-design-system';
 import { map, throttle, find, filter, flatten, findIndex } from 'lodash';
-import { useUserAccount, useIntegratedComponent, useUserSettings } from '@zextras/zapp-shell';
+import {
+	useUserAccount,
+	useIntegratedComponent,
+	useUserSettings
+} from '@zextras/carbonio-shell-ui';
 import { AttendeesContainer, TextArea, EditorWrapper } from './editor-complete-view';
 
 import ExpandedButtons, { addAttachments } from './components/expanded-buttons';
@@ -48,18 +52,12 @@ export default function EditorSmallView({
 	proposeNewTime
 }) {
 	const [t] = useTranslation();
-
-	const [firstTime, setFirstTime] = useState(true);
-	const [description, setDescription] = useState([
-		data?.resource.plainText,
-		data?.resource.richText
-	]);
-
 	const title = useMemo(() => (data && data.title !== '' ? data.title : 'No Subject'), [data]);
 	const settings = useUserSettings();
 	const account = useUserAccount();
 	const utils = useContext(EventContext);
 	const [dropZoneEnable, setDropZoneEnable] = useState(false);
+
 	useLayoutEffect(() => {
 		setTitle && setTitle(title);
 	}, [title, setTitle, data, callbacks]);
@@ -178,18 +176,6 @@ export default function EditorSmallView({
 		setDropZoneEnable(false);
 	};
 
-	const editorTextChange = useMemo(
-		() =>
-			throttle((text) => callbacks.onTextChange(text), 250, {
-				trailing: true,
-				leading: false
-			}),
-		[callbacks]
-	);
-	const updateDescription = useCallback((text) => {
-		setDescription(text);
-	}, []);
-
 	const onOrganizerChange = useCallback(
 		(val) => {
 			const selectedOrganizer = find(list, { value: val });
@@ -209,17 +195,11 @@ export default function EditorSmallView({
 		[account, callbacks, list]
 	);
 
-	useEffect(() => {
-		if (firstTime && data?.resource?.richText) {
-			setDescription([data?.resource.plainText, data?.resource.richText]);
-			setFirstTime(false);
-		}
-	}, [data, firstTime]);
-
 	const textAreaLabel = useMemo(
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
 		[t]
 	);
+
 	return (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large' }}
@@ -396,24 +376,20 @@ export default function EditorSmallView({
 								{data.resource.isRichText ? (
 									<EditorWrapper>
 										<RichTextEditor
-											value={description[1]}
-											onEditorChange={(ev) => {
-												updateDescription(ev);
-												editorTextChange(ev);
-											}}
+											value={data.resource.richText}
+											onEditorChange={callbacks.onTextChange}
 											minHeight={200}
 										/>
 									</EditorWrapper>
 								) : (
 									<TextArea
 										placeholder={textAreaLabel}
-										value={description[0]}
+										value={data.resource.plainText}
 										onChange={(ev) => {
 											// eslint-disable-next-line no-param-reassign
 											ev.target.style.height = 'auto';
 											// eslint-disable-next-line no-param-reassign
 											ev.target.style.height = `${25 + ev.target.scrollHeight}px`;
-											updateDescription([ev.target.value, ev.target.value]);
 											callbacks.onTextChange([ev.target.value, ev.target.value]);
 										}}
 									/>

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
-import { Container, Text, Icon, Divider, Row, Padding } from '@zextras/zapp-ui';
+import { Container, Text, Icon, Divider, Row, Padding } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import styled from 'styled-components';
 import { reduce } from 'lodash';

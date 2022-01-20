@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, useState, useCallback, useEffect } from 'react';
-import { Container } from '@zextras/zapp-ui';
+import { Container } from '@zextras/carbonio-design-system';
 import { isEmpty, map, reduce } from 'lodash';
 import moment from 'moment';
 

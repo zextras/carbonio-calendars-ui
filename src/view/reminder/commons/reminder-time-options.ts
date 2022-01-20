@@ -9,8 +9,8 @@ import { TFunction } from 'i18next';
 
 export const getReminderItems = (t: TFunction, setSnooze: (arg: number) => void) => [
 	{
-		id: t('reminder.at_time_of_event', 'At time of the event'),
-		label: t('reminder.at_time_of_event', 'At time of the event'),
+		id: t('reminder.at_time_of_event', 'At the time of the event'),
+		label: t('reminder.at_time_of_event', 'At the time of the event'),
 		click: () => setSnooze(0)
 	},
 	{

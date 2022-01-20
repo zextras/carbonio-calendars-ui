@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/zapp-shell';
+import { useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
 /* eslint-disable import/extensions */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { FC, ReactElement, useCallback, useState, useEffect, useMemo } from 'react';
-import { CustomModal } from '@zextras/zapp-ui';
+import { CustomModal } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';

@@ -5,7 +5,7 @@
  */
 import { useEffect, useState } from 'react';
 import { isEmpty, reduce } from 'lodash';
-import { useRefresh, useNotify, store } from '@zextras/zapp-shell';
+import { useRefresh, useNotify, store } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { combineReducers } from '@reduxjs/toolkit';
 import invitesSliceReducer, { handleModifiedInvites } from '../../store/slices/invites-slice';

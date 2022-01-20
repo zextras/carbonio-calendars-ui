@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Container, Icon, Text, Padding } from '@zextras/zapp-ui';
+import { Container, Icon, Text, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
@@ -90,7 +90,7 @@ export default function DropZoneAttachment({ onDragOverEvent, onDropEvent, onDra
 										>
 											{t(
 												'composer.attachment.draganddrop.content',
-												'Drop here your attachments to quick-add them to appointment'
+												'Drop here your attachements to quickly add them to the appointment'
 											)}
 										</DetailText>
 									</Container>

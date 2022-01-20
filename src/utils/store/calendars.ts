@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS } from '@zextras/zapp-shell';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy, reduce, some } from 'lodash';
 import { normalizeCalendar } from '../../normalizations/normalize-calendars';
 import { Calendar } from '../../types/store/calendars';

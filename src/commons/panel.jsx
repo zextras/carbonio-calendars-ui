@@ -5,7 +5,7 @@
  */
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Container } from '@zextras/zapp-ui';
+import { Container } from '@zextras/carbonio-design-system';
 import { Header } from '../view/event-panel-view/header';
 
 const AppointmentCardContainer = styled(Container)`
