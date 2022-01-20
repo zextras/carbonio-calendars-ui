@@ -16,6 +16,7 @@ import {
 	Tooltip
 } from '@zextras/zapp-ui';
 import { useDispatch } from 'react-redux';
+import { FOLDERS } from '@zextras/zapp-shell';
 import { getShareInfo } from '../../store/actions/get-share-info';
 import { SharesModal } from './shares-modal';
 import { useCalendarActions } from '../../hooks/use-calendar-actions';
@@ -55,10 +56,10 @@ export const FoldersComponent = ({ item }) => {
 	const ddItems = useCalendarActions(item);
 
 	const icon = useMemo(() => {
+		if (item.id === FOLDERS.TRASH) return checked ? 'Trash2' : 'Trash2Outline';
 		if (item.owner) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
-		if (checked) return 'Calendar2';
-		return 'CalendarOutline';
-	}, [checked, item.owner]);
+		return checked ? 'Calendar2' : 'CalendarOutline';
+	}, [checked, item.id, item.owner]);
 
 	return (
 		<Dropdown items={ddItems} contextMenu width="100%" display="block">
