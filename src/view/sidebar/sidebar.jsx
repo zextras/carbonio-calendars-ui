@@ -15,7 +15,7 @@ import { folderAction } from '../../store/actions/calendar-actions';
 import { setSearchRange } from '../../store/actions/set-search-range';
 import { CollapsedItems } from './collapsed-sidebar-items';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
-import { FoldersComponent, SharesComponent } from './calendar-components';
+import { FoldersComponent, SharesComponent } from './sidebar-components';
 
 const nest = (items, id) =>
 	map(
