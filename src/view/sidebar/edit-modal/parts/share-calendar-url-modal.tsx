@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, ReactElement, useContext } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { Container, SnackbarManagerContext, Text, Padding } from '@zextras/carbonio-design-system';
-import { Trans } from 'react-i18next';
 import { ShareCalendarUrlProps } from '../../../../types/share-calendar';
 import { ModalHeader } from '../../../../commons/modal-header';
 import { UrlColumn } from './url-column';
@@ -23,16 +23,16 @@ const getUrl = (type: string, user: string, folderName: string): string => {
 };
 const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 	folder,
-	folders,
 	onClose,
-	isFromEditModal,
-	t
+	isFromEditModal
 }): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const accounts = useUserAccounts();
 
+	const [t] = useTranslation();
+
 	const onUrlCopied = (title: string, type: string) => (): void => {
-		const text = getUrl(type, accounts[0].name, folders[folder].name);
+		const text = getUrl(type, accounts[0].name, folder.name);
 		navigator.clipboard.writeText(text).then(() => {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
@@ -50,7 +50,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 		<Container padding="8px 8px 24px">
 			<ModalHeader
 				title={t('label.share_calendar_url', {
-					title: folders[folder].name,
+					title: folder.name,
 					defaultValue: '{{title}} access share'
 				})}
 				onClose={onClose}
@@ -59,7 +59,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 				<Container crossAlignment="baseline">
 					<Text overflow="break-word">
 						{t('message.share_calendar_url_msg', {
-							title: folders[folder].name,
+							title: folder.name,
 							defaultValue:
 								'You can quickly share {{title}} with your collaborators using one of these URLs:'
 						})}

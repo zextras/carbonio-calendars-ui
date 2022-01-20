@@ -17,12 +17,12 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { filter, includes, isEmpty, map, find } from 'lodash';
+import { includes, isEmpty, map, find } from 'lodash';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
 import { folderAction } from '../../../../store/actions/calendar-actions';
@@ -30,6 +30,7 @@ import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colo
 import { GranteeInfo } from './grantee-info';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
+import { selectAllCalendars } from '../../../../store/selectors/calendars';
 
 const Square = styled.div`
 	width: 18px;
@@ -105,13 +106,14 @@ const getStatusItems = (t) =>
 		)
 	}));
 
-export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments }) => {
-	const [inputValue, setInputValue] = useState(allCalendars[folder].name || '');
-	const [freeBusy, setFreeBusy] = useState(allCalendars[folder].freeBusy || false);
+export const MainEditModal = ({ folder, totalAppointments }) => {
+	const allCalendars = useSelector(selectAllCalendars);
+	const [inputValue, setInputValue] = useState(folder.name || '');
+	const [freeBusy, setFreeBusy] = useState(folder.freeBusy || false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
-	const checked = useMemo(() => allCalendars[folder].checked, [allCalendars, folder]);
+	const checked = useMemo(() => folder.checked, [folder]);
 	const colors = useMemo(() => getStatusItems(t), [t]);
 	const { setModal, setGrant, onClose } = useContext(EditModalContext);
 	const accounts = useUserAccounts();
@@ -126,8 +128,8 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 		setHovered({});
 	}, []);
 	const folderArray = useMemo(() => {
-		map(folders, (f) => (f.label === allCalendars[folder].name ? null : f.label));
-	}, [folders, allCalendars, folder]);
+		map(allCalendars, (f) => (f.label === folder.name ? null : f.label));
+	}, [allCalendars, folder]);
 
 	const showDupWarning = useMemo(
 		() => includes(folderArray, inputValue),
@@ -136,7 +138,7 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 
 	const disabled = useMemo(
 		() =>
-			folder === '10'
+			folder?.id === '10'
 				? false
 				: inputValue.indexOf('/') > -1 ||
 				  inputValue.length === 0 ||
@@ -147,23 +149,20 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 	);
 
 	const defaultColor = useMemo(
-		() => find(colors, { label: allCalendars[folder]?.color?.label }),
-		[allCalendars, colors, folder]
+		() => find(colors, { label: folder?.color?.label }),
+		[colors, folder]
 	);
 	const [selectedColor, setSelectedColor] = useState(defaultColor[0]?.value || 0);
-	const defaultChecked = useMemo(
-		() => allCalendars[folder]?.freeBusy || false,
-		[folder, allCalendars]
-	);
+	const defaultChecked = useMemo(() => folder?.freeBusy || false, [folder]);
 
 	const onConfirm = () => {
 		if (inputValue) {
 			dispatch(
 				folderAction({
-					id: folder,
+					id: folder.id,
 					op: 'update',
 					changes: {
-						parent: allCalendars[folder].parent || '1',
+						parent: folder.parent ?? FOLDERS.USER_ROOT,
 						name: inputValue,
 						color: selectedColor,
 						excludeFreeBusy: freeBusy,
@@ -215,7 +214,7 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 			dispatch(
 				sendShareCalendarNotification({
 					contacts: [{ email: item.d }],
-					folder,
+					folder: folder.id,
 					accounts
 				})
 			).then((res) => {
@@ -254,10 +253,10 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 	const title = useMemo(
 		() =>
 			t('label.edit_access', {
-				name: allCalendars[folder].name,
+				name: folder.name,
 				defaultValue: "Edit {{name}}'s access"
 			}),
-		[allCalendars, folder, t]
+		[folder, t]
 	);
 
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
@@ -270,7 +269,7 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 				crossAlignment="flex-start"
 				height="fit"
 			>
-				{folder === '10' ? (
+				{folder?.id === FOLDERS.CALENDAR ? (
 					<Tooltip
 						label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
 						placement="top"
@@ -349,7 +348,7 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 					label="Exclude this calendar when reporting the free/busy times"
 				/>
 			</Container>
-			{!isEmpty(folders?.[folder]?.acl) && !allCalendars[folder].owner && (
+			{!isEmpty(folder?.acl) && !folder.owner && (
 				<>
 					<Container
 						padding={{ top: 'small', bottom: 'small' }}
@@ -369,7 +368,7 @@ export const MainEditModal = ({ folder, allCalendars, folders, totalAppointments
 					>
 						<Text weight="bold">{t('label.sharing_of_this_folder', 'Sharing of this folder')}</Text>
 					</Container>
-					{map(folders?.[folder]?.acl?.grant, (item, index) => (
+					{map(folder?.acl?.grant, (item, index) => (
 						<Container
 							padding={{ top: 'small', bottom: 'small' }}
 							mainAlignment="center"

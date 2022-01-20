@@ -5,17 +5,14 @@
  */
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { MainEditModal } from './parts/main-edit-modal';
 import { ShareCalendarModal } from '../share-calendar-modal';
 import { RevokeModal } from './parts/revoke-modal';
 import { EditModalContext } from '../../../commons/edit-modal-context';
 import { EditPermissionModal } from './parts/edit-permission-modal';
 import { ShareCalendarRoleOptions } from '../../../settings/components/utils';
-import { selectCalendars } from '../../../store/selectors/calendars';
 
-export const EditModal = ({ onClose, folder, allCalendars, totalAppointments }) => {
-	const folders = useSelector(selectCalendars);
+export const EditModal = ({ onClose, folder, totalAppointments }) => {
 	const [modal, setModal] = useState('main');
 	const [t] = useTranslation();
 	const [grant, setGrant] = useState();
@@ -30,31 +27,18 @@ export const EditModal = ({ onClose, folder, allCalendars, totalAppointments }) 
 		<>
 			<EditModalContext.Provider value={{ setModal, setGrant, onClose, roleOptions }}>
 				{modal === 'main' && (
-					<MainEditModal
-						allCalendars={allCalendars}
-						folder={folder}
-						folders={folders}
-						totalAppointments={totalAppointments}
-					/>
+					<MainEditModal folder={folder} totalAppointments={totalAppointments} />
 				)}
 
 				{(modal === 'share' && (
 					<ShareCalendarModal
 						folder={folder}
-						folders={folders}
-						allCalendars={allCalendars}
-						totalAppointments={totalAppointments}
 						closeFn={onClose}
-						openModal
 						onGoBack={onGoBack}
 						secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
-						grant={grant}
-						t={t}
 					/>
 				)) ||
-					(modal === 'revoke' && (
-						<RevokeModal folder={folder} grant={grant} onGoBack={onGoBack} folders={folders} />
-					))}
+					(modal === 'revoke' && <RevokeModal folder={folder} grant={grant} onGoBack={onGoBack} />)}
 
 				{modal === 'edit' && (
 					<EditPermissionModal folder={folder} grant={grant} onGoBack={onGoBack} />

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { omitBy, isNil, isArray, map } from 'lodash';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { pickBy, identity } from 'lodash';
 
 export const folderAction = createAsyncThunk(
 	'calendars/folderAction',
@@ -20,22 +20,35 @@ export const folderAction = createAsyncThunk(
 		op: string;
 		changes?: any;
 	}): Promise<any> => {
-		const result = await soapFetch('FolderAction', {
-			_jsns: 'urn:zimbraMail',
-			action: pickBy(
-				{
-					id,
-					op,
-					l: changes?.parent, // parent
-					recursive: changes?.recursive,
-					name: changes?.name,
-					color: changes?.color,
-					f: `${changes?.excludeFreeBusy ? 'b' : ''}${changes?.checked ? '#' : ''}`,
-					zid
-				},
-				identity
-			)
-		});
+		let result;
+		if (isArray(id)) {
+			result = await soapFetch('Batch', {
+				FolderActionRequest: map(id, (i, idx) => ({
+					action: { op, id: i },
+					requestId: idx,
+					_jsns: 'urn:zimbraMail'
+				})),
+				_jsns: 'urn:zimbra',
+				onerror: 'continue'
+			});
+		} else {
+			result = await soapFetch('FolderAction', {
+				_jsns: 'urn:zimbraMail',
+				action: omitBy(
+					{
+						id,
+						op,
+						l: changes?.parent, // parent
+						recursive: changes?.recursive,
+						name: changes?.name,
+						color: changes?.color,
+						f: `${changes?.excludeFreeBusy ? 'b' : ''}${changes?.checked ? '#' : ''}`,
+						zid
+					},
+					isNil
+				)
+			});
+		}
 		return result;
 	}
 );

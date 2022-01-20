@@ -11,13 +11,13 @@ export type Calendar = {
 	color: ZimbraColor;
 	id: string;
 	rid?: string;
+	n: number;
 	name: string;
 	parent: string;
 	owner: string;
 	deletable: boolean;
 	absFolderPath: string;
 	appointments: { ids: Array<string> };
-	icon: string;
 	zid: string;
 	acl: any;
 	isShared?: boolean;

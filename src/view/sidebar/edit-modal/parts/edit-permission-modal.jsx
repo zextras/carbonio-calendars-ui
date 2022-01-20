@@ -43,7 +43,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 				standardMessage,
 				contacts: [{ email: grant.d }],
 				shareWithUserRole,
-				folder,
+				folder: folder.id,
 				accounts,
 				allowToSeePrvtAppt,
 				grant
@@ -65,7 +65,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 							standardMessage,
 							contacts: [{ email: grant.d }],
 							shareWithUserRole,
-							folder,
+							folder: folder.id,
 							accounts
 						})
 					).then((res2) => {

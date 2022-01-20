@@ -18,11 +18,12 @@ import {
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
+import { selectAllCalendars } from '../../store/selectors/calendars';
 
 const Square = styled.div`
 	width: 18px;
@@ -99,7 +100,7 @@ const getStatusItems = (t) =>
 		)
 	}));
 
-export const NewModal = ({ folders, onClose }) => {
+export const NewModal = ({ onClose }) => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const [inputValue, setInputValue] = useState('');
@@ -109,7 +110,10 @@ export const NewModal = ({ folders, onClose }) => {
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useContext(SnackbarManagerContext);
 
+	const folders = useSelector(selectAllCalendars);
+
 	const folderArray = useMemo(() => map(folders, (f) => f.label), [folders]);
+
 	const showDupWarning = useMemo(
 		() => includes(folderArray, inputValue),
 		[inputValue, folderArray]

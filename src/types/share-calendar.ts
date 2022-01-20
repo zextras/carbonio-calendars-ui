@@ -7,14 +7,7 @@ import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
 
 export type ShareCalendarModalProps = {
-	openModal: () => void;
-	setModal: (a: any) => void;
-	dispatch: Dispatch;
-	t: TFunction;
-	toggleSnackbar: () => void;
-	folder: string;
-	folders: any;
-	allCalendars: any;
+	folder: any;
 	closeFn?: any;
 	onGoBack?: any;
 	secondaryLabel?: string;
@@ -33,9 +26,7 @@ export type ResponseActionsProps = {
 export type ShareCalendarUrlProps = {
 	folder: any;
 	onClose: () => void;
-	folders: any;
 	isFromEditModal?: boolean;
-	t: TFunction;
 };
 
 export type UrlColumnProps = {
