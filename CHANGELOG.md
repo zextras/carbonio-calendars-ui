@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5-rc.10](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.9...v0.1.5-rc.10) (2022-01-21)
+
+
+### Bug Fixes
+
+* fix lodash import ([a6be38f](https://github.com/zextras/carbonio-calendars-ui/commit/a6be38fd264d1ac585662b5975404f056541586d))
+
 ### 0.1.5-rc.9 (2022-01-21)
 
 
