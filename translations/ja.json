@@ -210,7 +210,23 @@
         "start_date_and_time": "開始日時",
         "tentative": "暫定",
         "timezone_pref_msg": "タイミングは、タイムゾーンの設定に従います。",
-        "your_pref_timezone_msg": "ご希望のタイムゾーン: GMT +01:00アムステルダム、ベルリン、ベルン、ローマ、ストックホルム、ウィーンです。"
+        "your_pref_timezone_msg": "ご希望のタイムゾーン: GMT +01:00アムステルダム、ベルリン、ベルン、ローマ、ストックホルム、ウィーンです。",
+        "create": "作成する",
+        "delete": "削除する",
+        "edits_saved": "編集内容が保存されました",
+        "undo": "元に戻す",
+        "empty": "空にする",
+        "error_try_again": "エラーが発生しました。再度お試しください",
+        "move": "移動",
+        "new_calendar": "新しいカレンダー",
+        "none": "なし",
+        "of_every_month": "今月、すべて",
+        "ok": "Ok",
+        "restore": "戻す",
+        "restore_calendar": "カレンダーを復元する",
+        "results_for": "検索結果:",
+        "snooze": "スヌーズ",
+        "start_week_on": "週の開始"
     },
     "create": "作成する",
     "delete": "削除する",
@@ -287,7 +303,8 @@
         "day_before": "{{count}} 日前",
         "hour_before": "{{count}}時間前",
         "minute_before": "{{count}}分前",
-        "week_before": "{{count}}週間前"
+        "week_before": "{{count}}週間前",
+        "all_time": "イベント中ずっと"
     },
     "repeat": {
         "custom": "カスタム",
@@ -420,7 +437,8 @@
         "proposed_time_accepted": "提案された時間を承認しました",
         "proposed_time_error": "エラーが発生しました。再度お試しください",
         "url_copied": "{{title}}がコピーされました",
-        "share_folder_success": "このカレンダーは共有されています"
+        "share_folder_success": "このカレンダーは共有されています",
+        "new_time_proposed_success": "新しい時間が提案されました"
     },
     "success": "成功",
     "type": "タイプ",
@@ -471,5 +489,8 @@
     "revoke_without_notification": "通知を送信せずにアクセス権を取り消す",
     "share_invite_resent": "再送信された招待状を共有する",
     "shared_folders": "共有カレンダー",
-    "resend_mail_notification_about_this_share": "この共有に関するメール通知を再送信する"
+    "resend_mail_notification_about_this_share": "この共有に関するメール通知を再送信する",
+    "placeholder": {
+        "organizer": "主催者"
+    }
 }
