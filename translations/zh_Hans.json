@@ -255,7 +255,19 @@
         "notify_organizer": "通知组织者",
         "number": "号码",
         "occurrences": "次数",
-        "optional": "可选"
+        "optional": "可选",
+        "create": "创建",
+        "delete": "删除",
+        "edits_saved": "编辑保存正确",
+        "error_try_again": "出现了一些错误，请重试",
+        "move": "移动",
+        "none": "无",
+        "ok": "OK",
+        "restore": "恢复",
+        "results_for": "结果：",
+        "snooze": "休眠",
+        "start_week_on": "一周开始于",
+        "undo": "撤消"
     },
     "months": {
         "april": "四月",
@@ -471,5 +483,8 @@
     "find_calendar_shares": "查找日历共享",
     "find_shares": "查找共享",
     "resend_mail_notification_about_this_share": "发送有关此共享的邮件通知",
-    "revoke_without_custom_message": "撤销访问权限并发送标准通知"
+    "revoke_without_custom_message": "撤销访问权限并发送标准通知",
+    "placeholder": {
+        "organizer": "组织者"
+    }
 }
