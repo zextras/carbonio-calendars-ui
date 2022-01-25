@@ -7,7 +7,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Accordion } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
-import { map, filter, reduce, remove, every, reject, head } from 'lodash';
+import { map, filter, reduce, remove, every, reject, find } from 'lodash';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -16,12 +16,21 @@ import { CollapsedItems } from './collapsed-sidebar-items';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 import { FoldersComponent, SharesComponent } from './sidebar-components';
 
+const calcFolderAbsParentLevel = (folders, subFolder, level = 1) => {
+	const nextFolder = find(folders, (f) => f.id === subFolder.parent);
+	return nextFolder
+		? calcFolderAbsParentLevel(folders, nextFolder, level + 1)
+		: {
+				absParent: level > 1 ? subFolder.id : subFolder.parent,
+				level
+		  };
+};
+
 const nest = (items, id) =>
 	map(
 		filter(items, (item) => item.parent === id),
 		(item) => ({
 			...item,
-			absParent: item.absParent ?? item.parent,
 			items: nest(items, item.id)
 		})
 	);
@@ -70,17 +79,20 @@ export default function SetMainMenuItems({ expanded }) {
 		[calendars, dispatch, end, start]
 	);
 
-	const allItems = useMemo(() => {
-		const normalized = map(calendars ?? [], (folder) => ({
-			...folder,
-			recursiveToggleCheck: () => recursiveToggleCheck([folder], folder.checked),
-			CustomComponent: FoldersComponent
-		}));
-		return nest(normalized, FOLDERS.USER_ROOT);
-	}, [calendars, recursiveToggleCheck]);
+	const allItems = useMemo(
+		() =>
+			map(calendars, (item) => ({
+				...item,
+				...calcFolderAbsParentLevel(calendars, item),
+				recursiveToggleCheck: () => recursiveToggleCheck([item], item.checked),
+				CustomComponent: FoldersComponent
+			})),
+		[calendars, recursiveToggleCheck]
+	);
 
-	const trashItem = useMemo(() => remove(allItems, ['id', FOLDERS.TRASH]), [allItems]);
-	const sharedSubItems = useMemo(() => remove(allItems, 'owner'), [allItems]);
+	const nestedItems = useMemo(() => nest(allItems, FOLDERS.USER_ROOT), [allItems]);
+	const trashItem = useMemo(() => remove(nestedItems, ['id', FOLDERS.TRASH]), [nestedItems]);
+	const sharedSubItems = useMemo(() => remove(nestedItems, 'owner'), [nestedItems]);
 
 	const sharesItem = useMemo(
 		() => ({
@@ -98,22 +110,22 @@ export default function SetMainMenuItems({ expanded }) {
 	);
 
 	const allCalendarsItem = useMemo(() => {
-		// Every controllable folders by All Calendars
 		const subItems = reject(
-			calendars,
-			(c) => c?.absFolderPath?.includes(head(trashItem)?.label) || c.isShared
+			allItems,
+			(c) => c?.absParent === FOLDERS.TRASH || c?.id === FOLDERS.TRASH || c.isShared
 		);
 		const checked = every(subItems, 'checked');
+
 		return {
 			name: t('label.all_calendars', 'All calendars'),
 			id: SIDEBAR_ITEMS.ALL_CALENDAR,
 			checked,
-			recursiveToggleCheck: () => recursiveToggleCheck(allItems, checked),
+			recursiveToggleCheck: () => recursiveToggleCheck(nestedItems, checked),
 			CustomComponent: FoldersComponent
 		};
-	}, [allItems, calendars, recursiveToggleCheck, t, trashItem]);
+	}, [allItems, t, recursiveToggleCheck, nestedItems]);
 
-	const items = [allCalendarsItem, ...allItems, ...trashItem, sharesItem];
+	const items = [allCalendarsItem, ...nestedItems, ...trashItem, sharesItem];
 
 	return expanded ? (
 		<Accordion items={items} />
