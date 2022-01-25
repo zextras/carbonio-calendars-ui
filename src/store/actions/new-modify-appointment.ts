@@ -62,7 +62,7 @@ export const generateSoapMessageFromInvite = (invite: any): any => {
 				mp: [
 					{
 						ct: 'text/plain',
-						content: invite?.textDescription[0]?._content
+						content: invite?.textDescription?.[0]?._content ?? ''
 					}
 				]
 			}
