@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import Panel from '../../commons/panel';
 import EditorController from './editor-controller';
-import { EventContext } from '../../commons/event-context';
 import { useQuickActions } from '../../hooks/use-quick-actions';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 import { selectCalendar } from '../../store/selectors/calendars';
@@ -28,9 +27,8 @@ export const EventEditPanel = () => {
 	}, [appointment, calendar, inst]);
 	const dispatch = useDispatch();
 	const replaceHistory = useReplaceHistoryCallback();
-	const utils = useContext(EventContext);
 	const [t] = useTranslation();
-	const actions = useQuickActions(event, { utils, replaceHistory, dispatch }, t);
+	const actions = useQuickActions(event, { replaceHistory, dispatch }, t);
 	const [title, setTitle] = useState(null);
 
 	return event ? (

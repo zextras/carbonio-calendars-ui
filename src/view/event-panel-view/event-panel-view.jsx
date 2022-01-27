@@ -19,7 +19,6 @@ import StyledDivider from '../../commons/styled-divider';
 import { extractBody } from '../../commons/body-message-renderer';
 import Panel from '../../commons/panel';
 import { useQuickActions } from '../../hooks/use-quick-actions';
-import { EventContext } from '../../commons/event-context';
 import ReminderPart from './reminder-part';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { selectCalendar } from '../../store/selectors/calendars';
@@ -56,7 +55,6 @@ export default function EventPanelView() {
 	const [t] = useTranslation();
 	const replaceHistory = useReplaceHistoryCallback();
 	const dispatch = useDispatch();
-	const utils = useContext(EventContext);
 	const { calendarId, apptId, ridZ } = useParams();
 	const calendar = useSelector((s) => selectCalendar(s, calendarId));
 	const appointment = useSelector((s) => selectAppointment(s, apptId));
@@ -69,7 +67,7 @@ export default function EventPanelView() {
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
 	);
-	const actions = useQuickActions(event, { utils, replaceHistory, dispatch }, t);
+	const actions = useQuickActions(event, { replaceHistory, dispatch }, t);
 
 	return event ? (
 		<Panel actions={actions} resizable={false} title={event.title}>
