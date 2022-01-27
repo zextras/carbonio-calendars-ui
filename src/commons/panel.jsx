@@ -46,7 +46,7 @@ const AppointmentExpandedContainer = styled(Container)`
 	max-height: 100%;
 `;
 
-export default function Panel({ children, title, actions, closeAction, resizable, hideActions }) {
+export default function Panel({ children, title, actions, resizable, hideActions }) {
 	const [expanded, setExpanded] = useState(false);
 	const actionsWithExpand = useMemo(
 		() =>
@@ -82,7 +82,7 @@ export default function Panel({ children, title, actions, closeAction, resizable
 						expanded={expanded}
 						height="100%"
 					>
-						<Header title={title} actions={actionsWithExpand} closeAction={closeAction} />
+						<Header title={title} actions={actionsWithExpand} />
 						{childrenWithExpandedContainer}
 					</AppointmentExpandedContainer>
 				</BackgroundContainer>
@@ -90,7 +90,7 @@ export default function Panel({ children, title, actions, closeAction, resizable
 		);
 	return (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start" expanded={expanded}>
-			<Header title={title} actions={actionsWithExpand} closeAction={closeAction} />
+			<Header title={title} actions={actionsWithExpand} />
 			{childrenWithExpandedContainer}
 		</AppointmentCardContainer>
 	);

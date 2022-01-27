@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useState } from 'react';
 import { Checkbox, Container, CustomModal, Padding, Text } from '@zextras/carbonio-design-system';
-import { Spinner } from '@zextras/carbonio-shell-ui';
+import { Spinner, useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useInvite } from '../../hooks/use-invite';
@@ -19,19 +19,24 @@ const ItalicText = styled(Text)`
 `;
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const DeleteEventModal = ({ event, open, isInstance, onClose }: any): ReactElement => {
+export const DeleteEventModal = ({ event, open }: any): ReactElement => {
+	const isInstance = !!event?.resource?.ridZ;
 	const invite = useInvite(event?.resource?.inviteId);
 	const [t] = useTranslation();
 	const [isAskingConfirmation, setIsAskingConfirmation] = useState(false);
-
+	const replaceHistory = useReplaceHistoryCallback();
 	const toggleAskConfirmation = useCallback(() => {
 		setIsAskingConfirmation((a) => !a);
 	}, []);
 
 	const actions = useDeleteActions(event, invite, {
 		isInstance,
-		onClose
+		replaceHistory
 	});
+
+	const onClose = useCallback(() => {
+		replaceHistory('');
+	}, [replaceHistory]);
 
 	return (
 		<CustomModal

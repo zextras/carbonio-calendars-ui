@@ -17,7 +17,6 @@ export default function EditorController({
 	setTitle,
 	panelIsExpanded = false,
 	action = 'new',
-	closePanel,
 	event,
 	hideActions
 }) {
@@ -29,7 +28,7 @@ export default function EditorController({
 
 	const { id, data } = useId(
 		action === 'new' && !editorId ? action : editorId,
-		null,
+		boardContext?.isBoard,
 		boardContext?.event ? boardContext.event : event,
 		selectedStartTime,
 		selectedEndTime,
@@ -40,7 +39,7 @@ export default function EditorController({
 			selectInstanceInvite(state, event?.resource.inviteId, event?.resource.ridZ) ||
 			boardContext?.invite
 	);
-	const callbacks = useEditorDispatches(id, closePanel);
+	const callbacks = useEditorDispatches(id, boardContext?.isBoard);
 
 	if (panelIsExpanded)
 		return (

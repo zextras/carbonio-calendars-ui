@@ -3,12 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import styled from 'styled-components';
 import { Container } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { Spinner, useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import ParticipantsPart from './participants-part';
 import MessagePart from './message-part';
 import DetailsPart from './details-part';
@@ -21,6 +22,9 @@ import { useQuickActions } from '../../hooks/use-quick-actions';
 import { EventContext } from '../../commons/event-context';
 import ReminderPart from './reminder-part';
 import { selectInstanceInvite } from '../../store/selectors/invites';
+import { selectCalendar } from '../../store/selectors/calendars';
+import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
+import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 
 const BodyContainer = styled(Container)`
 	overflow-y: auto;
@@ -48,18 +52,27 @@ const BodyContainer = styled(Container)`
 	// }
 `;
 
-export default function EventPanelView({ event, close }) {
+export default function EventPanelView() {
 	const [t] = useTranslation();
 	const replaceHistory = useReplaceHistoryCallback();
 	const dispatch = useDispatch();
 	const utils = useContext(EventContext);
+	const { calendarId, apptId, ridZ } = useParams();
+	const calendar = useSelector((s) => selectCalendar(s, calendarId));
+	const appointment = useSelector((s) => selectAppointment(s, apptId));
+	const inst = useSelector((s) => selectAppointmentInstance(s, apptId, ridZ));
+	const event = useMemo(() => {
+		if (calendar && appointment && inst)
+			return normalizeCalendarEvent(calendar, appointment, inst, appointment?.l?.includes(':'));
+		return undefined;
+	}, [appointment, calendar, inst]);
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
 	);
 	const actions = useQuickActions(event, { utils, replaceHistory, dispatch }, t);
 
-	return (
-		<Panel closeAction={close} actions={actions} resizable={false} title={event.title}>
+	return event ? (
+		<Panel actions={actions} resizable={false} title={event.title}>
 			<Container padding={{ all: 'none' }} mainAlignment="flex-start" height="calc(100% - 64px)">
 				<BodyContainer
 					orientation="vertical"
@@ -131,5 +144,7 @@ export default function EventPanelView({ event, close }) {
 				</BodyContainer>
 			</Container>
 		</Panel>
+	) : (
+		<Spinner />
 	);
 }

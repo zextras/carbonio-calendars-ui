@@ -79,7 +79,7 @@ export default function App() {
 					label: 'New Appointment',
 					icon: 'CalendarOutline',
 					click: () => {
-						getBridgedFunctions().addBoard('/');
+						getBridgedFunctions().addBoard('/', { isBoard: true });
 					}
 				},
 				secondaryItems: []

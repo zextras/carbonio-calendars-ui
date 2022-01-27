@@ -27,9 +27,7 @@ const BodyContainer = styled(Container)`
 	overflow-x: no-scroll;
 `;
 
-const EventPreviewPanel = ({ event, setEvent, setAction }) => {
-	const [deleteModal, setDeleteModal] = useState(false);
-	const [isInstance, setIsInstance] = useState(false);
+const EventPreviewPanel = ({ event }) => {
 	const [t] = useTranslation();
 	const replaceHistory = useReplaceHistoryCallback();
 	const dispatch = useDispatch();
@@ -38,33 +36,11 @@ const EventPreviewPanel = ({ event, setEvent, setAction }) => {
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
 
-	const closeAction = useCallback(() => {
-		setAction(null);
-		setEvent(null);
-	}, [setAction, setEvent]);
-
-	const toggleDeleteModal = useCallback(
-		(appt, value) => {
-			if (appt) {
-				setIsInstance(value);
-			}
-			if (deleteModal) {
-				closeAction();
-			}
-			setDeleteModal(!deleteModal);
-		},
-		[closeAction, deleteModal]
-	);
-
-	const actions = useQuickActions(
-		event,
-		{ utils: { toggleDeleteModal, isSearch: true, setEvent, setAction }, replaceHistory, dispatch },
-		t
-	);
+	const actions = useQuickActions(event, { replaceHistory, dispatch }, t);
 
 	return (
 		<>
-			{event && <Header title={event.title} actions={actions} closeAction={closeAction} />}
+			{event && <Header title={event.title} actions={actions} />}
 			<ImageAndIconPart color={event?.resource?.calendar?.color?.color || 'primary'} />
 			<BodyContainer
 				orientation="vertical"

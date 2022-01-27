@@ -79,7 +79,7 @@ const generateAppointmentRestoredSnackbar = (
 
 type AccountContext = {
 	isInstance: boolean;
-	onClose: () => void;
+	replaceHistory: (a: string) => void;
 };
 
 type UseDeleteActionsType = {
@@ -128,7 +128,7 @@ export const useDeleteActions = (
 						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 					});
 			};
-			context.onClose();
+			context.replaceHistory('');
 			const ctxt = {
 				dispatch,
 				t,
@@ -168,7 +168,7 @@ export const useDeleteActions = (
 						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 					});
 			};
-			context.onClose();
+			context.replaceHistory('');
 			const ctxt = {
 				dispatch,
 				t,
@@ -228,7 +228,7 @@ export const useDeleteActions = (
 	const deleteRecurrentInstance = useCallback(
 		(newMessage) => {
 			const isCanceled = false;
-			context.onClose();
+			context.replaceHistory('');
 			const ctxt = {
 				dispatch,
 				newMessage: newMessage?.text?.[0],

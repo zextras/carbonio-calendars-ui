@@ -21,8 +21,9 @@ export const openInDisplayer = (event, context, t) => ({
 	label: t('event.action.expand', 'Open in Displayer'),
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
-		context.utils.setEvent(event);
-		context.utils.setAction(EventActionsEnum.EXPAND);
+		context.replaceHistory(
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+		);
 	}
 });
 
@@ -158,8 +159,9 @@ export const moveApptToTrash = (event, context, t) => ({
 	disabled: !event.permission,
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
-		context.utils.toggleDeleteModal(event, context.isInstance);
-		context.utils.setEvent(event);
+		context.replaceHistory(
+			`/${event.resource.calendar.id}/${EventActionsEnum.TRASH}/${event.resource.id}/${event.resource.ridZ}`
+		);
 	}
 });
 
@@ -246,8 +248,9 @@ export const editAppointment = (event, context, t) => ({
 	disabled: !event.permission,
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
-		context.utils.setEvent(event);
-		context.utils.setAction(EventActionsEnum.EDIT);
+		context.replaceHistory(
+			`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
+		);
 	}
 });
 
@@ -263,8 +266,9 @@ export const moveInstanceToTrash = (event, context, t) => ({
 					getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ })
 			  )
 			: context.dispatch(getInvite({ inviteId: event.resource.inviteId }));
-		context.utils.toggleDeleteModal(event, context.isInstance);
-		context.utils.setEvent(event);
+		context.replaceHistory(
+			`/${event.resource.calendar.id}/${EventActionsEnum.TRASH}/${event.resource.id}/${event.resource.ridZ}`
+		);
 	}
 });
 
