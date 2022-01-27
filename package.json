@@ -90,6 +90,7 @@
 		"translations_repository": "git@bitbucket.org:zextras/com_zextras_zapp_calendar.git",
 		"name": "carbonio-calendars-ui",
 		"priority": 6,
-		"type": "app"
+		"type": "app",
+		"attrKey": "zimbraFeatureCalendarEnabled"
 	}
 }
