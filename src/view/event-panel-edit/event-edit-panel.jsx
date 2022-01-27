@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useReplaceHistoryCallback, Spinner } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';

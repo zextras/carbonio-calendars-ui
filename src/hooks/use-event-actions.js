@@ -13,6 +13,7 @@ import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../store/slices/appointments-slice';
 import { deleteAppointmentPermanent } from '../store/actions/delete-appointment-permanent';
+import { DeleteEventModal } from '../view/delete/delete-event-modal';
 
 export const openInDisplayer = (event, context, t) => ({
 	id: EventActionsEnum.EXPAND,
@@ -159,8 +160,18 @@ export const moveApptToTrash = (event, context, t) => ({
 	disabled: !event.permission,
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
-		context.replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.TRASH}/${event.resource.id}/${event.resource.ridZ}`
+		const closeModal = context.createModal(
+			{
+				onClose: () => {
+					closeModal();
+				},
+				children: (
+					<>
+						<DeleteEventModal event={event} onClose={() => closeModal()} />
+					</>
+				)
+			},
+			true
 		);
 	}
 });
@@ -254,7 +265,8 @@ export const editAppointment = (event, context, t) => ({
 	}
 });
 
-export const moveInstanceToTrash = (event, context, t) => ({
+/* TODO: delete after the implementation of the dropdown to distinguish between series and instances
+	export const moveInstanceToTrash = (event, context, t) => ({
 	id: EventActionsEnum.TRASH,
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
@@ -271,6 +283,7 @@ export const moveInstanceToTrash = (event, context, t) => ({
 		);
 	}
 });
+*/
 
 export const ActionsRetriever = (event, context, t) =>
 	// eslint-disable-next-line no-nested-ternary
@@ -319,7 +332,7 @@ export const RecurrentActionRetriever = (event, context, t) =>
 						if (ev) ev.preventDefault();
 					},
 					items: [
-						moveInstanceToTrash(event, { ...context, isInstance: true }, t),
+						moveApptToTrash(event, { ...context, isInstance: true }, t),
 						openInDisplayer(event, context, t)
 					]
 				},
@@ -331,7 +344,7 @@ export const RecurrentActionRetriever = (event, context, t) =>
 						if (ev) ev.preventDefault();
 					},
 					items: [
-						moveInstanceToTrash(event, { ...context, isInstance: false }, t),
+						moveApptToTrash(event, { ...context, isInstance: false }, t),
 						moveAppointment(event, context, t)
 					]
 				}

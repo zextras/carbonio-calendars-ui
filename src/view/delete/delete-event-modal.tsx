@@ -19,7 +19,7 @@ const ItalicText = styled(Text)`
 `;
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const DeleteEventModal = ({ event, open }: any): ReactElement => {
+export const DeleteEventModal = ({ event, onClose }: any): ReactElement => {
 	const isInstance = !!event?.resource?.ridZ;
 	const invite = useInvite(event?.resource?.inviteId);
 	const [t] = useTranslation();
@@ -34,13 +34,9 @@ export const DeleteEventModal = ({ event, open }: any): ReactElement => {
 		replaceHistory
 	});
 
-	const onClose = useCallback(() => {
-		replaceHistory('');
-	}, [replaceHistory]);
-
 	return (
 		<CustomModal
-			open={open}
+			open
 			onClose={onClose}
 			disablePortal
 			maxHeight="90vh"

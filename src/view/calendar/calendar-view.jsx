@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { Suspense, lazy, useEffect, useState, useMemo } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo } from 'react';
 import { Container, Text, SnackbarManager } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
@@ -16,7 +16,6 @@ import { setSearchRange } from '../../store/actions/set-search-range';
 import EventPanelView from '../event-panel-view/event-panel-view';
 import { EventEditPanel } from '../event-panel-edit/event-edit-panel';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
-import { DeleteEventModal } from '../delete/delete-event-modal';
 
 const CalendarComponent = lazy(() =>
 	import(/* webpackChunkName: "calendar-component" */ './calendar-component')
@@ -59,9 +58,6 @@ export default function CalendarView() {
 					</Route>
 					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
 						<EventPanelView />
-					</Route>
-					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.TRASH})/:apptId/:ridZ?`}>
-						<DeleteEventModal open={!!EventActionsEnum.TRASH} />
 					</Route>
 				</Switch>
 			</Container>
