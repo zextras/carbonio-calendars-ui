@@ -23,7 +23,7 @@ import {
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { useOnSaveAndOnSend } from './use-onsave-and-onsend';
 
-export const useEditorDispatches = (id, isBoard) => {
+export const useEditorDispatches = (id, isBoard = false) => {
 	const replaceHistory = useReplaceHistoryCallback();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [t] = useTranslation();

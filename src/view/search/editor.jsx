@@ -37,7 +37,7 @@ export const Editor = ({ event, actions }) => {
 			selectInstanceInvite(state, event?.resource.inviteId, event?.resource.ridZ) ||
 			boardContext?.invite
 	);
-	const callbacks = useEditorDispatches(id, close, invite);
+	const callbacks = useEditorDispatches(id);
 	return (
 		<>
 			<Header title={event.title} actions={actions} closeAction={close} />
