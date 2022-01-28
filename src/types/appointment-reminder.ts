@@ -92,4 +92,10 @@ export type ResourceType = {
 	isRecurrent: boolean;
 	participationStatus: string;
 	alarm: boolean;
+	calendar: {
+		id: string;
+		name: string;
+		color: unknown;
+		owner: string | undefined;
+	};
 };
