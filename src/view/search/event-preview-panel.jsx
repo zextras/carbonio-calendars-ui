@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
-import { Header } from '../event-panel-view/header';
+import { Header } from './header';
 import StyledDivider from '../../commons/styled-divider';
 import ReminderPart from '../event-panel-view/reminder-part';
 import MessagePart from '../event-panel-view/message-part';

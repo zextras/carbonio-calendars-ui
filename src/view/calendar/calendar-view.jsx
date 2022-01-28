@@ -14,7 +14,7 @@ import { selectCalendars } from '../../store/selectors/calendars';
 import { selectApptStatus } from '../../store/selectors/appointments';
 import { setSearchRange } from '../../store/actions/set-search-range';
 import EventPanelView from '../event-panel-view/event-panel-view';
-import { EventEditPanel } from '../event-panel-edit/event-edit-panel';
+import EventEditPanel from '../event-panel-edit/event-edit-panel';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 
 const CalendarComponent = lazy(() =>

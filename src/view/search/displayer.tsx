@@ -8,7 +8,7 @@
 import { Container } from '@zextras/carbonio-design-system';
 import React, { ComponentProps, ReactComponentElement, useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { Header } from '../event-panel-view/header';
+import { Header } from './header';
 import { DeleteEventModal } from '../delete/delete-event-modal';
 import { useSearchActionsFn } from './hooks/use-search-actions-fn';
 import StyledDivider from '../../commons/styled-divider';

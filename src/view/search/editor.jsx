@@ -7,7 +7,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useBoardConfig } from '@zextras/carbonio-shell-ui';
 import { useSelector } from 'react-redux';
-import { Header } from '../event-panel-view/header';
+import { Header } from './header';
 import { useSearchActionsFn } from './hooks/use-search-actions-fn';
 import EditorCompleteView from '../event-panel-edit/editor-complete-view';
 import { useQueryParam } from '../../commons/useQueryParam';
