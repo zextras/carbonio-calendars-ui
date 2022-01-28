@@ -5,6 +5,7 @@
  */
 import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
+import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 
 export type AppointmentReminderProps = {
 	t: TFunction;
@@ -95,7 +96,7 @@ export type ResourceType = {
 	calendar: {
 		id: string;
 		name: string;
-		color: unknown;
+		color: ZimbraColorType;
 		owner: string | undefined;
 	};
 };

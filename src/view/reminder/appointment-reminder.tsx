@@ -87,7 +87,7 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 						val?.resource.alarm &&
 						val?.resource.alarmData?.[0]?.nextAlarm > reminderRange.start &&
 						val?.permission === true &&
-						val.resource.calendar.id !== FOLDERS.TRASH
+						val?.resource?.calendar?.id !== FOLDERS.TRASH
 					) {
 						if (
 							moment(val.resource.alarmData[0].nextAlarm).isSameOrAfter(

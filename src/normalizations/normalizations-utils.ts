@@ -6,7 +6,7 @@
 import { filter, groupBy, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
 import { ZimbraFolder } from '../types/zimbra';
-import { ZIMBRA_STANDARD_COLORS, ZimbraColor } from '../commons/zimbra-standard-colors';
+import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../commons/zimbra-standard-colors';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const retrieveAttachmentsType = (original: any, disposition: any, dataID: any): any =>
@@ -119,7 +119,7 @@ export const getAlarmToString = (alarm: any): any => {
 	return null;
 };
 
-export const setCalendarColor = (folder: ZimbraFolder): ZimbraColor =>
+export const setCalendarColor = (folder: ZimbraFolder): ZimbraColorType =>
 	folder.rgb
 		? {
 				color: folder.rgb,
