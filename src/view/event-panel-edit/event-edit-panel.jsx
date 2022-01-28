@@ -141,7 +141,7 @@ const EventEditPanel = () => {
 	const selectedEndTime = useQueryParam('end');
 
 	const { id, data } = useId(
-		'new',
+		apptId ?? 'new',
 		boardContext?.isBoard,
 		boardContext?.event ? boardContext.event : event,
 		selectedStartTime,

@@ -31,7 +31,8 @@ export const DeleteEventModal = ({ event, onClose }: any): ReactElement => {
 
 	const actions = useDeleteActions(event, invite, {
 		isInstance,
-		replaceHistory
+		replaceHistory,
+		onClose
 	});
 
 	return (
