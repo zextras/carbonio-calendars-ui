@@ -5,7 +5,7 @@
  */
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useReplaceHistoryCallback, Spinner, useBoardConfig } from '@zextras/carbonio-shell-ui';
+import { useReplaceHistoryCallback, useBoardConfig } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -214,7 +214,7 @@ const EventEditPanel = () => {
 			)}
 		</>
 	) : (
-		<Spinner />
+		<></>
 	);
 };
 
