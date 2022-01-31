@@ -167,7 +167,7 @@ const EventEditPanel = () => {
 		if (!boardContext?.isBoard) {
 			setTitle(data?.title ?? t('label.no_subject', 'No subject'));
 		} else {
-			updateBoard(undefined, data?.title ?? t('label.new_appointment', 'New Appointment'));
+			updateBoard(undefined, data?.title ?? t('label.new_appointment', 'New appointment'));
 		}
 	}, [data?.title, setTitle, updateBoard, t, boardContext?.isBoard]);
 
