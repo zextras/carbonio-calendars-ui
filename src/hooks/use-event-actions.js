@@ -167,7 +167,11 @@ export const moveApptToTrash = (event, context, t) => ({
 				},
 				children: (
 					<>
-						<DeleteEventModal event={event} onClose={() => closeModal()} />
+						<DeleteEventModal
+							event={event}
+							onClose={() => closeModal()}
+							isInstance={context?.isInstance}
+						/>
 					</>
 				)
 			},
@@ -264,26 +268,6 @@ export const editAppointment = (event, context, t) => ({
 		);
 	}
 });
-
-/* TODO: delete after the implementation of the dropdown to distinguish between series and instances
-	export const moveInstanceToTrash = (event, context, t) => ({
-	id: EventActionsEnum.TRASH,
-	icon: 'Trash2Outline',
-	label: t('label.delete', 'Delete'),
-	disabled: false,
-	click: (ev) => {
-		if (ev) ev.stopPropagation();
-		context.isInstance
-			? context.dispatch(
-					getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ })
-			  )
-			: context.dispatch(getInvite({ inviteId: event.resource.inviteId }));
-		context.replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.TRASH}/${event.resource.id}/${event.resource.ridZ}`
-		);
-	}
-});
-*/
 
 export const ActionsRetriever = (event, context, t) =>
 	// eslint-disable-next-line no-nested-ternary

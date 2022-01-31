@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useCallback, useState } from 'react';
-import { Checkbox, Container, CustomModal, Padding, Text } from '@zextras/carbonio-design-system';
+import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
 import { Spinner, useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -19,8 +19,7 @@ const ItalicText = styled(Text)`
 `;
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const DeleteEventModal = ({ event, onClose }: any): ReactElement => {
-	const isInstance = !!event?.resource?.ridZ;
+export const DeleteEventModal = ({ event, onClose, isInstance }: any): ReactElement => {
 	const invite = useInvite(event?.resource?.inviteId);
 	const [t] = useTranslation();
 	const [isAskingConfirmation, setIsAskingConfirmation] = useState(false);
