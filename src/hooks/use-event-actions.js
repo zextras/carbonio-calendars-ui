@@ -7,7 +7,6 @@ import React from 'react';
 import { Text } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
-import { getInvite } from '../store/actions/get-invite';
 import MoveAppointment from '../view/move/move-appt-view';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
