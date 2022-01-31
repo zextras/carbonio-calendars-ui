@@ -59,6 +59,7 @@ export default function DatePicker({
 					</>
 				)}
 			</Container>
+			<Padding top="large" />
 			<AllDayCheckbox
 				allDay={allDay}
 				end={end}
