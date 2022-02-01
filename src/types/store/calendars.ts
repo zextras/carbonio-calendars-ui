@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { ZimbraColor } from '../../commons/zimbra-standard-colors';
+import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 
 export type Calendar = {
 	checked: boolean;
 	freeBusy: boolean;
-	color: ZimbraColor;
+	color: ZimbraColorType;
 	id: string;
 	rid?: string;
 	n: number;

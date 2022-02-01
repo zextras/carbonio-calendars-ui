@@ -3,13 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-export type ZimbraColor = {
+export type ZimbraColorType = {
 	color: string;
 	background: string;
 	label?: string;
 };
 
-export const ZIMBRA_STANDARD_COLORS: Array<ZimbraColor> = [
+export const ZIMBRA_STANDARD_COLORS: Array<ZimbraColorType> = [
 	{ color: '#000000', background: '#E6E9ED', label: 'black' },
 	{ color: '#0097A7', background: '#E5F4F6', label: 'aquamarine' },
 	{ color: '#ef5350', background: '#FDEDED', label: 'red' },
