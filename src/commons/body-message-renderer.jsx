@@ -3,22 +3,35 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useEffect, useRef } from 'react';
-import { forEach, reduce } from 'lodash';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { forEach, reduce, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
 
 const _CI_REGEX = /^<(.*)>$/;
 const _CI_SRC_REGEX = /^cid:(.*)$/;
+const LINK_REGEX = /\bhttps?:\/\/\S+/g;
+
+export const locationUrl = (location) => {
+	const found = location?.match(LINK_REGEX);
+	return found?.length ? found[0] : undefined;
+};
 
 function TextMessageRenderer({ text }) {
-	const containerRef = useRef();
-
-	useEffect(() => {
-		containerRef.current.innerText = text;
-	}, [text]);
-
-	return <Text ref={containerRef} />;
+	const convertedHTML = useMemo(
+		() =>
+			`<p>${map(text.split('\n'), (s) =>
+				s.replace(LINK_REGEX, `<a href='${locationUrl(s)}' target="blank">${locationUrl(s)}</a>`)
+			).join('<br />')}</p>`,
+		[text]
+	);
+	return (
+		<Text
+			dangerouslySetInnerHTML={{
+				__html: convertedHTML
+			}}
+		/>
+	);
 }
 
 function HtmlMessageRenderer({ msgId, body, parts }) {
@@ -140,6 +153,7 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	if (typeof fullInvite.fragment === 'undefined') {
 		return <EmptyBody />;
 	}
+
 	if (fullInvite?.htmlDescription) {
 		return (
 			<HtmlMessageRenderer
