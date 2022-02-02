@@ -183,6 +183,7 @@ export default function EventPanelView() {
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
 	);
+
 	const actions = useQuickActions(event, { replaceHistory, dispatch, createModal }, t);
 
 	return event ? (
