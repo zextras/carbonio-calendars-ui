@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { editAppointment, moveInstanceToTrash } from './use-event-actions';
+import { editAppointment, moveApptToTrash } from './use-event-actions';
 
 export const useQuickActions = (event, context, t) =>
 	event?.resource?.iAmOrganizer
 		? [
 				editAppointment(event, context, t),
-				moveInstanceToTrash(event, { ...context, isInstance: true }, t)
+				moveApptToTrash(event, { ...context, isInstance: true }, t)
 		  ]
 		: [];
