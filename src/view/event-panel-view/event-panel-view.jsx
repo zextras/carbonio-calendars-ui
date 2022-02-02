@@ -3,13 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import {
 	Container,
 	Divider,
 	Icon,
 	IconButton,
+	ModalManagerContext,
 	Row,
 	Text,
 	useHiddenCount
@@ -168,6 +169,7 @@ const DisplayerHeader = ({ title, actions }) => {
 export default function EventPanelView() {
 	const [t] = useTranslation();
 	const replaceHistory = useReplaceHistoryCallback();
+	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
 	const { calendarId, apptId, ridZ } = useParams();
 	const calendar = useSelector((s) => selectCalendar(s, calendarId));
@@ -181,7 +183,8 @@ export default function EventPanelView() {
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
 	);
-	const actions = useQuickActions(event, { replaceHistory, dispatch }, t);
+
+	const actions = useQuickActions(event, { replaceHistory, dispatch, createModal }, t);
 
 	return event ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">

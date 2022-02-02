@@ -8,6 +8,7 @@ import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import { Container, Padding, Text, Icon } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import Displayer from './displayer';
 import { Editor } from './editor';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -26,10 +27,10 @@ const SearchPanel = ({ appointments }: ComponentProps<any>): ReactComponentEleme
 
 	return (
 		<Switch>
-			<Route path={`${path}/:action(edit)/:apptId/:ridZ?`}>
+			<Route path={`${path}/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
 				<Editor event={event} />
 			</Route>
-			<Route path={`${path}/:action(view)/:apptId/:ridZ?`}>
+			<Route path={`${path}/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
 				<Displayer event={event} />
 			</Route>
 			<Route

@@ -3,13 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { Container } from '@zextras/carbonio-design-system';
-import React, { ComponentProps, ReactComponentElement, useCallback, useState } from 'react';
+import React, { ComponentProps, ReactComponentElement } from 'react';
 import styled from 'styled-components';
+import { useInvite } from '../../hooks/use-invite';
 import { Header } from './header';
-import { DeleteEventModal } from '../delete/delete-event-modal';
 import { useSearchActionsFn } from './hooks/use-search-actions-fn';
 import StyledDivider from '../../commons/styled-divider';
 import ReminderPart from '../event-panel-view/reminder-part';
@@ -20,34 +18,17 @@ import ReplyButtonsPart from '../event-panel-view/reply-buttons-part';
 import DetailsPart from '../event-panel-view/details-part';
 import ImageAndIconPart from '../event-panel-view/image-and-icon-part';
 import AttachmentsPart from '../event-panel-view/attachments-part';
-import { useSearchActionsItems } from './hooks/use-search-actions-items';
-import { useInvite } from './hooks/use-invite';
+import { useQuickActions } from '../../hooks/use-quick-actions';
 
 const BodyContainer = styled(Container)`
 	overflow-y: auto;
-	overflow-x: no-scroll;
 `;
 
 const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> => {
 	const { close } = useSearchActionsFn(event);
-	const invite = useInvite(event?.resource?.inviteId, event?.resource?.ridZ);
-	const [deleteModal, setDeleteModal] = useState(false);
-	const [isInstance, setIsInstance] = useState(false);
+	const invite = useInvite(event?.resource?.inviteId);
 
-	const toggleDeleteModal = useCallback(
-		(appt, value) => {
-			if (appt) {
-				setIsInstance(value);
-			}
-			if (deleteModal) {
-				close();
-			}
-			setDeleteModal(!deleteModal);
-		},
-		[close, deleteModal]
-	);
-
-	const actions = useSearchActionsItems(event, toggleDeleteModal);
+	const actions = useQuickActions(event);
 
 	return (
 		<Container mainAlignment="flex-start">
@@ -121,14 +102,6 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 							</>
 						)}
 					</BodyContainer>
-					{deleteModal && (
-						<DeleteEventModal
-							open={deleteModal}
-							event={event}
-							isInstance={isInstance}
-							onClose={toggleDeleteModal}
-						/>
-					)}
 				</>
 			)}
 		</Container>

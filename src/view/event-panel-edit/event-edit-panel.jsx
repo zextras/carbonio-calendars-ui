@@ -3,13 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-	useReplaceHistoryCallback,
-	useBoardConfig,
-	useUpdateCurrentBoard
-} from '@zextras/carbonio-shell-ui';
+import { useReplaceHistoryCallback, useBoardConfig } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -143,8 +139,6 @@ const EventEditPanel = () => {
 	const updateAppTime = useQueryParam('updateTime');
 	const selectedStartTime = useQueryParam('start');
 	const selectedEndTime = useQueryParam('end');
-	const [t] = useTranslation();
-	const updateBoard = useUpdateCurrentBoard();
 
 	const { id, data } = useId(
 		apptId ?? 'new',
@@ -162,14 +156,6 @@ const EventEditPanel = () => {
 	);
 
 	const callbacks = useEditorDispatches(id, boardContext?.isBoard);
-
-	useEffect(() => {
-		if (!boardContext?.isBoard) {
-			setTitle(data?.title ?? t('label.no_subject', 'No subject'));
-		} else {
-			updateBoard(undefined, data?.title ?? t('label.new_appointment', 'New appointment'));
-		}
-	}, [data?.title, setTitle, updateBoard, t, boardContext?.isBoard]);
 
 	return data ? (
 		<>

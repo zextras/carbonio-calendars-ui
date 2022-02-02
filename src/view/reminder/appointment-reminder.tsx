@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
 /* eslint-disable import/extensions */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -86,7 +86,8 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 					if (
 						val?.resource.alarm &&
 						val?.resource.alarmData?.[0]?.nextAlarm > reminderRange.start &&
-						val?.permission === true
+						val?.permission === true &&
+						val?.resource?.calendar?.id !== FOLDERS.TRASH
 					) {
 						if (
 							moment(val.resource.alarmData[0].nextAlarm).isSameOrAfter(
