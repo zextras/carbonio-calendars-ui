@@ -4,13 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { forEach, reduce, map } from 'lodash';
+import { forEach, reduce, map, head } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
 
 const _CI_REGEX = /^<(.*)>$/;
 const _CI_SRC_REGEX = /^cid:(.*)$/;
 const LINK_REGEX = /\bhttps?:\/\/\S+/g;
+const HREF = /href/g;
 
 export const locationUrl = (location) => {
 	const found = location?.match(LINK_REGEX);
@@ -21,7 +22,7 @@ function TextMessageRenderer({ text }) {
 	const convertedHTML = useMemo(
 		() =>
 			`<p>${map(text.split('\n'), (s) =>
-				s.replace(LINK_REGEX, `<a href='${locationUrl(s)}' target="blank">${locationUrl(s)}</a>`)
+				s.replace(LINK_REGEX, `<a href='${locationUrl(s)}' target="_blank">${locationUrl(s)}</a>`)
 			).join('<br />')}</p>`,
 		[text]
 	);
@@ -63,9 +64,24 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		}px`;
 	}, []);
 
+	const updatedBody = useMemo(
+		() =>
+			`${map(body.split('<p>'), (r) =>
+				r?.match(HREF)
+					? r
+					: r.replace(
+							LINK_REGEX,
+							`<a href='${locationUrl(head(r.split('</p>')))}' target="_blank">${locationUrl(
+								head(r.split('</p>'))
+							)}</a>`
+					  )
+			).join('<p>')}`,
+		[body]
+	);
+
 	useEffect(() => {
 		iframeRef.current.contentDocument.open();
-		iframeRef.current.contentDocument.write(`<div>${body}</div>`);
+		iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
 		iframeRef.current.contentDocument.close();
 		const imgMap = reduce(
 			parts,
@@ -91,7 +107,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 				p.setAttribute('src', `/service/home/~/?auth=co&id=${msgId}&part=${part.name}`);
 			}
 		});
-	}, [body, parts, msgId]);
+	}, [body, parts, msgId, updatedBody]);
 
 	return (
 		<div className="force-white-bg" style={{ width: '100%' }}>
