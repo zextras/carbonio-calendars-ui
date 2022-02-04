@@ -21,9 +21,9 @@ export const locationUrl = (location) => {
 function TextMessageRenderer({ text }) {
 	const convertedHTML = useMemo(
 		() =>
-			`<p>${map(text.split('\n'), (s) =>
+			`<span>${map(text.split('\n'), (s) =>
 				s.replace(LINK_REGEX, `<a href='${locationUrl(s)}' target="_blank">${locationUrl(s)}</a>`)
-			).join('<br />')}</p>`,
+			).join('<br />')}</span>`,
 		[text]
 	);
 	return (
@@ -31,6 +31,7 @@ function TextMessageRenderer({ text }) {
 			dangerouslySetInnerHTML={{
 				__html: convertedHTML
 			}}
+			overflow="breakword"
 		/>
 	);
 }
@@ -55,6 +56,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 			img {
 				max-width: 100%
 			}
+			
 		`;
 		styleTag.textContent = styles;
 		iframeRef.current.contentDocument.head.append(styleTag);
@@ -66,7 +68,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 
 	const updatedBody = useMemo(
 		() =>
-			`${map(body.split('<p>'), (r) =>
+			`${map(body.split('<span>'), (r) =>
 				r?.match(HREF)
 					? r
 					: r.replace(
@@ -75,7 +77,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 								head(r.split('</p>'))
 							)}</a>`
 					  )
-			).join('<p>')}`,
+			).join('<span>')}`,
 		[body]
 	);
 
