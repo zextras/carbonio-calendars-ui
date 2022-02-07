@@ -13,8 +13,9 @@ import {
 	Text,
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { map, some } from 'lodash';
+import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
 
 const ActionButtons = ({ actions, closeAction }) => {
 	const actionContainerRef = useRef();
@@ -55,10 +56,16 @@ const ExpandButton = ({ actions }) => (
 	</Row>
 );
 
-export const Header = ({ title, closeAction, actions }) => {
+export const Header = ({ title, actions }) => {
 	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });
+	const replaceHistory = useReplaceHistoryCallback();
+
+	const close = useCallback(() => {
+		replaceHistory(``);
+	}, [replaceHistory]);
+
 	return (
 		<>
 			<Row
@@ -88,7 +95,7 @@ export const Header = ({ title, closeAction, actions }) => {
 					<IconButton size="medium" icon="ExpandOutline" onClick={closeAction} />
 				</Row> */}
 				<Row padding={{ right: 'extrasmall' }}>
-					<IconButton size="medium" icon="CloseOutline" onClick={closeAction} />
+					<IconButton size="medium" icon="CloseOutline" onClick={close} />
 				</Row>
 			</Row>
 			<Divider />
@@ -103,7 +110,7 @@ export const Header = ({ title, closeAction, actions }) => {
 					padding={{ vertical: 'small' }}
 				>
 					<Row>
-						<ActionButtons actions={actions} closeAction={closeAction} />
+						<ActionButtons actions={actions} closeAction={close} />
 					</Row>
 				</Row>
 			)}

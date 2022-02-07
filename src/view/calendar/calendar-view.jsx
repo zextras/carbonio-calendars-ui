@@ -3,52 +3,30 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { Suspense, lazy, useEffect, useState, useCallback } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo } from 'react';
 import { Container, Text, SnackbarManager } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import CalendarStyle from './calendar-style';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { selectApptStatus } from '../../store/selectors/appointments';
 import { setSearchRange } from '../../store/actions/set-search-range';
-import { EventContext } from '../../commons/event-context';
 import EventPanelView from '../event-panel-view/event-panel-view';
-import { EventEditPanel } from '../event-panel-edit/appointment-edit-panel';
+import EventEditPanel from '../event-panel-edit/event-edit-panel';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
-import { DeleteEventModal } from '../delete/delete-event-modal';
 
 const CalendarComponent = lazy(() =>
 	import(/* webpackChunkName: "calendar-component" */ './calendar-component')
 );
 
 export default function CalendarView() {
-	const [event, setEvent] = useState(null);
-	const [action, setAction] = useState(null);
-	const [deleteModal, setDeleteModal] = useState(false);
 	const calendars = useSelector(selectCalendars);
-	const [primaryCalendar, setPrimaryCalendar] = useState({});
+	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const status = useSelector(selectApptStatus);
 	const dispatch = useDispatch();
-	const [isInstance, setIsInstance] = useState(false);
-
-	const closePanel = useCallback(() => {
-		setEvent(null);
-		setAction(null);
-	}, []);
-
-	const toggleDeleteModal = useCallback(
-		(appt, value) => {
-			if (appt) {
-				setIsInstance(value);
-			}
-			if (deleteModal) {
-				closePanel();
-			}
-			setDeleteModal(!deleteModal);
-		},
-		[closePanel, deleteModal]
-	);
+	const { path } = useRouteMatch();
 
 	useEffect(() => {
 		if (!isEmpty(calendars) && status === 'init') {
@@ -61,7 +39,6 @@ export default function CalendarView() {
 				})
 			);
 		}
-		setPrimaryCalendar(calendars?.[10] ?? {});
 	}, [dispatch, status, calendars]);
 
 	return (
@@ -71,26 +48,18 @@ export default function CalendarView() {
 				padding={{ all: 'medium' }}
 				style={{ overflowY: 'auto', position: 'relative' }}
 			>
-				<EventContext.Provider value={{ event, setEvent, action, setAction, toggleDeleteModal }}>
-					<CalendarStyle primaryCalendar={primaryCalendar} />
-					<Suspense fallback={<Text>Loading...</Text>}>
-						<CalendarComponent />
-					</Suspense>
-					{event && action === EventActionsEnum.EXPAND && (
-						<EventPanelView event={event} action={action} close={closePanel} />
-					)}
-					{event && action === EventActionsEnum.EDIT && (
-						<EventEditPanel event={event} action={action} close={closePanel} />
-					)}
-					{deleteModal && (
-						<DeleteEventModal
-							open={deleteModal}
-							event={event}
-							isInstance={isInstance}
-							onClose={toggleDeleteModal}
-						/>
-					)}
-				</EventContext.Provider>
+				<CalendarStyle primaryCalendar={primaryCalendar} />
+				<Suspense fallback={<Text>Loading...</Text>}>
+					<CalendarComponent />
+				</Suspense>
+				<Switch>
+					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
+						<EventEditPanel />
+					</Route>
+					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
+						<EventPanelView />
+					</Route>
+				</Switch>
 			</Container>
 		</SnackbarManager>
 	);

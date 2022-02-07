@@ -8,3 +8,7 @@ import { Store } from '../../types/store/store';
 export function selectEditor(state: Store, id: string): any {
 	return state.editor.editors[id];
 }
+
+export function selectEditors(state: Store): any {
+	return state.editor.editors;
+}
