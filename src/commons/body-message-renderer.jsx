@@ -4,28 +4,48 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { forEach, reduce, map, head } from 'lodash';
+import { forEach, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
 
 const _CI_REGEX = /^<(.*)>$/;
 const _CI_SRC_REGEX = /^cid:(.*)$/;
 const LINK_REGEX = /\bhttps?:\/\/\S+/g;
-const HREF = /href/g;
 
 export const locationUrl = (location) => {
 	const found = location?.match(LINK_REGEX);
 	return found?.length ? found[0] : undefined;
 };
-
-function TextMessageRenderer({ text }) {
-	const convertedHTML = useMemo(
-		() =>
-			`<span>${map(text.split('\n'), (s) =>
-				s.replace(LINK_REGEX, `<a href='${locationUrl(s)}' target="_blank">${locationUrl(s)}</a>`)
-			).join('<br />')}</span>`,
-		[text]
+const replaceLinkToAnchor = (content) => {
+	if (content === '' || content === undefined) {
+		return '';
+	}
+	return content.replace(
+		/(?:https?:\/\/|www\.)+(?![^\s]*?")([\w.,@?!^=%&amp;:()/~+#-]*[\w@?!^=%&amp;()/~+#-])?/gi,
+		(url) => {
+			const wrap = document.createElement('div');
+			const anchor = document.createElement('a');
+			let href = url.replace(/&amp;/g, '&');
+			if (!url.startsWith('http') && !url.startsWith('https')) {
+				href = `http://${url}`;
+			}
+			anchor.href = href.replace(/&#64;/g, '@').replace(/&#61;/g, '=');
+			anchor.target = '_blank';
+			anchor.innerHTML = url;
+			wrap.appendChild(anchor);
+			return wrap.innerHTML;
+		}
 	);
+};
+
+const plainTextToHTML = (str) => {
+	if (str !== undefined && str !== null) {
+		return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+	}
+	return '';
+};
+function TextMessageRenderer({ text }) {
+	const convertedHTML = useMemo(() => replaceLinkToAnchor(plainTextToHTML(text)), [text]);
 	return (
 		<Text
 			dangerouslySetInnerHTML={{
@@ -66,20 +86,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		}px`;
 	}, []);
 
-	const updatedBody = useMemo(
-		() =>
-			`${map(body.split('<span>'), (r) =>
-				r?.match(HREF)
-					? r
-					: r.replace(
-							LINK_REGEX,
-							`<a href='${locationUrl(head(r.split('</p>')))}' target="_blank">${locationUrl(
-								head(r.split('</p>'))
-							)}</a>`
-					  )
-			).join('<span>')}`,
-		[body]
-	);
+	const updatedBody = useMemo(() => replaceLinkToAnchor(body), [body]);
 
 	useEffect(() => {
 		iframeRef.current.contentDocument.open();
