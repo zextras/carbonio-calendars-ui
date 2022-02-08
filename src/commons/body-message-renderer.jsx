@@ -10,12 +10,7 @@ import { Container, Text } from '@zextras/carbonio-design-system';
 
 const _CI_REGEX = /^<(.*)>$/;
 const _CI_SRC_REGEX = /^cid:(.*)$/;
-const LINK_REGEX = /\bhttps?:\/\/\S+/g;
 
-export const locationUrl = (location) => {
-	const found = location?.match(LINK_REGEX);
-	return found?.length ? found[0] : undefined;
-};
 const replaceLinkToAnchor = (content) => {
 	if (content === '' || content === undefined) {
 		return '';
