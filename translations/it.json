@@ -18,7 +18,10 @@
         "hour_before": "{{count}} hour fa",
         "hour_before_plural": "{{count}} ore fa",
         "at_time_of_event": "Al momento dell'evento",
-        "all_time": "Per tutta la durata dell'evento"
+        "all_time": "Per tutta la durata dell'evento",
+        "modal": {
+            "set_new_time_message": "Vuoi proporre un nuovo orario per l'appuntamento mancato? Se selezioni OK, tutti i relativi promemoria verranno automaticamente cancellati."
+        }
     },
     "participants": {
         "AC_with_count": "Accettato",
@@ -27,14 +30,14 @@
         "TE_with_count_plural": "Rifiutati {{count}}",
         "NE_with_count": "Forse",
         "NE_with_count_plural": "Forse {{count}}",
-        "DE_with_count": "Non ha risposto (1)",
-        "DE_with_count_plural": "Non hanno risposto ({{count}})",
-        "Attendees_tentative_count": "<strong>1 partecipante </strong> ha risposto: forse",
-        "Attendees_tentative_count_plural": "<strong>{{count}} partecipanti </strong> hanno risposto: forse",
+        "DE_with_count": "({{count}}) non ha risposto",
+        "DE_with_count_plural": "({{count}}) non hanno risposto",
+        "Attendees_tentative_count": "<strong> partecipante </strong> ha risposto forse",
+        "Attendees_tentative_count_plural": "<strong>{{count}} partecipanti </strong> hanno risposto forse",
         "Tentative": "Risposto: forse",
-        "Attendees_accepted_count": "<strong>un partecipante </strong> ha accettato",
+        "Attendees_accepted_count": "<strong> partecipante </strong> ha accettato",
         "Attendees_accepted_count_plural": "<strong>{{count}} partecipanti </strong> hanno accettato",
-        "Attendees_not_answered_count": "<strong>un partecipante </strong> non ha risposto",
+        "Attendees_not_answered_count": "<strong> partecipante </strong> non ha risposto",
         "Attendees_not_answered_count_plural": "<strong>{{count}} partecipanti </strong> non hanno risposto",
         "visitors": "e altri {{others}} partecipanti",
         "Accepted": "accettato",
@@ -54,10 +57,10 @@
         "snackbar": {
             "settings_saved": "Modifiche salvate correttamente",
             "invite": {
-                "tentative": "Hai risposto: Forse",
+                "tentative": "Hai risposto Forse",
                 "accept": "Hai risposto Accettato",
                 "error": "Qualcosa è andato storto, riprova.",
-                "decline": "Hai risposto: Rifiutato"
+                "decline": "Hai risposto Rifiuta"
             },
             "appointment_permanently_deleted_error": "Qualcosa è andato storto, riprova",
             "new_calendar_create_error": "Qualcosa è andato storto, riprova",
@@ -75,7 +78,9 @@
             "calendar_moved_to_trash_error": "Qualcosa è andato storto, riprova",
             "edit_calendar": "Modifiche salvate",
             "edit_calendar_error": "Qualcosa è andato storto, riprova",
-            "new_calendar_created": "Nuovo calendario creato"
+            "new_calendar_created": "Nuovo calendario creato",
+            "calendar_permanently_deleted": "Calendario eliminato definitivamente",
+            "calendar_restored": "Calendario ripristinato correttamente"
         },
         "share_calendar_url_note2": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.<br/> Puoi trovare questi collegamenti anche con un clic destro del mouse sull'elenco dei calendari.",
         "share_calendar_url_note": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.",
@@ -99,7 +104,8 @@
         "want_to_send_cancellation_msg": "Vuoi inviare una notifica di cancellazione ai partecipanti?",
         "you_sure_delete_calendar": "Vuoi eliminare definitivamente il calendario \"{{name}}\"?",
         "you_sure_move_calendar_trash": "Vuoi eliminare il calendario \"{{name}}\"?",
-        "share_calendar_url_msg": "Condividi {{title}} con i tuoi collaboratori condividendo uno di questi URL:"
+        "share_calendar_url_msg": "Condividi {{title}} con i tuoi collaboratori condividendo uno di questi URL:",
+        "you_sure_delete_instance": "Vuoi eliminare questa istanza dell'appuntamento “{{title}}” ?"
     },
     "label": {
         "to": "A",
@@ -125,8 +131,8 @@
         "calendar": "Calendario",
         "busy": "Occupato",
         "attendee_plural": "Partecipanti",
-        "attachment": "allegato",
-        "attachment_plural": "{{count}} allegati",
+        "attachment": "Allegato",
+        "attachment_plural": "{{count}} Allegati",
         "all_day": "Tutto il giorno",
         "all_calendars": "Tutti i calendari",
         "download": "Scarica",
@@ -230,7 +236,19 @@
         "of_every_month": "del mese, ogni",
         "ok": "OK",
         "restore": "Ripristina",
-        "results_for": "Risultati per:"
+        "results_for": "Risultati per:",
+        "undo": "Annulla",
+        "start_week_on": "La settimana inizia il",
+        "appt_reminder": "Promemoria appuntamento",
+        "appt_reminder_plural": "Promemoria appuntamento",
+        "access_revoked": "Accesso revocato",
+        "changes_saved": "Modifiche salvate",
+        "delete_instance": "Vuoi eliminare questa istanza dell'appuntamento “{title}”?",
+        "settings_saved": "Impostazioni salvate",
+        "trash_emptied": "Cestino svuotato correttamente",
+        "calendar_shared": "Calendario condiviso correttamente",
+        "filter_sharer_user": "Proprietario della cartella",
+        "on_behalf_of": "{{accountName}} per conto di {{identitiy}} <{{otherAccount}}>"
     },
     "action": {
         "send": "Invia",
@@ -348,7 +366,7 @@
         "new_time_proposed_error": "Qualcosa è andato storto, riprova",
         "new_time_proposed_succes": "Nuovo orario proposto",
         "proposed_time_accepted": "Hai accettato l'orario proposto",
-        "share_folder_success": "Il Calendario è stato condiviso",
+        "share_folder_success": "Calendario condiviso correttamente",
         "url_copied": "{{title}} copiato",
         "new_time_proposed_success": "Nuovo orario proposto"
     },
@@ -370,7 +388,7 @@
                 "internal_users_groups": "Utenti Interni o Gruppi"
             },
             "share_calendar_role": {
-                "manager": "manager (visualizza, modifica, aggiungi e rimuovi)",
+                "manager": "Manager (visualizza, modifica, aggiungi e rimuovi)",
                 "none": "Nessuno",
                 "admin": "Amministratore (visualizza, modifica, aggiungi, rimuovi e gestisci)",
                 "viewer": "Visualizzatore (visualizza)"
@@ -401,7 +419,7 @@
         "weekly": "Settimanale",
         "yearly": "Annuale"
     },
-    "resend_mail_notification_about_this_share": "Invia notifica per questa condivisione",
+    "resend_mail_notification_about_this_share": "Invia e-mail di notifica per questa condivisione",
     "settings": {
         "label": {
             "enable_reminder_sound": "Riproduci un suono (necessita QuickTime o un plugin Windows Media)",
@@ -415,7 +433,9 @@
             "invitation_response": "Risposta all'invito",
             "show_popup_notification": "Mostra una notifica pop up",
             "show_rmndr_past_due_meetings": "Mostra promemoria per appuntamenti arretrati",
-            "snd_autorply_users": "Invia risposta automatica agli utenti che non possono invitarmi"
+            "snd_autorply_users": "Invia risposta automatica agli utenti che non possono invitarmi",
+            "delete_invt_on_rply": "Elimina invito alla risposta",
+            "forward_invites": "Inoltra inviti"
         },
         "options": {
             "free_busy_opts": {
@@ -509,5 +529,101 @@
     "write": "Scrivi",
     "has_attachments": "Ha allegati",
     "is_private": "È privato",
-    "is_recurrent": "È ricorrente"
+    "is_recurrent": "È ricorrente",
+    "placeholder": {
+        "organizer": "Organizzatore"
+    },
+    "appt_restored_successfully": "Appuntamento ripristinato",
+    "timezone": {
+        "alaska": "{{value}} Alaska",
+        "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} Anadyr, Petropavlovsk-Kamchatsky (RTZ 11)",
+        "argentina": "{{value}} Argentina",
+        "asuncion": "{{value}} Asunción",
+        "atlantic_time_canada": "{{value}} Atlantic Time (Canada)",
+        "azores": "{{value}} Azzoree",
+        "baja_california": "{{value}} Bassa California",
+        "baku": "{{value}} Baku",
+        "bangkok_hanoi_jakarta": "{{value}} Bangkok, Hanoi, Giacarta",
+        "beijing_chongqing_hong_kong_urumqi": "{{value}} Pechino, Chongqing, Hong Kong, Urumqi",
+        "beirut": "{{value}} Beirut",
+        "brasilia": "{{value}} Brasilia",
+        "britain_ireland_portugal": "{{value}} Gran Bretagna, Irlanda, Portogallo",
+        "brussels_copenhagen_madrid_paris ": "{{value}} Bruxelles, Copenaghen, Madrid, Parigi",
+        "cape_verde_is": "{{value}} Capo Verde.",
+        "caracas": "{{value}} Caracas",
+        "casablanca": "{{value}} Casablanca",
+        "cayenne_fortaleza": "{{value}} Cayenne, Fortaleza",
+        "central_america": "{{value}} America Centrale",
+        "chihuahua_la_paz_mazatlan": "{{value}} Chihuahua, La Paz, Mazatlan",
+        "chita": "{{value}} Chita",
+        "christmas_island": "{{value}} Isola di Natale",
+        "colombia": "{{value}} Colombia",
+        "coordinated_universal_time": "{{value}} Tempo Coordinato Universale",
+        "cuiaba": "{{value}} Cuiaba",
+        "damascus": "{{value}} Damasco",
+        "darwin": "{{value}} Darwin",
+        "dateline": "{{value}} Linea di cambio data",
+        "dhaka": "{{value}} Dhaka",
+        "egypt": "{{value}} Egitto",
+        "eucla": "{{value}} Eucla",
+        "georgetown_la_paz_manaus_san_juan": "{{value}} Georgetown, La Paz, Manaus, San Juan",
+        "gmt_02": "{{value}} GMT-02",
+        "gmt_11": "{{value}} GMT-11",
+        "greenland": "{{value}} Groenlandia",
+        "harare_pretoria": "{{value}} Harare, Pretoria",
+        "hawaii": "{{value}} Hawaii",
+        "helsinki_kyiv_riga_sofia_tallinn_vilnius": "{{value}} Helsinki, Kiev, Riga, Sofia, Tallin, Vilnius",
+        "indiana_east": "{{value}} Indiana (Est)",
+        "iraq": "{{value}} Iraq",
+        "irkutsk_rtz_7": "{{value}} Irkutsk (RTZ 7)",
+        "istanbul": "{{value}} Istanbul",
+        "jordan": "{{value}} Giordania",
+        "kabul": "{{value}} Kabul",
+        "kaliningrad_rtz_1": "{{value}} Kaliningrad (RTZ 1)",
+        "kathmandu": "{{value}} Kathmandu",
+        "korea": "{{value}} Corea",
+        "kuwait_riyadh": "{{value}} Kuwait, Riyadh",
+        "la_paz": "{{value}} La Paz",
+        "magadan": "{{value}} Magadan",
+        "manaus": "{{value}} Manaus",
+        "mid_atlantic": "{{value}} Medio Atlantico",
+        "minsk": "{{value}} Minsk",
+        "monrovia": "{{value}} Monrovia",
+        "montevideo": "{{value}} Montevideo",
+        "nairobi": "{{value}} Nairobi",
+        "namibia": "{{value}} Namibia",
+        "newfoundland": "{{value}} Terranova",
+        "nuku_alofa": "{{value}} Nuku’alofa",
+        "pacific_south_america": "{{value}} America del Sud",
+        "port_louis": "{{value}} Port Louis",
+        "pyongyang": "{{value}} Pyongyang",
+        "samoa": "{{value}} Samoa",
+        "saskatchewan": "{{value}} Saskatchewan",
+        "sri_jayawardenepura_kotte": "{{value}} Sri Jayawardenepura Kotte",
+        "tbilisi": "{{value}} Tbilisi",
+        "tehran": "{{value}} Tehran",
+        "us_canada_central": "{{value}} US/Canada Centrale",
+        "us_canada_eastern": "{{value}} US/Canada Orientale",
+        "us_canada_pacific": "{{value}} US/Canada Pacific",
+        "vladivostok_magadan": "{{value}} vladivostok_magadan_rtz_9",
+        "west_central_africa": "{{value}} Africa Centrale",
+        "yangon": "{{value}} Yangon",
+        "yerevan": "{{value}} Yerevan",
+        "abu_dhabi_muscat": "{{value}} Abu Dhabi, Mascate",
+        "amsterdam_berlin_bern_rome_stockholm_vienna": "{{value}} Amsterdam, Berlino, Berna, Roma, Stoccolma, Vienna",
+        "arizona": "{{value}} Arizona",
+        "athens_beirut_bucharest_istanbul": "{{value}} Atene, Beirut, Bucarest, Istanbul",
+        "belgrade_bratislava_budapest_ljubljana_prague": "{{value}} Belgrado, Bratislava, Budapest, Lubiana, Praga",
+        "chennai_kolkata_mumbai_new_delhi": "{{value}} Chennai, Kolkata, Mumbai, New Delhi",
+        "ekaterinburg_rtz_4": "{{value}} Ekaterinburg (RTZ 4)",
+        "guadalajara_mexico_city_monterrey ": "{{value}} Guadalajara, Città del Messico, Monterrey",
+        "jerusalem": "{{value}} Gerusalemme",
+        "krasnoyarsk_rtz_6": "{{value}} Krasnoyarsk (RTZ 6)",
+        "moscow_st_petersburg_volgograd_rtz_2": "{{value}} Mosca, San Pietroburgo, Volgograd (RTZ 2)",
+        "sarajevo_skopje_warsaw_zagreb": "{{value}} Sarajevo, Skopje, Varsavia, Zagabria",
+        "us_canada_mountain": "{{value}} US/Canada Mountain"
+    },
+    "messages": {
+        "format_as_plain_text": "Formatta come Testo semplice"
+    }
 }
