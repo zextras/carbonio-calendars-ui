@@ -28,11 +28,12 @@
         "hour_before": "{{count}} uur voordien",
         "hour_before_plural": "{{count}} uren voordien",
         "minute_before": "{{count}} minuut voordien",
-        "minute_before_plural": "{{count}} minuten voordien"
+        "minute_before_plural": "{{count}} minuten voordien",
+        "all_time": "De hele tijd van het evenement"
     },
     "label": {
         "attachment": "Bijlage",
-        "attachment_plural": "{{count}} Bijlagen",
+        "attachment_plural": "bijlagen",
         "busy": "Bezet",
         "days": "Dagen",
         "cancel": "Annuleren",
@@ -147,7 +148,24 @@
         "default_appt_vsblty": "Standaard zichtbaarheid afspraak",
         "location": "Locatie",
         "restore_calednar": "Kalender herstellen",
-        "start_date_and_time": "Startdatum en -tijd"
+        "start_date_and_time": "Startdatum en -tijd",
+        "snooze": "Snooze",
+        "edits_saved": "Bewerkingen correct opgeslagen",
+        "empty": "Leeg",
+        "create": "Creëren",
+        "error_try_again": "Er is iets misgegaan, probeer het opnieuw",
+        "move": "Verplaatsen",
+        "new_calendar": "Nieuwe kalender",
+        "none": "Geen",
+        "of_every_month": "van de maand, elke",
+        "ok": "OK",
+        "restore": "Herstellen",
+        "restore_calendar": "Kalender herstellen",
+        "results_for": "Resultaten voor:",
+        "start_week_on": "Week starten op",
+        "undo": "Ongedaan maken",
+        "delete": "Verwijderen",
+        "delete_plural": ""
     },
     "event": {
         "action": {
@@ -411,7 +429,8 @@
         "new_time_proposed_succes": "Nieuwe tijd voorgesteld",
         "proposed_time_accepted": "U aanvaardde de voorgestelde tijd",
         "url_copied": "{{title}} gekopieerd",
-        "share_folder_success": "Deze kalender is gedeeld"
+        "share_folder_success": "Deze kalender is gedeeld",
+        "new_time_proposed_success": "Nieuwe tijd voorgesteld"
     },
     "success": "Succes",
     "type": "Type",
@@ -493,5 +512,8 @@
     "private": "Privé",
     "remove_from_this_list": "Uit deze lijst verwijderen",
     "revoke_with_custom_message": "Toegang intrekken door een aangepaste melding te verzenden",
-    "shared_items": "Gedeelde items"
+    "shared_items": "Gedeelde items",
+    "placeholder": {
+        "organizer": "Organisator"
+    }
 }

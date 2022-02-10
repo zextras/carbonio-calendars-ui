@@ -135,7 +135,7 @@
         "all_day": "Ganztägig",
         "attendee_plural": "Teilnehmer",
         "attachment": "Anhang",
-        "attachment_plural": "",
+        "attachment_plural": "Anhänge",
         "tentative": "Vorläufig",
         "to": "An",
         "calendar": "Kalender",
@@ -173,7 +173,24 @@
         "busy": "Beschäftigt",
         "optional": "Optional",
         "optional_plural": "",
-        "out_of_office": "Nicht im Büro"
+        "out_of_office": "Nicht im Büro",
+        "snooze": "Schlummern",
+        "create": "Erstellen",
+        "delete": "Löschen",
+        "delete_plural": "",
+        "move": "Verschieben",
+        "new_calendar": "Neuer Kalender",
+        "edits_saved": "Änderungen korrekt gespeichert",
+        "empty": "Leer",
+        "error_try_again": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut",
+        "none": "Keine",
+        "of_every_month": "des Monats, jeden",
+        "ok": "OK",
+        "restore": "Wiederherstellen",
+        "restore_calendar": "Kalender wiederherstellen",
+        "results_for": "Ergebnisse für:",
+        "start_week_on": "Woche starten am",
+        "undo": "Rückgängig machen"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -195,9 +212,9 @@
         "Declined": "abgelehnt",
         "Accepted": "akzeptiert",
         "NE_with_count": "Vorläufig",
-        "NE_with_count_plural": "",
+        "NE_with_count_plural": "Vorläufig ({{count}})",
         "TE_with_count": "Abgelehnt",
-        "TE_with_count_plural": ""
+        "TE_with_count_plural": "Abgelehnt ({{count}})"
     },
     "action": {
         "create": "Erstellen",
@@ -323,7 +340,8 @@
         "minute_before_plural": "{{count}} Minuten früher",
         "week_before": "{{count}} Woche früher",
         "week_before_plural": "{{count}} Wochen früher",
-        "never": "Niemals"
+        "never": "Niemals",
+        "all_time": "die ganze Zeit des Events"
     },
     "remove_from_this_list": "Aus der Liste entfernen",
     "repeat": {
@@ -474,7 +492,8 @@
         "proposed_time_accepted": "Sie haben die vorgeschlagene Zeit zugesagt",
         "proposed_time_error": "Etwas ist schiefgegangen,bitte versuchen Sie es erneut",
         "share_folder_success": "Dieser Kalender wurde geteilt",
-        "url_copied": "{{title}} kopiert"
+        "url_copied": "{{title}} kopiert",
+        "new_time_proposed_success": "Neue Zeit vorgeschlagen"
     },
     "success": "Erfolg",
     "button": {
@@ -493,5 +512,8 @@
     "shared_items": "Geteilte Elemente",
     "shares_info": "Informationen zu geteiltem Zugriff",
     "workflow": "WorkFlow",
-    "write": "Schreiben"
+    "write": "Schreiben",
+    "placeholder": {
+        "organizer": "Organisator"
+    }
 }

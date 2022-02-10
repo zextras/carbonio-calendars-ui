@@ -129,7 +129,23 @@
         "start_week_of": "Mulai minggu",
         "the": "Tersebut",
         "weeks_on": "Minggu di",
-        "revoke": "Batalkan"
+        "revoke": "Batalkan",
+        "snooze": "Tunda",
+        "of_every_month": "bulan ini, setiap",
+        "ok": "OK",
+        "create": "Buat",
+        "delete": "Hapus",
+        "edits_saved": "Hasil edit disimpan dengan benar",
+        "empty": "Kosong",
+        "error_try_again": "Terjadi kesalahan, coba lagi",
+        "move": "Pindahkan",
+        "new_calendar": "Kalender baru",
+        "none": "Tidak ada",
+        "restore": "Pulihkan",
+        "restore_calendar": "Pulihkan kalender",
+        "results_for": "Hasil untuk:",
+        "start_week_on": "Mulai pekan pada",
+        "undo": "Batalkan"
     },
     "calendar": {
         "modal": {
@@ -280,7 +296,8 @@
         "week_before": "{{count}} minggu sebelumnya",
         "at_time_of_event": "Pada saat acara",
         "day_before": "{{count}} hari sebelumnya",
-        "hour_before": "{{count}} hari sebelumnya"
+        "hour_before": "{{count}} hari sebelumnya",
+        "all_time": "Sepanjang waktu acara"
     },
     "repeat": {
         "custom": "Kustom",
@@ -403,7 +420,8 @@
         "proposed_time_accepted": "Anda menerima waktu yang diusulkan",
         "proposed_time_error": "Terjadi kesalahan, coba lagi",
         "url_copied": "{{title}} disalin",
-        "share_folder_success": "Kalender ini telah dibagikan"
+        "share_folder_success": "Kalender ini telah dibagikan",
+        "new_time_proposed_success": "Waktu baru diusulkan"
     },
     "success": "Berhasil",
     "add": "Tambahkan",
@@ -471,5 +489,8 @@
     "shares_info": "Info Bersama",
     "workflow": "Alur Kerja",
     "write": "Tulis",
-    "revoke_with_custom_message": "Batalkan akses dengan mengirim pemberitahuan kustom"
+    "revoke_with_custom_message": "Batalkan akses dengan mengirim pemberitahuan kustom",
+    "placeholder": {
+        "organizer": "Penyelenggara"
+    }
 }

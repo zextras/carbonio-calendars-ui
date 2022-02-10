@@ -1,7 +1,7 @@
 {
     "label": {
         "attachment": "Adjunto",
-        "attachment_plural": "",
+        "attachment_plural": "Adjuntos",
         "end": "Fin",
         "busy": "Ocupado",
         "cancel": "Cancelar",
@@ -30,7 +30,7 @@
         "day": "Día",
         "days": "Días",
         "end_after": "Finalizar después de",
-        "weeks_on": "Semanas en",
+        "weeks_on": "Semana(s) en",
         "sharing_of_this_folder": "Compartición de esta carpeta",
         "add_share": "Añadir compartir",
         "apple_ical": "Apple iCal",
@@ -43,8 +43,8 @@
         "default_appt_vsblty": "Visibilidad de citas por defecto",
         "default_view": "Vista por defecto",
         "delete_permanently": "Borrar permanentemente",
-        "dismiss": "DESECHAR",
-        "dismiss_plural": "DESECHAR TODOS",
+        "dismiss": "Desechar",
+        "dismiss_plural": "Desechar todos",
         "display": "Mostrar",
         "edit_access": "Editar acceso de {{name}}",
         "edit_properties": "Editar propiedades de {{name}}",
@@ -115,8 +115,26 @@
         },
         "work_hour": "Hora de trabajo",
         "work_week": "Semana de trabajo",
-        "tentative": "Provisional",
-        "your_pref_timezone_msg": "Tu huso horario preferido es GMT +01:00 Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena."
+        "tentative": "provisional",
+        "your_pref_timezone_msg": "Tu huso horario preferido es GMT +01:00 Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena.",
+        "snooze": "Posponer",
+        "create": "Crear",
+        "delete": "Eliminar",
+        "delete_plural": "",
+        "calendar_shared": "Calendario compartido con éxito",
+        "empty": "Vacía",
+        "edits_saved": "Ediciones guardadas correctamente",
+        "error_try_again": "Algo fue mal, por favor, prueba de nuevo",
+        "move": "Mover",
+        "new_calendar": "Nuevo calendario",
+        "none": "None",
+        "of_every_month": "del mes, cada",
+        "ok": "OK",
+        "restore": "Restaurar",
+        "restore_calendar": "Restaurar calendario",
+        "start_week_on": "Empezar semana en",
+        "undo": "Deshacer",
+        "results_for": "Resultados para:"
     },
     "action": {
         "delete": "Eliminar",
@@ -135,7 +153,8 @@
         "send_cancellation": "Enviar cancelación",
         "calendar_access_share": "Compartir acceso al calendario",
         "edit_calendar_properties": "Editar propiedades del calendario",
-        "share_calendar": "Compartir calendario"
+        "share_calendar": "Compartir calendario",
+        "empty_trash_confirmation": "Esta acción borrará todos los elementos en las carpetas basura de Correo electrónico, Contactos, Calendario, Tareas y Maletín. ¿Seguro que quieres borrar permanentemente todo en esas basura?"
     },
     "event": {
         "action": {
@@ -174,7 +193,7 @@
                     "message3": "Elige un calendario al que mover las citas consideradas:"
                 },
                 "input": {
-                    "filter": "Filtrar calendarios"
+                    "filter": "Filtrar Calendarios"
                 },
                 "new": "Nuevo calendario"
             },
@@ -226,24 +245,24 @@
         "AC_with_count": "Aceptado",
         "AC_with_count_plural": "",
         "Declined": "rechazado",
-        "Attendees_not_answered_count": "<strong>1 asistente </strong> no ha respondido",
+        "Attendees_not_answered_count": "<strong> asistente </strong> no ha respondido",
         "Attendees_not_answered_count_plural": "<strong>{{count}} asistentes </strong> no han respondido",
         "Accepted": "aceptado",
-        "Attendees_declined_count": "<strong>1 asistente </strong> ha rechazado",
+        "Attendees_declined_count": "<strong>asistente </strong> ha rechazado",
         "Attendees_declined_count_plural": "<strong>{{count}} asistentes </strong> han rechazado",
         "NE_with_count": "Provisional",
         "NE_with_count_plural": "Provisional ({{count}})",
         "Tentative": "aceptado como provisional",
-        "DE_with_count": "No contestó (1)",
+        "DE_with_count": "No contestó ({{count}})",
         "DE_with_count_plural": "No contestaron ({{count}})",
         "Invited_Visitor": "han sido invitados",
         "Not_answered": "no contestaron",
         "TE_with_count": "Rechazado",
         "TE_with_count_plural": "Rechazados {{count}}",
         "visitors": "y otros {{others}} asistentes",
-        "Attendees_accepted_count": "<strong>1 asistente </strong> ha aceptado",
+        "Attendees_accepted_count": "<strong>asistente </strong> ha aceptado",
         "Attendees_accepted_count_plural": "<strong>{{count}} asistentes </strong> han aceptado",
-        "Attendees_tentative_count": "<strong>1 asistente </strong> ha aceptado provisionalmente",
+        "Attendees_tentative_count": "<strong> asistente </strong> ha aceptado provisionalmente",
         "Attendees_tentative_count_plural": "<strong>{{count}} asistentes </strong> han aceptado provisionalmente"
     },
     "read": "Leido",
@@ -257,7 +276,8 @@
         "minute_before": "{{count}} minuto antes",
         "minute_before_plural": "{{count}} minutos antes",
         "week_before": "{{count}} semana antes",
-        "week_before_plural": "{{count}} semanas antes"
+        "week_before_plural": "{{count}} semanas antes",
+        "all_time": "Todo el tiempo del evento"
     },
     "repeat": {
         "custom": "Personalizado",
@@ -314,9 +334,9 @@
                 "allow_none": "No dejar que nadie me invite a reuniones"
             },
             "timezones": {
-                "chennai": "GMT +05:30 Chennai,Calcuta,Bombay,Nueva Delhi",
+                "chennai": "GMT +05:30 Chennai, Calcuta, Bombay, Nueva Delhi",
                 "egypt": "GMT +02:00 Egipto",
-                "amsterdam": "GMT +01:00 Ámsterdam,Berlín,Berna,Roma,Estocolmo,Viena"
+                "amsterdam": "GMT +01:00 Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena"
             },
             "weekdays": {
                 "friday": "Viernes",
@@ -382,9 +402,10 @@
         "new_time_proposed_error": "Algo fue mal, por favor, prueba de nuevo",
         "new_time_proposed_succes": "Nueva hora propuesta",
         "proposed_time_accepted": "Has aceptado la hora propuesta",
-        "share_folder_success": "Este calendario ha sido compartido",
+        "share_folder_success": "Calendario compartido con éxito",
         "url_copied": "{{title}} copiado",
-        "proposed_time_error": "Algo fue mal, por favor, prueba de nuevo"
+        "proposed_time_error": "Algo fue mal, por favor, prueba de nuevo",
+        "new_time_proposed_success": "Nueva hora propuesta"
     },
     "success": "Éxito",
     "type": "Tipo",
@@ -394,7 +415,7 @@
         "you": "Tu",
         "are_organizer": "eres el organizador",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> es el organizador",
-        "you_will_see_the_subject_here": "Verás el asunto de esta cita aquí",
+        "you_will_see_the_subject_here": "Asunto",
         "have_not_sent_invitation": "Aún no has enviado la invitación a los asistentes",
         "snackbar": {
             "appt_moved": "Cita movida con éxito a",
@@ -414,13 +435,14 @@
             "invite": {
                 "accept": "Has contestado como Aceptado",
                 "error": "Algo fue mal, por favor, prueba de nuevo.",
-                "decline": "Has contestado como: Rechazado",
-                "tentative": "Has contestado como: Provisional"
+                "decline": "Has contestado como Rechazado",
+                "tentative": "Has contestado como Provisional"
             },
             "new_calendar_create_error": "Algo fue mal, por favor, inténtalo de nuevo",
             "new_calendar_created": "Calendario nuevo creado",
             "settings_saved": "Ediciones guardadas correctamente",
-            "edit_calendar_error": "Algo fue mal, por favor, inténtalo de nuevo"
+            "edit_calendar_error": "Algo fue mal, por favor, inténtalo de nuevo",
+            "calendar_permanently_deleted": "Calendario borrado permanentemente"
         },
         "invite_has_no_message": "Esta invitación no tiene un mensaje de texto",
         "invited_you": "te invitó a un evento",
@@ -493,5 +515,14 @@
     "shared_items": "Elementos compartidos",
     "shares_info": "Información de participaciones",
     "workflow": "Flujo de trabajo",
-    "write": "Escribir"
+    "write": "Escribir",
+    "appt_restored_successfully": "Cita restaurada con éxito",
+    "timezone": {
+        "gmt_02": "{{value}} GMT-02",
+        "gmt_11": "{{value}} GMT-11",
+        "amsterdam_berlin_bern_rome_stockholm_vienna": "{{value}} Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena"
+    },
+    "placeholder": {
+        "organizer": "Organizador"
+    }
 }
