@@ -20,7 +20,7 @@
         "download": "Baixar",
         "download_plural": "Baixar tudo",
         "attachment": "Anexo",
-        "attachment_plural": "{{count}} Anexos",
+        "attachment_plural": "anexos",
         "month": "Mês",
         "invitation_not_sent": "Você ainda não enviou o convite aos participantes",
         "calendar_color": "Cor do calendário",
@@ -116,7 +116,24 @@
         "work_hour": "Hora de trabalho",
         "work_week": "Semana de trabalho",
         "your_pref_timezone_msg": "Sua preferência de fuso horário é: GMT +01: 00 Amsterdã, Berlim, Berna, Roma, Estocolmo, Viena.",
-        "timezone_pref_msg": "Os horários seguem suas preferências de fuso horário."
+        "timezone_pref_msg": "Os horários seguem suas preferências de fuso horário.",
+        "create": "Criar",
+        "delete": "Apagar",
+        "delete_plural": "",
+        "edits_saved": "Edições salvas corretamente",
+        "empty": "Vazia",
+        "error_try_again": "Algo deu errado. Tente novamente",
+        "new_calendar": "Novo calendário",
+        "none": "Nenhum",
+        "of_every_month": "de cada mês, todo(a)",
+        "snooze": "Adiar",
+        "start_week_on": "Começar a semana",
+        "undo": "Desfazer",
+        "move": "Mover",
+        "ok": "OK",
+        "restore": "Restaurar",
+        "restore_calendar": "Recuperar calendário",
+        "results_for": "Resultados para:"
     },
     "action": {
         "delete": "Excluir",
@@ -304,7 +321,8 @@
         "hour_before": "{{count}} hora antes",
         "hour_before_plural": "{{count}} horas antes",
         "minute_before": "{{count}} minuto antes",
-        "minute_before_plural": "{{count}} minutos antes"
+        "minute_before_plural": "{{count}} minutos antes",
+        "all_time": "Na hora do evento"
     },
     "repeat": {
         "custom": "Personalizado",
@@ -431,7 +449,8 @@
         "proposed_time_accepted": "Você aceitou a hora proposta",
         "proposed_time_error": "Algo deu errado. Tente novamente",
         "url_copied": "{{title}} copiado",
-        "share_folder_success": "Este Calendário foi compartilhado"
+        "share_folder_success": "Este Calendário foi compartilhado",
+        "new_time_proposed_success": "Nova hora proposta"
     },
     "success": "Sucesso",
     "type": "Tipo",
@@ -493,5 +512,8 @@
     "shares_info": "Informações dos Compartilhamentos",
     "write": "Escrever",
     "workflow": "Fluxo de Trabalho",
-    "resend_mail_notification_about_this_share": "Enviar notificação por e-mail sobre este compartilhamento"
+    "resend_mail_notification_about_this_share": "Enviar notificação por e-mail sobre este compartilhamento",
+    "placeholder": {
+        "organizer": "Organizador"
+    }
 }

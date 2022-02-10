@@ -33,7 +33,7 @@
     },
     "label": {
         "attachment": "Bijlage",
-        "attachment_plural": "{{count}} Bijlagen",
+        "attachment_plural": "bijlagen",
         "busy": "Bezet",
         "days": "Dagen",
         "cancel": "Annuleren",

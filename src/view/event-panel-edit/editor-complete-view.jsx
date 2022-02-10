@@ -40,7 +40,6 @@ import ExpandedButtons, { addAttachments } from './components/expanded-buttons';
 
 import AttachmentsBlock from '../event-panel-view/attachments-part';
 import DatePicker from './components/date-picker';
-import { EventContext } from '../../commons/event-context';
 import RecurrenceSelector from './components/recurrence-selector';
 import DropZoneAttachment from './components/dropzone-component';
 
@@ -128,7 +127,6 @@ export default function EditorCompleteView({
 	const title = useMemo(() => (data && data.title !== '' ? data.title : 'No Subject'), [data]);
 	const settings = useUserSettings();
 	const account = useUserAccount();
-	const utils = useContext(EventContext);
 	const [ContactInput, available] = useIntegratedComponent('contact-input');
 
 	const [richText, setRichText] = useState('');
@@ -409,7 +407,7 @@ export default function EditorCompleteView({
 								crossAlignment="flex-start"
 							>
 								<DatePicker
-									start={data.start ?? utils.event.start}
+									start={data.start}
 									end={data.end}
 									allDay={data.allDay}
 									onChange={callbacks.onDateChange}

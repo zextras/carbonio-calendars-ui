@@ -40,7 +40,6 @@ import DatePicker from './components/date-picker';
 import ReminderSelector from './components/reminder-selector';
 import RecurrenceSelector from './components/recurrence-selector';
 import AttachmentsBlock from '../event-panel-view/attachments-part';
-import { EventContext } from '../../commons/event-context';
 import DropZoneAttachment from './components/dropzone-component';
 
 export default function EditorSmallView({
@@ -55,7 +54,6 @@ export default function EditorSmallView({
 	const title = useMemo(() => (data && data.title !== '' ? data.title : 'No Subject'), [data]);
 	const settings = useUserSettings();
 	const account = useUserAccount();
-	const utils = useContext(EventContext);
 	const [dropZoneEnable, setDropZoneEnable] = useState(false);
 
 	useLayoutEffect(() => {
@@ -329,7 +327,7 @@ export default function EditorSmallView({
 									crossAlignment="flex-start"
 								>
 									<DatePicker
-										start={data.start ?? utils.event.start}
+										start={data.start}
 										end={data.end}
 										allDay={data.allDay}
 										onChange={callbacks.onDateChange}
