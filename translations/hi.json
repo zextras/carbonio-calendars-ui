@@ -124,7 +124,24 @@
         "weeks_on": "हफ्ते",
         "work_hour": "काम घंटा",
         "work_week": "कार्य सप्ताह",
-        "your_pref_timezone_msg": "आपका पसंदीदा टाइमज़ोन है: GMT +1.00 एम्स्टर्डैम, बर्लिन, बर्न, रॉम,स्टॉकहोम, विएना।"
+        "your_pref_timezone_msg": "आपका पसंदीदा टाइमज़ोन है: GMT +1.00 एम्स्टर्डैम, बर्लिन, बर्न, रॉम,स्टॉकहोम, विएना।",
+        "snooze": "विलंबित करना",
+        "create": "बनाएँ",
+        "edits_saved": "बदलाव ठीक से सेव हो गए",
+        "empty": "रिक्त",
+        "move": "ले जाएँ",
+        "new_calendar": "नया कैलेंडर",
+        "restore": "वापस लाएँ",
+        "delete": "डिलीट करें",
+        "delete_plural": "",
+        "error_try_again": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+        "none": "कोई नहीं",
+        "of_every_month": "महीने के हर",
+        "ok": "ठीक है",
+        "restore_calendar": "कैलेंडर वापस लाएँ",
+        "results_for": "इसके नतीजे:",
+        "start_week_on": "इस दिन से सप्ताह का प्रारम्भ करें",
+        "undo": "अनडू करें"
     },
     "action": {
         "delete": "डिलीट करें",
@@ -280,7 +297,8 @@
         "minute_before": "{{count}} मिनट पहले",
         "minute_before_plural": "{{count}} मिनट पहले",
         "week_before": "{{count}} सप्ताह पहले",
-        "week_before_plural": "{{count}} सप्ताह पहले"
+        "week_before_plural": "{{count}} सप्ताह पहले",
+        "all_time": "ईवेंट के पूरे टाइम पर"
     },
     "repeat": {
         "custom": "कस्टम",
@@ -407,7 +425,8 @@
         "new_time_proposed_succes": "नया टाइम दिया गया",
         "proposed_time_accepted": "आपने दिए टाइम को स्वीकार कर लिया",
         "proposed_time_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
-        "url_copied": "{{title}} कॉपी किया गया"
+        "url_copied": "{{title}} कॉपी किया गया",
+        "new_time_proposed_success": "नया टाइम दिया गया"
     },
     "success": "सफलता",
     "type": "टाइप करें",
@@ -493,5 +512,8 @@
     "share_invite_resent": "शेयर इन्वाइट भेजा गया",
     "shared_folders": "शेयर किए कैलेंडर",
     "shared_items": "शेयर किए आइटम",
-    "shares_info": "शेयर की जानकारी"
+    "shares_info": "शेयर की जानकारी",
+    "placeholder": {
+        "organizer": "आयोजक"
+    }
 }
