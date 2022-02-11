@@ -19,7 +19,7 @@ const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
 );
 const LazyEditorView = lazy(() =>
-	import(/* webpackChunkName: "calendar-edit" */ './view/event-panel-edit/event-edit-panel')
+	import(/* webpackChunkName: "calendar-edit" */ './view/event-panel-edit/board-edit-panel')
 );
 const LazySettingsView = lazy(() =>
 	import(/* webpackChunkName: "settings-view" */ './settings/settings-view')
@@ -79,7 +79,7 @@ export default function App() {
 					label: 'New Appointment',
 					icon: 'CalendarOutline',
 					click: () => {
-						getBridgedFunctions().addBoard('/', { isBoard: true });
+						getBridgedFunctions().addBoard('/');
 					}
 				},
 				secondaryItems: []

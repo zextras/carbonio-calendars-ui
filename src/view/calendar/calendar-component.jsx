@@ -172,8 +172,7 @@ export default function CalendarComponent() {
 
 	const handleSelect = (e) => {
 		addBoard(`/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(e.end).getTime()}`, {
-			app: CALENDAR_APP_ID,
-			isBoard: true
+			app: CALENDAR_APP_ID
 		});
 	};
 	const onEventDrop = useCallback(
