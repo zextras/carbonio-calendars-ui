@@ -48,13 +48,7 @@ function Dropdown({ label, participants = [], width }) {
 
 	const displayedParticipants = useMemo(
 		() => (
-			<Container
-				orientation="horizontal"
-				mainAlignment="space-between"
-				crossAlignment="flex-start"
-				wrap="wrap"
-				width="fill"
-			>
+			<Container mainAlignment="space-between" crossAlignment="flex-start" wrap="wrap" width="fill">
 				{participants.map((participant) => (
 					<DisplayedParticipant participant={participant} key={participant.email} />
 				))}
@@ -73,7 +67,7 @@ function Dropdown({ label, participants = [], width }) {
 				height="fit"
 			>
 				<Row mainAlignment="flex-start" takeAvailableSpace>
-					<Text weight="bold">{label}</Text>
+					<Text size="small">{label}</Text>
 					<IconButton
 						icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
 						onClick={toggleExpanded}
@@ -89,6 +83,7 @@ function Dropdown({ label, participants = [], width }) {
 export default function ParticipantsDisplayer({ participants }) {
 	const [t] = useTranslation();
 	const width = Object.keys(participants).length === 1 ? '100%' : '50%';
+
 	if (Object.keys(participants).length === 0) return null;
 	return (
 		<Container
@@ -113,8 +108,8 @@ export default function ParticipantsDisplayer({ participants }) {
 			<Dropdown
 				label={t('participants.NE_with_count', {
 					count: participants.NE?.length ?? 0,
-					defaultValue: 'Tentative',
-					defaultValue_plural: 'Tentative ({{count}})'
+					defaultValue: "Didn't answer ({{count}})",
+					defaultValue_plural: "Didn't answer ({{count}})"
 				}).toUpperCase()}
 				participants={participants.NE}
 				width={width}
@@ -123,8 +118,8 @@ export default function ParticipantsDisplayer({ participants }) {
 			<Dropdown
 				label={t('participants.TE_with_count', {
 					count: participants.TE?.length ?? 0,
-					defaultValue: 'Declined',
-					defaultValue_plural: 'Declined ({{count}})'
+					defaultValue: 'Tentative',
+					defaultValue_plural: 'Tentative ({{count}})'
 				}).toUpperCase()}
 				participants={participants.TE}
 				width={width}
@@ -133,8 +128,8 @@ export default function ParticipantsDisplayer({ participants }) {
 			<Dropdown
 				label={t('participants.DE_with_count', {
 					count: participants.DE?.length ?? 0,
-					defaultValue: "Didn't answer ({{count}})",
-					defaultValue_plural: "Didn't answer ({{count}})"
+					defaultValue: 'Declined',
+					defaultValue_plural: 'Declined ({{count}})'
 				}).toUpperCase()}
 				participants={participants.DE}
 				width={width}

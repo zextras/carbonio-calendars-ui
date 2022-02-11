@@ -108,7 +108,8 @@ const generateInvite = (editorData: any): any => {
 			a: c.email,
 			d: c.firstName && c.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 			role: 'REQ',
-			ptst: 'NE'
+			ptst: 'NE',
+			rsvp: '1'
 		}))
 	);
 
@@ -118,7 +119,8 @@ const generateInvite = (editorData: any): any => {
 				a: c.email,
 				d: c.firstName && c.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 				role: 'OPT',
-				ptst: 'NE'
+				ptst: 'NE',
+				rsvp: '1'
 			}))
 		);
 

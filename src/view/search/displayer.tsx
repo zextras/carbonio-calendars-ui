@@ -16,7 +16,6 @@ import { extractBody } from '../../commons/body-message-renderer';
 import ParticipantsPart from '../event-panel-view/participants-part';
 import ReplyButtonsPart from '../event-panel-view/reply-buttons-part';
 import DetailsPart from '../event-panel-view/details-part';
-import ImageAndIconPart from '../event-panel-view/image-and-icon-part';
 import AttachmentsPart from '../event-panel-view/attachments-part';
 import { useQuickActions } from '../../hooks/use-quick-actions';
 
@@ -29,13 +28,11 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 	const invite = useInvite(event?.resource?.inviteId);
 
 	const actions = useQuickActions(event);
-
 	return (
-		<Container mainAlignment="flex-start">
+		<Container mainAlignment="flex-start" padding={{ all: 'medium' }}>
 			{event && (
 				<>
 					<Header title={event.title} actions={actions} closeAction={close} />
-					<ImageAndIconPart color={event?.resource?.calendar?.color?.color || 'primary'} />
 					<BodyContainer
 						orientation="vertical"
 						mainAlignment="flex-start"
@@ -82,6 +79,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 								/>
 							</>
 						)}
+
 						<StyledDivider />
 						{invite && (
 							<ReminderPart
@@ -93,7 +91,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 						{invite?.attachmentFiles?.length > 0 && (
 							<>
 								<StyledDivider />
-								<Container padding={{ all: 'medium' }}>
+								<Container padding={{ all: 'medium' }} background="gray6">
 									<AttachmentsPart
 										attachments={invite?.attachmentFiles}
 										message={{ id: event?.resource?.inviteId, subject: event?.title }}

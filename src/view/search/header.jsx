@@ -77,8 +77,8 @@ export const Header = ({ title, actions }) => {
 				height="48px"
 				padding={{ vertical: 'small' }}
 			>
-				<Row padding={{ horizontal: 'large' }}>
-					<Icon icon={eventIsEditable ? 'NewAppointmentOutline' : 'CalendarModOutline'} />
+				<Row padding={{ right: 'large' }}>
+					<Icon icon={'CalendarModOutline'} />
 				</Row>
 				<Row takeAvailableSpace mainAlignment="flex-start">
 					<Text size="medium" overflow="ellipsis">
