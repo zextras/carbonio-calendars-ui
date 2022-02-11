@@ -127,7 +127,7 @@ const Header = ({ title, expanded, setExpanded }) => {
 	);
 };
 
-const EventEditPanel = () => {
+const EventEditPanel = ({ boardContext }) => {
 	const { calendarId, apptId, ridZ } = useParams();
 	const calendar = useSelector((s) => selectCalendar(s, calendarId));
 	const appointment = useSelector((s) => selectAppointment(s, apptId));
@@ -139,7 +139,6 @@ const EventEditPanel = () => {
 	}, [appointment, calendar, inst]);
 	const [title, setTitle] = useState(null);
 	const [expanded, setExpanded] = useState(false);
-	const boardContext = useBoardConfig();
 	const updateAppTime = useQueryParam('updateTime');
 	const selectedStartTime = useQueryParam('start');
 	const selectedEndTime = useQueryParam('end');
