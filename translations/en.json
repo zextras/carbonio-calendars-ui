@@ -197,7 +197,7 @@
         "settings_saved": "Settings saved",
         "share": "Share",
         "share_calendar_url": "{{title}} access share",
-        "shares_items": "{{value}}'s shared calendars",
+        "shares_items": "<bold>{{user}}</bold>'s shared calendars",
         "sharing_of_this_folder": "Sharing of this folder",
         "show": "Show",
         "show_declined_meetings": "Show declined meetings",
