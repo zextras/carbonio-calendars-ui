@@ -16,7 +16,6 @@ import {
 	Checkbox,
 	Container,
 	Row,
-	RichTextEditor,
 	Divider,
 	Padding,
 	Select,
@@ -200,6 +199,8 @@ export default function EditorSmallView({
 		[t]
 	);
 
+	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
+
 	return (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large' }}
@@ -373,9 +374,9 @@ export default function EditorSmallView({
 								)}
 							</Container>
 							<Container minHeight="200px" padding={{ vertical: 'large' }}>
-								{data.resource.isRichText ? (
+								{composerIsAvailable && data.resource.isRichText ? (
 									<EditorWrapper>
-										<RichTextEditor
+										<Composer
 											value={data.resource.richText}
 											onEditorChange={callbacks.onTextChange}
 											minHeight={200}

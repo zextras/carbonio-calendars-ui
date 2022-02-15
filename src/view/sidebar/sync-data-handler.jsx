@@ -29,7 +29,6 @@ export const SyncDataHandler = () => {
 	const [initialized, setInitialized] = useState(false);
 	const start = useSelector(selectStart);
 	const end = useSelector(selectEnd);
-
 	useEffect(() => {
 		if (!isEmpty(refresh) && !initialized) {
 			store.setReducer(

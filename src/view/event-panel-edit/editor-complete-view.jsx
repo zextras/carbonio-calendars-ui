@@ -18,7 +18,6 @@ import {
 	Checkbox,
 	Container,
 	Row,
-	RichTextEditor,
 	Divider,
 	Padding,
 	Select,
@@ -287,6 +286,7 @@ export default function EditorCompleteView({
 		}
 	}, [title, setTitle]);
 
+	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
 	return (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large', top: 'small' }}
@@ -456,9 +456,9 @@ export default function EditorCompleteView({
 					</Row>
 
 					<Container minHeight="200px" padding={{ vertical: 'large' }}>
-						{data.resource.isRichText ? (
+						{composerIsAvailable && data.resource.isRichText ? (
 							<EditorWrapper>
-								<RichTextEditor value={richText} onEditorChange={onEditorChange} minHeight={200} />
+								<Composer value={richText} onEditorChange={onEditorChange} minHeight={200} />
 							</EditorWrapper>
 						) : (
 							<TextArea

@@ -7,7 +7,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Container } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import ParticipantsPart from './participants-part';
 import MessagePart from './message-part';
@@ -50,7 +50,6 @@ const BodyContainer = styled(Container)`
 
 export default function EventPanelView({ event, close }) {
 	const [t] = useTranslation();
-	const replaceHistory = useReplaceHistoryCallback();
 	const dispatch = useDispatch();
 	const utils = useContext(EventContext);
 	const invite = useSelector((state) =>

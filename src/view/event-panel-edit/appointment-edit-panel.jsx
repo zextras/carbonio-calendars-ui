@@ -5,7 +5,7 @@
  */
 import React, { useContext, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import Panel from '../../commons/panel';
 import EditorController from './editor-controller';
@@ -14,7 +14,6 @@ import { useQuickActions } from '../../hooks/use-quick-actions';
 
 export const EventEditPanel = ({ action, event, close }) => {
 	const dispatch = useDispatch();
-	const replaceHistory = useReplaceHistoryCallback();
 	const utils = useContext(EventContext);
 	const [t] = useTranslation();
 	const actions = useQuickActions(event, { utils, replaceHistory, dispatch }, t);

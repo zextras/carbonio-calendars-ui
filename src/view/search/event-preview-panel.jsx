@@ -7,7 +7,7 @@ import React, { useCallback, useState } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { Header } from '../event-panel-view/header';
 import StyledDivider from '../../commons/styled-divider';
@@ -31,7 +31,6 @@ const EventPreviewPanel = ({ event, setEvent, setAction }) => {
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [isInstance, setIsInstance] = useState(false);
 	const [t] = useTranslation();
-	const replaceHistory = useReplaceHistoryCallback();
 	const dispatch = useDispatch();
 
 	const invite = useSelector((state) =>

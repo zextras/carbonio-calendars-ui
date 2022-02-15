@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Button, Dropdown, Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import React, { useContext, useState, useCallback } from 'react';
 import { map, toUpper } from 'lodash';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { EventContext } from '../../commons/event-context';
@@ -198,7 +198,6 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 };
 
 export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
-	const replaceHistory = useReplaceHistoryCallback();
 	const utils = useContext(EventContext);
 
 	return (

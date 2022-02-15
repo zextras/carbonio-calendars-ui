@@ -17,14 +17,13 @@ import {
 } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { EventContext } from '../../commons/event-context';
 
 export default function CustomEvent({ event, title }) {
 	const [t] = useTranslation();
-	const replaceHistory = useReplaceHistoryCallback();
 	const dispatch = useDispatch();
 	const utils = useContext(EventContext);
 	const createModal = useContext(ModalManagerContext);
