@@ -4,31 +4,23 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Container, Button, IconButton } from '@zextras/carbonio-design-system';
 
 const MultiButton = styled(Button)`
-	border-radius: ${({ position }) => {
-		switch (position) {
-			case 'first':
-				return '2px 0 0 2px';
-			case 'last':
-				return '0 2px 2px 0';
-			case 'mid':
-			default:
-				return '0';
-		}
-	}};
-	${({ position }) =>
-		(position === 'mid' || position === 'first') &&
-		css`
-			border-right: none;
-		`};
-	${({ position }) =>
-		(position === 'mid' || position === 'last') &&
-		css`
-			border-left: none;
-		`};
+	&:last-child {
+		border-left: none;
+		border-radius: 0 2px 2px 0;
+	}
+	&:first-child {
+		border-right: none;
+		border-radius: 2px 0 0 2px;
+	}
+	&:not(:first-child):not(:last-child) {
+		border-radius: 0;
+		border-right: none;
+		border-left: none;
+	}
 `;
 
 export default function CustomToolbar({ label, onView, onNavigate, view }) {
@@ -61,28 +53,24 @@ export default function CustomToolbar({ label, onView, onNavigate, view }) {
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
 					<MultiButton
 						backgroundColor={view === 'month' ? 'highlight' : null}
-						position="first"
 						label="Month"
 						type="outlined"
 						onClick={month}
 					/>
 					<MultiButton
 						backgroundColor={view === 'week' ? 'highlight' : null}
-						position="mid"
 						label="Week"
 						type="outlined"
 						onClick={week}
 					/>
 					<MultiButton
 						backgroundColor={view === 'day' ? 'highlight' : null}
-						position="mid"
 						label="Day"
 						type="outlined"
 						onClick={day}
 					/>
 					<MultiButton
 						backgroundColor={view === 'work_week' ? 'highlight' : null}
-						position="last"
 						label="Work Week"
 						type="outlined"
 						onClick={workView}
