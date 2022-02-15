@@ -6,7 +6,7 @@
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement, useMemo, useEffect, useCallback } from 'react';
-import { Container, Padding, Row, Icon, Text, Button } from '@zextras/carbonio-design-system';
+import { Container, Padding, Row, Icon, Text } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
@@ -19,6 +19,8 @@ import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { inviteToEvent } from '../../hooks/use-invite-to-event';
 import { getInvite } from '../../store/actions/get-invite';
 import { CALENDAR_APP_ID } from '../../constants';
+import BodyMessageRenderer from '../../commons/body-message-renderer.jsx';
+import { useInvite } from '../../hooks/use-invite';
 
 const InviteContainer = styled(Container)`
 	border: 1px solid ${({ theme }: any): string => theme.palette.gray2.regular};
@@ -59,6 +61,8 @@ const InviteResponse: FC<InviteResponse> = ({
 			onLoadChange();
 		}
 	}, [mailMsg.read, onLoadChange]);
+	const fullInvite = useInvite(mailMsg?.id);
+
 	const apptTime = useMemo(
 		() =>
 			moment(invite[0]?.comp[0].s[0].u).format(
@@ -143,21 +147,6 @@ const InviteResponse: FC<InviteResponse> = ({
 							</Text>
 						</Row>
 					</Row>
-					{method !== 'COUNTER' && isAttendee && (
-						<Row
-							width="30%"
-							mainAlignment="flex-start"
-							padding={{ horizontal: 'small', bottom: 'small' }}
-						>
-							<Button
-								type="ghost"
-								label="PROPOSE NEW TIME"
-								icon="RefreshOutline"
-								color="primary"
-								onClick={proposeNewTime}
-							/>
-						</Row>
-					)}
 				</Row>
 
 				{invite[0]?.comp[0].loc && (
@@ -197,13 +186,16 @@ const InviteResponse: FC<InviteResponse> = ({
 						<Icon icon="MessageSquareOutline" />
 					</Row>
 					<Row takeAvailableSpace mainAlignment="flex-start">
-						<Text overflow="break-word">
-							{invite?.[0]?.comp?.[0]?.fr && invite?.[0]?.comp?.[0]?.fr !== 'undefined'
-								? invite[0].comp[0].fr
-								: invite[0]?.comp?.[0]?.desc?.[0]?._content}
-						</Text>
+						{fullInvite && (
+							<BodyMessageRenderer
+								fullInvite={fullInvite}
+								inviteId={inviteId}
+								parts={fullInvite?.parts}
+							/>
+						)}
 					</Row>
 				</Row>
+
 				{method === 'COUNTER'
 					? parent !== '5' && (
 							// eslint-disable-next-line react/jsx-indent
@@ -224,6 +216,7 @@ const InviteResponse: FC<InviteResponse> = ({
 								participationStatus={participationStatus}
 								invite={invite}
 								compNum={compNum}
+								proposeNewTime={proposeNewTime}
 							/>
 					  )}
 			</Container>

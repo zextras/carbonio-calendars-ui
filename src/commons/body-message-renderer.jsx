@@ -27,15 +27,16 @@ const replaceLinkToAnchor = (content) => {
 			anchor.href = href.replace(/&#64;/g, '@').replace(/&#61;/g, '=');
 			anchor.target = '_blank';
 			anchor.innerHTML = url;
+
 			wrap.appendChild(anchor);
-			return wrap.innerHTML;
+			return wrap.innerHTML.trim();
 		}
 	);
 };
 
 const plainTextToHTML = (str) => {
 	if (str !== undefined && str !== null) {
-		return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+		return str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 	}
 	return '';
 };
@@ -87,30 +88,31 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		iframeRef.current.contentDocument.open();
 		iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
 		iframeRef.current.contentDocument.close();
-		const imgMap = reduce(
-			parts,
-			(r, v) => {
-				if (!_CI_REGEX.test(v.ci)) return r;
-				r[_CI_REGEX.exec(v.ci)[1]] = v;
-				return r;
-			},
-			{}
-		);
+		// TODO: It will break for invites in sent folder or if appointment have attachments
+		// const imgMap = reduce(
+		// 	parts,
+		// 	(r, v) => {
+		// 		if (!_CI_REGEX.test(v.ci)) return r;
+		// 		r[_CI_REGEX.exec(v.ci)[1]] = v;
+		// 		return r;
+		// 	},
+		// 	{}
+		// );
 
-		const images = iframeRef.current.contentDocument.body.getElementsByTagName('img');
+		// const images = iframeRef.current.contentDocument.body.getElementsByTagName('img');
 
-		forEach(images, (p) => {
-			if (p.hasAttribute('dfsrc')) {
-				p.setAttribute('src', p.getAttribute('dfsrc'));
-			}
-			if (!_CI_SRC_REGEX.test(p.src)) return;
-			const ci = _CI_SRC_REGEX.exec(p.getAttribute('src'))[1];
-			if ({}.hasOwnProperty.call(imgMap, ci)) {
-				const part = imgMap[ci];
-				p.setAttribute('pnsrc', p.getAttribute('src'));
-				p.setAttribute('src', `/service/home/~/?auth=co&id=${msgId}&part=${part.name}`);
-			}
-		});
+		// forEach(images, (p) => {
+		// 	if (p.hasAttribute('dfsrc')) {
+		// 		p.setAttribute('src', p.getAttribute('dfsrc'));
+		// 	}
+		// 	if (!_CI_SRC_REGEX.test(p.src)) return;
+		// 	const ci = _CI_SRC_REGEX.exec(p.getAttribute('src'))[1];
+		// 	if ({}.hasOwnProperty.call(imgMap, ci)) {
+		// 		const part = imgMap[ci];
+		// 		p.setAttribute('pnsrc', p.getAttribute('src'));
+		// 		p.setAttribute('src', `/service/home/~/?auth=co&id=${msgId}&part=${part.name}`);
+		// 	}
+		// });
 	}, [body, parts, msgId, updatedBody]);
 
 	return (
@@ -147,7 +149,7 @@ export function extractBody(body) {
 export function extractHtmlBody(body) {
 	let htmlBody = extractBody(body);
 	if (htmlBody.startsWith('</div>')) {
-		htmlBody = `<html>${htmlBody.slice(10)}`;
+		htmlBody = `<html>${htmlBody.slice(12)}`;
 	}
 	return htmlBody;
 }
@@ -170,7 +172,7 @@ export function extractZimbraHtmlHeader(body) {
 
 export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	if (!fullInvite) return null;
-	if (typeof fullInvite.fragment === 'undefined') {
+	if (typeof fullInvite.fragment === 'undefined' || fullInvite.fragment === '') {
 		return <EmptyBody />;
 	}
 

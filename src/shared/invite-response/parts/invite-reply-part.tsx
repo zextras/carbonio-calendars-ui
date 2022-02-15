@@ -26,11 +26,13 @@ type InviteReplyPart = {
 	invite: any;
 	participationStatus: string;
 	compNum: string;
+	proposeNewTime: () => void;
 };
 const InviteReplyPart: FC<InviteReplyPart> = ({
 	inviteId,
 	participationStatus,
-	compNum
+	compNum,
+	proposeNewTime
 }): ReactElement => {
 	const [notifyOrganizer, setNotifyOrganizer] = useState(true);
 	const [activeCalendar, setActiveCalendar] = useState(null);
@@ -83,41 +85,56 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				</Container>
 			</Row>
 			<Divider />
-			<Container
-				orientation="horizontal"
-				crossAlignment="flex-start"
-				mainAlignment="center"
-				weight="fill"
+			<Row
+				width="fill"
 				height="fit"
-				padding={{ top: 'medium' }}
+				style={{
+					flexGrow: 1,
+					flexBasis: 'fit-content',
+					whiteSpace: 'nowrap',
+					overflow: 'hidden'
+				}}
 			>
-				<Button
-					type="outlined"
-					label="YES"
-					icon="Checkmark"
-					color="success"
-					onClick={onAction('ACCEPT')}
-					disabled={participationStatus === 'AC'}
-				/>
-				<Padding horizontal="small" />
-				<Button
-					type="outlined"
-					label="MAYBE"
-					icon="QuestionMark"
-					color="warning"
-					onClick={onAction('TENTATIVE')}
-					disabled={participationStatus === 'TE'}
-				/>
-				<Padding horizontal="small" />
-				<Button
-					type="outlined"
-					label="NO"
-					icon="Close"
-					color="error"
-					onClick={onAction('DECLINE')}
-					disabled={participationStatus === 'DE'}
-				/>
-			</Container>
+				<Padding horizontal="small" top="medium">
+					<Button
+						type="outlined"
+						label="YES"
+						icon="Checkmark"
+						color="success"
+						onClick={onAction('ACCEPT')}
+						disabled={participationStatus === 'AC'}
+					/>
+				</Padding>
+				<Padding horizontal="small" top="medium">
+					<Button
+						type="outlined"
+						label="MAYBE"
+						icon="QuestionMark"
+						color="warning"
+						onClick={onAction('TENTATIVE')}
+						disabled={participationStatus === 'TE'}
+					/>
+				</Padding>
+				<Padding horizontal="small" top="medium">
+					<Button
+						type="outlined"
+						label="NO"
+						icon="Close"
+						color="error"
+						onClick={onAction('DECLINE')}
+						disabled={participationStatus === 'DE'}
+					/>
+				</Padding>
+				<Padding horizontal="small" top="medium">
+					<Button
+						label="PROPOSE NEW TIME"
+						icon="RefreshOutline"
+						color="primary"
+						type="outlined"
+						onClick={proposeNewTime}
+					/>
+				</Padding>
+			</Row>
 		</>
 	);
 };
