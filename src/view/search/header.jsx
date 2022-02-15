@@ -15,7 +15,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { map, some } from 'lodash';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
 
 const ActionButtons = ({ actions, closeAction }) => {
 	const actionContainerRef = useRef();
@@ -60,11 +60,10 @@ export const Header = ({ title, actions }) => {
 	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });
-	const replaceHistory = useReplaceHistoryCallback();
 
 	const close = useCallback(() => {
 		replaceHistory(``);
-	}, [replaceHistory]);
+	}, []);
 
 	return (
 		<>
