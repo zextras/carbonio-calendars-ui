@@ -3,13 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useRef, cloneElement, useCallback, useState, useContext } from 'react';
+import React, { useRef, cloneElement, useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { setLightness } from 'polished';
 import { Container } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
+import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { useParams } from 'react-router-dom';
 import { EventResumeView } from '../event-resume-view/event-resume';
-import { EventContext } from '../../commons/event-context';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { getInvite } from '../../store/actions/get-invite';
 import { selectInstanceInvite } from '../../store/selectors/invites';
@@ -39,7 +40,6 @@ export const CustomEventWrapperStyler = styled.div`
 		}};
 		border: ${({ event }) => `1px solid ${event.resource.calendar.color.color} !important`};
 		box-sizing: border-box;
-		box-shadow: none;
 		margin: 0;
 		padding: 4px 8px;
 		border-radius: 4px;
@@ -91,19 +91,23 @@ export const CustomEventWrapperStyler = styled.div`
 `;
 
 export default function CustomEventWrapper({ event, children, selected }) {
-	const { setEvent, action, setAction } = useContext(EventContext);
 	const anchorRef = useRef();
 	const [open, setOpen] = useState(selected);
 	const dispatch = useDispatch();
+	const { action } = useParams();
+
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
 	);
 
+	const replaceHistory = useReplaceHistoryCallback();
+
 	const showPanelView = useCallback(() => {
 		setOpen(false);
-		setAction(EventActionsEnum.EXPAND);
-		setEvent(event);
-	}, [event, setAction, setEvent]);
+		replaceHistory(
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+		);
+	}, [event, replaceHistory]);
 
 	const toggleOpen = useCallback(
 		(e) => {
@@ -115,14 +119,6 @@ export default function CustomEventWrapper({ event, children, selected }) {
 			}
 		},
 		[action, dispatch, event.resource.inviteId, event.resource.ridZ, invite]
-	);
-
-	const showActions = useCallback(
-		(ev) => {
-			ev.preventDefault();
-			setEvent(event);
-		},
-		[event, setEvent]
 	);
 
 	const onClose = useCallback(() => setOpen(false), []);
@@ -145,7 +141,6 @@ export default function CustomEventWrapper({ event, children, selected }) {
 						...children.props,
 						children: cloneElement(children.props.children, {
 							...children.props.children,
-							onContextMenu: showActions,
 							onClick: toggleOpen,
 							ref: anchorRef,
 							onDoubleClick: showPanelView

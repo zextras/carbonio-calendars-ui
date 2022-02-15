@@ -19,13 +19,13 @@ import {
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { useOnSaveAndOnSend } from './use-onsave-and-onsend';
 
-export const useEditorDispatches = (id, close) => {
+export const useEditorDispatches = (id, isBoard = false) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const closeBoard = useRemoveCurrentBoard();
 	const accounts = useUserAccounts();
-	const { onSave, onSend } = useOnSaveAndOnSend(id, close);
+	const { onSave, onSend } = useOnSaveAndOnSend(id, isBoard);
 
 	const onSubjectChange = useMemo(
 		() =>
@@ -53,8 +53,8 @@ export const useEditorDispatches = (id, close) => {
 		[dispatch, id]
 	);
 	const closePanel = useCallback(() => {
-		close ? replaceHistory('/view') : closeBoard();
-	}, [close, closeBoard]);
+		!isBoard ? replaceHistory('') : closeBoard();
+	}, [isBoard, closeBoard]);
 
 	const uploadAttachments = useCallback((files) => dispatch(uploadParts({ files })), [dispatch]);
 
@@ -83,8 +83,8 @@ export const useEditorDispatches = (id, close) => {
 				});
 			}
 		});
-		close ? close() : closePanel();
-	}, [accounts, close, closePanel, dispatch, id, createSnackbar, t]);
+		closePanel();
+	}, [accounts, closePanel, dispatch, id, createSnackbar, t]);
 
 	const onDateChange = useCallback(
 		(mod) => dispatch(editAppointmentData({ id, mod })),

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { forEach, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
@@ -11,14 +11,44 @@ import { Container, Text } from '@zextras/carbonio-design-system';
 const _CI_REGEX = /^<(.*)>$/;
 const _CI_SRC_REGEX = /^cid:(.*)$/;
 
+const replaceLinkToAnchor = (content) => {
+	if (content === '' || content === undefined) {
+		return '';
+	}
+	return content.replace(
+		/(?:https?:\/\/|www\.)+(?![^\s]*?")([\w.,@?!^=%&amp;:()/~+#-]*[\w@?!^=%&amp;()/~+#-])?/gi,
+		(url) => {
+			const wrap = document.createElement('div');
+			const anchor = document.createElement('a');
+			let href = url.replace(/&amp;/g, '&');
+			if (!url.startsWith('http') && !url.startsWith('https')) {
+				href = `http://${url}`;
+			}
+			anchor.href = href.replace(/&#64;/g, '@').replace(/&#61;/g, '=');
+			anchor.target = '_blank';
+			anchor.innerHTML = url;
+			wrap.appendChild(anchor);
+			return wrap.innerHTML;
+		}
+	);
+};
+
+const plainTextToHTML = (str) => {
+	if (str !== undefined && str !== null) {
+		return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+	}
+	return '';
+};
 function TextMessageRenderer({ text }) {
-	const containerRef = useRef();
-
-	useEffect(() => {
-		containerRef.current.innerText = text;
-	}, [text]);
-
-	return <Text ref={containerRef} />;
+	const convertedHTML = useMemo(() => replaceLinkToAnchor(plainTextToHTML(text)), [text]);
+	return (
+		<Text
+			dangerouslySetInnerHTML={{
+				__html: convertedHTML
+			}}
+			overflow="breakword"
+		/>
+	);
 }
 
 function HtmlMessageRenderer({ msgId, body, parts }) {
@@ -41,6 +71,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 			img {
 				max-width: 100%
 			}
+			
 		`;
 		styleTag.textContent = styles;
 		iframeRef.current.contentDocument.head.append(styleTag);
@@ -50,9 +81,11 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		}px`;
 	}, []);
 
+	const updatedBody = useMemo(() => replaceLinkToAnchor(body), [body]);
+
 	useEffect(() => {
 		iframeRef.current.contentDocument.open();
-		iframeRef.current.contentDocument.write(`<div>${body}</div>`);
+		iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
 		iframeRef.current.contentDocument.close();
 		const imgMap = reduce(
 			parts,
@@ -78,7 +111,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 				p.setAttribute('src', `/service/home/~/?auth=co&id=${msgId}&part=${part.name}`);
 			}
 		});
-	}, [body, parts, msgId]);
+	}, [body, parts, msgId, updatedBody]);
 
 	return (
 		<div className="force-white-bg" style={{ width: '100%' }}>
@@ -140,6 +173,7 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	if (typeof fullInvite.fragment === 'undefined') {
 		return <EmptyBody />;
 	}
+
 	if (fullInvite?.htmlDescription) {
 		return (
 			<HtmlMessageRenderer

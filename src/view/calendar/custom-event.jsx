@@ -20,17 +20,15 @@ import { useTranslation } from 'react-i18next';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { useEventActions } from '../../hooks/use-event-actions';
-import { EventContext } from '../../commons/event-context';
 
 export default function CustomEvent({ event, title }) {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
-	const utils = useContext(EventContext);
 	const createModal = useContext(ModalManagerContext);
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const actions = useEventActions(
 		event,
-		{ replaceHistory, utils, dispatch, createModal, createSnackbar },
+		{ replaceHistory, dispatch, createModal, createSnackbar },
 		t
 	);
 

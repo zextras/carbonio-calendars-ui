@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { selectCalendars } from '../store/selectors/calendars';
-import { selectAppointment, selectAppointmentInstance } from '../store/selectors/appointments';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import { normalizeEditor } from '../normalizations/normalize-editor';
 import { getInvite } from '../store/actions/get-invite';
@@ -32,10 +31,6 @@ export const useId = (
 	const dispatch = useDispatch();
 	const [id, setId] = useState(editorId);
 	const calendars = useSelector(selectCalendars);
-	const appointment = useSelector((state) => selectAppointment(state, editorId));
-	const apptInstance = useSelector((state) =>
-		selectAppointmentInstance(state, event?.resource?.id, event?.resource?.ridZ)
-	);
 	const accounts = useUserAccounts();
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)

@@ -26,7 +26,7 @@ const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
 );
 const LazyEditorView = lazy(() =>
-	import(/* webpackChunkName: "calendar-edit" */ './view/event-panel-edit/editor-controller')
+	import(/* webpackChunkName: "calendar-edit" */ './view/event-panel-edit/board-edit-panel')
 );
 const LazySettingsView = lazy(() =>
 	import(/* webpackChunkName: "settings-view" */ './settings/settings-view')

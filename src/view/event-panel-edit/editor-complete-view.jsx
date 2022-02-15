@@ -39,7 +39,6 @@ import ExpandedButtons, { addAttachments } from './components/expanded-buttons';
 
 import AttachmentsBlock from '../event-panel-view/attachments-part';
 import DatePicker from './components/date-picker';
-import { EventContext } from '../../commons/event-context';
 import RecurrenceSelector from './components/recurrence-selector';
 import DropZoneAttachment from './components/dropzone-component';
 
@@ -127,7 +126,6 @@ export default function EditorCompleteView({
 	const title = useMemo(() => (data && data.title !== '' ? data.title : 'No Subject'), [data]);
 	const settings = useUserSettings();
 	const account = useUserAccount();
-	const utils = useContext(EventContext);
 	const [ContactInput, available] = useIntegratedComponent('contact-input');
 
 	const [richText, setRichText] = useState('');
@@ -210,10 +208,10 @@ export default function EditorCompleteView({
 						ele.right === 'sendAs'
 							? `${item.d}<${item.email[0].addr}>`
 							: t('label.on_behalf_of', {
-									identitiy: item.d,
+									identity: item.d,
 									accountName: account.name,
 									otherAccount: item.email[0].addr,
-									defaultValue: '{{accountName}} on behalf of {{identitiy}} <{{otherAccount}}>'
+									defaultValue: '{{accountName}} on behalf of {{identity}} <{{otherAccount}}>'
 							  }),
 					address: item.email[0].addr,
 					fullname: item.d,
@@ -409,7 +407,7 @@ export default function EditorCompleteView({
 								crossAlignment="flex-start"
 							>
 								<DatePicker
-									start={data.start ?? utils.event.start}
+									start={data.start}
 									end={data.end}
 									allDay={data.allDay}
 									onChange={callbacks.onDateChange}

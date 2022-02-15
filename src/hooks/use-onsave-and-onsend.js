@@ -12,7 +12,7 @@ import { selectEditor } from '../store/selectors/editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 
-export const useOnSaveAndOnSend = (id, close) => {
+export const useOnSaveAndOnSend = (id, isBoard) => {
 	const dispatch = useDispatch();
 	const account = useUserAccount();
 	const closeBoard = useRemoveCurrentBoard();
@@ -27,22 +27,22 @@ export const useOnSaveAndOnSend = (id, close) => {
 	);
 
 	const closePanel = useCallback(() => {
-		close ? replaceHistory('/view') : closeBoard();
-	}, [close, closeBoard]);
+		!isBoard ? replaceHistory('') : closeBoard();
+	}, [isBoard, closeBoard]);
 
 	const onSave = useCallback(() => {
 		dispatch(editAppointmentData({ id, mod: { resource: { draft: true } } }));
-		close ? close() : closePanel();
+		closePanel();
 		dispatch(saveAppointment());
-	}, [close, closePanel, dispatch, id, saveAppointment]);
+	}, [closePanel, dispatch, id, saveAppointment]);
 
 	const onSend = useCallback(() => {
 		dispatch(
 			editAppointmentData({ id, mod: { resource: { draft: false, inviteNeverSent: false } } })
 		);
 		dispatch(saveAppointment());
-		close ? close() : closePanel();
-	}, [close, closePanel, dispatch, id, saveAppointment]);
+		closePanel();
+	}, [closePanel, dispatch, id, saveAppointment]);
 
 	return {
 		onSave,
