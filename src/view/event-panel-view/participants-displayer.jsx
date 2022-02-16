@@ -3,7 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Avatar, Container, IconButton, Row, Text } from '@zextras/carbonio-design-system';
+import {
+	Avatar,
+	Container,
+	IconButton,
+	Row,
+	Text,
+	TextWithTooltip
+} from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useMemo, useState } from 'react';
 
@@ -21,7 +28,7 @@ function DisplayedParticipant({ participant }) {
 				takeAvailableSpace
 				padding={{ left: 'small' }}
 			>
-				<Text overflow="ellipsis">
+				<TextWithTooltip overflow="ellipsis">
 					{participant.name || participant.email}
 					<br />
 					<Text size="small" color="secondary">
@@ -31,7 +38,7 @@ function DisplayedParticipant({ participant }) {
 								: t('label.required', 'Required')
 						})`}
 					</Text>
-				</Text>
+				</TextWithTooltip>
 			</Row>
 		</Row>
 	);

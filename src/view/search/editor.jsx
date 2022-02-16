@@ -40,7 +40,7 @@ export const Editor = ({ event, actions }) => {
 	);
 	const callbacks = useEditorDispatches(id);
 	return (
-		<Container mainAlignment="flex-start" padding={{ vertical: 'medium' }}>
+		<Container mainAlignment="flex-start" padding={{ bottom: 'medium' }}>
 			<Header title={event.title} actions={actions} closeAction={close} />
 			<EditorCompleteView
 				data={data}

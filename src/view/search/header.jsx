@@ -75,7 +75,6 @@ export const Header = ({ title, actions }) => {
 				background="gray5"
 				width="fill"
 				height="48px"
-				padding={{ vertical: 'small' }}
 			>
 				<Row padding={{ horizontal: 'large' }}>
 					<Icon icon={'CalendarModOutline'} />
@@ -103,7 +102,7 @@ export const Header = ({ title, actions }) => {
 			{eventIsEditable && (
 				<Row
 					mainAlignment="flex-end"
-					crossAlignment="center"
+					crossAlignment="flex-start"
 					orientation="horizontal"
 					background="gray5"
 					width="fill"
