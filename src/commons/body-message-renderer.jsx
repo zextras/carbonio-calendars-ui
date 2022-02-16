@@ -34,7 +34,7 @@ const replaceLinkToAnchor = (content) => {
 
 const plainTextToHTML = (str) => {
 	if (str !== undefined && str !== null) {
-		return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+		return str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 	}
 	return '';
 };
@@ -45,7 +45,7 @@ function TextMessageRenderer({ text }) {
 			dangerouslySetInnerHTML={{
 				__html: convertedHTML
 			}}
-			overflow="breakword"
+			overflow="break-word"
 		/>
 	);
 }
@@ -148,7 +148,7 @@ export function extractBody(body) {
 export function extractHtmlBody(body) {
 	let htmlBody = extractBody(body);
 	if (htmlBody.startsWith('</div>')) {
-		htmlBody = `<html>${htmlBody.slice(10)}`;
+		htmlBody = `<html>${htmlBody.slice(12)}`;
 	}
 	return htmlBody;
 }

@@ -20,25 +20,28 @@ import AttachmentsPart from '../event-panel-view/attachments-part';
 import { useQuickActions } from '../../hooks/use-quick-actions';
 
 const BodyContainer = styled(Container)`
+	overflow-x: hidden;
 	overflow-y: auto;
+	white-space: pre-wrap;
+	word-wrap: break-word !important;
+	text-wrap: suppress !important;
 `;
 
 const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> => {
 	const { close } = useSearchActionsFn(event);
 	const invite = useInvite(event?.resource?.inviteId);
 
-	const actions = useQuickActions(event);
+	const actions = useQuickActions(event, { isFromSearch: true });
 	return (
-		<Container mainAlignment="flex-start" padding={{ all: 'medium' }}>
+		<Container mainAlignment="flex-start" padding={{ vertical: 'medium' }}>
 			{event && (
-				<>
+				<Container padding={{ all: 'none' }} mainAlignment="flex-start">
 					<Header title={event.title} actions={actions} closeAction={close} />
 					<BodyContainer
 						orientation="vertical"
 						mainAlignment="flex-start"
 						width="fill"
-						height="fit"
-						padding={{ top: 'small' }}
+						padding={{ all: 'large' }}
 					>
 						<DetailsPart
 							subject={event?.title}
@@ -70,14 +73,14 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 							/>
 						)}
 						{invite && extractBody(invite?.textDescription?.[0]?._content) && (
-							<>
+							<Container>
 								<StyledDivider />
 								<MessagePart
 									fullInvite={invite}
 									inviteId={event?.resource?.inviteId}
 									parts={invite?.parts}
 								/>
-							</>
+							</Container>
 						)}
 
 						<StyledDivider />
@@ -100,7 +103,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 							</>
 						)}
 					</BodyContainer>
-				</>
+				</Container>
 			)}
 		</Container>
 	);

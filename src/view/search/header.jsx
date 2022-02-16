@@ -77,7 +77,7 @@ export const Header = ({ title, actions }) => {
 				height="48px"
 				padding={{ vertical: 'small' }}
 			>
-				<Row padding={{ right: 'large' }}>
+				<Row padding={{ horizontal: 'large' }}>
 					<Icon icon={'CalendarModOutline'} />
 				</Row>
 				<Row takeAvailableSpace mainAlignment="flex-start">
@@ -85,6 +85,7 @@ export const Header = ({ title, actions }) => {
 						{title || t('label.no_subject', 'No subject')}
 					</Text>
 				</Row>
+
 				{expandedButton && <ExpandButton actions={actions} />}
 
 				{/* TODO: uncomment the code once the actions are in place */}
@@ -107,7 +108,7 @@ export const Header = ({ title, actions }) => {
 					background="gray5"
 					width="fill"
 					height="48px"
-					padding={{ vertical: 'small' }}
+					padding={{ vertical: 'small', right: 'large' }}
 				>
 					<Row>
 						<ActionButtons actions={actions} closeAction={close} />

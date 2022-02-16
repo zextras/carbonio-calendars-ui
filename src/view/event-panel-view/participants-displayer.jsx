@@ -10,12 +10,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 function DisplayedParticipant({ participant }) {
 	const [t] = useTranslation();
 	return (
-		<Row
-			mainAlignment="flex-start"
-			crossAlignment="center"
-			width="212px"
-			padding={{ vertical: 'small' }}
-		>
+		<Row mainAlignment="flex-start" crossAlignment="center" padding={{ vertical: 'small' }}>
 			<Avatar
 				label={participant.name || participant.email}
 				style={{ width: '48px', height: '48px' }}
@@ -113,7 +108,8 @@ export default function ParticipantsDisplayer({ participants }) {
 				}).toUpperCase()}
 				participants={participants.NE}
 				width={width}
-				style={{ fontWeigth: 400 }}
+				style={{ fontWeigth: 400, background: 'red' }}
+				background="error"
 			/>
 			<Dropdown
 				label={t('participants.TE_with_count', {
@@ -123,7 +119,7 @@ export default function ParticipantsDisplayer({ participants }) {
 				}).toUpperCase()}
 				participants={participants.TE}
 				width={width}
-				style={{ fontWeigth: 400 }}
+				style={{ fontWeigth: 400, background: 'yellow' }}
 			/>
 			<Dropdown
 				label={t('participants.DE_with_count', {
