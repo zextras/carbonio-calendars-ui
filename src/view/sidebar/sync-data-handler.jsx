@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { useEffect, useState } from 'react';
-import { isEmpty, reduce } from 'lodash';
+import { isEmpty, reduce, forEach, sortBy } from 'lodash';
 import { useRefresh, useNotify, store } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { combineReducers } from '@reduxjs/toolkit';
@@ -24,7 +24,8 @@ import { selectEnd, selectStart } from '../../store/selectors/calendars';
 
 export const SyncDataHandler = () => {
 	const refresh = useRefresh();
-	const notify = useNotify();
+	const notifyList = useNotify();
+	const [seq, setSeq] = useState(-1);
 	const dispatch = useDispatch();
 	const [initialized, setInitialized] = useState(false);
 	const start = useSelector(selectStart);
@@ -46,75 +47,82 @@ export const SyncDataHandler = () => {
 
 	useEffect(() => {
 		if (initialized) {
-			if (notify.created) {
-				if (notify.created.folder || notify.created.link) {
-					dispatch(
-						handleCreatedCalendars([
-							...(notify.created.folder ?? []),
-							...(notify.created.link ?? [])
-						])
-					);
-				}
-				if (notify.created.appt) {
-					dispatch(
-						setSearchRange({
-							rangeStart: start,
-							rangeEnd: end
-						})
-					);
-				}
-			}
-			if (notify.modified) {
-				if (notify.modified.folder || notify.modified.link) {
-					dispatch(
-						handleModifiedCalendars([
-							...(notify.modified.folder ?? []),
-							...(notify.modified.link ?? [])
-						])
-					);
-				}
-				if (notify.modified.appt) {
-					// probably unnecessary
-					const apptToUpdate = reduce(
-						notify.modified.appt,
-						(acc, v) => {
-							if (v.l) {
-								return [...acc, v];
+			if (notifyList.length > 0) {
+				forEach(sortBy(notifyList, 'seq'), (notify) => {
+					if (!isEmpty(notify) && notify.seq > seq) {
+						if (notify.created) {
+							if (notify.created.folder || notify.created.link) {
+								dispatch(
+									handleCreatedCalendars([
+										...(notify.created.folder ?? []),
+										...(notify.created.link ?? [])
+									])
+								);
 							}
-							return acc;
-						},
-						[]
-					);
-					if (apptToUpdate?.length > 0) {
-						dispatch(handleModifiedAppointments(apptToUpdate));
-					}
-					dispatch(
-						setSearchRange({
-							rangeStart: start,
-							rangeEnd: end
-						})
-					);
+							if (notify.created.appt) {
+								dispatch(
+									setSearchRange({
+										rangeStart: start,
+										rangeEnd: end
+									})
+								);
+							}
+						}
+						if (notify.modified) {
+							if (notify.modified.folder || notify.modified.link) {
+								dispatch(
+									handleModifiedCalendars([
+										...(notify.modified.folder ?? []),
+										...(notify.modified.link ?? [])
+									])
+								);
+							}
+							if (notify.modified.appt) {
+								// probably unnecessary
+								const apptToUpdate = reduce(
+									notify.modified.appt,
+									(acc, v) => {
+										if (v.l) {
+											return [...acc, v];
+										}
+										return acc;
+									},
+									[]
+								);
+								if (apptToUpdate?.length > 0) {
+									dispatch(handleModifiedAppointments(apptToUpdate));
+								}
+								dispatch(
+									setSearchRange({
+										rangeStart: start,
+										rangeEnd: end
+									})
+								);
 
-					const invites = reduce(
-						notify.modified.appt,
-						(acc, v) => {
-							if (v?.inv?.length > 0) {
-								return [...acc, ...v.inv];
+								const invites = reduce(
+									notify.modified.appt,
+									(acc, v) => {
+										if (v?.inv?.length > 0) {
+											return [...acc, ...v.inv];
+										}
+										return acc;
+									},
+									[]
+								);
+								if (invites?.length > 0) {
+									dispatch(handleModifiedInvites(invites));
+								}
 							}
-							return acc;
-						},
-						[]
-					);
-					if (invites?.length > 0) {
-						dispatch(handleModifiedInvites(invites));
+						}
+						if (notify.deleted) {
+							dispatch(handleDeletedCalendars(notify.deleted?.id?.split?.(',')));
+						}
+						setSeq(notify.seq);
 					}
-				}
-			}
-			if (notify.deleted) {
-				dispatch(handleDeletedCalendars(notify.deleted?.id?.split?.(',')));
+				});
 			}
 		}
-	}, [dispatch, end, initialized, notify.created, notify.deleted, notify.modified, start]);
+	}, [dispatch, end, initialized, notifyList, seq, start]);
 
 	return null;
 };
