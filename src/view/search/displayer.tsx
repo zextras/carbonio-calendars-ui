@@ -33,14 +33,19 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 
 	const actions = useQuickActions(event, { isFromSearch: true });
 	return (
-		<Container mainAlignment="flex-start" crossAlignment="center" padding={{ bottom: 'medium' }}>
+		<Container
+			mainAlignment="flex-start"
+			crossAlignment="flex-start"
+			padding={{ bottom: 'medium' }}
+		>
 			{event && (
 				<Container padding={{ all: 'none' }} mainAlignment="flex-start">
 					<Header title={event.title} actions={actions} closeAction={close} />
 					<BodyContainer
-						orientation="vertical"
 						mainAlignment="flex-start"
+						crossAlignment="flex-start"
 						width="fill"
+						height="min(calc(100% - 50px), fit)"
 						padding={{ all: 'large' }}
 					>
 						<DetailsPart
