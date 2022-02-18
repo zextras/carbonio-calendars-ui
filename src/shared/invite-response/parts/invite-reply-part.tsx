@@ -127,7 +127,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				</Padding>
 				<Padding horizontal="small" top="medium">
 					<Button
-						label="PROPOSE NEW TIME"
+						label={t('label.propose_new_time', 'PROPOSE NEW TIME')}
 						icon="RefreshOutline"
 						color="primary"
 						type="outlined"
