@@ -17,6 +17,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { filter, uniqWith, isEqual } from 'lodash';
 import { getShareInfo } from '../../store/actions/get-share-info';
 import { SharesModal } from './shares-modal';
 import { useCalendarActions } from '../../hooks/use-calendar-actions';
@@ -28,9 +29,13 @@ export const SharesComponent = ({ item }) => {
 		() =>
 			dispatch(getShareInfo()).then((res) => {
 				if (res.type.includes('fulfilled')) {
+					const calendars = uniqWith(
+						filter(res?.payload?.share ?? [], ['view', 'appointment']),
+						isEqual
+					);
 					const closeModal = createModal(
 						{
-							children: <SharesModal onClose={() => closeModal()} />
+							children: <SharesModal calendars={calendars} onClose={() => closeModal()} />
 						},
 						true
 					);
