@@ -16,11 +16,15 @@ const PaddedRow = styled(Row)`
 	padding: 4px 4px;
 `;
 
+const CalendarIcon = styled(Icon)`
+	width: 18px;
+	height: 18px;
+`;
 function SubjectRow({ subject, calendarColor, isPrivate }) {
 	return (
 		<Container mainAlignment="flex-start" orientation="horizontal">
 			{isPrivate && <Icon icon="Lock" customColor={calendarColor} style={{ padding: '4px' }} />}
-			<Text weight="bold" size="small" overflow="break-word">
+			<Text size="small" overflow="break-word" style={{ fontWeight: '600' }}>
 				{subject}
 			</Text>
 			{/* TODO: tags */}
@@ -60,7 +64,7 @@ export default function DetailsPart({ subject, calendarColor, inviteNeverSent, i
 					<ImageAndIconPart color={calendarColor || 'primary'} />
 				</Container>
 				<Padding right="large" />
-				<Row orientation="row" width="fill" takeAvailableSpace>
+				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
 						<SubjectRow
 							subject={subject}
@@ -70,11 +74,10 @@ export default function DetailsPart({ subject, calendarColor, inviteNeverSent, i
 						/>
 						<Tooltip label={event.resource.calendar.name} placement="left">
 							<div>
-								<Icon icon="Calendar2" size="small" customColor={calendarColor} />
+								<CalendarIcon icon="Calendar2" size="medium" customColor={calendarColor} />
 							</div>
 						</Tooltip>
 					</Container>
-					<CalendarInfoRow event={event} />
 					{event && <TimeInfoRow event={event} width="fill" />}
 					{event && <LocationRow event={event} width="fill" />}
 				</Row>

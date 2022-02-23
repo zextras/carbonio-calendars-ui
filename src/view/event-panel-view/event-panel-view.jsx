@@ -182,7 +182,7 @@ export default function EventPanelView() {
 		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
 	);
 
-	const actions = useQuickActions(event, { replaceHistory, dispatch, createModal }, t);
+	const actions = useQuickActions(event);
 
 	return event ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">

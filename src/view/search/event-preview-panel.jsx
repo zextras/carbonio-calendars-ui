@@ -31,12 +31,11 @@ const EventPreviewPanel = ({ event }) => {
 	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
-
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
 
-	const actions = useQuickActions(event, { replaceHistory, dispatch, createModal }, t);
+	const actions = useQuickActions(event);
 
 	return (
 		<>

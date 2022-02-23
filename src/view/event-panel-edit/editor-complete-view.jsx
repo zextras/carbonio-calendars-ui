@@ -302,10 +302,11 @@ export default function EditorCompleteView({
 			{data && (
 				<Row
 					orientation="horizontal"
-					padding={{ bottom: 'large', top: 'small' }}
+					padding={{ bottom: 'large', top: 'small', horizontal: 'medium' }}
 					height="fit"
 					width="fill"
 					mainAlignment="flex-end"
+					background="gray6"
 				>
 					<ExpandedButtons data={data} callbacks={callbacks} invite={invite} />
 					<SaveSendButtons
@@ -332,7 +333,7 @@ export default function EditorCompleteView({
 					}}
 				>
 					<Row mainAlignment="flex-start" crossAlignment="flex-start" width="fill">
-						<Container orientation="vertical" width="70%" style={{ minWidth: '800px' }}>
+						<Container orientation="vertical" style={{ minWidth: '800px' }}>
 							{defaultIdentity && list.length && (
 								<Select
 									items={newItems}
