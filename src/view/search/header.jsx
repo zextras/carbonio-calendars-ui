@@ -75,16 +75,16 @@ export const Header = ({ title, actions }) => {
 				background="gray5"
 				width="fill"
 				height="48px"
-				padding={{ vertical: 'small' }}
 			>
 				<Row padding={{ horizontal: 'large' }}>
-					<Icon icon={eventIsEditable ? 'NewAppointmentOutline' : 'CalendarModOutline'} />
+					<Icon icon={'CalendarModOutline'} />
 				</Row>
 				<Row takeAvailableSpace mainAlignment="flex-start">
 					<Text size="medium" overflow="ellipsis">
 						{title || t('label.no_subject', 'No subject')}
 					</Text>
 				</Row>
+
 				{expandedButton && <ExpandButton actions={actions} />}
 
 				{/* TODO: uncomment the code once the actions are in place */}
@@ -102,12 +102,12 @@ export const Header = ({ title, actions }) => {
 			{eventIsEditable && (
 				<Row
 					mainAlignment="flex-end"
-					crossAlignment="center"
+					crossAlignment="flex-start"
 					orientation="horizontal"
 					background="gray5"
 					width="fill"
 					height="48px"
-					padding={{ vertical: 'small' }}
+					padding={{ vertical: 'small', right: 'large' }}
 				>
 					<Row>
 						<ActionButtons actions={actions} closeAction={close} />

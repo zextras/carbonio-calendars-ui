@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { forEach, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
 
@@ -47,7 +46,7 @@ function TextMessageRenderer({ text }) {
 			dangerouslySetInnerHTML={{
 				__html: convertedHTML
 			}}
-			overflow="breakword"
+			overflow="break-word"
 		/>
 	);
 }
@@ -89,6 +88,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
 		iframeRef.current.contentDocument.close();
 		// TODO: It will break for invites in sent folder or if appointment have attachments
+		// const images = iframeRef.current.contentDocument.body.getElementsByTagName('img');
 		// const imgMap = reduce(
 		// 	parts,
 		// 	(r, v) => {
@@ -149,7 +149,7 @@ export function extractBody(body) {
 export function extractHtmlBody(body) {
 	let htmlBody = extractBody(body);
 	if (htmlBody.startsWith('</div>')) {
-		htmlBody = `<html>${htmlBody.slice(10)}`;
+		htmlBody = `<html>${htmlBody.slice(12)}`;
 	}
 	return htmlBody;
 }

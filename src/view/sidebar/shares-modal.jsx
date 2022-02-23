@@ -30,7 +30,7 @@ import {
 	toLower
 } from 'lodash';
 import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
@@ -72,7 +72,7 @@ const CustomItem = ({ item }) => {
 
 	return (
 		<>
-			<Padding right="medium">
+			<Padding>
 				<Checkbox value={checked} onClick={onClick} iconColor="primary" />
 			</Padding>
 			<AccordionItem item={item} />
@@ -80,14 +80,11 @@ const CustomItem = ({ item }) => {
 	);
 };
 
-export const SharesModal = ({ onClose }) => {
+export const SharesModal = ({ calendars, onClose }) => {
 	const [links, setLinks] = useState([]);
 	const [data, setData] = useState();
 	const dispatch = useDispatch();
 	const [t] = useTranslation();
-
-	const calendars = useSelector(selectAllCalendars);
-
 	const onConfirm = useCallback(() => {
 		dispatch(createMountpoint(links));
 		onClose();
@@ -116,10 +113,20 @@ export const SharesModal = ({ onClose }) => {
 				open: true,
 				items: map(values(data ?? filteredFolders), (v) => ({
 					id: v[0].ownerId,
-					label: t('label.shares_items', {
-						value: v[0].ownerName,
-						defaultValue: "{{value}}'s shared calendars"
-					}),
+					label: (
+						<Trans
+							i18nKey="label.shares_items"
+							defaults="<bold>{{user}}</bold>'s shared calendars"
+							values={{ user: v[0].ownerName }}
+							components={{
+								bold: (
+									<span
+										style={{ fontWeight: 'bold', fontFamily: 'sans-serif', fontSize: '14px' }}
+									/>
+								)
+							}}
+						/>
+					),
 					open: true,
 					items: v,
 					divider: true,
@@ -129,7 +136,7 @@ export const SharesModal = ({ onClose }) => {
 				onClick: () => null
 			}
 		],
-		[data, filteredFolders, t]
+		[data, filteredFolders]
 	);
 
 	const filterResults = useCallback(

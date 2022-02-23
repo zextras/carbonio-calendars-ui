@@ -262,9 +262,13 @@ export const editAppointment = (event, context, t) => ({
 	disabled: !event.permission,
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
-		context.replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
-		);
+		context.isFromSearch
+			? context.replaceHistory(
+					`/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
+			  )
+			: context.replaceHistory(
+					`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
+			  );
 	}
 });
 
