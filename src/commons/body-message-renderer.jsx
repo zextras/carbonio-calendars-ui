@@ -26,8 +26,9 @@ const replaceLinkToAnchor = (content) => {
 			anchor.href = href.replace(/&#64;/g, '@').replace(/&#61;/g, '=');
 			anchor.target = '_blank';
 			anchor.innerHTML = url;
+
 			wrap.appendChild(anchor);
-			return wrap.innerHTML;
+			return wrap.innerHTML.trim();
 		}
 	);
 };
@@ -86,9 +87,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		iframeRef.current.contentDocument.open();
 		iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
 		iframeRef.current.contentDocument.close();
-
-		// TODO: Commented because it is giving error if appointment has attachments
-
+		// TODO: It will break for invites in sent folder or if appointment have attachments
 		// const images = iframeRef.current.contentDocument.body.getElementsByTagName('img');
 		// const imgMap = reduce(
 		// 	parts,
@@ -99,6 +98,8 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		// 	},
 		// 	{}
 		// );
+
+		// const images = iframeRef.current.contentDocument.body.getElementsByTagName('img');
 
 		// forEach(images, (p) => {
 		// 	if (p.hasAttribute('dfsrc')) {
@@ -171,7 +172,7 @@ export function extractZimbraHtmlHeader(body) {
 
 export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	if (!fullInvite) return null;
-	if (typeof fullInvite.fragment === 'undefined') {
+	if (typeof fullInvite.fragment === 'undefined' || fullInvite.fragment === '') {
 		return <EmptyBody />;
 	}
 
