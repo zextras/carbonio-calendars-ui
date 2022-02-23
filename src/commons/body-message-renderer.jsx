@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { forEach, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
 
@@ -35,7 +34,7 @@ const replaceLinkToAnchor = (content) => {
 
 const plainTextToHTML = (str) => {
 	if (str !== undefined && str !== null) {
-		return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+		return str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 	}
 	return '';
 };
@@ -46,7 +45,7 @@ function TextMessageRenderer({ text }) {
 			dangerouslySetInnerHTML={{
 				__html: convertedHTML
 			}}
-			overflow="breakword"
+			overflow="break-word"
 		/>
 	);
 }
@@ -87,30 +86,32 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		iframeRef.current.contentDocument.open();
 		iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
 		iframeRef.current.contentDocument.close();
-		const imgMap = reduce(
-			parts,
-			(r, v) => {
-				if (!_CI_REGEX.test(v.ci)) return r;
-				r[_CI_REGEX.exec(v.ci)[1]] = v;
-				return r;
-			},
-			{}
-		);
 
-		const images = iframeRef.current.contentDocument.body.getElementsByTagName('img');
+		// TODO: Commented because it is giving error if appointment has attachments
 
-		forEach(images, (p) => {
-			if (p.hasAttribute('dfsrc')) {
-				p.setAttribute('src', p.getAttribute('dfsrc'));
-			}
-			if (!_CI_SRC_REGEX.test(p.src)) return;
-			const ci = _CI_SRC_REGEX.exec(p.getAttribute('src'))[1];
-			if ({}.hasOwnProperty.call(imgMap, ci)) {
-				const part = imgMap[ci];
-				p.setAttribute('pnsrc', p.getAttribute('src'));
-				p.setAttribute('src', `/service/home/~/?auth=co&id=${msgId}&part=${part.name}`);
-			}
-		});
+		// const images = iframeRef.current.contentDocument.body.getElementsByTagName('img');
+		// const imgMap = reduce(
+		// 	parts,
+		// 	(r, v) => {
+		// 		if (!_CI_REGEX.test(v.ci)) return r;
+		// 		r[_CI_REGEX.exec(v.ci)[1]] = v;
+		// 		return r;
+		// 	},
+		// 	{}
+		// );
+
+		// forEach(images, (p) => {
+		// 	if (p.hasAttribute('dfsrc')) {
+		// 		p.setAttribute('src', p.getAttribute('dfsrc'));
+		// 	}
+		// 	if (!_CI_SRC_REGEX.test(p.src)) return;
+		// 	const ci = _CI_SRC_REGEX.exec(p.getAttribute('src'))[1];
+		// 	if ({}.hasOwnProperty.call(imgMap, ci)) {
+		// 		const part = imgMap[ci];
+		// 		p.setAttribute('pnsrc', p.getAttribute('src'));
+		// 		p.setAttribute('src', `/service/home/~/?auth=co&id=${msgId}&part=${part.name}`);
+		// 	}
+		// });
 	}, [body, parts, msgId, updatedBody]);
 
 	return (
@@ -147,7 +148,7 @@ export function extractBody(body) {
 export function extractHtmlBody(body) {
 	let htmlBody = extractBody(body);
 	if (htmlBody.startsWith('</div>')) {
-		htmlBody = `<html>${htmlBody.slice(10)}`;
+		htmlBody = `<html>${htmlBody.slice(12)}`;
 	}
 	return htmlBody;
 }

@@ -5,6 +5,7 @@
  */
 import { filter, groupBy, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
+
 import { ZimbraFolder } from '../types/zimbra';
 import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../commons/zimbra-standard-colors';
 
@@ -80,6 +81,7 @@ export const getAlarmToString = (alarm: any): any => {
 
 		if (rel) {
 			let [number, unit] = [null, null];
+
 			const seconds =
 				(rel.s || 0) +
 				(rel.m || 0) * SECONDS_PER_MINUTE +
@@ -87,6 +89,9 @@ export const getAlarmToString = (alarm: any): any => {
 				(rel.d || 0) * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY +
 				(rel.w || 0) * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK;
 
+			if ((rel.s || 0) + (rel.m || 0) + (rel.h || 0) + (rel.d || 0) + (rel.w || 0) === 0) {
+				return 'At the time of event';
+			}
 			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK) === 0) {
 				const weeks =
 					seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK);

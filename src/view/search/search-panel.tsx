@@ -22,9 +22,7 @@ const LargeIcon = styled(Icon)`
 const SearchPanel = ({ appointments }: ComponentProps<any>): ReactComponentElement<any> => {
 	const { path } = useRouteMatch();
 	const [t] = useTranslation();
-
 	const event = useSearchEvent(appointments);
-
 	return (
 		<Switch>
 			<Route path={`${path}/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>

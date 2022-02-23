@@ -12,21 +12,21 @@ export default function SaveSendButtons({ data, onSave, onSend, proposeNewTime }
 	return (
 		<>
 			<Button
+				label={t('label.save', 'Save')}
+				icon="SaveOutline"
+				disabled={!data.title || proposeNewTime}
+				onClick={onSave}
 				type="outlined"
-				label={t('action.send', 'Send')}
-				icon="PaperPlane"
-				disabled={
-					data.resource.attendees.length === 0 && data.resource.optionalAttendees.length === 0
-				}
-				onClick={onSend}
 			/>
 
 			<Padding left="medium">
 				<Button
-					label={t('label.save', 'Save')}
-					icon="SaveOutline"
-					disabled={!data.title || proposeNewTime}
-					onClick={onSave}
+					label={t('action.send', 'Send')}
+					icon="PaperPlane"
+					disabled={
+						data.resource.attendees.length === 0 && data.resource.optionalAttendees.length === 0
+					}
+					onClick={onSend}
 				/>
 			</Padding>
 		</>

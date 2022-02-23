@@ -6,7 +6,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { map, filter, reduce } from 'lodash';
+import { map, filter, reduce, uniqBy, find } from 'lodash';
 import {
 	Container,
 	Icon,
@@ -15,8 +15,10 @@ import {
 	Link,
 	Row,
 	Text,
-	Tooltip
+	Tooltip,
+	useTheme
 } from '@zextras/carbonio-design-system';
+import { getFileExtension, calcColor } from '../../commons/utilities';
 
 function getSizeLabel(size) {
 	let value = '';
@@ -46,9 +48,11 @@ const AttachmentHoverBarContainer = styled(Container)`
 
 const AttachmentContainer = styled(Container)`
 	border-radius: 2px;
-	width: ${({ isComplete }) => (isComplete ? 'calc(25% - 4px)' : 'calc(50% - 4px)')};
+	width: ${({ isComplete }) => (isComplete ? 'calc(25% - 8px)' : 'calc(50% - 8px)')};
 	transition: 0.2s ease-out;
 	margin-bottom: ${({ theme }) => theme.sizes.padding.small};
+	margin-right: ${({ theme }) => theme.sizes.padding.small};
+	box-sizing: border-box;
 	&:hover {
 		background-color: ${({ theme, background, disabled }) =>
 			disabled ? 'gray5' : theme.palette[background].hover};
@@ -72,11 +76,11 @@ const AttachmentExtension = styled(Text)`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 24px;
-	height: 24px;
+	width: 32px;
+	height: 32px;
 	border-radius: ${({ theme }) => theme.borderRadius};
-	background-color: ${({ theme, disabled }) =>
-		disabled ? theme.palette.primary.disabled : theme.palette.primary.regular};
+	background-color: ${({ theme, disabled, background }) =>
+		disabled ? theme.palette.primary.disabled : background.color || theme.palette.primary.regular};
 	color: ${({ theme }) => theme.palette.gray6.regular};
 	font-size: calc(${({ theme }) => theme.sizes.font.small} - 2px);
 	text-transform: uppercase;
@@ -92,9 +96,11 @@ function Attachment({
 	isEditor,
 	removeAttachment,
 	isComplete,
-	disabled = false
+	disabled = false,
+	iconColors,
+	att
 }) {
-	const extension = filename.split('.').pop();
+	const extension = getFileExtension(att);
 	const sizeLabel = useMemo(() => getSizeLabel(size), [size]);
 	const [t] = useTranslation();
 	const inputRef = useRef();
@@ -115,6 +121,7 @@ function Attachment({
 			background={disabled ? 'gray5' : 'gray3'}
 			isComplete={isComplete}
 			disabled={disabled}
+			padding={{ right: 'medium' }}
 		>
 			<Tooltip
 				key={isEditor ? `${message.id}-Edit` : `${message.id}-Preview`}
@@ -137,7 +144,12 @@ function Attachment({
 					}}
 					takeAvailableSpace
 				>
-					<AttachmentExtension disabled={disabled}>{extension}</AttachmentExtension>
+					<AttachmentExtension
+						background={find(iconColors, (ic) => ic.extension === extension)}
+						disabled={disabled}
+					>
+						{extension}
+					</AttachmentExtension>
 					<Row orientation="vertical" crossAlignment="flex-start" takeAvailableSpace>
 						<Padding style={{ width: '100%' }} bottom="extrasmall">
 							<Text disabled={disabled}>{filename}</Text>
@@ -199,6 +211,7 @@ export default function AttachmentsBlock({
 }) {
 	const [t] = useTranslation();
 	const [expanded, setExpanded] = useState(false);
+	const theme = useTheme();
 	const attachmentsCount = useMemo(() => attachments.length, [attachments]);
 	const attachmentsParts = useMemo(() => map(attachments, 'name'), [attachments]);
 	const actionsDownloadLink = useMemo(
@@ -235,6 +248,33 @@ export default function AttachmentsBlock({
 		if (!expanded && !isComplete) return attachments.slice(0, 2);
 		return attachments;
 	}, [attachments, expanded, isComplete]);
+
+	const iconColors = useMemo(
+		() =>
+			uniqBy(
+				map(attachments, (att) => {
+					const fileExtn = getFileExtension(att);
+					const color = calcColor(att.contentType, theme);
+
+					if (iconColors) {
+						return [
+							...iconColors,
+							{
+								extension: fileExtn,
+								color
+							}
+						];
+					}
+					return {
+						extension: fileExtn,
+						color
+					};
+				}),
+				'extension'
+			),
+		[attachments, theme]
+	);
+
 	return (
 		attachmentsCount > 0 && (
 			<Container mainAlignment="flex-start" crossAlignment="flex-start">
@@ -245,7 +285,7 @@ export default function AttachmentsBlock({
 								{t('label.attachment', {
 									count: attachmentsCount,
 									defaultValue: 'Attachment',
-									defaultValue_plural: 'Attachments'
+									defaultValue_plural: '{{count}} Attachments'
 								})}
 							</Text>
 						)}
@@ -253,7 +293,7 @@ export default function AttachmentsBlock({
 							<Text color="gray1">{`1 ${t('label.attachment', {
 								count: attachmentsCount,
 								defaultValue: 'Attachment',
-								defaultValue_plural: 'Attachments'
+								defaultValue_plural: '{{count}} Attachments'
 							})}`}</Text>
 						)}
 						{attachmentsCount > 2 &&
@@ -264,7 +304,7 @@ export default function AttachmentsBlock({
 											{t('label.attachment', {
 												count: attachmentsCount,
 												defaultValue: 'Attachment',
-												defaultValue_plural: 'Attachments'
+												defaultValue_plural: '{{count}} Attachments'
 											})}
 										</Text>
 									</Padding>
@@ -282,7 +322,7 @@ export default function AttachmentsBlock({
 											{t('label.attachment', {
 												count: attachmentsCount,
 												defaultValue: 'Attachment',
-												defaultValue_plural: 'Attachments'
+												defaultValue_plural: '{{count}} Attachments'
 											})}
 										</Text>
 									</Padding>
@@ -308,9 +348,10 @@ export default function AttachmentsBlock({
 							  })}
 					</Link>
 				</Row>
+
 				<Container
 					orientation="horizontal"
-					mainAlignment="space-between"
+					mainAlignment="flex-start"
 					crossAlignment="flex-start"
 					wrap="wrap"
 				>
@@ -326,6 +367,8 @@ export default function AttachmentsBlock({
 							isComplete={isComplete}
 							removeAttachment={removeAttachment}
 							disabled={!att.name}
+							iconColors={iconColors}
+							att={att}
 						/>
 					))}
 				</Container>
