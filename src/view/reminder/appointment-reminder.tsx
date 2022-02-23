@@ -35,7 +35,7 @@ import SetNewTimeModal from './set-new_time-modal';
 import sound from '../../assets/notification.mp3';
 import ApptReminderModal from './appt-reminder-modal';
 import { showNotification } from '../notifications';
-import { CALENDAR_APP_ID } from '../../constants';
+import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
 
 const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	const dispatch = useDispatch();
@@ -180,7 +180,7 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
 
 	const setNewTime = useCallback(() => {
-		addBoard(`/edit?edit=${eventForChange?.resource?.id}&updateTime=true`, {
+		addBoard(`${CALENDAR_ROUTE}/edit?edit=${eventForChange?.resource?.id}&updateTime=true`, {
 			app: CALENDAR_APP_ID,
 			event: eventForChange
 		});

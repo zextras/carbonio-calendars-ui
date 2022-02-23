@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { head, split } from 'lodash';
-import { CALENDAR_APP_ID } from '../../../constants';
+import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../../constants';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 
 export const openEventFn = (ev, context) => {
@@ -27,7 +27,7 @@ export const editEventFn = (ev, context) => {
 
 export const moveToBardFn = (ev, context) => {
 	if (ev) ev.stopPropagation();
-	context.addBoard(`/${EventActionsEnum.EDIT}/${context.apptId}/${context.ridZ}`, {
+	context.addBoard(`${CALENDAR_ROUTE}/${EventActionsEnum.EDIT}/${context.apptId}/${context.ridZ}`, {
 		app: CALENDAR_APP_ID,
 		editor: context.editor
 	});
