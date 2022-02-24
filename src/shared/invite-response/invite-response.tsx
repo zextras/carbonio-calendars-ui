@@ -95,8 +95,12 @@ const InviteResponse: FC<InviteResponse> = ({
 		dispatch(getInvite({ inviteId })).then((res) => {
 			const normalizedInvite = { ...normalizeInvite(res.payload.m), ...res.payload.m };
 			const requiredEvent = inviteToEvent(normalizeInvite(res.payload.m));
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			addBoard(`/edit?edit=${res.payload.m.inv[0].comp[0].apptId}`, {
 				app: CALENDAR_APP_ID,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				event: requiredEvent,
 				invite: normalizedInvite,
 				proposeNewTime: true

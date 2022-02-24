@@ -182,6 +182,9 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	const setNewTime = useCallback(() => {
 		addBoard(`${CALENDAR_ROUTE}/edit?edit=${eventForChange?.resource?.id}&updateTime=true`, {
 			app: CALENDAR_APP_ID,
+			// Addboard call needs to be typed better
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			event: eventForChange
 		});
 		// @ts-ignore
