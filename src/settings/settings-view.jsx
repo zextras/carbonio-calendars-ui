@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import {
 	useUserSettings,
-	useReplaceHistoryCallback,
+	replaceHistory,
 	soapFetch,
 	editSettings
 } from '@zextras/carbonio-shell-ui';
@@ -40,7 +40,6 @@ export default function CalendarSettingsView() {
 	const [updatedSettings, setUpdatedSettings] = useState({});
 	const [notFirstLoad, setNotFirstLoad] = useState(false);
 	const [isEmailNotValid, setisEmailNotValid] = useState(false);
-	const replaceHistory = useReplaceHistoryCallback();
 	const [userRights, setUserRights] = useState({});
 	const [activeFreeBusyOptn, setActiveFreeBusyOptn] = useState(null);
 	const [activeInviteOptn, setActiveInviteOptn] = useState(null);

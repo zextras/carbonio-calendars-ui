@@ -80,7 +80,8 @@
             "edit_calendar_error": "Qualcosa è andato storto, riprova",
             "new_calendar_created": "Nuovo calendario creato",
             "calendar_permanently_deleted": "Calendario eliminato definitivamente",
-            "calendar_restored": "Calendario ripristinato correttamente"
+            "calendar_restored": "Calendario ripristinato correttamente",
+            "appointment_permanently_deleted": "Appuntamento eliminato definitivamente"
         },
         "share_calendar_url_note2": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.<br/> Puoi trovare questi collegamenti anche con un clic destro del mouse sull'elenco dei calendari.",
         "share_calendar_url_note": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.",
@@ -250,7 +251,8 @@
         "filter_sharer_user": "Proprietario della cartella",
         "on_behalf_of": "{{accountName}} per conto di {{identitiy}} <{{otherAccount}}>",
         "the": "Il",
-        "invites": "Inviti"
+        "invites": "Inviti",
+        "share_calendar_url": "{{title}} accesso condiviso"
     },
     "action": {
         "send": "Invia",

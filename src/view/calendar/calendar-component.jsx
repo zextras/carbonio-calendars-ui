@@ -21,7 +21,7 @@ import { selectAllAppointments } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
 import { setSearchRange } from '../../store/actions/set-search-range';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
-import { CALENDAR_APP_ID } from '../../constants';
+import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
@@ -171,10 +171,14 @@ export default function CalendarComponent() {
 	}, [settings]);
 
 	const handleSelect = (e) => {
-		addBoard(`/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(e.end).getTime()}`, {
-			app: CALENDAR_APP_ID,
-			isBoard: true
-		});
+		addBoard(
+			`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
+				e.end
+			).getTime()}`,
+			{
+				app: CALENDAR_APP_ID
+			}
+		);
 	};
 	const onEventDrop = useCallback(
 		(appt) => {

@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useState } from 'react';
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
-import { Spinner, useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { Spinner, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useInvite } from '../../hooks/use-invite';
@@ -23,7 +23,6 @@ export const DeleteEventModal = ({ event, onClose, isInstance }: any): ReactElem
 	const invite = useInvite(event?.resource?.inviteId);
 	const [t] = useTranslation();
 	const [isAskingConfirmation, setIsAskingConfirmation] = useState(false);
-	const replaceHistory = useReplaceHistoryCallback();
 	const toggleAskConfirmation = useCallback(() => {
 		setIsAskingConfirmation((a) => !a);
 	}, []);

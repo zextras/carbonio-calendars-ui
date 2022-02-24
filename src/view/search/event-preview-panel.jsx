@@ -7,7 +7,7 @@ import React, { useContext } from 'react';
 import { Container, ModalManagerContext } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { Header } from './header';
 import StyledDivider from '../../commons/styled-divider';
@@ -29,15 +29,13 @@ const BodyContainer = styled(Container)`
 
 const EventPreviewPanel = ({ event }) => {
 	const [t] = useTranslation();
-	const replaceHistory = useReplaceHistoryCallback();
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
-
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
 
-	const actions = useQuickActions(event, { replaceHistory, dispatch, createModal }, t);
+	const actions = useQuickActions(event);
 
 	return (
 		<>

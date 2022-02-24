@@ -5,11 +5,7 @@
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-	useReplaceHistoryCallback,
-	useBoardConfig,
-	useUpdateCurrentBoard
-} from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useBoardConfig, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -73,7 +69,6 @@ const AppointmentCardContainer = styled(Container)`
 
 const Header = ({ title, expanded, setExpanded }) => {
 	const [t] = useTranslation();
-	const replaceHistory = useReplaceHistoryCallback();
 
 	const headerItems = useMemo(
 		() => [
@@ -92,7 +87,7 @@ const Header = ({ title, expanded, setExpanded }) => {
 				}
 			}
 		],
-		[expanded, replaceHistory, setExpanded]
+		[expanded, setExpanded]
 	);
 
 	return (
@@ -127,7 +122,7 @@ const Header = ({ title, expanded, setExpanded }) => {
 	);
 };
 
-const EventEditPanel = () => {
+const EventEditPanel = ({ boardContext }) => {
 	const { calendarId, apptId, ridZ } = useParams();
 	const calendar = useSelector((s) => selectCalendar(s, calendarId));
 	const appointment = useSelector((s) => selectAppointment(s, apptId));
@@ -139,7 +134,6 @@ const EventEditPanel = () => {
 	}, [appointment, calendar, inst]);
 	const [title, setTitle] = useState(null);
 	const [expanded, setExpanded] = useState(false);
-	const boardContext = useBoardConfig();
 	const updateAppTime = useQueryParam('updateTime');
 	const selectedStartTime = useQueryParam('start');
 	const selectedEndTime = useQueryParam('end');

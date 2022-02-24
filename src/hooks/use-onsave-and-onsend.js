@@ -5,11 +5,7 @@
  */
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-	useRemoveCurrentBoard,
-	useReplaceHistoryCallback,
-	useUserAccount
-} from '@zextras/carbonio-shell-ui';
+import { useRemoveCurrentBoard, replaceHistory, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { startsWith } from 'lodash';
 import { editAppointmentData } from '../store/slices/editor-slice';
 import { selectEditor } from '../store/selectors/editor';
@@ -19,7 +15,6 @@ import { modifyAppointment } from '../store/actions/new-modify-appointment';
 export const useOnSaveAndOnSend = (id, isBoard) => {
 	const dispatch = useDispatch();
 	const account = useUserAccount();
-	const replaceHistory = useReplaceHistoryCallback();
 	const closeBoard = useRemoveCurrentBoard();
 	const editor = useSelector((state) => selectEditor(state, id));
 
@@ -33,7 +28,7 @@ export const useOnSaveAndOnSend = (id, isBoard) => {
 
 	const closePanel = useCallback(() => {
 		!isBoard ? replaceHistory('') : closeBoard();
-	}, [isBoard, closeBoard, replaceHistory]);
+	}, [isBoard, closeBoard]);
 
 	const onSave = useCallback(() => {
 		dispatch(editAppointmentData({ id, mod: { resource: { draft: true } } }));

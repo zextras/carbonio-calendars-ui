@@ -16,7 +16,7 @@ import {
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { Spinner, useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, Spinner } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { map, some } from 'lodash';
@@ -116,11 +116,10 @@ const DisplayerHeader = ({ title, actions }) => {
 	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });
-	const replaceHistory = useReplaceHistoryCallback();
 
 	const close = useCallback(() => {
 		replaceHistory(``);
-	}, [replaceHistory]);
+	}, []);
 
 	return (
 		<>
@@ -168,7 +167,6 @@ const DisplayerHeader = ({ title, actions }) => {
 
 export default function EventPanelView() {
 	const [t] = useTranslation();
-	const replaceHistory = useReplaceHistoryCallback();
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
 	const { calendarId, apptId, ridZ } = useParams();
@@ -184,7 +182,7 @@ export default function EventPanelView() {
 		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
 	);
 
-	const actions = useQuickActions(event, { replaceHistory, dispatch, createModal }, t);
+	const actions = useQuickActions(event);
 
 	return event ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">

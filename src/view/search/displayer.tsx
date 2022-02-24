@@ -16,32 +16,37 @@ import { extractBody } from '../../commons/body-message-renderer';
 import ParticipantsPart from '../event-panel-view/participants-part';
 import ReplyButtonsPart from '../event-panel-view/reply-buttons-part';
 import DetailsPart from '../event-panel-view/details-part';
-import ImageAndIconPart from '../event-panel-view/image-and-icon-part';
 import AttachmentsPart from '../event-panel-view/attachments-part';
 import { useQuickActions } from '../../hooks/use-quick-actions';
 
 const BodyContainer = styled(Container)`
+	overflow-x: hidden;
 	overflow-y: auto;
+	white-space: pre-wrap;
+	word-wrap: break-word !important;
+	text-wrap: suppress !important;
 `;
 
 const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> => {
 	const { close } = useSearchActionsFn(event);
 	const invite = useInvite(event?.resource?.inviteId);
 
-	const actions = useQuickActions(event);
-
+	const actions = useQuickActions(event, { isFromSearch: true });
 	return (
-		<Container mainAlignment="flex-start">
+		<Container
+			mainAlignment="flex-start"
+			crossAlignment="flex-start"
+			padding={{ bottom: 'medium' }}
+		>
 			{event && (
-				<>
+				<Container padding={{ all: 'none' }} mainAlignment="flex-start">
 					<Header title={event.title} actions={actions} closeAction={close} />
-					<ImageAndIconPart color={event?.resource?.calendar?.color?.color || 'primary'} />
 					<BodyContainer
-						orientation="vertical"
 						mainAlignment="flex-start"
+						crossAlignment="flex-start"
 						width="fill"
-						height="fit"
-						padding={{ top: 'small' }}
+						height="min(calc(100% - 50px), fit)"
+						padding={{ all: 'large' }}
 					>
 						<DetailsPart
 							subject={event?.title}
@@ -73,15 +78,16 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 							/>
 						)}
 						{invite && extractBody(invite?.textDescription?.[0]?._content) && (
-							<>
+							<Container>
 								<StyledDivider />
 								<MessagePart
 									fullInvite={invite}
 									inviteId={event?.resource?.inviteId}
 									parts={invite?.parts}
 								/>
-							</>
+							</Container>
 						)}
+
 						<StyledDivider />
 						{invite && (
 							<ReminderPart
@@ -93,7 +99,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 						{invite?.attachmentFiles?.length > 0 && (
 							<>
 								<StyledDivider />
-								<Container padding={{ all: 'medium' }}>
+								<Container padding={{ all: 'medium' }} background="gray6">
 									<AttachmentsPart
 										attachments={invite?.attachmentFiles}
 										message={{ id: event?.resource?.inviteId, subject: event?.title }}
@@ -102,7 +108,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 							</>
 						)}
 					</BodyContainer>
-				</>
+				</Container>
 			)}
 		</Container>
 	);
