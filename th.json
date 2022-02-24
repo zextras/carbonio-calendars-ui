@@ -38,7 +38,7 @@
         "invitation_not_sent": "คุณยังไม่ได้ส่งคำเชิญไปยังผู้เข้าร่วม",
         "all_calendars": "ปฏิทินทั้งหมด",
         "all_day": "ทั้งวัน",
-        "tentative": "ไม่แน่นอน",
+        "tentative": "ชั่วคราว",
         "required": "ที่จำเป็น",
         "start_date": "วันที่เริ่มต้น",
         "reminder": "เตือนความจำ",
@@ -61,7 +61,7 @@
         "calendar": "ปฏิทิน",
         "calendar_color": "สีปฏิทิน",
         "cancelled": "ยกเลิกแล้ว",
-        "create_appt_settings": "สร้างการนัดหมาย",
+        "create_appt_settings": "กำลังสร้างการนัดหมาย",
         "create_new_calendar": "สร้างปฏิทินใหม่",
         "day": "วัน",
         "days": "วัน",
@@ -80,7 +80,7 @@
         "every": "ทุก",
         "every_day": "ทุกวัน",
         "every_year_on": "ทุกปีใน",
-        "filter_sharer_user": "กรองผู้ใช้ที่แชร์",
+        "filter_sharer_user": "เจ้าของโฟลเดอร์",
         "find_shares": "เลือกปฏิทินที่คุณต้องการดูในแผนผังปฏิทิน",
         "free_busy": "ว่าง/ไม่ว่าง",
         "from": "จาก",
@@ -125,7 +125,34 @@
         "start_date_and_time": "วันที่และเวลาเริ่มต้น",
         "timezone_pref_msg": "การกำหนดเวลาเป็นไปตามการตั้งค่าเขตเวลาของคุณ",
         "work_week": "สัปดาห์การทำงาน",
-        "your_pref_timezone_msg": "เขตเวลาที่คุณต้องการคือ: GMT +01:00 อัมสเตอร์ดัม, เบอร์ลิน, เบิร์น, โรม, สตอกโฮล์ม, เวียนนา"
+        "your_pref_timezone_msg": "เขตเวลาที่คุณต้องการคือ: GMT +01:00 อัมสเตอร์ดัม, เบอร์ลิน, เบิร์น, โรม, สตอกโฮล์ม, เวียนนา",
+        "snooze": "เลื่อนต่อเวลา",
+        "create": "สร้าง",
+        "delete": "ลบ",
+        "start_week_on": "เริ่มสัปดาห์ใน",
+        "undo": "ย้อนกลับ",
+        "error_try_again": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+        "edits_saved": "บันทึกการแก้ไขอย่างถูกต้อง",
+        "empty": "ว่างเปล่า",
+        "move": "ย้าย",
+        "new_calendar": "ปฏิทินใหม่",
+        "none": "ไม่มี",
+        "of_every_month": "ของเดือน ทุกๆ",
+        "ok": "ตกลง",
+        "restore": "การกู้คืนข้อมูล (Restore)",
+        "restore_calendar": "กู้คืนปฏิทิน",
+        "results_for": "ผลลัพธ์สำหรับ:",
+        "appt_reminder": "การแจ้งเตือนการนัดหมาย",
+        "event_title": "ชื่องาน",
+        "access_revoked": "การเข้าถึงถูกเพิกถอน",
+        "calendar_shared": "แชร์ปฏิทินเรียบร้อยแล้ว",
+        "changes_saved": "บันทึกการเปลี่ยนแปลงแล้ว",
+        "discard_changes": "ยกเลิกการเปลี่ยนแปลง",
+        "delete_instance": "คุณแน่ใจหรือไม่ว่าต้องการลบอินสแตนซ์ของการนัดหมาย “{title}” นี้?",
+        "settings_saved": "การตั้งค่าที่บันทึกไว้",
+        "on_behalf_of": "{{accountName}} ในนามของ {{identitiy}} <{{otherAccount}}>",
+        "trash_emptied": "ล้างถังขยะเรียบร้อยแล้ว",
+        "the": "ที่"
     },
     "calendar": {
         "modal": {
@@ -150,9 +177,10 @@
         "new_calendar": "ปฏิทินใหม่",
         "send_cancellation": "ส่งการยกเลิก",
         "share_calendar": "แชร์ปฏิทิน",
-        "calendar_access_share": "แชร์การเข้าถึงปฏิทิน",
+        "calendar_access_share": "แชร์การเข้าถึงของปฏิทิน",
         "edit_calendar_properties": "แก้ไขคุณสมบัติของปฏิทิน",
-        "save_to_preview": "บันทึกเพื่อดูตัวอย่าง"
+        "save_to_preview": "บันทึกเพื่อดูตัวอย่าง",
+        "empty_trash_confirmation": "การดำเนินการนี้จะลบรายการทั้งหมดในโฟลเดอร์ถังขยะอีเมล, รายชื่อผู้ติดต่อ, ปฏิทิน, งาน, และกระเป๋าเอกสาร คุณแน่ใจหรือไม่ว่าต้องการลบทุกอย่างในโฟลเดอร์ถังขยะเหล่านี้อย่างถาวร?"
     },
     "event": {
         "action": {
@@ -223,7 +251,7 @@
         "label": {
             "flash_browser_title": "แฟลชชื่อเบราว์เซอร์",
             "forward_invites": "ส่งต่อคำเชิญ",
-            "default_appt_dur": "ระยะเวลาการนัดหมายเริ่มต้น",
+            "default_appt_dur": "ระยะเวลาเริ่มต้นของการนัดหมาย",
             "default_calendar": "ปฏิทินเริ่มต้น",
             "delete_invt_on_rply": "ลบคำเชิญเมื่อตอบกลับ",
             "enter_email": "ใส่ที่อยู่อีเมล",
@@ -234,10 +262,10 @@
             "span_time": "ช่วงเวลา",
             "enable_reminder_sound": "เล่นเสียง (จำเป็นต้องใช้ปลั๊กอิน QuickTime หรือ Windows Media)",
             "show_rmndr_past_due_meetings": "แสดงการเตือนความจำสำหรับการประชุมที่เลยกำหนด",
-            "snd_autorply_users": "ส่งการตอบกลับอัตโนมัติไปยังผู้ใช้ที่ถูกปฏิเสธไม่ให้ส่งคำเชิญถึงฉัน"
+            "snd_autorply_users": "ส่งการตอบกลับอัตโนมัติไปยังผู้ใช้ที่ไม่ได้รับอนุญาตให้เชิญฉัน"
         },
         "invalid_email": "อีเมลไม่ถูกต้อง",
-        "ical_note": "Apple iCal สามารถกำหนดค่าการเข้าถึงปฏิทินของคุณโดยใช้โปรโตคอล CalDAV เมื่อเปิดใช้งานการตั้งค่านี้ ปฏิทินที่แชร์จะแสดงในแท็บ Deligation ของบัญชี ical ดังนั้นคุณจึงสามารถมอบสิทธิ์การเข้าถึงปฏิทินของคุณให้กับผู้ใช้รายอื่นได้",
+        "ical_note": "คุณสามารถกำหนดค่า Apple iCal เพื่อเข้าถึงปฏิทินของคุณโดยใช้โปรโตคอล CalDAV เมื่อเปิดใช้งานการตั้งค่านี้ ปฏิทินที่แชร์จะแสดงในแท็บการมอบหมายของบัญชี ical ดังนั้นคุณจึงสามารถมอบสิทธิ์การเข้าถึงปฏิทินของคุณให้กับผู้ใช้รายอื่นได้",
         "permissions_note": "ผู้ใช้ด้านล่างต้องอยู่ในระบบอีเมลนี้ (zextras.com) คุณสามารถใช้ที่อยู่อีเมลแบบเต็มหรือเพียงแค่ชื่อผู้ใช้ก็ได้"
     },
     "folder": {
@@ -249,7 +277,7 @@
                 },
                 "footer": "ว่างเปล่า",
                 "input": {
-                    "filter": "กรองปฏิทิน"
+                    "filter": "ตัวกรองปฏิทิน"
                 },
                 "new": "ปฏิทินใหม่"
             },
@@ -308,7 +336,11 @@
         "day_before": "{{count}} วันก่อน",
         "hour_before": "{{count}} ชั่วโมงก่อน",
         "minute_before": "{{count}} นาทีก่อน",
-        "week_before": "{{count}} สัปดาห์ก่อน"
+        "week_before": "{{count}} สัปดาห์ก่อน",
+        "all_time": "ตลอดช่วงเวลาของเหตุการณ์",
+        "modal": {
+            "set_new_time_message": "คุณต้องการตั้งเวลาใหม่สำหรับการนัดหมายที่พลาดไปหรือไม่? หากคุณคลิกตกลง การเตือนความจำอื่น ๆ ทั้งหมดจะถูกปิดโดยอัตโนมัติ"
+        }
     },
     "repeat": {
         "custom": "กำหนดเอง",
@@ -331,9 +363,10 @@
         "new_time_proposed_succes": "เสนอเวลาใหม่",
         "proposed_time_accepted": "คุณยอมรับเวลาที่เสนอ",
         "proposed_time_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
-        "share_folder_success": "ปฏิทินนี้ถูกแชร์",
+        "share_folder_success": "แชร์ปฏิทินเรียบร้อยแล้ว",
         "url_copied": "{{title}} คัดลอกแล้ว",
-        "new_time_proposed_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง"
+        "new_time_proposed_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+        "new_time_proposed_success": "เสนอเวลาใหม่"
     },
     "success": "สำเร็จ",
     "add": "เพิ่ม",
@@ -355,7 +388,7 @@
             }
         },
         "note": {
-            "share_note": "ข้อความมาตรฐานจะแสดงชื่อของคุณ, ชื่อของรายการที่แชร์, สิทธิ์ที่มอบให้กับผู้รับ, และข้อมูลการลงชื่อเข้าใช้งาน หากจำเป็น"
+            "share_note": "ข้อความมาตรฐานจะแสดงชื่อของคุณ, ชื่อรายการที่แชร์, สิทธิ์ที่มอบให้กับผู้รับ, และข้อมูลการลงชื่อเข้าใช้"
         },
         "label": {
             "send_notification": "ส่งการแจ้งเตือนเกี่ยวกับการแชร์นี้",
@@ -372,7 +405,7 @@
         "are_organizer": "เป็นผู้จัด",
         "snackbar": {
             "appointment_permanently_deleted_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
-            "appt_moved": "ย้ายการนัดหมายไปที่ เรียบร้อยแล้ว ",
+            "appt_moved": "ย้ายการนัดหมายไปที่ เรียบร้อยแล้ว",
             "appointment_permanently_deleted_succesfully": "การลบอย่างถาวรเสร็จสมบูรณ์แล้ว",
             "appt_deleted_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "appt_moved_to_trash": "ย้ายการนัดหมายไปที่ถังขยะแล้ว",
@@ -385,8 +418,8 @@
             "invite": {
                 "accept": "คุณได้ตอบกลับว่ายอมรับ",
                 "error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
-                "decline": "คุณได้ตอบกลับว่า: ปฏิเสธ",
-                "tentative": "คุณได้ตอบกลับว่า: ไม่แน่นอน"
+                "decline": "คุณได้ตอบกลับว่าปฏิเสธ",
+                "tentative": "คุณได้ตอบกลับว่าไม่แน่นอน"
             },
             "new_calendar_created": "สร้างปฏิทินใหม่แล้ว",
             "settings_saved": "บันทึกการแก้ไขอย่างถูกต้อง",
@@ -394,7 +427,9 @@
             "appt_restored": "กู้คืนการนัดหมายไปที่ เรียบร้อยแล้ว",
             "calendar_moved_to_root_folder": "ปฏิทินย้ายไปที่โฟลเดอร์รูทแล้ว",
             "calendar_moved_to_trash_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
-            "new_calendar_create_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง"
+            "new_calendar_create_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
+            "calendar_permanently_deleted": "ปฎิทินถูกลบอย่างถาวร",
+            "calendar_restored": "กู้คืนปฏิทินเรียบร้อยแล้ว"
         },
         "share_calendar_url_note2": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้ <br/> คุณสามารถค้นหาลิงก์เหล่านั้นได้ด้วยการคลิกขวาที่รายการปฏิทินของคุณ",
         "delete_all_occurences": "ลบเหตุการณ์ทั้งหมด",
@@ -406,7 +441,7 @@
         "modal": {
             "delete": {
                 "sure_delete_appointment_permanently": "การลบการนัดหมายนี้อย่างถาวร คุณจะไม่สามารถกู้คืนได้อีก ดำเนินการต่อหรือไม่?",
-                "sure_delete_appointment_all_instances_permanently": "ซึ่งจะลบการนัดหมายนี้ทั้งหมดและคุณจะไม่สามารถกู้คืนได้อีก ดำเนินการต่อหรือไม่?"
+                "sure_delete_appointment_all_instances_permanently": "การดำเนินการนี้จะลบการนัดหมายทั้งหมดที่เกิดขึ้น และคุณจะไม่สามารถกู้คืนได้อีก ดำเนินการต่อหรือไม่?"
             }
         },
         "somebody_invited_you": "<strong>{{somebody}}</strong> ส่งคำเชิญให้คุณ",
@@ -414,14 +449,15 @@
         "sure_to_delete_appointment_permanently": "คุณแน่ใจหรือไม่ว่าต้องการลบการนัดหมายนี้อย่างถาวร?",
         "want_to_send_cancellation_msg": "คุณต้องการส่งข้อความยกเลิกไปยังผู้เข้าร่วมหรือไม่?",
         "you_are_organizer": "คุณเป็นผู้จัดงาน",
-        "you_will_see_the_subject_here": "คุณจะเห็นหัวข้อของการนัดหมายนี้ที่นี่",
+        "you_will_see_the_subject_here": "หัวข้อ",
         "delete_future_occurences_warning": "ซึ่งจะลบข้อยกเว้นทั้งหมด (ก่อนและหลังอินสแตนซ์นี้) ในซีรีส์ด้วย",
         "share_calendar_url_note": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> เป็นผู้จัดงาน",
         "sure_to_delete_appointment": "คุณแน่ใจหรือไม่ว่าต้องการลบการนัดหมาย?",
         "want_to_edit_cancellation_msg": "คุณต้องการแก้ไขข้อความยกเลิกการนัดหมายหรือไม่?",
         "you_sure_delete_calendar": "คุณแน่ใจหรือไม่ว่าต้องการลบปฏิทิน \"{{name}}\" อย่างถาวร?",
-        "share_calendar_url_msg": "คุณสามารถแชร์ {{title}} กับผู้ร่วมงานได้อย่างรวดเร็ว โดยใช้ URL เหล่านี้:"
+        "share_calendar_url_msg": "คุณสามารถแชร์ {{title}} กับผู้ร่วมงานได้อย่างรวดเร็ว โดยใช้ URL เหล่านี้:",
+        "you_sure_delete_instance": "คุณแน่ใจหรือไม่ว่าต้องการลบอินสแตนซ์ของการนัดหมาย “{{title}}” นี้?"
     },
     "type": "รูปแบบ",
     "tooltip": {
@@ -440,7 +476,7 @@
             "drive": "เพิ่มจาก Drive",
             "contactsMod": "เพิ่มบัตรผู้ติดต่อ",
             "draganddrop": {
-                "content": "วางไฟล์แนบของคุณที่นี่ เพื่อเพิ่มลงในการนัดหมายได้อย่างรวดเร็ว",
+                "content": "วางไฟล์แนบของคุณที่นี่เพื่อเพิ่มไปยังการนัดหมายอย่างรวดเร็ว",
                 "title": "โหมด Drag&Drop"
             },
             "local": "เพิ่มจาก local"
@@ -469,6 +505,105 @@
     "share_invite_resent": "ส่งการแชร์คำเชิญอีกครั้ง",
     "shared_items": "รายการที่แชร์",
     "shares_info": "แชร์ข้อมูล",
-    "resend_mail_notification_about_this_share": "ส่งการแจ้งเตือนทางอีเมลเกี่ยวกับการแชร์นี้อีกครั้ง",
-    "revoke_without_custom_message": "ถอนการเข้าถึงโดยส่งการแจ้งเตือนแบบมาตรฐาน"
+    "resend_mail_notification_about_this_share": "ส่งการแจ้งเตือนทางอีเมลเกี่ยวกับการแชร์นี้",
+    "revoke_without_custom_message": "ถอนการเข้าถึงโดยส่งการแจ้งเตือนแบบมาตรฐาน",
+    "placeholder": {
+        "organizer": "ผู้จัดงาน"
+    },
+    "messages": {
+        "format_as_plain_text": "จัดรูปแบบเป็นข้อความธรรมดา"
+    },
+    "appt_restored_successfully": "กู้คืนการนัดหมายเรียบร้อยแล้ว",
+    "has_attachments": "มีไฟล์แนบ",
+    "is_private": "เป็นส่วนตัว",
+    "is_recurrent": "ซ้ำ",
+    "timezone": {
+        "abu_dhabi_muscat": "{{value}} อาบูดาบี, มัสกัต",
+        "alaska": "{{value}} อลาสก้า",
+        "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} Anadyr, Petropavlovsk-Kamchatsky (RTZ 11)",
+        "argentina": "{{value}} อาร์เจนตินา",
+        "arizona": "{{value}} แอริโซนา",
+        "asuncion": "{{value}} อาซุนซิออง",
+        "atlantic_time_canada": "{{value}} เวลาแอตแลนติก (แคนาดา)",
+        "azores": "{{value}} อะซอเรส",
+        "baja_california": "{{value}} บาจาแคลิฟอร์เนีย",
+        "baku": "{{value}} บากู",
+        "bangkok_hanoi_jakarta": "{{value}} กรุงเทพ, ฮานอย, จาการ์ตา",
+        "beirut": "{{value}} เบรุต",
+        "belgrade_bratislava_budapest_ljubljana_prague": "{{value}} เบลเกรด, บราติสลาวา, บูดาเปสต์, ลูบลิยานา, ปราก",
+        "brasilia": "{{value}} บราซิเลีย",
+        "cape_verde_is": "{{value}} เคปเวิร์ด",
+        "caracas": "{{value}} การากัส",
+        "casablanca": "{{value}} คาซาบลังกา",
+        "cayenne_fortaleza": "{{value}} กาแยน, ฟอร์ตาเลซา",
+        "central_america": "{{value}} อเมริกากลาง",
+        "chihuahua_la_paz_mazatlan": "{{value}} ชิวาวา, ลาปาซ, มาซาตลัน",
+        "chita": "{{value}} ชิตา",
+        "christmas_island": "{{value}} เกาะคริสต์มาส",
+        "colombia": "{{value}} โคลอมเบีย",
+        "cuiaba": "{{value}} กูยาบา",
+        "damascus": "{{value}} ดามัสกัส",
+        "darwin": "{{value}} ดาร์วิน",
+        "dateline": "{{value}} วันที่",
+        "dhaka": "{{value}} ธากา",
+        "egypt": "{{value}} อียิปต์",
+        "eucla": "{{value}} ยูคลา",
+        "gmt_02": "{{value}} GMT-02",
+        "gmt_11": "{{value}} GMT-11",
+        "greenland": "{{value}} กรีนแลนด์",
+        "guadalajara_mexico_city_monterrey ": "{{value}} กวาดาลาฮารา, เม็กซิโกซิตี้, มอนเตร์เรย์",
+        "hawaii": "{{value}} ฮาวาย",
+        "indiana_east": "{{value}} อินดีแอนา (ตะวันออก)",
+        "iraq": "{{value}} อิรัก",
+        "irkutsk_rtz_7": "{{value}} อีร์คุตสค์ (RTZ 7)",
+        "istanbul": "{{value}} อิสตันบูล",
+        "jerusalem": "{{value}} เยรูซาเลม",
+        "jordan": "{{value}} จอร์แดน",
+        "kabul": "{{value}} คาบูล",
+        "kathmandu": "{{value}} กาฐมาณฑุ",
+        "korea": "{{value}} เกาหลี",
+        "krasnoyarsk_rtz_6": "{{value}} ครัสโนยาสค์ (RTZ 6)",
+        "la_paz": "{{value}} ลาปาซ",
+        "magadan": "{{value}} มากาดาน",
+        "manaus": "{{value}} มาเนาส์",
+        "mid_atlantic": "{{value}} กลางมหาสมุทรแอตแลนติก",
+        "minsk": "{{value}} มินสค์",
+        "montevideo": "{{value}} มอนเตวิเดโอ",
+        "nairobi": "{{value}} ไนโรบี",
+        "namibia": "{{value}} นามิเบีย",
+        "newfoundland": "{{value}} นิวฟันด์แลนด์",
+        "nuku_alofa": "{{value}} นูกูอาโลฟา",
+        "pacific_south_america": "{{value}} แปซิฟิก อเมริกาใต้",
+        "port_louis": "{{value}} พอร์ตหลุยส์",
+        "pyongyang": "{{value}} เปียงยาง",
+        "samoa": "{{value}} ซามัว",
+        "saskatchewan": "{{value}} ซัสแคตเชวัน",
+        "sri_jayawardenepura_kotte": "{{value}} ศรีชยวรรธนปุระโกฏเฏ",
+        "tbilisi": "{{value}} ทบิลิซิ",
+        "tehran": "{{value}} เตหะราน",
+        "us_canada_eastern": "{{value}} สหรัฐฯ/แคนาดาฝั่งตะวันออก",
+        "us_canada_mountain": "{{value}} ภูเขาในสหรัฐอเมริกา/แคนาดา",
+        "us_canada_pacific": "{{value}} สหรัฐอเมริกา/แคนาดา แปซิฟิก",
+        "vladivostok_magadan": "{{value}} วลาดิวอสต็อก_มากาดาน_rtz_9",
+        "west_central_africa": "{{value}} แอฟริกากลางตะวันตก",
+        "yangon": "{{value}} ย่างกุ้ง",
+        "yerevan": "{{value}} เยเรวาน",
+        "brussels_copenhagen_madrid_paris ": "{{value}} บรัสเซลส์, โคเปนเฮเกน, มาดริด, ปารีส",
+        "amsterdam_berlin_bern_rome_stockholm_vienna": "{{value}} อัมสเตอร์ดัม, เบอร์ลิน, เบิร์น, โรม, สตอกโฮล์ม, เวียนนา",
+        "athens_beirut_bucharest_istanbul": "{{value}} เอเธนส์, เบรุต, บูคาเรสต์, อิสตันบูล",
+        "beijing_chongqing_hong_kong_urumqi": "{{value}} ปักกิ่ง, ฉงชิ่ง, ฮ่องกง, อุรุมชี",
+        "britain_ireland_portugal": "{{value}} สหราชอาณาจักร, ไอร์แลนด์, โปรตุเกส",
+        "chennai_kolkata_mumbai_new_delhi": "{{value}} เจนไน, โกลกาตา, มุมไบ, นิวเดลี",
+        "coordinated_universal_time": "{{value}} เวลาสากลเชิงพิกัด",
+        "ekaterinburg_rtz_4": "{{value}} เอคาเทอรินเบิร์ก (RTZ 4)",
+        "georgetown_la_paz_manaus_san_juan": "{{value}} จอร์จทาวน์, ลาปาซ, มาเนาส์, ซานฮวน",
+        "harare_pretoria": "{{value}} ฮาแรร์, พริทอเรีย",
+        "helsinki_kyiv_riga_sofia_tallinn_vilnius": "{{value}} เฮลซิงกิ, เคียฟ, ริกา, โซเฟีย, ทาลลินน์, วิลนีอุส",
+        "kaliningrad_rtz_1": "{{value}} คาลินินกราด (RTZ 1)",
+        "kuwait_riyadh": "{{value}} คูเวต, ริยาด",
+        "monrovia": "{{value}} มอนโรเวีย",
+        "moscow_st_petersburg_volgograd_rtz_2": "{{value}} มอสโก, เซนต์ปีเตอร์สเบิร์ก, โวลโกกราด (RTZ 2)",
+        "sarajevo_skopje_warsaw_zagreb": "{{value}} ซาราเยโว, สโกเปีย, วอร์ซอ, ซาเกร็บ",
+        "us_canada_central": "{{value}} สหรัฐฯ/แคนาดากลาง"
+    }
 }
