@@ -80,7 +80,8 @@
             "edit_calendar_error": "Qualcosa è andato storto, riprova",
             "new_calendar_created": "Nuovo calendario creato",
             "calendar_permanently_deleted": "Calendario eliminato definitivamente",
-            "calendar_restored": "Calendario ripristinato correttamente"
+            "calendar_restored": "Calendario ripristinato correttamente",
+            "appointment_permanently_deleted": "Appuntamento eliminato definitivamente"
         },
         "share_calendar_url_note2": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.<br/> Puoi trovare questi collegamenti anche con un clic destro del mouse sull'elenco dei calendari.",
         "share_calendar_url_note": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.",
@@ -248,7 +249,10 @@
         "trash_emptied": "Cestino svuotato correttamente",
         "calendar_shared": "Calendario condiviso correttamente",
         "filter_sharer_user": "Proprietario della cartella",
-        "on_behalf_of": "{{accountName}} per conto di {{identity}} <{{otherAccount}}>"
+        "on_behalf_of": "{{accountName}} per conto di {{identitiy}} <{{otherAccount}}>",
+        "the": "Il",
+        "invites": "Inviti",
+        "share_calendar_url": "{{title}} accesso condiviso"
     },
     "action": {
         "send": "Invia",
@@ -269,7 +273,8 @@
         "edit_message": "Modifica Messaggio",
         "send_cancellation": "Invia cancellazione",
         "share_calendar": "Condividi Calendario",
-        "calendar_access_share": "Condivisione accesso calendario"
+        "calendar_access_share": "Condivisione accesso calendario",
+        "empty_trash_confirmation": "Tutti gli elementi che appartengono a Email, Contatti, Calendari, Impegni e valigetta verranno eliminati. Vuoi procedere spostando tutto nel cestino?"
     },
     "button": {
         "customize_modal": "Personalizza"
@@ -493,7 +498,8 @@
             }
         },
         "invalid_email": "E-mail non valida",
-        "permissions_note": "Gli utenti devono essere su questo sistema e-mail (zextras.com). Puoi utilizzare l'indirizzo e-mail completo oppure solo il nome utente."
+        "permissions_note": "Gli utenti devono essere su questo sistema e-mail (zextras.com). Puoi utilizzare l'indirizzo e-mail completo oppure solo il nome utente.",
+        "ical_note": "Apple iCal può essere configurato per accedere ai tuoi Calendari tramite il protocollo CalDAV. Quando questa impostazione è attiva, i calendari condivisi vengono mostrati nella finestra \"Delega\" dell'account iCal e potrei delegare l'accesso ad altri utenti."
     },
     "freebusy": "LiberoOccupato",
     "months": {

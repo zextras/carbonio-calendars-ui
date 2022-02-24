@@ -1,14 +1,14 @@
 {
     "label": {
         "attachment": "Adjunto",
-        "attachment_plural": "",
+        "attachment_plural": "Adjuntos",
         "end": "Fin",
         "busy": "Ocupado",
         "cancel": "Cancelar",
         "custom": "Personalizado",
         "dismiss_capitalize": "Desestimar",
-        "download": "Download",
-        "download_plural": "",
+        "download": "Descargar",
+        "download_plural": "Descargar todo",
         "edit": "Editar",
         "edit_share": "Editar compartición",
         "free": "Gratis",
@@ -30,33 +30,33 @@
         "day": "Día",
         "days": "Días",
         "end_after": "Finalizar después de",
-        "weeks_on": "Semanas en",
+        "weeks_on": "Semana(s) en",
         "sharing_of_this_folder": "Compartición de esta carpeta",
-        "add_share": "Añadir compartir",
+        "add_share": "Añadir compartición",
         "apple_ical": "Apple iCal",
         "auto_add_rcvd_app": "Añadir las citas recibidas al calendario automáticamente",
         "calendar": "Calendario",
         "calendar_setting": "Ajustes del calendario",
         "cancelled": "Cancelado",
-        "create_appt_settings": "Crear cita",
-        "create_new_calendar": "Crear calendario nuevo",
+        "create_appt_settings": "Creando citas",
+        "create_new_calendar": "Crear nuevo calendario",
         "default_appt_vsblty": "Visibilidad de citas por defecto",
         "default_view": "Vista por defecto",
-        "delete_permanently": "Borrar permanentemente",
-        "dismiss": "DESECHAR",
-        "dismiss_plural": "DESECHAR TODOS",
+        "delete_permanently": "Eliminar permanentemente",
+        "dismiss": "Desconsiderar",
+        "dismiss_plural": "Desconsiderar todo",
         "display": "Mostrar",
         "edit_access": "Editar acceso de {{name}}",
         "edit_properties": "Editar propiedades de {{name}}",
         "email_input_message": "Introducir direcciones de correo electrónico",
-        "enable_dlgtn_for_ical": "Activar delegación para el cliente CalDAV de Apple iCal",
+        "enable_dlgtn_for_ical": "Activar delegación para el cliente CalDAV de iCal de Apple",
         "end_date": "Fecha de finalización",
         "end_date_and_time": "Fecha y hora de finalización",
         "every": "Cada",
         "every_day": "Cada día",
         "every_weekday": "Cada fin de semana",
         "every_year_on": "Cada año en",
-        "filter_sharer_user": "Filtrar usuario compartidor",
+        "filter_sharer_user": "Propietario de la carpeta",
         "find_shares": "Selecciona qué calendarios quieres ver en el árbol de calendarios",
         "free_busy": "Libre/Ocupado",
         "from": "De",
@@ -115,8 +115,36 @@
         },
         "work_hour": "Hora de trabajo",
         "work_week": "Semana de trabajo",
-        "tentative": "Provisional",
-        "your_pref_timezone_msg": "Tu huso horario preferido es GMT +01:00 Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena."
+        "tentative": "provisional",
+        "your_pref_timezone_msg": "Tu huso horario preferido es GMT +01:00 Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena.",
+        "snooze": "Posponer",
+        "create": "Crear",
+        "delete": "Eliminar",
+        "delete_plural": "Eliminar todo",
+        "calendar_shared": "El calendario ha sido compartido correctamente",
+        "empty": "Vacío",
+        "edits_saved": "Ediciones salvadas correctamente",
+        "error_try_again": "Algo ha salido mal. Por favor intente de nuevo",
+        "move": "Mover",
+        "new_calendar": "Nuevo calendario",
+        "none": "None",
+        "of_every_month": "del mes, cada",
+        "ok": "OK",
+        "restore": "Restaurar",
+        "restore_calendar": "Restaurar calendario",
+        "start_week_on": "Empezar semana en",
+        "undo": "Deshacer",
+        "results_for": "Resultados para:",
+        "appt_reminder": "Recordatorio de cita",
+        "appt_reminder_plural": "Recordatorios de citas",
+        "access_revoked": "Acceso revocado",
+        "changes_saved": "Los cambios han sido guardados",
+        "delete_instance": "¿Seguro que quiere eliminar esta instancia de la cita “{title}”?",
+        "discard_changes": "DESCARTAR CAMBIOS",
+        "event_title": "Título del evento",
+        "on_behalf_of": "{{accountName}} en nombre de {{identitiy}} <{{otherAccount}}>",
+        "settings_saved": "Ajustes guardados",
+        "trash_emptied": "Papelera vaciada con éxito"
     },
     "action": {
         "delete": "Eliminar",
@@ -124,18 +152,19 @@
         "create": "Crear",
         "save": "Guardar",
         "send": "Enviar",
-        "delete_calendar": "Borrar calendario",
+        "delete_calendar": "Eliminar calendario",
         "empty_trash": "Vaciar papelera",
-        "move_to_root": "Mover a raíz",
+        "move_to_root": "Mover al directorio raíz",
         "new_calendar": "Nuevo calendario",
-        "preview": "Clic para previsualizar en otra pestaña",
+        "preview": "Clic para visualizar en otra pestaña",
         "delete_permanently": "Borrar permanentemente",
         "edit_message": "Editar mensaje",
-        "save_to_preview": "Guardar en vista previa",
+        "save_to_preview": "Salvar para pre-visualizar",
         "send_cancellation": "Enviar cancelación",
         "calendar_access_share": "Compartir acceso al calendario",
         "edit_calendar_properties": "Editar propiedades del calendario",
-        "share_calendar": "Compartir calendario"
+        "share_calendar": "Compartir calendario",
+        "empty_trash_confirmation": "Esta acción borrará todos los elementos del correo electrónico, contactos, calendario, tareas, maletín y papelera. ¿Seguro que desea borrar todos los elementos mencionados?"
     },
     "event": {
         "action": {
@@ -171,7 +200,7 @@
                 "title": "Mover",
                 "footer": "Vacío",
                 "body": {
-                    "message3": "Elige un calendario al que mover las citas consideradas:"
+                    "message3": "Elegir un calendario hacia donde mover las citas consideradas:"
                 },
                 "input": {
                     "filter": "Filtrar calendarios"
@@ -183,7 +212,7 @@
                 "footer": "Crear y restaurar"
             },
             "footer": {
-                "go_back": "Regresar"
+                "go_back": "Volver"
             },
             "item": {
                 "empty": "Vacío"
@@ -200,7 +229,7 @@
         "modal": {
             "custom_schedule": {
                 "footer": "Editar",
-                "title": "Personalizar de trabajo"
+                "title": "Personalizar horario de trabajo"
             }
         }
     },
@@ -226,24 +255,24 @@
         "AC_with_count": "Aceptado",
         "AC_with_count_plural": "",
         "Declined": "rechazado",
-        "Attendees_not_answered_count": "<strong>1 asistente </strong> no ha respondido",
+        "Attendees_not_answered_count": "<strong> asistente </strong> no ha respondido",
         "Attendees_not_answered_count_plural": "<strong>{{count}} asistentes </strong> no han respondido",
         "Accepted": "aceptado",
-        "Attendees_declined_count": "<strong>1 asistente </strong> ha rechazado",
+        "Attendees_declined_count": "<strong>asistente </strong> ha rechazado",
         "Attendees_declined_count_plural": "<strong>{{count}} asistentes </strong> han rechazado",
         "NE_with_count": "Provisional",
         "NE_with_count_plural": "Provisional ({{count}})",
         "Tentative": "aceptado como provisional",
-        "DE_with_count": "No contestó (1)",
+        "DE_with_count": "No contestó ({{count}})",
         "DE_with_count_plural": "No contestaron ({{count}})",
         "Invited_Visitor": "han sido invitados",
         "Not_answered": "no contestaron",
         "TE_with_count": "Rechazado",
         "TE_with_count_plural": "Rechazados {{count}}",
         "visitors": "y otros {{others}} asistentes",
-        "Attendees_accepted_count": "<strong>1 asistente </strong> ha aceptado",
+        "Attendees_accepted_count": "<strong>asistente </strong> ha aceptado",
         "Attendees_accepted_count_plural": "<strong>{{count}} asistentes </strong> han aceptado",
-        "Attendees_tentative_count": "<strong>1 asistente </strong> ha aceptado provisionalmente",
+        "Attendees_tentative_count": "<strong> asistente </strong> ha aceptado provisionalmente",
         "Attendees_tentative_count_plural": "<strong>{{count}} asistentes </strong> han aceptado provisionalmente"
     },
     "read": "Leido",
@@ -257,7 +286,11 @@
         "minute_before": "{{count}} minuto antes",
         "minute_before_plural": "{{count}} minutos antes",
         "week_before": "{{count}} semana antes",
-        "week_before_plural": "{{count}} semanas antes"
+        "week_before_plural": "{{count}} semanas antes",
+        "all_time": "Todo el tiempo del evento",
+        "modal": {
+            "set_new_time_message": "¿Quieres poner una nueva hora para la cita perdida? Si haces clic en ACEPTAR, todos los demás recordatorios serán descartados automáticamente."
+        }
     },
     "repeat": {
         "custom": "Personalizado",
@@ -314,9 +347,9 @@
                 "allow_none": "No dejar que nadie me invite a reuniones"
             },
             "timezones": {
-                "chennai": "GMT +05:30 Chennai,Calcuta,Bombay,Nueva Delhi",
+                "chennai": "GMT +05:30 Chennai, Calcuta, Bombay, Nueva Delhi",
                 "egypt": "GMT +02:00 Egipto",
-                "amsterdam": "GMT +01:00 Ámsterdam,Berlín,Berna,Roma,Estocolmo,Viena"
+                "amsterdam": "GMT +01:00 Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena"
             },
             "weekdays": {
                 "friday": "Viernes",
@@ -382,19 +415,20 @@
         "new_time_proposed_error": "Algo fue mal, por favor, prueba de nuevo",
         "new_time_proposed_succes": "Nueva hora propuesta",
         "proposed_time_accepted": "Has aceptado la hora propuesta",
-        "share_folder_success": "Este calendario ha sido compartido",
+        "share_folder_success": "Calendario compartido con éxito",
         "url_copied": "{{title}} copiado",
-        "proposed_time_error": "Algo fue mal, por favor, prueba de nuevo"
+        "proposed_time_error": "Algo fue mal, por favor, prueba de nuevo",
+        "new_time_proposed_success": "Nueva hora propuesta"
     },
     "success": "Éxito",
     "type": "Tipo",
     "add": "Agregar",
-    "appointments": "Reuniones",
+    "appointments": "Citas",
     "message": {
         "you": "Tu",
         "are_organizer": "eres el organizador",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> es el organizador",
-        "you_will_see_the_subject_here": "Verás el asunto de esta cita aquí",
+        "you_will_see_the_subject_here": "Asunto",
         "have_not_sent_invitation": "Aún no has enviado la invitación a los asistentes",
         "snackbar": {
             "appt_moved": "Cita movida con éxito a",
@@ -414,13 +448,15 @@
             "invite": {
                 "accept": "Has contestado como Aceptado",
                 "error": "Algo fue mal, por favor, prueba de nuevo.",
-                "decline": "Has contestado como: Rechazado",
-                "tentative": "Has contestado como: Provisional"
+                "decline": "Has contestado como Rechazado",
+                "tentative": "Has contestado como Provisional"
             },
             "new_calendar_create_error": "Algo fue mal, por favor, inténtalo de nuevo",
             "new_calendar_created": "Calendario nuevo creado",
             "settings_saved": "Ediciones guardadas correctamente",
-            "edit_calendar_error": "Algo fue mal, por favor, inténtalo de nuevo"
+            "edit_calendar_error": "Algo fue mal, por favor, inténtalo de nuevo",
+            "calendar_permanently_deleted": "Calendario borrado permanentemente",
+            "calendar_restored": "Calendario restaurado con éxito"
         },
         "invite_has_no_message": "Esta invitación no tiene un mensaje de texto",
         "invited_you": "te invitó a un evento",
@@ -445,7 +481,8 @@
         "share_calendar_url_msg": "Puedes compartir rápidamente {{title}} con tus colaboradores utilizando una de estas URLs:",
         "share_calendar_url_note2": "Solo tus colaboradores pueden acceder a tus datos utilizando esas URLs. <br/> También puedes encontrar esos enlaces haciendo clic derecho en tu lista de calendarios.",
         "somebody_invited_you": "<strong>{{somebody}}</strong> te invitó",
-        "sure_to_delete_appointment_permanently": "¿Seguro que quieres borrar esta cita permanentemente?"
+        "sure_to_delete_appointment_permanently": "¿Seguro que quieres borrar esta cita permanentemente?",
+        "you_sure_delete_instance": "¿Seguro que quieres borrar esta instancia de la cita \"{{title}}\"?"
     },
     "button": {
         "customize_modal": "Abrir módulo de personalización"
@@ -453,21 +490,21 @@
     "administer": "Administrar",
     "allowed_actions": "Acciones permitidas",
     "freebusy": "FreeBusy",
-    "cannot_edit_name": "No puedes editar el nombre de un calendario del sistema",
+    "cannot_edit_name": "No es posible editar el nombre de un calendario del sistema",
     "composer": {
         "attachment": {
-            "contactsMod": "añadir tarjeta de contacto",
+            "contactsMod": "añadir ficha de contacto",
             "draganddrop": {
-                "content": "Suelta aquí tus archivos adjuntos para añadirlos rápidamente a una cita",
-                "title": "Modo Arrastrar y Soltar"
+                "content": "Arrastre aquí sus archivos para añadirlos rápidamente a una cita",
+                "title": "Modo \"arrastrar y soltar\""
             },
-            "local": "Añadir desde local",
+            "local": "Añadir desde Mi PC",
             "drive": "Añadir desde Drive"
         }
     },
-    "edit_share_properties": "Editar propiedades de compartir",
-    "find_calendar_shares": "Encontrar compartidos de calendario",
-    "find_shares": "Encontrar compartidos",
+    "edit_share_properties": "Editar propiedades de compartición",
+    "find_calendar_shares": "Encontrar comparticiones de calendario",
+    "find_shares": "Encontrar comparticiones",
     "insert": "Insertar",
     "private": "Privado",
     "remove_from_this_list": "Quitar de esta lista",
@@ -493,5 +530,104 @@
     "shared_items": "Elementos compartidos",
     "shares_info": "Información de participaciones",
     "workflow": "Flujo de trabajo",
-    "write": "Escribir"
+    "write": "Escribir",
+    "appt_restored_successfully": "Cita restaurada con éxito",
+    "timezone": {
+        "gmt_02": "{{value}} GMT-02",
+        "gmt_11": "{{value}} GMT-11",
+        "amsterdam_berlin_bern_rome_stockholm_vienna": "{{value}} Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena",
+        "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} Anadyr, Petropavlovsk-Kamchatsky (RTZ 11)",
+        "beijing_chongqing_hong_kong_urumqi": "{{value}} Pekín, Chongqing, Hong Kong, Urumqi",
+        "central_america": "{{value}} América Central",
+        "coordinated_universal_time": "{{value}} Tiempo universal coordinado",
+        "helsinki_kyiv_riga_sofia_tallinn_vilnius": "{{value}} Helsinki, Kiev, Riga, Sofía, Tallin, Vilna",
+        "manaus": "{{value}} Manaus",
+        "moscow_st_petersburg_volgograd_rtz_2": "{{value}} Moscú, San Petersburgo, Volgogrado (RTZ 2)",
+        "sarajevo_skopje_warsaw_zagreb": "{{value}} Sarajevo, Skopje, Varsovia, Zagreb",
+        "abu_dhabi_muscat": "{{value}} Abu Dabi, Mascate",
+        "alaska": "{{value}} Alaska",
+        "argentina": "{{value}} Argentina",
+        "arizona": "{{value}} Arizona",
+        "asuncion": "{{value}} Asunción",
+        "athens_beirut_bucharest_istanbul": "{{value}} Atenas, Beirut, Bucarest, Estambul",
+        "atlantic_time_canada": "{{value}} Hora del Atlántico (Canadá)",
+        "azores": "{{value}} Azores",
+        "baja_california": "{{value}} Baja California",
+        "baku": "{{value}} Bakú",
+        "bangkok_hanoi_jakarta": "{{value}} Bangkok, Hanoi, Yakarta",
+        "beirut": "{{value}} Beirut",
+        "belgrade_bratislava_budapest_ljubljana_prague": "{{value}} Belgrado, Bratislava, Budapest, Liubliana, Praga",
+        "brasilia": "{{value}} Brasilia",
+        "britain_ireland_portugal": "{{value}} Gran Bretaña, Irlanda, Portugal",
+        "cape_verde_is": "{{value}} Cabo Verde",
+        "caracas": "{{value}} Caracas",
+        "casablanca": "{{value}} Casablanca",
+        "cayenne_fortaleza": "{{value}} Cayena, Fortaleza",
+        "chennai_kolkata_mumbai_new_delhi": "{{value}} Chennai, Calcuta, Bombay, Nueva Delhi",
+        "chihuahua_la_paz_mazatlan": "{{value}} Chihuahua, La Paz, Mazatlán",
+        "chita": "{{value}} Chita",
+        "christmas_island": "{{value}} Isla de Navidad",
+        "colombia": "{{value}} Colombia",
+        "cuiaba": "{{value}} Cuiaba",
+        "damascus": "{{value}} Damasco",
+        "darwin": "{{value}} Darwin",
+        "dateline": "{{value}} Línea de fecha",
+        "dhaka": "{{value}} Dhaka",
+        "egypt": "{{value}} Egipto",
+        "ekaterinburg_rtz_4": "{{value}} Ekaterimburgo (RTZ 4)",
+        "eucla": "{{value}} Eucla",
+        "georgetown_la_paz_manaus_san_juan": "{{value}} Georgetown, La Paz, Manaos, San Juan",
+        "greenland": "{{value}} Groenlandia",
+        "harare_pretoria": "{{value}} Harare, Pretoria",
+        "hawaii": "{{value}} Hawái",
+        "indiana_east": "{{value}} Indiana (Este)",
+        "iraq": "{{value}} Iraq",
+        "irkutsk_rtz_7": "{{value}} Irkutsk (RTZ 7)",
+        "istanbul": "{{value}} Estambul",
+        "jerusalem": "{{value}} Jerusalén",
+        "jordan": "{{value}} Jordania",
+        "kabul": "{{value}} Kabul",
+        "kaliningrad_rtz_1": "{{value}} Kaliningrado (RTZ 1)",
+        "kathmandu": "{{value}} Katmandú",
+        "korea": "{{value}} Corea",
+        "krasnoyarsk_rtz_6": "{{value}} Krasnoyarsk (RTZ 6)",
+        "kuwait_riyadh": "{{value}} Kuwait, Riyadh",
+        "la_paz": "{{value}} La Paz",
+        "magadan": "{{value}} Magadán",
+        "mid_atlantic": "{{value}} Medio Atlántico",
+        "minsk": "{{value}} Minsk",
+        "monrovia": "{{value}} Monrovia",
+        "montevideo": "{{value}} Montevideo",
+        "nairobi": "{{value}} Nairobi",
+        "namibia": "{{value}} Namibia",
+        "newfoundland": "{{value}} Terranova",
+        "nuku_alofa": "{{value}} Nuku’alofa",
+        "pacific_south_america": "{{value}} Pacífico América del Sur",
+        "port_louis": "{{value}} Puerto Luis",
+        "pyongyang": "{{value}} Pyongyang",
+        "samoa": "{{value}} Samoa",
+        "saskatchewan": "{{value}} Saskatchewan",
+        "sri_jayawardenepura_kotte": "{{value}} Sri Jayawardenepura Kotte",
+        "tbilisi": "{{value}} Tiflis",
+        "tehran": "{{value}} Teherán",
+        "us_canada_central": "{{value}} US/Canada Central",
+        "us_canada_eastern": "{{value}} US/Canada Oriental",
+        "us_canada_mountain": "{{value}} US/Canada Mountain",
+        "us_canada_pacific": "{{value}} US/Canada Pacífico",
+        "vladivostok_magadan": "{{value}} vladivostok_magadan_rtz_9",
+        "west_central_africa": "{{value}} África Centro-Occidental",
+        "yangon": "{{value}} Yangon",
+        "yerevan": "{{value}} Everán",
+        "brussels_copenhagen_madrid_paris ": "{{value}} Bruselas, Copenhague, Madrid, París",
+        "guadalajara_mexico_city_monterrey ": "{{value}} Guadalajara, Ciudad de México, Monterrey"
+    },
+    "placeholder": {
+        "organizer": "Organizador"
+    },
+    "is_private": "Es privado",
+    "is_recurrent": "Es recurrente",
+    "messages": {
+        "format_as_plain_text": "Formatear como texto plano"
+    },
+    "has_attachments": "Tiene adjuntos"
 }
