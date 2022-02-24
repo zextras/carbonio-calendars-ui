@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5-rc.12](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.11...v0.1.5-rc.12) (2022-02-24)
+
+
+### Features
+
+* applied breaking changes from shell ([5766293](https://github.com/zextras/carbonio-calendars-ui/commit/576629318d9938eab2e0c222dadf514c02e2ccf0))
+
+
+### Bug Fixes
+
+* editor wrapper for board context ([58d90ad](https://github.com/zextras/carbonio-calendars-ui/commit/58d90adb716e00c21d511bfc41216353b89b673f))
+* search displayer fixed ([8b1d668](https://github.com/zextras/carbonio-calendars-ui/commit/8b1d6688dfc24db5644c28eabc44ab11a5821ebf))
+* share account name not show in modal ([5a7ca0e](https://github.com/zextras/carbonio-calendars-ui/commit/5a7ca0e145fba0218eaf5f797755f639e47aa269))
+* show full description instead of fragment ([0efab69](https://github.com/zextras/carbonio-calendars-ui/commit/0efab6949b25261ace1fc1a60d1e83b5815efc33))
+
 ### [0.1.5-rc.11](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.10...v0.1.5-rc.11) (2022-02-10)
 
 
