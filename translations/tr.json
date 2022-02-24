@@ -334,7 +334,7 @@
         "start_week_on": "Hafta başlangıcı",
         "trash_emptied": "Çöp kutusu başarıyla boşaltıldı",
         "undo": "Geri Al",
-        "on_behalf_of": "({{accountName}} ,bu kullanıcı yerine {{identitiy}} <{{otherAccount}}>"
+        "on_behalf_of": "({{accountName}} ,bu kullanıcı yerine {{identity}} <{{otherAccount}}>"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {

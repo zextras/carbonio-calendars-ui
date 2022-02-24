@@ -246,7 +246,7 @@
         "access_revoked": "Accès supprimé",
         "changes_saved": "Modifications enregistrées",
         "of_every_month": "du mois, chaque",
-        "on_behalf_of": "{{accountName}} de la part de {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "{{accountName}} de la part de {{identity}} <{{otherAccount}}>",
         "start_week_on": "La semaine débute le",
         "trash_emptied": "Corbeille vidée avec succès",
         "undo": "Annuler",

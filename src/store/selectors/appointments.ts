@@ -10,11 +10,11 @@ import { Calendar } from '../../types/store/calendars';
 import { Store } from '../../types/store/store';
 
 export function selectAllAppointments({ appointments }: Store): Record<string, Appointment> {
-	return appointments.appointments;
+	return appointments?.appointments;
 }
 
 export function selectAppointment({ appointments }: Store, id: string): Appointment | undefined {
-	return appointments.appointments ? appointments.appointments[id] : undefined;
+	return appointments?.appointments ? appointments.appointments[id] : undefined;
 }
 
 export function selectAppointmentInstance(
@@ -28,7 +28,7 @@ export function selectAppointmentInstance(
 }
 
 export function selectApptStatus({ appointments }: Store): string {
-	return appointments.status;
+	return appointments?.status;
 }
 
 export function getSelectedEvents(

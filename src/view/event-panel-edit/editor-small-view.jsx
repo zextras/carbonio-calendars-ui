@@ -16,7 +16,6 @@ import {
 	Checkbox,
 	Container,
 	Row,
-	RichTextEditor,
 	Divider,
 	Padding,
 	Select,
@@ -119,10 +118,10 @@ export default function EditorSmallView({
 						ele.right === 'sendAs'
 							? `${item.d}<${item.email[0].addr}>`
 							: t('label.on_behalf_of', {
-									identitiy: item.d,
+									identity: item.d,
 									accountName: account.name,
 									otherAccount: item.email[0].addr,
-									defaultValue: '{{accountName}} on behalf of {{identitiy}} <{{otherAccount}}>'
+									defaultValue: '{{accountName}} on behalf of {{identity}} <{{otherAccount}}>'
 							  }),
 					address: item.email[0].addr,
 					fullname: item.d,
@@ -197,6 +196,8 @@ export default function EditorSmallView({
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
 		[t]
 	);
+
+	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
 
 	return (
 		<Container
@@ -371,9 +372,9 @@ export default function EditorSmallView({
 								)}
 							</Container>
 							<Container minHeight="200px" padding={{ vertical: 'large' }}>
-								{data.resource.isRichText ? (
+								{composerIsAvailable && data.resource.isRichText ? (
 									<EditorWrapper>
-										<RichTextEditor
+										<Composer
 											value={data.resource.richText}
 											onEditorChange={callbacks.onTextChange}
 											minHeight={200}

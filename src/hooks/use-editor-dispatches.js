@@ -3,11 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-	useReplaceHistoryCallback,
-	useRemoveCurrentBoard,
-	useUserAccounts
-} from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useRemoveCurrentBoard, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { useCallback, useContext, useMemo } from 'react';
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
@@ -24,7 +20,6 @@ import { proposeNewTime } from '../store/actions/propose-new-time';
 import { useOnSaveAndOnSend } from './use-onsave-and-onsend';
 
 export const useEditorDispatches = (id, isBoard = false) => {
-	const replaceHistory = useReplaceHistoryCallback();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
@@ -59,7 +54,7 @@ export const useEditorDispatches = (id, isBoard = false) => {
 	);
 	const closePanel = useCallback(() => {
 		!isBoard ? replaceHistory('') : closeBoard();
-	}, [isBoard, closeBoard, replaceHistory]);
+	}, [isBoard, closeBoard]);
 
 	const uploadAttachments = useCallback((files) => dispatch(uploadParts({ files })), [dispatch]);
 

@@ -248,7 +248,7 @@
         "trash_emptied": "Cestino svuotato correttamente",
         "calendar_shared": "Calendario condiviso correttamente",
         "filter_sharer_user": "Proprietario della cartella",
-        "on_behalf_of": "{{accountName}} per conto di {{identitiy}} <{{otherAccount}}>"
+        "on_behalf_of": "{{accountName}} per conto di {{identity}} <{{otherAccount}}>"
     },
     "action": {
         "send": "Invia",

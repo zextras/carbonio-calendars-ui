@@ -15,7 +15,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import React, { useState, useCallback, useContext } from 'react';
 import { map, toUpper } from 'lodash';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
@@ -204,7 +204,6 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 };
 
 export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
-	const replaceHistory = useReplaceHistoryCallback();
 	const createModal = useContext(ModalManagerContext);
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>

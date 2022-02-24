@@ -16,7 +16,7 @@ import {
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { Spinner, useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, Spinner } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { map, some } from 'lodash';
@@ -116,11 +116,10 @@ const DisplayerHeader = ({ title, actions }) => {
 	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });
-	const replaceHistory = useReplaceHistoryCallback();
 
 	const close = useCallback(() => {
 		replaceHistory(``);
-	}, [replaceHistory]);
+	}, []);
 
 	return (
 		<>
@@ -167,6 +166,9 @@ const DisplayerHeader = ({ title, actions }) => {
 };
 
 export default function EventPanelView() {
+	const [t] = useTranslation();
+	const createModal = useContext(ModalManagerContext);
+	const dispatch = useDispatch();
 	const { calendarId, apptId, ridZ } = useParams();
 	const calendar = useSelector((s) => selectCalendar(s, calendarId));
 	const appointment = useSelector((s) => selectAppointment(s, apptId));

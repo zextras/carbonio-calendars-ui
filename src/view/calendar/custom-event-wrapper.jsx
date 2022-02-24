@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { setLightness } from 'polished';
 import { Container } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
-import { useReplaceHistoryCallback } from '@zextras/carbonio-shell-ui';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useParams } from 'react-router-dom';
 import { EventResumeView } from '../event-resume-view/event-resume';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
@@ -100,14 +100,12 @@ export default function CustomEventWrapper({ event, children, selected }) {
 		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
 	);
 
-	const replaceHistory = useReplaceHistoryCallback();
-
 	const showPanelView = useCallback(() => {
 		setOpen(false);
 		replaceHistory(
 			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
-	}, [event, replaceHistory]);
+	}, [event]);
 
 	const toggleOpen = useCallback(
 		(e) => {
