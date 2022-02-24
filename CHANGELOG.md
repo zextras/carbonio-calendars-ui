@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5-rc.11](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.10...v0.1.5-rc.11) (2022-02-10)
+
+
+### Features
+
+* clickable link inside the appointment message ([6824836](https://github.com/zextras/carbonio-calendars-ui/commit/6824836f23a239952845e6924caa21797ef8ba69))
+* default title in board new appointment tab ([e15f876](https://github.com/zextras/carbonio-calendars-ui/commit/e15f876c3a76be16b594a7a02669a7e6c6aae14c))
+
+
+### Bug Fixes
+
+* allCalendars item checks all sub items ([d1ddcbb](https://github.com/zextras/carbonio-calendars-ui/commit/d1ddcbbaab2782d6eab74ba9fed5b82efcbf457d))
+* close modals after confirmation ([9d8a562](https://github.com/zextras/carbonio-calendars-ui/commit/9d8a562bf0b93541412db09a417c223db5e4206a))
+* datepicker manual value change fixed ([498e110](https://github.com/zextras/carbonio-calendars-ui/commit/498e110ffe47c1e0f689b6f030436d23cc4e2624))
+* delete future instances ([56f6f86](https://github.com/zextras/carbonio-calendars-ui/commit/56f6f86c64a2542bf36b7d8efd368294ec959d15))
+* filtering of controllable folders by all calendars ([e654493](https://github.com/zextras/carbonio-calendars-ui/commit/e6544935465b71fefaef82e803f25520f8442029))
+* receive all notifications from deleted appointment ([44ae97f](https://github.com/zextras/carbonio-calendars-ui/commit/44ae97f08348ba65571d6bc822a1628906e3c896))
+* static links replaced with clickable inside appointment description ([3c17a8e](https://github.com/zextras/carbonio-calendars-ui/commit/3c17a8eab4d1e30c35a296028689c5fd377fc31c))
+
 ### [0.1.5-rc.10](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.9...v0.1.5-rc.10) (2022-01-21)
 
 
