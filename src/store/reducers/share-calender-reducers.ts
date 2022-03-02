@@ -15,7 +15,7 @@ export function shareCalendarRejected(state: CalendarSlice, { meta, error }: any
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function shareCalenderFullFilled(state: CalendarSlice, { payload, meta }: any): any {
-	const { shareWithUserRole, grant, folder } = meta.arg;
+	const { shareWithUserRole, shareWithUserType, grant, folder } = meta.arg;
 	const { FolderActionResponse } = payload.response.Body.BatchResponse;
 	const tmpAcl = map(FolderActionResponse, (a) => a.action);
 	const currentFolder = cloneDeep(state).calendars[folder];
@@ -33,7 +33,7 @@ export function shareCalenderFullFilled(state: CalendarSlice, { payload, meta }:
 		  )
 		: map(tmpAcl, (a) => ({
 				d: a.d,
-				gt: grant.gt,
+				gt: shareWithUserType,
 				perm: shareWithUserRole,
 				zid: a.zid
 		  }));
