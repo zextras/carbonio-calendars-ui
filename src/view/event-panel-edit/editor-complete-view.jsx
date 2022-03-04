@@ -127,6 +127,7 @@ export default function EditorCompleteView({
 	const settings = useUserSettings();
 	const account = useUserAccount();
 	const [ContactInput, available] = useIntegratedComponent('contact-input');
+	const [RoomSelector, isRoomAvailable] = useIntegratedComponent('room-selector');
 
 	const [richText, setRichText] = useState('');
 	const [dropZoneEnable, setDropZoneEnable] = useState(false);
@@ -355,6 +356,15 @@ export default function EditorCompleteView({
 								defaultValue={data.resource.location}
 								onChange={callbacks.onLocationChange}
 							/>
+							{isRoomAvailable && (
+								<>
+									<Padding top="large" />
+									<RoomSelector
+										onChange={callbacks.onRoomChange}
+										defaultValue={data?.resource?.room}
+									/>
+								</>
+							)}
 							<ShiftedRow>
 								<AttendeesContainer>
 									<ContactInput

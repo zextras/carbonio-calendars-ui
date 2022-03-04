@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter, isNil, omitBy } from 'lodash';
+import { filter } from 'lodash';
 import moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -26,6 +26,7 @@ export const normalizeEditor = (
 	allDay: event.allDay,
 	resource: {
 		tz: invite?.tz,
+		room: event?.resource?.room,
 		attach: invite.attach,
 		attachmentFiles: invite.attachmentFiles,
 		parts: invite.parts,
@@ -68,7 +69,7 @@ export const normalizeEditor = (
 				  },
 		calendar: event.resource.calendar,
 		status: event.resource.status,
-		location: event.resource.location,
+		location: event?.resource?.location,
 		organizer: event.resource.organizer,
 		class: event.resource.class,
 		inviteNeverSent: event.resource.neverSent,

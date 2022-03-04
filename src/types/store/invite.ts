@@ -11,6 +11,7 @@ export type Invite = {
 	parent: string;
 	flags: string;
 	parts: any;
+	room: { link: string | undefined; label: string | undefined } | undefined;
 	alarmValue: string;
 	alarmString: string;
 	seriesId: string;

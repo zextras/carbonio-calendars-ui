@@ -10,7 +10,9 @@ import {
 	getAlarmToString,
 	normalizeInviteParticipants,
 	retrieveAttachmentsType,
-	findAttachments
+	findAttachments,
+	stripRoomFromLocation,
+	getRoomFromLocation
 } from './normalizations-utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -35,7 +37,8 @@ export const normalizeInvite = (m: any): Invite => ({
 	freeBusyActualStatus: m?.inv?.[0]?.comp?.[0]?.fba,
 	fragment: m?.inv?.[0]?.comp?.[0]?.fr,
 	isOrganizer: m?.inv?.[0]?.comp?.[0]?.isOrg,
-	location: m?.inv?.[0]?.comp?.[0]?.loc,
+	location: stripRoomFromLocation(m?.inv?.[0]?.comp?.[0]?.loc) ?? '',
+	room: getRoomFromLocation(m?.inv?.[0]?.comp?.[0]?.loc),
 	name: m?.inv?.[0]?.comp?.[0]?.name,
 	noBlob: m?.inv?.[0]?.comp?.[0]?.noBlob,
 	organizer: m?.inv?.[0]?.comp?.[0]?.or, // todo: normalize
@@ -82,7 +85,8 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	freeBusyActualStatus: inv.comp?.[0]?.fba,
 	fragment: inv.comp?.[0]?.fr,
 	isOrganizer: inv.comp?.[0]?.isOrg,
-	location: inv.comp?.[0]?.loc,
+	location: stripRoomFromLocation(inv.comp?.[0]?.loc) ?? '',
+	room: getRoomFromLocation(inv.comp?.[0]?.loc),
 	name: inv.comp?.[0]?.name,
 	noBlob: inv.comp?.[0]?.noBlob,
 	organizer: inv.comp?.[0]?.or, // todo: normalize

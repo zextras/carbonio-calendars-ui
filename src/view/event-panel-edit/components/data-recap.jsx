@@ -32,10 +32,16 @@ export default function DataRecap({ data }) {
 	           ${moment(data.end).format(' HH:mm')}`,
 		[data.start, data.end]
 	);
+
 	const apptLocation = useMemo(
 		() => `GMT ${moment(data.start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
 		[data.start]
 	);
+
+	const location = useMemo(() => {
+		const loc = data?.resource?.location ?? t('label.location', 'location');
+		return data?.resource?.room ? loc.concat(data?.resource?.room.label) : loc;
+	}, [data?.resource?.location, data?.resource?.room, t]);
 
 	return (
 		<Row
@@ -88,7 +94,7 @@ export default function DataRecap({ data }) {
 				</TitleRow>
 				<TitleRow>
 					<Text overflow="ellipsis" color="secondary" size="small">
-						{data?.resource?.location || t('label.location', 'location')}
+						{location}
 					</Text>
 				</TitleRow>
 			</Row>

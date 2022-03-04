@@ -20,12 +20,13 @@ export type ExceptionReference = SingleReference & {
 	inviteId: string;
 	isOrg: boolean;
 	name: string;
+	room: { link: string | undefined; label: string | undefined } | undefined;
 	neverSent: boolean;
 	ex: boolean;
 	fr: string;
 	recur: boolean;
 	or: any;
-	loc: any;
+	loc: string | undefined;
 	otherAtt: any;
 };
 
@@ -50,7 +51,8 @@ export type Appointment = {
 	inviteId: string;
 	isOrg: boolean;
 	l: string;
-	loc: any;
+	loc: string | undefined;
+	room: { link: string | undefined; label: string | undefined } | undefined;
 	md: number;
 	ms: number;
 	name: string;

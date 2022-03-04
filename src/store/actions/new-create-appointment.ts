@@ -7,6 +7,12 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
+import {
+	LINK_VALIDATOR_START,
+	LINK_VALIDATOR_END,
+	ROOM_VALIDATOR_START,
+	ROOM_VALIDATOR_END
+} from '../../constants/integrations';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const generateParticipantInformation = (attendees: Array<any>): any =>
@@ -101,6 +107,17 @@ const generateMp = (msg: any, account: any): any => ({
 		  ]
 });
 
+const generateLocation = (editorData: {
+	resource: { room: { label: string | undefined; link: string | undefined }; location: string };
+}): string =>
+	editorData?.resource?.room?.label && editorData?.resource?.room?.link
+		? `${editorData?.resource?.location ?? ''}${ROOM_VALIDATOR_START}${
+				editorData.resource.room.label
+		  }${ROOM_VALIDATOR_END} ${LINK_VALIDATOR_START}${
+				editorData?.resource?.room?.link
+		  }${LINK_VALIDATOR_END}`
+		: editorData.resource.location;
+
 const generateInvite = (editorData: any): any => {
 	const at = [];
 	at.push(
@@ -145,7 +162,7 @@ const generateInvite = (editorData: any): any => {
 				at,
 				allDay: editorData.allDay ? '1' : '0',
 				fb: editorData.allDay ? 'F' : editorData.resource.freeBusy,
-				loc: editorData.resource.location,
+				loc: generateLocation(editorData),
 				name: editorData.title,
 				or: {
 					a: editorData.resource.organizer.email,

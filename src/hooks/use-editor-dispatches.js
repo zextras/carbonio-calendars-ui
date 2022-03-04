@@ -8,12 +8,13 @@ import { useDispatch } from 'react-redux';
 import { useCallback, useContext, useMemo } from 'react';
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { throttle } from 'lodash';
+import { head, last, throttle } from 'lodash';
 import { uploadParts } from '../store/actions/upload-parts';
 import {
 	editAppointmentData,
 	editResourceData,
 	editAttendees,
+	editRoom,
 	editOptionalAttendees
 } from '../store/slices/editor-slice';
 import { proposeNewTime } from '../store/actions/propose-new-time';
@@ -182,6 +183,8 @@ export const useEditorDispatches = (id, isBoard = false) => {
 		[dispatch, id]
 	);
 
+	const onRoomChange = useCallback((data) => dispatch(editRoom({ id, data })), [dispatch, id]);
+
 	const onRecurrenceChange = useCallback(
 		(val) => dispatch(editResourceData({ id, mod: { recur: val } })),
 		[dispatch, id]
@@ -212,6 +215,7 @@ export const useEditorDispatches = (id, isBoard = false) => {
 		uploadAttachments,
 		onAttachmentsChange,
 		onRecurrenceChange,
+		onRoomChange,
 		closePanel,
 		onProposeNewTime
 	};

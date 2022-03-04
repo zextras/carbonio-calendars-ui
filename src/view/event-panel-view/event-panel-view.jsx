@@ -94,7 +94,7 @@ const ActionButtons = ({ actions, closeAction }) => {
 						<IconButton key={action.id} icon={action.icon} onClick={action.click} />
 					))}
 			</Row>
-			{/* IconButton disabled until the actions are active 
+			{/* IconButton disabled until the actions are active
 			<Padding right="medium">
 				<IconButton icon="MoreVertical" />
 			</Padding>
@@ -166,9 +166,6 @@ const DisplayerHeader = ({ title, actions }) => {
 };
 
 export default function EventPanelView() {
-	const [t] = useTranslation();
-	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch();
 	const { calendarId, apptId, ridZ } = useParams();
 	const calendar = useSelector((s) => selectCalendar(s, calendarId));
 	const appointment = useSelector((s) => selectAppointment(s, apptId));
@@ -179,7 +176,7 @@ export default function EventPanelView() {
 		return undefined;
 	}, [appointment, calendar, inst]);
 	const invite = useSelector((state) =>
-		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
+		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
 
 	const actions = useQuickActions(event);
