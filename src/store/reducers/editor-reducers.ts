@@ -61,7 +61,7 @@ export const editAttendeesReducer = (state: any, { payload }: any): any => {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const editRoomReducer = (state: any, { payload }: any): any => {
 	const { label, link, attendees } = payload.data;
-	if (label) {
+	if (label && link) {
 		state.editors[payload.id].resource.room = { label, link };
 	} else {
 		state.editors[payload.id].resource.room = undefined;

@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useCallback, useContext, useMemo } from 'react';
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { head, last, throttle } from 'lodash';
+import { throttle } from 'lodash';
 import { uploadParts } from '../store/actions/upload-parts';
 import {
 	editAppointmentData,
