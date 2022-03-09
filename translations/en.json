@@ -46,6 +46,7 @@
             "accept": "Accept",
             "decline": "Decline",
             "expand": "Open in Displayer",
+            "needs_action": "Needs action",
             "no": "No",
             "yes": "Yes"
         }

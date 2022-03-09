@@ -17,7 +17,7 @@ export const DescriptionFragmentRow = ({ event }) => (
 						width="fill"
 						crossAlignment="flex-start"
 						mainAlignment="flex-start"
-						padding={{ horizontal: 'small', bottom: 'small' }}
+						padding={{ vertical: 'small' }}
 					>
 						<Row padding={{ right: 'small' }}>
 							<Icon icon="MessageSquareOutline" />

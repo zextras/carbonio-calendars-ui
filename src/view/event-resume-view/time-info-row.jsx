@@ -20,13 +20,18 @@ export const TimeInfoRow = ({ event }) => {
 	}, [event, t]);
 
 	return (
-		<Row width="fill" mainAlignment="flex-start">
-			<Text overflow="break-word" weight="bold" size="small" color="gray1">
-				{date}
-				<br />
-				GMT
-				{`${moment(event.start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`}
-			</Text>
+		<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
+			<Row takeAvailableSpace mainAlignment="flex-start">
+				<Padding right="small">
+					<Icon icon="ClockOutline" size="medium" />
+				</Padding>
+				<Text overflow="break-word" weight="bold" size="small" color="gray1">
+					{date}
+					<br />
+					GMT
+					{`${moment(event.start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`}
+				</Text>
+			</Row>
 		</Row>
 	);
 };
