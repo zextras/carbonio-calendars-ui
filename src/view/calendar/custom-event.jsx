@@ -93,7 +93,7 @@ export default function CustomEvent({ event, title }) {
 							) : (
 								<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
 									<Row mainAlignment="space-between" takeAvailableSpace>
-										<Row>
+										<Row takeAvailableSpace mainAlignment="flex-start">
 											{!event.allDay && (
 												<Text overflow="ellipsis" color="currentColor" weight="medium">
 													{`${moment(event.start).format('LT')} - ${moment(event.end).format(
