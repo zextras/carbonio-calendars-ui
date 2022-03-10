@@ -3,18 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Icon, Padding, Row, Text, TextWithTooltip } from '@zextras/carbonio-design-system';
+import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import React from 'react';
 
-export const LocationRow = ({ event }) =>
+export const LocationRow = ({ event, showIcon = false }) =>
 	event?.resource?.class !== 'PRI' && (
 		<>
 			{event.resource.location && event.resource.location.length > 0 && (
 				<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 					<Row takeAvailableSpace mainAlignment="flex-start">
-						<Padding right="small">
-							<Icon icon="PinOutline" size="medium" />
-						</Padding>
+						{showIcon && (
+							<Padding right="small">
+								<Icon icon="PinOutline" size="medium" />
+							</Padding>
+						)}
 						<Row takeAvailableSpace mainAlignment="flex-start">
 							<Text color="gray1" size="small">
 								{event.resource.locationUrl ? (

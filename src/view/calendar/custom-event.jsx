@@ -19,8 +19,13 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import { useEventActions } from '../../hooks/use-event-actions';
 
+const NeedActionIcon = styled(Icon)`
+	position: relative;
+	top: -1px;
+`;
 export default function CustomEvent({ event, title }) {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
@@ -48,10 +53,10 @@ export default function CustomEvent({ event, title }) {
 				>
 					<Container
 						width="fill"
-						height="fill"
+						height="fit"
 						background="transparent"
-						mainAlignment="flex-start"
-						crossAlignment="flex-start"
+						mainAlignment="center"
+						crossAlignment="center"
 						style={{ position: 'relative' }}
 					>
 						<Container
@@ -63,29 +68,62 @@ export default function CustomEvent({ event, title }) {
 						>
 							{eventDiff <= 30 ? (
 								<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
-									<Text color="currentColor" weight="medium" style={{ overflow: 'visible' }}>
-										{`${moment(event.start).format('LT')} -`}
-									</Text>
-									<Padding left="small" />
-									<Text overflow="ellipsis" color="currentColor" weight="bold" size="small">
-										{event.title}
-									</Text>
+									<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
+										<Text color="currentColor" weight="medium" style={{ overflow: 'visible' }}>
+											{`${moment(event.start).format('LT')} -`}
+										</Text>
+										<Padding left="small" />
+										<Text overflow="ellipsis" color="currentColor" weight="bold" size="small">
+											{event.title}
+										</Text>
+									</Row>
+									{!event?.resource?.calendar?.owner &&
+										!event?.resource?.iAmOrganizer &&
+										event.resource?.participationStatus === 'NE' && (
+											<Row style={{ padding: 'none' }} mainAlignment="center">
+												<Tooltip
+													placement="top"
+													label={t('event.action.needs_action', 'Needs action')}
+												>
+													<NeedActionIcon icon="CalendarWarning" color="primary" />
+												</Tooltip>
+											</Row>
+										)}
 								</Row>
 							) : (
 								<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
-									{!event.allDay && (
-										<Text overflow="ellipsis" color="currentColor" weight="medium">
-											{`${moment(event.start).format('LT')} - ${moment(event.end).format('LT')}`}
-										</Text>
-									)}
-
-									{event.allDay && (
-										<Padding left="small">
-											<Text overflow="break-word" color="currentColor" weight="bold">
-												{title}
-											</Text>
-										</Padding>
-									)}
+									<Row mainAlignment="space-between" takeAvailableSpace>
+										<Row>
+											{!event.allDay && (
+												<Text overflow="ellipsis" color="currentColor" weight="medium">
+													{`${moment(event.start).format('LT')} - ${moment(event.end).format(
+														'LT'
+													)}`}
+												</Text>
+											)}
+										</Row>
+										{!event?.resource?.calendar?.owner &&
+											!event?.resource?.iAmOrganizer &&
+											event.resource?.participationStatus === 'NE' && (
+												<Row style={{ padding: 'none' }} mainAlignment="center">
+													<Tooltip
+														placement="top"
+														label={t('event.action.needs_action', 'Needs action')}
+													>
+														<NeedActionIcon icon="CalendarWarning" color="primary" />
+													</Tooltip>
+												</Row>
+											)}
+									</Row>
+									<Row>
+										{event.allDay && (
+											<Padding left="small">
+												<Text overflow="break-word" color="currentColor" weight="bold">
+													{title}
+												</Text>
+											</Padding>
+										)}
+									</Row>
 								</Row>
 							)}
 							{event.resource.class === 'PRI' && (

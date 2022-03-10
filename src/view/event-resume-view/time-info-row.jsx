@@ -8,7 +8,7 @@ import moment from 'moment';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-export const TimeInfoRow = ({ event }) => {
+export const TimeInfoRow = ({ event, showIcon = false }) => {
 	const [t] = useTranslation();
 	const date = React.useMemo(() => {
 		if (event?.allDay) {
@@ -22,9 +22,11 @@ export const TimeInfoRow = ({ event }) => {
 	return (
 		<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 			<Row takeAvailableSpace mainAlignment="flex-start">
-				<Padding right="small">
-					<Icon icon="ClockOutline" size="medium" />
-				</Padding>
+				{showIcon && (
+					<Padding right="small">
+						<Icon icon="ClockOutline" size="medium" />
+					</Padding>
+				)}
 				<Text overflow="break-word" weight="bold" size="small" color="gray1">
 					{date}
 					<br />

@@ -20,8 +20,8 @@ export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispa
 			<TitleRow event={event} invite={invite} />
 			<NeverSentWarningRow event={event} />
 			<CalendarInfoRow event={event} />
-			{event && <TimeInfoRow event={event} />}
-			{event && <LocationRow event={event} />}
+			{event && <TimeInfoRow event={event} showIcon />}
+			{event && <LocationRow event={event} showIcon />}
 			<ParticipantsRow event={event} invite={invite} />
 			<DescriptionFragmentRow event={event} />
 			<ActionsButtonsRow event={event} dispatch={dispatch} onClose={onClose} />
