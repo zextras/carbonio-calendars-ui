@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-// TEAMS/CHATS
+// CHATS
 export const ROOM_VALIDATOR_START = '<virtualRoom';
 export const ROOM_VALIDATOR_END = 'virtualRoom>';
 
