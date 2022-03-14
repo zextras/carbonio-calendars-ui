@@ -20,7 +20,8 @@ import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
 import AppointmentReminder from './view/reminder/appointment-reminder';
-import { CALENDAR_APP_ID, CALENDAR_ROUTE, settingsSubSections } from './constants';
+import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
+import { getSettingsSubSections } from './settings/sub-sections'
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -80,10 +81,7 @@ export default function App() {
 			route: CALENDAR_ROUTE,
 			label: t('label.app_name', 'Calendars'),
 			component: SettingsView,
-			subSections: settingsSubSections.map((item) => ({
-				id: t(item.label, item.fallback).replace(/\s/g, ''),
-				label: t(item.label, item.fallback)
-			}))
+			subSections: getSettingsSubSections(t)
 		});
 		addSearchView({
 			route: CALENDAR_ROUTE,

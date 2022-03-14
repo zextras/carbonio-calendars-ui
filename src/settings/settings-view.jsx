@@ -27,6 +27,13 @@ import CreateAppSettings from './creating-app-settings-view';
 import PermissionSettings from './permissions-settings-view';
 import { differenceObject, validEmail } from './components/utils';
 import { settingsSubSections } from '../constants';
+import {
+	creatingAppointmentsSubSection,
+	generalSubSection,
+	iCalSubSection,
+	permissionsSubSection,
+	workWeekSubSection
+} from './sub-sections';
 
 export default function CalendarSettingsView() {
 	const [t] = useTranslation();
@@ -380,26 +387,11 @@ export default function CalendarSettingsView() {
 	);
 
 	const title = useMemo(() => t('label.calendar_setting', 'Calendar Settings'), [t]);
-	const sectionTitleGeneral = useMemo(
-		() => t(settingsSubSections[0].label, settingsSubSections[0].fallback),
-		[t]
-	);
-	const sectionTitleWorkWeek = useMemo(
-		() => t(settingsSubSections[1].label, settingsSubSections[1].fallback),
-		[t]
-	);
-	const sectionTitleAppointments = useMemo(
-		() => t(settingsSubSections[2].label, settingsSubSections[2].fallback),
-		[t]
-	);
-	const sectionTitleAppleCal = useMemo(
-		() => t(settingsSubSections[3].label, settingsSubSections[3].fallback),
-		[t]
-	);
-	const sectionTitlePermissions = useMemo(
-		() => t(settingsSubSections[4].label, settingsSubSections[4].fallback),
-		[t]
-	);
+	const sectionTitleGeneral = useMemo(() => generalSubSection(t), [t]);
+	const sectionTitleWorkWeek = useMemo(() => workWeekSubSection(t), [t]);
+	const sectionTitleAppointments = useMemo(() => creatingAppointmentsSubSection(t), [t]);
+	const sectionTitleAppleCal = useMemo(() => iCalSubSection(t), [t]);
+	const sectionTitlePermissions = useMemo(() => permissionsSubSection(t), [t]);
 
 	return loading ? (
 		<Container
@@ -422,12 +414,8 @@ export default function CalendarSettingsView() {
 				background="gray5"
 				style={{ overflowY: 'auto' }}
 			>
-				<FormSection
-					width="50%"
-					minWidth="calc(min(100%, 512px))"
-					id={sectionTitleGeneral.replace(/\s/g, '')}
-				>
-					<FormSubSection label={t(settingsSubSections[0].label, settingsSubSections[0].fallback)}>
+				<FormSection width="50%" minWidth="calc(min(100%, 512px))">
+					<FormSubSection id={sectionTitleGeneral.id} label={sectionTitleGeneral.label}>
 						<GeneralSettingView
 							t={t}
 							settings={settings}
@@ -437,10 +425,7 @@ export default function CalendarSettingsView() {
 							setisEmailNotValid={setisEmailNotValid}
 						/>
 					</FormSubSection>
-					<FormSubSection
-						id={sectionTitleWorkWeek.replace(/\s/g, '')}
-						label={t(settingsSubSections[1].label, settingsSubSections[1].fallback)}
-					>
+					<FormSubSection id={sectionTitleWorkWeek.id} label={sectionTitleWorkWeek.label}>
 						<WorkWeekSettingsView
 							settingsObj={settingsObj}
 							t={t}
@@ -452,10 +437,7 @@ export default function CalendarSettingsView() {
 							toggleModal={toggleModal}
 						/>
 					</FormSubSection>
-					<FormSubSection
-						id={sectionTitleAppointments.replace(/\s/g, '')}
-						label={t(settingsSubSections[2].label, settingsSubSections[2].fallback)}
-					>
+					<FormSubSection id={sectionTitleAppointments.id} label={sectionTitleAppointments.label}>
 						<CreateAppSettings
 							t={t}
 							settings={settings}
@@ -463,10 +445,7 @@ export default function CalendarSettingsView() {
 							updateSettings={updateSettings}
 						/>
 					</FormSubSection>
-					<FormSubSection
-						id={sectionTitleAppleCal.replace(/\s/g, '')}
-						label={t(settingsSubSections[3].label, settingsSubSections[3].fallback)}
-					>
+					<FormSubSection id={sectionTitleAppleCal.id} label={sectionTitleAppleCal.label}>
 						<AppleICalSettings
 							t={t}
 							settings={settings}
@@ -474,10 +453,7 @@ export default function CalendarSettingsView() {
 							updateSettings={updateSettings}
 						/>
 					</FormSubSection>
-					<FormSubSection
-						label={t(settingsSubSections[4].label, settingsSubSections[4].fallback)}
-						id={sectionTitlePermissions.replace(/\s/g, '')}
-					>
+					<FormSubSection label={FormSubSection.label} id={sectionTitlePermissions.id}>
 						<PermissionSettings
 							t={t}
 							activeFreeBusyOptn={activeFreeBusyOptn}
