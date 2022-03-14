@@ -10,6 +10,7 @@ import { Container } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
 import { EventResumeView } from '../event-resume-view/event-resume';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { getInvite } from '../../store/actions/get-invite';
@@ -41,7 +42,10 @@ export const CustomEventWrapperStyler = styled.div`
 		border: ${({ event }) => `1px solid ${event.resource.calendar.color.color} !important`};
 		box-sizing: border-box;
 		margin: 0;
-		padding: 4px 8px;
+		padding: ${({ event }) =>
+			moment(event.end).diff(event.start, 'minutes') >= 30
+				? '4px 8px'
+				: '1px 8px 4px 8px !important'};
 		border-radius: 4px;
 		cursor: pointer;
 		width: 100%;

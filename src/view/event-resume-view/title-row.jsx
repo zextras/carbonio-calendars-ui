@@ -31,6 +31,13 @@ export const TitleRow = ({ event }) => (
 						)}
 					</Row>
 					<Row>{event?.resource?.flags?.includes('a') && <Icon icon="AttachOutline" />}</Row>
+					{!event?.resource?.calendar?.owner && !event?.resource?.iAmOrganizer && (
+						<Row>
+							{event.resource?.participationStatus === 'NE' && (
+								<Icon icon="CalendarWarning" color="primary" />
+							)}
+						</Row>
+					)}
 				</>
 			)}
 		</Row>
