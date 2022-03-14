@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { omitBy, isNil, isArray, map } from 'lodash';
+import { omitBy, isNil, isArray, map, forEach } from 'lodash';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 
 export const folderAction = createAsyncThunk(
@@ -32,10 +32,9 @@ export const folderAction = createAsyncThunk(
 				onerror: 'continue'
 			});
 		} else {
-			result = await soapFetch('FolderAction', {
-				_jsns: 'urn:zimbraMail',
-				action: omitBy(
-					{
+			const FolderActionRequest: any = [
+				{
+					action: {
 						id,
 						op,
 						l: changes?.parent, // parent
@@ -45,9 +44,26 @@ export const folderAction = createAsyncThunk(
 						f: `${changes?.excludeFreeBusy ? 'b' : ''}${changes?.checked ? '#' : ''}`,
 						zid
 					},
-					isNil
-				)
+					_jsns: 'urn:zimbraMail'
+				}
+			];
+			if (changes?.grant) {
+				forEach(changes?.grant, (g) => {
+					FolderActionRequest.push({
+						action: {
+							id,
+							op: 'grant',
+							grant: g
+						},
+						_jsns: 'urn:zimbraMail'
+					});
+				});
+			}
+			result = await soapFetch('Batch', {
+				FolderActionRequest,
+				_jsns: 'urn:zimbra'
 			});
+			return result;
 		}
 		return result;
 	}
