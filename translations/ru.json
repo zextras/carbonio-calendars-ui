@@ -260,7 +260,7 @@
         "calendar_shared": "Доступ к календарю успешно предоставлен",
         "changes_saved": "Изменения сохранены",
         "delete_instance": "Вы действительно хотите удалить этот экземпляр встречи «{title}»?",
-        "on_behalf_of": "({{accountName}}от  {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "({{accountName}}от {{identitiy}} <{{otherAccount}}>",
         "settings_saved": "Настройки сохранены",
         "start_week_on": "Начать неделю",
         "trash_emptied": "Корзина успешно очищена",

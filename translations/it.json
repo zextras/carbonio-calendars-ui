@@ -252,7 +252,8 @@
         "on_behalf_of": "{{accountName}} per conto di {{identitiy}} <{{otherAccount}}>",
         "the": "Il",
         "invites": "Inviti",
-        "share_calendar_url": "{{title}} accesso condiviso"
+        "share_calendar_url": "{{title}} accesso condiviso",
+        "new_appointment": "Nuovo appuntamento"
     },
     "action": {
         "send": "Invia",

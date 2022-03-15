@@ -1,1 +1,6 @@
-{}
+{
+    "label": {
+        "revoke_share": "Revogar partilha de {{title}}",
+        "save": "Salvar"
+    }
+}
