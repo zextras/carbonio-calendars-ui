@@ -6,17 +6,12 @@
 import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import {
 	useUserSettings,
-	replaceHistory,
 	soapFetch,
-	editSettings
+	editSettings,
+	SettingsHeader
 } from '@zextras/carbonio-shell-ui';
 import {
 	Container,
-	Padding,
-	Text,
-	Button,
-	Row,
-	Divider,
 	FormSection,
 	FormSubSection,
 	SnackbarManagerContext,
@@ -31,6 +26,13 @@ import AppleICalSettings from './apple-ical-settings';
 import CreateAppSettings from './creating-app-settings-view';
 import PermissionSettings from './permissions-settings-view';
 import { differenceObject, validEmail } from './components/utils';
+import {
+	creatingAppointmentsSubSection,
+	generalSubSection,
+	iCalSubSection,
+	permissionsSubSection,
+	workWeekSubSection
+} from './sub-sections';
 
 export default function CalendarSettingsView() {
 	const [t] = useTranslation();
@@ -383,6 +385,13 @@ export default function CalendarSettingsView() {
 		]
 	);
 
+	const title = useMemo(() => t('label.calendar_setting', 'Calendar Settings'), [t]);
+	const sectionTitleGeneral = useMemo(() => generalSubSection(t), [t]);
+	const sectionTitleWorkWeek = useMemo(() => workWeekSubSection(t), [t]);
+	const sectionTitleAppointments = useMemo(() => creatingAppointmentsSubSection(t), [t]);
+	const sectionTitleAppleCal = useMemo(() => iCalSubSection(t), [t]);
+	const sectionTitlePermissions = useMemo(() => permissionsSubSection(t), [t]);
+
 	return loading ? (
 		<Container
 			orientation="horizontal"
@@ -395,46 +404,8 @@ export default function CalendarSettingsView() {
 			</Shimmer.FormSection>
 		</Container>
 	) : (
-		<Container
-			orientation="vertical"
-			mainAlignment="space-around"
-			background="gray5"
-			style={{ overflowY: 'auto' }}
-		>
-			<Row orientation="horizontal" width="100%">
-				<Row
-					padding={{ all: 'small' }}
-					mainAlignment="flex-start"
-					width="50%"
-					crossAlignment="flex-start"
-				>
-					<Text size="large" weight="regular">
-						{t('label.calendar_setting', 'Calendar Settings')}
-					</Text>
-				</Row>
-				<Row
-					padding={{ all: 'small' }}
-					width="50%"
-					mainAlignment="flex-end"
-					crossAlignment="flex-end"
-				>
-					<Padding right="small">
-						<Button
-							label={t('label.discard_changes', 'DISCARD CHANGES')}
-							onClick={onClose}
-							color="secondary"
-							disabled={disabled}
-						/>
-					</Padding>
-					<Button
-						label={t('label.save', 'Save')}
-						color="primary"
-						onClick={saveChanges}
-						disabled={disabled}
-					/>
-				</Row>
-			</Row>
-			<Divider />
+		<>
+			<SettingsHeader title={title} onSave={saveChanges} onCancel={onClose} isDirty={!disabled} />
 			<Container
 				orientation="vertical"
 				mainAlignment="baseline"
@@ -443,7 +414,7 @@ export default function CalendarSettingsView() {
 				style={{ overflowY: 'auto' }}
 			>
 				<FormSection width="50%" minWidth="calc(min(100%, 512px))">
-					<FormSubSection label={t('label.general', 'General')}>
+					<FormSubSection id={sectionTitleGeneral.id} label={sectionTitleGeneral.label}>
 						<GeneralSettingView
 							t={t}
 							settings={settings}
@@ -453,7 +424,7 @@ export default function CalendarSettingsView() {
 							setisEmailNotValid={setisEmailNotValid}
 						/>
 					</FormSubSection>
-					<FormSubSection label={t('label.work_week', 'Work week')}>
+					<FormSubSection id={sectionTitleWorkWeek.id} label={sectionTitleWorkWeek.label}>
 						<WorkWeekSettingsView
 							settingsObj={settingsObj}
 							t={t}
@@ -465,7 +436,7 @@ export default function CalendarSettingsView() {
 							toggleModal={toggleModal}
 						/>
 					</FormSubSection>
-					<FormSubSection label={t('label.create_appt_settings', 'Creating Appointments')}>
+					<FormSubSection id={sectionTitleAppointments.id} label={sectionTitleAppointments.label}>
 						<CreateAppSettings
 							t={t}
 							settings={settings}
@@ -473,8 +444,7 @@ export default function CalendarSettingsView() {
 							updateSettings={updateSettings}
 						/>
 					</FormSubSection>
-
-					<FormSubSection label={t('label.apple_ical', 'Apple iCal')}>
+					<FormSubSection id={sectionTitleAppleCal.id} label={sectionTitleAppleCal.label}>
 						<AppleICalSettings
 							t={t}
 							settings={settings}
@@ -482,8 +452,7 @@ export default function CalendarSettingsView() {
 							updateSettings={updateSettings}
 						/>
 					</FormSubSection>
-
-					<FormSubSection label={t('label.permissions', 'Permissions')}>
+					<FormSubSection label={sectionTitlePermissions.label} id={sectionTitlePermissions.id}>
 						<PermissionSettings
 							t={t}
 							activeFreeBusyOptn={activeFreeBusyOptn}
@@ -511,6 +480,6 @@ export default function CalendarSettingsView() {
 				settingsToUpdate={settingsToUpdate}
 				disabled={!Object.keys(settingsToUpdate).includes('zimbraPrefCalendarWorkingHours')}
 			/>
-		</Container>
+		</>
 	);
 }
