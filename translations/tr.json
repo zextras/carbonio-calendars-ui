@@ -139,7 +139,8 @@
             "edit_calendar_error": "Bir hata oluştu, lütfen tekrar deneyin",
             "new_calendar_create_error": "Bir hata oluştu, lütfen tekrar deneyin",
             "calendar_permanently_deleted": "Takvim kalıcı olarak silindi",
-            "calendar_restored": "Takvim başarıyla geri alındı"
+            "calendar_restored": "Takvim başarıyla geri alındı",
+            "appointment_permanently_deleted": "Randevu kalıcı olarak silindi"
         },
         "are_organizer": "organize eden",
         "meeting_canceled": "Bu toplantı iptal edildi",
@@ -289,7 +290,7 @@
         "start_date_and_time": "Başlangıç tarih ve saati",
         "start_week_of": "Hafta başlangıcı",
         "subject": "Konu",
-        "tentative": "belirsiz",
+        "tentative": "Belirsiz",
         "time_zones": "Saat dilimleri",
         "to": "Kime",
         "type_name_here": "Takvim adı",
@@ -334,7 +335,8 @@
         "start_week_on": "Hafta başlangıcı",
         "trash_emptied": "Çöp kutusu başarıyla boşaltıldı",
         "undo": "Geri Al",
-        "on_behalf_of": "({{accountName}} ,bu kullanıcı yerine {{identity}} <{{otherAccount}}>"
+        "on_behalf_of": "({{accountName}} ,bu kullanıcı yerine {{identitiy}} <{{otherAccount}}>",
+        "new_appointment": "Yeni Randevu"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {

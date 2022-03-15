@@ -16,10 +16,11 @@
         "empty_trash": "Tempat Sampah Kosong",
         "new_calendar": "Kalender baru",
         "send_cancellation": "Kirim Pembatalan",
-        "share_calendar": "Bagikan Kalender"
+        "share_calendar": "Bagikan Kalender",
+        "empty_trash_confirmation": "Tindakan ini akan menghapus semua item dalam Email, Kontak, Kalender, Tugas, dan Tas Kantor. Yakin ingin menghapus semua yang ada di dalam folder sampah ini secara permanen?"
     },
     "label": {
-        "attachment": "{{count}} Lampiran",
+        "attachment": "lampiran",
         "busy": "Sibuk",
         "cancel": "Batal",
         "custom": "Kustom",
@@ -40,13 +41,13 @@
         "remove": "Hapus semua",
         "invitation_not_sent": "Anda belum mengirim undangan kepada peserta",
         "attendee_plural": "Peserta",
-        "all_calendars": "Semua Kalender",
+        "all_calendars": "Semua kalender",
         "all_day": "Sepanjang hari",
         "type_name_here": "Nama kalender",
         "work_hour": "Jam kerja",
-        "create_appt_settings": "Buat Janji Temu",
-        "time_zones": "Zona Waktu",
-        "tentative": "Sementara",
+        "create_appt_settings": "Membuat Janji Temu",
+        "time_zones": "Zona waktu",
+        "tentative": "sementara",
         "apple_ical": "Apple iCal",
         "auto_add_rcvd_app": "Menambahkan janji temu yang diterima secara otomatis ke kalender",
         "calendar": "Kalender",
@@ -57,7 +58,7 @@
         "day": "Hari",
         "days": "Hari",
         "default_view": "Tampilan default",
-        "delete_permanently": "Hapus Secara Permanen",
+        "delete_permanently": "Hapus secara permanen",
         "custom_repeat": "Pengulangan Kustom",
         "add_share": "Tambahkan berbagi",
         "default_appt_vsblty": "Visibilitas janji temu default",
@@ -85,10 +86,10 @@
         "private": "Pribadi",
         "enable_dlgtn_for_ical": "Aktifkan delegasi untuk Apple iCal CalDAV Client",
         "every_year_on": "Setiap tahun pada",
-        "dismiss": "ABAIKAN SEMUA",
+        "dismiss": "Abaikan semua",
         "of_the_month,_every": "bulan ini, setiap",
         "display": "Tampilkan",
-        "filter_sharer_user": "Filter pengguna bersama",
+        "filter_sharer_user": "Pemilik folder",
         "instance": "Kejadian",
         "no_end_date": "Tidak ada tanggal berakhir",
         "occurrences": "Kemunculan",
@@ -129,7 +130,33 @@
         "start_week_of": "Mulai minggu",
         "the": "Tersebut",
         "weeks_on": "Minggu di",
-        "revoke": "Batalkan"
+        "revoke": "Batalkan",
+        "snooze": "Tunda",
+        "of_every_month": "bulan ini, setiap",
+        "ok": "OK",
+        "create": "Buat",
+        "delete": "Hapus",
+        "edits_saved": "Hasil edit disimpan dengan benar",
+        "empty": "Kosong",
+        "error_try_again": "Terjadi kesalahan, coba lagi",
+        "move": "Pindahkan",
+        "new_calendar": "Kalender baru",
+        "none": "Tidak ada",
+        "restore": "Pulihkan",
+        "restore_calendar": "Pulihkan kalender",
+        "results_for": "Hasil untuk:",
+        "start_week_on": "Mulai pekan pada",
+        "undo": "Batalkan",
+        "appt_reminder": "Pengingat Janji Temu",
+        "discard_changes": "HAPUS PERUBAHAN",
+        "access_revoked": "Akses dicabut",
+        "calendar_shared": "Kalender berhasil dibagikan",
+        "changes_saved": "Perubahan disimpan",
+        "delete_instance": "Anda yakin ingin menghapus instans janji temu “{title}”?",
+        "event_title": "Judul acara",
+        "on_behalf_of": "{{accountName}} atas nama {{identitiy}} <{{otherAccount}}>",
+        "settings_saved": "Pengaturan disimpan",
+        "trash_emptied": "Sampah berhasil dikosongkan"
     },
     "calendar": {
         "modal": {
@@ -165,7 +192,7 @@
                 "title": "Pindahkan",
                 "footer": "Kosongkan",
                 "input": {
-                    "filter": "Filter Kalender"
+                    "filter": "Filter kalender"
                 },
                 "new": "Kalender Baru",
                 "body": {
@@ -223,12 +250,14 @@
             "invite": {
                 "accept": "Anda telah membalas sebagai Diterima",
                 "error": "Terjadi kesalahan, coba lagi.",
-                "decline": "Anda telah membalas sebagai: Ditolak",
-                "tentative": "Anda telah membalas sebagai: Sementara"
+                "decline": "Anda telah membalas dengan Ditolak",
+                "tentative": "Anda telah membalas dengan Sementara"
             },
             "settings_saved": "Hasil edit disimpan dengan benar",
             "new_calendar_create_error": "Terjadi kesalahan, coba lagi",
-            "new_calendar_created": "Kalender baru dibuat"
+            "new_calendar_created": "Kalender baru dibuat",
+            "calendar_permanently_deleted": "Kalender dihapus permanen",
+            "calendar_restored": "Kalender berhasil dipulihkan"
         },
         "have_not_sent_invitation": "Anda belum mengirim undangan ke peserta",
         "invite_has_no_message": "Undangan ini tidak berisi pesan teks",
@@ -244,7 +273,7 @@
         "you_are_organizer": "Anda adalah pengelola",
         "you_sure_delete_calendar": "Anda yakin ingin menghapus kalender \"{{name}}\" secara permanen?",
         "you_sure_move_calendar_trash": "Anda yakin ingin menghapus kalender \"{{name}}\"?",
-        "you_will_see_the_subject_here": "Anda akan melihat subjek janji temu ini di sini",
+        "you_will_see_the_subject_here": "Subjek",
         "somebody_invited_you": "<strong>{{somebody}}</strong>mengundang Anda",
         "sure_to_delete_all_occurences_appointment": "Anda yakin ingin menghapus semua kemunculan janji temu ini?",
         "meeting_canceled": "Rapat berikut telah dibatalkan",
@@ -255,7 +284,8 @@
             }
         },
         "share_calendar_url_note2": "Hanya kolaborator Anda yang dapat mengakses data Anda menggunakan URL ini.<br/>Anda juga bisa menemukan tautan tersebut dengan mengklik kanan daftar kalender Anda.",
-        "delete_future_occurences_warning": "Tindakan ini juga menghapus semua pengecualian (sebelum dan sesudah kejadian ini) dalam rangkaian tersebut"
+        "delete_future_occurences_warning": "Tindakan ini juga menghapus semua pengecualian (sebelum dan sesudah kejadian ini) dalam rangkaian tersebut",
+        "you_sure_delete_instance": "Anda yakin ingin menghapus instan janji temu “{{title}}” ini?"
     },
     "months": {
         "april": "April",
@@ -280,7 +310,11 @@
         "week_before": "{{count}} minggu sebelumnya",
         "at_time_of_event": "Pada saat acara",
         "day_before": "{{count}} hari sebelumnya",
-        "hour_before": "{{count}} hari sebelumnya"
+        "hour_before": "{{count}} hari sebelumnya",
+        "all_time": "Sepanjang waktu acara",
+        "modal": {
+            "set_new_time_message": "Anda ingin mengatur waktu baru untuk janji temu yang terlewat? Jika mengklik OK, semua pengingat lain akan otomatis dibuang."
+        }
     },
     "repeat": {
         "custom": "Kustom",
@@ -342,8 +376,8 @@
                 "allow_internal": "Izinkan hanya pengguna internal mengundang saya rapat"
             },
             "timezones": {
-                "amsterdam": "GMT +01:00 Amsterdam,Berlin,Bern,Roma,Stockholm,Wina",
-                "chennai": "GMT +05:30 Chennai,Kolkata,Mumbai,New Delhi",
+                "amsterdam": "GMT +01:00 Amsterdam, Berlin, Bern,Roma, Stockholm, Wina",
+                "chennai": "GMT +05:30 Chennai, Kolkata, Mumbai, New Delhi",
                 "egypt": "GMT +02:00 Mesir"
             }
         },
@@ -403,7 +437,8 @@
         "proposed_time_accepted": "Anda menerima waktu yang diusulkan",
         "proposed_time_error": "Terjadi kesalahan, coba lagi",
         "url_copied": "{{title}} disalin",
-        "share_folder_success": "Kalender ini telah dibagikan"
+        "share_folder_success": "Kalender berhasil dibagikan",
+        "new_time_proposed_success": "Waktu baru diusulkan"
     },
     "success": "Berhasil",
     "add": "Tambahkan",
@@ -449,7 +484,7 @@
     "find_calendar_shares": "Temukan Berbagi Kalender",
     "find_shares": "Temukan berbagi",
     "remove_from_this_list": "Hapus dari daftar ini",
-    "resend_mail_notification_about_this_share": "Kirim pemberitahuan email tentang berbagi ini",
+    "resend_mail_notification_about_this_share": "Kirim notifikasi email tentang berbagi ini",
     "search": {
         "results_for": "Hasil untuk:",
         "organized_by": "dikelola oleh"
@@ -471,5 +506,104 @@
     "shares_info": "Info Bersama",
     "workflow": "Alur Kerja",
     "write": "Tulis",
-    "revoke_with_custom_message": "Batalkan akses dengan mengirim pemberitahuan kustom"
+    "revoke_with_custom_message": "Batalkan akses dengan mengirim pemberitahuan kustom",
+    "placeholder": {
+        "organizer": "Penyelenggara"
+    },
+    "timezone": {
+        "amsterdam_berlin_bern_rome_stockholm_vienna": "{{value}} Amsterdam, Berlin, Bern, Roma, Stockholm, Vienna",
+        "beijing_chongqing_hong_kong_urumqi": "{{value}} Beijing, Chongqing, Hong Kong, Urumqi",
+        "chennai_kolkata_mumbai_new_delhi": "{{value}} Chennai, Kolkata, Mumbai, New Delhi",
+        "egypt": "{{value}} Mesir",
+        "georgetown_la_paz_manaus_san_juan": "{{value}} Georgetown, La Paz, Manaus, San Juan",
+        "kabul": "{{value}} Kabul",
+        "magadan": "{{value}} Magadan",
+        "sri_jayawardenepura_kotte": "{{value}} Sri Jayawardenepura Kotte",
+        "moscow_st_petersburg_volgograd_rtz_2": "{{value}} Moskow, St. Petersburg, Volgograd (RTZ 2)",
+        "abu_dhabi_muscat": "{{value}} Abu Dhabi, Muskat",
+        "alaska": "{{value}} Alaska",
+        "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} Anadyr, Petropavlovsk-Kamchatsky (RTZ 11)",
+        "argentina": "{{value}} Argentina",
+        "arizona": "{{value}} Arizona",
+        "asuncion": "{{value}} Asuncion",
+        "athens_beirut_bucharest_istanbul": "{{value}} Athena, Beirut, Bukares, Istanbul",
+        "atlantic_time_canada": "{{value}} Waktu Atlantik (Kanada)",
+        "azores": "{{value}} Azores",
+        "baja_california": "{{value}} Baja California",
+        "baku": "{{value}} Baku",
+        "bangkok_hanoi_jakarta": "{{value}} Bangkok, Hanoi, Jakarta",
+        "beirut": "{{value}} Beirut",
+        "belgrade_bratislava_budapest_ljubljana_prague": "{{value}} Belgrade, Bratislava, Budapest, Ljubljana, Praha",
+        "brasilia": "{{value}} Brasilia",
+        "britain_ireland_portugal": "{{value}} Britain, Ireland, Portugal",
+        "cape_verde_is": "{{value}} Tanjung Verde",
+        "caracas": "{{value}} Caracas",
+        "casablanca": "{{value}} Casablanca",
+        "cayenne_fortaleza": "{{value}} Cayenne, Fortaleza",
+        "central_america": "{{value}} Amerika Tengah",
+        "chihuahua_la_paz_mazatlan": "{{value}} Chihuahua, La Paz, Mazatlan",
+        "chita": "{{value}} Chita",
+        "christmas_island": "{{value}} Christmas Island",
+        "colombia": "{{value}} Kolombia",
+        "coordinated_universal_time": "{{value}} Waktu Universal Terkoordinasi",
+        "cuiaba": "{{value}} Cuiaba",
+        "damascus": "{{value}} Damaskus",
+        "darwin": "{{value}} Darwin",
+        "dateline": "{{value}} Dateline",
+        "dhaka": "{{value}} Dhaka",
+        "ekaterinburg_rtz_4": "{{value}} Ekaterinburg (RTZ 4)",
+        "eucla": "{{value}} Eucla",
+        "gmt_02": "{{value}} GMT-02",
+        "gmt_11": "{{value}} GMT-11",
+        "greenland": "{{value}} Greenland",
+        "harare_pretoria": "{{value}} Harare, Pretoria",
+        "hawaii": "{{value}} Hawaii",
+        "helsinki_kyiv_riga_sofia_tallinn_vilnius": "{{value}} Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius",
+        "indiana_east": "{{value}} Indiana (Timur)",
+        "iraq": "{{value}} Irak",
+        "irkutsk_rtz_7": "{{value}} Irkutsk (RTZ 7)",
+        "istanbul": "{{value}} Istanbul",
+        "jerusalem": "{{value}} Yerusalem",
+        "jordan": "{{value}} Yordania",
+        "kaliningrad_rtz_1": "{{value}} Kaliningrad (RTZ 1)",
+        "kathmandu": "{{value}} Kathmandu",
+        "korea": "{{value}} Korea",
+        "krasnoyarsk_rtz_6": "{{value}} Krasnoyarsk (RTZ 6)",
+        "kuwait_riyadh": "{{value}} Kuwait, Riyadh",
+        "la_paz": "{{value}} La Paz",
+        "manaus": "{{value}} Manaus",
+        "mid_atlantic": "{{value}} Atlantik Tengah",
+        "minsk": "{{value}} Minsk",
+        "monrovia": "{{value}} Monrovia",
+        "montevideo": "{{value}} Montevideo",
+        "nairobi": "{{value}} Nairobi",
+        "namibia": "{{value}} Namibia",
+        "newfoundland": "{{value}} Newfoundland",
+        "nuku_alofa": "{{value}} Nuku’alofa",
+        "pacific_south_america": "{{value}} Amerika Selatan Pasifik",
+        "port_louis": "{{value}} Port Louis",
+        "pyongyang": "{{value}} Pyongyang",
+        "samoa": "{{value}} Samoa",
+        "saskatchewan": "{{value}} Saskatchewan",
+        "sarajevo_skopje_warsaw_zagreb": "{{value}} Sarajevo, Skopje, Warsawa, Zagreb",
+        "tbilisi": "{{value}} Tbilisi",
+        "tehran": "{{value}} Teheran",
+        "us_canada_central": "{{value}} AS/Kanada Tengah",
+        "us_canada_eastern": "{{value}} AS/Kanada Timur",
+        "us_canada_mountain": "{{value}} AS/Kanada Pegunungan",
+        "us_canada_pacific": "{{value}} AS/Kanada Pasifik",
+        "vladivostok_magadan": "{{value}} vladivostok_magadan_rtz_9",
+        "west_central_africa": "{{value}} Afrika Tengah Barat",
+        "yangon": "{{value}} Yangon",
+        "yerevan": "{{value}} Yerevan",
+        "brussels_copenhagen_madrid_paris ": "{{value}} Brussels, Kopenhagen, Madrid, Paris",
+        "guadalajara_mexico_city_monterrey ": "{{value}} Guadalajara, Mexico City, Monterrey"
+    },
+    "appt_restored_successfully": "Janji temu berhasil dipulihkan",
+    "has_attachments": "Memiliki lampiran",
+    "is_private": "Privat",
+    "is_recurrent": "Berulang",
+    "messages": {
+        "format_as_plain_text": "Format sebagai Teks Biasa"
+    }
 }

@@ -89,7 +89,8 @@
             "new_calendar_create_error": "Что-то пошло не так, повторите попытку",
             "new_calendar_created": "Создан новый календарь",
             "calendar_permanently_deleted": "Календарь удален навсегда",
-            "calendar_restored": "Календарь успешно восстановлен"
+            "calendar_restored": "Календарь успешно восстановлен",
+            "appointment_permanently_deleted": "Встреча удалена"
         },
         "modal": {
             "delete": {
@@ -124,7 +125,7 @@
         "start_date": "Дата начала",
         "required": "Обязательный",
         "reminder": "Напоминание",
-        "private": "Приватный",
+        "private": "Личные",
         "out_of_office": "Нет на работе",
         "location": "Место",
         "from": "От",
@@ -190,7 +191,7 @@
         "work_hour": "Рабочий час",
         "work_week": "Рабочая неделя",
         "your_pref_timezone_msg": "Предпочтительный часовой пояс: GMT +01: 00 Амстердам, Берлин, Берн, Рим, Стокгольм, Вена.",
-        "custom": "Пользовательский",
+        "custom": "Персонализировать",
         "custom_repeat": "Настроить повторение",
         "general": "Общие настройки",
         "regular": "Обычный",
@@ -245,7 +246,7 @@
         "event_title": "Название мероприятия",
         "move": "Перенести",
         "new_calendar": "Новый календарь",
-        "none": "Никто",
+        "none": "Никогда",
         "of_every_month": "месяца, каждый(ую)",
         "ok": "ОК",
         "restore": "Восстановить",
@@ -259,12 +260,13 @@
         "calendar_shared": "Доступ к календарю успешно предоставлен",
         "changes_saved": "Изменения сохранены",
         "delete_instance": "Вы действительно хотите удалить этот экземпляр встречи «{title}»?",
-        "on_behalf_of": "({{accountName}}от <{{other Account}}>",
+        "on_behalf_of": "({{accountName}}от  {{identitiy}} <{{otherAccount}}>",
         "settings_saved": "Настройки сохранены",
         "start_week_on": "Начать неделю",
         "trash_emptied": "Корзина успешно очищена",
         "undo": "Отменить",
-        "of": "из"
+        "of": "из",
+        "new_appointment": "Новая встреча"
     },
     "tooltip": {
         "show_optionals": "Показать опции",
@@ -285,7 +287,7 @@
         "delete_calendar": "Удалить календарь",
         "create": "Создать",
         "download": "Загрузка",
-        "preview": "Нажмите, чтобы просмотреть на другой вкладке",
+        "preview": "Нажмите для просмотра в другой вкладке",
         "delete": "Удалить",
         "save_to_preview": "Сохранить для предварительного просмотра",
         "delete_permanently": "Удалить навсегда",
@@ -405,7 +407,7 @@
                 "day": "День"
             },
             "dflt_vsblty_opt": {
-                "public": "Общедоступный",
+                "public": "Общедоступные",
                 "private": "Частный"
             },
             "free_busy_opts": {
@@ -559,7 +561,7 @@
     "success": "Успешно",
     "has_attachments": "Есть вложения",
     "is_recurrent": "Повторяющаяся",
-    "is_private": "Приватный",
+    "is_private": "Личная",
     "messages": {
         "format_as_plain_text": "Форматировать как обычный текст"
     },
@@ -569,7 +571,7 @@
     },
     "timezone": {
         "alaska": "{{value}} Аляска",
-        "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} Анадырь, Петропавловск-Камчатский(RTZ 11)",
+        "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} Анадырь, Петропавловск-Камчатский",
         "argentina": "{{value}} Аргентина",
         "arizona": "{{value}} Аризона",
         "asuncion": "{{value}} Аризона",
@@ -604,7 +606,7 @@
         "guadalajara_mexico_city_monterrey ": "{{value}} Гвадалахара, Мехико, Монтеррей",
         "harare_pretoria": "{{value}} Хараре, Претория",
         "hawaii": "{{value}} Гавайи",
-        "indiana_east": "{{value}} Indiana (East)",
+        "indiana_east": "{{value}} Индиана (Восток)",
         "irkutsk_rtz_7": "{{value}} Иркутск (RTZ 7)",
         "istanbul": "{{value}} Стамбул",
         "jerusalem": "{{value}} Иерусалим",
@@ -653,7 +655,7 @@
         "montevideo": "{{value}} Монтевидео",
         "newfoundland": "{{value}} Ньюфаундленд",
         "sarajevo_skopje_warsaw_zagreb": "{{value}} Сараево, Скопье, Варшава, Загреб",
-        "us_canada_eastern": "{{value}} US/Canada Eastern",
-        "vladivostok_magadan": "{{value}} Владивосток_Магадан_rtz_9"
+        "us_canada_eastern": "{{value}} Восточная часть США/Канады",
+        "vladivostok_magadan": "{{value}} Владивосток, Магадан"
     }
 }
