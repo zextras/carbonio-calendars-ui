@@ -144,7 +144,8 @@
         "event_title": "Título del evento",
         "on_behalf_of": "{{accountName}} en nombre de {{identitiy}} <{{otherAccount}}>",
         "settings_saved": "Ajustes guardados",
-        "trash_emptied": "Papelera vaciada con éxito"
+        "trash_emptied": "Papelera vaciada con éxito",
+        "new_appointment": "Nueva reunión"
     },
     "action": {
         "delete": "Eliminar",
@@ -164,7 +165,7 @@
         "calendar_access_share": "Compartir acceso al calendario",
         "edit_calendar_properties": "Editar propiedades del calendario",
         "share_calendar": "Compartir calendario",
-        "empty_trash_confirmation": "Esta acción borrará todos los elementos del correo electrónico, contactos, calendario, tareas, maletín y papelera. ¿Seguro que desea borrar todos los elementos mencionados?"
+        "empty_trash_confirmation": "Esta acción eliminará todos los elementos de correo electrónico, contactos, calendario, tareas y maletín de la papelera. ¿Está seguro que desea continuar?"
     },
     "event": {
         "action": {
@@ -253,7 +254,7 @@
     "owner": "Propietario",
     "participants": {
         "AC_with_count": "Aceptado",
-        "AC_with_count_plural": "",
+        "AC_with_count_plural": "Aceptados ({{count}})",
         "Declined": "rechazado",
         "Attendees_not_answered_count": "<strong> asistente </strong> no ha respondido",
         "Attendees_not_answered_count_plural": "<strong>{{count}} asistentes </strong> no han respondido",
@@ -289,7 +290,7 @@
         "week_before_plural": "{{count}} semanas antes",
         "all_time": "Todo el tiempo del evento",
         "modal": {
-            "set_new_time_message": "¿Quieres poner una nueva hora para la cita perdida? Si haces clic en ACEPTAR, todos los demás recordatorios serán descartados automáticamente."
+            "set_new_time_message": "¿Quieres establecer un nuevo horario para la cita perdida? Si haces clic en ACEPTAR, todos los demás recordatorios serán descartados automáticamente."
         }
     },
     "repeat": {
@@ -456,7 +457,8 @@
             "settings_saved": "Ediciones guardadas correctamente",
             "edit_calendar_error": "Algo fue mal, por favor, inténtalo de nuevo",
             "calendar_permanently_deleted": "Calendario borrado permanentemente",
-            "calendar_restored": "Calendario restaurado con éxito"
+            "calendar_restored": "Calendario restaurado con éxito",
+            "appointment_permanently_deleted": "Reunión eliminada permanentemente"
         },
         "invite_has_no_message": "Esta invitación no tiene un mensaje de texto",
         "invited_you": "te invitó a un evento",
@@ -489,7 +491,7 @@
     },
     "administer": "Administrar",
     "allowed_actions": "Acciones permitidas",
-    "freebusy": "FreeBusy",
+    "freebusy": "Libre/Ocupado",
     "cannot_edit_name": "No es posible editar el nombre de un calendario del sistema",
     "composer": {
         "attachment": {
@@ -541,7 +543,7 @@
         "central_america": "{{value}} América Central",
         "coordinated_universal_time": "{{value}} Tiempo universal coordinado",
         "helsinki_kyiv_riga_sofia_tallinn_vilnius": "{{value}} Helsinki, Kiev, Riga, Sofía, Tallin, Vilna",
-        "manaus": "{{value}} Manaus",
+        "manaus": "{{value}} Manaos",
         "moscow_st_petersburg_volgograd_rtz_2": "{{value}} Moscú, San Petersburgo, Volgogrado (RTZ 2)",
         "sarajevo_skopje_warsaw_zagreb": "{{value}} Sarajevo, Skopje, Varsovia, Zagreb",
         "abu_dhabi_muscat": "{{value}} Abu Dabi, Mascate",
@@ -568,7 +570,7 @@
         "chita": "{{value}} Chita",
         "christmas_island": "{{value}} Isla de Navidad",
         "colombia": "{{value}} Colombia",
-        "cuiaba": "{{value}} Cuiaba",
+        "cuiaba": "{{value}} Cuiabá",
         "damascus": "{{value}} Damasco",
         "darwin": "{{value}} Darwin",
         "dateline": "{{value}} Línea de fecha",

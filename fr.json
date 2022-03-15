@@ -252,7 +252,8 @@
         "undo": "Annuler",
         "calendar_shared": "Calendrier partagé avec succès",
         "delete_instance": "Êtes vous sûr de vouloir supprimer cette instance de l'évènement “{title}” ?",
-        "settings_saved": "Paramètres enregistrés"
+        "settings_saved": "Paramètres enregistrés",
+        "new_appointment": "Nouveau rendez-vous"
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -290,7 +291,8 @@
             "calendar_moved_to_root_folder_error": "Quelque chose s'est mal passé, veuillez réessayer",
             "edit_calendar": "Modifications sauvées correctement",
             "calendar_restored": "Le calendrier a été restauré avec succès",
-            "calendar_permanently_deleted": "Le calendrier a été supprimé"
+            "calendar_permanently_deleted": "Le calendrier a été supprimé",
+            "appointment_permanently_deleted": "Rendez-vous supprimé définitivement"
         },
         "somebody_is_organizer": "<strong>{{somebody}}</strong> est l'organisateur",
         "sure_to_delete_all_occurences_appointment": "Êtes-vous sûr de vouloir supprimer toutes les occurrences de ce rendez-vous ?",
