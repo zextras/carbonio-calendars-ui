@@ -21,7 +21,7 @@ import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
 import AppointmentReminder from './view/reminder/appointment-reminder';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
-import { getSettingsSubSections } from './settings/sub-sections'
+import { getSettingsSubSections } from './settings/sub-sections';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
