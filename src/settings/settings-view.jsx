@@ -26,7 +26,6 @@ import AppleICalSettings from './apple-ical-settings';
 import CreateAppSettings from './creating-app-settings-view';
 import PermissionSettings from './permissions-settings-view';
 import { differenceObject, validEmail } from './components/utils';
-import { settingsSubSections } from '../constants';
 import {
 	creatingAppointmentsSubSection,
 	generalSubSection,
@@ -453,7 +452,7 @@ export default function CalendarSettingsView() {
 							updateSettings={updateSettings}
 						/>
 					</FormSubSection>
-					<FormSubSection label={FormSubSection.label} id={sectionTitlePermissions.id}>
+					<FormSubSection label={sectionTitlePermissions.label} id={sectionTitlePermissions.id}>
 						<PermissionSettings
 							t={t}
 							activeFreeBusyOptn={activeFreeBusyOptn}
