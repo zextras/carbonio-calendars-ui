@@ -186,7 +186,7 @@
         "permissions": "Uprawnienia",
         "private": "Prywatny",
         "outlook_url": "adres URL Outlooka",
-        "of": "od",
+        "of": "z",
         "share": "Udostępnij",
         "timezone_pref_msg": "Terminy zależą od twoich preferencji stref czasowych.",
         "the": " "
@@ -208,7 +208,7 @@
         "delete_future_occurences": "Usuń ten i wszystkie przyszłe przypadki",
         "delete_future_occurences_warning": "Ta czynność usunie również wszystkie wyjątki (przed i po tym przypadku) w serii",
         "invited_you": "Zaprosił(a) Cię do wzięcia udziału w wydarzeniu",
-        "meeting_canceled": "Następne spotkanie zostało anulowane",
+        "meeting_canceled": "Następujące spotkanie zostało anulowane",
         "share_calendar_url_msg": "Możesz szybko udostępnić {{title}} swoim współpracownikom klikjąc na jeden z tych linków:",
         "share_calendar_url_note": "Tylko twoi współpracownicy mają dostęp do twoich danych przy użyciu tych linków.",
         "invite_has_no_message": "To zaproszenie nie zawiera tekstu",
