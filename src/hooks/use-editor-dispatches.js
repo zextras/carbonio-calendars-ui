@@ -14,6 +14,7 @@ import {
 	editAppointmentData,
 	editResourceData,
 	editAttendees,
+	editRoom,
 	editOptionalAttendees
 } from '../store/slices/editor-slice';
 import { proposeNewTime } from '../store/actions/propose-new-time';
@@ -182,6 +183,8 @@ export const useEditorDispatches = (id, isBoard = false) => {
 		[dispatch, id]
 	);
 
+	const onRoomChange = useCallback((data) => dispatch(editRoom({ id, data })), [dispatch, id]);
+
 	const onRecurrenceChange = useCallback(
 		(val) => dispatch(editResourceData({ id, mod: { recur: val } })),
 		[dispatch, id]
@@ -212,6 +215,7 @@ export const useEditorDispatches = (id, isBoard = false) => {
 		uploadAttachments,
 		onAttachmentsChange,
 		onRecurrenceChange,
+		onRoomChange,
 		closePanel,
 		onProposeNewTime
 	};

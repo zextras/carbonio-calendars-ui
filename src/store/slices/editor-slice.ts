@@ -13,6 +13,7 @@ import {
 	editAttendeesReducer,
 	editOptionalAttendeesReducer,
 	editResourceDataReducer,
+	editRoomReducer,
 	openEditorReducer
 } from '../reducers/editor-reducers';
 
@@ -28,6 +29,7 @@ export const editorSlice = createSlice({
 		editAppointmentData: editAppointmentDataReducer,
 		editResourceData: editResourceDataReducer,
 		editAttendees: editAttendeesReducer,
+		editRoom: editRoomReducer,
 		editOptionalAttendees: editOptionalAttendeesReducer,
 		closeEditor: closeEditorReducer,
 		openEditor: openEditorReducer
@@ -42,7 +44,7 @@ export const {
 	editAppointmentData,
 	editResourceData,
 	openEditor,
-	closeEditor,
+	editRoom,
 	editAttendees,
 	editOptionalAttendees
 } = editorSlice.actions;

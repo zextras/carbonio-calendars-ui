@@ -60,6 +60,8 @@ export default function EditorSmallView({
 	}, [title, setTitle, data, callbacks]);
 
 	const [ContactInput] = useIntegratedComponent('contact-input');
+	const [RoomSelector, isRoomAvailable] = useIntegratedComponent('room-selector');
+
 	const onDragOverEvent = (event) => {
 		event.preventDefault();
 		setDropZoneEnable(true);
@@ -271,7 +273,15 @@ export default function EditorSmallView({
 								onChange={callbacks.onLocationChange}
 								disabled={updateAppTime}
 							/>
-
+							{isRoomAvailable && (
+								<>
+									<Padding top="large" />
+									<RoomSelector
+										onChange={callbacks.onRoomChange}
+										defaultValue={data?.resource?.room}
+									/>
+								</>
+							)}
 							<Row width="fill" padding={{ top: 'large' }}>
 								<AttendeesContainer>
 									<ContactInput
