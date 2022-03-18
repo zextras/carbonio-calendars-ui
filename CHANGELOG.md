@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5-rc.13](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.12...v0.1.5-rc.13) (2022-03-18)
+
+
+### Features
+
+* settings enhancement ([feb967b](https://github.com/zextras/carbonio-calendars-ui/commit/feb967be6a80d9e1c49975c773b5572a68d2968f))
+* virtual room integration ([4dd9618](https://github.com/zextras/carbonio-calendars-ui/commit/4dd96186a6270cde7bf2ee00177bf465848818ea))
+
+
+### Bug Fixes
+
+* appointments not answered is shown as declined on grid ([6ba1f74](https://github.com/zextras/carbonio-calendars-ui/commit/6ba1f742664f4d5797d7b4d7b3ca6b98f3ac3db1))
+* share calendar broken issue with new created calendar ([0eba2fc](https://github.com/zextras/carbonio-calendars-ui/commit/0eba2fc147bbaad518bab16b207d04a8cd9663bc))
+* share calendar color change on edit and fix share issue ([45860c9](https://github.com/zextras/carbonio-calendars-ui/commit/45860c9ac5ebed6192d40a288fd5313306ed2bf8))
+* ui improvement of delete confirm dialog ([ead97c0](https://github.com/zextras/carbonio-calendars-ui/commit/ead97c033db5060989301918847b6d90f2e09480))
+
 ### [0.1.5-rc.12](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.11...v0.1.5-rc.12) (2022-02-24)
 
 
