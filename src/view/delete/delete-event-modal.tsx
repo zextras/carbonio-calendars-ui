@@ -34,13 +34,17 @@ export const DeleteEventModal = ({ event, onClose, isInstance }: any): ReactElem
 	});
 
 	return (
-		<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
+		<Container
+			mainAlignment="center"
+			crossAlignment="flex-start"
+			height="fit"
+			padding={{ top: 'small', right: 'small', bottom: 'extralarge', left: 'small' }}
+		>
 			{invite ? (
 				<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
 					<ModalHeader title={`${t('label.delete', 'Delete')} ${event.title}`} onClose={onClose} />
-					<Padding vertical="extrasmall" />
 					<Container
-						padding={{ vertical: 'large', horizontal: 'small' }}
+						padding={{ vertical: 'medium' }}
 						mainAlignment="baseline"
 						crossAlignment="baseline"
 					>

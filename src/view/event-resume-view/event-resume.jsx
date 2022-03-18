@@ -17,11 +17,11 @@ import { TimeInfoRow } from './time-info-row';
 export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispatch }) => (
 	<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
 		<Container padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }} width="400px">
-			<TitleRow event={event} />
+			<TitleRow event={event} invite={invite} />
 			<NeverSentWarningRow event={event} />
 			<CalendarInfoRow event={event} />
-			{event && <TimeInfoRow event={event} />}
-			{event && <LocationRow event={event} />}
+			{event && <TimeInfoRow event={event} showIcon />}
+			{event && <LocationRow event={event} showIcon />}
 			<ParticipantsRow event={event} invite={invite} />
 			<DescriptionFragmentRow event={event} />
 			<ActionsButtonsRow event={event} dispatch={dispatch} onClose={onClose} />

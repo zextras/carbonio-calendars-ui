@@ -10,11 +10,11 @@
     "label": {
         "cancel": "कैंसल करें",
         "attachment": "अटैचमेंट",
-        "attachment_plural": "",
+        "attachment_plural": "अटैचमेंट्स",
         "busy": "व्यस्त",
         "dismiss_capitalize": "छोड़ें",
         "download": "डाऊनलोड करें",
-        "download_plural": "",
+        "download_plural": "सभी डाऊनलोड करें",
         "edit": "बदलाव करें",
         "edit_share": "शेयर में बदलाव करें",
         "end": "समाप्त",
@@ -40,20 +40,20 @@
         "auto_add_rcvd_app": "आमंत्रण को कैलेंडर में स्वतः जोड़ें",
         "calendar": "कैलेंडर",
         "calendar_color": "कैलेंडर का रंग",
-        "calendar_setting": "कैलेंडर सेटिंग",
-        "cancelled": "रद्द",
-        "create_appt_settings": "समयादेश बनाएँ",
+        "calendar_setting": "Calendar सेटिंग",
+        "cancelled": "रद्द हुआ",
+        "create_appt_settings": "एपॉइंटमेंट बना रहे हैं",
         "create_new_calendar": "नया कैलेंडर बनाएँ",
         "custom_repeat": "अपने अनुकूल दोहराना",
         "days": "दिन",
         "default_appt_vsblty": "डिफ़ॉल्ट समयादेश दृश्यता",
         "default_view": "डिफ़ॉल्ट दृश्य",
-        "delete_permanently": "सदा के लिए मिटाएँ",
+        "delete_permanently": "हमेशा के लिए डिलीट करें",
         "invitation_not_sent": "आपने अभी तक आमंत्रण नहीं भेजा है",
         "every_year_on": "हर वर्ष",
-        "edit_access": "{{name}} के ऐक्सेस में संशोधन",
+        "edit_access": "{{name}} की एक्सेस में बदलाव करें",
         "edit_properties": "{{name}} के गुण में संशोधन",
-        "email_input_message": "ई-संदेश पता लिखें",
+        "email_input_message": "ई-एड्रेस एंटर करें",
         "enable_dlgtn_for_ical": "ऐपल आइकैल कैल्डैव के लिए प्रतिनिधित्व सक्रिय करें",
         "end_after": "अंत करें",
         "end_date": "अंत की तिथि",
@@ -61,7 +61,7 @@
         "every": "हर",
         "every_day": "हर दिन",
         "every_weekday": "हर कार्य-दिवस",
-        "filter_sharer_user": "साझाकर्ता को फ़िल्टर करें",
+        "filter_sharer_user": "Foldar ओनर",
         "find_shares": "कैलेंडर वृक्ष में प्रदर्शित कैलेंडर का चयन",
         "free_busy": "ख़ाली/व्यस्त",
         "from": "प्रेषक",
@@ -91,7 +91,7 @@
         "resend": "दोबारा भेजें",
         "restore_calednar": "कैलेंडर वापस लाएँ",
         "revoke": "बंद करें",
-        "revoke_share": "{{title}} का साझा वापस लें",
+        "revoke_share": "{{title}} का शेयर वापस लें",
         "series": "क्रम",
         "share_calendar_url": "{{title}} ऐक्सेस शेयर",
         "shares_items": "{{value}} के सहभाजी कैलेंडर",
@@ -99,7 +99,7 @@
         "show_plural": "सभी दिखाएं",
         "show_declined_meetings": "अस्वीकृत मीटिंग दिखाएं",
         "start_date": "प्रारम्भ तिथि",
-        "dismiss": "ख़ारिज करना",
+        "dismiss": "ख़ारिज करें",
         "dismiss_plural": "सब ख़ारिज करें",
         "display": "प्रदर्शित करना",
         "set_new_time": "नया समय रखें",
@@ -121,10 +121,38 @@
             "tuesday": "मंगलवार",
             "wednesday": "बुधवार"
         },
-        "weeks_on": "हफ्ते",
+        "weeks_on": "हफ्ता (ते)",
         "work_hour": "काम घंटा",
         "work_week": "कार्य सप्ताह",
-        "your_pref_timezone_msg": "आपका पसंदीदा टाइमज़ोन है: GMT +1.00 एम्स्टर्डैम, बर्लिन, बर्न, रॉम,स्टॉकहोम, विएना।"
+        "your_pref_timezone_msg": "आपका पसंदीदा टाइमज़ोन है: GMT +1.00 एम्स्टर्डैम, बर्लिन, बर्न, रोम,स्टॉकहोम, विएना।",
+        "snooze": "विलंबित करना",
+        "create": "बनाएँ",
+        "edits_saved": "बदलाव ठीक से सेव हो गए",
+        "empty": "रिक्त",
+        "move": "ले जाएँ",
+        "new_calendar": "नया कैलेंडर",
+        "restore": "वापस लाएँ",
+        "delete": "डिलीट करें",
+        "delete_plural": "सभी डिलीट करें",
+        "error_try_again": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
+        "none": "कोई नहीं",
+        "of_every_month": "महीने के हर",
+        "ok": "ठीक है",
+        "restore_calendar": "कैलेंडर वापस लाएँ",
+        "results_for": "इसके नतीजे:",
+        "start_week_on": "इस दिन से सप्ताह का प्रारम्भ करें",
+        "undo": "अनडू करें",
+        "discard_changes": "बदलाव रद्द करें",
+        "access_revoked": "एक्सेस बंद की गई",
+        "calendar_shared": "Calendar शेयर किया गया",
+        "changes_saved": "बदलाव सेव किए गए",
+        "event_title": "घटना का शीर्षक",
+        "on_behalf_of": "{{identitiy}} के लिए {{accountName}} <{{otherAccount}}>",
+        "settings_saved": "सेटिंग्स सेव की गईं",
+        "trash_emptied": "रद्दी खाली किया गया",
+        "delete_instance": "क्या आप वाकई में \"{title}\" एपाइंटमेंट की इस घटना को डिलीट करना चाहते हैं?",
+        "appt_reminder": "एपाइंटमेंट रिमांइंडर",
+        "appt_reminder_plural": "एपाइंटमेंट के रिमांइंडर"
     },
     "action": {
         "delete": "डिलीट करें",
@@ -138,12 +166,13 @@
         "preview": "दूसरे टैब में झलक देखने के लिए क्लिक करें",
         "new_calendar": "नया कैलेंडर",
         "send_cancellation": "रद्द करने के लिए भेजें",
-        "calendar_access_share": "कैलेंडर ऐक्सेस शेयर",
+        "calendar_access_share": "Calendar की ऐक्सेस शेयर",
         "delete_permanently": "सदा के लिए मिटाएँ",
         "edit_calendar_properties": "कैलेंडर प्रॉपर्टी संशोधन",
         "edit_message": "संदेश संशोधन",
         "move_to_root": "मूल पर ले जाएँ",
-        "share_calendar": "कैलेंडर साझा करें"
+        "share_calendar": "कैलेंडर साझा करें",
+        "empty_trash_confirmation": "ऐसा करने से आपकी ईमेल, Contacts, Calendar, Tasks और Briefcase के रद्दी फोल्डरों के सभी आइटम डिलीट हो जाएंगे। क्या आप वाकई में इन रद्दी फोल्डरों की हर चीज जो परमानेंट डिलीट करना चाहते हैं?"
     },
     "message": {
         "you": "आप",
@@ -169,10 +198,12 @@
             "invite": {
                 "accept": "आपने स्वीकार किया है जबाब दिया है",
                 "error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें।",
-                "tentative": "आपने जबाब दिया: संभावित",
-                "decline": "आपने जबाब दिया: अस्वीकार"
+                "tentative": "आपने संभावित जबाब दिया",
+                "decline": "आपने अस्वीकार जबाब दिया"
             },
-            "new_calendar_created": "नया कैलेंडर बन गया"
+            "new_calendar_created": "नया कैलेंडर बन गया",
+            "calendar_permanently_deleted": "Calendar परमानेंट डिलीट कर दिया गया",
+            "calendar_restored": "Calendar वापस लाया गया"
         },
         "somebody_is_organizer": "ऑर्गनाइज़र <strong>{{somebody}}</strong> है",
         "are_organizer": "वाक्य इस तरह से माना जाएगा मानो आप ऑर्गनाइज़र हों",
@@ -199,8 +230,9 @@
         "you_are_organizer": "ऑर्गनाइज़र आप हैं",
         "you_sure_move_calendar_trash": "क्या आप वाकई में \"{{name}}\"कैलेंडर को डिलीट करना चाहते हैं?",
         "you_sure_delete_calendar": "क्या आप वाकई में \"{{name}}\"कैलेंडर को परमानेंट डिलीट करना चाहते हैं?",
-        "you_will_see_the_subject_here": "आपको एपाइंटमेंट का सबजेक्ट यहाँ दिखेगा",
-        "sure_to_delete_all_occurences_appointment": "क्या आप वाकई में इस एपाइंटमेंट के भविष्य में आने को पूरा डिलीट करना चाहते हैं?"
+        "you_will_see_the_subject_here": "विषय",
+        "sure_to_delete_all_occurences_appointment": "क्या आप वाकई में इस एपाइंटमेंट के भविष्य में आने को पूरा डिलीट करना चाहते हैं?",
+        "you_sure_delete_instance": "क्या आप वाकई में \"{{title}}\" एपाइंटमेंट की इस घटना को डिलीट करना चाहते हैं?"
     },
     "create": "बनाएँ",
     "delete": "डिलीट करें",
@@ -235,7 +267,7 @@
                 },
                 "footer": "रिक्त",
                 "input": {
-                    "filter": "कैलेंडरों की छटनी करें"
+                    "filter": "कैलेंडरों को फिल्टर करें"
                 },
                 "new": "नया कैलेंडर"
             },
@@ -246,7 +278,7 @@
                 "empty": "रिक्त"
             },
             "new": {
-                "duplicate_warning": "इसी नाम का एक और कैलेंडर पहले से ही है",
+                "duplicate_warning": "इसी नाम का कैलेंडर पहले से ही है",
                 "footer": "बनाएँ",
                 "title2": "नए कैलेंडर की रचना"
             }
@@ -280,7 +312,11 @@
         "minute_before": "{{count}} मिनट पहले",
         "minute_before_plural": "{{count}} मिनट पहले",
         "week_before": "{{count}} सप्ताह पहले",
-        "week_before_plural": "{{count}} सप्ताह पहले"
+        "week_before_plural": "{{count}} सप्ताह पहले",
+        "all_time": "ईवेंट के पूरे टाइम पर",
+        "modal": {
+            "set_new_time_message": "क्या आप मिस हो चुके एपोइंटमेंट के लिए कोई नया टाइम सेट करना चाहते हैं? यदि आप ठीक है पर क्लिक करेंगे तो दूसरे सभी रिमाइन्डर अपने-आप डिसमिस हो जाएंगे।"
+        }
     },
     "repeat": {
         "custom": "कस्टम",
@@ -330,8 +366,8 @@
                 "allow_internal": "सिर्फ आंतरिक यूज़रों को मुझे मीटिंगों में इन्वाइट करने दें"
             },
             "timezones": {
-                "amsterdam": "GMT +01:00 एम्स्टर्डैम,बर्लिन,बर्न,रॉम,स्टॉकहोम,विएना",
-                "chennai": "GMT +05:30 चेन्नई,कोलकाता,मुंबई,नई दिल्ली",
+                "amsterdam": "GMT +01:00 एम्स्टर्डैम, बर्लिन, बर्न, रोम, स्टॉकहोम, विएना",
+                "chennai": "GMT +05:30 चेन्नई, कोलकाता, मुंबई, नई दिल्ली",
                 "egypt": "GMT +02:00 मिस्र"
             },
             "default_view": {
@@ -351,7 +387,7 @@
                 "wednesday": "बुधवार"
             }
         },
-        "invalid_email": "एक मान्य ईमेल नहीं है",
+        "invalid_email": "एक मान्य ई-मेल नहीं है",
         "label": {
             "default_appt_dur": "एपाइंटमेंट की डिफ़ाल्ट अवधि",
             "forward_invites": "इन्वाइट फॉरवर्ड करें",
@@ -368,7 +404,7 @@
             "show_reminders": "रिमाइन्डर दिखाएँ",
             "show_timezones": "नया एपाइंटमेंट बनाते समय टाइम-ज़ोन दिखाएँ"
         },
-        "ical_note": "Apple iCal को आपके कैलेंडर में एक्सेस के लिए CalDAV प्रोटोकॉल का इस्तेमाल करके कॉन्फ़िगर किया जा सकता है। जब यह प्रेफेरेंस बंद हो तो शेयर किए कैलेंडर ical अकाउंट की Deligation टैब में दिखते हैं ताकि आप अपने कैलेंडर की एक्सेस दूसरे यूज़र्स को दे सकें।",
+        "ical_note": "Apple iCal को आपके कैलेंडर में एक्सेस के लिए CalDAV प्रोटोकॉल का इस्तेमाल करके कॉन्फ़िगर किया जा सकता है। जब यह प्रेफेरेंस बंद हो तो शेयर किए कैलेंडर ical अकाउंट की Delegation टैब में दिखते हैं ताकि आप अपने कैलेंडर की एक्सेस दूसरे यूज़र्स को दे सकें।",
         "permissions_note": "ये यूज़र इस ईमेल सिस्टम में होने चाहिए (zextras.com). आप पूरा ईमेल एड्रेस इस्तेमाल कर सकते हैं या सिर्फ यूज़रनेम।"
     },
     "share": {
@@ -376,7 +412,7 @@
             "share_calendar_role": {
                 "none": "कोई नहीं",
                 "admin": "एडमिन (देख,बदल,जोड़,हटा और एडमिनिस्टर कर सकता है)",
-                "manager": "मैनेजर (देख,बदल,जोड़ और हटा सकता है)",
+                "manager": "मैनेजर (देख, बदल, जोड़ और हटा सकता है)",
                 "viewer": "व्यूअर (देख सकता है)"
             },
             "share_calendar_with": {
@@ -403,11 +439,12 @@
         },
         "error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
         "new_time_proposed_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
-        "share_folder_success": "कैलेंडर शेयर किया गया",
+        "share_folder_success": "Calendar शेयर हो गया",
         "new_time_proposed_succes": "नया टाइम दिया गया",
         "proposed_time_accepted": "आपने दिए टाइम को स्वीकार कर लिया",
         "proposed_time_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
-        "url_copied": "{{title}} कॉपी किया गया"
+        "url_copied": "{{title}} कॉपी किया गया",
+        "new_time_proposed_success": "नया टाइम दिया गया"
     },
     "success": "सफलता",
     "type": "टाइप करें",
@@ -426,23 +463,23 @@
     "participants": {
         "Accepted": "स्वीकार्य",
         "NE_with_count": "संभावित",
-        "NE_with_count_plural": "",
+        "NE_with_count_plural": "संभावित {{count}}",
         "TE_with_count": "अस्वीकृत",
-        "TE_with_count_plural": "",
+        "TE_with_count_plural": "अस्वीकृत {{count}}",
         "Declined": "अस्वीकृत",
-        "DE_with_count": "जबाब नहीं दिया (1)",
-        "DE_with_count_plural": "जबाब नहीं दिया ({{count}})",
+        "DE_with_count": "({{count}}) ने जबाब नहीं दिया",
+        "DE_with_count_plural": "({{count}}) ने जबाब नहीं दिया",
         "Tentative": "सभावित है के साथ स्वीकार किया",
         "AC_with_count": "स्वीकार किया गया",
         "AC_with_count_plural": "{count}}) स्वीकार किए गए",
-        "Attendees_accepted_count": "<strong>1 व्यक्ति </strong> ने स्वीकार किया",
-        "Attendees_accepted_count_plural": "<strong>{{count}} व्यक्तियों </strong> ने स्वीकार किया",
-        "Attendees_declined_count": "<strong>1 व्यक्ति</strong> ने अस्वीकार कर दिया",
-        "Attendees_declined_count_plural": "<strong>{{count}} व्यक्तियों </strong> ने अस्वीकार कर दिया",
-        "Attendees_not_answered_count": "<strong>1 व्यक्ति</strong> ने जबाब नहीं दिया",
-        "Attendees_not_answered_count_plural": "<strong>{{count}} व्यक्तियों </strong> ने जबाब नहीं दिया",
-        "Attendees_tentative_count": "<strong>1 व्यक्ति </strong> ने जबाब दिया कि संभावित है",
-        "Attendees_tentative_count_plural": "<strong>{{count}} व्यक्तियों </strong> ने जबाब दिया कि संभावित है",
+        "Attendees_accepted_count": "<strong>{{count}} अटेंड करने वाले</strong> ने स्वीकार किया",
+        "Attendees_accepted_count_plural": "<strong>{{count}} अटेंड करने वालों</strong> ने स्वीकार किया",
+        "Attendees_declined_count": "<strong>{{count}} अटेंड करने वाले व्यक्ति</strong> ने अस्वीकार कर दिया",
+        "Attendees_declined_count_plural": "<strong>{{count}} अटेंड करने वाले व्यक्तियों</strong> ने अस्वीकार कर दिया",
+        "Attendees_not_answered_count": "<strong>{{count}} अटेंड करने वाले व्यक्ति </strong> ने जबाब नहीं दिया",
+        "Attendees_not_answered_count_plural": "<strong>{{count}} अटेंड करने वाले व्यक्तियों </strong> ने जबाब नहीं दिया",
+        "Attendees_tentative_count": "<strong>{{count}} अटेंड करने वाले व्यक्ति</strong> ने जबाब दिया कि संभावित है",
+        "Attendees_tentative_count_plural": "<strong>{{count}} अटेंड करने वाले व्यक्तियों</strong> ने जबाब दिया कि संभावित है",
         "Invited_Visitor": "को इन्वाइट किया गया है",
         "Not_answered": "जबाब नहीं दिया",
         "visitors": "और दूसरे {{others}} व्यक्ति"
@@ -457,7 +494,7 @@
             "drive": "ड्राइव से लाएँ",
             "contactsMod": "सम्पर्क कार्ड बनाएँ",
             "draganddrop": {
-                "content": "आपके अटैचमेंट यहाँ गिराएं समयादेश में लगाने के लिए",
+                "content": "आपके अटैचमेंट जल्दी से एपाइंटमेंट में जोड़ने के लिए उन्हें यहाँ ड्रॉप करें",
                 "title": "उठा के गिराएं"
             },
             "local": "लोकल से लगाएँ"
@@ -484,7 +521,7 @@
         "show_optionals": "वैकल्पिक दिखाएं"
     },
     "remove_from_this_list": "इस लिस्ट से हटाएँ",
-    "resend_mail_notification_about_this_share": "इस शेयर के बारे में मेल नोटिफिकेशन भेजें",
+    "resend_mail_notification_about_this_share": "इस शेयर के बारे में ई-मेल नोटिफिकेशन भेजें",
     "revoke_access": "एक्सेस रद्द करें",
     "revoke_with_custom_message": "एक कस्टम नोटिफिकेशन भेजकर एक्सेस बंद करें",
     "revoke_without_custom_message": "एक स्टैंडर्ड नोटिफिकेशन भेजकर एक्सेस बंद करें",
@@ -493,5 +530,104 @@
     "share_invite_resent": "शेयर इन्वाइट भेजा गया",
     "shared_folders": "शेयर किए कैलेंडर",
     "shared_items": "शेयर किए आइटम",
-    "shares_info": "शेयर की जानकारी"
+    "shares_info": "शेयर की जानकारी",
+    "placeholder": {
+        "organizer": "आयोजक"
+    },
+    "appt_restored_successfully": "एपाइंटमेंट वापस लाया गया",
+    "has_attachments": "अटैचमेंट हैं",
+    "is_private": "प्राइवेट है",
+    "is_recurrent": "बार-बार आता है",
+    "messages": {
+        "format_as_plain_text": "प्लेन टेक्स्ट में फॉर्मेट करें"
+    },
+    "timezone": {
+        "chennai_kolkata_mumbai_new_delhi": "{{value}} चेन्नई, कोलकाता, मुंबई, नई दिल्ली",
+        "coordinated_universal_time": "{{value}} कोओर्डिनेटेड यूनिवर्सल टाईम",
+        "ekaterinburg_rtz_4": "{{value}} इकाटेरिनबर्ग (RTZ 4)",
+        "georgetown_la_paz_manaus_san_juan": "{{value}} जॉर्जटाउन, ला पाज़, मानाउस, सान हुआन",
+        "helsinki_kyiv_riga_sofia_tallinn_vilnius": "{{value}} हेलसिंकी, कीव, रीगा, सोफिया, तालिन, विलनियस",
+        "korea": "{{value}} कोरिया",
+        "magadan": "{{value}} मागाडान",
+        "monrovia": "{{value}} मोनरोविया",
+        "moscow_st_petersburg_volgograd_rtz_2": "{{value}} मॉस्को, सेंट पीटर्सबर्ग, वोल्गोग्राद (RTZ 2)",
+        "pyongyang": "{{value}} प्योंगयांग",
+        "sri_jayawardenepura_kotte": "{{value}} श्री जयवर्दनेपुरा कोटे",
+        "us_canada_mountain": "{{value}} यूएस/कनाडा माउंटेन",
+        "west_central_africa": "{{value}} पश्चिमी मध्य अफ्रीका",
+        "abu_dhabi_muscat": "{{value}} आबू धाबी, मस्कट",
+        "alaska": "{{value}} अलास्का",
+        "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} एनाडीर, पेट्रोपावलोव्स्क-कामचैट्सकी (RTZ 11)",
+        "argentina": "{{value}} अर्जेंटीना",
+        "arizona": "{{value}} एरिज़ोना",
+        "asuncion": "{{value}} असंशियन",
+        "athens_beirut_bucharest_istanbul": "{{value}} एथेंस, बेरूत, बुखारेस्ट, इस्तांबुल",
+        "atlantic_time_canada": "{{value}} एटलांटिक टाइम (कनाडा)",
+        "azores": "{{value}} अज़ोरेस",
+        "baja_california": "{{value}} बाहा कैलिफोर्निया",
+        "baku": "{{value}} बाकू",
+        "bangkok_hanoi_jakarta": "{{value}} बैंकॉक, हनोई, जकार्ता",
+        "beijing_chongqing_hong_kong_urumqi": "{{value}} बीजिंग, चोंगकिंग, हाँग काँग, उरुमक़ी",
+        "beirut": "{{value}} बेरूत",
+        "belgrade_bratislava_budapest_ljubljana_prague": "{{value}} बेलग्रेड, ब्रातीस्लावा, बुडापेस्ट, ल्यूब्याना, प्राग",
+        "brasilia": "{{value}} ब्राज़ीलिया",
+        "britain_ireland_portugal": "{{value}} बर्लिन, आयरलैंड, पुर्तगाल",
+        "cape_verde_is": "{{value}} केप वर्ड आइलैंड.",
+        "caracas": "{{value}} काराकास",
+        "casablanca": "{{value}} कासाब्लांका",
+        "cayenne_fortaleza": "{{value}} केन, फ़ोर्टालेज़ा",
+        "central_america": "{{value}} मध्य अमेरिका",
+        "chihuahua_la_paz_mazatlan": "{{value}} चुआऊआ, ला पाज़, मज़ाटलन",
+        "chita": "{{value}} चीता",
+        "christmas_island": "{{value}} क्रिसमस आईलैंड",
+        "colombia": "{{value}} कोलम्बिया",
+        "cuiaba": "{{value}} कुयाबा",
+        "darwin": "{{value}} डार्विन",
+        "damascus": "{{value}} दमश्क",
+        "dateline": "{{value}} डेटलाइन",
+        "dhaka": "{{value}} ढाका",
+        "egypt": "{{value}} मिस्र",
+        "eucla": "{{value}} इयूक्ला",
+        "gmt_02": "{{value}} जीएमटी -02",
+        "gmt_11": "{{value}} जीएमटी -11",
+        "greenland": "{{value}} ग्रीनलैंड",
+        "harare_pretoria": "{{value}} हरारे, प्रिटोरिया",
+        "hawaii": "{{value}} हवाई",
+        "indiana_east": "{{value}} इंडियाना (ईस्ट)",
+        "irkutsk_rtz_7": "{{value}} इर्कुत्स्क (RTZ 7)",
+        "istanbul": "{{value}} इस्तांबुल",
+        "jerusalem": "{{value}} येरूसलम",
+        "jordan": "{{value}} जॉर्डन",
+        "kabul": "{{value}} काबुल",
+        "kaliningrad_rtz_1": "{{value}} कालीनीनग्राद (RTZ 1)",
+        "kathmandu": "{{value}} काठमांडू",
+        "krasnoyarsk_rtz_6": "{{value}} क्रास्नोयार्स्क (RTZ 6)",
+        "kuwait_riyadh": "{{value}} कुवैत, रियाध",
+        "la_paz": "{{value}} ला पाज़",
+        "manaus": "{{value}} मानाउस",
+        "mid_atlantic": "{{value}} मध्य-एटलांटिक",
+        "minsk": "{{value}} मिंस्क",
+        "montevideo": "{{value}} मोंटेविडियो",
+        "nairobi": "{{value}} नैरोबी",
+        "namibia": "{{value}} नामीबिया",
+        "newfoundland": "{{value}} न्यूफाउंडलैंड",
+        "nuku_alofa": "{{value}} नुकुआलोफ़ा",
+        "pacific_south_america": "{{value}} प्रशांत दक्षिण अमेरिका",
+        "port_louis": "{{value}} पोर्ट लूई",
+        "samoa": "{{value}} सामोआ",
+        "sarajevo_skopje_warsaw_zagreb": "{{value}} साराएवो, स्कोप्ये, वारसॉ, ज़ाग्रेब",
+        "saskatchewan": "{{value}} सस्काट्चेवान",
+        "tbilisi": "{{value}} त्बिलिसी",
+        "tehran": "{{value}} तेहरान",
+        "iraq": "{{value}} इराक़",
+        "us_canada_central": "{{value}} यूएस/कनाडा सेंट्रल",
+        "us_canada_eastern": "{{value}} यूएस/कनाडा ईस्टर्न",
+        "us_canada_pacific": "{{value}} यूएस/कनाडा पैसिफिक",
+        "vladivostok_magadan": "{{value}} व्लादिवोस्तोक_मागादान_rtz_9",
+        "yangon": "{{value}} यांगोन",
+        "yerevan": "{{value}} येरेवान",
+        "amsterdam_berlin_bern_rome_stockholm_vienna": "{{value}} एम्स्टर्डैम, बर्लिन, बर्न, रॉम, स्टॉकहोम, विएना",
+        "brussels_copenhagen_madrid_paris ": "{{value}} ब्रूसेल्स, कोपेनहागेन, मैड्रिड, पेरिस",
+        "guadalajara_mexico_city_monterrey ": "{{value}} गुआदलहारा, मेक्सिको सिटी, मोंटेर्री"
+    }
 }

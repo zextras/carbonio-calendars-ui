@@ -185,7 +185,7 @@ const ParticipantsDisplayerSmall = ({ participants = [], event }) => {
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
 			width="fill"
-			padding={{ horizontal: 'medium', top: 'extrasmall' }}
+			padding={{ horizontal: 'medium' }}
 			takeAvailableSpace
 		>
 			{!event?.resource?.iAmOrganizer && event?.resource?.calendar?.owner ? (
@@ -268,6 +268,7 @@ const ParticipantsDisplayerSmall = ({ participants = [], event }) => {
 const ParticipantsPartSmall = ({ event, organizer, participants }) => {
 	const [t] = useTranslation();
 	const accounts = useUserAccounts();
+
 	return (
 		<Container
 			orientation="vertical"
@@ -275,7 +276,7 @@ const ParticipantsPartSmall = ({ event, organizer, participants }) => {
 			crossAlignment="flex-start"
 			width="fill"
 			height="fit"
-			padding={{ horizontal: 'small', bottom: 'extrasmall' }}
+			padding={{ top: 'small' }}
 		>
 			{event?.resource?.iAmOrganizer && (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">

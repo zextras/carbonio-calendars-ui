@@ -159,11 +159,11 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 				};
 			default:
 				return {
-					id: 'option_1',
-					icon: 'CloseCircle',
-					label: toUpper(t('event.action.no', 'No')),
+					id: 'option_4',
+					icon: 'CalendarWarning',
+					label: toUpper(t('event.action.needs_action', 'Needs action')),
 					value: 'NE',
-					color: 'error'
+					color: 'primary'
 				};
 		}
 	};

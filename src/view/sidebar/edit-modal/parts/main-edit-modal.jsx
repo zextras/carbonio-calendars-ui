@@ -152,9 +152,8 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 		() => find(colors, { label: folder?.color?.label }),
 		[colors, folder]
 	);
-	const [selectedColor, setSelectedColor] = useState(defaultColor[0]?.value || 0);
+	const [selectedColor, setSelectedColor] = useState(defaultColor?.value || 0);
 	const defaultChecked = useMemo(() => folder?.freeBusy || false, [folder]);
-
 	const onConfirm = () => {
 		if (inputValue) {
 			dispatch(
@@ -166,7 +165,8 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 						name: inputValue,
 						color: selectedColor,
 						excludeFreeBusy: freeBusy,
-						checked
+						checked,
+						grant: folder.acl?.grant
 					}
 				})
 			).then((res) => {
