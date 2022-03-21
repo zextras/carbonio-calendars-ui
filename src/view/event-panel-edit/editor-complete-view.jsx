@@ -472,7 +472,7 @@ export default function EditorCompleteView({
 						) : (
 							<TextArea
 								placeholder={textAreaLabel}
-								value={data.resource.plainText}
+								defaultValue={data.resource.plainText}
 								onChange={(ev) => {
 									// eslint-disable-next-line no-param-reassign
 									ev.target.style.height = 'auto';
