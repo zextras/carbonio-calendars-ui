@@ -11,7 +11,7 @@ import { linkValidationRegEx, roomValidationRegEx } from '../constants/integrati
 import { ZimbraFolder } from '../types/zimbra';
 
 export const getRoomFromLocation = (
-	location: string
+	location = ''
 ): { link: string | undefined; label: string | undefined } | undefined => {
 	const roomMatch = location.match(roomValidationRegEx);
 	const linkMatch = location.match(linkValidationRegEx);
@@ -20,7 +20,7 @@ export const getRoomFromLocation = (
 		: undefined;
 };
 
-export const stripRoomFromLocation = (location: string): string | undefined => {
+export const stripRoomFromLocation = (location = ''): string | undefined => {
 	const roomMatch = location.match(roomValidationRegEx);
 	const linkMatch = location.match(linkValidationRegEx);
 
