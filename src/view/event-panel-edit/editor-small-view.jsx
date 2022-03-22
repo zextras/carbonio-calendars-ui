@@ -3,14 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, {
-	useCallback,
-	useContext,
-	useLayoutEffect,
-	useMemo,
-	useState,
-	useEffect
-} from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
 	Checkbox,
@@ -21,7 +14,7 @@ import {
 	Select,
 	Text
 } from '@zextras/carbonio-design-system';
-import { map, throttle, find, filter, flatten, findIndex } from 'lodash';
+import { map, find, filter, flatten, findIndex } from 'lodash';
 import {
 	useUserAccount,
 	useIntegratedComponent,
@@ -393,7 +386,7 @@ export default function EditorSmallView({
 								) : (
 									<TextArea
 										placeholder={textAreaLabel}
-										value={data.resource.plainText}
+										defaultValue={data.resource.plainText}
 										onChange={(ev) => {
 											// eslint-disable-next-line no-param-reassign
 											ev.target.style.height = 'auto';
