@@ -19,10 +19,10 @@ export const useOnSaveAndOnSend = (id, isBoard) => {
 	const editor = useSelector((state) => selectEditor(state, id));
 
 	const saveAppointment = useCallback(
-		() =>
+		(data) =>
 			startsWith(editor?.resource?.id, 'new')
-				? createAppointment({ editor, account })
-				: modifyAppointment({ editor, account }),
+				? createAppointment({ editor: data, account })
+				: modifyAppointment({ editor: data, account }),
 		[account, editor]
 	);
 
@@ -33,16 +33,16 @@ export const useOnSaveAndOnSend = (id, isBoard) => {
 	const onSave = useCallback(() => {
 		dispatch(editAppointmentData({ id, mod: { resource: { draft: true } } }));
 		closePanel();
-		dispatch(saveAppointment());
-	}, [closePanel, dispatch, id, saveAppointment]);
+		dispatch(saveAppointment({ ...editor, resource: { ...editor.resource, draft: true } }));
+	}, [closePanel, dispatch, id, saveAppointment, editor]);
 
 	const onSend = useCallback(() => {
 		dispatch(
 			editAppointmentData({ id, mod: { resource: { draft: false, inviteNeverSent: false } } })
 		);
-		dispatch(saveAppointment());
+		dispatch(saveAppointment({ ...editor, resource: { ...editor.resource, draft: false } }));
 		closePanel();
-	}, [closePanel, dispatch, id, saveAppointment]);
+	}, [closePanel, dispatch, id, saveAppointment, editor]);
 
 	return {
 		onSave,
