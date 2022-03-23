@@ -5,7 +5,7 @@
  */
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { Avatar, Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 
@@ -176,7 +176,7 @@ const Component = ({ label, participants = [], width, message, event, pt, logged
 const ParticipantsDisplayerSmall = ({ participants = [], event }) => {
 	const [t] = useTranslation();
 	const pt = calculateSize(participants);
-	const loggedInUser = useUserAccounts()[0];
+	const loggedInUser = useUserAccount();
 	if (Object.keys(participants).length === 0) return null;
 	return (
 		<Container
@@ -267,7 +267,7 @@ const ParticipantsDisplayerSmall = ({ participants = [], event }) => {
 
 const ParticipantsPartSmall = ({ event, organizer, participants }) => {
 	const [t] = useTranslation();
-	const accounts = useUserAccounts();
+	const account = useUserAccount();
 
 	return (
 		<Container
@@ -278,10 +278,15 @@ const ParticipantsPartSmall = ({ event, organizer, participants }) => {
 			height="fit"
 			padding={{ top: 'small' }}
 		>
-			{event?.resource?.iAmOrganizer && (
-				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
+			{event?.resource?.organizer?.email === account.name && (
+				<Row
+					mainAlignment="flex-start"
+					crossAlignment="center"
+					width="fill"
+					padding={{ bottom: 'medium' }}
+				>
 					<Padding right="small">
-						<Avatar size="small" label={accounts[0].name || accounts[0].displayName} />
+						<Avatar size="small" label={account.name || account.displayName} />
 					</Padding>
 
 					<Text overflow="break-word" weight="bold">
@@ -291,7 +296,12 @@ const ParticipantsPartSmall = ({ event, organizer, participants }) => {
 				</Row>
 			)}
 			{event?.resource?.iAmAttendee && (
-				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
+				<Row
+					mainAlignment="flex-start"
+					crossAlignment="center"
+					width="fill"
+					padding={{ bottom: 'medium' }}
+				>
 					<Padding right="small">
 						<Avatar size="small" label={organizer.name || organizer.email} />
 					</Padding>
@@ -304,8 +314,13 @@ const ParticipantsPartSmall = ({ event, organizer, participants }) => {
 					</Text>
 				</Row>
 			)}
-			{event?.resource?.iAmVisitor && (
-				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
+			{event?.resource?.organizer?.email !== account.name && !event?.resource?.iAmAttendee && (
+				<Row
+					mainAlignment="flex-start"
+					crossAlignment="center"
+					width="fill"
+					padding={{ bottom: 'medium' }}
+				>
 					<Padding right="small">
 						<Avatar size="small" label={organizer.name || organizer.email} />
 					</Padding>
