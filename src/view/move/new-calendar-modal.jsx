@@ -224,7 +224,10 @@ export const NewModal = ({
 			<Checkbox
 				value={freeBusy}
 				onClick={toggleFreeBusy}
-				label="Exclude this calendar when reporting the free/busy times"
+				label={t(
+					'label.exclude_free_busy',
+					'Exclude this calendar when reporting the free/busy times'
+				)}
 			/>
 			<ModalFooter
 				onConfirm={onConfirm}

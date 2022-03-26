@@ -113,9 +113,21 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				height="fit"
 				padding={{ top: 'medium' }}
 			>
-				<Button type="outlined" label="YES" icon="Checkmark" color="success" onClick={accept} />
+				<Button
+					type="outlined"
+					label={t('event.action.yes', 'yes')}
+					icon="Checkmark"
+					color="success"
+					onClick={accept}
+				/>
 				<Padding horizontal="small" />
-				<Button type="outlined" label="NO" icon="Close" color="error" onClick={decline} />
+				<Button
+					type="outlined"
+					label={t('event.action.no', 'no')}
+					icon="Close"
+					color="error"
+					onClick={decline}
+				/>
 			</Container>
 		</>
 	);

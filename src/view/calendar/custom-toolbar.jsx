@@ -5,6 +5,7 @@
  */
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import { Container, Button, IconButton } from '@zextras/carbonio-design-system';
 
 const MultiButton = styled(Button)`
@@ -24,6 +25,7 @@ const MultiButton = styled(Button)`
 `;
 
 export default function CustomToolbar({ label, onView, onNavigate, view }) {
+	const [t] = useTranslation();
 	const today = useCallback(() => onNavigate('TODAY'), [onNavigate]);
 	const next = useCallback(() => onNavigate('NEXT'), [onNavigate]);
 	const prev = useCallback(() => onNavigate('PREV'), [onNavigate]);
@@ -43,7 +45,7 @@ export default function CustomToolbar({ label, onView, onNavigate, view }) {
 				padding={{ horizontal: 'small' }}
 			>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-start">
-					<Button label="Today" type="outlined" onClick={today} />
+					<Button label={t('label.today', 'today')} type="outlined" onClick={today} />
 				</Container>
 				<Container orientation="horizontal" width="100%">
 					<IconButton iconColor="primary" icon="ChevronLeft" onClick={prev} />
@@ -53,25 +55,25 @@ export default function CustomToolbar({ label, onView, onNavigate, view }) {
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
 					<MultiButton
 						backgroundColor={view === 'month' ? 'highlight' : null}
-						label="Month"
+						label={t('label.month', 'month')}
 						type="outlined"
 						onClick={month}
 					/>
 					<MultiButton
 						backgroundColor={view === 'week' ? 'highlight' : null}
-						label="Week"
+						label={t('label.week', 'week')}
 						type="outlined"
 						onClick={week}
 					/>
 					<MultiButton
 						backgroundColor={view === 'day' ? 'highlight' : null}
-						label="Day"
+						label={t('label.day', 'day')}
 						type="outlined"
 						onClick={day}
 					/>
 					<MultiButton
 						backgroundColor={view === 'work_week' ? 'highlight' : null}
-						label="Work Week"
+						label={t('label.work_week', 'work week')}
 						type="outlined"
 						onClick={workView}
 					/>
