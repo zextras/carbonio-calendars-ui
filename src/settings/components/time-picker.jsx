@@ -6,6 +6,7 @@
 import React from 'react';
 import momentLocalizer from 'react-widgets-moment';
 import { Container } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
 import Styler from './date-picker-style';
 // import EndDatePicker from './end-date-picker';
 import StartTimePicker from './start-time-picker';
@@ -13,6 +14,7 @@ import StartTimePicker from './start-time-picker';
 momentLocalizer();
 
 export default function DatePicker({ start, end, onChange, day, disabled }) {
+	const [t] = useTranslation();
 	return (
 		<>
 			<Styler orientation="horizontal" allDay height="fit" mainAlignment="space-between">
@@ -23,12 +25,12 @@ export default function DatePicker({ start, end, onChange, day, disabled }) {
 						showEnd={false}
 						onChange={onChange}
 						day={day}
-						label="from"
+						label={t('label.from', 'from')}
 					/>
 				</Container>
 				<Container padding={{ all: 'small' }}>
 					<StartTimePicker
-						label="to"
+						label={t('label.to', 'to')}
 						disabled={disabled}
 						start={end}
 						showEnd

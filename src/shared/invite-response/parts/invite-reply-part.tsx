@@ -71,7 +71,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 					<Checkbox
 						value={notifyOrganizer}
 						onClick={(): void => setNotifyOrganizer(!notifyOrganizer)}
-						label="Notify Organizer"
+						label={t('label.notify_organizer', 'Notify Organizer')}
 					/>
 				</Container>
 				<Container width="50%" mainAlignment="flex-start">
@@ -98,7 +98,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Padding horizontal="small" top="medium">
 					<Button
 						type="outlined"
-						label="YES"
+						label={t('event.action.yes', 'yes')}
 						icon="Checkmark"
 						color="success"
 						onClick={onAction('ACCEPT')}
@@ -108,7 +108,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Padding horizontal="small" top="medium">
 					<Button
 						type="outlined"
-						label="MAYBE"
+						label={t('label.maybe', 'maybe')}
 						icon="QuestionMark"
 						color="warning"
 						onClick={onAction('TENTATIVE')}
@@ -118,7 +118,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Padding horizontal="small" top="medium">
 					<Button
 						type="outlined"
-						label="NO"
+						label={t('event.action.no', 'no')}
 						icon="Close"
 						color="error"
 						onClick={onAction('DECLINE')}
