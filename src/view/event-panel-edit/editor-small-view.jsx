@@ -271,7 +271,7 @@ export default function EditorSmallView({
 									<Padding top="large" />
 									<RoomSelector
 										onChange={callbacks.onRoomChange}
-										defaultValue={data?.resource?.room}
+										defaultValue={data.resource.room}
 									/>
 								</>
 							)}

@@ -38,11 +38,11 @@ export default function DataRecap({ data }) {
 		[data.start]
 	);
 
-	const location = useMemo(() => {
-		const loc = data?.resource?.location ?? t('label.location', 'location');
-		return data?.resource?.room ? loc.concat(data?.resource?.room.label) : loc;
-	}, [data?.resource?.location, data?.resource?.room, t]);
-
+	const location = useMemo(
+		() => data?.resource?.location ?? t('label.location', 'location'),
+		[data?.resource?.location, t]
+	);
+	const virtualRoom = useMemo(() => data?.resource?.room?.label, [data?.resource?.room?.label]);
 	return (
 		<Row
 			height="fit"
@@ -97,6 +97,13 @@ export default function DataRecap({ data }) {
 						{location}
 					</Text>
 				</TitleRow>
+				{virtualRoom && (
+					<TitleRow>
+						<Text overflow="ellipsis" color="secondary" size="small">
+							{virtualRoom}
+						</Text>
+					</TitleRow>
+				)}
 			</Row>
 		</Row>
 	);

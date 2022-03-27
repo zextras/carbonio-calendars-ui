@@ -3,12 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useContext } from 'react';
-import { Container, ModalManagerContext } from '@zextras/carbonio-design-system';
+import React from 'react';
+import { Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Header } from './header';
 import StyledDivider from '../../commons/styled-divider';
 import ReminderPart from '../event-panel-view/reminder-part';
@@ -28,9 +26,6 @@ const BodyContainer = styled(Container)`
 `;
 
 const EventPreviewPanel = ({ event }) => {
-	const [t] = useTranslation();
-	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch();
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
@@ -55,6 +50,7 @@ const EventPreviewPanel = ({ event }) => {
 					isPrivate={event?.resource.isPrivate}
 					inviteNeverSent={event?.resource?.inviteNeverSent}
 					event={event}
+					invite={invite}
 				/>
 				<StyledDivider />
 				{!event?.resource?.iAmOrganizer && !event?.resource?.owner && invite && (

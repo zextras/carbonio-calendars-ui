@@ -35,7 +35,6 @@ const normalizeEventResource = (
 	iAmAttendee: (!appt.isOrg && !calendar.owner) ?? false,
 	status: appt.status,
 	location: appt.loc,
-	room: appt.room,
 	locationUrl: locationUrl(appt.loc ?? ''),
 	fragment: (inst as ExceptionReference)?.fr ?? appt.fr,
 	class: appt.class,

@@ -6,6 +6,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
+import { replace } from 'lodash';
 
 const replaceLinkToAnchor = (content) => {
 	if (content === '' || content === undefined) {
@@ -140,6 +141,9 @@ export function extractZimbraHtmlHeader(body) {
 	}
 	return '';
 }
+export const ROOM_DIVIDER =
+	'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-';
+export const roomValidationRegEx = new RegExp(`(?<=${ROOM_DIVIDER})(.*)(?=${ROOM_DIVIDER})`, 's');
 
 export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	if (!fullInvite) return null;
@@ -148,13 +152,17 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	}
 
 	if (fullInvite?.htmlDescription) {
+		const originalHtml = fullInvite?.htmlDescription?.[0]?._content ?? '';
+		const roomHtmlDesc = roomValidationRegEx?.exec(originalHtml)?.[0];
+		const pattern = roomHtmlDesc ? `${ROOM_DIVIDER}${roomHtmlDesc}${ROOM_DIVIDER}` : undefined;
+		const htmlContent = pattern ? replace(originalHtml, pattern, '') : originalHtml;
 		return (
-			<HtmlMessageRenderer
-				msgId={inviteId}
-				body={extractHtmlBody(fullInvite?.htmlDescription?.[0]?._content)}
-				parts={parts}
-			/>
+			<HtmlMessageRenderer msgId={inviteId} body={extractHtmlBody(htmlContent)} parts={parts} />
 		);
 	}
-	return <TextMessageRenderer text={extractBody(fullInvite?.textDescription?.[0]?._content)} />;
+	const originalText = fullInvite?.textDescription?.[0]?._content ?? '';
+	const roomTextDesc = roomValidationRegEx?.exec(originalText)?.[0];
+	const pattern = roomTextDesc ? `${ROOM_DIVIDER}${roomTextDesc}${ROOM_DIVIDER}` : undefined;
+	const textContent = pattern ? replace(originalText, pattern, '') : originalText;
+	return <TextMessageRenderer text={extractBody(textContent)} />;
 }

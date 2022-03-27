@@ -6,7 +6,6 @@
 import { isNil, map, omitBy, reduce } from 'lodash';
 import moment from 'moment';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
-import { getRoomFromLocation, stripRoomFromLocation } from './normalizations-utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const normalizeApptInstanceRef = (instRef: any): ExceptionReference => ({
@@ -16,8 +15,7 @@ const normalizeApptInstanceRef = (instRef: any): ExceptionReference => ({
 	inviteId: instRef.invId,
 	isOrg: instRef.isOrg,
 	dur: instRef.dur,
-	loc: stripRoomFromLocation(instRef?.loc),
-	room: getRoomFromLocation(instRef?.loc),
+	loc: instRef?.loc,
 	name: instRef.name,
 	neverSent: instRef.neverSent,
 	or: instRef.or,
@@ -64,8 +62,7 @@ export const normalizeAppointment = (appt: any): Appointment => ({
 	draft: appt.draft,
 	inviteId: appt.invId,
 	isOrg: appt.isOrg,
-	loc: stripRoomFromLocation(appt.loc),
-	room: getRoomFromLocation(appt.loc),
+	loc: appt.loc,
 	otherAtt: appt.otherAtt,
 	recur: appt.recur ?? false,
 	l: appt.l,
@@ -113,8 +110,7 @@ export const normalizeAppointmentFromCreation = (appt: any, editor: any, id?: st
 	draft: editor.resource?.draft || false,
 	inviteId: appt.id,
 	isOrg: appt.inv[0].comp[0].isOrg,
-	loc: stripRoomFromLocation(appt.inv[0].comp[0].loc),
-	room: getRoomFromLocation(appt.inv[0].comp[0].loc),
+	loc: appt.inv[0].comp[0].loc,
 	otherAtt: appt.inv[0].comp[0].otherAtt ?? false,
 	recur: appt.recur ?? false,
 	l: appt.l,
@@ -162,12 +158,12 @@ export const normalizeAppointmentFromNotify = (appt: any): Appointment => <Appoi
 			draft: appt?.inv?.[0]?.comp?.[0]?.draft,
 			inviteId: appt?.id && appt?.inv?.[0] ? `${appt.id}-${appt.inv[0].id}` : undefined,
 			isOrg: appt?.inv?.[0]?.comp?.[0]?.isOrg,
-			loc: stripRoomFromLocation(appt?.inv?.[0]?.comp?.[0]?.loc),
-			room: getRoomFromLocation(appt?.inv?.[0]?.comp?.[0]?.loc),
+			loc: appt?.inv?.[0]?.comp?.[0]?.loc,
 			otherAtt: appt?.inv?.[0]?.comp?.[0]?.otherAtt,
 			recur: appt?.inv?.[0]?.comp?.[0]?.recur,
 			l: appt.l,
 			name: appt?.inv?.[0]?.comp?.[0]?.name,
+			meta: appt?.meta,
 			neverSent: appt?.inv?.[0]?.comp?.[0]?.neverSent,
 			or: appt?.inv?.[0]?.comp?.[0]?.or,
 			s: appt.s

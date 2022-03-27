@@ -9,7 +9,10 @@ import { getInvite } from '../actions/get-invite';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
 import { sendInviteResponse } from '../actions/send-invite-response';
 import { getInviteFulfilled, getInviteRejected } from '../reducers/get-invite';
-import { handleModifiedInvitesReducer } from '../reducers/handle-modified-invites';
+import {
+	handleInviteMetadataReducer,
+	handleModifiedInvitesReducer
+} from '../reducers/handle-modified-invites';
 import {
 	moveAppointmentToTrashFulfilled,
 	moveAppointmentToTrashPending,
@@ -28,7 +31,8 @@ export const invitesSlice = createSlice({
 		invites: {}
 	},
 	reducers: {
-		handleModifiedInvites: produce(handleModifiedInvitesReducer)
+		handleModifiedInvites: produce(handleModifiedInvitesReducer),
+		handleInviteMetadata: produce(handleInviteMetadataReducer)
 	},
 	extraReducers: (builder) => {
 		builder.addCase(getInvite.fulfilled, getInviteFulfilled);
@@ -42,6 +46,6 @@ export const invitesSlice = createSlice({
 	}
 });
 
-export const { handleModifiedInvites } = invitesSlice.actions;
+export const { handleModifiedInvites, handleInviteMetadata } = invitesSlice.actions;
 
 export default invitesSlice.reducer;

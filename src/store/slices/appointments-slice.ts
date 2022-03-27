@@ -16,6 +16,7 @@ import { dismissApptReminder } from '../actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../actions/snooze-appointment-reminder';
 import { handleCreatedAppointmentsReducer } from '../reducers/handle-created-appointments';
 import { handleModifiedAppointmentsReducer } from '../reducers/handle-modified-appointments';
+import { handleMetadataReducer } from '../reducers/handle-modified-invites';
 import { handleSyncReducer } from '../reducers/handle-sync';
 import {
 	moveAppointmentFulfilled,
@@ -63,6 +64,7 @@ export const appointmentsSlice = createSlice({
 		updateAppointment: updateAppointmentReducer,
 		handleModifiedAppointments: produce(handleModifiedAppointmentsReducer),
 		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer),
+		handleModifiedApptMetadata: produce(handleMetadataReducer),
 		handleAppointmentsSync: handleSyncReducer
 	},
 	extraReducers: (builder) => {
@@ -94,7 +96,7 @@ export const appointmentsSlice = createSlice({
 export const {
 	updateAppointment,
 	handleModifiedAppointments,
-	handleCreatedAppointments,
+	handleModifiedApptMetadata,
 	updateParticipationStatus
 } = appointmentsSlice.actions;
 

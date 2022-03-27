@@ -5,6 +5,8 @@
  */
 import { Divider, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import React from 'react';
+import { startsWith } from 'lodash';
+import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 
 export const DescriptionFragmentRow = ({ event }) => (
 	<>
@@ -23,7 +25,9 @@ export const DescriptionFragmentRow = ({ event }) => (
 							<Icon icon="MessageSquareOutline" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<Text overflow="break-word">{event.resource.fragment}</Text>
+							<Text overflow="break-word">
+								{startsWith(event.resource.fragment, ROOM_DIVIDER) ? '' : event.resource.fragment}
+							</Text>
 						</Row>
 					</Row>
 				)}

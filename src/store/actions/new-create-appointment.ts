@@ -7,12 +7,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
-import {
-	LINK_VALIDATOR_START,
-	LINK_VALIDATOR_END,
-	ROOM_VALIDATOR_START,
-	ROOM_VALIDATOR_END
-} from '../../constants/integrations';
+import { HTML_ROOM_DIVIDER, ROOM_DIVIDER } from '../../commons/body-message-renderer';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const generateParticipantInformation = (attendees: Array<any>): any =>
@@ -27,7 +22,13 @@ const generateParticipantInformation = (attendees: Array<any>): any =>
 
 function generateHtmlBodyRequest(
 	app: {
-		resource: { attendees: any; optionalAttendees: any; location: any; richText: any };
+		resource: {
+			attendees: any;
+			optionalAttendees: any;
+			location: any;
+			richText: any;
+			room: { label: string; link: string };
+		};
 		allDay: any;
 		start: moment.MomentInput;
 		end: moment.MomentInput;
@@ -44,8 +45,11 @@ function generateHtmlBodyRequest(
 		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
 
 	const intro = 'The following is a new meeting request';
-
-	return `<html><body id='htmlmode'><h3>${intro}:</h3>
+	const virtualRoomHtml = app?.resource?.room
+		? `${ROOM_DIVIDER}<br/><h3>${account.displayName} invited you to a virtual meeting on Carbonio Chats system.</h3><br/><p>Join the meeting now on <a href= app.resource.room.link>${app.resource.room.label}</a></p><br/><p>You can join the meeting via Web or by using native applications:</p><br/><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><br/><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a><br/><br/><br/>${ROOM_DIVIDER}`
+		: '';
+	return `<html><body id='htmlmode'>
+<h3>${intro}:</h3>
 <p>
 <table border='0'>
 <tr><th align=left>Subject:</th><td>${app.title}</td></tr>
@@ -60,12 +64,17 @@ function generateHtmlBodyRequest(
 <table border='0'>
 <tr><th align=left>Invitees:</th><td>${attendees}</td></tr>
 </table>
-<div>*~*~*~*~*~*~*~*~*~*</div><br>${app.resource.richText}`;
+<div>*~*~*~*~*~*~*~*~*~*</div><br>${virtualRoomHtml}${app.resource.richText}`;
 }
 
 function generateBodyRequest(
 	app: {
-		resource: { attendees: any; optionalAttendees: any; plainText: any };
+		resource: {
+			attendees: any;
+			optionalAttendees: any;
+			plainText: any;
+			room: { label: string; link: string };
+		};
 		allDay: any;
 		start: moment.MomentInput;
 		end: moment.MomentInput;
@@ -82,8 +91,14 @@ function generateBodyRequest(
 		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
 
 	const intro = 'The following is a new meeting request';
-
-	return `${intro}:\n\nSubject: ${app.title} \nOrganizer: "${account.displayName}" <${account.name}>\n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n*~*~*~*~*~*~*~*~*~*\n\n${app.resource.plainText}`;
+	const virtualRoom = app?.resource?.room?.label
+		? `-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\n${account.name} have invited you to a virtual meeting on Carbonio Chats system\n\nJoin the meeting now on ${app.resource.room.label}\n\n${app.resource.room.link} \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::- \n`
+		: undefined;
+	return `${intro}:\n\nSubject: ${app.title} \nOrganizer: "${account.displayName}" <${
+		account.name
+	}>\n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n*~*~*~*~*~*~*~*~*~*\n\n${
+		virtualRoom ? `${virtualRoom}\n\n` : ''
+	}${app.resource.plainText}`;
 }
 
 const generateMp = (msg: any, account: any): any => ({
@@ -106,17 +121,6 @@ const generateMp = (msg: any, account: any): any => ({
 				}
 		  ]
 });
-
-const generateLocation = (editorData: {
-	resource: { room: { label: string | undefined; link: string | undefined }; location: string };
-}): string =>
-	editorData?.resource?.room?.label && editorData?.resource?.room?.link
-		? `${editorData?.resource?.location ?? ''}${ROOM_VALIDATOR_START}${
-				editorData.resource.room.label
-		  }${ROOM_VALIDATOR_END} ${LINK_VALIDATOR_START}${
-				editorData?.resource?.room?.link
-		  }${LINK_VALIDATOR_END}`
-		: editorData.resource.location;
 
 const generateInvite = (editorData: any): any => {
 	const at = [];
@@ -162,7 +166,7 @@ const generateInvite = (editorData: any): any => {
 				at,
 				allDay: editorData.allDay ? '1' : '0',
 				fb: editorData.allDay ? 'F' : editorData.resource.freeBusy,
-				loc: generateLocation(editorData),
+				loc: editorData.resource.location,
 				name: editorData.title,
 				or: {
 					a: editorData.resource.organizer.email,
@@ -242,7 +246,20 @@ export const createAppointment = createAsyncThunk(
 	'appointment/create new appointment',
 	async ({ editor, account }: any): Promise<any> => {
 		const body = generateSoapMessageFromEditor(editor, account);
-		const res = await soapFetch('CreateAppointment', body);
+		const res: { calItemId: string } = await soapFetch('CreateAppointment', body);
+		if (res?.calItemId) {
+			await soapFetch('SetCustomMetadata', {
+				_jsns: 'urn:zimbraMail',
+				id: res.calItemId,
+				meta: {
+					section: 'crb-meeting-room',
+					_attrs: {
+						room: editor.resource.room.label,
+						link: editor.resource.room.link
+					}
+				}
+			});
+		}
 		return res;
 	}
 );

@@ -13,6 +13,7 @@ import { ParticipantsRow } from './partipants-row';
 import { DescriptionFragmentRow } from './description-fragment-row';
 import { ActionsButtonsRow } from './actions-buttons-row';
 import { TimeInfoRow } from './time-info-row';
+import { VirtualRoomRow } from './virtual-room-row';
 
 export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispatch }) => (
 	<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
@@ -22,6 +23,7 @@ export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispa
 			<CalendarInfoRow event={event} />
 			{event && <TimeInfoRow event={event} showIcon />}
 			{event && <LocationRow event={event} showIcon />}
+			{invite?.meta && <VirtualRoomRow meta={invite?.meta} showIcon />}
 			<ParticipantsRow event={event} invite={invite} />
 			<DescriptionFragmentRow event={event} />
 			<ActionsButtonsRow event={event} dispatch={dispatch} onClose={onClose} />
