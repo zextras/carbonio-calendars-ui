@@ -5,7 +5,7 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { isNil, map, omitBy } from 'lodash';
+import { includes, isNil, map, omitBy, startsWith } from 'lodash';
 import moment from 'moment';
 import { HTML_ROOM_DIVIDER, ROOM_DIVIDER } from '../../commons/body-message-renderer';
 
@@ -45,9 +45,10 @@ function generateHtmlBodyRequest(
 		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
 
 	const intro = 'The following is a new meeting request';
-	const virtualRoomHtml = app?.resource?.room
-		? `${ROOM_DIVIDER}<br/><h3>${account.displayName} invited you to a virtual meeting on Carbonio Chats system.</h3><br/><p>Join the meeting now on <a href= app.resource.room.link>${app.resource.room.label}</a></p><br/><p>You can join the meeting via Web or by using native applications:</p><br/><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><br/><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a><br/><br/><br/>${ROOM_DIVIDER}`
-		: '';
+	const virtualRoomHtml =
+		app?.resource?.room && !includes(app.resource.richText, ROOM_DIVIDER)
+			? `${ROOM_DIVIDER}<h3>${account.displayName} invited you to a virtual meeting on Carbonio Chats system.</h3><p>Join the meeting now on <a href= app.resource.room.link>${app.resource.room.label}</a></p><p>You can join the meeting via Web or by using native applications:</p><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a>${ROOM_DIVIDER}`
+			: '';
 	return `<html><body id='htmlmode'>
 <h3>${intro}:</h3>
 <p>
