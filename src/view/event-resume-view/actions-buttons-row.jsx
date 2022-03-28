@@ -205,7 +205,7 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 
 export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 	const createModal = useContext(ModalManagerContext);
-	const t = useTranslation();
+	const [t] = useTranslation();
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
 			{event.resource.iAmOrganizer && (
