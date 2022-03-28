@@ -5,9 +5,9 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { includes, isNil, map, omitBy, startsWith } from 'lodash';
+import { includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
-import { HTML_ROOM_DIVIDER, ROOM_DIVIDER } from '../../commons/body-message-renderer';
+import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import { METADATA_SECTIONS } from '../../constants/metadata';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
