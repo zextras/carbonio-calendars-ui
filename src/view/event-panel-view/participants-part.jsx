@@ -5,12 +5,12 @@
  */
 import React from 'react';
 import { Avatar, Container, Row, Text } from '@zextras/carbonio-design-system';
-import { useTranslation, Trans } from 'react-i18next';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { Trans } from 'react-i18next';
+import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import ParticipantsDisplayer from './participants-displayer';
 
 export default function ParticipantsPart({ event, organizer, participants }) {
-	const accounts = useUserAccounts();
+	const account = useUserAccount();
 
 	return (
 		<Container
@@ -22,11 +22,11 @@ export default function ParticipantsPart({ event, organizer, participants }) {
 			padding={{ horizontal: 'large', vertical: 'medium' }}
 			background="gray6"
 		>
-			{event.resource.iAmOrganizer && (
+			{event?.resource?.organizer?.email === account.name && (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
 						style={{ width: '48px', height: '48px' }}
-						label={accounts[0].name || accounts[0].displayName}
+						label={account.name || account.displayName}
 					/>
 					<Text style={{ padding: '0px 8px' }}>
 						<Trans
@@ -42,12 +42,7 @@ export default function ParticipantsPart({ event, organizer, participants }) {
 				</Row>
 			)}
 			{!event.resource.iAmOrganizer && !event.resource.owner && (
-				<Row
-					mainAlignment="flex-start"
-					crossAlignment="center"
-					width="fill"
-					padding={{ bottom: 'medium' }}
-				>
+				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
 						style={{ width: '48px', height: '48px' }}
 						label={organizer.name || organizer.email || organizer.mail}
@@ -57,6 +52,21 @@ export default function ParticipantsPart({ event, organizer, participants }) {
 							i18nKey="message.somebody_invited_you"
 							defaults="<strong>{{somebody}}</strong> invited you"
 							values={{ somebody: organizer.name || organizer.email || organizer.mail }}
+						/>
+					</Text>
+				</Row>
+			)}
+			{event?.resource?.organizer?.email !== account.name && !event?.resource?.iAmAttendee && (
+				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
+					<Avatar
+						style={{ width: '48px', height: '48px' }}
+						label={organizer.name || organizer.email || organizer.mail}
+					/>
+					<Text style={{ padding: '0px 8px' }}>
+						<Trans
+							i18nKey="message.somebody_is_organizer"
+							defaults="<strong>{{somebody}}</strong> is the organizer"
+							values={{ somebody: organizer.name || organizer.email }}
 						/>
 					</Text>
 				</Row>

@@ -5,21 +5,48 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { includes, isNil, map, omitBy } from 'lodash';
+import { concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import { METADATA_SECTIONS } from '../../constants/metadata';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const generateParticipantInformation = (attendees: Array<any>): any =>
-	map(attendees, (attendee) => ({
-		a: attendee.email,
-		p:
-			attendee.firstName && attendee.lastname
-				? `${attendee.firstName} ${attendee.lastname}`
-				: attendee.label,
-		t: 't'
-	}));
+type Participants = {
+	a: string | undefined;
+	p: string | undefined;
+	t: string;
+};
+type Resource = {
+	organizer: { email: string; name: string };
+	attendees: Array<{ email: string; firstName?: string; lastname?: string; label?: string }>;
+	optionalAttendees: Array<{
+		email: string;
+		firstName?: string;
+		lastname?: string;
+		label?: string;
+	}>;
+	draft: boolean;
+};
+
+const generateParticipantInformation = (resource: Resource): Array<Participants> =>
+	resource?.draft
+		? [
+				{
+					a: resource?.organizer?.email,
+					p: resource?.organizer?.name,
+					t: 'f'
+				}
+		  ]
+		: concat(
+				map(concat(resource?.attendees, resource?.optionalAttendees), (attendee) => ({
+					a: attendee.email,
+					p:
+						attendee.firstName && attendee.lastname
+							? `${attendee.firstName} ${attendee.lastname}`
+							: attendee.label,
+					t: 't'
+				})),
+				{ a: resource?.organizer?.email, p: resource?.organizer?.name, t: 'f' }
+		  );
 
 function generateHtmlBodyRequest(
 	app: {
@@ -202,7 +229,7 @@ const generateInvite = (editorData: any): any => {
 								d: moment(editorData.end).utc().format('YYYYMMDD[T]HHmmss[Z]')
 						  },
 				class: editorData.resource.class,
-				draft: editorData.resource.isDraft
+				draft: editorData.resource.draft
 			}
 		],
 		uid: editorData.resource.uid
@@ -227,11 +254,7 @@ export const generateSoapMessageFromEditor = (msg: any, account: any): any =>
 										: null
 						  }
 						: null,
-					e: generateParticipantInformation(msg?.resource?.attendees).concat({
-						a: msg.resource.organizer.email,
-						p: msg.resource.organizer.name,
-						t: 'f'
-					}),
+					e: generateParticipantInformation(msg?.resource),
 					inv: generateInvite(msg),
 					l: msg?.resource?.calendar?.id,
 					mp: generateMp(msg, account),

@@ -49,6 +49,7 @@ export const initEvent = ({
 		isRichText: true,
 		richText: '',
 		plainText: '',
-		optionalAttendees: []
+		optionalAttendees: [],
+		draft: false
 	}
 });

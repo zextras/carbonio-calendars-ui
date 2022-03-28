@@ -45,7 +45,7 @@ function DisplayedParticipant({ participant }) {
 }
 
 function Dropdown({ label, participants = [], width }) {
-	const [isExpanded, setIsExpanded] = useState(participants.length < 3);
+	const [isExpanded, setIsExpanded] = useState(true);
 	const toggleExpanded = useCallback(() => setIsExpanded((prevExpanded) => !prevExpanded), []);
 
 	const displayedParticipants = useMemo(

@@ -24,6 +24,7 @@ export const editAppointmentDataReducer = (state: any, { payload }: any): any =>
 	state.editors[payload.id] = merge(state.editors[payload.id], payload.mod);
 	state.editors[payload.id].resource = {
 		...state.editors[payload.id].resource,
+		draft: payload.mod?.resource?.draft,
 		start:
 			editor.allDay || !editor?.resource?.tz
 				? {
