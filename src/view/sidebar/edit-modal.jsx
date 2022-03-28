@@ -258,7 +258,7 @@ export const EditModal = ({
 						<Text size="small" color="secondary">
 							Type
 						</Text>
-						<Text>Calendar</Text>
+						<Text>{t('label.calendar', 'Calendar')}</Text>
 					</Row>
 					<Row orientation="vertical" width="25%" crossAlignment="flex-start">
 						<Text size="small" color="secondary">
@@ -282,7 +282,10 @@ export const EditModal = ({
 					value={freeBusy}
 					defaultChecked={defaultChecked}
 					onClick={toggleFreeBusy}
-					label="Exclude this calendar when reporting the free/busy times"
+					label={t(
+						'label.exclude_free_busy',
+						'Exclude this calendar when reporting the free/busy times'
+					)}
 				/>
 			</Container>
 		</Modal>

@@ -6,10 +6,12 @@
 import { useDispatch } from 'react-redux';
 import React, { useCallback } from 'react';
 import { Button, Container, Padding } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../../store/slices/appointments-slice';
 
 export default function ReplyButtonsPart({ inviteId, participationStatus, compNum }) {
+	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const decline = useCallback(
 		(ev) => {
@@ -63,7 +65,7 @@ export default function ReplyButtonsPart({ inviteId, participationStatus, compNu
 		>
 			<Button
 				type="outlined"
-				label="YES"
+				label={t('event.action.yes', 'yes')}
 				icon="CheckmarkCircle2"
 				color="success"
 				onClick={accept}
@@ -72,7 +74,7 @@ export default function ReplyButtonsPart({ inviteId, participationStatus, compNu
 			<Padding horizontal="small" />
 			<Button
 				type="outlined"
-				label="MAYBE"
+				label={t('label.maybe', 'maybe')}
 				icon="QuestionMarkCircle"
 				color="warning"
 				onClick={tentative}
@@ -81,7 +83,7 @@ export default function ReplyButtonsPart({ inviteId, participationStatus, compNu
 			<Padding horizontal="small" />
 			<Button
 				type="outlined"
-				label="NO"
+				label={t('event.action.no', 'no')}
 				icon="CloseCircle"
 				color="error"
 				onClick={decline}
