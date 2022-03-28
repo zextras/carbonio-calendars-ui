@@ -25,9 +25,7 @@ export const DescriptionFragmentRow = ({ event }) => (
 							<Icon icon="MessageSquareOutline" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<Text overflow="break-word">
-								{startsWith(event.resource.fragment, ROOM_DIVIDER) ? '' : event.resource.fragment}
-							</Text>
+							<Text overflow="break-word">{event.resource.fragment}</Text>
 						</Row>
 					</Row>
 				)}

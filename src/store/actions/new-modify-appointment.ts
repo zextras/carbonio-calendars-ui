@@ -7,6 +7,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { find } from 'lodash';
+import { METADATA_SECTIONS } from '../../constants/metadata';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -78,7 +79,7 @@ export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
 	async ({ invite, editor, account }: any, { getState }: any): Promise<unknown> => {
 		const prevInvite = getState()?.invites?.invites?.[editor.resource.inviteId];
-		const previousMeetingRoom = find(prevInvite?.meta, ['section', 'meeting-room']);
+		const previousMeetingRoom = find(prevInvite?.meta, ['section', METADATA_SECTIONS.MEETING_ROOM]);
 		const normalizeInviteToSoap = invite
 			? generateSoapMessageFromInvite(invite)
 			: generateSoapMessageFromEditor(editor, account);
@@ -88,7 +89,7 @@ export const modifyAppointment = createAsyncThunk(
 				_jsns: 'urn:zimbraMail',
 				id: editor.resource.inviteId,
 				meta: {
-					section: 'crb-meeting-room'
+					section: METADATA_SECTIONS.MEETING_ROOM
 				}
 			});
 		}
@@ -100,7 +101,7 @@ export const modifyAppointment = createAsyncThunk(
 				_jsns: 'urn:zimbraMail',
 				id: editor.resource.inviteId,
 				meta: {
-					section: 'crb-meeting-room',
+					section: METADATA_SECTIONS.MEETING_ROOM,
 					_attrs: {
 						room: editor.resource.room.label,
 						link: editor.resource.room.link

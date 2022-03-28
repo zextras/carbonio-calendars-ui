@@ -8,6 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { replace } from 'lodash';
 
+export const ROOM_DIVIDER =
+	'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-';
+export const roomValidationRegEx = new RegExp(`(?<=${ROOM_DIVIDER})(.*)(?=${ROOM_DIVIDER})`, 's');
+
 const replaceLinkToAnchor = (content) => {
 	if (content === '' || content === undefined) {
 		return '';
@@ -113,7 +117,11 @@ const divider = '*~*~*~*~*~*~*~*~*~*';
 export function extractBody(body) {
 	if (body) {
 		const lastElement = body.split(divider).pop();
-		return lastElement.trim();
+		const defaultMessage = roomValidationRegEx.exec(lastElement)?.[0];
+		const stripDefaultRoomMessage = defaultMessage
+			? replace(lastElement, `${ROOM_DIVIDER}${defaultMessage}${ROOM_DIVIDER}`, '')
+			: lastElement;
+		return stripDefaultRoomMessage.trim();
 	}
 	return '';
 }
@@ -123,6 +131,7 @@ export function extractHtmlBody(body) {
 	if (htmlBody.startsWith('</div>')) {
 		htmlBody = `<html>${htmlBody.slice(10)}`;
 	}
+
 	return htmlBody;
 }
 
@@ -141,9 +150,6 @@ export function extractZimbraHtmlHeader(body) {
 	}
 	return '';
 }
-export const ROOM_DIVIDER =
-	'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-';
-export const roomValidationRegEx = new RegExp(`(?<=${ROOM_DIVIDER})(.*)(?=${ROOM_DIVIDER})`, 's');
 
 export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	if (!fullInvite) return null;

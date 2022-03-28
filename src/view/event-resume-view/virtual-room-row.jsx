@@ -5,10 +5,11 @@
  */
 import { find } from 'lodash';
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { METADATA_SECTIONS } from '../../constants/metadata';
 
 export const VirtualRoomRow = ({ meta, showIcon }) => {
-	const room = find(meta, ['section', 'meeting-room']);
+	const room = useMemo(() => find(meta, ['section', METADATA_SECTIONS.MEETING_ROOM]), [meta]);
 	return room ? (
 		<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 			<Row takeAvailableSpace mainAlignment="flex-start">

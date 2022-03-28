@@ -8,9 +8,10 @@ import moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
+import { METADATA_SECTIONS } from '../constants/metadata';
 
 const getVirtualRoom = (meta: any): { label: string; link: string } | undefined => {
-	const room = find(meta, ['section', 'crb-meeting-room']);
+	const room = find(meta, ['section', METADATA_SECTIONS.MEETING_ROOM]);
 	return room?._attrs?.room && room?._attrs?.link
 		? {
 				label: room?._attrs?.room,
