@@ -205,7 +205,6 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 
 export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 	const createModal = useContext(ModalManagerContext);
-	const t = useTranslation();
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
 			{event.resource.iAmOrganizer && (
@@ -214,7 +213,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 						<Button
 							type="outlined"
 							color="error"
-							label={t('label.delete', 'Delete')}
+							label="Delete"
 							onClick={(ev) => {
 								if (ev) ev.stopPropagation();
 								onClose();
@@ -240,14 +239,14 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 						<Button
 							type="outlined"
 							disabled={!event.permission}
-							label={t('label.move', 'move')}
+							label="Move"
 							onClick={() => console.warn('not implemented yet')}
 						/>
 					) : (
 						<Button
 							disabled={!event.permission}
 							type="outlined"
-							label={t('label.edit', 'edit')}
+							label="Edit"
 							onClick={(ev) => {
 								if (ev) ev.stopPropagation();
 								onClose();

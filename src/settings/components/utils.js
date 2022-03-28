@@ -696,13 +696,13 @@ export const InvitesOptions = (t) => [
 	}
 ];
 export const StartWeekOfOptions = (t) => [
-	{ label: t('label.week_day.sunday', 'Sunday'), value: '0' },
-	{ label: t('label.week_day.monday', 'Monday'), value: '1' },
-	{ label: t('label.week_day.tuesday', 'Tuesday'), value: '2' },
-	{ label: t('label.week_day.wednesday', 'Wednesday'), value: '3' },
-	{ label: t('label.week_day.thursday', 'Thursday'), value: '4' },
-	{ label: t('label.week_day.friday', 'Friday'), value: '5' },
-	{ label: t('label.week_day.saturday', 'Saturday'), value: '6' }
+	{ label: t('label.week.sunday', 'Sunday'), value: '0' },
+	{ label: t('label.week.monday', 'Monday'), value: '1' },
+	{ label: t('label.week.tuesday', 'Tuesday'), value: '2' },
+	{ label: t('label.week.wednesday', 'Wednesday'), value: '3' },
+	{ label: t('label.week.thursday', 'Thursday'), value: '4' },
+	{ label: t('label.week.friday', 'Friday'), value: '5' },
+	{ label: t('label.week.saturday', 'Saturday'), value: '6' }
 ];
 
 export const DefaultApptVisibiltyOptions = (t) => [
@@ -747,19 +747,19 @@ export const SpanTimeOptions = (t, isMinutesFormat) => [
 export const getWeekDay = (day, t) => {
 	switch (day) {
 		case '1':
-			return t('label.week_day.monday', 'Monday');
+			return t('label.week.monday', 'Monday');
 		case '2':
-			return t('label.week_day.tuesday', 'Tuesday');
+			return t('label.week.tuesday', 'Tuesday');
 		case '3':
-			return t('label.week_day.wednesday', 'Wednesday');
+			return t('label.week.wednesday', 'Wednesday');
 		case '4':
-			return t('label.week_day.thursday', 'Thursday');
+			return t('label.week.thursday', 'Thursday');
 		case '5':
-			return t('label.week_day.friday', 'Friday');
+			return t('label.week.friday', 'Friday');
 		case '6':
-			return t('label.week_day.saturday', 'Saturday');
+			return t('label.week.saturday', 'Saturday');
 		default:
-			return t('label.week_day.sunday', 'Sunday');
+			return t('label.week.sunday', 'Sunday');
 	}
 };
 

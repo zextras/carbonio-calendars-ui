@@ -298,7 +298,7 @@ export default function GeneralSettings({
 				width="100%"
 			>
 				<Select
-					label={t('settings.label.span_time', 'Span time')}
+					label="Span time"
 					items={spanTimeOptions}
 					onChange={(dur) =>
 						updateSettings({

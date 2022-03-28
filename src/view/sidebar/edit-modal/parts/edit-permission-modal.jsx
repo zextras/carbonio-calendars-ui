@@ -129,7 +129,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 				<Select
 					items={roleOptions}
 					background="gray5"
-					label={t('label.role', 'role')}
+					label="Role"
 					onChange={onShareRoleChange}
 					disablePortal
 					defaultSelection={{
