@@ -6,7 +6,6 @@
 import React, { Suspense, lazy, useEffect, useMemo } from 'react';
 import { Container, Text, SnackbarManager } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
-import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
@@ -23,7 +22,6 @@ const CalendarComponent = lazy(() =>
 );
 
 export default function CalendarView() {
-	const [t] = useTranslation();
 	const calendars = useSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const status = useSelector(selectApptStatus);
@@ -51,7 +49,7 @@ export default function CalendarView() {
 				style={{ overflowY: 'auto', position: 'relative' }}
 			>
 				<CalendarStyle primaryCalendar={primaryCalendar} />
-				<Suspense fallback={<Text>{t('label.loading', 'Loading...')}</Text>}>
+				<Suspense fallback={<Text>Loading...</Text>}>
 					<CalendarComponent />
 				</Suspense>
 				<Switch>

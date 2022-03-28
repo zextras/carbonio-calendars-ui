@@ -146,13 +146,13 @@ export const WeekDaySelector = ({
 			{ label: t('label.day', 'Day'), value: 'MO,TU,WE,TH,FR,SA,SU' },
 			{ label: t('items.weekend_day', 'Weekend day'), value: 'SA,SU' },
 			{ label: t('items.working_day', 'Working day'), value: 'MO,TU,WE,TH,FR' },
-			{ label: t('label.week_day.monday', 'Monday'), value: 'MO' },
-			{ label: t('label.week_day.tuesday', 'Tuesday'), value: 'TU' },
-			{ label: t('label.week_day.wednesday', 'Wednesday'), value: 'WE' },
-			{ label: t('label.week_day.thursday', 'Thursday'), value: 'TH' },
-			{ label: t('label.week_day.friday', 'Friday'), value: 'FR' },
-			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
-			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
+			{ label: t('label.week.monday', 'Monday'), value: 'MO' },
+			{ label: t('label.week.tuesday', 'Tuesday'), value: 'TU' },
+			{ label: t('label.week.wednesday', 'Wednesday'), value: 'WE' },
+			{ label: t('label.week.thursday', 'Thursday'), value: 'TH' },
+			{ label: t('label.week.friday', 'Friday'), value: 'FR' },
+			{ label: t('label.week.saturday', 'Saturday'), value: 'SA' },
+			{ label: t('label.week.sunday', 'Sunday'), value: 'SU' }
 		],
 		[t]
 	);
@@ -225,13 +225,13 @@ export const WeekdayCheckboxes = ({ customRepeatValue, setCustomRepeatValue, byd
 
 	const selectItems = useMemo(
 		() => [
-			{ label: t('label.week_day.monday', 'Monday'), value: 'MO' },
-			{ label: t('label.week_day.tuesday', 'Tuesday'), value: 'TU' },
-			{ label: t('label.week_day.wednesday', 'Wednesday'), value: 'WE' },
-			{ label: t('label.week_day.thursday', 'Thursday'), value: 'TH' },
-			{ label: t('label.week_day.friday', 'Friday'), value: 'FR' },
-			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
-			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
+			{ label: t('label.week.monday', 'Monday'), value: 'MO' },
+			{ label: t('label.week.tuesday', 'Tuesday'), value: 'TU' },
+			{ label: t('label.week.wednesday', 'Wednesday'), value: 'WE' },
+			{ label: t('label.week.thursday', 'Thursday'), value: 'TH' },
+			{ label: t('label.week.friday', 'Friday'), value: 'FR' },
+			{ label: t('label.week.saturday', 'Saturday'), value: 'SA' },
+			{ label: t('label.week.sunday', 'Sunday'), value: 'SU' }
 		],
 		[t]
 	);

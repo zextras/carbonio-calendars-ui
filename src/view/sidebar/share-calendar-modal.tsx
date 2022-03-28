@@ -161,7 +161,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				<Select
 					items={shareCalendarWithOptions}
 					background="gray5"
-					label={t('label.share_with', 'share with')}
+					label="Share with"
 					disablePortal
 					onChange={onShareWithChange}
 					defaultSelection={{
@@ -225,7 +225,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				<Select
 					items={shareCalendarRoleOptions}
 					background="gray5"
-					label={t('label.role', 'role')}
+					label="Role"
 					onChange={onShareRoleChange}
 					disablePortal
 					defaultSelection={{
