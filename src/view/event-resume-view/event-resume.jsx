@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Container, Popover } from '@zextras/carbonio-design-system';
+import { Container, Divider, Popover } from '@zextras/carbonio-design-system';
 import { startsWith } from 'lodash';
 import { TitleRow } from './title-row';
 import { NeverSentWarningRow } from './never-sent-warning-row';
@@ -30,6 +30,7 @@ export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispa
 			{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
 				<DescriptionFragmentRow event={event} />
 			)}
+			<Divider />
 			<ActionsButtonsRow event={event} dispatch={dispatch} onClose={onClose} />
 		</Container>
 	</Popover>

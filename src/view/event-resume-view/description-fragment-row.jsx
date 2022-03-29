@@ -31,6 +31,5 @@ export const DescriptionFragmentRow = ({ event }) => (
 				)}
 			</>
 		)}
-		<Divider />
 	</>
 );
