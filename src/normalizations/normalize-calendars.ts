@@ -25,7 +25,9 @@ export const normalizeCalendar = (folder: ZimbraFolder): Calendar => ({
 	owner: folder.owner, // It's specified only if It's not the current user
 	zid: folder.zid,
 	acl: folder.acl,
-	isShared: !!folder.owner
+	isShared: !!folder.owner,
+	perm: folder.perm,
+	haveWriteAccess: folder.perm ? /w/.test(folder.perm) : true
 });
 
 export const normalizePartialCalendar = (folder: ZimbraFolder): any => ({
@@ -43,5 +45,7 @@ export const normalizePartialCalendar = (folder: ZimbraFolder): any => ({
 	owner: folder.owner, // It's specified only if It's not the current user
 	zid: folder.zid,
 	acl: folder.acl,
-	isShared: !isNil(folder.owner) ? !!folder.owner : undefined
+	isShared: !isNil(folder.owner) ? !!folder.owner : undefined,
+	perm: folder.perm,
+	haveWriteAccess: folder.perm ? /w/.test(folder.perm) : true
 });

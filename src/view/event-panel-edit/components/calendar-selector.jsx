@@ -69,15 +69,20 @@ export default function CalendarSelector({
 	onCalendarChange,
 	label,
 	excludeTrash = false,
-	updateAppTime = false
+	updateAppTime = false,
+	showCalWithWritePerm = true
 }) {
 	const [t] = useTranslation();
 
 	const calendars = useSelector(selectCalendars);
+	const calWithWritePerm = useMemo(
+		() => (showCalWithWritePerm ? filter(calendars, (cal) => cal.haveWriteAccess) : calendars),
+		[calendars, showCalWithWritePerm]
+	);
 
 	const requiredCalendars = useMemo(
-		() => (excludeTrash ? filter(calendars, (cal) => cal.zid !== '3') : calendars),
-		[calendars, excludeTrash]
+		() => (excludeTrash ? filter(calWithWritePerm, (cal) => cal.zid !== '3') : calWithWritePerm),
+		[calWithWritePerm, excludeTrash]
 	);
 	const calendarItems = useMemo(
 		() =>
@@ -97,8 +102,8 @@ export default function CalendarSelector({
 		[requiredCalendars]
 	);
 	const defaultCalendarSelection = useMemo(
-		() => find(calendarItems, ['value', calendarId]) || calendars[0],
-		[calendarItems, calendars, calendarId]
+		() => find(calendarItems, ['value', calendarId]) || requiredCalendars[0],
+		[calendarItems, requiredCalendars, calendarId]
 	);
 
 	const onSelectedCalendarChange = useCallback(

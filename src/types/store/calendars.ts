@@ -21,4 +21,6 @@ export type Calendar = {
 	zid: string;
 	acl: any;
 	isShared?: boolean;
+	perm?: string;
+	haveWriteAccess?: boolean;
 };
