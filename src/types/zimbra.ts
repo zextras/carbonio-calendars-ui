@@ -20,4 +20,6 @@ export type ZimbraFolder = {
 	zid: string;
 	acl: any;
 	isShared?: boolean;
+	perm?: string;
+	haveWriteAccess?: boolean;
 };

@@ -80,7 +80,8 @@ export const normalizeCalendarEvent = (
 	title: appt.name,
 	allDay: appt.allDay,
 	permission: !isShared,
-	id: `${appt.id}:${inst.ridZ}`
+	id: `${appt.id}:${inst.ridZ}`,
+	haveWriteAccess: calendar.haveWriteAccess
 });
 
 export const normalizeCalendarEvents = (

@@ -111,23 +111,45 @@ export const useEditorDispatches = (id, isBoard = false) => {
 			),
 		[dispatch, id]
 	);
+
 	const onCalendarChange = useCallback(
-		(calendar) =>
-			dispatch(
-				editAppointmentData({
-					id,
-					mod: {
-						resource: {
-							calendar: {
-								id: calendar.id,
-								name: calendar.name,
-								color: calendar.color
+		(calendar) => {
+			calendar.isShared
+				? dispatch(
+						editAppointmentData({
+							id,
+							mod: {
+								resource: {
+									calendar: {
+										id: calendar.id,
+										name: calendar.name,
+										color: calendar.color
+									},
+									organizer: {
+										email: calendar.owner,
+										name: '',
+										sentBy: accounts[0].name
+									}
+								}
 							}
-						}
-					}
-				})
-			),
-		[dispatch, id]
+						})
+				  )
+				: dispatch(
+						editAppointmentData({
+							id,
+							mod: {
+								resource: {
+									calendar: {
+										id: calendar.id,
+										name: calendar.name,
+										color: calendar.color
+									}
+								}
+							}
+						})
+				  );
+		},
+		[dispatch, id, accounts]
 	);
 	const onDisplayStatusChange = useCallback(
 		(freeBusy) => dispatch(editAppointmentData({ id, mod: { resource: { freeBusy } } })),

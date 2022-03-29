@@ -255,11 +255,11 @@ export const deletePermanently = ({ event, context, t }) => ({
 	}
 });
 
-export const editAppointment = (event, context, t) => ({
+export const editAppointment = (event, context, t, isEditable = false) => ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Edit2Outline',
 	label: t('label.edit', 'Edit'),
-	disabled: !event.permission,
+	disabled: isEditable ? !event.resource.iAmOrganizer || !event.haveWriteAccess : true,
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
 		context.isFromSearch
@@ -300,7 +300,7 @@ export const ActionsRetriever = (event, context, t) =>
 				openInDisplayer(event, context, t),
 				moveAppointment(event, context, t),
 				moveApptToTrash(event, context, t),
-				editAppointment(event, context, t)
+				editAppointment(event, context, t, true)
 		  ];
 
 export const RecurrentActionRetriever = (event, context, t) =>

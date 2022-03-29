@@ -208,7 +208,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 	const [t] = useTranslation();
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
-			{event.resource.iAmOrganizer && (
+			{event.resource.iAmOrganizer && event.haveWriteAccess ? (
 				<>
 					<Padding right="small">
 						<Button
@@ -232,7 +232,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 									true
 								);
 							}}
-							disabled={!event.permission}
+							disabled={!event.haveWriteAccess}
 						/>
 					</Padding>
 
@@ -245,7 +245,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 						/>
 					) : (
 						<Button
-							disabled={!event.permission}
+							disabled={!event.haveWriteAccess}
 							type="outlined"
 							label={t('label.edit', 'edit')}
 							onClick={(ev) => {
@@ -258,9 +258,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 						/>
 					)}
 				</>
-			)}
-
-			{!event?.resource?.calendar?.owner && !event?.resource?.iAmOrganizer && (
+			) : (
 				<ReplyButtonsPartSmall
 					inviteId={event.resource?.inviteId}
 					participationStatus={event.resource?.participationStatus}

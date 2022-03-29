@@ -41,7 +41,7 @@ export default function ParticipantsPart({ event, organizer, participants }) {
 					</Text>
 				</Row>
 			)}
-			{!event.resource.iAmOrganizer && !event.resource.owner && (
+			{!event.resource.iAmOrganizer && !event.resource.owner ? (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
 						style={{ width: '48px', height: '48px' }}
@@ -55,21 +55,23 @@ export default function ParticipantsPart({ event, organizer, participants }) {
 						/>
 					</Text>
 				</Row>
-			)}
-			{event?.resource?.organizer?.email !== account.name && !event?.resource?.iAmAttendee && (
-				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
-					<Avatar
-						style={{ width: '48px', height: '48px' }}
-						label={organizer.name || organizer.email || organizer.mail}
-					/>
-					<Text style={{ padding: '0px 8px' }}>
-						<Trans
-							i18nKey="message.somebody_is_organizer"
-							defaults="<strong>{{somebody}}</strong> is the organizer"
-							values={{ somebody: organizer.name || organizer.email }}
+			) : (
+				event?.resource?.organizer?.email !== account.name &&
+				!event?.resource?.iAmAttendee && (
+					<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
+						<Avatar
+							style={{ width: '48px', height: '48px' }}
+							label={organizer.name || organizer.email || organizer.mail}
 						/>
-					</Text>
-				</Row>
+						<Text style={{ padding: '0px 8px' }}>
+							<Trans
+								i18nKey="message.somebody_is_organizer"
+								defaults="<strong>{{somebody}}</strong> is the organizer"
+								values={{ somebody: organizer.name || organizer.email }}
+							/>
+						</Text>
+					</Row>
+				)
 			)}
 			<ParticipantsDisplayer participants={participants} />
 		</Container>
