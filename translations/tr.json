@@ -45,7 +45,8 @@
             "restore": "Geri yükle",
             "no": "Hayır",
             "tentative": "Belirsiz",
-            "yes": "Evet"
+            "yes": "Evet",
+            "needs_action": "Yapılması gerekenler"
         }
     },
     "folder": {
@@ -167,7 +168,7 @@
         "sure_to_delete_appointment_permanently": "Bu randevuyu kalıcı olarak silmek istediğinizden emin misiniz?",
         "want_to_edit_cancellation_msg": "Randevu iptal mesajını düzenlemek istiyor musunuz?",
         "you": "Siz",
-        "you_are_organizer": "Sizin organize ettiğiniz",
+        "you_are_organizer": "<Row><Text> <BoldText> Sizin  </BoldText> organize ettiğiniz </Text></Row>",
         "you_sure_delete_calendar": "\"{{name}}\" takvimi tamamen silmek istediğinizden emin misiniz?",
         "you_sure_move_calendar_trash": "\"{{name}}\" takvimi silmek istediğinizden emin misiniz?",
         "you_will_see_the_subject_here": "Konu",
@@ -282,7 +283,7 @@
         "series": "Seriler",
         "share": "Paylaş",
         "share_calendar_url": "{{title}} paylaşıma git",
-        "shares_items": "{{value}}'in paylaşılan takvimleri",
+        "shares_items": "<bold>{{user}}</bold> paylaşılan takvimleri",
         "sharing_of_this_folder": "Bu klasörün paylaşımı",
         "show": "Göster",
         "show_plural": "Hepsini göster",
@@ -335,8 +336,10 @@
         "start_week_on": "Hafta başlangıcı",
         "trash_emptied": "Çöp kutusu başarıyla boşaltıldı",
         "undo": "Geri Al",
-        "on_behalf_of": "({{accountName}} ,bu kullanıcı yerine {{identitiy}} <{{otherAccount}}>",
-        "new_appointment": "Yeni Randevu"
+        "on_behalf_of": "({{accountName}} ,bu kullanıcı yerine {{identity}} <{{otherAccount}}>",
+        "new_appointment": "Yeni Randevu",
+        "app_name": "Takvimler",
+        "propose_new_time": "YENİ ZAMAN ÖNER"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -350,15 +353,15 @@
         "Attendees_accepted_count_plural": "<strong>{{count}} katılımcı </strong> kabul etti",
         "Attendees_tentative_count": "<strong>{{count}} katılımcı </strong> belirsiz olarak kabul etti",
         "Attendees_tentative_count_plural": "<strong>{{count}} katılımcı </strong> belirsiz olarak kabul etti",
-        "DE_with_count": "Yanıtlamayan ({{count}})",
-        "DE_with_count_plural": "Yanıtlamayan ({{count}})",
+        "DE_with_count": "Reddedildi",
+        "DE_with_count_plural": "Reddedildi ({{count}})",
         "Declined": "reddetti",
         "Invited_Visitor": "davet edildi",
-        "NE_with_count": "Belirsiz",
-        "NE_with_count_plural": "Belirsiz ({{count}})",
+        "NE_with_count": "Yanıtlamadı",
+        "NE_with_count_plural": "Yanıtlamadı ({{count}})",
         "Not_answered": "yanıtlamadı",
-        "TE_with_count": "Reddetti",
-        "TE_with_count_plural": "Reddetti ({{count}})",
+        "TE_with_count": "Belirsiz",
+        "TE_with_count_plural": "Belirsiz ({{count}})",
         "Tentative": "belirsiz olarak kabul etti",
         "visitors": "ve diğer {{others}} katılımcı",
         "Accepted": "kabul edildi"

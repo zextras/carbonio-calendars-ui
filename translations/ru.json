@@ -23,15 +23,15 @@
         "AC_with_count_0": "Принял",
         "AC_with_count_1": "Приняли",
         "AC_with_count_2": "Приняли",
-        "TE_with_count_0": "Отклонил",
-        "TE_with_count_1": "Отклонили",
-        "TE_with_count_2": "Отклонили",
-        "NE_with_count_0": "Под вопросом",
-        "NE_with_count_1": "Под вопросом",
-        "NE_with_count_2": "Под вопросом",
-        "DE_with_count_0": "Не ответил",
-        "DE_with_count_1": "Не ответили",
-        "DE_with_count_2": "Не ответили",
+        "TE_with_count_0": "Под вопросом ({{count}})",
+        "TE_with_count_1": "Под вопросом ({{count}})",
+        "TE_with_count_2": "Под вопросом ({{count}})",
+        "NE_with_count_0": "Не ответил",
+        "NE_with_count_1": "Не ответили",
+        "NE_with_count_2": "Не ответили",
+        "DE_with_count_0": "Отклонил",
+        "DE_with_count_1": "Отклонили",
+        "DE_with_count_2": "Отклонили",
         "visitors": "и другие {{others}} участники",
         "Tentative": "предварительно принято",
         "Not_answered": "не ответил",
@@ -54,7 +54,7 @@
     "message": {
         "invite_has_no_message": "Это приглашения не содержит текста",
         "you_will_see_the_subject_here": "Тема",
-        "you_are_organizer": "Вы организатор",
+        "you_are_organizer": "<Row><Text> <BoldText> Вы организатор</BoldText> </Text></Row>",
         "somebody_invited_you": "<strong> {{кто-то}} </strong> пригласил вас",
         "meeting_canceled": "Следующая встреча отменена",
         "have_not_sent_invitation": "Вы еще не отправили приглашение участникам",
@@ -260,13 +260,15 @@
         "calendar_shared": "Доступ к календарю успешно предоставлен",
         "changes_saved": "Изменения сохранены",
         "delete_instance": "Вы действительно хотите удалить этот экземпляр встречи «{title}»?",
-        "on_behalf_of": "({{accountName}}от {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "({{accountName}} от {{identitiy}} <{{otherAccount}}>",
         "settings_saved": "Настройки сохранены",
         "start_week_on": "Начать неделю",
         "trash_emptied": "Корзина успешно очищена",
         "undo": "Отменить",
         "of": "из",
-        "new_appointment": "Новая встреча"
+        "new_appointment": "Новая встреча",
+        "app_name": "Календари",
+        "propose_new_time": "Предложить другое время"
     },
     "tooltip": {
         "show_optionals": "Показать опции",
@@ -356,7 +358,8 @@
             "decline": "Отклонить",
             "trash": "Удалить",
             "no": "Нет",
-            "yes": "Да"
+            "yes": "Да",
+            "needs_action": "Необходимо действие"
         }
     },
     "items": {
