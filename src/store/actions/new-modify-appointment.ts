@@ -6,6 +6,8 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { find } from 'lodash';
+import { METADATA_SECTIONS } from '../../constants/metadata';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -75,11 +77,38 @@ export const generateSoapMessageFromInvite = (invite: any): any => {
 
 export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
-	async ({ invite, editor, account }: any): Promise<unknown> => {
+	async ({ invite, editor, account }: any, { getState }: any): Promise<unknown> => {
+		const prevInvite = getState()?.invites?.invites?.[editor.resource.inviteId];
+		const previousMeetingRoom = find(prevInvite?.meta, ['section', METADATA_SECTIONS.MEETING_ROOM]);
 		const normalizeInviteToSoap = invite
 			? generateSoapMessageFromInvite(invite)
 			: generateSoapMessageFromEditor(editor, account);
 		const res = await soapFetch('ModifyAppointment', normalizeInviteToSoap);
+		if (previousMeetingRoom && !editor?.resource?.room) {
+			await soapFetch('SetCustomMetadata', {
+				_jsns: 'urn:zimbraMail',
+				id: editor.resource.inviteId,
+				meta: {
+					section: METADATA_SECTIONS.MEETING_ROOM
+				}
+			});
+		}
+		if (
+			editor?.resource?.room &&
+			editor?.resource?.room?.label !== previousMeetingRoom?._attrs?.room
+		) {
+			await soapFetch('SetCustomMetadata', {
+				_jsns: 'urn:zimbraMail',
+				id: editor.resource.inviteId,
+				meta: {
+					section: METADATA_SECTIONS.MEETING_ROOM,
+					_attrs: {
+						room: editor.resource.room.label,
+						link: editor.resource.room.link
+					}
+				}
+			});
+		}
 		return res;
 	}
 );

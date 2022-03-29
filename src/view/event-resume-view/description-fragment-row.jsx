@@ -5,6 +5,8 @@
  */
 import { Divider, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import React from 'react';
+import { startsWith } from 'lodash';
+import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 
 export const DescriptionFragmentRow = ({ event }) => (
 	<>
@@ -29,6 +31,5 @@ export const DescriptionFragmentRow = ({ event }) => (
 				)}
 			</>
 		)}
-		<Divider />
 	</>
 );

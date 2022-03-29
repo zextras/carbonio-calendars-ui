@@ -6,6 +6,11 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
+import { replace } from 'lodash';
+
+export const ROOM_DIVIDER =
+	'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-';
+export const roomValidationRegEx = new RegExp(`(?<=${ROOM_DIVIDER})(.*)(?=${ROOM_DIVIDER})`, 's');
 
 const replaceLinkToAnchor = (content) => {
 	if (content === '' || content === undefined) {
@@ -112,7 +117,11 @@ const divider = '*~*~*~*~*~*~*~*~*~*';
 export function extractBody(body) {
 	if (body) {
 		const lastElement = body.split(divider).pop();
-		return lastElement.trim();
+		const defaultMessage = roomValidationRegEx.exec(lastElement)?.[0];
+		const stripDefaultRoomMessage = defaultMessage
+			? replace(lastElement, `${ROOM_DIVIDER}${defaultMessage}${ROOM_DIVIDER}`, '')
+			: lastElement;
+		return stripDefaultRoomMessage.trim();
 	}
 	return '';
 }
@@ -122,6 +131,7 @@ export function extractHtmlBody(body) {
 	if (htmlBody.startsWith('</div>')) {
 		htmlBody = `<html>${htmlBody.slice(10)}`;
 	}
+
 	return htmlBody;
 }
 
@@ -148,13 +158,17 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	}
 
 	if (fullInvite?.htmlDescription) {
+		const originalHtml = fullInvite?.htmlDescription?.[0]?._content ?? '';
+		const roomHtmlDesc = roomValidationRegEx?.exec(originalHtml)?.[0];
+		const pattern = roomHtmlDesc ? `${ROOM_DIVIDER}${roomHtmlDesc}${ROOM_DIVIDER}` : undefined;
+		const htmlContent = pattern ? replace(originalHtml, pattern, '') : originalHtml;
 		return (
-			<HtmlMessageRenderer
-				msgId={inviteId}
-				body={extractHtmlBody(fullInvite?.htmlDescription?.[0]?._content)}
-				parts={parts}
-			/>
+			<HtmlMessageRenderer msgId={inviteId} body={extractHtmlBody(htmlContent)} parts={parts} />
 		);
 	}
-	return <TextMessageRenderer text={extractBody(fullInvite?.textDescription?.[0]?._content)} />;
+	const originalText = fullInvite?.textDescription?.[0]?._content ?? '';
+	const roomTextDesc = roomValidationRegEx?.exec(originalText)?.[0];
+	const pattern = roomTextDesc ? `${ROOM_DIVIDER}${roomTextDesc}${ROOM_DIVIDER}` : undefined;
+	const textContent = pattern ? replace(originalText, pattern, '') : originalText;
+	return <TextMessageRenderer text={extractBody(textContent)} />;
 }

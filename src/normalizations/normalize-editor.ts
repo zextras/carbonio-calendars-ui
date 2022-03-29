@@ -3,11 +3,22 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter } from 'lodash';
+import { filter, find } from 'lodash';
 import moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
+import { METADATA_SECTIONS } from '../constants/metadata';
+
+const getVirtualRoom = (meta: any): { label: string; link: string } | undefined => {
+	const room = find(meta, ['section', METADATA_SECTIONS.MEETING_ROOM]);
+	return room?._attrs?.room && room?._attrs?.link
+		? {
+				label: room?._attrs?.room,
+				link: room?._attrs?.link
+		  }
+		: undefined;
+};
 
 export const normalizeEditor = (
 	id: string,
@@ -26,10 +37,11 @@ export const normalizeEditor = (
 	allDay: event.allDay,
 	resource: {
 		tz: invite?.tz,
-		room: event?.resource?.room,
+		meta: invite?.meta,
 		attach: invite.attach,
 		attachmentFiles: invite.attachmentFiles,
 		parts: invite.parts,
+		room: getVirtualRoom(invite?.meta),
 		attendees: filter(
 			filter(invite.attendees, (p) => p.cutype !== 'RES'),
 			(a) => a.role === 'REQ'

@@ -3,30 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter, groupBy, map, reduce, replace, uniqBy } from 'lodash';
+import { filter, groupBy, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
 import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../commons/zimbra-standard-colors';
-import { linkValidationRegEx, roomValidationRegEx } from '../constants/integrations';
-
 import { ZimbraFolder } from '../types/zimbra';
-
-export const getRoomFromLocation = (
-	location = ''
-): { link: string | undefined; label: string | undefined } | undefined => {
-	const roomMatch = location.match(roomValidationRegEx);
-	const linkMatch = location.match(linkValidationRegEx);
-	return location && (roomMatch || linkMatch)
-		? { label: roomMatch?.[1], link: linkMatch?.[1] }
-		: undefined;
-};
-
-export const stripRoomFromLocation = (location = ''): string | undefined => {
-	const roomMatch = location.match(roomValidationRegEx);
-	const linkMatch = location.match(linkValidationRegEx);
-
-	const locationSubstring1 = roomMatch ? replace(location, roomMatch[0], ``) : undefined;
-	return linkMatch ? replace(locationSubstring1 ?? location, linkMatch[0], ``) : location;
-};
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const retrieveAttachmentsType = (original: any, disposition: any, dataID: any): any =>

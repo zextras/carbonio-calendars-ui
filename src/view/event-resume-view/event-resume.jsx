@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { Container, Popover } from '@zextras/carbonio-design-system';
+import { Container, Divider, Popover } from '@zextras/carbonio-design-system';
+import { startsWith } from 'lodash';
 import { TitleRow } from './title-row';
 import { NeverSentWarningRow } from './never-sent-warning-row';
 import { CalendarInfoRow } from './calendar-info-row';
@@ -13,6 +14,8 @@ import { ParticipantsRow } from './partipants-row';
 import { DescriptionFragmentRow } from './description-fragment-row';
 import { ActionsButtonsRow } from './actions-buttons-row';
 import { TimeInfoRow } from './time-info-row';
+import { VirtualRoomRow } from './virtual-room-row';
+import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 
 export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispatch }) => (
 	<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
@@ -22,8 +25,12 @@ export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispa
 			<CalendarInfoRow event={event} />
 			{event && <TimeInfoRow event={event} showIcon />}
 			{event && <LocationRow event={event} showIcon />}
+			{invite?.meta && <VirtualRoomRow meta={invite?.meta} showIcon />}
 			<ParticipantsRow event={event} invite={invite} />
-			<DescriptionFragmentRow event={event} />
+			{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
+				<DescriptionFragmentRow event={event} />
+			)}
+			<Divider />
 			<ActionsButtonsRow event={event} dispatch={dispatch} onClose={onClose} />
 		</Container>
 	</Popover>

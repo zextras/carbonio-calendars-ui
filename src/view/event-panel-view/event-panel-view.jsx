@@ -3,21 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import {
 	Container,
 	Divider,
 	Icon,
 	IconButton,
-	ModalManagerContext,
 	Row,
 	Text,
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { replaceHistory, Spinner } from '@zextras/carbonio-shell-ui';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { map, some } from 'lodash';
 import ParticipantsPart from './participants-part';
@@ -200,6 +199,7 @@ export default function EventPanelView() {
 						isPrivate={event.resource.isPrivate}
 						inviteNeverSent={event.resource.inviteNeverSent}
 						event={event}
+						invite={invite}
 					/>
 					<StyledDivider />
 					{!event.resource.iAmOrganizer && !event.resource.owner && invite && (

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import ImageAndIconPart from './image-and-icon-part';
 import { TimeInfoRow } from '../event-resume-view/time-info-row';
 import { LocationRow } from '../event-resume-view/location-row';
-import { CalendarInfoRow } from '../event-resume-view/calendar-info-row';
+import { VirtualRoomRow } from '../event-resume-view/virtual-room-row';
 
 const PaddedRow = styled(Row)`
 	padding: 4px 4px;
@@ -49,7 +49,14 @@ function InviteNeverSentRow({ inviteNeverSent = false }) {
 	return null;
 }
 
-export default function DetailsPart({ subject, calendarColor, inviteNeverSent, isPrivate, event }) {
+export default function DetailsPart({
+	subject,
+	calendarColor,
+	inviteNeverSent,
+	isPrivate,
+	event,
+	invite
+}) {
 	return (
 		<Container
 			mainAlignment="flex-start"
@@ -80,6 +87,7 @@ export default function DetailsPart({ subject, calendarColor, inviteNeverSent, i
 					</Container>
 					{event && <TimeInfoRow event={event} width="fill" />}
 					{event && <LocationRow event={event} width="fill" />}
+					{invite?.meta && <VirtualRoomRow meta={invite?.meta} />}
 				</Row>
 			</Row>
 			<Padding top={'medium'} />

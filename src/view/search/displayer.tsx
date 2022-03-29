@@ -55,6 +55,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 							isPrivate={event?.resource.isPrivate}
 							inviteNeverSent={event?.resource?.inviteNeverSent}
 							event={event}
+							invite={invite}
 						/>
 						<StyledDivider />
 						{!event?.resource?.iAmOrganizer && !event?.resource?.owner && invite && (
