@@ -26,12 +26,12 @@
     "participants": {
         "AC_with_count": "Accettato",
         "AC_with_count_plural": "Accettati ({{count}})",
-        "TE_with_count": "Rifiutato",
-        "TE_with_count_plural": "Rifiutati {{count}}",
-        "NE_with_count": "Forse",
-        "NE_with_count_plural": "Forse {{count}}",
-        "DE_with_count": "({{count}}) non ha risposto",
-        "DE_with_count_plural": "({{count}}) non hanno risposto",
+        "TE_with_count": "Forse",
+        "TE_with_count_plural": "Forse ({{count}})",
+        "NE_with_count": "Non ha risposto",
+        "NE_with_count_plural": "Non hanno risposto ({{count}})",
+        "DE_with_count": "Rifiutato",
+        "DE_with_count_plural": "{{count}} Rifiutato",
         "Attendees_tentative_count": "<strong> partecipante </strong> ha risposto forse",
         "Attendees_tentative_count_plural": "<strong>{{count}} partecipanti </strong> hanno risposto forse",
         "Tentative": "Risposto: forse",
@@ -49,7 +49,7 @@
     },
     "message": {
         "you_will_see_the_subject_here": "Oggetto",
-        "you_are_organizer": "Tu sei l'organizzatore",
+        "you_are_organizer": "<Row><Text> <BoldText>Tu </BoldText> sei l'organizzatore </Text></Row>",
         "somebody_invited_you": "<strong>{{somebody}}</strong> ti ha invitato",
         "meeting_canceled": "La riunione seguente è stata annullata",
         "invite_has_no_message": "Questo invito non ha messaggi di testo",
@@ -220,7 +220,7 @@
         "work_week": "Settimana lavorativa",
         "timezone_pref_msg": "Gli orari seguono le impostazioni relative al tuo fuso orario.",
         "your_pref_timezone_msg": "Il tuo fuso orario predefinito è: GMT +01:00 Amsterdam, Berlino, Berna, Roma, Stoccolma, Vienna.",
-        "shares_items": "calendari condivisi di {{value}}",
+        "shares_items": "calendari condivisi di <bold>{{user}}</bold>",
         "edits_saved": "Modifiche salvate correttamente",
         "restore_calendar": "Ripristina calendario",
         "snooze": "Posponi",
@@ -249,11 +249,13 @@
         "trash_emptied": "Cestino svuotato correttamente",
         "calendar_shared": "Calendario condiviso correttamente",
         "filter_sharer_user": "Proprietario della cartella",
-        "on_behalf_of": "{{accountName}} per conto di {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "{{accountName}} per conto di {{identity}} <{{otherAccount}}>",
         "the": "Il",
         "invites": "Inviti",
         "share_calendar_url": "{{title}} accesso condiviso",
-        "new_appointment": "Nuovo appuntamento"
+        "new_appointment": "Nuovo appuntamento",
+        "app_name": "Calendari",
+        "propose_new_time": "PROPONI NUOVO ORARIO"
     },
     "action": {
         "send": "Invia",
@@ -334,7 +336,8 @@
             "restore": "Ripristina",
             "trash": "Elimina",
             "yes": "Sì",
-            "expand": "Apri nel visulizzatore"
+            "expand": "Apri nel visulizzatore",
+            "needs_action": "Necessita azione"
         }
     },
     "composer": {

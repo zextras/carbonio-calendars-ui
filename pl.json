@@ -19,7 +19,8 @@
             "accept": "Akceptuj",
             "decline": "Odrzuć",
             "no": "Nie",
-            "expand": "Otwórz na Ekranie wyświetlającym"
+            "expand": "Otwórz na Ekranie wyświetlającym",
+            "needs_action": "Potrzebuje działania"
         }
     },
     "folder": {
@@ -139,9 +140,9 @@
         "revoke_share": "Cofnij udostępnienie {{title}}",
         "save": "Zapisz",
         "series": "Seria",
-        "set_new_time": "Ustaw nową godzinę",
+        "set_new_time": "Ustaw nowy czas",
         "share_calendar_url": "Udostępnij dostęp do {{title}}",
-        "shares_items": "Udostępnione kalendarze {{value}}",
+        "shares_items": "Udostępnione kalendarze użytkownika <bold>{{user}}</bold>",
         "sharing_of_this_folder": "Udostępnianie tego folderu",
         "show_0": "Pokaż",
         "show_1": "Pokaż wszystkie",
@@ -149,7 +150,7 @@
         "show_declined_meetings": "Pokaż odrzucone spotkania",
         "snooze": "Drzemka",
         "start_date": "Data rozpoczęcia",
-        "start_date_and_time": "Data i godzina rozpoczęcia",
+        "start_date_and_time": "Data i czas rozpoczęcia",
         "start_week_on": "Zacznij tydzień",
         "time_zones": "Strefy czasowe",
         "tentative": "Niepewne",
@@ -177,7 +178,7 @@
         "of_every": "każdego",
         "of_every_month": "miesiąca, każdego",
         "ok": "OK",
-        "on_behalf_of": "{{accountName}} w imieniu {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "{{accountName}} w imieniu {{identity}} <{{otherAccount}}>",
         "ongoing": "Trwający",
         "optional_0": "Opcjonalny",
         "optional_1": "Opcjonalne",
@@ -189,7 +190,9 @@
         "of": "z",
         "share": "Udostępnij",
         "timezone_pref_msg": "Terminy zależą od twoich preferencji stref czasowych.",
-        "the": " "
+        "the": " ",
+        "propose_new_time": "ZAPROPONUJ NOWY TERMIIN",
+        "app_name": "Kalendarze"
     },
     "message": {
         "modal": {
@@ -234,7 +237,7 @@
         "want_to_send_cancellation_msg": "Czy chcesz wysłać wiadomość dot. anulacji spotkania do uczestników?",
         "want_to_edit_cancellation_msg": "Czy chcesz edytować wiadomość dot. anulacji spotkania?",
         "you": "Ty",
-        "you_are_organizer": "Jesteś organizatorem",
+        "you_are_organizer": "<Row><Text><BoldText> Ty  </BoldText> jesteś organizatorem </Text></Row>",
         "you_sure_delete_calendar": "Czy na pewno chcesz trwale usunąć kalendarz {{name}}?",
         "you_sure_delete_instance": "Czy na pewno chcesz usunąć ten przypadek spotkania \"{{title}}\" ?",
         "you_sure_move_calendar_trash": "Czy na pewno chcesz usunąć kalendarz {{name}}?",
@@ -257,18 +260,18 @@
         "Attendees_declined_count_0": "<strong>{{count}} uczestnik </strong> odpowiedział: Odrzucono",
         "Attendees_declined_count_1": "<strong>{{count}} uczestników </strong> odpowiedziało: Odrzucono",
         "Attendees_declined_count_2": "<strong>{{count}} uczestników </strong> odpowiedziało: Odrzucono",
-        "DE_with_count_0": "Brak odpowiedzi: ({{count}})",
-        "DE_with_count_1": "Brak odpowiedzi: ({{count}})",
-        "DE_with_count_2": "Brak odpowiedzi: ({{count}})",
+        "DE_with_count_0": "Odrzucono",
+        "DE_with_count_1": "Odrzucono: ({{count}})",
+        "DE_with_count_2": "Odrzucono: ({{count}})",
         "Declined": "Odrzucono",
         "Invited_Visitor": "zostali zaproszeni",
-        "NE_with_count_0": "Niepewny",
-        "NE_with_count_1": "Niepewnych ({{count}})",
-        "NE_with_count_2": "Niepewnych ({{count}})",
+        "NE_with_count_0": "Brak odpowiedzi",
+        "NE_with_count_1": "Brak odpowiedzi ({{count}})",
+        "NE_with_count_2": "Brak odpowiedzi ({{count}})",
         "Tentative": "Zaakceptowano jako niepewne",
-        "TE_with_count_0": "Odrzucono",
-        "TE_with_count_1": "Odrzucono ({{count}})",
-        "TE_with_count_2": "Odrzucono ({{count}})",
+        "TE_with_count_0": "Niepewne",
+        "TE_with_count_1": "Niepewne ({{count}})",
+        "TE_with_count_2": "Niepewne ({{count}})",
         "Not_answered": "brak odpowiedzi",
         "visitors": "i inni {{others}} uczestnicy"
     },
@@ -325,17 +328,17 @@
                 "public": "Publiczny"
             },
             "free_busy_opts": {
-                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
-                "allow_domain": "Zezwól tylko użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
-                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
-                "allow_internal": "Zezwól tylko użytkonikom spoza swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
+                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej organizacji na sprawdzanie swojego statusu Wolny/Zajęty",
+                "allow_domain": "Zezwól tylko użytkownikom ze swojej organizacji na sprawdzanie swojego statusu Wolny/Zajęty",
+                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej organizacji na sprawdzanie swojego statusu Wolny/Zajęty",
+                "allow_internal": "Zezwól tylko użytkownikom spoza swojej organizacji (domeny) na sprawdzanie swojego statusu Wolny/Zajęty",
                 "allow_none": "Nie zezwalaj nikomu na sprawdzanie swojego statusu Wolny/Zajęty"
             },
             "invt_opts": {
-                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej domeny na zapraszanie mnie na spotkania",
-                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej domeny na zapraszanie mnie na spotkania",
+                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej organizacji (domeny) na zapraszanie mnie na spotkania",
+                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej organizacji na zapraszanie mnie na spotkania",
                 "allow_none": "Nie zezwalaj nikomu na zapraszanie mnie na spotkania",
-                "allow_internal": "Zezwól tylko użytkownikom ze swojej domeny na zapraszanie mnie na spotkania"
+                "allow_internal": "Zezwól tylko użytkownikom ze swojej organizacji na zapraszanie mnie na spotkania"
             },
             "timezones": {
                 "amsterdam": "GMT +01:00 Amsterdam, Berlin, Berno, Rzym, Sztokholm, Wiedeń",
@@ -350,8 +353,8 @@
         "invite": {
             "error": "Błąd"
         },
-        "new_time_proposed_success": "Nowa godzina została zaproponowana",
-        "proposed_time_accepted": "Zaakceptowano zaproponowaną godzinę",
+        "new_time_proposed_success": "Zaproponowano nowy czas",
+        "proposed_time_accepted": "Zaakceptowano zaproponowany czas",
         "url_copied": "skopiowano {{title}}"
     },
     "timezone": {
@@ -454,9 +457,9 @@
                 "manager": "Manager (może wyświetlać, edytować, dodawać oraz usuwać)"
             },
             "share_calendar_with": {
-                "internal_users_groups": "Użytkownicy lub Grupy z mojej domeny",
+                "internal_users_groups": "Użytkownicy lub Grupy z mojej organizacji",
                 "public": "Publiczny (można tylko wyświetlać, hasło niewymagane)",
-                "external_guests": "Goście spoza mojej domeny (mogą tylko wyświetlać)"
+                "external_guests": "Goście spoza mojej organizacji (mogą tylko wyświetlać)"
             }
         },
         "placeholder": {

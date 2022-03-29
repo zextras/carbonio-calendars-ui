@@ -204,7 +204,7 @@
                     "message3": "Elegir un calendario hacia donde mover las citas consideradas:"
                 },
                 "input": {
-                    "filter": "Filtrar calendarios"
+                    "filter": "Filtrar Calendarios"
                 },
                 "new": "Nuevo calendario"
             },
