@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.13...v0.1.7) (2022-04-01)
+
+
+### Bug Fixes
+
+* appointment composer save will send appointment to attendees ([f46bea5](https://github.com/zextras/carbonio-calendars-ui/commit/f46bea58c370c77c65d9db00bfbc7cd3e5029523))
+* appointment organizer wrong display in displayer ([9520cd3](https://github.com/zextras/carbonio-calendars-ui/commit/9520cd38dd29be9fc13b7bf4c46c6ee33acaacf4))
+* avoid duplicated default message in room description and improved formatting text description ([2cb60a5](https://github.com/zextras/carbonio-calendars-ui/commit/2cb60a52eb15283baf94ab283483bb19b236b9bb))
+* default room message in editor description is hidden for users ([099f377](https://github.com/zextras/carbonio-calendars-ui/commit/099f377605b386a69501ca51f95da4f44abb5077))
+* editing and creating appointments on shared calendar issue fixed ([86a9aa0](https://github.com/zextras/carbonio-calendars-ui/commit/86a9aa04cb87a5764864aa606f2b9f35db0c9816))
+* normalization crash ([9db5a0c](https://github.com/zextras/carbonio-calendars-ui/commit/9db5a0c0a12bc0794817431d939d0e4ba5b2e009))
+* removed hardcoded labels ([8e8ad70](https://github.com/zextras/carbonio-calendars-ui/commit/8e8ad704af5e37047385fd89dc1dd2e0160a80eb))
+* removed hardcoded labels ([147f328](https://github.com/zextras/carbonio-calendars-ui/commit/147f328373dee0046787f7a92db623035c15426c))
+* showing divider in resume view ([a31c577](https://github.com/zextras/carbonio-calendars-ui/commit/a31c577d9c09a78a9e6e55f799996c3617bd9a54))
+* using uncontrolled mode in textarea ([8ace34c](https://github.com/zextras/carbonio-calendars-ui/commit/8ace34c3ecb3e6b8e01fca380880e2d53cae7083))
+* virtual room use metadata and display a message description for external clients ([6d4a4ab](https://github.com/zextras/carbonio-calendars-ui/commit/6d4a4abeef70d972fb99951d78173601cbe23b72))
+
 ### [0.1.5-rc.13](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.12...v0.1.5-rc.13) (2022-03-18)
 
 
