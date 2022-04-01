@@ -207,15 +207,7 @@
         "time_zones": "Fuso orario",
         "type_name_here": "Nome Calendario",
         "view_url": "Visualizza URL",
-        "week": {
-            "friday": "Venerdì",
-            "monday": "Lunedì",
-            "saturday": "Sabato",
-            "sunday": "Domenica",
-            "thursday": "Giovedì",
-            "tuesday": "Mertedì",
-            "wednesday": "Mercoledì"
-        },
+        "week": "Settimana",
         "work_hour": "Orario lavorativo",
         "work_week": "Settimana lavorativa",
         "timezone_pref_msg": "Gli orari seguono le impostazioni relative al tuo fuso orario.",
@@ -255,7 +247,17 @@
         "share_calendar_url": "{{title}} accesso condiviso",
         "new_appointment": "Nuovo appuntamento",
         "app_name": "Calendari",
-        "propose_new_time": "PROPONI NUOVO ORARIO"
+        "propose_new_time": "PROPONI NUOVO ORARIO",
+        "week_day": {
+            "friday": "Venerdì",
+            "monday": "Lunedì",
+            "saturday": "Sabato",
+            "sunday": "Domenica",
+            "thursday": "Giovedì",
+            "tuesday": "Martedì",
+            "wednesday": "Mercoledì"
+        },
+        "weeks_on": "Settimana(e) di"
     },
     "action": {
         "send": "Invia",
