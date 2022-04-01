@@ -67,9 +67,10 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	}, [playing, audio]);
 
 	useEffect(() => {
-		audio.addEventListener('ended', () => setPlaying(false));
+		const handler = () => setPlaying(false);
+		audio.addEventListener('ended', () => handler);
 		return () => {
-			audio.removeEventListener('ended', () => setPlaying(false));
+			audio.removeEventListener('ended', () => handler);
 		};
 	}, [audio]);
 
@@ -162,11 +163,11 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 			dismissedAt: moment().valueOf()
 		}));
 		setShowNewTimeModal(false);
-		if (dismissItems.length > 0)
+		if (dismissItems.length > 0) {
 			// @ts-ignore
-			dispatch(dismissApptReminder({ dismissItems })).then((res: any) => {
-				setApptForReminders([]);
-			});
+			dispatch(dismissApptReminder({ dismissItems }));
+			setApptForReminders([]);
+		}
 	}, [dispatch, uniqueReminders]);
 
 	const removeFromAppList = useCallback(
