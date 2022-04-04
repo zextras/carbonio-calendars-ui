@@ -11,14 +11,14 @@ import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
 import { useTranslation } from 'react-i18next';
-import { useAddBoardCallback } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { inviteToEvent } from '../../hooks/use-invite-to-event';
 import { getInvite } from '../../store/actions/get-invite';
-import { CALENDAR_APP_ID } from '../../constants';
+import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
 import BodyMessageRenderer from '../../commons/body-message-renderer.jsx';
 import { useInvite } from '../../hooks/use-invite';
 
@@ -88,7 +88,6 @@ const InviteResponse: FC<InviteResponse> = ({
 			),
 		[invite]
 	);
-	const addBoard = useAddBoardCallback();
 	const proposeNewTime = useCallback(() => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
@@ -97,16 +96,19 @@ const InviteResponse: FC<InviteResponse> = ({
 			const requiredEvent = inviteToEvent(normalizeInvite(res.payload.m));
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			addBoard(`/edit?edit=${res.payload.m.inv[0].comp[0].apptId}`, {
-				app: CALENDAR_APP_ID,
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				event: requiredEvent,
-				invite: normalizedInvite,
-				proposeNewTime: true
-			});
+			getBridgedFunctions().addBoard(
+				`${CALENDAR_ROUTE}/edit?edit=${res.payload.m.inv[0].comp[0].apptId}`,
+				{
+					app: CALENDAR_APP_ID,
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					event: requiredEvent,
+					invite: normalizedInvite,
+					proposeNewTime: true
+				}
+			);
 		});
-	}, [dispatch, addBoard, inviteId]);
+	}, [dispatch, inviteId]);
 	return (
 		<InviteContainer padding={{ all: 'extralarge' }}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
