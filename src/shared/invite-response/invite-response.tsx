@@ -97,7 +97,7 @@ const InviteResponse: FC<InviteResponse> = ({
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			getBridgedFunctions().addBoard(
-				`${CALENDAR_ROUTE}/edit?edit=${res.payload.m.inv[0].comp[0].apptId}`,
+				`${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
 				{
 					app: CALENDAR_APP_ID,
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
