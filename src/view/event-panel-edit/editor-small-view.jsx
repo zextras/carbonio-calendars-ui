@@ -14,7 +14,7 @@ import {
 	Select,
 	Text
 } from '@zextras/carbonio-design-system';
-import { map, find, filter, flatten, findIndex } from 'lodash';
+import { map, find, sortBy } from 'lodash';
 import {
 	useUserAccount,
 	useIntegratedComponent,
@@ -88,52 +88,20 @@ export default function EditorSmallView({
 			})),
 		[list]
 	);
-
 	useEffect(() => {
-		const identityList = map(account.identities.identity, (item, idx) => ({
+		const sortedList = sortBy(account.identities.identity, ({ name }) =>
+			name === 'DEFAULT' ? 0 : 1
+		);
+		const identityList = map(sortedList, (item, idx) => ({
 			value: idx,
-
-			label: `${item.name}(${item._attrs?.zimbraPrefFromDisplay}  <${item._attrs?.zimbraPrefFromAddress}>)`,
+			label: `${item.name}  (${item._attrs?.zimbraPrefFromDisplay} <${item._attrs?.zimbraPrefFromAddress}>)`,
 			address: item._attrs?.zimbraPrefFromAddress,
 			fullname: item._attrs?.zimbraPrefFromDisplay,
 			type: item._attrs.zimbraPrefFromAddressType,
 			identityName: item.name
 		}));
 		setDefaultIdentity(find(identityList, (item) => item?.identityName === 'DEFAULT'));
-
-		const rightsList = map(
-			filter(
-				account?.rights?.targets,
-				(rts) => rts.right === 'sendAs' || rts.right === 'sendOnBehalfOf'
-			),
-			(ele, idx) =>
-				map(ele?.target, (item) => ({
-					value: idx + identityList.length,
-					label:
-						ele.right === 'sendAs'
-							? `${item.d}<${item.email[0].addr}>`
-							: t('label.on_behalf_of', {
-									identity: item.d,
-									accountName: account.name,
-									otherAccount: item.email[0].addr,
-									defaultValue: '{{accountName}} on behalf of {{identity}} <{{otherAccount}}>'
-							  }),
-					address: item.email[0].addr,
-					fullname: item.d,
-					type: ele.right,
-					identityName: ''
-				}))
-		);
-
-		const flattenList = flatten(rightsList);
-		const uniqueIdentityList = [...identityList];
-		if (flattenList?.length) {
-			map(flattenList, (ele) => {
-				const uniqIdentity = findIndex(identityList, { address: ele.address });
-				if (uniqIdentity < 0) uniqueIdentityList.push(ele);
-			});
-			setList(uniqueIdentityList);
-		} else setList(identityList);
+		setList(identityList);
 	}, [account, t]);
 	const onDropEvent = (event) => {
 		event.preventDefault();
@@ -171,20 +139,12 @@ export default function EditorSmallView({
 	const onOrganizerChange = useCallback(
 		(val) => {
 			const selectedOrganizer = find(list, { value: val });
-			callbacks.onOrganizerChange(
-				selectedOrganizer.type === 'sendOnBehalfOf'
-					? {
-							email: selectedOrganizer.address,
-							name: selectedOrganizer.fullname,
-							sentBy: account.name
-					  }
-					: {
-							email: selectedOrganizer.address,
-							name: selectedOrganizer.fullname
-					  }
-			);
+			callbacks.onOrganizerChange({
+				email: selectedOrganizer.address,
+				name: selectedOrganizer.fullname
+			});
 		},
-		[account, callbacks, list]
+		[callbacks, list]
 	);
 
 	const textAreaLabel = useMemo(

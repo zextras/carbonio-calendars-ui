@@ -5,7 +5,7 @@
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { replaceHistory, useBoardConfig, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -123,7 +123,14 @@ const Header = ({ title, expanded, setExpanded }) => {
 };
 
 const EventEditPanel = ({ boardContext }) => {
-	const { calendarId, apptId, ridZ } = useParams();
+	const params = useParams();
+	const { calendarId, apptId, ridZ } = boardContext?.proposeNewTime
+		? {
+				calendarId: boardContext?.event?.resource.calendar.id,
+				apptId: boardContext?.event?.resource.id,
+				ridZ: boardContext?.event?.resource.ridZ
+		  }
+		: params;
 	const calendar = useSelector((s) => selectCalendar(s, calendarId));
 	const appointment = useSelector((s) => selectAppointment(s, apptId));
 	const inst = useSelector((s) => selectAppointmentInstance(s, apptId, ridZ));
