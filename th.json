@@ -46,15 +46,7 @@
         "apple_ical": "Apple iCal",
         "auto_add_rcvd_app": "เพิ่มการนัดหมายที่ได้รับไปยังปฏิทินโดยอัตโนมัติ",
         "every_weekday": "ทุกสัปดาห์",
-        "week": {
-            "thursday": "วันพฤหัสบดี",
-            "tuesday": "วันอังคาร",
-            "wednesday": "วันพุธ",
-            "friday": "วันศุกร์",
-            "monday": "วันจันทร์",
-            "saturday": "วันเสาร์",
-            "sunday": "วันอาทิตย์"
-        },
+        "week": "สัปดาห์",
         "weeks_on": "สัปดาห์ใน",
         "add_share": "เพิ่มการแชร์",
         "attendee_plural": "ผู้เข้าร่วม",
@@ -152,7 +144,18 @@
         "settings_saved": "การตั้งค่าที่บันทึกไว้",
         "on_behalf_of": "{{accountName}} ในนามของ {{identitiy}} <{{otherAccount}}>",
         "trash_emptied": "ล้างถังขยะเรียบร้อยแล้ว",
-        "the": "ที่"
+        "the": "ที่",
+        "role": "บทบาท",
+        "today": "วันนี้",
+        "week_day": {
+            "friday": "วันศุกร์",
+            "monday": "วันจันทร์",
+            "saturday": "วันเสาร์",
+            "sunday": "วันอาทิตย์",
+            "thursday": "วันพฤหัสบดี",
+            "tuesday": "วันอังคาร",
+            "wednesday": "วันพุธ"
+        }
     },
     "calendar": {
         "modal": {

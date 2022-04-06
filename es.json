@@ -104,15 +104,7 @@
         "to": "Para",
         "type_name_here": "Nombre del calendario",
         "view_url": "Ver URL",
-        "week": {
-            "friday": "Viernes",
-            "monday": "Lunes",
-            "saturday": "Sábado",
-            "sunday": "Domingo",
-            "thursday": "Jueves",
-            "wednesday": "Miércoles",
-            "tuesday": "Martes"
-        },
+        "week": "Semana",
         "work_hour": "Hora de trabajo",
         "work_week": "Semana de trabajo",
         "tentative": "provisional",
@@ -145,7 +137,18 @@
         "on_behalf_of": "{{accountName}} en nombre de {{identitiy}} <{{otherAccount}}>",
         "settings_saved": "Ajustes guardados",
         "trash_emptied": "Papelera vaciada con éxito",
-        "new_appointment": "Nueva reunión"
+        "new_appointment": "Nueva reunión",
+        "role": "rol",
+        "today": "hoy",
+        "week_day": {
+            "friday": "Viernes",
+            "monday": "Lunes",
+            "saturday": "Sábado",
+            "sunday": "Domingo",
+            "thursday": "Jueves",
+            "tuesday": "Martes",
+            "wednesday": "Miércoles"
+        }
     },
     "action": {
         "delete": "Eliminar",

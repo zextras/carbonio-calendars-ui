@@ -112,15 +112,7 @@
         "time_zones": "टाइम ज़ोन",
         "type_name_here": "कैलेंडर नाम",
         "view_url": "URL देखें",
-        "week": {
-            "friday": "शुक्रवार",
-            "monday": "सोमवार",
-            "saturday": "शनिवार",
-            "sunday": "रविवार",
-            "thursday": "गुरुवार",
-            "tuesday": "मंगलवार",
-            "wednesday": "बुधवार"
-        },
+        "week": "सप्ताह",
         "weeks_on": "हफ्ता (ते)",
         "work_hour": "काम घंटा",
         "work_week": "कार्य सप्ताह",
@@ -152,7 +144,19 @@
         "trash_emptied": "रद्दी खाली किया गया",
         "delete_instance": "क्या आप वाकई में \"{title}\" एपाइंटमेंट की इस घटना को डिलीट करना चाहते हैं?",
         "appt_reminder": "एपाइंटमेंट रिमांइंडर",
-        "appt_reminder_plural": "एपाइंटमेंट के रिमांइंडर"
+        "appt_reminder_plural": "एपाइंटमेंट के रिमांइंडर",
+        "loading": "लोड हो रहा है...",
+        "role": "रोल",
+        "today": "आज",
+        "week_day": {
+            "sunday": "रविवार",
+            "thursday": "गुरुवार",
+            "tuesday": "मंगलवार",
+            "wednesday": "बुधवार",
+            "friday": "शुक्रवार",
+            "monday": "सोमवार",
+            "saturday": "शनिवार"
+        }
     },
     "action": {
         "delete": "डिलीट करें",

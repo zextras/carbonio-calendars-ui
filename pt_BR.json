@@ -103,15 +103,7 @@
         "to": "Para",
         "type_name_here": "Nome do calendário",
         "view_url": "Ver URL",
-        "week": {
-            "friday": "Sexta-Feira",
-            "monday": "Segunda-Feira",
-            "saturday": "Sábado",
-            "sunday": "Domingo",
-            "thursday": "Quinta-Feira",
-            "tuesday": "Terça-Feira",
-            "wednesday": "Quarta-Feira"
-        },
+        "week": "Semana",
         "weeks_on": "Semana(s) em",
         "work_hour": "Hora de trabalho",
         "work_week": "Semana de trabalho",
@@ -144,7 +136,18 @@
         "trash_emptied": "Lixeira esvaziada com sucesso",
         "appt_reminder": "Lembrete de Compromisso",
         "appt_reminder_plural": "Lembretes de Compromissos",
-        "settings_saved": "Configurações salvas"
+        "settings_saved": "Configurações salvas",
+        "today": "hojé",
+        "week_day": {
+            "saturday": "Sábado",
+            "sunday": "Domingo",
+            "thursday": "Quinta-Feira",
+            "friday": "Sexta-Feira",
+            "monday": "Segunda-Feira",
+            "tuesday": "Terça-Feira",
+            "wednesday": "Quarta-Feira"
+        },
+        "role": "função"
     },
     "action": {
         "delete": "Excluir",

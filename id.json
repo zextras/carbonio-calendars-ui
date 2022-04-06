@@ -106,15 +106,7 @@
         "timezone_pref_msg": "Pengaturan waktu mengikuti preferensi zona waktu Anda.",
         "to": "Kepada",
         "view_url": "Lihat URL",
-        "week": {
-            "friday": "Jumat",
-            "monday": "Senin",
-            "saturday": "Sabtu",
-            "sunday": "Minggu",
-            "thursday": "Kamis",
-            "tuesday": "Selasa",
-            "wednesday": "Rabu"
-        },
+        "week": "Minggu",
         "work_week": "Minggu kerja",
         "your_pref_timezone_msg": "Preferensi zona waktu Anda adalah: GMT +01:00 Amsterdam, Berlin, Bern, Roma, Stockholm, Wina.",
         "regular": "Reguler",
@@ -156,7 +148,19 @@
         "event_title": "Judul acara",
         "on_behalf_of": "{{accountName}} atas nama {{identitiy}} <{{otherAccount}}>",
         "settings_saved": "Pengaturan disimpan",
-        "trash_emptied": "Sampah berhasil dikosongkan"
+        "trash_emptied": "Sampah berhasil dikosongkan",
+        "loading": "Memuat...",
+        "role": "peran",
+        "today": "hari ini",
+        "week_day": {
+            "friday": "Jumat",
+            "monday": "Senin",
+            "saturday": "Sabtu",
+            "sunday": "Minggu",
+            "wednesday": "Rabu",
+            "thursday": "Kamis",
+            "tuesday": "Selasa"
+        }
     },
     "calendar": {
         "modal": {
