@@ -31,7 +31,7 @@
         "NE_with_count": "Non ha risposto",
         "NE_with_count_plural": "Non hanno risposto ({{count}})",
         "DE_with_count": "Rifiutato",
-        "DE_with_count_plural": "{{count}} Rifiutato",
+        "DE_with_count_plural": "{{count}} Hanno rifiutato",
         "Attendees_tentative_count": "<strong> partecipante </strong> ha risposto forse",
         "Attendees_tentative_count_plural": "<strong>{{count}} partecipanti </strong> hanno risposto forse",
         "Tentative": "Risposto: forse",
@@ -257,14 +257,19 @@
             "tuesday": "Martedì",
             "wednesday": "Mercoledì"
         },
-        "weeks_on": "Settimana(e) di"
+        "weeks_on": "Settimana(e) di",
+        "role": "ruolo",
+        "loading": "Caricamento...",
+        "maybe": "forse",
+        "share_with": "condividi con",
+        "today": "oggi"
     },
     "action": {
         "send": "Invia",
         "save": "Salva",
         "create": "Crea",
         "delete_calendar": "Elimina calendario",
-        "empty_trash": "Svuota cestino",
+        "empty_trash": "Svuota Cestino",
         "move_to_root": "Sposta in root",
         "new_calendar": "Nuovo calendario",
         "delete": "Cancella",

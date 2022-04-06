@@ -296,15 +296,7 @@
         "to": "Kime",
         "type_name_here": "Takvim adı",
         "view_url": "URL göster",
-        "week": {
-            "friday": "Cuma",
-            "monday": "Pazartesi",
-            "saturday": "Cumartesi",
-            "sunday": "Pazar",
-            "thursday": "Perşembe",
-            "tuesday": "Salı",
-            "wednesday": "Çarşamba"
-        },
+        "week": "Hafta",
         "weeks_on": "Hafta",
         "work_hour": "Çalışma saatleri",
         "work_week": "Çalışma günleri",
@@ -339,7 +331,22 @@
         "on_behalf_of": "({{accountName}} ,bu kullanıcı yerine {{identity}} <{{otherAccount}}>",
         "new_appointment": "Yeni Randevu",
         "app_name": "Takvimler",
-        "propose_new_time": "YENİ ZAMAN ÖNER"
+        "propose_new_time": "YENİ ZAMAN ÖNER",
+        "loading": "Yükleniyor…",
+        "maybe": "belki",
+        "role": "Rol",
+        "share_with": "paylaş",
+        "today": "bugün",
+        "week_day": {
+            "friday": "Cuma",
+            "monday": "Pazartesi",
+            "saturday": "Cumartesi",
+            "sunday": "Pazar",
+            "thursday": "Perşembe",
+            "tuesday": "Salı",
+            "wednesday": "Çarşamba"
+        },
+        "exclude_free_busy": "Serbest/meşgul zamanları raporlarken bu takvimi kullanma"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {

@@ -68,15 +68,7 @@
         "day": "Tag",
         "email_input_message": "E-Mail Adressen eingeben",
         "enable_dlgtn_for_ical": "Befugnisübertragung für Apple iCal CalDAV Client aktivieren",
-        "week": {
-            "saturday": "Samstag",
-            "sunday": "Sonntag",
-            "friday": "Freitag",
-            "monday": "Montag",
-            "thursday": "Donnerstag",
-            "tuesday": "Dienstag",
-            "wednesday": "Mittwoch"
-        },
+        "week": "Wochen",
         "create_appt_settings": "Termine erstellen",
         "add_share": "Teilen hinzufügen",
         "calendar_color": "Kalenderfarbe",
@@ -204,7 +196,18 @@
         "event_title": "Titel des Ereignisses",
         "on_behalf_of": "{{accountName}} im Namen von {{identitiy}} <{{otherAccount}}>",
         "settings_saved": "Einstellungen gespeichert",
-        "trash_emptied": "Papierkorb erfolgreich geleert"
+        "trash_emptied": "Papierkorb erfolgreich geleert",
+        "role": "Rolle",
+        "today": "heute",
+        "week_day": {
+            "friday": "Freitag",
+            "monday": "Montag",
+            "saturday": "Samstag",
+            "sunday": "Sonntag",
+            "thursday": "Donnerstag",
+            "tuesday": "Dienstag",
+            "wednesday": "Mittwoch"
+        }
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",

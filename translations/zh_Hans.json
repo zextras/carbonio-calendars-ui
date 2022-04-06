@@ -205,15 +205,7 @@
         "timezone_pref_msg": "计时将遵循您的时区首选项进行。",
         "type_name_here": "日历名称",
         "view_url": "查看URL",
-        "week": {
-            "friday": "星期五",
-            "monday": "星期一",
-            "sunday": "星期日",
-            "thursday": "星期四",
-            "tuesday": "星期二",
-            "wednesday": "星期三",
-            "saturday": "星期六"
-        },
+        "week": "周",
         "weeks_on": "周，于",
         "work_hour": "工作时间",
         "work_week": "工作周",
@@ -238,7 +230,7 @@
         "revoke_share": "撤销 {{title}} 的共享",
         "series": "系列",
         "set_new_time": "设置新时间",
-        "shares_items": "{{value}}的共享日历",
+        "shares_items": "<bold>{{user}}</bold>的共享日历",
         "sharing_of_this_folder": "共享此文件夹",
         "show_declined_meetings": "显示拒绝的会议",
         "show": "显示全部",
@@ -284,8 +276,12 @@
         "new_calendar": "新日历",
         "of_every_month": "，每月，每",
         "restore_calendar": "恢复日历",
-        "on_behalf_of": "{{accountName}} 代表 {{identitiy}} <{{otherAccount}}>",
-        "trash_emptied": "垃圾箱清空成功"
+        "on_behalf_of": "{{accountName}} 代表 {{identity}} <{{otherAccount}}>",
+        "trash_emptied": "垃圾箱清空成功",
+        "role": "角色",
+        "share_with": "分享给",
+        "today": "今天",
+        "new_appointment": "新预约"
     },
     "months": {
         "april": "四月",
@@ -452,13 +448,13 @@
         "visitors": "及另外{{others}}名参与者",
         "Attendees_not_answered_count": "<strong>{{count}}名参与者</strong>未答复",
         "Attendees_tentative_count": "<strong>{{count}}名参与者</strong>已暂定接受",
-        "DE_with_count": "未答复（{{count}}）",
+        "DE_with_count": "已拒绝（{{count}}）",
         "AC_with_count": "已接受（{{count}}）",
         "Declined": "已拒绝",
         "Invited_Visitor": "已邀请",
         "Not_answered": "未答复",
-        "NE_with_count": "暂定（{{count}}）",
-        "TE_with_count": "已拒绝（{{count}}）"
+        "NE_with_count": "未答复（{{count}}）",
+        "TE_with_count": "暂定 ({{count}})"
     },
     "cannot_edit_name": "您无法编辑系统日历名称",
     "composer": {
