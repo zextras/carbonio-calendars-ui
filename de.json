@@ -26,7 +26,8 @@
             "new_calendar_created": "Neuer Kalender erstellt",
             "edit_calendar": "Änderungen korrekt gespeichert",
             "calendar_permanently_deleted": "Kalender endgültig gelöscht",
-            "calendar_restored": "Kalender erfolgreich wiederhergestellt"
+            "calendar_restored": "Kalender erfolgreich wiederhergestellt",
+            "appointment_permanently_deleted": "Termin dauerhaft gelöscht"
         },
         "are_organizer": "sind der Organisator",
         "somebody_invited_you": "<strong>{{somebody}}</strong> hat Sie eingeladen",
@@ -51,7 +52,7 @@
         "sure_to_delete_appointment": "Sind Sie sicher, dass Sie diesen Termin löschen möchten?",
         "sure_to_delete_appointment_permanently": "Sind Sie sicher, dass Sie diesen Termin endgültig löschen möchten?",
         "want_to_edit_cancellation_msg": "Möchten Sie die Absagenachricht des Termins bearbeiten?",
-        "you_are_organizer": "Sie sind der Organisator",
+        "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>",
         "you_sure_delete_calendar": "Sind Sie sicher, dass Sie den \"{{name}}\" Kalender endgültig löschen möchten?",
         "you_sure_move_calendar_trash": "Sind Sie sicher, dass Sie den \"{{name}}\" Kalender löschen möchten?",
         "you_will_see_the_subject_here": "Betreff",
@@ -110,7 +111,7 @@
         "series": "Serientermine",
         "set_new_time": "Neue Zeit festlegen",
         "share_calendar_url": "{{title}} Zugang teilen",
-        "shares_items": "{{value}}s geteilte Kalender",
+        "shares_items": "<bold>{{user}}</bold>'s shared calendars",
         "sharing_of_this_folder": "Teilen dieses Ordners",
         "show": "Anzeigen",
         "show_plural": "Alle anzeigen",
@@ -207,13 +208,20 @@
             "thursday": "Donnerstag",
             "tuesday": "Dienstag",
             "wednesday": "Mittwoch"
-        }
+        },
+        "exclude_free_busy": "Diesen Kalender bei der Meldung der Frei-/Gebucht-Zeiten ausschließen",
+        "loading": "Laden...",
+        "maybe": "vielleicht",
+        "propose_new_time": "NEUE ZEIT VORSCHLAGEN",
+        "share_with": "teilen mit",
+        "app_name": "Kalender",
+        "new_appointment": "Neuer Termin"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
         "visitors": "und weitere {{others}} Teilnehmer",
-        "DE_with_count": "Hat nicht geantwortet ({{count}})",
-        "DE_with_count_plural": "Haben nicht geantwortet ({{count}})",
+        "DE_with_count": "Abgelehnt",
+        "DE_with_count_plural": "Abgelehnt {{count}}",
         "AC_with_count": "Zugesagt",
         "AC_with_count_plural": "Zugesagt ({{count}})",
         "Attendees_accepted_count": "<strong>{{count}} Teilnehmer </strong> hat zugesagt",
@@ -228,10 +236,10 @@
         "Tentative": "vorläufig zugesagt",
         "Declined": "abgelehnt",
         "Accepted": "akzeptiert",
-        "NE_with_count": "Vorläufig",
-        "NE_with_count_plural": "Vorläufig ({{count}})",
-        "TE_with_count": "Abgelehnt",
-        "TE_with_count_plural": "Abgelehnt ({{count}})"
+        "NE_with_count": "Hat nicht geantwortet",
+        "NE_with_count_plural": "Hat nicht geantwortet ({{{count}}})",
+        "TE_with_count": "Vorläufige",
+        "TE_with_count_plural": "Vorläufig ({{count}})"
     },
     "action": {
         "create": "Erstellen",
@@ -284,7 +292,8 @@
             "tentative": "Vorläufig",
             "trash": "Löschen",
             "no": "Nein",
-            "yes": "Ja"
+            "yes": "Ja",
+            "needs_action": "Handlungsbedarf"
         }
     },
     "folder": {

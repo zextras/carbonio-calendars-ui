@@ -27,7 +27,8 @@
             "appt_moved_error": "出现错误，预约未移动，请重试。",
             "appt_deleted_error": "出现错误，请重试。",
             "calendar_permanently_deleted": "日历已永久性删除",
-            "calendar_restored": "日历已成功恢复"
+            "calendar_restored": "日历已成功恢复",
+            "appointment_permanently_deleted": "预约已永久性删除"
         },
         "are_organizer": "为组织者",
         "delete_all_occurences": "删除所有重复次数",
@@ -54,7 +55,7 @@
         "sure_to_delete_appointment_permanently": "确定要永久性删除该预约吗？",
         "want_to_edit_cancellation_msg": "您想编辑预约取消消息吗？",
         "want_to_send_cancellation_msg": "您想向参与者发送取消消息吗？",
-        "you_are_organizer": "您为组织者",
+        "you_are_organizer": "<Row><Text><BoldText>您</BoldText>为组织者</Text></Row>",
         "you_sure_delete_calendar": "确定要永久性删除“{{name}}”日历吗？",
         "you_sure_move_calendar_trash": "确定要删除“{{name}}”日历吗？",
         "you_sure_delete_instance": "确定要删除此“{{title}}”预约的实例吗？"
@@ -98,7 +99,8 @@
             "yes": "是",
             "decline": "拒绝",
             "expand": "在显示工具中打开",
-            "tentative": "暂定"
+            "tentative": "暂定",
+            "needs_action": "需要操作"
         }
     },
     "items": {
@@ -240,7 +242,7 @@
         "tentative": "暂定",
         "the": "The",
         "time_zones": "时区",
-        "to": "收件人",
+        "to": "至",
         "display": "显示",
         "edit_access": "编辑 {{name}} 的访问权限",
         "edit_properties": "编辑 {{name}} 的属性",
@@ -281,7 +283,21 @@
         "role": "角色",
         "share_with": "分享给",
         "today": "今天",
-        "new_appointment": "新预约"
+        "new_appointment": "新预约",
+        "exclude_free_busy": "在报告空闲/忙碌时间排除此日历",
+        "maybe": "可能",
+        "loading": "加载中...",
+        "week_day": {
+            "saturday": "星期六",
+            "sunday": "星期日",
+            "thursday": "星期四",
+            "tuesday": "星期二",
+            "friday": "星期五",
+            "monday": "星期一",
+            "wednesday": "星期三"
+        },
+        "propose_new_time": "提出新时间",
+        "app_name": "日历"
     },
     "months": {
         "april": "四月",
