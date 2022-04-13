@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Padding, Select, Text, Icon, Row } from '@zextras/carbonio-design-system';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { find } from 'lodash';
@@ -71,16 +71,24 @@ const StatusItemComponent = ({ label, color }) => (
 		</Padding>
 	</Container>
 );
+
+const STATUS_VALUES = {
+	FREE: 'F',
+	TENTATIVE: 'T',
+	BUSY: 'B',
+	OUT_OF_OFFICE: 'O'
+};
+
 const getStatusItems = (t) => [
 	{
 		label: t('label.free', 'Free'),
-		value: 'F',
+		value: STATUS_VALUES.FREE,
 		color: '#ffffff',
 		customComponent: <StatusItemComponent label={t('label.free', 'Free')} color="#ffffff" />
 	},
 	{
 		label: t('label.tentative', 'tentative'),
-		value: 'T',
+		value: STATUS_VALUES.TENTATIVE,
 		color: '#ffc107',
 		customComponent: (
 			<StatusItemComponent label={t('label.tentative', 'tentative')} color="#ffc107" />
@@ -88,13 +96,13 @@ const getStatusItems = (t) => [
 	},
 	{
 		label: t('label.busy', 'Busy'),
-		value: 'B',
+		value: STATUS_VALUES.BUSY,
 		color: '#d5e3f6',
 		customComponent: <StatusItemComponent label={t('label.busy', 'Busy')} color="#d5e3f6" />
 	},
 	{
 		label: t('label.out_of_office', 'Out of office'),
-		value: 'O',
+		value: STATUS_VALUES.OUT_OF_OFFICE,
 		color: '#d5e3f6',
 		customComponent: (
 			<StatusItemComponent label={t('label.out_of_office', 'Out of office')} color="#2b73d2" />
@@ -104,22 +112,38 @@ const getStatusItems = (t) => [
 
 export default function FreeBusySelector({ onDisplayStatusChange, data, disabled }) {
 	const [t] = useTranslation();
-
+	const [isSelectedByUser, setIsSelectedByUser] = useState(false);
+	const setValue = useCallback(() => setIsSelectedByUser(true), []);
 	const statusItems = useMemo(() => getStatusItems(t), [t]);
 	const selectedItem = useMemo(
-		() => find(statusItems, (item) => item.value === data.resource.freeBusy),
-		[statusItems, data.resource.freeBusy]
+		() =>
+			find(statusItems, (item) => {
+				if (!isSelectedByUser) {
+					return data.allDay
+						? item.value === STATUS_VALUES.FREE
+						: item.value === STATUS_VALUES.BUSY;
+				}
+				return item.value === data.resource.freeBusy;
+			}),
+		[statusItems, data.allDay, data.resource.freeBusy, isSelectedByUser]
+	);
+	const onChange = useCallback(
+		(e) => {
+			onDisplayStatusChange(e);
+		},
+		[onDisplayStatusChange]
 	);
 
 	return (
 		<Select
 			disabled={disabled}
 			label={t('label.display', 'Display')}
-			onChange={onDisplayStatusChange}
+			onChange={onChange}
 			items={statusItems}
-			defaultSelection={selectedItem ?? statusItems[2]}
+			selection={selectedItem ?? statusItems[2]}
 			disablePortal
 			LabelFactory={LabelFactory}
+			onClick={setValue}
 		/>
 	);
 }
