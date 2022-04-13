@@ -225,7 +225,7 @@
         "event_title": "Titolo dell'evento",
         "move": "Sposta",
         "new_calendar": "Nuovo calendario",
-        "none": "Nesusno",
+        "none": "Nessuno",
         "of_every_month": "del mese, ogni",
         "ok": "OK",
         "restore": "Ripristina",
@@ -262,7 +262,8 @@
         "loading": "Caricamento...",
         "maybe": "forse",
         "share_with": "condividi con",
-        "today": "oggi"
+        "today": "oggi",
+        "exclude_free_busy": "Escludi questo calendario dalle impostazioni definite per lo stato libero/occupato"
     },
     "action": {
         "send": "Invia",

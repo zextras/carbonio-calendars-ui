@@ -91,7 +91,7 @@
         "series": "Series",
         "set_new_time": "Establecer nueva hora",
         "share_calendar_url": "Compartir acceso de {{title}}",
-        "shares_items": "{{value}} calendarios compartidos",
+        "shares_items": "Calendarios compartidos de <bold>{{user}}</bold>",
         "show": "Mostrar",
         "show_plural": "Mostrar todo",
         "show_declined_meetings": "Mostrar reuniones rechazadas",
@@ -134,7 +134,7 @@
         "delete_instance": "¿Seguro que quiere eliminar esta instancia de la cita “{title}”?",
         "discard_changes": "DESCARTAR CAMBIOS",
         "event_title": "Título del evento",
-        "on_behalf_of": "{{accountName}} en nombre de {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "{{accountName}} en nombre de {{identity}} <{{otherAccount}}>",
         "settings_saved": "Ajustes guardados",
         "trash_emptied": "Papelera vaciada con éxito",
         "new_appointment": "Nueva reunión",
@@ -148,7 +148,13 @@
             "thursday": "Jueves",
             "tuesday": "Martes",
             "wednesday": "Miércoles"
-        }
+        },
+        "exclude_free_busy": "Excluir este calendario cuando se informa de los momentos libres/ocupados",
+        "loading": "Cargando...",
+        "maybe": "tal vez",
+        "propose_new_time": "PROPONER NUEVA HORA",
+        "share_with": "compartir con",
+        "app_name": "Calendarios"
     },
     "action": {
         "delete": "Eliminar",
@@ -181,7 +187,8 @@
             "yes": "Sí",
             "decline": "Rechazar",
             "expand": "Abrir en visualizador",
-            "tentative": "Provisional"
+            "tentative": "Provisional",
+            "needs_action": "Necesita acción"
         }
     },
     "items": {
@@ -264,15 +271,15 @@
         "Accepted": "aceptado",
         "Attendees_declined_count": "<strong>asistente </strong> ha rechazado",
         "Attendees_declined_count_plural": "<strong>{{count}} asistentes </strong> han rechazado",
-        "NE_with_count": "Provisional",
-        "NE_with_count_plural": "Provisional ({{count}})",
+        "NE_with_count": "No contestó",
+        "NE_with_count_plural": "No contestaron ({{count}})",
         "Tentative": "aceptado como provisional",
-        "DE_with_count": "No contestó ({{count}})",
-        "DE_with_count_plural": "No contestaron ({{count}})",
+        "DE_with_count": "Rechazado ({{count}})",
+        "DE_with_count_plural": "Rechazados ({{count}})",
         "Invited_Visitor": "han sido invitados",
         "Not_answered": "no contestaron",
-        "TE_with_count": "Rechazado",
-        "TE_with_count_plural": "Rechazados {{count}}",
+        "TE_with_count": "Intento",
+        "TE_with_count_plural": "Intentos {{count}}",
         "visitors": "y otros {{others}} asistentes",
         "Attendees_accepted_count": "<strong>asistente </strong> ha aceptado",
         "Attendees_accepted_count_plural": "<strong>{{count}} asistentes </strong> han aceptado",
@@ -465,7 +472,7 @@
         },
         "invite_has_no_message": "Esta invitación no tiene un mensaje de texto",
         "invited_you": "te invitó a un evento",
-        "you_are_organizer": "Eres el organizador",
+        "you_are_organizer": "<Row><Text> <BoldText> Tú </BoldText> eres el organizador </Text></Row>",
         "delete_all_occurences": "Borrar todas las incidencias",
         "delete_future_occurences": "Borrar esta instancia y todas las futuras incidencias",
         "meeting_canceled": "La siguiente reunión ha sido cancelada",

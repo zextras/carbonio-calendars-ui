@@ -113,7 +113,7 @@
         "find_shares": "Wybierz które kalendarze będą wyświetlać się w drzewku kalendarzy",
         "free": "Wolny",
         "free_busy": "Wolny/Zajęty",
-        "general": "Ogólny",
+        "general": "Ogólne",
         "instance": "Przypadek",
         "invitation_not_sent": "Nie wysłano jeszcze zaproszeń do uczestników",
         "invites": "Zaproszenia",
@@ -498,7 +498,7 @@
             "drive": "Dodaj z Dysku"
         }
     },
-    "edit_share_properties": "Edytuj ustawienia udostępniania",
+    "edit_share_properties": "Edytuj właściwości udostępniania",
     "find_calendar_shares": "Znajdź Udostępnienia Kalendarza",
     "find_shares": "Znajdź udostępnienia",
     "freebusy": "WolnyZajęty",

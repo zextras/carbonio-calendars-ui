@@ -58,15 +58,7 @@
         "share": "Delen",
         "start_date": "Startdatum",
         "subject": "Onderwerp",
-        "week": {
-            "monday": "Maandag",
-            "saturday": "Zaterdag",
-            "sunday": "Zondag",
-            "thursday": "Donderdag",
-            "tuesday": "Dinsdag",
-            "wednesday": "Woensdag",
-            "friday": "Vrijdag"
-        },
+        "week": "Week",
         "free": "Gratis",
         "optional": "Keuzemogelijkheid",
         "optional_plural": "Keuzemogelijkheden",
@@ -141,7 +133,7 @@
         "series": "Serie",
         "set_new_time": "Nieuwe tijd instellen",
         "share_calendar_url": "{{title}} toegang delen",
-        "shares_items": "gedeelde kalenders van {{value}}",
+        "shares_items": "gedeelde kalenders van <bold>{{user}}</bold>",
         "sharing_of_this_folder": "Delen van deze map",
         "show_declined_meetings": "Geweigerde meetings tonen",
         "start_week_of": "Start week van",
@@ -178,9 +170,27 @@
         "discard_changes": "WIJZIGINGEN VERWIJDEREN",
         "delete_instance": "Weet u zeker dat u deze instantie van \"{title}\" afspraak wilt verwijderen?",
         "event_title": "Titel gebeurtenis",
-        "on_behalf_of": "{{accountName}} namens {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "{{accountName}} namens {{identity}} <{{otherAccount}}>",
         "settings_saved": "Instellingen opgeslagen",
-        "trash_emptied": "Prullenbak met succes leeggemaakt"
+        "trash_emptied": "Prullenbak met succes leeggemaakt",
+        "exclude_free_busy": "Laat deze kalender buiten beschouwing bij de rapportage van de vrije/actieve tijden",
+        "loading": "Wordt geladen...",
+        "maybe": "misschien",
+        "propose_new_time": "NIEUWE TIJD VOORSTELLEN",
+        "role": "rol",
+        "share_with": "delen met",
+        "today": "vandaag",
+        "week_day": {
+            "friday": "Vrijdag",
+            "monday": "Maandag",
+            "saturday": "Zaterdag",
+            "sunday": "Zondag",
+            "thursday": "Donderdag",
+            "tuesday": "Dinsdag",
+            "wednesday": "Woensdag"
+        },
+        "app_name": "Kalenders",
+        "new_appointment": "Nieuwe afspraak"
     },
     "event": {
         "action": {
@@ -193,7 +203,8 @@
             "yes": "Ja",
             "decline": "Weigeren",
             "expand": "In Displayer openen",
-            "tentative": "Voorlopig"
+            "tentative": "Voorlopig",
+            "needs_action": "Heeft actie nodig"
         }
     },
     "items": {
@@ -272,7 +283,8 @@
             "calendar_moved_to_root_folder_error": "Er ging iets mis, probeer het nog eens",
             "calendar_moved_to_trash_error": "Er is iets misgegaan, probeer het opnieuw",
             "calendar_permanently_deleted": "Kalender permanent verwijderd",
-            "calendar_restored": "Kalender met succes hersteld"
+            "calendar_restored": "Kalender met succes hersteld",
+            "appointment_permanently_deleted": "Afspraak permanent verwijderd"
         },
         "you": "U",
         "are_organizer": "zijn de organisator",
@@ -297,7 +309,7 @@
         "sure_to_delete_appointment": "Weet u zeker dat u de afspraak wilt verwijderen ?",
         "sure_to_delete_appointment_permanently": "Weet u zeker dat u deze afspraak permanent wilt verwijderen?",
         "want_to_edit_cancellation_msg": "Wilt u het bericht over het annuleren van een afspraak bewerken?",
-        "you_are_organizer": "U bent de organisator",
+        "you_are_organizer": "<Row><Text> <BoldText> U  </BoldText> bent de organisator </Text></Row>",
         "you_sure_move_calendar_trash": "Weet u zeker dat u de \"{{name}}\" kalender wilt verwijderen?",
         "sure_to_delete_all_occurences_appointment": "Weet u zeker dat u alle voorvallen van deze afspraak wilt verwijderen?",
         "want_to_send_cancellation_msg": "Wilt u een annuleringsbericht naar de aanwezigen sturen?",
@@ -468,10 +480,10 @@
         "Accepted": "aanvaard",
         "Declined": "geweigerd",
         "Invited_Visitor": "zijn uitgenodigd",
-        "NE_with_count": "Voorlopig",
-        "NE_with_count_plural": "Voorlopige ({{count}})",
+        "NE_with_count": "Antwoorde niet",
+        "NE_with_count_plural": "({{count}}) antwoorde niet",
         "Not_answered": "antwoordde niet",
-        "TE_with_count": "Geweigerd",
+        "TE_with_count": "Voorlopig",
         "TE_with_count_plural": "Geweigerd ({{count}})",
         "Tentative": "als voorlopig aanvaard",
         "AC_with_count": "Aanvaard",
@@ -484,8 +496,8 @@
         "Attendees_not_answered_count_plural": "<strong>{{count}} aanwezigen </strong> hebben niet geantwoord",
         "Attendees_tentative_count": "<strong>{{count}} aanwezige </strong> heeft als voorlopig aanvaard",
         "Attendees_tentative_count_plural": "<strong>{{count}} aanwezigen</strong> hebben als voorlopig aanvaard",
-        "DE_with_count": "Antwoordde niet (1)",
-        "DE_with_count_plural": "Antwoordden niet ({{count}})",
+        "DE_with_count": "Geweigerd",
+        "DE_with_count_plural": "({{count}}) geweigerd",
         "visitors": "en andere {{others}} aanwezigen"
     },
     "tooltip": {

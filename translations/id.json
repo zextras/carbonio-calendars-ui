@@ -118,7 +118,7 @@
         "share_calendar_url": "berbagi akses {{title}}",
         "sharing_of_this_folder": "Berbagi folder ini",
         "show_declined_meetings": "Tampilkan rapat yang ditolak",
-        "shares_items": "kalender bersama {{value}}",
+        "shares_items": "Kalender bersama <bold>{{user}}</bold>",
         "start_week_of": "Mulai minggu",
         "the": "Tersebut",
         "weeks_on": "Minggu di",
@@ -146,7 +146,7 @@
         "changes_saved": "Perubahan disimpan",
         "delete_instance": "Anda yakin ingin menghapus instans janji temu “{title}”?",
         "event_title": "Judul acara",
-        "on_behalf_of": "{{accountName}} atas nama {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "{{accountName}} atas nama {{identity}} <{{otherAccount}}>",
         "settings_saved": "Pengaturan disimpan",
         "trash_emptied": "Sampah berhasil dikosongkan",
         "loading": "Memuat...",
@@ -160,7 +160,13 @@
             "wednesday": "Rabu",
             "thursday": "Kamis",
             "tuesday": "Selasa"
-        }
+        },
+        "exclude_free_busy": "Kecualikan kalender ini saat melaporkan waktu bebas/sibuk",
+        "maybe": "mungkin",
+        "propose_new_time": "AJUKAN WAKTU BARU",
+        "share_with": "bagikan kepada",
+        "app_name": "Kalender",
+        "new_appointment": "Janji temu baru"
     },
     "calendar": {
         "modal": {
@@ -181,7 +187,8 @@
             "yes": "Ya",
             "decline": "Tolak",
             "expand": "Buka di Displayer",
-            "tentative": "Sementara"
+            "tentative": "Sementara",
+            "needs_action": "Memerlukan tindakan"
         }
     },
     "create": "Buat",
@@ -261,7 +268,8 @@
             "new_calendar_create_error": "Terjadi kesalahan, coba lagi",
             "new_calendar_created": "Kalender baru dibuat",
             "calendar_permanently_deleted": "Kalender dihapus permanen",
-            "calendar_restored": "Kalender berhasil dipulihkan"
+            "calendar_restored": "Kalender berhasil dipulihkan",
+            "appointment_permanently_deleted": "Janji temu dihapus permanen"
         },
         "have_not_sent_invitation": "Anda belum mengirim undangan ke peserta",
         "invite_has_no_message": "Undangan ini tidak berisi pesan teks",
@@ -274,7 +282,7 @@
         "sure_to_delete_appointment_permanently": "Anda yakin ingin menghapus janji temu ini secara permanen?",
         "want_to_edit_cancellation_msg": "Apakah Anda ingin mengedit pesan pembatalan janji temu?",
         "want_to_send_cancellation_msg": "Apakah Anda ingin mengirim pesan pembatalan ke peserta?",
-        "you_are_organizer": "Anda adalah pengelola",
+        "you_are_organizer": "<Row><Text><BoldText>Anda</BoldText> adalah penyelenggara</Text></Row>",
         "you_sure_delete_calendar": "Anda yakin ingin menghapus kalender \"{{name}}\" secara permanen?",
         "you_sure_move_calendar_trash": "Anda yakin ingin menghapus kalender \"{{name}}\"?",
         "you_will_see_the_subject_here": "Subjek",
@@ -454,13 +462,13 @@
     "participants": {
         "Tentative": "diterima sebagai sementara",
         "visitors": "dan peserta {{others}} lainnya",
-        "TE_with_count": "Ditolak ({{count}})",
+        "TE_with_count": "Sementara ({{count}})",
         "AC_with_count": "Diterima ({{count}})",
         "Accepted": "diterima",
-        "DE_with_count": "Belum menjawab ({{count}})",
+        "DE_with_count": "Menolak {{count}}",
         "Declined": "ditolak",
         "Invited_Visitor": "telah diundang",
-        "NE_with_count": "Sementara ({{count}})",
+        "NE_with_count": "Belum menjawab ({{count}})",
         "Not_answered": "belum menjawab",
         "Attendees_accepted_count": "<strong>{{count}} peserta </strong> menerima",
         "Attendees_declined_count": "<strong>{{count}} peserta </strong> menolak",

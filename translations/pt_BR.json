@@ -92,7 +92,7 @@
         "series": "Série",
         "set_new_time": "Definir novo horário",
         "share_calendar_url": "Compartilhar acesso de {{title}}",
-        "shares_items": "Calendários compartilhados de {{value}}",
+        "shares_items": "Calendários compartilhados de <bold>{{user}}</bold>",
         "sharing_of_this_folder": "Compartilhamento desta pasta",
         "show_declined_meetings": "Mostrar reuniões recusadas",
         "start_date": "Data de início",
@@ -110,8 +110,8 @@
         "your_pref_timezone_msg": "Sua preferência de fuso horário é: GMT +01: 00 Amsterdã, Berlim, Berna, Roma, Estocolmo, Viena.",
         "timezone_pref_msg": "Os horários seguem suas preferências de fuso horário.",
         "create": "Criar",
-        "delete": "Apagar",
-        "delete_plural": "",
+        "delete": "Excluir",
+        "delete_plural": "Excluir tudo",
         "edits_saved": "Edições salvas corretamente",
         "empty": "Vazia",
         "error_try_again": "Algo deu errado. Tente novamente",
@@ -132,7 +132,7 @@
         "discard_changes": "DESCARTAR MODIFICAÇÕES",
         "delete_instance": "Tem certeza que deseja excluir esta instância do compromisso “{title}”?",
         "event_title": "Título do evento",
-        "on_behalf_of": "{{accountName}} em nome de {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "{{accountName}} em nome de {{identity}} <{{otherAccount}}>",
         "trash_emptied": "Lixeira esvaziada com sucesso",
         "appt_reminder": "Lembrete de Compromisso",
         "appt_reminder_plural": "Lembretes de Compromissos",
@@ -147,7 +147,14 @@
             "tuesday": "Terça-Feira",
             "wednesday": "Quarta-Feira"
         },
-        "role": "função"
+        "role": "função",
+        "exclude_free_busy": "Excluir este calendário ao informar os horários livres/ocupados",
+        "loading": "Carregando...",
+        "maybe": "talvez",
+        "share_with": "compartilhar com",
+        "app_name": "Calendários",
+        "propose_new_time": "SUGERIR NOVO HORÁRIO",
+        "new_appointment": "Novo compromisso"
     },
     "action": {
         "delete": "Excluir",
@@ -180,7 +187,8 @@
             "yes": "Sim",
             "decline": "Recusar",
             "expand": "Abrir no Visualizador",
-            "tentative": "Provisório"
+            "tentative": "Provisório",
+            "needs_action": "Requer ação"
         }
     },
     "folder": {
@@ -262,7 +270,8 @@
             "calendar_moved_to_root_folder_error": "Algo deu errado. Tente novamente",
             "new_calendar_create_error": "Algo deu errado. Tente novamente",
             "calendar_permanently_deleted": "Calendário excluído permanentemente",
-            "calendar_restored": "Calendário restaurado com sucesso"
+            "calendar_restored": "Calendário restaurado com sucesso",
+            "appointment_permanently_deleted": "Compromisso excluído definitivamente"
         },
         "share_calendar_url_note2": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.<br/>Também é possível encontrar esses links clicando com o botão direito em sua lista de calendários.",
         "delete_all_occurences": "Excluir todas as ocorrências",
@@ -275,7 +284,7 @@
         "sure_to_delete_appointment": "Tem certeza que deseja excluir este compromisso?",
         "want_to_edit_cancellation_msg": "Deseja editar a mensagem de cancelamento deste compromisso?",
         "want_to_send_cancellation_msg": "Deseja enviar uma mensagem de cancelamento aos participantes?",
-        "you_are_organizer": "Você é o organizador",
+        "you_are_organizer": "<Row><Text><BoldText>Você </BoldText>é o organizador</Text></Row>",
         "you_sure_delete_calendar": "Tem certeza que deseja excluir permanentemente o calendário \"{{name}}\"?",
         "you_sure_move_calendar_trash": "Tem certeza que deseja excluir o calendário \"{{name}}\"?",
         "you_will_see_the_subject_here": "Assunto",
@@ -308,8 +317,8 @@
     "participants": {
         "AC_with_count": "Aceito",
         "AC_with_count_plural": "Aceitos ({{count}})",
-        "NE_with_count": "Provisório",
-        "NE_with_count_plural": "Provisórios ({{count}})",
+        "NE_with_count": "Não respondeu",
+        "NE_with_count_plural": "Não responderam ({{count}})",
         "Not_answered": "não respondeu",
         "Tentative": "aceitou como provisório",
         "Declined": "recusou",
@@ -322,11 +331,11 @@
         "Attendees_not_answered_count_plural": "<strong>{{count}} participantes</strong> não responderam",
         "Attendees_tentative_count": "<strong>{{count}} participante</strong> aceitou como provisório",
         "Attendees_tentative_count_plural": "<strong>{{count}} participantes</strong> aceitaram como provisório",
-        "DE_with_count": "Não respondeu ({{count}})",
-        "DE_with_count_plural": "Não responderam ({{count}})",
+        "DE_with_count": "Recusou",
+        "DE_with_count_plural": "Recursaram ({{count}})",
         "Invited_Visitor": "foi convidado",
-        "TE_with_count": "Recusou",
-        "TE_with_count_plural": "Recusaram ({{count}})",
+        "TE_with_count": "Provisório",
+        "TE_with_count_plural": "Provisórios ({{count}})",
         "visitors": "e outros {{others}} participantes"
     },
     "reminder": {
