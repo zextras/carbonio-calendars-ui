@@ -8,6 +8,7 @@ import {
 	Button,
 	Dropdown,
 	Icon,
+	IconButton,
 	ModalManagerContext,
 	Padding,
 	Row,
@@ -21,9 +22,14 @@ import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../../store/slices/appointments-slice';
 import { DeleteEventModal } from '../delete/delete-event-modal';
+import { useGetRecurrentActions } from '../../hooks/use-recurrent-actions';
 
 const AttendingRow = styled(Row)`
 	border: 1px solid ${(props) => props.theme.palette[props.invtReply.color].regular};
+`;
+
+const RecurrentRow = styled(Row)`
+	border: 1px solid ${(props) => props.theme.palette.primary.regular};
 `;
 
 const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatch }) => {
@@ -206,56 +212,83 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 	const createModal = useContext(ModalManagerContext);
 	const [t] = useTranslation();
+	const instanceActions = useGetRecurrentActions(event, { onClose, isInstance: true });
+	const seriesActions = useGetRecurrentActions(event, { onClose, isInstance: false });
+
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
 			{event.resource.iAmOrganizer && event.haveWriteAccess ? (
 				<>
-					<Padding right="small">
-						<Button
-							type="outlined"
-							color="error"
-							label={t('label.delete', 'Delete')}
-							onClick={(ev) => {
-								if (ev) ev.stopPropagation();
-								onClose();
-								const closeModal = createModal(
-									{
-										onClose: () => {
-											closeModal();
-										},
-										children: (
-											<>
-												<DeleteEventModal event={event} onClose={() => closeModal()} />
-											</>
-										)
-									},
-									true
-								);
-							}}
-							disabled={!event.haveWriteAccess}
-						/>
-					</Padding>
-
-					{event.resource?.calendar?.name === 'Trash' ? (
-						<Button
-							type="outlined"
-							disabled={!event.permission}
-							label={t('label.move', 'move')}
-							onClick={() => console.warn('not implemented yet')}
-						/>
+					{event.resource?.isRecurrent ? (
+						<Padding right="small" style={{ display: 'flex' }}>
+							<Dropdown data-testid={`series-options`} items={seriesActions}>
+								<RecurrentRow padding={{ all: 'small' }}>
+									<Padding right="small">
+										<Text color={'primary'}>SERIES</Text>
+									</Padding>
+									<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
+								</RecurrentRow>
+							</Dropdown>
+							<Padding left="small">
+								<Dropdown data-testid={`instance-options`} items={instanceActions}>
+									<RecurrentRow padding={{ all: 'small' }}>
+										<Padding right="small">
+											<Text color={'primary'}>INSTANCE</Text>
+										</Padding>
+										<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
+									</RecurrentRow>
+								</Dropdown>
+							</Padding>
+						</Padding>
 					) : (
-						<Button
-							disabled={!event.haveWriteAccess}
-							type="outlined"
-							label={t('label.edit', 'edit')}
-							onClick={(ev) => {
-								if (ev) ev.stopPropagation();
-								onClose();
-								replaceHistory(
-									`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
-								);
-							}}
-						/>
+						<>
+							<Padding right="small">
+								<Button
+									type="outlined"
+									color="error"
+									label={t('label.delete', 'Delete')}
+									onClick={(ev) => {
+										if (ev) ev.stopPropagation();
+										onClose();
+										const closeModal = createModal(
+											{
+												onClose: () => {
+													closeModal();
+												},
+												children: (
+													<>
+														<DeleteEventModal event={event} onClose={() => closeModal()} />
+													</>
+												)
+											},
+											true
+										);
+									}}
+									disabled={!event.haveWriteAccess}
+								/>
+							</Padding>
+							{event.resource?.calendar?.name === 'Trash' ? (
+								<Button
+									type="outlined"
+									disabled={!event.permission}
+									label={t('label.move', 'move')}
+									onClick={() => console.warn('not implemented yet')}
+								/>
+							) : (
+								<Button
+									disabled={!event.haveWriteAccess}
+									type="outlined"
+									label={t('label.edit', 'edit')}
+									onClick={(ev) => {
+										if (ev) ev.stopPropagation();
+										onClose();
+										replaceHistory(
+											`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
+										);
+									}}
+								/>
+							)}
+						</>
 					)}
 				</>
 			) : (

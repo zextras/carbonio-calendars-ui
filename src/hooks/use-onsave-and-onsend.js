@@ -11,21 +11,35 @@ import { editAppointmentData } from '../store/slices/editor-slice';
 import { selectEditor } from '../store/selectors/editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
+import { createApptException } from '../store/actions/create-appointment-exception';
 
-export const useOnSaveAndOnSend = (id, isBoard) => {
+export const useOnSaveAndOnSend = (id, isBoard, isInstance) => {
 	const dispatch = useDispatch();
 	const account = useUserAccount();
 	const closeBoard = useRemoveCurrentBoard();
 	const editor = useSelector((state) => selectEditor(state, id));
+	// createAppointmentExceptionRequest
 
+	// const saveAppointment = useCallback(
+	// 	(data) =>
+	// 		// eslint-disable-next-line no-nested-ternary
+	// 		!isSeries
+	// 			? createApptException({ editor: data, account, isSeries })
+	// 			: startsWith(editor?.resource?.id, 'new')
+	// 			? createAppointment({ editor: data, account })
+	// 			: modifyAppointment({ editor: data, account, isSeries }),
+	// 	[account, editor?.resource?.id, isSeries]
+	// );
 	const saveAppointment = useCallback(
 		(data) =>
-			startsWith(editor?.resource?.id, 'new')
+			// eslint-disable-next-line no-nested-ternary
+			isInstance
+				? createApptException({ editor: data, account, orignalData: {} })
+				: startsWith(editor?.resource?.id, 'new')
 				? createAppointment({ editor: data, account })
-				: modifyAppointment({ editor: data, account }),
-		[account, editor]
+				: modifyAppointment({ editor: data, account, isInstance }),
+		[account, editor?.resource?.id, isInstance]
 	);
-
 	const closePanel = useCallback(() => {
 		!isBoard ? replaceHistory('') : closeBoard();
 	}, [isBoard, closeBoard]);

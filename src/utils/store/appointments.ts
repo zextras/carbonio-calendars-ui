@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { reduce, find, uniqBy, forEach } from 'lodash';
+import { reduce, find, uniqBy, forEach, cloneDeep } from 'lodash';
 import { Appointment } from '../../types/store/appointments';
 import { AppointmentsSlice } from '../../types/store/store';
 
@@ -22,6 +22,8 @@ export const addAppointmentsToStore = (
 	state: AppointmentsSlice,
 	appts: Array<Appointment>
 ): void => {
+	console.log('aaaaaa state::', cloneDeep(state.appointments));
+	console.log('aaa appts::', appts);
 	state.appointments = reduce(
 		appts,
 		(acc, appt) => {

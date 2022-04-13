@@ -62,7 +62,8 @@ function generateHtmlBodyRequest(
 		end: moment.MomentInput;
 		title: any;
 	},
-	account: { displayName: any; name: any }
+	account: { displayName: any; name: any },
+	isInstance?: boolean
 ): any {
 	const attendees = [...app.resource.attendees, ...app.resource.optionalAttendees]
 		.map((a) => a.email)
@@ -109,7 +110,8 @@ function generateBodyRequest(
 		end: moment.MomentInput;
 		title: any;
 	},
-	account: { displayName: any; name: any }
+	account: { displayName: any; name: any },
+	isInstance?: boolean
 ): any {
 	const attendees = [...app.resource.attendees, ...app.resource.optionalAttendees]
 		.map((a) => a.email)
@@ -130,28 +132,28 @@ function generateBodyRequest(
 	}${app.resource.plainText}`;
 }
 
-const generateMp = (msg: any, account: any): any => ({
+const generateMp = (msg: any, account: any, isInstance?: boolean): any => ({
 	ct: 'multipart/alternative',
 	mp: msg.resource.isRichText
 		? [
 				{
 					ct: 'text/html',
-					content: generateHtmlBodyRequest(msg, account)
+					content: generateHtmlBodyRequest(msg, account, isInstance)
 				},
 				{
 					ct: 'text/plain',
-					content: generateBodyRequest(msg, account)
+					content: generateBodyRequest(msg, account, isInstance)
 				}
 		  ]
 		: [
 				{
 					ct: 'text/plain',
-					content: generateBodyRequest(msg, account)
+					content: generateBodyRequest(msg, account, isInstance)
 				}
 		  ]
 });
 
-const generateInvite = (editorData: any): any => {
+const generateInvite = (editorData: any, isInstance?: boolean): any => {
 	const at = [];
 	at.push(
 		...editorData.resource.attendees.map((c: any) => ({
@@ -162,7 +164,6 @@ const generateInvite = (editorData: any): any => {
 			rsvp: '1'
 		}))
 	);
-
 	editorData?.resource?.optionalAttendees &&
 		at.push(
 			...editorData.resource.optionalAttendees.map((c: any) => ({
@@ -202,13 +203,14 @@ const generateInvite = (editorData: any): any => {
 					d: editorData.resource.organizer.name,
 					sentBy: editorData.resource.organizer?.sentBy
 				},
-				recur: editorData?.resource?.recur ?? null,
+				...(isInstance ? {} : { recur: editorData?.resource?.recur ?? null }),
+
 				status: editorData.resource.status,
 				s:
 					editorData.allDay || editorData?.resource?.tz
 						? omitBy(
 								{
-									d: moment(editorData.start).format('YYYYMMDD'),
+									d: moment(editorData.start).format('YYYYMMDD[T]HHmmss'),
 									tz: editorData?.resource?.tz
 								},
 								isNil
@@ -220,7 +222,7 @@ const generateInvite = (editorData: any): any => {
 					editorData.allDay || editorData?.resource?.tz
 						? omitBy(
 								{
-									d: moment(editorData.end).format('YYYYMMDD'),
+									d: moment(editorData.end).format('YYYYMMDD[T]HHmmss'),
 									tz: editorData?.resource?.tz
 								},
 								isNil
@@ -228,6 +230,12 @@ const generateInvite = (editorData: any): any => {
 						: {
 								d: moment(editorData.end).utc().format('YYYYMMDD[T]HHmmss[Z]')
 						  },
+				...(isInstance
+					? {
+							exceptId: { d: editorData.resource.exceptionId }
+					  }
+					: {}),
+
 				class: editorData.resource.class,
 				draft: editorData.resource.draft
 			}
@@ -237,10 +245,10 @@ const generateInvite = (editorData: any): any => {
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const generateSoapMessageFromEditor = (msg: any, account: any): any =>
+export const generateSoapMessageFromEditor = (msg: any, account: any, isInstance?: boolean): any =>
 	omitBy(
 		{
-			echo: '1',
+			...(!isInstance ? { echo: '1' } : {}),
 			id: msg?.resource?.inviteId,
 			comp: '0',
 			m: omitBy(
@@ -255,9 +263,9 @@ export const generateSoapMessageFromEditor = (msg: any, account: any): any =>
 						  }
 						: null,
 					e: generateParticipantInformation(msg?.resource),
-					inv: generateInvite(msg),
+					inv: generateInvite(msg, isInstance),
 					l: msg?.resource?.calendar?.id,
-					mp: generateMp(msg, account),
+					mp: generateMp(msg, account, isInstance),
 					su: msg?.title
 				},
 				isNil
@@ -270,7 +278,7 @@ export const generateSoapMessageFromEditor = (msg: any, account: any): any =>
 export const createAppointment = createAsyncThunk(
 	'appointment/create new appointment',
 	async ({ editor, account }: any): Promise<any> => {
-		const body = generateSoapMessageFromEditor(editor, account);
+		const body = generateSoapMessageFromEditor(editor, account, false);
 		const res: { calItemId: string } = await soapFetch('CreateAppointment', body);
 		if (res?.calItemId) {
 			await soapFetch('SetCustomMetadata', {

@@ -35,7 +35,9 @@ export const normalizeEditor = (
 	startTimeZone: null,
 	endTimeZone: null,
 	allDay: event.allDay,
+
 	resource: {
+		recur: invite?.recurrenceRule?.[0] ?? undefined,
 		tz: invite?.tz,
 		meta: invite?.meta,
 		attach: invite.attach,
@@ -76,7 +78,7 @@ export const normalizeEditor = (
 						d: moment(event.end).utc().format('YYYYMMDD[T]HHmmss[Z]')
 				  }
 				: {
-						d: moment(event.start).format('YYYYMMDD[T]HHmmss'),
+						d: moment(event.end).format('YYYYMMDD[T]HHmmss'),
 						tz: invite?.tz
 				  },
 		calendar: event.resource.calendar,

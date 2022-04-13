@@ -129,7 +129,7 @@ export function extractBody(body) {
 export function extractHtmlBody(body) {
 	let htmlBody = extractBody(body);
 	if (htmlBody.startsWith('</div>')) {
-		htmlBody = `<html>${htmlBody.slice(10)}`;
+		htmlBody = `<html>${htmlBody.slice(12)}`;
 	}
 
 	return htmlBody;
