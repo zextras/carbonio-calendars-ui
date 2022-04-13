@@ -43,7 +43,7 @@ export default function CustomEvent({ event, title }) {
 	);
 	return (
 		<>
-			<Tooltip label={event.title} placement="top">
+			<Tooltip label={title} placement="top">
 				<Dropdown
 					contextMenu
 					width="cal(min(100%,200px))"
@@ -74,7 +74,7 @@ export default function CustomEvent({ event, title }) {
 										</Text>
 										<Padding left="small" />
 										<Text overflow="ellipsis" color="currentColor" weight="bold" size="small">
-											{event.title}
+											{title}
 										</Text>
 									</Row>
 									{!event?.resource?.calendar?.owner &&
