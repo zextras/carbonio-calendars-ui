@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.7...v0.1.8) (2022-04-14)
+
+
+### Features
+
+* editing allDay appointment does not reset appointment values ([81c0511](https://github.com/zextras/carbonio-calendars-ui/commit/81c0511f26dabfea4d5a7ed5ad30580a9c1e256c))
+
+
+### Bug Fixes
+
+* changed deletion sync handlers ([8167a12](https://github.com/zextras/carbonio-calendars-ui/commit/8167a12cf919c635fbfb4b26578845a63260e9d9))
+* dismiss button not working on reminders ([3c5754a](https://github.com/zextras/carbonio-calendars-ui/commit/3c5754a0a9158a43b5b1e0dd3a35d14dcf4585d8))
+* propose new time opening blank board ([2fc570f](https://github.com/zextras/carbonio-calendars-ui/commit/2fc570f72bd8f3cb1e45330a454a4a03de5734ed))
+* removed on behalf accounts on from selector of appointments ([fe654d5](https://github.com/zextras/carbonio-calendars-ui/commit/fe654d5cae736491fd0271c96917dfe93f2b87cd))
+
 ### [0.1.7](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.5-rc.13...v0.1.7) (2022-04-01)
 
 
