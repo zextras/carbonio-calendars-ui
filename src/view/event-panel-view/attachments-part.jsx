@@ -19,6 +19,7 @@ import {
 	useTheme
 } from '@zextras/carbonio-design-system';
 import { getFileExtension, calcColor } from '../../commons/utilities';
+import { FilePreview } from './file-preview';
 
 function getSizeLabel(size) {
 	let value = '';
@@ -162,6 +163,7 @@ function Attachment({
 			</Tooltip>
 			<Row orientation="horizontal" crossAlignment="center">
 				<AttachmentHoverBarContainer>
+					<FilePreview link={link} att={att} />
 					{disabled ? (
 						<Tooltip
 							key={`${message.id}-DeletePermanentlyOutline`}
