@@ -27,14 +27,15 @@
             "new_calendar_created": "新しいカレンダーが作成されました",
             "calendar_moved_to_root_folder": "カレンダーがルートフォルダに移動しました",
             "calendar_permanently_deleted": "カレンダーは完全に削除されました",
-            "calendar_restored": "カレンダーが復元されました"
+            "calendar_restored": "カレンダーが復元されました",
+            "appointment_permanently_deleted": "予定は完全に削除されました"
         },
         "are_organizer": "は主催者です",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> は主催者です",
         "have_not_sent_invitation": "まだ参加者に招待状を送信していません",
         "invite_has_no_message": "この招待状にはテキストメッセージがありません",
         "want_to_send_cancellation_msg": "参加者にキャンセルメッセージを送信しますか？",
-        "you_are_organizer": "あなたは主催者です",
+        "you_are_organizer": "<Row><Text> <BoldText> あなた </BoldText> は主催者です </Text></Row>",
         "you_sure_delete_calendar": "本当に「{{name}}」カレンダーを完全に削除しますか？",
         "you_will_see_the_subject_here": "件名",
         "delete_all_occurences": "あらゆる出来事を削除する",
@@ -90,7 +91,8 @@
             "yes": "はい",
             "decline": "拒否する",
             "expand": "ディスプレイヤーで開く",
-            "tentative": "暫定"
+            "tentative": "暫定",
+            "needs_action": "アクションが必要です"
         }
     },
     "items": {
@@ -189,7 +191,7 @@
         "series": "連続",
         "set_new_time": "新しい時間を設定する",
         "share_calendar_url": "{{title}}アクセス共有",
-        "shares_items": "{{value}}の共有カレンダー",
+        "shares_items": "<bold>{{user}}</bold>の共有カレンダー",
         "sharing_of_this_folder": "このフォルダの共有",
         "show": "すべて表示する",
         "show_declined_meetings": "辞退した会議を表示する",
@@ -199,15 +201,7 @@
         "to": "宛先",
         "type_name_here": "カレンダー名",
         "view_url": "URLを表示する",
-        "week": {
-            "friday": "金曜日",
-            "monday": "月曜日",
-            "saturday": "土曜日",
-            "sunday": "日曜日",
-            "thursday": "木曜日",
-            "tuesday": "火曜日",
-            "wednesday": "水曜日"
-        },
+        "week": "週",
         "weeks_on": "数週間",
         "work_hour": "平日",
         "work_week": "勤務週",
@@ -240,7 +234,25 @@
         "event_title": "イベントのタイトル",
         "settings_saved": "設定が保存されました",
         "trash_emptied": "ゴミ箱が空になりました",
-        "on_behalf_of": "{{identitiy}} <{{otherAccount}}>に代わって{{accountName}}"
+        "on_behalf_of": "{{identity}} <{{otherAccount}}>に代わって{{accountName}}",
+        "exclude_free_busy": "空き時間や忙しい時間を報告する際は、このカレンダーを除外してください",
+        "loading": "読み込んでいます...",
+        "maybe": "たぶん",
+        "propose_new_time": "新しい時間を提案する",
+        "share_with": "共有する人",
+        "app_name": "カレンダー",
+        "new_appointment": "新しい予定",
+        "role": "役割",
+        "week_day": {
+            "friday": "金曜日",
+            "monday": "月曜日",
+            "saturday": "土曜日",
+            "sunday": "日曜日",
+            "thursday": "木曜日",
+            "tuesday": "火曜日",
+            "wednesday": "水曜日"
+        },
+        "today": "今日"
     },
     "create": "作成する",
     "delete": "削除する",
@@ -296,9 +308,9 @@
     "owner": "オーナ",
     "participants": {
         "AC_with_count": "受け取り完了",
-        "DE_with_count": "未回答({{count}})",
-        "NE_with_count": "暫定({{count}})",
-        "TE_with_count": "辞退({{count}})",
+        "DE_with_count": "拒否{{count}}",
+        "NE_with_count": "未回答 ({{count}})",
+        "TE_with_count": "暫定({{count}})",
         "visitors": "およびその他の{{others}}参加者",
         "Accepted": "承認しました",
         "Attendees_accepted_count": "<strong>{{count}}参加者 </strong> が承認しました",

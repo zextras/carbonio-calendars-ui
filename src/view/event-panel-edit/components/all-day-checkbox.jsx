@@ -27,7 +27,11 @@ export default function AllDayCheckbox({ start, end, allDay, onChange, onAllDayC
 	}, [allDay]);
 	return (
 		<Container orientation="horizontal" mainAlignment="flex-start">
-			<Checkbox label={t('label.all_day', 'All day')} onChange={onAllDayChange} />
+			<Checkbox
+				label={t('label.all_day', 'All day')}
+				onChange={onAllDayChange}
+				defaultChecked={allDay}
+			/>
 		</Container>
 	);
 }

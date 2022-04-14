@@ -121,7 +121,7 @@ export const SyncDataHandler = () => {
 							}
 						}
 						if (notify.deleted) {
-							dispatch(handleDeletedCalendars(notify.deleted?.id?.split?.(',')));
+							dispatch(handleDeletedCalendars(notify.deleted));
 						}
 						setSeq(notify.seq);
 					}
