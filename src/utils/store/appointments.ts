@@ -22,8 +22,6 @@ export const addAppointmentsToStore = (
 	state: AppointmentsSlice,
 	appts: Array<Appointment>
 ): void => {
-	console.log('aaaaaa state::', cloneDeep(state.appointments));
-	console.log('aaa appts::', appts);
 	state.appointments = reduce(
 		appts,
 		(acc, appt) => {

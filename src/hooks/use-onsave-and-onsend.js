@@ -18,18 +18,6 @@ export const useOnSaveAndOnSend = (id, isBoard, isInstance) => {
 	const account = useUserAccount();
 	const closeBoard = useRemoveCurrentBoard();
 	const editor = useSelector((state) => selectEditor(state, id));
-	// createAppointmentExceptionRequest
-
-	// const saveAppointment = useCallback(
-	// 	(data) =>
-	// 		// eslint-disable-next-line no-nested-ternary
-	// 		!isSeries
-	// 			? createApptException({ editor: data, account, isSeries })
-	// 			: startsWith(editor?.resource?.id, 'new')
-	// 			? createAppointment({ editor: data, account })
-	// 			: modifyAppointment({ editor: data, account, isSeries }),
-	// 	[account, editor?.resource?.id, isSeries]
-	// );
 	const saveAppointment = useCallback(
 		(data) =>
 			// eslint-disable-next-line no-nested-ternary

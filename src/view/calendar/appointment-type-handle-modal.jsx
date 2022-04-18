@@ -16,14 +16,14 @@ export const AppointmentTypeHandlingModal = ({ event, onClose }) => {
 
 	const onEntireSeries = () => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}?isInstance=TRUE`
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 		onClose();
 	};
 
 	const onSingleInstance = () => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}?isInstance=TRUE`
 		);
 		onClose();
 	};

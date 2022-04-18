@@ -24,6 +24,7 @@ export const useGetRecurrentActions = (event, context = {}) => {
 				label: 'Open in displayer',
 				click: (ev) => {
 					if (ev) ev.stopPropagation();
+					onClose();
 					replaceHistory(
 						`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}${query}`
 					);
