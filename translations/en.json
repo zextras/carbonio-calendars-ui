@@ -336,6 +336,9 @@
     "placeholder": {
         "organizer": "Organizer"
     },
+    "preview": {
+        "close": "Close Preview"
+    },
     "read": "Read",
     "reminder": {
         "all_time": "All time of the event",
