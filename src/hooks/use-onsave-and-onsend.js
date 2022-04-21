@@ -32,9 +32,8 @@ export const useOnSaveAndOnSend = (id, isBoard) => {
 
 	const onSave = useCallback(() => {
 		dispatch(editAppointmentData({ id, mod: { resource: { draft: true } } }));
-		closePanel();
 		dispatch(saveAppointment({ ...editor, resource: { ...editor.resource, draft: true } }));
-	}, [closePanel, dispatch, id, saveAppointment, editor]);
+	}, [dispatch, id, saveAppointment, editor]);
 
 	const onSend = useCallback(() => {
 		dispatch(
