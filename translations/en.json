@@ -183,6 +183,7 @@
         "out_of_office": "Out of office",
         "outlook_url": "Outlook URL",
         "permissions": "Permissions",
+        "preview": "Preview",
         "private": "Private",
         "proposal_declined": "Proposal declined",
         "propose_new_time": "PROPOSE NEW TIME",
@@ -334,6 +335,9 @@
     },
     "placeholder": {
         "organizer": "Organizer"
+    },
+    "preview": {
+        "close": "Close Preview"
     },
     "read": "Read",
     "reminder": {
