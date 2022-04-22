@@ -30,8 +30,6 @@ export const useGetRecurrentActions = (event, context = {}) => {
 					);
 				}
 			},
-
-			moveApptToTrash(event, { isInstance, createModal }, t),
 			{
 				id: 'edit',
 				icon: 'Edit2Outline',
@@ -43,7 +41,8 @@ export const useGetRecurrentActions = (event, context = {}) => {
 						`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}${query}`
 					);
 				}
-			}
+			},
+			moveApptToTrash(event, { isInstance, createModal }, t)
 		],
 		[createModal, event, isInstance, onClose, query, t]
 	);

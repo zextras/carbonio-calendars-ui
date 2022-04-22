@@ -30,8 +30,8 @@ export const normalizeEditor = (
 	event: any
 ): any => ({
 	title: event.title,
-	start: event.start.valueOf(),
-	end: event.end.valueOf(),
+	start: invite.start.u ? invite.start.u : moment(invite.start.d).valueOf(),
+	end: invite.end.u ? invite.end.u : moment(invite.end.d).valueOf(),
 	startTimeZone: null,
 	endTimeZone: null,
 	allDay: event.allDay,

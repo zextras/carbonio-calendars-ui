@@ -193,6 +193,7 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 						setInvtReply(action);
 					}
 				}))}
+				style={{ cursor: 'pointer' }}
 				placement="bottom-end"
 			>
 				<AttendingRow padding={{ all: 'small' }} invtReply={invtReply}>
@@ -221,7 +222,11 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 				<>
 					{event.resource?.isRecurrent ? (
 						<Padding right="small" style={{ display: 'flex' }}>
-							<Dropdown data-testid={`series-options`} items={seriesActions}>
+							<Dropdown
+								data-testid={`series-options`}
+								items={seriesActions}
+								style={{ cursor: 'pointer' }}
+							>
 								<RecurrentRow padding={{ all: 'small' }}>
 									<Padding right="small">
 										<Text color={'primary'}>SERIES</Text>
@@ -230,7 +235,11 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 								</RecurrentRow>
 							</Dropdown>
 							<Padding left="small">
-								<Dropdown data-testid={`instance-options`} items={instanceActions}>
+								<Dropdown
+									data-testid={`instance-options`}
+									items={instanceActions}
+									style={{ cursor: 'pointer' }}
+								>
 									<RecurrentRow padding={{ all: 'small' }}>
 										<Padding right="small">
 											<Text color={'primary'}>INSTANCE</Text>

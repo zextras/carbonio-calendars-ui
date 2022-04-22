@@ -64,7 +64,12 @@ export const useId = (
 					appointment: isInstance
 						? {
 								...eventEditor,
-								resource: { ...eventEditor.resource, exceptionId: event.resource.ridZ }
+								start: event.start.valueOf(),
+								end: event.end.valueOf(),
+								resource: {
+									...eventEditor.resource,
+									exceptionId: event.resource.ridZ
+								}
 						  }
 						: eventEditor
 				})

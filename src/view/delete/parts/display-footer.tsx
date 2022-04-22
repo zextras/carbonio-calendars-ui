@@ -56,6 +56,7 @@ export const DisplayFooter = ({
 		[isSecondaryActive, t]
 	);
 
+	const color = useMemo(() => (!isSecondaryActive ? 'error' : undefined), [isSecondaryActive]);
 	const onConfirm = useMemo(() => {
 		if (isException) {
 			return actions?.deleteRecurrentInstance;
@@ -122,7 +123,7 @@ export const DisplayFooter = ({
 			secondaryAction={isSecondaryActive && onEditMessage}
 			secondaryDisabled={!isSecondaryActive}
 			disabled={!invite}
-			color="error"
+			color={color}
 		/>
 	);
 };
