@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { map, filter, reduce, uniqBy, find } from 'lodash';
@@ -18,19 +18,9 @@ import {
 	Tooltip,
 	useTheme
 } from '@zextras/carbonio-design-system';
+import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
 import { getFileExtension, calcColor } from '../../commons/utilities';
-
-function getSizeLabel(size) {
-	let value = '';
-	if (size < 1024000) {
-		value = `${Math.round((size / 1024) * 100) / 100} KB`;
-	} else if (size < 1024000000) {
-		value = `${Math.round((size / 1024 / 1024) * 100) / 100} MB`;
-	} else {
-		value = `${Math.round((size / 1024 / 1024 / 1024) * 100) / 100} GB`;
-	}
-	return value;
-}
+import { humanFileSize, previewType } from './file-preview';
 
 function getAttachmentsLink(messageId, messageSubject, attachments) {
 	if (attachments.length > 1) {
@@ -100,8 +90,9 @@ function Attachment({
 	iconColors,
 	att
 }) {
+	const { createPreview } = useContext(PreviewsManagerContext);
 	const extension = getFileExtension(att);
-	const sizeLabel = useMemo(() => getSizeLabel(size), [size]);
+	const sizeLabel = useMemo(() => humanFileSize(size), [size]);
 	const [t] = useTranslation();
 	const inputRef = useRef();
 	const inputRef2 = useRef();
@@ -113,6 +104,37 @@ function Attachment({
 		}
 	}, [inputRef]);
 
+	const preview = useCallback(
+		(ev) => {
+			ev.preventDefault();
+			const pType = previewType(att.contentType);
+			if (pType) {
+				createPreview({
+					src: link,
+					previewType: pType,
+					/** Left Action for the preview */
+					closeAction: {
+						id: 'close',
+						icon: 'ArrowBack',
+						tooltipLabel: t('preview.close', 'Close Preview')
+					},
+					/** Actions for the preview */
+					// actions: HeaderAction[],
+					/** Extension of the file, shown as info */
+					extension: att.filename.substring(att.filename.lastIndexOf('.') + 1),
+					/** Name of the file, shown as info */
+					filename: att.filename,
+					/** Size of the file, shown as info */
+					size: humanFileSize(att.size)
+				});
+			} else if (inputRef2.current) {
+				// eslint-disable-next-line no-param-reassign
+				inputRef2.current.value = null;
+				inputRef2.current.click();
+			}
+		},
+		[att, createPreview, link, t]
+	);
 	return (
 		<AttachmentContainer
 			orientation="horizontal"
@@ -134,14 +156,7 @@ function Attachment({
 				<Row
 					padding={{ all: 'small' }}
 					mainAlignment="flex-start"
-					onClick={(ev) => {
-						ev.preventDefault();
-						if (inputRef2.current) {
-							// eslint-disable-next-line no-param-reassign
-							inputRef2.current.value = null;
-							inputRef2.current.click();
-						}
-					}}
+					onClick={preview}
 					takeAvailableSpace
 				>
 					<AttachmentExtension
@@ -161,7 +176,7 @@ function Attachment({
 				</Row>
 			</Tooltip>
 			<Row orientation="horizontal" crossAlignment="center">
-				<AttachmentHoverBarContainer>
+				<AttachmentHoverBarContainer orientation="horizontal">
 					{disabled ? (
 						<Tooltip
 							key={`${message.id}-DeletePermanentlyOutline`}
