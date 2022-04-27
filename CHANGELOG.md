@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.9...v0.1.10) (2022-04-27)
+
+
+### Bug Fixes
+
+* preview tooltip message ([3979b67](https://github.com/zextras/carbonio-calendars-ui/commit/3979b6783e22edd838c83b54ac1c0ac04d1ea295))
+* preview-ui installation version ([a36d334](https://github.com/zextras/carbonio-calendars-ui/commit/a36d334f3c60dbdfa66f65e53fd4d3ddd67f84d3))
+
+### [0.1.9](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.8...v0.1.9) (2022-04-26)
+
+
+### Features
+
+* clicking on editor save won't close the editor ([e2c62cf](https://github.com/zextras/carbonio-calendars-ui/commit/e2c62cfe17dd708ea19f29db1005dc2793f7bc64))
+* improved appointment invites description message ([bbed060](https://github.com/zextras/carbonio-calendars-ui/commit/bbed060efb7516a0fd77e3037f03d7fc17d1d62b))
+* informative snackbars on save appointment ([56a8b5e](https://github.com/zextras/carbonio-calendars-ui/commit/56a8b5e8c1edde70f2c7ab3411be829005cb5bd3))
+
+
+### Bug Fixes
+
+* attachments uploading issue ([42b1367](https://github.com/zextras/carbonio-calendars-ui/commit/42b1367b6c6dc559f22c31344880579a9f13b373))
+* wrong date display in invite email ([7a24443](https://github.com/zextras/carbonio-calendars-ui/commit/7a24443dc25c17b063de87d7485b3ea66a3c67ce))
+
 ### [0.1.8](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.7...v0.1.8) (2022-04-14)
 
 
