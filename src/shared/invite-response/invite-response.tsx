@@ -6,13 +6,22 @@
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement, useMemo, useEffect, useCallback } from 'react';
-import { Container, Padding, Row, Icon, Text } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	Padding,
+	Row,
+	Icon,
+	Text,
+	Avatar,
+	Divider
+} from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
 import { useTranslation } from 'react-i18next';
 import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
+import { times } from 'lodash';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
@@ -79,13 +88,37 @@ const InviteResponse: FC<InviteResponse> = ({
 		[invite]
 	);
 
-	const participants = useMemo(
+	const requiredParticipants = useMemo(
 		() =>
-			invite[0]?.comp[0].at.map((user: any, index: number) =>
-				index === (invite[0]?.comp[0].at.length ?? 1) - 1 // the nullish coalescing is
-					? `${user.a || user.d}`
-					: `${user.a || user.d},`
-			),
+			invite[0]?.comp[0].at
+				.filter((user: any) => user.role === 'REQ')
+				.map((user: any, index: number) =>
+					index === (invite[0]?.comp[0].at.length ?? 1) - 1 // the nullish coalescing is
+						? `${user.d || user.a}`
+						: `${user.d || user.a},`
+				),
+		[invite]
+	);
+
+	const requiredParticipantsAccepted = useMemo(
+		() =>
+		invite[0]?.comp[0].at.filter((user: any) => (user.rsvp == true && user.role === 'REQ')),
+		[invite]
+	);
+
+	console.clear();
+	console.log('qui');
+	console.log(fullInvite);
+
+	const optionalParticipants = useMemo(
+		() =>
+			invite[0]?.comp[0].at
+				.filter((user: any) => user.role === 'OPT')
+				.map((user: any, index: number) =>
+					index === (invite[0]?.comp[0].at.length ?? 1) - 1 // the nullish coalescing is
+						? `${user.d || user.a}`
+						: `${user.d || user.a},`
+				),
 		[invite]
 	);
 	const proposeNewTime = useCallback(() => {
@@ -112,49 +145,34 @@ const InviteResponse: FC<InviteResponse> = ({
 	return (
 		<InviteContainer padding={{ all: 'extralarge' }}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
-				<Row padding={{ bottom: 'medium' }}>
-					<Icon icon="CalendarOutline" size="large" />
-					<Padding all="extrasmall" />
+				<Row width="fill" mainAlignment="flex-start" padding={{ bottom: 'extrasmall' }}>
 					{method === 'COUNTER' ? (
-						<Text weight="bold" size="large">
+						<Text weight="light" size="large">
 							{mailMsg.subject}
 						</Text>
 					) : (
-						<Text weight="bold" size="large">
-							{invite[0]?.comp[0]?.or.d || invite[0]?.comp[0]?.or.a}{' '}
-							{t('message.invited_you', 'invited you to an event')}
-						</Text>
+						<>
+							<Text weight="regular" size="large">
+								{invite[0]?.comp[0]?.or.d || invite[0]?.comp[0]?.or.a}{' '}
+								{t('message.invited_you', 'invited you to ')}
+							</Text>
+							&nbsp;
+							<Text weight="bold" size="large">
+								{mailMsg.subject ? mailMsg.subject : invite[0]?.comp[0].name}
+							</Text>
+						</>
 					)}
 				</Row>
-				<Row
-					width="fill"
-					mainAlignment="flex-start"
-					padding={{ horizontal: 'small', bottom: 'small' }}
-				>
-					<Row padding={{ right: 'small' }}>
-						<Icon icon="CalendarOutline" />
+				<Row width="100%" mainAlignment="flex-start">
+					<Row width="100%" mainAlignment="flex-start">
+						<Text overflow="break-word">{apptTime}</Text>
 					</Row>
-					<Row takeAvailableSpace mainAlignment="flex-start" display="flex">
-						<Text overflow="break-word">{invite[0]?.comp[0].name}</Text>
+					<Row width="100%" mainAlignment="flex-start" padding={{ top: 'extrasmall' }}>
+						<Text color="gray1" size="small" overflow="break-word">
+							GMT {apptTimeZone}
+						</Text>
 					</Row>
 				</Row>
-				<Row width="fill" mainAlignment="flex-start">
-					<Row
-						width="70%"
-						mainAlignment="flex-start"
-						padding={{ horizontal: 'small', bottom: 'small' }}
-					>
-						<Row padding={{ right: 'small' }}>
-							<Icon icon="ClockOutline" />
-						</Row>
-						<Row takeAvailableSpace mainAlignment="flex-start" display="flex">
-							<Text overflow="break-word">
-								{apptTime} GMT {apptTimeZone}
-							</Text>
-						</Row>
-					</Row>
-				</Row>
-
 				{invite[0]?.comp[0].loc && (
 					<Row
 						width="fill"
@@ -169,39 +187,6 @@ const InviteResponse: FC<InviteResponse> = ({
 						</Row>
 					</Row>
 				)}
-				<Row
-					width="fill"
-					mainAlignment="flex-start"
-					padding={{ horizontal: 'small', bottom: 'small' }}
-				>
-					<Row padding={{ right: 'small' }}>
-						<Icon icon="PeopleOutline" />
-					</Row>
-					<Row takeAvailableSpace mainAlignment="flex-start">
-						<Text overflow="break-word">{participants}</Text>
-					</Row>
-				</Row>
-
-				<Row
-					width="fill"
-					crossAlignment="flex-start"
-					mainAlignment="flex-start"
-					padding={{ horizontal: 'small', bottom: 'large' }}
-				>
-					<Row padding={{ right: 'small' }}>
-						<Icon icon="MessageSquareOutline" />
-					</Row>
-					<Row takeAvailableSpace mainAlignment="flex-start">
-						{fullInvite && (
-							<BodyMessageRenderer
-								fullInvite={fullInvite}
-								inviteId={inviteId}
-								parts={fullInvite?.parts}
-							/>
-						)}
-					</Row>
-				</Row>
-
 				{method === 'COUNTER'
 					? parent !== '5' && (
 							// eslint-disable-next-line react/jsx-indent
@@ -225,6 +210,84 @@ const InviteResponse: FC<InviteResponse> = ({
 								proposeNewTime={proposeNewTime}
 							/>
 					  )}
+				<Row width="100%" mainAlignment="flex-start" padding={{ vertical: 'large' }}>
+					<Row width="50%" mainAlignment="flex-start" crossAlignment="flex-start">
+						<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
+							<Icon size="large" icon="PeopleOutline" />
+						</Row>
+						<Row takeAvailableSpace mainAlignment="flex-start" crossAlignment="flex-start">
+							<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'extrasmall' }}>
+								<Text overflow="break-word">
+									{`${requiredParticipants.length} ${t('message.guests', 'guests')}`}
+								</Text>
+							</Row>
+							<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'small' }}>
+								<Text overflow="break-word" color="gray1" size="small">
+									{`${requiredParticipantsAccepted.length} ${t('message.accepted', 'accepted')}, 5 ${t('message.awaiting', 'awaiting')}`}
+								</Text>
+							</Row>
+							{requiredParticipants.map((value, index) => (
+								<>
+									<Row width="100%" padding={{ top: 'small' }}>
+										<Avatar label={value} size="small" />
+										<Row padding={{ left: 'small' }} takeAvailableSpace mainAlignment="flex-start">
+											<Text overflow="break-word">{value}</Text>
+										</Row>
+									</Row>
+								</>
+							))}
+						</Row>
+					</Row>
+					<Row width="50%" mainAlignment="flex-start" crossAlignment="flex-start">
+						<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
+							<Icon size="large" icon="OptionalInviteeOutline" />
+						</Row>
+						<Row takeAvailableSpace mainAlignment="flex-start" crossAlignment="flex-start">
+							<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'extrasmall' }}>
+								<Text overflow="break-word">
+									{`${optionalParticipants.length} ${t('message.optionals', 'optionals')}`}
+								</Text>
+							</Row>
+							<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'small' }}>
+								<Text overflow="break-word" color="gray1" size="small">
+									{`1 ${t('message.accepted', 'accepted')}, 5 ${t('message.awaiting', 'awaiting')}`}
+								</Text>
+							</Row>
+							{optionalParticipants.map((value, index) => (
+								<>
+									<Row width="100%" padding={{ top: 'small' }}>
+										<Avatar label={value} size="small" />
+										<Row padding={{ left: 'small' }} takeAvailableSpace mainAlignment="flex-start">
+											<Text overflow="break-word">{value}</Text>
+										</Row>
+									</Row>
+								</>
+							))}
+						</Row>
+					</Row>
+					<Row width="100%" padding={{ top: 'medium' }}>
+						<Divider />
+					</Row>
+				</Row>
+				<Row
+					width="100%"
+					crossAlignment="flex-start"
+					mainAlignment="flex-start"
+					padding={{ bottom: 'large' }}
+				>
+					<Row padding={{ right: 'small' }}>
+						<Icon size="large" icon="MessageSquareOutline" />
+					</Row>
+					<Row takeAvailableSpace mainAlignment="flex-start">
+						{fullInvite && (
+							<BodyMessageRenderer
+								fullInvite={fullInvite}
+								inviteId={inviteId}
+								parts={fullInvite?.parts}
+							/>
+						)}
+					</Row>
+				</Row>
 			</Container>
 		</InviteContainer>
 	);

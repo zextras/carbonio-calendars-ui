@@ -241,12 +241,15 @@
         "your_pref_timezone_msg": "Your preferred timezone is: GMT +01:00 Amsterdam, Berlin, Bern, Rome, Stockholm,Vienna."
     },
     "message": {
+        "accepted": "accepted",
         "are_organizer": "are the organizer",
+        "awaiting": "awaiting",
         "delete_all_occurences": "Delete all occurrences",
         "delete_future_occurences": "Delete this instance and all future occurrences",
         "delete_future_occurences_warning": "This will also delete all exceptions (before and after this instance) in the series",
+        "guests": "guests",
         "invite_has_no_message": "This invite has no text message",
-        "invited_you": "invited you to an event",
+        "invited_you": "invited you to",
         "meeting_canceled": "The following meeting has been cancelled",
         "modal": {
             "delete": {
@@ -254,6 +257,7 @@
                 "sure_delete_appointment_permanently": "By deleting permanently this appointment you will not be able to recover it anymore, continue?"
             }
         },
+        "optionals": "optionals",
         "search_hints": "",
         "share_calendar_url_msg": "You can quickly share {{title}} with your collaborators using one of these URLs:",
         "share_calendar_url_note": "Only your collaborators can access your data using these URLs.",

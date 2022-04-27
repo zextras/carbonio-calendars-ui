@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../carbonio-contacts-ui"
+		},
+		{
+			"path": "../carbonio-design-system"
+		},
+		{
+			"path": "../carbonio-mails-ui"
+		},
+		{
+			"path": "../carbonio-shell-ui"
+		}
+	]
+}

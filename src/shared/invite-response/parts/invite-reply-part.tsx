@@ -61,11 +61,10 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 	return (
 		<>
 			<Padding top="small" />
-			<Divider />
 			<Row
 				width="fill"
 				mainAlignment="space-between"
-				padding={{ horizontal: 'small', vertical: 'small' }}
+				padding={{vertical: 'small' }}
 			>
 				<Container width="50%" mainAlignment="flex-start" crossAlignment="baseline">
 					<Checkbox
@@ -84,7 +83,6 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 					/>
 				</Container>
 			</Row>
-			<Divider />
 			<Row
 				width="fill"
 				height="fit"
@@ -94,8 +92,10 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 					whiteSpace: 'nowrap',
 					overflow: 'hidden'
 				}}
+				bottom="medium"
+				mainAlignment="flex-start"
 			>
-				<Padding horizontal="small" top="medium">
+				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
 						label={t('event.action.yes', 'yes')}
@@ -105,7 +105,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 						disabled={participationStatus === 'AC'}
 					/>
 				</Padding>
-				<Padding horizontal="small" top="medium">
+				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
 						label={t('label.maybe', 'maybe')}
@@ -115,7 +115,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 						disabled={participationStatus === 'TE'}
 					/>
 				</Padding>
-				<Padding horizontal="small" top="medium">
+				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
 						label={t('event.action.no', 'no')}
@@ -125,7 +125,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 						disabled={participationStatus === 'DE'}
 					/>
 				</Padding>
-				<Padding horizontal="small" top="medium">
+				<Padding right="small" vertical="medium">
 					<Button
 						label={t('label.propose_new_time', 'PROPOSE NEW TIME')}
 						icon="RefreshOutline"
@@ -135,6 +135,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 					/>
 				</Padding>
 			</Row>
+			<Divider />
 		</>
 	);
 };
