@@ -150,7 +150,7 @@ function Attachment({
 				label={
 					disabled
 						? t('action.save_to_preview', 'Save to preview')
-						: t('action.preview', 'Click to preview in another tab')
+						: t('action.preview', 'Click to preview')
 				}
 			>
 				<Row
