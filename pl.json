@@ -328,17 +328,17 @@
                 "public": "Publiczny"
             },
             "free_busy_opts": {
-                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej organizacji na sprawdzanie swojego statusu Wolny/Zajęty",
-                "allow_domain": "Zezwól tylko użytkownikom ze swojej organizacji na sprawdzanie swojego statusu Wolny/Zajęty",
-                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej organizacji na sprawdzanie swojego statusu Wolny/Zajęty",
-                "allow_internal": "Zezwól tylko użytkownikom spoza swojej organizacji (domeny) na sprawdzanie swojego statusu Wolny/Zajęty",
+                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
+                "allow_domain": "Zezwól tylko użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
+                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
+                "allow_internal": "Zezwól tylko użytkownikom spoza swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
                 "allow_none": "Nie zezwalaj nikomu na sprawdzanie swojego statusu Wolny/Zajęty"
             },
             "invt_opts": {
-                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej organizacji (domeny) na zapraszanie mnie na spotkania",
-                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej organizacji na zapraszanie mnie na spotkania",
+                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej domeny na zapraszanie mnie na spotkania",
+                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej domeny na zapraszanie mnie na spotkania",
                 "allow_none": "Nie zezwalaj nikomu na zapraszanie mnie na spotkania",
-                "allow_internal": "Zezwól tylko użytkownikom ze swojej organizacji na zapraszanie mnie na spotkania"
+                "allow_internal": "Zezwól tylko użytkownikom ze swojej domeny na zapraszanie mnie na spotkania"
             },
             "timezones": {
                 "amsterdam": "GMT +01:00 Amsterdam, Berlin, Berno, Rzym, Sztokholm, Wiedeń",
@@ -457,9 +457,9 @@
                 "manager": "Manager (może wyświetlać, edytować, dodawać oraz usuwać)"
             },
             "share_calendar_with": {
-                "internal_users_groups": "Użytkownicy lub Grupy z mojej organizacji",
+                "internal_users_groups": "Użytkownicy lub Grupy z mojej domeny",
                 "public": "Publiczny (można tylko wyświetlać, hasło niewymagane)",
-                "external_guests": "Goście spoza mojej organizacji (mogą tylko wyświetlać)"
+                "external_guests": "Goście spoza mojej domeny (mogą tylko wyświetlać)"
             }
         },
         "placeholder": {
