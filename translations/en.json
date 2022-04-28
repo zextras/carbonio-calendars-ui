@@ -46,6 +46,7 @@
             "accept": "Accept",
             "decline": "Decline",
             "expand": "Open in Displayer",
+            "invitation_not_sent_yet": "The invitation has not been sent yet",
             "needs_action": "Needs action",
             "no": "No",
             "yes": "Yes"
@@ -277,7 +278,8 @@
                 "decline": "You’ve replied as Declined",
                 "tentative": "You’ve replied as Tentative"
             },
-            "new_calendar_created": "New calendar created"
+            "new_calendar_created": "New calendar created",
+            "series_deleted": "Series successfully deleted. Attendees will receive the cancellation notification."
         },
         "somebody_invited_you": "<strong>{{somebody}}</strong> invited you",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> is the organizer",

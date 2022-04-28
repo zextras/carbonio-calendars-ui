@@ -210,7 +210,9 @@ const generateInvite = (editorData: any, isInstance?: boolean): any => {
 					editorData.allDay || editorData?.resource?.tz
 						? omitBy(
 								{
-									d: moment(editorData.start).format('YYYYMMDD[T]HHmmss'),
+									d: editorData.allDay
+										? moment(editorData.start).startOf('day').format('YYYYMMDD')
+										: moment(editorData.start).format('YYYYMMDD[T]HHmmss'),
 									tz: editorData?.resource?.tz
 								},
 								isNil
@@ -222,7 +224,9 @@ const generateInvite = (editorData: any, isInstance?: boolean): any => {
 					editorData.allDay || editorData?.resource?.tz
 						? omitBy(
 								{
-									d: moment(editorData.end).format('YYYYMMDD[T]HHmmss'),
+									d: editorData.allDay
+										? moment(editorData.end).endOf('day').format('YYYYMMDD')
+										: moment(editorData.end).format('YYYYMMDD[T]HHmmss'),
 									tz: editorData?.resource?.tz
 								},
 								isNil
