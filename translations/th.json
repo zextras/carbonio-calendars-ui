@@ -1,17 +1,17 @@
 {
     "participants": {
         "AC_with_count": "ยอมรับ",
-        "TE_with_count": "ปฏิเสธ ({{count}})",
+        "TE_with_count": "ไม่แน่นอน ({{count}})",
         "visitors": "และผู้เข้าร่วมอีก {{others}} คน",
         "Invited_Visitor": "ได้รับเชิญ",
-        "NE_with_count": "ยังไม่แน่นอน ({{count}})",
+        "NE_with_count": "ยังไม่ตอบ ({{count}})",
         "Tentative": "ตอบรับเบื้องต้นว่ายังไม่แน่นอน",
         "Not_answered": "ยังไม่ตอบ",
         "Accepted": "ยอมรับ",
         "Attendees_accepted_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ยอมรับแล้ว",
         "Attendees_declined_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ปฏิเสธ",
         "Attendees_not_answered_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ยังไม่ได้ตอบ",
-        "DE_with_count": "ไม่ตอบ ({{count}})",
+        "DE_with_count": "ปฏิเสธ {{count}}",
         "Declined": "ปฏิเสธ",
         "Attendees_tentative_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ได้ตอบรับเบื้องต้นว่ายังไม่แน่นอน"
     },
@@ -112,7 +112,7 @@
         "view_url": "ดู URL",
         "work_hour": "ชั่วโมงทำงาน",
         "location": "สถานที่",
-        "shares_items": "ปฏิทินที่แชร์ของ {{value}}",
+        "shares_items": "ปฏิทินที่แชร์ของ<bold>{{user}}</bold>",
         "custom_repeat": "ทำซ้ำแบบกำหนดเอง",
         "start_date_and_time": "วันที่และเวลาเริ่มต้น",
         "timezone_pref_msg": "การกำหนดเวลาเป็นไปตามการตั้งค่าเขตเวลาของคุณ",
@@ -142,7 +142,7 @@
         "discard_changes": "ยกเลิกการเปลี่ยนแปลง",
         "delete_instance": "คุณแน่ใจหรือไม่ว่าต้องการลบอินสแตนซ์ของการนัดหมาย “{title}” นี้?",
         "settings_saved": "การตั้งค่าที่บันทึกไว้",
-        "on_behalf_of": "{{accountName}} ในนามของ {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "{{accountName}} ในนามของ {{identity}} <{{otherAccount}}>",
         "trash_emptied": "ล้างถังขยะเรียบร้อยแล้ว",
         "the": "ที่",
         "role": "บทบาท",
@@ -155,7 +155,14 @@
             "thursday": "วันพฤหัสบดี",
             "tuesday": "วันอังคาร",
             "wednesday": "วันพุธ"
-        }
+        },
+        "exclude_free_busy": "ไม่ต้องรวมปฏิทินนี้ เมื่อมีการรายงานเวลาว่าง/ไม่ว่าง",
+        "loading": "กำลังโหลด...",
+        "maybe": "อาจจะ",
+        "propose_new_time": "เสนอเวลาใหม่",
+        "share_with": "แชร์กับ",
+        "app_name": "ปฏิทิน",
+        "new_appointment": "การนัดหมายใหม่"
     },
     "calendar": {
         "modal": {
@@ -196,7 +203,8 @@
             "yes": "ใช่",
             "tentative": "ไม่แน่นอน",
             "decline": "ปฏิเสธ",
-            "expand": "เปิดใน Displayer"
+            "expand": "เปิดใน Displayer",
+            "needs_action": "การดำเนินการที่จำเป็น"
         }
     },
     "settings": {
@@ -432,7 +440,8 @@
             "calendar_moved_to_trash_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "new_calendar_create_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "calendar_permanently_deleted": "ปฎิทินถูกลบอย่างถาวร",
-            "calendar_restored": "กู้คืนปฏิทินเรียบร้อยแล้ว"
+            "calendar_restored": "กู้คืนปฏิทินเรียบร้อยแล้ว",
+            "appointment_permanently_deleted": "การนัดหมายถูกลบอย่างถาวร"
         },
         "share_calendar_url_note2": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้ <br/> คุณสามารถค้นหาลิงก์เหล่านั้นได้ด้วยการคลิกขวาที่รายการปฏิทินของคุณ",
         "delete_all_occurences": "ลบเหตุการณ์ทั้งหมด",
@@ -451,7 +460,7 @@
         "sure_to_delete_all_occurences_appointment": "คุณแน่ใจหรือไม่ว่าต้องการลบการนัดหมายนี้ทั้งหมด?",
         "sure_to_delete_appointment_permanently": "คุณแน่ใจหรือไม่ว่าต้องการลบการนัดหมายนี้อย่างถาวร?",
         "want_to_send_cancellation_msg": "คุณต้องการส่งข้อความยกเลิกไปยังผู้เข้าร่วมหรือไม่?",
-        "you_are_organizer": "คุณเป็นผู้จัดงาน",
+        "you_are_organizer": "<Row><Text> <BoldText> คุณ </BoldText> เป็นผู้จัด </Text></Row>",
         "you_will_see_the_subject_here": "หัวข้อ",
         "delete_future_occurences_warning": "ซึ่งจะลบข้อยกเว้นทั้งหมด (ก่อนและหลังอินสแตนซ์นี้) ในซีรีส์ด้วย",
         "share_calendar_url_note": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้",
@@ -486,7 +495,7 @@
         }
     },
     "administer": "ดูแล",
-    "allowed_actions": "การกระทำที่ได้รับอนุญาต",
+    "allowed_actions": "การดำเนินการที่ได้รับอนุญาต",
     "find_shares": "ค้นหาการแชร์",
     "edit_share_properties": "แก้ไขคุณสมบัติการแชร์",
     "find_calendar_shares": "ค้นหาการแชร์ปฏิทิน",

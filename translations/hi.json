@@ -94,7 +94,7 @@
         "revoke_share": "{{title}} का शेयर वापस लें",
         "series": "क्रम",
         "share_calendar_url": "{{title}} ऐक्सेस शेयर",
-        "shares_items": "{{value}} के सहभाजी कैलेंडर",
+        "shares_items": "<bold>{{user}}</bold> के शेयर किए कैलेंडर",
         "show": "दिखाएं",
         "show_plural": "सभी दिखाएं",
         "show_declined_meetings": "अस्वीकृत मीटिंग दिखाएं",
@@ -139,7 +139,7 @@
         "calendar_shared": "Calendar शेयर किया गया",
         "changes_saved": "बदलाव सेव किए गए",
         "event_title": "घटना का शीर्षक",
-        "on_behalf_of": "{{identitiy}} के लिए {{accountName}} <{{otherAccount}}>",
+        "on_behalf_of": "{{identity}} के लिए {{accountName}} <{{otherAccount}}>",
         "settings_saved": "सेटिंग्स सेव की गईं",
         "trash_emptied": "रद्दी खाली किया गया",
         "delete_instance": "क्या आप वाकई में \"{title}\" एपाइंटमेंट की इस घटना को डिलीट करना चाहते हैं?",
@@ -156,7 +156,13 @@
             "friday": "शुक्रवार",
             "monday": "सोमवार",
             "saturday": "शनिवार"
-        }
+        },
+        "app_name": "कैलेंडर",
+        "exclude_free_busy": "फ्री/बिजी टाइम रिपोर्ट करते समय इस कैलेंडर को शामिल न करें",
+        "maybe": "शायद",
+        "share_with": "इनके साथ शेयर",
+        "propose_new_time": "नया टाइम प्रोपोज करें",
+        "new_appointment": "नया एपोइंटमेंट"
     },
     "action": {
         "delete": "डिलीट करें",
@@ -207,7 +213,8 @@
             },
             "new_calendar_created": "नया कैलेंडर बन गया",
             "calendar_permanently_deleted": "Calendar परमानेंट डिलीट कर दिया गया",
-            "calendar_restored": "Calendar वापस लाया गया"
+            "calendar_restored": "Calendar वापस लाया गया",
+            "appointment_permanently_deleted": "एप्पोइंटमेंट परमानेंट डिलीट कर दिया गया"
         },
         "somebody_is_organizer": "ऑर्गनाइज़र <strong>{{somebody}}</strong> है",
         "are_organizer": "वाक्य इस तरह से माना जाएगा मानो आप ऑर्गनाइज़र हों",
@@ -231,7 +238,7 @@
         "want_to_edit_cancellation_msg": "क्या आप एपाइंटमेंट कैंसल मैसेज को बदलना चाहते हैं?",
         "delete_all_occurences": "जितनी बार आना है डिलीट करें",
         "want_to_send_cancellation_msg": "क्या आप भाग लेने वालों को एक नया कैन्सेलेशन मैसेज भेजना चाहते हैं?",
-        "you_are_organizer": "ऑर्गनाइज़र आप हैं",
+        "you_are_organizer": "<Row><Text> <BoldText> आप  </BoldText> ऑर्गनाइज़र हैं </Text></Row>",
         "you_sure_move_calendar_trash": "क्या आप वाकई में \"{{name}}\"कैलेंडर को डिलीट करना चाहते हैं?",
         "you_sure_delete_calendar": "क्या आप वाकई में \"{{name}}\"कैलेंडर को परमानेंट डिलीट करना चाहते हैं?",
         "you_will_see_the_subject_here": "विषय",
@@ -251,7 +258,8 @@
             "trash": "डिलीट करें",
             "tentative": "संभावित",
             "decline": "अस्वीकृत",
-            "expand": "डिस्प्ले में देखें"
+            "expand": "डिस्प्ले में देखें",
+            "needs_action": "कार्यवाई की आवश्यकता है"
         }
     },
     "folder": {
@@ -466,13 +474,13 @@
     "appointments": "अपॉइंट्मेंट",
     "participants": {
         "Accepted": "स्वीकार्य",
-        "NE_with_count": "संभावित",
-        "NE_with_count_plural": "संभावित {{count}}",
-        "TE_with_count": "अस्वीकृत",
-        "TE_with_count_plural": "अस्वीकृत {{count}}",
+        "NE_with_count": "जबाब नहीं दिया",
+        "NE_with_count_plural": "{{count}} ने जबाब नहीं दिया",
+        "TE_with_count": "संभावित",
+        "TE_with_count_plural": "{{count}} संभावित",
         "Declined": "अस्वीकृत",
-        "DE_with_count": "({{count}}) ने जबाब नहीं दिया",
-        "DE_with_count_plural": "({{count}}) ने जबाब नहीं दिया",
+        "DE_with_count": "मना कर दिया",
+        "DE_with_count_plural": "({{count}}) ने मना कर दिया",
         "Tentative": "सभावित है के साथ स्वीकार किया",
         "AC_with_count": "स्वीकार किया गया",
         "AC_with_count_plural": "{count}}) स्वीकार किए गए",

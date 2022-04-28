@@ -60,6 +60,8 @@ const normalizeEventResource = (
 export const getEndTime = (start: any, end: any, duration: any): any =>
 	duration === 86400000 ? moment(start).endOf('day') : moment(end).endOf('day');
 
+export const getDaysFromMillis = (milliseconds: number): number => milliseconds / 3600 / 1000 / 24;
+
 export const normalizeCalendarEvent = (
 	calendar: Calendar,
 	appt: Appointment,
@@ -69,11 +71,9 @@ export const normalizeCalendarEvent = (
 	// disabled: true,
 	start: appt.allDay ? moment(inst.s).startOf('day') : new Date(inst.s),
 	end: appt.allDay
-		? getEndTime(
-				inst.s,
-				inst.s + ((inst as ExceptionReference).dur ?? appt.dur),
-				(inst as ExceptionReference).dur ?? appt.dur
-		  )
+		? moment(appt.inst[0].ridZ)
+				.add(getDaysFromMillis(appt.dur) - 1, 'days')
+				.endOf('day')
 		: new Date(inst.s + ((inst as ExceptionReference).dur ?? appt.dur)),
 	resource: normalizeEventResource(appt, inst as ExceptionReference, calendar),
 
