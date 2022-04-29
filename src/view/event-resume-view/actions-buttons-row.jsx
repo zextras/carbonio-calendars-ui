@@ -221,7 +221,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 			{event.resource.iAmOrganizer && event.haveWriteAccess ? (
 				<>
 					{event.resource?.isRecurrent ? (
-						<Padding right="small" style={{ display: 'flex' }}>
+						<Row mainAlignment="flex-end">
 							<Dropdown
 								data-testid={`series-options`}
 								items={seriesActions}
@@ -229,12 +229,12 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 							>
 								<RecurrentRow padding={{ all: 'small' }}>
 									<Padding right="small">
-										<Text color={'primary'}>SERIES</Text>
+										<Text color={'primary'}>{t('label.series', 'SERIES')}</Text>
 									</Padding>
 									<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
 								</RecurrentRow>
 							</Dropdown>
-							<Padding left="small">
+							<Padding left="small" right="small">
 								<Dropdown
 									data-testid={`instance-options`}
 									items={instanceActions}
@@ -242,13 +242,13 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 								>
 									<RecurrentRow padding={{ all: 'small' }}>
 										<Padding right="small">
-											<Text color={'primary'}>INSTANCE</Text>
+											<Text color={'primary'}>{t('label.instance', 'INSTANCE')}</Text>
 										</Padding>
 										<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
 									</RecurrentRow>
 								</Dropdown>
 							</Padding>
-						</Padding>
+						</Row>
 					) : (
 						<>
 							<Padding right="small">
