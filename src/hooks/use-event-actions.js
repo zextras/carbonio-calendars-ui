@@ -13,6 +13,7 @@ import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../store/slices/appointments-slice';
 import { deleteAppointmentPermanent } from '../store/actions/delete-appointment-permanent';
 import { DeleteEventModal } from '../view/delete/delete-event-modal';
+import { applyTag } from '../view/tags/tag-actions';
 
 export const openInDisplayer = (event, context, t) => ({
 	id: EventActionsEnum.EXPAND,
@@ -288,7 +289,8 @@ export const ActionsRetriever = (event, context, t) =>
 					acceptAsTentative(event, context, t),
 					moveAppointment(event, context, t),
 					moveApptToTrash(event, context, t),
-					editAppointment(event, context, t)
+					editAppointment(event, context, t),
+					applyTag({ t, context, event })
 			  ]
 		: event.resource.calendar.id === FOLDERS.TRASH
 		? [
@@ -300,7 +302,8 @@ export const ActionsRetriever = (event, context, t) =>
 				openInDisplayer(event, context, t),
 				moveAppointment(event, context, t),
 				moveApptToTrash(event, context, t),
-				editAppointment(event, context, t, true)
+				editAppointment(event, context, t, true),
+				applyTag({ t, context, event })
 		  ];
 
 export const RecurrentActionRetriever = (event, context, t) =>
@@ -320,7 +323,8 @@ export const RecurrentActionRetriever = (event, context, t) =>
 					},
 					items: [
 						moveApptToTrash(event, { ...context, isInstance: true }, t),
-						openInDisplayer(event, context, t)
+						openInDisplayer(event, context, t),
+						applyTag({ t, context, event })
 					]
 				},
 				{
@@ -332,7 +336,8 @@ export const RecurrentActionRetriever = (event, context, t) =>
 					},
 					items: [
 						moveApptToTrash(event, { ...context, isInstance: false }, t),
-						moveAppointment(event, context, t)
+						moveAppointment(event, context, t),
+						applyTag({ t, context, event })
 					]
 				}
 		  ];

@@ -3,9 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Accordion } from '@zextras/carbonio-design-system';
+import {
+	Accordion,
+	AccordionItem,
+	Dropdown,
+	Icon,
+	ModalManagerContext,
+	Padding,
+	Row
+} from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
 import { map, filter, reduce, remove, every, reject, find } from 'lodash';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
@@ -14,7 +22,9 @@ import { folderAction } from '../../store/actions/calendar-actions';
 import { setSearchRange } from '../../store/actions/set-search-range';
 import { CollapsedItems } from './collapsed-sidebar-items';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
-import { FoldersComponent, SharesComponent } from './sidebar-components';
+import { FoldersComponent, SharesComponent, TagComponent } from './sidebar-components';
+import useGetTagsAccordion from '../../hooks/use-get-tags-accordions';
+import { createTag } from '../tags/tag-actions';
 
 const calcFolderAbsParentLevel = (folders, subFolder, level = 1) => {
 	const nextFolder = find(folders, (f) => f.id === subFolder.parent);
@@ -41,7 +51,7 @@ export default function SetMainMenuItems({ expanded }) {
 	const dispatch = useDispatch();
 	const start = useSelector(selectStart);
 	const end = useSelector(selectEnd);
-
+	const tagsAccordionItems = useGetTagsAccordion();
 	const recursiveToggleCheck = useCallback(
 		(item, checked) => {
 			const applyToChildren = (folderArr) =>
@@ -109,6 +119,18 @@ export default function SetMainMenuItems({ expanded }) {
 		[sharedSubItems, t]
 	);
 
+	const tagsItem = useMemo(
+		() => ({
+			id: 'Tags',
+			label: t('label.tags', 'Tags'),
+			divider: true,
+			open: false,
+			onClick: (e) => e.stopPropagation(),
+			CustomComponent: TagComponent,
+			items: tagsAccordionItems
+		}),
+		[t, tagsAccordionItems]
+	);
 	const allCalendarsItem = useMemo(() => {
 		const subItems = reject(
 			allItems,
@@ -125,7 +147,7 @@ export default function SetMainMenuItems({ expanded }) {
 		};
 	}, [allItems, t, recursiveToggleCheck, nestedItems]);
 
-	const items = [allCalendarsItem, ...nestedItems, ...trashItem, sharesItem];
+	const items = [allCalendarsItem, ...nestedItems, ...trashItem, tagsItem, sharesItem];
 
 	return expanded ? (
 		<Accordion items={items} />

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { find } from 'lodash';
+import { filter, find, isNil } from 'lodash';
 import { Invite } from '../types/store/invite';
 import {
 	normalizeMailPartMapFn,
@@ -50,6 +50,7 @@ export const normalizeInvite = (m: any): Invite => ({
 	isException: m?.inv?.[0]?.comp?.[0]?.ex || false,
 	recurrenceId: m?.inv?.[0]?.comp?.[0]?.exceptId, // shown only in exceptions todo: normalize
 	tagNamesList: m.tn,
+	tags: !isNil(m.t) ? filter(m.t.split(','), (t) => t !== '') : [],
 	attach: {
 		mp: retrieveAttachmentsType(m?.mp?.[0] ?? [], 'attachment', m?.id)
 	},
@@ -99,6 +100,7 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	isException: inv.comp?.[0]?.ex || false,
 	recurrenceId: inv.comp?.[0]?.exceptId, // shown only in exceptions todo: normalize
 	tagNamesList: inv.tn,
+	tags: !isNil(inv.t) ? filter(inv.t.split(','), (t) => t !== '') : [],
 	attach: {
 		mp: retrieveAttachmentsType(inv.mp?.[0] ?? [], 'attachment', `${inv.id}`)
 	},

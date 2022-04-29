@@ -65,4 +65,5 @@ export type Appointment = {
 	uid: string;
 	meta?: any;
 	otherAtt?: boolean;
+	tags?: string[];
 };

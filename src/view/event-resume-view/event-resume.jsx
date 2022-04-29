@@ -16,6 +16,7 @@ import { ActionsButtonsRow } from './actions-buttons-row';
 import { TimeInfoRow } from './time-info-row';
 import { VirtualRoomRow } from './virtual-room-row';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
+import TagsRow from './tags-row';
 
 export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispatch }) => (
 	<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
@@ -27,6 +28,7 @@ export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispa
 			{event && <LocationRow event={event} showIcon />}
 			{invite?.meta && <VirtualRoomRow meta={invite?.meta} showIcon />}
 			<ParticipantsRow event={event} invite={invite} />
+			{event?.resource?.tags?.length > 0 && <TagsRow event={event} invite={invite} />}
 			{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
 				<DescriptionFragmentRow event={event} />
 			)}

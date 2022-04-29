@@ -19,42 +19,47 @@ const normalizeEventResource = (
 	appt: Appointment,
 	inst: ExceptionReference,
 	calendar: Calendar
-): any => ({
-	id: appt.id,
-	inviteId: inst.inviteId ?? appt.inviteId,
-	ridZ: inst.ridZ,
-	calendar: {
-		id: calendar.id,
-		name: calendar.name,
-		color: calendar.color,
-		owner: calendar.owner
-	},
-	flags: appt.flags,
-	iAmOrganizer: appt.isOrg ?? false,
-	iAmVisitor: (!appt.isOrg && calendar.owner) ?? false,
-	iAmAttendee: (!appt.isOrg && !calendar.owner) ?? false,
-	status: appt.status,
-	location: appt.loc,
-	locationUrl: locationUrl(appt.loc ?? ''),
-	fragment: (inst as ExceptionReference)?.fr ?? appt.fr,
-	class: appt.class,
-	freeBusy: appt.fb,
-	hasChangesNotNotified: appt.draft || false,
-	inviteNeverSent: appt.neverSent || false,
-	hasOtherAttendees: appt.otherAtt,
-	isRecurrent: inst.recur ?? appt.recur,
-	isException: inst.ex ?? false,
-	participationStatus: appt.ptst,
-	organizer: {
-		name: appt?.or?.d,
-		email: appt?.or?.a
-	},
-	compNum: appt.compNum,
-	apptStart: inst.s,
-	alarm: appt.alarm,
-	alarmData: appt.alarmData,
-	uid: appt.uid
-});
+): any => {
+	console.log('vvv appt:', appt);
+	console.log('vvv inst:', inst);
+	return {
+		id: appt.id,
+		inviteId: inst.inviteId ?? appt.inviteId,
+		ridZ: inst.ridZ,
+		calendar: {
+			id: calendar.id,
+			name: calendar.name,
+			color: calendar.color,
+			owner: calendar.owner
+		},
+		flags: appt.flags,
+		iAmOrganizer: appt.isOrg ?? false,
+		iAmVisitor: (!appt.isOrg && calendar.owner) ?? false,
+		iAmAttendee: (!appt.isOrg && !calendar.owner) ?? false,
+		status: appt.status,
+		location: appt.loc,
+		locationUrl: locationUrl(appt.loc ?? ''),
+		fragment: (inst as ExceptionReference)?.fr ?? appt.fr,
+		class: appt.class,
+		freeBusy: appt.fb,
+		hasChangesNotNotified: appt.draft || false,
+		inviteNeverSent: appt.neverSent || false,
+		hasOtherAttendees: appt.otherAtt,
+		isRecurrent: inst.recur ?? appt.recur,
+		isException: inst.ex ?? false,
+		participationStatus: appt.ptst,
+		organizer: {
+			name: appt?.or?.d,
+			email: appt?.or?.a
+		},
+		compNum: appt.compNum,
+		apptStart: inst.s,
+		alarm: appt.alarm,
+		alarmData: appt.alarmData,
+		uid: appt.uid,
+		tags: appt.tags
+	};
+};
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getEndTime = (start: any, end: any, duration: any): any =>

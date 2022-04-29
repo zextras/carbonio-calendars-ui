@@ -39,6 +39,7 @@ export type Invite = {
 	isException: boolean;
 	recurrenceId: any;
 	tagNamesList: string;
+	tags?: string[];
 	attach: {
 		mp: any;
 	};
