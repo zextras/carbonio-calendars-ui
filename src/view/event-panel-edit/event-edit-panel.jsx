@@ -141,28 +141,28 @@ const EventEditPanel = ({ boardContext }) => {
 	}, [appointment, calendar, inst]);
 	const [title, setTitle] = useState(null);
 	const [expanded, setExpanded] = useState(false);
+	const isInstance = useQueryParam('isInstance');
 	const updateAppTime = useQueryParam('updateTime');
 	const selectedStartTime = useQueryParam('start');
 	const selectedEndTime = useQueryParam('end');
 	const [t] = useTranslation();
 	const updateBoard = useUpdateCurrentBoard();
-
 	const { id, data } = useId(
 		apptId ?? 'new',
 		boardContext?.isBoard,
 		boardContext?.event ? boardContext.event : event,
 		selectedStartTime,
 		selectedEndTime,
-		boardContext?.invite
+		boardContext?.invite,
+		isInstance
 	);
-
 	const invite = useSelector(
 		(state) =>
 			selectInstanceInvite(state, event?.resource.inviteId, event?.resource.ridZ) ||
 			boardContext?.invite
 	);
 
-	const callbacks = useEditorDispatches(id, boardContext?.isBoard);
+	const callbacks = useEditorDispatches(id, boardContext?.isBoard, isInstance);
 
 	useEffect(() => {
 		if (!boardContext?.isBoard) {
@@ -191,6 +191,7 @@ const EventEditPanel = ({ boardContext }) => {
 								invite={boardContext?.proposeNewTime ? boardContext.invite : invite}
 								updateAppTime={!!updateAppTime}
 								proposeNewTime={!!boardContext?.proposeNewTime}
+								isInstance={!!isInstance}
 							/>
 						</AppointmentExpandedContainer>
 					</BackgroundContainer>
@@ -206,6 +207,7 @@ const EventEditPanel = ({ boardContext }) => {
 							invite={boardContext?.proposeNewTime ? boardContext.invite : invite}
 							updateAppTime={!!updateAppTime}
 							hideActions
+							isInstance={!!isInstance}
 						/>
 					) : (
 						<AppointmentCardContainer
@@ -222,6 +224,7 @@ const EventEditPanel = ({ boardContext }) => {
 								invite={boardContext?.proposeNewTime ? boardContext.invite : invite}
 								updateAppTime={!!updateAppTime}
 								hideActions
+								isInstance={!!isInstance}
 							/>
 						</AppointmentCardContainer>
 					)}

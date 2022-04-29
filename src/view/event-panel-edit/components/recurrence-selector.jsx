@@ -7,7 +7,7 @@ import { Button, Container, Select, Icon, Row, Text } from '@zextras/carbonio-de
 import React, { useCallback, useMemo, useState } from 'react';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { toUpper } from 'lodash';
+import { toUpper, find } from 'lodash';
 import styled from 'styled-components';
 import CustomRecurrenceModal from './recurrences/custom-recurrence-modal';
 
@@ -74,7 +74,12 @@ const RepeatItemComponent = ({ label }) => (
 		<TextUpperCase>{label}</TextUpperCase>
 	</Container>
 );
-export default function RecurrenceSelector({ data, callbacks, updateAppTime = false }) {
+export default function RecurrenceSelector({
+	data,
+	callbacks,
+	updateAppTime = false,
+	isInstance = true
+}) {
 	const [t] = useTranslation();
 	const [open, setOpen] = useState(false);
 
@@ -146,16 +151,23 @@ export default function RecurrenceSelector({ data, callbacks, updateAppTime = fa
 		],
 		[t]
 	);
-
+	const ruleKey = useMemo(
+		() => data?.resource?.recur?.add?.[0]?.rule?.[0]?.freq,
+		[data?.resource?.recur?.add]
+	);
+	const defaultSelection = useMemo(
+		() => (data?.resource?.recur ? find(recurrenceItems, { value: ruleKey }) : recurrenceItems[0]),
+		[data?.resource?.recur, recurrenceItems, ruleKey]
+	);
 	return (
 		<>
 			<Select
 				label={t('label.repeat', 'Repeat')}
 				onChange={onRecurrenceChange}
 				items={recurrenceItems}
-				defaultSelection={recurrenceItems[0]}
+				defaultSelection={!isInstance ? defaultSelection : recurrenceItems[0]}
 				disablePortal
-				disabled={updateAppTime}
+				disabled={updateAppTime || isInstance}
 				LabelFactory={LabelFactory}
 			/>
 			<CustomRecurrenceModal

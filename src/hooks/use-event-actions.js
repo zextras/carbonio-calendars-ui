@@ -262,13 +262,14 @@ export const editAppointment = (event, context, t, isEditable = false) => ({
 	label: t('label.edit', 'Edit'),
 	disabled: isEditable ? !event.resource.iAmOrganizer || !event.haveWriteAccess : true,
 	click: (ev) => {
+		const query = context?.isInstance ? '?isInstance=TRUE' : '';
 		if (ev) ev.stopPropagation();
 		context.isFromSearch
 			? context.replaceHistory(
-					`/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
+					`/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}${query}`
 			  )
 			: context.replaceHistory(
-					`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
+					`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}${query}`
 			  );
 	}
 });

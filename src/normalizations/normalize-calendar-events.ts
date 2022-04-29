@@ -81,7 +81,8 @@ export const normalizeCalendarEvent = (
 		  )
 		: new Date(inst.s + ((inst as ExceptionReference).dur ?? appt.dur)),
 	resource: normalizeEventResource(appt, inst as ExceptionReference, calendar),
-	title: appt.name,
+
+	title: inst?.name || appt.name,
 	allDay: appt.allDay,
 	permission: !isShared,
 	id: `${appt.id}:${inst.ridZ}`,

@@ -75,18 +75,15 @@ export const generateSoapMessageFromInvite = (invite: any): any => {
 	};
 };
 
-export const modifyAppointment = createAsyncThunk(
-	'appointment/modify appointment',
-	async (
-		{ invite, editor, account, isInstance = false }: any,
-		{ getState }: any
-	): Promise<unknown> => {
+export const createApptException = createAsyncThunk(
+	'appointment/create-appointment-exception',
+	async ({ invite, editor, account }: any, { getState }: any): Promise<unknown> => {
 		const prevInvite = getState()?.invites?.invites?.[editor.resource.inviteId];
 		const previousMeetingRoom = find(prevInvite?.meta, ['section', METADATA_SECTIONS.MEETING_ROOM]);
 		const normalizeInviteToSoap = invite
 			? generateSoapMessageFromInvite(invite)
-			: generateSoapMessageFromEditor(editor, account, isInstance);
-		const res = await soapFetch('ModifyAppointment', normalizeInviteToSoap);
+			: generateSoapMessageFromEditor(editor, account, true);
+		const res = await soapFetch('CreateAppointmentException', normalizeInviteToSoap);
 		if (previousMeetingRoom && !editor?.resource?.room) {
 			await soapFetch('SetCustomMetadata', {
 				_jsns: 'urn:zimbraMail',
