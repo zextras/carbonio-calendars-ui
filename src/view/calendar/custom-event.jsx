@@ -22,7 +22,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { reduce, includes } from 'lodash';
 import { useEventActions } from '../../hooks/use-event-actions';
-import { useTagExist } from '../tags/tag-actions';
+import { createAndApplyTag, useTagExist } from '../tags/tag-actions';
 
 const NeedActionIcon = styled(Icon)`
 	position: relative;
@@ -34,9 +34,10 @@ export default function CustomEvent({ event, title }) {
 	const createModal = useContext(ModalManagerContext);
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const tags = useTags();
+
 	const actions = useEventActions(
 		event,
-		{ replaceHistory, dispatch, createModal, createSnackbar, tags },
+		{ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag },
 		t
 	);
 	const [showDropdown, setShowDropdown] = useState(false);
@@ -83,8 +84,6 @@ export default function CustomEvent({ event, title }) {
 		[event?.resource?.tags, showMultiTagIcon, isTagInStore]
 	);
 
-	console.log('mmm event:', event);
-	console.log('mmm tagItems:', tagItems);
 	const eventDiff = useMemo(
 		() => moment(event.end).diff(event.start, 'minutes'),
 		[event.start, event.end]

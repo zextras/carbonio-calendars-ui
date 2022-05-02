@@ -8,9 +8,11 @@ import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } f
 import { useTranslation } from 'react-i18next';
 import { Input, Padding, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
 import { createTag, renameTag, changeTagColor } from '@zextras/carbonio-shell-ui';
+import { useDispatch } from 'react-redux';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import ColorPicker from '../../commons/color-select';
+import { itemAction } from '../../store/actions/item-action';
 
 type ComponentProps = {
 	onClose: () => void;
@@ -25,17 +27,20 @@ type ComponentProps = {
 		name: string;
 		open: boolean;
 	};
+	event?: any;
 };
 const NonSupportedCharacters = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/;
 const CreateUpdateTagModal: FC<ComponentProps> = ({
 	onClose,
 	editMode = false,
-	tag
+	tag,
+	event
 }): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [t] = useTranslation();
 	const [name, setName] = useState(tag?.name || '');
 	const [color, setColor] = useState(tag?.color || 0);
+	const dispatch = useDispatch();
 	const title = useMemo(
 		() =>
 			editMode
@@ -56,27 +61,72 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 	);
 	const disabled = useMemo(() => name === '' || showWarning, [name, showWarning]);
 
-	const onCreate = useCallback(
-		() =>
-			createTag({ name, color }).then((res: any) => {
-				if (res.tag) {
+	const applyNewlyCreatedTag = useCallback(
+		({ inviteId, tagName }) => {
+			dispatch(
+				itemAction({
+					operation: 'tag',
+					inviteId,
+					tagName
+				})
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+			).then((res: any) => {
+				if (res.type.includes('fulfilled')) {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					createSnackbar({
-						key: `new-tag`,
+						key: `tag`,
 						replace: true,
+						hideButton: true,
 						type: 'info',
-						label: t('messages.snackbar.tag_created', {
-							name,
-							defaultValue: 'Tag {{name}} successfully created'
+						label: t('snackbar.tag_applied', {
+							tag: tagName,
+							defaultValue: '"{{tag}}" tag applied'
 						}),
+						autoHideTimeout: 3000
+					});
+				} else {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					createSnackbar({
+						key: `tag`,
+						replace: true,
+						type: 'error',
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000,
 						hideButton: true
 					});
 				}
+			});
+		},
+		[createSnackbar, dispatch, t]
+	);
+	const onCreate = useCallback(
+		() =>
+			createTag({ name, color }).then((res: any) => {
+				if (res.tag) {
+					if (event) {
+						applyNewlyCreatedTag({ inviteId: event.resource.id, tagName: res.tag?.[0]?.name });
+					} else {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						createSnackbar({
+							key: `new-tag`,
+							replace: true,
+							type: 'info',
+							label: t('messages.snackbar.tag_created', {
+								name,
+								defaultValue: 'Tag {{name}} successfully created'
+							}),
+							autoHideTimeout: 3000,
+							hideButton: true
+						});
+					}
+				}
 				onClose();
 			}),
-		[name, color, onClose, createSnackbar, t]
+		[name, color, onClose, event, applyNewlyCreatedTag, createSnackbar, t]
 	);
 	const onUpdate = useCallback(() => {
 		Promise.all([renameTag(`${tag?.id}`, name), changeTagColor(`${tag?.id}`, Number(color))])

@@ -38,43 +38,40 @@ const normalizeApptInstancesRefs = (
 	);
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const normalizeAppointment = (appt: any): Appointment => {
-	console.log('vv appt:', appt);
-	return {
-		id: appt.id,
-		alarm: appt.alarm,
-		alarmData: appt.alarmData,
-		fb: appt.fb,
-		fr: appt.fr ?? '',
-		d: appt.d,
-		fba: appt.fba,
-		md: appt.md,
-		flags: appt.f ?? '',
-		ms: appt.ms,
-		ptst: appt.ptst,
-		rev: appt.rev,
-		status: appt.status,
-		transp: appt.transp,
-		uid: appt.uid,
-		compNum: appt.compNum,
-		class: appt.class,
-		dur: appt.dur,
-		allDay: appt.allDay,
-		inst: normalizeApptInstancesRefs(appt.inst, appt.recur),
-		draft: appt.draft,
-		inviteId: appt.invId,
-		isOrg: appt.isOrg,
-		loc: appt.loc,
-		otherAtt: appt.otherAtt,
-		recur: appt.recur ?? false,
-		l: appt.l,
-		name: appt.name,
-		neverSent: appt.neverSent,
-		or: appt.or,
-		s: appt.s,
-		tags: !isNil(appt.t) ? filter(appt.t.split(','), (t) => t !== '') : []
-	};
-};
+export const normalizeAppointment = (appt: any): Appointment => ({
+	id: appt.id,
+	alarm: appt.alarm,
+	alarmData: appt.alarmData,
+	fb: appt.fb,
+	fr: appt.fr ?? '',
+	d: appt.d,
+	fba: appt.fba,
+	md: appt.md,
+	flags: appt.f ?? '',
+	ms: appt.ms,
+	ptst: appt.ptst,
+	rev: appt.rev,
+	status: appt.status,
+	transp: appt.transp,
+	uid: appt.uid,
+	compNum: appt.compNum,
+	class: appt.class,
+	dur: appt.dur,
+	allDay: appt.allDay,
+	inst: normalizeApptInstancesRefs(appt.inst, appt.recur),
+	draft: appt.draft,
+	inviteId: appt.invId,
+	isOrg: appt.isOrg,
+	loc: appt.loc,
+	otherAtt: appt.otherAtt,
+	recur: appt.recur ?? false,
+	l: appt.l,
+	name: appt.name,
+	neverSent: appt.neverSent,
+	or: appt.or,
+	s: appt.s,
+	tags: !isNil(appt.t) ? filter(appt.t.split(','), (t) => t !== '') : []
+});
 
 export const normalizeAppointments = (
 	appts: Array<Appointment>

@@ -8,22 +8,22 @@ import {
 	Button,
 	Dropdown,
 	Icon,
-	IconButton,
+	SnackbarManagerContext,
 	ModalManagerContext,
 	Padding,
 	Row,
-	Text
+	Text,
+	Container
 } from '@zextras/carbonio-design-system';
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useMemo } from 'react';
 import { map, toUpper } from 'lodash';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../../store/slices/appointments-slice';
-import { DeleteEventModal } from '../delete/delete-event-modal';
 import OrganizerActions from './parts/organizer-actions';
 import { useGetRecurrentActions } from '../../hooks/use-recurrent-actions';
+import { useEventActions } from '../../hooks/use-event-actions';
 
 const AttendingRow = styled(Row)`
 	border: 1px solid ${(props) => props.theme.palette[props.invtReply.color].regular};
@@ -33,7 +33,7 @@ const RecurrentRow = styled(Row)`
 	border: 1px solid ${(props) => props.theme.palette.primary.regular};
 `;
 
-const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatch }) => {
+const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatch, event }) => {
 	const [t] = useTranslation();
 	const decline = useCallback(
 		(ev) => {
@@ -176,9 +176,19 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 	};
 
 	const [invtReply, setInvtReply] = useState(attendingResponse(participationStatus));
+	const createModal = useContext(ModalManagerContext);
+
+	const tags = useTags();
+	const createSnackbar = useContext(SnackbarManagerContext);
+	const context = useMemo(
+		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags }),
+		[createModal, createSnackbar, dispatch, tags]
+	);
+
+	const actions = useEventActions(event, context, t, false);
 
 	return (
-		<>
+		<Container orientation="horizontal" mainAlignment="flex-end">
 			<Dropdown
 				disableAutoFocus
 				items={map(attendeesOptions, (action) => ({
@@ -198,36 +208,49 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 				placement="bottom-end"
 			>
 				<AttendingRow padding={{ all: 'small' }} invtReply={invtReply}>
-					<Padding right="small">
+					<Row>
 						<Icon color={invtReply.color} icon={invtReply.icon} />
-					</Padding>
-					<Padding right="small">
-						<Text color={invtReply.color}>{invtReply.label}</Text>
-					</Padding>
-					<Icon color={invtReply.color} icon="ArrowIosDownwardOutline" />
+					</Row>
+
+					<Row>
+						<Padding horizontal="small">
+							<Text color={invtReply.color}>{invtReply.label}</Text>
+						</Padding>
+						<Icon color={invtReply.color} icon="ArrowIosDownwardOutline" />
+					</Row>
 				</AttendingRow>
 			</Dropdown>
-		</>
+			<Padding left="small">
+				<Dropdown
+					disableAutoFocus
+					items={map(actions, (action) => ({
+						id: action.label,
+						icon: action.icon,
+						label: action.label,
+						key: action.id,
+						color: action.color,
+						items: action.items,
+						customComponent: action.customComponent,
+						click: (ev) => {
+							ev.stopPropagation();
+							action.click();
+						}
+					}))}
+					placement="bottom-end"
+				>
+					<Button
+						type="outlined"
+						label={t('label.other_actions', 'Other actions')}
+						icon="ArrowIosDownwardOutline"
+						style={{ padding: '7px 4px' }}
+					/>
+				</Dropdown>
+			</Padding>
+		</Container>
 	);
 };
 
-// export const ActionsButtonsRow = ({ event, dispatch, onClose }) => (
-// 	<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
-// 		{event.resource.iAmOrganizer && event.haveWriteAccess ? (
-// 			<OrganizerActions event={event} onClose={onClose} />
-// 		) : (
-// 			<ReplyButtonsPartSmall
-// 				inviteId={event.resource?.inviteId}
-// 				participationStatus={event.resource?.participationStatus}
-// 				compNum={event.resource?.compNum}
-// 				dispatch={dispatch}
-// 			/>
-// 		)}
-// 	</Row>
-// );
 export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
-	const createModal = useContext(ModalManagerContext);
-	const [t] = useTranslation();
 	const instanceActions = useGetRecurrentActions(event, { onClose, isInstance: true });
 	const seriesActions = useGetRecurrentActions(event, { onClose, isInstance: false });
 
@@ -265,32 +288,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 							</Padding>
 						</Padding>
 					) : (
-						<>
-							<Padding right="small">
-							<OrganizerActions event={event} onClose={onClose} />
-							</Padding>
-							{event.resource?.calendar?.name === 'Trash' ? (
-								<Button
-									type="outlined"
-									disabled={!event.permission}
-									label={t('label.move', 'move')}
-									onClick={() => console.warn('not implemented yet')}
-								/>
-							) : (
-								<Button
-									disabled={!event.haveWriteAccess}
-									type="outlined"
-									label={t('label.edit', 'edit')}
-									onClick={(ev) => {
-										if (ev) ev.stopPropagation();
-										onClose();
-										replaceHistory(
-											`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
-										);
-									}}
-								/>
-							)}
-						</>
+						<OrganizerActions event={event} onClose={onClose} />
 					)}
 				</>
 			) : (
@@ -299,6 +297,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 					participationStatus={event.resource?.participationStatus}
 					compNum={event.resource?.compNum}
 					dispatch={dispatch}
+					event={event}
 				/>
 			)}
 		</Row>

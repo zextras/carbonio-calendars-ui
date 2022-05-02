@@ -82,6 +82,7 @@ const DeleteTagModal: FC<ComponentProps> = ({ onClose, tag }): ReactElement => {
 				label={t('label.delete', 'Delete')}
 				disabled={false}
 				background="error"
+				color="error"
 			/>
 		</>
 	);

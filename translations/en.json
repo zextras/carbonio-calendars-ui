@@ -172,6 +172,7 @@
         "move": "Move",
         "new_appointment": "New appointment",
         "new_calendar": "New calendar",
+        "new_tag": "New Tag",
         "no_end_date": "No end date",
         "no_special_char_allowed": "Name should not contain any special character",
         "no_subject": "No subject",

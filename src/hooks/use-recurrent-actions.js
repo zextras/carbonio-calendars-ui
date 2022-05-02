@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ModalManagerContext } from '@zextras/carbonio-design-system';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
+import { applyTag } from '../view/tags/tag-actions';
 import { moveApptToTrash } from './use-event-actions';
 
 export const useGetRecurrentActions = (event, context = {}) => {
@@ -16,12 +17,14 @@ export const useGetRecurrentActions = (event, context = {}) => {
 	const createModal = useContext(ModalManagerContext);
 
 	const query = useMemo(() => (isInstance ? '?isInstance=TRUE' : ''), [isInstance]);
+	const tags = useTags();
 	const actions = useMemo(
 		() => [
 			{
 				id: 'openindisplayer',
 				icon: 'ExpandOutline',
 				label: 'Open in displayer',
+				keepOpen: true,
 				click: (ev) => {
 					if (ev) ev.stopPropagation();
 					onClose();
@@ -42,9 +45,10 @@ export const useGetRecurrentActions = (event, context = {}) => {
 					);
 				}
 			},
-			moveApptToTrash(event, { isInstance, createModal }, t)
+			moveApptToTrash(event, { isInstance, createModal }, t),
+			applyTag({ t, context: { tags }, event })
 		],
-		[createModal, event, isInstance, onClose, query, t]
+		[createModal, event, isInstance, onClose, query, t, tags]
 	);
 
 	return actions;

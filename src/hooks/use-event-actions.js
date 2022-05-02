@@ -20,6 +20,7 @@ export const openInDisplayer = (event, context, t) => ({
 	icon: 'ExpandOutline',
 	disabled: false,
 	label: t('event.action.expand', 'Open in Displayer'),
+	keepOpen: true,
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
 		context.replaceHistory(
@@ -158,6 +159,7 @@ export const moveApptToTrash = (event, context, t) => ({
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
 	disabled: !event.permission,
+	keepOpen: true,
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
 		const closeModal = context.createModal(
@@ -274,7 +276,7 @@ export const editAppointment = (event, context, t, isEditable = false) => ({
 	}
 });
 
-export const ActionsRetriever = (event, context, t) =>
+export const ActionsRetriever = (event, context, t, includeReplyActions) =>
 	// eslint-disable-next-line no-nested-ternary
 	!event.resource.iAmOrganizer
 		? event.resource.calendar.id === FOLDERS.TRASH
@@ -285,9 +287,13 @@ export const ActionsRetriever = (event, context, t) =>
 			  ]
 			: [
 					openInDisplayer(event, context, t),
-					acceptInvitation(event, context, t),
-					declineInvitation(event, context, t),
-					acceptAsTentative(event, context, t),
+					...(includeReplyActions
+						? [
+								acceptInvitation(event, context, t),
+								declineInvitation(event, context, t),
+								acceptAsTentative(event, context, t)
+						  ]
+						: []),
 					moveAppointment(event, context, t),
 					moveApptToTrash(event, context, t),
 					editAppointment(event, context, t),
@@ -343,7 +349,7 @@ export const RecurrentActionRetriever = (event, context, t) =>
 				}
 		  ];
 
-export const useEventActions = (event, context, t) =>
+export const useEventActions = (event, context, t, includeReplyActions = true) =>
 	event.resource.isRecurrent
 		? RecurrentActionRetriever(event, context, t)
-		: ActionsRetriever(event, { ...context, isInstance: true }, t);
+		: ActionsRetriever(event, { ...context, isInstance: true }, t, includeReplyActions);

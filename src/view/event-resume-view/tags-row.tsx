@@ -4,25 +4,30 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, ReactElement, useMemo } from 'react';
-import { Row, Padding, Icon, Text, Chip } from '@zextras/carbonio-design-system';
+import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
 import { includes, map, reduce } from 'lodash';
 import styled from 'styled-components';
 import { useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
+import { useTranslation } from 'react-i18next';
 import { EventType } from '../../types/event';
 
 const TagChip = styled(Chip)`
-	margin-right: ${({ theme }): string => theme.sizes.padding.extrasmall};
+	margin-left: ${({ theme }): string => theme.sizes.padding.extrasmall};
 	padding: 1px 8px !important;
 	margin-bottom: 4px;
 `;
 
-const TagsRow: FC<{ event: EventType }> = ({ event }): ReactElement => {
+const TagsRow: FC<{ event: EventType; hideIcon: boolean }> = ({
+	event,
+	hideIcon = false
+}): ReactElement => {
+	const [t] = useTranslation();
 	const tagsFromStore = useTags();
 	const tags = useMemo(
 		() =>
 			reduce(
 				tagsFromStore,
-				(acc: any, v) => {
+				(acc: any, v: any) => {
 					if (includes(event?.resource?.tags, v.id))
 						acc.push({
 							...v,
@@ -35,30 +40,55 @@ const TagsRow: FC<{ event: EventType }> = ({ event }): ReactElement => {
 			),
 		[event?.resource?.tags, tagsFromStore]
 	);
-
+	const tagLabel = useMemo(() => t('label.tags', 'Tags'), [t]);
 	return (
-		<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
-			<Row takeAvailableSpace mainAlignment="flex-start">
-				<Padding right="small">
-					<Icon icon="TagsMoreOutline" size="medium" />
-				</Padding>
+		<>
+			<Row
+				width="fill"
+				crossAlignment="flex-start"
+				mainAlignment="flex-start"
+				padding={{ vertical: 'small' }}
+			>
+				{!hideIcon && (
+					<Row padding={{ right: 'small' }}>
+						<Icon icon="TagsMoreOutline" size="medium" />
+					</Row>
+				)}
+
 				{event?.resource?.tags?.length > 0 && (
-					<Row orientation="horizontal" crossAlignment="flex-start" mainAlignment="flex-start">
-						<Text color="secondary" size="small" overflow="break-word">
-							{map(tags, (tag) => (
-								<TagChip
-									label={tag.name}
-									avatarBackground={tag.color}
-									background="gray2"
-									hasAvatar
-									avatarIcon="Tag"
-								/>
-							))}
-						</Text>
+					<Row takeAvailableSpace mainAlignment="flex-start">
+						{!hideIcon ? (
+							<Text color="secondary" size="small" overflow="break-word">
+								{map(tags, (tag) => (
+									<TagChip
+										label={tag.name}
+										avatarBackground={tag.color}
+										background="gray2"
+										hasAvatar
+										avatarIcon="Tag"
+										maxWidth="300px"
+									/>
+								))}
+							</Text>
+						) : (
+							<Text color="secondary" size="small" overflow="break-word">
+								{tagLabel}:
+								{map(tags, (tag) => (
+									<TagChip
+										label={tag.name}
+										avatarBackground={tag.color}
+										background="gray2"
+										hasAvatar
+										avatarIcon="Tag"
+										maxWidth="300px"
+									/>
+								))}
+							</Text>
+						)}
 					</Row>
 				)}
 			</Row>
-		</Row>
+		</>
 	);
 };
 
