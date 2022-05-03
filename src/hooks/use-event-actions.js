@@ -330,8 +330,7 @@ export const RecurrentActionRetriever = (event, context, t) =>
 					},
 					items: [
 						moveApptToTrash(event, { ...context, isInstance: true }, t),
-						openInDisplayer(event, context, t),
-						applyTag({ t, context, event })
+						openInDisplayer(event, context, t)
 					]
 				},
 				{
