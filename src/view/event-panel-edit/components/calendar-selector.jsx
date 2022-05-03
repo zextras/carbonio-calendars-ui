@@ -70,7 +70,8 @@ export default function CalendarSelector({
 	label,
 	excludeTrash = false,
 	updateAppTime = false,
-	showCalWithWritePerm = true
+	showCalWithWritePerm = true,
+	disabled
 }) {
 	const [t] = useTranslation();
 
@@ -118,7 +119,7 @@ export default function CalendarSelector({
 			items={calendarItems}
 			defaultSelection={defaultCalendarSelection}
 			disablePortal
-			disabled={updateAppTime}
+			disabled={updateAppTime || disabled}
 			LabelFactory={LabelFactory}
 		/>
 	);

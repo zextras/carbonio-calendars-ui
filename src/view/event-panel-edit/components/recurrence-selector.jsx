@@ -74,7 +74,7 @@ const RepeatItemComponent = ({ label }) => (
 		<TextUpperCase>{label}</TextUpperCase>
 	</Container>
 );
-export default function RecurrenceSelector({ data, callbacks, updateAppTime = false }) {
+export default function RecurrenceSelector({ data, callbacks, updateAppTime = false, disabled }) {
 	const [t] = useTranslation();
 	const [open, setOpen] = useState(false);
 
@@ -155,7 +155,7 @@ export default function RecurrenceSelector({ data, callbacks, updateAppTime = fa
 				items={recurrenceItems}
 				defaultSelection={recurrenceItems[0]}
 				disablePortal
-				disabled={updateAppTime}
+				disabled={updateAppTime || disabled}
 				LabelFactory={LabelFactory}
 			/>
 			<CustomRecurrenceModal
