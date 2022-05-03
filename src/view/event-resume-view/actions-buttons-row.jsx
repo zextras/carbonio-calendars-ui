@@ -17,7 +17,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import React, { useState, useCallback, useContext, useMemo } from 'react';
 import { map, toUpper } from 'lodash';
-import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../../store/slices/appointments-slice';
@@ -251,8 +251,17 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 };
 
 export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
-	const instanceActions = useGetRecurrentActions(event, { onClose, isInstance: true });
-	const seriesActions = useGetRecurrentActions(event, { onClose, isInstance: false });
+	const createModal = useContext(ModalManagerContext);
+
+	const tags = useTags();
+	const createSnackbar = useContext(SnackbarManagerContext);
+	const context = useMemo(
+		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags, onClose }),
+		[createModal, createSnackbar, dispatch, tags, onClose]
+	);
+
+	const instanceActions = useGetRecurrentActions(event, { ...context, isInstance: true });
+	const seriesActions = useGetRecurrentActions(event, { ...context, isInstance: false });
 
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
@@ -272,20 +281,22 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 									<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
 								</RecurrentRow>
 							</Dropdown>
-							<Padding left="small">
-								<Dropdown
-									data-testid={`instance-options`}
-									items={instanceActions}
-									style={{ cursor: 'pointer' }}
-								>
-									<RecurrentRow padding={{ all: 'small' }}>
-										<Padding right="small">
-											<Text color={'primary'}>INSTANCE</Text>
-										</Padding>
-										<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
-									</RecurrentRow>
-								</Dropdown>
-							</Padding>
+							{event.resource.calendar.id !== FOLDERS.TRASH && (
+								<Padding left="small">
+									<Dropdown
+										data-testid={`instance-options`}
+										items={instanceActions}
+										style={{ cursor: 'pointer' }}
+									>
+										<RecurrentRow padding={{ all: 'small' }}>
+											<Padding right="small">
+												<Text color={'primary'}>INSTANCE</Text>
+											</Padding>
+											<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
+										</RecurrentRow>
+									</Dropdown>
+								</Padding>
+							)}
 						</Padding>
 					) : (
 						<OrganizerActions event={event} onClose={onClose} />

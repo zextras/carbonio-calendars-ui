@@ -14,14 +14,18 @@ import {
 	Row
 } from '@zextras/carbonio-design-system';
 
-import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 
 import { map } from 'lodash';
 import { useDispatch } from 'react-redux';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 
 import { applyTag } from '../../tags/tag-actions';
-import { moveApptToTrash, openInDisplayer } from '../../../hooks/use-event-actions';
+import {
+	moveApptToTrash,
+	openInDisplayer,
+	deletePermanently
+} from '../../../hooks/use-event-actions';
 
 const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }): ReactElement => {
 	const createModal = useContext(ModalManagerContext);
@@ -33,9 +37,12 @@ const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }):
 		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags }),
 		[createModal, createSnackbar, dispatch, tags]
 	);
+
 	const otherActions = useMemo(
 		() => [
-			moveApptToTrash(event, { ...context, isInstance: true }, t),
+			event.resource.calendar.id === FOLDERS.TRASH
+				? deletePermanently({ event, context, t })
+				: moveApptToTrash(event, { ...context, isInstance: true }, t),
 			openInDisplayer(event, context, t),
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
