@@ -17,7 +17,7 @@ import {
 	SnackbarManagerContext,
 	Shimmer
 } from '@zextras/carbonio-design-system';
-import { map, filter, isEqual } from 'lodash';
+import { map, filter, isEqual, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import CustomScheduleModal from './custom-schedule-modal';
 import GeneralSettingView from './general-settings-view';
@@ -37,7 +37,6 @@ import {
 export default function CalendarSettingsView() {
 	const [t] = useTranslation();
 	const settings = useUserSettings()?.prefs;
-	const [isRegular, setIsRegular] = useState(true);
 	const [settingsObj, setSettingsObj] = useState({ ...settings });
 	const [updatedSettings, setUpdatedSettings] = useState({});
 	const [notFirstLoad, setNotFirstLoad] = useState(false);
@@ -178,7 +177,7 @@ export default function CalendarSettingsView() {
 	);
 
 	const [workingSchedule, setWorkingSchedule] = useState(
-		map(settings?.prefs?.zimbraPrefCalendarWorkingHours?.split(','), (schedule) => ({
+		map(settings?.zimbraPrefCalendarWorkingHours?.split(','), (schedule) => ({
 			day: schedule.split(':')[0],
 			working: schedule.split(':')[1] !== 'N',
 			start: schedule.split(':')[2],
@@ -186,6 +185,15 @@ export default function CalendarSettingsView() {
 		}))
 	);
 
+	function getRegularHourEnable() {
+		const uniqStart = uniqBy(workingSchedule, 'start');
+		const uniqEnd = uniqBy(workingSchedule, 'end');
+		if (uniqStart.length === 1 && uniqEnd.length === 1) {
+			return true;
+		}
+		return false;
+	}
+	const [isRegular, setIsRegular] = useState(getRegularHourEnable);
 	const [open, setOpen] = useState(false);
 	const toggleModal = useCallback(() => setOpen(!open), [open]);
 
@@ -319,6 +327,9 @@ export default function CalendarSettingsView() {
 				if (currentInvite !== activeInviteOptn) {
 					setCurrentInvite(activeInviteOptn);
 				}
+				if (settingsToUpdate.zimbraPrefCalendarWorkingHours) {
+					setOpen(false);
+				}
 			} else {
 				createSnackbar({
 					key: `new`,
@@ -346,14 +357,6 @@ export default function CalendarSettingsView() {
 	]);
 
 	const calculateRegularSchedule = (data) => {
-		data.start
-			? updateSettings({
-					target: { name: 'zimbraPrefCalendarDayHourEnd', value: `${data.hour}${data.minute}` }
-			  })
-			: updateSettings({
-					target: { name: 'zimbraPrefCalendarDayHourStart', value: `${data.hour}${data.minute}` }
-			  });
-
 		data.start
 			? setWorkingSchedule(
 					workingSchedule.map((schedule) => ({
