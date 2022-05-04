@@ -21,7 +21,8 @@ import {
 	Divider,
 	Padding,
 	Select,
-	Text
+	Text,
+	Button
 } from '@zextras/carbonio-design-system';
 import { map, find, filter, flatten, findIndex } from 'lodash';
 import {
@@ -126,11 +127,13 @@ export default function EditorCompleteView({
 	const title = useMemo(() => (data && data.title !== '' ? data.title : 'No Subject'), [data]);
 	const settings = useUserSettings();
 	const account = useUserAccount();
-	const [ContactInput, available] = useIntegratedComponent('contact-input');
+	const [ContactInput] = useIntegratedComponent('contact-input');
 	const [RoomSelector, isRoomAvailable] = useIntegratedComponent('room-selector');
 
 	const [richText, setRichText] = useState('');
 	const [dropZoneEnable, setDropZoneEnable] = useState(false);
+	const [showOptionals, setShowOptional] = useState(false);
+	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
 
 	const onDragOverEvent = (event) => {
 		event.preventDefault();
@@ -139,6 +142,12 @@ export default function EditorCompleteView({
 
 	const [defaultIdentity, setDefaultIdentity] = useState({});
 	const [list, setList] = useState([]);
+
+	useEffect(() => {
+		if (data?.resource?.optionalAttendees?.length) {
+			setShowOptional(true);
+		}
+	}, [data?.resource?.optionalAttendees?.length]);
 
 	const newItems = useMemo(
 		() =>
@@ -367,23 +376,49 @@ export default function EditorCompleteView({
 							)}
 							<ShiftedRow>
 								<AttendeesContainer>
-									<ContactInput
-										placeholder={t('label.attendee_plural', 'Attendees')}
-										onChange={callbacks.onAttendeesChange}
-										defaultValue={data.resource.attendees}
-									/>
+									<Container
+										orientation="horizontal"
+										background="gray5"
+										style={{ overflow: 'hidden' }}
+										padding={{ all: 'none' }}
+									>
+										<Container background="gray5" style={{ overflow: 'hidden' }}>
+											<ContactInput
+												placeholder={t('label.attendee_plural', 'Attendees')}
+												onChange={callbacks.onAttendeesChange}
+												defaultValue={data.resource.attendees}
+												disabled={updateAppTime}
+											/>
+										</Container>
+										<Container
+											width="fit"
+											background="gray5"
+											padding={{ right: 'medium', left: 'extrasmall' }}
+											orientation="horizontal"
+										>
+											<Button
+												label={t('label.optional_plural', 'Optionals')}
+												type="ghost"
+												labelColor="secondary"
+												style={{ padding: 0 }}
+												onClick={toggleOptionals}
+											/>
+										</Container>
+									</Container>
 								</AttendeesContainer>
 							</ShiftedRow>
 
-							<ShiftedRow>
-								<AttendeesContainer>
-									<ContactInput
-										placeholder={t('label.optional_plural', 'Optionals')}
-										onChange={callbacks.onAttendeesOptionalChange}
-										defaultValue={data.resource.optionalAttendees}
-									/>
-								</AttendeesContainer>
-							</ShiftedRow>
+							{showOptionals && (
+								<ShiftedRow>
+									<AttendeesContainer>
+										<ContactInput
+											placeholder={t('label.optional_plural', 'Optionals')}
+											onChange={callbacks.onAttendeesOptionalChange}
+											defaultValue={data.resource.optionalAttendees}
+										/>
+									</AttendeesContainer>
+								</ShiftedRow>
+							)}
 
 							<ShiftedRow width="fill" style={{ minWidth: '40%' }} mainAlignment="space-between">
 								<Container width="calc(50% - 4px)">
