@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import moment from 'moment';
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement, useCallback, useContext } from 'react';
 import {
@@ -16,10 +17,9 @@ import { useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
-import { appointmentToEvent } from '../../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../../store/actions/get-appointment';
-import { modifyAppointmentRequest } from '../../../store/actions/modify-appointment';
-import { normalizeAppointmentFromCreation } from '../../../normalizations/normalize-appointments';
+
+import { modifyAppointment } from '../../../store/actions/modify-appointment';
 
 type ProposedTimeReply = {
 	invite: any;
@@ -48,20 +48,25 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		dispatch(getAppointmentAndInvite({ aptId: id, inviteId })).then((res) => {
-			const { appointment, invite } = res.payload;
-			const normalizedAppointment = normalizeAppointmentFromCreation(appointment, {});
-			const normalizedInvite = invite.inv[0].comp
-				? normalizeInvite(invite)
-				: normalizeInvite({ ...invite, inv: appointment.inv });
-			const requiredEvent = appointmentToEvent(normalizedInvite, normalizedAppointment.id);
-
+			const message = {
+				...res.payload.m,
+				inv: [
+					{
+						...res.payload.m.inv[0],
+						comp: [
+							{
+								...res.payload.m.inv[0].comp[0],
+								s: Invite[0]?.comp[0].s,
+								e: Invite[0]?.comp[0].e
+							}
+						]
+					}
+				]
+			};
+			const normalizedInvite = normalizeInvite(message);
 			dispatch(
-				modifyAppointmentRequest({
-					appt: requiredEvent,
-					invite: normalizedInvite,
-					id: 0,
-					mailInvite: Invite,
-					account: accounts[0]
+				modifyAppointment({
+					invite: normalizedInvite
 				})
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
@@ -92,7 +97,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				moveToTrash();
 			});
 		});
-	}, [dispatch, id, inviteId, Invite, accounts, moveToTrash, createSnackbar, t]);
+	}, [Invite, createSnackbar, dispatch, id, inviteId, moveToTrash, t]);
 	const decline = useCallback(() => {
 		if (available)
 			openComposer(null, {

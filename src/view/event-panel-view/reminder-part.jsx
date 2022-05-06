@@ -7,7 +7,7 @@ import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { modifyAppointment } from '../../store/actions/new-modify-appointment';
+import { modifyAppointment } from '../../store/actions/modify-appointment';
 import { useInvite } from '../../hooks/use-invite';
 
 export default function ReminderPart({ alarmString, event }) {

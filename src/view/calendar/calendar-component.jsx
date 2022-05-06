@@ -23,10 +23,8 @@ import { setSearchRange } from '../../store/actions/set-search-range';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
-import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
-import { modifyAppointmentRequest } from '../../store/actions/modify-appointment';
-import { normalizeAppointmentFromCreation } from '../../normalizations/normalize-appointments';
+import { modifyAppointment } from '../../store/actions/modify-appointment';
 
 const localizer = momentLocalizer(moment);
 const nullAccessor = () => null;
@@ -190,25 +188,31 @@ export default function CalendarComponent() {
 					inviteId: appt.event.resource.inviteId
 				})
 			).then((res) => {
-				const { appointment, invite } = res.payload;
-				const normalizedAppointment = normalizeAppointmentFromCreation(appointment, {});
-				const normalizedInvite = invite.inv[0].comp
-					? normalizeInvite(invite)
-					: normalizeInvite({ ...invite, inv: appointment.inv });
-				const requiredEvent = appointmentToEvent(normalizedInvite, normalizedAppointment.id);
+				const message = {
+					...res.payload.m,
+					inv: [
+						{
+							...res.payload.m.inv[0],
+							comp: [
+								{
+									...res.payload.m.inv[0].comp[0],
+									s: [{ d: moment(moment(appt.start).utc()).format('YYYYMMDD[T]HHmmss[Z]') }],
+									e: [{ d: moment(moment(appt.end).utc()).format('YYYYMMDD[T]HHmmss[Z]') }]
+								}
+							]
+						}
+					]
+				};
+				const normalizedInvite = normalizeInvite(message);
 
 				dispatch(
-					modifyAppointmentRequest({
-						appt: requiredEvent,
-						invite: normalizedInvite,
-						id: 0,
-						mailInvite: [{ comp: [{ s: [{ u: appt.start }], e: [{ u: appt.end }] }] }],
-						account
+					modifyAppointment({
+						invite: normalizedInvite
 					})
 				);
 			});
 		},
-		[dispatch, account]
+		[dispatch]
 	);
 	const eventPropGetter = useCallback(
 		(event) => ({

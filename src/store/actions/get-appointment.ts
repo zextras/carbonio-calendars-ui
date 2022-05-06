@@ -52,8 +52,7 @@ export const getAppointmentAndInvite = createAsyncThunk(
 			onerror: 'continue'
 		})) as Record<string, Array<any>>;
 		return {
-			appointment: result.GetAppointmentResponse[0].appt[0],
-			invite: result.GetMsgResponse[0].m[0]
+			m: result.GetMsgResponse[0].m[0]
 		};
 	}
 );

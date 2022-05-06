@@ -8,7 +8,6 @@ import produce from 'immer';
 import { moveAppointmentRequest } from '../actions/move-appointment';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
 // eslint-disable-next-line import/no-cycle
-import { modifyAppointmentRequest } from '../actions/modify-appointment';
 import { searchAppointments } from '../actions/search-appointments';
 import { setSearchRange } from '../actions/set-search-range';
 import { deleteAppointmentPermanent } from '../actions/delete-appointment-permanent';
@@ -47,11 +46,6 @@ import {
 	snoozeApptReminderPending,
 	snoozeApptReminderRejected
 } from '../reducers/snooze-appointment';
-import {
-	handleModifyAppointmentPending,
-	handleModifyAppointmentFulfilled,
-	handleModifyAppointmentRejected
-} from '../reducers/modify-appointment';
 
 export const appointmentsSlice = createSlice({
 	name: 'appointments',
@@ -68,9 +62,6 @@ export const appointmentsSlice = createSlice({
 		handleAppointmentsSync: handleSyncReducer
 	},
 	extraReducers: (builder) => {
-		builder.addCase(modifyAppointmentRequest.pending, handleModifyAppointmentPending);
-		builder.addCase(modifyAppointmentRequest.fulfilled, handleModifyAppointmentFulfilled);
-		builder.addCase(modifyAppointmentRequest.rejected, handleModifyAppointmentRejected);
 		builder.addCase(setSearchRange.pending, setRangePending);
 		builder.addCase(setSearchRange.fulfilled, setRangeFulfilled);
 		builder.addCase(setSearchRange.rejected, setRangeRejected);

@@ -110,6 +110,7 @@ const InviteResponse: FC<InviteResponse> = ({
 			);
 		});
 	}, [dispatch, inviteId]);
+
 	return (
 		<InviteContainer padding={{ all: 'extralarge' }}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">

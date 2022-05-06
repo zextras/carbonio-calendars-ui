@@ -16,8 +16,8 @@ import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { editAppointmentData } from '../store/slices/editor-slice';
 import { selectEditor } from '../store/selectors/editor';
-import { createAppointment } from '../store/actions/new-create-appointment';
-import { modifyAppointment } from '../store/actions/new-modify-appointment';
+import { createAppointment } from '../store/actions/create-appointment';
+import { modifyAppointment } from '../store/actions/modify-appointment';
 
 export const useOnSaveAndOnSend = (id, isBoard) => {
 	const dispatch = useDispatch();

@@ -9,7 +9,7 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { TFunction } from 'i18next';
-import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
+import { modifyAppointment } from '../../../store/actions/modify-appointment';
 import { deleteEvent, sendResponse } from './delete-actions';
 import { moveAppointmentRequest } from '../../../store/actions/move-appointment';
 import { SnackbarArgumentType } from '../../../types/delete-appointment';
