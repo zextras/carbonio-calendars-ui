@@ -8,10 +8,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { find } from 'lodash';
 import { METADATA_SECTIONS } from '../../constants/metadata';
+import { Invite } from '../../types/store/invite';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const generateSoapMessageFromInvite = (invite: any): any => {
+export const generateSoapMessageFromInvite = (invite: Invite): any => {
 	const at = [];
 	invite.attendees && at.push(...invite.attendees);
 
