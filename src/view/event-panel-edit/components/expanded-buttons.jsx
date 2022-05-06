@@ -22,6 +22,8 @@ const ResizedIconCheckbox = styled(IconCheckbox)`
 		svg {
 			height: 20px;
 			width: 20px;
+			fill: ${({ disabled, theme }) =>
+				disabled ? theme.palette.secondary.disabled : theme.palette.currentColor.regular};
 		}
 	}
 `;
@@ -129,7 +131,6 @@ export default function ExpandedButtons({ data, callbacks, invite, isSmallView, 
 							icon="AttachOutline"
 							onClick={() => setOpenDD(!openDD)}
 							disabled={disabled}
-							value={disabled ? true : openDD}
 						/>
 					</Dropdown>
 				</Tooltip>

@@ -12,9 +12,9 @@ import { find } from 'lodash';
 export const Square = styled.div`
 	width: 16px;
 	height: 16px;
-	background: ${({ color, disabled, theme }) =>
-		disabled ? theme.palette.secondary.disabled : color};
+	background: ${({ color }) => color};
 	border-radius: 4px;
+	opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
 export const ColorContainer = styled(Container)`
