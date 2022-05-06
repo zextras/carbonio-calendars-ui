@@ -14,7 +14,8 @@ import { selectCalendars } from '../../../store/selectors/calendars';
 export const Square = styled.div`
 	width: 16px;
 	height: 16px;
-	background: ${({ color }) => color};
+	background: ${({ color, disabled, theme }) =>
+		disabled ? theme.palette.secondary.disabled : color};
 	border-radius: 4px;
 `;
 export const ColorContainer = styled(Container)`
@@ -25,7 +26,7 @@ export const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 `;
 
-const LabelFactory = ({ selected, label, open, focus }) => (
+const LabelFactory = ({ selected, label, open, focus, disabled }) => (
 	<ColorContainer
 		orientation="horizontal"
 		width="fill"
@@ -36,6 +37,7 @@ const LabelFactory = ({ selected, label, open, focus }) => (
 		padding={{
 			all: 'small'
 		}}
+		style={{ cursor: disabled ? 'no-drop' : 'pointer' }}
 	>
 		<Row width="100%" takeAvailableSpace mainAlignment="space-between">
 			<Row
@@ -49,9 +51,9 @@ const LabelFactory = ({ selected, label, open, focus }) => (
 				</Text>
 				<Row>
 					<Padding right="small">
-						<Square color={selected[0].color} />
+						<Square disabled={disabled} color={selected[0].color} />
 					</Padding>
-					<TextUpperCase>{selected[0].label}</TextUpperCase>
+					<TextUpperCase color={disabled ? 'secondary' : 'text'}>{selected[0].label}</TextUpperCase>
 				</Row>
 			</Row>
 		</Row>

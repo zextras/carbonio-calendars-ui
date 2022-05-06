@@ -129,6 +129,7 @@ export default function ExpandedButtons({ data, callbacks, invite, isSmallView, 
 							icon="AttachOutline"
 							onClick={() => setOpenDD(!openDD)}
 							disabled={disabled}
+							value={disabled ? true : openDD}
 						/>
 					</Dropdown>
 				</Tooltip>
