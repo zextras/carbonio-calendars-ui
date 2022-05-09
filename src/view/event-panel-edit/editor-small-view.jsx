@@ -13,9 +13,10 @@ import {
 	Padding,
 	Select,
 	Text,
-	Button
+	Button,
+	ChipInput
 } from '@zextras/carbonio-design-system';
-import { map, find, sortBy } from 'lodash';
+import { map, find, sortBy, some } from 'lodash';
 import {
 	useUserAccount,
 	useIntegratedComponent,
@@ -35,6 +36,9 @@ import RecurrenceSelector from './components/recurrence-selector';
 import AttachmentsBlock from '../event-panel-view/attachments-part';
 import DropZoneAttachment from './components/dropzone-component';
 
+const emailRegex =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars, max-len, no-control-regex
+	/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 export default function EditorSmallView({
 	setTitle,
 	data,
@@ -55,7 +59,7 @@ export default function EditorSmallView({
 		setTitle && setTitle(title);
 	}, [title, setTitle, data, callbacks]);
 
-	const [ContactInput] = useIntegratedComponent('contact-input');
+	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const [RoomSelector, isRoomAvailable] = useIntegratedComponent('room-selector');
 
 	const onDragOverEvent = (event) => {
@@ -150,6 +154,56 @@ export default function EditorSmallView({
 		[callbacks, list]
 	);
 
+	const onAttendeesChange = useCallback(
+		(participants) => {
+			callbacks.onAttendeesChange(
+				map(participants, (participant) =>
+					participant.email
+						? {
+								type: 'to',
+								address: participant.email,
+								name: participant.firstName,
+								fullName: participant.fullName,
+								error: !emailRegex.test(participant.email)
+						  }
+						: {
+								...participant,
+								email: participant.label,
+								address: participant.label,
+								type: 'to',
+								error: !emailRegex.test(participant.label)
+						  }
+				)
+			);
+		},
+		[callbacks]
+	);
+
+	const onOptionalsChange = useCallback(
+		(participants) => {
+			callbacks.onAttendeesOptionalChange(
+				map(participants, (participant) =>
+					participant.email
+						? {
+								type: 'to',
+								address: participant.email,
+								name: participant.firstName,
+								fullName: participant.fullName,
+								error: !emailRegex.test(participant.email)
+						  }
+						: {
+								...participant,
+								email: participant.label,
+								address: participant.label,
+								type: 'to',
+								error: !emailRegex.test(participant.label)
+						  }
+				)
+			);
+		},
+		[callbacks]
+	);
+
 	const textAreaLabel = useMemo(
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
 		[t]
@@ -162,7 +216,6 @@ export default function EditorSmallView({
 	}, [data?.resource?.optionalAttendees?.length]);
 
 	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
-
 	return (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large' }}
@@ -253,12 +306,25 @@ export default function EditorSmallView({
 										padding={{ all: 'none' }}
 									>
 										<Container background="gray5" style={{ overflow: 'hidden' }}>
-											<ContactInput
-												placeholder={t('label.attendee_plural', 'Attendees')}
-												onChange={callbacks.onAttendeesChange}
-												defaultValue={data.resource.attendees}
-												disabled={updateAppTime}
-											/>
+											{integrationAvailable ? (
+												<ContactInput
+													placeholder={t('label.attendee_plural', 'Attendees')}
+													onChange={callbacks.onAttendeesChange}
+													defaultValue={data.resource.attendees}
+													disabled={updateAppTime}
+												/>
+											) : (
+												<ChipInput
+													placeholder={t('label.attendee_plural', 'Attendees')}
+													background="gray5"
+													onChange={onAttendeesChange}
+													defaultValue={data.resource.attendees}
+													valueKey="address"
+													hasError={some(data.resource.attendees || [], { error: true })}
+													errorLabel=""
+													disabled={updateAppTime}
+												/>
+											)}
 										</Container>
 										<Container
 											width="fit"
@@ -280,11 +346,25 @@ export default function EditorSmallView({
 							{showOptionals && (
 								<Row width="fill" padding={{ top: 'large' }}>
 									<AttendeesContainer>
-										<ContactInput
-											placeholder={t('label.optional_plural', 'Optionals')}
-											onChange={callbacks.onAttendeesOptionalChange}
-											defaultValue={data.resource.optionalAttendees}
-										/>
+										{integrationAvailable ? (
+											<ContactInput
+												placeholder={t('label.optional_plural', 'Optionals')}
+												onChange={callbacks.onAttendeesOptionalChange}
+												defaultValue={data.resource.optionalAttendees}
+												disabled={updateAppTime}
+											/>
+										) : (
+											<ChipInput
+												placeholder={t('label.optional_plural', 'Optionals')}
+												background="gray5"
+												onChange={onOptionalsChange}
+												defaultValue={data.resource.optionalAttendees}
+												valueKey="address"
+												hasError={some(data.resource.optionalAttendees || [], { error: true })}
+												errorLabel=""
+												disabled={updateAppTime}
+											/>
+										)}
 									</AttendeesContainer>
 								</Row>
 							)}
