@@ -28,7 +28,8 @@
             "calendar_moved_to_root_folder": "カレンダーがルートフォルダに移動しました",
             "calendar_permanently_deleted": "カレンダーは完全に削除されました",
             "calendar_restored": "カレンダーが復元されました",
-            "appointment_permanently_deleted": "予定は完全に削除されました"
+            "appointment_permanently_deleted": "予定は完全に削除されました",
+            "calendar_edits_saved": "編集内容が保存されました"
         },
         "are_organizer": "は主催者です",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> は主催者です",
@@ -68,7 +69,7 @@
         "send": "送信",
         "delete_calendar": "カレンダーを削除する",
         "empty_trash": "ゴミ箱を空にする",
-        "preview": "クリックして別のタブでプレビューする",
+        "preview": "クリックしてプレビューする",
         "delete_permanently": "完全に削除する",
         "edit_message": "メッセージを編集する",
         "move_to_root": "ルートに移動する",
@@ -252,7 +253,8 @@
             "tuesday": "火曜日",
             "wednesday": "水曜日"
         },
-        "today": "今日"
+        "today": "今日",
+        "preview": "プレビューする"
     },
     "create": "作成する",
     "delete": "削除する",
@@ -617,5 +619,8 @@
     "has_attachments": "添付ファイルがあります",
     "is_private": "プライベートです",
     "is_recurrent": "循環しています",
-    "appt_restored_successfully": "予定が復元されました"
+    "appt_restored_successfully": "予定が復元されました",
+    "preview": {
+        "close": "プレビューを閉じる"
+    }
 }
