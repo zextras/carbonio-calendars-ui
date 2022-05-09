@@ -43,6 +43,7 @@ export type EventResource = {
 	changesNotNotified?: boolean;
 	hasAlarm?: boolean;
 	alarm?: AlarmType;
+	tags: string[];
 };
 
 export type EventType = {

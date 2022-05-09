@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useContext, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import {
 	Container,
 	Text,
@@ -17,10 +17,12 @@ import {
 } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { reduce, includes } from 'lodash';
 import { useEventActions } from '../../hooks/use-event-actions';
+import { createAndApplyTag, useTagExist } from '../tags/tag-actions';
 
 const NeedActionIcon = styled(Icon)`
 	position: relative;
@@ -31,16 +33,94 @@ export default function CustomEvent({ event, title }) {
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const createSnackbar = useContext(SnackbarManagerContext);
+	const tags = useTags();
+
 	const actions = useEventActions(
 		event,
-		{ replaceHistory, dispatch, createModal, createSnackbar },
+		{ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag },
 		t
+	);
+	const [showDropdown, setShowDropdown] = useState(false);
+	const onIconClick = useCallback((ev) => {
+		ev.stopPropagation();
+		setShowDropdown((o) => !o);
+	}, []);
+
+	const onDropdownClose = useCallback(() => {
+		setShowDropdown(false);
+	}, []);
+
+	const tagItems = useMemo(
+		() =>
+			reduce(
+				tags,
+				(acc, v) => {
+					if (includes(event?.resource?.tags, v.id))
+						acc.push({ ...v, color: ZIMBRA_STANDARD_COLORS[parseInt(v.color ?? '0', 10)].hex });
+					return acc;
+				},
+				[]
+			),
+		[event?.resource?.tags, tags]
+	);
+	const tagIcon = useMemo(() => (tagItems?.length > 1 ? 'TagsMoreOutline' : 'Tag'), [tagItems]);
+	const tagIconColor = useMemo(
+		() => (tagItems?.length === 1 ? tagItems?.[0]?.color : undefined),
+		[tagItems]
+	);
+	const tagName = useMemo(() => (tagItems?.length === 1 ? tagItems?.[0]?.name : ''), [tagItems]);
+	const isTagInStore = useTagExist(tagItems);
+	const showMultiTagIcon = useMemo(
+		() => event?.resource?.tags?.length > 1,
+		[event?.resource?.tags]
+	);
+	const showTagIcon = useMemo(
+		() =>
+			event?.resource?.tags &&
+			event?.resource?.tags?.length !== 0 &&
+			event?.resource?.tags?.[0] !== '' &&
+			!showMultiTagIcon &&
+			isTagInStore,
+		[event?.resource?.tags, showMultiTagIcon, isTagInStore]
 	);
 
 	const eventDiff = useMemo(
 		() => moment(event.end).diff(event.start, 'minutes'),
 		[event.start, event.end]
 	);
+
+	const tagsDropdownItems = useMemo(
+		() =>
+			reduce(
+				tags,
+				(acc, v) => {
+					if (includes(event?.resource?.tags, v.id))
+						acc.push({
+							...v,
+							color: ZIMBRA_STANDARD_COLORS[v.color ?? 0].hex,
+							label: v.name,
+							customComponent: (
+								<Row takeAvailableSpace mainAlignment="flex-start">
+									<Row takeAvailableSpace mainAlignment="space-between">
+										<Row mainAlignment="flex-end">
+											<Padding right="small">
+												<Icon icon="Tag" color={ZIMBRA_STANDARD_COLORS[v.color ?? 0].hex} />
+											</Padding>
+										</Row>
+										<Row takeAvailableSpace mainAlignment="flex-start">
+											<Text>{v.name}</Text>
+										</Row>
+									</Row>
+								</Row>
+							)
+						});
+					return acc;
+				},
+				[]
+			),
+		[event?.resource?.tags, tags]
+	);
+
 	return (
 		<>
 			<Dropdown
@@ -87,6 +167,29 @@ export default function CustomEvent({ event, title }) {
 											</Row>
 										</Tooltip>
 									)}
+								{showTagIcon && (
+									<Tooltip placement="top" label={tagName}>
+										<Row style={{ padding: 'none' }} mainAlignment="center">
+											<Icon data-testid="TagIcon" icon={tagIcon} color={tagIconColor} />
+										</Row>
+									</Tooltip>
+								)}
+								{showMultiTagIcon && (
+									<Dropdown
+										items={tagsDropdownItems}
+										forceOpen={showDropdown}
+										onClose={onDropdownClose}
+									>
+										<Padding left="small">
+											<Icon
+												data-testid="TagIcon"
+												icon={tagIcon}
+												onClick={onIconClick}
+												color={tagIconColor}
+											/>
+										</Padding>
+									</Dropdown>
+								)}
 							</Row>
 						) : (
 							<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
@@ -126,6 +229,29 @@ export default function CustomEvent({ event, title }) {
 										)}
 									</Row>
 								</Tooltip>
+								{showTagIcon && (
+									<Tooltip placement="top" label={tagName}>
+										<Row style={{ padding: 'none' }} mainAlignment="center">
+											<Icon data-testid="TagIcon" icon={tagIcon} color={tagIconColor} />
+										</Row>
+									</Tooltip>
+								)}
+								{showMultiTagIcon && (
+									<Dropdown
+										items={tagsDropdownItems}
+										forceOpen={showDropdown}
+										onClose={onDropdownClose}
+									>
+										<Padding left="small">
+											<Icon
+												data-testid="TagIcon"
+												icon={tagIcon}
+												onClick={onIconClick}
+												color={tagIconColor}
+											/>
+										</Padding>
+									</Dropdown>
+								)}
 							</Row>
 						)}
 						{event.resource.class === 'PRI' && (

@@ -53,7 +53,8 @@ const normalizeEventResource = (
 	apptStart: inst.s,
 	alarm: appt.alarm,
 	alarmData: appt.alarmData,
-	uid: appt.uid
+	uid: appt.uid,
+	tags: appt.tags
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

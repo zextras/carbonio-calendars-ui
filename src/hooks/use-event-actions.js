@@ -13,12 +13,14 @@ import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../store/slices/appointments-slice';
 import { deleteAppointmentPermanent } from '../store/actions/delete-appointment-permanent';
 import { DeleteEventModal } from '../view/delete/delete-event-modal';
+import { applyTag } from '../view/tags/tag-actions';
 
 export const openInDisplayer = (event, context, t) => ({
 	id: EventActionsEnum.EXPAND,
 	icon: 'ExpandOutline',
 	disabled: false,
 	label: t('event.action.expand', 'Open in Displayer'),
+	keepOpen: true,
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
 		context.replaceHistory(
@@ -97,7 +99,7 @@ export const moveAppointment = (event, context, t) => ({
 	id: EventActionsEnum.MOVE,
 	icon: 'MoveOutline',
 	label:
-		event.resource.calendar.id === FOLDERS.TRASH
+		event?.resource?.calendar?.id === FOLDERS.TRASH
 			? t('label.restore', 'Restore')
 			: t('label.move', 'Move'),
 	disabled: !event.permission,
@@ -107,12 +109,12 @@ export const moveAppointment = (event, context, t) => ({
 			context.dispatch(moveAppointmentRequest(data)).then((res) => {
 				if (res.type.includes('fulfilled')) {
 					context.createSnackbar({
-						key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
+						key: event?.resource?.calendar?.id === FOLDERS.TRASH ? 'restore' : 'move',
 						replace: true,
 						type: 'info',
 						hideButton: true,
 						label:
-							event.resource.calendar.id === FOLDERS.TRASH
+							event?.resource?.calendar?.id === FOLDERS.TRASH
 								? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
 										data.destinationCalendarName
 								  }`
@@ -123,7 +125,7 @@ export const moveAppointment = (event, context, t) => ({
 					});
 				} else {
 					context.createSnackbar({
-						key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
+						key: event?.resource?.calendar?.id === FOLDERS.TRASH ? 'restore' : 'move',
 						replace: true,
 						type: 'error',
 						hideButton: true,
@@ -157,6 +159,7 @@ export const moveApptToTrash = (event, context, t) => ({
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
 	disabled: !event.permission,
+	keepOpen: true,
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
 		const closeModal = context.createModal(
@@ -183,6 +186,7 @@ export const deletePermanently = ({ event, context, t }) => ({
 	id: 'deletePermanently',
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
+	keepOpen: true,
 	click: (ev) => {
 		if (ev) ev.preventDefault();
 		const closeModal = context.createModal({
@@ -207,7 +211,7 @@ export const deletePermanently = ({ event, context, t }) => ({
 							context.createSnackbar({
 								key: `delete-permanently`,
 								replace: true,
-								type: 'info',
+								type: 'success',
 								hideButton: true,
 								label: t(
 									'message.snackbar.appointment_permanently_deleted_succesfully',
@@ -273,7 +277,7 @@ export const editAppointment = (event, context, t, isEditable = false) => ({
 	}
 });
 
-export const ActionsRetriever = (event, context, t) =>
+export const ActionsRetriever = (event, context, t, includeReplyActions) =>
 	// eslint-disable-next-line no-nested-ternary
 	!event.resource.iAmOrganizer
 		? event.resource.calendar.id === FOLDERS.TRASH
@@ -284,12 +288,17 @@ export const ActionsRetriever = (event, context, t) =>
 			  ]
 			: [
 					openInDisplayer(event, context, t),
-					acceptInvitation(event, context, t),
-					declineInvitation(event, context, t),
-					acceptAsTentative(event, context, t),
+					...(includeReplyActions
+						? [
+								acceptInvitation(event, context, t),
+								declineInvitation(event, context, t),
+								acceptAsTentative(event, context, t)
+						  ]
+						: []),
 					moveAppointment(event, context, t),
 					moveApptToTrash(event, context, t),
-					editAppointment(event, context, t)
+					editAppointment(event, context, t),
+					applyTag({ t, context, event })
 			  ]
 		: event.resource.calendar.id === FOLDERS.TRASH
 		? [
@@ -301,7 +310,8 @@ export const ActionsRetriever = (event, context, t) =>
 				openInDisplayer(event, context, t),
 				moveAppointment(event, context, t),
 				moveApptToTrash(event, context, t),
-				editAppointment(event, context, t, true)
+				editAppointment(event, context, t, true),
+				applyTag({ t, context, event })
 		  ];
 
 export const RecurrentActionRetriever = (event, context, t) =>
@@ -333,12 +343,13 @@ export const RecurrentActionRetriever = (event, context, t) =>
 					},
 					items: [
 						moveApptToTrash(event, { ...context, isInstance: false }, t),
-						moveAppointment(event, context, t)
+						moveAppointment(event, context, t),
+						applyTag({ t, context, event })
 					]
 				}
 		  ];
 
-export const useEventActions = (event, context, t) =>
+export const useEventActions = (event, context, t, includeReplyActions = true) =>
 	event.resource.isRecurrent
 		? RecurrentActionRetriever(event, context, t)
-		: ActionsRetriever(event, { ...context, isInstance: true }, t);
+		: ActionsRetriever(event, { ...context, isInstance: true }, t, includeReplyActions);

@@ -5,12 +5,7 @@
  */
 import { useCallback, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-	useRemoveCurrentBoard,
-	replaceHistory,
-	useUserAccount,
-	FOLDERS
-} from '@zextras/carbonio-shell-ui';
+import { useRemoveCurrentBoard, replaceHistory, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { startsWith } from 'lodash';
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';

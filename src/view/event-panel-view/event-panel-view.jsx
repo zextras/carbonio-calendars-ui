@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import {
 	Container,
 	Divider,
+	Dropdown,
 	Icon,
 	IconButton,
 	Row,
@@ -90,9 +91,17 @@ const ActionButtons = ({ actions, closeAction }) => {
 				style={{ overflow: 'hidden' }}
 			>
 				{actions &&
-					map(actions, (action) => (
-						<IconButton key={action.id} icon={action.icon} onClick={action.click} />
-					))}
+					map(actions, (action) =>
+						action.items ? (
+							<Dropdown items={action.items}>
+								<Row takeAvailableSpace>
+									<IconButton icon="TagsMoreOutline" />
+								</Row>
+							</Dropdown>
+						) : (
+							<IconButton key={action.id} icon={action.icon} onClick={action.click} />
+						)
+					)}
 			</Row>
 			{/* IconButton disabled until the actions are active
 			<Padding right="medium">
@@ -146,6 +155,7 @@ const DisplayerHeader = ({ title, actions, isInstance }) => {
 				</Row>
 			</Row>
 			<Divider />
+
 			{eventIsEditable && (
 				<Row
 					mainAlignment="flex-end"
