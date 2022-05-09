@@ -259,7 +259,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags, onClose }),
 		[createModal, createSnackbar, dispatch, tags, onClose]
 	);
-
+	const [t] = useTranslation();
 	const instanceActions = useGetRecurrentActions(event, { ...context, isInstance: true });
 	const seriesActions = useGetRecurrentActions(event, { ...context, isInstance: false });
 
@@ -276,7 +276,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 							>
 								<RecurrentRow padding={{ all: 'small' }}>
 									<Padding right="small">
-										<Text color={'primary'}>SERIES</Text>
+										<Text color={'primary'}>{t('label.series', 'SERIES')}</Text>
 									</Padding>
 									<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
 								</RecurrentRow>
@@ -290,7 +290,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 									>
 										<RecurrentRow padding={{ all: 'small' }}>
 											<Padding right="small">
-												<Text color={'primary'}>INSTANCE</Text>
+												<Text color={'primary'}>{t('label.instance', 'INSTANCE')}</Text>
 											</Padding>
 											<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
 										</RecurrentRow>

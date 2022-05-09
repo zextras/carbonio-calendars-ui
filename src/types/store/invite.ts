@@ -50,4 +50,6 @@ export type Invite = {
 	ms?: number;
 	rev?: number;
 	meta: any;
+	allDay?: string | boolean;
+	draft?: number | boolean;
 };

@@ -24,8 +24,7 @@ export const useGetRecurrentActions = (event, context = {}) => {
 			{
 				id: 'openindisplayer',
 				icon: 'ExpandOutline',
-				label: 'Open in displayer',
-				keepOpen: true,
+				label: t('event.action.expand', 'Open in Displayer'),
 				click: (ev) => {
 					if (ev) ev.stopPropagation();
 					onClose();
@@ -37,7 +36,7 @@ export const useGetRecurrentActions = (event, context = {}) => {
 			{
 				id: 'edit',
 				icon: 'Edit2Outline',
-				label: 'Edit',
+				label: t('label.edit', 'Edit'),
 				click: (ev) => {
 					if (ev) ev.stopPropagation();
 					onClose();
