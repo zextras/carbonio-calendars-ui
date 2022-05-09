@@ -37,7 +37,7 @@ const generateAppointmentDeletedSnackbar = (
 		createSnackbar({
 			key: 'send',
 			replace: true,
-			type: 'success',
+			type: 'info',
 			label: snackbarLabel,
 			autoHideTimeout: 3000,
 			hideButton: true,

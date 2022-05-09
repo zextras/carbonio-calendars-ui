@@ -211,7 +211,7 @@ export const deletePermanently = ({ event, context, t }) => ({
 							context.createSnackbar({
 								key: `delete-permanently`,
 								replace: true,
-								type: 'info',
+								type: 'success',
 								hideButton: true,
 								label: t(
 									'message.snackbar.appointment_permanently_deleted_succesfully',
