@@ -151,7 +151,8 @@ export const normalizeAppointmentFromNotify = (appt: any): Appointment => <Appoi
 							{
 								recur: false,
 								ridZ: appt?.inv?.[0]?.comp?.[0]?.s?.[0]?.d,
-								s: appt?.inv?.[0]?.comp?.[0]?.s?.[0]?.u
+								s: appt?.inv?.[0]?.comp?.[0]?.s?.[0]?.u,
+								title: appt?.inv?.[0]?.comp?.[0]?.name
 							}
 					  ]
 					: undefined,

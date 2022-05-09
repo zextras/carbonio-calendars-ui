@@ -43,56 +43,55 @@ export default function CustomEvent({ event, title }) {
 	);
 	return (
 		<>
-			<Tooltip label={event.title} placement="top">
-				<Dropdown
-					contextMenu
-					width="cal(min(100%,200px))"
-					style={{ width: '100%', height: '100%' }}
-					items={actions}
-					display="block"
+			<Dropdown
+				contextMenu
+				width="cal(min(100%,200px))"
+				style={{ width: '100%', height: '100%' }}
+				items={actions}
+				display="block"
+			>
+				<Container
+					width="fill"
+					height="fit"
+					background="transparent"
+					mainAlignment="center"
+					crossAlignment="center"
+					style={{ position: 'relative' }}
 				>
 					<Container
+						orientation="horizontal"
 						width="fill"
 						height="fit"
-						background="transparent"
-						mainAlignment="center"
 						crossAlignment="center"
-						style={{ position: 'relative' }}
+						mainAlignment="flex-start"
 					>
-						<Container
-							orientation="horizontal"
-							width="fill"
-							height="fit"
-							crossAlignment="center"
-							mainAlignment="flex-start"
-						>
-							{eventDiff <= 30 ? (
-								<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
+						{eventDiff <= 30 ? (
+							<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
+								<Tooltip label={title} placement="top">
 									<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
 										<Text color="currentColor" weight="medium" style={{ overflow: 'visible' }}>
 											{`${moment(event.start).format('LT')} -`}
 										</Text>
 										<Padding left="small" />
 										<Text overflow="ellipsis" color="currentColor" weight="bold" size="small">
-											{event.title}
+											{title}
 										</Text>
 									</Row>
-									{!event?.resource?.calendar?.owner &&
-										!event?.resource?.iAmOrganizer &&
-										event.resource?.participationStatus === 'NE' && (
+								</Tooltip>
+								{!event?.resource?.calendar?.owner &&
+									!event?.resource?.iAmOrganizer &&
+									event.resource?.participationStatus === 'NE' && (
+										<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
 											<Row style={{ padding: 'none' }} mainAlignment="center">
-												<Tooltip
-													placement="top"
-													label={t('event.action.needs_action', 'Needs action')}
-												>
-													<NeedActionIcon icon="CalendarWarning" color="primary" />
-												</Tooltip>
+												<NeedActionIcon icon="CalendarWarning" color="primary" />
 											</Row>
-										)}
-								</Row>
-							) : (
-								<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
-									<Row mainAlignment="space-between" takeAvailableSpace>
+										</Tooltip>
+									)}
+							</Row>
+						) : (
+							<Row takeAvailableSpace mainAlignment="flex-start" wrap="no-wrap">
+								<Row mainAlignment="space-between" takeAvailableSpace>
+									<Tooltip label={title} placement="top">
 										<Row takeAvailableSpace mainAlignment="flex-start">
 											{!event.allDay && (
 												<Text overflow="ellipsis" color="currentColor" weight="medium">
@@ -102,19 +101,21 @@ export default function CustomEvent({ event, title }) {
 												</Text>
 											)}
 										</Row>
-										{!event?.resource?.calendar?.owner &&
-											!event?.resource?.iAmOrganizer &&
-											event.resource?.participationStatus === 'NE' && (
+									</Tooltip>
+									{!event?.resource?.calendar?.owner &&
+										!event?.resource?.iAmOrganizer &&
+										event.resource?.participationStatus === 'NE' && (
+											<Tooltip
+												placement="top"
+												label={t('event.action.needs_action', 'Needs action')}
+											>
 												<Row style={{ padding: 'none' }} mainAlignment="center">
-													<Tooltip
-														placement="top"
-														label={t('event.action.needs_action', 'Needs action')}
-													>
-														<NeedActionIcon icon="CalendarWarning" color="primary" />
-													</Tooltip>
+													<NeedActionIcon icon="CalendarWarning" color="primary" />
 												</Row>
-											)}
-									</Row>
+											</Tooltip>
+										)}
+								</Row>
+								<Tooltip label={title} placement="top">
 									<Row>
 										{event.allDay && (
 											<Padding left="small">
@@ -124,15 +125,32 @@ export default function CustomEvent({ event, title }) {
 											</Padding>
 										)}
 									</Row>
-								</Row>
-							)}
-							{event.resource.class === 'PRI' && (
+								</Tooltip>
+							</Row>
+						)}
+						{event.resource.class === 'PRI' && (
+							<Tooltip label={t('label.private', 'Private')} placement="top">
 								<Row padding={{ left: 'extrasmall' }}>
 									<Icon color="currentColor" icon="Lock" style={{ minWidth: '16px' }} />
 								</Row>
-							)}
-						</Container>
-						{!event.allDay && (
+							</Tooltip>
+						)}
+						{event.resource.inviteNeverSent && (
+							<Tooltip
+								label={t(
+									'event.action.invitation_not_sent_yet',
+									'The invitation has not been sent yet'
+								)}
+								placement="bottom"
+							>
+								<Row padding={{ left: 'extrasmall' }}>
+									<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '16px' }} />
+								</Row>
+							</Tooltip>
+						)}
+					</Container>
+					{!event.allDay && (
+						<Tooltip label={title} placement="top">
 							<Container
 								orientation="horizontal"
 								width="fill"
@@ -148,10 +166,10 @@ export default function CustomEvent({ event, title }) {
 									{title}
 								</Text>
 							</Container>
-						)}
-					</Container>
-				</Dropdown>
-			</Tooltip>
+						</Tooltip>
+					)}
+				</Container>
+			</Dropdown>
 		</>
 	);
 }

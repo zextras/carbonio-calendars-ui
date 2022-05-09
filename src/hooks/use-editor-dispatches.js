@@ -20,13 +20,13 @@ import {
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { useOnSaveAndOnSend } from './use-onsave-and-onsend';
 
-export const useEditorDispatches = (id, isBoard = false) => {
+export const useEditorDispatches = (id, isBoard = false, isInstance = false) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const closeBoard = useRemoveCurrentBoard();
 	const accounts = useUserAccounts();
-	const { onSave, onSend } = useOnSaveAndOnSend(id, isBoard);
+	const { onSave, onSend } = useOnSaveAndOnSend(id, isBoard, isInstance);
 
 	const onSubjectChange = useMemo(
 		() =>
