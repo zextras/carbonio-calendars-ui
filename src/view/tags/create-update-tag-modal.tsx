@@ -63,16 +63,12 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 
 	const applyNewlyCreatedTag = useCallback(
 		({ inviteId, tagName }) => {
-			dispatch(
-				itemAction({
-					operation: 'tag',
-					inviteId,
-					tagName
-				})
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-			).then((res: any) => {
-				if (res.type.includes('fulfilled')) {
+			itemAction({
+				operation: 'tag',
+				inviteId,
+				tagName
+			})
+				.then((res: any) => {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					createSnackbar({
@@ -86,7 +82,8 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 						}),
 						autoHideTimeout: 3000
 					});
-				} else {
+				})
+				.catch((error) => {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					createSnackbar({
@@ -97,10 +94,9 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 						autoHideTimeout: 3000,
 						hideButton: true
 					});
-				}
-			});
+				});
 		},
-		[createSnackbar, dispatch, t]
+		[createSnackbar, t]
 	);
 	const onCreate = useCallback(
 		() =>

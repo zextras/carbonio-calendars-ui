@@ -51,6 +51,23 @@ const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }):
 		[context, event, t]
 	);
 
+	const otherActionsOptions = useMemo(
+		() =>
+			map(otherActions, (action) => ({
+				id: action.label,
+				icon: action.icon,
+				label: action.label,
+				key: action.id,
+				color: action.color,
+				items: action.items,
+				customComponent: action.customComponent,
+				click: (ev: any): void => {
+					ev.stopPropagation();
+					action.click();
+				}
+			})),
+		[otherActions]
+	);
 	return (
 		<>
 			{event.resource?.calendar?.name === 'Trash' ? (
@@ -76,23 +93,7 @@ const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }):
 			)}
 
 			<Padding left="small">
-				<Dropdown
-					disableAutoFocus
-					items={map(otherActions, (action) => ({
-						id: action.label,
-						icon: action.icon,
-						label: action.label,
-						key: action.id,
-						color: action.color,
-						items: action.items,
-						customComponent: action.customComponent,
-						click: (ev: any): void => {
-							ev.stopPropagation();
-							action.click();
-						}
-					}))}
-					placement="bottom-end"
-				>
+				<Dropdown disableAutoFocus items={otherActionsOptions} placement="bottom-end">
 					<Row>
 						<Button
 							type="outlined"

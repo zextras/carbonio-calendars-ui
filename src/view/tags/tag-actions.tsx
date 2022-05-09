@@ -163,16 +163,13 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 	const toggleCheck = useCallback(
 		(value) => {
 			setChecked((c) => !c);
-			dispatch(
-				itemAction({
-					operation: value ? '!tag' : 'tag',
-					inviteId: event.resource.id,
-					tagName: tag.name
-				})
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-			).then((res: any) => {
-				if (res.type.includes('fulfilled')) {
+
+			itemAction({
+				operation: value ? '!tag' : 'tag',
+				inviteId: event.resource.id,
+				tagName: tag.name
+			})
+				.then((res: any) => {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					createSnackbar({
@@ -188,7 +185,8 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 							  }),
 						autoHideTimeout: 3000
 					});
-				} else {
+				})
+				.catch((error) => {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					createSnackbar({
@@ -199,10 +197,9 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 						autoHideTimeout: 3000,
 						hideButton: true
 					});
-				}
-			});
+				});
 		},
-		[event?.resource?.id, createSnackbar, dispatch, t, tag.name]
+		[event?.resource?.id, createSnackbar, t, tag.name]
 	);
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
