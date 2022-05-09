@@ -78,7 +78,8 @@ export default function RecurrenceSelector({
 	data,
 	callbacks,
 	updateAppTime = false,
-	isInstance = true
+	isInstance = true,
+	disabled
 }) {
 	const [t] = useTranslation();
 	const [open, setOpen] = useState(false);
@@ -167,7 +168,7 @@ export default function RecurrenceSelector({
 				items={recurrenceItems}
 				defaultSelection={!isInstance ? defaultSelection : recurrenceItems[0]}
 				disablePortal
-				disabled={updateAppTime || isInstance}
+				disabled={updateAppTime || disabled || isInstance}
 				LabelFactory={LabelFactory}
 			/>
 			<CustomRecurrenceModal
