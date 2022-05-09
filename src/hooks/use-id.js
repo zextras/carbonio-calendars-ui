@@ -10,8 +10,7 @@ import { selectCalendars } from '../store/selectors/calendars';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import { normalizeEditor } from '../normalizations/normalize-editor';
 import { getInvite } from '../store/actions/get-invite';
-import { initializeEditorAppointment } from '../store/actions/initialize-editor-appointment';
-import { addAppointmentEditor } from '../store/slices/editor-slice';
+import { addAppointmentEditor, initializeEditorAppointment } from '../store/slices/editor-slice';
 
 let counter = 0;
 

@@ -283,7 +283,7 @@ export const createAppointment = createAsyncThunk(
 	async ({ editor, account }: any): Promise<any> => {
 		const body = generateSoapMessageFromEditor(editor, account, false);
 		const res: { calItemId: string } = await soapFetch('CreateAppointment', body);
-		if (res?.calItemId) {
+		if (res?.calItemId && editor?.resource?.room?.label) {
 			await soapFetch('SetCustomMetadata', {
 				_jsns: 'urn:zimbraMail',
 				id: res.calItemId,
@@ -296,6 +296,7 @@ export const createAppointment = createAsyncThunk(
 				}
 			});
 		}
-		return res;
+		console.log(editor);
+		return { response: res, editor };
 	}
 );

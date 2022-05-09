@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
-import { initializeEditorAppointment } from '../actions/initialize-editor-appointment';
-import { handleCreateAppointmentFulfilled } from '../reducers/create-appointment';
+import { createAppointment } from '../actions/new-create-appointment';
+import { createAppointmentFulfilled } from '../reducers/create-appointment';
+import { initializeAppointmentReducer } from '../reducers/initialize-appointment';
 import {
 	addAppointmentEditorReducer,
 	closeEditorReducer,
@@ -32,14 +33,16 @@ export const editorSlice = createSlice({
 		editRoom: editRoomReducer,
 		editOptionalAttendees: editOptionalAttendeesReducer,
 		closeEditor: closeEditorReducer,
-		openEditor: openEditorReducer
+		openEditor: openEditorReducer,
+		initializeEditorAppointment: initializeAppointmentReducer
 	},
 	extraReducers: (builder) => {
-		builder.addCase(initializeEditorAppointment.fulfilled, handleCreateAppointmentFulfilled);
+		builder.addCase(createAppointment.fulfilled, createAppointmentFulfilled);
 	}
 });
 
 export const {
+	initializeEditorAppointment,
 	addAppointmentEditor,
 	editAppointmentData,
 	editResourceData,
