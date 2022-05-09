@@ -170,7 +170,12 @@ export default function EditorSmallView({
 					width="fill"
 					mainAlignment="flex-end"
 				>
-					<ExpandedButtons data={data} callbacks={callbacks} invite={invite} />
+					<ExpandedButtons
+						data={data}
+						callbacks={callbacks}
+						invite={invite}
+						disabled={proposeNewTime}
+					/>
 					<SaveSendButtons
 						proposeNewTime={proposeNewTime}
 						onSend={proposeNewTime ? callbacks.onProposeNewTime : callbacks.onSend}
@@ -219,16 +224,16 @@ export default function EditorSmallView({
 								label={t('label.event_title', 'Event title')}
 								defaultValue={data.title}
 								onChange={callbacks.onSubjectChange}
-								disabled={updateAppTime}
+								disabled={updateAppTime || proposeNewTime}
 							/>
 
 							<InputRow
 								label={t('label.location', 'Location')}
 								defaultValue={data.resource.location}
 								onChange={callbacks.onLocationChange}
-								disabled={updateAppTime}
+								disabled={updateAppTime || proposeNewTime}
 							/>
-							{isRoomAvailable && (
+							{isRoomAvailable && !proposeNewTime && (
 								<>
 									<Padding top="large" />
 									<RoomSelector
@@ -243,7 +248,7 @@ export default function EditorSmallView({
 										placeholder={t('label.attendee_plural', 'Attendees')}
 										onChange={callbacks.onAttendeesChange}
 										defaultValue={data.resource.attendees}
-										disabled={updateAppTime}
+										disabled={updateAppTime || proposeNewTime}
 									/>
 								</AttendeesContainer>
 							</Row>
@@ -266,7 +271,7 @@ export default function EditorSmallView({
 											onDisplayStatusChange={callbacks.onDisplayStatusChange}
 											data={data}
 											style={{ maxWidth: '48%' }}
-											disabled={updateAppTime}
+											disabled={updateAppTime || proposeNewTime}
 										/>
 									</Container>
 									<Container width="calc(50% - 4px)">
@@ -275,6 +280,7 @@ export default function EditorSmallView({
 											onCalendarChange={callbacks.onCalendarChange}
 											style={{ maxWidth: '48%' }}
 											updateAppTime={updateAppTime}
+											disabled={proposeNewTime}
 										/>
 									</Container>
 								</Row>
@@ -283,7 +289,7 @@ export default function EditorSmallView({
 										label={t('label.private', 'Private')}
 										onChange={callbacks.onPrivateChange}
 										defaultChecked={data.resource.class === 'PRI'}
-										disabled={updateAppTime}
+										disabled={updateAppTime || proposeNewTime}
 									/>
 								</Row>
 								<Container
@@ -314,7 +320,7 @@ export default function EditorSmallView({
 								>
 									<Container width="calc(50% - 4px)">
 										<ReminderSelector
-											disabled={updateAppTime}
+											disabled={updateAppTime || proposeNewTime}
 											onReminderChange={callbacks.onReminderChange}
 											data={data}
 										/>
@@ -324,6 +330,7 @@ export default function EditorSmallView({
 											data={data}
 											callbacks={callbacks}
 											updateAppTime={updateAppTime}
+											disabled={proposeNewTime}
 											isInstance={isInstance}
 										/>
 									</Container>

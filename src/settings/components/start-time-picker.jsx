@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo } from 'react';
-import { Container, Icon, Padding, Text } from '@zextras/carbonio-design-system';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import { Container, DateTimePicker, Padding, Text } from '@zextras/carbonio-design-system';
 import momentLocalizer from 'react-widgets-moment';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+import DatePickerCustomComponent from '../../view/event-panel-edit/components/date-picker-custom-component';
 
 momentLocalizer();
 const getHour = (hour) => {
@@ -72,14 +72,22 @@ export default function StartDatePicker({ start, onChange, day, showEnd, disable
 				<Text size="small">{t(`label.${label}`)}</Text>
 			</Padding>
 			<DateTimePicker
+				width="100%"
 				date={false}
 				value={startTime}
+				selected={startTime}
 				disabled={disabled}
+				showTimeSelectOnly
+				timeIntervals={30}
+				dateFormat="hh:mm aa"
 				onChange={onStartChange}
-				timeIcon={
-					<Padding all="small">
-						<Icon icon="ClockOutline" />
-					</Padding>
+				customInput={
+					<DatePickerCustomComponent
+						label={label}
+						value={startTime}
+						onChange={onStartChange}
+						icon="ClockOutline"
+					/>
 				}
 			/>
 		</Container>
