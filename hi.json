@@ -162,7 +162,8 @@
         "maybe": "शायद",
         "share_with": "इनके साथ शेयर",
         "propose_new_time": "नया टाइम प्रोपोज करें",
-        "new_appointment": "नया एपोइंटमेंट"
+        "new_appointment": "नया एपोइंटमेंट",
+        "preview": "प्रीव्यू"
     },
     "action": {
         "delete": "डिलीट करें",
@@ -173,7 +174,7 @@
         "empty_trash": "कूड़ेदान को ख़ाली करें",
         "delete_calendar": "कैलेंडर मिटाएँ",
         "save_to_preview": "झलक में सुरक्षित रखें",
-        "preview": "दूसरे टैब में झलक देखने के लिए क्लिक करें",
+        "preview": "प्रीव्यू के लिए क्लिक करें",
         "new_calendar": "नया कैलेंडर",
         "send_cancellation": "रद्द करने के लिए भेजें",
         "calendar_access_share": "Calendar की ऐक्सेस शेयर",
@@ -214,7 +215,8 @@
             "new_calendar_created": "नया कैलेंडर बन गया",
             "calendar_permanently_deleted": "Calendar परमानेंट डिलीट कर दिया गया",
             "calendar_restored": "Calendar वापस लाया गया",
-            "appointment_permanently_deleted": "एप्पोइंटमेंट परमानेंट डिलीट कर दिया गया"
+            "appointment_permanently_deleted": "एप्पोइंटमेंट परमानेंट डिलीट कर दिया गया",
+            "calendar_edits_saved": "बदलाव ठीक से सेव हो गए"
         },
         "somebody_is_organizer": "ऑर्गनाइज़र <strong>{{somebody}}</strong> है",
         "are_organizer": "वाक्य इस तरह से माना जाएगा मानो आप ऑर्गनाइज़र हों",
@@ -641,5 +643,8 @@
         "amsterdam_berlin_bern_rome_stockholm_vienna": "{{value}} एम्स्टर्डैम, बर्लिन, बर्न, रॉम, स्टॉकहोम, विएना",
         "brussels_copenhagen_madrid_paris ": "{{value}} ब्रूसेल्स, कोपेनहागेन, मैड्रिड, पेरिस",
         "guadalajara_mexico_city_monterrey ": "{{value}} गुआदलहारा, मेक्सिको सिटी, मोंटेर्री"
+    },
+    "preview": {
+        "close": "प्रीव्यू बंद करें"
     }
 }

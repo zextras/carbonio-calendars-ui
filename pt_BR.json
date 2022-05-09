@@ -154,7 +154,8 @@
         "share_with": "compartilhar com",
         "app_name": "Calendários",
         "propose_new_time": "SUGERIR NOVO HORÁRIO",
-        "new_appointment": "Novo compromisso"
+        "new_appointment": "Novo compromisso",
+        "preview": "Visualizar"
     },
     "action": {
         "delete": "Excluir",
@@ -167,7 +168,7 @@
         "new_calendar": "Novo calendário",
         "delete_calendar": "Excluir calendário",
         "save_to_preview": "Salvar para visualizar",
-        "preview": "Clique para pré-visualizar em outra aba",
+        "preview": "Clique para pré-visualizar",
         "delete_permanently": "Excluir Permanentemente",
         "edit_message": "Editar Mensagem",
         "send_cancellation": "Enviar Cancelamento",
@@ -271,7 +272,8 @@
             "new_calendar_create_error": "Algo deu errado. Tente novamente",
             "calendar_permanently_deleted": "Calendário excluído permanentemente",
             "calendar_restored": "Calendário restaurado com sucesso",
-            "appointment_permanently_deleted": "Compromisso excluído definitivamente"
+            "appointment_permanently_deleted": "Compromisso excluído definitivamente",
+            "calendar_edits_saved": "Edições salvas corretamente"
         },
         "share_calendar_url_note2": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.<br/>Também é possível encontrar esses links clicando com o botão direito em sua lista de calendários.",
         "delete_all_occurences": "Excluir todas as ocorrências",
@@ -641,5 +643,8 @@
     "appt_restored_successfully": "Compromisso restaurado com sucesso",
     "messages": {
         "format_as_plain_text": "Formatar como Texto Simples"
+    },
+    "preview": {
+        "close": "Fechar Pré-visualização"
     }
 }

@@ -9,7 +9,7 @@
         "empty_trash": "Vider la corbeille",
         "move_to_root": "Déplacer à la racine",
         "new_calendar": "Nouveau calendrier",
-        "preview": "Cliquer pour prévisualiser dans un autre onglet",
+        "preview": "Cliquer pour prévisualiser",
         "save": "Sauver",
         "save_to_preview": "Sauver l’aperçu",
         "send": "Envoyer",
@@ -263,7 +263,8 @@
             "wednesday": "Mercredi"
         },
         "role": "rôle",
-        "today": "aujourd'hui"
+        "today": "aujourd'hui",
+        "preview": "Prévisualisation"
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -302,7 +303,8 @@
             "edit_calendar": "Modifications sauvées correctement",
             "calendar_restored": "Le calendrier a été restauré avec succès",
             "calendar_permanently_deleted": "Le calendrier a été supprimé",
-            "appointment_permanently_deleted": "Rendez-vous supprimé définitivement"
+            "appointment_permanently_deleted": "Rendez-vous supprimé définitivement",
+            "calendar_edits_saved": "Modifications enregistrés avec succès"
         },
         "somebody_is_organizer": "<strong>{{somebody}}</strong> est l'organisateur",
         "sure_to_delete_all_occurences_appointment": "Êtes-vous sûr de vouloir supprimer toutes les occurrences de ce rendez-vous ?",
@@ -605,5 +607,8 @@
         "moscow_st_petersburg_volgograd_rtz_2": "{{value}} Moscou, Saint-Pétersbourg, Volgograd (RTZ 2)",
         "sri_jayawardenepura_kotte": "{{value}} Sri Jayawardenepura Kotte",
         "us_canada_pacific": "{{value}} États-Unis/Canada Pacifique"
+    },
+    "preview": {
+        "close": "Fermer la prévisualisation"
     }
 }

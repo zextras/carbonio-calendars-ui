@@ -7,7 +7,7 @@
         "empty_trash": "Empty Trash",
         "empty_trash_confirmation": "This action will delete all items in E-mail, Contacts, Calendar, Tasks and Briefcase trash folders. Are you sure that you want to permanently delete everything in these trash folders?",
         "move_to_root": "Move to root",
-        "preview": "Click to preview in another tab",
+        "preview": "Click to preview",
         "save_to_preview": "Save to preview",
         "send": "Send",
         "send_cancellation": "Send Cancellation",
@@ -183,6 +183,7 @@
         "out_of_office": "Out of office",
         "outlook_url": "Outlook URL",
         "permissions": "Permissions",
+        "preview": "Preview",
         "private": "Private",
         "proposal_declined": "Proposal declined",
         "propose_new_time": "PROPOSE NEW TIME",
@@ -265,6 +266,7 @@
             "appt_moved_to_trash": "Appointment moved to trash",
             "appt_restored": "Appointment restored successfully to",
             "calendar_deleted_successfully": "Calendar deleted successfully.",
+            "calendar_edits_saved": "Edits saved correctly",
             "calendar_moved_to_root_folder": "Calendar moved to Root folder",
             "calendar_moved_to_trash": "Calendar moved to trash",
             "calendar_permanently_deleted": "Calendar permanently deleted",
@@ -334,6 +336,9 @@
     },
     "placeholder": {
         "organizer": "Organizer"
+    },
+    "preview": {
+        "close": "Close Preview"
     },
     "read": "Read",
     "reminder": {

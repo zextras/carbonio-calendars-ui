@@ -162,7 +162,8 @@
         "propose_new_time": "เสนอเวลาใหม่",
         "share_with": "แชร์กับ",
         "app_name": "ปฏิทิน",
-        "new_appointment": "การนัดหมายใหม่"
+        "new_appointment": "การนัดหมายใหม่",
+        "preview": "ดูตัวอย่าง"
     },
     "calendar": {
         "modal": {
@@ -178,7 +179,7 @@
         "create": "สร้าง",
         "save": "บันทึก",
         "send": "ส่ง",
-        "preview": "คลิกเพื่อดูตัวอย่างในแท็บอื่น",
+        "preview": "คลิกเพื่อดูตัวอย่าง",
         "delete_permanently": "ลบอย่างถาวร",
         "delete_calendar": "ลบปฏิทิน",
         "edit_message": "แก้ไขข้อความ",
@@ -441,7 +442,8 @@
             "new_calendar_create_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "calendar_permanently_deleted": "ปฎิทินถูกลบอย่างถาวร",
             "calendar_restored": "กู้คืนปฏิทินเรียบร้อยแล้ว",
-            "appointment_permanently_deleted": "การนัดหมายถูกลบอย่างถาวร"
+            "appointment_permanently_deleted": "การนัดหมายถูกลบอย่างถาวร",
+            "calendar_edits_saved": "บันทึกการแก้ไขอย่างถูกต้อง"
         },
         "share_calendar_url_note2": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้ <br/> คุณสามารถค้นหาลิงก์เหล่านั้นได้ด้วยการคลิกขวาที่รายการปฏิทินของคุณ",
         "delete_all_occurences": "ลบเหตุการณ์ทั้งหมด",
@@ -617,5 +619,8 @@
         "moscow_st_petersburg_volgograd_rtz_2": "{{value}} มอสโก, เซนต์ปีเตอร์สเบิร์ก, โวลโกกราด (RTZ 2)",
         "sarajevo_skopje_warsaw_zagreb": "{{value}} ซาราเยโว, สโกเปีย, วอร์ซอ, ซาเกร็บ",
         "us_canada_central": "{{value}} สหรัฐฯ/แคนาดากลาง"
+    },
+    "preview": {
+        "close": "ปิดการแสดงตัวอย่าง"
     }
 }

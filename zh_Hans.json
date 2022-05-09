@@ -28,7 +28,8 @@
             "appt_deleted_error": "出现错误，请重试。",
             "calendar_permanently_deleted": "日历已永久性删除",
             "calendar_restored": "日历已成功恢复",
-            "appointment_permanently_deleted": "预约已永久性删除"
+            "appointment_permanently_deleted": "预约已永久性删除",
+            "calendar_edits_saved": "编辑保存正确"
         },
         "are_organizer": "为组织者",
         "delete_all_occurences": "删除所有重复次数",
@@ -78,7 +79,7 @@
         "edit_calendar_properties": "编辑日历属性",
         "move_to_root": "移动至根目录",
         "new_calendar": "新日历",
-        "preview": "点击以在另一标签页中预览",
+        "preview": "点击预览",
         "save_to_preview": "保存至预览",
         "send_cancellation": "发送取消",
         "share_calendar": "共享日历",
@@ -297,7 +298,8 @@
             "wednesday": "星期三"
         },
         "propose_new_time": "提出新时间",
-        "app_name": "日历"
+        "app_name": "日历",
+        "preview": "预览"
     },
     "months": {
         "april": "四月",
@@ -617,5 +619,8 @@
     "has_attachments": "有附件",
     "is_private": "私密",
     "is_recurrent": "重复",
-    "appt_restored_successfully": "预约已成功恢复"
+    "appt_restored_successfully": "预约已成功恢复",
+    "preview": {
+        "close": "关闭预览"
+    }
 }
