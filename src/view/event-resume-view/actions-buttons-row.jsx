@@ -75,62 +75,65 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 		[dispatch, inviteId, compNum]
 	);
 
-	const attendeesOptions = [
-		{
-			id: 'option_2',
-			icon: 'CheckmarkCircle2',
-			label: toUpper(t('event.action.yes', 'Yes')),
-			value: 'AC',
-			action: accept,
-			color: 'success',
-			customComponent: (
-				<Row>
-					<Padding right="small">
-						<Icon color="success" icon="CheckmarkCircle2" />
-					</Padding>
-					<Padding right="small">
-						<Text>{toUpper(t('event.action.yes', 'Yes'))}</Text>
-					</Padding>
-				</Row>
-			)
-		},
-		{
-			id: 'option_3',
-			icon: 'QuestionMarkCircle',
-			label: toUpper(t('label.tentative', 'Tentative')),
-			value: 'TE',
-			action: tentative,
-			color: 'warning',
-			customComponent: (
-				<Row>
-					<Padding right="small">
-						<Icon color="warning" icon="QuestionMarkCircle" />
-					</Padding>
-					<Padding right="small">
-						<Text>{toUpper(t('label.tentative', 'Tentative'))}</Text>
-					</Padding>
-				</Row>
-			)
-		},
-		{
-			id: 'option_1',
-			icon: 'CloseCircle',
-			label: toUpper(t('event.action.no', 'No')),
-			value: 'NO',
-			action: decline,
-			color: 'error',
-			customComponent: (
-				<Row>
-					<Padding right="small">
-						<Icon color="error" icon="CloseCircle" />
-					</Padding>
-					<Padding right="small">
-						<Text>{toUpper(t('event.action.no', 'No'))}</Text>
-					</Padding>
-				</Row>
-			)
-		}
-	];
+	const attendeesOptions = useMemo(
+		() => [
+			{
+				id: 'option_2',
+				icon: 'CheckmarkCircle2',
+				label: toUpper(t('event.action.yes', 'Yes')),
+				value: 'AC',
+				action: accept,
+				color: 'success',
+				customComponent: (
+					<Row>
+						<Padding right="small">
+							<Icon color="success" icon="CheckmarkCircle2" />
+						</Padding>
+						<Padding right="small">
+							<Text>{toUpper(t('event.action.yes', 'Yes'))}</Text>
+						</Padding>
+					</Row>
+				)
+			},
+			{
+				id: 'option_3',
+				icon: 'QuestionMarkCircle',
+				label: toUpper(t('label.tentative', 'Tentative')),
+				value: 'TE',
+				action: tentative,
+				color: 'warning',
+				customComponent: (
+					<Row>
+						<Padding right="small">
+							<Icon color="warning" icon="QuestionMarkCircle" />
+						</Padding>
+						<Padding right="small">
+							<Text>{toUpper(t('label.tentative', 'Tentative'))}</Text>
+						</Padding>
+					</Row>
+				)
+			},
+			{
+				id: 'option_1',
+				icon: 'CloseCircle',
+				label: toUpper(t('event.action.no', 'No')),
+				value: 'NO',
+				action: decline,
+				color: 'error',
+				customComponent: (
+					<Row>
+						<Padding right="small">
+							<Icon color="error" icon="CloseCircle" />
+						</Padding>
+						<Padding right="small">
+							<Text>{toUpper(t('event.action.no', 'No'))}</Text>
+						</Padding>
+					</Row>
+				)
+			}
+		],
+		[accept, decline, t, tentative]
+	);
 
 	const attendingResponse = (value) => {
 		switch (value) {
@@ -186,24 +189,45 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 	);
 
 	const actions = useEventActions(event, context, t, false);
-
+	const otherActions = useMemo(
+		() =>
+			map(actions, (action) => ({
+				id: action.label,
+				icon: action.icon,
+				label: action.label,
+				key: action.id,
+				color: action.color,
+				items: action.items,
+				customComponent: action.customComponent,
+				click: (ev) => {
+					ev.stopPropagation();
+					action.click();
+				}
+			})),
+		[actions]
+	);
+	const attendeesResponseOptions = useMemo(
+		() =>
+			map(attendeesOptions, (action) => ({
+				id: action.label,
+				icon: action.icon,
+				label: action.label,
+				key: action.id,
+				color: action.color,
+				customComponent: action.customComponent,
+				click: (ev) => {
+					ev.stopPropagation();
+					action.action();
+					setInvtReply(action);
+				}
+			})),
+		[attendeesOptions]
+	);
 	return (
 		<Container orientation="horizontal" mainAlignment="flex-end">
 			<Dropdown
 				disableAutoFocus
-				items={map(attendeesOptions, (action) => ({
-					id: action.label,
-					icon: action.icon,
-					label: action.label,
-					key: action.id,
-					color: action.color,
-					customComponent: action.customComponent,
-					click: (ev) => {
-						ev.stopPropagation();
-						action.action();
-						setInvtReply(action);
-					}
-				}))}
+				items={attendeesResponseOptions}
 				style={{ cursor: 'pointer' }}
 				placement="bottom-end"
 			>
@@ -221,23 +245,7 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 				</AttendingRow>
 			</Dropdown>
 			<Padding left="small">
-				<Dropdown
-					disableAutoFocus
-					items={map(actions, (action) => ({
-						id: action.label,
-						icon: action.icon,
-						label: action.label,
-						key: action.id,
-						color: action.color,
-						items: action.items,
-						customComponent: action.customComponent,
-						click: (ev) => {
-							ev.stopPropagation();
-							action.click();
-						}
-					}))}
-					placement="bottom-end"
-				>
+				<Dropdown disableAutoFocus items={otherActions} placement="bottom-end">
 					<Button
 						type="outlined"
 						label={t('label.other_actions', 'Other actions')}
