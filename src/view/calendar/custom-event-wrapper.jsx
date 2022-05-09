@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useRef, cloneElement, useCallback, useState } from 'react';
+import React, { useRef, cloneElement, useCallback, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { setLightness } from 'polished';
-import { Container } from '@zextras/carbonio-design-system';
+import { Container, ModalManagerContext } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useParams } from 'react-router-dom';
@@ -15,6 +15,7 @@ import { EventResumeView } from '../event-resume-view/event-resume';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { getInvite } from '../../store/actions/get-invite';
 import { selectInstanceInvite } from '../../store/selectors/invites';
+import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 
 export const CustomEventWrapperStyler = styled.div`
 	.rbc-event {
@@ -99,17 +100,27 @@ export default function CustomEventWrapper({ event, children, selected }) {
 	const [open, setOpen] = useState(selected);
 	const dispatch = useDispatch();
 	const { action } = useParams();
+	const createModal = useContext(ModalManagerContext);
 
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event.resource.inviteId, event.resource.ridZ)
 	);
 
 	const showPanelView = useCallback(() => {
-		setOpen(false);
-		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-		);
-	}, [event]);
+		if (event?.resource?.isRecurrent) {
+			const closeModal = createModal(
+				{
+					children: <AppointmentTypeHandlingModal event={event} onClose={() => closeModal()} />
+				},
+				true
+			);
+		} else {
+			setOpen(false);
+			replaceHistory(
+				`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			);
+		}
+	}, [event, createModal]);
 
 	const toggleOpen = useCallback(
 		(e) => {

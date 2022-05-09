@@ -33,6 +33,7 @@ import ReminderSelector from './components/reminder-selector';
 import RecurrenceSelector from './components/recurrence-selector';
 import AttachmentsBlock from '../event-panel-view/attachments-part';
 import DropZoneAttachment from './components/dropzone-component';
+import { useQueryParam } from '../../commons/useQueryParam';
 
 export default function EditorSmallView({
 	setTitle,
@@ -40,7 +41,8 @@ export default function EditorSmallView({
 	callbacks,
 	invite,
 	updateAppTime = false,
-	proposeNewTime
+	proposeNewTime,
+	isInstance
 }) {
 	const [t] = useTranslation();
 	const title = useMemo(() => (data && data.title !== '' ? data.title : 'No Subject'), [data]);
@@ -322,6 +324,7 @@ export default function EditorSmallView({
 											data={data}
 											callbacks={callbacks}
 											updateAppTime={updateAppTime}
+											isInstance={isInstance}
 										/>
 									</Container>
 								</Row>

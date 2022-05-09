@@ -46,6 +46,7 @@
             "accept": "Accept",
             "decline": "Decline",
             "expand": "Open in Displayer",
+            "invitation_not_sent_yet": "The invitation has not been sent yet",
             "needs_action": "Needs action",
             "no": "No",
             "yes": "Yes"
@@ -140,6 +141,7 @@
         "end_after": "End after",
         "end_date": "End date",
         "end_date_and_time": "End date and time",
+        "entire_serires": "ENTIRE SERIES",
         "error_try_again": "Something went wrong, please try again",
         "event_title": "Event title",
         "every": "Every",
@@ -212,6 +214,7 @@
         "show": "Show",
         "show_declined_meetings": "Show declined meetings",
         "show_plural": "Show all",
+        "single_instance": "SINGLE INSTANCE",
         "snooze": "Snooze",
         "start_date": "Start date",
         "start_date_and_time": "Start date and time",
@@ -242,6 +245,7 @@
         "your_pref_timezone_msg": "Your preferred timezone is: GMT +01:00 Amsterdam, Berlin, Bern, Rome, Stockholm,Vienna."
     },
     "message": {
+        "appointment_type_handle": "{{name}}” is a recurring appointment. Would you like to open only this instance or the series?",
         "are_organizer": "are the organizer",
         "delete_all_occurences": "Delete all occurrences",
         "delete_future_occurences": "Delete this instance and all future occurrences",
@@ -276,7 +280,8 @@
                 "decline": "You’ve replied as Declined",
                 "tentative": "You’ve replied as Tentative"
             },
-            "new_calendar_created": "New calendar created"
+            "new_calendar_created": "New calendar created",
+            "series_deleted": "Series successfully deleted. Attendees will receive the cancellation notification."
         },
         "somebody_invited_you": "<strong>{{somebody}}</strong> invited you",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> is the organizer",
