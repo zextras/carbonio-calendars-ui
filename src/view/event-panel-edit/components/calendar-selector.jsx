@@ -3,68 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Padding, Select, Text, Row, Icon } from '@zextras/carbonio-design-system';
+import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
-import styled from 'styled-components';
+
 import { selectCalendars } from '../../../store/selectors/calendars';
-
-export const Square = styled.div`
-	width: 16px;
-	height: 16px;
-	background: ${({ color }) => color};
-	border-radius: 4px;
-	opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
-`;
-export const ColorContainer = styled(Container)`
-	border-bottom: 1px solid ${({ theme }) => theme.palette.gray2.regular};
-`;
-
-export const TextUpperCase = styled(Text)`
-	text-transform: capitalize;
-`;
-
-const LabelFactory = ({ selected, label, open, focus, disabled }) => (
-	<ColorContainer
-		orientation="horizontal"
-		width="fill"
-		crossAlignment="center"
-		mainAlignment="space-between"
-		borderRadius="half"
-		background="gray5"
-		padding={{
-			all: 'small'
-		}}
-		style={{ cursor: disabled ? 'no-drop' : 'pointer' }}
-	>
-		<Row width="100%" takeAvailableSpace mainAlignment="space-between">
-			<Row
-				orientation="vertical"
-				crossAlignment="flex-start"
-				mainAlignment="flex-start"
-				padding={{ left: 'small' }}
-			>
-				<Text size="small" color={open || focus ? 'primary' : 'secondary'}>
-					{label}
-				</Text>
-				<Row>
-					<Padding right="small">
-						<Square disabled={disabled} color={selected[0].color} />
-					</Padding>
-					<TextUpperCase color={disabled ? 'secondary' : 'text'}>{selected[0].label}</TextUpperCase>
-				</Row>
-			</Row>
-		</Row>
-		<Icon
-			size="large"
-			icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
-			color={open || focus ? 'primary' : 'secondary'}
-			style={{ alignSelf: 'center' }}
-		/>
-	</ColorContainer>
-);
+import LabelFactory, { Square } from './select-label-factory';
 
 export default function CalendarSelector({
 	calendarId,
