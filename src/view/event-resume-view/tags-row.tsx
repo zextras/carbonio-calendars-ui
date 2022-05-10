@@ -7,6 +7,7 @@ import React, { FC, ReactElement, useMemo } from 'react';
 import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
 import { includes, map, reduce } from 'lodash';
 import styled from 'styled-components';
+
 import { useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { EventType } from '../../types/event';
@@ -41,6 +42,7 @@ const TagsRow: FC<{ event: EventType; hideIcon: boolean }> = ({
 		[event?.resource?.tags, tagsFromStore]
 	);
 	const tagLabel = useMemo(() => t('label.tags', 'Tags'), [t]);
+
 	return (
 		<>
 			<Row
@@ -61,6 +63,7 @@ const TagsRow: FC<{ event: EventType; hideIcon: boolean }> = ({
 							<Text color="secondary" size="small" overflow="break-word">
 								{map(tags, (tag) => (
 									<TagChip
+										key={tag.name}
 										label={tag.name}
 										avatarBackground={tag.color}
 										background="gray2"

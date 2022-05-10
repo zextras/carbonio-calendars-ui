@@ -24,6 +24,7 @@ import { updateParticipationStatus } from '../../store/slices/appointments-slice
 import OrganizerActions from './parts/organizer-actions';
 import { useGetRecurrentActions } from '../../hooks/use-recurrent-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
+import { createAndApplyTag } from '../tags/tag-actions';
 
 const AttendingRow = styled(Row)`
 	border: 1px solid ${(props) => props.theme.palette[props.invtReply.color].regular};
@@ -184,7 +185,7 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const context = useMemo(
-		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags }),
+		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag }),
 		[createModal, createSnackbar, dispatch, tags]
 	);
 
@@ -264,7 +265,15 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const context = useMemo(
-		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags, onClose }),
+		() => ({
+			replaceHistory,
+			dispatch,
+			createModal,
+			createSnackbar,
+			tags,
+			onClose,
+			createAndApplyTag
+		}),
 		[createModal, createSnackbar, dispatch, tags, onClose]
 	);
 	const [t] = useTranslation();

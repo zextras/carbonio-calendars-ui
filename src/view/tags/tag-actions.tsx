@@ -157,7 +157,7 @@ export const deleteTag = ({ t, createModal, tag }: ArgumentType): ReturnType => 
 export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType }): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useDispatch();
+
 	const [checked, setChecked] = useState(includes(event.resource.tags, tag.id));
 	const [isHovering, setIsHovering] = useState(false);
 	const toggleCheck = useCallback(
