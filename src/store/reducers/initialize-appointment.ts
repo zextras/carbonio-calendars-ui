@@ -3,11 +3,22 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+import { Calendar } from '../../types/store/calendars';
+import { EditorSlice } from '../../types/store/store';
 import { initEvent } from '../../utils/store/editors';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const initializeAppointmentReducer = (state: any, { payload }: any): any => {
+type Payload = {
+	payload: {
+		id: string;
+		panel: boolean;
+		calendar: Calendar;
+		accounts: Array<never>;
+		selectedStartTime: number;
+		selectedEndTime: number;
+	};
+};
+
+export const initializeAppointmentReducer = (state: EditorSlice, { payload }: Payload): void => {
 	const { id, panel, calendar, accounts, selectedStartTime, selectedEndTime } = payload;
 	state.editors[id] = initEvent({
 		id,
