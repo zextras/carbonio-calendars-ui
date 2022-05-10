@@ -296,7 +296,6 @@ export const createAppointment = createAsyncThunk(
 				}
 			});
 		}
-		console.log(editor);
 		return { response: res, editor };
 	}
 );
