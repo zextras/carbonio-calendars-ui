@@ -26,7 +26,8 @@ export const useId = (
 	event,
 	selectedStartTime = null,
 	selectedEndTime = null,
-	boardContextInvite = undefined
+	boardContextInvite = undefined,
+	isInstance = false
 ) => {
 	const dispatch = useDispatch();
 	const [id, setId] = useState(editorId);
@@ -60,7 +61,17 @@ export const useId = (
 				addAppointmentEditor({
 					id: newId,
 					panel,
-					appointment: eventEditor
+					appointment: isInstance
+						? {
+								...eventEditor,
+								start: event.start.valueOf(),
+								end: event.end.valueOf(),
+								resource: {
+									...eventEditor.resource,
+									exceptionId: event.resource.ridZ
+								}
+						  }
+						: eventEditor
 				})
 			);
 		} else if (event && boardContextInvite) {

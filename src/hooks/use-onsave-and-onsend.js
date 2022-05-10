@@ -5,12 +5,7 @@
  */
 import { useCallback, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-	useRemoveCurrentBoard,
-	replaceHistory,
-	useUserAccount,
-	FOLDERS
-} from '@zextras/carbonio-shell-ui';
+import { useRemoveCurrentBoard, replaceHistory, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { startsWith } from 'lodash';
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
@@ -18,8 +13,9 @@ import { editAppointmentData } from '../store/slices/editor-slice';
 import { selectEditor } from '../store/selectors/editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
+import { createApptException } from '../store/actions/create-appointment-exception';
 
-export const useOnSaveAndOnSend = (id, isBoard) => {
+export const useOnSaveAndOnSend = (id, isBoard, isInstance) => {
 	const dispatch = useDispatch();
 	const account = useUserAccount();
 	const closeBoard = useRemoveCurrentBoard();
@@ -30,12 +26,14 @@ export const useOnSaveAndOnSend = (id, isBoard) => {
 
 	const saveAppointment = useCallback(
 		(data) =>
-			startsWith(editor?.resource?.id, 'new')
+			// eslint-disable-next-line no-nested-ternary
+			isInstance
+				? createApptException({ editor: data, account, orignalData: {} })
+				: startsWith(editor?.resource?.id, 'new')
 				? createAppointment({ editor: data, account })
-				: modifyAppointment({ editor: data, account }),
-		[account, editor]
+				: modifyAppointment({ editor: data, account, isInstance }),
+		[account, editor?.resource?.id, isInstance]
 	);
-
 	const closePanel = useCallback(() => {
 		!isBoard ? replaceHistory('') : closeBoard();
 	}, [isBoard, closeBoard]);

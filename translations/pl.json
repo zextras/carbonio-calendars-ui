@@ -189,7 +189,7 @@
         "outlook_url": "adres URL Outlooka",
         "of": "z",
         "share": "Udostępnij",
-        "timezone_pref_msg": "Terminy zależą od twoich preferencji stref czasowych.",
+        "timezone_pref_msg": "Terminy zależą od twoich ustawień stref czasowych.",
         "the": " ",
         "propose_new_time": "ZAPROPONUJ NOWY TERMIIN",
         "app_name": "Kalendarze"
@@ -448,7 +448,7 @@
     },
     "share": {
         "note": {
-            "share_note": "Domyślna wiadomość zawiera twoje imię, nazwę udostępnianiego elementu, uprawnienia przyznane odbiorcom oraz informacje dot. logowania."
+            "share_note": "Domyślna wiadomość zawiera twoje imię, nazwę udostępnianiego elementu, uprawnienia przyznane odbiorcom oraz informacje logowania."
         },
         "options": {
             "share_calendar_role": {

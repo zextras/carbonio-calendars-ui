@@ -81,7 +81,8 @@
             "new_calendar_created": "Nuovo calendario creato",
             "calendar_permanently_deleted": "Calendario eliminato definitivamente",
             "calendar_restored": "Calendario ripristinato correttamente",
-            "appointment_permanently_deleted": "Appuntamento eliminato definitivamente"
+            "appointment_permanently_deleted": "Appuntamento eliminato definitivamente",
+            "calendar_edits_saved": "Modifiche salvate correttamente"
         },
         "share_calendar_url_note2": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.<br/> Puoi trovare questi collegamenti anche con un clic destro del mouse sull'elenco dei calendari.",
         "share_calendar_url_note": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.",
@@ -263,7 +264,8 @@
         "maybe": "forse",
         "share_with": "condividi con",
         "today": "oggi",
-        "exclude_free_busy": "Escludi questo calendario dalle impostazioni definite per lo stato libero/occupato"
+        "exclude_free_busy": "Escludi questo calendario dalle impostazioni definite per lo stato libero/occupato",
+        "preview": "Anteprima"
     },
     "action": {
         "send": "Invia",
@@ -275,7 +277,7 @@
         "new_calendar": "Nuovo calendario",
         "delete": "Cancella",
         "download": "Scarica",
-        "preview": "Clicca per l'anteprima in altra scheda",
+        "preview": "Clicca per visualizzare l'anteprima",
         "save_to_preview": "Salva nell'anteprima",
         "cancel": "Annulla",
         "modify_property": "Modifica proprietà",
@@ -643,5 +645,8 @@
     },
     "messages": {
         "format_as_plain_text": "Formatta come Testo semplice"
+    },
+    "preview": {
+        "close": "Chiudi Anteprima"
     }
 }

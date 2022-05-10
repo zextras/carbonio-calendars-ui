@@ -10,6 +10,7 @@ export type SingleReference = {
 	recur: boolean;
 	ridZ: string;
 	s: number;
+	name?: string;
 };
 
 export type ExceptionReference = SingleReference & {
@@ -53,7 +54,7 @@ export type Appointment = {
 	loc: string | undefined;
 	md: number;
 	ms: number;
-	name: string;
+	name?: string;
 	neverSent: boolean;
 	or: any;
 	ptst: string;
@@ -65,4 +66,5 @@ export type Appointment = {
 	uid: string;
 	meta?: any;
 	otherAtt?: boolean;
+	tags?: string[];
 };

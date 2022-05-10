@@ -27,7 +27,8 @@
             "edit_calendar": "Änderungen korrekt gespeichert",
             "calendar_permanently_deleted": "Kalender endgültig gelöscht",
             "calendar_restored": "Kalender erfolgreich wiederhergestellt",
-            "appointment_permanently_deleted": "Termin dauerhaft gelöscht"
+            "appointment_permanently_deleted": "Termin dauerhaft gelöscht",
+            "calendar_edits_saved": "Änderungen korrekt gespeichert"
         },
         "are_organizer": "sind der Organisator",
         "somebody_invited_you": "<strong>{{somebody}}</strong> hat Sie eingeladen",
@@ -195,7 +196,7 @@
         "delete_instance": "Sind Sie sicher, dass Sie diese Kopie des Termins \"{Titel}\" löschen wollen?",
         "discard_changes": "ÄNDERUNGEN VERWERFEN",
         "event_title": "Titel des Ereignisses",
-        "on_behalf_of": "{{accountName}} im Namen von {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "{{accountName}} im Namen von {{identity}} <{{otherAccount}}>",
         "settings_saved": "Einstellungen gespeichert",
         "trash_emptied": "Papierkorb erfolgreich geleert",
         "role": "Rolle",
@@ -215,7 +216,8 @@
         "propose_new_time": "NEUE ZEIT VORSCHLAGEN",
         "share_with": "teilen mit",
         "app_name": "Kalender",
-        "new_appointment": "Neuer Termin"
+        "new_appointment": "Neuer Termin",
+        "preview": "Vorschau"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -251,7 +253,7 @@
         "send": "Senden",
         "delete": "Löschen",
         "download": "Download",
-        "preview": "Klicken zur Vorschau in einem anderen Reiter",
+        "preview": "Klicken zur Vorschau",
         "save_to_preview": "Speichern und Vorschau",
         "delete_permanently": "Endgültig löschen",
         "edit_message": "Nachricht bearbeiten",

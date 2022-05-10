@@ -8,7 +8,7 @@
         "delete_permanently": "Permanent Verwijderen",
         "edit_message": "Bericht Bewerken",
         "delete_calendar": "Kalender verwijderen",
-        "preview": "Klik om te bekijken in een ander tabblad",
+        "preview": "Klik om te bekijken",
         "save_to_preview": "Naar voorbeeld opslaan",
         "calendar_access_share": "Toegang kalender delen",
         "edit_calendar_properties": "Kalendereigenschappen bewerken",
@@ -190,7 +190,8 @@
             "wednesday": "Woensdag"
         },
         "app_name": "Kalenders",
-        "new_appointment": "Nieuwe afspraak"
+        "new_appointment": "Nieuwe afspraak",
+        "preview": "Voorbeeld"
     },
     "event": {
         "action": {
@@ -284,7 +285,8 @@
             "calendar_moved_to_trash_error": "Er is iets misgegaan, probeer het opnieuw",
             "calendar_permanently_deleted": "Kalender permanent verwijderd",
             "calendar_restored": "Kalender met succes hersteld",
-            "appointment_permanently_deleted": "Afspraak permanent verwijderd"
+            "appointment_permanently_deleted": "Afspraak permanent verwijderd",
+            "calendar_edits_saved": "Bewerkingen correct opgeslagen"
         },
         "you": "U",
         "are_organizer": "zijn de organisator",
@@ -641,5 +643,8 @@
     "appt_restored_successfully": "Afspraak met succes hersteld",
     "messages": {
         "format_as_plain_text": "Formatteren als platte tekst"
+    },
+    "preview": {
+        "close": "Voorbeeld sluiten"
     }
 }

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil, map, omitBy, reduce } from 'lodash';
+import { filter, isNil, map, omitBy, reduce } from 'lodash';
 import moment from 'moment';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 
@@ -69,7 +69,8 @@ export const normalizeAppointment = (appt: any): Appointment => ({
 	name: appt.name,
 	neverSent: appt.neverSent,
 	or: appt.or,
-	s: appt.s
+	s: appt.s,
+	tags: !isNil(appt.t) ? filter(appt.t.split(','), (t) => t !== '') : []
 });
 
 export const normalizeAppointments = (
@@ -151,7 +152,8 @@ export const normalizeAppointmentFromNotify = (appt: any): Appointment => <Appoi
 							{
 								recur: false,
 								ridZ: appt?.inv?.[0]?.comp?.[0]?.s?.[0]?.d,
-								s: appt?.inv?.[0]?.comp?.[0]?.s?.[0]?.u
+								s: appt?.inv?.[0]?.comp?.[0]?.s?.[0]?.u,
+								title: appt?.inv?.[0]?.comp?.[0]?.name
 							}
 					  ]
 					: undefined,

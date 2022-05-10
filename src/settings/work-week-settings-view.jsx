@@ -59,9 +59,9 @@ export default function WorkWeekSettings({
 				width="100%"
 			>
 				<TimePicker
-					start={settingsObj.zimbraPrefCalendarDayHourStart}
+					start={workingSchedule[1]?.start}
 					disabled={!isRegular}
-					end={settingsObj.zimbraPrefCalendarDayHourEnd}
+					end={workingSchedule[1]?.end}
 					onChange={calculateRegularSchedule}
 					day="1"
 				/>

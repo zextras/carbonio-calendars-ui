@@ -39,6 +39,7 @@ export type Invite = {
 	isException: boolean;
 	recurrenceId: any;
 	tagNamesList: string;
+	tags?: string[];
 	attach: {
 		mp: any;
 	};
@@ -49,4 +50,6 @@ export type Invite = {
 	ms?: number;
 	rev?: number;
 	meta: any;
+	allDay?: string | boolean;
+	draft?: number | boolean;
 };
