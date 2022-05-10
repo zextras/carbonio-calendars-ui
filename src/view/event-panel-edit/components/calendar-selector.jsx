@@ -48,9 +48,6 @@ const LabelFactory = ({ selected, label, open, focus }) => (
 					{label}
 				</Text>
 				<Row>
-					<Padding right="small">
-						<Square color={selected[0].color} />
-					</Padding>
 					<TextUpperCase>{selected[0].label}</TextUpperCase>
 				</Row>
 			</Row>

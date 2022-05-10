@@ -128,7 +128,6 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 					onClick={decline}
 				/>
 				<Divider />
-
 			</Container>
 		</>
 	);

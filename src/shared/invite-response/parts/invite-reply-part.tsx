@@ -16,7 +16,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { sendResponse } from '../inivte-reply-actions';
+import { sendResponse } from '../invite-reply-actions';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import CalendarSelector from '../../../view/event-panel-edit/components/calendar-selector';
@@ -61,24 +61,20 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 	return (
 		<>
 			<Padding top="small" />
-			<Row
-				width="fill"
-				mainAlignment="space-between"
-				padding={{vertical: 'small' }}
-			>
-				<Container width="50%" mainAlignment="flex-start" crossAlignment="baseline">
+			<Row width="fill" mainAlignment="space-between" padding={{ vertical: 'small' }}>
+				<Container width="35%" mainAlignment="flex-start" crossAlignment="baseline">
 					<Checkbox
 						value={notifyOrganizer}
 						onClick={(): void => setNotifyOrganizer(!notifyOrganizer)}
 						label={t('label.notify_organizer', 'Notify Organizer')}
 					/>
 				</Container>
-				<Container width="50%" mainAlignment="flex-start">
+				<Container width="65%" mainAlignment="flex-start">
 					<CalendarSelector
 						calendarId="10"
 						onCalendarChange={(cal: any): void => setActiveCalendar(cal)}
 						style={{ maxWidth: '48%', width: '48%' }}
-						label={t('label.select_in')}
+						label={t('label.scheduled_in', 'Scheduled in')}
 						excludeTrash
 					/>
 				</Container>
@@ -92,10 +88,10 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 					whiteSpace: 'nowrap',
 					overflow: 'hidden'
 				}}
-				bottom="medium"
+				padding={{ vertical: 'small' }}
 				mainAlignment="flex-start"
 			>
-				<Padding right="small" vertical="medium">
+				<Padding right="small" vertical="large">
 					<Button
 						type="outlined"
 						label={t('event.action.yes', 'yes')}
@@ -125,7 +121,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 						disabled={participationStatus === 'DE'}
 					/>
 				</Padding>
-				<Padding right="small" vertical="medium">
+				<Padding right="small" vertical="large">
 					<Button
 						label={t('label.propose_new_time', 'PROPOSE NEW TIME')}
 						icon="RefreshOutline"
