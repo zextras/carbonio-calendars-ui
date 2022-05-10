@@ -84,6 +84,7 @@ const TagsRow: FC<{ event: EventType; hideIcon: boolean }> = ({
 							<Text color="secondary" size="small" overflow="break-word">
 								{map(tags, (tag) => (
 									<TagChip
+										key={tag.name}
 										label={tag.name}
 										avatarBackground={tag.color}
 										background="gray2"

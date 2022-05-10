@@ -9,7 +9,7 @@ import { useReplaceHistoryCallback, useTags } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { editAppointment, moveApptToTrash } from './use-event-actions';
-import { applyTag } from '../view/tags/tag-actions';
+import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 
 export const useQuickActions = (event, context = {}) => {
 	const [t] = useTranslation();
@@ -21,7 +21,15 @@ export const useQuickActions = (event, context = {}) => {
 		? [
 				applyTag({
 					event,
-					context: { replaceHistory, createModal, dispatch, ...context, isInstance: true, tags },
+					context: {
+						replaceHistory,
+						createModal,
+						dispatch,
+						...context,
+						isInstance: true,
+						tags,
+						createAndApplyTag
+					},
 					t
 				}),
 				editAppointment(event, { replaceHistory, createModal, dispatch, ...context }, t),
@@ -34,7 +42,15 @@ export const useQuickActions = (event, context = {}) => {
 		: [
 				applyTag({
 					event,
-					context: { replaceHistory, createModal, dispatch, ...context, isInstance: true, tags },
+					context: {
+						replaceHistory,
+						createModal,
+						dispatch,
+						...context,
+						isInstance: true,
+						tags,
+						createAndApplyTag
+					},
 					t
 				})
 		  ];

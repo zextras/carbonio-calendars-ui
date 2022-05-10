@@ -12,16 +12,17 @@ import {
 	Divider,
 	Padding,
 	Select,
-	Text
+	Text,
+	Button,
+	ChipInput
 } from '@zextras/carbonio-design-system';
-import { map, find, sortBy } from 'lodash';
+import { map, find, sortBy, some } from 'lodash';
 import {
 	useUserAccount,
 	useIntegratedComponent,
 	useUserSettings
 } from '@zextras/carbonio-shell-ui';
 import { AttendeesContainer, TextArea, EditorWrapper } from './editor-complete-view';
-
 import ExpandedButtons, { addAttachments } from './components/expanded-buttons';
 import SaveSendButtons from './components/save-send-buttons';
 import DataRecap from './components/data-recap';
@@ -33,8 +34,8 @@ import ReminderSelector from './components/reminder-selector';
 import RecurrenceSelector from './components/recurrence-selector';
 import AttachmentsBlock from '../event-panel-view/attachments-part';
 import DropZoneAttachment from './components/dropzone-component';
-import { useQueryParam } from '../../commons/useQueryParam';
 
+const emailRegex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
 export default function EditorSmallView({
 	setTitle,
 	data,
@@ -49,12 +50,14 @@ export default function EditorSmallView({
 	const settings = useUserSettings();
 	const account = useUserAccount();
 	const [dropZoneEnable, setDropZoneEnable] = useState(false);
+	const [showOptionals, setShowOptional] = useState(false);
+	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
 
 	useLayoutEffect(() => {
 		setTitle && setTitle(title);
 	}, [title, setTitle, data, callbacks]);
 
-	const [ContactInput] = useIntegratedComponent('contact-input');
+	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const [RoomSelector, isRoomAvailable] = useIntegratedComponent('room-selector');
 
 	const onDragOverEvent = (event) => {
@@ -149,13 +152,68 @@ export default function EditorSmallView({
 		[callbacks, list]
 	);
 
+	const onAttendeesChange = useCallback(
+		(participants) => {
+			callbacks.onAttendeesChange(
+				map(participants, (participant) =>
+					participant.email
+						? {
+								type: 'to',
+								address: participant.email,
+								name: participant.firstName,
+								fullName: participant.fullName,
+								error: !emailRegex.test(participant.email)
+						  }
+						: {
+								...participant,
+								email: participant.label,
+								address: participant.label,
+								type: 'to',
+								error: !emailRegex.test(participant.label)
+						  }
+				)
+			);
+		},
+		[callbacks]
+	);
+
+	const onOptionalsChange = useCallback(
+		(participants) => {
+			callbacks.onAttendeesOptionalChange(
+				map(participants, (participant) =>
+					participant.email
+						? {
+								type: 'to',
+								address: participant.email,
+								name: participant.firstName,
+								fullName: participant.fullName,
+								error: !emailRegex.test(participant.email)
+						  }
+						: {
+								...participant,
+								email: participant.label,
+								address: participant.label,
+								type: 'to',
+								error: !emailRegex.test(participant.label)
+						  }
+				)
+			);
+		},
+		[callbacks]
+	);
+
 	const textAreaLabel = useMemo(
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
 		[t]
 	);
 
-	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
+	useEffect(() => {
+		if (data?.resource?.optionalAttendees?.length) {
+			setShowOptional(true);
+		}
+	}, [data?.resource?.optionalAttendees?.length]);
 
+	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
 	return (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large' }}
@@ -244,19 +302,79 @@ export default function EditorSmallView({
 							)}
 							<Row width="fill" padding={{ top: 'large' }}>
 								<AttendeesContainer>
-									<ContactInput
-										placeholder={t('label.attendee_plural', 'Attendees')}
-										onChange={callbacks.onAttendeesChange}
-										defaultValue={data.resource.attendees}
-										disabled={updateAppTime || proposeNewTime}
-									/>
+									<Container
+										orientation="horizontal"
+										background="gray5"
+										style={{ overflow: 'hidden' }}
+										padding={{ all: 'none' }}
+									>
+										<Container background="gray5" style={{ overflow: 'hidden' }}>
+											{integrationAvailable ? (
+												<ContactInput
+													placeholder={t('label.attendee_plural', 'Attendees')}
+													onChange={callbacks.onAttendeesChange}
+													defaultValue={data.resource.attendees}
+													disabled={updateAppTime || proposeNewTime}
+												/>
+											) : (
+												<ChipInput
+													placeholder={t('label.attendee_plural', 'Attendees')}
+													background="gray5"
+													onChange={onAttendeesChange}
+													defaultValue={data.resource.attendees}
+													valueKey="address"
+													hasError={some(data.resource.attendees || [], { error: true })}
+													errorLabel=""
+													disabled={updateAppTime || proposeNewTime}
+												/>
+											)}
+										</Container>
+										<Container
+											width="fit"
+											background="gray5"
+											padding={{ right: 'medium', left: 'extrasmall' }}
+											orientation="horizontal"
+										>
+											<Button
+												label={t('label.optional_plural', 'Optionals')}
+												type="ghost"
+												labelColor="secondary"
+												style={{ padding: 0 }}
+												onClick={toggleOptionals}
+											/>
+										</Container>
+									</Container>
 								</AttendeesContainer>
 							</Row>
+							{showOptionals && (
+								<Row width="fill" padding={{ top: 'large' }}>
+									<AttendeesContainer>
+										{integrationAvailable ? (
+											<ContactInput
+												placeholder={t('label.optional_plural', 'Optionals')}
+												onChange={callbacks.onAttendeesOptionalChange}
+												defaultValue={data.resource.optionalAttendees}
+												disabled={updateAppTime || proposeNewTime}
+											/>
+										) : (
+											<ChipInput
+												placeholder={t('label.optional_plural', 'Optionals')}
+												background="gray5"
+												onChange={onOptionalsChange}
+												defaultValue={data.resource.optionalAttendees}
+												valueKey="address"
+												hasError={some(data.resource.optionalAttendees || [], { error: true })}
+												errorLabel=""
+												disabled={updateAppTime || proposeNewTime}
+											/>
+										)}
+									</AttendeesContainer>
+								</Row>
+							)}
 							<Container
 								orientation="vertical"
 								height="fit"
 								width="fill"
-								style={{ maxWidth: '70vw' }}
 								mainAlignment="flex-start"
 								crossAlignment="flex-start"
 							>
