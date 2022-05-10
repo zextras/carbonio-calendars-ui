@@ -49,7 +49,7 @@ export const useGetRecurrentActions = (event, context = {}) => {
 				? deletePermanently({ event, context: { ...context, isInstance, createModal }, t })
 				: moveApptToTrash(event, { isInstance, createModal }, t),
 			moveAppointment(event, { ...context, isInstance, createModal }, t),
-			...(isInstance ? [] : [applyTag({ t, context: { tags }, event })])
+			...(isInstance ? [] : [applyTag({ t, context: { ...context, tags }, event })])
 		],
 		[createModal, event, isInstance, onClose, query, t, tags, context]
 	);

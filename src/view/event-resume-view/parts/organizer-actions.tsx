@@ -20,7 +20,7 @@ import { map } from 'lodash';
 import { useDispatch } from 'react-redux';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 
-import { applyTag } from '../../tags/tag-actions';
+import { applyTag, createAndApplyTag } from '../../tags/tag-actions';
 import {
 	moveApptToTrash,
 	openInDisplayer,
@@ -34,7 +34,7 @@ const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }):
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const context = useMemo(
-		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags }),
+		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag }),
 		[createModal, createSnackbar, dispatch, tags]
 	);
 
