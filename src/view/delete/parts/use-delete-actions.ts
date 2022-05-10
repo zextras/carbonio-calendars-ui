@@ -20,22 +20,27 @@ const generateAppointmentDeletedSnackbar = (
 	res: { type: string | string[] },
 	t: TFunction,
 	createSnackbar: (obj: SnackbarArgumentType) => void,
-	undoAction?: () => void
+	undoAction?: () => void,
+	isRecurrentSeries?: boolean
 ): void => {
 	if (res.type.includes('fulfilled')) {
+		let snackbarLabel =
+			undoAction === undefined
+				? t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash')
+				: t('message.snackbar.appointment_permanently_deleted', 'Appointment permanently deleted');
+		if (isRecurrentSeries) {
+			snackbarLabel = t(
+				'message.snackbar.series_deleted',
+				'Series successfully deleted. Attendees will receive the cancellation notification.'
+			);
+		}
 		createSnackbar({
 			key: 'send',
 			replace: true,
 			type: 'info',
-			label:
-				undoAction === undefined
-					? t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash')
-					: t(
-							'message.snackbar.appointment_permanently_deleted',
-							'Appointment permanently deleted'
-					  ),
+			label: snackbarLabel,
 			autoHideTimeout: 3000,
-			hideButton: undoAction === undefined,
+			hideButton: true,
 			actionLabel: t('label.undo', 'Undo'),
 			onActionClick: () => (undoAction ? undoAction() : null)
 		});
@@ -214,7 +219,7 @@ export const useDeleteActions = (
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				.then((res: { type: string | string[] }) => {
-					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreRecurrentSeries);
+					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreRecurrentSeries, true);
 				})
 				.then(
 					setTimeout(() => {

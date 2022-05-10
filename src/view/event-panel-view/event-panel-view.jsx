@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import {
 	Container,
 	Divider,
+	Dropdown,
 	Icon,
 	IconButton,
 	Row,
@@ -32,6 +33,7 @@ import { selectInstanceInvite } from '../../store/selectors/invites';
 import { selectCalendar } from '../../store/selectors/calendars';
 import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
+import { useQueryParam } from '../../commons/useQueryParam';
 
 const BodyContainer = styled(Container)`
 	overflow-y: auto;
@@ -89,9 +91,17 @@ const ActionButtons = ({ actions, closeAction }) => {
 				style={{ overflow: 'hidden' }}
 			>
 				{actions &&
-					map(actions, (action) => (
-						<IconButton key={action.id} icon={action.icon} onClick={action.click} />
-					))}
+					map(actions, (action) =>
+						action.items ? (
+							<Dropdown items={action.items}>
+								<Row takeAvailableSpace>
+									<IconButton icon="TagsMoreOutline" />
+								</Row>
+							</Dropdown>
+						) : (
+							<IconButton key={action.id} icon={action.icon} onClick={action.click} />
+						)
+					)}
 			</Row>
 			{/* IconButton disabled until the actions are active
 			<Padding right="medium">
@@ -111,7 +121,7 @@ const ExpandButton = ({ actions }) => (
 	</Row>
 );
 
-const DisplayerHeader = ({ title, actions }) => {
+const DisplayerHeader = ({ title, actions, isInstance }) => {
 	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });
@@ -145,6 +155,7 @@ const DisplayerHeader = ({ title, actions }) => {
 				</Row>
 			</Row>
 			<Divider />
+
 			{eventIsEditable && (
 				<Row
 					mainAlignment="flex-end"
@@ -156,7 +167,7 @@ const DisplayerHeader = ({ title, actions }) => {
 					padding={{ vertical: 'small' }}
 				>
 					<Row>
-						<ActionButtons actions={actions} closeAction={close} />
+						<ActionButtons actions={actions} closeAction={close} isInstance={isInstance} />
 					</Row>
 				</Row>
 			)}
@@ -177,12 +188,12 @@ export default function EventPanelView() {
 	const invite = useSelector((state) =>
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
-
-	const actions = useQuickActions(event);
+	const isInstance = useQueryParam('isInstance');
+	const actions = useQuickActions(event, { isInstance });
 
 	return event ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">
-			<DisplayerHeader title={event.title} actions={actions} />
+			<DisplayerHeader title={event.title} actions={actions} isInstance={isInstance} />
 			<Container padding={{ all: 'none' }} mainAlignment="flex-start" height="calc(100% - 64px)">
 				<BodyContainer
 					orientation="vertical"

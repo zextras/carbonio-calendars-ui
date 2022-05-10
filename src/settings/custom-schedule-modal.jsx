@@ -4,14 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
-import {
-	Container,
-	Text,
-	CustomModal,
-	Divider,
-	Row,
-	Checkbox
-} from '@zextras/carbonio-design-system';
+import { Container, Text, CustomModal, Row, Checkbox } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import TimePicker from './components/time-picker';
 import { getWeekDay } from './components/utils';
@@ -34,7 +27,13 @@ export default function CustomScheduleModal({
 	);
 
 	return (
-		<CustomModal size="small" title="Title_bold_dark" open={open} onClose={toggleModal}>
+		<CustomModal
+			title="Title_bold_dark"
+			maxHeight="90vh"
+			size="medium"
+			open={open}
+			onClose={toggleModal}
+		>
 			<Container
 				padding={{ all: 'large' }}
 				mainAlignment="center"
@@ -48,28 +47,40 @@ export default function CustomScheduleModal({
 							{t('label.work_hour', 'Work hour')}
 						</Text>
 					</Row>
-					{map(workingSchedule, (s, index) => (
-						<Row key={`week_day_${index}`} orientation="horizontal" mainAlignment="baseline">
-							<Row width="35%" mainAlignment="baseline" crossAlignment="flex-start">
-								<Checkbox
-									value={s.working}
-									onClick={handelDaysClicked(s.day)}
-									label={getWeekDay(`${Number(s.day) - 1}`, t)}
-								/>
+					<Container
+						orientation="vertical"
+						mainAlignment="baseline"
+						crossAlignment="baseline"
+						maxHeight="60vh"
+						style={{ overflowY: 'auto' }}
+					>
+						{map(workingSchedule, (s, index) => (
+							<Row
+								width="95%"
+								key={`week_day_${index}`}
+								orientation="horizontal"
+								mainAlignment="baseline"
+							>
+								<Row width="35%" mainAlignment="baseline" crossAlignment="flex-start">
+									<Checkbox
+										value={s.working}
+										onClick={handelDaysClicked(s.day)}
+										label={getWeekDay(`${Number(s.day) - 1}`, t)}
+									/>
+								</Row>
+								<Row width="65%" mainAlignment="baseline" crossAlignment="flex-start">
+									<TimePicker
+										start={s.start}
+										disabled={!s.working}
+										end={s.end}
+										onChange={onFromChange}
+										day={s.day}
+									/>
+								</Row>
 							</Row>
-							<Row width="65%" mainAlignment="baseline" crossAlignment="flex-start">
-								<TimePicker
-									start={s.start}
-									disabled={!s.working}
-									end={s.end}
-									onChange={onFromChange}
-									day={s.day}
-								/>
-							</Row>
-						</Row>
-					))}
+						))}
+					</Container>
 				</Container>
-				<Divider />
 				<ModalFooter
 					onConfirm={saveChanges}
 					onClose={toggleModal}

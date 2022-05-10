@@ -99,15 +99,16 @@ const InviteResponse: FC<InviteResponse> = ({
 	}, [mailMsg.read, onLoadChange]);
 	const fullInvite = useInvite(mailMsg?.id);
 
-	const apptTime = useMemo(
-		() =>
-			moment(invite[0]?.comp[0].s[0].u).format(
-				`dddd, DD MMM, YYYY [${moment(invite[0]?.comp[0].s[0].u).format(`HH:mm`)}]-[${moment(
-					invite[0]?.comp[0].e[0].u
-				).format(`HH:mm`)}]`
-			),
-		[invite]
-	);
+	const apptTime = useMemo(() => {
+		if (invite[0]?.comp[0]?.allDay) {
+			return moment(invite[0]?.comp[0].s[0].d).format(`dddd, DD MMM, YYYY`);
+		}
+		return moment(invite[0]?.comp[0].s[0].u).format(
+			`dddd, DD MMM, YYYY [${moment(invite[0]?.comp[0].s[0].u).format(`HH:mm`)}]-[${moment(
+				invite[0]?.comp[0].e[0].u
+			).format(`HH:mm`)}]`
+		);
+	}, [invite]);
 
 	const apptTimeZone = useMemo(
 		() =>

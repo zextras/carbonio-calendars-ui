@@ -11,6 +11,7 @@ import ImageAndIconPart from './image-and-icon-part';
 import { TimeInfoRow } from '../event-resume-view/time-info-row';
 import { LocationRow } from '../event-resume-view/location-row';
 import { VirtualRoomRow } from '../event-resume-view/virtual-room-row';
+import TagsRow from '../event-resume-view/tags-row';
 
 const PaddedRow = styled(Row)`
 	padding: 4px 4px;
@@ -88,6 +89,7 @@ export default function DetailsPart({
 					{event && <TimeInfoRow event={event} width="fill" />}
 					{event && <LocationRow event={event} width="fill" />}
 					{invite?.meta && <VirtualRoomRow meta={invite?.meta} />}
+					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
 				</Row>
 			</Row>
 			<Padding top={'medium'} />

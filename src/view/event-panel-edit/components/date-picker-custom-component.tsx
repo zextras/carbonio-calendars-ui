@@ -12,6 +12,7 @@ type CustomComponentProps = {
 	onClick: () => void;
 	onChange: (a: string) => unknown;
 	label: string;
+	icon: string;
 };
 
 const CustomInputWrapper = styled(Row)`
@@ -30,7 +31,8 @@ const DatePickerCustomComponent: FC<CustomComponentProps> = ({
 	value,
 	onClick,
 	onChange,
-	label
+	label,
+	icon = 'CalendarOutline'
 }): ReactElement => {
 	const [input, setInput] = useState(value);
 	const [timer, setTimer] = useState<null | ReturnType<typeof setTimeout>>(null);
@@ -68,7 +70,7 @@ const DatePickerCustomComponent: FC<CustomComponentProps> = ({
 			<Row>
 				<Padding horizontal="small">
 					<Icon
-						icon="CalendarOutline"
+						icon={icon}
 						size="large"
 						onClick={onClick}
 						backgroundColor="transparent"

@@ -62,7 +62,8 @@ function generateHtmlBodyRequest(
 		end: moment.MomentInput;
 		title: any;
 	},
-	account: { displayName: any; name: any }
+	account: { displayName: any; name: any },
+	isInstance?: boolean
 ): any {
 	const attendees = [...app.resource.attendees, ...app.resource.optionalAttendees]
 		.map((a) => a.email)
@@ -72,28 +73,15 @@ function generateHtmlBodyRequest(
 		? moment(app.start).format('LL')
 		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
 
-	const intro = 'The following is a new meeting request';
-	const virtualRoomHtml =
+	const meetingHtml = `${ROOM_DIVIDER}<h3>${account.displayName} have invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${account.displayName} ${account.name}</p><p>Location: ${app.resource.location}</p><p>Time: ${date}</p><p>Invitess: ${attendees}</p>${ROOM_DIVIDER}`;
+	const virtualRoomHtml = app.resource?.room?.label
+		? `${ROOM_DIVIDER}<h3>${account.displayName} invited you to a virtual meeting on Carbonio Chats system.</h3><p>Join the meeting now on <a href= app.resource.room.link>${app.resource.room.label}</a></p><p>You can join the meeting via Web or by using native applications:</p><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a>${ROOM_DIVIDER}`
+		: '';
+	const defaultMessage =
 		app?.resource?.room && !includes(app.resource.richText, ROOM_DIVIDER)
-			? `${ROOM_DIVIDER}<h3>${account.displayName} invited you to a virtual meeting on Carbonio Chats system.</h3><p>Join the meeting now on <a href= app.resource.room.link>${app.resource.room.label}</a></p><p>You can join the meeting via Web or by using native applications:</p><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a>${ROOM_DIVIDER}`
-			: '';
-	return `<html><body id='htmlmode'>
-<h3>${intro}:</h3>
-<p>
-<table border='0'>
-<tr><th align=left>Subject:</th><td>${app.title}</td></tr>
-<tr><th align=left>Organizer:</th><td>"${account.displayName}" <${account.name}> </td></tr>
-</table>
-<p>
-<table border='0'>
-<tr><th align=left>Location:</th><td>${app.resource.location} </td></tr>
-<tr><th align=left>Time:</th><td> ${date}
- </td></tr></table>
-<p>
-<table border='0'>
-<tr><th align=left>Invitees:</th><td>${attendees}</td></tr>
-</table>
-<div>*~*~*~*~*~*~*~*~*~*</div><br>${virtualRoomHtml}${app.resource.richText}`;
+			? virtualRoomHtml
+			: meetingHtml;
+	return `<html><body id='htmlmode'>${defaultMessage}${app.resource.richText}`;
 }
 
 function generateBodyRequest(
@@ -109,7 +97,8 @@ function generateBodyRequest(
 		end: moment.MomentInput;
 		title: any;
 	},
-	account: { displayName: any; name: any }
+	account: { displayName: any; name: any },
+	isInstance?: boolean
 ): any {
 	const attendees = [...app.resource.attendees, ...app.resource.optionalAttendees]
 		.map((a) => a.email)
@@ -119,39 +108,51 @@ function generateBodyRequest(
 		? moment(app.start).format('LL')
 		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
 
-	const intro = 'The following is a new meeting request';
-	const virtualRoom = app?.resource?.room?.label
-		? `-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\n${account.name} have invited you to a virtual meeting on Carbonio Chats system\n\nJoin the meeting now on ${app.resource.room.label}\n\n${app.resource.room.link} \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::- \n`
-		: undefined;
-	return `${intro}:\n\nSubject: ${app.title} \nOrganizer: "${account.displayName}" <${
+	const virtualRoomMessage = app.resource?.room?.label
+		? `-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\n${
+				account.displayName ?? ''
+		  }  ${
+				account.name ?? ''
+		  } have invited you to a virtual meeting on Carbonio Chats system!\n\nJoin the meeting now on ${
+				app.resource.room.label
+		  }\n\n${
+				app.resource.room.link
+		  } \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::- \n`
+		: '';
+	const meetingMessage = `-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\n${
+		account.displayName ?? ''
+	}  ${account.name ?? ''} have invited you to a new meeting!\n\nSubject: ${
+		app.title
+	} \nOrganizer: "${account.displayName} ${
 		account.name
-	}>\n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n*~*~*~*~*~*~*~*~*~*\n\n${
-		virtualRoom ? `${virtualRoom}\n\n` : ''
-	}${app.resource.plainText}`;
+	}\n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-`;
+	const defaultMessage = app?.resource?.room?.label ? virtualRoomMessage : meetingMessage;
+
+	return `${defaultMessage}\n${app.resource.plainText}`;
 }
 
-const generateMp = (msg: any, account: any): any => ({
+const generateMp = (msg: any, account: any, isInstance?: boolean): any => ({
 	ct: 'multipart/alternative',
 	mp: msg.resource.isRichText
 		? [
 				{
 					ct: 'text/html',
-					content: generateHtmlBodyRequest(msg, account)
+					content: generateHtmlBodyRequest(msg, account, isInstance)
 				},
 				{
 					ct: 'text/plain',
-					content: generateBodyRequest(msg, account)
+					content: generateBodyRequest(msg, account, isInstance)
 				}
 		  ]
 		: [
 				{
 					ct: 'text/plain',
-					content: generateBodyRequest(msg, account)
+					content: generateBodyRequest(msg, account, isInstance)
 				}
 		  ]
 });
 
-const generateInvite = (editorData: any): any => {
+const generateInvite = (editorData: any, isInstance?: boolean): any => {
 	const at = [];
 	at.push(
 		...editorData.resource.attendees.map((c: any) => ({
@@ -162,7 +163,6 @@ const generateInvite = (editorData: any): any => {
 			rsvp: '1'
 		}))
 	);
-
 	editorData?.resource?.optionalAttendees &&
 		at.push(
 			...editorData.resource.optionalAttendees.map((c: any) => ({
@@ -202,13 +202,16 @@ const generateInvite = (editorData: any): any => {
 					d: editorData.resource.organizer.name,
 					sentBy: editorData.resource.organizer?.sentBy
 				},
-				recur: editorData?.resource?.recur ?? null,
+				...(isInstance ? {} : { recur: editorData?.resource?.recur ?? null }),
+
 				status: editorData.resource.status,
 				s:
 					editorData.allDay || editorData?.resource?.tz
 						? omitBy(
 								{
-									d: moment(editorData.start).format('YYYYMMDD'),
+									d: editorData.allDay
+										? moment(editorData.start).startOf('day').format('YYYYMMDD')
+										: moment(editorData.start).format('YYYYMMDD[T]HHmmss'),
 									tz: editorData?.resource?.tz
 								},
 								isNil
@@ -220,7 +223,9 @@ const generateInvite = (editorData: any): any => {
 					editorData.allDay || editorData?.resource?.tz
 						? omitBy(
 								{
-									d: moment(editorData.end).format('YYYYMMDD'),
+									d: editorData.allDay
+										? moment(editorData.end).endOf('day').format('YYYYMMDD')
+										: moment(editorData.end).format('YYYYMMDD[T]HHmmss'),
 									tz: editorData?.resource?.tz
 								},
 								isNil
@@ -228,6 +233,12 @@ const generateInvite = (editorData: any): any => {
 						: {
 								d: moment(editorData.end).utc().format('YYYYMMDD[T]HHmmss[Z]')
 						  },
+				...(isInstance
+					? {
+							exceptId: { d: editorData.resource.exceptionId }
+					  }
+					: {}),
+
 				class: editorData.resource.class,
 				draft: editorData.resource.draft
 			}
@@ -237,10 +248,10 @@ const generateInvite = (editorData: any): any => {
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const generateSoapMessageFromEditor = (msg: any, account: any): any =>
+export const generateSoapMessageFromEditor = (msg: any, account: any, isInstance?: boolean): any =>
 	omitBy(
 		{
-			echo: '1',
+			...(!isInstance ? { echo: '1' } : {}),
 			id: msg?.resource?.inviteId,
 			comp: '0',
 			m: omitBy(
@@ -255,9 +266,9 @@ export const generateSoapMessageFromEditor = (msg: any, account: any): any =>
 						  }
 						: null,
 					e: generateParticipantInformation(msg?.resource),
-					inv: generateInvite(msg),
+					inv: generateInvite(msg, isInstance),
 					l: msg?.resource?.calendar?.id,
-					mp: generateMp(msg, account),
+					mp: generateMp(msg, account, isInstance),
 					su: msg?.title
 				},
 				isNil
@@ -270,9 +281,9 @@ export const generateSoapMessageFromEditor = (msg: any, account: any): any =>
 export const createAppointment = createAsyncThunk(
 	'appointment/create new appointment',
 	async ({ editor, account }: any): Promise<any> => {
-		const body = generateSoapMessageFromEditor(editor, account);
+		const body = generateSoapMessageFromEditor(editor, account, false);
 		const res: { calItemId: string } = await soapFetch('CreateAppointment', body);
-		if (res?.calItemId) {
+		if (res?.calItemId && editor?.resource?.room?.label) {
 			await soapFetch('SetCustomMetadata', {
 				_jsns: 'urn:zimbraMail',
 				id: res.calItemId,
@@ -285,6 +296,6 @@ export const createAppointment = createAsyncThunk(
 				}
 			});
 		}
-		return res;
+		return { response: res, editor };
 	}
 );

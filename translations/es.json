@@ -154,7 +154,8 @@
         "maybe": "tal vez",
         "propose_new_time": "PROPONER UN NUEVO HORARIO",
         "share_with": "compartir con",
-        "app_name": "Calendarios"
+        "app_name": "Calendarios",
+        "preview": "Vista previa"
     },
     "action": {
         "delete": "Eliminar",
@@ -166,7 +167,7 @@
         "empty_trash": "Vaciar papelera",
         "move_to_root": "Mover al directorio raíz",
         "new_calendar": "Nuevo calendario",
-        "preview": "Clic para visualizar en otra pestaña",
+        "preview": "Clic para previsualizar",
         "delete_permanently": "Borrar permanentemente",
         "edit_message": "Editar mensaje",
         "save_to_preview": "Salvar para pre-visualizar",
@@ -468,7 +469,8 @@
             "edit_calendar_error": "Algo fue mal, por favor, inténtalo de nuevo",
             "calendar_permanently_deleted": "El calendario ha sido eliminado permanentemente",
             "calendar_restored": "El calendario ha sido restaurado con éxito",
-            "appointment_permanently_deleted": "La reunión ha sido eliminada permanentemente"
+            "appointment_permanently_deleted": "La reunión ha sido eliminada permanentemente",
+            "calendar_edits_saved": "Ediciones guardadas correctamente"
         },
         "invite_has_no_message": "Esta invitación no contiene texto",
         "invited_you": "te ha invitado a un evento",
@@ -641,5 +643,8 @@
     "messages": {
         "format_as_plain_text": "Texto sin formato"
     },
-    "has_attachments": "Tiene adjuntos"
+    "has_attachments": "Tiene adjuntos",
+    "preview": {
+        "close": "Cerrar vista previa"
+    }
 }

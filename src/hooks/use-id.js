@@ -10,8 +10,7 @@ import { selectCalendars } from '../store/selectors/calendars';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import { normalizeEditor } from '../normalizations/normalize-editor';
 import { getInvite } from '../store/actions/get-invite';
-import { initializeEditorAppointment } from '../store/actions/initialize-editor-appointment';
-import { addAppointmentEditor } from '../store/slices/editor-slice';
+import { addAppointmentEditor, initializeEditorAppointment } from '../store/slices/editor-slice';
 
 let counter = 0;
 
@@ -26,7 +25,8 @@ export const useId = (
 	event,
 	selectedStartTime = null,
 	selectedEndTime = null,
-	boardContextInvite = undefined
+	boardContextInvite = undefined,
+	isInstance = false
 ) => {
 	const dispatch = useDispatch();
 	const [id, setId] = useState(editorId);
@@ -60,7 +60,17 @@ export const useId = (
 				addAppointmentEditor({
 					id: newId,
 					panel,
-					appointment: eventEditor
+					appointment: isInstance
+						? {
+								...eventEditor,
+								start: event.start.valueOf(),
+								end: event.end.valueOf(),
+								resource: {
+									...eventEditor.resource,
+									exceptionId: event.resource.ridZ
+								}
+						  }
+						: eventEditor
 				})
 			);
 		} else if (event && boardContextInvite) {

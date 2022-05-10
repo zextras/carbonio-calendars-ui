@@ -6,7 +6,7 @@
         "create": "Oluştur",
         "delete": "Sil",
         "download": "İndir",
-        "preview": "Başka sekmede görüntülemek için tıklayın",
+        "preview": "Önizleme için tıklayın",
         "save_to_preview": "Önizleme için kaydedin",
         "delete_permanently": "Kalıcı olarak sil",
         "delete_calendar": "Takvimi sil",
@@ -141,7 +141,8 @@
             "new_calendar_create_error": "Bir hata oluştu, lütfen tekrar deneyin",
             "calendar_permanently_deleted": "Takvim kalıcı olarak silindi",
             "calendar_restored": "Takvim başarıyla geri alındı",
-            "appointment_permanently_deleted": "Randevu kalıcı olarak silindi"
+            "appointment_permanently_deleted": "Randevu kalıcı olarak silindi",
+            "calendar_edits_saved": "Değişiklikler başarıyla kaydedildi"
         },
         "are_organizer": "organize eden",
         "meeting_canceled": "Bu toplantı iptal edildi",
@@ -346,7 +347,8 @@
             "tuesday": "Salı",
             "wednesday": "Çarşamba"
         },
-        "exclude_free_busy": "Serbest/meşgul zamanları raporlarken bu takvimi kullanma"
+        "exclude_free_busy": "Serbest/meşgul zamanları raporlarken bu takvimi kullanma",
+        "preview": "Önizleme"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -641,5 +643,8 @@
         "nuku_alofa": "{{value}} Nuku’alofa",
         "sarajevo_skopje_warsaw_zagreb": "{{value}} Sarajevo, Skopje, Warsaw, Zagreb",
         "us_canada_pacific": "{{value}} US/Canada Pacific"
+    },
+    "preview": {
+        "close": "Önizlemeyi Kapat"
     }
 }

@@ -22,6 +22,8 @@ const ResizedIconCheckbox = styled(IconCheckbox)`
 		svg {
 			height: 20px;
 			width: 20px;
+			fill: ${({ disabled, theme }) =>
+				disabled ? theme.palette.secondary.disabled : theme.palette.currentColor.regular};
 		}
 	}
 `;
@@ -54,7 +56,7 @@ export const addAttachments = async (
 	return { payload, mp, files };
 };
 
-export default function ExpandedButtons({ data, callbacks, invite, isSmallView }) {
+export default function ExpandedButtons({ data, callbacks, invite, isSmallView, disabled }) {
 	const [t] = useTranslation();
 	const inputRef = useRef();
 	const [openDD, setOpenDD] = useState(false);
@@ -117,11 +119,18 @@ export default function ExpandedButtons({ data, callbacks, invite, isSmallView }
 			)}
 			<Padding right="small">
 				<Tooltip label={t('tooltip.add_attachments', 'Add attachments')}>
-					<Dropdown items={attachmentsItems} display="inline-block" width="fit" forceOpen={openDD}>
+					<Dropdown
+						items={attachmentsItems}
+						display="inline-block"
+						width="fit"
+						disabled={disabled}
+						forceOpen={openDD && !disabled}
+					>
 						<ResizedIconCheckbox
 							onChange={() => null}
 							icon="AttachOutline"
 							onClick={() => setOpenDD(!openDD)}
+							disabled={disabled}
 						/>
 					</Dropdown>
 				</Tooltip>

@@ -21,5 +21,6 @@ export enum EventActionsEnum {
 	DECLINE = 'decline',
 	PROPOSE_NEW_TIME = 'propose_new_time',
 	REPLY = 'reply',
-	FIND_SHARES = 'find_shares'
+	FIND_SHARES = 'find_shares',
+	EXPAND_SERIES = 'expand_series'
 }

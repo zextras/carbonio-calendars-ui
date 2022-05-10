@@ -8,25 +8,33 @@ import {
 	Button,
 	Dropdown,
 	Icon,
+	SnackbarManagerContext,
 	ModalManagerContext,
 	Padding,
 	Row,
-	Text
+	Text,
+	Container
 } from '@zextras/carbonio-design-system';
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext, useMemo } from 'react';
 import { map, toUpper } from 'lodash';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { updateParticipationStatus } from '../../store/slices/appointments-slice';
-import { DeleteEventModal } from '../delete/delete-event-modal';
+import OrganizerActions from './parts/organizer-actions';
+import { useGetRecurrentActions } from '../../hooks/use-recurrent-actions';
+import { useEventActions } from '../../hooks/use-event-actions';
+import { createAndApplyTag } from '../tags/tag-actions';
 
 const AttendingRow = styled(Row)`
 	border: 1px solid ${(props) => props.theme.palette[props.invtReply.color].regular};
 `;
 
-const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatch }) => {
+const RecurrentRow = styled(Row)`
+	border: 1px solid ${(props) => props.theme.palette.primary.regular};
+`;
+
+const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatch, event }) => {
 	const [t] = useTranslation();
 	const decline = useCallback(
 		(ev) => {
@@ -68,62 +76,65 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 		[dispatch, inviteId, compNum]
 	);
 
-	const attendeesOptions = [
-		{
-			id: 'option_2',
-			icon: 'CheckmarkCircle2',
-			label: toUpper(t('event.action.yes', 'Yes')),
-			value: 'AC',
-			action: accept,
-			color: 'success',
-			customComponent: (
-				<Row>
-					<Padding right="small">
-						<Icon color="success" icon="CheckmarkCircle2" />
-					</Padding>
-					<Padding right="small">
-						<Text>{toUpper(t('event.action.yes', 'Yes'))}</Text>
-					</Padding>
-				</Row>
-			)
-		},
-		{
-			id: 'option_3',
-			icon: 'QuestionMarkCircle',
-			label: toUpper(t('label.tentative', 'Tentative')),
-			value: 'TE',
-			action: tentative,
-			color: 'warning',
-			customComponent: (
-				<Row>
-					<Padding right="small">
-						<Icon color="warning" icon="QuestionMarkCircle" />
-					</Padding>
-					<Padding right="small">
-						<Text>{toUpper(t('label.tentative', 'Tentative'))}</Text>
-					</Padding>
-				</Row>
-			)
-		},
-		{
-			id: 'option_1',
-			icon: 'CloseCircle',
-			label: toUpper(t('event.action.no', 'No')),
-			value: 'NO',
-			action: decline,
-			color: 'error',
-			customComponent: (
-				<Row>
-					<Padding right="small">
-						<Icon color="error" icon="CloseCircle" />
-					</Padding>
-					<Padding right="small">
-						<Text>{toUpper(t('event.action.no', 'No'))}</Text>
-					</Padding>
-				</Row>
-			)
-		}
-	];
+	const attendeesOptions = useMemo(
+		() => [
+			{
+				id: 'option_2',
+				icon: 'CheckmarkCircle2',
+				label: toUpper(t('event.action.yes', 'Yes')),
+				value: 'AC',
+				action: accept,
+				color: 'success',
+				customComponent: (
+					<Row>
+						<Padding right="small">
+							<Icon color="success" icon="CheckmarkCircle2" />
+						</Padding>
+						<Padding right="small">
+							<Text>{toUpper(t('event.action.yes', 'Yes'))}</Text>
+						</Padding>
+					</Row>
+				)
+			},
+			{
+				id: 'option_3',
+				icon: 'QuestionMarkCircle',
+				label: toUpper(t('label.tentative', 'Tentative')),
+				value: 'TE',
+				action: tentative,
+				color: 'warning',
+				customComponent: (
+					<Row>
+						<Padding right="small">
+							<Icon color="warning" icon="QuestionMarkCircle" />
+						</Padding>
+						<Padding right="small">
+							<Text>{toUpper(t('label.tentative', 'Tentative'))}</Text>
+						</Padding>
+					</Row>
+				)
+			},
+			{
+				id: 'option_1',
+				icon: 'CloseCircle',
+				label: toUpper(t('event.action.no', 'No')),
+				value: 'NO',
+				action: decline,
+				color: 'error',
+				customComponent: (
+					<Row>
+						<Padding right="small">
+							<Icon color="error" icon="CloseCircle" />
+						</Padding>
+						<Padding right="small">
+							<Text>{toUpper(t('event.action.no', 'No'))}</Text>
+						</Padding>
+					</Row>
+				)
+			}
+		],
+		[accept, decline, t, tentative]
+	);
 
 	const attendingResponse = (value) => {
 		switch (value) {
@@ -169,93 +180,143 @@ const ReplyButtonsPartSmall = ({ participationStatus, inviteId, compNum, dispatc
 	};
 
 	const [invtReply, setInvtReply] = useState(attendingResponse(participationStatus));
+	const createModal = useContext(ModalManagerContext);
 
+	const tags = useTags();
+	const createSnackbar = useContext(SnackbarManagerContext);
+	const context = useMemo(
+		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag }),
+		[createModal, createSnackbar, dispatch, tags]
+	);
+
+	const actions = useEventActions(event, context, t, false);
+	const otherActions = useMemo(
+		() =>
+			map(actions, (action) => ({
+				id: action.label,
+				icon: action.icon,
+				label: action.label,
+				key: action.id,
+				color: action.color,
+				items: action.items,
+				customComponent: action.customComponent,
+				click: (ev) => {
+					ev.stopPropagation();
+					action.click();
+				}
+			})),
+		[actions]
+	);
+	const attendeesResponseOptions = useMemo(
+		() =>
+			map(attendeesOptions, (action) => ({
+				id: action.label,
+				icon: action.icon,
+				label: action.label,
+				key: action.id,
+				color: action.color,
+				customComponent: action.customComponent,
+				click: (ev) => {
+					ev.stopPropagation();
+					action.action();
+					setInvtReply(action);
+				}
+			})),
+		[attendeesOptions]
+	);
 	return (
-		<>
+		<Container orientation="horizontal" mainAlignment="flex-end">
 			<Dropdown
 				disableAutoFocus
-				items={map(attendeesOptions, (action) => ({
-					id: action.label,
-					icon: action.icon,
-					label: action.label,
-					key: action.id,
-					color: action.color,
-					customComponent: action.customComponent,
-					click: (ev) => {
-						ev.stopPropagation();
-						action.action();
-						setInvtReply(action);
-					}
-				}))}
+				items={attendeesResponseOptions}
+				style={{ cursor: 'pointer' }}
 				placement="bottom-end"
 			>
 				<AttendingRow padding={{ all: 'small' }} invtReply={invtReply}>
-					<Padding right="small">
+					<Row>
 						<Icon color={invtReply.color} icon={invtReply.icon} />
-					</Padding>
-					<Padding right="small">
-						<Text color={invtReply.color}>{invtReply.label}</Text>
-					</Padding>
-					<Icon color={invtReply.color} icon="ArrowIosDownwardOutline" />
+					</Row>
+
+					<Row>
+						<Padding horizontal="small">
+							<Text color={invtReply.color}>{invtReply.label}</Text>
+						</Padding>
+						<Icon color={invtReply.color} icon="ArrowIosDownwardOutline" />
+					</Row>
 				</AttendingRow>
 			</Dropdown>
-		</>
+			<Padding left="small">
+				<Dropdown disableAutoFocus items={otherActions} placement="bottom-end">
+					<Button
+						type="outlined"
+						label={t('label.other_actions', 'Other actions')}
+						icon="ArrowIosDownwardOutline"
+						style={{ padding: '7px 4px' }}
+					/>
+				</Dropdown>
+			</Padding>
+		</Container>
 	);
 };
 
 export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 	const createModal = useContext(ModalManagerContext);
+
+	const tags = useTags();
+	const createSnackbar = useContext(SnackbarManagerContext);
+	const context = useMemo(
+		() => ({
+			replaceHistory,
+			dispatch,
+			createModal,
+			createSnackbar,
+			tags,
+			onClose,
+			createAndApplyTag
+		}),
+		[createModal, createSnackbar, dispatch, tags, onClose]
+	);
 	const [t] = useTranslation();
+	const instanceActions = useGetRecurrentActions(event, { ...context, isInstance: true });
+	const seriesActions = useGetRecurrentActions(event, { ...context, isInstance: false });
+
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
 			{event.resource.iAmOrganizer && event.haveWriteAccess ? (
 				<>
-					<Padding right="small">
-						<Button
-							type="outlined"
-							color="error"
-							label={t('label.delete', 'Delete')}
-							onClick={(ev) => {
-								if (ev) ev.stopPropagation();
-								onClose();
-								const closeModal = createModal(
-									{
-										onClose: () => {
-											closeModal();
-										},
-										children: (
-											<>
-												<DeleteEventModal event={event} onClose={() => closeModal()} />
-											</>
-										)
-									},
-									true
-								);
-							}}
-							disabled={!event.haveWriteAccess}
-						/>
-					</Padding>
-
-					{event.resource?.calendar?.name === 'Trash' ? (
-						<Button
-							type="outlined"
-							disabled={!event.permission}
-							label={t('label.move', 'move')}
-							onClick={() => console.warn('not implemented yet')}
-						/>
+					{event.resource?.isRecurrent ? (
+						<Padding right="small" style={{ display: 'flex' }}>
+							<Dropdown
+								data-testid={`series-options`}
+								items={seriesActions}
+								style={{ cursor: 'pointer' }}
+							>
+								<RecurrentRow padding={{ all: 'small' }}>
+									<Padding right="small">
+										<Text color={'primary'}>{t('label.series', 'SERIES')}</Text>
+									</Padding>
+									<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
+								</RecurrentRow>
+							</Dropdown>
+							{event.resource.calendar.id !== FOLDERS.TRASH && (
+								<Padding left="small">
+									<Dropdown
+										data-testid={`instance-options`}
+										items={instanceActions}
+										style={{ cursor: 'pointer' }}
+									>
+										<RecurrentRow padding={{ all: 'small' }}>
+											<Padding right="small">
+												<Text color={'primary'}>{t('label.instance', 'INSTANCE')}</Text>
+											</Padding>
+											<Icon color={'primary'} icon="ArrowIosDownwardOutline" />
+										</RecurrentRow>
+									</Dropdown>
+								</Padding>
+							)}
+						</Padding>
 					) : (
-						<Button
-							disabled={!event.haveWriteAccess}
-							type="outlined"
-							label={t('label.edit', 'edit')}
-							onClick={(ev) => {
-								if (ev) ev.stopPropagation();
-								onClose();
-								replaceHistory(
-									`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
-								);
-							}}
-						/>
+						<OrganizerActions event={event} onClose={onClose} />
 					)}
 				</>
 			) : (
@@ -264,6 +325,7 @@ export const ActionsButtonsRow = ({ event, dispatch, onClose }) => {
 					participationStatus={event.resource?.participationStatus}
 					compNum={event.resource?.compNum}
 					dispatch={dispatch}
+					event={event}
 				/>
 			)}
 		</Row>

@@ -7,7 +7,7 @@
         "empty_trash": "Empty Trash",
         "empty_trash_confirmation": "This action will delete all items in E-mail, Contacts, Calendar, Tasks and Briefcase trash folders. Are you sure that you want to permanently delete everything in these trash folders?",
         "move_to_root": "Move to root",
-        "preview": "Click to preview in another tab",
+        "preview": "Click to preview",
         "save_to_preview": "Save to preview",
         "send": "Send",
         "send_cancellation": "Send Cancellation",
@@ -46,6 +46,7 @@
             "accept": "Accept",
             "decline": "Decline",
             "expand": "Open in Displayer",
+            "invitation_not_sent_yet": "The invitation has not been sent yet",
             "needs_action": "Needs action",
             "no": "No",
             "yes": "Yes"
@@ -113,6 +114,7 @@
         "create": "Create",
         "create_appt_settings": "Creating Appointments",
         "create_new_calendar": "Create a New Calendar",
+        "create_tag": "Create Tag",
         "custom": "Custom",
         "custom_repeat": "Custom Repeat",
         "day": "Day",
@@ -123,6 +125,8 @@
         "delete_instance": "Are you sure you want to delete this instance of “{title}” appointment?",
         "delete_permanently": "Delete permanently",
         "delete_plural": "Delete all",
+        "delete_tag": "Delete Tag",
+        "delete_tag_name": "Delete \"{{name}}\" tag",
         "discard_changes": "DISCARD CHANGES",
         "dismiss": "Dismiss",
         "dismiss_plural": "Dismiss all",
@@ -132,6 +136,8 @@
         "edit": "Edit",
         "edit_access": "Edit {{name}}'s access",
         "edit_share": "Edit share",
+        "edit_tag": "Edit Tag",
+        "edit_tag_name": "Edit \"{{name}}\" tag",
         "edits_saved": "Edits saved correctly",
         "email_input_message": "Enter e-mail addresses",
         "empty": "Empty",
@@ -140,6 +146,7 @@
         "end_after": "End after",
         "end_date": "End date",
         "end_date_and_time": "End date and time",
+        "entire_serires": "ENTIRE SERIES",
         "error_try_again": "Something went wrong, please try again",
         "event_title": "Event title",
         "every": "Every",
@@ -166,7 +173,9 @@
         "move": "Move",
         "new_appointment": "New appointment",
         "new_calendar": "New calendar",
+        "new_tag": "New Tag",
         "no_end_date": "No end date",
+        "no_special_char_allowed": "Name should not contain any special character",
         "no_subject": "No subject",
         "none": "None",
         "notify_organizer": "Notify organizer",
@@ -181,9 +190,11 @@
         "ongoing": "Ongoing",
         "optional": "Optional",
         "optional_plural": "Optionals",
+        "other_actions": "Other actions",
         "out_of_office": "Out of office",
         "outlook_url": "Outlook URL",
         "permissions": "Permissions",
+        "preview": "Preview",
         "private": "Private",
         "proposal_declined": "Proposal declined",
         "propose_new_time": "PROPOSE NEW TIME",
@@ -201,6 +212,7 @@
         "save": "Save",
         "scheduled_in": "Scheduled in",
         "search_hint": "",
+        "select_color": "Select Color",
         "select_in": "",
         "series": "Series",
         "set_new_time": "Set new time",
@@ -213,10 +225,14 @@
         "show": "Show",
         "show_declined_meetings": "Show declined meetings",
         "show_plural": "Show all",
+        "single_instance": "SINGLE INSTANCE",
         "snooze": "Snooze",
         "start_date": "Start date",
         "start_date_and_time": "Start date and time",
         "start_week_on": "Start week on",
+        "tag_max_length": "Max 128 characters are allowed",
+        "tag_name": "Tag name",
+        "tags": "Tags",
         "tentative": "tentative",
         "the": "The",
         "time_zones": "Time zones",
@@ -244,12 +260,15 @@
     },
     "message": {
         "accepted": "{{count}} accepted",
+        "appointment_type_handle": "{{name}}” is a recurring appointment. Would you like to open only this instance or the series?",
         "are_organizer": "are the organizer",
         "awaiting": "awaiting",
         "declined": "{{count}} declined",
         "delete_all_occurences": "Delete all occurrences",
         "delete_future_occurences": "Delete this instance and all future occurrences",
         "delete_future_occurences_warning": "This will also delete all exceptions (before and after this instance) in the series",
+        "delete_tag_message1": "Are you sure to delete \"{{name}}\" Tag?",
+        "delete_tag_message2": "Once deleted, it will be removed from every item marked with it.",
         "guests": "guests",
         "invite_has_no_message": "This invite has no text message",
         "invited_you": "invited you to",
@@ -284,6 +303,7 @@
             "appt_moved_to_trash": "Appointment moved to trash",
             "appt_restored": "Appointment restored successfully to",
             "calendar_deleted_successfully": "Calendar deleted successfully.",
+            "calendar_edits_saved": "Edits saved correctly",
             "calendar_moved_to_root_folder": "Calendar moved to Root folder",
             "calendar_moved_to_trash": "Calendar moved to trash",
             "calendar_permanently_deleted": "Calendar permanently deleted",
@@ -293,7 +313,8 @@
                 "decline": "You’ve replied as Declined",
                 "tentative": "You’ve replied as Tentative"
             },
-            "new_calendar_created": "New calendar created"
+            "new_calendar_created": "New calendar created",
+            "series_deleted": "Series successfully deleted. Attendees will receive the cancellation notification."
         },
         "somebody_invited_you": "<strong>{{somebody}}</strong> invited you",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> is the organizer",
@@ -312,7 +333,13 @@
         "you_will_see_the_subject_here": "Subject"
     },
     "messages": {
-        "format_as_plain_text": "Format as Plain Text"
+        "format_as_plain_text": "Format as Plain Text",
+        "snackbar": {
+            "tag_created": "Tag {{name}} successfully created",
+            "tag_deleted": "{{name}} Tag deleted successfully",
+            "tag_not_updated": "Something went wrong, tag not updated. Please try again.",
+            "tag_updated": "Tag successfully updated"
+        }
     },
     "months": {
         "april": "April",
@@ -355,6 +382,9 @@
     },
     "placeholder": {
         "organizer": "Organizer"
+    },
+    "preview": {
+        "close": "Close Preview"
     },
     "read": "Read",
     "reminder": {
@@ -479,6 +509,8 @@
         "new_time_proposed_success": "New time proposed",
         "proposed_time_accepted": "You accepted the proposed time",
         "share_folder_success": "Calendar shared successfully",
+        "tag_applied": "\"{{tag}}\" tag applied",
+        "tag_removed": "\"{{tag}}\" tag removed",
         "url_copied": "{{title}} copied"
     },
     "success": "Success",

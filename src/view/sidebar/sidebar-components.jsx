@@ -12,15 +12,18 @@ import {
 	Icon,
 	ModalManagerContext,
 	Padding,
+	Row,
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { filter, uniqWith, isEqual } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { getShareInfo } from '../../store/actions/get-share-info';
 import { SharesModal } from './shares-modal';
 import { useCalendarActions } from '../../hooks/use-calendar-actions';
+import { createTag } from '../tags/tag-actions';
 
 export const SharesComponent = ({ item }) => {
 	const createModal = useContext(ModalManagerContext);
@@ -74,6 +77,24 @@ export const FoldersComponent = ({ item }) => {
 				</Padding>
 				<Tooltip label={name} placement="right" maxWidth="100%">
 					<Text style={{ minWidth: 0, flexBasis: 0, flexGrow: 1 }}>{name}</Text>
+				</Tooltip>
+			</AccordionItem>
+		</Dropdown>
+	);
+};
+
+export const TagComponent = (item) => {
+	const [t] = useTranslation();
+	const createModal = useContext(ModalManagerContext);
+
+	return (
+		<Dropdown contextMenu display="block" width="fit" items={[createTag({ t, createModal })]}>
+			<AccordionItem item={item} style={{ height: '40px' }}>
+				<Padding right="small">
+					<Icon icon="TagsMoreOutline" size="large" />
+				</Padding>
+				<Tooltip label={item?.item?.label} placement="right" maxWidth="100%">
+					<Text style={{ minWidth: 0, flexBasis: 0, flexGrow: 1 }}>{item?.item?.label}</Text>
 				</Tooltip>
 			</AccordionItem>
 		</Dropdown>

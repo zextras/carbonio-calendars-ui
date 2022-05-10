@@ -113,14 +113,12 @@ const EmptyBody = () => {
 	);
 };
 
-const divider = '*~*~*~*~*~*~*~*~*~*';
 export function extractBody(body) {
 	if (body) {
-		const lastElement = body.split(divider).pop();
-		const defaultMessage = roomValidationRegEx.exec(lastElement)?.[0];
+		const defaultMessage = roomValidationRegEx.exec(body)?.[0];
 		const stripDefaultRoomMessage = defaultMessage
-			? replace(lastElement, `${ROOM_DIVIDER}${defaultMessage}${ROOM_DIVIDER}`, '')
-			: lastElement;
+			? replace(body, `${ROOM_DIVIDER}${defaultMessage}${ROOM_DIVIDER}`, '')
+			: body;
 		return stripDefaultRoomMessage.trim();
 	}
 	return '';
@@ -129,26 +127,10 @@ export function extractBody(body) {
 export function extractHtmlBody(body) {
 	let htmlBody = extractBody(body);
 	if (htmlBody.startsWith('</div>')) {
-		htmlBody = `<html>${htmlBody.slice(10)}`;
+		htmlBody = `<html>${htmlBody.slice(12)}`;
 	}
 
 	return htmlBody;
-}
-
-export function extractZimbraHeader(body) {
-	if (body) {
-		const lastElement = body.split(divider).first();
-		return lastElement.trim();
-	}
-	return '';
-}
-
-export function extractZimbraHtmlHeader(body) {
-	if (body) {
-		const lastElement = body.split(divider).first();
-		return lastElement.trim();
-	}
-	return '';
 }
 
 export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
