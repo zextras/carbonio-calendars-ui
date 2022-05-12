@@ -643,5 +643,8 @@
     "is_recurrent": "Ist wiederkehrend",
     "messages": {
         "format_as_plain_text": "Als reinen Text formatieren"
+    },
+    "preview": {
+        "close": "Vorschau schließen"
     }
 }
