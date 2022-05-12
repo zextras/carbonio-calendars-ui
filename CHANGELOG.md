@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.10...v0.1.11) (2022-05-12)
+
+
+### Features
+
+* appointment exception management ([4fc1def](https://github.com/zextras/carbonio-calendars-ui/commit/4fc1def684737cf2c871ef47bcebe80295d17141))
+* optionals attendees implemented ([#62](https://github.com/zextras/carbonio-calendars-ui/issues/62)) ([ab21252](https://github.com/zextras/carbonio-calendars-ui/commit/ab212528526f54bb41d9b477e916e463cfa688d7))
+
+
+### Bug Fixes
+
+* disable non changeable inputs while proposing new time ([#59](https://github.com/zextras/carbonio-calendars-ui/issues/59)) ([9a03f2b](https://github.com/zextras/carbonio-calendars-ui/commit/9a03f2b0a2ce2956c33ea5c3ad5e526e8ddc3dcb))
+* user can modify appointments after creation ([#63](https://github.com/zextras/carbonio-calendars-ui/issues/63)) ([aa87195](https://github.com/zextras/carbonio-calendars-ui/commit/aa871953655375043771fe3833814f75131e883f))
+* working hours setting not working ([#60](https://github.com/zextras/carbonio-calendars-ui/issues/60)) ([d95b5cb](https://github.com/zextras/carbonio-calendars-ui/commit/d95b5cb03cefd844bea0adb40d2686ca443f4657))
+
 ### [0.1.10](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.9...v0.1.10) (2022-04-27)
 
 
