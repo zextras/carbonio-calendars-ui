@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo } from 'react';
 import moment from 'moment';
 import { add as datesAdd } from 'date-arithmetic';
 import TimeGrid from 'react-big-calendar/lib/TimeGrid';
@@ -35,7 +35,10 @@ export interface WorkViewComponent extends React.FC<WorkViewProps> {
 
 export const WorkView: WorkViewComponent = (props: WorkViewProps): JSX.Element => {
 	const { date, workingSchedule } = props;
-	schedule = workingSchedule;
+
+	useEffect(() => {
+		schedule = workingSchedule;
+	}, [workingSchedule]);
 
 	const state = useMemo(() => {
 		const min = '0000';
@@ -104,8 +107,7 @@ WorkView.weekBounds = (week: WorkWeekDay[]): WorkWeekBounds => {
 // no-unused-vars: Actually called by BigCalendar
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 WorkView.title = (titleDate: Date): string => {
-	const settings = getUserSettings();
-	const { start, end } = WorkView.weekBounds(workWeek(settings));
+	const { start, end } = WorkView.weekBounds(schedule);
 	const startDate = moment(titleDate).day(start);
 	const endDate = datesAdd(startDate, end - start, 'day');
 	const isMonthSame = moment(startDate).format('MMMM') === moment(endDate).format('MMMM');
