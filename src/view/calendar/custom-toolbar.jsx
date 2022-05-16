@@ -7,6 +7,7 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { Container, Button, IconButton } from '@zextras/carbonio-design-system';
+import { useAppStatusStore } from '../../store/zustand/store';
 
 const MultiButton = styled(Button)`
 	&:last-child {
@@ -29,10 +30,22 @@ export default function CustomToolbar({ label, onView, onNavigate, view }) {
 	const today = useCallback(() => onNavigate('TODAY'), [onNavigate]);
 	const next = useCallback(() => onNavigate('NEXT'), [onNavigate]);
 	const prev = useCallback(() => onNavigate('PREV'), [onNavigate]);
-	const week = useCallback(() => onView('week'), [onView]);
-	const day = useCallback(() => onView('day'), [onView]);
-	const month = useCallback(() => onView('month'), [onView]);
-	const workView = useCallback(() => onView('work_week'), [onView]);
+	const week = useCallback(() => {
+		useAppStatusStore.setState({ calendarView: 'week' });
+		return onView('week');
+	}, [onView]);
+	const day = useCallback(() => {
+		useAppStatusStore.setState({ calendarView: 'day' });
+		return onView('day');
+	}, [onView]);
+	const month = useCallback(() => {
+		useAppStatusStore.setState({ calendarView: 'month' });
+		return onView('month');
+	}, [onView]);
+	const workView = useCallback(() => {
+		useAppStatusStore.setState({ calendarView: 'work_week' });
+		return onView('work_week');
+	}, [onView]);
 	return (
 		<Container width="fill" height="fit" padding={{ bottom: 'small' }}>
 			<Container
