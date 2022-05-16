@@ -9,13 +9,14 @@ import { ThemeContext } from 'styled-components';
 import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
-import { minBy, map, sortBy } from 'lodash';
+import { minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import CustomEvent from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import CustomToolbar from './custom-toolbar';
-import WorkView from './work-view';
+import { WorkView } from './work-view';
+import { workWeek } from '../../utils/work-week';
 import { selectCheckedCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { selectAllAppointments } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
@@ -28,7 +29,6 @@ import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
 import { modifyAppointmentRequest } from '../../store/actions/modify-appointment';
 import { normalizeAppointmentFromCreation } from '../../normalizations/normalize-appointments';
 
-const localizer = momentLocalizer(moment);
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
 
@@ -65,19 +65,16 @@ export default function CalendarComponent() {
 	const settings = useUserSettings();
 	const addBoard = useAddBoardCallback();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
-	const workingSchedule = useMemo(
-		() =>
-			sortBy(
-				map(settings.prefs.zimbraPrefCalendarWorkingHours?.split(','), (t) => ({
-					day: t.split(':')[0],
-					working: t.split(':')[1] !== 'N',
-					start: t.split(':')[2],
-					end: t.split(':')[3]
-				})),
-				'day'
-			),
-		[settings]
-	);
+	const firstDayOfWeek = settings.prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
+	if (settings.prefs.zimbraPrefLocale) {
+		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
+			week: {
+				dow: firstDayOfWeek
+			}
+		});
+	}
+	const localizer = momentLocalizer(moment);
+	const workingSchedule = useMemo(() => workWeek(settings), [settings]);
 
 	const events = useMemo(
 		() => normalizeCalendarEvents(appointments, selectedCalendars),
