@@ -164,8 +164,6 @@ export default function CalendarComponent() {
 
 	const defaultView = useMemo(() => {
 		if (calendarView) {
-			console.clear();
-			console.log(calendarView);
 			return calendarView;
 		}
 		switch (settings.prefs.zimbraPrefCalendarInitialView) {
@@ -272,7 +270,7 @@ export default function CalendarComponent() {
 				slotPropGetter={slotPropGetter}
 				workingSchedule={workingSchedule}
 				onSelectSlot={(e) => handleSelect(e)}
-				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)} // todo: persist in zustand or fix it?
+				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
 				onEventDrop={onEventDrop}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				draggableAccessor={(event) => event.resource.iAmOrganizer}
