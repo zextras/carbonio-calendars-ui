@@ -305,7 +305,7 @@ const InviteResponse: FC<InviteResponse> = ({
 						<Row takeAvailableSpace mainAlignment="flex-start" crossAlignment="flex-start">
 							<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'extrasmall' }}>
 								<Text overflow="break-word">
-									{`${requiredParticipants.length} ${t('message.participants')}`}
+									{t('message.required_participant', { count: requiredParticipants.length })}
 								</Text>
 							</Row>
 
@@ -391,7 +391,7 @@ const InviteResponse: FC<InviteResponse> = ({
 													actions={[
 														{
 															id: 'action2',
-															label: 'Send an email',
+															label: t('message.send_email'),
 															type: 'button',
 															icon: 'EmailOutline',
 															onClick: () => replyMsg(p)
@@ -417,49 +417,76 @@ const InviteResponse: FC<InviteResponse> = ({
 							)}
 						</Row>
 					</Row>
-					{optionalParticipants?.map((p: any, index: number) => (
-						<>
-							{index < maxOptParticipantsToShow && (
-								<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
-									{p.name ? (
-										<Tooltip placement="top" label={p.email} maxWidth="100%">
-											<div>
-												<Chip
-													label={p.name}
-													background="gray3"
-													color="text"
-													actions={[
-														{
-															id: 'action2',
-															label: 'Send an email',
-															type: 'button',
-															icon: 'EmailOutline',
-															onClick: () => replyMsg(p)
-														}
-													]}
-												/>
-											</div>
-										</Tooltip>
-									) : (
-										<Chip
-											label={p.email}
-											background="gray3"
-											color="text"
-											actions={[
-												{
-													id: 'action2',
-													label: 'Send an email',
-													type: 'button',
-													icon: 'EmailOutline',
-													onClick: () => replyMsg(p)
-												}
-											]}
-										/>
-									)}
+
+					{optionalParticipants.length > 0 && (
+						<Row width="50%" mainAlignment="flex-start" crossAlignment="flex-start">
+							<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
+								<Icon size="large" icon="OptionalInviteeOutline" />
+							</Row>
+							<Row takeAvailableSpace mainAlignment="flex-start" crossAlignment="flex-start">
+								<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'extrasmall' }}>
+									<Text overflow="break-word">
+										{t('message.optional_participant', { count: optionalParticipants.length })}
+									</Text>
 								</Row>
-							)}
-						</>
-					))}
+								{optionalParticipants.map((p: any, index: number) => (
+									<>
+										{index < maxOptParticipantsToShow && (
+											<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
+												{p.name ? (
+													<Tooltip placement="top" label={p.email} maxWidth="100%">
+														<div>
+															<Chip
+																label={p.name}
+																background="gray3"
+																color="text"
+																actions={[
+																	{
+																		id: 'action2',
+																		label: t('message.send_email'),
+																		type: 'button',
+																		icon: 'EmailOutline',
+																		onClick: () => replyMsg(p)
+																	}
+																]}
+															/>
+														</div>
+													</Tooltip>
+												) : (
+													<Chip
+														label={p.email}
+														background="gray3"
+														color="text"
+														actions={[
+															{
+																id: 'action2',
+																label: t('message.send_email'),
+																type: 'button',
+																icon: 'EmailOutline',
+																onClick: () => replyMsg(p)
+															}
+														]}
+													/>
+												)}
+											</Row>
+										)}
+									</>
+								))}
+								{maxOptParticipantsToShow < optionalParticipants.length && (
+									<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
+										<LinkText
+											color="primary"
+											size="medium"
+											onClick={(): void => setMaxReqParticipantsToShow(optionalParticipants.length)}
+											overflow="break-word"
+										>
+											{t('message.more', 'More...')}
+										</LinkText>
+									</Row>
+								)}
+							</Row>
+						</Row>
+					)}
 				</Row>
 
 				{fullInvite && (
