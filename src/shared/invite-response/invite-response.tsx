@@ -477,6 +477,7 @@ const InviteResponse: FC<InviteResponse> = ({
 										<LinkText
 											color="primary"
 											size="medium"
+											// eslint-disable-next-line max-len
 											onClick={(): void => setMaxReqParticipantsToShow(optionalParticipants.length)}
 											overflow="break-word"
 										>
