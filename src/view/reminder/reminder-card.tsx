@@ -21,7 +21,7 @@ import moment from 'moment';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../../store/actions/snooze-appointment-reminder';
 import { ApptReminderCardProps } from '../../types/appointment-reminder';
-import { getReminderItems } from './commons/reminder-time-options';
+import { useGetReminderItems } from './commons/reminder-time-options';
 
 const ApptReminderCard: FC<ApptReminderCardProps> = ({
 	event,
@@ -46,23 +46,29 @@ const ApptReminderCard: FC<ApptReminderCardProps> = ({
 			})
 		);
 		removeReminder(event.resource.id);
-		// .then((res: any) => removeReminder(event.resource.id));
 	}, [dispatch, event.resource.id, removeReminder]);
 
 	const snoozeReminder = useCallback(
-		(time) => {
+		(time, isBefore = true) => {
+			const untilForBefore = event?.resource?.isRecurrent
+				? moment()
+						.set({ hour: moment(event?.start).hour(), minute: moment(event?.start).minute() })
+						.subtract(time, 'minutes')
+						.valueOf()
+				: moment(event.start).subtract(time, 'minutes').valueOf();
 			dispatch(
 				// @ts-ignore
 				snoozeApptReminder({
 					id: event.resource.id,
-					until: moment(event.start).subtract(time, 'minutes').valueOf()
+					until: isBefore ? untilForBefore : moment().add(time, 'minutes').valueOf()
 				})
 			);
 			removeReminder(event.resource.id);
 		},
-		[dispatch, event.resource.id, event.start, removeReminder]
+		[dispatch, event, removeReminder]
 	);
-	const reminderItems = useMemo(() => getReminderItems(t, snoozeReminder), [t, snoozeReminder]);
+
+	const reminderItems = useGetReminderItems(t, snoozeReminder, event);
 
 	const timeToDisplay = useMemo(() => {
 		const difference = moment(event.end).diff(moment(event.start), 'seconds');
@@ -160,7 +166,7 @@ const ApptReminderCard: FC<ApptReminderCardProps> = ({
 					padding={{ horizontal: 'large' }}
 				>
 					<Row>
-						{(moment(event.start).valueOf() < moment().valueOf() ||
+						{/* {(moment(event.start).valueOf() < moment().valueOf() ||
 							moment(event.resource.alarmData[0].alarmInstStart).valueOf() < moment().valueOf()) &&
 						event.resource.iAmOrganizer ? (
 							<Tooltip placement="top" label={t('label.set_new_time', 'Set new time')}>
@@ -179,8 +185,12 @@ const ApptReminderCard: FC<ApptReminderCardProps> = ({
 									<IconButton icon="Flip2Outline" size="large" />
 								</Dropdown>
 							</Tooltip>
-						)}
-
+						)} */}
+						<Tooltip placement="top" label={t('label.snooze', 'Snooze')}>
+							<Dropdown items={reminderItems} placement="bottom-end">
+								<IconButton icon="Flip2Outline" size="large" />
+							</Dropdown>
+						</Tooltip>
 						<Tooltip placement="top" label={t('label.dismiss', 'Dismiss').toUpperCase()}>
 							<IconButton icon="BellOffOutline" size="large" onClick={dismissReminder} />
 						</Tooltip>
