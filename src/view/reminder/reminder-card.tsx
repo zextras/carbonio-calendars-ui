@@ -166,7 +166,7 @@ const ApptReminderCard: FC<ApptReminderCardProps> = ({
 					padding={{ horizontal: 'large' }}
 				>
 					<Row>
-						{/* {(moment(event.start).valueOf() < moment().valueOf() ||
+						{(moment(event.start).valueOf() < moment().valueOf() ||
 							moment(event.resource.alarmData[0].alarmInstStart).valueOf() < moment().valueOf()) &&
 						event.resource.iAmOrganizer ? (
 							<Tooltip placement="top" label={t('label.set_new_time', 'Set new time')}>
@@ -185,12 +185,8 @@ const ApptReminderCard: FC<ApptReminderCardProps> = ({
 									<IconButton icon="Flip2Outline" size="large" />
 								</Dropdown>
 							</Tooltip>
-						)} */}
-						<Tooltip placement="top" label={t('label.snooze', 'Snooze')}>
-							<Dropdown items={reminderItems} placement="bottom-end">
-								<IconButton icon="Flip2Outline" size="large" />
-							</Dropdown>
-						</Tooltip>
+						)}
+
 						<Tooltip placement="top" label={t('label.dismiss', 'Dismiss').toUpperCase()}>
 							<IconButton icon="BellOffOutline" size="large" onClick={dismissReminder} />
 						</Tooltip>
