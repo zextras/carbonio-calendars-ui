@@ -71,7 +71,7 @@ export const FoldersComponent = ({ item }) => {
 
 	return (
 		<Dropdown items={ddItems} contextMenu width="100%" display="block">
-			<AccordionItem item={item} onClick={recursiveToggleCheck} style={{ height: '40px' }}>
+			<AccordionItem item={item} onClick={recursiveToggleCheck} >
 				<Padding right="small">
 					<Icon icon={icon} customColor={color?.color} size="large" />
 				</Padding>
@@ -89,7 +89,7 @@ export const TagComponent = (item) => {
 
 	return (
 		<Dropdown contextMenu display="block" width="fit" items={[createTag({ t, createModal })]}>
-			<AccordionItem item={item} style={{ height: '40px' }}>
+			<AccordionItem item={item} >
 				<Padding right="small">
 					<Icon icon="TagsMoreOutline" size="large" />
 				</Padding>
