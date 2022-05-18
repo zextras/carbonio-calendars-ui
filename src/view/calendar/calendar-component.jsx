@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useContext, useEffect } from 'react';
+import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
 import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
@@ -27,6 +27,8 @@ import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
 import { modifyAppointmentRequest } from '../../store/actions/modify-appointment';
 import { normalizeAppointmentFromCreation } from '../../normalizations/normalize-appointments';
+import { useCalendarDate, useCalendarView } from '../../store/zustand/hooks';
+import { useAppStatusStore } from '../../store/zustand/store';
 
 const localizer = momentLocalizer(moment);
 const nullAccessor = () => null;
@@ -65,6 +67,9 @@ export default function CalendarComponent() {
 	const settings = useUserSettings();
 	const addBoard = useAddBoardCallback();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
+	const calendarView = useCalendarView();
+	const calendarDate = useCalendarDate();
+
 	const workingSchedule = useMemo(
 		() =>
 			sortBy(
@@ -158,6 +163,9 @@ export default function CalendarComponent() {
 	);
 
 	const defaultView = useMemo(() => {
+		if (calendarView) {
+			return calendarView;
+		}
 		switch (settings.prefs.zimbraPrefCalendarInitialView) {
 			case 'month':
 				return 'month';
@@ -168,7 +176,7 @@ export default function CalendarComponent() {
 			default:
 				return 'work_week';
 		}
-	}, [settings]);
+	}, [calendarView, settings?.prefs?.zimbraPrefCalendarInitialView]);
 
 	const handleSelect = (e) => {
 		addBoard(
@@ -230,6 +238,16 @@ export default function CalendarComponent() {
 		[]
 	);
 
+	const [date, setDate] = useState(calendarDate);
+
+	const onNavigate = useCallback(
+		(newDate) => {
+			useAppStatusStore.setState((s) => ({ ...s, date: newDate }));
+			return setDate(newDate);
+		},
+		[setDate]
+	);
+
 	return (
 		<>
 			<CalendarSyncWithRange />
@@ -239,6 +257,8 @@ export default function CalendarComponent() {
 				localizer={localizer}
 				defaultView={defaultView}
 				events={events}
+				date={date}
+				onNavigate={onNavigate}
 				startAccessor="start"
 				endAccessor="end"
 				style={{ width: '100%' }}

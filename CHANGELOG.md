@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.13](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.12...v0.1.13) (2022-05-16)
+
+
+### Features
+
+* persist calendar view switching app ([5cdd646](https://github.com/zextras/carbonio-calendars-ui/commit/5cdd6462cacbab60afee9b92bc770e2073393e1b))
+
 ### [0.1.12](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.11...v0.1.12) (2022-05-12)
 
 ### [0.1.11](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.10...v0.1.11) (2022-05-12)

@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "0.1.12",
+	"version": "0.1.13",
 	"description": "Calendar module for Zextras Carbonio",
 	"main": "src/app.jsx",
 	"engines": {
@@ -79,7 +79,8 @@
 		"react-widgets": "4.6.1",
 		"react-widgets-moment": "4.0.30",
 		"redux": "^4.1.2",
-		"styled-components": "5.3.3"
+		"styled-components": "5.3.3",
+		"zustand": "3.6.9"
 	},
 	"browserslist": [
 		">1%",
