@@ -131,7 +131,7 @@ export default function CustomEventWrapper({ event, children }) {
 			}
 			if (e.detail === 1 && action !== EventActionsEnum.EXPAND) {
 				setOpen(true);
-				useAppStatusStore.setState((s) => ({ ...s, isResumeOpen: true }));
+				useAppStatusStore.setState((s) => ({ ...s, isResumeViewOpen: true }));
 			}
 		},
 		[action, dispatch, event.resource.inviteId, event.resource.ridZ, invite]

@@ -27,7 +27,7 @@ import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
 import { modifyAppointmentRequest } from '../../store/actions/modify-appointment';
 import { normalizeAppointmentFromCreation } from '../../normalizations/normalize-appointments';
-import { useCalendarDate, useCalendarView, useResumeViewOpen } from '../../store/zustand/hooks';
+import { useCalendarDate, useCalendarView, useIsResumeViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
 
 const localizer = momentLocalizer(moment);
@@ -69,7 +69,7 @@ export default function CalendarComponent() {
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
-	const resumeViewOpen = useResumeViewOpen();
+	const resumeViewOpen = useIsResumeViewOpen();
 
 	const workingSchedule = useMemo(
 		() =>
@@ -189,7 +189,7 @@ export default function CalendarComponent() {
 					app: CALENDAR_APP_ID
 				}
 			);
-		useAppStatusStore.setState((s) => ({ ...s, isResumeOpen: false }));
+		useAppStatusStore.setState((s) => ({ ...s, isResumeViewOpen: false }));
 	};
 	const onEventDrop = useCallback(
 		(appt) => {
