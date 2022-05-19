@@ -68,7 +68,7 @@ const ApptReminderCard: FC<ApptReminderCardProps> = ({
 		[dispatch, event, removeReminder]
 	);
 
-	const reminderItems = useGetReminderItems(t, snoozeReminder, event);
+	const reminderItems = useGetReminderItems(snoozeReminder, event);
 
 	const timeToDisplay = useMemo(() => {
 		const difference = moment(event.end).diff(moment(event.start), 'seconds');

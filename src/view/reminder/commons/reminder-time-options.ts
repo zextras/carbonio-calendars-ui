@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { TFunction } from 'i18next';
 import { filter } from 'lodash';
 import moment from 'moment';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { EventType } from '../../../types/appointment-reminder';
 
 type ReturnType = Array<{
@@ -18,11 +18,15 @@ type ReturnType = Array<{
 	type?: string;
 }>;
 export const useGetReminderItems = (
-	t: TFunction,
 	setSnooze: (arg1: number, arg2?: boolean) => void,
 	event: EventType
 ): ReturnType => {
-	const diff = moment(event?.resource?.alarmData?.[0]?.alarmInstStart).diff(moment(), 'seconds');
+	const [t] = useTranslation();
+
+	const diff = useMemo(
+		() => moment(event?.resource?.alarmData?.[0]?.alarmInstStart).diff(moment(), 'seconds'),
+		[event?.resource?.alarmData]
+	);
 	const beforeList = useMemo(
 		() => [
 			{
