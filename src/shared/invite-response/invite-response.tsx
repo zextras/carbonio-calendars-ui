@@ -77,6 +77,15 @@ type InviteResponse = {
 	isAttendee: boolean;
 };
 
+type Participant = {
+	a: string;
+	d: string;
+	ptst: 'NE' | 'AC' | 'TE' | 'DE' | 'DG' | 'C' | 'IN' | 'WE' | 'DF';
+	role: 'OPT' | 'REQ';
+	rsvp: boolean;
+	url: string;
+};
+
 const InviteResponse: FC<InviteResponse> = ({
 	inviteId,
 	participationStatus,
@@ -120,8 +129,8 @@ const InviteResponse: FC<InviteResponse> = ({
 	const requiredParticipants = useMemo(
 		() =>
 			invite[0]?.comp[0].at
-				.filter((user: any) => user.role === 'REQ')
-				.map((user: any) => ({
+				.filter((user: Participant) => user.role === 'REQ')
+				.map((user: Participant) => ({
 					name: user.d,
 					email: user.a
 				})),
@@ -132,22 +141,22 @@ const InviteResponse: FC<InviteResponse> = ({
 	const optionalParticipants = useMemo(
 		() =>
 			invite[0]?.comp[0].at
-				.filter((user: any) => user.role === 'OPT')
-				.map((user: any) => ({
+				.filter((user: Participant) => user.role === 'OPT')
+				.map((user: Participant) => ({
 					name: user.d || user.a,
 					email: user.a
 				})),
 		[invite]
 	);
 
-	const replyMsg = (user: any): void => {
+	const replyMsg = (user: Participant): void => {
 		const obj = {
 			email: {
 				email: {
-					mail: user.email ? user.email : user.a
+					mail: user.a
 				}
 			},
-			firstName: user.name ?? user.d ?? '',
+			firstName: user.d ?? user.d ?? user.a,
 			middleName: ''
 		};
 		// disabled because click expect a click event
@@ -188,8 +197,10 @@ const InviteResponse: FC<InviteResponse> = ({
 					) : (
 						<>
 							<Text weight="regular" size="large" style={{ fontSize: '18px' }}>
-								{invite[0]?.comp[0]?.or.d || invite[0]?.comp[0]?.or.a}{' '}
-								{t('message.invited_you', 'invited you to ')}
+								{`${invite[0]?.comp[0]?.or.d || invite[0]?.comp[0]?.or.a} ${t(
+									'message.invited_you',
+									'invited you to '
+								)}`}
 							</Text>
 							&nbsp;
 							<Text weight="bold" size="large" style={{ fontSize: '18px' }}>
