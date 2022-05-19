@@ -3,15 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useEffect, useLayoutEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import moment from 'moment';
 import { add as datesAdd } from 'date-arithmetic';
 import TimeGrid from 'react-big-calendar/lib/TimeGrid';
 import { find, findLast, reduce } from 'lodash';
 import { Navigate } from 'react-big-calendar';
-import { getUserSettings } from '@zextras/carbonio-shell-ui';
-import { workWeek, WorkWeekDay } from '../../utils/work-week';
+import { WorkWeekDay } from '../../utils/work-week';
 
+// Needed by the "range" and "title" functions
 let schedule: WorkWeekDay[] = [];
 
 export interface WorkViewProps {
@@ -36,33 +36,22 @@ export interface WorkViewComponent extends React.FC<WorkViewProps> {
 export const WorkView: WorkViewComponent = (props: WorkViewProps): JSX.Element => {
 	const { date, workingSchedule } = props;
 
-	useEffect(() => {
-		schedule = workingSchedule;
-	}, [workingSchedule]);
+	// Looks horrible but there is no other way to pass and sync the workingSchedule
+	schedule = useMemo(() => workingSchedule, [workingSchedule]);
 
-	const state = useMemo(() => {
-		const min = '0000';
-		const max = '2300';
-
-		return {
-			minHour: Number(min?.split('').splice(0, 2).join('')),
-			minMins: Number(min?.split('').splice(2, 4).join('')),
-			maxHour: Number(max?.split('').splice(0, 2).join('')),
-			maxMins: Number(max?.split('').splice(2, 4).join('')),
-			range: WorkView.range(date)
-		};
-	}, [date]);
+	const range = useMemo(() => WorkView.range(date), [date]);
 
 	return (
 		<TimeGrid
 			{...props}
-			range={state.range}
-			max={new Date(0, 0, 0, state.maxHour, state.maxMins, 0)}
-			min={new Date(0, 0, 0, state.minHour, state.minMins, 0)}
+			range={range}
+			max={new Date(0, 0, 0, 23, 0, 0)}
+			min={new Date(0, 0, 0, 0, 0, 0)}
 		/>
 	);
 };
 
+// Called by BigCalendar on week change
 WorkView.range = (rangeDate: Date): Date[] => {
 	const current = moment(rangeDate).day();
 	const d = moment(rangeDate).set({ hour: 0, minute: 0, second: 0 });
