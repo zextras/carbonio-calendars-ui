@@ -80,7 +80,7 @@ type InviteResponse = {
 type Participant = {
 	a: string;
 	d: string;
-	ptst: 'NE' | 'AC' | 'TE' | 'DE' | 'DG' | 'C' | 'IN' | 'WE' | 'DF';
+	ptst: 'NE' | 'AC' | 'TE' | 'DE' | 'DG' | 'CO' | 'IN' | 'WE' | 'DF';
 	role: 'OPT' | 'REQ';
 	rsvp: boolean;
 	url: string;
