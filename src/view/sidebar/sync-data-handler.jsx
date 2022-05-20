@@ -8,10 +8,7 @@ import { isEmpty, reduce, forEach, sortBy } from 'lodash';
 import { useRefresh, useNotify, store } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { combineReducers } from '@reduxjs/toolkit';
-import invitesSliceReducer, {
-	handleInviteMetadata,
-	handleModifiedInvites
-} from '../../store/slices/invites-slice';
+import invitesSliceReducer, { handleModifiedInvites } from '../../store/slices/invites-slice';
 import calendarsSliceReducer, {
 	handleCalendarsRefresh,
 	handleCreatedCalendars,
@@ -20,8 +17,7 @@ import calendarsSliceReducer, {
 } from '../../store/slices/calendars-slice';
 import editorSliceReducer from '../../store/slices/editor-slice';
 import appointmentsSliceReducer, {
-	handleModifiedAppointments,
-	handleModifiedApptMetadata
+	handleModifiedAppointments
 } from '../../store/slices/appointments-slice';
 import { setSearchRange } from '../../store/actions/set-search-range';
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
@@ -116,8 +112,6 @@ export const SyncDataHandler = () => {
 								if (invites?.length > 0) {
 									dispatch(handleModifiedInvites(invites));
 								}
-								dispatch(handleModifiedApptMetadata(notify.modified.appt));
-								dispatch(handleInviteMetadata(notify.modified.appt));
 							}
 						}
 						if (notify.deleted) {

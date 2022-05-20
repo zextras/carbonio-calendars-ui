@@ -3,10 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { cloneDeep, filter, find, forEach, isNil, map, omitBy, startsWith } from 'lodash';
-import { normalizeAppointmentsFromNotify } from '../../normalizations/normalize-appointments';
+import { forEach, isNil, map, omitBy } from 'lodash';
 import { normalizeInviteFromSync } from '../../normalizations/normalize-invite';
-import { AppointmentsSlice, InvitesSlice } from '../../types/store/store';
+import { InvitesSlice } from '../../types/store/store';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const handleModifiedInvitesReducer = (state: InvitesSlice, { payload }: any): void => {
@@ -16,38 +15,6 @@ export const handleModifiedInvitesReducer = (state: InvitesSlice, { payload }: a
 			state.invites = {
 				...state.invites,
 				[inv.id]: { ...state.invites?.[inv.id], ...inv }
-			};
-		}
-	});
-};
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const handleInviteMetadataReducer = (state: InvitesSlice, { payload }: any): void => {
-	const appts = normalizeAppointmentsFromNotify(payload);
-	forEach(appts, (appt) => {
-		if (appt.meta) {
-			const toUpdate = cloneDeep(filter(state.invites, (v, k) => startsWith(k, appt.id)));
-			map(toUpdate, (item) => {
-				state.invites = {
-					...state.invites,
-					[item.id]: {
-						...state.invites[item.id],
-						meta: appt.meta
-					}
-				};
-			});
-		}
-	});
-};
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const handleMetadataReducer = (state: AppointmentsSlice, { payload }: any): void => {
-	const appts = normalizeAppointmentsFromNotify(payload);
-	forEach(appts, (appt) => {
-		if (state?.appointments?.[appt.id] && appt.meta) {
-			state.appointments = {
-				...state.appointments,
-				[appt.id]: { ...state?.appointments?.[appt.id], meta: state?.appointments?.[appt.id].meta }
 			};
 		}
 	});

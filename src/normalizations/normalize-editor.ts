@@ -8,16 +8,18 @@ import moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
-import { METADATA_SECTIONS } from '../constants/metadata';
+import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 
-const getVirtualRoom = (meta: any): { label: string; link: string } | undefined => {
-	const room = find(meta, ['section', METADATA_SECTIONS.MEETING_ROOM]);
-	return room?._attrs?.room && room?._attrs?.link
-		? {
-				label: room?._attrs?.room,
-				link: room?._attrs?.link
-		  }
-		: undefined;
+const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
+	const room = find(xprop, ['name', CRB_XPROPS.MEETING_ROOM]);
+	if (room) {
+		return {
+			label: find(room.xparam, ['name', CRB_XPARAMS.ROOM_NAME])?.value,
+			link: find(room.xparam, ['name', CRB_XPARAMS.ROOM_LINK])?.value
+		};
+	}
+
+	return undefined;
 };
 
 export const normalizeEditor = (
@@ -43,7 +45,7 @@ export const normalizeEditor = (
 		attach: invite.attach,
 		attachmentFiles: invite.attachmentFiles,
 		parts: invite.parts,
-		room: getVirtualRoom(invite?.meta),
+		room: getVirtualRoom(invite?.xprop),
 		attendees: filter(
 			filter(invite.attendees, (p) => p.cutype !== 'RES'),
 			(a) => a.role === 'REQ'

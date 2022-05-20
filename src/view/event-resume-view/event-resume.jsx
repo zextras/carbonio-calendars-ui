@@ -26,7 +26,7 @@ export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispa
 			<CalendarInfoRow event={event} />
 			{event && <TimeInfoRow event={event} showIcon />}
 			{event && <LocationRow event={event} showIcon />}
-			{invite?.meta && <VirtualRoomRow meta={invite?.meta} showIcon />}
+			{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
 			<ParticipantsRow event={event} invite={invite} />
 			{event?.resource?.tags?.length > 0 && <TagsRow event={event} invite={invite} />}
 			{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
