@@ -373,8 +373,12 @@
         "day_before_plural": "{{count}} days before",
         "hour_before": "{{count}} hour before",
         "hour_before_plural": "{{count}} hours before",
+        "hours": "{{count}} hour",
+        "hours_plural": "{{count}} hours",
         "minute_before": "{{count}} minute before",
         "minute_before_plural": "{{count}} minutes before",
+        "minutes": "{{count}} minute",
+        "minutes_plural": "{{count}} minutes",
         "modal": {
             "set_new_time_message": "Do you want to set a new time for the missed appointment? If you click OK, all the other reminders will be automatically dismissed."
         },
