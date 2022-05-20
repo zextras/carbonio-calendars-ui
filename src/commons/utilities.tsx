@@ -9,7 +9,7 @@ const FileExtensionRegex = /^.+\.([^.]+)$/;
 
 export const calcColor = (label: string, theme: unknown): string => {
 	let sum = 0;
-	for (let i = 0; i < label.length; i += 1) {
+	for (let i = 0; i < label?.length; i += 1) {
 		sum += label.charCodeAt(i);
 	}
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment

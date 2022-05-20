@@ -116,8 +116,6 @@ export const SyncDataHandler = () => {
 								if (invites?.length > 0) {
 									dispatch(handleModifiedInvites(invites));
 								}
-								dispatch(handleModifiedApptMetadata(notify.modified.appt));
-								dispatch(handleInviteMetadata(notify.modified.appt));
 							}
 						}
 						if (notify.deleted) {

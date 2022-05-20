@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { cloneDeep, filter, find, forEach, isNil, map, omitBy, startsWith } from 'lodash';
+import { filter, forEach, isNil, map, omitBy, startsWith } from 'lodash';
 import { normalizeAppointmentsFromNotify } from '../../normalizations/normalize-appointments';
 import { normalizeInviteFromSync } from '../../normalizations/normalize-invite';
 import { AppointmentsSlice, InvitesSlice } from '../../types/store/store';
@@ -26,16 +26,18 @@ export const handleInviteMetadataReducer = (state: InvitesSlice, { payload }: an
 	const appts = normalizeAppointmentsFromNotify(payload);
 	forEach(appts, (appt) => {
 		if (appt.meta) {
-			const toUpdate = cloneDeep(filter(state.invites, (v, k) => startsWith(k, appt.id)));
-			map(toUpdate, (item) => {
-				state.invites = {
-					...state.invites,
-					[item.id]: {
-						...state.invites[item.id],
-						meta: appt.meta
-					}
-				};
-			});
+			map(
+				filter(state.invites, (v, k) => startsWith(k, appt.id)),
+				(item) => {
+					state.invites = {
+						...state.invites,
+						[item.id]: {
+							...state.invites[item.id],
+							meta: appt.meta
+						}
+					};
+				}
+			);
 		}
 	});
 };

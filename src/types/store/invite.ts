@@ -52,4 +52,5 @@ export type Invite = {
 	meta: any;
 	allDay?: string | boolean;
 	draft?: number | boolean;
+	xprop?: any;
 };

@@ -127,7 +127,7 @@ export default function CustomEventWrapper({ event, children, selected }) {
 			if (!invite) {
 				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
 			}
-			if (e.detail === 1 && action !== EventActionsEnum.EXPAND) {
+			if (e?.detail === 1 && action !== EventActionsEnum.EXPAND) {
 				setOpen((o) => !o);
 			}
 		},

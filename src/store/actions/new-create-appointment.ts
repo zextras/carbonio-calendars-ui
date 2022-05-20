@@ -8,7 +8,7 @@ import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
-import { METADATA_SECTIONS } from '../../constants/metadata';
+import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 
 type Participants = {
 	a: string | undefined;
@@ -73,9 +73,9 @@ function generateHtmlBodyRequest(
 		? moment(app.start).format('LL')
 		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
 
-	const meetingHtml = `${ROOM_DIVIDER}<h3>${account.displayName} have invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${account.displayName} ${account.name}</p><p>Location: ${app.resource.location}</p><p>Time: ${date}</p><p>Invitess: ${attendees}</p>${ROOM_DIVIDER}`;
+	const meetingHtml = `${ROOM_DIVIDER}<h3>${account.displayName} have invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${account.displayName} ${account.name}</p><p>Location: ${app.resource.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
 	const virtualRoomHtml = app.resource?.room?.label
-		? `${ROOM_DIVIDER}<h3>${account.displayName} invited you to a virtual meeting on Carbonio Chats system.</h3><p>Join the meeting now on <a href= app.resource.room.link>${app.resource.room.label}</a></p><p>You can join the meeting via Web or by using native applications:</p><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a>${ROOM_DIVIDER}`
+		? `${ROOM_DIVIDER}<h3>${account.displayName} invited you to a virtual meeting on Carbonio Chats system.</h3><p>Join the meeting now on <a href= app.resource.room.link>${app.resource.room.label}</a></p><p>You can join the meeting via Web or by using native applications:</p><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a><br/>${ROOM_DIVIDER}`
 		: '';
 	const defaultMessage =
 		app?.resource?.room && !includes(app.resource.richText, ROOM_DIVIDER)
@@ -192,6 +192,24 @@ const generateInvite = (editorData: any, isInstance?: boolean): any => {
 								}
 						  ]
 						: undefined,
+				xprop: editorData.resource.room
+					? [
+							{
+								name: CRB_XPROPS.MEETING_ROOM,
+								value: CRB_XPROPS.MEETING_ROOM,
+								xparam: [
+									{
+										name: CRB_XPARAMS.ROOM_LINK,
+										value: editorData.resource.room.link
+									},
+									{
+										name: CRB_XPARAMS.ROOM_NAME,
+										value: editorData.resource.room.label
+									}
+								]
+							}
+					  ]
+					: undefined,
 				at,
 				allDay: editorData.allDay ? '1' : '0',
 				fb: editorData.resource.freeBusy,
@@ -283,19 +301,6 @@ export const createAppointment = createAsyncThunk(
 	async ({ editor, account }: any): Promise<any> => {
 		const body = generateSoapMessageFromEditor(editor, account, false);
 		const res: { calItemId: string } = await soapFetch('CreateAppointment', body);
-		if (res?.calItemId && editor?.resource?.room?.label) {
-			await soapFetch('SetCustomMetadata', {
-				_jsns: 'urn:zimbraMail',
-				id: res.calItemId,
-				meta: {
-					section: METADATA_SECTIONS.MEETING_ROOM,
-					_attrs: {
-						room: editor.resource.room.label,
-						link: editor.resource.room.link
-					}
-				}
-			});
-		}
 		return { response: res, editor };
 	}
 );
