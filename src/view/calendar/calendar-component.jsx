@@ -177,7 +177,7 @@ export default function CalendarComponent() {
 	const handleSelect = (e) => {
 		addBoard(
 			`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
-				e.end
+				e?.end
 			).getTime()}`,
 			{
 				app: CALENDAR_APP_ID
