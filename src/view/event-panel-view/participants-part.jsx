@@ -61,7 +61,7 @@ export default function ParticipantsPart({ event, organizer, participants }) {
 					<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 						<Avatar
 							style={{ width: '48px', height: '48px' }}
-							label={organizer.name || organizer.email || organizer.mail}
+							label={organizer.name || organizer.email || organizer.mail || ''}
 						/>
 						<Text style={{ padding: '0px 8px' }}>
 							<Trans

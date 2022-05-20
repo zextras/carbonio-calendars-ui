@@ -228,7 +228,7 @@ export default function EventPanelView() {
 							iAmOrganizer={event.resource.iAmOrganizer}
 							event={event}
 							organizer={event.resource.organizer}
-							participants={invite.participants}
+							participants={invite?.participants}
 							inviteId={event.resource.inviteId}
 							compNum={invite.compNum}
 						/>
