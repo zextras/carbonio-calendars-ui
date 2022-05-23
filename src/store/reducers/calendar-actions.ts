@@ -49,6 +49,7 @@ export function folderActionPending(state: CalendarSlice, { payload, meta }: any
 	const { id, op, changes, zid } = meta.arg;
 	// eslint-disable-next-line no-param-reassign
 	meta.arg.prevState = cloneDeep(state.calendars);
+
 	switch (op) {
 		case 'move':
 			state.calendars[id].parent = changes.parent;
@@ -63,7 +64,9 @@ export function folderActionPending(state: CalendarSlice, { payload, meta }: any
 				...state.calendars[id],
 				parent: changes.parent,
 				checked: true,
-				color: ZIMBRA_STANDARD_COLORS[Number(meta.arg.changes.color)]
+				color: meta?.arg?.changes?.color
+					? ZIMBRA_STANDARD_COLORS[Number(meta.arg.changes.color)]
+					: state.calendars[id].color
 			};
 			state.status = 'updating';
 			break;

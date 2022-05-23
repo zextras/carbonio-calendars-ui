@@ -17,7 +17,7 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { includes, isEmpty, map, find } from 'lodash';
+import { includes, isEmpty, map, find, isNull, omitBy } from 'lodash';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,42 +49,52 @@ const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 `;
 
-const LabelFactory = ({ selected, label, open, focus }) => (
-	<ColorContainer
-		orientation="horizontal"
-		width="fill"
-		crossAlignment="center"
-		mainAlignment="space-between"
-		borderRadius="half"
-		background="gray5"
-		padding={{
-			all: 'small'
-		}}
-	>
-		<Row width="100%" takeAvailableSpace mainAlignment="space-between">
-			<Row
-				orientation="vertical"
-				crossAlignment="flex-start"
-				mainAlignment="flex-start"
-				padding={{ left: 'small' }}
-			>
-				<Text size="small" color={open || focus ? 'primary' : 'secondary'}>
-					{label}
-				</Text>
-				<TextUpperCase>{selected[0].label}</TextUpperCase>
+const LabelFactory = ({ selected, label, open, focus }) => {
+	const colorName = useMemo(() => selected?.[0]?.label, [selected]);
+	const squareColor = useMemo(
+		() =>
+			colorName === 'custom'
+				? selected?.[0]?.color
+				: ZIMBRA_STANDARD_COLORS[Number(selected?.[0]?.value)].color,
+		[colorName, selected]
+	);
+	return (
+		<ColorContainer
+			orientation="horizontal"
+			width="fill"
+			crossAlignment="center"
+			mainAlignment="space-between"
+			borderRadius="half"
+			background="gray5"
+			padding={{
+				all: 'small'
+			}}
+		>
+			<Row width="100%" takeAvailableSpace mainAlignment="space-between">
+				<Row
+					orientation="vertical"
+					crossAlignment="flex-start"
+					mainAlignment="flex-start"
+					padding={{ left: 'small' }}
+				>
+					<Text size="small" color={open || focus ? 'primary' : 'secondary'}>
+						{label}
+					</Text>
+					<TextUpperCase>{colorName}</TextUpperCase>
+				</Row>
+				<Padding right="small">
+					<Square color={squareColor} />
+				</Padding>
 			</Row>
-			<Padding right="small">
-				<Square color={ZIMBRA_STANDARD_COLORS[Number(selected[0].value)].color} />
-			</Padding>
-		</Row>
-		<Icon
-			size="large"
-			icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
-			color={open || focus ? 'primary' : 'secondary'}
-			style={{ alignSelf: 'center' }}
-		/>
-	</ColorContainer>
-);
+			<Icon
+				size="large"
+				icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
+				color={open || focus ? 'primary' : 'secondary'}
+				style={{ alignSelf: 'center' }}
+			/>
+		</ColorContainer>
+	);
+};
 
 const getStatusItems = (t) =>
 	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
@@ -114,12 +124,13 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const checked = useMemo(() => folder.checked, [folder]);
-	const colors = useMemo(() => getStatusItems(t), [t]);
+
 	const { setModal, setGrant, onClose } = useContext(EditModalContext);
 	const accounts = useUserAccounts();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [hovered, setHovered] = useState({});
 
+	const colors = useMemo(() => getStatusItems(t), [t]);
 	const onMouseEnter = useCallback((item) => {
 		// setHovered(true);
 		setHovered(item);
@@ -149,25 +160,31 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 	);
 
 	const defaultColor = useMemo(
-		() => find(colors, { label: folder?.color?.label }),
+		() =>
+			folder?.color?.label === 'custom'
+				? folder?.color
+				: find(colors, { label: folder?.color?.label }),
 		[colors, folder]
 	);
 	const [selectedColor, setSelectedColor] = useState(defaultColor?.value || 0);
 	const defaultChecked = useMemo(() => folder?.freeBusy || false, [folder]);
-	const onConfirm = () => {
+	const onConfirm = useCallback(() => {
 		if (inputValue) {
 			dispatch(
 				folderAction({
 					id: folder.id,
 					op: 'update',
-					changes: {
-						parent: folder.parent ?? FOLDERS.USER_ROOT,
-						name: inputValue,
-						color: selectedColor,
-						excludeFreeBusy: freeBusy,
-						checked,
-						grant: folder.acl?.grant
-					}
+					changes: omitBy(
+						{
+							parent: folder.parent ?? FOLDERS.USER_ROOT,
+							name: inputValue,
+							color: selectedColor,
+							excludeFreeBusy: freeBusy,
+							checked,
+							grant: folder.acl?.grant
+						},
+						isNull
+					)
 				})
 			).then((res) => {
 				if (res.type.includes('fulfilled')) {
@@ -195,7 +212,19 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 			setSelectedColor(0);
 			setFreeBusy(false);
 		}
-	};
+	}, [
+		checked,
+		createSnackbar,
+		dispatch,
+		folder.acl?.grant,
+		folder.id,
+		folder.parent,
+		freeBusy,
+		inputValue,
+		onClose,
+		selectedColor,
+		t
+	]);
 
 	const onShare = useCallback(() => {
 		setModal('share');
@@ -260,6 +289,7 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 	);
 
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
+
 	return (
 		<Container padding="8px 8px 24px">
 			<ModalHeader onClose={onClose} title={title} />
@@ -330,7 +360,7 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 					label={t('label.calendar_color', 'Calendar color')}
 					onChange={setSelectedColor}
 					items={colors}
-					defaultSelection={defaultColor}
+					selection={defaultColor}
 					LabelFactory={LabelFactory}
 				/>
 			</Container>
