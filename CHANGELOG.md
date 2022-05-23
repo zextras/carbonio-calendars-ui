@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.14](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.13...v0.1.14) (2022-05-23)
+
+
+### Bug Fixes
+
+* reminder snooze action and options updated ([5f2a3d4](https://github.com/zextras/carbonio-calendars-ui/commit/5f2a3d442582ae75f06bf1d1a558b73fec2d1bfd))
+* virtual rooms are visible to invitees ([#72](https://github.com/zextras/carbonio-calendars-ui/issues/72)) ([a8dd511](https://github.com/zextras/carbonio-calendars-ui/commit/a8dd511f6124d0c5266cb1def4755e95d7ded13e))
+
 ### [0.1.13](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.12...v0.1.13) (2022-05-16)
 
 
