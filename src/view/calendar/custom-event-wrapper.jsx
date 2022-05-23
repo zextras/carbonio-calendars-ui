@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useRef, cloneElement, useCallback, useState, useContext } from 'react';
+import React, { useRef, cloneElement, useCallback, useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { setLightness } from 'polished';
 import { Container, ModalManagerContext } from '@zextras/carbonio-design-system';
@@ -16,6 +16,7 @@ import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { getInvite } from '../../store/actions/get-invite';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
+import { useAppStatusStore } from '../../store/zustand/store';
 
 export const CustomEventWrapperStyler = styled.div`
 	.rbc-event {
@@ -95,9 +96,9 @@ export const CustomEventWrapperStyler = styled.div`
 	}
 `;
 
-export default function CustomEventWrapper({ event, children, selected }) {
+export default function CustomEventWrapper({ event, children }) {
 	const anchorRef = useRef();
-	const [open, setOpen] = useState(selected);
+	const [open, setOpen] = useState(false);
 	const dispatch = useDispatch();
 	const { action } = useParams();
 	const createModal = useContext(ModalManagerContext);
@@ -127,8 +128,9 @@ export default function CustomEventWrapper({ event, children, selected }) {
 			if (!invite) {
 				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
 			}
-			if (e?.detail === 1 && action !== EventActionsEnum.EXPAND) {
-				setOpen((o) => !o);
+			if (e.detail === 1 && action !== EventActionsEnum.EXPAND) {
+				setOpen(true);
+				useAppStatusStore.setState((s) => ({ ...s, isResumeViewOpen: true }));
 			}
 		},
 		[action, dispatch, event.resource.inviteId, event.resource.ridZ, invite]

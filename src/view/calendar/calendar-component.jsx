@@ -28,7 +28,7 @@ import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
 import { modifyAppointmentRequest } from '../../store/actions/modify-appointment';
 import { normalizeAppointmentFromCreation } from '../../normalizations/normalize-appointments';
-import { useCalendarDate, useCalendarView } from '../../store/zustand/hooks';
+import { useCalendarDate, useCalendarView, useIsResumeViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
 
 const nullAccessor = () => null;
@@ -69,6 +69,7 @@ export default function CalendarComponent() {
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
+	const resumeViewOpen = useIsResumeViewOpen();
 	const firstDayOfWeek = settings.prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
 	if (settings.prefs.zimbraPrefLocale) {
@@ -175,14 +176,16 @@ export default function CalendarComponent() {
 	}, [calendarView, settings?.prefs?.zimbraPrefCalendarInitialView]);
 
 	const handleSelect = (e) => {
-		addBoard(
-			`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
-				e?.end
-			).getTime()}`,
-			{
-				app: CALENDAR_APP_ID
-			}
-		);
+		if (!resumeViewOpen)
+			addBoard(
+				`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
+					e.end
+				).getTime()}`,
+				{
+					app: CALENDAR_APP_ID
+				}
+			);
+		useAppStatusStore.setState((s) => ({ ...s, isResumeViewOpen: false }));
 	};
 	const onEventDrop = useCallback(
 		(appt) => {
@@ -214,6 +217,7 @@ export default function CalendarComponent() {
 		},
 		[dispatch, account]
 	);
+
 	const eventPropGetter = useCallback(
 		(event) => ({
 			style: {
