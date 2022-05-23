@@ -160,10 +160,7 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 	);
 
 	const defaultColor = useMemo(
-		() =>
-			folder?.color?.label === 'custom'
-				? folder?.color
-				: find(colors, { label: folder?.color?.label }),
+		() => find(colors, { label: folder?.color?.label }) ?? folder?.color,
 		[colors, folder]
 	);
 	const [selectedColor, setSelectedColor] = useState(defaultColor?.value || 0);
