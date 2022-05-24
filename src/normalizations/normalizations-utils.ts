@@ -127,6 +127,7 @@ export const setCalendarColor = (folder: ZimbraFolder): ZimbraColorType =>
 	folder.rgb
 		? {
 				color: folder.rgb,
+				label: 'custom',
 				background: setLightness(0.9, folder.rgb)
 		  }
 		: ZIMBRA_STANDARD_COLORS[0];
