@@ -82,7 +82,7 @@ export const FoldersComponent = ({ item }) => {
 		});
 
 		return (
-			<Padding right="small">
+			<Padding left="small">
 				<Tooltip placement="right" label={tooltipText}>
 					<div>
 						<Icon icon="ArrowCircleRight" customColor="#ffb74d" size="large" />
