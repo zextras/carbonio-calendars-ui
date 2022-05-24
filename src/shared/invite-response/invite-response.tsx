@@ -11,7 +11,6 @@ import {
 	Row,
 	Icon,
 	Text,
-	Avatar,
 	Divider,
 	Tooltip,
 	Chip
@@ -53,13 +52,6 @@ const LinkText = styled(Text)`
 	text-decoration: underline;
 	&:hover {
 		text-decoration: none;
-	}
-`;
-
-const ParticipantAvatar = styled(Avatar)`
-	cursor: pointer;
-	&:hover {
-		background-color: pink;
 	}
 `;
 
@@ -127,25 +119,13 @@ const InviteResponse: FC<InviteResponse> = ({
 
 	const [maxReqParticipantsToShow, setMaxReqParticipantsToShow] = useState(4);
 	const requiredParticipants = useMemo(
-		() =>
-			invite[0]?.comp[0].at
-				.filter((user: Participant) => user.role === 'REQ')
-				.map((user: Participant) => ({
-					name: user.d,
-					email: user.a
-				})),
+		() => invite[0]?.comp[0].at.filter((user: Participant) => user.role === 'REQ'),
 		[invite]
 	);
 
 	const [maxOptParticipantsToShow, setMaxOptParticipantsToShow] = useState(5);
 	const optionalParticipants = useMemo(
-		() =>
-			invite[0]?.comp[0].at
-				.filter((user: Participant) => user.role === 'OPT')
-				.map((user: Participant) => ({
-					name: user.d || user.a,
-					email: user.a
-				})),
+		() => invite[0]?.comp[0].at.filter((user: Participant) => user.role === 'OPT'),
 		[invite]
 	);
 
@@ -197,7 +177,7 @@ const InviteResponse: FC<InviteResponse> = ({
 					) : (
 						<>
 							<Text weight="regular" size="large" style={{ fontSize: '18px' }}>
-								{`${invite[0]?.comp[0]?.or.d || invite[0]?.comp[0]?.or.a} ${t(
+								{`${invite[0]?.comp[0]?.or?.d || invite[0]?.comp[0]?.or?.a} ${t(
 									'message.invited_you',
 									'invited you to '
 								)}`}
@@ -254,8 +234,8 @@ const InviteResponse: FC<InviteResponse> = ({
 						</Tooltip>
 
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<Tooltip placement="right" label={invite[0]?.comp[0]?.or.a}>
-								<Text size="medium" overflow="break-word" style={{ fontSize: '16px' }}>
+							<Tooltip placement="right" label={invite[0]?.comp[0]?.or?.a}>
+								<Text size="medium" overflow="break-word">
 									{invite[0]?.comp[0].loc}
 								</Text>
 							</Tooltip>
@@ -265,7 +245,7 @@ const InviteResponse: FC<InviteResponse> = ({
 
 				{chatLink && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large' }}>
-						<Tooltip placement="left" label={t('tooltip.chat', 'Virtual Chat')}>
+						<Tooltip placement="left" label={t('tooltip.virtual_chat', 'Virtual Chat')}>
 							<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
 								<Icon size="large" icon="VideoOutline" />
 							</Row>
@@ -273,13 +253,8 @@ const InviteResponse: FC<InviteResponse> = ({
 
 						<Row takeAvailableSpace mainAlignment="flex-start">
 							<Tooltip placement="right" label="link">
-								<LinkText
-									color="primary"
-									size="medium"
-									onClick={(): void => setMaxReqParticipantsToShow(requiredParticipants.length)}
-									overflow="break-word"
-								>
-									Chat&#39;s room
+								<LinkText color="primary" size="medium" overflow="break-word">
+									{t('tooltip.chat_room', 'Chat&#39;s room')}
 								</LinkText>
 							</Tooltip>
 						</Row>
@@ -294,9 +269,9 @@ const InviteResponse: FC<InviteResponse> = ({
 							</Row>
 						</Tooltip>
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<Tooltip placement="right" label="Equipment name">
-								<Text size="medium" overflow="break-word" style={{ fontSize: '16px' }}>
-									Equipment name
+							<Tooltip placement="right" label={t('tooltip.equipment', 'Equipment')}>
+								<Text size="medium" overflow="break-word">
+									{/* TODO: Equipment name */}
 								</Text>
 							</Tooltip>
 						</Row>
@@ -316,19 +291,23 @@ const InviteResponse: FC<InviteResponse> = ({
 						<Row takeAvailableSpace mainAlignment="flex-start" crossAlignment="flex-start">
 							<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'extrasmall' }}>
 								<Text overflow="break-word">
-									{t('message.required_participant', { count: requiredParticipants.length })}
+									{t('message.required_participant', {
+										count: requiredParticipants.length,
+										defaultValue: '{{count}} Participant',
+										defaultValue_plural: '{{count}} Participants'
+									})}
 								</Text>
 							</Row>
 
 							<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
-								{invite[0]?.comp[0]?.or.d ? (
-									<Tooltip placement="top" label={invite[0]?.comp[0]?.or.a} maxWidth="100%">
+								{invite[0]?.comp[0]?.or?.d ? (
+									<Tooltip placement="top" label={invite[0]?.comp[0]?.or?.a} maxWidth="100%">
 										<div>
 											<Chip
-												avatarLabel={invite[0]?.comp[0]?.or.d}
+												avatarLabel={invite[0]?.comp[0]?.or?.d}
 												label={
 													<>
-														<Text size="small">{invite[0]?.comp[0]?.or.d}</Text>&nbsp;
+														<Text size="small">{invite[0]?.comp[0]?.or?.d}</Text>&nbsp;
 														<Text size="small" color="secondary">
 															({t('message.organizer')})
 														</Text>
@@ -350,10 +329,10 @@ const InviteResponse: FC<InviteResponse> = ({
 									</Tooltip>
 								) : (
 									<Chip
-										avatarLabel={invite[0]?.comp[0]?.or.a}
+										avatarLabel={invite[0]?.comp[0]?.or?.a}
 										label={
 											<>
-												<Text>{invite[0]?.comp[0]?.or.a}</Text>&nbsp;
+												<Text>{invite[0]?.comp[0]?.or?.a}</Text>&nbsp;
 												<Text color="secondary">({t('message.organizer')})</Text>
 											</>
 										}
@@ -371,15 +350,15 @@ const InviteResponse: FC<InviteResponse> = ({
 									/>
 								)}
 							</Row>
-							{requiredParticipants.map((p: any, index: number) => (
+							{requiredParticipants.map((p: Participant, index: number) => (
 								<>
 									{index < maxReqParticipantsToShow && (
 										<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
-											{p.name ? (
-												<Tooltip placement="top" label={p.email} maxWidth="100%">
+											{p.d ? (
+												<Tooltip placement="top" label={p.a} maxWidth="100%">
 													<div>
 														<Chip
-															label={p.name}
+															label={p.d}
 															background="gray3"
 															color="text"
 															actions={[
@@ -396,7 +375,7 @@ const InviteResponse: FC<InviteResponse> = ({
 												</Tooltip>
 											) : (
 												<Chip
-													label={p.email}
+													label={p.a}
 													background="gray3"
 													color="text"
 													actions={[
@@ -437,18 +416,22 @@ const InviteResponse: FC<InviteResponse> = ({
 							<Row takeAvailableSpace mainAlignment="flex-start" crossAlignment="flex-start">
 								<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'extrasmall' }}>
 									<Text overflow="break-word">
-										{t('message.optional_participant', { count: optionalParticipants.length })}
+										{t('message.optional_participant', {
+											count: optionalParticipants.length,
+											defaultValue: '{{count}} Optional',
+											defaultValue_plural: '{{count}} Optionals'
+										})}
 									</Text>
 								</Row>
-								{optionalParticipants.map((p: any, index: number) => (
+								{optionalParticipants.map((p: Participant, index: number) => (
 									<>
 										{index < maxOptParticipantsToShow && (
 											<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
-												{p.name ? (
-													<Tooltip placement="top" label={p.email} maxWidth="100%">
+												{p.d ? (
+													<Tooltip placement="top" label={p.a} maxWidth="100%">
 														<div>
 															<Chip
-																label={p.name}
+																label={p.d}
 																background="gray3"
 																color="text"
 																actions={[
@@ -465,7 +448,7 @@ const InviteResponse: FC<InviteResponse> = ({
 													</Tooltip>
 												) : (
 													<Chip
-														label={p.email}
+														label={p.a}
 														background="gray3"
 														color="text"
 														actions={[
@@ -489,7 +472,7 @@ const InviteResponse: FC<InviteResponse> = ({
 											color="primary"
 											size="medium"
 											// eslint-disable-next-line max-len
-											onClick={(): void => setMaxReqParticipantsToShow(optionalParticipants.length)}
+											onClick={(): void => setMaxOptParticipantsToShow(optionalParticipants.length)}
 											overflow="break-word"
 										>
 											{t('message.more', 'More...')}

@@ -279,7 +279,6 @@
             }
         },
         "more": "More...",
-        "need_action": "{{count}} need action",
         "optional_participant": "{{count}} Optional",
         "optional_participant_plural": "{{count}} Optionals",
         "organizer": "Organizer",
@@ -601,12 +600,14 @@
     "tooltip": {
         "add_attachments": "Add attachments",
         "chat": "Equipment",
+        "chat_room": "Chat's room",
         "copy_ics_url": "Copy ICS url",
         "copy_outlook_url": "Copy Outlook url",
         "copy_vector_url": "Copy View url",
         "enable_disable_rich_text": "Enable/Disable rich text editor",
         "equipment": "Equipment",
-        "location": "Location"
+        "location": "Location",
+        "virtual_chat": "Virtual Chat"
     },
     "type": "Type",
     "workflow": "WorkFlow",
