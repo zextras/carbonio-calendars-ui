@@ -47,6 +47,12 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	const [showNewTimeModal, setShowNewTimeModal] = useState(false);
 	const [audio] = useState(new Audio(sound));
 	const [eventForChange, setEventForChange] = useState<EventType>();
+	const [currentTime, setCurrentTime] = useState(moment().valueOf());
+
+	useEffect(() => {
+		const interval = setInterval(() => setCurrentTime(moment().valueOf()), 30000);
+		return () => clearInterval(interval);
+	}, []);
 
 	const appointments = useSelector(selectAllAppointments);
 	const calendars = useSelector(selectCalendars);
@@ -105,7 +111,33 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 			),
 		[events, reminderRange.end, reminderRange.start]
 	);
+	const getTimeToDisplay = useCallback(
+		(event: EventType) => {
+			const difference = moment(event.end).diff(moment(event.start), 'seconds');
+			if (event.start < currentTime && event.end > currentTime) {
+				return t('label.ongoing', 'Ongoing');
+			}
+			if (event.start === currentTime) {
+				return t('label.now', 'Now');
+			}
+			if (event.start < currentTime) {
+				return moment(event.start).from(moment());
+			}
+			if (
+				event.resource.alarmData[0].alarmInstStart < currentTime &&
+				moment(event.resource.alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() >
+					currentTime
+			) {
+				return t('label.ongoing', 'Ongoing');
+			}
+			if (event.resource.alarmData[0].alarmInstStart < currentTime) {
+				return moment(event.resource.alarmData[0].alarmInstStart).fromNow();
+			}
 
+			return moment(event.resource.alarmData[0].alarmInstStart).fromNow();
+		},
+		[t, currentTime]
+	);
 	useEffect(() => {
 		const tmp: Record<string, () => void> = {};
 		const tp = differenceWith(apptForReminders, eventsToRemind);
@@ -120,12 +152,13 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 			const now = moment();
 			const difference = moment(alarmData[0].nextAlarm).diff(now, 'seconds', true);
 			const index = lastIndexOf(apptForReminders, rem);
-
+			console.log('vv rem:', rem);
+			const timeToDisplay = getTimeToDisplay(rem);
 			if (index === -1) {
 				tmp[`${inviteId}`] = () =>
 					setTimeout(
 						() => {
-							showNotification(rem.title, fragment);
+							showNotification(rem.title, timeToDisplay);
 							setPlaying(true);
 							setApptForReminders((prevApp) => [...prevApp, rem]);
 						},
