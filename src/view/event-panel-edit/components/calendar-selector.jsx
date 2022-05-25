@@ -8,7 +8,6 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
-
 import { selectCalendars } from '../../../store/selectors/calendars';
 import LabelFactory, { Square } from './select-label-factory';
 

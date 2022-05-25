@@ -104,11 +104,10 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 	return (
 		<>
 			<Padding top="small" />
-			<Divider />
 			<Container
 				orientation="horizontal"
 				crossAlignment="flex-start"
-				mainAlignment="center"
+				mainAlignment="flex-start"
 				weight="fill"
 				height="fit"
 				padding={{ top: 'medium' }}
@@ -128,6 +127,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 					color="error"
 					onClick={decline}
 				/>
+				<Divider />
 			</Container>
 		</>
 	);

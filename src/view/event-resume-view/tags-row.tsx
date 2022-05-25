@@ -50,6 +50,8 @@ const TagsRow: FC<{ event: EventType; hideIcon: boolean }> = ({
 			runSearch(
 				[
 					{
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
 						avatarBackground: tagToSearch?.color,
 						avatarIcon: 'Tag',
 						background: 'gray2',
