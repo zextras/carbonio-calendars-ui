@@ -155,7 +155,23 @@
         "app_name": "Calendários",
         "propose_new_time": "SUGERIR NOVO HORÁRIO",
         "new_appointment": "Novo compromisso",
-        "preview": "Visualizar"
+        "preview": "Visualizar",
+        "create_tag": "Criar Etiqueta",
+        "delete_tag": "Excluir Etiqueta",
+        "delete_tag_name": "Excluir etiqueta \"{{name}}\"",
+        "edit_tag": "Editar Etiqueta",
+        "edit_tag_name": "Editar etiqueta \"{{name}}\"",
+        "loading_results": "Carregando Resultados...",
+        "no_special_char_allowed": "O nome não deve conter nenhum caractere especial",
+        "results_for_error": "Não foi possível completar a busca, limpe-a e tente novamente: ",
+        "select_color": "Selecionar Cor",
+        "tag_max_length": "Máximo de 128 caracteres permitidos",
+        "tag_name": "Nome da etiqueta",
+        "tags": "Etiquetas",
+        "entire_serires": "TODA A SÉRIE",
+        "new_tag": "Nova Etiqueta",
+        "other_actions": "Outras ações",
+        "single_instance": "UMA ÚNICA INSTÂNCIA"
     },
     "action": {
         "delete": "Excluir",
@@ -189,7 +205,8 @@
             "decline": "Recusar",
             "expand": "Abrir no Visualizador",
             "tentative": "Provisório",
-            "needs_action": "Requer ação"
+            "needs_action": "Requer ação",
+            "invitation_not_sent_yet": "O convite ainda não foi enviado"
         }
     },
     "folder": {
@@ -273,7 +290,8 @@
             "calendar_permanently_deleted": "Calendário excluído permanentemente",
             "calendar_restored": "Calendário restaurado com sucesso",
             "appointment_permanently_deleted": "Compromisso excluído definitivamente",
-            "calendar_edits_saved": "Edições salvas corretamente"
+            "calendar_edits_saved": "Edições salvas corretamente",
+            "series_deleted": "Série excluída com sucesso. Os participantes receberão a notificação de cancelamento."
         },
         "share_calendar_url_note2": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.<br/>Também é possível encontrar esses links clicando com o botão direito em sua lista de calendários.",
         "delete_all_occurences": "Excluir todas as ocorrências",
@@ -298,7 +316,10 @@
             }
         },
         "sure_to_delete_appointment_permanently": "Tem certeza que deseja excluir este compromisso permanentemente?",
-        "you_sure_delete_instance": "Tem certeza que deseja excluir esta instância do compromisso “{{title}}”?"
+        "you_sure_delete_instance": "Tem certeza que deseja excluir esta instância do compromisso “{{title}}”?",
+        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?",
+        "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com ela.",
+        "appointment_type_handle": "\"{{name}}\" é um compromisso recorrente. Você gostaria de abrir apenas esta instância ou toda a série?"
     },
     "months": {
         "april": "Abril",
@@ -482,7 +503,9 @@
         "proposed_time_error": "Algo deu errado. Tente novamente",
         "url_copied": "{{title}} copiado",
         "share_folder_success": "Calendário compartilhado com sucesso",
-        "new_time_proposed_success": "Nova hora proposta"
+        "new_time_proposed_success": "Nova hora proposta",
+        "tag_applied": "Etiqueta \"{{tag}}\" aplicada",
+        "tag_removed": "Etiqueta \"{{tag}}\" removida"
     },
     "success": "Sucesso",
     "type": "Tipo",
@@ -642,7 +665,13 @@
     "is_recurrent": "É recorrente",
     "appt_restored_successfully": "Compromisso restaurado com sucesso",
     "messages": {
-        "format_as_plain_text": "Formatar como Texto Simples"
+        "format_as_plain_text": "Formatar como Texto Simples",
+        "snackbar": {
+            "tag_created": "Etiqueta {{name}} criada com sucesso",
+            "tag_deleted": "Etiqueta {{name}} excluída com sucesso",
+            "tag_updated": "Etiqueta atualizada com sucesso",
+            "tag_not_updated": "Algo deu errado, a etiqueta não foi atualizada. Tente novamente."
+        }
     },
     "preview": {
         "close": "Fechar Pré-visualização"

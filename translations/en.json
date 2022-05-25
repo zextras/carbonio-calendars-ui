@@ -223,8 +223,8 @@
         "shares_items": "<bold>{{user}}</bold>'s shared calendars",
         "sharing_of_this_folder": "Sharing of this folder",
         "show": "Show",
-        "show_declined_meetings": "Show declined meetings",
         "show_plural": "Show all",
+        "show_declined_meetings": "Show declined meetings",
         "single_instance": "SINGLE INSTANCE",
         "snooze": "Snooze",
         "start_date": "Start date",
@@ -259,7 +259,7 @@
         "your_pref_timezone_msg": "Your preferred timezone is: GMT +01:00 Amsterdam, Berlin, Bern, Rome, Stockholm,Vienna."
     },
     "message": {
-        "appointment_type_handle": "{{name}}” is a recurring appointment. Would you like to open only this instance or the series?",
+        "appointment_type_handle": "\"{{name}}” is a recurring appointment. Would you like to open only this instance or the series?",
         "are_organizer": "are the organizer",
         "delete_all_occurences": "Delete all occurrences",
         "delete_future_occurences": "Delete this instance and all future occurrences",
@@ -375,8 +375,12 @@
         "day_before_plural": "{{count}} days before",
         "hour_before": "{{count}} hour before",
         "hour_before_plural": "{{count}} hours before",
+        "hours": "{{count}} hour",
+        "hours_plural": "{{count}} hours",
         "minute_before": "{{count}} minute before",
         "minute_before_plural": "{{count}} minutes before",
+        "minutes": "{{count}} minute",
+        "minutes_plural": "{{count}} minutes",
         "modal": {
             "set_new_time_message": "Do you want to set a new time for the missed appointment? If you click OK, all the other reminders will be automatically dismissed."
         },
@@ -586,6 +590,8 @@
     },
     "tooltip": {
         "add_attachments": "Add attachments",
+        "calendar_sharing_status": "Shared with {{count}} people",
+        "calendar_sharing_status_one": "Shared with 1 person",
         "copy_ics_url": "Copy ICS url",
         "copy_outlook_url": "Copy Outlook url",
         "copy_vector_url": "Copy View url",

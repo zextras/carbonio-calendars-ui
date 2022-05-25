@@ -82,7 +82,8 @@
             "calendar_permanently_deleted": "Calendario eliminato definitivamente",
             "calendar_restored": "Calendario ripristinato correttamente",
             "appointment_permanently_deleted": "Appuntamento eliminato definitivamente",
-            "calendar_edits_saved": "Modifiche salvate correttamente"
+            "calendar_edits_saved": "Modifiche salvate correttamente",
+            "series_deleted": "La serie di appuntamenti è stata cancellata correttamente. Gli invitati riceveranno una notifica di avvenuta cancellazione."
         },
         "share_calendar_url_note2": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.<br/> Puoi trovare questi collegamenti anche con un clic destro del mouse sull'elenco dei calendari.",
         "share_calendar_url_note": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.",
@@ -107,7 +108,10 @@
         "you_sure_delete_calendar": "Vuoi eliminare definitivamente il calendario \"{{name}}\"?",
         "you_sure_move_calendar_trash": "Vuoi eliminare il calendario \"{{name}}\"?",
         "share_calendar_url_msg": "Condividi {{title}} con i tuoi collaboratori condividendo uno di questi URL:",
-        "you_sure_delete_instance": "Vuoi eliminare questa istanza dell'appuntamento “{{title}}” ?"
+        "you_sure_delete_instance": "Vuoi eliminare questa istanza dell'appuntamento “{{title}}” ?",
+        "appointment_type_handle": "\"{{name}}\" è un appuntamento ricorrente. Vuoi aprire solo questa istanza o tutta la serie?",
+        "delete_tag_message1": "Vuoi eliminare l'etichetta \"{{name}}\"?",
+        "delete_tag_message2": "Una volta eliminata, verrà eliminata anche da tutti gli elementi su cui è utilizzata."
     },
     "label": {
         "to": "A",
@@ -265,7 +269,23 @@
         "share_with": "condividi con",
         "today": "oggi",
         "exclude_free_busy": "Escludi questo calendario dalle impostazioni definite per lo stato libero/occupato",
-        "preview": "Anteprima"
+        "preview": "Anteprima",
+        "create_tag": "Crea Etichetta",
+        "delete_tag": "Elimina Etichetta",
+        "delete_tag_name": "Elimina etichetta \"{{name}}\"",
+        "edit_tag": "Modifica Etichetta",
+        "entire_serires": "TUTTA LA SERIE",
+        "no_special_char_allowed": "Il nome non deve contenere alcun carattere speciale",
+        "new_tag": "Nuova Etichetta",
+        "other_actions": "Altre azioni",
+        "single_instance": "SINGOLA ISTANZA",
+        "edit_tag_name": "Modifica etichetta \"{{name}}\"",
+        "loading_results": "Caricamento Risultati in corso...",
+        "results_for_error": "Impossibile iniziare la ricerca, cancella e riprova: ",
+        "select_color": "Seleziona Colore",
+        "tag_max_length": "Il numero massimo di caratteri consentiti è 128",
+        "tag_name": "Nome etichetta",
+        "tags": "Etichette"
     },
     "action": {
         "send": "Invia",
@@ -347,7 +367,8 @@
             "trash": "Elimina",
             "yes": "Sì",
             "expand": "Apri nel visulizzatore",
-            "needs_action": "Necessita azione"
+            "needs_action": "Necessita azione",
+            "invitation_not_sent_yet": "L'invito non è ancora stato inviato"
         }
     },
     "composer": {
@@ -387,7 +408,9 @@
         "proposed_time_accepted": "Hai accettato l'orario proposto",
         "share_folder_success": "Calendario condiviso correttamente",
         "url_copied": "{{title}} copiato",
-        "new_time_proposed_success": "Nuovo orario proposto"
+        "new_time_proposed_success": "Nuovo orario proposto",
+        "tag_applied": "Etichetta \"{{tag}}\" applicata",
+        "tag_removed": "Etichetta \"{{tag}}\" rimossa"
     },
     "add": "Aggiungi",
     "allowed_actions": "Azioni consentite",
@@ -644,7 +667,13 @@
         "us_canada_mountain": "{{value}} US/Canada Mountain"
     },
     "messages": {
-        "format_as_plain_text": "Formatta come Testo semplice"
+        "format_as_plain_text": "Formatta come Testo semplice",
+        "snackbar": {
+            "tag_created": "Etichetta {{name}} creata con successo",
+            "tag_deleted": "Etichetta {{name}} eliminata con successo",
+            "tag_updated": "Etichetta aggiornata con successo",
+            "tag_not_updated": "Qualcosa è andato storto, etichetta non aggiornata. Riprova."
+        }
     },
     "preview": {
         "close": "Chiudi Anteprima"

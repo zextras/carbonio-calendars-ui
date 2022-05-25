@@ -155,7 +155,23 @@
         "propose_new_time": "PROPONER UN NUEVO HORARIO",
         "share_with": "compartir con",
         "app_name": "Calendarios",
-        "preview": "Vista previa"
+        "preview": "Vista previa",
+        "entire_serires": "TODA LA SERIE",
+        "new_tag": "Nueva etiqueta",
+        "other_actions": "Otras acciones",
+        "single_instance": "UNA SOLA INSTANCIA",
+        "create_tag": "Crear etiqueta",
+        "delete_tag": "Borrar etiqueta",
+        "loading_results": "Cargando resultados...",
+        "no_special_char_allowed": "El nombre no debe contener ningún carácter especial",
+        "results_for_error": "No se puede realizar la búsqueda, bórrala y vuelve a intentarlo: ",
+        "select_color": "Elige un color",
+        "tag_max_length": "Máximo 128 caracteres permitidos",
+        "tag_name": "Nombre de etiqueta",
+        "tags": "Etiquetas",
+        "delete_tag_name": "Borrar etiqueta \"{{name}}\"",
+        "edit_tag": "Editar etiqueta",
+        "edit_tag_name": "Editar etiqueta \"{{name}}\""
     },
     "action": {
         "delete": "Eliminar",
@@ -189,7 +205,8 @@
             "decline": "Rechazar",
             "expand": "Abrir en visualizador",
             "tentative": "Provisional",
-            "needs_action": "Necesita acción"
+            "needs_action": "Necesita acción",
+            "invitation_not_sent_yet": "La invitación todavía no ha sido enviada"
         }
     },
     "items": {
@@ -430,7 +447,9 @@
         "share_folder_success": "Calendario compartido con éxito",
         "url_copied": "{{title}} copiado",
         "proposed_time_error": "Algo fue mal, por favor, prueba de nuevo",
-        "new_time_proposed_success": "Nuevo horario propuesto"
+        "new_time_proposed_success": "Nuevo horario propuesto",
+        "tag_applied": "Etiqueta \"{{tag}}\" aplicada",
+        "tag_removed": "Etiqueta \"{{tag}}\" eliminada"
     },
     "success": "Éxito",
     "type": "Tipo",
@@ -470,7 +489,8 @@
             "calendar_permanently_deleted": "El calendario ha sido eliminado permanentemente",
             "calendar_restored": "El calendario ha sido restaurado con éxito",
             "appointment_permanently_deleted": "La reunión ha sido eliminada permanentemente",
-            "calendar_edits_saved": "Ediciones guardadas correctamente"
+            "calendar_edits_saved": "Ediciones guardadas correctamente",
+            "series_deleted": "Serie borrada con éxito. Los asistentes recibirán una notificación de la cancelación."
         },
         "invite_has_no_message": "Esta invitación no contiene texto",
         "invited_you": "te ha invitado a un evento",
@@ -496,7 +516,10 @@
         "share_calendar_url_note2": "Solo tus colaboradores pueden acceder a los datos por medio de estos enlaces. <br/> También puedes encontrar los enlaces haciendo clic derecho en tu lista de calendarios.",
         "somebody_invited_you": "<strong>{{somebody}}</strong> te ha invitado",
         "sure_to_delete_appointment_permanently": "¿Seguro que quieres eliminar esta cita de forma permanente?",
-        "you_sure_delete_instance": "¿Seguro que quieres eliminar esta instancia de la cita \"{{title}}\"?"
+        "you_sure_delete_instance": "¿Seguro que quieres eliminar esta instancia de la cita \"{{title}}\"?",
+        "appointment_type_handle": "\"{{name}}\" es una cita recurrente. ¿Te gustaría abrir solo esta instancia o toda la serie?",
+        "delete_tag_message1": "¿Seguro que quieres borrar la etiqueta \"{{name}}\"?",
+        "delete_tag_message2": "Una vez borrada, se quitará de cada elemento marcado con ella."
     },
     "button": {
         "customize_modal": "Abrir módulo de personalización"
@@ -641,7 +664,13 @@
     "is_private": "Es privado",
     "is_recurrent": "Es recurrente",
     "messages": {
-        "format_as_plain_text": "Texto sin formato"
+        "format_as_plain_text": "Texto sin formato",
+        "snackbar": {
+            "tag_not_updated": "Algo salió mal, etiqueta no actualizada. Por favor, prueba de nuevo.",
+            "tag_created": "Etiqueta {{name}} creada con éxito",
+            "tag_deleted": "{{name}} etiqueta borrada con éxito",
+            "tag_updated": "Etiqueta actualizada con éxito"
+        }
     },
     "has_attachments": "Tiene adjuntos",
     "preview": {

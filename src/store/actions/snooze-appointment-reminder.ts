@@ -8,7 +8,7 @@ import { soapFetch } from '@zextras/carbonio-shell-ui';
 
 export const snoozeApptReminder = createAsyncThunk(
 	'reminder/snoozeApptReminder',
-	async ({ id, until, t }: any) => {
+	async ({ id, until }: { id: string; until: number }) => {
 		const response = await soapFetch('SnoozeCalendarItemAlarm', {
 			_jsns: 'urn:zimbraMail',
 			appt: [{ id, until }]

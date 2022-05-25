@@ -8,9 +8,11 @@ import create, { StoreApi, UseBoundStore } from 'zustand';
 export type AppState = {
 	calendarView: string;
 	date: Date;
+	isResumeViewOpen: boolean;
 };
 
 export const useAppStatusStore = create<AppState>(() => ({
 	calendarView: '',
-	date: new Date()
+	date: new Date(),
+	isResumeViewOpen: false
 })) as UseBoundStore<AppState, StoreApi<AppState>>;
