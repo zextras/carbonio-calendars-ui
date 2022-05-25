@@ -3,19 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useContext, useEffect } from 'react';
+import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
 import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
-import { minBy, map, sortBy } from 'lodash';
+import { minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import CustomEvent from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import CustomToolbar from './custom-toolbar';
-import WorkView from './work-view';
+import { WorkView } from './work-view';
+import { workWeek } from '../../utils/work-week';
 import { selectCheckedCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { selectAllAppointments } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
@@ -27,8 +28,9 @@ import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
 import { modifyAppointmentRequest } from '../../store/actions/modify-appointment';
 import { normalizeAppointmentFromCreation } from '../../normalizations/normalize-appointments';
+import { useCalendarDate, useCalendarView, useIsResumeViewOpen } from '../../store/zustand/hooks';
+import { useAppStatusStore } from '../../store/zustand/store';
 
-const localizer = momentLocalizer(moment);
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
 
@@ -64,20 +66,20 @@ export default function CalendarComponent() {
 	const account = useUserAccount();
 	const settings = useUserSettings();
 	const addBoard = useAddBoardCallback();
+	const calendarView = useCalendarView();
+	const calendarDate = useCalendarDate();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
-	const workingSchedule = useMemo(
-		() =>
-			sortBy(
-				map(settings.prefs.zimbraPrefCalendarWorkingHours?.split(','), (t) => ({
-					day: t.split(':')[0],
-					working: t.split(':')[1] !== 'N',
-					start: t.split(':')[2],
-					end: t.split(':')[3]
-				})),
-				'day'
-			),
-		[settings]
-	);
+	const resumeViewOpen = useIsResumeViewOpen();
+	const firstDayOfWeek = settings.prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
+	const localizer = momentLocalizer(moment);
+	if (settings.prefs.zimbraPrefLocale) {
+		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
+			week: {
+				dow: firstDayOfWeek
+			}
+		});
+	}
+	const workingSchedule = useMemo(() => workWeek(settings), [settings]);
 
 	const events = useMemo(
 		() => normalizeCalendarEvents(appointments, selectedCalendars),
@@ -158,6 +160,9 @@ export default function CalendarComponent() {
 	);
 
 	const defaultView = useMemo(() => {
+		if (calendarView) {
+			return calendarView;
+		}
 		switch (settings.prefs.zimbraPrefCalendarInitialView) {
 			case 'month':
 				return 'month';
@@ -168,17 +173,19 @@ export default function CalendarComponent() {
 			default:
 				return 'work_week';
 		}
-	}, [settings]);
+	}, [calendarView, settings?.prefs?.zimbraPrefCalendarInitialView]);
 
 	const handleSelect = (e) => {
-		addBoard(
-			`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
-				e.end
-			).getTime()}`,
-			{
-				app: CALENDAR_APP_ID
-			}
-		);
+		if (!resumeViewOpen)
+			addBoard(
+				`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
+					e.end
+				).getTime()}`,
+				{
+					app: CALENDAR_APP_ID
+				}
+			);
+		useAppStatusStore.setState((s) => ({ ...s, isResumeViewOpen: false }));
 	};
 	const onEventDrop = useCallback(
 		(appt) => {
@@ -210,6 +217,7 @@ export default function CalendarComponent() {
 		},
 		[dispatch, account]
 	);
+
 	const eventPropGetter = useCallback(
 		(event) => ({
 			style: {
@@ -230,6 +238,16 @@ export default function CalendarComponent() {
 		[]
 	);
 
+	const [date, setDate] = useState(calendarDate);
+
+	const onNavigate = useCallback(
+		(newDate) => {
+			useAppStatusStore.setState((s) => ({ ...s, date: newDate }));
+			return setDate(newDate);
+		},
+		[setDate]
+	);
+
 	return (
 		<>
 			<CalendarSyncWithRange />
@@ -239,6 +257,8 @@ export default function CalendarComponent() {
 				localizer={localizer}
 				defaultView={defaultView}
 				events={events}
+				date={date}
+				onNavigate={onNavigate}
 				startAccessor="start"
 				endAccessor="end"
 				style={{ width: '100%' }}

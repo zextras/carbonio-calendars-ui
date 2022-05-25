@@ -88,7 +88,7 @@ export default function DetailsPart({
 					</Container>
 					{event && <TimeInfoRow event={event} width="fill" />}
 					{event && <LocationRow event={event} width="fill" />}
-					{invite?.meta && <VirtualRoomRow meta={invite?.meta} />}
+					{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} />}
 					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
 				</Row>
 			</Row>

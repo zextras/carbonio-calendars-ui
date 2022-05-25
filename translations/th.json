@@ -163,7 +163,19 @@
         "share_with": "แชร์กับ",
         "app_name": "ปฏิทิน",
         "new_appointment": "การนัดหมายใหม่",
-        "preview": "ดูตัวอย่าง"
+        "preview": "ดูตัวอย่าง",
+        "create_tag": "สร้างแท็ก",
+        "delete_tag": "ลบแท็ก",
+        "delete_tag_name": "ลบแท็ก \"{{name}}\"",
+        "edit_tag": "แก้ไขแท็ก",
+        "edit_tag_name": "แก้ไขแท็ก \"{{name}}\"",
+        "loading_results": "กำลังโหลดผลลัพธ์...",
+        "no_special_char_allowed": "ชื่อไม่ควรมีอักขระพิเศษใดๆ",
+        "results_for_error": "ไม่สามารถเริ่มการค้นหาได้ โปรดล้างข้อมูลแล้วลองใหม่อีกครั้ง: ",
+        "select_color": "เลือกสี",
+        "tag_max_length": "อนุญาตให้ใช้อักขระได้สูงสุด 128 ตัว",
+        "tag_name": "ชื่อแท็ก",
+        "tags": "แท็ก"
     },
     "calendar": {
         "modal": {
@@ -378,7 +390,9 @@
         "share_folder_success": "แชร์ปฏิทินเรียบร้อยแล้ว",
         "url_copied": "{{title}} คัดลอกแล้ว",
         "new_time_proposed_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
-        "new_time_proposed_success": "เสนอเวลาใหม่"
+        "new_time_proposed_success": "เสนอเวลาใหม่",
+        "tag_applied": "ใช้แท็ก \"{{tag}}\" แล้ว",
+        "tag_removed": "นำแท็ก \"{{tag}}\" ออกแล้ว"
     },
     "success": "สำเร็จ",
     "add": "เพิ่ม",
@@ -471,7 +485,9 @@
         "want_to_edit_cancellation_msg": "คุณต้องการแก้ไขข้อความยกเลิกการนัดหมายหรือไม่?",
         "you_sure_delete_calendar": "คุณแน่ใจหรือไม่ว่าต้องการลบปฏิทิน \"{{name}}\" อย่างถาวร?",
         "share_calendar_url_msg": "คุณสามารถแชร์ {{title}} กับผู้ร่วมงานได้อย่างรวดเร็ว โดยใช้ URL เหล่านี้:",
-        "you_sure_delete_instance": "คุณแน่ใจหรือไม่ว่าต้องการลบอินสแตนซ์ของการนัดหมาย “{{title}}” นี้?"
+        "you_sure_delete_instance": "คุณแน่ใจหรือไม่ว่าต้องการลบอินสแตนซ์ของการนัดหมาย “{{title}}” นี้?",
+        "delete_tag_message1": "คุณแน่ใจหรือว่าต้องการลบแท็ก \"{{name}}\"?",
+        "delete_tag_message2": "หากลบออก มันจะถูกลบออกจากทุกรายการที่ทำเครื่องหมายไว้"
     },
     "type": "รูปแบบ",
     "tooltip": {
@@ -525,7 +541,12 @@
         "organizer": "ผู้จัดงาน"
     },
     "messages": {
-        "format_as_plain_text": "จัดรูปแบบเป็นข้อความธรรมดา"
+        "format_as_plain_text": "จัดรูปแบบเป็นข้อความธรรมดา",
+        "snackbar": {
+            "tag_created": "สร้างแท็ก {{name}} สำเร็จแล้ว",
+            "tag_deleted": "แท็ก {{name}} ถูกลบเรียบร้อยแล้ว",
+            "tag_updated": "อัปเดตแท็กเรียบร้อยแล้ว"
+        }
     },
     "appt_restored_successfully": "กู้คืนการนัดหมายเรียบร้อยแล้ว",
     "has_attachments": "มีไฟล์แนบ",

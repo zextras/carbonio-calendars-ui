@@ -191,7 +191,23 @@
         },
         "app_name": "Kalenders",
         "new_appointment": "Nieuwe afspraak",
-        "preview": "Voorbeeld"
+        "preview": "Voorbeeld",
+        "loading_results": "Resultaten laden...",
+        "create_tag": "Tag creëren",
+        "delete_tag": "Tag verwijderen",
+        "delete_tag_name": "\"{{name}}\" tag verwijderen",
+        "edit_tag": "Tag bewerken",
+        "edit_tag_name": "\"{{name}}\" tag bewerken",
+        "no_special_char_allowed": "De naam mag geen speciaal teken bevatten",
+        "results_for_error": "Kan de zoekactie niet starten, wissen en opnieuw proberen: ",
+        "select_color": "Kleur selecteren",
+        "tag_max_length": "Max 128 tekens zijn toegestaan",
+        "tag_name": "Tag-naam",
+        "tags": "Tags",
+        "entire_serires": "VOLLEDIGE SERIE",
+        "new_tag": "Nieuwe Tag",
+        "other_actions": "Andere acties",
+        "single_instance": "EEN ENKEL GEVAL"
     },
     "event": {
         "action": {
@@ -205,7 +221,8 @@
             "decline": "Weigeren",
             "expand": "In Displayer openen",
             "tentative": "Voorlopig",
-            "needs_action": "Heeft actie nodig"
+            "needs_action": "Heeft actie nodig",
+            "invitation_not_sent_yet": "De uitnodiging is nog niet verstuurd"
         }
     },
     "items": {
@@ -286,7 +303,8 @@
             "calendar_permanently_deleted": "Kalender permanent verwijderd",
             "calendar_restored": "Kalender met succes hersteld",
             "appointment_permanently_deleted": "Afspraak permanent verwijderd",
-            "calendar_edits_saved": "Bewerkingen correct opgeslagen"
+            "calendar_edits_saved": "Bewerkingen correct opgeslagen",
+            "series_deleted": "Serie succesvol verwijderd. Deelnemers ontvangen een bericht van annulering."
         },
         "you": "U",
         "are_organizer": "zijn de organisator",
@@ -317,7 +335,10 @@
         "want_to_send_cancellation_msg": "Wilt u een annuleringsbericht naar de aanwezigen sturen?",
         "you_sure_delete_calendar": "Weet u zeker dat u de \"{{name}}\" kalender permanent wilt verwijderen?",
         "share_calendar_url_msg": "U kunt snel {{title}} delen met uw medewerkers met behulp van een van deze URL:",
-        "you_sure_delete_instance": "Weet u zeker dat u deze instantie van \"{title}\" afspraak wilt verwijderen?"
+        "you_sure_delete_instance": "Weet u zeker dat u deze instantie van \"{title}\" afspraak wilt verwijderen?",
+        "delete_tag_message1": "Weet u zeker dat u de\"{{name}}\" Tag wilt verwijderen?",
+        "delete_tag_message2": "Eenmaal verwijderd, zal het verwijderd worden van elk item dat ermee gemarkeerd is.",
+        "appointment_type_handle": "\"{{name}}” is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?"
     },
     "months": {
         "april": "April",
@@ -462,7 +483,9 @@
         "proposed_time_accepted": "U aanvaardde de voorgestelde tijd",
         "url_copied": "{{title}} gekopieerd",
         "share_folder_success": "Kalender met succes gedeeld",
-        "new_time_proposed_success": "Nieuwe tijd voorgesteld"
+        "new_time_proposed_success": "Nieuwe tijd voorgesteld",
+        "tag_removed": "\"{{tag}}\" tag verwijderd",
+        "tag_applied": "\"{{tag}}\" tag toegepast"
     },
     "success": "Succes",
     "type": "Type",
@@ -642,7 +665,13 @@
     "is_recurrent": "Is terugkerend",
     "appt_restored_successfully": "Afspraak met succes hersteld",
     "messages": {
-        "format_as_plain_text": "Formatteren als platte tekst"
+        "format_as_plain_text": "Formatteren als platte tekst",
+        "snackbar": {
+            "tag_deleted": "{{name}} Tag met succes verwijderd",
+            "tag_updated": "Tag met succes bijgewerkt",
+            "tag_created": "Tag {{name}} met succes gecreëerd",
+            "tag_not_updated": "Er is iets fout gegaan, de tag is niet bijgewerkt. Probeer het opnieuw."
+        }
     },
     "preview": {
         "close": "Voorbeeld sluiten"

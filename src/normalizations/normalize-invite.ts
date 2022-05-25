@@ -60,7 +60,8 @@ export const normalizeInvite = (m: any): Invite => ({
 	alarmData: m?.inv?.[0]?.comp?.[0]?.alarm,
 	ms: m.ms || 0,
 	rev: m.rev || 0,
-	meta: m.meta
+	meta: m.meta,
+	xprop: m?.inv?.[0]?.comp?.[0]?.xprop
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -109,5 +110,6 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	alarm: !!inv.comp?.[0]?.alarm,
 	alarmData: inv.comp?.[0]?.alarm,
 	ms: inv.ms || 0,
-	rev: inv.rev || 0
+	rev: inv.rev || 0,
+	xprop: inv.comp?.[0]?.xprop
 });
