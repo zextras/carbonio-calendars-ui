@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.16](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.13...v0.1.16) (2022-05-25)
+
+
+### Features
+
+* added calendar share status icon ([1a1a42d](https://github.com/zextras/carbonio-calendars-ui/commit/1a1a42d466b913e7cf2b2b13b99aa723e6822298))
+
+
+### Bug Fixes
+
+* calendar property modal exploding for custom color ([9ebab70](https://github.com/zextras/carbonio-calendars-ui/commit/9ebab70ceac3d8b188363f31315dbe9284cf90a0))
+* items height on secondary bar ([5042322](https://github.com/zextras/carbonio-calendars-ui/commit/50423225d4beb96a4810276d6e5d77299c37c6d5))
+* items height on secondary bar ([cf90378](https://github.com/zextras/carbonio-calendars-ui/commit/cf90378cb13167d6ab2932b7539683d65833af0f))
+* new appointment board will not trigger if slot is click while small preview is open ([3d24e14](https://github.com/zextras/carbonio-calendars-ui/commit/3d24e143bdffee7763a74b633cede8002f05c653))
+* reminder snooze action and options updated ([5f2a3d4](https://github.com/zextras/carbonio-calendars-ui/commit/5f2a3d442582ae75f06bf1d1a558b73fec2d1bfd))
+* virtual rooms are visible to invitees ([#72](https://github.com/zextras/carbonio-calendars-ui/issues/72)) ([a8dd511](https://github.com/zextras/carbonio-calendars-ui/commit/a8dd511f6124d0c5266cb1def4755e95d7ded13e))
+
 ### [0.1.13](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.12...v0.1.13) (2022-05-16)
 
 
