@@ -57,7 +57,8 @@
             "trash": "Supprimer",
             "yes": "Oui",
             "expand": "Étendre la fenêtre",
-            "needs_action": "Une action est requise"
+            "needs_action": "Une action est requise",
+            "invitation_not_sent_yet": "L'invitation n'a pas encore été envoyée"
         }
     },
     "find_shares": "Rechercher les partages",
@@ -264,7 +265,23 @@
         },
         "role": "rôle",
         "today": "aujourd'hui",
-        "preview": "Prévisualisation"
+        "preview": "Prévisualisation",
+        "create_tag": "Créer une étiquette",
+        "edit_tag": "Éditer l'étiquette",
+        "edit_tag_name": "Éditer l'étiquette \"{{name}}\"",
+        "entire_serires": "TOUTE LES SÉRIE",
+        "loading_results": "Chargement des résultats...",
+        "new_tag": "Nouvelle étiquette",
+        "no_special_char_allowed": "Le nom ne doit pas contenir des caractères spéciaux",
+        "other_actions": "Autres actions",
+        "results_for_error": "Il n'est pas possible de démarrer la recherche, nettoyez là et réessayez : ",
+        "select_color": "Sélectionnez une couleur",
+        "single_instance": "INSTANCE UNIQUE",
+        "tag_max_length": "128 caractères maximum autorisés",
+        "tag_name": "Nom de l'étiquette",
+        "tags": "Étiquettes",
+        "delete_tag": "Supprimer l'étiquette",
+        "delete_tag_name": "Supprimer l'étiquette \"{{name}}\""
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -304,7 +321,8 @@
             "calendar_restored": "Le calendrier a été restauré avec succès",
             "calendar_permanently_deleted": "Le calendrier a été supprimé",
             "appointment_permanently_deleted": "Rendez-vous supprimé définitivement",
-            "calendar_edits_saved": "Modifications enregistrés avec succès"
+            "calendar_edits_saved": "Modifications enregistrées avec succès",
+            "series_deleted": "La séries a été supprimée avec succès. Les participants vont recevoir la notification de l'annulation."
         },
         "somebody_is_organizer": "<strong>{{somebody}}</strong> est l'organisateur",
         "sure_to_delete_all_occurences_appointment": "Êtes-vous sûr de vouloir supprimer toutes les occurrences de ce rendez-vous ?",
@@ -328,7 +346,10 @@
         "somebody_invited_you": "<strong>{{somebody}}</strong> vous a invité",
         "sure_to_delete_appointment": "Êtes-vous sûr de vouloir supprimer le rendez-vous ?",
         "you_sure_delete_calendar": "Êtes-vous sûr de vouloir supprimer définitivement le calendrier \"{{name}}\" ?",
-        "you_sure_delete_instance": "Êtes-vous sûr de vouloir supprimer cette instance du rendez-vous \"{{title}}\" ?"
+        "you_sure_delete_instance": "Êtes-vous sûr de vouloir supprimer cette instance du rendez-vous \"{{title}}\" ?",
+        "delete_tag_message1": "Êtes-vous sûr de vouloir supprimer l'étiquette \"{{name}}\" ?",
+        "delete_tag_message2": "Une fois supprimée, elle sera supprimée de l'ensemble des éléments qu'elle marquait.",
+        "appointment_type_handle": "\"{{name}}\" est un rendez-vous récurent. Souhaitez-vous ouvrir uniquement cette instance ou la série ?"
     },
     "months": {
         "april": "Avril",
@@ -455,7 +476,9 @@
         },
         "proposed_time_accepted": "Vous avez accepté l'horaire proposé",
         "share_folder_success": "Ce calendrier a été partagé avec succès",
-        "url_copied": "{{title}} copié"
+        "url_copied": "{{title}} copié",
+        "tag_applied": "Étiquette \"{{tag}}\" appliquée",
+        "tag_removed": "Étiquette \"{{tag}}\" supprimée"
     },
     "share_invite_resent": "Invitation à partager envoyée",
     "resend_mail_notification_about_this_share": "Envoyer une notification par email à propos de ce partage",
@@ -498,7 +521,13 @@
     "is_private": "Est privé",
     "is_recurrent": "Est récurrent",
     "messages": {
-        "format_as_plain_text": "Formater en texte brut"
+        "format_as_plain_text": "Formater en texte brut",
+        "snackbar": {
+            "tag_created": "L'étiquette {{name}} a été créée avec succès",
+            "tag_deleted": "L'étiquette {{name}} a été supprimée avec succès",
+            "tag_not_updated": "Une erreur est survenue, l'étiquette n'a pas été mise à jour. Merci de réessayer.",
+            "tag_updated": "L'étiquette a été mise à jour avec succès"
+        }
     },
     "read": "Lire",
     "remove_from_this_list": "Retirer de cette liste",

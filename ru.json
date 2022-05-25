@@ -91,7 +91,8 @@
             "calendar_permanently_deleted": "Календарь удален навсегда",
             "calendar_restored": "Календарь успешно восстановлен",
             "appointment_permanently_deleted": "Встреча удалена",
-            "calendar_edits_saved": "Правки сохранены корректно"
+            "calendar_edits_saved": "Правки сохранены правильно",
+            "series_deleted": "Серия встреч успешно удалена. Участники получат уведомление об отмене."
         },
         "modal": {
             "delete": {
@@ -111,7 +112,10 @@
         "delete_future_occurences_warning": "Это удалит все исключения (до и после этой встречи) в ряде",
         "delete_future_occurences": "Удалить эту встречу и все будущие встречи",
         "sure_to_delete_all_occurences_appointment": "Вы уверены, что хотите удалить эту встречу?",
-        "you_sure_delete_instance": "Вы действительно хотите удалить этот экземпляр встречи «{{title}}»?"
+        "you_sure_delete_instance": "Вы действительно хотите удалить этот экземпляр встречи «{{title}}»?",
+        "appointment_type_handle": "\"{{name}}\"— повторяющаяся встреча. Вы хотите открыть только этот экземпляр или серию?",
+        "delete_tag_message1": "Вы уверены, что хотите удалить тег \"{{name}}\"?",
+        "delete_tag_message2": "После удаления он будет удален из всех отмеченных им элементов."
     },
     "label": {
         "subject": "Тема",
@@ -277,7 +281,23 @@
         "role": "роль",
         "share_with": "поделиться с",
         "today": "сегодня",
-        "preview": "Предварительный просмотр"
+        "preview": "Предварительный просмотр",
+        "create_tag": "Создать Тег",
+        "delete_tag": "Удалить Тег",
+        "delete_tag_name": "Удалить тег \"{{name}}\"",
+        "edit_tag": "Редактировать Тег",
+        "edit_tag_name": "Редактировать тег {{name}}",
+        "entire_serires": "ВСЯ СЕРИЯ",
+        "new_tag": "Новый Тег",
+        "no_special_char_allowed": "Имя не должно содержать специальных символов",
+        "other_actions": "Другие действия",
+        "results_for_error": "Не удалось начать поиск, очистите его и повторите попытку: ",
+        "select_color": "Выбрать цвет",
+        "single_instance": "ЕДИНСТВЕННЫЙ ЭКЗЕМПЛЯР",
+        "tag_max_length": "Допускается не более 128 символов",
+        "tag_name": "Имя Тега",
+        "tags": "Теги",
+        "loading_results": "Загрузка результатов..."
     },
     "tooltip": {
         "show_optionals": "Показать опции",
@@ -368,7 +388,8 @@
             "trash": "Удалить",
             "no": "Нет",
             "yes": "Да",
-            "needs_action": "Необходимо действие"
+            "needs_action": "Необходимо действие",
+            "invitation_not_sent_yet": "Приглашение еще не отправлено"
         }
     },
     "items": {
@@ -545,7 +566,9 @@
         "proposed_time_accepted": "Вы приняли предлагаемое время",
         "url_copied": "{{title}} скопировано",
         "share_folder_success": "Доступ к календарю предоставлен",
-        "new_time_proposed_success": "Предложено новое время"
+        "new_time_proposed_success": "Предложено новое время",
+        "tag_applied": "Тег \"{{tag}}\" применен",
+        "tag_removed": "Тег \"{{tag}}\" удален"
     },
     "owner": "Владелец",
     "workflow": "Рабочий процесс",
@@ -575,7 +598,13 @@
     "is_recurrent": "Повторяющаяся",
     "is_private": "Личная",
     "messages": {
-        "format_as_plain_text": "Форматировать как обычный текст"
+        "format_as_plain_text": "Форматировать как обычный текст",
+        "snackbar": {
+            "tag_created": "Тег {{name}} успешно создан",
+            "tag_deleted": "Тег {{name}} успешно удален",
+            "tag_not_updated": "Что-то пошло не так, тег не обновился. Пожалуйста, попробуйте еще раз.",
+            "tag_updated": "Тег успешно обновлен"
+        }
     },
     "appt_restored_successfully": "Встреча успешно восстановлена",
     "placeholder": {
