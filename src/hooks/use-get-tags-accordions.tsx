@@ -43,6 +43,8 @@ const CustomComp = (props: ItemProps): ReactElement => {
 			runSearch(
 				[
 					{
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
 						avatarBackground: ZIMBRA_STANDARD_COLORS[props?.item?.color || 0].hex,
 						avatarIcon: 'Tag',
 						background: 'gray2',
