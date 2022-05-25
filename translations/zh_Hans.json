@@ -59,7 +59,9 @@
         "you_are_organizer": "<Row><Text><BoldText>您</BoldText>为组织者</Text></Row>",
         "you_sure_delete_calendar": "确定要永久性删除“{{name}}”日历吗？",
         "you_sure_move_calendar_trash": "确定要删除“{{name}}”日历吗？",
-        "you_sure_delete_instance": "确定要删除此“{{title}}”预约的实例吗？"
+        "you_sure_delete_instance": "确定要删除此“{{title}}”预约的实例吗？",
+        "delete_tag_message1": "确定要删除“{{name}}”标签吗？",
+        "delete_tag_message2": "删除后，其将从所有已进行相关标记的项目上移除。"
     },
     "calendar": {
         "modal": {
@@ -299,7 +301,19 @@
         },
         "propose_new_time": "提出新时间",
         "app_name": "日历",
-        "preview": "预览"
+        "preview": "预览",
+        "create_tag": "创建标签",
+        "edit_tag_name": "编辑“{{name}}”标签",
+        "no_special_char_allowed": "名称中不应包含任何特殊字符",
+        "select_color": "选择颜色",
+        "delete_tag": "删除标签",
+        "delete_tag_name": "删除“{{name}}”标签",
+        "edit_tag": "编辑标签",
+        "loading_results": "正在加载结果...",
+        "results_for_error": "无法开始搜索，清除并重试： ",
+        "tag_max_length": "最多允许 128 个字符",
+        "tag_name": "标签名称",
+        "tags": "标签"
     },
     "months": {
         "april": "四月",
@@ -453,7 +467,9 @@
         "proposed_time_accepted": "您接受了提议的时间",
         "proposed_time_error": "出现了一些错误，请重试",
         "new_time_proposed_error": "出现了一些错误，请重试",
-        "new_time_proposed_success": "已提议新时间"
+        "new_time_proposed_success": "已提议新时间",
+        "tag_applied": "“{{tag}}”标签已应用",
+        "tag_removed": "“{{tag}}”标签已移除"
     },
     "success": "成功",
     "type": "类型",
@@ -525,7 +541,12 @@
         "organizer": "组织者"
     },
     "messages": {
-        "format_as_plain_text": "格式化为纯文本"
+        "format_as_plain_text": "格式化为纯文本",
+        "snackbar": {
+            "tag_deleted": "{{name}} 标签已删除成功",
+            "tag_updated": "标签已成功更新",
+            "tag_created": "标签 {{name}} 已成功创建"
+        }
     },
     "timezone": {
         "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} 阿纳迪尔、彼得罗巴甫洛夫斯克 - 堪察加（RTZ 11）",

@@ -167,7 +167,19 @@
         "share_with": "bagikan kepada",
         "app_name": "Kalender",
         "new_appointment": "Janji temu baru",
-        "preview": "Pratinjau"
+        "preview": "Pratinjau",
+        "create_tag": "Buat Tag",
+        "delete_tag": "Hapus Tag",
+        "delete_tag_name": "Hapus tag \"{{name}}\"",
+        "edit_tag": "Edit Tag",
+        "edit_tag_name": "Edit tag \"{{name}}\"",
+        "loading_results": "Memuat Hasil...",
+        "no_special_char_allowed": "Nama tidak boleh berisi karakter spesial",
+        "results_for_error": "Tidak dapat memulai pencarian. Hapus dan coba lagi: ",
+        "tag_name": "Nama tag",
+        "tags": "Tag",
+        "select_color": "Pilih Warna",
+        "tag_max_length": "Maks 128 karakter yang diizinkan"
     },
     "calendar": {
         "modal": {
@@ -299,7 +311,9 @@
         },
         "share_calendar_url_note2": "Hanya kolaborator Anda yang dapat mengakses data Anda menggunakan URL ini.<br/>Anda juga bisa menemukan tautan tersebut dengan mengklik kanan daftar kalender Anda.",
         "delete_future_occurences_warning": "Tindakan ini juga menghapus semua pengecualian (sebelum dan sesudah kejadian ini) dalam rangkaian tersebut",
-        "you_sure_delete_instance": "Anda yakin ingin menghapus instan janji temu “{{title}}” ini?"
+        "you_sure_delete_instance": "Anda yakin ingin menghapus instan janji temu “{{title}}” ini?",
+        "delete_tag_message1": "Yakin ingin menghapus Tag \"{{name}}\"?",
+        "delete_tag_message2": "Setelah dihapus, ini akan dihapus dari tiap item yang ditandai dengannya."
     },
     "months": {
         "april": "April",
@@ -452,7 +466,9 @@
         "proposed_time_error": "Terjadi kesalahan, coba lagi",
         "url_copied": "{{title}} disalin",
         "share_folder_success": "Kalender berhasil dibagikan",
-        "new_time_proposed_success": "Waktu baru diusulkan"
+        "new_time_proposed_success": "Waktu baru diusulkan",
+        "tag_removed": "Tag \"{{tag}}: dihapus",
+        "tag_applied": "Tag \"{{tag}}\" diterapkan"
     },
     "success": "Berhasil",
     "add": "Tambahkan",
@@ -618,7 +634,12 @@
     "is_private": "Privat",
     "is_recurrent": "Berulang",
     "messages": {
-        "format_as_plain_text": "Format sebagai Teks Biasa"
+        "format_as_plain_text": "Format sebagai Teks Biasa",
+        "snackbar": {
+            "tag_created": "Tag {{name}} berhasil dibuat",
+            "tag_deleted": "Tag {{name}} berhasil dihapus",
+            "tag_updated": "Tag berhasil diperbarui"
+        }
     },
     "preview": {
         "close": "Tutup Pratinjau"

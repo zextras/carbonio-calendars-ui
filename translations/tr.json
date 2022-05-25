@@ -46,7 +46,8 @@
             "no": "Hayır",
             "tentative": "Belirsiz",
             "yes": "Evet",
-            "needs_action": "Yapılması gerekenler"
+            "needs_action": "Yapılması gerekenler",
+            "invitation_not_sent_yet": "Davet henüz gönderilmedi"
         }
     },
     "folder": {
@@ -142,7 +143,8 @@
             "calendar_permanently_deleted": "Takvim kalıcı olarak silindi",
             "calendar_restored": "Takvim başarıyla geri alındı",
             "appointment_permanently_deleted": "Randevu kalıcı olarak silindi",
-            "calendar_edits_saved": "Değişiklikler başarıyla kaydedildi"
+            "calendar_edits_saved": "Değişiklikler başarıyla kaydedildi",
+            "series_deleted": "Seri başarıyla silindi. Katılımcılara iptal bildirimi gönderilecek."
         },
         "are_organizer": "organize eden",
         "meeting_canceled": "Bu toplantı iptal edildi",
@@ -173,7 +175,10 @@
         "you_sure_delete_calendar": "\"{{name}}\" takvimi tamamen silmek istediğinizden emin misiniz?",
         "you_sure_move_calendar_trash": "\"{{name}}\" takvimi silmek istediğinizden emin misiniz?",
         "you_will_see_the_subject_here": "Konu",
-        "you_sure_delete_instance": "“{{title}}” randevusunun bu öğesini silmek istediğinizden emin misiniz?"
+        "you_sure_delete_instance": "“{{title}}” randevusunun bu öğesini silmek istediğinizden emin misiniz?",
+        "delete_tag_message1": "\"{{name}}\" etiketini silmek istediğinizden emin misiniz?",
+        "delete_tag_message2": "Silinince önceden işaretlenmiş tüm öğelerden etiket kaldırılacak.",
+        "appointment_type_handle": "{{name}}” tekrarlanan bir randevu. Sadece bu rendevuyu mu yoksa tekrarlama serisini mi açmak istersiniz?"
     },
     "search": {
         "results_for": "Sonuçlar:",
@@ -190,7 +195,9 @@
         "url_copied": "{{title}} kopyalandı",
         "new_time_proposed_error": "Bir hata oluştu, lütfen tekrar deneyin",
         "proposed_time_error": "Bir hata oluştu, lütfen tekrar deneyin",
-        "new_time_proposed_success": "Yeni saat önerildi"
+        "new_time_proposed_success": "Yeni saat önerildi",
+        "tag_applied": "\"{{tag}}\" etiketi uygulandı",
+        "tag_removed": "\"{{tag}}\" etiketi kaldırıldı"
     },
     "label": {
         "invitation_not_sent": "Katılımcılara henüz davet göndermediniz",
@@ -348,7 +355,23 @@
             "wednesday": "Çarşamba"
         },
         "exclude_free_busy": "Serbest/meşgul zamanları raporlarken bu takvimi kullanma",
-        "preview": "Önizleme"
+        "preview": "Önizleme",
+        "no_special_char_allowed": "Ad özel karakterler içermemelidir",
+        "single_instance": "TEK ÖRNEK",
+        "tag_max_length": "En çok 128 karakter kullanılabilir",
+        "create_tag": "Etiket Oluştur",
+        "delete_tag": "Etiketi Sil",
+        "delete_tag_name": "\"{{name}}\" etiketi sil",
+        "edit_tag": "Etiketi düzenle",
+        "edit_tag_name": "\"{{name}}\" etiketi düzenle",
+        "entire_serires": "TÜM SERİLER",
+        "loading_results": "Sonuçlar yükleniyor...",
+        "new_tag": "Yeni Etiket",
+        "other_actions": "Diğer işlemler",
+        "results_for_error": "Arama sorgusu başlatılamadı, silip yeniden deneyin: ",
+        "select_color": "Renk seçin",
+        "tag_name": "Etiket adı",
+        "tags": "Etiketler"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -549,7 +572,13 @@
     "is_private": "Özel",
     "is_recurrent": "Tekrarlanan",
     "messages": {
-        "format_as_plain_text": "Düz Metin olarak biçimlendir"
+        "format_as_plain_text": "Düz Metin olarak biçimlendir",
+        "snackbar": {
+            "tag_not_updated": "Bir hata oluştu, etiket güncellenemedi. Lütfen tekrar deneyin.",
+            "tag_created": "{{name}} etiketi başarıyla oluşturuldu",
+            "tag_deleted": "{{name}} Etiketi başarıyla silindi",
+            "tag_updated": "Etiket başarıyla güncellendi"
+        }
     },
     "appt_restored_successfully": "Randevu başarıyla geri yüklendi",
     "placeholder": {

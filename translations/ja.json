@@ -29,7 +29,8 @@
             "calendar_permanently_deleted": "カレンダーは完全に削除されました",
             "calendar_restored": "カレンダーが復元されました",
             "appointment_permanently_deleted": "予定は完全に削除されました",
-            "calendar_edits_saved": "編集内容が保存されました"
+            "calendar_edits_saved": "編集内容が保存されました",
+            "series_deleted": "シリーズが削除されました。 参加者にキャンセル通知が届きます。"
         },
         "are_organizer": "は主催者です",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> は主催者です",
@@ -59,7 +60,10 @@
         "share_calendar_url_note2": "このURLを使用してデータにアクセスできるのは、共同編集者だけです。<br/>カレンダーリストを右クリックしても、このリンクを見つけることができます。",
         "sure_to_delete_all_occurences_appointment": "本当にこの予定の出来事をすべて削除しますか？",
         "you_sure_move_calendar_trash": "本当に「{{name}}」カレンダーを完全に削除しますか？",
-        "you_sure_delete_instance": "本当にこの「{{title}}」予定のインスタンスを削除しますか？"
+        "you_sure_delete_instance": "本当にこの「{{title}}」予定のインスタンスを削除しますか？",
+        "appointment_type_handle": "「{{name}}」は定期的な予定です。このインスタンスのみを開きますか、それともシリーズを開きますか？",
+        "delete_tag_message1": "本当に\"{{name}}\" タグを削除しますか？",
+        "delete_tag_message2": "削除されると、それでマークされたすべてのアイテムから削除されます。"
     },
     "action": {
         "save": "保存する",
@@ -93,7 +97,8 @@
             "decline": "拒否する",
             "expand": "ディスプレイヤーで開く",
             "tentative": "暫定",
-            "needs_action": "アクションが必要です"
+            "needs_action": "アクションが必要です",
+            "invitation_not_sent_yet": "招待状はまだ送信されていません"
         }
     },
     "items": {
@@ -254,7 +259,23 @@
             "wednesday": "水曜日"
         },
         "today": "今日",
-        "preview": "プレビューする"
+        "preview": "プレビューする",
+        "entire_serires": "シリーズ全体",
+        "new_tag": "新しいタグ",
+        "other_actions": "その他のアクション",
+        "single_instance": "シングルインスタンス",
+        "create_tag": "タグを作成する",
+        "delete_tag": "タグを削除する",
+        "delete_tag_name": "\"{{name}}\" タグを削除する",
+        "edit_tag": "タグを編集する",
+        "edit_tag_name": "\"{{name}}\" タグを編集する",
+        "loading_results": "結果を読み込んでいます...",
+        "no_special_char_allowed": "名前に特殊文字を含めることはできません",
+        "results_for_error": "検索を開始できません。クリアして再度お試しください: ",
+        "select_color": "色を選択してください",
+        "tag_max_length": "最大128文字まで使用できます",
+        "tag_name": "タグの名前",
+        "tags": "タグ"
     },
     "create": "作成する",
     "delete": "削除する",
@@ -469,7 +490,9 @@
         "proposed_time_error": "エラーが発生しました。再度お試しください",
         "url_copied": "{{title}}がコピーされました",
         "share_folder_success": "カレンダーが共有されました",
-        "new_time_proposed_success": "新しい時間が提案されました"
+        "new_time_proposed_success": "新しい時間が提案されました",
+        "tag_applied": "\"{{tag}}\" タグが適用されました",
+        "tag_removed": "\"{{tag}}\" タグが削除されました"
     },
     "success": "成功",
     "type": "タイプ",
@@ -525,7 +548,13 @@
         "organizer": "主催者"
     },
     "messages": {
-        "format_as_plain_text": "プレーンテキストとしてフォーマット"
+        "format_as_plain_text": "プレーンテキストとしてフォーマット",
+        "snackbar": {
+            "tag_not_updated": "問題が発生しました。タグが更新されていません。 再度お試しください。",
+            "tag_created": "タグ{{name}}が作成されました",
+            "tag_deleted": "{{name}}タグが削除されました",
+            "tag_updated": "タグが更新されました"
+        }
     },
     "timezone": {
         "bangkok_hanoi_jakarta": "{{value}}バンコク、ハノイ、ジャカルタ",
