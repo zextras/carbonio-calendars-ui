@@ -24,13 +24,6 @@ import { selectCalendars } from '../../store/selectors/calendars';
 import { useSearchActionsFn } from './hooks/use-search-actions-fn';
 import { useTagExist } from '../tags/tag-actions';
 
-const HoverContainer = styled(Container)`
-	&:hover {
-		background: ${({ theme, active }) =>
-			active ? theme.palette.highlight.hover : theme.palette.gray6.hover};
-	}
-`;
-
 const SearchListItem = ({ item, active }) => {
 	const isShared = item?.resource?.l?.includes(':');
 	const calendars = useSelector(selectCalendars);
@@ -107,13 +100,7 @@ const SearchListItem = ({ item, active }) => {
 		[isTagInStore, item.resource.tags]
 	);
 	return (
-		<HoverContainer
-			wrap="nowrap"
-			style={{ cursor: 'default' }}
-			onClick={open}
-			background={active ? 'highlight' : 'gray6'}
-			active={active}
-		>
+		<Container wrap="nowrap" style={{ cursor: 'default' }} onClick={open} active={active}>
 			<Row
 				wrap="nowrap"
 				width="fill"
@@ -271,7 +258,7 @@ const SearchListItem = ({ item, active }) => {
 				</Container>
 			</Row>
 			<Divider />
-		</HoverContainer>
+		</Container>
 	);
 };
 
