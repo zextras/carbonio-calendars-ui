@@ -22,6 +22,7 @@ import { dismissApptReminder } from '../../store/actions/dismiss-appointment-rem
 import { snoozeApptReminder } from '../../store/actions/snooze-appointment-reminder';
 import { ApptReminderCardProps } from '../../types/appointment-reminder';
 import { useGetReminderItems } from './commons/reminder-time-options';
+import { DateType } from '../../types/event';
 
 const ApptReminderCard: FC<ApptReminderCardProps> = ({
 	event,
@@ -31,7 +32,7 @@ const ApptReminderCard: FC<ApptReminderCardProps> = ({
 	removeReminder,
 	setActive
 }): ReactElement => {
-	const [now, setNow] = useState(moment().valueOf());
+	const [now, setNow] = useState<DateType>(moment().valueOf());
 
 	useEffect(() => {
 		const interval = setInterval(() => setNow(moment().valueOf()), 30000);
