@@ -6,7 +6,7 @@
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement, useMemo, useEffect, useCallback } from 'react';
-import { Container, Padding, Row, Icon, Text } from '@zextras/carbonio-design-system';
+import { Container, Divider, Padding, Row, Icon, Text } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
@@ -23,9 +23,9 @@ import BodyMessageRenderer from '../../commons/body-message-renderer.jsx';
 import { useInvite } from '../../hooks/use-invite';
 
 const InviteContainer = styled(Container)`
-	border: 1px solid ${({ theme }: any): string => theme.palette.gray2.regular};
-	border-radius: 14px;
-	margin: ${({ theme }: any): string => theme.sizes.padding.extrasmall};
+	border: 1px solid ${({ theme }): string => theme.palette.gray3.regular} !important;
+	border-radius: 10px;
+	margin: ${({ theme }): string => theme.sizes.padding.extrasmall};
 `;
 type InviteResponse = {
 	inviteId: string;
@@ -112,8 +112,8 @@ const InviteResponse: FC<InviteResponse> = ({
 	}, [dispatch, inviteId]);
 	return (
 		<InviteContainer padding={{ all: 'extralarge' }}>
-			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
-				<Row padding={{ bottom: 'medium' }}>
+			<Container padding={{ all: 'small' }} mainAlignment="flex-start" width="100%">
+				<Row padding={{ bottom: 'large' }}>
 					<Icon icon="CalendarOutline" size="large" />
 					<Padding all="extrasmall" />
 					{method === 'COUNTER' ? (
@@ -127,26 +127,15 @@ const InviteResponse: FC<InviteResponse> = ({
 						</Text>
 					)}
 				</Row>
-				<Row
-					width="fill"
-					mainAlignment="flex-start"
-					padding={{ horizontal: 'small', bottom: 'small' }}
-				>
-					<Row padding={{ right: 'small' }}>
-						<Icon icon="CalendarOutline" />
-					</Row>
-					<Row takeAvailableSpace mainAlignment="flex-start" display="flex">
-						<Text overflow="break-word">{invite[0]?.comp[0].name}</Text>
-					</Row>
-				</Row>
-				<Row width="fill" mainAlignment="flex-start">
+				<Divider />
+				<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 					<Row
 						width="70%"
 						mainAlignment="flex-start"
-						padding={{ horizontal: 'small', bottom: 'small' }}
+						padding={{ horizontal: 'large', vertical: 'large' }}
 					>
 						<Row padding={{ right: 'small' }}>
-							<Icon icon="ClockOutline" />
+							<Icon icon="ClockOutline" size="large" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start" display="flex">
 							<Text overflow="break-word">
@@ -160,10 +149,10 @@ const InviteResponse: FC<InviteResponse> = ({
 					<Row
 						width="fill"
 						mainAlignment="flex-start"
-						padding={{ horizontal: 'small', bottom: 'small' }}
+						padding={{ horizontal: 'large', bottom: 'large' }}
 					>
 						<Row padding={{ right: 'small' }}>
-							<Icon icon="PinOutline" />
+							<Icon icon="PinOutline" size="large" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
 							<Text overflow="break-word">{invite[0]?.comp[0].loc}</Text>
@@ -173,10 +162,10 @@ const InviteResponse: FC<InviteResponse> = ({
 				<Row
 					width="fill"
 					mainAlignment="flex-start"
-					padding={{ horizontal: 'small', bottom: 'small' }}
+					padding={{ horizontal: 'large', bottom: 'large' }}
 				>
 					<Row padding={{ right: 'small' }}>
-						<Icon icon="PeopleOutline" />
+						<Icon icon="PeopleOutline" size="large" />
 					</Row>
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						<Text overflow="break-word">{participants}</Text>
@@ -187,10 +176,10 @@ const InviteResponse: FC<InviteResponse> = ({
 					width="fill"
 					crossAlignment="flex-start"
 					mainAlignment="flex-start"
-					padding={{ horizontal: 'small', bottom: 'large' }}
+					padding={{ horizontal: 'large', bottom: 'large' }}
 				>
 					<Row padding={{ right: 'small' }}>
-						<Icon icon="MessageSquareOutline" />
+						<Icon icon="MessageSquareOutline" size="large" />
 					</Row>
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						{fullInvite && (
