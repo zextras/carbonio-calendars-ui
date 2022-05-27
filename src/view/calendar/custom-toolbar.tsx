@@ -25,7 +25,19 @@ const MultiButton = styled(Button)`
 	}
 `;
 
-export default function CustomToolbar({ label, onView, onNavigate, view }) {
+export interface CustomToolbarProps {
+	label: string;
+	onView: (arg: string) => void;
+	onNavigate: (arg: string) => void;
+	view: string;
+}
+
+export const CustomToolbar = ({
+	label,
+	onView,
+	onNavigate,
+	view
+}: CustomToolbarProps): JSX.Element => {
 	const [t] = useTranslation();
 	const today = useCallback(() => onNavigate('TODAY'), [onNavigate]);
 	const next = useCallback(() => onNavigate('NEXT'), [onNavigate]);
@@ -46,6 +58,7 @@ export default function CustomToolbar({ label, onView, onNavigate, view }) {
 		useAppStatusStore.setState({ calendarView: 'work_week' });
 		return onView('work_week');
 	}, [onView]);
+
 	return (
 		<Container width="fill" height="fit" padding={{ bottom: 'small' }}>
 			<Container
@@ -62,7 +75,7 @@ export default function CustomToolbar({ label, onView, onNavigate, view }) {
 				</Container>
 				<Container orientation="horizontal" width="100%">
 					<IconButton iconColor="primary" icon="ChevronLeft" onClick={prev} />
-					<Button type="ghost" label={label} onClick={() => null} minWidth="250px" />
+					<Button type="ghost" label={label} onClick={(): null => null} minWidth="250px" />
 					<IconButton iconColor="primary" icon="ChevronRight" onClick={next} />
 				</Container>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
@@ -94,4 +107,4 @@ export default function CustomToolbar({ label, onView, onNavigate, view }) {
 			</Container>
 		</Container>
 	);
-}
+};

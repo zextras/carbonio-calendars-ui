@@ -12,15 +12,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
-import CustomEvent from './custom-event';
+import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
-import CustomToolbar from './custom-toolbar';
+import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { workWeek } from '../../utils/work-week';
-import { selectCheckedCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
-import { selectAllAppointments } from '../../store/selectors/appointments';
+import { selectCheckedCalendarsMap, selectEnd, selectStart } from '../../store/selectors/calendars';
+import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
-import { setSearchRange } from '../../store/actions/set-search-range';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
@@ -28,8 +27,9 @@ import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
 import { modifyAppointmentRequest } from '../../store/actions/modify-appointment';
 import { normalizeAppointmentFromCreation } from '../../normalizations/normalize-appointments';
-import { useCalendarDate, useCalendarView, useIsResumeViewOpen } from '../../store/zustand/hooks';
+import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
+import { searchAppointments } from '../../store/actions/search-appointments';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -42,25 +42,20 @@ const CalendarSyncWithRange = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(
-			setSearchRange({
-				rangeStart: start,
-				rangeEnd: end
-			})
-		);
+		dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 	}, [dispatch, end, start]);
 	return null;
 };
 
 const customComponents = {
 	toolbar: CustomToolbar,
-	event: CustomEvent,
+	event: (props) => <CustomEvent {...props} />,
 	eventWrapper: CustomEventWrapper
 };
 
 export default function CalendarComponent() {
-	const appointments = useSelector(selectAllAppointments);
-	const selectedCalendars = useSelector(selectCheckedCalendars);
+	const appointments = useSelector(selectAppointmentsArray);
+	const selectedCalendars = useSelector(selectCheckedCalendarsMap);
 	const dispatch = useDispatch();
 	const theme = useContext(ThemeContext);
 	const account = useUserAccount();
@@ -69,9 +64,11 @@ export default function CalendarComponent() {
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
-	const resumeViewOpen = useIsResumeViewOpen();
+	const summaryViewOpen = useIsSummaryViewOpen();
 	const firstDayOfWeek = settings.prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
+	const [date, setDate] = useState(calendarDate);
+
 	if (settings.prefs.zimbraPrefLocale) {
 		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
 			week: {
@@ -96,11 +93,12 @@ export default function CalendarComponent() {
 		[workingSchedule]
 	);
 
-	const slotBgColor = (date) => {
-		if (workingSchedule[moment(date).day()].working) {
+	const slotBgColor = (newDate) => {
+		if (workingSchedule[moment(newDate).day()].working) {
 			if (
-				moment(date).tz(timeZone).format('HHmm') >= workingSchedule[moment(date).day()].start &&
-				moment(date).tz(timeZone).format('HHmm') < workingSchedule[moment(date).day()].end
+				moment(newDate).tz(timeZone).format('HHmm') >=
+					workingSchedule[moment(newDate).day()].start &&
+				moment(newDate).tz(timeZone).format('HHmm') < workingSchedule[moment(newDate).day()].end
 			) {
 				return theme.palette.gray6.regular;
 			}
@@ -109,30 +107,30 @@ export default function CalendarComponent() {
 		return theme.palette.gray5.regular;
 	};
 
-	const slotDayBorderColor = (date) => {
-		if (workingSchedule[moment(date).day()].working) {
+	const slotDayBorderColor = (newDate) => {
+		if (workingSchedule[moment(newDate).day()].working) {
 			return theme.palette.gray3.regular;
 		}
 		return theme.palette.gray6.regular;
 	};
 
-	const slotPropGetter = (date) => ({
+	const slotPropGetter = (newDate) => ({
 		style: {
-			backgroundColor: slotBgColor(date),
+			backgroundColor: slotBgColor(newDate),
 			borderColor: `${theme.palette.gray3.regular}`,
 			borderRight: `1px solid ${theme.palette.gray3.regular}`
 		}
 	});
-	const dayPropGetter = (date) => ({
+	const dayPropGetter = (newDate) => ({
 		style: {
 			backgroundColor:
 				// eslint-disable-next-line no-nested-ternary
-				workingSchedule[moment(date).day()].working
-					? moment().isSame(moment(date), 'day')
+				workingSchedule[moment(newDate).day()].working
+					? moment().isSame(moment(newDate), 'day')
 						? theme.palette.highlight.regular
 						: theme.palette.gray6.regular
 					: theme.palette.gray3.regular,
-			borderBottom: `1px solid ${slotDayBorderColor(date)}`
+			borderBottom: `1px solid ${slotDayBorderColor(newDate)}`
 		}
 	});
 
@@ -176,7 +174,7 @@ export default function CalendarComponent() {
 	}, [calendarView, settings?.prefs?.zimbraPrefCalendarInitialView]);
 
 	const handleSelect = (e) => {
-		if (!resumeViewOpen)
+		if (!summaryViewOpen)
 			addBoard(
 				`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
 					e.end
@@ -185,7 +183,7 @@ export default function CalendarComponent() {
 					app: CALENDAR_APP_ID
 				}
 			);
-		useAppStatusStore.setState((s) => ({ ...s, isResumeViewOpen: false }));
+		useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 	};
 	const onEventDrop = useCallback(
 		(appt) => {
@@ -238,8 +236,6 @@ export default function CalendarComponent() {
 		[]
 	);
 
-	const [date, setDate] = useState(calendarDate);
-
 	const onNavigate = useCallback(
 		(newDate) => {
 			useAppStatusStore.setState((s) => ({ ...s, date: newDate }));
@@ -269,7 +265,7 @@ export default function CalendarComponent() {
 				dayPropGetter={dayPropGetter}
 				slotPropGetter={slotPropGetter}
 				workingSchedule={workingSchedule}
-				onSelectSlot={(e) => handleSelect(e)}
+				onSelectSlot={handleSelect}
 				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
 				onEventDrop={onEventDrop}
 				formats={{ eventTimeRangeFormat: () => '' }}

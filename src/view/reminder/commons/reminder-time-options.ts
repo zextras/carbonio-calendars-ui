@@ -8,7 +8,7 @@ import { filter } from 'lodash';
 import moment from 'moment';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { EventType } from '../../../types/appointment-reminder';
+import { EventType } from '../../../types/event';
 
 type ReturnType = Array<{
 	id: string;

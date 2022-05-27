@@ -15,7 +15,7 @@ export type SingleReference = {
 
 export type ExceptionReference = SingleReference & {
 	alarm: any;
-	allDay: any;
+	allDay: boolean;
 	dur: number;
 	draft: boolean;
 	inviteId: string;
@@ -51,7 +51,7 @@ export type Appointment = {
 	inviteId: string;
 	isOrg: boolean;
 	l: string;
-	loc: string | undefined;
+	loc: string;
 	md: number;
 	ms: number;
 	name?: string;

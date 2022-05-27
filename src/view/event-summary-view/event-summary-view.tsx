@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { Container, Divider, Popover } from '@zextras/carbonio-design-system';
 import { startsWith } from 'lodash';
+import { EventType } from '../../types/event';
+import { Invite } from '../../types/store/invite';
 import { TitleRow } from './title-row';
 import { NeverSentWarningRow } from './never-sent-warning-row';
 import { CalendarInfoRow } from './calendar-info-row';
@@ -18,7 +20,23 @@ import { VirtualRoomRow } from './virtual-room-row';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import TagsRow from './tags-row';
 
-export const EventResumeView = ({ anchorRef, open, event, onClose, invite, dispatch }) => (
+type EventSummaryProps = {
+	anchorRef: React.RefObject<HTMLInputElement | undefined>;
+	open: boolean;
+	event: EventType;
+	onClose: () => void;
+	invite: Invite;
+	dispatch: Dispatch<any>;
+};
+
+export const EventSummaryView = ({
+	anchorRef,
+	open,
+	event,
+	onClose,
+	invite,
+	dispatch
+}: EventSummaryProps): JSX.Element => (
 	<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
 		<Container padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }} width="400px">
 			<TitleRow event={event} invite={invite} />

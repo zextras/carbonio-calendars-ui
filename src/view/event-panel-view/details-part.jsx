@@ -8,10 +8,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import ImageAndIconPart from './image-and-icon-part';
-import { TimeInfoRow } from '../event-resume-view/time-info-row';
-import { LocationRow } from '../event-resume-view/location-row';
-import { VirtualRoomRow } from '../event-resume-view/virtual-room-row';
-import TagsRow from '../event-resume-view/tags-row';
+import { TimeInfoRow } from '../event-summary-view/time-info-row';
+import { LocationRow } from '../event-summary-view/location-row';
+import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
+import TagsRow from '../event-summary-view/tags-row';
 
 const PaddedRow = styled(Row)`
 	padding: 4px 4px;

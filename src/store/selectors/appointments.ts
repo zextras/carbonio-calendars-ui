@@ -13,6 +13,10 @@ export function selectAllAppointments({ appointments }: Store): Record<string, A
 	return appointments?.appointments;
 }
 
+export function selectAppointmentsArray({ appointments }: Store): Array<Appointment> {
+	return values(appointments?.appointments);
+}
+
 export function selectAppointment({ appointments }: Store, id: string): Appointment | undefined {
 	return appointments?.appointments ? appointments.appointments[id] : undefined;
 }

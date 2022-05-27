@@ -13,6 +13,7 @@ import { useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-sh
 import { useTranslation } from 'react-i18next';
 import { EventType } from '../../types/event';
 import { CALENDAR_ROUTE } from '../../constants';
+import { Invite } from '../../types/store/invite';
 
 const TagChip = styled(Chip)`
 	margin-left: ${({ theme }): string => theme.sizes.padding.extrasmall};
@@ -20,7 +21,7 @@ const TagChip = styled(Chip)`
 	margin-bottom: 4px;
 `;
 
-const TagsRow: FC<{ event: EventType; hideIcon: boolean }> = ({
+const TagsRow: FC<{ event: EventType; hideIcon?: boolean; invite?: Invite }> = ({
 	event,
 	hideIcon = false
 }): ReactElement => {

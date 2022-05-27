@@ -4,9 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
-/* eslint-disable import/extensions */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { FC, ReactElement, useCallback, useState, useEffect, useMemo } from 'react';
 import { CustomModal } from '@zextras/carbonio-design-system';
 import moment from 'moment';
@@ -26,12 +23,12 @@ import {
 } from 'lodash';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
-import { setSearchRange } from '../../store/actions/set-search-range';
+import { searchAppointments } from '../../store/actions/search-appointments';
 import { selectAllAppointments, selectApptStatus } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
-import { AppointmentReminderProps, EventType } from '../../types/appointment-reminder';
+import { AppointmentReminderProps } from '../../types/appointment-reminder';
+import { EventType } from '../../types/event';
 import SetNewTimeModal from './set-new_time-modal';
-// @ts-ignore
 import sound from '../../assets/notification.mp3';
 import ApptReminderModal from './appt-reminder-modal';
 import { showNotification } from '../notifications';
@@ -67,7 +64,7 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	}, [playing, audio]);
 
 	useEffect(() => {
-		const handler = () => setPlaying(false);
+		const handler = (): void => setPlaying(false);
 		audio.addEventListener('ended', () => handler);
 		return () => {
 			audio.removeEventListener('ended', () => handler);
@@ -113,8 +110,7 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 		const trans = pullAll(apptForReminders, uniqueTp);
 		setApptForReminders(trans);
 
-		// @ts-ignore
-		map(reminderQueue, (q) => clearTimeout(q));
+		map(reminderQueue, (q: number): void => clearTimeout(q));
 		map(eventsToRemind, (rem: EventType) => {
 			const { alarmData, fragment, inviteId } = rem.resource;
 			const now = moment();
@@ -122,7 +118,7 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 			const index = lastIndexOf(apptForReminders, rem);
 
 			if (index === -1) {
-				tmp[`${inviteId}`] = () =>
+				tmp[`${inviteId}`] = (): NodeJS.Timeout =>
 					setTimeout(
 						() => {
 							showNotification(rem.title, fragment);
@@ -144,12 +140,9 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	useEffect(() => {
 		if (!isEmpty(calendars) && status === 'init') {
 			const now = moment();
-			dispatch(
-				setSearchRange({
-					rangeStart: now.subtract('7', 'days').valueOf(),
-					rangeEnd: now.add('15', 'days').valueOf()
-				})
-			);
+			const start = now.subtract('7', 'days').valueOf();
+			const end = now.add('15', 'days').valueOf();
+			dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 		}
 	}, [dispatch, status, calendars]);
 
@@ -164,7 +157,6 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 		}));
 		setShowNewTimeModal(false);
 		if (dismissItems.length > 0) {
-			// @ts-ignore
 			dispatch(dismissApptReminder({ dismissItems }));
 			setApptForReminders([]);
 		}
@@ -188,6 +180,7 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 			// @ts-ignore
 			event: eventForChange
 		});
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		updateBoard(undefined, eventForChange?.title || 'Set New Time');
 		dismissAll();
@@ -202,19 +195,17 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 		<>
 			<CustomModal
 				open={openReminder}
-				onClose={() => null}
+				onClose={(): null => null}
 				maxHeight="90vh"
-				// @ts-ignore
-				onClick={(e) => e.stopPropagation()}
-				// @ts-ignore
-				onDoubleClick={(e) => e.stopPropagation()}
+				onClick={(e: MouseEvent): void => e.stopPropagation()}
+				onDoubleClick={(e: MouseEvent): void => e.stopPropagation()}
 			>
 				{showNewTimeModal ? (
 					<SetNewTimeModal toggleModal={toggleModal} t={t} setNewTime={setNewTime} />
 				) : (
 					<ApptReminderModal
 						title="Appointment Reminder"
-						onClose={() => null}
+						onClose={(): null => null}
 						events={uniqueReminders || []}
 						open={uniqueReminders.length > 0}
 						t={t}

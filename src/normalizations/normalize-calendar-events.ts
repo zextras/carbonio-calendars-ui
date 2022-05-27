@@ -5,10 +5,11 @@
  */
 import { find, reduce, map, isEmpty } from 'lodash';
 import moment from 'moment';
+import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { Calendar } from '../types/store/calendars';
 
-export const locationUrl = (location: string): any => {
+export const locationUrl = (location: string): string | undefined => {
 	const regex = /\bhttps?:\/\/\S+/g;
 	const found = location?.match(regex);
 
@@ -19,7 +20,7 @@ const normalizeEventResource = (
 	appt: Appointment,
 	inst: ExceptionReference,
 	calendar: Calendar
-): any => ({
+): EventResource => ({
 	id: appt.id,
 	inviteId: inst.inviteId ?? appt.inviteId,
 	ridZ: inst.ridZ,
@@ -31,7 +32,7 @@ const normalizeEventResource = (
 	},
 	flags: appt.flags,
 	iAmOrganizer: appt.isOrg ?? false,
-	iAmVisitor: (!appt.isOrg && calendar.owner) ?? false,
+	iAmVisitor: !!(!appt.isOrg && calendar.owner) ?? false,
 	iAmAttendee: (!appt.isOrg && !calendar.owner) ?? false,
 	status: appt.status,
 	location: appt.loc,
@@ -41,7 +42,7 @@ const normalizeEventResource = (
 	freeBusy: appt.fb,
 	hasChangesNotNotified: appt.draft || false,
 	inviteNeverSent: appt.neverSent || false,
-	hasOtherAttendees: appt.otherAtt,
+	hasOtherAttendees: appt.otherAtt ?? false,
 	isRecurrent: inst.recur ?? appt.recur,
 	isException: inst.ex ?? false,
 	participationStatus: appt.ptst,
@@ -54,12 +55,9 @@ const normalizeEventResource = (
 	alarm: appt.alarm,
 	alarmData: appt.alarmData,
 	uid: appt.uid,
-	tags: appt.tags
+	tags: appt.tags ?? [],
+	neverSent: appt.neverSent
 });
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const getEndTime = (start: any, end: any, duration: any): any =>
-	duration === 86400000 ? moment(start).endOf('day') : moment(end).endOf('day');
 
 export const getDaysFromMillis = (milliseconds: number): number => milliseconds / 3600 / 1000 / 24;
 
@@ -68,8 +66,7 @@ export const normalizeCalendarEvent = (
 	appt: Appointment,
 	inst: InstanceReference,
 	isShared: boolean
-): any => ({
-	// disabled: true,
+): EventType => ({
 	start: appt.allDay ? moment(inst.s).startOf('day') : new Date(inst.s),
 	end: appt.allDay
 		? moment(appt.inst[0].ridZ)
@@ -78,17 +75,17 @@ export const normalizeCalendarEvent = (
 		: new Date(inst.s + ((inst as ExceptionReference).dur ?? appt.dur)),
 	resource: normalizeEventResource(appt, inst as ExceptionReference, calendar),
 
-	title: inst?.name || appt.name,
+	title: inst?.name ?? appt?.name ?? '',
 	allDay: appt.allDay,
 	permission: !isShared,
 	id: `${appt.id}:${inst.ridZ}`,
-	haveWriteAccess: calendar.haveWriteAccess
+	haveWriteAccess: calendar.haveWriteAccess ?? false
 });
 
 export const normalizeCalendarEvents = (
 	appts: Array<Appointment>,
 	calendars: Record<string, Calendar>
-): any =>
+): Array<EventType> =>
 	!isEmpty(appts)
 		? reduce(
 				appts,
@@ -104,6 +101,6 @@ export const normalizeCalendarEvents = (
 						  ]
 						: acc;
 				},
-				[] as any
+				[] as Array<EventType>
 		  )
 		: [];

@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Moment } from 'moment';
+import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 import { AlarmType } from './appointments';
 
 export type EventResource = {
-	attach: { mp?: []; aid?: [] };
+	attach?: { mp?: []; aid?: [] };
 	attachmentFiles?: [];
 	id: string;
 	inviteId: string;
@@ -14,7 +16,7 @@ export type EventResource = {
 	calendar: {
 		id: string;
 		name: string;
-		color: unknown;
+		color: ZimbraColorType;
 		owner: string | undefined;
 	};
 	flags: string;
@@ -23,6 +25,7 @@ export type EventResource = {
 	iAmAttendee: boolean;
 	status: string;
 	location: string;
+	locationUrl?: string;
 	fragment: string;
 	neverSent: boolean;
 	class: string;
@@ -44,16 +47,18 @@ export type EventResource = {
 	hasAlarm?: boolean;
 	alarm?: AlarmType;
 	tags: string[];
+	compNum: number;
+	apptStart: number;
+	alarmData: Array<AlarmType>;
 };
 
 export type EventType = {
-	disabled: boolean;
-	start: string;
-	end: string;
+	start: Moment | Date;
+	end: Moment | Date;
 	resource: EventResource;
+	allDay: boolean;
+	permission: boolean;
 	title: string;
-	ridZ: string;
-	inviteId: string;
 	id: string;
-	calId: string;
+	haveWriteAccess: boolean;
 };

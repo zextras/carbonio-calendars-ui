@@ -42,6 +42,17 @@ export function selectCheckedCalendars({ calendars }: Store): Array<Calendar> {
 	return filter(calendars.calendars, ['checked', true]);
 }
 
+export function selectCheckedCalendarsMap({ calendars }: Store): Record<string, Calendar> {
+	return reduce(
+		filter(calendars.calendars, ['checked', true]),
+		(acc, v) => ({
+			...acc,
+			[v.id]: v
+		}),
+		{}
+	);
+}
+
 export function selectStart(state: Store): number {
 	return state?.calendars?.start;
 }

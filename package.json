@@ -57,6 +57,7 @@
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.2",
+		"@types/react-big-calendar": "^0.38.0",
 		"@zextras/carbonio-design-system": "^0.3.4",
 		"@zextras/carbonio-shell-ui": "^0.4.25",
 		"@zextras/carbonio-ui-preview": "^0.1.5",

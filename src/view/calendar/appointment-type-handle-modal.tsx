@@ -3,25 +3,32 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useContext } from 'react';
+import React from 'react';
 import { Text, Container, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import { EventType } from '../../types/event';
 
-export const AppointmentTypeHandlingModal = ({ event, onClose }) => {
+type ModalProps = {
+	event: EventType;
+	onClose: () => void;
+};
+
+// todo: refactor routing
+export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): JSX.Element => {
 	const [t] = useTranslation();
 
-	const onEntireSeries = () => {
+	const onEntireSeries = (): void => {
 		replaceHistory(
 			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 		onClose();
 	};
 
-	const onSingleInstance = () => {
+	const onSingleInstance = (): void => {
 		replaceHistory(
 			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}?isInstance=TRUE`
 		);
@@ -47,7 +54,6 @@ export const AppointmentTypeHandlingModal = ({ event, onClose }) => {
 					</Text>
 				</Padding>
 				<ModalFooter
-					onClose={onClose}
 					onConfirm={onSingleInstance}
 					label={t('label.single_instance', 'SINGLE INSTANCE')}
 					secondaryAction={onEntireSeries}
