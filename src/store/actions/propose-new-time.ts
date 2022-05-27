@@ -31,14 +31,12 @@ export const proposeNewTime = createAsyncThunk(
 							allDay: appt.allDay ? '1' : '0',
 							e: {
 								...appt.resource.end,
-								u: appt.end,
-								d: moment(moment(appt.end).utc()).format('YYYYMMDDTHHmm00')
+								d: moment(moment(appt.end)).format('YYYYMMDDTHHmm00')
 							},
 							or: appt.resource.organizer,
 							s: {
 								...appt.resource.start,
-								u: appt.start,
-								d: moment(moment(appt.start).utc()).format('YYYYMMDDTHHmm00')
+								d: moment(moment(appt.start)).format('YYYYMMDDTHHmm00')
 							}
 						}
 					]
@@ -47,10 +45,31 @@ export const proposeNewTime = createAsyncThunk(
 					ct: 'multipart/alternative',
 					mp: [
 						{
+							ct: 'text/html',
+							content: `<html><body id='htmlmode3'>
+							<table>
+								<tr height="24px"><td>New Time Proposed</td></tr>
+								<tr height="24px"><td>Subject: ${appt.title}</td></tr>
+								<tr height="24px" style="color:#2b73d2;font-weight:bold">
+									<td>Time: ${moment(appt.start).format('dddd, D MMMM, YYYY, HH:mm:ss')} - ${moment(appt.end).format(
+								'HH:mm:ss'
+							)} GMT ${moment(appt.start)
+								.tz(moment.tz.guess())
+								.format('Z')} ${moment.tz.guess()} [MODIFIED]</td>
+								</tr>
+							</table>\n<div>*~*~*~*~*~*~*~*~*~*</div><br>
+							${appt.resource?.richText}
+						`
+						},
+						{
 							content: `New Time Proposed\n\nSubject: ${appt.title} \n\nTime: ${moment(
 								appt.start
 							).format('dddd, D MMMM, YYYY, HH:mm:ss')} - ${moment(appt.end).format('HH:mm:ss')} GMT
-							${moment(appt.start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()} [MODIFIED]\n\n`,
+							${moment(appt.start)
+								.tz(moment.tz.guess())
+								.format('Z')} ${moment.tz.guess()} [MODIFIED]\n\n*~*~*~*~*~*~*~*~*~*\n\n${
+								appt.resource?.plainText
+							}`,
 							ct: 'text/plain'
 						}
 					]
