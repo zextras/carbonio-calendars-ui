@@ -7,8 +7,8 @@ import React, { useMemo } from 'react';
 import { useBoardConfig } from '@zextras/carbonio-shell-ui';
 import EventEditPanel from './event-edit-panel';
 
-const BoardEditPanel = () => {
-	const context = useBoardConfig();
+const BoardEditPanel = (): JSX.Element => {
+	const context = useBoardConfig<object>();
 	const boardContext = useMemo(() => ({ ...context, isBoard: true }), [context]);
 	return <EventEditPanel boardContext={boardContext} />;
 };

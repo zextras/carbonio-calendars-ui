@@ -70,12 +70,9 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 						)}
 						{invite && (
 							<ParticipantsPart
-								iAmOrganizer={event?.resource?.iAmOrganizer}
 								event={event}
 								organizer={event?.resource?.organizer}
 								participants={invite?.participants}
-								inviteId={event?.resource.inviteId}
-								compNum={invite?.compNum}
 							/>
 						)}
 						{invite && extractBody(invite?.textDescription?.[0]?._content) && (
@@ -90,13 +87,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 						)}
 
 						<StyledDivider />
-						{invite && (
-							<ReminderPart
-								editorId={event?.resource?.id}
-								alarmString={invite?.alarmString}
-								event={event}
-							/>
-						)}
+						{invite && <ReminderPart alarmString={invite?.alarmString} event={event} />}
 						{invite?.attachmentFiles?.length > 0 && (
 							<>
 								<StyledDivider />

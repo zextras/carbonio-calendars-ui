@@ -8,47 +8,32 @@ import React, { useCallback } from 'react';
 import { Button, Container, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
-import { updateParticipationStatus } from '../../store/slices/appointments-slice';
+import { ParticipationStatus } from '../../types/store/invite';
 
-export default function ReplyButtonsPart({ inviteId, participationStatus, compNum }) {
+type ReplyButtonProps = {
+	inviteId: string;
+	compNum: number;
+	participationStatus: ParticipationStatus;
+};
+
+export const ReplyButtonsPart = ({
+	inviteId,
+	participationStatus,
+	compNum
+}: ReplyButtonProps): JSX.Element => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
-	const decline = useCallback(
-		(ev) => {
+
+	const replyAction = useCallback(
+		(action) => {
 			dispatch(
 				sendInviteResponse({
 					inviteId,
 					updateOrganizer: false,
-					action: 'DECLINE',
+					action,
 					compNum
 				})
-			).then(() => dispatch(updateParticipationStatus({ inviteId, status: 'DE' })));
-		},
-		[dispatch, inviteId, compNum]
-	);
-	const tentative = useCallback(
-		(ev) => {
-			dispatch(
-				sendInviteResponse({
-					inviteId,
-					updateOrganizer: false,
-					action: 'TENTATIVE',
-					compNum
-				})
-			).then(() => dispatch(updateParticipationStatus({ inviteId, status: 'TE' })));
-		},
-		[dispatch, inviteId, compNum]
-	);
-	const accept = useCallback(
-		(ev) => {
-			dispatch(
-				sendInviteResponse({
-					inviteId,
-					updateOrganizer: false,
-					action: 'ACCEPT',
-					compNum
-				})
-			).then(() => dispatch(updateParticipationStatus({ inviteId, status: 'AC' })));
+			);
 		},
 		[dispatch, inviteId, compNum]
 	);
@@ -68,7 +53,7 @@ export default function ReplyButtonsPart({ inviteId, participationStatus, compNu
 				label={t('event.action.yes', 'yes')}
 				icon="CheckmarkCircle2"
 				color="success"
-				onClick={accept}
+				onClick={(): void => replyAction('ACCEPT')}
 				disabled={participationStatus === 'AC'}
 			/>
 			<Padding horizontal="small" />
@@ -77,7 +62,7 @@ export default function ReplyButtonsPart({ inviteId, participationStatus, compNu
 				label={t('label.maybe', 'maybe')}
 				icon="QuestionMarkCircle"
 				color="warning"
-				onClick={tentative}
+				onClick={(): void => replyAction('TENTATIVE')}
 				disabled={participationStatus === 'TE'}
 			/>
 			<Padding horizontal="small" />
@@ -86,9 +71,9 @@ export default function ReplyButtonsPart({ inviteId, participationStatus, compNu
 				label={t('event.action.no', 'no')}
 				icon="CloseCircle"
 				color="error"
-				onClick={decline}
+				onClick={(): void => replyAction('DECLINE')}
 				disabled={participationStatus === 'DE'}
 			/>
 		</Container>
 	);
-}
+};

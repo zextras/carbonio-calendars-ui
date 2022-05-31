@@ -12,7 +12,7 @@ import StyledDivider from '../../commons/styled-divider';
 import ReminderPart from '../event-panel-view/reminder-part';
 import MessagePart from '../event-panel-view/message-part';
 import { extractBody } from '../../commons/body-message-renderer';
-import ParticipantsPart from '../event-panel-view/participants-part';
+import { ParticipantsPart } from '../event-panel-view/participants-part';
 import ReplyButtonsPart from '../event-panel-view/reply-buttons-part';
 import DetailsPart from '../event-panel-view/details-part';
 import ImageAndIconPart from '../event-panel-view/image-and-icon-part';

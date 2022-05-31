@@ -8,7 +8,7 @@ import { Calendar } from '../../types/store/calendars';
 import { Store } from '../../types/store/store';
 
 export function selectCalendar(state: Store, id: string): Calendar {
-	return find(state.calendars.calendars, (item) => item.id === id) as Calendar;
+	return find(state?.calendars?.calendars, (item) => item.id === id) as Calendar;
 }
 
 export function selectCalendars(state: Store): Record<string, Calendar> {

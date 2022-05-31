@@ -99,7 +99,6 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 				open={open}
 				onClose={onClose}
 				invite={invite}
-				dispatch={dispatch}
 			/>
 			<Dropdown
 				contextMenu

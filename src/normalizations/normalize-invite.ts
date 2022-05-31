@@ -20,21 +20,21 @@ export const normalizeInvite = (m: any): Invite => ({
 	id: m.id,
 	attendees: m?.inv?.[0]?.comp?.[0]?.at ?? [],
 	parent: m.l,
-	flags: m.f, // read,unread,attachments,ecc...
+	flags: m.f,
 	parts: m.mp ? normalizeMailPartMapFn(m.mp) : [],
 	alarmString: getAlarmToString(m.inv[0]?.comp?.[0]?.alarm || null) ?? 'never',
 	alarmValue: `${m.inv?.[0]?.comp?.[0]?.alarm?.[0].trigger[0].rel[0].m}`,
 	seriesId: m?.inv?.[0]?.comp?.[0]?.calItemId,
 	class: m?.inv?.[0]?.comp?.[0]?.class,
 	compNum: m?.inv?.[0]?.comp?.[0]?.compNum, // Component number of the invite
-	date: m.d, // todo: check what date is
+	date: m.d,
 	textDescription: m?.inv?.[0]?.comp?.[0]?.desc, // todo: normalize
 	htmlDescription: m?.inv?.[0]?.comp?.[0]?.descHtml,
 	end: m?.inv?.[0]?.comp?.[0]?.e[0], // todo: normalize
-	freeBusy: m?.inv?.[0]?.comp?.[0]?.fb,
-	freeBusyActualStatus: m?.inv?.[0]?.comp?.[0]?.fba,
+	freeBusy: m?.inv?.[0]?.comp?.[0]?.fb ?? 'B',
+	freeBusyActualStatus: m?.inv?.[0]?.comp?.[0]?.fba ?? 'B',
 	fragment: m?.inv?.[0]?.comp?.[0]?.fr,
-	isOrganizer: m?.inv?.[0]?.comp?.[0]?.isOrg,
+	isOrganizer: m?.inv?.[0]?.comp?.[0]?.isOrg ?? false,
 	location: m?.inv?.[0]?.comp?.[0]?.loc ?? '',
 	name: m?.inv?.[0]?.comp?.[0]?.name,
 	noBlob: m?.inv?.[0]?.comp?.[0]?.noBlob,
@@ -48,7 +48,7 @@ export const normalizeInvite = (m: any): Invite => ({
 	uid: m?.inv?.[0]?.comp?.[0]?.uid,
 	url: m?.inv?.[0]?.comp?.[0]?.url,
 	isException: m?.inv?.[0]?.comp?.[0]?.ex || false,
-	recurrenceId: m?.inv?.[0]?.comp?.[0]?.exceptId, // shown only in exceptions todo: normalize
+	exceptId: m?.inv?.[0]?.comp?.[0]?.exceptId, // shown only in exceptions todo: normalize
 	tagNamesList: m.tn,
 	tags: !isNil(m.t) ? filter(m.t.split(','), (t) => t !== '') : [],
 	attach: {
@@ -99,7 +99,7 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	uid: inv.comp?.[0]?.uid,
 	url: inv.comp?.[0]?.url,
 	isException: inv.comp?.[0]?.ex || false,
-	recurrenceId: inv.comp?.[0]?.exceptId, // shown only in exceptions todo: normalize
+	exceptId: inv.comp?.[0]?.exceptId, // shown only in exceptions todo: normalize
 	tagNamesList: inv.tn,
 	tags: !isNil(inv.t) ? filter(inv.t.split(','), (t) => t !== '') : [],
 	attach: {

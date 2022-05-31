@@ -13,19 +13,12 @@ import {
 	SnackbarManagerContext,
 	Row
 } from '@zextras/carbonio-design-system';
-
 import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
-
 import { map } from 'lodash';
 import { useDispatch } from 'react-redux';
-import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
-
-import { applyTag, createAndApplyTag } from '../../tags/tag-actions';
-import {
-	moveApptToTrash,
-	openInDisplayer,
-	deletePermanently
-} from '../../../hooks/use-event-actions';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import { applyTag, createAndApplyTag } from '../tags/tag-actions';
+import { moveApptToTrash, openInDisplayer, deletePermanently } from '../../hooks/use-event-actions';
 
 const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }): ReactElement => {
 	const createModal = useContext(ModalManagerContext);

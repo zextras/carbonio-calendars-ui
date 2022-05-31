@@ -9,7 +9,8 @@ import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { Avatar, Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 
-const DisplayParticipantsVisitor = ({ participant, t }) => {
+const DisplayParticipantsVisitor = ({ participant }) => {
+	const [t] = useTranslation();
 	const users = [];
 	map(Object.keys(participant), (status) => map(participant[status], (user) => users.push(user)));
 	return (

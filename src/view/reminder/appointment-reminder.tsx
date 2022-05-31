@@ -26,7 +26,6 @@ import { dismissApptReminder } from '../../store/actions/dismiss-appointment-rem
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { selectAllAppointments, selectApptStatus } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
-import { AppointmentReminderProps } from '../../types/appointment-reminder';
 import { EventType } from '../../types/event';
 import SetNewTimeModal from './set-new_time-modal';
 import sound from '../../assets/notification.mp3';
@@ -34,7 +33,7 @@ import ApptReminderModal from './appt-reminder-modal';
 import { showNotification } from '../notifications';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
 
-const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
+const AppointmentReminder: FC = (): ReactElement => {
 	const dispatch = useDispatch();
 	const [t] = useTranslation();
 

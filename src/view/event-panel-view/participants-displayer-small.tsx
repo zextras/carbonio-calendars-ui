@@ -6,10 +6,20 @@
 import { Container, Row, Text } from '@zextras/carbonio-design-system';
 import { useTranslation, Trans } from 'react-i18next';
 import React, { useMemo } from 'react';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
+import { EventType } from '../../types/event';
+import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
-function calculateSize(participants) {
+type DropdownProps = {
+	label: JSX.Element;
+	participants: [];
+	message: string;
+	event: EventType;
+	pt: number;
+};
+
+const calculateSize = (participants): number => {
 	let pt = 0;
 	Object.keys(participants).map((obj) => {
 		participants[obj].map(() => {
@@ -19,10 +29,11 @@ function calculateSize(participants) {
 		return 0;
 	});
 	return pt;
-}
+};
 
-function DisplayedParticipant({ participant, message, loggedInUser }) {
+const DisplayedParticipant = ({ participant, message }: { message: string }): JSX.Element => {
 	const [t] = useTranslation();
+	const account = useUserAccount();
 
 	return (
 		<Container
@@ -32,7 +43,7 @@ function DisplayedParticipant({ participant, message, loggedInUser }) {
 			padding={{ bottom: 'extrasmall' }}
 		>
 			<Text overflow="ellipsis" size="small" color="secondary">
-				{participant.name === loggedInUser.name || participant.email === loggedInUser.name ? (
+				{participant.name === account.name || participant.email === account.name ? (
 					<strong> {t('message.you', 'You')}</strong>
 				) : (
 					<strong> {participant.name || participant.email} </strong>
@@ -41,9 +52,10 @@ function DisplayedParticipant({ participant, message, loggedInUser }) {
 			</Text>
 		</Container>
 	);
-}
+};
 
-function DisplayParticipantsVisitor({ participant, t }) {
+const DisplayParticipantsVisitor = ({ participant }) => {
+	const [t] = useTranslation();
 	const users = [];
 	map(Object.keys(participant), (status) => map(participant[status], (user) => users.push(user)));
 	return (
@@ -87,9 +99,18 @@ function DisplayParticipantsVisitor({ participant, t }) {
 			)}
 		</Container>
 	);
-}
+};
 
-function DisplayMultipleAttendee({ participant, message, t, loggedInUser }) {
+const DisplayMultipleAttendee = ({
+	participant,
+	message
+}: {
+	participant: Array<InviteParticipant>;
+	message: string;
+}): JSX.Element => {
+	const [t] = useTranslation();
+	const account = useUserAccount();
+
 	return (
 		<Row>
 			<Text size="small" color="secondary" overflow="break-word">
@@ -97,12 +118,12 @@ function DisplayMultipleAttendee({ participant, message, t, loggedInUser }) {
 					{' '}
 					{map(participant, (user, index) => (
 						<React.Fragment key={user.name || user.email}>
-							{user.name === loggedInUser.name || user.email === loggedInUser.name ? (
+							{user.name === account.name || user.email === account.name ? (
 								<> {t('message.you', 'You')}</>
 							) : (
 								<> {user.name || user.email} </>
 							)}
-							{index === participant.length - 1 ? null : <>,</>}
+							{index === participant.length - 1 && <>,</>}
 						</React.Fragment>
 					))}
 				</strong>{' '}
@@ -110,9 +131,9 @@ function DisplayMultipleAttendee({ participant, message, t, loggedInUser }) {
 			</Text>
 		</Row>
 	);
-}
+};
 
-function Dropdown({ label, participants = [], width, message, event, pt, loggedInUser, t }) {
+const Dropdown = ({ label, participants = [], message, event, pt }: DropdownProps): JSX.Element => {
 	const displayedParticipants = useMemo(
 		() => (
 			<Container
@@ -122,63 +143,63 @@ function Dropdown({ label, participants = [], width, message, event, pt, loggedI
 				takeAvailableSpace
 				width="fill"
 			>
-				{participants.map((participant) => (
+				{participants.map((participant, index) => (
 					<DisplayedParticipant
 						participant={participant}
-						key={participant.email}
+						key={`participant-${index}`}
 						message={message}
-						loggedInUser={loggedInUser}
 					/>
 				))}
 			</Container>
 		),
-		[participants, loggedInUser, message]
+		[participants, message]
 	);
 	return (
-		participants.length > 0 && (
-			<Container
-				orientation="vertical"
-				mainAlignment="flex-start"
-				crossAlignment="flex-start"
-				width={width}
-				padding={{ horizontal: 'medium', bottom: 'extrasmall' }}
-			>
-				{event?.resource?.iAmOrganizer && (
-					<>
-						{pt > 2 ? (
-							<Text size="small" color="secondary" overflow="break-word">
-								{label}
-							</Text>
-						) : (
-							displayedParticipants
-						)}
-					</>
-				)}
+		<>
+			{participants.length > 0 && (
+				<Container
+					orientation="vertical"
+					mainAlignment="flex-start"
+					crossAlignment="flex-start"
+					padding={{ horizontal: 'medium', bottom: 'extrasmall' }}
+				>
+					{event?.resource?.iAmOrganizer && (
+						<>
+							{pt > 2 ? (
+								<Text size="small" color="secondary" overflow="break-word">
+									{label}
+								</Text>
+							) : (
+								displayedParticipants
+							)}
+						</>
+					)}
 
-				{!event?.resource?.iAmOrganizer && !event?.resource?.calendar?.owner && (
-					<>
-						{' '}
-						{pt > 2 ? (
-							<DisplayMultipleAttendee
-								participant={participants}
-								message={message}
-								t={t}
-								loggedInUser={loggedInUser}
-							/>
-						) : (
-							displayedParticipants
-						)}{' '}
-					</>
-				)}
-			</Container>
-		)
+					{!event?.resource?.iAmOrganizer && !event?.resource?.calendar?.owner && (
+						<>
+							{' '}
+							{pt > 2 ? (
+								<DisplayMultipleAttendee participant={participants} message={message} />
+							) : (
+								displayedParticipants
+							)}{' '}
+						</>
+					)}
+				</Container>
+			)}
+		</>
 	);
-}
+};
 
-export default function ParticipantsDisplayer({ participants = [], event }) {
+export const ParticipantsDisplayer = ({
+	participants,
+	event
+}: {
+	participants: InviteParticipants;
+	event: EventType;
+}): JSX.Element | null => {
 	const [t] = useTranslation();
 	const pt = calculateSize(participants);
-	const loggedInUser = useUserAccounts()[0];
 	if (Object.keys(participants).length === 0) return null;
 	return (
 		<Container
@@ -191,7 +212,7 @@ export default function ParticipantsDisplayer({ participants = [], event }) {
 			takeAvailableSpace
 		>
 			{!event?.resource?.iAmOrganizer && event?.resource?.calendar?.owner ? (
-				<DisplayParticipantsVisitor participant={participants} t={t} event={event} />
+				<DisplayParticipantsVisitor participant={participants} />
 			) : (
 				<>
 					<Dropdown
@@ -203,14 +224,11 @@ export default function ParticipantsDisplayer({ participants = [], event }) {
 								defaults="<strong>{{count}} attendee </strong> has accepted"
 							/>
 						}
-						t={t}
 						message={t('participants.Accepted', 'accepted')}
 						participants={participants.AC}
 						event={event}
 						pt={pt}
-						loggedInUser={loggedInUser}
 					/>
-
 					<Dropdown
 						label={
 							<Trans
@@ -220,14 +238,11 @@ export default function ParticipantsDisplayer({ participants = [], event }) {
 								defaults="<strong>{{count}} attendee </strong> has not answered"
 							/>
 						}
-						t={t}
 						participants={participants.NE}
 						message={t('participants.Not_answered', "didn't answer")}
 						event={event}
 						pt={pt}
-						loggedInUser={loggedInUser}
 					/>
-
 					<Dropdown
 						label={
 							<Trans
@@ -237,14 +252,11 @@ export default function ParticipantsDisplayer({ participants = [], event }) {
 								defaults="<strong>{{count}} attendee </strong> has accepted as tentative"
 							/>
 						}
-						t={t}
 						participants={participants.TE}
 						message={t('participants.Tentative', 'accepted as tentative')}
 						event={event}
 						pt={pt}
-						loggedInUser={loggedInUser}
 					/>
-
 					<Dropdown
 						label={
 							<Trans
@@ -254,15 +266,13 @@ export default function ParticipantsDisplayer({ participants = [], event }) {
 								defaults="<strong>{{count}} attendee </strong> has declined"
 							/>
 						}
-						t={t}
 						participants={participants.DE}
 						message={t('participants.Declined', 'declined')}
 						event={event}
 						pt={pt}
-						loggedInUser={loggedInUser}
 					/>
 				</>
 			)}
 		</Container>
 	);
-}
+};

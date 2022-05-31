@@ -6,8 +6,15 @@
 import { Container, Icon } from '@zextras/carbonio-design-system';
 import React from 'react';
 import BodyMessageRenderer from '../../commons/body-message-renderer';
+import { Invite } from '../../types/store/invite';
 
-export default function MessagePart({ fullInvite, inviteId, parts }) {
+type MessageProps = {
+	fullInvite: Invite;
+	inviteId: string;
+	parts: any;
+};
+
+export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): JSX.Element => {
 	return (
 		<Container
 			orientation="horizontal"
@@ -31,4 +38,4 @@ export default function MessagePart({ fullInvite, inviteId, parts }) {
 			</Container>
 		</Container>
 	);
-}
+};

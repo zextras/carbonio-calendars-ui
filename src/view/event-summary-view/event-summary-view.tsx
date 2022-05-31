@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { Dispatch } from 'react';
+import React, { useMemo } from 'react';
 import { Container, Divider, Popover } from '@zextras/carbonio-design-system';
-import { startsWith } from 'lodash';
+import { isNil, omitBy, startsWith } from 'lodash';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 import { TitleRow } from './title-row';
@@ -26,7 +26,6 @@ type EventSummaryProps = {
 	event: EventType;
 	onClose: () => void;
 	invite: Invite;
-	dispatch: Dispatch<any>;
 };
 
 export const EventSummaryView = ({
@@ -34,24 +33,54 @@ export const EventSummaryView = ({
 	open,
 	event,
 	onClose,
-	invite,
-	dispatch
-}: EventSummaryProps): JSX.Element => (
-	<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
-		<Container padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }} width="400px">
-			<TitleRow event={event} invite={invite} />
-			<NeverSentWarningRow event={event} />
-			<CalendarInfoRow event={event} />
-			{event && <TimeInfoRow event={event} showIcon />}
-			{event && <LocationRow event={event} showIcon />}
-			{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
-			<ParticipantsRow event={event} invite={invite} />
-			{event?.resource?.tags?.length > 0 && <TagsRow event={event} invite={invite} />}
-			{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
-				<DescriptionFragmentRow event={event} />
-			)}
-			<Divider />
-			<ActionsButtonsRow event={event} dispatch={dispatch} onClose={onClose} />
-		</Container>
-	</Popover>
-);
+	invite
+}: EventSummaryProps): JSX.Element => {
+	const timeData = useMemo(
+		() =>
+			omitBy(
+				{
+					allDay: event.allDay,
+					start: event.start,
+					end: event.end
+				},
+				isNil
+			),
+		[event.allDay, event.end, event.start]
+	);
+
+	const locationData = useMemo(
+		() =>
+			omitBy(
+				{
+					class: event.resource.class,
+					location: event.resource.location,
+					locationUrl: event.resource.locationUrl
+				},
+				isNil
+			),
+		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
+	);
+
+	return (
+		<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
+			<Container
+				padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }}
+				width="400px"
+			>
+				<TitleRow event={event} />
+				<NeverSentWarningRow neverSent={event?.resource?.inviteNeverSent} />
+				<CalendarInfoRow />
+				{timeData && <TimeInfoRow timeInfoData={timeData} showIcon />}
+				{locationData && <LocationRow locationData={locationData} showIcon />}
+				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
+				<ParticipantsRow event={event} invite={invite} />
+				{event?.resource?.tags?.length > 0 && <TagsRow event={event} invite={invite} />}
+				{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
+					<DescriptionFragmentRow event={event} />
+				)}
+				<Divider />
+				<ActionsButtonsRow event={event} onClose={onClose} />
+			</Container>
+		</Popover>
+	);
+};

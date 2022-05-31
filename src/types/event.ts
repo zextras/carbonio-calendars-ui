@@ -6,6 +6,7 @@
 import { Moment } from 'moment';
 import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 import { AlarmType } from './appointments';
+import { AlarmData, ParticipationStatus } from './store/invite';
 
 export type EventResource = {
 	attach?: { mp?: []; aid?: [] };
@@ -34,7 +35,7 @@ export type EventResource = {
 	inviteNeverSent: boolean;
 	hasOtherAttendees: boolean;
 	isRecurrent: boolean;
-	participationStatus: string;
+	participationStatus: ParticipationStatus;
 	organizer: {
 		name: string;
 		email: string;
@@ -49,7 +50,7 @@ export type EventResource = {
 	tags: string[];
 	compNum: number;
 	apptStart: number;
-	alarmData: Array<AlarmType>;
+	alarmData: AlarmData;
 };
 
 export type EventType = {

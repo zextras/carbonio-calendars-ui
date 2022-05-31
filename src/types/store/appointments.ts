@@ -5,6 +5,7 @@
  */
 // eslint-disable-next-line no-shadow
 import { AlarmType } from '../appointments';
+import { ParticipationStatus } from '../event';
 
 export type SingleReference = {
 	recur: boolean;
@@ -57,7 +58,7 @@ export type Appointment = {
 	name?: string;
 	neverSent: boolean;
 	or: any;
-	ptst: string;
+	ptst: ParticipationStatus;
 	recur?: any;
 	rev: number;
 	s: any;

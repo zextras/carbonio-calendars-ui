@@ -20,16 +20,16 @@ import {
 } from '@zextras/carbonio-design-system';
 import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
 import { getFileExtension, calcColor } from '../../commons/utilities';
-import { humanFileSize, previewType } from './file-preview';
+import { humanFileSize, previewType } from '../../commons/file-preview';
 
-function getAttachmentsLink(messageId, messageSubject, attachments) {
+const getAttachmentsLink = (messageId, messageSubject, attachments) => {
 	if (attachments.length > 1) {
 		return `/service/home/~/?auth=co&id=${messageId}&filename=${messageSubject}&charset=UTF-8&part=${attachments.join(
 			','
 		)}&disp=a&fmt=zip`;
 	}
 	return `/service/home/~/?auth=co&id=${messageId}&part=${attachments.join(',')}&disp=a`;
-}
+};
 
 const AttachmentHoverBarContainer = styled(Container)`
 	display: none;
@@ -77,7 +77,7 @@ const AttachmentExtension = styled(Text)`
 	margin-right: ${({ theme }) => theme.sizes.padding.small};
 `;
 
-function Attachment({
+const Attachment = ({
 	filename,
 	size,
 	link,
@@ -89,7 +89,7 @@ function Attachment({
 	disabled = false,
 	iconColors,
 	att
-}) {
+}) => {
 	const { createPreview } = useContext(PreviewsManagerContext);
 	const extension = getFileExtension(att);
 	const sizeLabel = useMemo(() => humanFileSize(size), [size]);
@@ -215,15 +215,15 @@ function Attachment({
 			<AttachmentLink ref={inputRef} rel="noopener" target="_blank" href={link} />
 		</AttachmentContainer>
 	);
-}
+};
 
-export default function AttachmentsBlock({
+export const AttachmentsBlock = ({
 	attachments,
 	message,
 	callbacks,
 	isEditor = false,
 	isComplete = false
-}) {
+}) => {
 	const [t] = useTranslation();
 	const [expanded, setExpanded] = useState(false);
 	const theme = useTheme();
@@ -390,4 +390,4 @@ export default function AttachmentsBlock({
 			</Container>
 		)
 	);
-}
+};

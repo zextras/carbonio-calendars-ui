@@ -14,7 +14,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useMemo, useState } from 'react';
 
-function DisplayedParticipant({ participant }) {
+const DisplayedParticipant = ({ participant }) => {
 	const [t] = useTranslation();
 	return (
 		<Row mainAlignment="flex-start" crossAlignment="center" padding={{ vertical: 'small' }}>
@@ -42,9 +42,9 @@ function DisplayedParticipant({ participant }) {
 			</Row>
 		</Row>
 	);
-}
+};
 
-function Dropdown({ label, participants = [], width }) {
+const Dropdown = ({ label, participants = [], width }) => {
 	const [isExpanded, setIsExpanded] = useState(true);
 	const toggleExpanded = useCallback(() => setIsExpanded((prevExpanded) => !prevExpanded), []);
 
@@ -80,9 +80,9 @@ function Dropdown({ label, participants = [], width }) {
 			</Container>
 		)
 	);
-}
+};
 
-export default function ParticipantsDisplayer({ participants }) {
+export const ParticipantsDisplayer = ({ participants }) => {
 	const [t] = useTranslation();
 	const width = Object.keys(participants).length === 1 ? '100%' : '50%';
 
@@ -140,4 +140,4 @@ export default function ParticipantsDisplayer({ participants }) {
 			/>
 		</Container>
 	);
-}
+};

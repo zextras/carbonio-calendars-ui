@@ -4,20 +4,39 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
-import moment from 'moment';
-import React from 'react';
+import moment, { Moment } from 'moment';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export const TimeInfoRow = ({ event, showIcon = false }) => {
+type TimeInfoProps = {
+	allDay?: boolean;
+	start?: Date | Moment;
+	end?: Date | Moment;
+};
+
+export const TimeInfoRow = ({
+	timeInfoData,
+	showIcon = false
+}: {
+	timeInfoData: TimeInfoProps;
+	showIcon?: boolean;
+}): JSX.Element => {
 	const [t] = useTranslation();
-	const date = React.useMemo(() => {
-		if (event?.allDay) {
-			const startDate = moment(event.start);
+	const date = useMemo(() => {
+		if (timeInfoData.allDay) {
+			const startDate = moment(timeInfoData.start);
 			const dayOfWeek = startDate.format('dddd');
 			return `${dayOfWeek}, ${startDate.format('LL')} - ${t('label.all_day', 'All day')}`;
 		}
-		return `${moment(event.start).format('LLLL')} - ${moment(event.end).format('LT')}`;
-	}, [event, t]);
+		return `${moment(timeInfoData.start).format('LLLL')} - ${moment(timeInfoData.end).format(
+			'LT'
+		)}`;
+	}, [t, timeInfoData.allDay, timeInfoData.end, timeInfoData.start]);
+
+	const gmtDate = useMemo(
+		() => `${moment(timeInfoData.start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
+		[timeInfoData.start]
+	);
 
 	return (
 		<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
@@ -31,7 +50,7 @@ export const TimeInfoRow = ({ event, showIcon = false }) => {
 					{date}
 					<br />
 					GMT
-					{`${moment(event.start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`}
+					{gmtDate}
 				</Text>
 			</Row>
 		</Row>

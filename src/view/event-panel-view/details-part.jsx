@@ -4,14 +4,18 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { isNil, omitBy } from 'lodash';
 import ImageAndIconPart from './image-and-icon-part';
 import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { LocationRow } from '../event-summary-view/location-row';
 import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
 import TagsRow from '../event-summary-view/tags-row';
+import { selectCalendar } from '../../store/selectors/calendars';
 
 const PaddedRow = styled(Row)`
 	padding: 4px 4px;
@@ -21,19 +25,18 @@ const CalendarIcon = styled(Icon)`
 	width: 18px;
 	height: 18px;
 `;
-function SubjectRow({ subject, calendarColor, isPrivate }) {
-	return (
-		<Container mainAlignment="flex-start" orientation="horizontal">
-			{isPrivate && <Icon icon="Lock" customColor={calendarColor} style={{ padding: '4px' }} />}
-			<Text size="small" overflow="break-word" style={{ fontWeight: '600' }}>
-				{subject}
-			</Text>
-			{/* TODO: tags */}
-		</Container>
-	);
-}
 
-function InviteNeverSentRow({ inviteNeverSent = false }) {
+const SubjectRow = ({ subject, calendarColor, isPrivate }) => (
+	<Container mainAlignment="flex-start" orientation="horizontal">
+		{isPrivate && <Icon icon="Lock" customColor={calendarColor} style={{ padding: '4px' }} />}
+		<Text size="small" overflow="break-word" style={{ fontWeight: '600' }}>
+			{subject}
+		</Text>
+		{/* TODO: tags */}
+	</Container>
+);
+
+const InviteNeverSentRow = ({ inviteNeverSent = false }) => {
 	const [t] = useTranslation();
 	if (inviteNeverSent) {
 		return (
@@ -48,16 +51,52 @@ function InviteNeverSentRow({ inviteNeverSent = false }) {
 		);
 	}
 	return null;
-}
+};
 
-export default function DetailsPart({
+const CalendarInfo = ({ calendar }) => (
+	<Tooltip label={calendar.name} placement="left">
+		<div>
+			<CalendarIcon icon="Calendar2" size="medium" customColor={calendar.color.color} />
+		</div>
+	</Tooltip>
+);
+
+export const DetailsPart = ({
 	subject,
 	calendarColor,
 	inviteNeverSent,
 	isPrivate,
 	event,
 	invite
-}) {
+}) => {
+	const { calendarId } = useParams();
+	const calendar = useSelector((s) => selectCalendar(s, calendarId));
+
+	const timeData = useMemo(
+		() =>
+			omitBy(
+				{
+					allDay: event.allDay,
+					start: event.start,
+					end: event.end
+				},
+				isNil
+			),
+		[event.allDay, event.end, event.start]
+	);
+
+	const locationData = useMemo(
+		() =>
+			omitBy(
+				{
+					class: event.resource.class,
+					location: event.resource.location,
+					locationUrl: event.resource.locationUrl
+				},
+				isNil
+			),
+		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
+	);
 	return (
 		<Container
 			mainAlignment="flex-start"
@@ -80,14 +119,12 @@ export default function DetailsPart({
 							isPrivate={isPrivate}
 							width="fit"
 						/>
-						<Tooltip label={event.resource.calendar.name} placement="left">
-							<div>
-								<CalendarIcon icon="Calendar2" size="medium" customColor={calendarColor} />
-							</div>
-						</Tooltip>
+						{calendar && <CalendarInfo calendar={calendar} />}
 					</Container>
-					{event && <TimeInfoRow event={event} width="fill" />}
-					{event && <LocationRow event={event} width="fill" />}
+					{timeData && <TimeInfoRow timeInfoData={timeData} />}
+					{locationData && locationData?.class !== 'PRI' && (
+						<LocationRow locationData={locationData} width="fill" />
+					)}
 					{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} />}
 					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
 				</Row>
@@ -96,4 +133,4 @@ export default function DetailsPart({
 			<InviteNeverSentRow inviteNeverSent={inviteNeverSent} width="fill" />
 		</Container>
 	);
-}
+};

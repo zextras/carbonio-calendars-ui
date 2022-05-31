@@ -44,9 +44,10 @@ const CalendarView = () => (
 		<LazyCalendarView />
 	</Suspense>
 );
-const EditorView = (context) => (
+
+const EditorView = () => (
 	<Suspense fallback={<Spinner />}>
-		<LazyEditorView context={context} />
+		<LazyEditorView />
 	</Suspense>
 );
 const SettingsView = () => (
@@ -54,6 +55,7 @@ const SettingsView = () => (
 		<LazySettingsView />
 	</Suspense>
 );
+
 const SidebarView = (props) => (
 	<Suspense fallback={<Spinner />}>
 		<LazySidebarView {...props} />
@@ -114,6 +116,8 @@ export default function App() {
 		});
 		registerComponents({
 			id: 'invites-reply',
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			component: InviteResponse
 		});
 	}, [t]);

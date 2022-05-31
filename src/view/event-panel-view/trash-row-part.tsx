@@ -10,14 +10,15 @@ import styled from 'styled-components';
 import { reduce } from 'lodash';
 import { useSelector } from 'react-redux';
 import { selectInstanceInvite } from '../../store/selectors/invites';
+import { EventType } from '../../types/event';
 
 const TitleText = styled(Text)`
 	display: inline-block;
 	color: black;
 `;
 
-function findAttachments(parts, acc) {
-	return reduce(
+const findAttachments = (parts, acc) =>
+	reduce(
 		parts,
 		(found, part) => {
 			if (part.disposition === 'attachment') {
@@ -27,9 +28,8 @@ function findAttachments(parts, acc) {
 		},
 		acc
 	);
-}
 
-export default function TrashRow({ event }) {
+export const TrashRow = ({ event }: { event: EventType }): JSX.Element => {
 	const { inviteId, ridZ, participationStatus } = event.resource;
 	const invite = useSelector((state) => selectInstanceInvite(state, inviteId, ridZ));
 
@@ -86,4 +86,4 @@ export default function TrashRow({ event }) {
 			<Divider />
 		</Container>
 	);
-}
+};

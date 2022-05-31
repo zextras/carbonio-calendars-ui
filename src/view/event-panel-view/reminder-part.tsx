@@ -9,8 +9,15 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
 import { useInvite } from '../../hooks/use-invite';
+import { EventType } from '../../types/event';
 
-export default function ReminderPart({ alarmString, event }) {
+export const ReminderPart = ({
+	alarmString,
+	event
+}: {
+	alarmString: string;
+	event: EventType;
+}): JSX.Element | null => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const invite = useInvite(event?.resource?.inviteId);
@@ -205,4 +212,4 @@ export default function ReminderPart({ alarmString, event }) {
 			</Dropdown>
 		</Container>
 	) : null;
-}
+};

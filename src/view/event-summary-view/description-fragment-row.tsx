@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Divider, Icon, Row, Text } from '@zextras/carbonio-design-system';
+import { Icon, Row, Text } from '@zextras/carbonio-design-system';
 import React from 'react';
-import { startsWith } from 'lodash';
-import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
+import { EventType } from '../../types/event';
 
-export const DescriptionFragmentRow = ({ event }) => (
+export const DescriptionFragmentRow = ({ event }: { event: EventType }): JSX.Element => (
 	<>
 		{event.resource.class === 'PRI' &&
 		!event?.resource?.iAmOrganizer &&

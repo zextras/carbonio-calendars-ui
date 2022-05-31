@@ -6,12 +6,27 @@
 import React from 'react';
 import { Avatar, Container, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation, Trans } from 'react-i18next';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
-import ParticipantsDisplayerSmall from './participants-displayer-small';
+import { useUserAccount } from '@zextras/carbonio-shell-ui';
+import { EventType } from '../../types/event';
+import { InviteParticipants } from '../../types/store/invite';
+import { ParticipantsDisplayer } from './participants-displayer-small';
 
-export default function ParticipantsPart({ event, organizer, participants }) {
+type ParticipantsProps = {
+	event: EventType;
+	organizer: {
+		name: string;
+		email: string;
+	};
+	participants: InviteParticipants;
+};
+
+export const ParticipantsPart = ({
+	event,
+	organizer,
+	participants
+}: ParticipantsProps): JSX.Element => {
 	const [t] = useTranslation();
-	const accounts = useUserAccounts();
+	const account = useUserAccount();
 	return (
 		<Container
 			orientation="vertical"
@@ -24,7 +39,7 @@ export default function ParticipantsPart({ event, organizer, participants }) {
 			{event?.resource?.iAmOrganizer && (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Padding right="small">
-						<Avatar size="small" label={accounts[0].name || accounts[0].displayName} />
+						<Avatar size="small" label={account.name || account.displayName} />
 					</Padding>
 
 					<Text overflow="break-word" weight="bold">
@@ -62,7 +77,7 @@ export default function ParticipantsPart({ event, organizer, participants }) {
 					</Text>
 				</Row>
 			)}
-			<ParticipantsDisplayerSmall participants={participants} event={event} />
+			<ParticipantsDisplayer participants={participants} event={event} />
 		</Container>
 	);
-}
+};

@@ -17,51 +17,48 @@ type ModalProps = {
 	onClose: () => void;
 };
 
-// todo: refactor routing
 export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): JSX.Element => {
 	const [t] = useTranslation();
 
 	const onEntireSeries = (): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`
 		);
 		onClose();
 	};
 
 	const onSingleInstance = (): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}?isInstance=TRUE`
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 		onClose();
 	};
 
 	return (
-		<>
-			<Container
-				padding={{ all: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-			>
-				<ModalHeader onClose={onClose} title={event.title} />
-				<Padding all="small">
-					<Text overflow="break-word">
-						{t('message.appointment_type_handle', {
-							name: event.title,
-							defaultValue:
-								'{{name}}” is a recurring appointment. Would you like to open only this instance or the series?'
-						})}
-					</Text>
-				</Padding>
-				<ModalFooter
-					onConfirm={onSingleInstance}
-					label={t('label.single_instance', 'SINGLE INSTANCE')}
-					secondaryAction={onEntireSeries}
-					secondaryLabel={t('label.entire_serires', 'ENTIRE SERIES')}
-					secondaryBtnType="outlined"
-					secondaryColor="primary"
-				/>
-			</Container>
-		</>
+		<Container
+			padding={{ all: 'small' }}
+			mainAlignment="center"
+			crossAlignment="flex-start"
+			height="fit"
+		>
+			<ModalHeader onClose={onClose} title={event.title} />
+			<Padding all="small">
+				<Text overflow="break-word">
+					{t('message.appointment_type_handle', {
+						name: event.title,
+						defaultValue:
+							'{{name}}” is a recurring appointment. Would you like to open only this instance or the series?'
+					})}
+				</Text>
+			</Padding>
+			<ModalFooter
+				onConfirm={onSingleInstance}
+				label={t('label.single_instance', 'SINGLE INSTANCE')}
+				secondaryAction={onEntireSeries}
+				secondaryLabel={t('label.entire_serires', 'ENTIRE SERIES')}
+				secondaryBtnType="outlined"
+				secondaryColor="primary"
+			/>
+		</Container>
 	);
 };

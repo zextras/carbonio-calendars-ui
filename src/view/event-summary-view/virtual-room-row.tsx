@@ -7,8 +7,15 @@ import { find } from 'lodash';
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import React, { useMemo } from 'react';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
+import { XPropProps } from '../../types/store/invite';
 
-export const VirtualRoomRow = ({ xprop, showIcon }) => {
+export const VirtualRoomRow = ({
+	xprop,
+	showIcon = false
+}: {
+	xprop: XPropProps;
+	showIcon?: boolean;
+}): JSX.Element | null => {
 	const room = useMemo(() => find(xprop, ['name', CRB_XPROPS.MEETING_ROOM]), [xprop]);
 	if (room) {
 		const roomName = find(room.xparam, ['name', CRB_XPARAMS.ROOM_NAME])?.value;
