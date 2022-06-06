@@ -22,7 +22,11 @@ import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
 import { getFileExtension, calcColor } from '../../commons/utilities';
 import { humanFileSize, previewType } from '../../commons/file-preview';
 
-const getAttachmentsLink = (messageId, messageSubject, attachments) => {
+const getAttachmentsLink = (
+	messageId: string,
+	messageSubject: string,
+	attachments: Array<string>
+): string => {
 	if (attachments.length > 1) {
 		return `/service/home/~/?auth=co&id=${messageId}&filename=${messageSubject}&charset=UTF-8&part=${attachments.join(
 			','
@@ -33,31 +37,31 @@ const getAttachmentsLink = (messageId, messageSubject, attachments) => {
 
 const AttachmentHoverBarContainer = styled(Container)`
 	display: none;
-	height: 0px;
+	height: 0;
 `;
 
 const AttachmentContainer = styled(Container)`
 	border-radius: 2px;
-	width: ${({ isComplete }) => (isComplete ? 'calc(25% - 8px)' : 'calc(50% - 8px)')};
+	width: ${({ isComplete }): string => (isComplete ? 'calc(25% - 8px)' : 'calc(50% - 8px)')};
 	transition: 0.2s ease-out;
-	margin-bottom: ${({ theme }) => theme.sizes.padding.small};
-	margin-right: ${({ theme }) => theme.sizes.padding.small};
+	margin-bottom: ${({ theme }): string => theme.sizes.padding.small};
+	margin-right: ${({ theme }): string => theme.sizes.padding.small};
 	box-sizing: border-box;
 	&:hover {
-		background-color: ${({ theme, background, disabled }) =>
+		background-color: ${({ theme, background, disabled }): string =>
 			disabled ? 'gray5' : theme.palette[background].hover};
 		& ${AttachmentHoverBarContainer} {
 			display: flex;
 		}
 	}
 	&:focus {
-		background-color: ${({ theme, background }) => theme.palette[background].focus};
+		background-color: ${({ theme, background }): string => theme.palette[background].focus};
 	}
-	cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+	cursor: ${({ disabled }): string => (disabled ? 'default' : 'pointer')};
 `;
 
 const AttachmentLink = styled.a`
-	margin-bottom: ${({ theme }) => theme.sizes.padding.small};
+	margin-bottom: ${({ theme }): string => theme.sizes.padding.small};
 	position: relative;
 	text-decoration: none;
 `;
@@ -68,20 +72,33 @@ const AttachmentExtension = styled(Text)`
 	align-items: center;
 	width: 32px;
 	height: 32px;
-	border-radius: ${({ theme }) => theme.borderRadius};
-	background-color: ${({ theme, disabled, background }) =>
+	border-radius: ${({ theme }): string => theme.borderRadius};
+	background-color: ${({ theme, disabled, background }): string =>
 		disabled ? theme.palette.primary.disabled : background.color || theme.palette.primary.regular};
-	color: ${({ theme }) => theme.palette.gray6.regular};
-	font-size: calc(${({ theme }) => theme.sizes.font.small} - 2px);
+	color: ${({ theme }): string => theme.palette.gray6.regular};
+	font-size: calc(${({ theme }): string => theme.sizes.font.small} - 2px);
 	text-transform: uppercase;
-	margin-right: ${({ theme }) => theme.sizes.padding.small};
+	margin-right: ${({ theme }): string => theme.sizes.padding.small};
 `;
 
+type AttachmentProps = {
+	link: string;
+	id: string;
+	part: string;
+	isEditor: boolean;
+	isComplete: boolean;
+	removeAttachment: (arg: string) => void;
+	disabled: boolean;
+	iconColors: Array<{
+		extension: string;
+		color: string;
+	}>;
+	att: any;
+};
+
 const Attachment = ({
-	filename,
-	size,
 	link,
-	message,
+	id,
 	part,
 	isEditor,
 	removeAttachment,
@@ -89,17 +106,15 @@ const Attachment = ({
 	disabled = false,
 	iconColors,
 	att
-}) => {
+}: AttachmentProps): JSX.Element => {
 	const { createPreview } = useContext(PreviewsManagerContext);
 	const extension = getFileExtension(att);
-	const sizeLabel = useMemo(() => humanFileSize(size), [size]);
+	const sizeLabel = useMemo(() => humanFileSize(att.size), [att.size]);
 	const [t] = useTranslation();
-	const inputRef = useRef();
-	const inputRef2 = useRef();
+	const inputRef = useRef<HTMLAnchorElement>(null);
+	const inputRef2 = useRef<HTMLAnchorElement>(null);
 	const downloadAttachment = useCallback(() => {
-		if (inputRef.current) {
-			// eslint-disable-next-line no-param-reassign
-			inputRef.current.value = null;
+		if (inputRef?.current) {
 			inputRef.current.click();
 		}
 	}, [inputRef]);
@@ -128,8 +143,6 @@ const Attachment = ({
 					size: humanFileSize(att.size)
 				});
 			} else if (inputRef2.current) {
-				// eslint-disable-next-line no-param-reassign
-				inputRef2.current.value = null;
 				inputRef2.current.click();
 			}
 		},
@@ -146,7 +159,7 @@ const Attachment = ({
 			padding={{ right: 'medium' }}
 		>
 			<Tooltip
-				key={isEditor ? `${message.id}-Edit` : `${message.id}-Preview`}
+				key={isEditor ? `${id}-Edit` : `${id}-Preview`}
 				label={
 					disabled
 						? t('action.save_to_preview', 'Save to preview')
@@ -167,7 +180,7 @@ const Attachment = ({
 					</AttachmentExtension>
 					<Row orientation="vertical" crossAlignment="flex-start" takeAvailableSpace>
 						<Padding style={{ width: '100%' }} bottom="extrasmall">
-							<Text disabled={disabled}>{filename}</Text>
+							<Text disabled={disabled}>{att.filename}</Text>
 						</Padding>
 						<Text disabled={disabled} color="gray1" size="small">
 							{sizeLabel}
@@ -178,27 +191,22 @@ const Attachment = ({
 			<Row orientation="horizontal" crossAlignment="center">
 				<AttachmentHoverBarContainer orientation="horizontal">
 					{disabled ? (
-						<Tooltip
-							key={`${message.id}-DeletePermanentlyOutline`}
-							label={t('label.delete', 'Delete')}
-						>
+						<Tooltip key={`${id}-DeletePermanentlyOutline`} label={t('label.delete', 'Delete')}>
 							<IconButton
 								size="medium"
 								icon={'DeletePermanentlyOutline'}
-								onClick={() => removeAttachment(part)}
+								onClick={(): void => removeAttachment(part)}
 							/>
 						</Tooltip>
 					) : (
 						<Tooltip
-							key={
-								isEditor ? `${message.id}-EditOutline` : `${message.id}-DeletePermanentlyOutline`
-							}
+							key={isEditor ? `${id}-EditOutline` : `${id}-DeletePermanentlyOutline`}
 							label={isEditor ? t('label.delete', 'Delete') : t('label.download', 'Download')}
 						>
 							<IconButton
 								size="medium"
 								icon={isEditor ? 'DeletePermanentlyOutline' : 'DownloadOutline'}
-								onClick={isEditor ? () => removeAttachment(part) : downloadAttachment}
+								onClick={isEditor ? (): void => removeAttachment(part) : downloadAttachment}
 							/>
 						</Tooltip>
 					)}
@@ -209,7 +217,7 @@ const Attachment = ({
 					rel="noopener"
 					ref={inputRef2}
 					target="_blank"
-					href={`/service/home/~/?auth=co&id=${message.id}&part=${part}`}
+					href={`/service/home/~/?auth=co&id=${id}&part=${part}`}
 				/>
 			)}
 			<AttachmentLink ref={inputRef} rel="noopener" target="_blank" href={link} />
@@ -217,21 +225,31 @@ const Attachment = ({
 	);
 };
 
+type AttachmentsBlockProps = {
+	attachments: any;
+	id: string;
+	subject: string;
+	onAttachmentsChange?: () => void;
+	isEditor?: boolean;
+	isComplete?: boolean;
+};
+
 export const AttachmentsBlock = ({
 	attachments,
-	message,
-	callbacks,
+	id,
+	subject,
+	onAttachmentsChange,
 	isEditor = false,
 	isComplete = false
-}) => {
+}: AttachmentsBlockProps): JSX.Element => {
 	const [t] = useTranslation();
 	const [expanded, setExpanded] = useState(false);
 	const theme = useTheme();
 	const attachmentsCount = useMemo(() => attachments.length, [attachments]);
 	const attachmentsParts = useMemo(() => map(attachments, 'name'), [attachments]);
 	const actionsDownloadLink = useMemo(
-		() => getAttachmentsLink(message?.id, message?.subject, attachmentsParts),
-		[message, attachmentsParts]
+		() => getAttachmentsLink(id, subject, attachmentsParts),
+		[attachmentsParts, id, subject]
 	);
 
 	const removeAttachment = useCallback(
@@ -239,25 +257,29 @@ export const AttachmentsBlock = ({
 			const attachmentFiles = filter(attachments, (p) =>
 				p.name ? p.name !== part : !p.aid || p.aid !== part
 			);
-			callbacks.onAttachmentsChange(
-				{
-					aid: reduce(attachmentFiles, (acc, item) => (item.aid ? [...acc, item.aid] : acc), []),
-					mp: reduce(
-						attachmentFiles,
-						(acc, item) => (item.name ? [...acc, { part: item.name, mid: message.id }] : acc),
-						[]
-					)
-				},
-				attachmentFiles,
-				true
-			);
+			if (onAttachmentsChange) {
+				onAttachmentsChange(
+					{
+						aid: reduce(attachmentFiles, (acc, item) => (item.aid ? [...acc, item.aid] : acc), []),
+						mp: reduce(
+							attachmentFiles,
+							(acc, item) => (item.name ? [...acc, { part: item.name, mid: id }] : acc),
+							[]
+						)
+					},
+					attachmentFiles,
+					true
+				);
+			}
 		},
-		[attachments, callbacks, message]
+		[attachments, id, onAttachmentsChange]
 	);
 
 	const removeAllAttachments = useCallback(() => {
-		callbacks.onAttachmentsChange({ mp: [] }, [], true);
-	}, [callbacks]);
+		if (onAttachmentsChange) {
+			onAttachmentsChange({ mp: [] }, [], true);
+		}
+	}, [onAttachmentsChange]);
 	const attachToVisualize = useMemo(() => {
 		if (!expanded && isComplete) return attachments.slice(0, 4);
 		if (!expanded && !isComplete) return attachments.slice(0, 2);
@@ -271,15 +293,6 @@ export const AttachmentsBlock = ({
 					const fileExtn = getFileExtension(att);
 					const color = calcColor(att.contentType, theme);
 
-					if (iconColors) {
-						return [
-							...iconColors,
-							{
-								extension: fileExtn,
-								color
-							}
-						];
-					}
 					return {
 						extension: fileExtn,
 						color
@@ -291,103 +304,103 @@ export const AttachmentsBlock = ({
 	);
 
 	return (
-		attachmentsCount > 0 && (
-			<Container mainAlignment="flex-start" crossAlignment="flex-start">
-				<Row mainAlignment="flex-start" padding={{ top: 'extrasmall', bottom: 'medium' }}>
-					<Padding right="small">
-						{attachmentsCount < 3 && attachmentsCount > 1 && (
-							<Text color="gray1">
-								{t('label.attachment', {
+		<>
+			{attachmentsCount > 0 && (
+				<Container mainAlignment="flex-start" crossAlignment="flex-start">
+					<Row mainAlignment="flex-start" padding={{ top: 'extrasmall', bottom: 'medium' }}>
+						<Padding right="small">
+							{attachmentsCount < 3 && attachmentsCount > 1 && (
+								<Text color="gray1">
+									{t('label.attachment', {
+										count: attachmentsCount,
+										defaultValue: 'Attachment',
+										defaultValue_plural: '{{count}} Attachments'
+									})}
+								</Text>
+							)}
+							{attachmentsCount === 1 && (
+								<Text color="gray1">{`1 ${t('label.attachment', {
 									count: attachmentsCount,
 									defaultValue: 'Attachment',
 									defaultValue_plural: '{{count}} Attachments'
-								})}
-							</Text>
-						)}
-						{attachmentsCount === 1 && (
-							<Text color="gray1">{`1 ${t('label.attachment', {
-								count: attachmentsCount,
-								defaultValue: 'Attachment',
-								defaultValue_plural: '{{count}} Attachments'
-							})}`}</Text>
-						)}
-						{attachmentsCount > 2 &&
-							(expanded ? (
-								<Row onClick={() => setExpanded(false)} style={{ cursor: 'pointer' }}>
-									<Padding right="small">
-										<Text color="primary">
-											{t('label.attachment', {
-												count: attachmentsCount,
-												defaultValue: 'Attachment',
-												defaultValue_plural: '{{count}} Attachments'
-											})}
-										</Text>
-									</Padding>
-									<Icon icon="ArrowIosUpward" color="primary" />
-								</Row>
-							) : (
-								<Row onClick={() => setExpanded(true)} style={{ cursor: 'pointer' }}>
-									<Padding right="small">
-										<Text color="primary">
-											{t('label.show', {
-												count: attachmentsCount,
-												defaultValue: 'Show',
-												defaultValue_plural: 'Show all'
-											})}{' '}
-											{t('label.attachment', {
-												count: attachmentsCount,
-												defaultValue: 'Attachment',
-												defaultValue_plural: '{{count}} Attachments'
-											})}
-										</Text>
-									</Padding>
-									<Icon icon="ArrowIosDownward" color="primary" />
-								</Row>
-							))}
-					</Padding>
-					<Link
-						size="medium"
-						href={isEditor ? undefined : actionsDownloadLink}
-						onClick={isEditor ? removeAllAttachments : undefined}
-					>
-						{isEditor
-							? t('label.delete', {
-									count: attachmentsCount,
-									defaultValue: 'Delete',
-									defaultValue_plural: 'Delete all'
-							  })
-							: t('label.download', {
-									count: attachmentsCount,
-									defaultValue: 'Download',
-									defaultValue_plural: 'Download all'
-							  })}
-					</Link>
-				</Row>
+								})}`}</Text>
+							)}
+							{attachmentsCount > 2 &&
+								(expanded ? (
+									<Row onClick={(): void => setExpanded(false)} style={{ cursor: 'pointer' }}>
+										<Padding right="small">
+											<Text color="primary">
+												{t('label.attachment', {
+													count: attachmentsCount,
+													defaultValue: 'Attachment',
+													defaultValue_plural: '{{count}} Attachments'
+												})}
+											</Text>
+										</Padding>
+										<Icon icon="ArrowIosUpward" color="primary" />
+									</Row>
+								) : (
+									<Row onClick={(): void => setExpanded(true)} style={{ cursor: 'pointer' }}>
+										<Padding right="small">
+											<Text color="primary">
+												{t('label.show', {
+													count: attachmentsCount,
+													defaultValue: 'Show',
+													defaultValue_plural: 'Show all'
+												})}{' '}
+												{t('label.attachment', {
+													count: attachmentsCount,
+													defaultValue: 'Attachment',
+													defaultValue_plural: '{{count}} Attachments'
+												})}
+											</Text>
+										</Padding>
+										<Icon icon="ArrowIosDownward" color="primary" />
+									</Row>
+								))}
+						</Padding>
+						<Link
+							size="medium"
+							href={isEditor ? undefined : actionsDownloadLink}
+							onClick={isEditor ? removeAllAttachments : undefined}
+						>
+							{isEditor
+								? t('label.delete', {
+										count: attachmentsCount,
+										defaultValue: 'Delete',
+										defaultValue_plural: 'Delete all'
+								  })
+								: t('label.download', {
+										count: attachmentsCount,
+										defaultValue: 'Download',
+										defaultValue_plural: 'Download all'
+								  })}
+						</Link>
+					</Row>
 
-				<Container
-					orientation="horizontal"
-					mainAlignment="flex-start"
-					crossAlignment="flex-start"
-					wrap="wrap"
-				>
-					{map(attachToVisualize, (att, index) => (
-						<Attachment
-							key={`att-${att.filename}-${index}`}
-							filename={att.filename}
-							size={att.size}
-							link={getAttachmentsLink(message?.id, message?.subject, [att.name])}
-							message={message}
-							part={att.name ?? att.aid}
-							isEditor={isEditor}
-							isComplete={isComplete}
-							removeAttachment={removeAttachment}
-							disabled={!att.name}
-							iconColors={iconColors}
-							att={att}
-						/>
-					))}
+					<Container
+						orientation="horizontal"
+						mainAlignment="flex-start"
+						crossAlignment="flex-start"
+						wrap="wrap"
+					>
+						{map(attachToVisualize, (att, index) => (
+							<Attachment
+								key={`att-${att.filename}-${index}`}
+								link={getAttachmentsLink(id, subject, [att.name])}
+								id={id}
+								part={att.name ?? att.aid}
+								isEditor={isEditor}
+								isComplete={isComplete}
+								removeAttachment={removeAttachment}
+								disabled={!att.name}
+								iconColors={iconColors}
+								att={att}
+							/>
+						))}
+					</Container>
 				</Container>
-			</Container>
-		)
+			)}
+		</>
 	);
 };

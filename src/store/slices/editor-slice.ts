@@ -6,6 +6,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAppointment } from '../actions/new-create-appointment';
 import { createAppointmentFulfilled } from '../reducers/create-appointment';
+import {
+	editEditorAllDayReducer,
+	editEditorAttendeesReducer,
+	editEditorCalendarReducer,
+	editEditorClassReducer,
+	editEditorDisplayStatusReducer,
+	editEditorOptionalAttendeesReducer,
+	editEditorRoomReducer, editEditorTextReducer,
+	editLocationReducer,
+	editOrganizerReducer,
+	editTitleReducer,
+} from '../reducers/edit-organizer';
 import { initializeAppointmentReducer } from '../reducers/initialize-appointment';
 import {
 	addAppointmentEditorReducer,
@@ -17,13 +29,14 @@ import {
 	editRoomReducer,
 	openEditorReducer
 } from '../reducers/editor-reducers';
+import { newEditorReducer } from '../reducers/new-editor';
 
 export const editorSlice = createSlice({
 	name: 'editor',
 	initialState: {
 		status: 'idle',
 		editors: {},
-		editorPanel: null
+		editorPanel: undefined
 	},
 	reducers: {
 		addAppointmentEditor: addAppointmentEditorReducer,
@@ -34,7 +47,19 @@ export const editorSlice = createSlice({
 		editOptionalAttendees: editOptionalAttendeesReducer,
 		closeEditor: closeEditorReducer,
 		openEditor: openEditorReducer,
-		initializeEditorAppointment: initializeAppointmentReducer
+		initializeEditorAppointment: initializeAppointmentReducer,
+		createNewEditor: newEditorReducer,
+		editOrganizer: editOrganizerReducer,
+		editEditorTitle: editTitleReducer,
+		editEditorLocation: editLocationReducer,
+		editEditorRoom: editEditorRoomReducer,
+		editEditorAttendees: editEditorAttendeesReducer,
+		editEditorOptionalAttendees: editEditorOptionalAttendeesReducer,
+		editEditorDisplayStatus: editEditorDisplayStatusReducer,
+		editEditorCalendar: editEditorCalendarReducer,
+		editEditorClass: editEditorClassReducer,
+		editEditorText: editEditorTextReducer,
+		editEditorAllDay: editEditorAllDayReducer
 	},
 	extraReducers: (builder) => {
 		builder.addCase(createAppointment.fulfilled, createAppointmentFulfilled);
@@ -49,7 +74,19 @@ export const {
 	openEditor,
 	editRoom,
 	editAttendees,
-	editOptionalAttendees
+	editOptionalAttendees,
+	createNewEditor,
+	editOrganizer,
+	editEditorTitle,
+	editEditorLocation,
+	editEditorRoom,
+	editEditorAttendees,
+	editEditorOptionalAttendees,
+	editEditorDisplayStatus,
+	editEditorCalendar,
+	editEditorClass,
+	editEditorText,
+	editEditorAllDay
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

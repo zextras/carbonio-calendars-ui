@@ -24,9 +24,9 @@ export function selectAppointment({ appointments }: Store, id: string): Appointm
 export function selectAppointmentInstance(
 	{ appointments }: Store,
 	apptId: string,
-	ridZ: string
+	ridZ?: string
 ): InstanceReference | undefined {
-	return appointments?.appointments?.[apptId]?.inst
+	return appointments?.appointments?.[apptId]?.inst && ridZ
 		? find(appointments.appointments[apptId].inst, ['ridZ', ridZ])
 		: undefined;
 }

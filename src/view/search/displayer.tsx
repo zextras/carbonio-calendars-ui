@@ -10,13 +10,13 @@ import { useInvite } from '../../hooks/use-invite';
 import { Header } from './header';
 import { useSearchActionsFn } from './hooks/use-search-actions-fn';
 import StyledDivider from '../../commons/styled-divider';
-import ReminderPart from '../event-panel-view/reminder-part';
-import MessagePart from '../event-panel-view/message-part';
+import { ReminderPart } from '../event-panel-view/reminder-part';
+import { MessagePart } from '../event-panel-view/message-part';
 import { extractBody } from '../../commons/body-message-renderer';
-import ParticipantsPart from '../event-panel-view/participants-part';
-import ReplyButtonsPart from '../event-panel-view/reply-buttons-part';
-import DetailsPart from '../event-panel-view/details-part';
-import AttachmentsPart from '../event-panel-view/attachments-part';
+import { ParticipantsPart } from '../event-panel-view/participants-part';
+import { ReplyButtonsPart } from '../event-panel-view/reply-buttons-part';
+import { DetailsPart } from '../event-panel-view/details-part';
+import { AttachmentsBlock } from '../event-panel-view/attachments-part';
 import { useQuickActions } from '../../hooks/use-quick-actions';
 
 const BodyContainer = styled(Container)`
@@ -50,8 +50,6 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 					>
 						<DetailsPart
 							subject={event?.title}
-							calendarColor={event?.resource?.calendar?.color?.color}
-							location={event?.resource?.location}
 							isPrivate={event?.resource.isPrivate}
 							inviteNeverSent={event?.resource?.inviteNeverSent}
 							event={event}
@@ -92,9 +90,10 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 							<>
 								<StyledDivider />
 								<Container padding={{ all: 'medium' }} background="gray6">
-									<AttachmentsPart
+									<AttachmentsBlock
 										attachments={invite?.attachmentFiles}
-										message={{ id: event?.resource?.inviteId, subject: event?.title }}
+										id={event?.resource?.inviteId}
+										subject={event?.title}
 									/>
 								</Container>
 							</>

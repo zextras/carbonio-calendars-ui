@@ -9,20 +9,19 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { Header } from './header';
 import StyledDivider from '../../commons/styled-divider';
-import ReminderPart from '../event-panel-view/reminder-part';
-import MessagePart from '../event-panel-view/message-part';
+import { ReminderPart } from '../event-panel-view/reminder-part';
+import { MessagePart } from '../event-panel-view/message-part';
 import { extractBody } from '../../commons/body-message-renderer';
 import { ParticipantsPart } from '../event-panel-view/participants-part';
-import ReplyButtonsPart from '../event-panel-view/reply-buttons-part';
-import DetailsPart from '../event-panel-view/details-part';
-import ImageAndIconPart from '../event-panel-view/image-and-icon-part';
+import { ReplyButtonsPart } from '../event-panel-view/reply-buttons-part';
+import { DetailsPart } from '../event-panel-view/details-part';
+import { ImageAndIconPart } from '../event-panel-view/image-and-icon-part';
 import { useQuickActions } from '../../hooks/use-quick-actions';
 import { selectInstanceInvite } from '../../store/selectors/invites';
-import AttachmentsPart from '../event-panel-view/attachments-part';
+import { AttachmentsBlock } from '../event-panel-view/attachments-part';
 
 const BodyContainer = styled(Container)`
 	overflow-y: auto;
-	overflow-x: no-scroll;
 `;
 
 const EventPreviewPanel = ({ event }) => {
@@ -95,9 +94,10 @@ const EventPreviewPanel = ({ event }) => {
 					<>
 						<StyledDivider />
 						<Container padding={{ all: 'medium' }}>
-							<AttachmentsPart
+							<AttachmentsBlock
 								attachments={invite?.attachmentFiles}
-								message={{ id: event?.resource?.inviteId, subject: event?.title }}
+								id={event?.resource?.inviteId}
+								subject={event?.title}
 							/>
 						</Container>
 					</>

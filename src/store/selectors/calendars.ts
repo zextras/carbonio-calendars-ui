@@ -15,6 +15,10 @@ export function selectCalendars(state: Store): Record<string, Calendar> {
 	return state.calendars ? state.calendars.calendars : {};
 }
 
+export function selectCalendarsArray(state: Store): Array<Calendar> {
+	return values?.(state?.calendars?.calendars) ?? [];
+}
+
 export function selectAllCalendars(state: Store): Array<Calendar> {
 	return state.calendars ? values(state.calendars.calendars) : [];
 }

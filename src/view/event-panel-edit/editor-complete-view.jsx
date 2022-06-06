@@ -39,7 +39,7 @@ import CalendarSelector from './components/calendar-selector';
 import ReminderSelector from './components/reminder-selector';
 import ExpandedButtons, { addAttachments } from './components/expanded-buttons';
 
-import AttachmentsBlock from '../event-panel-view/attachments-part';
+import { AttachmentsBlock } from '../event-panel-view/attachments-part';
 import DatePicker from './components/date-picker';
 import RecurrenceSelector from './components/recurrence-selector';
 import DropZoneAttachment from './components/dropzone-component';
@@ -568,8 +568,9 @@ export default function EditorCompleteView({
 							{data?.resource?.attachmentFiles && data?.resource?.attachmentFiles?.length > 0 && (
 								<AttachmentsBlock
 									attachments={data?.resource.attachmentFiles}
-									message={{ id: data.resource.inviteId, subject: data?.resource?.title }}
-									callbacks={callbacks}
+									id={data.resource.inviteId}
+									subject={data?.resource?.title}
+									onAttachmentsChange={callbacks?.onAttachmentsChange}
 									isEditor
 									isComplete
 								/>

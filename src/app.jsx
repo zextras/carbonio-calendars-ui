@@ -26,8 +26,11 @@ import { getSettingsSubSections } from './settings/sub-sections';
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
 );
+/*const LazyEditorView = lazy(() =>
+	import(/!* webpackChunkName: "calendar-edit" *!/ './view/event-panel-edit/board-edit-panel')
+);*/
 const LazyEditorView = lazy(() =>
-	import(/* webpackChunkName: "calendar-edit" */ './view/event-panel-edit/board-edit-panel')
+	import(/* webpackChunkName: "calendar-edit" */ './view/editor/editor-board-wrapper')
 );
 const LazySettingsView = lazy(() =>
 	import(/* webpackChunkName: "settings-view" */ './settings/settings-view')

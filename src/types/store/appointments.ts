@@ -5,7 +5,7 @@
  */
 // eslint-disable-next-line no-shadow
 import { AlarmType } from '../appointments';
-import { ParticipationStatus } from '../event';
+import { ParticipationStatus } from './invite';
 
 export type SingleReference = {
 	recur: boolean;

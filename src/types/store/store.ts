@@ -24,7 +24,7 @@ export type InvitesSlice = {
 export type EditorSlice = {
 	status: string;
 	editors: any;
-	editorPanel: string | null;
+	editorPanel: string | undefined;
 };
 export type Store = {
 	calendars: CalendarSlice;

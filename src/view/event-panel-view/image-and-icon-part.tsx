@@ -23,7 +23,7 @@ export const ImageAndIconPart = ({
 	icon = 'CalendarOutline',
 	color
 }: {
-	icon: string;
+	icon?: string;
 	color: ZimbraColorType;
 }): JSX.Element => (
 	<OuterContainer customColor={`${color}.regular`}>

@@ -32,12 +32,12 @@ import EditorSmallView from './editor-small-view';
 const BackgroundContainer = styled.div`
 	z-index: 10;
 	position: absolute;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	left: 0px;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 	background-color: rgba(0, 0, 0, 0.73);
-	border-radius: 0px;
+	border-radius: 0;
 `;
 
 const AppointmentExpandedContainer = styled(Container)`
@@ -46,7 +46,7 @@ const AppointmentExpandedContainer = styled(Container)`
 	top: 16px;
 	right: 16px;
 	left: 16px;
-	bottom: 0px;
+	bottom: 0;
 	width: auto;
 	height: auto;
 	overflow: hidden;

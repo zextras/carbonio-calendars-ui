@@ -32,7 +32,7 @@ import CalendarSelector from './components/calendar-selector';
 import DatePicker from './components/date-picker';
 import ReminderSelector from './components/reminder-selector';
 import RecurrenceSelector from './components/recurrence-selector';
-import AttachmentsBlock from '../event-panel-view/attachments-part';
+import { AttachmentsBlock } from '../event-panel-view/attachments-part';
 import DropZoneAttachment from './components/dropzone-component';
 
 const emailRegex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
@@ -456,8 +456,9 @@ export default function EditorSmallView({
 								{data?.resource?.attachmentFiles && data?.resource?.attachmentFiles?.length > 0 && (
 									<AttachmentsBlock
 										attachments={data?.resource.attachmentFiles}
-										message={{ id: data?.resource.inviteId, subject: data?.title }}
-										callbacks={callbacks}
+										id={data?.resource.inviteId}
+										subject={data?.title}
+										onAttachmentsChange={callbacks?.onAttachmentsChange}
 										isEditor
 									/>
 								)}

@@ -8,7 +8,7 @@ import { Avatar, Container, Row, Text } from '@zextras/carbonio-design-system';
 import { Trans } from 'react-i18next';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { EventType } from '../../types/event';
-import { InviteParticipant } from '../../types/store/invite';
+import { InviteParticipants } from '../../types/store/invite';
 import { ParticipantsDisplayer } from './participants-displayer';
 
 type ParticipantProps = {
@@ -18,7 +18,7 @@ type ParticipantProps = {
 		email?: string;
 		mail?: string;
 	};
-	participants: Array<InviteParticipant>;
+	participants: InviteParticipants;
 };
 
 export const ParticipantsPart = ({

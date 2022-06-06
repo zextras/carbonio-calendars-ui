@@ -20,6 +20,7 @@ import { replaceHistory, Spinner } from '@zextras/carbonio-shell-ui';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { map, some } from 'lodash';
+import { Store } from '../../types/store/store';
 import { ParticipantsPart } from './participants-part';
 import StyledDivider from '../../commons/styled-divider';
 import { extractBody } from '../../commons/body-message-renderer';
@@ -74,7 +75,7 @@ const AppointmentCardContainer = styled(Container)`
 	overflow: hidden;
 `;
 
-const ActionButtons = ({ actions, closeAction }) => {
+const ActionButtons = ({ actions }: { actions: Array<any> }): JSX.Element => {
 	const actionContainerRef = useRef();
 	const [hiddenActionsCount, recalculateHiddenActions] = useHiddenCount(actionContainerRef, true);
 
@@ -112,7 +113,7 @@ const ActionButtons = ({ actions, closeAction }) => {
 	);
 };
 
-const ExpandButton = ({ actions }) => (
+const ExpandButton = ({ actions }: { actions: Array<any> }): JSX.Element => (
 	<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 		{actions &&
 			map(actions, (action) => (
@@ -121,7 +122,13 @@ const ExpandButton = ({ actions }) => (
 	</Row>
 );
 
-const DisplayerHeader = ({ title, actions, isInstance }) => {
+const DisplayerHeader = ({
+	title,
+	actions
+}: {
+	actions: Array<any>;
+	title: string;
+}): JSX.Element => {
 	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });
@@ -167,7 +174,7 @@ const DisplayerHeader = ({ title, actions, isInstance }) => {
 					padding={{ vertical: 'small' }}
 				>
 					<Row>
-						<ActionButtons actions={actions} closeAction={close} isInstance={isInstance} />
+						<ActionButtons actions={actions} />
 					</Row>
 				</Row>
 			)}
@@ -194,17 +201,22 @@ const PreviewWrapper = () => {
 	return ridZ ? <InstancePreview /> : <SeriesPreview />;
 }; */
 
-export default function EventPanelView() {
-	const { calendarId, apptId, ridZ } = useParams();
-	const calendar = useSelector((s) => selectCalendar(s, calendarId));
-	const appointment = useSelector((s) => selectAppointment(s, apptId));
-	const inst = useSelector((s) => selectAppointmentInstance(s, apptId, ridZ));
+type ParamsType = {
+	calendarId: string;
+	apptId: string;
+	ridZ?: string;
+};
+export default function EventPanelView(): JSX.Element {
+	const { calendarId, apptId, ridZ } = useParams<ParamsType>();
+	const calendar = useSelector((s: Store) => selectCalendar(s, calendarId));
+	const appointment = useSelector((s: Store) => selectAppointment(s, apptId));
+	const inst = useSelector((s: Store) => selectAppointmentInstance(s, apptId, ridZ));
 	const event = useMemo(() => {
 		if (calendar && appointment && inst)
 			return normalizeCalendarEvent(calendar, appointment, inst, appointment?.l?.includes(':'));
 		return undefined;
 	}, [appointment, calendar, inst]);
-	const invite = useSelector((state) =>
+	const invite = useSelector((state: Store) =>
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
 	const isInstance = useQueryParam('isInstance');
@@ -212,7 +224,7 @@ export default function EventPanelView() {
 
 	return event ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">
-			<DisplayerHeader title={event.title} actions={actions} isInstance={isInstance} />
+			<DisplayerHeader title={event.title} actions={actions} />
 			<Container padding={{ all: 'none' }} mainAlignment="flex-start" height="calc(100% - 64px)">
 				<BodyContainer
 					orientation="vertical"
@@ -226,13 +238,13 @@ export default function EventPanelView() {
 						subject={event.title}
 						calendarColor={calendar.color.color}
 						location={event.resource.location}
-						isPrivate={event.resource.isPrivate}
+						isPrivate={event?.resource?.class === 'PRI' ?? false}
 						inviteNeverSent={event.resource.inviteNeverSent}
 						event={event}
 						invite={invite}
 					/>
 					<StyledDivider />
-					{!event.resource.iAmOrganizer && !event.resource.owner && invite && (
+					{!event.resource.iAmOrganizer && !event?.resource?.calendar?.owner && invite && (
 						<>
 							<ReplyButtonsPart
 								inviteId={event.resource.inviteId}
@@ -244,12 +256,9 @@ export default function EventPanelView() {
 					)}
 					{invite && (
 						<ParticipantsPart
-							iAmOrganizer={event.resource.iAmOrganizer}
 							event={event}
 							organizer={event.resource.organizer}
 							participants={invite?.participants}
-							inviteId={event.resource.inviteId}
-							compNum={invite.compNum}
 						/>
 					)}
 					{invite && extractBody(invite.textDescription?.[0]?._content) && (
@@ -270,7 +279,8 @@ export default function EventPanelView() {
 							<Container padding={{ top: 'small', horizontal: 'large' }} background="gray6">
 								<AttachmentsBlock
 									attachments={invite?.attachmentFiles}
-									message={{ id: event.resource.inviteId, subject: event.title }}
+									id={event.resource.inviteId}
+									subject={event.title}
 								/>
 							</Container>
 						</>

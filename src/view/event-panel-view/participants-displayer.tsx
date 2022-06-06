@@ -13,8 +13,9 @@ import {
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useMemo, useState } from 'react';
+import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
-const DisplayedParticipant = ({ participant }) => {
+const DisplayedParticipant = ({ participant }: { participant: InviteParticipant }): JSX.Element => {
 	const [t] = useTranslation();
 	return (
 		<Row mainAlignment="flex-start" crossAlignment="center" padding={{ vertical: 'small' }}>
@@ -44,7 +45,13 @@ const DisplayedParticipant = ({ participant }) => {
 	);
 };
 
-const Dropdown = ({ label, participants = [], width }) => {
+type DropdownProps = {
+	label: string;
+	participants: Array<InviteParticipant>;
+	width: string;
+};
+
+const Dropdown = ({ label, participants, width }: DropdownProps): JSX.Element => {
 	const [isExpanded, setIsExpanded] = useState(true);
 	const toggleExpanded = useCallback(() => setIsExpanded((prevExpanded) => !prevExpanded), []);
 
@@ -60,29 +67,35 @@ const Dropdown = ({ label, participants = [], width }) => {
 	);
 
 	return (
-		participants.length > 0 && (
-			<Container
-				orientation="vertical"
-				mainAlignment="flex-start"
-				crossAlignment="flex-start"
-				width={width}
-				height="fit"
-			>
-				<Row mainAlignment="flex-start" takeAvailableSpace>
-					<Text size="small">{label}</Text>
-					<IconButton
-						icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
-						onClick={toggleExpanded}
-						size="small"
-					/>
-				</Row>
-				{isExpanded && displayedParticipants}
-			</Container>
-		)
+		<>
+			{participants.length > 0 && (
+				<Container
+					orientation="vertical"
+					mainAlignment="flex-start"
+					crossAlignment="flex-start"
+					width={width}
+					height="fit"
+				>
+					<Row mainAlignment="flex-start" takeAvailableSpace>
+						<Text size="small">{label}</Text>
+						<IconButton
+							icon={isExpanded ? 'ChevronUp' : 'ChevronDown'}
+							onClick={toggleExpanded}
+							size="small"
+						/>
+					</Row>
+					{isExpanded && displayedParticipants}
+				</Container>
+			)}
+		</>
 	);
 };
 
-export const ParticipantsDisplayer = ({ participants }) => {
+export const ParticipantsDisplayer = ({
+	participants
+}: {
+	participants: InviteParticipants;
+}): JSX.Element | null => {
 	const [t] = useTranslation();
 	const width = Object.keys(participants).length === 1 ? '100%' : '50%';
 
@@ -105,7 +118,6 @@ export const ParticipantsDisplayer = ({ participants }) => {
 				}).toUpperCase()}
 				participants={participants.AC}
 				width={width}
-				style={{ fontWeigth: 400 }}
 			/>
 			<Dropdown
 				label={t('participants.NE_with_count', {
@@ -115,8 +127,6 @@ export const ParticipantsDisplayer = ({ participants }) => {
 				}).toUpperCase()}
 				participants={participants.NE}
 				width={width}
-				style={{ fontWeigth: 400, background: 'red' }}
-				background="error"
 			/>
 			<Dropdown
 				label={t('participants.TE_with_count', {
@@ -126,7 +136,6 @@ export const ParticipantsDisplayer = ({ participants }) => {
 				}).toUpperCase()}
 				participants={participants.TE}
 				width={width}
-				style={{ fontWeigth: 400, background: 'yellow' }}
 			/>
 			<Dropdown
 				label={t('participants.DE_with_count', {
@@ -136,7 +145,6 @@ export const ParticipantsDisplayer = ({ participants }) => {
 				}).toUpperCase()}
 				participants={participants.DE}
 				width={width}
-				style={{ fontWeigth: 400 }}
 			/>
 		</Container>
 	);

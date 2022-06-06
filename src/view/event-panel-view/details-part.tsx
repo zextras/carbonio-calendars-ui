@@ -10,7 +10,11 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { isNil, omitBy } from 'lodash';
-import ImageAndIconPart from './image-and-icon-part';
+import { EventType } from '../../types/event';
+import { Calendar } from '../../types/store/calendars';
+import { Invite } from '../../types/store/invite';
+import { Store } from '../../types/store/store';
+import { ImageAndIconPart } from './image-and-icon-part';
 import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { LocationRow } from '../event-summary-view/location-row';
 import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
@@ -26,7 +30,13 @@ const CalendarIcon = styled(Icon)`
 	height: 18px;
 `;
 
-const SubjectRow = ({ subject, calendarColor, isPrivate }) => (
+type SubjectProps = {
+	subject: string;
+	calendarColor: string;
+	isPrivate: boolean;
+};
+
+const SubjectRow = ({ subject, calendarColor, isPrivate }: SubjectProps): JSX.Element => (
 	<Container mainAlignment="flex-start" orientation="horizontal">
 		{isPrivate && <Icon icon="Lock" customColor={calendarColor} style={{ padding: '4px' }} />}
 		<Text size="small" overflow="break-word" style={{ fontWeight: '600' }}>
@@ -36,24 +46,21 @@ const SubjectRow = ({ subject, calendarColor, isPrivate }) => (
 	</Container>
 );
 
-const InviteNeverSentRow = ({ inviteNeverSent = false }) => {
+const InviteNeverSentRow = (): JSX.Element => {
 	const [t] = useTranslation();
-	if (inviteNeverSent) {
-		return (
-			<PaddedRow takeAvailableSpace>
-				<Icon icon="AlertCircleOutline" color="error" />
-				<Padding horizontal="small">
-					<Text color="error">
-						{t('label.invitation_not_sent', "You haven't sent the invitation to the attendees yet")}
-					</Text>
-				</Padding>
-			</PaddedRow>
-		);
-	}
-	return null;
+	return (
+		<PaddedRow takeAvailableSpace>
+			<Icon icon="AlertCircleOutline" color="error" />
+			<Padding horizontal="small">
+				<Text color="error">
+					{t('label.invitation_not_sent', "You haven't sent the invitation to the attendees yet")}
+				</Text>
+			</Padding>
+		</PaddedRow>
+	);
 };
 
-const CalendarInfo = ({ calendar }) => (
+const CalendarInfo = ({ calendar }: { calendar: Calendar }): JSX.Element => (
 	<Tooltip label={calendar.name} placement="left">
 		<div>
 			<CalendarIcon icon="Calendar2" size="medium" customColor={calendar.color.color} />
@@ -61,16 +68,23 @@ const CalendarInfo = ({ calendar }) => (
 	</Tooltip>
 );
 
+type DetailsPartProps = {
+	subject: string;
+	inviteNeverSent: boolean;
+	isPrivate: boolean;
+	event: EventType;
+	invite: Invite;
+};
+
 export const DetailsPart = ({
 	subject,
-	calendarColor,
 	inviteNeverSent,
 	isPrivate,
 	event,
 	invite
-}) => {
-	const { calendarId } = useParams();
-	const calendar = useSelector((s) => selectCalendar(s, calendarId));
+}: DetailsPartProps): JSX.Element => {
+	const { calendarId } = useParams<{ calendarId: string }>();
+	const calendar = useSelector((s: Store) => selectCalendar(s, calendarId));
 
 	const timeData = useMemo(
 		() =>
@@ -108,29 +122,28 @@ export const DetailsPart = ({
 		>
 			<Row orientation="row" width="fill" takeAvailableSpace>
 				<Container width="fit">
-					<ImageAndIconPart color={calendarColor || 'primary'} />
+					<ImageAndIconPart color={calendar.color || 'primary'} />
 				</Container>
 				<Padding right="large" />
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
 						<SubjectRow
 							subject={subject}
-							calendarColor={calendarColor}
+							calendarColor={calendar.color.color}
 							isPrivate={isPrivate}
-							width="fit"
 						/>
 						{calendar && <CalendarInfo calendar={calendar} />}
 					</Container>
 					{timeData && <TimeInfoRow timeInfoData={timeData} />}
 					{locationData && locationData?.class !== 'PRI' && (
-						<LocationRow locationData={locationData} width="fill" />
+						<LocationRow locationData={locationData} />
 					)}
 					{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} />}
 					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
 				</Row>
 			</Row>
 			<Padding top={'medium'} />
-			<InviteNeverSentRow inviteNeverSent={inviteNeverSent} width="fill" />
+			{inviteNeverSent && <InviteNeverSentRow />}
 		</Container>
 	);
 };

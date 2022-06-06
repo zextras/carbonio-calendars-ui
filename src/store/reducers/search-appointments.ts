@@ -14,4 +14,5 @@ export const searchAppointmentsFulfilled = (
 ): void => {
 	const appt = normalizeAppointments(payload.appt);
 	addAppointmentsToStore(state, values(appt));
+	state.status = 'idle';
 };
