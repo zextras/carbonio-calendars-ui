@@ -41,6 +41,7 @@ const SearchList = ({
 					ItemComponent={SearchListItem}
 					active={`${apptId}:${ridZ}`}
 					onListBottom={loadMore}
+					background="gray6"
 				/>
 			)}
 		</Container>
