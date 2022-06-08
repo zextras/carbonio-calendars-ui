@@ -1,1 +1,575 @@
-{}
+{
+    "label": {
+        "exclude_free_busy": "Loại trừ lịch này khi báo cáo thời gian rảnh / bận",
+        "filter_sharer_user": "Chủ sở hữu thư mục",
+        "appt_reminder": "Nhắc cuộc hẹn",
+        "attachment": "Đính kèm",
+        "attendee_plural": "Người tham dự",
+        "auto_add_rcvd_app": "Tự động thêm các cuộc hẹn đã nhận vào lịch",
+        "apple_ical": "Apple iCal",
+        "all_day": "Tất cả các ngày",
+        "app_name": "Lịch",
+        "calendar": "Lịch",
+        "busy": "Bận",
+        "custom_repeat": "Lặp lại tuỳ chỉnh",
+        "discard_changes": "BỎ QUA CÁC THAY ĐỔI",
+        "outlook_url": "Outlook URL",
+        "resend": "Gửi lại",
+        "add_share": "Thêm chia sẻ",
+        "all_calendars": "Tất cả các lịch",
+        "calendar_color": "Màu lịch",
+        "calendar_setting": "Cài đặt lịch",
+        "calendar_shared": "Chia sẻ lịch thành công",
+        "cancelled": "Đã huỷ",
+        "changes_saved": "Lưu thay đổi",
+        "create": "Tạo",
+        "create_new_calendar": "Tạo lịch mới",
+        "create_tag": "Tạo Tag",
+        "custom": "Tuỳ chỉnh",
+        "day": "Ngày",
+        "days": "Ngày",
+        "default_appt_vsblty": "Hiển thị cuộc hẹn mặc định",
+        "default_view": "Chế độ xem mặc định",
+        "delete": "Xoá tất cả",
+        "delete_permanently": "Xoá vĩnh viễn",
+        "dismiss": "Bỏ hết",
+        "display": "Hiển thị",
+        "download": "Tải về tất cả",
+        "edit": "Chỉnh sửa",
+        "edit_access": "Chỉnh sửa truy cập {{name}}",
+        "edit_share": "Chỉnh sửa chia sẻ",
+        "edit_tag": "Chỉnh sửa Tag",
+        "edit_tag_name": "Chỉnh sửa tag \"{{name}}",
+        "email_input_message": "Nhập địa chỉ thư điện tử",
+        "empty": "Rỗng",
+        "enable_dlgtn_for_ical": "Bật ủy quyền cho Apple iCal CalDAV Client",
+        "end": "Kết thúc",
+        "end_after": "Kết thúc sau",
+        "end_date": "Ngày kết thúc",
+        "end_date_and_time": "Ngày và giờ kết thúc",
+        "entire_serires": "TOÀN BỘ DÒNG",
+        "event_title": "Tiêu đề sự kiện",
+        "every": "Mọi",
+        "every_day": "Hằng ngày",
+        "every_weekday": "Hằng tuần",
+        "every_year_on": "Hằng năm vào",
+        "find_shares": "Chọn lịch bạn muốn xem từ cây lịch",
+        "free": "Rảnh",
+        "free_busy": "Rảnh/Bận",
+        "from": "từ",
+        "general": "Chung",
+        "ics_url": "ICS URL",
+        "instance": "Ví dụ",
+        "invites": "Mời",
+        "loading_results": "Đang tải kết quả...",
+        "location": "Địa điểm",
+        "maybe": "có thể",
+        "month": "Tháng",
+        "months": "Tháng",
+        "move": "Di chuyển",
+        "new_appointment": "Cuộc hẹn mới",
+        "new_calendar": "Lịch mới",
+        "new_tag": "Tag mới",
+        "no_end_date": "Không có ngày kết thúc",
+        "no_subject": "Không chủ đề",
+        "loading": "Đang tải...",
+        "none": "Không",
+        "notify_organizer": "Thông báo cho người tổ chức",
+        "now": "Bây giờ",
+        "number": "Số",
+        "occurrences": "Sự xuất hiện",
+        "of": "của",
+        "of_every": "của mọi",
+        "of_every_month": "trong tháng, mọi",
+        "ok": "OK",
+        "ongoing": "Đang diễn ra",
+        "optional": "Tuỳ chọn",
+        "other_actions": "Các tác vụ khác",
+        "out_of_office": "Không ở văn phòng",
+        "permissions": "Quyền",
+        "proposal_declined": "Đề xuất bị từ chối",
+        "propose_new_time": "ĐỀ XUẤT THỜI GIAN MỚI",
+        "regular": "Thường xuyên",
+        "reminder": "Nhắc",
+        "repeat": "Lặp lại",
+        "required": "Yêu cầu",
+        "results_for": "Kết quả cho:",
+        "revoke": "Thu hồi",
+        "revoke_share": "Thu hồi chia sẻ của {{title}}",
+        "role": "vai trò",
+        "save": "Lưu",
+        "select_color": "Chọn màu",
+        "series": "Chuỗi",
+        "set_new_time": "Đặt thời gian mới",
+        "settings_saved": "Lưu cài đặt",
+        "share": "Chia sẻ",
+        "share_calendar_url": "chia sẻ quyền truy cập {{title}}",
+        "share_with": "chia sẻ với",
+        "sharing_of_this_folder": "Chia sẻ thư mục này",
+        "show": "Hiển thị tất cả",
+        "show_declined_meetings": "Hiển thị các cuộc gặp bị từ chối",
+        "single_instance": "TRƯỜNG HỢP DUY NHẤT",
+        "snooze": "Chế độ ngủ ngắn",
+        "start_date": "Ngày bắt đầu",
+        "start_date_and_time": "Ngày và giờ bắt đầu",
+        "tag_max_length": "Cho phép tối đa là 128 ký tự",
+        "tag_name": "Tên Tag",
+        "tags": "Tags",
+        "tentative": "dự kiến",
+        "the": "Các",
+        "time_zones": "Múi giờ",
+        "to": "đến",
+        "today": "hôm nay",
+        "type_name_here": "Tên lịch",
+        "undo": "Hoàn tác",
+        "view_url": "Xem URL",
+        "week": "Tuần",
+        "week_day": {
+            "monday": "Thứ Hai",
+            "saturday": "Thứ Bảy",
+            "sunday": "Chủ Nhật",
+            "thursday": "Thứ Năm",
+            "tuesday": "Thứ Ba",
+            "wednesday": "Thứ Tư",
+            "friday": "Thứ Sáu"
+        },
+        "weeks_on": "(Các) tuần vào",
+        "work_hour": "Giờ làm việc",
+        "work_week": "Tuần làm việc",
+        "trash_emptied": "Đã dọn dẹp thùng rác thành công",
+        "preview": "Xem trước",
+        "restore": "Khôi phục",
+        "restore_calendar": "Khôi phục lịch",
+        "private": "Riêng tư",
+        "access_revoked": "Quyền truy cập bị thu hồi",
+        "create_appt_settings": "Tạo cuộc hẹn",
+        "delete_instance": "Bạn có chắc chắn muốn xóa phiên bản cuộc hẹn “{title}” này không?",
+        "delete_tag": "Xoá Tag",
+        "delete_tag_name": "Xoá tag \"{{name}}\"",
+        "edits_saved": "Các chỉnh sửa đã được lưu chính xác",
+        "error_try_again": "Có lỗi, vui lòng thử lại",
+        "invitation_not_sent": "Bạn chưa gửi lời mời cho những người tham dự",
+        "no_special_char_allowed": "Tên không được chứa bất kỳ ký tự đặc biệt nào",
+        "on_behalf_of": "{{accountName}} thay mặt cho {{identity}} <{{otherAccount}}>",
+        "results_for_error": "Không thể bắt đầu tìm kiếm, hãy xóa nó và thử lại: ",
+        "shares_items": "<bold> {{user}} </bold> Lịch được chia sẻ của",
+        "start_week_on": "Bắt đầu tuần vào",
+        "timezone_pref_msg": "Thời gian tuân theo múi giờ của bạn chọn.",
+        "your_pref_timezone_msg": "Múi giờ ưa thích của bạn là: GMT +01: 00 Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna."
+    },
+    "participants": {
+        "Not_answered": "không trả lời",
+        "Attendees_declined_count": "<strong>{{count}} người tham dự </strong> đã từ chối",
+        "AC_with_count": "Đã chấp nhận ({{count}})",
+        "Accepted": "đã chấp nhận",
+        "Attendees_not_answered_count": "<strong>{{count}} người tham dự </strong> không trả lời",
+        "DE_with_count": "Từ chối {{count}}",
+        "Declined": "từ chối",
+        "Invited_Visitor": "đã được mời",
+        "NE_with_count": "Không trả lời ({{count}})",
+        "Attendees_accepted_count": "<strong>{{count}} người tham dự </strong> đã chấp nhận",
+        "Attendees_tentative_count": "<strong>{{count}} người tham dự </strong> có câu trả lời là \"không chắc chắn\"",
+        "TE_with_count": "Không chắc chắn ({{count}})",
+        "Tentative": "trả lời là không chắc chắn",
+        "visitors": "và người tham dự khác {{others}}"
+    },
+    "search": {
+        "organized_by": "tổ chức bởi"
+    },
+    "settings": {
+        "options": {
+            "default_view": {
+                "list": "Xem danh sách",
+                "week": "Xem theo tuần",
+                "day": "Xem theo ngày",
+                "month": "Xem theo tháng",
+                "work_week": "Xem theo tuần làm việc"
+            },
+            "free_busy_opts": {
+                "allow_all": "Cho phép cả người dùng bên trong và bên ngoài xem thông tin rảnh / bận của tôi",
+                "allow_none": "Không để ai xem thông tin rảnh / bận của tôi",
+                "allow_following": "Chỉ cho phép những người dùng nội bộ sau đây xem thông tin rảnh / bận của tôi",
+                "allow_domain": "Chỉ cho phép người dùng trong miền của tôi xem thông tin rảnh / bận của tôi",
+                "allow_internal": "Chỉ cho phép người dùng của các miền nội bộ xem thông tin rảnh / bận của tôi"
+            },
+            "invt_opts": {
+                "allow_none": "Không cho phép ai mời tôi tham gia cuộc họp",
+                "allow_all": "Cho phép cả người dùng bên trong và bên ngoài mời tôi tham gia cuộc họp",
+                "allow_following": "Chỉ cho phép những người dùng nội bộ sau mời tôi tham gia cuộc họp",
+                "allow_internal": "Chỉ cho phép người dùng nội bộ mời tôi tham gia cuộc họp"
+            },
+            "timezones": {
+                "egypt": "GMT +02:00 Egypt",
+                "amsterdam": "GMT +01:00 Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna",
+                "chennai": "GMT +05:30 Chennai, Kolkata, Mumbai, New Delhi"
+            },
+            "dflt_vsblty_opt": {
+                "public": "Public"
+            }
+        },
+        "label": {
+            "show_rmndr_past_due_meetings": "Hiển thị lời nhắc cho các cuộc họp quá hạn",
+            "default_calendar": "Lịch mặc định",
+            "delete_invt_on_rply": "Xóa lời mời khi trả lời",
+            "enter_email": "Nhập vào địa chỉ thư điện tử",
+            "flash_browser_title": "Flash tiêu đề trình duyệt",
+            "forward_invites": "Chuyển tiếp lời mời",
+            "invitation_response": "Trả lời lời mời",
+            "show_popup_notification": "Hiển thị một cửa sổ(popup) thông báo",
+            "show_timezones": "Hiển thị múi giờ khi tạo cuộc hẹn mới",
+            "span_time": "Thời gian kéo dài",
+            "default_appt_dur": "Thời lượng mặc định của cuộc hẹn",
+            "enable_reminder_sound": "Phát âm thanh (yêu cầu phải có plugin QuickTime hoặc Windows Media)",
+            "snd_autorply_users": "Gửi thư trả lời tự động đến người dùng mà bạn chặn quyền mời",
+            "show_reminders": "Hiển thị lời nhắc"
+        },
+        "invalid_email": "Địa chỉ thư điện tử sai",
+        "permissions_note": "Người dùng dưới đây phải ở trên hệ thống e-mail này (zextras.com). Bạn có thể sử dụng địa chỉ thư điện tử đầy đủ hoặc chỉ sử dụng tên người dùng.",
+        "ical_note": "Apple iCal có thể được định cấu hình để truy cập Lịch của bạn bằng giao thức CalDAV. Khi tùy chọn này được bật, các lịch dùng chung sẽ được hiển thị trong tab Ủy quyền(Delegation ) của tài khoản ical để bạn có thể ủy quyền truy cập vào Lịch của mình cho những người dùng khác."
+    },
+    "share": {
+        "label": {
+            "send_notification": "Gửi thông báo chia sẻ này",
+            "allow_to_see_private_appt": "Cho phép (những) người dùng xem các cuộc hẹn riêng tư của tôi"
+        },
+        "options": {
+            "share_calendar_role": {
+                "manager": "Người quản lý (có thể xem, chỉnh sửa, thêm và bớt)",
+                "admin": "Quản trị viên (có thể xem, chỉnh sửa, thêm, xóa và quản trị)",
+                "viewer": "Người xem(có thể xem)"
+            },
+            "share_calendar_with": {
+                "external_guests": "Khách bên ngoài (chỉ được xem)",
+                "internal_users_groups": "Người dùng và nhóm nội bộ",
+                "public": "Người bên ngoài (chỉ được xem, không yêu cầu mật khẩu)"
+            }
+        },
+        "placeholder": {
+            "standard_message": "Thêm ghi chú vào tin nhắn chuẩn",
+            "recipients_address": "Địa chỉ thư điện tử người nhận"
+        },
+        "note": {
+            "share_note": "Thông điệp tiêu chuẩn sẽ hiển thị tên của bạn, tên của thư mục được chia sẻ, quyền được cấp cho người nhận và thông tin đăng nhập."
+        }
+    },
+    "share_invite_resent": "Gửi lại lời mời chia sẻ",
+    "snackbar": {
+        "share_folder_success": "Chia sẻ lịch thành công",
+        "proposed_time_accepted": "Bạn chấp nhận thời gian đề xuất mới",
+        "invite": {
+            "error": "Lỗi"
+        },
+        "new_time_proposed_success": "Đề xuất thời gian mới",
+        "tag_applied": "đã áp dụng tag \"{{tag}}\"",
+        "tag_removed": "Đã xoá thẻ \"{{tag}}\"",
+        "url_copied": "Đã sao chép {{title}}"
+    },
+    "success": "Thành công",
+    "timezone": {
+        "casablanca": "{{value}} Casablanca",
+        "caracas": "{{value}} Caracas",
+        "ekaterinburg_rtz_4": "{{value}} Ekaterinburg (RTZ 4)",
+        "eucla": "{{value}} Eucla",
+        "georgetown_la_paz_manaus_san_juan": "{{value}} Georgetown, La Paz, Manaus, San Juan",
+        "gmt_02": "{{value}} GMT-02",
+        "gmt_11": "{{value}} GMT-11",
+        "dhaka": "{{value}} Dhaka",
+        "greenland": "{{value}} Greenland",
+        "kaliningrad_rtz_1": "{{value}} Kaliningrad (RTZ 1)",
+        "kuwait_riyadh": "{{value}} Kuwait, Riyadh",
+        "la_paz": "{{value}} La Paz",
+        "magadan": "{{value}} Magadan",
+        "newfoundland": "{{value}} Newfoundland",
+        "nuku_alofa": "{{value}} Nuku’alofa",
+        "pacific_south_america": "{{value}} Pacific South America",
+        "nairobi": "{{value}} Nairobi",
+        "namibia": "{{value}} Namibia",
+        "beirut": "{{value}} Beirut",
+        "darwin": "{{value}} Darwin",
+        "manaus": "{{value}} Manaus",
+        "mid_atlantic": "{{value}} Mid-Atlantic",
+        "minsk": "{{value}} Minsk",
+        "abu_dhabi_muscat": "{{value}} Abu Dhabi, Muscat",
+        "alaska": "{{value}} Alaska",
+        "argentina": "{{value}} Argentina",
+        "arizona": "{{value}} Arizona",
+        "asuncion": "{{value}} Asuncion",
+        "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} Anadyr, Petropavlovsk-Kamchatsky (RTZ 11)",
+        "atlantic_time_canada": "{{value}} Atlantic Time (Canada)",
+        "azores": "{{value}} Azores",
+        "baja_california": "{{value}} Baja California",
+        "baku": "{{value}} Baku",
+        "bangkok_hanoi_jakarta": "{{value}} Bangkok, Hanoi, Jakarta",
+        "beijing_chongqing_hong_kong_urumqi": "{{value}} Beijing, Chongqing, Hong Kong, Urumqi",
+        "belgrade_bratislava_budapest_ljubljana_prague": "{{value}} Belgrade, Bratislava, Budapest, Ljubljana, Prague",
+        "brasilia": "{{value}} Brasilia",
+        "britain_ireland_portugal": "{{value}} Britain, Ireland, Portugal",
+        "cape_verde_is": "{{value}} Cape Verde Is.",
+        "cayenne_fortaleza": "{{value}} Cayenne, Fortaleza",
+        "chennai_kolkata_mumbai_new_delhi": "{{value}} Chennai, Kolkata, Mumbai, New Delhi",
+        "chihuahua_la_paz_mazatlan": "{{value}} Chihuahua, La Paz, Mazatlan",
+        "chita": "{{value}} Chita",
+        "christmas_island": "{{value}} Christmas Island",
+        "colombia": "{{value}} Colombia",
+        "coordinated_universal_time": "{{value}} Coordinated Universal Time",
+        "cuiaba": "{{value}} Cuiaba",
+        "damascus": "{{value}} Damascus",
+        "guadalajara_mexico_city_monterrey ": "{{value}} Guadalajara, Mexico City, Monterrey",
+        "harare_pretoria": "{{value}} Harare, Pretoria",
+        "hawaii": "{{value}} Hawaii",
+        "samoa": "{{value}} Samoa",
+        "sarajevo_skopje_warsaw_zagreb": "{{value}} Sarajevo, Skopje, Warsaw, Zagreb",
+        "saskatchewan": "{{value}} Saskatchewan",
+        "sri_jayawardenepura_kotte": "{{value}} Sri Jayawardenepura Kotte",
+        "tbilisi": "{{value}} Tbilisi",
+        "tehran": "{{value}} Tehran",
+        "us_canada_eastern": "{{value}} US/Canada Eastern",
+        "us_canada_mountain": "{{value}} US/Canada Mountain",
+        "us_canada_pacific": "{{value}} US/Canada Pacific",
+        "vladivostok_magadan": "{{value}} vladivostok_magadan_rtz_9",
+        "west_central_africa": "{{value}} West Central Africa",
+        "yangon": "{{value}} Yangon",
+        "port_louis": "{{value}} Port Louis",
+        "indiana_east": "{{value}} Indiana (East)",
+        "korea": "{{value}} Korea",
+        "amsterdam_berlin_bern_rome_stockholm_vienna": "{{value}} Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna",
+        "athens_beirut_bucharest_istanbul": "{{value}} Athens, Beirut, Bucharest, Istanbul",
+        "brussels_copenhagen_madrid_paris ": "{{value}} Brussels, Copenhagen, Madrid, Paris",
+        "central_america": "{{value}} Central America",
+        "dateline": "{{value}} Dateline",
+        "egypt": "{{value}} Egypt",
+        "helsinki_kyiv_riga_sofia_tallinn_vilnius": "{{value}} Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius",
+        "krasnoyarsk_rtz_6": "{{value}} Krasnoyarsk (RTZ 6)",
+        "monrovia": "{{value}} Monrovia",
+        "kathmandu": "{{value}} Kathmandu",
+        "montevideo": "{{value}} Montevideo",
+        "moscow_st_petersburg_volgograd_rtz_2": "{{value}} Moscow, St. Petersburg, Volgograd (RTZ 2)",
+        "iraq": "{{value}} Iraq",
+        "irkutsk_rtz_7": "{{value}} Irkutsk (RTZ 7)",
+        "istanbul": "{{value}} Istanbul",
+        "jerusalem": "{{value}} Jerusalem",
+        "jordan": "{{value}} Jordan",
+        "kabul": "{{value}} Kabul",
+        "us_canada_central": "{{value}} US/Canada Central",
+        "yerevan": "{{value}} Yerevan",
+        "pyongyang": "{{value}} Pyongyang"
+    },
+    "tooltip": {
+        "copy_vector_url": "Sao chép View url",
+        "add_attachments": "Thêm vào đính kèm",
+        "copy_ics_url": "Sao chép ICS url",
+        "copy_outlook_url": "Sao chép Outlook url",
+        "enable_disable_rich_text": "Bật / Tắt trình chỉnh sửa văn bản rich text"
+    },
+    "find_shares": "Tìm chia sẻ",
+    "is_recurrent": "Lặp lại",
+    "items": {
+        "first": "Đầu tiên",
+        "fourth": "Thứ tư",
+        "last": "Cuối cùng",
+        "second": "Thứ nhì",
+        "third": "Thứ ba",
+        "weekend_day": "Ngày cuối tuần",
+        "working_day": "Ngày làm việc"
+    },
+    "message": {
+        "sure_to_delete_all_occurences_appointment": "Bạn có chắc chắn muốn xóa tất cả các lần xuất hiện của cuộc hẹn này không?",
+        "sure_to_delete_appointment": "Bạn có chắc chắn muốn xóa cuộc hẹn này không?",
+        "you_will_see_the_subject_here": "Chủ đề",
+        "you_sure_move_calendar_trash": "Bạn có chắc chắn muốn xóa lịch \"{{name}}\" ?",
+        "delete_all_occurences": "Xóa tất cả các lần xuất hiện",
+        "delete_future_occurences": "Xóa trường hợp này và tất cả các lần xuất hiện trong tương lai",
+        "delete_tag_message2": "Sau khi xóa, nó sẽ bị xóa khỏi mọi mục được đánh dấu bởi nó.",
+        "invite_has_no_message": "Lời mời này không có tin nhắn văn bản",
+        "invited_you": "đã mời bạn đến một sự kiện",
+        "meeting_canceled": "Cuộc họp sau đã bị hủy",
+        "snackbar": {
+            "appointment_permanently_deleted": "Cuộc hẹn đã bị xoá vĩnh viễn",
+            "appointment_permanently_deleted_succesfully": "Xoá vĩnh viễn thành công",
+            "appt_moved": "Cuộc hẹn đã di chuyển thành công tới",
+            "series_deleted": "Đã xoá chuổi thành công. Những người tham gia sẽ được nhận thông báo huỷ.",
+            "calendar_deleted_successfully": "Xoá lịch thành công.",
+            "calendar_edits_saved": "Chỉnh sửa được lưu chính xác",
+            "calendar_moved_to_root_folder": "Lịch đã được di chuyển về thư mục gốc",
+            "calendar_moved_to_trash": "Chuyển lịch vào thùng rác",
+            "calendar_permanently_deleted": "Xoá lịch vĩnh viễn",
+            "calendar_restored": "Lịch được khôi phục thành công",
+            "invite": {
+                "accept": "Bạn đã trả lời là Chấp nhận",
+                "decline": "Bạn đã trả lời là Từ chối",
+                "tentative": "Bạn đã trả lời là Không chắc chắn"
+            },
+            "appt_moved_to_trash": "Cuộc hẹn đã chuyển vào thùng rác",
+            "appt_restored": "Cuộc hẹn đã khôi phục thành công tới",
+            "new_calendar_created": "Lịch mới được tạo"
+        },
+        "want_to_send_cancellation_msg": "Bạn có muốn gửi thông báo huỷ cuộc hẹn đến những người tham dự không?",
+        "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> là người tổ chức </Text></Row>",
+        "delete_tag_message1": "Bạn có chắc xoá Tag\"{{name}}\"?",
+        "you_sure_delete_calendar": "Bạn có chắc chắn muốn xoá vĩnh viễn lịch \"{{name}}\" không?",
+        "you_sure_delete_instance": "Bạn có chắc chắn muốn xóa phiên bản cuộc hẹn “{{title}}” này không?",
+        "appointment_type_handle": "\"{{name}}\" là một cuộc hẹn định kỳ. Bạn chỉ muốn mở phiên bản này hay chuỗi chương trình?",
+        "modal": {
+            "delete": {
+                "sure_delete_appointment_all_instances_permanently": "Tác vụ này sẽ xóa tất cả các lần xuất hiện của cuộc hẹn này và bạn sẽ không thể khôi phục chúng lần nữa, tiếp tục không?",
+                "sure_delete_appointment_permanently": "Bằng cách xóa vĩnh viễn cuộc hẹn này, bạn sẽ không thể khôi phục cuộc hẹn nữa, tiếp tục không?"
+            }
+        },
+        "share_calendar_url_msg": "Bạn có thể nhanh chóng chia sẻ {{title}} với các cộng tác viên của mình bằng một trong các URL sau:",
+        "share_calendar_url_note": "Chỉ các cộng tác viên của bạn mới có thể truy cập dữ liệu của bạn bằng các URL này.",
+        "share_calendar_url_note2": "Chỉ các cộng tác viên của bạn mới có thể truy cập dữ liệu của bạn bằng các URL này. <br/> Bạn có thể tìm thấy các liên kết này cũng như nhấp chuột phải vào danh sách lịch của mình.",
+        "somebody_invited_you": "<strong>{{somebody}}</strong> đã mời bạn",
+        "somebody_is_organizer": "<strong>{{somebody}}</strong> là người tổ chức",
+        "sure_to_delete_appointment_permanently": "Bạn có chắc chắn muốn xóa tất cả các lần xuất hiện của cuộc hẹn này vĩnh viễn không?",
+        "want_to_edit_cancellation_msg": "Bạn có muốn soạn thông báo huỷ cuộc hẹn không?",
+        "you": "Bạn",
+        "are_organizer": "là người tổ chức",
+        "delete_future_occurences_warning": "Tác vụ này cũng sẽ xóa tất cả các ngoại lệ trong chuỗi(trước và sau trường hợp này)"
+    },
+    "messages": {
+        "format_as_plain_text": "Định dạng dưới dạng văn bản thuần túy(Format as Plain Text)",
+        "snackbar": {
+            "tag_created": "Tạo Tag {{name}} thành công",
+            "tag_deleted": "Xoá Tag {{name}} thành công",
+            "tag_updated": "Cập nhập Tag thành công",
+            "tag_not_updated": "Có gì đó sai không cập nhập được Tag. Vui lòng thử lại."
+        }
+    },
+    "months": {
+        "april": "Tháng Tư",
+        "august": "Tháng Tám",
+        "june": "Tháng Sáu",
+        "july": "Tháng Bảy",
+        "december": "Tháng Mười Hai",
+        "february": "Tháng Hai",
+        "january": "Tháng Giêng",
+        "march": "Tháng Ba",
+        "may": "Tháng Năm",
+        "november": "Tháng Mười Một",
+        "october": "Tháng Mười",
+        "september": "Tháng Chín"
+    },
+    "reminder": {
+        "never": "Không bao giờ",
+        "minute_before": "{{count}} phút trước",
+        "modal": {
+            "set_new_time_message": "Bạn có muốn đặt thời gian mới cho cuộc hẹn đã lỡ không? Nếu bạn nhấp vào OK, tất cả các lời nhắc khác sẽ tự động bị loại bỏ."
+        },
+        "week_before": "{{count}} tuần trước",
+        "all_time": "Tất cả thời gian của sự kiện",
+        "at_time_of_event": "Vào thời gian của sự kiện",
+        "day_before": "{{count}} ngày trước",
+        "hour_before": "{{count}} giờ trước"
+    },
+    "action": {
+        "calendar_access_share": "Chia sẻ quyền truy cập lịch",
+        "delete_calendar": "Xoá lịch",
+        "empty_trash": "Xoá sạch thùng rác",
+        "move_to_root": "Di chuyển về thư mục gốc",
+        "save_to_preview": "Lưu để xem trước",
+        "send": "Gửi",
+        "send_cancellation": "Huỷ lệnh gửi",
+        "share_calendar": "Chia sẻ lịch",
+        "edit_message": "Chỉnh sửa thông điệp",
+        "preview": "Bấm vào để xem trước",
+        "edit_calendar_properties": "Chỉnh sửa thuộc tính lịch",
+        "empty_trash_confirmation": "Tác vụ này sẽ xóa vĩnh viễn tất cả các mục trong thùng rác bao gồm Thư điện tử, Danh bạ, Lịch, Nhiệm vụ và Cặp. Bạn có chắc chắn muốn xóa các mục trong thùng rác này không?"
+    },
+    "administer": "Quản trị viên",
+    "appointments": "Lịch hẹn",
+    "button": {
+        "customize_modal": "Mở tuỳ chỉnh phương thức"
+    },
+    "calendar": {
+        "modal": {
+            "custom_schedule": {
+                "title": "Tuỳ chỉnh giờ làm việc"
+            }
+        }
+    },
+    "cannot_edit_name": "Bạn không thể chỉnh sửa tên của lịch hệ thống",
+    "composer": {
+        "attachment": {
+            "contactsMod": "thêm thẻ liên hệ",
+            "draganddrop": {
+                "title": "Chế độ kéo thả",
+                "content": "Kéo/thả vào đây các tệp đính kèm của bạn để nhanh chóng thêm vào cuộc hẹn"
+            },
+            "drive": "Thêm vào từ Drive",
+            "local": "Thêm vào từ thiết bị cục bộ"
+        }
+    },
+    "edit_share_properties": "Chỉnh sửa thuộc tính chia sẻ",
+    "event": {
+        "action": {
+            "accept": "Chấp nhận",
+            "decline": "Từ chối",
+            "expand": "Mở trong trình hiển thị",
+            "no": "Không",
+            "yes": "Có",
+            "needs_action": "Tác vụ cần thiết",
+            "invitation_not_sent_yet": "Lời mời vẫn chưa được gửi"
+        }
+    },
+    "allowed_actions": "Các tác vụ được phép",
+    "folder": {
+        "modal": {
+            "new": {
+                "title2": "Tạo lịch mới",
+                "duplicate_warning": "Lịch với tên này đã tồn tại"
+            },
+            "footer": {
+                "go_back": "Quay lại"
+            },
+            "move": {
+                "input": {
+                    "filter": "Bộ lọc lịch"
+                },
+                "body": {
+                    "message3": "Chọn một lịch để chuyển cuộc hẹn mà bạn cân nhắc:"
+                }
+            },
+            "restore": {
+                "footer": "Tạo và khôi phục"
+            }
+        },
+        "share_info": "Chia sẻ thông tin"
+    },
+    "find_calendar_shares": "Tìm chia sẻ lịch",
+    "freebusy": "Rảnh rỗi",
+    "has_attachments": "Có đính kèm",
+    "insert": "Chèn",
+    "is_private": "Riêng tư",
+    "owner": "Chủ sở hữu",
+    "repeat": {
+        "customize": "Tuỳ chỉnh",
+        "daily": "Hàng ngày",
+        "everyMonth": "Mỗi tháng",
+        "everyWeek": "Mỗi tuần",
+        "yearly": "Hàng năm",
+        "everyYear": "Mỗi năm",
+        "weekly": "Hàng tuần",
+        "monthly": "Hàng tháng"
+    },
+    "resend_mail_notification_about_this_share": "Gửi e-mail thông báo về chia sẻ này",
+    "revoke_access": "Thu hồi truy cập",
+    "revoke_without_custom_message": "Thu hồi quyền truy cập và gửi một thông báo chuẩn",
+    "revoke_without_notification": "Thu hồi quyền truy cập và không gửi thông báo",
+    "shared_folders": "Các lịch được chia sẻ",
+    "shared_items": "Các mục được chia sẻ",
+    "shares_info": "Thông tin chia sẻ",
+    "type": "Kiểu",
+    "workflow": "Luồng công việc",
+    "write": "Ghi",
+    "revoke_with_custom_message": "Thu hồi quyền truy cập và gửi một thông báo tùy chỉnh",
+    "placeholder": {
+        "organizer": "Người tổ chức"
+    },
+    "preview": {
+        "close": "Đóng chế độ xem trước"
+    },
+    "read": "Đọc",
+    "remove_from_this_list": "Xóa từ danh sách này",
+    "add": "Thêm vào",
+    "appt_restored_successfully": "Khôi phục lịch hẹn thành công"
+}
