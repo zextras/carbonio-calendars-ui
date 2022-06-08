@@ -137,6 +137,7 @@ export const moveAppointment = (event, context, t) => ({
 		};
 		const closeModal = context.createModal(
 			{
+				maxHeight: '90vh',
 				children: (
 					// eslint-disable-next-line react/jsx-filename-extension
 					<>
