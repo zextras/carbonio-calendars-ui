@@ -3,7 +3,21 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { AlarmType } from './appointments';
+import moment from 'moment';
+
+import { ZimbraColorType } from '../commons/zimbra-standard-colors';
+
+export type AlarmType = {
+	alarm: [];
+	alarmInstStart: DateType;
+	before: number;
+	compNum: number;
+	inviteId: number;
+	loc: string;
+	name: string;
+	nextAlarm: DateType;
+	nextCalAlarm: DateType;
+};
 
 export type EventResource = {
 	attach: { mp?: []; aid?: [] };
@@ -14,15 +28,19 @@ export type EventResource = {
 	calendar: {
 		id: string;
 		name: string;
-		color: unknown;
+		color: ZimbraColorType;
 		owner: string | undefined;
 	};
 	flags: string;
 	iAmOrganizer: boolean;
 	iAmVisitor: boolean;
 	iAmAttendee: boolean;
+	isRecurrent: boolean;
+	isException?: boolean;
+	isPrivate?: boolean;
 	status: string;
 	location: string;
+	locationUrl: string;
 	fragment: string;
 	neverSent: boolean;
 	class: string;
@@ -30,30 +48,32 @@ export type EventResource = {
 	hasChangesNotNotified: boolean;
 	inviteNeverSent: boolean;
 	hasOtherAttendees: boolean;
-	isRecurrent: boolean;
+
 	participationStatus: string;
 	organizer: {
 		name: string;
 		email: string;
 	};
-	isException?: boolean;
-	start?: number;
+
+	start?: DateType;
 	uid?: string;
 	idx?: number;
 	changesNotNotified?: boolean;
 	hasAlarm?: boolean;
-	alarm?: AlarmType;
+	alarmData: Array<AlarmType>;
+	alarm?: boolean;
 	tags: string[];
 };
 
+export type DateType = moment.Moment | Date | number;
+
 export type EventType = {
-	disabled: boolean;
-	start: string;
-	end: string;
+	title: string | undefined;
+	allDay: boolean;
+	start: moment.Moment | Date;
+	end: moment.Moment | Date;
 	resource: EventResource;
-	title: string;
-	ridZ: string;
-	inviteId: string;
-	id: string;
-	calId: string;
+	permission: boolean;
+	id?: string;
+	haveWriteAccess?: boolean;
 };

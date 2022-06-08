@@ -4,6 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { isNil } from 'lodash';
+import moment from 'moment';
+import { TFunction } from 'react-i18next';
+
+import { DateType, EventType } from '../types/event';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
 
@@ -234,4 +238,29 @@ export const convertToDecimal = (source: string): string => {
 		}
 	}
 	return result;
+};
+
+export const getTimeToDisplay = (event: EventType, currentTime: DateType, t: TFunction): string => {
+	const difference = moment(event.end).diff(moment(event.start), 'seconds');
+	if (event.start < currentTime && event.end > currentTime) {
+		return t('label.ongoing', 'Ongoing');
+	}
+	if (event.start === currentTime) {
+		return t('label.now', 'Now');
+	}
+	if (event.start < currentTime) {
+		return moment(event.start).from(moment());
+	}
+	if (
+		event.resource.alarmData[0].alarmInstStart < currentTime &&
+		moment(event.resource.alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() >
+			currentTime
+	) {
+		return t('label.ongoing', 'Ongoing');
+	}
+	if (event.resource.alarmData[0].alarmInstStart < currentTime) {
+		return moment(event.resource.alarmData[0].alarmInstStart).fromNow();
+	}
+
+	return moment(event.resource.alarmData[0].alarmInstStart).fromNow();
 };

@@ -5,6 +5,9 @@
  */
 import { find, reduce, map, isEmpty } from 'lodash';
 import moment from 'moment';
+
+import { DateType, EventType } from '../types/event';
+
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { Calendar } from '../types/store/calendars';
 
@@ -57,8 +60,7 @@ const normalizeEventResource = (
 	tags: appt.tags
 });
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const getEndTime = (start: any, end: any, duration: any): any =>
+export const getEndTime = (start: DateType, end: DateType, duration: number): DateType =>
 	duration === 86400000 ? moment(start).endOf('day') : moment(end).endOf('day');
 
 export const getDaysFromMillis = (milliseconds: number): number => milliseconds / 3600 / 1000 / 24;
@@ -68,11 +70,11 @@ export const normalizeCalendarEvent = (
 	appt: Appointment,
 	inst: InstanceReference,
 	isShared: boolean
-): any => ({
+): EventType => ({
 	// disabled: true,
 	start: appt.allDay ? moment(inst.s).startOf('day') : new Date(inst.s),
 	end: appt.allDay
-		? moment(appt.inst[0].ridZ)
+		? moment(inst?.ridZ)
 				.add(getDaysFromMillis(appt.dur) - 1, 'days')
 				.endOf('day')
 		: new Date(inst.s + ((inst as ExceptionReference).dur ?? appt.dur)),
@@ -88,7 +90,7 @@ export const normalizeCalendarEvent = (
 export const normalizeCalendarEvents = (
 	appts: Array<Appointment>,
 	calendars: Record<string, Calendar>
-): any =>
+): Array<EventType> =>
 	!isEmpty(appts)
 		? reduce(
 				appts,
@@ -104,6 +106,6 @@ export const normalizeCalendarEvents = (
 						  ]
 						: acc;
 				},
-				[] as any
+				[] as Array<EventType>
 		  )
 		: [];
