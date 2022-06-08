@@ -178,7 +178,7 @@
         "you_sure_delete_instance": "“{{title}}” randevusunun bu öğesini silmek istediğinizden emin misiniz?",
         "delete_tag_message1": "\"{{name}}\" etiketini silmek istediğinizden emin misiniz?",
         "delete_tag_message2": "Silinince önceden işaretlenmiş tüm öğelerden etiket kaldırılacak.",
-        "appointment_type_handle": "{{name}}” tekrarlanan bir randevu. Sadece bu rendevuyu mu yoksa tekrarlama serisini mi açmak istersiniz?"
+        "appointment_type_handle": "\"{{name}}” tekrarlanan bir randevu. Sadece bu rendevuyu mu yoksa tekrarlama serisini mi açmak istersiniz?"
     },
     "search": {
         "results_for": "Sonuçlar:",
