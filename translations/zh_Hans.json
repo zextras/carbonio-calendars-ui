@@ -29,7 +29,8 @@
             "calendar_permanently_deleted": "日历已永久性删除",
             "calendar_restored": "日历已成功恢复",
             "appointment_permanently_deleted": "预约已永久性删除",
-            "calendar_edits_saved": "编辑保存正确"
+            "calendar_edits_saved": "编辑保存正确",
+            "series_deleted": "系列已删除成功。参与者将收到取消通知。"
         },
         "are_organizer": "为组织者",
         "delete_all_occurences": "删除所有重复次数",
@@ -61,7 +62,8 @@
         "you_sure_move_calendar_trash": "确定要删除“{{name}}”日历吗？",
         "you_sure_delete_instance": "确定要删除此“{{title}}”预约的实例吗？",
         "delete_tag_message1": "确定要删除“{{name}}”标签吗？",
-        "delete_tag_message2": "删除后，其将从所有已进行相关标记的项目上移除。"
+        "delete_tag_message2": "删除后，其将从所有已进行相关标记的项目上移除。",
+        "appointment_type_handle": "“{{name}}”是定期预约。您是想打开此实例还是整个系列？"
     },
     "calendar": {
         "modal": {
@@ -103,7 +105,8 @@
             "decline": "拒绝",
             "expand": "在显示工具中打开",
             "tentative": "暂定",
-            "needs_action": "需要操作"
+            "needs_action": "需要操作",
+            "invitation_not_sent_yet": "尚未发送邀请"
         }
     },
     "items": {
@@ -313,7 +316,11 @@
         "results_for_error": "无法开始搜索，清除并重试： ",
         "tag_max_length": "最多允许 128 个字符",
         "tag_name": "标签名称",
-        "tags": "标签"
+        "tags": "标签",
+        "entire_serires": "全系列",
+        "new_tag": "新标签",
+        "other_actions": "其他操作",
+        "single_instance": "单个实例"
     },
     "months": {
         "april": "四月",
@@ -545,7 +552,8 @@
         "snackbar": {
             "tag_deleted": "{{name}} 标签已删除成功",
             "tag_updated": "标签已成功更新",
-            "tag_created": "标签 {{name}} 已成功创建"
+            "tag_created": "标签 {{name}} 已成功创建",
+            "tag_not_updated": "发生一些错误，标签未更新。请重试。"
         }
     },
     "timezone": {

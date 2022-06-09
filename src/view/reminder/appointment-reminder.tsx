@@ -4,10 +4,16 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
-/* eslint-disable import/extensions */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import React, { FC, ReactElement, useCallback, useState, useEffect, useMemo } from 'react';
+
+import React, {
+	FC,
+	ReactElement,
+	useCallback,
+	useState,
+	useEffect,
+	useMemo,
+	SyntheticEvent
+} from 'react';
 import { CustomModal } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -29,21 +35,26 @@ import { dismissApptReminder } from '../../store/actions/dismiss-appointment-rem
 import { setSearchRange } from '../../store/actions/set-search-range';
 import { selectAllAppointments, selectApptStatus } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
-import { AppointmentReminderProps, EventType } from '../../types/appointment-reminder';
+import { AppointmentReminderProps } from '../../types/appointment-reminder';
 import SetNewTimeModal from './set-new_time-modal';
-// @ts-ignore
 import sound from '../../assets/notification.mp3';
 import ApptReminderModal from './appt-reminder-modal';
 import { showNotification } from '../notifications';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
+import { getTimeToDisplay } from '../../commons/utilities';
+import { EventType } from '../../types/event';
 
+type ReminderQueue = Record<
+	string,
+	ReturnType<typeof clearTimeout> | ReturnType<typeof setTimeout>
+>;
 const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	const dispatch = useDispatch();
 	const [t] = useTranslation();
 
 	const [playing, setPlaying] = useState(false);
 	const [apptForReminders, setApptForReminders] = useState<Array<EventType>>([]);
-	const [reminderQueue, setReminderQueue] = useState<Record<string, () => void>>({});
+	const [reminderQueue, setReminderQueue] = useState<ReminderQueue>({});
 	const [showNewTimeModal, setShowNewTimeModal] = useState(false);
 	const [audio] = useState(new Audio(sound));
 	const [eventForChange, setEventForChange] = useState<EventType>();
@@ -67,7 +78,7 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	}, [playing, audio]);
 
 	useEffect(() => {
-		const handler = () => setPlaying(false);
+		const handler = (): void => setPlaying(false);
 		audio.addEventListener('ended', () => handler);
 		return () => {
 			audio.removeEventListener('ended', () => handler);
@@ -106,39 +117,45 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 		[events, reminderRange.end, reminderRange.start]
 	);
 
+	const noTitle = useMemo(() => t('label.no_title', 'No Title'), [t]);
 	useEffect(() => {
-		const tmp: Record<string, () => void> = {};
+		const tmp: Record<string, () => void | ReturnType<typeof setTimeout | typeof clearTimeout>> =
+			{};
 		const tp = differenceWith(apptForReminders, eventsToRemind);
 		const uniqueTp = uniq(tp);
 		const trans = pullAll(apptForReminders, uniqueTp);
 		setApptForReminders(trans);
 
-		// @ts-ignore
-		map(reminderQueue, (q) => clearTimeout(q));
-		map(eventsToRemind, (rem: EventType) => {
-			const { alarmData, fragment, inviteId } = rem.resource;
+		map(reminderQueue, (q: ReturnType<typeof setTimeout>) => clearTimeout(q));
+		map(eventsToRemind, (rem: EventType & { showNotification?: boolean }) => {
+			const { alarmData, inviteId } = rem.resource;
 			const now = moment();
 			const difference = moment(alarmData[0].nextAlarm).diff(now, 'seconds', true);
 			const index = lastIndexOf(apptForReminders, rem);
 
 			if (index === -1) {
-				tmp[`${inviteId}`] = () =>
+				tmp[`${inviteId}`] = (): ReturnType<typeof setTimeout> =>
 					setTimeout(
 						() => {
-							showNotification(rem.title, fragment);
+							const timeToDisplay = getTimeToDisplay(rem, now, t);
+							showNotification(rem?.title || noTitle, timeToDisplay);
 							setPlaying(true);
-							setApptForReminders((prevApp) => [...prevApp, rem]);
+							setApptForReminders((prevApp) => [...prevApp, { ...rem }]);
 						},
 						difference <= 0 ? 1000 : difference * 1000
 					);
 			}
 		});
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		setReminderQueue(tmp);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [eventsToRemind]);
+	}, [eventsToRemind, noTitle]);
 
 	useEffect(() => {
-		forEach(reminderQueue, (q) => q());
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		forEach(reminderQueue, (q): ReminderQueue => q());
 	}, [reminderQueue]);
 
 	useEffect(() => {
@@ -164,7 +181,6 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 		}));
 		setShowNewTimeModal(false);
 		if (dismissItems.length > 0) {
-			// @ts-ignore
 			dispatch(dismissApptReminder({ dismissItems }));
 			setApptForReminders([]);
 		}
@@ -188,6 +204,7 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 			// @ts-ignore
 			event: eventForChange
 		});
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		updateBoard(undefined, eventForChange?.title || 'Set New Time');
 		dismissAll();
@@ -202,19 +219,17 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 		<>
 			<CustomModal
 				open={openReminder}
-				onClose={() => null}
+				onClose={(): null => null}
 				maxHeight="90vh"
-				// @ts-ignore
-				onClick={(e) => e.stopPropagation()}
-				// @ts-ignore
-				onDoubleClick={(e) => e.stopPropagation()}
+				onClick={(e: SyntheticEvent): void => e.stopPropagation()}
+				onDoubleClick={(e: SyntheticEvent): void => e.stopPropagation()}
 			>
 				{showNewTimeModal ? (
 					<SetNewTimeModal toggleModal={toggleModal} t={t} setNewTime={setNewTime} />
 				) : (
 					<ApptReminderModal
 						title="Appointment Reminder"
-						onClose={() => null}
+						onClose={(): null => null}
 						events={uniqueReminders || []}
 						open={uniqueReminders.length > 0}
 						t={t}

@@ -179,7 +179,11 @@
         "tag_name": "Nama tag",
         "tags": "Tag",
         "select_color": "Pilih Warna",
-        "tag_max_length": "Maks 128 karakter yang diizinkan"
+        "tag_max_length": "Maks 128 karakter yang diizinkan",
+        "entire_serires": "SELURUH SERI",
+        "new_tag": "Tag Baru",
+        "other_actions": "Tindakan lain",
+        "single_instance": "SATU INSTANS"
     },
     "calendar": {
         "modal": {
@@ -201,7 +205,8 @@
             "decline": "Tolak",
             "expand": "Buka di Displayer",
             "tentative": "Sementara",
-            "needs_action": "Memerlukan tindakan"
+            "needs_action": "Memerlukan tindakan",
+            "invitation_not_sent_yet": "Undangan belum dikirim"
         }
     },
     "create": "Buat",
@@ -283,7 +288,8 @@
             "calendar_permanently_deleted": "Kalender dihapus permanen",
             "calendar_restored": "Kalender berhasil dipulihkan",
             "appointment_permanently_deleted": "Janji temu dihapus permanen",
-            "calendar_edits_saved": "Hasil edit disimpan dengan benar"
+            "calendar_edits_saved": "Hasil edit disimpan dengan benar",
+            "series_deleted": "Seri berhasil dihapus. Peserta akan menerima notifikasi pembatalan."
         },
         "have_not_sent_invitation": "Anda belum mengirim undangan ke peserta",
         "invite_has_no_message": "Undangan ini tidak berisi pesan teks",
@@ -313,7 +319,8 @@
         "delete_future_occurences_warning": "Tindakan ini juga menghapus semua pengecualian (sebelum dan sesudah kejadian ini) dalam rangkaian tersebut",
         "you_sure_delete_instance": "Anda yakin ingin menghapus instan janji temu “{{title}}” ini?",
         "delete_tag_message1": "Yakin ingin menghapus Tag \"{{name}}\"?",
-        "delete_tag_message2": "Setelah dihapus, ini akan dihapus dari tiap item yang ditandai dengannya."
+        "delete_tag_message2": "Setelah dihapus, ini akan dihapus dari tiap item yang ditandai dengannya.",
+        "appointment_type_handle": "\"{{name}}\" adalah janji temu berulang. Anda hanya ingin membuka instans ini atau seri?"
     },
     "months": {
         "april": "April",
@@ -638,7 +645,8 @@
         "snackbar": {
             "tag_created": "Tag {{name}} berhasil dibuat",
             "tag_deleted": "Tag {{name}} berhasil dihapus",
-            "tag_updated": "Tag berhasil diperbarui"
+            "tag_updated": "Tag berhasil diperbarui",
+            "tag_not_updated": "Terjadi kesalahan, tag tidak diperbarui. Coba lagi."
         }
     },
     "preview": {

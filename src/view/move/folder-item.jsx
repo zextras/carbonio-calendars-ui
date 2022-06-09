@@ -20,7 +20,7 @@ const FolderItem = ({ folders }) => {
 			orientation="vertical"
 			mainAlignment="flex-start"
 			minHeight="30vh"
-			maxHeight="60vh"
+			maxHeight="59vh"
 		>
 			<Accordion items={folders} background="gray6" />
 		</ContainerEl>

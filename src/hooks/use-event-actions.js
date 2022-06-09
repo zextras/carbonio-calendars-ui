@@ -137,6 +137,7 @@ export const moveAppointment = (event, context, t) => ({
 		};
 		const closeModal = context.createModal(
 			{
+				maxHeight: '90vh',
 				children: (
 					// eslint-disable-next-line react/jsx-filename-extension
 					<>
@@ -284,7 +285,8 @@ export const ActionsRetriever = (event, context, t, includeReplyActions) =>
 			? [
 					deletePermanently({ event, context, t }),
 					moveAppointment(event, context, t),
-					openInDisplayer(event, context, t)
+					openInDisplayer(event, context, t),
+					applyTag({ t, context, event })
 			  ]
 			: [
 					openInDisplayer(event, context, t),
@@ -304,7 +306,8 @@ export const ActionsRetriever = (event, context, t, includeReplyActions) =>
 		? [
 				deletePermanently({ event, context, t }),
 				moveAppointment(event, context, t),
-				openInDisplayer(event, context, t)
+				openInDisplayer(event, context, t),
+				applyTag({ t, context, event })
 		  ]
 		: [
 				openInDisplayer(event, context, t),
@@ -319,7 +322,8 @@ export const RecurrentActionRetriever = (event, context, t) =>
 		? [
 				deletePermanently({ event, context, t }),
 				moveAppointment(event, context, t),
-				openInDisplayer(event, context, t)
+				openInDisplayer(event, context, t),
+				applyTag({ t, context, event })
 		  ]
 		: [
 				{

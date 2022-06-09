@@ -28,7 +28,8 @@
             "calendar_permanently_deleted": "Kalender endgültig gelöscht",
             "calendar_restored": "Kalender erfolgreich wiederhergestellt",
             "appointment_permanently_deleted": "Termin dauerhaft gelöscht",
-            "calendar_edits_saved": "Änderungen korrekt gespeichert"
+            "calendar_edits_saved": "Änderungen korrekt gespeichert",
+            "series_deleted": "Serie erfolgreich gelöscht. Die Teilnehmer erhalten eine Absagebenachrichtigung."
         },
         "are_organizer": "sind der Organisator",
         "somebody_invited_you": "<strong>{{somebody}}</strong> hat Sie eingeladen",
@@ -61,7 +62,8 @@
         "you": "Sie",
         "you_sure_delete_instance": "Sind Sie sicher, dass Sie diese Kopie des Termins \"1{{title}}\" löschen wollen?",
         "delete_tag_message1": "Sind Sie sicher, dass Sie den \"{{name}}\" Tag?",
-        "delete_tag_message2": "Nach dem Löschen wird es aus allen damit gekennzeichneten Artikeln entfernt."
+        "delete_tag_message2": "Nach dem Löschen wird es aus allen damit gekennzeichneten Artikeln entfernt.",
+        "appointment_type_handle": "\"{{name}}” ist ein Serientermin. Möchten Sie nur diesen Termin oder die ganze Serie öffnen?"
     },
     "label": {
         "invitation_not_sent": "Sie haben die Einladung noch nicht an die Teilnehmer geschickt",
@@ -231,7 +233,11 @@
         "tags": "Etiketten",
         "delete_tag_name": "Tag \"{{name}}\" löschen",
         "edit_tag_name": "Tag \"{{name}}\" bearbeiten",
-        "results_for_error": "Die Suche kann nicht gestartet werden, löschen Sie sie und versuchen Sie es erneut: "
+        "results_for_error": "Die Suche kann nicht gestartet werden, löschen Sie sie und versuchen Sie es erneut: ",
+        "entire_serires": "KOMPLETTE SERIEN",
+        "new_tag": "Neues Etikett",
+        "other_actions": "Andere Aktionen",
+        "single_instance": "EINZELNE INSTANZ"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -309,7 +315,8 @@
             "trash": "Löschen",
             "no": "Nein",
             "yes": "Ja",
-            "needs_action": "Handlungsbedarf"
+            "needs_action": "Handlungsbedarf",
+            "invitation_not_sent_yet": "Die Einladung wurde noch nicht verschickt"
         }
     },
     "folder": {
