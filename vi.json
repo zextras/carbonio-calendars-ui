@@ -204,7 +204,7 @@
                 "chennai": "GMT +05:30 Chennai, Kolkata, Mumbai, New Delhi"
             },
             "dflt_vsblty_opt": {
-                "public": "Public"
+                "public": "Công khai"
             }
         },
         "label": {
@@ -476,7 +476,7 @@
         "empty_trash_confirmation": "Tác vụ này sẽ xóa vĩnh viễn tất cả các mục trong thùng rác bao gồm Thư điện tử, Danh bạ, Lịch, Nhiệm vụ và Cặp. Bạn có chắc chắn muốn xóa các mục trong thùng rác này không?"
     },
     "administer": "Quản trị viên",
-    "appointments": "Lịch hẹn",
+    "appointments": "Cuộc hẹn",
     "button": {
         "customize_modal": "Mở tuỳ chỉnh phương thức"
     },
@@ -571,5 +571,5 @@
     "read": "Đọc",
     "remove_from_this_list": "Xóa từ danh sách này",
     "add": "Thêm vào",
-    "appt_restored_successfully": "Khôi phục lịch hẹn thành công"
+    "appt_restored_successfully": "Khôi phục cuộc hẹn thành công"
 }
