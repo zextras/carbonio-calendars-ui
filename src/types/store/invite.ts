@@ -101,6 +101,8 @@ type AlarmDataTrigger = [
 
 export type AlarmData = [
 	{
+		nextAlarm: number;
+		alarmInstStart: number;
 		action: AlarmDataActions;
 		desc: AlarmDataDescription | Record<string, never>;
 		trigger: AlarmDataTrigger;

@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { Text } from '@zextras/carbonio-design-system';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import MoveAppointment from '../view/move/move-appt-view';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
@@ -14,6 +14,8 @@ import { updateParticipationStatus } from '../store/slices/appointments-slice';
 import { deleteAppointmentPermanent } from '../store/actions/delete-appointment-permanent';
 import { DeleteEventModal } from '../view/delete/delete-event-modal';
 import { applyTag } from '../view/tags/tag-actions';
+import { generateEditor } from '../commons/editor-generator';
+import { CALENDAR_ROUTE } from '../constants';
 
 export const openInDisplayer = (event, context, t) => ({
 	id: EventActionsEnum.EXPAND,
@@ -267,12 +269,24 @@ export const editAppointment = (event, context, t, isEditable = false) => ({
 	click: (ev) => {
 		const query = context?.isInstance ? '?isInstance=TRUE' : '';
 		if (ev) ev.stopPropagation();
+		const boardContext = {
+			organizer: event.resource.organizer,
+			title: event.title,
+			location: event.resource.location,
+			room: event.resource.room,
+			attendees: [],
+			optionalAttendees: [],
+			allDay: event.allDay,
+			freeBusy: event.resource.freeBusy,
+			class: event.resource.class,
+			start: event.start.valueOf(),
+			end: event.end.valueOf()
+		};
+		const { editor } = generateEditor(event.resource.id, boardContext);
 		context.isFromSearch
-			? context.replaceHistory(
-					`/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}${query}`
-			  )
+			? context.replaceHistory(`/${EventActionsEnum.EDIT}/${editor.id}${query}`)
 			: context.replaceHistory(
-					`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}${query}`
+					`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${editor.id}${query}`
 			  );
 	}
 });

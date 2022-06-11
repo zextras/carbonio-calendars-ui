@@ -30,7 +30,7 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): JSX.
 	const startDate = useMemo(() => new Date(start), [start]);
 	const endDate = useMemo(() => new Date(end), [end]);
 
-	const onChange = useCallback(
+	const onClick = useCallback(
 		(e) => {
 			if (e) {
 				const startValue = startDate.setHours(0, 0, 0, 0);
@@ -43,6 +43,6 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): JSX.
 	);
 
 	return !isNil(allDay) ? (
-		<Checkbox label={t('label.all_day', 'All day')} onChange={onChange} checked={allDay} />
+		<Checkbox label={t('label.all_day', 'All day')} onClick={onClick} value={allDay} />
 	) : null;
 };

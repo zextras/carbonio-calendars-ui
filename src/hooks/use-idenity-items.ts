@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useUserAccount } from '@zextras/carbonio-shell-ui';
+import { useUserAccount, getUserAccount } from '@zextras/carbonio-shell-ui';
 import { map, sortBy } from 'lodash';
 import { useMemo } from 'react';
 import { IdentityItem } from '../types/editor';
@@ -35,3 +35,4 @@ export const useIdentityItems = (): Array<IdentityItem> => {
 		});
 	}, [account.identities.identity]);
 };
+

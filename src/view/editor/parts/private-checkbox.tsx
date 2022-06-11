@@ -28,8 +28,8 @@ export const EditorPrivateCheckbox = ({
 	return (
 		<Checkbox
 			label={t('label.private', 'Private')}
-			onChange={onPrivateChange}
-			checked={apptClass === 'PRI'}
+			onClick={onPrivateChange}
+			value={apptClass === 'PRI'}
 			disabled={disabled}
 		/>
 	);

@@ -231,6 +231,7 @@
         "start_date": "Start date",
         "start_date_and_time": "Start date and time",
         "start_week_on": "Start week on",
+        "tag": "Tag",
         "tag_max_length": "Max 128 characters are allowed",
         "tag_name": "Tag name",
         "tags": "Tags",

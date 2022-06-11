@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useRef, useState } from 'react';
+import { reject } from 'lodash';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import {
 	Container,
 	Text,
@@ -89,6 +90,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 		t
 	);
 
+	const items = useMemo(() => reject(actions, (item) => !item.label), [actions]);
 	const onClose = useCallback(() => setOpen(false), []);
 
 	return (

@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Moment } from 'moment';
 import { Calendar } from './store/calendars';
 
 export type IdentityItem = {

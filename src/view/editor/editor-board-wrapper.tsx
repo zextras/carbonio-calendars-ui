@@ -5,16 +5,12 @@
  */
 import { useBoardConfig } from '@zextras/carbonio-shell-ui';
 import React, { useMemo } from 'react';
-import { useEditor } from '../../hooks/use-editor';
 import { EditorPanel } from './editor-panel';
 
 const BoardEditPanel = (): JSX.Element | null => {
 	const board = useBoardConfig<any>();
+	const id = useMemo(() => board?.id ?? 'new', [board?.id]);
 
-	const id = useMemo(() => board?.event?.resource.id ?? 'new', [board?.event?.resource.id]);
-
-	const { editorId, callbacks } = useEditor(id);
-
-	return editorId ? <EditorPanel editorId={editorId} callbacks={callbacks} /> : null;
+	return id ? <EditorPanel editorId={id} callbacks={board.callbacks} /> : null;
 };
 export default BoardEditPanel;

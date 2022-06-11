@@ -22,13 +22,12 @@ import Notifications from './view/notifications';
 import AppointmentReminder from './view/reminder/appointment-reminder';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { getSettingsSubSections } from './settings/sub-sections';
+import { generateEditor } from './commons/editor-generator';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
 );
-/*const LazyEditorView = lazy(() =>
-	import(/!* webpackChunkName: "calendar-edit" *!/ './view/event-panel-edit/board-edit-panel')
-);*/
+
 const LazyEditorView = lazy(() =>
 	import(/* webpackChunkName: "calendar-edit" */ './view/editor/editor-board-wrapper')
 );
@@ -106,9 +105,14 @@ export default function App() {
 				icon: 'CalendarModOutline',
 				click: (ev) => {
 					ev?.preventDefault?.();
-					getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
-						title: t('label.new_appointment', 'New Appointment')
-					});
+					const { editor, callbacks } = generateEditor(
+						'new',
+						{
+							title: t('label.new_appointment', 'New Appointment')
+						},
+						false
+					);
+					getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
 				},
 				disabled: false,
 				group: CALENDAR_APP_ID,

@@ -13,10 +13,11 @@ import {
 	editEditorClassReducer,
 	editEditorDisplayStatusReducer,
 	editEditorOptionalAttendeesReducer,
-	editEditorRoomReducer, editEditorTextReducer,
+	editEditorRoomReducer,
+	editEditorTextReducer,
 	editLocationReducer,
 	editOrganizerReducer,
-	editTitleReducer,
+	editTitleReducer
 } from '../reducers/edit-organizer';
 import { initializeAppointmentReducer } from '../reducers/initialize-appointment';
 import {
@@ -36,7 +37,8 @@ export const editorSlice = createSlice({
 	initialState: {
 		status: 'idle',
 		editors: {},
-		editorPanel: undefined
+		editorPanel: undefined,
+		activeId: undefined
 	},
 	reducers: {
 		addAppointmentEditor: addAppointmentEditorReducer,

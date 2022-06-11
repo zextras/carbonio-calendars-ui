@@ -21,7 +21,8 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
-import { EventType, ParticipationStatus } from '../types/event';
+import { EventType } from '../types/event';
+import { ParticipationStatus } from '../types/store/invite';
 import { createAndApplyTag } from '../view/tags/tag-actions';
 import { useEventActions } from '../hooks/use-event-actions';
 

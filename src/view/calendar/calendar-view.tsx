@@ -9,6 +9,7 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import EditorPanelWrapper from '../editor/editor-panel-wrapper';
 import CalendarStyle from './calendar-style';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { selectApptStatus } from '../../store/selectors/appointments';
@@ -54,8 +55,8 @@ export default function CalendarView(): JSX.Element {
 				<CalendarComponent />
 			</Suspense>
 			<Switch>
-				<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
-					<EventEditPanel />
+				<Route path={`${path}/:calendarId?/:action(${EventActionsEnum.EDIT})?/:editorId?/`}>
+					<EditorPanelWrapper />
 				</Route>
 				<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
 					<EventPanelView />

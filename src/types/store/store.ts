@@ -25,6 +25,7 @@ export type EditorSlice = {
 	status: string;
 	editors: any;
 	editorPanel: string | undefined;
+	activeId: string | undefined;
 };
 export type Store = {
 	calendars: CalendarSlice;

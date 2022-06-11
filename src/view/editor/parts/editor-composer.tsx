@@ -9,7 +9,7 @@ import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectEditorRichText } from '../../../store/selectors/editor';
+import { selectEditorPlainText, selectEditorRichText } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
 const TextArea = styled.textarea`
@@ -79,8 +79,7 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): JSX.Elem
 	const { onTextChange } = callbacks;
 	const isRichText = true;
 	const richText = useSelector(selectEditorRichText(editorId));
-	const plainText = 'ciao2';
-	// const [richTextValue, setRichTextValue] = useState(richText);
+	const plainText = useSelector(selectEditorPlainText(editorId));
 	const [plainTextValue, setPlainTextValue] = useState(plainText);
 
 	const textAreaLabel = useMemo(

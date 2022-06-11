@@ -287,7 +287,7 @@ const ParticipantsPartSmall = ({ event, organizer, participants }) => {
 					padding={{ bottom: 'medium' }}
 				>
 					<Padding right="small">
-						<Avatar size="small" label={account.name || account.displayName} />
+						<Avatar size="small" label={account.name ?? account.displayName ?? ''} />
 					</Padding>
 
 					<Text overflow="break-word" weight="bold">
@@ -304,7 +304,7 @@ const ParticipantsPartSmall = ({ event, organizer, participants }) => {
 					padding={{ bottom: 'medium' }}
 				>
 					<Padding right="small">
-						<Avatar size="small" label={organizer.name || organizer.email} />
+						<Avatar size="small" label={organizer.name ?? organizer.email ?? ''} />
 					</Padding>
 					<Text>
 						<Trans
@@ -323,7 +323,7 @@ const ParticipantsPartSmall = ({ event, organizer, participants }) => {
 					padding={{ bottom: 'medium' }}
 				>
 					<Padding right="small">
-						<Avatar size="small" label={organizer.name || organizer.email} />
+						<Avatar size="small" label={organizer.name ?? organizer.email ?? ''} />
 					</Padding>
 
 					<Text>
@@ -347,12 +347,9 @@ export const ParticipantsRow = ({ event, invite }) => (
 		event?.resource?.calendar?.owner &&
 		!event?.resource?.iAmOrganizer ? null : (
 			<ParticipantsPartSmall
-				iAmOrganizer={event?.resource?.iAmOrganizer}
 				event={event}
 				organizer={event?.resource?.organizer}
 				participants={invite?.participants}
-				inviteId={event?.resource?.inviteId}
-				compNum={invite?.compNum}
 			/>
 		)}
 	</>

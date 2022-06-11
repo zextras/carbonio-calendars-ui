@@ -7,9 +7,12 @@ import { IdentityItem } from '../../types/editor';
 import { InviteFreeBusy } from '../../types/store/invite';
 import { Store } from '../../types/store/store';
 
-export function selectEditor(state: Store, id: string): any {
-	return state.editor.editors[id];
-}
+export const selectEditor =
+	(id: string) =>
+	(state: Store): string =>
+		state.editor.editors[id];
+
+export const selectActiveEditorId = (state: Store): string | undefined => state.editor.activeId;
 
 export function selectEditors(state: Store): any {
 	return state.editor.editors;
@@ -74,3 +77,8 @@ export const selectEditorRichText =
 	(id: string) =>
 	(state: Store): string =>
 		state?.editor?.editors?.[id]?.richText;
+
+export const selectEditorPlainText =
+	(id: string) =>
+	(state: Store): string =>
+		state?.editor?.editors?.[id]?.plainText;

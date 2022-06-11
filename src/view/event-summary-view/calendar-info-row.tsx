@@ -16,22 +16,22 @@ export const CalendarInfoRow = (): JSX.Element => {
 
 	return (
 		<>
-			calendar && (
-			<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
-				<Row takeAvailableSpace mainAlignment="flex-start">
-					<Padding right="small">
-						<Icon
-							icon="Calendar2"
-							size="medium"
-							customColor={calendar?.color?.color ?? 'primary'}
-						/>
-					</Padding>
-					<Text overflow="break-word" size="medium" weight="bold">
-						{calendar?.name}
-					</Text>
+			{calendar && (
+				<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
+					<Row takeAvailableSpace mainAlignment="flex-start">
+						<Padding right="small">
+							<Icon
+								icon="Calendar2"
+								size="medium"
+								customColor={calendar?.color?.color ?? 'primary'}
+							/>
+						</Padding>
+						<Text overflow="break-word" size="medium" weight="bold">
+							{calendar?.name}
+						</Text>
+					</Row>
 				</Row>
-			</Row>
-			)
+			)}
 		</>
 	);
 };

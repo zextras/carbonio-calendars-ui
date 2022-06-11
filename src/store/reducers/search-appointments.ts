@@ -8,6 +8,10 @@ import { normalizeAppointments } from '../../normalizations/normalize-appointmen
 import { AppointmentsSlice } from '../../types/store/store';
 import { addAppointmentsToStore } from '../../utils/store/appointments';
 
+export const searchAppointmentsPending = (state: AppointmentsSlice): void => {
+	state.status = 'pending';
+};
+
 export const searchAppointmentsFulfilled = (
 	state: AppointmentsSlice,
 	{ payload }: { payload: any }
@@ -15,4 +19,8 @@ export const searchAppointmentsFulfilled = (
 	const appt = normalizeAppointments(payload.appt);
 	addAppointmentsToStore(state, values(appt));
 	state.status = 'idle';
+};
+
+export const searchAppointmentsRejected = (state: AppointmentsSlice): void => {
+	state.status = 'error';
 };

@@ -4,12 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ModalManagerContext } from '@zextras/carbonio-design-system';
-import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { applyTag } from '../view/tags/tag-actions';
 import { moveApptToTrash, deletePermanently, moveAppointment } from './use-event-actions';
+import { generateEditor } from '../commons/editor-generator';
+import { CALENDAR_ROUTE } from '../constants';
+import moment from 'moment';
 
 export const useGetRecurrentActions = (event, context = {}) => {
 	const { onClose, isInstance } = context;
@@ -40,8 +43,23 @@ export const useGetRecurrentActions = (event, context = {}) => {
 				click: (ev) => {
 					if (ev) ev.stopPropagation();
 					onClose();
+					const boardContext = {
+						organizer: event.resource.organizer,
+						title: event.title,
+						location: event.resource.location,
+						room: event.resource.room,
+						attendees: [],
+						optionalAttendees: [],
+						allDay: event.allDay,
+						freeBusy: event.resource.freeBusy,
+						class: event.resource.class,
+						start: event.start.valueOf(),
+						end: event.end.valueOf()
+					};
+					const { editor, callbacks } = generateEditor(event.resource.id, boardContext);
+					getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
 					replaceHistory(
-						`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}${query}`
+						`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${editor.id}${query}`
 					);
 				}
 			},

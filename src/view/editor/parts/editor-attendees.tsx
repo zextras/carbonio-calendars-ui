@@ -51,87 +51,85 @@ export const EditorAttendees = ({
 	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
 
 	// const isDisabled = useMemo(() => updateAppTime || proposeNewTime, []);
-	const hasError = useMemo(() => some(attendees || [], { error: true }), [attendees]);
+	const hasError = useMemo(() => some(attendees ?? [], { error: true }), [attendees]);
 	const optionalHasError = useMemo(
-		() => some(optionalAttendees || [], { error: true }),
+		() => some(optionalAttendees ?? [], { error: true }),
 		[optionalAttendees]
 	);
 
-	return (
-		(
-			<>
-				<AttendeesContainer>
-					<Container
-						orientation="horizontal"
-						background="gray5"
-						style={{ overflow: 'hidden' }}
-						padding={{ all: 'none' }}
-					>
-						<Container background="gray5" style={{ overflow: 'hidden' }}>
-							{integrationAvailable ? (
-								<ContactInput
-									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-									// @ts-ignore
-									placeholder={t('label.attendee_plural', 'Attendees')}
-									onChange={onAttendeesChange}
-									defaultValue={attendees}
-									disabled={disabled}
-								/>
-							) : (
-								<ChipInput
-									placeholder={t('label.attendee_plural', 'Attendees')}
-									background="gray5"
-									onChange={onAttendeesChange}
-									defaultValue={attendees}
-									valueKey="address"
-									hasError={hasError}
-									errorLabel=""
-									disabled={disabled}
-								/>
-							)}
-						</Container>
-						<Container
-							width="fit"
-							background="gray5"
-							padding={{ right: 'medium', left: 'extrasmall' }}
-							orientation="horizontal"
-						>
-							<Button
-								label={t('label.optional_plural', 'Optionals')}
-								type="ghost"
-								labelColor="secondary"
-								style={{ padding: 0 }}
-								onClick={toggleOptionals}
-							/>
-						</Container>
-					</Container>
-				</AttendeesContainer>
-				{showOptionals && (
-					<AttendeesContainer>
+	return attendees?.length > 0 || optionalAttendees?.length > 0 ? (
+		<>
+			<AttendeesContainer>
+				<Container
+					orientation="horizontal"
+					background="gray5"
+					style={{ overflow: 'hidden' }}
+					padding={{ all: 'none' }}
+				>
+					<Container background="gray5" style={{ overflow: 'hidden' }}>
 						{integrationAvailable ? (
 							<ContactInput
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
-								placeholder={t('label.optional_plural', 'Optionals')}
-								onChange={onOptionalAttendeesChange}
-								defaultValue={optionalAttendees}
+								placeholder={t('label.attendee_plural', 'Attendees')}
+								onChange={onAttendeesChange}
+								defaultValue={attendees}
 								disabled={disabled}
 							/>
 						) : (
 							<ChipInput
-								placeholder={t('label.optional_plural', 'Optionals')}
+								placeholder={t('label.attendee_plural', 'Attendees')}
 								background="gray5"
-								onChange={onOptionalAttendeesChange}
-								defaultValue={optionalAttendees}
+								onChange={onAttendeesChange}
+								defaultValue={attendees}
 								valueKey="address"
-								hasError={optionalHasError}
+								hasError={hasError}
 								errorLabel=""
 								disabled={disabled}
 							/>
 						)}
-					</AttendeesContainer>
-				)}
-			</>
-		) || null
-	);
+					</Container>
+					<Container
+						width="fit"
+						background="gray5"
+						padding={{ right: 'medium', left: 'extrasmall' }}
+						orientation="horizontal"
+					>
+						<Button
+							label={t('label.optional_plural', 'Optionals')}
+							type="ghost"
+							labelColor="secondary"
+							style={{ padding: 0 }}
+							onClick={toggleOptionals}
+						/>
+					</Container>
+				</Container>
+			</AttendeesContainer>
+			{showOptionals && (
+				<AttendeesContainer>
+					{integrationAvailable ? (
+						<ContactInput
+							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+							// @ts-ignore
+							placeholder={t('label.optional_plural', 'Optionals')}
+							onChange={onOptionalAttendeesChange}
+							defaultValue={optionalAttendees}
+							disabled={disabled}
+						/>
+					) : (
+						<ChipInput
+							placeholder={t('label.optional_plural', 'Optionals')}
+							background="gray5"
+							onChange={onOptionalAttendeesChange}
+							defaultValue={optionalAttendees}
+							valueKey="address"
+							hasError={optionalHasError}
+							errorLabel=""
+							disabled={disabled}
+						/>
+					)}
+				</AttendeesContainer>
+			)}
+		</>
+	) : null;
 };

@@ -182,25 +182,6 @@ const DisplayerHeader = ({
 	);
 };
 
-/* const SeriesPreview = () => {
-	const { apptId } = useParams();
-	const appointment = useSelector((s) => selectAppointment(s, apptId));
-	return <PreviewUI event={data} />;
-};
-const InstancePreview = () => {
-	const { apptId, ridZ } = useParams();
-	const appointment = useSelector((s) => selectAppointment(s, apptId));
-	const inst = useSelector((s) => selectAppointmentInstance(s, apptId, ridZ));
-	const data = useMemo(() => {}, []);
-	return <PreviewUI event={data} />;
-};
-
-const PreviewWrapper = () => {
-	const { ridZ } = useParams();
-
-	return ridZ ? <InstancePreview /> : <SeriesPreview />;
-}; */
-
 type ParamsType = {
 	calendarId: string;
 	apptId: string;
@@ -236,8 +217,6 @@ export default function EventPanelView(): JSX.Element {
 				>
 					<DetailsPart
 						subject={event.title}
-						calendarColor={calendar.color.color}
-						location={event.resource.location}
 						isPrivate={event?.resource?.class === 'PRI' ?? false}
 						inviteNeverSent={event.resource.inviteNeverSent}
 						event={event}

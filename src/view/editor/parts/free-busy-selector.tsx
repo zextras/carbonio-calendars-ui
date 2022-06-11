@@ -76,22 +76,13 @@ export const EditorFreeBusySelector = ({
 	disabled = false
 }: EditorFreeBusyProps): JSX.Element | null => {
 	const [t] = useTranslation();
-	const [isSelectedByUser, setIsSelectedByUser] = useState(false);
-	const setValue = useCallback(() => setIsSelectedByUser(true), []);
 	const statusItems = useMemo(() => getStatusItems(t), [t]);
-	const allDay = useSelector(selectEditorAllDay(editorId));
 	const freeBusy = useSelector(selectEditorFreeBusy(editorId));
 	const { onDisplayStatusChange } = callbacks;
 
 	const selectedItem = useMemo(
-		() =>
-			find(statusItems, (item) => {
-				if (!isSelectedByUser) {
-					return allDay ? item.value === STATUS_VALUES.FREE : item.value === STATUS_VALUES.BUSY;
-				}
-				return item.value === freeBusy;
-			}) ?? statusItems[2],
-		[statusItems, allDay, freeBusy, isSelectedByUser]
+		() => find(statusItems, ['value', freeBusy]) ?? statusItems[2],
+		[statusItems, freeBusy]
 	);
 	const onChange = useCallback(
 		(e) => {
@@ -109,7 +100,6 @@ export const EditorFreeBusySelector = ({
 			selection={selectedItem}
 			disablePortal
 			LabelFactory={LabelFactory}
-			onClick={setValue}
 		/>
 	);
 };

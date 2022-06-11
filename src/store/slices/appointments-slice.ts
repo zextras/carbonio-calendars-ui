@@ -26,7 +26,11 @@ import {
 	moveAppointmentToTrashPending,
 	moveAppointmentToTrashRejected
 } from '../reducers/move-appointment-to-trash';
-import { searchAppointmentsFulfilled } from '../reducers/search-appointments';
+import {
+	searchAppointmentsFulfilled,
+	searchAppointmentsPending,
+	searchAppointmentsRejected,
+} from '../reducers/search-appointments';
 import { updateAppointmentReducer } from '../reducers/update-appointment';
 import { handleUpdateParticipationStatus } from '../reducers/update-participation-status';
 import {
@@ -82,7 +86,9 @@ export const appointmentsSlice = createSlice({
 		builder.addCase(snoozeApptReminder.pending, snoozeApptReminderPending);
 		builder.addCase(snoozeApptReminder.fulfilled, snoozeApptReminderFulfilled);
 		builder.addCase(snoozeApptReminder.rejected, snoozeApptReminderRejected);
+		builder.addCase(searchAppointments.pending, searchAppointmentsPending);
 		builder.addCase(searchAppointments.fulfilled, searchAppointmentsFulfilled);
+		builder.addCase(searchAppointments.rejected, searchAppointmentsRejected);
 	}
 });
 

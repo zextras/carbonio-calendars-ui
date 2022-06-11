@@ -3,7 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import { Divider, Icon, IconButton, Padding, Row, Text } from '@zextras/carbonio-design-system';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
+import { isNil, map } from 'lodash';
+import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { selectEditorTitle } from '../../store/selectors/editor';
 import { EditorProps } from '../../types/editor';
 import { EditorAllDayCheckbox } from './parts/allday-checkbox';
 import { EditorAttendees } from './parts/editor-attendees';
@@ -18,7 +24,6 @@ import { EditorTitle } from './parts/title';
 import { EditorVirtualRoom } from './parts/virtual-room';
 
 export const EditorPanel = ({ editorId, callbacks }: EditorProps): JSX.Element | null => {
-	console.log(editorId);
 	return editorId && callbacks ? (
 		<>
 			<EditorOrganizer editorId={editorId} callbacks={callbacks} />

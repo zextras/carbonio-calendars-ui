@@ -13,9 +13,11 @@ import {
 	SnackbarManagerContext,
 	Row
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import { useDispatch } from 'react-redux';
+import { CALENDAR_ROUTE } from '../../constants';
+import { generateEditor } from '../../commons/editor-generator';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { applyTag, createAndApplyTag } from '../tags/tag-actions';
 import { moveApptToTrash, openInDisplayer, deletePermanently } from '../../hooks/use-event-actions';
@@ -78,9 +80,21 @@ const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }):
 					onClick={(ev: any): void => {
 						if (ev) ev.stopPropagation();
 						onClose();
-						replaceHistory(
-							`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
-						);
+						const boardContext = {
+							organizer: event.resource.organizer,
+							title: event.title,
+							location: event.resource.location,
+							room: event.resource.room,
+							attendees: [],
+							optionalAttendees: [],
+							allDay: event.allDay,
+							freeBusy: event.resource.freeBusy,
+							class: event.resource.class,
+							start: event.start.valueOf(),
+							end: event.end.valueOf()
+						};
+						const { editor } = generateEditor(event.resource.id, boardContext);
+						replaceHistory(`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${editor.id}`);
 					}}
 				/>
 			)}

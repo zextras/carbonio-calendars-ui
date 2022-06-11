@@ -6,7 +6,12 @@
 import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
+import {
+	getBridgedFunctions,
+	useAddBoardCallback,
+	useUserAccount,
+	useUserSettings
+} from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { minBy } from 'lodash';
@@ -30,6 +35,8 @@ import { normalizeAppointmentFromCreation } from '../../normalizations/normalize
 import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { searchAppointments } from '../../store/actions/search-appointments';
+import { generateEditor } from '../../commons/editor-generator';
+import { useTranslation } from 'react-i18next';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -61,6 +68,7 @@ export default function CalendarComponent() {
 	const account = useUserAccount();
 	const settings = useUserSettings();
 	const addBoard = useAddBoardCallback();
+	const [t] = useTranslation();
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
@@ -174,15 +182,21 @@ export default function CalendarComponent() {
 	}, [calendarView, settings?.prefs?.zimbraPrefCalendarInitialView]);
 
 	const handleSelect = (e) => {
-		if (!summaryViewOpen)
-			addBoard(
+		if (!summaryViewOpen) {
+			console.log(e);
+			const { editor, callbacks } = generateEditor('new', {
+				title: t('label.new_appointment', 'New Appointment')
+			});
+			getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
+		}
+		/* addBoard(
 				`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
 					e.end
 				).getTime()}`,
 				{
 					app: CALENDAR_APP_ID
 				}
-			);
+			); */
 		useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 	};
 	const onEventDrop = useCallback(

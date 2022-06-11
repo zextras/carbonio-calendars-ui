@@ -9,31 +9,41 @@ import { IdentityItem } from '../../types/editor';
 import { EditorSlice } from '../../types/store/store';
 
 type NewEditor = {
+	payload: any;
+};
+
+type PrefilledEditor = {
 	payload: {
 		id: string | undefined;
 		identities: Array<IdentityItem>;
+		event: any;
+	};
+};
+
+const defaultEditorValues = (id: string | undefined, identities: Array<IdentityItem>): any => {
+	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
+
+	return {
+		organizer: defaultOrganizer,
+		title: '',
+		location: '',
+		room: undefined,
+		attendees: [],
+		optionalAttendees: [],
+		allDay: false,
+		freeBusy: 'B',
+		class: 'PUB',
+		start: moment().valueOf(),
+		end: moment().valueOf() + 3600,
+		id
 	};
 };
 
 export const newEditorReducer = (state: EditorSlice, { payload }: NewEditor): void => {
-	const { id, identities } = payload;
-	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
-	if (id) {
-		const editor = {
-			organizer: defaultOrganizer,
-			title: '',
-			location: '',
-			room: undefined,
-			attendees: [],
-			optionalAttendees: [],
-			allDay: false,
-			freeBusy: 'B',
-			class: 'PUB',
-			start: moment().valueOf(),
-			end: moment().valueOf() + 3600,
-			id
-		};
-
-		state.editors[id] = editor;
+	if (payload) {
+		state.editors[payload.id] = payload;
+		if (payload.panel) {
+			state.activeId = payload.id;
+		}
 	}
 };

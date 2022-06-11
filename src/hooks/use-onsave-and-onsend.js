@@ -19,7 +19,7 @@ export const useOnSaveAndOnSend = (id, isBoard, isInstance) => {
 	const dispatch = useDispatch();
 	const account = useUserAccount();
 	const closeBoard = useRemoveCurrentBoard();
-	const editor = useSelector((state) => selectEditor(state, id));
+	const editor = useSelector(selectEditor(id));
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [t] = useTranslation();
 	const [isIdle, setIsIdle] = useState(true);
