@@ -29,7 +29,7 @@ export default function CalendarSelector({
 	);
 
 	const requiredCalendars = useMemo(
-		() => (excludeTrash ? filter(calWithWritePerm, (cal) => cal.zid !== '3') : calWithWritePerm),
+		() => (excludeTrash ? filter(calWithWritePerm, (cal) => cal.id !== '3') : calWithWritePerm),
 		[calWithWritePerm, excludeTrash]
 	);
 	const calendarItems = useMemo(
