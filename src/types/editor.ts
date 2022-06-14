@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Calendar } from './store/calendars';
+import { Attendee, InviteClass } from './store/invite';
 
 export type IdentityItem = {
 	value: number;
@@ -25,17 +26,42 @@ export type EditorCallbacks = {
 	onSubjectChange: (data: string) => void;
 	onLocationChange: (data: string) => void;
 	onRoomChange: (data: Room) => void;
-	onAttendeesChange: (data: string) => void;
-	onOptionalAttendeesChange: (data: string) => void;
+	onAttendeesChange: (attendees: Array<Attendee>) => {
+		payload: { id: string; attendees: Attendee[] };
+		type: string;
+	};
+	onOptionalAttendeesChange: (optionalAttendees: Array<Attendee>) => {
+		payload: { id: string; optionalAttendees: Array<Attendee> };
+		type: string;
+	};
 	onDisplayStatusChange: (data: string) => void;
-	onCalendarChange: (data: Calendar | undefined) => void;
-	onPrivateChange: (data: boolean) => void;
+	onCalendarChange: (calendar: Calendar) => void;
+	onPrivateChange: (data: InviteClass) => void;
 	onDateChange: (data: any) => void;
-	onTextChange: (data: string) => void;
-	onAllDayChange: (allDay: boolean, start?: number, end?: number) => void;
+	onTextChange: ([plainText, richText]: [plainText: string, richText: string]) => {
+		payload: { id: string | undefined; richText: string; plainText: string };
+	};
+	onAllDayChange: (
+		allDay: boolean,
+		start?: number,
+		end?: number
+	) => {
+		payload: {
+			id: string | undefined;
+			allDay: boolean;
+			start?: number | undefined;
+			end?: number | undefined;
+		};
+		type: string;
+	};
+	onTimeZoneChange: (timezone: string) => void;
+	onReminderChange: (reminder: string) => void;
+	onRecurrenceChange: (recurrenceRule: any) => void;
+	closeCurrentEditor: () => void;
 };
 
 export type EditorProps = {
 	editorId: string;
 	callbacks: EditorCallbacks;
+	expanded?: boolean;
 };

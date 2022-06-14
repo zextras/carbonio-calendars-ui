@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
+import { Container, Padding, Select, Text, Icon, Button } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { selectEditorAllDay, selectEditorFreeBusy } from '../../../store/selectors/editor';
+import { selectEditorFreeBusy } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 import LabelFactory, { Square } from './select-label-factory';
 
@@ -70,7 +70,7 @@ const getStatusItems = (t: TFunction<'translation'>): Array<any> => [
 	}
 ];
 
-export const EditorFreeBusySelector = ({
+export const EditorFreeBusySelector2 = ({
 	editorId,
 	callbacks,
 	disabled = false
@@ -102,4 +102,47 @@ export const EditorFreeBusySelector = ({
 			LabelFactory={LabelFactory}
 		/>
 	);
+};
+
+export const EditorFreeBusySelector = ({
+	editorId,
+	callbacks,
+	disabled = false
+}: EditorFreeBusyProps): JSX.Element | null => {
+	const [t] = useTranslation();
+	const statusItems = useMemo(() => getStatusItems(t), [t]);
+	const freeBusy = useSelector(selectEditorFreeBusy(editorId));
+	const { onDisplayStatusChange } = callbacks;
+
+	const getNewSelection = useCallback(
+		(e) => find(statusItems, ['value', e]) ?? statusItems[0],
+		[statusItems]
+	);
+
+	const [selected, setSelected] = useState(getNewSelection(freeBusy));
+
+	const onChange = useCallback(
+		(e) => {
+			onDisplayStatusChange(e);
+			setSelected(getNewSelection(e));
+		},
+		[getNewSelection, onDisplayStatusChange]
+	);
+
+	useEffect(() => {
+		if (freeBusy) {
+			setSelected(getNewSelection(freeBusy));
+		}
+	}, [freeBusy, getNewSelection]);
+
+	return selected ? (
+		<Select
+			items={statusItems}
+			background="gray5"
+			label="Select an item"
+			onChange={onChange}
+			selection={selected}
+			LabelFactory={LabelFactory}
+		/>
+	) : null;
 };

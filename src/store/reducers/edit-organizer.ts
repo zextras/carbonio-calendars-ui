@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { isNil } from 'lodash';
+import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { IdentityItem, Room } from '../../types/editor';
 import { Calendar } from '../../types/store/calendars';
-import { InviteClass } from '../../types/store/invite';
-import { EditorSlice } from '../../types/store/store';
+import { Attendee, InviteClass } from '../../types/store/invite';
+import { EditorSlice, Store } from '../../types/store/store';
 
 type OrganizerPayload = {
 	payload: {
@@ -39,9 +40,9 @@ type RoomPayload = {
 
 type CalendarPayload = {
 	payload: {
-		id: string | undefined;
-		organizer?: IdentityItem;
-		calendar: Calendar;
+		id: string;
+		calendar: { id: string; name: string; color: ZimbraColorType };
+		organizer: { email: string; name: string; sentBy: string } | undefined;
 	};
 };
 
@@ -67,6 +68,21 @@ type AllDayPayload = {
 		start?: number;
 		end?: number;
 	};
+};
+
+type AttendeePayload = { payload: { id: string; attendees: Attendee[] }; type: string };
+
+type OptionalAttendeePayload = {
+	payload: { id: string; optionalAttendees: Attendee[] };
+	type: string;
+};
+
+type FreeBusyPayload = {
+	payload: { id: string; freeBusy: string };
+};
+
+type DateReducer = {
+	payload: { id: string; mod: number };
 };
 
 export const editOrganizerReducer = (
@@ -113,14 +129,17 @@ export const editEditorRoomReducer = ({ editors }: EditorSlice, { payload }: Roo
 	}
 };
 
-export const editEditorAttendeesReducer = ({ editors }: EditorSlice, { payload }: any): void => {
+export const editEditorAttendeesReducer = (
+	{ editors }: EditorSlice,
+	{ payload }: AttendeePayload
+): void => {
 	// eslint-disable-next-line no-param-reassign
 	editors[payload.id].attendees = payload.attendees;
 };
 
 export const editEditorOptionalAttendeesReducer = (
 	{ editors }: EditorSlice,
-	{ payload }: any
+	{ payload }: OptionalAttendeePayload
 ): void => {
 	// eslint-disable-next-line no-param-reassign
 	editors[payload.id].optionalAttendees = payload.optionalAttendees;
@@ -128,7 +147,7 @@ export const editEditorOptionalAttendeesReducer = (
 
 export const editEditorDisplayStatusReducer = (
 	{ editors }: EditorSlice,
-	{ payload }: any
+	{ payload }: FreeBusyPayload
 ): void => {
 	if (editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
@@ -160,6 +179,12 @@ export const editEditorClassReducer = (
 	}
 };
 
+export const editEditorDateReducer = ({ editors }: EditorSlice, { payload }: DateReducer): void => {
+	if (payload?.id && editors?.[payload?.id]) {
+		// todo: complete
+	}
+};
+
 export const editEditorTextReducer = ({ editors }: EditorSlice, { payload }: TextPayload): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
@@ -184,5 +209,38 @@ export const editEditorAllDayReducer = (
 			// eslint-disable-next-line no-param-reassign
 			editors[payload.id].end = payload.end;
 		}
+	}
+};
+
+export const editEditorTimezoneReducer = ({ editors }: EditorSlice, { payload }: any): void => {
+	if (payload?.id && editors?.[payload?.id]) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].timezone = payload.timezone;
+	}
+};
+
+export const editEditorReminderReducer = ({ editors }: EditorSlice, { payload }: any): void => {
+	if (payload?.id && editors?.[payload?.id]) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].reminder = payload.reminder;
+	}
+};
+
+export const editEditorRecurrenceReducer = ({ editors }: EditorSlice, { payload }: any): void => {
+	if (payload?.id && editors?.[payload?.id]) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].recur = payload.recur;
+	}
+};
+
+export const closeEditorReducer = (
+	editor: EditorSlice,
+	{ payload }: { payload: { id: string } }
+): void => {
+	if (payload?.id && editor.editors?.[payload?.id]) {
+		// eslint-disable-next-line no-param-reassign
+		delete editor.editors[payload.id];
+		// eslint-disable-next-line no-param-reassign
+		editor.activeId = undefined;
 	}
 };

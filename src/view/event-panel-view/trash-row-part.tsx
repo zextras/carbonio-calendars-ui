@@ -11,27 +11,29 @@ import { reduce } from 'lodash';
 import { useSelector } from 'react-redux';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { EventType } from '../../types/event';
+import { Parts } from '../../types/store/invite';
+import { Store } from '../../types/store/store';
 
 const TitleText = styled(Text)`
 	display: inline-block;
 	color: black;
 `;
 
-const findAttachments = (parts, acc) =>
+const findAttachments = (parts: Parts, acc: Parts): Parts =>
 	reduce(
 		parts,
 		(found, part) => {
 			if (part.disposition === 'attachment') {
 				found.push(part);
 			}
-			return findAttachments(part.parts, found);
+			return findAttachments(part.parts ?? [], found);
 		},
-		acc
+		acc as Parts
 	);
 
 export const TrashRow = ({ event }: { event: EventType }): JSX.Element => {
 	const { inviteId, ridZ, participationStatus } = event.resource;
-	const invite = useSelector((state) => selectInstanceInvite(state, inviteId, ridZ));
+	const invite = useSelector((state: Store) => selectInstanceInvite(state, inviteId, ridZ));
 
 	const attachments = useMemo(() => findAttachments(invite.parts, []), [invite]);
 

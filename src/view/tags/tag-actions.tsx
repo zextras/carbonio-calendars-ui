@@ -21,6 +21,7 @@ import { ZIMBRA_STANDARD_COLORS, useTags, Tag, Tags } from '@zextras/carbonio-sh
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
+import { Invite } from '../../types/store/invite';
 import { TagsActionsType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from './delete-tag-modal';
@@ -154,11 +155,11 @@ export const deleteTag = ({ t, createModal, tag }: ArgumentType): ReturnType => 
 	}
 });
 
-export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType }): ReactElement => {
+export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: Invite }): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
-	const [checked, setChecked] = useState(includes(event.resource.tags, tag.id));
+	const [checked, setChecked] = useState(includes(event.tags, tag.id));
 	const [isHovering, setIsHovering] = useState(false);
 	const toggleCheck = useCallback(
 		(value) => {
@@ -166,7 +167,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 
 			itemAction({
 				operation: value ? '!tag' : 'tag',
-				inviteId: event.resource.id,
+				inviteId: event.id,
 				tagName: tag.name
 			})
 				.then((res: any) => {
@@ -199,7 +200,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 					});
 				});
 		},
-		[event?.resource?.id, createSnackbar, t, tag.name]
+		[event?.id, createSnackbar, t, tag.name]
 	);
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
@@ -236,7 +237,7 @@ export const applyTag = ({
 	event
 }: {
 	t: TFunction;
-	event: EventType;
+	event: Invite;
 	context: ContextType;
 	tags: TagsFromStoreType;
 }): { id: string; items: TagType[]; customComponent: ReactElement } => {

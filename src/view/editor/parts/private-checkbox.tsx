@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Checkbox } from '@zextras/carbonio-design-system';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectEditorClass } from '../../../store/selectors/editor';
@@ -25,10 +25,15 @@ export const EditorPrivateCheckbox = ({
 	const { onPrivateChange } = callbacks;
 	const apptClass = useSelector(selectEditorClass(editorId));
 
+	const onClick = useCallback(() => {
+		const newValue = apptClass === 'PRI' ? 'PUB' : 'PRI';
+		onPrivateChange(newValue);
+	}, [apptClass, onPrivateChange]);
+
 	return (
 		<Checkbox
 			label={t('label.private', 'Private')}
-			onClick={onPrivateChange}
+			onClick={onClick}
 			value={apptClass === 'PRI'}
 			disabled={disabled}
 		/>

@@ -29,7 +29,7 @@ const EventPreviewPanel = ({ event }) => {
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
 
-	const actions = useQuickActions(event);
+	const actions = useQuickActions(invite);
 
 	return (
 		<>

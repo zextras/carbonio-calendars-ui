@@ -69,12 +69,11 @@ export const normalizeCalendarEvent = (
 ): EventType => ({
 	start: appt.allDay ? moment(inst.s).startOf('day') : new Date(inst.s),
 	end: appt.allDay
-		? moment(appt.inst[0].ridZ)
+		? moment(inst?.ridZ)
 				.add(getDaysFromMillis(appt.dur) - 1, 'days')
 				.endOf('day')
 		: new Date(inst.s + ((inst as ExceptionReference).dur ?? appt.dur)),
 	resource: normalizeEventResource(appt, inst as ExceptionReference, calendar),
-
 	title: inst?.name ?? appt?.name ?? '',
 	allDay: appt.allDay,
 	permission: !isShared,

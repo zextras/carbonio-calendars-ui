@@ -7,16 +7,17 @@ import React, { useCallback, useMemo, useContext, useEffect, useState } from 're
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
 import {
-	getBridgedFunctions,
+	getBridgedFunctions, replaceHistory,
 	useAddBoardCallback,
 	useUserAccount,
-	useUserSettings
+	useUserSettings,
 } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import { useTranslation } from 'react-i18next';
 import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
@@ -26,7 +27,7 @@ import { selectCheckedCalendarsMap, selectEnd, selectStart } from '../../store/s
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
-import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
+import { CALENDAR_ROUTE } from '../../constants';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
@@ -36,7 +37,7 @@ import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../st
 import { useAppStatusStore } from '../../store/zustand/store';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { generateEditor } from '../../commons/editor-generator';
-import { useTranslation } from 'react-i18next';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -67,7 +68,6 @@ export default function CalendarComponent() {
 	const theme = useContext(ThemeContext);
 	const account = useUserAccount();
 	const settings = useUserSettings();
-	const addBoard = useAddBoardCallback();
 	const [t] = useTranslation();
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
@@ -102,7 +102,7 @@ export default function CalendarComponent() {
 	);
 
 	const slotBgColor = (newDate) => {
-		if (workingSchedule[moment(newDate).day()].working) {
+		if (workingSchedule?.[moment(newDate).day()]?.working) {
 			if (
 				moment(newDate).tz(timeZone).format('HHmm') >=
 					workingSchedule[moment(newDate).day()].start &&
@@ -116,7 +116,7 @@ export default function CalendarComponent() {
 	};
 
 	const slotDayBorderColor = (newDate) => {
-		if (workingSchedule[moment(newDate).day()].working) {
+		if (workingSchedule?.[moment(newDate).day()]?.working) {
 			return theme.palette.gray3.regular;
 		}
 		return theme.palette.gray6.regular;
@@ -133,7 +133,7 @@ export default function CalendarComponent() {
 		style: {
 			backgroundColor:
 				// eslint-disable-next-line no-nested-ternary
-				workingSchedule[moment(newDate).day()].working
+				workingSchedule?.[moment(newDate).day()]?.working
 					? moment().isSame(moment(newDate), 'day')
 						? theme.palette.highlight.regular
 						: theme.palette.gray6.regular
@@ -183,20 +183,13 @@ export default function CalendarComponent() {
 
 	const handleSelect = (e) => {
 		if (!summaryViewOpen) {
-			console.log(e);
-			const { editor, callbacks } = generateEditor('new', {
-				title: t('label.new_appointment', 'New Appointment')
+			const { editor } = generateEditor('new', {
+				title: t('label.new_appointment', 'New Appointment'),
+				start: moment(e.start).valueOf(),
+				end: moment(e.end).valueOf()
 			});
-			getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
+			replaceHistory(`/${editor.id}`);
 		}
-		/* addBoard(
-				`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
-					e.end
-				).getTime()}`,
-				{
-					app: CALENDAR_APP_ID
-				}
-			); */
 		useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 	};
 	const onEventDrop = useCallback(

@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Select } from '@zextras/carbonio-design-system';
-import React from 'react';
+import { find } from 'lodash';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useIdentityItems } from '../../../hooks/use-idenity-items';
@@ -17,12 +18,20 @@ export const EditorOrganizer = ({ editorId, callbacks }: EditorProps): JSX.Eleme
 	const organizer = useSelector(selectOrganizer(editorId));
 	const { onOrganizerChange } = callbacks;
 
+	const onChange = useCallback(
+		(e) => {
+			const newValue = find(identities, ['value', e]) ?? organizer;
+			onOrganizerChange(newValue);
+		},
+		[identities, onOrganizerChange, organizer]
+	);
+
 	return organizer ? (
 		<Select
 			items={identities}
 			label={t('placeholder.organizer', 'Organizer')}
 			selection={organizer}
-			onChange={onOrganizerChange}
+			onChange={onChange}
 		/>
 	) : null;
 };

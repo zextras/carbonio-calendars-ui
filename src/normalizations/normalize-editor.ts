@@ -3,14 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter, find } from 'lodash';
+import { filter, find, isNil, omitBy } from 'lodash';
 import moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
+import { Editor } from '../commons/editor-generator';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
+import { Invite } from '../types/store/invite';
 
-const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
+export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
 	const room = find(xprop, ['name', CRB_XPROPS.MEETING_ROOM]);
 	if (room) {
 		return {
@@ -102,3 +104,24 @@ export const normalizeEditor = (
 		uid: invite.uid || undefined
 	}
 });
+
+export const normalizeEditorFromInvite = (invite: Invite): Editor =>
+	omitBy(
+		{
+			title: invite.name,
+			location: invite.location,
+			room: getVirtualRoom(invite.xprop),
+			attendees: invite.attendees,
+			optionalAttendees: [],
+			allDay: invite.allDay ?? false,
+			freeBusy: invite.freeBusy,
+			class: invite.class,
+			start: invite?.allDay ? moment(invite?.date)?.startOf('date').valueOf() : invite?.start?.u,
+			end: invite?.allDay ? moment(invite?.date)?.endOf('date').valueOf() : invite?.end?.u,
+			timezone: invite?.start?.tz,
+			inviteId: invite.id,
+			reminder: invite?.alarmValue,
+			recur: invite.recurrenceRule
+		},
+		isNil
+	);

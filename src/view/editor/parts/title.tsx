@@ -45,7 +45,7 @@ export const EditorTitle = ({
 	const onChange = useCallback(
 		(e) => {
 			setValue(e.target.value);
-			throttleInput(e);
+			throttleInput(e.target.value);
 		},
 		[throttleInput]
 	);

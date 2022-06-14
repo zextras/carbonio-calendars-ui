@@ -3,41 +3,50 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { store, getUserAccount } from '@zextras/carbonio-shell-ui';
+import { store, getUserAccount, getUserSettings } from '@zextras/carbonio-shell-ui';
 import { find } from 'lodash';
 import moment from 'moment';
 import {
+	closeEditor,
 	createNewEditor,
-	editAppointmentData,
 	editEditorAllDay,
 	editEditorAttendees,
 	editEditorCalendar,
 	editEditorClass,
+	editEditorDate,
 	editEditorDisplayStatus,
 	editEditorLocation,
 	editEditorOptionalAttendees,
+	editEditorRecurrence,
+	editEditorReminder,
 	editEditorRoom,
 	editEditorText,
+	editEditorTimezone,
 	editEditorTitle,
 	editOrganizer
 } from '../store/slices/editor-slice';
-import { EditorCallbacks } from '../types/editor';
+import { EditorCallbacks, IdentityItem, Room } from '../types/editor';
+import { Calendar } from '../types/store/calendars';
+import { Attendee, InviteClass } from '../types/store/invite';
 import { getIdentityItems } from './get-identity-items';
 
-type Editor = {
-	organizer: any;
-	title: string;
-	location: string;
-	room: any;
-	attendees: any[];
-	optionalAttendees: any[];
-	allDay: boolean;
-	freeBusy: string;
-	class: string;
-	start: number;
-	end: number;
-	inviteId: string | undefined;
-	id: string;
+export type Editor = {
+	organizer?: any;
+	title?: string;
+	location?: string;
+	room?: any;
+	attendees?: any[];
+	optionalAttendees?: any[];
+	allDay?: boolean;
+	freeBusy?: string;
+	class?: string;
+	start?: number;
+	end?: number;
+	inviteId?: string | undefined;
+	timezone?: string | undefined;
+	reminder?: string | undefined;
+	recur?: any;
+	id?: string;
 };
 
 let counter = 0;
@@ -49,6 +58,8 @@ const getNewEditId = (id: string): string => {
 
 const createEmptyEditor = (id: string): Editor => {
 	const identities = getIdentityItems();
+	const { zimbraPrefTimeZoneId, zimbraPrefCalendarApptReminderWarningTime } =
+		getUserSettings().prefs;
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
 
 	return {
@@ -64,6 +75,9 @@ const createEmptyEditor = (id: string): Editor => {
 		start: moment().valueOf(),
 		end: moment().valueOf() + 3600,
 		inviteId: undefined,
+		timezone: zimbraPrefTimeZoneId as string,
+		reminder: zimbraPrefCalendarApptReminderWarningTime as string,
+		recur: undefined,
 		id
 	};
 };
@@ -72,23 +86,42 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 	const { dispatch } = store.store;
 	const account = getUserAccount();
 
-	const onOrganizerChange = (data) => dispatch(editOrganizer({ id, organizer: data }));
+	const onOrganizerChange = (
+		organizer: IdentityItem
+	): { payload: { id: string | undefined; organizer: IdentityItem }; type: string } =>
+		dispatch(editOrganizer({ id, organizer }));
 
-	const onSubjectChange = (data) => dispatch(editEditorTitle({ id, title: data.target.value }));
+	const onSubjectChange = (
+		title: string
+	): { payload: { id: string | undefined; title: string }; type: string } =>
+		dispatch(editEditorTitle({ id, title }));
 
-	const onLocationChange = (data) =>
-		dispatch(editEditorLocation({ id, location: data.target.value }));
+	const onLocationChange = (
+		location: string
+	): { payload: { id: string | undefined; location: string }; type: string } =>
+		dispatch(editEditorLocation({ id, location }));
 
-	const onRoomChange = (room) => dispatch(editEditorRoom({ id, room }));
+	const onRoomChange = (
+		room: Room
+	): { payload: { id: string | undefined; room: Room }; type: string } =>
+		dispatch(editEditorRoom({ id, room }));
 
-	const onAttendeesChange = (attendees) => dispatch(editEditorAttendees({ id, attendees }));
+	const onAttendeesChange = (
+		attendees: Array<Attendee>
+	): { payload: { id: string; attendees: Attendee[] }; type: string } =>
+		dispatch(editEditorAttendees({ id, attendees }));
 
-	const onOptionalAttendeesChange = (optionalAttendees) =>
+	const onOptionalAttendeesChange = (
+		optionalAttendees: Array<Attendee>
+	): { payload: { id: string; optionalAttendees: Attendee[] }; type: string } =>
 		dispatch(editEditorOptionalAttendees({ id, optionalAttendees }));
 
-	const onDisplayStatusChange = (freeBusy) => dispatch(editEditorDisplayStatus({ id, freeBusy }));
+	const onDisplayStatusChange = (
+		freeBusy: string
+	): { payload: { id: string; freeBusy: string }; type: string } =>
+		dispatch(editEditorDisplayStatus({ id, freeBusy }));
 
-	const onCalendarChange = (calendar) => {
+	const onCalendarChange = (calendar: Calendar): void => {
 		const calResource = {
 			id: calendar.id,
 			name: calendar.name,
@@ -107,21 +140,52 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 		dispatch(editEditorCalendar(data));
 	};
 
-	const onPrivateChange = (isPrivate) =>
+	const onPrivateChange = (
+		isPrivate: InviteClass
+	): { payload: { id: string | undefined; class: InviteClass }; type: string } =>
 		dispatch(
 			editEditorClass({
 				id,
-				class: isPrivate ? 'PRI' : 'PUB'
+				class: isPrivate
 			})
 		);
 
-	const onDateChange = (mod) => dispatch(editAppointmentData({ id, mod }));
+	const onDateChange = (
+		mod: number
+	): { payload: { id: string | undefined; mod: number }; type: string } =>
+		dispatch(editEditorDate({ id, mod }));
 
-	const onTextChange = ([plainText, richText]) =>
-		dispatch(editEditorText({ id, richText, plainText }));
+	const onTextChange = ([plainText, richText]: [plainText: string, richText: string]): {
+		payload: { id: string | undefined; richText: string; plainText: string };
+	} => dispatch(editEditorText({ id, richText, plainText }));
 
-	const onAllDayChange = (allDay, start, end) =>
-		dispatch(editEditorAllDay({ id, allDay, start, end }));
+	const onAllDayChange = (
+		allDay: boolean,
+		start?: number,
+		end?: number
+	): {
+		payload: {
+			id: string | undefined;
+			allDay: boolean;
+			start?: number | undefined;
+			end?: number | undefined;
+		};
+		type: string;
+	} => dispatch(editEditorAllDay({ id, allDay, start, end }));
+
+	const onTimeZoneChange = (timezone: string): any =>
+		dispatch(editEditorTimezone({ id, timezone }));
+
+	const onReminderChange = (reminder: string): any =>
+		dispatch(editEditorReminder({ id, reminder }));
+
+	const onRecurrenceChange = (
+		recur: any
+	): { payload: undefined; type: string } | { payload: { id: string; recur: any }; type: string } =>
+		dispatch(editEditorRecurrence({ id, recur }));
+
+	const closeCurrentEditor = (): { payload: { id: string }; type: string } =>
+		dispatch(closeEditor({ id }));
 
 	return {
 		onOrganizerChange,
@@ -135,11 +199,19 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 		onPrivateChange,
 		onDateChange,
 		onTextChange,
-		onAllDayChange
+		onAllDayChange,
+		onTimeZoneChange,
+		onReminderChange,
+		onRecurrenceChange,
+		closeCurrentEditor
 	};
 };
 
-export const generateEditor = (id: string, context = {}, panel = true): any => {
+export const generateEditor = (
+	id: string,
+	context = {},
+	panel = true
+): { editor: Editor; callbacks: EditorCallbacks } => {
 	const editorId = getNewEditId(id);
 	const emptyEditor = createEmptyEditor(editorId);
 	const editor = { ...emptyEditor, ...context };

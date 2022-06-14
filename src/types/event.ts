@@ -5,8 +5,20 @@
  */
 import { Moment } from 'moment';
 import { ZimbraColorType } from '../commons/zimbra-standard-colors';
-import { AlarmType } from './appointments';
 import { AlarmData, ParticipationStatus } from './store/invite';
+import moment from 'moment';
+
+export type AlarmType = {
+	alarm: [];
+	alarmInstStart: DateType;
+	before: number;
+	compNum: number;
+	inviteId: number;
+	loc: string;
+	name: string;
+	nextAlarm: DateType;
+	nextCalAlarm: DateType;
+};
 
 export type EventResource = {
 	attach?: { mp?: []; aid?: [] };
@@ -24,6 +36,8 @@ export type EventResource = {
 	iAmOrganizer: boolean;
 	iAmVisitor: boolean;
 	iAmAttendee: boolean;
+	isException?: boolean;
+	isPrivate?: boolean;
 	status: string;
 	location: string;
 	locationUrl?: string;
@@ -40,8 +54,8 @@ export type EventResource = {
 		name: string;
 		email: string;
 	};
-	isException?: boolean;
-	start?: number;
+	room?: any;
+	start?: DateType;
 	uid?: string;
 	idx?: number;
 	changesNotNotified?: boolean;
@@ -52,6 +66,8 @@ export type EventResource = {
 	apptStart: number;
 	alarmData: AlarmData;
 };
+
+export type DateType = moment.Moment | Date | number;
 
 export type EventType = {
 	start: Moment | Date;

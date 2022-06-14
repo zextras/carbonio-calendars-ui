@@ -5,31 +5,38 @@
  */
 import { Select } from '@zextras/carbonio-design-system';
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { findLabel, TimeZonesOptions } from '../../../settings/components/utils';
+import { selectEditorTimezone } from '../../../store/selectors/editor';
+import { EditorProps } from '../../../types/editor';
 
-export const EditorTimezone = ({ editorId, callbacks }): JSX.Element | null => {
+type SelectValue =
+	| {
+			label: string;
+			value: string;
+	  }
+	| undefined;
+
+export const EditorTimezone = ({ editorId, callbacks }: EditorProps): JSX.Element | null => {
 	const [t] = useTranslation();
+	const [value, setValue] = useState<SelectValue>(undefined);
+	const timezone = useSelector(selectEditorTimezone(editorId));
 	const { onTimeZoneChange } = callbacks;
-	const { zimbraPrefUseTimeZoneListInCalendar, zimbraPrefTimeZoneId } = useUserSettings().prefs;
 	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
+	const { zimbraPrefUseTimeZoneListInCalendar } = useUserSettings().prefs;
 
-	return zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? (
-		<Select
-			items={timeZonesOptions}
-			onChange={onTimeZoneChange}
-			defaultSelection={
-				invite?.start.tz
-					? {
-							label: findLabel(timeZonesOptions, invite?.start.tz),
-							value: invite?.start.tz
-					  }
-					: {
-							label: findLabel(timeZonesOptions, startTimeZone || zimbraPrefTimeZoneId),
-							value: startTimeZone || zimbraPrefTimeZoneId
-					  }
-			}
-		/>
+	useEffect(() => {
+		if (timezone) {
+			setValue({
+				label: findLabel(timeZonesOptions, timezone),
+				value: timezone
+			});
+		}
+	}, [timeZonesOptions, timezone]);
+
+	return value && zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? (
+		<Select items={timeZonesOptions} onChange={onTimeZoneChange} selection={value} />
 	) : null;
 };

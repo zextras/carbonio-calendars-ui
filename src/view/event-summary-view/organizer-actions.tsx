@@ -19,10 +19,16 @@ import { useDispatch } from 'react-redux';
 import { CALENDAR_ROUTE } from '../../constants';
 import { generateEditor } from '../../commons/editor-generator';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import { EventType } from '../../types/event';
+import { Invite } from '../../types/store/invite';
 import { applyTag, createAndApplyTag } from '../tags/tag-actions';
 import { moveApptToTrash, openInDisplayer, deletePermanently } from '../../hooks/use-event-actions';
 
-const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }): ReactElement => {
+const OrganizerActions: FC<{ event: EventType; onClose: any; invite: Invite }> = ({
+	event,
+	onClose,
+	invite
+}): ReactElement => {
 	const createModal = useContext(ModalManagerContext);
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
@@ -41,9 +47,9 @@ const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }):
 			openInDisplayer(event, context, t),
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			applyTag({ t, context, event })
+			applyTag({ t, context, event: invite })
 		],
-		[context, event, t]
+		[context, event, invite, t]
 	);
 
 	const otherActionsOptions = useMemo(
@@ -81,7 +87,6 @@ const OrganizerActions: FC<{ event: any; onClose: any }> = ({ event, onClose }):
 						if (ev) ev.stopPropagation();
 						onClose();
 						const boardContext = {
-							organizer: event.resource.organizer,
 							title: event.title,
 							location: event.resource.location,
 							room: event.resource.room,

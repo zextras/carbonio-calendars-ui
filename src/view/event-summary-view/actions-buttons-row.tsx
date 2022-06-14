@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
 	Dropdown,
@@ -18,7 +18,10 @@ import React, { useContext, useMemo } from 'react';
 import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { ReplyButtonsPartSmall } from '../../commons/reply-buttons-small';
+import { selectCalendar } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
+import { Invite } from '../../types/store/invite';
+import { Store } from '../../types/store/store';
 import OrganizerActions from './organizer-actions';
 import { useGetRecurrentActions } from '../../hooks/use-recurrent-actions';
 import { createAndApplyTag } from '../tags/tag-actions';
@@ -29,14 +32,16 @@ const RecurrentRow = styled(Row)`
 
 export const ActionsButtonsRow = ({
 	event,
-	onClose
+	onClose,
+	invite
 }: {
 	event: EventType;
 	onClose: () => void;
+	invite: Invite;
 }): JSX.Element => {
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
-
+	const calendar = useSelector((s: Store) => selectCalendar(s, invite?.parent));
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const context = useMemo(
@@ -47,13 +52,14 @@ export const ActionsButtonsRow = ({
 			createSnackbar,
 			tags,
 			onClose,
-			createAndApplyTag
+			createAndApplyTag,
+			calendar
 		}),
-		[createModal, createSnackbar, dispatch, tags, onClose]
+		[dispatch, createModal, createSnackbar, tags, onClose, calendar]
 	);
 	const [t] = useTranslation();
-	const instanceActions = useGetRecurrentActions(event, { ...context, isInstance: true });
-	const seriesActions = useGetRecurrentActions(event, { ...context, isInstance: false });
+	const instanceActions = useGetRecurrentActions(invite, { ...context, isInstance: true });
+	const seriesActions = useGetRecurrentActions(invite, { ...context, isInstance: false });
 
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
@@ -91,7 +97,7 @@ export const ActionsButtonsRow = ({
 							)}
 						</Padding>
 					) : (
-						<OrganizerActions event={event} onClose={onClose} />
+						<OrganizerActions event={event} onClose={onClose} invite={invite} />
 					)}
 				</>
 			) : (

@@ -20,6 +20,7 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { useInvite } from '../hooks/use-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { EventType } from '../types/event';
 import { ParticipationStatus } from '../types/store/invite';
@@ -59,6 +60,7 @@ export const ReplyButtonsPartSmall = ({
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
+	const invite = useInvite(event.resource.inviteId);
 
 	const replyAction = useCallback(
 		(action) => {
@@ -196,10 +198,10 @@ export const ReplyButtonsPartSmall = ({
 		[createModal, createSnackbar, dispatch, tags]
 	);
 
-	const actions = useEventActions(event, context, t, false);
+	const actions = useEventActions(invite, context, t, false);
 	const otherActions = useMemo(
 		() =>
-			map(actions, (action) => ({
+			map(actions ?? [], (action) => ({
 				id: action.label,
 				icon: action.icon,
 				label: action.label,

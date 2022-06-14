@@ -12,7 +12,7 @@ import { TitleRow } from './title-row';
 import { NeverSentWarningRow } from './never-sent-warning-row';
 import { CalendarInfoRow } from './calendar-info-row';
 import { LocationRow } from './location-row';
-import { ParticipantsRow } from './partipants-row';
+import { ParticipantsRow } from './participants-row';
 import { DescriptionFragmentRow } from './description-fragment-row';
 import { ActionsButtonsRow } from './actions-buttons-row';
 import { TimeInfoRow } from './time-info-row';
@@ -79,7 +79,7 @@ export const EventSummaryView = ({
 					<DescriptionFragmentRow event={event} />
 				)}
 				<Divider />
-				<ActionsButtonsRow event={event} onClose={onClose} />
+				{invite && <ActionsButtonsRow event={event} onClose={onClose} invite={invite} />}
 			</Container>
 		</Popover>
 	);

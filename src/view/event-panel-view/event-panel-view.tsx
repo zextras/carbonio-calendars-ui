@@ -201,7 +201,7 @@ export default function EventPanelView(): JSX.Element {
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
 	const isInstance = useQueryParam('isInstance');
-	const actions = useQuickActions(event, { isInstance });
+	const actions = useQuickActions(invite, { isInstance });
 
 	return event ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">

@@ -11,18 +11,22 @@ import {
 	editEditorAttendeesReducer,
 	editEditorCalendarReducer,
 	editEditorClassReducer,
+	editEditorDateReducer,
 	editEditorDisplayStatusReducer,
 	editEditorOptionalAttendeesReducer,
+	editEditorRecurrenceReducer,
+	editEditorReminderReducer,
 	editEditorRoomReducer,
 	editEditorTextReducer,
+	editEditorTimezoneReducer,
 	editLocationReducer,
 	editOrganizerReducer,
-	editTitleReducer
+	editTitleReducer,
+	closeEditorReducer
 } from '../reducers/edit-organizer';
 import { initializeAppointmentReducer } from '../reducers/initialize-appointment';
 import {
 	addAppointmentEditorReducer,
-	closeEditorReducer,
 	editAppointmentDataReducer,
 	editAttendeesReducer,
 	editOptionalAttendeesReducer,
@@ -47,7 +51,6 @@ export const editorSlice = createSlice({
 		editAttendees: editAttendeesReducer,
 		editRoom: editRoomReducer,
 		editOptionalAttendees: editOptionalAttendeesReducer,
-		closeEditor: closeEditorReducer,
 		openEditor: openEditorReducer,
 		initializeEditorAppointment: initializeAppointmentReducer,
 		createNewEditor: newEditorReducer,
@@ -60,8 +63,13 @@ export const editorSlice = createSlice({
 		editEditorDisplayStatus: editEditorDisplayStatusReducer,
 		editEditorCalendar: editEditorCalendarReducer,
 		editEditorClass: editEditorClassReducer,
+		editEditorDate: editEditorDateReducer,
 		editEditorText: editEditorTextReducer,
-		editEditorAllDay: editEditorAllDayReducer
+		editEditorAllDay: editEditorAllDayReducer,
+		editEditorTimezone: editEditorTimezoneReducer,
+		editEditorReminder: editEditorReminderReducer,
+		editEditorRecurrence: editEditorRecurrenceReducer,
+		closeEditor: closeEditorReducer
 	},
 	extraReducers: (builder) => {
 		builder.addCase(createAppointment.fulfilled, createAppointmentFulfilled);
@@ -87,8 +95,13 @@ export const {
 	editEditorDisplayStatus,
 	editEditorCalendar,
 	editEditorClass,
+	editEditorDate,
 	editEditorText,
-	editEditorAllDay
+	editEditorAllDay,
+	editEditorTimezone,
+	editEditorReminder,
+	editEditorRecurrence,
+	closeEditor
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

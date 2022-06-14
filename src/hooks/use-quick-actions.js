@@ -8,7 +8,7 @@ import { ModalManagerContext } from '@zextras/carbonio-design-system';
 import { useReplaceHistoryCallback, useTags } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { editAppointment, moveApptToTrash } from './use-event-actions';
+import { editAppointmentFromInvite, moveApptToTrash } from './use-event-actions';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 
 export const useQuickActions = (event, context = {}) => {
@@ -32,7 +32,7 @@ export const useQuickActions = (event, context = {}) => {
 					},
 					t
 				}),
-				editAppointment(event, { replaceHistory, createModal, dispatch, ...context }, t),
+				editAppointmentFromInvite(event, { replaceHistory, createModal, dispatch, ...context }, t),
 				moveApptToTrash(
 					event,
 					{ replaceHistory, createModal, dispatch, ...context, isInstance: true, tags },

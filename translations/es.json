@@ -34,7 +34,7 @@
         "sharing_of_this_folder": "Compartición de esta carpeta",
         "add_share": "Añadir compartición",
         "apple_ical": "iCal de Apple",
-        "auto_add_rcvd_app": "Añadir las citas recibidas al calendario automáticamente",
+        "auto_add_rcvd_app": "Añadir las citas recibidas automáticamente al calendario",
         "calendar": "Calendario",
         "calendar_setting": "Propiedades del calendario",
         "cancelled": "Cancelado",
@@ -90,7 +90,7 @@
         "revoke_share": "Revocar compartición de {{title}}",
         "series": "Serie",
         "set_new_time": "Establecer nuevo horario",
-        "share_calendar_url": "Compartir acceso a {{title}}",
+        "share_calendar_url": "Compartición de acceso a {{title}}",
         "shares_items": "Calendarios compartidos de <bold>{{user}}</bold>",
         "show": "Mostrar",
         "show_plural": "Mostrar todo",
@@ -161,15 +161,15 @@
         "other_actions": "Otras acciones",
         "single_instance": "UNA SOLA INSTANCIA",
         "create_tag": "Crear etiqueta",
-        "delete_tag": "Borrar etiqueta",
+        "delete_tag": "Eliminar etiqueta",
         "loading_results": "Cargando resultados...",
         "no_special_char_allowed": "El nombre no debe contener ningún carácter especial",
         "results_for_error": "No se puede realizar la búsqueda, bórrala y vuelve a intentarlo: ",
         "select_color": "Elige un color",
         "tag_max_length": "Máximo 128 caracteres permitidos",
-        "tag_name": "Nombre de etiqueta",
+        "tag_name": "Nombre de la etiqueta",
         "tags": "Etiquetas",
-        "delete_tag_name": "Borrar etiqueta \"{{name}}\"",
+        "delete_tag_name": "Eliminar etiqueta \"{{name}}\"",
         "edit_tag": "Editar etiqueta",
         "edit_tag_name": "Editar etiqueta \"{{name}}\""
     },
@@ -188,10 +188,10 @@
         "edit_message": "Editar mensaje",
         "save_to_preview": "Salvar para pre-visualizar",
         "send_cancellation": "Enviar cancelación",
-        "calendar_access_share": "Compartir acceso al calendario",
+        "calendar_access_share": "Compartición de acceso al calendario",
         "edit_calendar_properties": "Editar propiedades del calendario",
         "share_calendar": "Compartir calendario",
-        "empty_trash_confirmation": "Esta acción eliminará todos los elementos del correo electrónico, contactos, calendario, tareas y maletín de la papelera. ¿Está seguro que desea continuar?"
+        "empty_trash_confirmation": "Esta acción eliminará todos los elementos de la papelera. ¿Está seguro que desea continuar?"
     },
     "event": {
         "action": {
@@ -453,7 +453,7 @@
     },
     "success": "Éxito",
     "type": "Tipo",
-    "add": "Agregar",
+    "add": "Añadir",
     "appointments": "Citas",
     "message": {
         "you": "Tu",
@@ -522,7 +522,7 @@
         "delete_tag_message2": "Una vez borrada, se quitará de cada elemento marcado con ella."
     },
     "button": {
-        "customize_modal": "Abrir módulo de personalización"
+        "customize_modal": "Abrir modo de personalización"
     },
     "administer": "Administrar",
     "allowed_actions": "Acciones permitidas",
@@ -540,7 +540,7 @@
         }
     },
     "edit_share_properties": "Editar propiedades de compartición",
-    "find_calendar_shares": "Encontrar comparticiones de calendario",
+    "find_calendar_shares": "Encontrar comparticiones del calendario",
     "find_shares": "Encontrar comparticiones",
     "insert": "Insertar",
     "private": "Privado",
@@ -608,7 +608,7 @@
         "cuiaba": "{{value}} Cuiabá",
         "damascus": "{{value}} Damasco",
         "darwin": "{{value}} Darwin",
-        "dateline": "{{value}} Línea de fecha",
+        "dateline": "{{value}} Línea de cambio de fecha",
         "dhaka": "{{value}} Dhaka",
         "egypt": "{{value}} Egipto",
         "ekaterinburg_rtz_4": "{{value}} Ekaterimburgo (RTZ 4)",

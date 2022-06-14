@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Checkbox, Container } from '@zextras/carbonio-design-system';
+import { Checkbox } from '@zextras/carbonio-design-system';
 import { isNil } from 'lodash';
-import React, { useCallback, useLayoutEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
@@ -35,11 +35,11 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): JSX.
 			if (e) {
 				const startValue = startDate.setHours(0, 0, 0, 0);
 				const endValue = endDate.setHours(0, 0, 0, 0);
-				onAllDayChange(e, startValue, endValue);
+				onAllDayChange(!allDay, startValue, endValue);
 			}
-			onAllDayChange(e);
+			onAllDayChange(!allDay);
 		},
-		[endDate, onAllDayChange, startDate]
+		[allDay, endDate, onAllDayChange, startDate]
 	);
 
 	return !isNil(allDay) ? (

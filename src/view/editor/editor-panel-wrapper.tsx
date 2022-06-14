@@ -14,14 +14,13 @@ import {
 } from '@zextras/carbonio-design-system';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isNil, map } from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { createCallbacks } from '../../commons/editor-generator';
-import { selectActiveEditorId, selectEditor, selectEditorTitle } from '../../store/selectors/editor';
-import { Store } from '../../types/store/store';
+import { createCallbacks, Editor } from '../../commons/editor-generator';
+import { selectActiveEditorId, selectEditorTitle } from '../../store/selectors/editor';
+import { EditorCallbacks } from '../../types/editor';
 import { EditorPanel } from './editor-panel';
 
 const AppointmentCardContainer = styled(Container)`
@@ -42,9 +41,15 @@ type HeaderProps = {
 	editorId: string;
 	expanded: boolean;
 	setExpanded: (arg: (e: boolean) => boolean) => void;
+	callbacks: EditorCallbacks;
 };
 
-const Header = ({ editorId, expanded, setExpanded }: HeaderProps): JSX.Element | null => {
+const Header = ({
+	editorId,
+	expanded,
+	setExpanded,
+	callbacks
+}: HeaderProps): JSX.Element | null => {
 	const [t] = useTranslation();
 
 	const title = useSelector(selectEditorTitle(editorId));
@@ -62,11 +67,11 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): JSX.Element |
 				icon: 'CloseOutline',
 				label: '',
 				click: (): void => {
-					replaceHistory(``);
+					callbacks.closeCurrentEditor();
 				}
 			}
 		],
-		[expanded, setExpanded]
+		[callbacks, expanded, setExpanded]
 	);
 
 	return !isNil(title) ? (
@@ -108,8 +113,13 @@ const EditorPanelWrapper = (): JSX.Element | null => {
 
 	return editorId && callbacks ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start" expanded={false}>
-			<Header editorId={editorId} expanded={expanded} setExpanded={setExpanded} />
-			<EditorPanel editorId={editorId} callbacks={callbacks} />
+			<Header
+				editorId={editorId}
+				expanded={expanded}
+				setExpanded={setExpanded}
+				callbacks={callbacks}
+			/>
+			<EditorPanel editorId={editorId} callbacks={callbacks} expanded={expanded} />
 		</AppointmentCardContainer>
 	) : null;
 };

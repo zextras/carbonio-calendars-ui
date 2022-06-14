@@ -50,6 +50,12 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 		selectInstanceInvite(state, event.resource.inviteId)
 	);
 
+	const getEventInvite = useCallback(() => {
+		if (!invite) {
+			dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
+		}
+	}, [dispatch, event.resource.inviteId, event.resource.ridZ, invite]);
+
 	const showPanelView = useCallback(() => {
 		if (event?.resource?.isRecurrent) {
 			// I'm disabling lint as the DS is not defining the type
@@ -84,13 +90,13 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 		[action, dispatch, event.resource.inviteId, event.resource.ridZ, invite]
 	);
 
-	const actions = useEventActions(
-		event,
-		{ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag },
-		t
-	);
+	const actions =
+		useEventActions(
+			invite,
+			{ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag },
+			t
+		) ?? [];
 
-	const items = useMemo(() => reject(actions, (item) => !item.label), [actions]);
 	const onClose = useCallback(() => setOpen(false), []);
 
 	return (
@@ -108,6 +114,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 				style={{ width: '100%', height: '100%' }}
 				items={actions}
 				display="block"
+				onOpen={getEventInvite}
 			>
 				<Container
 					width="fill"

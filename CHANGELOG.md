@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.17](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.16...v0.1.17) (2022-06-09)
+
+
+### Features
+
+* tag search && search fix implemented ([0f55282](https://github.com/zextras/carbonio-calendars-ui/commit/0f55282bb07826692bfa25e833e9bf5a92187aba))
+
+
+### Bug Fixes
+
+* fix background to allow navigation on lists ([f7ae7ff](https://github.com/zextras/carbonio-calendars-ui/commit/f7ae7ff1354480e6c87ea36625412aa600fd26b8))
+* fixed appointment move dialog overflow ([44dbdc0](https://github.com/zextras/carbonio-calendars-ui/commit/44dbdc0b986cf0ee496e1d79bf82723fff1758e5))
+* participant type, removed unused translation and added fallbacks, code optimization ([a60ed02](https://github.com/zextras/carbonio-calendars-ui/commit/a60ed029791cc7923eb31c9c989bae8141cb029b))
+* removed unused translations, added Participant~ type, typo error ([32e153c](https://github.com/zextras/carbonio-calendars-ui/commit/32e153ce0051b9f6950890b2cddef4a4777e8eae))
+* removed unused translations, added Participant~ type, typo error ([5881e75](https://github.com/zextras/carbonio-calendars-ui/commit/5881e75c91d84e374c5dc8a5b796c6abf54f27e6))
+* time and description issue on propose new time email ([#82](https://github.com/zextras/carbonio-calendars-ui/issues/82)) ([6913aed](https://github.com/zextras/carbonio-calendars-ui/commit/6913aed893456f005af915b22d71923b8adf04c4))
+
 ### [0.1.16](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.13...v0.1.16) (2022-05-25)
 
 

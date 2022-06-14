@@ -29,7 +29,7 @@
         "add_share": "Adicionar compartilhamento",
         "all_calendars": "Todos os calendários",
         "all_day": "Todo o dia",
-        "apple_ical": "Apple iCal",
+        "apple_ical": "iCal da Apple",
         "private": "Privado",
         "proposal_declined": "Proposta recusada",
         "auto_add_rcvd_app": "Adicionar automaticamente os compromissos recebidos ao calendário",
@@ -49,15 +49,15 @@
         "dismiss_plural": "Dispensar todos",
         "display": "Exibir",
         "edit_properties": "Editar propriedades de {{name}}",
-        "enable_dlgtn_for_ical": "Habilitar delegação para cliente Apple iCal CalDAV",
+        "enable_dlgtn_for_ical": "Habilitar delegação para o cliente iCal CalDAV da Apple",
         "end_after": "Terminar após",
         "end_date": "Data final",
         "end_date_and_time": "Data e hora final",
-        "every": "Todo(a)",
+        "every": "A cada",
         "every_day": "Todos os dias",
         "every_weekday": "Todo dia de semana",
         "every_year_on": "Todo ano em",
-        "find_shares": "Selecione quais calendários deseja ver na árvore de calendários",
+        "find_shares": "Selecione quais calendários deseja ver na lista de calendários",
         "free_busy": "Livre/Ocupado",
         "from": "De",
         "email_input_message": "Inserir endereços de e-mail",
@@ -68,8 +68,8 @@
         "location": "Localização",
         "months": "Meses",
         "no_end_date": "Sem data final",
-        "no_subject": "Sem Assunto",
-        "notify_organizer": "Notificar organizador",
+        "no_subject": "Sem assunto",
+        "notify_organizer": "Notificar ao organizador",
         "number": "Número",
         "occurrences": "Ocorrência(s)",
         "of_every": "de cada",
@@ -91,7 +91,7 @@
         "revoke_share": "Revogar compartilhamento de {{title}}",
         "series": "Série",
         "set_new_time": "Definir novo horário",
-        "share_calendar_url": "Compartilhar acesso de {{title}}",
+        "share_calendar_url": "Compartilhamento de acesso a {{title}}",
         "shares_items": "Calendários compartilhados de <bold>{{user}}</bold>",
         "sharing_of_this_folder": "Compartilhamento desta pasta",
         "show_declined_meetings": "Mostrar reuniões recusadas",
@@ -117,14 +117,14 @@
         "error_try_again": "Algo deu errado. Tente novamente",
         "new_calendar": "Novo calendário",
         "none": "Nenhum",
-        "of_every_month": "de cada mês, todo(a)",
+        "of_every_month": "de cada mês, a cada",
         "snooze": "Adiar",
         "start_week_on": "Começar a semana",
         "undo": "Desfazer",
         "move": "Mover",
         "ok": "OK",
         "restore": "Restaurar",
-        "restore_calendar": "Recuperar calendário",
+        "restore_calendar": "Restabelecer calendário",
         "results_for": "Resultados para:",
         "access_revoked": "Acesso revogado",
         "calendar_shared": "Calendário compartilhado com sucesso",
@@ -133,11 +133,11 @@
         "delete_instance": "Tem certeza que deseja excluir esta instância do compromisso “{title}”?",
         "event_title": "Título do evento",
         "on_behalf_of": "{{accountName}} em nome de {{identity}} <{{otherAccount}}>",
-        "trash_emptied": "Lixeira esvaziada com sucesso",
+        "trash_emptied": "Lixeira esvaziada com êxito",
         "appt_reminder": "Lembrete de Compromisso",
         "appt_reminder_plural": "Lembretes de Compromissos",
-        "settings_saved": "Configurações salvas",
-        "today": "hojé",
+        "settings_saved": "As configurações foram salvas",
+        "today": "hoje",
         "week_day": {
             "saturday": "Sábado",
             "sunday": "Domingo",
@@ -155,16 +155,16 @@
         "app_name": "Calendários",
         "propose_new_time": "SUGERIR NOVO HORÁRIO",
         "new_appointment": "Novo compromisso",
-        "preview": "Visualizar",
+        "preview": "Pré-visualizar",
         "create_tag": "Criar Etiqueta",
         "delete_tag": "Excluir Etiqueta",
         "delete_tag_name": "Excluir etiqueta \"{{name}}\"",
         "edit_tag": "Editar Etiqueta",
         "edit_tag_name": "Editar etiqueta \"{{name}}\"",
-        "loading_results": "Carregando Resultados...",
-        "no_special_char_allowed": "O nome não deve conter nenhum caractere especial",
+        "loading_results": "Carregando resultados...",
+        "no_special_char_allowed": "O nome não deve conter caracteres especiais",
         "results_for_error": "Não foi possível completar a busca, limpe-a e tente novamente: ",
-        "select_color": "Selecionar Cor",
+        "select_color": "Selecionar cor",
         "tag_max_length": "Máximo de 128 caracteres permitidos",
         "tag_name": "Nome da etiqueta",
         "tags": "Etiquetas",
@@ -180,10 +180,10 @@
         "save": "Salvar",
         "send": "Enviar",
         "empty_trash": "Esvaziar Lixeira",
-        "move_to_root": "Mover para raiz",
+        "move_to_root": "Mover para a pasta Home",
         "new_calendar": "Novo calendário",
         "delete_calendar": "Excluir calendário",
-        "save_to_preview": "Salvar para visualizar",
+        "save_to_preview": "Salvar para pré-visualizar",
         "preview": "Clique para pré-visualizar",
         "delete_permanently": "Excluir Permanentemente",
         "edit_message": "Editar Mensagem",
@@ -191,7 +191,7 @@
         "share_calendar": "Compartilhar Calendário",
         "calendar_access_share": "Compartilhamento de acesso ao calendário",
         "edit_calendar_properties": "Editar propriedades do calendário",
-        "empty_trash_confirmation": "Esta ação vai excluir todos os itens em E-mail, Contatos, Calendário, Tarefas e Pasta de lixo. Tem certeza que deseja excluir permanentemente tudo destas pastas de lixeira?"
+        "empty_trash_confirmation": "Esta ação vai excluir todos os itens da lixeira. Tem certeza que deseja continuar?"
     },
     "event": {
         "action": {
@@ -219,7 +219,7 @@
                 "title": "Mover",
                 "footer": "Vazia",
                 "body": {
-                    "message3": "Selecione um calendário para mover o compromisso selecionado:"
+                    "message3": "Selecione um calendário onde mover o compromisso selecionado:"
                 },
                 "input": {
                     "filter": "Filtrar calendários"
@@ -266,13 +266,13 @@
             "appointment_permanently_deleted_error": "Algo deu errado. Tente novamente",
             "appt_moved_error": "Algo deu errado, o compromisso não foi movido. Tente novamente.",
             "appt_moved": "Compromisso movido com sucesso para",
-            "appointment_permanently_deleted_succesfully": "Exclusão permanente feita com sucesso",
+            "appointment_permanently_deleted_succesfully": "Exclusão permanente efetuada com sucesso",
             "appt_deleted_error": "Algo deu errado. Tente novamente.",
             "appt_moved_to_trash": "Compromisso movido para a lixeira",
             "appt_restored": "Compromisso restaurado com sucesso em",
             "calendar_delete_error": "Algo deu errado. Tente novamente.",
             "calendar_deleted_successfully": "Calendário excluído com sucesso.",
-            "calendar_moved_to_root_folder": "Calendário movido para a Pasta Raiz",
+            "calendar_moved_to_root_folder": "Calendário movido para a pasta Home",
             "calendar_moved_to_trash": "Calendário movido para lixeira",
             "calendar_moved_to_trash_error": "Algo deu errado. Tente novamente",
             "edit_calendar": "Edições salvas corretamente",
@@ -289,7 +289,7 @@
             "new_calendar_create_error": "Algo deu errado. Tente novamente",
             "calendar_permanently_deleted": "Calendário excluído permanentemente",
             "calendar_restored": "Calendário restaurado com sucesso",
-            "appointment_permanently_deleted": "Compromisso excluído definitivamente",
+            "appointment_permanently_deleted": "Compromisso excluído permanentemente",
             "calendar_edits_saved": "Edições salvas corretamente",
             "series_deleted": "Série excluída com sucesso. Os participantes receberão a notificação de cancelamento."
         },
@@ -298,7 +298,7 @@
         "delete_future_occurences": "Excluir este evento e todas as ocorrências futuras",
         "invited_you": "convidou você para um evento",
         "share_calendar_url_note": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.",
-        "share_calendar_url_msg": "Você pode compartilhar rapidamente o {{title}} com seus colaboradores usando uma destas URLs:",
+        "share_calendar_url_msg": "Você pode compartilhar rapidamente {{title}} com seus colaboradores usando uma destas URLs:",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> é o organizador",
         "sure_to_delete_all_occurences_appointment": "Tem certeza que deseja excluir todas as ocorrências deste compromisso?",
         "sure_to_delete_appointment": "Tem certeza que deseja excluir este compromisso?",
@@ -315,10 +315,10 @@
                 "sure_delete_appointment_all_instances_permanently": "Isto vai excluir todas as ocorrências deste compromisso e você não poderá recuperá-las novamente. Continuar?"
             }
         },
-        "sure_to_delete_appointment_permanently": "Tem certeza que deseja excluir este compromisso permanentemente?",
+        "sure_to_delete_appointment_permanently": "Tem certeza que deseja excluir este compromisso?",
         "you_sure_delete_instance": "Tem certeza que deseja excluir esta instância do compromisso “{{title}}”?",
         "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?",
-        "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com ela.",
+        "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com a mesma.",
         "appointment_type_handle": "\"{{name}}\" é um compromisso recorrente. Você gostaria de abrir apenas esta instância ou toda a série?"
     },
     "months": {
@@ -342,9 +342,9 @@
         "AC_with_count_plural": "Aceitos ({{count}})",
         "NE_with_count": "Não respondeu",
         "NE_with_count_plural": "Não responderam ({{count}})",
-        "Not_answered": "não respondeu",
+        "Not_answered": "não responderam",
         "Tentative": "aceitou como provisório",
-        "Declined": "recusou",
+        "Declined": "recusado",
         "Accepted": "aceito",
         "Attendees_accepted_count": "<strong>{{count}} participante</strong> aceitou",
         "Attendees_accepted_count_plural": "<strong>{{count}} participantes</strong> aceitaram",
@@ -356,7 +356,7 @@
         "Attendees_tentative_count_plural": "<strong>{{count}} participantes</strong> aceitaram como provisório",
         "DE_with_count": "Recusou",
         "DE_with_count_plural": "Recursaram ({{count}})",
-        "Invited_Visitor": "foi convidado",
+        "Invited_Visitor": "tem sido convidado",
         "TE_with_count": "Provisório",
         "TE_with_count_plural": "Provisórios ({{count}})",
         "visitors": "e outros {{others}} participantes"
@@ -381,7 +381,7 @@
         "custom": "Personalizado",
         "none": "Nenhum",
         "customize": "Personalizar",
-        "daily": "Diário",
+        "daily": "Diáriamente",
         "everyDay": "Todos os Dias",
         "everyMonth": "Todo mês",
         "everyWeek": "Toda Semana",
@@ -426,9 +426,9 @@
             },
             "default_view": {
                 "day": "Visualização por Dia",
-                "month": "Visualização Mensal",
-                "week": "Visualização Semanal",
-                "work_week": "Visualização de Dias Úteis",
+                "month": "Visualização por mês",
+                "week": "Visualização por semana",
+                "work_week": "Visualização por dias úteis",
                 "list": "Visualização em Lista"
             },
             "timezones": {
@@ -447,36 +447,36 @@
             }
         },
         "label": {
-            "snd_autorply_users": "Enviar resposta automática aos usuários que não podem me convidar",
-            "invitation_response": "Resposta de Convite",
-            "default_appt_dur": "Duração padrão de compromisso",
+            "snd_autorply_users": "Enviar resposta automática aos usuários que não tem permitido me convidar",
+            "invitation_response": "Resposta ao convite",
+            "default_appt_dur": "Duração padrão dos compromissos",
             "default_calendar": "Calendário padrão",
             "delete_invt_on_rply": "Excluir convite na resposta",
             "enable_reminder_sound": "Tocar um som (requer o plugin de QuickTime ou Windows Media)",
             "enter_email": "Inserir endereço de e-mail",
             "flash_browser_title": "Piscar a barra de título do navegador",
-            "forward_invites": "Encaminhar Convites",
+            "forward_invites": "Encaminhar convites",
             "show_popup_notification": "Mostrar uma notificação pop-up",
-            "show_reminders": "Mostrar Lembretes",
-            "show_rmndr_past_due_meetings": "Mostrar lembretes de reuniões em atraso",
+            "show_reminders": "Mostrar lembretes",
+            "show_rmndr_past_due_meetings": "Mostrar lembretes de reuniões atrasadas",
             "show_timezones": "Mostrar fuso horário ao criar um novo compromisso",
             "span_time": "Período de tempo"
         },
         "invalid_email": "Não é um e-mail válido",
         "permissions_note": "Os usuários abaixo devem fazer parte deste sistema de e-mail (zextras.com). Você pode usar o endereço de e-mail completo ou apenas o nome de usuário.",
-        "ical_note": "Apple iCal pode ser configurado para acessar seu Calendário usando o protocolo CalDAV. Quando esta preferência estiver ativada, os calendários compartilhados são exibidos na aba de Delegação de conta iCal para que você possa delegar acesso a seus Calendários a outros usuários."
+        "ical_note": "iCal daApple pode ser configurado para acessar seu Calendário usando o protocolo CalDAV. Quando esta preferência estiver ativada, os calendários compartilhados são exibidos na aba de Delegação de conta iCal para que você possa delegar acesso a seus Calendários a outros usuários."
     },
     "share": {
         "options": {
             "share_calendar_role": {
                 "none": "Nenhum",
                 "admin": "Admin (pode visualizar, adicionar, remover e administrar)",
-                "manager": "Gerente (pode visualizar, editar, adicionar e remover)",
-                "viewer": "Visualizador (pode visualizar)"
+                "manager": "Administrador (pode visualizar, editar, adicionar e remover)",
+                "viewer": "Visualizador (pode apenas visualizar)"
             },
             "share_calendar_with": {
-                "external_guests": "Convidados externos (apenas ver)",
-                "internal_users_groups": "Usuários ou Grupos Internos",
+                "external_guests": "Convidados externos (apenas podem visualizar)",
+                "internal_users_groups": "Usuários ou grupos internos",
                 "public": "Público (apenas ver, senha não necessária)"
             }
         },
@@ -515,7 +515,7 @@
         "modal": {
             "custom_schedule": {
                 "footer": "Editar",
-                "title": "Personalizar horas de trabalho"
+                "title": "Personalizar horários de trabalho"
             }
         }
     },
@@ -529,34 +529,34 @@
                 "title": "Modo Arrastar e Soltar",
                 "content": "Solte aqui seus anexos para adicioná-los rapidamente ao compromisso"
             },
-            "local": "Adicionar de pasta local",
+            "local": "Adicionar a partir do Meu Computador",
             "contactsMod": "adicionar cartão de contato",
-            "drive": "Adicionar do Drive"
+            "drive": "Adicionar a partir do Drive"
         }
     },
     "button": {
-        "customize_modal": "Abrir Personalização"
+        "customize_modal": "Abrir modo de Personalização"
     },
-    "shared_folders": "Calendários Compartilhados",
+    "shared_folders": "Calendários compartilhados",
     "tooltip": {
         "add_attachments": "Adicionar anexos",
-        "enable_disable_rich_text": "Ativar/Desativar editor de rich text",
+        "enable_disable_rich_text": "Ativar/desativar editor de texto enriquecido",
         "show_optionals": "Mostrar opcionais",
         "copy_ics_url": "Copiar URL de ICS",
         "copy_outlook_url": "Copiar URL do Outlook",
-        "copy_vector_url": "Copiar URL de Visualização"
+        "copy_vector_url": "Copiar URL de visualização"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",
     "find_calendar_shares": "Encontrar Compartilhamentos do Calendário",
     "find_shares": "Localizar compartilhamentos",
     "insert": "Inserir",
-    "freebusy": "FreeBusy",
+    "freebusy": "Livre/Ocupado",
     "private": "Privado",
     "remove_from_this_list": "Remover desta lista",
     "revoke_access": "Revogar acesso",
     "revoke_with_custom_message": "Revogar acesso enviando uma notificação personalizada",
-    "revoke_without_custom_message": "Revogar acesso enviando uma notificação padrão",
+    "revoke_without_custom_message": "Revogar acesso enviando a notificação padrão",
     "revoke_without_notification": "Revogar acesso sem enviar notificação",
     "search": {
         "organized_by": "organizado por",
@@ -564,9 +564,9 @@
     },
     "share_invite_resent": "Convite de compartilhamento reenviado",
     "shared_items": "Itens compartilhados",
-    "shares_info": "Informações dos Compartilhamentos",
+    "shares_info": "Informações dos compartilhamentos",
     "write": "Escrever",
-    "workflow": "Fluxo de Trabalho",
+    "workflow": "Fluxo de trabalho",
     "resend_mail_notification_about_this_share": "Enviar notificação por e-mail sobre este compartilhamento",
     "placeholder": {
         "organizer": "Organizador"
@@ -635,7 +635,7 @@
         "namibia": "{{value}} Namíbia",
         "newfoundland": "{{value}} Terra Nova",
         "nuku_alofa": "{{value}} Nuku’alofa",
-        "pacific_south_america": "{{value}} Pacífico América do Sul",
+        "pacific_south_america": "{{value}} Pacífico de América do Sul",
         "port_louis": "{{value}} Porto Louis",
         "pyongyang": "{{value}} Pyongyang",
         "samoa": "{{value}} Samoa",
@@ -665,7 +665,7 @@
     "is_recurrent": "É recorrente",
     "appt_restored_successfully": "Compromisso restaurado com sucesso",
     "messages": {
-        "format_as_plain_text": "Formatar como Texto Simples",
+        "format_as_plain_text": "Formatar como texto simples",
         "snackbar": {
             "tag_created": "Etiqueta {{name}} criada com sucesso",
             "tag_deleted": "Etiqueta {{name}} excluída com sucesso",
@@ -674,6 +674,6 @@
         }
     },
     "preview": {
-        "close": "Fechar Pré-visualização"
+        "close": "Fechar pré-visualização"
     }
 }

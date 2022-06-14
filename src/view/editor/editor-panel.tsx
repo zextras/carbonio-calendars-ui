@@ -16,17 +16,20 @@ import { EditorAttendees } from './parts/editor-attendees';
 import { EditorCalendarSelector } from './parts/editor-calendar-selector';
 import { EditorComposer } from './parts/editor-composer';
 import { EditorDatePicker } from './parts/editor-date-picker';
+import { EditorRecurrence } from './parts/editor-recurrence';
+import { EditorReminder } from './parts/editor-reminder';
 import { EditorFreeBusySelector } from './parts/free-busy-selector';
 import { EditorLocation } from './parts/location';
 import { EditorOrganizer } from './parts/organizer';
 import { EditorPrivateCheckbox } from './parts/private-checkbox';
+import { EditorTimezone } from './parts/time-zone';
 import { EditorTitle } from './parts/title';
 import { EditorVirtualRoom } from './parts/virtual-room';
 
-export const EditorPanel = ({ editorId, callbacks }: EditorProps): JSX.Element | null => {
-	return editorId && callbacks ? (
+export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): JSX.Element | null =>
+	editorId && callbacks ? (
 		<>
-			<EditorOrganizer editorId={editorId} callbacks={callbacks} />
+			<EditorOrganizer editorId={editorId} callbacks={callbacks} expanded={expanded} />
 			<EditorTitle editorId={editorId} callbacks={callbacks} />
 			<EditorLocation editorId={editorId} callbacks={callbacks} />
 			<EditorVirtualRoom editorId={editorId} callbacks={callbacks} />
@@ -35,9 +38,10 @@ export const EditorPanel = ({ editorId, callbacks }: EditorProps): JSX.Element |
 			<EditorCalendarSelector editorId={editorId} callbacks={callbacks} />
 			<EditorPrivateCheckbox editorId={editorId} callbacks={callbacks} />
 			<EditorDatePicker editorId={editorId} callbacks={callbacks} />
+			<EditorTimezone editorId={editorId} callbacks={callbacks} expanded={expanded} />
 			<EditorAllDayCheckbox editorId={editorId} callbacks={callbacks} />
-			{/* <EditorTimezone /> */}
+			<EditorReminder editorId={editorId} callbacks={callbacks} expanded={expanded} />
+			<EditorRecurrence editorId={editorId} callbacks={callbacks} expanded={expanded} />
 			<EditorComposer editorId={editorId} callbacks={callbacks} />
 		</>
 	) : null;
-};

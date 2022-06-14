@@ -82,3 +82,18 @@ export const selectEditorPlainText =
 	(id: string) =>
 	(state: Store): string =>
 		state?.editor?.editors?.[id]?.plainText;
+
+export const selectEditorTimezone =
+	(id: string) =>
+	(state: Store): string =>
+		state?.editor?.editors?.[id]?.timezone;
+
+export const selectEditorReminder =
+	(id: string) =>
+	(state: Store): string =>
+		state?.editor?.editors?.[id]?.reminder;
+
+export const selectEditorRecurrence =
+	(id: string) =>
+	(state: Store): any =>
+		state?.editor?.editors?.[id]?.recur;

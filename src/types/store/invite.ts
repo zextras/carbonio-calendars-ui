@@ -109,6 +109,12 @@ export type AlarmData = [
 	}
 ];
 
+export type Part = {
+	disposition?: 'attachment';
+	parts?: Parts;
+};
+
+export type Parts = Array<Part>;
 /* todo: invite types are definitely incomplete or can be wrong. Make sure to update this periodically */
 export type Invite = {
 	tz?: string;
@@ -117,7 +123,7 @@ export type Invite = {
 	attendees: Array<Attendee>;
 	parent: string;
 	flags: string;
-	parts: any;
+	parts: Parts;
 	alarmValue: string;
 	alarmString: string;
 	seriesId: string;

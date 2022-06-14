@@ -5,7 +5,8 @@
  */
 import React from 'react';
 import { Text } from '@zextras/carbonio-design-system';
-import { FOLDERS, getBridgedFunctions, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { useSelector } from 'react-redux';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import MoveAppointment from '../view/move/move-appt-view';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
@@ -15,7 +16,8 @@ import { deleteAppointmentPermanent } from '../store/actions/delete-appointment-
 import { DeleteEventModal } from '../view/delete/delete-event-modal';
 import { applyTag } from '../view/tags/tag-actions';
 import { generateEditor } from '../commons/editor-generator';
-import { CALENDAR_ROUTE } from '../constants';
+import { normalizeEditorFromInvite } from '../normalizations/normalize-editor';
+import { selectCalendar } from '../store/selectors/calendars';
 
 export const openInDisplayer = (event, context, t) => ({
 	id: EventActionsEnum.EXPAND,
@@ -26,7 +28,7 @@ export const openInDisplayer = (event, context, t) => ({
 	click: (ev) => {
 		if (ev) ev.stopPropagation();
 		context.replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${context.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 	}
 });
@@ -101,7 +103,7 @@ export const moveAppointment = (event, context, t) => ({
 	id: EventActionsEnum.MOVE,
 	icon: 'MoveOutline',
 	label:
-		event?.resource?.calendar?.id === FOLDERS.TRASH
+		context?.calendar?.id === FOLDERS.TRASH
 			? t('label.restore', 'Restore')
 			: t('label.move', 'Move'),
 	disabled: !event.permission,
@@ -111,12 +113,12 @@ export const moveAppointment = (event, context, t) => ({
 			context.dispatch(moveAppointmentRequest(data)).then((res) => {
 				if (res.type.includes('fulfilled')) {
 					context.createSnackbar({
-						key: event?.resource?.calendar?.id === FOLDERS.TRASH ? 'restore' : 'move',
+						key: context?.calendar?.id === FOLDERS.TRASH ? 'restore' : 'move',
 						replace: true,
 						type: 'info',
 						hideButton: true,
 						label:
-							event?.resource?.calendar?.id === FOLDERS.TRASH
+							context?.calendar?.id === FOLDERS.TRASH
 								? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
 										data.destinationCalendarName
 								  }`
@@ -127,7 +129,7 @@ export const moveAppointment = (event, context, t) => ({
 					});
 				} else {
 					context.createSnackbar({
-						key: event?.resource?.calendar?.id === FOLDERS.TRASH ? 'restore' : 'move',
+						key: context?.calendar?.id === FOLDERS.TRASH ? 'restore' : 'move',
 						replace: true,
 						type: 'error',
 						hideButton: true,
@@ -139,6 +141,7 @@ export const moveAppointment = (event, context, t) => ({
 		};
 		const closeModal = context.createModal(
 			{
+				maxHeight: '90vh',
 				children: (
 					// eslint-disable-next-line react/jsx-filename-extension
 					<>
@@ -261,16 +264,16 @@ export const deletePermanently = ({ event, context, t }) => ({
 	}
 });
 
-export const editAppointment = (event, context, t, isEditable = false) => ({
+/* export const editAppointment = (event, context, t, isEditable = false) => ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Edit2Outline',
 	label: t('label.edit', 'Edit'),
-	disabled: isEditable ? !event.resource.iAmOrganizer || !event.haveWriteAccess : true,
+	disabled: isEditable ? !event.isOrganizer || !event.haveWriteAccess : true,
 	click: (ev) => {
 		const query = context?.isInstance ? '?isInstance=TRUE' : '';
 		if (ev) ev.stopPropagation();
 		const boardContext = {
-			organizer: event.resource.organizer,
+			organizer: event.organizer,
 			title: event.title,
 			location: event.resource.location,
 			room: event.resource.room,
@@ -286,15 +289,33 @@ export const editAppointment = (event, context, t, isEditable = false) => ({
 		context.isFromSearch
 			? context.replaceHistory(`/${EventActionsEnum.EDIT}/${editor.id}${query}`)
 			: context.replaceHistory(
-					`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${editor.id}${query}`
+					`/${context.calendar.id}/${EventActionsEnum.EDIT}/${editor.id}${query}`
+			  );
+	}
+}); */
+
+export const editAppointmentFromInvite = (invite, context, t, isEditable = false) => ({
+	id: EventActionsEnum.EDIT,
+	icon: 'Edit2Outline',
+	label: t('label.edit', 'Edit'),
+	disabled: !invite.isOrganizer || !context?.calendar?.haveWriteAccess,
+	click: (ev) => {
+		const query = context?.isInstance ? '?isInstance=TRUE' : '';
+		if (ev) ev.stopPropagation();
+		const editorData = normalizeEditorFromInvite(invite);
+		const { editor } = generateEditor(invite.apptId, editorData);
+		context.isFromSearch
+			? context.replaceHistory(`/${EventActionsEnum.EDIT}/${editor.id}${query}`)
+			: context.replaceHistory(
+					`/${context?.calendar?.id}/${EventActionsEnum.EDIT}/${editor.id}${query}`
 			  );
 	}
 });
 
 export const ActionsRetriever = (event, context, t, includeReplyActions) =>
 	// eslint-disable-next-line no-nested-ternary
-	!event.resource.iAmOrganizer
-		? event.resource.calendar.id === FOLDERS.TRASH
+	!event.isOrganizer
+		? context.calendar.id === FOLDERS.TRASH
 			? [
 					deletePermanently({ event, context, t }),
 					moveAppointment(event, context, t),
@@ -312,10 +333,10 @@ export const ActionsRetriever = (event, context, t, includeReplyActions) =>
 						: []),
 					moveAppointment(event, context, t),
 					moveApptToTrash(event, context, t),
-					editAppointment(event, context, t),
+					editAppointmentFromInvite(event, context, t),
 					applyTag({ t, context, event })
 			  ]
-		: event.resource.calendar.id === FOLDERS.TRASH
+		: context.calendar.id === FOLDERS.TRASH
 		? [
 				deletePermanently({ event, context, t }),
 				moveAppointment(event, context, t),
@@ -326,12 +347,12 @@ export const ActionsRetriever = (event, context, t, includeReplyActions) =>
 				openInDisplayer(event, context, t),
 				moveAppointment(event, context, t),
 				moveApptToTrash(event, context, t),
-				editAppointment(event, context, t, true),
+				editAppointmentFromInvite(event, context, t, true),
 				applyTag({ t, context, event })
 		  ];
 
 export const RecurrentActionRetriever = (event, context, t) =>
-	event.resource.calendar.id === FOLDERS.TRASH
+	context.calendar.id === FOLDERS.TRASH
 		? [
 				deletePermanently({ event, context, t }),
 				moveAppointment(event, context, t),
@@ -366,7 +387,10 @@ export const RecurrentActionRetriever = (event, context, t) =>
 				}
 		  ];
 
-export const useEventActions = (event, context, t, includeReplyActions = true) =>
-	event.resource.isRecurrent
-		? RecurrentActionRetriever(event, context, t)
-		: ActionsRetriever(event, { ...context, isInstance: true }, t, includeReplyActions);
+export const useEventActions = (event, context, t, includeReplyActions = true) => {
+	const calendar = useSelector((s) => selectCalendar(s, event?.parent));
+	if (!event) return undefined;
+	return event?.recurrenceRule
+		? RecurrentActionRetriever(event, { ...context, calendar }, t)
+		: ActionsRetriever(event, { ...context, calendar, isInstance: true }, t, includeReplyActions);
+};

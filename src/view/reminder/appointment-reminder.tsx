@@ -27,19 +27,25 @@ import { searchAppointments } from '../../store/actions/search-appointments';
 import { selectAllAppointments, selectApptStatus } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
+import { AppointmentReminderProps } from '../../types/appointment-reminder';
 import SetNewTimeModal from './set-new_time-modal';
 import sound from '../../assets/notification.mp3';
 import ApptReminderModal from './appt-reminder-modal';
 import { showNotification } from '../notifications';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
+import { getTimeToDisplay } from '../../commons/utilities';
 
-const AppointmentReminder: FC = (): ReactElement => {
+type ReminderQueue = Record<
+	string,
+	ReturnType<typeof clearTimeout> | ReturnType<typeof setTimeout>
+>;
+const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	const dispatch = useDispatch();
 	const [t] = useTranslation();
 
 	const [playing, setPlaying] = useState(false);
 	const [apptForReminders, setApptForReminders] = useState<Array<EventType>>([]);
-	const [reminderQueue, setReminderQueue] = useState<Record<string, () => void>>({});
+	const [reminderQueue, setReminderQueue] = useState<ReminderQueue>({});
 	const [showNewTimeModal, setShowNewTimeModal] = useState(false);
 	const [audio] = useState(new Audio(sound));
 	const [eventForChange, setEventForChange] = useState<EventType>();
@@ -102,38 +108,44 @@ const AppointmentReminder: FC = (): ReactElement => {
 		[events, reminderRange.end, reminderRange.start]
 	);
 
+	const noTitle = useMemo(() => t('label.no_title', 'No Title'), [t]);
 	useEffect(() => {
-		const tmp: Record<string, () => void> = {};
+		const tmp: Record<string, () => void | ReturnType<typeof setTimeout | typeof clearTimeout>> =
+			{};
 		const tp = differenceWith(apptForReminders, eventsToRemind);
 		const uniqueTp = uniq(tp);
 		const trans = pullAll(apptForReminders, uniqueTp);
 		setApptForReminders(trans);
-
-		map(reminderQueue, (q: number): void => clearTimeout(q));
-		map(eventsToRemind, (rem: EventType) => {
-			const { alarmData, fragment, inviteId } = rem.resource;
+		map(reminderQueue, (q: ReturnType<typeof setTimeout>) => clearTimeout(q));
+		map(eventsToRemind, (rem: EventType & { showNotification?: boolean }) => {
+			const { alarmData, inviteId } = rem.resource;
 			const now = moment();
 			const difference = moment(alarmData[0].nextAlarm).diff(now, 'seconds', true);
 			const index = lastIndexOf(apptForReminders, rem);
 
 			if (index === -1) {
-				tmp[`${inviteId}`] = (): NodeJS.Timeout =>
+				tmp[`${inviteId}`] = (): ReturnType<typeof setTimeout> =>
 					setTimeout(
 						() => {
-							showNotification(rem.title, fragment);
+							const timeToDisplay = getTimeToDisplay(rem, now, t);
+							showNotification(rem?.title || noTitle, timeToDisplay);
 							setPlaying(true);
-							setApptForReminders((prevApp) => [...prevApp, rem]);
+							setApptForReminders((prevApp) => [...prevApp, { ...rem }]);
 						},
 						difference <= 0 ? 1000 : difference * 1000
 					);
 			}
 		});
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		setReminderQueue(tmp);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [eventsToRemind]);
+	}, [eventsToRemind, noTitle]);
 
 	useEffect(() => {
-		forEach(reminderQueue, (q) => q());
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		forEach(reminderQueue, (q): ReminderQueue => q());
 	}, [reminderQueue]);
 
 	useEffect(() => {

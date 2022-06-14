@@ -31,7 +31,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 	const { close } = useSearchActionsFn(event);
 	const invite = useInvite(event?.resource?.inviteId);
 
-	const actions = useQuickActions(event, { isFromSearch: true });
+	const actions = useQuickActions(invite, { isFromSearch: true });
 	return (
 		<Container
 			mainAlignment="flex-start"

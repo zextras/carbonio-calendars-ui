@@ -15,6 +15,7 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeInvite = (m: any): Invite => ({
+	allDay: m?.inv?.[0]?.comp?.[0]?.allDay,
 	apptId: m?.inv?.[0]?.comp?.[0]?.apptId,
 	tz: find(m?.inv?.[0]?.tz, (value) => value.id !== 'UTC')?.id,
 	id: m.id,

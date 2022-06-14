@@ -7,7 +7,7 @@
         "edit_message": "Edytuj Wiadomość",
         "empty_trash": "Opróżnij Kosz",
         "move_to_root": "Przenieś do źródła",
-        "preview": "Kliknij aby zobaczyć podgląd w nowej karcie",
+        "preview": "Kliknij aby zobaczyć podgląd",
         "save_to_preview": "Zapisz do podglądu",
         "send": "Wyślij",
         "send_cancellation": "Wyślij Anulację",
@@ -20,7 +20,8 @@
             "decline": "Odrzuć",
             "no": "Nie",
             "expand": "Otwórz na Ekranie wyświetlającym",
-            "needs_action": "Potrzebuje działania"
+            "needs_action": "Potrzebuje działania",
+            "invitation_not_sent_yet": "Zaproszenie nie zostało jeszcze wysłane"
         }
     },
     "folder": {
@@ -158,15 +159,7 @@
         "type_name_here": "Nazwa kalendarza",
         "undo": "Cofnij",
         "view_url": "Zobacz adres URL",
-        "week": {
-            "friday": "Piątek",
-            "monday": "Poniedziałek",
-            "saturday": "Sobota",
-            "sunday": "Niedziela",
-            "thursday": "Czwartek",
-            "tuesday": "Wtorek",
-            "wednesday": "Środa"
-        },
+        "week": "Tydzień",
         "weeks_on": "Tygodnie",
         "work_hour": "Godzina pracy",
         "work_week": "Tydzień roboczy",
@@ -192,7 +185,41 @@
         "timezone_pref_msg": "Terminy zależą od twoich ustawień stref czasowych.",
         "the": " ",
         "propose_new_time": "ZAPROPONUJ NOWY TERMIIN",
-        "app_name": "Kalendarze"
+        "app_name": "Kalendarze",
+        "delete_tag_name": "Usuń Tag \"{{name}}\"",
+        "from": "od",
+        "loading": "Ładowanie...",
+        "maybe": "może",
+        "exclude_free_busy": "Wyklucz ten kalendarz z informowania o statusie wolny/zajęty",
+        "role": "rola",
+        "today": "dzisiaj",
+        "week_day": {
+            "sunday": "Niedziela",
+            "thursday": "Czwartek",
+            "friday": "Piątek",
+            "monday": "Poniedziałek",
+            "saturday": "Sobota",
+            "tuesday": "Czwartek",
+            "wednesday": "Środa"
+        },
+        "create_tag": "Stwórz Tag",
+        "delete_tag": "Usuń Tag",
+        "edit_tag": "Edytuj Tag",
+        "edit_tag_name": "Edytuj Tag \"{{name}}\"",
+        "entire_serires": "CAŁA SERIA",
+        "loading_results": "Ładowanie wyników...",
+        "new_tag": "Nowy Tag",
+        "no_special_char_allowed": "Nazwa nie może zawierać żadnych znaków specjalnych",
+        "other_actions": "Inne czynności",
+        "results_for_error": "Nie udało się wyszukać, wyczyść pole i spróbuj ponownie: ",
+        "select_color": "Wybierz kolor",
+        "share_with": "udostępnij",
+        "single_instance": "POJEDYNCZY PRZYPADEK",
+        "tag_max_length": "Dozwolone max. 128 znaków",
+        "tag_name": "Nazwa Tagu",
+        "tags": "Tagi",
+        "to": "do",
+        "preview": "Podgląd"
     },
     "message": {
         "modal": {
@@ -231,7 +258,9 @@
                 "decline": "Odpowiedziałeś: Odrzucono",
                 "tentative": "Odpowiedziałeś: Niepewne"
             },
-            "new_calendar_created": "Nowy kalendarz został utworzony"
+            "new_calendar_created": "Nowy kalendarz został utworzony",
+            "calendar_edits_saved": "Zmiany zostały zapisane pomyślnie",
+            "series_deleted": "Seria została usunięta pomyślnie. Uczestnicy otrzymają powiadomienie o anulacji."
         },
         "sure_to_delete_appointment_permanently": "Na pewno chcesz trwale usunąć to spotkanie?",
         "want_to_send_cancellation_msg": "Czy chcesz wysłać wiadomość dot. anulacji spotkania do uczestników?",
@@ -241,7 +270,10 @@
         "you_sure_delete_calendar": "Czy na pewno chcesz trwale usunąć kalendarz {{name}}?",
         "you_sure_delete_instance": "Czy na pewno chcesz usunąć ten przypadek spotkania \"{{title}}\" ?",
         "you_sure_move_calendar_trash": "Czy na pewno chcesz usunąć kalendarz {{name}}?",
-        "you_will_see_the_subject_here": "Temat"
+        "you_will_see_the_subject_here": "Temat",
+        "delete_tag_message1": "Czy na pewno chcesz usunąć Tag \"{{name}}\"?",
+        "delete_tag_message2": "Po usunięciu Tag zostanie zdjęty z każdego elementu oznaczonego nim.",
+        "appointment_type_handle": "\"{{name}}\" to powtarzające się spotkanie. Chcesz otworzyć tylko ten przypadek czy serię?"
     },
     "participants": {
         "Attendees_tentative_count_0": "<strong>{{count}} uczestnik </strong> odpowiedział: Niepewne",
@@ -355,7 +387,9 @@
         },
         "new_time_proposed_success": "Zaproponowano nowy czas",
         "proposed_time_accepted": "Zaakceptowano zaproponowany czas",
-        "url_copied": "skopiowano {{title}}"
+        "url_copied": "skopiowano {{title}}",
+        "tag_applied": "Tag \"{{tag}}\" został zastosowany",
+        "tag_removed": "Tag \"{{tag}}\" został zdjęty"
     },
     "timezone": {
         "brussels_copenhagen_madrid_paris ": "{{value}} Bruksela, Kopenhaga, Madryt, Paryż",
@@ -490,7 +524,7 @@
     "composer": {
         "attachment": {
             "contactsMod": "Dodaj wizytówkę",
-            "local": "Dodaj z tego komputera",
+            "local": "Dodaj z tego urządzenia",
             "draganddrop": {
                 "content": "Upuść tutaj załączniki, żeby szybko dodać je do spotkania",
                 "title": "Tryb Drag&Drop"
@@ -535,7 +569,13 @@
     "shared_folders": "Udostępnione Kalendarze",
     "shared_items": "Udostępnione elementy",
     "messages": {
-        "format_as_plain_text": "Formatuj jako zwykły tekst"
+        "format_as_plain_text": "Formatuj jako zwykły tekst",
+        "snackbar": {
+            "tag_created": "Tag {{name}} został pomyślnie stworzony",
+            "tag_deleted": "Tag {{name}} został usunięty pomyślnie",
+            "tag_not_updated": "Coś poszło nie tak, Tag nie został zaktualizowany. Spróbuj ponownie.",
+            "tag_updated": "Tag został zaktualizowany pomyślnie"
+        }
     },
     "months": {
         "april": "Kwiecień",
@@ -566,5 +606,8 @@
     },
     "type": "Typ",
     "workflow": "Organizacja Pracy",
-    "write": "Pisanie"
+    "write": "Pisanie",
+    "preview": {
+        "close": "Zamknij Podgląd"
+    }
 }

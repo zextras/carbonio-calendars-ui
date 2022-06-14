@@ -55,7 +55,7 @@ export default function CalendarView(): JSX.Element {
 				<CalendarComponent />
 			</Suspense>
 			<Switch>
-				<Route path={`${path}/:calendarId?/:action(${EventActionsEnum.EDIT})?/:editorId?/`}>
+				<Route path={`${path}/:calendarId?/:action(${EventActionsEnum.EDIT})/:editorId?/`}>
 					<EditorPanelWrapper />
 				</Route>
 				<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>

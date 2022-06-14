@@ -226,10 +226,21 @@ const Attachment = ({
 };
 
 type AttachmentsBlockProps = {
-	attachments: any;
+	attachments: Array<{
+		part: any;
+		mid: string;
+		filename: string;
+		contentType: string;
+		name: string;
+		aid?: string;
+	}>;
 	id: string;
 	subject: string;
-	onAttachmentsChange?: () => void;
+	onAttachmentsChange?: (
+		arg1: { aid?: string[]; mp: Array<{ part: any; mid: string }> },
+		arg2: any,
+		arg3: any
+	) => void;
 	isEditor?: boolean;
 	isComplete?: boolean;
 };
@@ -260,11 +271,15 @@ export const AttachmentsBlock = ({
 			if (onAttachmentsChange) {
 				onAttachmentsChange(
 					{
-						aid: reduce(attachmentFiles, (acc, item) => (item.aid ? [...acc, item.aid] : acc), []),
+						aid: reduce(
+							attachmentFiles,
+							(acc, item) => (item.aid ? [...acc, item.aid] : acc),
+							[] as string[]
+						),
 						mp: reduce(
 							attachmentFiles,
 							(acc, item) => (item.name ? [...acc, { part: item.name, mid: id }] : acc),
-							[]
+							[] as Array<{ part: any; mid: string }>
 						)
 					},
 					attachmentFiles,

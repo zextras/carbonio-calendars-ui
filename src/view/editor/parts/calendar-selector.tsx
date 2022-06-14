@@ -14,7 +14,7 @@ import LabelFactory, { Square } from './select-label-factory';
 
 type CalendarSelectorProps = {
 	calendarId: string;
-	onCalendarChange: (id: Calendar | undefined) => void;
+	onCalendarChange: (calendar: Calendar) => void;
 	label?: string;
 	excludeTrash?: boolean;
 	updateAppTime?: boolean;
@@ -65,7 +65,10 @@ export const CalendarSelector = ({
 		[calendarItems, requiredCalendars, calendarId]
 	);
 
-	const getSelectedCalendar = useCallback((id) => find(calendars, ['id', id]), [calendars]);
+	const getSelectedCalendar = useCallback(
+		(id) => find(calendars, ['id', id]) ?? calendars[10],
+		[calendars]
+	);
 
 	const onSelectedCalendarChange = useCallback(
 		(id) => onCalendarChange(getSelectedCalendar(id)),
