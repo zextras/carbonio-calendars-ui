@@ -8,6 +8,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { selectCalendars } from '../../../store/selectors/calendars';
 import LabelFactory, { Square } from './select-label-factory';
 
@@ -29,7 +30,8 @@ export default function CalendarSelector({
 	);
 
 	const requiredCalendars = useMemo(
-		() => (excludeTrash ? filter(calWithWritePerm, (cal) => cal.id !== '3') : calWithWritePerm),
+		() =>
+			excludeTrash ? filter(calWithWritePerm, (cal) => cal.id !== FOLDERS.TRASH) : calWithWritePerm,
 		[calWithWritePerm, excludeTrash]
 	);
 	const calendarItems = useMemo(
