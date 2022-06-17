@@ -38,7 +38,7 @@
         "delete_future_occurences_warning": "这也将删除系列中（在此实例之前和之后）的所有例外",
         "have_not_sent_invitation": "您尚未向参与者发送邀请",
         "invite_has_no_message": "此邀请没有文本消息",
-        "invited_you": "邀请您参加活动",
+        "invited_you": "已邀请您至",
         "meeting_canceled": "以下会议已被取消",
         "modal": {
             "delete": {
@@ -63,7 +63,12 @@
         "you_sure_delete_instance": "确定要删除此“{{title}}”预约的实例吗？",
         "delete_tag_message1": "确定要删除“{{name}}”标签吗？",
         "delete_tag_message2": "删除后，其将从所有已进行相关标记的项目上移除。",
-        "appointment_type_handle": "“{{name}}”是定期预约。您是想打开此实例还是整个系列？"
+        "appointment_type_handle": "“{{name}}”是定期预约。您是想打开此实例还是整个系列？",
+        "organizer": "组织者",
+        "reply": "回复",
+        "reply_all": "回复全部",
+        "send_email": "发送邮件",
+        "send_email_to": "发送邮件至：{{email}}"
     },
     "calendar": {
         "modal": {
@@ -320,7 +325,8 @@
         "entire_serires": "全系列",
         "new_tag": "新标签",
         "other_actions": "其他操作",
-        "single_instance": "单个实例"
+        "single_instance": "单个实例",
+        "no_title": "无标题"
     },
     "months": {
         "april": "四月",
@@ -535,7 +541,10 @@
         "show_optionals": "显示选项",
         "copy_ics_url": "复制ICS URL",
         "copy_outlook_url": "复制Outlook URL",
-        "copy_vector_url": "复制视图URL"
+        "copy_vector_url": "复制视图URL",
+        "chat": "设备",
+        "equipment": "设备",
+        "location": "位置"
     },
     "workflow": "工作流",
     "write": "编写",
