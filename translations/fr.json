@@ -281,7 +281,9 @@
         "tag_name": "Nom de l'étiquette",
         "tags": "Étiquettes",
         "delete_tag": "Supprimer l'étiquette",
-        "delete_tag_name": "Supprimer l'étiquette \"{{name}}\""
+        "delete_tag_name": "Supprimer l'étiquette \"{{name}}\"",
+        "no_title": "Pas de titre",
+        "scheduled_in": "Planifié en"
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -291,7 +293,7 @@
         "delete_future_occurences": "Supprimer cette instance et toutes les futures occurrences",
         "have_not_sent_invitation": "Vous n'avez pas encore envoyé les invitations aux participants",
         "invite_has_no_message": "L'invitation n'a pas de message",
-        "invited_you": "vous a invité à un événement",
+        "invited_you": "vous a invité à",
         "meeting_canceled": "La réunion suivante a été annulée",
         "snackbar": {
             "appointment_permanently_deleted_error": "Quelque chose s'est mal passé, veuillez réessayer",
@@ -349,7 +351,21 @@
         "you_sure_delete_instance": "Êtes-vous sûr de vouloir supprimer cette instance du rendez-vous \"{{title}}\" ?",
         "delete_tag_message1": "Êtes-vous sûr de vouloir supprimer l'étiquette \"{{name}}\" ?",
         "delete_tag_message2": "Une fois supprimée, elle sera supprimée de l'ensemble des éléments qu'elle marquait.",
-        "appointment_type_handle": "\"{{name}}\" est un rendez-vous récurent. Souhaitez-vous ouvrir uniquement cette instance ou la série ?"
+        "appointment_type_handle": "\"{{name}}\" est un rendez-vous récurent. Souhaitez-vous ouvrir uniquement cette instance ou la série ?",
+        "awaiting": "En attente",
+        "declined": "{{count}} refusé",
+        "guests": "invités",
+        "more": "Plus...",
+        "organizer": "Organisateur",
+        "reply": "Répondre",
+        "reply_all": "Répondre à tous",
+        "send_email": "Envoyer un email",
+        "send_email_to": "Envoyer un email à : {{email}}",
+        "accepted": "{{count}} accepté",
+        "optional_participant": "{{count}} Optionnel",
+        "optional_participant_plural": "{{count}} Optionnels",
+        "required_participant": "{{count}} Participant",
+        "required_participant_plural": "{{count}} Participants"
     },
     "months": {
         "april": "Avril",
@@ -405,7 +421,11 @@
         "week_before_plural": "{{count}} semaines précédentes",
         "modal": {
             "set_new_time_message": "Souhaitez-vous replanifier une heure pour le rendez-vous manqué ? Si vous cliquez sur OK, tous les autres rappels seront automatiquement annulés."
-        }
+        },
+        "hours": "{{count}} heure",
+        "hours_plural": "{{count}} heures",
+        "minutes": "{{count}} minute",
+        "minutes_plural": "{{count}} minutes"
     },
     "repeat": {
         "everyYear": "Chaque Année",
@@ -512,7 +532,14 @@
         "copy_vector_url": "Copier l'url de la vue",
         "enable_disable_rich_text": "Activer/désactiver l'éditeur de texte riche",
         "add_attachments": "Ajouter des pièces jointes",
-        "copy_ics_url": "Copier l'url du SCI"
+        "copy_ics_url": "Copier l'url du SCI",
+        "chat_room": "Salle de discussion",
+        "calendar_sharing_status": "Partagé avec {{count}} personnes",
+        "equipment": "Équipement",
+        "location": "Emplacement",
+        "virtual_chat": "Discussion virtuelle",
+        "chat": "Équipement",
+        "calendar_sharing_status_one": "Partagé avec 1 personne"
     },
     "type": "Type",
     "workflow": "Flux de travail",

@@ -24,7 +24,7 @@
         "changes_saved": "Lưu thay đổi",
         "create": "Tạo",
         "create_new_calendar": "Tạo lịch mới",
-        "create_tag": "Tạo Tag",
+        "create_tag": "Tạo thẻ",
         "custom": "Tuỳ chỉnh",
         "day": "Ngày",
         "days": "Ngày",
@@ -38,8 +38,8 @@
         "edit": "Chỉnh sửa",
         "edit_access": "Chỉnh sửa truy cập {{name}}",
         "edit_share": "Chỉnh sửa chia sẻ",
-        "edit_tag": "Chỉnh sửa Tag",
-        "edit_tag_name": "Chỉnh sửa tag \"{{name}}",
+        "edit_tag": "Chỉnh sửa thẻ",
+        "edit_tag_name": "Chỉnh sửa thẻ \"{{name}}",
         "email_input_message": "Nhập địa chỉ thư điện tử",
         "empty": "Rỗng",
         "enable_dlgtn_for_ical": "Bật ủy quyền cho Apple iCal CalDAV Client",
@@ -113,8 +113,8 @@
         "start_date": "Ngày bắt đầu",
         "start_date_and_time": "Ngày và giờ bắt đầu",
         "tag_max_length": "Cho phép tối đa là 128 ký tự",
-        "tag_name": "Tên Tag",
-        "tags": "Tags",
+        "tag_name": "Tên thẻ",
+        "tags": "Thẻ",
         "tentative": "dự kiến",
         "the": "Các",
         "time_zones": "Múi giờ",
@@ -144,8 +144,8 @@
         "access_revoked": "Quyền truy cập bị thu hồi",
         "create_appt_settings": "Tạo cuộc hẹn",
         "delete_instance": "Bạn có chắc chắn muốn xóa phiên bản cuộc hẹn “{title}” này không?",
-        "delete_tag": "Xoá Tag",
-        "delete_tag_name": "Xoá tag \"{{name}}\"",
+        "delete_tag": "Xoá thẻ",
+        "delete_tag_name": "Xoá thẻ \"{{name}}\"",
         "edits_saved": "Các chỉnh sửa đã được lưu chính xác",
         "error_try_again": "Có lỗi, vui lòng thử lại",
         "invitation_not_sent": "Bạn chưa gửi lời mời cho những người tham dự",
@@ -155,7 +155,9 @@
         "shares_items": "<bold> {{user}} </bold> Lịch được chia sẻ của",
         "start_week_on": "Bắt đầu tuần vào",
         "timezone_pref_msg": "Thời gian tuân theo múi giờ của bạn chọn.",
-        "your_pref_timezone_msg": "Múi giờ ưa thích của bạn là: GMT +01: 00 Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna."
+        "your_pref_timezone_msg": "Múi giờ ưa thích của bạn là: GMT +01: 00 Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna.",
+        "no_title": "Không tiêu đề",
+        "scheduled_in": "Đặt lịch vào"
     },
     "participants": {
         "Not_answered": "không trả lời",
@@ -260,7 +262,7 @@
             "error": "Lỗi"
         },
         "new_time_proposed_success": "Đề xuất thời gian mới",
-        "tag_applied": "đã áp dụng tag \"{{tag}}\"",
+        "tag_applied": "đã áp dụng thẻ \"{{tag}}\"",
         "tag_removed": "Đã xoá thẻ \"{{tag}}\"",
         "url_copied": "Đã sao chép {{title}}"
     },
@@ -359,7 +361,14 @@
         "add_attachments": "Thêm vào đính kèm",
         "copy_ics_url": "Sao chép ICS url",
         "copy_outlook_url": "Sao chép Outlook url",
-        "enable_disable_rich_text": "Bật / Tắt trình chỉnh sửa văn bản rich text"
+        "enable_disable_rich_text": "Bật / Tắt trình chỉnh sửa văn bản rich text",
+        "chat_room": "Phòng trò chuyện",
+        "calendar_sharing_status": "Chia sẻ {{count}} với",
+        "calendar_sharing_status_one": "Chia sẻ với 1 người",
+        "equipment": "Thiết bị",
+        "location": "Địa điểm",
+        "virtual_chat": "Cuộc trò chuyện ảo",
+        "chat": "Thiết bị"
     },
     "find_shares": "Tìm chia sẻ",
     "is_recurrent": "Lặp lại",
@@ -405,7 +414,7 @@
         },
         "want_to_send_cancellation_msg": "Bạn có muốn gửi thông báo huỷ cuộc hẹn đến những người tham dự không?",
         "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> là người tổ chức </Text></Row>",
-        "delete_tag_message1": "Bạn có chắc xoá Tag\"{{name}}\"?",
+        "delete_tag_message1": "Bạn có chắc xoá thẻ \"{{name}}\"?",
         "you_sure_delete_calendar": "Bạn có chắc chắn muốn xoá vĩnh viễn lịch \"{{name}}\" không?",
         "you_sure_delete_instance": "Bạn có chắc chắn muốn xóa phiên bản cuộc hẹn “{{title}}” này không?",
         "appointment_type_handle": "\"{{name}}\" là một cuộc hẹn định kỳ. Bạn chỉ muốn mở phiên bản này hay chuỗi chương trình?",
@@ -424,14 +433,26 @@
         "want_to_edit_cancellation_msg": "Bạn có muốn soạn thông báo huỷ cuộc hẹn không?",
         "you": "Bạn",
         "are_organizer": "là người tổ chức",
-        "delete_future_occurences_warning": "Tác vụ này cũng sẽ xóa tất cả các ngoại lệ trong chuỗi(trước và sau trường hợp này)"
+        "delete_future_occurences_warning": "Tác vụ này cũng sẽ xóa tất cả các ngoại lệ trong chuỗi(trước và sau trường hợp này)",
+        "awaiting": "chờ đợi",
+        "declined": "{{count}} đã từ chối",
+        "guests": "khách",
+        "optional_participant": "{{count}} Tuỳ chọn",
+        "organizer": "Tổ chức",
+        "reply": "Trả lời",
+        "reply_all": "Trả lời tất cả",
+        "send_email": "Gửi một thư điện tử",
+        "send_email_to": "Gửi một thư điện tử đến: {{email}}",
+        "accepted": "{{count}} đã chấp nhận",
+        "more": "Nhiều hơn...",
+        "required_participant": "{{count}} người tham gia"
     },
     "messages": {
         "format_as_plain_text": "Định dạng dưới dạng văn bản thuần túy(Format as Plain Text)",
         "snackbar": {
-            "tag_created": "Tạo Tag {{name}} thành công",
-            "tag_deleted": "Xoá Tag {{name}} thành công",
-            "tag_updated": "Cập nhập Tag thành công",
+            "tag_created": "Tạo thẻ {{name}} thành công",
+            "tag_deleted": "Xoá thẻ {{name}} thành công",
+            "tag_updated": "Cập nhập thẻ thành công",
             "tag_not_updated": "Có gì đó sai không cập nhập được Tag. Vui lòng thử lại."
         }
     },
@@ -459,7 +480,9 @@
         "all_time": "Tất cả thời gian của sự kiện",
         "at_time_of_event": "Vào thời gian của sự kiện",
         "day_before": "{{count}} ngày trước",
-        "hour_before": "{{count}} giờ trước"
+        "hour_before": "{{count}} giờ trước",
+        "hours": "{{count}} giờ",
+        "minutes": "{{count}} phút"
     },
     "action": {
         "calendar_access_share": "Chia sẻ quyền truy cập lịch",
@@ -476,7 +499,7 @@
         "empty_trash_confirmation": "Tác vụ này sẽ xóa vĩnh viễn tất cả các mục trong thùng rác bao gồm Thư điện tử, Danh bạ, Lịch, Nhiệm vụ và Cặp. Bạn có chắc chắn muốn xóa các mục trong thùng rác này không?"
     },
     "administer": "Quản trị viên",
-    "appointments": "Cuộc hẹn",
+    "appointments": "Các cuộc hẹn",
     "button": {
         "customize_modal": "Mở tuỳ chỉnh phương thức"
     },

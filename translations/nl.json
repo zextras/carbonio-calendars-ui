@@ -338,7 +338,10 @@
         "you_sure_delete_instance": "Weet u zeker dat u deze instantie van \"{title}\" afspraak wilt verwijderen?",
         "delete_tag_message1": "Weet u zeker dat u de\"{{name}}\" Tag wilt verwijderen?",
         "delete_tag_message2": "Eenmaal verwijderd, zal het verwijderd worden van elk item dat ermee gemarkeerd is.",
-        "appointment_type_handle": "\"{{name}}” is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?"
+        "appointment_type_handle": "\"{{name}}” is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?",
+        "organizer": "Organisator",
+        "reply": "Antwoorden",
+        "reply_all": "Alle beantwoorden"
     },
     "months": {
         "april": "April",
@@ -531,7 +534,10 @@
         "copy_outlook_url": "Kopie Outlook url",
         "copy_vector_url": "Kopie Weergave url",
         "show_optionals": "Optiemogelijkheden weergeven",
-        "add_attachments": "Bijlagen toevoegen"
+        "add_attachments": "Bijlagen toevoegen",
+        "chat": "Uitrusting",
+        "equipment": "Uitrusting",
+        "location": "Locatie"
     },
     "button": {
         "customize_modal": "Modal aanpassen openen"
