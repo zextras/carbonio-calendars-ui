@@ -10,7 +10,7 @@ import { replace } from 'lodash';
 
 export const ROOM_DIVIDER =
 	'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-';
-export const roomValidationRegEx = new RegExp(`(?<=${ROOM_DIVIDER})(.*)(?=${ROOM_DIVIDER})`, 's');
+export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER}`, 's');
 
 const replaceLinkToAnchor = (content) => {
 	if (content === '' || content === undefined) {
@@ -116,9 +116,7 @@ const EmptyBody = () => {
 export function extractBody(body) {
 	if (body) {
 		const defaultMessage = roomValidationRegEx.exec(body)?.[0];
-		const stripDefaultRoomMessage = defaultMessage
-			? replace(body, `${ROOM_DIVIDER}${defaultMessage}${ROOM_DIVIDER}`, '')
-			: body;
+		const stripDefaultRoomMessage = defaultMessage ? replace(body, defaultMessage, '') : body;
 		return stripDefaultRoomMessage.trim();
 	}
 	return '';
@@ -142,15 +140,13 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	if (fullInvite?.htmlDescription) {
 		const originalHtml = fullInvite?.htmlDescription?.[0]?._content ?? '';
 		const roomHtmlDesc = roomValidationRegEx?.exec(originalHtml)?.[0];
-		const pattern = roomHtmlDesc ? `${ROOM_DIVIDER}${roomHtmlDesc}${ROOM_DIVIDER}` : undefined;
-		const htmlContent = pattern ? replace(originalHtml, pattern, '') : originalHtml;
+		const htmlContent = roomHtmlDesc ? replace(originalHtml, roomHtmlDesc, '') : originalHtml;
 		return (
 			<HtmlMessageRenderer msgId={inviteId} body={extractHtmlBody(htmlContent)} parts={parts} />
 		);
 	}
 	const originalText = fullInvite?.textDescription?.[0]?._content ?? '';
 	const roomTextDesc = roomValidationRegEx?.exec(originalText)?.[0];
-	const pattern = roomTextDesc ? `${ROOM_DIVIDER}${roomTextDesc}${ROOM_DIVIDER}` : undefined;
-	const textContent = pattern ? replace(originalText, pattern, '') : originalText;
+	const textContent = roomTextDesc ? replace(originalText, roomTextDesc, '') : originalText;
 	return <TextMessageRenderer text={extractBody(textContent)} />;
 }
