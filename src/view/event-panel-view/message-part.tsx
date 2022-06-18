@@ -14,28 +14,26 @@ type MessageProps = {
 	parts: any;
 };
 
-export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): JSX.Element => {
-	return (
+export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): JSX.Element => (
+	<Container
+		orientation="horizontal"
+		mainAlignment="flex-start"
+		crossAlignment="flex-start"
+		width="fill"
+		height="fit"
+		padding={{ all: 'large' }}
+		background="gray6"
+	>
+		<Icon icon="MessageSquareOutline" />
 		<Container
-			orientation="horizontal"
+			orientation="vertical"
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
 			width="fill"
 			height="fit"
-			padding={{ all: 'large' }}
-			background="gray6"
+			padding={{ left: 'small' }}
 		>
-			<Icon icon="MessageSquareOutline" />
-			<Container
-				orientation="vertical"
-				mainAlignment="flex-start"
-				crossAlignment="flex-start"
-				width="fill"
-				height="fit"
-				padding={{ left: 'small' }}
-			>
-				<BodyMessageRenderer fullInvite={fullInvite} inviteId={inviteId} parts={parts} />
-			</Container>
+			<BodyMessageRenderer fullInvite={fullInvite} inviteId={inviteId} parts={parts} />
 		</Container>
-	);
-};
+	</Container>
+);

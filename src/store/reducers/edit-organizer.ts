@@ -6,9 +6,8 @@
 import { isNil } from 'lodash';
 import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { IdentityItem, Room } from '../../types/editor';
-import { Calendar } from '../../types/store/calendars';
 import { Attendee, InviteClass } from '../../types/store/invite';
-import { EditorSlice, Store } from '../../types/store/store';
+import { EditorSlice } from '../../types/store/store';
 
 type OrganizerPayload = {
 	payload: {
@@ -85,6 +84,42 @@ type DateReducer = {
 	payload: { id: string; mod: number };
 };
 
+type IsRichTextPayload = {
+	payload: { id: string; isRichText: boolean };
+};
+
+type AttachmentFilesPayload = {
+	payload: { id: string; attach: any; attachmentFiles: any[] };
+};
+
+export const editIsRichTextReducer = (
+	{ editors }: EditorSlice,
+	{ payload }: IsRichTextPayload
+): void => {
+	if (payload?.id && !isNil(editors?.[payload?.id]?.isRichText)) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].isRichText = payload.isRichText;
+	}
+};
+
+export const editEditorAttachmentsReducer = (
+	{ editors }: EditorSlice,
+	{ payload }: AttachmentFilesPayload
+): void => {
+	if (payload?.id) {
+		if (editors?.[payload?.id]?.attachmentFiles) {
+			// eslint-disable-next-line no-param-reassign
+			editors[payload.id].attachmentFiles = [
+				...editors[payload.id].attachmentFiles,
+				payload.attachmentFiles
+			];
+		}
+		if (editors?.[payload?.id]?.attach) {
+			// eslint-disable-next-line no-param-reassign
+			editors[payload.id].attach = payload.attach;
+		}
+	}
+};
 export const editOrganizerReducer = (
 	{ editors }: EditorSlice,
 	{ payload }: OrganizerPayload
@@ -212,6 +247,7 @@ export const editEditorAllDayReducer = (
 	}
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const editEditorTimezoneReducer = ({ editors }: EditorSlice, { payload }: any): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
@@ -219,6 +255,7 @@ export const editEditorTimezoneReducer = ({ editors }: EditorSlice, { payload }:
 	}
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const editEditorReminderReducer = ({ editors }: EditorSlice, { payload }: any): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
@@ -226,6 +263,7 @@ export const editEditorReminderReducer = ({ editors }: EditorSlice, { payload }:
 	}
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const editEditorRecurrenceReducer = ({ editors }: EditorSlice, { payload }: any): void => {
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign

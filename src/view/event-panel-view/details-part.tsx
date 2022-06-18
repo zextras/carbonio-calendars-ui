@@ -122,7 +122,7 @@ export const DetailsPart = ({
 		>
 			<Row orientation="row" width="fill" takeAvailableSpace>
 				<Container width="fit">
-					<ImageAndIconPart color={calendar.color || 'primary'} />
+					<ImageAndIconPart color={calendar.color.color || 'primary'} />
 				</Container>
 				<Padding right="large" />
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">

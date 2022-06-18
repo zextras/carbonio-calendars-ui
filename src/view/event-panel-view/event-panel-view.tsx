@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import {
 	Container,
@@ -11,16 +11,19 @@ import {
 	Dropdown,
 	Icon,
 	IconButton,
+	ModalManagerContext,
 	Row,
+	SnackbarManagerContext,
 	Text,
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { replaceHistory, Spinner } from '@zextras/carbonio-shell-ui';
-import { useSelector } from 'react-redux';
+import { replaceHistory, Spinner, useTags } from '@zextras/carbonio-shell-ui';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { map, some } from 'lodash';
 import { Store } from '../../types/store/store';
+import { createAndApplyTag } from '../tags/tag-actions';
 import { ParticipantsPart } from './participants-part';
 import StyledDivider from '../../commons/styled-divider';
 import { extractBody } from '../../commons/body-message-renderer';
@@ -189,6 +192,10 @@ type ParamsType = {
 };
 export default function EventPanelView(): JSX.Element {
 	const { calendarId, apptId, ridZ } = useParams<ParamsType>();
+	const dispatch = useDispatch();
+	const createModal = useContext(ModalManagerContext);
+	const tags = useTags();
+	const createSnackbar = useContext(SnackbarManagerContext);
 	const calendar = useSelector((s: Store) => selectCalendar(s, calendarId));
 	const appointment = useSelector((s: Store) => selectAppointment(s, apptId));
 	const inst = useSelector((s: Store) => selectAppointmentInstance(s, apptId, ridZ));
@@ -200,8 +207,21 @@ export default function EventPanelView(): JSX.Element {
 	const invite = useSelector((state: Store) =>
 		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
 	);
-	const isInstance = useQueryParam('isInstance');
-	const actions = useQuickActions(invite, { isInstance });
+
+	const context = useMemo(
+		() => ({
+			replaceHistory,
+			dispatch,
+			createModal,
+			createSnackbar,
+			tags,
+			createAndApplyTag,
+			isInstance: true
+		}),
+		[createModal, createSnackbar, dispatch, tags]
+	);
+
+	const actions = useQuickActions(invite, context);
 
 	return event ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">

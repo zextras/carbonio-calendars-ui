@@ -120,6 +120,7 @@ export type Invite = {
 	tz?: string;
 	apptId: string;
 	id: string;
+	ciFolder: string;
 	attendees: Array<Attendee>;
 	parent: string;
 	flags: string;

@@ -6,12 +6,7 @@
 import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import {
-	getBridgedFunctions, replaceHistory,
-	useAddBoardCallback,
-	useUserAccount,
-	useUserSettings,
-} from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { minBy } from 'lodash';
@@ -27,7 +22,6 @@ import { selectCheckedCalendarsMap, selectEnd, selectStart } from '../../store/s
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
-import { CALENDAR_ROUTE } from '../../constants';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
@@ -38,6 +32,7 @@ import { useAppStatusStore } from '../../store/zustand/store';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { generateEditor } from '../../commons/editor-generator';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import { CALENDAR_ROUTE } from '../../constants';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -183,12 +178,12 @@ export default function CalendarComponent() {
 
 	const handleSelect = (e) => {
 		if (!summaryViewOpen) {
-			const { editor } = generateEditor('new', {
+			const { editor, callbacks } = generateEditor('new', {
 				title: t('label.new_appointment', 'New Appointment'),
 				start: moment(e.start).valueOf(),
 				end: moment(e.end).valueOf()
 			});
-			replaceHistory(`/${editor.id}`);
+			getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
 		}
 		useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 	};

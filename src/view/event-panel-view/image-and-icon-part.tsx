@@ -24,7 +24,7 @@ export const ImageAndIconPart = ({
 	color
 }: {
 	icon?: string;
-	color: ZimbraColorType;
+	color: string;
 }): JSX.Element => (
 	<OuterContainer customColor={`${color}.regular`}>
 		<IconContainer icon={icon} customColor={`${color}.regular`} label="" backgroundColor={color} />

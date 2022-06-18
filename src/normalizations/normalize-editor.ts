@@ -5,13 +5,11 @@
  */
 import { filter, find, isNil, omitBy } from 'lodash';
 import moment from 'moment';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
-import { Editor } from '../commons/editor-generator';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Invite } from '../types/store/invite';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
 	const room = find(xprop, ['name', CRB_XPROPS.MEETING_ROOM]);
 	if (room) {
@@ -105,9 +103,12 @@ export const normalizeEditor = (
 	}
 });
 
-export const normalizeEditorFromInvite = (invite: Invite): Editor =>
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const normalizeEditorFromInvite = (invite: Invite, context?: any): any =>
 	omitBy(
 		{
+			ridZ: context?.ridZ,
+			isInstance: context?.isInstance ?? false,
 			title: invite.name,
 			location: invite.location,
 			room: getVirtualRoom(invite.xprop),

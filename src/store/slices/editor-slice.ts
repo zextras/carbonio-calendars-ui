@@ -22,7 +22,9 @@ import {
 	editLocationReducer,
 	editOrganizerReducer,
 	editTitleReducer,
-	closeEditorReducer
+	closeEditorReducer,
+	editIsRichTextReducer,
+	editEditorAttachmentsReducer
 } from '../reducers/edit-organizer';
 import { initializeAppointmentReducer } from '../reducers/initialize-appointment';
 import {
@@ -54,6 +56,8 @@ export const editorSlice = createSlice({
 		openEditor: openEditorReducer,
 		initializeEditorAppointment: initializeAppointmentReducer,
 		createNewEditor: newEditorReducer,
+		editIsRichText: editIsRichTextReducer,
+		editEditorAttachments: editEditorAttachmentsReducer,
 		editOrganizer: editOrganizerReducer,
 		editEditorTitle: editTitleReducer,
 		editEditorLocation: editLocationReducer,
@@ -86,6 +90,8 @@ export const {
 	editAttendees,
 	editOptionalAttendees,
 	createNewEditor,
+	editIsRichText,
+	editEditorAttachments,
 	editOrganizer,
 	editEditorTitle,
 	editEditorLocation,

@@ -3,10 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container } from '@zextras/carbonio-design-system';
-import React, { ComponentProps, ReactComponentElement } from 'react';
+import {
+	Container,
+	ModalManagerContext,
+	SnackbarManagerContext
+} from '@zextras/carbonio-design-system';
+import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import React, { ComponentProps, ReactComponentElement, useContext, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useInvite } from '../../hooks/use-invite';
+import { createAndApplyTag } from '../tags/tag-actions';
 import { Header } from './header';
 import { useSearchActionsFn } from './hooks/use-search-actions-fn';
 import StyledDivider from '../../commons/styled-divider';
@@ -24,14 +31,31 @@ const BodyContainer = styled(Container)`
 	overflow-y: auto;
 	white-space: pre-wrap;
 	word-wrap: break-word !important;
-	text-wrap: suppress !important;
 `;
 
 const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> => {
 	const { close } = useSearchActionsFn(event);
 	const invite = useInvite(event?.resource?.inviteId);
+	const dispatch = useDispatch();
+	const createModal = useContext(ModalManagerContext);
+	const tags = useTags();
+	const createSnackbar = useContext(SnackbarManagerContext);
 
-	const actions = useQuickActions(invite, { isFromSearch: true });
+	const context = useMemo(
+		() => ({
+			replaceHistory,
+			dispatch,
+			createModal,
+			createSnackbar,
+			tags,
+			createAndApplyTag,
+			isInstance: true,
+			isFromSearch: true
+		}),
+		[createModal, createSnackbar, dispatch, tags]
+	);
+
+	const actions = useQuickActions(invite, context);
 	return (
 		<Container
 			mainAlignment="flex-start"

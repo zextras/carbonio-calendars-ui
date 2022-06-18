@@ -15,6 +15,7 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeInvite = (m: any): Invite => ({
+	ciFolder: m?.inv?.[0]?.comp?.[0]?.ciFolder,
 	allDay: m?.inv?.[0]?.comp?.[0]?.allDay,
 	apptId: m?.inv?.[0]?.comp?.[0]?.apptId,
 	tz: find(m?.inv?.[0]?.tz, (value) => value.id !== 'UTC')?.id,
@@ -67,6 +68,7 @@ export const normalizeInvite = (m: any): Invite => ({
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeInviteFromSync = (inv: any): Invite => ({
+	ciFolder: inv?.comp?.[0]?.ciFolder,
 	apptId: inv?.comp?.[0]?.apptId,
 	id: `${inv?.comp?.[0]?.apptId}-${inv.id}`,
 	attendees: inv.comp?.[0]?.at ?? [],

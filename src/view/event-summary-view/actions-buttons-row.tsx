@@ -58,8 +58,16 @@ export const ActionsButtonsRow = ({
 		[dispatch, createModal, createSnackbar, tags, onClose, calendar]
 	);
 	const [t] = useTranslation();
-	const instanceActions = useGetRecurrentActions(invite, { ...context, isInstance: true });
-	const seriesActions = useGetRecurrentActions(invite, { ...context, isInstance: false });
+	const instanceActions = useGetRecurrentActions(invite, {
+		...context,
+		isInstance: true,
+		ridZ: event.resource.ridZ
+	});
+	const seriesActions = useGetRecurrentActions(invite, {
+		...context,
+		isInstance: false,
+		ridZ: event.resource.ridZ
+	});
 
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>

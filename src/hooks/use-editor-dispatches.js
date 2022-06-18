@@ -9,7 +9,7 @@ import { useCallback, useContext, useMemo } from 'react';
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { throttle } from 'lodash';
-import { uploadParts } from '../store/actions/upload-parts';
+import { uploadParts } from '../commons/upload-parts';
 import {
 	editAppointmentData,
 	editResourceData,

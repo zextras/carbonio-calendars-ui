@@ -22,6 +22,8 @@ export type Room = {
 };
 
 export type EditorCallbacks = {
+	onToggleRichText: (isRichText: boolean) => void;
+	onAttachmentsChange: (attach: any, attachmentFiles: any) => void;
 	onOrganizerChange: (data: IdentityItem) => void;
 	onSubjectChange: (data: string) => void;
 	onLocationChange: (data: string) => void;
@@ -58,10 +60,40 @@ export type EditorCallbacks = {
 	onReminderChange: (reminder: string) => void;
 	onRecurrenceChange: (recurrenceRule: any) => void;
 	closeCurrentEditor: () => void;
+	onSave: () => Promise<any>;
 };
 
 export type EditorProps = {
 	editorId: string;
 	callbacks: EditorCallbacks;
 	expanded?: boolean;
+};
+
+export type Editor = {
+	uid?: string | undefined;
+	ridZ?: string | undefined;
+	draft?: boolean | undefined;
+	calendar: Calendar | undefined;
+	isException: boolean;
+	isInstance: boolean;
+	isRichText?: boolean;
+	attachmentFiles: any;
+	plainText: string;
+	richText: string;
+	organizer?: any;
+	title?: string;
+	location?: string;
+	room?: any;
+	attendees: any[];
+	optionalAttendees: any[];
+	allDay?: boolean;
+	freeBusy?: string;
+	class?: string;
+	start?: number;
+	end?: number;
+	inviteId?: string | undefined;
+	timezone?: string | undefined;
+	reminder?: string | undefined;
+	recur?: any;
+	id?: string;
 };

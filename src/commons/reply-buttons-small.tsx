@@ -20,12 +20,12 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { useEventActions } from '../actions/action-items';
 import { useInvite } from '../hooks/use-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { EventType } from '../types/event';
 import { ParticipationStatus } from '../types/store/invite';
 import { createAndApplyTag } from '../view/tags/tag-actions';
-import { useEventActions } from '../hooks/use-event-actions';
 
 const AttendingRow = styled(Row)`
 	border: 1px solid ${(props): string => props.theme.palette[props.invtReply.color].regular};
@@ -194,11 +194,21 @@ export const ReplyButtonsPartSmall = ({
 	const [invtReply, setInvtReply] = useState(defaultValue);
 
 	const context = useMemo(
-		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag }),
-		[createModal, createSnackbar, dispatch, tags]
+		() => ({
+			replaceHistory,
+			dispatch,
+			createModal,
+			createSnackbar,
+			tags,
+			createAndApplyTag,
+			isInstance: true,
+			ridZ: event.resource.ridZ
+		}),
+		[createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
 	);
 
 	const actions = useEventActions(invite, context, t, false);
+
 	const otherActions = useMemo(
 		() =>
 			map(actions ?? [], (action) => ({

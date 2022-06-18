@@ -4,12 +4,16 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { store, getUserAccount, getUserSettings } from '@zextras/carbonio-shell-ui';
-import { find } from 'lodash';
+import { find, startsWith } from 'lodash';
 import moment from 'moment';
+import { createAppointment } from '../store/actions/new-create-appointment';
+import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import {
 	closeEditor,
 	createNewEditor,
+	editAppointmentData,
 	editEditorAllDay,
+	editEditorAttachments,
 	editEditorAttendees,
 	editEditorCalendar,
 	editEditorClass,
@@ -23,31 +27,13 @@ import {
 	editEditorText,
 	editEditorTimezone,
 	editEditorTitle,
+	editIsRichText,
 	editOrganizer
 } from '../store/slices/editor-slice';
-import { EditorCallbacks, IdentityItem, Room } from '../types/editor';
+import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
 import { Calendar } from '../types/store/calendars';
 import { Attendee, InviteClass } from '../types/store/invite';
 import { getIdentityItems } from './get-identity-items';
-
-export type Editor = {
-	organizer?: any;
-	title?: string;
-	location?: string;
-	room?: any;
-	attendees?: any[];
-	optionalAttendees?: any[];
-	allDay?: boolean;
-	freeBusy?: string;
-	class?: string;
-	start?: number;
-	end?: number;
-	inviteId?: string | undefined;
-	timezone?: string | undefined;
-	reminder?: string | undefined;
-	recur?: any;
-	id?: string;
-};
 
 let counter = 0;
 
@@ -63,6 +49,11 @@ const createEmptyEditor = (id: string): Editor => {
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
 
 	return {
+		calendar: undefined,
+		isException: false,
+		isInstance: false,
+		isRichText: true,
+		attachmentFiles: [],
 		organizer: defaultOrganizer,
 		title: '',
 		location: '',
@@ -78,6 +69,8 @@ const createEmptyEditor = (id: string): Editor => {
 		timezone: zimbraPrefTimeZoneId as string,
 		reminder: zimbraPrefCalendarApptReminderWarningTime as string,
 		recur: undefined,
+		richText: '',
+		plainText: '',
 		id
 	};
 };
@@ -85,6 +78,22 @@ const createEmptyEditor = (id: string): Editor => {
 export const createCallbacks = (id: string): EditorCallbacks => {
 	const { dispatch } = store.store;
 	const account = getUserAccount();
+
+	const onToggleRichText = (isRichText: boolean): void => {
+		dispatch(editIsRichText({ id, isRichText }));
+	};
+
+	const onAttachmentsChange = (
+		attach: any,
+		attachmentFiles: any[]
+	): { payload: { id: string; attach: any; attachmentFiles: any[] }; type: string } =>
+		dispatch(
+			editEditorAttachments({
+				id,
+				attach,
+				attachmentFiles
+			})
+		);
 
 	const onOrganizerChange = (
 		organizer: IdentityItem
@@ -187,7 +196,22 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 	const closeCurrentEditor = (): { payload: { id: string }; type: string } =>
 		dispatch(closeEditor({ id }));
 
+	const onSave = (draft = true): any =>
+		startsWith(
+			id,
+			'new' // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		) /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */ /* @ts-ignore */
+			? dispatch(createAppointment({ id, draft })) // @ts-ignore
+			: dispatch(modifyAppointment({ id, draft }));
+
+	const onSend = (): any => {
+		dispatch(editAppointmentData({ id, draft: false, inviteNeverSent: false }));
+		return onSave(false);
+	};
+
 	return {
+		onToggleRichText,
+		onAttachmentsChange,
 		onOrganizerChange,
 		onSubjectChange,
 		onLocationChange,
@@ -203,7 +227,8 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 		onTimeZoneChange,
 		onReminderChange,
 		onRecurrenceChange,
-		closeCurrentEditor
+		closeCurrentEditor,
+		onSave
 	};
 };
 

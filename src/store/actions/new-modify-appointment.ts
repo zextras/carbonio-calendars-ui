@@ -6,8 +6,6 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { find } from 'lodash';
-import { CRB_XPROPS } from '../../constants/xprops';
 import { Invite } from '../../types/store/invite';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
@@ -77,11 +75,14 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 
 export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
-	async ({ invite, editor, account, isInstance = false }: any): Promise<unknown> => {
+	async ({ invite, editor }: any): Promise<unknown> => {
 		const normalizeInviteToSoap = invite
 			? generateSoapMessageFromInvite(invite)
-			: generateSoapMessageFromEditor(editor, account, isInstance);
-		const res = await soapFetch('ModifyAppointment', normalizeInviteToSoap);
-		return res;
+			: generateSoapMessageFromEditor(editor);
+		if (editor.isInstance && !editor.isException) {
+			return undefined;
+			// createApptException
+		}
+		return soapFetch('ModifyAppointment', normalizeInviteToSoap);
 	}
 );

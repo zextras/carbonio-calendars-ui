@@ -3,10 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 import { AlarmData, ParticipationStatus } from './store/invite';
-import moment from 'moment';
 
 export type AlarmType = {
 	alarm: [];

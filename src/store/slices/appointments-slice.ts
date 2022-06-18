@@ -29,7 +29,7 @@ import {
 import {
 	searchAppointmentsFulfilled,
 	searchAppointmentsPending,
-	searchAppointmentsRejected,
+	searchAppointmentsRejected
 } from '../reducers/search-appointments';
 import { updateAppointmentReducer } from '../reducers/update-appointment';
 import { handleUpdateParticipationStatus } from '../reducers/update-participation-status';

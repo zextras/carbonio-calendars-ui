@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { TFunction } from 'i18next';
 import React, { useCallback, useMemo, useState } from 'react';
 import {
 	Container,
@@ -14,30 +15,42 @@ import {
 	Row,
 	Icon
 } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
-import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
+import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
+import { Calendar } from '../../types/store/calendars';
+import { Invite } from '../../types/store/invite';
 
 const Square = styled.div`
 	width: 18px;
 	height: 18px;
 	position: relative;
 	top: -3px;
-	border: 1px solid ${({ theme }) => theme.palette.gray2.regular};
-	background: ${({ color }) => color};
+	border: 1px solid ${({ theme }): string => theme.palette.gray2.regular};
+	background: ${({ color }): string | undefined => color};
 	border-radius: 4px;
 `;
 
 const ColorContainer = styled(Container)`
-	border-bottom: 1px solid ${({ theme }) => theme.palette.gray2.regular};
+	border-bottom: 1px solid ${({ theme }): string => theme.palette.gray2.regular};
 `;
 const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 `;
-const LabelFactory = ({ selected, label, open, focus }) => (
+type LabelFactoryProps = {
+	selected: [{ label: string; value: string }];
+	label: string;
+	open: boolean;
+	focus: boolean;
+};
+
+const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): JSX.Element => (
 	<ColorContainer
 		orientation="horizontal"
 		width="fill"
@@ -73,10 +86,10 @@ const LabelFactory = ({ selected, label, open, focus }) => (
 		/>
 	</ColorContainer>
 );
-const getStatusItems = (t) =>
+const getStatusItems = (): any =>
 	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
 		background: el.background,
-		label: t(el.label),
+		label: el.label,
 		value: index.toString(),
 		customComponent: (
 			<Container
@@ -87,7 +100,7 @@ const getStatusItems = (t) =>
 				height="fit"
 			>
 				<Padding left="small">
-					<TextUpperCase>{t(el.label)}</TextUpperCase>
+					<TextUpperCase>{el.label}</TextUpperCase>
 				</Padding>
 				<Padding right="small">
 					<Square color={el.color} />
@@ -96,24 +109,41 @@ const getStatusItems = (t) =>
 		)
 	}));
 
+type ActionArgs = {
+	inviteId: string;
+	t: TFunction;
+	l: string;
+	color: ZimbraColorType;
+	id: string;
+	destinationCalendarName: string;
+};
+
+type NewModalProps = {
+	toggleModal: () => void;
+	onClose: () => void;
+	invite: Invite;
+	currentFolder: Calendar;
+	folders: Record<string, Calendar>;
+	action: (arg: ActionArgs) => void;
+};
+
 export const NewModal = ({
 	onClose,
 	toggleModal,
 	folders,
-	dispatch,
-	t,
-	createSnackbar,
-	event,
+	invite,
 	action
-}) => {
-	const { inviteId, ridZ, id } = event.resource;
+}: NewModalProps): JSX.Element => {
+	const { id, apptId } = invite;
+	const [t] = useTranslation();
+	const dispatch = useDispatch();
 	const [inputValue, setInputValue] = useState('');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-	const colors = useMemo(() => getStatusItems(t), [t]);
+	const colors = useMemo(() => getStatusItems(), []);
 	const [selectedColor, setSelectedColor] = useState(0);
 
-	const folderArray = useMemo(() => map(folders, (f) => f.label), [folders]);
+	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);
 	const showDupWarning = useMemo(
 		() => includes(folderArray, inputValue),
 		[inputValue, folderArray]
@@ -128,7 +158,7 @@ export const NewModal = ({
 		[inputValue, showDupWarning]
 	);
 
-	const onConfirm = () => {
+	const onConfirm = (): void => {
 		if (inputValue) {
 			dispatch(
 				createCalendar({
@@ -137,18 +167,19 @@ export const NewModal = ({
 					color: selectedColor,
 					excludeFreeBusy: freeBusy
 				})
-			).then((newCalendarRes) => {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+			).then((newCalendarRes: any) => {
 				if (newCalendarRes.type.includes('fulfilled')) {
 					action({
-						inviteId,
-						ridZ,
+						inviteId: id,
 						t,
 						l: Object.keys(newCalendarRes.payload[0])[0],
 						color: ZIMBRA_STANDARD_COLORS[Number(newCalendarRes.meta.arg.color)],
 						destinationCalendarName: inputValue,
-						id
+						id: apptId
 					});
-					createSnackbar({
+					getBridgedFunctions().createSnackbar({
 						key: `new`,
 						replace: true,
 						type: 'primary',
@@ -158,7 +189,7 @@ export const NewModal = ({
 					});
 					onClose();
 				} else {
-					createSnackbar({
+					getBridgedFunctions().createSnackbar({
 						key: `move`,
 						replace: true,
 						type: 'error',
@@ -173,7 +204,7 @@ export const NewModal = ({
 		setInputValue('');
 		setSelectedColor(0);
 		setFreeBusy(false);
-		onClose('');
+		onClose();
 	};
 
 	const onCloseModal = useCallback(() => {
@@ -201,7 +232,7 @@ export const NewModal = ({
 				label={placeholder}
 				backgroundColor="gray5"
 				value={inputValue}
-				onChange={(e) => {
+				onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
 					setInputValue(e.target.value);
 				}}
 			/>
@@ -234,11 +265,10 @@ export const NewModal = ({
 				secondaryAction={toggleModal}
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
 				label={
-					event.resource.calendar.id === '3'
+					invite.ciFolder === FOLDERS.TRASH
 						? t('folder.modal.restore.footer', 'Create and Restore')
 						: t('label.empty', 'Empty')
 				}
-				t={t}
 				disabled={disabled}
 			/>
 		</Container>

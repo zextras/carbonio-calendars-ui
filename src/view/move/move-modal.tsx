@@ -3,35 +3,57 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { TFunction } from 'i18next';
 import React, { useState, useMemo, useCallback } from 'react';
 import { Input, Container, Text } from '@zextras/carbonio-design-system';
 import { filter, startsWith, reduce, isEmpty } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
-import FolderItem from './folder-item';
+import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
+import { Calendar } from '../../types/store/calendars';
+import { Invite } from '../../types/store/invite';
+import { FolderItem } from './folder-item';
 
-export default function MoveModal({
+type ActionArgs = {
+	inviteId: string;
+	t: TFunction;
+	l: string;
+	color: ZimbraColorType;
+	id: string;
+	destinationCalendarName: string;
+};
+
+type MoveModalProps = {
+	toggleModal: () => void;
+	onClose: () => void;
+	invite: Invite;
+	currentFolder: Calendar;
+	folders: Record<string, Calendar>;
+	action: (arg: ActionArgs) => void;
+};
+
+export const MoveModal = ({
 	toggleModal,
 	onClose,
-	event,
+	invite,
 	currentFolder,
 	folders,
-	t,
 	action
-}) {
-	const { inviteId, ridZ } = event.resource;
+}: MoveModalProps): JSX.Element => {
+	const { id, apptId } = invite;
+	const [t] = useTranslation();
 	const [input, setInput] = useState('');
-	const [folderDestination, setFolderDestination] = useState({});
+	const [folderDestination, setFolderDestination] = useState<Calendar>({} as Calendar);
 	const [isSameFolder, setIsSameFolder] = useState(false);
 	const onConfirm = useCallback(() => {
 		if (folderDestination?.id !== currentFolder.id) {
 			action({
-				inviteId,
-				ridZ,
+				inviteId: id,
 				t,
 				l: folderDestination.id,
 				color: folderDestination.color,
-				id: event.resource.id,
+				id: apptId,
 				destinationCalendarName: folderDestination.name
 			});
 			onClose();
@@ -44,29 +66,30 @@ export default function MoveModal({
 		folderDestination.color,
 		currentFolder.id,
 		action,
-		inviteId,
-		ridZ,
+		id,
 		t,
-		event.resource.id,
+		apptId,
 		onClose
 	]);
-	const filterFromInput = useMemo(
+	const filterFromInput = useMemo<Calendar[]>(
 		() =>
 			filter(folders, (v) => {
 				if (isEmpty(v)) {
 					return false;
 				}
-				if (v.id === currentFolder[0].id) {
+				if (v.id === currentFolder.id) {
 					return false;
 				}
 				return startsWith(v.name?.toLowerCase(), input?.toLowerCase());
 			}),
 		[currentFolder, folders, input]
 	);
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
 	const nestFilteredFolders = useCallback(
-		(items, id, results) =>
+		(items: Calendar[], calId, results: Calendar[]) =>
 			reduce(
-				filter(items, (item) => item.parent === id),
+				filter(items, (item) => item.parent === calId),
 				(acc, item) => {
 					const match = filter(results, (result) => result.id === item.id);
 					if (match && match.length) {
@@ -88,7 +111,7 @@ export default function MoveModal({
 					}
 					return acc;
 				},
-				[]
+				[] as Calendar[]
 			),
 		[folderDestination.id, input.length, folders]
 	);
@@ -115,10 +138,8 @@ export default function MoveModal({
 		>
 			<ModalHeader
 				title={`${
-					event.resource.calendar.id === '3'
-						? t('label.restore', 'Restore')
-						: t('label.move', 'Move')
-				} ${event.title}`}
+					invite.ciFolder === '3' ? t('label.restore', 'Restore') : t('label.move', 'Move')
+				} ${invite.name}`}
 				onClose={onClose}
 			/>
 			<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
@@ -138,15 +159,14 @@ export default function MoveModal({
 					label={t('folder.modal.move.input.filter', 'Filter calendars')}
 					backgroundColor="gray5"
 					value={input}
-					onChange={(e) => setInput(e.target.value)}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+						if (e) {
+							setInput(e?.target?.value);
+						}
+					}}
 				/>
 
-				<FolderItem
-					folders={nestedData}
-					showInput
-					label={t('label.new_calendar', 'New Calendar')}
-					btnClick={toggleModal}
-				/>
+				<FolderItem folders={nestedData} />
 				<Container padding={{ all: 'medium' }} mainAlignment="center" crossAlignment="flex-start">
 					{isSameFolder && <Text color="error">Cannot move to same folder</Text>}
 				</Container>
@@ -156,15 +176,10 @@ export default function MoveModal({
 					secondaryBtnType="outlined"
 					secondaryColor="primary"
 					secondaryLabel={t('label.new_calendar', 'New Calendar')}
-					label={
-						event.resource.calendar.id === '3'
-							? t('label.restore', 'Restore')
-							: t('label.move', 'Move')
-					}
+					label={invite.ciFolder === '3' ? t('label.restore', 'Restore') : t('label.move', 'Move')}
 					disabled={!folderDestination.id || folderDestination.id === currentFolder.id}
-					t={t}
 				/>
 			</Container>
 		</Container>
 	);
-}
+};

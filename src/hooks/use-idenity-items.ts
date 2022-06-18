@@ -35,4 +35,3 @@ export const useIdentityItems = (): Array<IdentityItem> => {
 		});
 	}, [account.identities.identity]);
 };
-

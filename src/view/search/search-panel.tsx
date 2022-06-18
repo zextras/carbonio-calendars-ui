@@ -24,29 +24,29 @@ const SearchPanel = ({ appointments }: ComponentProps<any>): ReactComponentEleme
 	const [t] = useTranslation();
 	const event = useSearchEvent(appointments);
 	return (
-		<Switch>
-			<Route path={`${path}/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
-				<Editor event={event} />
-			</Route>
-			<Route path={`${path}/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
-				<Displayer event={event} />
-			</Route>
-			<Route
-				path={path}
-				render={(): ReactComponentElement<any> => (
-					<Container background="gray5" mainAlignment="center">
-						<LargeIcon icon="SearchOutline" color="secondary" />
-						<Padding top="medium" />
-						<Padding top="extralarge" />
-						<Text color="secondary" size="large" weight="bold">
-							{t(`label.search_hint`)}
-						</Text>
-						<Padding top="medium" />
-						<Text color="secondary">{t(`message.search_hints`)}</Text>
-					</Container>
-				)}
-			/>
-		</Switch>
+		<>
+			<Switch>
+				<Route path={`${path}/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
+					<Displayer event={event} />
+				</Route>
+				<Route
+					path={path}
+					render={(): ReactComponentElement<any> => (
+						<Container background="gray5" mainAlignment="center">
+							<LargeIcon icon="SearchOutline" color="secondary" />
+							<Padding top="medium" />
+							<Padding top="extralarge" />
+							<Text color="secondary" size="large" weight="bold">
+								{t(`label.search_hint`)}
+							</Text>
+							<Padding top="medium" />
+							<Text color="secondary">{t(`message.search_hints`)}</Text>
+						</Container>
+					)}
+				/>
+			</Switch>
+			<Editor event={event} />
+		</>
 	);
 };
 

@@ -13,7 +13,7 @@ const ContainerEl = styled(Container)`
 	display: block;
 `;
 
-const FolderItem = ({ folders }) => {
+export const FolderItem = ({ folders }: { folders: unknown[] }): JSX.Element => {
 	const [t] = useTranslation();
 	return folders.length ? (
 		<ContainerEl
@@ -30,5 +30,3 @@ const FolderItem = ({ folders }) => {
 		</Container>
 	);
 };
-
-export default FolderItem;

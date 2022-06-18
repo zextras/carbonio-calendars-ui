@@ -14,11 +14,11 @@ import {
 } from '@zextras/carbonio-design-system';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isNil, map } from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { createCallbacks, Editor } from '../../commons/editor-generator';
+import { createCallbacks } from '../../commons/editor-generator';
 import { selectActiveEditorId, selectEditorTitle } from '../../store/selectors/editor';
 import { EditorCallbacks } from '../../types/editor';
 import { EditorPanel } from './editor-panel';
@@ -110,6 +110,12 @@ const EditorPanelWrapper = (): JSX.Element | null => {
 	const editorId = useSelector(selectActiveEditorId);
 	const [expanded, setExpanded] = useState(false);
 	const callbacks = useMemo(() => (editorId ? createCallbacks(editorId) : undefined), [editorId]);
+
+	useEffect(() => {
+		if (!editorId) {
+			replaceHistory('');
+		}
+	}, [editorId]);
 
 	return editorId && callbacks ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start" expanded={false}>

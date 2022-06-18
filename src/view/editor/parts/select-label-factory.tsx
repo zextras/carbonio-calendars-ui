@@ -43,7 +43,20 @@ color: ${({ theme, disabled, showPrimary }): string =>
 		? theme.palette.primary.regular
 		: theme.palette.secondary.regular}}`;
 
-const LabelFactory = ({ selected, label, open, focus, disabled }: any): JSX.Element => (
+type LabelFactoryProps = {
+	selected: [{ label: string; value: string; color: string }];
+	label: string;
+	open: boolean;
+	focus: boolean;
+	disabled: boolean;
+};
+const LabelFactory = ({
+	selected,
+	label,
+	open,
+	focus,
+	disabled
+}: LabelFactoryProps): JSX.Element => (
 	<ColorContainer
 		orientation="horizontal"
 		width="fill"

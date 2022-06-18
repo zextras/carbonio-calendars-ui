@@ -13,16 +13,19 @@ import {
 	SnackbarManagerContext,
 	Row
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, getBridgedFunctions, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import { useDispatch } from 'react-redux';
-import { CALENDAR_ROUTE } from '../../constants';
+import {
+	deletePermanentlyItem,
+	moveApptToTrashItem,
+	openInDisplayerItem
+} from '../../actions/action-items';
 import { generateEditor } from '../../commons/editor-generator';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 import { applyTag, createAndApplyTag } from '../tags/tag-actions';
-import { moveApptToTrash, openInDisplayer, deletePermanently } from '../../hooks/use-event-actions';
 
 const OrganizerActions: FC<{ event: EventType; onClose: any; invite: Invite }> = ({
 	event,
@@ -35,16 +38,25 @@ const OrganizerActions: FC<{ event: EventType; onClose: any; invite: Invite }> =
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const context = useMemo(
-		() => ({ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag }),
-		[createModal, createSnackbar, dispatch, tags]
+		() => ({
+			replaceHistory,
+			dispatch,
+			createModal,
+			createSnackbar,
+			tags,
+			createAndApplyTag,
+			isInstance: true,
+			ridZ: event.resource.ridZ
+		}),
+		[createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
 	);
 
 	const otherActions = useMemo(
 		() => [
 			event.resource.calendar.id === FOLDERS.TRASH
-				? deletePermanently({ event, context, t })
-				: moveApptToTrash(event, { ...context, isInstance: true }, t),
-			openInDisplayer(event, context, t),
+				? deletePermanentlyItem(invite, context, t)
+				: moveApptToTrashItem(invite, context, t),
+			openInDisplayerItem(invite, context, t),
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			applyTag({ t, context, event: invite })

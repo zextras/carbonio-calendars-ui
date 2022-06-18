@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { reject } from 'lodash';
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import {
 	Container,
@@ -19,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useEventActions } from '../../hooks/use-event-actions';
+import { useEventActions } from '../../actions/action-items';
 import { EventType } from '../../types/event';
 import { Store } from '../../types/store/store';
 import { createAndApplyTag } from '../tags/tag-actions';
@@ -90,12 +89,21 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 		[action, dispatch, event.resource.inviteId, event.resource.ridZ, invite]
 	);
 
-	const actions =
-		useEventActions(
-			invite,
-			{ replaceHistory, dispatch, createModal, createSnackbar, tags, createAndApplyTag },
-			t
-		) ?? [];
+	const context = useMemo(
+		() => ({
+			replaceHistory,
+			dispatch,
+			createModal,
+			createSnackbar,
+			tags,
+			createAndApplyTag,
+			ridZ: event?.resource?.ridZ,
+			isInstance: true
+		}),
+		[createModal, createSnackbar, dispatch, event?.resource?.ridZ, tags]
+	);
+
+	const actions = useEventActions(invite, context, t);
 
 	const onClose = useCallback(() => setOpen(false), []);
 

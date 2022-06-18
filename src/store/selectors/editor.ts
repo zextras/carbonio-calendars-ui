@@ -18,6 +18,11 @@ export function selectEditors(state: Store): any {
 	return state.editor.editors;
 }
 
+export const selectEditorIsRichText =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.isRichText;
+
 export const selectOrganizer =
 	(id: string) =>
 	(state: Store): IdentityItem =>
