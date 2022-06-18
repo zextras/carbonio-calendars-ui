@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.18](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.17...v0.1.18) (2022-06-17)
+
+
+### Bug Fixes
+
+* calendar crashes on safari ([c7c1519](https://github.com/zextras/carbonio-calendars-ui/commit/c7c15191468fb9847c3d7f136d0cdb513fe9cea8))
+* removal of default room message from description ([874a3df](https://github.com/zextras/carbonio-calendars-ui/commit/874a3df40599c0d107d1440f51977bf590ea8b11))
+
 ### [0.1.17](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.16...v0.1.17) (2022-06-09)
 
 

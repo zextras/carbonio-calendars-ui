@@ -115,10 +115,8 @@ const EmptyBody = () => {
 
 export function extractBody(body) {
 	if (body) {
-		const defaultMessage = roomValidationRegEx.exec(body)?.[1];
-		const stripDefaultRoomMessage = defaultMessage
-			? replace(body, `${ROOM_DIVIDER}${defaultMessage}${ROOM_DIVIDER}`, '')
-			: body;
+		const defaultMessage = roomValidationRegEx.exec(body)?.[0];
+		const stripDefaultRoomMessage = defaultMessage ? replace(body, defaultMessage, '') : body;
 		return stripDefaultRoomMessage.trim();
 	}
 	return '';
@@ -149,7 +147,6 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 	}
 	const originalText = fullInvite?.textDescription?.[0]?._content ?? '';
 	const roomTextDesc = roomValidationRegEx?.exec(originalText)?.[0];
-	const pattern = roomTextDesc ? `${ROOM_DIVIDER}${roomTextDesc}${ROOM_DIVIDER}` : undefined;
-	const textContent = pattern ? replace(originalText, pattern, '') : originalText;
+	const textContent = roomTextDesc ? replace(originalText, roomTextDesc, '') : originalText;
 	return <TextMessageRenderer text={extractBody(textContent)} />;
 }
