@@ -171,7 +171,9 @@
         "entire_serires": "TODA A SÉRIE",
         "new_tag": "Nova Etiqueta",
         "other_actions": "Outras ações",
-        "single_instance": "UMA ÚNICA INSTÂNCIA"
+        "single_instance": "UMA ÚNICA INSTÂNCIA",
+        "no_title": "Sem Título",
+        "scheduled_in": "Agenda"
     },
     "action": {
         "delete": "Excluir",
@@ -296,7 +298,7 @@
         "share_calendar_url_note2": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.<br/>Também é possível encontrar esses links clicando com o botão direito em sua lista de calendários.",
         "delete_all_occurences": "Excluir todas as ocorrências",
         "delete_future_occurences": "Excluir este evento e todas as ocorrências futuras",
-        "invited_you": "convidou você para um evento",
+        "invited_you": "convidou você para",
         "share_calendar_url_note": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.",
         "share_calendar_url_msg": "Você pode compartilhar rapidamente {{title}} com seus colaboradores usando uma destas URLs:",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> é o organizador",
@@ -319,7 +321,11 @@
         "you_sure_delete_instance": "Tem certeza que deseja excluir esta instância do compromisso “{{title}}”?",
         "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?",
         "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com a mesma.",
-        "appointment_type_handle": "\"{{name}}\" é um compromisso recorrente. Você gostaria de abrir apenas esta instância ou toda a série?"
+        "appointment_type_handle": "\"{{name}}\" é um compromisso recorrente. Você gostaria de abrir apenas esta instância ou toda a série?",
+        "organizer": "Organizador",
+        "reply": "Responder",
+        "reply_all": "Responder a todos",
+        "more": "Mais..."
     },
     "months": {
         "april": "Abril",
@@ -544,7 +550,11 @@
         "show_optionals": "Mostrar opcionais",
         "copy_ics_url": "Copiar URL de ICS",
         "copy_outlook_url": "Copiar URL do Outlook",
-        "copy_vector_url": "Copiar URL de visualização"
+        "copy_vector_url": "Copiar URL de visualização",
+        "chat": "Equipamento",
+        "equipment": "Equipamento",
+        "location": "Localização",
+        "chat_room": "Link da Sala virtual"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",

@@ -265,7 +265,10 @@
         "you_sure_delete_instance": "क्या आप वाकई में \"{{title}}\" एपाइंटमेंट की इस घटना को डिलीट करना चाहते हैं?",
         "delete_tag_message1": "क्या आप वाकई में \"{{name}}\" टैग डिलीट करना चाहते हैं?",
         "delete_tag_message2": "डिलीट हो जाने के बाद, इससे मार्क हर आइटम से इसे हटा दिया जाएगा।",
-        "appointment_type_handle": "{{name}} बार-बार आने वाला अपोइंटमेंट है। क्या आप सिर्फ इस घटना को या पूरी सीरीज़ खोलना चाहते हैं?"
+        "appointment_type_handle": "{{name}} बार-बार आने वाला अपोइंटमेंट है। क्या आप सिर्फ इस घटना को या पूरी सीरीज़ खोलना चाहते हैं?",
+        "organizer": "आयोजक",
+        "reply": "रिप्लाई करें",
+        "reply_all": "सभी को उत्तर"
     },
     "create": "बनाएँ",
     "delete": "डिलीट करें",
@@ -555,7 +558,10 @@
         "copy_ics_url": "ICS यूआरएल कॉपी करें",
         "copy_outlook_url": "Outlook यूआरएल कॉपी करें",
         "copy_vector_url": "व्यू यूआरएल कॉपी करें",
-        "show_optionals": "वैकल्पिक दिखाएं"
+        "show_optionals": "वैकल्पिक दिखाएं",
+        "chat": "उपकरण",
+        "equipment": "उपकरण",
+        "location": "स्थान"
     },
     "remove_from_this_list": "इस लिस्ट से हटाएँ",
     "resend_mail_notification_about_this_share": "इस शेयर के बारे में ई-मेल नोटिफिकेशन भेजें",
