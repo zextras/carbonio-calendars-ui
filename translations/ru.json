@@ -17,7 +17,13 @@
         "all_time": "Все время мероприятия",
         "modal": {
             "set_new_time_message": "Вы хотите установить новое время для пропущенной встречи? Если вы нажмете ОК, все остальные напоминания будут автоматически отменены."
-        }
+        },
+        "hours_0": "{{count}} час",
+        "hours_1": "{{count}} часа",
+        "hours_2": "{{count}} часов",
+        "minutes_0": "{{count}} минута",
+        "minutes_1": "{{count}} минуты",
+        "minutes_2": "{{count}} минут"
     },
     "participants": {
         "AC_with_count_0": "Принял",
@@ -103,7 +109,7 @@
         "share_calendar_url_note2": "Только ваши сотрудники могут получить доступ к вашим данным с помощью этих ссылок. <br/> Вы можете найти эти ссылки, щелкнув правой кнопкой мыши на список календарей.",
         "sure_to_delete_appointment": "Вы уверены, что хотите удалить встречу?",
         "want_to_send_cancellation_msg": "Вы хотите отправить участникам сообщение об отмене?",
-        "invited_you": "пригласил вас на встречу",
+        "invited_you": "пригласил вас",
         "share_calendar_url_msg": "Вы можете быстро предоставить доступ к {{title}} своим сотрудникам с помощью одной из этих ссылок:",
         "share_calendar_url_note": "Только ваши сотрудники могут получить доступ к вашим данным, используя эти ссылки.",
         "delete_all_occurences": "Удалить все встречи",
@@ -115,7 +121,23 @@
         "you_sure_delete_instance": "Вы действительно хотите удалить этот экземпляр встречи «{{title}}»?",
         "appointment_type_handle": "\"{{name}}\"— повторяющаяся встреча. Вы хотите открыть только этот экземпляр или серию?",
         "delete_tag_message1": "Вы уверены, что хотите удалить тег \"{{name}}\"?",
-        "delete_tag_message2": "После удаления он будет удален из всех отмеченных им элементов."
+        "delete_tag_message2": "После удаления он будет удален из всех отмеченных им элементов.",
+        "accepted": "{{count}} принято",
+        "awaiting": "Ожидание",
+        "declined": "{{count}} отклонено",
+        "guests": "гости",
+        "more": "Больше...",
+        "optional_participant_0": "{{count}} Необязательно",
+        "optional_participant_1": "{{count}} Необязательно",
+        "optional_participant_2": "{{count}} Необязательно",
+        "organizer": "Организатор",
+        "reply": "Ответить",
+        "reply_all": "Ответить всем",
+        "required_participant_0": "{{count}} Участник",
+        "required_participant_1": "{{count}} Участника",
+        "required_participant_2": "{{count}} Участников",
+        "send_email": "Отправить письмо",
+        "send_email_to": "Отправить письмо : {{email}}"
     },
     "label": {
         "subject": "Тема",
@@ -297,7 +319,9 @@
         "tag_max_length": "Допускается не более 128 символов",
         "tag_name": "Имя Тега",
         "tags": "Теги",
-        "loading_results": "Загрузка результатов..."
+        "loading_results": "Загрузка результатов...",
+        "scheduled_in": "Ежедневник",
+        "no_title": "Без заголовка"
     },
     "tooltip": {
         "show_optionals": "Показать опции",
@@ -305,7 +329,14 @@
         "add_attachments": "Добавить вложения",
         "copy_vector_url": "Скопировать ссылку для просмотра",
         "copy_outlook_url": "Скопировать URL-адрес Outlook",
-        "copy_ics_url": "Копировать ICS ссылку"
+        "copy_ics_url": "Копировать ICS ссылку",
+        "chat": "Оборудование",
+        "calendar_sharing_status_one": "Совместно с 1 человеком",
+        "equipment": "Оборудование",
+        "location": "Место",
+        "virtual_chat": "Конференц-зал",
+        "chat_room": "Комната в Chats",
+        "calendar_sharing_status": "Совместно с {{count}}"
     },
     "action": {
         "send": "Отправить",

@@ -171,7 +171,9 @@
         "tags": "Etiquetas",
         "delete_tag_name": "Eliminar etiqueta \"{{name}}\"",
         "edit_tag": "Editar etiqueta",
-        "edit_tag_name": "Editar etiqueta \"{{name}}\""
+        "edit_tag_name": "Editar etiqueta \"{{name}}\"",
+        "scheduled_in": "Agenda",
+        "no_title": "Sin Título"
     },
     "action": {
         "delete": "Eliminar",
@@ -319,7 +321,11 @@
         "all_time": "Toda la duración del evento",
         "modal": {
             "set_new_time_message": "¿Quieres definir un nuevo horario para la cita perdida? Si haces clic en ACEPTAR, todos los demás recordatorios serán descartados automáticamente."
-        }
+        },
+        "hours": "{{count}} hora",
+        "hours_plural": "{{count}} horas",
+        "minutes": "{{count}} minuto",
+        "minutes_plural": "{{count}} minutos"
     },
     "repeat": {
         "custom": "Personalizado",
@@ -493,7 +499,7 @@
             "series_deleted": "Serie borrada con éxito. Los asistentes recibirán una notificación de la cancelación."
         },
         "invite_has_no_message": "Esta invitación no contiene texto",
-        "invited_you": "te ha invitado a un evento",
+        "invited_you": "te ha invitado a",
         "you_are_organizer": "<Row><Text> <BoldText> Tú </BoldText> eres el organizador </Text></Row>",
         "delete_all_occurences": "Eliminar todas las incidencias",
         "delete_future_occurences": "Eliminar esta instancia y todas las futuras incidencias",
@@ -519,7 +525,21 @@
         "you_sure_delete_instance": "¿Seguro que quieres eliminar esta instancia de la cita \"{{title}}\"?",
         "appointment_type_handle": "\"{{name}}\" es una cita recurrente. ¿Te gustaría abrir solo esta instancia o toda la serie?",
         "delete_tag_message1": "¿Seguro que quieres borrar la etiqueta \"{{name}}\"?",
-        "delete_tag_message2": "Una vez borrada, se quitará de cada elemento marcado con ella."
+        "delete_tag_message2": "Una vez borrada, se quitará de cada elemento marcado con ella.",
+        "organizer": "Organizador",
+        "reply": "Responder",
+        "reply_all": "Responder a todos",
+        "send_email_to": "Enviar un e-mail a: {{email}}",
+        "accepted": "{{count}} aceptado",
+        "awaiting": "a la espera",
+        "declined": "{{count}} rechazado",
+        "guests": "invitados",
+        "more": "Más…",
+        "optional_participant": "{{count}} Opcional",
+        "optional_participant_plural": "{{count}} Opcionales",
+        "required_participant": "{{count}} Participante",
+        "required_participant_plural": "{{count}} Participantes",
+        "send_email": "Enviar un e-mail"
     },
     "button": {
         "customize_modal": "Abrir modo de personalización"
@@ -560,7 +580,14 @@
         "copy_outlook_url": "Copiar enlace de Outlook",
         "copy_vector_url": "Copiar enlace de visualización",
         "enable_disable_rich_text": "Activar/Desactivar editor de texto enriquecido",
-        "show_optionals": "Mostrar opcionales"
+        "show_optionals": "Mostrar opcionales",
+        "chat": "Equipamiento",
+        "equipment": "Equipamiento",
+        "location": "Ubicación",
+        "chat_room": "Enlace de la Sala Virtual",
+        "calendar_sharing_status": "Compartido con {{count}} persona(s)",
+        "calendar_sharing_status_one": "Compartido con 1 persona",
+        "virtual_chat": "Chat virtual"
     },
     "share_invite_resent": "Invitación para acceder a la compartición reenviada",
     "shared_folders": "Calendarios compartidos",

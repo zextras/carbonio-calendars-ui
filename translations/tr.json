@@ -160,7 +160,7 @@
         "delete_future_occurences_warning": "Serideki (bu randevu öncesi ve sonrasındaki) tüm özel durumlar da silinecek",
         "have_not_sent_invitation": "Katılımcılara henüz davet göndermediniz",
         "invite_has_no_message": "Bu davette yazılı mesaj yok",
-        "invited_you": "sizi bir etkinliğe davet etti",
+        "invited_you": "sizi davet etti:",
         "share_calendar_url_msg": "Bu URL bağlantılarından birisini kullanarak {{title}} öğesini kişilerle kolayca paylaşabilirsiniz:",
         "share_calendar_url_note2": "Bu URL bağlantılarını kullanarak sadece katılımcılar veriye erişebilir.<br/> Takvim listenizde sağ tıkladığınızda da bu bağlantıları görebilirsiniz.",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> organize eden kişi",
@@ -178,7 +178,21 @@
         "you_sure_delete_instance": "“{{title}}” randevusunun bu öğesini silmek istediğinizden emin misiniz?",
         "delete_tag_message1": "\"{{name}}\" etiketini silmek istediğinizden emin misiniz?",
         "delete_tag_message2": "Silinince önceden işaretlenmiş tüm öğelerden etiket kaldırılacak.",
-        "appointment_type_handle": "\"{{name}}” tekrarlanan bir randevu. Sadece bu rendevuyu mu yoksa tekrarlama serisini mi açmak istersiniz?"
+        "appointment_type_handle": "\"{{name}}” tekrarlanan bir randevu. Sadece bu rendevuyu mu yoksa tekrarlama serisini mi açmak istersiniz?",
+        "accepted": "{{count}} kişi kabul etti",
+        "awaiting": "bekleniyor",
+        "declined": "{{count}} kişi reddetti",
+        "guests": "konuklar",
+        "more": "Daha fazla...",
+        "optional_participant": "{{count}} İsteğe bağlı",
+        "optional_participant_plural": "{{count}} İsteğe bağlı",
+        "organizer": "Organize eden",
+        "reply": "Yanıtla",
+        "required_participant": "{{count}} Katılımcı",
+        "required_participant_plural": "{{count}} Katılımcı",
+        "send_email": "E-posta gönder",
+        "send_email_to": "E-posta gönder: {{email}}",
+        "reply_all": "Hepsini yanıtla"
     },
     "search": {
         "results_for": "Sonuçlar:",
@@ -371,7 +385,9 @@
         "results_for_error": "Arama sorgusu başlatılamadı, silip yeniden deneyin: ",
         "select_color": "Renk seçin",
         "tag_name": "Etiket adı",
-        "tags": "Etiketler"
+        "tags": "Etiketler",
+        "no_title": "Başlık Yok",
+        "scheduled_in": "Zamanlandı"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -404,7 +420,14 @@
         "enable_disable_rich_text": "Gelişmiş metin düzenleyici kullan/kullanma",
         "copy_ics_url": "ICS url kopyala",
         "copy_outlook_url": "Outlook url kopyala",
-        "copy_vector_url": "View url kopyala"
+        "copy_vector_url": "View url kopyala",
+        "chat": "Donanım",
+        "chat_room": "Sohbet odası",
+        "calendar_sharing_status": "{{count}} kişi ile paylaşıldı",
+        "calendar_sharing_status_one": "1 kişi ile paylaşıldı",
+        "equipment": "Donanım",
+        "location": "Yer",
+        "virtual_chat": "Sanal Sohbet"
     },
     "revoke_with_custom_message": "Özel bildirim göndererek erişim yetkisini kaldır",
     "settings": {
@@ -555,7 +578,11 @@
         "all_time": "Etkinliğin tüm süresi",
         "modal": {
             "set_new_time_message": "Zamanı geçen randevu için yeni bir zaman belirlemek ister misiniz? TAMAM tuşuna tıkladığınızda tüm diğer hatırlatmalar otomatik olarak iptal edilecek."
-        }
+        },
+        "minutes": "{{count}} dakika",
+        "minutes_plural": "{{count}} dakika",
+        "hours": "{{count}} saat",
+        "hours_plural": "{{count}} saat"
     },
     "remove_from_this_list": "Bu listeden kaldır",
     "revoke_access": "Erişim yetkisini kaldır",

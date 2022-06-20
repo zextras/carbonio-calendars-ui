@@ -155,7 +155,20 @@
         "app_name": "Calendários",
         "propose_new_time": "SUGERIR NOVO HORÁRIO",
         "new_appointment": "Novo compromisso",
-        "preview": "Visualizar"
+        "preview": "Visualizar",
+        "scheduled_in": "Agenda",
+        "select_color": "Selecionar Cor",
+        "results_for_error": "Não foi possível completar a busca, limpe-a e tente novamente: ",
+        "tags": "Marcadores",
+        "tag_name": "Nome do marcador",
+        "tag_max_length": "Máximo de 128 caracteres permitidos",
+        "no_special_char_allowed": "O nome não deve conter nenhum caractere especial",
+        "new_tag": "Novo marcador",
+        "edit_tag_name": "Editar etiqueta \"{{name}}\"",
+        "edit_tag": "Editar Etiqueta",
+        "delete_tag_name": "Excluir etiqueta \"{{name}}\"",
+        "delete_tag": "Excluir Etiqueta",
+        "create_tag": "Criar Etiqueta"
     },
     "action": {
         "delete": "Excluir",
@@ -298,7 +311,13 @@
             }
         },
         "sure_to_delete_appointment_permanently": "Tem certeza que deseja excluir este compromisso permanentemente?",
-        "you_sure_delete_instance": "Tens a certeza que desejas excluir esta instância do compromisso “{{title}}”?"
+        "you_sure_delete_instance": "Tens a certeza que desejas excluir esta instância do compromisso “{{title}}”?",
+        "reply_all": "Responder a todos",
+        "reply": "Responder",
+        "organizer": "Organizador",
+        "more": "Mais...",
+        "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com ela.",
+        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?"
     },
     "months": {
         "april": "Abril",
@@ -523,7 +542,10 @@
         "show_optionals": "Mostrar opcionais",
         "copy_ics_url": "Copiar URL de ICS",
         "copy_outlook_url": "Copiar URL do Outlook",
-        "copy_vector_url": "Copiar URL de Visualização"
+        "copy_vector_url": "Copiar URL de Visualização",
+        "location": "Local",
+        "equipment": "Equipamento",
+        "chat": "Equipamento"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",
@@ -644,7 +666,12 @@
     "is_recurrent": "É recorrente",
     "appt_restored_successfully": "Compromisso restaurado com sucesso",
     "messages": {
-        "format_as_plain_text": "Formatar como Texto Simples"
+        "format_as_plain_text": "Formatar como Texto Simples",
+        "snackbar": {
+            "tag_created": "Etiqueta {{name}} criada com sucesso",
+            "tag_updated": "Etiqueta atualizada com sucesso",
+            "tag_deleted": "Etiqueta {{name}} excluída com sucesso"
+        }
     },
     "preview": {
         "close": "Fechar Pré-visualização"

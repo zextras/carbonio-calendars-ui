@@ -212,7 +212,7 @@
         "revoke_share": "Revoke share of {{title}}",
         "role": "role",
         "save": "Save",
-        "scheduled_in": "Scheduled in",
+        "scheduled_in": "Calendar",
         "search_hint": "",
         "select_color": "Select Color",
         "select_in": "",
@@ -607,7 +607,7 @@
     "tooltip": {
         "add_attachments": "Add attachments",
         "chat": "Equipment",
-        "chat_room": "Chat's room",
+        "chat_room": "Virtual Room's link",
         "calendar_sharing_status": "Shared with {{count}} people",
         "calendar_sharing_status_one": "Shared with 1 person",
         "copy_ics_url": "Copy ICS url",
