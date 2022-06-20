@@ -63,7 +63,10 @@
         "you_sure_delete_instance": "本当にこの「{{title}}」予定のインスタンスを削除しますか？",
         "appointment_type_handle": "「{{name}}」は定期的な予定です。このインスタンスのみを開きますか、それともシリーズを開きますか？",
         "delete_tag_message1": "本当に\"{{name}}\" タグを削除しますか？",
-        "delete_tag_message2": "削除されると、それでマークされたすべてのアイテムから削除されます。"
+        "delete_tag_message2": "削除されると、それでマークされたすべてのアイテムから削除されます。",
+        "organizer": "主催者",
+        "reply": "返信する",
+        "reply_all": "全員に返信する"
     },
     "action": {
         "save": "保存する",
@@ -529,7 +532,10 @@
         "show_optionals": "オプションを表示する",
         "copy_ics_url": "ICSのURLをコピーする",
         "copy_outlook_url": "OutlookのURLをコピーする",
-        "copy_vector_url": "ビューのURLをコピーする"
+        "copy_vector_url": "ビューのURLをコピーする",
+        "chat": "機器",
+        "equipment": "機器",
+        "location": "場所"
     },
     "workflow": "ワークフロー",
     "write": "書く",

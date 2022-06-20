@@ -5,7 +5,14 @@
         "add_attachments": "Aggiungi allegati",
         "copy_ics_url": "Copia url ICS",
         "copy_outlook_url": "Copia url Outlook",
-        "copy_vector_url": "Copia url vista"
+        "copy_vector_url": "Copia url vista",
+        "chat": "Attrezzatura",
+        "equipment": "Attrezzatura",
+        "location": "Luogo",
+        "calendar_sharing_status": "Condiviso con {{count}} persone",
+        "calendar_sharing_status_one": "Condiviso con 1 persona",
+        "virtual_chat": "Chat Virtuale",
+        "chat_room": "Link alla Stanza Virtuale"
     },
     "reminder": {
         "week_before": "{{count}} settimana fa",
@@ -21,7 +28,11 @@
         "all_time": "Per tutta la durata dell'evento",
         "modal": {
             "set_new_time_message": "Vuoi proporre un nuovo orario per l'appuntamento mancato? Se selezioni OK, tutti i relativi promemoria verranno automaticamente cancellati."
-        }
+        },
+        "hours": "{{count}} ora",
+        "hours_plural": "{{count}} ore",
+        "minutes": "{{count}} minuto",
+        "minutes_plural": "{{count}} minuti"
     },
     "participants": {
         "AC_with_count": "Accettato",
@@ -95,7 +106,7 @@
         "delete_all_occurences": "Cancella tutte le occorrenze",
         "delete_future_occurences": "Elimina questa istanza e tutte le occorrenze future",
         "delete_future_occurences_warning": "Saranno eliminate anche tutte le eccezioni (prima e dopo questa istanza) della serie",
-        "invited_you": "ti ha invitato a un evento",
+        "invited_you": "ti ha invitato a:",
         "modal": {
             "delete": {
                 "sure_delete_appointment_permanently": "Eliminando permanentemente questo appuntamento non sarà più possibile ripristinarlo, vuoi continuare?",
@@ -111,7 +122,19 @@
         "you_sure_delete_instance": "Vuoi eliminare questa istanza dell'appuntamento “{{title}}” ?",
         "appointment_type_handle": "\"{{name}}\" è un appuntamento ricorrente. Vuoi aprire solo questa istanza o tutta la serie?",
         "delete_tag_message1": "Vuoi eliminare l'etichetta \"{{name}}\"?",
-        "delete_tag_message2": "Una volta eliminata, verrà eliminata anche da tutti gli elementi su cui è utilizzata."
+        "delete_tag_message2": "Una volta eliminata, verrà eliminata anche da tutti gli elementi su cui è utilizzata.",
+        "reply": "Rispondi",
+        "reply_all": "Rispondi a tutti",
+        "organizer": "Organizzatore",
+        "awaiting": "in attesa",
+        "guests": "ospiti",
+        "more": "Altro...",
+        "optional_participant": "{{count}} Opzionale",
+        "optional_participant_plural": "{{count}} Opzionali",
+        "required_participant": "{{count}} Partecipante",
+        "required_participant_plural": "{{count}} Partecipanti",
+        "send_email": "Invia e-mail",
+        "send_email_to": "Invia e-mail a: {{email}}"
     },
     "label": {
         "to": "A",
@@ -285,7 +308,9 @@
         "select_color": "Seleziona Colore",
         "tag_max_length": "Il numero massimo di caratteri consentiti è 128",
         "tag_name": "Nome etichetta",
-        "tags": "Etichette"
+        "tags": "Etichette",
+        "no_title": "Nessun Titolo",
+        "scheduled_in": "Calendario"
     },
     "action": {
         "send": "Invia",

@@ -494,7 +494,10 @@
         "you_sure_delete_instance": "คุณแน่ใจหรือไม่ว่าต้องการลบอินสแตนซ์ของการนัดหมาย “{{title}}” นี้?",
         "delete_tag_message1": "คุณแน่ใจหรือว่าต้องการลบแท็ก \"{{name}}\"?",
         "delete_tag_message2": "หากลบออก มันจะถูกลบออกจากทุกรายการที่ทำเครื่องหมายไว้",
-        "appointment_type_handle": "\"{{name}}” เป็นการนัดหมายที่เกิดซ้ำ คุณต้องการเปิดเฉพาะอินสแตนซ์นี้หรือทั้งซีรีส์?"
+        "appointment_type_handle": "\"{{name}}” เป็นการนัดหมายที่เกิดซ้ำ คุณต้องการเปิดเฉพาะอินสแตนซ์นี้หรือทั้งซีรีส์?",
+        "organizer": "ผู้จัดงาน",
+        "reply": "ตอบกลับ",
+        "reply_all": "ตอบกลับทั้งหมด"
     },
     "type": "รูปแบบ",
     "tooltip": {
@@ -503,7 +506,10 @@
         "copy_outlook_url": "คัดลอก URL ของ Outlook",
         "copy_vector_url": "คัดลอก URL ของ View",
         "copy_ics_url": "คัดลอก URL ICS",
-        "enable_disable_rich_text": "เปิด/ปิดการใช้งานตัวแก้ไข Rich Text"
+        "enable_disable_rich_text": "เปิด/ปิดการใช้งานตัวแก้ไข Rich Text",
+        "chat": "อุปกรณ์",
+        "equipment": "อุปกรณ์",
+        "location": "สถานที่"
     },
     "button": {
         "customize_modal": "เปิด Customize Modal"

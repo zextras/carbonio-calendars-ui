@@ -320,7 +320,10 @@
         "you_sure_delete_instance": "Anda yakin ingin menghapus instan janji temu “{{title}}” ini?",
         "delete_tag_message1": "Yakin ingin menghapus Tag \"{{name}}\"?",
         "delete_tag_message2": "Setelah dihapus, ini akan dihapus dari tiap item yang ditandai dengannya.",
-        "appointment_type_handle": "\"{{name}}\" adalah janji temu berulang. Anda hanya ingin membuka instans ini atau seri?"
+        "appointment_type_handle": "\"{{name}}\" adalah janji temu berulang. Anda hanya ingin membuka instans ini atau seri?",
+        "organizer": "Penyelenggara",
+        "reply": "Balas",
+        "reply_all": "Balas semua"
     },
     "months": {
         "april": "April",
@@ -535,7 +538,10 @@
         "copy_outlook_url": "Salin url Outlook",
         "copy_vector_url": "Salin url Tampilan",
         "enable_disable_rich_text": "Aktifkan/Nonaktifkan editor teks kaya",
-        "show_optionals": "Tampilkan opsi"
+        "show_optionals": "Tampilkan opsi",
+        "chat": "Peralatan",
+        "equipment": "Peralatan",
+        "location": "Lokasi"
     },
     "share_invite_resent": "Undangan berbagi dikirim ulang",
     "shared_folders": "Kalender Bersama",
