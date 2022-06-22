@@ -172,7 +172,7 @@
         "delete_tag_name": "Eliminar etiqueta \"{{name}}\"",
         "edit_tag": "Editar etiqueta",
         "edit_tag_name": "Editar etiqueta \"{{name}}\"",
-        "scheduled_in": "Agendado para",
+        "scheduled_in": "Agenda",
         "no_title": "Sin Título"
     },
     "action": {
@@ -584,7 +584,7 @@
         "chat": "Equipamiento",
         "equipment": "Equipamiento",
         "location": "Ubicación",
-        "chat_room": "Sala de chat",
+        "chat_room": "Enlace de la Sala Virtual",
         "calendar_sharing_status": "Compartido con {{count}} persona(s)",
         "calendar_sharing_status_one": "Compartido con 1 persona",
         "virtual_chat": "Chat virtual"

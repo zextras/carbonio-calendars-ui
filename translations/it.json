@@ -11,7 +11,8 @@
         "location": "Luogo",
         "calendar_sharing_status": "Condiviso con {{count}} persone",
         "calendar_sharing_status_one": "Condiviso con 1 persona",
-        "virtual_chat": "Chat Virtuale"
+        "virtual_chat": "Chat Virtuale",
+        "chat_room": "Link alla Stanza Virtuale"
     },
     "reminder": {
         "week_before": "{{count}} settimana fa",
@@ -308,7 +309,8 @@
         "tag_max_length": "Il numero massimo di caratteri consentiti è 128",
         "tag_name": "Nome etichetta",
         "tags": "Etichette",
-        "no_title": "Nessun Titolo"
+        "no_title": "Nessun Titolo",
+        "scheduled_in": "Calendario"
     },
     "action": {
         "send": "Invia",
