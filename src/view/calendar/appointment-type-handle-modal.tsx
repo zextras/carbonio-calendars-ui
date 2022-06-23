@@ -22,7 +22,7 @@ export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): JS
 
 	const onEntireSeries = (): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 		onClose();
 	};

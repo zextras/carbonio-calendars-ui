@@ -1,14 +1,23 @@
 /*
- * SPDX-FileCopyrightText: 2021 Zextras <https://www.zextras.com>
+ * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
-import { Row, Avatar, Text, Container, Icon } from '@zextras/carbonio-design-system';
+import { Avatar, Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import moment from 'moment';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
+import {
+	selectEditorCalendar,
+	selectEditorEnd,
+	selectEditorLocation,
+	selectEditorRoom,
+	selectEditorStart,
+	selectEditorTitle
+} from '../../../store/selectors/editor';
 
 export const AvatarComp = styled(Avatar)`
 	svg {
@@ -19,30 +28,33 @@ export const AvatarComp = styled(Avatar)`
 	}
 `;
 
-const TitleRow = ({ children }) => (
+const TitleRow = ({ children }: { children: JSX.Element }): JSX.Element => (
 	<Container mainAlignment="flex-start" crossAlignment="flex-start" padding={{ top: 'extrasmall' }}>
 		{children}
 	</Container>
 );
-export default function DataRecap({ data }) {
+
+export const EditorSummary = ({ editorId }: { editorId: string }): JSX.Element => {
 	const [t] = useTranslation();
+	const start = useSelector(selectEditorStart(editorId));
+	const end = useSelector(selectEditorEnd(editorId));
+	const location = useSelector(selectEditorLocation(editorId));
+	const room = useSelector(selectEditorRoom(editorId));
+	const title = useSelector(selectEditorTitle(editorId));
+	const calendar = useSelector(selectEditorCalendar(editorId));
 
 	const apptDateTime = useMemo(
-		() => `${moment(data.start).format(`dddd, DD MMMM, YYYY HH:mm`)} -
-	           ${moment(data.end).format(' HH:mm')}`,
-		[data.start, data.end]
+		() => `${moment(start).format(`dddd, DD MMMM, YYYY HH:mm`)} -
+	           ${moment(end).format(' HH:mm')}`,
+		[start, end]
 	);
 
 	const apptLocation = useMemo(
-		() => `GMT ${moment(data.start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
-		[data.start]
+		() => `GMT ${moment(start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
+		[start]
 	);
 
-	const location = useMemo(
-		() => data?.resource?.location ?? t('label.location', 'location'),
-		[data?.resource?.location, t]
-	);
-	const virtualRoom = useMemo(() => data?.resource?.room?.label, [data?.resource?.room?.label]);
+	const virtualRoom = useMemo(() => room?.label, [room?.label]);
 	return (
 		<Row
 			height="fit"
@@ -55,9 +67,7 @@ export default function DataRecap({ data }) {
 				size="large"
 				icon="Calendar2"
 				style={{
-					background: data.resource.calendar.color
-						? data.resource.calendar.color?.color
-						: ZIMBRA_STANDARD_COLORS[0].color
+					background: calendar?.color?.color ?? ZIMBRA_STANDARD_COLORS?.[0]?.color
 				}}
 				label=""
 			/>
@@ -71,15 +81,11 @@ export default function DataRecap({ data }) {
 			>
 				<Container mainAlignment="space-between" orientation="horizontal">
 					<Text overflow="ellipsis" weight="bold" size="small">
-						{data.title || t('message.you_will_see_the_subject_here', 'Subject')}
+						{title || t('message.you_will_see_the_subject_here', 'Subject')}
 					</Text>
 					<Icon
 						icon="Calendar2"
-						customColor={
-							data.resource.calendar.color
-								? data.resource.calendar.color.color
-								: ZIMBRA_STANDARD_COLORS[0].color
-						}
+						customColor={calendar?.color?.color ?? ZIMBRA_STANDARD_COLORS?.[0]?.color}
 					/>
 				</Container>
 				<TitleRow>
@@ -107,4 +113,4 @@ export default function DataRecap({ data }) {
 			</Row>
 		</Row>
 	);
-}
+};

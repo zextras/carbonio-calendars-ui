@@ -8,19 +8,17 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
-import { useInvite } from '../../hooks/use-invite';
-import { EventType } from '../../types/event';
+import { Invite } from '../../types/store/invite';
 
 export const ReminderPart = ({
 	alarmString,
-	event
+	invite
 }: {
 	alarmString: string;
-	event: EventType;
+	invite: Invite;
 }): JSX.Element | null => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
-	const invite = useInvite(event?.resource?.inviteId);
 	const setSnooze = useCallback(
 		(time) => {
 			dispatch(

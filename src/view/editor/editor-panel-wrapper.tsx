@@ -23,18 +23,29 @@ import { selectActiveEditorId, selectEditorTitle } from '../../store/selectors/e
 import { EditorCallbacks } from '../../types/editor';
 import { EditorPanel } from './editor-panel';
 
-const AppointmentCardContainer = styled(Container)`
+const BackgroundContainer = styled.div`
 	z-index: 10;
 	position: absolute;
-	top: 68px;
-	right: 12px;
-	bottom: 12px;
-	left: ${({ expanded }): string => (expanded ? '12px' : 'max(calc(100% - 680px), 12px)')};
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.73);
+	border-radius: 0;
+`;
+
+export const AppointmentCardContainer = styled(Container)`
+	z-index: 10;
+	position: absolute;
+	top: ${({ expanded }): string => (expanded ? '16px' : '16px')};
+	right: ${({ expanded }): string => (expanded ? '16px' : '16px')};
+	bottom: ${({ expanded }): string => (expanded ? '0' : '12px')};
+	left: ${({ expanded }): string => (expanded ? '16px' : 'max(calc(100% - 680px), 12px)')};
 	transition: left 0.2s ease-in-out;
 	height: auto;
 	width: auto;
-	max-height: 100%;
 	overflow: hidden;
+	max-height: 100%;
 `;
 
 type HeaderProps = {
@@ -118,15 +129,18 @@ const EditorPanelWrapper = (): JSX.Element | null => {
 	}, [editorId]);
 
 	return editorId && callbacks ? (
-		<AppointmentCardContainer background="gray5" mainAlignment="flex-start" expanded={false}>
-			<Header
-				editorId={editorId}
-				expanded={expanded}
-				setExpanded={setExpanded}
-				callbacks={callbacks}
-			/>
-			<EditorPanel editorId={editorId} callbacks={callbacks} expanded={expanded} />
-		</AppointmentCardContainer>
+		<>
+			{expanded && <BackgroundContainer />}
+			<AppointmentCardContainer background="gray5" mainAlignment="flex-start" expanded={expanded}>
+				<Header
+					editorId={editorId}
+					expanded={expanded}
+					setExpanded={setExpanded}
+					callbacks={callbacks}
+				/>
+				<EditorPanel editorId={editorId} callbacks={callbacks} expanded={expanded} />
+			</AppointmentCardContainer>
+		</>
 	) : null;
 };
 

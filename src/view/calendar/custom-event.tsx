@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useEventActions } from '../../actions/action-items';
+import { useEventActions } from '../../hooks/use-event-actions';
 import { EventType } from '../../types/event';
 import { Store } from '../../types/store/store';
 import { createAndApplyTag } from '../tags/tag-actions';
@@ -44,7 +44,6 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 	const anchorRef = useRef();
 	const [open, setOpen] = useState(false);
 	const { action } = useParams<{ action: string }>();
-
 	const invite = useSelector((state: Store) =>
 		selectInstanceInvite(state, event.resource.inviteId)
 	);
@@ -97,25 +96,17 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 			createSnackbar,
 			tags,
 			createAndApplyTag,
-			ridZ: event?.resource?.ridZ,
-			isInstance: true
+			ridZ: event?.resource?.ridZ
 		}),
 		[createModal, createSnackbar, dispatch, event?.resource?.ridZ, tags]
 	);
 
-	const actions = useEventActions(invite, context, t);
+	const actions = useEventActions(invite, event, context, t);
 
 	const onClose = useCallback(() => setOpen(false), []);
 
 	return (
-		<Container ref={anchorRef}>
-			<EventSummaryView
-				anchorRef={anchorRef}
-				event={event}
-				open={open}
-				onClose={onClose}
-				invite={invite}
-			/>
+		<Container ref={anchorRef} onClick={toggleOpen} height="100%">
 			<Dropdown
 				contextMenu
 				width="cal(min(100%,200px))"
@@ -126,12 +117,10 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 			>
 				<Container
 					width="fill"
-					height="fit"
+					height="fill"
 					background="transparent"
-					mainAlignment="center"
-					crossAlignment="center"
-					style={{ position: 'relative' }}
-					onClick={toggleOpen}
+					mainAlignment="start"
+					crossAlignment="start"
 					onDoubleClick={showPanelView}
 				>
 					<Container
@@ -184,6 +173,15 @@ export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => 
 					)}
 				</Container>
 			</Dropdown>
+			{open && (
+				<EventSummaryView
+					anchorRef={anchorRef}
+					event={event}
+					open={open}
+					onClose={onClose}
+					invite={invite}
+				/>
+			)}
 		</Container>
 	);
 };

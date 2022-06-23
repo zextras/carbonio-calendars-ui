@@ -11,17 +11,18 @@ import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { deleteAppointmentPermanent } from '../../store/actions/delete-appointment-permanent';
 import { ActionsContext } from '../../types/actions';
+import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 
 type DeletePermanentlyProps = {
 	onClose: () => void;
-	invite: Invite;
+	event: EventType;
 	context: ActionsContext;
 };
 
 export const DeletePermanently = ({
 	onClose,
-	invite,
+	event,
 	context
 }: DeletePermanentlyProps): JSX.Element => {
 	const [t] = useTranslation();
@@ -39,10 +40,10 @@ export const DeletePermanently = ({
 		context
 			.dispatch(
 				deleteAppointmentPermanent({
-					inviteId: invite.id,
-					ridZ: context.ridZ,
-					t: getBridgedFunctions().t,
-					id: invite.apptId
+					inviteId: event.resource.inviteId,
+					ridZ: event.resource.ridZ,
+					t,
+					id: event.resource.id
 				})
 			)
 			.then((res: any) => {
@@ -77,7 +78,7 @@ export const DeletePermanently = ({
 					});
 				}
 			});
-	}, [context, invite.apptId, invite.id, onClose]);
+	}, [context, event.resource.id, event.resource.inviteId, event.resource.ridZ, onClose, t]);
 
 	return (
 		<Container
@@ -88,7 +89,7 @@ export const DeletePermanently = ({
 		>
 			<ModalHeader title={title} onClose={onClose} />
 			<Container padding={{ top: 'large', bottom: 'large' }} crossAlignment="flex-start">
-				{invite.recurrenceRule ? (
+				{event.resource.isRecurrent ? (
 					<Text overflow="break-word">
 						{getBridgedFunctions().t(
 							'message.modal.delete.sure_delete_appointment_all_instances_permanently',

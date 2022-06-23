@@ -35,7 +35,7 @@ export const TrashRow = ({ event }: { event: EventType }): JSX.Element => {
 	const { inviteId, ridZ, participationStatus } = event.resource;
 	const invite = useSelector((state: Store) => selectInstanceInvite(state, inviteId, ridZ));
 
-	const attachments = useMemo(() => findAttachments(invite.parts, []), [invite]);
+	const attachments = useMemo(() => findAttachments(invite?.parts ?? [], []), [invite]);
 
 	return (
 		<Container takeAvailableSpace padding={{ all: 'small' }}>
@@ -55,9 +55,7 @@ export const TrashRow = ({ event }: { event: EventType }): JSX.Element => {
 				<Row width="60%" orientation="horizontal">
 					<Text color="secondary">
 						<TitleText weight="bold">{event.title} </TitleText>
-						{event.resource.fragment && event.resource.fragment.length > 0 && (
-							<>&nbsp; -{event.resource.fragment}</>
-						)}
+						{event?.resource?.fragment?.length > 0 && <>&nbsp; -{event.resource.fragment}</>}
 					</Text>
 				</Row>
 				<Row

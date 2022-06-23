@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { store, getUserAccount, getUserSettings } from '@zextras/carbonio-shell-ui';
+import { store, getUserAccount, getUserSettings, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { find, startsWith } from 'lodash';
 import moment from 'moment';
+import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import {
@@ -28,11 +29,12 @@ import {
 	editEditorTimezone,
 	editEditorTitle,
 	editIsRichText,
-	editOrganizer
+	editOrganizer,
+	updateEditor
 } from '../store/slices/editor-slice';
 import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
-import { Calendar } from '../types/store/calendars';
-import { Attendee, InviteClass } from '../types/store/invite';
+import { EventResourceCalendar } from '../types/event';
+import { Attendee, InviteClass, InviteFreeBusy } from '../types/store/invite';
 import { getIdentityItems } from './get-identity-items';
 
 let counter = 0;
@@ -44,15 +46,22 @@ const getNewEditId = (id: string): string => {
 
 const createEmptyEditor = (id: string): Editor => {
 	const identities = getIdentityItems();
-	const { zimbraPrefTimeZoneId, zimbraPrefCalendarApptReminderWarningTime } =
-		getUserSettings().prefs;
+	const {
+		zimbraPrefTimeZoneId,
+		zimbraPrefCalendarApptReminderWarningTime,
+		zimbraPrefDefaultCalendarId = CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
+	} = getUserSettings().prefs;
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
+	const calendars = store?.store?.getState().calendars;
 
 	return {
-		calendar: undefined,
+		attach: undefined,
+		calendar: calendars?.calendars?.[zimbraPrefDefaultCalendarId],
 		isException: false,
+		exceptId: undefined,
 		isInstance: false,
 		isRichText: true,
+		isNew: true,
 		attachmentFiles: [],
 		organizer: defaultOrganizer,
 		title: '',
@@ -126,18 +135,18 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 		dispatch(editEditorOptionalAttendees({ id, optionalAttendees }));
 
 	const onDisplayStatusChange = (
-		freeBusy: string
-	): { payload: { id: string; freeBusy: string }; type: string } =>
+		freeBusy: InviteFreeBusy
+	): { payload: { id: string; freeBusy: InviteFreeBusy }; type: string } =>
 		dispatch(editEditorDisplayStatus({ id, freeBusy }));
 
-	const onCalendarChange = (calendar: Calendar): void => {
+	const onCalendarChange = (calendar: EventResourceCalendar): void => {
 		const calResource = {
 			id: calendar.id,
 			name: calendar.name,
 			color: calendar.color
 		};
 		const organizer = {
-			email: calendar.owner,
+			email: calendar.owner ?? '',
 			name: '',
 			sentBy: account.name
 		};
@@ -159,10 +168,14 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 			})
 		);
 
-	const onDateChange = (
-		mod: number
-	): { payload: { id: string | undefined; mod: number }; type: string } =>
-		dispatch(editEditorDate({ id, mod }));
+	const onDateChange = ({
+		start,
+		end
+	}: {
+		start: number;
+		end: number;
+	}): { payload: { id: string | undefined; start: number; end: number }; type: string } =>
+		dispatch(editEditorDate({ id, start, end }));
 
 	const onTextChange = ([plainText, richText]: [plainText: string, richText: string]): {
 		payload: { id: string | undefined; richText: string; plainText: string };
@@ -193,21 +206,32 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 	): { payload: undefined; type: string } | { payload: { id: string; recur: any }; type: string } =>
 		dispatch(editEditorRecurrence({ id, recur }));
 
-	const closeCurrentEditor = (): { payload: { id: string }; type: string } =>
-		dispatch(closeEditor({ id }));
-
-	const onSave = (draft = true): any =>
-		startsWith(
-			id,
-			'new' // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		) /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */ /* @ts-ignore */
-			? dispatch(createAppointment({ id, draft })) // @ts-ignore
-			: dispatch(modifyAppointment({ id, draft }));
-
-	const onSend = (): any => {
-		dispatch(editAppointmentData({ id, draft: false, inviteNeverSent: false }));
-		return onSave(false);
+	const closeCurrentEditor = (): { payload: { id: string }; type: string } => {
+		replaceHistory('');
+		return dispatch(closeEditor({ id }));
 	};
+
+	const onSave = ({
+		draft = true,
+		isNew = true
+	}): any => // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		isNew // @ts-ignore
+			? dispatch(createAppointment({ id, draft })) // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					.unwrap() // @ts-ignore
+					.then(({ response, editor }) => {
+						if (response) {
+							dispatch(updateEditor({ id, editor }));
+						} // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					}) // @ts-ignore
+			: dispatch(modifyAppointment({ id, draft })) // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					.unwrap() // @ts-ignore
+					.then(({ response, editor }) => {
+						if (response) {
+							dispatch(updateEditor({ id, editor }));
+						}
+					});
+
+	const onSend = (isNew: boolean): Promise<any> => onSave({ draft: false, isNew });
 
 	return {
 		onToggleRichText,
@@ -228,7 +252,8 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 		onReminderChange,
 		onRecurrenceChange,
 		closeCurrentEditor,
-		onSave
+		onSave,
+		onSend
 	};
 };
 
@@ -239,7 +264,7 @@ export const generateEditor = (
 ): { editor: Editor; callbacks: EditorCallbacks } => {
 	const editorId = getNewEditId(id);
 	const emptyEditor = createEmptyEditor(editorId);
-	const editor = { ...emptyEditor, ...context };
+	const editor = { ...emptyEditor, ...context, isNew: startsWith(editorId, 'new') };
 	const callbacks = createCallbacks(editorId);
 	const { dispatch } = store.store;
 	const storeEditorData = { ...editor, panel };

@@ -33,7 +33,7 @@ const BodyContainer = styled(Container)`
 	word-wrap: break-word !important;
 `;
 
-const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> => {
+const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> | null => {
 	const { close } = useSearchActionsFn(event);
 	const invite = useInvite(event?.resource?.inviteId);
 	const dispatch = useDispatch();
@@ -47,6 +47,8 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 			dispatch,
 			createModal,
 			createSnackbar,
+			searchPanel: true,
+			panel: false,
 			tags,
 			createAndApplyTag,
 			isInstance: true,
@@ -55,8 +57,8 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 		[createModal, createSnackbar, dispatch, tags]
 	);
 
-	const actions = useQuickActions(invite, context);
-	return (
+	const actions = useQuickActions(invite, event, context);
+	return invite ? (
 		<Container
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
@@ -73,10 +75,10 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 						padding={{ all: 'large' }}
 					>
 						<DetailsPart
+							event={event}
 							subject={event?.title}
 							isPrivate={event?.resource.isPrivate}
 							inviteNeverSent={event?.resource?.inviteNeverSent}
-							event={event}
 							invite={invite}
 						/>
 						<StyledDivider />
@@ -92,7 +94,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 						)}
 						{invite && (
 							<ParticipantsPart
-								event={event}
+								invite={invite}
 								organizer={event?.resource?.organizer}
 								participants={invite?.participants}
 							/>
@@ -109,7 +111,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 						)}
 
 						<StyledDivider />
-						{invite && <ReminderPart alarmString={invite?.alarmString} event={event} />}
+						{invite && <ReminderPart alarmString={invite?.alarmString} invite={invite} />}
 						{invite?.attachmentFiles?.length > 0 && (
 							<>
 								<StyledDivider />
@@ -126,7 +128,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 				</Container>
 			)}
 		</Container>
-	);
+	) : null;
 };
 
 export default Displayer;

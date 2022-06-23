@@ -14,7 +14,6 @@ import CalendarStyle from './calendar-style';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { selectApptStatus } from '../../store/selectors/appointments';
 import EventPanelView from '../event-panel-view/event-panel-view';
-import EventEditPanel from '../event-panel-edit/event-edit-panel';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { searchAppointments } from '../../store/actions/search-appointments';
 
@@ -41,7 +40,7 @@ export default function CalendarView(): JSX.Element {
 	return (
 		<Container
 			background="gray6"
-			padding={{ all: 'medium' }}
+			padding={{ all: 'large' }}
 			style={{ overflowY: 'auto', position: 'relative' }}
 		>
 			<CalendarStyle primaryCalendar={primaryCalendar} />

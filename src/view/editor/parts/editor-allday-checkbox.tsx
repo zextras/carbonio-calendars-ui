@@ -27,12 +27,12 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): JSX.
 	const [t] = useTranslation();
 	const { onAllDayChange } = callbacks;
 
-	const startDate = useMemo(() => new Date(start), [start]);
-	const endDate = useMemo(() => new Date(end), [end]);
+	const startDate = useMemo(() => (start ? new Date(start) : undefined), [start]);
+	const endDate = useMemo(() => (end ? new Date(end) : undefined), [end]);
 
 	const onClick = useCallback(
 		(e) => {
-			if (e) {
+			if (e && startDate && endDate) {
 				const startValue = startDate.setHours(0, 0, 0, 0);
 				const endValue = endDate.setHours(0, 0, 0, 0);
 				onAllDayChange(!allDay, startValue, endValue);

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { reduce, find, uniqBy, forEach } from 'lodash';
+import { reduce, find, uniqBy, forEach, isEqual, uniqWith } from 'lodash';
 import { Appointment } from '../../types/store/appointments';
 import { AppointmentsSlice } from '../../types/store/store';
 
@@ -26,12 +26,15 @@ export const addAppointmentsToStore = (
 		appts,
 		(acc, appt) => {
 			const key = find(acc, (item) => item.id === appt.id);
-			return key
-				? {
-						...acc,
-						[appt.id]: { ...appt, inst: uniqBy([...appt.inst, ...key.inst], 'ridZ') }
-				  }
-				: { ...acc, [appt.id]: appt };
+			const inst = key ? uniqWith([...appt.inst, ...key.inst], isEqual) : undefined;
+			const res =
+				key && inst
+					? {
+							...acc,
+							[appt.id]: { ...appt, inst }
+					  }
+					: { ...acc, [appt.id]: appt };
+			return res;
 		},
 		state.appointments
 	);

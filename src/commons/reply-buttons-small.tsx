@@ -20,7 +20,7 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { useEventActions } from '../actions/action-items';
+import { useEventActions } from '../hooks/use-event-actions';
 import { useInvite } from '../hooks/use-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { EventType } from '../types/event';
@@ -61,7 +61,6 @@ export const ReplyButtonsPartSmall = ({
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const invite = useInvite(event.resource.inviteId);
-
 	const replyAction = useCallback(
 		(action) => {
 			dispatch(
@@ -199,15 +198,17 @@ export const ReplyButtonsPartSmall = ({
 			dispatch,
 			createModal,
 			createSnackbar,
+			isSeries: false,
+			isInstance: true,
+			isException: event.resource.isException,
 			tags,
 			createAndApplyTag,
-			isInstance: true,
 			ridZ: event.resource.ridZ
 		}),
-		[createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
+		[createModal, createSnackbar, dispatch, event.resource.isException, event.resource.ridZ, tags]
 	);
 
-	const actions = useEventActions(invite, context, t, false);
+	const actions = useEventActions(invite, event, context, t, false);
 
 	const otherActions = useMemo(
 		() =>

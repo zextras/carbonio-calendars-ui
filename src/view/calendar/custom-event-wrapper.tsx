@@ -86,6 +86,12 @@ export const CustomEventWrapperStyler = styled.div<{ event: EventType }>`
 		border-bottom-left-radius: 0;
 		border-bottom-right-radius: 0;
 	}
+	.rbc-addons-dnd-resizable {
+		height: 100%;
+	}
+	.rbc-event-content {
+		height: 100%;
+	}
 `;
 
 type EventWrapperProps = {

@@ -69,22 +69,21 @@ const CalendarInfo = ({ calendar }: { calendar: Calendar }): JSX.Element => (
 );
 
 type DetailsPartProps = {
+	event: EventType;
 	subject: string;
 	inviteNeverSent: boolean;
 	isPrivate: boolean;
-	event: EventType;
 	invite: Invite;
 };
 
 export const DetailsPart = ({
+	event,
 	subject,
 	inviteNeverSent,
 	isPrivate,
-	event,
 	invite
 }: DetailsPartProps): JSX.Element => {
-	const { calendarId } = useParams<{ calendarId: string }>();
-	const calendar = useSelector((s: Store) => selectCalendar(s, calendarId));
+	const calendar = useSelector((s: Store) => selectCalendar(s, event.resource.calendar.id));
 
 	const timeData = useMemo(
 		() =>
@@ -103,13 +102,13 @@ export const DetailsPart = ({
 		() =>
 			omitBy(
 				{
-					class: event.resource.class,
-					location: event.resource.location,
-					locationUrl: event.resource.locationUrl
+					class: invite.class,
+					location: invite.location,
+					locationUrl: invite.locationUrl
 				},
 				isNil
 			),
-		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
+		[invite.class, invite.location, invite.locationUrl]
 	);
 	return (
 		<Container
@@ -139,7 +138,9 @@ export const DetailsPart = ({
 						<LocationRow locationData={locationData} />
 					)}
 					{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} />}
-					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
+					{typeof invite?.tags?.length === 'number' && invite?.tags?.length > 0 && (
+						<TagsRow invite={invite} hideIcon />
+					)}
 				</Row>
 			</Row>
 			<Padding top={'medium'} />

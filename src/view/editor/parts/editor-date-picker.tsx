@@ -12,9 +12,9 @@ import {
 	selectEditorStart
 } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
-import StartDatePicker from '../../event-panel-edit/components/start-date-picker';
-import EndDatePicker from '../../event-panel-edit/components/end-date-picker';
-import Styler from '../../event-panel-edit/components/date-picker-style';
+import StartDatePicker from '../../../commons/start-date-picker';
+import EndDatePicker from '../../../commons/end-date-picker';
+import Styler from '../../../commons/date-picker-style';
 
 type DatePickerProps = {
 	editorId: string;

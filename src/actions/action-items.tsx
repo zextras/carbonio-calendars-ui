@@ -7,6 +7,8 @@ import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { TFunction } from 'i18next';
 import { ActionsContext } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
+import { EventType } from '../types/event';
+import { Appointment } from '../types/store/appointments';
 import { Invite } from '../types/store/invite';
 import { applyTag } from '../view/tags/tag-actions';
 import {
@@ -21,7 +23,7 @@ import {
 } from './action-functions';
 
 export const openInDisplayerItem = (
-	invite: Invite,
+	event: EventType,
 	context: ActionsContext,
 	t: TFunction
 ): any => ({
@@ -30,11 +32,11 @@ export const openInDisplayerItem = (
 	disabled: false,
 	label: t('event.action.expand', 'Open in Displayer'),
 	keepOpen: true,
-	click: (ev: Event): void => openAppointment(ev, invite, context)
+	click: (ev: Event): void => openAppointment(ev, event, context)
 });
 
 export const acceptInvitationItem = (
-	invite: Invite,
+	event: EventType,
 	context: ActionsContext,
 	t: TFunction
 ): any => ({
@@ -42,11 +44,11 @@ export const acceptInvitationItem = (
 	icon: 'CheckmarkOutline',
 	label: t('event.action.accept', 'Accept'),
 	disabled: false,
-	click: (ev: Event): void => acceptInvitation(ev, invite, context)
+	click: (ev: Event): void => acceptInvitation(ev, event, context)
 });
 
 export const declineInvitationItem = (
-	invite: Invite,
+	event: EventType,
 	context: ActionsContext,
 	t: TFunction
 ): any => ({
@@ -54,11 +56,11 @@ export const declineInvitationItem = (
 	icon: 'CloseOutline',
 	label: t('event.action.decline', 'Decline'),
 	disabled: false,
-	click: (ev: Event): void => declineInvitation(ev, invite, context)
+	click: (ev: Event): void => declineInvitation(ev, event, context)
 });
 
 export const acceptAsTentativeItem = (
-	invite: Invite,
+	event: EventType,
 	context: ActionsContext,
 	t: TFunction
 ): any => ({
@@ -66,10 +68,11 @@ export const acceptAsTentativeItem = (
 	icon: 'QuestionMark',
 	label: t('label.tentative', 'Tentative'),
 	disabled: false,
-	click: (ev: Event): void => acceptAsTentative(ev, invite, context)
+	click: (ev: Event): void => acceptAsTentative(ev, event, context)
 });
 
 export const moveAppointmentItem = (
+	event: EventType,
 	invite: Invite,
 	context: ActionsContext,
 	t: TFunction
@@ -77,13 +80,16 @@ export const moveAppointmentItem = (
 	id: EventActionsEnum.MOVE,
 	icon: 'MoveOutline',
 	label:
-		invite.ciFolder === FOLDERS.TRASH ? t('label.restore', 'Restore') : t('label.move', 'Move'),
+		event.resource.calendar.id === FOLDERS.TRASH
+			? t('label.restore', 'Restore')
+			: t('label.move', 'Move'),
 	disabled: false,
 	click: (ev: Event): void => moveAppointment(ev, invite, context)
 });
 
 export const moveApptToTrashItem = (
 	invite: Invite,
+	event: EventType,
 	context: ActionsContext,
 	t: TFunction
 ): any => ({
@@ -92,11 +98,12 @@ export const moveApptToTrashItem = (
 	label: t('label.delete', 'Delete'),
 	disabled: false,
 	keepOpen: true,
-	click: (ev: Event): void => moveToTrash(ev, invite, context)
+	click: (ev: Event): void => moveToTrash(ev, event, invite, context)
 });
 
 export const deletePermanentlyItem = (
 	invite: Invite,
+	event: EventType,
 	context: ActionsContext,
 	t: TFunction
 ): any => ({
@@ -104,11 +111,12 @@ export const deletePermanentlyItem = (
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
 	keepOpen: true,
-	click: (ev: Event): void => deletePermanently(ev, invite, context)
+	click: (ev: Event): void => deletePermanently(ev, event, context)
 });
 
 export const editAppointmentItem = (
 	invite: Invite,
+	event: EventType,
 	context: ActionsContext,
 	t: TFunction
 ): any => ({
@@ -116,101 +124,5 @@ export const editAppointmentItem = (
 	icon: 'Edit2Outline',
 	label: t('label.edit', 'Edit'),
 	disabled: !invite.isOrganizer || !context?.haveWriteAccess,
-	click: (ev: Event): void => editAppointment(ev, invite, context)
+	click: (ev: Event): void => editAppointment(ev, event, invite, context)
 });
-
-export const ActionsRetriever = (
-	invite: Invite,
-	context: ActionsContext,
-	t: TFunction,
-	includeReplyActions: boolean
-): any =>
-	// eslint-disable-next-line no-nested-ternary
-	!invite.isOrganizer
-		? invite.ciFolder === FOLDERS.TRASH
-			? [
-					deletePermanentlyItem(invite, context, t),
-					moveAppointmentItem(invite, context, t),
-					openInDisplayerItem(invite, context, t),
-					applyTag({ t, context, invite })
-			  ]
-			: [
-					openInDisplayerItem(invite, context, t),
-					...(includeReplyActions
-						? [
-								acceptInvitationItem(invite, context, t),
-								declineInvitationItem(invite, context, t),
-								acceptAsTentativeItem(invite, context, t)
-						  ]
-						: []),
-					moveAppointmentItem(invite, context, t),
-					moveApptToTrashItem(invite, context, t),
-					editAppointmentItem(invite, context, t),
-					applyTag({ t, context, invite })
-			  ]
-		: invite.ciFolder === FOLDERS.TRASH
-		? [
-				deletePermanentlyItem(invite, context, t),
-				moveAppointmentItem(invite, context, t),
-				openInDisplayerItem(invite, context, t),
-				applyTag({ t, context, invite })
-		  ]
-		: [
-				openInDisplayerItem(invite, context, t),
-				moveAppointmentItem(invite, context, t),
-				moveApptToTrashItem(invite, context, t),
-				editAppointmentItem(invite, context, t),
-				applyTag({ t, context, invite })
-		  ];
-
-export const RecurrentActionRetriever = (
-	invite: Invite,
-	context: ActionsContext,
-	t: TFunction
-): any =>
-	invite.ciFolder === FOLDERS.TRASH
-		? [
-				deletePermanentlyItem(invite, context, t),
-				moveAppointmentItem(invite, context, t),
-				openInDisplayerItem(invite, context, t),
-				applyTag({ t, context, invite })
-		  ]
-		: [
-				{
-					id: 'instance',
-					icon: 'CalendarOutline',
-					label: t('label.instance', 'Instance'),
-					click: (ev: Event): void => {
-						if (ev) ev.preventDefault();
-					},
-					items: [
-						moveApptToTrashItem(invite, { ...context, isInstance: true }, t),
-						openInDisplayerItem(invite, context, t)
-					]
-				},
-				{
-					id: 'series',
-					icon: 'CalendarOutline',
-					label: t('label.series', 'Series'),
-					click: (ev: Event): void => {
-						if (ev) ev.preventDefault();
-					},
-					items: [
-						moveApptToTrashItem(invite, { ...context, isInstance: false }, t),
-						moveAppointmentItem(invite, context, t),
-						applyTag({ t, context, invite })
-					]
-				}
-		  ];
-
-export const useEventActions = (
-	invite: Invite,
-	context: ActionsContext,
-	t: TFunction,
-	includeReplyActions = true
-): any => {
-	if (!invite) return [];
-	return invite?.recurrenceRule
-		? RecurrentActionRetriever(invite, context, t)
-		: ActionsRetriever(invite, { ...context, isInstance: true }, t, includeReplyActions);
-};

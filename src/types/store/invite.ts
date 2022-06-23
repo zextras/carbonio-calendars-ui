@@ -127,7 +127,6 @@ export type Invite = {
 	parts: Parts;
 	alarmValue: string;
 	alarmString: string;
-	seriesId: string;
 	class: InviteClass;
 	compNum: number;
 	date: number;
@@ -167,4 +166,6 @@ export type Invite = {
 	allDay?: boolean;
 	draft?: number | boolean;
 	xprop?: XPropProps;
+	neverSent: boolean;
+	locationUrl: string | undefined;
 };

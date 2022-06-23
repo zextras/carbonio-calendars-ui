@@ -15,9 +15,6 @@ import { EventType } from '../../types/event';
 import { Store } from '../../types/store/store';
 
 export const TitleRow = ({ event }: { event: EventType }): JSX.Element => {
-	const { calendarId } = useParams<{ calendarId: string }>();
-	const calendar = useSelector((s: Store) => selectCalendar(s, calendarId));
-
 	const tags = useTags();
 	const tagItems = useMemo(
 		() =>
@@ -46,7 +43,7 @@ export const TitleRow = ({ event }: { event: EventType }): JSX.Element => {
 				{event.resource.class === 'PRI' && (
 					<Row padding={{ all: 'small' }}>
 						<Icon
-							customColor={calendar.color.color}
+							customColor={event.resource.calendar.color.color}
 							icon="LockOutline"
 							style={{ minWidth: '16px' }}
 						/>
@@ -63,7 +60,7 @@ export const TitleRow = ({ event }: { event: EventType }): JSX.Element => {
 							{event?.resource?.tags?.length > 0 && <Icon color={tagIconColor} icon={tagIcon} />}
 						</Row>
 						<Row>{event?.resource?.flags?.includes('a') && <Icon icon="AttachOutline" />}</Row>
-						{!calendar?.owner && !event?.resource?.iAmOrganizer && (
+						{!event.resource.calendar?.owner && !event?.resource?.iAmOrganizer && (
 							<Row>
 								{event.resource?.participationStatus === 'NE' && (
 									<Icon icon="CalendarWarning" color="primary" />

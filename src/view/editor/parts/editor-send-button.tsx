@@ -5,20 +5,30 @@
  */
 import { Button } from '@zextras/carbonio-design-system';
 import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { selectEditorIsNew, selectEditorTitle } from '../../../store/selectors/editor';
+import {
+	selectEditorAttendees,
+	selectEditorIsNew,
+	selectEditorOptionalAttendees
+} from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
-export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): JSX.Element => {
+export const EditorSendButton = ({ editorId, callbacks }: EditorProps): JSX.Element => {
 	const [t] = useTranslation();
-	const title = useSelector(selectEditorTitle(editorId));
+	const attendees = useSelector(selectEditorAttendees(editorId));
+	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
-	const { onSave } = callbacks;
+
+	const { onSend } = callbacks;
+	const disabled = useMemo(
+		() => !attendees?.length && !optionalAttendees?.length,
+		[attendees?.length, optionalAttendees?.length]
+	);
 
 	const onClick = useCallback(() => {
-		onSave({ draft: true, isNew }).then((res) => {
+		onSend(isNew).then((res: { type: string | string[] }) => {
 			if (res?.type) {
 				const success = res.type.includes('fulfilled');
 				getBridgedFunctions().createSnackbar({
@@ -33,15 +43,14 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): JSX.Elem
 				});
 			}
 		});
-	}, [isNew, onSave, t]);
+	}, [isNew, onSend, t]);
 
 	return (
 		<Button
-			label={t('label.save', 'Save')}
-			icon="SaveOutline"
-			disabled={!title?.length}
+			label={t('action.send', 'Send')}
+			icon="PaperPlane"
+			disabled={disabled}
 			onClick={onClick}
-			type="outlined"
 		/>
 	);
 };

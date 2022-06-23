@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Editor } from '../editor';
 import { Appointment } from './appointments';
 import { Calendar } from './calendars';
+import { Invite } from './invite';
 
-export type CalendarMsg = any;
 export type CalendarSlice = {
 	status: string;
 	calendars: Record<string, Calendar>;
@@ -19,13 +20,14 @@ export type AppointmentsSlice = {
 };
 export type InvitesSlice = {
 	status: string;
-	invites: Record<string, CalendarMsg>;
+	invites: Record<string, Invite>;
 };
 export type EditorSlice = {
 	status: string;
-	editors: any;
+	editors: Record<string, Editor>;
 	editorPanel: string | undefined;
 	activeId: string | undefined;
+	searchActiveId: string | undefined;
 };
 export type Store = {
 	calendars: CalendarSlice;

@@ -24,7 +24,8 @@ import {
 	editTitleReducer,
 	closeEditorReducer,
 	editIsRichTextReducer,
-	editEditorAttachmentsReducer
+	editEditorAttachmentsReducer,
+	updateEditorReducer
 } from '../reducers/edit-organizer';
 import { initializeAppointmentReducer } from '../reducers/initialize-appointment';
 import {
@@ -44,7 +45,8 @@ export const editorSlice = createSlice({
 		status: 'idle',
 		editors: {},
 		editorPanel: undefined,
-		activeId: undefined
+		activeId: undefined,
+		searchActiveId: undefined
 	},
 	reducers: {
 		addAppointmentEditor: addAppointmentEditorReducer,
@@ -73,7 +75,8 @@ export const editorSlice = createSlice({
 		editEditorTimezone: editEditorTimezoneReducer,
 		editEditorReminder: editEditorReminderReducer,
 		editEditorRecurrence: editEditorRecurrenceReducer,
-		closeEditor: closeEditorReducer
+		closeEditor: closeEditorReducer,
+		updateEditor: updateEditorReducer
 	},
 	extraReducers: (builder) => {
 		builder.addCase(createAppointment.fulfilled, createAppointmentFulfilled);
@@ -107,7 +110,8 @@ export const {
 	editEditorTimezone,
 	editEditorReminder,
 	editEditorRecurrence,
-	closeEditor
+	closeEditor,
+	updateEditor
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

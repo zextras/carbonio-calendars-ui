@@ -7,11 +7,8 @@ import React, { FC, ReactElement, useCallback, useMemo } from 'react';
 import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
 import { includes, map, reduce } from 'lodash';
 import styled from 'styled-components';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
-import { EventType } from '../../types/event';
 import { CALENDAR_ROUTE } from '../../constants';
 import { Invite } from '../../types/store/invite';
 
@@ -21,8 +18,8 @@ const TagChip = styled(Chip)`
 	margin-bottom: 4px;
 `;
 
-const TagsRow: FC<{ event: EventType; hideIcon?: boolean; invite?: Invite }> = ({
-	event,
+const TagsRow: FC<{ hideIcon?: boolean; invite: Invite }> = ({
+	invite,
 	hideIcon = false
 }): ReactElement => {
 	const [t] = useTranslation();
@@ -32,7 +29,7 @@ const TagsRow: FC<{ event: EventType; hideIcon?: boolean; invite?: Invite }> = (
 			reduce(
 				tagsFromStore,
 				(acc: any, v: any) => {
-					if (includes(event?.resource?.tags, v.id))
+					if (includes(invite?.tags, v.id))
 						acc.push({
 							...v,
 							color: ZIMBRA_STANDARD_COLORS[v.color ?? 0].hex,
@@ -42,7 +39,7 @@ const TagsRow: FC<{ event: EventType; hideIcon?: boolean; invite?: Invite }> = (
 				},
 				[]
 			),
-		[event?.resource?.tags, tagsFromStore]
+		[invite?.tags, tagsFromStore]
 	);
 	const tagLabel = useMemo(() => t('label.tags', 'Tags'), [t]);
 
@@ -81,7 +78,7 @@ const TagsRow: FC<{ event: EventType; hideIcon?: boolean; invite?: Invite }> = (
 					</Row>
 				)}
 
-				{event?.resource?.tags?.length > 0 && (
+				{typeof invite?.tags?.length === 'number' && invite?.tags?.length > 0 && (
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						{!hideIcon ? (
 							<Text color="secondary" size="small" overflow="break-word">

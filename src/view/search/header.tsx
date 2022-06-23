@@ -8,16 +8,14 @@ import {
 	Divider,
 	Icon,
 	IconButton,
-	Padding,
 	Row,
 	Text,
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { map, some } from 'lodash';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
 
-const ActionButtons = ({ actions, closeAction }) => {
+const ActionButtons = ({ actions }: { actions: any[] }): JSX.Element => {
 	const actionContainerRef = useRef();
 	const [hiddenActionsCount, recalculateHiddenActions] = useHiddenCount(actionContainerRef, true);
 
@@ -38,7 +36,7 @@ const ActionButtons = ({ actions, closeAction }) => {
 						<IconButton key={action.id} icon={action.icon} onClick={action.click} />
 					))}
 			</Row>
-			{/* IconButton disabled until the actions are active 
+			{/* IconButton disabled until the actions are active
 			<Padding right="medium">
 				<IconButton icon="MoreVertical" />
 			</Padding>
@@ -47,7 +45,7 @@ const ActionButtons = ({ actions, closeAction }) => {
 	);
 };
 
-const ExpandButton = ({ actions }) => (
+const ExpandButton = ({ actions }: { actions: any[] }): JSX.Element => (
 	<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 		{actions &&
 			map(actions, (action) => (
@@ -56,14 +54,16 @@ const ExpandButton = ({ actions }) => (
 	</Row>
 );
 
-export const Header = ({ title, actions }) => {
+type HeaderProps = {
+	title: string;
+	actions: any[];
+	closeAction: () => void;
+};
+
+export const Header = ({ title, actions, closeAction }: HeaderProps): JSX.Element => {
 	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });
-
-	const close = useCallback(() => {
-		replaceHistory(``);
-	}, []);
 
 	return (
 		<>
@@ -80,7 +80,7 @@ export const Header = ({ title, actions }) => {
 				</Row>
 				<Row takeAvailableSpace mainAlignment="flex-start">
 					<Text size="medium" overflow="ellipsis">
-						{title || t('label.no_subject', 'No subject')}
+						{title ?? t('label.no_subject', 'No subject')}
 					</Text>
 				</Row>
 
@@ -94,7 +94,7 @@ export const Header = ({ title, actions }) => {
 					<IconButton size="medium" icon="ExpandOutline" onClick={closeAction} />
 				</Row> */}
 				<Row padding={{ right: 'extrasmall' }}>
-					<IconButton size="medium" icon="CloseOutline" onClick={close} />
+					<IconButton size="medium" icon="CloseOutline" onClick={closeAction} />
 				</Row>
 			</Row>
 			<Divider />
@@ -109,7 +109,7 @@ export const Header = ({ title, actions }) => {
 					padding={{ vertical: 'small', right: 'large' }}
 				>
 					<Row>
-						<ActionButtons actions={actions} closeAction={close} />
+						<ActionButtons actions={actions} />
 					</Row>
 				</Row>
 			)}

@@ -7,7 +7,9 @@ import { Tags } from '@zextras/carbonio-shell-ui';
 
 export type ActionsContext = {
 	ridZ?: string | undefined;
-	isInstance: boolean;
+	isInstance?: boolean;
+	isSeries?: boolean;
+	isException?: boolean;
 	haveWriteAccess?: boolean;
 	isFromSearch?: boolean;
 	createAndApplyTag: (arg: any) => any;
@@ -17,4 +19,6 @@ export type ActionsContext = {
 	replaceHistory: (arg: any) => void;
 	tags: Tags;
 	onClose?: () => void;
+	panel?: boolean;
+	searchPanel?: boolean;
 };

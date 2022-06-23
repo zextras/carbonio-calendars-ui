@@ -7,7 +7,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
 import { moveAppointmentRequest } from '../actions/move-appointment';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
-// eslint-disable-next-line import/no-cycle
 import { modifyAppointmentRequest } from '../actions/modify-appointment';
 import { searchAppointments } from '../actions/search-appointments';
 import { deleteAppointmentPermanent } from '../actions/delete-appointment-permanent';

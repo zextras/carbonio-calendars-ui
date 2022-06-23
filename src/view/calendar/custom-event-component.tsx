@@ -51,11 +51,9 @@ export const CustomEventComponent = ({
 			reduce(
 				tags,
 				(acc: Array<Tag>, v) => {
-					if (includes(event?.resource?.tags, v.id))
-						acc.push({
-							...v,
-							color: parseInt(ZIMBRA_STANDARD_COLORS[v.color ?? 0].hex, 10)
-						});
+					if (includes(event?.resource?.tags, v.id)) {
+						return [...acc, v];
+					}
 					return acc;
 				},
 				[]
@@ -64,7 +62,10 @@ export const CustomEventComponent = ({
 	);
 	const tagIcon = useMemo(() => (tagItems?.length > 1 ? 'TagsMoreOutline' : 'Tag'), [tagItems]);
 	const tagIconColor = useMemo(
-		() => (tagItems?.length === 1 ? tagItems?.[0]?.color : undefined),
+		() =>
+			tagItems?.length === 1 && tagItems?.[0]?.color
+				? ZIMBRA_STANDARD_COLORS[tagItems?.[0]?.color]?.hex
+				: undefined,
 		[tagItems]
 	);
 	const tagName = useMemo(() => (tagItems?.length === 1 ? tagItems?.[0]?.name : ''), [tagItems]);

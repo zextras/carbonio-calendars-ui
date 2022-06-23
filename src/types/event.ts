@@ -19,18 +19,21 @@ export type AlarmType = {
 	nextCalAlarm: DateType;
 };
 
+export type EventResourceCalendar = {
+	id: string;
+	name: string;
+	color: ZimbraColorType;
+	owner?: string | undefined;
+	isShared?: boolean;
+};
+
 export type EventResource = {
 	attach?: { mp?: []; aid?: [] };
 	attachmentFiles?: [];
 	id: string;
 	inviteId: string;
 	ridZ: string;
-	calendar: {
-		id: string;
-		name: string;
-		color: ZimbraColorType;
-		owner: string | undefined;
-	};
+	calendar: EventResourceCalendar;
 	flags: string;
 	iAmOrganizer: boolean;
 	iAmVisitor: boolean;

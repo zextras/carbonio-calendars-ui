@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { cloneDeep, omit, filter } from 'lodash';
+import { cloneDeep, filter } from 'lodash';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const moveAppointmentToTrashPending = (state: any, { meta, payload }: any): void => {
+export const moveAppointmentToTrashPending = (state: any, { meta }: any): void => {
 	const { ridZ, deleteSingleInstance, id } = meta.arg;
 
 	state.status = 'pending';

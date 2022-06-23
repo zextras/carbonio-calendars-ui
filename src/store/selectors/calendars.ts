@@ -20,16 +20,16 @@ export function selectCalendarsArray(state: Store): Array<Calendar> {
 }
 
 export function selectAllCalendars(state: Store): Array<Calendar> {
-	return state.calendars ? values(state.calendars.calendars) : [];
+	return values?.(state?.calendars?.calendars) ?? [];
 }
 
 export function selectStatus(state: Store): string {
-	return state.calendars.status;
+	return state?.invites?.status;
 }
 
 export function selectAllCheckedCalendarsQuery({ calendars }: Store): string {
 	return reduce(
-		filter(calendars.calendars, 'checked'),
+		filter(calendars?.calendars, 'checked'),
 		(acc, c) => {
 			acc.push(`inid:"${c.id}"`);
 			return acc;

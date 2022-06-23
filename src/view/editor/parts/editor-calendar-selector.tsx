@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import React from 'react';
-import { CALENDAR_PREFS_DEFAULTS } from '../../../constants/defaults';
+import { useSelector } from 'react-redux';
+import { Row } from '@zextras/carbonio-design-system';
+import { selectEditorCalendar } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 import { CalendarSelector } from './calendar-selector';
 
@@ -21,15 +22,15 @@ export const EditorCalendarSelector = ({
 	disabled
 }: EditorCalendarSelectorProps): JSX.Element | null => {
 	const { onCalendarChange } = callbacks;
-	const { zimbraPrefDefaultCalendarId = CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID } =
-		useUserSettings().prefs;
+	const calendar = useSelector(selectEditorCalendar(editorId));
 
-	// todo: make calendarSelector an abstract component so it can be reused in the whole app
 	return (
-		<CalendarSelector
-			calendarId={`${zimbraPrefDefaultCalendarId}`}
-			onCalendarChange={onCalendarChange}
-			disabled={disabled}
-		/>
+		<Row height="fit" width="fill" padding={{ top: 'large' }}>
+			<CalendarSelector
+				calendarId={calendar?.id}
+				onCalendarChange={onCalendarChange}
+				disabled={disabled}
+			/>
+		</Row>
 	);
 };

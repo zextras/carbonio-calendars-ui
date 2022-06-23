@@ -198,7 +198,7 @@ const generateInvite = (editorData: Editor): any => {
 						: {
 								d: moment(editorData.end).utc().format('YYYYMMDD[T]HHmmss[Z]')
 						  },
-				exceptId: editorData?.isException ? { d: editorData.ridZ } : undefined,
+				exceptId: editorData.exceptId,
 				class: editorData.class,
 				draft: editorData.draft
 			}
@@ -245,7 +245,14 @@ export const createAppointment = createAsyncThunk(
 		if (editor) {
 			const body = generateSoapMessageFromEditor({ ...editor, draft });
 			const res: { calItemId: string } = await soapFetch('CreateAppointment', body);
-			return { response: res, editor };
+			return {
+				response: res,
+				editor: {
+					...editor,
+					isNew: false,
+					isSeries: !!editor.recur
+				}
+			};
 		}
 		return undefined;
 	}

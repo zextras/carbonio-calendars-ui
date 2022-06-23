@@ -18,21 +18,21 @@ import {
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { replaceHistory, Spinner, useTags } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { map, some } from 'lodash';
+import { useInvite } from '../../hooks/use-invite';
+import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 import { Store } from '../../types/store/store';
+import { AppointmentCardContainer } from '../editor/editor-panel-wrapper';
 import { createAndApplyTag } from '../tags/tag-actions';
 import { ParticipantsPart } from './participants-part';
 import StyledDivider from '../../commons/styled-divider';
 import { extractBody } from '../../commons/body-message-renderer';
 import { useQuickActions } from '../../hooks/use-quick-actions';
-import { selectInstanceInvite } from '../../store/selectors/invites';
 import { selectCalendar } from '../../store/selectors/calendars';
 import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
-import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
-import { useQueryParam } from '../../commons/useQueryParam';
 import { DetailsPart } from './details-part';
 import { ReplyButtonsPart } from './reply-buttons-part';
 import { MessagePart } from './message-part';
@@ -62,20 +62,6 @@ const BodyContainer = styled(Container)`
 	// 		background: rgba(255,0,0,0.8);
 	// 		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 	// }
-`;
-
-const AppointmentCardContainer = styled(Container)`
-	z-index: 10;
-	position: absolute;
-	top: 68px;
-	right: 12px;
-	bottom: 12px;
-	left: ${'max(calc(100% - 680px), 12px)'};
-	transition: left 0.2s ease-in-out;
-	height: auto;
-	width: auto;
-	max-height: 100%;
-	overflow: hidden;
 `;
 
 const ActionButtons = ({ actions }: { actions: Array<any> }): JSX.Element => {
@@ -190,7 +176,7 @@ type ParamsType = {
 	apptId: string;
 	ridZ?: string;
 };
-export default function EventPanelView(): JSX.Element {
+export default function EventPanelView(): JSX.Element | null {
 	const { calendarId, apptId, ridZ } = useParams<ParamsType>();
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
@@ -198,15 +184,14 @@ export default function EventPanelView(): JSX.Element {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const calendar = useSelector((s: Store) => selectCalendar(s, calendarId));
 	const appointment = useSelector((s: Store) => selectAppointment(s, apptId));
+	const invite = useInvite(appointment?.inviteId);
 	const inst = useSelector((s: Store) => selectAppointmentInstance(s, apptId, ridZ));
+
 	const event = useMemo(() => {
 		if (calendar && appointment && inst)
 			return normalizeCalendarEvent(calendar, appointment, inst, appointment?.l?.includes(':'));
 		return undefined;
 	}, [appointment, calendar, inst]);
-	const invite = useSelector((state: Store) =>
-		selectInstanceInvite(state, event?.resource?.inviteId, event?.resource?.ridZ)
-	);
 
 	const context = useMemo(
 		() => ({
@@ -221,11 +206,11 @@ export default function EventPanelView(): JSX.Element {
 		[createModal, createSnackbar, dispatch, tags]
 	);
 
-	const actions = useQuickActions(invite, context);
+	const actions = useQuickActions(invite, event, context);
 
-	return event ? (
+	return invite && event ? (
 		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">
-			<DisplayerHeader title={event.title} actions={actions} />
+			<DisplayerHeader title={invite.name} actions={actions} />
 			<Container padding={{ all: 'none' }} mainAlignment="flex-start" height="calc(100% - 64px)">
 				<BodyContainer
 					orientation="vertical"
@@ -236,17 +221,17 @@ export default function EventPanelView(): JSX.Element {
 					background="gray5"
 				>
 					<DetailsPart
-						subject={event.title}
-						isPrivate={event?.resource?.class === 'PRI' ?? false}
-						inviteNeverSent={event.resource.inviteNeverSent}
 						event={event}
+						subject={invite.name}
+						isPrivate={invite.class === 'PRI' ?? false}
+						inviteNeverSent={invite.neverSent}
 						invite={invite}
 					/>
 					<StyledDivider />
-					{!event.resource.iAmOrganizer && !event?.resource?.calendar?.owner && invite && (
+					{!invite.isOrganizer && !calendar.owner && invite && (
 						<>
 							<ReplyButtonsPart
-								inviteId={event.resource.inviteId}
+								inviteId={invite.id}
 								participationStatus={event.resource.participationStatus}
 								compNum={invite.compNum}
 							/>
@@ -255,40 +240,33 @@ export default function EventPanelView(): JSX.Element {
 					)}
 					{invite && (
 						<ParticipantsPart
-							event={event}
-							organizer={event.resource.organizer}
+							invite={invite}
+							organizer={invite.organizer}
 							participants={invite?.participants}
 						/>
 					)}
 					{invite && extractBody(invite.textDescription?.[0]?._content) && (
 						<>
 							<StyledDivider />
-							<MessagePart
-								fullInvite={invite}
-								inviteId={event.resource.inviteId}
-								parts={invite.parts}
-							/>
+							<MessagePart fullInvite={invite} inviteId={invite.id} parts={invite.parts} />
 						</>
 					)}
 					<StyledDivider />
-					{invite && <ReminderPart alarmString={invite.alarmString} event={event} />}
+					{invite && <ReminderPart alarmString={invite.alarmString} invite={invite} />}
 					{invite?.attachmentFiles.length > 0 && (
 						<>
 							<StyledDivider />
 							<Container padding={{ top: 'small', horizontal: 'large' }} background="gray6">
 								<AttachmentsBlock
 									attachments={invite?.attachmentFiles}
-									id={event.resource.inviteId}
-									subject={event.title}
+									id={invite.id}
+									subject={invite.name}
 								/>
 							</Container>
 						</>
 					)}
-					<Container background="gray6" height="32px" />
 				</BodyContainer>
 			</Container>
 		</AppointmentCardContainer>
-	) : (
-		<Spinner />
-	);
+	) : null;
 }

@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil } from 'lodash';
+import { isNil, omit, reject } from 'lodash';
 import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
-import { IdentityItem, Room } from '../../types/editor';
-import { Attendee, InviteClass } from '../../types/store/invite';
+import { Editor, IdentityItem, Room } from '../../types/editor';
+import { EventResourceCalendar } from '../../types/event';
+import { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
 import { EditorSlice } from '../../types/store/store';
 
 type OrganizerPayload = {
@@ -40,7 +41,7 @@ type RoomPayload = {
 type CalendarPayload = {
 	payload: {
 		id: string;
-		calendar: { id: string; name: string; color: ZimbraColorType };
+		calendar: EventResourceCalendar;
 		organizer: { email: string; name: string; sentBy: string } | undefined;
 	};
 };
@@ -77,11 +78,11 @@ type OptionalAttendeePayload = {
 };
 
 type FreeBusyPayload = {
-	payload: { id: string; freeBusy: string };
+	payload: { id: string; freeBusy: InviteFreeBusy };
 };
 
 type DateReducer = {
-	payload: { id: string; mod: number };
+	payload: { id: string; start: number; end: number };
 };
 
 type IsRichTextPayload = {
@@ -216,7 +217,10 @@ export const editEditorClassReducer = (
 
 export const editEditorDateReducer = ({ editors }: EditorSlice, { payload }: DateReducer): void => {
 	if (payload?.id && editors?.[payload?.id]) {
-		// todo: complete
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].start = payload.start;
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].end = payload.end;
 	}
 };
 
@@ -277,8 +281,16 @@ export const closeEditorReducer = (
 ): void => {
 	if (payload?.id && editor.editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
-		delete editor.editors[payload.id];
+		editor.editors = omit(editor.editors, payload.id);
+	}
+};
+
+export const updateEditorReducer = (
+	editor: EditorSlice,
+	{ payload }: { payload: { id: string; editor: Editor } }
+): void => {
+	if (payload?.id && editor?.editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
-		editor.activeId = undefined;
+		editor.editors[payload.id] = { ...editor.editors[payload.id], ...payload.editor };
 	}
 };

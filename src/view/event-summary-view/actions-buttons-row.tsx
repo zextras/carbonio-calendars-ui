@@ -44,7 +44,7 @@ export const ActionsButtonsRow = ({
 	const calendar = useSelector((s: Store) => selectCalendar(s, invite?.parent));
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const context = useMemo(
+	const instanceContext = useMemo(
 		() => ({
 			replaceHistory,
 			dispatch,
@@ -53,21 +53,53 @@ export const ActionsButtonsRow = ({
 			tags,
 			onClose,
 			createAndApplyTag,
-			calendar
+			calendar,
+			isSeries: true,
+			isException: event.resource.isException,
+			isInstance: true,
+			ridZ: event.resource.ridZ
 		}),
-		[dispatch, createModal, createSnackbar, tags, onClose, calendar]
+		[
+			dispatch,
+			createModal,
+			createSnackbar,
+			tags,
+			onClose,
+			calendar,
+			event.resource.isException,
+			event.resource.ridZ
+		]
 	);
+	const seriesContext = useMemo(
+		() => ({
+			replaceHistory,
+			dispatch,
+			createModal,
+			createSnackbar,
+			tags,
+			onClose,
+			createAndApplyTag,
+			calendar,
+			isSeries: true,
+			isException: event.resource.isException,
+			isInstance: false,
+			ridZ: event.resource.ridZ
+		}),
+		[
+			calendar,
+			createModal,
+			createSnackbar,
+			dispatch,
+			event.resource.isException,
+			event.resource.ridZ,
+			onClose,
+			tags
+		]
+	);
+
 	const [t] = useTranslation();
-	const instanceActions = useGetRecurrentActions(invite, {
-		...context,
-		isInstance: true,
-		ridZ: event.resource.ridZ
-	});
-	const seriesActions = useGetRecurrentActions(invite, {
-		...context,
-		isInstance: false,
-		ridZ: event.resource.ridZ
-	});
+	const instanceActions = useGetRecurrentActions(invite, event, instanceContext);
+	const seriesActions = useGetRecurrentActions(invite, event, seriesContext);
 
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
@@ -105,7 +137,7 @@ export const ActionsButtonsRow = ({
 							)}
 						</Padding>
 					) : (
-						<OrganizerActions event={event} onClose={onClose} invite={invite} />
+						<OrganizerActions event={event} invite={invite} />
 					)}
 				</>
 			) : (

@@ -25,7 +25,7 @@ type EventSummaryProps = {
 	open: boolean;
 	event: EventType;
 	onClose: () => void;
-	invite: Invite;
+	invite: Invite | undefined;
 };
 
 export const EventSummaryView = ({
@@ -34,7 +34,7 @@ export const EventSummaryView = ({
 	event,
 	onClose,
 	invite
-}: EventSummaryProps): JSX.Element => {
+}: EventSummaryProps): JSX.Element | null => {
 	const timeData = useMemo(
 		() =>
 			omitBy(
@@ -61,7 +61,7 @@ export const EventSummaryView = ({
 		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
 	);
 
-	return (
+	return invite ? (
 		<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
 			<Container
 				padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }}
@@ -74,13 +74,15 @@ export const EventSummaryView = ({
 				{locationData && <LocationRow locationData={locationData} showIcon />}
 				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
 				<ParticipantsRow event={event} invite={invite} />
-				{event?.resource?.tags?.length > 0 && <TagsRow event={event} invite={invite} />}
+				{typeof invite?.tags?.length === 'number' && invite?.tags?.length > 0 && (
+					<TagsRow invite={invite} />
+				)}
 				{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
 					<DescriptionFragmentRow event={event} />
 				)}
 				<Divider />
-				{invite && <ActionsButtonsRow event={event} onClose={onClose} invite={invite} />}
+				<ActionsButtonsRow event={event} onClose={onClose} invite={invite} />
 			</Container>
 		</Popover>
-	);
+	) : null;
 };

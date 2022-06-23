@@ -12,11 +12,12 @@ import {
 	retrieveAttachmentsType,
 	findAttachments
 } from './normalizations-utils';
+import { locationUrl } from './normalize-calendar-events';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeInvite = (m: any): Invite => ({
 	ciFolder: m?.inv?.[0]?.comp?.[0]?.ciFolder,
-	allDay: m?.inv?.[0]?.comp?.[0]?.allDay,
+	allDay: m?.inv?.[0]?.comp?.[0]?.allDay ?? false,
 	apptId: m?.inv?.[0]?.comp?.[0]?.apptId,
 	tz: find(m?.inv?.[0]?.tz, (value) => value.id !== 'UTC')?.id,
 	id: m.id,
@@ -26,7 +27,6 @@ export const normalizeInvite = (m: any): Invite => ({
 	parts: m.mp ? normalizeMailPartMapFn(m.mp) : [],
 	alarmString: getAlarmToString(m.inv[0]?.comp?.[0]?.alarm || null) ?? 'never',
 	alarmValue: `${m.inv?.[0]?.comp?.[0]?.alarm?.[0].trigger[0].rel[0].m}`,
-	seriesId: m?.inv?.[0]?.comp?.[0]?.calItemId,
 	class: m?.inv?.[0]?.comp?.[0]?.class,
 	compNum: m?.inv?.[0]?.comp?.[0]?.compNum, // Component number of the invite
 	date: m.d,
@@ -63,7 +63,9 @@ export const normalizeInvite = (m: any): Invite => ({
 	ms: m.ms || 0,
 	rev: m.rev || 0,
 	meta: m.meta,
-	xprop: m?.inv?.[0]?.comp?.[0]?.xprop
+	xprop: m?.inv?.[0]?.comp?.[0]?.xprop,
+	neverSent: m?.inv?.[0]?.comp?.[0]?.neverSent ?? false,
+	locationUrl: locationUrl(m?.inv?.[0]?.comp?.[0]?.loc ?? '')
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -77,7 +79,6 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	parts: inv.mp ? normalizeMailPartMapFn(inv.mp) : [],
 	alarmString: getAlarmToString(inv.comp?.[0]?.alarm || null) ?? 'never',
 	alarmValue: `${inv.comp?.[0]?.alarm?.[0].trigger[0].rel[0].m}`,
-	seriesId: inv.comp?.[0]?.calItemId,
 	class: inv.comp?.[0]?.class,
 	compNum: inv.comp?.[0]?.compNum, // Component number of the invite
 	date: inv.d, // todo: check what date is
@@ -114,5 +115,7 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	alarmData: inv.comp?.[0]?.alarm,
 	ms: inv.ms || 0,
 	rev: inv.rev || 0,
-	xprop: inv.comp?.[0]?.xprop
+	xprop: inv.comp?.[0]?.xprop,
+	neverSent: inv?.[0]?.comp?.[0]?.neverSent ?? false,
+	locationUrl: locationUrl(inv?.[0]?.comp?.[0]?.loc ?? '')
 });

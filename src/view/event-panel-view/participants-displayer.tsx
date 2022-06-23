@@ -47,18 +47,18 @@ const DisplayedParticipant = ({ participant }: { participant: InviteParticipant 
 
 type DropdownProps = {
 	label: string;
-	participants: Array<InviteParticipant>;
+	participants?: Array<InviteParticipant>;
 	width: string;
 };
 
-const Dropdown = ({ label, participants, width }: DropdownProps): JSX.Element => {
+const Dropdown = ({ label, participants, width }: DropdownProps): JSX.Element | null => {
 	const [isExpanded, setIsExpanded] = useState(true);
 	const toggleExpanded = useCallback(() => setIsExpanded((prevExpanded) => !prevExpanded), []);
 
 	const displayedParticipants = useMemo(
 		() => (
 			<Container mainAlignment="space-between" crossAlignment="flex-start" wrap="wrap" width="fill">
-				{participants.map((participant) => (
+				{participants?.map((participant) => (
 					<DisplayedParticipant participant={participant} key={participant.email} />
 				))}
 			</Container>
@@ -66,9 +66,9 @@ const Dropdown = ({ label, participants, width }: DropdownProps): JSX.Element =>
 		[participants]
 	);
 
-	return (
+	return participants ? (
 		<>
-			{participants.length > 0 && (
+			{participants?.length > 0 && (
 				<Container
 					orientation="vertical"
 					mainAlignment="flex-start"
@@ -88,7 +88,7 @@ const Dropdown = ({ label, participants, width }: DropdownProps): JSX.Element =>
 				</Container>
 			)}
 		</>
-	);
+	) : null;
 };
 
 export const ParticipantsDisplayer = ({
@@ -110,42 +110,50 @@ export const ParticipantsDisplayer = ({
 			heigh="fit"
 			padding={{ top: 'large' }}
 		>
-			<Dropdown
-				label={t('participants.AC_with_count', {
-					count: participants.AC?.length ?? 0,
-					defaultValue: 'Accepted',
-					defaultValue_plural: 'Accepted ({{count}})'
-				}).toUpperCase()}
-				participants={participants.AC}
-				width={width}
-			/>
-			<Dropdown
-				label={t('participants.NE_with_count', {
-					count: participants.NE?.length ?? 0,
-					defaultValue: "Didn't answer ({{count}})",
-					defaultValue_plural: "Didn't answer ({{count}})"
-				}).toUpperCase()}
-				participants={participants.NE}
-				width={width}
-			/>
-			<Dropdown
-				label={t('participants.TE_with_count', {
-					count: participants.TE?.length ?? 0,
-					defaultValue: 'Tentative',
-					defaultValue_plural: 'Tentative ({{count}})'
-				}).toUpperCase()}
-				participants={participants.TE}
-				width={width}
-			/>
-			<Dropdown
-				label={t('participants.DE_with_count', {
-					count: participants.DE?.length ?? 0,
-					defaultValue: 'Declined',
-					defaultValue_plural: 'Declined ({{count}})'
-				}).toUpperCase()}
-				participants={participants.DE}
-				width={width}
-			/>
+			{participants?.AC?.length > 0 && (
+				<Dropdown
+					label={t('participants.AC_with_count', {
+						count: participants.AC?.length ?? 0,
+						defaultValue: 'Accepted',
+						defaultValue_plural: 'Accepted ({{count}})'
+					}).toUpperCase()}
+					participants={participants.AC}
+					width={width}
+				/>
+			)}
+			{participants?.NE?.length > 0 && (
+				<Dropdown
+					label={t('participants.NE_with_count', {
+						count: participants.NE?.length ?? 0,
+						defaultValue: "Didn't answer ({{count}})",
+						defaultValue_plural: "Didn't answer ({{count}})"
+					}).toUpperCase()}
+					participants={participants.NE}
+					width={width}
+				/>
+			)}
+			{participants?.TE?.length > 0 && (
+				<Dropdown
+					label={t('participants.TE_with_count', {
+						count: participants?.TE?.length ?? 0,
+						defaultValue: 'Tentative',
+						defaultValue_plural: 'Tentative ({{count}})'
+					}).toUpperCase()}
+					participants={participants.TE}
+					width={width}
+				/>
+			)}
+			{participants?.DE?.length > 0 && (
+				<Dropdown
+					label={t('participants.DE_with_count', {
+						count: participants.DE?.length ?? 0,
+						defaultValue: 'Declined',
+						defaultValue_plural: 'Declined ({{count}})'
+					}).toUpperCase()}
+					participants={participants.DE}
+					width={width}
+				/>
+			)}
 		</Container>
 	);
 };

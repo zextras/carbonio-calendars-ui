@@ -3,31 +3,33 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Avatar, Container, Row, Text } from '@zextras/carbonio-design-system';
 import { Trans } from 'react-i18next';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
-import { EventType } from '../../types/event';
-import { InviteParticipants } from '../../types/store/invite';
+import { useSelector } from 'react-redux';
+import { selectCalendar } from '../../store/selectors/calendars';
+import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
+import { Store } from '../../types/store/store';
 import { ParticipantsDisplayer } from './participants-displayer';
 
 type ParticipantProps = {
-	event: EventType;
-	organizer: {
-		name?: string;
-		email?: string;
-		mail?: string;
-	};
+	invite: Invite;
+	organizer: InviteOrganizer;
 	participants: InviteParticipants;
 };
 
 export const ParticipantsPart = ({
-	event,
+	invite,
 	organizer,
 	participants
 }: ParticipantProps): JSX.Element => {
 	const account = useUserAccount();
-
+	const calendar = useSelector((s: Store) => selectCalendar(s, invite.ciFolder));
+	const iAmAttendee = useMemo(
+		() => (!invite.isOrganizer && !calendar.owner) ?? false,
+		[calendar.owner, invite.isOrganizer]
+	);
 	return (
 		<Container
 			orientation="vertical"
@@ -38,7 +40,7 @@ export const ParticipantsPart = ({
 			padding={{ horizontal: 'large', vertical: 'medium' }}
 			background="gray6"
 		>
-			{event?.resource?.organizer?.email === account.name && (
+			{invite?.organizer?.a === account.name && (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
 						style={{ width: '48px', height: '48px' }}
@@ -57,33 +59,33 @@ export const ParticipantsPart = ({
 					</Text>
 				</Row>
 			)}
-			{!event.resource.iAmOrganizer && !event.resource.calendar?.owner ? (
+			{!invite.isOrganizer && !calendar?.owner ? (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
 						style={{ width: '48px', height: '48px' }}
-						label={organizer.name || organizer.email || organizer.mail}
+						label={organizer.d || organizer.a || organizer.url}
 					/>
 					<Text style={{ padding: '0px 8px' }}>
 						<Trans
 							i18nKey="message.somebody_invited_you"
 							defaults="<strong>{{somebody}}</strong> invited you"
-							values={{ somebody: organizer.name || organizer.email || organizer.mail }}
+							values={{ somebody: organizer.d || organizer.a || organizer.url }}
 						/>
 					</Text>
 				</Row>
 			) : (
-				event?.resource?.organizer?.email !== account.name &&
-				!event?.resource?.iAmAttendee && (
+				organizer.a !== account.name &&
+				!iAmAttendee && (
 					<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 						<Avatar
 							style={{ width: '48px', height: '48px' }}
-							label={organizer.name || organizer.email || organizer.mail || ''}
+							label={organizer.d || organizer.a || organizer.url || ''}
 						/>
 						<Text style={{ padding: '0px 8px' }}>
 							<Trans
 								i18nKey="message.somebody_is_organizer"
 								defaults="<strong>{{somebody}}</strong> is the organizer"
-								values={{ somebody: organizer.name || organizer.email }}
+								values={{ somebody: organizer.d || organizer.a }}
 							/>
 						</Text>
 					</Row>

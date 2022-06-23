@@ -16,20 +16,18 @@ import {
 import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import { useDispatch } from 'react-redux';
+import { editAppointment } from '../../actions/action-functions';
 import {
 	deletePermanentlyItem,
 	moveApptToTrashItem,
 	openInDisplayerItem
 } from '../../actions/action-items';
-import { generateEditor } from '../../commons/editor-generator';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 import { applyTag, createAndApplyTag } from '../tags/tag-actions';
 
-const OrganizerActions: FC<{ event: EventType; onClose: any; invite: Invite }> = ({
+const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
 	event,
-	onClose,
 	invite
 }): ReactElement => {
 	const createModal = useContext(ModalManagerContext);
@@ -52,15 +50,16 @@ const OrganizerActions: FC<{ event: EventType; onClose: any; invite: Invite }> =
 	);
 
 	const otherActions = useMemo(
-		() => [
-			event.resource.calendar.id === FOLDERS.TRASH
-				? deletePermanentlyItem(invite, context, t)
-				: moveApptToTrashItem(invite, context, t),
-			openInDisplayerItem(invite, context, t),
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			applyTag({ t, context, event: invite })
-		],
+		() =>
+			!invite
+				? []
+				: [
+						event.resource.calendar.id === FOLDERS.TRASH
+							? deletePermanentlyItem(invite, event, context, t)
+							: moveApptToTrashItem(invite, event, context, t),
+						openInDisplayerItem(event, context, t),
+						applyTag({ t, context, invite })
+				  ],
 		[context, event, invite, t]
 	);
 
@@ -95,24 +94,7 @@ const OrganizerActions: FC<{ event: EventType; onClose: any; invite: Invite }> =
 					disabled={!event.haveWriteAccess}
 					type="outlined"
 					label={t('label.edit', 'edit')}
-					onClick={(ev: any): void => {
-						if (ev) ev.stopPropagation();
-						onClose();
-						const boardContext = {
-							title: event.title,
-							location: event.resource.location,
-							room: event.resource.room,
-							attendees: [],
-							optionalAttendees: [],
-							allDay: event.allDay,
-							freeBusy: event.resource.freeBusy,
-							class: event.resource.class,
-							start: event.start.valueOf(),
-							end: event.end.valueOf()
-						};
-						const { editor } = generateEditor(event.resource.id, boardContext);
-						replaceHistory(`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${editor.id}`);
-					}}
+					onClick={(ev: Event): void => editAppointment(ev, event, invite, context)}
 				/>
 			)}
 

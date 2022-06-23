@@ -9,7 +9,7 @@ import { ThemeContext } from 'styled-components';
 import { getBridgedFunctions, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
-import { minBy } from 'lodash';
+import { isEqual, minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useTranslation } from 'react-i18next';
@@ -23,16 +23,14 @@ import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
-import { appointmentToEvent } from '../../hooks/use-invite-to-event';
-import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
-import { modifyAppointmentRequest } from '../../store/actions/modify-appointment';
-import { normalizeAppointmentFromCreation } from '../../normalizations/normalize-appointments';
 import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { generateEditor } from '../../commons/editor-generator';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { CALENDAR_ROUTE } from '../../constants';
+import { getInvite } from '../../store/actions/get-invite';
+import { normalizeEditorFromInvite } from '../../normalizations/normalize-editor';
+import { selectActiveEditor, selectActiveEditorId } from '../../store/selectors/editor';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -59,9 +57,9 @@ const customComponents = {
 export default function CalendarComponent() {
 	const appointments = useSelector(selectAppointmentsArray);
 	const selectedCalendars = useSelector(selectCheckedCalendarsMap);
+	const editor = useSelector(selectActiveEditor);
 	const dispatch = useDispatch();
 	const theme = useContext(ThemeContext);
-	const account = useUserAccount();
 	const settings = useUserSettings();
 	const [t] = useTranslation();
 	const calendarView = useCalendarView();
@@ -176,46 +174,55 @@ export default function CalendarComponent() {
 		}
 	}, [calendarView, settings?.prefs?.zimbraPrefCalendarInitialView]);
 
-	const handleSelect = (e) => {
-		if (!summaryViewOpen) {
-			const { editor, callbacks } = generateEditor('new', {
-				title: t('label.new_appointment', 'New Appointment'),
-				start: moment(e.start).valueOf(),
-				end: moment(e.end).valueOf()
-			});
-			getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
-		}
-		useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
-	};
+	const handleSelect = useCallback(
+		(e) => {
+			if (!summaryViewOpen) {
+				const { callbacks } = generateEditor('new', {
+					title: t('label.new_appointment', 'New Appointment'),
+					start: moment(e.start).valueOf(),
+					end: moment(e.end).valueOf()
+				});
+				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
+			}
+			useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
+		},
+		[editor, summaryViewOpen, t]
+	);
+
 	const onEventDrop = useCallback(
 		(appt) => {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			dispatch(
-				getAppointmentAndInvite({
-					aptId: appt.event.resource.id,
-					inviteId: appt.event.resource.inviteId
-				})
-			).then((res) => {
-				const { appointment, invite } = res.payload;
-				const normalizedAppointment = normalizeAppointmentFromCreation(appointment, {});
-				const normalizedInvite = invite.inv[0].comp
-					? normalizeInvite(invite)
-					: normalizeInvite({ ...invite, inv: appointment.inv });
-				const requiredEvent = appointmentToEvent(normalizedInvite, normalizedAppointment.id);
-
-				dispatch(
-					modifyAppointmentRequest({
-						appt: requiredEvent,
-						invite: normalizedInvite,
-						id: 0,
-						mailInvite: [{ comp: [{ s: [{ u: appt.start }], e: [{ u: appt.end }] }] }],
-						account
-					})
-				);
-			});
+			const { start, end, event } = appt;
+			if (!isEqual(event.start, start) || !isEqual(event.end, end)) {
+				dispatch(getInvite({ inviteId: event.resource.inviteId })).then(({ payload }) => {
+					const invite = normalizeInvite(payload.m);
+					const editorData = normalizeEditorFromInvite(invite);
+					const { callbacks } = generateEditor(invite.apptId, {
+						...editorData,
+						start: moment(start).valueOf(),
+						end: moment(end).valueOf(),
+						isSeries: !!editorData.recur,
+						isInstance: true,
+						isException: !!editorData.exceptId
+					});
+					callbacks.onSave({ isNew: editor?.isNew }).then((res) => {
+						if (res?.type) {
+							const success = res.type.includes('fulfilled');
+							getBridgedFunctions().createSnackbar({
+								key: `calendar-moved-root`,
+								replace: true,
+								type: success ? 'info' : 'warning',
+								hideButton: true,
+								label: !success
+									? t('label.error_try_again', 'Something went wrong, please try again')
+									: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+								autoHideTimeout: 3000
+							});
+						}
+					});
+				});
+			}
 		},
-		[dispatch, account]
+		[dispatch, editor?.isNew, t]
 	);
 
 	const eventPropGetter = useCallback(

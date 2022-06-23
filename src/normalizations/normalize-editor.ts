@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter, find, isNil, omitBy } from 'lodash';
+import { store } from '@zextras/carbonio-shell-ui';
+import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
+import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Invite } from '../types/store/invite';
 
@@ -103,17 +105,40 @@ export const normalizeEditor = (
 	}
 });
 
+const getAttendees = (attendees: any[], role: string): any[] =>
+	map(filter(attendees, ['role', role]), (at) =>
+		omitBy(
+			{
+				company: undefined,
+				email: at?.a,
+				firstName: undefined,
+				fullName: at?.d,
+				id: `${at?.a} ${at.d}`,
+				label: at?.d,
+				lastName: undefined
+			},
+			isNil
+		)
+	);
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeEditorFromInvite = (invite: Invite, context?: any): any =>
 	omitBy(
 		{
+			calendar:
+				store?.store?.getState().calendars.calendars[
+					invite.ciFolder ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
+				],
 			ridZ: context?.ridZ,
 			isInstance: context?.isInstance ?? false,
+			isSeries: context?.isSeries ?? false,
+			isException: invite?.isException ?? context?.isException ?? false,
+			exceptId: invite?.exceptId,
 			title: invite.name,
 			location: invite.location,
 			room: getVirtualRoom(invite.xprop),
-			attendees: invite.attendees,
-			optionalAttendees: [],
+			attendees: getAttendees(invite.attendees, 'REQ'),
+			optionalAttendees: getAttendees(invite.attendees, 'OPT'),
 			allDay: invite.allDay ?? false,
 			freeBusy: invite.freeBusy,
 			class: invite.class,

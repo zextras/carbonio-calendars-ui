@@ -77,7 +77,7 @@ export const normalizeCalendarEvent = (
 	title: inst?.name ?? appt?.name ?? '',
 	allDay: appt.allDay,
 	permission: !isShared,
-	id: `${appt.id}:${inst.ridZ}`,
+	id: `${appt.id}:${inst.ridZ}`, // inst.inviteId ?? appt.inviteId
 	haveWriteAccess: calendar.haveWriteAccess ?? false
 });
 

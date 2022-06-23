@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Button, ChipInput, Container } from '@zextras/carbonio-design-system';
+import { Button, ChipInput, Container, Row } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -40,7 +40,7 @@ export const EditorAttendees = ({
 	editorId,
 	callbacks,
 	disabled = false
-}: EditorAttendeesProps): JSX.Element | null => {
+}: EditorAttendeesProps): JSX.Element => {
 	const [t] = useTranslation();
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const [showOptionals, setShowOptional] = useState(false);
@@ -57,7 +57,7 @@ export const EditorAttendees = ({
 		[optionalAttendees]
 	);
 
-	return attendees?.length > 0 || optionalAttendees?.length > 0 ? (
+	return (
 		<>
 			<AttendeesContainer>
 				<Container
@@ -106,30 +106,32 @@ export const EditorAttendees = ({
 				</Container>
 			</AttendeesContainer>
 			{showOptionals && (
-				<AttendeesContainer>
-					{integrationAvailable ? (
-						<ContactInput
-							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-							// @ts-ignore
-							placeholder={t('label.optional_plural', 'Optionals')}
-							onChange={onOptionalAttendeesChange}
-							defaultValue={optionalAttendees}
-							disabled={disabled}
-						/>
-					) : (
-						<ChipInput
-							placeholder={t('label.optional_plural', 'Optionals')}
-							background="gray5"
-							onChange={onOptionalAttendeesChange}
-							defaultValue={optionalAttendees}
-							valueKey="address"
-							hasError={optionalHasError}
-							errorLabel=""
-							disabled={disabled}
-						/>
-					)}
-				</AttendeesContainer>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<AttendeesContainer>
+						{integrationAvailable ? (
+							<ContactInput
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								placeholder={t('label.optional_plural', 'Optionals')}
+								onChange={onOptionalAttendeesChange}
+								defaultValue={optionalAttendees}
+								disabled={disabled}
+							/>
+						) : (
+							<ChipInput
+								placeholder={t('label.optional_plural', 'Optionals')}
+								background="gray5"
+								onChange={onOptionalAttendeesChange}
+								defaultValue={optionalAttendees}
+								valueKey="address"
+								hasError={optionalHasError}
+								errorLabel=""
+								disabled={disabled}
+							/>
+						)}
+					</AttendeesContainer>
+				</Row>
 			)}
 		</>
-	) : null;
+	);
 };

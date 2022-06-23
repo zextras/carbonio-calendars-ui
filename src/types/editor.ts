@@ -3,8 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { EventResourceCalendar } from './event';
 import { Calendar } from './store/calendars';
-import { Attendee, InviteClass } from './store/invite';
+import { Attendee, InviteClass, InviteFreeBusy } from './store/invite';
 
 export type IdentityItem = {
 	value: number;
@@ -36,10 +37,13 @@ export type EditorCallbacks = {
 		payload: { id: string; optionalAttendees: Array<Attendee> };
 		type: string;
 	};
-	onDisplayStatusChange: (data: string) => void;
+	onDisplayStatusChange: (data: InviteFreeBusy) => void;
 	onCalendarChange: (calendar: Calendar) => void;
 	onPrivateChange: (data: InviteClass) => void;
-	onDateChange: (data: any) => void;
+	onDateChange: (date: { start: number; end: number }) => {
+		payload: { id: string | undefined; start: number; end: number };
+		type: string;
+	};
 	onTextChange: ([plainText, richText]: [plainText: string, richText: string]) => {
 		payload: { id: string | undefined; richText: string; plainText: string };
 	};
@@ -60,7 +64,8 @@ export type EditorCallbacks = {
 	onReminderChange: (reminder: string) => void;
 	onRecurrenceChange: (recurrenceRule: any) => void;
 	closeCurrentEditor: () => void;
-	onSave: () => Promise<any>;
+	onSave: ({ draft, isNew }: { draft?: boolean; isNew?: boolean }) => Promise<any>;
+	onSend: (isNew: boolean) => Promise<any>;
 };
 
 export type EditorProps = {
@@ -73,9 +78,11 @@ export type Editor = {
 	uid?: string | undefined;
 	ridZ?: string | undefined;
 	draft?: boolean | undefined;
-	calendar: Calendar | undefined;
+	calendar: EventResourceCalendar | undefined;
+	exceptId: { d: string; tz: string } | undefined;
 	isException: boolean;
 	isInstance: boolean;
+	isNew: boolean;
 	isRichText?: boolean;
 	attachmentFiles: any;
 	plainText: string;
@@ -87,7 +94,7 @@ export type Editor = {
 	attendees: any[];
 	optionalAttendees: any[];
 	allDay?: boolean;
-	freeBusy?: string;
+	freeBusy?: InviteFreeBusy;
 	class?: string;
 	start?: number;
 	end?: number;
@@ -96,4 +103,5 @@ export type Editor = {
 	reminder?: string | undefined;
 	recur?: any;
 	id?: string;
+	attach: any;
 };

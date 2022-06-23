@@ -6,6 +6,7 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
+import moment from 'moment';
 import { Invite } from '../../types/store/invite';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
@@ -73,7 +74,7 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 	};
 };
 
-export const modifyAppointment = createAsyncThunk(
+/* export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
 	async ({ invite, editor }: any): Promise<unknown> => {
 		const normalizeInviteToSoap = invite
@@ -84,5 +85,42 @@ export const modifyAppointment = createAsyncThunk(
 			// createApptException
 		}
 		return soapFetch('ModifyAppointment', normalizeInviteToSoap);
+	}
+); */
+
+export const modifyAppointment = createAsyncThunk(
+	'appointment/create new appointment',
+	async ({ id, draft }: any, { getState }: any): Promise<any> => {
+		const editor = getState()?.editor?.editors?.[id];
+		if (editor) {
+			if (editor.isSeries && editor.isInstance && !editor.isException) {
+				const exceptId = {
+					d: editor?.timezone
+						? moment(editor.start).format('YYYYMMDD[T]HHmmss')
+						: moment(editor.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+					tz: editor?.timezone
+				};
+				const body = generateSoapMessageFromEditor({ ...editor, draft, exceptId });
+				const res: { calItemId: string; invId: string } = await soapFetch(
+					'CreateAppointmentException',
+					body
+				);
+				const updatedEditor = {
+					...editor,
+					isSeries: true,
+					isInstance: true,
+					isException: true,
+					isNew: false,
+					inviteId: res.invId,
+					exceptId
+				};
+				return { response: res, editor: updatedEditor };
+			}
+			const body = generateSoapMessageFromEditor({ ...editor, draft });
+			const res: { calItemId: string } = await soapFetch('ModifyAppointment', body);
+			const updatedEditor = { ...editor, isSeries: !!editor.recur, isNew: false };
+			return { response: res, editor: updatedEditor };
+		}
+		return undefined;
 	}
 );
