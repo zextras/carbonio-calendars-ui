@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
-import { Container, Padding, Text, Row, Checkbox, Select } from '@zextras/carbonio-design-system';
-import { DefaultCalendarOptions } from './components/utils';
+import React from 'react';
+import { Container, Padding, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
+import { CalendarSelector } from '../view/editor/parts/calendar-selector';
 
 export default function CreatingAppointmentSettings({ t, settingsObj, updateSettings }) {
-	const defaultCalendarOptions = useMemo(() => DefaultCalendarOptions(t), [t]);
 	return (
 		<Container
 			padding={{ all: 'medium' }}
@@ -28,13 +27,17 @@ export default function CreatingAppointmentSettings({ t, settingsObj, updateSett
 				orientation="horizontal"
 				width="100%"
 			>
-				<Select
-					items={defaultCalendarOptions}
-					onChange={() => null}
-					defaultSelection={{
-						label: 'Calendar',
-						value: 'calendar'
+				<CalendarSelector
+					calendarId={settingsObj.zimbraPrefDefaultCalendarId}
+					onCalendarChange={(cal) => {
+						updateSettings({
+							target: {
+								name: 'zimbraPrefDefaultCalendarId',
+								value: cal.id
+							}
+						});
 					}}
+					excludeTrash
 				/>
 			</Row>
 

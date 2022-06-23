@@ -172,7 +172,8 @@
         "new_tag": "Nova Etiqueta",
         "other_actions": "Outras ações",
         "single_instance": "UMA ÚNICA INSTÂNCIA",
-        "no_title": "Sem Título"
+        "no_title": "Sem Título",
+        "scheduled_in": "Agenda"
     },
     "action": {
         "delete": "Excluir",
@@ -323,7 +324,8 @@
         "appointment_type_handle": "\"{{name}}\" é um compromisso recorrente. Você gostaria de abrir apenas esta instância ou toda a série?",
         "organizer": "Organizador",
         "reply": "Responder",
-        "reply_all": "Responder a todos"
+        "reply_all": "Responder a todos",
+        "more": "Mais..."
     },
     "months": {
         "april": "Abril",
@@ -551,7 +553,8 @@
         "copy_vector_url": "Copiar URL de visualização",
         "chat": "Equipamento",
         "equipment": "Equipamento",
-        "location": "Localização"
+        "location": "Localização",
+        "chat_room": "Link da Sala virtual"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",

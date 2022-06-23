@@ -283,7 +283,7 @@
         "delete_tag": "Supprimer l'étiquette",
         "delete_tag_name": "Supprimer l'étiquette \"{{name}}\"",
         "no_title": "Pas de titre",
-        "scheduled_in": "Planifié en"
+        "scheduled_in": "Calendrier"
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -533,7 +533,7 @@
         "enable_disable_rich_text": "Activer/désactiver l'éditeur de texte riche",
         "add_attachments": "Ajouter des pièces jointes",
         "copy_ics_url": "Copier l'url du SCI",
-        "chat_room": "Salle de discussion",
+        "chat_room": "Lien de la Salle Virtuelle",
         "calendar_sharing_status": "Partagé avec {{count}} personnes",
         "equipment": "Équipement",
         "location": "Emplacement",

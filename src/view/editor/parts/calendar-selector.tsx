@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -40,7 +41,8 @@ export const CalendarSelector = ({
 	);
 
 	const requiredCalendars = useMemo(
-		() => (excludeTrash ? filter(calWithWritePerm, (cal) => cal.zid !== '3') : calWithWritePerm),
+		() =>
+			excludeTrash ? filter(calWithWritePerm, (cal) => cal.id !== FOLDERS.TRASH) : calWithWritePerm,
 		[calWithWritePerm, excludeTrash]
 	);
 	const calendarItems = useMemo(
