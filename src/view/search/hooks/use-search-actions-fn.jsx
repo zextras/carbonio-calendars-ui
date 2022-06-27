@@ -6,10 +6,13 @@
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useCallback } from 'react';
 import { useAddBoardCallback, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { useSelector } from 'react-redux';
 import { closeEventFn, editEventFn, moveToBardFn, openEventFn } from '../utils/actions-fn';
+import { selectCalendar } from '../../../store/selectors/calendars';
 
-export const useSearchActionsFn = (event) => {
+export const useSearchActionsFn = (event, invite) => {
 	const history = useHistory();
+	const calendar = useSelector((s) => selectCalendar(s, event?.resource?.calendar?.id));
 	const { pathname } = useLocation();
 	const { apptId, ridZ, action } = useParams();
 	const addBoard = useAddBoardCallback();
@@ -19,8 +22,8 @@ export const useSearchActionsFn = (event) => {
 	);
 
 	const edit = useCallback(
-		(ev) => editEventFn(ev, { action, history, pathname, apptId, ridZ }),
-		[action, apptId, history, pathname, ridZ]
+		(ev) => editEventFn(ev, invite, { action, history, pathname, calendar, apptId, ridZ }),
+		[action, apptId, calendar, history, invite, pathname, ridZ]
 	);
 
 	const open = useCallback(

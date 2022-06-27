@@ -74,7 +74,7 @@ export const ParticipantsPart = ({
 					</Text>
 				</Row>
 			) : (
-				organizer.a !== account.name &&
+				invite?.organizer?.a !== account.name &&
 				!iAmAttendee && (
 					<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 						<Avatar
