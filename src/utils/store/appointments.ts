@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { reduce, find, uniqBy, forEach, isEqual, uniqWith } from 'lodash';
+import { reduce, find, forEach, isEqual, uniqWith } from 'lodash';
 import { Appointment } from '../../types/store/appointments';
 import { AppointmentsSlice } from '../../types/store/store';
 

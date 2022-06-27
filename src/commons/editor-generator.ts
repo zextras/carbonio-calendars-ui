@@ -59,6 +59,7 @@ const createEmptyEditor = (id: string): Editor => {
 		calendar: calendars?.calendars?.[zimbraPrefDefaultCalendarId],
 		isException: false,
 		exceptId: undefined,
+		isSeries: false,
 		isInstance: false,
 		isRichText: true,
 		isNew: true,
@@ -221,7 +222,8 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 					.then(({ response, editor }) => {
 						if (response) {
 							dispatch(updateEditor({ id, editor }));
-						} // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						}
+						return Promise.resolve({ response, editor }); // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					}) // @ts-ignore
 			: dispatch(modifyAppointment({ id, draft })) // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					.unwrap() // @ts-ignore
@@ -229,6 +231,7 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 						if (response) {
 							dispatch(updateEditor({ id, editor }));
 						}
+						return Promise.resolve({ response, editor });
 					});
 
 	const onSend = (isNew: boolean): Promise<any> => onSave({ draft: false, isNew });
@@ -269,5 +272,6 @@ export const generateEditor = (
 	const { dispatch } = store.store;
 	const storeEditorData = { ...editor, panel };
 	dispatch(createNewEditor(storeEditorData));
-	return { editor, callbacks };
+	const storeData = store.store.getState();
+	return { editor: storeData?.editor?.editors?.[editorId], callbacks };
 };

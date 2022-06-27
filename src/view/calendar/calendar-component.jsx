@@ -6,7 +6,7 @@
 import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import { getBridgedFunctions, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions, store, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEqual, minBy } from 'lodash';
@@ -30,7 +30,6 @@ import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
 import { normalizeEditorFromInvite } from '../../normalizations/normalize-editor';
-import { selectActiveEditor, selectActiveEditorId } from '../../store/selectors/editor';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -57,7 +56,6 @@ const customComponents = {
 export default function CalendarComponent() {
 	const appointments = useSelector(selectAppointmentsArray);
 	const selectedCalendars = useSelector(selectCheckedCalendarsMap);
-	const editor = useSelector(selectActiveEditor);
 	const dispatch = useDispatch();
 	const theme = useContext(ThemeContext);
 	const settings = useUserSettings();
@@ -177,52 +175,64 @@ export default function CalendarComponent() {
 	const handleSelect = useCallback(
 		(e) => {
 			if (!summaryViewOpen) {
-				const { callbacks } = generateEditor('new', {
+				const { editor, callbacks } = generateEditor('new', {
 					title: t('label.new_appointment', 'New Appointment'),
 					start: moment(e.start).valueOf(),
 					end: moment(e.end).valueOf()
 				});
-				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
+				const storeData = store.store.getState();
+				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
+					...storeData.editor.editors[storeData.editor.activeId],
+					callbacks
+				});
 			}
 			useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 		},
-		[editor, summaryViewOpen, t]
+		[summaryViewOpen, t]
 	);
 
 	const onEventDrop = useCallback(
 		(appt) => {
 			const { start, end, event } = appt;
 			if (!isEqual(event.start, start) || !isEqual(event.end, end)) {
-				dispatch(getInvite({ inviteId: event.resource.inviteId })).then(({ payload }) => {
-					const invite = normalizeInvite(payload.m);
-					const editorData = normalizeEditorFromInvite(invite);
-					const { callbacks } = generateEditor(invite.apptId, {
-						...editorData,
-						start: moment(start).valueOf(),
-						end: moment(end).valueOf(),
-						isSeries: !!editorData.recur,
-						isInstance: true,
-						isException: !!editorData.exceptId
-					});
-					callbacks.onSave({ isNew: editor?.isNew }).then((res) => {
-						if (res?.type) {
-							const success = res.type.includes('fulfilled');
-							getBridgedFunctions().createSnackbar({
-								key: `calendar-moved-root`,
-								replace: true,
-								type: success ? 'info' : 'warning',
-								hideButton: true,
-								label: !success
-									? t('label.error_try_again', 'Something went wrong, please try again')
-									: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-								autoHideTimeout: 3000
+				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ })).then(
+					({ payload }) => {
+						const invite = normalizeInvite(payload.m);
+						const editorData = normalizeEditorFromInvite(invite);
+						const { callbacks } = generateEditor(invite.apptId, {
+							...editorData,
+							start: moment(start).valueOf(),
+							end: moment(end).valueOf(),
+							isSeries: !!editorData.recur,
+							ridZ: event.resource.ridZ,
+							isInstance: true,
+							isException: !!editorData.exceptId
+						});
+						const storeData = store.store.getState();
+						callbacks
+							.onSave({
+								isNew: storeData.editor.editors[storeData.editor.activeId]?.isNew
+							})
+							.then((res) => {
+								if (res?.type) {
+									const success = res.type.includes('fulfilled');
+									getBridgedFunctions().createSnackbar({
+										key: `calendar-moved-root`,
+										replace: true,
+										type: success ? 'info' : 'warning',
+										hideButton: true,
+										label: !success
+											? t('label.error_try_again', 'Something went wrong, please try again')
+											: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+										autoHideTimeout: 3000
+									});
+								}
 							});
-						}
-					});
-				});
+					}
+				);
 			}
 		},
-		[dispatch, editor?.isNew, t]
+		[dispatch, t]
 	);
 
 	const eventPropGetter = useCallback(

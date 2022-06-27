@@ -31,7 +31,7 @@ export const CalendarSelector = ({
 	updateAppTime = false,
 	showCalWithWritePerm = true,
 	disabled
-}: CalendarSelectorProps): JSX.Element => {
+}: CalendarSelectorProps): JSX.Element | null => {
 	const [t] = useTranslation();
 
 	const calendars = useSelector(selectCalendarsArray);
@@ -63,13 +63,13 @@ export const CalendarSelector = ({
 		[requiredCalendars]
 	);
 	const defaultCalendarSelection = useMemo(
-		() => find(calendarItems, ['value', calendarId]) || requiredCalendars[0],
+		() => find(calendarItems, ['value', calendarId]) ?? requiredCalendars[0],
 		[calendarItems, requiredCalendars, calendarId]
 	);
 
 	const getSelectedCalendar = useCallback(
-		(id) => find(calendars, ['id', id]) ?? calendars[10],
-		[calendars]
+		(id) => find(calendars, ['id', id]) ?? requiredCalendars[0],
+		[calendars, requiredCalendars]
 	);
 
 	const onSelectedCalendarChange = useCallback(
@@ -77,7 +77,7 @@ export const CalendarSelector = ({
 		[getSelectedCalendar, onCalendarChange]
 	);
 
-	return (
+	return calendars ? (
 		<Select
 			label={label || t('label.calendar', 'Calendar')}
 			onChange={onSelectedCalendarChange}
@@ -87,5 +87,5 @@ export const CalendarSelector = ({
 			disabled={updateAppTime || disabled}
 			LabelFactory={LabelFactory}
 		/>
-	);
+	) : null;
 };

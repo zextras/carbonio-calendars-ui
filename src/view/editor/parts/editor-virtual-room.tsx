@@ -3,9 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Row } from '@zextras/carbonio-design-system';
 import { selectEditorRoom } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
@@ -25,8 +28,8 @@ export const EditorVirtualRoom = ({
 	const room = useSelector(selectEditorRoom(editorId));
 
 	return isRoomAvailable ? (
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		<RoomSelector onChange={onRoomChange} defaultValue={room} disabled={disabled} />
+		<Row height="fit" width="fill" padding={{ top: 'large' }}>
+			<RoomSelector onChange={onRoomChange} defaultValue={room} disabled={disabled} />
+		</Row>
 	) : null;
 };

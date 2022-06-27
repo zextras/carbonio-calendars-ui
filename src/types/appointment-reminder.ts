@@ -7,12 +7,6 @@ import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
 import { EventType } from './event';
 
-export type AppointmentReminderProps = {
-	t: TFunction;
-	appointments: Record<string, unknown>;
-	dispatch: Dispatch;
-};
-
 export type ApptReminderModalProps = {
 	title: string;
 	open: boolean;

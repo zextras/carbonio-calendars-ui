@@ -17,6 +17,36 @@ type Participants = {
 	t: string;
 };
 
+const setResourceDate = ({
+	time,
+	allDay = false,
+	timezone
+}: {
+	time: number | undefined;
+	allDay?: boolean;
+	timezone?: string;
+}): any => {
+	if (allDay) {
+		return timezone
+			? {
+					d: moment(time).startOf('day').format('YYYYMMDD'),
+					tz: timezone
+			  }
+			: {
+					d: moment(time).startOf('day').utc().format('YYYYMMDD'),
+					tz: 'UTC'
+			  };
+	}
+	return timezone
+		? {
+				d: moment(time).format('YYYYMMDD[T]HHmmss'),
+				tz: timezone
+		  }
+		: {
+				d: moment(time).utc().format('YYYYMMDD[T]HHmmss[Z]')
+		  };
+};
+
 const generateParticipantInformation = (resource: Editor): Array<Participants> =>
 	resource?.draft
 		? [
@@ -168,36 +198,21 @@ const generateInvite = (editorData: Editor): any => {
 					a: editorData.organizer.address,
 					d: editorData.organizer.fullName
 				},
-				recur: editorData?.isInstance || editorData?.isException ? undefined : editorData?.recur,
+				recur:
+					(editorData?.isInstance && editorData?.isSeries) || editorData?.isException
+						? undefined
+						: editorData?.recur,
 				status: 'CONF',
-				s:
-					editorData.allDay || editorData?.timezone
-						? omitBy(
-								{
-									d: editorData.allDay
-										? moment(editorData.start).startOf('day').format('YYYYMMDD')
-										: moment(editorData.start).format('YYYYMMDD[T]HHmmss'),
-									tz: editorData?.timezone
-								},
-								isNil
-						  )
-						: {
-								d: moment(editorData.start).utc().format('YYYYMMDD[T]HHmmss[Z]')
-						  },
-				e:
-					editorData.allDay || editorData?.timezone
-						? omitBy(
-								{
-									d: editorData.allDay
-										? moment(editorData.end).endOf('day').format('YYYYMMDD')
-										: moment(editorData.end).format('YYYYMMDD[T]HHmmss'),
-									tz: editorData?.timezone
-								},
-								isNil
-						  )
-						: {
-								d: moment(editorData.end).utc().format('YYYYMMDD[T]HHmmss[Z]')
-						  },
+				s: setResourceDate({
+					time: editorData.start,
+					allDay: editorData?.allDay,
+					timezone: editorData?.timezone
+				}),
+				e: setResourceDate({
+					time: editorData.end,
+					allDay: editorData?.allDay,
+					timezone: editorData?.timezone
+				}),
 				exceptId: editorData.exceptId,
 				class: editorData.class,
 				draft: editorData.draft
@@ -244,13 +259,16 @@ export const createAppointment = createAsyncThunk(
 		const editor = getState()?.editor?.editors?.[id];
 		if (editor) {
 			const body = generateSoapMessageFromEditor({ ...editor, draft });
-			const res: { calItemId: string } = await soapFetch('CreateAppointment', body);
+			const res: { calItemId: string; invId: string } = await soapFetch('CreateAppointment', body);
 			return {
 				response: res,
 				editor: {
 					...editor,
 					isNew: false,
-					isSeries: !!editor.recur
+					isSeries: !!editor.recur,
+					isInstance: true,
+					isException: false,
+					inviteId: res.invId
 				}
 			};
 		}

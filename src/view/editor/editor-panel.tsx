@@ -43,9 +43,7 @@ export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): JSX
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
 						<EditorLocation editorId={editorId} callbacks={callbacks} />
 					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorVirtualRoom editorId={editorId} callbacks={callbacks} />
-					</Row>
+					<EditorVirtualRoom editorId={editorId} callbacks={callbacks} />
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
 						<EditorAttendees editorId={editorId} callbacks={callbacks} />
 					</Row>

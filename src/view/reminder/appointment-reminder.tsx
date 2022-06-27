@@ -27,7 +27,6 @@ import { searchAppointments } from '../../store/actions/search-appointments';
 import { selectAllAppointments, selectApptStatus } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
-import { AppointmentReminderProps } from '../../types/appointment-reminder';
 import SetNewTimeModal from './set-new_time-modal';
 import sound from '../../assets/notification.mp3';
 import ApptReminderModal from './appt-reminder-modal';
@@ -39,7 +38,7 @@ type ReminderQueue = Record<
 	string,
 	ReturnType<typeof clearTimeout> | ReturnType<typeof setTimeout>
 >;
-const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
+const AppointmentReminder = (): ReactElement => {
 	const dispatch = useDispatch();
 	const [t] = useTranslation();
 

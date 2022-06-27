@@ -14,7 +14,6 @@ import { dismissApptReminder } from '../actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../actions/snooze-appointment-reminder';
 import { handleCreatedAppointmentsReducer } from '../reducers/handle-created-appointments';
 import { handleModifiedAppointmentsReducer } from '../reducers/handle-modified-appointments';
-import { handleSyncReducer } from '../reducers/handle-sync';
 import {
 	moveAppointmentFulfilled,
 	moveAppointmentPending,
@@ -63,8 +62,7 @@ export const appointmentsSlice = createSlice({
 		updateParticipationStatus: handleUpdateParticipationStatus,
 		updateAppointment: updateAppointmentReducer,
 		handleModifiedAppointments: produce(handleModifiedAppointmentsReducer),
-		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer),
-		handleAppointmentsSync: handleSyncReducer
+		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer)
 	},
 	extraReducers: (builder) => {
 		builder.addCase(modifyAppointmentRequest.pending, handleModifyAppointmentPending);

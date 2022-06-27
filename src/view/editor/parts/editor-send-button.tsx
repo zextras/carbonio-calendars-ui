@@ -28,22 +28,10 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): JSX.Elem
 	);
 
 	const onClick = useCallback(() => {
-		onSend(isNew).then((res: { type: string | string[] }) => {
-			if (res?.type) {
-				const success = res.type.includes('fulfilled');
-				getBridgedFunctions().createSnackbar({
-					key: `calendar-moved-root`,
-					replace: true,
-					type: success ? 'info' : 'warning',
-					hideButton: true,
-					label: !success
-						? t('label.error_try_again', 'Something went wrong, please try again')
-						: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-					autoHideTimeout: 3000
-				});
-			}
+		onSend(isNew).then(({ response }) => {
+			// todo: add informative snackbar depending on response
 		});
-	}, [isNew, onSend, t]);
+	}, [isNew, onSend]);
 
 	return (
 		<Button

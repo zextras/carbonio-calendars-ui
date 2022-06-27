@@ -82,6 +82,7 @@ export type Editor = {
 	exceptId: { d: string; tz: string } | undefined;
 	isException: boolean;
 	isInstance: boolean;
+	isSeries: boolean;
 	isNew: boolean;
 	isRichText?: boolean;
 	attachmentFiles: any;

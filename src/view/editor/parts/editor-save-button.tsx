@@ -18,20 +18,17 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): JSX.Elem
 	const { onSave } = callbacks;
 
 	const onClick = useCallback(() => {
-		onSave({ draft: true, isNew }).then((res) => {
-			if (res?.type) {
-				const success = res.type.includes('fulfilled');
-				getBridgedFunctions().createSnackbar({
-					key: `calendar-moved-root`,
-					replace: true,
-					type: success ? 'info' : 'warning',
-					hideButton: true,
-					label: !success
-						? t('label.error_try_again', 'Something went wrong, please try again')
-						: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-					autoHideTimeout: 3000
-				});
-			}
+		onSave({ draft: true, isNew }).then(({ response }) => {
+			getBridgedFunctions().createSnackbar({
+				key: `calendar-moved-root`,
+				replace: true,
+				type: response ? 'info' : 'warning',
+				hideButton: true,
+				label: !response
+					? t('label.error_try_again', 'Something went wrong, please try again')
+					: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+				autoHideTimeout: 3000
+			});
 		});
 	}, [isNew, onSave, t]);
 

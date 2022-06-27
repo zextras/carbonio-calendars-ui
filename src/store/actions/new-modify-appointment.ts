@@ -96,8 +96,8 @@ export const modifyAppointment = createAsyncThunk(
 			if (editor.isSeries && editor.isInstance && !editor.isException) {
 				const exceptId = {
 					d: editor?.timezone
-						? moment(editor.start).format('YYYYMMDD[T]HHmmss')
-						: moment(editor.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+						? moment(editor.ridZ).format('YYYYMMDD[T]HHmmss')
+						: moment(editor.ridZ).utc().format('YYYYMMDD[T]HHmmss[Z]'),
 					tz: editor?.timezone
 				};
 				const body = generateSoapMessageFromEditor({ ...editor, draft, exceptId });
