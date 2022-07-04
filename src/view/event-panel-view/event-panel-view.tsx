@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import {
 	Container,
@@ -64,7 +64,7 @@ const BodyContainer = styled(Container)`
 	// }
 `;
 
-const ActionButtons = ({ actions }: { actions: Array<any> }): JSX.Element => {
+const ActionButtons = ({ actions }: { actions: Array<any> }): ReactElement => {
 	const actionContainerRef = useRef();
 	const [hiddenActionsCount, recalculateHiddenActions] = useHiddenCount(actionContainerRef, true);
 
@@ -102,7 +102,7 @@ const ActionButtons = ({ actions }: { actions: Array<any> }): JSX.Element => {
 	);
 };
 
-const ExpandButton = ({ actions }: { actions: Array<any> }): JSX.Element => (
+const ExpandButton = ({ actions }: { actions: Array<any> }): ReactElement => (
 	<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 		{actions &&
 			map(actions, (action) => (
@@ -117,7 +117,7 @@ const DisplayerHeader = ({
 }: {
 	actions: Array<any>;
 	title: string;
-}): JSX.Element => {
+}): ReactElement => {
 	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });
@@ -176,7 +176,7 @@ type ParamsType = {
 	apptId: string;
 	ridZ?: string;
 };
-export default function EventPanelView(): JSX.Element | null {
+export default function EventPanelView(): ReactElement | null {
 	const { calendarId, apptId, ridZ } = useParams<ParamsType>();
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
@@ -200,10 +200,11 @@ export default function EventPanelView(): JSX.Element | null {
 			createModal,
 			createSnackbar,
 			tags,
+			ridZ: event?.resource?.ridZ,
 			createAndApplyTag,
 			isInstance: true
 		}),
-		[createModal, createSnackbar, dispatch, tags]
+		[createModal, createSnackbar, dispatch, event?.resource?.ridZ, tags]
 	);
 
 	const actions = useQuickActions(invite, event, context);

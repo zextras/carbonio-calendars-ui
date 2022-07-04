@@ -5,14 +5,13 @@
  */
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import ModalFooter from '../../commons/modal-footer';
-import { ModalHeader } from '../../commons/modal-header';
-import { deleteAppointmentPermanent } from '../../store/actions/delete-appointment-permanent';
-import { ActionsContext } from '../../types/actions';
-import { EventType } from '../../types/event';
-import { Invite } from '../../types/store/invite';
+import ModalFooter from './modal-footer';
+import { ModalHeader } from './modal-header';
+import { deleteAppointmentPermanent } from '../store/actions/delete-appointment-permanent';
+import { ActionsContext } from '../types/actions';
+import { EventType } from '../types/event';
 
 type DeletePermanentlyProps = {
 	onClose: () => void;
@@ -24,7 +23,7 @@ export const DeletePermanently = ({
 	onClose,
 	event,
 	context
-}: DeletePermanentlyProps): JSX.Element => {
+}: DeletePermanentlyProps): ReactElement => {
 	const [t] = useTranslation();
 	const title = useMemo(
 		() =>

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { map } from 'lodash';
-import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
 import { EditorCallbacks } from '../../../types/editor';
 import { addAttachments } from './editor-attachments';
@@ -21,7 +21,7 @@ export const EditorDropZone = ({
 	editorId,
 	callbacks,
 	children
-}: DropzoneProps): JSX.Element | null => {
+}: DropzoneProps): ReactElement | null => {
 	const [dropZoneEnable, setDropZoneEnable] = useState(false);
 	const parts: never[] = useMemo(() => [], []);
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { useDispatch } from 'react-redux';
-import React, { useCallback } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import { Button, Container, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
@@ -20,7 +20,7 @@ export const ReplyButtonsPart = ({
 	inviteId,
 	participationStatus,
 	compNum
-}: ReplyButtonProps): JSX.Element => {
+}: ReplyButtonProps): ReactElement => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 

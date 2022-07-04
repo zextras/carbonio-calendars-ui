@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { Suspense, lazy, useEffect, useMemo } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, ReactElement } from 'react';
 import { Button, Container } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
@@ -21,7 +21,7 @@ const CalendarComponent = lazy(
 	() => import(/* webpackChunkName: "calendar-component" */ './calendar-component')
 );
 
-export default function CalendarView(): JSX.Element {
+export default function CalendarView(): ReactElement {
 	const calendars = useSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const status = useSelector(selectApptStatus);

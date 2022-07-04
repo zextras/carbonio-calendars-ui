@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { Container, Divider, Popover } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith } from 'lodash';
 import { EventType } from '../../types/event';
@@ -34,7 +34,7 @@ export const EventSummaryView = ({
 	event,
 	onClose,
 	invite
-}: EventSummaryProps): JSX.Element | null => {
+}: EventSummaryProps): ReactElement | null => {
 	const timeData = useMemo(
 		() =>
 			omitBy(

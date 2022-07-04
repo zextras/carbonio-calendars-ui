@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Select, Icon, Row, Container, Text } from '@zextras/carbonio-design-system';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 import { find } from 'lodash';
 import { useSelector } from 'react-redux';
@@ -168,7 +168,7 @@ type LabelFactoryProps = {
 	focus: boolean;
 };
 
-const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): JSX.Element => (
+const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
 	<ColorContainer
 		orientation="horizontal"
 		width="fill"
@@ -211,7 +211,7 @@ type SelectValue =
 	  }
 	| undefined;
 
-export const EditorReminder = ({ editorId, callbacks }: EditorProps): JSX.Element | null => {
+export const EditorReminder = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const reminderItems = useMemo(() => getReminderItems(t), [t]);
 	const reminder = useSelector(selectEditorReminder(editorId));

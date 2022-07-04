@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, ReactElement } from 'react';
 import { find } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +19,7 @@ type MoveAppointmentProps = {
 	invite: Invite;
 };
 
-export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): JSX.Element => {
+export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): ReactElement => {
 	const dispatch = useDispatch();
 	const folders = useSelector(selectCalendars);
 	const currentFolder = useMemo(

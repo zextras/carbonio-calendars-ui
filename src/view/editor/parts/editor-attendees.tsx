@@ -6,7 +6,7 @@
 import { Button, ChipInput, Container, Row } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -40,7 +40,7 @@ export const EditorAttendees = ({
 	editorId,
 	callbacks,
 	disabled = false
-}: EditorAttendeesProps): JSX.Element => {
+}: EditorAttendeesProps): ReactElement => {
 	const [t] = useTranslation();
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const [showOptionals, setShowOptional] = useState(false);

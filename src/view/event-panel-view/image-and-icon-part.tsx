@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Avatar, Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
@@ -25,7 +25,7 @@ export const ImageAndIconPart = ({
 }: {
 	icon?: string;
 	color: string;
-}): JSX.Element => (
+}): ReactElement => (
 	<OuterContainer customColor={`${color}.regular`}>
 		<IconContainer icon={icon} customColor={`${color}.regular`} label="" backgroundColor={color} />
 	</OuterContainer>

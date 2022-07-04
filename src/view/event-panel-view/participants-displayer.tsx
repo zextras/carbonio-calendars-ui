@@ -12,10 +12,14 @@ import {
 	TextWithTooltip
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
-const DisplayedParticipant = ({ participant }: { participant: InviteParticipant }): JSX.Element => {
+const DisplayedParticipant = ({
+	participant
+}: {
+	participant: InviteParticipant;
+}): ReactElement => {
 	const [t] = useTranslation();
 	return (
 		<Row mainAlignment="flex-start" crossAlignment="center" padding={{ vertical: 'small' }}>
@@ -51,7 +55,7 @@ type DropdownProps = {
 	width: string;
 };
 
-const Dropdown = ({ label, participants, width }: DropdownProps): JSX.Element | null => {
+const Dropdown = ({ label, participants, width }: DropdownProps): ReactElement | null => {
 	const [isExpanded, setIsExpanded] = useState(true);
 	const toggleExpanded = useCallback(() => setIsExpanded((prevExpanded) => !prevExpanded), []);
 
@@ -95,7 +99,7 @@ export const ParticipantsDisplayer = ({
 	participants
 }: {
 	participants: InviteParticipants;
-}): JSX.Element | null => {
+}): ReactElement | null => {
 	const [t] = useTranslation();
 	const width = Object.keys(participants).length === 1 ? '100%' : '50%';
 

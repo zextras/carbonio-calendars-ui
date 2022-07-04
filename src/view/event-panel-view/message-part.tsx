@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Icon } from '@zextras/carbonio-design-system';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import BodyMessageRenderer from '../../commons/body-message-renderer';
 import { Invite } from '../../types/store/invite';
 
@@ -14,7 +14,7 @@ type MessageProps = {
 	parts: any;
 };
 
-export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): JSX.Element => (
+export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): ReactElement => (
 	<Container
 		orientation="horizontal"
 		mainAlignment="flex-start"

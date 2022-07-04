@@ -5,14 +5,14 @@
  */
 import { Select } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
-import React, { useCallback } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useIdentityItems } from '../../../hooks/use-idenity-items';
 import { selectOrganizer } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
-export const EditorOrganizer = ({ editorId, callbacks }: EditorProps): JSX.Element | null => {
+export const EditorOrganizer = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const identities = useIdentityItems();
 	const organizer = useSelector(selectOrganizer(editorId));

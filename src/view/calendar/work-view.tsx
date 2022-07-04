@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import moment from 'moment';
 import { add as datesAdd } from 'date-arithmetic';
 import TimeGrid from 'react-big-calendar/lib/TimeGrid';
@@ -33,7 +33,7 @@ export interface WorkViewComponent extends React.FC<WorkViewProps> {
 	title(titleDate: Date): string;
 }
 
-export const WorkView: WorkViewComponent = (props: WorkViewProps): JSX.Element => {
+export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement => {
 	const { date, workingSchedule } = props;
 
 	// Looks horrible but there is no other way to pass and sync the workingSchedule

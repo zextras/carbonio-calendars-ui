@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { Container, Text, Icon, Divider, Row, Padding } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -31,7 +31,7 @@ const findAttachments = (parts: Parts, acc: Parts): Parts =>
 		acc as Parts
 	);
 
-export const TrashRow = ({ event }: { event: EventType }): JSX.Element => {
+export const TrashRow = ({ event }: { event: EventType }): ReactElement => {
 	const { inviteId, ridZ, participationStatus } = event.resource;
 	const invite = useSelector((state: Store) => selectInstanceInvite(state, inviteId, ridZ));
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { TFunction } from 'i18next';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, ReactElement } from 'react';
 import { Input, Container, Text } from '@zextras/carbonio-design-system';
 import { filter, startsWith, reduce, isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +40,7 @@ export const MoveModal = ({
 	currentFolder,
 	folders,
 	action
-}: MoveModalProps): JSX.Element => {
+}: MoveModalProps): ReactElement => {
 	const { id, apptId } = invite;
 	const [t] = useTranslation();
 	const [input, setInput] = useState('');

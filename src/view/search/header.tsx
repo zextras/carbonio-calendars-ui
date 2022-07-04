@@ -12,7 +12,7 @@ import {
 	Text,
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
-import React, { useEffect, useRef } from 'react';
+import React, { ReactElement, useEffect, useRef } from 'react';
 import { map, some } from 'lodash';
 
 const ActionButtons = ({ actions }: { actions: any[] }): JSX.Element => {
@@ -45,7 +45,7 @@ const ActionButtons = ({ actions }: { actions: any[] }): JSX.Element => {
 	);
 };
 
-const ExpandButton = ({ actions }: { actions: any[] }): JSX.Element => (
+const ExpandButton = ({ actions }: { actions: any[] }): ReactElement => (
 	<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 		{actions &&
 			map(actions, (action) => (
@@ -60,7 +60,7 @@ type HeaderProps = {
 	closeAction: () => void;
 };
 
-export const Header = ({ title, actions, closeAction }: HeaderProps): JSX.Element => {
+export const Header = ({ title, actions, closeAction }: HeaderProps): ReactElement => {
 	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });

@@ -5,7 +5,7 @@
  */
 import { Checkbox } from '@zextras/carbonio-design-system';
 import { isNil } from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
@@ -20,7 +20,7 @@ type AllDayProps = {
 	callbacks: EditorCallbacks;
 };
 
-export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): JSX.Element | null => {
+export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): ReactElement | null => {
 	const allDay = useSelector(selectEditorAllDay(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));

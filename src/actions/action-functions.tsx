@@ -13,7 +13,7 @@ import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { DeleteEventModal } from '../view/delete/delete-event-modal';
-import { DeletePermanently } from '../view/modals/delete-permanently';
+import { DeletePermanently } from '../commons/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
 
 export const openAppointment = (ev: Event, event: EventType, context: ActionsContext): void => {

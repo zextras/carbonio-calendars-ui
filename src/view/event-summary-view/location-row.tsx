@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 
 type LocationProps = {
@@ -22,7 +22,7 @@ export const LocationRow = ({
 }: {
 	locationData: LocationProps;
 	showIcon?: boolean;
-}): JSX.Element => {
+}): ReactElement => {
 	const location = useMemo(() => {
 		const regex = /\bhttps?:\/\/\S+/g;
 		return locationData?.location?.replace(regex, '');

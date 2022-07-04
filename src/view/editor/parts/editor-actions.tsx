@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Row, Padding } from '@zextras/carbonio-design-system';
 import { EditorProps } from '../../../types/editor';
 import { EditorAttachmentsButton } from './editor-attachments';
@@ -11,7 +11,7 @@ import { EditorRichTextButton } from './editor-richtext-button';
 import { EditorSaveButton } from './editor-save-button';
 import { EditorSendButton } from './editor-send-button';
 
-export const EditorActions = ({ editorId, callbacks }: EditorProps): JSX.Element => (
+export const EditorActions = ({ editorId, callbacks }: EditorProps): ReactElement => (
 	<Row
 		orientation="horizontal"
 		padding={{ top: 'small', bottom: 'small' }}

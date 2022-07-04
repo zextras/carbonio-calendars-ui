@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { Avatar, Container, Row, Text } from '@zextras/carbonio-design-system';
 import { Trans } from 'react-i18next';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
@@ -23,7 +23,7 @@ export const ParticipantsPart = ({
 	invite,
 	organizer,
 	participants
-}: ParticipantProps): JSX.Element => {
+}: ParticipantProps): ReactElement => {
 	const account = useUserAccount();
 	const calendar = useSelector((s: Store) => selectCalendar(s, invite.ciFolder));
 	const iAmAttendee = useMemo(

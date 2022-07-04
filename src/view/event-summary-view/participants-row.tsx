@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Account, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { Avatar, Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
@@ -18,7 +18,7 @@ import {
 
 type ParticipantProps = { participant: InviteParticipants; event: EventType };
 
-const DisplayParticipantsVisitor = ({ participant, event }: ParticipantProps): JSX.Element => {
+const DisplayParticipantsVisitor = ({ participant, event }: ParticipantProps): ReactElement => {
 	const [t] = useTranslation();
 	const users = reduce(participant, (acc, v) => [...acc, ...v], [] as Array<InviteParticipant>);
 	return (
@@ -74,7 +74,7 @@ const DisplayMultipleAttendee = ({
 	participant,
 	message,
 	loggedInUser
-}: DisplayMultipleAttendee): JSX.Element => {
+}: DisplayMultipleAttendee): ReactElement => {
 	const [t] = useTranslation();
 	return (
 		<Row>
@@ -122,7 +122,7 @@ const DisplayedParticipant = ({
 	participant,
 	message,
 	loggedInUser
-}: DisplayedParticipantType): JSX.Element => {
+}: DisplayedParticipantType): ReactElement => {
 	const [t] = useTranslation();
 
 	return (
@@ -144,7 +144,7 @@ const DisplayedParticipant = ({
 	);
 };
 type ComponentProps = {
-	label: JSX.Element;
+	label: ReactElement;
 	participants: Array<InviteParticipant>;
 	width?: string;
 	message: string;
@@ -161,7 +161,7 @@ const Component = ({
 	event,
 	pt,
 	loggedInUser
-}: ComponentProps): JSX.Element | null => {
+}: ComponentProps): ReactElement | null => {
 	const displayedParticipants = useMemo(
 		() => (
 			<Container
@@ -229,7 +229,7 @@ type ParticipantsDisplayerSmallType = {
 const ParticipantsDisplayerSmall = ({
 	participants,
 	event
-}: ParticipantsDisplayerSmallType): JSX.Element | null => {
+}: ParticipantsDisplayerSmallType): ReactElement | null => {
 	const [t] = useTranslation();
 	const loggedInUser = useUserAccount();
 	if (!participants || Object.keys(participants)?.length === 0) return null;
@@ -327,7 +327,7 @@ const ParticipantsPartSmall = ({
 	event,
 	organizer,
 	participants
-}: ParticipantsPartSmallType): JSX.Element => {
+}: ParticipantsPartSmallType): ReactElement => {
 	const [t] = useTranslation();
 	const account = useUserAccount();
 
@@ -407,7 +407,7 @@ export const ParticipantsRow = ({
 }: {
 	event: EventType;
 	invite: Invite;
-}): JSX.Element => (
+}): ReactElement => (
 	<>
 		{invite &&
 		event?.resource?.class === 'PRI' &&

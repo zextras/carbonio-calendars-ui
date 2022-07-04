@@ -16,7 +16,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { map, toUpper } from 'lodash';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -39,7 +39,7 @@ type ResponseProp = {
 	action?: () => void;
 	color: string;
 	selected?: boolean;
-	customComponent?: JSX.Element;
+	customComponent?: ReactElement;
 };
 
 type ReplyButtonProps = {
@@ -54,7 +54,7 @@ export const ReplyButtonsPartSmall = ({
 	inviteId,
 	compNum,
 	event
-}: ReplyButtonProps): JSX.Element => {
+}: ReplyButtonProps): ReactElement => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
