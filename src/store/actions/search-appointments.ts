@@ -24,8 +24,8 @@ export const searchAppointments = createAsyncThunk(
 			sortBy?: string;
 		},
 		{ getState }: any
-	): Promise<unknown> => {
-		const res = await soapFetch('Search', {
+	): Promise<unknown> =>
+		soapFetch('Search', {
 			_jsns: 'urn:zimbraMail',
 			limit: '500',
 			calExpandInstEnd: spanEnd,
@@ -39,7 +39,5 @@ export const searchAppointments = createAsyncThunk(
 			query: {
 				_content: query ?? selectAllCheckedCalendarsQuery(getState())
 			}
-		});
-		return res;
-	}
+		})
 );

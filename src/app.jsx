@@ -22,12 +22,14 @@ import Notifications from './view/notifications';
 import AppointmentReminder from './view/reminder/appointment-reminder';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { getSettingsSubSections } from './settings/sub-sections';
+import { generateEditor } from './commons/editor-generator';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
 );
+
 const LazyEditorView = lazy(() =>
-	import(/* webpackChunkName: "calendar-edit" */ './view/event-panel-edit/board-edit-panel')
+	import(/* webpackChunkName: "calendar-edit" */ './view/editor/editor-board-wrapper')
 );
 const LazySettingsView = lazy(() =>
 	import(/* webpackChunkName: "settings-view" */ './settings/settings-view')
@@ -44,9 +46,10 @@ const CalendarView = () => (
 		<LazyCalendarView />
 	</Suspense>
 );
-const EditorView = (context) => (
+
+const EditorView = () => (
 	<Suspense fallback={<Spinner />}>
-		<LazyEditorView context={context} />
+		<LazyEditorView />
 	</Suspense>
 );
 const SettingsView = () => (
@@ -54,6 +57,7 @@ const SettingsView = () => (
 		<LazySettingsView />
 	</Suspense>
 );
+
 const SidebarView = (props) => (
 	<Suspense fallback={<Spinner />}>
 		<LazySidebarView {...props} />
@@ -101,9 +105,14 @@ export default function App() {
 				icon: 'CalendarModOutline',
 				click: (ev) => {
 					ev?.preventDefault?.();
-					getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
-						title: t('label.new_appointment', 'New Appointment')
-					});
+					const { editor, callbacks } = generateEditor(
+						'new',
+						{
+							title: t('label.new_appointment', 'New Appointment')
+						},
+						false
+					);
+					getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
 				},
 				disabled: false,
 				group: CALENDAR_APP_ID,
@@ -114,6 +123,8 @@ export default function App() {
 		});
 		registerComponents({
 			id: 'invites-reply',
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			component: InviteResponse
 		});
 	}, [t]);

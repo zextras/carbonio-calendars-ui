@@ -3,14 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter, find } from 'lodash';
+import { store } from '@zextras/carbonio-shell-ui';
+import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
+import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
+import { Invite } from '../types/store/invite';
 
-const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
 	const room = find(xprop, ['name', CRB_XPROPS.MEETING_ROOM]);
 	if (room) {
 		return {
@@ -102,3 +104,50 @@ export const normalizeEditor = (
 		uid: invite.uid || undefined
 	}
 });
+
+const getAttendees = (attendees: any[], role: string): any[] =>
+	map(filter(attendees, ['role', role]), (at) =>
+		omitBy(
+			{
+				company: undefined,
+				email: at?.a,
+				firstName: undefined,
+				fullName: at?.d,
+				id: `${at?.a} ${at.d}`,
+				label: at?.d,
+				lastName: undefined
+			},
+			isNil
+		)
+	);
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const normalizeEditorFromInvite = (invite: Invite, context?: any): any =>
+	omitBy(
+		{
+			calendar:
+				store?.store?.getState().calendars.calendars[
+					invite.ciFolder ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
+				],
+			ridZ: context?.ridZ,
+			isInstance: context?.isInstance ?? false,
+			isSeries: context?.isSeries ?? false,
+			isException: invite?.isException ?? context?.isException ?? false,
+			exceptId: invite?.exceptId,
+			title: invite.name,
+			location: invite.location,
+			room: getVirtualRoom(invite.xprop),
+			attendees: getAttendees(invite.attendees, 'REQ'),
+			optionalAttendees: getAttendees(invite.attendees, 'OPT'),
+			allDay: invite.allDay ?? false,
+			freeBusy: invite.freeBusy,
+			class: invite.class,
+			start: invite?.allDay ? moment(invite?.date)?.startOf('date').valueOf() : invite?.start?.u,
+			end: invite?.allDay ? moment(invite?.date)?.endOf('date').valueOf() : invite?.end?.u,
+			timezone: invite?.start?.tz,
+			inviteId: invite.id,
+			reminder: invite?.alarmValue,
+			recur: invite.recurrenceRule
+		},
+		isNil
+	);

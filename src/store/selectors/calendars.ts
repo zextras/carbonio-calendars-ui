@@ -8,24 +8,28 @@ import { Calendar } from '../../types/store/calendars';
 import { Store } from '../../types/store/store';
 
 export function selectCalendar(state: Store, id: string): Calendar {
-	return find(state.calendars.calendars, (item) => item.id === id) as Calendar;
+	return find(state?.calendars?.calendars, (item) => item.id === id) as Calendar;
 }
 
 export function selectCalendars(state: Store): Record<string, Calendar> {
 	return state.calendars ? state.calendars.calendars : {};
 }
 
+export function selectCalendarsArray(state: Store): Array<Calendar> {
+	return values?.(state?.calendars?.calendars) ?? [];
+}
+
 export function selectAllCalendars(state: Store): Array<Calendar> {
-	return state.calendars ? values(state.calendars.calendars) : [];
+	return values?.(state?.calendars?.calendars) ?? [];
 }
 
 export function selectStatus(state: Store): string {
-	return state.calendars.status;
+	return state?.invites?.status;
 }
 
 export function selectAllCheckedCalendarsQuery({ calendars }: Store): string {
 	return reduce(
-		filter(calendars.calendars, 'checked'),
+		filter(calendars?.calendars, 'checked'),
 		(acc, c) => {
 			acc.push(`inid:"${c.id}"`);
 			return acc;
@@ -40,6 +44,17 @@ export function selectUncheckedCalendars({ calendars }: Store): Array<Calendar> 
 
 export function selectCheckedCalendars({ calendars }: Store): Array<Calendar> {
 	return filter(calendars.calendars, ['checked', true]);
+}
+
+export function selectCheckedCalendarsMap({ calendars }: Store): Record<string, Calendar> {
+	return reduce(
+		filter(calendars.calendars, ['checked', true]),
+		(acc, v) => ({
+			...acc,
+			[v.id]: v
+		}),
+		{}
+	);
 }
 
 export function selectStart(state: Store): number {

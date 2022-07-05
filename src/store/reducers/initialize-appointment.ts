@@ -9,7 +9,7 @@ import { initEvent } from '../../utils/store/editors';
 
 type Payload = {
 	payload: {
-		id: string;
+		id: string | undefined;
 		panel: boolean;
 		calendar: Calendar;
 		accounts: Array<never>;
@@ -20,14 +20,16 @@ type Payload = {
 
 export const initializeAppointmentReducer = (state: EditorSlice, { payload }: Payload): void => {
 	const { id, panel, calendar, accounts, selectedStartTime, selectedEndTime } = payload;
-	state.editors[id] = initEvent({
-		id,
-		calendar,
-		account: accounts[0],
-		selectedStartTime,
-		selectedEndTime
-	});
-	if (panel) {
-		state.editorPanel = payload.id;
+	if (id) {
+		state.editors[id] = initEvent({
+			id,
+			calendar,
+			account: accounts[0],
+			selectedStartTime,
+			selectedEndTime
+		});
+		if (panel) {
+			state.editorPanel = payload.id;
+		}
 	}
 };

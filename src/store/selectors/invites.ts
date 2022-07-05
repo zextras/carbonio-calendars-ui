@@ -3,8 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { CalendarMsg, Store } from '../../types/store/store';
+import { Invite } from '../../types/store/invite';
+import { Store } from '../../types/store/store';
 
-export function selectInstanceInvite(state: Store, inviteId: string): CalendarMsg {
-	return state?.invites?.invites?.[inviteId] ?? undefined;
+export function selectInstanceInvite(
+	state: Store,
+	inviteId?: string,
+	ridZ?: string
+): Invite | undefined {
+	return inviteId ? state?.invites?.invites?.[inviteId] : undefined;
 }

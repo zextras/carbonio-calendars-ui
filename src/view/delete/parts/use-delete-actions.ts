@@ -83,7 +83,7 @@ const generateAppointmentRestoredSnackbar = (
 };
 
 type AccountContext = {
-	isInstance: boolean;
+	isInstance?: boolean;
 	replaceHistory: (a: string) => void;
 	onClose: () => void;
 };
@@ -155,7 +155,7 @@ export const useDeleteActions = (
 					}, 5000)
 				);
 		},
-		[context, createSnackbar, dispatch, event, invite, notifyOrganizer, t]
+		[event, context, createSnackbar, dispatch, invite, notifyOrganizer, t]
 	);
 
 	const deleteRecurrentSerie = useCallback(
@@ -230,7 +230,7 @@ export const useDeleteActions = (
 				);
 		},
 
-		[context, createSnackbar, deleteAll, dispatch, event, invite, notifyOrganizer, t]
+		[event, context, createSnackbar, deleteAll, dispatch, invite, notifyOrganizer, t]
 	);
 
 	const deleteRecurrentInstance = useCallback(
@@ -264,7 +264,7 @@ export const useDeleteActions = (
 					}, 5000)
 				);
 		},
-		[context, createSnackbar, dispatch, event, invite, notifyOrganizer, t]
+		[event, context, createSnackbar, dispatch, invite, notifyOrganizer, t]
 	);
 
 	return useMemo(

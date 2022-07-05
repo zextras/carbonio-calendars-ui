@@ -18,7 +18,6 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { find, reduce, includes } from 'lodash';
-import styled from 'styled-components';
 import { useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { useSearchActionsFn } from './hooks/use-search-actions-fn';

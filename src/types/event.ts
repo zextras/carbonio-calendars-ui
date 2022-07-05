@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import moment from 'moment';
-
+import moment, { Moment } from 'moment';
 import { ZimbraColorType } from '../commons/zimbra-standard-colors';
+import { AlarmData, ParticipationStatus } from './store/invite';
 
 export type AlarmType = {
 	alarm: [];
@@ -19,28 +19,30 @@ export type AlarmType = {
 	nextCalAlarm: DateType;
 };
 
+export type EventResourceCalendar = {
+	id: string;
+	name: string;
+	color: ZimbraColorType;
+	owner?: string | undefined;
+	isShared?: boolean;
+};
+
 export type EventResource = {
-	attach: { mp?: []; aid?: [] };
+	attach?: { mp?: []; aid?: [] };
 	attachmentFiles?: [];
 	id: string;
 	inviteId: string;
 	ridZ: string;
-	calendar: {
-		id: string;
-		name: string;
-		color: ZimbraColorType;
-		owner: string | undefined;
-	};
+	calendar: EventResourceCalendar;
 	flags: string;
 	iAmOrganizer: boolean;
 	iAmVisitor: boolean;
 	iAmAttendee: boolean;
-	isRecurrent: boolean;
 	isException?: boolean;
 	isPrivate?: boolean;
 	status: string;
 	location: string;
-	locationUrl: string;
+	locationUrl?: string;
 	fragment: string;
 	neverSent: boolean;
 	class: string;
@@ -48,32 +50,34 @@ export type EventResource = {
 	hasChangesNotNotified: boolean;
 	inviteNeverSent: boolean;
 	hasOtherAttendees: boolean;
-
-	participationStatus: string;
+	isRecurrent: boolean;
+	participationStatus: ParticipationStatus;
 	organizer: {
 		name: string;
 		email: string;
 	};
-
+	room?: any;
 	start?: DateType;
 	uid?: string;
 	idx?: number;
 	changesNotNotified?: boolean;
 	hasAlarm?: boolean;
-	alarmData: Array<AlarmType>;
-	alarm?: boolean;
+	alarm?: AlarmType;
 	tags: string[];
+	compNum: number;
+	apptStart: number;
+	alarmData: AlarmData;
 };
 
 export type DateType = moment.Moment | Date | number;
 
 export type EventType = {
-	title: string | undefined;
-	allDay: boolean;
-	start: moment.Moment | Date;
-	end: moment.Moment | Date;
+	start: Moment | Date;
+	end: Moment | Date;
 	resource: EventResource;
+	allDay: boolean;
 	permission: boolean;
-	id?: string;
-	haveWriteAccess?: boolean;
+	title: string;
+	id: string;
+	haveWriteAccess: boolean;
 };

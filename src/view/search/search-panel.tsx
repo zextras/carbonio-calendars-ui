@@ -3,16 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Container, Icon, Padding, Text } from '@zextras/carbonio-design-system';
 import React, { ComponentProps, ReactComponentElement } from 'react';
-import { useRouteMatch, Switch, Route } from 'react-router-dom';
-import { Container, Padding, Text, Icon } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { useRouteMatch, Switch, Route } from 'react-router-dom';
+import styled from 'styled-components';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import Displayer from './displayer';
 import { Editor } from './editor';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { useSearchEvent } from './hooks/use-search-event';
 
 const LargeIcon = styled(Icon)`
@@ -24,29 +22,31 @@ const SearchPanel = ({ appointments }: ComponentProps<any>): ReactComponentEleme
 	const [t] = useTranslation();
 	const event = useSearchEvent(appointments);
 	return (
-		<Switch>
-			<Route path={`${path}/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
-				<Editor event={event} />
-			</Route>
-			<Route path={`${path}/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
-				<Displayer event={event} />
-			</Route>
-			<Route
-				path={path}
-				render={(): ReactComponentElement<any> => (
-					<Container background="gray5" mainAlignment="center">
-						<LargeIcon icon="SearchOutline" color="secondary" />
-						<Padding top="medium" />
-						<Padding top="extralarge" />
-						<Text color="secondary" size="large" weight="bold">
-							{t(`label.search_hint`)}
-						</Text>
-						<Padding top="medium" />
-						<Text color="secondary">{t(`message.search_hints`)}</Text>
-					</Container>
-				)}
-			/>
-		</Switch>
+		<>
+			<Switch>
+				<Route path={`${path}/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
+					<Editor />
+				</Route>
+				<Route path={`${path}/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
+					<Displayer event={event} />
+				</Route>
+				<Route
+					path={path}
+					render={(): ReactComponentElement<any> => (
+						<Container background="gray5" mainAlignment="center">
+							<LargeIcon icon="SearchOutline" color="secondary" />
+							<Padding top="medium" />
+							<Padding top="extralarge" />
+							<Text color="secondary" size="large" weight="bold">
+								{t(`label.search_hint`)}
+							</Text>
+							<Padding top="medium" />
+							<Text color="secondary">{t(`message.search_hints`)}</Text>
+						</Container>
+					)}
+				/>
+			</Switch>
+		</>
 	);
 };
 

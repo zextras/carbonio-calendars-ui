@@ -73,21 +73,21 @@ const ApptReminderCard: FC<ApptReminderCardProps> = ({
 
 	const timeToDisplay = useMemo(() => {
 		const difference = moment(event.end).diff(moment(event.start), 'seconds');
-		if (event.start < now && event.end > now) {
+		if (event.start.valueOf() < now && event.end.valueOf() > now) {
 			return (
 				<Text color="info" size="large">
 					{t('label.ongoing', 'Ongoing')}
 				</Text>
 			);
 		}
-		if (event.start === now) {
+		if (event.start.valueOf() === now) {
 			return (
 				<Text color="info" size="large">
 					{t('label.now', 'Now')}
 				</Text>
 			);
 		}
-		if (event.start < now) {
+		if (event.start.valueOf() < now) {
 			return (
 				<Text color="error" size="large">
 					{moment(event.start).from(moment())}

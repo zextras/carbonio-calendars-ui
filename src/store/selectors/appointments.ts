@@ -13,6 +13,10 @@ export function selectAllAppointments({ appointments }: Store): Record<string, A
 	return appointments?.appointments;
 }
 
+export function selectAppointmentsArray({ appointments }: Store): Array<Appointment> {
+	return values(appointments?.appointments);
+}
+
 export function selectAppointment({ appointments }: Store, id: string): Appointment | undefined {
 	return appointments?.appointments ? appointments.appointments[id] : undefined;
 }
@@ -20,9 +24,9 @@ export function selectAppointment({ appointments }: Store, id: string): Appointm
 export function selectAppointmentInstance(
 	{ appointments }: Store,
 	apptId: string,
-	ridZ: string
+	ridZ?: string
 ): InstanceReference | undefined {
-	return appointments?.appointments?.[apptId]?.inst
+	return appointments?.appointments?.[apptId]?.inst && ridZ
 		? find(appointments.appointments[apptId].inst, ['ridZ', ridZ])
 		: undefined;
 }

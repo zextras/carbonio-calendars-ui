@@ -4,16 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
-
-import React, {
-	FC,
-	ReactElement,
-	useCallback,
-	useState,
-	useEffect,
-	useMemo,
-	SyntheticEvent
-} from 'react';
+import React, { FC, ReactElement, useCallback, useState, useEffect, useMemo } from 'react';
 import { CustomModal } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -32,23 +23,22 @@ import {
 } from 'lodash';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
-import { setSearchRange } from '../../store/actions/set-search-range';
+import { searchAppointments } from '../../store/actions/search-appointments';
 import { selectAllAppointments, selectApptStatus } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
-import { AppointmentReminderProps } from '../../types/appointment-reminder';
+import { EventType } from '../../types/event';
 import SetNewTimeModal from './set-new_time-modal';
 import sound from '../../assets/notification.mp3';
 import ApptReminderModal from './appt-reminder-modal';
 import { showNotification } from '../notifications';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
 import { getTimeToDisplay } from '../../commons/utilities';
-import { EventType } from '../../types/event';
 
 type ReminderQueue = Record<
 	string,
 	ReturnType<typeof clearTimeout> | ReturnType<typeof setTimeout>
 >;
-const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
+const AppointmentReminder = (): ReactElement => {
 	const dispatch = useDispatch();
 	const [t] = useTranslation();
 
@@ -125,7 +115,6 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 		const uniqueTp = uniq(tp);
 		const trans = pullAll(apptForReminders, uniqueTp);
 		setApptForReminders(trans);
-
 		map(reminderQueue, (q: ReturnType<typeof setTimeout>) => clearTimeout(q));
 		map(eventsToRemind, (rem: EventType & { showNotification?: boolean }) => {
 			const { alarmData, inviteId } = rem.resource;
@@ -161,12 +150,9 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	useEffect(() => {
 		if (!isEmpty(calendars) && status === 'init') {
 			const now = moment();
-			dispatch(
-				setSearchRange({
-					rangeStart: now.subtract('7', 'days').valueOf(),
-					rangeEnd: now.add('15', 'days').valueOf()
-				})
-			);
+			const start = now.subtract('7', 'days').valueOf();
+			const end = now.add('15', 'days').valueOf();
+			dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 		}
 	}, [dispatch, status, calendars]);
 
@@ -221,8 +207,8 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 				open={openReminder}
 				onClose={(): null => null}
 				maxHeight="90vh"
-				onClick={(e: SyntheticEvent): void => e.stopPropagation()}
-				onDoubleClick={(e: SyntheticEvent): void => e.stopPropagation()}
+				onClick={(e: MouseEvent): void => e.stopPropagation()}
+				onDoubleClick={(e: MouseEvent): void => e.stopPropagation()}
 			>
 				{showNewTimeModal ? (
 					<SetNewTimeModal toggleModal={toggleModal} t={t} setNewTime={setNewTime} />
