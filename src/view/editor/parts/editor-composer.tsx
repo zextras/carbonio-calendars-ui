@@ -5,11 +5,15 @@
  */
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { throttle } from 'lodash';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectEditorPlainText, selectEditorRichText } from '../../../store/selectors/editor';
+import {
+	selectEditorIsRichText,
+	selectEditorPlainText,
+	selectEditorRichText
+} from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
 const TextArea = styled.textarea`
@@ -77,10 +81,12 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): JSX.Elem
 	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
 	const [t] = useTranslation();
 	const { onTextChange } = callbacks;
-	const isRichText = true;
+
+	const isRichText = useSelector(selectEditorIsRichText(editorId));
 	const richText = useSelector(selectEditorRichText(editorId));
 	const plainText = useSelector(selectEditorPlainText(editorId));
-	const [plainTextValue, setPlainTextValue] = useState(plainText);
+
+	const [plainTextValue, setPlainTextValue] = useState(plainText ?? '');
 
 	const textAreaLabel = useMemo(
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
@@ -98,6 +104,7 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): JSX.Elem
 
 	const onRichTextChange = useCallback(
 		(e) => {
+			setPlainTextValue(e[1]);
 			throttleInput(e);
 		},
 		[throttleInput]
@@ -105,11 +112,17 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): JSX.Elem
 
 	const onPlainTextChange = useCallback(
 		(e) => {
-			setPlainTextValue(e[0]);
-			throttleInput(e);
+			setPlainTextValue(e.target.value);
+			throttleInput([e.target.value, e.target.value]);
 		},
 		[throttleInput]
 	);
+
+	useEffect(() => {
+		if (plainText) {
+			setPlainTextValue(plainText);
+		}
+	}, [plainText]);
 
 	return (
 		<>
@@ -117,20 +130,10 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): JSX.Elem
 				<EditorWrapper>
 					{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
 					{/* @ts-ignore */}
-					<Composer value={richText} onEditorChange={onRichTextChange} minHeight={200} />
+					<Composer onEditorChange={onRichTextChange} minHeight={200} initialValue={richText} />
 				</EditorWrapper>
 			) : (
-				<TextArea
-					placeholder={textAreaLabel}
-					value={plainTextValue}
-					onChange={(ev): void => {
-						// eslint-disable-next-line no-param-reassign
-						ev.target.style.height = 'auto';
-						// eslint-disable-next-line no-param-reassign
-						ev.target.style.height = `${25 + ev.target.scrollHeight}px`;
-						onPlainTextChange([ev.target.value, ev.target.value]);
-					}}
-				/>
+				<TextArea placeholder={textAreaLabel} value={plainTextValue} onChange={onPlainTextChange} />
 			)}
 		</>
 	);
