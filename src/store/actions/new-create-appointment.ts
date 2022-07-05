@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { getUserSettings, soapFetch, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
@@ -133,6 +133,7 @@ const generateMp = (msg: Editor): any => ({
 
 const generateInvite = (editorData: Editor): any => {
 	const at = [];
+	const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
 	at.push(
 		...editorData.attendees.map((c: any) => ({
 			a: c.email,
@@ -206,12 +207,14 @@ const generateInvite = (editorData: Editor): any => {
 				s: setResourceDate({
 					time: editorData.start,
 					allDay: editorData?.allDay,
-					timezone: editorData?.timezone
+					timezone:
+						zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? editorData?.timezone : undefined
 				}),
 				e: setResourceDate({
 					time: editorData.end,
 					allDay: editorData?.allDay,
-					timezone: editorData?.timezone
+					timezone:
+						zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? editorData?.timezone : undefined
 				}),
 				exceptId: editorData.exceptId,
 				class: editorData.class,
