@@ -128,7 +128,7 @@ export const MoveModal = ({
 				background: folderDestination.id === '1' ? 'highlight' : undefined
 			}
 		],
-		[filterFromInput, folderDestination.id, folders, nestFilteredFolders, t]
+		[t, filterFromInput, folderDestination.id, folders, nestFilteredFolders]
 	);
 
 	return (
