@@ -77,14 +77,6 @@
         },
         "share_info": "Share Info"
     },
-    "folders": {
-        "drafts": "Drafts",
-        "inbox": "Inbox",
-        "junk": "Junk",
-        "sent": "Sent",
-        "spam": "Spam",
-        "trash": "Trash"
-    },
     "freebusy": "FreeBusy",
     "has_attachments": "Has attachments",
     "insert": "Insert",
