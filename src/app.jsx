@@ -22,6 +22,7 @@ import Notifications from './view/notifications';
 import AppointmentReminder from './view/reminder/appointment-reminder';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { getSettingsSubSections } from './settings/sub-sections';
+import { StoreProvider } from './store/redux';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -41,28 +42,38 @@ const LazySearchView = lazy(() =>
 
 const CalendarView = () => (
 	<Suspense fallback={<Spinner />}>
-		<LazyCalendarView />
+		<StoreProvider>
+			<LazyCalendarView />
+		</StoreProvider>
 	</Suspense>
 );
 const EditorView = (context) => (
 	<Suspense fallback={<Spinner />}>
-		<LazyEditorView context={context} />
+		<StoreProvider>
+			<LazyEditorView context={context} />
+		</StoreProvider>
 	</Suspense>
 );
 const SettingsView = () => (
 	<Suspense fallback={<Spinner />}>
-		<LazySettingsView />
+		<StoreProvider>
+			<LazySettingsView />
+		</StoreProvider>
 	</Suspense>
 );
 const SidebarView = (props) => (
 	<Suspense fallback={<Spinner />}>
-		<LazySidebarView {...props} />
+		<StoreProvider>
+			<LazySidebarView {...props} />
+		</StoreProvider>
 	</Suspense>
 );
 
 const SearchView = (props) => (
 	<Suspense fallback={<Spinner />}>
-		<LazySearchView {...props} />
+		<StoreProvider>
+			<LazySearchView {...props} />
+		</StoreProvider>
 	</Suspense>
 );
 export default function App() {
@@ -119,10 +130,10 @@ export default function App() {
 	}, [t]);
 
 	return (
-		<>
+		<StoreProvider>
 			<SyncDataHandler />
-			<AppointmentReminder />
+			{/* <AppointmentReminder /> */}
 			<Notifications />
-		</>
+		</StoreProvider>
 	);
 }
