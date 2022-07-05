@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
+import { DeletePermanently } from '../commons/delete-permanently';
 import { generateEditor } from '../commons/editor-generator';
 import { normalizeEditorFromInvite } from '../normalizations/normalize-editor';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
@@ -13,7 +14,6 @@ import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { DeleteEventModal } from '../view/delete/delete-event-modal';
-import { DeletePermanently } from '../commons/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
 
 export const openAppointment = (ev: Event, event: EventType, context: ActionsContext): void => {

@@ -9,12 +9,7 @@ import { Account, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { Avatar, Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { map, reduce } from 'lodash';
 import { EventType } from '../../types/event';
-import {
-	Invite,
-	InviteOrganizer,
-	InviteParticipant,
-	InviteParticipants
-} from '../../types/store/invite';
+import { Invite, InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
 type ParticipantProps = { participant: InviteParticipants; event: EventType };
 

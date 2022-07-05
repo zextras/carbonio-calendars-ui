@@ -5,7 +5,7 @@
  */
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { throttle } from 'lodash';
-import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';

@@ -8,7 +8,7 @@ import React, { ReactElement, useCallback, useEffect, useMemo, useState } from '
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Input } from '@zextras/carbonio-design-system';
-import { selectEditorLocation, selectEditorTitle } from '../../../store/selectors/editor';
+import { selectEditorLocation } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
 type EditorTitleProps = {

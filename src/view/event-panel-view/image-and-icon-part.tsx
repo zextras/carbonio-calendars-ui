@@ -6,7 +6,6 @@
 import React, { ReactElement } from 'react';
 import { Avatar, Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
-import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 
 const OuterContainer = styled(Container)`
 	height: 100%;

@@ -27,7 +27,6 @@ export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): ReactE
 		[folders, invite.ciFolder]
 	);
 	const [showNewFolderModal, setShowNewFolderModal] = useState(false);
-	const [t] = useTranslation();
 
 	const toggleModal = useCallback(
 		() => setShowNewFolderModal(!showNewFolderModal),
