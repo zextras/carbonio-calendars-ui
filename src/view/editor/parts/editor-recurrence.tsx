@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Select, Icon, Row, Text } from '@zextras/carbonio-design-system';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { toUpper, find } from 'lodash';
@@ -28,7 +28,7 @@ type LabelFactoryProps = {
 	focus: boolean;
 };
 
-const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): JSX.Element => (
+const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
 	<ColorContainer
 		orientation="horizontal"
 		width="fill"
@@ -64,7 +64,7 @@ const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): JSX.
 	</ColorContainer>
 );
 
-const RepeatItemComponent = ({ label }: { label: string }): JSX.Element => (
+const RepeatItemComponent = ({ label }: { label: string }): ReactElement => (
 	<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
 		<TextUpperCase>{label}</TextUpperCase>
 	</Container>
@@ -74,11 +74,11 @@ type SelectProps =
 	| {
 			label: string;
 			value: string;
-			customComponent: JSX.Element;
+			customComponent: ReactElement;
 	  }
 	| undefined;
 
-export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): JSX.Element | null => {
+export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const { onRecurrenceChange } = callbacks;
 	const recur = useSelector(selectEditorRecurrence(editorId));

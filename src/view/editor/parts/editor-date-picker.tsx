@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Padding } from '@zextras/carbonio-design-system';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import {
 	selectEditorAllDay,
@@ -21,7 +21,7 @@ type DatePickerProps = {
 	callbacks: EditorCallbacks;
 };
 
-export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): JSX.Element | null => {
+export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): ReactElement | null => {
 	const allDay = useSelector(selectEditorAllDay(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));

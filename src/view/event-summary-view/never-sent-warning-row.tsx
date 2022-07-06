@@ -6,13 +6,13 @@
 import styled from 'styled-components';
 import { Icon, Row, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 const WarningText = styled(Text)`
 	color: #d74942;
 `;
 
-export const NeverSentWarningRow = ({ neverSent }: { neverSent: boolean }): JSX.Element => {
+export const NeverSentWarningRow = ({ neverSent }: { neverSent: boolean }): ReactElement => {
 	const [t] = useTranslation();
 	return (
 		<>

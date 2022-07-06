@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
-import React, { useCallback } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
@@ -16,7 +16,7 @@ export const ReminderPart = ({
 }: {
 	alarmString: string;
 	invite: Invite;
-}): JSX.Element | null => {
+}): ReactElement | null => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const setSnooze = useCallback(

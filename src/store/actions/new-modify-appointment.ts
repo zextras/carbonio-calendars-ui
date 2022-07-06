@@ -74,20 +74,6 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 	};
 };
 
-/* export const modifyAppointment = createAsyncThunk(
-	'appointment/modify appointment',
-	async ({ invite, editor }: any): Promise<unknown> => {
-		const normalizeInviteToSoap = invite
-			? generateSoapMessageFromInvite(invite)
-			: generateSoapMessageFromEditor(editor);
-		if (editor.isInstance && !editor.isException) {
-			return undefined;
-			// createApptException
-		}
-		return soapFetch('ModifyAppointment', normalizeInviteToSoap);
-	}
-); */
-
 export const modifyAppointment = createAsyncThunk(
 	'appointment/create new appointment',
 	async ({ id, draft }: any, { getState }: any): Promise<any> => {

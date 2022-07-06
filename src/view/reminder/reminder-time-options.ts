@@ -8,7 +8,7 @@ import { filter } from 'lodash';
 import moment from 'moment';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { EventType } from '../../../types/event';
+import { AlarmData } from '../../types/store/invite';
 
 type ReturnType = Array<{
 	id: string;
@@ -19,13 +19,13 @@ type ReturnType = Array<{
 }>;
 export const useGetReminderItems = (
 	setSnooze: (arg1: number, arg2?: boolean) => void,
-	event: EventType
+	alarmData: AlarmData
 ): ReturnType => {
 	const [t] = useTranslation();
 
 	const diff = useMemo(
-		() => moment(event?.resource?.alarmData?.[0]?.alarmInstStart).diff(moment(), 'seconds'),
-		[event?.resource?.alarmData]
+		() => moment(alarmData?.[0]?.alarmInstStart).diff(moment(), 'seconds'),
+		[alarmData]
 	);
 	const beforeList = useMemo(
 		() => [
@@ -138,7 +138,7 @@ export const useGetReminderItems = (
 					defaultValue_plural: '{{count}} minutes'
 				}),
 				click: () => setSnooze(1, false),
-				value: 1 * 60
+				value: 60
 			},
 			{
 				id: 'reminder_after_5',
@@ -194,9 +194,8 @@ export const useGetReminderItems = (
 		[setSnooze, t]
 	);
 
-	const reminderList = useMemo(
+	return useMemo(
 		() => [...filter(beforeList, (item) => item.value <= diff), ...afterList],
 		[afterList, beforeList, diff]
 	);
-	return reminderList;
 };

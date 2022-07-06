@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Container, Text, Accordion } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ const ContainerEl = styled(Container)`
 	display: block;
 `;
 
-export const FolderItem = ({ folders }: { folders: unknown[] }): JSX.Element => {
+export const FolderItem = ({ folders }: { folders: unknown[] }): ReactElement => {
 	const [t] = useTranslation();
 	return folders.length ? (
 		<ContainerEl

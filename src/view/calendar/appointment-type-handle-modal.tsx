@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Text, Container, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
@@ -17,7 +17,7 @@ type ModalProps = {
 	onClose: () => void;
 };
 
-export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): JSX.Element => {
+export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): ReactElement => {
 	const [t] = useTranslation();
 
 	const onEntireSeries = (): void => {

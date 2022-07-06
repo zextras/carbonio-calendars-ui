@@ -5,7 +5,7 @@
  */
 import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { uploadParts } from '../../../commons/upload-parts';
@@ -28,7 +28,7 @@ export const addAttachments = async (
 	return { payload, mp, files };
 };
 
-export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): JSX.Element => {
+export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
 	const [t] = useTranslation();
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [openDD, setOpenDD] = useState(false);

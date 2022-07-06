@@ -9,7 +9,7 @@ import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { Calendar } from '../types/store/calendars';
 
-export const locationUrl = (location: string): string | undefined => {
+export const getLocationUrl = (location: string): string | undefined => {
 	const regex = /\bhttps?:\/\/\S+/g;
 	const found = location?.match(regex);
 
@@ -36,7 +36,7 @@ const normalizeEventResource = (
 	iAmAttendee: (!appt.isOrg && !calendar.owner) ?? false,
 	status: appt.status,
 	location: appt.loc,
-	locationUrl: locationUrl(appt.loc ?? ''),
+	locationUrl: getLocationUrl(appt.loc ?? ''),
 	fragment: (inst as ExceptionReference)?.fr ?? appt.fr,
 	class: appt.class,
 	freeBusy: appt.fb,

@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Icon, Row, Text } from '@zextras/carbonio-design-system';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { EventType } from '../../types/event';
 
-export const DescriptionFragmentRow = ({ event }: { event: EventType }): JSX.Element => (
+export const DescriptionFragmentRow = ({ event }: { event: EventType }): ReactElement => (
 	<>
 		{event.resource.class === 'PRI' &&
 		!event?.resource?.iAmOrganizer &&

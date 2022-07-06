@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -36,7 +36,7 @@ type SubjectProps = {
 	isPrivate: boolean;
 };
 
-const SubjectRow = ({ subject, calendarColor, isPrivate }: SubjectProps): JSX.Element => (
+const SubjectRow = ({ subject, calendarColor, isPrivate }: SubjectProps): ReactElement => (
 	<Container mainAlignment="flex-start" orientation="horizontal">
 		{isPrivate && <Icon icon="Lock" customColor={calendarColor} style={{ padding: '4px' }} />}
 		<Text size="small" overflow="break-word" style={{ fontWeight: '600' }}>
@@ -46,7 +46,7 @@ const SubjectRow = ({ subject, calendarColor, isPrivate }: SubjectProps): JSX.El
 	</Container>
 );
 
-const InviteNeverSentRow = (): JSX.Element => {
+const InviteNeverSentRow = (): ReactElement => {
 	const [t] = useTranslation();
 	return (
 		<PaddedRow takeAvailableSpace>
@@ -60,7 +60,7 @@ const InviteNeverSentRow = (): JSX.Element => {
 	);
 };
 
-const CalendarInfo = ({ calendar }: { calendar: Calendar }): JSX.Element => (
+const CalendarInfo = ({ calendar }: { calendar: Calendar }): ReactElement => (
 	<Tooltip label={calendar.name} placement="left">
 		<div>
 			<CalendarIcon icon="Calendar2" size="medium" customColor={calendar.color.color} />
@@ -82,7 +82,7 @@ export const DetailsPart = ({
 	inviteNeverSent,
 	isPrivate,
 	invite
-}: DetailsPartProps): JSX.Element => {
+}: DetailsPartProps): ReactElement => {
 	const calendar = useSelector((s: Store) => selectCalendar(s, event.resource.calendar.id));
 
 	const timeData = useMemo(

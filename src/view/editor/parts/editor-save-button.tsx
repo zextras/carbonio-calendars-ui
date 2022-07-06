@@ -5,13 +5,13 @@
  */
 import { Button } from '@zextras/carbonio-design-system';
 import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import React, { useCallback } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectEditorIsNew, selectEditorTitle } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
-export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): JSX.Element => {
+export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
 	const [t] = useTranslation();
 	const title = useSelector(selectEditorTitle(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));

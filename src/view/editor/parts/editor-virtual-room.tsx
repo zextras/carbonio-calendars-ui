@@ -22,7 +22,7 @@ export const EditorVirtualRoom = ({
 	editorId,
 	callbacks,
 	disabled = false
-}: EditorRoomProps): JSX.Element | null => {
+}: EditorRoomProps): ReactElement | null => {
 	const [RoomSelector, isRoomAvailable] = useIntegratedComponent('room-selector');
 	const { onRoomChange } = callbacks;
 	const room = useSelector(selectEditorRoom(editorId));

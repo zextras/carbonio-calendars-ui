@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import moment from 'moment';
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
@@ -19,7 +19,7 @@ const NeedActionIcon = styled(Icon)`
 `;
 
 type TagItems = Tag & {
-	customComponent: JSX.Element;
+	customComponent: ReactElement;
 	label: string;
 };
 
@@ -33,7 +33,7 @@ export const CustomEventComponent = ({
 	event,
 	tags,
 	title
-}: CustomEventComponentProps): JSX.Element => {
+}: CustomEventComponentProps): ReactElement => {
 	const [showDropdown, setShowDropdown] = useState(false);
 	const [t] = useTranslation();
 

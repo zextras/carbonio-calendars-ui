@@ -55,7 +55,7 @@ export type Appointment = {
 	loc: string;
 	md: number;
 	ms: number;
-	name?: string;
+	name: string;
 	neverSent: boolean;
 	or: any;
 	ptst: ParticipationStatus;

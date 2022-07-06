@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Container, Padding, Text, Row, Icon } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 
@@ -56,7 +56,7 @@ const LabelFactory = ({
 	open,
 	focus,
 	disabled
-}: LabelFactoryProps): JSX.Element => (
+}: LabelFactoryProps): ReactElement => (
 	<ColorContainer
 		orientation="horizontal"
 		width="fill"

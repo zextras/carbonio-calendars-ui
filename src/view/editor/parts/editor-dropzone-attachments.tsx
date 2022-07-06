@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Container, Icon, Text, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -62,7 +62,7 @@ export const DropZoneAttachment = ({
 	onDragOver,
 	onDrop,
 	onDragLeave
-}: DropzoneProps): JSX.Element => {
+}: DropzoneProps): ReactElement => {
 	const [t] = useTranslation();
 	return (
 		<>
