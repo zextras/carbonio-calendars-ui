@@ -94,7 +94,7 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
 					disabled={!event.haveWriteAccess}
 					type="outlined"
 					label={t('label.edit', 'edit')}
-					onClick={(ev: Event): void => editAppointment(ev, event, invite, context)}
+					onClick={editAppointment({ event, invite, context })}
 				/>
 			)}
 

@@ -8,9 +8,7 @@ import { TFunction } from 'i18next';
 import { ActionsContext } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
-import { Appointment } from '../types/store/appointments';
 import { Invite } from '../types/store/invite';
-import { applyTag } from '../view/tags/tag-actions';
 import {
 	acceptAsTentative,
 	acceptInvitation,
@@ -32,7 +30,7 @@ export const openInDisplayerItem = (
 	disabled: false,
 	label: t('event.action.expand', 'Open in Displayer'),
 	keepOpen: true,
-	click: (ev: Event): void => openAppointment(ev, event, context)
+	click: openAppointment({ event, context })
 });
 
 export const acceptInvitationItem = (
@@ -44,7 +42,7 @@ export const acceptInvitationItem = (
 	icon: 'CheckmarkOutline',
 	label: t('event.action.accept', 'Accept'),
 	disabled: false,
-	click: (ev: Event): void => acceptInvitation(ev, event, context)
+	click: acceptInvitation({ event, context })
 });
 
 export const declineInvitationItem = (
@@ -56,7 +54,7 @@ export const declineInvitationItem = (
 	icon: 'CloseOutline',
 	label: t('event.action.decline', 'Decline'),
 	disabled: false,
-	click: (ev: Event): void => declineInvitation(ev, event, context)
+	click: declineInvitation({ event, context })
 });
 
 export const acceptAsTentativeItem = (
@@ -68,7 +66,7 @@ export const acceptAsTentativeItem = (
 	icon: 'QuestionMark',
 	label: t('label.tentative', 'Tentative'),
 	disabled: false,
-	click: (ev: Event): void => acceptAsTentative(ev, event, context)
+	click: acceptAsTentative({ event, context })
 });
 
 export const moveAppointmentItem = (
@@ -84,7 +82,7 @@ export const moveAppointmentItem = (
 			? t('label.restore', 'Restore')
 			: t('label.move', 'Move'),
 	disabled: false,
-	click: (ev: Event): void => moveAppointment(ev, invite, context)
+	click: moveAppointment({ invite, context })
 });
 
 export const moveApptToTrashItem = (
@@ -98,7 +96,7 @@ export const moveApptToTrashItem = (
 	label: t('label.delete', 'Delete'),
 	disabled: false,
 	keepOpen: true,
-	click: (ev: Event): void => moveToTrash(ev, event, invite, context)
+	click: moveToTrash({ event, invite, context })
 });
 
 export const deletePermanentlyItem = (
@@ -111,7 +109,7 @@ export const deletePermanentlyItem = (
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
 	keepOpen: true,
-	click: (ev: Event): void => deletePermanently(ev, event, context)
+	click: deletePermanently({ event, context })
 });
 
 export const editAppointmentItem = (
@@ -124,5 +122,5 @@ export const editAppointmentItem = (
 	icon: 'Edit2Outline',
 	label: t('label.edit', 'Edit'),
 	disabled: !invite.isOrganizer || !context?.haveWriteAccess,
-	click: (ev: Event): void => editAppointment(ev, event, invite, context)
+	click: editAppointment({ event, invite, context })
 });
