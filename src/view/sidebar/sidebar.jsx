@@ -16,6 +16,7 @@ import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 import { FoldersComponent, SharesComponent, TagComponent } from './sidebar-components';
 import useGetTagsAccordion from '../../hooks/use-get-tags-accordions';
 import { searchAppointments } from '../../store/actions/search-appointments';
+import { getFolderTranslatedName } from '../../commons/utilities';
 
 const calcFolderAbsParentLevel = (folders, subFolder, level = 1) => {
 	const nextFolder = find(folders, (f) => f.id === subFolder.parent);
@@ -79,11 +80,12 @@ export default function SetMainMenuItems({ expanded }) {
 		() =>
 			map(calendars, (item) => ({
 				...item,
+				name: getFolderTranslatedName(t, item.id, item.name),
 				...calcFolderAbsParentLevel(calendars, item),
 				recursiveToggleCheck: () => recursiveToggleCheck([item], item.checked),
 				CustomComponent: FoldersComponent
 			})),
-		[calendars, recursiveToggleCheck]
+		[calendars, recursiveToggleCheck, t]
 	);
 
 	const nestedItems = useMemo(() => nest(allItems, FOLDERS.USER_ROOT), [allItems]);
