@@ -5,7 +5,7 @@
  */
 import { Avatar, Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import moment from 'moment';
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -28,13 +28,13 @@ export const AvatarComp = styled(Avatar)`
 	}
 `;
 
-const TitleRow = ({ children }: { children: JSX.Element }): JSX.Element => (
+const TitleRow = ({ children }: { children: ReactElement }): ReactElement => (
 	<Container mainAlignment="flex-start" crossAlignment="flex-start" padding={{ top: 'extrasmall' }}>
 		{children}
 	</Container>
 );
 
-export const EditorSummary = ({ editorId }: { editorId: string }): JSX.Element => {
+export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement => {
 	const [t] = useTranslation();
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));

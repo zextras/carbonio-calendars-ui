@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 import { setLightness } from 'polished';
 import moment from 'moment';
@@ -99,6 +99,6 @@ type EventWrapperProps = {
 	children: React.ReactChildren;
 };
 
-export default function CustomEventWrapper({ event, children }: EventWrapperProps): JSX.Element {
+export default function CustomEventWrapper({ event, children }: EventWrapperProps): ReactElement {
 	return <CustomEventWrapperStyler event={event}>{children}</CustomEventWrapperStyler>;
 }

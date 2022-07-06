@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Divider, Row } from '@zextras/carbonio-design-system';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { EditorProps } from '../../types/editor';
 import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
 import { EditorActions } from './parts/editor-actions';
@@ -24,7 +24,7 @@ import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
 
-export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): JSX.Element | null =>
+export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): ReactElement | null =>
 	editorId && callbacks ? (
 		<Container
 			padding={{ horizontal: 'large', bottom: 'large' }}

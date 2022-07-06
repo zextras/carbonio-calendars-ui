@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import {
 	Container,
 	Text,
@@ -35,7 +35,7 @@ type CustomEventProps = {
 	title: string;
 };
 
-export const CustomEvent = ({ event, title }: CustomEventProps): JSX.Element => {
+export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);

@@ -5,7 +5,7 @@
  */
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import moment, { Moment } from 'moment';
-import React, { useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type TimeInfoProps = {
@@ -20,7 +20,7 @@ export const TimeInfoRow = ({
 }: {
 	timeInfoData: TimeInfoProps;
 	showIcon?: boolean;
-}): JSX.Element => {
+}): ReactElement => {
 	const [t] = useTranslation();
 	const date = useMemo(() => {
 		if (timeInfoData.allDay) {

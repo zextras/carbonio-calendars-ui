@@ -19,10 +19,10 @@ import { useTranslation } from 'react-i18next';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
-import AppointmentReminder from './view/reminder/appointment-reminder';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { generateEditor } from './commons/editor-generator';
+import { AppointmentReminder } from './view/reminder/appointment-reminder';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -131,8 +131,8 @@ export default function App() {
 
 	return (
 		<>
-			<SyncDataHandler />
 			<AppointmentReminder />
+			<SyncDataHandler />
 			<Notifications />
 		</>
 	);

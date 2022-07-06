@@ -5,7 +5,7 @@
  */
 import { Container, Padding, Select, Text, Icon, Button } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectEditorFreeBusy } from '../../../store/selectors/editor';
@@ -23,7 +23,7 @@ type ItemProps = {
 	color: string;
 };
 
-const StatusItemComponent = ({ label, color }: ItemProps): JSX.Element => (
+const StatusItemComponent = ({ label, color }: ItemProps): ReactElement => (
 	<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
 		<Square color={color} />
 		<Padding left="small">
@@ -74,7 +74,7 @@ export const EditorFreeBusySelector2 = ({
 	editorId,
 	callbacks,
 	disabled = false
-}: EditorFreeBusyProps): JSX.Element | null => {
+}: EditorFreeBusyProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const statusItems = useMemo(() => getStatusItems(t), [t]);
 	const freeBusy = useSelector(selectEditorFreeBusy(editorId));
@@ -108,7 +108,7 @@ export const EditorFreeBusySelector = ({
 	editorId,
 	callbacks,
 	disabled = false
-}: EditorFreeBusyProps): JSX.Element | null => {
+}: EditorFreeBusyProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const statusItems = useMemo(() => getStatusItems(t), [t]);
 	const freeBusy = useSelector(selectEditorFreeBusy(editorId));

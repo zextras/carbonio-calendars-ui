@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Button } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
@@ -15,7 +14,7 @@ import {
 } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
-export const EditorSendButton = ({ editorId, callbacks }: EditorProps): JSX.Element => {
+export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
 	const [t] = useTranslation();
 	const attendees = useSelector(selectEditorAttendees(editorId));
 	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));

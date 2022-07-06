@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useRef, useState, useContext } from 'react';
+import React, { useCallback, useMemo, useRef, useState, useContext, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { map, filter, reduce, uniqBy, find } from 'lodash';
@@ -106,7 +106,7 @@ const Attachment = ({
 	disabled = false,
 	iconColors,
 	att
-}: AttachmentProps): JSX.Element => {
+}: AttachmentProps): ReactElement => {
 	const { createPreview } = useContext(PreviewsManagerContext);
 	const extension = getFileExtension(att);
 	const sizeLabel = useMemo(() => humanFileSize(att.size), [att.size]);
@@ -252,7 +252,7 @@ export const AttachmentsBlock = ({
 	onAttachmentsChange,
 	isEditor = false,
 	isComplete = false
-}: AttachmentsBlockProps): JSX.Element => {
+}: AttachmentsBlockProps): ReactElement => {
 	const [t] = useTranslation();
 	const [expanded, setExpanded] = useState(false);
 	const theme = useTheme();

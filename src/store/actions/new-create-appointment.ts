@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getUserSettings, soapFetch, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { getUserSettings, soapFetch } from '@zextras/carbonio-shell-ui';
 import { concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';

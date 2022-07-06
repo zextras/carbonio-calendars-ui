@@ -12,7 +12,7 @@ import {
 	retrieveAttachmentsType,
 	findAttachments
 } from './normalizations-utils';
-import { locationUrl } from './normalize-calendar-events';
+import { getLocationUrl } from './normalize-calendar-events';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeInvite = (m: any): Invite => ({
@@ -65,7 +65,7 @@ export const normalizeInvite = (m: any): Invite => ({
 	meta: m.meta,
 	xprop: m?.inv?.[0]?.comp?.[0]?.xprop,
 	neverSent: m?.inv?.[0]?.comp?.[0]?.neverSent ?? false,
-	locationUrl: locationUrl(m?.inv?.[0]?.comp?.[0]?.loc ?? '')
+	locationUrl: getLocationUrl(m?.inv?.[0]?.comp?.[0]?.loc ?? '')
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -117,5 +117,5 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	rev: inv.rev || 0,
 	xprop: inv.comp?.[0]?.xprop,
 	neverSent: inv?.[0]?.comp?.[0]?.neverSent ?? false,
-	locationUrl: locationUrl(inv?.[0]?.comp?.[0]?.loc ?? '')
+	locationUrl: getLocationUrl(inv?.[0]?.comp?.[0]?.loc ?? '')
 });

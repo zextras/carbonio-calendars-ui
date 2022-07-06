@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { Row } from '@zextras/carbonio-design-system';
 import { selectEditorCalendar } from '../../../store/selectors/editor';
@@ -20,7 +20,7 @@ export const EditorCalendarSelector = ({
 	editorId,
 	callbacks,
 	disabled
-}: EditorCalendarSelectorProps): JSX.Element | null => {
+}: EditorCalendarSelectorProps): ReactElement | null => {
 	const { onCalendarChange } = callbacks;
 	const calendar = useSelector(selectEditorCalendar(editorId));
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { TFunction } from 'i18next';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import {
 	Container,
 	Input,
@@ -50,7 +50,7 @@ type LabelFactoryProps = {
 	focus: boolean;
 };
 
-const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): JSX.Element => (
+const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
 	<ColorContainer
 		orientation="horizontal"
 		width="fill"
@@ -133,7 +133,7 @@ export const NewModal = ({
 	folders,
 	invite,
 	action
-}: NewModalProps): JSX.Element => {
+}: NewModalProps): ReactElement => {
 	const { id, apptId } = invite;
 	const [t] = useTranslation();
 	const dispatch = useDispatch();

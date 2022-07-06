@@ -5,7 +5,7 @@
  */
 import { Select } from '@zextras/carbonio-design-system';
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { findLabel, TimeZonesOptions } from '../../../settings/components/utils';
@@ -19,7 +19,7 @@ type SelectValue =
 	  }
 	| undefined;
 
-export const EditorTimezone = ({ editorId, callbacks }: EditorProps): JSX.Element | null => {
+export const EditorTimezone = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const [value, setValue] = useState<SelectValue>(undefined);
 	const timezone = useSelector(selectEditorTimezone(editorId));

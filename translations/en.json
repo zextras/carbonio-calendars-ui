@@ -94,6 +94,7 @@
     "label": {
         "access_revoked": "Access revoked",
         "add_share": "Add share",
+        "al": "Inbox",
         "all_calendars": "All calendars",
         "all_day": "All day",
         "app_name": "Calendars",
@@ -211,6 +212,7 @@
         "revoke": "Revoke",
         "revoke_share": "Revoke share of {{title}}",
         "role": "role",
+        "root": "Root",
         "save": "Save",
         "scheduled_in": "Calendar",
         "search_hint": "",
@@ -242,6 +244,7 @@
         "timezone_pref_msg": "The timings follow your timezone preferences.",
         "to": "to",
         "today": "today",
+        "trash": "Trash",
         "trash_emptied": "Trash emptied successfully",
         "type_name_here": "Calendar name",
         "undo": "Undo",

@@ -5,7 +5,7 @@
  */
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { throttle } from 'lodash';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -77,7 +77,7 @@ type ComposerProps = {
 	callbacks: EditorCallbacks;
 };
 
-export const EditorComposer = ({ editorId, callbacks }: ComposerProps): JSX.Element | null => {
+export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactElement | null => {
 	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
 	const [t] = useTranslation();
 	const { onTextChange } = callbacks;

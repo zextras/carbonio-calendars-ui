@@ -14,7 +14,7 @@ import {
 	Row,
 	Text
 } from '@zextras/carbonio-design-system';
-import React, { useContext, useMemo } from 'react';
+import React, { ReactElement, useContext, useMemo } from 'react';
 import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { ReplyButtonsPartSmall } from '../../commons/reply-buttons-small';
@@ -38,7 +38,7 @@ export const ActionsButtonsRow = ({
 	event: EventType;
 	onClose: () => void;
 	invite: Invite;
-}): JSX.Element => {
+}): ReactElement => {
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
 	const calendar = useSelector((s: Store) => selectCalendar(s, invite?.parent));

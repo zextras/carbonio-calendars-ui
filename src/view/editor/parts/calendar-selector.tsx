@@ -5,7 +5,7 @@
  */
 import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
@@ -31,7 +31,7 @@ export const CalendarSelector = ({
 	updateAppTime = false,
 	showCalWithWritePerm = true,
 	disabled
-}: CalendarSelectorProps): JSX.Element | null => {
+}: CalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
 
 	const calendars = useSelector(selectCalendarsArray);
