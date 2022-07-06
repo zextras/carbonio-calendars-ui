@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions, FOLDERS } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import { ReminderItem } from '../types/appointment-reminder';
@@ -294,4 +294,36 @@ export const getTimeToDisplayData = (
 		size: 'large',
 		text: moment(alarmData[0].alarmInstStart).fromNow()
 	};
+};
+
+export const translatedSystemFolders = (t: TFunction): Array<string> => [
+	t('label.root', 'Root'),
+	t('label.all_calendars', 'All calendars'),
+	t('label.calendar', 'Calendar'),
+	t('label.trash', 'Trash')
+];
+
+export const getFolderTranslatedName = (
+	t: TFunction,
+	folderId: string,
+	folderName: string
+): string => {
+	// TODO remove when TS conversion will be completed
+	const id = `${folderId}`;
+	let translationKey;
+	switch (id) {
+		case FOLDERS.USER_ROOT:
+			translationKey = 'root';
+			break;
+		case FOLDERS.CALENDAR:
+			translationKey = 'calendar';
+			break;
+		case FOLDERS.TRASH:
+			translationKey = 'trash';
+			break;
+		default:
+			return folderName;
+	}
+
+	return t(`label.${translationKey}`, folderName);
 };

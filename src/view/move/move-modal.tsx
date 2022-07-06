@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { TFunction } from 'i18next';
 import React, { useState, useMemo, useCallback, ReactElement } from 'react';
 import { Input, Container, Text } from '@zextras/carbonio-design-system';
@@ -10,6 +11,7 @@ import { filter, startsWith, reduce, isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
+import { getFolderTranslatedName } from '../../commons/utilities';
 import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { Calendar } from '../../types/store/calendars';
 import { Invite } from '../../types/store/invite';
@@ -118,15 +120,15 @@ export const MoveModal = ({
 	const nestedData = useMemo(
 		() => [
 			{
-				id: '1',
-				label: 'Root',
+				id: FOLDERS.USER_ROOT,
+				label: getFolderTranslatedName(t, FOLDERS.USER_ROOT, 'Root'),
 				level: '0',
 				open: true,
 				items: nestFilteredFolders(folders, '1', filterFromInput),
 				background: folderDestination.id === '1' ? 'highlight' : undefined
 			}
 		],
-		[filterFromInput, folderDestination.id, folders, nestFilteredFolders]
+		[t, filterFromInput, folderDestination.id, folders, nestFilteredFolders]
 	);
 
 	return (
