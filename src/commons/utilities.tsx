@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { getBridgedFunctions, FOLDERS } from '@zextras/carbonio-shell-ui';
+import { TFunction } from 'i18next';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import { ReminderItem } from '../types/appointment-reminder';
