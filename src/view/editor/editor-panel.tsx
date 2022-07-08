@@ -27,9 +27,11 @@ import { EditorVirtualRoom } from './parts/editor-virtual-room';
 export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): ReactElement | null =>
 	editorId && callbacks ? (
 		<Container
+			background="gray5"
 			padding={{ horizontal: 'large', bottom: 'large' }}
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
+			style={{ overflow: 'auto' }}
 		>
 			<EditorActions editorId={editorId} callbacks={callbacks} />
 			<EditorSummary editorId={editorId} />

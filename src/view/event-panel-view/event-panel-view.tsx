@@ -210,14 +210,19 @@ export default function EventPanelView(): ReactElement | null {
 	const actions = useQuickActions(invite, event, context);
 
 	return invite && event ? (
-		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">
+		<AppointmentCardContainer mainAlignment="flex-start">
 			<DisplayerHeader title={invite.name} actions={actions} />
-			<Container padding={{ all: 'none' }} mainAlignment="flex-start" height="calc(100% - 64px)">
+			<Container
+				padding={{ all: 'none' }}
+				mainAlignment="flex-start"
+				height="calc(100% - 64px)"
+				style={{ overflow: 'auto' }}
+			>
 				<BodyContainer
 					orientation="vertical"
 					mainAlignment="flex-start"
 					width="fill"
-					height="fit"
+					height="fill"
 					padding={{ all: 'large' }}
 					background="gray5"
 				>
