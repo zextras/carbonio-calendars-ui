@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Button, ChipInput, Container, Row } from '@zextras/carbonio-design-system';
+import { ButtonOld as Button, ChipInput, Container, Row } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';

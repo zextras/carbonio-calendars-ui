@@ -12,7 +12,7 @@ import {
 	Select,
 	Text,
 	Checkbox,
-	Button,
+	ButtonOld as Button,
 	Row,
 	Icon,
 	IconButton

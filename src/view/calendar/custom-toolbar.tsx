@@ -6,7 +6,7 @@
 import React, { ReactElement, useCallback } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { Container, Button, IconButton } from '@zextras/carbonio-design-system';
+import { Container, ButtonOld as Button, IconButton } from '@zextras/carbonio-design-system';
 import { useAppStatusStore } from '../../store/zustand/store';
 
 const MultiButton = styled(Button)`
