@@ -175,18 +175,23 @@ export default function CalendarComponent() {
 	const handleSelect = useCallback(
 		(e) => {
 			if (!summaryViewOpen) {
-				const pickedEnd = moment(e.end);
-				const preferredEnd = moment(
+				const isAllDay =
+					moment(e.end).hours() === moment(e.start).hours() &&
+					moment(e.end).minutes() === moment(e.start).minutes();
+				const slotEnd = moment(e.end);
+				const preferredSettingsEnd = moment(
 					getEndTime({
 						start: moment(e.start).valueOf(),
 						duration: settings?.prefs?.zimbraPrefCalendarDefaultApptDuration
 					})
 				);
-				const end = pickedEnd.isSameOrAfter(preferredEnd) ? pickedEnd : preferredEnd;
+				const end = slotEnd.isSameOrAfter(preferredSettingsEnd) ? slotEnd : preferredSettingsEnd;
+				const editorEnd = isAllDay ? slotEnd : end;
 				const { editor, callbacks } = generateEditor('new', {
 					title: t('label.new_appointment', 'New Appointment'),
 					start: moment(e.start).valueOf(),
-					end
+					end: editorEnd,
+					allDay: isAllDay ?? false
 				});
 				const storeData = store.store.getState();
 				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
