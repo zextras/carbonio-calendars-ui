@@ -75,7 +75,7 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 };
 
 export const modifyAppointment = createAsyncThunk(
-	'appointment/create new appointment',
+	'appointment/modify appointment',
 	async ({ id, draft }: any, { getState }: any): Promise<any> => {
 		const editor = getState()?.editor?.editors?.[id];
 		if (editor) {

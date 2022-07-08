@@ -3,7 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { store, getUserAccount, getUserSettings, replaceHistory } from '@zextras/carbonio-shell-ui';
+import {
+	store,
+	getUserAccount,
+	getUserSettings,
+	replaceHistory,
+	getBridgedFunctions
+} from '@zextras/carbonio-shell-ui';
 import { find, isNaN, startsWith } from 'lodash';
 import moment from 'moment';
 import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
@@ -285,9 +291,18 @@ export const generateEditor = (
 	const emptyEditor = createEmptyEditor(editorId);
 	const editor = { ...emptyEditor, ...context, isNew: startsWith(editorId, 'new') };
 	const callbacks = createCallbacks(editorId);
+	const closeCurrentEditor = panel
+		? callbacks.closeCurrentEditor
+		: getBridgedFunctions().removeCurrentBoard;
 	const { dispatch } = store.store;
 	const storeEditorData = { ...editor, panel };
 	dispatch(createNewEditor(storeEditorData));
 	const storeData = store.store.getState();
-	return { editor: storeData?.editor?.editors?.[editorId], callbacks };
+	return {
+		editor: storeData?.editor?.editors?.[editorId],
+		callbacks: {
+			...callbacks,
+			closeCurrentEditor
+		}
+	};
 };
