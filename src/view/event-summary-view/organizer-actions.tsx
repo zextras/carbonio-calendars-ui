@@ -58,7 +58,7 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
 							? deletePermanentlyItem(invite, event, context, t)
 							: moveApptToTrashItem(invite, event, context, t),
 						openInDisplayerItem(event, context, t),
-						applyTag({ t, context, invite })
+						applyTag({ t, context, event })
 				  ],
 		[context, event, invite, t]
 	);

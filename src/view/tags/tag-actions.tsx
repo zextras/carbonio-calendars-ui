@@ -154,11 +154,11 @@ export const deleteTag = ({ t, createModal, tag }: ArgumentType): ReturnType => 
 	}
 });
 
-export const TagsDropdownItem = ({ tag, invite }: { tag: Tag; invite: Invite }): ReactElement => {
+export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType }): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
-	const [checked, setChecked] = useState(includes(invite.tags, tag.id));
+	const [checked, setChecked] = useState(includes(event.resource.tags, tag.id));
 	const [isHovering, setIsHovering] = useState(false);
 	const toggleCheck = useCallback(
 		(value) => {
@@ -166,7 +166,7 @@ export const TagsDropdownItem = ({ tag, invite }: { tag: Tag; invite: Invite }):
 
 			itemActionRequest({
 				op: value ? '!tag' : 'tag',
-				inviteId: invite.id,
+				inviteId: event.resource.id,
 				tagName: tag.name
 			})
 				.then((res: any) => {
@@ -199,7 +199,7 @@ export const TagsDropdownItem = ({ tag, invite }: { tag: Tag; invite: Invite }):
 					});
 				});
 		},
-		[invite?.id, createSnackbar, t, tag.name]
+		[event?.resource?.id, createSnackbar, t, tag.name]
 	);
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
@@ -233,10 +233,10 @@ export const TagsDropdownItem = ({ tag, invite }: { tag: Tag; invite: Invite }):
 export const applyTag = ({
 	t,
 	context,
-	invite
+	event
 }: {
 	t: TFunction;
-	invite: Invite;
+	event: EventType;
 	context: ContextType;
 }): { id: string; items: TagType[]; customComponent: ReactElement } => {
 	const tagItem = reduce(
@@ -256,7 +256,7 @@ export const applyTag = ({
 				label: v.name,
 				icon: 'TagOutline',
 				keepOpen: true,
-				customComponent: <TagsDropdownItem tag={v} invite={invite} />
+				customComponent: <TagsDropdownItem tag={v} event={event} />
 			};
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
@@ -275,7 +275,7 @@ export const applyTag = ({
 				type="outlined"
 				size="fill"
 				isSmall
-				onClick={(): void => context.createAndApplyTag({ t, context, invite }).click()}
+				onClick={(): void => context.createAndApplyTag({ t, context, event }).click()}
 			/>
 		)
 	});

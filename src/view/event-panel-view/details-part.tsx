@@ -138,9 +138,7 @@ export const DetailsPart = ({
 						<LocationRow locationData={locationData} />
 					)}
 					{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} />}
-					{typeof invite?.tags?.length === 'number' && invite?.tags?.length > 0 && (
-						<TagsRow invite={invite} hideIcon />
-					)}
+					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
 				</Row>
 			</Row>
 			<Padding top={'medium'} />

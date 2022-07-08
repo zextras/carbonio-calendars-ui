@@ -22,7 +22,7 @@ export const useQuickActions = (
 	return invite?.isOrganizer
 		? [
 				applyTag({
-					invite,
+					event,
 					context: {
 						...context,
 						tags,
@@ -45,7 +45,7 @@ export const useQuickActions = (
 		  ]
 		: [
 				applyTag({
-					invite,
+					event,
 					context: {
 						...context,
 						tags,
