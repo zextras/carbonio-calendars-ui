@@ -29,8 +29,7 @@ export const sendResponse = (event: EventType, invite: any, context: any): any =
 		sendInviteResponse({
 			inviteId: event.resource.inviteId,
 			updateOrganizer: true,
-			action: 'DECLINE',
-			compNum: invite.compNum
+			action: 'DECLINE'
 		})
 	);
 

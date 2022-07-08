@@ -55,8 +55,7 @@ export const acceptInvitation =
 				sendInviteResponse({
 					inviteId: event.resource.inviteId,
 					updateOrganizer: false,
-					action: 'ACCEPT',
-					compNum: event.resource.compNum
+					action: 'ACCEPT'
 				})
 			)
 			.then(() =>
@@ -73,8 +72,7 @@ export const declineInvitation =
 				sendInviteResponse({
 					inviteId: event.resource.inviteId,
 					updateOrganizer: false,
-					action: 'DECLINE',
-					compNum: event.resource.compNum
+					action: 'DECLINE'
 				})
 			)
 			.then(() =>
@@ -91,8 +89,7 @@ export const acceptAsTentative =
 				sendInviteResponse({
 					inviteId: event.resource.inviteId,
 					updateOrganizer: false,
-					action: 'TENTATIVE',
-					compNum: event.resource.compNum
+					action: 'TENTATIVE'
 				})
 			)
 			.then(() =>

@@ -19,13 +19,12 @@ import {
 import { find, includes, reduce } from 'lodash';
 import { ZIMBRA_STANDARD_COLORS, useTags, Tag, Tags } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
+import { itemActionRequest } from '../../soap/item-action-request';
 import { Invite } from '../../types/store/invite';
 import { TagsActionsType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from './delete-tag-modal';
-import { itemAction } from '../../store/actions/item-action';
 import { EventType } from '../../types/event';
 
 export type ReturnType = {
@@ -165,8 +164,8 @@ export const TagsDropdownItem = ({ tag, invite }: { tag: Tag; invite: Invite }):
 		(value) => {
 			setChecked((c) => !c);
 
-			itemAction({
-				operation: value ? '!tag' : 'tag',
+			itemActionRequest({
+				op: value ? '!tag' : 'tag',
 				inviteId: invite.id,
 				tagName: tag.name
 			})

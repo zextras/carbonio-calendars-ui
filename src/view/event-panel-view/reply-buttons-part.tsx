@@ -30,12 +30,11 @@ export const ReplyButtonsPart = ({
 				sendInviteResponse({
 					inviteId,
 					updateOrganizer: false,
-					action,
-					compNum
+					action
 				})
 			);
 		},
-		[dispatch, inviteId, compNum]
+		[dispatch, inviteId]
 	);
 
 	return (

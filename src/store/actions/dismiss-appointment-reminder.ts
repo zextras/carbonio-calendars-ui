@@ -4,15 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { dismissCalendarItemAlarmRequest } from '../../soap/dismiss-calendar-item-alarm-request';
 
 export const dismissApptReminder = createAsyncThunk(
-	'reminder/dismisApptReminder',
-	async ({ dismissItems }: any) => {
-		const response = await soapFetch('DismissCalendarItemAlarm', {
-			_jsns: 'urn:zimbraMail',
-			appt: dismissItems
-		});
-		return { response };
-	}
+	'calendar/dismissAppointmentReminder',
+	async ({ dismissItems }: any) => dismissCalendarItemAlarmRequest({ items: dismissItems })
 );
