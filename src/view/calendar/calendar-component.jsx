@@ -26,7 +26,7 @@ import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { generateEditor } from '../../commons/editor-generator';
+import { generateEditor, getEndTime } from '../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
 import { normalizeEditorFromInvite } from '../../normalizations/normalize-editor';
@@ -175,10 +175,18 @@ export default function CalendarComponent() {
 	const handleSelect = useCallback(
 		(e) => {
 			if (!summaryViewOpen) {
+				const pickedEnd = moment(e.end);
+				const preferredEnd = moment(
+					getEndTime({
+						start: moment(e.start).valueOf(),
+						duration: settings?.prefs?.zimbraPrefCalendarDefaultApptDuration
+					})
+				);
+				const end = pickedEnd.isSameOrAfter(preferredEnd) ? pickedEnd : preferredEnd;
 				const { editor, callbacks } = generateEditor('new', {
 					title: t('label.new_appointment', 'New Appointment'),
 					start: moment(e.start).valueOf(),
-					end: moment(e.end).valueOf()
+					end
 				});
 				const storeData = store.store.getState();
 				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
@@ -188,7 +196,7 @@ export default function CalendarComponent() {
 			}
 			useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 		},
-		[summaryViewOpen, t]
+		[settings?.prefs?.zimbraPrefCalendarDefaultApptDuration, summaryViewOpen, t]
 	);
 
 	const onEventDrop = useCallback(
