@@ -110,10 +110,7 @@ export const editEditorAttachmentsReducer = (
 	if (payload?.id) {
 		if (editors?.[payload?.id]?.attachmentFiles) {
 			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].attachmentFiles = [
-				...editors[payload.id].attachmentFiles,
-				payload.attachmentFiles
-			];
+			editors[payload.id].attachmentFiles = payload.attachmentFiles;
 		}
 		if (editors?.[payload?.id]?.attach) {
 			// eslint-disable-next-line no-param-reassign

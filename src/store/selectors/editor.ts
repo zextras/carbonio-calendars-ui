@@ -118,3 +118,18 @@ export const selectEditorIsNew =
 	(id: string) =>
 	(state: Store): boolean =>
 		state?.editor?.editors?.[id]?.isNew;
+
+export const selectEditorInviteId =
+	(id: string) =>
+	(state: Store): string | undefined =>
+		state?.editor?.editors?.[id]?.inviteId;
+
+export const selectEditorAttachmentFiles =
+	(id: string) =>
+	(state: Store): Array<any> =>
+		state?.editor?.editors?.[id]?.attachmentFiles;
+
+export const selectEditorAttach =
+	(id: string) =>
+	(state: Store): Array<any> =>
+		state?.editor?.editors?.[id]?.attach?.mp;

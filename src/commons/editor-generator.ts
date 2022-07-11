@@ -96,7 +96,6 @@ const createEmptyEditor = (id: string): Editor => {
 			start: moment().valueOf(),
 			duration: zimbraPrefCalendarDefaultApptDuration as string
 		}),
-		// end: moment().valueOf() + 3600,
 		inviteId: undefined,
 		timezone: zimbraPrefTimeZoneId as string,
 		reminder: zimbraPrefCalendarApptReminderWarningTime as string,

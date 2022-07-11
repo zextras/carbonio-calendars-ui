@@ -42,7 +42,7 @@ const AttachmentHoverBarContainer = styled(Container)`
 
 const AttachmentContainer = styled(Container)`
 	border-radius: 2px;
-	width: ${({ isComplete }): string => (isComplete ? 'calc(25% - 8px)' : 'calc(50% - 8px)')};
+	width: calc(50% - 8px);
 	transition: 0.2s ease-out;
 	margin-bottom: ${({ theme }): string => theme.sizes.padding.small};
 	margin-right: ${({ theme }): string => theme.sizes.padding.small};
@@ -86,7 +86,6 @@ type AttachmentProps = {
 	id: string;
 	part: string;
 	isEditor: boolean;
-	isComplete: boolean;
 	removeAttachment: (arg: string) => void;
 	disabled: boolean;
 	iconColors: Array<{
@@ -102,7 +101,6 @@ const Attachment = ({
 	part,
 	isEditor,
 	removeAttachment,
-	isComplete,
 	disabled = false,
 	iconColors,
 	att
@@ -154,7 +152,6 @@ const Attachment = ({
 			mainAlignment="flex-start"
 			height="fit"
 			background={disabled ? 'gray5' : 'gray3'}
-			isComplete={isComplete}
 			disabled={disabled}
 			padding={{ right: 'medium' }}
 		>
@@ -238,11 +235,9 @@ type AttachmentsBlockProps = {
 	subject: string;
 	onAttachmentsChange?: (
 		arg1: { aid?: string[]; mp: Array<{ part: any; mid: string }> },
-		arg2: any,
-		arg3: any
+		arg2: any
 	) => void;
 	isEditor?: boolean;
-	isComplete?: boolean;
 };
 
 export const AttachmentsBlock = ({
@@ -250,18 +245,18 @@ export const AttachmentsBlock = ({
 	id,
 	subject,
 	onAttachmentsChange,
-	isEditor = false,
-	isComplete = false
+	isEditor = false
 }: AttachmentsBlockProps): ReactElement => {
 	const [t] = useTranslation();
 	const [expanded, setExpanded] = useState(false);
 	const theme = useTheme();
+
 	const attachmentsCount = useMemo(() => attachments.length, [attachments]);
-	const attachmentsParts = useMemo(() => map(attachments, 'name'), [attachments]);
-	const actionsDownloadLink = useMemo(
-		() => getAttachmentsLink(id, subject, attachmentsParts),
-		[attachmentsParts, id, subject]
-	);
+
+	const actionsDownloadLink = useMemo(() => {
+		const attachmentsParts = map(attachments, 'name');
+		return getAttachmentsLink(id, subject, attachmentsParts);
+	}, [attachments, id, subject]);
 
 	const removeAttachment = useCallback(
 		(part) => {
@@ -282,8 +277,7 @@ export const AttachmentsBlock = ({
 							[] as Array<{ part: any; mid: string }>
 						)
 					},
-					attachmentFiles,
-					true
+					attachmentFiles
 				);
 			}
 		},
@@ -292,14 +286,14 @@ export const AttachmentsBlock = ({
 
 	const removeAllAttachments = useCallback(() => {
 		if (onAttachmentsChange) {
-			onAttachmentsChange({ mp: [] }, [], true);
+			onAttachmentsChange({ mp: [] }, []);
 		}
 	}, [onAttachmentsChange]);
-	const attachToVisualize = useMemo(() => {
-		if (!expanded && isComplete) return attachments.slice(0, 4);
-		if (!expanded && !isComplete) return attachments.slice(0, 2);
-		return attachments;
-	}, [attachments, expanded, isComplete]);
+
+	const attachToVisualize = useMemo(
+		() => (expanded ? attachments : attachments.slice(0, 2)),
+		[attachments, expanded]
+	);
 
 	const iconColors = useMemo(
 		() =>
@@ -406,7 +400,6 @@ export const AttachmentsBlock = ({
 								id={id}
 								part={att.name ?? att.aid}
 								isEditor={isEditor}
-								isComplete={isComplete}
 								removeAttachment={removeAttachment}
 								disabled={!att.name}
 								iconColors={iconColors}

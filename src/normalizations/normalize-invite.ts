@@ -106,10 +106,6 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	exceptId: inv.comp?.[0]?.exceptId, // shown only in exceptions todo: normalize
 	tagNamesList: inv.tn,
 	tags: !isNil(inv.t) ? filter(inv.t.split(','), (t) => t !== '') : [],
-	attach: {
-		mp: retrieveAttachmentsType(inv.mp?.[0] ?? [], 'attachment', `${inv.id}`)
-	},
-	attachmentFiles: findAttachments(inv.mp ?? [], []),
 	participants: normalizeInviteParticipants(inv.comp?.[0]?.at ?? []),
 	alarm: !!inv.comp?.[0]?.alarm,
 	alarmData: inv.comp?.[0]?.alarm,

@@ -7,6 +7,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
+import {
+	findAttachments,
+	retrieveAttachmentsType
+} from '../../normalizations/normalizations-utils';
 import { Invite } from '../../types/store/invite';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
@@ -103,8 +107,22 @@ export const modifyAppointment = createAsyncThunk(
 				return { response: res, editor: updatedEditor };
 			}
 			const body = generateSoapMessageFromEditor({ ...editor, draft });
-			const res: { calItemId: string } = await soapFetch('ModifyAppointment', body);
-			const updatedEditor = { ...editor, isSeries: !!editor.recur, isNew: false };
+			const res: { calItemId: string; echo: any } = await soapFetch('ModifyAppointment', body);
+			const attach = {
+				mp: retrieveAttachmentsType(
+					res?.echo?.[0]?.m?.[0]?.mp?.[0] ?? [],
+					'attachment',
+					res?.echo?.[0]?.m?.[0]?.id
+				)
+			};
+			const attachmentFiles = findAttachments(res?.echo?.[0]?.m?.[0]?.mp ?? [], []);
+			const updatedEditor = {
+				...editor,
+				isSeries: !!editor.recur,
+				isNew: false,
+				attach,
+				attachmentFiles
+			};
 			return { response: res, editor: updatedEditor };
 		}
 		return undefined;

@@ -229,18 +229,15 @@ const generateInvite = (editorData: Editor): any => {
 export const generateSoapMessageFromEditor = (msg: Editor): any =>
 	omitBy(
 		{
-			echo: msg?.isInstance ? '0' : '1',
+			echo: '1',
 			id: msg?.inviteId,
 			comp: '0',
 			m: omitBy(
 				{
-					attach: msg?.attachmentFiles
+					attach: msg?.attach
 						? {
-								mp: msg?.attachmentFiles?.mp,
-								aid:
-									msg?.attachmentFiles?.aid?.length > 0
-										? msg?.attachmentFiles?.aid?.join(',')
-										: undefined
+								mp: msg?.attach?.mp,
+								aid: msg?.attach?.aid?.length > 0 ? msg?.attach?.aid?.join(',') : undefined
 						  }
 						: undefined,
 					e: generateParticipantInformation(msg),
