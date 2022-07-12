@@ -4,12 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
-import { useBoardConfig } from '@zextras/carbonio-shell-ui';
 import EventEditPanel from './event-edit-panel';
 
-const BoardEditPanel = () => {
-	const context = useBoardConfig();
-	const boardContext = useMemo(() => ({ ...context, isBoard: true }), [context]);
+const BoardEditPanel = ({ board }) => {
+	const boardContext = useMemo(() => ({ ...board.context, isBoard: true }), [board]);
 	return <EventEditPanel boardContext={boardContext} />;
 };
 export default BoardEditPanel;

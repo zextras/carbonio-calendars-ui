@@ -5,7 +5,7 @@
  */
 import { useCallback, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRemoveCurrentBoard, replaceHistory, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useUserAccount, useBoardHooks } from '@zextras/carbonio-shell-ui';
 import { startsWith } from 'lodash';
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +18,7 @@ import { createApptException } from '../store/actions/create-appointment-excepti
 export const useOnSaveAndOnSend = (id, isBoard, isInstance) => {
 	const dispatch = useDispatch();
 	const account = useUserAccount();
-	const closeBoard = useRemoveCurrentBoard();
+	const { closeBoard } = useBoardHooks();
 	const editor = useSelector((state) => selectEditor(state, id));
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [t] = useTranslation();

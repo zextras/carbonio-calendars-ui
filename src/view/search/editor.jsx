@@ -6,7 +6,7 @@
 import React from 'react';
 import { Container } from '@zextras/carbonio-design-system';
 import { useParams } from 'react-router-dom';
-import { useBoardConfig } from '@zextras/carbonio-shell-ui';
+import { useBoardHooks } from '@zextras/carbonio-shell-ui';
 import { useSelector } from 'react-redux';
 import { Header } from './header';
 import { useSearchActionsFn } from './hooks/use-search-actions-fn';
@@ -19,7 +19,7 @@ import { useEditorDispatches } from '../../hooks/use-editor-dispatches';
 export const Editor = ({ event, actions }) => {
 	const { action } = useParams();
 	const { close } = useSearchActionsFn(event);
-	const boardContext = useBoardConfig();
+	const { board } = useBoardHooks();
 	const editorId = useQueryParam('edit');
 	const updateAppTime = useQueryParam('updateTime');
 	const selectedStartTime = useQueryParam('start');
@@ -28,15 +28,15 @@ export const Editor = ({ event, actions }) => {
 	const { id, data } = useId(
 		action === 'new' && !editorId ? action : editorId,
 		null,
-		boardContext?.event ? boardContext.event : event,
+		board.context?.event ? board.context.event : event,
 		selectedStartTime,
 		selectedEndTime,
-		boardContext?.invite
+		board.context?.invite
 	);
 	const invite = useSelector(
 		(state) =>
 			selectInstanceInvite(state, event?.resource.inviteId, event?.resource.ridZ) ||
-			boardContext?.invite
+			board.context?.invite
 	);
 	const callbacks = useEditorDispatches(id);
 	return (
@@ -45,9 +45,9 @@ export const Editor = ({ event, actions }) => {
 			<EditorCompleteView
 				data={data}
 				callbacks={callbacks}
-				invite={boardContext?.proposeNewTime ? boardContext.invite : invite}
+				invite={board.context?.proposeNewTime ? board.context.invite : invite}
 				updateAppTime={!!updateAppTime}
-				proposeNewTime={!!boardContext?.proposeNewTime}
+				proposeNewTime={!!board.context?.proposeNewTime}
 			/>
 		</Container>
 	);

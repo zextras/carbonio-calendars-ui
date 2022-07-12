@@ -3,8 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, useAddBoardCallback, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
-
+import { FOLDERS, addBoard } from '@zextras/carbonio-shell-ui';
 import React, {
 	FC,
 	ReactElement,
@@ -40,7 +39,7 @@ import SetNewTimeModal from './set-new_time-modal';
 import sound from '../../assets/notification.mp3';
 import ApptReminderModal from './appt-reminder-modal';
 import { showNotification } from '../notifications';
-import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
+import { CALENDAR_ROUTE } from '../../constants';
 import { getTimeToDisplay } from '../../commons/utilities';
 import { EventType } from '../../types/event';
 
@@ -69,9 +68,6 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 		}),
 		[]
 	);
-
-	const updateBoard = useUpdateCurrentBoard();
-	const addBoard = useAddBoardCallback();
 
 	useEffect(() => {
 		playing ? audio.play() : audio.pause();
@@ -197,18 +193,13 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
 
 	const setNewTime = useCallback(() => {
-		addBoard(`${CALENDAR_ROUTE}/edit?edit=${eventForChange?.resource?.id}&updateTime=true`, {
-			app: CALENDAR_APP_ID,
-			// Addboard call needs to be typed better
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			event: eventForChange
+		addBoard({
+			url: `${CALENDAR_ROUTE}/edit?edit=${eventForChange?.resource?.id}&updateTime=true`,
+			context: { event: eventForChange },
+			title: eventForChange?.title ?? t('label.set_new_time', 'Set New Time')
 		});
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		updateBoard(undefined, eventForChange?.title || 'Set New Time');
 		dismissAll();
-	}, [eventForChange, addBoard, updateBoard, dismissAll]);
+	}, [eventForChange, t, dismissAll]);
 
 	const openReminder = useMemo(
 		() => uniqueReminders.length > 0 && apptForReminders.length > 0,

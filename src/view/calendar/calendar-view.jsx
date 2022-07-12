@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { Suspense, lazy, useEffect, useMemo } from 'react';
-import { Container, Text, SnackbarManager } from '@zextras/carbonio-design-system';
+import { Container, Text } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
@@ -44,25 +44,23 @@ export default function CalendarView() {
 	}, [dispatch, status, calendars]);
 
 	return (
-		<SnackbarManager>
-			<Container
-				background="gray6"
-				padding={{ all: 'medium' }}
-				style={{ overflowY: 'auto', position: 'relative' }}
-			>
-				<CalendarStyle primaryCalendar={primaryCalendar} />
-				<Suspense fallback={<Text>{t('label.loading', 'Loading...')}</Text>}>
-					<CalendarComponent />
-				</Suspense>
-				<Switch>
-					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
-						<EventEditPanel />
-					</Route>
-					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
-						<EventPanelView />
-					</Route>
-				</Switch>
-			</Container>
-		</SnackbarManager>
+		<Container
+			background="gray6"
+			padding={{ all: 'medium' }}
+			style={{ overflowY: 'auto', position: 'relative' }}
+		>
+			<CalendarStyle primaryCalendar={primaryCalendar} />
+			<Suspense fallback={<Text>{t('label.loading', 'Loading...')}</Text>}>
+				<CalendarComponent />
+			</Suspense>
+			<Switch>
+				<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
+					<EventEditPanel />
+				</Route>
+				<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
+					<EventPanelView />
+				</Route>
+			</Switch>
+		</Container>
 	);
 }

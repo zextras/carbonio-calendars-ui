@@ -5,7 +5,7 @@
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { replaceHistory, useUpdateCurrentBoard } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useBoardHooks } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -146,7 +146,7 @@ const EventEditPanel = ({ boardContext }) => {
 	const selectedStartTime = useQueryParam('start');
 	const selectedEndTime = useQueryParam('end');
 	const [t] = useTranslation();
-	const updateBoard = useUpdateCurrentBoard();
+	const { updateBoard } = useBoardHooks();
 	const { id, data } = useId(
 		apptId ?? 'new',
 		boardContext?.isBoard,
@@ -168,7 +168,7 @@ const EventEditPanel = ({ boardContext }) => {
 		if (!boardContext?.isBoard) {
 			setTitle(data?.title ?? t('label.no_subject', 'No subject'));
 		} else {
-			updateBoard(undefined, data?.title ?? t('label.new_appointment', 'New Appointment'));
+			updateBoard({ title: data?.title ?? t('label.new_appointment', 'New Appointment') });
 		}
 	}, [data?.title, setTitle, updateBoard, t, boardContext?.isBoard]);
 

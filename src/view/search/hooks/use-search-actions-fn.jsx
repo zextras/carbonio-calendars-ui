@@ -5,18 +5,16 @@
  */
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useCallback } from 'react';
-import { useAddBoardCallback } from '@zextras/carbonio-shell-ui';
 import { closeEventFn, editEventFn, moveToBardFn, openEventFn } from '../utils/actions-fn';
 
 export const useSearchActionsFn = (event) => {
 	const history = useHistory();
 	const { pathname } = useLocation();
 	const { apptId, ridZ, action } = useParams();
-	const addBoard = useAddBoardCallback();
 
 	const moveToBoard = useCallback(
-		(ev, editor) => moveToBardFn(ev, { addBoard, apptId, ridZ, editor, action, history, pathname }),
-		[action, addBoard, apptId, history, pathname, ridZ]
+		(ev, editor) => moveToBardFn(ev, { apptId, ridZ, editor, action, history, pathname }),
+		[action, apptId, history, pathname, ridZ]
 	);
 
 	const edit = useCallback(

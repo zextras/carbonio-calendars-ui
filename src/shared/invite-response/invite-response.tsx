@@ -19,7 +19,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
 import { useTranslation } from 'react-i18next';
-import { getBridgedFunctions, getAction, Action } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction, Action } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
@@ -151,19 +151,14 @@ const InviteResponse: FC<InviteResponse> = ({
 		dispatch(getInvite({ inviteId })).then((res) => {
 			const normalizedInvite = { ...normalizeInvite(res.payload.m), ...res.payload.m };
 			const requiredEvent = inviteToEvent(normalizeInvite(res.payload.m));
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			getBridgedFunctions().addBoard(
-				`${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
-				{
-					app: CALENDAR_APP_ID,
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
+			addBoard({
+				url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
+				context: {
 					event: requiredEvent,
 					invite: normalizedInvite,
 					proposeNewTime: true
 				}
-			);
+			});
 		});
 	}, [dispatch, inviteId]);
 	return (

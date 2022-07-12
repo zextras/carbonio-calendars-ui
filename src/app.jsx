@@ -13,7 +13,7 @@ import {
 	registerActions,
 	registerComponents,
 	ACTION_TYPES,
-	getBridgedFunctions
+	addBoard
 } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
@@ -112,7 +112,8 @@ export default function App() {
 				icon: 'CalendarModOutline',
 				click: (ev) => {
 					ev?.preventDefault?.();
-					getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
+					addBoard({
+						url: `${CALENDAR_ROUTE}/`,
 						title: t('label.new_appointment', 'New Appointment')
 					});
 				},
@@ -132,7 +133,7 @@ export default function App() {
 	return (
 		<StoreProvider>
 			<SyncDataHandler />
-			{/* <AppointmentReminder /> */}
+			<AppointmentReminder />
 			<Notifications />
 		</StoreProvider>
 	);

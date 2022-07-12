@@ -6,7 +6,7 @@
 import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { addBoard, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { minBy } from 'lodash';
@@ -22,7 +22,7 @@ import { selectAllAppointments } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
 import { setSearchRange } from '../../store/actions/set-search-range';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
-import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
+import { CALENDAR_ROUTE } from '../../constants';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { appointmentToEvent } from '../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
@@ -65,7 +65,6 @@ export default function CalendarComponent() {
 	const theme = useContext(ThemeContext);
 	const account = useUserAccount();
 	const settings = useUserSettings();
-	const addBoard = useAddBoardCallback();
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
@@ -177,14 +176,11 @@ export default function CalendarComponent() {
 
 	const handleSelect = (e) => {
 		if (!resumeViewOpen)
-			addBoard(
-				`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
+			addBoard({
+				url: `/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
 					e.end
-				).getTime()}`,
-				{
-					app: CALENDAR_APP_ID
-				}
-			);
+				).getTime()}`
+			});
 		useAppStatusStore.setState((s) => ({ ...s, isResumeViewOpen: false }));
 	};
 	const onEventDrop = useCallback(
