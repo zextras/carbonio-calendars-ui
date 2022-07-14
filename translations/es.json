@@ -188,12 +188,12 @@
         "preview": "Clic para previsualizar",
         "delete_permanently": "Borrar permanentemente",
         "edit_message": "Editar mensaje",
-        "save_to_preview": "Salvar para pre-visualizar",
+        "save_to_preview": "Salvar para previsualizar",
         "send_cancellation": "Enviar cancelación",
         "calendar_access_share": "Compartición de acceso al calendario",
         "edit_calendar_properties": "Editar propiedades del calendario",
         "share_calendar": "Compartir calendario",
-        "empty_trash_confirmation": "Esta acción eliminará todos los elementos de la papelera. ¿Está seguro que desea continuar?"
+        "empty_trash_confirmation": "Esta acción eliminará todos los elementos de la papelera. ¿Estás seguro que quieres continuar?"
     },
     "event": {
         "action": {
