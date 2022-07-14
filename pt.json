@@ -286,7 +286,7 @@
             "calendar_permanently_deleted": "Calendário excluído permanentemente",
             "calendar_restored": "Calendário restaurado com sucesso",
             "appointment_permanently_deleted": "Compromisso excluído definitivamente",
-            "calendar_edits_saved": "Edições salvas corretamente"
+            "calendar_edits_saved": "Edições salvas correctamente"
         },
         "share_calendar_url_note2": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.<br/>Também é possível encontrar esses links clicando com o botão direito em sua lista de calendários.",
         "delete_all_occurences": "Excluir todas as ocorrências",
@@ -317,7 +317,9 @@
         "organizer": "Organizador",
         "more": "Mais...",
         "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com ela.",
-        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?"
+        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?",
+        "declined": "{{count}} recusadas",
+        "awaiting": "a esperar"
     },
     "months": {
         "april": "Abril",
@@ -545,7 +547,8 @@
         "copy_vector_url": "Copiar URL de Visualização",
         "location": "Local",
         "equipment": "Equipamento",
-        "chat": "Equipamento"
+        "chat": "Equipamento",
+        "calendar_sharing_status": "Partilhado com {{count}} personas"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",
