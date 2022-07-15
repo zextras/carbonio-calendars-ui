@@ -182,10 +182,10 @@ export default function EventPanelView(): ReactElement | null {
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const calendar = useSelector((s: Store) => selectCalendar(s, calendarId));
-	const appointment = useSelector((s: Store) => selectAppointment(s, apptId));
+	const calendar = useSelector(selectCalendar(calendarId));
+	const appointment = useSelector(selectAppointment(apptId));
 	const invite = useInvite(appointment?.inviteId);
-	const inst = useSelector((s: Store) => selectAppointmentInstance(s, apptId, ridZ));
+	const inst = useSelector(selectAppointmentInstance(apptId, ridZ));
 
 	const event = useMemo(() => {
 		if (calendar && appointment && inst)
@@ -234,7 +234,7 @@ export default function EventPanelView(): ReactElement | null {
 						invite={invite}
 					/>
 					<StyledDivider />
-					{!invite.isOrganizer && !calendar.owner && invite && (
+					{!invite.isOrganizer && !calendar?.owner && invite && (
 						<>
 							<ReplyButtonsPart
 								inviteId={invite.id}

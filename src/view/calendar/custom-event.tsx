@@ -82,10 +82,25 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 			}
 			if (e.detail === 1 && action !== EventActionsEnum.EXPAND) {
 				setOpen(true);
-				useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: true }));
+				useAppStatusStore.setState((s) => ({
+					...s,
+					isSummaryViewOpen: true,
+					inviteId: event.resource.inviteId,
+					ridZ: event.resource.ridZ,
+					calendarId: event.resource.calendar.id,
+					appointmentId: event.resource.id
+				}));
 			}
 		},
-		[action, dispatch, event.resource.inviteId, event.resource.ridZ, invite]
+		[
+			action,
+			dispatch,
+			event.resource.calendar.id,
+			event.resource.id,
+			event.resource.inviteId,
+			event.resource.ridZ,
+			invite
+		]
 	);
 
 	const context = useMemo(

@@ -7,9 +7,10 @@ import { filter, find, reduce, values } from 'lodash';
 import { Calendar } from '../../types/store/calendars';
 import { Store } from '../../types/store/store';
 
-export function selectCalendar(state: Store, id: string): Calendar {
-	return find(state?.calendars?.calendars, (item) => item.id === id) as Calendar;
-}
+export const selectCalendar =
+	(id: string | undefined): ((state: Store) => Calendar | undefined) =>
+	(state: Store): Calendar | undefined =>
+		find(state?.calendars?.calendars, ['id', id]);
 
 export function selectCalendars(state: Store): Record<string, Calendar> {
 	return state.calendars ? state.calendars.calendars : {};

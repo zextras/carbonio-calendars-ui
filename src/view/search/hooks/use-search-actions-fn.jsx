@@ -12,7 +12,7 @@ import { selectCalendar } from '../../../store/selectors/calendars';
 
 export const useSearchActionsFn = (event, invite) => {
 	const history = useHistory();
-	const calendar = useSelector((s) => selectCalendar(s, event?.resource?.calendar?.id));
+	const calendar = useSelector(selectCalendar(event?.resource?.calendar?.id));
 	const { pathname } = useLocation();
 	const { apptId, ridZ, action } = useParams();
 	const addBoard = useAddBoardCallback();

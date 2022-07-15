@@ -23,6 +23,8 @@ import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { generateEditor } from './commons/editor-generator';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
+import { useAppointment, useCalendar, useInstance } from './store/zustand/hooks';
+import { useAppointmentActions } from './hooks/use-appointment-actions';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -69,6 +71,22 @@ const SearchView = (props) => (
 		<LazySearchView {...props} />
 	</Suspense>
 );
+
+const ZustandLogger = () => {
+	const calendar = useCalendar();
+	const appointment = useAppointment();
+	const instance = useInstance();
+
+	const actions = useAppointmentActions();
+
+	useEffect(() => {
+		console.clear();
+		console.log(calendar, appointment, instance, actions);
+	}, [actions, appointment, calendar, instance]);
+
+	return null;
+};
+
 export default function App() {
 	const [t] = useTranslation();
 	useEffect(() => {
@@ -131,6 +149,7 @@ export default function App() {
 
 	return (
 		<>
+			<ZustandLogger />
 			<AppointmentReminder />
 			<SyncDataHandler />
 			<Notifications />

@@ -82,8 +82,8 @@ export const DetailsPart = ({
 	inviteNeverSent,
 	isPrivate,
 	invite
-}: DetailsPartProps): ReactElement => {
-	const calendar = useSelector((s: Store) => selectCalendar(s, event.resource.calendar.id));
+}: DetailsPartProps): ReactElement | null => {
+	const calendar = useSelector(selectCalendar(event.resource.calendar.id));
 
 	const timeData = useMemo(
 		() =>
@@ -110,7 +110,7 @@ export const DetailsPart = ({
 			),
 		[invite.class, invite.location, invite.locationUrl]
 	);
-	return (
+	return calendar ? (
 		<Container
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
@@ -144,5 +144,5 @@ export const DetailsPart = ({
 			<Padding top={'medium'} />
 			{inviteNeverSent && <InviteNeverSentRow />}
 		</Container>
-	);
+	) : null;
 };

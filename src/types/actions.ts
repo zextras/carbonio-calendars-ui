@@ -22,3 +22,5 @@ export type ActionsContext = {
 	panel?: boolean;
 	searchPanel?: boolean;
 };
+
+export type PanelView = 'app' | 'board' | 'search';

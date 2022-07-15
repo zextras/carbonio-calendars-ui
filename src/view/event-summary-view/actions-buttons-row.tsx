@@ -21,7 +21,6 @@ import { ReplyButtonsPartSmall } from '../../commons/reply-buttons-small';
 import { selectCalendar } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
-import { Store } from '../../types/store/store';
 import OrganizerActions from './organizer-actions';
 import { useGetRecurrentActions } from '../../hooks/use-recurrent-actions';
 import { createAndApplyTag } from '../tags/tag-actions';
@@ -41,7 +40,7 @@ export const ActionsButtonsRow = ({
 }): ReactElement => {
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
-	const calendar = useSelector((s: Store) => selectCalendar(s, invite?.parent));
+	const calendar = useSelector(selectCalendar(invite?.parent));
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const instanceContext = useMemo(

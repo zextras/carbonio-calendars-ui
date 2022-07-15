@@ -25,10 +25,10 @@ export const ParticipantsPart = ({
 	participants
 }: ParticipantProps): ReactElement => {
 	const account = useUserAccount();
-	const calendar = useSelector((s: Store) => selectCalendar(s, invite.ciFolder));
+	const calendar = useSelector(selectCalendar(invite.ciFolder));
 	const iAmAttendee = useMemo(
-		() => (!invite.isOrganizer && !calendar.owner) ?? false,
-		[calendar.owner, invite.isOrganizer]
+		() => (!invite.isOrganizer && !calendar?.owner) ?? false,
+		[calendar?.owner, invite.isOrganizer]
 	);
 	return (
 		<Container
