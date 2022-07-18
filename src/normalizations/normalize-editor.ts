@@ -151,7 +151,9 @@ export const normalizeEditorFromInvite = (invite: Invite, context?: any): any =>
 			timezone: invite?.start?.tz,
 			inviteId: invite.id,
 			reminder: invite?.alarmValue,
-			recur: invite.recurrenceRule
+			recur: invite.recurrenceRule,
+			richText: invite?.htmlDescription[0]._content ?? '',
+			plainText: invite?.textDescription[0]._content ?? ''
 		},
 		isNil
 	);
