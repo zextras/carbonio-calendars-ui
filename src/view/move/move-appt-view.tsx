@@ -3,11 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, getTFunction } from '@zextras/carbonio-shell-ui';
 import React, { useState, useMemo, useCallback, ReactElement } from 'react';
 import { find } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { Invite } from '../../types/store/invite';
 import { NewModal } from './new-calendar-modal';
@@ -45,11 +44,11 @@ export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): ReactE
 					hideButton: true,
 					label:
 						invite.ciFolder === FOLDERS.TRASH
-							? `${getBridgedFunctions().t(
+							? `${getTFunction()(
 									'message.snackbar.appt_restored',
 									'Appointment restored successfully to'
 							  )} ${data.destinationCalendarName}`
-							: `${getBridgedFunctions().t(
+							: `${getTFunction()(
 									'message.snackbar.appt_moved',
 									'Appointment moved successfully to'
 							  )} ${data.destinationCalendarName}`,
@@ -61,10 +60,7 @@ export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): ReactE
 					replace: true,
 					type: 'error',
 					hideButton: true,
-					label: getBridgedFunctions().t(
-						'label.error_try_again',
-						'Something went wrong, please try again'
-					),
+					label: getTFunction()('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000
 				});
 			}
