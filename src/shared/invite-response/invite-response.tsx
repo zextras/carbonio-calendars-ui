@@ -26,9 +26,10 @@ import ProposedTimeReply from './parts/proposed-time-reply';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { inviteToEvent } from '../../hooks/use-invite-to-event';
 import { getInvite } from '../../store/actions/get-invite';
-import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
+import { CALENDAR_ROUTE } from '../../constants';
 import BodyMessageRenderer from '../../commons/body-message-renderer.jsx';
 import { useInvite } from '../../hooks/use-invite';
+import { StoreProvider } from '../../store/redux';
 
 /**
    @todo: momentary variables to dynamize
@@ -506,4 +507,9 @@ const InviteResponse: FC<InviteResponse> = ({
 	);
 };
 
-export default InviteResponse;
+const InviteResponseComp: FC<InviteResponse> = (props) => (
+	<StoreProvider>
+		<InviteResponse {...props} />
+	</StoreProvider>
+);
+export default InviteResponseComp;

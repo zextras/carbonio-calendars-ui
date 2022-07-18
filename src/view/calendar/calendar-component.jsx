@@ -183,8 +183,11 @@ export default function CalendarComponent() {
 				const storeData = store.store.getState();
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
-					...storeData.editor.editors[storeData.editor.activeId],
-					callbacks
+					title: editor.title,
+					context: {
+						...storeData.editor.editors[storeData.editor.activeId],
+						callbacks
+					}
 				});
 			}
 			useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));

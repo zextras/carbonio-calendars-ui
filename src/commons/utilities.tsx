@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getTFunction, FOLDERS } from '@zextras/carbonio-shell-ui';
+import { t, FOLDERS } from '@zextras/carbonio-shell-ui';
 import { TFunction } from 'i18next';
 import { isNil } from 'lodash';
 import moment from 'moment';
@@ -256,14 +256,14 @@ export const getTimeToDisplayData = (
 		return {
 			color: 'info',
 			size: 'large',
-			text: getTFunction()('label.ongoing', 'Ongoing')
+			text: t('label.ongoing', 'Ongoing')
 		};
 	}
 	if (start.valueOf() === currentTime) {
 		return {
 			color: 'info',
 			size: 'large',
-			text: getTFunction()('label.now', 'Now')
+			text: t('label.now', 'Now')
 		};
 	}
 	if (start.valueOf() < currentTime) {
@@ -280,7 +280,7 @@ export const getTimeToDisplayData = (
 		return {
 			color: 'info',
 			size: 'large',
-			text: getTFunction()('label.ongoing', 'Ongoing')
+			text: t('label.ongoing', 'Ongoing')
 		};
 	}
 	if (alarmData[0].alarmInstStart < currentTime) {

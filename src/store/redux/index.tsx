@@ -12,8 +12,6 @@ import calendarsSliceReducer from '../slices/calendars-slice';
 import editorSliceReducer from '../slices/editor-slice';
 import appointmentsSliceReducer from '../slices/appointments-slice';
 
-export default combineReducers({});
-
 export const store = configureStore({
 	devTools: {
 		name: CALENDAR_APP_ID

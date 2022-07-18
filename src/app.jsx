@@ -125,8 +125,11 @@ export default function App() {
 					);
 					addBoard({
 						url: `${CALENDAR_ROUTE}/`,
-						...editor,
-						callbacks
+						title: editor.title,
+						context: {
+							...editor,
+							callbacks
+						}
 					});
 				},
 				disabled: false,

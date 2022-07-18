@@ -37,6 +37,7 @@ export const moveToBardFn = (ev, context) => {
 	if (ev) ev.stopPropagation();
 	addBoard({
 		url: `${CALENDAR_ROUTE}/${EventActionsEnum.EDIT}/${context.apptId}/${context.ridZ}`,
+		title: context.editor.title,
 		context: { editor: context.editor }
 	});
 	const path = head(split(context?.pathname, `/${context?.action}`));
