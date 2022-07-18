@@ -8,7 +8,8 @@ import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-sys
 import { Spinner, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { useInvite } from '../../hooks/use-invite';
+import { EventType } from '../../types/event';
+import { Invite } from '../../types/store/invite';
 import { DisplayFooter } from './parts/display-footer';
 import { DisplayMessage } from './parts/display-message';
 import { ModalHeader } from '../../commons/modal-header';
@@ -18,9 +19,19 @@ const ItalicText = styled(Text)`
 	font-style: italic;
 `;
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const DeleteEventModal = ({ event, onClose, isInstance }: any): ReactElement => {
-	const invite = useInvite(event?.resource?.inviteId);
+type DeleteEventModalProps = {
+	event: EventType;
+	invite: Invite;
+	onClose: () => void;
+	isInstance?: boolean;
+};
+
+export const DeleteEventModal = ({
+	event,
+	invite,
+	onClose,
+	isInstance
+}: DeleteEventModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const [isAskingConfirmation, setIsAskingConfirmation] = useState(false);
 	const toggleAskConfirmation = useCallback(() => {
@@ -49,10 +60,8 @@ export const DeleteEventModal = ({ event, onClose, isInstance }: any): ReactElem
 						crossAlignment="baseline"
 					>
 						<DisplayMessage
-							event={event}
 							invite={invite}
 							isInstance={isInstance}
-							deleteAll={actions?.deleteAll}
 							isAskingConfirmation={isAskingConfirmation}
 						/>
 						{!isInstance &&
@@ -100,7 +109,6 @@ export const DeleteEventModal = ({ event, onClose, isInstance }: any): ReactElem
 					<DisplayFooter
 						actions={actions}
 						toggleAskConfirmation={toggleAskConfirmation}
-						event={event}
 						invite={invite}
 						isInstance={isInstance}
 						onClose={onClose}

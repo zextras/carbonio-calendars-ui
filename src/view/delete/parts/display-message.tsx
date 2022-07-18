@@ -7,17 +7,23 @@ import { size } from 'lodash';
 import React, { ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text } from '@zextras/carbonio-design-system';
+import { Invite } from '../../../types/store/invite';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+type DisplayMessageProps = {
+	invite: Invite;
+	isInstance?: boolean;
+	isAskingConfirmation: boolean;
+};
+
 export const DisplayMessage = ({
-	event,
 	invite,
 	isInstance,
 	isAskingConfirmation
-}: any): ReactElement => {
+}: DisplayMessageProps): ReactElement => {
 	const [t] = useTranslation();
 	const participantsSize = useMemo(() => size(invite?.participants), [invite]);
-	const { isRecurrent, iAmOrganizer, isException } = event.resource;
+	const { isOrganizer, isException } = invite;
+	const isRecurrent = !!invite.recurrenceRule;
 
 	const displayMessage = useMemo(() => {
 		if (isAskingConfirmation) {
@@ -27,7 +33,7 @@ export const DisplayMessage = ({
 			);
 		}
 		if ((isInstance && !isRecurrent) || isException) {
-			if (iAmOrganizer) {
+			if (isOrganizer) {
 				return participantsSize > 0
 					? t(
 							'message.want_to_edit_cancellation_msg',
@@ -44,19 +50,19 @@ export const DisplayMessage = ({
 			);
 		}
 		if (isRecurrent && isInstance) {
-			if (iAmOrganizer) {
+			if (isOrganizer) {
 				return participantsSize > 0
 					? t(
 							'message.want_to_edit_cancellation_msg',
 							'Do you want to edit the appointment cancellation message?'
 					  )
 					: t('message.you_sure_delete_instance', {
-							title: event.title,
+							title: invite.name,
 							defaultValue: `Are you sure you want to delete this instance of “{{title}}” appointment?`
 					  });
 			}
 			return t('message.you_sure_delete_instance', {
-				title: event.title,
+				title: invite.name,
 				defaultValue: `Are you sure you want to delete this instance of “{{title}}” appointment?`
 			});
 		}
@@ -66,8 +72,8 @@ export const DisplayMessage = ({
 			'Are you sure you want to delete all occurrences of this appointment?'
 		);
 	}, [
-		event.title,
-		iAmOrganizer,
+		invite.name,
+		isOrganizer,
 		isAskingConfirmation,
 		isException,
 		isInstance,

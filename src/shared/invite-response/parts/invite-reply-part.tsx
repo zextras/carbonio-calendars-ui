@@ -16,10 +16,8 @@ import {
 } from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { CalendarSelector } from '../../../view/editor/parts/calendar-selector';
 import { sendResponse } from '../invite-reply-actions';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import CalendarSelector from '../../../view/event-panel-edit/components/calendar-selector';
 
 type InviteReplyPart = {
 	inviteId: string;
@@ -73,6 +71,8 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 					<CalendarSelector
 						calendarId="10"
 						onCalendarChange={(cal: any): void => setActiveCalendar(cal)}
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
 						style={{ maxWidth: '48%', width: '48%' }}
 						label={t('label.scheduled_in', 'Scheduled in')}
 						excludeTrash

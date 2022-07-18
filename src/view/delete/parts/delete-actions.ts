@@ -6,6 +6,9 @@
 import { isNil, omitBy } from 'lodash';
 import { moveAppointmentToTrash } from '../../../store/actions/move-appointment-to-trash';
 import { sendInviteResponse } from '../../../store/actions/send-invite-response';
+import { EventType } from '../../../types/event';
+import { Appointment } from '../../../types/store/appointments';
+import { Invite } from '../../../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const generateSnackbar = ({ res, t, createSnackbar }: any): any => {
@@ -21,7 +24,7 @@ export const generateSnackbar = ({ res, t, createSnackbar }: any): any => {
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const sendResponse = (event: any, invite: any, context: any): any =>
+export const sendResponse = (event: EventType, invite: any, context: any): any =>
 	context.dispatch(
 		sendInviteResponse({
 			inviteId: event.resource.inviteId,
@@ -32,7 +35,7 @@ export const sendResponse = (event: any, invite: any, context: any): any =>
 	);
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const deleteEvent = (event: any, invite: any, context: any): any => {
+export const deleteEvent = (event: EventType, invite: Invite, context: any): any => {
 	const { inviteId, id, isRecurrent, ridZ, iAmOrganizer } = event.resource;
 	const moveToTrashArgs = omitBy(
 		{

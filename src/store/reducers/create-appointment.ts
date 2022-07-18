@@ -6,6 +6,11 @@
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createAppointmentFulfilled = (state: any, { payload }: any): void => {
-	state.editors[payload.editor.resource.id].resource.id = payload.response.calItemId;
-	state.editors[payload.editor.resource.id].resource.inviteId = payload.response.invId;
+	if (state?.editors?.[payload?.editor?.id]) {
+		state.editors[payload.editor.id] = {
+			...state.editors[payload.editor.id],
+			id: payload.response.calItemId,
+			inviteId: payload.response.invId
+		};
+	}
 };

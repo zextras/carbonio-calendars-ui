@@ -8,7 +8,7 @@ import { Container, DateTimePicker, Padding, Text } from '@zextras/carbonio-desi
 import momentLocalizer from 'react-widgets-moment';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
-import DatePickerCustomComponent from '../../view/event-panel-edit/components/date-picker-custom-component';
+import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
 
 momentLocalizer();
 const getHour = (hour) => {

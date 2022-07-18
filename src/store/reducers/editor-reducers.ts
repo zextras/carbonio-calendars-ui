@@ -78,12 +78,6 @@ export const editOptionalAttendeesReducer = (state: any, { payload }: any): any 
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const closeEditorReducer = (state: any, { payload }: any): any => {
-	state.editors[payload.id] = undefined;
-	if (payload.id === state.editorPanel) state.editorPanel = null;
-};
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const openEditorReducer = (state: any, { payload }: any): any => {
 	state.editors[payload.id] = undefined;
 	if (payload.id === state.editorPanel) state.editorPanel = null;

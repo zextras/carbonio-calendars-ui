@@ -1,66 +1,27 @@
 /*
- * SPDX-FileCopyrightText: 2021 Zextras <https://www.zextras.com>
+ * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, addBoard } from '@zextras/carbonio-shell-ui';
-import React, {
-	FC,
-	ReactElement,
-	useCallback,
-	useState,
-	useEffect,
-	useMemo,
-	SyntheticEvent
-} from 'react';
-import { CustomModal } from '@zextras/carbonio-design-system';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import React, { ReactElement, useState, useEffect, useMemo } from 'react';
+import { filter, find, forEach, includes, isEmpty } from 'lodash';
 import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-	reduce,
-	values,
-	uniq,
-	uniqBy,
-	pullAll,
-	isEmpty,
-	map,
-	forEach,
-	differenceWith,
-	lastIndexOf
-} from 'lodash';
-import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
-import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
-import { setSearchRange } from '../../store/actions/set-search-range';
-import { selectAllAppointments, selectApptStatus } from '../../store/selectors/appointments';
-import { selectCalendars } from '../../store/selectors/calendars';
-import { AppointmentReminderProps } from '../../types/appointment-reminder';
-import SetNewTimeModal from './set-new_time-modal';
-import sound from '../../assets/notification.mp3';
-import ApptReminderModal from './appt-reminder-modal';
+import { useSelector } from 'react-redux';
+import { getTimeToDisplayData } from '../../commons/utilities';
+import { normalizeReminderItem } from '../../normalizations/normalize-reminder';
+import { selectAppointmentsArray } from '../../store/selectors/appointments';
+import { ReminderItem, Reminders } from '../../types/appointment-reminder';
+import { Appointment } from '../../types/store/appointments';
 import { showNotification } from '../notifications';
-import { CALENDAR_ROUTE } from '../../constants';
-import { getTimeToDisplay } from '../../commons/utilities';
-import { EventType } from '../../types/event';
+import { ReminderModal } from './reminder-modal';
+import sound from '../../assets/notification.mp3';
 
-type ReminderQueue = Record<
-	string,
-	ReturnType<typeof clearTimeout> | ReturnType<typeof setTimeout>
->;
-const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
-	const dispatch = useDispatch();
-	const [t] = useTranslation();
+export const AppointmentReminder = (): ReactElement | null => {
+	const [reminders, setReminders] = useState<Reminders>({});
+	const appointments = useSelector(selectAppointmentsArray);
+	const notificationAudio = useMemo(() => new Audio(sound), []);
 
-	const [playing, setPlaying] = useState(false);
-	const [apptForReminders, setApptForReminders] = useState<Array<EventType>>([]);
-	const [reminderQueue, setReminderQueue] = useState<ReminderQueue>({});
-	const [showNewTimeModal, setShowNewTimeModal] = useState(false);
-	const [audio] = useState(new Audio(sound));
-	const [eventForChange, setEventForChange] = useState<EventType>();
-
-	const appointments = useSelector(selectAllAppointments);
-	const calendars = useSelector(selectCalendars);
-	const status = useSelector(selectApptStatus);
 	const reminderRange = useMemo(
 		() => ({
 			start: moment().subtract('7', 'days').valueOf(),
@@ -69,171 +30,55 @@ const AppointmentReminder: FC<AppointmentReminderProps> = (): ReactElement => {
 		[]
 	);
 
-	useEffect(() => {
-		playing ? audio.play() : audio.pause();
-	}, [playing, audio]);
-
-	useEffect(() => {
-		const handler = (): void => setPlaying(false);
-		audio.addEventListener('ended', () => handler);
-		return () => {
-			audio.removeEventListener('ended', () => handler);
-		};
-	}, [audio]);
-
-	const events = useMemo(
-		() => normalizeCalendarEvents(values(appointments), calendars),
-		[appointments, calendars]
-	);
-
-	const eventsToRemind = useMemo(
+	const appointmentsToRemind = useMemo(
 		() =>
-			reduce(
-				events,
-				(acc: Array<EventType>, val: EventType) => {
-					if (
-						val?.resource.alarm &&
-						val?.resource.alarmData?.[0]?.nextAlarm > reminderRange.start &&
-						val?.permission === true &&
-						val?.resource?.calendar?.id !== FOLDERS.TRASH
-					) {
-						if (
-							moment(val.resource.alarmData[0].nextAlarm).isSameOrAfter(
-								moment(reminderRange.start)
-							) &&
-							moment(val.resource.alarmData[0].nextAlarm).isSameOrBefore(moment(reminderRange.end))
-						) {
-							acc.push(val);
-						}
+			filter(
+				appointments ?? [],
+				(appt) =>
+					appt.alarm &&
+					appt.alarmData?.length &&
+					appt?.alarmData?.[0]?.nextAlarm > reminderRange?.start &&
+					moment(appt?.alarmData?.[0]?.nextAlarm).isSameOrAfter(moment(reminderRange?.start)) &&
+					moment(appt?.alarmData?.[0]?.nextAlarm).isSameOrBefore(moment(reminderRange?.end)) &&
+					!includes(appt?.inviteId, ':') &&
+					appt?.l !== FOLDERS.TRASH
+			) as Appointment[],
+		[appointments, reminderRange?.end, reminderRange?.start]
+	);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			const remindersToNotify = [] as Array<ReminderItem>;
+			forEach(appointmentsToRemind, (appt) => {
+				const difference = moment(appt?.alarmData?.[0]?.nextAlarm).diff(moment(), 'seconds', true);
+				if (difference <= 0) {
+					const reminder = normalizeReminderItem(appt);
+					const isAlreadyAdded = find(reminders, {
+						start: reminder.start,
+						key: reminder.key,
+						end: reminder.end
+					});
+					if (!isAlreadyAdded) {
+						remindersToNotify.push(reminder);
+						setReminders((rem) => ({
+							...rem,
+							[reminder.key]: reminder
+						}));
 					}
-					return acc;
-				},
-				[]
-			),
-		[events, reminderRange.end, reminderRange.start]
-	);
-
-	const noTitle = useMemo(() => t('label.no_title', 'No Title'), [t]);
-	useEffect(() => {
-		const tmp: Record<string, () => void | ReturnType<typeof setTimeout | typeof clearTimeout>> =
-			{};
-		const tp = differenceWith(apptForReminders, eventsToRemind);
-		const uniqueTp = uniq(tp);
-		const trans = pullAll(apptForReminders, uniqueTp);
-		setApptForReminders(trans);
-
-		map(reminderQueue, (q: ReturnType<typeof setTimeout>) => clearTimeout(q));
-		map(eventsToRemind, (rem: EventType & { showNotification?: boolean }) => {
-			const { alarmData, inviteId } = rem.resource;
-			const now = moment();
-			const difference = moment(alarmData[0].nextAlarm).diff(now, 'seconds', true);
-			const index = lastIndexOf(apptForReminders, rem);
-
-			if (index === -1) {
-				tmp[`${inviteId}`] = (): ReturnType<typeof setTimeout> =>
-					setTimeout(
-						() => {
-							const timeToDisplay = getTimeToDisplay(rem, now, t);
-							showNotification(rem?.title || noTitle, timeToDisplay);
-							setPlaying(true);
-							setApptForReminders((prevApp) => [...prevApp, { ...rem }]);
-						},
-						difference <= 0 ? 1000 : difference * 1000
-					);
+				}
+			});
+			if (remindersToNotify?.length > 0) {
+				notificationAudio.play();
+				forEach(remindersToNotify, (rem) => {
+					const { text } = getTimeToDisplayData(rem, moment());
+					showNotification(rem?.name, text);
+				});
 			}
-		});
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		setReminderQueue(tmp);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [eventsToRemind, noTitle]);
+		}, 1000);
+		return () => clearInterval(interval);
+	}, [appointmentsToRemind, notificationAudio, reminders]);
 
-	useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		forEach(reminderQueue, (q): ReminderQueue => q());
-	}, [reminderQueue]);
-
-	useEffect(() => {
-		if (!isEmpty(calendars) && status === 'init') {
-			const now = moment();
-			dispatch(
-				setSearchRange({
-					rangeStart: now.subtract('7', 'days').valueOf(),
-					rangeEnd: now.add('15', 'days').valueOf()
-				})
-			);
-		}
-	}, [dispatch, status, calendars]);
-
-	const uniqueReminders = useMemo(
-		() => (apptForReminders.length > 0 ? uniqBy(apptForReminders, 'resource.uid') : []),
-		[apptForReminders]
-	);
-	const dismissAll = useCallback(() => {
-		const dismissItems = map(uniqueReminders, (a: EventType) => ({
-			id: a.resource.id,
-			dismissedAt: moment().valueOf()
-		}));
-		setShowNewTimeModal(false);
-		if (dismissItems.length > 0) {
-			dispatch(dismissApptReminder({ dismissItems }));
-			setApptForReminders([]);
-		}
-	}, [dispatch, uniqueReminders]);
-
-	const removeFromAppList = useCallback(
-		(id) => {
-			const tmp = apptForReminders.filter((apt: EventType) => apt.resource.id !== id);
-			setApptForReminders(tmp);
-		},
-		[apptForReminders]
-	);
-
-	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
-
-	const setNewTime = useCallback(() => {
-		addBoard({
-			url: `${CALENDAR_ROUTE}/edit?edit=${eventForChange?.resource?.id}&updateTime=true`,
-			context: { event: eventForChange },
-			title: eventForChange?.title ?? t('label.set_new_time', 'Set New Time')
-		});
-		dismissAll();
-	}, [eventForChange, t, dismissAll]);
-
-	const openReminder = useMemo(
-		() => uniqueReminders.length > 0 && apptForReminders.length > 0,
-		[uniqueReminders, apptForReminders]
-	);
-
-	return (
-		<>
-			<CustomModal
-				open={openReminder}
-				onClose={(): null => null}
-				maxHeight="90vh"
-				onClick={(e: SyntheticEvent): void => e.stopPropagation()}
-				onDoubleClick={(e: SyntheticEvent): void => e.stopPropagation()}
-			>
-				{showNewTimeModal ? (
-					<SetNewTimeModal toggleModal={toggleModal} t={t} setNewTime={setNewTime} />
-				) : (
-					<ApptReminderModal
-						title="Appointment Reminder"
-						onClose={(): null => null}
-						events={uniqueReminders || []}
-						open={uniqueReminders.length > 0}
-						t={t}
-						toggleModal={toggleModal}
-						dispatch={dispatch}
-						onConfirm={dismissAll}
-						setActive={setEventForChange}
-						removeReminder={removeFromAppList}
-					/>
-				)}
-			</CustomModal>
-		</>
-	);
+	return !isEmpty(reminders) ? (
+		<ReminderModal reminders={reminders} setReminders={setReminders} />
+	) : null;
 };
-
-export default AppointmentReminder;

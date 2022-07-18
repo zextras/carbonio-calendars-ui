@@ -19,16 +19,18 @@ import { useTranslation } from 'react-i18next';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
-import AppointmentReminder from './view/reminder/appointment-reminder';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { StoreProvider } from './store/redux';
+import { generateEditor } from './commons/editor-generator';
+import { AppointmentReminder } from './view/reminder/appointment-reminder';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
 );
+
 const LazyEditorView = lazy(() =>
-	import(/* webpackChunkName: "calendar-edit" */ './view/event-panel-edit/board-edit-panel')
+	import(/* webpackChunkName: "calendar-edit" */ './view/editor/editor-board-wrapper')
 );
 const LazySettingsView = lazy(() =>
 	import(/* webpackChunkName: "settings-view" */ './settings/settings-view')
@@ -47,10 +49,11 @@ const CalendarView = () => (
 		</StoreProvider>
 	</Suspense>
 );
-const EditorView = (context) => (
+
+const EditorView = () => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<LazyEditorView context={context} />
+			<LazyEditorView />
 		</StoreProvider>
 	</Suspense>
 );
@@ -61,6 +64,7 @@ const SettingsView = () => (
 		</StoreProvider>
 	</Suspense>
 );
+
 const SidebarView = (props) => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
@@ -112,9 +116,17 @@ export default function App() {
 				icon: 'CalendarModOutline',
 				click: (ev) => {
 					ev?.preventDefault?.();
+					const { editor, callbacks } = generateEditor(
+						'new',
+						{
+							title: t('label.new_appointment', 'New Appointment')
+						},
+						false
+					);
 					addBoard({
 						url: `${CALENDAR_ROUTE}/`,
-						title: t('label.new_appointment', 'New Appointment')
+						...editor,
+						callbacks
 					});
 				},
 				disabled: false,
@@ -126,14 +138,16 @@ export default function App() {
 		});
 		registerComponents({
 			id: 'invites-reply',
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			component: InviteResponse
 		});
 	}, [t]);
 
 	return (
 		<StoreProvider>
-			<SyncDataHandler />
 			<AppointmentReminder />
+			<SyncDataHandler />
 			<Notifications />
 		</StoreProvider>
 	);

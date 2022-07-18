@@ -3,28 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-	Accordion,
-	AccordionItem,
-	Dropdown,
-	Icon,
-	ModalManagerContext,
-	Padding,
-	Row
-} from '@zextras/carbonio-design-system';
+import { Accordion } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
 import { map, filter, reduce, remove, every, reject, find } from 'lodash';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { folderAction } from '../../store/actions/calendar-actions';
-import { setSearchRange } from '../../store/actions/set-search-range';
 import { CollapsedItems } from './collapsed-sidebar-items';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 import { FoldersComponent, SharesComponent, TagComponent } from './sidebar-components';
 import useGetTagsAccordion from '../../hooks/use-get-tags-accordions';
-import { createTag } from '../tags/tag-actions';
+import { searchAppointments } from '../../store/actions/search-appointments';
+import { getFolderTranslatedName } from '../../commons/utilities';
 
 const calcFolderAbsParentLevel = (folders, subFolder, level = 1) => {
 	const nextFolder = find(folders, (f) => f.id === subFolder.parent);
@@ -77,12 +69,7 @@ export default function SetMainMenuItems({ expanded }) {
 				})
 			).then((res) => {
 				if (res?.meta?.arg?.op === 'check') {
-					dispatch(
-						setSearchRange({
-							rangeStart: start,
-							rangeEnd: end
-						})
-					);
+					dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 				}
 			});
 		},
@@ -93,11 +80,12 @@ export default function SetMainMenuItems({ expanded }) {
 		() =>
 			map(calendars, (item) => ({
 				...item,
+				name: getFolderTranslatedName(t, item.id, item.name),
 				...calcFolderAbsParentLevel(calendars, item),
 				recursiveToggleCheck: () => recursiveToggleCheck([item], item.checked),
 				CustomComponent: FoldersComponent
 			})),
-		[calendars, recursiveToggleCheck]
+		[calendars, recursiveToggleCheck, t]
 	);
 
 	const nestedItems = useMemo(() => nest(allItems, FOLDERS.USER_ROOT), [allItems]);

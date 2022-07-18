@@ -3,40 +3,49 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { TFunction } from 'i18next';
-import { Dispatch } from 'redux';
-import { EventType } from './event';
+import { AlarmData } from './store/invite';
 
-export type AppointmentReminderProps = {
-	t: TFunction;
-	appointments: Record<string, unknown>;
-	dispatch: Dispatch;
+export type SetActiveReminderFn = (reminderItem: ReminderItem) => void;
+export type RemoveReminderFn = (a: string) => void;
+export type ReminderItem = {
+	key: string;
+	start: Date;
+	id: string;
+	isRecurrent: boolean;
+	end: Date;
+	alarmData: AlarmData;
+	location: string;
+	name: string;
+	isOrg: boolean;
+	inviteId: string;
+};
+
+export type ReminderModalContentProps = {
+	reminders: Reminders;
+	removeReminder: RemoveReminderFn;
+	toggleModal: () => void;
+	setActiveReminder: SetActiveReminderFn;
 };
 
 export type ApptReminderModalProps = {
-	title: string;
 	open: boolean;
-	onClose: () => void;
-	events: Array<EventType>;
-	t: TFunction;
-	dispatch: Dispatch;
+	reminders: Reminders;
 	onConfirm: (a: string) => void;
-	removeReminder: (a: string) => void;
+	removeReminder: RemoveReminderFn;
 	toggleModal: () => void;
-	setActive: (a: EventType) => void;
+	setActiveReminder: SetActiveReminderFn;
 };
 
 export type ApptReminderCardProps = {
-	event: EventType;
-	t: TFunction;
-	dispatch: Dispatch;
-	removeReminder: (a: string) => void;
+	reminderItem: ReminderItem;
+	removeReminder: RemoveReminderFn;
 	toggleModal: () => void;
-	setActive: (a: EventType) => void;
+	setActiveReminder: SetActiveReminderFn;
 };
 
 export type SetNewTimeModalProps = {
 	toggleModal: () => void;
-	t: TFunction;
 	setNewTime: () => void;
 };
+
+export type Reminders = Record<string, ReminderItem>;

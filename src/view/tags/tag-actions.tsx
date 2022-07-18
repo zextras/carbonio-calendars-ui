@@ -21,6 +21,7 @@ import { ZIMBRA_STANDARD_COLORS, useTags, Tag, Tags } from '@zextras/carbonio-sh
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
+import { Invite } from '../../types/store/invite';
 import { TagsActionsType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from './delete-tag-modal';
@@ -66,7 +67,7 @@ export type ArgumentType = {
 export type ContextType = {
 	createAndApplyTag: (arg: any) => any;
 	createModal: any;
-	createSnackbar: (arg: any) => void;
+	createSnackbar: unknown;
 	dispatch: Dispatch;
 	replaceHistory: (arg: any) => void;
 	tags: Tags;
@@ -154,11 +155,11 @@ export const deleteTag = ({ t, createModal, tag }: ArgumentType): ReturnType => 
 	}
 });
 
-export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType }): ReactElement => {
+export const TagsDropdownItem = ({ tag, invite }: { tag: Tag; invite: Invite }): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
-	const [checked, setChecked] = useState(includes(event.resource.tags, tag.id));
+	const [checked, setChecked] = useState(includes(invite.tags, tag.id));
 	const [isHovering, setIsHovering] = useState(false);
 	const toggleCheck = useCallback(
 		(value) => {
@@ -166,7 +167,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 
 			itemAction({
 				operation: value ? '!tag' : 'tag',
-				inviteId: event.resource.id,
+				inviteId: invite.id,
 				tagName: tag.name
 			})
 				.then((res: any) => {
@@ -199,7 +200,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 					});
 				});
 		},
-		[event?.resource?.id, createSnackbar, t, tag.name]
+		[invite?.id, createSnackbar, t, tag.name]
 	);
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
@@ -233,12 +234,11 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 export const applyTag = ({
 	t,
 	context,
-	event
+	invite
 }: {
 	t: TFunction;
-	event: EventType;
+	invite: Invite;
 	context: ContextType;
-	tags: TagsFromStoreType;
 }): { id: string; items: TagType[]; customComponent: ReactElement } => {
 	const tagItem = reduce(
 		context.tags,
@@ -257,7 +257,7 @@ export const applyTag = ({
 				label: v.name,
 				icon: 'TagOutline',
 				keepOpen: true,
-				customComponent: <TagsDropdownItem tag={v} event={event} />
+				customComponent: <TagsDropdownItem tag={v} invite={invite} />
 			};
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
@@ -276,7 +276,7 @@ export const applyTag = ({
 				type="outlined"
 				size="fill"
 				isSmall
-				onClick={(): void => context.createAndApplyTag({ t, context, event }).click()}
+				onClick={(): void => context.createAndApplyTag({ t, context, invite }).click()}
 			/>
 		)
 	});

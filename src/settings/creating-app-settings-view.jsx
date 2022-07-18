@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { Container, Padding, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
-import CalendarSelector from '../view/event-panel-edit/components/calendar-selector';
+import { CalendarSelector } from '../view/editor/parts/calendar-selector';
 
 export default function CreatingAppointmentSettings({ t, settingsObj, updateSettings }) {
 	return (
