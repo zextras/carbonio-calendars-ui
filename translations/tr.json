@@ -387,7 +387,7 @@
         "tag_name": "Etiket adı",
         "tags": "Etiketler",
         "no_title": "Başlık Yok",
-        "scheduled_in": "Zamanlandı"
+        "scheduled_in": "Takvim"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -422,7 +422,7 @@
         "copy_outlook_url": "Outlook url kopyala",
         "copy_vector_url": "View url kopyala",
         "chat": "Donanım",
-        "chat_room": "Sohbet odası",
+        "chat_room": "Sanal Oda bağlantısı",
         "calendar_sharing_status": "{{count}} kişi ile paylaşıldı",
         "calendar_sharing_status_one": "1 kişi ile paylaşıldı",
         "equipment": "Donanım",
