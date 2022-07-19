@@ -108,7 +108,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				orientation="horizontal"
 				crossAlignment="flex-start"
 				mainAlignment="flex-start"
-				weight="fill"
+				width="fill"
 				height="fit"
 				padding={{ top: 'medium' }}
 			>

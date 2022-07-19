@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { ButtonOld as Button, ChipInput, Container, Row } from '@zextras/carbonio-design-system';
+import { Button, ChipInput, Container, Row } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
@@ -67,7 +67,7 @@ export const EditorAttendees = ({
 					padding={{ all: 'none' }}
 				>
 					<Container background="gray5" style={{ overflow: 'hidden' }}>
-						{integrationAvailable ? (
+						{!integrationAvailable ? (
 							<ContactInput
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
@@ -80,9 +80,10 @@ export const EditorAttendees = ({
 							<ChipInput
 								placeholder={t('label.attendee_plural', 'Attendees')}
 								background="gray5"
-								onChange={onAttendeesChange}
+								onChange={(items: any): void => {
+									onAttendeesChange(items);
+								}}
 								defaultValue={attendees}
-								valueKey="address"
 								hasError={hasError}
 								errorLabel=""
 								disabled={disabled}
@@ -121,9 +122,10 @@ export const EditorAttendees = ({
 							<ChipInput
 								placeholder={t('label.optional_plural', 'Optionals')}
 								background="gray5"
-								onChange={onOptionalAttendeesChange}
+								onChange={(items: any): void => {
+									onOptionalAttendeesChange(items);
+								}}
 								defaultValue={optionalAttendees}
-								valueKey="address"
 								hasError={optionalHasError}
 								errorLabel=""
 								disabled={disabled}

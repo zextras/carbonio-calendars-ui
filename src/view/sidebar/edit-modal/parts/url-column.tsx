@@ -3,8 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useState } from 'react';
-import { Container, ButtonOld as Button, Tooltip, Padding } from '@zextras/carbonio-design-system';
+import React, {
+	FC,
+	ReactElement,
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState
+} from 'react';
+import { Container, Button, Tooltip, Padding } from '@zextras/carbonio-design-system';
 import { UrlColumnProps } from '../../../../types/share-calendar';
 import SvgContainer from './svg-container';
 
@@ -25,7 +33,7 @@ export const UrlColumn: FC<UrlColumnProps> = ({
 					<Button
 						label={label}
 						icon="Copy"
-						size="fill"
+						width="fill"
 						type="outlined"
 						onClick={onUrlCopied(label, type)}
 						onMouseEnter={(): void => setIsHovered(true)}

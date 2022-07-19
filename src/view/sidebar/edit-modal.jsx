@@ -18,7 +18,7 @@ import {
 	IconButton
 } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
-import { filter, map, includes, find } from 'lodash';
+import { map, includes, find } from 'lodash';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { folderAction } from '../../store/actions/calendar-actions';
 

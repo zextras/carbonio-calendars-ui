@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
-import { Padding, Row, Icon, Input, IconButton } from '@zextras/carbonio-design-system';
+import { Padding, Row, Input, IconButton } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 
 type CustomComponentProps = {
