@@ -43,22 +43,24 @@ export default function CalendarView(): ReactElement {
 			padding={{ all: 'large' }}
 			style={{ overflowY: 'auto', position: 'relative' }}
 		>
-			<CalendarStyle primaryCalendar={primaryCalendar} />
-			<Suspense
-				fallback={
-					<Container height="50%" mainAlignment="center" crossAlignment="center">
-						<Button loading disabled label="" type="ghost" />
-					</Container>
-				}
-			>
-				<CalendarComponent />
-			</Suspense>
 			<Switch>
-				<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
-					<EventPanelView />
-				</Route>
-				<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
-					<EditorPanelWrapper />
+				<Route path={`${path}/:calendarId?/:action?/:apptId?/:ridZ?`}>
+					<CalendarStyle primaryCalendar={primaryCalendar} />
+					<Suspense
+						fallback={
+							<Container height="50%" mainAlignment="center" crossAlignment="center">
+								<Button loading disabled label="" type="ghost" />
+							</Container>
+						}
+					>
+						<CalendarComponent />
+					</Suspense>
+					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
+						<EventPanelView />
+					</Route>
+					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
+						<EditorPanelWrapper />
+					</Route>
 				</Route>
 			</Switch>
 		</Container>

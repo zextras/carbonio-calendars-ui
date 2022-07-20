@@ -27,15 +27,9 @@ const setResourceDate = ({
 	timezone?: string;
 }): any => {
 	if (allDay) {
-		return timezone
-			? {
-					d: moment(time).startOf('day').format('YYYYMMDD'),
-					tz: timezone
-			  }
-			: {
-					d: moment(time).startOf('day').utc().format('YYYYMMDD'),
-					tz: 'UTC'
-			  };
+		return {
+			d: moment(time).startOf('day').format('YYYYMMDD')
+		};
 	}
 	return timezone
 		? {

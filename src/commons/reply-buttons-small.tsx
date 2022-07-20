@@ -20,8 +20,6 @@ import React, { ReactElement, useCallback, useContext, useMemo, useState } from 
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { useEventActions } from '../hooks/use-event-actions';
-import { useInvite } from '../hooks/use-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { EventType } from '../types/event';
 import { ParticipationStatus } from '../types/store/invite';
@@ -46,21 +44,22 @@ type ReplyButtonProps = {
 	inviteId: string;
 	compNum: number;
 	event: EventType;
+	actions: any;
 	participationStatus: ParticipationStatus;
 };
 
 export const ReplyButtonsPartSmall = ({
 	participationStatus,
 	inviteId,
-	compNum,
-	event
+	event,
+	actions
 }: ReplyButtonProps): ReactElement => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const invite = useInvite(event.resource.inviteId);
+
 	const replyAction = useCallback(
 		(action) => {
 			dispatch(
@@ -207,25 +206,6 @@ export const ReplyButtonsPartSmall = ({
 		[createModal, createSnackbar, dispatch, event.resource.isException, event.resource.ridZ, tags]
 	);
 
-	const actions = useEventActions(invite, event, context, t, false);
-
-	const otherActions = useMemo(
-		() =>
-			map(actions ?? [], (action) => ({
-				id: action.label,
-				icon: action.icon,
-				label: action.label,
-				key: action.id,
-				color: action.color,
-				items: action.items,
-				customComponent: action.customComponent,
-				click: (ev: Event): void => {
-					ev.stopPropagation();
-					action.click();
-				}
-			})),
-		[actions]
-	);
 	const attendeesResponseOptions = useMemo(
 		() =>
 			map(attendeesOptions, (option) => ({
@@ -268,7 +248,7 @@ export const ReplyButtonsPartSmall = ({
 				</AttendingRow>
 			</Dropdown>
 			<Padding left="small">
-				<Dropdown disableAutoFocus items={otherActions} placement="bottom-end">
+				<Dropdown disableAutoFocus items={actions} placement="bottom-end">
 					<Button
 						type="outlined"
 						label={t('label.other_actions', 'Other actions')}

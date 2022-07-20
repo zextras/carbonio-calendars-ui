@@ -17,11 +17,16 @@ import {
 } from '@zextras/carbonio-design-system';
 
 import { find, includes, reduce } from 'lodash';
-import { ZIMBRA_STANDARD_COLORS, useTags, Tag, Tags } from '@zextras/carbonio-shell-ui';
+import {
+	ZIMBRA_STANDARD_COLORS,
+	useTags,
+	Tag,
+	Tags,
+	getBridgedFunctions
+} from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 import { itemActionRequest } from '../../soap/item-action-request';
-import { Invite } from '../../types/store/invite';
 import { TagsActionsType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from './delete-tag-modal';
@@ -89,17 +94,15 @@ export const createTag = ({ t, createModal }: ArgumentType): ReturnType => ({
 });
 
 export const createAndApplyTag = ({
-	t,
 	context,
 	event
 }: {
-	t: TFunction;
 	context: ContextType;
 	event: EventType;
 }): ReturnType => ({
 	id: TagsActionsType.NEW,
 	icon: 'TagOutline',
-	label: t('label.create_tag', 'Create Tag'),
+	label: getBridgedFunctions().t('label.create_tag', 'Create Tag'),
 	click: (e: React.SyntheticEvent<EventTarget>): void => {
 		if (e) {
 			e.stopPropagation();
@@ -231,11 +234,9 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 };
 
 export const applyTag = ({
-	t,
 	context,
 	event
 }: {
-	t: TFunction;
 	event: EventType;
 	context: ContextType;
 }): { id: string; items: TagType[]; customComponent: ReactElement } => {
@@ -271,11 +272,11 @@ export const applyTag = ({
 		keepOpen: true,
 		customComponent: (
 			<Button
-				label={t('label.new_tag', 'New Tag')}
+				label={getBridgedFunctions().t('label.new_tag', 'New Tag')}
 				type="outlined"
 				size="fill"
 				isSmall
-				onClick={(): void => context.createAndApplyTag({ t, context, event }).click()}
+				onClick={(): void => context.createAndApplyTag({ context, event }).click()}
 			/>
 		)
 	});
@@ -289,7 +290,7 @@ export const applyTag = ({
 				</Padding>
 				<Row takeAvailableSpace mainAlignment="space-between">
 					<Padding right="small">
-						<Text>{t('label.tags', 'Tags')}</Text>
+						<Text>{getBridgedFunctions().t('label.tags', 'Tags')}</Text>
 					</Padding>
 				</Row>
 			</Row>

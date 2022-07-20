@@ -9,18 +9,10 @@ export type AppState = {
 	calendarView: string;
 	date: Date;
 	isSummaryViewOpen: boolean;
-	appointmentId: string | undefined;
-	calendarId: string | undefined;
-	ridZ: string | undefined;
-	inviteId: string | undefined;
 };
 
 export const useAppStatusStore = create<AppState>(() => ({
 	calendarView: '',
 	date: new Date(),
-	isSummaryViewOpen: false,
-	appointmentId: undefined,
-	calendarId: undefined,
-	ridZ: undefined,
-	inviteId: undefined
+	isSummaryViewOpen: false
 })) as UseBoundStore<AppState, StoreApi<AppState>>;

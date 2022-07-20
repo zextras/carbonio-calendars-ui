@@ -40,16 +40,16 @@ export function selectAllCheckedCalendarsQuery({ calendars }: Store): string {
 }
 
 export function selectUncheckedCalendars({ calendars }: Store): Array<Calendar> {
-	return filter(calendars.calendars, ['checked', false]);
+	return filter(calendars?.calendars, ['checked', false]);
 }
 
 export function selectCheckedCalendars({ calendars }: Store): Array<Calendar> {
-	return filter(calendars.calendars, ['checked', true]);
+	return filter(calendars?.calendars, ['checked', true]);
 }
 
 export function selectCheckedCalendarsMap({ calendars }: Store): Record<string, Calendar> {
 	return reduce(
-		filter(calendars.calendars, ['checked', true]),
+		filter(calendars?.calendars, ['checked', true]),
 		(acc, v) => ({
 			...acc,
 			[v.id]: v

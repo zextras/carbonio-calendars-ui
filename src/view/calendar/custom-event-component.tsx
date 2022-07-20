@@ -143,6 +143,13 @@ export const CustomEventComponent = ({
 						</Row>
 					</Tooltip>
 				)}
+			{event?.resource?.isException && (
+				<Tooltip placement="top" label={t('event.is_exception', 'Exception')}>
+					<Row style={{ padding: 'none' }} mainAlignment="center">
+						<NeedActionIcon icon="RepeatException" />
+					</Row>
+				</Tooltip>
+			)}
 			{showTagIcon && (
 				<Tooltip placement="top" label={tagName}>
 					<Row style={{ padding: 'none' }} mainAlignment="center">

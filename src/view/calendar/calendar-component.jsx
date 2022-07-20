@@ -6,7 +6,7 @@
 import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import { getBridgedFunctions, store, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, store, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEqual, minBy } from 'lodash';
@@ -29,7 +29,7 @@ import { searchAppointments } from '../../store/actions/search-appointments';
 import { generateEditor, getEndTime } from '../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
-import { normalizeEditorFromInvite } from '../../normalizations/normalize-editor';
+import { normalizeEditor } from '../../normalizations/normalize-editor';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -177,7 +177,8 @@ export default function CalendarComponent() {
 			if (!summaryViewOpen) {
 				const isAllDay =
 					moment(e.end).hours() === moment(e.start).hours() &&
-					moment(e.end).minutes() === moment(e.start).minutes();
+					moment(e.end).minutes() === moment(e.start).minutes() &&
+					!moment(e.start).isSame(moment(e.end));
 				const slotEnd = moment(e.end);
 				const preferredSettingsEnd = moment(
 					getEndTime({
@@ -187,15 +188,18 @@ export default function CalendarComponent() {
 				);
 				const end = slotEnd.isSameOrAfter(preferredSettingsEnd) ? slotEnd : preferredSettingsEnd;
 				const editorEnd = isAllDay ? slotEnd : end;
-				const { editor, callbacks } = generateEditor('new', {
-					title: t('label.new_appointment', 'New Appointment'),
-					start: moment(e.start).valueOf(),
-					end: editorEnd,
-					allDay: isAllDay ?? false
+				const { editor, callbacks } = generateEditor({
+					context: {
+						title: t('label.new_appointment', 'New Appointment'),
+						start: moment(e.start).valueOf(),
+						end: editorEnd,
+						allDay: isAllDay ?? false,
+						panel: false
+					}
 				});
 				const storeData = store.store.getState();
 				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
-					...storeData.editor.editors[storeData.editor.activeId],
+					...storeData.editor.editors[editor.id],
 					callbacks
 				});
 			}
@@ -206,25 +210,27 @@ export default function CalendarComponent() {
 
 	const onEventDrop = useCallback(
 		(appt) => {
-			const { start, end, event } = appt;
-			if (!isEqual(event.start, start) || !isEqual(event.end, end)) {
+			const { start, end, event, isAllDay } = appt;
+			if (!isEqual(event.start, start) || !isEqual(event.end, end) || event.allDay !== isAllDay) {
 				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ })).then(
 					({ payload }) => {
+						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();
+						const endTime =
+							isAllDay || event.allDay ? moment(start).endOf('day') : moment(end).valueOf();
 						const invite = normalizeInvite(payload.m);
-						const editorData = normalizeEditorFromInvite(invite);
-						const { callbacks } = generateEditor(invite.apptId, {
-							...editorData,
-							start: moment(start).valueOf(),
-							end: moment(end).valueOf(),
-							isSeries: !!editorData.recur,
-							ridZ: event.resource.ridZ,
-							isInstance: true,
-							isException: !!editorData.exceptId
+						const { editor, callbacks } = generateEditor({
+							event,
+							invite,
+							context: {
+								start: startTime,
+								end: endTime,
+								allDay: !!isAllDay
+							}
 						});
 						const storeData = store.store.getState();
 						callbacks
 							.onSave({
-								isNew: storeData.editor.editors[storeData.editor.activeId]?.isNew
+								isNew: storeData.editor.editors[editor.id]?.isNew
 							})
 							.then((res) => {
 								if (res?.type) {
@@ -301,7 +307,9 @@ export default function CalendarComponent() {
 				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
 				onEventDrop={onEventDrop}
 				formats={{ eventTimeRangeFormat: () => '' }}
-				draggableAccessor={(event) => event.resource.iAmOrganizer}
+				draggableAccessor={(event) =>
+					event.resource.iAmOrganizer && event.resource.calendar.id !== FOLDERS.TRASH
+				}
 			/>
 		</>
 	);

@@ -7,41 +7,39 @@ import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { generateEditor } from '../../commons/editor-generator';
+import { normalizeEditor } from '../../normalizations/normalize-editor';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
+import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 
 export const ReminderPart = ({
 	alarmString,
-	invite
+	invite,
+	event
 }: {
 	alarmString: string;
 	invite: Invite;
+	event: EventType;
 }): ReactElement | null => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const setSnooze = useCallback(
 		(time) => {
-			dispatch(
-				modifyAppointment({
-					invite: {
-						...invite,
-						alarmData: [
-							{
-								action: 'DISPLAY',
-								trigger: {
-									rel: {
-										m: Number(time),
-										related: 'START',
-										neg: '1'
-									}
-								}
-							}
-						]
-					}
-				})
-			);
+			const editorInvite = {
+				...invite,
+				alarmValue: time
+			};
+			const { editor } = generateEditor({
+				event,
+				invite: editorInvite,
+				context: {
+					panel: true
+				}
+			});
+			dispatch(modifyAppointment({ id: editor.id, draft: invite.draft }));
 		},
-		[dispatch, invite]
+		[dispatch, event, invite]
 	);
 	const getReminderItems = [
 		{

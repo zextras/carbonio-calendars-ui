@@ -50,7 +50,8 @@
             "needs_action": "Needs action",
             "no": "No",
             "yes": "Yes"
-        }
+        },
+        "is_exception": "Exception"
     },
     "find_calendar_shares": "Find Calendar Shares",
     "find_shares": "Find shares",

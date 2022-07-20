@@ -73,7 +73,6 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 								<ReplyButtonsPart
 									inviteId={event?.resource?.inviteId}
 									participationStatus={event?.resource?.participationStatus}
-									compNum={invite?.compNum}
 								/>
 								<StyledDivider />
 							</>
@@ -97,7 +96,9 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 						)}
 
 						<StyledDivider />
-						{invite && <ReminderPart alarmString={invite?.alarmString} invite={invite} />}
+						{invite && (
+							<ReminderPart alarmString={invite?.alarmString} invite={invite} event={event} />
+						)}
 						{invite?.attachmentFiles?.length > 0 && (
 							<>
 								<StyledDivider />

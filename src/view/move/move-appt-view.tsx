@@ -4,28 +4,25 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import React, { useState, useMemo, useCallback, ReactElement } from 'react';
-import { find } from 'lodash';
+import React, { useState, useCallback, ReactElement } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
-import { Invite } from '../../types/store/invite';
+import { EventType } from '../../types/event';
+import { RouteParams } from '../../types/route-params';
+import { Appointment } from '../../types/store/appointments';
 import { NewModal } from './new-calendar-modal';
 import { MoveModal } from './move-modal';
-import { selectCalendars } from '../../store/selectors/calendars';
+import { selectCalendar } from '../../store/selectors/calendars';
 
 type MoveAppointmentProps = {
 	onClose: () => void;
-	invite: Invite;
+	event: EventType;
 };
 
-export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): ReactElement => {
+export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactElement | null => {
 	const dispatch = useDispatch();
-	const folders = useSelector(selectCalendars);
-	const currentFolder = useMemo(
-		() => find(folders, ['id', invite.ciFolder]) ?? folders[0],
-		[folders, invite.ciFolder]
-	);
+	const currentFolder = useSelector(selectCalendar(event.resource.calendar.id));
 	const [showNewFolderModal, setShowNewFolderModal] = useState(false);
 
 	const toggleModal = useCallback(
@@ -39,12 +36,12 @@ export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): ReactE
 		dispatch(moveAppointmentRequest(data)).then((res: any) => {
 			if (res.type.includes('fulfilled')) {
 				getBridgedFunctions().createSnackbar({
-					key: invite.ciFolder === FOLDERS.TRASH ? 'restore' : 'move',
+					key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
 					replace: true,
 					type: 'info',
 					hideButton: true,
 					label:
-						invite.ciFolder === FOLDERS.TRASH
+						event.resource.calendar.id === FOLDERS.TRASH
 							? `${getBridgedFunctions().t(
 									'message.snackbar.appt_restored',
 									'Appointment restored successfully to'
@@ -57,7 +54,7 @@ export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): ReactE
 				});
 			} else {
 				getBridgedFunctions().createSnackbar({
-					key: invite.ciFolder === FOLDERS.TRASH ? 'restore' : 'move',
+					key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
 					replace: true,
 					type: 'error',
 					hideButton: true,
@@ -71,15 +68,14 @@ export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): ReactE
 		});
 	};
 
-	return (
+	return currentFolder ? (
 		<>
 			{showNewFolderModal ? (
 				<NewModal
 					toggleModal={toggleModal}
 					onClose={onClose}
 					currentFolder={currentFolder}
-					folders={folders}
-					invite={invite}
+					event={event}
 					action={moveAppt}
 				/>
 			) : (
@@ -87,11 +83,10 @@ export const MoveApptModal = ({ onClose, invite }: MoveAppointmentProps): ReactE
 					toggleModal={toggleModal}
 					onClose={onClose}
 					currentFolder={currentFolder}
-					folders={folders}
-					invite={invite}
+					event={event}
 					action={moveAppt}
 				/>
 			)}
 		</>
-	);
+	) : null;
 };

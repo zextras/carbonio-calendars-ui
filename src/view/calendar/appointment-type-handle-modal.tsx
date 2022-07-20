@@ -22,10 +22,10 @@ export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): Re
 
 	const onEntireSeries = useCallback((): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`
 		);
 		onClose();
-	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ, onClose]);
+	}, [event.resource.calendar.id, event.resource.id, onClose]);
 
 	const onSingleInstance = useCallback((): void => {
 		replaceHistory(

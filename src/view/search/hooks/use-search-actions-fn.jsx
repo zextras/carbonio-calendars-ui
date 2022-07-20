@@ -22,8 +22,8 @@ export const useSearchActionsFn = (event, invite) => {
 	);
 
 	const edit = useCallback(
-		(ev) => editEventFn(ev, invite, { action, history, pathname, calendar, apptId, ridZ }),
-		[action, apptId, calendar, history, invite, pathname, ridZ]
+		(ev) => editEventFn(ev, event, invite, { action, history, pathname, calendar, apptId, ridZ }),
+		[action, apptId, calendar, event, history, invite, pathname, ridZ]
 	);
 
 	const open = useCallback(
