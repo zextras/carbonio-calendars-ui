@@ -211,7 +211,7 @@ export default function CalendarComponent() {
 	const onEventDrop = useCallback(
 		(appt) => {
 			const { start, end, event, isAllDay } = appt;
-			if (!isEqual(event.start, start) || !isEqual(event.end, end) || event.allDay !== isAllDay) {
+			if (!isEqual(event.start, start) || !isEqual(event.end, end) || event.allDay !== !!isAllDay) {
 				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ })).then(
 					({ payload }) => {
 						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();

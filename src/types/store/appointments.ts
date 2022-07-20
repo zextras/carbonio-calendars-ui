@@ -34,6 +34,7 @@ export type ExceptionReference = SingleReference & {
 	status?: string;
 	fb?: string;
 	ptst?: string;
+	tzo?: number;
 };
 
 export type InstanceReference = SingleReference | ExceptionReference;
