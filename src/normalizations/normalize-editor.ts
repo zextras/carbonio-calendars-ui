@@ -87,8 +87,10 @@ export const normalizeEditor = ({
 			allDay: event?.allDay,
 			freeBusy: invite.freeBusy,
 			class: invite.class,
-			start: event?.allDay ? moment(event?.start)?.startOf('date').valueOf() : event?.start,
-			end: event?.allDay ? moment(event?.end)?.endOf('date').valueOf() : event?.end,
+			start: event?.allDay
+				? moment(event?.start)?.startOf('date').valueOf()
+				: event?.start.valueOf(),
+			end: event?.allDay ? moment(event?.end)?.endOf('date').valueOf() : event?.end.valueOf(),
 			timezone: invite?.start?.tz,
 			inviteId: event?.resource?.inviteId,
 			reminder: invite?.alarmValue,
