@@ -8,7 +8,7 @@ import { EventType } from '../types/event';
 
 export const normalizeReminderItem = (appointment: EventType): ReminderItem => ({
 	start: new Date(appointment.start.valueOf()),
-	key: `${appointment?.id}-${appointment.resource?.alarmData?.[0]?.alarmInstStart}`,
+	key: `${appointment?.resource?.id}-${appointment.resource?.alarmData?.[0]?.alarmInstStart}`,
 	isRecurrent: appointment.resource.isRecurrent,
 	end: new Date(appointment.end.valueOf()),
 	alarmData: appointment.resource.alarmData,

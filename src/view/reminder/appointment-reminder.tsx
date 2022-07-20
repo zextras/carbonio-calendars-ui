@@ -15,7 +15,6 @@ import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
 import { EventType } from '../../types/event';
-import { Appointment } from '../../types/store/appointments';
 import { showNotification } from '../notifications';
 import { ReminderModal } from './reminder-modal';
 import sound from '../../assets/notification.mp3';
