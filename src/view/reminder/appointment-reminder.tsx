@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { filter, find, forEach, includes, isEmpty } from 'lodash';
+import { filter, find, forEach, includes, isEmpty, map } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getTimeToDisplayData } from '../../commons/utilities';
-import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
+import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 import { normalizeReminderItem } from '../../normalizations/normalize-reminder';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
@@ -24,7 +24,13 @@ export const AppointmentReminder = (): ReactElement | null => {
 	const appointments = useSelector(selectAppointmentsArray);
 	const calendars = useSelector(selectCalendars);
 
-	const events = normalizeCalendarEvents(appointments, calendars);
+	const events = map(appointments, (appt) => {
+		const isShared = appt?.l?.includes(':');
+		const cal = isShared
+			? find(calendars, (f) => `${f.zid}:${f.rid}` === appt.l)
+			: find(calendars, (f) => f.id === appt.l);
+		return normalizeCalendarEvent({ calendar: cal ?? calendars?.['10'], appointment: appt });
+	});
 
 	const notificationAudio = useMemo(() => new Audio(sound), []);
 
