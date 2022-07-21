@@ -18,7 +18,12 @@ import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { workWeek } from '../../utils/work-week';
-import { selectCheckedCalendarsMap, selectEnd, selectStart } from '../../store/selectors/calendars';
+import {
+	selectCalendars,
+	selectCheckedCalendarsMap,
+	selectEnd,
+	selectStart
+} from '../../store/selectors/calendars';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
@@ -29,7 +34,7 @@ import { searchAppointments } from '../../store/actions/search-appointments';
 import { generateEditor, getEndTime } from '../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
-import { normalizeEditor } from '../../normalizations/normalize-editor';
+import CalendarStyle from './calendar-style';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -67,6 +72,8 @@ export default function CalendarComponent() {
 	const firstDayOfWeek = settings.prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
 	const [date, setDate] = useState(calendarDate);
+	const calendars = useSelector(selectCalendars);
+	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 
 	if (settings.prefs.zimbraPrefLocale) {
 		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
@@ -282,9 +289,14 @@ export default function CalendarComponent() {
 		[setDate]
 	);
 
+	const resizeEvent = useCallback(({ event, start, end }) => {
+		console.log(event, start, end);
+	}, []);
+
 	return (
 		<>
 			<CalendarSyncWithRange />
+			<CalendarStyle primaryCalendar={primaryCalendar} />
 			<BigCalendar
 				selectable
 				eventPropGetter={eventPropGetter}
@@ -306,7 +318,10 @@ export default function CalendarComponent() {
 				onSelectSlot={handleSelect}
 				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
 				onEventDrop={onEventDrop}
+				onEventResize={resizeEvent}
 				formats={{ eventTimeRangeFormat: () => '' }}
+				resizable
+				resizableAccessor={() => false}
 				draggableAccessor={(event) =>
 					event.resource.iAmOrganizer && event.resource.calendar.id !== FOLDERS.TRASH
 				}

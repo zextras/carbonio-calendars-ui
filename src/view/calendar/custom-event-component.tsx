@@ -143,13 +143,15 @@ export const CustomEventComponent = ({
 						</Row>
 					</Tooltip>
 				)}
-			{event?.resource?.isException && (
-				<Tooltip placement="top" label={t('event.is_exception', 'Exception')}>
-					<Row style={{ padding: 'none' }} mainAlignment="center">
-						<NeedActionIcon icon="RepeatException" />
-					</Row>
-				</Tooltip>
-			)}
+			{/* {event?.resource?.isException && (
+				<Padding left="small">
+					<Icon
+						data-testid="ExceptionIcon"
+						icon="RepeatException"
+						color={event.resource.calendar.color.color}
+					/>
+				</Padding>
+			)} */}
 			{showTagIcon && (
 				<Tooltip placement="top" label={tagName}>
 					<Row style={{ padding: 'none' }} mainAlignment="center">
@@ -198,6 +200,15 @@ export const CustomEventComponent = ({
 					)}
 				</Row>
 			</Tooltip>
+			{/* {event?.resource?.isException && (
+				<Padding left="small">
+					<Icon
+						data-testid="ExceptionIcon"
+						icon="RepeatException"
+						color={event.resource.calendar.color.color}
+					/>
+				</Padding>
+			)} */}
 			{showTagIcon && (
 				<Tooltip placement="top" label={tagName}>
 					<Row style={{ padding: 'none' }} mainAlignment="center">
