@@ -10,6 +10,6 @@ export const getInvite = createAsyncThunk(
 	'invites/get invite',
 	async ({ inviteId, ridZ }: { inviteId: string; ridZ?: string }): Promise<any> => {
 		const { m } = await getMessageRequest({ inviteId, ridZ });
-		return { m: m[0] };
+		return Promise.resolve({ m: m[0] });
 	}
 );

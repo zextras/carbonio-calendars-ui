@@ -3,28 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import {
-	Dropdown,
-	Icon,
-	SnackbarManagerContext,
-	ModalManagerContext,
-	Padding,
-	Row,
-	Text
-} from '@zextras/carbonio-design-system';
-import React, { ReactElement, useContext, useMemo } from 'react';
-import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import { Dropdown, Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
+import React, { ReactElement, useMemo } from 'react';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { ReplyButtonsPartSmall } from '../../commons/reply-buttons-small';
-import { selectCalendar } from '../../store/selectors/calendars';
+import { useEventSummaryViewActions } from '../../hooks/use-event-summary-view-actions';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
-import { Store } from '../../types/store/store';
 import OrganizerActions from './organizer-actions';
-import { useGetRecurrentActions } from '../../hooks/use-recurrent-actions';
-import { createAndApplyTag } from '../tags/tag-actions';
 
 const RecurrentRow = styled(Row)`
 	border: 1px solid ${(props): string => props.theme.palette.primary.regular};
@@ -39,68 +27,13 @@ export const ActionsButtonsRow = ({
 	onClose: () => void;
 	invite: Invite;
 }): ReactElement => {
-	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch();
-	const calendar = useSelector((s: Store) => selectCalendar(s, invite?.parent));
-	const tags = useTags();
-	const createSnackbar = useContext(SnackbarManagerContext);
-	const instanceContext = useMemo(
-		() => ({
-			replaceHistory,
-			dispatch,
-			createModal,
-			createSnackbar,
-			tags,
-			onClose,
-			createAndApplyTag,
-			calendar,
-			isSeries: true,
-			isException: event.resource.isException,
-			isInstance: true,
-			ridZ: event.resource.ridZ
-		}),
-		[
-			dispatch,
-			createModal,
-			createSnackbar,
-			tags,
-			onClose,
-			calendar,
-			event.resource.isException,
-			event.resource.ridZ
-		]
-	);
-	const seriesContext = useMemo(
-		() => ({
-			replaceHistory,
-			dispatch,
-			createModal,
-			createSnackbar,
-			tags,
-			onClose,
-			createAndApplyTag,
-			calendar,
-			isSeries: true,
-			isException: event.resource.isException,
-			isInstance: false,
-			ridZ: event.resource.ridZ
-		}),
-		[
-			calendar,
-			createModal,
-			createSnackbar,
-			dispatch,
-			event.resource.isException,
-			event.resource.ridZ,
-			onClose,
-			tags
-		]
-	);
-
 	const [t] = useTranslation();
-	const instanceActions = useGetRecurrentActions(invite, event, instanceContext);
-	const seriesActions = useGetRecurrentActions(invite, event, seriesContext);
+	const actions = useEventSummaryViewActions({
+		event
+	});
 
+	const instanceActions = useMemo(() => actions?.[0]?.items ?? [], [actions]);
+	const seriesActions = useMemo(() => actions?.[1]?.items ?? [], [actions]);
 	return (
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
 			{event.resource.iAmOrganizer && event.haveWriteAccess ? (
@@ -137,7 +70,7 @@ export const ActionsButtonsRow = ({
 							)}
 						</Padding>
 					) : (
-						<OrganizerActions event={event} invite={invite} />
+						<OrganizerActions event={event} invite={invite} actions={actions} />
 					)}
 				</>
 			) : (
@@ -146,6 +79,7 @@ export const ActionsButtonsRow = ({
 					participationStatus={event.resource?.participationStatus}
 					compNum={event.resource?.compNum}
 					event={event}
+					actions={actions}
 				/>
 			)}
 		</Row>

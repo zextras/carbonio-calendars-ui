@@ -5,7 +5,8 @@
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { getUserAccount, getUserSettings, soapFetch } from '@zextras/carbonio-shell-ui';
+import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
 import {
 	findAttachments,
@@ -82,14 +83,23 @@ export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
 	async ({ id, draft }: any, { getState }: any): Promise<any> => {
 		const editor = getState()?.editor?.editors?.[id];
+		const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
+
 		if (editor) {
 			if (editor.isSeries && editor.isInstance && !editor.isException) {
-				const exceptId = {
-					d: editor?.timezone
-						? moment(editor.ridZ).format('YYYYMMDD[T]HHmmss')
-						: moment(editor.ridZ).utc().format('YYYYMMDD[T]HHmmss[Z]'),
-					tz: editor?.timezone
-				};
+				const exceptId = omitBy(
+					{
+						d:
+							editor?.timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE'
+								? moment(editor.ridZ).format('YYYYMMDD[T]HHmmss')
+								: moment(editor.ridZ).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+						tz:
+							editor?.timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE'
+								? editor?.timezone
+								: undefined
+					},
+					isNil
+				);
 				const body = generateSoapMessageFromEditor({ ...editor, draft, exceptId });
 				const res: { calItemId: string; invId: string } = await soapFetch(
 					'CreateAppointmentException',

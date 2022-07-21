@@ -9,12 +9,17 @@ import React, { useState, useMemo, useCallback, ReactElement } from 'react';
 import { Input, Container, Text } from '@zextras/carbonio-design-system';
 import { filter, startsWith, reduce, isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
 import { getFolderTranslatedName } from '../../commons/utilities';
 import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
+import { selectCalendars } from '../../store/selectors/calendars';
+import { EventType } from '../../types/event';
+import { RouteParams } from '../../types/route-params';
+import { Appointment } from '../../types/store/appointments';
 import { Calendar } from '../../types/store/calendars';
-import { Invite } from '../../types/store/invite';
 import { FolderItem } from './folder-item';
 
 type ActionArgs = {
@@ -29,33 +34,32 @@ type ActionArgs = {
 type MoveModalProps = {
 	toggleModal: () => void;
 	onClose: () => void;
-	invite: Invite;
+	event: EventType;
 	currentFolder: Calendar;
-	folders: Record<string, Calendar>;
 	action: (arg: ActionArgs) => void;
 };
 
 export const MoveModal = ({
 	toggleModal,
 	onClose,
-	invite,
+	event,
 	currentFolder,
-	folders,
 	action
 }: MoveModalProps): ReactElement => {
-	const { id, apptId } = invite;
 	const [t] = useTranslation();
+
+	const folders = useSelector(selectCalendars);
 	const [input, setInput] = useState('');
 	const [folderDestination, setFolderDestination] = useState<Calendar>({} as Calendar);
 	const [isSameFolder, setIsSameFolder] = useState(false);
 	const onConfirm = useCallback(() => {
 		if (folderDestination?.id !== currentFolder.id) {
 			action({
-				inviteId: id,
+				inviteId: event.resource.inviteId,
 				t,
 				l: folderDestination.id,
 				color: folderDestination.color,
-				id: apptId,
+				id: event.resource.id,
 				destinationCalendarName: folderDestination.name
 			});
 			onClose();
@@ -64,13 +68,13 @@ export const MoveModal = ({
 		}
 	}, [
 		folderDestination.id,
-		folderDestination.name,
 		folderDestination.color,
+		folderDestination.name,
 		currentFolder.id,
 		action,
-		id,
+		event.resource.inviteId,
+		event.resource.id,
 		t,
-		apptId,
 		onClose
 	]);
 	const filterFromInput = useMemo<Calendar[]>(
@@ -140,8 +144,10 @@ export const MoveModal = ({
 		>
 			<ModalHeader
 				title={`${
-					invite.ciFolder === '3' ? t('label.restore', 'Restore') : t('label.move', 'Move')
-				} ${invite.name}`}
+					event.resource.calendar.id === FOLDERS.TRASH
+						? t('label.restore', 'Restore')
+						: t('label.move', 'Move')
+				} ${event.title}`}
 				onClose={onClose}
 			/>
 			<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
@@ -178,7 +184,11 @@ export const MoveModal = ({
 					secondaryBtnType="outlined"
 					secondaryColor="primary"
 					secondaryLabel={t('label.new_calendar', 'New Calendar')}
-					label={invite.ciFolder === '3' ? t('label.restore', 'Restore') : t('label.move', 'Move')}
+					label={
+						event.resource.calendar.id === FOLDERS.TRASH
+							? t('label.restore', 'Restore')
+							: t('label.move', 'Move')
+					}
 					disabled={!folderDestination.id || folderDestination.id === currentFolder.id}
 				/>
 			</Container>

@@ -15,7 +15,7 @@ export type SingleReference = {
 };
 
 export type ExceptionReference = SingleReference & {
-	alarm: any;
+	alarm: boolean;
 	allDay: boolean;
 	dur: number;
 	draft: boolean;
@@ -29,6 +29,12 @@ export type ExceptionReference = SingleReference & {
 	or: any;
 	loc: string | undefined;
 	otherAtt: any;
+	class?: string;
+	hasEx?: boolean;
+	status?: string;
+	fb?: string;
+	ptst?: string;
+	tzo?: number;
 };
 
 export type InstanceReference = SingleReference | ExceptionReference;

@@ -13,6 +13,7 @@ import {
 import { find, isNaN, startsWith } from 'lodash';
 import moment from 'moment';
 import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
+import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import {
@@ -38,15 +39,15 @@ import {
 	updateEditor
 } from '../store/slices/editor-slice';
 import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
-import { EventResourceCalendar } from '../types/event';
-import { Attendee, InviteClass, InviteFreeBusy } from '../types/store/invite';
+import { EventResourceCalendar, EventType } from '../types/event';
+import { Attendee, Invite, InviteClass, InviteFreeBusy } from '../types/store/invite';
 import { getIdentityItems } from './get-identity-items';
 
 let counter = 0;
 
-const getNewEditId = (id: string): string => {
+const getNewEditId = (id?: string): string => {
 	counter += 1;
-	return `${id}-${counter}`;
+	return `${id ?? 'new'}-${counter}`;
 };
 
 export const getEndTime = ({ start, duration }: { start: number; duration: string }): number => {
@@ -281,20 +282,26 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 	};
 };
 
-export const generateEditor = (
-	id: string,
-	context = {},
-	panel = true
-): { editor: Editor; callbacks: EditorCallbacks } => {
-	const editorId = getNewEditId(id);
+export const generateEditor = ({
+	event,
+	invite,
+	context
+}: {
+	event?: EventPropType;
+	invite?: Invite;
+	context: any;
+}): { editor: Editor; callbacks: EditorCallbacks } => {
+	const editorId = getNewEditId(event?.resource?.id);
 	const emptyEditor = createEmptyEditor(editorId);
-	const editor = { ...emptyEditor, ...context, isNew: startsWith(editorId, 'new') };
+	const normalizedEditor = invite && event ? normalizeEditor({ invite, event }) : {};
+	const editorData = { ...normalizedEditor, ...context };
+	const editor = { ...emptyEditor, ...editorData, isNew: startsWith(editorId, 'new') };
 	const callbacks = createCallbacks(editorId);
-	const closeCurrentEditor = panel
+	const closeCurrentEditor = context.panel
 		? callbacks.closeCurrentEditor
 		: getBridgedFunctions().removeCurrentBoard;
 	const { dispatch } = store.store;
-	const storeEditorData = { ...editor, panel };
+	const storeEditorData = { ...editor, panel: context.panel };
 	dispatch(createNewEditor(storeEditorData));
 	const storeData = store.store.getState();
 	return {
