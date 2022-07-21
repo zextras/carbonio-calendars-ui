@@ -335,7 +335,7 @@
         "equipment": "Оборудование",
         "location": "Место",
         "virtual_chat": "Конференц-зал",
-        "chat_room": "Комната в Chats",
+        "chat_room": "Ссылка на виртуальную комнату",
         "calendar_sharing_status": "Совместно с {{count}}"
     },
     "action": {

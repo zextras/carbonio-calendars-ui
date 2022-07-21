@@ -325,7 +325,17 @@
         "organizer": "Organizador",
         "reply": "Responder",
         "reply_all": "Responder a todos",
-        "more": "Mais..."
+        "more": "Mais...",
+        "send_email_to": "Enviar um e-mail para: {{email}}",
+        "send_email": "Enviar um e-mail",
+        "required_participant": "{{count}} Participante",
+        "required_participant_plural": "{{count}} Participantes",
+        "optional_participant": "{{count}} Opcional",
+        "optional_participant_plural": "{{count}} Opcionais",
+        "guests": "convidados",
+        "declined": "{{count}} recusadas",
+        "awaiting": "esperando",
+        "accepted": "{{count}} aceitadas"
     },
     "months": {
         "april": "Abril",
@@ -381,7 +391,11 @@
         "all_time": "Na hora do evento",
         "modal": {
             "set_new_time_message": "Deseja definir um novo horário para o compromisso perdido? Se você clicar em OK, todos os lembretes serão automaticamente descartados."
-        }
+        },
+        "minutes": "{{count}} minuto",
+        "minutes_plural": "{{count}} minutos",
+        "hours": "{{count}} hora",
+        "hours_plural": "{{count}} horas"
     },
     "repeat": {
         "custom": "Personalizado",
@@ -554,7 +568,10 @@
         "chat": "Equipamento",
         "equipment": "Equipamento",
         "location": "Localização",
-        "chat_room": "Link da Sala virtual"
+        "chat_room": "Link da Sala virtual",
+        "virtual_chat": "Chat virtual",
+        "calendar_sharing_status_one": "Compartilhado com 1 pessoa",
+        "calendar_sharing_status": "Compartilhado com {{count}} personas"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",

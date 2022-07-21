@@ -12,6 +12,7 @@ import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Editor } from '../types/editor';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { retrieveAttachmentsType } from './normalizations-utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
