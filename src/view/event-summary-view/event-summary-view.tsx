@@ -74,9 +74,7 @@ export const EventSummaryView = ({
 				{locationData && <LocationRow locationData={locationData} showIcon />}
 				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
 				<ParticipantsRow event={event} invite={invite} />
-				{typeof invite?.tags?.length === 'number' && invite?.tags?.length > 0 && (
-					<TagsRow invite={invite} />
-				)}
+				{event?.resource?.tags?.length > 0 && <TagsRow event={event} />}
 				{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
 					<DescriptionFragmentRow event={event} />
 				)}

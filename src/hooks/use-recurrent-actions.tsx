@@ -39,7 +39,7 @@ export const useGetRecurrentActions = (
 							? deletePermanentlyItem(invite, event, { ...context, isInstance, createModal }, t)
 							: moveApptToTrashItem(invite, event, { ...context, isInstance, createModal }, t),
 						moveAppointmentItem(event, invite, { ...context, isInstance, createModal }, t),
-						...(isInstance ? [] : [applyTag({ t, context: { ...context, tags }, invite })])
+						...(isInstance ? [] : [applyTag({ t, context: { ...context, tags }, event })])
 				  ]
 				: [],
 		[invite, event, context, t, isInstance, createModal, tags]

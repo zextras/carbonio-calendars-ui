@@ -265,6 +265,7 @@
         "your_pref_timezone_msg": "Your preferred timezone is: GMT +01:00 Amsterdam, Berlin, Bern, Rome, Stockholm,Vienna."
     },
     "message": {
+        "appointment_invitation_sent": "Appointment invitation sent",
         "appointment_type_handle": "{{name}}” is a recurring appointment. Would you like to open only this instance or the series?",
         "are_organizer": "are the organizer",
         "delete_all_occurences": "Delete all occurrences",

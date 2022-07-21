@@ -3,8 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { store, getUserAccount, getUserSettings, replaceHistory } from '@zextras/carbonio-shell-ui';
-import { find, startsWith } from 'lodash';
+import {
+	store,
+	getUserAccount,
+	getUserSettings,
+	replaceHistory,
+	getBridgedFunctions
+} from '@zextras/carbonio-shell-ui';
+import { find, isNaN, startsWith } from 'lodash';
 import moment from 'moment';
 import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
 import { createAppointment } from '../store/actions/new-create-appointment';
@@ -12,7 +18,6 @@ import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import {
 	closeEditor,
 	createNewEditor,
-	editAppointmentData,
 	editEditorAllDay,
 	editEditorAttachments,
 	editEditorAttendees,
@@ -44,10 +49,23 @@ const getNewEditId = (id: string): string => {
 	return `${id}-${counter}`;
 };
 
+export const getEndTime = ({ start, duration }: { start: number; duration: string }): number => {
+	const now = moment(start);
+	if (duration?.includes('m')) {
+		const interval = parseInt(duration, 10) * 60;
+		const value = now.add(interval, 's').valueOf();
+		return isNaN(value) ? now.valueOf() + 3600 : value;
+	}
+	const interval = parseInt(duration, 10);
+	const value = now.add(interval, 's').valueOf();
+	return isNaN(value) ? now.valueOf() + 3600 : value;
+};
+
 const createEmptyEditor = (id: string): Editor => {
 	const identities = getIdentityItems();
 	const {
 		zimbraPrefTimeZoneId,
+		zimbraPrefCalendarDefaultApptDuration,
 		zimbraPrefCalendarApptReminderWarningTime,
 		zimbraPrefDefaultCalendarId = CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
 	} = getUserSettings().prefs;
@@ -74,7 +92,10 @@ const createEmptyEditor = (id: string): Editor => {
 		freeBusy: 'B',
 		class: 'PUB',
 		start: moment().valueOf(),
-		end: moment().valueOf() + 3600,
+		end: getEndTime({
+			start: moment().valueOf(),
+			duration: zimbraPrefCalendarDefaultApptDuration as string
+		}),
 		inviteId: undefined,
 		timezone: zimbraPrefTimeZoneId as string,
 		reminder: zimbraPrefCalendarApptReminderWarningTime as string,
@@ -269,9 +290,18 @@ export const generateEditor = (
 	const emptyEditor = createEmptyEditor(editorId);
 	const editor = { ...emptyEditor, ...context, isNew: startsWith(editorId, 'new') };
 	const callbacks = createCallbacks(editorId);
+	const closeCurrentEditor = panel
+		? callbacks.closeCurrentEditor
+		: getBridgedFunctions().removeCurrentBoard;
 	const { dispatch } = store.store;
 	const storeEditorData = { ...editor, panel };
 	dispatch(createNewEditor(storeEditorData));
 	const storeData = store.store.getState();
-	return { editor: storeData?.editor?.editors?.[editorId], callbacks };
+	return {
+		editor: storeData?.editor?.editors?.[editorId],
+		callbacks: {
+			...callbacks,
+			closeCurrentEditor
+		}
+	};
 };

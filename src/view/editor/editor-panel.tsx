@@ -8,6 +8,7 @@ import React, { ReactElement } from 'react';
 import { EditorProps } from '../../types/editor';
 import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
 import { EditorActions } from './parts/editor-actions';
+import { EditorAttachments } from './parts/editor-attachments';
 import { EditorAttendees } from './parts/editor-attendees';
 import { EditorCalendarSelector } from './parts/editor-calendar-selector';
 import { EditorComposer } from './parts/editor-composer';
@@ -27,9 +28,11 @@ import { EditorVirtualRoom } from './parts/editor-virtual-room';
 export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): ReactElement | null =>
 	editorId && callbacks ? (
 		<Container
+			background="gray5"
 			padding={{ horizontal: 'large', bottom: 'large' }}
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
+			style={{ overflow: 'auto' }}
 		>
 			<EditorActions editorId={editorId} callbacks={callbacks} />
 			<EditorSummary editorId={editorId} />
@@ -69,6 +72,7 @@ export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): Rea
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
 						<EditorRecurrence editorId={editorId} callbacks={callbacks} expanded={expanded} />
 					</Row>
+					<EditorAttachments editorId={editorId} callbacks={callbacks} expanded={expanded} />
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
 						<EditorComposer editorId={editorId} callbacks={callbacks} />
 					</Row>

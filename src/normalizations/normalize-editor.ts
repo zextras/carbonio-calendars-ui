@@ -10,6 +10,7 @@ import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
 import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Invite } from '../types/store/invite';
+import { retrieveAttachmentsType } from './normalizations-utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -130,6 +131,9 @@ export const normalizeEditorFromInvite = (invite: Invite, context?: any): any =>
 					invite.ciFolder ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
 				],
 			ridZ: context?.ridZ,
+			attach: invite.attach,
+			parts: invite.parts,
+			attachmentFiles: invite.attachmentFiles,
 			isInstance: context?.isInstance ?? false,
 			isSeries: context?.isSeries ?? false,
 			isException: invite?.isException ?? context?.isException ?? false,
@@ -147,7 +151,9 @@ export const normalizeEditorFromInvite = (invite: Invite, context?: any): any =>
 			timezone: invite?.start?.tz,
 			inviteId: invite.id,
 			reminder: invite?.alarmValue,
-			recur: invite.recurrenceRule
+			recur: invite.recurrenceRule,
+			richText: invite?.htmlDescription[0]._content ?? '',
+			plainText: invite?.textDescription[0]._content ?? ''
 		},
 		isNil
 	);

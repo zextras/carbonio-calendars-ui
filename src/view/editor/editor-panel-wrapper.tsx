@@ -39,13 +39,13 @@ export const AppointmentCardContainer = styled(Container)`
 	position: absolute;
 	top: ${({ expanded }): string => (expanded ? '16px' : '16px')};
 	right: ${({ expanded }): string => (expanded ? '16px' : '16px')};
-	bottom: ${({ expanded }): string => (expanded ? '0' : '12px')};
+	bottom: ${({ expanded }): string => (expanded ? '0' : '16px')};
 	left: ${({ expanded }): string => (expanded ? '16px' : 'max(calc(100% - 680px), 12px)')};
 	transition: left 0.2s ease-in-out;
 	height: auto;
 	width: auto;
-	overflow: hidden;
 	max-height: 100%;
+	padding: 0;
 `;
 
 type HeaderProps = {
@@ -131,7 +131,7 @@ const EditorPanelWrapper = (): ReactElement | null => {
 	return editorId && callbacks ? (
 		<>
 			{expanded && <BackgroundContainer />}
-			<AppointmentCardContainer background="gray5" mainAlignment="flex-start" expanded={expanded}>
+			<AppointmentCardContainer mainAlignment="flex-start" expanded={expanded}>
 				<Header
 					editorId={editorId}
 					expanded={expanded}

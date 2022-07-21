@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Button } from '@zextras/carbonio-design-system';
+import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -20,7 +21,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
 
-	const { onSend } = callbacks;
+	const { onSend, closeCurrentEditor } = callbacks;
 	const disabled = useMemo(
 		() => !attendees?.length && !optionalAttendees?.length,
 		[attendees?.length, optionalAttendees?.length]
@@ -28,9 +29,21 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 
 	const onClick = useCallback(() => {
 		onSend(isNew).then(({ response }) => {
-			// todo: add informative snackbar depending on response
+			if (response) {
+				closeCurrentEditor();
+			}
+			getBridgedFunctions().createSnackbar({
+				key: `calendar-moved-root`,
+				replace: true,
+				type: response ? 'info' : 'warning',
+				hideButton: true,
+				label: !response
+					? t('label.error_try_again', 'Something went wrong, please try again')
+					: t('message.appointment_invitation_sent', 'Appointment invitation sent'),
+				autoHideTimeout: 3000
+			});
 		});
-	}, [isNew, onSend]);
+	}, [closeCurrentEditor, isNew, onSend, t]);
 
 	return (
 		<Button

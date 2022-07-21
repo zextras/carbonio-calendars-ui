@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { getUserSettings, soapFetch } from '@zextras/carbonio-shell-ui';
 import { concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
@@ -133,6 +133,7 @@ const generateMp = (msg: Editor): any => ({
 
 const generateInvite = (editorData: Editor): any => {
 	const at = [];
+	const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
 	at.push(
 		...editorData.attendees.map((c: any) => ({
 			a: c.email,
@@ -206,12 +207,14 @@ const generateInvite = (editorData: Editor): any => {
 				s: setResourceDate({
 					time: editorData.start,
 					allDay: editorData?.allDay,
-					timezone: editorData?.timezone
+					timezone:
+						zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? editorData?.timezone : undefined
 				}),
 				e: setResourceDate({
 					time: editorData.end,
 					allDay: editorData?.allDay,
-					timezone: editorData?.timezone
+					timezone:
+						zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? editorData?.timezone : undefined
 				}),
 				exceptId: editorData.exceptId,
 				class: editorData.class,
@@ -226,18 +229,15 @@ const generateInvite = (editorData: Editor): any => {
 export const generateSoapMessageFromEditor = (msg: Editor): any =>
 	omitBy(
 		{
-			echo: msg?.isInstance ? '0' : '1',
+			echo: '1',
 			id: msg?.inviteId,
 			comp: '0',
 			m: omitBy(
 				{
-					attach: msg?.attachmentFiles
+					attach: msg?.attach
 						? {
-								mp: msg?.attachmentFiles?.mp,
-								aid:
-									msg?.attachmentFiles?.aid?.length > 0
-										? msg?.attachmentFiles?.aid?.join(',')
-										: undefined
+								mp: msg?.attach?.mp,
+								aid: msg?.attach?.aid?.length > 0 ? msg?.attach?.aid?.join(',') : undefined
 						  }
 						: undefined,
 					e: generateParticipantInformation(msg),

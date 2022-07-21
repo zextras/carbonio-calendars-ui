@@ -34,7 +34,7 @@ export const ActionsRetriever = (
 					deletePermanentlyItem(invite, event, context, t),
 					moveAppointmentItem(event, invite, context, t),
 					openInDisplayerItem(event, context, t),
-					applyTag({ t, context, invite })
+					applyTag({ t, context, event })
 			  ]
 			: [
 					openInDisplayerItem(event, context, t),
@@ -48,21 +48,21 @@ export const ActionsRetriever = (
 					moveAppointmentItem(event, invite, context, t),
 					moveApptToTrashItem(invite, event, context, t),
 					editAppointmentItem(invite, event, context, t),
-					applyTag({ t, context, invite })
+					applyTag({ t, context, event })
 			  ]
 		: event.resource.calendar.id === FOLDERS.TRASH
 		? [
 				deletePermanentlyItem(invite, event, context, t),
 				moveAppointmentItem(event, invite, context, t),
 				openInDisplayerItem(event, context, t),
-				applyTag({ t, context, invite })
+				applyTag({ t, context, event })
 		  ]
 		: [
 				openInDisplayerItem(event, context, t),
 				moveAppointmentItem(event, invite, context, t),
 				moveApptToTrashItem(invite, event, context, t),
 				editAppointmentItem(invite, event, context, t),
-				applyTag({ t, context, invite })
+				applyTag({ t, context, event })
 		  ];
 
 export const RecurrentActionRetriever = (
@@ -88,7 +88,7 @@ export const RecurrentActionRetriever = (
 				deletePermanentlyItem(invite, event, instanceContext, t),
 				moveAppointmentItem(event, invite, instanceContext, t),
 				openInDisplayerItem(event, instanceContext, t),
-				applyTag({ t, context: instanceContext, invite })
+				applyTag({ t, context: instanceContext, event })
 		  ]
 		: [
 				{
@@ -113,7 +113,7 @@ export const RecurrentActionRetriever = (
 					items: [
 						moveApptToTrashItem(invite, event, seriesContext, t),
 						moveAppointmentItem(event, invite, seriesContext, t),
-						applyTag({ t, context: seriesContext, invite })
+						applyTag({ t, context: seriesContext, event })
 					]
 				}
 		  ];
