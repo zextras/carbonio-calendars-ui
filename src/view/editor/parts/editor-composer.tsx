@@ -128,9 +128,14 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 		<>
 			{composerIsAvailable && isRichText ? (
 				<EditorWrapper>
-					{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-					{/* @ts-ignore */}
-					<Composer onEditorChange={onRichTextChange} minHeight={200} initialValue={richText} />
+					<Composer
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						onEditorChange={onRichTextChange}
+						minHeight={200}
+						initialValue={richText}
+						value={richText}
+					/>
 				</EditorWrapper>
 			) : (
 				<TextArea placeholder={textAreaLabel} value={plainTextValue} onChange={onPlainTextChange} />

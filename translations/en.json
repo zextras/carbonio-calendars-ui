@@ -37,7 +37,8 @@
                 "title": "Drag&Drop Mode"
             },
             "drive": "Add from Drive",
-            "local": "Add from local"
+            "local": "Add from local",
+            "url": "Add public link from Files"
         }
     },
     "edit_share_properties": "Edit share properties",
@@ -113,6 +114,7 @@
         "calendar_shared": "Calendar shared successfully",
         "cancelled": "Cancelled",
         "changes_saved": "Changes saved",
+        "choose_file": "Choose file",
         "create": "Create",
         "create_appt_settings": "Creating Appointments",
         "create_new_calendar": "Create a New Calendar",
@@ -201,6 +203,7 @@
         "private": "Private",
         "proposal_declined": "Proposal declined",
         "propose_new_time": "PROPOSE NEW TIME",
+        "public_link_description": "Generated from {{title}} on {{date}}",
         "regular": "Regular",
         "reminder": "Reminder",
         "repeat": "Repeat",
@@ -224,6 +227,7 @@
         "settings_saved": "Settings saved",
         "share": "Share",
         "share_calendar_url": "{{title}} access share",
+        "share_public_link": "Share Public Link",
         "share_with": "share with",
         "shares_items": "<bold>{{user}}</bold>'s shared calendars",
         "sharing_of_this_folder": "Sharing of this folder",
@@ -295,6 +299,7 @@
         "share_calendar_url_note": "Only your collaborators can access your data using these URLs.",
         "share_calendar_url_note2": "Only your collaborators can access your data using these URLs.<br/> You can find these links also right-clicking your calendars list.",
         "snackbar": {
+            "all_link_copied": "Public link copied successfully",
             "appointment_permanently_deleted": "Appointment permanently deleted",
             "appointment_permanently_deleted_succesfully": "Permanent deletion completed successfully",
             "appt_moved": "Appointment moved successfully to",
@@ -311,8 +316,10 @@
                 "decline": "You’ve replied as Declined",
                 "tentative": "You’ve replied as Tentative"
             },
+            "link_copying_error": "There seems to be a problem while generating public link, please try again",
             "new_calendar_created": "New calendar created",
-            "series_deleted": "Series successfully deleted. Attendees will receive the cancellation notification."
+            "series_deleted": "Series successfully deleted. Attendees will receive the cancellation notification.",
+            "some_link_copying_error": "There seems to be a problem while generating public url for some files, please try again"
         },
         "somebody_invited_you": "<strong>{{somebody}}</strong> invited you",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> is the organizer",
