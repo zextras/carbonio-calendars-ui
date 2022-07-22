@@ -4,16 +4,17 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design-system';
+import { getAction } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { uploadParts } from '../../../commons/upload-parts';
-import { retrieveAttachmentsType } from '../../../normalizations/normalizations-utils';
 import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 import { ResizedIconCheckbox } from './editor-styled-components';
+import { useGetPublicUrl } from '../editor-util-hooks/use-get-public-url';
 
 const FileInput = styled.input`
 	display: none;
@@ -35,13 +36,49 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 	const [openDD, setOpenDD] = useState(false);
 	const attachmentFiles = useSelector(selectEditorAttachmentFiles(editorId));
 	const parts = useSelector(selectEditorAttach(editorId));
-	const { onAttachmentsChange } = callbacks;
+	const { onAttachmentsChange, onTextChange } = callbacks;
 
 	const onFileClick = useCallback(() => {
+		setOpenDD(false);
 		if (inputRef.current) {
 			inputRef.current.click();
 		}
 	}, []);
+
+	const [getLink, getLinkAvailable] = useGetPublicUrl({
+		editorId,
+		onTextChange
+	});
+
+	const actionURLTarget = useMemo(
+		() => ({
+			title: t('label.choose_file', 'Choose file'),
+			confirmAction: getLink,
+			confirmLabel: t('label.share_public_link', 'Share Public Link'),
+			allowFiles: true,
+			allowFolders: false
+		}),
+		[getLink, t]
+	);
+
+	const [getFilesAction, getFilesActionAvailable] = getAction(
+		'carbonio_files_action',
+		'files-select-nodes',
+		actionURLTarget
+	);
+	const publicUrlItem = useMemo(
+		() => ({
+			...getFilesAction,
+			label: t('composer.attachment.url', 'Add public link from Files'),
+			icon: 'Link2',
+			disabled: !getFilesActionAvailable || !getLinkAvailable,
+			click: (a: any): void => {
+				setOpenDD(false);
+				getFilesAction?.click && getFilesAction.click(a);
+			}
+		}),
+		[getFilesAction, getFilesActionAvailable, getLinkAvailable, t]
+	);
 
 	const attachmentsItems = useMemo(
 		() => [
@@ -58,26 +95,9 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 					</>
 				)
 			},
-			{
-				id: 'driveAttachment',
-				icon: 'DriveOutline',
-				label: t('composer.attachment.drive', 'Add from Drive'),
-				click: (): void => {
-					setOpenDD(false);
-				},
-				disabled: true
-			},
-			{
-				id: 'contactsModAttachment',
-				icon: 'ContactsModOutline',
-				label: t('composer.attachment.contactsMod', 'add contact card'),
-				click: (): void => {
-					setOpenDD(false);
-				},
-				disabled: true
-			}
+			publicUrlItem
 		],
-		[onFileClick, t]
+		[onFileClick, t, publicUrlItem]
 	);
 
 	const onChange = useCallback((): void => {
@@ -105,6 +125,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 						onChange={(): null => null}
 						icon="AttachOutline"
 						onClick={(): void => setOpenDD(!openDD)}
+						value={openDD}
 					/>
 				</Dropdown>
 			</Tooltip>
