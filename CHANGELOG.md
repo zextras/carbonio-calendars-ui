@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.20](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.19...v0.1.20) (2022-07-22)
+
+
+### Features
+
+* allow user to share public link of files in appointment ([2406ed7](https://github.com/zextras/carbonio-calendars-ui/commit/2406ed7243b0dbf6f5d4dcd79f295abdfe0c9cc2))
+
+
+### Bug Fixes
+
+* default calendar option is showing only main calendar ([#87](https://github.com/zextras/carbonio-calendars-ui/issues/87)) ([ded4fef](https://github.com/zextras/carbonio-calendars-ui/commit/ded4fefbb996f41711b0ddbd0a38a56b9cd0f339))
+* restored a missing import ([918ddeb](https://github.com/zextras/carbonio-calendars-ui/commit/918ddeb3f7eb49034cf0950c84f0b73abd3ccbf4))
+* use the folder's translated names in the secondary bar and modals ([#94](https://github.com/zextras/carbonio-calendars-ui/issues/94)) ([07b43dd](https://github.com/zextras/carbonio-calendars-ui/commit/07b43dd55e2eed13a9f562e4b016e2953147543e))
+
 ### [0.1.19](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.18...v0.1.19) (2022-06-20)
 
 ### [0.1.18](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.17...v0.1.18) (2022-06-17)
