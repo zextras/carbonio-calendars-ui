@@ -9,9 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Row, IconButton, Padding, Tooltip } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { folderAction } from '../../store/actions/calendar-actions';
-import { setSearchRange } from '../../store/actions/set-search-range';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
+import { searchAppointments } from '../../store/actions/search-appointments';
 
 const CollapsedSidebarItems = ({ item }) => {
 	const { name, color, checked = undefined } = item;
@@ -49,12 +49,7 @@ const CollapsedSidebarItems = ({ item }) => {
 			})
 		).then((res) => {
 			if (res?.meta?.arg?.op === 'check') {
-				dispatch(
-					setSearchRange({
-						rangeStart: start,
-						rangeEnd: end
-					})
-				);
+				dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 			}
 		});
 	}, [calendars, checked, dispatch, end, item, start]);

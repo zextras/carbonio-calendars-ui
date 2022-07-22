@@ -3,11 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { getBridgedFunctions, FOLDERS } from '@zextras/carbonio-shell-ui';
+import { TFunction } from 'i18next';
 import { isNil } from 'lodash';
 import moment from 'moment';
-import { TFunction } from 'react-i18next';
+import { ReminderItem } from '../types/appointment-reminder';
 
-import { DateType, EventType } from '../types/event';
+import { DateType } from '../types/event';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
 
@@ -25,7 +27,8 @@ type FileType = {
 	contentType: string;
 };
 export const getFileExtension = (file: FileType): string => {
-	if (isNil(FileExtensionRegex.exec(file.filename))) {
+	const match = FileExtensionRegex.exec(file.filename);
+	if (isNil(match)) {
 		switch (file.contentType) {
 			case 'text/html':
 				return 'html';
@@ -217,9 +220,8 @@ export const getFileExtension = (file: FileType): string => {
 				return '?';
 		}
 	}
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	return FileExtensionRegex.exec(file.filename)[1];
+
+	return match[1];
 };
 
 export const convertToDecimal = (source: string): string => {
@@ -240,27 +242,89 @@ export const convertToDecimal = (source: string): string => {
 	return result;
 };
 
-export const getTimeToDisplay = (event: EventType, currentTime: DateType, t: TFunction): string => {
-	const difference = moment(event.end).diff(moment(event.start), 'seconds');
-	if (event.start < currentTime && event.end > currentTime) {
-		return t('label.ongoing', 'Ongoing');
+export const getTimeToDisplayData = (
+	reminder: ReminderItem,
+	currentTime: DateType
+): {
+	color: string;
+	size: string;
+	text: string;
+} => {
+	const { start, end, alarmData } = reminder;
+	const difference = moment(end).diff(moment(start), 'seconds');
+	if (start.valueOf() < currentTime && end.valueOf() > currentTime) {
+		return {
+			color: 'info',
+			size: 'large',
+			text: getBridgedFunctions().t('label.ongoing', 'Ongoing')
+		};
 	}
-	if (event.start === currentTime) {
-		return t('label.now', 'Now');
+	if (start.valueOf() === currentTime) {
+		return {
+			color: 'info',
+			size: 'large',
+			text: getBridgedFunctions().t('label.now', 'Now')
+		};
 	}
-	if (event.start < currentTime) {
-		return moment(event.start).from(moment());
+	if (start.valueOf() < currentTime) {
+		return {
+			color: 'error',
+			size: 'large',
+			text: moment(start).from(moment())
+		};
 	}
 	if (
-		event.resource.alarmData[0].alarmInstStart < currentTime &&
-		moment(event.resource.alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() >
-			currentTime
+		alarmData[0].alarmInstStart < currentTime &&
+		moment(alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() > currentTime
 	) {
-		return t('label.ongoing', 'Ongoing');
+		return {
+			color: 'info',
+			size: 'large',
+			text: getBridgedFunctions().t('label.ongoing', 'Ongoing')
+		};
 	}
-	if (event.resource.alarmData[0].alarmInstStart < currentTime) {
-		return moment(event.resource.alarmData[0].alarmInstStart).fromNow();
+	if (alarmData[0].alarmInstStart < currentTime) {
+		return {
+			color: 'error',
+			size: 'large',
+			text: moment(alarmData[0].alarmInstStart).fromNow()
+		};
+	}
+	return {
+		color: 'info',
+		size: 'large',
+		text: moment(alarmData[0].alarmInstStart).fromNow()
+	};
+};
+
+export const translatedSystemFolders = (t: TFunction): Array<string> => [
+	t('label.root', 'Root'),
+	t('label.all_calendars', 'All calendars'),
+	t('label.calendar', 'Calendar'),
+	t('label.trash', 'Trash')
+];
+
+export const getFolderTranslatedName = (
+	t: TFunction,
+	folderId: string,
+	folderName: string
+): string => {
+	// TODO remove when TS conversion will be completed
+	const id = `${folderId}`;
+	let translationKey;
+	switch (id) {
+		case FOLDERS.USER_ROOT:
+			translationKey = 'root';
+			break;
+		case FOLDERS.CALENDAR:
+			translationKey = 'calendar';
+			break;
+		case FOLDERS.TRASH:
+			translationKey = 'trash';
+			break;
+		default:
+			return folderName;
 	}
 
-	return moment(event.resource.alarmData[0].alarmInstStart).fromNow();
+	return t(`label.${translationKey}`, folderName);
 };

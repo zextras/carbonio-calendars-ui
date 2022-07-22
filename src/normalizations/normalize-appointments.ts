@@ -24,7 +24,8 @@ const normalizeApptInstanceRef = (instRef: any): ExceptionReference => ({
 	fr: instRef.fr,
 	recur: instRef.recur,
 	ridZ: instRef.ridZ,
-	s: instRef.s
+	s: instRef.s,
+	tzo: instRef.tzo
 });
 
 const normalizeApptInstancesRefs = (
@@ -134,7 +135,7 @@ export const normalizeAppointmentFromNotify = (appt: any): Appointment => <Appoi
 			md: appt.md,
 			flags: appt?.inv?.[0]?.comp?.[0]?.f,
 			ms: appt?.inv?.[0]?.comp?.[0]?.ms,
-			ptst: appt?.inv?.[0]?.comp?.[0]?.ptst,
+			ptst: appt?.ptst,
 			rev: appt.rev,
 			status: appt?.inv?.[0]?.comp?.[0]?.status,
 			transp: appt?.inv?.[0]?.comp?.[0]?.transp,

@@ -114,7 +114,6 @@ export default createGlobalStyle`
 		font-size: 16px;
 		padding: 8px;
 		background-color: ${({ theme }) => theme.palette.gray5.regular}; }
-		margin: 4px;
 		.rbc-toolbar .rbc-toolbar-label {
 			flex-grow: 1;
 			padding: 0 10px;
@@ -386,8 +385,7 @@ export default createGlobalStyle`
 
 	.rbc-time-view-resources .rbc-time-header-content {
 		min-width: auto;
-		flex: 1 0 0;
-		flex-basis: 0px; }
+		flex: 1 0 0; }
 
 	.rbc-time-view-resources .rbc-time-header-cell-single-day {
 		display: none; }
@@ -398,8 +396,7 @@ export default createGlobalStyle`
 	.rbc-time-view-resources .rbc-header,
 	.rbc-time-view-resources .rbc-day-bg {
 		width: 140px;
-		flex: 1 1 0;
-		flex-basis: 0 px; }
+		flex: 1 1 0; }
 
 	.rbc-time-header-content + .rbc-time-header-content {
 		margin-left: -1px; }
@@ -508,4 +505,67 @@ export default createGlobalStyle`
 		height: 2px;
 		background-color: ${({ theme }) => theme.palette.primary.regular};
 		pointer-events: none; }
+
+  .rbc-addons-dnd .rbc-addons-dnd-row-body {
+    position: relative; }
+
+  .rbc-addons-dnd .rbc-addons-dnd-drag-row {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0; }
+
+  .rbc-addons-dnd .rbc-addons-dnd-over {
+    background-color: rgba(0, 0, 0, 0.3); }
+
+  .rbc-addons-dnd .rbc-event {
+    transition: opacity 150ms; }
+  .rbc-addons-dnd .rbc-event:hover .rbc-addons-dnd-resize-ns-icon, .rbc-addons-dnd .rbc-event:hover .rbc-addons-dnd-resize-ew-icon {
+    display: block; }
+
+  .rbc-addons-dnd .rbc-addons-dnd-dragged-event {
+    opacity: 0; }
+
+  .rbc-addons-dnd.rbc-addons-dnd-is-dragging .rbc-event:not(.rbc-addons-dnd-dragged-event):not(.rbc-addons-dnd-drag-preview) {
+    opacity: .50; }
+
+  .rbc-addons-dnd .rbc-addons-dnd-resizable {
+    position: relative;
+    width: 100%;
+    height: 100%; }
+
+  .rbc-addons-dnd .rbc-addons-dnd-resize-ns-anchor {
+    width: 100%;
+    text-align: center;
+    position: absolute; }
+  .rbc-addons-dnd .rbc-addons-dnd-resize-ns-anchor:first-child {
+    z-index: 20;
+    top: 0; }
+  .rbc-addons-dnd .rbc-addons-dnd-resize-ns-anchor:last-child {
+    z-index: 20;
+    bottom: 0; }
+  .rbc-addons-dnd .rbc-addons-dnd-resize-ns-anchor .rbc-addons-dnd-resize-ns-icon {
+    display: none;
+    border-top: 3px double;
+    margin: 0 auto;
+    width: 10px;
+    cursor: ns-resize; }
+
+  .rbc-addons-dnd .rbc-addons-dnd-resize-ew-anchor {
+    position: absolute;
+    top: 4px;
+    bottom: 0; }
+  .rbc-addons-dnd .rbc-addons-dnd-resize-ew-anchor:first-child {
+		z-index: 20;
+    left: 0; }
+  .rbc-addons-dnd .rbc-addons-dnd-resize-ew-anchor:last-child {
+    z-index: 20;
+    right: 0; }
+  .rbc-addons-dnd .rbc-addons-dnd-resize-ew-anchor .rbc-addons-dnd-resize-ew-icon {
+    display: none;
+    border-left: 3px double;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 10px;
+    cursor: ew-resize; }
 	`;

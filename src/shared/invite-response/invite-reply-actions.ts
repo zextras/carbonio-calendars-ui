@@ -34,9 +34,7 @@ export const sendResponse = ({
 		sendInviteResponse({
 			inviteId,
 			updateOrganizer: notifyOrganizer,
-			action,
-			compNum,
-			fromMail: true
+			action
 		})
 	).then((res: any): void => {
 		if (res.type.includes('fulfilled')) {

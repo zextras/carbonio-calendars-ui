@@ -6,3 +6,9 @@
 export const CALENDAR_APP_ID = 'carbonio-calendars-ui';
 
 export const CALENDAR_ROUTE = 'calendars';
+
+export const PANEL_VIEW = {
+	APP: 'app',
+	BOARD: 'board',
+	SEARCH: 'search'
+};

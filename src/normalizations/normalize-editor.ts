@@ -3,14 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter, find } from 'lodash';
-import moment from 'moment';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+import { store } from '@zextras/carbonio-shell-ui';
+import { filter, find, isNil, map, omitBy } from 'lodash';
+import moment, { Moment } from 'moment';
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
+import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
+import { Editor } from '../types/editor';
+import { EventType } from '../types/event';
+import { Invite } from '../types/store/invite';
+import { retrieveAttachmentsType } from './normalizations-utils';
 
-const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
 	const room = find(xprop, ['name', CRB_XPROPS.MEETING_ROOM]);
 	if (room) {
 		return {
@@ -22,83 +27,79 @@ const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined
 	return undefined;
 };
 
-export const normalizeEditor = (
-	id: string,
-	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-	invite: any,
-	selectedStartTime: string,
-	selectedEndTime: string,
-	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-	event: any
-): any => ({
-	title: event.title,
-	start: invite.start.u ? invite.start.u : moment(invite.start.d).valueOf(),
-	end: invite.end.u ? invite.end.u : moment(invite.end.d).valueOf(),
-	startTimeZone: null,
-	endTimeZone: null,
-	allDay: event.allDay,
+const getAttendees = (attendees: any[], role: string): any[] =>
+	map(filter(attendees, ['role', role]), (at) =>
+		omitBy(
+			{
+				company: undefined,
+				email: at?.a,
+				firstName: undefined,
+				fullName: at?.d,
+				id: `${at?.a} ${at.d}`,
+				label: at?.d,
+				lastName: undefined
+			},
+			isNil
+		)
+	);
 
+export type EventPropType = {
 	resource: {
-		recur: invite?.recurrenceRule?.[0] ?? undefined,
-		tz: invite?.tz,
-		meta: invite?.meta,
-		attach: invite.attach,
-		attachmentFiles: invite.attachmentFiles,
-		parts: invite.parts,
-		room: getVirtualRoom(invite?.xprop),
-		attendees: filter(
-			filter(invite.attendees, (p) => p.cutype !== 'RES'),
-			(a) => a.role === 'REQ'
-		).map((a) => ({
-			email: a.a
-		})),
-		optionalAttendees: filter(
-			filter(invite.attendees, (p) => p.cutype !== 'RES'),
-			(a) => a.role === 'OPT'
-		).map((a) => ({
-			email: a.a
-		})),
-		alarmString: invite.alarmString ?? 'never',
-		alarmValue: invite.alarmValue,
-		id,
-		idx: 0,
-		iAmOrganizer: invite.isOrganizer,
-		// can be deleted as we also have it outside resources
-		start:
-			event.allDay || !invite?.tz
-				? {
-						d: moment(event.start).utc().format('YYYYMMDD[T]HHmmss[Z]')
-				  }
-				: {
-						d: moment(event.start).format('YYYYMMDD[T]HHmmss'),
-						tz: invite?.tz
-				  },
-		// can be deleted as we also have it outside resources
-		end:
-			event.allDay || !invite?.tz
-				? {
-						d: moment(event.end).utc().format('YYYYMMDD[T]HHmmss[Z]')
-				  }
-				: {
-						d: moment(event.end).format('YYYYMMDD[T]HHmmss'),
-						tz: invite?.tz
-				  },
-		calendar: event.resource.calendar,
-		status: event.resource.status,
-		location: event?.resource?.location,
-		organizer: event.resource.organizer,
-		class: event.resource.class,
-		inviteNeverSent: event.resource.neverSent,
-		hasOtherAttendees: event.resource.hasOtherAttendees,
-		hasAlarm: event.resource.alarm,
-		fragment: event.resource.fragment,
-		isRichText: !!invite.htmlDescription,
-		richText: extractHtmlBody(invite.htmlDescription?.[0]._content) ?? '',
-		plainText: extractBody(invite.textDescription?.[0]._content) ?? '',
-		freeBusy: event.resource.freeBusy,
-		inviteId: event.resource.inviteId,
-		ms: event.resource.ms || undefined,
-		rev: event.resource.rev || undefined,
-		uid: invite.uid || undefined
-	}
-});
+		ridZ?: string;
+		calendar: { id: string };
+		isRecurrent: boolean;
+		isException?: boolean;
+		location: string;
+		inviteId: string;
+		id: string;
+	};
+	title: string;
+	allDay: boolean;
+	start: Date | Moment;
+	end: Date | Moment;
+};
+
+export const normalizeEditor = ({
+	invite,
+	event
+}: {
+	invite: Invite;
+	event: EventPropType;
+}): Editor =>
+	omitBy(
+		{
+			calendar:
+				store?.store?.getState().calendars.calendars[
+					event.resource.calendar.id ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
+				],
+			ridZ: event?.resource?.ridZ,
+			attach: invite.attach,
+			parts: invite.parts,
+			attachmentFiles: invite.attachmentFiles,
+			isInstance: !!event?.resource?.ridZ,
+			isSeries: event?.resource?.isRecurrent,
+			isException: event?.resource?.isException,
+			exceptId: invite?.exceptId,
+			title: event?.title,
+			location: event?.resource?.location,
+			room: getVirtualRoom(invite.xprop),
+			attendees: getAttendees(invite.attendees, 'REQ'),
+			optionalAttendees: getAttendees(invite.attendees, 'OPT'),
+			allDay: event?.allDay,
+			freeBusy: invite.freeBusy,
+			class: invite.class,
+			start: event?.allDay
+				? moment(event?.start)?.startOf('date').valueOf()
+				: moment(event?.start).valueOf(),
+			end: event?.allDay
+				? moment(event?.end)?.endOf('date').valueOf()
+				: moment(event?.end).valueOf(),
+			timezone: invite?.start?.tz,
+			inviteId: event?.resource?.inviteId,
+			reminder: invite?.alarmValue,
+			recur: invite.recurrenceRule,
+			richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
+			plainText: extractBody(invite?.textDescription?.[0]?._content) ?? ''
+		},
+		isNil
+	) as Editor;

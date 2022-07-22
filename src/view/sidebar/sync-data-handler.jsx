@@ -19,8 +19,8 @@ import editorSliceReducer from '../../store/slices/editor-slice';
 import appointmentsSliceReducer, {
 	handleModifiedAppointments
 } from '../../store/slices/appointments-slice';
-import { setSearchRange } from '../../store/actions/set-search-range';
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
+import { searchAppointments } from '../../store/actions/search-appointments';
 
 export const SyncDataHandler = () => {
 	const refresh = useRefresh();
@@ -49,7 +49,7 @@ export const SyncDataHandler = () => {
 		if (initialized) {
 			if (notifyList.length > 0) {
 				forEach(sortBy(notifyList, 'seq'), (notify) => {
-					if (!isEmpty(notify) && notify.seq > seq) {
+					if (!isEmpty(notify) && (notify.seq > seq || (seq > 1 && notify.seq === 1))) {
 						if (notify.created) {
 							if (notify.created.folder || notify.created.link) {
 								dispatch(
@@ -60,12 +60,7 @@ export const SyncDataHandler = () => {
 								);
 							}
 							if (notify.created.appt) {
-								dispatch(
-									setSearchRange({
-										rangeStart: start,
-										rangeEnd: end
-									})
-								);
+								dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 							}
 						}
 						if (notify.modified) {
@@ -92,12 +87,7 @@ export const SyncDataHandler = () => {
 								if (apptToUpdate?.length > 0) {
 									dispatch(handleModifiedAppointments(apptToUpdate));
 								}
-								dispatch(
-									setSearchRange({
-										rangeStart: start,
-										rangeEnd: end
-									})
-								);
+								dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 
 								const invites = reduce(
 									notify.modified.appt,

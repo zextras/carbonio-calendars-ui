@@ -7,16 +7,13 @@ import { createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
 import { moveAppointmentRequest } from '../actions/move-appointment';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
-// eslint-disable-next-line import/no-cycle
 import { modifyAppointmentRequest } from '../actions/modify-appointment';
 import { searchAppointments } from '../actions/search-appointments';
-import { setSearchRange } from '../actions/set-search-range';
 import { deleteAppointmentPermanent } from '../actions/delete-appointment-permanent';
 import { dismissApptReminder } from '../actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../actions/snooze-appointment-reminder';
 import { handleCreatedAppointmentsReducer } from '../reducers/handle-created-appointments';
 import { handleModifiedAppointmentsReducer } from '../reducers/handle-modified-appointments';
-import { handleSyncReducer } from '../reducers/handle-sync';
 import {
 	moveAppointmentFulfilled,
 	moveAppointmentPending,
@@ -27,8 +24,11 @@ import {
 	moveAppointmentToTrashPending,
 	moveAppointmentToTrashRejected
 } from '../reducers/move-appointment-to-trash';
-import { searchAppointmentsFulfilled } from '../reducers/search-appointments';
-import { setRangeFulfilled, setRangePending, setRangeRejected } from '../reducers/set-search-range';
+import {
+	searchAppointmentsFulfilled,
+	searchAppointmentsPending,
+	searchAppointmentsRejected
+} from '../reducers/search-appointments';
 import { updateAppointmentReducer } from '../reducers/update-appointment';
 import { handleUpdateParticipationStatus } from '../reducers/update-participation-status';
 import {
@@ -62,16 +62,12 @@ export const appointmentsSlice = createSlice({
 		updateParticipationStatus: handleUpdateParticipationStatus,
 		updateAppointment: updateAppointmentReducer,
 		handleModifiedAppointments: produce(handleModifiedAppointmentsReducer),
-		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer),
-		handleAppointmentsSync: handleSyncReducer
+		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer)
 	},
 	extraReducers: (builder) => {
 		builder.addCase(modifyAppointmentRequest.pending, handleModifyAppointmentPending);
 		builder.addCase(modifyAppointmentRequest.fulfilled, handleModifyAppointmentFulfilled);
 		builder.addCase(modifyAppointmentRequest.rejected, handleModifyAppointmentRejected);
-		builder.addCase(setSearchRange.pending, setRangePending);
-		builder.addCase(setSearchRange.fulfilled, setRangeFulfilled);
-		builder.addCase(setSearchRange.rejected, setRangeRejected);
 		builder.addCase(moveAppointmentToTrash.pending, moveAppointmentToTrashPending);
 		builder.addCase(moveAppointmentToTrash.rejected, moveAppointmentToTrashRejected);
 		builder.addCase(moveAppointmentToTrash.fulfilled, moveAppointmentToTrashFulfilled);
@@ -87,7 +83,9 @@ export const appointmentsSlice = createSlice({
 		builder.addCase(snoozeApptReminder.pending, snoozeApptReminderPending);
 		builder.addCase(snoozeApptReminder.fulfilled, snoozeApptReminderFulfilled);
 		builder.addCase(snoozeApptReminder.rejected, snoozeApptReminderRejected);
+		builder.addCase(searchAppointments.pending, searchAppointmentsPending);
 		builder.addCase(searchAppointments.fulfilled, searchAppointmentsFulfilled);
+		builder.addCase(searchAppointments.rejected, searchAppointmentsRejected);
 	}
 });
 

@@ -4,35 +4,47 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container } from '@zextras/carbonio-design-system';
-import React, { ComponentProps, ReactComponentElement } from 'react';
+import React, { ComponentProps, ReactComponentElement, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useInvite } from '../../hooks/use-invite';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { Header } from './header';
 import { useSearchActionsFn } from './hooks/use-search-actions-fn';
 import StyledDivider from '../../commons/styled-divider';
-import ReminderPart from '../event-panel-view/reminder-part';
-import MessagePart from '../event-panel-view/message-part';
+import { ReminderPart } from '../event-panel-view/reminder-part';
+import { MessagePart } from '../event-panel-view/message-part';
 import { extractBody } from '../../commons/body-message-renderer';
-import ParticipantsPart from '../event-panel-view/participants-part';
-import ReplyButtonsPart from '../event-panel-view/reply-buttons-part';
-import DetailsPart from '../event-panel-view/details-part';
-import AttachmentsPart from '../event-panel-view/attachments-part';
-import { useQuickActions } from '../../hooks/use-quick-actions';
+import { ParticipantsPart } from '../event-panel-view/participants-part';
+import { ReplyButtonsPart } from '../event-panel-view/reply-buttons-part';
+import { DetailsPart } from '../event-panel-view/details-part';
+import { AttachmentsBlock } from '../event-panel-view/attachments-part';
 
 const BodyContainer = styled(Container)`
 	overflow-x: hidden;
 	overflow-y: auto;
 	white-space: pre-wrap;
 	word-wrap: break-word !important;
-	text-wrap: suppress !important;
 `;
 
-const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> => {
+const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> | null => {
 	const { close } = useSearchActionsFn(event);
 	const invite = useInvite(event?.resource?.inviteId);
-
-	const actions = useQuickActions(event, { isFromSearch: true });
-	return (
+	const [t] = useTranslation();
+	const { edit } = useSearchActionsFn(event, invite);
+	const actions = useMemo(
+		() => [
+			{
+				id: EventActionsEnum.EDIT,
+				icon: 'Edit2Outline',
+				label: t('label.edit', 'Edit'),
+				disabled: !event?.resource?.iAmOrganizer,
+				click: edit
+			}
+		],
+		[edit, event?.resource?.iAmOrganizer, t]
+	);
+	return invite ? (
 		<Container
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
@@ -49,12 +61,10 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 						padding={{ all: 'large' }}
 					>
 						<DetailsPart
+							event={event}
 							subject={event?.title}
-							calendarColor={event?.resource?.calendar?.color?.color}
-							location={event?.resource?.location}
 							isPrivate={event?.resource.isPrivate}
 							inviteNeverSent={event?.resource?.inviteNeverSent}
-							event={event}
 							invite={invite}
 						/>
 						<StyledDivider />
@@ -63,19 +73,15 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 								<ReplyButtonsPart
 									inviteId={event?.resource?.inviteId}
 									participationStatus={event?.resource?.participationStatus}
-									compNum={invite?.compNum}
 								/>
 								<StyledDivider />
 							</>
 						)}
 						{invite && (
 							<ParticipantsPart
-								iAmOrganizer={event?.resource?.iAmOrganizer}
-								event={event}
+								invite={invite}
 								organizer={event?.resource?.organizer}
 								participants={invite?.participants}
-								inviteId={event?.resource.inviteId}
-								compNum={invite?.compNum}
 							/>
 						)}
 						{invite && extractBody(invite?.textDescription?.[0]?._content) && (
@@ -91,19 +97,16 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 
 						<StyledDivider />
 						{invite && (
-							<ReminderPart
-								editorId={event?.resource?.id}
-								alarmString={invite?.alarmString}
-								event={event}
-							/>
+							<ReminderPart alarmString={invite?.alarmString} invite={invite} event={event} />
 						)}
 						{invite?.attachmentFiles?.length > 0 && (
 							<>
 								<StyledDivider />
 								<Container padding={{ all: 'medium' }} background="gray6">
-									<AttachmentsPart
+									<AttachmentsBlock
 										attachments={invite?.attachmentFiles}
-										message={{ id: event?.resource?.inviteId, subject: event?.title }}
+										id={event?.resource?.inviteId}
+										subject={event?.title}
 									/>
 								</Container>
 							</>
@@ -112,7 +115,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> =
 				</Container>
 			)}
 		</Container>
-	);
+	) : null;
 };
 
 export default Displayer;

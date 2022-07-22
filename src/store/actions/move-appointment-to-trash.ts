@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { cancelAppointmentRequest } from '../../soap/cancel-appointment-request';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function getMp({ t, fullInvite, newMessage }: any) {
@@ -54,7 +54,6 @@ export const moveAppointmentToTrash = createAsyncThunk(
 	async (
 		{
 			inviteId,
-			ridZ,
 			t,
 			isOrganizer = true,
 			deleteSingleInstance = false,
@@ -68,22 +67,13 @@ export const moveAppointmentToTrash = createAsyncThunk(
 		const state: any = getState();
 		const invite = inv ?? state.invites.invites[inviteId];
 		const m = createMessageForDelete({ invite, t, newMessage });
-		if (deleteSingleInstance) {
-			const response = await soapFetch('CancelAppointment', {
-				_jsns: 'urn:zimbraMail',
-				inst,
-				id: inviteId,
-				comp: '0',
-				s,
-				m: isOrganizer ? m : { ...m, e: [] }
-			});
-			return { response, inviteId };
-		}
-		const response = await soapFetch('CancelAppointment', {
-			_jsns: 'urn:zimbraMail',
+		const response = await cancelAppointmentRequest({
+			deleteSingleInstance,
 			id: inviteId,
-			comp: '0',
-			m: isOrganizer ? m : { ...m, e: [] }
+			inst,
+			s,
+			m,
+			isOrganizer
 		});
 		return { response, inviteId };
 	}

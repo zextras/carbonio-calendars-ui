@@ -6,30 +6,35 @@
 import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import { useAddBoardCallback, useUserAccount, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, store, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
-import { minBy } from 'lodash';
+import { isEqual, minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
-import CustomEvent from './custom-event';
+import { useTranslation } from 'react-i18next';
+import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
-import CustomToolbar from './custom-toolbar';
+import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { workWeek } from '../../utils/work-week';
-import { selectCheckedCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
-import { selectAllAppointments } from '../../store/selectors/appointments';
+import {
+	selectCalendars,
+	selectCheckedCalendarsMap,
+	selectEnd,
+	selectStart
+} from '../../store/selectors/calendars';
+import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
-import { setSearchRange } from '../../store/actions/set-search-range';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
-import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
-import { appointmentToEvent } from '../../hooks/use-invite-to-event';
-import { getAppointmentAndInvite } from '../../store/actions/get-appointment';
-import { modifyAppointmentRequest } from '../../store/actions/modify-appointment';
-import { normalizeAppointmentFromCreation } from '../../normalizations/normalize-appointments';
-import { useCalendarDate, useCalendarView, useIsResumeViewOpen } from '../../store/zustand/hooks';
+import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
+import { searchAppointments } from '../../store/actions/search-appointments';
+import { generateEditor, getEndTime } from '../../commons/editor-generator';
+import { CALENDAR_ROUTE } from '../../constants';
+import { getInvite } from '../../store/actions/get-invite';
+import CalendarStyle from './calendar-style';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -42,36 +47,34 @@ const CalendarSyncWithRange = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(
-			setSearchRange({
-				rangeStart: start,
-				rangeEnd: end
-			})
-		);
+		dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 	}, [dispatch, end, start]);
 	return null;
 };
 
 const customComponents = {
 	toolbar: CustomToolbar,
-	event: CustomEvent,
+	event: (props) => <CustomEvent {...props} />,
 	eventWrapper: CustomEventWrapper
 };
 
 export default function CalendarComponent() {
-	const appointments = useSelector(selectAllAppointments);
-	const selectedCalendars = useSelector(selectCheckedCalendars);
+	const appointments = useSelector(selectAppointmentsArray);
+	const selectedCalendars = useSelector(selectCheckedCalendarsMap);
 	const dispatch = useDispatch();
 	const theme = useContext(ThemeContext);
-	const account = useUserAccount();
 	const settings = useUserSettings();
-	const addBoard = useAddBoardCallback();
+	const [t] = useTranslation();
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
-	const resumeViewOpen = useIsResumeViewOpen();
+	const summaryViewOpen = useIsSummaryViewOpen();
 	const firstDayOfWeek = settings.prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
+	const [date, setDate] = useState(calendarDate);
+	const calendars = useSelector(selectCalendars);
+	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
+
 	if (settings.prefs.zimbraPrefLocale) {
 		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
 			week: {
@@ -96,11 +99,12 @@ export default function CalendarComponent() {
 		[workingSchedule]
 	);
 
-	const slotBgColor = (date) => {
-		if (workingSchedule[moment(date).day()].working) {
+	const slotBgColor = (newDate) => {
+		if (workingSchedule?.[moment(newDate).day()]?.working) {
 			if (
-				moment(date).tz(timeZone).format('HHmm') >= workingSchedule[moment(date).day()].start &&
-				moment(date).tz(timeZone).format('HHmm') < workingSchedule[moment(date).day()].end
+				moment(newDate).tz(timeZone).format('HHmm') >=
+					workingSchedule[moment(newDate).day()].start &&
+				moment(newDate).tz(timeZone).format('HHmm') < workingSchedule[moment(newDate).day()].end
 			) {
 				return theme.palette.gray6.regular;
 			}
@@ -109,30 +113,30 @@ export default function CalendarComponent() {
 		return theme.palette.gray5.regular;
 	};
 
-	const slotDayBorderColor = (date) => {
-		if (workingSchedule[moment(date).day()].working) {
+	const slotDayBorderColor = (newDate) => {
+		if (workingSchedule?.[moment(newDate).day()]?.working) {
 			return theme.palette.gray3.regular;
 		}
 		return theme.palette.gray6.regular;
 	};
 
-	const slotPropGetter = (date) => ({
+	const slotPropGetter = (newDate) => ({
 		style: {
-			backgroundColor: slotBgColor(date),
+			backgroundColor: slotBgColor(newDate),
 			borderColor: `${theme.palette.gray3.regular}`,
 			borderRight: `1px solid ${theme.palette.gray3.regular}`
 		}
 	});
-	const dayPropGetter = (date) => ({
+	const dayPropGetter = (newDate) => ({
 		style: {
 			backgroundColor:
 				// eslint-disable-next-line no-nested-ternary
-				workingSchedule[moment(date).day()].working
-					? moment().isSame(moment(date), 'day')
+				workingSchedule?.[moment(newDate).day()]?.working
+					? moment().isSame(moment(newDate), 'day')
 						? theme.palette.highlight.regular
 						: theme.palette.gray6.regular
 					: theme.palette.gray3.regular,
-			borderBottom: `1px solid ${slotDayBorderColor(date)}`
+			borderBottom: `1px solid ${slotDayBorderColor(newDate)}`
 		}
 	});
 
@@ -175,47 +179,86 @@ export default function CalendarComponent() {
 		}
 	}, [calendarView, settings?.prefs?.zimbraPrefCalendarInitialView]);
 
-	const handleSelect = (e) => {
-		if (!resumeViewOpen)
-			addBoard(
-				`/${CALENDAR_ROUTE}/edit?id=new&start=${new Date(e.start).getTime()}&end=${new Date(
-					e.end
-				).getTime()}`,
-				{
-					app: CALENDAR_APP_ID
-				}
-			);
-		useAppStatusStore.setState((s) => ({ ...s, isResumeViewOpen: false }));
-	};
-	const onEventDrop = useCallback(
-		(appt) => {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			dispatch(
-				getAppointmentAndInvite({
-					aptId: appt.event.resource.id,
-					inviteId: appt.event.resource.inviteId
-				})
-			).then((res) => {
-				const { appointment, invite } = res.payload;
-				const normalizedAppointment = normalizeAppointmentFromCreation(appointment, {});
-				const normalizedInvite = invite.inv[0].comp
-					? normalizeInvite(invite)
-					: normalizeInvite({ ...invite, inv: appointment.inv });
-				const requiredEvent = appointmentToEvent(normalizedInvite, normalizedAppointment.id);
-
-				dispatch(
-					modifyAppointmentRequest({
-						appt: requiredEvent,
-						invite: normalizedInvite,
-						id: 0,
-						mailInvite: [{ comp: [{ s: [{ u: appt.start }], e: [{ u: appt.end }] }] }],
-						account
+	const handleSelect = useCallback(
+		(e) => {
+			if (!summaryViewOpen) {
+				const isAllDay =
+					moment(e.end).hours() === moment(e.start).hours() &&
+					moment(e.end).minutes() === moment(e.start).minutes() &&
+					!moment(e.start).isSame(moment(e.end));
+				const slotEnd = moment(e.end);
+				const preferredSettingsEnd = moment(
+					getEndTime({
+						start: moment(e.start).valueOf(),
+						duration: settings?.prefs?.zimbraPrefCalendarDefaultApptDuration
 					})
 				);
-			});
+				const end = slotEnd.isSameOrAfter(preferredSettingsEnd) ? slotEnd : preferredSettingsEnd;
+				const editorEnd = isAllDay ? slotEnd : end;
+				const { editor, callbacks } = generateEditor({
+					context: {
+						title: t('label.new_appointment', 'New Appointment'),
+						start: moment(e.start).valueOf(),
+						end: editorEnd,
+						allDay: isAllDay ?? false,
+						panel: false
+					}
+				});
+				const storeData = store.store.getState();
+				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
+					...storeData.editor.editors[editor.id],
+					callbacks
+				});
+			}
+			useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 		},
-		[dispatch, account]
+		[settings?.prefs?.zimbraPrefCalendarDefaultApptDuration, summaryViewOpen, t]
+	);
+
+	const onEventDrop = useCallback(
+		(appt) => {
+			const { start, end, event, isAllDay } = appt;
+			if (!isEqual(event.start, start) || !isEqual(event.end, end) || event.allDay !== !!isAllDay) {
+				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ })).then(
+					({ payload }) => {
+						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();
+						const endTime =
+							isAllDay || event.allDay ? moment(start).endOf('day') : moment(end).valueOf();
+						const invite = normalizeInvite(payload.m);
+						const { editor, callbacks } = generateEditor({
+							event,
+							invite,
+							context: {
+								start: startTime,
+								end: endTime,
+								allDay: !!isAllDay
+							}
+						});
+						const storeData = store.store.getState();
+						callbacks
+							.onSave({
+								isNew: storeData.editor.editors[editor.id]?.isNew
+							})
+							.then((res) => {
+								if (res?.type) {
+									const success = res.type.includes('fulfilled');
+									getBridgedFunctions().createSnackbar({
+										key: `calendar-moved-root`,
+										replace: true,
+										type: success ? 'info' : 'warning',
+										hideButton: true,
+										label: !success
+											? t('label.error_try_again', 'Something went wrong, please try again')
+											: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+										autoHideTimeout: 3000
+									});
+								}
+							});
+					}
+				);
+			}
+		},
+		[dispatch, t]
 	);
 
 	const eventPropGetter = useCallback(
@@ -238,8 +281,6 @@ export default function CalendarComponent() {
 		[]
 	);
 
-	const [date, setDate] = useState(calendarDate);
-
 	const onNavigate = useCallback(
 		(newDate) => {
 			useAppStatusStore.setState((s) => ({ ...s, date: newDate }));
@@ -248,9 +289,14 @@ export default function CalendarComponent() {
 		[setDate]
 	);
 
+	const resizeEvent = useCallback(({ event, start, end }) => {
+		console.log(event, start, end);
+	}, []);
+
 	return (
 		<>
 			<CalendarSyncWithRange />
+			<CalendarStyle primaryCalendar={primaryCalendar} />
 			<BigCalendar
 				selectable
 				eventPropGetter={eventPropGetter}
@@ -269,11 +315,16 @@ export default function CalendarComponent() {
 				dayPropGetter={dayPropGetter}
 				slotPropGetter={slotPropGetter}
 				workingSchedule={workingSchedule}
-				onSelectSlot={(e) => handleSelect(e)}
+				onSelectSlot={handleSelect}
 				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
 				onEventDrop={onEventDrop}
+				onEventResize={resizeEvent}
 				formats={{ eventTimeRangeFormat: () => '' }}
-				draggableAccessor={(event) => event.resource.iAmOrganizer}
+				resizable
+				resizableAccessor={() => false}
+				draggableAccessor={(event) =>
+					event.resource.iAmOrganizer && event.resource.calendar.id !== FOLDERS.TRASH
+				}
 			/>
 		</>
 	);

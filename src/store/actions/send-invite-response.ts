@@ -4,19 +4,20 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { sendInviteReplyRequest } from '../../soap/send-invite-reply-request';
 
 export const sendInviteResponse = createAsyncThunk(
 	'invites/sendInviteResponse',
-	async ({ inviteId, action, updateOrganizer }: any): Promise<any> => {
-		const response = await soapFetch('SendInviteReply', {
-			_jsns: 'urn:zimbraMail',
-			id: inviteId,
-			compNum: 0,
-			verb: action,
-			rt: 'r',
-			updateOrganizer
-		});
+	async ({
+		inviteId,
+		action,
+		updateOrganizer
+	}: {
+		inviteId: string;
+		action: string;
+		updateOrganizer: boolean;
+	}): Promise<any> => {
+		const response = await sendInviteReplyRequest({ id: inviteId, action, updateOrganizer });
 		return { response };
 	}
 );

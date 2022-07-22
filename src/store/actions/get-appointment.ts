@@ -6,18 +6,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 
-export const getAppointment = createAsyncThunk(
-	'appointment/get-single-appt',
-	async ({ aptId, uid }: { uid?: string; aptId: string }): Promise<unknown> => {
-		const { appt } = (await soapFetch('GetAppointment', {
-			_jsns: 'urn:zimbraMail',
-			id: aptId,
-			uid
-		})) as { appt: any };
-		return { appt: appt[0] };
-	}
-);
-
 export const getAppointmentAndInvite = createAsyncThunk(
 	'batch/get-appt-and-invite',
 	async ({ aptId, uid, inviteId }: { uid?: string; aptId: string; inviteId: string }) => {

@@ -12,7 +12,6 @@ import ModalFooter from '../../../commons/modal-footer';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const DisplayFooter = ({
 	actions,
-	event,
 	invite,
 	isInstance,
 	toggleAskConfirmation,
@@ -21,16 +20,17 @@ export const DisplayFooter = ({
 }: any): ReactElement => {
 	const [t] = useTranslation();
 	const participantsSize = useMemo(() => size(invite?.participants), [invite]);
-	const { isRecurrent, iAmOrganizer, isException } = event.resource;
+	const { isOrganizer, isException } = invite;
+	const isRecurrent = !!invite.recurrenceRule;
 	const [openComposer, available] = useIntegratedFunction('compose');
 
 	const isSecondaryActive = useMemo(
 		() =>
 			invite &&
 			(isAskingConfirmation ||
-				(isRecurrent && isInstance && iAmOrganizer && participantsSize > 0) ||
-				(!isRecurrent && isInstance && iAmOrganizer && participantsSize > 0)),
-		[iAmOrganizer, invite, isAskingConfirmation, isInstance, isRecurrent, participantsSize]
+				(isRecurrent && isInstance && isOrganizer && participantsSize > 0) ||
+				(!isRecurrent && isInstance && isOrganizer && participantsSize > 0)),
+		[isOrganizer, invite, isAskingConfirmation, isInstance, isRecurrent, participantsSize]
 	);
 
 	const secondaryColor = useMemo(
@@ -63,7 +63,7 @@ export const DisplayFooter = ({
 		}
 		// single instance
 		if (isInstance && !isRecurrent) {
-			if (iAmOrganizer && !isAskingConfirmation) {
+			if (isOrganizer && !isAskingConfirmation) {
 				return actions?.deleteNonRecurrentEvent;
 			}
 			return actions?.deleteNonRecurrentEvent;
@@ -74,7 +74,7 @@ export const DisplayFooter = ({
 		}
 		// series
 		if (isRecurrent && !isInstance) {
-			if (iAmOrganizer && !isAskingConfirmation) {
+			if (isOrganizer && !isAskingConfirmation) {
 				return participantsSize > 0 ? toggleAskConfirmation : actions?.deleteRecurrentSerie;
 			}
 			return actions?.deleteRecurrentSerie;
@@ -84,7 +84,7 @@ export const DisplayFooter = ({
 		actions?.deleteNonRecurrentEvent,
 		actions?.deleteRecurrentInstance,
 		actions?.deleteRecurrentSerie,
-		iAmOrganizer,
+		isOrganizer,
 		isAskingConfirmation,
 		isException,
 		isInstance,
@@ -101,7 +101,7 @@ export const DisplayFooter = ({
 					'text',
 					`${t('message.meeting_canceled', 'The following meeting has been cancelled')}:`
 				],
-				subject: `${t('label.cancelled', 'Cancelled')} ${event.title}`,
+				subject: `${t('label.cancelled', 'Cancelled')} ${invite.name}`,
 				to: reduce(
 					invite?.participants ?? [],
 					(acc, v) => {
@@ -111,7 +111,7 @@ export const DisplayFooter = ({
 					[]
 				)
 			});
-	}, [onClose, available, openComposer, onConfirm, t, event.title, invite?.participants]);
+	}, [onClose, available, openComposer, onConfirm, t, invite.name, invite?.participants]);
 
 	return (
 		<ModalFooter

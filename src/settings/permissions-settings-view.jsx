@@ -6,7 +6,19 @@
 import React from 'react';
 import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { AttendeesContainer } from '../view/event-panel-edit/editor-complete-view';
+import styled from 'styled-components';
+
+const AttendeesContainer = styled.div`
+	width: calc(100% - ${({ hasTooltip }) => (hasTooltip ? `48px` : '0px')});
+	height: fit-content;
+	background: ${({ theme }) => theme.palette.gray5.regular};
+	border-bottom: 1px solid ${({ theme }) => theme.palette.gray2.regular};
+	[class^='Chip__ChipComp'] {
+		[class^='Text__Comp'] {
+			color: ${({ theme }) => theme.palette.text.regular};
+		}
+	}
+`;
 
 export default function PermisionsSettings({
 	t,

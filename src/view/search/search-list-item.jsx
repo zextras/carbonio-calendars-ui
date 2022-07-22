@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import {
@@ -18,15 +18,20 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { find, reduce, includes } from 'lodash';
-import styled from 'styled-components';
 import { useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
 import { selectCalendars } from '../../store/selectors/calendars';
-import { useSearchActionsFn } from './hooks/use-search-actions-fn';
 import { useTagExist } from '../tags/tag-actions';
+import { useSearchViewActions } from '../../hooks/use-search-view-actions';
+import { selectInstanceInvite } from '../../store/selectors/invites';
+import { getInvite } from '../../store/actions/get-invite';
+import { openAppointment } from '../../actions/appointment-actions-fn';
+import { PANEL_VIEW } from '../../constants';
 
 const SearchListItem = ({ item, active }) => {
 	const isShared = item?.resource?.l?.includes(':');
 	const calendars = useSelector(selectCalendars);
+	const invite = useSelector(selectInstanceInvite(item?.resource?.inviteId));
+	const dispatch = useDispatch();
 
 	const cal = isShared
 		? find(calendars, (f) => `${f.zid}:${f.rid}` === item.resource?.l)
@@ -70,8 +75,6 @@ const SearchListItem = ({ item, active }) => {
 		[hasAttachments, item.resource?.class, item.resource?.isRecurrent, item.resource?.location]
 	);
 
-	const { open } = useSearchActionsFn(item);
-
 	const tagsFromStore = useTags();
 	const tags = useMemo(
 		() =>
@@ -99,8 +102,26 @@ const SearchListItem = ({ item, active }) => {
 			isTagInStore,
 		[isTagInStore, item.resource.tags]
 	);
+
+	const onClick = useCallback(
+		(ev) => {
+			const open = openAppointment({
+				event: item,
+				panelView: PANEL_VIEW.SEARCH
+			});
+			if (!invite) {
+				dispatch(getInvite({ inviteId: item.resource.inviteId })).then(() => {
+					open(ev);
+				});
+			} else {
+				open(ev);
+			}
+		},
+		[dispatch, invite, item]
+	);
+
 	return (
-		<Container wrap="nowrap" style={{ cursor: 'default' }} onClick={open} active={active}>
+		<Container wrap="nowrap" style={{ cursor: 'default' }} onClick={onClick} active={active}>
 			<Row
 				wrap="nowrap"
 				width="fill"

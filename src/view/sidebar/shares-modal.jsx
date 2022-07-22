@@ -32,10 +32,11 @@ import {
 import styled from 'styled-components';
 import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
 import { createMountpoint } from '../../store/actions/create-mountpoint';
-import { selectAllCalendars } from '../../store/selectors/calendars';
+import { getFolderTranslatedName } from '../../commons/utilities';
 
 const ContainerEl = styled(Container)`
 	overflow-y: auto;
@@ -92,7 +93,7 @@ export const SharesModal = ({ calendars, onClose }) => {
 
 	const shared = map(calendars, (c) => ({
 		id: `${c.ownerName} - ${c.folderId} - ${c.granteeType} - ${c.granteeName}`,
-		label: last(split(c.folderPath, '/')),
+		label: getFolderTranslatedName(t, c.folderId, last(split(c.folderPath, '/'))),
 		open: true,
 		items: [],
 		ownerName: c.ownerName,
@@ -107,8 +108,8 @@ export const SharesModal = ({ calendars, onClose }) => {
 	const nestedData = useMemo(
 		() => [
 			{
-				id: '1',
-				label: 'Root',
+				id: FOLDERS.USER_ROOT,
+				label: getFolderTranslatedName(t, FOLDERS.USER_ROOT, 'Root'),
 				level: '0',
 				open: true,
 				items: map(values(data ?? filteredFolders), (v) => ({
@@ -136,7 +137,7 @@ export const SharesModal = ({ calendars, onClose }) => {
 				onClick: () => null
 			}
 		],
-		[data, filteredFolders]
+		[t, data, filteredFolders]
 	);
 
 	const filterResults = useCallback(

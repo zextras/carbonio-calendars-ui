@@ -5,6 +5,7 @@
  */
 // eslint-disable-next-line no-shadow
 import { AlarmType } from '../appointments';
+import { ParticipationStatus } from './invite';
 
 export type SingleReference = {
 	recur: boolean;
@@ -14,8 +15,8 @@ export type SingleReference = {
 };
 
 export type ExceptionReference = SingleReference & {
-	alarm: any;
-	allDay: any;
+	alarm: boolean;
+	allDay: boolean;
 	dur: number;
 	draft: boolean;
 	inviteId: string;
@@ -28,6 +29,12 @@ export type ExceptionReference = SingleReference & {
 	or: any;
 	loc: string | undefined;
 	otherAtt: any;
+	class?: string;
+	hasEx?: boolean;
+	status?: string;
+	fb?: string;
+	ptst?: string;
+	tzo?: number;
 };
 
 export type InstanceReference = SingleReference | ExceptionReference;
@@ -51,13 +58,13 @@ export type Appointment = {
 	inviteId: string;
 	isOrg: boolean;
 	l: string;
-	loc: string | undefined;
+	loc: string;
 	md: number;
 	ms: number;
-	name?: string;
+	name: string;
 	neverSent: boolean;
 	or: any;
-	ptst: string;
+	ptst: ParticipationStatus;
 	recur?: any;
 	rev: number;
 	s: any;
