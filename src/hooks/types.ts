@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-export type ACTION = {
+export type Action = {
 	click: (ev?: MouseEvent) => void;
 	icon: string;
 	id: string;
@@ -18,4 +18,4 @@ export type ACTION = {
 	}>;
 	label: string;
 };
-export type GetActionReturnType = Array<ACTION>;
+export type GetActionReturnType = Array<Action>;
