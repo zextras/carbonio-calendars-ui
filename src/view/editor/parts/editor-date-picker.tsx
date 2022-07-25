@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Padding } from '@zextras/carbonio-design-system';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 import {
 	selectEditorAllDay,
 	selectEditorEnd,
@@ -25,13 +26,20 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 	const allDay = useSelector(selectEditorAllDay(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));
+	const [diff] = useState(moment(end).diff(moment(start)));
 	const { onDateChange } = callbacks;
 
 	return start && end ? (
 		<Styler allDay={allDay} orientation="horizontal" height="fit" mainAlignment="flex-start">
-			<StartDatePicker start={start} end={end} onChange={onDateChange} allDay={allDay} />
+			<StartDatePicker
+				start={start}
+				end={end}
+				onChange={onDateChange}
+				diff={diff}
+				allDay={allDay}
+			/>
 			<Padding left="small" />
-			<EndDatePicker start={start} end={end} onChange={onDateChange} allDay={allDay} />
+			<EndDatePicker start={start} end={end} onChange={onDateChange} diff={diff} allDay={allDay} />
 		</Styler>
 	) : null;
 };
