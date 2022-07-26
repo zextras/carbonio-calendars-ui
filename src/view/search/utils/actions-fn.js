@@ -6,7 +6,7 @@
 import { head, split } from 'lodash';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../../constants';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
-import { normalizeEditorFromInvite } from '../../../normalizations/normalize-editor';
+import { normalizeEditor } from '../../../normalizations/normalize-editor';
 import { generateEditor } from '../../../commons/editor-generator';
 
 export const openEventFn = (ev, context) => {
@@ -21,14 +21,10 @@ export const closeEventFn = (ev, context) => {
 	context?.history.push(path);
 };
 
-export const editEventFn = (ev, invite, context) => {
+export const editEventFn = (ev, event, invite, context) => {
 	if (ev) ev.stopPropagation();
 	const path = head(split(context?.pathname, `/${context?.action}`));
-	const editorData = normalizeEditorFromInvite(invite, {
-		...context,
-		calendar: context.calendar
-	});
-	generateEditor(context?.apptId, { ...editorData, searchPanel: true }, false);
+	generateEditor({ event, invite, context: { searchPanel: true, panel: false } });
 	context?.history.push(`${path}/${EventActionsEnum.EDIT}/${context?.apptId}/${context?.ridZ}`);
 };
 

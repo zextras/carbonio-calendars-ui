@@ -17,15 +17,19 @@ import {
 } from '@zextras/carbonio-design-system';
 
 import { find, includes, reduce } from 'lodash';
-import { ZIMBRA_STANDARD_COLORS, useTags, Tag, Tags } from '@zextras/carbonio-shell-ui';
+import {
+	ZIMBRA_STANDARD_COLORS,
+	useTags,
+	Tag,
+	Tags,
+	getBridgedFunctions
+} from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
-import { Invite } from '../../types/store/invite';
+import { itemActionRequest } from '../../soap/item-action-request';
 import { TagsActionsType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from './delete-tag-modal';
-import { itemAction } from '../../store/actions/item-action';
 import { EventType } from '../../types/event';
 
 export type ReturnType = {
@@ -90,17 +94,15 @@ export const createTag = ({ t, createModal }: ArgumentType): ReturnType => ({
 });
 
 export const createAndApplyTag = ({
-	t,
 	context,
 	event
 }: {
-	t: TFunction;
 	context: ContextType;
 	event: EventType;
 }): ReturnType => ({
 	id: TagsActionsType.NEW,
 	icon: 'TagOutline',
-	label: t('label.create_tag', 'Create Tag'),
+	label: getBridgedFunctions().t('label.create_tag', 'Create Tag'),
 	click: (e): void => {
 		if (e) {
 			e.stopPropagation();
@@ -155,19 +157,19 @@ export const deleteTag = ({ t, createModal, tag }: ArgumentType): ReturnType => 
 	}
 });
 
-export const TagsDropdownItem = ({ tag, invite }: { tag: Tag; invite: Invite }): ReactElement => {
+export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType }): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
-	const [checked, setChecked] = useState(includes(invite.tags, tag.id));
+	const [checked, setChecked] = useState(includes(event.resource.tags, tag.id));
 	const [isHovering, setIsHovering] = useState(false);
 	const toggleCheck = useCallback(
 		(value) => {
 			setChecked((c) => !c);
 
-			itemAction({
-				operation: value ? '!tag' : 'tag',
-				inviteId: invite.id,
+			itemActionRequest({
+				op: value ? '!tag' : 'tag',
+				inviteId: event.resource.id,
 				tagName: tag.name
 			})
 				.then((res: any) => {
@@ -200,7 +202,7 @@ export const TagsDropdownItem = ({ tag, invite }: { tag: Tag; invite: Invite }):
 					});
 				});
 		},
-		[invite?.id, createSnackbar, t, tag.name]
+		[event?.resource?.id, createSnackbar, t, tag.name]
 	);
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
@@ -232,12 +234,10 @@ export const TagsDropdownItem = ({ tag, invite }: { tag: Tag; invite: Invite }):
 };
 
 export const applyTag = ({
-	t,
 	context,
-	invite
+	event
 }: {
-	t: TFunction;
-	invite: Invite;
+	event: EventType;
 	context: ContextType;
 }): { id: string; items: TagType[]; customComponent: ReactElement } => {
 	const tagItem = reduce(
@@ -257,7 +257,7 @@ export const applyTag = ({
 				label: v.name,
 				icon: 'TagOutline',
 				keepOpen: true,
-				customComponent: <TagsDropdownItem tag={v} invite={invite} />
+				customComponent: <TagsDropdownItem tag={v} event={event} />
 			};
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
@@ -272,11 +272,11 @@ export const applyTag = ({
 		keepOpen: true,
 		customComponent: (
 			<Button
-				label={t('label.new_tag', 'New Tag')}
+				label={getBridgedFunctions().t('label.new_tag', 'New Tag')}
 				type="outlined"
 				size="fill"
 				isSmall
-				onClick={(): void => context.createAndApplyTag({ t, context, invite }).click()}
+				onClick={(): void => context.createAndApplyTag({ context, event }).click()}
 			/>
 		)
 	});
@@ -290,7 +290,7 @@ export const applyTag = ({
 				</Padding>
 				<Row takeAvailableSpace mainAlignment="space-between">
 					<Padding right="small">
-						<Text>{t('label.tags', 'Tags')}</Text>
+						<Text>{getBridgedFunctions().t('label.tags', 'Tags')}</Text>
 					</Padding>
 				</Row>
 			</Row>

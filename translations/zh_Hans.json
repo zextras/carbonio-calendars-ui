@@ -68,7 +68,8 @@
         "reply": "回复",
         "reply_all": "回复全部",
         "send_email": "发送邮件",
-        "send_email_to": "发送邮件至：{{email}}"
+        "send_email_to": "发送邮件至：{{email}}",
+        "more": "更多..."
     },
     "calendar": {
         "modal": {
@@ -326,7 +327,8 @@
         "new_tag": "新标签",
         "other_actions": "其他操作",
         "single_instance": "单个实例",
-        "no_title": "无标题"
+        "no_title": "无标题",
+        "scheduled_in": "日历"
     },
     "months": {
         "april": "四月",
@@ -544,7 +546,8 @@
         "copy_vector_url": "复制视图URL",
         "chat": "设备",
         "equipment": "设备",
-        "location": "位置"
+        "location": "位置",
+        "chat_room": "虚拟房间链接"
     },
     "workflow": "工作流",
     "write": "编写",

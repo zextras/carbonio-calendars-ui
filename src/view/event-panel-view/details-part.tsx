@@ -81,8 +81,8 @@ export const DetailsPart = ({
 	inviteNeverSent,
 	isPrivate,
 	invite
-}: DetailsPartProps): ReactElement => {
-	const calendar = useSelector((s: Store) => selectCalendar(s, event.resource.calendar.id));
+}: DetailsPartProps): ReactElement | null => {
+	const calendar = useSelector(selectCalendar(event.resource.calendar.id));
 
 	const timeData = useMemo(
 		() =>
@@ -109,7 +109,7 @@ export const DetailsPart = ({
 			),
 		[invite.class, invite.location, invite.locationUrl]
 	);
-	return (
+	return calendar ? (
 		<Container
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
@@ -137,13 +137,11 @@ export const DetailsPart = ({
 						<LocationRow locationData={locationData} />
 					)}
 					{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} />}
-					{typeof invite?.tags?.length === 'number' && invite?.tags?.length > 0 && (
-						<TagsRow invite={invite} hideIcon />
-					)}
+					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
 				</Row>
 			</Row>
 			<Padding top={'medium'} />
 			{inviteNeverSent && <InviteNeverSentRow />}
 		</Container>
-	);
+	) : null;
 };

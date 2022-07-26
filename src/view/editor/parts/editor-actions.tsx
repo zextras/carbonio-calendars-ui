@@ -6,7 +6,7 @@
 import React, { ReactElement } from 'react';
 import { Row, Padding } from '@zextras/carbonio-design-system';
 import { EditorProps } from '../../../types/editor';
-import { EditorAttachmentsButton } from './editor-attachments';
+import { EditorAttachmentsButton } from './editor-attachments-button';
 import { EditorRichTextButton } from './editor-richtext-button';
 import { EditorSaveButton } from './editor-save-button';
 import { EditorSendButton } from './editor-send-button';

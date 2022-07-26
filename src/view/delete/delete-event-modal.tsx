@@ -7,8 +7,10 @@ import React, { ReactElement, useCallback, useState } from 'react';
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
 import { Spinner, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { EventType } from '../../types/event';
+import { RouteParams } from '../../types/route-params';
 import { Invite } from '../../types/store/invite';
 import { DisplayFooter } from './parts/display-footer';
 import { DisplayMessage } from './parts/display-message';
@@ -22,18 +24,19 @@ const ItalicText = styled(Text)`
 type DeleteEventModalProps = {
 	event: EventType;
 	invite: Invite;
+	context: any;
 	onClose: () => void;
-	isInstance?: boolean;
 };
 
 export const DeleteEventModal = ({
 	event,
 	invite,
-	onClose,
-	isInstance
+	context,
+	onClose
 }: DeleteEventModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const [isAskingConfirmation, setIsAskingConfirmation] = useState(false);
+	const isInstance = context?.isInstance;
 	const toggleAskConfirmation = useCallback(() => {
 		setIsAskingConfirmation((a) => !a);
 	}, []);
@@ -65,9 +68,9 @@ export const DeleteEventModal = ({
 							isAskingConfirmation={isAskingConfirmation}
 						/>
 						{!isInstance &&
-							event?.resource?.iAmOrganizer &&
+							event.resource.iAmOrganizer &&
 							!isAskingConfirmation &&
-							event?.resource?.isRecurrent && (
+							event.resource.isRecurrent && (
 								<>
 									<Padding top="small" />
 									<Checkbox

@@ -12,14 +12,12 @@ import { ParticipationStatus } from '../../types/store/invite';
 
 type ReplyButtonProps = {
 	inviteId: string;
-	compNum: number;
 	participationStatus: ParticipationStatus;
 };
 
 export const ReplyButtonsPart = ({
 	inviteId,
-	participationStatus,
-	compNum
+	participationStatus
 }: ReplyButtonProps): ReactElement => {
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
@@ -30,12 +28,11 @@ export const ReplyButtonsPart = ({
 				sendInviteResponse({
 					inviteId,
 					updateOrganizer: false,
-					action,
-					compNum
+					action
 				})
 			);
 		},
-		[dispatch, inviteId, compNum]
+		[dispatch, inviteId]
 	);
 
 	return (

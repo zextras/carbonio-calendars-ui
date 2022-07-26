@@ -6,10 +6,7 @@
 import { Invite } from '../../types/store/invite';
 import { Store } from '../../types/store/store';
 
-export function selectInstanceInvite(
-	state: Store,
-	inviteId?: string,
-	ridZ?: string
-): Invite | undefined {
-	return inviteId ? state?.invites?.invites?.[inviteId] : undefined;
-}
+export const selectInstanceInvite =
+	(inviteId?: string): ((state: Store) => Invite | undefined) =>
+	(state: Store): Invite | undefined =>
+		inviteId ? state?.invites?.invites?.[inviteId] : undefined;

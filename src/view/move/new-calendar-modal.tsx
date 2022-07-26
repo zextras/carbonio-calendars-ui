@@ -18,7 +18,8 @@ import {
 	SelectProps
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
 import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
@@ -26,8 +27,11 @@ import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../../commons/zimbra-st
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
+import { selectCalendars } from '../../store/selectors/calendars';
+import { EventType } from '../../types/event';
+import { RouteParams } from '../../types/route-params';
+import { Appointment } from '../../types/store/appointments';
 import { Calendar } from '../../types/store/calendars';
-import { Invite } from '../../types/store/invite';
 
 const Square = styled.div`
 	width: 18px;
@@ -116,23 +120,17 @@ type ActionArgs = {
 type NewModalProps = {
 	toggleModal: () => void;
 	onClose: () => void;
-	invite: Invite;
+	event: EventType;
 	currentFolder: Calendar;
-	folders: Record<string, Calendar>;
 	action: (arg: ActionArgs) => void;
 };
 
-export const NewModal = ({
-	onClose,
-	toggleModal,
-	folders,
-	invite,
-	action
-}: NewModalProps): ReactElement => {
-	const { id, apptId } = invite;
+export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
+
 	const dispatch = useDispatch();
 	const [inputValue, setInputValue] = useState('');
+	const folders = useSelector(selectCalendars);
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const colors = useMemo(() => getStatusItems(), []);
@@ -167,12 +165,12 @@ export const NewModal = ({
 			).then((newCalendarRes: any) => {
 				if (newCalendarRes.type.includes('fulfilled')) {
 					action({
-						inviteId: id,
+						inviteId: event.resource.inviteId,
 						t,
 						l: Object.keys(newCalendarRes.payload[0])[0],
 						color: ZIMBRA_STANDARD_COLORS[Number(newCalendarRes.meta.arg.color)],
 						destinationCalendarName: inputValue,
-						id: apptId
+						id: event.resource.id
 					});
 					getBridgedFunctions().createSnackbar({
 						key: `new`,
@@ -263,7 +261,7 @@ export const NewModal = ({
 				secondaryAction={toggleModal}
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
 				label={
-					invite.ciFolder === FOLDERS.TRASH
+					event.resource.calendar.id === FOLDERS.TRASH
 						? t('folder.modal.restore.footer', 'Create and Restore')
 						: t('label.empty', 'Empty')
 				}

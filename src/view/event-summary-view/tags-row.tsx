@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { CALENDAR_ROUTE } from '../../constants';
-import { Invite } from '../../types/store/invite';
+import { EventType } from '../../types/event';
 
 const TagChip = styled(Chip)`
 	margin-left: ${({ theme }): string => theme.sizes.padding.extrasmall};
@@ -18,8 +18,8 @@ const TagChip = styled(Chip)`
 	margin-bottom: 4px;
 `;
 
-const TagsRow: FC<{ hideIcon?: boolean; invite: Invite }> = ({
-	invite,
+const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
+	event,
 	hideIcon = false
 }): ReactElement => {
 	const [t] = useTranslation();
@@ -29,7 +29,7 @@ const TagsRow: FC<{ hideIcon?: boolean; invite: Invite }> = ({
 			reduce(
 				tagsFromStore,
 				(acc: any, v: any) => {
-					if (includes(invite?.tags, v.id))
+					if (includes(event?.resource?.tags, v.id))
 						acc.push({
 							...v,
 							color: ZIMBRA_STANDARD_COLORS[v.color ?? 0].hex,
@@ -39,7 +39,7 @@ const TagsRow: FC<{ hideIcon?: boolean; invite: Invite }> = ({
 				},
 				[]
 			),
-		[invite?.tags, tagsFromStore]
+		[event?.resource?.tags, tagsFromStore]
 	);
 	const tagLabel = useMemo(() => t('label.tags', 'Tags'), [t]);
 
@@ -78,7 +78,7 @@ const TagsRow: FC<{ hideIcon?: boolean; invite: Invite }> = ({
 					</Row>
 				)}
 
-				{typeof invite?.tags?.length === 'number' && invite?.tags?.length > 0 && (
+				{event?.resource?.tags?.length > 0 && (
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						{!hideIcon ? (
 							<Text color="secondary" size="small" overflow="break-word">

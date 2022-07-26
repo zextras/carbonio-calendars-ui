@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import ColorPicker from '../../commons/color-select';
-import { itemAction } from '../../store/actions/item-action';
+import { itemActionRequest } from '../../soap/item-action-request';
 
 type ComponentProps = {
 	onClose: () => void;
@@ -62,8 +62,8 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 
 	const applyNewlyCreatedTag = useCallback(
 		({ inviteId, tagName }) => {
-			itemAction({
-				operation: 'tag',
+			itemActionRequest({
+				op: 'tag',
 				inviteId,
 				tagName
 			})

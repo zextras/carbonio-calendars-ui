@@ -12,7 +12,7 @@ import { selectCalendar } from '../../../store/selectors/calendars';
 
 export const useSearchActionsFn = (event, invite) => {
 	const history = useHistory();
-	const calendar = useSelector((s) => selectCalendar(s, event?.resource?.calendar?.id));
+	const calendar = useSelector(selectCalendar(event?.resource?.calendar?.id));
 	const { pathname } = useLocation();
 	const { apptId, ridZ, action } = useParams();
 	const addBoard = useAddBoardCallback();
@@ -22,8 +22,8 @@ export const useSearchActionsFn = (event, invite) => {
 	);
 
 	const edit = useCallback(
-		(ev) => editEventFn(ev, invite, { action, history, pathname, calendar, apptId, ridZ }),
-		[action, apptId, calendar, history, invite, pathname, ridZ]
+		(ev) => editEventFn(ev, event, invite, { action, history, pathname, calendar, apptId, ridZ }),
+		[action, apptId, calendar, event, history, invite, pathname, ridZ]
 	);
 
 	const open = useCallback(

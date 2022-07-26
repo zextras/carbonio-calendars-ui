@@ -117,6 +117,7 @@ export type Part = {
 export type Parts = Array<Part>;
 /* todo: invite types are definitely incomplete or can be wrong. Make sure to update this periodically */
 export type Invite = {
+	mp?: any;
 	tz?: string;
 	apptId: string;
 	id: string;
@@ -153,10 +154,10 @@ export type Invite = {
 	exceptId: Array<InviteException>;
 	tagNamesList: string;
 	tags?: string[];
-	attach: {
+	attach?: {
 		mp: any;
 	};
-	attachmentFiles: any;
+	attachmentFiles?: any;
 	participants: InviteParticipants;
 	alarm?: boolean;
 	alarmData?: AlarmData | undefined;

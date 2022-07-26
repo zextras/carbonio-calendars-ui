@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import {
 	Container,
@@ -11,26 +11,26 @@ import {
 	Dropdown,
 	Icon,
 	IconButton,
-	ModalManagerContext,
 	Row,
-	SnackbarManagerContext,
 	Text,
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
-import { useDispatch, useSelector } from 'react-redux';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { map, noop, some } from 'lodash';
 import { useInvite } from '../../hooks/use-invite';
+import { useEventPanelViewHeaderActions } from '../../hooks/use-event-panel-view-header-actions';
+import { getAlarmToString } from '../../normalizations/normalizations-utils';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
-import { Store } from '../../types/store/store';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import { RouteParams } from '../../types/route-params';
+import { ExceptionReference } from '../../types/store/appointments';
 import { AppointmentCardContainer } from '../editor/editor-panel-wrapper';
-import { createAndApplyTag } from '../tags/tag-actions';
 import { ParticipantsPart } from './participants-part';
 import StyledDivider from '../../commons/styled-divider';
 import { extractBody } from '../../commons/body-message-renderer';
-import { useQuickActions } from '../../hooks/use-quick-actions';
 import { selectCalendar } from '../../store/selectors/calendars';
 import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
 import { DetailsPart } from './details-part';
@@ -90,19 +90,15 @@ const ExpandButton = ({ actions }: { actions: Array<any> }): ReactElement => (
 	</Row>
 );
 
-const DisplayerHeader = ({
-	title,
-	actions
-}: {
-	actions: Array<any>;
-	title: string;
-}): ReactElement => {
+const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
 	const [t] = useTranslation();
-	const eventIsEditable = some(actions, { id: 'edit' });
-	const expandedButton = some(actions, { id: 'expand' });
+	const actions = useEventPanelViewHeaderActions(event);
+
+	const eventIsEditable = useMemo(() => some(actions, { id: EventActionsEnum.EDIT }), [actions]);
+	const expandedButton = useMemo(() => some(actions, { id: EventActionsEnum.EXPAND }), [actions]);
 
 	const close = useCallback(() => {
-		replaceHistory(``);
+		replaceHistory('');
 	}, []);
 
 	return (
@@ -121,7 +117,7 @@ const DisplayerHeader = ({
 				</Row>
 				<Row takeAvailableSpace mainAlignment="flex-start">
 					<Text size="medium" overflow="ellipsis">
-						{title || t('label.no_subject', 'No subject')}
+						{event.title || t('label.no_subject', 'No subject')}
 					</Text>
 				</Row>
 				{expandedButton && <ExpandButton actions={actions} />}
@@ -150,70 +146,54 @@ const DisplayerHeader = ({
 	);
 };
 
-type ParamsType = {
-	calendarId: string;
-	apptId: string;
-	ridZ?: string;
-};
 export default function EventPanelView(): ReactElement | null {
-	const { calendarId, apptId, ridZ } = useParams<ParamsType>();
-	const dispatch = useDispatch();
-	const createModal = useContext(ModalManagerContext);
-	const tags = useTags();
-	const createSnackbar = useContext(SnackbarManagerContext);
-	const calendar = useSelector((s: Store) => selectCalendar(s, calendarId));
-	const appointment = useSelector((s: Store) => selectAppointment(s, apptId));
-	const invite = useInvite(appointment?.inviteId);
-	const inst = useSelector((s: Store) => selectAppointmentInstance(s, apptId, ridZ));
+	const { calendarId, apptId, ridZ } = useParams<RouteParams>();
+
+	const calendar = useSelector(selectCalendar(calendarId));
+	const appointment = useSelector(selectAppointment(apptId));
+	const instance = useSelector(selectAppointmentInstance(apptId, ridZ));
+	const invite = useInvite((instance as ExceptionReference)?.inviteId ?? appointment?.inviteId);
 
 	const event = useMemo(() => {
-		if (calendar && appointment && inst)
-			return normalizeCalendarEvent(calendar, appointment, inst, appointment?.l?.includes(':'));
+		if (calendar && appointment && invite)
+			return normalizeCalendarEvent({ calendar, appointment, instance, invite });
 		return undefined;
-	}, [appointment, calendar, inst]);
+	}, [appointment, calendar, instance, invite]);
 
-	const context = useMemo(
-		() => ({
-			replaceHistory,
-			dispatch,
-			createModal,
-			createSnackbar,
-			tags,
-			ridZ: event?.resource?.ridZ,
-			createAndApplyTag,
-			isInstance: true
-		}),
-		[createModal, createSnackbar, dispatch, event?.resource?.ridZ, tags]
+	const alarmString = useMemo(
+		() => getAlarmToString(event?.resource?.alarmData),
+		[event?.resource?.alarmData]
 	);
-
-	const actions = useQuickActions(invite, event, context);
-
-	return invite && event ? (
-		<AppointmentCardContainer background="gray5" mainAlignment="flex-start">
-			<DisplayerHeader title={invite.name} actions={actions} />
-			<Container padding={{ all: 'none' }} mainAlignment="flex-start" height="calc(100% - 64px)">
+	return event && invite ? (
+		<AppointmentCardContainer mainAlignment="flex-start">
+			<DisplayerHeader event={event} />
+			<Container
+				padding={{ all: 'none' }}
+				mainAlignment="flex-start"
+				height="calc(100% - 48px)"
+				style={{ overflow: 'auto' }}
+			>
 				<BodyContainer
 					orientation="vertical"
 					mainAlignment="flex-start"
 					width="fill"
-					height="fit"
+					height="fill"
 					padding={{ all: 'large' }}
 					background="gray5"
 				>
 					<DetailsPart
 						event={event}
-						subject={invite.name}
-						isPrivate={invite.class === 'PRI' ?? false}
+						subject={event.title}
+						isPrivate={event.resource.class === 'PRI' ?? false}
 						inviteNeverSent={invite.neverSent}
 						invite={invite}
 					/>
 					<StyledDivider />
-					{!invite.isOrganizer && !calendar.owner && invite && (
+					{!event.resource.iAmOrganizer && !calendar?.owner && invite && (
 						<>
 							<ReplyButtonsPart
-								inviteId={invite.id}
+								inviteId={event.resource.inviteId}
 								participationStatus={event.resource.participationStatus}
-								compNum={invite.compNum}
 							/>
 							<StyledDivider />
 						</>
@@ -232,7 +212,7 @@ export default function EventPanelView(): ReactElement | null {
 						</>
 					)}
 					<StyledDivider />
-					{invite && <ReminderPart alarmString={invite.alarmString} invite={invite} />}
+					{invite && <ReminderPart alarmString={alarmString} invite={invite} event={event} />}
 					{invite?.attachmentFiles.length > 0 && (
 						<>
 							<StyledDivider />
@@ -240,7 +220,7 @@ export default function EventPanelView(): ReactElement | null {
 								<AttachmentsBlock
 									attachments={invite?.attachmentFiles}
 									id={invite.id}
-									subject={invite.name}
+									subject={event.title}
 								/>
 							</Container>
 						</>

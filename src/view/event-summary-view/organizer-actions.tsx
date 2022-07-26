@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { noop } from 'lodash';
 import React, { FC, ReactElement, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -13,23 +14,18 @@ import {
 	SnackbarManagerContext,
 	Row
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
-import { map, noop } from 'lodash';
+import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
-import { editAppointment } from '../../actions/action-functions';
-import {
-	deletePermanentlyItem,
-	moveApptToTrashItem,
-	openInDisplayerItem
-} from '../../actions/action-items';
+import { editAppointment } from '../../actions/appointment-actions-fn';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
-import { applyTag, createAndApplyTag } from '../tags/tag-actions';
+import { createAndApplyTag } from '../tags/tag-actions';
 
-const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
+const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> = ({
 	event,
-	invite
-}): ReactElement => {
+	invite,
+	actions
+}): ReactElement | null => {
 	const createModal = useContext(ModalManagerContext);
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
@@ -48,58 +44,26 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
 		}),
 		[createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
 	);
-
-	const otherActions = useMemo(
-		() =>
-			!invite
-				? []
-				: [
-						event.resource.calendar.id === FOLDERS.TRASH
-							? deletePermanentlyItem(invite, event, context, t)
-							: moveApptToTrashItem(invite, event, context, t),
-						openInDisplayerItem(event, context, t),
-						applyTag({ t, context, invite })
-				  ],
-		[context, event, invite, t]
-	);
-
-	const otherActionsOptions = useMemo(
-		() =>
-			map(otherActions, (action) => ({
-				id: action.label,
-				icon: action.icon,
-				label: action.label,
-				key: action.id,
-				color: action.color,
-				items: action.items,
-				customComponent: action.customComponent,
-				click: (ev: any): void => {
-					ev.stopPropagation();
-					action.click();
-				}
-			})),
-		[otherActions]
-	);
-	return (
+	return event ? (
 		<>
 			{event.resource?.calendar?.name === 'Trash' ? (
 				<Button
 					type="outlined"
 					disabled={!event.permission}
 					label={t('label.move', 'move')}
-					onClick={noop}
+					onClick={(): void => console.warn('not implemented yet')}
 				/>
 			) : (
 				<Button
 					disabled={!event.haveWriteAccess}
 					type="outlined"
 					label={t('label.edit', 'edit')}
-					onClick={(ev): void => editAppointment(ev, event, invite, context)}
+					onClick={editAppointment({ event, invite, context })}
 				/>
 			)}
 
 			<Padding left="small">
-				<Dropdown disableAutoFocus items={otherActionsOptions} placement="bottom-end">
+				<Dropdown disableAutoFocus items={actions} placement="bottom-end">
 					<Row>
 						<Button
 							type="outlined"
@@ -111,7 +75,7 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
 				</Dropdown>
 			</Padding>
 		</>
-	);
+	) : null;
 };
 
 export default OrganizerActions;

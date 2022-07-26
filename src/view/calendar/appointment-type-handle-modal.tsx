@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import { Text, Container, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
@@ -20,19 +20,19 @@ type ModalProps = {
 export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): ReactElement => {
 	const [t] = useTranslation();
 
-	const onEntireSeries = (): void => {
+	const onEntireSeries = useCallback((): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`
 		);
 		onClose();
-	};
+	}, [event.resource.calendar.id, event.resource.id, onClose]);
 
-	const onSingleInstance = (): void => {
+	const onSingleInstance = useCallback((): void => {
 		replaceHistory(
 			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 		onClose();
-	};
+	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ, onClose]);
 
 	return (
 		<Container
