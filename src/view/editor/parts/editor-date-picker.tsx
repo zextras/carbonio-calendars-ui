@@ -8,6 +8,7 @@ import React, { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import {
 	selectEditorAllDay,
+	selectEditorDisabled,
 	selectEditorEnd,
 	selectEditorStart
 } from '../../../store/selectors/editor';
@@ -26,12 +27,25 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));
 	const { onDateChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	return start && end ? (
 		<Styler allDay={allDay} orientation="horizontal" height="fit" mainAlignment="flex-start">
-			<StartDatePicker start={start} end={end} onChange={onDateChange} allDay={allDay} />
+			<StartDatePicker
+				start={start}
+				end={end}
+				onChange={onDateChange}
+				allDay={allDay}
+				disabled={disabled?.datePicker}
+			/>
 			<Padding left="small" />
-			<EndDatePicker start={start} end={end} onChange={onDateChange} allDay={allDay} />
+			<EndDatePicker
+				start={start}
+				end={end}
+				onChange={onDateChange}
+				allDay={allDay}
+				disabled={disabled?.datePicker}
+			/>
 		</Styler>
 	) : null;
 };

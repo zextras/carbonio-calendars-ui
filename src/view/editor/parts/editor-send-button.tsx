@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
 	selectEditorAttendees,
+	selectEditorDisabled,
 	selectEditorIsNew,
 	selectEditorOptionalAttendees
 } from '../../../store/selectors/editor';
@@ -20,11 +21,12 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const attendees = useSelector(selectEditorAttendees(editorId));
 	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const { onSend, closeCurrentEditor } = callbacks;
-	const disabled = useMemo(
-		() => !attendees?.length && !optionalAttendees?.length,
-		[attendees?.length, optionalAttendees?.length]
+	const isDisabled = useMemo(
+		() => disabled?.sendButton || (!attendees?.length && !optionalAttendees?.length),
+		[attendees?.length, disabled?.sendButton, optionalAttendees?.length]
 	);
 
 	const onClick = useCallback(() => {
@@ -49,7 +51,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 		<Button
 			label={t('action.send', 'Send')}
 			icon="PaperPlane"
-			disabled={disabled}
+			disabled={isDisabled}
 			onClick={onClick}
 		/>
 	);

@@ -8,7 +8,11 @@ import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { selectEditorIsNew, selectEditorTitle } from '../../../store/selectors/editor';
+import {
+	selectEditorDisabled,
+	selectEditorIsNew,
+	selectEditorTitle
+} from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
 export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
@@ -16,6 +20,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const title = useSelector(selectEditorTitle(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
 	const { onSave } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const onClick = useCallback(() => {
 		onSave({ draft: true, isNew }).then(({ response }) => {
@@ -36,7 +41,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 		<Button
 			label={t('label.save', 'Save')}
 			icon="SaveOutline"
-			disabled={!title?.length}
+			disabled={disabled?.saveButton ?? !title?.length}
 			onClick={onClick}
 			type="outlined"
 		/>

@@ -156,7 +156,25 @@ const InviteResponse: FC<InviteResponse> = ({
 				event: requiredEvent,
 				invite: normalizedInvite,
 				context: {
-					panel: false
+					panel: false,
+					disabled: {
+						title: true,
+						location: true,
+						organizer: true,
+						virtualRoom: true,
+						richTextButton: true,
+						attachmentsButton: true,
+						saveButton: true,
+						attendees: true,
+						optionalAttendees: true,
+						freeBusy: true,
+						calendar: true,
+						private: true,
+						allDay: true,
+						reminder: true,
+						recurrence: true,
+						composer: true
+					}
 				}
 			});
 			const storeData = store.store.getState();

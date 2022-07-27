@@ -10,7 +10,11 @@ import { useTranslation } from 'react-i18next';
 import { toUpper, find } from 'lodash';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectEditorRecurrence, selectEditorStart } from '../../../store/selectors/editor';
+import {
+	selectEditorDisabled,
+	selectEditorRecurrence,
+	selectEditorStart
+} from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
 export const ColorContainer = styled(Container)`
@@ -84,6 +88,7 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 	const recur = useSelector(selectEditorRecurrence(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const [value, setValue] = useState<SelectProps>(undefined);
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const onChange = useCallback(
 		(ev) => {
@@ -160,7 +165,7 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 			items={recurrenceItems}
 			selection={value}
 			disablePortal
-			disabled={false}
+			disabled={disabled?.recurrence}
 			LabelFactory={LabelFactory}
 		/>
 	) : null;

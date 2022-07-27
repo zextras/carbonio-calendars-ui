@@ -11,7 +11,11 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { uploadParts } from '../../../commons/upload-parts';
-import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
+import {
+	selectEditorAttach,
+	selectEditorAttachmentFiles,
+	selectEditorDisabled
+} from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 import { ResizedIconCheckbox } from './editor-styled-components';
 import { useGetPublicUrl } from '../editor-util-hooks/use-get-public-url';
@@ -37,6 +41,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 	const attachmentFiles = useSelector(selectEditorAttachmentFiles(editorId));
 	const parts = useSelector(selectEditorAttach(editorId));
 	const { onAttachmentsChange, onTextChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const onFileClick = useCallback(() => {
 		setOpenDD(false);
@@ -126,6 +131,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 						icon="AttachOutline"
 						onClick={(): void => setOpenDD(!openDD)}
 						value={openDD}
+						disabled={disabled?.attachmentsButton}
 					/>
 				</Dropdown>
 			</Tooltip>
