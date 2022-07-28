@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil, omit, reject } from 'lodash';
+import { isNil, omit, reject, union } from 'lodash';
 import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { Editor, IdentityItem, Room } from '../../types/editor';
 import { EventResourceCalendar } from '../../types/event';
@@ -112,7 +112,10 @@ export const editEditorAttachmentsReducer = (
 			// eslint-disable-next-line no-param-reassign
 			editors[payload.id].attachmentFiles = payload.attachmentFiles;
 			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].attach = payload.attach;
+			editors[payload.id].attach = {
+				...payload.attach,
+				aid: union(editors[payload.id]?.attach?.aid ?? [], payload?.attach?.aid ?? [])
+			};
 		}
 	}
 };
