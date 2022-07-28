@@ -207,7 +207,9 @@
         "entire_serires": "VOLLEDIGE SERIE",
         "new_tag": "Nieuwe Tag",
         "other_actions": "Andere acties",
-        "single_instance": "EEN ENKEL GEVAL"
+        "single_instance": "EEN ENKEL GEVAL",
+        "no_title": "Geen Titel",
+        "scheduled_in": "Agenda"
     },
     "event": {
         "action": {
@@ -316,7 +318,7 @@
         "delete_future_occurences_warning": "Dit zal ook alle uitzonderingen (voor en na deze instantie) in de reeks verwijderen",
         "have_not_sent_invitation": "U heeft de uitnodiging nog niet naar de deelnemers gestuurd",
         "invite_has_no_message": "Deze uitnodiging heeft geen tekstbericht",
-        "invited_you": "nodigde u uit voor een evenement",
+        "invited_you": "nodigde u uit voor",
         "meeting_canceled": "De volgende meeting is geannuleerd",
         "modal": {
             "delete": {
@@ -341,7 +343,10 @@
         "appointment_type_handle": "\"{{name}}” is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?",
         "organizer": "Organisator",
         "reply": "Antwoorden",
-        "reply_all": "Alle beantwoorden"
+        "reply_all": "Alle beantwoorden",
+        "send_email_to": "E-mail sturen naar: {{email}}",
+        "send_email": "E-mail sturen",
+        "more": "Meer..."
     },
     "months": {
         "april": "April",
@@ -537,7 +542,8 @@
         "add_attachments": "Bijlagen toevoegen",
         "chat": "Uitrusting",
         "equipment": "Uitrusting",
-        "location": "Locatie"
+        "location": "Locatie",
+        "chat_room": "Link naar virtuele ruimte"
     },
     "button": {
         "customize_modal": "Modal aanpassen openen"
