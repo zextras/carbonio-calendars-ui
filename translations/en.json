@@ -115,6 +115,7 @@
         "cancelled": "Cancelled",
         "changes_saved": "Changes saved",
         "choose_file": "Choose file",
+        "continue": "Continue",
         "create": "Create",
         "create_appt_settings": "Creating Appointments",
         "create_new_calendar": "Create a New Calendar",
@@ -254,6 +255,7 @@
         "type_name_here": "Calendar name",
         "undo": "Undo",
         "view_url": "View URL",
+        "warning": "Warning",
         "week": "Week",
         "week_day": {
             "friday": "Friday",
@@ -278,6 +280,7 @@
         "delete_future_occurences_warning": "This will also delete all exceptions (before and after this instance) in the series",
         "delete_tag_message1": "Are you sure to delete \"{{name}}\" Tag?",
         "delete_tag_message2": "Once deleted, it will be removed from every item marked with it.",
+        "edit_series_warning": "As you proceed with the series modification, all previously deleted or modified instances will be restored with the new series settings.",
         "invite_has_no_message": "This invite has no text message",
         "invited_you": "invited you to an event",
         "meeting_canceled": "The following meeting has been cancelled",
