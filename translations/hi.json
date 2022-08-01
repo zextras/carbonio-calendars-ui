@@ -179,7 +179,9 @@
         "entire_serires": "पूरी सीरीज़",
         "new_tag": "नया टैग",
         "other_actions": "दूसरे एक्शन",
-        "single_instance": "एकल घटना"
+        "single_instance": "एकल घटना",
+        "no_title": "कोई शीर्षक नहीं",
+        "scheduled_in": "कैलेंडर"
     },
     "action": {
         "delete": "डिलीट करें",
@@ -249,7 +251,7 @@
         "share_calendar_url_note": "केवल आपके साथ टीम में काम करने वाले इन URL से आपका डाटा एक्सेस कर सकेंगे।",
         "share_calendar_url_note2": "केवल आपके साथ टीम में काम करने वाले इन URL से आपका डाटा एक्सेस कर सकेंगे।<br/>आप ये लिंक अपनी कैलेंडर लिस्ट में राइट-क्लिक करके भी ढूंढ सकते हैं।",
         "delete_future_occurences_warning": "इससे सीरीज़ में सभी अपवाद भी डिलीट हो जाएंगे (इस मौके के पहले और बाद)",
-        "invited_you": "ने आपको किसी ईवेंट में इन्वाइट किया",
+        "invited_you": "आपको इसमें इन्वाइट किया",
         "meeting_canceled": "निम्नलिखित मीटिंग कैंसल कर दी गई है",
         "share_calendar_url_msg": "आप {{title}} को जल्दी से अपनी टीम में काम करने वालों से इनमें से एक URL चुनकर शेयर कर सकते हैं:",
         "somebody_invited_you": "<strong>{{somebody}}</strong> ने आपको इन्वाइट किया है",
@@ -268,7 +270,18 @@
         "appointment_type_handle": "{{name}} बार-बार आने वाला अपोइंटमेंट है। क्या आप सिर्फ इस घटना को या पूरी सीरीज़ खोलना चाहते हैं?",
         "organizer": "आयोजक",
         "reply": "रिप्लाई करें",
-        "reply_all": "सभी को उत्तर"
+        "reply_all": "सभी को उत्तर",
+        "send_email_to": "यहाँ ई-मेल भेजें: {{email}}",
+        "send_email": "ई-मेल भेजें",
+        "more": "और...",
+        "required_participant": "{{count}} पार्टिसिपेंट",
+        "required_participant_plural": "{{count}} पार्टिसिपेंट्स",
+        "optional_participant": "{{count}} ऑप्शनल",
+        "optional_participant_plural": "{{count}} ऑप्शनल्स",
+        "guests": "मेहमान",
+        "declined": "{{count}} अस्वीकृत",
+        "awaiting": "इंतज़ार कर रहा है",
+        "accepted": "{{count}} स्वीकार"
     },
     "create": "बनाएँ",
     "delete": "डिलीट करें",
@@ -354,7 +367,11 @@
         "all_time": "ईवेंट के पूरे टाइम पर",
         "modal": {
             "set_new_time_message": "क्या आप मिस हो चुके एपोइंटमेंट के लिए कोई नया टाइम सेट करना चाहते हैं? यदि आप ठीक है पर क्लिक करेंगे तो दूसरे सभी रिमाइन्डर अपने-आप डिसमिस हो जाएंगे।"
-        }
+        },
+        "minutes": "{{count}} मिनट",
+        "minutes_plural": "{{count}} मिनट",
+        "hours": "{{count}} घंटा",
+        "hours_plural": "{{count}} घंटे"
     },
     "repeat": {
         "custom": "कस्टम",
@@ -561,7 +578,11 @@
         "show_optionals": "वैकल्पिक दिखाएं",
         "chat": "उपकरण",
         "equipment": "उपकरण",
-        "location": "स्थान"
+        "location": "स्थान",
+        "chat_room": "Virtual Room लिंक",
+        "virtual_chat": "वर्चुअल चैट",
+        "calendar_sharing_status_one": "1 व्यक्ति के साथ शेयर किया गया",
+        "calendar_sharing_status": "{{count}} व्यक्तियों के साथ शेयर किया गया"
     },
     "remove_from_this_list": "इस लिस्ट से हटाएँ",
     "resend_mail_notification_about_this_share": "इस शेयर के बारे में ई-मेल नोटिफिकेशन भेजें",

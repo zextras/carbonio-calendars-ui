@@ -134,7 +134,9 @@
         "required_participant": "{{count}} Partecipante",
         "required_participant_plural": "{{count}} Partecipanti",
         "send_email": "Invia e-mail",
-        "send_email_to": "Invia e-mail a: {{email}}"
+        "send_email_to": "Invia e-mail a: {{email}}",
+        "declined": "{{count}} rifiutato",
+        "accepted": "{{count}} accettato"
     },
     "label": {
         "to": "A",
