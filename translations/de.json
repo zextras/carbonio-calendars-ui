@@ -66,7 +66,10 @@
         "appointment_type_handle": "\"{{name}}” ist ein Serientermin. Möchten Sie nur diesen Termin oder die ganze Serie öffnen?",
         "organizer": "Organisator",
         "reply": "Antworten",
-        "reply_all": "Allen antworten"
+        "reply_all": "Allen antworten",
+        "send_email_to": "Senden Sie eine E-Mail an: {{email}}",
+        "send_email": "E-Mail senden",
+        "more": "Mehr ..."
     },
     "label": {
         "invitation_not_sent": "Sie haben die Einladung noch nicht an die Teilnehmer geschickt",
@@ -240,7 +243,9 @@
         "entire_serires": "KOMPLETTE SERIEN",
         "new_tag": "Neues Etikett",
         "other_actions": "Andere Aktionen",
-        "single_instance": "EINZELNE INSTANZ"
+        "single_instance": "EINZELNE INSTANZ",
+        "scheduled_in": "Kalender",
+        "no_title": "Kein Titel"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -566,7 +571,8 @@
         "enable_disable_rich_text": "Rich Text Editor aktivieren/ deaktivieren",
         "chat": "Ausstattung",
         "equipment": "Ausstattung",
-        "location": "Ort"
+        "location": "Ort",
+        "chat_room": "Link des virtuellen Raums"
     },
     "share_invite_resent": "Einladung zum Teilen erneut gesendet",
     "shared_folders": "Geteilte Kalender",

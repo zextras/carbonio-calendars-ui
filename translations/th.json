@@ -179,7 +179,9 @@
         "entire_serires": "ทั้งซีรีส์",
         "new_tag": "แท็กใหม่",
         "other_actions": "การกระทำอื่นๆ",
-        "single_instance": "อินสแตนซ์เดียว"
+        "single_instance": "อินสแตนซ์เดียว",
+        "scheduled_in": "ปฏิทิน",
+        "no_title": "ไม่มีชื่อเรื่อง"
     },
     "calendar": {
         "modal": {
@@ -369,7 +371,9 @@
         "all_time": "ตลอดช่วงเวลาของเหตุการณ์",
         "modal": {
             "set_new_time_message": "คุณต้องการตั้งเวลาใหม่สำหรับการนัดหมายที่พลาดไปหรือไม่? หากคุณคลิกตกลง การเตือนความจำอื่น ๆ ทั้งหมดจะถูกปิดโดยอัตโนมัติ"
-        }
+        },
+        "minutes": "{{count}} นาที",
+        "hours": "{{count}} ชั่วโมง"
     },
     "repeat": {
         "custom": "กำหนดเอง",
@@ -470,7 +474,7 @@
         "delete_future_occurences": "ลบอินสแตนซ์นี้และเหตุการณ์ในอนาคตทั้งหมด",
         "have_not_sent_invitation": "คุณยังไม่ได้ส่งคำเชิญไปยังผู้เข้าร่วม",
         "invite_has_no_message": "คำเชิญนี้ไม่มีข้อความ",
-        "invited_you": "เชิญคุณเข้าร่วมกิจกรรมแล้ว",
+        "invited_you": "เชิญคุณเข้าสู่",
         "meeting_canceled": "การประชุมต่อไปนี้ถูกยกเลิกแล้ว",
         "modal": {
             "delete": {
@@ -497,7 +501,16 @@
         "appointment_type_handle": "\"{{name}}” เป็นการนัดหมายที่เกิดซ้ำ คุณต้องการเปิดเฉพาะอินสแตนซ์นี้หรือทั้งซีรีส์?",
         "organizer": "ผู้จัดงาน",
         "reply": "ตอบกลับ",
-        "reply_all": "ตอบกลับทั้งหมด"
+        "reply_all": "ตอบกลับทั้งหมด",
+        "send_email_to": "ส่งอีเมลไปที่: {{email}}",
+        "send_email": "ส่งอีเมล",
+        "more": "เพิ่มเติม...",
+        "required_participant": "ผู้เข้าร่วม {{count}}",
+        "optional_participant": "{{count}} ตัวเลือก",
+        "guests": "แขก",
+        "declined": "ปฏิเสธแล้ว {{count}}",
+        "awaiting": "กำลังรอ",
+        "accepted": "ยอมรับแล้ว {{count}}"
     },
     "type": "รูปแบบ",
     "tooltip": {
@@ -509,7 +522,11 @@
         "enable_disable_rich_text": "เปิด/ปิดการใช้งานตัวแก้ไข Rich Text",
         "chat": "อุปกรณ์",
         "equipment": "อุปกรณ์",
-        "location": "สถานที่"
+        "location": "สถานที่",
+        "chat_room": "ลิงก์ของห้องเสมือนจริง",
+        "virtual_chat": "แชทเสมือนจริง",
+        "calendar_sharing_status": "แชร์กับ {{count}} คน",
+        "calendar_sharing_status_one": "แชร์กับ 1 คน"
     },
     "button": {
         "customize_modal": "เปิด Customize Modal"
