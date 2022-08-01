@@ -69,7 +69,13 @@
         "reply_all": "回复全部",
         "send_email": "发送邮件",
         "send_email_to": "发送邮件至：{{email}}",
-        "more": "更多..."
+        "more": "更多...",
+        "required_participant": "{{count}} 参与者",
+        "optional_participant": "{{count}} 可选",
+        "guests": "访客",
+        "declined": "{{count}} 已拒绝",
+        "awaiting": "等待中",
+        "accepted": "{{count}} 已接受"
     },
     "calendar": {
         "modal": {
@@ -356,7 +362,9 @@
         "modal": {
             "set_new_time_message": "您想为错过的预约设定一个新的时间吗？点击“确定”后，所有其他提醒将自动取消。"
         },
-        "all_time": "所有活动"
+        "all_time": "所有活动",
+        "minutes": "{{count}} 分钟",
+        "hours": "{{count}} 小时"
     },
     "repeat": {
         "custom": "自定义",
@@ -547,7 +555,10 @@
         "chat": "设备",
         "equipment": "设备",
         "location": "位置",
-        "chat_room": "虚拟房间链接"
+        "chat_room": "虚拟房间链接",
+        "virtual_chat": "虚拟聊天",
+        "calendar_sharing_status_one": "已与 1 人分享",
+        "calendar_sharing_status": "已与 {{count}} 人分享"
     },
     "workflow": "工作流",
     "write": "编写",
