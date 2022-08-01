@@ -273,15 +273,7 @@
         "reply_all": "सभी को उत्तर",
         "send_email_to": "यहाँ ई-मेल भेजें: {{email}}",
         "send_email": "ई-मेल भेजें",
-        "more": "और...",
-        "required_participant": "{{count}} पार्टिसिपेंट",
-        "required_participant_plural": "{{count}} पार्टिसिपेंट्स",
-        "optional_participant": "{{count}} ऑप्शनल",
-        "optional_participant_plural": "{{count}} ऑप्शनल्स",
-        "guests": "मेहमान",
-        "declined": "{{count}} अस्वीकृत",
-        "awaiting": "इंतज़ार कर रहा है",
-        "accepted": "{{count}} स्वीकार"
+        "more": "और..."
     },
     "create": "बनाएँ",
     "delete": "डिलीट करें",

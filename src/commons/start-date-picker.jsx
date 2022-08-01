@@ -11,15 +11,15 @@ import DatePickerCustomComponent from './date-picker-custom-component';
 
 momentLocalizer();
 
-export default function StartDatePicker({ start, end, allDay, onChange }) {
+export default function StartDatePicker({ start, end, allDay, diff, onChange }) {
 	const [t] = useTranslation();
 	const onStartChange = useCallback(
 		(d) =>
 			onChange({
 				start: d.getTime(),
-				end: end > d.getTime() ? end : d.getTime() + 15 * 60 * 1000
+				end: d.getTime() + diff
 			}),
-		[end, onChange]
+		[onChange, diff]
 	);
 
 	const startDate = useMemo(() => new Date(start), [start]);
