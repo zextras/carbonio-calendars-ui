@@ -33,7 +33,11 @@
         "all_time": "De hele tijd van het evenement",
         "modal": {
             "set_new_time_message": "Wilt u een nieuwe tijd instellen voor de gemiste afspraak? Als u op OK klikt, worden alle andere herinneringen automatisch geweigerd."
-        }
+        },
+        "minutes": "{{count}} minuut",
+        "minutes_plural": "{{count}} minuten",
+        "hours": "{{count}} uur",
+        "hours_plural": "{{count}} uren"
     },
     "label": {
         "attachment": "Bijlage",
@@ -543,7 +547,10 @@
         "chat": "Uitrusting",
         "equipment": "Uitrusting",
         "location": "Locatie",
-        "chat_room": "Link naar virtuele ruimte"
+        "chat_room": "Link naar virtuele ruimte",
+        "virtual_chat": "Virtuele Chat",
+        "calendar_sharing_status_one": "Gedeeld met 1 persoon",
+        "calendar_sharing_status": "Gedeeld met {{count}} persoon"
     },
     "button": {
         "customize_modal": "Modal aanpassen openen"
