@@ -87,8 +87,8 @@ const AttachmentExtension = styled(Text)<
 `;
 
 type AttachmentProps = {
-	link: string;
-	id: string;
+	link?: string;
+	id?: string;
 	part: string;
 	isEditor: boolean;
 	removeAttachment: (arg: string) => void;
@@ -126,7 +126,7 @@ const Attachment = ({
 		(ev) => {
 			ev.preventDefault();
 			const pType = previewType(att.contentType);
-			if (pType) {
+			if (pType && link) {
 				createPreview({
 					src: link,
 					previewType: pType,
@@ -236,7 +236,7 @@ type AttachmentsBlockProps = {
 		name: string;
 		aid?: string;
 	}>;
-	id: string;
+	id?: string;
 	subject: string;
 	onAttachmentsChange?: (
 		arg1: { aid?: string[]; mp: Array<{ part: any; mid: string }> },
@@ -260,7 +260,7 @@ export const AttachmentsBlock = ({
 
 	const actionsDownloadLink = useMemo(() => {
 		const attachmentsParts = map(attachments, 'name');
-		return getAttachmentsLink(id, subject, attachmentsParts);
+		return id ? getAttachmentsLink(id, subject, attachmentsParts) : undefined;
 	}, [attachments, id, subject]);
 
 	const removeAttachment = useCallback(
@@ -278,7 +278,7 @@ export const AttachmentsBlock = ({
 						),
 						mp: reduce(
 							attachmentFiles,
-							(acc, item) => (item.name ? [...acc, { part: item.name, mid: id }] : acc),
+							(acc, item) => (item.name && id ? [...acc, { part: item.name, mid: id }] : acc),
 							[] as Array<{ part: any; mid: string }>
 						)
 					},
@@ -401,7 +401,7 @@ export const AttachmentsBlock = ({
 						{map(attachToVisualize, (att, index) => (
 							<Attachment
 								key={`att-${att.filename}-${index}`}
-								link={getAttachmentsLink(id, subject, [att.name])}
+								link={id ? getAttachmentsLink(id, subject, [att.name]) : undefined}
 								id={id}
 								part={att.name ?? att.aid}
 								isEditor={isEditor}

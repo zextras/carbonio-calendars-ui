@@ -9,16 +9,25 @@ import {
 	Icon,
 	Row,
 	Text,
+	Button,
 	LabelFactoryProps
 } from '@zextras/carbonio-design-system';
+import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { toUpper, find } from 'lodash';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectEditorRecurrence, selectEditorStart } from '../../../store/selectors/editor';
+import {
+	selectEditorRecurrence,
+	selectEditorStart,
+	selectIsException,
+	selectIsInstance,
+	selectIsSeries
+} from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
+import CustomRecurrenceModal from './recurrences/custom-recurrence-modal';
 
 export const ColorContainer = styled(Container)`
 	border-bottom: 1px solid ${({ theme }): string => theme.palette.gray2.regular};
@@ -27,6 +36,20 @@ export const ColorContainer = styled(Container)`
 export const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 `;
+
+const CustomRepeat = ({ setOpen }: { setOpen: (a: boolean) => void }): ReactElement => (
+	<Container width="fill" mainAlignment="center" orientation="horizontal">
+		<Button
+			type="outlined"
+			label={getBridgedFunctions().t('label.custom', 'Custom')}
+			color="primary"
+			width="fill"
+			onClick={(): void => {
+				setOpen(true);
+			}}
+		/>
+	</Container>
+);
 
 const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
 	<ColorContainer
@@ -84,11 +107,19 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 	const recur = useSelector(selectEditorRecurrence(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const [value, setValue] = useState<SelectProps>(undefined);
+	const [open, setOpen] = useState(false);
+
+	const isInstance = useSelector(selectIsInstance(editorId));
+	const isSeries = useSelector(selectIsSeries(editorId));
+	const isException = useSelector(selectIsException(editorId));
 
 	const onChange = useCallback(
 		(ev) => {
 			const defaultValue = { freq: ev, interval: { ival: 1 } };
 			switch (ev) {
+				case 'CUSTOM':
+					setOpen(true);
+					break;
 				case 'DAI':
 				case 'MON':
 				case 'YEA':
@@ -141,6 +172,11 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 				label: t('repeat.everyYear', 'Every Year'),
 				value: 'YEA',
 				customComponent: <RepeatItemComponent label={t('repeat.everyYear', 'Every Year')} />
+			},
+			{
+				label: t('label.custom', 'Custom'),
+				value: 'CUSTOM',
+				customComponent: <CustomRepeat setOpen={setOpen} />
 			}
 		],
 		[t]
@@ -153,15 +189,27 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 		}
 	}, [recur, recurrenceItems, ruleKey]);
 
+	const disabled = useMemo(
+		() => isSeries && isInstance && !isException,
+		[isException, isInstance, isSeries]
+	);
+
 	return value ? (
-		<Select
-			label={t('label.repeat', 'Repeat')}
-			onChange={onChange}
-			items={recurrenceItems}
-			selection={value}
-			disablePortal
-			disabled={false}
-			LabelFactory={LabelFactory}
-		/>
+		<>
+			<Select
+				label={t('label.repeat', 'Repeat')}
+				onChange={onChange}
+				items={recurrenceItems}
+				selection={value}
+				disablePortal
+				disabled={disabled}
+				LabelFactory={LabelFactory}
+			/>
+			<CustomRecurrenceModal
+				openModal={open}
+				setOpenCb={setOpen}
+				onRecurrenceChange={onRecurrenceChange}
+			/>
+		</>
 	) : null;
 };

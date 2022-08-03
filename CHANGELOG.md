@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.22](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.21...v0.1.22) (2022-08-01)
+
+### [0.1.21](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.20...v0.1.21) (2022-07-28)
+
+
+### Bug Fixes
+
+* enabled custom recurrence in editor appointment ([356dfc9](https://github.com/zextras/carbonio-calendars-ui/commit/356dfc93c4101a5a54c623ff452a5ddb0f3e97b4))
+
 ### [0.1.20](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.19...v0.1.20) (2022-07-22)
 
 

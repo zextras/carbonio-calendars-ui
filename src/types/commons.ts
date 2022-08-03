@@ -23,6 +23,10 @@ export type ModalFooterProps = {
 	primaryBtnType?: ButtonProps['type'];
 	secondaryBtnType?: ButtonProps['type'];
 	showDivider?: boolean | undefined;
+	additionalAction?: (ev: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void;
+	additionalBtnType?: ButtonProps['type'] | undefined;
+	additionalColor?: string | undefined;
+	additionalLabel?: string | undefined;
 	primaryTooltip?:
 		| {
 				label: string;

@@ -133,3 +133,18 @@ export const selectEditorAttach =
 	(id: string) =>
 	(state: Store): Array<any> =>
 		state?.editor?.editors?.[id]?.attach?.mp;
+
+export const selectIsInstance =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.isInstance;
+
+export const selectIsSeries =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.isSeries;
+
+export const selectIsException =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.isException;
