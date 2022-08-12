@@ -244,6 +244,7 @@ const InviteResponse: FC<InviteResponse> = ({
 								invite={invite}
 								compNum={compNum}
 								proposeNewTime={proposeNewTime}
+								parent={parent}
 							/>
 					  )}
 

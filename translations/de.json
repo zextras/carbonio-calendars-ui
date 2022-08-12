@@ -35,7 +35,7 @@
         "somebody_invited_you": "<strong>{{somebody}}</strong> hat Sie eingeladen",
         "sure_to_delete_all_occurences_appointment": "Sind Sie sicher, dass Sie alle Ereignisse dieses Termins löschen möchten?",
         "want_to_send_cancellation_msg": "Möchten Sie eine Absagenachricht an die Teilnehmer senden?",
-        "invited_you": "hat Sie zu einem Event eingeladen",
+        "invited_you": "hat Sie eingeladen zu",
         "meeting_canceled": "Das folgende Meeting wurde abgesagt",
         "delete_all_occurences": "Alle Ereignisse löschen",
         "delete_future_occurences": "Dieses Event und alle zukünftigen Ereignisse löschen",
@@ -66,7 +66,18 @@
         "appointment_type_handle": "\"{{name}}” ist ein Serientermin. Möchten Sie nur diesen Termin oder die ganze Serie öffnen?",
         "organizer": "Organisator",
         "reply": "Antworten",
-        "reply_all": "Allen antworten"
+        "reply_all": "Allen antworten",
+        "send_email_to": "Senden Sie eine E-Mail an: {{email}}",
+        "send_email": "E-Mail senden",
+        "more": "Mehr ...",
+        "required_participant": "{{count}} Teilnehmer",
+        "required_participant_plural": "{{count}} Teilnehmer",
+        "optional_participant": "{{count}} Optional",
+        "optional_participant_plural": "{{count}} Optionale",
+        "guests": "Gäste",
+        "declined": "{{count}} abgelehnt",
+        "awaiting": "warten",
+        "accepted": "{{count}} akzeptiert"
     },
     "label": {
         "invitation_not_sent": "Sie haben die Einladung noch nicht an die Teilnehmer geschickt",
@@ -240,7 +251,9 @@
         "entire_serires": "KOMPLETTE SERIEN",
         "new_tag": "Neues Etikett",
         "other_actions": "Andere Aktionen",
-        "single_instance": "EINZELNE INSTANZ"
+        "single_instance": "EINZELNE INSTANZ",
+        "scheduled_in": "Kalender",
+        "no_title": "Kein Titel"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -397,7 +410,11 @@
         "all_time": "die ganze Zeit des Events",
         "modal": {
             "set_new_time_message": "Möchten Sie eine neue Zeit für den verpassten Termin festlegen? Wenn Sie auf OK klicken, werden alle anderen Erinnerungen automatisch verworfen."
-        }
+        },
+        "minutes": "{{count}} Minute",
+        "minutes_plural": "{{count}} Minuten",
+        "hours": "{{count}} Stunde",
+        "hours_plural": "{{count}} Stunden"
     },
     "remove_from_this_list": "Aus der Liste entfernen",
     "repeat": {
@@ -566,7 +583,11 @@
         "enable_disable_rich_text": "Rich Text Editor aktivieren/ deaktivieren",
         "chat": "Ausstattung",
         "equipment": "Ausstattung",
-        "location": "Ort"
+        "location": "Ort",
+        "chat_room": "Link des virtuellen Raums",
+        "virtual_chat": "Virtueller Chat",
+        "calendar_sharing_status_one": "Mit 1 Person geteilt",
+        "calendar_sharing_status": "Mit {{count}} Person(en) geteilt"
     },
     "share_invite_resent": "Einladung zum Teilen erneut gesendet",
     "shared_folders": "Geteilte Kalender",

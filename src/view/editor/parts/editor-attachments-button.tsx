@@ -19,6 +19,7 @@ import {
 import { EditorProps } from '../../../types/editor';
 import { ResizedIconCheckbox } from './editor-styled-components';
 import { useGetPublicUrl } from '../editor-util-hooks/use-get-public-url';
+import { useGetFilesFromDrive } from '../editor-util-hooks/use-get-drive-files';
 
 const FileInput = styled.input`
 	display: none;
@@ -55,6 +56,11 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 		onTextChange
 	});
 
+	const [getFilesFromDrive, getFilesAvailable] = useGetFilesFromDrive({
+		editorId,
+		onAttachmentsChange
+	});
+
 	const actionURLTarget = useMemo(
 		() => ({
 			title: t('label.choose_file', 'Choose file'),
@@ -85,6 +91,37 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 		[getFilesAction, getFilesActionAvailable, getLinkAvailable, t]
 	);
 
+	const actionTarget = useMemo(
+		() => ({
+			title: t('label.choose_file', 'Choose file'),
+			confirmAction: getFilesFromDrive,
+			confirmLabel: t('label.select', 'Select'),
+			allowFiles: true,
+			allowFolders: false
+		}),
+		[getFilesFromDrive, t]
+	);
+
+	const [filesSelectFilesAction, filesSelectFilesActionAvailable] = getAction(
+		'carbonio_files_action',
+		'files-select-nodes',
+		actionTarget
+	);
+
+	const addFileItem = useMemo(
+		() => ({
+			...filesSelectFilesAction,
+			label: t('composer.attachment.files', 'Add from Files'),
+			icon: 'DriveOutline',
+			disabled: !filesSelectFilesActionAvailable || !getFilesAvailable,
+			click: (a: any): void => {
+				setOpenDD(false);
+				filesSelectFilesAction?.click && filesSelectFilesAction.click(a);
+			}
+		}),
+		[filesSelectFilesAction, filesSelectFilesActionAvailable, getFilesAvailable, t]
+	);
+
 	const attachmentsItems = useMemo(
 		() => [
 			{
@@ -100,9 +137,10 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 					</>
 				)
 			},
+			addFileItem,
 			publicUrlItem
 		],
-		[onFileClick, t, publicUrlItem]
+		[t, onFileClick, addFileItem, publicUrlItem]
 	);
 
 	const onChange = useCallback((): void => {

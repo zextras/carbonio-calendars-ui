@@ -183,7 +183,9 @@
         "entire_serires": "SELURUH SERI",
         "new_tag": "Tag Baru",
         "other_actions": "Tindakan lain",
-        "single_instance": "SATU INSTANS"
+        "single_instance": "SATU INSTANS",
+        "no_title": "Tanpa Judul",
+        "scheduled_in": "Kalender"
     },
     "calendar": {
         "modal": {
@@ -293,7 +295,7 @@
         },
         "have_not_sent_invitation": "Anda belum mengirim undangan ke peserta",
         "invite_has_no_message": "Undangan ini tidak berisi pesan teks",
-        "invited_you": "mengundang Anda ke acara",
+        "invited_you": "mengundang Anda ke",
         "delete_future_occurences": "Hapus peristiwa dan semua kemunculan di masa mendatang",
         "delete_all_occurences": "Hapus semua kemunculan",
         "share_calendar_url_note": "Hanya kolaborator Anda yang dapat mengakses data Anda menggunakan URL ini.",
@@ -323,7 +325,16 @@
         "appointment_type_handle": "\"{{name}}\" adalah janji temu berulang. Anda hanya ingin membuka instans ini atau seri?",
         "organizer": "Penyelenggara",
         "reply": "Balas",
-        "reply_all": "Balas semua"
+        "reply_all": "Balas semua",
+        "send_email_to": "Kirim email ke: {{email}}",
+        "send_email": "Kirim email",
+        "more": "Lainnya...",
+        "required_participant": "{{count}} Peserta",
+        "optional_participant": "{{count}} Opsional",
+        "guests": "tamu",
+        "declined": "{{count}} menolak",
+        "accepted": "{{count}} menerima",
+        "awaiting": "menunggu"
     },
     "months": {
         "april": "April",
@@ -352,7 +363,9 @@
         "all_time": "Sepanjang waktu acara",
         "modal": {
             "set_new_time_message": "Anda ingin mengatur waktu baru untuk janji temu yang terlewat? Jika mengklik OK, semua pengingat lain akan otomatis dibuang."
-        }
+        },
+        "minutes": "{{count}} menit",
+        "hours": "{{count}} jam"
     },
     "repeat": {
         "custom": "Kustom",
@@ -541,7 +554,11 @@
         "show_optionals": "Tampilkan opsi",
         "chat": "Peralatan",
         "equipment": "Peralatan",
-        "location": "Lokasi"
+        "location": "Lokasi",
+        "chat_room": "Tautan Ruang Virtual",
+        "virtual_chat": "Chat Virtual",
+        "calendar_sharing_status_one": "Dibagikan kepada 1 oarang",
+        "calendar_sharing_status": "Dibagikan kepada {{count}} orang"
     },
     "share_invite_resent": "Undangan berbagi dikirim ulang",
     "shared_folders": "Kalender Bersama",

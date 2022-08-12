@@ -5,6 +5,7 @@
  */
 import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import { omit } from 'lodash';
+import { GetActionReturnType } from '../hooks/types';
 import { PanelView } from '../types/actions';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
@@ -27,7 +28,7 @@ export const getRecurrentAppointmentActionsItems = ({
 	invite: Invite;
 	panelView?: PanelView;
 	context: any;
-}): any => {
+}): GetActionReturnType => {
 	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as any;
 	if (event.resource.calendar.id === FOLDERS.TRASH) {
 		return [
@@ -45,7 +46,7 @@ export const getRecurrentAppointmentActionsItems = ({
 			id: 'instance',
 			icon: 'CalendarOutline',
 			label: getBridgedFunctions().t('label.instance', 'Instance'),
-			click: (ev: Event): void => {
+			click: (ev: MouseEvent | undefined): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
@@ -64,7 +65,7 @@ export const getRecurrentAppointmentActionsItems = ({
 			id: 'series',
 			icon: 'CalendarOutline',
 			label: getBridgedFunctions().t('label.series', 'Series'),
-			click: (ev: Event): void => {
+			click: (ev: MouseEvent | undefined): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [

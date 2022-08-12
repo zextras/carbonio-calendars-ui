@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Padding } from '@zextras/carbonio-design-system';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 import {
 	selectEditorAllDay,
 	selectEditorDisabled,
@@ -26,6 +27,7 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 	const allDay = useSelector(selectEditorAllDay(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));
+	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
 	const { onDateChange } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
 
@@ -35,6 +37,7 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 				start={start}
 				end={end}
 				onChange={onDateChange}
+        diff={diff}
 				allDay={allDay}
 				disabled={disabled?.datePicker}
 			/>
@@ -43,6 +46,7 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 				start={start}
 				end={end}
 				onChange={onDateChange}
+        diff={diff}
 				allDay={allDay}
 				disabled={disabled?.datePicker}
 			/>

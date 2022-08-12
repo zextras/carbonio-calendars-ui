@@ -221,7 +221,7 @@
         "to": "do",
         "preview": "Podgląd",
         "no_title": "Brak tytułu",
-        "scheduled_in": "Zaplanowano na za"
+        "scheduled_in": "Kalendarz"
     },
     "message": {
         "modal": {
@@ -627,7 +627,7 @@
         "copy_outlook_url": "Skopiuj link do Outlooka",
         "copy_vector_url": "Skopiuj link do Widoku",
         "enable_disable_rich_text": "Włącz/Wyłącz rozbudowany edytor tekstu",
-        "chat_room": "Pokój Chatu",
+        "chat_room": "Link do Wirtualnego Pokoju",
         "calendar_sharing_status_one": "Udostępniono 1 osobie",
         "equipment": "Ekwipunek",
         "location": "Lokalizacja",

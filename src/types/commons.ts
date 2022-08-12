@@ -21,6 +21,10 @@ export type ModalFooterProps = {
 	primaryBtnType?: string | undefined;
 	secondaryBtnType?: string | undefined;
 	showDivider?: boolean | undefined;
+	additionalAction?: (ev: Event) => void;
+	additionalBtnType?: string | undefined;
+	additionalColor?: string | undefined;
+	additionalLabel?: string | undefined;
 	primaryTooltip?:
 		| {
 				label: string;

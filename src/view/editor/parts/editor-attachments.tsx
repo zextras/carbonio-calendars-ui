@@ -30,7 +30,7 @@ export const EditorAttachments = ({
 	const { onAttachmentsChange } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
 
-	return attachmentFiles?.length > 0 && title && inviteId ? (
+	return attachmentFiles?.length > 0 && title ? (
 		<AttachmentsBlock
 			attachments={attachmentFiles}
 			id={inviteId}

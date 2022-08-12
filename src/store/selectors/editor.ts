@@ -138,3 +138,18 @@ export const selectEditorDisabled =
 	(id: string) =>
 	(state: Store): Record<string, boolean> =>
 		state?.editor?.editors?.[id]?.disabled;
+
+export const selectIsInstance =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.isInstance;
+
+export const selectIsSeries =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.isSeries;
+
+export const selectIsException =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.isException;
