@@ -30,7 +30,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const { onSend, closeCurrentEditor } = callbacks;
-  const { action } = useParams<{ action: string }>();
+	const { action } = useParams<{ action: string }>();
 	const isDisabled = useMemo(
 		() => disabled?.sendButton || (!attendees?.length && !optionalAttendees?.length),
 		[attendees?.length, disabled?.sendButton, optionalAttendees?.length]

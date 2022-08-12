@@ -37,7 +37,7 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 				start={start}
 				end={end}
 				onChange={onDateChange}
-        diff={diff}
+				diff={diff}
 				allDay={allDay}
 				disabled={disabled?.datePicker}
 			/>
@@ -46,7 +46,7 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 				start={start}
 				end={end}
 				onChange={onDateChange}
-        diff={diff}
+				diff={diff}
 				allDay={allDay}
 				disabled={disabled?.datePicker}
 			/>
