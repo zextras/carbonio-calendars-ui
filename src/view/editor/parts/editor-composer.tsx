@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
+	selectEditorDisabled,
 	selectEditorIsRichText,
 	selectEditorPlainText,
 	selectEditorRichText
@@ -85,6 +86,7 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 	const isRichText = useSelector(selectEditorIsRichText(editorId));
 	const richText = useSelector(selectEditorRichText(editorId));
 	const plainText = useSelector(selectEditorPlainText(editorId));
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const [plainTextValue, setPlainTextValue] = useState(plainText ?? '');
 
@@ -135,10 +137,16 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 						minHeight={200}
 						initialValue={richText}
 						value={richText}
+						disabled={disabled?.composer}
 					/>
 				</EditorWrapper>
 			) : (
-				<TextArea placeholder={textAreaLabel} value={plainTextValue} onChange={onPlainTextChange} />
+				<TextArea
+					placeholder={textAreaLabel}
+					value={plainTextValue}
+					onChange={onPlainTextChange}
+					disabled={disabled?.composer}
+				/>
 			)}
 		</>
 	);

@@ -63,43 +63,45 @@ export const normalizeEditor = ({
 	invite,
 	event
 }: {
-	invite: Invite;
-	event: EventPropType;
+	invite?: Invite;
+	event?: EventPropType;
 }): Editor =>
-	omitBy(
-		{
-			calendar:
-				store?.store?.getState().calendars.calendars[
-					event.resource.calendar.id ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
-				],
-			ridZ: event?.resource?.ridZ,
-			attach: invite.attach,
-			parts: invite.parts,
-			attachmentFiles: invite.attachmentFiles,
-			isInstance: !!event?.resource?.ridZ,
-			isSeries: event?.resource?.isRecurrent,
-			isException: event?.resource?.isException,
-			exceptId: invite?.exceptId,
-			title: event?.title,
-			location: event?.resource?.location,
-			room: getVirtualRoom(invite.xprop),
-			attendees: getAttendees(invite.attendees, 'REQ'),
-			optionalAttendees: getAttendees(invite.attendees, 'OPT'),
-			allDay: event?.allDay,
-			freeBusy: invite.freeBusy,
-			class: invite.class,
-			start: event?.allDay
-				? moment(event?.start)?.startOf('date').valueOf()
-				: moment(event?.start).valueOf(),
-			end: event?.allDay
-				? moment(event?.end)?.endOf('date').valueOf()
-				: moment(event?.end).valueOf(),
-			timezone: invite?.start?.tz,
-			inviteId: event?.resource?.inviteId,
-			reminder: invite?.alarmValue,
-			recur: invite.recurrenceRule,
-			richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
-			plainText: extractBody(invite?.textDescription?.[0]?._content) ?? ''
-		},
-		isNil
-	) as Editor;
+	invite && event
+		? (omitBy(
+				{
+					calendar:
+						store?.store?.getState().calendars.calendars[
+							event.resource.calendar.id ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
+						],
+					ridZ: event?.resource?.ridZ,
+					attach: invite.attach,
+					parts: invite.parts,
+					attachmentFiles: invite.attachmentFiles,
+					isInstance: !!event?.resource?.ridZ,
+					isSeries: event?.resource?.isRecurrent,
+					isException: event?.resource?.isException,
+					exceptId: invite?.exceptId,
+					title: event?.title,
+					location: event?.resource?.location,
+					room: getVirtualRoom(invite.xprop),
+					attendees: getAttendees(invite.attendees, 'REQ'),
+					optionalAttendees: getAttendees(invite.attendees, 'OPT'),
+					allDay: event?.allDay,
+					freeBusy: invite.freeBusy,
+					class: invite.class,
+					start: event?.allDay
+						? moment(event?.start)?.startOf('date').valueOf()
+						: moment(event?.start).valueOf(),
+					end: event?.allDay
+						? moment(event?.end)?.endOf('date').valueOf()
+						: moment(event?.end).valueOf(),
+					timezone: invite?.start?.tz,
+					inviteId: event?.resource?.inviteId,
+					reminder: invite?.alarmValue,
+					recur: invite.recurrenceRule,
+					richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
+					plainText: extractBody(invite?.textDescription?.[0]?._content) ?? ''
+				},
+				isNil
+		  ) as Editor)
+		: ({} as Editor);

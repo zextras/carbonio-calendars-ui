@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import {
 	selectEditor,
+	selectEditorDisabled,
 	selectEditorIsNew,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
@@ -26,6 +27,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const createModal = useContext(ModalManagerContext);
 
 	const { onSave, closeCurrentEditor } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 	const { action } = useParams<{ action: string }>();
 
 	const onClick = useCallback(() => {
@@ -80,7 +82,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 		<Button
 			label={t('label.save', 'Save')}
 			icon="SaveOutline"
-			disabled={!title?.length}
+			disabled={disabled?.saveButton ?? !title?.length}
 			onClick={onClick}
 			type="outlined"
 		/>

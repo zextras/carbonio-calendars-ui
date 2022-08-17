@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
 	selectEditorAllDay,
+	selectEditorDisabled,
 	selectEditorEnd,
 	selectEditorStart
 } from '../../../store/selectors/editor';
@@ -26,6 +27,7 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): Reac
 	const end = useSelector(selectEditorEnd(editorId));
 	const [t] = useTranslation();
 	const { onAllDayChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const startDate = useMemo(() => (start ? new Date(start) : undefined), [start]);
 	const endDate = useMemo(() => (end ? new Date(end) : undefined), [end]);
@@ -43,6 +45,11 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): Reac
 	);
 
 	return !isNil(allDay) ? (
-		<Checkbox label={t('label.all_day', 'All day')} onClick={onClick} value={allDay} />
+		<Checkbox
+			label={t('label.all_day', 'All day')}
+			onClick={onClick}
+			value={allDay}
+			disabled={disabled?.allDay}
+		/>
 	) : null;
 };

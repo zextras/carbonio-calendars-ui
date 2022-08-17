@@ -19,8 +19,9 @@ import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
 import { useTranslation } from 'react-i18next';
-import { getBridgedFunctions, getAction, Action } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions, getAction, Action, store } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
+import { generateEditor } from '../../commons/editor-generator';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
@@ -149,21 +150,42 @@ const InviteResponse: FC<InviteResponse> = ({
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		dispatch(getInvite({ inviteId })).then((res) => {
-			const normalizedInvite = { ...normalizeInvite(res.payload.m), ...res.payload.m };
-			const requiredEvent = inviteToEvent(normalizeInvite(res.payload.m));
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			getBridgedFunctions().addBoard(
-				`${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
-				{
-					app: CALENDAR_APP_ID,
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					event: requiredEvent,
-					invite: normalizedInvite,
-					proposeNewTime: true
+			const normalizedInvite = normalizeInvite(res.payload.m);
+			const requiredEvent = inviteToEvent(normalizedInvite);
+			const { editor, callbacks } = generateEditor({
+				event: requiredEvent,
+				invite: normalizedInvite,
+				context: {
+					panel: false,
+					disabled: {
+						title: true,
+						location: true,
+						organizer: true,
+						virtualRoom: true,
+						richTextButton: true,
+						attachmentsButton: true,
+						saveButton: true,
+						attendees: true,
+						optionalAttendees: true,
+						freeBusy: true,
+						calendar: true,
+						private: true,
+						allDay: true,
+						reminder: true,
+						recurrence: true,
+						composer: true
+					}
 				}
-			);
+			});
+			const storeData = store.store.getState();
+			if (editor.id) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
+					...storeData.editor.editors[editor.id],
+					callbacks
+				});
+			}
 		});
 	}, [dispatch, inviteId]);
 	return (

@@ -238,6 +238,7 @@ type AttachmentsBlockProps = {
 		arg2: any
 	) => void;
 	isEditor?: boolean;
+	disabled?: boolean;
 };
 
 export const AttachmentsBlock = ({
@@ -245,7 +246,8 @@ export const AttachmentsBlock = ({
 	id,
 	subject,
 	onAttachmentsChange,
-	isEditor = false
+	isEditor = false,
+	disabled
 }: AttachmentsBlockProps): ReactElement => {
 	const [t] = useTranslation();
 	const [expanded, setExpanded] = useState(false);
@@ -372,6 +374,7 @@ export const AttachmentsBlock = ({
 							size="medium"
 							href={isEditor ? undefined : actionsDownloadLink}
 							onClick={isEditor ? removeAllAttachments : undefined}
+							disabled={disabled}
 						>
 							{isEditor
 								? t('label.delete', {
@@ -401,7 +404,7 @@ export const AttachmentsBlock = ({
 								part={att.name ?? att.aid}
 								isEditor={isEditor}
 								removeAttachment={removeAttachment}
-								disabled={!att.name}
+								disabled={!att.name ?? disabled}
 								iconColors={iconColors}
 								att={att}
 							/>

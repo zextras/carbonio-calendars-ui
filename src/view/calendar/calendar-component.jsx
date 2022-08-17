@@ -231,7 +231,8 @@ export default function CalendarComponent() {
 							context: {
 								start: startTime,
 								end: endTime,
-								allDay: !!isAllDay
+								allDay: !!isAllDay,
+								panel: false
 							}
 						});
 						const storeData = store.store.getState();
