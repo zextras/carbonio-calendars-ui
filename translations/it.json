@@ -22,7 +22,7 @@
         "minute_before_plural": "{{count}} minuti prima",
         "day_before": "{{count}} giorno fa",
         "day_before_plural": "{{count}} giorni fa",
-        "hour_before": "{{count}} hour fa",
+        "hour_before": "{{count}} ora fa",
         "hour_before_plural": "{{count}} ore fa",
         "at_time_of_event": "Al momento dell'evento",
         "all_time": "Per tutta la durata dell'evento",
