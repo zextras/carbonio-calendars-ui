@@ -8,24 +8,20 @@ import React, { ReactElement, useCallback, useEffect, useMemo, useState } from '
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Input } from '@zextras/carbonio-design-system';
-import { selectEditorTitle } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectEditorTitle } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
 type EditorTitleProps = {
 	editorId: string;
 	callbacks: EditorCallbacks;
-	disabled?: boolean;
 };
 
-export const EditorTitle = ({
-	editorId,
-	callbacks,
-	disabled = false
-}: EditorTitleProps): ReactElement | null => {
+export const EditorTitle = ({ editorId, callbacks }: EditorTitleProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const title = useSelector(selectEditorTitle(editorId));
 	const [value, setValue] = useState(title ?? '');
 	const { onSubjectChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	useEffect(() => {
 		if (title) {
@@ -55,7 +51,7 @@ export const EditorTitle = ({
 			label={t('label.event_title', 'Event title')}
 			value={value}
 			onChange={onChange}
-			disabled={disabled}
+			disabled={disabled?.title}
 			backgroundColor="gray5"
 		/>
 	) : null;

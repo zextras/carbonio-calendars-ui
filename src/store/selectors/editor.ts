@@ -134,6 +134,11 @@ export const selectEditorAttach =
 	(state: Store): Array<any> =>
 		state?.editor?.editors?.[id]?.attach?.mp;
 
+export const selectEditorDisabled =
+	(id: string) =>
+	(state: Store): Record<string, boolean> =>
+		state?.editor?.editors?.[id]?.disabled;
+
 export const selectIsInstance =
 	(id: string) =>
 	(state: Store): boolean =>

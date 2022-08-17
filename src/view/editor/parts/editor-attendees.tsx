@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
 	selectEditorAttendees,
+	selectEditorDisabled,
 	selectEditorOptionalAttendees
 } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
@@ -19,7 +20,6 @@ import { EditorCallbacks } from '../../../types/editor';
 type EditorAttendeesProps = {
 	editorId: string;
 	callbacks: EditorCallbacks;
-	disabled?: boolean;
 };
 
 export const AttendeesContainer = styled.div`
@@ -36,11 +36,7 @@ export const AttendeesContainer = styled.div`
 	}
 `;
 
-export const EditorAttendees = ({
-	editorId,
-	callbacks,
-	disabled = false
-}: EditorAttendeesProps): ReactElement => {
+export const EditorAttendees = ({ editorId, callbacks }: EditorAttendeesProps): ReactElement => {
 	const [t] = useTranslation();
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const [showOptionals, setShowOptional] = useState(false);
@@ -49,6 +45,7 @@ export const EditorAttendees = ({
 
 	const attendees = useSelector(selectEditorAttendees(editorId));
 	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	// const isDisabled = useMemo(() => updateAppTime || proposeNewTime, []);
 	const hasError = useMemo(() => some(attendees ?? [], { error: true }), [attendees]);
@@ -74,7 +71,7 @@ export const EditorAttendees = ({
 								placeholder={t('label.attendee_plural', 'Attendees')}
 								onChange={onAttendeesChange}
 								defaultValue={attendees}
-								disabled={disabled}
+								disabled={disabled?.attendees}
 							/>
 						) : (
 							<ChipInput
@@ -85,7 +82,7 @@ export const EditorAttendees = ({
 								valueKey="address"
 								hasError={hasError}
 								errorLabel=""
-								disabled={disabled}
+								disabled={disabled?.attendees}
 							/>
 						)}
 					</Container>
@@ -115,7 +112,7 @@ export const EditorAttendees = ({
 								placeholder={t('label.optional_plural', 'Optionals')}
 								onChange={onOptionalAttendeesChange}
 								defaultValue={optionalAttendees}
-								disabled={disabled}
+								disabled={disabled?.optionalAttendees}
 							/>
 						) : (
 							<ChipInput
@@ -126,7 +123,7 @@ export const EditorAttendees = ({
 								valueKey="address"
 								hasError={optionalHasError}
 								errorLabel=""
-								disabled={disabled}
+								disabled={disabled?.optionalAttendees}
 							/>
 						)}
 					</AttendeesContainer>

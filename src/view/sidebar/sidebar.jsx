@@ -7,7 +7,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Accordion } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
-import { map, filter, reduce, remove, every, reject, find } from 'lodash';
+import { map, filter, reduce, remove, every, reject, find, orderBy } from 'lodash';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -87,8 +87,15 @@ export default function SetMainMenuItems({ expanded }) {
 			})),
 		[calendars, recursiveToggleCheck, t]
 	);
-
-	const nestedItems = useMemo(() => nest(allItems, FOLDERS.USER_ROOT), [allItems]);
+	const sortedAllItems = useMemo(
+		() => orderBy(allItems, [(item) => item.name.toLowerCase()], ['asc']),
+		[allItems]
+	);
+	const nestedItems = useMemo(() => nest(sortedAllItems, FOLDERS.USER_ROOT), [sortedAllItems]);
+	const defaultCalItem = useMemo(
+		() => remove(nestedItems, ['id', FOLDERS.CALENDAR]),
+		[nestedItems]
+	);
 	const trashItem = useMemo(() => remove(nestedItems, ['id', FOLDERS.TRASH]), [nestedItems]);
 	const sharedSubItems = useMemo(() => remove(nestedItems, 'owner'), [nestedItems]);
 
@@ -135,7 +142,14 @@ export default function SetMainMenuItems({ expanded }) {
 		};
 	}, [allItems, t, recursiveToggleCheck, nestedItems]);
 
-	const items = [allCalendarsItem, ...nestedItems, ...trashItem, tagsItem, sharesItem];
+	const items = [
+		allCalendarsItem,
+		...defaultCalItem,
+		...nestedItems,
+		...trashItem,
+		tagsItem,
+		sharesItem
+	];
 
 	return expanded ? (
 		<Accordion items={items} />

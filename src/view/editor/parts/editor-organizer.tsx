@@ -9,7 +9,7 @@ import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useIdentityItems } from '../../../hooks/use-idenity-items';
-import { selectOrganizer } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectOrganizer } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
 export const EditorOrganizer = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
@@ -17,6 +17,7 @@ export const EditorOrganizer = ({ editorId, callbacks }: EditorProps): ReactElem
 	const identities = useIdentityItems();
 	const organizer = useSelector(selectOrganizer(editorId));
 	const { onOrganizerChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const onChange = useCallback(
 		(e) => {
@@ -32,6 +33,7 @@ export const EditorOrganizer = ({ editorId, callbacks }: EditorProps): ReactElem
 			label={t('placeholder.organizer', 'Organizer')}
 			selection={organizer}
 			onChange={onChange}
+			disabled={disabled?.organizer}
 		/>
 	) : null;
 };

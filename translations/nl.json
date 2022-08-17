@@ -350,15 +350,7 @@
         "reply_all": "Alle beantwoorden",
         "send_email_to": "E-mail sturen naar: {{email}}",
         "send_email": "E-mail sturen",
-        "more": "Meer...",
-        "required_participant": "{{count}} Deelnemer",
-        "required_participant_plural": "{{count}} Deelnemers",
-        "optional_participant": "{{count}} Optioneel",
-        "optional_participant_plural": "{{count}} Optionele",
-        "guests": "gasten",
-        "declined": "{{count}} geweigerd",
-        "awaiting": "in afwachting",
-        "accepted": "{{count}} aanvaard"
+        "more": "Meer..."
     },
     "months": {
         "april": "April",

@@ -3,11 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { map } from 'lodash';
-import React, { ReactElement, useMemo } from 'react';
+import React, { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import {
 	selectEditorAttachmentFiles,
+	selectEditorDisabled,
 	selectEditorInviteId,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
@@ -28,14 +28,16 @@ export const EditorAttachments = ({
 	const inviteId = useSelector(selectEditorInviteId(editorId));
 	const title = useSelector(selectEditorTitle(editorId));
 	const { onAttachmentsChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
-	return attachmentFiles?.length > 0 && title && inviteId ? (
+	return attachmentFiles?.length > 0 && title ? (
 		<AttachmentsBlock
 			attachments={attachmentFiles}
 			id={inviteId}
 			onAttachmentsChange={onAttachmentsChange}
 			isEditor
 			subject={title}
+			disabled={disabled?.attachments}
 		/>
 	) : null;
 };
