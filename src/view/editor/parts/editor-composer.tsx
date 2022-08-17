@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { throttle } from 'lodash';
+import { debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -38,7 +38,6 @@ const EditorWrapper = styled.div`
 	width: 100%;
 	height: 100%;
 	overflow-y: auto;
-
 	position: relative;
 	.tox .tox-editor-header {
 		z-index: 0;
@@ -46,7 +45,6 @@ const EditorWrapper = styled.div`
 	> .tox:not(.tox-tinymce-inline) {
 		width: 100%;
 		border: none;
-
 		.tox-editor-header {
 			background-color: ${(props): string => props.theme.palette.gray6.regular};
 		}
@@ -87,15 +85,16 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 	const plainText = useSelector(selectEditorPlainText(editorId));
 
 	const [plainTextValue, setPlainTextValue] = useState(plainText ?? '');
+	const [richTextValue, setRichTextValue] = useState(richText ?? '');
 
 	const textAreaLabel = useMemo(
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
 		[t]
 	);
 
-	const throttleInput = useMemo(
+	const debounceInput = useMemo(
 		() =>
-			throttle(onTextChange, 500, {
+			debounce(onTextChange, 500, {
 				trailing: true,
 				leading: false
 			}),
@@ -104,18 +103,19 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 
 	const onRichTextChange = useCallback(
 		(e) => {
-			setPlainTextValue(e[1]);
-			throttleInput(e);
+			setRichTextValue(e[1]);
+			setPlainTextValue(e[0]);
+			debounceInput(e);
 		},
-		[throttleInput]
+		[debounceInput]
 	);
 
 	const onPlainTextChange = useCallback(
 		(e) => {
 			setPlainTextValue(e.target.value);
-			throttleInput([e.target.value, e.target.value]);
+			debounceInput([e.target.value, e.target.value]);
 		},
-		[throttleInput]
+		[debounceInput]
 	);
 
 	useEffect(() => {
@@ -123,6 +123,12 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 			setPlainTextValue(plainText);
 		}
 	}, [plainText]);
+
+	useEffect(() => {
+		if (richText) {
+			setRichTextValue(richText);
+		}
+	}, [richText]);
 
 	return (
 		<>
@@ -133,8 +139,7 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 						// @ts-ignore
 						onEditorChange={onRichTextChange}
 						minHeight={200}
-						initialValue={richText}
-						value={richText}
+						value={richTextValue}
 					/>
 				</EditorWrapper>
 			) : (
