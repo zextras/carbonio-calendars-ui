@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil, throttle } from 'lodash';
+import { debounce, isNil } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -29,9 +29,9 @@ export const EditorTitle = ({ editorId, callbacks }: EditorTitleProps): ReactEle
 		}
 	}, [title]);
 
-	const throttleInput = useMemo(
+	const debounceInput = useMemo(
 		() =>
-			throttle(onSubjectChange, 500, {
+			debounce(onSubjectChange, 500, {
 				trailing: true,
 				leading: false
 			}),
@@ -41,9 +41,9 @@ export const EditorTitle = ({ editorId, callbacks }: EditorTitleProps): ReactEle
 	const onChange = useCallback(
 		(e) => {
 			setValue(e.target.value);
-			throttleInput(e.target.value);
+			debounceInput(e.target.value);
 		},
-		[throttleInput]
+		[debounceInput]
 	);
 
 	return !isNil(title) ? (
