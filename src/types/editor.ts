@@ -104,6 +104,6 @@ export type Editor = {
 	timezone?: string | undefined;
 	reminder?: string | undefined;
 	recur?: any;
-	id?: string;
+	id: string;
 	attach: any;
 };

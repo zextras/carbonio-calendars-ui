@@ -39,9 +39,8 @@ import {
 	updateEditor
 } from '../store/slices/editor-slice';
 import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
-import { EventResourceCalendar, EventType } from '../types/event';
+import { EventResourceCalendar } from '../types/event';
 import { Attendee, Invite, InviteClass, InviteFreeBusy } from '../types/store/invite';
-import { EditorAttachmentsButton } from '../view/editor/parts/editor-attachments-button';
 import { getIdentityItems } from './get-identity-items';
 
 let counter = 0;
@@ -131,15 +130,13 @@ const createEmptyEditor = (id: string): Editor => {
 };
 
 export const applyContextToEditor = ({
-	empty,
 	editor,
 	context
 }: {
-	empty: Editor;
 	editor: Editor;
 	context: any;
 }): Editor => {
-	let newEditor = empty;
+	let newEditor = createEmptyEditor(editor.id);
 	const contextObj = omit(context, 'disabled');
 	if (!isEmpty(context)) {
 		newEditor = { ...newEditor, ...editor, ...contextObj };
@@ -341,15 +338,13 @@ export const generateEditor = ({
 	invite?: Invite;
 	context: any;
 }): { editor: Editor; callbacks: EditorCallbacks } => {
-	const editorId = getNewEditId(event?.resource?.id);
-	const emptyEditor = createEmptyEditor(editorId);
-	const normalizedEditor = normalizeEditor({ invite, event });
+	const id = getNewEditId(event?.resource?.id);
+	const compiledEditor = normalizeEditor({ invite, event, id });
 	const editor = applyContextToEditor({
-		empty: emptyEditor,
-		editor: normalizedEditor,
+		editor: compiledEditor,
 		context
 	});
-	const callbacks = createCallbacks(editorId);
+	const callbacks = createCallbacks(id);
 	const closeCurrentEditor = context.panel
 		? callbacks.closeCurrentEditor
 		: getBridgedFunctions().removeCurrentBoard;
@@ -357,7 +352,7 @@ export const generateEditor = ({
 	dispatch(createNewEditor(editor));
 	const storeData = store.store.getState();
 	return {
-		editor: storeData?.editor?.editors?.[editorId],
+		editor: storeData?.editor?.editors?.[id],
 		callbacks: {
 			...callbacks,
 			closeCurrentEditor

@@ -6,7 +6,6 @@
 import { head, split } from 'lodash';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../../constants';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
-import { normalizeEditor } from '../../../normalizations/normalize-editor';
 import { generateEditor } from '../../../commons/editor-generator';
 
 export const openEventFn = (ev, context) => {
