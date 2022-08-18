@@ -81,7 +81,7 @@ const createEmptyEditor = (id: string): Editor => {
 		isSeries: false,
 		isInstance: true,
 		isRichText: true,
-		isNew: true,
+		isNew: startsWith(id, 'new'),
 		attachmentFiles: [],
 		organizer: defaultOrganizer,
 		title: '',
@@ -147,8 +147,7 @@ export const applyContextToEditor = ({
 			disabled: {
 				...newEditor.disabled,
 				...context.disabled
-			},
-			isNew: startsWith(editor.id, 'new')
+			}
 		};
 	}
 	return newEditor;
