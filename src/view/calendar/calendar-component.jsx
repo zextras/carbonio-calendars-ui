@@ -186,7 +186,7 @@ export default function CalendarComponent() {
 					moment(e.end).hours() === moment(e.start).hours() &&
 					moment(e.end).minutes() === moment(e.start).minutes() &&
 					!moment(e.start).isSame(moment(e.end));
-				const slotEnd = moment(e.end);
+				const slotEnd = isAllDay ? moment(e.start).endOf('day') : moment(e.end);
 				const preferredSettingsEnd = moment(
 					getEndTime({
 						start: moment(e.start).valueOf(),
