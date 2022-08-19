@@ -20,11 +20,9 @@ import { toUpper, find } from 'lodash';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
+	selectEditorDisabled,
 	selectEditorRecurrence,
-	selectEditorStart,
-	selectIsException,
-	selectIsInstance,
-	selectIsSeries
+	selectEditorStart
 } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 import CustomRecurrenceModal from './recurrences/custom-recurrence-modal';
@@ -107,11 +105,8 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 	const recur = useSelector(selectEditorRecurrence(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const [value, setValue] = useState<SelectProps>(undefined);
+	const disabled = useSelector(selectEditorDisabled(editorId));
 	const [open, setOpen] = useState(false);
-
-	const isInstance = useSelector(selectIsInstance(editorId));
-	const isSeries = useSelector(selectIsSeries(editorId));
-	const isException = useSelector(selectIsException(editorId));
 
 	const onChange = useCallback(
 		(ev) => {
@@ -189,11 +184,6 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 		}
 	}, [recur, recurrenceItems, ruleKey]);
 
-	const disabled = useMemo(
-		() => isSeries && isInstance && !isException,
-		[isException, isInstance, isSeries]
-	);
-
 	return value ? (
 		<>
 			<Select
@@ -202,7 +192,7 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 				items={recurrenceItems}
 				selection={value}
 				disablePortal
-				disabled={disabled}
+				disabled={disabled?.recurrence}
 				LabelFactory={LabelFactory}
 			/>
 			<CustomRecurrenceModal

@@ -3,29 +3,25 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil, throttle } from 'lodash';
+import { isNil, debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Input } from '@zextras/carbonio-design-system';
-import { selectEditorLocation } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectEditorLocation } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
 type EditorTitleProps = {
 	editorId: string;
 	callbacks: EditorCallbacks;
-	disabled?: boolean;
 };
 
-export const EditorLocation = ({
-	editorId,
-	callbacks,
-	disabled = false
-}: EditorTitleProps): ReactElement | null => {
+export const EditorLocation = ({ editorId, callbacks }: EditorTitleProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const location = useSelector(selectEditorLocation(editorId));
 	const [value, setValue] = useState(location ?? '');
 	const { onLocationChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	useEffect(() => {
 		if (location) {
@@ -33,9 +29,9 @@ export const EditorLocation = ({
 		}
 	}, [location]);
 
-	const throttleInput = useMemo(
+	const debounceInput = useMemo(
 		() =>
-			throttle(onLocationChange, 500, {
+			debounce(onLocationChange, 500, {
 				trailing: true,
 				leading: false
 			}),
@@ -45,9 +41,9 @@ export const EditorLocation = ({
 	const onChange = useCallback(
 		(e) => {
 			setValue(e.target.value);
-			throttleInput(e.target.value);
+			debounceInput(e.target.value);
 		},
-		[throttleInput]
+		[debounceInput]
 	);
 
 	return !isNil(location) ? (
@@ -55,7 +51,7 @@ export const EditorLocation = ({
 			label={t('label.location', 'Location')}
 			value={value}
 			onChange={onChange}
-			disabled={disabled}
+			disabled={disabled?.location}
 			backgroundColor="gray5"
 		/>
 	) : null;

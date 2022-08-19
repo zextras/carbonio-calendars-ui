@@ -9,7 +9,7 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { find } from 'lodash';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectEditorReminder } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectEditorReminder } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
 const getReminderItems = (t: TFunction): Array<{ label: string; value: string }> => [
@@ -209,6 +209,7 @@ export const EditorReminder = ({ editorId, callbacks }: EditorProps): ReactEleme
 	const reminderItems = useMemo(() => getReminderItems(t), [t]);
 	const reminder = useSelector(selectEditorReminder(editorId));
 	const { onReminderChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const getNewSelection = useCallback(
 		(e) => find(reminderItems, ['value', e]) ?? reminderItems[0],
@@ -234,7 +235,7 @@ export const EditorReminder = ({ editorId, callbacks }: EditorProps): ReactEleme
 	return selected ? (
 		<Select
 			items={reminderItems}
-			disabled={false}
+			disabled={disabled?.reminder}
 			label={t('label.reminder', 'Reminder')}
 			dropdownMaxHeight="200px"
 			onChange={onChange}

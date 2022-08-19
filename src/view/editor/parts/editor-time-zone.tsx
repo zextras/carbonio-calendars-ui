@@ -9,7 +9,7 @@ import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { findLabel, TimeZonesOptions } from '../../../settings/components/utils';
-import { selectEditorTimezone } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectEditorTimezone } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
 type SelectValue =
@@ -26,6 +26,7 @@ export const EditorTimezone = ({ editorId, callbacks }: EditorProps): ReactEleme
 	const { onTimeZoneChange } = callbacks;
 	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
 	const { zimbraPrefUseTimeZoneListInCalendar } = useUserSettings().prefs;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	useEffect(() => {
 		if (timezone) {
@@ -47,6 +48,7 @@ export const EditorTimezone = ({ editorId, callbacks }: EditorProps): ReactEleme
 				onTimeZoneChange(item?.value);
 			}}
 			selection={value}
+			disabled={disabled?.timezone}
 		/>
 	) : null;
 };

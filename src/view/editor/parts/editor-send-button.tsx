@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import {
 	selectEditor,
 	selectEditorAttendees,
+	selectEditorDisabled,
 	selectEditorIsNew,
 	selectEditorOptionalAttendees
 } from '../../../store/selectors/editor';
@@ -26,12 +27,13 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const isNew = useSelector(selectEditorIsNew(editorId));
 	const editor = useSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const { onSend, closeCurrentEditor } = callbacks;
 	const { action } = useParams<{ action: string }>();
-	const disabled = useMemo(
-		() => !attendees?.length && !optionalAttendees?.length,
-		[attendees?.length, optionalAttendees?.length]
+	const isDisabled = useMemo(
+		() => disabled?.sendButton || (!attendees?.length && !optionalAttendees?.length),
+		[attendees?.length, disabled?.sendButton, optionalAttendees?.length]
 	);
 
 	const onClick = useCallback(() => {
@@ -89,7 +91,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 		<Button
 			label={t('action.send', 'Send')}
 			icon="PaperPlane"
-			disabled={disabled}
+			disabled={isDisabled}
 			onClick={onClick}
 		/>
 	);

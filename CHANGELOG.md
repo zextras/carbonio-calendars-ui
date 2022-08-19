@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.24](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.23...v0.1.24) (2022-08-17)
+
+
+### Bug Fixes
+
+* editor composer input optimisation ([96bf027](https://github.com/zextras/carbonio-calendars-ui/commit/96bf0271869b58aa93810b54d766eb1ddc4196f7))
+
 ### [0.1.23](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.22...v0.1.23) (2022-08-05)
 
 
