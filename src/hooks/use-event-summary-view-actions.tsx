@@ -11,8 +11,9 @@ import { selectInstanceInvite } from '../store/selectors/invites';
 import { createAndApplyTag } from '../view/tags/tag-actions';
 import { getAppointmentActionsItems } from '../actions/get-appointment-actions-items';
 import { getRecurrentAppointmentActionsItems } from '../actions/get-recurrent-appointment-actions-items';
+import { GetActionReturnType } from './types';
 
-export const useEventSummaryViewActions = ({ event }: { event?: any }): any => {
+export const useEventSummaryViewActions = ({ event }: { event?: any }): GetActionReturnType => {
 	const invite = useSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);

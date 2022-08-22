@@ -3,19 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Padding, Select, Text, Icon, Button } from '@zextras/carbonio-design-system';
+import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { selectEditorFreeBusy } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectEditorFreeBusy } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 import LabelFactory, { Square } from './select-label-factory';
 
 type EditorFreeBusyProps = {
 	editorId: string;
 	callbacks: EditorCallbacks;
-	disabled?: boolean;
 };
 
 type ItemProps = {
@@ -70,49 +69,15 @@ const getStatusItems = (t: TFunction<'translation'>): Array<any> => [
 	}
 ];
 
-export const EditorFreeBusySelector2 = ({
-	editorId,
-	callbacks,
-	disabled = false
-}: EditorFreeBusyProps): ReactElement | null => {
-	const [t] = useTranslation();
-	const statusItems = useMemo(() => getStatusItems(t), [t]);
-	const freeBusy = useSelector(selectEditorFreeBusy(editorId));
-	const { onDisplayStatusChange } = callbacks;
-
-	const selectedItem = useMemo(
-		() => find(statusItems, ['value', freeBusy]) ?? statusItems[2],
-		[statusItems, freeBusy]
-	);
-	const onChange = useCallback(
-		(e) => {
-			onDisplayStatusChange(e);
-		},
-		[onDisplayStatusChange]
-	);
-
-	return (
-		<Select
-			disabled={disabled}
-			label={t('label.display', 'Display')}
-			onChange={onChange}
-			items={statusItems}
-			selection={selectedItem}
-			disablePortal
-			LabelFactory={LabelFactory}
-		/>
-	);
-};
-
 export const EditorFreeBusySelector = ({
 	editorId,
-	callbacks,
-	disabled = false
+	callbacks
 }: EditorFreeBusyProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const statusItems = useMemo(() => getStatusItems(t), [t]);
 	const freeBusy = useSelector(selectEditorFreeBusy(editorId));
 	const { onDisplayStatusChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const getNewSelection = useCallback(
 		(e) => find(statusItems, ['value', e]) ?? statusItems[0],
@@ -139,9 +104,10 @@ export const EditorFreeBusySelector = ({
 		<Select
 			items={statusItems}
 			background="gray5"
-			label="Select an item"
+			label={t('label.display', 'Display')}
 			onChange={onChange}
 			selection={selected}
+			disabled={disabled?.freeBusy}
 			LabelFactory={LabelFactory}
 		/>
 	) : null;

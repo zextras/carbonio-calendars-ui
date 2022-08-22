@@ -7,7 +7,7 @@ import { Tooltip } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { selectEditorIsRichText } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectEditorIsRichText } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 import { ResizedIconCheckbox } from './editor-styled-components';
 
@@ -15,6 +15,7 @@ export const EditorRichTextButton = ({ editorId, callbacks }: EditorProps): Reac
 	const [t] = useTranslation();
 	const { onToggleRichText } = callbacks;
 	const isRichText = useSelector(selectEditorIsRichText(editorId));
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	const onClick = useCallback(() => {
 		onToggleRichText(!isRichText);
@@ -27,6 +28,7 @@ export const EditorRichTextButton = ({ editorId, callbacks }: EditorProps): Reac
 				value={isRichText}
 				onClick={onClick}
 				onChange={(): null => null}
+				disabled={disabled?.richTextButton}
 			/>
 		</Tooltip>
 	);

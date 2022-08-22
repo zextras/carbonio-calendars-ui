@@ -9,27 +9,26 @@ import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Row } from '@zextras/carbonio-design-system';
-import { selectEditorRoom } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectEditorRoom } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
 type EditorRoomProps = {
 	editorId: string;
 	callbacks: EditorCallbacks;
-	disabled?: boolean;
 };
 
 export const EditorVirtualRoom = ({
 	editorId,
-	callbacks,
-	disabled = false
+	callbacks
 }: EditorRoomProps): ReactElement | null => {
 	const [RoomSelector, isRoomAvailable] = useIntegratedComponent('room-selector');
 	const { onRoomChange } = callbacks;
 	const room = useSelector(selectEditorRoom(editorId));
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	return isRoomAvailable ? (
 		<Row height="fit" width="fill" padding={{ top: 'large' }}>
-			<RoomSelector onChange={onRoomChange} defaultValue={room} disabled={disabled} />
+			<RoomSelector onChange={onRoomChange} defaultValue={room} disabled={disabled?.virtualRoom} />
 		</Row>
 	) : null;
 };
