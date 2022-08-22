@@ -16,6 +16,8 @@ import {
 import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { editAppointment } from '../../actions/appointment-actions-fn';
+import { PANEL_VIEW } from '../../constants';
+import { ActionsContext, PanelView } from '../../types/actions';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 import { createAndApplyTag } from '../tags/tag-actions';
@@ -30,7 +32,7 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 	const dispatch = useDispatch();
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const context = useMemo(
+	const context = useMemo<ActionsContext>(
 		() => ({
 			replaceHistory,
 			dispatch,
@@ -39,7 +41,8 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 			tags,
 			createAndApplyTag,
 			isInstance: true,
-			ridZ: event.resource.ridZ
+			ridZ: event.resource.ridZ,
+			panelView: PANEL_VIEW.APP as PanelView
 		}),
 		[createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
 	);

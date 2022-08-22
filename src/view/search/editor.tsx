@@ -3,20 +3,21 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useMemo } from 'react';
+import { replaceHistory } from '@zextras/carbonio-shell-ui';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
 import { useSelector } from 'react-redux';
 import { Header } from './header';
 import { EditorPanel } from '../editor/editor-panel';
 import { selectSearchActiveId } from '../../store/selectors/editor';
 import { createCallbacks } from '../../commons/editor-generator';
-import { useSearchActionsFn } from './hooks/use-search-actions-fn';
 
 export const Editor = (): ReactElement | null => {
 	const editorId = useSelector(selectSearchActiveId);
 	const callbacks = useMemo(() => (editorId ? createCallbacks(editorId) : undefined), [editorId]);
-	const { close } = useSearchActionsFn();
-
+	const close = useCallback(() => {
+		replaceHistory('');
+	}, []);
 	return editorId && callbacks ? (
 		<Container
 			mainAlignment="flex-start"

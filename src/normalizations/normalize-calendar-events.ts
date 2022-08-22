@@ -41,6 +41,7 @@ const normalizeEventResource = ({
 		owner: calendar.owner
 	},
 	flags: appt.flags,
+	dur: inst?.dur ?? appt.dur,
 	iAmOrganizer: inst?.isOrg ?? appt.isOrg ?? false,
 	iAmVisitor: !!(!appt.isOrg && calendar.owner) ?? false,
 	iAmAttendee: (!appt.isOrg && !calendar.owner) ?? false,
