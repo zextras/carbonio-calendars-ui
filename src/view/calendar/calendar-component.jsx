@@ -31,7 +31,7 @@ import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { generateEditor, getEndTime } from '../../commons/editor-generator';
+import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
 import CalendarStyle from './calendar-style';
@@ -186,20 +186,11 @@ export default function CalendarComponent() {
 					moment(e.end).hours() === moment(e.start).hours() &&
 					moment(e.end).minutes() === moment(e.start).minutes() &&
 					!moment(e.start).isSame(moment(e.end));
-				const slotEnd = moment(e.end);
-				const preferredSettingsEnd = moment(
-					getEndTime({
-						start: moment(e.start).valueOf(),
-						duration: settings?.prefs?.zimbraPrefCalendarDefaultApptDuration
-					})
-				);
-				const end = slotEnd.isSameOrAfter(preferredSettingsEnd) ? slotEnd : preferredSettingsEnd;
-				const editorEnd = isAllDay ? slotEnd : end;
 				const { editor, callbacks } = generateEditor({
 					context: {
 						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
-						end: editorEnd,
+						end: moment(e.end),
 						allDay: isAllDay ?? false,
 						panel: false
 					}
@@ -212,7 +203,7 @@ export default function CalendarComponent() {
 			}
 			useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 		},
-		[settings?.prefs?.zimbraPrefCalendarDefaultApptDuration, summaryViewOpen, t]
+		[summaryViewOpen, t]
 	);
 
 	const onEventDrop = useCallback(

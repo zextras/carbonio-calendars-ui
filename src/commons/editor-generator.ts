@@ -39,9 +39,8 @@ import {
 	updateEditor
 } from '../store/slices/editor-slice';
 import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
-import { EventResourceCalendar, EventType } from '../types/event';
+import { EventResourceCalendar } from '../types/event';
 import { Attendee, Invite, InviteClass, InviteFreeBusy } from '../types/store/invite';
-import { EditorAttachmentsButton } from '../view/editor/parts/editor-attachments-button';
 import { getIdentityItems } from './get-identity-items';
 
 let counter = 0;
