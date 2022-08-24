@@ -190,7 +190,7 @@ export default function CalendarComponent() {
 					context: {
 						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
-						end: moment(e.end),
+						end: moment(e.end).valueOf(),
 						allDay: isAllDay ?? false,
 						panel: false
 					}

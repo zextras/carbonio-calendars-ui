@@ -194,8 +194,9 @@ export default createGlobalStyle`
 	.rbc-row-segment {
 		padding: 0 1px 1px 1px; }
 
-	.rbc-selected-cell {
-		background-color: ${({ theme }) => theme.palette.transparent.active}; }
+  .rbc-day-bg.rbc-selected-cell {
+    background-color: ${({ primaryCalendar }) => primaryCalendar?.color?.background} !important;
+    border: 1px solid ${({ primaryCalendar }) => primaryCalendar?.color?.color} !important;}
 
 	.rbc-show-more {
 		background-color: ${({ theme }) => theme.palette.transparent.active};
