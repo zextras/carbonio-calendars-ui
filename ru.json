@@ -21,9 +21,9 @@
         "hours_0": "{{count}} час",
         "hours_1": "{{count}} часа",
         "hours_2": "{{count}} часов",
-        "minutes_0": "{{count}} минута",
-        "minutes_1": "{{count}} минуты",
-        "minutes_2": "{{count}} минут"
+        "minutes_0": "{{count}} минута",
+        "minutes_1": "{{count}} минуты",
+        "minutes_2": "{{count}} минут"
     },
     "participants": {
         "AC_with_count_0": "Принял",
