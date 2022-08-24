@@ -294,14 +294,6 @@ export default function CalendarComponent() {
 		console.log(event, start, end);
 	}, []);
 
-	const allDayEv = useMemo(
-		() =>
-			find(events, [
-				'id',
-				'20bd3134-2623-47fe-9e59-f0663a2e8013:68668:20bd3134-2623-47fe-9e59-f0663a2e8013:68668-68667:20220811'
-			]),
-		[events]
-	);
 	return (
 		<>
 			<CalendarSyncWithRange />
