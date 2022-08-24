@@ -143,6 +143,6 @@ export const editAppointmentItem = ({
 	icon: 'Edit2Outline',
 	keepOpen: true,
 	label: getBridgedFunctions().t('label.edit', 'Edit'),
-	disabled: !event.resource.iAmOrganizer || !event?.haveWriteAccess,
+	disabled: !event?.haveWriteAccess,
 	click: editAppointment({ event, invite, context })
 });
