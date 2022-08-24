@@ -9,7 +9,7 @@ import { ThemeContext } from 'styled-components';
 import { FOLDERS, getBridgedFunctions, store, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEqual, minBy } from 'lodash';
+import { find, isEqual, minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useTranslation } from 'react-i18next';
@@ -186,7 +186,7 @@ export default function CalendarComponent() {
 					moment(e.end).hours() === moment(e.start).hours() &&
 					moment(e.end).minutes() === moment(e.start).minutes() &&
 					!moment(e.start).isSame(moment(e.end));
-				const slotEnd = isAllDay ? moment(e.end).subtract(1, 'day').endOf('day') : moment(e.end);
+				const slotEnd = isAllDay ? moment(e.end).subtract(1, 'day').startOf('day') : moment(e.end);
 				const preferredSettingsEnd = moment(
 					getEndTime({
 						start: moment(e.start).valueOf(),
@@ -199,7 +199,7 @@ export default function CalendarComponent() {
 					context: {
 						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
-						end: editorEnd,
+						end: editorEnd.valueOf(),
 						allDay: isAllDay ?? false,
 						panel: false
 					}
@@ -223,7 +223,7 @@ export default function CalendarComponent() {
 					({ payload }) => {
 						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();
 						const endTime =
-							isAllDay || event.allDay ? moment(start).endOf('day') : moment(end).valueOf();
+							isAllDay || event.allDay ? moment(end).startOf('day') : moment(end).valueOf();
 						const invite = normalizeInvite(payload.m);
 						const { editor, callbacks } = generateEditor({
 							event,
@@ -294,6 +294,14 @@ export default function CalendarComponent() {
 		console.log(event, start, end);
 	}, []);
 
+	const allDayEv = useMemo(
+		() =>
+			find(events, [
+				'id',
+				'20bd3134-2623-47fe-9e59-f0663a2e8013:68668:20bd3134-2623-47fe-9e59-f0663a2e8013:68668-68667:20220811'
+			]),
+		[events]
+	);
 	return (
 		<>
 			<CalendarSyncWithRange />
