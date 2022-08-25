@@ -162,18 +162,24 @@ export const editAppointment =
 	}): ((ev: Event) => void) =>
 	(ev: Event): void => {
 		if (ev) ev.stopPropagation();
-
-		generateEditor({
-			event,
-			invite,
-			context: {
-				panel: context.panel ?? true
-			}
-		});
-		if (event?.resource?.ridZ) {
-			replaceHistory(
-				`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
-			);
+		if (context?.panelView === PANEL_VIEW.APP) {
+			generateEditor({
+				event,
+				invite,
+				context: {
+					panel: context.panel ?? true
+				}
+			});
+			const path = event.resource.ridZ
+				? `/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
+				: `/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}`;
+			replaceHistory(path);
 		}
-		replaceHistory(`/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}`);
+		if (context?.panelView === PANEL_VIEW.SEARCH) {
+			generateEditor({ event, invite, context: { searchPanel: true, panel: false } });
+			const path = event.resource.ridZ
+				? `/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
+				: `/${EventActionsEnum.EDIT}/${event.resource.id}`;
+			replaceHistory(path);
+		}
 	};

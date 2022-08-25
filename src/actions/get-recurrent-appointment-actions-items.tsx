@@ -55,7 +55,7 @@ export const getRecurrentAppointmentActionsItems = ({
 					panelView: 'app',
 					context
 				}),
-				editAppointmentItem({ invite, event, context }),
+				editAppointmentItem({ invite, event, context: { ...context, panelView } }),
 				event.resource.calendar.id === FOLDERS.TRASH
 					? deletePermanentlyItem({ event, context })
 					: moveApptToTrashItem({ invite, event, context: { ...context, isInstance: true } })
@@ -74,7 +74,7 @@ export const getRecurrentAppointmentActionsItems = ({
 					panelView: 'app',
 					context
 				}),
-				editAppointmentItem({ invite, event: seriesEvent, context }),
+				editAppointmentItem({ invite, event: seriesEvent, context: { ...context, panelView } }),
 				event.resource.calendar.id === FOLDERS.TRASH
 					? deletePermanentlyItem({ event: seriesEvent, context })
 					: moveApptToTrashItem({ invite, event, context: { ...context, isInstance: false } }),

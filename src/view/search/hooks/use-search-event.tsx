@@ -6,9 +6,10 @@
 import { useMemo } from 'react';
 import { find } from 'lodash';
 import { useParams } from 'react-router-dom';
+import { EventType } from '../../../types/event';
 
-export const useSearchEvent = (appointmentsFromSearch) => {
-	const { apptId, ridZ } = useParams();
+export const useSearchEvent = (appointmentsFromSearch: Array<EventType>): EventType | undefined => {
+	const { apptId, ridZ } = useParams<{ apptId: string; ridZ: string }>();
 	return useMemo(
 		() =>
 			find(
@@ -16,5 +17,5 @@ export const useSearchEvent = (appointmentsFromSearch) => {
 				(appt) => appt?.resource?.id === apptId && appt?.resource?.ridZ === ridZ
 			),
 		[appointmentsFromSearch, apptId, ridZ]
-	);
+	) as EventType;
 };

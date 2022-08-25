@@ -28,6 +28,7 @@ export type EventResourceCalendar = {
 };
 
 export type EventResource = {
+	dur: number;
 	attach?: { mp?: []; aid?: [] };
 	attachmentFiles?: [];
 	id: string;
