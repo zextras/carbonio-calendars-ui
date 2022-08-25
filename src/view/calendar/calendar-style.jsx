@@ -249,7 +249,7 @@ export default createGlobalStyle`
 	}
   .rbc-allday-cell{
     cursor: ${({ summaryViewOpen, action }) =>
-			!summaryViewOpen && !action ? 'w-resize' : 'inherit'};
+			!summaryViewOpen && !action ? 'ew-resize' : 'inherit'};
 	}
 	.rbc-row-bg {
 		display: flex;
