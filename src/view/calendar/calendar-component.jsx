@@ -9,7 +9,7 @@ import { ThemeContext } from 'styled-components';
 import { FOLDERS, getBridgedFunctions, store, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEqual, minBy } from 'lodash';
+import { find, isEqual, minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useTranslation } from 'react-i18next';
@@ -214,7 +214,7 @@ export default function CalendarComponent() {
 					({ payload }) => {
 						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();
 						const endTime =
-							isAllDay || event.allDay ? moment(start).endOf('day') : moment(end).valueOf();
+							isAllDay || event.allDay ? moment(end).startOf('day') : moment(end).valueOf();
 						const invite = normalizeInvite(payload.m);
 						const { editor, callbacks } = generateEditor({
 							event,
