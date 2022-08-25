@@ -96,7 +96,13 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 		event
 	});
 
-	const onClose = useCallback(() => setOpen(false), []);
+	const onClose = useCallback(() => {
+		setOpen(false);
+		useAppStatusStore.setState((s) => ({
+			...s,
+			isSummaryViewOpen: false
+		}));
+	}, []);
 
 	return (
 		<>
