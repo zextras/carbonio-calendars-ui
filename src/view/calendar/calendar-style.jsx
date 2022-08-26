@@ -74,7 +74,7 @@ export default createGlobalStyle`
 
 	.rbc-header {
 		overflow: hidden;
-		flex: 1 0 0%;
+		flex: 1 0 0;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		padding: 0 3px;
@@ -125,7 +125,6 @@ export default createGlobalStyle`
 			text-align: center;
 			vertical-align: middle;
 			background: none;
-			background-image: none;
 			border: 1px solid ${({ theme }) => theme.palette.primary.regular};
 			padding: .375rem 1rem;
 			border-radius: 2px;
@@ -195,8 +194,10 @@ export default createGlobalStyle`
 		padding: 0 1px 1px 1px; }
 
   .rbc-day-bg.rbc-selected-cell {
-    background-color: ${({ primaryCalendar }) => primaryCalendar?.color?.background} !important;
-    border: 1px solid ${({ primaryCalendar }) => primaryCalendar?.color?.color} !important;}
+    background-color: ${({ primaryCalendar, summaryViewOpen, action }) =>
+			!summaryViewOpen && !action ? primaryCalendar?.color?.background : 'inherit'} !important;
+    border: 1px solid ${({ primaryCalendar, summaryViewOpen, action }) =>
+			!summaryViewOpen && !action ? primaryCalendar?.color?.color : 'inherit'} !important;}
 
 	.rbc-show-more {
 		background-color: ${({ theme }) => theme.palette.transparent.active};
@@ -243,14 +244,24 @@ export default createGlobalStyle`
 			color: inherit;
 			text-decoration: none; }
 
+  .rbc-day-slot.rbc-time-column {
+		cursor: ${({ summaryViewOpen, action }) => (!summaryViewOpen && !action ? 'ns-resize' : 'inherit')};
+	}
+  .rbc-allday-cell{
+    cursor: ${({ summaryViewOpen, action }) =>
+			!summaryViewOpen && !action ? 'ew-resize' : 'inherit'};
+	}
 	.rbc-row-bg {
 		display: flex;
 		flex-direction: row;
 		flex: 1 0 0;
-		overflow: hidden; }
-
+		overflow: hidden;
+	}
+  .rbc-month-row {
+    cursor: ${({ summaryViewOpen, action }) => (!summaryViewOpen && !action ? 'move' : 'inherit')};
+	}
 	.rbc-day-bg {
-		flex: 1 0 0%; }
+		flex: 1 0 0; }
 		.rbc-day-bg + .rbc-day-bg {
 			border-left: 1px solid ${({ theme }) => theme.palette.gray3.regular}; }
 		.rbc-rtl .rbc-day-bg + .rbc-day-bg {
@@ -480,7 +491,7 @@ export default createGlobalStyle`
 
 	.rbc-time-content {
 		display: flex;
-		flex: 1 0 0%;
+		flex: 1 0 0;
 		align-items: flex-start;
 		width: 100%;
 		border-top: 2px solid ${({ theme }) => theme.palette.gray3.regular};

@@ -9,10 +9,11 @@ import { ThemeContext } from 'styled-components';
 import { FOLDERS, getBridgedFunctions, store, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
-import { find, isEqual, minBy } from 'lodash';
+import { isEqual, minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
@@ -74,6 +75,7 @@ export default function CalendarComponent() {
 	const [date, setDate] = useState(calendarDate);
 	const calendars = useSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
+	const { action } = useParams();
 
 	if (settings.prefs.zimbraPrefLocale) {
 		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
@@ -181,16 +183,17 @@ export default function CalendarComponent() {
 
 	const handleSelect = useCallback(
 		(e) => {
-			if (!summaryViewOpen) {
+			if (!summaryViewOpen && !action) {
 				const isAllDay =
 					moment(e.end).hours() === moment(e.start).hours() &&
 					moment(e.end).minutes() === moment(e.start).minutes() &&
 					!moment(e.start).isSame(moment(e.end));
+				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
 				const { editor, callbacks } = generateEditor({
 					context: {
 						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
-						end: moment(e.end).valueOf(),
+						end: end.valueOf(),
 						allDay: isAllDay ?? false,
 						panel: false
 					}
@@ -201,9 +204,8 @@ export default function CalendarComponent() {
 					callbacks
 				});
 			}
-			useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 		},
-		[summaryViewOpen, t]
+		[action, summaryViewOpen, t]
 	);
 
 	const onEventDrop = useCallback(
@@ -288,7 +290,11 @@ export default function CalendarComponent() {
 	return (
 		<>
 			<CalendarSyncWithRange />
-			<CalendarStyle primaryCalendar={primaryCalendar} />
+			<CalendarStyle
+				primaryCalendar={primaryCalendar}
+				summaryViewOpen={summaryViewOpen}
+				action={action}
+			/>
 			<BigCalendar
 				selectable
 				eventPropGetter={eventPropGetter}
@@ -314,6 +320,7 @@ export default function CalendarComponent() {
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
 				resizableAccessor={() => false}
+				onSelecting={() => !summaryViewOpen && !action}
 				draggableAccessor={(event) =>
 					event.resource.iAmOrganizer && event.resource.calendar.id !== FOLDERS.TRASH
 				}
