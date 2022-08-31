@@ -37,6 +37,7 @@
                 "title": "Drag&Drop Mode"
             },
             "drive": "Add from Drive",
+            "files": "Add from Files",
             "local": "Add from local",
             "url": "Add public link from Files"
         }
@@ -96,7 +97,6 @@
     "label": {
         "access_revoked": "Access revoked",
         "add_share": "Add share",
-        "al": "Inbox",
         "all_calendars": "All calendars",
         "all_day": "All day",
         "app_name": "Calendars",
@@ -115,6 +115,7 @@
         "cancelled": "Cancelled",
         "changes_saved": "Changes saved",
         "choose_file": "Choose file",
+        "continue": "Continue",
         "create": "Create",
         "create_appt_settings": "Creating Appointments",
         "create_new_calendar": "Create a New Calendar",
@@ -220,6 +221,7 @@
         "save": "Save",
         "scheduled_in": "Calendar",
         "search_hint": "",
+        "select": "Select",
         "select_color": "Select Color",
         "select_in": "",
         "series": "Series",
@@ -254,6 +256,7 @@
         "type_name_here": "Calendar name",
         "undo": "Undo",
         "view_url": "View URL",
+        "warning": "Warning",
         "week": "Week",
         "week_day": {
             "friday": "Friday",
@@ -278,6 +281,7 @@
         "delete_future_occurences_warning": "This will also delete all exceptions (before and after this instance) in the series",
         "delete_tag_message1": "Are you sure to delete \"{{name}}\" Tag?",
         "delete_tag_message2": "Once deleted, it will be removed from every item marked with it.",
+        "edit_series_warning": "As you proceed with the series modification, all previously deleted or modified instances will be restored with the new series settings.",
         "invite_has_no_message": "This invite has no text message",
         "invited_you": "invited you to an event",
         "meeting_canceled": "The following meeting has been cancelled",
@@ -299,12 +303,14 @@
         "share_calendar_url_note": "Only your collaborators can access your data using these URLs.",
         "share_calendar_url_note2": "Only your collaborators can access your data using these URLs.<br/> You can find these links also right-clicking your calendars list.",
         "snackbar": {
+            "all_att_added": "Attachments added successfully",
             "all_link_copied": "Public link copied successfully",
             "appointment_permanently_deleted": "Appointment permanently deleted",
             "appointment_permanently_deleted_succesfully": "Permanent deletion completed successfully",
             "appt_moved": "Appointment moved successfully to",
             "appt_moved_to_trash": "Appointment moved to trash",
             "appt_restored": "Appointment restored successfully to",
+            "att_err_adding": "There seems to be a problem when adding attachments, please try again",
             "calendar_deleted_successfully": "Calendar deleted successfully.",
             "calendar_edits_saved": "Edits saved correctly",
             "calendar_moved_to_root_folder": "Calendar moved to Root folder",
@@ -319,6 +325,7 @@
             "link_copying_error": "There seems to be a problem while generating public link, please try again",
             "new_calendar_created": "New calendar created",
             "series_deleted": "Series successfully deleted. Attendees will receive the cancellation notification.",
+            "some_att_add_fails": "There seems to be a problem when adding some attachments, please try again",
             "some_link_copying_error": "There seems to be a problem while generating public url for some files, please try again"
         },
         "somebody_invited_you": "<strong>{{somebody}}</strong> invited you",

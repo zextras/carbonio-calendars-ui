@@ -4,13 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container } from '@zextras/carbonio-design-system';
-import React, { ComponentProps, ReactComponentElement, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { ComponentProps, ReactComponentElement } from 'react';
 import styled from 'styled-components';
 import { useInvite } from '../../hooks/use-invite';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
-import { Header } from './header';
-import { useSearchActionsFn } from './hooks/use-search-actions-fn';
+import { DisplayerHeader } from '../event-panel-view/event-panel-view';
 import StyledDivider from '../../commons/styled-divider';
 import { ReminderPart } from '../event-panel-view/reminder-part';
 import { MessagePart } from '../event-panel-view/message-part';
@@ -28,22 +25,7 @@ const BodyContainer = styled(Container)`
 `;
 
 const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> | null => {
-	const { close } = useSearchActionsFn(event);
 	const invite = useInvite(event?.resource?.inviteId);
-	const [t] = useTranslation();
-	const { edit } = useSearchActionsFn(event, invite);
-	const actions = useMemo(
-		() => [
-			{
-				id: EventActionsEnum.EDIT,
-				icon: 'Edit2Outline',
-				label: t('label.edit', 'Edit'),
-				disabled: !event?.resource?.iAmOrganizer,
-				click: edit
-			}
-		],
-		[edit, event?.resource?.iAmOrganizer, t]
-	);
 	return invite ? (
 		<Container
 			mainAlignment="flex-start"
@@ -52,7 +34,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 		>
 			{event && (
 				<Container padding={{ all: 'none' }} mainAlignment="flex-start">
-					<Header title={event.title} actions={actions} closeAction={close} />
+					<DisplayerHeader event={event} />
 					<BodyContainer
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"

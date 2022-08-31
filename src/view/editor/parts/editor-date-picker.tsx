@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Padding } from '@zextras/carbonio-design-system';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 import {
 	selectEditorAllDay,
+	selectEditorDisabled,
 	selectEditorEnd,
 	selectEditorStart
 } from '../../../store/selectors/editor';
@@ -25,13 +27,29 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 	const allDay = useSelector(selectEditorAllDay(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));
+	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
 	const { onDateChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	return start && end ? (
 		<Styler allDay={allDay} orientation="horizontal" height="fit" mainAlignment="flex-start">
-			<StartDatePicker start={start} end={end} onChange={onDateChange} allDay={allDay} />
+			<StartDatePicker
+				start={start}
+				end={end}
+				onChange={onDateChange}
+				diff={diff}
+				allDay={allDay}
+				disabled={disabled?.datePicker}
+			/>
 			<Padding left="small" />
-			<EndDatePicker start={start} end={end} onChange={onDateChange} allDay={allDay} />
+			<EndDatePicker
+				start={start}
+				end={end}
+				onChange={onDateChange}
+				diff={diff}
+				allDay={allDay}
+				disabled={disabled?.datePicker}
+			/>
 		</Styler>
 	) : null;
 };

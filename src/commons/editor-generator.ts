@@ -10,7 +10,7 @@ import {
 	replaceHistory,
 	getBridgedFunctions
 } from '@zextras/carbonio-shell-ui';
-import { find, isNaN, startsWith } from 'lodash';
+import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
@@ -39,7 +39,7 @@ import {
 	updateEditor
 } from '../store/slices/editor-slice';
 import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
-import { EventResourceCalendar, EventType } from '../types/event';
+import { EventResourceCalendar } from '../types/event';
 import { Attendee, Invite, InviteClass, InviteFreeBusy } from '../types/store/invite';
 import { getIdentityItems } from './get-identity-items';
 
@@ -79,9 +79,9 @@ const createEmptyEditor = (id: string): Editor => {
 		isException: false,
 		exceptId: undefined,
 		isSeries: false,
-		isInstance: false,
+		isInstance: true,
 		isRichText: true,
-		isNew: true,
+		isNew: startsWith(id, 'new'),
 		attachmentFiles: [],
 		organizer: defaultOrganizer,
 		title: '',
@@ -103,8 +103,54 @@ const createEmptyEditor = (id: string): Editor => {
 		recur: undefined,
 		richText: '',
 		plainText: '',
+		disabled: {
+			richTextButton: false,
+			attachmentsButton: false,
+			saveButton: false,
+			sendButton: false,
+			organizer: false,
+			title: false,
+			location: false,
+			virtualRoom: false,
+			attendees: false,
+			optionalAttendees: false,
+			freeBusySelector: false,
+			calendarSelector: false,
+			private: false,
+			datePicker: false,
+			timezone: false,
+			allDay: false,
+			reminder: false,
+			recurrence: false,
+			attachments: false,
+			composer: false
+		},
 		id
 	};
+};
+
+export const applyContextToEditor = ({
+	editor,
+	context
+}: {
+	editor: Editor;
+	context: any;
+}): Editor => {
+	let newEditor = createEmptyEditor(editor.id);
+	const contextObj = omit(context, 'disabled');
+	if (!isEmpty(context)) {
+		newEditor = { ...newEditor, ...editor, ...contextObj };
+	}
+	if (!isEmpty(context?.disabled)) {
+		newEditor = {
+			...newEditor,
+			disabled: {
+				...newEditor.disabled,
+				...context.disabled
+			}
+		};
+	}
+	return newEditor;
 };
 
 export const createCallbacks = (id: string): EditorCallbacks => {
@@ -291,21 +337,21 @@ export const generateEditor = ({
 	invite?: Invite;
 	context: any;
 }): { editor: Editor; callbacks: EditorCallbacks } => {
-	const editorId = getNewEditId(event?.resource?.id);
-	const emptyEditor = createEmptyEditor(editorId);
-	const normalizedEditor = invite && event ? normalizeEditor({ invite, event }) : {};
-	const editorData = { ...normalizedEditor, ...context };
-	const editor = { ...emptyEditor, ...editorData, isNew: startsWith(editorId, 'new') };
-	const callbacks = createCallbacks(editorId);
+	const id = getNewEditId(event?.resource?.id);
+	const compiledEditor = normalizeEditor({ invite, event, id });
+	const editor = applyContextToEditor({
+		editor: compiledEditor,
+		context
+	});
+	const callbacks = createCallbacks(id);
 	const closeCurrentEditor = context.panel
 		? callbacks.closeCurrentEditor
 		: getBridgedFunctions().removeCurrentBoard;
 	const { dispatch } = store.store;
-	const storeEditorData = { ...editor, panel: context.panel };
-	dispatch(createNewEditor(storeEditorData));
+	dispatch(createNewEditor(editor));
 	const storeData = store.store.getState();
 	return {
-		editor: storeData?.editor?.editors?.[editorId],
+		editor: storeData?.editor?.editors?.[id],
 		callbacks: {
 			...callbacks,
 			closeCurrentEditor

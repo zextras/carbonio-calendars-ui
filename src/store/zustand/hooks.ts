@@ -7,4 +7,5 @@ import { useAppStatusStore } from './store';
 
 export const useCalendarView = (): string => useAppStatusStore((s) => s.calendarView);
 export const useCalendarDate = (): Date => useAppStatusStore((s) => s.date);
-export const useIsSummaryViewOpen = (): boolean => useAppStatusStore((s) => s.isSummaryViewOpen);
+export const useIsSummaryViewOpen = (): boolean =>
+	useAppStatusStore((s) => s.summaryViewCounter > 0);

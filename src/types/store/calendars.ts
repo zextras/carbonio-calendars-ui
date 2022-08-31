@@ -22,5 +22,5 @@ export type Calendar = {
 	acl: any;
 	isShared?: boolean;
 	perm?: string;
-	haveWriteAccess?: boolean;
+	haveWriteAccess: boolean;
 };

@@ -75,7 +75,7 @@ export const getAppointmentActionsItems = ({
 		}),
 		moveAppointmentItem({ event, context }),
 		moveApptToTrashItem({ invite, event, context: { ...context, isInstance: true } }),
-		editAppointmentItem({ invite, event, context }),
+		editAppointmentItem({ invite, event, context: { ...context, panelView } }),
 		acceptInvitationItem({ event, context }),
 		declineInvitationItem({ event, context }),
 		acceptAsTentativeItem({ event, context }),
