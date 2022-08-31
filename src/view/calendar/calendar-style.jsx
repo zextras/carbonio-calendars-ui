@@ -243,22 +243,11 @@ export default createGlobalStyle`
 		.rbc-date-cell > a, .rbc-date-cell > a:active, .rbc-date-cell > a:visited {
 			color: inherit;
 			text-decoration: none; }
-
-  .rbc-day-slot.rbc-time-column {
-		cursor: ${({ summaryViewOpen, action }) => (!summaryViewOpen && !action ? 'ns-resize' : 'inherit')};
-	}
-  .rbc-allday-cell{
-    cursor: ${({ summaryViewOpen, action }) =>
-			!summaryViewOpen && !action ? 'ew-resize' : 'inherit'};
-	}
 	.rbc-row-bg {
 		display: flex;
 		flex-direction: row;
 		flex: 1 0 0;
 		overflow: hidden;
-	}
-  .rbc-month-row {
-    cursor: ${({ summaryViewOpen, action }) => (!summaryViewOpen && !action ? 'move' : 'inherit')};
 	}
 	.rbc-day-bg {
 		flex: 1 0 0; }
