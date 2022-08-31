@@ -1,6 +1,5 @@
 {
     "tooltip": {
-        "show_optionals": "Mostra facoltativi",
         "enable_disable_rich_text": "Attiva/Disattiva editor avanzato",
         "add_attachments": "Aggiungi allegati",
         "copy_ics_url": "Copia url ICS",
@@ -64,31 +63,22 @@
         "somebody_invited_you": "<strong>{{somebody}}</strong> ti ha invitato",
         "meeting_canceled": "La riunione seguente è stata annullata",
         "invite_has_no_message": "Questo invito non ha messaggi di testo",
-        "have_not_sent_invitation": "Non hai ancora inviato l'invito ai partecipanti",
         "snackbar": {
             "settings_saved": "Modifiche salvate correttamente",
             "invite": {
                 "tentative": "Hai risposto Forse",
                 "accept": "Hai risposto Accettato",
-                "error": "Qualcosa è andato storto, riprova.",
                 "decline": "Hai risposto Rifiuta"
             },
-            "appointment_permanently_deleted_error": "Qualcosa è andato storto, riprova",
             "new_calendar_create_error": "Qualcosa è andato storto, riprova",
             "appointment_permanently_deleted_succesfully": "Eliminazione conclusa correttamente",
-            "appt_deleted_error": "Qualcosa è andato storto, riprova.",
             "appt_moved": "Appuntamento spostato in",
-            "appt_moved_error": "Qualcosa è andato storto, l'appuntamento non è stato spostato, riprova.",
             "appt_moved_to_trash": "Appuntamento spostato nel cestino",
             "appt_restored": "Appuntamento ripristinato in",
-            "calendar_delete_error": "Qualcosa è andato storto, riprova.",
             "calendar_deleted_successfully": "Calendario eliminato correttamente.",
             "calendar_moved_to_root_folder": "Calendario spostato nella cartella Root",
-            "calendar_moved_to_root_folder_error": "Qualcosa è andato storto, riprova",
             "calendar_moved_to_trash": "Calendario spostato nel cestino",
-            "calendar_moved_to_trash_error": "Qualcosa è andato storto, riprova",
             "edit_calendar": "Modifiche salvate",
-            "edit_calendar_error": "Qualcosa è andato storto, riprova",
             "new_calendar_created": "Nuovo calendario creato",
             "calendar_permanently_deleted": "Calendario eliminato definitivamente",
             "calendar_restored": "Calendario ripristinato correttamente",
@@ -142,14 +132,12 @@
         "to": "A",
         "tentative": "forse",
         "no_subject": "Nessun oggetto",
-        "subject": "Oggetto",
         "start_date_and_time": "Data ed ora di inizio",
         "start_date": "Data di inizio",
         "required": "Richiesto",
         "reminder": "Promemoria",
         "private": "Privato",
         "out_of_office": "Non in ufficio",
-        "organizer": "Organizzatore",
         "optional": "Facoltativo",
         "optional_plural": "Facoltativi",
         "location": "Luogo",
@@ -171,7 +159,6 @@
         "save": "Salva",
         "show": "Mostra",
         "show_plural": "Mostra tutto",
-        "cancel": "Cancella",
         "resend": "Invia di nuovo",
         "every_day": "Ogni giorno",
         "find_shares": "Seleziona i calendari da visualizzare nella tua lista calendari",
@@ -214,23 +201,19 @@
         "delete_permanently": "Elimina definitivamente",
         "dismiss": "Annulla",
         "dismiss_plural": "Annulla tutto",
-        "edit_properties": "Modifica proprietà di {{name}}",
         "edit_share": "Modifica condivisione",
         "email_input_message": "Inserisci indirizzo e-mail",
         "of_every": "di ogni",
-        "of_the_month,_every": "del mese, ogni",
         "ongoing": "Continuo",
         "share": "Condividi",
         "outlook_url": "URL Outlook",
         "permissions": "Permessi",
         "regular": "Regolare",
         "repeat": "Ripeti",
-        "restore_calednar": "Ripristina calendario",
         "revoke_share": "Revoca condivisione di {{title}}",
         "series": "Serie",
         "set_new_time": "Imposta nuovo orario",
         "show_declined_meetings": "Mostra appuntamenti rifiutati",
-        "dismiss_capitalize": "Annulla",
         "remove": "Elimina",
         "remove_plural": "Elimina tutto",
         "sharing_of_this_folder": "Condivisione di questa cartella",
@@ -316,20 +299,15 @@
     },
     "action": {
         "send": "Invia",
-        "save": "Salva",
         "create": "Crea",
         "delete_calendar": "Elimina calendario",
         "empty_trash": "Svuota Cestino",
         "move_to_root": "Sposta in root",
-        "new_calendar": "Nuovo calendario",
         "delete": "Cancella",
-        "download": "Scarica",
         "preview": "Clicca per visualizzare l'anteprima",
         "save_to_preview": "Salva nell'anteprima",
-        "cancel": "Annulla",
         "modify_property": "Modifica proprietà",
         "edit_calendar_properties": "Modifica le proprietà del calendario",
-        "delete_permanently": "Elimina definitivamente",
         "edit_message": "Modifica Messaggio",
         "send_cancellation": "Invia cancellazione",
         "share_calendar": "Condividi Calendario",
@@ -342,7 +320,6 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "Modifica",
                 "title": "Personalizza orario lavorativo"
             }
         }
@@ -350,13 +327,10 @@
     "folder": {
         "modal": {
             "delete": {
-                "title": "Elimina",
                 "footer": "Elimina"
             },
             "move": {
-                "title": "Sposta",
                 "footer": "Vuoto",
-                "new": "Nuovo Calendario",
                 "body": {
                     "message3": "Seleziona un calendario in cui spostare questo appuntamento:"
                 },
@@ -365,16 +339,11 @@
                 }
             },
             "restore": {
-                "title": "Ripristina",
                 "footer": "Crea e Ripristina"
             },
             "new": {
                 "duplicate_warning": "Esiste già un calendario con lo stesso nome",
-                "footer": "CREA",
                 "title2": "Creazione nuovo calendario"
-            },
-            "item": {
-                "empty": "Vuoto"
             },
             "footer": {
                 "go_back": "Indietro"
@@ -384,13 +353,10 @@
     },
     "event": {
         "action": {
-            "tentative": "Forse",
             "accept": "Accetta",
             "decline": "Rifiuta",
-            "edit": "Modifica",
             "move": "Sposta",
             "no": "No",
-            "restore": "Ripristina",
             "trash": "Elimina",
             "yes": "Sì",
             "expand": "Apri nel visulizzatore",
@@ -410,7 +376,6 @@
         }
     },
     "search": {
-        "results_for": "Risultati per:",
         "organized_by": "organizzato da"
     },
     "find_calendar_shares": "Trova Condivisoni Calendario",
@@ -420,17 +385,14 @@
         "last": "Ultimo",
         "second": "Secondo",
         "third": "Terzo",
-        "day": "Giorno",
         "weekend_day": "Fine settimana",
         "working_day": "Giorno lavorativo"
     },
     "snackbar": {
-        "error": "Qualcosa è andato storto. riprova",
         "proposed_time_error": "Qualcosa è andato storto, riprova",
         "invite": {
             "error": "Errore"
         },
-        "new_time_proposed_error": "Qualcosa è andato storto, riprova",
         "new_time_proposed_succes": "Nuovo orario proposto",
         "proposed_time_accepted": "Hai accettato l'orario proposto",
         "share_folder_success": "Calendario condiviso correttamente",
@@ -444,7 +406,6 @@
     "appointments": "Appuntamenti",
     "administer": "Gestisci",
     "cannot_edit_name": "Non è possibile modificare il nome di una calendario di sistema",
-    "create": "Crea",
     "delete": "Elimina",
     "edit_share_properties": "Modifica proprietà di condivisione",
     "find_shares": "Trova condivisioni",
@@ -458,7 +419,6 @@
             },
             "share_calendar_role": {
                 "manager": "Manager (visualizza, modifica, aggiungi e rimuovi)",
-                "none": "Nessuno",
                 "admin": "Amministratore (visualizza, modifica, aggiungi, rimuovi e gestisci)",
                 "viewer": "Visualizzatore (visualizza)"
             }
@@ -478,13 +438,10 @@
     "repeat": {
         "everyMonth": "Ogni Mese",
         "customize": "Personalizza",
-        "custom": "Personalizzato",
         "daily": "Giornaliero",
-        "everyDay": "Ogni Giorno",
         "everyWeek": "Ogni Settimana",
         "everyYear": "Ogni Anno",
         "monthly": "Mensile",
-        "none": "Nessuno",
         "weekly": "Settimanale",
         "yearly": "Annuale"
     },
@@ -521,25 +478,17 @@
                 "allow_none": "Nessuno può invitarmi agli appuntamenti"
             },
             "weekdays": {
-                "wednesday": "Mercoledì",
                 "friday": "Venerdì",
-                "monday": "Lunedì",
                 "saturday": "Sabato",
-                "sunday": "Domenica",
-                "thursday": "Giovedì",
-                "tuesday": "Mertedì"
+                "thursday": "Giovedì"
             },
             "show_reminder": {
                 "day_before": "1 giorno prima",
                 "day_before_plural": "{{count}} giorni prima",
-                "never": "Mai",
                 "hour_before": "1 ora prima",
                 "hour_before_plural": "{{count}} ore prima",
-                "minute_before": "1 minuto prima",
-                "minute_before_plural": "{{count}} minuti prima",
                 "week_before": "1 settimana prima",
-                "week_before_plural": "{{count}} settimane prima",
-                "all_time": "Per tutta la durata dell'evento"
+                "week_before_plural": "{{count}} settimane prima"
             },
             "default_cal_opts": {
                 "calendar": "Calendario"
@@ -552,7 +501,6 @@
                 "work_week": "Vista Settimana Lavorativa"
             },
             "dflt_vsblty_opt": {
-                "private": "Privato",
                 "public": "Pubblico"
             },
             "timezones": {
@@ -580,9 +528,7 @@
         "october": "Ottobre",
         "september": "Settembre"
     },
-    "of": "di",
     "owner": "Proprietario",
-    "private": "Privato",
     "read": "Letto",
     "remove_from_this_list": "Rimuovi da questa lista",
     "revoke_access": "Revoca accesso",

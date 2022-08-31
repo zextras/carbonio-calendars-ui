@@ -5,26 +5,18 @@
             "appt_moved": "预约已成功移至：",
             "appointment_permanently_deleted_succesfully": "永久性删除成功完成",
             "appt_moved_to_trash": "预约移动至垃圾箱",
-            "calendar_delete_error": "出现了一些错误，请重试。",
             "calendar_deleted_successfully": "日历已删除成功。",
             "calendar_moved_to_root_folder": "日历已移动至根文件夹",
-            "calendar_moved_to_root_folder_error": "出现了一些错误，请重试",
             "calendar_moved_to_trash": "日历移动至垃圾箱",
-            "calendar_moved_to_trash_error": "出现了一些错误，请重试",
             "edit_calendar": "编辑保存正确",
-            "edit_calendar_error": "出现了一些错误，请重试",
             "invite": {
                 "accept": "您已回复：接受",
-                "error": "出现错误，请重试。",
                 "decline": "您已回复拒绝",
                 "tentative": "您已回复暂定"
             },
-            "new_calendar_create_error": "出现了一些错误，请重试",
             "new_calendar_created": "新日历已创建",
-            "settings_saved": "编辑保存正确",
             "appointment_permanently_deleted_error": "出现了一些错误，请重试",
             "appt_restored": "预约已成功恢复至：",
-            "appt_moved_error": "出现错误，预约未移动，请重试。",
             "appt_deleted_error": "出现错误，请重试。",
             "calendar_permanently_deleted": "日历已永久性删除",
             "calendar_restored": "日历已成功恢复",
@@ -36,7 +28,6 @@
         "delete_all_occurences": "删除所有重复次数",
         "delete_future_occurences": "删除此实例及其所有未来重复",
         "delete_future_occurences_warning": "这也将删除系列中（在此实例之前和之后）的所有例外",
-        "have_not_sent_invitation": "您尚未向参与者发送邀请",
         "invite_has_no_message": "此邀请没有文本消息",
         "invited_you": "已邀请您至",
         "meeting_canceled": "以下会议已被取消",
@@ -80,27 +71,21 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "编辑",
                 "title": "自定义工作时间"
             }
         }
     },
     "action": {
-        "download": "下载",
         "create": "创建",
-        "save": "保存",
         "send": "发送",
-        "delete": "删除",
         "calendar_access_share": "日历访问共享",
         "edit_calendar_properties": "编辑日历属性",
         "move_to_root": "移动至根目录",
-        "new_calendar": "新日历",
         "preview": "点击预览",
         "save_to_preview": "保存至预览",
         "send_cancellation": "发送取消",
         "share_calendar": "共享日历",
         "delete_calendar": "删除日历",
-        "delete_permanently": "永久删除",
         "edit_message": "编辑消息",
         "empty_trash": "清空垃圾箱",
         "empty_trash_confirmation": "此操作将删除邮件、联系人、日历、任务和公文包垃圾文件夹中的所有项目。确定要永久性删除垃圾文件夹中的所有内容吗？"
@@ -108,15 +93,11 @@
     "event": {
         "action": {
             "accept": "接受",
-            "edit": "编辑",
             "move": "移动",
-            "restore": "恢复",
             "no": "否",
-            "trash": "删除",
             "yes": "是",
             "decline": "拒绝",
             "expand": "在显示工具中打开",
-            "tentative": "暂定",
             "needs_action": "需要操作",
             "invitation_not_sent_yet": "尚未发送邀请"
         }
@@ -124,43 +105,33 @@
     "items": {
         "second": "秒",
         "working_day": "工作日",
-        "day": "日",
         "first": "第一个",
         "fourth": "第四个",
         "last": "最后",
         "third": "第三个",
         "weekend_day": "周末日"
     },
-    "create": "创建",
     "delete": "删除",
     "folder": {
         "modal": {
             "delete": {
-                "footer": "删除",
                 "title": "删除"
             },
             "move": {
-                "title": "移动",
                 "body": {
                     "message3": "选择日历夹以将其相关预约移动至："
                 },
                 "input": {
                     "filter": "过滤日历"
                 },
-                "new": "新日历",
                 "footer": "空"
             },
             "restore": {
-                "title": "恢复",
                 "footer": "创建和恢复"
             },
             "new": {
-                "footer": "创建",
                 "title2": "新日历创建",
                 "duplicate_warning": "带有相同名称的日历已存在"
-            },
-            "item": {
-                "empty": "空"
             },
             "footer": {
                 "go_back": "返回"
@@ -178,15 +149,11 @@
         "now": "现在",
         "of": "of",
         "permissions": "权限",
-        "remove": "删除",
         "attachment": "附件",
         "busy": "忙碌",
-        "cancel": "取消",
         "custom": "自定义",
-        "dismiss_capitalize": "收起",
         "save": "保存",
         "share": "分享",
-        "subject": "主题",
         "general": "通用",
         "add_share": "添加共享",
         "all_calendars": "所有日历",
@@ -209,7 +176,6 @@
         "months": "月",
         "no_end_date": "无结束日期",
         "of_every": "，每",
-        "of_the_month,_every": "，每月，每",
         "ongoing": "持续",
         "out_of_office": "不在办公室",
         "outlook_url": "Outlook URL",
@@ -220,7 +186,6 @@
         "repeat": "重复",
         "required": "必要",
         "resend": "重新发送",
-        "restore_calednar": "恢复日历",
         "share_calendar_url": "{{title}}访问共享",
         "timezone_pref_msg": "计时将遵循您的时区首选项进行。",
         "type_name_here": "日历名称",
@@ -256,14 +221,12 @@
         "show": "显示全部",
         "start_date": "开始日期",
         "start_date_and_time": "开始日期和时间",
-        "start_week_of": "一周开始，",
         "tentative": "暂定",
         "the": "The",
         "time_zones": "时区",
         "to": "至",
         "display": "显示",
         "edit_access": "编辑 {{name}} 的访问权限",
-        "edit_properties": "编辑 {{name}} 的属性",
         "email_input_message": "输入邮件地址",
         "end_after": "以下条件后结束：",
         "enable_dlgtn_for_ical": "为 Apple iCal CalDAV 客户端启用委派",
@@ -350,7 +313,6 @@
         "october": "十月",
         "september": "九月"
     },
-    "of": "的",
     "owner": "所有者",
     "reminder": {
         "never": "永不",
@@ -367,11 +329,9 @@
         "hours": "{{count}} 小时"
     },
     "repeat": {
-        "custom": "自定义",
         "none": "无",
         "customize": "自定义",
         "daily": "每日",
-        "everyDay": "每天",
         "everyMonth": "每月",
         "everyWeek": "每周",
         "everyYear": "每年",
@@ -382,16 +342,12 @@
     "settings": {
         "options": {
             "dflt_vsblty_opt": {
-                "public": "公共",
-                "private": "私密"
+                "public": "公共"
             },
             "show_reminder": {
                 "never": "永不",
-                "all_time": "所有活动",
                 "day_before": "{{count}}天前",
-                "hour_before": "{{count}}小时前",
-                "minute_before": "{{count}}分钟前",
-                "week_before": "{{count}}周前"
+                "minute_before": "{{count}}分钟前"
             },
             "default_cal_opts": {
                 "calendar": "日历"
@@ -422,13 +378,9 @@
                 "egypt": "GMT+02:00 埃及"
             },
             "weekdays": {
-                "monday": "星期一",
                 "saturday": "星期六",
-                "sunday": "星期日",
                 "thursday": "星期四",
-                "tuesday": "星期二",
-                "wednesday": "星期三",
-                "friday": "星期五"
+                "wednesday": "星期三"
             }
         },
         "label": {
@@ -454,7 +406,6 @@
     "share": {
         "options": {
             "share_calendar_role": {
-                "none": "无",
                 "admin": "Admin（可查看、编辑、添加、移除并进行管理）",
                 "manager": "管理者（可查看、编辑、添加与移除）",
                 "viewer": "查看者（可查看）"
@@ -483,12 +434,9 @@
         "invite": {
             "error": "错误"
         },
-        "error": "出现了一些错误，请重试",
         "share_folder_success": "日历已共享成功",
         "url_copied": "{{title}}已复制",
-        "new_time_proposed_succes": "已提议新时间",
         "proposed_time_accepted": "您接受了提议的时间",
-        "proposed_time_error": "出现了一些错误，请重试",
         "new_time_proposed_error": "出现了一些错误，请重试",
         "new_time_proposed_success": "已提议新时间",
         "tag_applied": "“{{tag}}”标签已应用",
@@ -527,14 +475,12 @@
     },
     "freebusy": "FreeBusy",
     "insert": "插入",
-    "private": "私密",
     "remove_from_this_list": "从此列表中移除",
     "revoke_access": "撤销访问权限",
     "revoke_with_custom_message": "撤销访问权限并发送自定义通知",
     "revoke_without_notification": "撤销访问权限并不发送通知",
     "search": {
-        "organized_by": "组织方",
-        "results_for": "结果："
+        "organized_by": "组织方"
     },
     "share_invite_resent": "共享邀请重发",
     "button": {
@@ -548,7 +494,6 @@
     "tooltip": {
         "add_attachments": "添加附件",
         "enable_disable_rich_text": "启用/禁用富文本编辑器",
-        "show_optionals": "显示选项",
         "copy_ics_url": "复制ICS URL",
         "copy_outlook_url": "复制Outlook URL",
         "copy_vector_url": "复制视图URL",

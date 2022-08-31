@@ -16,12 +16,10 @@
         "Attendees_tentative_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ได้ตอบรับเบื้องต้นว่ายังไม่แน่นอน"
     },
     "label": {
-        "subject": "หัวข้อ",
         "cancel": "ยกเลิก",
         "custom": "กำหนดเอง",
         "attachment": "สิ่งที่แนบมา",
         "busy": "ไม่ว่าง",
-        "dismiss_capitalize": "ยกเลิก",
         "download": "ดาวน์โหลด",
         "edit": "แก้ไข",
         "edit_share": "แก้ไขการแชร์",
@@ -32,7 +30,6 @@
         "now": "ตอนนี้",
         "of": "ของ",
         "permissions": "การอนุญาต",
-        "remove": "ลบ",
         "save": "บันทึก",
         "share": "แชร์",
         "invitation_not_sent": "คุณยังไม่ได้ส่งคำเชิญไปยังผู้เข้าร่วม",
@@ -63,7 +60,6 @@
         "delete_permanently": "ลบอย่างถาวร",
         "dismiss": "ยกเลิกทั้งหมด",
         "display": "แสดง",
-        "edit_properties": "แก้ไขคุณสมบัติของ {{name}}",
         "email_input_message": "ใส่ที่อยู่อีเมล",
         "enable_dlgtn_for_ical": "เปิดใช้การมอบหมายงานสำหรับ Apple iCal CalDAV Client",
         "end_after": "สิ้นสุดหลังจาก",
@@ -88,7 +84,6 @@
         "number": "หมายเลข",
         "occurrences": "เหตุการณ์",
         "of_every": "ของทุกๆ",
-        "of_the_month,_every": "ของเดือน ทุกๆ",
         "ongoing": "ต่อเนื่อง",
         "optional": "ไม่จำเป็น",
         "out_of_office": "ไม่อยู่",
@@ -97,7 +92,6 @@
         "proposal_declined": "ข้อเสนอถูกปฏิเสธ",
         "regular": "ปกติ",
         "repeat": "ทำซ้ำ",
-        "restore_calednar": "กู้คืนปฏิทิน",
         "revoke_share": "ถอนการแชร์ของ {{title}}",
         "series": "ซีรีส์",
         "set_new_time": "ตั้งเวลาใหม่",
@@ -105,7 +99,6 @@
         "sharing_of_this_folder": "การแชร์ของโฟลเดอร์นี้",
         "show": "แสดงทั้งหมด",
         "show_declined_meetings": "แสดงการปฏิเสธการประชุม",
-        "start_week_of": "เริ่มสัปดาห์ของ",
         "time_zones": "โซนเวลา",
         "to": "ถึง",
         "type_name_here": "ชื่อปฏิทิน",
@@ -186,24 +179,19 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "แก้ไข",
                 "title": "กำหนดชั่วโมงการทำงาน"
             }
         }
     },
     "action": {
-        "delete": "ลบ",
         "download": "ดาวน์โหลด",
-        "create": "สร้าง",
         "save": "บันทึก",
         "send": "ส่ง",
         "preview": "คลิกเพื่อดูตัวอย่าง",
-        "delete_permanently": "ลบอย่างถาวร",
         "delete_calendar": "ลบปฏิทิน",
         "edit_message": "แก้ไขข้อความ",
         "empty_trash": "ถังขยะว่างเปล่า",
         "move_to_root": "ย้ายไปที่รูท",
-        "new_calendar": "ปฏิทินใหม่",
         "send_cancellation": "ส่งการยกเลิก",
         "share_calendar": "แชร์ปฏิทิน",
         "calendar_access_share": "แชร์การเข้าถึงของปฏิทิน",
@@ -214,13 +202,10 @@
     "event": {
         "action": {
             "accept": "ยอมรับ",
-            "edit": "แก้ไข",
             "move": "ย้าย",
-            "restore": "การกู้คืนข้อมูล (Restore)",
             "trash": "ลบ",
             "no": "ไม่",
             "yes": "ใช่",
-            "tentative": "ไม่แน่นอน",
             "decline": "ปฏิเสธ",
             "expand": "เปิดใน Displayer",
             "needs_action": "การดำเนินการที่จำเป็น",
@@ -230,16 +215,12 @@
     "settings": {
         "options": {
             "show_reminder": {
-                "never": "ไม่มี",
                 "all_time": "ตลอดช่วงเวลาของเหตุการณ์",
-                "day_before": "{{count}} วันก่อน",
                 "hour_before": "{{count}} ชั่วโมงก่อน",
-                "week_before": "{{count}} สัปดาห์ก่อน",
                 "minute_before": "{{count}} นาทีก่อน"
             },
             "dflt_vsblty_opt": {
-                "public": "สาธารณะ",
-                "private": "ส่วนตัว"
+                "public": "สาธารณะ"
             },
             "default_cal_opts": {
                 "calendar": "ปฏิทิน"
@@ -270,13 +251,9 @@
                 "amsterdam": "GMT +01:00 อัมสเตอร์ดัม, เบอร์ลิน, เบิร์น, โรม, สตอกโฮล์ม, เวียนนา"
             },
             "weekdays": {
-                "friday": "วันศุกร์",
                 "monday": "วันจันทร์",
-                "saturday": "วันเสาร์",
                 "sunday": "วันอาทิตย์",
-                "thursday": "วันพฤหัสบดี",
-                "tuesday": "วันอังคาร",
-                "wednesday": "วันพุธ"
+                "tuesday": "วันอังคาร"
             }
         },
         "label": {
@@ -302,31 +279,23 @@
     "folder": {
         "modal": {
             "move": {
-                "title": "ย้าย",
                 "body": {
                     "message3": "เลือกปฏิทินเพื่อย้ายการนัดหมายไปที่:"
                 },
-                "footer": "ว่างเปล่า",
                 "input": {
                     "filter": "ตัวกรองปฏิทิน"
-                },
-                "new": "ปฏิทินใหม่"
+                }
             },
             "restore": {
                 "title": "การกู้คืนข้อมูล (Restore)",
                 "footer": "สร้างและกู้คืน"
             },
             "delete": {
-                "footer": "ลบ",
                 "title": "ลบ"
             },
             "new": {
                 "duplicate_warning": "มีปฏิทินชื่อนี้แล้ว",
-                "footer": "สร้าง",
                 "title2": "การสร้างปฏิทินใหม่"
-            },
-            "item": {
-                "empty": "ว่างเปล่า"
             },
             "footer": {
                 "go_back": "ย้อนกลับ"
@@ -336,7 +305,6 @@
     },
     "items": {
         "second": "วินาที",
-        "day": "วัน",
         "first": "ลำดับแรก",
         "fourth": "อันดับสี่",
         "last": "สุดท้าย",
@@ -358,7 +326,6 @@
         "april": "เมษายน",
         "august": "สิงหาคม"
     },
-    "of": "ของ",
     "owner": "เจ้าของ",
     "read": "อ่าน",
     "reminder": {
@@ -376,11 +343,9 @@
         "hours": "{{count}} ชั่วโมง"
     },
     "repeat": {
-        "custom": "กำหนดเอง",
         "none": "ไม่มี",
         "customize": "กำหนดเอง",
         "daily": "ทุกวัน",
-        "everyDay": "ทุกวัน",
         "everyWeek": "ทุกสัปดาห์",
         "everyYear": "ทุกปี",
         "monthly": "ทุกเดือน",
@@ -392,13 +357,10 @@
         "invite": {
             "error": "ผิดพลาด"
         },
-        "error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
         "new_time_proposed_succes": "เสนอเวลาใหม่",
         "proposed_time_accepted": "คุณยอมรับเวลาที่เสนอ",
-        "proposed_time_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
         "share_folder_success": "แชร์ปฏิทินเรียบร้อยแล้ว",
         "url_copied": "{{title}} คัดลอกแล้ว",
-        "new_time_proposed_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
         "new_time_proposed_success": "เสนอเวลาใหม่",
         "tag_applied": "ใช้แท็ก \"{{tag}}\" แล้ว",
         "tag_removed": "นำแท็ก \"{{tag}}\" ออกแล้ว"
@@ -406,12 +368,10 @@
     "success": "สำเร็จ",
     "add": "เพิ่ม",
     "appointments": "การนัดหมาย",
-    "create": "สร้าง",
     "delete": "ลบ",
     "share": {
         "options": {
             "share_calendar_role": {
-                "none": "ไม่มี",
                 "admin": "ผู้ดูแลระบบ (สามารถดู, แก้ไข, เพิ่ม, ลบ, และจัดการได้)",
                 "manager": "ผู้จัดการ (สามารถดู, แก้ไข, เพิ่ม, และลบ)",
                 "viewer": "ผู้ชม (สามารถดูได้)"
@@ -439,29 +399,21 @@
         "you_sure_move_calendar_trash": "คุณแน่ใจหรือไม่ว่าต้องการลบปฏิทิน \"{{name}}\"?",
         "are_organizer": "เป็นผู้จัด",
         "snackbar": {
-            "appointment_permanently_deleted_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "appt_moved": "ย้ายการนัดหมายไปที่ เรียบร้อยแล้ว",
             "appointment_permanently_deleted_succesfully": "การลบอย่างถาวรเสร็จสมบูรณ์แล้ว",
-            "appt_deleted_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "appt_moved_to_trash": "ย้ายการนัดหมายไปที่ถังขยะแล้ว",
-            "calendar_delete_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "calendar_deleted_successfully": "ลบปฏิทินเรียบร้อยแล้ว",
-            "calendar_moved_to_root_folder_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "calendar_moved_to_trash": "ปฏิทินย้ายไปที่ถังขยะแล้ว",
-            "edit_calendar": "บันทึกการแก้ไขอย่างถูกต้อง",
             "edit_calendar_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "invite": {
                 "accept": "คุณได้ตอบกลับว่ายอมรับ",
-                "error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
                 "decline": "คุณได้ตอบกลับว่าปฏิเสธ",
                 "tentative": "คุณได้ตอบกลับว่าไม่แน่นอน"
             },
             "new_calendar_created": "สร้างปฏิทินใหม่แล้ว",
-            "settings_saved": "บันทึกการแก้ไขอย่างถูกต้อง",
             "appt_moved_error": "เกิดข้อผิดพลาดบางอย่าง การนัดหมายไม่ถูกย้าย โปรดลองใหม่อีกครั้ง",
             "appt_restored": "กู้คืนการนัดหมายไปที่ เรียบร้อยแล้ว",
             "calendar_moved_to_root_folder": "ปฏิทินย้ายไปที่โฟลเดอร์รูทแล้ว",
-            "calendar_moved_to_trash_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "new_calendar_create_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "calendar_permanently_deleted": "ปฎิทินถูกลบอย่างถาวร",
             "calendar_restored": "กู้คืนปฏิทินเรียบร้อยแล้ว",
@@ -472,7 +424,6 @@
         "share_calendar_url_note2": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้ <br/> คุณสามารถค้นหาลิงก์เหล่านั้นได้ด้วยการคลิกขวาที่รายการปฏิทินของคุณ",
         "delete_all_occurences": "ลบเหตุการณ์ทั้งหมด",
         "delete_future_occurences": "ลบอินสแตนซ์นี้และเหตุการณ์ในอนาคตทั้งหมด",
-        "have_not_sent_invitation": "คุณยังไม่ได้ส่งคำเชิญไปยังผู้เข้าร่วม",
         "invite_has_no_message": "คำเชิญนี้ไม่มีข้อความ",
         "invited_you": "เชิญคุณเข้าสู่",
         "meeting_canceled": "การประชุมต่อไปนี้ถูกยกเลิกแล้ว",
@@ -514,7 +465,6 @@
     },
     "type": "รูปแบบ",
     "tooltip": {
-        "show_optionals": "แสดงตัวเลือก",
         "add_attachments": "เพิ่มไฟล์แนบ",
         "copy_outlook_url": "คัดลอก URL ของ Outlook",
         "copy_vector_url": "คัดลอก URL ของ View",
@@ -551,7 +501,6 @@
     "cannot_edit_name": "คุณไม่สามารถแก้ไขชื่อปฏิทินระบบได้",
     "freebusy": "FreeBusy",
     "insert": "ใส่",
-    "private": "ส่วนตัว",
     "search": {
         "results_for": "ผลลัพธ์สำหรับ:",
         "organized_by": "จัดโดย"

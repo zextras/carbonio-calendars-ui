@@ -2,9 +2,7 @@
     "label": {
         "general": "Geral",
         "busy": "Ocupado",
-        "cancel": "Cancelar",
         "custom": "Personalizado",
-        "dismiss_capitalize": "Dispensar",
         "edit": "Editar",
         "edit_share": "Editar compartilhamento",
         "end": "Fim",
@@ -12,11 +10,8 @@
         "now": "Agora",
         "of": "de",
         "permissions": "Permissões",
-        "remove": "Excluir",
-        "remove_plural": "Excluir tudo",
         "save": "Salvar",
         "share": "Partilhar",
-        "subject": "Assunto",
         "download": "Baixar",
         "download_plural": "Baixar tudo",
         "attachment": "Anexo",
@@ -48,7 +43,6 @@
         "dismiss": "Dispensar",
         "dismiss_plural": "Dispensar todos",
         "display": "Exibir",
-        "edit_properties": "Editar propriedades de {{name}}",
         "enable_dlgtn_for_ical": "Habilitar delegação para cliente Apple iCal CalDAV",
         "end_after": "Terminar após",
         "end_date": "Data final",
@@ -73,7 +67,6 @@
         "number": "Número",
         "occurrences": "Ocorrência(s)",
         "of_every": "de cada",
-        "of_the_month,_every": "de cada mês, todo(a)",
         "ongoing": "Em curso",
         "optional": "Opcional",
         "optional_plural": "Opcionais",
@@ -87,7 +80,6 @@
         "revoke": "Revogar",
         "show": "Mostrar",
         "show_plural": "Mostrar tudo",
-        "restore_calednar": "Recuperar calendário",
         "revoke_share": "Revogar compartilhamento de {{title}}",
         "series": "Série",
         "set_new_time": "Definir novo horário",
@@ -97,7 +89,6 @@
         "show_declined_meetings": "Mostrar reuniões recusadas",
         "start_date": "Data de início",
         "start_date_and_time": "Data e hora de início",
-        "start_week_of": "Iniciar semana de",
         "tentative": "provisório",
         "time_zones": "Fusos horários",
         "to": "Para",
@@ -171,18 +162,14 @@
         "create_tag": "Criar Etiqueta"
     },
     "action": {
-        "delete": "Excluir",
         "download": "Download",
-        "create": "Criar",
         "save": "Salvar",
         "send": "Enviar",
         "empty_trash": "Esvaziar Lixeira",
         "move_to_root": "Mover para raiz",
-        "new_calendar": "Novo calendário",
         "delete_calendar": "Excluir calendário",
         "save_to_preview": "Salvar para visualizar",
         "preview": "Clique para pré-visualizar",
-        "delete_permanently": "Excluir Permanentemente",
         "edit_message": "Editar Mensagem",
         "send_cancellation": "Enviar Cancelamento",
         "share_calendar": "Compartilhar Calendário",
@@ -193,34 +180,28 @@
     "event": {
         "action": {
             "accept": "Aceitar",
-            "edit": "Editar",
             "move": "Mover",
-            "restore": "Restaurar",
             "trash": "Excluir",
             "no": "Não",
             "yes": "Sim",
             "decline": "Recusar",
             "expand": "Abrir no Visualizador",
-            "tentative": "Provisório",
             "needs_action": "Requer ação"
         }
     },
     "folder": {
         "modal": {
             "delete": {
-                "footer": "Excluir",
                 "title": "Excluir"
             },
             "move": {
-                "title": "Mover",
                 "footer": "Vazia",
                 "body": {
                     "message3": "Selecione um calendário para mover o compromisso selecionado:"
                 },
                 "input": {
                     "filter": "Filtrar calendários"
-                },
-                "new": "Novo Calendário"
+                }
             },
             "restore": {
                 "title": "Restaurar",
@@ -228,22 +209,16 @@
             },
             "new": {
                 "duplicate_warning": "Já existe um calendário com o mesmo nome",
-                "title2": "Criação de novo calendário",
-                "footer": "CRIAR"
+                "title2": "Criação de novo calendário"
             },
             "footer": {
                 "go_back": "Voltar"
-            },
-            "item": {
-                "empty": "Vazia"
             }
         },
         "share_info": "Partilhar informações"
     },
-    "delete": "Excluir",
     "items": {
         "second": "Segundo",
-        "day": "Dia",
         "first": "Primeiro",
         "weekend_day": "Dia de Fim de Semana",
         "working_day": "Dia Útil",
@@ -255,34 +230,25 @@
         "you": "Você",
         "somebody_invited_you": "<strong>{{somebody}}</strong> te convidou",
         "are_organizer": "é o organizador",
-        "have_not_sent_invitation": "Você ainda não enviou o convite aos participantes",
         "invite_has_no_message": "Este convite não possui mensagem de texto",
         "meeting_canceled": "A seguinte reunião foi cancelada",
         "snackbar": {
-            "appointment_permanently_deleted_error": "Algo deu errado. Tente novamente",
             "appt_moved_error": "Algo deu errado, o compromisso não foi movido. Tente novamente.",
             "appt_moved": "Compromisso movido com sucesso para",
             "appointment_permanently_deleted_succesfully": "Exclusão permanente feita com sucesso",
-            "appt_deleted_error": "Algo deu errado. Tente novamente.",
             "appt_moved_to_trash": "Compromisso movido para a lixeira",
             "appt_restored": "Compromisso restaurado com sucesso em",
-            "calendar_delete_error": "Algo deu errado. Tente novamente.",
             "calendar_deleted_successfully": "Calendário excluído com sucesso.",
             "calendar_moved_to_root_folder": "Calendário movido para a Pasta Raiz",
             "calendar_moved_to_trash": "Calendário movido para lixeira",
-            "calendar_moved_to_trash_error": "Algo deu errado. Tente novamente",
             "edit_calendar": "Edições salvas corretamente",
-            "edit_calendar_error": "Algo deu errado. Tente novamente",
             "invite": {
                 "accept": "Você respondeu como Aceito",
-                "error": "Algo deu errado. Tente novamente.",
                 "decline": "Você respondeu como Recusado",
                 "tentative": "Você respondeu como Provisório"
             },
             "new_calendar_created": "Novo calendário criado",
-            "settings_saved": "Edições salvas corretamente",
             "calendar_moved_to_root_folder_error": "Algo deu errado. Tente novamente",
-            "new_calendar_create_error": "Algo deu errado. Tente novamente",
             "calendar_permanently_deleted": "Calendário excluído permanentemente",
             "calendar_restored": "Calendário restaurado com sucesso",
             "appointment_permanently_deleted": "Compromisso excluído definitivamente",
@@ -335,7 +301,6 @@
         "september": "Setembro",
         "may": "Maio"
     },
-    "of": "de",
     "owner": "Proprietário",
     "participants": {
         "AC_with_count": "Aceito",
@@ -378,11 +343,9 @@
         }
     },
     "repeat": {
-        "custom": "Personalizado",
         "none": "Nenhum",
         "customize": "Personalizar",
         "daily": "Diário",
-        "everyDay": "Todos os Dias",
         "everyMonth": "Todo mês",
         "everyWeek": "Toda Semana",
         "everyYear": "Todo Ano",
@@ -393,20 +356,14 @@
     "settings": {
         "options": {
             "dflt_vsblty_opt": {
-                "public": "Público",
-                "private": "Privado"
+                "public": "Público"
             },
             "show_reminder": {
                 "never": "Nunca",
-                "all_time": "Na hora do evento",
                 "day_before": "1 dia antes",
                 "day_before_plural": "{{count}} dias antes",
-                "hour_before": "1 hora antes",
-                "hour_before_plural": "{{count}} horas antes",
                 "minute_before": "1 minuto antes",
-                "minute_before_plural": "{{count}} minutos antes",
-                "week_before": "1 semana antes",
-                "week_before_plural": "{{count}} semanas antes"
+                "minute_before_plural": "{{count}} minutos antes"
             },
             "invt_opts": {
                 "allow_none": "Não permitir que ninguém me convide para reuniões",
@@ -421,9 +378,6 @@
                 "allow_following": "Permitir a visualização do meu status livre/ocupado apenas aos usuários internos",
                 "allow_all": "Permitir a visualização do meu status livre/ocupado por usuários internos e externos"
             },
-            "default_cal_opts": {
-                "calendar": "Calendário"
-            },
             "default_view": {
                 "day": "Visualização por Dia",
                 "month": "Visualização Mensal",
@@ -437,13 +391,9 @@
                 "chennai": "GMT +5:30 Chennai, Calcutá, Mumbai, Nova Delhi"
             },
             "weekdays": {
-                "friday": "Sexta-Feira",
                 "monday": "Segunda-Feira",
-                "saturday": "Sábado",
                 "sunday": "Domingo",
-                "thursday": "Quinta-Feira",
-                "tuesday": "Terça-Feira",
-                "wednesday": "Quarta-Feira"
+                "tuesday": "Terça-Feira"
             }
         },
         "label": {
@@ -469,7 +419,6 @@
     "share": {
         "options": {
             "share_calendar_role": {
-                "none": "Nenhum",
                 "admin": "Admin (pode visualizar, adicionar, remover e administrar)",
                 "manager": "Gerente (pode visualizar, editar, adicionar e remover)",
                 "viewer": "Visualizador (pode visualizar)"
@@ -496,11 +445,8 @@
         "invite": {
             "error": "Erro"
         },
-        "error": "Algo deu errado. Tente novamente",
         "new_time_proposed_error": "Algo deu errado. Tente novamente",
-        "new_time_proposed_succes": "Nova hora proposta",
         "proposed_time_accepted": "Você aceitou a hora proposta",
-        "proposed_time_error": "Algo deu errado. Tente novamente",
         "url_copied": "{{title}} copiado",
         "share_folder_success": "Calendário partilhado corretamente",
         "new_time_proposed_success": "Nova hora proposta",
@@ -514,12 +460,10 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "Editar",
                 "title": "Personalizar horas de trabalho"
             }
         }
     },
-    "create": "Criar",
     "read": "Lida",
     "administer": "Administrar",
     "allowed_actions": "Ações permitidas",
@@ -541,7 +485,6 @@
     "tooltip": {
         "add_attachments": "Adicionar anexos",
         "enable_disable_rich_text": "Ativar/Desativar editor de rich text",
-        "show_optionals": "Mostrar opcionais",
         "copy_ics_url": "Copiar URL de ICS",
         "copy_outlook_url": "Copiar URL do Outlook",
         "copy_vector_url": "Copiar URL de Visualização",
@@ -556,15 +499,13 @@
     "find_shares": "Localizar compartilhamentos",
     "insert": "Inserir",
     "freebusy": "Livre/Ocupado",
-    "private": "Privado",
     "remove_from_this_list": "Remover desta lista",
     "revoke_access": "Revogar acesso",
     "revoke_with_custom_message": "Revogar acesso enviando uma notificação personalizada",
     "revoke_without_custom_message": "Revogar acesso enviando uma notificação padrão",
     "revoke_without_notification": "Revogar acesso sem enviar notificação",
     "search": {
-        "organized_by": "organizado por",
-        "results_for": "Resultados para:"
+        "organized_by": "organizado por"
     },
     "share_invite_resent": "Convite da partilha reenviado",
     "shared_items": "Itens compartilhados",

@@ -1,16 +1,12 @@
 {
     "action": {
-        "create": "Créer",
         "delete": "Supprimer",
         "delete_calendar": "Supprimer le calendrier",
-        "delete_permanently": "Supprimer de manière permanente",
         "download": "Télécharger",
         "edit_message": "Éditer le message",
         "empty_trash": "Vider la corbeille",
         "move_to_root": "Déplacer à la racine",
-        "new_calendar": "Nouveau calendrier",
         "preview": "Cliquer pour prévisualiser",
-        "save": "Sauver",
         "save_to_preview": "Sauver l’aperçu",
         "send": "Envoyer",
         "share_calendar": "Partager le Calendrier",
@@ -26,7 +22,6 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "Éditer",
                 "title": "Personnaliser les heures de travail"
             }
         }
@@ -43,18 +38,14 @@
             "local": "Ajouter un fichier depuis le disque local"
         }
     },
-    "create": "Création",
     "delete": "Suppression",
     "event": {
         "action": {
             "decline": "Refuser",
             "accept": "Accepter",
-            "edit": "Éditer",
             "move": "Déplacer",
             "no": "Non",
-            "restore": "Restaurer",
             "tentative": "Provisoirement",
-            "trash": "Supprimer",
             "yes": "Oui",
             "expand": "Étendre la fenêtre",
             "needs_action": "Une action est requise",
@@ -65,21 +56,16 @@
     "folder": {
         "modal": {
             "delete": {
-                "footer": "Supprimer",
                 "title": "Supprimer"
             },
             "footer": {
                 "go_back": "Retour"
-            },
-            "item": {
-                "empty": "Vide"
             },
             "move": {
                 "footer": "Vide",
                 "input": {
                     "filter": "Filtrer les calendriers"
                 },
-                "new": "Nouveau calendrier",
                 "title": "Déplacer",
                 "body": {
                     "message3": "Sélectionner le calendrier vers lequel déplacer l'évènement :"
@@ -87,12 +73,10 @@
             },
             "new": {
                 "duplicate_warning": "Un calendrier avec le même nom existe déjà",
-                "footer": "CRÉER",
                 "title2": "Création d'un nouveau calendrier"
             },
             "restore": {
-                "footer": "Créer et restaurer",
-                "title": "Restaurer"
+                "footer": "Créer et restaurer"
             }
         },
         "share_info": "Partager l'information"
@@ -100,7 +84,6 @@
     "freebusy": "Disponibilité",
     "insert": "Insérer",
     "items": {
-        "day": "Jour",
         "first": "Premier",
         "fourth": "Forcer",
         "last": "Dernier",
@@ -118,7 +101,6 @@
         "calendar": "Calendrier",
         "calendar_color": "Couleur du calendrier",
         "calendar_setting": "Paramètres du calendrier",
-        "cancel": "Annuler",
         "cancelled": "Annulé",
         "create_new_calendar": "Créer un nouveau calendrier",
         "custom": "Personnaliser",
@@ -135,13 +117,11 @@
         "create_appt_settings": "Créer des rendez-vous",
         "dismiss": "Rejeter",
         "dismiss_plural": "Tout rejeter",
-        "dismiss_capitalize": "Rejeter",
         "display": "Afficher",
         "download": "Télécharger",
         "download_plural": "Tout télécharger",
         "edit": "Modifier",
         "edit_access": "Modifier les accès de {{name}}",
-        "edit_properties": "Modifier les propriétés de {{name}}",
         "edit_share": "Modifier le partage",
         "email_input_message": "Saisir les adresses email",
         "enable_dlgtn_for_ical": "Activer la délégation pour le client Apple iCal CalDAV",
@@ -168,7 +148,6 @@
         "number": "Nombre",
         "of": "de",
         "of_every": "de chaque",
-        "of_the_month,_every": "du mois, tous les",
         "ongoing": "En cours",
         "optional": "Optionnel",
         "optional_plural": "Optionnels",
@@ -177,12 +156,9 @@
         "private": "Privé",
         "proposal_declined": "Proposition refusée",
         "regular": "Régulier",
-        "remove": "Supprimer",
-        "remove_plural": "Tout supprimer",
         "repeat": "Répéter",
         "required": "Requis",
         "resend": "Renvoyer",
-        "restore_calednar": "Restaurer le calendrier",
         "revoke": "Révoquer",
         "save": "Enregistrer",
         "set_new_time": "Régler une nouvelle heure",
@@ -195,7 +171,6 @@
         "show_declined_meetings": "Afficher les réunions refusées",
         "start_date": "Date de début",
         "start_date_and_time": "Date et heure de début",
-        "start_week_of": "Semaine de départ de",
         "subject": "Sujet",
         "the": "Le",
         "time_zones": "Fuseaux horaires",
@@ -291,34 +266,26 @@
         "are_organizer": "êtes l'organisateur",
         "delete_all_occurences": "Supprimer toutes les occurrences",
         "delete_future_occurences": "Supprimer cette instance et toutes les futures occurrences",
-        "have_not_sent_invitation": "Vous n'avez pas encore envoyé les invitations aux participants",
         "invite_has_no_message": "L'invitation n'a pas de message",
         "invited_you": "vous a invité à",
         "meeting_canceled": "La réunion suivante a été annulée",
         "snackbar": {
-            "appointment_permanently_deleted_error": "Quelque chose s'est mal passé, veuillez réessayer",
             "appt_moved": "Le rendez-vous est déplacé avec succès vers",
             "appt_moved_to_trash": "Rendez-vous placé dans la corbeille",
             "appt_restored": "Le rendez-vous a été restauré avec succès vers",
-            "calendar_delete_error": "Quelque chose s'est mal passé, veuillez réessayer.",
             "calendar_deleted_successfully": "Calendrier supprimé avec succès.",
             "calendar_moved_to_root_folder": "Calendrier déplacé vers le dossier Racine",
             "calendar_moved_to_trash": "Calendrier placé dans la corbeille",
-            "calendar_moved_to_trash_error": "Quelque chose s'est mal passé, veuillez réessayer",
             "edit_calendar_error": "Quelque chose s'est mal passé, veuillez réessayer",
             "invite": {
                 "accept": "Vous avez répondu comme : Accepté",
                 "decline": "Vous avez répondu comme : Refusé",
-                "tentative": "Vous avez répondu comme : Tentative",
-                "error": "Quelque chose s'est mal passé, veuillez réessayer."
+                "tentative": "Vous avez répondu comme : Tentative"
             },
             "new_calendar_create_error": "Quelque chose s'est mal passé, veuillez réessayer",
             "new_calendar_created": "Nouveau calendrier créé",
-            "settings_saved": "Modifications sauvées correctement",
             "appointment_permanently_deleted_succesfully": "La suppression définitive a été effectuée avec succès",
-            "appt_deleted_error": "Quelque chose s'est mal passé, veuillez réessayer.",
             "appt_moved_error": "Quelque chose s'est mal passé, le rendez-vous n'a pas été déplacé, veuillez réessayer.",
-            "calendar_moved_to_root_folder_error": "Quelque chose s'est mal passé, veuillez réessayer",
             "edit_calendar": "Modifications sauvées correctement",
             "calendar_restored": "Le calendrier a été restauré avec succès",
             "calendar_permanently_deleted": "Le calendrier a été supprimé",
@@ -381,7 +348,6 @@
         "october": "Octobre",
         "september": "Septembre"
     },
-    "of": "de",
     "owner": "Propriétaire",
     "participants": {
         "Accepted": "accepté",

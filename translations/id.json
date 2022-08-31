@@ -1,20 +1,16 @@
 {
     "action": {
-        "create": "Buat",
         "delete": "Hapus",
-        "download": "Unduh",
         "save": "Simpan",
         "send": "Kirim",
         "delete_calendar": "Hapus kalender",
         "preview": "Klik untuk melihat pratinjau",
         "save_to_preview": "Simpan untuk melihat pratinjau",
         "calendar_access_share": "Berbagi akses kalender",
-        "delete_permanently": "Hapus Secara Permanen",
         "edit_calendar_properties": "Edit properti kalender",
         "edit_message": "Edit Pesan",
         "move_to_root": "Pindahkan ke root",
         "empty_trash": "Tempat Sampah Kosong",
-        "new_calendar": "Kalender baru",
         "send_cancellation": "Kirim Pembatalan",
         "share_calendar": "Bagikan Kalender",
         "empty_trash_confirmation": "Tindakan ini akan menghapus semua item dalam Email, Kontak, Kalender, Tugas, dan Tas Kantor. Yakin ingin menghapus semua yang ada di dalam folder sampah ini secara permanen?"
@@ -22,9 +18,7 @@
     "label": {
         "attachment": "lampiran",
         "busy": "Sibuk",
-        "cancel": "Batal",
         "custom": "Kustom",
-        "dismiss_capitalize": "Abaikan",
         "download": "Unduh semua",
         "edit": "Edit",
         "edit_share": "Edit berbagi",
@@ -37,7 +31,6 @@
         "permissions": "Izin",
         "save": "Simpan",
         "share": "Bagikan",
-        "subject": "Subjek",
         "remove": "Hapus semua",
         "invitation_not_sent": "Anda belum mengirim undangan kepada peserta",
         "attendee_plural": "Peserta",
@@ -63,7 +56,6 @@
         "add_share": "Tambahkan berbagi",
         "default_appt_vsblty": "Visibilitas janji temu default",
         "edit_access": "Edit akses {{name}}",
-        "edit_properties": "Edit properti {{name}}",
         "email_input_message": "Masukkan alamat email",
         "every": "Setiap",
         "every_day": "Setiap hari",
@@ -87,7 +79,6 @@
         "enable_dlgtn_for_ical": "Aktifkan delegasi untuk Apple iCal CalDAV Client",
         "every_year_on": "Setiap tahun pada",
         "dismiss": "Abaikan semua",
-        "of_the_month,_every": "bulan ini, setiap",
         "display": "Tampilkan",
         "filter_sharer_user": "Pemilik folder",
         "instance": "Kejadian",
@@ -112,14 +103,12 @@
         "regular": "Reguler",
         "reminder": "Pengingat",
         "repeat": "Ulangi",
-        "restore_calednar": "Pulihkan kalender",
         "series": "Rangkaian",
         "set_new_time": "Atur waktu baru",
         "share_calendar_url": "berbagi akses {{title}}",
         "sharing_of_this_folder": "Berbagi folder ini",
         "show_declined_meetings": "Tampilkan rapat yang ditolak",
         "shares_items": "Kalender bersama <bold>{{user}}</bold>",
-        "start_week_of": "Mulai minggu",
         "the": "Tersebut",
         "weeks_on": "Minggu di",
         "revoke": "Batalkan",
@@ -190,7 +179,6 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "Edit",
                 "title": "Sesuaikan jam kerja"
             }
         }
@@ -198,49 +186,37 @@
     "event": {
         "action": {
             "accept": "Terima",
-            "edit": "Edit",
             "move": "Pindahkan",
-            "restore": "Pulihkan",
             "trash": "Hapus",
             "no": "Tidak",
             "yes": "Ya",
             "decline": "Tolak",
             "expand": "Buka di Displayer",
-            "tentative": "Sementara",
             "needs_action": "Memerlukan tindakan",
             "invitation_not_sent_yet": "Undangan belum dikirim"
         }
     },
-    "create": "Buat",
     "delete": "Hapus",
     "folder": {
         "modal": {
             "delete": {
-                "footer": "Hapus",
                 "title": "Hapus"
             },
             "move": {
-                "title": "Pindahkan",
                 "footer": "Kosongkan",
                 "input": {
                     "filter": "Filter kalender"
                 },
-                "new": "Kalender Baru",
                 "body": {
                     "message3": "Pilih kalender untuk memindahkan janji temu yang diinginkan:"
                 }
             },
             "restore": {
-                "title": "Pulihkan",
                 "footer": "Buat dan Pulihkan"
             },
             "new": {
-                "footer": "BUAT",
                 "title2": "Pembuatan kalender baru",
                 "duplicate_warning": "Kalender dengan nama yang sama sudah ada"
-            },
-            "item": {
-                "empty": "Kosongkan"
             },
             "footer": {
                 "go_back": "Kembali"
@@ -250,7 +226,6 @@
     },
     "items": {
         "second": "Detik",
-        "day": "Hari",
         "first": "Pertama",
         "fourth": "Keempat",
         "last": "Terakhir",
@@ -264,27 +239,18 @@
         "somebody_is_organizer": "<strong>{{somebody}}</strong>adalah pengelola",
         "snackbar": {
             "appt_moved": "Janji temu berhasil dipindahkan ke",
-            "appt_moved_error": "Terjadi kesalahan, janji temu belum dipindahkan, coba lagi.",
             "appointment_permanently_deleted_succesfully": "Berhasil dihapus secara permanen",
-            "appt_deleted_error": "Terjadi kesalahan, coba lagi.",
             "appt_restored": "Janji temu berhasil dipulihkan ke",
-            "appointment_permanently_deleted_error": "Terjadi kesalahan, coba lagi",
             "appt_moved_to_trash": "Janji temu dipindahkan ke tempat sampah",
-            "calendar_delete_error": "Terjadi kesalahan, coba lagi.",
             "calendar_deleted_successfully": "Kalender berhasil dihapus.",
             "calendar_moved_to_root_folder": "Kalender dipindahkan ke folder Root",
-            "calendar_moved_to_root_folder_error": "Terjadi kesalahan, coba lagi",
             "calendar_moved_to_trash": "Kalender dipindahkan ke tempat sampah",
-            "calendar_moved_to_trash_error": "Terjadi kesalahan, coba lagi",
             "edit_calendar": "Hasil edit disimpan dengan benar",
-            "edit_calendar_error": "Terjadi kesalahan, coba lagi",
             "invite": {
                 "accept": "Anda telah membalas sebagai Diterima",
-                "error": "Terjadi kesalahan, coba lagi.",
                 "decline": "Anda telah membalas dengan Ditolak",
                 "tentative": "Anda telah membalas dengan Sementara"
             },
-            "settings_saved": "Hasil edit disimpan dengan benar",
             "new_calendar_create_error": "Terjadi kesalahan, coba lagi",
             "new_calendar_created": "Kalender baru dibuat",
             "calendar_permanently_deleted": "Kalender dihapus permanen",
@@ -293,7 +259,6 @@
             "calendar_edits_saved": "Hasil edit disimpan dengan benar",
             "series_deleted": "Seri berhasil dihapus. Peserta akan menerima notifikasi pembatalan."
         },
-        "have_not_sent_invitation": "Anda belum mengirim undangan ke peserta",
         "invite_has_no_message": "Undangan ini tidak berisi pesan teks",
         "invited_you": "mengundang Anda ke",
         "delete_future_occurences": "Hapus peristiwa dan semua kemunculan di masa mendatang",
@@ -350,7 +315,6 @@
         "october": "Oktober",
         "september": "September"
     },
-    "of": "dari",
     "owner": "Pemilik",
     "read": "Dibaca",
     "reminder": {
@@ -368,11 +332,9 @@
         "hours": "{{count}} jam"
     },
     "repeat": {
-        "custom": "Kustom",
         "none": "Tidak ada",
         "customize": "Sesuaikan",
         "daily": "Harian",
-        "everyDay": "Setiap Hari",
         "everyMonth": "Setiap Bulan",
         "everyWeek": "Setiap Minggu",
         "everyYear": "Setiap Tahun",
@@ -383,28 +345,18 @@
     "settings": {
         "options": {
             "dflt_vsblty_opt": {
-                "public": "Publik",
-                "private": "Pribadi"
+                "public": "Publik"
             },
             "show_reminder": {
                 "never": "Jangan pernah",
-                "day_before": "{{count}} hari sebelumnya",
                 "hour_before": "{{count}} jam sebelumnya",
-                "minute_before": "{{count}} menit sebelumnya",
-                "week_before": "{{count}} minggu sebelumnya",
-                "all_time": "Sepanjang waktu acara"
+                "week_before": "{{count}} minggu sebelumnya"
             },
             "weekdays": {
                 "sunday": "Minggu",
-                "thursday": "Kamis",
                 "tuesday": "Selasa",
-                "wednesday": "Rabu",
                 "friday": "Jumat",
-                "monday": "Senin",
                 "saturday": "Sabtu"
-            },
-            "default_cal_opts": {
-                "calendar": "Kalender"
             },
             "default_view": {
                 "day": "Tampilan Hari",
@@ -455,7 +407,6 @@
     "share": {
         "options": {
             "share_calendar_role": {
-                "none": "Tidak ada",
                 "manager": "Pengelola (dapat melihat, mengedit, menambahkan, dan menghapus)",
                 "viewer": "Pemirsa (dapat melihat)",
                 "admin": "Admin (bisa melihat,mengedit,menambahkan,menghapus,dan mengelola)"
@@ -482,11 +433,8 @@
         "invite": {
             "error": "Terjadi kesalahan"
         },
-        "error": "Terjadi kesalahan, coba lagi",
         "new_time_proposed_error": "Terjadi kesalahan, coba lagi",
-        "new_time_proposed_succes": "Waktu baru diusulkan",
         "proposed_time_accepted": "Anda menerima waktu yang diusulkan",
-        "proposed_time_error": "Terjadi kesalahan, coba lagi",
         "url_copied": "{{title}} disalin",
         "share_folder_success": "Kalender berhasil dibagikan",
         "new_time_proposed_success": "Waktu baru diusulkan",
@@ -529,7 +477,6 @@
             "local": "Tambahkan dari lokal"
         }
     },
-    "private": "Pribadi",
     "cannot_edit_name": "Anda tidak dapat mengedit nama kalender sistem",
     "edit_share_properties": "Edit properti berbagi",
     "freebusy": "FreeBusy",
@@ -539,7 +486,6 @@
     "remove_from_this_list": "Hapus dari daftar ini",
     "resend_mail_notification_about_this_share": "Kirim notifikasi email tentang berbagi ini",
     "search": {
-        "results_for": "Hasil untuk:",
         "organized_by": "dikelola oleh"
     },
     "revoke_access": "Batalkan akses",
@@ -551,7 +497,6 @@
         "copy_outlook_url": "Salin url Outlook",
         "copy_vector_url": "Salin url Tampilan",
         "enable_disable_rich_text": "Aktifkan/Nonaktifkan editor teks kaya",
-        "show_optionals": "Tampilkan opsi",
         "chat": "Peralatan",
         "equipment": "Peralatan",
         "location": "Lokasi",

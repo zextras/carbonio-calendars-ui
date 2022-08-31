@@ -2,18 +2,14 @@
     "action": {
         "calendar_access_share": "Takvim erişim paylaşımı",
         "send": "Gönder",
-        "save": "Kaydet",
         "create": "Oluştur",
-        "delete": "Sil",
         "download": "İndir",
         "preview": "Önizleme için tıklayın",
         "save_to_preview": "Önizleme için kaydedin",
-        "delete_permanently": "Kalıcı olarak sil",
         "delete_calendar": "Takvimi sil",
         "edit_message": "Mesajı düzenle",
         "empty_trash": "Çöp kutusunu boşalt",
         "move_to_root": "En üst klasöre taşı",
-        "new_calendar": "Yeni takvim",
         "send_cancellation": "İptal bilgisi gönder",
         "share_calendar": "Takvimi paylaş",
         "edit_calendar_properties": "Takvim özelliklerini düzenle",
@@ -38,13 +34,9 @@
         "action": {
             "accept": "Kabul Et",
             "decline": "Reddet",
-            "edit": "Düzenle",
             "expand": "Görüntüleyicide Aç",
-            "move": "Taşı",
             "trash": "Sil",
-            "restore": "Geri yükle",
             "no": "Hayır",
-            "tentative": "Belirsiz",
             "yes": "Evet",
             "needs_action": "Yapılması gerekenler",
             "invitation_not_sent_yet": "Davet henüz gönderilmedi"
@@ -62,31 +54,24 @@
                 "input": {
                     "filter": "Takvimleri filtrele"
                 },
-                "new": "Yeni Takvim",
-                "title": "Taşı",
-                "footer": "Boş"
+                "title": "Taşı"
             },
             "new": {
                 "footer": "OLUŞTUR",
                 "title2": "Yeni takvim oluştur",
                 "duplicate_warning": "Aynı ad kullanılmış takvim zaten var"
             },
-            "item": {
-                "empty": "Boş"
-            },
             "restore": {
                 "title": "Geri yükle",
                 "footer": "Oluştur ve Geri Yükle"
             },
             "delete": {
-                "footer": "Sil",
                 "title": "Sil"
             }
         },
         "share_info": "Paylaşım Bilgisi"
     },
     "items": {
-        "day": "Gün",
         "first": "İlk",
         "fourth": "Dördüncü",
         "last": "Son",
@@ -102,44 +87,32 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "Düzenle",
                 "title": "Çalışma saatlerini değiştir"
             }
         }
     },
-    "create": "Oluştur",
     "cannot_edit_name": "Sistem takvimi adını değiştiremezsiniz",
-    "delete": "Sil",
     "find_calendar_shares": "Takvim Paylaşımlarını Bul",
     "find_shares": "Paylaşımları bul",
     "freebusy": "Serbest/Meşgul",
     "insert": "Ekle",
     "message": {
         "snackbar": {
-            "settings_saved": "Değişiklikler başarıyla kaydedildi",
             "appt_moved": "Randevu başarıyla taşındı",
-            "appointment_permanently_deleted_error": "Bir hata oluştu, lütfen tekrar deneyin",
             "appt_restored": "Randevu başarıyla geri yüklendi",
             "appointment_permanently_deleted_succesfully": "Tamamen silme işlemi başarıyla tamamlandı",
-            "appt_deleted_error": "Bir hata oluştu, lütfen tekrar deneyin.",
             "appt_moved_error": "Bir hata oluştu, randevu taşınmadı, lütfen tekrar deneyin.",
             "appt_moved_to_trash": "Randevu çöp kutusuna taşındı",
-            "calendar_delete_error": "Bir hata oluştu, lütfen tekrar deneyin.",
             "calendar_deleted_successfully": "Takvim başarıyla silindi.",
             "calendar_moved_to_root_folder": "Takvim Kök klasöre taşındı",
-            "calendar_moved_to_root_folder_error": "Bir hata oluştu, lütfen tekrar deneyin",
             "calendar_moved_to_trash": "Takvim çöp kutusuna taşındı",
-            "edit_calendar": "Değişiklikler başarıyla kaydedildi",
             "invite": {
                 "accept": "Kabul edildi olarak yanıtladınız",
-                "error": "Bir hata oluştu, lütfen tekrar deneyin.",
                 "decline": "Reddedildi olarak yanıtladınız",
                 "tentative": "Belirsiz olarak yanıtladınız"
             },
             "new_calendar_created": "Yeni takvim oluşturuldu",
-            "calendar_moved_to_trash_error": "Bir hata oluştu, lütfen tekrar deneyin",
             "edit_calendar_error": "Bir hata oluştu, lütfen tekrar deneyin",
-            "new_calendar_create_error": "Bir hata oluştu, lütfen tekrar deneyin",
             "calendar_permanently_deleted": "Takvim kalıcı olarak silindi",
             "calendar_restored": "Takvim başarıyla geri alındı",
             "appointment_permanently_deleted": "Randevu kalıcı olarak silindi",
@@ -158,7 +131,6 @@
         "delete_all_occurences": "Tüm tekrarlamaları sil",
         "delete_future_occurences": "Bu randevuyu ve ilerideki tüm tekrarlamaları sil",
         "delete_future_occurences_warning": "Serideki (bu randevu öncesi ve sonrasındaki) tüm özel durumlar da silinecek",
-        "have_not_sent_invitation": "Katılımcılara henüz davet göndermediniz",
         "invite_has_no_message": "Bu davette yazılı mesaj yok",
         "invited_you": "sizi davet etti:",
         "share_calendar_url_msg": "Bu URL bağlantılarından birisini kullanarak {{title}} öğesini kişilerle kolayca paylaşabilirsiniz:",
@@ -195,19 +167,15 @@
         "reply_all": "Hepsini yanıtla"
     },
     "search": {
-        "results_for": "Sonuçlar:",
         "organized_by": "Organize eden"
     },
     "snackbar": {
-        "error": "Bir hata oluştu, lütfen tekrar deneyin",
         "invite": {
             "error": "Hata"
         },
-        "new_time_proposed_succes": "Yeni saat önerildi",
         "proposed_time_accepted": "Önerilen saati kabul ettiniz",
         "share_folder_success": "Takvim başarıyla paylaşıldı",
         "url_copied": "{{title}} kopyalandı",
-        "new_time_proposed_error": "Bir hata oluştu, lütfen tekrar deneyin",
         "proposed_time_error": "Bir hata oluştu, lütfen tekrar deneyin",
         "new_time_proposed_success": "Yeni saat önerildi",
         "tag_applied": "\"{{tag}}\" etiketi uygulandı",
@@ -227,7 +195,6 @@
         "enable_dlgtn_for_ical": "Apple iCal CalDAV Client için temsilci etkinleştir",
         "every_weekday": "Haftanın her günü",
         "filter_sharer_user": "Klasör sahibi",
-        "of_the_month,_every": "ayın, her",
         "remove": "Sil",
         "remove_plural": "Hepsini Sil",
         "set_new_time": "Yeni saat belirle",
@@ -241,7 +208,6 @@
         "apple_ical": "Apple iCal",
         "auto_add_rcvd_app": "Gelen randevuları otomatik olarak takvime ekle",
         "calendar_setting": "Takvim Ayarları",
-        "cancel": "İptal",
         "cancelled": "İptal edildi",
         "create_new_calendar": "Yeni Takvim oluştur",
         "custom": "Özel",
@@ -252,12 +218,10 @@
         "delete_permanently": "Kalıcı olarak sil",
         "dismiss": "Kapat",
         "dismiss_plural": "Hepsini kapat",
-        "dismiss_capitalize": "Kapat",
         "display": "Göster",
         "download": "İndir",
         "download_plural": "Hepsini İndir",
         "edit": "Düzenle",
-        "edit_properties": "{{name}}'in özelliklerini düzenle",
         "edit_share": "Paylaşımı düzenle",
         "email_input_message": "E-posta adresleri gir",
         "end": "Son",
@@ -298,7 +262,6 @@
         "repeat": "Tekrarla",
         "required": "Gerekli",
         "resend": "Yeniden gönder",
-        "restore_calednar": "Takvimi geri yükle",
         "revoke": "İptal et",
         "revoke_share": "{{title}} paylaşımını iptal et",
         "save": "Kaydet",
@@ -311,7 +274,6 @@
         "show_plural": "Hepsini göster",
         "start_date": "Başlangıç tarihi",
         "start_date_and_time": "Başlangıç tarih ve saati",
-        "start_week_of": "Hafta başlangıcı",
         "subject": "Konu",
         "tentative": "Belirsiz",
         "time_zones": "Saat dilimleri",
@@ -415,7 +377,6 @@
         "Accepted": "kabul edildi"
     },
     "tooltip": {
-        "show_optionals": "İsteğe bağlıları göster",
         "add_attachments": "Eklenti ekle",
         "enable_disable_rich_text": "Gelişmiş metin düzenleyici kullan/kullanma",
         "copy_ics_url": "ICS url kopyala",
@@ -450,8 +411,7 @@
         },
         "options": {
             "dflt_vsblty_opt": {
-                "public": "Genel",
-                "private": "Özel"
+                "public": "Genel"
             },
             "free_busy_opts": {
                 "allow_all": "İçeriden veya dışarıdan kullanıcıların serbest / meşgul bilgimi görmelerine izin ver",
@@ -466,9 +426,6 @@
                 "allow_none": "Hiç kimsenin beni toplantılara davet etmesine izin verme",
                 "allow_all": "İçeriden veya dışarıdan kullanıcıların beni toplantılara davet etmesine izin ver"
             },
-            "default_cal_opts": {
-                "calendar": "Takvim"
-            },
             "default_view": {
                 "day": "Günlük Görünüm",
                 "list": "Liste Görünümü",
@@ -477,14 +434,10 @@
                 "work_week": "Çalışma Günleri Görünümü"
             },
             "show_reminder": {
-                "all_time": "Etkinliğin tüm süresi",
                 "day_before": "1 gün önce",
                 "day_before_plural": "{{count}} gün önce",
-                "hour_before": "1 saat önce",
-                "hour_before_plural": "{{count}} saat önce",
                 "minute_before": "1 dakika önce",
                 "minute_before_plural": "{{count}} dakika önce",
-                "never": "Hiçbir zaman",
                 "week_before": "1 hafta önce",
                 "week_before_plural": "{{count}} hafta önce"
             },
@@ -494,30 +447,22 @@
                 "egypt": "GMT +02:00 Mısır"
             },
             "weekdays": {
-                "friday": "Cuma",
                 "monday": "Pazartesi",
-                "saturday": "Cumartesi",
                 "sunday": "Pazar",
-                "thursday": "Perşembe",
-                "tuesday": "Salı",
-                "wednesday": "Çarşamba"
+                "tuesday": "Salı"
             }
         },
         "invalid_email": "Geçersiz e-posta adresi",
         "permissions_note": "Aşağıdaki kullanıcıların bu e-posta sisteminde (zextras.com) bulunmaları gerekir. E-posta adresinin tamamını veya sadece kullanıcı adını kullanabilirsiniz."
     },
-    "private": "Özel",
     "read": "Okunmuş",
     "repeat": {
         "daily": "Günlük",
-        "custom": "Özel",
         "customize": "Özelleştir",
-        "everyDay": "Her gün",
         "everyMonth": "Her ay",
         "everyWeek": "Her hafta",
         "everyYear": "Her yıl",
         "monthly": "Aylık",
-        "none": "Yok",
         "weekly": "Haftalık",
         "yearly": "Yıllık"
     },
@@ -530,7 +475,6 @@
             "share_calendar_role": {
                 "admin": "Admin (Görüntüler, düzenler, ekler, kaldırır ve yönetir)",
                 "manager": "Yönetim (Görüntüler, düzenler, ekler ve kaldırır)",
-                "none": "Hiçbiri",
                 "viewer": "Görüntüleme (Görüntüler)"
             },
             "share_calendar_with": {
@@ -562,7 +506,6 @@
         "october": "Ekim",
         "september": "Eylül"
     },
-    "of": "—",
     "owner": "Sahibi",
     "reminder": {
         "at_time_of_event": "Etkinlik saatinde",
