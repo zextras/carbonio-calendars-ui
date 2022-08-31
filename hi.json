@@ -2,17 +2,14 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "बदलाव करें",
                 "title": "कार्य समय बदलें"
             }
         }
     },
     "label": {
-        "cancel": "कैंसल करें",
         "attachment": "अटैचमेंट",
         "attachment_plural": "अटैचमेंट्स",
         "busy": "व्यस्त",
-        "dismiss_capitalize": "छोड़ें",
         "download": "डाऊनलोड करें",
         "download_plural": "सभी डाऊनलोड करें",
         "edit": "बदलाव करें",
@@ -23,11 +20,8 @@
         "month": "माह",
         "of": "में से",
         "permissions": "परमीशन",
-        "remove": "डिलीट करें",
-        "remove_plural": "",
         "save": "सेव करें",
         "share": "शेयर करें",
-        "subject": "विषय",
         "custom": "कस्टम",
         "now": "अभी",
         "all_day": "पूरा दिन",
@@ -52,7 +46,6 @@
         "invitation_not_sent": "आपने अभी तक आमंत्रण नहीं भेजा है",
         "every_year_on": "हर वर्ष",
         "edit_access": "{{name}} की एक्सेस में बदलाव करें",
-        "edit_properties": "{{name}} के गुण में संशोधन",
         "email_input_message": "ई-एड्रेस एंटर करें",
         "enable_dlgtn_for_ical": "ऐपल आइकैल कैल्डैव के लिए प्रतिनिधित्व सक्रिय करें",
         "end_after": "अंत करें",
@@ -76,7 +69,6 @@
         "number": "संख्या",
         "occurrences": "कब आता है",
         "of_every": "हर में से",
-        "of_the_month,_every": "महीने के हर",
         "ongoing": "चलता हुआ",
         "optional": "वैकल्पिक",
         "optional_plural": "वैकल्पिक",
@@ -89,7 +81,6 @@
         "repeat": "दोहराएँ",
         "required": "अपेक्षित",
         "resend": "दोबारा भेजें",
-        "restore_calednar": "कैलेंडर वापस लाएँ",
         "revoke": "बंद करें",
         "revoke_share": "{{title}} का शेयर वापस लें",
         "series": "क्रम",
@@ -107,7 +98,6 @@
         "start_date_and_time": "प्रारम्भ तिथि और समय",
         "tentative": "संभावित",
         "timezone_pref_msg": "टाइमिंग आपके टाइमज़ोन की पसंद के अनुसार होती हैं।",
-        "start_week_of": "इस सप्ताह का प्रारम्भ करें",
         "the": "यह",
         "time_zones": "टाइम ज़ोन",
         "type_name_here": "कैलेंडर नाम",
@@ -184,19 +174,15 @@
         "scheduled_in": "कैलेंडर"
     },
     "action": {
-        "delete": "डिलीट करें",
         "download": "डाऊनलोड करें",
-        "create": "बनाएँ",
         "save": "सेव करें",
         "send": "भेजें",
         "empty_trash": "कूड़ेदान को ख़ाली करें",
         "delete_calendar": "कैलेंडर मिटाएँ",
         "save_to_preview": "झलक में सुरक्षित रखें",
         "preview": "प्रीव्यू के लिए क्लिक करें",
-        "new_calendar": "नया कैलेंडर",
         "send_cancellation": "रद्द करने के लिए भेजें",
         "calendar_access_share": "Calendar की ऐक्सेस शेयर",
-        "delete_permanently": "सदा के लिए मिटाएँ",
         "edit_calendar_properties": "कैलेंडर प्रॉपर्टी संशोधन",
         "edit_message": "संदेश संशोधन",
         "move_to_root": "मूल पर ले जाएँ",
@@ -205,28 +191,21 @@
     },
     "message": {
         "you": "आप",
-        "have_not_sent_invitation": "आपने अभी तक आमंत्रण नहीं भेजा है",
         "snackbar": {
             "settings_saved": "बदलाव ठीक से सेव हो गए",
             "appt_moved": "एपोइंटमेंट यहाँ भेजा गया",
-            "appointment_permanently_deleted_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
             "calendar_delete_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें।",
             "calendar_moved_to_trash": "कैलेंडर रद्दी में भेजा गया",
-            "edit_calendar_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
             "new_calendar_create_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
             "appointment_permanently_deleted_succesfully": "परमानेंट डिलीट हो गया",
-            "appt_deleted_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें।",
             "appt_moved_error": "कुछ गड़बड़ हुई, एपाइंटमेंट नहीं गया, दोबारा कोशिश करें।",
             "appt_moved_to_trash": "एपाइंटमेंट रद्दी में भेजा गया",
             "appt_restored": "एपाइंटमेंट यहाँ वापस लाया गया",
             "calendar_deleted_successfully": "कैलेंडर डिलीट किया गया।",
             "calendar_moved_to_root_folder": "कैलेंडर रूट फोल्डर में भेजा गया",
-            "calendar_moved_to_root_folder_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
             "calendar_moved_to_trash_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
-            "edit_calendar": "बदलाव ठीक से सेव हो गए",
             "invite": {
                 "accept": "आपने स्वीकार किया है जबाब दिया है",
-                "error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें।",
                 "tentative": "आपने संभावित जबाब दिया",
                 "decline": "आपने अस्वीकार जबाब दिया"
             },
@@ -283,18 +262,14 @@
         "awaiting": "इंतज़ार कर रहा है",
         "accepted": "{{count}} स्वीकार"
     },
-    "create": "बनाएँ",
     "delete": "डिलीट करें",
     "event": {
         "action": {
             "no": "नहीं",
             "yes": "हाँ",
             "accept": "स्वीकार करें",
-            "edit": "बदलाव करें",
             "move": "ले जाएँ",
-            "restore": "वापस लाएँ",
             "trash": "डिलीट करें",
-            "tentative": "संभावित",
             "decline": "अस्वीकृत",
             "expand": "डिस्प्ले में देखें",
             "needs_action": "कार्यवाई की आवश्यकता है",
@@ -304,33 +279,24 @@
     "folder": {
         "modal": {
             "delete": {
-                "footer": "डिलीट करें",
                 "title": "डिलीट करें"
             },
             "restore": {
-                "title": "वापस लाएँ",
                 "footer": "बनाएँ और वापस लाएँ"
             },
             "move": {
-                "title": "ले जाएँ",
                 "body": {
                     "message3": "विचाराधीन समयादेश को रखने के लिए एक कैलेंडर चयनित करें:"
                 },
-                "footer": "रिक्त",
                 "input": {
                     "filter": "कैलेंडरों को फिल्टर करें"
-                },
-                "new": "नया कैलेंडर"
+                }
             },
             "footer": {
                 "go_back": "वापस जाएँ"
             },
-            "item": {
-                "empty": "रिक्त"
-            },
             "new": {
                 "duplicate_warning": "इसी नाम का कैलेंडर पहले से ही है",
-                "footer": "बनाएँ",
                 "title2": "नए कैलेंडर की रचना"
             }
         },
@@ -350,7 +316,6 @@
         "september": "सितंबर",
         "january": "जनवरी"
     },
-    "of": "में से",
     "owner": "ओनर",
     "read": "पढ़ें",
     "reminder": {
@@ -374,7 +339,6 @@
         "hours_plural": "{{count}} घंटे"
     },
     "repeat": {
-        "custom": "कस्टम",
         "none": "कोई नहीं",
         "daily": "प्रतिदिन",
         "monthly": "मासिक",
@@ -382,27 +346,19 @@
         "yearly": "वार्षिक",
         "everyWeek": "हर सप्ताह",
         "customize": "कस्टमाइज़ करें",
-        "everyDay": "रोज",
         "everyMonth": "हर महीने",
         "everyYear": "हर साल"
     },
     "settings": {
         "options": {
             "dflt_vsblty_opt": {
-                "public": "पब्लिक",
-                "private": "निजी"
+                "public": "पब्लिक"
             },
             "show_reminder": {
                 "never": "कभी नहीं",
-                "week_before": "1 सप्ताह पहले",
-                "week_before_plural": "{{count}} सप्ताह पहले",
                 "all_time": "ईवेंट के पूरे टाइम पर",
-                "day_before": "1 दिन पहले",
-                "day_before_plural": "{{count}} दिन पहले",
                 "hour_before": "1 घंटा पहले",
-                "hour_before_plural": "{{count}} घंटे पहले",
-                "minute_before": "1 मिनट पहले",
-                "minute_before_plural": "{{count}} मिनट पहले"
+                "hour_before_plural": "{{count}} घंटे पहले"
             },
             "default_cal_opts": {
                 "calendar": "कैलेंडर"
@@ -433,13 +389,9 @@
                 "work_week": "कार्य सप्ताह व्यू"
             },
             "weekdays": {
-                "friday": "शुक्रवार",
                 "monday": "सोमवार",
-                "saturday": "शनिवार",
                 "sunday": "रविवार",
-                "thursday": "गुरुवार",
-                "tuesday": "मंगलवार",
-                "wednesday": "बुधवार"
+                "tuesday": "मंगलवार"
             }
         },
         "invalid_email": "एक मान्य ई-मेल नहीं है",
@@ -465,7 +417,6 @@
     "share": {
         "options": {
             "share_calendar_role": {
-                "none": "कोई नहीं",
                 "admin": "एडमिन (देख,बदल,जोड़,हटा और एडमिनिस्टर कर सकता है)",
                 "manager": "मैनेजर (देख, बदल, जोड़ और हटा सकता है)",
                 "viewer": "व्यूअर (देख सकता है)"
@@ -492,12 +443,9 @@
         "invite": {
             "error": "त्रुटि"
         },
-        "error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
         "new_time_proposed_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
         "share_folder_success": "Calendar शेयर हो गया",
-        "new_time_proposed_succes": "नया टाइम दिया गया",
         "proposed_time_accepted": "आपने दिए टाइम को स्वीकार कर लिया",
-        "proposed_time_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
         "url_copied": "{{title}} कॉपी किया गया",
         "new_time_proposed_success": "नया टाइम दिया गया",
         "tag_applied": "\"{{tag}}\" टैग अप्लाई हो गया",
@@ -512,8 +460,7 @@
         "last": "अंतिम",
         "third": "तीसरा",
         "weekend_day": "सप्ताहांत दिन",
-        "working_day": "कार्य दिवस",
-        "day": "दिन"
+        "working_day": "कार्य दिवस"
     },
     "add": "जोड़ें",
     "appointments": "अपॉइंट्मेंट",
@@ -563,7 +510,6 @@
     "find_shares": "सहभाजी खोजें",
     "freebusy": "ख़ाली व्यस्त",
     "insert": "सम्मिलित करना",
-    "private": "निजी",
     "search": {
         "results_for": "इसके नतीजे:",
         "organized_by": "इनके द्वारा ऑर्गनाइज़"
@@ -575,7 +521,6 @@
         "copy_ics_url": "ICS यूआरएल कॉपी करें",
         "copy_outlook_url": "Outlook यूआरएल कॉपी करें",
         "copy_vector_url": "व्यू यूआरएल कॉपी करें",
-        "show_optionals": "वैकल्पिक दिखाएं",
         "chat": "उपकरण",
         "equipment": "उपकरण",
         "location": "स्थान",

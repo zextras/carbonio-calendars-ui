@@ -3,28 +3,19 @@
         "snackbar": {
             "appt_moved": "Termin erfolgreich verschoben zu",
             "invite": {
-                "error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut.",
                 "accept": "Sie haben mit einer Zusage geantwortet",
                 "decline": "Sie haben mit \"Abgelehnt\" geantwortet",
                 "tentative": "Sie haben mit \" Vorläufig\" geantwortet"
             },
             "appt_restored": "Termin erfolgreich wiederhergestellt zu",
-            "appt_moved_error": "Etwas ist schiefgelaufen, Termin nicht verschoben, bitte versuchen Sie es erneut.",
             "settings_saved": "Änderungen korrekt gespeichert",
-            "appointment_permanently_deleted_error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut",
             "appointment_permanently_deleted_succesfully": "Endgültige Löschung erfolgreich durchgeführt",
-            "appt_deleted_error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut.",
             "appt_moved_to_trash": "Termin in den Papierkorb verschoben",
-            "calendar_delete_error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut.",
             "calendar_deleted_successfully": "Kalender erfolgreich gelöscht.",
             "calendar_moved_to_root_folder": "Kalender in den Root Ordner verschoben",
-            "calendar_moved_to_root_folder_error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut",
             "calendar_moved_to_trash": "Kalender in den Papierkorb verschoben",
-            "calendar_moved_to_trash_error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut",
             "edit_calendar_error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut",
-            "new_calendar_create_error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut",
             "new_calendar_created": "Neuer Kalender erstellt",
-            "edit_calendar": "Änderungen korrekt gespeichert",
             "calendar_permanently_deleted": "Kalender endgültig gelöscht",
             "calendar_restored": "Kalender erfolgreich wiederhergestellt",
             "appointment_permanently_deleted": "Termin dauerhaft gelöscht",
@@ -40,7 +31,6 @@
         "delete_all_occurences": "Alle Ereignisse löschen",
         "delete_future_occurences": "Dieses Event und alle zukünftigen Ereignisse löschen",
         "delete_future_occurences_warning": "Dies wird auch alle Ausnahmen in dieser Terminserie löschen (vor und nach diesem Ereignis)",
-        "have_not_sent_invitation": "Sie haben die Einladung noch nicht an die Teilnehmer geschickt",
         "invite_has_no_message": "Diese Einladung hat keine Textnachricht",
         "modal": {
             "delete": {
@@ -84,7 +74,6 @@
         "all_calendars": "Alle Kalender",
         "auto_add_rcvd_app": "Erhaltene Termine automatisch zum Kalender hinzufügen",
         "apple_ical": "Apple iCal",
-        "restore_calednar": "Kalender wiederherstellen",
         "day": "Tag",
         "email_input_message": "E-Mail Adressen eingeben",
         "enable_dlgtn_for_ical": "Befugnisübertragung für Apple iCal CalDAV Client aktivieren",
@@ -102,7 +91,6 @@
         "dismiss_plural": "ALLE ABLEHNEN",
         "display": "Ansicht",
         "edit_access": "{{name}}'s Zugriff bearbeiten",
-        "edit_properties": "{{name}}'s Eigenschaften bearbeiten",
         "end_date": "Enddatum",
         "end_date_and_time": "Enddatum und Zeit",
         "every_weekday": "Jeder Wochentag",
@@ -119,7 +107,6 @@
         "notify_organizer": "Organisator benachrichtigen",
         "occurrences": "Ereignis(se)",
         "of_every": "von jedem",
-        "of_the_month,_every": "des Monats, jeden",
         "ongoing": "fortwährend",
         "outlook_url": "Outlook URL",
         "proposal_declined": "Vorschlag abgelehnt",
@@ -137,7 +124,6 @@
         "show_declined_meetings": "Abgelehnte Meetings anzeigen",
         "start_date": "Startdatum",
         "start_date_and_time": "Startdatum und Zeit",
-        "start_week_of": "Woche starten von",
         "the": "Der",
         "time_zones": "Zeitzonen",
         "timezone_pref_msg": "Die Uhrzeiten entsprechen Ihrer bevorzugten Zeitzone.",
@@ -154,11 +140,9 @@
         "tentative": "Vorläufig",
         "to": "An",
         "calendar": "Kalender",
-        "cancel": "Abbrechen",
         "custom": "Benutzerdefiniert",
         "days": "Tage",
         "delete_permanently": "Endgültig löschen",
-        "dismiss_capitalize": "Abweisen",
         "download": "Download",
         "download_plural": "Alles Downloaden",
         "edit": "Bearbeiten",
@@ -175,13 +159,10 @@
         "permissions": "Berechtigungen",
         "private": "Privat",
         "reminder": "Erinnerung",
-        "remove": "Löschen",
-        "remove_plural": "",
         "repeat": "Wiederholen",
         "required": "Erforderlich",
         "save": "Speichern",
         "share": "Teilen",
-        "subject": "Betreff",
         "edit_share": "Teil bearbeiten",
         "end": "Ende",
         "end_after": "Ende nach",
@@ -280,18 +261,14 @@
         "TE_with_count_plural": "Vorläufig ({{count}})"
     },
     "action": {
-        "create": "Erstellen",
         "delete_calendar": "Kalender löschen",
         "empty_trash": "Papierkorb leeren",
         "move_to_root": "In den Root-Order verschieben",
-        "new_calendar": "Neuer Kalender",
         "save": "Speichern",
         "send": "Senden",
-        "delete": "Löschen",
         "download": "Download",
         "preview": "Klicken zur Vorschau",
         "save_to_preview": "Speichern und Vorschau",
-        "delete_permanently": "Endgültig löschen",
         "edit_message": "Nachricht bearbeiten",
         "share_calendar": "Kalender teilen",
         "calendar_access_share": "Kalenderzugriff teilen",
@@ -302,7 +279,6 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "Bearbeiten",
                 "title": "Arbeitsstunden personalisieren"
             }
         }
@@ -323,11 +299,8 @@
         "action": {
             "accept": "Akzeptieren",
             "decline": "Ablehnen",
-            "edit": "Bearbeiten",
             "expand": "In der Anzeige öffnen",
-            "move": "Verschieben",
             "restore": "Wiederherstellen",
-            "tentative": "Vorläufig",
             "trash": "Löschen",
             "no": "Nein",
             "yes": "Ja",
@@ -340,23 +313,17 @@
             "footer": {
                 "go_back": "Zurück"
             },
-            "item": {
-                "empty": "Leer"
-            },
             "delete": {
-                "footer": "Löschen",
-                "title": "Löschen"
+                "footer": "Löschen"
             },
             "move": {
                 "title": "Verschieben",
                 "body": {
                     "message3": "Wählen Sie einen Kalender aus als Ziel zum Verschieben für den gewünschten Termin:"
                 },
-                "footer": "Leer",
                 "input": {
                     "filter": "Kalender filtern"
-                },
-                "new": "Neuer Kalender"
+                }
             },
             "restore": {
                 "title": "Wiederherstellen",
@@ -364,14 +331,12 @@
             },
             "new": {
                 "duplicate_warning": "Es existiert bereits ein Kalender mit demselben Namen",
-                "footer": "ERSTELLEN",
                 "title2": "Neue Kalendererstellung"
             }
         },
         "share_info": "Info teilen"
     },
     "items": {
-        "day": "Tag",
         "weekend_day": "Wochendtag",
         "working_day": "Werktag",
         "first": "Erster",
@@ -385,7 +350,6 @@
     "allowed_actions": "Erlaubte Aktionen",
     "appointments": "Termine",
     "cannot_edit_name": "Sie können den Namen eines Kalendersystems nicht bearbeiten",
-    "create": "Erstellen",
     "delete": "Löschen",
     "edit_share_properties": "Eigenschaften für das Teilen bearbeiten",
     "find_calendar_shares": "Geteilte Kalender finden",
@@ -393,7 +357,6 @@
     "freebusy": "FreeBusy",
     "insert": "Eingeben",
     "search": {
-        "results_for": "Ergebnisse für:",
         "organized_by": "organisiert von"
     },
     "reminder": {
@@ -419,14 +382,11 @@
     "remove_from_this_list": "Aus der Liste entfernen",
     "repeat": {
         "customize": "Anpassen",
-        "everyDay": "Jeden Tag",
         "everyMonth": "Jeden Monat",
         "everyWeek": "Jede Woche",
         "everyYear": "Jedes Jahr",
-        "custom": "Benutzerdefiniert",
         "daily": "Täglich",
         "monthly": "Monatlich",
-        "none": "Keine",
         "weekly": "Wöchentlich",
         "yearly": "Jährlich"
     },
@@ -454,23 +414,14 @@
         },
         "options": {
             "dflt_vsblty_opt": {
-                "private": "Privat",
                 "public": "Öffentlich"
             },
             "show_reminder": {
-                "never": "Niemals",
                 "all_time": "die ganze Zeit des Events",
-                "day_before": "1 Tag früher",
-                "day_before_plural": "{{count}} Tage früher",
                 "hour_before": "1 Stunde früher",
                 "hour_before_plural": "{{count}} Stunden früher",
-                "minute_before": "1 Minute früher",
-                "minute_before_plural": "{{count}} Minuten früher",
                 "week_before": "1 Woche früher",
                 "week_before_plural": "{{count}} Wochen früher"
-            },
-            "default_cal_opts": {
-                "calendar": "Kalender"
             },
             "free_busy_opts": {
                 "allow_following": "Nur den folgenden internen Nutzern erlauben, meine frei/beschäftigt Informationen zu sehen",
@@ -498,13 +449,9 @@
                 "work_week": "Arbeitswochenansicht"
             },
             "weekdays": {
-                "friday": "Freitag",
                 "monday": "Montag",
-                "saturday": "Samstag",
                 "sunday": "Sonntag",
-                "thursday": "Donnerstag",
-                "tuesday": "Dienstag",
-                "wednesday": "Mittwoch"
+                "tuesday": "Dienstag"
             }
         },
         "permissions_note": "Nutzer müssen aus diesem E-Mail System stammen (zextras.com). Sie können die vollständige E-Mail Adresse nutzen oder nur den Benutzername.",
@@ -518,7 +465,6 @@
                 "public": "Öffentlich (nur Leserecht, kein Passwort erforderlich)"
             },
             "share_calendar_role": {
-                "none": "Keine",
                 "admin": "Admin (kann sehen, bearbeiten, hinzufügen, entfernen und verwalten)",
                 "manager": "Manager (kann sehen, bearbeiten, hinzufügen und entfernen)",
                 "viewer": "Zuschauer (kann sehen)"
@@ -550,20 +496,15 @@
         "april": "April",
         "june": "Juni"
     },
-    "of": "von",
     "owner": "Besitzer",
-    "private": "Privat",
     "read": "Gelesen",
     "type": "Typ",
     "snackbar": {
         "invite": {
             "error": "Fehler"
         },
-        "error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut",
         "new_time_proposed_error": "Etwas ist schiefgegangen,bitte versuchen Sie es erneut",
-        "new_time_proposed_succes": "Neue Zeit vorgeschlagen",
         "proposed_time_accepted": "Sie haben die vorgeschlagene Zeit zugesagt",
-        "proposed_time_error": "Etwas ist schiefgegangen,bitte versuchen Sie es erneut",
         "share_folder_success": "Kalender erfolgreich geteilt",
         "url_copied": "{{title}} kopiert",
         "new_time_proposed_success": "Neue Zeit vorgeschlagen",
@@ -575,7 +516,6 @@
         "customize_modal": "Modal anpassen öffnen"
     },
     "tooltip": {
-        "show_optionals": "Optionale anzeigen",
         "add_attachments": "Anhänge einfügen",
         "copy_ics_url": "ICS URL kopieren",
         "copy_outlook_url": "Outlook URL kopieren",

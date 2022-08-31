@@ -63,36 +63,28 @@
         "you_are_organizer": "<Row><Text> <BoldText> Вы организатор</BoldText> </Text></Row>",
         "somebody_invited_you": "<strong> {{кто-то}} </strong> пригласил вас",
         "meeting_canceled": "Следующая встреча отменена",
-        "have_not_sent_invitation": "Вы еще не отправили приглашение участникам",
-        "you_sure_move_calendar_trash": "Вы действительно хотите удалить календарь \"{{name}}\"?",
-        "you_sure_delete_calendar": "Вы действительно хотите навсегда удалить календарь \"{{name}}\"?",
+        "you_sure_move_calendar_trash": "Вы уверены, что хотите удалить календарь \"{{name}}\"?",
+        "you_sure_delete_calendar": "Вы уверены, чтохотите навсегда удалить календарь \"{{name}}\"?",
         "you": "Вы",
         "somebody_is_organizer": "<strong> {{кто-то}} </strong> - организатор",
         "are_organizer": "Организатор",
         "snackbar": {
             "appt_moved": "Встреча успешно перенесена",
-            "appt_moved_error": "Что-то пошло не так, встреча не перенесена. Повторите попытку.",
             "settings_saved": "Правки сохранены",
-            "appt_moved_to_trash": "Встреча перенесена в корзину",
+            "appt_moved_to_trash": "Встреча удалена",
             "calendar_moved_to_root_folder": "Календарь перемещен в корневую папку",
-            "calendar_moved_to_trash_error": "Что-то пошло не так, повторите попытку",
             "appt_deleted_error": "Что-то пошло не так, повторите попытку.",
-            "calendar_delete_error": "Что-то пошло не так, повторите попытку.",
             "appointment_permanently_deleted_error": "Что-то пошло не так, повторите попытку",
             "appointment_permanently_deleted_succesfully": "Удаление завершено",
             "appt_restored": "Встреча успешно восстановлена в",
             "calendar_deleted_successfully": "Календарь успешно удален.",
             "calendar_moved_to_trash": "Календарь перенесен в корзину",
-            "edit_calendar": "Правки сохранены",
             "invite": {
                 "accept": "Вы ответили: Принято",
-                "error": "Что-то пошло не так, повторите попытку.",
                 "tentative": "Вы ответили : Под вопросом",
                 "decline": "Вы ответили : Отклонено"
             },
-            "calendar_moved_to_root_folder_error": "Что-то пошло не так, повторите попытку",
             "edit_calendar_error": "Что-то пошло не так, повторите попытку",
-            "new_calendar_create_error": "Что-то пошло не так, повторите попытку",
             "new_calendar_created": "Создан новый календарь",
             "calendar_permanently_deleted": "Календарь удален навсегда",
             "calendar_restored": "Календарь успешно восстановлен",
@@ -113,12 +105,12 @@
         "share_calendar_url_msg": "Вы можете быстро предоставить доступ к {{title}} своим сотрудникам с помощью одной из этих ссылок:",
         "share_calendar_url_note": "Только ваши сотрудники могут получить доступ к вашим данным, используя эти ссылки.",
         "delete_all_occurences": "Удалить все встречи",
-        "sure_to_delete_appointment_permanently": "Вы действительно хотите удалить эту встречу навсегда?",
-        "want_to_edit_cancellation_msg": "Вы хотите отредактировать сообщение об отмене встречи?",
+        "sure_to_delete_appointment_permanently": "Вы уверены, что хотите удалить эту встречу навсегда?",
+        "want_to_edit_cancellation_msg": "Вы хотите изменить сообщение об отмене встречи?",
         "delete_future_occurences_warning": "Это удалит все исключения (до и после этой встречи) в ряде",
         "delete_future_occurences": "Удалить эту встречу и все будущие встречи",
         "sure_to_delete_all_occurences_appointment": "Вы уверены, что хотите удалить эту встречу?",
-        "you_sure_delete_instance": "Вы действительно хотите удалить этот экземпляр встречи «{{title}}»?",
+        "you_sure_delete_instance": "Вы уверены, что хотите удалить этот экземпляр встречи «{{title}}»?",
         "appointment_type_handle": "\"{{name}}\"— повторяющаяся встреча. Вы хотите открыть только этот экземпляр или серию?",
         "delete_tag_message1": "Вы уверены, что хотите удалить тег \"{{name}}\"?",
         "delete_tag_message2": "После удаления он будет удален из всех отмеченных им элементов.",
@@ -140,7 +132,6 @@
         "send_email_to": "Отправить письмо : {{email}}"
     },
     "label": {
-        "subject": "Тема",
         "organizer": "Организатор",
         "optional_0": "Необязательный",
         "optional_1": "Необязательные",
@@ -170,12 +161,9 @@
         "all_calendars": "Все календари",
         "to": "Кому",
         "type_name_here": "Название календаря",
-        "restore_calednar": "Восстановить календарь",
         "invitation_not_sent": "Вы еще не отправили приглашение участникам",
-        "edit_properties": "Редактировать свойства {{name}}",
         "create_new_calendar": "Создать Новый Календарь",
         "calendar_color": "Цвет календаря",
-        "cancel": "Отменить",
         "save": "Сохранить",
         "apple_ical": "Apple iCal",
         "calendar_setting": "Настройки Календаря",
@@ -191,9 +179,6 @@
         "months": "Месяцы",
         "no_end_date": "Без даты окончания",
         "number": "Число",
-        "remove_0": "Удалить",
-        "remove_1": "Удалить",
-        "remove_2": "Удалить",
         "time_zones": "Часовые пояса",
         "auto_add_rcvd_app": "Автоматически добавлять встречи в календарь",
         "default_appt_vsblty": "Видимость встречи по умолчанию",
@@ -204,7 +189,6 @@
         "show_1": "Показать",
         "show_2": "Показать",
         "show_declined_meetings": "Показать отклоненные встречи",
-        "start_week_of": "Начало недели",
         "week": "Неделя",
         "timezone_pref_msg": "Время соответствует вашему выбору часового пояса.",
         "work_hour": "Рабочий час",
@@ -221,7 +205,6 @@
         "edit_access": "Изменить права доступа {{name}}",
         "revoke": "Отозвать",
         "delete_permanently": "Удалить навсегда",
-        "dismiss_capitalize": "Закрыть",
         "email_input_message": "Введите адреса электронной почты",
         "invites": "Приглашения",
         "shares_items": "{{value}}Общие календари",
@@ -233,7 +216,7 @@
         "find_shares": "Выберите, какие календари вы хотите видеть в дереве календарей",
         "free_busy": "Свободен/Занят",
         "notify_organizer": "Уведомить организатора",
-        "ongoing": "Непрерывный",
+        "ongoing": "Непрерывно",
         "permissions": "Разрешения",
         "proposal_declined": "Предложение отклонено",
         "outlook_url": "Outlook URL",
@@ -248,7 +231,6 @@
         "instance": "Экземпляр",
         "ics_url": "ICS URL",
         "of_every": "каждого",
-        "of_the_month,_every": "месяца, каждый",
         "series": "Серии",
         "revoke_share": "Отозвать доступ {{title}}",
         "weeks_on": "Еженедельно",
@@ -324,7 +306,6 @@
         "no_title": "Без заголовка"
     },
     "tooltip": {
-        "show_optionals": "Показать опции",
         "enable_disable_rich_text": "Включение/отключение редактора форматированного текста",
         "add_attachments": "Добавить вложения",
         "copy_vector_url": "Скопировать ссылку для просмотра",
@@ -340,21 +321,16 @@
     },
     "action": {
         "send": "Отправить",
-        "save": "Сохранить",
         "cancel": "Отменить",
         "move_to_root": "Переместить в root",
         "empty_trash": "Очистить корзину",
-        "modify_property": "Изменить свойство",
         "new_calendar": "Новый календарь",
         "delete_calendar": "Удалить календарь",
-        "create": "Создать",
         "download": "Загрузка",
         "preview": "Нажмите для просмотра",
-        "delete": "Удалить",
         "save_to_preview": "Сохранить для предварительного просмотра",
-        "delete_permanently": "Удалить навсегда",
         "calendar_access_share": "Общий доступ к календарю",
-        "edit_message": "Редактировать сообщение",
+        "edit_message": "Изменить сообщение",
         "send_cancellation": "Отправить отмену",
         "share_calendar": "Поделиться Календарем",
         "edit_calendar_properties": "Изменить свойства календаря",
@@ -363,32 +339,25 @@
     "folder": {
         "modal": {
             "move": {
-                "footer": "Пустой",
                 "input": {
                     "filter": "Фильтр Календарей"
                 },
-                "new": "Новый Календарь",
                 "body": {
                     "message3": "Выберите календарь, в который нужно переместить рассматриваемую встречу:"
-                },
-                "title": "Переместить"
+                }
             },
             "new": {
                 "duplicate_warning": "Календарь с таким названием уже существует",
-                "footer": "СОЗДАТЬ",
                 "title2": "Создать новый календарь"
             },
             "footer": {
-                "cancel": "Отменить",
                 "go_back": "Вернуться назад"
             },
             "delete": {
-                "title": "Удалить",
                 "footer": "Удалить"
             },
             "restore": {
-                "footer": "Создать и Восстановить",
-                "title": "Восстановить"
+                "footer": "Создать и Восстановить"
             },
             "item": {
                 "empty": "Пусто"
@@ -409,14 +378,10 @@
     },
     "event": {
         "action": {
-            "accept": "Принять",
-            "edit": "Редактировать",
+            "accept": "Принято",
             "expand": "Открыть в Displayer",
-            "move": "Переместить",
             "restore": "Восстановить",
-            "tentative": "Под вопросом",
             "decline": "Отклонить",
-            "trash": "Удалить",
             "no": "Нет",
             "yes": "Да",
             "needs_action": "Необходимо действие",
@@ -424,7 +389,6 @@
         }
     },
     "items": {
-        "day": "День",
         "weekend_day": "Выходной день",
         "working_day": "Рабочий день",
         "first": "Первый",
@@ -436,7 +400,6 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "Редактировать",
                 "title": "Настройка рабочих часов"
             }
         }
@@ -460,9 +423,6 @@
             "flash_browser_title": "Мигающий заголовок в браузере"
         },
         "options": {
-            "default_cal_opts": {
-                "calendar": "Календарь"
-            },
             "default_view": {
                 "list": "Представление списка",
                 "month": "Месяц",
@@ -471,8 +431,7 @@
                 "day": "День"
             },
             "dflt_vsblty_opt": {
-                "public": "Общедоступные",
-                "private": "Частный"
+                "public": "Общедоступные"
             },
             "free_busy_opts": {
                 "allow_following": "Разрешить только следующим внутренним пользователям видеть мою информацию о свободен/занят",
@@ -488,17 +447,10 @@
                 "allow_following": "Разрешить только следующим внутренним пользователям приглашать меня на встречи"
             },
             "show_reminder": {
-                "never": "Никогда",
                 "all_time": "Во время встречи",
-                "hour_before_0": "{{count}}Час до",
-                "hour_before_1": "{{count}}Часа до",
-                "hour_before_2": "{{count}}Часов до",
                 "minute_before_0": "{{count}}мина до",
                 "minute_before_1": "{{count}} минуты до",
                 "minute_before_2": "{{count}} минут до",
-                "week_before_0": "{{count}} неделя до",
-                "week_before_1": "{{count}} недели до",
-                "week_before_2": "{{count}}недель до",
                 "day_before_0": "{{count}}день до",
                 "day_before_1": "{{count}}дней до",
                 "day_before_2": "{{count}}дней до"
@@ -509,13 +461,9 @@
                 "amsterdam": "GMT +01: 00 Амстердам, Берлин, Берн, Рим, Стокгольм, Вена"
             },
             "weekdays": {
-                "friday": "Пятница",
                 "monday": "Понедельник",
-                "sunday": "Воскресенье",
                 "thursday": "Четверг",
-                "tuesday": "Вторник",
-                "wednesday": "Среда",
-                "saturday": "Суббота"
+                "wednesday": "Среда"
             }
         },
         "ical_note": "Apple iCal можно настроить для доступа к вашим календарям с помощью протокола CalDAV. Когда этот параметр включен, общие календари отображаются во вкладке Делегирование учетной записи ical, поэтому вы можете делегировать доступ к своим календарям другим пользователям.",
@@ -537,7 +485,6 @@
     },
     "repeat": {
         "daily": "Ежедневно",
-        "everyDay": "Каждый день",
         "everyMonth": "Каждый месяц",
         "everyYear": "Каждый год",
         "monthly": "Ежемесячно",
@@ -545,22 +492,18 @@
         "everyWeek": "Каждую неделю",
         "yearly": "Ежегодно",
         "customize": "Настроить",
-        "custom": "Пользовательский",
         "none": "Нет"
     },
     "add": "Добавить",
     "administer": "Администрирование",
     "allowed_actions": "Разрешенные действия",
-    "create": "Создать",
     "delete": "Удалить",
     "freebusy": "Свободен/Занят",
     "insert": "Вставить",
-    "private": "Частная встреча",
     "read": "Читать",
     "share": {
         "options": {
             "share_calendar_role": {
-                "none": "Никто",
                 "admin": "Администратор (может просматривать, редактировать, добавлять, удалять и администрировать)",
                 "manager": "Менеджер (может просматривать, редактировать, добавлять и удалять)",
                 "viewer": "Зритель (может только просматривать)"
@@ -587,12 +530,10 @@
     "write": "Написать",
     "remove_from_this_list": "Убрать из списка",
     "snackbar": {
-        "error": "Что-то пошло не так, повторите попытку",
         "proposed_time_error": "Что-то пошло не так, повторите попытку",
         "invite": {
             "error": "Ошибка"
         },
-        "new_time_proposed_error": "Что-то пошло не так, повторите попытку",
         "new_time_proposed_succes": "Предложено новое время",
         "proposed_time_accepted": "Вы приняли предлагаемое время",
         "url_copied": "{{title}} скопировано",
@@ -613,8 +554,7 @@
     "revoke_access": "Отменить доступ",
     "revoke_without_notification": "Отозвать доступ без отправки уведомления",
     "search": {
-        "organized_by": "организован",
-        "results_for": "Результаты по запросу:"
+        "organized_by": "организован"
     },
     "shared_folders": "Общие календари",
     "shared_items": "Общие элементы",
