@@ -250,6 +250,7 @@ export default createGlobalStyle`
 		overflow: hidden;
 	}
 	.rbc-day-bg {
+		cursor: pointer;
 		flex: 1 0 0; }
 		.rbc-day-bg + .rbc-day-bg {
 			border-left: 1px solid ${({ theme }) => theme.palette.gray3.regular}; }
@@ -409,7 +410,14 @@ export default createGlobalStyle`
 
 	.rbc-day-header {
 		text-align: center; }
-
+	.rbc-allday-cell {
+    cursor: ${({ summaryViewOpen, action }) =>
+			!summaryViewOpen && !action ? 'pointer' : 'inherit'};
+	}
+  .rbc-day-slot.rbc-time-column {
+    cursor: ${({ summaryViewOpen, action }) =>
+			!summaryViewOpen && !action ? 'pointer' : 'inherit'};
+  }
 	.rbc-slot-selection {
 		color: ${({ primaryCalendar }) => primaryCalendar?.color?.color};
 		background-color: ${({ primaryCalendar }) => primaryCalendar?.color?.background};
@@ -422,8 +430,8 @@ export default createGlobalStyle`
 		border-radius : 4px;
 	}
 
-	.rbc-slot-selecting {
-		cursor: move; }
+  .rbc-day-slot.rbc-time-column.rbc-slot-selecting {
+		cursor: ns-resize; }
 
 	.rbc-time-view {
 		display: flex;
@@ -526,7 +534,7 @@ export default createGlobalStyle`
 
   .rbc-addons-dnd .rbc-addons-dnd-dragged-event {
     opacity: 0; }
-
+	
   .rbc-addons-dnd.rbc-addons-dnd-is-dragging .rbc-event:not(.rbc-addons-dnd-dragged-event):not(.rbc-addons-dnd-drag-preview) {
     opacity: .50; }
 
