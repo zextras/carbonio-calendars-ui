@@ -2,7 +2,6 @@
     "action": {
         "calendar_access_share": "Takvim erişim paylaşımı",
         "send": "Gönder",
-        "create": "Oluştur",
         "download": "İndir",
         "preview": "Önizleme için tıklayın",
         "save_to_preview": "Önizleme için kaydedin",
@@ -35,7 +34,6 @@
             "accept": "Kabul Et",
             "decline": "Reddet",
             "expand": "Görüntüleyicide Aç",
-            "trash": "Sil",
             "no": "Hayır",
             "yes": "Evet",
             "needs_action": "Yapılması gerekenler",
@@ -53,8 +51,7 @@
                 },
                 "input": {
                     "filter": "Takvimleri filtrele"
-                },
-                "title": "Taşı"
+                }
             },
             "new": {
                 "footer": "OLUŞTUR",
@@ -62,11 +59,7 @@
                 "duplicate_warning": "Aynı ad kullanılmış takvim zaten var"
             },
             "restore": {
-                "title": "Geri yükle",
                 "footer": "Oluştur ve Geri Yükle"
-            },
-            "delete": {
-                "title": "Sil"
             }
         },
         "share_info": "Paylaşım Bilgisi"
@@ -101,7 +94,6 @@
             "appt_moved": "Randevu başarıyla taşındı",
             "appt_restored": "Randevu başarıyla geri yüklendi",
             "appointment_permanently_deleted_succesfully": "Tamamen silme işlemi başarıyla tamamlandı",
-            "appt_moved_error": "Bir hata oluştu, randevu taşınmadı, lütfen tekrar deneyin.",
             "appt_moved_to_trash": "Randevu çöp kutusuna taşındı",
             "calendar_deleted_successfully": "Takvim başarıyla silindi.",
             "calendar_moved_to_root_folder": "Takvim Kök klasöre taşındı",
@@ -112,7 +104,6 @@
                 "tentative": "Belirsiz olarak yanıtladınız"
             },
             "new_calendar_created": "Yeni takvim oluşturuldu",
-            "edit_calendar_error": "Bir hata oluştu, lütfen tekrar deneyin",
             "calendar_permanently_deleted": "Takvim kalıcı olarak silindi",
             "calendar_restored": "Takvim başarıyla geri alındı",
             "appointment_permanently_deleted": "Randevu kalıcı olarak silindi",
@@ -151,19 +142,15 @@
         "delete_tag_message1": "\"{{name}}\" etiketini silmek istediğinizden emin misiniz?",
         "delete_tag_message2": "Silinince önceden işaretlenmiş tüm öğelerden etiket kaldırılacak.",
         "appointment_type_handle": "\"{{name}}” tekrarlanan bir randevu. Sadece bu rendevuyu mu yoksa tekrarlama serisini mi açmak istersiniz?",
-        "accepted": "{{count}} kişi kabul etti",
         "awaiting": "bekleniyor",
-        "declined": "{{count}} kişi reddetti",
         "guests": "konuklar",
         "more": "Daha fazla...",
         "optional_participant": "{{count}} İsteğe bağlı",
         "optional_participant_plural": "{{count}} İsteğe bağlı",
         "organizer": "Organize eden",
-        "reply": "Yanıtla",
         "required_participant": "{{count}} Katılımcı",
         "required_participant_plural": "{{count}} Katılımcı",
         "send_email": "E-posta gönder",
-        "send_email_to": "E-posta gönder: {{email}}",
         "reply_all": "Hepsini yanıtla"
     },
     "search": {
@@ -176,7 +163,6 @@
         "proposed_time_accepted": "Önerilen saati kabul ettiniz",
         "share_folder_success": "Takvim başarıyla paylaşıldı",
         "url_copied": "{{title}} kopyalandı",
-        "proposed_time_error": "Bir hata oluştu, lütfen tekrar deneyin",
         "new_time_proposed_success": "Yeni saat önerildi",
         "tag_applied": "\"{{tag}}\" etiketi uygulandı",
         "tag_removed": "\"{{tag}}\" etiketi kaldırıldı"
@@ -195,8 +181,6 @@
         "enable_dlgtn_for_ical": "Apple iCal CalDAV Client için temsilci etkinleştir",
         "every_weekday": "Haftanın her günü",
         "filter_sharer_user": "Klasör sahibi",
-        "remove": "Sil",
-        "remove_plural": "Hepsini Sil",
         "set_new_time": "Yeni saat belirle",
         "show_declined_meetings": "Reddedilen toplantıları göster",
         "timezone_pref_msg": "Saat ayarları saat dilimi tercihinize göre ayarlanacak.",
@@ -274,7 +258,6 @@
         "show_plural": "Hepsini göster",
         "start_date": "Başlangıç tarihi",
         "start_date_and_time": "Başlangıç tarih ve saati",
-        "subject": "Konu",
         "tentative": "Belirsiz",
         "time_zones": "Saat dilimleri",
         "to": "Kime",
@@ -385,7 +368,6 @@
         "chat": "Donanım",
         "chat_room": "Sanal Oda bağlantısı",
         "calendar_sharing_status": "{{count}} kişi ile paylaşıldı",
-        "calendar_sharing_status_one": "1 kişi ile paylaşıldı",
         "equipment": "Donanım",
         "location": "Yer",
         "virtual_chat": "Sanal Sohbet"
@@ -434,12 +416,8 @@
                 "work_week": "Çalışma Günleri Görünümü"
             },
             "show_reminder": {
-                "day_before": "1 gün önce",
-                "day_before_plural": "{{count}} gün önce",
                 "minute_before": "1 dakika önce",
-                "minute_before_plural": "{{count}} dakika önce",
-                "week_before": "1 hafta önce",
-                "week_before_plural": "{{count}} hafta önce"
+                "minute_before_plural": "{{count}} dakika önce"
             },
             "timezones": {
                 "amsterdam": "GMT +01:00 Amsterdam, Berlin, Bern, Roma, Stockholm, Viyana",
@@ -447,9 +425,7 @@
                 "egypt": "GMT +02:00 Mısır"
             },
             "weekdays": {
-                "monday": "Pazartesi",
-                "sunday": "Pazar",
-                "tuesday": "Salı"
+                "sunday": "Pazar"
             }
         },
         "invalid_email": "Geçersiz e-posta adresi",

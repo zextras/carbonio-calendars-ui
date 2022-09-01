@@ -8,16 +8,13 @@
             "calendar_deleted_successfully": "日历已删除成功。",
             "calendar_moved_to_root_folder": "日历已移动至根文件夹",
             "calendar_moved_to_trash": "日历移动至垃圾箱",
-            "edit_calendar": "编辑保存正确",
             "invite": {
                 "accept": "您已回复：接受",
                 "decline": "您已回复拒绝",
                 "tentative": "您已回复暂定"
             },
             "new_calendar_created": "新日历已创建",
-            "appointment_permanently_deleted_error": "出现了一些错误，请重试",
             "appt_restored": "预约已成功恢复至：",
-            "appt_deleted_error": "出现错误，请重试。",
             "calendar_permanently_deleted": "日历已永久性删除",
             "calendar_restored": "日历已成功恢复",
             "appointment_permanently_deleted": "预约已永久性删除",
@@ -56,16 +53,12 @@
         "delete_tag_message2": "删除后，其将从所有已进行相关标记的项目上移除。",
         "appointment_type_handle": "“{{name}}”是定期预约。您是想打开此实例还是整个系列？",
         "organizer": "组织者",
-        "reply": "回复",
         "reply_all": "回复全部",
         "send_email": "发送邮件",
-        "send_email_to": "发送邮件至：{{email}}",
         "more": "更多...",
         "required_participant": "{{count}} 参与者",
         "optional_participant": "{{count}} 可选",
-        "guests": "访客",
         "declined": "{{count}} 已拒绝",
-        "awaiting": "等待中",
         "accepted": "{{count}} 已接受"
     },
     "calendar": {
@@ -76,7 +69,6 @@
         }
     },
     "action": {
-        "create": "创建",
         "send": "发送",
         "calendar_access_share": "日历访问共享",
         "edit_calendar_properties": "编辑日历属性",
@@ -93,7 +85,6 @@
     "event": {
         "action": {
             "accept": "接受",
-            "move": "移动",
             "no": "否",
             "yes": "是",
             "decline": "拒绝",
@@ -111,7 +102,6 @@
         "third": "第三个",
         "weekend_day": "周末日"
     },
-    "delete": "删除",
     "folder": {
         "modal": {
             "delete": {
@@ -123,8 +113,7 @@
                 },
                 "input": {
                     "filter": "过滤日历"
-                },
-                "footer": "空"
+                }
             },
             "restore": {
                 "footer": "创建和恢复"
@@ -329,7 +318,6 @@
         "hours": "{{count}} 小时"
     },
     "repeat": {
-        "none": "无",
         "customize": "自定义",
         "daily": "每日",
         "everyMonth": "每月",
@@ -345,9 +333,7 @@
                 "public": "公共"
             },
             "show_reminder": {
-                "never": "永不",
-                "day_before": "{{count}}天前",
-                "minute_before": "{{count}}分钟前"
+                "day_before": "{{count}}天前"
             },
             "default_cal_opts": {
                 "calendar": "日历"
@@ -378,9 +364,7 @@
                 "egypt": "GMT+02:00 埃及"
             },
             "weekdays": {
-                "saturday": "星期六",
-                "thursday": "星期四",
-                "wednesday": "星期三"
+                "thursday": "星期四"
             }
         },
         "label": {
@@ -437,7 +421,6 @@
         "share_folder_success": "日历已共享成功",
         "url_copied": "{{title}}已复制",
         "proposed_time_accepted": "您接受了提议的时间",
-        "new_time_proposed_error": "出现了一些错误，请重试",
         "new_time_proposed_success": "已提议新时间",
         "tag_applied": "“{{tag}}”标签已应用",
         "tag_removed": "“{{tag}}”标签已移除"
@@ -502,7 +485,6 @@
         "location": "位置",
         "chat_room": "虚拟房间链接",
         "virtual_chat": "虚拟聊天",
-        "calendar_sharing_status_one": "已与 1 人分享",
         "calendar_sharing_status": "已与 {{count}} 人分享"
     },
     "workflow": "工作流",

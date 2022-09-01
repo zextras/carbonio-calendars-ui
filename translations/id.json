@@ -1,6 +1,5 @@
 {
     "action": {
-        "delete": "Hapus",
         "save": "Simpan",
         "send": "Kirim",
         "delete_calendar": "Hapus kalender",
@@ -31,7 +30,6 @@
         "permissions": "Izin",
         "save": "Simpan",
         "share": "Bagikan",
-        "remove": "Hapus semua",
         "invitation_not_sent": "Anda belum mengirim undangan kepada peserta",
         "attendee_plural": "Peserta",
         "all_calendars": "Semua kalender",
@@ -186,7 +184,6 @@
     "event": {
         "action": {
             "accept": "Terima",
-            "move": "Pindahkan",
             "trash": "Hapus",
             "no": "Tidak",
             "yes": "Ya",
@@ -196,14 +193,12 @@
             "invitation_not_sent_yet": "Undangan belum dikirim"
         }
     },
-    "delete": "Hapus",
     "folder": {
         "modal": {
             "delete": {
                 "title": "Hapus"
             },
             "move": {
-                "footer": "Kosongkan",
                 "input": {
                     "filter": "Filter kalender"
                 },
@@ -245,13 +240,11 @@
             "calendar_deleted_successfully": "Kalender berhasil dihapus.",
             "calendar_moved_to_root_folder": "Kalender dipindahkan ke folder Root",
             "calendar_moved_to_trash": "Kalender dipindahkan ke tempat sampah",
-            "edit_calendar": "Hasil edit disimpan dengan benar",
             "invite": {
                 "accept": "Anda telah membalas sebagai Diterima",
                 "decline": "Anda telah membalas dengan Ditolak",
                 "tentative": "Anda telah membalas dengan Sementara"
             },
-            "new_calendar_create_error": "Terjadi kesalahan, coba lagi",
             "new_calendar_created": "Kalender baru dibuat",
             "calendar_permanently_deleted": "Kalender dihapus permanen",
             "calendar_restored": "Kalender berhasil dipulihkan",
@@ -289,16 +282,12 @@
         "delete_tag_message2": "Setelah dihapus, ini akan dihapus dari tiap item yang ditandai dengannya.",
         "appointment_type_handle": "\"{{name}}\" adalah janji temu berulang. Anda hanya ingin membuka instans ini atau seri?",
         "organizer": "Penyelenggara",
-        "reply": "Balas",
         "reply_all": "Balas semua",
-        "send_email_to": "Kirim email ke: {{email}}",
         "send_email": "Kirim email",
         "more": "Lainnya...",
         "required_participant": "{{count}} Peserta",
         "optional_participant": "{{count}} Opsional",
-        "guests": "tamu",
         "declined": "{{count}} menolak",
-        "accepted": "{{count}} menerima",
         "awaiting": "menunggu"
     },
     "months": {
@@ -332,7 +321,6 @@
         "hours": "{{count}} jam"
     },
     "repeat": {
-        "none": "Tidak ada",
         "customize": "Sesuaikan",
         "daily": "Harian",
         "everyMonth": "Setiap Bulan",
@@ -348,15 +336,11 @@
                 "public": "Publik"
             },
             "show_reminder": {
-                "never": "Jangan pernah",
-                "hour_before": "{{count}} jam sebelumnya",
-                "week_before": "{{count}} minggu sebelumnya"
+                "hour_before": "{{count}} jam sebelumnya"
             },
             "weekdays": {
                 "sunday": "Minggu",
-                "tuesday": "Selasa",
-                "friday": "Jumat",
-                "saturday": "Sabtu"
+                "friday": "Jumat"
             },
             "default_view": {
                 "day": "Tampilan Hari",
@@ -433,7 +417,6 @@
         "invite": {
             "error": "Terjadi kesalahan"
         },
-        "new_time_proposed_error": "Terjadi kesalahan, coba lagi",
         "proposed_time_accepted": "Anda menerima waktu yang diusulkan",
         "url_copied": "{{title}} disalin",
         "share_folder_success": "Kalender berhasil dibagikan",
@@ -502,7 +485,6 @@
         "location": "Lokasi",
         "chat_room": "Tautan Ruang Virtual",
         "virtual_chat": "Chat Virtual",
-        "calendar_sharing_status_one": "Dibagikan kepada 1 oarang",
         "calendar_sharing_status": "Dibagikan kepada {{count}} orang"
     },
     "share_invite_resent": "Undangan berbagi dikirim ulang",

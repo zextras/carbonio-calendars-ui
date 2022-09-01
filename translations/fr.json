@@ -1,8 +1,6 @@
 {
     "action": {
-        "delete": "Supprimer",
         "delete_calendar": "Supprimer le calendrier",
-        "download": "Télécharger",
         "edit_message": "Éditer le message",
         "empty_trash": "Vider la corbeille",
         "move_to_root": "Déplacer à la racine",
@@ -38,14 +36,11 @@
             "local": "Ajouter un fichier depuis le disque local"
         }
     },
-    "delete": "Suppression",
     "event": {
         "action": {
             "decline": "Refuser",
             "accept": "Accepter",
-            "move": "Déplacer",
             "no": "Non",
-            "tentative": "Provisoirement",
             "yes": "Oui",
             "expand": "Étendre la fenêtre",
             "needs_action": "Une action est requise",
@@ -55,18 +50,13 @@
     "find_shares": "Rechercher les partages",
     "folder": {
         "modal": {
-            "delete": {
-                "title": "Supprimer"
-            },
             "footer": {
                 "go_back": "Retour"
             },
             "move": {
-                "footer": "Vide",
                 "input": {
                     "filter": "Filtrer les calendriers"
                 },
-                "title": "Déplacer",
                 "body": {
                     "message3": "Sélectionner le calendrier vers lequel déplacer l'évènement :"
                 }
@@ -171,7 +161,6 @@
         "show_declined_meetings": "Afficher les réunions refusées",
         "start_date": "Date de début",
         "start_date_and_time": "Date et heure de début",
-        "subject": "Sujet",
         "the": "Le",
         "time_zones": "Fuseaux horaires",
         "timezone_pref_msg": "Les horaires suivent les préférences de votre fuseau horaire.",
@@ -276,16 +265,13 @@
             "calendar_deleted_successfully": "Calendrier supprimé avec succès.",
             "calendar_moved_to_root_folder": "Calendrier déplacé vers le dossier Racine",
             "calendar_moved_to_trash": "Calendrier placé dans la corbeille",
-            "edit_calendar_error": "Quelque chose s'est mal passé, veuillez réessayer",
             "invite": {
                 "accept": "Vous avez répondu comme : Accepté",
                 "decline": "Vous avez répondu comme : Refusé",
                 "tentative": "Vous avez répondu comme : Tentative"
             },
-            "new_calendar_create_error": "Quelque chose s'est mal passé, veuillez réessayer",
             "new_calendar_created": "Nouveau calendrier créé",
             "appointment_permanently_deleted_succesfully": "La suppression définitive a été effectuée avec succès",
-            "appt_moved_error": "Quelque chose s'est mal passé, le rendez-vous n'a pas été déplacé, veuillez réessayer.",
             "edit_calendar": "Modifications sauvées correctement",
             "calendar_restored": "Le calendrier a été restauré avec succès",
             "calendar_permanently_deleted": "Le calendrier a été supprimé",
@@ -319,15 +305,11 @@
         "delete_tag_message1": "Êtes-vous sûr de vouloir supprimer l'étiquette \"{{name}}\" ?",
         "delete_tag_message2": "Une fois supprimée, elle sera supprimée de l'ensemble des éléments qu'elle marquait.",
         "appointment_type_handle": "\"{{name}}\" est un rendez-vous récurent. Souhaitez-vous ouvrir uniquement cette instance ou la série ?",
-        "awaiting": "En attente",
         "declined": "{{count}} refusé",
-        "guests": "invités",
         "more": "Plus...",
         "organizer": "Organisateur",
-        "reply": "Répondre",
         "reply_all": "Répondre à tous",
         "send_email": "Envoyer un email",
-        "send_email_to": "Envoyer un email à : {{email}}",
         "accepted": "{{count}} accepté",
         "optional_participant": "{{count}} Optionnel",
         "optional_participant_plural": "{{count}} Optionnels",
@@ -504,8 +486,7 @@
         "equipment": "Équipement",
         "location": "Emplacement",
         "virtual_chat": "Discussion virtuelle",
-        "chat": "Équipement",
-        "calendar_sharing_status_one": "Partagé avec 1 personne"
+        "chat": "Équipement"
     },
     "type": "Type",
     "workflow": "Flux de travail",

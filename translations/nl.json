@@ -1,8 +1,6 @@
 {
     "action": {
-        "save": "Opslaan",
         "send": "Versturen",
-        "delete": "Verwijderen",
         "edit_message": "Bericht Bewerken",
         "delete_calendar": "Kalender verwijderen",
         "preview": "Klik om te bekijken",
@@ -205,9 +203,7 @@
     "event": {
         "action": {
             "accept": "Aanvaarden",
-            "move": "Verplaatsen",
             "no": "Nee",
-            "trash": "Verwijderen",
             "yes": "Ja",
             "decline": "Weigeren",
             "expand": "In Displayer openen",
@@ -226,7 +222,6 @@
     },
     "add": "Toevoegen",
     "appointments": "Afspraken",
-    "delete": "Verwijderen",
     "folder": {
         "modal": {
             "delete": {
@@ -241,7 +236,6 @@
                 }
             },
             "restore": {
-                "title": "Herstellen",
                 "footer": "Aanmaken en herstellen"
             },
             "new": {
@@ -261,18 +255,14 @@
                 "decline": "U hebt geantwoord als Geweigerd",
                 "tentative": "U hebt geantwoord als: Voorlopig"
             },
-            "settings_saved": "Bewerkingen correct opgeslagen",
             "appt_moved": "Afspraak met succes verplaatst naar",
-            "appointment_permanently_deleted_error": "Er is iets misgegaan, probeer het opnieuw",
             "appointment_permanently_deleted_succesfully": "Definitieve verwijdering met succes voltooid",
             "appt_moved_to_trash": "Afspraak verplaatst naar prullenbak",
             "appt_restored": "Afspraak met succes hersteld naar",
             "calendar_deleted_successfully": "Kalender met succes verwijderd.",
             "calendar_moved_to_root_folder": "Kalender verplaatst naar Root-map",
             "calendar_moved_to_trash": "Kalender verplaatst naar prullenbak",
-            "edit_calendar_error": "Er ging iets mis, probeer het nog eens",
             "new_calendar_created": "Nieuwe kalender gecreëerd",
-            "calendar_moved_to_trash_error": "Er is iets misgegaan, probeer het opnieuw",
             "calendar_permanently_deleted": "Kalender permanent verwijderd",
             "calendar_restored": "Kalender met succes hersteld",
             "appointment_permanently_deleted": "Afspraak permanent verwijderd",
@@ -312,9 +302,7 @@
         "delete_tag_message2": "Eenmaal verwijderd, zal het verwijderd worden van elk item dat ermee gemarkeerd is.",
         "appointment_type_handle": "\"{{name}}” is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?",
         "organizer": "Organisator",
-        "reply": "Antwoorden",
         "reply_all": "Alle beantwoorden",
-        "send_email_to": "E-mail sturen naar: {{email}}",
         "send_email": "E-mail sturen",
         "more": "Meer..."
     },
@@ -335,7 +323,6 @@
     "owner": "Eigenaar",
     "read": "Gelezen",
     "repeat": {
-        "none": "Geen",
         "customize": "Personaliseren",
         "daily": "Dagelijks",
         "everyMonth": "Elke maand",
@@ -351,17 +338,12 @@
                 "public": "Publiek"
             },
             "show_reminder": {
-                "never": "Nooit",
                 "day_before": "1 dag voordien",
-                "day_before_plural": "{{count}} dagen voordien",
-                "week_before": "1 week voordien",
-                "week_before_plural": "{{count}} weken voordien"
+                "day_before_plural": "{{count}} dagen voordien"
             },
             "weekdays": {
                 "friday": "Vrijdag",
-                "saturday": "Zaterdag",
-                "thursday": "Donderdag",
-                "wednesday": "Woensdag"
+                "thursday": "Donderdag"
             },
             "default_view": {
                 "day": "Dagweergave",
@@ -438,7 +420,6 @@
         "invite": {
             "error": "Fout"
         },
-        "proposed_time_error": "Er is iets misgegaan, probeer het opnieuw",
         "new_time_proposed_succes": "Nieuwe tijd voorgesteld",
         "proposed_time_accepted": "U aanvaardde de voorgestelde tijd",
         "url_copied": "{{title}} gekopieerd",
@@ -494,7 +475,6 @@
         "location": "Locatie",
         "chat_room": "Link naar virtuele ruimte",
         "virtual_chat": "Virtuele Chat",
-        "calendar_sharing_status_one": "Gedeeld met 1 persoon",
         "calendar_sharing_status": "Gedeeld met {{count}} persoon"
     },
     "button": {

@@ -162,7 +162,6 @@
         "create_tag": "Criar Etiqueta"
     },
     "action": {
-        "download": "Download",
         "save": "Salvar",
         "send": "Enviar",
         "empty_trash": "Esvaziar Lixeira",
@@ -180,7 +179,6 @@
     "event": {
         "action": {
             "accept": "Aceitar",
-            "move": "Mover",
             "trash": "Excluir",
             "no": "Não",
             "yes": "Sim",
@@ -191,9 +189,6 @@
     },
     "folder": {
         "modal": {
-            "delete": {
-                "title": "Excluir"
-            },
             "move": {
                 "footer": "Vazia",
                 "body": {
@@ -204,7 +199,6 @@
                 }
             },
             "restore": {
-                "title": "Restaurar",
                 "footer": "Criar e Restaurar"
             },
             "new": {
@@ -233,7 +227,6 @@
         "invite_has_no_message": "Este convite não possui mensagem de texto",
         "meeting_canceled": "A seguinte reunião foi cancelada",
         "snackbar": {
-            "appt_moved_error": "Algo deu errado, o compromisso não foi movido. Tente novamente.",
             "appt_moved": "Compromisso movido com sucesso para",
             "appointment_permanently_deleted_succesfully": "Exclusão permanente feita com sucesso",
             "appt_moved_to_trash": "Compromisso movido para a lixeira",
@@ -241,14 +234,12 @@
             "calendar_deleted_successfully": "Calendário excluído com sucesso.",
             "calendar_moved_to_root_folder": "Calendário movido para a Pasta Raiz",
             "calendar_moved_to_trash": "Calendário movido para lixeira",
-            "edit_calendar": "Edições salvas corretamente",
             "invite": {
                 "accept": "Você respondeu como Aceito",
                 "decline": "Você respondeu como Recusado",
                 "tentative": "Você respondeu como Provisório"
             },
             "new_calendar_created": "Novo calendário criado",
-            "calendar_moved_to_root_folder_error": "Algo deu errado. Tente novamente",
             "calendar_permanently_deleted": "Calendário excluído permanentemente",
             "calendar_restored": "Calendário restaurado com sucesso",
             "appointment_permanently_deleted": "Compromisso excluído definitivamente",
@@ -278,13 +269,11 @@
         },
         "sure_to_delete_appointment_permanently": "Tem certeza que deseja excluir este compromisso permanentemente?",
         "you_sure_delete_instance": "Tens a certeza que desejas excluir esta instância do compromisso “{{title}}”?",
-        "reply_all": "Responder a todos",
         "reply": "Responder",
         "organizer": "Organizador",
         "more": "Mais...",
         "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com ela.",
         "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?",
-        "declined": "{{count}} recusadas",
         "awaiting": "a esperar"
     },
     "months": {
@@ -343,7 +332,6 @@
         }
     },
     "repeat": {
-        "none": "Nenhum",
         "customize": "Personalizar",
         "daily": "Diário",
         "everyMonth": "Todo mês",
@@ -359,11 +347,8 @@
                 "public": "Público"
             },
             "show_reminder": {
-                "never": "Nunca",
                 "day_before": "1 dia antes",
-                "day_before_plural": "{{count}} dias antes",
-                "minute_before": "1 minuto antes",
-                "minute_before_plural": "{{count}} minutos antes"
+                "day_before_plural": "{{count}} dias antes"
             },
             "invt_opts": {
                 "allow_none": "Não permitir que ninguém me convide para reuniões",
@@ -391,9 +376,7 @@
                 "chennai": "GMT +5:30 Chennai, Calcutá, Mumbai, Nova Delhi"
             },
             "weekdays": {
-                "monday": "Segunda-Feira",
-                "sunday": "Domingo",
-                "tuesday": "Terça-Feira"
+                "sunday": "Domingo"
             }
         },
         "label": {
@@ -445,7 +428,6 @@
         "invite": {
             "error": "Erro"
         },
-        "new_time_proposed_error": "Algo deu errado. Tente novamente",
         "proposed_time_accepted": "Você aceitou a hora proposta",
         "url_copied": "{{title}} copiado",
         "share_folder_success": "Calendário partilhado corretamente",

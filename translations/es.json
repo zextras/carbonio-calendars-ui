@@ -167,7 +167,6 @@
         "no_title": "Sin Título"
     },
     "action": {
-        "download": "Download",
         "save": "Guardar",
         "send": "Enviar",
         "delete_calendar": "Eliminar calendario",
@@ -185,7 +184,6 @@
     "event": {
         "action": {
             "accept": "Aceptar",
-            "move": "Mover",
             "trash": "Eliminar",
             "no": "No",
             "yes": "Sí",
@@ -206,9 +204,6 @@
     },
     "folder": {
         "modal": {
-            "delete": {
-                "title": "Eliminar"
-            },
             "move": {
                 "footer": "Vacío",
                 "body": {
@@ -219,7 +214,6 @@
                 }
             },
             "restore": {
-                "title": "Restaurar",
                 "footer": "Crear y restaurar"
             },
             "footer": {
@@ -239,7 +233,6 @@
             }
         }
     },
-    "delete": "Eliminar",
     "months": {
         "february": "Febrero",
         "july": "Julio",
@@ -301,7 +294,6 @@
         "minutes_plural": "{{count}} minutos"
     },
     "repeat": {
-        "none": "None",
         "customize": "Personalizar",
         "daily": "Diariamente",
         "everyMonth": "Todos los meses",
@@ -317,10 +309,7 @@
                 "public": "Público"
             },
             "show_reminder": {
-                "never": "Nunca",
-                "all_time": "Todo el tiempo del evento",
-                "minute_before": "1 minuto antes",
-                "minute_before_plural": "{{count}} minutos antes"
+                "all_time": "Todo el tiempo del evento"
             },
             "default_cal_opts": {
                 "calendar": "Calendario"
@@ -351,9 +340,7 @@
                 "amsterdam": "GMT +01:00 Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena"
             },
             "weekdays": {
-                "monday": "Lunes",
-                "sunday": "Domingo",
-                "tuesday": "Martes"
+                "sunday": "Domingo"
             }
         },
         "label": {
@@ -405,7 +392,6 @@
         "invite": {
             "error": "Error"
         },
-        "new_time_proposed_error": "Algo fue mal, por favor, prueba de nuevo",
         "proposed_time_accepted": "Has aceptado la hora propuesta",
         "share_folder_success": "Calendario compartido con éxito",
         "url_copied": "{{title}} copiado",
@@ -424,21 +410,18 @@
         "you_will_see_the_subject_here": "Asunto",
         "snackbar": {
             "appt_moved": "La cita ha sido movida correctamente a",
-            "appointment_permanently_deleted_error": "Algo fue mal, por favor, prueba de nuevo",
             "appointment_permanently_deleted_succesfully": "Acción realizada con éxito",
             "appt_moved_to_trash": "Cita movida a la papelera",
             "appt_restored": "Cita restaurada correctamente en",
             "calendar_deleted_successfully": "Calendario eliminado con éxito.",
             "calendar_moved_to_root_folder": "El calendario ha sido movido a la carpeta raíz",
             "calendar_moved_to_trash": "El calendario ha sido movido a la papelera",
-            "edit_calendar": "Ediciones guardadas correctamente",
             "invite": {
                 "accept": "Has respondido como \"Aceptado\"",
                 "decline": "Has respondido como \"Rechazado\"",
                 "tentative": "Has contestado como \"En duda\""
             },
             "new_calendar_created": "Nuevo calendario creado",
-            "edit_calendar_error": "Algo fue mal, por favor, inténtalo de nuevo",
             "calendar_permanently_deleted": "El calendario ha sido eliminado permanentemente",
             "calendar_restored": "El calendario ha sido restaurado con éxito",
             "appointment_permanently_deleted": "La reunión ha sido eliminada permanentemente",
@@ -474,13 +457,9 @@
         "delete_tag_message1": "¿Seguro que quieres borrar la etiqueta \"{{name}}\"?",
         "delete_tag_message2": "Una vez borrada, se quitará de cada elemento marcado con ella.",
         "organizer": "Organizador",
-        "reply": "Responder",
         "reply_all": "Responder a todos",
-        "send_email_to": "Enviar un e-mail a: {{email}}",
         "accepted": "{{count}} aceptado",
-        "awaiting": "a la espera",
         "declined": "{{count}} rechazado",
-        "guests": "invitados",
         "more": "Más…",
         "optional_participant": "{{count}} Opcional",
         "optional_participant_plural": "{{count}} Opcionales",
@@ -530,7 +509,6 @@
         "location": "Ubicación",
         "chat_room": "Enlace de la Sala Virtual",
         "calendar_sharing_status": "Compartido con {{count}} persona(s)",
-        "calendar_sharing_status_one": "Compartido con 1 persona",
         "virtual_chat": "Chat virtual"
     },
     "share_invite_resent": "Invitación para acceder a la compartición reenviada",

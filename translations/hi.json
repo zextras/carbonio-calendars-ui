@@ -174,7 +174,6 @@
         "scheduled_in": "कैलेंडर"
     },
     "action": {
-        "download": "डाऊनलोड करें",
         "save": "सेव करें",
         "send": "भेजें",
         "empty_trash": "कूड़ेदान को ख़ाली करें",
@@ -192,18 +191,13 @@
     "message": {
         "you": "आप",
         "snackbar": {
-            "settings_saved": "बदलाव ठीक से सेव हो गए",
             "appt_moved": "एपोइंटमेंट यहाँ भेजा गया",
-            "calendar_delete_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें।",
             "calendar_moved_to_trash": "कैलेंडर रद्दी में भेजा गया",
-            "new_calendar_create_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
             "appointment_permanently_deleted_succesfully": "परमानेंट डिलीट हो गया",
-            "appt_moved_error": "कुछ गड़बड़ हुई, एपाइंटमेंट नहीं गया, दोबारा कोशिश करें।",
             "appt_moved_to_trash": "एपाइंटमेंट रद्दी में भेजा गया",
             "appt_restored": "एपाइंटमेंट यहाँ वापस लाया गया",
             "calendar_deleted_successfully": "कैलेंडर डिलीट किया गया।",
             "calendar_moved_to_root_folder": "कैलेंडर रूट फोल्डर में भेजा गया",
-            "calendar_moved_to_trash_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
             "invite": {
                 "accept": "आपने स्वीकार किया है जबाब दिया है",
                 "tentative": "आपने संभावित जबाब दिया",
@@ -248,19 +242,15 @@
         "delete_tag_message2": "डिलीट हो जाने के बाद, इससे मार्क हर आइटम से इसे हटा दिया जाएगा।",
         "appointment_type_handle": "{{name}} बार-बार आने वाला अपोइंटमेंट है। क्या आप सिर्फ इस घटना को या पूरी सीरीज़ खोलना चाहते हैं?",
         "organizer": "आयोजक",
-        "reply": "रिप्लाई करें",
         "reply_all": "सभी को उत्तर",
-        "send_email_to": "यहाँ ई-मेल भेजें: {{email}}",
         "send_email": "ई-मेल भेजें",
         "more": "और..."
     },
-    "delete": "डिलीट करें",
     "event": {
         "action": {
             "no": "नहीं",
             "yes": "हाँ",
             "accept": "स्वीकार करें",
-            "move": "ले जाएँ",
             "trash": "डिलीट करें",
             "decline": "अस्वीकृत",
             "expand": "डिस्प्ले में देखें",
@@ -270,9 +260,6 @@
     },
     "folder": {
         "modal": {
-            "delete": {
-                "title": "डिलीट करें"
-            },
             "restore": {
                 "footer": "बनाएँ और वापस लाएँ"
             },
@@ -331,7 +318,6 @@
         "hours_plural": "{{count}} घंटे"
     },
     "repeat": {
-        "none": "कोई नहीं",
         "daily": "प्रतिदिन",
         "monthly": "मासिक",
         "weekly": "साप्ताहिक",
@@ -347,10 +333,7 @@
                 "public": "पब्लिक"
             },
             "show_reminder": {
-                "never": "कभी नहीं",
-                "all_time": "ईवेंट के पूरे टाइम पर",
-                "hour_before": "1 घंटा पहले",
-                "hour_before_plural": "{{count}} घंटे पहले"
+                "all_time": "ईवेंट के पूरे टाइम पर"
             },
             "default_cal_opts": {
                 "calendar": "कैलेंडर"
@@ -381,9 +364,7 @@
                 "work_week": "कार्य सप्ताह व्यू"
             },
             "weekdays": {
-                "monday": "सोमवार",
-                "sunday": "रविवार",
-                "tuesday": "मंगलवार"
+                "sunday": "रविवार"
             }
         },
         "invalid_email": "एक मान्य ई-मेल नहीं है",
@@ -435,7 +416,6 @@
         "invite": {
             "error": "त्रुटि"
         },
-        "new_time_proposed_error": "कुछ गड़बड़ हुई, दोबारा कोशिश करें",
         "share_folder_success": "Calendar शेयर हो गया",
         "proposed_time_accepted": "आपने दिए टाइम को स्वीकार कर लिया",
         "url_copied": "{{title}} कॉपी किया गया",
@@ -503,7 +483,6 @@
     "freebusy": "ख़ाली व्यस्त",
     "insert": "सम्मिलित करना",
     "search": {
-        "results_for": "इसके नतीजे:",
         "organized_by": "इनके द्वारा ऑर्गनाइज़"
     },
     "revoke_without_notification": "बिना किसी सूचना के एक्सेस खत्म करें",
@@ -518,7 +497,6 @@
         "location": "स्थान",
         "chat_room": "Virtual Room लिंक",
         "virtual_chat": "वर्चुअल चैट",
-        "calendar_sharing_status_one": "1 व्यक्ति के साथ शेयर किया गया",
         "calendar_sharing_status": "{{count}} व्यक्तियों के साथ शेयर किया गया"
     },
     "remove_from_this_list": "इस लिस्ट से हटाएँ",

@@ -8,13 +8,11 @@
                 "tentative": "Sie haben mit \" Vorläufig\" geantwortet"
             },
             "appt_restored": "Termin erfolgreich wiederhergestellt zu",
-            "settings_saved": "Änderungen korrekt gespeichert",
             "appointment_permanently_deleted_succesfully": "Endgültige Löschung erfolgreich durchgeführt",
             "appt_moved_to_trash": "Termin in den Papierkorb verschoben",
             "calendar_deleted_successfully": "Kalender erfolgreich gelöscht.",
             "calendar_moved_to_root_folder": "Kalender in den Root Ordner verschoben",
             "calendar_moved_to_trash": "Kalender in den Papierkorb verschoben",
-            "edit_calendar_error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut",
             "new_calendar_created": "Neuer Kalender erstellt",
             "calendar_permanently_deleted": "Kalender endgültig gelöscht",
             "calendar_restored": "Kalender erfolgreich wiederhergestellt",
@@ -55,18 +53,14 @@
         "delete_tag_message2": "Nach dem Löschen wird es aus allen damit gekennzeichneten Artikeln entfernt.",
         "appointment_type_handle": "\"{{name}}” ist ein Serientermin. Möchten Sie nur diesen Termin oder die ganze Serie öffnen?",
         "organizer": "Organisator",
-        "reply": "Antworten",
         "reply_all": "Allen antworten",
-        "send_email_to": "Senden Sie eine E-Mail an: {{email}}",
         "send_email": "E-Mail senden",
         "more": "Mehr ...",
         "required_participant": "{{count}} Teilnehmer",
         "required_participant_plural": "{{count}} Teilnehmer",
         "optional_participant": "{{count}} Optional",
         "optional_participant_plural": "{{count}} Optionale",
-        "guests": "Gäste",
         "declined": "{{count}} abgelehnt",
-        "awaiting": "warten",
         "accepted": "{{count}} akzeptiert"
     },
     "label": {
@@ -264,9 +258,7 @@
         "delete_calendar": "Kalender löschen",
         "empty_trash": "Papierkorb leeren",
         "move_to_root": "In den Root-Order verschieben",
-        "save": "Speichern",
         "send": "Senden",
-        "download": "Download",
         "preview": "Klicken zur Vorschau",
         "save_to_preview": "Speichern und Vorschau",
         "edit_message": "Nachricht bearbeiten",
@@ -300,7 +292,6 @@
             "accept": "Akzeptieren",
             "decline": "Ablehnen",
             "expand": "In der Anzeige öffnen",
-            "restore": "Wiederherstellen",
             "trash": "Löschen",
             "no": "Nein",
             "yes": "Ja",
@@ -313,9 +304,6 @@
             "footer": {
                 "go_back": "Zurück"
             },
-            "delete": {
-                "footer": "Löschen"
-            },
             "move": {
                 "title": "Verschieben",
                 "body": {
@@ -326,7 +314,6 @@
                 }
             },
             "restore": {
-                "title": "Wiederherstellen",
                 "footer": "Erstellen und wiederherstellen"
             },
             "new": {
@@ -350,7 +337,6 @@
     "allowed_actions": "Erlaubte Aktionen",
     "appointments": "Termine",
     "cannot_edit_name": "Sie können den Namen eines Kalendersystems nicht bearbeiten",
-    "delete": "Löschen",
     "edit_share_properties": "Eigenschaften für das Teilen bearbeiten",
     "find_calendar_shares": "Geteilte Kalender finden",
     "find_shares": "Teile finden",
@@ -417,11 +403,8 @@
                 "public": "Öffentlich"
             },
             "show_reminder": {
-                "all_time": "die ganze Zeit des Events",
                 "hour_before": "1 Stunde früher",
-                "hour_before_plural": "{{count}} Stunden früher",
-                "week_before": "1 Woche früher",
-                "week_before_plural": "{{count}} Wochen früher"
+                "hour_before_plural": "{{count}} Stunden früher"
             },
             "free_busy_opts": {
                 "allow_following": "Nur den folgenden internen Nutzern erlauben, meine frei/beschäftigt Informationen zu sehen",
@@ -449,9 +432,7 @@
                 "work_week": "Arbeitswochenansicht"
             },
             "weekdays": {
-                "monday": "Montag",
-                "sunday": "Sonntag",
-                "tuesday": "Dienstag"
+                "sunday": "Sonntag"
             }
         },
         "permissions_note": "Nutzer müssen aus diesem E-Mail System stammen (zextras.com). Sie können die vollständige E-Mail Adresse nutzen oder nur den Benutzername.",
@@ -503,7 +484,6 @@
         "invite": {
             "error": "Fehler"
         },
-        "new_time_proposed_error": "Etwas ist schiefgegangen,bitte versuchen Sie es erneut",
         "proposed_time_accepted": "Sie haben die vorgeschlagene Zeit zugesagt",
         "share_folder_success": "Kalender erfolgreich geteilt",
         "url_copied": "{{title}} kopiert",
@@ -526,7 +506,6 @@
         "location": "Ort",
         "chat_room": "Link des virtuellen Raums",
         "virtual_chat": "Virtueller Chat",
-        "calendar_sharing_status_one": "Mit 1 Person geteilt",
         "calendar_sharing_status": "Mit {{count}} Person(en) geteilt"
     },
     "share_invite_resent": "Einladung zum Teilen erneut gesendet",
