@@ -70,10 +70,8 @@
         "are_organizer": "Организатор",
         "snackbar": {
             "appt_moved": "Встреча успешно перенесена",
-            "settings_saved": "Правки сохранены",
             "appt_moved_to_trash": "Встреча удалена",
             "calendar_moved_to_root_folder": "Календарь перемещен в корневую папку",
-            "appt_deleted_error": "Что-то пошло не так, повторите попытку.",
             "appointment_permanently_deleted_error": "Что-то пошло не так, повторите попытку",
             "appointment_permanently_deleted_succesfully": "Удаление завершено",
             "appt_restored": "Встреча успешно восстановлена в",
@@ -84,7 +82,6 @@
                 "tentative": "Вы ответили : Под вопросом",
                 "decline": "Вы ответили : Отклонено"
             },
-            "edit_calendar_error": "Что-то пошло не так, повторите попытку",
             "new_calendar_created": "Создан новый календарь",
             "calendar_permanently_deleted": "Календарь удален навсегда",
             "calendar_restored": "Календарь успешно восстановлен",
@@ -114,22 +111,18 @@
         "appointment_type_handle": "\"{{name}}\"— повторяющаяся встреча. Вы хотите открыть только этот экземпляр или серию?",
         "delete_tag_message1": "Вы уверены, что хотите удалить тег \"{{name}}\"?",
         "delete_tag_message2": "После удаления он будет удален из всех отмеченных им элементов.",
-        "accepted": "{{count}} принято",
         "awaiting": "Ожидание",
-        "declined": "{{count}} отклонено",
         "guests": "гости",
         "more": "Больше...",
         "optional_participant_0": "{{count}} Необязательно",
         "optional_participant_1": "{{count}} Необязательно",
         "optional_participant_2": "{{count}} Необязательно",
         "organizer": "Организатор",
-        "reply": "Ответить",
         "reply_all": "Ответить всем",
         "required_participant_0": "{{count}} Участник",
         "required_participant_1": "{{count}} Участника",
         "required_participant_2": "{{count}} Участников",
-        "send_email": "Отправить письмо",
-        "send_email_to": "Отправить письмо : {{email}}"
+        "send_email": "Отправить письмо"
     },
     "label": {
         "organizer": "Организатор",
@@ -312,7 +305,6 @@
         "copy_outlook_url": "Скопировать URL-адрес Outlook",
         "copy_ics_url": "Копировать ICS ссылку",
         "chat": "Оборудование",
-        "calendar_sharing_status_one": "Совместно с 1 человеком",
         "equipment": "Оборудование",
         "location": "Место",
         "virtual_chat": "Конференц-зал",
@@ -321,12 +313,9 @@
     },
     "action": {
         "send": "Отправить",
-        "cancel": "Отменить",
         "move_to_root": "Переместить в root",
         "empty_trash": "Очистить корзину",
-        "new_calendar": "Новый календарь",
         "delete_calendar": "Удалить календарь",
-        "download": "Загрузка",
         "preview": "Нажмите для просмотра",
         "save_to_preview": "Сохранить для предварительного просмотра",
         "calendar_access_share": "Общий доступ к календарю",
@@ -353,14 +342,8 @@
             "footer": {
                 "go_back": "Вернуться назад"
             },
-            "delete": {
-                "footer": "Удалить"
-            },
             "restore": {
                 "footer": "Создать и Восстановить"
-            },
-            "item": {
-                "empty": "Пусто"
             }
         },
         "share_info": "сведения об общей папке"
@@ -380,7 +363,6 @@
         "action": {
             "accept": "Принято",
             "expand": "Открыть в Displayer",
-            "restore": "Восстановить",
             "decline": "Отклонить",
             "no": "Нет",
             "yes": "Да",
@@ -447,13 +429,9 @@
                 "allow_following": "Разрешить только следующим внутренним пользователям приглашать меня на встречи"
             },
             "show_reminder": {
-                "all_time": "Во время встречи",
                 "minute_before_0": "{{count}}мина до",
                 "minute_before_1": "{{count}} минуты до",
-                "minute_before_2": "{{count}} минут до",
-                "day_before_0": "{{count}}день до",
-                "day_before_1": "{{count}}дней до",
-                "day_before_2": "{{count}}дней до"
+                "minute_before_2": "{{count}} минут до"
             },
             "timezones": {
                 "chennai": "GMT +05: 30 Ченнаи, Калькутта, Мумбаи, Нью-Дели",
@@ -461,9 +439,7 @@
                 "amsterdam": "GMT +01: 00 Амстердам, Берлин, Берн, Рим, Стокгольм, Вена"
             },
             "weekdays": {
-                "monday": "Понедельник",
-                "thursday": "Четверг",
-                "wednesday": "Среда"
+                "thursday": "Четверг"
             }
         },
         "ical_note": "Apple iCal можно настроить для доступа к вашим календарям с помощью протокола CalDAV. Когда этот параметр включен, общие календари отображаются во вкладке Делегирование учетной записи ical, поэтому вы можете делегировать доступ к своим календарям другим пользователям.",
@@ -491,13 +467,11 @@
         "weekly": "Еженедельно",
         "everyWeek": "Каждую неделю",
         "yearly": "Ежегодно",
-        "customize": "Настроить",
-        "none": "Нет"
+        "customize": "Настроить"
     },
     "add": "Добавить",
     "administer": "Администрирование",
     "allowed_actions": "Разрешенные действия",
-    "delete": "Удалить",
     "freebusy": "Свободен/Занят",
     "insert": "Вставить",
     "read": "Читать",
@@ -530,11 +504,9 @@
     "write": "Написать",
     "remove_from_this_list": "Убрать из списка",
     "snackbar": {
-        "proposed_time_error": "Что-то пошло не так, повторите попытку",
         "invite": {
             "error": "Ошибка"
         },
-        "new_time_proposed_succes": "Предложено новое время",
         "proposed_time_accepted": "Вы приняли предлагаемое время",
         "url_copied": "{{title}} скопировано",
         "share_folder_success": "Доступ к календарю предоставлен",

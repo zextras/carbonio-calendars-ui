@@ -16,7 +16,6 @@
         "Attendees_tentative_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ได้ตอบรับเบื้องต้นว่ายังไม่แน่นอน"
     },
     "label": {
-        "cancel": "ยกเลิก",
         "custom": "กำหนดเอง",
         "attachment": "สิ่งที่แนบมา",
         "busy": "ไม่ว่าง",
@@ -184,7 +183,6 @@
         }
     },
     "action": {
-        "download": "ดาวน์โหลด",
         "save": "บันทึก",
         "send": "ส่ง",
         "preview": "คลิกเพื่อดูตัวอย่าง",
@@ -202,7 +200,6 @@
     "event": {
         "action": {
             "accept": "ยอมรับ",
-            "move": "ย้าย",
             "trash": "ลบ",
             "no": "ไม่",
             "yes": "ใช่",
@@ -215,15 +212,10 @@
     "settings": {
         "options": {
             "show_reminder": {
-                "all_time": "ตลอดช่วงเวลาของเหตุการณ์",
-                "hour_before": "{{count}} ชั่วโมงก่อน",
-                "minute_before": "{{count}} นาทีก่อน"
+                "hour_before": "{{count}} ชั่วโมงก่อน"
             },
             "dflt_vsblty_opt": {
                 "public": "สาธารณะ"
-            },
-            "default_cal_opts": {
-                "calendar": "ปฏิทิน"
             },
             "default_view": {
                 "list": "มุมมองรายการ",
@@ -251,9 +243,7 @@
                 "amsterdam": "GMT +01:00 อัมสเตอร์ดัม, เบอร์ลิน, เบิร์น, โรม, สตอกโฮล์ม, เวียนนา"
             },
             "weekdays": {
-                "monday": "วันจันทร์",
-                "sunday": "วันอาทิตย์",
-                "tuesday": "วันอังคาร"
+                "sunday": "วันอาทิตย์"
             }
         },
         "label": {
@@ -287,11 +277,7 @@
                 }
             },
             "restore": {
-                "title": "การกู้คืนข้อมูล (Restore)",
                 "footer": "สร้างและกู้คืน"
-            },
-            "delete": {
-                "title": "ลบ"
             },
             "new": {
                 "duplicate_warning": "มีปฏิทินชื่อนี้แล้ว",
@@ -343,7 +329,6 @@
         "hours": "{{count}} ชั่วโมง"
     },
     "repeat": {
-        "none": "ไม่มี",
         "customize": "กำหนดเอง",
         "daily": "ทุกวัน",
         "everyWeek": "ทุกสัปดาห์",
@@ -357,7 +342,6 @@
         "invite": {
             "error": "ผิดพลาด"
         },
-        "new_time_proposed_succes": "เสนอเวลาใหม่",
         "proposed_time_accepted": "คุณยอมรับเวลาที่เสนอ",
         "share_folder_success": "แชร์ปฏิทินเรียบร้อยแล้ว",
         "url_copied": "{{title}} คัดลอกแล้ว",
@@ -368,7 +352,6 @@
     "success": "สำเร็จ",
     "add": "เพิ่ม",
     "appointments": "การนัดหมาย",
-    "delete": "ลบ",
     "share": {
         "options": {
             "share_calendar_role": {
@@ -404,17 +387,14 @@
             "appt_moved_to_trash": "ย้ายการนัดหมายไปที่ถังขยะแล้ว",
             "calendar_deleted_successfully": "ลบปฏิทินเรียบร้อยแล้ว",
             "calendar_moved_to_trash": "ปฏิทินย้ายไปที่ถังขยะแล้ว",
-            "edit_calendar_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "invite": {
                 "accept": "คุณได้ตอบกลับว่ายอมรับ",
                 "decline": "คุณได้ตอบกลับว่าปฏิเสธ",
                 "tentative": "คุณได้ตอบกลับว่าไม่แน่นอน"
             },
             "new_calendar_created": "สร้างปฏิทินใหม่แล้ว",
-            "appt_moved_error": "เกิดข้อผิดพลาดบางอย่าง การนัดหมายไม่ถูกย้าย โปรดลองใหม่อีกครั้ง",
             "appt_restored": "กู้คืนการนัดหมายไปที่ เรียบร้อยแล้ว",
             "calendar_moved_to_root_folder": "ปฏิทินย้ายไปที่โฟลเดอร์รูทแล้ว",
-            "new_calendar_create_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "calendar_permanently_deleted": "ปฎิทินถูกลบอย่างถาวร",
             "calendar_restored": "กู้คืนปฏิทินเรียบร้อยแล้ว",
             "appointment_permanently_deleted": "การนัดหมายถูกลบอย่างถาวร",
@@ -451,16 +431,12 @@
         "delete_tag_message2": "หากลบออก มันจะถูกลบออกจากทุกรายการที่ทำเครื่องหมายไว้",
         "appointment_type_handle": "\"{{name}}” เป็นการนัดหมายที่เกิดซ้ำ คุณต้องการเปิดเฉพาะอินสแตนซ์นี้หรือทั้งซีรีส์?",
         "organizer": "ผู้จัดงาน",
-        "reply": "ตอบกลับ",
         "reply_all": "ตอบกลับทั้งหมด",
-        "send_email_to": "ส่งอีเมลไปที่: {{email}}",
         "send_email": "ส่งอีเมล",
         "more": "เพิ่มเติม...",
         "required_participant": "ผู้เข้าร่วม {{count}}",
         "optional_participant": "{{count}} ตัวเลือก",
-        "guests": "แขก",
         "declined": "ปฏิเสธแล้ว {{count}}",
-        "awaiting": "กำลังรอ",
         "accepted": "ยอมรับแล้ว {{count}}"
     },
     "type": "รูปแบบ",
@@ -475,8 +451,7 @@
         "location": "สถานที่",
         "chat_room": "ลิงก์ของห้องเสมือนจริง",
         "virtual_chat": "แชทเสมือนจริง",
-        "calendar_sharing_status": "แชร์กับ {{count}} คน",
-        "calendar_sharing_status_one": "แชร์กับ 1 คน"
+        "calendar_sharing_status": "แชร์กับ {{count}} คน"
     },
     "button": {
         "customize_modal": "เปิด Customize Modal"
@@ -502,7 +477,6 @@
     "freebusy": "FreeBusy",
     "insert": "ใส่",
     "search": {
-        "results_for": "ผลลัพธ์สำหรับ:",
         "organized_by": "จัดโดย"
     },
     "remove_from_this_list": "ลบออกจากรายการนี้",

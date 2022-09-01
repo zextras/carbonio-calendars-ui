@@ -9,7 +9,6 @@
         "equipment": "Attrezzatura",
         "location": "Luogo",
         "calendar_sharing_status": "Condiviso con {{count}} persone",
-        "calendar_sharing_status_one": "Condiviso con 1 persona",
         "virtual_chat": "Chat Virtuale",
         "chat_room": "Link alla Stanza Virtuale"
     },
@@ -64,13 +63,11 @@
         "meeting_canceled": "La riunione seguente è stata annullata",
         "invite_has_no_message": "Questo invito non ha messaggi di testo",
         "snackbar": {
-            "settings_saved": "Modifiche salvate correttamente",
             "invite": {
                 "tentative": "Hai risposto Forse",
                 "accept": "Hai risposto Accettato",
                 "decline": "Hai risposto Rifiuta"
             },
-            "new_calendar_create_error": "Qualcosa è andato storto, riprova",
             "appointment_permanently_deleted_succesfully": "Eliminazione conclusa correttamente",
             "appt_moved": "Appuntamento spostato in",
             "appt_moved_to_trash": "Appuntamento spostato nel cestino",
@@ -78,7 +75,6 @@
             "calendar_deleted_successfully": "Calendario eliminato correttamente.",
             "calendar_moved_to_root_folder": "Calendario spostato nella cartella Root",
             "calendar_moved_to_trash": "Calendario spostato nel cestino",
-            "edit_calendar": "Modifiche salvate",
             "new_calendar_created": "Nuovo calendario creato",
             "calendar_permanently_deleted": "Calendario eliminato definitivamente",
             "calendar_restored": "Calendario ripristinato correttamente",
@@ -113,10 +109,8 @@
         "appointment_type_handle": "\"{{name}}\" è un appuntamento ricorrente. Vuoi aprire solo questa istanza o tutta la serie?",
         "delete_tag_message1": "Vuoi eliminare l'etichetta \"{{name}}\"?",
         "delete_tag_message2": "Una volta eliminata, verrà eliminata anche da tutti gli elementi su cui è utilizzata.",
-        "reply": "Rispondi",
         "reply_all": "Rispondi a tutti",
         "organizer": "Organizzatore",
-        "awaiting": "in attesa",
         "guests": "ospiti",
         "more": "Altro...",
         "optional_participant": "{{count}} Opzionale",
@@ -124,9 +118,7 @@
         "required_participant": "{{count}} Partecipante",
         "required_participant_plural": "{{count}} Partecipanti",
         "send_email": "Invia e-mail",
-        "send_email_to": "Invia e-mail a: {{email}}",
-        "declined": "{{count}} rifiutato",
-        "accepted": "{{count}} accettato"
+        "declined": "{{count}} rifiutato"
     },
     "label": {
         "to": "A",
@@ -214,8 +206,6 @@
         "series": "Serie",
         "set_new_time": "Imposta nuovo orario",
         "show_declined_meetings": "Mostra appuntamenti rifiutati",
-        "remove": "Elimina",
-        "remove_plural": "Elimina tutto",
         "sharing_of_this_folder": "Condivisione di questa cartella",
         "time_zones": "Fuso orario",
         "type_name_here": "Nome Calendario",
@@ -299,14 +289,11 @@
     },
     "action": {
         "send": "Invia",
-        "create": "Crea",
         "delete_calendar": "Elimina calendario",
         "empty_trash": "Svuota Cestino",
         "move_to_root": "Sposta in root",
-        "delete": "Cancella",
         "preview": "Clicca per visualizzare l'anteprima",
         "save_to_preview": "Salva nell'anteprima",
-        "modify_property": "Modifica proprietà",
         "edit_calendar_properties": "Modifica le proprietà del calendario",
         "edit_message": "Modifica Messaggio",
         "send_cancellation": "Invia cancellazione",
@@ -326,9 +313,6 @@
     },
     "folder": {
         "modal": {
-            "delete": {
-                "footer": "Elimina"
-            },
             "move": {
                 "footer": "Vuoto",
                 "body": {
@@ -355,9 +339,7 @@
         "action": {
             "accept": "Accetta",
             "decline": "Rifiuta",
-            "move": "Sposta",
             "no": "No",
-            "trash": "Elimina",
             "yes": "Sì",
             "expand": "Apri nel visulizzatore",
             "needs_action": "Necessita azione",
@@ -389,11 +371,9 @@
         "working_day": "Giorno lavorativo"
     },
     "snackbar": {
-        "proposed_time_error": "Qualcosa è andato storto, riprova",
         "invite": {
             "error": "Errore"
         },
-        "new_time_proposed_succes": "Nuovo orario proposto",
         "proposed_time_accepted": "Hai accettato l'orario proposto",
         "share_folder_success": "Calendario condiviso correttamente",
         "url_copied": "{{title}} copiato",
@@ -406,7 +386,6 @@
     "appointments": "Appuntamenti",
     "administer": "Gestisci",
     "cannot_edit_name": "Non è possibile modificare il nome di una calendario di sistema",
-    "delete": "Elimina",
     "edit_share_properties": "Modifica proprietà di condivisione",
     "find_shares": "Trova condivisioni",
     "insert": "Inserisci",
@@ -478,20 +457,13 @@
                 "allow_none": "Nessuno può invitarmi agli appuntamenti"
             },
             "weekdays": {
-                "friday": "Venerdì",
-                "saturday": "Sabato",
-                "thursday": "Giovedì"
+                "saturday": "Sabato"
             },
             "show_reminder": {
                 "day_before": "1 giorno prima",
                 "day_before_plural": "{{count}} giorni prima",
-                "hour_before": "1 ora prima",
-                "hour_before_plural": "{{count}} ore prima",
                 "week_before": "1 settimana prima",
                 "week_before_plural": "{{count}} settimane prima"
-            },
-            "default_cal_opts": {
-                "calendar": "Calendario"
             },
             "default_view": {
                 "day": "Vista Giorno",
