@@ -1,11 +1,8 @@
 {
     "action": {
-        "create": "Creëren",
         "save": "Opslaan",
         "send": "Versturen",
-        "download": "Downloaden",
         "delete": "Verwijderen",
-        "delete_permanently": "Permanent Verwijderen",
         "edit_message": "Bericht Bewerken",
         "delete_calendar": "Kalender verwijderen",
         "preview": "Klik om te bekijken",
@@ -14,7 +11,6 @@
         "edit_calendar_properties": "Kalendereigenschappen bewerken",
         "empty_trash": "Prullenbak leegmaken",
         "move_to_root": "Naar root verplaatsen",
-        "new_calendar": "Nieuwe kalender",
         "send_cancellation": "Annulering verzenden",
         "share_calendar": "Kalender delen",
         "empty_trash_confirmation": "Deze actie verwijdert alle items in de E-mail, Contacten, Agenda, Taken en Brievenbus prullenmappen. Weet u zeker dat u alles in deze prullenmappen permanent wilt verwijderen?"
@@ -44,10 +40,8 @@
         "attachment_plural": "bijlagen",
         "busy": "Bezet",
         "days": "Dagen",
-        "cancel": "Annuleren",
         "custom": "Op maat",
         "delete_permanently": "Permanent verwijderen",
-        "dismiss_capitalize": "Weigeren",
         "edit": "Bewerken",
         "edit_share": "Gedeeld bestand bewerken",
         "end": "Eindigen",
@@ -61,15 +55,12 @@
         "save": "Opslaan",
         "share": "Delen",
         "start_date": "Startdatum",
-        "subject": "Onderwerp",
         "week": "Week",
         "free": "Gratis",
         "optional": "Keuzemogelijkheid",
         "optional_plural": "Keuzemogelijkheden",
         "download": "Downloaden",
         "download_plural": "Alles downloaden",
-        "remove": "Verwijderen",
-        "remove_plural": "Alles verwijderen",
         "invitation_not_sent": "U heeft de uitnodiging nog niet naar de deelnemers gestuurd",
         "all_day": "Hele dag",
         "all_calendars": "Alle kalenders",
@@ -107,7 +98,6 @@
         "dismiss": "Verwijderen",
         "dismiss_plural": "Alles verwijderen",
         "display": "Weergeven",
-        "edit_properties": "Eigenschappen van {{name}} bewerken",
         "email_input_message": "E-mailadressen ingeven",
         "end_after": "Eindigen na",
         "ics_url": "ICS URL",
@@ -119,7 +109,6 @@
         "number": "Nummer",
         "occurrences": "Voorval(len)",
         "of_every": "van elke",
-        "of_the_month,_every": "van de maand, elke",
         "ongoing": "Aan de gang",
         "resend": "Opnieuw verzenden",
         "revoke": "Intrekken",
@@ -140,14 +129,12 @@
         "shares_items": "gedeelde kalenders van <bold>{{user}}</bold>",
         "sharing_of_this_folder": "Delen van deze map",
         "show_declined_meetings": "Geweigerde meetings tonen",
-        "start_week_of": "Start week van",
         "the": "De",
         "time_zones": "Tijdzones",
         "to": "Aan",
         "view_url": "URL bekijken",
         "default_appt_vsblty": "Standaard zichtbaarheid afspraak",
         "location": "Locatie",
-        "restore_calednar": "Kalender herstellen",
         "start_date_and_time": "Startdatum en -tijd",
         "snooze": "Snooze",
         "edits_saved": "Bewerkingen correct opgeslagen",
@@ -218,22 +205,18 @@
     "event": {
         "action": {
             "accept": "Aanvaarden",
-            "edit": "Bewerken",
             "move": "Verplaatsen",
             "no": "Nee",
-            "restore": "Herstellen",
             "trash": "Verwijderen",
             "yes": "Ja",
             "decline": "Weigeren",
             "expand": "In Displayer openen",
-            "tentative": "Voorlopig",
             "needs_action": "Heeft actie nodig",
             "invitation_not_sent_yet": "De uitnodiging is nog niet verstuurd"
         }
     },
     "items": {
         "second": "Seconde",
-        "day": "Dag",
         "first": "Eerst",
         "fourth": "Vierde",
         "last": "Laatste",
@@ -243,24 +226,19 @@
     },
     "add": "Toevoegen",
     "appointments": "Afspraken",
-    "create": "Creëren",
     "delete": "Verwijderen",
     "folder": {
         "modal": {
             "delete": {
-                "footer": "Verwijderen",
                 "title": "Verwijderen"
             },
             "move": {
-                "title": "Verplaatsen",
                 "body": {
                     "message3": "Selecteer een kalender om de overwogen afspraak naar te verplaatsen:"
                 },
-                "footer": "Leeg",
                 "input": {
                     "filter": "Kalenders filteren"
-                },
-                "new": "Nieuwe kalender"
+                }
             },
             "restore": {
                 "title": "Herstellen",
@@ -268,11 +246,7 @@
             },
             "new": {
                 "duplicate_warning": "Kalender met dezelfde naam bestaat al",
-                "footer": "CREËREN",
                 "title2": "Creatie nieuwe kalender"
-            },
-            "item": {
-                "empty": "Leeg"
             },
             "footer": {
                 "go_back": "Teruggaan"
@@ -283,28 +257,21 @@
     "message": {
         "snackbar": {
             "invite": {
-                "error": "Er is iets misgegaan, probeer het opnieuw.",
                 "accept": "U hebt geantwoord als Aanvaard",
                 "decline": "U hebt geantwoord als Geweigerd",
                 "tentative": "U hebt geantwoord als: Voorlopig"
             },
-            "appt_deleted_error": "Er is iets misgegaan, probeer het opnieuw.",
             "settings_saved": "Bewerkingen correct opgeslagen",
             "appt_moved": "Afspraak met succes verplaatst naar",
-            "appt_moved_error": "Er ging iets mis, afspraak niet verplaatst, probeer het opnieuw.",
             "appointment_permanently_deleted_error": "Er is iets misgegaan, probeer het opnieuw",
             "appointment_permanently_deleted_succesfully": "Definitieve verwijdering met succes voltooid",
             "appt_moved_to_trash": "Afspraak verplaatst naar prullenbak",
             "appt_restored": "Afspraak met succes hersteld naar",
-            "calendar_delete_error": "Er is iets misgegaan, probeer het opnieuw.",
             "calendar_deleted_successfully": "Kalender met succes verwijderd.",
             "calendar_moved_to_root_folder": "Kalender verplaatst naar Root-map",
             "calendar_moved_to_trash": "Kalender verplaatst naar prullenbak",
-            "edit_calendar": "Bewerkingen correct opgeslagen",
             "edit_calendar_error": "Er ging iets mis, probeer het nog eens",
-            "new_calendar_create_error": "Er ging iets mis, probeer het nog eens",
             "new_calendar_created": "Nieuwe kalender gecreëerd",
-            "calendar_moved_to_root_folder_error": "Er ging iets mis, probeer het nog eens",
             "calendar_moved_to_trash_error": "Er is iets misgegaan, probeer het opnieuw",
             "calendar_permanently_deleted": "Kalender permanent verwijderd",
             "calendar_restored": "Kalender met succes hersteld",
@@ -320,7 +287,6 @@
         "delete_all_occurences": "Alle voorvallen verwijderen",
         "delete_future_occurences": "Dit voorval en alle toekomstige voorvallen verwijderen",
         "delete_future_occurences_warning": "Dit zal ook alle uitzonderingen (voor en na deze instantie) in de reeks verwijderen",
-        "have_not_sent_invitation": "U heeft de uitnodiging nog niet naar de deelnemers gestuurd",
         "invite_has_no_message": "Deze uitnodiging heeft geen tekstbericht",
         "invited_you": "nodigde u uit voor",
         "meeting_canceled": "De volgende meeting is geannuleerd",
@@ -366,15 +332,12 @@
         "october": "Oktober",
         "september": "September"
     },
-    "of": "van",
     "owner": "Eigenaar",
     "read": "Gelezen",
     "repeat": {
-        "custom": "Op maat",
         "none": "Geen",
         "customize": "Personaliseren",
         "daily": "Dagelijks",
-        "everyDay": "Elke dag",
         "everyMonth": "Elke maand",
         "everyWeek": "Elke week",
         "everyYear": "Elk jaar",
@@ -385,32 +348,20 @@
     "settings": {
         "options": {
             "dflt_vsblty_opt": {
-                "public": "Publiek",
-                "private": "Privé"
+                "public": "Publiek"
             },
             "show_reminder": {
                 "never": "Nooit",
-                "all_time": "De hele tijd van het evenement",
                 "day_before": "1 dag voordien",
                 "day_before_plural": "{{count}} dagen voordien",
-                "hour_before": "1 uur voordien",
-                "hour_before_plural": "{{count}} uren voordien",
                 "week_before": "1 week voordien",
-                "week_before_plural": "{{count}} weken voordien",
-                "minute_before": "1 minuut voordien",
-                "minute_before_plural": "{{count}} minuten voordien"
+                "week_before_plural": "{{count}} weken voordien"
             },
             "weekdays": {
                 "friday": "Vrijdag",
-                "monday": "Maandag",
                 "saturday": "Zaterdag",
-                "sunday": "Zondag",
                 "thursday": "Donderdag",
-                "tuesday": "Dinsdag",
                 "wednesday": "Woensdag"
-            },
-            "default_cal_opts": {
-                "calendar": "Kalender"
             },
             "default_view": {
                 "day": "Dagweergave",
@@ -461,7 +412,6 @@
     "share": {
         "options": {
             "share_calendar_role": {
-                "none": "Geen",
                 "admin": "Admin (kan bekijken, bewerken, toevoegen, verwijderen en beheren)",
                 "manager": "Manager (kan bekijken, bewerken, toevoegen en verwijderen)",
                 "viewer": "Kijker (kan bekijken)"
@@ -488,9 +438,7 @@
         "invite": {
             "error": "Fout"
         },
-        "new_time_proposed_error": "Er is iets misgegaan, probeer het opnieuw",
         "proposed_time_error": "Er is iets misgegaan, probeer het opnieuw",
-        "error": "Er ging iets mis, probeer het opnieuw",
         "new_time_proposed_succes": "Nieuwe tijd voorgesteld",
         "proposed_time_accepted": "U aanvaardde de voorgestelde tijd",
         "url_copied": "{{title}} gekopieerd",
@@ -504,13 +452,11 @@
     "calendar": {
         "modal": {
             "custom_schedule": {
-                "footer": "Bewerken",
                 "title": "Werkuren aanpassen"
             }
         }
     },
     "search": {
-        "results_for": "Resultaten voor:",
         "organized_by": "georganiseerd door"
     },
     "participants": {
@@ -542,7 +488,6 @@
         "copy_ics_url": "Kopie ICS url",
         "copy_outlook_url": "Kopie Outlook url",
         "copy_vector_url": "Kopie Weergave url",
-        "show_optionals": "Optiemogelijkheden weergeven",
         "add_attachments": "Bijlagen toevoegen",
         "chat": "Uitrusting",
         "equipment": "Uitrusting",
@@ -583,7 +528,6 @@
     "shares_info": "Delen info",
     "workflow": "Workflow",
     "write": "Schrijven",
-    "private": "Privé",
     "remove_from_this_list": "Uit deze lijst verwijderen",
     "revoke_with_custom_message": "Toegang intrekken door een aangepaste melding te verzenden",
     "shared_items": "Gedeelde items",
