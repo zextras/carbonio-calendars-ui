@@ -13,29 +13,26 @@ import {
 	SnackbarManagerContext,
 	Row
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
-import { map } from 'lodash';
+import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
-import { editAppointment } from '../../actions/action-functions';
-import {
-	deletePermanentlyItem,
-	moveApptToTrashItem,
-	openInDisplayerItem
-} from '../../actions/action-items';
+import { editAppointment } from '../../actions/appointment-actions-fn';
+import { PANEL_VIEW } from '../../constants';
+import { ActionsContext, PanelView } from '../../types/actions';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
-import { applyTag, createAndApplyTag } from '../tags/tag-actions';
+import { createAndApplyTag } from '../tags/tag-actions';
 
-const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
+const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> = ({
 	event,
-	invite
-}): ReactElement => {
+	invite,
+	actions
+}): ReactElement | null => {
 	const createModal = useContext(ModalManagerContext);
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const context = useMemo(
+	const context = useMemo<ActionsContext>(
 		() => ({
 			replaceHistory,
 			dispatch,
@@ -44,43 +41,12 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
 			tags,
 			createAndApplyTag,
 			isInstance: true,
-			ridZ: event.resource.ridZ
+			ridZ: event.resource.ridZ,
+			panelView: PANEL_VIEW.APP as PanelView
 		}),
 		[createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
 	);
-
-	const otherActions = useMemo(
-		() =>
-			!invite
-				? []
-				: [
-						event.resource.calendar.id === FOLDERS.TRASH
-							? deletePermanentlyItem(invite, event, context, t)
-							: moveApptToTrashItem(invite, event, context, t),
-						openInDisplayerItem(event, context, t),
-						applyTag({ t, context, invite })
-				  ],
-		[context, event, invite, t]
-	);
-
-	const otherActionsOptions = useMemo(
-		() =>
-			map(otherActions, (action) => ({
-				id: action.label,
-				icon: action.icon,
-				label: action.label,
-				key: action.id,
-				color: action.color,
-				items: action.items,
-				customComponent: action.customComponent,
-				click: (ev: any): void => {
-					ev.stopPropagation();
-					action.click();
-				}
-			})),
-		[otherActions]
-	);
-	return (
+	return event ? (
 		<>
 			{event.resource?.calendar?.name === 'Trash' ? (
 				<Button
@@ -94,12 +60,12 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
 					disabled={!event.haveWriteAccess}
 					type="outlined"
 					label={t('label.edit', 'edit')}
-					onClick={(ev: Event): void => editAppointment(ev, event, invite, context)}
+					onClick={editAppointment({ event, invite, context })}
 				/>
 			)}
 
 			<Padding left="small">
-				<Dropdown disableAutoFocus items={otherActionsOptions} placement="bottom-end">
+				<Dropdown disableAutoFocus items={actions} placement="bottom-end">
 					<Row>
 						<Button
 							type="outlined"
@@ -110,7 +76,7 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite }> = ({
 				</Dropdown>
 			</Padding>
 		</>
-	);
+	) : null;
 };
 
 export default OrganizerActions;

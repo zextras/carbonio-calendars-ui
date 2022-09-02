@@ -4,12 +4,17 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { throttle } from 'lodash';
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import { debounce } from 'lodash';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectEditorPlainText, selectEditorRichText } from '../../../store/selectors/editor';
+import {
+	selectEditorDisabled,
+	selectEditorIsRichText,
+	selectEditorPlainText,
+	selectEditorRichText
+} from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
 const TextArea = styled.textarea`
@@ -34,7 +39,6 @@ const EditorWrapper = styled.div`
 	width: 100%;
 	height: 100%;
 	overflow-y: auto;
-
 	position: relative;
 	.tox .tox-editor-header {
 		z-index: 0;
@@ -42,7 +46,6 @@ const EditorWrapper = styled.div`
 	> .tox:not(.tox-tinymce-inline) {
 		width: 100%;
 		border: none;
-
 		.tox-editor-header {
 			background-color: ${(props): string => props.theme.palette.gray6.regular};
 		}
@@ -77,19 +80,23 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
 	const [t] = useTranslation();
 	const { onTextChange } = callbacks;
-	const isRichText = true;
+
+	const isRichText = useSelector(selectEditorIsRichText(editorId));
 	const richText = useSelector(selectEditorRichText(editorId));
 	const plainText = useSelector(selectEditorPlainText(editorId));
-	const [plainTextValue, setPlainTextValue] = useState(plainText);
+	const disabled = useSelector(selectEditorDisabled(editorId));
+
+	const [plainTextValue, setPlainTextValue] = useState(plainText ?? '');
+	const [richTextValue, setRichTextValue] = useState(richText ?? '');
 
 	const textAreaLabel = useMemo(
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
 		[t]
 	);
 
-	const throttleInput = useMemo(
+	const debounceInput = useMemo(
 		() =>
-			throttle(onTextChange, 500, {
+			debounce(onTextChange, 500, {
 				trailing: true,
 				leading: false
 			}),
@@ -98,38 +105,52 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 
 	const onRichTextChange = useCallback(
 		(e) => {
-			throttleInput(e);
+			setRichTextValue(e[1]);
+			setPlainTextValue(e[0]);
+			debounceInput(e);
 		},
-		[throttleInput]
+		[debounceInput]
 	);
 
 	const onPlainTextChange = useCallback(
 		(e) => {
-			setPlainTextValue(e[0]);
-			throttleInput(e);
+			setPlainTextValue(e.target.value);
+			debounceInput([e.target.value, e.target.value]);
 		},
-		[throttleInput]
+		[debounceInput]
 	);
+
+	useEffect(() => {
+		if (plainText) {
+			setPlainTextValue(plainText);
+		}
+	}, [plainText]);
+
+	useEffect(() => {
+		if (richText) {
+			setRichTextValue(richText);
+		}
+	}, [richText]);
 
 	return (
 		<>
 			{composerIsAvailable && isRichText ? (
 				<EditorWrapper>
-					{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-					{/* @ts-ignore */}
-					<Composer value={richText} onEditorChange={onRichTextChange} minHeight={200} />
+					<Composer
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						onEditorChange={onRichTextChange}
+						minHeight={200}
+						value={richTextValue}
+						disabled={disabled?.composer}
+					/>
 				</EditorWrapper>
 			) : (
 				<TextArea
 					placeholder={textAreaLabel}
 					value={plainTextValue}
-					onChange={(ev): void => {
-						// eslint-disable-next-line no-param-reassign
-						ev.target.style.height = 'auto';
-						// eslint-disable-next-line no-param-reassign
-						ev.target.style.height = `${25 + ev.target.scrollHeight}px`;
-						onPlainTextChange([ev.target.value, ev.target.value]);
-					}}
+					onChange={onPlainTextChange}
+					disabled={disabled?.composer}
 				/>
 			)}
 		</>

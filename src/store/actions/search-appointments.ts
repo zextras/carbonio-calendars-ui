@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { isNil, omitBy } from 'lodash';
+import { searchRequest } from '../../soap/search-request';
+import { SearchRequestProps } from '../../types/soap/soap-actions';
 import { selectAllCheckedCalendarsQuery } from '../selectors/calendars';
 
 export const searchAppointments = createAsyncThunk(
@@ -24,20 +26,12 @@ export const searchAppointments = createAsyncThunk(
 			sortBy?: string;
 		},
 		{ getState }: any
-	): Promise<unknown> =>
-		soapFetch('Search', {
-			_jsns: 'urn:zimbraMail',
-			limit: '500',
-			calExpandInstEnd: spanEnd,
-			calExpandInstStart: spanStart,
-			// locale: {
-			//	_content: "it",
-			// },
-			offset: offset ?? 0,
-			sortBy: sortBy ?? 'none',
-			types: 'appointment',
-			query: {
-				_content: query ?? selectAllCheckedCalendarsQuery(getState())
-			}
-		})
+	): Promise<unknown> => {
+		const _content = query ?? selectAllCheckedCalendarsQuery(getState());
+		const arg = omitBy(
+			{ start: spanStart, end: spanEnd, content: _content, sortBy, offset },
+			isNil
+		) as SearchRequestProps;
+		return searchRequest(arg);
+	}
 );

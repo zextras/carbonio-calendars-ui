@@ -8,11 +8,10 @@ import React, { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { selectCalendar } from '../../store/selectors/calendars';
-import { Store } from '../../types/store/store';
 
 export const CalendarInfoRow = (): ReactElement => {
 	const { calendarId } = useParams<{ calendarId: string }>();
-	const calendar = useSelector((s: Store) => selectCalendar(s, calendarId));
+	const calendar = useSelector(selectCalendar(calendarId));
 
 	return (
 		<>

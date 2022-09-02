@@ -21,6 +21,7 @@ import 'moment-timezone';
 import { useTranslation } from 'react-i18next';
 import { addBoard, getAction, Action } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
+import { generateEditor } from '../../commons/editor-generator';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
@@ -29,7 +30,7 @@ import { getInvite } from '../../store/actions/get-invite';
 import { CALENDAR_ROUTE } from '../../constants';
 import BodyMessageRenderer from '../../commons/body-message-renderer.jsx';
 import { useInvite } from '../../hooks/use-invite';
-import { StoreProvider } from '../../store/redux';
+import { store, StoreProvider } from '../../store/redux';
 
 /**
    @todo: momentary variables to dynamize
@@ -150,16 +151,43 @@ const InviteResponse: FC<InviteResponse> = ({
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		dispatch(getInvite({ inviteId })).then((res) => {
-			const normalizedInvite = { ...normalizeInvite(res.payload.m), ...res.payload.m };
-			const requiredEvent = inviteToEvent(normalizeInvite(res.payload.m));
-			addBoard({
-				url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
+			const normalizedInvite = normalizeInvite(res.payload.m);
+			const requiredEvent = inviteToEvent(normalizedInvite);
+			const { editor, callbacks } = generateEditor({
+				event: requiredEvent,
+				invite: normalizedInvite,
 				context: {
-					event: requiredEvent,
-					invite: normalizedInvite,
-					proposeNewTime: true
+					panel: false,
+					disabled: {
+						title: true,
+						location: true,
+						organizer: true,
+						virtualRoom: true,
+						richTextButton: true,
+						attachmentsButton: true,
+						saveButton: true,
+						attendees: true,
+						optionalAttendees: true,
+						freeBusy: true,
+						calendar: true,
+						private: true,
+						allDay: true,
+						reminder: true,
+						recurrence: true,
+						composer: true
+					}
 				}
 			});
+			const storeData = store.getState();
+			if (editor.id) {
+				addBoard({
+					url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
+					context: {
+						...storeData.editor.editors[editor.id],
+						callbacks
+					}
+				});
+			}
 		});
 	}, [dispatch, inviteId]);
 	return (
@@ -218,6 +246,7 @@ const InviteResponse: FC<InviteResponse> = ({
 								invite={invite}
 								compNum={compNum}
 								proposeNewTime={proposeNewTime}
+								parent={parent}
 							/>
 					  )}
 

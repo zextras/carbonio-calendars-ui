@@ -85,10 +85,8 @@ export const editorSlice = createSlice({
 });
 
 export const {
-	initializeEditorAppointment,
 	addAppointmentEditor,
 	editAppointmentData,
-	editResourceData,
 	openEditor,
 	editRoom,
 	editAttendees,

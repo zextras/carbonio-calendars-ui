@@ -7,8 +7,8 @@ export type ModalFooterProps = {
 	mainAlignment?: string | undefined;
 	crossAlignment?: string | undefined;
 	padding?: Record<string, string> | undefined;
-	onConfirm: (a: string) => void;
-	secondaryAction?: () => void | undefined;
+	onConfirm: (ev: Event) => void;
+	secondaryAction?: (ev: Event) => void;
 	label: string;
 	secondaryLabel?: string | undefined;
 	disabled?: boolean | undefined;
@@ -21,6 +21,10 @@ export type ModalFooterProps = {
 	primaryBtnType?: string | undefined;
 	secondaryBtnType?: string | undefined;
 	showDivider?: boolean | undefined;
+	additionalAction?: (ev: Event) => void;
+	additionalBtnType?: string | undefined;
+	additionalColor?: string | undefined;
+	additionalLabel?: string | undefined;
 	primaryTooltip?:
 		| {
 				label: string;

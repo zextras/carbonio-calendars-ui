@@ -4,12 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
-import {
-	useUserSettings,
-	soapFetch,
-	editSettings,
-	SettingsHeader
-} from '@zextras/carbonio-shell-ui';
+import { useUserSettings, editSettings, SettingsHeader } from '@zextras/carbonio-shell-ui';
 import {
 	Container,
 	FormSection,
@@ -33,6 +28,7 @@ import {
 	permissionsSubSection,
 	workWeekSubSection
 } from './sub-sections';
+import { getRightsRequest } from '../soap/get-rights-request';
 
 export default function CalendarSettingsView() {
 	const [t] = useTranslation();
@@ -51,9 +47,7 @@ export default function CalendarSettingsView() {
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const getUserRights = async () => {
-		const response = await soapFetch('GetRights', {
-			_jsns: 'urn:zimbraAccount'
-		});
+		const response = await getRightsRequest();
 		setUserRights(response);
 	};
 	useEffect(() => {

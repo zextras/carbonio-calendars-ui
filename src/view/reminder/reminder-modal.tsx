@@ -13,7 +13,6 @@ import { ModalHeader } from '../../commons/modal-header';
 import { generateEditor } from '../../commons/editor-generator';
 import ModalFooter from '../../commons/modal-footer';
 import { CALENDAR_ROUTE } from '../../constants';
-import { normalizeEditorFromInvite } from '../../normalizations/normalize-editor';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
@@ -59,24 +58,35 @@ export const ReminderModal = ({
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		dispatch(getInvite({ inviteId: activeReminder.inviteId })).then(({ payload }) => {
-			const invite = normalizeInvite(payload.m);
-			const editorData = normalizeEditorFromInvite(invite);
-			const { editor, callbacks } = generateEditor(
-				activeReminder?.id ?? 'new',
-				{
-					...editorData,
-					isSeries: true,
-					isInstance: false,
-					isException: false
-				},
-				false
-			);
-			addBoard({
-				url: `${CALENDAR_ROUTE}/`,
-				title: editor.title,
-				context: { ...editor, callbacks }
-			});
-			dismissAll();
+			if (activeReminder) {
+				const invite = normalizeInvite(payload.m);
+				const event = {
+					resource: {
+						calendar: activeReminder.calendar,
+						isRecurrent: activeReminder.isRecurrent,
+						isException: !!activeReminder.isException,
+						location: activeReminder.location,
+						inviteId: activeReminder.inviteId,
+						id: activeReminder.id
+					},
+					title: activeReminder.name,
+					allDay: activeReminder.allDay,
+					start: activeReminder.start,
+					end: activeReminder.end
+				};
+				const { editor, callbacks } = generateEditor({
+					event,
+					invite,
+					context: { panel: false }
+				});
+				addBoard({
+					url: `${CALENDAR_ROUTE}/`,
+					title: editor.title,
+					context: { ...editor, callbacks }
+				});
+				addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
+				dismissAll();
+			}
 		});
 	}, [activeReminder, dismissAll, dispatch]);
 

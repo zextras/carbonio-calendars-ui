@@ -3,11 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { find, reduce, map, isEmpty } from 'lodash';
 import moment from 'moment';
-import { EventResource, EventType } from '../types/event';
+import { EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { Calendar } from '../types/store/calendars';
+import { Invite } from '../types/store/invite';
 
 export const getLocationUrl = (location: string): string | undefined => {
 	const regex = /\bhttps?:\/\/\S+/g;
@@ -16,14 +18,25 @@ export const getLocationUrl = (location: string): string | undefined => {
 	return found?.length ? found[0] : undefined;
 };
 
-const normalizeEventResource = (
-	appt: Appointment,
-	inst: ExceptionReference,
-	calendar: Calendar
-): EventResource => ({
+export const getDaysFromMillis = (milliseconds: number): number => milliseconds / 3600 / 1000 / 24;
+
+const normalizeEventResource = ({
+	appt,
+	calendar,
+	inst,
+	invite,
+	iAmOrganizer
+}: {
+	appt: Appointment;
+	calendar: Calendar;
+	inst?: ExceptionReference;
+	invite?: Invite;
+	iAmOrganizer: boolean;
+}): any => ({
 	id: appt.id,
-	inviteId: inst.inviteId ?? appt.inviteId,
-	ridZ: inst.ridZ,
+	inviteId: inst?.inviteId ?? appt.inviteId,
+	ridZ: inst?.ridZ,
+	name: inst?.name ?? appt.name,
 	calendar: {
 		id: calendar.id,
 		name: calendar.name,
@@ -31,58 +44,83 @@ const normalizeEventResource = (
 		owner: calendar.owner
 	},
 	flags: appt.flags,
-	iAmOrganizer: appt.isOrg ?? false,
-	iAmVisitor: !!(!appt.isOrg && calendar.owner) ?? false,
-	iAmAttendee: (!appt.isOrg && !calendar.owner) ?? false,
-	status: appt.status,
-	location: appt.loc,
-	locationUrl: getLocationUrl(appt.loc ?? ''),
+	dur: inst?.dur ?? appt.dur,
+	iAmOrganizer,
+	iAmVisitor: !!(!iAmOrganizer && calendar.owner) ?? false,
+	iAmAttendee: (!iAmOrganizer && !calendar.owner) ?? false,
+	status: inst?.status ?? appt.status,
+	location: inst?.loc ?? appt.loc,
+	locationUrl: getLocationUrl(inst?.loc ?? appt.loc ?? ''),
 	fragment: (inst as ExceptionReference)?.fr ?? appt.fr,
-	class: appt.class,
-	freeBusy: appt.fb,
-	hasChangesNotNotified: appt.draft || false,
+	class: inst?.class ?? appt.class,
+	freeBusy: inst?.fb ?? appt.fb,
+	hasChangesNotNotified: inst?.draft ?? appt.draft ?? false,
 	inviteNeverSent: appt.neverSent || false,
-	hasOtherAttendees: appt.otherAtt ?? false,
-	isRecurrent: inst.recur ?? appt.recur,
-	isException: inst.ex ?? false,
-	participationStatus: appt.ptst,
+	hasOtherAttendees: inst?.otherAtt ?? appt.otherAtt ?? false,
+	isRecurrent: inst?.recur ?? appt.recur,
+	isException: inst?.ex ?? false,
+	hasException: inst?.hasEx ?? appt.hasEx ?? false,
+	participationStatus: inst?.ptst ?? appt.ptst,
 	organizer: {
 		name: appt?.or?.d,
 		email: appt?.or?.a
 	},
 	compNum: appt.compNum,
-	apptStart: inst.s,
-	alarm: appt.alarm,
-	alarmData: appt.alarmData,
+	apptStart: inst?.s,
+	alarm: inst?.alarm ?? appt.alarm,
+	alarmData: invite?.alarmData ?? appt.alarmData,
 	uid: appt.uid,
 	tags: appt.tags ?? [],
-	neverSent: appt.neverSent
+	neverSent: inst?.neverSent ?? appt.neverSent,
+	appointment: appt,
+	instance: inst
 });
 
-export const getDaysFromMillis = (milliseconds: number): number => milliseconds / 3600 / 1000 / 24;
-
-export const normalizeCalendarEvent = (
-	calendar: Calendar,
-	appt: Appointment,
-	inst: InstanceReference,
-	isShared: boolean
-): EventType => ({
-	start: appt.allDay ? new Date(moment(inst.s).startOf('day').valueOf()) : new Date(inst.s),
-	end: appt.allDay
-		? new Date(
-				moment(inst?.ridZ)
-					.add(getDaysFromMillis(appt.dur) - 1, 'days')
-					.endOf('day')
-					.valueOf()
-		  )
-		: new Date(inst.s + ((inst as ExceptionReference).dur ?? appt.dur)),
-	resource: normalizeEventResource(appt, inst as ExceptionReference, calendar),
-	title: inst?.name ?? appt?.name ?? '',
-	allDay: appt.allDay,
-	permission: !isShared,
-	id: `${appt.id}:${inst.ridZ}`, // inst.inviteId ?? appt.inviteId
-	haveWriteAccess: calendar.haveWriteAccess ?? false
-});
+export const normalizeCalendarEvent = ({
+	calendar,
+	appointment,
+	instance,
+	invite
+}: {
+	calendar: Calendar;
+	appointment: Appointment;
+	instance?: InstanceReference;
+	invite?: Invite;
+}): EventType => {
+	const allDay = (instance as ExceptionReference)?.allDay ?? appointment?.allDay;
+	const instanceStart = instance
+		? (instance as ExceptionReference).s + ((instance as ExceptionReference)?.tzo ?? 0)
+		: undefined;
+	const start = instanceStart || (invite as Invite)?.start?.u || appointment.inst?.[0]?.s;
+	const dur = (instance as ExceptionReference)?.dur ?? appointment.dur;
+	const user = getUserAccount();
+	const iAmOrganizer = appointment.or.a === user.name;
+	return {
+		start: allDay ? new Date(moment(start).startOf('day').valueOf()) : new Date(start),
+		end: allDay
+			? new Date(
+					moment(start)
+						.add(getDaysFromMillis(dur) - 1, 'days')
+						.endOf('day')
+						.valueOf()
+			  )
+			: new Date(start + dur),
+		resource: normalizeEventResource({
+			appt: appointment,
+			iAmOrganizer,
+			calendar,
+			inst: instance as ExceptionReference,
+			invite
+		}),
+		title: instance?.name ?? appointment?.name ?? '',
+		allDay,
+		id: `${appointment.id}:${(instance as ExceptionReference)?.inviteId ?? appointment.inviteId}:${
+			instance?.ridZ ?? ''
+		}`,
+		permission: !appointment?.l?.includes(':'),
+		haveWriteAccess: calendar?.haveWriteAccess
+	};
+};
 
 export const normalizeCalendarEvents = (
 	appts: Array<Appointment>,
@@ -99,7 +137,13 @@ export const normalizeCalendarEvents = (
 					return cal
 						? [
 								...acc,
-								...map(appt.inst, (inst) => normalizeCalendarEvent(cal, appt, inst, isShared))
+								...map(appt.inst, (inst) =>
+									normalizeCalendarEvent({
+										calendar: cal,
+										appointment: appt,
+										instance: inst
+									})
+								)
 						  ]
 						: acc;
 				},

@@ -10,8 +10,6 @@ import { EditorPanel } from './editor-panel';
 const BoardEditPanel = (): ReactElement | null => {
 	const board = useBoard();
 
-	return board?.id ? (
-		<EditorPanel editorId={board?.id} callbacks={board.context.callbacks} />
-	) : null;
+	return board?.id ? <EditorPanel editorId={board?.id} callbacks={board.callbacks} /> : null;
 };
 export default BoardEditPanel;

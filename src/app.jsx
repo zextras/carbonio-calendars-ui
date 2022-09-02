@@ -80,6 +80,7 @@ const SearchView = (props) => (
 		</StoreProvider>
 	</Suspense>
 );
+
 export default function App() {
 	const [t] = useTranslation();
 	useEffect(() => {
@@ -116,20 +117,14 @@ export default function App() {
 				icon: 'CalendarModOutline',
 				click: (ev) => {
 					ev?.preventDefault?.();
-					const { editor, callbacks } = generateEditor(
-						'new',
-						{
-							title: t('label.new_appointment', 'New Appointment')
-						},
-						false
-					);
+					const { editor, callbacks } = generateEditor({
+						context: { title: t('label.new_appointment', 'New Appointment'), panel: false }
+					});
 					addBoard({
 						url: `${CALENDAR_ROUTE}/`,
 						title: editor.title,
-						context: {
-							...editor,
-							callbacks
-						}
+						...editor,
+						callbacks
 					});
 				},
 				disabled: false,

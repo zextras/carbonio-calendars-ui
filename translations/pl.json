@@ -221,7 +221,7 @@
         "to": "do",
         "preview": "Podgląd",
         "no_title": "Brak tytułu",
-        "scheduled_in": "Zaplanowano na za"
+        "scheduled_in": "Kalendarz"
     },
     "message": {
         "modal": {
@@ -276,18 +276,14 @@
         "delete_tag_message1": "Czy na pewno chcesz usunąć Tag \"{{name}}\"?",
         "delete_tag_message2": "Po usunięciu Tag zostanie zdjęty z każdego elementu oznaczonego nim.",
         "appointment_type_handle": "\"{{name}}\" to powtarzające się spotkanie. Chcesz otworzyć tylko ten przypadek czy serię?",
-        "accepted": "{{count}} zaakceptowało",
         "awaiting": "oczekujące",
-        "guests": "goście",
         "more": "Więcej...",
         "organizer": "Organizator",
-        "reply": "Odpowiedz",
         "reply_all": "Odpowiedz wszystkim",
         "required_participant_0": "{{count}} Uczestnik",
         "required_participant_1": "{{count}} Uczestników",
         "required_participant_2": "{{count}} Uczestników",
         "send_email": "Wyślij e-mail",
-        "send_email_to": "Wyślij e-mail do: {{email}}",
         "declined": "{{count}} odrzuciło",
         "optional_participant_0": "{{count}} Opcjonalny",
         "optional_participant_1": "{{count}} Opcjonalnych",
@@ -627,8 +623,7 @@
         "copy_outlook_url": "Skopiuj link do Outlooka",
         "copy_vector_url": "Skopiuj link do Widoku",
         "enable_disable_rich_text": "Włącz/Wyłącz rozbudowany edytor tekstu",
-        "chat_room": "Pokój Chatu",
-        "calendar_sharing_status_one": "Udostępniono 1 osobie",
+        "chat_room": "Link do Wirtualnego Pokoju",
         "equipment": "Ekwipunek",
         "location": "Lokalizacja",
         "virtual_chat": "Wirtualny Czat",

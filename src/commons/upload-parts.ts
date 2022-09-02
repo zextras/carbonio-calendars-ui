@@ -9,7 +9,7 @@ import { convertToDecimal } from './utilities';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const uploadParts = async (files: any): Promise<any> =>
 	Promise.all(
-		map(files.files, (file) =>
+		map(files, (file) =>
 			fetch('/service/upload?fmt=extended,raw', {
 				headers: {
 					'Cache-Control': 'no-cache',

@@ -7,7 +7,7 @@ import { map } from 'lodash';
 import React, { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
 import { EditorCallbacks } from '../../../types/editor';
-import { addAttachments } from './editor-attachments';
+import { addAttachments } from './editor-attachments-button';
 import { DropZoneAttachment } from './editor-dropzone-attachments';
 
 type DropzoneProps = {

@@ -6,19 +6,30 @@
 import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import { addBoard, useUserSettings, getBridgedFunctions, store } from '@zextras/carbonio-shell-ui';
+import {
+	FOLDERS,
+	getBridgedFunctions,
+	useUserSettings,
+	addBoard
+} from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEqual, minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { workWeek } from '../../utils/work-week';
-import { selectCheckedCalendarsMap, selectEnd, selectStart } from '../../store/selectors/calendars';
+import {
+	selectCalendars,
+	selectCheckedCalendarsMap,
+	selectEnd,
+	selectStart
+} from '../../store/selectors/calendars';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
@@ -29,7 +40,8 @@ import { useAppStatusStore } from '../../store/zustand/store';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { generateEditor } from '../../commons/editor-generator';
 import { getInvite } from '../../store/actions/get-invite';
-import { normalizeEditorFromInvite } from '../../normalizations/normalize-editor';
+import CalendarStyle from './calendar-style';
+import { store } from '../../store/redux';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -67,6 +79,9 @@ export default function CalendarComponent() {
 	const firstDayOfWeek = settings.prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
 	const [date, setDate] = useState(calendarDate);
+	const calendars = useSelector(selectCalendars);
+	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
+	const { action } = useParams();
 
 	if (settings.prefs.zimbraPrefLocale) {
 		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
@@ -174,48 +189,59 @@ export default function CalendarComponent() {
 
 	const handleSelect = useCallback(
 		(e) => {
-			if (!summaryViewOpen) {
-				const { editor, callbacks } = generateEditor('new', {
-					title: t('label.new_appointment', 'New Appointment'),
-					start: moment(e.start).valueOf(),
-					end: moment(e.end).valueOf()
+			if (!summaryViewOpen && !action) {
+				const isAllDay =
+					moment(e.end).hours() === moment(e.start).hours() &&
+					moment(e.end).minutes() === moment(e.start).minutes() &&
+					!moment(e.start).isSame(moment(e.end));
+				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
+				const { editor, callbacks } = generateEditor({
+					context: {
+						title: t('label.new_appointment', 'New Appointment'),
+						start: moment(e.start).valueOf(),
+						end: end.valueOf(),
+						allDay: isAllDay ?? false,
+						panel: false
+					}
 				});
-				const storeData = store.store.getState();
+				const storeData = store.getState();
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
 					title: editor.title,
 					context: {
-						...storeData.editor.editors[storeData.editor.activeId],
+						...storeData.editor.editors[editor.id],
 						callbacks
 					}
 				});
 			}
-			useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 		},
-		[summaryViewOpen, t]
+		[action, summaryViewOpen, t]
 	);
 
 	const onEventDrop = useCallback(
 		(appt) => {
-			const { start, end, event } = appt;
-			if (!isEqual(event.start, start) || !isEqual(event.end, end)) {
+			const { start, end, event, isAllDay } = appt;
+			if (!isEqual(event.start, start) || !isEqual(event.end, end) || event.allDay !== !!isAllDay) {
 				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ })).then(
 					({ payload }) => {
+						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();
+						const endTime =
+							isAllDay || event.allDay ? moment(end).startOf('day') : moment(end).valueOf();
 						const invite = normalizeInvite(payload.m);
-						const editorData = normalizeEditorFromInvite(invite);
-						const { callbacks } = generateEditor(invite.apptId, {
-							...editorData,
-							start: moment(start).valueOf(),
-							end: moment(end).valueOf(),
-							isSeries: !!editorData.recur,
-							ridZ: event.resource.ridZ,
-							isInstance: true,
-							isException: !!editorData.exceptId
+						const { editor, callbacks } = generateEditor({
+							event,
+							invite,
+							context: {
+								start: startTime,
+								end: endTime,
+								allDay: !!isAllDay,
+								panel: false
+							}
 						});
-						const storeData = store.store.getState();
+						const storeData = store.getState();
 						callbacks
 							.onSave({
-								isNew: storeData.editor.editors[storeData.editor.activeId]?.isNew
+								isNew: storeData.editor.editors[editor.id]?.isNew
 							})
 							.then((res) => {
 								if (res?.type) {
@@ -267,9 +293,18 @@ export default function CalendarComponent() {
 		[setDate]
 	);
 
+	const resizeEvent = useCallback(({ event, start, end }) => {
+		console.log(event, start, end);
+	}, []);
+
 	return (
 		<>
 			<CalendarSyncWithRange />
+			<CalendarStyle
+				primaryCalendar={primaryCalendar}
+				summaryViewOpen={summaryViewOpen}
+				action={action}
+			/>
 			<BigCalendar
 				selectable
 				eventPropGetter={eventPropGetter}
@@ -291,8 +326,14 @@ export default function CalendarComponent() {
 				onSelectSlot={handleSelect}
 				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
 				onEventDrop={onEventDrop}
+				onEventResize={resizeEvent}
 				formats={{ eventTimeRangeFormat: () => '' }}
-				draggableAccessor={(event) => event.resource.iAmOrganizer}
+				resizable
+				resizableAccessor={() => false}
+				onSelecting={() => !summaryViewOpen && !action}
+				draggableAccessor={(event) =>
+					event.resource.iAmOrganizer && event.resource.calendar.id !== FOLDERS.TRASH
+				}
 			/>
 		</>
 	);

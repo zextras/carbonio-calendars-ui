@@ -4,17 +4,20 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ReminderItem } from '../types/appointment-reminder';
-import { Appointment } from '../types/store/appointments';
+import { EventType } from '../types/event';
 
-export const normalizeReminderItem = (appointment: Appointment): ReminderItem => ({
-	start: new Date(appointment.alarmData[0].alarmInstStart),
-	key: `${appointment?.id}-${appointment?.alarmData?.[0]?.alarmInstStart}`,
-	isRecurrent: !!appointment.recur ?? false,
-	end: new Date(appointment.alarmData[0].alarmInstStart + appointment.dur),
-	alarmData: appointment.alarmData,
-	location: appointment.alarmData[0].loc ?? appointment.loc,
-	name: appointment.alarmData[0].name ?? appointment.name,
-	isOrg: appointment.isOrg,
-	id: appointment.id,
-	inviteId: appointment.inviteId
+export const normalizeReminderItem = (appointment: EventType): ReminderItem => ({
+	start: new Date(appointment.resource?.alarmData?.[0]?.alarmInstStart),
+	key: `${appointment?.resource?.id}-${appointment.resource?.alarmData?.[0]?.alarmInstStart}`,
+	isRecurrent: appointment.resource.isRecurrent,
+	end: new Date(appointment.resource.alarmData[0].alarmInstStart + appointment.resource.dur),
+	alarmData: appointment.resource.alarmData,
+	location: appointment.resource.location,
+	name: appointment.title,
+	isOrg: appointment.resource.iAmOrganizer,
+	id: appointment.resource.id,
+	inviteId: appointment.resource.inviteId,
+	calendar: appointment.resource.calendar,
+	isException: appointment.resource.isException,
+	allDay: appointment.allDay
 });

@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useMemo } from 'react';
+import React, { ReactElement, useEffect, useMemo } from 'react';
 import { Container, Divider, Popover } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith } from 'lodash';
+import { useAppStatusStore } from '../../store/zustand/store';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 import { TitleRow } from './title-row';
@@ -61,6 +62,16 @@ export const EventSummaryView = ({
 		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
 	);
 
+	useEffect(() => {
+		useAppStatusStore.setState(({ summaryViewCounter }) => ({
+			summaryViewCounter: summaryViewCounter + 1
+		}));
+		return () =>
+			useAppStatusStore.setState(({ summaryViewCounter }) => ({
+				summaryViewCounter: summaryViewCounter - 1
+			}));
+	}, []);
+
 	return invite ? (
 		<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
 			<Container
@@ -74,14 +85,12 @@ export const EventSummaryView = ({
 				{locationData && <LocationRow locationData={locationData} showIcon />}
 				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
 				<ParticipantsRow event={event} invite={invite} />
-				{typeof invite?.tags?.length === 'number' && invite?.tags?.length > 0 && (
-					<TagsRow invite={invite} />
-				)}
+				{event?.resource?.tags?.length > 0 && <TagsRow event={event} />}
 				{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
 					<DescriptionFragmentRow event={event} />
 				)}
 				<Divider />
-				<ActionsButtonsRow event={event} onClose={onClose} invite={invite} />
+				<ActionsButtonsRow event={event} invite={invite} />
 			</Container>
 		</Popover>
 	) : null;

@@ -11,7 +11,7 @@ import { TransProps } from './i18next';
 export type DeleteApptViewType = {
 	open: boolean;
 	onClose: () => void;
-	event: any;
+	event: EventType;
 	isInstance: boolean;
 };
 
@@ -53,7 +53,7 @@ export type DeleteApptFunctionType = {
 	id?: string;
 	notifyOrganizer?: boolean;
 	dispatch: Dispatch;
-	event: any;
+	event: EventType;
 	t?: TFunction;
 	invite: any;
 	notify?: boolean;

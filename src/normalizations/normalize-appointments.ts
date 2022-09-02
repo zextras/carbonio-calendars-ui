@@ -24,7 +24,8 @@ const normalizeApptInstanceRef = (instRef: any): ExceptionReference => ({
 	fr: instRef.fr,
 	recur: instRef.recur,
 	ridZ: instRef.ridZ,
-	s: instRef.s
+	s: instRef.s,
+	tzo: instRef.tzo
 });
 
 const normalizeApptInstancesRefs = (

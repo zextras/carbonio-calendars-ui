@@ -7,11 +7,11 @@ import { Container, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { EventType } from '../types/event';
 import ModalFooter from './modal-footer';
 import { ModalHeader } from './modal-header';
 import { deleteAppointmentPermanent } from '../store/actions/delete-appointment-permanent';
 import { ActionsContext } from '../types/actions';
-import { EventType } from '../types/event';
 
 type DeletePermanentlyProps = {
 	onClose: () => void;
@@ -39,10 +39,7 @@ export const DeletePermanently = ({
 		context
 			.dispatch(
 				deleteAppointmentPermanent({
-					inviteId: event.resource.inviteId,
-					ridZ: event.resource.ridZ,
-					t,
-					id: event.resource.id
+					inviteId: event.resource.inviteId
 				})
 			)
 			.then((res: any) => {
@@ -50,7 +47,7 @@ export const DeletePermanently = ({
 				if (res.type.includes('fulfilled')) {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
-					context.createSnackbar({
+					getBridgedFunctions().createSnackbar({
 						key: `delete-permanently`,
 						replace: true,
 						type: 'success',
@@ -64,7 +61,7 @@ export const DeletePermanently = ({
 				} else {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
-					context.createSnackbar({
+					getBridgedFunctions().createSnackbar({
 						key: `delete-permanently`,
 						replace: true,
 						type: 'error',
@@ -74,7 +71,7 @@ export const DeletePermanently = ({
 					});
 				}
 			});
-	}, [context, event.resource.id, event.resource.inviteId, event.resource.ridZ, onClose, t]);
+	}, [context, event.resource.inviteId, onClose]);
 
 	return (
 		<Container
@@ -85,7 +82,7 @@ export const DeletePermanently = ({
 		>
 			<ModalHeader title={title} onClose={onClose} />
 			<Container padding={{ top: 'large', bottom: 'large' }} crossAlignment="flex-start">
-				{event.resource.isRecurrent ? (
+				{event?.resource?.isRecurrent ? (
 					<Text overflow="break-word">
 						{t(
 							'message.modal.delete.sure_delete_appointment_all_instances_permanently',

@@ -3,10 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getUserAccount, getUserSettings, replaceHistory } from '@zextras/carbonio-shell-ui';
-import { find, startsWith } from 'lodash';
+import {
+	getUserAccount,
+	getUserSettings,
+	replaceHistory,
+	getBridgedFunctions
+} from '@zextras/carbonio-shell-ui';
+import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
+import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { store } from '../store/redux';
@@ -34,20 +40,33 @@ import {
 } from '../store/slices/editor-slice';
 import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
 import { EventResourceCalendar } from '../types/event';
-import { Attendee, InviteClass, InviteFreeBusy } from '../types/store/invite';
+import { Attendee, Invite, InviteClass, InviteFreeBusy } from '../types/store/invite';
 import { getIdentityItems } from './get-identity-items';
 
 let counter = 0;
 
-const getNewEditId = (id: string): string => {
+const getNewEditId = (id?: string): string => {
 	counter += 1;
-	return `${id}-${counter}`;
+	return `${id ?? 'new'}-${counter}`;
+};
+
+export const getEndTime = ({ start, duration }: { start: number; duration: string }): number => {
+	const now = moment(start);
+	if (duration?.includes('m')) {
+		const interval = parseInt(duration, 10) * 60;
+		const value = now.add(interval, 's').valueOf();
+		return isNaN(value) ? now.valueOf() + 3600 : value;
+	}
+	const interval = parseInt(duration, 10);
+	const value = now.add(interval, 's').valueOf();
+	return isNaN(value) ? now.valueOf() + 3600 : value;
 };
 
 const createEmptyEditor = (id: string): Editor => {
 	const identities = getIdentityItems();
 	const {
 		zimbraPrefTimeZoneId,
+		zimbraPrefCalendarDefaultApptDuration,
 		zimbraPrefCalendarApptReminderWarningTime,
 		zimbraPrefDefaultCalendarId = CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
 	} = getUserSettings().prefs;
@@ -60,9 +79,9 @@ const createEmptyEditor = (id: string): Editor => {
 		isException: false,
 		exceptId: undefined,
 		isSeries: false,
-		isInstance: false,
+		isInstance: true,
 		isRichText: true,
-		isNew: true,
+		isNew: startsWith(id, 'new'),
 		attachmentFiles: [],
 		organizer: defaultOrganizer,
 		title: '',
@@ -74,15 +93,64 @@ const createEmptyEditor = (id: string): Editor => {
 		freeBusy: 'B',
 		class: 'PUB',
 		start: moment().valueOf(),
-		end: moment().valueOf() + 3600,
+		end: getEndTime({
+			start: moment().valueOf(),
+			duration: zimbraPrefCalendarDefaultApptDuration as string
+		}),
 		inviteId: undefined,
 		timezone: zimbraPrefTimeZoneId as string,
 		reminder: zimbraPrefCalendarApptReminderWarningTime as string,
 		recur: undefined,
 		richText: '',
 		plainText: '',
+		disabled: {
+			richTextButton: false,
+			attachmentsButton: false,
+			saveButton: false,
+			sendButton: false,
+			organizer: false,
+			title: false,
+			location: false,
+			virtualRoom: false,
+			attendees: false,
+			optionalAttendees: false,
+			freeBusySelector: false,
+			calendarSelector: false,
+			private: false,
+			datePicker: false,
+			timezone: false,
+			allDay: false,
+			reminder: false,
+			recurrence: false,
+			attachments: false,
+			composer: false
+		},
 		id
 	};
+};
+
+export const applyContextToEditor = ({
+	editor,
+	context
+}: {
+	editor: Editor;
+	context: any;
+}): Editor => {
+	let newEditor = createEmptyEditor(editor.id);
+	const contextObj = omit(context, 'disabled');
+	if (!isEmpty(context)) {
+		newEditor = { ...newEditor, ...editor, ...contextObj };
+	}
+	if (!isEmpty(context?.disabled)) {
+		newEditor = {
+			...newEditor,
+			disabled: {
+				...newEditor.disabled,
+				...context.disabled
+			}
+		};
+	}
+	return newEditor;
 };
 
 export const createCallbacks = (id: string): EditorCallbacks => {
@@ -260,18 +328,32 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 	};
 };
 
-export const generateEditor = (
-	id: string,
-	context = {},
-	panel = true
-): { editor: Editor; callbacks: EditorCallbacks } => {
-	const editorId = getNewEditId(id);
-	const emptyEditor = createEmptyEditor(editorId);
-	const editor = { ...emptyEditor, ...context, isNew: startsWith(editorId, 'new') };
-	const callbacks = createCallbacks(editorId);
-	const { dispatch } = store;
-	const storeEditorData = { ...editor, panel };
-	dispatch(createNewEditor(storeEditorData));
-	const storeData = store.getState();
-	return { editor: storeData?.editor?.editors?.[editorId], callbacks };
+export const generateEditor = ({
+	event,
+	invite,
+	context
+}: {
+	event?: EventPropType;
+	invite?: Invite;
+	context: any;
+}): { editor: Editor; callbacks: EditorCallbacks } => {
+	const id = getNewEditId(event?.resource?.id);
+	const compiledEditor = normalizeEditor({ invite, event, id });
+	const editor = applyContextToEditor({
+		editor: compiledEditor,
+		context
+	});
+	const callbacks = createCallbacks(id);
+	const closeCurrentEditor = context.panel
+		? callbacks.closeCurrentEditor
+		: getBridgedFunctions().removeCurrentBoard;
+	const { dispatch, getState } = store;
+	dispatch(createNewEditor(editor));
+	return {
+		editor: getState()?.editor?.editors?.[id],
+		callbacks: {
+			...callbacks,
+			closeCurrentEditor
+		}
+	};
 };

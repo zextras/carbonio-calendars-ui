@@ -2,6 +2,71 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.25](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.24...v0.1.25) (2022-09-01)
+
+
+### Features
+
+* attach from files on appointment ([d3c1983](https://github.com/zextras/carbonio-calendars-ui/commit/d3c19831448ec069b4b6da85c1e8ef10d9333861))
+* sort calendars in secondary bar ([902fc7f](https://github.com/zextras/carbonio-calendars-ui/commit/902fc7fb20c298bfa57fb7eb150e4874c811133f))
+* testing initialization ([6b8e0a3](https://github.com/zextras/carbonio-calendars-ui/commit/6b8e0a3feccf4676ba92580f25e7a7384f2eb5c0))
+* testing initialization ([2b6df67](https://github.com/zextras/carbonio-calendars-ui/commit/2b6df67d611ba814ed9eb83cde6e9db6d4fab6ea))
+* warning modal implemented while modifying series ([#107](https://github.com/zextras/carbonio-calendars-ui/issues/107)) ([5541dd2](https://github.com/zextras/carbonio-calendars-ui/commit/5541dd294e7aae955332bd51ea08fc821577ad11))
+
+
+### Bug Fixes
+
+* attachments are visible ([580e0b4](https://github.com/zextras/carbonio-calendars-ui/commit/580e0b492372c52c5cde13fde55883353257e251))
+* attachments ids will be mantained during the editing ([7b04c7f](https://github.com/zextras/carbonio-calendars-ui/commit/7b04c7f981205a7ec170ff270813381888bebc3b))
+* babel js ([95694f5](https://github.com/zextras/carbonio-calendars-ui/commit/95694f5eb43069e8d04a6e714cc52091250cfd5e))
+* change end date on update start date ([#106](https://github.com/zextras/carbonio-calendars-ui/issues/106)) ([e9b633e](https://github.com/zextras/carbonio-calendars-ui/commit/e9b633e68abe12ded6f2b5f26164f7bb00eb9f89))
+* clicking allCalendar item check/uncheck all calendars ([0c2cd30](https://github.com/zextras/carbonio-calendars-ui/commit/0c2cd30824ce886ba75dbb6cac6c09efa7d95f52))
+* editor fields can be disabled ([758ff3d](https://github.com/zextras/carbonio-calendars-ui/commit/758ff3dc2f81ef4cd8b2caae2aff32fa0ba54dce))
+* fix appointments editing permissions ([6be767f](https://github.com/zextras/carbonio-calendars-ui/commit/6be767f4dd982f1fc9dbbd81a38be24da4cf81f7))
+* possibility to create new 30 mins appointment by drag ([bdc11db](https://github.com/zextras/carbonio-calendars-ui/commit/bdc11db6c5b878a47ba9d7a3e0f0303c76bb3b1c))
+* propose new time opens a new editor ([94ec21f](https://github.com/zextras/carbonio-calendars-ui/commit/94ec21fb66e3206f641ed5280c0b7523bf34c982))
+* reminders displays correct date ([a3d1b25](https://github.com/zextras/carbonio-calendars-ui/commit/a3d1b25e94504ae11797858deca882f3b48bc175))
+* selected all day slot creates a new single day event ([#123](https://github.com/zextras/carbonio-calendars-ui/issues/123)) ([b8a9f3f](https://github.com/zextras/carbonio-calendars-ui/commit/b8a9f3fa4d48d87b82a77bc3cb1bb46db072fbad))
+* send mail to organizer on reply event ([0f09e58](https://github.com/zextras/carbonio-calendars-ui/commit/0f09e580e1390f09173c30119aafdaecc04131e5))
+* work-view shows allDay events inside the correct days ([#129](https://github.com/zextras/carbonio-calendars-ui/issues/129)) ([6dfdcc3](https://github.com/zextras/carbonio-calendars-ui/commit/6dfdcc39c32235c893fc5f79589e402bb691d1a3))
+
+### [0.1.24](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.23...v0.1.24) (2022-08-17)
+
+
+### Bug Fixes
+
+* editor composer input optimisation ([96bf027](https://github.com/zextras/carbonio-calendars-ui/commit/96bf0271869b58aa93810b54d766eb1ddc4196f7))
+
+### [0.1.23](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.22...v0.1.23) (2022-08-05)
+
+
+### Bug Fixes
+
+* provided the apointment instance to the calendar event normalization ([4e6d966](https://github.com/zextras/carbonio-calendars-ui/commit/4e6d9665d0d638ed367e1b42f083e975b56bb44d))
+
+### [0.1.22](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.21...v0.1.22) (2022-08-01)
+
+### [0.1.21](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.20...v0.1.21) (2022-07-28)
+
+
+### Bug Fixes
+
+* enabled custom recurrence in editor appointment ([356dfc9](https://github.com/zextras/carbonio-calendars-ui/commit/356dfc93c4101a5a54c623ff452a5ddb0f3e97b4))
+
+### [0.1.20](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.19...v0.1.20) (2022-07-22)
+
+
+### Features
+
+* allow user to share public link of files in appointment ([2406ed7](https://github.com/zextras/carbonio-calendars-ui/commit/2406ed7243b0dbf6f5d4dcd79f295abdfe0c9cc2))
+
+
+### Bug Fixes
+
+* default calendar option is showing only main calendar ([#87](https://github.com/zextras/carbonio-calendars-ui/issues/87)) ([ded4fef](https://github.com/zextras/carbonio-calendars-ui/commit/ded4fefbb996f41711b0ddbd0a38a56b9cd0f339))
+* restored a missing import ([918ddeb](https://github.com/zextras/carbonio-calendars-ui/commit/918ddeb3f7eb49034cf0950c84f0b73abd3ccbf4))
+* use the folder's translated names in the secondary bar and modals ([#94](https://github.com/zextras/carbonio-calendars-ui/issues/94)) ([07b43dd](https://github.com/zextras/carbonio-calendars-ui/commit/07b43dd55e2eed13a9f562e4b016e2953147543e))
+
 ### [0.1.19](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.18...v0.1.19) (2022-06-20)
 
 ### [0.1.18](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.17...v0.1.18) (2022-06-17)

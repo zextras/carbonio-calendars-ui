@@ -7,6 +7,7 @@
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement } from 'react';
 import { Container, Button, Padding, Divider, Tooltip } from '@zextras/carbonio-design-system';
+import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import { ModalFooterProps } from '../types/commons';
 
 const ModalFooter: FC<ModalFooterProps> = ({
@@ -16,7 +17,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	color = 'primary',
 	label,
 	secondaryAction,
-	secondaryLabel = 'Cancel',
+	secondaryLabel = t('label.cancel', 'cancel'),
 	primaryBtnType = 'default',
 	secondaryBtnType = 'default',
 	disabled,
@@ -26,7 +27,11 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	secondaryColor = 'secondary',
 	size = 'fit',
 	showDivider = true,
-	primaryTooltip
+	primaryTooltip,
+	additionalAction,
+	additionalBtnType = 'outlined',
+	additionalColor = 'secondary',
+	additionalLabel = t('label.cancel', 'cancel')
 }): ReactElement => (
 	<Container mainAlignment={mainAlignment} crossAlignment={crossAlignment}>
 		{showDivider && (
@@ -40,33 +45,56 @@ const ModalFooter: FC<ModalFooterProps> = ({
 				<Divider />
 			</Container>
 		)}
-		<Container
-			padding={{ top: 'small', bottom: 'small' }}
-			mainAlignment="flex-end"
-			crossAlignment="flex-start"
-			orientation="horizontal"
-			height="fit"
-		>
-			{secondaryAction && (
-				<>
+		<Container orientation="horizontal" mainAlignment="space-between">
+			{additionalAction && (
+				<Container orientation="horizontal" width="fit">
 					<Button
-						backgroundColor={secondarybackground}
-						color={secondaryColor}
-						type={secondaryBtnType}
-						onClick={secondaryAction}
-						label={secondaryLabel}
-						disabled={secondaryDisabled}
-						size={size}
+						color={additionalColor}
+						type={additionalBtnType}
+						onClick={additionalAction}
+						label={additionalLabel}
 					/>
 					<Padding horizontal="extrasmall" />
-				</>
+				</Container>
 			)}
-			{primaryTooltip ? (
-				<Tooltip
-					label={primaryTooltip.label}
-					placement={primaryTooltip.placement}
-					maxWidth={primaryTooltip.maxWidth}
-				>
+			<Container
+				padding={{ top: 'small', bottom: 'small' }}
+				mainAlignment="flex-end"
+				crossAlignment="flex-start"
+				orientation="horizontal"
+				height="fit"
+			>
+				{secondaryAction && (
+					<>
+						<Button
+							backgroundColor={secondarybackground}
+							color={secondaryColor}
+							type={secondaryBtnType}
+							onClick={secondaryAction}
+							label={secondaryLabel}
+							disabled={secondaryDisabled}
+							size={size}
+						/>
+						<Padding horizontal="extrasmall" />
+					</>
+				)}
+				{primaryTooltip ? (
+					<Tooltip
+						label={primaryTooltip.label}
+						placement={primaryTooltip.placement}
+						maxWidth={primaryTooltip.maxWidth}
+					>
+						<Button
+							size={size}
+							color={color}
+							onClick={onConfirm}
+							label={label}
+							type={primaryBtnType}
+							disabled={disabled}
+							backgroundColor={color || background}
+						/>
+					</Tooltip>
+				) : (
 					<Button
 						size={size}
 						color={color}
@@ -76,18 +104,8 @@ const ModalFooter: FC<ModalFooterProps> = ({
 						disabled={disabled}
 						backgroundColor={color || background}
 					/>
-				</Tooltip>
-			) : (
-				<Button
-					size={size}
-					color={color}
-					onClick={onConfirm}
-					label={label}
-					type={primaryBtnType}
-					disabled={disabled}
-					backgroundColor={color || background}
-				/>
-			)}
+				)}
+			</Container>
 		</Container>
 	</Container>
 );

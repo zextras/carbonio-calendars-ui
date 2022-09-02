@@ -9,11 +9,12 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { TFunction } from 'i18next';
+import { generateEditor } from '../../../commons/editor-generator';
 import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
+import { EventType } from '../../../types/event';
 import { deleteEvent, sendResponse } from './delete-actions';
 import { moveAppointmentRequest } from '../../../store/actions/move-appointment';
 import { SnackbarArgumentType } from '../../../types/delete-appointment';
-import { EventType } from '../../../types/event';
 import { Invite } from '../../../types/store/invite';
 
 const generateAppointmentDeletedSnackbar = (
@@ -108,7 +109,6 @@ export const useDeleteActions = (
 	const createSnackbar = useContext(SnackbarManagerContext) as (obj: SnackbarArgumentType) => void;
 	const [deleteAll, setDeleteAll] = useState(true);
 	const [notifyOrganizer, setNotifyOrganizer] = useState(false);
-
 	const toggleNotifyOrganizer = useCallback(() => {
 		setNotifyOrganizer((a) => !a);
 	}, []);
@@ -143,19 +143,19 @@ export const useDeleteActions = (
 				createSnackbar,
 				newMessage: newMessage?.text?.[0]
 			};
-			deleteEvent(event, invite, ctxt)
+			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreAppointment);
 				})
 				.then(
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
-							sendResponse(event, invite, ctxt);
+							sendResponse(event, ctxt);
 						}
 					}, 5000)
 				);
 		},
-		[event, context, createSnackbar, dispatch, invite, notifyOrganizer, t]
+		[event, context, createSnackbar, dispatch, notifyOrganizer, t]
 	);
 
 	const deleteRecurrentSerie = useCallback(
@@ -184,36 +184,37 @@ export const useDeleteActions = (
 				createSnackbar,
 				newMessage: newMessage?.text?.[0]
 			};
-			const deleteFunction = (): void =>
-				!deleteAll
-					? dispatch(
-							modifyAppointment({
-								invite: {
-									...invite,
-									recurrenceRule: [
+			const deleteFunction = (): void => {
+				const modifiedInvite = {
+					...invite,
+					recurrenceRule: [
+						{
+							add: [
+								{
+									rule: [
 										{
-											add: [
+											...invite?.recurrenceRule[0]?.add[0]?.rule[0],
+											until: [
 												{
-													rule: [
-														{
-															...invite?.recurrenceRule[0]?.add[0]?.rule[0],
-															until: [
-																{
-																	d: moment(event?.resource?.ridZ)
-																		.subtract(1, 'day')
-																		.format('YYYYMMDD')
-																}
-															]
-														}
-													]
+													d: moment(event?.resource?.ridZ).subtract(1, 'day').format('YYYYMMDD')
 												}
 											]
 										}
 									]
 								}
-							})
-					  )
-					: deleteEvent(event, invite, ctxt);
+							]
+						}
+					]
+				};
+				const { editor } = generateEditor({
+					event,
+					invite: modifiedInvite,
+					context: { panel: true }
+				});
+				return !deleteAll
+					? dispatch(modifyAppointment({ id: editor.id, draft: invite.draft }))
+					: deleteEvent(event, ctxt);
+			};
 
 			deleteFunction()
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -224,7 +225,7 @@ export const useDeleteActions = (
 				.then(
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
-							sendResponse(event, invite, ctxt);
+							sendResponse(event, ctxt);
 						}
 					}, 5000)
 				);
@@ -252,19 +253,19 @@ export const useDeleteActions = (
 				},
 				s: moment(event.start).valueOf()
 			};
-			deleteEvent(event, invite, ctxt)
+			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar);
 				})
 				.then(
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
-							sendResponse(event, invite, ctxt);
+							sendResponse(event, ctxt);
 						}
 					}, 5000)
 				);
 		},
-		[event, context, createSnackbar, dispatch, invite, notifyOrganizer, t]
+		[event, context, createSnackbar, dispatch, invite?.start?.tz, notifyOrganizer, t]
 	);
 
 	return useMemo(

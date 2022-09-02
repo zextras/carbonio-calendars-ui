@@ -38,23 +38,18 @@ export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement 
 
 	// Looks horrible but there is no other way to pass and sync the workingSchedule
 	schedule = useMemo(() => workingSchedule, [workingSchedule]);
-
-	const range = useMemo(() => WorkView.range(date), [date]);
-
-	return (
-		<TimeGrid
-			{...props}
-			range={range}
-			max={new Date(0, 0, 0, 23, 0, 0)}
-			min={new Date(0, 0, 0, 0, 0, 0)}
-		/>
+	const [min, max, range] = useMemo(
+		() => [moment(date).startOf('day'), moment(date).endOf('day'), WorkView.range(date)],
+		[date]
 	);
+
+	return <TimeGrid {...props} range={range} max={max} min={min} />;
 };
 
 // Called by BigCalendar on week change
 WorkView.range = (rangeDate: Date): Date[] => {
 	const current = moment(rangeDate).day();
-	const d = moment(rangeDate).set({ hour: 0, minute: 0, second: 0 });
+	const d = moment(rangeDate).startOf('day');
 	return reduce(
 		schedule,
 		(acc: Date[], day: WorkWeekDay, i: number) => {

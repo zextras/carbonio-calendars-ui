@@ -4,67 +4,41 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { isArray, map, forEach } from 'lodash';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { isArray, map } from 'lodash';
+import { batchRequest } from '../../soap/batch-request';
+import { folderActionRequest } from '../../soap/folder-action-request';
+import { FolderActionRequest } from '../../types/soap/soap-actions';
 
 export const folderAction = createAsyncThunk(
-	'calendars/folderAction',
+	'calendars/folderActionRequest',
 	async ({
 		id,
 		op,
 		zid,
 		changes
 	}: {
-		id: string;
+		id: Array<string> | string;
 		zid: string;
 		op: string;
 		changes?: any;
 	}): Promise<any> => {
-		let result;
 		if (isArray(id)) {
-			result = await soapFetch('Batch', {
+			const body: FolderActionRequest = {
+				_jsns: 'urn:zimbra',
+				onerror: 'continue',
 				FolderActionRequest: map(id, (i, idx) => ({
 					action: { op, id: i },
 					requestId: idx,
 					_jsns: 'urn:zimbraMail'
-				})),
-				_jsns: 'urn:zimbra',
-				onerror: 'continue'
-			});
-		} else {
-			const FolderActionRequest: any = [
-				{
-					action: {
-						id,
-						op,
-						l: changes?.parent, // parent
-						recursive: changes?.recursive,
-						name: changes?.name,
-						color: changes?.color,
-						f: `${changes?.excludeFreeBusy ? 'b' : ''}${changes?.checked ? '#' : ''}`,
-						zid
-					},
-					_jsns: 'urn:zimbraMail'
-				}
-			];
-			if (changes?.grant) {
-				forEach(changes?.grant, (g) => {
-					FolderActionRequest.push({
-						action: {
-							id,
-							op: 'grant',
-							grant: g
-						},
-						_jsns: 'urn:zimbraMail'
-					});
-				});
-			}
-			result = await soapFetch('Batch', {
-				FolderActionRequest,
-				_jsns: 'urn:zimbra'
-			});
-			return result;
+				}))
+			};
+			return batchRequest(body);
 		}
-		return result;
+		return folderActionRequest({
+			id,
+			op,
+			zid,
+			changes
+		});
 	}
 );

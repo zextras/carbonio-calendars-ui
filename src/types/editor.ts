@@ -75,6 +75,7 @@ export type EditorProps = {
 };
 
 export type Editor = {
+	disabled: Record<string, boolean>;
 	uid?: string | undefined;
 	ridZ?: string | undefined;
 	draft?: boolean | undefined;
@@ -103,6 +104,6 @@ export type Editor = {
 	timezone?: string | undefined;
 	reminder?: string | undefined;
 	recur?: any;
-	id?: string;
+	id: string;
 	attach: any;
 };

@@ -18,6 +18,9 @@ export type ReminderItem = {
 	name: string;
 	isOrg: boolean;
 	inviteId: string;
+	calendar: { id: string };
+	isException?: boolean;
+	allDay: boolean;
 };
 
 export type ReminderModalContentProps = {

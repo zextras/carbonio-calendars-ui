@@ -5,8 +5,13 @@
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { getUserAccount, getUserSettings, soapFetch } from '@zextras/carbonio-shell-ui';
+import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
+import {
+	findAttachments,
+	retrieveAttachmentsType
+} from '../../normalizations/normalizations-utils';
 import { Invite } from '../../types/store/invite';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
@@ -75,17 +80,26 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 };
 
 export const modifyAppointment = createAsyncThunk(
-	'appointment/create new appointment',
+	'appointment/modify appointment',
 	async ({ id, draft }: any, { getState }: any): Promise<any> => {
 		const editor = getState()?.editor?.editors?.[id];
+		const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
+
 		if (editor) {
 			if (editor.isSeries && editor.isInstance && !editor.isException) {
-				const exceptId = {
-					d: editor?.timezone
-						? moment(editor.ridZ).format('YYYYMMDD[T]HHmmss')
-						: moment(editor.ridZ).utc().format('YYYYMMDD[T]HHmmss[Z]'),
-					tz: editor?.timezone
-				};
+				const exceptId = omitBy(
+					{
+						d:
+							editor?.timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE'
+								? moment(editor.ridZ).format('YYYYMMDD[T]HHmmss')
+								: moment(editor.ridZ).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+						tz:
+							editor?.timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE'
+								? editor?.timezone
+								: undefined
+					},
+					isNil
+				);
 				const body = generateSoapMessageFromEditor({ ...editor, draft, exceptId });
 				const res: { calItemId: string; invId: string } = await soapFetch(
 					'CreateAppointmentException',
@@ -103,8 +117,22 @@ export const modifyAppointment = createAsyncThunk(
 				return { response: res, editor: updatedEditor };
 			}
 			const body = generateSoapMessageFromEditor({ ...editor, draft });
-			const res: { calItemId: string } = await soapFetch('ModifyAppointment', body);
-			const updatedEditor = { ...editor, isSeries: !!editor.recur, isNew: false };
+			const res: { calItemId: string; echo: any } = await soapFetch('ModifyAppointment', body);
+			const attach = {
+				mp: retrieveAttachmentsType(
+					res?.echo?.[0]?.m?.[0]?.mp?.[0] ?? [],
+					'attachment',
+					res?.echo?.[0]?.m?.[0]?.id
+				)
+			};
+			const attachmentFiles = findAttachments(res?.echo?.[0]?.m?.[0]?.mp ?? [], []);
+			const updatedEditor = {
+				...editor,
+				isSeries: !!editor.recur,
+				isNew: false,
+				attach,
+				attachmentFiles
+			};
 			return { response: res, editor: updatedEditor };
 		}
 		return undefined;
