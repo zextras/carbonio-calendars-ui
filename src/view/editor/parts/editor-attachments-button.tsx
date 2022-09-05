@@ -5,7 +5,7 @@
  */
 import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { getAction } from '@zextras/carbonio-shell-ui';
-import { map } from 'lodash';
+import { map, omitBy } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -137,8 +137,16 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 					</>
 				)
 			},
-			addFileItem,
-			publicUrlItem
+			{
+				...addFileItem,
+				id: addFileItem.id ?? '',
+				type: addFileItem.type as 'divider' | undefined
+			},
+			{
+				...publicUrlItem,
+				id: publicUrlItem.id ?? '',
+				type: publicUrlItem.type as 'divider' | undefined
+			}
 		],
 		[t, onFileClick, addFileItem, publicUrlItem]
 	);

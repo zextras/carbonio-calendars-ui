@@ -3,7 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Select, Icon, Row, Text, Button } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	Select,
+	Icon,
+	Row,
+	Text,
+	Button,
+	LabelFactoryProps
+} from '@zextras/carbonio-design-system';
 import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
@@ -27,20 +35,13 @@ export const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 `;
 
-type LabelFactoryProps = {
-	selected: [{ label: string; value: string }];
-	label: string;
-	open: boolean;
-	focus: boolean;
-};
-
 const CustomRepeat = ({ setOpen }: { setOpen: (a: boolean) => void }): ReactElement => (
 	<Container width="fill" mainAlignment="center" orientation="horizontal">
 		<Button
 			type="outlined"
 			label={getBridgedFunctions().t('label.custom', 'Custom')}
 			color="primary"
-			size="fill"
+			width="fill"
 			onClick={(): void => {
 				setOpen(true);
 			}}

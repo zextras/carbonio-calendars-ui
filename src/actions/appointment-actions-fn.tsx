@@ -159,8 +159,8 @@ export const editAppointment =
 		event: EventType;
 		invite: Invite;
 		context: ActionsContext;
-	}): ((ev: Event) => void) =>
-	(ev: Event): void => {
+	}): ((ev: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void) =>
+	(ev: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent): void => {
 		if (ev) ev.stopPropagation();
 		if (context?.panelView === PANEL_VIEW.APP) {
 			generateEditor({

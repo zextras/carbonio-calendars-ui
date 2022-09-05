@@ -11,12 +11,20 @@ import {
 	ModalManagerContext,
 	Padding,
 	Row,
+	RowProps,
 	SnackbarManagerContext,
 	Text
 } from '@zextras/carbonio-design-system';
 import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
-import { map, toUpper } from 'lodash';
-import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+import { map, noop, toUpper } from 'lodash';
+import React, {
+	ReactElement,
+	SyntheticEvent,
+	useCallback,
+	useContext,
+	useMemo,
+	useState
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -25,7 +33,7 @@ import { EventType } from '../types/event';
 import { ParticipationStatus } from '../types/store/invite';
 import { createAndApplyTag } from '../view/tags/tag-actions';
 
-const AttendingRow = styled(Row)`
+const AttendingRow = styled(Row)<RowProps & { invtReply: ResponseProp }>`
 	border: 1px solid ${(props): string => props.theme.palette[props.invtReply.color].regular};
 `;
 
@@ -216,7 +224,7 @@ export const ReplyButtonsPartSmall = ({
 				key: option.id,
 				color: option.color,
 				customComponent: option.customComponent,
-				click: (ev: Event): void => {
+				click: (ev: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 					ev.stopPropagation();
 					if (option.action) {
 						option.action();
@@ -254,6 +262,7 @@ export const ReplyButtonsPartSmall = ({
 						label={t('label.other_actions', 'Other actions')}
 						icon="ArrowIosDownwardOutline"
 						style={{ padding: '7px 4px' }}
+						onClick={noop}
 					/>
 				</Dropdown>
 			</Padding>
