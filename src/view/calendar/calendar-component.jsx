@@ -13,6 +13,7 @@ import { isEqual, minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
@@ -31,7 +32,7 @@ import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { generateEditor, getEndTime } from '../../commons/editor-generator';
+import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
 import CalendarStyle from './calendar-style';
@@ -74,6 +75,7 @@ export default function CalendarComponent() {
 	const [date, setDate] = useState(calendarDate);
 	const calendars = useSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
+	const { action } = useParams();
 
 	if (settings.prefs.zimbraPrefLocale) {
 		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
@@ -181,25 +183,17 @@ export default function CalendarComponent() {
 
 	const handleSelect = useCallback(
 		(e) => {
-			if (!summaryViewOpen) {
+			if (!summaryViewOpen && !action) {
 				const isAllDay =
 					moment(e.end).hours() === moment(e.start).hours() &&
 					moment(e.end).minutes() === moment(e.start).minutes() &&
 					!moment(e.start).isSame(moment(e.end));
-				const slotEnd = moment(e.end);
-				const preferredSettingsEnd = moment(
-					getEndTime({
-						start: moment(e.start).valueOf(),
-						duration: settings?.prefs?.zimbraPrefCalendarDefaultApptDuration
-					})
-				);
-				const end = slotEnd.isSameOrAfter(preferredSettingsEnd) ? slotEnd : preferredSettingsEnd;
-				const editorEnd = isAllDay ? slotEnd : end;
+				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
 				const { editor, callbacks } = generateEditor({
 					context: {
 						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
-						end: editorEnd,
+						end: end.valueOf(),
 						allDay: isAllDay ?? false,
 						panel: false
 					}
@@ -210,9 +204,8 @@ export default function CalendarComponent() {
 					callbacks
 				});
 			}
-			useAppStatusStore.setState((s) => ({ ...s, isSummaryViewOpen: false }));
 		},
-		[settings?.prefs?.zimbraPrefCalendarDefaultApptDuration, summaryViewOpen, t]
+		[action, summaryViewOpen, t]
 	);
 
 	const onEventDrop = useCallback(
@@ -223,7 +216,7 @@ export default function CalendarComponent() {
 					({ payload }) => {
 						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();
 						const endTime =
-							isAllDay || event.allDay ? moment(start).endOf('day') : moment(end).valueOf();
+							isAllDay || event.allDay ? moment(end).startOf('day') : moment(end).valueOf();
 						const invite = normalizeInvite(payload.m);
 						const { editor, callbacks } = generateEditor({
 							event,
@@ -297,7 +290,11 @@ export default function CalendarComponent() {
 	return (
 		<>
 			<CalendarSyncWithRange />
-			<CalendarStyle primaryCalendar={primaryCalendar} />
+			<CalendarStyle
+				primaryCalendar={primaryCalendar}
+				summaryViewOpen={summaryViewOpen}
+				action={action}
+			/>
 			<BigCalendar
 				selectable
 				eventPropGetter={eventPropGetter}
@@ -323,6 +320,7 @@ export default function CalendarComponent() {
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
 				resizableAccessor={() => false}
+				onSelecting={() => !summaryViewOpen && !action}
 				draggableAccessor={(event) =>
 					event.resource.iAmOrganizer && event.resource.calendar.id !== FOLDERS.TRASH
 				}

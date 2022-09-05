@@ -9,7 +9,6 @@ import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
-import { normalizeEditor } from '../../normalizations/normalize-editor';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';

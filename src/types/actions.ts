@@ -21,6 +21,7 @@ export type ActionsContext = {
 	onClose?: () => void;
 	panel?: boolean;
 	searchPanel?: boolean;
+	panelView?: PanelView;
 };
 
 export type PanelView = 'app' | 'board' | 'search';

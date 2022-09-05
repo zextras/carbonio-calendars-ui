@@ -61,8 +61,10 @@ export type EventPropType = {
 
 export const normalizeEditor = ({
 	invite,
-	event
+	event,
+	id
 }: {
+	id: string;
 	invite?: Invite;
 	event?: EventPropType;
 }): Editor =>
@@ -73,6 +75,7 @@ export const normalizeEditor = ({
 						store?.store?.getState().calendars.calendars[
 							event.resource.calendar.id ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
 						],
+					id,
 					ridZ: event?.resource?.ridZ,
 					attach: invite.attach,
 					parts: invite.parts,
@@ -104,4 +107,4 @@ export const normalizeEditor = ({
 				},
 				isNil
 		  ) as Editor)
-		: ({} as Editor);
+		: ({ id } as Editor);

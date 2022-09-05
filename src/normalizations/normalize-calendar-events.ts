@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { find, reduce, map, isEmpty } from 'lodash';
 import moment from 'moment';
 import { EventType } from '../types/event';
@@ -23,12 +24,14 @@ const normalizeEventResource = ({
 	appt,
 	calendar,
 	inst,
-	invite
+	invite,
+	iAmOrganizer
 }: {
 	appt: Appointment;
 	calendar: Calendar;
 	inst?: ExceptionReference;
 	invite?: Invite;
+	iAmOrganizer: boolean;
 }): any => ({
 	id: appt.id,
 	inviteId: inst?.inviteId ?? appt.inviteId,
@@ -41,9 +44,10 @@ const normalizeEventResource = ({
 		owner: calendar.owner
 	},
 	flags: appt.flags,
-	iAmOrganizer: inst?.isOrg ?? appt.isOrg ?? false,
-	iAmVisitor: !!(!appt.isOrg && calendar.owner) ?? false,
-	iAmAttendee: (!appt.isOrg && !calendar.owner) ?? false,
+	dur: inst?.dur ?? appt.dur,
+	iAmOrganizer,
+	iAmVisitor: !!(!iAmOrganizer && calendar.owner) ?? false,
+	iAmAttendee: (!iAmOrganizer && !calendar.owner) ?? false,
 	status: inst?.status ?? appt.status,
 	location: inst?.loc ?? appt.loc,
 	locationUrl: getLocationUrl(inst?.loc ?? appt.loc ?? ''),
@@ -89,6 +93,8 @@ export const normalizeCalendarEvent = ({
 		: undefined;
 	const start = instanceStart || (invite as Invite)?.start?.u || appointment.inst?.[0]?.s;
 	const dur = (instance as ExceptionReference)?.dur ?? appointment.dur;
+	const user = getUserAccount();
+	const iAmOrganizer = appointment.or.a === user.name;
 	return {
 		start: allDay ? new Date(moment(start).startOf('day').valueOf()) : new Date(start),
 		end: allDay
@@ -101,6 +107,7 @@ export const normalizeCalendarEvent = ({
 			: new Date(start + dur),
 		resource: normalizeEventResource({
 			appt: appointment,
+			iAmOrganizer,
 			calendar,
 			inst: instance as ExceptionReference,
 			invite
@@ -111,7 +118,7 @@ export const normalizeCalendarEvent = ({
 			instance?.ridZ ?? ''
 		}`,
 		permission: !appointment?.l?.includes(':'),
-		haveWriteAccess: appointment.isOrg ?? calendar?.haveWriteAccess ?? false
+		haveWriteAccess: calendar?.haveWriteAccess
 	};
 };
 

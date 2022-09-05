@@ -90,7 +90,7 @@ const ExpandButton = ({ actions }: { actions: Array<any> }): ReactElement => (
 	</Row>
 );
 
-const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
+export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
 	const [t] = useTranslation();
 	const actions = useEventPanelViewHeaderActions(event);
 

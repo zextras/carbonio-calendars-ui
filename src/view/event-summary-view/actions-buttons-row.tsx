@@ -20,11 +20,9 @@ const RecurrentRow = styled(Row)`
 
 export const ActionsButtonsRow = ({
 	event,
-	onClose,
 	invite
 }: {
 	event: EventType;
-	onClose: () => void;
 	invite: Invite;
 }): ReactElement => {
 	const [t] = useTranslation();

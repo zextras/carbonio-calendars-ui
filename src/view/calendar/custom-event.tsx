@@ -25,7 +25,6 @@ import { selectInstanceInvite } from '../../store/selectors/invites';
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { getInvite } from '../../store/actions/get-invite';
-import { useAppStatusStore } from '../../store/zustand/store';
 import { CustomEventComponent } from './custom-event-component';
 
 type CustomEventProps = {
@@ -42,12 +41,6 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	const [open, setOpen] = useState(false);
 	const { action } = useParams<{ action: string }>();
 	const invite = useSelector(selectInstanceInvite(event.resource.inviteId));
-
-	useEffect(() => {
-		if (!isNil(action)) {
-			useAppStatusStore.setState({ isSummaryViewOpen: false });
-		}
-	}, [action]);
 
 	const getEventInvite = useCallback(() => {
 		if (!invite) {
@@ -69,7 +62,6 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 				true
 			);
 		} else {
-			setOpen(false);
 			replaceHistory(
 				`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
@@ -81,22 +73,26 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 			if (!invite) {
 				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
 			}
-			if (e.detail === 1 && isNil(action)) {
+			if (e.detail === 1 && isNil(action) && !open) {
 				setOpen(true);
-				useAppStatusStore.setState((s) => ({
-					...s,
-					isSummaryViewOpen: true
-				}));
 			}
 		},
-		[action, dispatch, event, invite]
+		[action, dispatch, event.resource.inviteId, event.resource.ridZ, invite, open]
 	);
 
 	const actions = useEventSummaryViewActions({
 		event
 	});
 
-	const onClose = useCallback(() => setOpen(false), []);
+	const onClose = useCallback(() => {
+		setOpen(false);
+	}, []);
+
+	useEffect(() => {
+		if (!isNil(action)) {
+			setOpen(false);
+		}
+	}, [action]);
 
 	return (
 		<>
@@ -173,8 +169,8 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 					anchorRef={anchorRef}
 					event={event}
 					open={open}
-					onClose={onClose}
 					invite={invite}
+					onClose={onClose}
 				/>
 			)}
 		</>
