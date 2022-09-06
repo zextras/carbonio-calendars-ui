@@ -14,8 +14,7 @@ import {
 	Dropdown,
 	ModalManagerContext
 } from '@zextras/carbonio-design-system';
-import { useTranslation } from 'react-i18next';
-import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useEventSummaryViewActions } from '../../hooks/use-event-summary-view-actions';
@@ -26,6 +25,7 @@ import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { getInvite } from '../../store/actions/get-invite';
 import { CustomEventComponent } from './custom-event-component';
+import { StoreProvider } from '../../store/redux';
 
 type CustomEventProps = {
 	event: EventType;
@@ -33,7 +33,6 @@ type CustomEventProps = {
 };
 
 export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
-	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
@@ -56,7 +55,9 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 			const closeModal = createModal(
 				{
 					children: (
-						<AppointmentTypeHandlingModal event={event} onClose={(): void => closeModal()} />
+						<StoreProvider>
+							<AppointmentTypeHandlingModal event={event} onClose={(): void => closeModal()} />
+						</StoreProvider>
 					)
 				},
 				true

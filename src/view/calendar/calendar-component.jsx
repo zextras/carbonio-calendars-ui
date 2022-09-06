@@ -10,14 +10,14 @@ import {
 	FOLDERS,
 	getBridgedFunctions,
 	useUserSettings,
-	addBoard
+	addBoard,
+	t
 } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEqual, minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
-import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
@@ -71,7 +71,6 @@ export default function CalendarComponent() {
 	const dispatch = useDispatch();
 	const theme = useContext(ThemeContext);
 	const settings = useUserSettings();
-	const [t] = useTranslation();
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
@@ -208,14 +207,12 @@ export default function CalendarComponent() {
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
 					title: editor.title,
-					context: {
-						...storeData.editor.editors[editor.id],
-						callbacks
-					}
+					...storeData.editor.editors[editor.id],
+					callbacks
 				});
 			}
 		},
-		[action, summaryViewOpen, t]
+		[action, summaryViewOpen]
 	);
 
 	const onEventDrop = useCallback(
@@ -262,7 +259,7 @@ export default function CalendarComponent() {
 				);
 			}
 		},
-		[dispatch, t]
+		[dispatch]
 	);
 
 	const eventPropGetter = useCallback(

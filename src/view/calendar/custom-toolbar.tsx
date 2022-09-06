@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { t } from '@zextras/carbonio-shell-ui';
 import React, { FC, ReactElement, useCallback } from 'react';
 import styled, { css, SimpleInterpolation } from 'styled-components';
-import { useTranslation } from 'react-i18next';
 import {
 	Container,
 	Button,
@@ -55,7 +55,6 @@ export const CustomToolbar = ({
 	onNavigate,
 	view
 }: CustomToolbarProps): ReactElement => {
-	const [t] = useTranslation();
 	const today = useCallback(() => onNavigate('TODAY'), [onNavigate]);
 	const next = useCallback(() => onNavigate('NEXT'), [onNavigate]);
 	const prev = useCallback(() => onNavigate('PREV'), [onNavigate]);

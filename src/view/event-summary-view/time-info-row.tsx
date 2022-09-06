@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import moment, { Moment } from 'moment';
 import React, { ReactElement, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 type TimeInfoProps = {
 	allDay?: boolean;
@@ -21,7 +21,6 @@ export const TimeInfoRow = ({
 	timeInfoData: TimeInfoProps;
 	showIcon?: boolean;
 }): ReactElement => {
-	const [t] = useTranslation();
 	const date = useMemo(() => {
 		if (timeInfoData.allDay) {
 			const startDate = moment(timeInfoData.start);
@@ -31,7 +30,7 @@ export const TimeInfoRow = ({
 		return `${moment(timeInfoData.start).format('LLLL')} - ${moment(timeInfoData.end).format(
 			'LT'
 		)}`;
-	}, [t, timeInfoData.allDay, timeInfoData.end, timeInfoData.start]);
+	}, [timeInfoData.allDay, timeInfoData.end, timeInfoData.start]);
 
 	const gmtDate = useMemo(
 		() => `${moment(timeInfoData.start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,

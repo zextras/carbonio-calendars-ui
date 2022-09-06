@@ -4,19 +4,16 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 /* eslint-disable import/extensions */
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
-import { TFunction } from 'i18next';
+import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { Dispatch } from 'redux';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 
 type ResponseAction = {
 	inviteId: string;
-	compNum: string;
 	notifyOrganizer: boolean;
 	action: string;
 	dispatch: Dispatch;
 	activeCalendar: any;
-	t: TFunction;
 	createSnackbar: any;
 	parent: string;
 };
@@ -24,9 +21,7 @@ export const sendResponse = ({
 	inviteId,
 	notifyOrganizer,
 	action,
-	compNum,
 	dispatch,
-	t,
 	activeCalendar,
 	createSnackbar,
 	parent

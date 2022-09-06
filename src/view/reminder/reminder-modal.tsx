@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, CustomModal } from '@zextras/carbonio-design-system';
-import { addBoard, t } from '@zextras/carbonio-shell-ui';
+import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
@@ -17,6 +17,7 @@ import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
+import { EditorCallbacks } from '../../types/editor';
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
 
@@ -82,8 +83,9 @@ export const ReminderModal = ({
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
 					title: editor.title ?? '',
-					context: { ...editor, callbacks }
-				});
+					...editor,
+					callbacks
+				} as unknown as Board & { callbacks: EditorCallbacks });
 				dismissAll();
 			}
 		});

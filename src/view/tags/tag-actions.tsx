@@ -26,10 +26,11 @@ import { find, includes, reduce } from 'lodash';
 import { ZIMBRA_STANDARD_COLORS, useTags, Tag, Tags, t } from '@zextras/carbonio-shell-ui';
 import { Dispatch } from 'redux';
 import { itemActionRequest } from '../../soap/item-action-request';
-import { TagsActionsType } from '../../types/tags';
+import { TagsActionsType, TagType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from './delete-tag-modal';
 import { EventType } from '../../types/event';
+import { StoreProvider } from '../../store/redux';
 
 export type ReturnType = {
 	id: string;
@@ -42,19 +43,6 @@ export type ReturnType = {
 		icon: string;
 		label: string;
 	}>;
-};
-
-export type TagType = {
-	customComponent?: ReactElement;
-	active?: boolean;
-	color?: number;
-	divider?: boolean;
-	id: string;
-	label?: string;
-	name?: string;
-	open?: boolean;
-	keepOpen?: boolean;
-	CustomComponent?: ReactElement;
 };
 
 export type TagsFromStoreType = Record<string, Tag>;
@@ -85,7 +73,13 @@ export const createTag = ({ createModal }: ArgumentType): ReturnType => ({
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		const closeModal = createModal(
-			{ children: <CreateUpdateTagModal onClose={(): void => closeModal()} /> },
+			{
+				children: (
+					<StoreProvider>
+						<CreateUpdateTagModal onClose={(): void => closeModal()} />
+					</StoreProvider>
+				)
+			},
 			true
 		);
 	}
@@ -108,7 +102,13 @@ export const createAndApplyTag = ({
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		const closeModal = context.createModal(
-			{ children: <CreateUpdateTagModal onClose={(): void => closeModal()} event={event} /> },
+			{
+				children: (
+					<StoreProvider>
+						<CreateUpdateTagModal onClose={(): void => closeModal()} event={event} />
+					</StoreProvider>
+				)
+			},
 			true
 		);
 	}
@@ -127,7 +127,11 @@ export const editTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 			{
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				children: <CreateUpdateTagModal onClose={(): void => closeModal()} tag={tag} editMode />
+				children: (
+					<StoreProvider>
+						<CreateUpdateTagModal onClose={(): void => closeModal()} tag={tag} editMode />
+					</StoreProvider>
+				)
 			},
 			true
 		);
@@ -148,7 +152,11 @@ export const deleteTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 			{
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				children: <DeleteTagModal onClose={(): void => closeModal()} tag={tag} />
+				children: (
+					<StoreProvider>
+						<DeleteTagModal onClose={(): void => closeModal()} tag={tag} />
+					</StoreProvider>
+				)
 			},
 			true
 		);

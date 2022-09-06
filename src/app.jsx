@@ -13,9 +13,9 @@ import {
 	registerActions,
 	registerComponents,
 	ACTION_TYPES,
-	addBoard
+	addBoard,
+	t
 } from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
@@ -82,7 +82,6 @@ const SearchView = (props) => (
 );
 
 export default function App() {
-	const [t] = useTranslation();
 	useEffect(() => {
 		addRoute({
 			route: CALENDAR_ROUTE,
@@ -107,7 +106,7 @@ export default function App() {
 			route: CALENDAR_ROUTE,
 			component: EditorView
 		});
-	}, [t]);
+	}, []);
 
 	useEffect(() => {
 		registerActions({
@@ -140,7 +139,7 @@ export default function App() {
 			// @ts-ignore
 			component: InviteResponse
 		});
-	}, [t]);
+	}, []);
 
 	return (
 		<StoreProvider>

@@ -5,8 +5,7 @@
  */
 import React, { ReactElement, useCallback } from 'react';
 import { Text, Container, Padding } from '@zextras/carbonio-design-system';
-import { useTranslation } from 'react-i18next';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
@@ -18,8 +17,6 @@ type ModalProps = {
 };
 
 export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): ReactElement => {
-	const [t] = useTranslation();
-
 	const onEntireSeries = useCallback((): void => {
 		replaceHistory(
 			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`

@@ -9,6 +9,7 @@ import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { StoreProvider } from '../../../store/redux';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import {
 	selectEditor,
@@ -39,14 +40,16 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				{
 					size: 'large',
 					children: (
-						<SeriesEditWarningModal
-							action={onSave}
-							isSending={false}
-							onClose={(): void => closeModal()}
-							isNew={isNew}
-							closeCurrentEditor={closeCurrentEditor}
-							draft
-						/>
+						<StoreProvider>
+							<SeriesEditWarningModal
+								action={onSave}
+								isSending={false}
+								onClose={(): void => closeModal()}
+								isNew={isNew}
+								closeCurrentEditor={closeCurrentEditor}
+								draft
+							/>
+						</StoreProvider>
 					),
 					onClose: () => {
 						closeModal();

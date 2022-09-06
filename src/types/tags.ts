@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { ReactElement } from 'react';
 // eslint-disable-next-line no-shadow
 export enum TagsActionsType {
 	NEW = 'new',
@@ -11,3 +12,16 @@ export enum TagsActionsType {
 	EDIT = 'edit',
 	Apply = 'apply'
 }
+
+export type TagType = {
+	customComponent?: ReactElement;
+	active?: boolean;
+	color?: number;
+	divider?: boolean;
+	id: string;
+	label?: string;
+	name?: string;
+	open?: boolean;
+	keepOpen?: boolean;
+	CustomComponent?: ReactElement;
+};

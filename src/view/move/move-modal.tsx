@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { TFunction } from 'i18next';
 import React, { useState, useMemo, useCallback, ReactElement } from 'react';
 import { Input, Container, Text, AccordionItemType } from '@zextras/carbonio-design-system';
 import { filter, startsWith, reduce, isEmpty } from 'lodash';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
@@ -43,8 +42,6 @@ export const MoveModal = ({
 	currentFolder,
 	action
 }: MoveModalProps): ReactElement => {
-	const [t] = useTranslation();
-
 	const folders = useSelector(selectCalendars);
 	const [input, setInput] = useState('');
 	const [folderDestination, setFolderDestination] = useState<Calendar>({} as Calendar);
@@ -71,7 +68,6 @@ export const MoveModal = ({
 		action,
 		event.resource.inviteId,
 		event.resource.id,
-		t,
 		onClose
 	]);
 	const filterFromInput = useMemo<Calendar[]>(

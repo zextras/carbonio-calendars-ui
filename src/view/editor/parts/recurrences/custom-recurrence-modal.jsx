@@ -7,8 +7,8 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Container, CustomModal, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import moment from 'moment';
 import { pickBy, identity, toUpper, isNaN } from 'lodash';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { t } from '@zextras/carbonio-shell-ui';
 import { DailyCustomRecurrence } from './daily-custom-recurrence';
 import { YearlyCustomRecurrence } from './yearly-custom-recurrence';
 import { MonthlyCustomRecurrence } from './monthly-custom-recurrence';
@@ -26,7 +26,6 @@ const RepetitionFrequency = {
 };
 
 export default function CustomRecurrenceModal({ openModal, setOpenCb, onRecurrenceChange }) {
-	const [t] = useTranslation();
 	const start = useSelector(selectStart);
 
 	const defaultRepetition = useMemo(
@@ -50,7 +49,7 @@ export default function CustomRecurrenceModal({ openModal, setOpenCb, onRecurren
 			{ label: t('repeat.monthly', 'Monthly'), value: RepetitionFrequency.MONTHLY },
 			{ label: t('repeat.yearly', 'Yearly'), value: RepetitionFrequency.YEARLY }
 		],
-		[t]
+		[]
 	);
 
 	const onRepetitionChange = useCallback(

@@ -5,8 +5,9 @@
  */
 import React from 'react';
 import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 
-export default function AppleIcalSettings({ t, settingsObj, updateSettings }) {
+export default function AppleIcalSettings({ settingsObj, updateSettings }) {
 	return (
 		<Container
 			padding={{ all: 'medium' }}

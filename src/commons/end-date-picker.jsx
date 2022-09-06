@@ -6,13 +6,12 @@
 import React, { useCallback, useMemo } from 'react';
 import { DateTimePicker } from '@zextras/carbonio-design-system';
 import momentLocalizer from 'react-widgets-moment';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
 import DatePickerCustomComponent from './date-picker-custom-component';
 
 momentLocalizer();
 
 export default function EndDatePicker({ start, end, allDay, diff, onChange }) {
-	const [t] = useTranslation();
 	const onEndChange = useCallback(
 		(d) =>
 			onChange({
@@ -28,7 +27,7 @@ export default function EndDatePicker({ start, end, allDay, diff, onChange }) {
 			`${
 				allDay ? t('label.end_date', 'End date') : t('label.end_date_and_time', 'End date and time')
 			}`,
-		[t, allDay]
+		[allDay]
 	);
 	return (
 		<DateTimePicker

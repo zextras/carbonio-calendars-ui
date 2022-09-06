@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useMemo } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { Account, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { Trans } from 'react-i18next';
+import { Account, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { Avatar, Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { map, reduce } from 'lodash';
 import { EventType } from '../../types/event';
@@ -14,7 +14,6 @@ import { Invite, InviteParticipant, InviteParticipants } from '../../types/store
 type ParticipantProps = { participant: InviteParticipants; event: EventType };
 
 const DisplayParticipantsVisitor = ({ participant }: ParticipantProps): ReactElement => {
-	const [t] = useTranslation();
 	const users = reduce(participant, (acc, v) => [...acc, ...v], [] as Array<InviteParticipant>);
 	return (
 		<Container
@@ -68,29 +67,26 @@ const DisplayMultipleAttendee = ({
 	participant,
 	message,
 	loggedInUser
-}: DisplayMultipleAttendee): ReactElement => {
-	const [t] = useTranslation();
-	return (
-		<Row>
-			<Text size="small" color="secondary" overflow="break-word">
-				<strong>
-					{' '}
-					{map(participant, (user, index) => (
-						<React.Fragment key={user.name || user.email}>
-							{user.name === loggedInUser.name || user.email === loggedInUser.name ? (
-								<> {t('message.you', 'You')}</>
-							) : (
-								<> {user.name || user.email} </>
-							)}
-							{index === participant.length - 1 ? null : <>,</>}
-						</React.Fragment>
-					))}
-				</strong>{' '}
-				{message}
-			</Text>
-		</Row>
-	);
-};
+}: DisplayMultipleAttendee): ReactElement => (
+	<Row>
+		<Text size="small" color="secondary" overflow="break-word">
+			<strong>
+				{' '}
+				{map(participant, (user, index) => (
+					<React.Fragment key={user.name || user.email}>
+						{user.name === loggedInUser.name || user.email === loggedInUser.name ? (
+							<> {t('message.you', 'You')}</>
+						) : (
+							<> {user.name || user.email} </>
+						)}
+						{index === participant.length - 1 ? null : <>,</>}
+					</React.Fragment>
+				))}
+			</strong>{' '}
+			{message}
+		</Text>
+	</Row>
+);
 
 const calculateSize = (participants: InviteParticipants): number => {
 	let pt = 0;
@@ -116,26 +112,22 @@ const DisplayedParticipant = ({
 	participant,
 	message,
 	loggedInUser
-}: DisplayedParticipantType): ReactElement => {
-	const [t] = useTranslation();
-
-	return (
-		<Container
-			mainAlignment="flex-start"
-			crossAlignment="flex-start"
-			padding={{ bottom: 'extrasmall' }}
-		>
-			<Text overflow="ellipsis" size="small" color="secondary">
-				{participant.name === loggedInUser.name || participant.email === loggedInUser.name ? (
-					<strong> {t('message.you', 'You')}</strong>
-				) : (
-					<strong> {participant.name || participant.email} </strong>
-				)}{' '}
-				{message}
-			</Text>
-		</Container>
-	);
-};
+}: DisplayedParticipantType): ReactElement => (
+	<Container
+		mainAlignment="flex-start"
+		crossAlignment="flex-start"
+		padding={{ bottom: 'extrasmall' }}
+	>
+		<Text overflow="ellipsis" size="small" color="secondary">
+			{participant.name === loggedInUser.name || participant.email === loggedInUser.name ? (
+				<strong> {t('message.you', 'You')}</strong>
+			) : (
+				<strong> {participant.name || participant.email} </strong>
+			)}{' '}
+			{message}
+		</Text>
+	</Container>
+);
 type ComponentProps = {
 	label: ReactElement;
 	participants: Array<InviteParticipant>;
@@ -217,7 +209,6 @@ const ParticipantsDisplayerSmall = ({
 	participants,
 	event
 }: ParticipantsDisplayerSmallType): ReactElement | null => {
-	const [t] = useTranslation();
 	const loggedInUser = useUserAccount();
 	if (!participants || Object.keys(participants)?.length === 0) return null;
 	const pt = calculateSize(participants);
@@ -314,7 +305,6 @@ const ParticipantsPartSmall = ({
 	organizer,
 	participants
 }: ParticipantsPartSmallType): ReactElement => {
-	const [t] = useTranslation();
 	const account = useUserAccount();
 
 	return (

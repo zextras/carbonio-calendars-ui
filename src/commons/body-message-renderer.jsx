@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { replace } from 'lodash';
+import { t } from '@zextras/carbonio-shell-ui';
 
 export const ROOM_DIVIDER =
 	'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-';
@@ -103,15 +103,11 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 	);
 }
 
-const EmptyBody = () => {
-	const [t] = useTranslation();
-
-	return (
-		<Container padding={{ bottom: 'medium' }}>
-			<Text>{`(${t('message.invite_has_no_message', 'This invite has no text message')}.)`}</Text>
-		</Container>
-	);
-};
+const EmptyBody = () => (
+	<Container padding={{ bottom: 'medium' }}>
+		<Text>{`(${t('message.invite_has_no_message', 'This invite has no text message')}.)`}</Text>
+	</Container>
+);
 
 export function extractBody(body) {
 	if (body) {

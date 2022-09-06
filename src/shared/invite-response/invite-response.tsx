@@ -18,10 +18,10 @@ import {
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
-import { useTranslation } from 'react-i18next';
-import { addBoard, getAction, Action } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction, Action, t, Board } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
+import { EditorCallbacks } from '../../types/editor';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
@@ -94,7 +94,6 @@ const InviteResponse: FC<InviteResponse> = ({
 	isAttendee
 }): ReactElement => {
 	const dispatch = useDispatch();
-	const [t] = useTranslation();
 	useEffect(() => {
 		if (!mailMsg.read) {
 			onLoadChange();
@@ -183,11 +182,9 @@ const InviteResponse: FC<InviteResponse> = ({
 				addBoard({
 					url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
 					title: storeData?.editor?.editors?.[editor.id]?.title ?? '',
-					context: {
-						...storeData.editor.editors[editor.id],
-						callbacks
-					}
-				});
+					...storeData.editor.editors[editor.id],
+					callbacks
+				} as unknown as Board & { callbacks: EditorCallbacks });
 			}
 		});
 	}, [dispatch, inviteId]);
