@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
-import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
+import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import { useCallback, useContext } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
 
@@ -23,7 +22,6 @@ export const useGetFilesFromDrive = ({ editorId, onAttachmentsChange }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const attachmentFiles = useSelector(selectEditorAttachmentFiles(editorId));
 	const parts = useSelector(selectEditorAttach(editorId));
-	const [t] = useTranslation();
 	const [uploadTo, isAvailable] = useIntegratedFunction('upload-to-target-and-get-target-id');
 
 	const confirmAction = useCallback(
@@ -71,7 +69,7 @@ export const useGetFilesFromDrive = ({ editorId, onAttachmentsChange }) => {
 				});
 			}
 		},
-		[attachmentFiles, createSnackbar, isAvailable, onAttachmentsChange, parts, t, uploadTo]
+		[attachmentFiles, createSnackbar, isAvailable, onAttachmentsChange, parts, uploadTo]
 	);
 	return [confirmAction, isAvailable];
 };

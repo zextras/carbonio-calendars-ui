@@ -12,7 +12,7 @@ type CustomComponentProps = {
 	onClick: () => void;
 	onChange: (a: string) => unknown;
 	label: string;
-	icon: string;
+	icon?: string;
 };
 
 const CustomInputWrapper = styled(Row)`

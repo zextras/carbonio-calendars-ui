@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
 import {
 	AccordionItem,
@@ -16,7 +14,6 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { reduce } from 'lodash';
-import { useTranslation } from 'react-i18next';
 import { useGetTagsActions } from '../view/tags/tag-actions';
 import { CALENDAR_ROUTE } from '../constants';
 
@@ -36,8 +33,7 @@ type ItemProps = {
 };
 
 const CustomComp = (props: ItemProps): ReactElement => {
-	const [t] = useTranslation();
-	const actions = useGetTagsActions({ tag: props?.item, t });
+	const actions = useGetTagsActions({ tag: props?.item });
 	const triggerSearch = useCallback(
 		() =>
 			runSearch(

@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design-system';
-import { getAction } from '@zextras/carbonio-shell-ui';
-import { map, omitBy } from 'lodash';
+import { getAction, t } from '@zextras/carbonio-shell-ui';
+import { map } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { uploadParts } from '../../../commons/upload-parts';
@@ -36,7 +35,6 @@ export const addAttachments = async (
 };
 
 export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
-	const [t] = useTranslation();
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [openDD, setOpenDD] = useState(false);
 	const attachmentFiles = useSelector(selectEditorAttachmentFiles(editorId));
@@ -69,7 +67,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 			allowFiles: true,
 			allowFolders: false
 		}),
-		[getLink, t]
+		[getLink]
 	);
 
 	const [getFilesAction, getFilesActionAvailable] = getAction(
@@ -88,7 +86,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 				getFilesAction?.click && getFilesAction.click(a);
 			}
 		}),
-		[getFilesAction, getFilesActionAvailable, getLinkAvailable, t]
+		[getFilesAction, getFilesActionAvailable, getLinkAvailable]
 	);
 
 	const actionTarget = useMemo(
@@ -99,7 +97,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 			allowFiles: true,
 			allowFolders: false
 		}),
-		[getFilesFromDrive, t]
+		[getFilesFromDrive]
 	);
 
 	const [filesSelectFilesAction, filesSelectFilesActionAvailable] = getAction(
@@ -119,7 +117,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 				filesSelectFilesAction?.click && filesSelectFilesAction.click(a);
 			}
 		}),
-		[filesSelectFilesAction, filesSelectFilesActionAvailable, getFilesAvailable, t]
+		[filesSelectFilesAction, filesSelectFilesActionAvailable, getFilesAvailable]
 	);
 
 	const attachmentsItems = useMemo(
@@ -148,7 +146,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 				type: publicUrlItem.type as 'divider' | undefined
 			}
 		],
-		[t, onFileClick, addFileItem, publicUrlItem]
+		[onFileClick, addFileItem, publicUrlItem]
 	);
 
 	const onChange = useCallback((): void => {

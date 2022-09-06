@@ -6,13 +6,12 @@
 import React, { useCallback, useMemo } from 'react';
 import { DateTimePicker } from '@zextras/carbonio-design-system';
 import momentLocalizer from 'react-widgets-moment';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
 import DatePickerCustomComponent from './date-picker-custom-component';
 
 momentLocalizer();
 
-export default function StartDatePicker({ start, end, allDay, diff, onChange }) {
-	const [t] = useTranslation();
+export default function StartDatePicker({ start, allDay, diff, onChange }) {
 	const onStartChange = useCallback(
 		(d) =>
 			onChange({
@@ -30,7 +29,7 @@ export default function StartDatePicker({ start, end, allDay, diff, onChange }) 
 					? t('label.start_date', 'Start date')
 					: t('label.start_date_and_time', 'Start date and time')
 			}`,
-		[allDay, t]
+		[allDay]
 	);
 	const dateFormat = useMemo(() => (allDay ? 'dd/MM/yyyy' : 'dd/MM/yyyy HH:mm'), [allDay]);
 	return (

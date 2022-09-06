@@ -11,6 +11,7 @@ import {
 	Text,
 	TextWithTooltip
 } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
@@ -19,35 +20,32 @@ const DisplayedParticipant = ({
 	participant
 }: {
 	participant: InviteParticipant;
-}): ReactElement => {
-	const [t] = useTranslation();
-	return (
-		<Row mainAlignment="flex-start" crossAlignment="center" padding={{ vertical: 'small' }}>
-			<Avatar
-				label={participant.name || participant.email}
-				style={{ width: '48px', height: '48px' }}
-			/>
-			<Row
-				mainAlignment="flex-start"
-				crossAlignment="center"
-				takeAvailableSpace
-				padding={{ left: 'small' }}
-			>
-				<TextWithTooltip overflow="ellipsis">
-					{participant.name || participant.email}
-					<br />
-					<Text size="small" color="secondary">
-						{`(${
-							participant.isOptional
-								? t('label.optional', 'Optional')
-								: t('label.required', 'Required')
-						})`}
-					</Text>
-				</TextWithTooltip>
-			</Row>
+}): ReactElement => (
+	<Row mainAlignment="flex-start" crossAlignment="center" padding={{ vertical: 'small' }}>
+		<Avatar
+			label={participant.name || participant.email}
+			style={{ width: '48px', height: '48px' }}
+		/>
+		<Row
+			mainAlignment="flex-start"
+			crossAlignment="center"
+			takeAvailableSpace
+			padding={{ left: 'small' }}
+		>
+			<TextWithTooltip overflow="ellipsis">
+				{participant.name || participant.email}
+				<br />
+				<Text size="small" color="secondary">
+					{`(${
+						participant.isOptional
+							? t('label.optional', 'Optional')
+							: t('label.required', 'Required')
+					})`}
+				</Text>
+			</TextWithTooltip>
 		</Row>
-	);
-};
+	</Row>
+);
 
 type DropdownProps = {
 	label: string;
@@ -100,7 +98,6 @@ export const ParticipantsDisplayer = ({
 }: {
 	participants: InviteParticipants;
 }): ReactElement | null => {
-	const [t] = useTranslation();
 	const width = Object.keys(participants).length === 1 ? '100%' : '50%';
 
 	if (Object.keys(participants).length === 0) return null;

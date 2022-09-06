@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { omit } from 'lodash';
 import { SyntheticEvent } from 'react';
 import { GetActionReturnType } from '../hooks/types';
@@ -46,8 +46,8 @@ export const getRecurrentAppointmentActionsItems = ({
 		{
 			id: 'instance',
 			icon: 'CalendarOutline',
-			label: getBridgedFunctions().t('label.instance', 'Instance'),
-			click: (ev?: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			label: t('label.instance', 'Instance'),
+			click: (ev: SyntheticEvent<HTMLElement, Event> | KeyboardEvent | undefined): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
@@ -65,8 +65,8 @@ export const getRecurrentAppointmentActionsItems = ({
 		{
 			id: 'series',
 			icon: 'CalendarOutline',
-			label: getBridgedFunctions().t('label.series', 'Series'),
-			click: (ev?: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			label: t('label.series', 'Series'),
+			click: (ev: SyntheticEvent<HTMLElement, Event> | KeyboardEvent | undefined): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [

@@ -7,7 +7,7 @@
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement } from 'react';
 import { Container, Button, Padding, Divider, Tooltip } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import { ModalFooterProps } from '../types/commons';
 
 const ModalFooter: FC<ModalFooterProps> = ({
@@ -17,7 +17,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	color = 'primary',
 	label,
 	secondaryAction,
-	secondaryLabel = getBridgedFunctions().t('label.cancel', 'cancel'),
+	secondaryLabel = t('label.cancel', 'cancel'),
 	primaryBtnType = 'default',
 	secondaryBtnType = 'default',
 	disabled,
@@ -31,7 +31,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	additionalAction,
 	additionalBtnType = 'outlined',
 	additionalColor = 'secondary',
-	additionalLabel = getBridgedFunctions().t('label.cancel', 'cancel')
+	additionalLabel = t('label.cancel', 'cancel')
 }): ReactElement => (
 	<Container mainAlignment={mainAlignment} crossAlignment={crossAlignment}>
 		{showDivider && (

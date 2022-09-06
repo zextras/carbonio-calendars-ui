@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import { ActionsContext, PanelView } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
@@ -32,7 +32,7 @@ export const openAppointmentItem = ({
 	icon: 'ExpandOutline',
 	disabled: false,
 	keepOpen: true,
-	label: getBridgedFunctions().t('event.action.expand', 'Open in Displayer'),
+	label: t('event.action.expand', 'Open in Displayer'),
 	click: openAppointment({
 		event,
 		panelView
@@ -48,7 +48,7 @@ export const acceptInvitationItem = ({
 }): any => ({
 	id: EventActionsEnum.ACCEPT,
 	icon: 'CheckmarkOutline',
-	label: getBridgedFunctions().t('event.action.accept', 'Accept'),
+	label: t('event.action.accept', 'Accept'),
 	disabled: event?.resource?.participationStatus === 'AC',
 	click: acceptInvitation({ event, context })
 });
@@ -62,7 +62,7 @@ export const declineInvitationItem = ({
 }): any => ({
 	id: EventActionsEnum.DECLINE,
 	icon: 'CloseOutline',
-	label: getBridgedFunctions().t('event.action.decline', 'Decline'),
+	label: t('event.action.decline', 'Decline'),
 	disabled: event?.resource?.participationStatus === 'DE',
 	click: declineInvitation({ event, context })
 });
@@ -76,7 +76,7 @@ export const acceptAsTentativeItem = ({
 }): any => ({
 	id: EventActionsEnum.TENTATIVE,
 	icon: 'QuestionMark',
-	label: getBridgedFunctions().t('label.tentative', 'Tentative'),
+	label: t('label.tentative', 'Tentative'),
 	disabled: event?.resource?.participationStatus === 'TE',
 	click: acceptAsTentative({ event, context })
 });
@@ -92,8 +92,8 @@ export const moveAppointmentItem = ({
 	icon: 'MoveOutline',
 	label:
 		event.resource.calendar.id === FOLDERS.TRASH
-			? getBridgedFunctions().t('label.restore', 'Restore')
-			: getBridgedFunctions().t('label.move', 'Move'),
+			? t('label.restore', 'Restore')
+			: t('label.move', 'Move'),
 	disabled: false,
 	keepOpen: true,
 	click: moveAppointment({ event, context })
@@ -110,7 +110,7 @@ export const moveApptToTrashItem = ({
 }): any => ({
 	id: EventActionsEnum.TRASH,
 	icon: 'Trash2Outline',
-	label: getBridgedFunctions().t('label.delete', 'Delete'),
+	label: t('label.delete', 'Delete'),
 	disabled: false,
 	keepOpen: true,
 	click: moveToTrash({ event, invite, context })
@@ -125,7 +125,7 @@ export const deletePermanentlyItem = ({
 }): any => ({
 	id: 'deletePermanently',
 	icon: 'DeletePermanentlyOutline',
-	label: getBridgedFunctions().t('label.delete_permanently', 'Delete permanently'),
+	label: t('label.delete_permanently', 'Delete permanently'),
 	keepOpen: true,
 	click: deletePermanently({ event, context })
 });
@@ -142,7 +142,7 @@ export const editAppointmentItem = ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Edit2Outline',
 	keepOpen: true,
-	label: getBridgedFunctions().t('label.edit', 'Edit'),
+	label: t('label.edit', 'Edit'),
 	disabled: !event?.haveWriteAccess,
 	click: editAppointment({ event, invite, context })
 });

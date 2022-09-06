@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, CustomModal } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
@@ -17,6 +17,7 @@ import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
+import { EditorCallbacks } from '../../types/editor';
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
 
@@ -79,7 +80,12 @@ export const ReminderModal = ({
 					invite,
 					context: { panel: false }
 				});
-				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
+				addBoard({
+					url: `${CALENDAR_ROUTE}/`,
+					title: editor.title ?? '',
+					...editor,
+					callbacks
+				} as unknown as Board & { callbacks: EditorCallbacks });
 				dismissAll();
 			}
 		});
@@ -87,7 +93,7 @@ export const ReminderModal = ({
 
 	const headerLabel = useMemo(
 		() =>
-			getBridgedFunctions().t(`label.appt_reminder`, {
+			t(`label.appt_reminder`, {
 				count: Object.keys(reminders)?.length ?? 1,
 				defaultValue: 'Appointment Reminder',
 				defaultValue_Plural: 'Appointment Reminders'
@@ -97,7 +103,7 @@ export const ReminderModal = ({
 
 	const footerLabel = useMemo(
 		() =>
-			getBridgedFunctions().t('label.dismiss', {
+			t('label.dismiss', {
 				count: Object.keys(reminders)?.length ?? 1,
 				defaultValue: 'Dismiss',
 				defaultValue_Plural: 'Dismiss all'

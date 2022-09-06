@@ -112,6 +112,7 @@
         "calendar_color": "Calendar color",
         "calendar_setting": "Calendar Settings",
         "calendar_shared": "Calendar shared successfully",
+        "cancel": "cancel",
         "cancelled": "Cancelled",
         "changes_saved": "Changes saved",
         "choose_file": "Choose file",
@@ -620,6 +621,7 @@
     "tooltip": {
         "add_attachments": "Add attachments",
         "calendar_sharing_status": "Shared with {{count}} people",
+        "calendar_sharing_status_one": "Shared with 1 person",
         "calendar_sharing_status_plural": "",
         "chat": "Equipment",
         "chat_room": "Virtual Room's link",

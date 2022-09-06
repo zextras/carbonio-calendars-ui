@@ -5,9 +5,10 @@
  */
 import React from 'react';
 import { Container, Padding, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { CalendarSelector } from '../view/editor/parts/calendar-selector';
 
-export default function CreatingAppointmentSettings({ t, settingsObj, updateSettings }) {
+export default function CreatingAppointmentSettings({ settingsObj, updateSettings }) {
 	return (
 		<Container
 			padding={{ all: 'medium' }}

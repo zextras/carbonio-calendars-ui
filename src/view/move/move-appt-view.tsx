@@ -3,14 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import React, { useState, useCallback, ReactElement } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { EventType } from '../../types/event';
-import { RouteParams } from '../../types/route-params';
-import { Appointment } from '../../types/store/appointments';
 import { NewModal } from './new-calendar-modal';
 import { MoveModal } from './move-modal';
 import { selectCalendar } from '../../store/selectors/calendars';
@@ -42,14 +39,12 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 					hideButton: true,
 					label:
 						event.resource.calendar.id === FOLDERS.TRASH
-							? `${getBridgedFunctions().t(
-									'message.snackbar.appt_restored',
-									'Appointment restored successfully to'
-							  )} ${data.destinationCalendarName}`
-							: `${getBridgedFunctions().t(
-									'message.snackbar.appt_moved',
-									'Appointment moved successfully to'
-							  )} ${data.destinationCalendarName}`,
+							? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
+									data.destinationCalendarName
+							  }`
+							: `${t('message.snackbar.appt_moved', 'Appointment moved successfully to')} ${
+									data.destinationCalendarName
+							  }`,
 					autoHideTimeout: 3000
 				});
 			} else {
@@ -58,10 +53,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 					replace: true,
 					type: 'error',
 					hideButton: true,
-					label: getBridgedFunctions().t(
-						'label.error_try_again',
-						'Something went wrong, please try again'
-					),
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000
 				});
 			}

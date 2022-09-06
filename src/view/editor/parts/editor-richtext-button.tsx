@@ -4,15 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Tooltip } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectEditorDisabled, selectEditorIsRichText } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 import { ResizedIconCheckbox } from './editor-styled-components';
 
 export const EditorRichTextButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
-	const [t] = useTranslation();
 	const { onToggleRichText } = callbacks;
 	const isRichText = useSelector(selectEditorIsRichText(editorId));
 	const disabled = useSelector(selectEditorDisabled(editorId));

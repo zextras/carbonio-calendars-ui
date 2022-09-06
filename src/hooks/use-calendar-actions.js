@@ -3,11 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useTranslation } from 'react-i18next';
 import React, { useContext } from 'react';
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import { NewModal } from '../view/sidebar/new-modal';
 import { folderAction } from '../store/actions/calendar-actions';
@@ -18,9 +17,9 @@ import { getFolder } from '../store/actions/get-folder';
 import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
 import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
 import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
+import { StoreProvider } from '../store/redux';
 
 export const useCalendarActions = (item) => {
-	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
@@ -36,7 +35,11 @@ export const useCalendarActions = (item) => {
 				}
 				const closeModal = createModal(
 					{
-						children: <NewModal onClose={() => closeModal()} />
+						children: (
+							<StoreProvider>
+								<NewModal onClose={() => closeModal()} />
+							</StoreProvider>
+						)
 					},
 					true
 				);
@@ -91,7 +94,11 @@ export const useCalendarActions = (item) => {
 				}
 				const closeModal = createModal(
 					{
-						children: <EmptyModal onClose={() => closeModal()} />
+						children: (
+							<StoreProvider>
+								<EmptyModal onClose={() => closeModal()} />
+							</StoreProvider>
+						)
 					},
 					true
 				);
@@ -109,12 +116,14 @@ export const useCalendarActions = (item) => {
 				const closeModal = createModal(
 					{
 						children: (
-							<EditModal
-								folder={item}
-								grant={item.acl?.grant}
-								totalAppointments={item.n}
-								onClose={() => closeModal()}
-							/>
+							<StoreProvider>
+								<EditModal
+									folder={item}
+									grant={item.acl?.grant}
+									totalAppointments={item.n}
+									onClose={() => closeModal()}
+								/>
+							</StoreProvider>
 						),
 						maxHeight: '70vh',
 						size: 'medium'
@@ -133,7 +142,11 @@ export const useCalendarActions = (item) => {
 				}
 				const closeModal = createModal(
 					{
-						children: <DeleteModal folder={item} onClose={() => closeModal()} />
+						children: (
+							<StoreProvider>
+								<DeleteModal folder={item} onClose={() => closeModal()} />
+							</StoreProvider>
+						)
 					},
 					true
 				);
@@ -163,9 +176,9 @@ export const useCalendarActions = (item) => {
 						const closeModal = createModal(
 							{
 								children: (
-									<>
+									<StoreProvider>
 										<SharesInfoModal onClose={() => closeModal()} folder={res.payload.link} />
-									</>
+									</StoreProvider>
 								)
 							},
 							true
@@ -182,13 +195,13 @@ export const useCalendarActions = (item) => {
 				const closeModal = createModal(
 					{
 						children: (
-							<>
+							<StoreProvider>
 								<ShareCalendarModal
 									folder={item}
 									totalAppointments={item.n}
 									closeFn={() => closeModal()}
 								/>
-							</>
+							</StoreProvider>
 						),
 						maxHeight: '70vh'
 					},
@@ -205,9 +218,9 @@ export const useCalendarActions = (item) => {
 				const closeModal = createModal(
 					{
 						children: (
-							<>
+							<StoreProvider>
 								<ShareCalendarUrlModal folder={item} onClose={() => closeModal()} />
-							</>
+							</StoreProvider>
 						),
 						maxHeight: '70vh',
 						size: 'medium'

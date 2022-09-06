@@ -3,16 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { store } from '@zextras/carbonio-shell-ui';
 import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
 import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
+import { store } from '../store/redux';
 import { Editor } from '../types/editor';
-import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
-import { retrieveAttachmentsType } from './normalizations-utils';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -72,7 +70,7 @@ export const normalizeEditor = ({
 		? (omitBy(
 				{
 					calendar:
-						store?.store?.getState().calendars.calendars[
+						store?.getState().calendars.calendars[
 							event.resource.calendar.id ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
 						],
 					id,

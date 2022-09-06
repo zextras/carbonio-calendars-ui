@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Accordion } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
 import { map, filter, reduce, remove, every, reject, find, orderBy, head } from 'lodash';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { CollapsedItems } from './collapsed-sidebar-items';
@@ -39,7 +39,6 @@ const nest = (items, id) =>
 
 export default function SetMainMenuItems({ expanded }) {
 	const calendars = useSelector(selectAllCalendars);
-	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const start = useSelector(selectStart);
 	const end = useSelector(selectEnd);
@@ -80,12 +79,12 @@ export default function SetMainMenuItems({ expanded }) {
 		() =>
 			map(calendars, (item) => ({
 				...item,
-				name: getFolderTranslatedName(t, item.id, item.name),
+				name: getFolderTranslatedName(item.id, item.name),
 				...calcFolderAbsParentLevel(calendars, item),
 				recursiveToggleCheck: () => recursiveToggleCheck([item], item.checked),
 				CustomComponent: FoldersComponent
 			})),
-		[calendars, recursiveToggleCheck, t]
+		[calendars, recursiveToggleCheck]
 	);
 	const sortedAllItems = useMemo(
 		() => orderBy(allItems, [(item) => item.name.toLowerCase()], ['asc']),
@@ -107,7 +106,7 @@ export default function SetMainMenuItems({ expanded }) {
 			}),
 			divider: true
 		}),
-		[sharedSubItems, t]
+		[sharedSubItems]
 	);
 
 	const tagsItem = useMemo(
@@ -120,7 +119,7 @@ export default function SetMainMenuItems({ expanded }) {
 			CustomComponent: TagComponent,
 			items: tagsAccordionItems
 		}),
-		[t, tagsAccordionItems]
+		[tagsAccordionItems]
 	);
 	const allCalendarsItem = useMemo(() => {
 		const subItems = reject(
@@ -136,7 +135,7 @@ export default function SetMainMenuItems({ expanded }) {
 			recursiveToggleCheck: () => recursiveToggleCheck(nestedItems, checked),
 			CustomComponent: FoldersComponent
 		};
-	}, [allItems, nestedItems, t, recursiveToggleCheck]);
+	}, [allItems, nestedItems, recursiveToggleCheck]);
 
 	const defaultCalItem = find(nestedItems, ['id', FOLDERS.CALENDAR]);
 	const sortedNestedItems = reject(nestedItems, ['id', FOLDERS.CALENDAR]);

@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useTranslation } from 'react-i18next';
 import React, { useCallback, useState } from 'react';
 import { Container, Padding, Text } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import {
 	MonthlyDayInput,
 	MonthSelector,
@@ -19,7 +19,6 @@ const FirstRadioOption = ({
 	is1stOptDisabled,
 	setIs1stOptDisabled
 }) => {
-	const [t] = useTranslation();
 	const [bymonthday, setByMonthDay] = useState(customRepeatValue?.bymonthday);
 	const [bymonth, setByMonth] = useState(customRepeatValue?.bymonth);
 
@@ -74,7 +73,6 @@ const SecondRadioOption = ({
 	is1stOptDisabled,
 	setIs1stOptDisabled
 }) => {
-	const [t] = useTranslation();
 	const [bysetpos, setBySetPos] = useState({ poslist: '1' });
 	const [byday, setByDay] = useState({ wkday: [{ day: slicedWeekDay }] });
 	const [bymonth, setByMonth] = useState(customRepeatValue?.bymonth);

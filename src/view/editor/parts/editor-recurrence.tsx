@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { t } from '@zextras/carbonio-shell-ui';
 import {
 	Container,
 	Select,
@@ -12,10 +13,8 @@ import {
 	Button,
 	LabelFactoryProps
 } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
-import { useTranslation } from 'react-i18next';
 import { toUpper, find } from 'lodash';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -39,7 +38,7 @@ const CustomRepeat = ({ setOpen }: { setOpen: (a: boolean) => void }): ReactElem
 	<Container width="fill" mainAlignment="center" orientation="horizontal">
 		<Button
 			type="outlined"
-			label={getBridgedFunctions().t('label.custom', 'Custom')}
+			label={t('label.custom', 'Custom')}
 			color="primary"
 			width="fill"
 			onClick={(): void => {
@@ -100,7 +99,6 @@ type SelectProps =
 	| undefined;
 
 export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
-	const [t] = useTranslation();
 	const { onRecurrenceChange } = callbacks;
 	const recur = useSelector(selectEditorRecurrence(editorId));
 	const start = useSelector(selectEditorStart(editorId));
@@ -174,7 +172,7 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 				customComponent: <CustomRepeat setOpen={setOpen} />
 			}
 		],
-		[t]
+		[]
 	);
 	const ruleKey = useMemo(() => recur?.add?.[0]?.rule?.[0]?.freq ?? 'NONE', [recur?.add]);
 

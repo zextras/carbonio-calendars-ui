@@ -31,8 +31,8 @@ import {
 } from 'lodash';
 import styled from 'styled-components';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { useDispatch } from 'react-redux';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
 import { createMountpoint } from '../../store/actions/create-mountpoint';
@@ -45,7 +45,6 @@ const ContainerEl = styled(Container)`
 
 const CustomItem = ({ item }) => {
 	const [checked, setChecked] = useState(false);
-	const [t] = useTranslation();
 
 	const onClick = useCallback(() => {
 		if (!checked) {
@@ -69,7 +68,7 @@ const CustomItem = ({ item }) => {
 			item.setLinks(filter(item.links, (v) => v.id !== item.id));
 		}
 		setChecked(!checked);
-	}, [checked, item, t]);
+	}, [checked, item]);
 
 	return (
 		<>
@@ -85,7 +84,6 @@ export const SharesModal = ({ calendars, onClose }) => {
 	const [links, setLinks] = useState([]);
 	const [data, setData] = useState();
 	const dispatch = useDispatch();
-	const [t] = useTranslation();
 	const onConfirm = useCallback(() => {
 		dispatch(createMountpoint(links));
 		onClose();
@@ -93,7 +91,7 @@ export const SharesModal = ({ calendars, onClose }) => {
 
 	const shared = map(calendars, (c) => ({
 		id: `${c.ownerName} - ${c.folderId} - ${c.granteeType} - ${c.granteeName}`,
-		label: getFolderTranslatedName(t, c.folderId, last(split(c.folderPath, '/'))),
+		label: getFolderTranslatedName(c.folderId, last(split(c.folderPath, '/'))),
 		open: true,
 		items: [],
 		ownerName: c.ownerName,
@@ -109,7 +107,7 @@ export const SharesModal = ({ calendars, onClose }) => {
 		() => [
 			{
 				id: FOLDERS.USER_ROOT,
-				label: getFolderTranslatedName(t, FOLDERS.USER_ROOT, 'Root'),
+				label: getFolderTranslatedName(FOLDERS.USER_ROOT, 'Root'),
 				level: '0',
 				open: true,
 				items: map(values(data ?? filteredFolders), (v) => ({
@@ -137,7 +135,7 @@ export const SharesModal = ({ calendars, onClose }) => {
 				onClick: () => null
 			}
 		],
-		[t, data, filteredFolders]
+		[data, filteredFolders]
 	);
 
 	const filterResults = useCallback(

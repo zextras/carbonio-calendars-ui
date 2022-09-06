@@ -13,7 +13,7 @@ import {
 	Select,
 	Input
 } from '@zextras/carbonio-design-system';
-
+import { t } from '@zextras/carbonio-shell-ui';
 import {
 	ShowReminderOptions,
 	DefaultViewOptions,
@@ -24,20 +24,19 @@ import {
 } from './components/utils';
 
 export default function GeneralSettings({
-	t,
 	settingsObj,
 	updateSettings,
 	isEmailNotValid,
 	setisEmailNotValid
 }) {
-	const showReminderOptions = useMemo(() => ShowReminderOptions(t), [t]);
-	const defaultViewOptions = useMemo(() => DefaultViewOptions(t), [t]);
-	const startWeekOfOptions = useMemo(() => StartWeekOfOptions(t), [t]);
+	const showReminderOptions = useMemo(() => ShowReminderOptions(), []);
+	const defaultViewOptions = useMemo(() => DefaultViewOptions(), []);
+	const startWeekOfOptions = useMemo(() => StartWeekOfOptions(), []);
 	const spanTimeOptions = useMemo(
-		() => SpanTimeOptions(t, settingsObj.zimbraPrefCalendarDefaultApptDuration.includes('m')),
-		[settingsObj.zimbraPrefCalendarDefaultApptDuration, t]
+		() => SpanTimeOptions(settingsObj.zimbraPrefCalendarDefaultApptDuration.includes('m')),
+		[settingsObj.zimbraPrefCalendarDefaultApptDuration]
 	);
-	const defaultApptVisibiltyOptions = useMemo(() => DefaultApptVisibiltyOptions(t), [t]);
+	const defaultApptVisibiltyOptions = useMemo(() => DefaultApptVisibiltyOptions(), []);
 
 	return (
 		<Container padding={{ all: 'small' }} mainAlignment="baseline" crossAlignment="baseline">

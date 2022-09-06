@@ -5,36 +5,25 @@
  */
 
 import React, { FC, ReactElement, useCallback, useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Container, Text, SnackbarManagerContext } from '@zextras/carbonio-design-system';
-import { deleteTag } from '@zextras/carbonio-shell-ui';
+import { deleteTag, t } from '@zextras/carbonio-shell-ui';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
+import { TagType } from '../../types/tags';
 
 type ComponentProps = {
 	onClose: () => void;
-	tag?: {
-		CustomComponent: ReactElement;
-		active: boolean;
-		color: number;
-		divider: boolean;
-		id: string;
-		label: string;
-		name: string;
-		open: boolean;
-	};
+	tag?: TagType;
 };
 const DeleteTagModal: FC<ComponentProps> = ({ onClose, tag }): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const [t] = useTranslation();
-
 	const title = useMemo(
 		() =>
 			t('label.delete_tag_name', {
 				name: tag?.name,
 				defaultValue: 'Delete "{{name}}" tag'
 			}),
-		[t, tag?.name]
+		[tag?.name]
 	);
 
 	const onConfirm = useCallback(() => {
@@ -58,7 +47,7 @@ const DeleteTagModal: FC<ComponentProps> = ({ onClose, tag }): ReactElement => {
 			}
 			onClose();
 		});
-	}, [createSnackbar, onClose, t, tag]);
+	}, [createSnackbar, onClose, tag]);
 
 	return (
 		<>

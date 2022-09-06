@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-design-system';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
 import { selectCalendarsArray } from '../../../store/selectors/calendars';
@@ -32,8 +31,6 @@ export const CalendarSelector = ({
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
-	const [t] = useTranslation();
-
 	const calendars = useSelector(selectCalendarsArray);
 	const calWithWritePerm = useMemo(
 		() => (showCalWithWritePerm ? filter(calendars, 'haveWriteAccess') : calendars),
