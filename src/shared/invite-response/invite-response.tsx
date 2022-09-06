@@ -182,6 +182,7 @@ const InviteResponse: FC<InviteResponse> = ({
 			if (editor.id) {
 				addBoard({
 					url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
+					title: storeData?.editor?.editors?.[editor.id]?.title ?? '',
 					context: {
 						...storeData.editor.editors[editor.id],
 						callbacks

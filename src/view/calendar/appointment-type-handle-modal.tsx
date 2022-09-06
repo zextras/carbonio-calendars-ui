@@ -47,7 +47,7 @@ export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): Re
 					{t('message.appointment_type_handle', {
 						name: event.title,
 						defaultValue:
-							'{{name}}” is a recurring appointment. Would you like to open only this instance or the series?'
+							'"{{name}}” is a recurring appointment. Would you like to open only this instance or the series?'
 					})}
 				</Text>
 			</Padding>

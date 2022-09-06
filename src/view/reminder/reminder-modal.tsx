@@ -81,10 +81,9 @@ export const ReminderModal = ({
 				});
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
-					title: editor.title,
+					title: editor.title ?? '',
 					context: { ...editor, callbacks }
 				});
-				addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
 				dismissAll();
 			}
 		});
@@ -111,13 +110,7 @@ export const ReminderModal = ({
 	);
 
 	return (
-		<CustomModal
-			open={openModal}
-			onClose={(): null => null}
-			maxHeight="90vh"
-			onClick={(e: MouseEvent): void => e.stopPropagation()}
-			onDoubleClick={(e: MouseEvent): void => e.stopPropagation()}
-		>
+		<CustomModal open={openModal} onClose={(): null => null} maxHeight="90vh">
 			{showNewTimeModal ? (
 				<SetNewAppointmentTimeModal toggleModal={toggleModal} setNewTime={setNewTime} />
 			) : (

@@ -5,6 +5,7 @@
  */
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { omit } from 'lodash';
+import { SyntheticEvent } from 'react';
 import { GetActionReturnType } from '../hooks/types';
 import { PanelView } from '../types/actions';
 import { EventType } from '../types/event';
@@ -46,7 +47,7 @@ export const getRecurrentAppointmentActionsItems = ({
 			id: 'instance',
 			icon: 'CalendarOutline',
 			label: t('label.instance', 'Instance'),
-			click: (ev: MouseEvent | undefined): void => {
+			click: (ev: SyntheticEvent<HTMLElement, Event> | KeyboardEvent | undefined): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
@@ -65,7 +66,7 @@ export const getRecurrentAppointmentActionsItems = ({
 			id: 'series',
 			icon: 'CalendarOutline',
 			label: t('label.series', 'Series'),
-			click: (ev: MouseEvent | undefined): void => {
+			click: (ev: SyntheticEvent<HTMLElement, Event> | KeyboardEvent | undefined): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [

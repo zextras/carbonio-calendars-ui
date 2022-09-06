@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t, FOLDERS } from '@zextras/carbonio-shell-ui';
+import { TextProps } from '@zextras/carbonio-design-system';
 import { TFunction } from 'i18next';
 import { isNil } from 'lodash';
 import moment from 'moment';
@@ -246,8 +247,8 @@ export const getTimeToDisplayData = (
 	reminder: ReminderItem,
 	currentTime: DateType
 ): {
-	color: string;
-	size: string;
+	color: TextProps['color'];
+	size: TextProps['size'];
 	text: string;
 } => {
 	const { start, end, alarmData } = reminder;
@@ -297,22 +298,16 @@ export const getTimeToDisplayData = (
 	};
 };
 
-export const translatedSystemFolders = (t: TFunction): Array<string> => [
+export const translatedSystemFolders = (): Array<string> => [
 	t('label.root', 'Root'),
 	t('label.all_calendars', 'All calendars'),
 	t('label.calendar', 'Calendar'),
 	t('label.trash', 'Trash')
 ];
 
-export const getFolderTranslatedName = (
-	t: TFunction,
-	folderId: string,
-	folderName: string
-): string => {
-	// TODO remove when TS conversion will be completed
-	const id = `${folderId}`;
+export const getFolderTranslatedName = (folderId: string, folderName: string): string => {
 	let translationKey;
-	switch (id) {
+	switch (folderId) {
 		case FOLDERS.USER_ROOT:
 			translationKey = 'root';
 			break;

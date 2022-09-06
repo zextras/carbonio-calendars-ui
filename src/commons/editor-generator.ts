@@ -7,7 +7,7 @@ import {
 	getUserAccount,
 	getUserSettings,
 	replaceHistory,
-	getBridgedFunctions
+	closeBoard
 } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
@@ -344,16 +344,10 @@ export const generateEditor = ({
 		context
 	});
 	const callbacks = createCallbacks(id);
-	const closeCurrentEditor = context.panel
-		? callbacks.closeCurrentEditor
-		: getBridgedFunctions().removeCurrentBoard;
 	const { dispatch, getState } = store;
 	dispatch(createNewEditor(editor));
 	return {
 		editor: getState()?.editor?.editors?.[id],
-		callbacks: {
-			...callbacks,
-			closeCurrentEditor
-		}
+		callbacks
 	};
 };

@@ -6,7 +6,6 @@
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { EventType } from '../types/event';
 import ModalFooter from './modal-footer';
 import { ModalHeader } from './modal-header';
@@ -24,17 +23,16 @@ export const DeletePermanently = ({
 	event,
 	context
 }: DeletePermanentlyProps): ReactElement => {
-	const [t] = useTranslation();
 	const title = useMemo(
 		() =>
 			t(
 				'message.sure_to_delete_appointment_permanently',
 				'Are you sure you want to delete this appointment permanently?'
 			),
-		[t]
+		[]
 	);
 
-	const label = useMemo(() => t('label.delete_permanently', 'Delete permanently'), [t]);
+	const label = useMemo(() => t('label.delete_permanently', 'Delete permanently'), []);
 	const onConfirm = useCallback(() => {
 		context
 			.dispatch(

@@ -3,12 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { ButtonProps, ContainerProps, TooltipProps } from '@zextras/carbonio-design-system';
+
 export type ModalFooterProps = {
-	mainAlignment?: string | undefined;
-	crossAlignment?: string | undefined;
+	mainAlignment?: ContainerProps['mainAlignment'] | undefined;
+	crossAlignment?: ContainerProps['crossAlignment'] | undefined;
 	padding?: Record<string, string> | undefined;
-	onConfirm: (ev: Event) => void;
-	secondaryAction?: (ev: Event) => void;
+	onConfirm: () => void;
+	secondaryAction?: () => void;
 	label: string;
 	secondaryLabel?: string | undefined;
 	disabled?: boolean | undefined;
@@ -17,18 +19,18 @@ export type ModalFooterProps = {
 	secondarybackground?: string | undefined;
 	color?: string | undefined;
 	secondaryColor?: string | undefined;
-	size?: string | undefined;
-	primaryBtnType?: string | undefined;
-	secondaryBtnType?: string | undefined;
+	width?: ButtonProps['width'];
+	primaryBtnType?: ButtonProps['type'];
+	secondaryBtnType?: ButtonProps['type'];
 	showDivider?: boolean | undefined;
-	additionalAction?: (ev: Event) => void;
-	additionalBtnType?: string | undefined;
+	additionalAction?: (ev: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void;
+	additionalBtnType?: ButtonProps['type'] | undefined;
 	additionalColor?: string | undefined;
 	additionalLabel?: string | undefined;
 	primaryTooltip?:
 		| {
 				label: string;
-				placement: string;
+				placement: TooltipProps['placement'];
 				maxWidth: string;
 		  }
 		| undefined;

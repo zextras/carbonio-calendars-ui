@@ -35,11 +35,6 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 		() => disabled?.sendButton || (!attendees?.length && !optionalAttendees?.length),
 		[attendees?.length, disabled?.sendButton, optionalAttendees?.length]
 	);
-
-	useEffect(() => {
-		console.clear();
-		console.log(editor, editorId);
-	}, [editor, editorId]);
 	const onClick = useCallback(() => {
 		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
 			// It's ignore because the createModal Function is not typed

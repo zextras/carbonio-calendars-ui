@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getInvite } from '../store/actions/get-invite';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import { Invite } from '../types/store/invite';
-import { Store } from '../types/store/store';
 
 export const useInvite = (inviteId: string | undefined): Invite | undefined => {
 	const [loading, setLoading] = useState(false);

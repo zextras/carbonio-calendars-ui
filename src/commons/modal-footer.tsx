@@ -25,7 +25,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	background = 'primary',
 	secondarybackground,
 	secondaryColor = 'secondary',
-	size = 'fit',
+	width = 'fit',
 	showDivider = true,
 	primaryTooltip,
 	additionalAction,
@@ -73,7 +73,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 							onClick={secondaryAction}
 							label={secondaryLabel}
 							disabled={secondaryDisabled}
-							size={size}
+							width={width}
 						/>
 						<Padding horizontal="extrasmall" />
 					</>
@@ -85,7 +85,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 						maxWidth={primaryTooltip.maxWidth}
 					>
 						<Button
-							size={size}
+							width={width}
 							color={color}
 							onClick={onConfirm}
 							label={label}
@@ -96,7 +96,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 					</Tooltip>
 				) : (
 					<Button
-						size={size}
+						width={width}
 						color={color}
 						onClick={onConfirm}
 						label={label}

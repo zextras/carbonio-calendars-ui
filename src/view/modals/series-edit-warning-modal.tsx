@@ -5,7 +5,7 @@
  */
 
 import { Container, Text } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useMemo } from 'react';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
@@ -27,19 +27,18 @@ export const SeriesEditWarningModal = ({
 	draft,
 	closeCurrentEditor
 }: ModalProps): JSX.Element => {
-	const { t } = getBridgedFunctions();
 	const message = useMemo(
 		() =>
 			t(
 				'message.edit_series_warning',
 				'As you proceed with the series modification, all previously deleted or modified instances will be restored with the new series settings.'
 			),
-		[t]
+		[]
 	);
 
-	const title = useMemo(() => t('label.warning', 'Warning'), [t]);
-	const label = useMemo(() => t('label.continue', 'Continue'), [t]);
-	const secondaryActionLabel = useMemo(() => t('label.discard_changes', 'Discard Changes'), [t]);
+	const title = useMemo(() => t('label.warning', 'Warning'), []);
+	const label = useMemo(() => t('label.continue', 'Continue'), []);
+	const secondaryActionLabel = useMemo(() => t('label.discard_changes', 'Discard Changes'), []);
 	const onConfirm = useCallback(() => {
 		isSending
 			? action(isNew).then(({ response }: any) => {
@@ -71,7 +70,7 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  });
-	}, [action, closeCurrentEditor, draft, isNew, isSending, onClose, t]);
+	}, [action, closeCurrentEditor, draft, isNew, isSending, onClose]);
 
 	const onDiscard = useCallback(() => {
 		onClose();
