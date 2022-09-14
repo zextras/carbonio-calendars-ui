@@ -12,6 +12,13 @@ import calendarsSliceReducer from '../slices/calendars-slice';
 import editorSliceReducer from '../slices/editor-slice';
 import appointmentsSliceReducer from '../slices/appointments-slice';
 
+export const reducers = {
+	appointments: appointmentsSliceReducer,
+	calendars: calendarsSliceReducer,
+	editor: editorSliceReducer,
+	invites: invitesSliceReducer
+};
+
 export const store = configureStore({
 	devTools: {
 		name: CALENDAR_APP_ID
@@ -21,12 +28,7 @@ export const store = configureStore({
 	// 	  (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
 	// 	: // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 	// 	  (getDefaultMiddleware) => getDefaultMiddleware(),
-	reducer: combineReducers({
-		appointments: appointmentsSliceReducer,
-		calendars: calendarsSliceReducer,
-		editor: editorSliceReducer,
-		invites: invitesSliceReducer
-	})
+	reducer: combineReducers(reducers)
 });
 
 export const StoreProvider: FC = ({ children }) => <Provider store={store}>{children}</Provider>;

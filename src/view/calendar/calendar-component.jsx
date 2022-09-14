@@ -65,6 +65,8 @@ const customComponents = {
 	eventWrapper: CustomEventWrapper
 };
 
+export const FakeComponent = ({ a, b }) => <div data-testid="fake">{a + b}</div>;
+
 export default function CalendarComponent() {
 	const appointments = useSelector(selectAppointmentsArray);
 	const selectedCalendars = useSelector(selectCheckedCalendarsMap);
