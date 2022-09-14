@@ -148,8 +148,9 @@ export default function SetMainMenuItems({ expanded }) {
 		trashItem,
 		divider(1),
 		tagsItem,
+		divider(2),
 		sharesItem,
-		divider(2)
+		divider(3)
 	];
 
 	return expanded ? (
