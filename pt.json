@@ -155,14 +155,13 @@
         "tag_max_length": "Máximo de 128 caracteres permitidos",
         "no_special_char_allowed": "O nome não deve conter nenhum caractere especial",
         "new_tag": "Novo marcador",
-        "edit_tag_name": "Editar etiqueta \"{{name}}\"",
+        "edit_tag_name": "Editar etiqueta {{name}}",
         "edit_tag": "Editar Etiqueta",
-        "delete_tag_name": "Excluir etiqueta \"{{name}}\"",
+        "delete_tag_name": "Excluir etiqueta {{name}}",
         "delete_tag": "Excluir Etiqueta",
         "create_tag": "Criar Etiqueta"
     },
     "action": {
-        "save": "Salvar",
         "send": "Enviar",
         "empty_trash": "Esvaziar Lixeira",
         "move_to_root": "Mover para raiz",
@@ -179,7 +178,6 @@
     "event": {
         "action": {
             "accept": "Aceitar",
-            "trash": "Excluir",
             "no": "Não",
             "yes": "Sim",
             "decline": "Recusar",
@@ -190,7 +188,6 @@
     "folder": {
         "modal": {
             "move": {
-                "footer": "Vazia",
                 "body": {
                     "message3": "Selecione um calendário para mover o compromisso selecionado:"
                 },
@@ -257,8 +254,8 @@
         "want_to_edit_cancellation_msg": "Deseja editar a mensagem de cancelamento deste compromisso?",
         "want_to_send_cancellation_msg": "Deseja enviar uma mensagem de cancelamento aos participantes?",
         "you_are_organizer": "<Row><Text><BoldText>Você </BoldText>é o organizador</Text></Row>",
-        "you_sure_delete_calendar": "Tens a certeza que desejas excluir permanentemente o calendário \"{{name}}\"?",
-        "you_sure_move_calendar_trash": "Tens a certeza que desejas excluir o calendário \"{{name}}\"?",
+        "you_sure_delete_calendar": "Tens a certeza que desejas excluir permanentemente o calendário {{name}}?",
+        "you_sure_move_calendar_trash": "Tens a certeza que desejas excluir o calendário {{name}}?",
         "you_will_see_the_subject_here": "Assunto",
         "delete_future_occurences_warning": "Isto também irá excluir todas as exceções (antes e depois deste evento) na série",
         "modal": {
@@ -268,13 +265,11 @@
             }
         },
         "sure_to_delete_appointment_permanently": "Tem certeza que deseja excluir este compromisso permanentemente?",
-        "you_sure_delete_instance": "Tens a certeza que desejas excluir esta instância do compromisso “{{title}}”?",
-        "reply": "Responder",
+        "you_sure_delete_instance": "Tens a certeza que desejas excluir esta instância do compromisso {{title}}?",
         "organizer": "Organizador",
         "more": "Mais...",
         "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com ela.",
-        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?",
-        "awaiting": "a esperar"
+        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta {{name}}?"
     },
     "months": {
         "april": "Abril",
@@ -346,10 +341,6 @@
             "dflt_vsblty_opt": {
                 "public": "Público"
             },
-            "show_reminder": {
-                "day_before": "1 dia antes",
-                "day_before_plural": "{{count}} dias antes"
-            },
             "invt_opts": {
                 "allow_none": "Não permitir que ninguém me convide para reuniões",
                 "allow_following": "Permitir que apenas os seguintes usuários internos me enviem convites para reuniões",
@@ -374,9 +365,6 @@
                 "egypt": "GMT +02:00 Egito",
                 "amsterdam": "GMT +01:00 Amsterdã, Berlim, Berna, Roma, Estocolmo, Viena",
                 "chennai": "GMT +5:30 Chennai, Calcutá, Mumbai, Nova Delhi"
-            },
-            "weekdays": {
-                "sunday": "Domingo"
             }
         },
         "label": {
@@ -432,8 +420,8 @@
         "url_copied": "{{title}} copiado",
         "share_folder_success": "Calendário partilhado corretamente",
         "new_time_proposed_success": "Nova hora proposta",
-        "tag_applied": "Etiqueta \"{{tag}}\" aplicada",
-        "tag_removed": "Etiqueta \"{{tag}}\" removida"
+        "tag_applied": "Etiqueta {{tag}} aplicada",
+        "tag_removed": "Etiqueta {{tag}} removida"
     },
     "success": "Sucesso",
     "type": "Tipo",

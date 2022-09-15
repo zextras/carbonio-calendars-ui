@@ -39,7 +39,7 @@
         "edit_access": "Chỉnh sửa truy cập {{name}}",
         "edit_share": "Chỉnh sửa chia sẻ",
         "edit_tag": "Chỉnh sửa thẻ",
-        "edit_tag_name": "Chỉnh sửa thẻ \"{{name}}",
+        "edit_tag_name": "Chỉnh sửa thẻ {{name}}",
         "email_input_message": "Nhập địa chỉ thư điện tử",
         "empty": "Rỗng",
         "enable_dlgtn_for_ical": "Bật ủy quyền cho Apple iCal CalDAV Client",
@@ -145,7 +145,7 @@
         "create_appt_settings": "Tạo cuộc hẹn",
         "delete_instance": "Bạn có chắc chắn muốn xóa phiên bản cuộc hẹn “{title}” này không?",
         "delete_tag": "Xoá thẻ",
-        "delete_tag_name": "Xoá thẻ \"{{name}}\"",
+        "delete_tag_name": "Xoá thẻ {{name}}",
         "edits_saved": "Các chỉnh sửa đã được lưu chính xác",
         "error_try_again": "Có lỗi, vui lòng thử lại",
         "invitation_not_sent": "Bạn chưa gửi lời mời cho những người tham dự",
@@ -157,7 +157,14 @@
         "timezone_pref_msg": "Thời gian tuân theo múi giờ của bạn chọn.",
         "your_pref_timezone_msg": "Múi giờ ưa thích của bạn là: GMT +01: 00 Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna.",
         "no_title": "Không tiêu đề",
-        "scheduled_in": "Đặt lịch vào"
+        "scheduled_in": "Đặt lịch vào",
+        "warning": "Warning",
+        "trash": "Trash",
+        "tag": "Thẻ",
+        "share_public_link": "Chia sẻ liên kết công khai",
+        "select": "Select",
+        "root": "Gốc",
+        "choose_file": "Chọn tệp (File)"
     },
     "participants": {
         "Not_answered": "không trả lời",
@@ -262,8 +269,8 @@
             "error": "Lỗi"
         },
         "new_time_proposed_success": "Đề xuất thời gian mới",
-        "tag_applied": "đã áp dụng thẻ \"{{tag}}\"",
-        "tag_removed": "Đã xoá thẻ \"{{tag}}\"",
+        "tag_applied": "đã áp dụng thẻ {{tag}}",
+        "tag_removed": "Đã xoá thẻ {{tag}}",
         "url_copied": "Đã sao chép {{title}}"
     },
     "success": "Thành công",
@@ -384,7 +391,7 @@
         "sure_to_delete_all_occurences_appointment": "Bạn có chắc chắn muốn xóa tất cả các lần xuất hiện của cuộc hẹn này không?",
         "sure_to_delete_appointment": "Bạn có chắc chắn muốn xóa cuộc hẹn này không?",
         "you_will_see_the_subject_here": "Chủ đề",
-        "you_sure_move_calendar_trash": "Bạn có chắc chắn muốn xóa lịch \"{{name}}\" ?",
+        "you_sure_move_calendar_trash": "Bạn có chắc chắn muốn xóa lịch {{name}} ?",
         "delete_all_occurences": "Xóa tất cả các lần xuất hiện",
         "delete_future_occurences": "Xóa trường hợp này và tất cả các lần xuất hiện trong tương lai",
         "delete_tag_message2": "Sau khi xóa, nó sẽ bị xóa khỏi mọi mục được đánh dấu bởi nó.",
@@ -409,14 +416,20 @@
             },
             "appt_moved_to_trash": "Cuộc hẹn đã chuyển vào thùng rác",
             "appt_restored": "Cuộc hẹn đã khôi phục thành công tới",
-            "new_calendar_created": "Lịch mới được tạo"
+            "new_calendar_created": "Lịch mới được tạo",
+            "some_link_copying_error": "Có vẻ như có vấn đề khi tạo Url công khai cho một số Tệp, vui lòng thử lại lần nữa",
+            "some_att_add_fails": "Có vẻ như có vấn đề khi thêm đính kèm, vui lòng thử lại lần nữa",
+            "link_copying_error": "Có vẻ như có vấn đề khi tạo liên kết công khai, vui lòng thử lại lần nữa",
+            "att_err_adding": "Có vẻ như có vấn đề khi thêm đính kèm, vui lòng thử lại lần nữa",
+            "all_link_copied": "Đã sao chép liên kết công khai thành công",
+            "all_att_added": "Thêm đính kèm thành công"
         },
         "want_to_send_cancellation_msg": "Bạn có muốn gửi thông báo huỷ cuộc hẹn đến những người tham dự không?",
         "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> là người tổ chức </Text></Row>",
-        "delete_tag_message1": "Bạn có chắc xoá thẻ \"{{name}}\"?",
-        "you_sure_delete_calendar": "Bạn có chắc chắn muốn xoá vĩnh viễn lịch \"{{name}}\" không?",
-        "you_sure_delete_instance": "Bạn có chắc chắn muốn xóa phiên bản cuộc hẹn “{{title}}” này không?",
-        "appointment_type_handle": "\"{{name}}\" là một cuộc hẹn định kỳ. Bạn chỉ muốn mở phiên bản này hay chuỗi chương trình?",
+        "delete_tag_message1": "Bạn có chắc xoá thẻ {{name}}?",
+        "you_sure_delete_calendar": "Bạn có chắc chắn muốn xoá vĩnh viễn lịch {{name}} không?",
+        "you_sure_delete_instance": "Bạn có chắc chắn muốn xóa phiên bản cuộc hẹn {{title}} này không?",
+        "appointment_type_handle": "{{name}} là một cuộc hẹn định kỳ. Bạn chỉ muốn mở phiên bản này hay chuỗi chương trình?",
         "modal": {
             "delete": {
                 "sure_delete_appointment_all_instances_permanently": "Tác vụ này sẽ xóa tất cả các lần xuất hiện của cuộc hẹn này và bạn sẽ không thể khôi phục chúng lần nữa, tiếp tục không?",
@@ -433,12 +446,9 @@
         "you": "Bạn",
         "are_organizer": "là người tổ chức",
         "delete_future_occurences_warning": "Tác vụ này cũng sẽ xóa tất cả các ngoại lệ trong chuỗi(trước và sau trường hợp này)",
-        "declined": "{{count}} đã từ chối",
         "optional_participant": "{{count}} Tuỳ chọn",
         "organizer": "Tổ chức",
-        "reply_all": "Trả lời tất cả",
         "send_email": "Gửi một thư điện tử",
-        "accepted": "{{count}} đã chấp nhận",
         "more": "Nhiều hơn...",
         "required_participant": "{{count}} người tham gia"
     },
@@ -514,7 +524,9 @@
                 "content": "Kéo/thả vào đây các tệp đính kèm của bạn để nhanh chóng thêm vào cuộc hẹn"
             },
             "drive": "Thêm vào từ Drive",
-            "local": "Thêm vào từ thiết bị cục bộ"
+            "local": "Thêm vào từ thiết bị cục bộ",
+            "url": "Thêm một liên kết công khai từ các Tệp",
+            "files": "Thêm vào từ tệp tin"
         }
     },
     "edit_share_properties": "Chỉnh sửa thuộc tính chia sẻ",

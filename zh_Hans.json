@@ -19,7 +19,13 @@
             "calendar_restored": "日历已成功恢复",
             "appointment_permanently_deleted": "预约已永久性删除",
             "calendar_edits_saved": "编辑保存正确",
-            "series_deleted": "系列已删除成功。参与者将收到取消通知。"
+            "series_deleted": "系列已删除成功。参与者将收到取消通知。",
+            "some_link_copying_error": "为部分文件生成公开 URL 时似乎发生错误，请重试",
+            "some_att_add_fails": "添加一些附件时似乎出现错误，请重试",
+            "link_copying_error": "生成公开链接时似乎发生错误，请重试",
+            "att_err_adding": "添加附件时似乎出现错误，请重试",
+            "all_link_copied": "公开链接已复制成功",
+            "all_att_added": "附件添加成功"
         },
         "are_organizer": "为组织者",
         "delete_all_occurences": "删除所有重复次数",
@@ -46,20 +52,17 @@
         "want_to_edit_cancellation_msg": "您想编辑预约取消消息吗？",
         "want_to_send_cancellation_msg": "您想向参与者发送取消消息吗？",
         "you_are_organizer": "<Row><Text><BoldText>您</BoldText>为组织者</Text></Row>",
-        "you_sure_delete_calendar": "确定要永久性删除“{{name}}”日历吗？",
-        "you_sure_move_calendar_trash": "确定要删除“{{name}}”日历吗？",
-        "you_sure_delete_instance": "确定要删除此“{{title}}”预约的实例吗？",
-        "delete_tag_message1": "确定要删除“{{name}}”标签吗？",
+        "you_sure_delete_calendar": "确定要永久性删除 {{name}}日历吗？",
+        "you_sure_move_calendar_trash": "确定要删除 {{name}}日历吗？",
+        "you_sure_delete_instance": "确定要删除此{{title}}预约的实例吗？",
+        "delete_tag_message1": "确定要删除 {{name}} 标签吗？",
         "delete_tag_message2": "删除后，其将从所有已进行相关标记的项目上移除。",
-        "appointment_type_handle": "“{{name}}”是定期预约。您是想打开此实例还是整个系列？",
+        "appointment_type_handle": "{{name}}是定期预约。您是想打开此实例还是整个系列？",
         "organizer": "组织者",
-        "reply_all": "回复全部",
         "send_email": "发送邮件",
         "more": "更多...",
         "required_participant": "{{count}} 参与者",
-        "optional_participant": "{{count}} 可选",
-        "declined": "{{count}} 已拒绝",
-        "accepted": "{{count}} 已接受"
+        "optional_participant": "{{count}} 可选"
     },
     "calendar": {
         "modal": {
@@ -104,9 +107,6 @@
     },
     "folder": {
         "modal": {
-            "delete": {
-                "title": "删除"
-            },
             "move": {
                 "body": {
                     "message3": "选择日历夹以将其相关预约移动至："
@@ -270,11 +270,11 @@
         "app_name": "日历",
         "preview": "预览",
         "create_tag": "创建标签",
-        "edit_tag_name": "编辑“{{name}}”标签",
+        "edit_tag_name": "编辑 {{name}} 标签",
         "no_special_char_allowed": "名称中不应包含任何特殊字符",
         "select_color": "选择颜色",
         "delete_tag": "删除标签",
-        "delete_tag_name": "删除“{{name}}”标签",
+        "delete_tag_name": "删除 {{name}} 标签",
         "edit_tag": "编辑标签",
         "loading_results": "正在加载结果...",
         "results_for_error": "无法开始搜索，清除并重试： ",
@@ -286,7 +286,14 @@
         "other_actions": "其他操作",
         "single_instance": "单个实例",
         "no_title": "无标题",
-        "scheduled_in": "日历"
+        "scheduled_in": "日历",
+        "warning": "警告",
+        "trash": "回收站",
+        "tag": "标记",
+        "share_public_link": "分享公开链接",
+        "select": "选择",
+        "root": "根目录",
+        "choose_file": "选择文件"
     },
     "months": {
         "april": "四月",
@@ -332,12 +339,6 @@
             "dflt_vsblty_opt": {
                 "public": "公共"
             },
-            "show_reminder": {
-                "day_before": "{{count}}天前"
-            },
-            "default_cal_opts": {
-                "calendar": "日历"
-            },
             "default_view": {
                 "month": "月视图",
                 "week": "周视图",
@@ -362,9 +363,6 @@
                 "chennai": "GMT+05:30 钦奈、加尔各答、孟买、新德里",
                 "amsterdam": "GMT +01:00 阿姆斯特丹、柏林、伯尔尼、罗马、斯德哥尔摩、维也纳",
                 "egypt": "GMT+02:00 埃及"
-            },
-            "weekdays": {
-                "thursday": "星期四"
             }
         },
         "label": {
@@ -422,8 +420,8 @@
         "url_copied": "{{title}}已复制",
         "proposed_time_accepted": "您接受了提议的时间",
         "new_time_proposed_success": "已提议新时间",
-        "tag_applied": "“{{tag}}”标签已应用",
-        "tag_removed": "“{{tag}}”标签已移除"
+        "tag_applied": "{{tag}} 标签已应用",
+        "tag_removed": "{{tag}} 标签已移除"
     },
     "success": "成功",
     "type": "类型",
@@ -453,7 +451,9 @@
                 "title": "拖放模式"
             },
             "drive": "从云盘添加",
-            "local": "从本地添加"
+            "local": "从本地添加",
+            "url": "从文件添加公开链接",
+            "files": "从文件添加"
         }
     },
     "freebusy": "FreeBusy",
