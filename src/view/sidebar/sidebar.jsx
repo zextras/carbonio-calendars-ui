@@ -101,10 +101,11 @@ export default function SetMainMenuItems({ expanded }) {
 			icon: 'Share',
 			open: false,
 			items: sharedSubItems.concat({
+				id: 'find-shares-button',
 				label: t('find_shares', 'Find shares'),
 				CustomComponent: SharesComponent
 			}),
-			divider: true
+			divider: false
 		}),
 		[sharedSubItems]
 	);
@@ -113,7 +114,7 @@ export default function SetMainMenuItems({ expanded }) {
 		() => ({
 			id: 'Tags',
 			label: t('label.tags', 'Tags'),
-			divider: true,
+			divider: false,
 			open: false,
 			onClick: (e) => e.stopPropagation(),
 			CustomComponent: TagComponent,
@@ -137,6 +138,7 @@ export default function SetMainMenuItems({ expanded }) {
 		};
 	}, [allItems, nestedItems, recursiveToggleCheck]);
 
+	const divider = (idx) => ({ divider: true, id: `divider-${idx}` });
 	const defaultCalItem = find(nestedItems, ['id', FOLDERS.CALENDAR]);
 	const sortedNestedItems = reject(nestedItems, ['id', FOLDERS.CALENDAR]);
 	const items = [
@@ -144,8 +146,11 @@ export default function SetMainMenuItems({ expanded }) {
 		defaultCalItem,
 		...sortedNestedItems,
 		trashItem,
+		divider(1),
 		tagsItem,
-		sharesItem
+		divider(2),
+		sharesItem,
+		divider(3)
 	];
 
 	return expanded ? (
