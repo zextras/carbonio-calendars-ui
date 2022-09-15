@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { StoreProvider } from '../../../store/redux';
 import {
 	selectEditor,
 	selectEditorAttendees,
@@ -21,7 +21,6 @@ import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
-	const [t] = useTranslation();
 	const attendees = useSelector(selectEditorAttendees(editorId));
 	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
@@ -35,7 +34,6 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 		() => disabled?.sendButton || (!attendees?.length && !optionalAttendees?.length),
 		[attendees?.length, disabled?.sendButton, optionalAttendees?.length]
 	);
-
 	const onClick = useCallback(() => {
 		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
 			// It's ignore because the createModal Function is not typed
@@ -45,14 +43,16 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				{
 					size: 'large',
 					children: (
-						<SeriesEditWarningModal
-							action={onSend}
-							isSending
-							onClose={(): void => closeModal()}
-							isNew={isNew}
-							closeCurrentEditor={closeCurrentEditor}
-							draft
-						/>
+						<StoreProvider>
+							<SeriesEditWarningModal
+								action={onSend}
+								isSending
+								onClose={(): void => closeModal()}
+								isNew={isNew}
+								closeCurrentEditor={closeCurrentEditor}
+								draft
+							/>
+						</StoreProvider>
 					),
 					onClose: () => {
 						closeModal();
@@ -80,11 +80,10 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 		action,
 		closeCurrentEditor,
 		createModal,
-		editor.isInstance,
-		editor.isSeries,
+		editor?.isInstance,
+		editor?.isSeries,
 		isNew,
-		onSend,
-		t
+		onSend
 	]);
 
 	return (

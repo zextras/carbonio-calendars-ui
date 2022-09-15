@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { noop } from 'lodash';
 import React, { FC, ReactElement, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -71,6 +72,7 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 							type="outlined"
 							label={t('label.other_actions', 'Other actions')}
 							icon="ArrowIosDownwardOutline"
+							onClick={noop}
 						/>
 					</Row>
 				</Dropdown>

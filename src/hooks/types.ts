@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { SyntheticEvent } from 'react';
+
 export type Action = {
-	click: (ev?: MouseEvent) => void;
+	click: (ev?: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
 	icon: string;
 	id: string;
 	items: Array<{
-		click: (ev?: MouseEvent) => void;
+		click: (ev?: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
 		disabled: boolean;
 		icon: string;
 		id: string;

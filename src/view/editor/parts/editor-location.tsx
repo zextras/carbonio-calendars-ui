@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Input } from '@zextras/carbonio-design-system';
 import { selectEditorDisabled, selectEditorLocation } from '../../../store/selectors/editor';
@@ -17,7 +17,6 @@ type EditorTitleProps = {
 };
 
 export const EditorLocation = ({ editorId, callbacks }: EditorTitleProps): ReactElement | null => {
-	const [t] = useTranslation();
 	const location = useSelector(selectEditorLocation(editorId));
 	const [value, setValue] = useState(location ?? '');
 	const { onLocationChange } = callbacks;

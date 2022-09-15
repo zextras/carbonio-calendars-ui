@@ -3,8 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
-import { TFunction } from 'i18next';
+import React, {
+	ReactElement,
+	SyntheticEvent,
+	useCallback,
+	useContext,
+	useMemo,
+	useState
+} from 'react';
 import {
 	ModalManagerContext,
 	SnackbarManagerContext,
@@ -13,30 +19,24 @@ import {
 	Padding,
 	Icon,
 	Checkbox,
-	Button
+	ButtonOld as Button
 } from '@zextras/carbonio-design-system';
 
 import { find, includes, reduce } from 'lodash';
-import {
-	ZIMBRA_STANDARD_COLORS,
-	useTags,
-	Tag,
-	Tags,
-	getBridgedFunctions
-} from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
+import { ZIMBRA_STANDARD_COLORS, useTags, Tag, Tags, t } from '@zextras/carbonio-shell-ui';
 import { Dispatch } from 'redux';
 import { itemActionRequest } from '../../soap/item-action-request';
-import { TagsActionsType } from '../../types/tags';
+import { TagsActionsType, TagType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from './delete-tag-modal';
 import { EventType } from '../../types/event';
+import { StoreProvider } from '../../store/redux';
 
 export type ReturnType = {
 	id: string;
 	icon: string;
 	label: string;
-	click?: (arg: React.SyntheticEvent<EventTarget>) => void;
+	click?: (arg: React.SyntheticEvent<EventTarget> | KeyboardEvent) => void;
 	items?: Array<{
 		customComponent: ReactElement;
 		id: string;
@@ -45,23 +45,9 @@ export type ReturnType = {
 	}>;
 };
 
-export type TagType = {
-	customComponent?: ReactElement;
-	active?: boolean;
-	color?: number;
-	divider?: boolean;
-	id: string;
-	label?: string;
-	name?: string;
-	open?: boolean;
-	keepOpen?: boolean;
-	CustomComponent?: ReactElement;
-};
-
 export type TagsFromStoreType = Record<string, Tag>;
 
 export type ArgumentType = {
-	t: TFunction;
 	createModal?: unknown;
 	createSnackbar?: unknown;
 	items?: ReturnType;
@@ -76,18 +62,24 @@ export type ContextType = {
 	replaceHistory: (arg: any) => void;
 	tags: Tags;
 };
-export const createTag = ({ t, createModal }: ArgumentType): ReturnType => ({
+export const createTag = ({ createModal }: ArgumentType): ReturnType => ({
 	id: TagsActionsType.NEW,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
-	click: (e: React.SyntheticEvent<EventTarget>): void => {
+	click: (e): void => {
 		if (e) {
 			e.stopPropagation();
 		}
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		const closeModal = createModal(
-			{ children: <CreateUpdateTagModal onClose={(): void => closeModal()} /> },
+			{
+				children: (
+					<StoreProvider>
+						<CreateUpdateTagModal onClose={(): void => closeModal()} />
+					</StoreProvider>
+				)
+			},
 			true
 		);
 	}
@@ -102,24 +94,30 @@ export const createAndApplyTag = ({
 }): ReturnType => ({
 	id: TagsActionsType.NEW,
 	icon: 'TagOutline',
-	label: getBridgedFunctions().t('label.create_tag', 'Create Tag'),
-	click: (e: React.SyntheticEvent<EventTarget>): void => {
+	label: t('label.create_tag', 'Create Tag'),
+	click: (e: SyntheticEvent<EventTarget> | KeyboardEvent): void => {
 		if (e) {
 			e.stopPropagation();
 		}
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		const closeModal = context.createModal(
-			{ children: <CreateUpdateTagModal onClose={(): void => closeModal()} event={event} /> },
+			{
+				children: (
+					<StoreProvider>
+						<CreateUpdateTagModal onClose={(): void => closeModal()} event={event} />
+					</StoreProvider>
+				)
+			},
 			true
 		);
 	}
 });
-export const editTag = ({ t, createModal, tag }: ArgumentType): ReturnType => ({
+export const editTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 	id: TagsActionsType.EDIT,
 	icon: 'Edit2Outline',
 	label: t('label.edit_tag', 'Edit Tag'),
-	click: (e: React.SyntheticEvent<EventTarget>): void => {
+	click: (e): void => {
 		if (e) {
 			e.stopPropagation();
 		}
@@ -129,18 +127,22 @@ export const editTag = ({ t, createModal, tag }: ArgumentType): ReturnType => ({
 			{
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				children: <CreateUpdateTagModal onClose={(): void => closeModal()} tag={tag} editMode />
+				children: (
+					<StoreProvider>
+						<CreateUpdateTagModal onClose={(): void => closeModal()} tag={tag} editMode />
+					</StoreProvider>
+				)
 			},
 			true
 		);
 	}
 });
 
-export const deleteTag = ({ t, createModal, tag }: ArgumentType): ReturnType => ({
+export const deleteTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 	id: TagsActionsType.DELETE,
 	icon: 'Untag',
 	label: t('label.delete_tag', 'Delete Tag'),
-	click: (e: React.SyntheticEvent<EventTarget>): void => {
+	click: (e): void => {
 		if (e) {
 			e.stopPropagation();
 		}
@@ -150,7 +152,11 @@ export const deleteTag = ({ t, createModal, tag }: ArgumentType): ReturnType => 
 			{
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				children: <DeleteTagModal onClose={(): void => closeModal()} tag={tag} />
+				children: (
+					<StoreProvider>
+						<DeleteTagModal onClose={(): void => closeModal()} tag={tag} />
+					</StoreProvider>
+				)
 			},
 			true
 		);
@@ -158,7 +164,6 @@ export const deleteTag = ({ t, createModal, tag }: ArgumentType): ReturnType => 
 });
 
 export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType }): ReactElement => {
-	const [t] = useTranslation();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const [checked, setChecked] = useState(includes(event.resource.tags, tag.id));
@@ -202,7 +207,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 					});
 				});
 		},
-		[event?.resource?.id, createSnackbar, t, tag.name]
+		[event?.resource?.id, createSnackbar, tag.name]
 	);
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
@@ -272,7 +277,7 @@ export const applyTag = ({
 		keepOpen: true,
 		customComponent: (
 			<Button
-				label={getBridgedFunctions().t('label.new_tag', 'New Tag')}
+				label={t('label.new_tag', 'New Tag')}
 				type="outlined"
 				size="fill"
 				isSmall
@@ -290,7 +295,7 @@ export const applyTag = ({
 				</Padding>
 				<Row takeAvailableSpace mainAlignment="space-between">
 					<Padding right="small">
-						<Text>{getBridgedFunctions().t('label.tags', 'Tags')}</Text>
+						<Text>{t('label.tags', 'Tags')}</Text>
 					</Padding>
 				</Row>
 			</Row>
@@ -298,16 +303,16 @@ export const applyTag = ({
 	};
 };
 
-export const useGetTagsActions = ({ tag, t }: ArgumentType): Array<ReturnType> => {
+export const useGetTagsActions = ({ tag }: ArgumentType): Array<ReturnType> => {
 	const createModal = useContext(ModalManagerContext);
 	const createSnackbar = useContext(SnackbarManagerContext);
 	return useMemo(
 		() => [
-			createTag({ t, createModal }),
-			editTag({ t, createModal, tag }),
-			deleteTag({ t, tag, createSnackbar, createModal })
+			createTag({ createModal }),
+			editTag({ createModal, tag }),
+			deleteTag({ tag, createSnackbar, createModal })
 		],
-		[createModal, createSnackbar, t, tag]
+		[createModal, createSnackbar, tag]
 	);
 };
 

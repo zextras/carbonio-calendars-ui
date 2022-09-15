@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
-import { useUserSettings, editSettings, SettingsHeader } from '@zextras/carbonio-shell-ui';
+import { useUserSettings, editSettings, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
 import {
 	Container,
 	FormSection,
@@ -13,7 +13,6 @@ import {
 	Shimmer
 } from '@zextras/carbonio-design-system';
 import { map, filter, isEqual, uniqBy } from 'lodash';
-import { useTranslation } from 'react-i18next';
 import CustomScheduleModal from './custom-schedule-modal';
 import GeneralSettingView from './general-settings-view';
 import WorkWeekSettingsView from './work-week-settings-view';
@@ -31,7 +30,6 @@ import {
 import { getRightsRequest } from '../soap/get-rights-request';
 
 export default function CalendarSettingsView() {
-	const [t] = useTranslation();
 	const settings = useUserSettings()?.prefs;
 	const [settingsObj, setSettingsObj] = useState({ ...settings });
 	const [updatedSettings, setUpdatedSettings] = useState({});
@@ -346,8 +344,7 @@ export default function CalendarSettingsView() {
 		isEmailNotValid,
 		allowedFBUsers,
 		allowedInivteUsers,
-		createSnackbar,
-		t
+		createSnackbar
 	]);
 
 	const calculateRegularSchedule = (data) => {
@@ -382,12 +379,12 @@ export default function CalendarSettingsView() {
 		]
 	);
 
-	const title = useMemo(() => t('label.calendar_setting', 'Calendar Settings'), [t]);
-	const sectionTitleGeneral = useMemo(() => generalSubSection(t), [t]);
-	const sectionTitleWorkWeek = useMemo(() => workWeekSubSection(t), [t]);
-	const sectionTitleAppointments = useMemo(() => creatingAppointmentsSubSection(t), [t]);
-	const sectionTitleAppleCal = useMemo(() => iCalSubSection(t), [t]);
-	const sectionTitlePermissions = useMemo(() => permissionsSubSection(t), [t]);
+	const title = useMemo(() => t('label.calendar_setting', 'Calendar Settings'), []);
+	const sectionTitleGeneral = useMemo(() => generalSubSection(), []);
+	const sectionTitleWorkWeek = useMemo(() => workWeekSubSection(), []);
+	const sectionTitleAppointments = useMemo(() => creatingAppointmentsSubSection(), []);
+	const sectionTitleAppleCal = useMemo(() => iCalSubSection(), []);
+	const sectionTitlePermissions = useMemo(() => permissionsSubSection(), []);
 
 	return loading ? (
 		<Container
@@ -413,7 +410,6 @@ export default function CalendarSettingsView() {
 				<FormSection width="50%" minWidth="calc(min(100%, 512px))">
 					<FormSubSection id={sectionTitleGeneral.id} label={sectionTitleGeneral.label}>
 						<GeneralSettingView
-							t={t}
 							settings={settings}
 							settingsObj={settingsObj}
 							updateSettings={updateSettings}
@@ -424,7 +420,6 @@ export default function CalendarSettingsView() {
 					<FormSubSection id={sectionTitleWorkWeek.id} label={sectionTitleWorkWeek.label}>
 						<WorkWeekSettingsView
 							settingsObj={settingsObj}
-							t={t}
 							workingSchedule={workingSchedule}
 							isRegular={isRegular}
 							handelDaysClicked={handelDaysClicked}
@@ -435,7 +430,6 @@ export default function CalendarSettingsView() {
 					</FormSubSection>
 					<FormSubSection id={sectionTitleAppointments.id} label={sectionTitleAppointments.label}>
 						<CreateAppSettings
-							t={t}
 							settings={settings}
 							settingsObj={settingsObj}
 							updateSettings={updateSettings}
@@ -443,7 +437,6 @@ export default function CalendarSettingsView() {
 					</FormSubSection>
 					<FormSubSection id={sectionTitleAppleCal.id} label={sectionTitleAppleCal.label}>
 						<AppleICalSettings
-							t={t}
 							settings={settings}
 							settingsObj={settingsObj}
 							updateSettings={updateSettings}
@@ -451,7 +444,6 @@ export default function CalendarSettingsView() {
 					</FormSubSection>
 					<FormSubSection label={sectionTitlePermissions.label} id={sectionTitlePermissions.id}>
 						<PermissionSettings
-							t={t}
 							activeFreeBusyOptn={activeFreeBusyOptn}
 							activeInviteOptn={activeInviteOptn}
 							handleInviteRightChange={handleInviteRightChange}
@@ -469,7 +461,6 @@ export default function CalendarSettingsView() {
 			<CustomScheduleModal
 				open={open}
 				toggleModal={toggleModal}
-				t={t}
 				workingSchedule={workingSchedule}
 				onFromChange={onFromChange}
 				saveChanges={saveChanges}

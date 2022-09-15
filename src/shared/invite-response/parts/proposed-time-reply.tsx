@@ -9,12 +9,11 @@ import {
 	SnackbarManagerContext,
 	Container,
 	Padding,
-	Button,
+	ButtonOld as Button,
 	Divider
 } from '@zextras/carbonio-design-system';
-import { useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { t, useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
 import { appointmentToEvent } from '../../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../../store/actions/get-appointment';
@@ -40,7 +39,6 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 	to
 }): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const accounts = useUserAccounts();
 	const [openComposer, available] = useIntegratedFunction('compose');
@@ -92,7 +90,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				moveToTrash();
 			});
 		});
-	}, [dispatch, id, inviteId, Invite, accounts, moveToTrash, createSnackbar, t]);
+	}, [dispatch, id, inviteId, Invite, accounts, moveToTrash, createSnackbar]);
 	const decline = useCallback(() => {
 		if (available)
 			openComposer(null, {
@@ -100,7 +98,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				subject: `${t('label.proposal_declined', 'Proposal declined')}${title}`,
 				to
 			});
-	}, [available, openComposer, t, title, fragment, to]);
+	}, [available, openComposer, title, fragment, to]);
 	return (
 		<>
 			<Padding top="small" />
@@ -108,7 +106,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				orientation="horizontal"
 				crossAlignment="flex-start"
 				mainAlignment="flex-start"
-				weight="fill"
+				width="fill"
 				height="fit"
 				padding={{ top: 'medium' }}
 			>

@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
-import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
+import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 
 const AttendeesContainer = styled.div`
@@ -21,7 +21,6 @@ const AttendeesContainer = styled.div`
 `;
 
 export default function PermisionsSettings({
-	t,
 	activeFreeBusyOptn,
 	activeInviteOptn,
 	setAllowedFBUsers,

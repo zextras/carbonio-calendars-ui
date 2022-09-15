@@ -9,6 +9,7 @@ import { DeletePermanently } from '../commons/delete-permanently';
 import { generateEditor } from '../commons/editor-generator';
 import { PANEL_VIEW } from '../constants';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
+import { StoreProvider } from '../store/redux';
 import { updateParticipationStatus } from '../store/slices/appointments-slice';
 import { ActionsContext, PanelView } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
@@ -93,7 +94,9 @@ export const deletePermanently =
 		const closeModal = context.createModal(
 			{
 				children: (
-					<DeletePermanently onClose={(): void => closeModal()} event={event} context={context} />
+					<StoreProvider>
+						<DeletePermanently onClose={(): void => closeModal()} event={event} context={context} />
+					</StoreProvider>
 				),
 				onClose: () => {
 					closeModal();
@@ -118,12 +121,14 @@ export const moveToTrash =
 		const closeModal = context.createModal(
 			{
 				children: (
-					<DeleteEventModal
-						event={event}
-						invite={invite}
-						context={context}
-						onClose={(): void => closeModal()}
-					/>
+					<StoreProvider>
+						<DeleteEventModal
+							event={event}
+							invite={invite}
+							context={context}
+							onClose={(): void => closeModal()}
+						/>
+					</StoreProvider>
 				),
 				onClose: () => {
 					closeModal();
@@ -141,7 +146,11 @@ export const moveAppointment =
 		const closeModal = context.createModal(
 			{
 				maxHeight: '90vh',
-				children: <MoveApptModal event={event} onClose={(): void => closeModal()} />,
+				children: (
+					<StoreProvider>
+						<MoveApptModal event={event} onClose={(): void => closeModal()} />
+					</StoreProvider>
+				),
 				onClose: () => {
 					closeModal();
 				}
@@ -159,8 +168,8 @@ export const editAppointment =
 		event: EventType;
 		invite: Invite;
 		context: ActionsContext;
-	}): ((ev: Event) => void) =>
-	(ev: Event): void => {
+	}): ((ev: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void) =>
+	(ev: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent): void => {
 		if (ev) ev.stopPropagation();
 		if (context?.panelView === PANEL_VIEW.APP) {
 			generateEditor({

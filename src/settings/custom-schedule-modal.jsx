@@ -6,6 +6,7 @@
 import React, { useMemo } from 'react';
 import { Container, Text, CustomModal, Row, Checkbox } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
+import { t } from '@zextras/carbonio-shell-ui';
 import TimePicker from './components/time-picker';
 import { getWeekDay } from './components/utils';
 import { ModalHeader } from '../commons/modal-header';
@@ -14,7 +15,6 @@ import ModalFooter from '../commons/modal-footer';
 export default function CustomScheduleModal({
 	open,
 	toggleModal,
-	t,
 	workingSchedule,
 	onFromChange,
 	saveChanges,
@@ -23,7 +23,7 @@ export default function CustomScheduleModal({
 }) {
 	const title = useMemo(
 		() => t('calendar.modal.custom_schedule.title', 'Customize working hours'),
-		[t]
+		[]
 	);
 
 	return (

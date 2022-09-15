@@ -5,12 +5,9 @@
  */
 import React, { ReactElement, useCallback, useState } from 'react';
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
-import { Spinner, replaceHistory } from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Spinner, replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 import { EventType } from '../../types/event';
-import { RouteParams } from '../../types/route-params';
 import { Invite } from '../../types/store/invite';
 import { DisplayFooter } from './parts/display-footer';
 import { DisplayMessage } from './parts/display-message';
@@ -34,7 +31,6 @@ export const DeleteEventModal = ({
 	context,
 	onClose
 }: DeleteEventModalProps): ReactElement => {
-	const [t] = useTranslation();
 	const [isAskingConfirmation, setIsAskingConfirmation] = useState(false);
 	const isInstance = context?.isInstance;
 	const toggleAskConfirmation = useCallback(() => {

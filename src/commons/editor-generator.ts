@@ -4,11 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import {
-	store,
 	getUserAccount,
 	getUserSettings,
 	replaceHistory,
-	getBridgedFunctions
+	closeBoard
 } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
@@ -16,6 +15,7 @@ import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
+import { store } from '../store/redux';
 import {
 	closeEditor,
 	createNewEditor,
@@ -71,7 +71,7 @@ const createEmptyEditor = (id: string): Editor => {
 		zimbraPrefDefaultCalendarId = CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
 	} = getUserSettings().prefs;
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
-	const calendars = store?.store?.getState().calendars;
+	const calendars = store?.getState().calendars;
 
 	return {
 		attach: undefined,
@@ -154,7 +154,7 @@ export const applyContextToEditor = ({
 };
 
 export const createCallbacks = (id: string): EditorCallbacks => {
-	const { dispatch } = store.store;
+	const { dispatch } = store;
 	const account = getUserAccount();
 
 	const onToggleRichText = (isRichText: boolean): void => {
@@ -344,17 +344,10 @@ export const generateEditor = ({
 		context
 	});
 	const callbacks = createCallbacks(id);
-	const closeCurrentEditor = context.panel
-		? callbacks.closeCurrentEditor
-		: getBridgedFunctions().removeCurrentBoard;
-	const { dispatch } = store.store;
+	const { dispatch, getState } = store;
 	dispatch(createNewEditor(editor));
-	const storeData = store.store.getState();
 	return {
-		editor: storeData?.editor?.editors?.[id],
-		callbacks: {
-			...callbacks,
-			closeCurrentEditor
-		}
+		editor: getState()?.editor?.editors?.[id],
+		callbacks
 	};
 };

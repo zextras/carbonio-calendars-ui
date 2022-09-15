@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Checkbox } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
 	selectEditorAllDay,
@@ -25,7 +25,6 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): Reac
 	const allDay = useSelector(selectEditorAllDay(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));
-	const [t] = useTranslation();
 	const { onAllDayChange } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
 

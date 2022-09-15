@@ -8,8 +8,7 @@ import moment from 'moment';
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { includes, reduce } from 'lodash';
-import { Tags, ZIMBRA_STANDARD_COLORS, Tag } from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
+import { Tags, ZIMBRA_STANDARD_COLORS, Tag, t } from '@zextras/carbonio-shell-ui';
 import { EventType } from '../../types/event';
 import { useTagExist } from '../tags/tag-actions';
 
@@ -35,8 +34,6 @@ export const CustomEventComponent = ({
 	title
 }: CustomEventComponentProps): ReactElement => {
 	const [showDropdown, setShowDropdown] = useState(false);
-	const [t] = useTranslation();
-
 	const onIconClick = useCallback((ev) => {
 		ev.stopPropagation();
 		setShowDropdown((o) => !o);

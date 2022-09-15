@@ -5,11 +5,10 @@
  */
 
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
-import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
+import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import moment from 'moment';
 import { useCallback, useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
 	selectEditorPlainText,
@@ -23,7 +22,6 @@ export const useGetPublicUrl = ({ editorId, onTextChange }) => {
 	const richText = useSelector(selectEditorRichText(editorId));
 	const plainText = useSelector(selectEditorPlainText(editorId));
 	const title = useSelector(selectEditorTitle(editorId));
-	const [t] = useTranslation();
 	const description = useMemo(
 		() =>
 			t('label.public_link_description', {
@@ -31,7 +29,7 @@ export const useGetPublicUrl = ({ editorId, onTextChange }) => {
 				date: moment().format('yyyy-MM-DD_hh:mm'),
 				defaultValue: 'Generated from {{title}} on {{date}}'
 			}),
-		[t, title]
+		[title]
 	);
 	const getPublicUrl = useCallback(
 		(nodes) => {
@@ -76,7 +74,7 @@ export const useGetPublicUrl = ({ editorId, onTextChange }) => {
 				onTextChange(newText);
 			});
 		},
-		[getLink, t, createSnackbar, plainText, richText, onTextChange, description]
+		[getLink, createSnackbar, plainText, richText, onTextChange, description]
 	);
 	return [getPublicUrl, getLinkAvailable];
 };

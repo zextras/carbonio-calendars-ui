@@ -8,18 +8,17 @@ import {
 	Container,
 	Padding,
 	Text,
-	Button,
+	ButtonOld as Button,
 	Row,
 	Divider,
 	Checkbox
 } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
+import { t } from '@zextras/carbonio-shell-ui';
 import TimePicker from './components/time-picker';
 import { getWeekDay } from './components/utils';
 
 export default function WorkWeekSettings({
-	settingsObj,
-	t,
 	workingSchedule,
 	isRegular,
 	handelDaysClicked,
@@ -34,7 +33,7 @@ export default function WorkWeekSettings({
 					<Checkbox
 						value={s.working}
 						onClick={handelDaysClicked(s.day)}
-						label={getWeekDay(`${Number(s.day) - 1}`, t)}
+						label={getWeekDay(`${Number(s.day) - 1}`)}
 					/>
 				</Row>
 			))}

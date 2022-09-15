@@ -3,19 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { t } from '@zextras/carbonio-shell-ui';
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement, useCallback, useState, useContext } from 'react';
 import {
 	SnackbarManagerContext,
 	Container,
 	Padding,
-	Button,
+	ButtonOld as Button,
 	Divider,
 	Row,
 	Checkbox
 } from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { CalendarSelector } from '../../../view/editor/parts/calendar-selector';
 import { sendResponse } from '../invite-reply-actions';
 
@@ -37,7 +37,6 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 	const [notifyOrganizer, setNotifyOrganizer] = useState(true);
 	const [activeCalendar, setActiveCalendar] = useState(null);
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const [t] = useTranslation();
 	const dispatch = useDispatch();
 
 	const onAction = useCallback(
@@ -48,16 +47,14 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				sendResponse({
 					action,
 					createSnackbar,
-					t,
 					inviteId,
-					compNum,
 					notifyOrganizer,
 					activeCalendar,
 					dispatch,
 					parent
 				});
 			},
-		[dispatch, inviteId, compNum, notifyOrganizer, activeCalendar, t, createSnackbar, parent]
+		[dispatch, inviteId, notifyOrganizer, activeCalendar, createSnackbar, parent]
 	);
 	return (
 		<>

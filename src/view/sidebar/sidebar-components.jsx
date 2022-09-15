@@ -6,7 +6,7 @@
 import React, { useCallback, useContext, useMemo } from 'react';
 import {
 	AccordionItem,
-	Button,
+	ButtonOld as Button,
 	Container,
 	Dropdown,
 	Icon,
@@ -24,6 +24,7 @@ import { getShareInfo } from '../../store/actions/get-share-info';
 import { SharesModal } from './shares-modal';
 import { useCalendarActions } from '../../hooks/use-calendar-actions';
 import { createTag } from '../tags/tag-actions';
+import { StoreProvider } from '../../store/redux';
 
 export const SharesComponent = ({ item }) => {
 	const createModal = useContext(ModalManagerContext);
@@ -36,7 +37,11 @@ export const SharesComponent = ({ item }) => {
 					if (res.isFulfilled) {
 						const closeModal = createModal(
 							{
-								children: <SharesModal calendars={res.calendars} onClose={() => closeModal()} />
+								children: (
+									<StoreProvider>
+										<SharesModal calendars={res.calendars} onClose={() => closeModal()} />
+									</StoreProvider>
+								)
 							},
 							true
 						);
