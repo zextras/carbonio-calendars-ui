@@ -1,8 +1,6 @@
 {
     "action": {
-        "save": "Opslaan",
         "send": "Versturen",
-        "delete": "Verwijderen",
         "edit_message": "Bericht Bewerken",
         "delete_calendar": "Kalender verwijderen",
         "preview": "Klik om te bekijken",
@@ -186,9 +184,9 @@
         "loading_results": "Resultaten laden...",
         "create_tag": "Tag creëren",
         "delete_tag": "Tag verwijderen",
-        "delete_tag_name": "\"{{name}}\" tag verwijderen",
+        "delete_tag_name": "{{name}} tag verwijderen",
         "edit_tag": "Tag bewerken",
-        "edit_tag_name": "\"{{name}}\" tag bewerken",
+        "edit_tag_name": "{{name}} tag bewerken",
         "no_special_char_allowed": "De naam mag geen speciaal teken bevatten",
         "results_for_error": "Kan de zoekactie niet starten, wissen en opnieuw proberen: ",
         "select_color": "Kleur selecteren",
@@ -200,14 +198,19 @@
         "other_actions": "Andere acties",
         "single_instance": "EEN ENKEL GEVAL",
         "no_title": "Geen Titel",
-        "scheduled_in": "Agenda"
+        "scheduled_in": "Agenda",
+        "warning": "Warnung",
+        "trash": "Papierkorb",
+        "tag": "Label",
+        "share_public_link": "Publieke Link delen",
+        "select": "Selecteren",
+        "root": "Hoofdniveau",
+        "choose_file": "Bestand kiezen"
     },
     "event": {
         "action": {
             "accept": "Aanvaarden",
-            "move": "Verplaatsen",
             "no": "Nee",
-            "trash": "Verwijderen",
             "yes": "Ja",
             "decline": "Weigeren",
             "expand": "In Displayer openen",
@@ -226,12 +229,8 @@
     },
     "add": "Toevoegen",
     "appointments": "Afspraken",
-    "delete": "Verwijderen",
     "folder": {
         "modal": {
-            "delete": {
-                "title": "Verwijderen"
-            },
             "move": {
                 "body": {
                     "message3": "Selecteer een kalender om de overwogen afspraak naar te verplaatsen:"
@@ -241,7 +240,6 @@
                 }
             },
             "restore": {
-                "title": "Herstellen",
                 "footer": "Aanmaken en herstellen"
             },
             "new": {
@@ -261,23 +259,25 @@
                 "decline": "U hebt geantwoord als Geweigerd",
                 "tentative": "U hebt geantwoord als: Voorlopig"
             },
-            "settings_saved": "Bewerkingen correct opgeslagen",
             "appt_moved": "Afspraak met succes verplaatst naar",
-            "appointment_permanently_deleted_error": "Er is iets misgegaan, probeer het opnieuw",
             "appointment_permanently_deleted_succesfully": "Definitieve verwijdering met succes voltooid",
             "appt_moved_to_trash": "Afspraak verplaatst naar prullenbak",
             "appt_restored": "Afspraak met succes hersteld naar",
             "calendar_deleted_successfully": "Kalender met succes verwijderd.",
             "calendar_moved_to_root_folder": "Kalender verplaatst naar Root-map",
             "calendar_moved_to_trash": "Kalender verplaatst naar prullenbak",
-            "edit_calendar_error": "Er ging iets mis, probeer het nog eens",
             "new_calendar_created": "Nieuwe kalender gecreëerd",
-            "calendar_moved_to_trash_error": "Er is iets misgegaan, probeer het opnieuw",
             "calendar_permanently_deleted": "Kalender permanent verwijderd",
             "calendar_restored": "Kalender met succes hersteld",
             "appointment_permanently_deleted": "Afspraak permanent verwijderd",
             "calendar_edits_saved": "Bewerkingen correct opgeslagen",
-            "series_deleted": "Serie succesvol verwijderd. Deelnemers ontvangen een bericht van annulering."
+            "series_deleted": "Serie succesvol verwijderd. Deelnemers ontvangen een bericht van annulering.",
+            "some_link_copying_error": "Er lijkt een probleem te zijn met het genereren van de publieke url voor sommige bestanden, probeer het opnieuw",
+            "some_att_add_fails": "Er lijkt een probleem te zijn bij het toevoegen van enkele bijlagen, probeer het opnieuw",
+            "link_copying_error": "Er lijkt een probleem te zijn tijdens het genereren van de publieke link, probeer het opnieuw",
+            "att_err_adding": "Er lijkt een probleem te zijn bij het toevoegen van bijlagen, probeer het opnieuw",
+            "all_link_copied": "Publieke link met succes gekopieerd",
+            "all_att_added": "Bijlagen met succes toegevoegd"
         },
         "you": "U",
         "are_organizer": "zijn de organisator",
@@ -302,29 +302,18 @@
         "sure_to_delete_appointment_permanently": "Weet u zeker dat u deze afspraak permanent wilt verwijderen?",
         "want_to_edit_cancellation_msg": "Wilt u het bericht over het annuleren van een afspraak bewerken?",
         "you_are_organizer": "<Row><Text> <BoldText> U  </BoldText> bent de organisator </Text></Row>",
-        "you_sure_move_calendar_trash": "Weet u zeker dat u de \"{{name}}\" kalender wilt verwijderen?",
+        "you_sure_move_calendar_trash": "Weet u zeker dat u de {{name}} kalender wilt verwijderen?",
         "sure_to_delete_all_occurences_appointment": "Weet u zeker dat u alle voorvallen van deze afspraak wilt verwijderen?",
         "want_to_send_cancellation_msg": "Wilt u een annuleringsbericht naar de aanwezigen sturen?",
-        "you_sure_delete_calendar": "Weet u zeker dat u de \"{{name}}\" kalender permanent wilt verwijderen?",
+        "you_sure_delete_calendar": "Weet u zeker dat u de {{name}} kalender permanent wilt verwijderen?",
         "share_calendar_url_msg": "U kunt snel {{title}} delen met uw medewerkers met behulp van een van deze URL:",
         "you_sure_delete_instance": "Weet u zeker dat u deze instantie van \"{title}\" afspraak wilt verwijderen?",
-        "delete_tag_message1": "Weet u zeker dat u de\"{{name}}\" Tag wilt verwijderen?",
+        "delete_tag_message1": "Weet u zeker dat u de{{name}} Tag wilt verwijderen?",
         "delete_tag_message2": "Eenmaal verwijderd, zal het verwijderd worden van elk item dat ermee gemarkeerd is.",
-        "appointment_type_handle": "\"{{name}}” is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?",
+        "appointment_type_handle": "{{name}} is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?",
         "organizer": "Organisator",
-        "reply": "Antwoorden",
-        "reply_all": "Alle beantwoorden",
-        "send_email_to": "E-mail sturen naar: {{email}}",
         "send_email": "E-mail sturen",
-        "more": "Meer...",
-        "required_participant": "{{count}} Deelnemer",
-        "required_participant_plural": "{{count}} Deelnemers",
-        "optional_participant": "{{count}} Optioneel",
-        "optional_participant_plural": "{{count}} Optionele",
-        "guests": "gasten",
-        "declined": "{{count}} geweigerd",
-        "awaiting": "in afwachting",
-        "accepted": "{{count}} aanvaard"
+        "more": "Meer..."
     },
     "months": {
         "april": "April",
@@ -343,7 +332,6 @@
     "owner": "Eigenaar",
     "read": "Gelezen",
     "repeat": {
-        "none": "Geen",
         "customize": "Personaliseren",
         "daily": "Dagelijks",
         "everyMonth": "Elke maand",
@@ -357,19 +345,6 @@
         "options": {
             "dflt_vsblty_opt": {
                 "public": "Publiek"
-            },
-            "show_reminder": {
-                "never": "Nooit",
-                "day_before": "1 dag voordien",
-                "day_before_plural": "{{count}} dagen voordien",
-                "week_before": "1 week voordien",
-                "week_before_plural": "{{count}} weken voordien"
-            },
-            "weekdays": {
-                "friday": "Vrijdag",
-                "saturday": "Zaterdag",
-                "thursday": "Donderdag",
-                "wednesday": "Woensdag"
             },
             "default_view": {
                 "day": "Dagweergave",
@@ -446,14 +421,12 @@
         "invite": {
             "error": "Fout"
         },
-        "proposed_time_error": "Er is iets misgegaan, probeer het opnieuw",
-        "new_time_proposed_succes": "Nieuwe tijd voorgesteld",
         "proposed_time_accepted": "U aanvaardde de voorgestelde tijd",
         "url_copied": "{{title}} gekopieerd",
         "share_folder_success": "Kalender met succes gedeeld",
         "new_time_proposed_success": "Nieuwe tijd voorgesteld",
-        "tag_removed": "\"{{tag}}\" tag verwijderd",
-        "tag_applied": "\"{{tag}}\" tag toegepast"
+        "tag_removed": "{{tag}} tag verwijderd",
+        "tag_applied": "{{tag}} tag toegepast"
     },
     "success": "Succes",
     "type": "Type",
@@ -502,7 +475,6 @@
         "location": "Locatie",
         "chat_room": "Link naar virtuele ruimte",
         "virtual_chat": "Virtuele Chat",
-        "calendar_sharing_status_one": "Gedeeld met 1 persoon",
         "calendar_sharing_status": "Gedeeld met {{count}} persoon"
     },
     "button": {
@@ -516,7 +488,9 @@
             "draganddrop": {
                 "title": "Drag&Drop-modus",
                 "content": "Drop hier uw bijlagen om ze snel aan de afspraak toe te voegen"
-            }
+            },
+            "url": "Openbare link toevoegen vanuit Bestanden",
+            "files": "Toevoegen vanuit Bestanden"
         }
     },
     "administer": "Beheren",

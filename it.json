@@ -9,7 +9,7 @@
         "equipment": "Attrezzatura",
         "location": "Luogo",
         "calendar_sharing_status": "Condiviso con {{count}} persone",
-        "calendar_sharing_status_one": "Condiviso con 1 persona",
+        "calendar_sharing_status_plural": "",
         "virtual_chat": "Chat Virtuale",
         "chat_room": "Link alla Stanza Virtuale"
     },
@@ -64,13 +64,11 @@
         "meeting_canceled": "La riunione seguente è stata annullata",
         "invite_has_no_message": "Questo invito non ha messaggi di testo",
         "snackbar": {
-            "settings_saved": "Modifiche salvate correttamente",
             "invite": {
                 "tentative": "Hai risposto Forse",
                 "accept": "Hai risposto Accettato",
                 "decline": "Hai risposto Rifiuta"
             },
-            "new_calendar_create_error": "Qualcosa è andato storto, riprova",
             "appointment_permanently_deleted_succesfully": "Eliminazione conclusa correttamente",
             "appt_moved": "Appuntamento spostato in",
             "appt_moved_to_trash": "Appuntamento spostato nel cestino",
@@ -78,13 +76,18 @@
             "calendar_deleted_successfully": "Calendario eliminato correttamente.",
             "calendar_moved_to_root_folder": "Calendario spostato nella cartella Root",
             "calendar_moved_to_trash": "Calendario spostato nel cestino",
-            "edit_calendar": "Modifiche salvate",
             "new_calendar_created": "Nuovo calendario creato",
             "calendar_permanently_deleted": "Calendario eliminato definitivamente",
             "calendar_restored": "Calendario ripristinato correttamente",
             "appointment_permanently_deleted": "Appuntamento eliminato definitivamente",
             "calendar_edits_saved": "Modifiche salvate correttamente",
-            "series_deleted": "La serie di appuntamenti è stata cancellata correttamente. Gli invitati riceveranno una notifica di avvenuta cancellazione."
+            "series_deleted": "La serie di appuntamenti è stata cancellata correttamente. Gli invitati riceveranno una notifica di avvenuta cancellazione.",
+            "some_link_copying_error": "Sembra esserci stato un problema durante la generazione dell'url pubblico di alcuni file, riprova",
+            "some_att_add_fails": "Sembra esserci stato un problema durante l'aggiunta di alcuni allegati, riprova",
+            "link_copying_error": "Sembra esserci stato un problema durante la generazione del link pubblico, riprova",
+            "att_err_adding": "Sembra esserci stato un problema durante l'aggiunta degli allegati, riprova",
+            "all_link_copied": "Link pubblico copiato con successo",
+            "all_att_added": "Allegati aggiunti correttamente"
         },
         "share_calendar_url_note2": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.<br/> Puoi trovare questi collegamenti anche con un clic destro del mouse sull'elenco dei calendari.",
         "share_calendar_url_note": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.",
@@ -96,7 +99,7 @@
         "delete_all_occurences": "Cancella tutte le occorrenze",
         "delete_future_occurences": "Elimina questa istanza e tutte le occorrenze future",
         "delete_future_occurences_warning": "Saranno eliminate anche tutte le eccezioni (prima e dopo questa istanza) della serie",
-        "invited_you": "ti ha invitato a:",
+        "invited_you": "ti ha invitato a un evento",
         "modal": {
             "delete": {
                 "sure_delete_appointment_permanently": "Eliminando permanentemente questo appuntamento non sarà più possibile ripristinarlo, vuoi continuare?",
@@ -106,27 +109,22 @@
         "sure_to_delete_all_occurences_appointment": "Vuoi eliminare tutte le occorrenze di questo appuntamento?",
         "sure_to_delete_appointment_permanently": "Vuoi eliminare questo appuntamento definitivamente?",
         "want_to_send_cancellation_msg": "Vuoi inviare una notifica di cancellazione ai partecipanti?",
-        "you_sure_delete_calendar": "Vuoi eliminare definitivamente il calendario \"{{name}}\"?",
-        "you_sure_move_calendar_trash": "Vuoi eliminare il calendario \"{{name}}\"?",
+        "you_sure_delete_calendar": "Vuoi eliminare definitivamente il calendario {{name}}?",
+        "you_sure_move_calendar_trash": "Vuoi eliminare il calendario {{name}}?",
         "share_calendar_url_msg": "Condividi {{title}} con i tuoi collaboratori condividendo uno di questi URL:",
-        "you_sure_delete_instance": "Vuoi eliminare questa istanza dell'appuntamento “{{title}}” ?",
-        "appointment_type_handle": "\"{{name}}\" è un appuntamento ricorrente. Vuoi aprire solo questa istanza o tutta la serie?",
-        "delete_tag_message1": "Vuoi eliminare l'etichetta \"{{name}}\"?",
+        "you_sure_delete_instance": "Vuoi eliminare questa istanza dell'appuntamento {{title}} ?",
+        "appointment_type_handle": "{{name}} è un appuntamento ricorrente. Vuoi aprire solo questa istanza o tutta la serie?",
+        "delete_tag_message1": "Vuoi eliminare l'etichetta {{name}}?",
         "delete_tag_message2": "Una volta eliminata, verrà eliminata anche da tutti gli elementi su cui è utilizzata.",
-        "reply": "Rispondi",
-        "reply_all": "Rispondi a tutti",
         "organizer": "Organizzatore",
-        "awaiting": "in attesa",
-        "guests": "ospiti",
         "more": "Altro...",
         "optional_participant": "{{count}} Opzionale",
         "optional_participant_plural": "{{count}} Opzionali",
         "required_participant": "{{count}} Partecipante",
         "required_participant_plural": "{{count}} Partecipanti",
         "send_email": "Invia e-mail",
-        "send_email_to": "Invia e-mail a: {{email}}",
-        "declined": "{{count}} rifiutato",
-        "accepted": "{{count}} accettato"
+        "edit_series_warning": "Procedendo con le modifiche alla serie, tutte le istanze precedentemente modificate o eliminate, verranno ripristinate secondo le nuove impostazioni di questa serie.",
+        "appointment_invitation_sent": "Invito all'appuntamento inviato"
     },
     "label": {
         "to": "A",
@@ -155,7 +153,7 @@
         "all_day": "Tutto il giorno",
         "all_calendars": "Tutti i calendari",
         "download": "Scarica",
-        "download_plural": "Scarica tutto",
+        "download_plural": "Scarica tutti",
         "save": "Salva",
         "show": "Mostra",
         "show_plural": "Mostra tutto",
@@ -214,8 +212,6 @@
         "series": "Serie",
         "set_new_time": "Imposta nuovo orario",
         "show_declined_meetings": "Mostra appuntamenti rifiutati",
-        "remove": "Elimina",
-        "remove_plural": "Elimina tutto",
         "sharing_of_this_folder": "Condivisione di questa cartella",
         "time_zones": "Fuso orario",
         "type_name_here": "Nome Calendario",
@@ -280,14 +276,14 @@
         "preview": "Anteprima",
         "create_tag": "Crea Etichetta",
         "delete_tag": "Elimina Etichetta",
-        "delete_tag_name": "Elimina etichetta \"{{name}}\"",
+        "delete_tag_name": "Elimina etichetta {{name}}",
         "edit_tag": "Modifica Etichetta",
         "entire_serires": "TUTTA LA SERIE",
         "no_special_char_allowed": "Il nome non deve contenere alcun carattere speciale",
         "new_tag": "Nuova Etichetta",
         "other_actions": "Altre azioni",
         "single_instance": "SINGOLA ISTANZA",
-        "edit_tag_name": "Modifica etichetta \"{{name}}\"",
+        "edit_tag_name": "Modifica etichetta {{name}}",
         "loading_results": "Caricamento Risultati in corso...",
         "results_for_error": "Impossibile iniziare la ricerca, cancella e riprova: ",
         "select_color": "Seleziona Colore",
@@ -295,18 +291,24 @@
         "tag_name": "Nome etichetta",
         "tags": "Etichette",
         "no_title": "Nessun Titolo",
-        "scheduled_in": "Calendario"
+        "scheduled_in": "Calendario",
+        "public_link_description": "Generato da {{title}} il {{date}}",
+        "continue": "Continua",
+        "warning": "Avviso",
+        "trash": "Cestino",
+        "tag": "Tag",
+        "share_public_link": "Condividi Link Pubblico",
+        "select": "Seleziona",
+        "root": "Primaria",
+        "choose_file": "Scegli file"
     },
     "action": {
         "send": "Invia",
-        "create": "Crea",
         "delete_calendar": "Elimina calendario",
         "empty_trash": "Svuota Cestino",
         "move_to_root": "Sposta in root",
-        "delete": "Cancella",
         "preview": "Clicca per visualizzare l'anteprima",
         "save_to_preview": "Salva nell'anteprima",
-        "modify_property": "Modifica proprietà",
         "edit_calendar_properties": "Modifica le proprietà del calendario",
         "edit_message": "Modifica Messaggio",
         "send_cancellation": "Invia cancellazione",
@@ -326,11 +328,7 @@
     },
     "folder": {
         "modal": {
-            "delete": {
-                "footer": "Elimina"
-            },
             "move": {
-                "footer": "Vuoto",
                 "body": {
                     "message3": "Seleziona un calendario in cui spostare questo appuntamento:"
                 },
@@ -355,14 +353,13 @@
         "action": {
             "accept": "Accetta",
             "decline": "Rifiuta",
-            "move": "Sposta",
             "no": "No",
-            "trash": "Elimina",
             "yes": "Sì",
             "expand": "Apri nel visulizzatore",
             "needs_action": "Necessita azione",
             "invitation_not_sent_yet": "L'invito non è ancora stato inviato"
-        }
+        },
+        "is_exception": "Eccezione"
     },
     "composer": {
         "attachment": {
@@ -372,7 +369,9 @@
             "draganddrop": {
                 "content": "Trascina qui gli allegati per aggiungerli velocemente all'appuntamento",
                 "title": "Modalità Drag&Drop"
-            }
+            },
+            "url": "Aggiungi link pubblico da Files",
+            "files": "Aggiungi da Files"
         }
     },
     "search": {
@@ -389,24 +388,21 @@
         "working_day": "Giorno lavorativo"
     },
     "snackbar": {
-        "proposed_time_error": "Qualcosa è andato storto, riprova",
         "invite": {
             "error": "Errore"
         },
-        "new_time_proposed_succes": "Nuovo orario proposto",
         "proposed_time_accepted": "Hai accettato l'orario proposto",
         "share_folder_success": "Calendario condiviso correttamente",
         "url_copied": "{{title}} copiato",
         "new_time_proposed_success": "Nuovo orario proposto",
-        "tag_applied": "Etichetta \"{{tag}}\" applicata",
-        "tag_removed": "Etichetta \"{{tag}}\" rimossa"
+        "tag_applied": "Etichetta {{tag}} applicata",
+        "tag_removed": "Etichetta {{tag}} rimossa"
     },
     "add": "Aggiungi",
     "allowed_actions": "Azioni consentite",
     "appointments": "Appuntamenti",
     "administer": "Gestisci",
     "cannot_edit_name": "Non è possibile modificare il nome di una calendario di sistema",
-    "delete": "Elimina",
     "edit_share_properties": "Modifica proprietà di condivisione",
     "find_shares": "Trova condivisioni",
     "insert": "Inserisci",
@@ -476,22 +472,6 @@
                 "allow_all": "Consenti ad utenti interni e esterni di invitarmi agli appuntamenti",
                 "allow_following": "Consenti solo ai seguenti utenti di invitarmi agli appuntamenti",
                 "allow_none": "Nessuno può invitarmi agli appuntamenti"
-            },
-            "weekdays": {
-                "friday": "Venerdì",
-                "saturday": "Sabato",
-                "thursday": "Giovedì"
-            },
-            "show_reminder": {
-                "day_before": "1 giorno prima",
-                "day_before_plural": "{{count}} giorni prima",
-                "hour_before": "1 ora prima",
-                "hour_before_plural": "{{count}} ore prima",
-                "week_before": "1 settimana prima",
-                "week_before_plural": "{{count}} settimane prima"
-            },
-            "default_cal_opts": {
-                "calendar": "Calendario"
             },
             "default_view": {
                 "day": "Vista Giorno",

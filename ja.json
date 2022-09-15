@@ -2,15 +2,12 @@
     "message": {
         "you": "あなた",
         "snackbar": {
-            "appointment_permanently_deleted_error": "エラーが発生しました。再度お試しください",
             "appt_moved": "予定が移動しました",
             "appointment_permanently_deleted_succesfully": "完全に削除されました",
-            "appt_moved_error": "エラーが発生しました。予定が移動されませんでした。再度お試しください。",
             "appt_moved_to_trash": "予定がゴミ箱に移動しました",
             "appt_restored": "予定が復元されました",
             "calendar_deleted_successfully": "カレンダーが削除されました。",
             "calendar_moved_to_trash": "カレンダーがゴミ箱に移動しました",
-            "edit_calendar": "編集内容が保存されました",
             "invite": {
                 "accept": "承認済みとして返信しました",
                 "decline": "辞退済みとして返信しました",
@@ -22,7 +19,13 @@
             "calendar_restored": "カレンダーが復元されました",
             "appointment_permanently_deleted": "予定は完全に削除されました",
             "calendar_edits_saved": "編集内容が保存されました",
-            "series_deleted": "シリーズが削除されました。 参加者にキャンセル通知が届きます。"
+            "series_deleted": "シリーズが削除されました。 参加者にキャンセル通知が届きます。",
+            "some_link_copying_error": "一部のファイルのパブリックURLの生成中に問題が発生したようです。再度お試しください",
+            "some_att_add_fails": "添付ファイルを追加する際に問題が生じたようです。再度お試しください",
+            "link_copying_error": "パブリックリンクの生成中に問題が発生したようです。再度お試しください",
+            "att_err_adding": "添付ファイルを追加する際に問題が生じたようです。再度お試しください",
+            "all_link_copied": "パブリックリンクがコピーされました",
+            "all_att_added": "添付ファイルが追加されました"
         },
         "are_organizer": "は主催者です",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> は主催者です",
@@ -53,24 +56,15 @@
         "you_sure_move_calendar_trash": "本当に「{{name}}」カレンダーを完全に削除しますか？",
         "you_sure_delete_instance": "本当にこの「{{title}}」予定のインスタンスを削除しますか？",
         "appointment_type_handle": "「{{name}}」は定期的な予定です。このインスタンスのみを開きますか、それともシリーズを開きますか？",
-        "delete_tag_message1": "本当に\"{{name}}\" タグを削除しますか？",
+        "delete_tag_message1": "本当に{{name}} タグを削除しますか？",
         "delete_tag_message2": "削除されると、それでマークされたすべてのアイテムから削除されます。",
         "organizer": "主催者",
-        "reply": "返信する",
-        "reply_all": "全員に返信する",
         "required_participant": "{{count}}参加者",
         "optional_participant": "{{count}}オプション",
-        "guests": "ゲスト",
-        "declined": "{{count}}が却下されました",
-        "awaiting": "待機しています",
-        "accepted": "{{count}}が承認されました",
-        "send_email_to": "次の宛先にメールを送信します: {{email}}",
         "send_email": "メールを送信する",
         "more": "その他..."
     },
     "action": {
-        "delete": "削除する",
-        "create": "作成する",
         "send": "送信",
         "delete_calendar": "カレンダーを削除する",
         "empty_trash": "ゴミ箱を空にする",
@@ -87,7 +81,6 @@
     "event": {
         "action": {
             "accept": "許可",
-            "move": "移動",
             "no": "いいえ",
             "yes": "はい",
             "decline": "拒否する",
@@ -252,9 +245,9 @@
         "single_instance": "シングルインスタンス",
         "create_tag": "タグを作成する",
         "delete_tag": "タグを削除する",
-        "delete_tag_name": "\"{{name}}\" タグを削除する",
+        "delete_tag_name": "{{name}} タグを削除する",
         "edit_tag": "タグを編集する",
-        "edit_tag_name": "\"{{name}}\" タグを編集する",
+        "edit_tag_name": "{{name}} タグを編集する",
         "loading_results": "結果を読み込んでいます...",
         "no_special_char_allowed": "名前に特殊文字を含めることはできません",
         "results_for_error": "検索を開始できません。クリアして再度お試しください: ",
@@ -263,14 +256,17 @@
         "tag_name": "タグの名前",
         "tags": "タグ",
         "no_title": "件名なし",
-        "scheduled_in": "カレンダー"
+        "scheduled_in": "カレンダー",
+        "warning": "警告",
+        "trash": "ゴミ箱",
+        "tag": "タグ",
+        "share_public_link": "パブリックリンクを共有する",
+        "select": "選択",
+        "root": "ルート",
+        "choose_file": "ファイルを選択する"
     },
-    "delete": "削除する",
     "folder": {
         "modal": {
-            "delete": {
-                "title": "削除する"
-            },
             "move": {
                 "body": {
                     "message3": "カレンダーを選択して、検討中の予定を以下に移動します:"
@@ -280,7 +276,6 @@
                 }
             },
             "restore": {
-                "title": "復元する",
                 "footer": "作成と復元"
             },
             "new": {
@@ -340,7 +335,6 @@
         "hours": "{{count}}時間"
     },
     "repeat": {
-        "none": "なし",
         "customize": "カスタマイズ",
         "daily": "毎日",
         "everyMonth": "毎月",
@@ -352,11 +346,6 @@
     },
     "settings": {
         "options": {
-            "show_reminder": {
-                "all_time": "イベント中ずっと",
-                "hour_before": "{{count}}時間前",
-                "week_before": "{{count}}週間前"
-            },
             "dflt_vsblty_opt": {
                 "public": "公開する"
             },
@@ -384,11 +373,6 @@
                 "chennai": "GMT +05:30チェンナイ、コルカタ、ムンバイ、ニューデリー",
                 "egypt": "GMT 02:00 エジプト",
                 "amsterdam": "GMT +01:00 アムステルダム、ベルリン、ベルン、ローマ、ストックホルム、ウィーン"
-            },
-            "weekdays": {
-                "monday": "月曜日",
-                "sunday": "日曜日",
-                "tuesday": "火曜日"
             }
         },
         "invalid_email": "有効なメールではありません",
@@ -449,13 +433,12 @@
         "invite": {
             "error": "エラー"
         },
-        "new_time_proposed_error": "エラーが発生しました。再度お試しください",
         "proposed_time_accepted": "提案された時間を承認しました",
         "url_copied": "{{title}}がコピーされました",
         "share_folder_success": "カレンダーが共有されました",
         "new_time_proposed_success": "新しい時間が提案されました",
-        "tag_applied": "\"{{tag}}\" タグが適用されました",
-        "tag_removed": "\"{{tag}}\" タグが削除されました"
+        "tag_applied": "{{tag}} タグが適用されました",
+        "tag_removed": "{{tag}} タグが削除されました"
     },
     "success": "成功",
     "type": "タイプ",
@@ -472,7 +455,9 @@
                 "title": "ドラッグ＆ドロップモード"
             },
             "drive": "ドライブから追加する",
-            "local": "ローカルから追加する"
+            "local": "ローカルから追加する",
+            "url": "ファイルからパブリックリンクを追加する",
+            "files": "ファイルから追加する"
         }
     },
     "cannot_edit_name": "システムカレンダーの名前は編集できません",
@@ -494,7 +479,6 @@
         "equipment": "機器",
         "location": "場所",
         "virtual_chat": "バーチャルチャット",
-        "calendar_sharing_status_one": "1人と共有されました",
         "calendar_sharing_status": "{{count}}人と共有されました",
         "chat_room": "バーチャルルームのリンク"
     },

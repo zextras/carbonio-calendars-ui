@@ -16,7 +16,6 @@
         "Attendees_tentative_count": "<strong> ผู้เข้าร่วม {{count}} คน </strong> ได้ตอบรับเบื้องต้นว่ายังไม่แน่นอน"
     },
     "label": {
-        "cancel": "ยกเลิก",
         "custom": "กำหนดเอง",
         "attachment": "สิ่งที่แนบมา",
         "busy": "ไม่ว่าง",
@@ -159,9 +158,9 @@
         "preview": "ดูตัวอย่าง",
         "create_tag": "สร้างแท็ก",
         "delete_tag": "ลบแท็ก",
-        "delete_tag_name": "ลบแท็ก \"{{name}}\"",
+        "delete_tag_name": "ลบแท็ก {{name}}",
         "edit_tag": "แก้ไขแท็ก",
-        "edit_tag_name": "แก้ไขแท็ก \"{{name}}\"",
+        "edit_tag_name": "แก้ไขแท็ก {{name}}",
         "loading_results": "กำลังโหลดผลลัพธ์...",
         "no_special_char_allowed": "ชื่อไม่ควรมีอักขระพิเศษใดๆ",
         "results_for_error": "ไม่สามารถเริ่มการค้นหาได้ โปรดล้างข้อมูลแล้วลองใหม่อีกครั้ง: ",
@@ -174,7 +173,14 @@
         "other_actions": "การกระทำอื่นๆ",
         "single_instance": "อินสแตนซ์เดียว",
         "scheduled_in": "ปฏิทิน",
-        "no_title": "ไม่มีชื่อเรื่อง"
+        "no_title": "ไม่มีชื่อเรื่อง",
+        "warning": "คำเตือน",
+        "trash": "ถังขยะ",
+        "tag": "แท็ก",
+        "share_public_link": "แชร์ลิงก์สาธารณะ",
+        "select": "เลือก",
+        "root": "ราก",
+        "choose_file": "เลือกไฟล์"
     },
     "calendar": {
         "modal": {
@@ -184,8 +190,6 @@
         }
     },
     "action": {
-        "download": "ดาวน์โหลด",
-        "save": "บันทึก",
         "send": "ส่ง",
         "preview": "คลิกเพื่อดูตัวอย่าง",
         "delete_calendar": "ลบปฏิทิน",
@@ -202,8 +206,6 @@
     "event": {
         "action": {
             "accept": "ยอมรับ",
-            "move": "ย้าย",
-            "trash": "ลบ",
             "no": "ไม่",
             "yes": "ใช่",
             "decline": "ปฏิเสธ",
@@ -214,16 +216,8 @@
     },
     "settings": {
         "options": {
-            "show_reminder": {
-                "all_time": "ตลอดช่วงเวลาของเหตุการณ์",
-                "hour_before": "{{count}} ชั่วโมงก่อน",
-                "minute_before": "{{count}} นาทีก่อน"
-            },
             "dflt_vsblty_opt": {
                 "public": "สาธารณะ"
-            },
-            "default_cal_opts": {
-                "calendar": "ปฏิทิน"
             },
             "default_view": {
                 "list": "มุมมองรายการ",
@@ -249,11 +243,6 @@
                 "chennai": "GMT +05:30 เจนไน, โกลกาตา, มุมไบ, นิวเดลี",
                 "egypt": "GMT +02:00 อียิปต์",
                 "amsterdam": "GMT +01:00 อัมสเตอร์ดัม, เบอร์ลิน, เบิร์น, โรม, สตอกโฮล์ม, เวียนนา"
-            },
-            "weekdays": {
-                "monday": "วันจันทร์",
-                "sunday": "วันอาทิตย์",
-                "tuesday": "วันอังคาร"
             }
         },
         "label": {
@@ -287,11 +276,7 @@
                 }
             },
             "restore": {
-                "title": "การกู้คืนข้อมูล (Restore)",
                 "footer": "สร้างและกู้คืน"
-            },
-            "delete": {
-                "title": "ลบ"
             },
             "new": {
                 "duplicate_warning": "มีปฏิทินชื่อนี้แล้ว",
@@ -343,7 +328,6 @@
         "hours": "{{count}} ชั่วโมง"
     },
     "repeat": {
-        "none": "ไม่มี",
         "customize": "กำหนดเอง",
         "daily": "ทุกวัน",
         "everyWeek": "ทุกสัปดาห์",
@@ -357,18 +341,16 @@
         "invite": {
             "error": "ผิดพลาด"
         },
-        "new_time_proposed_succes": "เสนอเวลาใหม่",
         "proposed_time_accepted": "คุณยอมรับเวลาที่เสนอ",
         "share_folder_success": "แชร์ปฏิทินเรียบร้อยแล้ว",
         "url_copied": "{{title}} คัดลอกแล้ว",
         "new_time_proposed_success": "เสนอเวลาใหม่",
-        "tag_applied": "ใช้แท็ก \"{{tag}}\" แล้ว",
-        "tag_removed": "นำแท็ก \"{{tag}}\" ออกแล้ว"
+        "tag_applied": "ใช้แท็ก {{tag}} แล้ว",
+        "tag_removed": "นำแท็ก {{tag}} ออกแล้ว"
     },
     "success": "สำเร็จ",
     "add": "เพิ่ม",
     "appointments": "การนัดหมาย",
-    "delete": "ลบ",
     "share": {
         "options": {
             "share_calendar_role": {
@@ -396,7 +378,7 @@
     },
     "message": {
         "you": "คุณ",
-        "you_sure_move_calendar_trash": "คุณแน่ใจหรือไม่ว่าต้องการลบปฏิทิน \"{{name}}\"?",
+        "you_sure_move_calendar_trash": "คุณแน่ใจหรือไม่ว่าต้องการลบปฏิทิน {{name}}?",
         "are_organizer": "เป็นผู้จัด",
         "snackbar": {
             "appt_moved": "ย้ายการนัดหมายไปที่ เรียบร้อยแล้ว",
@@ -404,22 +386,25 @@
             "appt_moved_to_trash": "ย้ายการนัดหมายไปที่ถังขยะแล้ว",
             "calendar_deleted_successfully": "ลบปฏิทินเรียบร้อยแล้ว",
             "calendar_moved_to_trash": "ปฏิทินย้ายไปที่ถังขยะแล้ว",
-            "edit_calendar_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "invite": {
                 "accept": "คุณได้ตอบกลับว่ายอมรับ",
                 "decline": "คุณได้ตอบกลับว่าปฏิเสธ",
                 "tentative": "คุณได้ตอบกลับว่าไม่แน่นอน"
             },
             "new_calendar_created": "สร้างปฏิทินใหม่แล้ว",
-            "appt_moved_error": "เกิดข้อผิดพลาดบางอย่าง การนัดหมายไม่ถูกย้าย โปรดลองใหม่อีกครั้ง",
             "appt_restored": "กู้คืนการนัดหมายไปที่ เรียบร้อยแล้ว",
             "calendar_moved_to_root_folder": "ปฏิทินย้ายไปที่โฟลเดอร์รูทแล้ว",
-            "new_calendar_create_error": "เกิดข้อผิดพลาดบางอย่าง โปรดลองใหม่อีกครั้ง",
             "calendar_permanently_deleted": "ปฎิทินถูกลบอย่างถาวร",
             "calendar_restored": "กู้คืนปฏิทินเรียบร้อยแล้ว",
             "appointment_permanently_deleted": "การนัดหมายถูกลบอย่างถาวร",
             "calendar_edits_saved": "บันทึกการแก้ไขอย่างถูกต้อง",
-            "series_deleted": "ลบซีรีส์เรียบร้อยแล้วและผู้เข้าร่วมจะได้รับการแจ้งเตือนการยกเลิก"
+            "series_deleted": "ลบซีรีส์เรียบร้อยแล้วและผู้เข้าร่วมจะได้รับการแจ้งเตือนการยกเลิก",
+            "some_link_copying_error": "ดูเหมือนว่าจะเกิดปัญหาขึ้นในขณะสร้าง url สาธารณะสำหรับบางไฟล์ โปรดลองใหม่อีกครั้ง",
+            "some_att_add_fails": "ดูเหมือนว่าจะมีปัญหาในการเพิ่มไฟล์แนบ โปรดลองใหม่อีกครั้ง",
+            "link_copying_error": "ดูเหมือนว่าจะเกิดปัญหาขึ้นในขณะสร้างลิงก์สาธารณะ โปรดลองใหม่อีกครั้ง",
+            "att_err_adding": "ดูเหมือนว่าจะมีปัญหาในการเพิ่มไฟล์แนบ โปรดลองใหม่อีกครั้ง",
+            "all_link_copied": "คัดลอกลิงก์สาธารณะเรียบร้อยแล้ว",
+            "all_att_added": "เพิ่มไฟล์แนบเรียบร้อยแล้ว"
         },
         "share_calendar_url_note2": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้ <br/> คุณสามารถค้นหาลิงก์เหล่านั้นได้ด้วยการคลิกขวาที่รายการปฏิทินของคุณ",
         "delete_all_occurences": "ลบเหตุการณ์ทั้งหมด",
@@ -444,24 +429,17 @@
         "somebody_is_organizer": "<strong>{{somebody}}</strong> เป็นผู้จัดงาน",
         "sure_to_delete_appointment": "คุณแน่ใจหรือไม่ว่าต้องการลบการนัดหมาย?",
         "want_to_edit_cancellation_msg": "คุณต้องการแก้ไขข้อความยกเลิกการนัดหมายหรือไม่?",
-        "you_sure_delete_calendar": "คุณแน่ใจหรือไม่ว่าต้องการลบปฏิทิน \"{{name}}\" อย่างถาวร?",
+        "you_sure_delete_calendar": "คุณแน่ใจหรือไม่ว่าต้องการลบปฏิทิน {{name}} อย่างถาวร?",
         "share_calendar_url_msg": "คุณสามารถแชร์ {{title}} กับผู้ร่วมงานได้อย่างรวดเร็ว โดยใช้ URL เหล่านี้:",
-        "you_sure_delete_instance": "คุณแน่ใจหรือไม่ว่าต้องการลบอินสแตนซ์ของการนัดหมาย “{{title}}” นี้?",
-        "delete_tag_message1": "คุณแน่ใจหรือว่าต้องการลบแท็ก \"{{name}}\"?",
+        "you_sure_delete_instance": "คุณแน่ใจหรือไม่ว่าต้องการลบอินสแตนซ์ของการนัดหมาย {{title}} นี้?",
+        "delete_tag_message1": "คุณแน่ใจหรือว่าต้องการลบแท็ก {{name}}?",
         "delete_tag_message2": "หากลบออก มันจะถูกลบออกจากทุกรายการที่ทำเครื่องหมายไว้",
-        "appointment_type_handle": "\"{{name}}” เป็นการนัดหมายที่เกิดซ้ำ คุณต้องการเปิดเฉพาะอินสแตนซ์นี้หรือทั้งซีรีส์?",
+        "appointment_type_handle": "{{name}} เป็นการนัดหมายที่เกิดซ้ำ คุณต้องการเปิดเฉพาะอินสแตนซ์นี้หรือทั้งซีรีส์?",
         "organizer": "ผู้จัดงาน",
-        "reply": "ตอบกลับ",
-        "reply_all": "ตอบกลับทั้งหมด",
-        "send_email_to": "ส่งอีเมลไปที่: {{email}}",
         "send_email": "ส่งอีเมล",
         "more": "เพิ่มเติม...",
         "required_participant": "ผู้เข้าร่วม {{count}}",
-        "optional_participant": "{{count}} ตัวเลือก",
-        "guests": "แขก",
-        "declined": "ปฏิเสธแล้ว {{count}}",
-        "awaiting": "กำลังรอ",
-        "accepted": "ยอมรับแล้ว {{count}}"
+        "optional_participant": "{{count}} ตัวเลือก"
     },
     "type": "รูปแบบ",
     "tooltip": {
@@ -475,8 +453,7 @@
         "location": "สถานที่",
         "chat_room": "ลิงก์ของห้องเสมือนจริง",
         "virtual_chat": "แชทเสมือนจริง",
-        "calendar_sharing_status": "แชร์กับ {{count}} คน",
-        "calendar_sharing_status_one": "แชร์กับ 1 คน"
+        "calendar_sharing_status": "แชร์กับ {{count}} คน"
     },
     "button": {
         "customize_modal": "เปิด Customize Modal"
@@ -489,7 +466,9 @@
                 "content": "วางไฟล์แนบของคุณที่นี่เพื่อเพิ่มไปยังการนัดหมายอย่างรวดเร็ว",
                 "title": "โหมด Drag&Drop"
             },
-            "local": "เพิ่มจาก local"
+            "local": "เพิ่มจาก local",
+            "url": "เพิ่มลิงก์สาธารณะจาก Files",
+            "files": "เพิ่มจากไฟล์"
         }
     },
     "administer": "ดูแล",
@@ -502,7 +481,6 @@
     "freebusy": "FreeBusy",
     "insert": "ใส่",
     "search": {
-        "results_for": "ผลลัพธ์สำหรับ:",
         "organized_by": "จัดโดย"
     },
     "remove_from_this_list": "ลบออกจากรายการนี้",
