@@ -8,19 +8,23 @@
                 "tentative": "Sie haben mit \" Vorläufig\" geantwortet"
             },
             "appt_restored": "Termin erfolgreich wiederhergestellt zu",
-            "settings_saved": "Änderungen korrekt gespeichert",
             "appointment_permanently_deleted_succesfully": "Endgültige Löschung erfolgreich durchgeführt",
             "appt_moved_to_trash": "Termin in den Papierkorb verschoben",
             "calendar_deleted_successfully": "Kalender erfolgreich gelöscht.",
             "calendar_moved_to_root_folder": "Kalender in den Root Ordner verschoben",
             "calendar_moved_to_trash": "Kalender in den Papierkorb verschoben",
-            "edit_calendar_error": "Etwas ist schiefgegangen, bitte versuchen Sie es erneut",
             "new_calendar_created": "Neuer Kalender erstellt",
             "calendar_permanently_deleted": "Kalender endgültig gelöscht",
             "calendar_restored": "Kalender erfolgreich wiederhergestellt",
             "appointment_permanently_deleted": "Termin dauerhaft gelöscht",
             "calendar_edits_saved": "Änderungen korrekt gespeichert",
-            "series_deleted": "Serie erfolgreich gelöscht. Die Teilnehmer erhalten eine Absagebenachrichtigung."
+            "series_deleted": "Serie erfolgreich gelöscht. Die Teilnehmer erhalten eine Absagebenachrichtigung.",
+            "some_link_copying_error": "Es scheint ein Problem bei der Erstellung des öffentlichen URLS für einige Dateien zu geben, bitte versuchen Sie es erneut",
+            "some_att_add_fails": "Es scheint ein Problem beim Hinzufügen einiger Anhänge zu geben, bitte versuchen Sie es erneut",
+            "link_copying_error": "Es scheint ein Problem bei der Erstellung des öffentlichen Links zu geben, bitte versuchen Sie es erneut",
+            "att_err_adding": "Es scheint ein Problem beim Hinzufügen von Anhängen zu geben, bitte versuchen Sie es erneut",
+            "all_link_copied": "Öffentlicher Link erfolgreich kopiert",
+            "all_att_added": "Anlagen erfolgreich hinzugefügt"
         },
         "are_organizer": "sind der Organisator",
         "somebody_invited_you": "<strong>{{somebody}}</strong> hat Sie eingeladen",
@@ -45,29 +49,22 @@
         "sure_to_delete_appointment_permanently": "Sind Sie sicher, dass Sie diesen Termin endgültig löschen möchten?",
         "want_to_edit_cancellation_msg": "Möchten Sie die Absagenachricht des Termins bearbeiten?",
         "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>",
-        "you_sure_delete_calendar": "Sind Sie sicher, dass Sie den \"{{name}}\" Kalender endgültig löschen möchten?",
-        "you_sure_move_calendar_trash": "Sind Sie sicher, dass Sie den \"{{name}}\" Kalender löschen möchten?",
+        "you_sure_delete_calendar": "Sind Sie sicher, dass Sie den {{name}} Kalender endgültig löschen möchten?",
+        "you_sure_move_calendar_trash": "Sind Sie sicher, dass Sie den {{name}} Kalender löschen möchten?",
         "you_will_see_the_subject_here": "Betreff",
         "share_calendar_url_msg": "Sie können {{title}} schnell mit Ihren Kollegen teilen, indem Sie einen dieser URLs benutzen:",
         "you": "Sie",
         "you_sure_delete_instance": "Sind Sie sicher, dass Sie diese Kopie des Termins \"1{{title}}\" löschen wollen?",
-        "delete_tag_message1": "Sind Sie sicher, dass Sie den \"{{name}}\" Tag?",
+        "delete_tag_message1": "Sind Sie sicher, dass Sie den {{name}} Tag?",
         "delete_tag_message2": "Nach dem Löschen wird es aus allen damit gekennzeichneten Artikeln entfernt.",
-        "appointment_type_handle": "\"{{name}}” ist ein Serientermin. Möchten Sie nur diesen Termin oder die ganze Serie öffnen?",
+        "appointment_type_handle": "{{name}} ist ein Serientermin. Möchten Sie nur diesen Termin oder die ganze Serie öffnen?",
         "organizer": "Organisator",
-        "reply": "Antworten",
-        "reply_all": "Allen antworten",
-        "send_email_to": "Senden Sie eine E-Mail an: {{email}}",
         "send_email": "E-Mail senden",
         "more": "Mehr ...",
         "required_participant": "{{count}} Teilnehmer",
         "required_participant_plural": "{{count}} Teilnehmer",
         "optional_participant": "{{count}} Optional",
-        "optional_participant_plural": "{{count}} Optionale",
-        "guests": "Gäste",
-        "declined": "{{count}} abgelehnt",
-        "awaiting": "warten",
-        "accepted": "{{count}} akzeptiert"
+        "optional_participant_plural": "{{count}} Optionale"
     },
     "label": {
         "invitation_not_sent": "Sie haben die Einladung noch nicht an die Teilnehmer geschickt",
@@ -226,15 +223,22 @@
         "tag_max_length": "Maximal 128 Zeichen sind erlaubt",
         "tag_name": "Tag name",
         "tags": "Etiketten",
-        "delete_tag_name": "Tag \"{{name}}\" löschen",
-        "edit_tag_name": "Tag \"{{name}}\" bearbeiten",
+        "delete_tag_name": "Tag {{name}} löschen",
+        "edit_tag_name": "Tag {{name}} bearbeiten",
         "results_for_error": "Die Suche kann nicht gestartet werden, löschen Sie sie und versuchen Sie es erneut: ",
         "entire_serires": "KOMPLETTE SERIEN",
         "new_tag": "Neues Etikett",
         "other_actions": "Andere Aktionen",
         "single_instance": "EINZELNE INSTANZ",
         "scheduled_in": "Kalender",
-        "no_title": "Kein Titel"
+        "no_title": "Kein Titel",
+        "warning": "Waarschuwing",
+        "trash": "Prullenbak",
+        "tag": "Tag",
+        "share_public_link": "Öffentlichen Link teilen",
+        "select": "Auswählen",
+        "root": "Stammordner",
+        "choose_file": "Datei auswählen"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -264,9 +268,7 @@
         "delete_calendar": "Kalender löschen",
         "empty_trash": "Papierkorb leeren",
         "move_to_root": "In den Root-Order verschieben",
-        "save": "Speichern",
         "send": "Senden",
-        "download": "Download",
         "preview": "Klicken zur Vorschau",
         "save_to_preview": "Speichern und Vorschau",
         "edit_message": "Nachricht bearbeiten",
@@ -292,7 +294,9 @@
             "draganddrop": {
                 "content": "Legen Sie hier Ihre Anhänge ab, um diese Ihrem Termin schnell hinzuzufügen",
                 "title": "Drag&Drop Modus"
-            }
+            },
+            "url": "Öffentlichen Link von Files hinzufügen",
+            "files": "Aus Files hinzufügen"
         }
     },
     "event": {
@@ -300,8 +304,6 @@
             "accept": "Akzeptieren",
             "decline": "Ablehnen",
             "expand": "In der Anzeige öffnen",
-            "restore": "Wiederherstellen",
-            "trash": "Löschen",
             "no": "Nein",
             "yes": "Ja",
             "needs_action": "Handlungsbedarf",
@@ -313,11 +315,7 @@
             "footer": {
                 "go_back": "Zurück"
             },
-            "delete": {
-                "footer": "Löschen"
-            },
             "move": {
-                "title": "Verschieben",
                 "body": {
                     "message3": "Wählen Sie einen Kalender aus als Ziel zum Verschieben für den gewünschten Termin:"
                 },
@@ -326,7 +324,6 @@
                 }
             },
             "restore": {
-                "title": "Wiederherstellen",
                 "footer": "Erstellen und wiederherstellen"
             },
             "new": {
@@ -350,7 +347,6 @@
     "allowed_actions": "Erlaubte Aktionen",
     "appointments": "Termine",
     "cannot_edit_name": "Sie können den Namen eines Kalendersystems nicht bearbeiten",
-    "delete": "Löschen",
     "edit_share_properties": "Eigenschaften für das Teilen bearbeiten",
     "find_calendar_shares": "Geteilte Kalender finden",
     "find_shares": "Teile finden",
@@ -416,13 +412,6 @@
             "dflt_vsblty_opt": {
                 "public": "Öffentlich"
             },
-            "show_reminder": {
-                "all_time": "die ganze Zeit des Events",
-                "hour_before": "1 Stunde früher",
-                "hour_before_plural": "{{count}} Stunden früher",
-                "week_before": "1 Woche früher",
-                "week_before_plural": "{{count}} Wochen früher"
-            },
             "free_busy_opts": {
                 "allow_following": "Nur den folgenden internen Nutzern erlauben, meine frei/beschäftigt Informationen zu sehen",
                 "allow_all": "Sowohl internen also auch externen Nutzer erlauben, meine frei/beschäftigt Informationen zu sehen",
@@ -447,11 +436,6 @@
                 "month": "Monatsansicht",
                 "week": "Wochenansicht",
                 "work_week": "Arbeitswochenansicht"
-            },
-            "weekdays": {
-                "monday": "Montag",
-                "sunday": "Sonntag",
-                "tuesday": "Dienstag"
             }
         },
         "permissions_note": "Nutzer müssen aus diesem E-Mail System stammen (zextras.com). Sie können die vollständige E-Mail Adresse nutzen oder nur den Benutzername.",
@@ -503,13 +487,12 @@
         "invite": {
             "error": "Fehler"
         },
-        "new_time_proposed_error": "Etwas ist schiefgegangen,bitte versuchen Sie es erneut",
         "proposed_time_accepted": "Sie haben die vorgeschlagene Zeit zugesagt",
         "share_folder_success": "Kalender erfolgreich geteilt",
         "url_copied": "{{title}} kopiert",
         "new_time_proposed_success": "Neue Zeit vorgeschlagen",
-        "tag_applied": "\"{{tag}}\" Tag angewendet",
-        "tag_removed": "\"{{tag}}\" Tag entfernt"
+        "tag_applied": "{{tag}} Tag angewendet",
+        "tag_removed": "{{tag}} Tag entfernt"
     },
     "success": "Erfolg",
     "button": {
@@ -526,7 +509,6 @@
         "location": "Ort",
         "chat_room": "Link des virtuellen Raums",
         "virtual_chat": "Virtueller Chat",
-        "calendar_sharing_status_one": "Mit 1 Person geteilt",
         "calendar_sharing_status": "Mit {{count}} Person(en) geteilt"
     },
     "share_invite_resent": "Einladung zum Teilen erneut gesendet",
