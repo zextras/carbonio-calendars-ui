@@ -155,14 +155,14 @@
         "new_appointment": "नया एपोइंटमेंट",
         "preview": "प्रीव्यू",
         "edit_tag": "टैग बदलें",
-        "edit_tag_name": "\"{{name}}\" टैग बदलें",
+        "edit_tag_name": "{{name}} टैग बदलें",
         "loading_results": "रिज़ल्ट लोड कर रहा है...",
         "no_special_char_allowed": "नाम में कोई स्पेशल कैरक्टर नहीं होना चाहिए",
         "tag_name": "टैग नाम",
         "tags": "बिल्ले",
         "create_tag": "टैग बनाएँ",
         "delete_tag": "टैग डिलीट करें",
-        "delete_tag_name": "\"{{name}}\" टैग डिलीट करें",
+        "delete_tag_name": "{{name}} टैग डिलीट करें",
         "results_for_error": "सर्च शुरू नहीं कर पा रहा, इसे क्लियर करें और दोबारा कोशिश करने: ",
         "select_color": "रंग चुनें",
         "tag_max_length": "अधिकतम 128 कैरक्टर",
@@ -171,10 +171,16 @@
         "other_actions": "दूसरे एक्शन",
         "single_instance": "एकल घटना",
         "no_title": "कोई शीर्षक नहीं",
-        "scheduled_in": "कैलेंडर"
+        "scheduled_in": "कैलेंडर",
+        "warning": "चेतावनी",
+        "trash": "रद्दी",
+        "tag": "टैग",
+        "share_public_link": "पब्लिक लिंक शेयर करें",
+        "select": "चुनें",
+        "root": "मूल",
+        "choose_file": "फाइल चुनें"
     },
     "action": {
-        "save": "सेव करें",
         "send": "भेजें",
         "empty_trash": "कूड़ेदान को ख़ाली करें",
         "delete_calendar": "कैलेंडर मिटाएँ",
@@ -208,7 +214,13 @@
             "calendar_restored": "Calendar वापस लाया गया",
             "appointment_permanently_deleted": "एप्पोइंटमेंट परमानेंट डिलीट कर दिया गया",
             "calendar_edits_saved": "बदलाव ठीक से सेव हो गए",
-            "series_deleted": "सीरीज़ डिलीट कर दी गई। अटेंड करने वालों को कैंसल होने का नोटिफ़िकेशन मिलेगा।"
+            "series_deleted": "सीरीज़ डिलीट कर दी गई। अटेंड करने वालों को कैंसल होने का नोटिफ़िकेशन मिलेगा।",
+            "some_link_copying_error": "कुछ फाइलों के लिए पब्लिक url बनाते समय कोई समस्या हुई, दोबारा कोशिश करें",
+            "some_att_add_fails": "कुछ अटैचमेंट जोड़ने में कुछ समस्या आ रही है, कृपया दोबारा कोशिश करें",
+            "link_copying_error": "पब्लिक लिंक बनाते समय कोई समस्या हुई, दोबारा कोशिश करें",
+            "att_err_adding": "अटैचमेंट जोड़ने में कुछ समस्या आ रही है, कृपया दोबारा कोशिश करें",
+            "all_link_copied": "पब्लिक लिंक कॉपी हुई",
+            "all_att_added": "अटैचमेंट जोड़ा गया"
         },
         "somebody_is_organizer": "ऑर्गनाइज़र <strong>{{somebody}}</strong> है",
         "are_organizer": "वाक्य इस तरह से माना जाएगा मानो आप ऑर्गनाइज़र हों",
@@ -233,16 +245,15 @@
         "delete_all_occurences": "जितनी बार आना है डिलीट करें",
         "want_to_send_cancellation_msg": "क्या आप भाग लेने वालों को एक नया कैन्सेलेशन मैसेज भेजना चाहते हैं?",
         "you_are_organizer": "<Row><Text> <BoldText> आप  </BoldText> ऑर्गनाइज़र हैं </Text></Row>",
-        "you_sure_move_calendar_trash": "क्या आप वाकई में \"{{name}}\"कैलेंडर को डिलीट करना चाहते हैं?",
-        "you_sure_delete_calendar": "क्या आप वाकई में \"{{name}}\"कैलेंडर को परमानेंट डिलीट करना चाहते हैं?",
+        "you_sure_move_calendar_trash": "क्या आप वाकई में {{name}}कैलेंडर को डिलीट करना चाहते हैं?",
+        "you_sure_delete_calendar": "क्या आप वाकई में {{name}}कैलेंडर को परमानेंट डिलीट करना चाहते हैं?",
         "you_will_see_the_subject_here": "विषय",
         "sure_to_delete_all_occurences_appointment": "क्या आप वाकई में इस एपाइंटमेंट के भविष्य में आने को पूरा डिलीट करना चाहते हैं?",
-        "you_sure_delete_instance": "क्या आप वाकई में \"{{title}}\" एपाइंटमेंट की इस घटना को डिलीट करना चाहते हैं?",
-        "delete_tag_message1": "क्या आप वाकई में \"{{name}}\" टैग डिलीट करना चाहते हैं?",
+        "you_sure_delete_instance": "क्या आप वाकई में {{title}} एपाइंटमेंट की इस घटना को डिलीट करना चाहते हैं?",
+        "delete_tag_message1": "क्या आप वाकई में {{name}} टैग डिलीट करना चाहते हैं?",
         "delete_tag_message2": "डिलीट हो जाने के बाद, इससे मार्क हर आइटम से इसे हटा दिया जाएगा।",
         "appointment_type_handle": "{{name}} बार-बार आने वाला अपोइंटमेंट है। क्या आप सिर्फ इस घटना को या पूरी सीरीज़ खोलना चाहते हैं?",
         "organizer": "आयोजक",
-        "reply_all": "सभी को उत्तर",
         "send_email": "ई-मेल भेजें",
         "more": "और..."
     },
@@ -251,7 +262,6 @@
             "no": "नहीं",
             "yes": "हाँ",
             "accept": "स्वीकार करें",
-            "trash": "डिलीट करें",
             "decline": "अस्वीकृत",
             "expand": "डिस्प्ले में देखें",
             "needs_action": "कार्यवाई की आवश्यकता है",
@@ -332,12 +342,6 @@
             "dflt_vsblty_opt": {
                 "public": "पब्लिक"
             },
-            "show_reminder": {
-                "all_time": "ईवेंट के पूरे टाइम पर"
-            },
-            "default_cal_opts": {
-                "calendar": "कैलेंडर"
-            },
             "free_busy_opts": {
                 "allow_all": "आंतरिक और बाहरी दोनों यूजरों को मेरी फ्री/व्यस्त जानकारी देखने दें",
                 "allow_following": "सिर्फ इन आंतरिक यूजरों को मेरी फ्री/व्यस्त जानकारी देखने दें",
@@ -362,9 +366,6 @@
                 "month": "माह व्यू",
                 "week": "सप्ताह व्यू",
                 "work_week": "कार्य सप्ताह व्यू"
-            },
-            "weekdays": {
-                "sunday": "रविवार"
             }
         },
         "invalid_email": "एक मान्य ई-मेल नहीं है",
@@ -420,8 +421,8 @@
         "proposed_time_accepted": "आपने दिए टाइम को स्वीकार कर लिया",
         "url_copied": "{{title}} कॉपी किया गया",
         "new_time_proposed_success": "नया टाइम दिया गया",
-        "tag_applied": "\"{{tag}}\" टैग अप्लाई हो गया",
-        "tag_removed": "\"{{tag}}\" टैग हटाया गया"
+        "tag_applied": "{{tag}} टैग अप्लाई हो गया",
+        "tag_removed": "{{tag}} टैग हटाया गया"
     },
     "success": "सफलता",
     "type": "टाइप करें",
@@ -473,7 +474,9 @@
                 "content": "आपके अटैचमेंट जल्दी से एपाइंटमेंट में जोड़ने के लिए उन्हें यहाँ ड्रॉप करें",
                 "title": "उठा के गिराएं"
             },
-            "local": "लोकल से लगाएँ"
+            "local": "लोकल से लगाएँ",
+            "url": "फाइलों से पब्लिक लिंक जोड़ें",
+            "files": "Files से जोड़ें"
         }
     },
     "cannot_edit_name": "आप सिस्टम कैलेंडर का नाम नहीं बदल सकते",

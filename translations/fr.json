@@ -33,7 +33,9 @@
                 "content": "Déposer ici vos pièces jointes afin de les ajouter à l'évènement"
             },
             "drive": "Ajouter depuis le Drive",
-            "local": "Ajouter un fichier depuis le disque local"
+            "local": "Ajouter un fichier depuis le disque local",
+            "url": "Ajouter un lien public à partir de Files",
+            "files": "Ajouter à partir de Files"
         }
     },
     "event": {
@@ -45,7 +47,8 @@
             "expand": "Étendre la fenêtre",
             "needs_action": "Une action est requise",
             "invitation_not_sent_yet": "L'invitation n'a pas encore été envoyée"
-        }
+        },
+        "is_exception": "Exception"
     },
     "find_shares": "Rechercher les partages",
     "folder": {
@@ -109,7 +112,7 @@
         "dismiss_plural": "Tout rejeter",
         "display": "Afficher",
         "download": "Télécharger",
-        "download_plural": "Tout télécharger",
+        "download_plural": "Télécharger tout",
         "edit": "Modifier",
         "edit_access": "Modifier les accès de {{name}}",
         "edit_share": "Modifier le partage",
@@ -231,12 +234,12 @@
         "today": "aujourd'hui",
         "preview": "Prévisualisation",
         "create_tag": "Créer une étiquette",
-        "edit_tag": "Éditer l'étiquette",
-        "edit_tag_name": "Éditer l'étiquette \"{{name}}\"",
+        "edit_tag": "Modifier l'étiquette",
+        "edit_tag_name": "Modifier l'étiquette {{name}}",
         "entire_serires": "TOUTE LES SÉRIE",
         "loading_results": "Chargement des résultats...",
         "new_tag": "Nouvelle étiquette",
-        "no_special_char_allowed": "Le nom ne doit pas contenir des caractères spéciaux",
+        "no_special_char_allowed": "Le nom ne doit pas contenir de caractère spécial",
         "other_actions": "Autres actions",
         "results_for_error": "Il n'est pas possible de démarrer la recherche, nettoyez là et réessayez : ",
         "select_color": "Sélectionnez une couleur",
@@ -245,9 +248,18 @@
         "tag_name": "Nom de l'étiquette",
         "tags": "Étiquettes",
         "delete_tag": "Supprimer l'étiquette",
-        "delete_tag_name": "Supprimer l'étiquette \"{{name}}\"",
+        "delete_tag_name": "Supprimer l'étiquette {{name}}",
         "no_title": "Pas de titre",
-        "scheduled_in": "Calendrier"
+        "scheduled_in": "Calendrier",
+        "warning": "Attention",
+        "trash": "Corbeille",
+        "tag": "Etiquette",
+        "share_public_link": "Partager lien public",
+        "select": "Sélectionner",
+        "root": "Racine",
+        "public_link_description": "Généré à partir de {{titre}} le {{date}}.",
+        "continue": "Continuer",
+        "choose_file": "Choisir fichier"
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -256,7 +268,7 @@
         "delete_all_occurences": "Supprimer toutes les occurrences",
         "delete_future_occurences": "Supprimer cette instance et toutes les futures occurrences",
         "invite_has_no_message": "L'invitation n'a pas de message",
-        "invited_you": "vous a invité à",
+        "invited_you": "vous a invité à un rendez-vous",
         "meeting_canceled": "La réunion suivante a été annulée",
         "snackbar": {
             "appt_moved": "Le rendez-vous est déplacé avec succès vers",
@@ -272,12 +284,17 @@
             },
             "new_calendar_created": "Nouveau calendrier créé",
             "appointment_permanently_deleted_succesfully": "La suppression définitive a été effectuée avec succès",
-            "edit_calendar": "Modifications sauvées correctement",
             "calendar_restored": "Le calendrier a été restauré avec succès",
             "calendar_permanently_deleted": "Le calendrier a été supprimé",
             "appointment_permanently_deleted": "Rendez-vous supprimé définitivement",
             "calendar_edits_saved": "Modifications enregistrées avec succès",
-            "series_deleted": "La séries a été supprimée avec succès. Les participants vont recevoir la notification de l'annulation."
+            "series_deleted": "La séries a été supprimée avec succès. Les participants vont recevoir la notification de l'annulation.",
+            "some_link_copying_error": "Il semble y avoir un problème lors de la génération de l'url publique pour certains fichiers, veuillez réessayer",
+            "some_att_add_fails": "Il semble y avoir un problème lors de l'ajout de certaines pièces jointes, veuillez réessayer",
+            "link_copying_error": "Il semble y avoir un problème lors de la génération du lien public, veuillez réessayer",
+            "att_err_adding": "Il semble y avoir un problème lors de l'ajout de pièces jointes, veuillez réessayer",
+            "all_link_copied": "Le lien public a été copié avec succès",
+            "all_att_added": "Les pièces jointes ont été ajoutées avec succès"
         },
         "somebody_is_organizer": "<strong>{{somebody}}</strong> est l'organisateur",
         "sure_to_delete_all_occurences_appointment": "Êtes-vous sûr de vouloir supprimer toutes les occurrences de ce rendez-vous ?",
@@ -286,7 +303,7 @@
         "want_to_send_cancellation_msg": "Souhaitez-vous envoyer un message d'annulation aux participants ?",
         "you": "Vous",
         "you_are_organizer": "<Row><Text> <BoldText> Vous  </BoldText> êtes l'organisateur </Text></Row>",
-        "you_sure_move_calendar_trash": "Êtes-vous sûr de vouloir supprimer le calendrier \"{{name}}\" ?",
+        "you_sure_move_calendar_trash": "Êtes-vous sûr de vouloir supprimer le calendrier {{name}} ?",
         "you_will_see_the_subject_here": "Sujet",
         "delete_future_occurences_warning": "Cela va également supprimer toutes les exceptions (avant et après cette instance) dans les séries",
         "modal": {
@@ -300,21 +317,20 @@
         "share_calendar_url_note2": "Seuls vos collaborateurs peuvent accéder à vos données en utilisant ces URLs.<br/>Vous pouvez également retrouver ces liens en cliquant droit sur la liste des calendriers.",
         "somebody_invited_you": "<strong>{{somebody}}</strong> vous a invité",
         "sure_to_delete_appointment": "Êtes-vous sûr de vouloir supprimer le rendez-vous ?",
-        "you_sure_delete_calendar": "Êtes-vous sûr de vouloir supprimer définitivement le calendrier \"{{name}}\" ?",
-        "you_sure_delete_instance": "Êtes-vous sûr de vouloir supprimer cette instance du rendez-vous \"{{title}}\" ?",
-        "delete_tag_message1": "Êtes-vous sûr de vouloir supprimer l'étiquette \"{{name}}\" ?",
-        "delete_tag_message2": "Une fois supprimée, elle sera supprimée de l'ensemble des éléments qu'elle marquait.",
-        "appointment_type_handle": "\"{{name}}\" est un rendez-vous récurent. Souhaitez-vous ouvrir uniquement cette instance ou la série ?",
-        "declined": "{{count}} refusé",
+        "you_sure_delete_calendar": "Êtes-vous sûr de vouloir supprimer définitivement le calendrier {{name}} ?",
+        "you_sure_delete_instance": "Êtes-vous sûr de vouloir supprimer cette instance du rendez-vous {{title}} ?",
+        "delete_tag_message1": "Êtes-vous sûr de vouloir supprimer l'étiquette {{name}} ?",
+        "delete_tag_message2": "Une fois supprimée, elle sera supprimée de l'ensemble des éléments associés.",
+        "appointment_type_handle": "{{name}} est un rendez-vous récurent. Souhaitez-vous ouvrir uniquement cette instance ou la série ?",
         "more": "Plus...",
         "organizer": "Organisateur",
-        "reply_all": "Répondre à tous",
         "send_email": "Envoyer un email",
-        "accepted": "{{count}} accepté",
         "optional_participant": "{{count}} Optionnel",
         "optional_participant_plural": "{{count}} Optionnels",
         "required_participant": "{{count}} Participant",
-        "required_participant_plural": "{{count}} Participants"
+        "required_participant_plural": "{{count}} Participants",
+        "edit_series_warning": "Au fur et à mesure de la modification de la série, toutes les instances précédemment supprimées ou modifiées seront restaurées avec les nouveaux paramètres de la série.",
+        "appointment_invitation_sent": "Envoi d'une invitation à un rendez-vous"
     },
     "months": {
         "april": "Avril",
@@ -445,8 +461,8 @@
         "proposed_time_accepted": "Vous avez accepté l'horaire proposé",
         "share_folder_success": "Ce calendrier a été partagé avec succès",
         "url_copied": "{{title}} copié",
-        "tag_applied": "Étiquette \"{{tag}}\" appliquée",
-        "tag_removed": "Étiquette \"{{tag}}\" supprimée"
+        "tag_applied": "Étiquette {{tag}} appliquée",
+        "tag_removed": "L'étiquette {{tag}} a été supprimée"
     },
     "share_invite_resent": "Invitation à partager envoyée",
     "resend_mail_notification_about_this_share": "Envoyer une notification par email à propos de ce partage",
@@ -482,7 +498,8 @@
         "add_attachments": "Ajouter des pièces jointes",
         "copy_ics_url": "Copier l'url du SCI",
         "chat_room": "Lien de la Salle Virtuelle",
-        "calendar_sharing_status": "Partagé avec {{count}} personnes",
+        "calendar_sharing_status": "Partagé avec {{nombre}} personne",
+        "calendar_sharing_status_plural": "Partagé avec {{nombre}} personnes",
         "equipment": "Équipement",
         "location": "Emplacement",
         "virtual_chat": "Discussion virtuelle",
@@ -500,7 +517,7 @@
             "tag_created": "L'étiquette {{name}} a été créée avec succès",
             "tag_deleted": "L'étiquette {{name}} a été supprimée avec succès",
             "tag_not_updated": "Une erreur est survenue, l'étiquette n'a pas été mise à jour. Merci de réessayer.",
-            "tag_updated": "L'étiquette a été mise à jour avec succès"
+            "tag_updated": "Étiquette mise à jour avec succès"
         }
     },
     "read": "Lire",

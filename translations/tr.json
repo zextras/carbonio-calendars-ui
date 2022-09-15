@@ -2,7 +2,6 @@
     "action": {
         "calendar_access_share": "Takvim erişim paylaşımı",
         "send": "Gönder",
-        "download": "İndir",
         "preview": "Önizleme için tıklayın",
         "save_to_preview": "Önizleme için kaydedin",
         "delete_calendar": "Takvimi sil",
@@ -26,7 +25,9 @@
             "draganddrop": {
                 "content": "Randevuya hızlı eklemek için eklerinizi buraya bırakın",
                 "title": "Sürükle ve Bırak Modu"
-            }
+            },
+            "url": "Dosyalar'dan genel bağlantı ekle",
+            "files": "Dosyalar'dan Ekle"
         }
     },
     "event": {
@@ -38,7 +39,8 @@
             "yes": "Evet",
             "needs_action": "Yapılması gerekenler",
             "invitation_not_sent_yet": "Davet henüz gönderilmedi"
-        }
+        },
+        "is_exception": "İstisna"
     },
     "folder": {
         "modal": {
@@ -54,7 +56,6 @@
                 }
             },
             "new": {
-                "footer": "OLUŞTUR",
                 "title2": "Yeni takvim oluştur",
                 "duplicate_warning": "Aynı ad kullanılmış takvim zaten var"
             },
@@ -108,7 +109,13 @@
             "calendar_restored": "Takvim başarıyla geri alındı",
             "appointment_permanently_deleted": "Randevu kalıcı olarak silindi",
             "calendar_edits_saved": "Değişiklikler başarıyla kaydedildi",
-            "series_deleted": "Seri başarıyla silindi. Katılımcılara iptal bildirimi gönderilecek."
+            "series_deleted": "Seri başarıyla silindi. Katılımcılara iptal bildirimi gönderilecek.",
+            "some_link_copying_error": "Bazı dosyalar için genel bağlantı oluşturulurken bir sorun oluştu, lütfen tekrar deneyin",
+            "some_att_add_fails": "Bazı ekler eklenirken bir sorun oluştu, lütfen tekrar deneyin",
+            "link_copying_error": "Genel bağlantı oluşturulurken bir sorun oluştu, lütfen tekrar deneyin",
+            "att_err_adding": "Ekler eklenirken bir sorun oluştu, lütfen tekrar deneyin",
+            "all_link_copied": "Genel bağlantı başarıyla kopyalandı",
+            "all_att_added": "Ekler başarıyla eklendi"
         },
         "are_organizer": "organize eden",
         "meeting_canceled": "Bu toplantı iptal edildi",
@@ -123,7 +130,7 @@
         "delete_future_occurences": "Bu randevuyu ve ilerideki tüm tekrarlamaları sil",
         "delete_future_occurences_warning": "Serideki (bu randevu öncesi ve sonrasındaki) tüm özel durumlar da silinecek",
         "invite_has_no_message": "Bu davette yazılı mesaj yok",
-        "invited_you": "sizi davet etti:",
+        "invited_you": "sizi bir etkinliğe davet etti",
         "share_calendar_url_msg": "Bu URL bağlantılarından birisini kullanarak {{title}} öğesini kişilerle kolayca paylaşabilirsiniz:",
         "share_calendar_url_note2": "Bu URL bağlantılarını kullanarak sadece katılımcılar veriye erişebilir.<br/> Takvim listenizde sağ tıkladığınızda da bu bağlantıları görebilirsiniz.",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> organize eden kişi",
@@ -135,15 +142,13 @@
         "want_to_edit_cancellation_msg": "Randevu iptal mesajını düzenlemek istiyor musunuz?",
         "you": "Siz",
         "you_are_organizer": "<Row><Text> <BoldText> Sizin  </BoldText> organize ettiğiniz </Text></Row>",
-        "you_sure_delete_calendar": "\"{{name}}\" takvimi tamamen silmek istediğinizden emin misiniz?",
-        "you_sure_move_calendar_trash": "\"{{name}}\" takvimi silmek istediğinizden emin misiniz?",
+        "you_sure_delete_calendar": "{{name}} takvimi tamamen silmek istediğinizden emin misiniz?",
+        "you_sure_move_calendar_trash": "{{name}} takvimi silmek istediğinizden emin misiniz?",
         "you_will_see_the_subject_here": "Konu",
-        "you_sure_delete_instance": "“{{title}}” randevusunun bu öğesini silmek istediğinizden emin misiniz?",
-        "delete_tag_message1": "\"{{name}}\" etiketini silmek istediğinizden emin misiniz?",
+        "you_sure_delete_instance": "{{title}} randevusunun bu öğesini silmek istediğinizden emin misiniz?",
+        "delete_tag_message1": "{{name}} etiketini silmek istediğinizden emin misiniz?",
         "delete_tag_message2": "Silinince önceden işaretlenmiş tüm öğelerden etiket kaldırılacak.",
-        "appointment_type_handle": "\"{{name}}” tekrarlanan bir randevu. Sadece bu rendevuyu mu yoksa tekrarlama serisini mi açmak istersiniz?",
-        "awaiting": "bekleniyor",
-        "guests": "konuklar",
+        "appointment_type_handle": "{{name}} tekrarlanan bir randevu. Sadece bu rendevuyu mu yoksa tekrarlama serisini mi açmak istersiniz?",
         "more": "Daha fazla...",
         "optional_participant": "{{count}} İsteğe bağlı",
         "optional_participant_plural": "{{count}} İsteğe bağlı",
@@ -151,7 +156,8 @@
         "required_participant": "{{count}} Katılımcı",
         "required_participant_plural": "{{count}} Katılımcı",
         "send_email": "E-posta gönder",
-        "reply_all": "Hepsini yanıtla"
+        "edit_series_warning": "Serileri değiştirmeye devam ederseniz, daha önce silinmiş veya değiştirilmiş tüm tekrarlamalar yeni seri ayarları ile geri yüklenecek.",
+        "appointment_invitation_sent": "Randevu daveti gönderildi"
     },
     "search": {
         "organized_by": "Organize eden"
@@ -164,8 +170,8 @@
         "share_folder_success": "Takvim başarıyla paylaşıldı",
         "url_copied": "{{title}} kopyalandı",
         "new_time_proposed_success": "Yeni saat önerildi",
-        "tag_applied": "\"{{tag}}\" etiketi uygulandı",
-        "tag_removed": "\"{{tag}}\" etiketi kaldırıldı"
+        "tag_applied": "{{tag}} etiketi uygulandı",
+        "tag_removed": "{{tag}} etiketi kaldırıldı"
     },
     "label": {
         "invitation_not_sent": "Katılımcılara henüz davet göndermediniz",
@@ -320,9 +326,9 @@
         "tag_max_length": "En çok 128 karakter kullanılabilir",
         "create_tag": "Etiket Oluştur",
         "delete_tag": "Etiketi Sil",
-        "delete_tag_name": "\"{{name}}\" etiketi sil",
+        "delete_tag_name": "{{name}} etiketi sil",
         "edit_tag": "Etiketi düzenle",
-        "edit_tag_name": "\"{{name}}\" etiketi düzenle",
+        "edit_tag_name": "{{name}} etiketi düzenle",
         "entire_serires": "TÜM SERİLER",
         "loading_results": "Sonuçlar yükleniyor...",
         "new_tag": "Yeni Etiket",
@@ -332,7 +338,16 @@
         "tag_name": "Etiket adı",
         "tags": "Etiketler",
         "no_title": "Başlık Yok",
-        "scheduled_in": "Takvim"
+        "scheduled_in": "Takvim",
+        "warning": "Uyarı",
+        "trash": "Çöp Kutusu",
+        "tag": "Etiket",
+        "share_public_link": "Genel Bağlantı Paylaş",
+        "select": "Seç",
+        "root": "Kök",
+        "public_link_description": "Başlık {{title}} 'dan {{date}} tarihinde oluşturuldu",
+        "continue": "İlerle",
+        "choose_file": "Dosya seç"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -368,6 +383,7 @@
         "chat": "Donanım",
         "chat_room": "Sanal Oda bağlantısı",
         "calendar_sharing_status": "{{count}} kişi ile paylaşıldı",
+        "calendar_sharing_status_plural": "{{count}} kişi ile paylaşıldı",
         "equipment": "Donanım",
         "location": "Yer",
         "virtual_chat": "Sanal Sohbet"
@@ -415,17 +431,10 @@
                 "week": "Haftalık Görünüm",
                 "work_week": "Çalışma Günleri Görünümü"
             },
-            "show_reminder": {
-                "minute_before": "1 dakika önce",
-                "minute_before_plural": "{{count}} dakika önce"
-            },
             "timezones": {
                 "amsterdam": "GMT +01:00 Amsterdam, Berlin, Bern, Roma, Stockholm, Viyana",
                 "chennai": "GMT +05:30 Chennai, Kalkuta, Mumbai, Yeni Delhi",
                 "egypt": "GMT +02:00 Mısır"
-            },
-            "weekdays": {
-                "sunday": "Pazar"
             }
         },
         "invalid_email": "Geçersiz e-posta adresi",

@@ -1,6 +1,5 @@
 {
     "action": {
-        "save": "Simpan",
         "send": "Kirim",
         "delete_calendar": "Hapus kalender",
         "preview": "Klik untuk melihat pratinjau",
@@ -157,9 +156,9 @@
         "preview": "Pratinjau",
         "create_tag": "Buat Tag",
         "delete_tag": "Hapus Tag",
-        "delete_tag_name": "Hapus tag \"{{name}}\"",
+        "delete_tag_name": "Hapus tag {{name}}",
         "edit_tag": "Edit Tag",
-        "edit_tag_name": "Edit tag \"{{name}}\"",
+        "edit_tag_name": "Edit tag {{name}}",
         "loading_results": "Memuat Hasil...",
         "no_special_char_allowed": "Nama tidak boleh berisi karakter spesial",
         "results_for_error": "Tidak dapat memulai pencarian. Hapus dan coba lagi: ",
@@ -172,7 +171,14 @@
         "other_actions": "Tindakan lain",
         "single_instance": "SATU INSTANS",
         "no_title": "Tanpa Judul",
-        "scheduled_in": "Kalender"
+        "scheduled_in": "Kalender",
+        "warning": "Peringatan",
+        "trash": "Sampah",
+        "tag": "Tag",
+        "share_public_link": "Bagikan Tautan Publik",
+        "select": "Pilih",
+        "root": "Akar",
+        "choose_file": "Pilih file"
     },
     "calendar": {
         "modal": {
@@ -184,7 +190,6 @@
     "event": {
         "action": {
             "accept": "Terima",
-            "trash": "Hapus",
             "no": "Tidak",
             "yes": "Ya",
             "decline": "Tolak",
@@ -195,9 +200,6 @@
     },
     "folder": {
         "modal": {
-            "delete": {
-                "title": "Hapus"
-            },
             "move": {
                 "input": {
                     "filter": "Filter kalender"
@@ -250,7 +252,13 @@
             "calendar_restored": "Kalender berhasil dipulihkan",
             "appointment_permanently_deleted": "Janji temu dihapus permanen",
             "calendar_edits_saved": "Hasil edit disimpan dengan benar",
-            "series_deleted": "Seri berhasil dihapus. Peserta akan menerima notifikasi pembatalan."
+            "series_deleted": "Seri berhasil dihapus. Peserta akan menerima notifikasi pembatalan.",
+            "some_link_copying_error": "Tampaknya ada masalah saat membuat url publik untuk beberapa file, coba lagi",
+            "some_att_add_fails": "Tampaknya ada masalah saat menambahkan beberapa lampiran, coba lagi",
+            "link_copying_error": "Tampaknya ada masalah saat membuat tautan publik, coba lagi",
+            "att_err_adding": "Tampaknya ada masalah saat menambahkan lampiran, coba lagi",
+            "all_link_copied": "Tautan publik berhasil disalin",
+            "all_att_added": "Lampiran berhasil ditambahkan"
         },
         "invite_has_no_message": "Undangan ini tidak berisi pesan teks",
         "invited_you": "mengundang Anda ke",
@@ -263,8 +271,8 @@
         "want_to_edit_cancellation_msg": "Apakah Anda ingin mengedit pesan pembatalan janji temu?",
         "want_to_send_cancellation_msg": "Apakah Anda ingin mengirim pesan pembatalan ke peserta?",
         "you_are_organizer": "<Row><Text><BoldText>Anda</BoldText> adalah penyelenggara</Text></Row>",
-        "you_sure_delete_calendar": "Anda yakin ingin menghapus kalender \"{{name}}\" secara permanen?",
-        "you_sure_move_calendar_trash": "Anda yakin ingin menghapus kalender \"{{name}}\"?",
+        "you_sure_delete_calendar": "Anda yakin ingin menghapus kalender {{name}} secara permanen?",
+        "you_sure_move_calendar_trash": "Anda yakin ingin menghapus kalender {{name}}?",
         "you_will_see_the_subject_here": "Subjek",
         "somebody_invited_you": "<strong>{{somebody}}</strong>mengundang Anda",
         "sure_to_delete_all_occurences_appointment": "Anda yakin ingin menghapus semua kemunculan janji temu ini?",
@@ -277,18 +285,15 @@
         },
         "share_calendar_url_note2": "Hanya kolaborator Anda yang dapat mengakses data Anda menggunakan URL ini.<br/>Anda juga bisa menemukan tautan tersebut dengan mengklik kanan daftar kalender Anda.",
         "delete_future_occurences_warning": "Tindakan ini juga menghapus semua pengecualian (sebelum dan sesudah kejadian ini) dalam rangkaian tersebut",
-        "you_sure_delete_instance": "Anda yakin ingin menghapus instan janji temu “{{title}}” ini?",
-        "delete_tag_message1": "Yakin ingin menghapus Tag \"{{name}}\"?",
+        "you_sure_delete_instance": "Anda yakin ingin menghapus instan janji temu {{title}} ini?",
+        "delete_tag_message1": "Yakin ingin menghapus Tag {{name}}?",
         "delete_tag_message2": "Setelah dihapus, ini akan dihapus dari tiap item yang ditandai dengannya.",
-        "appointment_type_handle": "\"{{name}}\" adalah janji temu berulang. Anda hanya ingin membuka instans ini atau seri?",
+        "appointment_type_handle": "{{name}} adalah janji temu berulang. Anda hanya ingin membuka instans ini atau seri?",
         "organizer": "Penyelenggara",
-        "reply_all": "Balas semua",
         "send_email": "Kirim email",
         "more": "Lainnya...",
         "required_participant": "{{count}} Peserta",
-        "optional_participant": "{{count}} Opsional",
-        "declined": "{{count}} menolak",
-        "awaiting": "menunggu"
+        "optional_participant": "{{count}} Opsional"
     },
     "months": {
         "april": "April",
@@ -334,13 +339,6 @@
         "options": {
             "dflt_vsblty_opt": {
                 "public": "Publik"
-            },
-            "show_reminder": {
-                "hour_before": "{{count}} jam sebelumnya"
-            },
-            "weekdays": {
-                "sunday": "Minggu",
-                "friday": "Jumat"
             },
             "default_view": {
                 "day": "Tampilan Hari",
@@ -422,7 +420,7 @@
         "share_folder_success": "Kalender berhasil dibagikan",
         "new_time_proposed_success": "Waktu baru diusulkan",
         "tag_removed": "Tag \"{{tag}}: dihapus",
-        "tag_applied": "Tag \"{{tag}}\" diterapkan"
+        "tag_applied": "Tag {{tag}} diterapkan"
     },
     "success": "Berhasil",
     "add": "Tambahkan",
@@ -457,7 +455,9 @@
                 "content": "Letakkan lampiran Anda di sini untuk menambahkannya dengan cepat ke janji temu",
                 "title": "Mode Seret & Lepas"
             },
-            "local": "Tambahkan dari lokal"
+            "local": "Tambahkan dari lokal",
+            "url": "Tambahkan tautan publik dari Files",
+            "files": "Tambahkan dari Files"
         }
     },
     "cannot_edit_name": "Anda tidak dapat mengedit nama kalender sistem",

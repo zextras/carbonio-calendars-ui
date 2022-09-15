@@ -19,7 +19,13 @@
             "calendar_restored": "カレンダーが復元されました",
             "appointment_permanently_deleted": "予定は完全に削除されました",
             "calendar_edits_saved": "編集内容が保存されました",
-            "series_deleted": "シリーズが削除されました。 参加者にキャンセル通知が届きます。"
+            "series_deleted": "シリーズが削除されました。 参加者にキャンセル通知が届きます。",
+            "some_link_copying_error": "一部のファイルのパブリックURLの生成中に問題が発生したようです。再度お試しください",
+            "some_att_add_fails": "添付ファイルを追加する際に問題が生じたようです。再度お試しください",
+            "link_copying_error": "パブリックリンクの生成中に問題が発生したようです。再度お試しください",
+            "att_err_adding": "添付ファイルを追加する際に問題が生じたようです。再度お試しください",
+            "all_link_copied": "パブリックリンクがコピーされました",
+            "all_att_added": "添付ファイルが追加されました"
         },
         "are_organizer": "は主催者です",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> は主催者です",
@@ -50,19 +56,15 @@
         "you_sure_move_calendar_trash": "本当に「{{name}}」カレンダーを完全に削除しますか？",
         "you_sure_delete_instance": "本当にこの「{{title}}」予定のインスタンスを削除しますか？",
         "appointment_type_handle": "「{{name}}」は定期的な予定です。このインスタンスのみを開きますか、それともシリーズを開きますか？",
-        "delete_tag_message1": "本当に\"{{name}}\" タグを削除しますか？",
+        "delete_tag_message1": "本当に{{name}} タグを削除しますか？",
         "delete_tag_message2": "削除されると、それでマークされたすべてのアイテムから削除されます。",
         "organizer": "主催者",
-        "reply_all": "全員に返信する",
         "required_participant": "{{count}}参加者",
         "optional_participant": "{{count}}オプション",
-        "declined": "{{count}}が却下されました",
-        "accepted": "{{count}}が承認されました",
         "send_email": "メールを送信する",
         "more": "その他..."
     },
     "action": {
-        "create": "作成する",
         "send": "送信",
         "delete_calendar": "カレンダーを削除する",
         "empty_trash": "ゴミ箱を空にする",
@@ -243,9 +245,9 @@
         "single_instance": "シングルインスタンス",
         "create_tag": "タグを作成する",
         "delete_tag": "タグを削除する",
-        "delete_tag_name": "\"{{name}}\" タグを削除する",
+        "delete_tag_name": "{{name}} タグを削除する",
         "edit_tag": "タグを編集する",
-        "edit_tag_name": "\"{{name}}\" タグを編集する",
+        "edit_tag_name": "{{name}} タグを編集する",
         "loading_results": "結果を読み込んでいます...",
         "no_special_char_allowed": "名前に特殊文字を含めることはできません",
         "results_for_error": "検索を開始できません。クリアして再度お試しください: ",
@@ -254,13 +256,17 @@
         "tag_name": "タグの名前",
         "tags": "タグ",
         "no_title": "件名なし",
-        "scheduled_in": "カレンダー"
+        "scheduled_in": "カレンダー",
+        "warning": "警告",
+        "trash": "ゴミ箱",
+        "tag": "タグ",
+        "share_public_link": "パブリックリンクを共有する",
+        "select": "選択",
+        "root": "ルート",
+        "choose_file": "ファイルを選択する"
     },
     "folder": {
         "modal": {
-            "delete": {
-                "title": "削除する"
-            },
             "move": {
                 "body": {
                     "message3": "カレンダーを選択して、検討中の予定を以下に移動します:"
@@ -340,9 +346,6 @@
     },
     "settings": {
         "options": {
-            "show_reminder": {
-                "hour_before": "{{count}}時間前"
-            },
             "dflt_vsblty_opt": {
                 "public": "公開する"
             },
@@ -370,9 +373,6 @@
                 "chennai": "GMT +05:30チェンナイ、コルカタ、ムンバイ、ニューデリー",
                 "egypt": "GMT 02:00 エジプト",
                 "amsterdam": "GMT +01:00 アムステルダム、ベルリン、ベルン、ローマ、ストックホルム、ウィーン"
-            },
-            "weekdays": {
-                "sunday": "日曜日"
             }
         },
         "invalid_email": "有効なメールではありません",
@@ -437,8 +437,8 @@
         "url_copied": "{{title}}がコピーされました",
         "share_folder_success": "カレンダーが共有されました",
         "new_time_proposed_success": "新しい時間が提案されました",
-        "tag_applied": "\"{{tag}}\" タグが適用されました",
-        "tag_removed": "\"{{tag}}\" タグが削除されました"
+        "tag_applied": "{{tag}} タグが適用されました",
+        "tag_removed": "{{tag}} タグが削除されました"
     },
     "success": "成功",
     "type": "タイプ",
@@ -455,7 +455,9 @@
                 "title": "ドラッグ＆ドロップモード"
             },
             "drive": "ドライブから追加する",
-            "local": "ローカルから追加する"
+            "local": "ローカルから追加する",
+            "url": "ファイルからパブリックリンクを追加する",
+            "files": "ファイルから追加する"
         }
     },
     "cannot_edit_name": "システムカレンダーの名前は編集できません",

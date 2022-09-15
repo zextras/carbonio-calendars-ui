@@ -149,9 +149,9 @@
         "preview": "Pré-visualizar",
         "create_tag": "Criar Etiqueta",
         "delete_tag": "Excluir Etiqueta",
-        "delete_tag_name": "Excluir etiqueta \"{{name}}\"",
+        "delete_tag_name": "Excluir etiqueta {{name}}",
         "edit_tag": "Editar Etiqueta",
-        "edit_tag_name": "Editar etiqueta \"{{name}}\"",
+        "edit_tag_name": "Editar etiqueta {{name}}",
         "loading_results": "Carregando resultados...",
         "no_special_char_allowed": "O nome não deve conter caracteres especiais",
         "results_for_error": "Não foi possível completar a busca, limpe-a e tente novamente: ",
@@ -164,10 +164,16 @@
         "other_actions": "Outras ações",
         "single_instance": "UMA ÚNICA INSTÂNCIA",
         "no_title": "Sem Título",
-        "scheduled_in": "Agenda"
+        "scheduled_in": "Agenda",
+        "warning": "Atenção",
+        "trash": "Lixeira",
+        "tag": "Marcador",
+        "share_public_link": "Compartilhar link público",
+        "select": "Selecionar",
+        "root": "Raiz",
+        "choose_file": "Escolher arquivo"
     },
     "action": {
-        "save": "Salvar",
         "send": "Enviar",
         "empty_trash": "Esvaziar Lixeira",
         "move_to_root": "Mover para a pasta Home",
@@ -184,7 +190,6 @@
     "event": {
         "action": {
             "accept": "Aceitar",
-            "trash": "Excluir",
             "no": "Não",
             "yes": "Sim",
             "decline": "Recusar",
@@ -196,7 +201,6 @@
     "folder": {
         "modal": {
             "move": {
-                "footer": "Vazia",
                 "body": {
                     "message3": "Selecione um calendário onde mover o compromisso selecionado:"
                 },
@@ -250,7 +254,13 @@
             "calendar_restored": "Calendário restaurado com sucesso",
             "appointment_permanently_deleted": "Compromisso excluído permanentemente",
             "calendar_edits_saved": "Edições salvas corretamente",
-            "series_deleted": "Série excluída com sucesso. Os participantes receberão a notificação de cancelamento."
+            "series_deleted": "Série excluída com sucesso. Os participantes receberão a notificação de cancelamento.",
+            "some_link_copying_error": "Parece que há um problema ao gerar o link público para alguns arquivos. Tente de novo",
+            "some_att_add_fails": "Parece que há um problema ao adicionar alguns anexos. Tente novamente",
+            "link_copying_error": "Parece que há um problema ao gerar o link público. Tente de novo",
+            "att_err_adding": "Parece que há um problema ao adicionar os anexos. Tente novamente",
+            "all_link_copied": "Link público foi copiado com êxito",
+            "all_att_added": "Anexos adicionados com sucesso"
         },
         "share_calendar_url_note2": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.<br/>Também é possível encontrar esses links clicando com o botão direito em sua lista de calendários.",
         "delete_all_occurences": "Excluir todas as ocorrências",
@@ -264,8 +274,8 @@
         "want_to_edit_cancellation_msg": "Deseja editar a mensagem de cancelamento deste compromisso?",
         "want_to_send_cancellation_msg": "Deseja enviar uma mensagem de cancelamento aos participantes?",
         "you_are_organizer": "<Row><Text><BoldText>Você </BoldText>é o organizador</Text></Row>",
-        "you_sure_delete_calendar": "Tem certeza que deseja excluir permanentemente o calendário \"{{name}}\"?",
-        "you_sure_move_calendar_trash": "Tem certeza que deseja excluir o calendário \"{{name}}\"?",
+        "you_sure_delete_calendar": "Tem certeza que deseja excluir permanentemente o calendário {{name}}?",
+        "you_sure_move_calendar_trash": "Tem certeza que deseja excluir o calendário {{name}}?",
         "you_will_see_the_subject_here": "Assunto",
         "delete_future_occurences_warning": "Isto também irá excluir todas as exceções (antes e depois deste evento) na série",
         "modal": {
@@ -275,20 +285,17 @@
             }
         },
         "sure_to_delete_appointment_permanently": "Tem certeza que deseja excluir este compromisso?",
-        "you_sure_delete_instance": "Tem certeza que deseja excluir esta instância do compromisso “{{title}}”?",
-        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?",
+        "you_sure_delete_instance": "Tem certeza que deseja excluir esta instância do compromisso {{title}}?",
+        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta {{name}}?",
         "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com a mesma.",
-        "appointment_type_handle": "\"{{name}}\" é um compromisso recorrente. Você gostaria de abrir apenas esta instância ou toda a série?",
+        "appointment_type_handle": "{{name}} é um compromisso recorrente. Você gostaria de abrir apenas esta instância ou toda a série?",
         "organizer": "Organizador",
-        "reply_all": "Responder a todos",
         "more": "Mais...",
         "send_email": "Enviar um e-mail",
         "required_participant": "{{count}} Participante",
         "required_participant_plural": "{{count}} Participantes",
         "optional_participant": "{{count}} Opcional",
-        "optional_participant_plural": "{{count}} Opcionais",
-        "declined": "{{count}} recusadas",
-        "accepted": "{{count}} aceitadas"
+        "optional_participant_plural": "{{count}} Opcionais"
     },
     "months": {
         "april": "Abril",
@@ -364,10 +371,6 @@
             "dflt_vsblty_opt": {
                 "public": "Público"
             },
-            "show_reminder": {
-                "day_before": "1 dia antes",
-                "day_before_plural": "{{count}} dias antes"
-            },
             "invt_opts": {
                 "allow_none": "Não permitir que ninguém me convide para reuniões",
                 "allow_following": "Permitir que apenas os seguintes usuários internos me enviem convites para reuniões",
@@ -392,9 +395,6 @@
                 "egypt": "GMT +02:00 Egito",
                 "amsterdam": "GMT +01:00 Amsterdã, Berlim, Berna, Roma, Estocolmo, Viena",
                 "chennai": "GMT +5:30 Chennai, Calcutá, Mumbai, Nova Delhi"
-            },
-            "weekdays": {
-                "sunday": "Domingo"
             }
         },
         "label": {
@@ -450,8 +450,8 @@
         "url_copied": "{{title}} copiado",
         "share_folder_success": "Calendário compartilhado com sucesso",
         "new_time_proposed_success": "Nova hora proposta",
-        "tag_applied": "Etiqueta \"{{tag}}\" aplicada",
-        "tag_removed": "Etiqueta \"{{tag}}\" removida"
+        "tag_applied": "Etiqueta {{tag}} aplicada",
+        "tag_removed": "Etiqueta {{tag}} removida"
     },
     "success": "Sucesso",
     "type": "Tipo",
@@ -475,7 +475,9 @@
             },
             "local": "Adicionar a partir do Meu Computador",
             "contactsMod": "adicionar cartão de contato",
-            "drive": "Adicionar a partir do Drive"
+            "drive": "Adicionar a partir do Drive",
+            "url": "Adicionar link público a partir de Files",
+            "files": "Adicionar do Files"
         }
     },
     "button": {
