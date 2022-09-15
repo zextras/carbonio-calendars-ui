@@ -155,15 +155,13 @@
         "tag_max_length": "Máximo de 128 caracteres permitidos",
         "no_special_char_allowed": "O nome não deve conter nenhum caractere especial",
         "new_tag": "Novo marcador",
-        "edit_tag_name": "Editar etiqueta \"{{name}}\"",
+        "edit_tag_name": "Editar etiqueta {{name}}",
         "edit_tag": "Editar Etiqueta",
-        "delete_tag_name": "Excluir etiqueta \"{{name}}\"",
+        "delete_tag_name": "Excluir etiqueta {{name}}",
         "delete_tag": "Excluir Etiqueta",
         "create_tag": "Criar Etiqueta"
     },
     "action": {
-        "download": "Download",
-        "save": "Salvar",
         "send": "Enviar",
         "empty_trash": "Esvaziar Lixeira",
         "move_to_root": "Mover para raiz",
@@ -180,8 +178,6 @@
     "event": {
         "action": {
             "accept": "Aceitar",
-            "move": "Mover",
-            "trash": "Excluir",
             "no": "Não",
             "yes": "Sim",
             "decline": "Recusar",
@@ -191,11 +187,7 @@
     },
     "folder": {
         "modal": {
-            "delete": {
-                "title": "Excluir"
-            },
             "move": {
-                "footer": "Vazia",
                 "body": {
                     "message3": "Selecione um calendário para mover o compromisso selecionado:"
                 },
@@ -204,7 +196,6 @@
                 }
             },
             "restore": {
-                "title": "Restaurar",
                 "footer": "Criar e Restaurar"
             },
             "new": {
@@ -233,7 +224,6 @@
         "invite_has_no_message": "Este convite não possui mensagem de texto",
         "meeting_canceled": "A seguinte reunião foi cancelada",
         "snackbar": {
-            "appt_moved_error": "Algo deu errado, o compromisso não foi movido. Tente novamente.",
             "appt_moved": "Compromisso movido com sucesso para",
             "appointment_permanently_deleted_succesfully": "Exclusão permanente feita com sucesso",
             "appt_moved_to_trash": "Compromisso movido para a lixeira",
@@ -241,14 +231,12 @@
             "calendar_deleted_successfully": "Calendário excluído com sucesso.",
             "calendar_moved_to_root_folder": "Calendário movido para a Pasta Raiz",
             "calendar_moved_to_trash": "Calendário movido para lixeira",
-            "edit_calendar": "Edições salvas corretamente",
             "invite": {
                 "accept": "Você respondeu como Aceito",
                 "decline": "Você respondeu como Recusado",
                 "tentative": "Você respondeu como Provisório"
             },
             "new_calendar_created": "Novo calendário criado",
-            "calendar_moved_to_root_folder_error": "Algo deu errado. Tente novamente",
             "calendar_permanently_deleted": "Calendário excluído permanentemente",
             "calendar_restored": "Calendário restaurado com sucesso",
             "appointment_permanently_deleted": "Compromisso excluído definitivamente",
@@ -266,8 +254,8 @@
         "want_to_edit_cancellation_msg": "Deseja editar a mensagem de cancelamento deste compromisso?",
         "want_to_send_cancellation_msg": "Deseja enviar uma mensagem de cancelamento aos participantes?",
         "you_are_organizer": "<Row><Text><BoldText>Você </BoldText>é o organizador</Text></Row>",
-        "you_sure_delete_calendar": "Tens a certeza que desejas excluir permanentemente o calendário \"{{name}}\"?",
-        "you_sure_move_calendar_trash": "Tens a certeza que desejas excluir o calendário \"{{name}}\"?",
+        "you_sure_delete_calendar": "Tens a certeza que desejas excluir permanentemente o calendário {{name}}?",
+        "you_sure_move_calendar_trash": "Tens a certeza que desejas excluir o calendário {{name}}?",
         "you_will_see_the_subject_here": "Assunto",
         "delete_future_occurences_warning": "Isto também irá excluir todas as exceções (antes e depois deste evento) na série",
         "modal": {
@@ -277,15 +265,11 @@
             }
         },
         "sure_to_delete_appointment_permanently": "Tem certeza que deseja excluir este compromisso permanentemente?",
-        "you_sure_delete_instance": "Tens a certeza que desejas excluir esta instância do compromisso “{{title}}”?",
-        "reply_all": "Responder a todos",
-        "reply": "Responder",
+        "you_sure_delete_instance": "Tens a certeza que desejas excluir esta instância do compromisso {{title}}?",
         "organizer": "Organizador",
         "more": "Mais...",
         "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com ela.",
-        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta \"{{name}}\"?",
-        "declined": "{{count}} recusadas",
-        "awaiting": "a esperar"
+        "delete_tag_message1": "Tem certeza que deseja excluir a Etiqueta {{name}}?"
     },
     "months": {
         "april": "Abril",
@@ -343,7 +327,6 @@
         }
     },
     "repeat": {
-        "none": "Nenhum",
         "customize": "Personalizar",
         "daily": "Diário",
         "everyMonth": "Todo mês",
@@ -357,13 +340,6 @@
         "options": {
             "dflt_vsblty_opt": {
                 "public": "Público"
-            },
-            "show_reminder": {
-                "never": "Nunca",
-                "day_before": "1 dia antes",
-                "day_before_plural": "{{count}} dias antes",
-                "minute_before": "1 minuto antes",
-                "minute_before_plural": "{{count}} minutos antes"
             },
             "invt_opts": {
                 "allow_none": "Não permitir que ninguém me convide para reuniões",
@@ -389,11 +365,6 @@
                 "egypt": "GMT +02:00 Egito",
                 "amsterdam": "GMT +01:00 Amsterdã, Berlim, Berna, Roma, Estocolmo, Viena",
                 "chennai": "GMT +5:30 Chennai, Calcutá, Mumbai, Nova Delhi"
-            },
-            "weekdays": {
-                "monday": "Segunda-Feira",
-                "sunday": "Domingo",
-                "tuesday": "Terça-Feira"
             }
         },
         "label": {
@@ -445,13 +416,12 @@
         "invite": {
             "error": "Erro"
         },
-        "new_time_proposed_error": "Algo deu errado. Tente novamente",
         "proposed_time_accepted": "Você aceitou a hora proposta",
         "url_copied": "{{title}} copiado",
         "share_folder_success": "Calendário partilhado corretamente",
         "new_time_proposed_success": "Nova hora proposta",
-        "tag_applied": "Etiqueta \"{{tag}}\" aplicada",
-        "tag_removed": "Etiqueta \"{{tag}}\" removida"
+        "tag_applied": "Etiqueta {{tag}} aplicada",
+        "tag_removed": "Etiqueta {{tag}} removida"
     },
     "success": "Sucesso",
     "type": "Tipo",
