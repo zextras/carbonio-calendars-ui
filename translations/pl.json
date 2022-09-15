@@ -111,7 +111,7 @@
         "every_day": "Każdego dnia",
         "every_weekday": "Każdego dnia roboczego",
         "every_year_on": "Każdego kolejnego roku",
-        "filter_sharer_user": "Posiadacz folderu",
+        "filter_sharer_user": "Właściciel folderu",
         "find_shares": "Wybierz które kalendarze będą wyświetlać się w drzewku kalendarzy",
         "free": "Wolny",
         "free_busy": "Wolny/Zajęty",
@@ -628,7 +628,7 @@
         "october": "Październik",
         "september": "Wrzesień"
     },
-    "owner": "Posiadacz",
+    "owner": "Właściciel",
     "read": "Czytanie",
     "remove_from_this_list": "Usuń z tej listy",
     "revoke_access": "Odbierz dostęp",
