@@ -33,6 +33,7 @@ export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): Rea
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
 			style={{ overflow: 'auto' }}
+			data-testid="EditorPanel"
 		>
 			<EditorActions editorId={editorId} callbacks={callbacks} />
 			<EditorSummary editorId={editorId} />

@@ -5,14 +5,13 @@
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import React, { useMemo } from 'react';
-import { render, RenderOptions, RenderResult } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ModalManager, ThemeProvider, SnackbarManager } from '@zextras/carbonio-design-system';
 import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 import { CALENDAR_APP_ID } from '../../constants';
 import { reducers } from '../../store/redux';
-import { Store } from '../../types/store/store';
 import I18nTestFactory from '../i18n/i18n-test-factory';
 
 interface ProvidersWrapperProps {

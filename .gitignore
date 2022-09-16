@@ -9,4 +9,4 @@
 /sdk/
 /e2e/output/
 /junit.xml
-/coverage/cobertura-coverage.xml
+/coverage
