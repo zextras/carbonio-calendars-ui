@@ -14,10 +14,9 @@ import {
 	getRandomEditorId,
 	mockEmptyStore
 } from '../../../__mocks__/generators/generators';
+import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 
 moment.tz.setDefault('America/New_York');
-
-// jest.mock('react-widgets-moment', () => jest.fn());
 
 /* describe('Editor panel', async () => {
 	const isNew = false;
@@ -43,7 +42,7 @@ moment.tz.setDefault('America/New_York');
 }); */
 
 describe('Editor panel wrapper', () => {
-	test('it doesnt render without editorid or callbacks', () => {
+	test('it doesnt render without editorId or callbacks', () => {
 		const store = mockEmptyStore();
 		const options = {
 			preloadedState: store
@@ -54,7 +53,7 @@ describe('Editor panel wrapper', () => {
 		expect(screen.queryByTestId('AppointmentCardContainer')).not.toBeInTheDocument();
 		expect(screen.queryByTestId('EditorHeader')).not.toBeInTheDocument();
 	});
-	describe('it renders with editorid and callbacks', () => {
+	describe('it renders with editorId and callbacks', () => {
 		test('without background container when it is not expanded', () => {
 			const isNew = false;
 			const editorId = getRandomEditorId(isNew);
@@ -67,16 +66,24 @@ describe('Editor panel wrapper', () => {
 			};
 
 			const store = mockEmptyStore({ calendars, editor });
+
 			const options = {
 				preloadedState: store
 			};
+
+			shell.useUserSettings.mockImplementation(() => ({
+				prefs: {
+					zimbraPrefUseTimeZoneListInCalendar: 'FALSE'
+				}
+			}));
+
 			setupTest(<EditorPanelWrapper />, options);
 			expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
-			expect(screen.getByTestId('EditorBackgroundContainer')).toBeInTheDocument();
+			expect(screen.queryByTestId('EditorBackgroundContainer')).not.toBeInTheDocument();
 			expect(screen.getByTestId('AppointmentCardContainer')).toBeInTheDocument();
 			expect(screen.getByTestId('EditorHeader')).toBeInTheDocument();
 		});
-		test('with background container when it is expanded', () => {
+		test('with background container when it is expanded', async () => {
 			const isNew = false;
 			const editorId = getRandomEditorId(isNew);
 			const calendars = {
@@ -88,13 +95,28 @@ describe('Editor panel wrapper', () => {
 			};
 
 			const store = mockEmptyStore({ calendars, editor });
+
 			const options = {
 				preloadedState: store
 			};
-			setupTest(<EditorPanelWrapper />, options);
-			// todo: click screen.getByTestId('icon: Expand') to expand the container to let the test pass
+
+			const { user } = setupTest(<EditorPanelWrapper />, options);
+
+			await user.click(screen.getByTestId('expand'));
+
+			await screen.findByTestId('icon: Collapse');
+
 			expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
 			expect(screen.getByTestId('EditorBackgroundContainer')).toBeInTheDocument();
+			expect(screen.getByTestId('AppointmentCardContainer')).toBeInTheDocument();
+			expect(screen.getByTestId('EditorHeader')).toBeInTheDocument();
+
+			await user.click(screen.getByTestId('expand'));
+
+			await screen.findByTestId('icon: Expand');
+
+			expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
+			expect(screen.queryByTestId('EditorBackgroundContainer')).not.toBeInTheDocument();
 			expect(screen.getByTestId('AppointmentCardContainer')).toBeInTheDocument();
 			expect(screen.getByTestId('EditorHeader')).toBeInTheDocument();
 		});
