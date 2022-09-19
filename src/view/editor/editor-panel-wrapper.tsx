@@ -96,6 +96,7 @@ const Header = ({
 				width="fill"
 				height="48px"
 				padding={{ vertical: 'small' }}
+				data-testid="EditorHeader"
 			>
 				<Row padding={{ horizontal: 'large' }}>
 					<Icon icon={'CalendarModOutline'} />
@@ -108,7 +109,12 @@ const Header = ({
 				<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 					{headerItems &&
 						map(headerItems, (action) => (
-							<IconButton key={action.id} icon={action.icon} onClick={action.click} />
+							<IconButton
+								key={action.id}
+								icon={action.icon}
+								onClick={action.click}
+								data-testid={action.id}
+							/>
 						))}
 					<Padding right="extrasmall" />
 				</Row>
@@ -131,8 +137,12 @@ const EditorPanelWrapper = (): ReactElement | null => {
 
 	return editorId && callbacks ? (
 		<>
-			{expanded && <BackgroundContainer />}
-			<AppointmentCardContainer mainAlignment="flex-start" expanded={expanded}>
+			{expanded && <BackgroundContainer data-testid="EditorBackgroundContainer" />}
+			<AppointmentCardContainer
+				mainAlignment="flex-start"
+				expanded={expanded}
+				data-testid="AppointmentCardContainer"
+			>
 				<Header
 					editorId={editorId}
 					expanded={expanded}

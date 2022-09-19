@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { noop } from 'lodash';
+import React from 'react';
 
+const FakeIntegration = (): JSX.Element => <div data-testid="fake-component" />;
 const soapFetchMock = (req: Record<string, unknown>): Promise<Record<string, unknown>> =>
 	Promise.resolve(req);
 
@@ -63,16 +65,20 @@ const mockedAccountItem = {
 export const soapFetch = jest.fn(soapFetchMock);
 export const getUserAccount = jest.fn(() => mockedAccountItem);
 export const useUserAccount = jest.fn(() => mockedAccountItem);
-export const t = jest.fn(() => noop);
+export const t = jest.fn(noop);
 export const replaceHistory = jest.fn();
 const getLink = jest.fn(() => noop);
 const getLinkAvailable = jest.fn(() => noop);
 export const useIntegratedFunction = jest.fn(() => [getLink, getLinkAvailable]);
+export const useUserSettings = jest.fn(() => ({
+	prefs: {
+		zimbraPrefUseTimeZoneListInCalendar: 'TRUE'
+	}
+}));
+const IntegrationComponent = jest.fn(FakeIntegration);
+const isIntegrationAvailable = jest.fn(() => true);
 
-const RoomSelector = jest.fn(() => noop);
-const isRoomAvailable = jest.fn(() => noop);
-
-export const useIntegratedComponent = jest.fn(() => [RoomSelector, isRoomAvailable]);
+export const useIntegratedComponent = jest.fn(() => [IntegrationComponent, isIntegrationAvailable]);
 const getFilesAction = jest.fn(() => noop);
 const getFilesActionAvailable = jest.fn(() => noop);
 export const getAction = jest.fn(() => [getFilesAction, getFilesActionAvailable]);

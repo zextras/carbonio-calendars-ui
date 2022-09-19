@@ -27,59 +27,58 @@ const CustomInputWrapper = styled(Row)`
 	}
 `;
 
-const DatePickerCustomComponent: FC<CustomComponentProps> = ({
-	value,
-	onClick,
-	onChange,
-	label,
-	icon = 'CalendarOutline'
-}): ReactElement => {
-	const [input, setInput] = useState(value.toString());
-	const [timer, setTimer] = useState<null | ReturnType<typeof setTimeout>>(null);
+const DatePickerCustomComponent: FC<CustomComponentProps> = React.forwardRef(
+	function DatePickerCustomComponentFn(
+		{ value, onClick, onChange, label, icon = 'CalendarOutline' },
+		ref
+	): ReactElement {
+		const [input, setInput] = useState(value.toString());
+		const [timer, setTimer] = useState<null | ReturnType<typeof setTimeout>>(null);
 
-	const throttledOnChange = useCallback(
-		(data) => {
-			clearTimeout(timer as ReturnType<typeof setTimeout>);
-			const newTimer = setTimeout(() => {
-				onChange(data);
-			}, 1000);
+		const throttledOnChange = useCallback(
+			(data) => {
+				clearTimeout(timer as ReturnType<typeof setTimeout>);
+				const newTimer = setTimeout(() => {
+					onChange(data);
+				}, 1000);
 
-			setTimer(newTimer);
-		},
-		[onChange, timer]
-	);
+				setTimer(newTimer);
+			},
+			[onChange, timer]
+		);
 
-	useEffect(() => {
-		setInput(value.toString());
-	}, [value]);
+		useEffect(() => {
+			setInput(value.toString());
+		}, [value]);
 
-	return (
-		<CustomInputWrapper background="gray4">
-			<Row takeAvailableSpace minWidth="150px" background="transparent">
-				<Input
-					label={label}
-					value={input}
-					onChange={(e: React.FormEvent<HTMLInputElement>): void => {
-						setInput((e.target as HTMLInputElement).value);
-						throttledOnChange(e);
-					}}
-					hideBorder
-					disabled
-				/>
-			</Row>
-			<Row>
-				<Padding horizontal="small">
-					<IconButton
-						icon={icon}
-						size="large"
-						onClick={onClick}
-						backgroundColor="transparent"
-						iconColor="text"
+		return (
+			<CustomInputWrapper background="gray4">
+				<Row takeAvailableSpace minWidth="150px" background="transparent">
+					<Input
+						label={label}
+						value={input}
+						onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+							setInput((e.target as HTMLInputElement).value);
+							throttledOnChange(e);
+						}}
+						hideBorder
+						disabled
 					/>
-				</Padding>
-			</Row>
-		</CustomInputWrapper>
-	);
-};
+				</Row>
+				<Row>
+					<Padding horizontal="small">
+						<IconButton
+							icon={icon}
+							size="large"
+							onClick={onClick}
+							backgroundColor="transparent"
+							iconColor="text"
+						/>
+					</Padding>
+				</Row>
+			</CustomInputWrapper>
+		);
+	}
+);
 
 export default DatePickerCustomComponent;

@@ -10,30 +10,102 @@ import { nanoid } from '@reduxjs/toolkit';
 import { isNil, reduce, values } from 'lodash';
 import moment from 'moment';
 
-export function generateMessage() {
-	return {};
-}
+const getRandomInRange = (min = 1, max = 3) => faker.datatype.number({ max, min });
 
-export function generateAppointments() {
-	const appointments = [];
-
-	return appointments;
-}
+export const getRandomEditorId = (isNew) => {
+	const randomId = getRandomInRange(1, 5);
+	return isNew ? `new-${randomId}` : `edit-${randomId}`;
+};
 
 export const generateCalendarItem = () => ({
 	id: nanoid(),
-	name: faker.commerce.product()
+	name: faker.commerce.product(),
+	haveWriteAccess: faker.datatype.boolean(),
+	color: {
+		color: getRandomInRange(0, 8)
+	}
 });
 
-export const generateSliceCalendarMap = ({
-	length = faker.datatype.number({ max: 3, min: 1 }),
-	supportNesting = true
-}) =>
+const defaultCalendar = {
+	...generateCalendarItem(),
+	id: '10',
+	name: 'Calendar',
+	haveWriteAccess: true
+};
+export const generateEditorSliceItem = ({
+	editorId = getRandomEditorId(),
+	calendar = defaultCalendar
+} = {}) => ({
+	[editorId]: {
+		id: editorId,
+		allDay: false,
+		attach: undefined,
+		attachmentFiles: [],
+		attendees: [],
+		calendar,
+		class: 'PUB',
+		disabled: {
+			allDay: false,
+			attachments: false,
+			attachmentsButton: false,
+			attendees: false,
+			calendarSelector: false,
+			composer: false,
+			datePicker: false,
+			freeBusySelector: false,
+			location: false,
+			optionalAttendees: false,
+			organizer: false,
+			private: false,
+			recurrence: false,
+			reminder: false,
+			richTextButton: false,
+			saveButton: false,
+			sendButton: false,
+			timezone: false,
+			title: false,
+			virtualRoom: false
+		},
+		end: 1663324705236,
+		exceptId: undefined,
+		freeBusy: 'B',
+		inviteId: undefined,
+		isException: false,
+		isInstance: true,
+		isNew: true,
+		isRichText: true,
+		isSeries: false,
+		location: '',
+		optionalAttendees: [],
+		organizer: {
+			address: 'gabriele.marino@zextras.com',
+			fullName: 'Gabriele Marino',
+			identityName: 'DEFAULT',
+			label: 'DEFAULT Gabriele Marino (<gabriele.marino@zextras.com>) ',
+			type: undefined,
+			value: 0
+		},
+		panel: false,
+		plainText: '',
+		recur: null,
+		reminder: '5',
+		richText: '',
+		room: undefined,
+		start: 1663321105236,
+		timezone: 'Europe/Berlin',
+		title: 'Nuovo appuntamento'
+	}
+});
+
+export const generateCalendarSliceItem = ({
+	length = getRandomInRange(),
+	supportNesting = false
+} = {}) =>
 	reduce(
 		Array.from({ length }),
 		(acc) => {
 			const hasItems = supportNesting ? faker.datatype.boolean() : undefined;
-			const itemNumbers = hasItems ? faker.datatype.number({ max: 3, min: 1 }) : 0;
+			const itemNumbers = hasItems ? getRandomInRange() : 0;
 			const item = generateCalendarItem();
 
 			return isNil(hasItems)
@@ -45,23 +117,41 @@ export const generateSliceCalendarMap = ({
 						...acc,
 						[item.id]: {
 							...item,
-							items: hasItems ? values(generateSliceCalendarMap({ length: itemNumbers })) : []
+							items: hasItems ? values(generateCalendarSliceItem({ length: itemNumbers })) : []
 						}
 				  };
 		},
-		{}
+		{ 10: defaultCalendar }
 	);
 
-export const generateCalendarsSlice = ({
-	length = faker.datatype.number({ max: 3, min: 1 }),
-	supportNesting = true
-}) => ({
-	calendars: generateSliceCalendarMap({ length, supportNesting }),
-	status: 'idle',
-	start: moment().subtract('7', 'days').valueOf(),
-	end: moment().add('15', 'days').valueOf()
-});
-
-export const generateStore = () => ({
-	calendars: generateCalendarsSlice({ supportNesting: false })
-});
+// generateCalendarsSlice({ supportNesting: false })
+export const mockEmptyStore = (reducers = {}) => {
+	const { calendars = {}, editor = {}, appointments = {}, invites = {} } = reducers;
+	return {
+		calendars: {
+			calendars: {},
+			status: 'idle',
+			start: moment().subtract('7', 'days').valueOf(),
+			end: moment().add('15', 'days').valueOf(),
+			...calendars
+		},
+		editor: {
+			activeId: undefined,
+			editorPanel: undefined,
+			editors: {},
+			searchActiveId: undefined,
+			status: 'idle',
+			...editor
+		},
+		appointments: {
+			status: 'init',
+			appointments: {},
+			...appointments
+		},
+		invites: {
+			status: 'idle',
+			invites: {},
+			...invites
+		}
+	};
+};
