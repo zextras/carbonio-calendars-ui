@@ -328,6 +328,35 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 	};
 };
 
+const setEditorDate = ({
+	editor,
+	invite,
+	event
+}: {
+	editor: Editor;
+	invite: Invite | undefined;
+	event: EventPropType | undefined;
+}): Editor => {
+	if (editor.isSeries && !editor.isInstance && !editor.isException) {
+		return {
+			...editor,
+			start: event?.allDay
+				? moment(invite?.start?.u)?.startOf('date').valueOf()
+				: moment(invite?.start?.u).valueOf(),
+			end: event?.allDay
+				? moment(invite?.end?.u)?.endOf('date').valueOf()
+				: moment(invite?.end?.u).valueOf()
+		};
+	}
+	return {
+		...editor,
+		start: event?.allDay
+			? moment(event?.start)?.startOf('date').valueOf()
+			: moment(event?.start).valueOf(),
+		end: event?.allDay ? moment(event?.end)?.endOf('date').valueOf() : moment(event?.end).valueOf()
+	};
+};
+
 export const generateEditor = ({
 	event,
 	invite,
@@ -339,13 +368,14 @@ export const generateEditor = ({
 }): { editor: Editor; callbacks: EditorCallbacks } => {
 	const id = getNewEditId(event?.resource?.id);
 	const compiledEditor = normalizeEditor({ invite, event, id });
-	const editor = applyContextToEditor({
+	const editorWithContext = applyContextToEditor({
 		editor: compiledEditor,
 		context
 	});
+	const editorWithDates = setEditorDate({ editor: editorWithContext, event, invite });
 	const callbacks = createCallbacks(id);
 	const { dispatch, getState } = store;
-	dispatch(createNewEditor(editor));
+	dispatch(createNewEditor(editorWithDates));
 	return {
 		editor: getState()?.editor?.editors?.[id],
 		callbacks

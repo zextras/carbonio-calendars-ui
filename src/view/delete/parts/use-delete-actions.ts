@@ -209,7 +209,7 @@ export const useDeleteActions = (
 				const { editor } = generateEditor({
 					event,
 					invite: modifiedInvite,
-					context: { panel: true }
+					context
 				});
 				return !deleteAll
 					? dispatch(modifyAppointment({ id: editor.id, draft: invite.draft }))
