@@ -64,7 +64,7 @@ export const EditorAttendees = ({ editorId, callbacks }: EditorAttendeesProps): 
 					padding={{ all: 'none' }}
 				>
 					<Container background="gray5" style={{ overflow: 'hidden' }}>
-						{!integrationAvailable ? (
+						{integrationAvailable ? (
 							<ContactInput
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
