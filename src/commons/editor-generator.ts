@@ -367,15 +367,16 @@ export const generateEditor = ({
 	context: any;
 }): { editor: Editor; callbacks: EditorCallbacks } => {
 	const id = getNewEditId(event?.resource?.id);
-	const compiledEditor = normalizeEditor({ invite, event, id });
+	const isInstance = context?.isInstance;
+	const compiledEditor = normalizeEditor({ invite, event, id, isInstance });
+	const editorWithDates = setEditorDate({ editor: compiledEditor, event, invite });
 	const editorWithContext = applyContextToEditor({
-		editor: compiledEditor,
+		editor: editorWithDates,
 		context
 	});
-	const editorWithDates = setEditorDate({ editor: editorWithContext, event, invite });
 	const callbacks = createCallbacks(id);
 	const { dispatch, getState } = store;
-	dispatch(createNewEditor(editorWithDates));
+	dispatch(createNewEditor(editorWithContext));
 	return {
 		editor: getState()?.editor?.editors?.[id],
 		callbacks
