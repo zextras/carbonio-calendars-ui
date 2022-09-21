@@ -184,6 +184,7 @@ export const useDeleteActions = (
 				createSnackbar,
 				newMessage: newMessage?.text?.[0]
 			};
+			const untilDate = moment(event?.resource?.ridZ).subtract(1, 'day').format('YYYYMMDD');
 			const deleteFunction = (): void => {
 				const modifiedInvite = {
 					...invite,
@@ -196,7 +197,7 @@ export const useDeleteActions = (
 											...invite?.recurrenceRule[0]?.add[0]?.rule[0],
 											until: [
 												{
-													d: moment(event?.resource?.ridZ).subtract(1, 'day').format('YYYYMMDD')
+													d: untilDate
 												}
 											]
 										}
@@ -211,9 +212,10 @@ export const useDeleteActions = (
 					invite: modifiedInvite,
 					context
 				});
-				return !deleteAll
-					? dispatch(modifyAppointment({ id: editor.id, draft: invite.draft }))
-					: deleteEvent(event, ctxt);
+				const isTheFirstInstance = moment(untilDate).isSameOrBefore(moment(invite.start.d));
+				return deleteAll || isTheFirstInstance
+					? deleteEvent(event, ctxt)
+					: dispatch(modifyAppointment({ id: editor.id, draft: invite.draft }));
 			};
 
 			deleteFunction()
