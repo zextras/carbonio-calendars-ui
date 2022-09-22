@@ -33,26 +33,26 @@ export const ColorContainer = styled(Container)`
 export const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 	color: ${({ theme, disabled }): string =>
-		disabled ? theme.palette.text.disabled : theme.palette.text.regular}}
+		disabled ? theme.palette.text.disabled : theme.palette.text.regular};
 `;
 
-export const LabelText = styled(Text)<TextProps & { showPrimary?: boolean }>`
-color: ${({ theme, disabled, showPrimary }): string =>
+export const LabelText = styled(Text)<TextProps & { $showPrimary?: boolean }>`
+color: ${({ theme, disabled, $showPrimary }): string =>
 	// eslint-disable-next-line no-nested-ternary
 	disabled
 		? theme.palette.text.disabled
-		: showPrimary
+		: $showPrimary
 		? theme.palette.primary.regular
-		: theme.palette.secondary.regular}}`;
+		: theme.palette.secondary.regular}};`;
 
-export const StyledIcon = styled(Icon)<IconProps & { showPrimary?: boolean }>`
-color: ${({ theme, disabled, showPrimary }): string =>
+export const StyledIcon = styled(Icon)<IconProps & { $showPrimary?: boolean }>`
+color: ${({ theme, disabled, $showPrimary }): string =>
 	// eslint-disable-next-line no-nested-ternary
 	disabled
 		? theme.palette.text.disabled
-		: showPrimary
+		: $showPrimary
 		? theme.palette.primary.regular
-		: theme.palette.secondary.regular}}`;
+		: theme.palette.secondary.regular}};`;
 
 interface CustomSelectItem extends SelectItem {
 	color?: string;
@@ -88,7 +88,7 @@ const LabelFactory = ({
 				mainAlignment="flex-start"
 				padding={{ left: 'small' }}
 			>
-				<LabelText size="small" disabled={disabled} showPrimary={open || focus}>
+				<LabelText size="small" disabled={disabled} $showPrimary={open || focus}>
 					{label}
 				</LabelText>
 				<Row>
@@ -103,7 +103,7 @@ const LabelFactory = ({
 			size="large"
 			icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
 			disabled={disabled}
-			showPrimary={open || focus}
+			$showPrimary={open || focus}
 			style={{ alignSelf: 'center' }}
 		/>
 	</ColorContainer>
