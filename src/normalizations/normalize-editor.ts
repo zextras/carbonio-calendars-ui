@@ -60,11 +60,13 @@ export type EventPropType = {
 export const normalizeEditor = ({
 	invite,
 	event,
-	id
+	id,
+	isInstance
 }: {
 	id: string;
 	invite?: Invite;
 	event?: EventPropType;
+	isInstance?: boolean;
 }): Editor =>
 	invite && event
 		? (omitBy(
@@ -78,7 +80,7 @@ export const normalizeEditor = ({
 					attach: invite.attach,
 					parts: invite.parts,
 					attachmentFiles: invite.attachmentFiles,
-					isInstance: !!event?.resource?.ridZ,
+					isInstance: isInstance ?? !!event?.resource?.ridZ,
 					isSeries: event?.resource?.isRecurrent,
 					isException: event?.resource?.isException,
 					exceptId: invite?.exceptId,
