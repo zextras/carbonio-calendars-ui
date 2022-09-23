@@ -89,6 +89,7 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement 
 				width="fill"
 				height="48px"
 				padding={{ vertical: 'small' }}
+				data-testid="EditorHeader"
 			>
 				<Row padding={{ horizontal: 'large' }}>
 					<Icon icon={'CalendarModOutline'} />
@@ -101,7 +102,12 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement 
 				<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 					{headerItems &&
 						map(headerItems, (action) => (
-							<IconButton key={action.id} icon={action.icon} onClick={action.click} />
+							<IconButton
+								key={action.id}
+								icon={action.icon}
+								onClick={action.click}
+								data-testid={action.id}
+							/>
 						))}
 					<Padding right="extrasmall" />
 				</Row>
