@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { size } from 'lodash';
 import moment from 'moment';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -213,11 +214,11 @@ export const useDeleteActions = (
 					context
 				});
 				const isTheFirstInstance = moment(untilDate).isSameOrBefore(moment(invite.start.d));
+				const draft = !(size(invite?.participants) > 0);
 				return deleteAll || isTheFirstInstance
 					? deleteEvent(event, ctxt)
-					: dispatch(modifyAppointment({ id: editor.id, draft: invite.draft }));
+					: dispatch(modifyAppointment({ id: editor.id, draft }));
 			};
-
 			deleteFunction()
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
