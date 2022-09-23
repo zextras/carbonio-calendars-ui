@@ -5,7 +5,7 @@
  */
 import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
 import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
+import React, { ReactElement, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ import { StoreProvider } from '../../../store/redux';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import {
 	selectEditor,
+	selectEditorAttendees,
 	selectEditorDisabled,
 	selectEditorIsNew,
 	selectEditorTitle
@@ -26,9 +27,10 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const isNew = useSelector(selectEditorIsNew(editorId));
 	const editor = useSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
-
-	const { onSave, closeCurrentEditor } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
+	const attendeesLength = useSelector(selectEditorAttendees)?.length;
+
+	const { onSave } = callbacks;
 	const { action } = useParams<{ action: string }>();
 
 	const onClick = useCallback(() => {
@@ -46,8 +48,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 								isSending={false}
 								onClose={(): void => closeModal()}
 								isNew={isNew}
-								closeCurrentEditor={closeCurrentEditor}
-								draft
+								editorId={editorId}
 							/>
 						</StoreProvider>
 					),
@@ -58,7 +59,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				true
 			);
 		} else
-			onSave({ draft: true, isNew }).then(({ response }) => {
+			onSave({ draft: !attendeesLength, isNew }).then(({ response }) => {
 				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
@@ -71,14 +72,15 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				});
 			});
 	}, [
+		editor.isSeries,
+		editor.isInstance,
 		action,
-		closeCurrentEditor,
-		createModal,
-		editor?.isSeries,
-		editor?.isInstance,
-		isNew,
 		onSave,
-		t
+		attendeesLength,
+		isNew,
+		t,
+		createModal,
+		editorId
 	]);
 
 	return (

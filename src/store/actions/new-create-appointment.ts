@@ -130,8 +130,7 @@ const generateInvite = (editorData: Editor): any => {
 	const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
 	at.push(
 		...editorData.attendees.map((c: any) => ({
-			// a: c.email,
-			a: c.label,
+			a: c.email,
 			d: c?.firstName && c?.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 			role: 'REQ',
 			ptst: 'NE',
@@ -261,7 +260,7 @@ export const createAppointment = createAsyncThunk(
 					...editor,
 					isNew: false,
 					isSeries: !!editor.recur,
-					isInstance: true,
+					isInstance: !editor.recur,
 					isException: false,
 					inviteId: res.invId
 				}

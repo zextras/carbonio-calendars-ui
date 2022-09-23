@@ -129,6 +129,7 @@ export const modifyAppointment = createAsyncThunk(
 			const updatedEditor = {
 				...editor,
 				isSeries: !!editor.recur,
+				isInstance: !editor.recur,
 				isNew: false,
 				attach,
 				attachmentFiles
