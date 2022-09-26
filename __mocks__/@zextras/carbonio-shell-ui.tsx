@@ -82,3 +82,4 @@ export const useIntegratedComponent = jest.fn(() => [IntegrationComponent, isInt
 const getFilesAction = jest.fn(() => noop);
 const getFilesActionAvailable = jest.fn(() => noop);
 export const getAction = jest.fn(() => [getFilesAction, getFilesActionAvailable]);
+export const useBoard = jest.fn();
