@@ -16,14 +16,16 @@ function getMp({ t, fullInvite, newMessage }: any) {
 		mp: [
 			{
 				ct: 'text/plain',
-				content: `${meetingCanceled}\n\n${fullInvite.desc ? fullInvite.desc[0]._content : ''}`
+				content: `${meetingCanceled}\n\n${
+					fullInvite.textDescription ? fullInvite.textDescription[0]._content : ''
+				}`
 			}
 		]
 	};
-	if (fullInvite.descHtml) {
+	if (fullInvite.htmlDescription) {
 		mp.mp.push({
 			ct: 'text/html',
-			content: `<html><h3>${meetingCanceled}</h3><br/><br/>${fullInvite.descHtml[0]._content.slice(
+			content: `<html><h3>${meetingCanceled}</h3><br/><br/>${fullInvite.htmlDescription[0]._content.slice(
 				6
 			)}`
 		});
@@ -42,8 +44,18 @@ function getParticipants(participants: any) {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function createMessageForDelete({ invite, t, newMessage }: any) {
+	const organizer = [
+		{
+			a: invite?.organizer?.a,
+			p: invite?.organizer?.d,
+			t: 'f'
+		}
+	];
 	return {
-		e: getParticipants(Object.entries(invite?.participants ?? []).flatMap(([_, value]) => value)),
+		e:
+			getParticipants(Object.entries(invite?.participants).flatMap(([_, value]) => value)).concat(
+				organizer
+			) ?? organizer,
 		su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,
 		mp: getMp({ t, fullInvite: invite, newMessage })
 	};
