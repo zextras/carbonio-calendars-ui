@@ -9,7 +9,7 @@ import { getMessageRequest } from '../../soap/get-message-request';
 export const getInvite = createAsyncThunk(
 	'invites/get invite',
 	async ({ inviteId, ridZ }: { inviteId: string; ridZ?: string }): Promise<any> => {
-		const { m } = await getMessageRequest({ inviteId, ridZ });
-		return Promise.resolve({ m: m[0] });
+		const response = await getMessageRequest({ inviteId, ridZ });
+		return Promise.resolve({ m: response.m[0] });
 	}
 );

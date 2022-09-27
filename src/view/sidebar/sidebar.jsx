@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Accordion } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
 import { map, filter, reduce, remove, every, reject, find, orderBy, head } from 'lodash';
@@ -77,7 +76,7 @@ export default function SetMainMenuItems({ expanded }) {
 
 	const allItems = useMemo(
 		() =>
-			map(calendars, (item) => ({
+			map(reject(calendars, ['broken', true]) ?? [], (item) => ({
 				...item,
 				name: getFolderTranslatedName(item.id, item.name),
 				...calcFolderAbsParentLevel(calendars, item),

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Folder } from '@zextras/carbonio-shell-ui';
 import { filter, find, reduce, values } from 'lodash';
 import { Calendar } from '../../types/store/calendars';
 import { Store } from '../../types/store/store';
@@ -29,14 +30,15 @@ export function selectStatus(state: Store): string {
 }
 
 export function selectAllCheckedCalendarsQuery({ calendars }: Store): string {
+	const calendarsArr = filter(
+		values<Calendar>(calendars?.calendars),
+		(f) => f.checked && !f.broken
+	);
 	return reduce(
-		filter(calendars?.calendars, 'checked'),
-		(acc, c) => {
-			acc.push(`inid:"${c.id}"`);
-			return acc;
-		},
-		[] as Array<string>
-	).join(' OR ');
+		calendarsArr,
+		(acc, c, id) => (id === 0 ? `inid:"${c.id}"` : `${acc} OR inid:"${c.id}"`),
+		''
+	);
 }
 
 export function selectUncheckedCalendars({ calendars }: Store): Array<Calendar> {

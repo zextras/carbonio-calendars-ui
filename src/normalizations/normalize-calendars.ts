@@ -12,6 +12,7 @@ import { setCalendarColor } from './normalizations-utils';
 
 export const normalizeCalendar = (folder: ZimbraFolder): Calendar => ({
 	checked: /#/.test(folder.f),
+	broken: folder?.broken ?? false,
 	freeBusy: /b/.test(folder.f),
 	appointments: folder.appt ?? [{ ids: '' }],
 	deletable: folder.deletable,
