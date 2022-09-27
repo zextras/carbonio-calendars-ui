@@ -130,8 +130,7 @@ const generateInvite = (editorData: Editor): any => {
 	const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
 	at.push(
 		...editorData.attendees.map((c: any) => ({
-			// a: c.email,
-			a: c.label,
+			a: c.email,
 			d: c?.firstName && c?.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 			role: 'REQ',
 			ptst: 'NE',
@@ -153,7 +152,7 @@ const generateInvite = (editorData: Editor): any => {
 		comp: [
 			{
 				alarm:
-					editorData?.reminder !== 'never'
+					editorData?.reminder !== 'never' && editorData.reminder !== 'undefined'
 						? [
 								{
 									action: 'DISPLAY',
