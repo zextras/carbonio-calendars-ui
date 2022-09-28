@@ -265,7 +265,7 @@
         "share_calendar_url_note2": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.<br/>Também é possível encontrar esses links clicando com o botão direito em sua lista de calendários.",
         "delete_all_occurences": "Excluir todas as ocorrências",
         "delete_future_occurences": "Excluir este evento e todas as ocorrências futuras",
-        "invited_you": "convidou você para",
+        "invited_you": "convidou você para um evento",
         "share_calendar_url_note": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.",
         "share_calendar_url_msg": "Você pode compartilhar rapidamente {{title}} com seus colaboradores usando uma destas URLs:",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> é o organizador",
