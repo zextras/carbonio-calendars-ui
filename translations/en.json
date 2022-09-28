@@ -415,6 +415,8 @@
             "set_new_time_message": "Do you want to set a new time for the missed appointment? If you click OK, all the other reminders will be automatically dismissed."
         },
         "never": "Never",
+        "second_before": "{{count}} second before",
+        "second_before_plural": "",
         "week_before": "{{count}} week before",
         "week_before_plural": "{{count}} weeks before"
     },
