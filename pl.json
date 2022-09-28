@@ -126,7 +126,7 @@
         "new_calendar": "Nowy kalendarz",
         "no_end_date": "Bez daty zakończenia",
         "no_subject": "Bez tematu",
-        "none": "Nikt z powyższych",
+        "none": "Wyłączone",
         "notify_organizer": "Powiadom organizatora",
         "move": "Przenieś",
         "proposal_declined": "Propozycja odrzucona",
@@ -533,7 +533,7 @@
         },
         "placeholder": {
             "recipients_address": "Adresy e-mail odbiorców",
-            "standard_message": "Dodaj notkę do domyślnej wiadomości"
+            "standard_message": "Dodaj notatkę do domyślnej wiadomości"
         },
         "label": {
             "allow_to_see_private_appt": "Pozwól użytkownikom widzieć moje prywatne spotkania",
@@ -598,7 +598,7 @@
         "yearly": "Co rok"
     },
     "revoke_without_custom_message": "Odbierz dostęp i wyślij domyślną notkę",
-    "revoke_without_notification": "Odbierz dostęp i nie wysyłaj notki",
+    "revoke_without_notification": "Odbierz dostęp i nie wysyłaj notatki",
     "search": {
         "organized_by": "zorganizowane przez"
     },
