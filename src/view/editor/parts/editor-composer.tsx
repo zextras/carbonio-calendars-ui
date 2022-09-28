@@ -3,10 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
+import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
 import { debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
@@ -78,7 +77,6 @@ type ComposerProps = {
 
 export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactElement | null => {
 	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
-	const [t] = useTranslation();
 	const { onTextChange } = callbacks;
 
 	const isRichText = useSelector(selectEditorIsRichText(editorId));
@@ -91,7 +89,7 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 
 	const textAreaLabel = useMemo(
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
-		[t]
+		[]
 	);
 
 	const debounceInput = useMemo(

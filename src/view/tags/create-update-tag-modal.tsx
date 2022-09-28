@@ -5,28 +5,18 @@
  */
 
 import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Input, Padding, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
-import { createTag, renameTag, changeTagColor } from '@zextras/carbonio-shell-ui';
-import { useDispatch } from 'react-redux';
+import { createTag, renameTag, changeTagColor, t } from '@zextras/carbonio-shell-ui';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import ColorPicker from '../../commons/color-select';
 import { itemActionRequest } from '../../soap/item-action-request';
+import { TagType } from '../../types/tags';
 
 type ComponentProps = {
 	onClose: () => void;
 	editMode?: boolean;
-	tag?: {
-		CustomComponent: ReactElement;
-		active: boolean;
-		color: number;
-		divider: boolean;
-		id: string;
-		label: string;
-		name: string;
-		open: boolean;
-	};
+	tag?: TagType;
 	event?: any;
 };
 const NonSupportedCharacters = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/;
@@ -37,18 +27,16 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 	event
 }): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const [t] = useTranslation();
 	const [name, setName] = useState(tag?.name || '');
 	const [color, setColor] = useState(tag?.color || 0);
-	const dispatch = useDispatch();
 	const title = useMemo(
 		() =>
 			editMode
 				? t('label.edit_tag_name', { name: tag?.name, defaultValue: 'Edit "{{name}}" tag' })
 				: t('label.create_tag', 'Create a new Tag'),
-		[editMode, t, tag?.name]
+		[editMode, tag?.name]
 	);
-	const label = useMemo(() => t('label.tag_name', 'Tag name'), [t]);
+	const label = useMemo(() => t('label.tag_name', 'Tag name'), []);
 	const handleColorChange = useCallback((c: number) => setColor(c), []);
 	const handleNameChange = useCallback((ev) => setName(ev.target.value), []);
 
@@ -68,7 +56,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 				inviteId,
 				tagName
 			})
-				.then((res: any) => {
+				.then(() => {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					createSnackbar({
@@ -83,7 +71,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 						autoHideTimeout: 3000
 					});
 				})
-				.catch((error) => {
+				.catch(() => {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					createSnackbar({
@@ -96,7 +84,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 					});
 				});
 		},
-		[createSnackbar, t]
+		[createSnackbar]
 	);
 	const onCreate = useCallback(
 		() =>
@@ -122,7 +110,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 				}
 				onClose();
 			}),
-		[name, color, onClose, event, applyNewlyCreatedTag, createSnackbar, t]
+		[name, color, onClose, event, applyNewlyCreatedTag, createSnackbar]
 	);
 	const onUpdate = useCallback(() => {
 		Promise.all([renameTag(`${tag?.id}`, name), changeTagColor(`${tag?.id}`, Number(color))])
@@ -155,7 +143,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 					hideButton: true
 				});
 			});
-	}, [color, createSnackbar, name, onClose, t, tag]);
+	}, [color, createSnackbar, name, onClose, tag]);
 
 	return (
 		<>

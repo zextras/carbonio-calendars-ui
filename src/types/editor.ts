@@ -63,7 +63,6 @@ export type EditorCallbacks = {
 	onTimeZoneChange: (timezone: string) => void;
 	onReminderChange: (reminder: string) => void;
 	onRecurrenceChange: (recurrenceRule: any) => void;
-	closeCurrentEditor: () => void;
 	onSave: ({ draft, isNew }: { draft?: boolean; isNew?: boolean }) => Promise<any>;
 	onSend: (isNew: boolean) => Promise<any>;
 };
@@ -105,5 +104,6 @@ export type Editor = {
 	reminder?: string | undefined;
 	recur?: any;
 	id: string;
+	panel: boolean;
 	attach: any;
 };

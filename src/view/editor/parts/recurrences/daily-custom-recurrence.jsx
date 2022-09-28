@@ -5,11 +5,10 @@
  */
 import React, { useState, useCallback } from 'react';
 import { Container, Padding, Text } from '@zextras/carbonio-design-system';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
 import { IntervalInput } from './options-components';
 
 export const DailyCustomRecurrence = ({ customRepeatValue, setCustomRepeatValue }) => {
-	const [t] = useTranslation();
 	const [isInputDisabled, setIsInputDisabled] = useState(true);
 	const [interval, setInterval] = useState(customRepeatValue?.interval);
 

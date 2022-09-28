@@ -3,19 +3,28 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement } from 'react';
-import { Container, Text, Accordion } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	Text,
+	Accordion,
+	AccordionItemType,
+	AccordionDivider
+} from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
 
 const ContainerEl = styled(Container)`
 	overflow-y: auto;
 	display: block;
 `;
 
-export const FolderItem = ({ folders }: { folders: unknown[] }): ReactElement => {
-	const [t] = useTranslation();
-	return folders.length ? (
+export const FolderItem = ({
+	folders
+}: {
+	folders: (AccordionItemType | AccordionDivider)[];
+}): ReactElement =>
+	folders.length ? (
 		<ContainerEl
 			orientation="vertical"
 			mainAlignment="flex-start"
@@ -29,4 +38,3 @@ export const FolderItem = ({ folders }: { folders: unknown[] }): ReactElement =>
 			<Text size="large"> {t('label.empty', 'Empty')} </Text>
 		</Container>
 	);
-};

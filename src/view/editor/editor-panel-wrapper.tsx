@@ -5,6 +5,7 @@
  */
 import {
 	Container,
+	ContainerProps,
 	Divider,
 	Icon,
 	IconButton,
@@ -20,7 +21,6 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { createCallbacks } from '../../commons/editor-generator';
 import { selectActiveEditorId, selectEditorTitle } from '../../store/selectors/editor';
-import { EditorCallbacks } from '../../types/editor';
 import { EditorPanel } from './editor-panel';
 
 const BackgroundContainer = styled.div`
@@ -34,7 +34,7 @@ const BackgroundContainer = styled.div`
 	border-radius: 0;
 `;
 
-export const AppointmentCardContainer = styled(Container)`
+export const AppointmentCardContainer = styled(Container)<ContainerProps & { expanded?: boolean }>`
 	z-index: 10;
 	position: absolute;
 	top: ${({ expanded }): string => (expanded ? '16px' : '16px')};
@@ -52,15 +52,9 @@ type HeaderProps = {
 	editorId: string;
 	expanded: boolean;
 	setExpanded: (arg: (e: boolean) => boolean) => void;
-	callbacks: EditorCallbacks;
 };
 
-const Header = ({
-	editorId,
-	expanded,
-	setExpanded,
-	callbacks
-}: HeaderProps): ReactElement | null => {
+const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement | null => {
 	const [t] = useTranslation();
 
 	const title = useSelector(selectEditorTitle(editorId));
@@ -78,11 +72,11 @@ const Header = ({
 				icon: 'CloseOutline',
 				label: '',
 				click: (): void => {
-					callbacks.closeCurrentEditor();
+					replaceHistory('');
 				}
 			}
 		],
-		[callbacks, expanded, setExpanded]
+		[expanded, setExpanded]
 	);
 
 	return !isNil(title) ? (
@@ -95,6 +89,7 @@ const Header = ({
 				width="fill"
 				height="48px"
 				padding={{ vertical: 'small' }}
+				data-testid="EditorHeader"
 			>
 				<Row padding={{ horizontal: 'large' }}>
 					<Icon icon={'CalendarModOutline'} />
@@ -107,7 +102,12 @@ const Header = ({
 				<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 					{headerItems &&
 						map(headerItems, (action) => (
-							<IconButton key={action.id} icon={action.icon} onClick={action.click} />
+							<IconButton
+								key={action.id}
+								icon={action.icon}
+								onClick={action.click}
+								data-testid={action.id}
+							/>
 						))}
 					<Padding right="extrasmall" />
 				</Row>
@@ -130,14 +130,13 @@ const EditorPanelWrapper = (): ReactElement | null => {
 
 	return editorId && callbacks ? (
 		<>
-			{expanded && <BackgroundContainer />}
-			<AppointmentCardContainer mainAlignment="flex-start" expanded={expanded}>
-				<Header
-					editorId={editorId}
-					expanded={expanded}
-					setExpanded={setExpanded}
-					callbacks={callbacks}
-				/>
+			{expanded && <BackgroundContainer data-testid="EditorBackgroundContainer" />}
+			<AppointmentCardContainer
+				mainAlignment="flex-start"
+				expanded={expanded}
+				data-testid="AppointmentCardContainer"
+			>
+				<Header editorId={editorId} expanded={expanded} setExpanded={setExpanded} />
 				<EditorPanel editorId={editorId} callbacks={callbacks} expanded={expanded} />
 			</AppointmentCardContainer>
 		</>

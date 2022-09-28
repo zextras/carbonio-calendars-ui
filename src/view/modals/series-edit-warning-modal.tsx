@@ -5,18 +5,25 @@
  */
 
 import { Container, Text } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import {
+	closeBoard,
+	getBridgedFunctions,
+	replaceHistory,
+	useBoard,
+	t
+} from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
+import { selectEditorAttendees, selectEditorPanel } from '../../store/selectors/editor';
 
 type ModalProps = {
 	onClose: () => void;
 	action: any;
 	isNew?: boolean;
-	draft?: boolean;
 	isSending?: boolean;
-	closeCurrentEditor: any;
+	editorId: string;
 };
 
 export const SeriesEditWarningModal = ({
@@ -24,27 +31,30 @@ export const SeriesEditWarningModal = ({
 	action,
 	isSending = false,
 	isNew,
-	draft,
-	closeCurrentEditor
+	editorId
 }: ModalProps): JSX.Element => {
-	const { t } = getBridgedFunctions();
 	const message = useMemo(
 		() =>
 			t(
 				'message.edit_series_warning',
 				'As you proceed with the series modification, all previously deleted or modified instances will be restored with the new series settings.'
 			),
-		[t]
+		[]
 	);
 
-	const title = useMemo(() => t('label.warning', 'Warning'), [t]);
-	const label = useMemo(() => t('label.continue', 'Continue'), [t]);
-	const secondaryActionLabel = useMemo(() => t('label.discard_changes', 'Discard Changes'), [t]);
+	const board = useBoard();
+	const panel = useSelector(selectEditorPanel(editorId));
+	const attendeesLength = useSelector(selectEditorAttendees)?.length;
+
+	const title = useMemo(() => t('label.warning', 'Warning'), []);
+	const label = useMemo(() => t('label.continue', 'Continue'), []);
+	const secondaryActionLabel = useMemo(() => t('label.discard_changes', 'Discard Changes'), []);
+
 	const onConfirm = useCallback(() => {
 		isSending
 			? action(isNew).then(({ response }: any) => {
-					if (response) {
-						closeCurrentEditor();
+					if (panel && response) {
+						replaceHistory('');
 					}
 					getBridgedFunctions().createSnackbar({
 						key: `calendar-moved-root`,
@@ -58,7 +68,7 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  })
-			: action({ draft, isNew }).then(({ response }: any) => {
+			: action({ draft: !attendeesLength, isNew }).then(({ response }: any) => {
 					getBridgedFunctions().createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
@@ -71,12 +81,16 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  });
-	}, [action, closeCurrentEditor, draft, isNew, isSending, onClose, t]);
+	}, [action, attendeesLength, isNew, isSending, onClose, panel]);
 
 	const onDiscard = useCallback(() => {
 		onClose();
-		closeCurrentEditor();
-	}, [closeCurrentEditor, onClose]);
+		if (panel) {
+			replaceHistory('');
+		} else if (board) {
+			closeBoard(board?.id);
+		}
+	}, [board, onClose, panel]);
 	return (
 		<Container
 			padding={{ all: 'large' }}

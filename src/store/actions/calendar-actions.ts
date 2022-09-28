@@ -7,7 +7,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isArray, map } from 'lodash';
 import { batchRequest } from '../../soap/batch-request';
 import { folderActionRequest } from '../../soap/folder-action-request';
-import { FolderActionRequest, SoapRequests } from '../../types/soap/soap-actions';
+import { FolderActionRequest } from '../../types/soap/soap-actions';
 
 export const folderAction = createAsyncThunk(
 	'calendars/folderActionRequest',

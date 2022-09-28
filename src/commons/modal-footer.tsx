@@ -7,7 +7,7 @@
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement } from 'react';
 import { Container, Button, Padding, Divider, Tooltip } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import { ModalFooterProps } from '../types/commons';
 
 const ModalFooter: FC<ModalFooterProps> = ({
@@ -17,7 +17,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	color = 'primary',
 	label,
 	secondaryAction,
-	secondaryLabel = getBridgedFunctions().t('label.cancel', 'cancel'),
+	secondaryLabel = t('label.cancel', 'cancel'),
 	primaryBtnType = 'default',
 	secondaryBtnType = 'default',
 	disabled,
@@ -25,13 +25,13 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	background = 'primary',
 	secondarybackground,
 	secondaryColor = 'secondary',
-	size = 'fit',
+	width = 'fit',
 	showDivider = true,
 	primaryTooltip,
 	additionalAction,
 	additionalBtnType = 'outlined',
 	additionalColor = 'secondary',
-	additionalLabel = getBridgedFunctions().t('label.cancel', 'cancel')
+	additionalLabel = t('label.cancel', 'cancel')
 }): ReactElement => (
 	<Container mainAlignment={mainAlignment} crossAlignment={crossAlignment}>
 		{showDivider && (
@@ -73,7 +73,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 							onClick={secondaryAction}
 							label={secondaryLabel}
 							disabled={secondaryDisabled}
-							size={size}
+							width={width}
 						/>
 						<Padding horizontal="extrasmall" />
 					</>
@@ -85,7 +85,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 						maxWidth={primaryTooltip.maxWidth}
 					>
 						<Button
-							size={size}
+							width={width}
 							color={color}
 							onClick={onConfirm}
 							label={label}
@@ -96,7 +96,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 					</Tooltip>
 				) : (
 					<Button
-						size={size}
+						width={width}
 						color={color}
 						onClick={onConfirm}
 						label={label}

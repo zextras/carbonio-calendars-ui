@@ -6,13 +6,18 @@
 import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { ThemeContext } from 'styled-components';
-import { FOLDERS, getBridgedFunctions, store, useUserSettings } from '@zextras/carbonio-shell-ui';
+import {
+	FOLDERS,
+	getBridgedFunctions,
+	useUserSettings,
+	addBoard,
+	t
+} from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEqual, minBy } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
-import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
@@ -28,14 +33,15 @@ import {
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
+import { CALENDAR_ROUTE } from '../../constants';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { generateEditor } from '../../commons/editor-generator';
-import { CALENDAR_ROUTE } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
 import CalendarStyle from './calendar-style';
+import { store } from '../../store/redux';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -65,7 +71,6 @@ export default function CalendarComponent() {
 	const dispatch = useDispatch();
 	const theme = useContext(ThemeContext);
 	const settings = useUserSettings();
-	const [t] = useTranslation();
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
@@ -198,14 +203,16 @@ export default function CalendarComponent() {
 						panel: false
 					}
 				});
-				const storeData = store.store.getState();
-				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
+				const storeData = store.getState();
+				addBoard({
+					url: `${CALENDAR_ROUTE}/`,
+					title: editor.title,
 					...storeData.editor.editors[editor.id],
 					callbacks
 				});
 			}
 		},
-		[action, summaryViewOpen, t]
+		[action, summaryViewOpen]
 	);
 
 	const onEventDrop = useCallback(
@@ -228,7 +235,7 @@ export default function CalendarComponent() {
 								panel: false
 							}
 						});
-						const storeData = store.store.getState();
+						const storeData = store.getState();
 						callbacks
 							.onSave({
 								isNew: storeData.editor.editors[editor.id]?.isNew
@@ -252,7 +259,7 @@ export default function CalendarComponent() {
 				);
 			}
 		},
-		[dispatch, t]
+		[dispatch]
 	);
 
 	const eventPropGetter = useCallback(

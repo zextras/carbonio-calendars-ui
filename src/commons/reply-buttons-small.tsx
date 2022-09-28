@@ -8,24 +8,21 @@ import {
 	Container,
 	Dropdown,
 	Icon,
-	ModalManagerContext,
 	Padding,
 	Row,
-	SnackbarManagerContext,
+	RowProps,
 	Text
 } from '@zextras/carbonio-design-system';
-import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
-import { map, toUpper } from 'lodash';
-import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
+import { map, noop, toUpper } from 'lodash';
+import React, { ReactElement, SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { EventType } from '../types/event';
 import { ParticipationStatus } from '../types/store/invite';
-import { createAndApplyTag } from '../view/tags/tag-actions';
 
-const AttendingRow = styled(Row)`
+const AttendingRow = styled(Row)<RowProps & { invtReply: ResponseProp }>`
 	border: 1px solid ${(props): string => props.theme.palette[props.invtReply.color].regular};
 `;
 
@@ -51,14 +48,9 @@ type ReplyButtonProps = {
 export const ReplyButtonsPartSmall = ({
 	participationStatus,
 	inviteId,
-	event,
 	actions
 }: ReplyButtonProps): ReactElement => {
-	const [t] = useTranslation();
 	const dispatch = useDispatch();
-	const createModal = useContext(ModalManagerContext);
-	const tags = useTags();
-	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const replyAction = useCallback(
 		(action) => {
@@ -130,81 +122,62 @@ export const ReplyButtonsPartSmall = ({
 				)
 			}
 		],
-		[replyAction, t]
+		[replyAction]
 	);
 
-	const attendingResponse = useCallback(
-		(value: ParticipationStatus): ResponseProp => {
-			switch (value) {
-				case 'TE':
-					return {
-						id: 'option_3',
-						icon: 'QuestionMarkCircle',
-						label: toUpper(t('label.tentative', 'Tentative')),
-						value: 'TE',
-						color: 'warning',
-						selected: false
-					};
-				case 'AC':
-					return {
-						id: 'option_2',
-						icon: 'CheckmarkCircle2',
-						label: toUpper(t('event.action.yes', 'Yes')),
-						value: 'AC',
-						color: 'success',
-						selected: false
-					};
+	const attendingResponse = useCallback((value: ParticipationStatus): ResponseProp => {
+		switch (value) {
+			case 'TE':
+				return {
+					id: 'option_3',
+					icon: 'QuestionMarkCircle',
+					label: toUpper(t('label.tentative', 'Tentative')),
+					value: 'TE',
+					color: 'warning',
+					selected: false
+				};
+			case 'AC':
+				return {
+					id: 'option_2',
+					icon: 'CheckmarkCircle2',
+					label: toUpper(t('event.action.yes', 'Yes')),
+					value: 'AC',
+					color: 'success',
+					selected: false
+				};
 
-				case 'DE':
-					return {
-						id: 'option_1',
-						icon: 'CloseCircle',
-						label: toUpper(t('event.action.no', 'No')),
-						value: 'DE',
-						color: 'error'
-					};
-				case 'NE':
-					return {
-						id: 'option_4',
-						icon: 'CalendarWarning',
-						label: toUpper(t('event.action.needs_action', 'Needs action')),
-						value: 'NE',
-						color: 'primary'
-					};
-				default:
-					return {
-						id: 'option_4',
-						icon: 'CalendarWarning',
-						label: toUpper(t('event.action.needs_action', 'Needs action')),
-						value: 'NE',
-						color: 'primary'
-					};
-			}
-		},
-		[t]
-	);
+			case 'DE':
+				return {
+					id: 'option_1',
+					icon: 'CloseCircle',
+					label: toUpper(t('event.action.no', 'No')),
+					value: 'DE',
+					color: 'error'
+				};
+			case 'NE':
+				return {
+					id: 'option_4',
+					icon: 'CalendarWarning',
+					label: toUpper(t('event.action.needs_action', 'Needs action')),
+					value: 'NE',
+					color: 'primary'
+				};
+			default:
+				return {
+					id: 'option_4',
+					icon: 'CalendarWarning',
+					label: toUpper(t('event.action.needs_action', 'Needs action')),
+					value: 'NE',
+					color: 'primary'
+				};
+		}
+	}, []);
 
 	const defaultValue = useMemo(
 		() => attendingResponse(participationStatus),
 		[attendingResponse, participationStatus]
 	);
 	const [invtReply, setInvtReply] = useState(defaultValue);
-
-	const context = useMemo(
-		() => ({
-			replaceHistory,
-			dispatch,
-			createModal,
-			createSnackbar,
-			isSeries: false,
-			isInstance: true,
-			isException: event.resource.isException,
-			tags,
-			createAndApplyTag,
-			ridZ: event.resource.ridZ
-		}),
-		[createModal, createSnackbar, dispatch, event.resource.isException, event.resource.ridZ, tags]
-	);
 
 	const attendeesResponseOptions = useMemo(
 		() =>
@@ -216,7 +189,7 @@ export const ReplyButtonsPartSmall = ({
 				key: option.id,
 				color: option.color,
 				customComponent: option.customComponent,
-				click: (ev: Event): void => {
+				click: (ev: SyntheticEvent<HTMLElement> | KeyboardEvent): void => {
 					ev.stopPropagation();
 					if (option.action) {
 						option.action();
@@ -254,6 +227,7 @@ export const ReplyButtonsPartSmall = ({
 						label={t('label.other_actions', 'Other actions')}
 						icon="ArrowIosDownwardOutline"
 						style={{ padding: '7px 4px' }}
+						onClick={noop}
 					/>
 				</Dropdown>
 			</Padding>

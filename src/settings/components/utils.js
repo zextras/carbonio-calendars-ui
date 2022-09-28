@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isEqual, transform, isObject, filter, find } from 'lodash';
+import { isEqual, transform, isObject, find } from 'lodash';
+import { t } from '@zextras/carbonio-shell-ui';
 
-export const ShowReminderOptions = (t) => [
+export const ShowReminderOptions = () => [
 	{ label: t('reminder.never', 'Never'), value: '0' },
 	{ label: t('reminder.all_time', 'All time of the event'), value: '-1' },
 	{
@@ -146,18 +147,18 @@ export const ShowReminderOptions = (t) => [
 	}
 ];
 
-export const DefaultViewOptions = (t) => [
+export const DefaultViewOptions = () => [
 	{ label: t('settings.options.default_view.month', 'Month View'), value: 'month' },
 	{ label: t('settings.options.default_view.week', 'Week View'), value: 'week' },
 	{ label: t('settings.options.default_view.day', 'Day View'), value: 'day' },
 	{ label: t('settings.options.default_view.work_week', 'Work Week View'), value: 'workWeek' },
 	{ label: t('settings.options.default_view.list', 'List View'), value: 'list' }
 ];
-export const DefaultCalendarOptions = (t) => [
+export const DefaultCalendarOptions = () => [
 	{ label: t('label.calendar', 'Calendar'), value: 'calendar' }
 ];
 
-export const TimeZonesOptions = (t) => [
+export const TimeZonesOptions = () => [
 	{
 		value: 'Etc/GMT+12',
 		label: t('timezone.dateline', { value: 'GMT -12:00', defaultValue: '{{value}} Dateline' })
@@ -630,7 +631,7 @@ export const TimeZonesOptions = (t) => [
 		})
 	}
 ];
-export const FreeBusyOptions = (t) => [
+export const FreeBusyOptions = () => [
 	{
 		label: t(
 			'settings.options.free_busy_opts.allow_all',
@@ -668,7 +669,7 @@ export const FreeBusyOptions = (t) => [
 	}
 ];
 
-export const InvitesOptions = (t) => [
+export const InvitesOptions = () => [
 	{
 		label: t(
 			'settings.options.invt_opts.allow_all',
@@ -695,7 +696,7 @@ export const InvitesOptions = (t) => [
 		value: 'v4'
 	}
 ];
-export const StartWeekOfOptions = (t) => [
+export const StartWeekOfOptions = () => [
 	{ label: t('label.week_day.sunday', 'Sunday'), value: '0' },
 	{ label: t('label.week_day.monday', 'Monday'), value: '1' },
 	{ label: t('label.week_day.tuesday', 'Tuesday'), value: '2' },
@@ -705,11 +706,11 @@ export const StartWeekOfOptions = (t) => [
 	{ label: t('label.week_day.saturday', 'Saturday'), value: '6' }
 ];
 
-export const DefaultApptVisibiltyOptions = (t) => [
+export const DefaultApptVisibiltyOptions = () => [
 	{ label: t('settings.options.dflt_vsblty_opt.public', 'Public'), value: 'public' },
 	{ label: t('label.private', 'Private'), value: 'private' }
 ];
-export const SpanTimeOptions = (t, isMinutesFormat) => [
+export const SpanTimeOptions = (isMinutesFormat) => [
 	{
 		label: t('reminder.minute_before', {
 			count: 30,
@@ -744,7 +745,7 @@ export const SpanTimeOptions = (t, isMinutesFormat) => [
 	}
 ];
 
-export const getWeekDay = (day, t) => {
+export const getWeekDay = (day) => {
 	switch (day) {
 		case '1':
 			return t('label.week_day.monday', 'Monday');
@@ -763,7 +764,7 @@ export const getWeekDay = (day, t) => {
 	}
 };
 
-export const ShareCalendarWithOptions = (t) => [
+export const ShareCalendarWithOptions = () => [
 	{
 		label: t('share.options.share_calendar_with.internal_users_groups', 'Internal Users or Groups'),
 		value: 'usr'
@@ -782,7 +783,7 @@ export const ShareCalendarWithOptions = (t) => [
 	}
 ];
 
-export const ShareCalendarRoleOptions = (t) => [
+export const ShareCalendarRoleOptions = () => [
 	{ label: t('label.none', 'None'), value: '' },
 	{ label: t('share.options.share_calendar_role.viewer', 'Viewer (can view)'), value: 'r' },
 	{

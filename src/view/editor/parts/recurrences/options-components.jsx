@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useCallback, useMemo } from 'react';
 import { differenceWith, find, isEqual, isNaN, map } from 'lodash';
 import { Checkbox, Container, Input, Select } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 
 export const MonthSelector = ({
 	customRepeatValue,
@@ -15,8 +16,6 @@ export const MonthSelector = ({
 	bymonth,
 	setByMonth
 }) => {
-	const [t] = useTranslation();
-
 	const months = useMemo(
 		() => [
 			{ label: t('months.january', 'January'), value: '1' },
@@ -32,7 +31,7 @@ export const MonthSelector = ({
 			{ label: t('months.november', 'November'), value: '11' },
 			{ label: t('months.december', 'December'), value: '12' }
 		],
-		[t]
+		[]
 	);
 
 	const defaultMonthSelection = useMemo(
@@ -68,8 +67,6 @@ export const MonthlyDayInput = ({
 	setCustomRepeatValue,
 	is1stOptDisabled
 }) => {
-	const [t] = useTranslation();
-
 	const onDayChange = useCallback(
 		(ev) => {
 			setByMonthDay({ modaylist: ev.target.value });
@@ -100,8 +97,6 @@ export const OrdinalNumberSelector = ({
 	setCustomRepeatValue,
 	is1stOptDisabled
 }) => {
-	const [t] = useTranslation();
-
 	const ordinalNumbers = useMemo(
 		() => [
 			{ label: t('items.first', 'First'), value: '1' },
@@ -110,7 +105,7 @@ export const OrdinalNumberSelector = ({
 			{ label: t('items.fourth', 'Fourth'), value: '4' },
 			{ label: t('items.last', 'Last'), value: '-1' }
 		],
-		[t]
+		[]
 	);
 	const onBySetPosChange = useCallback(
 		(ev) => {
@@ -139,8 +134,6 @@ export const WeekDaySelector = ({
 	setCustomRepeatValue,
 	is1stOptDisabled
 }) => {
-	const [t] = useTranslation();
-
 	const weekOptions = useMemo(
 		() => [
 			{ label: t('label.day', 'Day'), value: 'MO,TU,WE,TH,FR,SA,SU' },
@@ -154,7 +147,7 @@ export const WeekDaySelector = ({
 			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
 			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
 		],
-		[t]
+		[]
 	);
 
 	const defaultDaySelection = useMemo(
@@ -221,8 +214,6 @@ export const IntervalInput = ({
 };
 
 export const WeekdayCheckboxes = ({ customRepeatValue, setCustomRepeatValue, byday, setByDay }) => {
-	const [t] = useTranslation();
-
 	const selectItems = useMemo(
 		() => [
 			{ label: t('label.week_day.monday', 'Monday'), value: 'MO' },
@@ -233,7 +224,7 @@ export const WeekdayCheckboxes = ({ customRepeatValue, setCustomRepeatValue, byd
 			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
 			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
 		],
-		[t]
+		[]
 	);
 
 	const handleMultipleCheckboxes = useCallback(

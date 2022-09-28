@@ -6,8 +6,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { Container, DateTimePicker, Padding, Text } from '@zextras/carbonio-design-system';
 import momentLocalizer from 'react-widgets-moment';
-import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+import { t } from '@zextras/carbonio-shell-ui';
 import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
 
 momentLocalizer();
@@ -51,7 +51,6 @@ const getDate = (time) => {
 	);
 };
 export default function StartDatePicker({ start, onChange, day, showEnd, disabled, label }) {
-	const [t] = useTranslation();
 	getDate(start);
 	const onStartChange = useCallback(
 		(d) => {

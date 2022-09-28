@@ -10,6 +10,7 @@ import { isNaN } from 'lodash';
 import { useSelector } from 'react-redux';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import momentLocalizer from 'react-widgets-moment';
+import { t } from '@zextras/carbonio-shell-ui';
 import Styler from '../../../../settings/components/date-picker-style';
 import { selectStart } from '../../../../store/selectors/calendars';
 import { selectEditorAllDay } from '../../../../store/selectors/editor';
@@ -49,7 +50,6 @@ export const SimplifiedCustomDatePicker = ({ start, allDay, disabled, onChange }
 };
 
 export const SetCustomEnd = ({ customEndValue, setCustomEndValue }) => {
-	const [t] = useTranslation();
 	const start = useSelector(selectStart);
 	const allDay = useSelector(selectEditorAllDay);
 	const [isOccurrenceDisabled, setIsOccurrenceDisabled] = useState(true);

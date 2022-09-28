@@ -19,8 +19,7 @@ import {
 	ModalManagerContext
 } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
-import { useTranslation } from 'react-i18next';
-import { useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { t, useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import {
 	ShareCalendarWithOptions,
@@ -36,6 +35,7 @@ import { ModalHeader } from '../../commons/modal-header';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
 // eslint-disable-next-line import/no-named-as-default,import/no-named-as-default-member
 import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
+import { StoreProvider } from '../../store/redux';
 
 export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	folder,
@@ -44,12 +44,11 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	secondaryLabel
 }): ReactElement => {
 	const dispatch = useDispatch();
-	const [t] = useTranslation();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
-	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(t), [t]);
-	const shareCalendarRoleOptions = useMemo(() => ShareCalendarRoleOptions(t), [t]);
+	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(), []);
+	const shareCalendarRoleOptions = useMemo(() => ShareCalendarRoleOptions(), []);
 
 	const [sendNotification, setSendNotification] = useState(true);
 	const [standardMessage, setStandardMessage] = useState('');
@@ -60,7 +59,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const createModal = useContext(ModalManagerContext);
 	const accounts = useUserAccounts();
 
-	const title = useMemo(() => `${t('label.share', 'Share')} ${folder?.name}`, [folder?.name, t]);
+	const title = useMemo(() => `${t('label.share', 'Share')} ${folder?.name}`, [folder?.name]);
 
 	const onShareWithChange = useCallback((shareWith) => {
 		setshareWithUserType(shareWith);
@@ -75,13 +74,13 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		const closeModal = createModal(
 			{
 				children: (
-					<>
+					<StoreProvider>
 						<ShareCalendarUrlModal
 							folder={folder}
 							onClose={(): void => closeModal()}
 							isFromEditModal
 						/>
-					</>
+					</StoreProvider>
 				),
 				maxHeight: '70vh',
 				size: 'medium'
@@ -188,15 +187,10 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					<ChipInput
 						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
 						background="gray4"
-						disablePortal
 						onChange={(ev: any): any => {
 							// @ts-ignore
 							setContacts(map(ev, (contact) => ({ email: contact.address })));
 						}}
-						valueKey="address"
-						getChipLabel={(participant: any): string =>
-							participant.fullName ?? participant.name ?? participant.address
-						}
 					/>
 				)}
 			</Container>
@@ -259,7 +253,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					onChange={(ev: any): void => {
 						setStandardMessage(ev.target.value);
 					}}
-					background="gray5"
 					disabled={!sendNotification}
 				/>
 			</Container>

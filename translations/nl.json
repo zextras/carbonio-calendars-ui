@@ -288,7 +288,7 @@
         "delete_future_occurences": "Dit voorval en alle toekomstige voorvallen verwijderen",
         "delete_future_occurences_warning": "Dit zal ook alle uitzonderingen (voor en na deze instantie) in de reeks verwijderen",
         "invite_has_no_message": "Deze uitnodiging heeft geen tekstbericht",
-        "invited_you": "nodigde u uit voor",
+        "invited_you": "nodigde u uit voor een evenement",
         "meeting_canceled": "De volgende meeting is geannuleerd",
         "modal": {
             "delete": {
@@ -307,7 +307,7 @@
         "want_to_send_cancellation_msg": "Wilt u een annuleringsbericht naar de aanwezigen sturen?",
         "you_sure_delete_calendar": "Weet u zeker dat u de {{name}} kalender permanent wilt verwijderen?",
         "share_calendar_url_msg": "U kunt snel {{title}} delen met uw medewerkers met behulp van een van deze URL:",
-        "you_sure_delete_instance": "Weet u zeker dat u deze instantie van \"{title}\" afspraak wilt verwijderen?",
+        "you_sure_delete_instance": "Weet u zeker dat u deze instantie van {{title}} afspraak wilt verwijderen?",
         "delete_tag_message1": "Weet u zeker dat u de{{name}} Tag wilt verwijderen?",
         "delete_tag_message2": "Eenmaal verwijderd, zal het verwijderd worden van elk item dat ermee gemarkeerd is.",
         "appointment_type_handle": "{{name}} is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?",

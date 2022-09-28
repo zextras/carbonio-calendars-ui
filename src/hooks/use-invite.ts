@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getInvite } from '../store/actions/get-invite';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import { Invite } from '../types/store/invite';
-import { Store } from '../types/store/store';
 
 export const useInvite = (inviteId: string | undefined): Invite | undefined => {
 	const [loading, setLoading] = useState(false);
@@ -21,7 +20,6 @@ export const useInvite = (inviteId: string | undefined): Invite | undefined => {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			dispatch(getInvite({ inviteId })).then((res) => {
-				console.log(res);
 				setLoading(false);
 			});
 		}

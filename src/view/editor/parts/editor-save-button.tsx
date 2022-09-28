@@ -4,14 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
+import React, { ReactElement, useCallback, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { StoreProvider } from '../../../store/redux';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import {
 	selectEditor,
+	selectEditorAttendees,
 	selectEditorDisabled,
 	selectEditorIsNew,
 	selectEditorTitle
@@ -20,14 +21,14 @@ import { EditorProps } from '../../../types/editor';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
-	const [t] = useTranslation();
 	const title = useSelector(selectEditorTitle(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
 	const editor = useSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
-
-	const { onSave, closeCurrentEditor } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
+	const attendeesLength = useSelector(selectEditorAttendees)?.length;
+
+	const { onSave } = callbacks;
 	const { action } = useParams<{ action: string }>();
 
 	const onClick = useCallback(() => {
@@ -39,14 +40,15 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				{
 					size: 'large',
 					children: (
-						<SeriesEditWarningModal
-							action={onSave}
-							isSending={false}
-							onClose={(): void => closeModal()}
-							isNew={isNew}
-							closeCurrentEditor={closeCurrentEditor}
-							draft
-						/>
+						<StoreProvider>
+							<SeriesEditWarningModal
+								action={onSave}
+								isSending={false}
+								onClose={(): void => closeModal()}
+								isNew={isNew}
+								editorId={editorId}
+							/>
+						</StoreProvider>
 					),
 					onClose: () => {
 						closeModal();
@@ -55,7 +57,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				true
 			);
 		} else
-			onSave({ draft: true, isNew }).then(({ response }) => {
+			onSave({ draft: !attendeesLength, isNew }).then(({ response }) => {
 				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
@@ -68,14 +70,14 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				});
 			});
 	}, [
-		action,
-		closeCurrentEditor,
-		createModal,
 		editor.isSeries,
 		editor.isInstance,
-		isNew,
+		action,
 		onSave,
-		t
+		attendeesLength,
+		isNew,
+		createModal,
+		editorId
 	]);
 
 	return (

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Icon, Padding, Text } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import React, { ComponentProps, ReactComponentElement } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
@@ -19,7 +19,6 @@ const LargeIcon = styled(Icon)`
 
 const SearchPanel = ({ appointments }: ComponentProps<any>): ReactComponentElement<any> => {
 	const { path } = useRouteMatch();
-	const [t] = useTranslation();
 	const event = useSearchEvent(appointments);
 	return (
 		<>

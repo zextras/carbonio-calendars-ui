@@ -18,18 +18,19 @@ import {
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
-import { useTranslation } from 'react-i18next';
-import { getBridgedFunctions, getAction, Action, store } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction, Action, t, Board } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
+import { EditorCallbacks } from '../../types/editor';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { inviteToEvent } from '../../hooks/use-invite-to-event';
 import { getInvite } from '../../store/actions/get-invite';
-import { CALENDAR_APP_ID, CALENDAR_ROUTE } from '../../constants';
+import { CALENDAR_ROUTE } from '../../constants';
 import BodyMessageRenderer from '../../commons/body-message-renderer.jsx';
 import { useInvite } from '../../hooks/use-invite';
+import { store, StoreProvider } from '../../store/redux';
 
 /**
    @todo: momentary variables to dynamize
@@ -93,7 +94,6 @@ const InviteResponse: FC<InviteResponse> = ({
 	isAttendee
 }): ReactElement => {
 	const dispatch = useDispatch();
-	const [t] = useTranslation();
 	useEffect(() => {
 		if (!mailMsg.read) {
 			onLoadChange();
@@ -177,14 +177,14 @@ const InviteResponse: FC<InviteResponse> = ({
 					}
 				}
 			});
-			const storeData = store.store.getState();
+			const storeData = store.getState();
 			if (editor.id) {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, {
+				addBoard({
+					url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
+					title: storeData?.editor?.editors?.[editor.id]?.title ?? '',
 					...storeData.editor.editors[editor.id],
 					callbacks
-				});
+				} as unknown as Board & { callbacks: EditorCallbacks });
 			}
 		});
 	}, [dispatch, inviteId]);
@@ -534,4 +534,9 @@ const InviteResponse: FC<InviteResponse> = ({
 	);
 };
 
-export default InviteResponse;
+const InviteResponseComp: FC<InviteResponse> = (props) => (
+	<StoreProvider>
+		<InviteResponse {...props} />
+	</StoreProvider>
+);
+export default InviteResponseComp;

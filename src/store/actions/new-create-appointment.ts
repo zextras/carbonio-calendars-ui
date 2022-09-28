@@ -52,9 +52,9 @@ const generateParticipantInformation = (resource: Editor): Array<Participants> =
 		  ]
 		: concat(
 				map(concat(resource?.attendees, resource?.optionalAttendees), (attendee) => ({
-					a: attendee.email,
+					a: attendee?.email ?? attendee?.label,
 					p:
-						attendee.firstName && attendee.lastname
+						attendee?.firstName && attendee?.lastname
 							? `${attendee.firstName} ${attendee.lastname}`
 							: attendee.label,
 					t: 't'
@@ -131,7 +131,7 @@ const generateInvite = (editorData: Editor): any => {
 	at.push(
 		...editorData.attendees.map((c: any) => ({
 			a: c.email,
-			d: c.firstName && c.lastname ? `${c.firstName} ${c.lastname}` : c.label,
+			d: c?.firstName && c?.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 			role: 'REQ',
 			ptst: 'NE',
 			rsvp: '1'
@@ -260,7 +260,7 @@ export const createAppointment = createAsyncThunk(
 					...editor,
 					isNew: false,
 					isSeries: !!editor.recur,
-					isInstance: true,
+					isInstance: !editor.recur,
 					isException: false,
 					inviteId: res.invId
 				}

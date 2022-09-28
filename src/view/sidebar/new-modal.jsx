@@ -17,8 +17,8 @@ import {
 } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
-import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { t } from '@zextras/carbonio-shell-ui';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
@@ -77,7 +77,7 @@ const LabelFactory = ({ selected, label, open, focus }) => (
 		/>
 	</ColorContainer>
 );
-const getStatusItems = (t) =>
+const getStatusItems = () =>
 	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
 		background: el.background,
 		label: t(el.label),
@@ -101,12 +101,11 @@ const getStatusItems = (t) =>
 	}));
 
 export const NewModal = ({ onClose }) => {
-	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const [inputValue, setInputValue] = useState('');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-	const colors = useMemo(() => getStatusItems(t), [t]);
+	const colors = useMemo(() => getStatusItems(), []);
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useContext(SnackbarManagerContext);
 
@@ -172,8 +171,8 @@ export const NewModal = ({ onClose }) => {
 		onClose();
 	}, [onClose]);
 
-	const title = useMemo(() => t('label.create_new_calendar', 'Create a New Calendar'), [t]);
-	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
+	const title = useMemo(() => t('label.create_new_calendar', 'Create a New Calendar'), []);
+	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), []);
 
 	return (
 		<Container padding="8px 8px 24px">

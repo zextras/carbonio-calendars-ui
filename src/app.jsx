@@ -13,14 +13,15 @@ import {
 	registerActions,
 	registerComponents,
 	ACTION_TYPES,
-	getBridgedFunctions
+	addBoard,
+	t
 } from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { getSettingsSubSections } from './settings/sub-sections';
+import { StoreProvider } from './store/redux';
 import { generateEditor } from './commons/editor-generator';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 
@@ -43,35 +44,44 @@ const LazySearchView = lazy(() =>
 
 const CalendarView = () => (
 	<Suspense fallback={<Spinner />}>
-		<LazyCalendarView />
+		<StoreProvider>
+			<LazyCalendarView />
+		</StoreProvider>
 	</Suspense>
 );
 
 const EditorView = () => (
 	<Suspense fallback={<Spinner />}>
-		<LazyEditorView />
+		<StoreProvider>
+			<LazyEditorView />
+		</StoreProvider>
 	</Suspense>
 );
 const SettingsView = () => (
 	<Suspense fallback={<Spinner />}>
-		<LazySettingsView />
+		<StoreProvider>
+			<LazySettingsView />
+		</StoreProvider>
 	</Suspense>
 );
 
 const SidebarView = (props) => (
 	<Suspense fallback={<Spinner />}>
-		<LazySidebarView {...props} />
+		<StoreProvider>
+			<LazySidebarView {...props} />
+		</StoreProvider>
 	</Suspense>
 );
 
 const SearchView = (props) => (
 	<Suspense fallback={<Spinner />}>
-		<LazySearchView {...props} />
+		<StoreProvider>
+			<LazySearchView {...props} />
+		</StoreProvider>
 	</Suspense>
 );
 
 export default function App() {
-	const [t] = useTranslation();
 	useEffect(() => {
 		addRoute({
 			route: CALENDAR_ROUTE,
@@ -96,7 +106,7 @@ export default function App() {
 			route: CALENDAR_ROUTE,
 			component: EditorView
 		});
-	}, [t]);
+	}, []);
 
 	useEffect(() => {
 		registerActions({
@@ -109,7 +119,12 @@ export default function App() {
 					const { editor, callbacks } = generateEditor({
 						context: { title: t('label.new_appointment', 'New Appointment'), panel: false }
 					});
-					getBridgedFunctions().addBoard(`${CALENDAR_ROUTE}/`, { ...editor, callbacks });
+					addBoard({
+						url: `${CALENDAR_ROUTE}/`,
+						title: editor.title,
+						...editor,
+						callbacks
+					});
 				},
 				disabled: false,
 				group: CALENDAR_APP_ID,
@@ -124,13 +139,13 @@ export default function App() {
 			// @ts-ignore
 			component: InviteResponse
 		});
-	}, [t]);
+	}, []);
 
 	return (
-		<>
+		<StoreProvider>
 			<AppointmentReminder />
 			<SyncDataHandler />
 			<Notifications />
-		</>
+		</StoreProvider>
 	);
 }
