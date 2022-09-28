@@ -50,9 +50,6 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	const { action } = useParams<{ action: string }>();
 	const invite = useSelector(selectInstanceInvite(event.resource.inviteId));
 	const createSnackbar = useContext(SnackbarManagerContext);
-
-	const isPrivate = useMemo(() => event.resource.class === 'PRI' ?? false, [event.resource.class]);
-
 	const getEventInvite = useCallback(() => {
 		if (!invite) {
 			dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
@@ -60,7 +57,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	}, [dispatch, event.resource.inviteId, event.resource.ridZ, invite]);
 
 	const showPanelView = useCallback(() => {
-		if (!isPrivate) {
+		if (event.permission) {
 			if (event?.resource?.isRecurrent) {
 				// I'm disabling lint as the DS is not defining the type
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -90,7 +87,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 				hideButton: true
 			});
 		}
-	}, [isPrivate, event, createModal, createSnackbar]);
+	}, [event, createModal, createSnackbar]);
 
 	const toggleOpen = useCallback(
 		(e) => {
