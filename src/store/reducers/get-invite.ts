@@ -17,5 +17,6 @@ export function getInviteFulfilled(state: InvitesSlice, { meta, payload }: any):
 }
 
 export function getInviteRejected(state: InvitesSlice): void {
+	debugger;
 	state.status = 'error';
 }

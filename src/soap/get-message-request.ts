@@ -5,6 +5,7 @@
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
+import { normalizeErrorException } from '../normalizations/normalize-error-exception';
 
 export const getMessageRequest = async ({
 	inviteId,
@@ -12,28 +13,36 @@ export const getMessageRequest = async ({
 }: {
 	inviteId: string;
 	ridZ?: string;
-}): Promise<any> =>
-	soapFetch('GetMsg', {
-		_jsns: 'urn:zimbraMail',
-		m: omitBy(
-			{
-				html: 1,
-				needExp: 1,
-				id: inviteId,
-				ridZ,
-				header: [
-					{
-						n: 'List-ID'
-					},
-					{
-						n: 'X-Zimbra-DL'
-					},
-					{
-						n: 'IN-REPLY-TO'
-					}
-				],
-				max: 250000
-			},
-			isNil
-		)
-	});
+}): Promise<any> => {
+	try {
+		return soapFetch('GetMsg', {
+			_jsns: 'urn:zimbraMail',
+			m: omitBy(
+				{
+					html: 1,
+					needExp: 1,
+					id: inviteId,
+					ridZ,
+					header: [
+						{
+							n: 'List-ID'
+						},
+						{
+							n: 'X-Zimbra-DL'
+						},
+						{
+							n: 'IN-REPLY-TO'
+						}
+					],
+					max: 250000
+				},
+				isNil
+			)
+		});
+	} catch (e) {
+		if (e instanceof soapException) {
+			return normalizeErrorException(e);
+		}
+		return e;
+	}
+};

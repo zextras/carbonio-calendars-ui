@@ -8,8 +8,14 @@ import { getMessageRequest } from '../../soap/get-message-request';
 
 export const getInvite = createAsyncThunk(
 	'invites/get invite',
-	async ({ inviteId, ridZ }: { inviteId: string; ridZ?: string }): Promise<any> => {
-		const response = await getMessageRequest({ inviteId, ridZ });
-		return Promise.resolve({ m: response.m[0] });
+	async (
+		{ inviteId, ridZ }: { inviteId: string; ridZ?: string },
+		{ rejectWithValue }
+	): Promise<any> => {
+		const response = getMessageRequest({ inviteId, ridZ });
+		if (response.type === 'errorException') {
+			return rejectWithValue(response);
+		}
+		return response;
 	}
 );
