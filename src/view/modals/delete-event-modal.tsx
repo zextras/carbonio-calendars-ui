@@ -36,6 +36,7 @@ type DeleteEventModalContentProps = {
 	event: EventType;
 	onConfirm: () => void;
 	onClose: () => void;
+	isSeries: boolean;
 };
 
 const DeleteEventModalContent = ({
@@ -47,7 +48,8 @@ const DeleteEventModalContent = ({
 	invite,
 	event,
 	onConfirm,
-	onClose
+	onClose,
+	isSeries
 }: DeleteEventModalContentProps): ReactElement => {
 	const { name } = invite;
 	const displayMessage = useMemo(() => {
@@ -78,7 +80,7 @@ const DeleteEventModalContent = ({
 				crossAlignment="baseline"
 			>
 				<Text overflow="break-word">{displayMessage}</Text>
-				{!isSingleInstance && event.resource.iAmOrganizer && (
+				{isSeries && !isException && event.resource.iAmOrganizer && (
 					<>
 						<Padding top="small" />
 						<Checkbox
@@ -133,7 +135,6 @@ export const DeleteEventModal = ({
 	context,
 	onClose
 }: DeleteEventModalProps): ReactElement => {
-	const [isAskingConfirmation, setIsAskingConfirmation] = useState(false);
 	const { isOrganizer, isException, participants } = invite;
 	const participantsSize = useMemo(() => size(participants), [participants]);
 
@@ -142,6 +143,10 @@ export const DeleteEventModal = ({
 	const isSeries = isRecurrent && !isInstance;
 	const isSingleInstance = isInstance && !isRecurrent;
 	const isInstanceOfSeries = isRecurrent && isInstance;
+
+	const [isAskingConfirmation, setIsAskingConfirmation] = useState<boolean>(
+		() => participantsSize > 0 && (isException || isInstance)
+	);
 
 	const toggleAskConfirmation = useCallback(() => {
 		setIsAskingConfirmation((a) => !a);
@@ -154,17 +159,14 @@ export const DeleteEventModal = ({
 	});
 
 	const onConfirm = useMemo(() => {
-		if (isException) {
+		if (isException || isInstanceOfSeries) {
 			return actions?.deleteRecurrentInstance;
 		}
 		if (isSingleInstance) {
 			return actions?.deleteNonRecurrentEvent;
 		}
-		if (isInstanceOfSeries) {
-			return actions?.deleteRecurrentInstance;
-		}
 		if (isSeries) {
-			if (isOrganizer && participantsSize > 0) {
+			if (isOrganizer && participantsSize > 0 && !isAskingConfirmation) {
 				return toggleAskConfirmation;
 			}
 			return actions?.deleteRecurrentSerie;
@@ -180,6 +182,7 @@ export const DeleteEventModal = ({
 		actions?.deleteRecurrentSerie,
 		isOrganizer,
 		participantsSize,
+		isAskingConfirmation,
 		toggleAskConfirmation
 	]);
 
@@ -210,6 +213,7 @@ export const DeleteEventModal = ({
 					event={event}
 					onConfirm={onConfirm}
 					onClose={onClose}
+					isSeries={isSeries}
 				/>
 			)}
 		</Container>

@@ -53,6 +53,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 						type={additionalBtnType}
 						onClick={additionalAction}
 						label={additionalLabel}
+						width={width}
 					/>
 					<Padding horizontal="extrasmall" />
 				</Container>
