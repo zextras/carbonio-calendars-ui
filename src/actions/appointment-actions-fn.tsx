@@ -5,7 +5,6 @@
  */
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import React from 'react';
-import { DeletePermanently } from '../commons/delete-permanently';
 import { generateEditor } from '../commons/editor-generator';
 import { PANEL_VIEW } from '../constants';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
@@ -15,7 +14,8 @@ import { ActionsContext, PanelView } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
-import { DeleteEventModal } from '../view/delete/delete-event-modal';
+import { DeleteEventModal } from '../view/modals/delete-event-modal';
+import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
 
 export const openAppointment =

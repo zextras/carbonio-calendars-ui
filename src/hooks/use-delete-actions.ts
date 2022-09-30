@@ -10,13 +10,13 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { TFunction } from 'i18next';
-import { generateEditor } from '../../../commons/editor-generator';
-import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
-import { EventType } from '../../../types/event';
-import { deleteEvent, sendResponse } from './delete-actions';
-import { moveAppointmentRequest } from '../../../store/actions/move-appointment';
-import { SnackbarArgumentType } from '../../../types/delete-appointment';
-import { Invite } from '../../../types/store/invite';
+import { generateEditor } from '../commons/editor-generator';
+import { modifyAppointment } from '../store/actions/new-modify-appointment';
+import { EventType } from '../types/event';
+import { deleteEvent, sendResponse } from '../actions/delete-actions';
+import { moveAppointmentRequest } from '../store/actions/move-appointment';
+import { SnackbarArgumentType } from '../types/delete-appointment';
+import { Invite } from '../types/store/invite';
 
 const generateAppointmentDeletedSnackbar = (
 	res: { type: string | string[] },
@@ -90,10 +90,10 @@ type AccountContext = {
 	onClose: () => void;
 };
 
-type UseDeleteActionsType = {
-	deleteNonRecurrentEvent: (newMessage: object) => void;
-	deleteRecurrentInstance: (newMessage: object) => void;
-	deleteRecurrentSerie: (newMessage: object) => void;
+export type UseDeleteActionsType = {
+	deleteNonRecurrentEvent: (newMessage?: object) => void;
+	deleteRecurrentInstance: (newMessage?: object) => void;
+	deleteRecurrentSerie: (newMessage?: object) => void;
 	toggleNotifyOrganizer: () => void;
 	toggleDeleteAll: () => void;
 	deleteAll: boolean;
