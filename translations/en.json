@@ -401,7 +401,7 @@
         "close": "Close Preview"
     },
     "read": "Read",
-    "recurrent_in_allday": "You cannot drag a recurrent appointment in a allDay slot",
+    "recurrent_in_allday": "You cannot drag a recurrent appointment in a all day slot",
     "reminder": {
         "all_time": "All time of the event",
         "at_time_of_event": "At the time of the event",
