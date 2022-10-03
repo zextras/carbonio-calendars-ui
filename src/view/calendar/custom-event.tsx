@@ -4,7 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { isNil } from 'lodash';
-import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+	ReactElement,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from 'react';
 import {
 	Container,
 	Text,
@@ -12,7 +20,8 @@ import {
 	Row,
 	Tooltip,
 	Dropdown,
-	ModalManagerContext
+	ModalManagerContext,
+	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
 import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +49,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	const [open, setOpen] = useState(false);
 	const { action } = useParams<{ action: string }>();
 	const invite = useSelector(selectInstanceInvite(event.resource.inviteId));
-
+	const createSnackbar = useContext(SnackbarManagerContext);
 	const getEventInvite = useCallback(() => {
 		if (!invite) {
 			dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
@@ -48,26 +57,37 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	}, [dispatch, event.resource.inviteId, event.resource.ridZ, invite]);
 
 	const showPanelView = useCallback(() => {
-		if (event?.resource?.isRecurrent) {
-			// I'm disabling lint as the DS is not defining the type
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			const closeModal = createModal(
-				{
-					children: (
-						<StoreProvider>
-							<AppointmentTypeHandlingModal event={event} onClose={(): void => closeModal()} />
-						</StoreProvider>
-					)
-				},
-				true
-			);
+		if (event.permission) {
+			if (event?.resource?.isRecurrent) {
+				// I'm disabling lint as the DS is not defining the type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				const closeModal = createModal(
+					{
+						children: (
+							<StoreProvider>
+								<AppointmentTypeHandlingModal event={event} onClose={(): void => closeModal()} />
+							</StoreProvider>
+						)
+					},
+					true
+				);
+			} else {
+				replaceHistory(
+					`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				);
+			}
 		} else {
-			replaceHistory(
-				`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-			);
+			createSnackbar({
+				key: `private_appointment`,
+				replace: true,
+				type: 'info',
+				label: t('label.appointment_is_private', 'The appointment is private.'),
+				autoHideTimeout: 3000,
+				hideButton: true
+			});
 		}
-	}, [event, createModal]);
+	}, [event, createModal, createSnackbar]);
 
 	const toggleOpen = useCallback(
 		(e) => {
@@ -78,7 +98,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 				setOpen(true);
 			}
 		},
-		[action, dispatch, event.resource.inviteId, event.resource.ridZ, invite, open]
+		[invite, action, open, dispatch, event.resource.inviteId, event.resource.ridZ]
 	);
 
 	const actions = useEventSummaryViewActions({
