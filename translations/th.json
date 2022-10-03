@@ -410,7 +410,7 @@
         "delete_all_occurences": "ลบเหตุการณ์ทั้งหมด",
         "delete_future_occurences": "ลบอินสแตนซ์นี้และเหตุการณ์ในอนาคตทั้งหมด",
         "invite_has_no_message": "คำเชิญนี้ไม่มีข้อความ",
-        "invited_you": "เชิญคุณเข้าสู่",
+        "invited_you": "เชิญคุณเข้าร่วมกิจกรรมแล้ว",
         "meeting_canceled": "การประชุมต่อไปนี้ถูกยกเลิกแล้ว",
         "modal": {
             "delete": {
@@ -452,8 +452,7 @@
         "equipment": "อุปกรณ์",
         "location": "สถานที่",
         "chat_room": "ลิงก์ของห้องเสมือนจริง",
-        "virtual_chat": "แชทเสมือนจริง",
-        "calendar_sharing_status": "แชร์กับ {{count}} คน"
+        "virtual_chat": "แชทเสมือนจริง"
     },
     "button": {
         "customize_modal": "เปิด Customize Modal"
