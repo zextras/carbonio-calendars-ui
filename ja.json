@@ -62,7 +62,9 @@
         "required_participant": "{{count}}参加者",
         "optional_participant": "{{count}}オプション",
         "send_email": "メールを送信する",
-        "more": "その他..."
+        "more": "その他...",
+        "edit_series_warning": "シリーズの変更を進めると、以前に削除または変更されたインスタンスすべてが新しいシリーズ設定で復元されます。",
+        "appointment_invitation_sent": "予約招待状を送信しました"
     },
     "action": {
         "send": "送信",
@@ -87,7 +89,8 @@
             "expand": "ディスプレイヤーで開く",
             "needs_action": "アクションが必要です",
             "invitation_not_sent_yet": "招待状はまだ送信されていません"
-        }
+        },
+        "is_exception": "例外"
     },
     "items": {
         "second": "秒",
@@ -103,7 +106,7 @@
         "attachment": "添付ファイル",
         "busy": "予定あり",
         "custom": "カスタム",
-        "download": "ダウンロード",
+        "download": "すべてダウンロードする",
         "edit": "編集する",
         "edit_share": "シェアを編集する",
         "free": "フリー",
@@ -263,7 +266,9 @@
         "share_public_link": "パブリックリンクを共有する",
         "select": "選択",
         "root": "ルート",
-        "choose_file": "ファイルを選択する"
+        "choose_file": "ファイルを選択する",
+        "public_link_description": "{{date}}に{{title}}から生成されました",
+        "continue": "続行する"
     },
     "folder": {
         "modal": {

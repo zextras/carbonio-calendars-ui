@@ -261,7 +261,7 @@
             "all_att_added": "Lampiran berhasil ditambahkan"
         },
         "invite_has_no_message": "Undangan ini tidak berisi pesan teks",
-        "invited_you": "mengundang Anda ke",
+        "invited_you": "mengundang Anda ke acara",
         "delete_future_occurences": "Hapus peristiwa dan semua kemunculan di masa mendatang",
         "delete_all_occurences": "Hapus semua kemunculan",
         "share_calendar_url_note": "Hanya kolaborator Anda yang dapat mengakses data Anda menggunakan URL ini.",
@@ -419,7 +419,7 @@
         "url_copied": "{{title}} disalin",
         "share_folder_success": "Kalender berhasil dibagikan",
         "new_time_proposed_success": "Waktu baru diusulkan",
-        "tag_removed": "Tag \"{{tag}}: dihapus",
+        "tag_removed": "Tag {{tag}}: dihapus",
         "tag_applied": "Tag {{tag}} diterapkan"
     },
     "success": "Berhasil",
@@ -484,8 +484,7 @@
         "equipment": "Peralatan",
         "location": "Lokasi",
         "chat_room": "Tautan Ruang Virtual",
-        "virtual_chat": "Chat Virtual",
-        "calendar_sharing_status": "Dibagikan kepada {{count}} orang"
+        "virtual_chat": "Chat Virtual"
     },
     "share_invite_resent": "Undangan berbagi dikirim ulang",
     "shared_folders": "Kalender Bersama",
