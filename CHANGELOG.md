@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.28](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.27...v0.1.28) (2022-09-29)
+
+
+### Bug Fixes
+
+* restore the list of available calendars when moving an appointment ([e440f41](https://github.com/zextras/carbonio-calendars-ui/commit/e440f4182744120437513eadfa346074813288cb))
+
 ### [0.1.27](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.26...v0.1.27) (2022-09-28)
 
 
