@@ -128,7 +128,6 @@ export const SharesModal = ({ calendars, onClose }) => {
 					),
 					open: true,
 					items: v,
-					divider: true,
 					background: undefined
 				})),
 				background: undefined,
