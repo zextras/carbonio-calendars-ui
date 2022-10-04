@@ -224,7 +224,7 @@ export default function CalendarComponent() {
 						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();
 						const endTime =
 							isAllDay || event.allDay ? moment(end).startOf('day') : moment(end).valueOf();
-						const invite = normalizeInvite(payload.m);
+						const invite = normalizeInvite(payload.m?.[0]);
 						const { editor, callbacks } = generateEditor({
 							event,
 							invite,

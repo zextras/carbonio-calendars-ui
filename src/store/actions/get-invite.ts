@@ -13,6 +13,8 @@ export const getInvite = createAsyncThunk(
 		{ rejectWithValue }
 	): Promise<any> => {
 		const response = getMessageRequest({ inviteId, ridZ });
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		if (response.type === 'errorException') {
 			return rejectWithValue(response);
 		}
