@@ -74,7 +74,7 @@
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.2",
 		"@zextras/carbonio-design-system": "^0.4.0",
-		"@zextras/carbonio-shell-ui": "0.4.34-devel.1662384028142",
+		"@zextras/carbonio-shell-ui": "0.4.37-devel.1664954995613",
 		"@zextras/carbonio-ui-preview": "^0.2.0",
 		"core-js": "3.19.1",
 		"date-arithmetic": "^4.1.0",

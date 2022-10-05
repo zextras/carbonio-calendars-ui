@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { soapFetch, SoapException } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import { normalizeErrorException } from '../normalizations/normalize-error-exception';
 
@@ -40,7 +40,7 @@ export const getMessageRequest = async ({
 			)
 		});
 	} catch (e) {
-		if (e instanceof soapException) {
+		if (e instanceof SoapException) {
 			return normalizeErrorException(e);
 		}
 		return e;
