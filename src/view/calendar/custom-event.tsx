@@ -4,15 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { isNil } from 'lodash';
-import React, {
-	ReactElement,
-	useCallback,
-	useContext,
-	useEffect,
-	useMemo,
-	useRef,
-	useState
-} from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
 	Container,
 	Text,
@@ -56,6 +48,18 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 		}
 	}, [dispatch, event.resource.inviteId, event.resource.ridZ, invite]);
 
+	const onEntireSeries = useCallback((): void => {
+		replaceHistory(
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`
+		);
+	}, [event.resource.calendar.id, event.resource.id]);
+
+	const onSingleInstance = useCallback((): void => {
+		replaceHistory(
+			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+		);
+	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
+
 	const showPanelView = useCallback(() => {
 		if (event.permission) {
 			if (event?.resource?.isRecurrent) {
@@ -66,7 +70,12 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 					{
 						children: (
 							<StoreProvider>
-								<AppointmentTypeHandlingModal event={event} onClose={(): void => closeModal()} />
+								<AppointmentTypeHandlingModal
+									event={event}
+									onClose={(): void => closeModal()}
+									onSeries={onEntireSeries}
+									onInstance={onSingleInstance}
+								/>
 							</StoreProvider>
 						)
 					},
@@ -87,7 +96,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 				hideButton: true
 			});
 		}
-	}, [event, createModal, createSnackbar]);
+	}, [event, createModal, onEntireSeries, onSingleInstance, createSnackbar]);
 
 	const toggleOpen = useCallback(
 		(e) => {
