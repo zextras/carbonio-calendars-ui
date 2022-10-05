@@ -430,7 +430,7 @@
             "all_att_added": "Archivos adjuntos añadidos con éxito"
         },
         "invite_has_no_message": "Esta invitación no contiene texto",
-        "invited_you": "te ha invitado a",
+        "invited_you": "te ha invitado a un evento",
         "you_are_organizer": "<Row><Text> <BoldText> Tú </BoldText> eres el organizador </Text></Row>",
         "delete_all_occurences": "Eliminar todas las incidencias",
         "delete_future_occurences": "Eliminar esta instancia y todas las futuras incidencias",

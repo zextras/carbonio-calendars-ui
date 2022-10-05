@@ -12,7 +12,8 @@ import {
 	Row,
 	Tooltip,
 	Dropdown,
-	ModalManagerContext
+	ModalManagerContext,
+	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
 import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +41,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	const [open, setOpen] = useState(false);
 	const { action } = useParams<{ action: string }>();
 	const invite = useSelector(selectInstanceInvite(event.resource.inviteId));
-
+	const createSnackbar = useContext(SnackbarManagerContext);
 	const getEventInvite = useCallback(() => {
 		if (!invite) {
 			dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
@@ -60,31 +61,42 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
 
 	const showPanelView = useCallback(() => {
-		if (event?.resource?.isRecurrent) {
-			// I'm disabling lint as the DS is not defining the type
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			const closeModal = createModal(
-				{
-					children: (
-						<StoreProvider>
-							<AppointmentTypeHandlingModal
-								event={event}
-								onClose={(): void => closeModal()}
-								onSeries={onEntireSeries}
-								onInstance={onSingleInstance}
-							/>
-						</StoreProvider>
-					)
-				},
-				true
-			);
+		if (event.permission) {
+			if (event?.resource?.isRecurrent) {
+				// I'm disabling lint as the DS is not defining the type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				const closeModal = createModal(
+					{
+						children: (
+							<StoreProvider>
+								<AppointmentTypeHandlingModal
+									event={event}
+									onClose={(): void => closeModal()}
+									onSeries={onEntireSeries}
+									onInstance={onSingleInstance}
+								/>
+							</StoreProvider>
+						)
+					},
+					true
+				);
+			} else {
+				replaceHistory(
+					`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				);
+			}
 		} else {
-			replaceHistory(
-				`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-			);
+			createSnackbar({
+				key: `private_appointment`,
+				replace: true,
+				type: 'info',
+				label: t('label.appointment_is_private', 'The appointment is private.'),
+				autoHideTimeout: 3000,
+				hideButton: true
+			});
 		}
-	}, [event, createModal, onEntireSeries, onSingleInstance]);
+	}, [event, createModal, onEntireSeries, onSingleInstance, createSnackbar]);
 
 	const toggleOpen = useCallback(
 		(e) => {
@@ -95,7 +107,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 				setOpen(true);
 			}
 		},
-		[action, dispatch, event.resource.inviteId, event.resource.ridZ, invite, open]
+		[invite, action, open, dispatch, event.resource.inviteId, event.resource.ridZ]
 	);
 
 	const actions = useEventSummaryViewActions({
