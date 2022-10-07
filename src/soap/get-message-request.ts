@@ -3,9 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch, SoapException } from '@zextras/carbonio-shell-ui';
+import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
-import { normalizeErrorException } from '../normalizations/normalize-error-exception';
 
 export const getMessageRequest = async ({
 	inviteId,
@@ -14,35 +13,31 @@ export const getMessageRequest = async ({
 	inviteId: string;
 	ridZ?: string;
 }): Promise<any> => {
-	try {
-		return soapFetch('GetMsg', {
-			_jsns: 'urn:zimbraMail',
-			m: omitBy(
-				{
-					html: 1,
-					needExp: 1,
-					id: inviteId,
-					ridZ,
-					header: [
-						{
-							n: 'List-ID'
-						},
-						{
-							n: 'X-Zimbra-DL'
-						},
-						{
-							n: 'IN-REPLY-TO'
-						}
-					],
-					max: 250000
-				},
-				isNil
-			)
-		});
-	} catch (e) {
-		if (e instanceof SoapException) {
-			return normalizeErrorException(e);
-		}
-		return e;
-	}
+	const response = await soapFetch('GetMsg', {
+		_jsns: 'urn:zimbraMail',
+		m: omitBy(
+			{
+				html: 1,
+				needExp: 1,
+				id: inviteId,
+				ridZ,
+				header: [
+					{
+						n: 'List-ID'
+					},
+					{
+						n: 'X-Zimbra-DL'
+					},
+					{
+						n: 'IN-REPLY-TO'
+					}
+				],
+				max: 250000
+			},
+			isNil
+		)
+	});
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	return response?.Fault ? { ...response.Fault, error: true } : response;
 };

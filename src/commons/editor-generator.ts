@@ -3,12 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-	getUserAccount,
-	getUserSettings,
-	replaceHistory,
-	closeBoard
-} from '@zextras/carbonio-shell-ui';
+import { getUserAccount, getUserSettings, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
@@ -285,22 +280,21 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 		isNew = true
 	}): any => // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		isNew // @ts-ignore
-			? dispatch(createAppointment({ id, draft })) // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					.unwrap() // @ts-ignore
-					.then(({ response, editor }) => {
-						if (response) {
-							dispatch(updateEditor({ id, editor }));
-						}
-						return Promise.resolve({ response, editor }); // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					}) // @ts-ignore
-			: dispatch(modifyAppointment({ id, draft })) // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					.unwrap() // @ts-ignore
-					.then(({ response, editor }) => {
-						if (response) {
-							dispatch(updateEditor({ id, editor }));
-						}
+			? dispatch(createAppointment({ id, draft })).then(({ payload }) => {
+					const { response, editor } = payload;
+					if (payload?.response) {
+						dispatch(updateEditor({ id, editor }));
+					}
+					return Promise.resolve({ response, editor }); // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			  }) // @ts-ignore
+			: dispatch(modifyAppointment({ id, draft })).then(({ payload }) => {
+					const { response, editor, error } = payload;
+					if (response && !error) {
+						dispatch(updateEditor({ id, editor }));
 						return Promise.resolve({ response, editor });
-					});
+					}
+					return Promise.resolve(payload);
+			  });
 
 	const onSend = (isNew: boolean): Promise<any> => onSave({ draft: false, isNew });
 

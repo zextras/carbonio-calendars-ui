@@ -219,8 +219,13 @@ export default function CalendarComponent() {
 		(appt) => {
 			const { start, end, event, isAllDay } = appt;
 			if (!isEqual(event.start, start) || !isEqual(event.end, end) || event.allDay !== !!isAllDay) {
-				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ })).then(
-					({ payload }) => {
+				dispatch(
+					getInvite({
+						inviteId: event.resource.inviteId,
+						ridZ: event.resource.ridZ
+					})
+				).then(({ payload }) => {
+					if (!payload.error) {
 						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();
 						const endTime =
 							isAllDay || event.allDay ? moment(end).startOf('day') : moment(end).valueOf();
@@ -235,28 +240,36 @@ export default function CalendarComponent() {
 								panel: false
 							}
 						});
-						const storeData = store.getState();
 						callbacks
 							.onSave({
-								isNew: storeData.editor.editors[editor.id]?.isNew
+								isNew: editor?.isNew
 							})
 							.then((res) => {
-								if (res?.type) {
-									const success = res.type.includes('fulfilled');
-									getBridgedFunctions().createSnackbar({
-										key: `calendar-moved-root`,
-										replace: true,
-										type: success ? 'info' : 'warning',
-										hideButton: true,
-										label: !success
-											? t('label.error_try_again', 'Something went wrong, please try again')
-											: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-										autoHideTimeout: 3000
-									});
-								}
+								const success = !res.error;
+								getBridgedFunctions().createSnackbar({
+									key: `calendar-moved-root`,
+									replace: true,
+									type: success ? 'info' : 'warning',
+									hideButton: true,
+									label: !success
+										? t('label.error_try_again', 'Something went wrong, please try again')
+										: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+									autoHideTimeout: 3000
+								});
 							});
+					} else {
+						getBridgedFunctions().createSnackbar({
+							key: `calendar-moved-root`,
+							replace: true,
+							type: 'warning',
+							hideButton: true,
+							label:
+								payload?.Reason?.Text ??
+								t('label.error_try_again', 'Something went wrong, please try again'),
+							autoHideTimeout: 3000
+						});
 					}
-				);
+				});
 			}
 		},
 		[dispatch]

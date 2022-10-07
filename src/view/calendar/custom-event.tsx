@@ -14,7 +14,7 @@ import {
 	Dropdown,
 	ModalManagerContext
 } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useEventSummaryViewActions } from '../../hooks/use-event-summary-view-actions';
@@ -43,21 +43,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 
 	const getEventInvite = useCallback(() => {
 		if (!invite) {
-			dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ })).then(
-				(res) => {
-					if (!res?.type?.includes?.('fulfilled')) {
-						debugger;
-						/* getBridgedFunctions().createSnackbar({
-							key: `soap-exception`,
-							replace: true,
-							type: 'warning',
-							hideButton: true,
-							label: t('label.error_try_again', 'Something went wrong, please try again'),
-							autoHideTimeout: 3000
-						}); */
-					}
-				}
-			);
+			dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
 		}
 	}, [dispatch, event.resource.inviteId, event.resource.ridZ, invite]);
 
