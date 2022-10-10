@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder } from '@zextras/carbonio-shell-ui';
 import { filter, find, reduce, values } from 'lodash';
 import { Calendar } from '../../types/store/calendars';
 import { Store } from '../../types/store/store';

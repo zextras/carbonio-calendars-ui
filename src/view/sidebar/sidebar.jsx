@@ -6,7 +6,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Accordion } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
-import { map, filter, reduce, remove, every, reject, find, orderBy, head } from 'lodash';
+import { map, filter, reduce, remove, every, reject, find, orderBy, head, forEach } from 'lodash';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -16,6 +16,8 @@ import { FoldersComponent, SharesComponent, TagComponent } from './sidebar-compo
 import useGetTagsAccordion from '../../hooks/use-get-tags-accordions';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { getFolderTranslatedName } from '../../commons/utilities';
+import { getMiniCal } from '../../store/actions/get-mini-cal';
+import { updateCalendar } from '../../store/slices/calendars-slice';
 
 const calcFolderAbsParentLevel = (folders, subFolder, level = 1) => {
 	const nextFolder = find(folders, (f) => f.id === subFolder.parent);
@@ -68,6 +70,11 @@ export default function SetMainMenuItems({ expanded }) {
 			).then((res) => {
 				if (res?.meta?.arg?.op === 'check') {
 					dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
+					dispatch(getMiniCal({ start, end })).then((response) => {
+						if (response?.payload?.error) {
+							dispatch(updateCalendar(response?.payload?.error));
+						}
+					});
 				}
 			});
 		},

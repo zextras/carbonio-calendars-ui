@@ -28,6 +28,7 @@ import { handleModifiedCalendarsReducer } from '../reducers/handle-modified-cale
 import { handleSyncReducer, handleCalendarsRefreshReducer } from '../reducers/handle-sync';
 import { setRangeReducer } from '../reducers/set-range';
 import { shareCalenderFullFilled } from '../reducers/share-calender-reducers';
+import { handleUpdateCalendar } from '../reducers/update-calendar';
 
 export const calendarsSlice = createSlice({
 	name: 'calendars',
@@ -43,7 +44,8 @@ export const calendarsSlice = createSlice({
 		handleDeletedCalendars: produce(handleDeletedCalendarsReducer),
 		handleCalendarsSync: handleSyncReducer,
 		handleCalendarsRefresh: handleCalendarsRefreshReducer,
-		setRange: setRangeReducer
+		setRange: setRangeReducer,
+		updateCalendar: handleUpdateCalendar
 	},
 	extraReducers: (builder) => {
 		builder.addCase(createCalendar.pending, createCalendarPending);
@@ -58,6 +60,7 @@ export const calendarsSlice = createSlice({
 });
 
 export const {
+	updateCalendar,
 	handleCreatedCalendars,
 	handleModifiedCalendars,
 	handleDeletedCalendars,
