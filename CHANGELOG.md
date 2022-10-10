@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.29](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.28...v0.1.29) (2022-10-04)
+
+
+### Bug Fixes
+
+* depricated divider prop removed from the accordion ([8972688](https://github.com/zextras/carbonio-calendars-ui/commit/89726885e8b12a09a613f24c710ac364bcb83a10))
+
 ### [0.1.28](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.27...v0.1.28) (2022-09-29)
 
 
