@@ -133,7 +133,7 @@ export const useDeleteActions = (
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					.then((res: { type: string | string[] }) => {
-						onBoardClose();
+						onBoardClose && onBoardClose();
 						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 					});
 			};
@@ -147,13 +147,13 @@ export const useDeleteActions = (
 			};
 			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {
-					onBoardClose();
+					onBoardClose && onBoardClose();
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreAppointment);
 				})
 				.then(
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
-							onBoardClose();
+							onBoardClose && onBoardClose();
 							sendResponse(event, ctxt);
 						}
 					}, 5000)
@@ -226,13 +226,13 @@ export const useDeleteActions = (
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				.then((res: { type: string | string[] }) => {
-					onBoardClose();
+					onBoardClose && onBoardClose();
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreRecurrentSeries, true);
 				})
 				.then(
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
-							onBoardClose();
+							onBoardClose && onBoardClose();
 							sendResponse(event, ctxt);
 						}
 					}, 5000)
@@ -263,13 +263,13 @@ export const useDeleteActions = (
 			};
 			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {
-					onBoardClose();
+					onBoardClose && onBoardClose();
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar);
 				})
 				.then(
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
-							onBoardClose();
+							onBoardClose && onBoardClose();
 							sendResponse(event, ctxt);
 						}
 					}, 5000)
