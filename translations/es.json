@@ -6,7 +6,7 @@
         "busy": "Ocupado",
         "custom": "Personalizado",
         "download": "Descargar",
-        "download_plural": "Descargar todo",
+        "download_plural": "Descargar todos",
         "edit": "Editar",
         "edit_share": "Editar compartición",
         "free": "Gratis",
@@ -171,7 +171,9 @@
         "share_public_link": "Compartir enlace público",
         "select": "Seleccionar",
         "root": "Raíz",
-        "choose_file": "Elegir archivo"
+        "choose_file": "Elegir archivo",
+        "public_link_description": "Generado de  {{title}} en {{date}}",
+        "continue": "Continuar"
     },
     "action": {
         "send": "Enviar",
@@ -196,7 +198,8 @@
             "expand": "Abrir en visualizador",
             "needs_action": "Necesita acción",
             "invitation_not_sent_yet": "La invitación todavía no ha sido enviada"
-        }
+        },
+        "is_exception": "Excepción"
     },
     "items": {
         "second": "Segundo",
@@ -430,7 +433,7 @@
             "all_att_added": "Archivos adjuntos añadidos con éxito"
         },
         "invite_has_no_message": "Esta invitación no contiene texto",
-        "invited_you": "te ha invitado a",
+        "invited_you": "te ha invitado a un evento",
         "you_are_organizer": "<Row><Text> <BoldText> Tú </BoldText> eres el organizador </Text></Row>",
         "delete_all_occurences": "Eliminar todas las incidencias",
         "delete_future_occurences": "Eliminar esta instancia y todas las futuras incidencias",
@@ -463,7 +466,9 @@
         "optional_participant_plural": "{{count}} Opcionales",
         "required_participant": "{{count}} Participante",
         "required_participant_plural": "{{count}} Participantes",
-        "send_email": "Enviar un e-mail"
+        "send_email": "Enviar un e-mail",
+        "edit_series_warning": "Cuando procedas con la modificación de las series, todas las instancias borradas o modificadas anteriormente serán restauradas con los ajustes de las nuevas series.",
+        "appointment_invitation_sent": "Invitación a cita enviada"
     },
     "button": {
         "customize_modal": "Abrir modo de personalización"
@@ -508,7 +513,8 @@
         "equipment": "Equipamiento",
         "location": "Ubicación",
         "chat_room": "Enlace de la Sala Virtual",
-        "calendar_sharing_status": "Compartido con {{count}} persona(s)",
+        "calendar_sharing_status": "Compartido con {{count}} persona",
+        "calendar_sharing_status_plural": "Compartido con {{count}} personas",
         "virtual_chat": "Chat virtual"
     },
     "share_invite_resent": "Invitación para acceder a la compartición reenviada",

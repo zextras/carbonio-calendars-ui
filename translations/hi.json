@@ -178,7 +178,9 @@
         "share_public_link": "पब्लिक लिंक शेयर करें",
         "select": "चुनें",
         "root": "मूल",
-        "choose_file": "फाइल चुनें"
+        "choose_file": "फाइल चुनें",
+        "public_link_description": "{{date}} को {{title}} से बनाया",
+        "continue": "जारी रखें"
     },
     "action": {
         "send": "भेजें",
@@ -236,7 +238,7 @@
         "share_calendar_url_note": "केवल आपके साथ टीम में काम करने वाले इन URL से आपका डाटा एक्सेस कर सकेंगे।",
         "share_calendar_url_note2": "केवल आपके साथ टीम में काम करने वाले इन URL से आपका डाटा एक्सेस कर सकेंगे।<br/>आप ये लिंक अपनी कैलेंडर लिस्ट में राइट-क्लिक करके भी ढूंढ सकते हैं।",
         "delete_future_occurences_warning": "इससे सीरीज़ में सभी अपवाद भी डिलीट हो जाएंगे (इस मौके के पहले और बाद)",
-        "invited_you": "आपको इसमें इन्वाइट किया",
+        "invited_you": "ने आपको किसी ईवेंट में इन्वाइट किया",
         "meeting_canceled": "निम्नलिखित मीटिंग कैंसल कर दी गई है",
         "share_calendar_url_msg": "आप {{title}} को जल्दी से अपनी टीम में काम करने वालों से इनमें से एक URL चुनकर शेयर कर सकते हैं:",
         "somebody_invited_you": "<strong>{{somebody}}</strong> ने आपको इन्वाइट किया है",
@@ -255,7 +257,13 @@
         "appointment_type_handle": "{{name}} बार-बार आने वाला अपोइंटमेंट है। क्या आप सिर्फ इस घटना को या पूरी सीरीज़ खोलना चाहते हैं?",
         "organizer": "आयोजक",
         "send_email": "ई-मेल भेजें",
-        "more": "और..."
+        "more": "और...",
+        "required_participant": "{{count}} पार्टीसिपेंट",
+        "required_participant_plural": "{{count}} पार्टीसिपेंट्स",
+        "optional_participant": "{{count}} ऑप्शनल",
+        "optional_participant_plural": "{{count}} ऑप्शनल्स",
+        "edit_series_warning": "जैसे-जैसे आप सीरीज़ में बदलाव करते जाएंगे, पहले डिलीट किए या बदले इन्सटेन्स नई सीरीज़ सेटिंग्स से रिस्टोर होते जाएंगे।",
+        "appointment_invitation_sent": "एप्पोइंटमेंट आमंत्रण भेजा गया"
     },
     "event": {
         "action": {
@@ -266,7 +274,8 @@
             "expand": "डिस्प्ले में देखें",
             "needs_action": "कार्यवाई की आवश्यकता है",
             "invitation_not_sent_yet": "इन्विटेशन अभी तक भेजा नहीं गया है"
-        }
+        },
+        "is_exception": "अपवाद"
     },
     "folder": {
         "modal": {
@@ -500,7 +509,8 @@
         "location": "स्थान",
         "chat_room": "Virtual Room लिंक",
         "virtual_chat": "वर्चुअल चैट",
-        "calendar_sharing_status": "{{count}} व्यक्तियों के साथ शेयर किया गया"
+        "calendar_sharing_status": "{{count}} व्यक्ति के साथ शेयर किया गया",
+        "calendar_sharing_status_plural": "{{count}} व्यक्तियों के साथ शेयर किया गया"
     },
     "remove_from_this_list": "इस लिस्ट से हटाएँ",
     "resend_mail_notification_about_this_share": "इस शेयर के बारे में ई-मेल नोटिफिकेशन भेजें",
