@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { t } from '@zextras/carbonio-shell-ui';
 import { filter, groupBy, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
 import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../commons/zimbra-standard-colors';
@@ -66,8 +67,6 @@ export const findAttachments = (parts: any, acc: any): any =>
 		acc
 	);
 
-const createStringOfAlarm = (number: any, unit: any): any => `${number} ${unit} BEFORE`;
-
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getAlarmToString = (alarm: any): any => {
 	const DAY_PER_WEEK = 7;
@@ -79,8 +78,6 @@ export const getAlarmToString = (alarm: any): any => {
 		const rel = alarm[0].trigger[0].rel[0];
 
 		if (rel) {
-			let [number, unit] = [null, null];
-
 			const seconds =
 				(rel.s || 0) +
 				(rel.m || 0) * SECONDS_PER_MINUTE +
@@ -89,35 +86,46 @@ export const getAlarmToString = (alarm: any): any => {
 				(rel.w || 0) * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK;
 
 			if ((rel.s || 0) + (rel.m || 0) + (rel.h || 0) + (rel.d || 0) + (rel.w || 0) === 0) {
-				return 'At the time of event';
+				return t('reminder.at_time_of_event', 'At the time of the event');
 			}
 			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK) === 0) {
 				const weeks =
 					seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK);
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				[number, unit] = [weeks, `WEEK${weeks > 1 ? 'S' : ''}`];
-			} else if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY) === 0) {
-				const days = seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY);
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				[number, unit] = [days, `DAY${days > 1 ? 'S' : ''}`];
-			} else if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR) === 0) {
-				const hours = seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR);
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				[number, unit] = [hours, `HOUR${hours > 1 ? 'S' : ''}`];
-			} else if (seconds % SECONDS_PER_MINUTE === 0) {
-				const minutes = seconds / SECONDS_PER_MINUTE;
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				[number, unit] = [minutes, `MINUTE${minutes > 1 ? 'S' : ''}`];
-			} else {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				[number, unit] = [seconds, `SECOND${number > 1 ? 'S' : ''}`];
+				return t('reminder.week_before', {
+					count: weeks,
+					defaultValue: '{{count}} week before',
+					defaultValue_plural: '{{count}} weeks before'
+				});
 			}
-			return createStringOfAlarm(number, unit);
+			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY) === 0) {
+				const days = seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY);
+				return t('reminder.day_before', {
+					count: days,
+					defaultValue: '{{count}} day before',
+					defaultValue_plural: '{{count}} days before'
+				});
+			}
+			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR) === 0) {
+				const hours = seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR);
+				return t('reminder.hour_before', {
+					count: hours,
+					defaultValue: '{{count}} hour before',
+					defaultValue_plural: '{{count}} hours before'
+				});
+			}
+			if (seconds % SECONDS_PER_MINUTE === 0) {
+				const minutes = seconds / SECONDS_PER_MINUTE;
+				return t('reminder.minute_before', {
+					count: minutes,
+					defaultValue: '{{count}} minute before',
+					defaultValue_plural: '{{count}} minutes before'
+				});
+			}
+			return t('reminder.second_before', {
+				count: seconds,
+				defaultValue: '{{count}} second before',
+				defaultValue_plural: '{{count}} seconds before'
+			});
 		}
 	}
 	return null;

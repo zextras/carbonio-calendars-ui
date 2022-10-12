@@ -21,7 +21,6 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { createCallbacks } from '../../commons/editor-generator';
 import { selectActiveEditorId, selectEditorTitle } from '../../store/selectors/editor';
-import { EditorCallbacks } from '../../types/editor';
 import { EditorPanel } from './editor-panel';
 
 const BackgroundContainer = styled.div`
@@ -53,15 +52,9 @@ type HeaderProps = {
 	editorId: string;
 	expanded: boolean;
 	setExpanded: (arg: (e: boolean) => boolean) => void;
-	callbacks: EditorCallbacks;
 };
 
-const Header = ({
-	editorId,
-	expanded,
-	setExpanded,
-	callbacks
-}: HeaderProps): ReactElement | null => {
+const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement | null => {
 	const [t] = useTranslation();
 
 	const title = useSelector(selectEditorTitle(editorId));
@@ -79,11 +72,11 @@ const Header = ({
 				icon: 'CloseOutline',
 				label: '',
 				click: (): void => {
-					callbacks.closeCurrentEditor();
+					replaceHistory('');
 				}
 			}
 		],
-		[callbacks, expanded, setExpanded]
+		[expanded, setExpanded]
 	);
 
 	return !isNil(title) ? (
@@ -143,12 +136,7 @@ const EditorPanelWrapper = (): ReactElement | null => {
 				expanded={expanded}
 				data-testid="AppointmentCardContainer"
 			>
-				<Header
-					editorId={editorId}
-					expanded={expanded}
-					setExpanded={setExpanded}
-					callbacks={callbacks}
-				/>
+				<Header editorId={editorId} expanded={expanded} setExpanded={setExpanded} />
 				<EditorPanel editorId={editorId} callbacks={callbacks} expanded={expanded} />
 			</AppointmentCardContainer>
 		</>

@@ -3,8 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil, omit, reject, union } from 'lodash';
-import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
+import { isNil, omit, union } from 'lodash';
 import { Editor, IdentityItem, Room } from '../../types/editor';
 import { EventResourceCalendar } from '../../types/event';
 import { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
@@ -273,7 +272,7 @@ export const editEditorRecurrenceReducer = ({ editors }: EditorSlice, { payload 
 	}
 };
 
-export const closeEditorReducer = (
+export const deleteEditorReducer = (
 	editor: EditorSlice,
 	{ payload }: { payload: { id: string } }
 ): void => {

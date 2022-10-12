@@ -153,3 +153,8 @@ export const selectIsException =
 	(id: string) =>
 	(state: Store): boolean =>
 		state?.editor?.editors?.[id]?.isException;
+
+export const selectEditorPanel =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.panel;

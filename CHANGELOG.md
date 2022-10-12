@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.29](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.28...v0.1.29) (2022-10-04)
+
+
+### Bug Fixes
+
+* depricated divider prop removed from the accordion ([8972688](https://github.com/zextras/carbonio-calendars-ui/commit/89726885e8b12a09a613f24c710ac364bcb83a10))
+
+### [0.1.28](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.27...v0.1.28) (2022-09-29)
+
+
+### Bug Fixes
+
+* restore the list of available calendars when moving an appointment ([e440f41](https://github.com/zextras/carbonio-calendars-ui/commit/e440f4182744120437513eadfa346074813288cb))
+
+### [0.1.27](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.26...v0.1.27) (2022-09-28)
+
+
+### Bug Fixes
+
+* missing translation in calendar displayer ([9a0be05](https://github.com/zextras/carbonio-calendars-ui/commit/9a0be05d8a3e95e7bf86f94fdc532b77cc25f25e))
+* on creation editor will have correct start and end dates ([#138](https://github.com/zextras/carbonio-calendars-ui/issues/138)) ([265a990](https://github.com/zextras/carbonio-calendars-ui/commit/265a990fe6f4aae6eecc8a313d24aced65a4759c))
+* restore shared calendars and tags elements on secondary bar ([662ae85](https://github.com/zextras/carbonio-calendars-ui/commit/662ae850405352cdcbfb748608739a1455e6cd70))
+* reverting cursor changes in calendar selection ([6df78ad](https://github.com/zextras/carbonio-calendars-ui/commit/6df78ad2b454b8c348e07a7a0d1babf4dc7df4e6))
+
 ### [0.1.26](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.25...v0.1.26) (2022-09-15)
 
 ### [0.1.25](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.24...v0.1.25) (2022-09-01)

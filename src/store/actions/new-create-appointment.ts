@@ -260,7 +260,7 @@ export const createAppointment = createAsyncThunk(
 					...editor,
 					isNew: false,
 					isSeries: !!editor.recur,
-					isInstance: true,
+					isInstance: !editor.recur,
 					isException: false,
 					inviteId: res.invId
 				}

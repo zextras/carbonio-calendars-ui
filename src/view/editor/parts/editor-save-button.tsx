@@ -12,6 +12,7 @@ import { StoreProvider } from '../../../store/redux';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import {
 	selectEditor,
+	selectEditorAttendees,
 	selectEditorDisabled,
 	selectEditorIsNew,
 	selectEditorTitle
@@ -25,8 +26,9 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const editor = useSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
 	const disabled = useSelector(selectEditorDisabled(editorId));
+	const attendeesLength = useSelector(selectEditorAttendees)?.length;
 
-	const { onSave, closeCurrentEditor } = callbacks;
+	const { onSave } = callbacks;
 	const { action } = useParams<{ action: string }>();
 
 	const onClick = useCallback(() => {
@@ -44,8 +46,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 								isSending={false}
 								onClose={(): void => closeModal()}
 								isNew={isNew}
-								closeCurrentEditor={closeCurrentEditor}
-								draft
+								editorId={editorId}
 							/>
 						</StoreProvider>
 					),
@@ -56,7 +57,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				true
 			);
 		} else
-			onSave({ draft: true, isNew }).then(({ response }) => {
+			onSave({ draft: !attendeesLength, isNew }).then(({ response }) => {
 				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
@@ -69,13 +70,14 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				});
 			});
 	}, [
+		editor.isSeries,
+		editor.isInstance,
 		action,
-		closeCurrentEditor,
-		createModal,
-		editor?.isSeries,
-		editor?.isInstance,
+		onSave,
+		attendeesLength,
 		isNew,
-		onSave
+		createModal,
+		editorId
 	]);
 
 	return (

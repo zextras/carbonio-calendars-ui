@@ -4,7 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
+import {
+	closeBoard,
+	getBridgedFunctions,
+	replaceHistory,
+	t,
+	useBoard
+} from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -28,7 +34,9 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const createModal = useContext(ModalManagerContext);
 	const disabled = useSelector(selectEditorDisabled(editorId));
 
-	const { onSend, closeCurrentEditor } = callbacks;
+	const board = useBoard();
+
+	const { onSend } = callbacks;
 	const { action } = useParams<{ action: string }>();
 	const isDisabled = useMemo(
 		() => disabled?.sendButton || (!attendees?.length && !optionalAttendees?.length),
@@ -49,8 +57,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 								isSending
 								onClose={(): void => closeModal()}
 								isNew={isNew}
-								closeCurrentEditor={closeCurrentEditor}
-								draft
+								editorId={editorId}
 							/>
 						</StoreProvider>
 					),
@@ -62,8 +69,10 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 			);
 		} else
 			onSend(isNew).then(({ response }) => {
-				if (response) {
-					closeCurrentEditor();
+				if (editor?.panel && response) {
+					replaceHistory('');
+				} else if (board) {
+					closeBoard(board?.id);
 				}
 				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
@@ -78,10 +87,12 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 			});
 	}, [
 		action,
-		closeCurrentEditor,
+		board,
 		createModal,
-		editor?.isInstance,
-		editor?.isSeries,
+		editor.isInstance,
+		editor.isSeries,
+		editor?.panel,
+		editorId,
 		isNew,
 		onSend
 	]);

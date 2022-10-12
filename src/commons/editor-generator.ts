@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getUserAccount, getUserSettings, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { getUserAccount, getUserSettings } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
@@ -12,7 +12,6 @@ import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { store } from '../store/redux';
 import {
-	closeEditor,
 	createNewEditor,
 	editEditorAllDay,
 	editEditorAttachments,
@@ -71,6 +70,7 @@ const createEmptyEditor = (id: string): Editor => {
 	return {
 		attach: undefined,
 		calendar: calendars?.calendars?.[zimbraPrefDefaultCalendarId],
+		panel: false,
 		isException: false,
 		exceptId: undefined,
 		isSeries: false,
@@ -270,11 +270,6 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 	): { payload: undefined; type: string } | { payload: { id: string; recur: any }; type: string } =>
 		dispatch(editEditorRecurrence({ id, recur }));
 
-	const closeCurrentEditor = (): { payload: { id: string }; type: string } => {
-		replaceHistory('');
-		return dispatch(closeEditor({ id }));
-	};
-
 	const onSave = ({
 		draft = true,
 		isNew = true
@@ -316,7 +311,6 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 		onTimeZoneChange,
 		onReminderChange,
 		onRecurrenceChange,
-		closeCurrentEditor,
 		onSave,
 		onSend
 	};

@@ -5,31 +5,33 @@
  */
 import React, { ReactElement, useCallback } from 'react';
 import { Text, Container, Padding } from '@zextras/carbonio-design-system';
-import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 
 type ModalProps = {
 	event: EventType;
 	onClose: () => void;
+	onSeries: () => void;
+	onInstance: () => void;
 };
 
-export const AppointmentTypeHandlingModal = ({ event, onClose }: ModalProps): ReactElement => {
+export const AppointmentTypeHandlingModal = ({
+	event,
+	onClose,
+	onSeries,
+	onInstance
+}: ModalProps): ReactElement => {
 	const onEntireSeries = useCallback((): void => {
-		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`
-		);
-		onClose();
-	}, [event.resource.calendar.id, event.resource.id, onClose]);
+		onSeries?.();
+		onClose?.();
+	}, [onClose, onSeries]);
 
 	const onSingleInstance = useCallback((): void => {
-		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-		);
-		onClose();
-	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ, onClose]);
+		onInstance?.();
+		onClose?.();
+	}, [onClose, onInstance]);
 
 	return (
 		<Container

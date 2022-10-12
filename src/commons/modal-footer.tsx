@@ -7,7 +7,7 @@
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement } from 'react';
 import { Container, Button, Padding, Divider, Tooltip } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 import { ModalFooterProps } from '../types/commons';
 
 const ModalFooter: FC<ModalFooterProps> = ({
@@ -53,6 +53,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 						type={additionalBtnType}
 						onClick={additionalAction}
 						label={additionalLabel}
+						width={width}
 					/>
 					<Padding horizontal="extrasmall" />
 				</Container>

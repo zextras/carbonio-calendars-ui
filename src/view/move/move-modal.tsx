@@ -95,12 +95,14 @@ export const MoveModal = ({
 						return [
 							...acc,
 							{
+								divider: true
+							},
+							{
 								...item,
 								label: item.name,
 								items: folders,
 								onClick: () => setFolderDestination(item),
 								open: !!input.length,
-								divider: true,
 								background: folderDestination.id === item.id ? 'highlight' : undefined
 							}
 						];
@@ -116,16 +118,17 @@ export const MoveModal = ({
 	);
 
 	const nestedData = useMemo(
-		() => [
-			{
-				id: FOLDERS.USER_ROOT,
-				label: getFolderTranslatedName(FOLDERS.USER_ROOT, 'Root'),
-				level: 0,
-				open: true,
-				items: nestFilteredFolders(folders, '1', filterFromInput),
-				background: folderDestination.id === '1' ? 'highlight' : undefined
-			} as AccordionItemType
-		],
+		() =>
+			[
+				{
+					id: FOLDERS.USER_ROOT,
+					label: getFolderTranslatedName(FOLDERS.USER_ROOT, 'Root'),
+					level: 0,
+					open: true,
+					items: nestFilteredFolders(folders, '1', filterFromInput),
+					background: folderDestination.id === '1' ? 'highlight' : undefined
+				}
+			] as AccordionItemType[],
 		[filterFromInput, folderDestination.id, folders, nestFilteredFolders]
 	);
 

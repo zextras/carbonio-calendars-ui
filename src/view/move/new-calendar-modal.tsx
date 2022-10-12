@@ -240,7 +240,6 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 			<Select
 				label={'Select color'}
 				onChange={(value): void => {
-					console.log('*** value', value);
 					// setSelectedColor
 				}}
 				items={colors}

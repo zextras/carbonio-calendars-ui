@@ -11,14 +11,16 @@ import {
 	getBridgedFunctions,
 	useUserSettings,
 	addBoard,
-	t
+	t,
+	replaceHistory
 } from '@zextras/carbonio-shell-ui';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEqual, minBy } from 'lodash';
+import { isEqual, isNil, minBy, omit, omitBy, size } from 'lodash';
 import { min as datesMin, max as datesMax } from 'date-arithmetic';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
+import { ModalManagerContext } from '@zextras/carbonio-design-system';
 import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
@@ -41,7 +43,10 @@ import { searchAppointments } from '../../store/actions/search-appointments';
 import { generateEditor } from '../../commons/editor-generator';
 import { getInvite } from '../../store/actions/get-invite';
 import CalendarStyle from './calendar-style';
-import { store } from '../../store/redux';
+import { store, StoreProvider } from '../../store/redux';
+import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
+import { ModifyStandardMessageModal } from '../modals/modify-standard-message-modal';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -65,12 +70,35 @@ const customComponents = {
 	eventWrapper: CustomEventWrapper
 };
 
+const getStart = ({ isAllDay, dropStart, isSeries, inviteStart, eventStart }) => {
+	if (isAllDay) {
+		return dropStart.startOf('day');
+	}
+	if (isSeries) {
+		const diff = dropStart.diff(eventStart);
+		return inviteStart.add(diff).valueOf();
+	}
+	return dropStart.valueOf();
+};
+
+const getEnd = ({ isAllDay, dropEnd, isSeries, inviteEnd, eventEnd, eventAllDay }) => {
+	if (isAllDay || eventAllDay) {
+		return dropEnd.startOf('day');
+	}
+	if (isSeries) {
+		const diff = dropEnd.diff(eventEnd);
+		return inviteEnd.add(diff).valueOf();
+	}
+	return dropEnd.valueOf();
+};
+
 export default function CalendarComponent() {
 	const appointments = useSelector(selectAppointmentsArray);
 	const selectedCalendars = useSelector(selectCheckedCalendarsMap);
 	const dispatch = useDispatch();
 	const theme = useContext(ThemeContext);
 	const settings = useUserSettings();
+	const createModal = useContext(ModalManagerContext);
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
 	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
@@ -215,37 +243,51 @@ export default function CalendarComponent() {
 		[action, summaryViewOpen]
 	);
 
-	const onEventDrop = useCallback(
-		(appt) => {
-			const { start, end, event, isAllDay } = appt;
-			if (!isEqual(event.start, start) || !isEqual(event.end, end) || event.allDay !== !!isAllDay) {
-				dispatch(
-					getInvite({
-						inviteId: event.resource.inviteId,
-						ridZ: event.resource.ridZ
-					})
-				).then(({ payload }) => {
-					if (!payload.error) {
-						const startTime = isAllDay ? moment(start).startOf('day') : moment(start).valueOf();
-						const endTime =
-							isAllDay || event.allDay ? moment(end).startOf('day') : moment(end).valueOf();
-						const invite = normalizeInvite(payload.m?.[0]);
-						const { editor, callbacks } = generateEditor({
-							event,
-							invite,
-							context: {
+	const onDropFn = useCallback(
+		({ start, end, event, isAllDay, isSeries }) => {
+			dispatch(
+				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
+			).then(({ payload }) => {
+				const inviteStart = moment(payload.m.inv[0].comp[0].s[0].u);
+				const eventStart = moment(event.start);
+				const dropStart = moment(start);
+				const inviteEnd = moment(payload.m.inv[0].comp[0].e[0].u);
+				const eventEnd = moment(event.end);
+				const dropEnd = moment(end);
+				const eventAllDay = event.allDay;
+				const startTime = getStart({ isSeries, dropStart, isAllDay, inviteStart, eventStart });
+				const endTime = getEnd({ isSeries, dropEnd, isAllDay, inviteEnd, eventEnd, eventAllDay });
+				const invite = normalizeInvite(payload.m);
+				const onConfirm = (draft, context) => {
+					const { editor, callbacks } = generateEditor({
+						event,
+						invite,
+						context: omitBy(
+							{
 								start: startTime,
 								end: endTime,
 								allDay: !!isAllDay,
-								panel: false
-							}
-						});
-						callbacks
-							.onSave({
-								isNew: editor?.isNew
-							})
-							.then((res) => {
-								const success = !res.error;
+								panel: false,
+								richText: context?.text?.[1],
+								plainText: context?.text?.[0]
+							},
+							isNil
+						)
+					});
+					const storeData = store.getState();
+					callbacks
+						.onSave(
+							omitBy(
+								{
+									draft,
+									isNew: storeData.editor.editors[editor.id]?.isNew
+								},
+								isNil
+							)
+						)
+						.then((res) => {
+							if (res?.response) {
+								const success = res?.response;
 								getBridgedFunctions().createSnackbar({
 									key: `calendar-moved-root`,
 									replace: true,
@@ -256,23 +298,90 @@ export default function CalendarComponent() {
 										: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
 									autoHideTimeout: 3000
 								});
-							});
-					} else {
-						getBridgedFunctions().createSnackbar({
-							key: `calendar-moved-root`,
-							replace: true,
-							type: 'warning',
-							hideButton: true,
-							label:
-								payload?.Reason?.Text ??
-								t('label.error_try_again', 'Something went wrong, please try again'),
-							autoHideTimeout: 3000
+							}
 						});
-					}
+				};
+				if (size(invite.participants) > 0) {
+					const closeModal = createModal(
+						{
+							children: (
+								<StoreProvider>
+									<ModifyStandardMessageModal
+										title={t('label.edit')}
+										onClose={() => closeModal()}
+										confirmLabel={t('action.send_edit', 'Send Edit')}
+										onConfirm={(context) => {
+											onConfirm(false, context);
+											closeModal();
+										}}
+										invite={invite}
+										isEdited
+									/>
+								</StoreProvider>
+							)
+						},
+						true
+					);
+				} else {
+					onConfirm(true);
+				}
+			});
+		},
+		[createModal, dispatch]
+	);
+
+	const onEventDrop = useCallback(
+		(appt) => {
+			const { start, end, event, isAllDay } = appt;
+			if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
+				getBridgedFunctions().createSnackbar({
+					key: `recurrent-moved-in-allDay`,
+					replace: true,
+					type: 'warning',
+					hideButton: true,
+					label: t(
+						'recurrent_in_allday',
+						'You cannot drag a recurrent appointment in a all day slot'
+					),
+					autoHideTimeout: 3000
 				});
+			} else if (
+				!isEqual(event.start, start) ||
+				!isEqual(event.end, end) ||
+				event.allDay !== !!isAllDay
+			) {
+				const onEntireSeries = () => {
+					const seriesEvent = {
+						...event,
+						resource: omit(event.resource, 'ridZ')
+					};
+					onDropFn({ start, end, event: seriesEvent, isAllDay, isSeries: true });
+				};
+				const onSingleInstance = () => {
+					onDropFn({ start, end, event, isAllDay });
+				};
+				if (event.resource.isRecurrent) {
+					const closeModal = createModal(
+						{
+							children: (
+								<StoreProvider>
+									<AppointmentTypeHandlingModal
+										event={event}
+										onClose={() => closeModal()}
+										onSeries={onEntireSeries}
+										onInstance={onSingleInstance}
+									/>
+								</StoreProvider>
+							)
+						},
+						true
+					);
+				} else {
+					onDropFn({ start, end, event, isAllDay });
+				}
 			}
 		},
-		[dispatch]
+		[createModal, onDropFn]
 	);
 
 	const eventPropGetter = useCallback(
@@ -306,6 +415,12 @@ export default function CalendarComponent() {
 	const resizeEvent = useCallback(({ event, start, end }) => {
 		console.log(event, start, end);
 	}, []);
+
+	useEffect(() => {
+		if (action && (action !== EventActionsEnum.EXPAND || action !== EventActionsEnum.EDIT)) {
+			replaceHistory('');
+		}
+	}, [action]);
 
 	return (
 		<>
