@@ -75,7 +75,7 @@
         "create": "Stwórz",
         "create_appt_settings": "Tworzenie spotkań",
         "create_new_calendar": "Stwórz Nowy kalendarz",
-        "custom": "Niestandardowy",
+        "custom": "Niestandardowe",
         "custom_repeat": "Niestandardowe Powtarzanie",
         "day": "Dzień",
         "days": "Dni",
@@ -112,9 +112,9 @@
         "every_weekday": "Każdego dnia roboczego",
         "every_year_on": "Każdego kolejnego roku",
         "filter_sharer_user": "Właściciel folderu",
-        "find_shares": "Wybierz które kalendarze będą wyświetlać się w drzewku kalendarzy",
+        "find_shares": "Wybierz które kalendarze będą widoczne w drzewku kalendarzy",
         "free": "Wolny",
-        "free_busy": "Wolny/Zajęty",
+        "free_busy": "Wolny/zajęty",
         "general": "Ogólne",
         "instance": "Przypadek",
         "invitation_not_sent": "Nie wysłano jeszcze zaproszeń do uczestników",
@@ -130,7 +130,7 @@
         "notify_organizer": "Powiadom organizatora",
         "move": "Przenieś",
         "proposal_declined": "Propozycja odrzucona",
-        "regular": "Regularny",
+        "regular": "Regularne",
         "reminder": "Przypomnienie",
         "repeat": "Powtórz",
         "required": "Wymagany",
@@ -149,11 +149,11 @@
         "show_0": "Pokaż",
         "show_1": "Pokaż wszystkie",
         "show_2": "Pokaż wszystkie",
-        "show_declined_meetings": "Pokaż odrzucone spotkania",
+        "show_declined_meetings": "Pokazuj odrzucone spotkania",
         "snooze": "Drzemka",
         "start_date": "Data rozpoczęcia",
         "start_date_and_time": "Data i czas rozpoczęcia",
-        "start_week_on": "Zacznij tydzień",
+        "start_week_on": "Dzień rozpoczęcia tygodnia",
         "time_zones": "Strefy czasowe",
         "tentative": "Niepewne",
         "trash_emptied": "Kosz opróżniony pomyślnie",
@@ -162,9 +162,9 @@
         "view_url": "Zobacz adres URL",
         "week": "Tydzień",
         "weeks_on": "Tygodnie",
-        "work_hour": "Godzina pracy",
+        "work_hour": "Godziny pracy",
         "work_week": "Tydzień roboczy",
-        "your_pref_timezone_msg": "Twoja preferowana strefa czasowa: GMT +01:00 Amsterdam, Berlin, Berno, Rzym, Sztokholm, Wiedeń.",
+        "your_pref_timezone_msg": "Twoja strefa czasowa: GMT +01:00 Amsterdam, Berlin, Berno, Rzym, Sztokholm, Wiedeń.",
         "new_appointment": "Nowe spotkanie",
         "now": "Teraz",
         "number": "Numer",
@@ -179,11 +179,11 @@
         "optional_2": "Opcjonalnych",
         "out_of_office": "Poza biurem",
         "permissions": "Uprawnienia",
-        "private": "Prywatny",
+        "private": "Prywatne",
         "outlook_url": "adres URL Outlooka",
         "of": "z",
         "share": "Udostępnij",
-        "timezone_pref_msg": "Terminy zależą od Twoich ustawień stref czasowych.",
+        "timezone_pref_msg": "Godziny zależą od Twoich ustawień stref czasowych.",
         "the": " ",
         "propose_new_time": "ZAPROPONUJ NOWY TERMIIN",
         "app_name": "Kalendarze",
@@ -340,7 +340,7 @@
         "modal": {
             "set_new_time_message": "Czy chcesz ustalić nowy termin dla przeoczonego spotkania? Jeśli naciśniesz OK, wszystkie inne przypomnienia zostaną automatycznie usunięte."
         },
-        "all_time": "Na cały czas trwania wydarzenia",
+        "all_time": "Na czas trwania wydarzenia",
         "day_before_0": "{{count}} dzień przed",
         "day_before_1": "{{count}} dni przed",
         "day_before_2": "{{count}} dni przed",
@@ -366,17 +366,17 @@
     "revoke_with_custom_message": "Odbierz dostęp i wyślij niestandardową notkę",
     "settings": {
         "ical_note": "Możesz skonfigurować Apple iCal, by uzyskać dostęp do swoich Kalendarzy za pośrednictwem protokołu CalDAV. Kiedy ta opcja jest włączona, udostępnione kalendarze wyświetalne są w zakładce Delegacje konta iCal. Z tego miejsca możesz delegować dostęp to Twoich kalendarzy innym użytkownikom.",
-        "permissions_note": "Poniższy użytkoniwicy muszą znajdować się na tym samym systemie mailowym (zextras.com). Możesz użyć całego adresu e-mail lub samej nazwy użytkownika.",
+        "permissions_note": "Poniżsi użytkownicy muszą znajdować się na tym samym systemie pocztowym. Możesz użyć całego adresu e-mail lub samej nazwy użytkownika.",
         "label": {
-            "flash_browser_title": "Podświetl tytuł przeglądarki",
-            "forward_invites": "Prześlij zaproszenia dalej",
-            "invitation_response": "Odpowiedź na Zaproszenie",
-            "show_reminders": "Pokaż Przypomnienia",
-            "show_rmndr_past_due_meetings": "Pokaż Przypomnienia dla przeszłych spotkań",
+            "flash_browser_title": "Podświetl tytuł strony w przeglądarce",
+            "forward_invites": "Przekazywanie zaproszeń dalej",
+            "invitation_response": "Odpowiedź na zaproszenie",
+            "show_reminders": "Pokazywanie przypomnień",
+            "show_rmndr_past_due_meetings": "Pokazuj przypomnienia dla przeszłych spotkań",
             "show_timezones": "Pokaż strefę czasową przy tworzeniu nowych spotkań",
             "show_popup_notification": "Pokaż powiadomienie pop-up",
             "snd_autorply_users": "Wysyłaj automatyczną odpowiedź do użytkowników nie mających uprawnień do zapraszania mnie",
-            "span_time": "Czas trwania",
+            "span_time": "Pokazuj przypomnienia",
             "default_appt_dur": "Domyślna długość trwania spotkania",
             "default_calendar": "Domyślny kalendarz",
             "delete_invt_on_rply": "Usuń zaproszenie po odpowiedzi",
@@ -392,20 +392,20 @@
                 "work_week": "Widok tygodnia roboczego"
             },
             "dflt_vsblty_opt": {
-                "public": "Publiczny"
+                "public": "Publiczne"
             },
             "free_busy_opts": {
-                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
-                "allow_domain": "Zezwól tylko użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
-                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
-                "allow_internal": "Zezwól tylko użytkownikom spoza swojej domeny na sprawdzanie swojego statusu Wolny/Zajęty",
+                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej domeny na sprawdzanie swojego statusu Wolny/zajęty",
+                "allow_domain": "Zezwól tylko użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/zajęty",
+                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/zajęty",
+                "allow_internal": "Zezwól tylko użytkownikom spoza swojej domeny na sprawdzanie swojego statusu Wolny/zajęty",
                 "allow_none": "Nie zezwalaj nikomu na sprawdzanie swojego statusu Wolny/Zajęty"
             },
             "invt_opts": {
-                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej domeny na zapraszanie mnie na spotkania",
-                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej domeny na zapraszanie mnie na spotkania",
+                "allow_all": "Zezwól użytkownikom spoza jak i z mojej domeny na zapraszanie mnie na spotkania",
+                "allow_following": "Zezwól tylko wybranym użytkownikom z mojej domeny na zapraszanie mnie na spotkania",
                 "allow_none": "Nie zezwalaj nikomu na zapraszanie mnie na spotkania",
-                "allow_internal": "Zezwól tylko użytkownikom ze swojej domeny na zapraszanie mnie na spotkania"
+                "allow_internal": "Zezwól tylko użytkownikom z mojej domeny na zapraszanie mnie na spotkania"
             },
             "timezones": {
                 "amsterdam": "GMT +01:00 Amsterdam, Berlin, Berno, Rzym, Sztokholm, Wiedeń",
@@ -546,7 +546,7 @@
     "appointments": "Spotkania",
     "appt_restored_successfully": "Spotkania przywrócone prawidłowo",
     "button": {
-        "customize_modal": "Otwórz Dostosowywanie Modala"
+        "customize_modal": "Otwórz okno dostosowywania"
     },
     "calendar": {
         "modal": {
@@ -570,8 +570,8 @@
         }
     },
     "edit_share_properties": "Edytuj właściwości udostępniania",
-    "find_calendar_shares": "Znajdź Udostępnienia Kalendarza",
-    "find_shares": "Znajdź udostępnienia",
+    "find_calendar_shares": "Znajdź udostępnienia kalendarza",
+    "find_shares": "Dodaj",
     "freebusy": "WolnyZajęty",
     "has_attachments": "Ma załączniki",
     "is_private": "Jest prywatny",
@@ -603,7 +603,7 @@
         "organized_by": "zorganizowane przez"
     },
     "share_invite_resent": "Zaproszenie do udostępnienia zostało wysłane ponownie",
-    "shared_folders": "Udostępnione Kalendarze",
+    "shared_folders": "Udostępnione kalendarze",
     "shared_items": "Udostępnione elementy",
     "messages": {
         "format_as_plain_text": "Formatuj jako zwykły tekst",

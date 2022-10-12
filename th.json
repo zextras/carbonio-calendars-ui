@@ -19,7 +19,7 @@
         "custom": "กำหนดเอง",
         "attachment": "สิ่งที่แนบมา",
         "busy": "ไม่ว่าง",
-        "download": "ดาวน์โหลด",
+        "download": "ดาวน์โหลดทั้งหมด",
         "edit": "แก้ไข",
         "edit_share": "แก้ไขการแชร์",
         "end": "จบ",
@@ -180,7 +180,9 @@
         "share_public_link": "แชร์ลิงก์สาธารณะ",
         "select": "เลือก",
         "root": "ราก",
-        "choose_file": "เลือกไฟล์"
+        "choose_file": "เลือกไฟล์",
+        "public_link_description": "สร้างจาก {{title}} เมื่อวันที่ {{date}}",
+        "continue": "ดำเนินการต่อ"
     },
     "calendar": {
         "modal": {
@@ -212,7 +214,8 @@
             "expand": "เปิดใน Displayer",
             "needs_action": "การดำเนินการที่จำเป็น",
             "invitation_not_sent_yet": "ยังไม่ได้ส่งคำเชิญ"
-        }
+        },
+        "is_exception": "ข้อยกเว้น"
     },
     "settings": {
         "options": {
@@ -410,7 +413,7 @@
         "delete_all_occurences": "ลบเหตุการณ์ทั้งหมด",
         "delete_future_occurences": "ลบอินสแตนซ์นี้และเหตุการณ์ในอนาคตทั้งหมด",
         "invite_has_no_message": "คำเชิญนี้ไม่มีข้อความ",
-        "invited_you": "เชิญคุณเข้าสู่",
+        "invited_you": "เชิญคุณเข้าร่วมกิจกรรมแล้ว",
         "meeting_canceled": "การประชุมต่อไปนี้ถูกยกเลิกแล้ว",
         "modal": {
             "delete": {
@@ -439,7 +442,9 @@
         "send_email": "ส่งอีเมล",
         "more": "เพิ่มเติม...",
         "required_participant": "ผู้เข้าร่วม {{count}}",
-        "optional_participant": "{{count}} ตัวเลือก"
+        "optional_participant": "{{count}} ตัวเลือก",
+        "edit_series_warning": "ในขณะที่คุณดำเนินการแก้ไขซีรีส์ อินสแตนซ์ที่ถูกลบหรือแก้ไขก่อนหน้านี้ทั้งหมดจะถูกกู้คืนด้วยการตั้งค่าซีรีส์ใหม่",
+        "appointment_invitation_sent": "ส่งคำเชิญนัดหมายแล้ว"
     },
     "type": "รูปแบบ",
     "tooltip": {
@@ -452,8 +457,7 @@
         "equipment": "อุปกรณ์",
         "location": "สถานที่",
         "chat_room": "ลิงก์ของห้องเสมือนจริง",
-        "virtual_chat": "แชทเสมือนจริง",
-        "calendar_sharing_status": "แชร์กับ {{count}} คน"
+        "virtual_chat": "แชทเสมือนจริง"
     },
     "button": {
         "customize_modal": "เปิด Customize Modal"

@@ -32,7 +32,7 @@
         "delete_future_occurences": "删除此实例及其所有未来重复",
         "delete_future_occurences_warning": "这也将删除系列中（在此实例之前和之后）的所有例外",
         "invite_has_no_message": "此邀请没有文本消息",
-        "invited_you": "已邀请您至",
+        "invited_you": "已邀请您加入活动",
         "meeting_canceled": "以下会议已被取消",
         "modal": {
             "delete": {
@@ -62,7 +62,10 @@
         "send_email": "发送邮件",
         "more": "更多...",
         "required_participant": "{{count}} 参与者",
-        "optional_participant": "{{count}} 可选"
+        "optional_participant": "{{count}} 可选",
+        "search_hints": " ",
+        "edit_series_warning": "当您修改系列时，所有先前被删除或修改的实例都将按照新的系列设置进行恢复。",
+        "appointment_invitation_sent": "预约邀请已发送"
     },
     "calendar": {
         "modal": {
@@ -94,7 +97,8 @@
             "expand": "在显示工具中打开",
             "needs_action": "需要操作",
             "invitation_not_sent_yet": "尚未发送邀请"
-        }
+        },
+        "is_exception": "例外"
     },
     "items": {
         "second": "秒",
@@ -129,7 +133,7 @@
         "share_info": "共享信息"
     },
     "label": {
-        "download": "下载",
+        "download": "下载全部",
         "edit": "编辑",
         "edit_share": "编辑分享",
         "end": "结束",
@@ -293,7 +297,11 @@
         "share_public_link": "分享公开链接",
         "select": "选择",
         "root": "根目录",
-        "choose_file": "选择文件"
+        "choose_file": "选择文件",
+        "select_in": " ",
+        "search_hint": " ",
+        "public_link_description": "从 {{title}} 于 {{date}} 生成",
+        "continue": "继续"
     },
     "months": {
         "april": "四月",
@@ -485,7 +493,7 @@
         "location": "位置",
         "chat_room": "虚拟房间链接",
         "virtual_chat": "虚拟聊天",
-        "calendar_sharing_status": "已与 {{count}} 人分享"
+        "calendar_sharing_status": " "
     },
     "workflow": "工作流",
     "write": "编写",
