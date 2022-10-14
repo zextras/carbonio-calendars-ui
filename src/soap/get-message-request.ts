@@ -12,8 +12,8 @@ export const getMessageRequest = async ({
 }: {
 	inviteId: string;
 	ridZ?: string;
-}): Promise<any> =>
-	soapFetch('GetMsg', {
+}): Promise<any> => {
+	const response = await soapFetch('GetMsg', {
 		_jsns: 'urn:zimbraMail',
 		m: omitBy(
 			{
@@ -37,3 +37,7 @@ export const getMessageRequest = async ({
 			isNil
 		)
 	});
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	return response?.Fault ? { ...response.Fault, error: true } : response;
+};

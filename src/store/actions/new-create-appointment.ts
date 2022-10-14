@@ -152,7 +152,7 @@ const generateInvite = (editorData: Editor): any => {
 		comp: [
 			{
 				alarm:
-					editorData?.reminder !== 'never'
+					editorData?.reminder !== 'never' && editorData.reminder !== 'undefined'
 						? [
 								{
 									action: 'DISPLAY',

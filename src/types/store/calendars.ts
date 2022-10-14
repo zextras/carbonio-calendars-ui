@@ -7,6 +7,7 @@ import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 
 export type Calendar = {
 	checked: boolean;
+	broken: boolean;
 	freeBusy: boolean;
 	color: ZimbraColorType;
 	id: string;

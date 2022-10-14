@@ -100,14 +100,12 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 
 	const toggleOpen = useCallback(
 		(e) => {
-			if (!invite) {
-				dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
-			}
+			getEventInvite();
 			if (e.detail === 1 && isNil(action) && !open) {
 				setOpen(true);
 			}
 		},
-		[invite, action, open, dispatch, event.resource.inviteId, event.resource.ridZ]
+		[getEventInvite, action, open]
 	);
 
 	const actions = useEventSummaryViewActions({
