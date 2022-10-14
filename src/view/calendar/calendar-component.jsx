@@ -417,7 +417,7 @@ export default function CalendarComponent() {
 	}, []);
 
 	useEffect(() => {
-		if (action && (action !== EventActionsEnum.EXPAND || action !== EventActionsEnum.EDIT)) {
+		if (action && action !== EventActionsEnum.EXPAND && action !== EventActionsEnum.EDIT) {
 			replaceHistory('');
 		}
 	}, [action]);
