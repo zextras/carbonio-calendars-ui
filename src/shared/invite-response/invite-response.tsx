@@ -150,7 +150,7 @@ const InviteResponse: FC<InviteResponse> = ({
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		dispatch(getInvite({ inviteId })).then((res) => {
-			const normalizedInvite = normalizeInvite(res.payload.m);
+			const normalizedInvite = normalizeInvite(res.payload.m?.[0]);
 			const requiredEvent = inviteToEvent(normalizedInvite);
 			const { editor, callbacks } = generateEditor({
 				event: requiredEvent,
