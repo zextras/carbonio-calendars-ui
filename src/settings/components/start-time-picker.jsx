@@ -66,7 +66,7 @@ export default function StartDatePicker({ start, onChange, day, showEnd, disable
 	const startTime = useMemo(() => getDate(start), [start]);
 
 	return (
-		<Container crossAlignment="flex-start" style={{ maxWidth: '600px' }}>
+		<Container crossAlignment="flex-start" style={{ maxWidth: '37.5rem' }}>
 			<Padding bottom="extrasmall">
 				<Text size="small">{t(`label.${label}`)}</Text>
 			</Padding>

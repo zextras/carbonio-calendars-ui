@@ -16,14 +16,14 @@ type CustomComponentProps = {
 };
 
 const CustomInputWrapper = styled(Row)`
-	border-bottom: 1px solid ${({ theme }): string => theme.palette.gray4};
-	border-radius: 2px;
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray4};
+	border-radius: 0.125rem;
 	&:hover {
 		background: ${({ theme }): string => theme.palette.gray2};
 	}
 
 	&:focus-within {
-		border-bottom: 1px solid ${({ theme }): string => theme.palette.primary};
+		border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.primary};
 	}
 `;
 
@@ -53,7 +53,7 @@ const DatePickerCustomComponent: FC<CustomComponentProps> = React.forwardRef(
 
 		return (
 			<CustomInputWrapper background="gray4">
-				<Row takeAvailableSpace minWidth="150px" background="transparent">
+				<Row takeAvailableSpace minWidth="9.375rem" background="transparent">
 					<Input
 						label={label}
 						value={input}

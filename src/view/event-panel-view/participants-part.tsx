@@ -43,10 +43,10 @@ export const ParticipantsPart = ({
 			{invite?.organizer?.a === account.name && (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
-						style={{ width: '48px', height: '48px' }}
+						style={{ width: '3rem', height: '3rem' }}
 						label={account.name || account.displayName}
 					/>
-					<Text style={{ padding: '0px 8px' }}>
+					<Text style={{ padding: '0 0.5rem' }}>
 						<Trans
 							i18nKey="message.you_are_organizer"
 							defaults="<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>"
@@ -62,10 +62,10 @@ export const ParticipantsPart = ({
 			{!invite.isOrganizer && !calendar?.owner ? (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
-						style={{ width: '48px', height: '48px' }}
+						style={{ width: '3rem', height: '3rem' }}
 						label={organizer.d || organizer.a || organizer.url}
 					/>
-					<Text style={{ padding: '0px 8px' }}>
+					<Text style={{ padding: '0 0.5rem' }}>
 						<Trans
 							i18nKey="message.somebody_invited_you"
 							defaults="<strong>{{somebody}}</strong> invited you"
@@ -78,10 +78,10 @@ export const ParticipantsPart = ({
 				!iAmAttendee && (
 					<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 						<Avatar
-							style={{ width: '48px', height: '48px' }}
+							style={{ width: '3rem', height: '3rem' }}
 							label={organizer.d || organizer.a || organizer.url || ''}
 						/>
-						<Text style={{ padding: '0px 8px' }}>
+						<Text style={{ padding: '0 0.5rem' }}>
 							<Trans
 								i18nKey="message.somebody_is_organizer"
 								defaults="<strong>{{somebody}}</strong> is the organizer"

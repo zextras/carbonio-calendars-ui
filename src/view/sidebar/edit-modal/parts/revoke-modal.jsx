@@ -88,7 +88,7 @@ export const RevokeModal = ({ folder, grant, onGoBack }) => {
 	]);
 
 	return (
-		<Container padding="8px 8px 24px">
+		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader
 				title={t('label.revoke_share', {
 					title: folder.name,

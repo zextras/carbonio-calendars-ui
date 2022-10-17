@@ -17,17 +17,17 @@ import { useAppStatusStore } from '../../store/zustand/store';
 
 const ButtonWrapper = styled.div`
 	min-width: fit-content;
-	border: 1px solid;
+	border: 0.0625rem solid;
 	${({ color = 'primary', theme }): SimpleInterpolation => css`
 		${pseudoClasses(theme, color, 'border-color')};
 	`};
 	&:last-child {
 		border-left: none;
-		border-radius: 0 2px 2px 0;
+		border-radius: 0 0.125rem 0.125rem 0;
 	}
 	&:first-child {
 		border-right: none;
-		border-radius: 2px 0 0 2px;
+		border-radius: 0.125rem 0 0 0.125rem;
 	}
 	&:not(:first-child):not(:last-child) {
 		border-radius: 0;
@@ -80,7 +80,7 @@ export const CustomToolbar = ({
 			<Container
 				orientation="horizontal"
 				width="fill"
-				height={48}
+				height="3rem"
 				mainAlignment="baseline"
 				crossAlignment="stretch"
 				background="gray5"

@@ -52,10 +52,10 @@ const ActionButtons = ({ actions }: { actions: Array<any> }): ReactElement => {
 	}, [actions, recalculateHiddenActions]);
 
 	return (
-		<Row wrap="nowrap" height="100%" mainAlignment="flex-end" style={{ maxWidth: '160px' }}>
+		<Row wrap="nowrap" height="100%" mainAlignment="flex-end" style={{ maxWidth: '10rem' }}>
 			<Row
 				//	ref={actionContainerRef}
-				height="40px"
+				height="2.5rem"
 				mainAlignment="flex-start"
 				style={{ overflow: 'hidden' }}
 			>
@@ -82,7 +82,7 @@ const ActionButtons = ({ actions }: { actions: Array<any> }): ReactElement => {
 };
 
 const ExpandButton = ({ actions }: { actions: Array<any> }): ReactElement => (
-	<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
+	<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 		{actions &&
 			map(actions, (action) => (
 				<IconButton key={action.id} icon={action.icon} onClick={action.click} />
@@ -109,7 +109,7 @@ export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
 				orientation="horizontal"
 				background="gray5"
 				width="fill"
-				height="48px"
+				height="3rem"
 				padding={{ vertical: 'small' }}
 			>
 				<Row padding={{ horizontal: 'large' }}>
@@ -134,7 +134,7 @@ export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
 					orientation="horizontal"
 					background="gray5"
 					width="fill"
-					height="48px"
+					height="3rem"
 					padding={{ vertical: 'small' }}
 				>
 					<Row>
@@ -170,7 +170,7 @@ export default function EventPanelView(): ReactElement | null {
 			<Container
 				padding={{ all: 'none' }}
 				mainAlignment="flex-start"
-				height="calc(100% - 48px)"
+				height="calc(100% - 3rem)"
 				style={{ overflow: 'auto' }}
 			>
 				<BodyContainer

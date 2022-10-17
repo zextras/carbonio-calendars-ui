@@ -15,7 +15,7 @@ import { Invite } from '../../types/store/invite';
 import OrganizerActions from './organizer-actions';
 
 const RecurrentRow = styled(Row)`
-	border: 1px solid ${(props): string => props.theme.palette.primary.regular};
+	border: 0.0625rem solid ${(props): string => props.theme.palette.primary.regular};
 `;
 
 export const ActionsButtonsRow = ({

@@ -127,7 +127,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 			<Container ref={anchorRef} onClick={toggleOpen} height="100%">
 				<Dropdown
 					contextMenu
-					width="cal(min(100%,200px))"
+					width="cal(min(100%,12.5rem))"
 					style={{ width: '100%', height: '100%' }}
 					items={actions}
 					display="block"
@@ -152,7 +152,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 							{event.resource.class === 'PRI' && (
 								<Tooltip label={t('label.private', 'Private')} placement="top">
 									<Row padding={{ left: 'extrasmall' }}>
-										<Icon color="currentColor" icon="Lock" style={{ minWidth: '16px' }} />
+										<Icon color="currentColor" icon="Lock" style={{ minWidth: '1rem' }} />
 									</Row>
 								</Tooltip>
 							)}
@@ -165,7 +165,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 									placement="bottom"
 								>
 									<Row padding={{ left: 'extrasmall' }}>
-										<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '16px' }} />
+										<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '1rem' }} />
 									</Row>
 								</Tooltip>
 							)}

@@ -14,7 +14,7 @@ import { useTagExist } from '../tags/tag-actions';
 
 const NeedActionIcon = styled(Icon)`
 	position: relative;
-	top: -1px;
+	top: -0.0625rem;
 `;
 
 type TagItems = Tag & {

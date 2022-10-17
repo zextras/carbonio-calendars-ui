@@ -21,7 +21,7 @@ const TextArea = styled.textarea`
 	padding: ${(props): string => props.theme.sizes.padding.large};
 	background: ${(props): string => props.theme.palette.gray5.regular};
 	height: fit-content;
-	min-height: 150px;
+	min-height: 9.375rem;
 	flex-grow: 1;
 	width: 100%;
 	border: none;
