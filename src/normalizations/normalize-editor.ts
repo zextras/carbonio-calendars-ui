@@ -6,7 +6,7 @@
 import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
-import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
+import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { store } from '../store/redux';
 import { Editor } from '../types/editor';
@@ -73,7 +73,7 @@ export const normalizeEditor = ({
 				{
 					calendar:
 						store?.getState().calendars.calendars[
-							event.resource.calendar.id ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
+							event.resource.calendar.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
 						],
 					id,
 					ridZ: event?.resource?.ridZ,

@@ -8,7 +8,7 @@
 import React, { FC, ReactElement } from 'react';
 import { Container, Button, Padding, Divider, Tooltip } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { ModalFooterProps } from '../types/commons';
+import { ModalFooterProps } from '../carbonio-ui-commons/types';
 
 const ModalFooter: FC<ModalFooterProps> = ({
 	mainAlignment = 'center',
@@ -25,9 +25,8 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	background = 'primary',
 	secondarybackground,
 	secondaryColor = 'secondary',
-	width = 'fit',
 	showDivider = true,
-	primaryTooltip,
+	tooltip,
 	additionalAction,
 	additionalBtnType = 'outlined',
 	additionalColor = 'secondary',
@@ -53,7 +52,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 						type={additionalBtnType}
 						onClick={additionalAction}
 						label={additionalLabel}
-						width={width}
+						width="fit"
 					/>
 					<Padding horizontal="extrasmall" />
 				</Container>
@@ -74,19 +73,15 @@ const ModalFooter: FC<ModalFooterProps> = ({
 							onClick={secondaryAction}
 							label={secondaryLabel}
 							disabled={secondaryDisabled}
-							width={width}
+							width="fit"
 						/>
 						<Padding horizontal="extrasmall" />
 					</>
 				)}
-				{primaryTooltip ? (
-					<Tooltip
-						label={primaryTooltip.label}
-						placement={primaryTooltip.placement}
-						maxWidth={primaryTooltip.maxWidth}
-					>
+				{tooltip ? (
+					<Tooltip label={tooltip} placement="top" maxWidth="fit">
 						<Button
-							width={width}
+							width="fit"
 							color={color}
 							onClick={onConfirm}
 							label={label}
@@ -97,7 +92,7 @@ const ModalFooter: FC<ModalFooterProps> = ({
 					</Tooltip>
 				) : (
 					<Button
-						width={width}
+						width="fit"
 						color={color}
 						onClick={onConfirm}
 						label={label}
