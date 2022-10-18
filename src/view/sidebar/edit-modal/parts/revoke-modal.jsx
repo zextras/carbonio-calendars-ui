@@ -162,11 +162,7 @@ export const RevokeModal = ({ folder, grant, onGoBack }) => {
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
 				label={t('label.revoke', 'Revoke')}
 				t={t}
-				primaryTooltip={{
-					label: tooltipLabel,
-					placement: 'top',
-					maxWidth: 'fit'
-				}}
+				tooltip={tooltipLabel}
 			/>
 		</Container>
 	);
