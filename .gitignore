@@ -5,7 +5,7 @@
 /pkg/
 /build/
 /dist/
-/.idea
+/.idea/
 /sdk/
 /e2e/output/
 /junit.xml

@@ -412,12 +412,10 @@ export default function CalendarComponent() {
 		[setDate]
 	);
 
-	const resizeEvent = useCallback(({ event, start, end }) => {
-		console.log(event, start, end);
-	}, []);
+	const resizeEvent = () => null;
 
 	useEffect(() => {
-		if (action && (action !== EventActionsEnum.EXPAND || action !== EventActionsEnum.EDIT)) {
+		if (action && action !== EventActionsEnum.EXPAND && action !== EventActionsEnum.EDIT) {
 			replaceHistory('');
 		}
 	}, [action]);
