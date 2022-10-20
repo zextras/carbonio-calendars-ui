@@ -10,7 +10,8 @@ import { extractCalendars } from '../../utils/store/calendars';
 export const createCalendar = createAsyncThunk(
 	'calendars/create',
 	async ({ name, parent, color, excludeFreeBusy }: any, { requestId }) => {
-		const { folder } = await createFolderRequest({ name, parent, color, excludeFreeBusy });
-		return [extractCalendars(folder), requestId];
+		const res = await createFolderRequest({ name, parent, color, excludeFreeBusy });
+		const folders = extractCalendars(res.folder);
+		return [folders, requestId];
 	}
 );
