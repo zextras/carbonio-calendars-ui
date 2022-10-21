@@ -12,25 +12,25 @@ export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promis
 	soapFetch('CounterAppointment', {
 		_jsns: 'urn:zimbraMail',
 		comp: '0',
-		id: appt.resource.inviteId,
-		ms: appt.resource.ms,
-		rev: appt.resource.rev,
+		id: appt.inviteId,
+		ms: appt.ms,
+		rev: appt.rev,
 		m: {
-			e: [{ a: appt.resource.organizer.a, t: 't' }],
+			e: [{ a: appt.organizer.address, t: 't' }],
 			inv: {
 				comp: [
 					{
 						name: appt.title,
-						uid: appt.resource.uid,
+						uid: appt.uid,
 						seq: 1,
 						allDay: appt.allDay ? '1' : '0',
 						e: {
-							...appt.resource.end,
+							tz: appt?.timezone,
 							d: moment(moment(appt.end)).format('YYYYMMDDTHHmm00')
 						},
-						or: appt.resource.organizer,
+						or: { a: appt.organizer?.address },
 						s: {
-							...appt.resource.start,
+							tz: appt?.timezone,
 							d: moment(moment(appt.start)).format('YYYYMMDDTHHmm00')
 						}
 					}
@@ -53,7 +53,7 @@ export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promis
 							.format('Z')} ${moment.tz.guess()} [MODIFIED]</td>
 								</tr>
 							</table>\n<div>*~*~*~*~*~*~*~*~*~*</div><br>
-							${appt.resource?.richText}
+							${appt?.richText}
 						`
 					},
 					{
@@ -63,7 +63,7 @@ export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promis
 							${moment(appt.start)
 								.tz(moment.tz.guess())
 								.format('Z')} ${moment.tz.guess()} [MODIFIED]\n\n*~*~*~*~*~*~*~*~*~*\n\n${
-							appt.resource?.plainText
+							appt.plainText
 						}`,
 						ct: 'text/plain'
 					}
