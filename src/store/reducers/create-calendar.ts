@@ -35,7 +35,6 @@ export const createCalendarPending = (state: CalendarSlice, { meta }: any): any 
 	state.status = 'pending';
 };
 
-export const createCalendarRejected = (state: CalendarSlice, { payload, meta }: any): any => {
-	console.log(payload, meta);
+export const createCalendarRejected = (state: CalendarSlice): any => {
 	state.status = 'error';
 };

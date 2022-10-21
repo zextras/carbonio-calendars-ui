@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { ActionsContext, PanelView } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
@@ -33,12 +33,12 @@ export const openAppointmentItem = ({
 	disabled: false,
 	keepOpen: true,
 	label: t('event.action.expand', 'Open in Displayer'),
-	click: (): void => {
+	click: (ev: Event): void => {
 		context?.onClose && context?.onClose();
 		openAppointment({
 			event,
 			panelView
-		})();
+		})(ev);
 	}
 });
 
@@ -116,9 +116,9 @@ export const moveApptToTrashItem = ({
 	label: t('label.delete', 'Delete'),
 	disabled: false,
 	keepOpen: true,
-	click: (): void => {
+	click: (ev: Event): void => {
 		context?.onClose && context?.onClose();
-		moveToTrash({ event, invite, context })();
+		moveToTrash({ event, invite, context })(ev);
 	}
 });
 
@@ -133,9 +133,9 @@ export const deletePermanentlyItem = ({
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
 	keepOpen: true,
-	click: (): void => {
+	click: (ev: Event): void => {
 		context?.onClose && context?.onClose();
-		deletePermanently({ event, context })();
+		deletePermanently({ event, context })(ev);
 	}
 });
 
