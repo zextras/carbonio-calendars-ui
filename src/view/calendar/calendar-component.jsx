@@ -415,7 +415,7 @@ export default function CalendarComponent() {
 	const resizeEvent = () => null;
 
 	useEffect(() => {
-		if (action && (action !== EventActionsEnum.EXPAND || action !== EventActionsEnum.EDIT)) {
+		if (action && action !== EventActionsEnum.EXPAND && action !== EventActionsEnum.EDIT) {
 			replaceHistory('');
 		}
 	}, [action]);
