@@ -13,7 +13,7 @@ import {
 	generateEditorSliceItem,
 	getRandomEditorId,
 	mockEmptyStore
-} from '../../../__mocks__/generators/generators';
+} from '../../test/utils/generators';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 
 moment.tz.setDefault('America/New_York');
