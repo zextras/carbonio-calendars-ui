@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { ActionsContext, PanelView } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
@@ -94,7 +94,7 @@ export const moveAppointmentItem = ({
 		event.resource.calendar.id === FOLDERS.TRASH
 			? t('label.restore', 'Restore')
 			: t('label.move', 'Move'),
-	disabled: false,
+	disabled: !event?.haveWriteAccess,
 	keepOpen: true,
 	click: moveAppointment({ event, context })
 });
@@ -111,7 +111,7 @@ export const moveApptToTrashItem = ({
 	id: EventActionsEnum.TRASH,
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
-	disabled: false,
+	disabled: !event?.haveWriteAccess,
 	keepOpen: true,
 	click: moveToTrash({ event, invite, context })
 });
