@@ -6,7 +6,7 @@
 import { getUserAccount, getUserSettings } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
-import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
+import { PREFS_DEFAULTS } from '../constants';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
@@ -62,7 +62,7 @@ const createEmptyEditor = (id: string): Editor => {
 		zimbraPrefTimeZoneId,
 		zimbraPrefCalendarDefaultApptDuration,
 		zimbraPrefCalendarApptReminderWarningTime,
-		zimbraPrefDefaultCalendarId = CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
+		zimbraPrefDefaultCalendarId = PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
 	} = getUserSettings().prefs;
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
 	const calendars = store?.getState().calendars;
@@ -275,22 +275,21 @@ export const createCallbacks = (id: string): EditorCallbacks => {
 		isNew = true
 	}): any => // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		isNew // @ts-ignore
-			? dispatch(createAppointment({ id, draft })) // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					.unwrap() // @ts-ignore
-					.then(({ response, editor }) => {
-						if (response) {
-							dispatch(updateEditor({ id, editor }));
-						}
-						return Promise.resolve({ response, editor }); // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					}) // @ts-ignore
-			: dispatch(modifyAppointment({ id, draft })) // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					.unwrap() // @ts-ignore
-					.then(({ response, editor }) => {
-						if (response) {
-							dispatch(updateEditor({ id, editor }));
-						}
+			? dispatch(createAppointment({ id, draft })).then(({ payload }) => {
+					const { response, editor } = payload;
+					if (payload?.response) {
+						dispatch(updateEditor({ id, editor }));
+					}
+					return Promise.resolve({ response, editor }); // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			  }) // @ts-ignore
+			: dispatch(modifyAppointment({ id, draft })).then(({ payload }) => {
+					const { response, editor, error } = payload;
+					if (response && !error) {
+						dispatch(updateEditor({ id, editor }));
 						return Promise.resolve({ response, editor });
-					});
+					}
+					return Promise.resolve(payload);
+			  });
 
 	const onSend = (isNew: boolean): Promise<any> => onSave({ draft: false, isNew });
 

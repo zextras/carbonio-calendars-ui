@@ -214,7 +214,9 @@ export const useDeleteActions = (
 				const { editor } = generateEditor({
 					event,
 					invite: modifiedInvite,
-					context
+					context: {
+						isInstance: context.isInstance
+					}
 				});
 				const isTheFirstInstance = moment(untilDate).isSameOrBefore(moment(invite.start.d));
 				const draft = !(size(invite?.participants) > 0);

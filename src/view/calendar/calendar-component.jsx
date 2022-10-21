@@ -288,7 +288,7 @@ export default function CalendarComponent() {
 						.then((res) => {
 							if (res?.response) {
 								const success = res?.response;
-								getBridgedFunctions().createSnackbar({
+								getBridgedFunctions()?.createSnackbar({
 									key: `calendar-moved-root`,
 									replace: true,
 									type: success ? 'info' : 'warning',
@@ -334,7 +334,7 @@ export default function CalendarComponent() {
 		(appt) => {
 			const { start, end, event, isAllDay } = appt;
 			if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
-				getBridgedFunctions().createSnackbar({
+				getBridgedFunctions()?.createSnackbar({
 					key: `recurrent-moved-in-allDay`,
 					replace: true,
 					type: 'warning',
@@ -412,12 +412,10 @@ export default function CalendarComponent() {
 		[setDate]
 	);
 
-	const resizeEvent = useCallback(({ event, start, end }) => {
-		console.log(event, start, end);
-	}, []);
+	const resizeEvent = () => null;
 
 	useEffect(() => {
-		if (action && (action !== EventActionsEnum.EXPAND || action !== EventActionsEnum.EDIT)) {
+		if (action && action !== EventActionsEnum.EXPAND && action !== EventActionsEnum.EDIT) {
 			replaceHistory('');
 		}
 	}, [action]);

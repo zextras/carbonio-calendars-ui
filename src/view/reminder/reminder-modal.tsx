@@ -60,7 +60,7 @@ export const ReminderModal = ({
 		// @ts-ignore
 		dispatch(getInvite({ inviteId: activeReminder.inviteId })).then(({ payload }) => {
 			if (activeReminder) {
-				const invite = normalizeInvite(payload.m);
+				const invite = normalizeInvite(payload.m?.[0]);
 				const event = {
 					resource: {
 						calendar: activeReminder.calendar,
