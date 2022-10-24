@@ -138,7 +138,7 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
 						onEditorChange={onRichTextChange}
-						minHeight={200}
+						minHeight="12.5rem"
 						value={richTextValue}
 						disabled={disabled?.composer}
 					/>

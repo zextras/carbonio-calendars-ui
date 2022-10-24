@@ -35,7 +35,9 @@ export const createCalendarPending = (state: CalendarSlice, { meta }: any): any 
 	state.status = 'pending';
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createCalendarRejected = (state: CalendarSlice, { payload, meta }: any): any => {
+	// eslint-disable-next-line no-console
 	console.log(payload, meta);
 	state.status = 'error';
 };
