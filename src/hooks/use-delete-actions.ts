@@ -39,7 +39,7 @@ const generateAppointmentDeletedSnackbar = (
 		createSnackbar({
 			key: 'send',
 			replace: true,
-			type: 'info',
+			type: 'success',
 			label: snackbarLabel,
 			autoHideTimeout: 3000,
 			hideButton: true,
@@ -119,7 +119,7 @@ export const useDeleteActions = (
 	}, []);
 
 	const deleteNonRecurrentEvent = useCallback(
-		(newMessage) => {
+		({ editor: newMessage, onBoardClose }) => {
 			context.onClose();
 			let isCanceled = false;
 			const restoreAppointment = (): void => {
@@ -133,6 +133,7 @@ export const useDeleteActions = (
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					.then((res: { type: string | string[] }) => {
+						onBoardClose && onBoardClose();
 						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 					});
 			};
@@ -146,11 +147,13 @@ export const useDeleteActions = (
 			};
 			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {
+					onBoardClose && onBoardClose();
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreAppointment);
 				})
 				.then(
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
+							onBoardClose && onBoardClose();
 							sendResponse(event, ctxt);
 						}
 					}, 5000)
@@ -160,8 +163,8 @@ export const useDeleteActions = (
 	);
 
 	const deleteRecurrentSerie = useCallback(
-		(newMessage) => {
-			context.onClose();
+		({ editor: newMessage, onBoardClose }) => {
+			context?.onClose && context?.onClose();
 			let isCanceled = false;
 			const restoreRecurrentSeries = (): void => {
 				isCanceled = true;
@@ -225,11 +228,13 @@ export const useDeleteActions = (
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				.then((res: { type: string | string[] }) => {
+					onBoardClose && onBoardClose();
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreRecurrentSeries, true);
 				})
 				.then(
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
+							onBoardClose && onBoardClose();
 							sendResponse(event, ctxt);
 						}
 					}, 5000)
@@ -240,7 +245,7 @@ export const useDeleteActions = (
 	);
 
 	const deleteRecurrentInstance = useCallback(
-		(newMessage) => {
+		({ editor: newMessage, onBoardClose }) => {
 			context.onClose();
 			const isCanceled = false;
 			context.replaceHistory('');
@@ -260,11 +265,13 @@ export const useDeleteActions = (
 			};
 			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {
+					onBoardClose && onBoardClose();
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar);
 				})
 				.then(
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
+							onBoardClose && onBoardClose();
 							sendResponse(event, ctxt);
 						}
 					}, 5000)

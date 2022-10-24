@@ -4,4 +4,4 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-export const PreviewsManagerContext = jest.fn();
+export * from '../../src/carbonio-ui-commons/test/mocks/carbonio-ui-preview';
