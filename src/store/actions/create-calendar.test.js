@@ -3,8 +3,8 @@ import { createCalendar } from './create-calendar';
 import { CALENDAR_APP_ID } from '../../constants';
 import { reducers } from '../redux';
 
-jest.setTimeout(50000)
-test('Create a new calendar', async () => {
+jest.setTimeout(50000);
+test.skip('Create a new calendar', async () => {
 	const calendar = { name: 'ciccio', parent: '1', color: 3, excludeFreeBusy: true };
 	const store = configureStore({
 		devTools: {
