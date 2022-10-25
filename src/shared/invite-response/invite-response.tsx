@@ -20,7 +20,6 @@ import moment from 'moment';
 import 'moment-timezone';
 import { addBoard, getAction, Action, t, Board } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
-import { proposeNewTime } from '../../store/actions/propose-new-time';
 import { generateEditor } from '../../commons/editor-generator';
 import { EditorCallbacks } from '../../types/editor';
 import InviteReplyPart from './parts/invite-reply-part';

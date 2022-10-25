@@ -22,8 +22,6 @@ export const EditorOrganizer = ({ editorId, callbacks }: EditorProps): ReactElem
 	const [t] = useTranslation();
 	const identities = useIdentityItems();
 	const organizer = useSelector(selectOrganizer(editorId));
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	const normalizedOrganizer = normaliseContact(organizer);
 	const { onOrganizerChange } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
