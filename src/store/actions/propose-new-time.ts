@@ -13,7 +13,8 @@ export const proposeNewTime = createAsyncThunk(
 	async ({ id }: { id: string }, { getState }): Promise<any> => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
-		const appt = getState().editor.editors[id];
+		const appt = getState()?.editor?.editors?.[id];
+
 		return counterAppointmentRequest({ appt });
 	}
 );
