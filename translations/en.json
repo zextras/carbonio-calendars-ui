@@ -11,6 +11,7 @@
         "save_to_preview": "Save to preview",
         "send": "Send",
         "send_cancellation": "Send Cancellation",
+        "send_edit": "Send Edit",
         "share_calendar": "Share Calendar"
     },
     "add": "Add",
@@ -101,6 +102,7 @@
         "all_day": "All day",
         "app_name": "Calendars",
         "apple_ical": "Apple iCal",
+        "appointment_is_private": "The appointment is private.",
         "appt_reminder": "Appointment Reminder",
         "appt_reminder_plural": "Appointment Reminders",
         "attachment": "Attachment",
@@ -180,6 +182,7 @@
         "new_appointment": "New appointment",
         "new_calendar": "New calendar",
         "new_tag": "New Tag",
+        "new_time_proposed": "New Time Proposed",
         "no_end_date": "No end date",
         "no_special_char_allowed": "Name should not contain any special character",
         "no_subject": "No subject",
@@ -242,6 +245,7 @@
         "start_date": "Start date",
         "start_date_and_time": "Start date and time",
         "start_week_on": "Start week on",
+        "subject": "Subject",
         "tag": "Tag",
         "tag_max_length": "Max 128 characters are allowed",
         "tag_name": "Tag name",
@@ -286,6 +290,7 @@
         "invite_has_no_message": "This invite has no text message",
         "invited_you": "invited you to an event",
         "meeting_canceled": "The following meeting has been cancelled",
+        "meeting_modified": "The following meeting has been modified",
         "modal": {
             "delete": {
                 "sure_delete_appointment_all_instances_permanently": "This will delete all occurrences of this appointment and you will not be able to recover them again, continue?",
@@ -335,13 +340,13 @@
         "sure_to_delete_appointment": "Are you sure you want to delete the appointment?",
         "sure_to_delete_appointment_permanently": "Are you sure you want to delete this appointment permanently?",
         "want_to_edit_cancellation_msg": "Do you want to edit the appointment cancellation message?",
+        "want_to_edit_modified_msg": "Do you want to edit the modified appointment's message?",
         "want_to_send_cancellation_msg": "Do you want to send a cancellation message to the attendees?",
         "you": "You",
         "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>",
         "you_sure_delete_calendar": "Are you sure you want to permanently delete the {{name}} calendar?",
         "you_sure_delete_instance": "Are you sure you want to delete this instance of {{title}} appointment?",
         "you_sure_move_calendar_trash": "Are you sure you want to delete the {{name}} calendar?",
-        "you_will_see_the_subject_here": "Subject"
     },
     "messages": {
         "format_as_plain_text": "Format as Plain Text",
@@ -398,6 +403,7 @@
         "close": "Close Preview"
     },
     "read": "Read",
+    "recurrent_in_allday": "You cannot drag a recurrent appointment in a all day slot",
     "reminder": {
         "all_time": "All time of the event",
         "at_time_of_event": "At the time of the event",
@@ -416,7 +422,7 @@
         },
         "never": "Never",
         "second_before": "{{count}} second before",
-        "second_before_plural": "",
+        "second_before_plural": "{{count}} seconds before",
         "week_before": "{{count}} week before",
         "week_before_plural": "{{count}} weeks before"
     },
@@ -523,7 +529,6 @@
         "invite": {
             "error": "Error"
         },
-        "new_time_proposed_success": "New time proposed",
         "proposed_time_accepted": "You accepted the proposed time",
         "share_folder_success": "Calendar shared successfully",
         "tag_applied": "{{tag}} tag applied",

@@ -74,7 +74,7 @@
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.2",
 		"@zextras/carbonio-design-system": "^0.4.1",
-		"@zextras/carbonio-shell-ui": "0.4.37",
+		"@zextras/carbonio-shell-ui": "0.4.39",
 		"@zextras/carbonio-ui-preview": "^0.2.1",
 		"core-js": "3.19.1",
 		"date-arithmetic": "^4.1.0",
@@ -84,6 +84,7 @@
 		"lodash": "^4.17.21",
 		"moment": "2.29.1",
 		"moment-timezone": "0.5.34",
+		"msw": "^0.47.4",
 		"polished": "4.0.3",
 		"prop-types": "15.7.2",
 		"react": "17.0.2",

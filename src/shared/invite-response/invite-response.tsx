@@ -146,16 +146,18 @@ const InviteResponse: FC<InviteResponse> = ({
 		mailToContact(obj)?.click();
 	};
 
-	const proposeNewTime = useCallback(() => {
+	const proposeNewTimeCb = useCallback(() => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		dispatch(getInvite({ inviteId })).then((res) => {
-			const normalizedInvite = normalizeInvite(res.payload.m);
+			const normalizedInvite = normalizeInvite(res.payload.m?.[0]);
 			const requiredEvent = inviteToEvent(normalizedInvite);
+
 			const { editor, callbacks } = generateEditor({
 				event: requiredEvent,
 				invite: normalizedInvite,
 				context: {
+					isProposeNewTime: true,
 					panel: false,
 					disabled: {
 						title: true,
@@ -180,7 +182,7 @@ const InviteResponse: FC<InviteResponse> = ({
 			const storeData = store.getState();
 			if (editor.id) {
 				addBoard({
-					url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.inv[0]?.comp[0]?.apptId}`,
+					url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.[0]?.inv[0]?.comp[0]?.apptId}`,
 					title: storeData?.editor?.editors?.[editor.id]?.title ?? '',
 					...storeData.editor.editors[editor.id],
 					callbacks
@@ -243,7 +245,7 @@ const InviteResponse: FC<InviteResponse> = ({
 								participationStatus={participationStatus}
 								invite={invite}
 								compNum={compNum}
-								proposeNewTime={proposeNewTime}
+								proposeNewTime={proposeNewTimeCb}
 								parent={parent}
 							/>
 					  )}

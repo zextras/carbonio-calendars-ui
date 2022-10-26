@@ -9,7 +9,7 @@ import { InvitesSlice } from '../../types/store/store';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function getInviteFulfilled(state: InvitesSlice, { meta, payload }: any): void {
 	const { m } = payload;
-	const invite = normalizeInvite(m);
+	const invite = normalizeInvite(m?.[0]);
 	state.invites = {
 		...state.invites,
 		[meta.arg.inviteId]: invite

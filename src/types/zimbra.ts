@@ -5,6 +5,7 @@
  */
 export type ZimbraFolder = {
 	f: any;
+	broken?: boolean;
 	folder: ZimbraFolder;
 	color: any;
 	id: string;

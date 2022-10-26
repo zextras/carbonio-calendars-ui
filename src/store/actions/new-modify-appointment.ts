@@ -5,7 +5,7 @@
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getUserAccount, getUserSettings, soapFetch } from '@zextras/carbonio-shell-ui';
+import { getUserSettings, soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
 import {
@@ -81,7 +81,7 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 
 export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
-	async ({ id, draft }: any, { getState }: any): Promise<any> => {
+	async ({ id, draft }: any, { getState, rejectWithValue }: any): Promise<any> => {
 		const editor = getState()?.editor?.editors?.[id];
 		const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
 
@@ -105,16 +105,22 @@ export const modifyAppointment = createAsyncThunk(
 					'CreateAppointmentException',
 					body
 				);
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				const response = res?.Fault ? { ...res.Fault, error: true } : res;
+				if (response?.error) {
+					return rejectWithValue(response);
+				}
 				const updatedEditor = {
 					...editor,
 					isSeries: true,
 					isInstance: true,
 					isException: true,
 					isNew: false,
-					inviteId: res.invId,
+					inviteId: response.invId,
 					exceptId
 				};
-				return { response: res, editor: updatedEditor };
+				return { response, editor: updatedEditor };
 			}
 			const body = generateSoapMessageFromEditor({ ...editor, draft });
 			const res: { calItemId: string; echo: any } = await soapFetch('ModifyAppointment', body);

@@ -366,7 +366,7 @@
     "revoke_with_custom_message": "Odbierz dostęp i wyślij niestandardową notkę",
     "settings": {
         "ical_note": "Możesz skonfigurować Apple iCal, by uzyskać dostęp do swoich Kalendarzy za pośrednictwem protokołu CalDAV. Kiedy ta opcja jest włączona, udostępnione kalendarze wyświetalne są w zakładce Delegacje konta iCal. Z tego miejsca możesz delegować dostęp to Twoich kalendarzy innym użytkownikom.",
-        "permissions_note": "Poniżsi użytkownicy muszą znajdować się na tym samym systemie pocztowym. Możesz użyć całego adresu e-mail lub samej nazwy użytkownika.",
+        "permissions_note": "Poniższy użytkownicy muszą znajdować się na tym samym systemie pocztowym. Możesz użyć całego adresu e-mail lub samej nazwy użytkownika.",
         "label": {
             "flash_browser_title": "Podświetl tytuł strony w przeglądarce",
             "forward_invites": "Przekazywanie zaproszeń dalej",
