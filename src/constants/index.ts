@@ -12,3 +12,7 @@ export const PANEL_VIEW = {
 	BOARD: 'board',
 	SEARCH: 'search'
 };
+
+export const PREFS_DEFAULTS = {
+	DEFAULT_CALENDAR_ID: '10'
+};

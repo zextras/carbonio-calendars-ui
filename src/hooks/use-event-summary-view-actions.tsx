@@ -13,7 +13,13 @@ import { getAppointmentActionsItems } from '../actions/get-appointment-actions-i
 import { getRecurrentAppointmentActionsItems } from '../actions/get-recurrent-appointment-actions-items';
 import { GetActionReturnType } from './types';
 
-export const useEventSummaryViewActions = ({ event }: { event?: any }): GetActionReturnType => {
+export const useEventSummaryViewActions = ({
+	onClose,
+	event
+}: {
+	onClose?: () => void;
+	event?: any;
+}): GetActionReturnType => {
 	const invite = useSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
@@ -27,9 +33,10 @@ export const useEventSummaryViewActions = ({ event }: { event?: any }): GetActio
 			replaceHistory,
 			createModal,
 			dispatch,
-			createSnackbar
+			createSnackbar,
+			onClose
 		}),
-		[createModal, createSnackbar, dispatch, tags]
+		[createModal, createSnackbar, dispatch, onClose, tags]
 	);
 
 	return useMemo(() => {
@@ -46,5 +53,5 @@ export const useEventSummaryViewActions = ({ event }: { event?: any }): GetActio
 			invite,
 			context
 		});
-	}, [event, context, invite]);
+	}, [event, invite, context]);
 };
