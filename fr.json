@@ -259,7 +259,8 @@
         "root": "Racine",
         "public_link_description": "Généré à partir de {{titre}} le {{date}}.",
         "continue": "Continuer",
-        "choose_file": "Choisir fichier"
+        "choose_file": "Choisir fichier",
+        "cancel": "annuler"
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -389,7 +390,9 @@
         "hours": "{{count}} heure",
         "hours_plural": "{{count}} heures",
         "minutes": "{{count}} minute",
-        "minutes_plural": "{{count}} minutes"
+        "minutes_plural": "{{count}} minutes",
+        "second_before": "{{count}} seconde avant de",
+        "second_before_plural": "{{count}} secondes avant de"
     },
     "repeat": {
         "everyYear": "Chaque Année",
@@ -503,7 +506,8 @@
         "equipment": "Équipement",
         "location": "Emplacement",
         "virtual_chat": "Discussion virtuelle",
-        "chat": "Équipement"
+        "chat": "Équipement",
+        "calendar_sharing_status_one": "Partagé avec 1 personne"
     },
     "type": "Type",
     "workflow": "Flux de travail",

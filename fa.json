@@ -3,5 +3,11 @@
         "attachment": {
             "local": "افزودن از حافظه دستگاه"
         }
+    },
+    "action": {
+        "edit_message": "ویرایش پیغام",
+        "edit_calendar_properties": "ویرایش ویژگی‌های تقویم",
+        "delete_calendar": "حذف تقویم",
+        "calendar_access_share": "اشتراک دسترسی تقویم"
     }
 }

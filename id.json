@@ -178,7 +178,9 @@
         "share_public_link": "Bagikan Tautan Publik",
         "select": "Pilih",
         "root": "Akar",
-        "choose_file": "Pilih file"
+        "choose_file": "Pilih file",
+        "public_link_description": "Dibuat dari {{title}} pada {{date}}",
+        "continue": "Lanjutkan"
     },
     "calendar": {
         "modal": {
@@ -196,7 +198,8 @@
             "expand": "Buka di Displayer",
             "needs_action": "Memerlukan tindakan",
             "invitation_not_sent_yet": "Undangan belum dikirim"
-        }
+        },
+        "is_exception": "Pengecualian"
     },
     "folder": {
         "modal": {
@@ -293,7 +296,9 @@
         "send_email": "Kirim email",
         "more": "Lainnya...",
         "required_participant": "{{count}} Peserta",
-        "optional_participant": "{{count}} Opsional"
+        "optional_participant": "{{count}} Opsional",
+        "edit_series_warning": "Karena Anda melanjutkan dengan modifikasi seri, semua instans yang sebelumnya dihapus atau diubah akan dipulihkan dengan pengaturan seri baru.",
+        "appointment_invitation_sent": "Undangan janji temu dikirim"
     },
     "months": {
         "april": "April",
