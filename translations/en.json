@@ -346,7 +346,7 @@
         "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>",
         "you_sure_delete_calendar": "Are you sure you want to permanently delete the {{name}} calendar?",
         "you_sure_delete_instance": "Are you sure you want to delete this instance of {{title}} appointment?",
-        "you_sure_move_calendar_trash": "Are you sure you want to delete the {{name}} calendar?",
+        "you_sure_move_calendar_trash": "Are you sure you want to delete the {{name}} calendar?"
     },
     "messages": {
         "format_as_plain_text": "Format as Plain Text",

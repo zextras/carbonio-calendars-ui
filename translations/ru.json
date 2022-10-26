@@ -23,7 +23,10 @@
         "hours_2": "{{count}} часов",
         "minutes_0": "{{count}} минута",
         "minutes_1": "{{count}} минуты",
-        "minutes_2": "{{count}} минут"
+        "minutes_2": "{{count}} минут",
+        "second_before_0": "{{count}} секунду до",
+        "second_before_1": "{{count}} секунды до",
+        "second_before_2": "{{count}} секунд до"
     },
     "participants": {
         "AC_with_count_0": "Принял",
@@ -308,7 +311,8 @@
         "root": "Корень",
         "public_link_description": "Создано из {{title}} {{date}}",
         "continue": "Продолжить",
-        "choose_file": "Выбрать файл"
+        "choose_file": "Выбрать файл",
+        "cancel": "отменить"
     },
     "tooltip": {
         "enable_disable_rich_text": "Включение/отключение редактора форматированного текста",
@@ -323,7 +327,8 @@
         "chat_room": "Ссылка на виртуальную комнату",
         "calendar_sharing_status_0": "Поделился с {{count}}",
         "calendar_sharing_status_1": "Поделился {{count}}",
-        "calendar_sharing_status_2": "Поделился {{count}}"
+        "calendar_sharing_status_2": "Поделился {{count}}",
+        "calendar_sharing_status_one": "Поделился с одним пользователем"
     },
     "action": {
         "send": "Отправить",

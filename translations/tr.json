@@ -347,7 +347,8 @@
         "root": "Kök",
         "public_link_description": "Başlık {{title}} 'dan {{date}} tarihinde oluşturuldu",
         "continue": "İlerle",
-        "choose_file": "Dosya seç"
+        "choose_file": "Dosya seç",
+        "cancel": "iptal"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -386,7 +387,8 @@
         "calendar_sharing_status_plural": "{{count}} kişi ile paylaşıldı",
         "equipment": "Donanım",
         "location": "Yer",
-        "virtual_chat": "Sanal Sohbet"
+        "virtual_chat": "Sanal Sohbet",
+        "calendar_sharing_status_one": "1 kişi ile paylaşıldı"
     },
     "revoke_with_custom_message": "Özel bildirim göndererek erişim yetkisini kaldır",
     "settings": {
@@ -510,7 +512,9 @@
         "minutes": "{{count}} dakika",
         "minutes_plural": "{{count}} dakika",
         "hours": "{{count}} saat",
-        "hours_plural": "{{count}} saat"
+        "hours_plural": "{{count}} saat",
+        "second_before": "{{count}} saniye önce",
+        "second_before_plural": "{{count}} saniye önce"
     },
     "remove_from_this_list": "Bu listeden kaldır",
     "revoke_access": "Erişim yetkisini kaldır",

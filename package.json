@@ -75,9 +75,9 @@
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.2",
-		"@zextras/carbonio-design-system": "^0.4.1",
-		"@zextras/carbonio-shell-ui": "0.4.39",
-		"@zextras/carbonio-ui-preview": "^0.2.1",
+		"@zextras/carbonio-design-system": "^0.5.0",
+		"@zextras/carbonio-shell-ui": "0.4.40",
+		"@zextras/carbonio-ui-preview": "^0.2.3",
 		"core-js": "3.19.1",
 		"date-arithmetic": "^4.1.0",
 		"formik": "2.1.4",
@@ -98,7 +98,7 @@
 		"react-widgets": "4.6.1",
 		"react-widgets-moment": "4.0.30",
 		"redux": "^4.1.2",
-		"styled-components": "5.3.3",
+		"styled-components": "5.3.6",
 		"zustand": "3.6.9"
 	},
 	"browserslist": [

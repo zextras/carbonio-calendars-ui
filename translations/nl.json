@@ -120,7 +120,7 @@
         "reminder": "Herinnering",
         "repeat": "Herhalen",
         "required": "Vereist",
-        "revoke_share": "Delen van {{title}} herroepen",
+        "revoke_share": "Delen van {{title}} intrekken",
         "series": "Serie",
         "set_new_time": "Nieuwe tijd instellen",
         "share_calendar_url": "{{title}} toegang delen",
@@ -205,7 +205,9 @@
         "share_public_link": "Publieke Link delen",
         "select": "Selecteren",
         "root": "Hoofdniveau",
-        "choose_file": "Bestand kiezen"
+        "choose_file": "Bestand kiezen",
+        "public_link_description": "Gegenereerd van {{title}} op {{date}}",
+        "continue": "Doorgaan"
     },
     "event": {
         "action": {
@@ -216,7 +218,8 @@
             "expand": "In Displayer openen",
             "needs_action": "Heeft actie nodig",
             "invitation_not_sent_yet": "De uitnodiging is nog niet verstuurd"
-        }
+        },
+        "is_exception": "Uitzondering"
     },
     "items": {
         "second": "Seconde",
@@ -313,7 +316,13 @@
         "appointment_type_handle": "{{name}} is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?",
         "organizer": "Organisator",
         "send_email": "E-mail sturen",
-        "more": "Meer..."
+        "more": "Meer...",
+        "required_participant": "{{count}} Deelnemer",
+        "required_participant_plural": "{{count}} Deelnemers",
+        "optional_participant": "{{count}} Optioneel",
+        "optional_participant_plural": "{{count}} Optioneel",
+        "edit_series_warning": "Terwijl u de reeks wijzigt, worden alle eerder verwijderde of gewijzigde instanties hersteld met de nieuwe reeksinstellingen.",
+        "appointment_invitation_sent": "Afspraak uitnodiging verzonden"
     },
     "months": {
         "april": "April",
@@ -475,7 +484,8 @@
         "location": "Locatie",
         "chat_room": "Link naar virtuele ruimte",
         "virtual_chat": "Virtuele Chat",
-        "calendar_sharing_status": "Gedeeld met {{count}} persoon"
+        "calendar_sharing_status": "Gedeeld met {{count}} persoon",
+        "calendar_sharing_status_plural": "Gedeeld met {{count}} personen"
     },
     "button": {
         "customize_modal": "Modal aanpassen openen"
