@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.31](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.30...v0.1.31) (2022-10-26)
+
+
+### Features
+
+* integrating common submodule ([8f252d5](https://github.com/zextras/carbonio-calendars-ui/commit/8f252d5024440a94bcabc5cb1cacdf7d2bc6442f))
+* snackbar on private appointment if no permission ([653e71b](https://github.com/zextras/carbonio-calendars-ui/commit/653e71bea2c3721a7b3812733dd00f6a1c7377ff))
+* snackbar on private appointment of shared calendar ([6e40643](https://github.com/zextras/carbonio-calendars-ui/commit/6e4064365ac6b98026d6117964fdc2f2037ecf45))
+
+
+### Bug Fixes
+
+* avoid passing non serializable values through redux ([#153](https://github.com/zextras/carbonio-calendars-ui/issues/153)) ([31130c8](https://github.com/zextras/carbonio-calendars-ui/commit/31130c8dc45cb0cf358f79fd39495c85b68274ab))
+* bord not closed when sending and event cancellation. ([ab7ba90](https://github.com/zextras/carbonio-calendars-ui/commit/ab7ba908621ed3c3250ec046b39964737fe5548e))
+* normalization does not break the view ([29fdab8](https://github.com/zextras/carbonio-calendars-ui/commit/29fdab87fc605a6035e422cbfc58841478d6b270))
+* previewer and editor stays open on open/edit actions ([#158](https://github.com/zextras/carbonio-calendars-ui/issues/158)) ([65b37df](https://github.com/zextras/carbonio-calendars-ui/commit/65b37df6db7338b84bba675f22b939dfbca838ae))
+* propose new time fixed ([#162](https://github.com/zextras/carbonio-calendars-ui/issues/162)) ([450016d](https://github.com/zextras/carbonio-calendars-ui/commit/450016d0495feafb1f40611bfde14ae7b3994733))
+* using a safer condition to check appointment organizer ([3affd1b](https://github.com/zextras/carbonio-calendars-ui/commit/3affd1b0319bd8789236df3e55471319a9567424))
+
 ### [0.1.30](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.29...v0.1.30) (2022-10-12)
 
 ### [0.1.29](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.28...v0.1.29) (2022-10-04)

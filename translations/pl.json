@@ -231,7 +231,8 @@
         "root": "Źródło",
         "public_link_description": "Wygenerowano z {{title}} dnia {{date}}",
         "continue": "Kontynuuj",
-        "choose_file": "Wybierz plik"
+        "choose_file": "Wybierz plik",
+        "cancel": "anuluj"
     },
     "message": {
         "modal": {
@@ -360,13 +361,16 @@
         "hours_2": "{{count}} godzin",
         "minutes_0": "{{count}} minuta",
         "minutes_1": "{{count}} minuty",
-        "minutes_2": "{{count}} minut"
+        "minutes_2": "{{count}} minut",
+        "second_before_0": "{{count}} sekunda przed",
+        "second_before_1": "{{count}} sekundy przed",
+        "second_before_2": "{{count}} sekund przed"
     },
     "resend_mail_notification_about_this_share": "Wyślij powiadomienie mailowe dot. tego udostępnienia",
     "revoke_with_custom_message": "Odbierz dostęp i wyślij niestandardową notkę",
     "settings": {
         "ical_note": "Możesz skonfigurować Apple iCal, by uzyskać dostęp do swoich Kalendarzy za pośrednictwem protokołu CalDAV. Kiedy ta opcja jest włączona, udostępnione kalendarze wyświetalne są w zakładce Delegacje konta iCal. Z tego miejsca możesz delegować dostęp to Twoich kalendarzy innym użytkownikom.",
-        "permissions_note": "Poniższy użytkownicy muszą znajdować się na tym samym systemie pocztowym. Możesz użyć całego adresu e-mail lub samej nazwy użytkownika.",
+        "permissions_note": "Poniżsi użytkownicy muszą znajdować się na tym samym systemie pocztowym. Możesz użyć całego adresu e-mail lub samej nazwy użytkownika.",
         "label": {
             "flash_browser_title": "Podświetl tytuł strony w przeglądarce",
             "forward_invites": "Przekazywanie zaproszeń dalej",
@@ -526,7 +530,7 @@
                 "manager": "Manager (może wyświetlać, edytować, dodawać oraz usuwać)"
             },
             "share_calendar_with": {
-                "internal_users_groups": "Użytkownicy lub Grupy z mojej domeny",
+                "internal_users_groups": "Użytkownicy lub grupy z mojej domeny",
                 "public": "Publiczny (można tylko wyświetlać, hasło niewymagane)",
                 "external_guests": "Goście spoza mojej domeny (mogą tylko wyświetlać)"
             }
@@ -562,7 +566,7 @@
             "local": "Dodaj z tego urządzenia",
             "draganddrop": {
                 "content": "Upuść tutaj załączniki, żeby szybko dodać je do spotkania",
-                "title": "Tryb Drag&Drop"
+                "title": "Tryb Przeciągnij i upuść"
             },
             "drive": "Dodaj z Dysku",
             "url": "Dodaj publiczny link z Files",
@@ -640,14 +644,15 @@
         "copy_outlook_url": "Skopiuj link do Outlooka",
         "copy_vector_url": "Skopiuj link do Widoku",
         "enable_disable_rich_text": "Włącz/Wyłącz rozbudowany edytor tekstu",
-        "chat_room": "Link do Wirtualnego Pokoju",
+        "chat_room": "Link do wirtualnego pokoju",
         "equipment": "Ekwipunek",
         "location": "Lokalizacja",
         "virtual_chat": "Wirtualny Czat",
         "chat": "Ekwipunek",
         "calendar_sharing_status_0": "Udostępniono {{count}} osobie",
         "calendar_sharing_status_1": "Udostępniono {{count}} osobom",
-        "calendar_sharing_status_2": "Udostępniono {{count}} osobom"
+        "calendar_sharing_status_2": "Udostępniono {{count}} osobom",
+        "calendar_sharing_status_one": "Udostępniono 1 osobie"
     },
     "type": "Typ",
     "workflow": "Organizacja Pracy",
