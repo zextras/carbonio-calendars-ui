@@ -123,8 +123,8 @@ export const editOrganizerReducer = (
 	{ payload }: OrganizerPayload
 ): void => {
 	if (payload?.id && editors?.[payload?.id]?.organizer && payload?.organizer) {
-		// eslint-disable-next-line no-param-reassign
-		editors[payload.id].organizer = payload.organizer;
+		const editor = editors[payload.id];
+		editor.organizer = payload.organizer;
 	}
 };
 
