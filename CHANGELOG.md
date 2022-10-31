@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.32](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.31...v0.1.32) (2022-10-31)
+
+
+### Bug Fixes
+
+* hotfix to calendar organizer ([9695f17](https://github.com/zextras/carbonio-calendars-ui/commit/9695f171122d879bab9450d9de0cd22c44be10f6))
+
 ### [0.1.31](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.30...v0.1.31) (2022-10-26)
 
 
