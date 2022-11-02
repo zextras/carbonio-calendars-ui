@@ -33,10 +33,13 @@ export const openAppointmentItem = ({
 	disabled: false,
 	keepOpen: true,
 	label: t('event.action.expand', 'Open in Displayer'),
-	click: openAppointment({
-		event,
-		panelView
-	})
+	click: (ev: Event): void => {
+		context?.onClose && context?.onClose();
+		openAppointment({
+			event,
+			panelView
+		})(ev);
+	}
 });
 
 export const acceptInvitationItem = ({
@@ -113,7 +116,10 @@ export const moveApptToTrashItem = ({
 	label: t('label.delete', 'Delete'),
 	disabled: !event?.haveWriteAccess,
 	keepOpen: true,
-	click: moveToTrash({ event, invite, context })
+	click: (ev: Event): void => {
+		context?.onClose && context?.onClose();
+		moveToTrash({ event, invite, context })(ev);
+	}
 });
 
 export const deletePermanentlyItem = ({
@@ -127,7 +133,10 @@ export const deletePermanentlyItem = ({
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
 	keepOpen: true,
-	click: deletePermanently({ event, context })
+	click: (ev: Event): void => {
+		context?.onClose && context?.onClose();
+		deletePermanently({ event, context })(ev);
+	}
 });
 
 export const editAppointmentItem = ({

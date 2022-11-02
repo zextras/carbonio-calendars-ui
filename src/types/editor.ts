@@ -8,12 +8,12 @@ import { Calendar } from './store/calendars';
 import { Attendee, InviteClass, InviteFreeBusy } from './store/invite';
 
 export type IdentityItem = {
-	value: number;
+	value?: number | string;
 	label: string;
 	address: string;
 	fullName: string;
-	type: string;
-	identityName: string;
+	type?: string;
+	identityName?: string;
 };
 
 export type Room = {

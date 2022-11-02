@@ -171,7 +171,9 @@
         "share_public_link": "Compartilhar link público",
         "select": "Selecionar",
         "root": "Raiz",
-        "choose_file": "Escolher arquivo"
+        "choose_file": "Escolher arquivo",
+        "public_link_description": "Gerado a partir de {{title}} em {{date}}",
+        "continue": "Continuar"
     },
     "action": {
         "send": "Enviar",
@@ -196,7 +198,8 @@
             "expand": "Abrir no Visualizador",
             "needs_action": "Requer ação",
             "invitation_not_sent_yet": "O convite ainda não foi enviado"
-        }
+        },
+        "is_exception": "Exceção"
     },
     "folder": {
         "modal": {
@@ -295,7 +298,9 @@
         "required_participant": "{{count}} Participante",
         "required_participant_plural": "{{count}} Participantes",
         "optional_participant": "{{count}} Opcional",
-        "optional_participant_plural": "{{count}} Opcionais"
+        "optional_participant_plural": "{{count}} Opcionais",
+        "edit_series_warning": "Ao prosseguir com a modificação da série, todas as instâncias excluídas ou modificadas anteriormente serão restauradas com as novas configurações da série.",
+        "appointment_invitation_sent": "Convite de compromisso enviado"
     },
     "months": {
         "april": "Abril",
@@ -495,7 +500,8 @@
         "location": "Localização",
         "chat_room": "Link da Sala virtual",
         "virtual_chat": "Chat virtual",
-        "calendar_sharing_status": "Compartilhado com {{count}} personas"
+        "calendar_sharing_status": "Compartilhado com {{count}} pessoa",
+        "calendar_sharing_status_plural": ""
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",

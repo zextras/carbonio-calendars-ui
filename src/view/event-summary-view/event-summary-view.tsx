@@ -90,7 +90,7 @@ export const EventSummaryView = ({
 					<DescriptionFragmentRow event={event} />
 				)}
 				<Divider />
-				<ActionsButtonsRow event={event} invite={invite} />
+				<ActionsButtonsRow onClose={onClose} event={event} invite={invite} />
 			</Container>
 		</Popover>
 	) : null;

@@ -5,11 +5,11 @@
  */
 import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
-import { extractHtmlBody, extractBody } from '../commons/body-message-renderer';
-import { CALENDAR_PREFS_DEFAULTS } from '../constants/defaults';
+import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
+import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { store } from '../store/redux';
-import { Editor } from '../types/editor';
+import { Editor, IdentityItem } from '../types/editor';
 import { Invite } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -24,6 +24,14 @@ export const getVirtualRoom = (xprop: any): { label: string; link: string } | un
 
 	return undefined;
 };
+
+export const normaliseContact = (contact: { a: string; d: string }): IdentityItem => ({
+	...contact,
+	address: contact?.a,
+	fullName: contact?.d,
+	label: contact?.d ?? contact?.a,
+	value: contact?.a
+});
 
 const getAttendees = (attendees: any[], role: string): any[] =>
 	map(filter(attendees, ['role', role]), (at) =>
@@ -73,7 +81,7 @@ export const normalizeEditor = ({
 				{
 					calendar:
 						store?.getState().calendars.calendars[
-							event.resource.calendar.id ?? CALENDAR_PREFS_DEFAULTS.ZIMBRA_PREF_DEFAULT_CALENDAR_ID
+							event.resource.calendar.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
 						],
 					id,
 					ridZ: event?.resource?.ridZ,
@@ -102,8 +110,12 @@ export const normalizeEditor = ({
 					inviteId: event?.resource?.inviteId,
 					reminder: invite?.alarmValue,
 					recur: invite.recurrenceRule,
+					organizer: invite?.organizer,
 					richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
-					plainText: extractBody(invite?.textDescription?.[0]?._content) ?? ''
+					plainText: extractBody(invite?.textDescription?.[0]?._content) ?? '',
+					uid: invite?.uid,
+					ms: invite?.ms,
+					rev: invite?.rev
 				},
 				isNil
 		  ) as Editor)
