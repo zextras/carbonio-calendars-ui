@@ -1,0 +1,51 @@
+/*
+ * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
+
+const getResponse = (id: string): SuccessSoapResponse<any> => ({
+	Header: {
+		context: {
+			session: { id: 150973, _content: 150973 },
+			change: { token: 15954 }
+		}
+	},
+	Body: {
+		CreateFolderResponse: {
+			folder: [
+				{
+					id,
+					uuid: '70f277d0-76bf-4793-8b8a-6e7743516516',
+					deletable: true,
+					name: 'ciccio',
+					absFolderPath: '/ciccio',
+					l: '1',
+					luuid: '675a66e9-cde4-434f-b853-236de184bae2',
+					f: 'b',
+					color: 3,
+					view: 'appointment',
+					rev: 15954,
+					ms: 15954,
+					webOfflineSyncDays: 0,
+					activesyncdisabled: false,
+					n: 0,
+					s: 0,
+					i4ms: 15954,
+					i4next: 7573
+				}
+			],
+			_jsns: 'urn:zimbraMail'
+		}
+	}
+});
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
+export const handleCreateFolderRequest = (req, res, ctx) => {
+	const resp = req.body.Body.CreateFolderRequest;
+	const response = getResponse(resp.id);
+	return res(ctx.json(response));
+};
