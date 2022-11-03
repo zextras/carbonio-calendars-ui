@@ -159,6 +159,11 @@ const InviteResponse: FC<InviteResponse> = ({
 				context: {
 					isProposeNewTime: true,
 					panel: false,
+					organizer: {
+						label: `${requiredEvent.resource.organizer.d ?? requiredEvent.resource.organizer.a}`,
+						address: requiredEvent.resource.organizer.a,
+						fullName: requiredEvent.resource.organizer.d
+					},
 					disabled: {
 						title: true,
 						location: true,

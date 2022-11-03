@@ -25,7 +25,7 @@ export const useIdentityItems = (): Array<IdentityItem> => {
 				? `(<${item._attrs?.zimbraPrefFromAddress}>) `
 				: '';
 			return {
-				value: idx,
+				value: `${idx}`,
 				label: `${name}${display}${fromAddress}`,
 				address: item._attrs?.zimbraPrefFromAddress,
 				fullName: item._attrs?.zimbraPrefFromDisplay,
