@@ -13,7 +13,7 @@ import { UrlColumn } from './url-column';
 
 const getUrl = (type: string, user: string, folderName: string): string => {
 	const domain =
-		window.location.hostname === 'localhost' ? 'crb1.zimbraopen.com' : window.location.hostname;
+		window.location.hostname === 'localhost' ? 'crb2.zimbraopen.com' : window.location.hostname;
 
 	switch (type) {
 		case 'ics':
