@@ -86,7 +86,12 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 					`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 				);
 			}
-		} else {
+		}
+		if (
+			event?.resource?.class === 'PRI' &&
+			!event?.resource?.iAmOrganizer &&
+			!event?.haveWriteAccess
+		) {
 			createSnackbar({
 				key: `private_appointment`,
 				replace: true,
@@ -99,13 +104,17 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	}, [event, createModal, onEntireSeries, onSingleInstance, createSnackbar]);
 
 	const toggleOpen = useCallback(
-		(e) => {
-			getEventInvite();
-			if (e.detail === 1 && isNil(action) && !open) {
-				setOpen(true);
+		(e): void => {
+			if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
+				console.log('hello');
+			} else {
+				getEventInvite();
+				if (e.detail === 1 && isNil(action) && !open) {
+					setOpen(true);
+				}
 			}
 		},
-		[getEventInvite, action, open]
+		[event, getEventInvite, action, open]
 	);
 
 	const actions = useEventSummaryViewActions({
@@ -171,7 +180,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 							)}
 						</Container>
 						{!event.allDay && (
-							<Tooltip label={title} placement="top">
+							<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
 								<Container
 									orientation="horizontal"
 									width="fill"

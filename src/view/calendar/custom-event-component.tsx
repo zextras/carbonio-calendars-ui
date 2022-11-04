@@ -120,7 +120,7 @@ export const CustomEventComponent = ({
 
 	return eventDiff <= 30 ? (
 		<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
-			<Tooltip label={title} placement="top">
+			<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
 				<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
 					<Text color="currentColor" weight="medium" style={{ overflow: 'visible' }}>
 						{`${moment(event.start).format('LT')} -`}
@@ -167,7 +167,7 @@ export const CustomEventComponent = ({
 	) : (
 		<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
 			<Row mainAlignment="space-between" takeAvailableSpace>
-				<Tooltip label={title} placement="top">
+				<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						{!event.allDay && (
 							<Text overflow="ellipsis" color="currentColor" weight="medium">
