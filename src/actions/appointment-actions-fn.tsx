@@ -118,6 +118,8 @@ export const moveToTrash =
 	}): ((ev: Event) => void) =>
 	(ev: Event): void => {
 		if (ev) ev.stopPropagation();
+
+		context?.onClose && context?.onClose();
 		const closeModal = context.createModal(
 			{
 				children: (
@@ -143,6 +145,7 @@ export const moveAppointment =
 	(ev: Event): void => {
 		if (ev) ev.preventDefault();
 
+		context?.onClose && context?.onClose();
 		const closeModal = context.createModal(
 			{
 				maxHeight: '90vh',

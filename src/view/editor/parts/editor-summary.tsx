@@ -81,7 +81,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 			>
 				<Container mainAlignment="space-between" orientation="horizontal">
 					<Text overflow="ellipsis" weight="bold" size="small">
-						{title || t('message.you_will_see_the_subject_here', 'Subject')}
+						{title || t('label.subject', 'Subject')}
 					</Text>
 					<Icon
 						icon="Calendar2"

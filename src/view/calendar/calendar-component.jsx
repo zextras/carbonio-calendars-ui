@@ -3,50 +3,49 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useContext, useEffect, useState } from 'react';
-import moment from 'moment';
-import { ThemeContext } from 'styled-components';
+import { ModalManagerContext } from '@zextras/carbonio-design-system';
 import {
+	addBoard,
 	FOLDERS,
 	getBridgedFunctions,
-	useUserSettings,
-	addBoard,
+	replaceHistory,
 	t,
-	replaceHistory
+	useUserSettings
 } from '@zextras/carbonio-shell-ui';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import { useDispatch, useSelector } from 'react-redux';
+import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isEqual, isNil, minBy, omit, omitBy, size } from 'lodash';
-import { min as datesMin, max as datesMax } from 'date-arithmetic';
+import moment from 'moment';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { ModalManagerContext } from '@zextras/carbonio-design-system';
-import { CustomEvent } from './custom-event';
-import CustomEventWrapper from './custom-event-wrapper';
-import { CustomToolbar } from './custom-toolbar';
-import { WorkView } from './work-view';
-import { workWeek } from '../../utils/work-week';
+import { ThemeContext } from 'styled-components';
+import { generateEditor } from '../../commons/editor-generator';
+import { CALENDAR_ROUTE } from '../../constants';
+import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
+import { getInvite } from '../../store/actions/get-invite';
+import { searchAppointments } from '../../store/actions/search-appointments';
+import { store, StoreProvider } from '../../store/redux';
+import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
 	selectCalendars,
 	selectCheckedCalendarsMap,
 	selectEnd,
 	selectStart
 } from '../../store/selectors/calendars';
-import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { setRange } from '../../store/slices/calendars-slice';
-import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
-import { CALENDAR_ROUTE } from '../../constants';
-import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { useCalendarDate, useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
-import { searchAppointments } from '../../store/actions/search-appointments';
-import { generateEditor } from '../../commons/editor-generator';
-import { getInvite } from '../../store/actions/get-invite';
-import CalendarStyle from './calendar-style';
-import { store, StoreProvider } from '../../store/redux';
-import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
-import { ModifyStandardMessageModal } from '../modals/modify-standard-message-modal';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import { workWeek } from '../../utils/work-week';
+import { ModifyStandardMessageModal } from '../modals/modify-standard-message-modal';
+import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
+import CalendarStyle from './calendar-style';
+import { CustomEvent } from './custom-event';
+import CustomEventWrapper from './custom-event-wrapper';
+import { CustomToolbar } from './custom-toolbar';
+import { WorkView } from './work-view';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -248,16 +247,16 @@ export default function CalendarComponent() {
 			dispatch(
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
 			).then(({ payload }) => {
-				const inviteStart = moment(payload.m.inv[0].comp[0].s[0].u);
+				const inviteStart = moment(payload.m[0].inv[0].comp[0].s[0].u);
 				const eventStart = moment(event.start);
 				const dropStart = moment(start);
-				const inviteEnd = moment(payload.m.inv[0].comp[0].e[0].u);
+				const inviteEnd = moment(payload.m[0].inv[0].comp[0].e[0].u);
 				const eventEnd = moment(event.end);
 				const dropEnd = moment(end);
 				const eventAllDay = event.allDay;
 				const startTime = getStart({ isSeries, dropStart, isAllDay, inviteStart, eventStart });
 				const endTime = getEnd({ isSeries, dropEnd, isAllDay, inviteEnd, eventEnd, eventAllDay });
-				const invite = normalizeInvite(payload.m);
+				const invite = payload.m[0];
 				const onConfirm = (draft, context) => {
 					const { editor, callbacks } = generateEditor({
 						event,

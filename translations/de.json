@@ -30,7 +30,7 @@
         "somebody_invited_you": "<strong>{{somebody}}</strong> hat Sie eingeladen",
         "sure_to_delete_all_occurences_appointment": "Sind Sie sicher, dass Sie alle Ereignisse dieses Termins löschen möchten?",
         "want_to_send_cancellation_msg": "Möchten Sie eine Absagenachricht an die Teilnehmer senden?",
-        "invited_you": "hat Sie eingeladen zu",
+        "invited_you": "hat Sie zu einem Event eingeladen",
         "meeting_canceled": "Das folgende Meeting wurde abgesagt",
         "delete_all_occurences": "Alle Ereignisse löschen",
         "delete_future_occurences": "Dieses Event und alle zukünftigen Ereignisse löschen",
@@ -54,7 +54,7 @@
         "you_will_see_the_subject_here": "Betreff",
         "share_calendar_url_msg": "Sie können {{title}} schnell mit Ihren Kollegen teilen, indem Sie einen dieser URLs benutzen:",
         "you": "Sie",
-        "you_sure_delete_instance": "Sind Sie sicher, dass Sie diese Kopie des Termins \"1{{title}}\" löschen wollen?",
+        "you_sure_delete_instance": "Sind Sie sicher, dass Sie dieses Ereignis des Termins {{title}} löschen wollen?",
         "delete_tag_message1": "Sind Sie sicher, dass Sie den {{name}} Tag?",
         "delete_tag_message2": "Nach dem Löschen wird es aus allen damit gekennzeichneten Artikeln entfernt.",
         "appointment_type_handle": "{{name}} ist ein Serientermin. Möchten Sie nur diesen Termin oder die ganze Serie öffnen?",
@@ -64,7 +64,9 @@
         "required_participant": "{{count}} Teilnehmer",
         "required_participant_plural": "{{count}} Teilnehmer",
         "optional_participant": "{{count}} Optional",
-        "optional_participant_plural": "{{count}} Optionale"
+        "optional_participant_plural": "{{count}} Optionale",
+        "edit_series_warning": "Da Sie mit der Änderung der gesamten Serie fortfahren, werden alle bereits gelöschten oder veränderten Ereignisse mit den neuen Serieneinstellungen wiederhergestellt.",
+        "appointment_invitation_sent": "Termineinladung gesendet"
     },
     "label": {
         "invitation_not_sent": "Sie haben die Einladung noch nicht an die Teilnehmer geschickt",
@@ -140,8 +142,8 @@
         "custom": "Benutzerdefiniert",
         "days": "Tage",
         "delete_permanently": "Endgültig löschen",
-        "download": "Download",
-        "download_plural": "Alles Downloaden",
+        "download": "Herunterladen",
+        "download_plural": "Alle herunterladen",
         "edit": "Bearbeiten",
         "every": "Jeden",
         "every_day": "Jeden Tag",
@@ -238,7 +240,9 @@
         "share_public_link": "Öffentlichen Link teilen",
         "select": "Auswählen",
         "root": "Stammordner",
-        "choose_file": "Datei auswählen"
+        "choose_file": "Datei auswählen",
+        "public_link_description": "Erzeugt von {{title}} am {{date}}",
+        "continue": "Fortfahren"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -308,7 +312,8 @@
             "yes": "Ja",
             "needs_action": "Handlungsbedarf",
             "invitation_not_sent_yet": "Die Einladung wurde noch nicht verschickt"
-        }
+        },
+        "is_exception": "Ausnahme"
     },
     "folder": {
         "modal": {
@@ -509,7 +514,8 @@
         "location": "Ort",
         "chat_room": "Link des virtuellen Raums",
         "virtual_chat": "Virtueller Chat",
-        "calendar_sharing_status": "Mit {{count}} Person(en) geteilt"
+        "calendar_sharing_status": "Mit {{count}} Person geteilt",
+        "calendar_sharing_status_plural": "Mit {{count}} Personen geteilt"
     },
     "share_invite_resent": "Einladung zum Teilen erneut gesendet",
     "shared_folders": "Geteilte Kalender",
