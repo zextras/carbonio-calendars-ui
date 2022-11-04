@@ -16,11 +16,13 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { StoreProvider } from '../../../store/redux';
 import {
-	selectEditor,
 	selectEditorAttendees,
 	selectEditorDisabled,
+	selectEditorIsInstance,
 	selectEditorIsNew,
-	selectEditorOptionalAttendees
+	selectEditorIsSeries,
+	selectEditorOptionalAttendees,
+	selectEditorPanel
 } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
@@ -29,8 +31,10 @@ import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
 	const attendees = useSelector(selectEditorAttendees(editorId));
 	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
+	const isSeries = useSelector(selectEditorIsSeries(editorId));
+	const isInstance = useSelector(selectEditorIsInstance(editorId));
+	const panel = useSelector(selectEditorPanel(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
-	const editor = useSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
 	const disabled = useSelector(selectEditorDisabled(editorId));
 
@@ -43,7 +47,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 		[attendees?.length, disabled?.sendButton, optionalAttendees?.length]
 	);
 	const onClick = useCallback(() => {
-		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
+		if (isSeries && action === EventActionsEnum.EDIT && !isInstance) {
 			// It's ignore because the createModal Function is not typed
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
@@ -69,7 +73,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 			);
 		} else
 			onSend(isNew).then(({ response }) => {
-				if (editor?.panel && response) {
+				if (panel && response) {
 					replaceHistory('');
 				} else if (board) {
 					closeBoard(board?.id);
@@ -85,17 +89,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 					autoHideTimeout: 3000
 				});
 			});
-	}, [
-		action,
-		board,
-		createModal,
-		editor.isInstance,
-		editor.isSeries,
-		editor?.panel,
-		editorId,
-		isNew,
-		onSend
-	]);
+	}, [action, board, createModal, editorId, isInstance, isNew, isSeries, onSend, panel]);
 
 	return (
 		<Button

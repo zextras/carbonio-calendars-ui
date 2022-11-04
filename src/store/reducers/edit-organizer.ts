@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil, omit, union } from 'lodash';
+import { cloneDeep, isNil, omit, omitBy, union } from 'lodash';
 import { Editor, IdentityItem, Room } from '../../types/editor';
 import { EventResourceCalendar } from '../../types/event';
 import { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
@@ -284,10 +284,27 @@ export const deleteEditorReducer = (
 
 export const updateEditorReducer = (
 	editor: EditorSlice,
-	{ payload }: { payload: { id: string; editor: Editor } }
+	{ payload }: { payload: { id: string; editor: Editor; response: any } }
 ): void => {
 	if (payload?.id && editor?.editors?.[payload?.id]) {
+		console.log('@@ old editor ID: ', payload.id);
+		console.log('@@ old active ID: ', cloneDeep(editor.activeId));
+		console.log('@@ old Store: ', cloneDeep(editor.editors));
+
 		// eslint-disable-next-line no-param-reassign
-		editor.editors[payload.id] = { ...editor.editors[payload.id], ...payload.editor };
+		editor.editors = {
+			...editor.editors,
+			[payload.editor.editorId]: { ...editor.editors[payload.id], ...payload.editor }
+		};
+		console.log('@@ new Store: ', cloneDeep(editor.editors));
+		if (payload.editor.editorId !== payload.id) {
+			// eslint-disable-next-line no-param-reassign
+			editor.editors = omit(editor.editors, payload.id);
+			// eslint-disable-next-line no-param-reassign
+			editor.activeId = payload.editor.editorId;
+		}
+		console.log('@@ new editor ID: ', payload.editor.editorId);
+		console.log('@@ new active ID: ', cloneDeep(editor.activeId));
+		console.log('@@ new Store: ', cloneDeep(editor.editors));
 	}
 };

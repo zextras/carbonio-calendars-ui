@@ -10,7 +10,8 @@ import {
 	getBridgedFunctions,
 	replaceHistory,
 	useBoard,
-	t
+	t,
+	useBoardHooks
 } from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -45,6 +46,7 @@ export const SeriesEditWarningModal = ({
 	const board = useBoard();
 	const panel = useSelector(selectEditorPanel(editorId));
 	const attendeesLength = useSelector(selectEditorAttendees)?.length;
+	const boardUtilities = useBoardHooks();
 
 	const title = useMemo(() => t('label.warning', 'Warning'), []);
 	const label = useMemo(() => t('label.continue', 'Continue'), []);
@@ -52,8 +54,9 @@ export const SeriesEditWarningModal = ({
 
 	const onConfirm = useCallback(() => {
 		isSending
-			? action(isNew).then(({ response }: any) => {
+			? action(isNew).then(({ response, editor }: any) => {
 					if (panel && response) {
+						boardUtilities?.updateBoard({ editorId: editor.editorId });
 						replaceHistory('');
 					}
 					getBridgedFunctions().createSnackbar({
@@ -68,7 +71,11 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  })
-			: action({ draft: !attendeesLength, isNew }).then(({ response }: any) => {
+			: action({ draft: !attendeesLength, isNew }).then((res: any) => {
+					const { response, editor } = res;
+					if (panel && response) {
+						boardUtilities?.updateBoard({ editorId: editor.editorId });
+					}
 					getBridgedFunctions().createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
@@ -81,7 +88,7 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  });
-	}, [action, attendeesLength, isNew, isSending, onClose, panel]);
+	}, [action, attendeesLength, boardUtilities, isNew, isSending, onClose, panel]);
 
 	const onDiscard = useCallback(() => {
 		onClose();

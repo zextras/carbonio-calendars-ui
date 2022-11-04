@@ -4,18 +4,19 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions, t, updateBoard, useBoardHooks } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { StoreProvider } from '../../../store/redux';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import {
-	selectEditor,
 	selectEditorAttendees,
 	selectEditorDisabled,
+	selectEditorIsInstance,
 	selectEditorIsNew,
-	selectEditorTitle
+	selectEditorIsSeries, selectEditorPanel,
+	selectEditorTitle,
 } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
@@ -23,16 +24,19 @@ import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
 	const title = useSelector(selectEditorTitle(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
-	const editor = useSelector(selectEditor(editorId));
+	const isSeries = useSelector(selectEditorIsSeries(editorId));
+	const panel = useSelector(selectEditorPanel(editorId));
+	const isInstance = useSelector(selectEditorIsInstance(editorId));
 	const createModal = useContext(ModalManagerContext);
 	const disabled = useSelector(selectEditorDisabled(editorId));
 	const attendeesLength = useSelector(selectEditorAttendees)?.length;
+	const boardUtilities = useBoardHooks();
 
 	const { onSave } = callbacks;
 	const { action } = useParams<{ action: string }>();
 
 	const onClick = useCallback(() => {
-		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
+		if (isSeries && action === EventActionsEnum.EDIT && !isInstance) {
 			// It's ignore because the createModal Function is not typed
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
@@ -57,7 +61,11 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				true
 			);
 		} else
-			onSave({ draft: !attendeesLength, isNew }).then(({ response }) => {
+			onSave({ draft: !attendeesLength, isNew }).then((res) => {
+				const { response, editor } = res;
+				if (!panel) {
+					boardUtilities?.updateBoard({ editorId: editor.editorId });
+				}
 				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
@@ -70,14 +78,16 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				});
 			});
 	}, [
-		editor.isSeries,
-		editor.isInstance,
+		isSeries,
 		action,
+		isInstance,
 		onSave,
 		attendeesLength,
 		isNew,
 		createModal,
-		editorId
+		editorId,
+		panel,
+		boardUtilities
 	]);
 
 	return (

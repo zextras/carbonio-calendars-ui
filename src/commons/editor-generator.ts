@@ -40,7 +40,13 @@ import { getIdentityItems } from './get-identity-items';
 
 let counter = 0;
 
-const getNewEditId = (id?: string): string => {
+const getNewEditId = (id?: string, ridZ?: string): string => {
+	if (id) {
+		if (ridZ) {
+			return `${id}-${ridZ}`;
+		}
+		return id;
+	}
 	counter += 1;
 	return `${id ?? 'new'}-${counter}`;
 };
@@ -52,9 +58,12 @@ export const getEndTime = ({ start, duration }: { start: number; duration: strin
 		const value = now.add(interval, 's').valueOf();
 		return isNaN(value) ? now.valueOf() + 3600 : value;
 	}
-	const interval = parseInt(duration, 10);
-	const value = now.add(interval, 's').valueOf();
-	return isNaN(value) ? now.valueOf() + 3600 : value;
+	if (duration) {
+		const interval = parseInt(duration, 10);
+		const value = now.add(interval, 's').valueOf();
+		return isNaN(value) ? now.valueOf() + 3600 : value;
+	}
+	return now.valueOf() + 3600;
 };
 
 const createEmptyEditor = (id: string): Editor => {
@@ -121,7 +130,8 @@ const createEmptyEditor = (id: string): Editor => {
 			attachments: false,
 			composer: false
 		},
-		id
+		id,
+		editorId: id
 	};
 };
 
@@ -277,19 +287,34 @@ export const createCallbacks = (
 
 	const createAppointmentFn = (draft: boolean): Promise<any> =>
 		dispatch(createAppointment({ id, draft })).then(({ payload }) => {
-			const { response, editor } = payload;
-			if (payload?.response) {
-				dispatch(updateEditor({ id, editor }));
+			const { response, editor, error } = payload;
+			const { ridZ, s } = response.echo[0].m[0].inv[0].comp[0];
+			const editId = ridZ ?? s[0].d;
+			const newId =
+				editor.isSeries && !editor.isException && !editor.isInstance
+					? `${response.apptId}`
+					: `${response.apptId}-${editId}`;
+			const updatedEditor = { ...editor, editorId: newId };
+			if (response && !error) {
+				dispatch(updateEditor({ id, editor: updatedEditor, response }));
+				return Promise.resolve({ response, editor: updatedEditor });
 			}
-			return Promise.resolve({ response, editor });
+			return Promise.resolve(payload);
 		});
 
 	const modifyAppointmentFn = (draft: boolean): Promise<any> =>
 		dispatch(modifyAppointment({ id, draft })).then(({ payload }) => {
 			const { response, editor, error } = payload;
+			const { ridZ, s } = response.echo[0].m[0].inv[0].comp[0];
+			const editId = ridZ ?? s[0].d;
+			const newId =
+				editor.isSeries && !editor.isException && !editor.isInstance
+					? `${response.apptId}`
+					: `${response.apptId}-${editId}`;
+			const updatedEditor = { ...editor, editorId: newId };
 			if (response && !error) {
-				dispatch(updateEditor({ id, editor }));
-				return Promise.resolve({ response, editor });
+				dispatch(updateEditor({ id, editor: updatedEditor, response }));
+				return Promise.resolve({ response, editor: updatedEditor });
 			}
 			return Promise.resolve(payload);
 		});
@@ -298,7 +323,7 @@ export const createCallbacks = (
 		dispatch(proposeNewTime({ id })).then(({ payload }) => {
 			const { response, editor, error } = payload;
 			if (response && !error) {
-				dispatch(updateEditor({ id, editor }));
+				dispatch(updateEditor({ id, editor, response }));
 				return Promise.resolve({ response, editor });
 			}
 			return Promise.resolve({ ...payload, response: 'success' });
@@ -342,23 +367,36 @@ const setEditorDate = ({
 	invite: Invite | undefined;
 	event: EventPropType | undefined;
 }): Editor => {
-	if (editor.isSeries && !editor.isInstance && !editor.isException) {
+	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getUserSettings().prefs;
+	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
+		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
+		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
+	if (event) {
+		if (editor.isSeries && !editor.isInstance && !editor.isException && invite) {
+			return {
+				...editor,
+				start: event?.allDay
+					? moment(invite?.start?.u)?.startOf('date').valueOf()
+					: moment(invite?.start?.u).valueOf(),
+				end: event?.allDay
+					? moment(invite?.end?.u)?.endOf('date').valueOf()
+					: moment(invite?.end?.u).valueOf()
+			};
+		}
 		return {
 			...editor,
 			start: event?.allDay
-				? moment(invite?.start?.u)?.startOf('date').valueOf()
-				: moment(invite?.start?.u).valueOf(),
+				? moment(event?.start)?.startOf('date').valueOf()
+				: moment(event?.start).valueOf(),
 			end: event?.allDay
-				? moment(invite?.end?.u)?.endOf('date').valueOf()
-				: moment(invite?.end?.u).valueOf()
+				? moment(event?.end)?.endOf('date').valueOf()
+				: moment(event?.end).valueOf()
 		};
 	}
 	return {
 		...editor,
-		start: event?.allDay
-			? moment(event?.start)?.startOf('date').valueOf()
-			: moment(event?.start).valueOf(),
-		end: event?.allDay ? moment(event?.end)?.endOf('date').valueOf() : moment(event?.end).valueOf()
+		start: moment().valueOf(),
+		end: moment().valueOf() + endDur
 	};
 };
 
@@ -371,7 +409,29 @@ export const generateEditor = ({
 	invite?: Invite;
 	context: any;
 }): { editor: Editor; callbacks: EditorCallbacks } => {
-	const id = getNewEditId(event?.resource?.id);
+	if (event?.resource?.id) {
+		const predicate =
+			event?.resource?.id && event?.resource?.ridZ
+				? `${event?.resource?.id}-${event?.resource?.ridZ}`
+				: event?.resource?.id;
+		const editors = store?.getState()?.editor?.editors;
+		const editorInStore = find(editors, ['id', predicate]);
+		if (editorInStore) {
+			const newEditor = applyContextToEditor({
+				editor: editorInStore,
+				context
+			});
+			const callbacks = createCallbacks(editorInStore.editorId, context);
+			const { dispatch, getState } = store;
+
+			dispatch(createNewEditor(newEditor));
+			return {
+				editor: getState()?.editor?.editors?.[editorInStore.id],
+				callbacks
+			};
+		}
+	}
+	const id = getNewEditId(event?.resource?.id, event?.resource?.ridZ);
 	const isInstance = context?.isInstance;
 	const compiledEditor = normalizeEditorWithoutOrganizer({ invite, event, id, isInstance });
 	const editorWithDates = setEditorDate({ editor: compiledEditor, event, invite });
@@ -380,7 +440,7 @@ export const generateEditor = ({
 		context
 	});
 
-	const callbacks = createCallbacks(id, context);
+	const callbacks = createCallbacks(editorWithContext.editorId, context);
 	const { dispatch, getState } = store;
 
 	dispatch(createNewEditor(editorWithContext));

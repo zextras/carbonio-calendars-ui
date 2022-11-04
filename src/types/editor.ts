@@ -75,6 +75,7 @@ export type EditorProps = {
 
 export type Editor = {
 	disabled: Record<string, boolean>;
+	editorId: string;
 	uid?: string | undefined;
 	ridZ?: string | undefined;
 	draft?: boolean | undefined;

@@ -158,3 +158,12 @@ export const selectEditorPanel =
 	(id: string) =>
 	(state: Store): boolean =>
 		state?.editor?.editors?.[id]?.panel;
+
+export const selectEditorIsSeries =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.isSeries;
+export const selectEditorIsInstance =
+	(id: string) =>
+	(state: Store): boolean =>
+		state?.editor?.editors?.[id]?.isInstance;

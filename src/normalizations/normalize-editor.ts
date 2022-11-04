@@ -76,6 +76,7 @@ export const normalizeEditorWithoutOrganizer = ({
 							event.resource.calendar.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
 						],
 					id,
+					editorId: id,
 					ridZ: event?.resource?.ridZ,
 					attach: invite.attach,
 					parts: invite.parts,
@@ -110,4 +111,4 @@ export const normalizeEditorWithoutOrganizer = ({
 				},
 				isNil
 		  ) as Editor)
-		: ({ id } as Editor);
+		: ({ id, editorId: id } as Editor);

@@ -13,7 +13,7 @@ export const newEditorReducer = (state: EditorSlice, { payload }: NewEditor): vo
 	if (payload) {
 		state.editors[payload.id] = payload;
 		if (payload.panel) {
-			state.activeId = payload.id;
+			state.activeId = payload.editorId;
 		}
 		if (payload.searchPanel) {
 			state.searchActiveId = payload.id;
