@@ -25,12 +25,12 @@ export const getVirtualRoom = (xprop: any): { label: string; link: string } | un
 	return undefined;
 };
 
-export const normaliseContact = (contact: { address: string; fullName: string }): IdentityItem => ({
+export const normaliseContact = (contact: { a: string; d: string }): IdentityItem => ({
 	...contact,
-	address: contact?.address,
-	fullName: contact?.fullName,
-	label: contact?.address ?? contact?.fullName,
-	value: contact?.address
+	address: contact?.a,
+	fullName: contact?.d,
+	label: contact?.d ?? contact?.a,
+	value: contact?.a
 });
 
 const getAttendees = (attendees: any[], role: string): any[] =>
