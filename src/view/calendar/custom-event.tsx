@@ -87,26 +87,19 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 				);
 			}
 		}
-		if (
-			event?.resource?.class === 'PRI' &&
-			!event?.resource?.iAmOrganizer &&
-			!event?.haveWriteAccess
-		) {
-			createSnackbar({
-				key: `private_appointment`,
-				replace: true,
-				type: 'info',
-				label: t('label.appointment_is_private', 'The appointment is private.'),
-				autoHideTimeout: 3000,
-				hideButton: true
-			});
-		}
-	}, [event, createModal, onEntireSeries, onSingleInstance, createSnackbar]);
+	}, [event, createModal, onEntireSeries, onSingleInstance]);
 
 	const toggleOpen = useCallback(
 		(e): void => {
 			if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
-				console.log('hello');
+				createSnackbar({
+					key: `private_appointment`,
+					replace: true,
+					type: 'info',
+					label: t('label.appointment_is_private', 'The appointment is private.'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
 			} else {
 				getEventInvite();
 				if (e.detail === 1 && isNil(action) && !open) {
@@ -114,7 +107,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 				}
 			}
 		},
-		[event, getEventInvite, action, open]
+		[event?.resource?.class, event?.haveWriteAccess, createSnackbar, getEventInvite, action, open]
 	);
 
 	const actions = useEventSummaryViewActions({
