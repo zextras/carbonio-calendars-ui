@@ -244,7 +244,14 @@ export const applyTag = ({
 }: {
 	event: EventType;
 	context: ContextType;
-}): { id: string; items: TagType[]; customComponent: ReactElement } => {
+}): {
+	id: string;
+	items: TagType[];
+	customComponent?: ReactElement;
+	label?: string;
+	icon?: string;
+	disabled?: boolean;
+} => {
 	const tagItem = reduce(
 		context.tags,
 		(
@@ -285,22 +292,30 @@ export const applyTag = ({
 			/>
 		)
 	});
-	return {
-		id: TagsActionsType.Apply,
-		items: tagItem,
-		customComponent: (
-			<Row takeAvailableSpace mainAlignment="flex-start">
-				<Padding right="small">
-					<Icon icon="TagsMoreOutline" />
-				</Padding>
-				<Row takeAvailableSpace mainAlignment="space-between">
-					<Padding right="small">
-						<Text>{t('label.tags', 'Tags')}</Text>
-					</Padding>
-				</Row>
-			</Row>
-		)
-	};
+	return event.haveWriteAccess
+		? {
+				id: TagsActionsType.Apply,
+				items: tagItem,
+				customComponent: (
+					<Row takeAvailableSpace mainAlignment="flex-start">
+						<Padding right="small">
+							<Icon icon="TagsMoreOutline" />
+						</Padding>
+						<Row takeAvailableSpace mainAlignment="space-between">
+							<Padding right="small">
+								<Text>{t('label.tags', 'Tags')}</Text>
+							</Padding>
+						</Row>
+					</Row>
+				)
+		  }
+		: {
+				id: TagsActionsType.Apply,
+				items: [],
+				label: t('label.tags', 'Tags'),
+				icon: 'TagsMoreOutline',
+				disabled: true
+		  };
 };
 
 export const useGetTagsActions = ({ tag }: ArgumentType): Array<ReturnType> => {
