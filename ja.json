@@ -33,7 +33,6 @@
         "want_to_send_cancellation_msg": "参加者にキャンセルメッセージを送信しますか？",
         "you_are_organizer": "<Row><Text> <BoldText> あなた </BoldText> は主催者です </Text></Row>",
         "you_sure_delete_calendar": "本当に{{name}}カレンダーを完全に削除しますか？",
-        "you_will_see_the_subject_here": "件名",
         "delete_all_occurences": "あらゆる出来事を削除する",
         "delete_future_occurences": "この瞬間と今後の出来事をすべて削除します",
         "delete_future_occurences_warning": "これにより、シリーズ内のすべての例外（この瞬間の前後）も削除されます",
@@ -441,7 +440,6 @@
         "proposed_time_accepted": "提案された時間を承認しました",
         "url_copied": "{{title}}がコピーされました",
         "share_folder_success": "カレンダーが共有されました",
-        "new_time_proposed_success": "新しい時間が提案されました",
         "tag_applied": "{{tag}} タグが適用されました",
         "tag_removed": "{{tag}} タグが削除されました"
     },

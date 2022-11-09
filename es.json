@@ -393,7 +393,6 @@
         "proposed_time_accepted": "Has aceptado la hora propuesta",
         "share_folder_success": "Calendario compartido con éxito",
         "url_copied": "{{title}} copiado",
-        "new_time_proposed_success": "Nuevo horario propuesto",
         "tag_applied": "Etiqueta {{tag}} aplicada",
         "tag_removed": "Etiqueta {{tag}} eliminada"
     },
@@ -405,7 +404,6 @@
         "you": "Tu",
         "are_organizer": "eres el organizador",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> es el organizador",
-        "you_will_see_the_subject_here": "Asunto",
         "snackbar": {
             "appt_moved": "La cita ha sido movida correctamente a",
             "appointment_permanently_deleted_succesfully": "Acción realizada con éxito",

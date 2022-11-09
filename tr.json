@@ -11,7 +11,8 @@
         "send_cancellation": "İptal bilgisi gönder",
         "share_calendar": "Takvimi paylaş",
         "edit_calendar_properties": "Takvim özelliklerini düzenle",
-        "empty_trash_confirmation": "E-Posta, Kişiler, Takvim, Görevler ve Çanta çöp kutularındaki tüm öğeler silinecek. Bu çöp kutularındaki herşeyi tamamen silmek istediğinizden emin misiniz?"
+        "empty_trash_confirmation": "E-Posta, Kişiler, Takvim, Görevler ve Çanta çöp kutularındaki tüm öğeler silinecek. Bu çöp kutularındaki herşeyi tamamen silmek istediğinizden emin misiniz?",
+        "send_edit": "Gönder Düzenle"
     },
     "edit_share_properties": "Paylaşım özelliklerini düzenle",
     "button": {
@@ -144,7 +145,6 @@
         "you_are_organizer": "<Row><Text> <BoldText> Sizin  </BoldText> organize ettiğiniz </Text></Row>",
         "you_sure_delete_calendar": "{{name}} takvimi tamamen silmek istediğinizden emin misiniz?",
         "you_sure_move_calendar_trash": "{{name}} takvimi silmek istediğinizden emin misiniz?",
-        "you_will_see_the_subject_here": "Konu",
         "you_sure_delete_instance": "{{title}} randevusunun bu öğesini silmek istediğinizden emin misiniz?",
         "delete_tag_message1": "{{name}} etiketini silmek istediğinizden emin misiniz?",
         "delete_tag_message2": "Silinince önceden işaretlenmiş tüm öğelerden etiket kaldırılacak.",
@@ -157,7 +157,9 @@
         "required_participant_plural": "{{count}} Katılımcı",
         "send_email": "E-posta gönder",
         "edit_series_warning": "Serileri değiştirmeye devam ederseniz, daha önce silinmiş veya değiştirilmiş tüm tekrarlamalar yeni seri ayarları ile geri yüklenecek.",
-        "appointment_invitation_sent": "Randevu daveti gönderildi"
+        "appointment_invitation_sent": "Randevu daveti gönderildi",
+        "want_to_edit_modified_msg": "Değiştirilen randevu için mesajı düzenlemek ister misiniz?",
+        "meeting_modified": "Bu toplantı değiştirildi"
     },
     "search": {
         "organized_by": "Organize eden"
@@ -169,7 +171,6 @@
         "proposed_time_accepted": "Önerilen saati kabul ettiniz",
         "share_folder_success": "Takvim başarıyla paylaşıldı",
         "url_copied": "{{title}} kopyalandı",
-        "new_time_proposed_success": "Yeni saat önerildi",
         "tag_applied": "{{tag}} etiketi uygulandı",
         "tag_removed": "{{tag}} etiketi kaldırıldı"
     },
@@ -348,7 +349,10 @@
         "public_link_description": "Başlık {{title}} 'dan {{date}} tarihinde oluşturuldu",
         "continue": "İlerle",
         "choose_file": "Dosya seç",
-        "cancel": "iptal"
+        "cancel": "iptal",
+        "subject": "Konu",
+        "new_time_proposed": "Yeni Saat Önerildi",
+        "appointment_is_private": "Bu özel randevudur."
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -634,5 +638,6 @@
     },
     "preview": {
         "close": "Önizlemeyi Kapat"
-    }
+    },
+    "recurrent_in_allday": "Tekrarlanan randevuyu tüm gün alanına taşıyamazsınız"
 }
