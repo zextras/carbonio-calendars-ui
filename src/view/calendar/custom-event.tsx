@@ -86,26 +86,28 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 					`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 				);
 			}
-		} else {
-			createSnackbar({
-				key: `private_appointment`,
-				replace: true,
-				type: 'info',
-				label: t('label.appointment_is_private', 'The appointment is private.'),
-				autoHideTimeout: 3000,
-				hideButton: true
-			});
 		}
-	}, [event, createModal, onEntireSeries, onSingleInstance, createSnackbar]);
+	}, [event, createModal, onEntireSeries, onSingleInstance]);
 
 	const toggleOpen = useCallback(
-		(e) => {
-			getEventInvite();
-			if (e.detail === 1 && isNil(action) && !open) {
-				setOpen(true);
+		(e): void => {
+			if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
+				createSnackbar({
+					key: `private_appointment`,
+					replace: true,
+					type: 'info',
+					label: t('label.appointment_is_private', 'The appointment is private.'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			} else {
+				getEventInvite();
+				if (e.detail === 1 && isNil(action) && !open) {
+					setOpen(true);
+				}
 			}
 		},
-		[getEventInvite, action, open]
+		[event?.resource?.class, event?.haveWriteAccess, createSnackbar, getEventInvite, action, open]
 	);
 
 	const actions = useEventSummaryViewActions({
@@ -171,7 +173,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 							)}
 						</Container>
 						{!event.allDay && (
-							<Tooltip label={title} placement="top">
+							<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
 								<Container
 									orientation="horizontal"
 									width="fill"
