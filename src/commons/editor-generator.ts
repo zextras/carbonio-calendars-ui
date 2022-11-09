@@ -342,23 +342,36 @@ const setEditorDate = ({
 	invite: Invite | undefined;
 	event: EventPropType | undefined;
 }): Editor => {
-	if (editor.isSeries && !editor.isInstance && !editor.isException) {
+	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getUserSettings().prefs;
+	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
+		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
+		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
+	if (event) {
+		if (editor.isSeries && !editor.isInstance && !editor.isException && invite) {
+			return {
+				...editor,
+				start: event?.allDay
+					? moment(invite?.start?.u)?.startOf('date').valueOf()
+					: moment(invite?.start?.u).valueOf(),
+				end: event?.allDay
+					? moment(invite?.end?.u)?.endOf('date').valueOf()
+					: moment(invite?.end?.u).valueOf()
+			};
+		}
 		return {
 			...editor,
 			start: event?.allDay
-				? moment(invite?.start?.u)?.startOf('date').valueOf()
-				: moment(invite?.start?.u).valueOf(),
+				? moment(event?.start)?.startOf('date').valueOf()
+				: moment(event?.start).valueOf(),
 			end: event?.allDay
-				? moment(invite?.end?.u)?.endOf('date').valueOf()
-				: moment(invite?.end?.u).valueOf()
+				? moment(event?.end)?.endOf('date').valueOf()
+				: moment(event?.end).valueOf()
 		};
 	}
 	return {
 		...editor,
-		start: event?.allDay
-			? moment(event?.start)?.startOf('date').valueOf()
-			: moment(event?.start).valueOf(),
-		end: event?.allDay ? moment(event?.end)?.endOf('date').valueOf() : moment(event?.end).valueOf()
+		start: moment().valueOf(),
+		end: moment().valueOf() + endDur
 	};
 };
 
