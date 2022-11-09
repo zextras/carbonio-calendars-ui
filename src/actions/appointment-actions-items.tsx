@@ -97,7 +97,7 @@ export const moveAppointmentItem = ({
 		event.resource.calendar.id === FOLDERS.TRASH
 			? t('label.restore', 'Restore')
 			: t('label.move', 'Move'),
-	disabled: false,
+	disabled: !event?.haveWriteAccess,
 	keepOpen: true,
 	click: moveAppointment({ event, context })
 });
@@ -114,7 +114,7 @@ export const moveApptToTrashItem = ({
 	id: EventActionsEnum.TRASH,
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
-	disabled: false,
+	disabled: !event?.haveWriteAccess,
 	keepOpen: true,
 	click: (ev: Event): void => {
 		context?.onClose && context?.onClose();
