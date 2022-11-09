@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getUserAccount, getUserSettings } from '@zextras/carbonio-shell-ui';
+import { Folder, getUserAccount, getUserSettings, LinkFolder } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
+import { setCalendarColor } from '../normalizations/normalizations-utils';
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { PREFS_DEFAULTS } from '../constants';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
@@ -37,6 +38,7 @@ import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
 import { EventResourceCalendar } from '../types/event';
 import { Attendee, Invite, InviteClass, InviteFreeBusy } from '../types/store/invite';
 import { getIdentityItems } from './get-identity-items';
+import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 
 let counter = 0;
 
@@ -57,20 +59,27 @@ export const getEndTime = ({ start, duration }: { start: number; duration: strin
 	return isNaN(value) ? now.valueOf() + 3600 : value;
 };
 
-const createEmptyEditor = (id: string): Editor => {
+const createEmptyEditor = (id: string, folders: Array<Folder>): Editor => {
 	const identities = getIdentityItems();
 	const {
 		zimbraPrefTimeZoneId,
 		zimbraPrefCalendarDefaultApptDuration,
-		zimbraPrefCalendarApptReminderWarningTime,
-		zimbraPrefDefaultCalendarId = PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+		zimbraPrefCalendarApptReminderWarningTime
 	} = getUserSettings().prefs;
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
-	const calendars = store?.getState().calendars;
-
+	const defaultCalendar = find(folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
 	return {
 		attach: undefined,
-		calendar: calendars?.calendars?.[zimbraPrefDefaultCalendarId],
+		calendar: defaultCalendar
+			? {
+					id: defaultCalendar.id,
+					name: defaultCalendar.name, // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					color: defaultCalendar.color // @ts-ignore
+						? ZIMBRA_STANDARD_COLORS[defaultCalendar.color]
+						: setCalendarColor(defaultCalendar),
+					owner: (defaultCalendar as LinkFolder)?.owner
+			  }
+			: undefined,
 		panel: false,
 		isException: false,
 		exceptId: undefined,
@@ -132,8 +141,8 @@ export const applyContextToEditor = ({
 	editor: Editor;
 	context: any;
 }): Editor => {
-	let newEditor = createEmptyEditor(editor.id);
-	const contextObj = omit(context, 'disabled');
+	let newEditor = createEmptyEditor(editor.id, context.folders);
+	const contextObj = omit(context, ['disabled', 'folders']);
 	if (!isEmpty(context)) {
 		newEditor = { ...newEditor, ...editor, ...contextObj };
 	}
@@ -274,20 +283,28 @@ export const createCallbacks = (
 	): { payload: undefined; type: string } | { payload: { id: string; recur: any }; type: string } =>
 		dispatch(editEditorRecurrence({ id, recur }));
 
-	const onSave = ({ draft = true, isNew = true }): Promise<any> =>
+	const onSave = ({
+		draft = true,
+		isNew = true,
+		editor
+	}: {
+		editor: Editor;
+		isNew?: boolean;
+		draft?: boolean;
+	}): Promise<any> =>
 		isNew
-			? dispatch(createAppointment({ id, draft })).then(({ payload }) => {
-					const { response, editor } = payload;
+			? dispatch(createAppointment({ id, draft, editor })).then(({ payload }) => {
+					const { response } = payload;
 					if (payload?.response) {
-						dispatch(updateEditor({ id, editor }));
+						dispatch(updateEditor({ id, editor: payload.editor }));
 					}
-					return Promise.resolve({ response, editor });
+					return Promise.resolve({ response, editor: payload.editor });
 			  })
-			: dispatch(modifyAppointment({ id, draft })).then(({ payload }) => {
-					const { response, editor, error } = payload;
+			: dispatch(modifyAppointment({ id, draft, editor })).then(({ payload }) => {
+					const { response, error } = payload;
 					if (response && !error) {
-						dispatch(updateEditor({ id, editor }));
-						return Promise.resolve({ response, editor });
+						dispatch(updateEditor({ id, editor: payload.editor }));
+						return Promise.resolve({ response, editor: payload.editor });
 					}
 					return Promise.resolve(payload);
 			  });
@@ -302,8 +319,8 @@ export const createCallbacks = (
 			return Promise.resolve({ ...payload, response: 'success' });
 		});
 
-	const onSend = (isNew: boolean): Promise<any> =>
-		context?.isProposeNewTime ? onProposeNewTime() : onSave({ draft: false, isNew });
+	const onSend = (isNew: boolean, editor: Editor): Promise<any> =>
+		context?.isProposeNewTime ? onProposeNewTime() : onSave({ draft: false, isNew, editor });
 
 	return {
 		onToggleRichText,
@@ -367,8 +384,8 @@ export const generateEditor = ({
 	context: any;
 }): { editor: Editor; callbacks: EditorCallbacks } => {
 	const id = getNewEditId(event?.resource?.id);
-	const isInstance = context?.isInstance;
-	const compiledEditor = normalizeEditor({ invite, event, id, isInstance });
+	const { isInstance, folders } = context;
+	const compiledEditor = normalizeEditor({ invite, event, id, isInstance, folders });
 	const editorWithDates = setEditorDate({ editor: compiledEditor, event, invite });
 	const editorWithContext = applyContextToEditor({
 		editor: editorWithDates,
@@ -376,11 +393,12 @@ export const generateEditor = ({
 	});
 
 	const callbacks = createCallbacks(id, context);
-	const { dispatch, getState } = store;
+	const { dispatch } = store;
 
 	dispatch(createNewEditor(editorWithContext));
+
 	return {
-		editor: getState()?.editor?.editors?.[id],
+		editor: editorWithContext,
 		callbacks
 	};
 };

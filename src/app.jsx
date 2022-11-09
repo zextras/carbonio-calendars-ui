@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { lazy, useEffect, Suspense } from 'react';
+import React, { lazy, useEffect, Suspense, useMemo } from 'react';
 import {
 	Spinner,
 	addRoute,
@@ -14,8 +14,10 @@ import {
 	registerComponents,
 	ACTION_TYPES,
 	addBoard,
-	t
+	t,
+	useFolders
 } from '@zextras/carbonio-shell-ui';
+import { filter } from 'lodash';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
@@ -82,6 +84,9 @@ const SearchView = (props) => (
 );
 
 export default function App() {
+	const folders = useFolders();
+	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
+
 	useEffect(() => {
 		addRoute({
 			route: CALENDAR_ROUTE,
@@ -117,7 +122,11 @@ export default function App() {
 				click: (ev) => {
 					ev?.preventDefault?.();
 					const { editor, callbacks } = generateEditor({
-						context: { title: t('label.new_appointment', 'New Appointment'), panel: false }
+						context: {
+							title: t('label.new_appointment', 'New Appointment'),
+							panel: false,
+							folders: calendarFolders
+						}
 					});
 					addBoard({
 						url: `${CALENDAR_ROUTE}/`,
@@ -139,7 +148,7 @@ export default function App() {
 			// @ts-ignore
 			component: InviteResponse
 		});
-	}, []);
+	}, [calendarFolders]);
 
 	return (
 		<StoreProvider>

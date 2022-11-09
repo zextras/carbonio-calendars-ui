@@ -58,6 +58,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 								onClose={(): void => closeModal()}
 								isNew={isNew}
 								editorId={editorId}
+								editor={editor}
 							/>
 						</StoreProvider>
 					),
@@ -68,7 +69,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				true
 			);
 		} else
-			onSend(isNew).then(({ response }) => {
+			onSend(isNew, editor).then(({ response }) => {
 				if (editor?.panel && response) {
 					replaceHistory('');
 				} else if (board) {
@@ -85,24 +86,16 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 					autoHideTimeout: 3000
 				});
 			});
-	}, [
-		action,
-		board,
-		createModal,
-		editor.isInstance,
-		editor.isSeries,
-		editor?.panel,
-		editorId,
-		isNew,
-		onSend
-	]);
+	}, [action, board, createModal, editor, editorId, isNew, onSend]);
 
 	return (
 		<Button
 			label={t('action.send', 'Send')}
+			name="send"
 			icon="PaperPlane"
 			disabled={isDisabled}
 			onClick={onClick}
+			data-testid="send"
 		/>
 	);
 };

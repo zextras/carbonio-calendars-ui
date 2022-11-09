@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Folders } from '@zextras/carbonio-shell-ui';
 import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
@@ -69,20 +70,22 @@ export const normalizeEditor = ({
 	invite,
 	event,
 	id,
-	isInstance
+	isInstance,
+	folders
 }: {
 	id: string;
 	invite?: Invite;
 	event?: EventPropType;
 	isInstance?: boolean;
+	folders?: Folders;
 }): Editor =>
 	invite && event
 		? (omitBy(
 				{
-					calendar:
-						store?.getState().calendars.calendars[
-							event.resource.calendar.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
-						],
+					calendar: find(folders, [
+						'id',
+						event.resource.calendar.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+					]),
 					id,
 					ridZ: event?.resource?.ridZ,
 					attach: invite.attach,

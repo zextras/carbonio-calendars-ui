@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, CustomModal } from '@zextras/carbonio-design-system';
-import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
-import { isEmpty, map, omit } from 'lodash';
+import { addBoard, Board, t, useFolders } from '@zextras/carbonio-shell-ui';
+import { filter, isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -32,7 +32,8 @@ export const ReminderModal = ({
 	const [activeReminder, setActiveReminder] = useState<ReminderItem | undefined>(undefined);
 	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
 	const dispatch = useDispatch();
-
+	const folders = useFolders();
+	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
 	const openModal = useMemo(() => !isEmpty(reminders), [reminders]);
 
 	const dismissAll = useCallback(() => {
@@ -78,7 +79,10 @@ export const ReminderModal = ({
 				const { editor, callbacks } = generateEditor({
 					event,
 					invite,
-					context: { panel: false }
+					context: {
+						folders: calendarFolders,
+						panel: false
+					}
 				});
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
@@ -89,7 +93,7 @@ export const ReminderModal = ({
 				dismissAll();
 			}
 		});
-	}, [activeReminder, dismissAll, dispatch]);
+	}, [activeReminder, calendarFolders, dismissAll, dispatch]);
 
 	const headerLabel = useMemo(
 		() =>

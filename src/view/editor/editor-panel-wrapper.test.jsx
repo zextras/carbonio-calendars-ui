@@ -5,7 +5,6 @@
  */
 import React from 'react';
 import { screen } from '@testing-library/react';
-import moment from 'moment-timezone';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import EditorPanelWrapper from './editor-panel-wrapper';
 import {
@@ -18,8 +17,6 @@ import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import { CALENDAR_APP_ID } from '../../constants';
 import { reducers } from '../../store/redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
-
-moment.tz.setDefault('America/New_York');
 
 /* describe('Editor panel', async () => {
 	const isNew = false;

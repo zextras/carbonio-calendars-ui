@@ -47,6 +47,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 								onClose={(): void => closeModal()}
 								isNew={isNew}
 								editorId={editorId}
+								editor={editor}
 							/>
 						</StoreProvider>
 					),
@@ -57,7 +58,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				true
 			);
 		} else
-			onSave({ draft: !attendeesLength, isNew }).then(({ response }) => {
+			onSave({ draft: !attendeesLength, isNew, editor }).then(({ response }) => {
 				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
@@ -69,19 +70,11 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 					autoHideTimeout: 3000
 				});
 			});
-	}, [
-		editor.isSeries,
-		editor.isInstance,
-		action,
-		onSave,
-		attendeesLength,
-		isNew,
-		createModal,
-		editorId
-	]);
+	}, [editor, action, onSave, attendeesLength, isNew, createModal, editorId]);
 
 	return (
 		<Button
+			data-testid="save"
 			label={t('label.save', 'Save')}
 			icon="SaveOutline"
 			disabled={disabled?.saveButton ?? !title?.length}

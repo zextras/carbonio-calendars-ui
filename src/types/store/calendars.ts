@@ -14,12 +14,11 @@ export type Calendar = {
 	rid?: string;
 	n: number;
 	name: string;
-	parent: string;
-	owner: string;
+	parent?: string;
+	owner?: string;
 	deletable: boolean;
-	absFolderPath: string;
-	appointments: { ids: Array<string> };
-	zid: string;
+	absFolderPath?: string;
+	zid?: string;
 	acl: any;
 	isShared?: boolean;
 	perm?: string;

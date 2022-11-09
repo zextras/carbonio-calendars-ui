@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
-import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useFolders, useTags } from '@zextras/carbonio-shell-ui';
+import { filter } from 'lodash';
 import { useContext, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectInstanceInvite } from '../store/selectors/invites';
@@ -25,10 +26,12 @@ export const useEventSummaryViewActions = ({
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
-
+	const folders = useFolders();
+	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
 	const context = useMemo(
 		() => ({
 			tags,
+			folders: calendarFolders,
 			createAndApplyTag,
 			replaceHistory,
 			createModal,
@@ -36,7 +39,7 @@ export const useEventSummaryViewActions = ({
 			createSnackbar,
 			onClose
 		}),
-		[createModal, createSnackbar, dispatch, onClose, tags]
+		[calendarFolders, createModal, createSnackbar, dispatch, onClose, tags]
 	);
 
 	return useMemo(() => {

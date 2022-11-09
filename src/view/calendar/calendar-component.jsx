@@ -10,10 +10,11 @@ import {
 	getBridgedFunctions,
 	replaceHistory,
 	t,
+	useFolders,
 	useUserSettings
 } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
-import { isEqual, isNil, minBy, omit, omitBy, size } from 'lodash';
+import { filter, isEqual, isNil, minBy, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -26,7 +27,7 @@ import { CALENDAR_ROUTE } from '../../constants';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { getInvite } from '../../store/actions/get-invite';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { store, StoreProvider } from '../../store/redux';
+import { StoreProvider } from '../../store/redux';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
 	selectCalendars,
@@ -108,7 +109,8 @@ export default function CalendarComponent() {
 	const calendars = useSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
-
+	const folders = useFolders();
+	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
 	if (settings.prefs.zimbraPrefLocale) {
 		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
 			week: {
@@ -223,6 +225,7 @@ export default function CalendarComponent() {
 				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
 				const { editor, callbacks } = generateEditor({
 					context: {
+						folders: calendarFolders,
 						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
 						end: end.valueOf(),
@@ -230,16 +233,15 @@ export default function CalendarComponent() {
 						panel: false
 					}
 				});
-				const storeData = store.getState();
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
 					title: editor.title,
-					...storeData.editor.editors[editor.id],
+					...editor,
 					callbacks
 				});
 			}
 		},
-		[action, summaryViewOpen]
+		[action, calendarFolders, summaryViewOpen]
 	);
 
 	const onDropFn = useCallback(
@@ -263,6 +265,7 @@ export default function CalendarComponent() {
 						invite,
 						context: omitBy(
 							{
+								folders: calendarFolders,
 								start: startTime,
 								end: endTime,
 								allDay: !!isAllDay,
@@ -273,13 +276,12 @@ export default function CalendarComponent() {
 							isNil
 						)
 					});
-					const storeData = store.getState();
 					callbacks
 						.onSave(
 							omitBy(
 								{
 									draft,
-									isNew: storeData.editor.editors[editor.id]?.isNew
+									isNew: editor?.isNew
 								},
 								isNil
 							)
@@ -326,7 +328,7 @@ export default function CalendarComponent() {
 				}
 			});
 		},
-		[createModal, dispatch]
+		[calendarFolders, createModal, dispatch]
 	);
 
 	const onEventDrop = useCallback(

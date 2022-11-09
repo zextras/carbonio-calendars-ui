@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { Folder, Folders } from '@zextras/carbonio-shell-ui';
 import { size } from 'lodash';
 import moment from 'moment';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -88,6 +89,7 @@ type AccountContext = {
 	isInstance?: boolean;
 	replaceHistory: (a: string) => void;
 	onClose: () => void;
+	folders: Array<Folder>;
 };
 
 export type UseDeleteActionsType = {
@@ -215,7 +217,8 @@ export const useDeleteActions = (
 					event,
 					invite: modifiedInvite,
 					context: {
-						isInstance: context.isInstance
+						isInstance: context.isInstance,
+						folders: context.folders
 					}
 				});
 				const isTheFirstInstance = moment(untilDate).isSameOrBefore(moment(invite.start.d));

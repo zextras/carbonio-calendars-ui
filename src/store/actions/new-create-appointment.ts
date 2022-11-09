@@ -10,6 +10,7 @@ import moment from 'moment';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { Editor } from '../../types/editor';
+import { store } from '../redux';
 
 type Participants = {
 	a: string | undefined;
@@ -249,8 +250,7 @@ export const generateSoapMessageFromEditor = (msg: Editor): any =>
 
 export const createAppointment = createAsyncThunk(
 	'appointment/create new appointment',
-	async ({ id, draft }: any, { getState }: any): Promise<any> => {
-		const editor = getState()?.editor?.editors?.[id];
+	async ({ draft, editor }: any): Promise<any> => {
 		if (editor) {
 			const body = generateSoapMessageFromEditor({ ...editor, draft });
 			const res: { calItemId: string; invId: string } = await soapFetch('CreateAppointment', body);
