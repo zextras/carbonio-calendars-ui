@@ -276,7 +276,6 @@
         "you_are_organizer": "<Row><Text><BoldText>Anda</BoldText> adalah penyelenggara</Text></Row>",
         "you_sure_delete_calendar": "Anda yakin ingin menghapus kalender {{name}} secara permanen?",
         "you_sure_move_calendar_trash": "Anda yakin ingin menghapus kalender {{name}}?",
-        "you_will_see_the_subject_here": "Subjek",
         "somebody_invited_you": "<strong>{{somebody}}</strong>mengundang Anda",
         "sure_to_delete_all_occurences_appointment": "Anda yakin ingin menghapus semua kemunculan janji temu ini?",
         "meeting_canceled": "Rapat berikut telah dibatalkan",
@@ -423,7 +422,6 @@
         "proposed_time_accepted": "Anda menerima waktu yang diusulkan",
         "url_copied": "{{title}} disalin",
         "share_folder_success": "Kalender berhasil dibagikan",
-        "new_time_proposed_success": "Waktu baru diusulkan",
         "tag_removed": "Tag {{tag}}: dihapus",
         "tag_applied": "Tag {{tag}} diterapkan"
     },
