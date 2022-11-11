@@ -7,6 +7,7 @@ import { filter, size } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
 import { Spinner, replaceHistory, t, useFolders } from '@zextras/carbonio-shell-ui';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import ModalFooter from '../../commons/modal-footer';
 import { EventType } from '../../types/event';
@@ -137,7 +138,7 @@ export const DeleteEventModal = ({
 }: DeleteEventModalProps): ReactElement => {
 	const { isOrganizer, isException, participants } = invite;
 	const participantsSize = useMemo(() => size(participants), [participants]);
-
+	const dispatch = useDispatch();
 	const folders = useFolders();
 	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
 	const isInstance = context?.isInstance;
@@ -158,6 +159,7 @@ export const DeleteEventModal = ({
 		isInstance,
 		replaceHistory,
 		onClose,
+		dispatch,
 		folders: calendarFolders
 	});
 

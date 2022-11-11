@@ -35,6 +35,7 @@ export const ReminderPart = ({
 				event,
 				invite: editorInvite,
 				context: {
+					dispatch,
 					folders: calendarFolders,
 					panel: true
 				}

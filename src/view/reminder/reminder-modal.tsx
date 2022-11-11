@@ -80,6 +80,7 @@ export const ReminderModal = ({
 					event,
 					invite,
 					context: {
+						dispatch,
 						folders: calendarFolders,
 						panel: false
 					}

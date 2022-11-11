@@ -10,7 +10,6 @@ import moment from 'moment';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { Editor } from '../../types/editor';
-import { store } from '../redux';
 
 type Participants = {
 	a: string | undefined;

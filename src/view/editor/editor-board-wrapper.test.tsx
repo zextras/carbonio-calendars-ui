@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { Board } from '@zextras/carbonio-shell-ui';
 import React from 'react';
+import { Dispatch } from 'redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { createCallbacks } from '../../commons/editor-generator';
 import { CALENDAR_APP_ID } from '../../constants';
@@ -18,10 +19,12 @@ import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 
 const initBoard = ({
 	editorId,
-	isNew
+	isNew,
+	dispatch
 }: {
 	editorId: string;
 	isNew: boolean;
+	dispatch: Dispatch;
 }): Board & { callbacks: EditorCallbacks } & Editor => ({
 	url: 'calendars/',
 	title: 'Nuovo appuntamento',
@@ -100,7 +103,7 @@ const initBoard = ({
 		composer: false
 	},
 	id: editorId,
-	callbacks: createCallbacks(editorId),
+	callbacks: createCallbacks(editorId, { dispatch }),
 	app: 'carbonio-calendars-ui',
 	icon: 'CalendarModOutline'
 });
@@ -143,10 +146,16 @@ describe('Editor board wrapper', () => {
 				zimbraPrefUseTimeZoneListInCalendar: 'TRUE'
 			}
 		}));
-		shell.useBoard.mockImplementation(() => initBoard({ editorId, isNew }));
-		setupTest(<BoardEditPanel />, { store });
+		shell.useBoard.mockImplementation(() =>
+			initBoard({ editorId, isNew, dispatch: store.dispatch })
+		);
+		const { user } = setupTest(<BoardEditPanel />, { store });
+
 		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
 		expect(screen.getByTestId('send')).toBeDisabled();
+		expect(store.getState().editor.editors[editorId].isNew).toEqual(true);
+		await user.click(screen.getByTestId('save'));
 		expect(screen.getByTestId('save')).toBeEnabled();
+		expect(store.getState().editor.editors[editorId].isNew).toEqual(false);
 	});
 });

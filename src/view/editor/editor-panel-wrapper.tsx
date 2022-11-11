@@ -17,7 +17,7 @@ import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isNil, map } from 'lodash';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { createCallbacks } from '../../commons/editor-generator';
 import { selectActiveEditorId, selectEditorTitle } from '../../store/selectors/editor';
@@ -119,8 +119,12 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement 
 
 const EditorPanelWrapper = (): ReactElement | null => {
 	const editorId = useSelector(selectActiveEditorId);
+	const dispatch = useDispatch();
 	const [expanded, setExpanded] = useState(false);
-	const callbacks = useMemo(() => (editorId ? createCallbacks(editorId) : undefined), [editorId]);
+	const callbacks = useMemo(
+		() => (editorId ? createCallbacks(editorId, { dispatch }) : undefined),
+		[dispatch, editorId]
+	);
 
 	useEffect(() => {
 		if (!editorId) {

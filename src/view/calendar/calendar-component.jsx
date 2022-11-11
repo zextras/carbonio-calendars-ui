@@ -225,6 +225,7 @@ export default function CalendarComponent() {
 				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
 				const { editor, callbacks } = generateEditor({
 					context: {
+						dispatch,
 						folders: calendarFolders,
 						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
@@ -241,7 +242,7 @@ export default function CalendarComponent() {
 				});
 			}
 		},
-		[action, calendarFolders, summaryViewOpen]
+		[action, calendarFolders, dispatch, summaryViewOpen]
 	);
 
 	const onDropFn = useCallback(
@@ -265,6 +266,7 @@ export default function CalendarComponent() {
 						invite,
 						context: omitBy(
 							{
+								dispatch,
 								folders: calendarFolders,
 								start: startTime,
 								end: endTime,

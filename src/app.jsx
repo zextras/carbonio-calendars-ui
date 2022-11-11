@@ -18,6 +18,7 @@ import {
 	useFolders
 } from '@zextras/carbonio-shell-ui';
 import { filter } from 'lodash';
+import { useDispatch } from 'react-redux';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
@@ -83,9 +84,10 @@ const SearchView = (props) => (
 	</Suspense>
 );
 
-export default function App() {
+const AppRegistrations = () => {
 	const folders = useFolders();
 	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		addRoute({
@@ -125,6 +127,7 @@ export default function App() {
 						context: {
 							title: t('label.new_appointment', 'New Appointment'),
 							panel: false,
+							dispatch,
 							folders: calendarFolders
 						}
 					});
@@ -148,10 +151,14 @@ export default function App() {
 			// @ts-ignore
 			component: InviteResponse
 		});
-	}, [calendarFolders]);
+	}, [calendarFolders, dispatch]);
+	return null;
+};
 
+export default function App() {
 	return (
 		<StoreProvider>
+			<AppRegistrations />
 			<AppointmentReminder />
 			<SyncDataHandler />
 			<Notifications />

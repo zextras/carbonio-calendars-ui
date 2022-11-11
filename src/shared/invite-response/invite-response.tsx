@@ -31,7 +31,7 @@ import { getInvite } from '../../store/actions/get-invite';
 import { CALENDAR_ROUTE } from '../../constants';
 import BodyMessageRenderer from '../../commons/body-message-renderer.jsx';
 import { useInvite } from '../../hooks/use-invite';
-import { store, StoreProvider } from '../../store/redux';
+import { StoreProvider } from '../../store/redux';
 
 /**
    @todo: momentary variables to dynamize
@@ -160,6 +160,7 @@ const InviteResponse: FC<InviteResponse> = ({
 				event: requiredEvent,
 				invite: normalizedInvite,
 				context: {
+					dispatch,
 					folders: calendarFolders,
 					isProposeNewTime: true,
 					panel: false,

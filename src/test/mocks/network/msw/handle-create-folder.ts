@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { faker } from '@faker-js/faker';
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
 
-const getResponse = (id: string): SuccessSoapResponse<any> => ({
+const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
 		context: {
 			session: { id: 150973, _content: 150973 },
@@ -16,7 +17,7 @@ const getResponse = (id: string): SuccessSoapResponse<any> => ({
 		CreateFolderResponse: {
 			folder: [
 				{
-					id,
+					id: faker.random.numeric(),
 					uuid: '70f277d0-76bf-4793-8b8a-6e7743516516',
 					deletable: true,
 					name: 'ciccio',
@@ -46,6 +47,6 @@ const getResponse = (id: string): SuccessSoapResponse<any> => ({
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
 export const handleCreateFolderRequest = (req, res, ctx) => {
 	const resp = req.body.Body.CreateFolderRequest;
-	const response = getResponse(resp.id);
+	const response = getResponse();
 	return res(ctx.json(response));
 };

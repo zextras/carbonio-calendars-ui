@@ -9,7 +9,6 @@ import moment, { Moment } from 'moment';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
-import { store } from '../store/redux';
 import { Editor, IdentityItem } from '../types/editor';
 import { Invite } from '../types/store/invite';
 

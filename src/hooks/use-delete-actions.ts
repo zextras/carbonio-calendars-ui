@@ -11,6 +11,7 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { TFunction } from 'i18next';
+import { Dispatch } from 'redux';
 import { generateEditor } from '../commons/editor-generator';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { EventType } from '../types/event';
@@ -87,6 +88,7 @@ const generateAppointmentRestoredSnackbar = (
 
 type AccountContext = {
 	isInstance?: boolean;
+	dispatch: Dispatch;
 	replaceHistory: (a: string) => void;
 	onClose: () => void;
 	folders: Array<Folder>;
@@ -217,6 +219,7 @@ export const useDeleteActions = (
 					event,
 					invite: modifiedInvite,
 					context: {
+						dispatch: context.dispatch,
 						isInstance: context.isInstance,
 						folders: context.folders
 					}
