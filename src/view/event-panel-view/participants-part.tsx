@@ -10,7 +10,6 @@ import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { useSelector } from 'react-redux';
 import { selectCalendar } from '../../store/selectors/calendars';
 import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
-import { Store } from '../../types/store/store';
 import { ParticipantsDisplayer } from './participants-displayer';
 
 type ParticipantProps = {
@@ -44,7 +43,7 @@ export const ParticipantsPart = ({
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
 						style={{ width: '48px', height: '48px' }}
-						label={account.name || account.displayName}
+						label={account.name ?? account.displayName ?? ''}
 					/>
 					<Text style={{ padding: '0px 8px' }}>
 						<Trans
@@ -63,7 +62,7 @@ export const ParticipantsPart = ({
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
 						style={{ width: '48px', height: '48px' }}
-						label={organizer.d || organizer.a || organizer.url}
+						label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
 					/>
 					<Text style={{ padding: '0px 8px' }}>
 						<Trans
@@ -79,7 +78,7 @@ export const ParticipantsPart = ({
 					<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 						<Avatar
 							style={{ width: '48px', height: '48px' }}
-							label={organizer.d || organizer.a || organizer.url || ''}
+							label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
 						/>
 						<Text style={{ padding: '0px 8px' }}>
 							<Trans
