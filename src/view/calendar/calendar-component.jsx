@@ -46,6 +46,7 @@ import { CustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
+import { normalizeInvite } from '../../normalizations/normalize-invite';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -256,7 +257,7 @@ export default function CalendarComponent() {
 				const eventAllDay = event.allDay;
 				const startTime = getStart({ isSeries, dropStart, isAllDay, inviteStart, eventStart });
 				const endTime = getEnd({ isSeries, dropEnd, isAllDay, inviteEnd, eventEnd, eventAllDay });
-				const invite = payload.m[0];
+				const invite = normalizeInvite(payload.m[0]);
 				const onConfirm = (draft, context) => {
 					const { editor, callbacks } = generateEditor({
 						event,

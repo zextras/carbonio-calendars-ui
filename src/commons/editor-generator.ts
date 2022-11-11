@@ -8,7 +8,7 @@ import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { PREFS_DEFAULTS } from '../constants';
-import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
+import { EventPropType, normalizeEditorWithoutOrganizer } from '../normalizations/normalize-editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { store } from '../store/redux';
@@ -132,10 +132,11 @@ export const applyContextToEditor = ({
 	editor: Editor;
 	context: any;
 }): Editor => {
-	let newEditor = createEmptyEditor(editor.id);
+	const emptyEditor = createEmptyEditor(editor.id);
+	let newEditor = { ...emptyEditor, ...editor };
 	const contextObj = omit(context, 'disabled');
 	if (!isEmpty(context)) {
-		newEditor = { ...newEditor, ...editor, ...contextObj };
+		newEditor = { ...newEditor, ...contextObj };
 	}
 	if (!isEmpty(context?.disabled)) {
 		newEditor = {
@@ -274,23 +275,24 @@ export const createCallbacks = (
 	): { payload: undefined; type: string } | { payload: { id: string; recur: any }; type: string } =>
 		dispatch(editEditorRecurrence({ id, recur }));
 
-	const onSave = ({ draft = true, isNew = true }): Promise<any> =>
-		isNew
-			? dispatch(createAppointment({ id, draft })).then(({ payload }) => {
-					const { response, editor } = payload;
-					if (payload?.response) {
-						dispatch(updateEditor({ id, editor }));
-					}
-					return Promise.resolve({ response, editor });
-			  })
-			: dispatch(modifyAppointment({ id, draft })).then(({ payload }) => {
-					const { response, editor, error } = payload;
-					if (response && !error) {
-						dispatch(updateEditor({ id, editor }));
-						return Promise.resolve({ response, editor });
-					}
-					return Promise.resolve(payload);
-			  });
+	const createAppointmentFn = (draft: boolean): Promise<any> =>
+		dispatch(createAppointment({ id, draft })).then(({ payload }) => {
+			const { response, editor } = payload;
+			if (payload?.response) {
+				dispatch(updateEditor({ id, editor }));
+			}
+			return Promise.resolve({ response, editor });
+		});
+
+	const modifyAppointmentFn = (draft: boolean): Promise<any> =>
+		dispatch(modifyAppointment({ id, draft })).then(({ payload }) => {
+			const { response, editor, error } = payload;
+			if (response && !error) {
+				dispatch(updateEditor({ id, editor }));
+				return Promise.resolve({ response, editor });
+			}
+			return Promise.resolve(payload);
+		});
 
 	const onProposeNewTime = (): Promise<any> =>
 		dispatch(proposeNewTime({ id })).then(({ payload }) => {
@@ -301,6 +303,9 @@ export const createCallbacks = (
 			}
 			return Promise.resolve({ ...payload, response: 'success' });
 		});
+
+	const onSave = ({ draft = true, isNew = true }): Promise<any> =>
+		isNew ? createAppointmentFn(draft) : modifyAppointmentFn(draft);
 
 	const onSend = (isNew: boolean): Promise<any> =>
 		context?.isProposeNewTime ? onProposeNewTime() : onSave({ draft: false, isNew });
@@ -337,23 +342,36 @@ const setEditorDate = ({
 	invite: Invite | undefined;
 	event: EventPropType | undefined;
 }): Editor => {
-	if (editor.isSeries && !editor.isInstance && !editor.isException) {
+	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getUserSettings().prefs;
+	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
+		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
+		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
+	if (event) {
+		if (editor.isSeries && !editor.isInstance && !editor.isException && invite) {
+			return {
+				...editor,
+				start: event?.allDay
+					? moment(invite?.start?.u)?.startOf('date').valueOf()
+					: moment(invite?.start?.u).valueOf(),
+				end: event?.allDay
+					? moment(invite?.end?.u)?.endOf('date').valueOf()
+					: moment(invite?.end?.u).valueOf()
+			};
+		}
 		return {
 			...editor,
 			start: event?.allDay
-				? moment(invite?.start?.u)?.startOf('date').valueOf()
-				: moment(invite?.start?.u).valueOf(),
+				? moment(event?.start)?.startOf('date').valueOf()
+				: moment(event?.start).valueOf(),
 			end: event?.allDay
-				? moment(invite?.end?.u)?.endOf('date').valueOf()
-				: moment(invite?.end?.u).valueOf()
+				? moment(event?.end)?.endOf('date').valueOf()
+				: moment(event?.end).valueOf()
 		};
 	}
 	return {
 		...editor,
-		start: event?.allDay
-			? moment(event?.start)?.startOf('date').valueOf()
-			: moment(event?.start).valueOf(),
-		end: event?.allDay ? moment(event?.end)?.endOf('date').valueOf() : moment(event?.end).valueOf()
+		start: moment().valueOf(),
+		end: moment().valueOf() + endDur
 	};
 };
 
@@ -368,7 +386,7 @@ export const generateEditor = ({
 }): { editor: Editor; callbacks: EditorCallbacks } => {
 	const id = getNewEditId(event?.resource?.id);
 	const isInstance = context?.isInstance;
-	const compiledEditor = normalizeEditor({ invite, event, id, isInstance });
+	const compiledEditor = normalizeEditorWithoutOrganizer({ invite, event, id, isInstance });
 	const editorWithDates = setEditorDate({ editor: compiledEditor, event, invite });
 	const editorWithContext = applyContextToEditor({
 		editor: editorWithDates,

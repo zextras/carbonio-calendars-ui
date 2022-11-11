@@ -17,7 +17,9 @@ export const useIdentityItems = (): Array<IdentityItem> => {
 		);
 
 		return map(sortedList, (item, idx) => {
-			const name = item.name ? `${item.name} ` : '';
+			const name = item._attrs?.zimbraPrefIdentityName
+				? `${item._attrs?.zimbraPrefIdentityName} `
+				: '';
 			const display = item._attrs?.zimbraPrefFromDisplay
 				? `${item._attrs?.zimbraPrefFromDisplay} `
 				: '';
@@ -25,7 +27,7 @@ export const useIdentityItems = (): Array<IdentityItem> => {
 				? `(<${item._attrs?.zimbraPrefFromAddress}>) `
 				: '';
 			return {
-				value: idx,
+				value: `${idx}`,
 				label: `${name}${display}${fromAddress}`,
 				address: item._attrs?.zimbraPrefFromAddress,
 				fullName: item._attrs?.zimbraPrefFromDisplay,
