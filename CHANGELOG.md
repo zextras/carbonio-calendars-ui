@@ -2,7 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.35](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.34...v0.1.35) (2022-11-09)
+
+
+### Bug Fixes
+
+* new appointments have a default duration ([df71cf8](https://github.com/zextras/carbonio-calendars-ui/commit/df71cf8a5a521c6c1e4eeb8f4b609d91122fe715))
+
+### [0.1.34](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.33...v0.1.34) (2022-11-04)
+
+
+### Bug Fixes
+
+* appointment organizer is properly set ([22b2b99](https://github.com/zextras/carbonio-calendars-ui/commit/22b2b99c784285ecc88335147d05a2fc393f2415))
+* drop action works for any appointment type ([a03107d](https://github.com/zextras/carbonio-calendars-ui/commit/a03107dab95a07b34d99969ac8ef2294adda77aa))
+* reverting commons module to its commit point ([f91cea6](https://github.com/zextras/carbonio-calendars-ui/commit/f91cea6e3eb2d50791c39e6e6b2465a8256f4181))
+
 ### [0.1.33](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.32...v0.1.33) (2022-11-02)
+
+
+### Bug Fixes
+
+* fixed modify appointment ([33f82d2](https://github.com/zextras/carbonio-calendars-ui/commit/33f82d22182ac5ba7d1f18e7dab4ebf929fdcdb1))
 
 ### [0.1.32](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.31...v0.1.32) (2022-10-31)
 

@@ -10,7 +10,7 @@ import { Dispatch } from 'redux';
 import { setCalendarColor } from '../normalizations/normalizations-utils';
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { PREFS_DEFAULTS } from '../constants';
-import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
+import { EventPropType, normalizeEditorWithoutOrganizer } from '../normalizations/normalize-editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import {
@@ -141,10 +141,11 @@ export const applyContextToEditor = ({
 	editor: Editor;
 	context: any;
 }): Editor => {
-	let newEditor = createEmptyEditor(editor.id, context.folders);
+	const emptyEditor = createEmptyEditor(editor.id, context.folders);
+	let newEditor = { ...emptyEditor, ...editor };
 	const contextObj = omit(context, ['disabled', 'folders', 'dispatch']);
 	if (!isEmpty(context)) {
-		newEditor = { ...newEditor, ...editor, ...contextObj };
+		newEditor = { ...newEditor, ...contextObj };
 	}
 	if (!isEmpty(context?.disabled)) {
 		newEditor = {
@@ -283,48 +284,51 @@ export const createCallbacks = (
 	): { payload: undefined; type: string } | { payload: { id: string; recur: any }; type: string } =>
 		dispatch(editEditorRecurrence({ id, recur }));
 
+	const createAppointmentFn = (draft: boolean, editor: Editor): Promise<any> =>
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		dispatch(createAppointment({ draft, editor })).then(({ payload }) => {
+			const { response } = payload;
+			if (payload?.response) {
+				dispatch(updateEditor({ id, editor: payload.editor }));
+			}
+			return Promise.resolve({ response, editor: payload.editor });
+		});
+
+	const modifyAppointmentFn = (draft: boolean, editor: Editor): Promise<any> =>
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		dispatch(modifyAppointment({ draft, editor })).then(({ payload }) => {
+			const { response, error } = payload;
+			if (response && !error) {
+				dispatch(updateEditor({ id, editor: payload.editor }));
+				return Promise.resolve({ response, editor: payload.editor });
+			}
+			return Promise.resolve(payload);
+		});
+
+	const onProposeNewTime = (): Promise<any> =>
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		dispatch(proposeNewTime({ id })).then(({ payload }) => {
+			const { response, editor, error } = payload;
+			if (response && !error) {
+				dispatch(updateEditor({ id, editor }));
+				return Promise.resolve({ response, editor });
+			}
+			return Promise.resolve(payload);
+		});
+
 	const onSave = ({
 		draft = true,
 		isNew = true,
 		editor
 	}: {
-		editor: Editor;
-		isNew?: boolean;
 		draft?: boolean;
-	}): Promise<any> => // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		isNew // @ts-ignore
-			? dispatch(createAppointment({ draft, editor })).then(
-					({ payload }: { payload: { response: any; editor: Editor } }) => {
-						const { response } = payload;
-						if (payload?.response) {
-							dispatch(updateEditor({ id, editor: payload.editor }));
-						}
-						return Promise.resolve({ response, editor: payload.editor });
-					} // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			  ) // @ts-ignore
-			: dispatch(modifyAppointment({ draft, editor })).then(
-					({ payload }: { payload: { response: any; editor: Editor; error: any } }) => {
-						const { response, error } = payload;
-						if (response && !error) {
-							dispatch(updateEditor({ id, editor: payload.editor }));
-							return Promise.resolve({ response, editor: payload.editor });
-						}
-						return Promise.resolve(payload);
-					}
-			  );
-
-	const onProposeNewTime = (): Promise<any> => // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		dispatch(proposeNewTime({ id })).then(
-			({ payload }: { payload: { response: any; editor: Editor; error: any } }) => {
-				const { response, editor, error } = payload;
-				if (response && !error) {
-					dispatch(updateEditor({ id, editor }));
-					return Promise.resolve({ response, editor });
-				}
-				return Promise.resolve({ ...payload, response: 'success' });
-			}
-		);
+		isNew?: boolean;
+		editor: Editor;
+	}): Promise<any> =>
+		isNew ? createAppointmentFn(draft, editor) : modifyAppointmentFn(draft, editor);
 
 	const onSend = (isNew: boolean, editor: Editor): Promise<any> =>
 		context?.isProposeNewTime ? onProposeNewTime() : onSave({ draft: false, isNew, editor });
@@ -361,23 +365,36 @@ const setEditorDate = ({
 	invite: Invite | undefined;
 	event: EventPropType | undefined;
 }): Editor => {
-	if (editor.isSeries && !editor.isInstance && !editor.isException) {
+	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getUserSettings().prefs;
+	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
+		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
+		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
+	if (event) {
+		if (editor.isSeries && !editor.isInstance && !editor.isException && invite) {
+			return {
+				...editor,
+				start: event?.allDay
+					? moment(invite?.start?.u)?.startOf('date').valueOf()
+					: moment(invite?.start?.u).valueOf(),
+				end: event?.allDay
+					? moment(invite?.end?.u)?.endOf('date').valueOf()
+					: moment(invite?.end?.u).valueOf()
+			};
+		}
 		return {
 			...editor,
 			start: event?.allDay
-				? moment(invite?.start?.u)?.startOf('date').valueOf()
-				: moment(invite?.start?.u).valueOf(),
+				? moment(event?.start)?.startOf('date').valueOf()
+				: moment(event?.start).valueOf(),
 			end: event?.allDay
-				? moment(invite?.end?.u)?.endOf('date').valueOf()
-				: moment(invite?.end?.u).valueOf()
+				? moment(event?.end)?.endOf('date').valueOf()
+				: moment(event?.end).valueOf()
 		};
 	}
 	return {
 		...editor,
-		start: event?.allDay
-			? moment(event?.start)?.startOf('date').valueOf()
-			: moment(event?.start).valueOf(),
-		end: event?.allDay ? moment(event?.end)?.endOf('date').valueOf() : moment(event?.end).valueOf()
+		start: moment().valueOf(),
+		end: moment().valueOf() + endDur
 	};
 };
 
@@ -392,7 +409,13 @@ export const generateEditor = ({
 }): { editor: Editor; callbacks: EditorCallbacks } => {
 	const id = getNewEditId(event?.resource?.id);
 	const { isInstance, folders, dispatch } = context;
-	const compiledEditor = normalizeEditor({ invite, event, id, isInstance, folders });
+	const compiledEditor = normalizeEditorWithoutOrganizer({
+		invite,
+		event,
+		id,
+		isInstance,
+		folders
+	});
 	const editorWithDates = setEditorDate({ editor: compiledEditor, event, invite });
 	const editorWithContext = applyContextToEditor({
 		editor: editorWithDates,

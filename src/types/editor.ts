@@ -9,7 +9,7 @@ import { Calendar } from './store/calendars';
 import { Attendee, InviteClass, InviteFreeBusy } from './store/invite';
 
 export type IdentityItem = {
-	value?: number | string;
+	value: string;
 	label: string;
 	address: string;
 	fullName: string;

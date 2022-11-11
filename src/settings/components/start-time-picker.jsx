@@ -68,7 +68,7 @@ export default function StartDatePicker({ start, onChange, day, showEnd, disable
 	return (
 		<Container crossAlignment="flex-start" style={{ maxWidth: '600px' }}>
 			<Padding bottom="extrasmall">
-				<Text size="small">{t(`label.${label}`)}</Text>
+				<Text size="small">{label}</Text>
 			</Padding>
 			<DateTimePicker
 				width="100%"
