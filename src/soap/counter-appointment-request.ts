@@ -43,9 +43,9 @@ export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promis
 						ct: 'text/html',
 						content: `<html><body id='htmlmode3'>
 							<table>
-								<tr height="24px"><td>New Time Proposed</td></tr>
-								<tr height="24px"><td>Subject: ${appt.title}</td></tr>
-								<tr height="24px" style="color:#2b73d2;font-weight:bold">
+								<tr height="1.5rem"><td>New Time Proposed</td></tr>
+								<tr height="1.5rem"><td>Subject: ${appt.title}</td></tr>
+								<tr height="1.5rem" style="color:#2b73d2;font-weight:bold">
 									<td>Time: ${moment(appt.start).format('dddd, D MMMM, YYYY, HH:mm:ss')} - ${moment(appt.end).format(
 							'HH:mm:ss'
 						)} GMT ${moment(appt.start)

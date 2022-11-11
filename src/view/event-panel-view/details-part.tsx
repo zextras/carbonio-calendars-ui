@@ -21,12 +21,12 @@ import TagsRow from '../event-summary-view/tags-row';
 import { selectCalendar } from '../../store/selectors/calendars';
 
 const PaddedRow = styled(Row)`
-	padding: 4px 4px;
+	padding: 0.25rem 0.25rem;
 `;
 
 const CalendarIcon = styled(Icon)`
-	width: 18px;
-	height: 18px;
+	width: 1.125rem;
+	height: 1.125rem;
 `;
 
 type SubjectProps = {
@@ -37,7 +37,7 @@ type SubjectProps = {
 
 const SubjectRow = ({ subject, calendarColor, isPrivate }: SubjectProps): ReactElement => (
 	<Container mainAlignment="flex-start" orientation="horizontal">
-		{isPrivate && <Icon icon="Lock" customColor={calendarColor} style={{ padding: '4px' }} />}
+		{isPrivate && <Icon icon="Lock" customColor={calendarColor} style={{ padding: '0.25rem' }} />}
 		<Text size="small" overflow="break-word" style={{ fontWeight: '600' }}>
 			{subject}
 		</Text>

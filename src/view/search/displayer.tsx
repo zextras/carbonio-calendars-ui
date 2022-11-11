@@ -39,7 +39,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"
 						width="fill"
-						height="min(calc(100% - 50px), fit)"
+						height="min(calc(100% - 3.125rem), fit)"
 						padding={{ all: 'large' }}
 					>
 						<DetailsPart

@@ -41,7 +41,7 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 						<Icon
 							customColor={event.resource.calendar.color.color}
 							icon="LockOutline"
-							style={{ minWidth: '16px' }}
+							style={{ minWidth: '1rem' }}
 						/>
 					</Row>
 				)}

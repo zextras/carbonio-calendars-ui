@@ -54,7 +54,7 @@ export const SharesComponent = ({ item }) => {
 			width="fill"
 			mainAlignment="center"
 			orientation="horizontal"
-			style={{ padding: '8px 16px' }}
+			style={{ padding: '0.5rem 1rem' }}
 		>
 			<Button type="outlined" label={item.label} color="primary" size="fill" onClick={onClick} />
 		</Container>

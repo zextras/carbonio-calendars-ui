@@ -160,7 +160,7 @@ const SearchView: FC<SearchProps> = ({ useDisableSearch, useQuery, ResultsHeader
 	return (
 		<Container style={{ whiteSpace: 'nowrap' }}>
 			<ResultsHeader label={resultLabel} />
-			<Container orientation="horizontal" style={{ minHeight: '0px' }} mainAlignment="flex-start">
+			<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
 				<Switch>
 					<Route path={`${path}/:action?/:apptId?/:ridZ?`}>
 						<SearchList loadMore={loadMore} appointments={appointments} loading={loading} />

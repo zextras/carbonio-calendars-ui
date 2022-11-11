@@ -44,8 +44,8 @@ export function mailToContact(contact: object): Action | undefined {
 }
 
 const InviteContainer = styled(Container)`
-	border: 1px solid ${({ theme }: any): string => theme.palette.gray2.regular};
-	border-radius: 14px;
+	border: 0.0625rem solid ${({ theme }: any): string => theme.palette.gray2.regular};
+	border-radius: 0.875rem;
 	margin: ${({ theme }: any): string => theme.sizes.padding.extrasmall};
 `;
 
@@ -205,14 +205,14 @@ const InviteResponse: FC<InviteResponse> = ({
 						</Text>
 					) : (
 						<>
-							<Text weight="regular" size="large" style={{ fontSize: '18px' }}>
+							<Text weight="regular" size="large" style={{ fontSize: '1.125rem' }}>
 								{`${invite[0]?.comp[0]?.or?.d || invite[0]?.comp[0]?.or?.a} ${t(
 									'message.invited_you',
 									'invited you to '
 								)}`}
 							</Text>
 							&nbsp;
-							<Text weight="bold" size="large" style={{ fontSize: '18px' }}>
+							<Text weight="bold" size="large" style={{ fontSize: '1.125rem' }}>
 								{mailMsg.subject ? mailMsg.subject : invite[0]?.comp[0].name}
 							</Text>
 						</>
@@ -220,12 +220,12 @@ const InviteResponse: FC<InviteResponse> = ({
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
 					<Row width="100%" mainAlignment="flex-start" padding={{ top: 'extrasmall' }}>
-						<Text overflow="break-word" style={{ fontSize: '14px' }}>
+						<Text overflow="break-word" style={{ fontSize: '0.875rem' }}>
 							{apptTime}
 						</Text>
 					</Row>
 					<Row width="100%" mainAlignment="flex-start" padding={{ top: 'small' }}>
-						<Text color="gray1" size="small" overflow="break-word" style={{ fontSize: '14px' }}>
+						<Text color="gray1" size="small" overflow="break-word" style={{ fontSize: '0.875rem' }}>
 							GMT {apptTimeZone}
 						</Text>
 					</Row>

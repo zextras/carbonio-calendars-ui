@@ -159,7 +159,7 @@ export default function CalendarComponent() {
 		style: {
 			backgroundColor: slotBgColor(newDate),
 			borderColor: `${theme.palette.gray3.regular}`,
-			borderRight: `1px solid ${theme.palette.gray3.regular}`
+			borderRight: `0.0625rem solid ${theme.palette.gray3.regular}`
 		}
 	});
 	const dayPropGetter = (newDate) => ({
@@ -171,7 +171,7 @@ export default function CalendarComponent() {
 						? theme.palette.highlight.regular
 						: theme.palette.gray6.regular
 					: theme.palette.gray3.regular,
-			borderBottom: `1px solid ${slotDayBorderColor(newDate)}`
+			borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`
 		}
 	});
 
@@ -391,14 +391,14 @@ export default function CalendarComponent() {
 				color: event.resource.calendar.color.color,
 				boxSizing: 'border-box',
 				margin: `0`,
-				padding: `4px 8px`,
-				borderRadius: `4px`,
+				padding: `0.25rem 0.5rem`,
+				borderRadius: `0.25rem`,
 				cursor: `pointer`,
 				width: `100%`,
 				textAlign: `left`,
 				transition: `border 0.15s ease-in-out, background 0.15s ease-in-out`,
-				boxShadow: `0px 0px 14px -8px rgba(0, 0, 0, 0.5)`,
-				border: `1px solid ${event.resource.calendar.color.color}`
+				boxShadow: `0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)`,
+				border: `0.0625rem solid ${event.resource.calendar.color.color}`
 			}
 		}),
 		[]

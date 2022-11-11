@@ -120,7 +120,7 @@ export const SharesModal = ({ calendars, onClose }) => {
 							components={{
 								bold: (
 									<span
-										style={{ fontWeight: 'bold', fontFamily: 'sans-serif', fontSize: '14px' }}
+										style={{ fontWeight: 'bold', fontFamily: 'sans-serif', fontSize: '0.875rem' }}
 									/>
 								)
 							}}

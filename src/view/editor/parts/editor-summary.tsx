@@ -21,10 +21,10 @@ import {
 
 export const AvatarComp = styled(Avatar)`
 	svg {
-		width: 24px;
-		min-width: 24px;
-		height: 24px;
-		min-height: 24px;
+		width: 1.5rem;
+		min-width: 1.5rem;
+		height: 1.5rem;
+		min-height: 1.5rem;
 	}
 `;
 

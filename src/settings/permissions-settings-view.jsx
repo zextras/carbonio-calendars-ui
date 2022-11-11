@@ -9,10 +9,10 @@ import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 
 const AttendeesContainer = styled.div`
-	width: calc(100% - ${({ hasTooltip }) => (hasTooltip ? `48px` : '0px')});
+	width: calc(100% - ${({ hasTooltip }) => (hasTooltip ? `3rem` : '0rem')});
 	height: fit-content;
 	background: ${({ theme }) => theme.palette.gray5.regular};
-	border-bottom: 1px solid ${({ theme }) => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
 	[class^='Chip__ChipComp'] {
 		[class^='Text__Comp'] {
 			color: ${({ theme }) => theme.palette.text.regular};
