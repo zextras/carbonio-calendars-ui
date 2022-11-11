@@ -1,5 +1,7 @@
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
 import { PREFS_DEFAULTS } from '../constants';
+import { reducers } from '../store/redux';
 import { generateEditor } from './editor-generator';
 
 const folders = [
@@ -72,7 +74,8 @@ shell.getUserSettings.mockImplementation(() => ({
 describe('Editor generator', () => {
 	describe('From scratch', () => {
 		test('standard single appointment', () => {
-			const context = { folders };
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const context = { folders, dispatch: store.dispatch };
 			const { editor, callbacks } = generateEditor({
 				context
 			});

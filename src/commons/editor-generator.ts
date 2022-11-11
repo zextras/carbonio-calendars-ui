@@ -142,7 +142,7 @@ export const applyContextToEditor = ({
 	context: any;
 }): Editor => {
 	let newEditor = createEmptyEditor(editor.id, context.folders);
-	const contextObj = omit(context, ['disabled', 'folders']);
+	const contextObj = omit(context, ['disabled', 'folders', 'dispatch']);
 	if (!isEmpty(context)) {
 		newEditor = { ...newEditor, ...editor, ...contextObj };
 	}
