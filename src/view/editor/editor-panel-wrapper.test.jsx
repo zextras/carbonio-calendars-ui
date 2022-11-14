@@ -19,7 +19,7 @@ import { reducers } from '../../store/redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 
 // todo: datePicker render is very slow
-jest.setTimeout(10000);
+jest.setTimeout(20000);
 
 describe('Editor panel wrapper', () => {
 	test('it doesnt render without editorId or callbacks', () => {

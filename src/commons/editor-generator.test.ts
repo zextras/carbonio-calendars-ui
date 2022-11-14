@@ -6,6 +6,9 @@ import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
 import { disabledFields, generateEditor } from './editor-generator';
 
+// todo: datePicker render is very slow
+jest.setTimeout(20000);
+
 const folders: Array<Folder> = [
 	{
 		absFolderPath: '/Calendar',
