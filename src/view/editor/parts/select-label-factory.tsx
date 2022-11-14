@@ -19,15 +19,15 @@ import {
 import styled from 'styled-components';
 
 export const Square = styled.div`
-	width: 16px;
-	height: 16px;
+	width: 1rem;
+	height: 1rem;
 	background: ${({ color }): string | undefined => color};
-	border-radius: 4px;
+	border-radius: 0.25rem;
 	opacity: ${({ disabled }: { disabled?: boolean }): number => (disabled ? 0.5 : 1)};
 `;
 
 export const ColorContainer = styled(Container)`
-	border-bottom: 1px solid ${({ theme }): string => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 `;
 
 export const TextUpperCase = styled(Text)`

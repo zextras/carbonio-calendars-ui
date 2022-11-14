@@ -21,7 +21,7 @@ const TextArea = styled.textarea`
 	padding: ${(props): string => props.theme.sizes.padding.large};
 	background: ${(props): string => props.theme.palette.gray5.regular};
 	height: fit-content;
-	min-height: 150px;
+	min-height: 9.375rem;
 	flex-grow: 1;
 	width: 100%;
 	border: none;
@@ -138,7 +138,7 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
 						onEditorChange={onRichTextChange}
-						minHeight={200}
+						minHeight="12.5rem"
 						value={richTextValue}
 						disabled={disabled?.composer}
 					/>

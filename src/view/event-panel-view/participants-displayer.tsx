@@ -24,7 +24,7 @@ const DisplayedParticipant = ({
 	<Row mainAlignment="flex-start" crossAlignment="center" padding={{ vertical: 'small' }}>
 		<Avatar
 			label={participant.name || participant.email}
-			style={{ width: '48px', height: '48px' }}
+			style={{ width: '3rem', height: '3rem' }}
 		/>
 		<Row
 			mainAlignment="flex-start"

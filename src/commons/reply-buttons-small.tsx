@@ -23,7 +23,7 @@ import { EventType } from '../types/event';
 import { ParticipationStatus } from '../types/store/invite';
 
 const AttendingRow = styled(Row)<RowProps & { invtReply: ResponseProp }>`
-	border: 1px solid ${(props): string => props.theme.palette[props.invtReply.color].regular};
+	border: 0.0625rem solid ${(props): string => props.theme.palette[props.invtReply.color].regular};
 `;
 
 type ResponseProp = {
@@ -226,7 +226,7 @@ export const ReplyButtonsPartSmall = ({
 						type="outlined"
 						label={t('label.other_actions', 'Other actions')}
 						icon="ArrowIosDownwardOutline"
-						style={{ padding: '7px 4px' }}
+						style={{ padding: '0.4375rem 0.25rem' }}
 						onClick={noop}
 					/>
 				</Dropdown>

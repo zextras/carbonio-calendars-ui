@@ -17,8 +17,8 @@ import { EventType } from '../../types/event';
 
 const TagChip = styled(Chip)`
 	margin-left: ${({ theme }): string => theme.sizes.padding.extrasmall};
-	padding: 1px 8px !important;
-	margin-bottom: 4px;
+	padding: 0.0625rem 0.5rem !important;
+	margin-bottom: 0.25rem;
 `;
 
 const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
@@ -93,7 +93,7 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 										background="gray2"
 										hasAvatar
 										avatarIcon="Tag"
-										maxWidth="300px"
+										maxWidth="18.75rem"
 										onClick={(): void => triggerSearch(tag)}
 									/>
 								))}
@@ -108,7 +108,7 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 										background="gray2"
 										hasAvatar
 										avatarIcon="Tag"
-										maxWidth="300px"
+										maxWidth="18.75rem"
 										onClick={(): void => triggerSearch(tag)}
 									/>
 								))}

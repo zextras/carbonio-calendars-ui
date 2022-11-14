@@ -149,7 +149,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	}, []);
 
 	return (
-		<Container padding="8px 8px 24px">
+		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader onClose={closeFn} title={title} />
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}

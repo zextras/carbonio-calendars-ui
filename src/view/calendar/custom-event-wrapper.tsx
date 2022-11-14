@@ -32,19 +32,20 @@ export const CustomEventWrapperStyler = styled.div<{ event: EventType }>`
 					return event.resource.calendar.color.background;
 			}
 		}};
-		border: ${({ event }): string => `1px solid ${event.resource.calendar.color.color} !important`};
+		border: ${({ event }): string =>
+			`0.0625rem solid ${event.resource.calendar.color.color} !important`};
 		box-sizing: border-box;
 		margin: 0;
 		padding: ${({ event }): string =>
 			moment(event.end).diff(event.start, 'minutes') >= 30
-				? '4px 8px'
-				: '1px 8px 4px 8px !important'};
-		border-radius: 4px;
+				? '0.25rem 0.5rem'
+				: '0.0625rem 0.5rem 0.25rem 0.5rem !important'};
+		border-radius: 0.25rem;
 		cursor: pointer;
 		width: 100%;
 		text-align: left;
 		transition: border 0.15s ease-in-out, background 0.15s ease-in-out;
-		box-shadow: 0px 0px 14px -8px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5);
 	}
 	.rbc-slot-selecting .rbc-event {
 		cursor: inherit;
@@ -53,7 +54,7 @@ export const CustomEventWrapperStyler = styled.div<{ event: EventType }>`
 	.rbc-event.rbc-selected {
 		/* background-color: ${({ event }): string =>
 			setLightness(0.95, event.resource.calendar.color.background)}; */
-		border: 1px solid ${({ event }): string => event.resource.calendar.color.color};
+		border: 0.0625rem solid ${({ event }): string => event.resource.calendar.color.color};
 	}
 	.rbc-event:focus {
 		background-color: ${({ event }): string =>
@@ -64,7 +65,7 @@ export const CustomEventWrapperStyler = styled.div<{ event: EventType }>`
 	}
 
 	.rbc-event-overlaps {
-		box-shadow: -1px 1px 5px 0px rgba(51, 51, 51, 0.5);
+		box-shadow: -0.0625rem 0.0625rem 0.3125rem 0 rgba(51, 51, 51, 0.5);
 	}
 
 	.rbc-event-continues-prior {

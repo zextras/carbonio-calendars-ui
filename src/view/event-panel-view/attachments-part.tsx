@@ -43,8 +43,8 @@ const AttachmentHoverBarContainer = styled(Container)`
 `;
 
 const AttachmentContainer = styled(Container)<ContainerProps & { disabled: boolean }>`
-	border-radius: 2px;
-	width: calc(50% - 8px);
+	border-radius: 0.125rem;
+	width: calc(50% - 0.5rem);
 	transition: 0.2s ease-out;
 	margin-bottom: ${({ theme }): string => theme.sizes.padding.small};
 	margin-right: ${({ theme }): string => theme.sizes.padding.small};
@@ -75,13 +75,13 @@ const AttachmentExtension = styled(Text)<
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 32px;
-	height: 32px;
+	width: 2rem;
+	height: 2rem;
 	border-radius: ${({ theme }): string => theme.borderRadius};
 	background-color: ${({ theme, disabled, background }): string =>
 		disabled ? theme.palette.primary.disabled : background?.color || theme.palette.primary.regular};
 	color: ${({ theme }): string => theme.palette.gray6.regular};
-	font-size: calc(${({ theme }): string => theme.sizes.font.small} - 2px);
+	font-size: calc(${({ theme }): string => theme.sizes.font.small} - 0.125rem);
 	text-transform: uppercase;
 	margin-right: ${({ theme }): string => theme.sizes.padding.small};
 `;

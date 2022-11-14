@@ -50,7 +50,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 		});
 	};
 	return (
-		<Container padding="8px 8px 24px">
+		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader
 				title={t('label.share_calendar_url', {
 					title: folder.name,

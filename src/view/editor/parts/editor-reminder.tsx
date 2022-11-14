@@ -154,7 +154,7 @@ const getReminderItems = (t: TFunction): Array<{ label: string; value: string }>
 ];
 
 export const ColorContainer = styled(Container)`
-	border-bottom: 1px solid ${({ theme }): string => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 `;
 
 export const TextUpperCase = styled(Text)`
@@ -237,7 +237,7 @@ export const EditorReminder = ({ editorId, callbacks }: EditorProps): ReactEleme
 			items={reminderItems}
 			disabled={disabled?.reminder}
 			label={t('label.reminder', 'Reminder')}
-			dropdownMaxHeight="200px"
+			dropdownMaxHeight="12.5rem"
 			onChange={onChange}
 			selection={selected}
 			disablePortal

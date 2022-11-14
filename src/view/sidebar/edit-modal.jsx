@@ -23,16 +23,16 @@ import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { folderAction } from '../../store/actions/calendar-actions';
 
 const Square = styled.div`
-	width: 18px;
-	height: 18px;
+	width: 1.125rem;
+	height: 1.125rem;
 	position: relative;
-	top: -3px;
-	border: 1px solid ${({ theme }) => theme.palette.gray2.regular};
+	top: -0.1875rem;
+	border: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
 	background: ${({ color }) => color};
-	border-radius: 4px;
+	border-radius: 0.25rem;
 `;
 const ColorContainer = styled(Container)`
-	border-bottom: 1px solid ${({ theme }) => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
 `;
 const TextUpperCase = styled(Text)`
 	text-transform: capitalize;

@@ -129,7 +129,7 @@ export const ReminderModal = ({
 					width="100%"
 				>
 					<ModalHeader title={headerLabel} />
-					<Container maxHeight={320} style={{ overflow: 'auto', display: 'block' }}>
+					<Container maxHeight="20rem" style={{ overflow: 'auto', display: 'block' }}>
 						{map(reminders, (reminder) => (
 							<AppointmentReminderItem
 								reminderItem={reminder}

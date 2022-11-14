@@ -8,10 +8,10 @@ import styled from 'styled-components';
 
 export const ResizedIconCheckbox = styled(IconCheckbox)`
 	[class^='Padding__Comp'] {
-		padding: 6px;
+		padding: 0.375rem;
 		svg {
-			height: 20px;
-			width: 20px;
+			height: 1.25rem;
+			width: 1.25rem;
 			fill: ${({ disabled, theme, value }): string => {
 				if (disabled) {
 					return theme.palette.secondary.disabled;
