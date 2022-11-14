@@ -13,6 +13,7 @@ import { createAndApplyTag } from '../view/tags/tag-actions';
 import { getAppointmentActionsItems } from '../actions/get-appointment-actions-items';
 import { getRecurrentAppointmentActionsItems } from '../actions/get-recurrent-appointment-actions-items';
 import { GetActionReturnType } from './types';
+import { useCalendarFolders } from './use-calendar-folders';
 
 export const useEventSummaryViewActions = ({
 	onClose,
@@ -26,8 +27,7 @@ export const useEventSummaryViewActions = ({
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const folders = useFolders();
-	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
+	const calendarFolders = useCalendarFolders();
 	const context = useMemo(
 		() => ({
 			tags,

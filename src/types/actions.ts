@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folders, Tags } from '@zextras/carbonio-shell-ui';
+import { Folder, Tags } from '@zextras/carbonio-shell-ui';
 
 export type ActionsContext = {
 	ridZ?: string | undefined;
@@ -22,7 +22,7 @@ export type ActionsContext = {
 	panel?: boolean;
 	searchPanel?: boolean;
 	panelView?: PanelView;
-	folders?: Folders;
+	folders: Array<Folder>;
 };
 
 export type PanelView = 'app' | 'board' | 'search';

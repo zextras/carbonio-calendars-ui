@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { Folder } from '@zextras/carbonio-shell-ui';
+import moment from 'moment';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
-import { generateEditor } from './editor-generator';
+import { disabledFields, generateEditor } from './editor-generator';
 
-const folders = [
+const folders: Array<Folder> = [
 	{
 		absFolderPath: '/Calendar',
 		acl: undefined,
@@ -80,22 +82,72 @@ describe('Editor generator', () => {
 				context
 			});
 
+			// expect editor and callbacks returned from function
 			expect(editor).toBeDefined();
 			expect(callbacks).toBeDefined();
+
+			// expect all callbacks
+			expect(callbacks).toHaveProperty('onToggleRichText');
+			expect(callbacks).toHaveProperty('onAttachmentsChange');
+			expect(callbacks).toHaveProperty('onOrganizerChange');
+			expect(callbacks).toHaveProperty('onSubjectChange');
+			expect(callbacks).toHaveProperty('onLocationChange');
+			expect(callbacks).toHaveProperty('onRoomChange');
+			expect(callbacks).toHaveProperty('onAttendeesChange');
+			expect(callbacks).toHaveProperty('onOptionalAttendeesChange');
+			expect(callbacks).toHaveProperty('onDisplayStatusChange');
+			expect(callbacks).toHaveProperty('onCalendarChange');
+			expect(callbacks).toHaveProperty('onPrivateChange');
+			expect(callbacks).toHaveProperty('onDateChange');
+			expect(callbacks).toHaveProperty('onTextChange');
+			expect(callbacks).toHaveProperty('onAllDayChange');
+			expect(callbacks).toHaveProperty('onTimeZoneChange');
+			expect(callbacks).toHaveProperty('onReminderChange');
+			expect(callbacks).toHaveProperty('onRecurrenceChange');
+			expect(callbacks).toHaveProperty('onSave');
+			expect(callbacks).toHaveProperty('onSend');
+
+			// expect default disabled fields to false
+			expect(editor.disabled).toEqual(disabledFields);
+
+			// expect a default calendar is selected
 			expect(editor.calendar).toBeDefined();
 
-			expect(editor.title).toBe('');
-			expect(editor.location).toBe('');
-			expect(editor.freeBusy).toBe('B');
+			// expect organizer to be defined and to be the default
+			expect(editor.organizer).toBeDefined();
+			expect(editor.organizer).toHaveProperty('label', 'DEFAULT');
+
+			// all parameters are the default ones
+			expect(editor.allDay).toBe(false);
+			expect(editor.attach).toBeUndefined();
+			expect(editor.attachmentFiles).toStrictEqual([]);
+			expect(editor.attendees).toStrictEqual([]);
 			expect(editor.class).toBe('PUB');
-			expect(editor.timezone).toBe('Europe/Berlin');
+			expect(editor.end).toBe(moment(editor.start).add('60', 'minutes').valueOf());
+			expect(editor.exceptId).toBeUndefined();
+			expect(editor.freeBusy).toBe('B');
+			expect(editor.id).toBe('new-1');
+			expect(editor.inviteId).toBeUndefined();
+			expect(editor.isException).toBe(false);
+			expect(editor.isInstance).toBe(true);
+			expect(editor.isNew).toBe(true);
+			expect(editor.isSeries).toBe(false);
+			expect(editor.location).toBe('');
+			expect(editor.optionalAttendees).toStrictEqual([]);
+			expect(editor.panel).toBe(false);
+			expect(editor.plainText).toBe('');
+			expect(editor.recur).toBeUndefined();
 			expect(editor.reminder).toBe('5');
 			expect(editor.richText).toBe('');
-			expect(editor.plainText).toBe('');
-			expect(editor.panel).toBe(false);
-			expect(editor.isInstance).toBe(true);
-			expect(editor.isSeries).toBe(false);
-			expect(editor.isException).toBe(false);
+			expect(editor.room).toBeUndefined();
+			expect(editor.start).toBeLessThanOrEqual(new Date().valueOf());
+			expect(editor.timezone).toBe('Europe/Berlin');
+			expect(editor.title).toBe('');
 		});
+		test.todo('series appointment');
+		test.todo('single instance of a series');
+		test.todo('exception of a series');
+		test.todo('context in a single instance');
+		test.todo('onProposeNewTime instead of onSave property of callbacks object');
 	});
 });

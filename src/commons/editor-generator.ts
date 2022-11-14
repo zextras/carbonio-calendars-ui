@@ -59,6 +59,29 @@ export const getEndTime = ({ start, duration }: { start: number; duration: strin
 	return isNaN(value) ? now.valueOf() + 3600 : value;
 };
 
+export const disabledFields = {
+	richTextButton: false,
+	attachmentsButton: false,
+	saveButton: false,
+	sendButton: false,
+	organizer: false,
+	title: false,
+	location: false,
+	virtualRoom: false,
+	attendees: false,
+	optionalAttendees: false,
+	freeBusySelector: false,
+	calendarSelector: false,
+	private: false,
+	datePicker: false,
+	timezone: false,
+	allDay: false,
+	reminder: false,
+	recurrence: false,
+	attachments: false,
+	composer: false
+};
+
 const createEmptyEditor = (id: string, folders: Array<Folder>): Editor => {
 	const identities = getIdentityItems();
 	const {
@@ -108,28 +131,7 @@ const createEmptyEditor = (id: string, folders: Array<Folder>): Editor => {
 		recur: undefined,
 		richText: '',
 		plainText: '',
-		disabled: {
-			richTextButton: false,
-			attachmentsButton: false,
-			saveButton: false,
-			sendButton: false,
-			organizer: false,
-			title: false,
-			location: false,
-			virtualRoom: false,
-			attendees: false,
-			optionalAttendees: false,
-			freeBusySelector: false,
-			calendarSelector: false,
-			private: false,
-			datePicker: false,
-			timezone: false,
-			allDay: false,
-			reminder: false,
-			recurrence: false,
-			attachments: false,
-			composer: false
-		},
+		disabled: disabledFields,
 		id
 	};
 };
@@ -405,7 +407,14 @@ export const generateEditor = ({
 }: {
 	event?: EventPropType;
 	invite?: Invite;
-	context: any;
+	context: {
+		isInstance?: boolean;
+		dispatch: Dispatch;
+		folders: Array<Folder>;
+		isProposeNewTime?: boolean;
+		panel?: boolean;
+		searchPanel?: boolean;
+	} & Partial<Editor>;
 }): { editor: Editor; callbacks: EditorCallbacks } => {
 	const id = getNewEditId(event?.resource?.id);
 	const { isInstance, folders, dispatch } = context;

@@ -27,6 +27,7 @@ import { getSettingsSubSections } from './settings/sub-sections';
 import { StoreProvider } from './store/redux';
 import { generateEditor } from './commons/editor-generator';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
+import { useCalendarFolders } from './hooks/use-calendar-folders';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -85,8 +86,7 @@ const SearchView = (props) => (
 );
 
 const AppRegistrations = () => {
-	const folders = useFolders();
-	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
+	const calendarFolders = useCalendarFolders();
 	const dispatch = useDispatch();
 
 	useEffect(() => {

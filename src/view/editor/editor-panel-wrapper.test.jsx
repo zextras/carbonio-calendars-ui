@@ -18,28 +18,8 @@ import { CALENDAR_APP_ID } from '../../constants';
 import { reducers } from '../../store/redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 
-/* describe('Editor panel', async () => {
-	const isNew = false;
-	const editorId = getRandomEditorId(isNew);
-	const calendars = {
-		calendars: generateCalendarSliceItem()
-	};
-	const editor = {
-		activeId: editorId,
-		editors: generateEditorSliceItem({ editorId })
-	};
-
-	const store = mockEmptyStore({ calendars, editor });
-	const options = {
-		preloadedState: store
-	};
-	setupTest(<EditorPanelWrapper />, options);
-	expect(
-		screen.getByRole('textbox', {
-			name: /Event title/i
-		})
-	).toHaveValue(editor.editors[editorId].title);
-}); */
+// todo: datePicker render is very slow
+jest.setTimeout(10000);
 
 describe('Editor panel wrapper', () => {
 	test('it doesnt render without editorId or callbacks', () => {

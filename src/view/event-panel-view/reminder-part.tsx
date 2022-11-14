@@ -9,6 +9,7 @@ import { filter, noop } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
@@ -23,8 +24,7 @@ export const ReminderPart = ({
 	event: EventType;
 }): ReactElement | null => {
 	const dispatch = useDispatch();
-	const folders = useFolders();
-	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
+	const calendarFolders = useCalendarFolders();
 	const setSnooze = useCallback(
 		(time) => {
 			const editorInvite = {

@@ -22,6 +22,7 @@ import 'moment-timezone';
 import { addBoard, getAction, Action, t, Board, useFolders } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { EditorCallbacks } from '../../types/editor';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
@@ -95,8 +96,7 @@ const InviteResponse: FC<InviteResponse> = ({
 	isAttendee
 }): ReactElement => {
 	const dispatch = useDispatch();
-	const folders = useFolders();
-	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
+	const calendarFolders = useCalendarFolders();
 	useEffect(() => {
 		if (!mailMsg.read) {
 			onLoadChange();

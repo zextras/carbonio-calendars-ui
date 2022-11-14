@@ -17,6 +17,9 @@ import {
 } from '../../test/generators/generators';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 
+// todo: datePicker render is very slow
+jest.setTimeout(10000);
+
 const initBoard = ({
 	editorId,
 	isNew,

@@ -10,6 +10,7 @@ import { Spinner, replaceHistory, t, useFolders } from '@zextras/carbonio-shell-
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import ModalFooter from '../../commons/modal-footer';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 import { ModalHeader } from '../../commons/modal-header';
@@ -139,8 +140,7 @@ export const DeleteEventModal = ({
 	const { isOrganizer, isException, participants } = invite;
 	const participantsSize = useMemo(() => size(participants), [participants]);
 	const dispatch = useDispatch();
-	const folders = useFolders();
-	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
+	const calendarFolders = useCalendarFolders();
 	const isInstance = context?.isInstance;
 	const isRecurrent = !!invite.recurrenceRule;
 	const isSeries = isRecurrent && !isInstance;

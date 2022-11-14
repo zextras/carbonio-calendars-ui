@@ -48,6 +48,7 @@ import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -110,8 +111,7 @@ export default function CalendarComponent() {
 	const calendars = useSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
-	const folders = useFolders();
-	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
+	const calendarFolders = useCalendarFolders();
 	if (settings.prefs.zimbraPrefLocale) {
 		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
 			week: {

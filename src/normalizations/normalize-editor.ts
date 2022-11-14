@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folders } from '@zextras/carbonio-shell-ui';
+import { Folder } from '@zextras/carbonio-shell-ui';
 import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
@@ -68,7 +68,7 @@ export const normalizeEditorWithoutOrganizer = ({
 	invite?: Invite;
 	event?: EventPropType;
 	isInstance?: boolean;
-	folders?: Folders;
+	folders?: Array<Folder>;
 }): Editor =>
 	invite && event
 		? (omitBy(

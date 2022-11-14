@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder } from '@zextras/carbonio-shell-ui';
 import { EventResourceCalendar } from './event';
 import { Calendar } from './store/calendars';
 import { Attendee, InviteClass, InviteFreeBusy } from './store/invite';

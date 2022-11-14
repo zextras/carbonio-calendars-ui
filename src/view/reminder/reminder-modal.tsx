@@ -13,6 +13,7 @@ import { ModalHeader } from '../../commons/modal-header';
 import { generateEditor } from '../../commons/editor-generator';
 import ModalFooter from '../../commons/modal-footer';
 import { CALENDAR_ROUTE } from '../../constants';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
@@ -32,8 +33,7 @@ export const ReminderModal = ({
 	const [activeReminder, setActiveReminder] = useState<ReminderItem | undefined>(undefined);
 	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
 	const dispatch = useDispatch();
-	const folders = useFolders();
-	const calendarFolders = useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
+	const calendarFolders = useCalendarFolders();
 	const openModal = useMemo(() => !isEmpty(reminders), [reminders]);
 
 	const dismissAll = useCallback(() => {
