@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { lazy, useEffect, Suspense } from 'react';
+import React, { lazy, useEffect, Suspense, useMemo } from 'react';
 import {
 	Spinner,
 	addRoute,
@@ -14,8 +14,11 @@ import {
 	registerComponents,
 	ACTION_TYPES,
 	addBoard,
-	t
+	t,
+	useFolders
 } from '@zextras/carbonio-shell-ui';
+import { filter } from 'lodash';
+import { useDispatch } from 'react-redux';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
@@ -24,6 +27,7 @@ import { getSettingsSubSections } from './settings/sub-sections';
 import { StoreProvider } from './store/redux';
 import { generateEditor } from './commons/editor-generator';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
+import { useCalendarFolders } from './hooks/use-calendar-folders';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -81,7 +85,10 @@ const SearchView = (props) => (
 	</Suspense>
 );
 
-export default function App() {
+const AppRegistrations = () => {
+	const calendarFolders = useCalendarFolders();
+	const dispatch = useDispatch();
+
 	useEffect(() => {
 		addRoute({
 			route: CALENDAR_ROUTE,
@@ -117,7 +124,12 @@ export default function App() {
 				click: (ev) => {
 					ev?.preventDefault?.();
 					const { editor, callbacks } = generateEditor({
-						context: { title: t('label.new_appointment', 'New Appointment'), panel: false }
+						context: {
+							title: t('label.new_appointment', 'New Appointment'),
+							panel: false,
+							dispatch,
+							folders: calendarFolders
+						}
 					});
 					addBoard({
 						url: `${CALENDAR_ROUTE}/`,
@@ -139,10 +151,14 @@ export default function App() {
 			// @ts-ignore
 			component: InviteResponse
 		});
-	}, []);
+	}, [calendarFolders, dispatch]);
+	return null;
+};
 
+export default function App() {
 	return (
 		<StoreProvider>
+			<AppRegistrations />
 			<AppointmentReminder />
 			<SyncDataHandler />
 			<Notifications />

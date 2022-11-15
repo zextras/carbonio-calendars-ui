@@ -13,12 +13,14 @@ import { selectInstanceInvite } from '../store/selectors/invites';
 import { PanelView } from '../types/actions';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 import { editAppointmentItem } from '../actions/appointment-actions-items';
+import { useCalendarFolders } from './use-calendar-folders';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useEventPanelViewHeaderActions = (event: any): any => {
 	const tags = useTags();
 	const { pathname } = useLocation();
 	const createModal = useContext(ModalManagerContext);
+	const calendarFolders = useCalendarFolders();
 	const dispatch = useDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const panelView = useMemo(
@@ -32,6 +34,7 @@ export const useEventPanelViewHeaderActions = (event: any): any => {
 		createModal,
 		dispatch,
 		createSnackbar,
+		folders: calendarFolders,
 		panelView
 	};
 	const invite = useSelector(selectInstanceInvite(event.resource.inviteId));

@@ -6,7 +6,7 @@
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Header } from './header';
 import { EditorPanel } from '../editor/editor-panel';
 import { selectSearchActiveId } from '../../store/selectors/editor';
@@ -14,7 +14,11 @@ import { createCallbacks } from '../../commons/editor-generator';
 
 export const Editor = (): ReactElement | null => {
 	const editorId = useSelector(selectSearchActiveId);
-	const callbacks = useMemo(() => (editorId ? createCallbacks(editorId) : undefined), [editorId]);
+	const dispatch = useDispatch();
+	const callbacks = useMemo(
+		() => (editorId ? createCallbacks(editorId, { dispatch }) : undefined),
+		[dispatch, editorId]
+	);
 	const close = useCallback(() => {
 		replaceHistory('');
 	}, []);

@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, CustomModal } from '@zextras/carbonio-design-system';
-import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
-import { isEmpty, map, omit } from 'lodash';
+import { addBoard, Board, t, useFolders } from '@zextras/carbonio-shell-ui';
+import { filter, isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -13,6 +13,7 @@ import { ModalHeader } from '../../commons/modal-header';
 import { generateEditor } from '../../commons/editor-generator';
 import ModalFooter from '../../commons/modal-footer';
 import { CALENDAR_ROUTE } from '../../constants';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
@@ -32,7 +33,7 @@ export const ReminderModal = ({
 	const [activeReminder, setActiveReminder] = useState<ReminderItem | undefined>(undefined);
 	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
 	const dispatch = useDispatch();
-
+	const calendarFolders = useCalendarFolders();
 	const openModal = useMemo(() => !isEmpty(reminders), [reminders]);
 
 	const dismissAll = useCallback(() => {
@@ -78,7 +79,11 @@ export const ReminderModal = ({
 				const { editor, callbacks } = generateEditor({
 					event,
 					invite,
-					context: { panel: false }
+					context: {
+						dispatch,
+						folders: calendarFolders,
+						panel: false
+					}
 				});
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
@@ -89,7 +94,7 @@ export const ReminderModal = ({
 				dismissAll();
 			}
 		});
-	}, [activeReminder, dismissAll, dispatch]);
+	}, [activeReminder, calendarFolders, dismissAll, dispatch]);
 
 	const headerLabel = useMemo(
 		() =>

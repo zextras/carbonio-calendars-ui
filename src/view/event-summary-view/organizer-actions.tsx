@@ -14,10 +14,11 @@ import {
 	SnackbarManagerContext,
 	Row
 } from '@zextras/carbonio-design-system';
-import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useTags, Folder } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { editAppointment } from '../../actions/appointment-actions-fn';
 import { PANEL_VIEW } from '../../constants';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { ActionsContext, PanelView } from '../../types/actions';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
@@ -29,6 +30,7 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 	actions
 }): ReactElement | null => {
 	const createModal = useContext(ModalManagerContext);
+	const calendarFolders = useCalendarFolders();
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const tags = useTags();
@@ -40,12 +42,13 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 			createModal,
 			createSnackbar,
 			tags,
+			folders: calendarFolders,
 			createAndApplyTag,
 			isInstance: true,
 			ridZ: event.resource.ridZ,
 			panelView: PANEL_VIEW.APP as PanelView
 		}),
-		[createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
+		[calendarFolders, createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
 	);
 	return event ? (
 		<>

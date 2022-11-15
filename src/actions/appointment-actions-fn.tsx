@@ -179,6 +179,8 @@ export const editAppointment =
 				event,
 				invite,
 				context: {
+					folders: context.folders,
+					dispatch: context.dispatch,
 					panel: context.panel ?? true
 				}
 			});
@@ -188,7 +190,16 @@ export const editAppointment =
 			replaceHistory(path);
 		}
 		if (context?.panelView === PANEL_VIEW.SEARCH) {
-			generateEditor({ event, invite, context: { searchPanel: true, panel: false } });
+			generateEditor({
+				event,
+				invite,
+				context: {
+					searchPanel: true,
+					panel: false,
+					dispatch: context.dispatch,
+					folders: context.folders
+				}
+			});
 			const path = event.resource.ridZ
 				? `/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
 				: `/${EventActionsEnum.EDIT}/${event.resource.id}`;

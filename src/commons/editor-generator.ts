@@ -3,15 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getUserAccount, getUserSettings } from '@zextras/carbonio-shell-ui';
+import { Folder, getUserAccount, getUserSettings, LinkFolder } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
+import { Dispatch } from 'redux';
+import { setCalendarColor } from '../normalizations/normalizations-utils';
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { PREFS_DEFAULTS } from '../constants';
 import { EventPropType, normalizeEditorWithoutOrganizer } from '../normalizations/normalize-editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
-import { store } from '../store/redux';
 import {
 	createNewEditor,
 	editEditorAllDay,
@@ -37,6 +38,7 @@ import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
 import { EventResourceCalendar } from '../types/event';
 import { Attendee, Invite, InviteClass, InviteFreeBusy } from '../types/store/invite';
 import { getIdentityItems } from './get-identity-items';
+import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 
 let counter = 0;
 
@@ -57,20 +59,50 @@ export const getEndTime = ({ start, duration }: { start: number; duration: strin
 	return isNaN(value) ? now.valueOf() + 3600 : value;
 };
 
-const createEmptyEditor = (id: string): Editor => {
+export const disabledFields = {
+	richTextButton: false,
+	attachmentsButton: false,
+	saveButton: false,
+	sendButton: false,
+	organizer: false,
+	title: false,
+	location: false,
+	virtualRoom: false,
+	attendees: false,
+	optionalAttendees: false,
+	freeBusySelector: false,
+	calendarSelector: false,
+	private: false,
+	datePicker: false,
+	timezone: false,
+	allDay: false,
+	reminder: false,
+	recurrence: false,
+	attachments: false,
+	composer: false
+};
+
+const createEmptyEditor = (id: string, folders: Array<Folder>): Editor => {
 	const identities = getIdentityItems();
 	const {
 		zimbraPrefTimeZoneId,
 		zimbraPrefCalendarDefaultApptDuration,
-		zimbraPrefCalendarApptReminderWarningTime,
-		zimbraPrefDefaultCalendarId = PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+		zimbraPrefCalendarApptReminderWarningTime
 	} = getUserSettings().prefs;
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
-	const calendars = store?.getState().calendars;
-
+	const defaultCalendar = find(folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
 	return {
 		attach: undefined,
-		calendar: calendars?.calendars?.[zimbraPrefDefaultCalendarId],
+		calendar: defaultCalendar
+			? {
+					id: defaultCalendar.id,
+					name: defaultCalendar.name, // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					color: defaultCalendar.color // @ts-ignore
+						? ZIMBRA_STANDARD_COLORS[defaultCalendar.color]
+						: setCalendarColor(defaultCalendar),
+					owner: (defaultCalendar as LinkFolder)?.owner
+			  }
+			: undefined,
 		panel: false,
 		isException: false,
 		exceptId: undefined,
@@ -99,28 +131,7 @@ const createEmptyEditor = (id: string): Editor => {
 		recur: undefined,
 		richText: '',
 		plainText: '',
-		disabled: {
-			richTextButton: false,
-			attachmentsButton: false,
-			saveButton: false,
-			sendButton: false,
-			organizer: false,
-			title: false,
-			location: false,
-			virtualRoom: false,
-			attendees: false,
-			optionalAttendees: false,
-			freeBusySelector: false,
-			calendarSelector: false,
-			private: false,
-			datePicker: false,
-			timezone: false,
-			allDay: false,
-			reminder: false,
-			recurrence: false,
-			attachments: false,
-			composer: false
-		},
+		disabled: disabledFields,
 		id
 	};
 };
@@ -132,9 +143,9 @@ export const applyContextToEditor = ({
 	editor: Editor;
 	context: any;
 }): Editor => {
-	const emptyEditor = createEmptyEditor(editor.id);
+	const emptyEditor = createEmptyEditor(editor.id, context.folders);
 	let newEditor = { ...emptyEditor, ...editor };
-	const contextObj = omit(context, 'disabled');
+	const contextObj = omit(context, ['disabled', 'folders', 'dispatch']);
 	if (!isEmpty(context)) {
 		newEditor = { ...newEditor, ...contextObj };
 	}
@@ -152,10 +163,10 @@ export const applyContextToEditor = ({
 
 export const createCallbacks = (
 	id: string,
-	context?: { isProposeNewTime: boolean }
+	context: { isProposeNewTime?: boolean; dispatch: Dispatch }
 ): EditorCallbacks => {
-	const { dispatch } = store;
 	const account = getUserAccount();
+	const { dispatch } = context;
 
 	const onToggleRichText = (isRichText: boolean): void => {
 		dispatch(editIsRichText({ id, isRichText }));
@@ -275,17 +286,33 @@ export const createCallbacks = (
 	): { payload: undefined; type: string } | { payload: { id: string; recur: any }; type: string } =>
 		dispatch(editEditorRecurrence({ id, recur }));
 
-	const createAppointmentFn = (draft: boolean): Promise<any> =>
-		dispatch(createAppointment({ id, draft })).then(({ payload }) => {
-			const { response, editor } = payload;
+	const createAppointmentFn = (draft: boolean, editor: Editor): Promise<any> =>
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		dispatch(createAppointment({ draft, editor })).then(({ payload }) => {
+			const { response } = payload;
 			if (payload?.response) {
-				dispatch(updateEditor({ id, editor }));
+				dispatch(updateEditor({ id, editor: payload.editor }));
 			}
-			return Promise.resolve({ response, editor });
+			return Promise.resolve({ response, editor: payload.editor });
 		});
 
-	const modifyAppointmentFn = (draft: boolean): Promise<any> =>
-		dispatch(modifyAppointment({ id, draft })).then(({ payload }) => {
+	const modifyAppointmentFn = (draft: boolean, editor: Editor): Promise<any> =>
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		dispatch(modifyAppointment({ draft, editor })).then(({ payload }) => {
+			const { response, error } = payload;
+			if (response && !error) {
+				dispatch(updateEditor({ id, editor: payload.editor }));
+				return Promise.resolve({ response, editor: payload.editor });
+			}
+			return Promise.resolve(payload);
+		});
+
+	const onProposeNewTime = (): Promise<any> =>
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		dispatch(proposeNewTime({ id })).then(({ payload }) => {
 			const { response, editor, error } = payload;
 			if (response && !error) {
 				dispatch(updateEditor({ id, editor }));
@@ -294,21 +321,19 @@ export const createCallbacks = (
 			return Promise.resolve(payload);
 		});
 
-	const onProposeNewTime = (): Promise<any> =>
-		dispatch(proposeNewTime({ id })).then(({ payload }) => {
-			const { response, editor, error } = payload;
-			if (response && !error) {
-				dispatch(updateEditor({ id, editor }));
-				return Promise.resolve({ response, editor });
-			}
-			return Promise.resolve({ ...payload, response: 'success' });
-		});
+	const onSave = ({
+		draft = true,
+		isNew = true,
+		editor
+	}: {
+		draft?: boolean;
+		isNew?: boolean;
+		editor: Editor;
+	}): Promise<any> =>
+		isNew ? createAppointmentFn(draft, editor) : modifyAppointmentFn(draft, editor);
 
-	const onSave = ({ draft = true, isNew = true }): Promise<any> =>
-		isNew ? createAppointmentFn(draft) : modifyAppointmentFn(draft);
-
-	const onSend = (isNew: boolean): Promise<any> =>
-		context?.isProposeNewTime ? onProposeNewTime() : onSave({ draft: false, isNew });
+	const onSend = (isNew: boolean, editor: Editor): Promise<any> =>
+		context?.isProposeNewTime ? onProposeNewTime() : onSave({ draft: false, isNew, editor });
 
 	return {
 		onToggleRichText,
@@ -382,11 +407,24 @@ export const generateEditor = ({
 }: {
 	event?: EventPropType;
 	invite?: Invite;
-	context: any;
+	context: {
+		isInstance?: boolean;
+		dispatch: Dispatch;
+		folders: Array<Folder>;
+		isProposeNewTime?: boolean;
+		panel?: boolean;
+		searchPanel?: boolean;
+	} & Partial<Editor>;
 }): { editor: Editor; callbacks: EditorCallbacks } => {
 	const id = getNewEditId(event?.resource?.id);
-	const isInstance = context?.isInstance;
-	const compiledEditor = normalizeEditorWithoutOrganizer({ invite, event, id, isInstance });
+	const { isInstance, folders, dispatch } = context;
+	const compiledEditor = normalizeEditorWithoutOrganizer({
+		invite,
+		event,
+		id,
+		isInstance,
+		folders
+	});
 	const editorWithDates = setEditorDate({ editor: compiledEditor, event, invite });
 	const editorWithContext = applyContextToEditor({
 		editor: editorWithDates,
@@ -394,11 +432,11 @@ export const generateEditor = ({
 	});
 
 	const callbacks = createCallbacks(id, context);
-	const { dispatch, getState } = store;
 
 	dispatch(createNewEditor(editorWithContext));
+
 	return {
-		editor: getState()?.editor?.editors?.[id],
+		editor: editorWithContext,
 		callbacks
 	};
 };

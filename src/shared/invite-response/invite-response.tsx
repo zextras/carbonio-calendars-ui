@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { filter } from 'lodash';
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable import/extensions */
 import React, { FC, ReactElement, useMemo, useEffect, useCallback, useState } from 'react';
@@ -18,9 +19,10 @@ import {
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
-import { addBoard, getAction, Action, t, Board } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction, Action, t, Board, useFolders } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { EditorCallbacks } from '../../types/editor';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
@@ -30,7 +32,7 @@ import { getInvite } from '../../store/actions/get-invite';
 import { CALENDAR_ROUTE } from '../../constants';
 import BodyMessageRenderer from '../../commons/body-message-renderer.jsx';
 import { useInvite } from '../../hooks/use-invite';
-import { store, StoreProvider } from '../../store/redux';
+import { StoreProvider } from '../../store/redux';
 
 /**
    @todo: momentary variables to dynamize
@@ -94,6 +96,7 @@ const InviteResponse: FC<InviteResponse> = ({
 	isAttendee
 }): ReactElement => {
 	const dispatch = useDispatch();
+	const calendarFolders = useCalendarFolders();
 	useEffect(() => {
 		if (!mailMsg.read) {
 			onLoadChange();
@@ -157,6 +160,8 @@ const InviteResponse: FC<InviteResponse> = ({
 				event: requiredEvent,
 				invite: normalizedInvite,
 				context: {
+					dispatch,
+					folders: calendarFolders,
 					isProposeNewTime: true,
 					panel: false,
 					organizer: {
@@ -184,17 +189,16 @@ const InviteResponse: FC<InviteResponse> = ({
 					}
 				}
 			});
-			const storeData = store.getState();
 			if (editor.id) {
 				addBoard({
 					url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.[0]?.inv[0]?.comp[0]?.apptId}`,
-					title: storeData?.editor?.editors?.[editor.id]?.title ?? '',
-					...storeData.editor.editors[editor.id],
+					title: editor?.title ?? '',
+					...editor,
 					callbacks
 				} as unknown as Board & { callbacks: EditorCallbacks });
 			}
 		});
-	}, [dispatch, inviteId]);
+	}, [calendarFolders, dispatch, inviteId]);
 	return (
 		<InviteContainer padding={{ all: 'extralarge' }}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
