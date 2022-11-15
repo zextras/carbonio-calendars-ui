@@ -34,17 +34,17 @@ import { Appointment } from '../../types/store/appointments';
 import { Calendar } from '../../types/store/calendars';
 
 const Square = styled.div`
-	width: 18px;
-	height: 18px;
+	width: 1.125rem;
+	height: 1.125rem;
 	position: relative;
-	top: -3px;
-	border: 1px solid ${({ theme }): string => theme.palette.gray2.regular};
+	top: -0.1875rem;
+	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 	background: ${({ color }): string | undefined => color};
-	border-radius: 4px;
+	border-radius: 0.25rem;
 `;
 
 const ColorContainer = styled(Container)`
-	border-bottom: 1px solid ${({ theme }): string => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 `;
 const TextUpperCase = styled(Text)`
 	text-transform: capitalize;

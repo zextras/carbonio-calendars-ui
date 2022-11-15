@@ -72,7 +72,7 @@ export const DeleteModal = ({ folder, onClose }) => {
 	};
 	const title = useMemo(() => t('label.delete', 'Delete'), [t]);
 	return folder ? (
-		<Container padding="8px 8px 24px">
+		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader title={title} onClose={onClose} />
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}

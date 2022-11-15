@@ -76,7 +76,7 @@ export const EventSummaryView = ({
 		<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
 			<Container
 				padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }}
-				width="400px"
+				width="25rem"
 			>
 				<TitleRow event={event} />
 				<NeverSentWarningRow neverSent={event?.resource?.inviteNeverSent} />

@@ -8,8 +8,8 @@ import { Avatar, Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 
 const IconContainer = styled(Avatar)`
-	width: 48px;
-	height: 48px;
+	width: 3rem;
+	height: 3rem;
 `;
 
 export const ImageAndIconPart = ({

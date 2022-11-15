@@ -70,7 +70,7 @@ const SearchListItem = ({ item, active }) => {
 			item.resource?.class === 'PRI' ||
 			item.resource?.location ||
 			item?.resource?.isRecurrent
-				? { minWidth: '50px', flexBasis: 'content', flexGrow: 1 }
+				? { minWidth: '3.125rem', flexBasis: 'content', flexGrow: 1 }
 				: undefined,
 		[hasAttachments, item.resource?.class, item.resource?.isRecurrent, item.resource?.location]
 	);
@@ -147,7 +147,7 @@ const SearchListItem = ({ item, active }) => {
 								<Padding left="small" />
 								<Row
 									wrap="nowrap"
-									style={{ minWidth: '50px', flexBasis: 'content', flexGrow: 1 }}
+									style={{ minWidth: '3.125rem', flexBasis: 'content', flexGrow: 1 }}
 									mainAlignment="flex-start"
 								>
 									<Tooltip label={timeString} maxWidth="100%">
@@ -238,7 +238,7 @@ const SearchListItem = ({ item, active }) => {
 							<>
 								<Padding left="small" />
 								<Row
-									style={{ minWidth: '50px', flexBasis: 'content', flexGrow: 1 }}
+									style={{ minWidth: '3.125rem', flexBasis: 'content', flexGrow: 1 }}
 									mainAlignment="flex-start"
 								>
 									<Tooltip label={item.title} maxWidth="100%">
@@ -251,7 +251,7 @@ const SearchListItem = ({ item, active }) => {
 							<>
 								<Padding left="small" />
 								<Row
-									style={{ minWidth: '50px', flexBasis: 'content', flexGrow: 1 }}
+									style={{ minWidth: '3.125rem', flexBasis: 'content', flexGrow: 1 }}
 									mainAlignment="flex-end"
 								>
 									<Tooltip

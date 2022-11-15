@@ -63,7 +63,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 				margin: 0;
 				overflow-y: hidden;
 				font-family: Roboto, sans-serif;
-				font-size: 14px;
+				font-size: 0.875rem;
 			}
 			body pre, body pre * {
 				white-space: pre-wrap;

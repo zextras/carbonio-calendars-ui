@@ -27,7 +27,7 @@ import { EditorProps } from '../../../types/editor';
 import CustomRecurrenceModal from './recurrences/custom-recurrence-modal';
 
 export const ColorContainer = styled(Container)`
-	border-bottom: 1px solid ${({ theme }): string => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 `;
 
 export const TextUpperCase = styled(Text)`

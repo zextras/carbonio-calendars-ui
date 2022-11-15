@@ -86,26 +86,28 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 					`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 				);
 			}
-		} else {
-			createSnackbar({
-				key: `private_appointment`,
-				replace: true,
-				type: 'info',
-				label: t('label.appointment_is_private', 'The appointment is private.'),
-				autoHideTimeout: 3000,
-				hideButton: true
-			});
 		}
-	}, [event, createModal, onEntireSeries, onSingleInstance, createSnackbar]);
+	}, [event, createModal, onEntireSeries, onSingleInstance]);
 
 	const toggleOpen = useCallback(
-		(e) => {
-			getEventInvite();
-			if (e.detail === 1 && isNil(action) && !open) {
-				setOpen(true);
+		(e): void => {
+			if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
+				createSnackbar({
+					key: `private_appointment`,
+					replace: true,
+					type: 'info',
+					label: t('label.appointment_is_private', 'The appointment is private.'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			} else {
+				getEventInvite();
+				if (e.detail === 1 && isNil(action) && !open) {
+					setOpen(true);
+				}
 			}
 		},
-		[getEventInvite, action, open]
+		[event?.resource?.class, event?.haveWriteAccess, createSnackbar, getEventInvite, action, open]
 	);
 
 	const actions = useEventSummaryViewActions({
@@ -127,7 +129,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 			<Container ref={anchorRef} onClick={toggleOpen} height="100%">
 				<Dropdown
 					contextMenu
-					width="cal(min(100%,200px))"
+					width="cal(min(100%,12.5rem))"
 					style={{ width: '100%', height: '100%' }}
 					items={actions}
 					display="block"
@@ -152,7 +154,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 							{event.resource.class === 'PRI' && (
 								<Tooltip label={t('label.private', 'Private')} placement="top">
 									<Row padding={{ left: 'extrasmall' }}>
-										<Icon color="currentColor" icon="Lock" style={{ minWidth: '16px' }} />
+										<Icon color="currentColor" icon="Lock" style={{ minWidth: '1rem' }} />
 									</Row>
 								</Tooltip>
 							)}
@@ -165,13 +167,13 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 									placement="bottom"
 								>
 									<Row padding={{ left: 'extrasmall' }}>
-										<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '16px' }} />
+										<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '1rem' }} />
 									</Row>
 								</Tooltip>
 							)}
 						</Container>
 						{!event.allDay && (
-							<Tooltip label={title} placement="top">
+							<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
 								<Container
 									orientation="horizontal"
 									width="fill"

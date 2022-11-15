@@ -19,8 +19,9 @@ export const handleModifiedCalendarsReducer = (state: CalendarSlice, { payload }
 			const newFolder = find(foldersToAdd, (c) => c.id === item.id);
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			const toRet = newFolder ? { ...item, ...newFolder } : item;
-
+			const toRet = newFolder
+				? { ...item, ...newFolder, haveWriteAccess: item.perm ? /w/.test(item.perm) : true }
+				: { ...item, haveWriteAccess: item.perm ? /w/.test(item.perm) : true };
 			return {
 				...acc,
 				[toRet.id]: toRet
