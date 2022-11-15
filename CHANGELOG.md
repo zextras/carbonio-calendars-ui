@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.37](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.36...v0.1.37) (2022-11-15)
+
+
+### Features
+
+* convert px to rem ([7b6ba44](https://github.com/zextras/carbonio-calendars-ui/commit/7b6ba443775b3b9fda19419dc0526f8f99a85602))
+* convert px to rem ([f5e34f0](https://github.com/zextras/carbonio-calendars-ui/commit/f5e34f015ad73fb52e4623c3db6c307a4cd2e510))
+* convert px to rem ([76b8f24](https://github.com/zextras/carbonio-calendars-ui/commit/76b8f24b70025b15e61347d1f4cf9cbae21ecc54))
+
+
+### Bug Fixes
+
+* avoid store import around the app ([5a244d8](https://github.com/zextras/carbonio-calendars-ui/commit/5a244d84f0241fdfd27f1a9a6129b2dbec736308))
+* editor test setup ([9bde0c2](https://github.com/zextras/carbonio-calendars-ui/commit/9bde0c2641bf836f79ee0b20538095199a9dc886))
+* hardcoded translations removed ([#181](https://github.com/zextras/carbonio-calendars-ui/issues/181)) ([4004d6d](https://github.com/zextras/carbonio-calendars-ui/commit/4004d6d3730984b33a636a02efcaef7dfeee0ea4))
+* improving editor default values ([8e6a7f1](https://github.com/zextras/carbonio-calendars-ui/commit/8e6a7f124e2d4c99b55ba21b33cae63e7bfa7e0b))
+* managed the actions in shared calendar as per rights ([#172](https://github.com/zextras/carbonio-calendars-ui/issues/172)) ([bcbc9fb](https://github.com/zextras/carbonio-calendars-ui/commit/bcbc9fb34fd9ec9548e5c3e5e9c7e3db45e513cb))
+* maximum stack execeeded in generate editor caused by folders ([8fe02d7](https://github.com/zextras/carbonio-calendars-ui/commit/8fe02d721e660097209a8e5c3421f038f819a833))
+* setting up commons structure ([b8a27ab](https://github.com/zextras/carbonio-calendars-ui/commit/b8a27abab58ab51838e549c9b359dc788cbab6f9))
+* store uses same provider ([3c5df56](https://github.com/zextras/carbonio-calendars-ui/commit/3c5df5642c712021c50583ceecac462312119c4f))
+
 ### [0.1.36](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.35...v0.1.36) (2022-11-09)
 
 
