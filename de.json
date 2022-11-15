@@ -51,7 +51,6 @@
         "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>",
         "you_sure_delete_calendar": "Sind Sie sicher, dass Sie den {{name}} Kalender endgültig löschen möchten?",
         "you_sure_move_calendar_trash": "Sind Sie sicher, dass Sie den {{name}} Kalender löschen möchten?",
-        "you_will_see_the_subject_here": "Betreff",
         "share_calendar_url_msg": "Sie können {{title}} schnell mit Ihren Kollegen teilen, indem Sie einen dieser URLs benutzen:",
         "you": "Sie",
         "you_sure_delete_instance": "Sind Sie sicher, dass Sie dieses Ereignis des Termins {{title}} löschen wollen?",
@@ -495,7 +494,6 @@
         "proposed_time_accepted": "Sie haben die vorgeschlagene Zeit zugesagt",
         "share_folder_success": "Kalender erfolgreich geteilt",
         "url_copied": "{{title}} kopiert",
-        "new_time_proposed_success": "Neue Zeit vorgeschlagen",
         "tag_applied": "{{tag}} Tag angewendet",
         "tag_removed": "{{tag}} Tag entfernt"
     },
