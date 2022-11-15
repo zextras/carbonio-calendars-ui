@@ -34,7 +34,7 @@
         "delete_permanently": "Xoá vĩnh viễn",
         "dismiss": "Bỏ hết",
         "display": "Hiển thị",
-        "download": "Tải về tất cả",
+        "download": "Tải xuống tất cả",
         "edit": "Chỉnh sửa",
         "edit_access": "Chỉnh sửa truy cập {{name}}",
         "edit_share": "Chỉnh sửa chia sẻ",
@@ -118,7 +118,7 @@
         "tentative": "dự kiến",
         "the": "Các",
         "time_zones": "Múi giờ",
-        "to": "đến",
+        "to": "to",
         "today": "hôm nay",
         "type_name_here": "Tên lịch",
         "undo": "Hoàn tác",
@@ -157,14 +157,22 @@
         "timezone_pref_msg": "Thời gian tuân theo múi giờ của bạn chọn.",
         "your_pref_timezone_msg": "Múi giờ ưa thích của bạn là: GMT +01: 00 Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna.",
         "no_title": "Không tiêu đề",
-        "scheduled_in": "Đặt lịch vào",
-        "warning": "Warning",
-        "trash": "Trash",
+        "scheduled_in": "Lịch",
+        "warning": "Cảnh báo",
+        "trash": "Thùng rác",
         "tag": "Thẻ",
         "share_public_link": "Chia sẻ liên kết công khai",
-        "select": "Select",
-        "root": "Gốc",
-        "choose_file": "Chọn tệp (File)"
+        "select": "Lựa chọn",
+        "root": "Root",
+        "choose_file": "Chọn tệp (File)",
+        "select_in": "rỗng",
+        "search_hint": "rỗng",
+        "subject": "Chủ đề",
+        "public_link_description": "Được tạo từ {{title}} vào {{date}}",
+        "new_time_proposed": "Thời gian đề xuất mới",
+        "continue": "Tiếp tục",
+        "cancel": "huỷ",
+        "appointment_is_private": "Đây là cuộc họp riêng tư."
     },
     "participants": {
         "Not_answered": "không trả lời",
@@ -268,7 +276,6 @@
         "invite": {
             "error": "Lỗi"
         },
-        "new_time_proposed_success": "Đề xuất thời gian mới",
         "tag_applied": "đã áp dụng thẻ {{tag}}",
         "tag_removed": "Đã xoá thẻ {{tag}}",
         "url_copied": "Đã sao chép {{title}}"
@@ -320,7 +327,7 @@
         "chita": "{{value}} Chita",
         "christmas_island": "{{value}} Christmas Island",
         "colombia": "{{value}} Colombia",
-        "coordinated_universal_time": "{{value}} Coordinated Universal Time",
+        "coordinated_universal_time": "{{value}} Giờ phối hợp quốc tế",
         "cuiaba": "{{value}} Cuiaba",
         "damascus": "{{value}} Damascus",
         "guadalajara_mexico_city_monterrey ": "{{value}} Guadalajara, Mexico City, Monterrey",
@@ -369,12 +376,13 @@
         "copy_ics_url": "Sao chép ICS url",
         "copy_outlook_url": "Sao chép Outlook url",
         "enable_disable_rich_text": "Bật / Tắt trình chỉnh sửa văn bản rich text",
-        "chat_room": "Phòng trò chuyện",
-        "calendar_sharing_status": "Chia sẻ {{count}} với",
+        "chat_room": "Liên kết phòng ảo",
+        "calendar_sharing_status": "rỗng",
         "equipment": "Thiết bị",
         "location": "Địa điểm",
         "virtual_chat": "Cuộc trò chuyện ảo",
-        "chat": "Thiết bị"
+        "chat": "Thiết bị",
+        "calendar_sharing_status_one": "Chia sẻ với 1 người"
     },
     "find_shares": "Tìm chia sẻ",
     "is_recurrent": "Lặp lại",
@@ -390,7 +398,6 @@
     "message": {
         "sure_to_delete_all_occurences_appointment": "Bạn có chắc chắn muốn xóa tất cả các lần xuất hiện của cuộc hẹn này không?",
         "sure_to_delete_appointment": "Bạn có chắc chắn muốn xóa cuộc hẹn này không?",
-        "you_will_see_the_subject_here": "Chủ đề",
         "you_sure_move_calendar_trash": "Bạn có chắc chắn muốn xóa lịch {{name}} ?",
         "delete_all_occurences": "Xóa tất cả các lần xuất hiện",
         "delete_future_occurences": "Xóa trường hợp này và tất cả các lần xuất hiện trong tương lai",
@@ -445,12 +452,17 @@
         "want_to_edit_cancellation_msg": "Bạn có muốn soạn thông báo huỷ cuộc hẹn không?",
         "you": "Bạn",
         "are_organizer": "là người tổ chức",
-        "delete_future_occurences_warning": "Tác vụ này cũng sẽ xóa tất cả các ngoại lệ trong chuỗi(trước và sau trường hợp này)",
+        "delete_future_occurences_warning": "Tác vụ này cũng sẽ xóa tất cả các ngoại lệ (trước và sau trường hợp này) trong chuỗi",
         "optional_participant": "{{count}} Tuỳ chọn",
         "organizer": "Tổ chức",
         "send_email": "Gửi một thư điện tử",
         "more": "Nhiều hơn...",
-        "required_participant": "{{count}} người tham gia"
+        "required_participant": "{{count}} người tham gia",
+        "search_hints": "rỗng",
+        "want_to_edit_modified_msg": "Bạn có muốn chỉnh sửa tin nhắn của cuộc hẹn đã sửa đổi không?",
+        "meeting_modified": "Cuộc họp sau đã được sửa đổi",
+        "edit_series_warning": "Khi bạn tiến hành sửa đổi chuỗi, tất cả các phiên bản đã xóa hoặc sửa đổi trước đó sẽ được khôi phục với cài đặt chuỗi mới.",
+        "appointment_invitation_sent": "Đã gửi lời mời cuộc hẹn"
     },
     "messages": {
         "format_as_plain_text": "Định dạng dưới dạng văn bản thuần túy(Format as Plain Text)",
@@ -487,7 +499,8 @@
         "day_before": "{{count}} ngày trước",
         "hour_before": "{{count}} giờ trước",
         "hours": "{{count}} giờ",
-        "minutes": "{{count}} phút"
+        "minutes": "{{count}} phút",
+        "second_before": "{{count}} giây trước khi"
     },
     "action": {
         "calendar_access_share": "Chia sẻ quyền truy cập lịch",
@@ -501,7 +514,8 @@
         "edit_message": "Chỉnh sửa thông điệp",
         "preview": "Bấm vào để xem trước",
         "edit_calendar_properties": "Chỉnh sửa thuộc tính lịch",
-        "empty_trash_confirmation": "Tác vụ này sẽ xóa vĩnh viễn tất cả các mục trong thùng rác bao gồm Thư điện tử, Danh bạ, Lịch, Nhiệm vụ và Cặp. Bạn có chắc chắn muốn xóa các mục trong thùng rác này không?"
+        "empty_trash_confirmation": "Tác vụ này sẽ xóa vĩnh viễn tất cả các mục trong thùng rác bao gồm Thư điện tử, Danh bạ, Lịch, Nhiệm vụ và Cặp. Bạn có chắc chắn muốn xóa các mục trong thùng rác này không?",
+        "send_edit": "Gửi chỉnh sửa"
     },
     "administer": "Quản trị viên",
     "appointments": "Các cuộc hẹn",
@@ -539,7 +553,8 @@
             "yes": "Có",
             "needs_action": "Tác vụ cần thiết",
             "invitation_not_sent_yet": "Lời mời vẫn chưa được gửi"
-        }
+        },
+        "is_exception": "Ngoại lệ"
     },
     "allowed_actions": "Các tác vụ được phép",
     "folder": {
@@ -601,5 +616,6 @@
     "read": "Đọc",
     "remove_from_this_list": "Xóa từ danh sách này",
     "add": "Thêm vào",
-    "appt_restored_successfully": "Khôi phục cuộc hẹn thành công"
+    "appt_restored_successfully": "Khôi phục cuộc hẹn thành công",
+    "recurrent_in_allday": "Bạn không thể kéo một cuộc hẹn lặp lại suốt cả ngày"
 }
