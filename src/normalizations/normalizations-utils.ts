@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
+import { Folder, t } from '@zextras/carbonio-shell-ui';
 import { filter, groupBy, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
 import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../commons/zimbra-standard-colors';
@@ -131,7 +131,7 @@ export const getAlarmToString = (alarm: any): any => {
 	return null;
 };
 
-export const setCalendarColor = (folder: ZimbraFolder): ZimbraColorType =>
+export const setCalendarColor = (folder: Folder): ZimbraColorType =>
 	folder.rgb
 		? {
 				color: folder.rgb,

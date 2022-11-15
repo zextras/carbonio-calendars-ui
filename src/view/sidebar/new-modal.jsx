@@ -26,17 +26,17 @@ import ModalFooter from '../../commons/modal-footer';
 import { selectAllCalendars } from '../../store/selectors/calendars';
 
 const Square = styled.div`
-	width: 18px;
-	height: 18px;
+	width: 1.125rem;
+	height: 1.125rem;
 	position: relative;
-	top: -3px;
-	border: 1px solid ${({ theme }) => theme.palette.gray2.regular};
+	top: -0.1875rem;
+	border: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
 	background: ${({ color }) => color};
-	border-radius: 4px;
+	border-radius: 0.25rem;
 `;
 
 const ColorContainer = styled(Container)`
-	border-bottom: 1px solid ${({ theme }) => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
 `;
 const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
@@ -175,7 +175,7 @@ export const NewModal = ({ onClose }) => {
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), []);
 
 	return (
-		<Container padding="8px 8px 24px">
+		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader title={title} onClose={onCloseFn} />
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}

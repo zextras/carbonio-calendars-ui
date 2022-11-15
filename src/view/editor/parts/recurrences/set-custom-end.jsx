@@ -29,7 +29,7 @@ export const SimplifiedCustomDatePicker = ({ start, allDay, disabled, onChange }
 				mainAlignment="flex-start"
 				backgroundColor="gray5"
 			>
-				<Container crossAlignment="flex-start" style={{ maxWidth: '500px' }}>
+				<Container crossAlignment="flex-start" style={{ maxWidth: '31.25rem' }}>
 					<DateTimePicker
 						time={false}
 						valueFormat={{ month: 'short', year: 'numeric' }}

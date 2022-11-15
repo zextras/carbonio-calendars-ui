@@ -24,11 +24,11 @@ type EditorAttendeesProps = {
 
 export const AttendeesContainer = styled.div`
 	width: calc(
-		100% - ${({ hasTooltip }: { hasTooltip?: boolean }): string => (hasTooltip ? `48px` : '0px')}
+		100% - ${({ hasTooltip }: { hasTooltip?: boolean }): string => (hasTooltip ? `3rem` : '0rem')}
 	);
 	height: fit-content;
 	background: ${({ theme }): string => theme.palette.gray5.regular};
-	border-bottom: 1px solid ${({ theme }): string => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 	[class^='Chip__ChipComp'] {
 		[class^='Text__Comp'] {
 			color: ${({ theme }): string => theme.palette.text.regular};

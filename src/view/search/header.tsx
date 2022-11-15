@@ -24,10 +24,10 @@ const ActionButtons = ({ actions }: { actions: any[] }): JSX.Element => {
 	}, [actions, recalculateHiddenActions]);
 
 	return (
-		<Row wrap="nowrap" height="100%" mainAlignment="flex-end" style={{ maxWidth: '160px' }}>
+		<Row wrap="nowrap" height="100%" mainAlignment="flex-end" style={{ maxWidth: '10rem' }}>
 			<Row
 				//	ref={actionContainerRef}
-				height="40px"
+				height="2.5rem"
 				mainAlignment="flex-start"
 				style={{ overflow: 'hidden' }}
 			>
@@ -46,7 +46,7 @@ const ActionButtons = ({ actions }: { actions: any[] }): JSX.Element => {
 };
 
 const ExpandButton = ({ actions }: { actions: any[] }): ReactElement => (
-	<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
+	<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 		{actions &&
 			map(actions, (action) => (
 				<IconButton key={action.id} icon={action.icon} onClick={action.click} />
@@ -73,7 +73,7 @@ export const Header = ({ title, actions, closeAction }: HeaderProps): ReactEleme
 				orientation="horizontal"
 				background="gray5"
 				width="fill"
-				height="48px"
+				height="3rem"
 			>
 				<Row padding={{ horizontal: 'large' }}>
 					<Icon icon={'CalendarModOutline'} />
@@ -105,7 +105,7 @@ export const Header = ({ title, actions, closeAction }: HeaderProps): ReactEleme
 					orientation="horizontal"
 					background="gray5"
 					width="fill"
-					height="48px"
+					height="3rem"
 					padding={{ vertical: 'small', right: 'large' }}
 				>
 					<Row>

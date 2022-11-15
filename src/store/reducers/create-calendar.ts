@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { cloneDeep } from 'lodash';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { CalendarSlice } from '../../types/store/store';
 
@@ -12,7 +11,6 @@ export const createCalendarFullFilled = (state: CalendarSlice, { payload, meta }
 	const [calendars] = payload;
 	delete state.calendars[meta.arg.tmpId];
 	Object.assign(state.calendars, calendars);
-	const newItem = cloneDeep(state);
 	state.status = 'succeeded';
 };
 

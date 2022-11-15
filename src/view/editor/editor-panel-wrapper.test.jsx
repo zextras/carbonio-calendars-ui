@@ -5,49 +5,34 @@
  */
 import React from 'react';
 import { screen } from '@testing-library/react';
-import moment from 'moment-timezone';
-import { setupTest } from '../../test/utils/test-utils';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import EditorPanelWrapper from './editor-panel-wrapper';
 import {
 	generateCalendarSliceItem,
 	generateEditorSliceItem,
 	getRandomEditorId,
 	mockEmptyStore
-} from '../../test/utils/generators';
+} from '../../test/generators/generators';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
+import { CALENDAR_APP_ID } from '../../constants';
+import { reducers } from '../../store/redux';
+import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 
-moment.tz.setDefault('America/New_York');
-
-/* describe('Editor panel', async () => {
-	const isNew = false;
-	const editorId = getRandomEditorId(isNew);
-	const calendars = {
-		calendars: generateCalendarSliceItem()
-	};
-	const editor = {
-		activeId: editorId,
-		editors: generateEditorSliceItem({ editorId })
-	};
-
-	const store = mockEmptyStore({ calendars, editor });
-	const options = {
-		preloadedState: store
-	};
-	setupTest(<EditorPanelWrapper />, options);
-	expect(
-		screen.getByRole('textbox', {
-			name: /Event title/i
-		})
-	).toHaveValue(editor.editors[editorId].title);
-}); */
+// todo: datePicker render is very slow
+jest.setTimeout(20000);
 
 describe('Editor panel wrapper', () => {
 	test('it doesnt render without editorId or callbacks', () => {
-		const store = mockEmptyStore();
-		const options = {
-			preloadedState: store
-		};
-		setupTest(<EditorPanelWrapper />, options);
+		const emptyStore = mockEmptyStore();
+
+		const store = configureStore({
+			devTools: {
+				name: CALENDAR_APP_ID
+			},
+			reducer: combineReducers(reducers),
+			preloadedState: emptyStore
+		});
+		setupTest(<EditorPanelWrapper />, { store });
 		expect(screen.queryByTestId('EditorPanel')).not.toBeInTheDocument();
 		expect(screen.queryByTestId('EditorBackgroundContainer')).not.toBeInTheDocument();
 		expect(screen.queryByTestId('AppointmentCardContainer')).not.toBeInTheDocument();
@@ -65,11 +50,7 @@ describe('Editor panel wrapper', () => {
 				editors: generateEditorSliceItem({ editorId })
 			};
 
-			const store = mockEmptyStore({ calendars, editor });
-
-			const options = {
-				preloadedState: store
-			};
+			const emptyStore = mockEmptyStore({ calendars, editor });
 
 			shell.useUserSettings.mockImplementation(() => ({
 				prefs: {
@@ -77,7 +58,15 @@ describe('Editor panel wrapper', () => {
 				}
 			}));
 
-			setupTest(<EditorPanelWrapper />, options);
+			const store = configureStore({
+				devTools: {
+					name: CALENDAR_APP_ID
+				},
+				reducer: combineReducers(reducers),
+				preloadedState: emptyStore
+			});
+
+			setupTest(<EditorPanelWrapper />, { store });
 			expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
 			expect(screen.queryByTestId('EditorBackgroundContainer')).not.toBeInTheDocument();
 			expect(screen.getByTestId('AppointmentCardContainer')).toBeInTheDocument();
@@ -94,13 +83,17 @@ describe('Editor panel wrapper', () => {
 				editors: generateEditorSliceItem({ editorId })
 			};
 
-			const store = mockEmptyStore({ calendars, editor });
+			const emptyStore = mockEmptyStore({ calendars, editor });
 
-			const options = {
-				preloadedState: store
-			};
+			const store = configureStore({
+				devTools: {
+					name: CALENDAR_APP_ID
+				},
+				reducer: combineReducers(reducers),
+				preloadedState: emptyStore
+			});
 
-			const { user } = setupTest(<EditorPanelWrapper />, options);
+			const { user } = setupTest(<EditorPanelWrapper />, { store });
 
 			await user.click(screen.getByTestId('expand'));
 

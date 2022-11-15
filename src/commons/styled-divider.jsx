@@ -6,11 +6,11 @@
 import styled from 'styled-components';
 
 const StyledDivider = styled.hr`
-	border: 0px;
-	height: 0px;
-	border-top: 1px solid ${(props) => props.theme.palette.gray2.regular};
-	width: calc(100% - 32px);
-	margin: 0px;
+	border: 0;
+	height: 0;
+	border-top: 0.0625rem solid ${(props) => props.theme.palette.gray2.regular};
+	width: calc(100% - 2rem);
+	margin: 0;
 `;
 
 export default StyledDivider;

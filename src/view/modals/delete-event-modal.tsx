@@ -3,12 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { size } from 'lodash';
+import { filter, size } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
-import { Spinner, replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { Spinner, replaceHistory, t, useFolders } from '@zextras/carbonio-shell-ui';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import ModalFooter from '../../commons/modal-footer';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 import { ModalHeader } from '../../commons/modal-header';
@@ -137,7 +139,8 @@ export const DeleteEventModal = ({
 }: DeleteEventModalProps): ReactElement => {
 	const { isOrganizer, isException, participants } = invite;
 	const participantsSize = useMemo(() => size(participants), [participants]);
-
+	const dispatch = useDispatch();
+	const calendarFolders = useCalendarFolders();
 	const isInstance = context?.isInstance;
 	const isRecurrent = !!invite.recurrenceRule;
 	const isSeries = isRecurrent && !isInstance;
@@ -155,7 +158,9 @@ export const DeleteEventModal = ({
 	const actions = useDeleteActions(event, invite, {
 		isInstance,
 		replaceHistory,
-		onClose
+		onClose,
+		dispatch,
+		folders: calendarFolders
 	});
 
 	const onConfirm = useMemo(() => {

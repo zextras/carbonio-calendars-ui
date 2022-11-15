@@ -19,7 +19,7 @@ export const reducers = {
 	invites: invitesSliceReducer
 };
 
-export const store = configureStore({
+const store = configureStore({
 	devTools: {
 		name: CALENDAR_APP_ID
 	},

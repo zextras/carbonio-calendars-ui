@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { selectEditorAttendees, selectEditorPanel } from '../../store/selectors/editor';
+import { Editor } from '../../types/editor';
 
 type ModalProps = {
 	onClose: () => void;
@@ -24,6 +25,7 @@ type ModalProps = {
 	isNew?: boolean;
 	isSending?: boolean;
 	editorId: string;
+	editor: Editor;
 };
 
 export const SeriesEditWarningModal = ({
@@ -31,7 +33,8 @@ export const SeriesEditWarningModal = ({
 	action,
 	isSending = false,
 	isNew,
-	editorId
+	editorId,
+	editor
 }: ModalProps): JSX.Element => {
 	const message = useMemo(
 		() =>
@@ -52,7 +55,7 @@ export const SeriesEditWarningModal = ({
 
 	const onConfirm = useCallback(() => {
 		isSending
-			? action(isNew).then(({ response }: any) => {
+			? action(isNew, editor).then(({ response }: any) => {
 					if (panel && response) {
 						replaceHistory('');
 					}
@@ -68,7 +71,7 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  })
-			: action({ draft: !attendeesLength, isNew }).then(({ response }: any) => {
+			: action({ draft: !attendeesLength, isNew, editor }).then(({ response }: any) => {
 					getBridgedFunctions().createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
@@ -81,7 +84,7 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  });
-	}, [action, attendeesLength, isNew, isSending, onClose, panel]);
+	}, [action, attendeesLength, editor, isNew, isSending, onClose, panel]);
 
 	const onDiscard = useCallback(() => {
 		onClose();

@@ -63,8 +63,16 @@ export type EditorCallbacks = {
 	onTimeZoneChange: (timezone: string) => void;
 	onReminderChange: (reminder: string) => void;
 	onRecurrenceChange: (recurrenceRule: any) => void;
-	onSave: ({ draft, isNew }: { draft?: boolean; isNew?: boolean }) => Promise<any>;
-	onSend: (isNew: boolean) => Promise<any>;
+	onSave: ({
+		draft,
+		isNew,
+		editor
+	}: {
+		draft?: boolean;
+		isNew?: boolean;
+		editor: Editor;
+	}) => Promise<any>;
+	onSend: (isNew: boolean, editor: Editor) => Promise<any>;
 };
 
 export type EditorProps = {
@@ -78,8 +86,8 @@ export type Editor = {
 	uid?: string | undefined;
 	ridZ?: string | undefined;
 	draft?: boolean | undefined;
-	calendar: EventResourceCalendar | undefined;
-	exceptId: { d: string; tz: string } | undefined;
+	calendar?: EventResourceCalendar;
+	exceptId?: { d: string; tz: string } | undefined;
 	isException: boolean;
 	isInstance: boolean;
 	isSeries: boolean;
@@ -105,5 +113,5 @@ export type Editor = {
 	recur?: any;
 	id: string;
 	panel: boolean;
-	attach: any;
+	attach?: any;
 };

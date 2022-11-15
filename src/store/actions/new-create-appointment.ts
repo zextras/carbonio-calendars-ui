@@ -249,8 +249,7 @@ export const generateSoapMessageFromEditor = (msg: Editor): any =>
 
 export const createAppointment = createAsyncThunk(
 	'appointment/create new appointment',
-	async ({ id, draft }: any, { getState }: any): Promise<any> => {
-		const editor = getState()?.editor?.editors?.[id];
+	async ({ draft, editor }: any): Promise<any> => {
 		if (editor) {
 			const body = generateSoapMessageFromEditor({ ...editor, draft });
 			const res: { calItemId: string; invId: string } = await soapFetch('CreateAppointment', body);

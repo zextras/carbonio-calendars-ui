@@ -17,7 +17,7 @@ import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isNil, map } from 'lodash';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { createCallbacks } from '../../commons/editor-generator';
 import { selectActiveEditorId, selectEditorTitle } from '../../store/selectors/editor';
@@ -37,10 +37,10 @@ const BackgroundContainer = styled.div`
 export const AppointmentCardContainer = styled(Container)<ContainerProps & { expanded?: boolean }>`
 	z-index: 10;
 	position: absolute;
-	top: ${({ expanded }): string => (expanded ? '16px' : '16px')};
-	right: ${({ expanded }): string => (expanded ? '16px' : '16px')};
-	bottom: ${({ expanded }): string => (expanded ? '0' : '16px')};
-	left: ${({ expanded }): string => (expanded ? '16px' : 'max(calc(100% - 680px), 12px)')};
+	top: ${({ expanded }): string => (expanded ? '1rem' : '1rem')};
+	right: ${({ expanded }): string => (expanded ? '1rem' : '1rem')};
+	bottom: ${({ expanded }): string => (expanded ? '0' : '1rem')};
+	left: ${({ expanded }): string => (expanded ? '1rem' : 'max(calc(100% - 42.5rem), 0.75rem)')};
 	transition: left 0.2s ease-in-out;
 	height: auto;
 	width: auto;
@@ -87,7 +87,7 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement 
 				orientation="horizontal"
 				background="gray5"
 				width="fill"
-				height="48px"
+				height="3rem"
 				padding={{ vertical: 'small' }}
 				data-testid="EditorHeader"
 			>
@@ -99,7 +99,7 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement 
 						{title ?? t('label.no_subject', 'No subject')}
 					</Text>
 				</Row>
-				<Row height="40px" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
+				<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 					{headerItems &&
 						map(headerItems, (action) => (
 							<IconButton
@@ -119,8 +119,12 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement 
 
 const EditorPanelWrapper = (): ReactElement | null => {
 	const editorId = useSelector(selectActiveEditorId);
+	const dispatch = useDispatch();
 	const [expanded, setExpanded] = useState(false);
-	const callbacks = useMemo(() => (editorId ? createCallbacks(editorId) : undefined), [editorId]);
+	const callbacks = useMemo(
+		() => (editorId ? createCallbacks(editorId, { dispatch }) : undefined),
+		[dispatch, editorId]
+	);
 
 	useEffect(() => {
 		if (!editorId) {

@@ -20,6 +20,24 @@ export type AlarmType = {
 };
 
 export type EventResourceCalendar = {
+	broken?: boolean;
+	checked?: boolean;
+	deletable?: boolean;
+	absFolderPath?: string;
+	n?: number;
+	parent?: string;
+	haveWriteAccess?: boolean;
+	acl?: {
+		grant: [
+			{
+				zid: string;
+				gt: string;
+				perm: string;
+			}
+		];
+	};
+	freeBusy?: boolean;
+	appointments?: [{ ids: string }];
 	id: string;
 	name: string;
 	color: ZimbraColorType;

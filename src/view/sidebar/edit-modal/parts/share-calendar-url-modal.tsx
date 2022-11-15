@@ -12,13 +12,16 @@ import { ModalHeader } from '../../../../commons/modal-header';
 import { UrlColumn } from './url-column';
 
 const getUrl = (type: string, user: string, folderName: string): string => {
+	const domain =
+		window.location.hostname === 'localhost' ? 'crb2.zimbraopen.com' : window.location.hostname;
+
 	switch (type) {
 		case 'ics':
-			return `https://mail.zextras.com/home/${user}/${folderName}.ics`;
+			return `https://${domain}/home/${user}/${folderName}.ics`;
 		case 'html':
-			return `https://mail.zextras.com/home/${user}/${folderName}.html`;
+			return `https://${domain}/home/${user}/${folderName}.html`;
 		default:
-			return `webcals://mail.zextras.com/home/${user}/${folderName}`;
+			return `webcals://${domain}/home/${user}/${folderName}`;
 	}
 };
 const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
@@ -47,7 +50,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 		});
 	};
 	return (
-		<Container padding="8px 8px 24px">
+		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader
 				title={t('label.share_calendar_url', {
 					title: folder.name,

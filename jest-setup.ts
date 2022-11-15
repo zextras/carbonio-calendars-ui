@@ -5,40 +5,42 @@
  */
 import '@testing-library/jest-dom';
 import failOnConsole from 'jest-fail-on-console';
-import server from './src/carbonio-ui-commons/test/mocks/network/msw/server';
+import moment from 'moment-timezone';
+import { rest } from 'msw';
+import {
+	defaultAfterAllTests,
+	defaultAfterEachTest,
+	defaultBeforeAllTests,
+	defaultBeforeEachTest,
+	getFailOnConsoleDefaultConfig
+} from './src/carbonio-ui-commons/test/jest-setup';
+import { registerRestHandler } from './src/carbonio-ui-commons/test/mocks/network/msw/handlers';
+import { handleCreateFolderRequest } from './src/test/mocks/network/msw/handle-create-folder';
+import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-message';
 
 failOnConsole({
-	shouldFailOnError: true,
-	shouldFailOnWarn: true
+	...getFailOnConsoleDefaultConfig()
 });
 
 beforeAll(() => {
-	server.listen();
-	// todo: check if useful or not
-	/*	Object.defineProperty(window, 'matchMedia', {
-		writable: true,
-		value: jest.fn().mockImplementation((query) => ({
-			matches: false,
-			media: query,
-			onchange: null,
-			addListener: jest.fn(), // Deprecated
-			removeListener: jest.fn(), // Deprecated
-			addEventListener: jest.fn(),
-			removeEventListener: jest.fn(),
-			dispatchEvent: jest.fn()
-		}))
-	}); */
+	const h = [
+		rest.post('/service/soap/CreateFolderRequest', handleCreateFolderRequest),
+		rest.post('/service/soap/CreateAppointmentRequest', handleCreateAppointmentRequest)
+	];
+	registerRestHandler(...h);
+	moment.tz.setDefault('America/New_York');
+
+	defaultBeforeAllTests();
 });
 
 beforeEach(() => {
-	// Do not useFakeTimers with `whatwg-fetch` if using mocked server
-	// https://github.com/mswjs/msw/issues/448
+	defaultBeforeEachTest();
 });
 
-afterAll(() => server.close());
-
 afterEach(() => {
-	server.resetHandlers();
-	// jest.runOnlyPendingTimers();
-	// jest.useRealTimers();
+	defaultAfterEachTest();
+});
+
+afterAll(() => {
+	defaultAfterAllTests();
 });

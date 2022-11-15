@@ -407,7 +407,7 @@ export default function CalendarSettingsView() {
 				background="gray5"
 				style={{ overflowY: 'auto' }}
 			>
-				<FormSection width="50%" minWidth="calc(min(100%, 512px))">
+				<FormSection width="50%" minWidth="calc(min(100%, 32rem))">
 					<FormSubSection id={sectionTitleGeneral.id} label={sectionTitleGeneral.label}>
 						<GeneralSettingView
 							settings={settings}

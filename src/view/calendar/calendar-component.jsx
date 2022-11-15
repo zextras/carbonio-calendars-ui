@@ -10,10 +10,11 @@ import {
 	getBridgedFunctions,
 	replaceHistory,
 	t,
+	useFolders,
 	useUserSettings
 } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
-import { isEqual, isNil, minBy, omit, omitBy, size } from 'lodash';
+import { filter, isEqual, isNil, minBy, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -26,7 +27,7 @@ import { CALENDAR_ROUTE } from '../../constants';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { getInvite } from '../../store/actions/get-invite';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { store, StoreProvider } from '../../store/redux';
+import { StoreProvider } from '../../store/redux';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
 	selectCalendars,
@@ -47,6 +48,7 @@ import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -109,7 +111,7 @@ export default function CalendarComponent() {
 	const calendars = useSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
-
+	const calendarFolders = useCalendarFolders();
 	if (settings.prefs.zimbraPrefLocale) {
 		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
 			week: {
@@ -159,7 +161,7 @@ export default function CalendarComponent() {
 		style: {
 			backgroundColor: slotBgColor(newDate),
 			borderColor: `${theme.palette.gray3.regular}`,
-			borderRight: `1px solid ${theme.palette.gray3.regular}`
+			borderRight: `0.0625rem solid ${theme.palette.gray3.regular}`
 		}
 	});
 	const dayPropGetter = (newDate) => ({
@@ -171,7 +173,7 @@ export default function CalendarComponent() {
 						? theme.palette.highlight.regular
 						: theme.palette.gray6.regular
 					: theme.palette.gray3.regular,
-			borderBottom: `1px solid ${slotDayBorderColor(newDate)}`
+			borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`
 		}
 	});
 
@@ -224,6 +226,8 @@ export default function CalendarComponent() {
 				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
 				const { editor, callbacks } = generateEditor({
 					context: {
+						dispatch,
+						folders: calendarFolders,
 						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
 						end: end.valueOf(),
@@ -231,16 +235,15 @@ export default function CalendarComponent() {
 						panel: false
 					}
 				});
-				const storeData = store.getState();
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
 					title: editor.title,
-					...storeData.editor.editors[editor.id],
+					...editor,
 					callbacks
 				});
 			}
 		},
-		[action, summaryViewOpen]
+		[action, calendarFolders, dispatch, summaryViewOpen]
 	);
 
 	const onDropFn = useCallback(
@@ -264,6 +267,8 @@ export default function CalendarComponent() {
 						invite,
 						context: omitBy(
 							{
+								dispatch,
+								folders: calendarFolders,
 								start: startTime,
 								end: endTime,
 								allDay: !!isAllDay,
@@ -274,13 +279,12 @@ export default function CalendarComponent() {
 							isNil
 						)
 					});
-					const storeData = store.getState();
 					callbacks
 						.onSave(
 							omitBy(
 								{
 									draft,
-									isNew: storeData.editor.editors[editor.id]?.isNew
+									isNew: editor?.isNew
 								},
 								isNil
 							)
@@ -327,7 +331,7 @@ export default function CalendarComponent() {
 				}
 			});
 		},
-		[createModal, dispatch]
+		[calendarFolders, createModal, dispatch]
 	);
 
 	const onEventDrop = useCallback(
@@ -391,14 +395,14 @@ export default function CalendarComponent() {
 				color: event.resource.calendar.color.color,
 				boxSizing: 'border-box',
 				margin: `0`,
-				padding: `4px 8px`,
-				borderRadius: `4px`,
+				padding: `0.25rem 0.5rem`,
+				borderRadius: `0.25rem`,
 				cursor: `pointer`,
 				width: `100%`,
 				textAlign: `left`,
 				transition: `border 0.15s ease-in-out, background 0.15s ease-in-out`,
-				boxShadow: `0px 0px 14px -8px rgba(0, 0, 0, 0.5)`,
-				border: `1px solid ${event.resource.calendar.color.color}`
+				boxShadow: `0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)`,
+				border: `0.0625rem solid ${event.resource.calendar.color.color}`
 			}
 		}),
 		[]
