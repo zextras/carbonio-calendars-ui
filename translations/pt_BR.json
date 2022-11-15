@@ -279,7 +279,6 @@
         "you_are_organizer": "<Row><Text><BoldText>Você </BoldText>é o organizador</Text></Row>",
         "you_sure_delete_calendar": "Tem certeza que deseja excluir permanentemente o calendário {{name}}?",
         "you_sure_move_calendar_trash": "Tem certeza que deseja excluir o calendário {{name}}?",
-        "you_will_see_the_subject_here": "Assunto",
         "delete_future_occurences_warning": "Isto também irá excluir todas as exceções (antes e depois deste evento) na série",
         "modal": {
             "delete": {
@@ -454,7 +453,6 @@
         "proposed_time_accepted": "Você aceitou a hora proposta",
         "url_copied": "{{title}} copiado",
         "share_folder_success": "Calendário compartilhado com sucesso",
-        "new_time_proposed_success": "Nova hora proposta",
         "tag_applied": "Etiqueta {{tag}} aplicada",
         "tag_removed": "Etiqueta {{tag}} removida"
     },

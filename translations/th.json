@@ -347,7 +347,6 @@
         "proposed_time_accepted": "คุณยอมรับเวลาที่เสนอ",
         "share_folder_success": "แชร์ปฏิทินเรียบร้อยแล้ว",
         "url_copied": "{{title}} คัดลอกแล้ว",
-        "new_time_proposed_success": "เสนอเวลาใหม่",
         "tag_applied": "ใช้แท็ก {{tag}} แล้ว",
         "tag_removed": "นำแท็ก {{tag}} ออกแล้ว"
     },
@@ -426,7 +425,6 @@
         "sure_to_delete_appointment_permanently": "คุณแน่ใจหรือไม่ว่าต้องการลบการนัดหมายนี้อย่างถาวร?",
         "want_to_send_cancellation_msg": "คุณต้องการส่งข้อความยกเลิกไปยังผู้เข้าร่วมหรือไม่?",
         "you_are_organizer": "<Row><Text> <BoldText> คุณ </BoldText> เป็นผู้จัด </Text></Row>",
-        "you_will_see_the_subject_here": "หัวข้อ",
         "delete_future_occurences_warning": "ซึ่งจะลบข้อยกเว้นทั้งหมด (ก่อนและหลังอินสแตนซ์นี้) ในซีรีส์ด้วย",
         "share_calendar_url_note": "ผู้ร่วมงานของคุณเท่านั้นที่จะสามารถเข้าถึงข้อมูลของคุณโดยใช้ URL เหล่านี้",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> เป็นผู้จัดงาน",
