@@ -260,7 +260,10 @@
         "public_link_description": "Généré à partir de {{titre}} le {{date}}.",
         "continue": "Continuer",
         "choose_file": "Choisir fichier",
-        "cancel": "annuler"
+        "cancel": "annuler",
+        "subject": "Objet",
+        "new_time_proposed": "Nouvel horaire proposé",
+        "appointment_is_private": "Cet évènement est privé."
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -305,7 +308,6 @@
         "you": "Vous",
         "you_are_organizer": "<Row><Text> <BoldText> Vous  </BoldText> êtes l'organisateur </Text></Row>",
         "you_sure_move_calendar_trash": "Êtes-vous sûr de vouloir supprimer le calendrier {{name}} ?",
-        "you_will_see_the_subject_here": "Sujet",
         "delete_future_occurences_warning": "Cela va également supprimer toutes les exceptions (avant et après cette instance) dans les séries",
         "modal": {
             "delete": {
@@ -331,7 +333,9 @@
         "required_participant": "{{count}} Participant",
         "required_participant_plural": "{{count}} Participants",
         "edit_series_warning": "Au fur et à mesure de la modification de la série, toutes les instances précédemment supprimées ou modifiées seront restaurées avec les nouveaux paramètres de la série.",
-        "appointment_invitation_sent": "Envoi d'une invitation à un rendez-vous"
+        "appointment_invitation_sent": "Envoi d'une invitation à un rendez-vous",
+        "want_to_edit_modified_msg": "Souhaitez-vous éditer le message personnalisé de cet évènement ?",
+        "meeting_modified": "L'évènement suivant a été modifié"
     },
     "months": {
         "april": "Avril",
@@ -457,7 +461,6 @@
         }
     },
     "snackbar": {
-        "new_time_proposed_success": "Nouvel horaire proposé",
         "invite": {
             "error": "Erreur"
         },
@@ -634,5 +637,6 @@
     },
     "preview": {
         "close": "Fermer la prévisualisation"
-    }
+    },
+    "recurrent_in_allday": "Vous ne pouvez pas déplacer un évènement récurent dans un créneau de journée complète"
 }

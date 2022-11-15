@@ -41,7 +41,6 @@
             }
         },
         "sure_to_delete_all_occurences_appointment": "确定要删除此预约的所有重复事件吗？",
-        "you_will_see_the_subject_here": "主题",
         "somebody_is_organizer": "<strong>{{somebody}}</strong>是组织者",
         "somebody_invited_you": "<strong>{{somebody}}</strong>邀请了您",
         "share_calendar_url_note": "仅协作者可使用这些URL访问您的数据。",
@@ -427,7 +426,6 @@
         "share_folder_success": "日历已共享成功",
         "url_copied": "{{title}}已复制",
         "proposed_time_accepted": "您接受了提议的时间",
-        "new_time_proposed_success": "已提议新时间",
         "tag_applied": "{{tag}} 标签已应用",
         "tag_removed": "{{tag}} 标签已移除"
     },

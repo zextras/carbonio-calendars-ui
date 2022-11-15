@@ -62,7 +62,6 @@
     },
     "message": {
         "invite_has_no_message": "Это приглашения не содержит текста",
-        "you_will_see_the_subject_here": "Тема",
         "you_are_organizer": "<Row><Text> <BoldText> Вы организатор</BoldText> </Text></Row>",
         "somebody_invited_you": "<strong> {{кто-то}} </strong> пригласил вас",
         "meeting_canceled": "Следующая встреча отменена",
@@ -129,7 +128,9 @@
         "required_participant_2": "{{count}} Участников",
         "send_email": "Отправить письмо",
         "edit_series_warning": "По мере редактирования серии все ранее удаленные или измененные экземпляры будут восстановлены с новыми настройками серии.",
-        "appointment_invitation_sent": "Приглашение на встречу отправлено"
+        "appointment_invitation_sent": "Приглашение на встречу отправлено",
+        "want_to_edit_modified_msg": "Вы хотите отредактировать сообщение о встрече?",
+        "meeting_modified": "Следующая встреча была изменена"
     },
     "label": {
         "optional_0": "Необязательный",
@@ -312,7 +313,10 @@
         "public_link_description": "Создано из {{title}} {{date}}",
         "continue": "Продолжить",
         "choose_file": "Выбрать файл",
-        "cancel": "отменить"
+        "cancel": "отменить",
+        "subject": "Тема",
+        "new_time_proposed": "Предложено новое время",
+        "appointment_is_private": "Личная встреча."
     },
     "tooltip": {
         "enable_disable_rich_text": "Включение/отключение редактора форматированного текста",
@@ -342,7 +346,8 @@
         "send_cancellation": "Отправить отмену",
         "share_calendar": "Поделиться Календарем",
         "edit_calendar_properties": "Изменить свойства календаря",
-        "empty_trash_confirmation": "Это действие удалит все элементы из папок электронной почты, контактов, календаря, задач и портфеля. Вы уверены, что хотите навсегда удалить все папки находящиеся в этой корзине?"
+        "empty_trash_confirmation": "Это действие удалит все элементы из папок электронной почты, контактов, календаря, задач и портфеля. Вы уверены, что хотите навсегда удалить все папки находящиеся в этой корзине?",
+        "send_edit": "Отправить изменения"
     },
     "folder": {
         "modal": {
@@ -524,7 +529,6 @@
         "proposed_time_accepted": "Вы приняли предлагаемое время",
         "url_copied": "{{title}} скопировано",
         "share_folder_success": "Доступ к календарю предоставлен",
-        "new_time_proposed_success": "Предложено новое время",
         "tag_applied": "Тег {{tag}} применен",
         "tag_removed": "Тег {{tag}} удален"
     },
@@ -658,5 +662,6 @@
     },
     "preview": {
         "close": "Закрыть предварительный просмотр"
-    }
+    },
+    "recurrent_in_allday": "Вы не можете перетащить повторяющуюся встречу в слот на весь день"
 }
