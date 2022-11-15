@@ -33,7 +33,7 @@ export type ExceptionReference = SingleReference & {
 	hasEx?: boolean;
 	status?: string;
 	fb?: string;
-	ptst?: string;
+	ptst?: ParticipationStatus;
 	tzo?: number;
 };
 

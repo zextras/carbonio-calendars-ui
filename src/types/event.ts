@@ -51,7 +51,7 @@ export type EventResource = {
 	attachmentFiles?: [];
 	id: string;
 	inviteId: string;
-	ridZ: string;
+	ridZ?: string;
 	calendar: EventResourceCalendar;
 	flags: string;
 	iAmOrganizer: boolean;
@@ -84,7 +84,7 @@ export type EventResource = {
 	alarm?: AlarmType;
 	tags: string[];
 	compNum: number;
-	apptStart: number;
+	apptStart?: number;
 	alarmData: AlarmData;
 };
 

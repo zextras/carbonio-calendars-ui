@@ -4,6 +4,7 @@ import moment from 'moment';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
+import { EventType } from '../types/event';
 import { disabledFields, generateEditor } from './editor-generator';
 
 // todo: datePicker render is very slow
@@ -47,25 +48,71 @@ const folders: Array<Folder> = [
 	}
 ];
 
-/* const getRandomDate = () => {
-	const maxDate = Date.now();
-	const timestamp = Math.floor(Math.random() * maxDate);
-	return new Date(timestamp);
-};
-
-const generateCalendarEvent = () => {
-	const start = getRandomDate();
-	const end = start.valueOf() + 3600 * 1000;
+const getEvent = (context: Partial<EventType>): EventType => {
 	return {
-		start,
-		end,
-		// resource:,
-		title: faker.name
-		// id: faker.,
-		// permission:,
-		// haveWriteAccess:,
-	};
-}; */
+		start: new Date(),
+		end: new Date(),
+		resource: {
+			id: '1',
+			inviteId: '1-2',
+			ridZ: '1234',
+			flags: '',
+			dur: 123456789,
+			iAmOrganizer: true,
+			iAmVisitor: false,
+			iAmAttendee: false,
+			status: '',
+			location: '',
+			locationUrl: '',
+			fragment: '',
+			class: '',
+			freeBusy: '',
+			hasChangesNotNotified: false,
+			inviteNeverSent: false,
+			hasOtherAttendees: false,
+			isRecurrent: false,
+			isException: false,
+			participationStatus: 'AC',
+			compNum: 0,
+			apptStart: 123456789,
+			alarm: {
+				alarm:,
+				alarmInstStart:,
+				before:,
+				compNum:,
+				inviteId:,
+				loc:,
+				name:,
+				nextAlarm:,
+				nextCalAlarm:
+			},
+			alarmData: [{
+				nextAlarm: 123456789,
+				alarmInstStart: 123456789,
+				action: 'DISPLAY',
+				desc: {description: ''},
+				trigger: [
+					{
+						rel: [
+							{
+								m: 0,
+								neg: 'TRUE',
+								related: 'START'
+							}
+						]
+					}
+				]
+			}],
+			uid: '',
+			tags: [''],
+			neverSent: true
+		},
+		title: 'new-event-1',
+		id: '1',
+		permission: true,
+		haveWriteAccess: true
+	}
+};
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
@@ -147,7 +194,7 @@ describe('Editor generator', () => {
 			expect(editor.timezone).toBe('Europe/Berlin');
 			expect(editor.title).toBe('');
 		});
-		test.todo('series appointment');
+		test('series appointment');
 		test.todo('single instance of a series');
 		test.todo('exception of a series');
 		test.todo('context in a single instance');
