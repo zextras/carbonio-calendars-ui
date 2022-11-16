@@ -4,14 +4,15 @@
         "calendar_access_share": "Udostępnij dostęp do kalendarza",
         "delete_calendar": "Usuń kalendarz",
         "edit_calendar_properties": "Edytuj właściwości kalendarza",
-        "edit_message": "Edytuj Wiadomość",
+        "edit_message": "Edytuj wiadomość",
         "empty_trash": "Opróżnij Kosz",
         "move_to_root": "Przenieś do źródła",
         "preview": "Kliknij aby zobaczyć podgląd",
         "save_to_preview": "Zapisz do podglądu",
         "send": "Wyślij",
-        "send_cancellation": "Wyślij Anulację",
-        "share_calendar": "Udostępnij Kalendarz"
+        "send_cancellation": "Wyślij anulację",
+        "share_calendar": "Udostępnij kalendarz",
+        "send_edit": "Wyślij edycję"
     },
     "event": {
         "action": {
@@ -232,7 +233,10 @@
         "public_link_description": "Wygenerowano z {{title}} dnia {{date}}",
         "continue": "Kontynuuj",
         "choose_file": "Wybierz plik",
-        "cancel": "anuluj"
+        "cancel": "anuluj",
+        "subject": "Temat",
+        "new_time_proposed": "Nowy zaproponowany czas",
+        "appointment_is_private": "To spotkanie jest prywatne."
     },
     "message": {
         "modal": {
@@ -289,7 +293,6 @@
         "you_sure_delete_calendar": "Czy na pewno chcesz trwale usunąć kalendarz {{name}}?",
         "you_sure_delete_instance": "Czy na pewno chcesz usunąć ten przypadek spotkania {{title}} ?",
         "you_sure_move_calendar_trash": "Czy na pewno chcesz usunąć kalendarz {{name}}?",
-        "you_will_see_the_subject_here": "Temat",
         "delete_tag_message1": "Czy na pewno chcesz usunąć Tag {{name}}?",
         "delete_tag_message2": "Po usunięciu Tag zostanie zdjęty z każdego elementu oznaczonego nim.",
         "appointment_type_handle": "{{name}} to powtarzające się spotkanie. Chcesz otworzyć tylko ten przypadek czy serię?",
@@ -303,7 +306,9 @@
         "optional_participant_1": "{{count}} Opcjonalnych",
         "optional_participant_2": "{{count}} Opcjonalnych",
         "edit_series_warning": "Jeśli zmodyfikujesz serię, wszystkie poprzednio usunięte lub zmodyfikowane przypadki zostaną przywrócone z nowymi ustawieniami serii.",
-        "appointment_invitation_sent": "Zaproszenie na spotkanie zostało wysłane"
+        "appointment_invitation_sent": "Zaproszenie na spotkanie zostało wysłane",
+        "want_to_edit_modified_msg": "Czy chcesz edytować wiadomość dot. modyfikacji spotkania?",
+        "meeting_modified": "Następujące spotkanie zostało zmodyfikowane"
     },
     "participants": {
         "Attendees_tentative_count_0": "<strong>{{count}} uczestnik </strong> odpowiedział: Niepewne",
@@ -424,7 +429,6 @@
         "invite": {
             "error": "Błąd"
         },
-        "new_time_proposed_success": "Zaproponowano nowy czas",
         "proposed_time_accepted": "Zaakceptowano zaproponowany czas",
         "url_copied": "skopiowano {{title}}",
         "tag_applied": "Tag {{tag}} został zastosowany",
@@ -659,5 +663,6 @@
     "write": "Pisanie",
     "preview": {
         "close": "Zamknij Podgląd"
-    }
+    },
+    "recurrent_in_allday": "Nie można umieścić powtarzającego się spotkania w oknie cały dzień"
 }

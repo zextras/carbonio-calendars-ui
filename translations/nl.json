@@ -285,7 +285,6 @@
         "you": "U",
         "are_organizer": "zijn de organisator",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> is de organisator",
-        "you_will_see_the_subject_here": "Onderwerp",
         "share_calendar_url_note2": "Alleen uw medewerkers hebben toegang tot uw gegevens via deze URL's. <br/> U kunt deze links ook vinden door rechts te klikken op uw kalenderlijst.",
         "delete_all_occurences": "Alle voorvallen verwijderen",
         "delete_future_occurences": "Dit voorval en alle toekomstige voorvallen verwijderen",
@@ -433,7 +432,6 @@
         "proposed_time_accepted": "U aanvaardde de voorgestelde tijd",
         "url_copied": "{{title}} gekopieerd",
         "share_folder_success": "Kalender met succes gedeeld",
-        "new_time_proposed_success": "Nieuwe tijd voorgesteld",
         "tag_removed": "{{tag}} tag verwijderd",
         "tag_applied": "{{tag}} tag toegepast"
     },
