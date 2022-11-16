@@ -67,13 +67,11 @@ const normalizeEventResource = ({
 	},
 	compNum: appt.compNum,
 	apptStart: inst?.s,
-	alarm: inst?.alarm ?? appt.alarm,
+	alarm: appt.alarm,
 	alarmData: invite?.alarmData ?? appt.alarmData,
 	uid: appt.uid,
 	tags: appt.tags ?? [],
-	neverSent: inst?.neverSent ?? appt.neverSent,
-	appointment: appt,
-	instance: inst
+	neverSent: inst?.neverSent ?? appt.neverSent
 });
 
 export const normalizeCalendarEvent = ({

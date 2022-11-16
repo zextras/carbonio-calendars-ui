@@ -86,6 +86,8 @@ export type EventResource = {
 	compNum: number;
 	apptStart?: number;
 	alarmData: AlarmData;
+	name: string;
+	hasException?: boolean;
 };
 
 export type DateType = moment.Moment | Date | number;
