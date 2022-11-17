@@ -49,17 +49,6 @@ const folders: Array<Folder> = [
 	}
 ];
 
-/* export type AlarmType = {
-	alarm: [];
-	alarmInstStart: DateType;
-	before: number;
-	compNum: number;
-	inviteId: number;
-	loc: string;
-	name: string;
-	nextAlarm: DateType;
-	nextCalAlarm: DateType;
-}; */
 const getDefaultEvent = (): EventType => ({
 	start: new Date(),
 	end: new Date(),
@@ -143,7 +132,7 @@ type ResourceProp = { resource: Omit<Partial<EventResource>, 'calendar'> & Calen
 type GetEventProp = Omit<Partial<EventType>, 'resource'> & ResourceProp;
 
 const getEvent = (context = {} as GetEventProp): EventType => {
-	const { calendar, organizer, alarm = {}, alarmData = {} } = context?.resource ?? {};
+	const { calendar, organizer, alarm, alarmData } = context?.resource ?? {};
 	const baseEvent = getDefaultEvent();
 	return {
 		...baseEvent,

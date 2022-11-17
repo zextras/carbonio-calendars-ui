@@ -10,7 +10,7 @@ import { Dispatch } from 'redux';
 import { setCalendarColor } from '../normalizations/normalizations-utils';
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { PREFS_DEFAULTS } from '../constants';
-import { EventPropType, normalizeEditorWithoutOrganizer } from '../normalizations/normalize-editor';
+import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import {
@@ -143,22 +143,21 @@ export const applyContextToEditor = ({
 	editor: Editor;
 	context: any;
 }): Editor => {
-	const emptyEditor = createEmptyEditor(editor.id, context.folders);
-	let newEditor = { ...emptyEditor, ...editor };
 	const contextObj = omit(context, ['disabled', 'folders', 'dispatch']);
+	let editorWithContext = { ...editor };
 	if (!isEmpty(context)) {
-		newEditor = { ...newEditor, ...contextObj };
+		editorWithContext = { ...editorWithContext, ...contextObj };
 	}
 	if (!isEmpty(context?.disabled)) {
-		newEditor = {
-			...newEditor,
+		editorWithContext = {
+			...editorWithContext,
 			disabled: {
-				...newEditor.disabled,
+				...editorWithContext.disabled,
 				...context.disabled
 			}
 		};
 	}
-	return newEditor;
+	return editorWithContext;
 };
 
 export const createCallbacks = (
@@ -358,48 +357,6 @@ export const createCallbacks = (
 	};
 };
 
-const setEditorDate = ({
-	editor,
-	invite,
-	event
-}: {
-	editor: Editor;
-	invite: Invite | undefined;
-	event: EventPropType | undefined;
-}): Editor => {
-	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getUserSettings().prefs;
-	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
-		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
-		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
-	if (event) {
-		if (editor.isSeries && !editor.isInstance && !editor.isException && invite) {
-			return {
-				...editor,
-				start: event?.allDay
-					? moment(invite?.start?.u)?.startOf('date').valueOf()
-					: moment(invite?.start?.u).valueOf(),
-				end: event?.allDay
-					? moment(invite?.end?.u)?.endOf('date').valueOf()
-					: moment(invite?.end?.u).valueOf()
-			};
-		}
-		return {
-			...editor,
-			start: event?.allDay
-				? moment(event?.start)?.startOf('date').valueOf()
-				: moment(event?.start).valueOf(),
-			end: event?.allDay
-				? moment(event?.end)?.endOf('date').valueOf()
-				: moment(event?.end).valueOf()
-		};
-	}
-	return {
-		...editor,
-		start: moment().valueOf(),
-		end: moment().valueOf() + endDur
-	};
-};
-
 export const generateEditor = ({
 	event,
 	invite,
@@ -417,26 +374,26 @@ export const generateEditor = ({
 	} & Partial<Editor>;
 }): { editor: Editor; callbacks: EditorCallbacks } => {
 	const id = getNewEditId(event?.resource?.id);
-	const { isInstance, folders, dispatch } = context;
-	const compiledEditor = normalizeEditorWithoutOrganizer({
+	const emptyEditor = createEmptyEditor(id, context.folders);
+
+	const compiledEditor = normalizeEditor({
 		invite,
 		event,
-		id,
-		isInstance,
-		folders
+		emptyEditor,
+		context
 	});
-	const editorWithDates = setEditorDate({ editor: compiledEditor, event, invite });
-	const editorWithContext = applyContextToEditor({
-		editor: editorWithDates,
+
+	const editor = applyContextToEditor({
+		editor: compiledEditor,
 		context
 	});
 
 	const callbacks = createCallbacks(id, context);
 
-	dispatch(createNewEditor(editorWithContext));
+	context.dispatch(createNewEditor(editor));
 
 	return {
-		editor: editorWithContext,
+		editor,
 		callbacks
 	};
 };

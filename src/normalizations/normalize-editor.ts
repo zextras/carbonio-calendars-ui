@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder } from '@zextras/carbonio-shell-ui';
+import { Folder, getUserSettings } from '@zextras/carbonio-shell-ui';
 import { filter, find, isNil, map, omit, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
@@ -57,59 +57,107 @@ export type EventPropType = {
 	end: Date | Moment;
 };
 
-export const normalizeEditorWithoutOrganizer = ({
+const setEditorDate = ({
+	editorType,
+	invite,
+	event
+}: {
+	editorType: { isSeries: boolean; isInstance: boolean; isException: boolean };
+	invite: Invite | undefined;
+	event: EventPropType | undefined;
+}): { start: number; end: number } => {
+	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getUserSettings().prefs;
+	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
+		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
+		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
+	if (event) {
+		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
+			return {
+				start: event?.allDay
+					? moment(invite?.start?.u)?.startOf('date').valueOf()
+					: moment(invite?.start?.u).valueOf(),
+				end: event?.allDay
+					? moment(invite?.end?.u)?.endOf('date').valueOf()
+					: moment(invite?.end?.u).valueOf()
+			};
+		}
+		return {
+			start: event?.allDay
+				? moment(event?.start)?.startOf('date').valueOf()
+				: moment(event?.start).valueOf(),
+			end: event?.allDay
+				? moment(event?.end)?.endOf('date').valueOf()
+				: moment(event?.end).valueOf()
+		};
+	}
+	return {
+		start: moment().valueOf(),
+		end: moment().valueOf() + endDur
+	};
+};
+
+export const normalizeEditor = ({
 	invite,
 	event,
-	id,
-	isInstance,
-	folders
+	emptyEditor,
+	context
 }: {
-	id: string;
+	emptyEditor: Editor;
 	invite?: Invite;
 	event?: EventPropType;
-	isInstance?: boolean;
-	folders?: Array<Folder>;
-}): Editor =>
-	invite && event
-		? (omitBy(
-				{
-					calendar: omit(
-						find(folders, ['id', event.resource.calendar.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]),
-						'parent'
-					),
-					id,
-					ridZ: event?.resource?.ridZ,
-					attach: invite.attach,
-					parts: invite.parts,
-					attachmentFiles: invite.attachmentFiles,
-					isInstance: isInstance ?? !!event?.resource?.ridZ,
-					isSeries: event?.resource?.isRecurrent,
-					isException: event?.resource?.isException,
-					exceptId: invite?.exceptId,
-					title: event?.title,
-					location: event?.resource?.location,
-					room: getVirtualRoom(invite.xprop),
-					attendees: getAttendees(invite.attendees, 'REQ'),
-					optionalAttendees: getAttendees(invite.attendees, 'OPT'),
-					allDay: event?.allDay,
-					freeBusy: invite.freeBusy,
-					class: invite.class,
-					start: event?.allDay
-						? moment(event?.start)?.startOf('date').valueOf()
-						: moment(event?.start).valueOf(),
-					end: event?.allDay
-						? moment(event?.end)?.endOf('date').valueOf()
-						: moment(event?.end).valueOf(),
-					timezone: invite?.start?.tz,
-					inviteId: event?.resource?.inviteId,
-					reminder: invite?.alarmValue,
-					recur: invite.recurrenceRule,
-					richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
-					plainText: extractBody(invite?.textDescription?.[0]?._content) ?? '',
-					uid: invite?.uid,
-					ms: invite?.ms,
-					rev: invite?.rev
+	context: any;
+}): Editor => {
+	if (event && invite) {
+		const isSeries = event?.resource?.isRecurrent;
+		const isInstance = context?.isInstance ?? !!event?.resource?.ridZ;
+		const isException = event?.resource?.isException ?? false;
+		const calendarId = event.resource.calendar.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID;
+		const editorType = { isSeries, isInstance, isException };
+
+		const { start, end } = setEditorDate({ editorType, event, invite });
+		const compiledEditor = omitBy(
+			{
+				calendar: omit(find(context?.folders, ['id', calendarId]), 'parent'),
+				organizer: {
+					label: `${invite.organizer.d ?? invite.organizer.a}`,
+					address: invite.organizer.a,
+					fullName: invite.organizer.d
 				},
-				isNil
-		  ) as Editor)
-		: ({ id } as Editor);
+				id: emptyEditor.id,
+				ridZ: event?.resource?.ridZ,
+				attach: invite.attach,
+				parts: invite.parts,
+				attachmentFiles: invite.attachmentFiles,
+				isInstance,
+				isSeries,
+				isException,
+				exceptId: invite?.exceptId,
+				title: event?.title,
+				location: event?.resource?.location,
+				room: getVirtualRoom(invite.xprop),
+				attendees: getAttendees(invite.attendees, 'REQ'),
+				optionalAttendees: getAttendees(invite.attendees, 'OPT'),
+				allDay: event?.allDay,
+				freeBusy: invite.freeBusy,
+				class: invite.class,
+				start,
+				end,
+				timezone: invite?.start?.tz,
+				inviteId: event?.resource?.inviteId,
+				reminder: invite?.alarmValue,
+				recur: invite.recurrenceRule,
+				richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
+				plainText: extractBody(invite?.textDescription?.[0]?._content) ?? '',
+				uid: invite?.uid,
+				ms: invite?.ms,
+				rev: invite?.rev
+			},
+			isNil
+		);
+		return {
+			...emptyEditor,
+			...compiledEditor
+		};
+	}
+	return emptyEditor;
+};
