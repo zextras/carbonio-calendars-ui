@@ -68,7 +68,7 @@ const normalizeEventResource = ({
 	compNum: appt.compNum,
 	apptStart: inst?.s,
 	alarm: appt.alarm,
-	alarmData: invite?.alarmData ?? appt.alarmData,
+	alarmData: invite?.alarmData ?? appt?.alarmData?.[0]?.alarm,
 	uid: appt.uid,
 	tags: appt.tags ?? [],
 	neverSent: inst?.neverSent ?? appt.neverSent

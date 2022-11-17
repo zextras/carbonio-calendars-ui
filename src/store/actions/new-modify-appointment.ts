@@ -58,7 +58,7 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 						s: invite?.start,
 						e: invite?.end,
 						class: invite.class,
-						draft: invite.draft ?? 0
+						draft: 0
 					}
 				],
 				uid: invite.uid

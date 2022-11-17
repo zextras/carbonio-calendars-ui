@@ -26,7 +26,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const editor = useSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
 	const disabled = useSelector(selectEditorDisabled(editorId));
-	const attendeesLength = useSelector(selectEditorAttendees)?.length;
+	const attendeesLength = useSelector(selectEditorAttendees(editorId))?.length;
 
 	const { onSave } = callbacks;
 	const { action } = useParams<{ action: string }>();

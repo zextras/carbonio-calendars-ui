@@ -3,9 +3,10 @@ import { Folder } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
 import { PREFS_DEFAULTS } from '../constants';
+import { getAlarmToString } from '../normalizations/normalizations-utils';
 import { reducers } from '../store/redux';
-import { AlarmType, EventResource, EventResourceCalendar, EventType } from '../types/event';
-import { AlarmData } from '../types/store/invite';
+import { EventResource, EventResourceCalendar, EventType } from '../types/event';
+import { Invite } from '../types/store/invite';
 import { disabledFields, generateEditor } from './editor-generator';
 
 // todo: datePicker render is very slow
@@ -62,34 +63,22 @@ const getDefaultEvent = (): EventType => ({
 			name: 'io',
 			email: 'io@gmail.com'
 		},
-		alarm: {
-			alarm: [],
-			alarmInstStart: new Date(),
-			before: 123456789,
-			compNum: 0,
-			inviteId: 1,
-			loc: 'loc',
-			name: 'name',
-			nextAlarm: new Date(),
-			nextCalAlarm: new Date()
-		},
+		alarm: true,
 		alarmData: [
 			{
-				nextAlarm: 123456789,
-				alarmInstStart: 123456789,
 				action: 'DISPLAY',
-				desc: { description: '' },
 				trigger: [
 					{
 						rel: [
 							{
-								m: 0,
+								m: 5,
 								neg: 'TRUE',
 								related: 'START'
 							}
 						]
 					}
-				]
+				],
+				desc: { description: '' }
 			}
 		],
 		id: '1',
@@ -102,12 +91,12 @@ const getDefaultEvent = (): EventType => ({
 		iAmOrganizer: true,
 		iAmVisitor: false,
 		iAmAttendee: false,
-		status: '',
+		status: 'COMP',
 		location: '',
 		locationUrl: '',
 		fragment: '',
-		class: '',
-		freeBusy: '',
+		class: 'PUB',
+		freeBusy: 'F',
 		hasChangesNotNotified: false,
 		inviteNeverSent: false,
 		hasOtherAttendees: false,
@@ -127,12 +116,117 @@ const getDefaultEvent = (): EventType => ({
 	haveWriteAccess: true
 });
 
-type CalendarProp = { calendar: Partial<EventResourceCalendar> };
-type ResourceProp = { resource: Omit<Partial<EventResource>, 'calendar'> & CalendarProp };
-type GetEventProp = Omit<Partial<EventType>, 'resource'> & ResourceProp;
+const getDefaultInvite = (event?: GetEventProps): Invite => {
+	const folderId = event?.resource?.calendar?.id ?? 'folderId';
+	const alarmStringValue = event?.resource?.alarm || null;
+	return {
+		apptId: event?.resource?.id ?? 'apptId',
+		id: event?.resource?.inviteId ?? 'id',
+		ciFolder: folderId,
+		attendees: [], // event doesn't have this
+		parent: folderId,
+		flags: event?.resource?.flags ?? '',
+		parts: [], // event doesn't have this
+		alarmValue: event?.resource?.alarmData?.[0]?.trigger?.[0]?.rel?.[0]?.m.toString(),
+		alarmString: getAlarmToString(alarmStringValue) ?? 'never',
+		class: event?.resource?.class ?? 'PUB',
+		compNum: event?.resource?.compNum ?? 0,
+		date: 1667382630000,
+		textDescription: [], // event doesn't have this
+		htmlDescription: [], // event doesn't have this
+		end: {
+			d: moment(event?.end).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+			u: event?.end?.valueOf() ?? 1667382630000
+		},
+		freeBusy: event?.resource?.freeBusy ?? 'F',
+		freeBusyActualStatus: event?.resource?.freeBusy ?? 'F',
+		fragment: event?.resource?.fragment ?? '',
+		isOrganizer: event?.resource?.iAmOrganizer ?? true,
+		location: event?.resource?.location ?? '',
+		name: event?.resource?.name ?? '',
+		noBlob: true,
+		organizer: {
+			a: event?.resource?.organizer?.email ?? 'asd',
+			d: event?.resource?.organizer?.name ?? 'lol',
+			url: event?.resource?.organizer?.email ?? 'url'
+		},
+		recurrenceRule: undefined,
+		isRespRequested: false,
+		start: {
+			d: moment(event?.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+			u: event?.start?.valueOf() ?? 1667382630000
+		},
+		sequenceNumber: 123456789,
+		status: event?.resource?.status ?? 'COMP',
+		transparency: 'O',
+		uid: event?.resource?.uid ?? '',
+		url: '',
+		isException: event?.resource?.isException ?? false,
+		exceptId: event?.resource?.isException
+			? [
+					{
+						d: 'string',
+						tz: 'string',
+						rangeType: 1
+					}
+			  ]
+			: undefined,
+		tagNamesList: '',
+		tags: event?.resource?.tags ?? [],
+		attach: {
+			mp: []
+		},
+		attachmentFiles: [],
+		participants: {
+			AC: [
+				{
+					name: 'name',
+					email: 'email',
+					isOptional: false,
+					response: 'AC'
+				}
+			]
+		},
+		alarm: event?.resource?.alarm ?? true,
+		alarmData: event?.resource?.alarmData ?? [
+			{
+				nextAlarm: 123456789,
+				alarmInstStart: 123456789,
+				action: 'DISPLAY',
+				desc: { description: '' },
+				trigger: [
+					{
+						rel: [
+							{
+								m: 0,
+								neg: 'TRUE',
+								related: 'START'
+							}
+						]
+					}
+				]
+			}
+		],
+		ms: 1,
+		rev: 1,
+		meta: [{}],
+		allDay: event?.allDay ?? false,
+		xprop: undefined,
+		neverSent: event?.resource?.inviteNeverSent ?? true,
+		locationUrl: event?.resource?.locationUrl ?? ''
+	};
+};
 
-const getEvent = (context = {} as GetEventProp): EventType => {
-	const { calendar, organizer, alarm, alarmData } = context?.resource ?? {};
+type CalendarProps = { calendar: Partial<EventResourceCalendar> };
+type ResourceProps = {
+	resource: Partial<Omit<Partial<EventResource>, 'calendar'> & CalendarProps>;
+};
+type GetEventProps = Omit<Partial<EventType>, 'resource'> & ResourceProps;
+
+type GetInviteProps = { context?: Partial<Invite>; event?: GetEventProps };
+
+const getEvent = (context = {} as GetEventProps): EventType => {
+	const { calendar, organizer } = context?.resource ?? {};
 	const baseEvent = getDefaultEvent();
 	return {
 		...baseEvent,
@@ -151,16 +245,16 @@ const getEvent = (context = {} as GetEventProp): EventType => {
 			organizer: {
 				...baseEvent.resource.organizer,
 				...(organizer ?? {})
-			},
-			alarm: {
-				...baseEvent.resource.alarm,
-				...(alarm ?? {})
-			} as AlarmType,
-			alarmData: {
-				...baseEvent.resource.alarmData,
-				...(alarmData ?? {})
-			} as AlarmData
+			}
 		}
+	};
+};
+
+const getInvite = (props?: GetInviteProps): Invite => {
+	const baseInvite = getDefaultInvite(props?.event);
+	return {
+		...baseInvite,
+		...(props?.context ?? {})
 	};
 };
 
@@ -244,20 +338,39 @@ describe('Editor generator', () => {
 			expect(editor.timezone).toBe('Europe/Berlin');
 			expect(editor.title).toBe('');
 		});
-		test.skip('series appointment', () => {
-			// this fails at the moment todo: fix before merge
+		test('series appointment', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
 			const event = getEvent({
-				title: 'ciccio',
 				resource: {
-					tags: ['1,2,3'],
-					calendar: {
-						id: '5'
-					}
+					isRecurrent: true,
+					ridZ: undefined
 				}
 			});
-			expect(event).toBe(0);
+			const invite = getInvite({ event });
+			const context = { folders, dispatch: store.dispatch };
+			const { editor } = generateEditor({ event, invite, context });
+
+			expect(editor.isSeries).toBe(true);
+			expect(editor.isException).toBe(false);
+			expect(editor.isInstance).toBe(false);
+			expect(editor.isNew).toBe(false);
 		});
-		test.todo('single instance of a series');
+		test('single instance of a series', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const event = getEvent({
+				resource: {
+					isRecurrent: true
+				}
+			});
+			const invite = getInvite({ event });
+			const context = { folders, dispatch: store.dispatch };
+			const { editor } = generateEditor({ event, invite, context });
+
+			expect(editor.isSeries).toBe(true);
+			expect(editor.isException).toBe(false);
+			expect(editor.isInstance).toBe(true);
+			expect(editor.isNew).toBe(false);
+		});
 		test.todo('exception of a series');
 		test.todo('context in a single instance');
 		test.todo('onProposeNewTime instead of onSave property of callbacks object');

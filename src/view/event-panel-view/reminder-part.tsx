@@ -40,7 +40,7 @@ export const ReminderPart = ({
 					panel: true
 				}
 			});
-			dispatch(modifyAppointment({ id: editor.id, draft: invite.draft }));
+			dispatch(modifyAppointment({ id: editor.id, draft: !(invite?.attendees?.length > 0) }));
 		},
 		[calendarFolders, dispatch, event, invite]
 	);
