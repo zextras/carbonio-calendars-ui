@@ -7,7 +7,7 @@ import { getAlarmToString } from '../normalizations/normalizations-utils';
 import { reducers } from '../store/redux';
 import { EventResource, EventResourceCalendar, EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
-import { disabledFields, generateEditor } from './editor-generator';
+import { disabledFields, EditorContext, generateEditor } from './editor-generator';
 
 // todo: datePicker render is very slow
 jest.setTimeout(20000);
@@ -371,8 +371,141 @@ describe('Editor generator', () => {
 			expect(editor.isInstance).toBe(true);
 			expect(editor.isNew).toBe(false);
 		});
-		test.todo('exception of a series');
-		test.todo('context in a single instance');
-		test.todo('onProposeNewTime instead of onSave property of callbacks object');
+		test('exception of a series', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const event = getEvent({
+				resource: {
+					isException: true
+				}
+			});
+			const invite = getInvite({ event });
+			const context = { folders, dispatch: store.dispatch };
+			const { editor } = generateEditor({ event, invite, context });
+
+			expect(editor.isSeries).toBe(false);
+			expect(editor.isException).toBe(true);
+			expect(editor.isInstance).toBe(true);
+			expect(editor.isNew).toBe(false);
+		});
+		test('context in a single instance', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const context: EditorContext = {
+				folders,
+				dispatch: store.dispatch,
+				disabled: disabledFields,
+				isException: false,
+				isInstance: true,
+				isSeries: false,
+				isNew: true,
+				isRichText: false,
+				plainText: 'test content',
+				richText: '<p>test content</p>',
+				attachmentFiles: [
+					{
+						contentType: 'image/gif',
+						size: 9632179,
+						name: '2',
+						filename: 'filename_1.gif',
+						disposition: 'attachment'
+					}
+				],
+				organizer: {
+					address: 'francesco.gottardi@zextras.com',
+					fullName: 'Francesco Gottardi',
+					identityName: 'DEFAULT',
+					label: 'DEFAULT Francesco Gottardi (<francesco.gottardi@zextras.com>) ',
+					type: undefined,
+					value: '0'
+				},
+				title: 'Single istance',
+				location: 'Location',
+				room: {
+					name: 'Room name',
+					link: 'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'
+				},
+				attendees: [],
+				optionalAttendees: [],
+				allDay: true,
+				freeBusy: 'F',
+				class: 'PRI',
+				start: new Date().valueOf(),
+				end: new Date().valueOf(),
+				reminder: '10',
+				recur: [
+					{
+						add: [
+							{
+								rule: [
+									{
+										freq: 'DAI',
+										until: [
+											{
+												d: '20241119T110000Z'
+											}
+										],
+										interval: [
+											{
+												ival: 1
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				],
+				attach: {
+					mp: [{ part: '2', mid: '3375-3374' }]
+				}
+			};
+
+			const { editor, callbacks } = generateEditor({ context });
+
+			// expect editor and callbacks returned from function
+			expect(editor).toBeDefined();
+			expect(callbacks).toBeDefined();
+
+			// expect default disabled fields to false
+			expect(editor.disabled).toEqual(disabledFields);
+
+			// editor props check
+			expect(editor.isException).toBe(false);
+			expect(editor.isInstance).toBe(true);
+			expect(editor.isNew).toBe(true);
+			expect(editor.isSeries).toBe(false);
+			expect(editor.isRichText).toBe(false);
+			expect(editor.plainText).toBe('test content');
+			expect(editor.richText).toBe('<p>test content</p>');
+			expect(editor.organizer).toBeDefined();
+			expect(editor.organizer).toHaveProperty(
+				'label',
+				'DEFAULT Francesco Gottardi (<francesco.gottardi@zextras.com>) '
+			);
+			expect(editor.title).toBe('Single istance');
+			expect(editor.location).toBe('Location');
+			expect(editor.room).toBeDefined();
+			expect(editor.room).toHaveProperty('name', 'Room name');
+			expect(editor.room).toHaveProperty(
+				'link',
+				'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'
+			);
+			expect(editor.attendees).toStrictEqual([]);
+			expect(editor.optionalAttendees).toStrictEqual([]);
+			expect(editor.freeBusy).toBe('F');
+			expect(editor.start).toBeLessThanOrEqual(new Date().valueOf());
+			expect(editor.end).toBe(moment(editor.start).valueOf());
+			expect(editor.allDay).toBe(true);
+			expect(editor.reminder).toBe('10');
+			expect(editor.recur[0].add[0].rule[0].freq).toBe('DAI');
+			expect(editor.recur[0].add[0].rule[0].interval[0].ival).toBe(1);
+			expect(editor.class).toBe('PRI');
+			expect(editor.attach.mp[0].part).toBe('2');
+			expect(editor.attach.mp[0].mid).toBe('3375-3374');
+			expect(editor.attachmentFiles[0].contentType).toBe('image/gif');
+			expect(editor.attachmentFiles[0].size).toBe(9632179);
+			expect(editor.attachmentFiles[0].name).toBe('2');
+			expect(editor.attachmentFiles[0].filename).toBe('filename_1.gif');
+			expect(editor.attachmentFiles[0].disposition).toBe('attachment');
+		});
 	});
 });

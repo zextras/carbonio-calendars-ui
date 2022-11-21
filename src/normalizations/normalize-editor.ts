@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder, getUserSettings } from '@zextras/carbonio-shell-ui';
+import { getUserSettings } from '@zextras/carbonio-shell-ui';
 import { filter, find, isNil, map, omit, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';

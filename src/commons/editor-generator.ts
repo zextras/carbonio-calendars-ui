@@ -82,7 +82,7 @@ export const disabledFields = {
 	composer: false
 };
 
-const createEmptyEditor = (id: string, folders: Array<Folder>): Editor => {
+export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor => {
 	const identities = getIdentityItems();
 	const {
 		zimbraPrefTimeZoneId,
@@ -219,22 +219,24 @@ export const createCallbacks = (
 		dispatch(editEditorDisplayStatus({ id, freeBusy }));
 
 	const onCalendarChange = (calendar: EventResourceCalendar): void => {
-		const calResource = {
-			id: calendar.id,
-			name: calendar.name,
-			color: calendar.color
-		};
-		const organizer = {
-			email: calendar.owner ?? '',
-			name: '',
-			sentBy: account.name
-		};
-		const data = {
-			id,
-			calendar: calResource,
-			organizer: calendar.isShared ? organizer : undefined
-		};
-		dispatch(editEditorCalendar(data));
+		if (calendar) {
+			const calResource = {
+				id: calendar.id,
+				name: calendar.name,
+				color: calendar.color
+			};
+			const organizer = {
+				email: calendar.owner ?? '',
+				name: '',
+				sentBy: account.name
+			};
+			const data = {
+				id,
+				calendar: calResource,
+				organizer: calendar.isShared ? organizer : undefined
+			};
+			dispatch(editEditorCalendar(data));
+		}
 	};
 
 	const onPrivateChange = (
@@ -357,6 +359,15 @@ export const createCallbacks = (
 	};
 };
 
+export type EditorContext = {
+	isInstance?: boolean;
+	dispatch: Dispatch;
+	folders: Array<Folder>;
+	isProposeNewTime?: boolean;
+	panel?: boolean;
+	searchPanel?: boolean;
+} & Partial<Editor>;
+
 export const generateEditor = ({
 	event,
 	invite,
@@ -364,14 +375,7 @@ export const generateEditor = ({
 }: {
 	event?: EventPropType;
 	invite?: Invite;
-	context: {
-		isInstance?: boolean;
-		dispatch: Dispatch;
-		folders: Array<Folder>;
-		isProposeNewTime?: boolean;
-		panel?: boolean;
-		searchPanel?: boolean;
-	} & Partial<Editor>;
+	context: EditorContext;
 }): { editor: Editor; callbacks: EditorCallbacks } => {
 	const id = getNewEditId(event?.resource?.id);
 	const emptyEditor = createEmptyEditor(id, context.folders);

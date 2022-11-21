@@ -24,7 +24,7 @@ export const normalizeReminderItem = ({
 			key: `${appointment?.id}-${appointment?.alarmData?.[0]?.alarmInstStart}`,
 			isRecurrent: appointment.recur,
 			end: new Date(appointment.alarmData[0].alarmInstStart + appointment.dur),
-			alarmData: appointment.alarmData[0].alarm,
+			alarmData: appointment.alarmData,
 			location: appointment.loc,
 			name: appointment.name,
 			isOrg: iAmOrganizer,

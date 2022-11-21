@@ -5,7 +5,6 @@ import React from 'react';
 import { Dispatch } from 'redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { createCallbacks } from '../../commons/editor-generator';
-import { CALENDAR_APP_ID } from '../../constants';
 import { reducers } from '../../store/redux';
 import { Editor, EditorCallbacks } from '../../types/editor';
 import BoardEditPanel from './editor-board-wrapper';
@@ -16,6 +15,7 @@ import {
 	generateEditorSliceItem
 } from '../../test/generators/generators';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
+import { getEditor } from './editor-panel-wrapper.test';
 
 // todo: datePicker render is very slow
 jest.setTimeout(20000);
@@ -114,9 +114,6 @@ const initBoard = ({
 describe('Editor board wrapper', () => {
 	test('it does not render without board id', () => {
 		const store = configureStore({
-			devTools: {
-				name: CALENDAR_APP_ID
-			},
 			reducer: combineReducers(reducers)
 		});
 
@@ -126,21 +123,19 @@ describe('Editor board wrapper', () => {
 	test('it renders with board id', async () => {
 		const isNew = true;
 		const editorId = getRandomEditorId(isNew);
+		const editor = getEditor(editorId);
 
 		const calendars = {
 			calendars: generateCalendarSliceItem()
 		};
-		const editor = {
+		const editorSlice = {
 			activeId: editorId,
-			editors: generateEditorSliceItem({ editorId })
+			editors: generateEditorSliceItem({ editor })
 		};
 
-		const emptyStore = mockEmptyStore({ calendars, editor });
+		const emptyStore = mockEmptyStore({ calendars, editor: editorSlice });
 
 		const store = configureStore({
-			devTools: {
-				name: CALENDAR_APP_ID
-			},
 			reducer: combineReducers(reducers),
 			preloadedState: emptyStore
 		});
