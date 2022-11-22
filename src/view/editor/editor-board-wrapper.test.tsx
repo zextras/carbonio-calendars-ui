@@ -139,6 +139,10 @@ describe('Editor board wrapper', () => {
 			reducer: combineReducers(reducers),
 			preloadedState: emptyStore
 		});
+
+		shell.getBridgedFunctions.mockImplementation(() => ({
+			createSnackbar: jest.fn()
+		}));
 		shell.getUserSettings.mockImplementation(() => ({
 			prefs: {
 				zimbraPrefUseTimeZoneListInCalendar: 'TRUE'
@@ -150,10 +154,13 @@ describe('Editor board wrapper', () => {
 		const { user } = setupTest(<BoardEditPanel />, { store });
 
 		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
-		expect(screen.getByTestId('send')).toBeDisabled();
+		expect(screen.getByRole('button', { name: /send/i })).toBeDisabled();
+
 		expect(store.getState().editor.editors[editorId].isNew).toEqual(true);
-		await user.click(screen.getByTestId('save'));
-		expect(screen.getByTestId('save')).toBeEnabled();
+
+		await user.click(screen.getByRole('button', { name: /save/i }));
+
+		expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
 		expect(store.getState().editor.editors[editorId].isNew).toEqual(false);
 	});
 });

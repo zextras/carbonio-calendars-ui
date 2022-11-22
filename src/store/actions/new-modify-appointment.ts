@@ -81,8 +81,7 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 
 export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
-	async ({ id, draft }: any, { getState, rejectWithValue }: any): Promise<any> => {
-		const editor = getState()?.editor?.editors?.[id];
+	async ({ draft, editor }: any, { rejectWithValue }: any): Promise<any> => {
 		const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
 
 		if (editor) {
@@ -124,6 +123,12 @@ export const modifyAppointment = createAsyncThunk(
 			}
 			const body = generateSoapMessageFromEditor({ ...editor, draft });
 			const res: { calItemId: string; echo: any } = await soapFetch('ModifyAppointment', body);
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			const response = res?.Fault ? { ...res.Fault, error: true } : res;
+			if (response?.error) {
+				return rejectWithValue(response);
+			}
 			const attach = {
 				mp: retrieveAttachmentsType(
 					res?.echo?.[0]?.m?.[0]?.mp?.[0] ?? [],
