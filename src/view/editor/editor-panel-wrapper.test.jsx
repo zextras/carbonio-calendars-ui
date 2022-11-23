@@ -23,8 +23,7 @@ import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { createEmptyEditor } from '../../commons/editor-generator';
 import { PREFS_DEFAULTS } from '../../constants';
 
-// todo: datePicker render is very slow
-jest.setTimeout(200000);
+jest.setTimeout(50000);
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
@@ -53,7 +52,7 @@ const defaultIdentityRegex = new RegExp(defaultIdentityName, 'i');
 const defaultCalendar = 'Calendar';
 const defaultCalendarRegex = new RegExp(defaultCalendar, 'i');
 
-const userAccount = {
+export const userAccount = {
 	identities: {
 		identity: [
 			{
@@ -291,6 +290,7 @@ describe('Editor panel wrapper', () => {
 			};
 
 			shell.getBridgedFunctions.mockImplementation(() => module);
+			shell.t.mockImplementation(() => '');
 
 			const snackbarSpy = jest.spyOn(module, 'createSnackbar');
 

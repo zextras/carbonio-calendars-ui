@@ -8,9 +8,9 @@ import { reducers } from '../store/redux';
 import { EventResource, EventResourceCalendar, EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { disabledFields, EditorContext, generateEditor } from './editor-generator';
+import { userAccount } from '../view/editor/editor-panel-wrapper.test';
 
-// todo: datePicker render is very slow
-jest.setTimeout(20000);
+jest.setTimeout(50000);
 
 const folders: Array<Folder> = [
 	{
@@ -216,6 +216,9 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 		locationUrl: event?.resource?.locationUrl ?? ''
 	};
 };
+
+shell.useUserAccount.mockImplementation(() => userAccount);
+shell.getUserAccount.mockImplementation(() => userAccount);
 
 type CalendarProps = { calendar: Partial<EventResourceCalendar> };
 type ResourceProps = {
