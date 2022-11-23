@@ -6,7 +6,7 @@
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { find, reduce, map, isEmpty } from 'lodash';
 import moment from 'moment';
-import { EventType } from '../types/event';
+import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { Calendar } from '../types/store/calendars';
 import { Invite } from '../types/store/invite';
@@ -32,7 +32,7 @@ const normalizeEventResource = ({
 	inst?: ExceptionReference;
 	invite?: Invite;
 	iAmOrganizer: boolean;
-}): any => ({
+}): EventResource => ({
 	id: appt.id,
 	inviteId: inst?.inviteId ?? appt.inviteId,
 	ridZ: inst?.ridZ,
@@ -67,13 +67,11 @@ const normalizeEventResource = ({
 	},
 	compNum: appt.compNum,
 	apptStart: inst?.s,
-	alarm: inst?.alarm ?? appt.alarm,
-	alarmData: invite?.alarmData ?? appt.alarmData,
+	alarm: appt.alarm,
+	alarmData: invite?.alarmData ?? appt?.alarmData?.[0]?.alarm,
 	uid: appt.uid,
 	tags: appt.tags ?? [],
-	neverSent: inst?.neverSent ?? appt.neverSent,
-	appointment: appt,
-	instance: inst
+	neverSent: inst?.neverSent ?? appt.neverSent
 });
 
 export const normalizeCalendarEvent = ({

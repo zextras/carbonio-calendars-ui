@@ -53,6 +53,7 @@ export const EditorTitle = ({ editorId, callbacks }: EditorTitleProps): ReactEle
 			onChange={onChange}
 			disabled={disabled?.title}
 			backgroundColor="gray5"
+			data-testid="editor-title"
 		/>
 	) : null;
 };

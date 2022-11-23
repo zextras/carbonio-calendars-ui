@@ -10,20 +10,21 @@ import { nanoid } from '@reduxjs/toolkit';
 import { isNil, reduce, values } from 'lodash';
 import moment from 'moment';
 
-const getRandomInRange = (min = 1, max = 3) => faker.datatype.number({ max, min });
+export const getRandomInRange = (min = 1, max = 3) => faker.datatype.number({ max, min });
 
 export const getRandomEditorId = (isNew) => {
 	const randomId = getRandomInRange(1, 5);
 	return isNew ? `new-${randomId}` : `edit-${randomId}`;
 };
 
-export const generateCalendarItem = () => ({
+export const generateCalendarItem = (calendar) => ({
 	id: nanoid(),
 	name: faker.commerce.product(),
-	haveWriteAccess: faker.datatype.boolean(),
+	haveWriteAccess: true,
 	color: {
 		color: getRandomInRange(0, 8)
-	}
+	},
+	...(calendar ?? {})
 });
 
 const defaultCalendar = {
@@ -32,81 +33,84 @@ const defaultCalendar = {
 	name: 'Calendar',
 	haveWriteAccess: true
 };
-export const generateEditorSliceItem = ({
-	editorId = getRandomEditorId(),
-	calendar = defaultCalendar
-} = {}) => ({
-	[editorId]: {
-		id: editorId,
-		allDay: false,
-		attach: undefined,
-		attachmentFiles: [],
-		attendees: [],
-		calendar,
-		class: 'PUB',
-		disabled: {
+
+export const generateEditorSliceItem = ({ editor, calendar = defaultCalendar } = {}) => {
+	const id = editor?.id ?? getRandomEditorId();
+	return {
+		[id]: {
+			id,
 			allDay: false,
-			attachments: false,
-			attachmentsButton: false,
-			attendees: false,
-			calendarSelector: false,
-			composer: false,
-			datePicker: false,
-			freeBusySelector: false,
-			location: false,
-			optionalAttendees: false,
-			organizer: false,
-			private: false,
-			recurrence: false,
-			reminder: false,
-			richTextButton: false,
-			saveButton: false,
-			sendButton: false,
-			timezone: false,
-			title: false,
-			virtualRoom: false
-		},
-		end: 1663324705236,
-		exceptId: undefined,
-		freeBusy: 'B',
-		inviteId: undefined,
-		isException: false,
-		isInstance: true,
-		isNew: true,
-		isRichText: true,
-		isSeries: false,
-		location: '',
-		optionalAttendees: [],
-		organizer: {
-			address: 'gabriele.marino@zextras.com',
-			fullName: 'Gabriele Marino',
-			identityName: 'DEFAULT',
-			label: 'DEFAULT Gabriele Marino (<gabriele.marino@zextras.com>) ',
-			type: undefined,
-			value: 0
-		},
-		panel: false,
-		plainText: '',
-		recur: null,
-		reminder: '5',
-		richText: '',
-		room: undefined,
-		start: 1663321105236,
-		timezone: 'Europe/Berlin',
-		title: 'Nuovo appuntamento'
-	}
-});
+			attach: undefined,
+			attachmentFiles: [],
+			attendees: [],
+			calendar,
+			class: 'PUB',
+			disabled: {
+				allDay: false,
+				attachments: false,
+				attachmentsButton: false,
+				attendees: false,
+				calendarSelector: false,
+				composer: false,
+				datePicker: false,
+				freeBusySelector: false,
+				location: false,
+				optionalAttendees: false,
+				organizer: false,
+				private: false,
+				recurrence: false,
+				reminder: false,
+				richTextButton: false,
+				saveButton: false,
+				sendButton: false,
+				timezone: false,
+				title: false,
+				virtualRoom: false
+			},
+			end: 1663324705236,
+			exceptId: undefined,
+			freeBusy: 'B',
+			inviteId: undefined,
+			isException: false,
+			isInstance: true,
+			isNew: true,
+			isRichText: true,
+			isSeries: false,
+			location: '',
+			optionalAttendees: [],
+			organizer: {
+				address: 'gabriele.marino@zextras.com',
+				fullName: 'Gabriele Marino',
+				identityName: 'DEFAULT',
+				label: 'DEFAULT Gabriele Marino (<gabriele.marino@zextras.com>) ',
+				type: undefined,
+				value: 0
+			},
+			panel: false,
+			plainText: '',
+			recur: null,
+			reminder: '5',
+			richText: '',
+			room: undefined,
+			start: 1663321105236,
+			timezone: 'Europe/Berlin',
+			title: 'Nuovo appuntamento',
+			...(editor ?? {})
+		}
+	};
+};
 
 export const generateCalendarSliceItem = ({
 	length = getRandomInRange(),
-	supportNesting = false
+	supportNesting = false,
+	folders
 } = {}) =>
 	reduce(
-		Array.from({ length }),
-		(acc) => {
+		folders ?? Array.from({ length }),
+		(acc, v) => {
 			const hasItems = supportNesting ? faker.datatype.boolean() : undefined;
 			const itemNumbers = hasItems ? getRandomInRange() : 0;
-			const item = generateCalendarItem();
+			const item = generateCalendarItem(v);
 
 			return isNil(hasItems)
 				? {

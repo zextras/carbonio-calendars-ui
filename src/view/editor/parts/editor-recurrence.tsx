@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
 import {
 	Container,
 	Select,
@@ -16,6 +15,7 @@ import {
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import { toUpper, find } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
@@ -34,19 +34,22 @@ export const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 `;
 
-const CustomRepeat = ({ setOpen }: { setOpen: (a: boolean) => void }): ReactElement => (
-	<Container width="fill" mainAlignment="center" orientation="horizontal">
-		<Button
-			type="outlined"
-			label={t('label.custom', 'Custom')}
-			color="primary"
-			width="fill"
-			onClick={(): void => {
-				setOpen(true);
-			}}
-		/>
-	</Container>
-);
+const CustomRepeat = ({ setOpen }: { setOpen: (a: boolean) => void }): ReactElement => {
+	const [t] = useTranslation();
+	return (
+		<Container width="fill" mainAlignment="center" orientation="horizontal">
+			<Button
+				type="outlined"
+				label={t('label.custom', 'Custom')}
+				color="primary"
+				width="fill"
+				onClick={(): void => {
+					setOpen(true);
+				}}
+			/>
+		</Container>
+	);
+};
 
 const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
 	<ColorContainer
@@ -105,6 +108,7 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 	const [value, setValue] = useState<SelectProps>(undefined);
 	const disabled = useSelector(selectEditorDisabled(editorId));
 	const [open, setOpen] = useState(false);
+	const [t] = useTranslation();
 
 	const onChange = useCallback(
 		(ev) => {
@@ -116,24 +120,32 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 				case 'DAI':
 				case 'MON':
 				case 'YEA':
-					onRecurrenceChange({
-						add: { rule: defaultValue }
-					});
+					onRecurrenceChange([
+						{
+							add: [{ rule: [defaultValue] }]
+						}
+					]);
 					break;
 				case 'WEE':
-					onRecurrenceChange({
-						add: {
-							rule: {
-								...defaultValue,
-								byday: {
-									wkday: [{ day: toUpper(`${moment(start).format('dddd').slice(0, 2)}`) }]
+					onRecurrenceChange([
+						{
+							add: [
+								{
+									rule: [
+										{
+											...defaultValue,
+											byday: {
+												wkday: [{ day: toUpper(`${moment(start).format('dddd').slice(0, 2)}`) }]
+											}
+										}
+									]
 								}
-							}
+							]
 						}
-					});
+					]);
 					break;
 				default:
-					onRecurrenceChange(null);
+					onRecurrenceChange(undefined);
 			}
 		},
 		[onRecurrenceChange, start]
@@ -172,9 +184,9 @@ export const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactEle
 				customComponent: <CustomRepeat setOpen={setOpen} />
 			}
 		],
-		[]
+		[t]
 	);
-	const ruleKey = useMemo(() => recur?.add?.[0]?.rule?.[0]?.freq ?? 'NONE', [recur?.add]);
+	const ruleKey = useMemo(() => recur?.[0]?.add?.[0]?.rule?.[0]?.freq ?? 'NONE', [recur]);
 
 	useEffect(() => {
 		if (ruleKey) {

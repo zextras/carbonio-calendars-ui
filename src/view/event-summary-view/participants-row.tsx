@@ -14,7 +14,11 @@ import { Invite, InviteParticipant, InviteParticipants } from '../../types/store
 type ParticipantProps = { participant: InviteParticipants; event: EventType };
 
 const DisplayParticipantsVisitor = ({ participant }: ParticipantProps): ReactElement => {
-	const users = reduce(participant, (acc, v) => [...acc, ...v], [] as Array<InviteParticipant>);
+	const users = reduce(
+		participant,
+		(acc, v) => (v ? [...acc, ...v] : acc),
+		[] as Array<InviteParticipant>
+	);
 	return (
 		<Container
 			orientation="horizontal"
@@ -130,7 +134,7 @@ const DisplayedParticipant = ({
 );
 type ComponentProps = {
 	label: ReactElement;
-	participants: Array<InviteParticipant>;
+	participants?: Array<InviteParticipant>;
 	width?: string;
 	message: string;
 	event: EventType;

@@ -8,10 +8,10 @@ import {
 	closeBoard,
 	getBridgedFunctions,
 	replaceHistory,
-	t,
 	useBoard
 } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { StoreProvider } from '../../../store/redux';
@@ -33,7 +33,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const editor = useSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
 	const disabled = useSelector(selectEditorDisabled(editorId));
-
+	const [t] = useTranslation();
 	const board = useBoard();
 
 	const { onSend } = callbacks;
@@ -86,16 +86,14 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 					autoHideTimeout: 3000
 				});
 			});
-	}, [action, board, createModal, editor, editorId, isNew, onSend]);
+	}, [action, board, createModal, editor, editorId, isNew, onSend, t]);
 
 	return (
 		<Button
 			label={t('action.send', 'Send')}
-			name="send"
 			icon="PaperPlane"
 			disabled={isDisabled}
 			onClick={onClick}
-			data-testid="send"
 		/>
 	);
 };

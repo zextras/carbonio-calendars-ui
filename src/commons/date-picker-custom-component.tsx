@@ -16,14 +16,14 @@ type CustomComponentProps = {
 };
 
 const CustomInputWrapper = styled(Row)`
-	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray4};
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray4.regular};
 	border-radius: 0.125rem;
 	&:hover {
-		background: ${({ theme }): string => theme.palette.gray2};
+		background: ${({ theme }): string => theme.palette.gray2.regular};
 	}
 
 	&:focus-within {
-		border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.primary};
+		border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.primary.regular};
 	}
 `;
 

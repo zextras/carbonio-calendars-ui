@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { AlarmData } from './store/invite';
+import { AlarmType } from './event';
 
 export type SetActiveReminderFn = (reminderItem: ReminderItem) => void;
 export type RemoveReminderFn = (a: string) => void;
@@ -13,7 +13,7 @@ export type ReminderItem = {
 	id: string;
 	isRecurrent: boolean;
 	end: Date;
-	alarmData: AlarmData;
+	alarmData: Array<AlarmType>;
 	location: string;
 	name: string;
 	isOrg: boolean;

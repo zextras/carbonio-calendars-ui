@@ -274,22 +274,24 @@ export const getTimeToDisplayData = (
 			text: moment(start).from(moment())
 		};
 	}
-	if (
-		alarmData[0].alarmInstStart < currentTime &&
-		moment(alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() > currentTime
-	) {
-		return {
-			color: 'info',
-			size: 'large',
-			text: t('label.ongoing', 'Ongoing')
-		};
-	}
-	if (alarmData[0].alarmInstStart < currentTime) {
-		return {
-			color: 'error',
-			size: 'large',
-			text: moment(alarmData[0].alarmInstStart).fromNow()
-		};
+	if (alarmData && alarmData?.[0] && alarmData?.[0]?.alarmInstStart) {
+		if (
+			alarmData[0].alarmInstStart < currentTime &&
+			moment(alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() > currentTime
+		) {
+			return {
+				color: 'info',
+				size: 'large',
+				text: t('label.ongoing', 'Ongoing')
+			};
+		}
+		if (alarmData[0].alarmInstStart < currentTime) {
+			return {
+				color: 'error',
+				size: 'large',
+				text: moment(alarmData[0].alarmInstStart).fromNow()
+			};
+		}
 	}
 	return {
 		color: 'info',

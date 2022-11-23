@@ -30,7 +30,7 @@ export type InviteDescription = {
 
 export type InviteDateFormat = {
 	d: string;
-	tz: string;
+	tz?: string;
 	u: number;
 };
 
@@ -58,9 +58,9 @@ export type InviteParticipant = {
 	response: ParticipationStatus;
 };
 
-export type InviteParticipants = {
+export type InviteParticipants = Partial<{
 	[k in ParticipationStatus]: Array<InviteParticipant>;
-};
+}>;
 
 type XParam = {
 	name: string;
@@ -101,8 +101,8 @@ type AlarmDataTrigger = [
 
 export type AlarmData = [
 	{
-		nextAlarm: number;
-		alarmInstStart: number;
+		nextAlarm?: number;
+		alarmInstStart?: number;
 		action: AlarmDataActions;
 		desc: AlarmDataDescription | Record<string, never>;
 		trigger: AlarmDataTrigger;
@@ -126,7 +126,7 @@ export type Invite = {
 	parent: string;
 	flags: string;
 	parts: Parts;
-	alarmValue: string;
+	alarmValue: string | undefined;
 	alarmString: string;
 	class: InviteClass;
 	compNum: number;
@@ -151,7 +151,7 @@ export type Invite = {
 	uid: string;
 	url: string;
 	isException: boolean;
-	exceptId: Array<InviteException>;
+	exceptId?: Array<InviteException>;
 	tagNamesList: string;
 	tags?: string[];
 	attach?: {
@@ -165,7 +165,6 @@ export type Invite = {
 	rev?: number;
 	meta: any;
 	allDay?: boolean;
-	draft?: number | boolean;
 	xprop?: XPropProps;
 	neverSent: boolean;
 	locationUrl: string | undefined;

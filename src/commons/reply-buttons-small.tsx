@@ -7,6 +7,7 @@ import {
 	Button,
 	Container,
 	Dropdown,
+	getColor,
 	Icon,
 	Padding,
 	Row,
@@ -23,7 +24,7 @@ import { EventType } from '../types/event';
 import { ParticipationStatus } from '../types/store/invite';
 
 const AttendingRow = styled(Row)<RowProps & { invtReply: ResponseProp }>`
-	border: 0.0625rem solid ${(props): string => props.theme.palette[props.invtReply.color].regular};
+	border: 0.0625rem solid ${({ theme, invtReply }): string => getColor(invtReply.color, theme)};
 `;
 
 type ResponseProp = {

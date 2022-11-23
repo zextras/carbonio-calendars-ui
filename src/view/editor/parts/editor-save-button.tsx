@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
+import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { StoreProvider } from '../../../store/redux';
@@ -26,7 +27,8 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const editor = useSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
 	const disabled = useSelector(selectEditorDisabled(editorId));
-	const attendeesLength = useSelector(selectEditorAttendees)?.length;
+	const attendeesLength = useSelector(selectEditorAttendees(editorId))?.length;
+	const [t] = useTranslation();
 
 	const { onSave } = callbacks;
 	const { action } = useParams<{ action: string }>();
@@ -70,11 +72,10 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 					autoHideTimeout: 3000
 				});
 			});
-	}, [editor, action, onSave, attendeesLength, isNew, createModal, editorId]);
+	}, [editor, action, onSave, attendeesLength, isNew, createModal, editorId, t]);
 
 	return (
 		<Button
-			data-testid="save"
 			label={t('label.save', 'Save')}
 			icon="SaveOutline"
 			disabled={disabled?.saveButton ?? !title?.length}
