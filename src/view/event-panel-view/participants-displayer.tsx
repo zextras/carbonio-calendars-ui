@@ -12,6 +12,7 @@ import {
 	TextWithTooltip
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
@@ -99,7 +100,7 @@ export const ParticipantsDisplayer = ({
 	participants: InviteParticipants;
 }): ReactElement | null => {
 	const width = Object.keys(participants).length === 1 ? '100%' : '50%';
-
+	if (isEmpty(participants)) return null;
 	if (Object.keys(participants).length === 0) return null;
 	return (
 		<Container
@@ -111,7 +112,7 @@ export const ParticipantsDisplayer = ({
 			height="fit"
 			padding={{ top: 'large' }}
 		>
-			{participants?.AC?.length > 0 && (
+			{participants?.AC && participants?.AC?.length > 0 && (
 				<Dropdown
 					label={t('participants.AC_with_count', {
 						count: participants.AC?.length ?? 0,
@@ -122,7 +123,7 @@ export const ParticipantsDisplayer = ({
 					width={width}
 				/>
 			)}
-			{participants?.NE?.length > 0 && (
+			{participants?.NE && participants?.NE?.length > 0 && (
 				<Dropdown
 					label={t('participants.NE_with_count', {
 						count: participants.NE?.length ?? 0,
@@ -133,7 +134,7 @@ export const ParticipantsDisplayer = ({
 					width={width}
 				/>
 			)}
-			{participants?.TE?.length > 0 && (
+			{participants?.TE && participants?.TE?.length > 0 && (
 				<Dropdown
 					label={t('participants.TE_with_count', {
 						count: participants?.TE?.length ?? 0,
@@ -144,7 +145,7 @@ export const ParticipantsDisplayer = ({
 					width={width}
 				/>
 			)}
-			{participants?.DE?.length > 0 && (
+			{participants?.DE && participants?.DE?.length > 0 && (
 				<Dropdown
 					label={t('participants.DE_with_count', {
 						count: participants.DE?.length ?? 0,

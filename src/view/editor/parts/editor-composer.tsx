@@ -141,6 +141,7 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 						minHeight="12.5rem"
 						value={richTextValue}
 						disabled={disabled?.composer}
+						data-testid="editor-composer"
 					/>
 				</EditorWrapper>
 			) : (
@@ -149,6 +150,7 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 					value={plainTextValue}
 					onChange={onPlainTextChange}
 					disabled={disabled?.composer}
+					data-testid="editor-textArea"
 				/>
 			)}
 		</>

@@ -16,7 +16,7 @@ import {
 } from './src/carbonio-ui-commons/test/jest-setup';
 import { registerRestHandler } from './src/carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { handleCreateFolderRequest } from './src/test/mocks/network/msw/handle-create-folder';
-import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-message';
+import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
 
 failOnConsole({
 	...getFailOnConsoleDefaultConfig()

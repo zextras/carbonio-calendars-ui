@@ -13,21 +13,21 @@ export const CustomEventWrapperStyler = styled.div<{ event: EventType }>`
 	.rbc-event {
 		color: ${({ event, theme }): string => {
 			switch (event.resource.status) {
-				case 'declined':
+				case 'CANC':
 					return theme.palette.gray0.regular;
-				case 'tentative':
-				case 'accepted':
+				case 'TENT':
+				case 'CONF':
 				default:
 					return event.resource.calendar.color.color;
 			}
 		}};
 		background-color: ${({ event, theme }): string => {
 			switch (event.resource.status) {
-				case 'declined':
+				case 'CANC':
 					return theme.palette.gray3.regular;
-				case 'tentative':
+				case 'TENT':
 					return theme.palette.gray6.regular;
-				case 'accepted':
+				case 'CONF':
 				default:
 					return event.resource.calendar.color.background;
 			}

@@ -130,7 +130,7 @@ const generateInvite = (editorData: Editor): any => {
 	const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
 	at.push(
 		...editorData.attendees.map((c: any) => ({
-			a: c.email,
+			a: c?.email ?? c?.label,
 			d: c?.firstName && c?.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 			role: 'REQ',
 			ptst: 'NE',
@@ -140,7 +140,7 @@ const generateInvite = (editorData: Editor): any => {
 	editorData?.optionalAttendees &&
 		at.push(
 			...editorData.optionalAttendees.map((c: any) => ({
-				a: c.email,
+				a: c?.email ?? c?.label,
 				d: c.firstName && c.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 				role: 'OPT',
 				ptst: 'NE',
@@ -249,10 +249,16 @@ export const generateSoapMessageFromEditor = (msg: Editor): any =>
 
 export const createAppointment = createAsyncThunk(
 	'appointment/create new appointment',
-	async ({ draft, editor }: any): Promise<any> => {
+	async ({ draft, editor }: any, { rejectWithValue }: any): Promise<any> => {
 		if (editor) {
 			const body = generateSoapMessageFromEditor({ ...editor, draft });
 			const res: { calItemId: string; invId: string } = await soapFetch('CreateAppointment', body);
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			const response = res?.Fault ? { ...res.Fault, error: true } : res;
+			if (response?.error) {
+				return rejectWithValue(response);
+			}
 			return {
 				response: res,
 				editor: {

@@ -3,9 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-// eslint-disable-next-line no-shadow
-import { AlarmType } from '../appointments';
-import { ParticipationStatus } from './invite';
+import { AlarmType } from '../event';
+import { InviteClass, InviteFreeBusy, InviteStatus, ParticipationStatus } from './invite';
 
 export type SingleReference = {
 	recur: boolean;
@@ -29,27 +28,27 @@ export type ExceptionReference = SingleReference & {
 	or: any;
 	loc: string | undefined;
 	otherAtt: any;
-	class?: string;
+	class?: InviteClass;
 	hasEx?: boolean;
-	status?: string;
-	fb?: string;
-	ptst?: string;
+	status?: InviteStatus;
+	fb?: InviteFreeBusy;
+	ptst?: ParticipationStatus;
 	tzo?: number;
 };
 
 export type InstanceReference = SingleReference | ExceptionReference;
 
 export type Appointment = {
-	alarm?: AlarmType;
-	alarmData: any;
-	allDay: any;
-	class: string;
+	alarm: boolean;
+	alarmData?: Array<AlarmType>;
+	allDay: boolean;
+	class: InviteClass;
 	flags: string;
 	compNum: number;
 	d: number;
 	draft: boolean;
 	dur: number;
-	fb: string;
+	fb: InviteFreeBusy;
 	fba: string;
 	fr?: string;
 	hasEx?: boolean;
@@ -68,7 +67,7 @@ export type Appointment = {
 	recur?: any;
 	rev: number;
 	s: any;
-	status: string;
+	status: InviteStatus;
 	transp: string;
 	uid: string;
 	meta?: any;

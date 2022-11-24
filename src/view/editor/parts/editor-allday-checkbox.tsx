@@ -49,6 +49,7 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): Reac
 			onClick={onClick}
 			value={allDay}
 			disabled={disabled?.allDay}
+			data-testid="editor-allDay"
 		/>
 	) : null;
 };

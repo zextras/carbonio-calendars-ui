@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-design-system';
-import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t, useUserAccounts, useUserSettings } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
+import { PREFS_DEFAULTS } from '../../../constants';
 import { selectCalendarsArray } from '../../../store/selectors/calendars';
 import { Calendar } from '../../../types/store/calendars';
 import LabelFactory, { Square } from './select-label-factory';
@@ -32,6 +33,7 @@ export const CalendarSelector = ({
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
 	const calendars = useSelector(selectCalendarsArray);
+	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
 	const calWithWritePerm = useMemo(
 		() => (showCalWithWritePerm ? filter(calendars, 'haveWriteAccess') : calendars),
 		[calendars, showCalWithWritePerm]
@@ -63,26 +65,29 @@ export const CalendarSelector = ({
 			),
 		[requiredCalendars]
 	);
+
 	const defaultCalendarSelection = useMemo(() => {
+		const defaultCal = find(requiredCalendars, [
+			'id',
+			zimbraPrefDefaultCalendarId ?? PREFS_DEFAULTS?.DEFAULT_CALENDAR_ID
+		]);
 		const defaultCalendar = {
-			value: requiredCalendars[0].id,
-			label: requiredCalendars[0].name,
-			color: requiredCalendars[0].color
+			value: defaultCal?.id ?? requiredCalendars?.[0]?.id,
+			label: defaultCal?.name ?? requiredCalendars?.[0]?.name,
+			color: defaultCal?.color ?? requiredCalendars?.[0]?.color
 		};
 		return find(calendarItems, ['value', calendarId]) ?? defaultCalendar;
-	}, [calendarItems, requiredCalendars, calendarId]);
-
-	const getSelectedCalendar = useCallback(
-		(id) => find(calendars, ['id', id]) ?? requiredCalendars[0],
-		[calendars, requiredCalendars]
-	);
+	}, [requiredCalendars, zimbraPrefDefaultCalendarId, calendarItems, calendarId]);
 
 	const onSelectedCalendarChange = useCallback(
-		(id) => onCalendarChange(getSelectedCalendar(id)),
-		[getSelectedCalendar, onCalendarChange]
+		(id) => {
+			const calendar = find(calendars, ['id', id]) ?? requiredCalendars[0];
+			return onCalendarChange(calendar);
+		},
+		[calendars, onCalendarChange, requiredCalendars]
 	);
 
-	return calendars ? (
+	return calendars && defaultCalendarSelection ? (
 		<Select
 			label={label || t('label.calendar', 'Calendar')}
 			onChange={onSelectedCalendarChange}

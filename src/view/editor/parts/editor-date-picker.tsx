@@ -28,8 +28,8 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
-	const { onDateChange } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
+	const { onDateChange } = callbacks;
 
 	return start && end ? (
 		<Styler allDay={allDay} orientation="horizontal" height="fit" mainAlignment="flex-start">

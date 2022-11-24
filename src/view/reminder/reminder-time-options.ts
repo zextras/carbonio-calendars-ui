@@ -9,6 +9,7 @@ import { filter } from 'lodash';
 import moment from 'moment';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AlarmType } from '../../types/event';
 import { AlarmData } from '../../types/store/invite';
 
 // interface DropdownItem {
@@ -39,7 +40,7 @@ type Option = {
 };
 export const useGetReminderItems = (
 	setSnooze: (arg1: number, arg2?: boolean) => void,
-	alarmData: AlarmData
+	alarmData: Array<AlarmType>
 ): DropdownItem[] => {
 	const [t] = useTranslation();
 

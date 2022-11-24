@@ -18,7 +18,8 @@ import {
 	Tooltip,
 	useTheme,
 	ContainerProps,
-	TextProps
+	TextProps,
+	getColor
 } from '@zextras/carbonio-design-system';
 import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
 import { getFileExtension, calcColor } from '../../commons/utilities';
@@ -51,14 +52,14 @@ const AttachmentContainer = styled(Container)<ContainerProps & { disabled: boole
 	box-sizing: border-box;
 	&:hover {
 		background-color: ${({ theme, background = 'transparent', disabled }): string =>
-			disabled ? 'gray5' : theme.palette[background].hover};
+			disabled ? 'gray5' : getColor(`${background}.hover`, theme)};
 		& ${AttachmentHoverBarContainer} {
 			display: flex;
 		}
 	}
 	&:focus {
 		background-color: ${({ theme, background = 'transparent' }): string =>
-			theme.palette[background].focus};
+			getColor(`${background}.focus`, theme)};
 	}
 	cursor: ${({ disabled }): string => (disabled ? 'default' : 'pointer')};
 `;
