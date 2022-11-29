@@ -279,31 +279,21 @@ export default function CalendarComponent() {
 							isNil
 						)
 					});
-					callbacks
-						.onSave(
-							omitBy(
-								{
-									draft,
-									isNew: editor?.isNew
-								},
-								isNil
-							)
-						)
-						.then((res) => {
-							if (res?.response) {
-								const success = res?.response;
-								getBridgedFunctions()?.createSnackbar({
-									key: `calendar-moved-root`,
-									replace: true,
-									type: success ? 'info' : 'warning',
-									hideButton: true,
-									label: !success
-										? t('label.error_try_again', 'Something went wrong, please try again')
-										: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-									autoHideTimeout: 3000
-								});
-							}
-						});
+					callbacks.onSave(omitBy({ draft, editor, isNew: false }, isNil)).then((res) => {
+						if (res?.response) {
+							const success = res?.response;
+							getBridgedFunctions()?.createSnackbar({
+								key: `calendar-moved-root`,
+								replace: true,
+								type: success ? 'info' : 'warning',
+								hideButton: true,
+								label: !success
+									? t('label.error_try_again', 'Something went wrong, please try again')
+									: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+								autoHideTimeout: 3000
+							});
+						}
+					});
 				};
 				if (size(invite.participants) > 0) {
 					const closeModal = createModal(
