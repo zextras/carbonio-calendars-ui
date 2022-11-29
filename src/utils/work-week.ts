@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { AccountSettings } from '@zextras/carbonio-shell-ui';
 import { map, sortBy } from 'lodash';
 
 export interface WorkWeekDay {
@@ -13,10 +12,10 @@ export interface WorkWeekDay {
 	end: string;
 }
 
-export const workWeek = (settings: AccountSettings): WorkWeekDay[] =>
+export const workWeek = (zimbraPrefCalendarWorkingHours: string): WorkWeekDay[] =>
 	sortBy(
 		map(
-			(settings.prefs.zimbraPrefCalendarWorkingHours as string)?.split(','),
+			zimbraPrefCalendarWorkingHours?.split(','),
 			(t: string): WorkWeekDay =>
 				({
 					day: t.split(':')[0],

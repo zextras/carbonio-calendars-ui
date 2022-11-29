@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getUserSettings, soapFetch } from '@zextras/carbonio-shell-ui';
+import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { Editor } from '../../types/editor';
+import { getPrefs } from '../../carbonio-ui-commons/utils/get-prefs';
 
 type Participants = {
 	a: string | undefined;
@@ -45,7 +46,7 @@ const generateParticipantInformation = (resource: Editor): Array<Participants> =
 	resource?.draft
 		? [
 				{
-					a: resource?.organizer?.address,
+					a: resource?.organizer?.address ?? resource?.organizer?.label,
 					p: resource?.organizer?.fullName,
 					t: 'f'
 				}
@@ -59,7 +60,11 @@ const generateParticipantInformation = (resource: Editor): Array<Participants> =
 							: attendee.label,
 					t: 't'
 				})),
-				{ a: resource?.organizer?.address, p: resource?.organizer?.fullName, t: 'f' }
+				{
+					a: resource?.organizer?.address ?? resource?.organizer?.label,
+					p: resource?.organizer?.fullName,
+					t: 'f'
+				}
 		  );
 
 function generateHtmlBodyRequest(app: Editor): any {
@@ -127,7 +132,7 @@ const generateMp = (msg: Editor): any => ({
 
 const generateInvite = (editorData: Editor): any => {
 	const at = [];
-	const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
+	const { zimbraPrefUseTimeZoneListInCalendar } = getPrefs();
 	at.push(
 		...editorData.attendees.map((c: any) => ({
 			a: c?.email ?? c?.label,

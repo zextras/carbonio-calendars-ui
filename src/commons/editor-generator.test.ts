@@ -1,54 +1,38 @@
+/*
+ * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { Folder } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
+import {
+	createFakeIdentity,
+	getMockedAccountItem
+} from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import { PREFS_DEFAULTS } from '../constants';
 import { getAlarmToString } from '../normalizations/normalizations-utils';
 import { reducers } from '../store/redux';
 import { EventResource, EventResourceCalendar, EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { disabledFields, EditorContext, generateEditor } from './editor-generator';
-import { userAccount } from '../view/editor/editor-panel-wrapper.test';
+import { generateCalendarsArray } from '../test/generators/generators';
+
+const identity1 = createFakeIdentity();
+
+const userAccount = getMockedAccountItem({ identity1 });
 
 jest.setTimeout(50000);
 
-const folders: Array<Folder> = [
-	{
-		absFolderPath: '/Calendar',
-		acl: undefined,
-		activesyncdisabled: false,
-		children: [],
-		color: undefined,
-		deletable: false,
-		depth: 1,
-		f: '#',
-		i4ms: 6046,
-		i4n: undefined,
-		i4next: 396,
-		i4u: undefined,
-		id: '10',
-		isLink: false,
-		l: '1',
-		luuid: 'b9483716-91e9-4ecf-a594-344185f17ac9',
-		md: undefined,
-		meta: undefined,
-		ms: 1,
-		n: 4,
-		name: 'Calendar',
-		perm: undefined,
-		recursive: false,
-		rest: undefined,
-		retentionPolicy: undefined,
-		rev: 1,
-		rgb: undefined,
-		s: 0,
-		u: undefined,
-		url: undefined,
-		uuid: '365f04ec-2c8d-4ef0-9998-a23e94a85725',
-		view: 'appointment',
-		webOfflineSyncDays: 0
-	}
-];
+const folder = {
+	absFolderPath: '/Test',
+	id: '5',
+	l: '1',
+	name: 'Test',
+	view: 'appointment'
+};
+
+const folders = generateCalendarsArray({ folders: [folder] });
 
 const getDefaultEvent = (): EventType => ({
 	start: new Date(),
@@ -312,7 +296,8 @@ describe('Editor generator', () => {
 
 			// expect organizer to be defined and to be the default
 			expect(editor.organizer).toBeDefined();
-			expect(editor.organizer).toHaveProperty('label', 'DEFAULT');
+			expect(editor.organizer.fullName).toBe(identity1.fullName);
+			expect(editor.organizer.identityName).toBe('DEFAULT');
 
 			// all parameters are the default ones
 			expect(editor.allDay).toBe(false);

@@ -7,7 +7,6 @@ import { Folder, t } from '@zextras/carbonio-shell-ui';
 import { filter, groupBy, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
 import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../commons/zimbra-standard-colors';
-import { ZimbraFolder } from '../types/zimbra';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const retrieveAttachmentsType = (original: any, disposition: any, dataID: any): any =>

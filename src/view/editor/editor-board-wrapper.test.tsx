@@ -5,20 +5,24 @@ import React from 'react';
 import { Dispatch } from 'redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { createCallbacks } from '../../commons/editor-generator';
+import { PREFS_DEFAULTS } from '../../constants';
 import { reducers } from '../../store/redux';
 import { Editor, EditorCallbacks } from '../../types/editor';
 import BoardEditPanel from './editor-board-wrapper';
 import {
 	getRandomEditorId,
-	mockEmptyStore,
+	generateCalendarsArray,
+	mockStore,
+	getEditor,
 	generateCalendarSliceItem,
 	generateEditorSliceItem
 } from '../../test/generators/generators';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
-import { getEditor } from './editor-panel-wrapper.test';
 
 // todo: datePicker render is very slow
 jest.setTimeout(50000);
+
+const folderItems = generateCalendarsArray();
 
 const initBoard = ({
 	editorId,
@@ -111,6 +115,15 @@ const initBoard = ({
 	icon: 'CalendarModOutline'
 });
 
+shell.getUserSettings.mockImplementation(() => ({
+	prefs: {
+		zimbraPrefTimeZoneId: 'Europe/Berlin',
+		zimbraPrefCalendarDefaultApptDuration: '60m',
+		zimbraPrefCalendarApptReminderWarningTime: '5',
+		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	}
+}));
+
 describe('Editor board wrapper', () => {
 	test('it does not render without board id', () => {
 		const store = configureStore({
@@ -123,7 +136,7 @@ describe('Editor board wrapper', () => {
 	test('it renders with board id', async () => {
 		const isNew = true;
 		const editorId = getRandomEditorId(isNew);
-		const editor = getEditor(editorId);
+		const editor = getEditor({ id: editorId, folders: folderItems });
 
 		const calendars = {
 			calendars: generateCalendarSliceItem()
@@ -133,7 +146,7 @@ describe('Editor board wrapper', () => {
 			editors: generateEditorSliceItem({ editor })
 		};
 
-		const emptyStore = mockEmptyStore({ calendars, editor: editorSlice });
+		const emptyStore = mockStore({ calendars, editor: editorSlice });
 
 		const store = configureStore({
 			reducer: combineReducers(reducers),

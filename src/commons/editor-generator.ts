@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder, getUserAccount, getUserSettings, LinkFolder } from '@zextras/carbonio-shell-ui';
+import { Folder, getUserAccount, LinkFolder } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { Dispatch } from 'redux';
@@ -37,6 +37,7 @@ import {
 import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
 import { EventResourceCalendar } from '../types/event';
 import { Attendee, Invite, InviteClass, InviteFreeBusy } from '../types/store/invite';
+import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { getIdentityItems } from './get-identity-items';
 import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 
@@ -88,7 +89,7 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		zimbraPrefTimeZoneId,
 		zimbraPrefCalendarDefaultApptDuration,
 		zimbraPrefCalendarApptReminderWarningTime
-	} = getUserSettings().prefs;
+	} = getPrefs();
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
 	const defaultCalendar = find(folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
 	return {

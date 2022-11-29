@@ -5,7 +5,7 @@
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getUserSettings, soapFetch } from '@zextras/carbonio-shell-ui';
+import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
 import {
@@ -13,6 +13,7 @@ import {
 	retrieveAttachmentsType
 } from '../../normalizations/normalizations-utils';
 import { Invite } from '../../types/store/invite';
+import { getPrefs } from '../../carbonio-ui-commons/utils/get-prefs';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
 export const generateSoapMessageFromInvite = (invite: Invite): any => {
@@ -82,7 +83,7 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
 	async ({ draft, editor }: any, { rejectWithValue }: any): Promise<any> => {
-		const { zimbraPrefUseTimeZoneListInCalendar } = getUserSettings().prefs;
+		const { zimbraPrefUseTimeZoneListInCalendar } = getPrefs();
 
 		if (editor) {
 			if (editor.isSeries && editor.isInstance && !editor.isException) {

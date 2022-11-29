@@ -11,19 +11,41 @@ import { head, last } from 'lodash';
 import moment from 'moment';
 import EditorPanelWrapper from './editor-panel-wrapper';
 import {
+	generateCalendarsArray,
 	generateCalendarSliceItem,
 	generateEditorSliceItem,
 	getRandomEditorId,
-	getRandomInRange,
-	mockEmptyStore
+	getEditor,
+	mockStore
 } from '../../test/generators/generators';
 import { reducers } from '../../store/redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { createEmptyEditor } from '../../commons/editor-generator';
 import { PREFS_DEFAULTS } from '../../constants';
+import {
+	createFakeIdentity,
+	getMockedAccountItem
+} from '../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 
 jest.setTimeout(50000);
+
+const identity1 = createFakeIdentity();
+const identity2 = createFakeIdentity();
+const identity3 = createFakeIdentity();
+
+const identity1Name = `${identity1.firstName} ${identity1.lastName}`;
+const identityRegex = new RegExp(identity1Name, 'i');
+
+const identity2Name = `${identity2.firstName} ${identity2.lastName}`;
+const identity2Regex = new RegExp(identity2Name, 'i');
+
+const defaultCalendar = 'Calendar';
+const defaultCalendarRegex = new RegExp(defaultCalendar, 'i');
+
+const userAccount = getMockedAccountItem({ identity1, identity2 });
+
+shell.useUserAccount.mockImplementation(() => userAccount);
+shell.getUserAccount.mockImplementation(() => userAccount);
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
@@ -34,141 +56,21 @@ shell.getUserSettings.mockImplementation(() => ({
 	}
 }));
 
-const getIdentity = () => ({
-	firstName: faker?.name?.firstName?.() ?? '',
-	lastName: faker?.name?.lastName?.() ?? ''
-});
-
-const identity1 = getIdentity();
-const identity2 = getIdentity();
-const identity3 = getIdentity();
-
-const identity1Name = `${identity1.firstName} ${identity1.lastName}`;
-const identityRegex = new RegExp(identity1Name, 'i');
-
-const defaultIdentityName = 'DEFAULT identity';
-const defaultIdentityRegex = new RegExp(defaultIdentityName, 'i');
-
-const defaultCalendar = 'Calendar';
-const defaultCalendarRegex = new RegExp(defaultCalendar, 'i');
-
-export const userAccount = {
-	identities: {
-		identity: [
-			{
-				id: '1',
-				name: 'DEFAULT',
-				_attrs: {
-					zimbraPrefFromAddressType: faker?.internet?.email?.() ?? '',
-					zimbraPrefIdentityName: defaultIdentityName
-				}
-			},
-			{
-				id: '2',
-				name: identity1Name,
-				_attrs: {
-					zimbraPrefFromAddressType:
-						faker?.internet?.email?.(identity1.firstName, identity1.lastName) ?? '',
-					zimbraPrefIdentityName: identity1Name
-				}
-			}
-		]
-	}
+const folder = {
+	absFolderPath: '/Test',
+	id: '5',
+	l: '1',
+	name: 'Test',
+	view: 'appointment'
 };
 
-shell.useUserAccount.mockImplementation(() => userAccount);
-shell.getUserAccount.mockImplementation(() => userAccount);
-
-const folders = [
-	{
-		absFolderPath: '/Calendar',
-		acl: undefined,
-		activesyncdisabled: false,
-		children: [],
-		color: {
-			color: getRandomInRange(0, 8)
-		},
-		deletable: false,
-		depth: 1,
-		f: '#',
-		i4ms: 6046,
-		i4n: undefined,
-		i4next: 396,
-		i4u: undefined,
-		id: '10',
-		isLink: false,
-		l: '1',
-		luuid: 'b9483716-91e9-4ecf-a594-344185f17ac9',
-		md: undefined,
-		meta: undefined,
-		ms: 1,
-		n: 4,
-		name: 'Calendar',
-		perm: undefined,
-		recursive: false,
-		rest: undefined,
-		retentionPolicy: undefined,
-		rev: 1,
-		rgb: undefined,
-		s: 0,
-		u: undefined,
-		url: undefined,
-		uuid: '365f04ec-2c8d-4ef0-9998-a23e94a85725',
-		view: 'appointment',
-		webOfflineSyncDays: 0
-	},
-	{
-		absFolderPath: '/Test',
-		acl: undefined,
-		activesyncdisabled: false,
-		children: [],
-		color: {
-			color: getRandomInRange(0, 8)
-		},
-		deletable: false,
-		depth: 1,
-		f: '#',
-		i4ms: 6046,
-		i4n: undefined,
-		i4next: 396,
-		i4u: undefined,
-		id: '5',
-		isLink: false,
-		l: '1',
-		luuid: 'b9483716-91e9-4ecf-a594-344185f17ac8',
-		md: undefined,
-		meta: undefined,
-		ms: 1,
-		n: 4,
-		name: 'Test',
-		perm: undefined,
-		recursive: false,
-		rest: undefined,
-		retentionPolicy: undefined,
-		rev: 1,
-		rgb: undefined,
-		s: 0,
-		u: undefined,
-		url: undefined,
-		uuid: '365f04ec-2c8d-4ef0-9998-a23e94a85726',
-		view: 'appointment',
-		webOfflineSyncDays: 0
-	}
-];
-
-export const getEditor = (editorId = getRandomEditorId(false), context = {}) => {
-	const editor = createEmptyEditor(editorId, folders);
-	return {
-		...editor,
-		...context
-	};
-};
+const folders = generateCalendarsArray({ folders: [folder] });
 
 describe('Editor panel wrapper', () => {
 	shell.useIntegratedComponent.mockImplementation(jest.fn(() => [undefined, false]));
 
 	test('it doesnt render without editorId or callbacks', () => {
-		const emptyStore = mockEmptyStore();
+		const emptyStore = mockStore();
 
 		const store = configureStore({
 			reducer: combineReducers(reducers),
@@ -187,13 +89,13 @@ describe('Editor panel wrapper', () => {
 			const calendars = {
 				calendars: generateCalendarSliceItem()
 			};
-			const editor = getEditor(editorId);
+			const editor = getEditor({ id: editorId, folders });
 			const editorSlice = {
 				activeId: editorId,
 				editors: generateEditorSliceItem({ editor })
 			};
 
-			const emptyStore = mockEmptyStore({ calendars, editor: editorSlice });
+			const emptyStore = mockStore({ calendars, editor: editorSlice });
 
 			const store = configureStore({
 				reducer: combineReducers(reducers),
@@ -226,7 +128,7 @@ describe('Editor panel wrapper', () => {
 
 			const isNew = true;
 			const editorId = getRandomEditorId(isNew);
-			const editor = getEditor(editorId);
+			const editor = getEditor({ id: editorId, folders });
 			const calendars = {
 				calendars: generateCalendarSliceItem({ folders })
 			};
@@ -234,7 +136,7 @@ describe('Editor panel wrapper', () => {
 				activeId: editorId,
 				editors: generateEditorSliceItem({ editor })
 			};
-			const emptyStore = mockEmptyStore({ calendars, editor: editorSlice });
+			const emptyStore = mockStore({ calendars, editor: editorSlice });
 
 			const store = configureStore({
 				reducer: combineReducers(reducers),
@@ -296,7 +198,7 @@ describe('Editor panel wrapper', () => {
 
 			const isNew = true;
 			const editorId = getRandomEditorId(isNew);
-			const editor = getEditor(editorId);
+			const editor = getEditor({ id: editorId, folders });
 			const calendars = {
 				calendars: generateCalendarSliceItem({ folders })
 			};
@@ -304,7 +206,7 @@ describe('Editor panel wrapper', () => {
 				activeId: editorId,
 				editors: generateEditorSliceItem({ editor })
 			};
-			const emptyStore = mockEmptyStore({ calendars, editor: editorSlice });
+			const emptyStore = mockStore({ calendars, editor: editorSlice });
 
 			const store = configureStore({
 				reducer: combineReducers(reducers),
@@ -320,14 +222,14 @@ describe('Editor panel wrapper', () => {
 
 			// ASSERTIONS ON EDITOR DEFAULT VALUES
 			expect(prevEditorState.freeBusy).toBe('B');
-			expect(prevEditorState.organizer.label).toBe('DEFAULT identity');
+			expect(prevEditorState.organizer.identityName).toBe('DEFAULT');
 			expect(prevEditorState.calendar.name).toBe('Calendar');
 			expect(prevEditorState.reminder).toBe('5');
 			expect(prevEditorState.recur).toBeUndefined();
 
 			// USER INTERACTIONS ON EDITOR FIELDS
-			await user.click(screen.getByText(defaultIdentityRegex));
 			await user.click(screen.getByText(identityRegex));
+			await user.click(screen.getByText(identity2Regex));
 
 			const newTitle = faker.random.word();
 			const newLocation = faker.random.word();
@@ -383,13 +285,10 @@ describe('Editor panel wrapper', () => {
 			const editorState = store.getState().editor.editors[editorId];
 
 			// ASSERTIONS ON EDITOR NEW VALUES
-			expect(editorState.organizer.label).toBe(identity1Name);
+			expect(editorState.organizer.identityName).toBe(identity2Name);
 			expect(editorState.title).toBe(newTitle);
 			expect(editorState.location).toBe(newLocation);
 			expect(editorState.freeBusy).toBe('F');
-
-			// This is commented due to a bug which must be fixed inside the calendar selector
-			// expect(editorState.calendar.name).toBe('Test');
 
 			// check if both checkboxes have different icon after clicking on them
 			expect(screen.getAllByTestId('icon: CheckmarkSquare')).toHaveLength(2);

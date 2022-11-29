@@ -4,17 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ModalManagerContext } from '@zextras/carbonio-design-system';
-import {
-	addBoard,
-	FOLDERS,
-	getBridgedFunctions,
-	replaceHistory,
-	t,
-	useFolders,
-	useUserSettings
-} from '@zextras/carbonio-shell-ui';
+import { addBoard, FOLDERS, getBridgedFunctions, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
-import { filter, isEqual, isNil, minBy, omit, omitBy, size } from 'lodash';
+import { isEqual, isNil, minBy, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -22,6 +14,7 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../constants';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
@@ -49,6 +42,7 @@ import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
+import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -98,28 +92,32 @@ export default function CalendarComponent() {
 	const appointments = useSelector(selectAppointmentsArray);
 	const selectedCalendars = useSelector(selectCheckedCalendarsMap);
 	const dispatch = useDispatch();
+	const [t] = useTranslation();
 	const theme = useContext(ThemeContext);
-	const settings = useUserSettings();
+	const prefs = usePrefs();
 	const createModal = useContext(ModalManagerContext);
 	const calendarView = useCalendarView();
 	const calendarDate = useCalendarDate();
-	const timeZone = settings.prefs.zimbraPrefTimeZoneId;
+	const timeZone = prefs.zimbraPrefTimeZoneId;
 	const summaryViewOpen = useIsSummaryViewOpen();
-	const firstDayOfWeek = settings.prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
+	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
 	const [date, setDate] = useState(calendarDate);
 	const calendars = useSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
 	const calendarFolders = useCalendarFolders();
-	if (settings.prefs.zimbraPrefLocale) {
-		moment.updateLocale(settings.prefs.zimbraPrefLocale, {
+	if (prefs.zimbraPrefLocale) {
+		moment.updateLocale(prefs.zimbraPrefLocale, {
 			week: {
 				dow: firstDayOfWeek
 			}
 		});
 	}
-	const workingSchedule = useMemo(() => workWeek(settings), [settings]);
+	const workingSchedule = useMemo(
+		() => workWeek(prefs.zimbraPrefCalendarWorkingHours),
+		[prefs?.zimbraPrefCalendarWorkingHours]
+	);
 
 	const events = useMemo(
 		() => normalizeCalendarEvents(appointments, selectedCalendars),
@@ -204,7 +202,7 @@ export default function CalendarComponent() {
 		if (calendarView) {
 			return calendarView;
 		}
-		switch (settings.prefs.zimbraPrefCalendarInitialView) {
+		switch (prefs.zimbraPrefCalendarInitialView) {
 			case 'month':
 				return 'month';
 			case 'week':
@@ -214,7 +212,7 @@ export default function CalendarComponent() {
 			default:
 				return 'work_week';
 		}
-	}, [calendarView, settings?.prefs?.zimbraPrefCalendarInitialView]);
+	}, [calendarView, prefs?.zimbraPrefCalendarInitialView]);
 
 	const handleSelect = useCallback(
 		(e) => {
@@ -243,7 +241,7 @@ export default function CalendarComponent() {
 				});
 			}
 		},
-		[action, calendarFolders, dispatch, summaryViewOpen]
+		[action, calendarFolders, dispatch, summaryViewOpen, t]
 	);
 
 	const onDropFn = useCallback(
@@ -279,31 +277,21 @@ export default function CalendarComponent() {
 							isNil
 						)
 					});
-					callbacks
-						.onSave(
-							omitBy(
-								{
-									draft,
-									isNew: editor?.isNew
-								},
-								isNil
-							)
-						)
-						.then((res) => {
-							if (res?.response) {
-								const success = res?.response;
-								getBridgedFunctions()?.createSnackbar({
-									key: `calendar-moved-root`,
-									replace: true,
-									type: success ? 'info' : 'warning',
-									hideButton: true,
-									label: !success
-										? t('label.error_try_again', 'Something went wrong, please try again')
-										: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-									autoHideTimeout: 3000
-								});
-							}
-						});
+					callbacks.onSave(omitBy({ draft, editor, isNew: false }, isNil)).then((res) => {
+						if (res?.response) {
+							const success = res?.response;
+							getBridgedFunctions()?.createSnackbar({
+								key: `calendar-moved-root`,
+								replace: true,
+								type: success ? 'info' : 'warning',
+								hideButton: true,
+								label: !success
+									? t('label.error_try_again', 'Something went wrong, please try again')
+									: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+								autoHideTimeout: 3000
+							});
+						}
+					});
 				};
 				if (size(invite.participants) > 0) {
 					const closeModal = createModal(
@@ -331,7 +319,7 @@ export default function CalendarComponent() {
 				}
 			});
 		},
-		[calendarFolders, createModal, dispatch]
+		[calendarFolders, createModal, dispatch, t]
 	);
 
 	const onEventDrop = useCallback(
@@ -385,7 +373,7 @@ export default function CalendarComponent() {
 				}
 			}
 		},
-		[createModal, onDropFn]
+		[createModal, onDropFn, t]
 	);
 
 	const eventPropGetter = useCallback(
