@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.39](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.38...v0.1.39) (2022-11-29)
+
+
+### Bug Fixes
+
+* modify appointment from drag and drop works properly ([b46305d](https://github.com/zextras/carbonio-calendars-ui/commit/b46305d32eb5a25bd1cdc9170dd2e8b974f8f00a))
+
 ### [0.1.38](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.37...v0.1.38) (2022-11-24)
 
 ### [0.1.37](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.36...v0.1.37) (2022-11-15)
