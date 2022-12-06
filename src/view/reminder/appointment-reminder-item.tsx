@@ -109,7 +109,12 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 					{locationUrl && (
 						<Row>
 							<Text>
-								<a target="_blank" href={locationUrl} rel="noreferrer">
+								<a
+									target="_blank"
+									href={locationUrl}
+									rel="noreferrer"
+									onClick={(e): void => e.stopPropagation()}
+								>
 									{locationUrl}
 								</a>
 							</Text>
