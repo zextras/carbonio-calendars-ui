@@ -86,7 +86,7 @@ export type Editor = {
 	uid?: string | undefined;
 	ridZ?: string | undefined;
 	draft?: boolean | undefined;
-	calendar?: EventResourceCalendar;
+	calendar?: Partial<EventResourceCalendar>;
 	exceptId?: { d: string; tz: string } | undefined;
 	isException: boolean;
 	isInstance: boolean;
