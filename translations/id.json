@@ -11,7 +11,8 @@
         "empty_trash": "Tempat Sampah Kosong",
         "send_cancellation": "Kirim Pembatalan",
         "share_calendar": "Bagikan Kalender",
-        "empty_trash_confirmation": "Tindakan ini akan menghapus semua item dalam Email, Kontak, Kalender, Tugas, dan Tas Kantor. Yakin ingin menghapus semua yang ada di dalam folder sampah ini secara permanen?"
+        "empty_trash_confirmation": "Tindakan ini akan menghapus semua item dalam Email, Kontak, Kalender, Tugas, dan Tas Kantor. Yakin ingin menghapus semua yang ada di dalam folder sampah ini secara permanen?",
+        "send_edit": "Kirim Edit"
     },
     "label": {
         "attachment": "lampiran",
@@ -180,7 +181,11 @@
         "root": "Akar",
         "choose_file": "Pilih file",
         "public_link_description": "Dibuat dari {{title}} pada {{date}}",
-        "continue": "Lanjutkan"
+        "continue": "Lanjutkan",
+        "new_time_proposed": "Waktu Baru yang Diusulkan",
+        "subject": "Subjek",
+        "cancel": "Batal",
+        "appointment_is_private": "Janji temu bersifat pribadi."
     },
     "calendar": {
         "modal": {
@@ -297,7 +302,9 @@
         "required_participant": "{{count}} Peserta",
         "optional_participant": "{{count}} Opsional",
         "edit_series_warning": "Karena Anda melanjutkan dengan modifikasi seri, semua instans yang sebelumnya dihapus atau diubah akan dipulihkan dengan pengaturan seri baru.",
-        "appointment_invitation_sent": "Undangan janji temu dikirim"
+        "appointment_invitation_sent": "Undangan janji temu dikirim",
+        "meeting_modified": "Rapat berikut telah diubah",
+        "want_to_edit_modified_msg": "Ingin mengedit pesan janji temu yang dimodifikasi?"
     },
     "months": {
         "april": "April",
@@ -327,7 +334,8 @@
             "set_new_time_message": "Anda ingin mengatur waktu baru untuk janji temu yang terlewat? Jika mengklik OK, semua pengingat lain akan otomatis dibuang."
         },
         "minutes": "{{count}} menit",
-        "hours": "{{count}} jam"
+        "hours": "{{count}} jam",
+        "second_before": "{{count}} detik sebelum"
     },
     "repeat": {
         "customize": "Sesuaikan",
@@ -487,7 +495,9 @@
         "equipment": "Peralatan",
         "location": "Lokasi",
         "chat_room": "Tautan Ruang Virtual",
-        "virtual_chat": "Chat Virtual"
+        "virtual_chat": "Chat Virtual",
+        "calendar_sharing_status_one": "Dibagikan kepada 1 oarang",
+        "calendar_sharing_status": "Dibagikan kepada {{count}} orang"
     },
     "share_invite_resent": "Undangan berbagi dikirim ulang",
     "shared_folders": "Kalender Bersama",
@@ -603,5 +613,6 @@
     },
     "preview": {
         "close": "Tutup Pratinjau"
-    }
+    },
+    "recurrent_in_allday": "Anda tidak dapat menyeret janji temu berulang di semua slot hari"
 }

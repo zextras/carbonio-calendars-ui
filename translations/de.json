@@ -65,7 +65,9 @@
         "optional_participant": "{{count}} Optional",
         "optional_participant_plural": "{{count}} Optionale",
         "edit_series_warning": "Da Sie mit der Änderung der gesamten Serie fortfahren, werden alle bereits gelöschten oder veränderten Ereignisse mit den neuen Serieneinstellungen wiederhergestellt.",
-        "appointment_invitation_sent": "Termineinladung gesendet"
+        "appointment_invitation_sent": "Termineinladung gesendet",
+        "meeting_modified": "Das folgende Meeting wurde geändert",
+        "want_to_edit_modified_msg": "Möchten Sie die geänderte Nachricht des Termins bearbeiten?"
     },
     "label": {
         "invitation_not_sent": "Sie haben die Einladung noch nicht an die Teilnehmer geschickt",
@@ -241,7 +243,11 @@
         "root": "Stammordner",
         "choose_file": "Datei auswählen",
         "public_link_description": "Erzeugt von {{title}} am {{date}}",
-        "continue": "Fortfahren"
+        "continue": "Fortfahren",
+        "new_time_proposed": "Neuer Uhrzeitvorschlag",
+        "subject": "Betreff",
+        "cancel": "abbrechen",
+        "appointment_is_private": "Dieser Termin ist privat."
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -279,7 +285,8 @@
         "calendar_access_share": "Kalenderzugriff teilen",
         "edit_calendar_properties": "Kalendereigenschaften bearbeiten",
         "send_cancellation": "Abbruch senden",
-        "empty_trash_confirmation": "Diese Aktion wird alle Elemente in E-Mails, Kontakte, Kalender, Aufgaben und Aktentasche löschen. Sind Sie sicher, dass Sie alles in diesen Papierkörben endgültig löschen möchten?"
+        "empty_trash_confirmation": "Diese Aktion wird alle Elemente in E-Mails, Kontakte, Kalender, Aufgaben und Aktentasche löschen. Sind Sie sicher, dass Sie alles in diesen Papierkörben endgültig löschen möchten?",
+        "send_edit": "Bearbeiten senden"
     },
     "calendar": {
         "modal": {
@@ -377,7 +384,9 @@
         "minutes": "{{count}} Minute",
         "minutes_plural": "{{count}} Minuten",
         "hours": "{{count}} Stunde",
-        "hours_plural": "{{count}} Stunden"
+        "hours_plural": "{{count}} Stunden",
+        "second_before": "{{count}} Sekunde früher",
+        "second_before_plural": "{{count}} Sekunden früher"
     },
     "remove_from_this_list": "Aus der Liste entfernen",
     "repeat": {
@@ -513,7 +522,8 @@
         "chat_room": "Link des virtuellen Raums",
         "virtual_chat": "Virtueller Chat",
         "calendar_sharing_status": "Mit {{count}} Person geteilt",
-        "calendar_sharing_status_plural": "Mit {{count}} Personen geteilt"
+        "calendar_sharing_status_plural": "Mit {{count}} Personen geteilt",
+        "calendar_sharing_status_one": "Mit 1 Person geteilt"
     },
     "share_invite_resent": "Einladung zum Teilen erneut gesendet",
     "shared_folders": "Geteilte Kalender",
@@ -628,5 +638,6 @@
     },
     "preview": {
         "close": "Vorschau schließen"
-    }
+    },
+    "recurrent_in_allday": "Sie können einen Serientermin nicht in einen Tagesslot ziehen"
 }
