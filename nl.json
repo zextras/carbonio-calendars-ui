@@ -11,7 +11,8 @@
         "move_to_root": "Naar root verplaatsen",
         "send_cancellation": "Annulering verzenden",
         "share_calendar": "Kalender delen",
-        "empty_trash_confirmation": "Deze actie verwijdert alle items in de E-mail, Contacten, Agenda, Taken en Brievenbus prullenmappen. Weet u zeker dat u alles in deze prullenmappen permanent wilt verwijderen?"
+        "empty_trash_confirmation": "Deze actie verwijdert alle items in de E-mail, Contacten, Agenda, Taken en Brievenbus prullenmappen. Weet u zeker dat u alles in deze prullenmappen permanent wilt verwijderen?",
+        "send_edit": "Bewerking versturen"
     },
     "reminder": {
         "never": "Nooit",
@@ -31,7 +32,9 @@
         "minutes": "{{count}} minuut",
         "minutes_plural": "{{count}} minuten",
         "hours": "{{count}} uur",
-        "hours_plural": "{{count}} uren"
+        "hours_plural": "{{count}} uren",
+        "second_before": "{{count}} seconde voor",
+        "second_before_plural": "{{count}} seconden voor"
     },
     "label": {
         "attachment": "Bijlage",
@@ -207,7 +210,11 @@
         "root": "Hoofdniveau",
         "choose_file": "Bestand kiezen",
         "public_link_description": "Gegenereerd van {{title}} op {{date}}",
-        "continue": "Doorgaan"
+        "continue": "Doorgaan",
+        "new_time_proposed": "Nieuw tijdsvoorstel",
+        "subject": "Onderwerp",
+        "cancel": "annuleren",
+        "appointment_is_private": "De afspraak is privé."
     },
     "event": {
         "action": {
@@ -321,7 +328,9 @@
         "optional_participant": "{{count}} Optioneel",
         "optional_participant_plural": "{{count}} Optioneel",
         "edit_series_warning": "Terwijl u de reeks wijzigt, worden alle eerder verwijderde of gewijzigde instanties hersteld met de nieuwe reeksinstellingen.",
-        "appointment_invitation_sent": "Afspraak uitnodiging verzonden"
+        "appointment_invitation_sent": "Afspraak uitnodiging verzonden",
+        "meeting_modified": "De volgende vergadering is gewijzigd",
+        "want_to_edit_modified_msg": "Wilt u het bericht van de gewijzigde afspraak bewerken?"
     },
     "months": {
         "april": "April",
@@ -483,7 +492,8 @@
         "chat_room": "Link naar virtuele ruimte",
         "virtual_chat": "Virtuele Chat",
         "calendar_sharing_status": "Gedeeld met {{count}} persoon",
-        "calendar_sharing_status_plural": "Gedeeld met {{count}} personen"
+        "calendar_sharing_status_plural": "Gedeeld met {{count}} personen",
+        "calendar_sharing_status_one": "Gedeeld met 1 persoon"
     },
     "button": {
         "customize_modal": "Modal aanpassen openen"
@@ -628,5 +638,6 @@
     },
     "preview": {
         "close": "Voorbeeld sluiten"
-    }
+    },
+    "recurrent_in_allday": "U kunt een terugkerende afspraak niet in slot voor een hele dag slepen"
 }
