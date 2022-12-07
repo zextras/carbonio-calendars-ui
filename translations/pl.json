@@ -174,7 +174,7 @@
         "of_every_month": "miesiąca, każdego",
         "ok": "OK",
         "on_behalf_of": "{{accountName}} w imieniu {{identity}} <{{otherAccount}}>",
-        "ongoing": "Trwający",
+        "ongoing": "Trwające",
         "optional_0": "Opcjonalny",
         "optional_1": "Opcjonalne",
         "optional_2": "Opcjonalnych",
@@ -468,7 +468,7 @@
         "amsterdam_berlin_bern_rome_stockholm_vienna": "{{value}} Amsterdam, Berlin, Berno, Rzym, Sztokholm, Wiedeń",
         "brasilia": "{{value}} Brazylia",
         "britain_ireland_portugal": "{{value}} Wielka Brytania, Irlandia, Portugalia",
-        "cape_verde_is": "{{value}} wyspy Cape Verde",
+        "cape_verde_is": "{{value}} Wyspy Cape Verde",
         "caracas": "{{value}} Caracas",
         "casablanca": "{{value}} Casablanca",
         "central_america": "{{value}} Ameryka Środkowa",
@@ -662,7 +662,7 @@
     "workflow": "Organizacja Pracy",
     "write": "Pisanie",
     "preview": {
-        "close": "Zamknij Podgląd"
+        "close": "Zamknij podgląd"
     },
     "recurrent_in_allday": "Nie można umieścić powtarzającego się spotkania w oknie cały dzień"
 }

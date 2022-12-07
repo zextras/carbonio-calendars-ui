@@ -173,7 +173,11 @@
         "root": "Raíz",
         "choose_file": "Elegir archivo",
         "public_link_description": "Generado de  {{title}} en {{date}}",
-        "continue": "Continuar"
+        "continue": "Continuar",
+        "new_time_proposed": "Nueva hora propuesta",
+        "subject": "Asunto",
+        "cancel": "Cancelar",
+        "appointment_is_private": "La cita es privada."
     },
     "action": {
         "send": "Enviar",
@@ -187,7 +191,8 @@
         "calendar_access_share": "Compartición de acceso al calendario",
         "edit_calendar_properties": "Editar propiedades del calendario",
         "share_calendar": "Compartir calendario",
-        "empty_trash_confirmation": "Esta acción eliminará todos los elementos de la papelera. ¿Estás seguro que quieres continuar?"
+        "empty_trash_confirmation": "Esta acción eliminará todos los elementos de la papelera. ¿Estás seguro que quieres continuar?",
+        "send_edit": "Enviar edición"
     },
     "event": {
         "action": {
@@ -298,7 +303,9 @@
         "hours": "{{count}} hora",
         "hours_plural": "{{count}} horas",
         "minutes": "{{count}} minuto",
-        "minutes_plural": "{{count}} minutos"
+        "minutes_plural": "{{count}} minutos",
+        "second_before": "{{count}} segundo antes",
+        "second_before_plural": "{{count}} segundos antes"
     },
     "repeat": {
         "customize": "Personalizar",
@@ -466,7 +473,9 @@
         "required_participant_plural": "{{count}} Participantes",
         "send_email": "Enviar un e-mail",
         "edit_series_warning": "Cuando procedas con la modificación de las series, todas las instancias borradas o modificadas anteriormente serán restauradas con los ajustes de las nuevas series.",
-        "appointment_invitation_sent": "Invitación a cita enviada"
+        "appointment_invitation_sent": "Invitación a cita enviada",
+        "meeting_modified": "La siguiente reunión ha sido modificada",
+        "want_to_edit_modified_msg": "¿Quieres editar el mensaje de la cita modificada?"
     },
     "button": {
         "customize_modal": "Abrir modo de personalización"
@@ -513,7 +522,8 @@
         "chat_room": "Enlace de la Sala Virtual",
         "calendar_sharing_status": "Compartido con {{count}} persona",
         "calendar_sharing_status_plural": "Compartido con {{count}} personas",
-        "virtual_chat": "Chat virtual"
+        "virtual_chat": "Chat virtual",
+        "calendar_sharing_status_one": "Compartido con 1 persona"
     },
     "share_invite_resent": "Invitación para acceder a la compartición reenviada",
     "shared_folders": "Calendarios compartidos",
@@ -628,5 +638,6 @@
     "has_attachments": "Tiene adjuntos",
     "preview": {
         "close": "Cerrar vista previa"
-    }
+    },
+    "recurrent_in_allday": "No puedes arrastrar una cita recurrente en un espacio para todo un día"
 }

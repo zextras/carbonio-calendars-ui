@@ -64,7 +64,9 @@
         "optional_participant": "{{count}} 可选",
         "search_hints": " ",
         "edit_series_warning": "当您修改系列时，所有先前被删除或修改的实例都将按照新的系列设置进行恢复。",
-        "appointment_invitation_sent": "预约邀请已发送"
+        "appointment_invitation_sent": "预约邀请已发送",
+        "meeting_modified": "以下会议有改动",
+        "want_to_edit_modified_msg": "是否编辑已修改的预约消息？"
     },
     "calendar": {
         "modal": {
@@ -85,7 +87,8 @@
         "delete_calendar": "删除日历",
         "edit_message": "编辑消息",
         "empty_trash": "清空垃圾箱",
-        "empty_trash_confirmation": "此操作将删除邮件、联系人、日历、任务和公文包垃圾文件夹中的所有项目。确定要永久性删除垃圾文件夹中的所有内容吗？"
+        "empty_trash_confirmation": "此操作将删除邮件、联系人、日历、任务和公文包垃圾文件夹中的所有项目。确定要永久性删除垃圾文件夹中的所有内容吗？",
+        "send_edit": "发送编辑"
     },
     "event": {
         "action": {
@@ -300,7 +303,11 @@
         "select_in": " ",
         "search_hint": " ",
         "public_link_description": "从 {{title}} 于 {{date}} 生成",
-        "continue": "继续"
+        "continue": "继续",
+        "new_time_proposed": "建议的新时间",
+        "subject": "主题",
+        "cancel": "取消",
+        "appointment_is_private": "预约为私密。"
     },
     "months": {
         "april": "四月",
@@ -329,7 +336,8 @@
         },
         "all_time": "所有活动",
         "minutes": "{{count}} 分钟",
-        "hours": "{{count}} 小时"
+        "hours": "{{count}} 小时",
+        "second_before": "{{count}}秒前"
     },
     "repeat": {
         "customize": "自定义",
@@ -491,7 +499,8 @@
         "location": "位置",
         "chat_room": "虚拟房间链接",
         "virtual_chat": "虚拟聊天",
-        "calendar_sharing_status": " "
+        "calendar_sharing_status": " ",
+        "calendar_sharing_status_one": "已与 1 人分享"
     },
     "workflow": "工作流",
     "write": "编写",
@@ -607,5 +616,6 @@
     "appt_restored_successfully": "预约已成功恢复",
     "preview": {
         "close": "关闭预览"
-    }
+    },
+    "recurrent_in_allday": "您无法将重复预约拖动至全天空槽中"
 }
