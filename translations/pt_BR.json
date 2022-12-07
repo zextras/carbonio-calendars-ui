@@ -173,7 +173,11 @@
         "root": "Raiz",
         "choose_file": "Escolher arquivo",
         "public_link_description": "Gerado a partir de {{title}} em {{date}}",
-        "continue": "Continuar"
+        "continue": "Continuar",
+        "new_time_proposed": "Novo horário proposto",
+        "subject": "Assunto",
+        "cancel": "Cancelar",
+        "appointment_is_private": "O compromisso é privado."
     },
     "action": {
         "send": "Enviar",
@@ -187,7 +191,8 @@
         "share_calendar": "Compartilhar Calendário",
         "calendar_access_share": "Compartilhamento de acesso ao calendário",
         "edit_calendar_properties": "Editar propriedades do calendário",
-        "empty_trash_confirmation": "Esta ação vai excluir todos os itens da lixeira. Tem certeza que deseja continuar?"
+        "empty_trash_confirmation": "Esta ação vai excluir todos os itens da lixeira. Tem certeza que deseja continuar?",
+        "send_edit": "Enviar Edição"
     },
     "event": {
         "action": {
@@ -299,7 +304,9 @@
         "optional_participant": "{{count}} Opcional",
         "optional_participant_plural": "{{count}} Opcionais",
         "edit_series_warning": "Ao prosseguir com a modificação da série, todas as instâncias excluídas ou modificadas anteriormente serão restauradas com as novas configurações da série.",
-        "appointment_invitation_sent": "Convite de compromisso enviado"
+        "appointment_invitation_sent": "Convite de compromisso enviado",
+        "meeting_modified": "A seguinte reunião foi alterada",
+        "want_to_edit_modified_msg": "Deseja editar a mensagem do compromisso alterado?"
     },
     "months": {
         "april": "Abril",
@@ -358,7 +365,9 @@
         "minutes": "{{count}} minuto",
         "minutes_plural": "{{count}} minutos",
         "hours": "{{count}} hora",
-        "hours_plural": "{{count}} horas"
+        "hours_plural": "{{count}} horas",
+        "second_before": "{{count}} segundo antes",
+        "second_before_plural": "{{count}} segundos antes"
     },
     "repeat": {
         "customize": "Personalizar",
@@ -499,7 +508,8 @@
         "chat_room": "Link da Sala virtual",
         "virtual_chat": "Chat virtual",
         "calendar_sharing_status": "Compartilhado com {{count}} pessoa",
-        "calendar_sharing_status_plural": ""
+        "calendar_sharing_status_plural": "",
+        "calendar_sharing_status_one": "Compartilhado com 1 pessoa"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",
@@ -628,5 +638,6 @@
     },
     "preview": {
         "close": "Fechar pré-visualização"
-    }
+    },
+    "recurrent_in_allday": "Você não pode arrastar um compromisso recorrente para um horário de dia inteiro"
 }
