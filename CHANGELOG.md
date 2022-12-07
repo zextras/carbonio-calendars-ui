@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.40](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.39...v0.1.40) (2022-12-07)
+
+
+### Bug Fixes
+
+* getting error snackbar on propose new time send ([8532517](https://github.com/zextras/carbonio-calendars-ui/commit/853251751cf410533f54bbd76182c3781df5aa3d))
+
 ### [0.1.39](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.38...v0.1.39) (2022-11-29)
 
 
