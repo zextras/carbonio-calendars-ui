@@ -101,32 +101,34 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 	}, [available, openComposer, title, fragment, to]);
 	return (
 		<>
-			<Padding top="small" />
 			<Container
 				orientation="horizontal"
 				crossAlignment="flex-start"
 				mainAlignment="flex-start"
 				width="fill"
 				height="fit"
-				padding={{ top: 'medium' }}
+				padding={{ vertical: 'small' }}
 			>
-				<Button
-					type="outlined"
-					label={t('event.action.yes', 'yes')}
-					icon="Checkmark"
-					color="success"
-					onClick={accept}
-				/>
-				<Padding horizontal="small" />
-				<Button
-					type="outlined"
-					label={t('event.action.no', 'no')}
-					icon="Close"
-					color="error"
-					onClick={decline}
-				/>
-				<Divider />
+				<Padding right="small" vertical="medium">
+					<Button
+						type="outlined"
+						label={t('event.action.yes', 'yes')}
+						icon="Checkmark"
+						color="success"
+						onClick={accept}
+					/>
+				</Padding>
+				<Padding right="small" vertical="medium">
+					<Button
+						type="outlined"
+						label={t('event.action.no', 'no')}
+						icon="Close"
+						color="error"
+						onClick={decline}
+					/>
+				</Padding>
 			</Container>
+			<Divider />
 		</>
 	);
 };

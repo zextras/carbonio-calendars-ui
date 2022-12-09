@@ -120,6 +120,17 @@ export const CustomEventComponent = ({
 
 	return eventDiff <= 30 ? (
 		<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
+			{!event?.resource?.calendar?.owner &&
+				!event?.resource?.iAmOrganizer &&
+				event.resource?.participationStatus === 'NE' && (
+					<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
+						<Row style={{ padding: 'none' }} mainAlignment="center">
+							<Padding right="small">
+								<NeedActionIcon icon="CalendarWarning" color="primary" />
+							</Padding>
+						</Row>
+					</Tooltip>
+				)}
 			<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
 				<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
 					<Text color="currentColor" weight="medium" style={{ overflow: 'visible' }}>
@@ -131,15 +142,6 @@ export const CustomEventComponent = ({
 					</Text>
 				</Row>
 			</Tooltip>
-			{!event?.resource?.calendar?.owner &&
-				!event?.resource?.iAmOrganizer &&
-				event.resource?.participationStatus === 'NE' && (
-					<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
-						<Row style={{ padding: 'none' }} mainAlignment="center">
-							<NeedActionIcon icon="CalendarWarning" color="primary" />
-						</Row>
-					</Tooltip>
-				)}
 			{/* {event?.resource?.isException && (
 				<Padding left="small">
 					<Icon
@@ -167,6 +169,17 @@ export const CustomEventComponent = ({
 	) : (
 		<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
 			<Row mainAlignment="space-between" takeAvailableSpace>
+				{!event?.resource?.calendar?.owner &&
+					!event?.resource?.iAmOrganizer &&
+					event.resource?.participationStatus === 'NE' && (
+						<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
+							<Row style={{ padding: 'none' }} mainAlignment="center">
+								<Padding right="small">
+									<NeedActionIcon icon="CalendarWarning" color="primary" />
+								</Padding>
+							</Row>
+						</Tooltip>
+					)}
 				<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						{!event.allDay && (
@@ -176,15 +189,6 @@ export const CustomEventComponent = ({
 						)}
 					</Row>
 				</Tooltip>
-				{!event?.resource?.calendar?.owner &&
-					!event?.resource?.iAmOrganizer &&
-					event.resource?.participationStatus === 'NE' && (
-						<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
-							<Row style={{ padding: 'none' }} mainAlignment="center">
-								<NeedActionIcon icon="CalendarWarning" color="primary" />
-							</Row>
-						</Tooltip>
-					)}
 			</Row>
 			<Tooltip label={title} placement="top">
 				<Row>

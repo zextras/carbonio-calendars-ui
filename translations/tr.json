@@ -159,7 +159,8 @@
         "edit_series_warning": "Serileri değiştirmeye devam ederseniz, daha önce silinmiş veya değiştirilmiş tüm tekrarlamalar yeni seri ayarları ile geri yüklenecek.",
         "appointment_invitation_sent": "Randevu daveti gönderildi",
         "want_to_edit_modified_msg": "Değiştirilen randevu için mesajı düzenlemek ister misiniz?",
-        "meeting_modified": "Bu toplantı değiştirildi"
+        "meeting_modified": "Bu toplantı değiştirildi",
+        "search_hints": " "
     },
     "search": {
         "organized_by": "Organize eden"
@@ -352,7 +353,9 @@
         "cancel": "iptal",
         "subject": "Konu",
         "new_time_proposed": "Yeni Saat Önerildi",
-        "appointment_is_private": "Bu özel randevudur."
+        "appointment_is_private": "Bu özel randevudur.",
+        "search_hint": " ",
+        "select_in": " "
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {

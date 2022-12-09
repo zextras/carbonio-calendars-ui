@@ -63,7 +63,9 @@
         "send_email": "メールを送信する",
         "more": "その他...",
         "edit_series_warning": "シリーズの変更を進めると、以前に削除または変更されたインスタンスすべてが新しいシリーズ設定で復元されます。",
-        "appointment_invitation_sent": "予約招待状を送信しました"
+        "appointment_invitation_sent": "予約招待状を送信しました",
+        "meeting_modified": "次の会議が変更されました",
+        "want_to_edit_modified_msg": "変更された予定のメッセージを編集しますか？"
     },
     "action": {
         "send": "送信",
@@ -77,7 +79,8 @@
         "share_calendar": "カレンダーを共有する",
         "calendar_access_share": "カレンダーのアクセスシェア",
         "edit_calendar_properties": "カレンダーのプロパティを編集する",
-        "empty_trash_confirmation": "この操作により、メール、連絡先、カレンダー、タスク、ブリーフケースのゴミ箱のフォルダ内のアイテムがすべて削除されます。本当にこうしたゴミ箱フォルダ内のすべてを完全に削除しますか？"
+        "empty_trash_confirmation": "この操作により、メール、連絡先、カレンダー、タスク、ブリーフケースのゴミ箱のフォルダ内のアイテムがすべて削除されます。本当にこうしたゴミ箱フォルダ内のすべてを完全に削除しますか？",
+        "send_edit": "編集を送信する"
     },
     "event": {
         "action": {
@@ -267,7 +270,11 @@
         "root": "ルート",
         "choose_file": "ファイルを選択する",
         "public_link_description": "{{date}}に{{title}}から生成されました",
-        "continue": "続行する"
+        "continue": "続行する",
+        "new_time_proposed": "時刻変更依頼",
+        "subject": "件名",
+        "cancel": "キャンセル",
+        "appointment_is_private": "予定は非公開です。"
     },
     "folder": {
         "modal": {
@@ -336,7 +343,8 @@
             "set_new_time_message": "欠席した予定の新しい時間を設定しますか？ [OK]をクリックすると、他のリマインダーがすべて自動的に閉じられます。"
         },
         "minutes": "{{count}}分間",
-        "hours": "{{count}}時間"
+        "hours": "{{count}}時間",
+        "second_before": "{{count}}秒前"
     },
     "repeat": {
         "customize": "カスタマイズ",
@@ -482,7 +490,9 @@
         "equipment": "機器",
         "location": "場所",
         "virtual_chat": "バーチャルチャット",
-        "chat_room": "バーチャルルームのリンク"
+        "chat_room": "バーチャルルームのリンク",
+        "calendar_sharing_status_one": "1人と共有されました",
+        "calendar_sharing_status": "{{count}}人と共有されました"
     },
     "workflow": "ワークフロー",
     "write": "書く",
@@ -603,5 +613,6 @@
     "appt_restored_successfully": "予定が復元されました",
     "preview": {
         "close": "プレビューを閉じる"
-    }
+    },
+    "recurrent_in_allday": "定期的な予定を終日スロットにドラッグすることはできません"
 }

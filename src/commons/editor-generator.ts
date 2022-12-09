@@ -395,10 +395,11 @@ export const generateEditor = ({
 
 	const callbacks = createCallbacks(id, context);
 
-	context.dispatch(createNewEditor(editor));
+	const newEditor: Editor = { ...editor, calendar: omit(editor.calendar, ['parent', 'children']) };
+	context.dispatch(createNewEditor(newEditor));
 
 	return {
-		editor,
+		editor: newEditor,
 		callbacks
 	};
 };

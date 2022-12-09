@@ -10,11 +10,17 @@ import { counterAppointmentRequest } from '../../soap/counter-appointment-reques
 
 export const proposeNewTime = createAsyncThunk(
 	'calendars/proposeNewTime',
-	async ({ id }: { id: string }, { getState }): Promise<any> => {
+	async ({ id }: { id: string }, { getState, rejectWithValue }): Promise<any> => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		const appt = getState()?.editor?.editors?.[id];
-
-		return counterAppointmentRequest({ appt });
+		const res = await counterAppointmentRequest({ appt });
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		const response = res?.Fault ? { ...res.Fault, error: true } : res;
+		if (response?.error) {
+			return rejectWithValue(response);
+		}
+		return { response: res, editor: appt };
 	}
 );
