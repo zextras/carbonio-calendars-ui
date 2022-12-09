@@ -11,7 +11,7 @@ type GetEventProps = Omit<Partial<EventType>, 'resource'> & ResourceProps;
 
 const getDefaultEvent = (): EventType => ({
 	start: new Date(),
-	end: new Date(getEndTime({ start: new Date().valueOf(), duration: '60m' })),
+	end: new Date(getEndTime({ start: new Date().valueOf(), duration: '30m' })),
 	resource: {
 		calendar: {
 			id: '10',

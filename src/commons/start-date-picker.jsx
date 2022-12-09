@@ -7,6 +7,7 @@ import React, { useCallback, useMemo } from 'react';
 import { DateTimePicker } from '@zextras/carbonio-design-system';
 import momentLocalizer from 'react-widgets-moment';
 import { t } from '@zextras/carbonio-shell-ui';
+import moment from 'moment';
 import DatePickerCustomComponent from './date-picker-custom-component';
 
 momentLocalizer();
@@ -14,7 +15,7 @@ momentLocalizer();
 export default function StartDatePicker({ start, allDay, diff, onChange }) {
 	const onStartChange = useCallback(
 		(d) => {
-			const startTime = d.getTime();
+			const startTime = moment(d).valueOf();
 			const endTime = startTime + diff;
 			return onChange({
 				start: startTime,
@@ -49,6 +50,7 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 					label={label}
 					value={startDate}
 					onChange={onStartChange}
+					utcOffset={-60}
 					testId="start-picker"
 				/>
 			}

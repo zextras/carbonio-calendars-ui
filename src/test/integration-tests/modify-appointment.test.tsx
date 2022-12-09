@@ -58,7 +58,7 @@ describe('modify appointment', () => {
 		// CHECKING EDITOR DEFAULT VALUES
 		expect(previousEditor.allDay).toEqual(false);
 		expect(previousEditor.start).toEqual(1640995200000);
-		expect(previousEditor.end).toEqual(1640998800000);
+		expect(previousEditor.end).toEqual(1640997000000);
 
 		// SETTING EDITOR NEW VALUES
 		const newAttendees = map(mockedData.editor.getRandomAttendees(), 'email');
@@ -116,7 +116,7 @@ describe('modify appointment', () => {
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);
 		expect(updatedEditor.start).toEqual(1641157200000);
-		expect(updatedEditor.end).toEqual(1641160800000);
+		expect(updatedEditor.end).toEqual(1641159000000);
 		expect(updatedEditor.attendees).toHaveLength(newAttendees.length);
 		expect(updatedEditor.optionalAttendees).toHaveLength(newOptionals.length);
 
