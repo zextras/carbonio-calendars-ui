@@ -101,7 +101,7 @@ describe('modify appointment', () => {
 				name: /choose sunday, january 2nd, 2022/i
 			})
 		);
-		await user.click(screen.getByText(/12:00 am/i));
+		await user.click(screen.getByText(/10:00 pm/i));
 
 		// SELECTING DIFFERENT REMINDER VALUE
 		await user.click(screen.getByText(/reminder/i));
@@ -115,8 +115,8 @@ describe('modify appointment', () => {
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);
-		expect(updatedEditor.start).toEqual(1641078000000);
-		expect(updatedEditor.end).toEqual(1641081600000);
+		expect(updatedEditor.start).toEqual(1641157200000);
+		expect(updatedEditor.end).toEqual(1641160800000);
 		expect(updatedEditor.attendees).toHaveLength(newAttendees.length);
 		expect(updatedEditor.optionalAttendees).toHaveLength(newOptionals.length);
 
