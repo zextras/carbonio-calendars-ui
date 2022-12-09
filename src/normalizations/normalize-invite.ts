@@ -25,8 +25,8 @@ export const normalizeInvite = (m: any): Invite => ({
 	parent: m.l,
 	flags: m.f,
 	parts: m.mp ? normalizeMailPartMapFn(m.mp) : [],
-	alarmString: getAlarmToString(m.inv[0]?.comp?.[0]?.alarm || null) ?? 'never',
-	alarmValue: m.inv[0]?.comp?.[0]?.alarm?.[0]?.trigger?.[0]?.rel?.[0].m?.toString(),
+	alarmString: getAlarmToString(m?.inv?.[0]?.comp?.[0]?.alarm || null) ?? 'never',
+	alarmValue: m?.inv?.[0]?.comp?.[0]?.alarm?.[0]?.trigger?.[0]?.rel?.[0].m?.toString(),
 	class: m?.inv?.[0]?.comp?.[0]?.class,
 	compNum: m?.inv?.[0]?.comp?.[0]?.compNum, // Component number of the invite
 	date: m.d,

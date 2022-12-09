@@ -75,6 +75,7 @@
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.2",
+		"@testing-library/react-hooks": "^8.0.1",
 		"@zextras/carbonio-design-system": "^0.5.2",
 		"@zextras/carbonio-shell-ui": "0.4.44",
 		"@zextras/carbonio-ui-preview": "^0.2.4",

@@ -43,7 +43,7 @@ import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 
 let counter = 0;
 
-const getNewEditId = (id?: string): string => {
+export const getNewEditId = (id?: string): string => {
 	counter += 1;
 	return `${id ?? 'new'}-${counter}`;
 };

@@ -13,11 +13,14 @@ momentLocalizer();
 
 export default function StartDatePicker({ start, allDay, diff, onChange }) {
 	const onStartChange = useCallback(
-		(d) =>
-			onChange({
-				start: d.getTime(),
-				end: d.getTime() + diff
-			}),
+		(d) => {
+			const startTime = d.getTime();
+			const endTime = startTime + diff;
+			return onChange({
+				start: startTime,
+				end: endTime
+			});
+		},
 		[onChange, diff]
 	);
 
@@ -42,7 +45,12 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 			defaultValue={startDate}
 			onChange={onStartChange}
 			customInput={
-				<DatePickerCustomComponent label={label} value={startDate} onChange={onStartChange} />
+				<DatePickerCustomComponent
+					label={label}
+					value={startDate}
+					onChange={onStartChange}
+					testId="start-picker"
+				/>
 			}
 		/>
 	);
