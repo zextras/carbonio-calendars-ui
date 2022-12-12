@@ -15,6 +15,7 @@ import {
 	getFailOnConsoleDefaultConfig
 } from './src/carbonio-ui-commons/test/jest-setup';
 import { registerRestHandler } from './src/carbonio-ui-commons/test/mocks/network/msw/handlers';
+import { handleCreateAppointmentExceptionRequest } from './src/test/mocks/network/msw/handle-create-appointment-exception';
 import { handleCreateFolderRequest } from './src/test/mocks/network/msw/handle-create-folder';
 import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
 import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite';
@@ -29,6 +30,10 @@ beforeAll(() => {
 		rest.post('/service/soap/GetMsgRequest', handleGetInvite),
 		rest.post('/service/soap/CreateFolderRequest', handleCreateFolderRequest),
 		rest.post('/service/soap/CreateAppointmentRequest', handleCreateAppointmentRequest),
+		rest.post(
+			'/service/soap/CreateAppointmentExceptionRequest',
+			handleCreateAppointmentExceptionRequest
+		),
 		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest)
 	];
 	registerRestHandler(...h);

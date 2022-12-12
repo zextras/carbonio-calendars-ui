@@ -53,7 +53,29 @@ const getSeriesEditorFields = (context: any = {}): any => ({
 	isSeries: true,
 	isInstance: false,
 	exceptId: undefined,
-	recur: 'something',
+	recur: [
+		{
+			add: [
+				{
+					rule: [
+						{
+							freq: 'DAI',
+							until: [
+								{
+									d: '20241210T083000Z'
+								}
+							],
+							interval: [
+								{
+									ival: 1
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
 	...context
 });
 
@@ -62,7 +84,29 @@ const getInstanceEditorFields = (context: any = {}): any => ({
 	isSeries: true,
 	isInstance: true,
 	exceptId: undefined,
-	recur: 'something',
+	recur: [
+		{
+			add: [
+				{
+					rule: [
+						{
+							freq: 'DAI',
+							until: [
+								{
+									d: '20241210T083000Z'
+								}
+							],
+							interval: [
+								{
+									ival: 1
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
 	...context
 });
 

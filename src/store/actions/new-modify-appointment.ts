@@ -113,7 +113,7 @@ export const modifyAppointment = createAsyncThunk(
 				}
 				const updatedEditor = {
 					...editor,
-					isSeries: true,
+					isSeries: false,
 					isInstance: true,
 					isException: true,
 					isNew: false,
