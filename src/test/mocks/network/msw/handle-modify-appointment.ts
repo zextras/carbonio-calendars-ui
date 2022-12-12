@@ -76,8 +76,8 @@ const getResponse = (id: string): SuccessSoapResponse<any> => ({
 											fb: 'B',
 											transp: 'O',
 											or: {
-												a: 'zextras@demo.zextras.io',
-												url: 'zextras@demo.zextras.io',
+												a: 'carbonio@admin.io',
+												url: 'carbonio@admin.io',
 												d: 'Carbonio Admin'
 											},
 											url: '',

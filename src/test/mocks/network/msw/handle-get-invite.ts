@@ -39,27 +39,27 @@ const getSoapInvite = ({ context }: { context: { id: string } }): any => ({
 							desc: [{}]
 						}
 					],
-					fr: '-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::- Gabriele Marino have invited you to a new meeting! Subject: ...',
+					fr: '-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::- mail fullname have invited you to a new meeting! Subject: ...',
 					noBlob: true,
 					desc: [
 						{
 							_content:
-								'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\nGabriele Marino have invited you to a new meeting!\n\nSubject: test \nOrganizer: "Gabriele Marino \n\nTime: Monday, December 5, 2022 12:30 PM - 1:00 PM\n \nInvitees:  \n\n\n-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\n'
+								'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\nmail fullname have invited you to a new meeting!\n\nSubject: test \nOrganizer: "mail fullname \n\nTime: Monday, December 5, 2022 12:30 PM - 1:00 PM\n \nInvitees:  \n\n\n-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\n'
 						}
 					],
 					descHtml: [
 						{
 							_content:
-								'<html><body id="htmlmode">-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-<h3>Gabriele Marino have invited you to a new meeting!</h3><p>Subject: test</p><p>Organizer: Gabriele Marino</p><p>Location: </p><p>Time: Monday, December 5, 2022 12:30 PM - 1:00 PM</p><p>Invitees: </p><br />-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-</body></html><html><body id="htmlmode"></body></html><html><body id="htmlmode"></body></html><html><body id="htmlmode"></body></html>'
+								'<html><body id="htmlmode">-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-<h3>mail fullname have invited you to a new meeting!</h3><p>Subject: test</p><p>Organizer: mail fullname</p><p>Location: </p><p>Time: Monday, December 5, 2022 12:30 PM - 1:00 PM</p><p>Invitees: </p><br />-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-</body></html><html><body id="htmlmode"></body></html><html><body id="htmlmode"></body></html><html><body id="htmlmode"></body></html>'
 						}
 					],
 					fba: 'B',
 					fb: 'B',
 					transp: 'O',
 					or: {
-						a: 'gabriele.marino@zextras.com',
-						url: 'gabriele.marino@zextras.com',
-						d: 'Gabriele Marino'
+						a: 'mail@fullname.com',
+						url: 'mail@fullname.com',
+						d: 'mail fullname'
 					},
 					url: '',
 					isOrg: true,
