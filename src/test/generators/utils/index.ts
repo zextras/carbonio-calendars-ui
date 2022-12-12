@@ -30,4 +30,81 @@ const getRandomOrganizer = (org?: IdentityItem): IdentityItem => {
 	};
 };
 
-export default { getRandomInRange, getRandomCalendarFlags, getRandomEditorId, getRandomOrganizer };
+const getSingleEditorFields = (context: any = {}): any => ({
+	isException: false,
+	isSeries: false,
+	isInstance: true,
+	exceptId: undefined,
+	recur: undefined,
+	...context
+});
+
+const getExceptionEditorFields = (context: any = {}): any => ({
+	isException: true,
+	isSeries: false,
+	isInstance: true,
+	exceptId: undefined,
+	recur: undefined,
+	...context
+});
+
+const getSeriesEditorFields = (context: any = {}): any => ({
+	isException: false,
+	isSeries: true,
+	isInstance: false,
+	exceptId: undefined,
+	recur: 'something',
+	...context
+});
+
+const getInstanceEditorFields = (context: any = {}): any => ({
+	isException: false,
+	isSeries: true,
+	isInstance: true,
+	exceptId: undefined,
+	recur: 'something',
+	...context
+});
+
+const getSingleEventFields = (context: any = {}): any => ({
+	isException: false,
+	isRecurrent: false,
+	ridZ: '20220101T093000Z',
+	...context
+});
+
+const getExceptionEventFields = (context: any = {}): any => ({
+	isException: true,
+	isRecurrent: false,
+	ridZ: '20220101T093000Z',
+	...context
+});
+
+const getSeriesEventFields = (context: any = {}): any => ({
+	isException: false,
+	isRecurrent: true,
+	ridZ: undefined,
+	...context
+});
+
+const getInstanceEventFields = (context: any = {}): any => ({
+	isException: false,
+	isRecurrent: true,
+	ridZ: '20221215T083000Z',
+	...context
+});
+
+export default {
+	getRandomInRange,
+	getRandomCalendarFlags,
+	getRandomEditorId,
+	getRandomOrganizer,
+	getSingleEditorFields,
+	getExceptionEditorFields,
+	getSeriesEditorFields,
+	getInstanceEditorFields,
+	getSingleEventFields,
+	getExceptionEventFields,
+	getSeriesEventFields,
+	getInstanceEventFields
+};

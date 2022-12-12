@@ -86,34 +86,10 @@ const getRandomAttendees = (context?: { length?: number }): Array<any> => {
 type EditorType = Pick<Editor, 'isException' | 'isSeries' | 'isInstance'>;
 
 const getRandomEditorType = (type?: 'single' | 'series' | 'exception' | 'instance'): EditorType => {
-	const single = {
-		isException: false,
-		isSeries: false,
-		isInstance: true,
-		exceptId: undefined,
-		recur: undefined
-	};
-	const exception = {
-		isException: true,
-		isSeries: false,
-		isInstance: true,
-		exceptId: undefined,
-		recur: undefined
-	};
-	const series = {
-		isException: false,
-		isSeries: true,
-		isInstance: false,
-		exceptId: undefined,
-		recur: 'something'
-	};
-	const instance = {
-		isException: false,
-		isSeries: true,
-		isInstance: true,
-		exceptId: undefined,
-		recur: 'something'
-	};
+	const single = utils.getSingleEditorFields();
+	const exception = utils.getExceptionEditorFields();
+	const series = utils.getSeriesEditorFields();
+	const instance = utils.getInstanceEditorFields();
 
 	const types = [single, exception, series, instance];
 

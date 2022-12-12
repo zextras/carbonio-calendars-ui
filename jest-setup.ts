@@ -32,12 +32,12 @@ beforeAll(() => {
 		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest)
 	];
 	registerRestHandler(...h);
-	moment.tz.setDefault('Europe/Rome');
-	jest.setSystemTime(new Date('2022-01-01'));
 	defaultBeforeAllTests();
 });
 
 beforeEach(() => {
+	moment.tz.setDefault('Europe/Rome');
+	jest.setSystemTime(new Date('2022-01-01'));
 	defaultBeforeEachTest();
 });
 
