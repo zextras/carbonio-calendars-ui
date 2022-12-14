@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Select } from '@zextras/carbonio-design-system';
-import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { usePrefs } from '../../../carbonio-ui-commons/utils/use-prefs';
 import { findLabel, TimeZonesOptions } from '../../../settings/components/utils';
 import { selectEditorDisabled, selectEditorTimezone } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
@@ -25,7 +25,7 @@ export const EditorTimezone = ({ editorId, callbacks }: EditorProps): ReactEleme
 	const timezone = useSelector(selectEditorTimezone(editorId));
 	const { onTimeZoneChange } = callbacks;
 	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
-	const { zimbraPrefUseTimeZoneListInCalendar } = useUserSettings().prefs;
+	const { zimbraPrefUseTimeZoneListInCalendar } = usePrefs();
 	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	useEffect(() => {

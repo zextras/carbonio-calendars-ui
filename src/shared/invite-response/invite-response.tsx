@@ -3,9 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter } from 'lodash';
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable import/extensions */
 import React, { FC, ReactElement, useMemo, useEffect, useCallback, useState } from 'react';
 import {
 	Container,
@@ -19,7 +16,7 @@ import {
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
-import { addBoard, getAction, Action, t, Board, useFolders } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction, Action, t, Board } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
@@ -30,7 +27,7 @@ import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { inviteToEvent } from '../../hooks/use-invite-to-event';
 import { getInvite } from '../../store/actions/get-invite';
 import { CALENDAR_ROUTE } from '../../constants';
-import BodyMessageRenderer from '../../commons/body-message-renderer.jsx';
+import BodyMessageRenderer from '../../commons/body-message-renderer';
 import { useInvite } from '../../hooks/use-invite';
 import { StoreProvider } from '../../store/redux';
 

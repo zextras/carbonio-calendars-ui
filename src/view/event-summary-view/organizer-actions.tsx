@@ -14,7 +14,7 @@ import {
 	SnackbarManagerContext,
 	Row
 } from '@zextras/carbonio-design-system';
-import { replaceHistory, useTags, Folder } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import { editAppointment } from '../../actions/appointment-actions-fn';
 import { PANEL_VIEW } from '../../constants';

@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
-import { replaceHistory, useFolders, useTags } from '@zextras/carbonio-shell-ui';
-import { filter } from 'lodash';
+import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useContext, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectInstanceInvite } from '../store/selectors/invites';

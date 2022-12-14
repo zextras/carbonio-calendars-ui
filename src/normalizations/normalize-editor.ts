@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getUserSettings } from '@zextras/carbonio-shell-ui';
 import { filter, find, isNil, map, omit, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
@@ -11,6 +10,7 @@ import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Editor } from '../types/editor';
 import { Invite } from '../types/store/invite';
+import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -66,7 +66,7 @@ const setEditorDate = ({
 	invite: Invite | undefined;
 	event: EventPropType | undefined;
 }): { start: number; end: number } => {
-	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getUserSettings().prefs;
+	const { zimbraPrefCalendarDefaultApptDuration = '3600' } = getPrefs();
 	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
 		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;

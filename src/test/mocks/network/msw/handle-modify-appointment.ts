@@ -1,10 +1,4 @@
-/*
- * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
- *
- * SPDX-License-Identifier: AGPL-3.0-only
- */
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
-import { some } from 'lodash';
 
 const getResponse = (id: string): SuccessSoapResponse<any> => ({
 	Header: {
@@ -16,7 +10,7 @@ const getResponse = (id: string): SuccessSoapResponse<any> => ({
 		}
 	},
 	Body: {
-		CreateAppointmentResponse: {
+		ModifyAppointmentResponse: {
 			calItemId: '395',
 			apptId: '395',
 			invId: '395-394',
@@ -125,133 +119,8 @@ const getResponse = (id: string): SuccessSoapResponse<any> => ({
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleCreateAppointmentRequest = (req, res, ctx) => {
-	const resp = req.body.Body.CreateAppointmentRequest;
-	if (!resp?.m) {
-		const response = {
-			Fault: {
-				Code: {
-					Value: 'soap:Sender'
-				},
-				Reason: {
-					Text: 'invalid request: missing required element: m'
-				},
-				Detail: {
-					Error: {
-						Code: 'service.INVALID_REQUEST',
-						Trace: 'Error trace detail',
-						_jsns: 'urn:zimbra'
-					}
-				}
-			}
-		};
-		return res(ctx.json(response));
-	}
-	if (resp?.m) {
-		if (resp?.m?.e && some(resp?.m?.e, (item) => !item.a)) {
-			const response = {
-				Fault: {
-					Code: {
-						Value: 'soap:Sender'
-					},
-					Reason: {
-						Text: 'invalid request: missing required element: a'
-					},
-					Detail: {
-						Error: {
-							Code: 'service.INVALID_REQUEST',
-							Trace: 'Error trace detail',
-							_jsns: 'urn:zimbra'
-						}
-					}
-				}
-			};
-			return res(ctx.json(response));
-		}
-		if (
-			resp?.m?.mp?.attach?.mp &&
-			some(resp?.m?.mp?.attach?.mp, (item) => !item?.mid || !item?.part)
-		) {
-			const response = {
-				Fault: {
-					Code: {
-						Value: 'soap:Sender'
-					},
-					Reason: {
-						Text: 'invalid request: missing required element of attachment' // todo: this is invented, use the correct message
-					},
-					Detail: {
-						Error: {
-							Code: 'service.INVALID_REQUEST',
-							Trace: 'Error trace detail',
-							_jsns: 'urn:zimbra'
-						}
-					}
-				}
-			};
-			return res(ctx.json(response));
-		}
-		if (resp?.m?.mp?.attach?.m && !resp?.m?.mp?.attach?.m?.id) {
-			const response = {
-				Fault: {
-					Code: {
-						Value: 'soap:Sender'
-					},
-					Reason: {
-						Text: 'invalid request: missing required element: id' // todo: this is invented, use the correct message
-					},
-					Detail: {
-						Error: {
-							Code: 'service.INVALID_REQUEST',
-							Trace: 'Error trace detail',
-							_jsns: 'urn:zimbra'
-						}
-					}
-				}
-			};
-			return res(ctx.json(response));
-		}
-		if (resp?.m?.mp?.attach?.cn && !resp?.m?.mp?.attach?.cn?.id) {
-			const response = {
-				Fault: {
-					Code: {
-						Value: 'soap:Sender'
-					},
-					Reason: {
-						Text: 'invalid request: missing required element: id' // todo: this is invented, use the correct message
-					},
-					Detail: {
-						Error: {
-							Code: 'service.INVALID_REQUEST',
-							Trace: 'Error trace detail',
-							_jsns: 'urn:zimbra'
-						}
-					}
-				}
-			};
-			return res(ctx.json(response));
-		}
-		if (resp?.m?.inv[0]?.comp[0]?.exceptId && !resp?.m?.inv[0]?.comp[0]?.exceptId?.d) {
-			const response = {
-				Fault: {
-					Code: {
-						Value: 'soap:Sender'
-					},
-					Reason: {
-						Text: 'invalid request: missing required element: d' // todo: this is invented, use the correct message
-					},
-					Detail: {
-						Error: {
-							Code: 'service.INVALID_REQUEST',
-							Trace: 'Error trace detail',
-							_jsns: 'urn:zimbra'
-						}
-					}
-				}
-			};
-			return res(ctx.json(response));
-		}
-	}
+export const handleModifyAppointmentRequest = (req, res, ctx) => {
+	const resp = req.body.Body.ModifyAppointmentRequest;
 	const response = getResponse(resp.id);
 	return res(ctx.json(response));
 };

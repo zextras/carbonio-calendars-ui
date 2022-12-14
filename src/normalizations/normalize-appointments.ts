@@ -43,6 +43,7 @@ export const normalizeAppointment = (appt: any): Appointment => ({
 	id: appt.id,
 	alarm: appt.alarm,
 	alarmData: appt.alarmData,
+	hasEx: appt?.hasEx,
 	fb: appt.fb,
 	fr: appt.fr ?? '',
 	d: appt.d,

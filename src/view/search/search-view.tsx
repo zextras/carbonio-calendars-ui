@@ -7,11 +7,11 @@ import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
 import { isEmpty, map, reduce } from 'lodash';
 import moment from 'moment';
-
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { FOLDERS, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { getSelectedEvents } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
@@ -46,15 +46,15 @@ const SearchView: FC<SearchProps> = ({ useDisableSearch, useQuery, ResultsHeader
 	const [loading, setLoading] = useState(false);
 	const dispatch = useDispatch();
 	const { path } = useRouteMatch();
-	const settings = useUserSettings()?.prefs;
+	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
 	const [resultLabel, setResultLabel] = useState<string>(t('label.results_for', 'Results for: '));
 	const [isInvalidQuery, setIsInvalidQuery] = useState<boolean>(false);
 	const [includeTrash, includeSharedFolders] = useMemo(
 		() => [
-			settings?.zimbraPrefIncludeTrashInSearch === 'TRUE',
-			settings?.zimbraPrefIncludeSharedItemsInSearch === 'TRUE'
+			zimbraPrefIncludeTrashInSearch === 'TRUE',
+			zimbraPrefIncludeSharedItemsInSearch === 'TRUE'
 		],
-		[settings]
+		[zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch]
 	);
 
 	const calendars = useSelector(selectCalendars);
