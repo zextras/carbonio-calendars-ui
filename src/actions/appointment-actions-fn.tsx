@@ -226,9 +226,9 @@ export const createCopy =
 	}: {
 		event: EventType;
 		invite: Invite;
-		context: ActionsContext;
-	}): ((ev: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void) =>
-	(ev: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent): void => {
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+	}): ((ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void) =>
+	(ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent): void => {
 		if (ev) ev.stopPropagation();
 		context?.onClose && context?.onClose();
 		const identities = getIdentityItems();
