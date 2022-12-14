@@ -4,7 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { isNil } from 'lodash';
-import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+	ReactElement,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from 'react';
 import {
 	Container,
 	Text,
@@ -61,33 +69,40 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
 
 	const showPanelView = useCallback(() => {
-		if (event.permission) {
-			if (event?.resource?.isRecurrent) {
-				// I'm disabling lint as the DS is not defining the type
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				const closeModal = createModal(
-					{
-						children: (
-							<StoreProvider>
-								<AppointmentTypeHandlingModal
-									event={event}
-									onClose={(): void => closeModal()}
-									onSeries={onEntireSeries}
-									onInstance={onSingleInstance}
-								/>
-							</StoreProvider>
-						)
-					},
-					true
-				);
-			} else {
-				replaceHistory(
-					`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-				);
-			}
+		if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
+			createSnackbar({
+				key: `private_appointment`,
+				replace: true,
+				type: 'info',
+				label: t('label.appointment_is_private', 'The appointment is private.'),
+				autoHideTimeout: 3000,
+				hideButton: true
+			});
+		} else if (event?.resource?.isRecurrent) {
+			// I'm disabling lint as the DS is not defining the type
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			const closeModal = createModal(
+				{
+					children: (
+						<StoreProvider>
+							<AppointmentTypeHandlingModal
+								event={event}
+								onClose={(): void => closeModal()}
+								onSeries={onEntireSeries}
+								onInstance={onSingleInstance}
+							/>
+						</StoreProvider>
+					)
+				},
+				true
+			);
+		} else {
+			replaceHistory(
+				`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			);
 		}
-	}, [event, createModal, onEntireSeries, onSingleInstance]);
+	}, [event, createModal, onEntireSeries, onSingleInstance, createSnackbar]);
 
 	const toggleOpen = useCallback(
 		(e): void => {
@@ -110,13 +125,14 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 		[event?.resource?.class, event?.haveWriteAccess, createSnackbar, getEventInvite, action, open]
 	);
 
-	const actions = useEventSummaryViewActions({
-		event
-	});
-
 	const onClose = useCallback(() => {
 		setOpen(false);
 	}, []);
+
+	const actions = useEventSummaryViewActions({
+		event,
+		onClose
+	});
 
 	useEffect(() => {
 		if (!isNil(action)) {
