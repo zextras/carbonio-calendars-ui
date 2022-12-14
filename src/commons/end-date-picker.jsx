@@ -38,7 +38,12 @@ export default function EndDatePicker({ start, end, allDay, diff, onChange }) {
 			defaultValue={endDate}
 			onChange={onEndChange}
 			customInput={
-				<DatePickerCustomComponent label={label} value={endDate} onChange={onEndChange} />
+				<DatePickerCustomComponent
+					label={label}
+					value={endDate}
+					onChange={onEndChange}
+					testId="end-picker"
+				/>
 			}
 		/>
 	);

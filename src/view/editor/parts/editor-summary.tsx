@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
 import {
+	selectEditorAllDay,
 	selectEditorCalendar,
 	selectEditorEnd,
 	selectEditorLocation,
@@ -42,12 +43,21 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const room = useSelector(selectEditorRoom(editorId));
 	const title = useSelector(selectEditorTitle(editorId));
 	const calendar = useSelector(selectEditorCalendar(editorId));
+	const allDay = useSelector(selectEditorAllDay(editorId));
 
-	const apptDateTime = useMemo(
-		() => `${moment(start).format(`dddd, DD MMMM, YYYY HH:mm`)} -
-	           ${moment(end).format(' HH:mm')}`,
-		[start, end]
-	);
+	const apptDateTime = useMemo(() => {
+		const diff = moment(end).diff(moment(start), 'days');
+		const allDayString =
+			allDay && diff > 0
+				? `${moment(start).format(`dddd, DD MMMM, YYYY`)} -
+	           ${moment(end).format(`dddd, DD MMMM, YYYY`)} - ${t('label.all_day', 'All day')}`
+				: `${moment(start).format(`dddd, DD MMMM, YYYY`)} - ${t('label.all_day', 'All day')}`;
+
+		return allDay
+			? allDayString
+			: `${moment(start).format(`dddd, DD MMMM, YYYY HH:mm`)} -
+	           ${moment(end).format(' HH:mm')}`;
+	}, [end, start, allDay, t]);
 
 	const apptLocation = useMemo(
 		() => `GMT ${moment(start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,

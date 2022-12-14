@@ -25,9 +25,7 @@ import {
 	updateEditorReducer,
 	deleteEditorReducer
 } from '../reducers/edit-organizer';
-import { initializeAppointmentReducer } from '../reducers/initialize-appointment';
 import {
-	addAppointmentEditorReducer,
 	editAppointmentDataReducer,
 	editAttendeesReducer,
 	editOptionalAttendeesReducer,
@@ -48,14 +46,12 @@ export const editorSlice = createSlice({
 		searchActiveId: undefined
 	},
 	reducers: {
-		addAppointmentEditor: addAppointmentEditorReducer,
 		editAppointmentData: editAppointmentDataReducer,
 		editResourceData: editResourceDataReducer,
 		editAttendees: editAttendeesReducer,
 		editRoom: editRoomReducer,
 		editOptionalAttendees: editOptionalAttendeesReducer,
 		openEditor: openEditorReducer,
-		initializeEditorAppointment: initializeAppointmentReducer,
 		createNewEditor: newEditorReducer,
 		editIsRichText: editIsRichTextReducer,
 		editEditorAttachments: editEditorAttachmentsReducer,
@@ -80,7 +76,6 @@ export const editorSlice = createSlice({
 });
 
 export const {
-	addAppointmentEditor,
 	editAppointmentData,
 	openEditor,
 	editRoom,

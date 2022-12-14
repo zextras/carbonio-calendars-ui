@@ -142,7 +142,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 
 	return (
 		<>
-			<Container ref={anchorRef} onClick={toggleOpen} height="100%">
+			<Container ref={anchorRef} onClick={toggleOpen} height="100%" data-testid="calendar-event">
 				<Dropdown
 					contextMenu
 					width="cal(min(100%,12.5rem))"

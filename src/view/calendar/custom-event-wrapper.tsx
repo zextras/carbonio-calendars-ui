@@ -52,8 +52,8 @@ export const CustomEventWrapperStyler = styled.div<{ event: EventType }>`
 		pointer-events: none;
 	}
 	.rbc-event.rbc-selected {
-		/* background-color: ${({ event }): string =>
-			setLightness(0.95, event.resource.calendar.color.background)}; */
+		background-color: ${({ event }): string =>
+			setLightness(0.95, event.resource.calendar.color.background)};
 		border: 0.0625rem solid ${({ event }): string => event.resource.calendar.color.color};
 	}
 	.rbc-event:focus {
