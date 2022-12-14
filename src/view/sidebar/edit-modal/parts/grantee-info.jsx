@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useContext, useMemo } from 'react';
-import { replace, split, capitalize } from 'lodash';
 import { Chip, Container } from '@zextras/carbonio-design-system';
+import React, { useContext, useMemo } from 'react';
 import styled from 'styled-components';
-import { findLabel } from '../../../../settings/components/utils';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
+import { findLabel } from '../../../../settings/components/utils';
 
 const HoverChip = styled(Chip)`
 	background-color: ${({ theme, hovered, grant }) =>
@@ -17,13 +16,17 @@ const HoverChip = styled(Chip)`
 
 export const GranteeInfo = ({ grant, hovered }) => {
 	const { roleOptions } = useContext(EditModalContext);
-	const label = useMemo(
-		() =>
-			`${capitalize(replace(split(grant.d, '@')?.[0], '.', ' '))} - ${
-				split(findLabel(roleOptions, grant.perm), ' ')[0]
-			}`,
-		[grant.d, grant.perm, roleOptions]
+
+	const role = useMemo(
+		() => findLabel(roleOptions, grant.perm || roleOptions, grant[0]?.perm || ''),
+		[roleOptions, grant]
 	);
+
+	const label = useMemo(() => {
+		const composeLabel = (name) => `${name} - ${role}`;
+		return grant.d ? composeLabel(grant.d) : composeLabel(grant.zid);
+	}, [grant, role]);
+
 	return (
 		<Container crossAlignment="flex-start">
 			<HoverChip label={label} hovered={hovered} grant={grant} />

@@ -508,6 +508,7 @@
             "share_calendar_role": {
                 "admin": "Admin (can view,edit,add,remove and administer)",
                 "manager": "Manager (can view, edit, add and remove)",
+                "none": "None",
                 "viewer": "Viewer (can view)"
             },
             "share_calendar_with": {
@@ -635,9 +636,12 @@
         "copy_ics_url": "Copy ICS url",
         "copy_outlook_url": "Copy Outlook url",
         "copy_vector_url": "Copy View url",
+        "edit": "Edit share properties",
         "enable_disable_rich_text": "Enable/Disable rich text editor",
         "equipment": "Equipment",
         "location": "Location",
+        "resend": "Send mail notification about this share",
+        "revoke": "Revoke access",
         "virtual_chat": "Virtual Chat"
     },
     "type": "Type",

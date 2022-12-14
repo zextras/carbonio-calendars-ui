@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isEqual, transform, isObject, find } from 'lodash';
+import { isEqual, transform, isObject, filter } from 'lodash';
 import { t } from '@zextras/carbonio-shell-ui';
 
 export const ShowReminderOptions = () => [
@@ -783,24 +783,22 @@ export const ShareCalendarWithOptions = () => [
 	}
 ];
 
-export const ShareCalendarRoleOptions = () => [
-	{ label: t('label.none', 'None'), value: '' },
-	{ label: t('share.options.share_calendar_role.viewer', 'Viewer (can view)'), value: 'r' },
+export const ShareCalendarRoleOptions = (canViewPrvtAppt) => [
+	{ label: t('share.options.share_calendar_role.none', 'None'), value: '' },
 	{
-		label: t(
-			'share.options.share_calendar_role.admin',
-			'Admin (can view,edit,add,remove and administer)'
-		),
-		value: 'rwidxa'
+		label: t('share.options.share_calendar_role.viewer', 'Viewer'),
+		value: canViewPrvtAppt ? 'rp' : 'r'
 	},
 	{
-		label: t(
-			'share.options.share_calendar_role.manager',
-			'Manager (can view, edit, add and remove)'
-		),
-		value: 'rwidx'
+		label: t('share.options.share_calendar_role.admin', 'Admin'),
+		value: canViewPrvtAppt ? 'rwidxap' : 'rwidxa'
+	},
+	{
+		label: t('share.options.share_calendar_role.manager', 'Manager'),
+		value: canViewPrvtAppt ? 'rwidxp' : 'rwidx'
 	}
 ];
+
 export const differenceObject = (object, base) => {
 	// eslint-disable-next-line no-shadow
 	function changes(object, base) {
@@ -818,4 +816,4 @@ export const validEmailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
 export const validEmail = (email) => !!validEmailRegex.test(email);
 
-export const findLabel = (list, value) => find(list, (item) => item.value === value)?.label;
+export const findLabel = (list, value) => filter(list, (item) => item.value === value)[0]?.label;
