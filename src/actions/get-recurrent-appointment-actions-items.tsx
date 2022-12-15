@@ -41,7 +41,7 @@ export const getRecurrentAppointmentActionsItems = ({
 			}),
 			deletePermanentlyItem({ event, context }),
 			moveAppointmentItem({ event, context }),
-			createCopyItem({ event, invite, context })
+			createCopyItem({ event: seriesEvent, invite, context })
 		];
 	}
 	return [
@@ -58,7 +58,7 @@ export const getRecurrentAppointmentActionsItems = ({
 					panelView: 'app',
 					context
 				}),
-				createCopyItem({ event, invite, context }),
+				createCopyItem({ event: seriesEvent, invite, context }),
 				editAppointmentItem({ invite, event, context: { ...context, panelView } }),
 				event.resource.calendar.id === FOLDERS.TRASH
 					? deletePermanentlyItem({ event, context })
@@ -78,7 +78,7 @@ export const getRecurrentAppointmentActionsItems = ({
 					panelView: 'app',
 					context
 				}),
-				createCopyItem({ event, invite, context }),
+				createCopyItem({ event: seriesEvent, invite, context }),
 				editAppointmentItem({ invite, event: seriesEvent, context: { ...context, panelView } }),
 				event.resource.calendar.id === FOLDERS.TRASH
 					? deletePermanentlyItem({ event: seriesEvent, context })

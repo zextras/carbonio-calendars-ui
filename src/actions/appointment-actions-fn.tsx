@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
-import { find } from 'lodash';
+import { find, omit } from 'lodash';
 import React from 'react';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
@@ -230,18 +230,25 @@ export const createCopy =
 	}): ((ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void) =>
 	(ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent): void => {
 		if (ev) ev.stopPropagation();
+		const eventToCopy = { ...event, resource: omit(event.resource, 'id') } as EventType;
 		context?.onClose && context?.onClose();
 		const identities = getIdentityItems();
 		const organizer = find(identities, ['identityName', 'DEFAULT']);
-
+		const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
+		const isInstance = !event?.resource?.isRecurrent && !!event?.resource?.ridZ;
 		const { editor, callbacks } = generateEditor({
-			event,
+			event: eventToCopy,
 			invite,
 			context: {
 				folders: context.folders,
 				dispatch: context.dispatch,
 				panel: context.panel ?? true,
-				organizer
+				organizer,
+				recur: isSeries ? invite.recurrenceRule : undefined,
+				exceptId: undefined,
+				isInstance,
+				isSeries,
+				isException: false
 			}
 		});
 		addBoard({

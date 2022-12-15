@@ -158,14 +158,11 @@ export const createCopyItem = ({
 	invite: Invite;
 	event: EventType;
 	context: ActionsContext;
-}): any => {
-	const eventToCopy = { ...event, resource: omit(event.resource, 'id') } as EventType;
-	return {
-		id: EventActionsEnum.EDIT,
-		icon: 'Copy',
-		keepOpen: true,
-		label: t('label.create_copy', 'Create a Copy'),
-		disabled: false,
-		click: createCopy({ event: eventToCopy, invite, context })
-	};
-};
+}): any => ({
+	id: EventActionsEnum.EDIT,
+	icon: 'Copy',
+	keepOpen: true,
+	label: t('label.create_copy', 'Create a Copy'),
+	disabled: false,
+	click: createCopy({ event, invite, context })
+});
