@@ -142,7 +142,7 @@
         "download": "Download",
         "download_plural": "Download all",
         "edit": "Edit",
-        "edit_access": "Edit {{name}}'s access",
+        "edit_access": "Edit access",
         "edit_share": "Edit share",
         "edit_tag": "Edit Tag",
         "edit_tag_name": "Edit {{name}} tag",

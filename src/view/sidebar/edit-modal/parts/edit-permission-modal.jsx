@@ -88,16 +88,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 		setshareWithUserRole(shareRole);
 	}, []);
 
-	const userName = useMemo(() => grant.d || grant.zid, [grant]);
-
-	const title = useMemo(
-		() =>
-			`${t('label.edit_access', {
-				name: userName,
-				defaultValue: "Edit {{name}}'s access"
-			})} `,
-		[t, userName]
-	);
+	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
 	return (
 		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader title={title} onClose={onClose} />

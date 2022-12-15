@@ -182,7 +182,7 @@ export const EditModal = ({
 
 	const onClose = useCallback(() => setModal(''), [setModal]);
 
-	const title = useMemo(() => t('label.edit_access', "Edit {{name}}'s access EDIT MODAL"), [t]);
+	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 
 	function CustomTitle() {

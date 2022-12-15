@@ -275,16 +275,7 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 		},
 		[setModal, setActiveGrant]
 	);
-	const name = useMemo(() => folder.name, [folder.name]);
-
-	const title = useMemo(
-		() =>
-			t('label.edit_access', {
-				name,
-				defaultValue: "Edit {{name}}'s access"
-			}),
-		[name, t]
-	);
+	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
 
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 
@@ -423,7 +414,7 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 									/>
 								</Tooltip>
 								<Padding horizontal="extrasmall" />
-								<Tooltip label={t('tooltip.revoke', 'Revoke access')} placement="top">
+								<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
 									<Button
 										type="outlined"
 										label={t('label.revoke', 'Revoke')}

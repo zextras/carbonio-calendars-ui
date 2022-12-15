@@ -8,7 +8,7 @@ import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { MainEditModal } from './parts/main-edit-modal';
 import { ShareCalendarModal } from '../share-calendar-modal';
-import { RevokeModal as ShareRevokeModal } from './parts/revoke-modal';
+import { ShareRevokeModal } from './parts/revoke-modal';
 import { EditModalContext } from '../../../commons/edit-modal-context';
 import { EditPermissionModal } from './parts/edit-permission-modal';
 import { ShareCalendarRoleOptions } from '../../../settings/components/utils';
