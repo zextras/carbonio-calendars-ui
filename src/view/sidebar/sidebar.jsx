@@ -6,7 +6,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Accordion } from '@zextras/carbonio-design-system';
 import { useDispatch, useSelector } from 'react-redux';
-import { map, filter, reduce, remove, every, reject, find, orderBy, head, forEach } from 'lodash';
+import { map, filter, reduce, remove, every, reject, find, orderBy, head } from 'lodash';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { selectAllCalendars, selectEnd, selectStart } from '../../store/selectors/calendars';
 import { folderAction } from '../../store/actions/calendar-actions';

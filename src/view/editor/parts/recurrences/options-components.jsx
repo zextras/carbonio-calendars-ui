@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useTranslation } from 'react-i18next';
 import React, { useCallback, useMemo } from 'react';
 import { differenceWith, find, isEqual, isNaN, map } from 'lodash';
 import { Checkbox, Container, Input, Select } from '@zextras/carbonio-design-system';

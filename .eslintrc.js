@@ -4,5 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 module.exports = {
-	extends: ['./src/carbonio-ui-commons/.eslintrc.js']
+	extends: ['./src/carbonio-ui-commons/.eslintrc.js'],
+	rules: {
+		'notice/notice': [
+			'error',
+			{
+				templateFile: './notice.template.ts'
+			}
+		]
+	}
 };

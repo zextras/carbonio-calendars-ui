@@ -19,7 +19,7 @@ export const useInvite = (inviteId: string | undefined): Invite | undefined => {
 			setLoading(true);
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			dispatch(getInvite({ inviteId })).then((res) => {
+			dispatch(getInvite({ inviteId })).then(() => {
 				setLoading(false);
 			});
 		}

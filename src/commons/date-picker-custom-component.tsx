@@ -29,10 +29,14 @@ const CustomInputWrapper = styled(Row)`
 `;
 
 const DatePickerCustomComponent: FC<CustomComponentProps> = React.forwardRef(
-	function DatePickerCustomComponentFn(
-		{ value, onClick, onChange, label, icon = 'CalendarOutline', testId = 'picker' },
-		ref
-	): ReactElement {
+	function DatePickerCustomComponentFn({
+		value,
+		onClick,
+		onChange,
+		label,
+		icon = 'CalendarOutline',
+		testId = 'picker'
+	}): ReactElement {
 		const [input, setInput] = useState(value.toString());
 		const [timer, setTimer] = useState<null | ReturnType<typeof setTimeout>>(null);
 

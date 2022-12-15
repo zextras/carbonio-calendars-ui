@@ -7,7 +7,6 @@ import React, { useCallback, useMemo } from 'react';
 import { Container, DateTimePicker, Padding, Text } from '@zextras/carbonio-design-system';
 import momentLocalizer from 'react-widgets-moment';
 import moment from 'moment';
-import { t } from '@zextras/carbonio-shell-ui';
 import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
 
 momentLocalizer();

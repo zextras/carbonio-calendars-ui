@@ -6,7 +6,7 @@
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
 import { some } from 'lodash';
 
-const getResponse = (id: string): SuccessSoapResponse<any> => ({
+const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
 		context: {
 			session: {
@@ -252,6 +252,6 @@ export const handleCreateAppointmentRequest = (req, res, ctx) => {
 			return res(ctx.json(response));
 		}
 	}
-	const response = getResponse(resp.id);
+	const response = getResponse();
 	return res(ctx.json(response));
 };

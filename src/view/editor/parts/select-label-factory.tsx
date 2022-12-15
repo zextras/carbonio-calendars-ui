@@ -12,7 +12,6 @@ import {
 	Icon,
 	TextProps,
 	IconProps,
-	SelectProps,
 	SelectItem,
 	LabelFactoryProps
 } from '@zextras/carbonio-design-system';

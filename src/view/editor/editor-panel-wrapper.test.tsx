@@ -3,12 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { map } from 'lodash';
 import React from 'react';
 import { screen } from '@testing-library/react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { faker } from '@faker-js/faker';
-import moment from 'moment';
 import EditorPanelWrapper from './editor-panel-wrapper';
 import { reducers } from '../../store/redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
