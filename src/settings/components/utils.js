@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isEqual, transform, isObject, filter } from 'lodash';
+import { isEqual, transform, isObject, find } from 'lodash';
 import { t } from '@zextras/carbonio-shell-ui';
 
 export const ShowReminderOptions = () => [
@@ -816,4 +816,4 @@ export const validEmailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
 export const validEmail = (email) => !!validEmailRegex.test(email);
 
-export const findLabel = (list, value) => filter(list, (item) => item.value === value)[0]?.label;
+export const findLabel = (list, value) => find(list, (item) => item.value === value).label;
