@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
+import { EditorSlice } from '../../types/store/store';
 import {
 	editEditorAllDayReducer,
 	editEditorAttendeesReducer,
@@ -36,15 +37,16 @@ import {
 import { newEditorReducer } from '../reducers/new-editor';
 import { Editor } from '../../types/editor';
 
+const initialState: EditorSlice = {
+	status: 'idle',
+	editors: {} as Record<string, Editor>,
+	editorPanel: undefined,
+	activeId: undefined,
+	searchActiveId: undefined
+};
 export const editorSlice = createSlice({
 	name: 'editor',
-	initialState: {
-		status: 'idle',
-		editors: {} as Record<string, Editor>,
-		editorPanel: undefined,
-		activeId: undefined,
-		searchActiveId: undefined
-	},
+	initialState,
 	reducers: {
 		editAppointmentData: editAppointmentDataReducer,
 		editResourceData: editResourceDataReducer,

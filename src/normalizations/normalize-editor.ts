@@ -145,7 +145,7 @@ export const normalizeEditor = ({
 				timezone: invite?.start?.tz,
 				inviteId: event?.resource?.inviteId,
 				reminder: invite?.alarmValue,
-				recur: invite.recurrenceRule,
+				recur: !isInstance ? invite.recurrenceRule : undefined,
 				richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
 				plainText: extractBody(invite?.textDescription?.[0]?._content) ?? '',
 				uid: invite?.uid,

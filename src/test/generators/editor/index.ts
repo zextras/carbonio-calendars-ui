@@ -112,7 +112,7 @@ const getEditor = ({
 	folders,
 	organizer
 }: {
-	editor: Partial<Editor>;
+	editor?: Partial<Editor>;
 	folders: Folder[];
 	organizer?: IdentityItem;
 }): Editor => {

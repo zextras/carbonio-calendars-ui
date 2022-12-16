@@ -6,18 +6,17 @@
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useContext, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { editAppointment, openAppointment } from '../actions/appointment-actions-fn';
-import { selectInstanceInvite } from '../store/selectors/invites';
+import { useDispatch } from 'react-redux';
+import { openAppointment } from '../actions/appointment-actions-fn';
 import { createAndApplyTag } from '../view/tags/tag-actions';
+import { useCalendarFolders } from './use-calendar-folders';
 
 export const useSearchViewActions = ({ event }: { event?: any }): any => {
-	const invite = useSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
-
+	const calendarFolders = useCalendarFolders();
 	const context = useMemo(
 		() => ({
 			tags,
@@ -25,9 +24,10 @@ export const useSearchViewActions = ({ event }: { event?: any }): any => {
 			replaceHistory,
 			createModal,
 			dispatch,
-			createSnackbar
+			createSnackbar,
+			folders: calendarFolders
 		}),
-		[createModal, createSnackbar, dispatch, tags]
+		[calendarFolders, createModal, createSnackbar, dispatch, tags]
 	);
 
 	return useMemo(() => {
@@ -35,8 +35,9 @@ export const useSearchViewActions = ({ event }: { event?: any }): any => {
 		return {
 			open: openAppointment({
 				event,
-				panelView: 'search'
+				panelView: 'search',
+				context
 			})
 		};
-	}, [event]);
+	}, [context, event]);
 };
