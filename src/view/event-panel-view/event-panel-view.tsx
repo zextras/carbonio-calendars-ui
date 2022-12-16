@@ -198,7 +198,7 @@ export default function EventPanelView(): ReactElement | null {
 							<StyledDivider />
 						</>
 					)}
-					{invite && (
+					{invite && invite.organizer && (
 						<ParticipantsPart
 							invite={invite}
 							organizer={invite.organizer}
