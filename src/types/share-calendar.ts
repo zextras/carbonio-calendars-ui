@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Grant } from '@zextras/carbonio-shell-ui';
 import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
 
@@ -12,6 +13,7 @@ export type ShareCalendarModalProps = {
 	onGoBack?: any;
 	secondaryLabel?: string;
 	isFromEditModal?: boolean;
+	grant: Array<Grant>;
 };
 
 export type ResponseActionsProps = {

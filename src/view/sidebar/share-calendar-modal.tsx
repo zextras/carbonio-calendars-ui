@@ -41,14 +41,18 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	folder,
 	closeFn,
 	onGoBack,
-	secondaryLabel
+	secondaryLabel,
+	grant
 }): ReactElement => {
 	const dispatch = useDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(), []);
-	const shareCalendarRoleOptions = useMemo(() => ShareCalendarRoleOptions(), []);
+	const shareCalendarRoleOptions = useMemo(
+		() => ShareCalendarRoleOptions(grant?.[0]?.perm?.includes('p')),
+		[grant]
+	);
 
 	const [sendNotification, setSendNotification] = useState(true);
 	const [standardMessage, setStandardMessage] = useState('');
