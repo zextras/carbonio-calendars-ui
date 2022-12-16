@@ -6,7 +6,6 @@
 import { Divider, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useMemo } from 'react';
 import { reduce, includes } from 'lodash';
-
 import { Tag, useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
 import { EventType } from '../../types/event';
 
@@ -20,7 +19,7 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 					if (includes(event?.resource?.tags, v.id))
 						acc.push({
 							...v,
-							color: parseInt(ZIMBRA_STANDARD_COLORS[parseInt(`${v.color}` ?? '0', 10)].hex, 10)
+							color: parseInt(ZIMBRA_STANDARD_COLORS[v?.color ?? 0].hex, 10)
 						});
 					return acc;
 				},
