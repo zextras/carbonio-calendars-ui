@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 import { ModalManagerContext } from '@zextras/carbonio-design-system';
 import { addBoard, getBridgedFunctions, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isEqual, isNil, omit, omitBy, size } from 'lodash';

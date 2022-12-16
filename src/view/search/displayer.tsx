@@ -59,10 +59,10 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 								<StyledDivider />
 							</>
 						)}
-						{invite && (
+						{invite && invite.organizer && (
 							<ParticipantsPart
 								invite={invite}
-								organizer={event?.resource?.organizer}
+								organizer={invite.organizer}
 								participants={invite?.participants}
 							/>
 						)}
