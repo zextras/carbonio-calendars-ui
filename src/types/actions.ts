@@ -16,7 +16,7 @@ export type ActionsContext = {
 	createModal: any;
 	createSnackbar: unknown;
 	dispatch: any;
-	replaceHistory: (arg: any) => void;
+	replaceHistory?: (arg: any) => void;
 	tags: Tags;
 	onClose?: () => void;
 	panel?: boolean;

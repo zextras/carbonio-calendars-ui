@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-design-system';
-import { FOLDERS, t, useUserAccounts, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t, useUserSettings } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
 import { PREFS_DEFAULTS } from '../../../constants';
+import { usePrefs } from '../../../carbonio-ui-commons/utils/use-prefs';
 import { selectCalendarsArray } from '../../../store/selectors/calendars';
 import { Calendar } from '../../../types/store/calendars';
 import LabelFactory, { Square } from './select-label-factory';

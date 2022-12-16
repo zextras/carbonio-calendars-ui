@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { lazy, useEffect, Suspense, useMemo } from 'react';
+import React, { lazy, useEffect, Suspense } from 'react';
 import {
 	Spinner,
 	addRoute,
@@ -13,21 +13,22 @@ import {
 	registerActions,
 	registerComponents,
 	ACTION_TYPES,
-	addBoard,
-	t,
-	useFolders
+	t
 } from '@zextras/carbonio-shell-ui';
-import { filter } from 'lodash';
-import { useDispatch } from 'react-redux';
+import { isEmpty } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { StoreProvider } from './store/redux';
-import { generateEditor } from './commons/editor-generator';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
-import { useCalendarFolders } from './hooks/use-calendar-folders';
+import { useOnClickNewButton } from './hooks/on-click-new-button';
+import { selectCalendars } from './store/selectors/calendars';
+import { selectApptStatus } from './store/selectors/appointments';
+import { searchAppointments } from './store/actions/search-appointments';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -86,8 +87,19 @@ const SearchView = (props) => (
 );
 
 const AppRegistrations = () => {
-	const calendarFolders = useCalendarFolders();
+	const onClickNewButton = useOnClickNewButton();
+	const calendars = useSelector(selectCalendars);
+	const status = useSelector(selectApptStatus);
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (!isEmpty(calendars) && status === 'init') {
+			const now = moment();
+			const start = now.startOf('isoWeek').valueOf();
+			const end = now.endOf('isoWeek').valueOf();
+			dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
+		}
+	}, [dispatch, status, calendars]);
 
 	useEffect(() => {
 		addRoute({
@@ -121,23 +133,7 @@ const AppRegistrations = () => {
 				id: 'new-appointment',
 				label: t('label.new_appointment', 'New Appointment'),
 				icon: 'CalendarModOutline',
-				click: (ev) => {
-					ev?.preventDefault?.();
-					const { editor, callbacks } = generateEditor({
-						context: {
-							title: t('label.new_appointment', 'New Appointment'),
-							panel: false,
-							dispatch,
-							folders: calendarFolders
-						}
-					});
-					addBoard({
-						url: `${CALENDAR_ROUTE}/`,
-						title: editor.title,
-						...editor,
-						callbacks
-					});
-				},
+				click: onClickNewButton,
 				disabled: false,
 				group: CALENDAR_APP_ID,
 				primary: true
@@ -151,7 +147,7 @@ const AppRegistrations = () => {
 			// @ts-ignore
 			component: InviteResponse
 		});
-	}, [calendarFolders, dispatch]);
+	}, [onClickNewButton]);
 	return null;
 };
 

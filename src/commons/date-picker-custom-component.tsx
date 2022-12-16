@@ -13,6 +13,7 @@ type CustomComponentProps = {
 	onChange: (a: string) => unknown;
 	label: string;
 	icon?: string;
+	testId?: string;
 };
 
 const CustomInputWrapper = styled(Row)`
@@ -29,7 +30,7 @@ const CustomInputWrapper = styled(Row)`
 
 const DatePickerCustomComponent: FC<CustomComponentProps> = React.forwardRef(
 	function DatePickerCustomComponentFn(
-		{ value, onClick, onChange, label, icon = 'CalendarOutline' },
+		{ value, onClick, onChange, label, icon = 'CalendarOutline', testId = 'picker' },
 		ref
 	): ReactElement {
 		const [input, setInput] = useState(value.toString());
@@ -68,6 +69,7 @@ const DatePickerCustomComponent: FC<CustomComponentProps> = React.forwardRef(
 				<Row>
 					<Padding horizontal="small">
 						<IconButton
+							data-testid={testId}
 							icon={icon}
 							size="large"
 							onClick={onClick}

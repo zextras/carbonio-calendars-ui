@@ -7,18 +7,6 @@ import { cloneDeep, merge } from 'lodash';
 import moment from 'moment';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const addAppointmentEditorReducer = (state: any, { payload }: any): any => {
-	state.editors[payload.id] = payload.appointment;
-	if (payload.panel) {
-		if (state.editorPanel !== payload.id) {
-			// This discards any unsaved edits in the previous panel
-			state.editors[state.editorPanel] = undefined;
-		}
-		state.editorPanel = payload.id;
-	}
-};
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const editAppointmentDataReducer = (state: any, { payload }: any): any => {
 	const editor = cloneDeep(state.editors[payload.id]);
 	state.editors[payload.id] = merge(state.editors[payload.id], payload.mod);
