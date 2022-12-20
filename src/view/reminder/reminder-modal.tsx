@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, CustomModal } from '@zextras/carbonio-design-system';
-import { addBoard, Board, t, useFolders } from '@zextras/carbonio-shell-ui';
-import { filter, isEmpty, map, omit } from 'lodash';
+import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
+import { isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';

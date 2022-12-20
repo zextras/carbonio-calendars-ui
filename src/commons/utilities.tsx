@@ -5,7 +5,6 @@
  */
 import { t, FOLDERS } from '@zextras/carbonio-shell-ui';
 import { TextProps } from '@zextras/carbonio-design-system';
-import { TFunction } from 'i18next';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import { ReminderItem } from '../types/appointment-reminder';

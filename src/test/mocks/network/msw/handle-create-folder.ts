@@ -46,7 +46,6 @@ const getResponse = (): SuccessSoapResponse<any> => ({
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
 export const handleCreateFolderRequest = (req, res, ctx) => {
-	const resp = req.body.Body.CreateFolderRequest;
 	const response = getResponse();
 	return res(ctx.json(response));
 };

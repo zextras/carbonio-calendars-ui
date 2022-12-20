@@ -5,7 +5,7 @@
  */
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
 
-const getResponse = (id: string): SuccessSoapResponse<any> => ({
+const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
 		context: {
 			session: {
@@ -126,6 +126,6 @@ const getResponse = (id: string): SuccessSoapResponse<any> => ({
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
 export const handleModifyAppointmentRequest = (req, res, ctx) => {
 	const resp = req.body.Body.ModifyAppointmentRequest;
-	const response = getResponse(resp.id);
+	const response = getResponse();
 	return res(ctx.json(response));
 };

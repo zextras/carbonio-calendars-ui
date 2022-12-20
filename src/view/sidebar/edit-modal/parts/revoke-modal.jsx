@@ -22,7 +22,7 @@ import ModalFooter from '../../../../commons/modal-footer';
 import { GranteeInfo } from './grantee-info';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 
-export const RevokeModal = ({ folder, grant, onGoBack }) => {
+export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 	const [t] = useTranslation();
 	const [sendNotification, setSendNotification] = useState(false);
 	const [standardMessage, setStandardMessage] = useState('');

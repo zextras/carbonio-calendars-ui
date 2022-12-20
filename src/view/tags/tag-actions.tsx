@@ -177,7 +177,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 				inviteId: event.resource.id,
 				tagName: tag.name
 			})
-				.then((res: any) => {
+				.then(() => {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					createSnackbar({
@@ -194,7 +194,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 						autoHideTimeout: 3000
 					});
 				})
-				.catch((error) => {
+				.catch(() => {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					createSnackbar({
