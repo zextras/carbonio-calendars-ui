@@ -33,7 +33,7 @@ export type SearchResults = {
 	query: Array<{ label: string }>;
 };
 
-const SearchView: FC<SearchProps> = ({ useDisableSearch, useQuery, ResultsHeader }) => {
+const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	const [query, updateQuery] = useQuery();
 	const [t] = useTranslation();
 	const [searchResults, setSearchResults] = useState<SearchResults>({

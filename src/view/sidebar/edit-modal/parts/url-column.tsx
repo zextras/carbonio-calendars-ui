@@ -3,15 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, {
-	FC,
-	ReactElement,
-	useCallback,
-	useEffect,
-	useLayoutEffect,
-	useRef,
-	useState
-} from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 import { Container, Button, Tooltip, Padding } from '@zextras/carbonio-design-system';
 import { UrlColumnProps } from '../../../../types/share-calendar';
 import SvgContainer from './svg-container';

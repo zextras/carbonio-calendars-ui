@@ -19,7 +19,6 @@ import {
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
 import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
@@ -29,8 +28,6 @@ import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
-import { RouteParams } from '../../types/route-params';
-import { Appointment } from '../../types/store/appointments';
 import { Calendar } from '../../types/store/calendars';
 
 const Square = styled.div`
@@ -239,7 +236,7 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 			<Padding vertical="medium" />
 			<Select
 				label={'Select color'}
-				onChange={(value): void => {
+				onChange={(): void => {
 					// setSelectedColor
 				}}
 				items={colors}

@@ -18,7 +18,6 @@ import {
 } from '@zextras/carbonio-design-system';
 import { useDispatch } from 'react-redux';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { filter } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { getShareInfo } from '../../store/actions/get-share-info';
 import { SharesModal } from './shares-modal';

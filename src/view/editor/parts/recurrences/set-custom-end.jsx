@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useTranslation } from 'react-i18next';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Container, Input, Padding, Text, Icon } from '@zextras/carbonio-design-system';
 import { isNaN } from 'lodash';

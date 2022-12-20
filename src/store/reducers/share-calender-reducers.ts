@@ -3,15 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { clone, cloneDeep, filter, find, forEach, map, reduce } from 'lodash';
+import { cloneDeep, filter, forEach, map, reduce } from 'lodash';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { CalendarSlice } from '../../types/store/store';
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function shareCalendarRejected(state: CalendarSlice, { meta, error }: any): any {
-	const { arg, requestId } = meta;
-	// state.calendars[arg.id || requestId].error = error; todo: check this line
-}
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function shareCalenderFullFilled(state: CalendarSlice, { payload, meta }: any): any {
@@ -47,7 +41,7 @@ export function shareCalenderFullFilled(state: CalendarSlice, { payload, meta }:
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function folderActionPending(state: CalendarSlice, { payload, meta }: any): any {
+export function folderActionPending(state: CalendarSlice, { meta }: any): any {
 	const { id, op, changes } = meta.arg;
 	// eslint-disable-next-line no-param-reassign
 	meta.arg.prevState = cloneDeep(state.calendars);
@@ -89,7 +83,7 @@ export function folderActionPending(state: CalendarSlice, { payload, meta }: any
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function folderActionRejected(state: CalendarSlice, { payload, meta }: any): any {
+export function folderActionRejected(state: CalendarSlice, { meta }: any): any {
 	state.calendars = meta.arg.prevState;
 	state.status = 'rejected';
 }

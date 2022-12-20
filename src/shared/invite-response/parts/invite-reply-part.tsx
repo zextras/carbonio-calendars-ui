@@ -30,7 +30,6 @@ type InviteReplyPart = {
 const InviteReplyPart: FC<InviteReplyPart> = ({
 	inviteId,
 	participationStatus,
-	compNum,
 	proposeNewTime,
 	parent
 }): ReactElement => {

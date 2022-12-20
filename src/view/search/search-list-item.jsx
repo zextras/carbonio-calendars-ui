@@ -21,7 +21,6 @@ import { find, reduce, includes } from 'lodash';
 import { useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { useTagExist } from '../tags/tag-actions';
-import { useSearchViewActions } from '../../hooks/use-search-view-actions';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { getInvite } from '../../store/actions/get-invite';
 import { openAppointment } from '../../actions/appointment-actions-fn';
