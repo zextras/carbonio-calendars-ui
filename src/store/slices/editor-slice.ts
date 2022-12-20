@@ -24,7 +24,8 @@ import {
 	editIsRichTextReducer,
 	editEditorAttachmentsReducer,
 	updateEditorReducer,
-	deleteEditorReducer
+	deleteEditorReducer,
+	editEditorRecurrenceFrequencyReducer, editEditorRecurrenceIntervalReducer,
 } from '../reducers/edit-organizer';
 import {
 	editAppointmentDataReducer,
@@ -72,6 +73,8 @@ export const editorSlice = createSlice({
 		editEditorTimezone: editEditorTimezoneReducer,
 		editEditorReminder: editEditorReminderReducer,
 		editEditorRecurrence: editEditorRecurrenceReducer,
+		editEditorRecurrenceFrequency: editEditorRecurrenceFrequencyReducer,
+		editEditorRecurrenceInterval: editEditorRecurrenceIntervalReducer,
 		deleteEditor: deleteEditorReducer,
 		updateEditor: updateEditorReducer
 	}
@@ -101,6 +104,8 @@ export const {
 	editEditorTimezone,
 	editEditorReminder,
 	editEditorRecurrence,
+	editEditorRecurrenceFrequency,
+	editEditorRecurrenceInterval,
 	deleteEditor,
 	updateEditor
 } = editorSlice.actions;

@@ -25,6 +25,7 @@ import {
 	editEditorLocation,
 	editEditorOptionalAttendees,
 	editEditorRecurrence,
+	editEditorRecurrenceFrequency, editEditorRecurrenceInterval,
 	editEditorReminder,
 	editEditorRoom,
 	editEditorText,
@@ -32,7 +33,7 @@ import {
 	editEditorTitle,
 	editIsRichText,
 	editOrganizer,
-	updateEditor
+	updateEditor,
 } from '../store/slices/editor-slice';
 import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
 import { EventResourceCalendar } from '../types/event';
@@ -288,6 +289,20 @@ export const createCallbacks = (
 	): { payload: undefined; type: string } | { payload: { id: string; recur: any }; type: string } =>
 		dispatch(editEditorRecurrence({ id, recur }));
 
+	const onRecurrenceFrequencyChange = (
+		freq: string
+	):
+		| { payload: undefined; type: string }
+		| { payload: { id: string; freq: string }; type: string } =>
+		dispatch(editEditorRecurrenceFrequency({ id, freq }));
+
+	const onEditorRecurrenceIntervalChange = (
+		ival: number
+	):
+		| { payload: undefined; type: string }
+		| { payload: { id: string; ival: number }; type: string } =>
+		dispatch(editEditorRecurrenceInterval({ id, ival }));
+
 	const createAppointmentFn = (draft: boolean, editor: Editor): Promise<any> =>
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
@@ -355,6 +370,8 @@ export const createCallbacks = (
 		onTimeZoneChange,
 		onReminderChange,
 		onRecurrenceChange,
+		onRecurrenceFrequencyChange,
+		onEditorRecurrenceIntervalChange,
 		onSave,
 		onSend
 	};

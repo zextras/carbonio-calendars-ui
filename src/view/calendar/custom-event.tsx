@@ -149,6 +149,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 					style={{ width: '100%', height: '100%' }}
 					items={actions}
 					display="block"
+					onClick={(e) => e.stopPropagation()}
 					onOpen={getEventInvite}
 				>
 					<Container

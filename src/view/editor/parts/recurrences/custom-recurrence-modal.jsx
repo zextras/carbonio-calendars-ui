@@ -38,7 +38,7 @@ export default function CustomRecurrenceModal({ openModal, setOpenCb, onRecurren
 	const [customRepeatValue, setCustomRepeatValue] = useState(defaultRepetition);
 	const [customEndValue, setCustomEndValue] = useState(null);
 	const defaultWeekDay = useMemo(() => moment(start).format('dddd'), [start]);
-	const slicedWeekDay = useMemo(() => toUpper(`${defaultWeekDay.slice(0, 2)}`), [defaultWeekDay]);
+	const slicedWeekDay = useMemo(() => toUpper(`${defaultWeekDay?.slice(0, 2)}`), [defaultWeekDay]);
 	const bymonth = useMemo(() => ({ molist: parseInt(moment(start).format('MM'), 10) }), [start]);
 	const bymonthday = useMemo(() => ({ modaylist: moment(start).format('D') }), [start]);
 

@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
-import { omit } from 'lodash';
 import { ActionsContext, PanelView } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
@@ -33,7 +32,6 @@ export const openAppointmentItem = ({
 	id: EventActionsEnum.EXPAND,
 	icon: 'ExpandOutline',
 	disabled: false,
-	keepOpen: true,
 	label: t('event.action.expand', 'Open in Displayer'),
 	click: openAppointment({
 		event,
@@ -98,7 +96,6 @@ export const moveAppointmentItem = ({
 			? t('label.restore', 'Restore')
 			: t('label.move', 'Move'),
 	disabled: !event?.haveWriteAccess,
-	keepOpen: true,
 	click: moveAppointment({ event, context })
 });
 
@@ -115,7 +112,6 @@ export const moveApptToTrashItem = ({
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
 	disabled: !event?.haveWriteAccess,
-	keepOpen: true,
 	click: moveToTrash({ event, invite, context })
 });
 
@@ -129,7 +125,6 @@ export const deletePermanentlyItem = ({
 	id: 'deletePermanently',
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
-	keepOpen: true,
 	click: deletePermanently({ event, context })
 });
 
@@ -144,7 +139,6 @@ export const editAppointmentItem = ({
 }): any => ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Edit2Outline',
-	keepOpen: true,
 	label: t('label.edit', 'Edit'),
 	disabled: !event?.haveWriteAccess,
 	click: editAppointment({ event, invite, context })
@@ -161,7 +155,6 @@ export const createCopyItem = ({
 }): any => ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Copy',
-	keepOpen: true,
 	label: t('label.create_copy', 'Create a Copy'),
 	disabled: false,
 	click: createCopy({ event, invite, context })
