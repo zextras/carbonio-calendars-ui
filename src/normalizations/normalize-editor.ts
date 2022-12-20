@@ -57,16 +57,6 @@ export type EventPropType = {
 	end: Date | Moment;
 };
 
-const setEditorRecurrenceValue = (recurrence: any): string => {
-	if (
-		recurrence?.[0]?.add?.[0]?.rule?.[0]?.freq === 'DAI' &&
-		recurrence?.[0]?.add?.[0]?.rule?.[0]?.interval?.[0]?.ival === 1
-	)
-		return 'DAI';
-	if (!recurrence) return 'NONE';
-	return 'CUSTOM';
-};
-
 const setEditorDate = ({
 	editorType,
 	invite,
@@ -156,7 +146,6 @@ export const normalizeEditor = ({
 				inviteId: event?.resource?.inviteId,
 				reminder: invite?.alarmValue,
 				recur: !isInstance ? invite.recurrenceRule : undefined,
-				recurrenceValue: !isInstance && invite.recurrenceRule ? 'CUSTOM' : 'NONE',
 				richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
 				plainText: extractBody(invite?.textDescription?.[0]?._content) ?? '',
 				uid: invite?.uid,
