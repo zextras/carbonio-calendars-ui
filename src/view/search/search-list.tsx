@@ -32,7 +32,12 @@ const SearchList = ({
 	const { apptId, ridZ } = useParams<RoutesParams>();
 
 	return (
-		<Container background="gray6" width="25%" mainAlignment="flex-start">
+		<Container
+			background="gray6"
+			width="25%"
+			mainAlignment="flex-start"
+			data-testid="CalendarsSearchResultListContainer"
+		>
 			{loading ? (
 				<ShimmerList />
 			) : (
@@ -42,6 +47,7 @@ const SearchList = ({
 					active={`${apptId}:${ridZ}`}
 					onListBottom={loadMore}
 					background="gray6"
+					data-testid="SearchResultCalendarsContainer"
 				/>
 			)}
 		</Container>
