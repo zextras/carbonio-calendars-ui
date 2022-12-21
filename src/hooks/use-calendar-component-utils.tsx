@@ -229,6 +229,7 @@ export const useCalendarComponentUtils = (): {
 						start: moment(e.start).valueOf(),
 						end: end.valueOf(),
 						allDay: isAllDay ?? false,
+						freeBusy: isAllDay ? 'F' : 'B',
 						panel: false
 					}
 				});
