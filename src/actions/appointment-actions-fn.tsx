@@ -30,8 +30,7 @@ export const openAppointment =
 		panelView: PanelView;
 		context: ActionsContext;
 	}): ((ev: Event) => void) =>
-	(ev: Event): void => {
-		if (ev) ev.stopPropagation();
+	(): void => {
 		context?.onClose && context?.onClose();
 		if (panelView === PANEL_VIEW.APP) {
 			const path = event.resource.ridZ
@@ -49,8 +48,7 @@ export const openAppointment =
 
 export const acceptInvitation =
 	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(ev: Event): void => {
-		if (ev) ev.stopPropagation();
+	(): void => {
 		context
 			.dispatch(
 				sendInviteResponse({
@@ -66,8 +64,7 @@ export const acceptInvitation =
 
 export const declineInvitation =
 	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(ev: Event): void => {
-		if (ev) ev.stopPropagation();
+	(): void => {
 		context
 			.dispatch(
 				sendInviteResponse({
@@ -83,8 +80,7 @@ export const declineInvitation =
 
 export const acceptAsTentative =
 	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(ev: Event): void => {
-		if (ev) ev.stopPropagation();
+	(): void => {
 		context
 			.dispatch(
 				sendInviteResponse({
@@ -128,8 +124,7 @@ export const moveToTrash =
 		invite: Invite;
 		context: ActionsContext;
 	}): ((ev: Event) => void) =>
-	(ev: Event): void => {
-		if (ev) ev.stopPropagation();
+	(): void => {
 		context?.onClose && context?.onClose();
 		const closeModal = context.createModal(
 			{
@@ -183,8 +178,7 @@ export const editAppointment =
 		invite: Invite;
 		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
 	}): ((ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void) =>
-	(ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent): void => {
-		if (ev) ev.stopPropagation();
+	(): void => {
 		if (context?.panelView === PANEL_VIEW.APP) {
 			generateEditor({
 				event,
@@ -228,8 +222,7 @@ export const createCopy =
 		invite: Invite;
 		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
 	}): ((ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void) =>
-	(ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent): void => {
-		if (ev) ev.stopPropagation();
+	(): void => {
 		const eventToCopy = { ...event, resource: omit(event.resource, 'id') } as EventType;
 		context?.onClose && context?.onClose();
 		const identities = getIdentityItems();
