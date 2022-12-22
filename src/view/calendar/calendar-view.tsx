@@ -23,6 +23,7 @@ export default function CalendarView(): ReactElement {
 			background="gray6"
 			padding={{ all: 'large' }}
 			style={{ overflowY: 'auto', position: 'relative' }}
+			data-testid="MainCalendarContainer"
 		>
 			<Switch>
 				<Route path={`${path}/:calendarId?/:action?/:apptId?/:ridZ?`}>
