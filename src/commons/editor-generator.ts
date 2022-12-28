@@ -3,10 +3,24 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder, getUserAccount, LinkFolder } from '@zextras/carbonio-shell-ui';
-import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
+import { Folder, getUserAccount, LinkFolder, t } from '@zextras/carbonio-shell-ui';
+import {
+	every,
+	find,
+	includes,
+	isEmpty,
+	isNaN,
+	last,
+	matches,
+	omit,
+	split,
+	startsWith,
+	without
+} from 'lodash';
 import moment from 'moment';
 import { Dispatch } from 'redux';
+import momentLocalizer from 'react-widgets-moment';
+import { TimeZonesOptions } from '../settings/components/utils';
 import { setCalendarColor } from '../normalizations/normalizations-utils';
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { PREFS_DEFAULTS } from '../constants';
@@ -25,7 +39,8 @@ import {
 	editEditorLocation,
 	editEditorOptionalAttendees,
 	editEditorRecurrence,
-	editEditorRecurrenceFrequency, editEditorRecurrenceInterval,
+	editEditorRecurrenceFrequency,
+	editEditorRecurrenceInterval,
 	editEditorReminder,
 	editEditorRoom,
 	editEditorText,
@@ -33,7 +48,7 @@ import {
 	editEditorTitle,
 	editIsRichText,
 	editOrganizer,
-	updateEditor,
+	updateEditor
 } from '../store/slices/editor-slice';
 import { Editor, EditorCallbacks, IdentityItem, Room } from '../types/editor';
 import { EventResourceCalendar } from '../types/event';
@@ -41,6 +56,8 @@ import { Attendee, Invite, InviteClass, InviteFreeBusy } from '../types/store/in
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { getIdentityItems } from './get-identity-items';
 import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
+
+momentLocalizer(moment);
 
 let counter = 0;
 
@@ -88,11 +105,17 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 	const identities = getIdentityItems();
 	const {
 		zimbraPrefTimeZoneId,
+		zimbraPrefUseTimeZoneListInCalendar,
 		zimbraPrefCalendarDefaultApptDuration,
 		zimbraPrefCalendarApptReminderWarningTime
 	} = getPrefs();
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
 	const defaultCalendar = find(folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
+	const defaultTimezone =
+		zimbraPrefUseTimeZoneListInCalendar === 'TRUE'
+			? zimbraPrefTimeZoneId ?? moment.tz.guess(true)
+			: moment.tz.guess(true);
+
 	return {
 		attach: undefined,
 		calendar: defaultCalendar
@@ -128,7 +151,7 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 			duration: zimbraPrefCalendarDefaultApptDuration as string
 		}),
 		inviteId: undefined,
-		timezone: zimbraPrefTimeZoneId as string,
+		timezone: defaultTimezone,
 		reminder: zimbraPrefCalendarApptReminderWarningTime as string,
 		recur: undefined,
 		richText: '',

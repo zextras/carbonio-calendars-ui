@@ -116,18 +116,22 @@ export const selectEditorRecurrenceFrequency =
 
 export const selectEditorRecurrenceInterval =
 	(id: string) =>
-	(state: Store): number | undefined =>
-		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.interval?.[0]?.ival;
+	(state: Store): { ival: number } | undefined =>
+		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.interval?.[0]?.ival && {
+			ival: state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.interval?.[0]?.ival
+		};
 
 export const selectEditorRecurrenceByDay =
 	(id: string) =>
-	(state: Store): any | undefined =>
-		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.byday;
+	(state: Store): { wkday: Array<{ day: string }> } | undefined =>
+		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.byday?.[0]?.wkday && {
+			wkday: state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.byday?.[0]?.wkday
+		};
 
 export const selectEditorRecurrenceUntilDate =
 	(id: string) =>
 	(state: Store): string | undefined =>
-		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.until?.d;
+		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.until?.[0]?.d;
 
 export const selectEditorRecurrenceCount =
 	(id: string) =>

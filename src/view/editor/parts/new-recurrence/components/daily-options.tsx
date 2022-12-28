@@ -4,56 +4,187 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useContext, useState } from 'react';
-import { Input, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
-import { isNumber, isNaN } from 'lodash';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
+import { Input, Radio, RadioGroup, Row, Text, ModalFooter } from '@zextras/carbonio-design-system';
+import {
+	isNumber,
+	isNaN,
+	reduce,
+	filter,
+	map,
+	differenceWith,
+	isEqual,
+	omitBy,
+	isNil
+} from 'lodash';
+import { useSelector } from 'react-redux';
+import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
+import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
+import {
+	selectEditorRecurrenceByDay, selectEditorRecurrenceCount,
+	selectEditorRecurrenceFrequency,
+	selectEditorRecurrenceInterval, selectEditorRecurrenceUntilDate,
+} from '../../../../../store/selectors/editor';
+import { workWeek } from '../../../../../utils/work-week';
 import { RecurrenceContext } from '../contexts';
+import RecurrenceEndOptions from './recurrence-end-options';
+
+const RADIO_VALUES = {
+	EVERYDAY: 'Everyday',
+	WORKING_DAY: 'Working_day',
+	EVERY_X_DAY: 'Every_x_days'
+};
+
+const defaultState = {
+	freq: 'DAI',
+	interval: {
+		ival: 1
+	},
+	radioValue: RADIO_VALUES.EVERYDAY
+};
+
+const initialState = (freq, interval, byday, workingSchedule): string => {
+	if ((freq === 'DAI' || freq === 'WEE') && byday?.wkday && interval?.ival === 1) {
+		// building an array with the same structure of wkday to check if they have the same values
+		// to determine if we are receiving a workingday value
+		const workingDays = map(filter(workingSchedule, ['working', true]), (workingDay) => {
+			const day = WEEK_SCHEDULE[workingDay.day]?.slice(0, 2);
+			return { day };
+		});
+		const diff = differenceWith(workingDays, byday?.wkday, isEqual);
+		if (diff?.length === 0) {
+			return RADIO_VALUES.WORKING_DAY;
+		}
+		return defaultState.radioValue;
+	}
+	if (freq === 'DAI' && interval?.ival === 1 && !byday?.wkday) {
+		return RADIO_VALUES.EVERYDAY;
+	}
+	if (freq === 'DAI' && interval?.ival > 1 && !byday?.wkday) {
+		return RADIO_VALUES.EVERY_X_DAY;
+	}
+	return defaultState.radioValue;
+};
+
+const startValueInitialState = (freq, byday, interval, workingSchedule) => {
+	if (freq === 'DAI') {
+		return omitBy({ interval, byday }, isNil);
+	}
+	if (freq === 'WEE' && byday?.wkday && interval?.ival === 1) {
+		const workingDays = map(filter(workingSchedule, ['working', true]), (workingDay) => {
+			const day = WEEK_SCHEDULE[workingDay.day]?.slice(0, 2);
+			return { day };
+		});
+		const diff = differenceWith(workingDays, byday?.wkday, isEqual);
+		if (diff?.length === 0 && interval?.ival === 1) {
+			return { interval, byday };
+		}
+		return { interval: defaultState.interval };
+	}
+};
+
+const setEndInitialValue = (count, until) => {
+	if (count) return count;
+	if (until) return until;
+	return undefined;
+};
 
 const DailyOptions = () => {
-	const { ival, setIval, byWeekDay } = useContext(RecurrenceContext);
-	const initialState = (): string => {
-		if (ival && ival === 1 && !byWeekDay) {
-			return 'everyday';
-		}
-		if (byWeekDay) {
-			return 'every-working-day';
-		}
-		if (ival && ival > 0 && !byWeekDay) {
-			return 'every-x-days';
-		}
-		return 'everyday';
-	};
-	const [radioValue, setRadioValue] = useState(initialState);
-	const [inputValue, setInputValue] = useState<number | ''>(ival ?? 2);
+	const { editorId, frequency } = useContext(RecurrenceContext);
+	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
+	const interval = useSelector(selectEditorRecurrenceInterval(editorId));
+	const byday = useSelector(selectEditorRecurrenceByDay(editorId));
+	const count = useSelector(selectEditorRecurrenceCount(editorId));
+	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
+
+	const prefs = usePrefs();
+
+	const workingSchedule = useMemo(
+		() => workWeek(prefs.zimbraPrefCalendarWorkingHours),
+		[prefs?.zimbraPrefCalendarWorkingHours]
+	);
+	const [radioValue, setRadioValue] = useState(() =>
+		initialState(freq, interval, byday, workingSchedule)
+	);
+	const [end, setEnd] = useState(() => setEndInitialValue(count, until));
+
+	const [startValue, setStartValue] = useState(() =>
+		startValueInitialState(freq, byday, interval, workingSchedule)
+	);
+
+	const [inputValue, setInputValue] = useState<number | ''>(
+		interval?.ival ?? defaultState?.interval?.ival
+	);
+
+	const setStartByWorkingDay = useCallback(() => {
+		const wkday = reduce(
+			workingSchedule,
+			(result, weekday) => {
+				if (weekday.working) {
+					const day = WEEK_SCHEDULE[weekday.day];
+					return [
+						...result,
+						{
+							day: day.slice(0, 2)
+						}
+					];
+				}
+				return result;
+			},
+			[]
+		);
+		setStartValue({
+			byday: { wkday }
+		});
+	}, [setStartValue, workingSchedule]);
 
 	const onChange = useCallback(
 		(ev) => {
 			switch (ev) {
-				case 'everyday':
-					setIval(1);
+				case RADIO_VALUES.EVERYDAY:
+					setStartValue({
+						interval: {
+							ival: 1
+						}
+					});
 					setRadioValue(ev);
 					break;
-				case 'every-working-day':
-					setIval(1);
+				case RADIO_VALUES.WORKING_DAY:
+					setStartByWorkingDay();
 					setRadioValue(ev);
 					break;
-				case 'every-x-days':
-					isNumber(inputValue) && !isNaN(inputValue) && inputValue > 0 && setIval(inputValue);
+				case RADIO_VALUES.EVERY_X_DAY:
+					isNumber(inputValue) &&
+						!isNaN(inputValue) &&
+						inputValue > 0 &&
+						setStartValue({
+							interval: {
+								ival: inputValue
+							}
+						});
 					setRadioValue(ev);
 					break;
 				default:
-					setIval(1);
-					setRadioValue('everyday');
+					setStartValue({
+						interval: {
+							ival: 1
+						}
+					});
+					setRadioValue(RADIO_VALUES.EVERYDAY);
 					break;
 			}
 		},
-		[inputValue, setIval]
+		[inputValue, setStartValue, setStartByWorkingDay]
 	);
 
 	const onInputChange = useCallback(
 		(ev) => {
 			if (ev.target.value === '') {
-				setIval(1);
+				setStartValue({
+					interval: {
+						ival: 1
+					}
+				});
 				setInputValue(ev.target.value);
 			} else {
 				const convertedInputToNumber = parseInt(ev.target.value, 10);
@@ -63,36 +194,51 @@ const DailyOptions = () => {
 					convertedInputToNumber > 0
 				) {
 					setInputValue(convertedInputToNumber);
-					if (radioValue === 'every-x-days') {
-						setIval(convertedInputToNumber);
+					if (radioValue === RADIO_VALUES.EVERY_X_DAY) {
+						setStartValue({
+							interval: {
+								ival: convertedInputToNumber
+							}
+						});
 					}
 				}
 			}
 		},
-		[setIval, radioValue]
+		[setStartValue, radioValue]
 	);
+	const onConfirm = useCallback(() => {
+		console.log('@@@ daily footer');
+		console.log('@@@ ', frequency, startValue, end);
+	}, [end, frequency, startValue]);
 
-	return (
-		<RadioGroup value={radioValue} onChange={onChange}>
-			<Radio label={t('label.every_day', 'Every day')} value="everyday" />
-			<Radio label={t('items.working_day', 'Every working day')} value="every-working-day" />
-			<Radio
-				label={
-					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-						<Text overflow="break-word">{t('label.every', 'Every')}</Text>
-						<Input
-							backgroundColor="gray5"
-							label={t('label.days', 'Days')}
-							value={inputValue}
-							onChange={onInputChange}
-						/>
-						<Text overflow="break-word">{t('label.days', 'Days')}</Text>
-					</Row>
-				}
-				value="every-x-days"
-			/>
-		</RadioGroup>
-	);
+	return frequency === 'DAI' ? (
+		<>
+			<RadioGroup value={radioValue} onChange={onChange}>
+				<Radio label={t('label.every_day', 'Every day')} value={RADIO_VALUES.EVERYDAY} />
+				<Radio
+					label={t('items.working_day', 'Every working day')}
+					value={RADIO_VALUES.WORKING_DAY}
+				/>
+				<Radio
+					label={
+						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+							<Text overflow="break-word">{t('label.every', 'Every')}</Text>
+							<Input
+								backgroundColor="gray5"
+								label={t('label.days', 'Days')}
+								value={inputValue}
+								onChange={onInputChange}
+							/>
+							<Text overflow="break-word">{t('label.days', 'Days')}</Text>
+						</Row>
+					}
+					value={RADIO_VALUES.EVERY_X_DAY}
+				/>
+			</RadioGroup>
+			<RecurrenceEndOptions end={end} setEnd={setEnd} />
+			<ModalFooter onConfirm={onConfirm} confirmLabel={t('repeat.customize', 'Customize')} />
+		</>
+	) : null;
 };
 
 export default DailyOptions;

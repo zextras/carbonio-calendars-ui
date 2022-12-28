@@ -19,7 +19,11 @@ const CustomRepeatSelectItem = ({ editorId, callbacks }): ReactElement => {
 				maxHeight: '90vh',
 				children: (
 					<StoreProvider>
-						<CustomRecurrenceModal editorId={editorId} callbacks={callbacks} />
+						<CustomRecurrenceModal
+							editorId={editorId}
+							callbacks={callbacks}
+							onClose={() => closeModal()}
+						/>
 					</StoreProvider>
 				),
 				onClose: () => {

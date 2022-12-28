@@ -5,13 +5,13 @@
  */
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { minBy } from 'lodash';
-import moment from 'moment';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
+import moment from 'moment-timezone';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
@@ -174,6 +174,11 @@ export default function CalendarComponent() {
 				return 'work_week';
 		}
 	}, [calendarView, prefs?.zimbraPrefCalendarInitialView]);
+
+	useEffect(() => {
+		const timezone = moment.tz.guess(true);
+		console.log('@@@', timezone);
+	}, []);
 
 	return (
 		<>

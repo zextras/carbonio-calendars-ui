@@ -5,7 +5,8 @@
  */
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNaN, isNil, isNumber } from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
+import moment from 'moment';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import {
 	Container,
 	Icon,
@@ -21,15 +22,15 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import momentLocalizer from 'react-widgets-moment';
 import Styler from '../../../../../settings/components/date-picker-style';
 import {
-	selectEditorAllDay,
-	selectEditorRecurrenceCount,
+	selectEditorAllDay, selectEditorRecurrenceCount,
 	selectEditorRecurrenceUntilDate,
-	selectEditorStart
+	selectEditorStart,
 } from '../../../../../store/selectors/editor';
+import { RecurrenceContext } from '../contexts';
 
 momentLocalizer();
 
-export const SimplifiedCustomDatePicker = ({ start, allDay, disabled, onChange }) => {
+export const SimplifiedCustomDatePicker = ({ start, allDay, onChange }) => {
 	const startDate = useMemo(() => new Date(start), [start]);
 
 	return (
@@ -47,7 +48,6 @@ export const SimplifiedCustomDatePicker = ({ start, allDay, disabled, onChange }
 						valueFormat={{ month: 'short', year: 'numeric' }}
 						defaultValue={startDate}
 						onChange={onChange}
-						disabled={disabled}
 						format="DD MMM YYYY"
 						dateIcon={
 							<Padding all="small">
@@ -61,22 +61,101 @@ export const SimplifiedCustomDatePicker = ({ start, allDay, disabled, onChange }
 	);
 };
 
-const RecurrenceEndOptions = ({ editorId, callbacks }) => {
+const radioInitialState = (count, until) => {
+	if (count) {
+		return 'end_after_count';
+	}
+	if (until) {
+		return 'end_after_until';
+	}
+	return 'no_end';
+};
+
+const RecurrenceEndOptions = ({ end, setEnd }) => {
+	const { editorId } = useContext(RecurrenceContext);
 	const start = useSelector(selectEditorStart(editorId));
 	const allDay = useSelector(selectEditorAllDay);
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
 	const count = useSelector(selectEditorRecurrenceCount(editorId));
+	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
 
-	const [radioValue, setRadioValue] = useState('no_end');
-	const [inputValue, setInputValue] = useState(until);
+	const [radioValue, setRadioValue] = useState(() => radioInitialState(count, until));
+	const [inputValue, setInputValue] = useState(count ?? '1');
 
-	const onRadioValueChange = useCallback((ev) => {
-		setRadioValue(ev);
-	}, []);
+	const initialPickerValue = useMemo(
+		() => (until ? moment(until).valueOf() : start ?? new Date().valueOf()),
+		[start, until]
+	);
 
-	const onInputValueChane = useCallback((ev) => {
-		setInputValue(ev);
-	}, []);
+	const [pickerValue, setPickerValue] = useState(initialPickerValue);
+
+	const onInputValueChange = useCallback(
+		(ev) => {
+			if (ev.target.value === '') {
+				setEnd({
+					count: { num: 1 }
+				});
+				setInputValue(ev.target.value);
+			} else {
+				const convertedInputToNumber = parseInt(ev.target.value, 10);
+				if (
+					isNumber(convertedInputToNumber) &&
+					!isNaN(convertedInputToNumber) &&
+					convertedInputToNumber > 0
+				) {
+					setInputValue(convertedInputToNumber);
+					if (radioValue === 'end_after_count') {
+						setEnd({
+							count: {
+								num: convertedInputToNumber
+							}
+						});
+					}
+				}
+			}
+		},
+		[setEnd, radioValue]
+	);
+
+	const onRadioValueChange = useCallback(
+		(ev) => {
+			switch (ev) {
+				case 'no_end':
+					setEnd(undefined);
+					setRadioValue(ev);
+					break;
+				case 'end_after_count':
+					setEnd({
+						count: { num: inputValue }
+					});
+					setRadioValue(ev);
+					break;
+				case 'end_after_until':
+					setEnd({
+						until: {
+							d: moment(pickerValue).format('YYYYMMDD')
+						}
+					});
+					setRadioValue(ev);
+					break;
+				default:
+					setEnd(undefined);
+					setRadioValue('no_end');
+					break;
+			}
+		},
+		[inputValue, pickerValue, setEnd]
+	);
+
+	const onDateChange = useCallback(
+		(d) => {
+			const fullData = moment(d.valueOf()).format('YYYYMMDD');
+			setPickerValue(d.valueOf());
+			setEnd({ until: { d: fullData } });
+		},
+		[setEnd]
+	);
+	const num = useMemo(() => parseInt(end?.count?.num, 10), [end?.count?.num]);
+
 	return (
 		<RadioGroup value={radioValue} onChange={onRadioValueChange}>
 			<Radio label={t('label.no_end_date', 'No end date')} value="no_end" />
@@ -88,8 +167,8 @@ const RecurrenceEndOptions = ({ editorId, callbacks }) => {
 							backgroundColor="gray5"
 							label={t('label.occurrences', 'Occurence(s)')}
 							value={inputValue}
-							onChange={onInputValueChane}
-							hasError={!isNil(count) && (count > 99 || count < 1 || !isNumber(count))}
+							onChange={onInputValueChange}
+							hasError={!isNil(num) && (num > 99 || num < 1 || !isNumber(num))}
 						/>
 					</Row>
 				}
@@ -97,14 +176,23 @@ const RecurrenceEndOptions = ({ editorId, callbacks }) => {
 			/>
 			<Radio
 				label={
-					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+					<Row
+						width="fit"
+						orientation="horizontal"
+						mainAlignment="flex-start"
+						wrap="nowrap"
+						onClick={(ev) => {
+							// used to block onChange from Radio - todo: remove once CDS - 108 is completed
+							ev.stopPropagation();
+						}}
+					>
 						<Text overflow="break-word">{t('label.end_after', 'End after')}</Text>
 						<Styler orientation="horizontal" allDay height="fit" mainAlignment="space-between">
 							<Container padding={{ all: 'small' }}>
 								<SimplifiedCustomDatePicker
-									start={start}
+									start={initialPickerValue}
 									allDay={allDay}
-									onChange={() => null}
+									onChange={onDateChange}
 								/>
 							</Container>
 						</Styler>

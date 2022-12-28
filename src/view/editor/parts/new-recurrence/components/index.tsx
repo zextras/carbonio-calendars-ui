@@ -7,5 +7,12 @@ import CustomRepeatSelectItem from './custom-repeat';
 import CustomRecurrenceModal from './custom-recurrence-modal';
 import RepeatItemComponent from './repeat-item-component';
 import RecurrenceEndOptions from './recurrence-end-options';
+import DailyOptions from './daily-options';
 
-export { CustomRepeatSelectItem, RepeatItemComponent, CustomRecurrenceModal, RecurrenceEndOptions };
+export {
+	CustomRepeatSelectItem,
+	RepeatItemComponent,
+	CustomRecurrenceModal,
+	RecurrenceEndOptions,
+	DailyOptions
+};

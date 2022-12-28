@@ -206,14 +206,12 @@ const generateInvite = (editorData: Editor): any => {
 				s: setResourceDate({
 					time: editorData.start,
 					allDay: editorData?.allDay,
-					timezone:
-						zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? editorData?.timezone : undefined
+					timezone: editorData?.timezone
 				}),
 				e: setResourceDate({
 					time: editorData.end,
 					allDay: editorData?.allDay,
-					timezone:
-						zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? editorData?.timezone : undefined
+					timezone: editorData?.timezone
 				}),
 				exceptId: editorData.exceptId,
 				class: editorData.class,
