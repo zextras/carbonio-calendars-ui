@@ -22,9 +22,10 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import momentLocalizer from 'react-widgets-moment';
 import Styler from '../../../../../settings/components/date-picker-style';
 import {
-	selectEditorAllDay, selectEditorRecurrenceCount,
+	selectEditorAllDay,
+	selectEditorRecurrenceCount,
 	selectEditorRecurrenceUntilDate,
-	selectEditorStart,
+	selectEditorStart
 } from '../../../../../store/selectors/editor';
 import { RecurrenceContext } from '../contexts';
 

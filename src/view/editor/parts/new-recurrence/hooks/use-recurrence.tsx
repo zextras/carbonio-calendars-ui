@@ -10,8 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectEditorStart } from '../../../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../../../types/editor';
-import { CustomRepeatSelectItem, RepeatItemComponent } from '../components';
-
+import CustomRepeatSelectItem from '../components/custom-repeat';
+import RepeatItemComponent from '../components/repeat-item-component';
 
 type UseRecurrenceReturn = {
 	onChange: (arg: string) => void;
@@ -22,7 +22,7 @@ type UseRecurrenceReturn = {
 	}>;
 };
 
-const useRecurrence = (editorId: string, callbacks: EditorCallbacks): UseRecurrenceReturn => {
+export default (editorId: string, callbacks: EditorCallbacks): UseRecurrenceReturn => {
 	const [t] = useTranslation();
 	const start = useSelector(selectEditorStart(editorId));
 	const { onRecurrenceChange } = callbacks;
@@ -104,5 +104,3 @@ const useRecurrence = (editorId: string, callbacks: EditorCallbacks): UseRecurre
 	);
 	return { onChange, recurrenceItems };
 };
-
-export default useRecurrence;

@@ -10,7 +10,8 @@ import ModalHeader from '../../../../../carbonio-ui-commons/components/modals/mo
 import { selectEditorRecurrenceFrequency } from '../../../../../store/selectors/editor';
 import { RecurrenceContext } from '../contexts';
 import DailyOptions from './daily-options';
-import FrequencySelect from './frequency-select';
+import FrequencySelect from '../components/frequency-select';
+import MonthlyOptions from './monthly-options';
 import WeeklyOptions from './weekly-options';
 
 const CustomRecurrenceModal = ({ editorId, callbacks, onClose }) => {
@@ -37,6 +38,7 @@ const CustomRecurrenceModal = ({ editorId, callbacks, onClose }) => {
 			<FrequencySelect />
 			<DailyOptions />
 			<WeeklyOptions />
+			<MonthlyOptions />
 		</RecurrenceContext.Provider>
 	);
 };
