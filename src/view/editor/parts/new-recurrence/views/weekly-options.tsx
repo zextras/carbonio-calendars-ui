@@ -32,9 +32,11 @@ import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
 import {
-	selectEditorRecurrenceByDay, selectEditorRecurrenceCount,
+	selectEditorRecurrenceByDay,
+	selectEditorRecurrenceCount,
 	selectEditorRecurrenceFrequency,
-	selectEditorRecurrenceInterval, selectEditorRecurrenceUntilDate,
+	selectEditorRecurrenceInterval,
+	selectEditorRecurrenceUntilDate
 } from '../../../../../store/selectors/editor';
 import { workWeek } from '../../../../../utils/work-week';
 import { RecurrenceContext } from '../contexts';

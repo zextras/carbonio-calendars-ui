@@ -133,6 +133,11 @@ export const selectEditorRecurrenceUntilDate =
 	(state: Store): string | undefined =>
 		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.until?.[0]?.d;
 
+export const selectEditorRecurrenceSetPos =
+	(id: string) =>
+	(state: Store): string | undefined =>
+		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.bysetpos?.poslist;
+
 export const selectEditorRecurrenceCount =
 	(id: string) =>
 	(state: Store): number | undefined =>

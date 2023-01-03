@@ -149,7 +149,9 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 					style={{ width: '100%', height: '100%' }}
 					items={actions}
 					display="block"
-					onClick={(e) => e.stopPropagation()}
+					onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
+						if (e) (e as Event)?.stopImmediatePropagation?.();
+					}}
 					onOpen={getEventInvite}
 				>
 					<Container

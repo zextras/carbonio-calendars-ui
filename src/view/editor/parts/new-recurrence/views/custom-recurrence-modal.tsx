@@ -13,6 +13,7 @@ import DailyOptions from './daily-options';
 import FrequencySelect from '../components/frequency-select';
 import MonthlyOptions from './monthly-options';
 import WeeklyOptions from './weekly-options';
+import YearlyOptions from './yearly-options';
 
 const CustomRecurrenceModal = ({ editorId, callbacks, onClose }) => {
 	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
@@ -39,6 +40,7 @@ const CustomRecurrenceModal = ({ editorId, callbacks, onClose }) => {
 			<DailyOptions />
 			<WeeklyOptions />
 			<MonthlyOptions />
+			<YearlyOptions />
 		</RecurrenceContext.Provider>
 	);
 };
