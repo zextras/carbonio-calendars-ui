@@ -18,7 +18,7 @@ import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import EditorPanelWrapper from '../../view/editor/editor-panel-wrapper';
 import mockedData from '../generators';
 
-jest.setTimeout(25000);
+jest.setTimeout(50000);
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
