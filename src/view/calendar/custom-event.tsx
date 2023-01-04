@@ -142,7 +142,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 
 	return (
 		<>
-			<Container ref={anchorRef} onClick={toggleOpen} height="100%" data-testid="calendar-event">
+			<Container ref={anchorRef} height="100%" data-testid="calendar-event">
 				<Dropdown
 					contextMenu
 					width="cal(min(100%,12.5rem))"
@@ -153,6 +153,9 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 						if (e) (e as Event)?.stopImmediatePropagation?.();
 					}}
 					onOpen={getEventInvite}
+					onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
+						if (e) (e as Event)?.stopImmediatePropagation?.();
+					}}
 				>
 					<Container
 						width="fill"
@@ -161,6 +164,8 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"
 						onDoubleClick={showPanelView}
+						onClick={toggleOpen}
+						data-testid="calendar-event-inner-container"
 					>
 						<Container
 							orientation="horizontal"

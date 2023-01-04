@@ -21,7 +21,7 @@ test('click edit appointment from event summary view as organizer', async () => 
 		// path: '/:calendarId?/:action?/:apptId?/:ridZ?'
 	});
 	expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
-	await user.click(screen.getByTestId('calendar-event'));
+	await user.click(screen.getByTestId('calendar-event-inner-container'));
 	// this means the summary view is open
 	expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
 });

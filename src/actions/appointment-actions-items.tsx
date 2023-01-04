@@ -133,7 +133,10 @@ export const deletePermanentlyItem = ({
 	id: EventActionsEnum.DELETE_PERMANENTLY,
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
+<<<<<<< HEAD
 	disabled: false,
+=======
+>>>>>>> origin
 	click: deletePermanently({ event, context })
 });
 
