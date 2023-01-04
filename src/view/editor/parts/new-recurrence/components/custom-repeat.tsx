@@ -22,7 +22,7 @@ const CustomRepeatSelectItem = ({ editorId, callbacks }): ReactElement => {
 						<CustomRecurrenceModal
 							editorId={editorId}
 							callbacks={callbacks}
-							onClose={() => closeModal()}
+							onClose={(): void => closeModal()}
 						/>
 					</StoreProvider>
 				),

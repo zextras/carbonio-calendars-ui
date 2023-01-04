@@ -72,8 +72,8 @@ const radioInitialState = (count, until) => {
 	return 'no_end';
 };
 
-const RecurrenceEndOptions = ({ end, setEnd }) => {
-	const { editorId } = useContext(RecurrenceContext);
+const RecurrenceEndOptions = () => {
+	const { editorId, newEndValue, setNewEndValue } = useContext(RecurrenceContext);
 	const start = useSelector(selectEditorStart(editorId));
 	const allDay = useSelector(selectEditorAllDay);
 	const count = useSelector(selectEditorRecurrenceCount(editorId));
@@ -92,7 +92,7 @@ const RecurrenceEndOptions = ({ end, setEnd }) => {
 	const onInputValueChange = useCallback(
 		(ev) => {
 			if (ev.target.value === '') {
-				setEnd({
+				setNewEndValue({
 					count: { num: 1 }
 				});
 				setInputValue(ev.target.value);
@@ -105,7 +105,7 @@ const RecurrenceEndOptions = ({ end, setEnd }) => {
 				) {
 					setInputValue(convertedInputToNumber);
 					if (radioValue === 'end_after_count') {
-						setEnd({
+						setNewEndValue({
 							count: {
 								num: convertedInputToNumber
 							}
@@ -114,24 +114,24 @@ const RecurrenceEndOptions = ({ end, setEnd }) => {
 				}
 			}
 		},
-		[setEnd, radioValue]
+		[setNewEndValue, radioValue]
 	);
 
 	const onRadioValueChange = useCallback(
 		(ev) => {
 			switch (ev) {
 				case 'no_end':
-					setEnd(undefined);
+					setNewEndValue(undefined);
 					setRadioValue(ev);
 					break;
 				case 'end_after_count':
-					setEnd({
+					setNewEndValue({
 						count: { num: inputValue }
 					});
 					setRadioValue(ev);
 					break;
 				case 'end_after_until':
-					setEnd({
+					setNewEndValue({
 						until: {
 							d: moment(pickerValue).format('YYYYMMDD')
 						}
@@ -139,28 +139,35 @@ const RecurrenceEndOptions = ({ end, setEnd }) => {
 					setRadioValue(ev);
 					break;
 				default:
-					setEnd(undefined);
+					setNewEndValue(undefined);
 					setRadioValue('no_end');
 					break;
 			}
 		},
-		[inputValue, pickerValue, setEnd]
+		[inputValue, pickerValue, setNewEndValue]
 	);
 
 	const onDateChange = useCallback(
 		(d) => {
 			const fullData = moment(d.valueOf()).format('YYYYMMDD');
 			setPickerValue(d.valueOf());
-			setEnd({ until: { d: fullData } });
+			setNewEndValue({ until: { d: fullData } });
 		},
-		[setEnd]
+		[setNewEndValue]
 	);
-	const num = useMemo(() => parseInt(end?.count?.num, 10), [end?.count?.num]);
+	const num = useMemo(() => parseInt(newEndValue?.count?.num, 10), [newEndValue?.count?.num]);
 
 	return (
 		<RadioGroup value={radioValue} onChange={onRadioValueChange}>
-			<Radio label={t('label.no_end_date', 'No end date')} value="no_end" />
 			<Radio
+				size="small"
+				iconColor="primary"
+				label={t('label.no_end_date', 'No end date')}
+				value="no_end"
+			/>
+			<Radio
+				size="small"
+				iconColor="primary"
 				label={
 					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 						<Text overflow="break-word">{t('label.end_after', 'End after')}</Text>
@@ -176,13 +183,15 @@ const RecurrenceEndOptions = ({ end, setEnd }) => {
 				value="end_after_count"
 			/>
 			<Radio
+				size="small"
+				iconColor="primary"
 				label={
 					<Row
 						width="fit"
 						orientation="horizontal"
 						mainAlignment="flex-start"
 						wrap="nowrap"
-						onClick={(ev) => {
+						onClick={(ev): void => {
 							// used to block onChange from Radio - todo: remove once CDS - 108 is completed
 							ev.stopPropagation();
 						}}

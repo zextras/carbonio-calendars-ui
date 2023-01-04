@@ -4,8 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { Input, Radio, RadioGroup, Row, Text, ModalFooter } from '@zextras/carbonio-design-system';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+	Radio,
+	RadioGroup,
+	Row,
+	Text,
+	ModalFooter,
+	Padding
+} from '@zextras/carbonio-design-system';
 import {
 	isNumber,
 	isNaN,
@@ -21,11 +28,14 @@ import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
 import {
-	selectEditorRecurrenceByDay, selectEditorRecurrenceCount,
+	selectEditorRecurrenceByDay,
+	selectEditorRecurrenceCount,
 	selectEditorRecurrenceFrequency,
-	selectEditorRecurrenceInterval, selectEditorRecurrenceUntilDate,
+	selectEditorRecurrenceInterval,
+	selectEditorRecurrenceUntilDate
 } from '../../../../../store/selectors/editor';
 import { workWeek } from '../../../../../utils/work-week';
+import { IntervalInput } from '../components/interval-input';
 import { RecurrenceContext } from '../contexts';
 import RecurrenceEndOptions from './recurrence-end-options';
 
@@ -83,19 +93,11 @@ const startValueInitialState = (freq, byday, interval, workingSchedule) => {
 	}
 };
 
-const setEndInitialValue = (count, until) => {
-	if (count) return count;
-	if (until) return until;
-	return undefined;
-};
-
 const DailyOptions = () => {
-	const { editorId, frequency } = useContext(RecurrenceContext);
+	const { editorId, frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
 	const interval = useSelector(selectEditorRecurrenceInterval(editorId));
 	const byday = useSelector(selectEditorRecurrenceByDay(editorId));
-	const count = useSelector(selectEditorRecurrenceCount(editorId));
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
 
 	const prefs = usePrefs();
 
@@ -106,7 +108,6 @@ const DailyOptions = () => {
 	const [radioValue, setRadioValue] = useState(() =>
 		initialState(freq, interval, byday, workingSchedule)
 	);
-	const [end, setEnd] = useState(() => setEndInitialValue(count, until));
 
 	const [startValue, setStartValue] = useState(() =>
 		startValueInitialState(freq, byday, interval, workingSchedule)
@@ -179,65 +180,64 @@ const DailyOptions = () => {
 
 	const onInputChange = useCallback(
 		(ev) => {
-			if (ev.target.value === '') {
+			if (radioValue === RADIO_VALUES.EVERY_X_DAY) {
 				setStartValue({
 					interval: {
-						ival: 1
+						ival: ev
 					}
 				});
-				setInputValue(ev.target.value);
-			} else {
-				const convertedInputToNumber = parseInt(ev.target.value, 10);
-				if (
-					isNumber(convertedInputToNumber) &&
-					!isNaN(convertedInputToNumber) &&
-					convertedInputToNumber > 0
-				) {
-					setInputValue(convertedInputToNumber);
-					if (radioValue === RADIO_VALUES.EVERY_X_DAY) {
-						setStartValue({
-							interval: {
-								ival: convertedInputToNumber
-							}
-						});
-					}
-				}
 			}
 		},
 		[setStartValue, radioValue]
 	);
-	const onConfirm = useCallback(() => {
-		console.log('@@@ daily footer');
-		console.log('@@@ ', frequency, startValue, end);
-	}, [end, frequency, startValue]);
+
+	useEffect(() => {
+		if (startValue && frequency === 'DAI') {
+			setNewStartValue(startValue);
+		}
+	}, [frequency, setNewStartValue, startValue]);
 
 	return frequency === 'DAI' ? (
-		<>
-			<RadioGroup value={radioValue} onChange={onChange}>
-				<Radio label={t('label.every_day', 'Every day')} value={RADIO_VALUES.EVERYDAY} />
+		<RadioGroup value={radioValue} onChange={onChange}>
+			<Padding vertical="small">
 				<Radio
+					size="small"
+					iconColor="primary"
+					label={t('label.every_day', 'Every day')}
+					value={RADIO_VALUES.EVERYDAY}
+				/>
+			</Padding>
+			<Padding vertical="small">
+				<Radio
+					size="small"
+					iconColor="primary"
 					label={t('items.working_day', 'Every working day')}
 					value={RADIO_VALUES.WORKING_DAY}
 				/>
+			</Padding>
+			<Padding top="small">
 				<Radio
+					size="small"
+					iconColor="primary"
 					label={
 						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 							<Text overflow="break-word">{t('label.every', 'Every')}</Text>
-							<Input
-								backgroundColor="gray5"
-								label={t('label.days', 'Days')}
-								value={inputValue}
-								onChange={onInputChange}
-							/>
+							<Padding horizontal="small">
+								<IntervalInput
+									disabled={radioValue !== RADIO_VALUES.EVERY_X_DAY}
+									value={inputValue}
+									onChange={onInputChange}
+									label={t('label.days', 'Days')}
+									setValue={setInputValue}
+								/>
+							</Padding>
 							<Text overflow="break-word">{t('label.days', 'Days')}</Text>
 						</Row>
 					}
 					value={RADIO_VALUES.EVERY_X_DAY}
 				/>
-			</RadioGroup>
-			<RecurrenceEndOptions end={end} setEnd={setEnd} />
-			<ModalFooter onConfirm={onConfirm} confirmLabel={t('repeat.customize', 'Customize')} />
-		</>
+			</Padding>
+		</RadioGroup>
 	) : null;
 };
 

@@ -4,43 +4,22 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
-import {
-	Checkbox,
-	Container,
-	Input,
-	Radio,
-	RadioGroup,
-	Row,
-	Select,
-	Text,
-	ModalFooter
-} from '@zextras/carbonio-design-system';
-import {
-	isNumber,
-	isNaN,
-	find,
-	differenceWith,
-	map,
-	isEqual,
-	reject,
-	filter,
-	omitBy,
-	isNil
-} from 'lodash';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { Container, Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
+import { find, differenceWith, map, isEqual, filter, omitBy, isNil } from 'lodash';
 import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
 import {
 	selectEditorRecurrenceByDay,
-	selectEditorRecurrenceCount,
 	selectEditorRecurrenceFrequency,
-	selectEditorRecurrenceInterval,
-	selectEditorRecurrenceUntilDate
+	selectEditorRecurrenceInterval
 } from '../../../../../store/selectors/editor';
 import { workWeek } from '../../../../../utils/work-week';
+import { IntervalInput } from '../components/interval-input';
+import { WeekdayCheckboxes } from '../components/weekday-checkboxes';
+import WeekdaySelect from '../components/weekday-select';
 import { RecurrenceContext } from '../contexts';
-import RecurrenceEndOptions from './recurrence-end-options';
 
 const RADIO_VALUES = {
 	QUICK_OPTIONS: 'QuickOptions',
@@ -113,19 +92,12 @@ const selectInitialValue = (weeklyOptions, byday) =>
 			).length === 0
 	) ?? weeklyOptions[0];
 
-const setEndInitialValue = (count, until) => {
-	if (count) return count;
-	if (until) return until;
-	return undefined;
-};
-
 const WeeklyOptions = () => {
-	const { editorId, frequency } = useContext(RecurrenceContext);
+	const { editorId, frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
 	const interval = useSelector(selectEditorRecurrenceInterval(editorId));
 	const byday = useSelector(selectEditorRecurrenceByDay(editorId));
-	const count = useSelector(selectEditorRecurrenceCount(editorId));
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
+
 	const prefs = usePrefs();
 
 	const workingSchedule = useMemo(
@@ -162,25 +134,17 @@ const WeeklyOptions = () => {
 	const [inputValue, setInputValue] = useState<number | ''>(interval?.ival ?? 1);
 	const [selectValue, setSelectValue] = useState(() => selectInitialValue(weeklyOptions, byday));
 	const [checkboxesValue, setCheckboxesValue] = useState(byday?.wkday ?? []);
-	const [end, setEnd] = useState(() => setEndInitialValue(count, until));
 	const [startValue, setStartValue] = useState(() =>
 		startValueInitialState(freq, byday, interval, workingSchedule)
 	);
+
 	const onByDayChange = useCallback(
 		(ev) => {
 			if (ev && radioValue === RADIO_VALUES.QUICK_OPTIONS) {
-				const days = map(ev?.split?.(','), (day) => ({ day }));
-				const selectedValue = ev?.split?.(',');
-				const newValue =
-					find(weeklyOptions, (item) => {
-						const itemValue = item?.value?.split?.(',');
-						return differenceWith(itemValue, selectedValue, isEqual).length === 0;
-					}) ?? weeklyOptions[0];
-				setSelectValue(newValue);
-				setStartValue({ byday: { wkday: days } });
+				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: ev } }));
 			}
 		},
-		[radioValue, weeklyOptions]
+		[radioValue]
 	);
 
 	const onChange = useCallback(
@@ -212,131 +176,98 @@ const WeeklyOptions = () => {
 
 	const onInputChange = useCallback(
 		(ev) => {
-			if (ev.target.value === '') {
+			if (radioValue === RADIO_VALUES.CUSTOM_OPTIONS) {
 				setStartValue((prevValue) => ({
 					...prevValue,
 					interval: {
-						ival: 1
+						ival: ev
 					}
 				}));
-				setInputValue(ev.target.value);
-			} else {
-				const convertedInputToNumber = parseInt(ev.target.value, 10);
-				if (
-					isNumber(convertedInputToNumber) &&
-					!isNaN(convertedInputToNumber) &&
-					convertedInputToNumber > 0
-				) {
-					setInputValue(convertedInputToNumber);
-					if (radioValue === RADIO_VALUES.CUSTOM_OPTIONS) {
-						setStartValue((prevValue) => ({
-							...prevValue,
-							interval: {
-								ival: convertedInputToNumber
-							}
-						}));
-					}
-				}
 			}
 		},
 		[setStartValue, radioValue]
 	);
 
 	const onCheckboxClick = useCallback(
-		(opt) => {
-			const checkbox = find(checkboxesValue, { day: opt.value });
-			if (!checkbox) {
-				setCheckboxesValue((prev) => [...prev, { day: opt.value }]);
+		(ev) => {
+			if (ev && radioValue === RADIO_VALUES.CUSTOM_OPTIONS) {
 				setStartValue((prevValue) => ({
 					...prevValue,
-					byday: {
-						wkday: [...checkboxesValue, { day: opt.value }]
-					}
-				}));
-			} else {
-				setCheckboxesValue(reject(checkboxesValue, { day: opt.value }));
-				setStartValue((prevValue) => ({
-					...prevValue,
-					byday: {
-						wkday: reject(checkboxesValue, { day: opt.value })
-					}
+					byday: { wkday: ev }
 				}));
 			}
 		},
-		[checkboxesValue, setStartValue]
+		[radioValue]
 	);
 
-	const onConfirm = useCallback(() => {
-		console.log('@@@ weekly footer');
-		console.log('@@@ ', frequency, startValue, end);
-	}, [frequency, startValue, end]);
+	useEffect(() => {
+		if (startValue && frequency === 'WEE') {
+			setNewStartValue(startValue);
+		}
+	}, [frequency, setNewStartValue, startValue]);
 
 	return frequency === 'WEE' ? (
-		<>
-			<RadioGroup value={radioValue} onChange={onChange}>
-				<Radio
-					label={
+		<RadioGroup value={radioValue} onChange={onChange}>
+			<Radio
+				size="small"
+				iconColor="primary"
+				label={
+					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+						<Text overflow="break-word">{t('label.every', 'Every')}</Text>
+						<Padding horizontal="small">
+							<WeekdaySelect
+								setSelection={setSelectValue}
+								onChange={onByDayChange}
+								selection={selectValue}
+								disabled={radioValue !== RADIO_VALUES.QUICK_OPTIONS}
+							/>
+						</Padding>
+					</Row>
+				}
+				value={RADIO_VALUES.QUICK_OPTIONS}
+			/>
+			<Radio
+				size="small"
+				iconColor="primary"
+				label={
+					<Container
+						orientation="vertical"
+						width="fit"
+						mainAlignment="flex-start"
+						crossAlignment="flex-start"
+					>
 						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 							<Text overflow="break-word">{t('label.every', 'Every')}</Text>
-							<Select
-								items={weeklyOptions}
-								label={t('label.day', 'Day')}
-								onChange={onByDayChange}
-								disablePortal
-								disabled={radioValue !== RADIO_VALUES.QUICK_OPTIONS}
-								width="fill"
-								selection={selectValue}
-							/>
-						</Row>
-					}
-					value={RADIO_VALUES.QUICK_OPTIONS}
-				/>
-				<Radio
-					label={
-						<Container
-							orientation="vertical"
-							width="fit"
-							mainAlignment="flex-start"
-							crossAlignment="flex-start"
-							padding={{ horizontal: 'small' }}
-						>
-							<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-								<Text overflow="break-word">{t('label.every', 'Every')}</Text>
-								<Input
+							<Padding horizontal="small">
+								<IntervalInput
 									label={t('label.weeks_on', 'Week(s) on')}
 									onChange={onInputChange}
-									backgroundColor="gray5"
-									defaultValue={inputValue}
+									setValue={setInputValue}
+									value={inputValue}
+									disabled={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
 								/>
-							</Row>
-							<Row
-								width="fit"
-								orientation="horizontal"
-								mainAlignment="flex-start"
-								crossAlignment="flex-start"
-								wrap="nowrap"
-							>
-								{map(weekOptions, (opt) => {
-									const isChecked = !!find(checkboxesValue, ({ day }) => day === opt.value);
-									return (
-										<Checkbox
-											key={opt.label}
-											onClick={() => onCheckboxClick(opt)}
-											label={opt.label.slice(0, 3)}
-											value={isChecked}
-											disabled={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
-										/>
-									);
-								})}
-							</Row>
-						</Container>
-					}
-					value={RADIO_VALUES.CUSTOM_OPTIONS}
+							</Padding>
+						</Row>
+					</Container>
+				}
+				value={RADIO_VALUES.CUSTOM_OPTIONS}
+			/>
+			<Row
+				width="fit"
+				orientation="horizontal"
+				mainAlignment="flex-start"
+				crossAlignment="flex-start"
+				wrap="nowrap"
+			>
+				<WeekdayCheckboxes
+					isHidden={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
+					value={checkboxesValue}
+					setValue={setCheckboxesValue}
+					onClick={onCheckboxClick}
+					disabled={radioValue !== RADIO_VALUES.CUSTOM_OPTIONS}
 				/>
-			</RadioGroup>
-			<RecurrenceEndOptions end={end} setEnd={setEnd} />
-			<ModalFooter onConfirm={onConfirm} confirmLabel={t('repeat.customize', 'Customize')} />
-		</>
+			</Row>
+		</RadioGroup>
 	) : null;
 };
 

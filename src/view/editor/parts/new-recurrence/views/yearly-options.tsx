@@ -3,46 +3,25 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-	Container,
-	Input,
-	ModalFooter,
-	Padding,
-	Radio,
-	RadioGroup,
-	Row,
-	Select,
-	Text
-} from '@zextras/carbonio-design-system';
+import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { differenceWith, find, isEqual, isNaN, isNil, isNumber, map, omitBy } from 'lodash';
+import { map } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import {
-	selectEditorRecurrenceCount,
-	selectEditorRecurrenceUntilDate
-} from '../../../../../store/selectors/editor';
+import { MonthSelect } from '../components/month-select';
+import { MonthlyDayInput } from '../components/monthly-day-input';
+import { OrdinalNumberSelect } from '../components/ordinal-number-select';
+import WeekdaySelect from '../components/weekday-select';
 import { RecurrenceContext } from '../contexts';
-import RecurrenceEndOptions from './recurrence-end-options';
 
 const RADIO_VALUES = {
 	NOT_IMPLEMENTED_1: 'NotImplemented1',
 	NOT_IMPLEMENTED_2: 'NotImplemented2'
 };
 
-const setEndInitialValue = (count, until) => {
-	if (count) return count;
-	if (until) return until;
-	return undefined;
-};
-
 const YearlyOptions = () => {
-	const { editorId, frequency } = useContext(RecurrenceContext);
-	const count = useSelector(selectEditorRecurrenceCount(editorId));
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
+	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const [radioValue, setRadioValue] = useState(RADIO_VALUES.NOT_IMPLEMENTED_1);
 
-	const [end, setEnd] = useState(() => setEndInitialValue(count, until));
 	const [moDayList, setMoDayList] = useState<number | ''>(1);
 
 	const months = useMemo(
@@ -73,75 +52,36 @@ const YearlyOptions = () => {
 		bymonth: { molist: byMonthFirstSelectValue?.value }
 	});
 
-	const onConfirm = useCallback(() => {
-		console.log('@@@ yearly footer');
-		console.log('@@@ ', frequency, startValue, end);
-	}, [frequency, startValue, end]);
-
 	const onMoDayListChange = useCallback(
 		(ev) => {
-			if (ev.target.value === '') {
+			if (radioValue === RADIO_VALUES.NOT_IMPLEMENTED_1) {
 				setStartValue((prevValue) => ({
-					...(prevValue ?? {}),
-					bymonthday: {
-						modaylist: 1
+					...prevValue,
+					interval: {
+						ival: ev
 					}
 				}));
-				setMoDayList(ev.target.value);
-			} else {
-				const convertedInputToNumber = parseInt(ev.target.value, 10);
-				if (
-					isNumber(convertedInputToNumber) &&
-					!isNaN(convertedInputToNumber) &&
-					convertedInputToNumber >= 0
-				) {
-					setMoDayList(convertedInputToNumber);
-					if (radioValue === RADIO_VALUES.NOT_IMPLEMENTED_1) {
-						setStartValue((prevValue) => ({
-							...(prevValue ?? {}),
-							bymonthday: {
-								modaylist: convertedInputToNumber
-							}
-						}));
-					}
-				}
 			}
 		},
 		[radioValue]
 	);
 
 	const onFirstMonthChange = useCallback(
-		(ev) => {
-			if (ev) {
-				const molist = Number(ev);
-				const selectedValue = ev?.split?.(',');
-				const newValue =
-					find(months, (item) => {
-						const itemValue = item?.value?.split?.(',');
-						return differenceWith(itemValue, selectedValue, isEqual).length === 0;
-					}) ?? months[0];
-				setByMonthFirstSelectValue(newValue);
+		(molist) => {
+			if (molist && radioValue === RADIO_VALUES.NOT_IMPLEMENTED_1) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bymonth: { molist } }));
 			}
 		},
-		[months]
+		[radioValue]
 	);
 
 	const onSecondMonthChange = useCallback(
-		(ev) => {
-			if (ev) {
-				const molist = Number(ev);
-				const selectedValue = ev?.split?.(',');
-				const newValue =
-					find(months, (item) => {
-						const itemValue = item?.value?.split?.(',');
-						return differenceWith(itemValue, selectedValue, isEqual).length === 0;
-					}) ?? months[0];
-				setByMonthSecondSelectValue(newValue);
+		(molist) => {
+			if (molist && radioValue === RADIO_VALUES.NOT_IMPLEMENTED_2) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bymonth: { molist } }));
 			}
 		},
-		[months]
+		[radioValue]
 	);
 
 	const ordinalNumbers = useMemo(
@@ -160,17 +100,10 @@ const YearlyOptions = () => {
 	const onBySetPosChange = useCallback(
 		(ev) => {
 			if (ev && radioValue === RADIO_VALUES.NOT_IMPLEMENTED_2) {
-				const selectedValue = ev?.split?.(',');
-				const newValue =
-					find(ordinalNumbers, (item) => {
-						const itemValue = item?.value?.split?.(',');
-						return differenceWith(itemValue, selectedValue, isEqual).length === 0;
-					}) ?? ordinalNumbers[0];
-				setPosListSelectValue(newValue);
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bysetpos: { poslist: ev } }));
 			}
 		},
-		[ordinalNumbers, radioValue]
+		[radioValue]
 	);
 
 	const weekOptions = useMemo(
@@ -194,18 +127,10 @@ const YearlyOptions = () => {
 	const onByDayChange = useCallback(
 		(ev) => {
 			if (ev && radioValue === RADIO_VALUES.NOT_IMPLEMENTED_2) {
-				const days = map(ev?.split?.(','), (day) => ({ day }));
-				const selectedValue = ev?.split?.(',');
-				const newValue =
-					find(weekOptions, (item) => {
-						const itemValue = item?.value?.split?.(',');
-						return differenceWith(itemValue, selectedValue, isEqual).length === 0;
-					}) ?? weekOptions[0];
-				setByDaySelectValue(newValue);
-				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: days } }));
+				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: ev } }));
 			}
 		},
-		[radioValue, weekOptions]
+		[radioValue]
 	);
 
 	const onRadioChange = useCallback(
@@ -243,105 +168,87 @@ const YearlyOptions = () => {
 	);
 
 	useEffect(() => {
-		if (frequency === 'YEA') {
-			console.log('@@@ yearly footer');
-			console.log('@@@ ', frequency, startValue);
+		if (startValue && frequency === 'YEA') {
+			setNewStartValue(startValue);
 		}
-	}, [frequency, startValue]);
+	}, [frequency, setNewStartValue, startValue]);
 
 	return frequency === 'YEA' ? (
-		<>
-			<RadioGroup value={radioValue} onChange={onRadioChange}>
-				<Radio
-					label={
-						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+		<RadioGroup value={radioValue} onChange={onRadioChange}>
+			<Radio
+				size="small"
+				iconColor="primary"
+				label={
+					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+						<Padding horizontal="small">
+							<Text>{t('label.every_year_on', 'Every year on')}</Text>
+						</Padding>
+						<MonthlyDayInput
+							value={moDayList}
+							setValue={setMoDayList}
+							onChange={onMoDayListChange}
+							disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_1}
+						/>
+						<Padding horizontal="small">
+							<Text>{t('label.of', 'of')}</Text>
+						</Padding>
+						<MonthSelect
+							value={byMonthFirstSelectValue}
+							setValue={setByMonthFirstSelectValue}
+							onChange={onFirstMonthChange}
+							disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_1}
+						/>
+					</Row>
+				}
+				value={RADIO_VALUES.NOT_IMPLEMENTED_1}
+			/>
+			<Radio
+				size="small"
+				iconColor="primary"
+				label={
+					<Container
+						orientation="vertical"
+						mainAlignment="center"
+						crossAlignment="flex-start"
+						width="100%"
+					>
+						<Container
+							orientation="horizontal"
+							mainAlignment="flex-start"
+							crossAlignment="center"
+							width="fill"
+						>
 							<Padding horizontal="small">
-								<Text>{t('label.every_year_on', 'Every year on')}</Text>
+								<Text>{t('label.the', 'The')}</Text>
 							</Padding>
-							<Input
-								backgroundColor="gray5"
-								label={t('label.day', 'Day')}
-								value={moDayList}
-								onChange={onMoDayListChange}
-								disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_1}
-								hasError={
-									(isNumber(moDayList) && !isNaN(moDayList) && (moDayList < 1 || moDayList > 31)) ||
-									!isNumber(moDayList)
-								}
+							<OrdinalNumberSelect
+								value={posListSelectValue}
+								setValue={setPosListSelectValue}
+								onChange={onBySetPosChange}
+								disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_2}
+							/>
+							<Padding horizontal="small" />
+							<WeekdaySelect
+								onChange={onByDayChange}
+								disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_2}
+								setSelection={setByDaySelectValue}
 							/>
 							<Padding horizontal="small">
 								<Text>{t('label.of', 'of')}</Text>
 							</Padding>
-							<Select
-								items={months}
-								label={t('label.month', 'Month')}
-								onChange={onFirstMonthChange}
-								disablePortal
-								width="fit"
-								disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_1}
-								selection={byMonthFirstSelectValue}
+							<MonthSelect
+								value={byMonthSecondSelectValue}
+								setValue={setByMonthSecondSelectValue}
+								onChange={onSecondMonthChange}
+								disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_2}
 							/>
-						</Row>
-					}
-					value={RADIO_VALUES.NOT_IMPLEMENTED_1}
-				/>
-				<Radio
-					label={
-						<Container
-							orientation="vertical"
-							mainAlignment="center"
-							crossAlignment="flex-start"
-							width="100%"
-						>
-							<Container
-								orientation="horizontal"
-								mainAlignment="flex-start"
-								crossAlignment="center"
-								width="fill"
-							>
-								<Padding horizontal="small">
-									<Text>{t('label.the', 'The')}</Text>
-								</Padding>
-								<Select
-									items={ordinalNumbers}
-									label={t('label.number', 'Number')}
-									onChange={onBySetPosChange}
-									disablePortal
-									width="fit"
-									disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_2}
-									selection={posListSelectValue}
-								/>
-								<Padding horizontal="small" />
-								<Select
-									items={weekOptions}
-									label={t('label.day', 'Day')}
-									onChange={onByDayChange}
-									disablePortal
-									width="fit"
-									disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_2}
-									selection={byDaySelectValue}
-								/>
-								<Padding horizontal="small">
-									<Text>{t('label.of', 'of')}</Text>
-								</Padding>
-								<Select
-									items={months}
-									label={t('label.month', 'Month')}
-									onChange={onSecondMonthChange}
-									disablePortal
-									width="fit"
-									disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_2}
-									selection={byMonthSecondSelectValue}
-								/>
-							</Container>
 						</Container>
-					}
-					value={RADIO_VALUES.NOT_IMPLEMENTED_2}
-				/>
-			</RadioGroup>
-			<RecurrenceEndOptions end={end} setEnd={setEnd} />
-			<ModalFooter onConfirm={onConfirm} confirmLabel={t('repeat.customize', 'Customize')} />
-		</>
+					</Container>
+				}
+				value={RADIO_VALUES.NOT_IMPLEMENTED_2}
+			/>
+		</RadioGroup>
 	) : null;
 };
+
 export default YearlyOptions;

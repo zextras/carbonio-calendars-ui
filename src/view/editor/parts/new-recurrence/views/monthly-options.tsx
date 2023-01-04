@@ -5,49 +5,34 @@
  */
 import { t } from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import {
-	Container,
-	Input,
-	ModalFooter,
-	Padding,
-	Radio,
-	RadioGroup,
-	Row,
-	Select,
-	Text
-} from '@zextras/carbonio-design-system';
-import { isNumber, isNaN, map, find, differenceWith, isEqual, isNil, omitBy } from 'lodash';
-import { useSelector } from 'react-redux';
-import {
-	selectEditorRecurrenceCount,
-	selectEditorRecurrenceUntilDate
-} from '../../../../../store/selectors/editor';
+import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
+import { map } from 'lodash';
+import { IntervalInput } from '../components/interval-input';
+import { MonthlyDayInput } from '../components/monthly-day-input';
+import { OrdinalNumberSelect } from '../components/ordinal-number-select';
+import WeekdaySelect from '../components/weekday-select';
 import { RecurrenceContext } from '../contexts';
-import RecurrenceEndOptions from './recurrence-end-options';
 
 const RADIO_VALUES = {
 	DAY_OF_MONTH: 'DayOfTheMonth',
 	MONTHLY_CUSTOMIZED: 'MonthlyCustomized'
 };
 
-const setEndInitialValue = (count, until) => {
-	if (count) return count;
-	if (until) return until;
-	return undefined;
-};
-
 const MonthlyOptions = () => {
-	const { editorId, frequency } = useContext(RecurrenceContext);
-	const count = useSelector(selectEditorRecurrenceCount(editorId));
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
+	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const [radioValue, setRadioValue] = useState(RADIO_VALUES.DAY_OF_MONTH);
 	const [moDayList, setMoDayList] = useState<number | ''>(1);
 	const [intervalFirstInput, setIntervalFirstInput] = useState<number | ''>(1);
 	const [intervalSecondInput, setIntervalSecondInput] = useState<number | ''>(1);
 
-	const [end, setEnd] = useState(() => setEndInitialValue(count, until));
-
-	const [startValue, setStartValue] = useState();
+	const [startValue, setStartValue] = useState({
+		bymonthday: {
+			modaylist: moDayList
+		},
+		interval: {
+			ival: intervalFirstInput
+		}
+	});
 
 	const ordinalNumbers = useMemo(
 		() => [
@@ -119,31 +104,13 @@ const MonthlyOptions = () => {
 
 	const onMoDayListChange = useCallback(
 		(ev) => {
-			if (ev.target.value === '') {
+			if (ev && radioValue === RADIO_VALUES.DAY_OF_MONTH) {
 				setStartValue((prevValue) => ({
 					...(prevValue ?? {}),
 					bymonthday: {
-						modaylist: 1
+						modaylist: ev
 					}
 				}));
-				setMoDayList(ev.target.value);
-			} else {
-				const convertedInputToNumber = parseInt(ev.target.value, 10);
-				if (
-					isNumber(convertedInputToNumber) &&
-					!isNaN(convertedInputToNumber) &&
-					convertedInputToNumber >= 0
-				) {
-					setMoDayList(convertedInputToNumber);
-					if (radioValue === RADIO_VALUES.DAY_OF_MONTH) {
-						setStartValue((prevValue) => ({
-							...(prevValue ?? {}),
-							bymonthday: {
-								modaylist: convertedInputToNumber
-							}
-						}));
-					}
-				}
 			}
 		},
 		[radioValue]
@@ -151,210 +118,144 @@ const MonthlyOptions = () => {
 
 	const onFirstIntervalChange = useCallback(
 		(ev) => {
-			if (ev.target.value === '') {
+			if (radioValue === RADIO_VALUES.DAY_OF_MONTH) {
 				setStartValue((prevValue) => ({
-					...(prevValue ?? {}), // todo: consider to use controlled value insted of its previous
+					...prevValue,
 					interval: {
-						ival: 1
+						ival: ev
 					}
 				}));
-				setIntervalFirstInput(ev.target.value);
-			} else {
-				const convertedInputToNumber = parseInt(ev.target.value, 10);
-				if (
-					isNumber(convertedInputToNumber) &&
-					!isNaN(convertedInputToNumber) &&
-					convertedInputToNumber >= 0
-				) {
-					setIntervalFirstInput(convertedInputToNumber);
-					if (radioValue === RADIO_VALUES.DAY_OF_MONTH) {
-						setStartValue((prevValue) => ({
-							...(prevValue ?? {}),
-							interval: {
-								ival: convertedInputToNumber
-							}
-						}));
-					}
-				}
 			}
 		},
-		[radioValue]
+		[setStartValue, radioValue]
 	);
 
 	const onSecondIntervalChange = useCallback(
 		(ev) => {
-			if (ev.target.value === '') {
+			if (radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
 				setStartValue((prevValue) => ({
-					...(prevValue ?? {}), // todo: consider to use controlled value insted of its previous
+					...prevValue,
 					interval: {
-						ival: 1
+						ival: ev
 					}
 				}));
-				setIntervalSecondInput(ev.target.value);
-			} else {
-				const convertedInputToNumber = parseInt(ev.target.value, 10);
-				if (
-					isNumber(convertedInputToNumber) &&
-					!isNaN(convertedInputToNumber) &&
-					convertedInputToNumber >= 0
-				) {
-					setIntervalSecondInput(convertedInputToNumber);
-					if (radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
-						setStartValue((prevValue) => ({
-							...(prevValue ?? {}),
-							interval: {
-								ival: convertedInputToNumber
-							}
-						}));
-					}
-				}
 			}
 		},
-		[radioValue]
+		[setStartValue, radioValue]
 	);
 
 	const onBySetPosChange = useCallback(
 		(ev) => {
 			if (ev && radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
-				const selectedValue = ev?.split?.(',');
-				const newValue =
-					find(ordinalNumbers, (item) => {
-						const itemValue = item?.value?.split?.(',');
-						return differenceWith(itemValue, selectedValue, isEqual).length === 0;
-					}) ?? ordinalNumbers[0];
-				setPosListSelectValue(newValue);
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bysetpos: { poslist: ev } }));
 			}
 		},
-		[ordinalNumbers, radioValue]
+		[radioValue]
 	);
 
 	const onByDayChange = useCallback(
 		(ev) => {
 			if (ev && radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
-				const days = map(ev?.split?.(','), (day) => ({ day }));
-				const selectedValue = ev?.split?.(',');
-				const newValue =
-					find(weekOptions, (item) => {
-						const itemValue = item?.value?.split?.(',');
-						return differenceWith(itemValue, selectedValue, isEqual).length === 0;
-					}) ?? weekOptions[0];
-				setByDaySelectValue(newValue);
-				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: days } }));
+				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: ev } }));
 			}
 		},
-		[radioValue, weekOptions]
+		[radioValue]
 	);
 
 	useEffect(() => {
-		if (frequency === 'MON') {
-			console.log('@@@ monthly footer');
-			console.log('@@@ ', frequency, startValue);
+		if (startValue && frequency === 'MON') {
+			setNewStartValue(startValue);
 		}
-	}, [frequency, startValue]);
-
-	const onConfirm = useCallback(() => {
-		console.log('@@@ weekly footer');
-		console.log('@@@ ', frequency, startValue, end);
-	}, [frequency, startValue, end]);
+	}, [frequency, setNewStartValue, startValue]);
 
 	return frequency === 'MON' ? (
-		<>
-			<RadioGroup value={radioValue} onChange={onRadioChange}>
-				<Radio
-					label={
-						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Padding horizontal="small">
-								<Text>{t('label.day', 'Day')}</Text>
-							</Padding>
-							<Input
-								backgroundColor="gray5"
-								label={t('label.day', 'Day')}
-								value={moDayList}
-								onChange={onMoDayListChange}
-								disabled={radioValue !== RADIO_VALUES.DAY_OF_MONTH}
-								hasError={
-									(isNumber(moDayList) && !isNaN(moDayList) && (moDayList < 1 || moDayList > 31)) ||
-									!isNumber(moDayList)
-								}
-							/>
-							<Padding horizontal="small">
-								<Text>{t('label.every', 'every')}</Text>
-							</Padding>
-							<Input
-								label={t('label.months', 'Months')}
-								onChange={onFirstIntervalChange}
-								backgroundColor="gray5"
-								disabled={radioValue !== RADIO_VALUES.DAY_OF_MONTH}
-								value={intervalFirstInput}
-								hasError={
-									(isNumber(intervalFirstInput) &&
-										!isNaN(intervalFirstInput) &&
-										(intervalFirstInput < 1 || intervalFirstInput > 99)) ||
-									!isNumber(intervalFirstInput)
-								}
-							/>
-						</Row>
-					}
-					value={RADIO_VALUES.DAY_OF_MONTH}
-				/>
-				<Radio
-					label={
+		<RadioGroup value={radioValue} onChange={onRadioChange}>
+			<Radio
+				size="small"
+				iconColor="primary"
+				label={
+					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+						<Padding horizontal="small">
+							<Text>{t('label.day', 'Day')}</Text>
+						</Padding>
+						<MonthlyDayInput
+							value={moDayList}
+							setValue={setMoDayList}
+							onChange={onMoDayListChange}
+							disabled={radioValue !== RADIO_VALUES.DAY_OF_MONTH}
+						/>
+						<Padding horizontal="small">
+							<Text>{t('label.every', 'every')}</Text>
+						</Padding>
+						<IntervalInput
+							value={intervalFirstInput}
+							setValue={setIntervalFirstInput}
+							label={t('label.months', 'Months')}
+							onChange={onFirstIntervalChange}
+							disabled={radioValue !== RADIO_VALUES.DAY_OF_MONTH}
+						/>
+					</Row>
+				}
+				value={RADIO_VALUES.DAY_OF_MONTH}
+			/>
+			<Radio
+				size="small"
+				iconColor="primary"
+				label={
+					<Container
+						orientation="vertical"
+						mainAlignment="center"
+						crossAlignment="flex-start"
+						width="100%"
+					>
 						<Container
-							orientation="vertical"
-							mainAlignment="center"
-							crossAlignment="flex-start"
-							width="100%"
+							orientation="horizontal"
+							mainAlignment="flex-start"
+							crossAlignment="center"
+							width="fill"
 						>
 							<Padding horizontal="small">
 								<Text>{t('label.the', 'The')}</Text>
 							</Padding>
-							<Select
-								items={ordinalNumbers}
-								label={t('label.number', 'Number')}
+							<OrdinalNumberSelect
+								value={posListSelectValue}
+								setValue={setPosListSelectValue}
 								onChange={onBySetPosChange}
-								disablePortal
-								width="fit"
 								disabled={radioValue !== RADIO_VALUES.MONTHLY_CUSTOMIZED}
-								selection={posListSelectValue}
 							/>
 							<Padding horizontal="small" />
-							<Select
-								items={weekOptions}
-								label={t('label.day', 'Day')}
+							<WeekdaySelect
+								setSelection={setByDaySelectValue}
 								onChange={onByDayChange}
-								disablePortal
-								width="fit"
-								disabled={radioValue !== RADIO_VALUES.MONTHLY_CUSTOMIZED}
 								selection={byDaySelectValue}
+								disabled={radioValue !== RADIO_VALUES.MONTHLY_CUSTOMIZED}
 							/>
+						</Container>
+						<Container
+							orientation="horizontal"
+							mainAlignment="flex-start"
+							crossAlignment="center"
+							padding={{ vertical: 'small' }}
+							width="80%"
+						>
 							<Padding horizontal="small">
 								<Text>{t('label.of_every_month', 'of the month, every')}</Text>
 							</Padding>
-							<Input
-								label={t('label.month', 'Month')}
-								onChange={onSecondIntervalChange}
-								backgroundColor="gray5"
-								disabled={radioValue !== RADIO_VALUES.MONTHLY_CUSTOMIZED}
+							<MonthlyDayInput
 								value={intervalSecondInput}
-								hasError={
-									(isNumber(intervalSecondInput) &&
-										!isNaN(intervalSecondInput) &&
-										(intervalSecondInput < 1 || intervalSecondInput > 99)) ||
-									!isNumber(intervalSecondInput)
-								}
+								setValue={setIntervalSecondInput}
+								onChange={onSecondIntervalChange}
+								disabled={radioValue !== RADIO_VALUES.MONTHLY_CUSTOMIZED}
 							/>
 							<Padding horizontal="small">
 								<Text>{t('label.months', 'Months')}</Text>
 							</Padding>
 						</Container>
-					}
-					value={RADIO_VALUES.MONTHLY_CUSTOMIZED}
-				/>
-			</RadioGroup>
-			<RecurrenceEndOptions end={end} setEnd={setEnd} />
-			<ModalFooter onConfirm={onConfirm} confirmLabel={t('repeat.customize', 'Customize')} />
-		</>
+					</Container>
+				}
+				value={RADIO_VALUES.MONTHLY_CUSTOMIZED}
+			/>
+		</RadioGroup>
 	) : null;
 };
 
