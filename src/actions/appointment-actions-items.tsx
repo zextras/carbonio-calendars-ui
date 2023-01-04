@@ -7,7 +7,7 @@ import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { ActionsContext, PanelView } from '../types/actions';
 import { EventActionsEnum, EventActionsId } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
-import { Invite, ParticipationStatus } from '../types/store/invite';
+import { Invite } from '../types/store/invite';
 import {
 	acceptAsTentative,
 	acceptInvitation,
@@ -25,7 +25,7 @@ type AppointmentActionsItems = {
 	icon: string;
 	disabled: boolean;
 	label: string;
-	click: (ev: Event) => void;
+	click: (ev?: Event) => void;
 };
 
 export const openAppointmentItem = ({
@@ -133,10 +133,7 @@ export const deletePermanentlyItem = ({
 	id: EventActionsEnum.DELETE_PERMANENTLY,
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
-<<<<<<< HEAD
 	disabled: false,
-=======
->>>>>>> origin
 	click: deletePermanently({ event, context })
 });
 

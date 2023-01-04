@@ -22,6 +22,7 @@ jest.setTimeout(25000);
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
+		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',

@@ -8,13 +8,13 @@ import { find } from 'lodash';
 import React, { ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { ColorContainer, TextUpperCase } from '../../../../../commons/styled-components';
+import { useRecurrence } from '../../../../../hooks/use-recurrence';
 import {
 	selectEditorDisabled,
 	selectEditorRecurrence
 } from '../../../../../store/selectors/editor';
 import { EditorProps } from '../../../../../types/editor';
-import { ColorContainer, TextUpperCase } from '../../editor-recurrence';
-import { useRecurrence } from '../hooks';
 
 const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
 	<ColorContainer

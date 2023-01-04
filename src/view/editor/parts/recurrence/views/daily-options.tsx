@@ -4,15 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import {
-	Radio,
-	RadioGroup,
-	Row,
-	Text,
-	ModalFooter,
-	Padding
-} from '@zextras/carbonio-design-system';
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import {
 	isNumber,
 	isNaN,
@@ -22,22 +15,21 @@ import {
 	differenceWith,
 	isEqual,
 	omitBy,
-	isNil
+	isNil,
+	find
 } from 'lodash';
 import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
+import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
 import {
 	selectEditorRecurrenceByDay,
-	selectEditorRecurrenceCount,
 	selectEditorRecurrenceFrequency,
-	selectEditorRecurrenceInterval,
-	selectEditorRecurrenceUntilDate
+	selectEditorRecurrenceInterval
 } from '../../../../../store/selectors/editor';
-import { workWeek } from '../../../../../utils/work-week';
+import { Byday, Interval, RecurrenceStartValue } from '../../../../../types/editor';
+import { workWeek, WorkWeekDay } from '../../../../../utils/work-week';
 import { IntervalInput } from '../components/interval-input';
-import { RecurrenceContext } from '../contexts';
-import RecurrenceEndOptions from './recurrence-end-options';
 
 const RADIO_VALUES = {
 	EVERYDAY: 'Everyday',
@@ -53,12 +45,17 @@ const defaultState = {
 	radioValue: RADIO_VALUES.EVERYDAY
 };
 
-const initialState = (freq, interval, byday, workingSchedule): string => {
+const initialState = (
+	freq: string | undefined,
+	interval: Interval | undefined,
+	byday: Byday | undefined,
+	workingSchedule: WorkWeekDay[]
+): string => {
 	if ((freq === 'DAI' || freq === 'WEE') && byday?.wkday && interval?.ival === 1) {
 		// building an array with the same structure of wkday to check if they have the same values
 		// to determine if we are receiving a workingday value
 		const workingDays = map(filter(workingSchedule, ['working', true]), (workingDay) => {
-			const day = WEEK_SCHEDULE[workingDay.day]?.slice(0, 2);
+			const day = find(WEEK_SCHEDULE, ['value', workingDay.day])?.label?.slice(0, 2);
 			return { day };
 		});
 		const diff = differenceWith(workingDays, byday?.wkday, isEqual);
@@ -70,19 +67,24 @@ const initialState = (freq, interval, byday, workingSchedule): string => {
 	if (freq === 'DAI' && interval?.ival === 1 && !byday?.wkday) {
 		return RADIO_VALUES.EVERYDAY;
 	}
-	if (freq === 'DAI' && interval?.ival > 1 && !byday?.wkday) {
+	if (freq === 'DAI' && interval && interval?.ival > 1 && !byday?.wkday) {
 		return RADIO_VALUES.EVERY_X_DAY;
 	}
 	return defaultState.radioValue;
 };
 
-const startValueInitialState = (freq, byday, interval, workingSchedule) => {
+const startValueInitialState = (
+	freq: string | undefined,
+	byday: Byday | undefined,
+	interval: Interval | undefined,
+	workingSchedule: WorkWeekDay[]
+): RecurrenceStartValue | undefined => {
 	if (freq === 'DAI') {
 		return omitBy({ interval, byday }, isNil);
 	}
 	if (freq === 'WEE' && byday?.wkday && interval?.ival === 1) {
 		const workingDays = map(filter(workingSchedule, ['working', true]), (workingDay) => {
-			const day = WEEK_SCHEDULE[workingDay.day]?.slice(0, 2);
+			const day = find(WEEK_SCHEDULE, ['value', workingDay.day])?.label?.slice(0, 2);
 			return { day };
 		});
 		const diff = differenceWith(workingDays, byday?.wkday, isEqual);
@@ -91,10 +93,11 @@ const startValueInitialState = (freq, byday, interval, workingSchedule) => {
 		}
 		return { interval: defaultState.interval };
 	}
+	return undefined;
 };
 
-const DailyOptions = () => {
-	const { editorId, frequency, setNewStartValue } = useContext(RecurrenceContext);
+const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
 	const interval = useSelector(selectEditorRecurrenceInterval(editorId));
 	const byday = useSelector(selectEditorRecurrenceByDay(editorId));
@@ -122,17 +125,19 @@ const DailyOptions = () => {
 			workingSchedule,
 			(result, weekday) => {
 				if (weekday.working) {
-					const day = WEEK_SCHEDULE[weekday.day];
-					return [
-						...result,
-						{
-							day: day.slice(0, 2)
-						}
-					];
+					const day = find(WEEK_SCHEDULE, ['value', weekday.day])?.label?.slice(0, 2);
+					if (day) {
+						return [
+							...result,
+							{
+								day: day?.slice(0, 2)
+							}
+						];
+					}
 				}
 				return result;
 			},
-			[]
+			[] as { day: string }[]
 		);
 		setStartValue({
 			byday: { wkday }
@@ -199,27 +204,31 @@ const DailyOptions = () => {
 
 	return frequency === 'DAI' ? (
 		<RadioGroup value={radioValue} onChange={onChange}>
-			<Padding vertical="small">
-				<Radio
-					size="small"
-					iconColor="primary"
-					label={t('label.every_day', 'Every day')}
-					value={RADIO_VALUES.EVERYDAY}
-				/>
-			</Padding>
-			<Padding vertical="small">
-				<Radio
-					size="small"
-					iconColor="primary"
-					label={t('items.working_day', 'Every working day')}
-					value={RADIO_VALUES.WORKING_DAY}
-				/>
-			</Padding>
-			<Padding top="small">
-				<Radio
-					size="small"
-					iconColor="primary"
-					label={
+			<Radio
+				size="small"
+				iconColor="primary"
+				label={
+					<Padding vertical="small">
+						<Text overflow="break-word">{t('label.every_day', 'Every day')}</Text>
+					</Padding>
+				}
+				value={RADIO_VALUES.EVERYDAY}
+			/>
+			<Radio
+				size="small"
+				iconColor="primary"
+				label={
+					<Padding vertical="small">
+						<Text overflow="break-word">{t('items.working_day', 'Every working day')}</Text>
+					</Padding>
+				}
+				value={RADIO_VALUES.WORKING_DAY}
+			/>
+			<Radio
+				size="small"
+				iconColor="primary"
+				label={
+					<Padding top="small">
 						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 							<Text overflow="break-word">{t('label.every', 'Every')}</Text>
 							<Padding horizontal="small">
@@ -233,10 +242,10 @@ const DailyOptions = () => {
 							</Padding>
 							<Text overflow="break-word">{t('label.days', 'Days')}</Text>
 						</Row>
-					}
-					value={RADIO_VALUES.EVERY_X_DAY}
-				/>
-			</Padding>
+					</Padding>
+				}
+				value={RADIO_VALUES.EVERY_X_DAY}
+			/>
 		</RadioGroup>
 	) : null;
 };

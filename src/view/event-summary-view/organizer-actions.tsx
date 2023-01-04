@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { noop } from 'lodash';
-import React, { FC, ReactElement, useContext, useMemo } from 'react';
+import React, { FC, ReactElement, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
 	Button,
@@ -50,6 +50,10 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 		}),
 		[calendarFolders, createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
 	);
+	const onClick = useCallback(() => {
+		editAppointment({ event, invite, context });
+	}, [context, event, invite]);
+
 	return event ? (
 		<>
 			{event.resource?.calendar?.name === 'Trash' ? (
@@ -64,7 +68,7 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 					disabled={!event.haveWriteAccess}
 					type="outlined"
 					label={t('label.edit', 'edit')}
-					onClick={editAppointment({ event, invite, context })}
+					onClick={onClick}
 				/>
 			)}
 

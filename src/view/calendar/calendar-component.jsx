@@ -177,7 +177,6 @@ export default function CalendarComponent() {
 
 	useEffect(() => {
 		const timezone = moment.tz.guess(true);
-		console.log('@@@', timezone);
 	}, []);
 
 	return (

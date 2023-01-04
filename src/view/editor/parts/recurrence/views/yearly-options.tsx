@@ -6,19 +6,20 @@
 import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { RecurrenceContext } from '../../../../../commons/recurrence-context';
+import { RecurrenceStartValue } from '../../../../../types/editor';
 import { MonthSelect } from '../components/month-select';
 import { MonthlyDayInput } from '../components/monthly-day-input';
 import { OrdinalNumberSelect } from '../components/ordinal-number-select';
 import WeekdaySelect from '../components/weekday-select';
-import { RecurrenceContext } from '../contexts';
 
 const RADIO_VALUES = {
 	NOT_IMPLEMENTED_1: 'NotImplemented1',
 	NOT_IMPLEMENTED_2: 'NotImplemented2'
 };
 
-const YearlyOptions = () => {
+const YearlyOptions = (): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const [radioValue, setRadioValue] = useState(RADIO_VALUES.NOT_IMPLEMENTED_1);
 
@@ -45,9 +46,9 @@ const YearlyOptions = () => {
 	const [byMonthFirstSelectValue, setByMonthFirstSelectValue] = useState(months[0]);
 	const [byMonthSecondSelectValue, setByMonthSecondSelectValue] = useState(months[0]);
 
-	const [startValue, setStartValue] = useState({
+	const [startValue, setStartValue] = useState<RecurrenceStartValue>({
 		bymonthday: {
-			modaylist: moDayList
+			modaylist: moDayList as number
 		},
 		bymonth: { molist: byMonthFirstSelectValue?.value }
 	});
@@ -139,7 +140,7 @@ const YearlyOptions = () => {
 				case RADIO_VALUES.NOT_IMPLEMENTED_1:
 					setStartValue({
 						bymonthday: {
-							modaylist: moDayList
+							modaylist: moDayList as number
 						},
 						bymonth: { molist: byMonthFirstSelectValue?.value }
 					});

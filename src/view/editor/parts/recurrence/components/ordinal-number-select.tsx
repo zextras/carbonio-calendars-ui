@@ -6,14 +6,21 @@
 import { Select } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual } from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
+
+type OrdinalNumberSelectProps = {
+	value: { label: string; value: string };
+	setValue: React.Dispatch<React.SetStateAction<{ label: string; value: string }>>;
+	onChange: (ev: string) => void;
+	disabled: boolean;
+};
 
 export const OrdinalNumberSelect = ({
 	value,
 	setValue,
 	onChange,
 	disabled
-}) => {
+}: OrdinalNumberSelectProps): ReactElement => {
 	const ordinalNumbers = useMemo(
 		() => [
 			{ label: t('items.first', 'First'), value: '1' },

@@ -6,14 +6,21 @@
 import { Select } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual } from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
+
+type MonthSelectProps = {
+	value: { label: string; value: string };
+	setValue: React.Dispatch<React.SetStateAction<{ label: string; value: string }>>;
+	onChange: (ev: number) => void;
+	disabled: boolean;
+};
 
 export const MonthSelect = ({
 	value,
 	setValue,
 	onChange,
 	disabled
-}) => {
+}: MonthSelectProps): ReactElement => {
 	const months = useMemo(
 		() => [
 			{ label: t('months.january', 'January'), value: '1' },

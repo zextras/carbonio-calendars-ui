@@ -25,7 +25,8 @@ import {
 	editEditorAttachmentsReducer,
 	updateEditorReducer,
 	deleteEditorReducer,
-	editEditorRecurrenceFrequencyReducer, editEditorRecurrenceIntervalReducer,
+	editEditorRecurrenceFrequencyReducer,
+	editEditorRecurrenceIntervalReducer
 } from '../reducers/edit-organizer';
 import {
 	editAppointmentDataReducer,

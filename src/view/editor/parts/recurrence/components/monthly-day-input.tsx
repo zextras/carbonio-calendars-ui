@@ -6,14 +6,21 @@
 import { Input } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNaN, isNumber } from 'lodash';
-import React, { useCallback } from 'react';
+import React, { ReactElement, useCallback } from 'react';
+
+type IntervalInputProps = {
+	value: number | '';
+	setValue: React.Dispatch<React.SetStateAction<number | ''>>;
+	onChange: (ev: number) => void;
+	disabled: boolean;
+};
 
 export const MonthlyDayInput = ({
 	disabled,
 	setValue,
 	onChange,
 	value
-}) => {
+}: IntervalInputProps): ReactElement => {
 	const onMonthChange = useCallback(
 		(ev) => {
 			if (ev.target.value === '') {

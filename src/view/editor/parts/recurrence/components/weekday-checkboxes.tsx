@@ -8,13 +8,21 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { find, map, reject } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
+type WeekdayCheckboxesProps = {
+	value: { day: string }[];
+	setValue: React.Dispatch<React.SetStateAction<{ day: string }[]>>;
+	disabled: boolean;
+	onClick: (newValue: { day: string }[]) => void;
+	isHidden: boolean;
+};
+
 export const WeekdayCheckboxes = ({
 	value,
 	setValue,
 	disabled,
 	onClick,
 	isHidden
-}): ReactElement | null => {
+}: WeekdayCheckboxesProps): ReactElement | null => {
 	const selectItems = useMemo(
 		() => [
 			{ label: t('label.week_day.monday', 'Monday'), value: 'MO' },

@@ -5,7 +5,15 @@
  */
 import { Input } from '@zextras/carbonio-design-system';
 import { isNaN, isNumber } from 'lodash';
-import React, { useCallback } from 'react';
+import React, { ReactElement, useCallback } from 'react';
+
+type IntervalInputProps = {
+	label: string;
+	value: number | '';
+	setValue: React.Dispatch<React.SetStateAction<number | ''>>;
+	onChange: (ev: number) => void;
+	disabled: boolean;
+};
 
 export const IntervalInput = ({
 	label,
@@ -13,7 +21,7 @@ export const IntervalInput = ({
 	setValue,
 	onChange,
 	disabled
-}) => {
+}: IntervalInputProps): ReactElement => {
 	const onIntervalChange = useCallback(
 		(ev) => {
 			if (ev.target.value === '') {

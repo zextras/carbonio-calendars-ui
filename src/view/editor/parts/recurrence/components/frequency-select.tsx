@@ -5,9 +5,9 @@
  */
 import { Select } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
-import React, { useCallback, useContext, useMemo } from 'react';
+import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RecurrenceContext } from '../contexts';
+import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 
 const RepetitionFrequency = {
 	DAILY: 'DAI',
@@ -16,8 +16,8 @@ const RepetitionFrequency = {
 	YEARLY: 'YEA'
 };
 
-const FrequencySelect = () => {
-	const { frequency, setFrequency } = useContext(RecurrenceContext);
+const FrequencySelect = (): ReactElement => {
+	const context = useContext(RecurrenceContext);
 	const [t] = useTranslation();
 
 	const repetitionItems = useMemo(
@@ -31,15 +31,15 @@ const FrequencySelect = () => {
 	);
 
 	const initialValue = useMemo(
-		() => find(repetitionItems, { value: frequency }) ?? repetitionItems[0],
-		[repetitionItems, frequency]
+		() => find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0],
+		[repetitionItems, context?.frequency]
 	);
 
 	const onChange = useCallback(
 		(ev) => {
-			setFrequency(ev);
+			context?.setFrequency?.(ev);
 		},
-		[setFrequency]
+		[context]
 	);
 
 	return (

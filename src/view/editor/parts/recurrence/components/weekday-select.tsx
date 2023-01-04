@@ -10,8 +10,8 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 
 type WeekDaySelectorProps = {
 	selection?: SelectItem;
-	setSelection: any;
-	onChange: any;
+	setSelection: React.Dispatch<React.SetStateAction<{ label: string; value: string }>>;
+	onChange: (ev: { day: any }[]) => void;
 	disabled?: boolean;
 };
 

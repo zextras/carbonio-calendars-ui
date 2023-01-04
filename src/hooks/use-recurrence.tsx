@@ -8,10 +8,10 @@ import moment from 'moment';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { selectEditorStart } from '../../../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../../../types/editor';
-import CustomRepeatSelectItem from '../components/custom-repeat';
-import RepeatItemComponent from '../components/repeat-item-component';
+import { selectEditorStart } from '../store/selectors/editor';
+import { EditorCallbacks } from '../types/editor';
+import CustomRepeatSelectItem from '../view/editor/parts/recurrence/components/custom-repeat';
+import RepeatItemComponent from '../view/editor/parts/recurrence/components/repeat-item-component';
 
 type UseRecurrenceReturn = {
 	onChange: (arg: string) => void;
@@ -22,7 +22,10 @@ type UseRecurrenceReturn = {
 	}>;
 };
 
-export default (editorId: string, callbacks: EditorCallbacks): UseRecurrenceReturn => {
+export const useRecurrence = (
+	editorId: string,
+	callbacks: EditorCallbacks
+): UseRecurrenceReturn => {
 	const [t] = useTranslation();
 	const start = useSelector(selectEditorStart(editorId));
 	const { onRecurrenceChange } = callbacks;

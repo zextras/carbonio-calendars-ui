@@ -4,22 +4,23 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Container, Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import { find, differenceWith, map, isEqual, filter, omitBy, isNil } from 'lodash';
 import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
+import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
 import {
 	selectEditorRecurrenceByDay,
 	selectEditorRecurrenceFrequency,
 	selectEditorRecurrenceInterval
 } from '../../../../../store/selectors/editor';
-import { workWeek } from '../../../../../utils/work-week';
+import { Byday, Interval, RecurrenceStartValue } from '../../../../../types/editor';
+import { workWeek, WorkWeekDay } from '../../../../../utils/work-week';
 import { IntervalInput } from '../components/interval-input';
 import { WeekdayCheckboxes } from '../components/weekday-checkboxes';
 import WeekdaySelect from '../components/weekday-select';
-import { RecurrenceContext } from '../contexts';
 
 const RADIO_VALUES = {
 	QUICK_OPTIONS: 'QuickOptions',
@@ -37,12 +38,17 @@ const defaultState = {
 	radioValue: RADIO_VALUES.QUICK_OPTIONS
 };
 
-const radioInitialState = (freq, interval, byday, workingSchedule): string => {
+const radioInitialState = (
+	freq: string | undefined,
+	interval: Interval | undefined,
+	byday: Byday | undefined,
+	workingSchedule: WorkWeekDay[]
+): string => {
 	if ((freq === 'DAI' || freq === 'WEE') && byday?.wkday) {
 		// building an array with the same structure of wkday to check if they have the same values
 		// to determine if we are receiving the value of the working day option
 		const workingDays = map(filter(workingSchedule, ['working', true]), (workingDay) => {
-			const day = WEEK_SCHEDULE[workingDay.day]?.slice(0, 2);
+			const day = find(WEEK_SCHEDULE, ['value', workingDay.day])?.label?.slice(0, 2);
 			return { day };
 		});
 		const diff = differenceWith(workingDays, byday?.wkday, isEqual);
@@ -60,7 +66,12 @@ const radioInitialState = (freq, interval, byday, workingSchedule): string => {
 	return defaultState.radioValue;
 };
 
-const startValueInitialState = (freq, byday, interval, weeklyOptions) => {
+const startValueInitialState = (
+	freq: string | undefined,
+	interval: Interval | undefined,
+	byday: Byday | undefined,
+	weeklyOptions: { label: string; value: string }[]
+): RecurrenceStartValue | undefined => {
 	if (freq === 'WEE') {
 		return omitBy({ interval, byday }, isNil);
 	}
@@ -79,21 +90,25 @@ const startValueInitialState = (freq, byday, interval, weeklyOptions) => {
 		}
 		return { interval: defaultState.interval, byday: defaultState.byday };
 	}
+	return undefined;
 };
 
-const selectInitialValue = (weeklyOptions, byday) =>
+const selectInitialValue = (
+	weeklyOptions: { label: string; value: string }[],
+	byday: Byday | undefined
+): { label: string; value: string } =>
 	find(
 		weeklyOptions,
 		(item) =>
 			differenceWith(
 				map(item?.value?.split?.(','), (day) => ({ day })),
-				byday?.wkday ?? {},
+				byday?.wkday ?? [],
 				isEqual
 			).length === 0
 	) ?? weeklyOptions[0];
 
-const WeeklyOptions = () => {
-	const { editorId, frequency, setNewStartValue } = useContext(RecurrenceContext);
+const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
 	const interval = useSelector(selectEditorRecurrenceInterval(editorId));
 	const byday = useSelector(selectEditorRecurrenceByDay(editorId));
@@ -135,7 +150,7 @@ const WeeklyOptions = () => {
 	const [selectValue, setSelectValue] = useState(() => selectInitialValue(weeklyOptions, byday));
 	const [checkboxesValue, setCheckboxesValue] = useState(byday?.wkday ?? []);
 	const [startValue, setStartValue] = useState(() =>
-		startValueInitialState(freq, byday, interval, workingSchedule)
+		startValueInitialState(freq, interval, byday, weeklyOptions)
 	);
 
 	const onByDayChange = useCallback(
@@ -159,7 +174,7 @@ const WeeklyOptions = () => {
 				case RADIO_VALUES.CUSTOM_OPTIONS:
 					setStartValue({
 						byday: { wkday: checkboxesValue },
-						interval: { ival: inputValue }
+						interval: { ival: inputValue as number }
 					});
 					setRadioValue(ev);
 					break;

@@ -7,9 +7,16 @@ import { Button, Container, ModalManagerContext } from '@zextras/carbonio-design
 import React, { ReactElement, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StoreProvider } from '../../../../../store/redux';
+import { EditorCallbacks } from '../../../../../types/editor';
 import CustomRecurrenceModal from '../views/custom-recurrence-modal';
 
-const CustomRepeatSelectItem = ({ editorId, callbacks }): ReactElement => {
+const CustomRepeatSelectItem = ({
+	editorId,
+	callbacks
+}: {
+	editorId: string;
+	callbacks: EditorCallbacks;
+}): ReactElement => {
 	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
 

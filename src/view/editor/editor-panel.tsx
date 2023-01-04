@@ -23,7 +23,7 @@ import { EditorPrivateCheckbox } from './parts/editor-private-checkbox';
 import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
-import { EditorRecurrence } from './parts/new-recurrence';
+import { EditorRecurrence } from './parts/recurrence';
 
 export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): ReactElement | null =>
 	editorId && callbacks ? (

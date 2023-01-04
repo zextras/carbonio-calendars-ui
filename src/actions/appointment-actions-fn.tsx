@@ -29,7 +29,7 @@ export const openAppointment =
 		event: EventType;
 		panelView: PanelView;
 		context: ActionsContext;
-	}): ((ev: Event) => void) =>
+	}): ((ev?: Event) => void) =>
 	(): void => {
 		context?.onClose && context?.onClose();
 		if (panelView === PANEL_VIEW.APP) {
@@ -47,7 +47,7 @@ export const openAppointment =
 	};
 
 export const acceptInvitation =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
 	(): void => {
 		context
 			.dispatch(
@@ -63,7 +63,7 @@ export const acceptInvitation =
 	};
 
 export const declineInvitation =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
 	(): void => {
 		context
 			.dispatch(
@@ -79,7 +79,7 @@ export const declineInvitation =
 	};
 
 export const acceptAsTentative =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
 	(): void => {
 		context
 			.dispatch(
@@ -95,8 +95,8 @@ export const acceptAsTentative =
 	};
 
 export const deletePermanently =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(ev: Event): void => {
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	(ev?: Event): void => {
 		if (ev) ev.preventDefault();
 		context?.onClose && context?.onClose();
 		const closeModal = context.createModal(
@@ -123,7 +123,7 @@ export const moveToTrash =
 		event: EventType;
 		invite: Invite;
 		context: ActionsContext;
-	}): ((ev: Event) => void) =>
+	}): ((ev?: Event) => void) =>
 	(): void => {
 		context?.onClose && context?.onClose();
 		const closeModal = context.createModal(
@@ -147,8 +147,8 @@ export const moveToTrash =
 	};
 
 export const moveAppointment =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(ev: Event): void => {
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	(ev?: Event): void => {
 		if (ev) ev.preventDefault();
 
 		context?.onClose && context?.onClose();

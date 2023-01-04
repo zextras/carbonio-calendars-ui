@@ -4,33 +4,34 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
+import { RecurrenceContext } from '../../../../../commons/recurrence-context';
+import { RecurrenceStartValue } from '../../../../../types/editor';
 import { IntervalInput } from '../components/interval-input';
 import { MonthlyDayInput } from '../components/monthly-day-input';
 import { OrdinalNumberSelect } from '../components/ordinal-number-select';
 import WeekdaySelect from '../components/weekday-select';
-import { RecurrenceContext } from '../contexts';
 
 const RADIO_VALUES = {
 	DAY_OF_MONTH: 'DayOfTheMonth',
 	MONTHLY_CUSTOMIZED: 'MonthlyCustomized'
 };
 
-const MonthlyOptions = () => {
+const MonthlyOptions = (): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const [radioValue, setRadioValue] = useState(RADIO_VALUES.DAY_OF_MONTH);
 	const [moDayList, setMoDayList] = useState<number | ''>(1);
 	const [intervalFirstInput, setIntervalFirstInput] = useState<number | ''>(1);
 	const [intervalSecondInput, setIntervalSecondInput] = useState<number | ''>(1);
 
-	const [startValue, setStartValue] = useState({
+	const [startValue, setStartValue] = useState<RecurrenceStartValue>({
 		bymonthday: {
-			modaylist: moDayList
+			modaylist: moDayList as number
 		},
 		interval: {
-			ival: intervalFirstInput
+			ival: intervalFirstInput as number
 		}
 	});
 
@@ -70,10 +71,10 @@ const MonthlyOptions = () => {
 				case RADIO_VALUES.DAY_OF_MONTH:
 					setStartValue({
 						bymonthday: {
-							modaylist: moDayList
+							modaylist: moDayList as number
 						},
 						interval: {
-							ival: intervalFirstInput
+							ival: intervalFirstInput as number
 						}
 					});
 					setRadioValue(ev);
@@ -84,7 +85,7 @@ const MonthlyOptions = () => {
 						bysetpos: { poslist: posListSelectValue?.value },
 						byday: { wkday: map(byDaySelectValue?.value?.split?.(','), (day) => ({ day })) },
 						interval: {
-							ival: intervalSecondInput
+							ival: intervalSecondInput as number
 						}
 					});
 					break;

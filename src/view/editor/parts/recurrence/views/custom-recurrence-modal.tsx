@@ -6,7 +6,7 @@
 import { ModalFooter, Padding, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
-import React, { useCallback, useState } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ModalHeader from '../../../../../carbonio-ui-commons/components/modals/modal-header';
 import {
@@ -14,15 +14,23 @@ import {
 	selectEditorRecurrenceFrequency,
 	selectEditorRecurrenceUntilDate
 } from '../../../../../store/selectors/editor';
-import { RecurrenceContext } from '../contexts';
+import {
+	EditorCallbacks,
+	RecurrenceEndValue,
+	RecurrenceStartValue
+} from '../../../../../types/editor';
 import DailyOptions from './daily-options';
 import FrequencySelect from '../components/frequency-select';
 import MonthlyOptions from './monthly-options';
 import RecurrenceEndOptions from './recurrence-end-options';
 import WeeklyOptions from './weekly-options';
 import YearlyOptions from './yearly-options';
+import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 
-const setEndInitialValue = (count, until) => {
+const setEndInitialValue = (
+	count: number | undefined,
+	until: string | undefined
+): RecurrenceEndValue => {
 	if (count) return { count: { num: count } };
 	if (until)
 		return {
@@ -33,7 +41,17 @@ const setEndInitialValue = (count, until) => {
 	return undefined;
 };
 
-const CustomRecurrenceModal = ({ editorId, callbacks, onClose }) => {
+type CustomRecurrenceModalProps = {
+	editorId: string;
+	callbacks: EditorCallbacks;
+	onClose: () => void;
+};
+
+const CustomRecurrenceModal = ({
+	editorId,
+	callbacks,
+	onClose
+}: CustomRecurrenceModalProps): ReactElement => {
 	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
 	const count = useSelector(selectEditorRecurrenceCount(editorId));
 	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
@@ -41,7 +59,7 @@ const CustomRecurrenceModal = ({ editorId, callbacks, onClose }) => {
 
 	const [frequency, setFrequency] = useState(freq);
 
-	const [newStartValue, setNewStartValue] = useState();
+	const [newStartValue, setNewStartValue] = useState<RecurrenceStartValue>();
 	const [newEndValue, setNewEndValue] = useState(() => setEndInitialValue(count, until));
 
 	const onConfirm = useCallback(() => {
@@ -55,18 +73,17 @@ const CustomRecurrenceModal = ({ editorId, callbacks, onClose }) => {
 		setNewEndValue(undefined);
 	}, [onRecurrenceChange, newStartValue, newEndValue, frequency, onClose]);
 
+	const recurrenceContextValue = {
+		newStartValue,
+		setNewStartValue,
+		newEndValue,
+		setNewEndValue,
+		frequency,
+		setFrequency
+	};
+
 	return (
-		<RecurrenceContext.Provider
-			value={{
-				editorId,
-				newStartValue,
-				setNewStartValue,
-				newEndValue,
-				setNewEndValue,
-				frequency,
-				setFrequency
-			}}
-		>
+		<RecurrenceContext.Provider value={recurrenceContextValue}>
 			<ModalHeader title={t('label.custom_repeat', 'Custom Repeat')} onClose={onClose} />
 			<Padding vertical="medium">
 				<Text weight="bold" size="large">
@@ -75,8 +92,8 @@ const CustomRecurrenceModal = ({ editorId, callbacks, onClose }) => {
 			</Padding>
 			<FrequencySelect />
 			<Padding vertical="small">
-				<DailyOptions />
-				<WeeklyOptions />
+				<DailyOptions editorId={editorId} />
+				<WeeklyOptions editorId={editorId} />
 				<MonthlyOptions />
 				<YearlyOptions />
 			</Padding>
@@ -86,7 +103,7 @@ const CustomRecurrenceModal = ({ editorId, callbacks, onClose }) => {
 				</Text>
 			</Padding>
 			<Padding vertical="small">
-				<RecurrenceEndOptions />
+				<RecurrenceEndOptions editorId={editorId} />
 			</Padding>
 			<ModalFooter onConfirm={onConfirm} confirmLabel={t('repeat.customize', 'Customize')} />
 		</RecurrenceContext.Provider>
