@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { cloneDeep, isNil, omit, union } from 'lodash';
+import { isNil, omit, union } from 'lodash';
 import { Editor, IdentityItem, Room } from '../../types/editor';
 import { EventResourceCalendar } from '../../types/event';
 import { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';

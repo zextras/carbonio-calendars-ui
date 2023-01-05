@@ -6,6 +6,7 @@
 import { Checkbox } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
+import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -30,17 +31,18 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): Reac
 
 	const startDate = useMemo(() => (start ? new Date(start) : undefined), [start]);
 	const endDate = useMemo(() => (end ? new Date(end) : undefined), [end]);
+	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
 
 	const onClick = useCallback(
 		(e) => {
 			if (e && startDate && endDate) {
 				const startValue = startDate.setHours(0, 0, 0, 0);
-				const endValue = endDate.setHours(0, 0, 0, 0);
+				const endValue = startValue + diff;
 				onAllDayChange(!allDay, startValue, endValue);
 			}
 			onAllDayChange(!allDay);
 		},
-		[allDay, endDate, onAllDayChange, startDate]
+		[allDay, diff, endDate, onAllDayChange, startDate]
 	);
 
 	return !isNil(allDay) ? (

@@ -32,7 +32,7 @@ export default function PermisionsSettings({
 	defaultSelectedFreeBusyContacts,
 	defaultSelectedInviteContacts
 }) {
-	const [ContactInput, available] = useIntegratedComponent('contact-input');
+	const [ContactInput] = useIntegratedComponent('contact-input');
 	return (
 		<Container
 			padding={{ all: 'medium' }}

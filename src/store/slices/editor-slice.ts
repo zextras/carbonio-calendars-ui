@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
+import { EditorSlice } from '../../types/store/store';
 import {
 	editEditorAllDayReducer,
 	editEditorAttendeesReducer,
@@ -25,9 +26,7 @@ import {
 	updateEditorReducer,
 	deleteEditorReducer
 } from '../reducers/edit-organizer';
-import { initializeAppointmentReducer } from '../reducers/initialize-appointment';
 import {
-	addAppointmentEditorReducer,
 	editAppointmentDataReducer,
 	editAttendeesReducer,
 	editOptionalAttendeesReducer,
@@ -38,24 +37,23 @@ import {
 import { newEditorReducer } from '../reducers/new-editor';
 import { Editor } from '../../types/editor';
 
+const initialState: EditorSlice = {
+	status: 'idle',
+	editors: {} as Record<string, Editor>,
+	editorPanel: undefined,
+	activeId: undefined,
+	searchActiveId: undefined
+};
 export const editorSlice = createSlice({
 	name: 'editor',
-	initialState: {
-		status: 'idle',
-		editors: {} as Record<string, Editor>,
-		editorPanel: undefined,
-		activeId: undefined,
-		searchActiveId: undefined
-	},
+	initialState,
 	reducers: {
-		addAppointmentEditor: addAppointmentEditorReducer,
 		editAppointmentData: editAppointmentDataReducer,
 		editResourceData: editResourceDataReducer,
 		editAttendees: editAttendeesReducer,
 		editRoom: editRoomReducer,
 		editOptionalAttendees: editOptionalAttendeesReducer,
 		openEditor: openEditorReducer,
-		initializeEditorAppointment: initializeAppointmentReducer,
 		createNewEditor: newEditorReducer,
 		editIsRichText: editIsRichTextReducer,
 		editEditorAttachments: editEditorAttachmentsReducer,
@@ -80,7 +78,6 @@ export const editorSlice = createSlice({
 });
 
 export const {
-	addAppointmentEditor,
 	editAppointmentData,
 	openEditor,
 	editRoom,

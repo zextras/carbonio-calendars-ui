@@ -3,10 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useTranslation } from 'react-i18next';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { useDispatch } from 'react-redux';
 import {
 	Checkbox,
 	Container,
@@ -16,14 +12,17 @@ import {
 	SnackbarManagerContext,
 	Text
 } from '@zextras/carbonio-design-system';
-import { replace, split } from 'lodash';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
-import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
-import { ModalHeader } from '../../../../commons/modal-header';
-import { GranteeInfo } from './grantee-info';
 import ModalFooter from '../../../../commons/modal-footer';
+import { ModalHeader } from '../../../../commons/modal-header';
 import { findLabel } from '../../../../settings/components/utils';
+import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { shareCalendar } from '../../../../store/actions/share-calendar';
+import { GranteeInfo } from './grantee-info';
 
 export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 	const [t] = useTranslation();
@@ -41,7 +40,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 			shareCalendar({
 				sendNotification,
 				standardMessage,
-				contacts: [{ email: grant.d }],
+				contacts: [{ email: grant.d || grant.zid }],
 				shareWithUserRole,
 				folder: folder.id,
 				accounts,
@@ -63,7 +62,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 						sendShareCalendarNotification({
 							sendNotification,
 							standardMessage,
-							contacts: [{ email: grant.d }],
+							contacts: [{ email: grant.d || grant.zid }],
 							shareWithUserRole,
 							folder: folder.id,
 							accounts
@@ -89,13 +88,10 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 		setshareWithUserRole(shareRole);
 	}, []);
 
-	const label = useMemo(() => replace(split(grant.d, '@')?.[0], '.', ' '), [grant.d]);
+	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
 	return (
 		<Container padding="0.5rem 0.5rem 1.5rem">
-			<ModalHeader
-				title={t('label.edit_access', { name: label, defaultValue: "Edit {{name}}'s access" })}
-				onClose={onClose}
-			/>
+			<ModalHeader title={title} onClose={onClose} />
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}
 				mainAlignment="center"

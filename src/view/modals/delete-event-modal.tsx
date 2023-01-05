@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter, size } from 'lodash';
+import { size } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
-import { Spinner, replaceHistory, t, useFolders } from '@zextras/carbonio-shell-ui';
+import { Spinner, replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import ModalFooter from '../../commons/modal-footer';

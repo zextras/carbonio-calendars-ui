@@ -6,11 +6,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { map } from 'lodash';
 
-export const shareCalendar = createAsyncThunk(
-	'calendar/shareCalendar',
-	async (data: any, { getState }) => {
-		const requests: any = {};
-		requests.ShareCalendarRequest = `<BatchRequest xmlns="urn:zimbra" onerror="stop">
+export const shareCalendar = createAsyncThunk('calendar/shareCalendar', async (data: any) => {
+	const requests: any = {};
+	requests.ShareCalendarRequest = `<BatchRequest xmlns="urn:zimbra" onerror="stop">
         ${map(
 					data.contacts,
 					(
@@ -25,12 +23,12 @@ export const shareCalendar = createAsyncThunk(
 				).join('')}    
         </BatchRequest>`;
 
-		const res = await fetch('/service/soap/BatchRequest', {
-			method: 'POST',
-			headers: {
-				'content-type': 'application/soap+xml'
-			},
-			body: `<?xml version="1.0" encoding="utf-8"?>
+	const res = await fetch('/service/soap/BatchRequest', {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/soap+xml'
+		},
+		body: `<?xml version="1.0" encoding="utf-8"?>
 			<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
 				<soap:Header>
 					<context xmlns="urn:zimbra">
@@ -43,12 +41,11 @@ export const shareCalendar = createAsyncThunk(
 				</soap:Body>
 			</soap:Envelope>
 		`
-		});
-		const response = await res.json();
-		if (response.Body.Fault) {
-			throw new Error(response.Body.Fault.Reason.Text);
-		}
-
-		return { response };
+	});
+	const response = await res.json();
+	if (response.Body.Fault) {
+		throw new Error(response.Body.Fault.Reason.Text);
 	}
-);
+
+	return { response };
+});

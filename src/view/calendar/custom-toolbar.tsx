@@ -78,6 +78,7 @@ export const CustomToolbar = ({
 	return (
 		<Container width="fill" height="fit" padding={{ bottom: 'small' }}>
 			<Container
+				data-testid="CalendarToolbar"
 				orientation="horizontal"
 				width="fill"
 				height="3rem"
@@ -96,7 +97,12 @@ export const CustomToolbar = ({
 				</Container>
 				<Container orientation="horizontal" mainAlignment="center">
 					<IconButton iconColor="primary" icon="ChevronLeft" onClick={prev} />
-					<Button type="ghost" label={label} onClick={(): null => null} />
+					<Button
+						type="ghost"
+						label={label}
+						onClick={(): null => null}
+						data-testid="CurrentDateContainer"
+					/>
 					<IconButton iconColor="primary" icon="ChevronRight" onClick={next} />
 				</Container>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
@@ -105,24 +111,28 @@ export const CustomToolbar = ({
 						label={t('label.month', 'month')}
 						type="outlined"
 						onClick={month}
+						data-testid="MonthButton"
 					/>
 					<CustomButton
 						backgroundColor={view === 'week' ? 'highlight' : undefined}
 						label={t('label.week', 'week')}
 						type="outlined"
 						onClick={week}
+						data-testid="WeekButton"
 					/>
 					<CustomButton
 						backgroundColor={view === 'day' ? 'highlight' : undefined}
 						label={t('label.day', 'day')}
 						type="outlined"
 						onClick={day}
+						data-testid="DayButton"
 					/>
 					<CustomButton
 						backgroundColor={view === 'work_week' ? 'highlight' : undefined}
 						label={t('label.work_week', 'work week')}
 						type="outlined"
 						onClick={workView}
+						data-testid="WorkWeekButton"
 					/>
 				</Container>
 			</Container>

@@ -32,3 +32,4 @@ const store = configureStore({
 });
 
 export const StoreProvider: FC = ({ children }) => <Provider store={store}>{children}</Provider>;
+export type AppDispatch = typeof store.dispatch;

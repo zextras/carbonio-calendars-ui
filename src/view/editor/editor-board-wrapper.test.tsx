@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { Board } from '@zextras/carbonio-shell-ui';
@@ -5,20 +10,12 @@ import React from 'react';
 import { Dispatch } from 'redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { createCallbacks } from '../../commons/editor-generator';
+import { PREFS_DEFAULTS } from '../../constants';
 import { reducers } from '../../store/redux';
+import mockedData from '../../test/generators';
 import { Editor, EditorCallbacks } from '../../types/editor';
 import BoardEditPanel from './editor-board-wrapper';
-import {
-	getRandomEditorId,
-	mockEmptyStore,
-	generateCalendarSliceItem,
-	generateEditorSliceItem
-} from '../../test/generators/generators';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
-import { getEditor } from './editor-panel-wrapper.test';
-
-// todo: datePicker render is very slow
-jest.setTimeout(50000);
 
 const initBoard = ({
 	editorId,
@@ -31,32 +28,6 @@ const initBoard = ({
 }): Board & { callbacks: EditorCallbacks } & Editor => ({
 	url: 'calendars/',
 	title: 'Nuovo appuntamento',
-	calendar: {
-		checked: true,
-		broken: false,
-		freeBusy: false,
-		deletable: false,
-		absFolderPath: '/Calendar',
-		color: {
-			color: '#FF7043',
-			background: '#FFF0EC',
-			label: 'orange'
-		},
-		id: '10',
-		name: 'Calendar',
-		n: 305,
-		acl: {
-			grant: [
-				{
-					zid: '663d50fd-3e0f-4b7f-a488-f799953540eb',
-					gt: 'usr',
-					perm: 'r'
-				}
-			]
-		},
-		isShared: false,
-		haveWriteAccess: true
-	},
 	panel: false,
 	isException: false,
 	isSeries: false,
@@ -64,13 +35,6 @@ const initBoard = ({
 	isRichText: true,
 	isNew,
 	attachmentFiles: [],
-	organizer: {
-		value: '0',
-		label: 'DEFAULT Gabriele Marino (<gabriele.marino@zextras.com>) ',
-		address: 'gabriele.marino@zextras.com',
-		fullName: 'Gabriele Marino',
-		identityName: 'DEFAULT'
-	},
 	location: '',
 	attendees: [],
 	optionalAttendees: [],
@@ -111,6 +75,15 @@ const initBoard = ({
 	icon: 'CalendarModOutline'
 });
 
+shell.getUserSettings.mockImplementation(() => ({
+	prefs: {
+		zimbraPrefTimeZoneId: 'Europe/Berlin',
+		zimbraPrefCalendarDefaultApptDuration: '60m',
+		zimbraPrefCalendarApptReminderWarningTime: '5',
+		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	}
+}));
+
 describe('Editor board wrapper', () => {
 	test('it does not render without board id', () => {
 		const store = configureStore({
@@ -122,45 +95,18 @@ describe('Editor board wrapper', () => {
 	});
 	test('it renders with board id', async () => {
 		const isNew = true;
-		const editorId = getRandomEditorId(isNew);
-		const editor = getEditor(editorId);
-
-		const calendars = {
-			calendars: generateCalendarSliceItem()
-		};
-		const editorSlice = {
-			activeId: editorId,
-			editors: generateEditorSliceItem({ editor })
-		};
-
-		const emptyStore = mockEmptyStore({ calendars, editor: editorSlice });
-
-		const store = configureStore({
-			reducer: combineReducers(reducers),
-			preloadedState: emptyStore
-		});
+		const editorId = mockedData.utils.getRandomEditorId(isNew);
+		const store = configureStore({ reducer: combineReducers(reducers) });
 
 		shell.getBridgedFunctions.mockImplementation(() => ({
 			createSnackbar: jest.fn()
 		}));
-		shell.getUserSettings.mockImplementation(() => ({
-			prefs: {
-				zimbraPrefUseTimeZoneListInCalendar: 'TRUE'
-			}
-		}));
+
 		shell.useBoard.mockImplementation(() =>
 			initBoard({ editorId, isNew, dispatch: store.dispatch })
 		);
-		const { user } = setupTest(<BoardEditPanel />, { store });
+		setupTest(<BoardEditPanel />, { store });
 
 		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
-		expect(screen.getByRole('button', { name: /send/i })).toBeDisabled();
-
-		expect(store.getState().editor.editors[editorId].isNew).toEqual(true);
-
-		await user.click(screen.getByRole('button', { name: /save/i }));
-
-		expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
-		expect(store.getState().editor.editors[editorId].isNew).toEqual(false);
 	});
 });

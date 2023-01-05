@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
-import { useUserSettings, editSettings, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
+import { editSettings, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
 import {
 	Container,
 	FormSection,
@@ -28,9 +28,10 @@ import {
 	workWeekSubSection
 } from './sub-sections';
 import { getRightsRequest } from '../soap/get-rights-request';
+import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
 
 export default function CalendarSettingsView() {
-	const settings = useUserSettings()?.prefs;
+	const settings = usePrefs();
 	const [settingsObj, setSettingsObj] = useState({ ...settings });
 	const [updatedSettings, setUpdatedSettings] = useState({});
 	const [notFirstLoad, setNotFirstLoad] = useState(false);
