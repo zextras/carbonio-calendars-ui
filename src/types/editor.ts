@@ -85,8 +85,6 @@ export type EditorCallbacks = {
 	onTimeZoneChange: (timezone: string) => void;
 	onReminderChange: (reminder: string) => void;
 	onRecurrenceChange: (recurrenceRule: any) => void;
-	onRecurrenceFrequencyChange: (freq: string) => void;
-	onEditorRecurrenceIntervalChange: (ival: number) => void;
 	onSave: ({
 		draft,
 		isNew,
