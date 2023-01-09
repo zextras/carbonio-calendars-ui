@@ -40,7 +40,7 @@ export const openAppointmentItem = ({
 	id: EventActionsEnum.EXPAND,
 	icon: 'ExpandOutline',
 	disabled: false,
-	label: t('event.action.expand', 'Open in Displayer'),
+	label: t('event.action.expand', 'Open'),
 	click: openAppointment({
 		event,
 		panelView,
@@ -164,7 +164,7 @@ export const createCopyItem = ({
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Copy',
-	label: t('label.create_copy', 'Create a Copy'),
+	label: t('label.create_copy', 'Copy'),
 	disabled: false,
 	click: createCopy({ event, invite, context })
 });
