@@ -96,6 +96,7 @@ const CustomRecurrenceModal = ({
 				onClose={onClose}
 				closeIconTooltip="Close"
 			/>
+			<Divider />
 			<ModalBody>
 				<Text weight="bold" size="large">
 					{t('label.repeat', 'Repeat')}
