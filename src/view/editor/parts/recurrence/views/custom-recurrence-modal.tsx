@@ -3,12 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Divider, ModalBody, ModalFooter, Padding, Text } from '@zextras/carbonio-design-system';
+import {
+	Divider,
+	ModalBody,
+	ModalHeader,
+	ModalFooter,
+	Padding,
+	Text
+} from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import React, { ReactElement, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import ModalHeader from '../../../../../carbonio-ui-commons/components/modals/modal-header';
 import {
 	selectEditorRecurrenceCount,
 	selectEditorRecurrenceFrequency,
@@ -84,7 +90,12 @@ const CustomRecurrenceModal = ({
 
 	return (
 		<RecurrenceContext.Provider value={recurrenceContextValue}>
-			<ModalHeader title={t('label.custom_repeat', 'Custom Repeat')} onClose={onClose} />
+			<ModalHeader
+				title={t('label.custom_repeat', 'Custom Repeat')}
+				showCloseIcon
+				onClose={onClose}
+				closeIconTooltip="Close"
+			/>
 			<ModalBody>
 				<Text weight="bold" size="large">
 					{t('label.repeat', 'Repeat')}
