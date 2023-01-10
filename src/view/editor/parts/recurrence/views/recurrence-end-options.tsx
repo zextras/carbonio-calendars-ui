@@ -183,16 +183,27 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 				size="small"
 				iconColor="primary"
 				label={
-					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-						<Text overflow="break-word">{t('label.end_after', 'End after')}</Text>
-						<Input
-							backgroundColor="gray5"
-							label={t('label.occurrences', 'Occurence(s)')}
-							value={inputValue}
-							disabled={radioValue !== 'end_after_count'}
-							onChange={onInputValueChange}
-							hasError={!isNil(num) && (num > 99 || num < 1 || !isNumber(num))}
-						/>
+					<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+						<Row
+							width="fit"
+							orientation="horizontal"
+							mainAlignment="flex-start"
+							wrap="nowrap"
+							padding={{ right: 'small' }}
+						>
+							<Text>{t('label.end_after', 'End after')}</Text>
+						</Row>
+						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+							<Input
+								backgroundColor="gray5"
+								width="fit"
+								label={t('label.occurrences', 'Occurence(s)')}
+								value={inputValue}
+								disabled={radioValue !== 'end_after_count'}
+								onChange={onInputValueChange}
+								hasError={!isNil(num) && (num > 99 || num < 1 || !isNumber(num))}
+							/>
+						</Row>
 					</Row>
 				}
 				value="end_after_count"
@@ -201,16 +212,26 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 				size="small"
 				iconColor="primary"
 				label={
-					<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-						<Text overflow="break-word">{t('label.end_after', 'End after')}</Text>
-						<Styler orientation="horizontal" allDay height="fit" mainAlignment="space-between">
-							<SimplifiedCustomDatePicker
-								start={initialPickerValue}
-								allDay={allDay}
-								onChange={onDateChange}
-								disabled={radioValue !== 'end_after_until'}
-							/>
-						</Styler>
+					<Row width="fill" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+						<Row
+							width="fit"
+							orientation="horizontal"
+							mainAlignment="flex-start"
+							wrap="nowrap"
+							padding={{ right: 'small' }}
+						>
+							<Text>{t('label.end_after', 'End after')}</Text>
+						</Row>
+						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
+							<Styler orientation="horizontal" allDay height="fit" mainAlignment="space-between">
+								<SimplifiedCustomDatePicker
+									start={initialPickerValue}
+									allDay={allDay}
+									onChange={onDateChange}
+									disabled={radioValue !== 'end_after_until'}
+								/>
+							</Styler>
+						</Row>
 					</Row>
 				}
 				value="end_after_until"

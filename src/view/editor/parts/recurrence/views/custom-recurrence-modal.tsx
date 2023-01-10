@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { ModalFooter, Padding, Text } from '@zextras/carbonio-design-system';
+import { Divider, ModalBody, ModalFooter, Padding, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import React, { ReactElement, useCallback, useState } from 'react';
@@ -85,26 +85,28 @@ const CustomRecurrenceModal = ({
 	return (
 		<RecurrenceContext.Provider value={recurrenceContextValue}>
 			<ModalHeader title={t('label.custom_repeat', 'Custom Repeat')} onClose={onClose} />
-			<Padding vertical="medium">
+			<ModalBody>
 				<Text weight="bold" size="large">
 					{t('label.repeat', 'Repeat')}
 				</Text>
-			</Padding>
-			<FrequencySelect />
-			<Padding vertical="small">
-				<DailyOptions editorId={editorId} />
-				<WeeklyOptions editorId={editorId} />
-				<MonthlyOptions />
-				<YearlyOptions />
-			</Padding>
-			<Padding vertical="medium">
-				<Text weight="bold" size="large">
-					{t('label.end', 'End')}
-				</Text>
-			</Padding>
-			<Padding vertical="small">
-				<RecurrenceEndOptions editorId={editorId} />
-			</Padding>
+				<Padding top="small" />
+				<FrequencySelect />
+				<Padding vertical="small">
+					<DailyOptions editorId={editorId} />
+					<WeeklyOptions editorId={editorId} />
+					<MonthlyOptions />
+					<YearlyOptions />
+				</Padding>
+				<Padding vertical="medium">
+					<Text weight="bold" size="large">
+						{t('label.end', 'End')}
+					</Text>
+				</Padding>
+				<Padding vertical="small">
+					<RecurrenceEndOptions editorId={editorId} />
+				</Padding>
+			</ModalBody>
+			<Divider />
 			<ModalFooter onConfirm={onConfirm} confirmLabel={t('repeat.customize', 'Customize')} />
 		</RecurrenceContext.Provider>
 	);

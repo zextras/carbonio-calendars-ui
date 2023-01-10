@@ -4,17 +4,20 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Icon, LabelFactoryProps, Row, Select, Text } from '@zextras/carbonio-design-system';
-import { find } from 'lodash';
-import React, { ReactElement, useMemo } from 'react';
+import { find, toUpper } from 'lodash';
+import moment from 'moment';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { ColorContainer, TextUpperCase } from '../../../../../commons/styled-components';
-import { useRecurrence } from '../../../../../hooks/use-recurrence';
 import {
 	selectEditorDisabled,
-	selectEditorRecurrence
+	selectEditorRecurrence,
+	selectEditorStart
 } from '../../../../../store/selectors/editor';
 import { EditorProps } from '../../../../../types/editor';
+import CustomRepeatSelectItem from '../components/custom-repeat';
+import RepeatItemComponent from '../components/repeat-item-component';
 
 const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): ReactElement => (
 	<ColorContainer
@@ -56,22 +59,103 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 	const recur = useSelector(selectEditorRecurrence(editorId));
 	const disabled = useSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();
+	const start = useSelector(selectEditorStart(editorId));
+	const { onRecurrenceChange } = callbacks;
 
-	const { onChange, recurrenceItems } = useRecurrence(editorId, callbacks);
+	const recurrenceItems = useMemo(
+		() => [
+			{
+				label: t('label.none', 'None'),
+				value: 'NONE',
+				customComponent: <RepeatItemComponent label={t('label.none', 'None')} />
+			},
+			{
+				label: t('label.every_day', 'Every day'),
+				value: 'DAI',
+				customComponent: <RepeatItemComponent label={t('label.every_day', 'Every day')} />
+			},
+			{
+				label: t('repeat.everyWeek', 'Every Week'),
+				value: 'WEE',
+				customComponent: <RepeatItemComponent label={t('repeat.everyWeek', 'Every Week')} />
+			},
+			{
+				label: t('repeat.everyMonth', 'Every Month'),
+				value: 'MON',
+				customComponent: <RepeatItemComponent label={t('repeat.everyMonth', 'Every Month')} />
+			},
+			{
+				label: t('repeat.everyYear', 'Every Year'),
+				value: 'YEA',
+				customComponent: <RepeatItemComponent label={t('repeat.everyYear', 'Every Year')} />
+			},
+			{
+				label: t('label.custom', 'Custom'),
+				value: 'CUSTOM',
+				customComponent: <CustomRepeatSelectItem editorId={editorId} callbacks={callbacks} />
+			}
+		],
+		[callbacks, editorId, t]
+	);
 
 	const initialValue = useMemo(() => {
 		const recurrenceValue = recur ? 'CUSTOM' : 'NONE';
 		return find(recurrenceItems, { value: recurrenceValue }) ?? recurrenceItems[0];
 	}, [recur, recurrenceItems]);
 
+	const [selected, setSelected] = useState(initialValue);
+
+	const onChange = useCallback(
+		(ev) => {
+			if (ev) {
+				const defaultValue = { freq: ev, interval: [{ ival: 1 }] };
+				switch (ev) {
+					case 'CUSTOM':
+						break;
+					case 'DAI':
+					case 'MON':
+					case 'YEA':
+						setSelected(find(recurrenceItems, { value: ev }) ?? recurrenceItems[0]);
+						onRecurrenceChange([
+							{
+								add: [{ rule: [defaultValue] }]
+							}
+						]);
+						break;
+					case 'WEE':
+						setSelected(find(recurrenceItems, { value: ev }) ?? recurrenceItems[0]);
+						onRecurrenceChange([
+							{
+								add: [
+									{
+										rule: [
+											{
+												...defaultValue,
+												byday: {
+													wkday: [{ day: toUpper(`${moment(start).format('dddd').slice(0, 2)}`) }]
+												}
+											}
+										]
+									}
+								]
+							}
+						]);
+						break;
+					default:
+						setSelected(find(recurrenceItems, { value: 'NONE' }) ?? recurrenceItems[0]);
+						onRecurrenceChange(undefined);
+				}
+			}
+		},
+		[onRecurrenceChange, recurrenceItems, start]
+	);
+
 	return initialValue ? (
 		<Select
 			label={t('label.repeat', 'Repeat')}
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			onChange={onChange}
 			items={recurrenceItems}
-			selection={initialValue}
+			selection={selected}
 			disablePortal
 			disabled={disabled?.recurrence}
 			LabelFactory={LabelFactory}

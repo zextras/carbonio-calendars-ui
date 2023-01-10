@@ -11,7 +11,7 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 type WeekDaySelectorProps = {
 	selection?: SelectItem;
 	setSelection: React.Dispatch<React.SetStateAction<{ label: string; value: string }>>;
-	onChange: (ev: { day: any }[]) => void;
+	onChange: (ev: { day: string }[]) => void;
 	disabled?: boolean;
 };
 

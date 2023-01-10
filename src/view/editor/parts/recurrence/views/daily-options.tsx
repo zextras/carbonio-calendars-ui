@@ -4,31 +4,17 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react';
 import { Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
-import {
-	isNumber,
-	isNaN,
-	reduce,
-	filter,
-	map,
-	differenceWith,
-	isEqual,
-	omitBy,
-	isNil,
-	find
-} from 'lodash';
+import { isNumber, isNaN, map, differenceWith, isEqual, omitBy, isNil } from 'lodash';
 import { useSelector } from 'react-redux';
-import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
 import {
 	selectEditorRecurrenceByDay,
 	selectEditorRecurrenceFrequency,
 	selectEditorRecurrenceInterval
 } from '../../../../../store/selectors/editor';
 import { Byday, Interval, RecurrenceStartValue } from '../../../../../types/editor';
-import { workWeek, WorkWeekDay } from '../../../../../utils/work-week';
 import { IntervalInput } from '../components/interval-input';
 
 const RADIO_VALUES = {
@@ -48,16 +34,12 @@ const defaultState = {
 const initialState = (
 	freq: string | undefined,
 	interval: Interval | undefined,
-	byday: Byday | undefined,
-	workingSchedule: WorkWeekDay[]
+	byday: Byday | undefined
 ): string => {
 	if ((freq === 'DAI' || freq === 'WEE') && byday?.wkday && interval?.ival === 1) {
 		// building an array with the same structure of wkday to check if they have the same values
 		// to determine if we are receiving a workingday value
-		const workingDays = map(filter(workingSchedule, ['working', true]), (workingDay) => {
-			const day = find(WEEK_SCHEDULE, ['value', workingDay.day])?.label?.slice(0, 2);
-			return { day };
-		});
+		const workingDays = map(['MO', 'TU', 'WE', 'TH', 'FR'], (day) => ({ day }));
 		const diff = differenceWith(workingDays, byday?.wkday, isEqual);
 		if (diff?.length === 0) {
 			return RADIO_VALUES.WORKING_DAY;
@@ -76,17 +58,13 @@ const initialState = (
 const startValueInitialState = (
 	freq: string | undefined,
 	byday: Byday | undefined,
-	interval: Interval | undefined,
-	workingSchedule: WorkWeekDay[]
+	interval: Interval | undefined
 ): RecurrenceStartValue | undefined => {
 	if (freq === 'DAI') {
 		return omitBy({ interval, byday }, isNil);
 	}
 	if (freq === 'WEE' && byday?.wkday && interval?.ival === 1) {
-		const workingDays = map(filter(workingSchedule, ['working', true]), (workingDay) => {
-			const day = find(WEEK_SCHEDULE, ['value', workingDay.day])?.label?.slice(0, 2);
-			return { day };
-		});
+		const workingDays = map(['MO', 'TU', 'WE', 'TH', 'FR'], (day) => ({ day }));
 		const diff = differenceWith(workingDays, byday?.wkday, isEqual);
 		if (diff?.length === 0 && interval?.ival === 1) {
 			return { interval, byday };
@@ -102,47 +80,13 @@ const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null =
 	const interval = useSelector(selectEditorRecurrenceInterval(editorId));
 	const byday = useSelector(selectEditorRecurrenceByDay(editorId));
 
-	const prefs = usePrefs();
+	const [radioValue, setRadioValue] = useState(() => initialState(freq, interval, byday));
 
-	const workingSchedule = useMemo(
-		() => workWeek(prefs.zimbraPrefCalendarWorkingHours),
-		[prefs?.zimbraPrefCalendarWorkingHours]
-	);
-	const [radioValue, setRadioValue] = useState(() =>
-		initialState(freq, interval, byday, workingSchedule)
-	);
-
-	const [startValue, setStartValue] = useState(() =>
-		startValueInitialState(freq, byday, interval, workingSchedule)
-	);
+	const [startValue, setStartValue] = useState(() => startValueInitialState(freq, byday, interval));
 
 	const [inputValue, setInputValue] = useState<number | ''>(
 		interval?.ival ?? defaultState?.interval?.ival
 	);
-
-	const setStartByWorkingDay = useCallback(() => {
-		const wkday = reduce(
-			workingSchedule,
-			(result, weekday) => {
-				if (weekday.working) {
-					const day = find(WEEK_SCHEDULE, ['value', weekday.day])?.label?.slice(0, 2);
-					if (day) {
-						return [
-							...result,
-							{
-								day: day?.slice(0, 2)
-							}
-						];
-					}
-				}
-				return result;
-			},
-			[] as { day: string }[]
-		);
-		setStartValue({
-			byday: { wkday }
-		});
-	}, [setStartValue, workingSchedule]);
 
 	const onChange = useCallback(
 		(ev) => {
@@ -156,7 +100,9 @@ const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null =
 					setRadioValue(ev);
 					break;
 				case RADIO_VALUES.WORKING_DAY:
-					setStartByWorkingDay();
+					setStartValue({
+						byday: { wkday: map(['MO', 'TU', 'WE', 'TH', 'FR'], (day) => ({ day })) }
+					});
 					setRadioValue(ev);
 					break;
 				case RADIO_VALUES.EVERY_X_DAY:
@@ -180,7 +126,7 @@ const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null =
 					break;
 			}
 		},
-		[inputValue, setStartValue, setStartByWorkingDay]
+		[inputValue, setStartValue]
 	);
 
 	const onInputChange = useCallback(
