@@ -92,7 +92,7 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 			},
 			{
 				label: t('label.custom', 'Custom'),
-				value: RECURRENCE_FREQUENCY.NEVER,
+				value: RECURRENCE_FREQUENCY.CUSTOM,
 				customComponent: <CustomRepeatSelectItem editorId={editorId} callbacks={callbacks} />
 			}
 		],
@@ -100,7 +100,7 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 	);
 
 	const initialValue = useMemo(() => {
-		const recurrenceValue = recur ? RECURRENCE_FREQUENCY.NEVER : RECURRENCE_FREQUENCY.NEVER;
+		const recurrenceValue = recur ? RECURRENCE_FREQUENCY.CUSTOM : RECURRENCE_FREQUENCY.NEVER;
 		return find(recurrenceItems, { value: recurrenceValue }) ?? recurrenceItems[0];
 	}, [recur, recurrenceItems]);
 
@@ -111,7 +111,7 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 			if (ev) {
 				const defaultValue = { freq: ev, interval: [{ ival: 1 }] };
 				switch (ev) {
-					case RECURRENCE_FREQUENCY.NEVER:
+					case RECURRENCE_FREQUENCY.CUSTOM:
 						break;
 					case RECURRENCE_FREQUENCY.DAILY:
 					case RECURRENCE_FREQUENCY.MONTHLY:
