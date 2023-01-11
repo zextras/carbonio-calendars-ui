@@ -7,6 +7,7 @@ import { Select, SelectItem } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual, map } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
+import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 
 type WeekDaySelectorProps = {
 	selection?: SelectItem;
@@ -21,21 +22,7 @@ const WeekdaySelect = ({
 	onChange,
 	disabled = false
 }: WeekDaySelectorProps): ReactElement => {
-	const weekOptions = useMemo(
-		() => [
-			{ label: t('label.day', 'Day'), value: 'MO,TU,WE,TH,FR,SA,SU' },
-			{ label: t('items.weekend_day', 'Weekend day'), value: 'SA,SU' },
-			{ label: t('items.working_day', 'Working day'), value: 'MO,TU,WE,TH,FR' },
-			{ label: t('label.week_day.monday', 'Monday'), value: 'MO' },
-			{ label: t('label.week_day.tuesday', 'Tuesday'), value: 'TU' },
-			{ label: t('label.week_day.wednesday', 'Wednesday'), value: 'WE' },
-			{ label: t('label.week_day.thursday', 'Thursday'), value: 'TH' },
-			{ label: t('label.week_day.friday', 'Friday'), value: 'FR' },
-			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
-			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
-		],
-		[]
-	);
+	const { weekOptions } = useRecurrenceItems();
 
 	const daySelection = useMemo(
 		() =>

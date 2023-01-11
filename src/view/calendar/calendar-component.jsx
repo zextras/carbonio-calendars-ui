@@ -175,10 +175,6 @@ export default function CalendarComponent() {
 		}
 	}, [calendarView, prefs?.zimbraPrefCalendarInitialView]);
 
-	useEffect(() => {
-		const timezone = moment.tz.guess(true);
-	}, []);
-
 	return (
 		<>
 			<CalendarSyncWithRange />

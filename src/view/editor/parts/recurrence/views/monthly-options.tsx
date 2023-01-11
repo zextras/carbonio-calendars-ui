@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react';
 import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
+import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
+import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import { RecurrenceStartValue } from '../../../../../types/editor';
 import { IntervalInput } from '../components/interval-input';
 import { MonthlyDayInput } from '../components/monthly-day-input';
@@ -35,32 +37,7 @@ const MonthlyOptions = (): ReactElement | null => {
 		}
 	});
 
-	const ordinalNumbers = useMemo(
-		() => [
-			{ label: t('items.first', 'First'), value: '1' },
-			{ label: t('items.second', 'Second'), value: '2' },
-			{ label: t('items.third', 'Third'), value: '3' },
-			{ label: t('items.fourth', 'Fourth'), value: '4' },
-			{ label: t('items.last', 'Last'), value: '-1' }
-		],
-		[]
-	);
-
-	const weekOptions = useMemo(
-		() => [
-			{ label: t('label.day', 'Day'), value: 'MO,TU,WE,TH,FR,SA,SU' },
-			{ label: t('items.weekend_day', 'Weekend day'), value: 'SA,SU' },
-			{ label: t('items.working_day', 'Working day'), value: 'MO,TU,WE,TH,FR' },
-			{ label: t('label.week_day.monday', 'Monday'), value: 'MO' },
-			{ label: t('label.week_day.tuesday', 'Tuesday'), value: 'TU' },
-			{ label: t('label.week_day.wednesday', 'Wednesday'), value: 'WE' },
-			{ label: t('label.week_day.thursday', 'Thursday'), value: 'TH' },
-			{ label: t('label.week_day.friday', 'Friday'), value: 'FR' },
-			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
-			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
-		],
-		[]
-	);
+	const { weekOptions, ordinalNumbers } = useRecurrenceItems();
 
 	const [posListSelectValue, setPosListSelectValue] = useState(ordinalNumbers?.[0]);
 	const [byDaySelectValue, setByDaySelectValue] = useState(weekOptions?.[0]);
@@ -164,12 +141,12 @@ const MonthlyOptions = (): ReactElement | null => {
 	);
 
 	useEffect(() => {
-		if (startValue && frequency === 'MON') {
+		if (startValue && frequency === RECURRENCE_FREQUENCY.MONTHLY) {
 			setNewStartValue(startValue);
 		}
 	}, [frequency, setNewStartValue, startValue]);
 
-	return frequency === 'MON' ? (
+	return frequency === RECURRENCE_FREQUENCY.MONTHLY ? (
 		<RadioGroup value={radioValue} onChange={onRadioChange}>
 			<Radio
 				size="small"

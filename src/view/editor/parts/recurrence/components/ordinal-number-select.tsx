@@ -6,7 +6,8 @@
 import { Select } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual } from 'lodash';
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback } from 'react';
+import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 
 type OrdinalNumberSelectProps = {
 	value: { label: string; value: string };
@@ -21,16 +22,7 @@ export const OrdinalNumberSelect = ({
 	onChange,
 	disabled
 }: OrdinalNumberSelectProps): ReactElement => {
-	const ordinalNumbers = useMemo(
-		() => [
-			{ label: t('items.first', 'First'), value: '1' },
-			{ label: t('items.second', 'Second'), value: '2' },
-			{ label: t('items.third', 'Third'), value: '3' },
-			{ label: t('items.fourth', 'Fourth'), value: '4' },
-			{ label: t('items.last', 'Last'), value: '-1' }
-		],
-		[]
-	);
+	const { ordinalNumbers } = useRecurrenceItems();
 
 	const onBySetPosChange = useCallback(
 		(ev) => {

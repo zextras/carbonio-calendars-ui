@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Checkbox, Container } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
 import { find, map, reject } from 'lodash';
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback } from 'react';
+import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 
 type WeekdayCheckboxesProps = {
 	value: { day: string }[];
@@ -23,18 +23,7 @@ export const WeekdayCheckboxes = ({
 	onClick,
 	isHidden
 }: WeekdayCheckboxesProps): ReactElement | null => {
-	const selectItems = useMemo(
-		() => [
-			{ label: t('label.week_day.monday', 'Monday'), value: 'MO' },
-			{ label: t('label.week_day.tuesday', 'Tuesday'), value: 'TU' },
-			{ label: t('label.week_day.wednesday', 'Wednesday'), value: 'WE' },
-			{ label: t('label.week_day.thursday', 'Thursday'), value: 'TH' },
-			{ label: t('label.week_day.friday', 'Friday'), value: 'FR' },
-			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
-			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
-		],
-		[]
-	);
+	const { weekDays } = useRecurrenceItems();
 
 	const onCheckboxClick = useCallback(
 		(opt) => {
@@ -54,7 +43,7 @@ export const WeekdayCheckboxes = ({
 
 	return isHidden ? null : (
 		<>
-			{map(selectItems, (opt) => {
+			{map(weekDays, (opt) => {
 				const isChecked = !!find(value, ({ day }) => day === opt.value);
 				return (
 					<Container

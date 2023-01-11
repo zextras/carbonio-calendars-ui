@@ -6,8 +6,10 @@
 import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
-import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
+import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
+import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import { RecurrenceStartValue } from '../../../../../types/editor';
 import { MonthSelect } from '../components/month-select';
 import { MonthlyDayInput } from '../components/monthly-day-input';
@@ -15,33 +17,16 @@ import { OrdinalNumberSelect } from '../components/ordinal-number-select';
 import WeekdaySelect from '../components/weekday-select';
 
 const RADIO_VALUES = {
-	NOT_IMPLEMENTED_1: 'NotImplemented1',
-	NOT_IMPLEMENTED_2: 'NotImplemented2'
+	FIRST_RADIO: 'first_radio',
+	SECOND_RADIO: 'second_radio'
 };
 
 const YearlyOptions = (): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
-	const [radioValue, setRadioValue] = useState(RADIO_VALUES.NOT_IMPLEMENTED_1);
+	const [radioValue, setRadioValue] = useState(RADIO_VALUES.FIRST_RADIO);
 
 	const [moDayList, setMoDayList] = useState<number | ''>(1);
-
-	const months = useMemo(
-		() => [
-			{ label: t('months.january', 'January'), value: '1' },
-			{ label: t('months.february', 'February'), value: '2' },
-			{ label: t('months.march', 'March'), value: '3' },
-			{ label: t('months.april', 'April'), value: '4' },
-			{ label: t('months.may', 'May'), value: '5' },
-			{ label: t('months.june', 'June'), value: '6' },
-			{ label: t('months.july', 'July'), value: '7' },
-			{ label: t('months.august', 'August'), value: '8' },
-			{ label: t('months.september', 'September'), value: '9' },
-			{ label: t('months.october', 'October'), value: '10' },
-			{ label: t('months.november', 'November'), value: '11' },
-			{ label: t('months.december', 'December'), value: '12' }
-		],
-		[]
-	);
+	const { weekOptions, ordinalNumbers, months } = useRecurrenceItems();
 
 	const [byMonthFirstSelectValue, setByMonthFirstSelectValue] = useState(months[0]);
 	const [byMonthSecondSelectValue, setByMonthSecondSelectValue] = useState(months[0]);
@@ -55,7 +40,7 @@ const YearlyOptions = (): ReactElement | null => {
 
 	const onMoDayListChange = useCallback(
 		(ev) => {
-			if (radioValue === RADIO_VALUES.NOT_IMPLEMENTED_1) {
+			if (radioValue === RADIO_VALUES.FIRST_RADIO) {
 				setStartValue((prevValue) => ({
 					...prevValue,
 					interval: {
@@ -69,7 +54,7 @@ const YearlyOptions = (): ReactElement | null => {
 
 	const onFirstMonthChange = useCallback(
 		(molist) => {
-			if (molist && radioValue === RADIO_VALUES.NOT_IMPLEMENTED_1) {
+			if (molist && radioValue === RADIO_VALUES.FIRST_RADIO) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bymonth: { molist } }));
 			}
 		},
@@ -78,56 +63,29 @@ const YearlyOptions = (): ReactElement | null => {
 
 	const onSecondMonthChange = useCallback(
 		(molist) => {
-			if (molist && radioValue === RADIO_VALUES.NOT_IMPLEMENTED_2) {
+			if (molist && radioValue === RADIO_VALUES.SECOND_RADIO) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bymonth: { molist } }));
 			}
 		},
 		[radioValue]
 	);
 
-	const ordinalNumbers = useMemo(
-		() => [
-			{ label: t('items.first', 'First'), value: '1' },
-			{ label: t('items.second', 'Second'), value: '2' },
-			{ label: t('items.third', 'Third'), value: '3' },
-			{ label: t('items.fourth', 'Fourth'), value: '4' },
-			{ label: t('items.last', 'Last'), value: '-1' }
-		],
-		[]
-	);
-
 	const [posListSelectValue, setPosListSelectValue] = useState(ordinalNumbers?.[0]);
 
 	const onBySetPosChange = useCallback(
 		(ev) => {
-			if (ev && radioValue === RADIO_VALUES.NOT_IMPLEMENTED_2) {
+			if (ev && radioValue === RADIO_VALUES.SECOND_RADIO) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bysetpos: { poslist: ev } }));
 			}
 		},
 		[radioValue]
 	);
 
-	const weekOptions = useMemo(
-		() => [
-			{ label: t('label.day', 'Day'), value: 'MO,TU,WE,TH,FR,SA,SU' },
-			{ label: t('items.weekend_day', 'Weekend day'), value: 'SA,SU' },
-			{ label: t('items.working_day', 'Working day'), value: 'MO,TU,WE,TH,FR' },
-			{ label: t('label.week_day.monday', 'Monday'), value: 'MO' },
-			{ label: t('label.week_day.tuesday', 'Tuesday'), value: 'TU' },
-			{ label: t('label.week_day.wednesday', 'Wednesday'), value: 'WE' },
-			{ label: t('label.week_day.thursday', 'Thursday'), value: 'TH' },
-			{ label: t('label.week_day.friday', 'Friday'), value: 'FR' },
-			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
-			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
-		],
-		[]
-	);
-
 	const [byDaySelectValue, setByDaySelectValue] = useState(weekOptions?.[0]);
 
 	const onByDayChange = useCallback(
 		(ev) => {
-			if (ev && radioValue === RADIO_VALUES.NOT_IMPLEMENTED_2) {
+			if (ev && radioValue === RADIO_VALUES.SECOND_RADIO) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: ev } }));
 			}
 		},
@@ -137,7 +95,7 @@ const YearlyOptions = (): ReactElement | null => {
 	const onRadioChange = useCallback(
 		(ev) => {
 			switch (ev) {
-				case RADIO_VALUES.NOT_IMPLEMENTED_1:
+				case RADIO_VALUES.FIRST_RADIO:
 					setStartValue({
 						bymonthday: {
 							modaylist: moDayList as number
@@ -146,7 +104,7 @@ const YearlyOptions = (): ReactElement | null => {
 					});
 					setRadioValue(ev);
 					break;
-				case RADIO_VALUES.NOT_IMPLEMENTED_2:
+				case RADIO_VALUES.SECOND_RADIO:
 					setRadioValue(ev);
 					setStartValue({
 						bysetpos: { poslist: posListSelectValue?.value },
@@ -155,7 +113,7 @@ const YearlyOptions = (): ReactElement | null => {
 					});
 					break;
 				default:
-					setRadioValue(RADIO_VALUES.NOT_IMPLEMENTED_1);
+					setRadioValue(RADIO_VALUES.FIRST_RADIO);
 					break;
 			}
 		},
@@ -169,12 +127,12 @@ const YearlyOptions = (): ReactElement | null => {
 	);
 
 	useEffect(() => {
-		if (startValue && frequency === 'YEA') {
+		if (startValue && frequency === RECURRENCE_FREQUENCY.YEARLY) {
 			setNewStartValue(startValue);
 		}
 	}, [frequency, setNewStartValue, startValue]);
 
-	return frequency === 'YEA' ? (
+	return frequency === RECURRENCE_FREQUENCY.YEARLY ? (
 		<RadioGroup value={radioValue} onChange={onRadioChange}>
 			<Radio
 				size="small"
@@ -188,7 +146,7 @@ const YearlyOptions = (): ReactElement | null => {
 							value={moDayList}
 							setValue={setMoDayList}
 							onChange={onMoDayListChange}
-							disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_1}
+							disabled={radioValue !== RADIO_VALUES.FIRST_RADIO}
 						/>
 						<Padding horizontal="small">
 							<Text>{t('label.of', 'of')}</Text>
@@ -197,11 +155,11 @@ const YearlyOptions = (): ReactElement | null => {
 							value={byMonthFirstSelectValue}
 							setValue={setByMonthFirstSelectValue}
 							onChange={onFirstMonthChange}
-							disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_1}
+							disabled={radioValue !== RADIO_VALUES.FIRST_RADIO}
 						/>
 					</Row>
 				}
-				value={RADIO_VALUES.NOT_IMPLEMENTED_1}
+				value={RADIO_VALUES.FIRST_RADIO}
 			/>
 			<Radio
 				size="small"
@@ -226,12 +184,12 @@ const YearlyOptions = (): ReactElement | null => {
 								value={posListSelectValue}
 								setValue={setPosListSelectValue}
 								onChange={onBySetPosChange}
-								disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_2}
+								disabled={radioValue !== RADIO_VALUES.SECOND_RADIO}
 							/>
 							<Padding horizontal="small" />
 							<WeekdaySelect
 								onChange={onByDayChange}
-								disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_2}
+								disabled={radioValue !== RADIO_VALUES.SECOND_RADIO}
 								setSelection={setByDaySelectValue}
 							/>
 							<Padding horizontal="small">
@@ -241,12 +199,12 @@ const YearlyOptions = (): ReactElement | null => {
 								value={byMonthSecondSelectValue}
 								setValue={setByMonthSecondSelectValue}
 								onChange={onSecondMonthChange}
-								disabled={radioValue !== RADIO_VALUES.NOT_IMPLEMENTED_2}
+								disabled={radioValue !== RADIO_VALUES.SECOND_RADIO}
 							/>
 						</Container>
 					</Container>
 				}
-				value={RADIO_VALUES.NOT_IMPLEMENTED_2}
+				value={RADIO_VALUES.SECOND_RADIO}
 			/>
 		</RadioGroup>
 	) : null;

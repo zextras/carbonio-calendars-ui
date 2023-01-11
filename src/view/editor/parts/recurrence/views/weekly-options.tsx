@@ -10,7 +10,9 @@ import { find, differenceWith, map, isEqual, filter, omitBy, isNil } from 'lodas
 import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
+import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
+import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import {
 	selectEditorRecurrenceByDay,
 	selectEditorRecurrenceFrequency,
@@ -28,7 +30,7 @@ const RADIO_VALUES = {
 };
 
 const defaultState = {
-	freq: 'WEE',
+	freq: RECURRENCE_FREQUENCY.WEEKLY,
 	interval: {
 		ival: 1
 	},
@@ -44,7 +46,10 @@ const radioInitialState = (
 	byday: Byday | undefined,
 	workingSchedule: WorkWeekDay[]
 ): string => {
-	if ((freq === 'DAI' || freq === 'WEE') && byday?.wkday) {
+	if (
+		(freq === RECURRENCE_FREQUENCY.DAILY || freq === RECURRENCE_FREQUENCY.WEEKLY) &&
+		byday?.wkday
+	) {
 		// building an array with the same structure of wkday to check if they have the same values
 		// to determine if we are receiving the value of the working day option
 		const workingDays = map(filter(workingSchedule, ['working', true]), (workingDay) => {
@@ -57,7 +62,7 @@ const radioInitialState = (
 		}
 		return RADIO_VALUES.CUSTOM_OPTIONS;
 	}
-	if (freq === 'WEE') {
+	if (freq === RECURRENCE_FREQUENCY.WEEKLY) {
 		if (interval?.ival === 1) {
 			return RADIO_VALUES.QUICK_OPTIONS;
 		}
@@ -72,10 +77,10 @@ const startValueInitialState = (
 	byday: Byday | undefined,
 	weeklyOptions: { label: string; value: string }[]
 ): RecurrenceStartValue | undefined => {
-	if (freq === 'WEE') {
+	if (freq === RECURRENCE_FREQUENCY.WEEKLY) {
 		return omitBy({ interval, byday }, isNil);
 	}
-	if (freq === 'DAI' && byday?.wkday && interval?.ival === 1) {
+	if (freq === RECURRENCE_FREQUENCY.DAILY && byday?.wkday && interval?.ival === 1) {
 		const option = find(
 			weeklyOptions,
 			(item) =>
@@ -120,37 +125,16 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 		[prefs?.zimbraPrefCalendarWorkingHours]
 	);
 
-	const weekOptions = useMemo(
-		() => [
-			{ label: t('label.week_day.monday', 'Monday'), value: 'MO' },
-			{ label: t('label.week_day.tuesday', 'Tuesday'), value: 'TU' },
-			{ label: t('label.week_day.wednesday', 'Wednesday'), value: 'WE' },
-			{ label: t('label.week_day.thursday', 'Thursday'), value: 'TH' },
-			{ label: t('label.week_day.friday', 'Friday'), value: 'FR' },
-			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
-			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
-		],
-		[]
-	);
-
-	const weeklyOptions = useMemo(
-		() => [
-			{ label: t('label.every_day', 'Every day'), value: 'MO,TU,WE,TH,FR,SA,SU' },
-			{ label: t('items.weekend_day', 'Weekend day'), value: 'SA,SU' },
-			{ label: t('items.working_day', 'Working day'), value: 'MO,TU,WE,TH,FR' },
-			...weekOptions
-		],
-		[weekOptions]
-	);
+	const { weekOptions } = useRecurrenceItems();
 
 	const [radioValue, setRadioValue] = useState(() =>
 		radioInitialState(freq, interval, byday, workingSchedule)
 	);
 	const [inputValue, setInputValue] = useState<number | ''>(interval?.ival ?? 1);
-	const [selectValue, setSelectValue] = useState(() => selectInitialValue(weeklyOptions, byday));
+	const [selectValue, setSelectValue] = useState(() => selectInitialValue(weekOptions, byday));
 	const [checkboxesValue, setCheckboxesValue] = useState(byday?.wkday ?? []);
 	const [startValue, setStartValue] = useState(() =>
-		startValueInitialState(freq, interval, byday, weeklyOptions)
+		startValueInitialState(freq, interval, byday, weekOptions)
 	);
 
 	const onByDayChange = useCallback(
@@ -216,12 +200,12 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 	);
 
 	useEffect(() => {
-		if (startValue && frequency === 'WEE') {
+		if (startValue && frequency === RECURRENCE_FREQUENCY.WEEKLY) {
 			setNewStartValue(startValue);
 		}
 	}, [frequency, setNewStartValue, startValue]);
 
-	return frequency === 'WEE' ? (
+	return frequency === RECURRENCE_FREQUENCY.WEEKLY ? (
 		<RadioGroup value={radioValue} onChange={onChange}>
 			<Radio
 				size="small"

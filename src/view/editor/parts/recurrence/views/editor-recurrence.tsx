@@ -10,6 +10,7 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { ColorContainer, TextUpperCase } from '../../../../../commons/styled-components';
+import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import {
 	selectEditorDisabled,
 	selectEditorRecurrence,
@@ -66,32 +67,32 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 		() => [
 			{
 				label: t('label.none', 'None'),
-				value: 'NONE',
+				value: RECURRENCE_FREQUENCY.NEVER,
 				customComponent: <RepeatItemComponent label={t('label.none', 'None')} />
 			},
 			{
 				label: t('label.every_day', 'Every day'),
-				value: 'DAI',
+				value: RECURRENCE_FREQUENCY.DAILY,
 				customComponent: <RepeatItemComponent label={t('label.every_day', 'Every day')} />
 			},
 			{
 				label: t('repeat.everyWeek', 'Every Week'),
-				value: 'WEE',
+				value: RECURRENCE_FREQUENCY.WEEKLY,
 				customComponent: <RepeatItemComponent label={t('repeat.everyWeek', 'Every Week')} />
 			},
 			{
 				label: t('repeat.everyMonth', 'Every Month'),
-				value: 'MON',
+				value: RECURRENCE_FREQUENCY.MONTHLY,
 				customComponent: <RepeatItemComponent label={t('repeat.everyMonth', 'Every Month')} />
 			},
 			{
 				label: t('repeat.everyYear', 'Every Year'),
-				value: 'YEA',
+				value: RECURRENCE_FREQUENCY.YEARLY,
 				customComponent: <RepeatItemComponent label={t('repeat.everyYear', 'Every Year')} />
 			},
 			{
 				label: t('label.custom', 'Custom'),
-				value: 'CUSTOM',
+				value: RECURRENCE_FREQUENCY.NEVER,
 				customComponent: <CustomRepeatSelectItem editorId={editorId} callbacks={callbacks} />
 			}
 		],
@@ -99,7 +100,7 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 	);
 
 	const initialValue = useMemo(() => {
-		const recurrenceValue = recur ? 'CUSTOM' : 'NONE';
+		const recurrenceValue = recur ? RECURRENCE_FREQUENCY.NEVER : RECURRENCE_FREQUENCY.NEVER;
 		return find(recurrenceItems, { value: recurrenceValue }) ?? recurrenceItems[0];
 	}, [recur, recurrenceItems]);
 
@@ -110,11 +111,11 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 			if (ev) {
 				const defaultValue = { freq: ev, interval: [{ ival: 1 }] };
 				switch (ev) {
-					case 'CUSTOM':
+					case RECURRENCE_FREQUENCY.NEVER:
 						break;
-					case 'DAI':
-					case 'MON':
-					case 'YEA':
+					case RECURRENCE_FREQUENCY.DAILY:
+					case RECURRENCE_FREQUENCY.MONTHLY:
+					case RECURRENCE_FREQUENCY.YEARLY:
 						setSelected(find(recurrenceItems, { value: ev }) ?? recurrenceItems[0]);
 						onRecurrenceChange([
 							{
@@ -122,7 +123,7 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 							}
 						]);
 						break;
-					case 'WEE':
+					case RECURRENCE_FREQUENCY.WEEKLY:
 						setSelected(find(recurrenceItems, { value: ev }) ?? recurrenceItems[0]);
 						onRecurrenceChange([
 							{
@@ -142,7 +143,9 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 						]);
 						break;
 					default:
-						setSelected(find(recurrenceItems, { value: 'NONE' }) ?? recurrenceItems[0]);
+						setSelected(
+							find(recurrenceItems, { value: RECURRENCE_FREQUENCY.NEVER }) ?? recurrenceItems[0]
+						);
 						onRecurrenceChange(undefined);
 				}
 			}

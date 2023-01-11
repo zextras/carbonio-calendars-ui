@@ -6,7 +6,8 @@
 import { Select } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual } from 'lodash';
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback } from 'react';
+import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 
 type MonthSelectProps = {
 	value: { label: string; value: string };
@@ -21,23 +22,7 @@ export const MonthSelect = ({
 	onChange,
 	disabled
 }: MonthSelectProps): ReactElement => {
-	const months = useMemo(
-		() => [
-			{ label: t('months.january', 'January'), value: '1' },
-			{ label: t('months.february', 'February'), value: '2' },
-			{ label: t('months.march', 'March'), value: '3' },
-			{ label: t('months.april', 'April'), value: '4' },
-			{ label: t('months.may', 'May'), value: '5' },
-			{ label: t('months.june', 'June'), value: '6' },
-			{ label: t('months.july', 'July'), value: '7' },
-			{ label: t('months.august', 'August'), value: '8' },
-			{ label: t('months.september', 'September'), value: '9' },
-			{ label: t('months.october', 'October'), value: '10' },
-			{ label: t('months.november', 'November'), value: '11' },
-			{ label: t('months.december', 'December'), value: '12' }
-		],
-		[]
-	);
+	const { months } = useRecurrenceItems();
 
 	const onMonthChange = useCallback(
 		(ev) => {

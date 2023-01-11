@@ -8,27 +8,13 @@ import { find } from 'lodash';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-
-const RepetitionFrequency = {
-	DAILY: 'DAI',
-	WEEKLY: 'WEE',
-	MONTHLY: 'MON',
-	YEARLY: 'YEA'
-};
+import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 
 const FrequencySelect = (): ReactElement => {
 	const context = useContext(RecurrenceContext);
 	const [t] = useTranslation();
 
-	const repetitionItems = useMemo(
-		() => [
-			{ label: t('repeat.daily', 'Daily'), value: RepetitionFrequency.DAILY },
-			{ label: t('repeat.weekly', 'Weekly'), value: RepetitionFrequency.WEEKLY },
-			{ label: t('repeat.monthly', 'Monthly'), value: RepetitionFrequency.MONTHLY },
-			{ label: t('repeat.yearly', 'Yearly'), value: RepetitionFrequency.YEARLY }
-		],
-		[t]
-	);
+	const { repetitionItems } = useRecurrenceItems();
 
 	const initialValue = useMemo(
 		() => find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0],

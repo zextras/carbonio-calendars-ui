@@ -9,6 +9,7 @@ import { Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-
 import { isNumber, isNaN, map, differenceWith, isEqual, omitBy, isNil } from 'lodash';
 import { useSelector } from 'react-redux';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
+import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import {
 	selectEditorRecurrenceByDay,
 	selectEditorRecurrenceFrequency,
@@ -24,7 +25,7 @@ const RADIO_VALUES = {
 };
 
 const defaultState = {
-	freq: 'DAI',
+	freq: RECURRENCE_FREQUENCY.DAILY,
 	interval: {
 		ival: 1
 	},
@@ -36,7 +37,11 @@ const initialState = (
 	interval: Interval | undefined,
 	byday: Byday | undefined
 ): string => {
-	if ((freq === 'DAI' || freq === 'WEE') && byday?.wkday && interval?.ival === 1) {
+	if (
+		(freq === RECURRENCE_FREQUENCY.DAILY || freq === RECURRENCE_FREQUENCY.WEEKLY) &&
+		byday?.wkday &&
+		interval?.ival === 1
+	) {
 		// building an array with the same structure of wkday to check if they have the same values
 		// to determine if we are receiving a workingday value
 		const workingDays = map(['MO', 'TU', 'WE', 'TH', 'FR'], (day) => ({ day }));
@@ -46,10 +51,10 @@ const initialState = (
 		}
 		return defaultState.radioValue;
 	}
-	if (freq === 'DAI' && interval?.ival === 1 && !byday?.wkday) {
+	if (freq === RECURRENCE_FREQUENCY.DAILY && interval?.ival === 1 && !byday?.wkday) {
 		return RADIO_VALUES.EVERYDAY;
 	}
-	if (freq === 'DAI' && interval && interval?.ival > 1 && !byday?.wkday) {
+	if (freq === RECURRENCE_FREQUENCY.DAILY && interval && interval?.ival > 1 && !byday?.wkday) {
 		return RADIO_VALUES.EVERY_X_DAY;
 	}
 	return defaultState.radioValue;
@@ -60,10 +65,10 @@ const startValueInitialState = (
 	byday: Byday | undefined,
 	interval: Interval | undefined
 ): RecurrenceStartValue | undefined => {
-	if (freq === 'DAI') {
+	if (freq === RECURRENCE_FREQUENCY.DAILY) {
 		return omitBy({ interval, byday }, isNil);
 	}
-	if (freq === 'WEE' && byday?.wkday && interval?.ival === 1) {
+	if (freq === RECURRENCE_FREQUENCY.WEEKLY && byday?.wkday && interval?.ival === 1) {
 		const workingDays = map(['MO', 'TU', 'WE', 'TH', 'FR'], (day) => ({ day }));
 		const diff = differenceWith(workingDays, byday?.wkday, isEqual);
 		if (diff?.length === 0 && interval?.ival === 1) {
@@ -143,12 +148,12 @@ const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null =
 	);
 
 	useEffect(() => {
-		if (startValue && frequency === 'DAI') {
+		if (startValue && frequency === RECURRENCE_FREQUENCY.DAILY) {
 			setNewStartValue(startValue);
 		}
 	}, [frequency, setNewStartValue, startValue]);
 
-	return frequency === 'DAI' ? (
+	return frequency === RECURRENCE_FREQUENCY.DAILY ? (
 		<RadioGroup value={radioValue} onChange={onChange}>
 			<Radio
 				size="small"
