@@ -112,6 +112,7 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 				const defaultValue = { freq: ev, interval: [{ ival: 1 }] };
 				switch (ev) {
 					case RECURRENCE_FREQUENCY.CUSTOM:
+						setSelected(find(recurrenceItems, { value: ev }) ?? recurrenceItems[0]);
 						break;
 					case RECURRENCE_FREQUENCY.DAILY:
 					case RECURRENCE_FREQUENCY.MONTHLY:

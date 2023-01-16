@@ -16,10 +16,11 @@ const FrequencySelect = (): ReactElement => {
 
 	const { repetitionItems } = useRecurrenceItems();
 
-	const initialValue = useMemo(
-		() => find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0],
-		[repetitionItems, context?.frequency]
-	);
+	const initialValue = useMemo(() => {
+		const value = find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0];
+		context?.setFrequency(value?.value);
+		return value;
+	}, [repetitionItems, context]);
 
 	const onChange = useCallback(
 		(ev) => {
