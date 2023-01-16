@@ -70,7 +70,7 @@ type InviteResponse = {
 	isAttendee: boolean;
 };
 
-type Participant = {
+export type Participant = {
 	a: string;
 	d: string;
 	ptst: 'NE' | 'AC' | 'TE' | 'DE' | 'DG' | 'CO' | 'IN' | 'WE' | 'DF';
