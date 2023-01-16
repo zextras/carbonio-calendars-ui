@@ -3,26 +3,25 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-	Avatar,
-	Container,
-	IconButton,
-	Row,
-	Text,
-	TextWithTooltip
-} from '@zextras/carbonio-design-system';
+import { Avatar, Container, IconButton, Row, Text, Chip } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
-import { useTranslation } from 'react-i18next';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
-const DisplayedParticipant = ({
+import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
+
+export const DisplayedParticipant = ({
 	participant
 }: {
 	participant: InviteParticipant;
 }): ReactElement => (
-	<Row mainAlignment="flex-start" crossAlignment="center" padding={{ vertical: 'small' }}>
+	<Row
+		data-testid={'DisplayedParticipant'}
+		mainAlignment="flex-start"
+		crossAlignment="flex-start"
+		padding={{ vertical: 'small' }}
+	>
 		<Avatar
 			label={participant.name || participant.email}
 			style={{ width: '3rem', height: '3rem' }}
@@ -33,17 +32,43 @@ const DisplayedParticipant = ({
 			takeAvailableSpace
 			padding={{ left: 'small' }}
 		>
-			<TextWithTooltip overflow="ellipsis">
-				{participant.name || participant.email}
-				<br />
-				<Text size="small" color="secondary">
-					{`(${
-						participant.isOptional
-							? t('label.optional', 'Optional')
-							: t('label.required', 'Required')
-					})`}
-				</Text>
-			</TextWithTooltip>
+			<Text>{participant.name || participant.email}</Text>
+
+			<Row
+				mainAlignment="flex-start"
+				width="100%"
+				padding={{ top: 'extrasmall', bottom: 'extrasmall' }}
+			>
+				<Chip
+					label={participant.email}
+					background="gray3"
+					color="text"
+					data-testid={'Chip'}
+					hasAvatar={false}
+					actions={[
+						{
+							id: 'action1',
+							label: t('message.send_email', 'Send e-mail'),
+							type: 'button',
+							icon: 'EmailOutline',
+							onClick: () => sendMsg(participant)
+						},
+						{
+							id: 'action2',
+							label: t('message.copy', 'Copy'),
+							type: 'button',
+							icon: 'Copy',
+							onClick: () => copyEmailToClipboard(participant.email)
+						}
+					]}
+				/>
+			</Row>
+
+			<Text size="small" color="secondary">
+				{`(${
+					participant.isOptional ? t('label.optional', 'Optional') : t('label.required', 'Required')
+				})`}
+			</Text>
 		</Row>
 	</Row>
 );
