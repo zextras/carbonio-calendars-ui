@@ -281,6 +281,7 @@
         "appointment_invitation_sent": "Appointment invitation sent",
         "appointment_type_handle": "{{name}} is a recurring appointment. Would you like to open only this instance or the series?",
         "are_organizer": "are the organizer",
+        "copy": "Copy",
         "delete_all_occurences": "Delete all occurrences",
         "delete_future_occurences": "Delete this instance and all future occurrences",
         "delete_future_occurences_warning": "This will also delete all exceptions (before and after this instance) in the series",
@@ -526,6 +527,7 @@
     "shared_items": "Shared items",
     "shares_info": "Shares Info",
     "snackbar": {
+        "email_copied_to_clipboard": "Email copied to clipboard.",
         "invite": {
             "error": "Error"
         },
