@@ -41,7 +41,7 @@ export const useCalendarComponentUtils = (): {
 	const calendarFolders = useCalendarFolders();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const { action } = useParams<{
-		action: EventActionsEnum.EXPAND | EventActionsEnum.EDIT | undefined;
+		action: typeof EventActionsEnum.EXPAND | typeof EventActionsEnum.EDIT | undefined;
 	}>();
 
 	useEffect(() => {

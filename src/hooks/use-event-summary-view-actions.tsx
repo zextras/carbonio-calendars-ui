@@ -11,7 +11,7 @@ import { selectInstanceInvite } from '../store/selectors/invites';
 import { createAndApplyTag } from '../view/tags/tag-actions';
 import { getAppointmentActionsItems } from '../actions/get-appointment-actions-items';
 import { getRecurrentAppointmentActionsItems } from '../actions/get-recurrent-appointment-actions-items';
-import { GetActionReturnType } from './types';
+import { GetActionReturnTypeDD } from './types';
 import { useCalendarFolders } from './use-calendar-folders';
 
 export const useEventSummaryViewActions = ({
@@ -20,7 +20,7 @@ export const useEventSummaryViewActions = ({
 }: {
 	onClose?: () => void;
 	event?: any;
-}): GetActionReturnType => {
+}): GetActionReturnTypeDD => {
 	const invite = useSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);

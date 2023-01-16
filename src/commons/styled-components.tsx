@@ -11,12 +11,12 @@ export const Square = styled.div`
 	height: 1.125rem;
 	position: relative;
 	top: -0.1875rem;
-	border: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
-	background: ${({ color }) => color};
+	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
+	background: ${({ color }): string | undefined => color};
 	border-radius: 0.25rem;
 `;
 export const ColorContainer = styled(Container)`
-	border-bottom: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 `;
 
 export const TextUpperCase = styled(Text)`

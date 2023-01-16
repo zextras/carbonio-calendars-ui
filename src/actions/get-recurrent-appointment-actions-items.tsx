@@ -49,7 +49,7 @@ export const getRecurrentAppointmentActionsItems = ({
 			id: 'instance',
 			icon: 'CalendarOutline',
 			label: t('label.instance', 'Instance'),
-			click: (ev: SyntheticEvent<HTMLElement, Event> | KeyboardEvent | undefined): void => {
+			click: (ev?: Event): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
@@ -69,7 +69,7 @@ export const getRecurrentAppointmentActionsItems = ({
 			id: 'series',
 			icon: 'CalendarOutline',
 			label: t('label.series', 'Series'),
-			click: (ev: SyntheticEvent<HTMLElement, Event> | KeyboardEvent | undefined): void => {
+			click: (ev?: Event): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [

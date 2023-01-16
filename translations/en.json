@@ -48,7 +48,7 @@
         "action": {
             "accept": "Accept",
             "decline": "Decline",
-            "expand": "Open in Displayer",
+            "expand": "Open",
             "invitation_not_sent_yet": "The invitation has not been sent yet",
             "needs_action": "Needs action",
             "no": "No",
@@ -121,7 +121,7 @@
         "continue": "Continue",
         "create": "Create",
         "create_appt_settings": "Creating Appointments",
-        "create_copy": "Create a Copy",
+        "create_copy": "Copy",
         "create_new_calendar": "Create a New Calendar",
         "create_tag": "Create Tag",
         "custom": "Custom",
