@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.43](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.42...v0.1.43) (2023-01-16)
+
+
+### Bug Fixes
+
+* saving appointments doesn't send it to the attendees ([25e2cc8](https://github.com/zextras/carbonio-calendars-ui/commit/25e2cc861ba475d42bbfeaef8f0383168df7a397))
+
 ### [0.1.42](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.41...v0.1.42) (2023-01-05)
 
 
