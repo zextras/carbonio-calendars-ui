@@ -95,7 +95,7 @@
         "your_pref_timezone_msg": "Uw voorkeurstijdzone is: GMT +01:00 Amsterdam, Berlijn, Bern, Rome, Stockholm, Wenen.",
         "create_new_calendar": "Een nieuwe kalender creëren",
         "default_view": "Standaard weergave",
-        "edit_access": "Toegang van {{name}} bewerken",
+        "edit_access": "Toegang bewerken",
         "dismiss": "Verwijderen",
         "dismiss_plural": "Alles verwijderen",
         "display": "Weergeven",
@@ -214,7 +214,8 @@
         "new_time_proposed": "Nieuw tijdsvoorstel",
         "subject": "Onderwerp",
         "cancel": "annuleren",
-        "appointment_is_private": "De afspraak is privé."
+        "appointment_is_private": "De afspraak is privé.",
+        "create_copy": "Een kopie maken"
     },
     "event": {
         "action": {
@@ -414,7 +415,8 @@
             "share_calendar_role": {
                 "admin": "Admin (kan bekijken, bewerken, toevoegen, verwijderen en beheren)",
                 "manager": "Manager (kan bekijken, bewerken, toevoegen en verwijderen)",
-                "viewer": "Kijker (kan bekijken)"
+                "viewer": "Kijker (kan bekijken)",
+                "none": "Geen"
             },
             "share_calendar_with": {
                 "external_guests": "Externe gasten (alleen bekijken)",
@@ -493,7 +495,10 @@
         "virtual_chat": "Virtuele Chat",
         "calendar_sharing_status": "Gedeeld met {{count}} persoon",
         "calendar_sharing_status_plural": "Gedeeld met {{count}} personen",
-        "calendar_sharing_status_one": "Gedeeld met 1 persoon"
+        "calendar_sharing_status_one": "Gedeeld met 1 persoon",
+        "revoke": "Toegang intrekken",
+        "resend": "E-mailbericht over dit aandeel verzenden",
+        "edit": "Deeleigenschappen bewerken"
     },
     "button": {
         "customize_modal": "Modal aanpassen openen"
