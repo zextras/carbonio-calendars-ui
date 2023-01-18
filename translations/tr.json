@@ -158,7 +158,7 @@
         "send_email": "E-posta gönder",
         "edit_series_warning": "Serileri değiştirmeye devam ederseniz, daha önce silinmiş veya değiştirilmiş tüm tekrarlamalar yeni seri ayarları ile geri yüklenecek.",
         "appointment_invitation_sent": "Randevu daveti gönderildi",
-        "want_to_edit_modified_msg": "Değiştirilen randevu için mesajı düzenlemek ister misiniz?",
+        "want_to_edit_modified_msg": "Katılımcılara değişiklikler hakkında bilgilendirme e-postası gönderilecek. Özel bir mesaj eklemek ister misiniz?",
         "meeting_modified": "Bu toplantı değiştirildi",
         "search_hints": " "
     },
@@ -194,7 +194,7 @@
         "timezone_pref_msg": "Saat ayarları saat dilimi tercihinize göre ayarlanacak.",
         "your_pref_timezone_msg": "Tercih ettiğiniz saat dilimi: GMT +01:00 Amsterdam, Berlin, Bern, Roma, Stockholm, Viyana.",
         "create_appt_settings": "Randevu Oluşturma",
-        "edit_access": "{{name}}'in erişimini düzenle",
+        "edit_access": "Erişimi düzenle",
         "private": "Özel",
         "add_share": "Paylaşım ekle",
         "apple_ical": "Apple iCal",
@@ -255,7 +255,7 @@
         "required": "Gerekli",
         "resend": "Yeniden gönder",
         "revoke": "İptal et",
-        "revoke_share": "{{title}} paylaşımını iptal et",
+        "revoke_share": "{{title}} paylaşımını kaldır",
         "save": "Kaydet",
         "series": "Seriler",
         "share": "Paylaş",
@@ -355,7 +355,8 @@
         "new_time_proposed": "Yeni Saat Önerildi",
         "appointment_is_private": "Bu özel randevudur.",
         "search_hint": " ",
-        "select_in": " "
+        "select_in": " ",
+        "create_copy": "Kopya oluştur"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -395,7 +396,10 @@
         "equipment": "Donanım",
         "location": "Yer",
         "virtual_chat": "Sanal Sohbet",
-        "calendar_sharing_status_one": "1 kişi ile paylaşıldı"
+        "calendar_sharing_status_one": "1 kişi ile paylaşıldı",
+        "revoke": "Erişimi iptal et",
+        "resend": "Bu paylaşım hakkında e-posta bildirimi gönder",
+        "edit": "Paylaşım özelliklerini düzenle"
     },
     "revoke_with_custom_message": "Özel bildirim göndererek erişim yetkisini kaldır",
     "settings": {
@@ -469,7 +473,8 @@
             "share_calendar_role": {
                 "admin": "Admin (Görüntüler, düzenler, ekler, kaldırır ve yönetir)",
                 "manager": "Yönetim (Görüntüler, düzenler, ekler ve kaldırır)",
-                "viewer": "Görüntüleme (Görüntüler)"
+                "viewer": "Görüntüleme (Görüntüler)",
+                "none": "Yok"
             },
             "share_calendar_with": {
                 "external_guests": "Dışarıdan misafir (sadece görüntüler)",
@@ -524,7 +529,7 @@
         "second_before_plural": "{{count}} saniye önce"
     },
     "remove_from_this_list": "Bu listeden kaldır",
-    "revoke_access": "Erişim yetkisini kaldır",
+    "revoke_access": "Erişimi iptal et",
     "revoke_without_custom_message": "Standart bildirim göndererek erişim yetkisini kaldır",
     "revoke_without_notification": "Bildirim göndermeden erişim yetkisini kaldır",
     "share_invite_resent": "Paylaşım davetini yeniden gönder",

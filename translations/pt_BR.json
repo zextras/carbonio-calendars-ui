@@ -35,7 +35,7 @@
         "create_new_calendar": "Criar um Novo Calendário",
         "custom_repeat": "Repetição Personalizada",
         "day": "Dia",
-        "edit_access": "Editar acesso de {{name}}",
+        "edit_access": "Editar acesso",
         "days": "Dias",
         "default_appt_vsblty": "Visibilidade de compromisso padrão",
         "default_view": "Visualização padrão",
@@ -177,7 +177,8 @@
         "new_time_proposed": "Novo horário proposto",
         "subject": "Assunto",
         "cancel": "Cancelar",
-        "appointment_is_private": "O compromisso é privado."
+        "appointment_is_private": "O compromisso é privado.",
+        "create_copy": "Criar uma cópia"
     },
     "action": {
         "send": "Enviar",
@@ -435,7 +436,8 @@
             "share_calendar_role": {
                 "admin": "Admin (pode visualizar, adicionar, remover e administrar)",
                 "manager": "Administrador (pode visualizar, editar, adicionar e remover)",
-                "viewer": "Visualizador (pode apenas visualizar)"
+                "viewer": "Visualizador (pode apenas visualizar)",
+                "none": "Nenhum"
             },
             "share_calendar_with": {
                 "external_guests": "Convidados externos (apenas podem visualizar)",
@@ -509,7 +511,10 @@
         "virtual_chat": "Chat virtual",
         "calendar_sharing_status": "Compartilhado com {{count}} pessoa",
         "calendar_sharing_status_plural": "",
-        "calendar_sharing_status_one": "Compartilhado com 1 pessoa"
+        "calendar_sharing_status_one": "Compartilhado com 1 pessoa",
+        "revoke": "Revogar acesso",
+        "resend": "Enviar notificação por e-mail sobre este compartilhamento",
+        "edit": "Editar propriedades de compartilhamento"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",

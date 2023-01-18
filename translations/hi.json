@@ -184,7 +184,8 @@
         "new_time_proposed": "नया समय प्रस्तुत करें",
         "subject": "विषय",
         "cancel": "कैंसल करें",
-        "appointment_is_private": "एपाइंटमेंट प्राइवेट है।"
+        "appointment_is_private": "एपाइंटमेंट प्राइवेट है।",
+        "create_copy": "एक प्रतिलिपि बनाएँ"
     },
     "action": {
         "send": "भेजें",
@@ -410,7 +411,8 @@
             "share_calendar_role": {
                 "admin": "एडमिन (देख,बदल,जोड़,हटा और एडमिनिस्टर कर सकता है)",
                 "manager": "मैनेजर (देख, बदल, जोड़ और हटा सकता है)",
-                "viewer": "व्यूअर (देख सकता है)"
+                "viewer": "व्यूअर (देख सकता है)",
+                "none": "कोई नहीं"
             },
             "share_calendar_with": {
                 "external_guests": "बाहरी गेस्ट (सिर्फ देख सकते हैं)",
@@ -518,7 +520,10 @@
         "virtual_chat": "वर्चुअल चैट",
         "calendar_sharing_status": "{{count}} व्यक्ति के साथ शेयर किया गया",
         "calendar_sharing_status_plural": "{{count}} व्यक्तियों के साथ शेयर किया गया",
-        "calendar_sharing_status_one": "1 व्यक्ति के साथ शेयर किया गया"
+        "calendar_sharing_status_one": "1 व्यक्ति के साथ शेयर किया गया",
+        "revoke": "एक्सेस बंद करें",
+        "resend": "इस शेयर के बारे में मेल नोटिफिकेशन भेजें",
+        "edit": "शेयर गुणों में संशोधन"
     },
     "remove_from_this_list": "इस लिस्ट से हटाएँ",
     "resend_mail_notification_about_this_share": "इस शेयर के बारे में ई-मेल नोटिफिकेशन भेजें",
