@@ -12,7 +12,10 @@
         "calendar_sharing_status_plural": "",
         "virtual_chat": "Chat Virtuale",
         "chat_room": "Link alla Stanza Virtuale",
-        "calendar_sharing_status_one": "Condiviso con una persona"
+        "calendar_sharing_status_one": "Condiviso con una persona",
+        "revoke": "Revoca accesso",
+        "resend": "Invia notifica per questa condivisione",
+        "edit": "Modifica proprietà di condivisione"
     },
     "reminder": {
         "week_before": "{{count}} settimana fa",
@@ -127,7 +130,7 @@
         "send_email": "Invia e-mail",
         "edit_series_warning": "Procedendo con le modifiche alla serie, tutte le istanze precedentemente modificate o eliminate, verranno ripristinate secondo le nuove impostazioni di questa serie.",
         "appointment_invitation_sent": "Invito all'appuntamento inviato",
-        "want_to_edit_modified_msg": "Vuoi modificare il messaggio dell'appuntamento?",
+        "want_to_edit_modified_msg": "Le modifiche verranno notificate ai partecipanti via email. Vuoi aggiungere un messaggio personalizzato?",
         "meeting_modified": "La riunione seguente è stata modificata"
     },
     "label": {
@@ -192,7 +195,7 @@
         "custom_repeat": "Ripetizione Personalizzata",
         "day": "Giorno",
         "proposal_declined": "Proposta rifiutata",
-        "edit_access": "Modifica l'accesso di {{name}}",
+        "edit_access": "Modifica accesso",
         "add_share": "Aggiungi condivisione",
         "create_appt_settings": "Crea Appuntamenti",
         "create_new_calendar": "Crea Nuovo Calendario",
@@ -308,7 +311,8 @@
         "cancel": "annulla",
         "subject": "Oggetto",
         "new_time_proposed": "Nuovo Orario Proposto",
-        "appointment_is_private": "L'appuntamento è privato."
+        "appointment_is_private": "L'appuntamento è privato.",
+        "create_copy": "Crea una copia"
     },
     "action": {
         "send": "Invia",
@@ -424,7 +428,8 @@
             "share_calendar_role": {
                 "manager": "Manager (visualizza, modifica, aggiungi e rimuovi)",
                 "admin": "Amministratore (visualizza, modifica, aggiungi, rimuovi e gestisci)",
-                "viewer": "Visualizzatore (visualizza)"
+                "viewer": "Visualizzatore (visualizza)",
+                "none": "Nessuno"
             }
         },
         "placeholder": {

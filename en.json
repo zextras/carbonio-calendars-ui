@@ -121,6 +121,7 @@
         "continue": "Continue",
         "create": "Create",
         "create_appt_settings": "Creating Appointments",
+        "create_copy": "Create a Copy",
         "create_new_calendar": "Create a New Calendar",
         "create_tag": "Create Tag",
         "custom": "Custom",
@@ -142,7 +143,7 @@
         "download": "Download",
         "download_plural": "Download all",
         "edit": "Edit",
-        "edit_access": "Edit {{name}}'s access",
+        "edit_access": "Edit access",
         "edit_share": "Edit share",
         "edit_tag": "Edit Tag",
         "edit_tag_name": "Edit {{name}} tag",
@@ -340,7 +341,7 @@
         "sure_to_delete_appointment": "Are you sure you want to delete the appointment?",
         "sure_to_delete_appointment_permanently": "Are you sure you want to delete this appointment permanently?",
         "want_to_edit_cancellation_msg": "Do you want to edit the appointment cancellation message?",
-        "want_to_edit_modified_msg": "Do you want to edit the modified appointment's message?",
+        "want_to_edit_modified_msg": "The changes will be notified via email to the attendees. Would you like to add a custom message?",
         "want_to_send_cancellation_msg": "Do you want to send a cancellation message to the attendees?",
         "you": "You",
         "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>",
@@ -508,6 +509,7 @@
             "share_calendar_role": {
                 "admin": "Admin (can view,edit,add,remove and administer)",
                 "manager": "Manager (can view, edit, add and remove)",
+                "none": "None",
                 "viewer": "Viewer (can view)"
             },
             "share_calendar_with": {
@@ -635,9 +637,12 @@
         "copy_ics_url": "Copy ICS url",
         "copy_outlook_url": "Copy Outlook url",
         "copy_vector_url": "Copy View url",
+        "edit": "Edit share properties",
         "enable_disable_rich_text": "Enable/Disable rich text editor",
         "equipment": "Equipment",
         "location": "Location",
+        "resend": "Send mail notification about this share",
+        "revoke": "Revoke access",
         "virtual_chat": "Virtual Chat"
     },
     "type": "Type",

@@ -274,7 +274,8 @@
         "new_time_proposed": "時刻変更依頼",
         "subject": "件名",
         "cancel": "キャンセル",
-        "appointment_is_private": "予定は非公開です。"
+        "appointment_is_private": "予定は非公開です。",
+        "create_copy": "コピーを作成"
     },
     "folder": {
         "modal": {
@@ -412,7 +413,8 @@
             "share_calendar_role": {
                 "admin": "管理者（表示、編集、追加、削除、管理できます）",
                 "manager": "管理者（表示、編集、追加、削除できます）",
-                "viewer": "ビューア（表示可能）"
+                "viewer": "ビューア（表示可能）",
+                "none": "なし"
             },
             "share_calendar_with": {
                 "external_guests": "外部ゲスト（表示のみ）",
@@ -492,7 +494,9 @@
         "virtual_chat": "バーチャルチャット",
         "chat_room": "バーチャルルームのリンク",
         "calendar_sharing_status_one": "1人と共有されました",
-        "calendar_sharing_status": "{{count}}人と共有されました"
+        "calendar_sharing_status": "{{count}}人と共有されました",
+        "revoke": "アクセス権を取り消す",
+        "edit": "共有プロパティを編集する"
     },
     "workflow": "ワークフロー",
     "write": "書く",
