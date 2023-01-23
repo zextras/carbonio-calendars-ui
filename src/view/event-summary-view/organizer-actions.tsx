@@ -50,9 +50,10 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 		}),
 		[calendarFolders, createModal, createSnackbar, dispatch, event.resource.ridZ, tags]
 	);
-	const onClick = useCallback(() => {
-		editAppointment({ event, invite, context });
-	}, [context, event, invite]);
+	const onClick = useMemo(
+		() => editAppointment({ event, invite, context }),
+		[context, event, invite]
+	);
 
 	return event ? (
 		<>
@@ -68,6 +69,8 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 					disabled={!event.haveWriteAccess}
 					type="outlined"
 					label={t('label.edit', 'edit')}
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
 					onClick={onClick}
 				/>
 			)}
