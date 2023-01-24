@@ -11,6 +11,7 @@ import { applyTag } from '../view/tags/tag-actions';
 import {
 	acceptAsTentativeItem,
 	acceptInvitationItem,
+	createCopyItem,
 	declineInvitationItem,
 	deletePermanentlyItem,
 	editAppointmentItem,
@@ -39,7 +40,8 @@ export const getAppointmentActionsItems = ({
 					context
 				}),
 				moveAppointmentItem({ event, context }),
-				deletePermanentlyItem({ event, context })
+				deletePermanentlyItem({ event, context }),
+				createCopyItem({ event, invite, context })
 			];
 		}
 		return [
@@ -50,6 +52,7 @@ export const getAppointmentActionsItems = ({
 			}),
 			moveAppointmentItem({ event, context }),
 			moveApptToTrashItem({ invite, event, context: { ...context, isInstance: true } }),
+			createCopyItem({ event, invite, context }),
 			applyTag({
 				event,
 				context
@@ -64,7 +67,8 @@ export const getAppointmentActionsItems = ({
 				context
 			}),
 			deletePermanentlyItem({ event, context }),
-			moveAppointmentItem({ event, context })
+			moveAppointmentItem({ event, context }),
+			createCopyItem({ event, invite, context })
 		];
 	}
 	return [
@@ -79,6 +83,7 @@ export const getAppointmentActionsItems = ({
 		acceptInvitationItem({ event, context }),
 		declineInvitationItem({ event, context }),
 		acceptAsTentativeItem({ event, context }),
+		createCopyItem({ event, invite, context }),
 		applyTag({
 			event,
 			context

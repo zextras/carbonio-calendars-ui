@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { cloneDeep, isNil, omit, union } from 'lodash';
+import { isNil, omit, union } from 'lodash';
 import { Editor, IdentityItem, Room } from '../../types/editor';
 import { EventResourceCalendar } from '../../types/event';
 import { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
@@ -269,6 +269,28 @@ export const editEditorRecurrenceReducer = ({ editors }: EditorSlice, { payload 
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].recur = payload.recur;
+	}
+};
+
+export const editEditorRecurrenceFrequencyReducer = (
+	{ editors }: EditorSlice,
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	{ payload }: any
+): void => {
+	if (payload?.id && editors?.[payload?.id] && editors[payload.id]?.recur) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].recur[0].add[0].rule[0].freq = payload.freq;
+	}
+};
+
+export const editEditorRecurrenceIntervalReducer = (
+	{ editors }: EditorSlice,
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	{ payload }: any
+): void => {
+	if (payload?.id && editors?.[payload?.id] && editors[payload.id]?.recur) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].recur[0].add[0].rule[0].interval[0].ival = payload.ival;
 	}
 };
 

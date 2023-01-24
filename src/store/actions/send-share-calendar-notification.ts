@@ -8,9 +8,9 @@ import { map } from 'lodash';
 
 export const sendShareCalendarNotification = createAsyncThunk(
 	'calendar/sendShareCalendarNotification',
-	async (data: any, { getState }) =>
+	async (data: any) =>
 		Promise.all(
-			map(data.contacts, (contact, index) =>
+			map(data.contacts, (contact) =>
 				fetch('/service/soap/SendShareNotificationRequest', {
 					method: 'POST',
 					headers: {

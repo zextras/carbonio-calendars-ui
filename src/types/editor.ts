@@ -7,6 +7,28 @@ import { EventResourceCalendar } from './event';
 import { Calendar } from './store/calendars';
 import { Attendee, InviteClass, InviteFreeBusy } from './store/invite';
 
+export type Count = { count: { num: number } };
+export type Until = {
+	until: {
+		d: string;
+	};
+};
+
+export type Interval = { ival: number };
+export type Byday = { wkday: Array<{ day: string }> };
+export type PosList = { poslist: string };
+export type ModayList = { modaylist: number };
+export type ByMonth = { molist: string };
+
+export type RecurrenceEndValue = Count | Until | undefined;
+export type RecurrenceStartValue = {
+	bymonth?: ByMonth;
+	bymonthday?: ModayList;
+	bysetpos?: PosList;
+	interval?: Interval;
+	byday?: Byday;
+};
+
 export type IdentityItem = {
 	value: string;
 	label: string;

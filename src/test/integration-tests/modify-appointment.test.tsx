@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { map, values } from 'lodash';
@@ -13,10 +18,11 @@ import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import EditorPanelWrapper from '../../view/editor/editor-panel-wrapper';
 import mockedData from '../generators';
 
-jest.setTimeout(25000);
+jest.setTimeout(50000);
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
+		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',

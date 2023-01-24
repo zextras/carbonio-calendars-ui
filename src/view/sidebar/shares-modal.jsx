@@ -30,7 +30,7 @@ import {
 	toLower
 } from 'lodash';
 import styled from 'styled-components';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { ModalHeader } from '../../commons/modal-header';

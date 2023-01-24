@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { EventType } from '../../types/event';
 import { Parts } from '../../types/store/invite';
-import { Store } from '../../types/store/store';
 
 const TitleText = styled(Text)`
 	display: inline-block;

@@ -5,12 +5,13 @@
  */
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { ActionsContext, PanelView } from '../types/actions';
-import { EventActionsEnum } from '../types/enums/event-actions-enum';
+import { EventActionsEnum, EventActionsId } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import {
 	acceptAsTentative,
 	acceptInvitation,
+	createCopy,
 	declineInvitation,
 	deletePermanently,
 	editAppointment,
@@ -19,6 +20,14 @@ import {
 	openAppointment
 } from './appointment-actions-fn';
 
+type AppointmentActionsItems = {
+	id: EventActionsId;
+	icon: string;
+	disabled: boolean;
+	label: string;
+	click: (ev?: Event) => void;
+};
+
 export const openAppointmentItem = ({
 	event,
 	panelView,
@@ -26,20 +35,17 @@ export const openAppointmentItem = ({
 }: {
 	event: EventType;
 	panelView: PanelView;
-	context: any;
-}): any => ({
+	context: ActionsContext;
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.EXPAND,
 	icon: 'ExpandOutline',
 	disabled: false,
-	keepOpen: true,
-	label: t('event.action.expand', 'Open in Displayer'),
-	click: (ev: Event): void => {
-		context?.onClose && context?.onClose();
-		openAppointment({
-			event,
-			panelView
-		})(ev);
-	}
+	label: t('event.action.expand', 'Open'),
+	click: openAppointment({
+		event,
+		panelView,
+		context
+	})
 });
 
 export const acceptInvitationItem = ({
@@ -48,7 +54,7 @@ export const acceptInvitationItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.ACCEPT,
 	icon: 'CheckmarkOutline',
 	label: t('event.action.accept', 'Accept'),
@@ -62,7 +68,7 @@ export const declineInvitationItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.DECLINE,
 	icon: 'CloseOutline',
 	label: t('event.action.decline', 'Decline'),
@@ -76,7 +82,7 @@ export const acceptAsTentativeItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.TENTATIVE,
 	icon: 'QuestionMark',
 	label: t('label.tentative', 'Tentative'),
@@ -90,7 +96,7 @@ export const moveAppointmentItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.MOVE,
 	icon: 'MoveOutline',
 	label:
@@ -98,7 +104,6 @@ export const moveAppointmentItem = ({
 			? t('label.restore', 'Restore')
 			: t('label.move', 'Move'),
 	disabled: !event?.haveWriteAccess,
-	keepOpen: true,
 	click: moveAppointment({ event, context })
 });
 
@@ -110,16 +115,12 @@ export const moveApptToTrashItem = ({
 	invite: Invite;
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.TRASH,
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
 	disabled: !event?.haveWriteAccess,
-	keepOpen: true,
-	click: (ev: Event): void => {
-		context?.onClose && context?.onClose();
-		moveToTrash({ event, invite, context })(ev);
-	}
+	click: moveToTrash({ event, invite, context })
 });
 
 export const deletePermanentlyItem = ({
@@ -128,15 +129,12 @@ export const deletePermanentlyItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
-	id: 'deletePermanently',
+}): AppointmentActionsItems => ({
+	id: EventActionsEnum.DELETE_PERMANENTLY,
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
-	keepOpen: true,
-	click: (ev: Event): void => {
-		context?.onClose && context?.onClose();
-		deletePermanently({ event, context })(ev);
-	}
+	disabled: false,
+	click: deletePermanently({ event, context })
 });
 
 export const editAppointmentItem = ({
@@ -147,11 +145,26 @@ export const editAppointmentItem = ({
 	invite: Invite;
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Edit2Outline',
-	keepOpen: true,
 	label: t('label.edit', 'Edit'),
 	disabled: !event?.haveWriteAccess,
 	click: editAppointment({ event, invite, context })
+});
+
+export const createCopyItem = ({
+	invite,
+	event,
+	context
+}: {
+	invite: Invite;
+	event: EventType;
+	context: ActionsContext;
+}): AppointmentActionsItems => ({
+	id: EventActionsEnum.EDIT,
+	icon: 'Copy',
+	label: t('label.create_copy', 'Copy'),
+	disabled: false,
+	click: createCopy({ event, invite, context })
 });

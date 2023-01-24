@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import React from 'react';
@@ -16,7 +21,7 @@ test('click edit appointment from event summary view as organizer', async () => 
 		// path: '/:calendarId?/:action?/:apptId?/:ridZ?'
 	});
 	expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
-	await user.click(screen.getByTestId('calendar-event'));
+	await user.click(screen.getByTestId('calendar-event-inner-container'));
 	// this means the summary view is open
 	expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
 });

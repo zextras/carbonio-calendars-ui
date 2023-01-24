@@ -9,7 +9,6 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
 import { PREFS_DEFAULTS } from '../../../constants';
-import { usePrefs } from '../../../carbonio-ui-commons/utils/use-prefs';
 import { selectCalendarsArray } from '../../../store/selectors/calendars';
 import { Calendar } from '../../../types/store/calendars';
 import LabelFactory, { Square } from './select-label-factory';

@@ -3,12 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { map } from 'lodash';
 import React from 'react';
 import { screen } from '@testing-library/react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { faker } from '@faker-js/faker';
-import moment from 'moment';
 import EditorPanelWrapper from './editor-panel-wrapper';
 import { reducers } from '../../store/redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -25,15 +22,6 @@ jest.setTimeout(50000);
 const identity1 = createFakeIdentity();
 const identity2 = createFakeIdentity();
 
-const identity1Name = `${identity1.firstName} ${identity1.lastName}`;
-const identityRegex = new RegExp(identity1Name, 'i');
-
-const identity2Name = `${identity2.firstName} ${identity2.lastName}`;
-const identity2Regex = new RegExp(identity2Name, 'i');
-
-const defaultCalendar = 'Calendar';
-const defaultCalendarRegex = new RegExp(defaultCalendar, 'i');
-
 const userAccount = getMockedAccountItem({ identity1, identity2 });
 
 shell.useUserAccount.mockImplementation(() => userAccount);
@@ -41,6 +29,7 @@ shell.getUserAccount.mockImplementation(() => userAccount);
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
+		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',

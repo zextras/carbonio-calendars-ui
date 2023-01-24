@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 import { Folder, LinkFolder } from '@zextras/carbonio-shell-ui';
 import { find, map, startsWith } from 'lodash';
 import moment from 'moment';
@@ -112,7 +117,7 @@ const getEditor = ({
 	folders,
 	organizer
 }: {
-	editor: Partial<Editor>;
+	editor?: Partial<Editor>;
 	folders: Folder[];
 	organizer?: IdentityItem;
 }): Editor => {

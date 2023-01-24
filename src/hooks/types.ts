@@ -6,18 +6,33 @@
 
 import { SyntheticEvent } from 'react';
 
-export type Action = {
-	click: (ev?: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
+export type ActionItem = {
+	click: (ev?: Event) => void;
+	icon: string;
+	id: string;
+	items?: Array<{
+		click?: (ev?: Event) => void;
+		disabled?: boolean;
+		icon?: string;
+		id?: string;
+		label?: string;
+	}>;
+	label: string;
+};
+export type ActionItemDD = {
+	click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
 	icon: string;
 	id: string;
 	items: Array<{
-		click: (ev?: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
+		click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
 		disabled: boolean;
 		icon: string;
 		id: string;
-		keepOpen: boolean;
 		label: string;
 	}>;
 	label: string;
 };
-export type GetActionReturnType = Array<Action>;
+
+export type GetActionReturnTypeDD = Array<ActionItemDD>;
+
+export type GetActionReturnType = Array<ActionItem>;

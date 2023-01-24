@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const sendInviteResponsePending = (state: any, { inviteId, meta }: any): void => {
+export const sendInviteResponsePending = (state: any, { meta }: any): void => {
 	if (meta.arg.fromMail) {
 		// in case if invite respnse is sent from mail
 	} else {

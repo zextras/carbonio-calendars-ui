@@ -60,7 +60,7 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				true
 			);
 		} else
-			onSave({ draft: !attendeesLength, isNew, editor }).then(({ response }) => {
+			onSave({ draft: !!attendeesLength, isNew, editor }).then(({ response }) => {
 				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,

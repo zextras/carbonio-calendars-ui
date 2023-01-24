@@ -116,7 +116,7 @@ const getStatusItems = (t) =>
 		)
 	}));
 
-export const MainEditModal = ({ folder, totalAppointments }) => {
+export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 	const allCalendars = useSelector(selectAllCalendars);
 	const [inputValue, setInputValue] = useState(folder.name || '');
 	const [freeBusy, setFreeBusy] = useState(folder.freeBusy || false);
@@ -125,7 +125,7 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 	const dispatch = useDispatch();
 	const checked = useMemo(() => folder.checked, [folder]);
 
-	const { setModal, setGrant, onClose } = useContext(EditModalContext);
+	const { setModal, onClose, setActiveGrant } = useContext(EditModalContext);
 	const accounts = useUserAccounts();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [hovered, setHovered] = useState({});
@@ -178,7 +178,7 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 							color: selectedColor,
 							excludeFreeBusy: freeBusy,
 							checked,
-							grant: folder.acl?.grant
+							grant
 						},
 						isNull
 					)
@@ -213,10 +213,10 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 		checked,
 		createSnackbar,
 		dispatch,
-		folder.acl?.grant,
 		folder.id,
 		folder.parent,
 		freeBusy,
+		grant,
 		inputValue,
 		onClose,
 		selectedColor,
@@ -224,15 +224,15 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 	]);
 
 	const onShare = useCallback(() => {
-		setModal('share');
+		if (setModal) setModal('share');
 	}, [setModal]);
 
 	const onRevoke = useCallback(
 		(item) => {
+			if (setActiveGrant) setActiveGrant(item);
 			setModal('revoke');
-			setGrant(item);
 		},
-		[setGrant, setModal]
+		[setActiveGrant, setModal]
 	);
 
 	const onResend = useCallback(
@@ -270,20 +270,12 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 
 	const onEdit = useCallback(
 		(item) => {
+			if (setActiveGrant) setActiveGrant(item);
 			setModal('edit');
-			setGrant(item);
 		},
-		[setGrant, setModal]
+		[setModal, setActiveGrant]
 	);
-
-	const title = useMemo(
-		() =>
-			t('label.edit_access', {
-				name: folder.name,
-				defaultValue: "Edit {{name}}'s access"
-			}),
-		[folder, t]
-	);
+	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
 
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 
@@ -398,28 +390,27 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 					>
 						<Text weight="bold">{t('label.sharing_of_this_folder', 'Sharing of this folder')}</Text>
 					</Container>
-					{map(folder?.acl?.grant, (item, index) => (
+					{map(grant, (item, index) => (
 						<Container
-							padding={{ top: 'small', bottom: 'small' }}
-							mainAlignment="center"
-							crossAlignment="flex-start"
 							orientation="horizontal"
-							height="fit"
+							mainAlignment="flex-end"
+							padding={{ bottom: 'small' }}
 							key={index}
 						>
-							<Container orientation="horizontal" mainAlignment="flex-end">
-								<GranteeInfo grant={item} hovered={hovered} />
-								<Tooltip
-									label={t('edit_share_properties', 'Edit share properties')}
-									placement="top"
-								>
+							<GranteeInfo grant={item} hovered={hovered} />
+							<Container
+								orientation="horizontal"
+								mainAlignment="flex-end"
+								onMouseEnter={onMouseEnter}
+								onMouseLeave={onMouseLeave}
+								maxWidth="fit"
+							>
+								<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
 									<Button
 										type="outlined"
 										label={t('label.edit', 'Edit')}
 										onClick={() => onEdit(item)}
 										isSmall
-										onMouseEnter={() => onMouseEnter(item)}
-										onMouseLeave={() => onMouseLeave()}
 									/>
 								</Tooltip>
 								<Padding horizontal="extrasmall" />
@@ -430,26 +421,19 @@ export const MainEditModal = ({ folder, totalAppointments }) => {
 										color="error"
 										onClick={() => onRevoke(item)}
 										isSmall
-										onMouseEnter={() => onMouseEnter(item)}
-										onMouseLeave={() => onMouseLeave()}
 									/>
 								</Tooltip>
 								<Padding horizontal="extrasmall" />
 								<Tooltip
-									label={t(
-										'resend_mail_notification_about_this_share',
-										'Send e-mail notification about this share'
-									)}
+									label={t('tooltip.resend', 'Send mail notification about this share')}
 									placement="top"
-									maxWidth="fit"
+									maxWidth="18.75rem"
 								>
 									<Button
 										type="outlined"
 										label={t('label.resend', 'Resend')}
-										onClick={() => onResend(item)}
+										onClick={onResend}
 										isSmall
-										onMouseEnter={() => onMouseEnter(item)}
-										onMouseLeave={() => onMouseLeave()}
 									/>
 								</Tooltip>
 							</Container>

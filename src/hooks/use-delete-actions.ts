@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
-import { Folder, Folders } from '@zextras/carbonio-shell-ui';
+import { Folder } from '@zextras/carbonio-shell-ui';
 import { size } from 'lodash';
 import moment from 'moment';
 import { useCallback, useContext, useMemo, useState } from 'react';

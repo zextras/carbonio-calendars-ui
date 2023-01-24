@@ -12,6 +12,7 @@ import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { applyTag } from '../view/tags/tag-actions';
 import {
+	createCopyItem,
 	deletePermanentlyItem,
 	editAppointmentItem,
 	moveAppointmentItem,
@@ -39,7 +40,8 @@ export const getRecurrentAppointmentActionsItems = ({
 				context
 			}),
 			deletePermanentlyItem({ event, context }),
-			moveAppointmentItem({ event, context })
+			moveAppointmentItem({ event, context }),
+			createCopyItem({ event: seriesEvent, invite, context })
 		];
 	}
 	return [
@@ -47,7 +49,7 @@ export const getRecurrentAppointmentActionsItems = ({
 			id: 'instance',
 			icon: 'CalendarOutline',
 			label: t('label.instance', 'Instance'),
-			click: (ev: SyntheticEvent<HTMLElement, Event> | KeyboardEvent | undefined): void => {
+			click: (ev?: Event): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
@@ -56,6 +58,7 @@ export const getRecurrentAppointmentActionsItems = ({
 					panelView: 'app',
 					context
 				}),
+				createCopyItem({ event: seriesEvent, invite, context }),
 				editAppointmentItem({ invite, event, context: { ...context, panelView } }),
 				event.resource.calendar.id === FOLDERS.TRASH
 					? deletePermanentlyItem({ event, context })
@@ -66,7 +69,7 @@ export const getRecurrentAppointmentActionsItems = ({
 			id: 'series',
 			icon: 'CalendarOutline',
 			label: t('label.series', 'Series'),
-			click: (ev: SyntheticEvent<HTMLElement, Event> | KeyboardEvent | undefined): void => {
+			click: (ev?: Event): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
@@ -75,6 +78,7 @@ export const getRecurrentAppointmentActionsItems = ({
 					panelView: 'app',
 					context
 				}),
+				createCopyItem({ event: seriesEvent, invite, context }),
 				editAppointmentItem({ invite, event: seriesEvent, context: { ...context, panelView } }),
 				event.resource.calendar.id === FOLDERS.TRASH
 					? deletePermanentlyItem({ event: seriesEvent, context })

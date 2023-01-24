@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "0.1.41",
+	"version": "1.0.0",
 	"description": "Calendar module for Zextras Carbonio",
 	"main": "src/app.jsx",
 	"engines": {
@@ -44,6 +44,7 @@
 		"@faker-js/faker": "^7.3.0",
 		"@testing-library/jest-dom": "^5.16.4",
 		"@testing-library/react": "^12.1.5",
+		"@testing-library/react-hooks": "^8.0.1",
 		"@testing-library/user-event": "^14.3.0",
 		"@types/history": "4.7.9",
 		"@types/jest": "^28.1.6",
@@ -76,9 +77,9 @@
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.2",
 		"@testing-library/react-hooks": "^8.0.1",
-		"@zextras/carbonio-design-system": "^0.5.2",
-		"@zextras/carbonio-shell-ui": "0.4.44",
-		"@zextras/carbonio-ui-preview": "^0.2.4",
+		"@zextras/carbonio-design-system": "1.0.0",
+		"@zextras/carbonio-shell-ui": "0.4.46",
+		"@zextras/carbonio-ui-preview": "1.0.0",
 		"core-js": "3.19.1",
 		"date-arithmetic": "^4.1.0",
 		"formik": "2.1.4",
@@ -95,7 +96,7 @@
 		"react-dom": "17.0.2",
 		"react-i18next": "11.14.3",
 		"react-redux": "7.2.6",
-		"react-router-dom": "5.3.0",
+		"react-router-dom": "^5.3.0",
 		"react-widgets": "4.6.1",
 		"react-widgets-moment": "4.0.30",
 		"redux": "^4.1.2",
