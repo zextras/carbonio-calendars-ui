@@ -4,13 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useMemo } from 'react';
-import { Avatar, Container, Row, Text } from '@zextras/carbonio-design-system';
+import { Avatar, Container, Row, Text, Chip } from '@zextras/carbonio-design-system';
 import { Trans } from 'react-i18next';
-import { useUserAccount } from '@zextras/carbonio-shell-ui';
+import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
 import { useSelector } from 'react-redux';
 import { selectCalendar } from '../../store/selectors/calendars';
 import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
 import { ParticipantsDisplayer } from './participants-displayer';
+import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
 
 type ParticipantProps = {
 	invite: Invite;
@@ -59,18 +60,54 @@ export const ParticipantsPart = ({
 				</Row>
 			)}
 			{!invite.isOrganizer && !calendar?.owner ? (
-				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
+				<Row mainAlignment="flex-start" crossAlignment="flex-start" padding={{ vertical: 'small' }}>
 					<Avatar
-						style={{ width: '3rem', height: '3rem' }}
 						label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
+						style={{ width: '3rem', height: '3rem' }}
 					/>
-					<Text style={{ padding: '0 0.5rem' }}>
-						<Trans
-							i18nKey="message.somebody_invited_you"
-							defaults="<strong>{{somebody}}</strong> invited you"
-							values={{ somebody: organizer.d || organizer.a || organizer.url }}
-						/>
-					</Text>
+					<Row
+						mainAlignment="flex-start"
+						crossAlignment="center"
+						takeAvailableSpace
+						padding={{ left: 'small' }}
+					>
+						<Text>
+							<Trans
+								i18nKey="message.somebody_invited_you"
+								defaults="<strong>{{somebody}}</strong> invited you"
+								values={{ somebody: organizer.d || organizer.a || organizer.url }}
+							/>
+						</Text>
+						<Row
+							mainAlignment="flex-start"
+							width="100%"
+							padding={{ top: 'extrasmall', bottom: 'extrasmall' }}
+						>
+							<Chip
+								label={organizer.a || organizer.d}
+								background="gray3"
+								color="text"
+								data-testid={'Chip'}
+								hasAvatar={false}
+								actions={[
+									{
+										id: 'action1',
+										label: t('message.send_email', 'Send e-mail'),
+										type: 'button',
+										icon: 'EmailOutline',
+										onClick: () => sendMsg(organizer.a, organizer.d)
+									},
+									{
+										id: 'action2',
+										label: t('message.copy', 'Copy'),
+										type: 'button',
+										icon: 'Copy',
+										onClick: () => copyEmailToClipboard(organizer.a)
+									}
+								]}
+							/>
+						</Row>
+					</Row>
 				</Row>
 			) : (
 				invite?.organizer?.a !== account.name &&
