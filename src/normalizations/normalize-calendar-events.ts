@@ -71,7 +71,8 @@ const normalizeEventResource = ({
 	alarmData: invite?.alarmData ?? appt?.alarmData?.[0]?.alarm,
 	uid: appt.uid,
 	tags: appt.tags ?? [],
-	neverSent: inst?.neverSent ?? appt.neverSent
+	neverSent: inst?.neverSent ?? appt.neverSent,
+	isRespRequested: invite?.isRespRequested ?? false
 });
 
 export const normalizeCalendarEvent = ({
@@ -115,7 +116,7 @@ export const normalizeCalendarEvent = ({
 		id: `${appointment.id}:${(instance as ExceptionReference)?.inviteId ?? appointment.inviteId}:${
 			instance?.ridZ ?? ''
 		}`,
-		permission: !appointment?.l?.includes(':'),
+		isShared: appointment?.l?.includes(':'),
 		haveWriteAccess: calendar?.haveWriteAccess
 	};
 };

@@ -11,19 +11,18 @@ import { applyTag } from '../view/tags/tag-actions';
 import {
 	acceptAsTentativeItem,
 	acceptInvitationItem,
-	createCopyItem,
+	copyEventItem,
 	declineInvitationItem,
 	deletePermanentlyItem,
-	editAppointmentItem,
-	moveAppointmentItem,
+	editEventItem,
+	moveEventItem,
 	moveApptToTrashItem,
-	openAppointmentItem
+	openEventItem
 } from './appointment-actions-items';
 
 export const getAppointmentActionsItems = ({
 	event,
 	invite,
-	panelView = 'app',
 	context
 }: {
 	event: EventType;
@@ -34,59 +33,74 @@ export const getAppointmentActionsItems = ({
 	if (event.resource.iAmOrganizer) {
 		if (event.resource.calendar.id === FOLDERS.TRASH) {
 			return [
-				openAppointmentItem({
+				openEventItem({
 					event,
-					panelView,
 					context
 				}),
-				moveAppointmentItem({ event, context }),
+				moveEventItem({ event, context }),
 				deletePermanentlyItem({ event, context }),
-				createCopyItem({ event, invite, context })
+				copyEventItem({ event, invite, context })
+			];
+		}
+		if (event.resource.calendar.id === FOLDERS.CALENDAR) {
+			return [
+				openEventItem({
+					event,
+					context
+				}),
+				editEventItem({ invite, event, context: { ...context } }),
+				moveEventItem({ event, context }),
+				moveApptToTrashItem({ invite, event, context: { ...context, isInstance: true } }),
+				copyEventItem({ event, invite, context }),
+				applyTag({
+					event,
+					context
+				})
+			];
+		}
+		if (event.haveWriteAccess) {
+			return [
+				openEventItem({
+					event,
+					context
+				}),
+				editEventItem({ invite, event, context: { ...context } }),
+				moveEventItem({ event, context }),
+				moveApptToTrashItem({ invite, event, context: { ...context, isInstance: true } }),
+				copyEventItem({ event, invite, context }),
+				applyTag({
+					event,
+					context
+				})
 			];
 		}
 		return [
-			openAppointmentItem({
+			openEventItem({
 				event,
-				panelView,
 				context
 			}),
-			moveAppointmentItem({ event, context }),
-			moveApptToTrashItem({ invite, event, context: { ...context, isInstance: true } }),
-			createCopyItem({ event, invite, context }),
-			applyTag({
-				event,
-				context
-			})
+			copyEventItem({ event, invite, context })
 		];
 	}
 	if (event.resource.calendar.id === FOLDERS.TRASH) {
 		return [
-			openAppointmentItem({
+			openEventItem({
 				event,
-				panelView,
 				context
 			}),
 			deletePermanentlyItem({ event, context }),
-			moveAppointmentItem({ event, context }),
-			createCopyItem({ event, invite, context })
+			moveEventItem({ event, context }),
+			copyEventItem({ event, invite, context })
 		];
 	}
 	return [
-		openAppointmentItem({
+		openEventItem({
 			event,
-			panelView,
 			context
 		}),
-		moveAppointmentItem({ event, context }),
-		moveApptToTrashItem({ invite, event, context: { ...context, isInstance: true } }),
-		editAppointmentItem({ invite, event, context: { ...context, panelView } }),
 		acceptInvitationItem({ event, context }),
 		declineInvitationItem({ event, context }),
 		acceptAsTentativeItem({ event, context }),
-		createCopyItem({ event, invite, context }),
-		applyTag({
-			event,
-			context
-		})
+		copyEventItem({ event, invite, context })
 	];
 };

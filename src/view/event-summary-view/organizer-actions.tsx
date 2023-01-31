@@ -59,7 +59,7 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 			{event.resource?.calendar?.name === 'Trash' ? (
 				<Button
 					type="outlined"
-					disabled={!event.permission}
+					disabled={!event.haveWriteAccess}
 					label={t('label.move', 'move')}
 					onClick={(): void => console.warn('not implemented yet')}
 				/>
