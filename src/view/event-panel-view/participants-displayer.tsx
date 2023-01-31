@@ -51,7 +51,7 @@ export const DisplayedParticipant = ({
 							label: t('message.send_email', 'Send e-mail'),
 							type: 'button',
 							icon: 'EmailOutline',
-							onClick: () => sendMsg(participant)
+							onClick: () => sendMsg(participant.email, participant.name)
 						},
 						{
 							id: 'action2',
