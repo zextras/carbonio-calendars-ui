@@ -22,14 +22,14 @@ export const copyEmailToClipboard = (email: string): void => {
 	});
 };
 
-export const sendMsg = (user: InviteParticipant): void => {
+export const sendMsg = (email: string, name: string): void => {
 	const obj = {
 		email: {
 			email: {
-				mail: user.email
+				mail: email
 			}
 		},
-		firstName: user.name ?? user.email,
+		firstName: name ?? email,
 		middleName: ''
 	};
 	// disabled because click expect a click event
