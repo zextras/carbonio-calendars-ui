@@ -12,7 +12,7 @@ import { CALENDAR_ROUTE, PANEL_VIEW } from '../constants';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
 import { updateParticipationStatus } from '../store/slices/appointments-slice';
-import { ActionsContext, PanelView } from '../types/actions';
+import { ActionsContext } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
@@ -20,7 +20,6 @@ import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
 
-// always available, disabled if not possible
 export const createCopy =
 	({
 		event,
@@ -129,7 +128,6 @@ export const moveAppointment =
 		);
 	};
 
-// delete permanently e move to trash da unificare in un unica azione
 export const deletePermanently =
 	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
 	(ev?: Event): void => {
@@ -199,7 +197,6 @@ export const openAppointment =
 			replaceHistory(path);
 		}
 	};
-// optionally available, not available if not possible
 export const acceptInvitation =
 	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
 	(): void => {
