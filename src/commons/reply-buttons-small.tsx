@@ -7,25 +7,18 @@ import {
 	Button,
 	Container,
 	Dropdown,
-	getColor,
 	Icon,
 	Padding,
 	Row,
-	RowProps,
 	Text
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map, noop, toUpper } from 'lodash';
 import React, { ReactElement, SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { EventType } from '../types/event';
 import { ParticipationStatus } from '../types/store/invite';
-
-const AttendingRow = styled(Row)<RowProps & { invtReply: ResponseProp }>`
-	border: 0.0625rem solid ${({ theme, invtReply }): string => getColor(invtReply.color, theme)};
-`;
 
 type ResponseProp = {
 	id: string;
@@ -202,32 +195,21 @@ export const ReplyButtonsPartSmall = ({
 	);
 	return (
 		<Container orientation="horizontal" mainAlignment="flex-end">
-			<Dropdown
-				disableAutoFocus
-				items={attendeesResponseOptions}
-				style={{ cursor: 'pointer' }}
-				placement="bottom-end"
-			>
-				<AttendingRow padding={{ all: 'small' }} invtReply={invtReply}>
-					<Row>
-						<Icon color={invtReply.color} icon={invtReply.icon} />
-					</Row>
-
-					<Row>
-						<Padding horizontal="small">
-							<Text color={invtReply.color}>{invtReply.label}</Text>
-						</Padding>
-						<Icon color={invtReply.color} icon="ArrowIosDownwardOutline" />
-					</Row>
-				</AttendingRow>
+			<Dropdown items={attendeesResponseOptions} placement="bottom-end">
+				<Button
+					type="outlined"
+					label={invtReply.label}
+					icon="ChevronDown"
+					onClick={noop}
+					color={invtReply.color}
+				/>
 			</Dropdown>
 			<Padding left="small">
 				<Dropdown disableAutoFocus items={actions} placement="bottom-end">
 					<Button
 						type="outlined"
 						label={t('label.other_actions', 'Other actions')}
-						icon="ArrowIosDownwardOutline"
-						style={{ padding: '0.4375rem 0.25rem' }}
+						icon="ChevronDown"
 						onClick={noop}
 					/>
 				</Dropdown>

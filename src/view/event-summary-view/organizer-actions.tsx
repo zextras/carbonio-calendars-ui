@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { noop } from 'lodash';
-import React, { FC, ReactElement, useCallback, useContext, useMemo } from 'react';
+import React, { FC, ReactElement, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
 	Button,
@@ -76,12 +76,12 @@ const OrganizerActions: FC<{ event: EventType; invite: Invite; actions: any }> =
 			)}
 
 			<Padding left="small">
-				<Dropdown disableAutoFocus items={actions} placement="bottom-end">
+				<Dropdown items={actions} placement="bottom-end">
 					<Row>
 						<Button
 							type="outlined"
 							label={t('label.other_actions', 'Other actions')}
-							icon="ArrowIosDownwardOutline"
+							icon="ChevronDown"
 							onClick={noop}
 						/>
 					</Row>
