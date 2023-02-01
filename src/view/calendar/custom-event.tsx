@@ -4,15 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { isNil } from 'lodash';
-import React, {
-	ReactElement,
-	useCallback,
-	useContext,
-	useEffect,
-	useMemo,
-	useRef,
-	useState
-} from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
 	Container,
 	Text,
@@ -26,7 +18,7 @@ import {
 import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useEventSummaryViewActions } from '../../hooks/use-event-summary-view-actions';
+import { useEventActions } from '../../hooks/use-event-actions';
 import { EventType } from '../../types/event';
 import { EventSummaryView } from '../event-summary-view/event-summary-view';
 import { selectInstanceInvite } from '../../store/selectors/invites';
@@ -129,7 +121,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 		setOpen(false);
 	}, []);
 
-	const actions = useEventSummaryViewActions({
+	const actions = useEventActions({
 		event,
 		onClose
 	});

@@ -28,13 +28,11 @@ type AppointmentActionsItems = {
 	click: (ev?: Event) => void;
 };
 
-export const openAppointmentItem = ({
+export const openEventItem = ({
 	event,
-	panelView,
 	context
 }: {
 	event: EventType;
-	panelView: PanelView;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.EXPAND,
@@ -43,7 +41,6 @@ export const openAppointmentItem = ({
 	label: t('event.action.expand', 'Open'),
 	click: openAppointment({
 		event,
-		panelView,
 		context
 	})
 });
@@ -90,7 +87,7 @@ export const acceptAsTentativeItem = ({
 	click: acceptAsTentative({ event, context })
 });
 
-export const moveAppointmentItem = ({
+export const moveEventItem = ({
 	event,
 	context
 }: {
@@ -137,7 +134,7 @@ export const deletePermanentlyItem = ({
 	click: deletePermanently({ event, context })
 });
 
-export const editAppointmentItem = ({
+export const editEventItem = ({
 	invite,
 	event,
 	context
@@ -149,11 +146,14 @@ export const editAppointmentItem = ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Edit2Outline',
 	label: t('label.edit', 'Edit'),
-	disabled: !event?.haveWriteAccess,
+	disabled:
+		!event?.haveWriteAccess ||
+		event.resource.calendar.id === FOLDERS.TRASH ||
+		!event.resource.iAmOrganizer,
 	click: editAppointment({ event, invite, context })
 });
 
-export const createCopyItem = ({
+export const copyEventItem = ({
 	invite,
 	event,
 	context
@@ -168,3 +168,28 @@ export const createCopyItem = ({
 	disabled: false,
 	click: createCopy({ event, invite, context })
 });
+
+export const deleteEventItem = ({
+	invite,
+	event,
+	context
+}: {
+	invite: Invite;
+	event: EventType;
+	context: ActionsContext;
+}): AppointmentActionsItems =>
+	event.resource.calendar.id === FOLDERS.TRASH
+		? {
+				id: EventActionsEnum.DELETE_PERMANENTLY,
+				icon: 'DeletePermanentlyOutline',
+				label: t('label.delete_permanently', 'Delete permanently'),
+				disabled: !event?.haveWriteAccess,
+				click: deletePermanently({ event, context })
+		  }
+		: {
+				id: EventActionsEnum.TRASH,
+				icon: 'Trash2Outline',
+				label: t('label.delete', 'Delete'),
+				disabled: !event?.haveWriteAccess,
+				click: moveToTrash({ event, invite, context })
+		  };

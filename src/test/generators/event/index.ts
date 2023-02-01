@@ -71,12 +71,13 @@ const getDefaultEvent = (): EventType => ({
 		apptStart: 123456789,
 		uid: '',
 		tags: [''],
-		neverSent: true
+		neverSent: true,
+		isRespRequested: false
 	},
 	title: 'new-event-1',
 	allDay: false,
 	id: '1',
-	permission: true,
+	isShared: false,
 	haveWriteAccess: true
 });
 

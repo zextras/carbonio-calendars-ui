@@ -8,6 +8,7 @@ import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useContext, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { openAppointment } from '../actions/appointment-actions-fn';
+import { PanelView } from '../types/actions';
 import { createAndApplyTag } from '../view/tags/tag-actions';
 import { useCalendarFolders } from './use-calendar-folders';
 
@@ -24,6 +25,7 @@ export const useSearchViewActions = ({ event }: { event?: any }): any => {
 			replaceHistory,
 			createModal,
 			dispatch,
+			panelView: 'search' as PanelView,
 			createSnackbar,
 			folders: calendarFolders
 		}),
@@ -35,7 +37,6 @@ export const useSearchViewActions = ({ event }: { event?: any }): any => {
 		return {
 			open: openAppointment({
 				event,
-				panelView: 'search',
 				context
 			})
 		};
