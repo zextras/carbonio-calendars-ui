@@ -645,7 +645,7 @@
         "location": "Location",
         "resend": "Send mail notification about this share",
         "revoke": "Revoke access",
-        "virtual_chat": "Virtual Chat"
+        "virtual_room": "Virtual Room"
     },
     "type": "Type",
     "workflow": "WorkFlow",
