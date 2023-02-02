@@ -55,11 +55,11 @@ const recurrenceRule = [
 ];
 
 describe.each`
-	title          | seriesResourceEvent                           | recurrence        | exceptId                     | expected
-	${'single'}    | ${{}}                                         | ${undefined}      | ${undefined}                 | ${mockedData.utils.getSingleEditorFields()}
-	${'series'}    | ${mockedData.utils.getSeriesEventFields()}    | ${recurrenceRule} | ${undefined}                 | ${mockedData.utils.getSeriesEditorFields()}
-	${'exception'} | ${mockedData.utils.getExceptionEventFields()} | ${undefined}      | ${undefined}                 | ${mockedData.utils.getExceptionEditorFields()}
-	${'instance'}  | ${mockedData.utils.getInstanceEventFields()}  | ${recurrenceRule} | ${{ d: '20221215T083000Z' }} | ${mockedData.utils.getExceptionEditorFields()}
+	title          | seriesResourceEvent                           | recurrence        | exceptId                                         | expected
+	${'single'}    | ${{}}                                         | ${undefined}      | ${undefined}                                     | ${mockedData.utils.getSingleEditorFields()}
+	${'series'}    | ${mockedData.utils.getSeriesEventFields()}    | ${recurrenceRule} | ${undefined}                                     | ${mockedData.utils.getSeriesEditorFields()}
+	${'exception'} | ${mockedData.utils.getExceptionEventFields()} | ${undefined}      | ${undefined}                                     | ${mockedData.utils.getExceptionEditorFields()}
+	${'instance'}  | ${mockedData.utils.getInstanceEventFields()}  | ${recurrenceRule} | ${{ d: '20221215T093000', tz: 'Europe/Berlin' }} | ${mockedData.utils.getExceptionEditorFields()}
 `('modify appointment', ({ title, seriesResourceEvent, recurrence, exceptId, expected }) => {
 	test(`${title} - attendees, optionals, title, location, private, allDay, start, end, reminder`, async () => {
 		// SETUP MOCKS AND STORE
