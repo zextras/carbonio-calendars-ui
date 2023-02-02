@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.0.0...v1.1.0) (2023-02-02)
+
+
+### Features
+
+* send and copy mail from apointment large preview ([ac1cd33](https://github.com/zextras/carbonio-calendars-ui/commit/ac1cd3375c007bdead9da11c6902ddc9a49eb1d9))
+
+
+### Bug Fixes
+
+* adding notice header in every file ([1eeecdc](https://github.com/zextras/carbonio-calendars-ui/commit/1eeecdcaaa4033b9055dad8012c067e82cec44d4))
+* copyToClipboard and sendEmail for organizer in appointmentlarge preview ([a0f509f](https://github.com/zextras/carbonio-calendars-ui/commit/a0f509faf13e882d6ef6669ed864784c17613726))
+* dropdown event actions ([#220](https://github.com/zextras/carbonio-calendars-ui/issues/220)) ([f75c916](https://github.com/zextras/carbonio-calendars-ui/commit/f75c916519a02010bcdb87c8688edf60872774a3))
+* edit action works as intended ([d7eecb3](https://github.com/zextras/carbonio-calendars-ui/commit/d7eecb3b914b94c091c679800536f15f9ad83e1c))
+* information regarding virtual room inside appointment email ([2c332a0](https://github.com/zextras/carbonio-calendars-ui/commit/2c332a030a62c8be301071c72fde56b63d99c2f0))
+
 ## [1.0.0](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.43...v1.0.0) (2023-01-18)
 
 

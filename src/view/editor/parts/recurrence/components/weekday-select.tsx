@@ -21,7 +21,7 @@ const WeekdaySelect = ({
 	setSelection,
 	onChange,
 	disabled = false
-}: WeekDaySelectorProps): ReactElement => {
+}: WeekDaySelectorProps): ReactElement | null => {
 	const { weekOptions } = useRecurrenceItems();
 
 	const daySelection = useMemo(
@@ -57,7 +57,7 @@ const WeekdaySelect = ({
 		},
 		[onChange, setSelection, weekOptions]
 	);
-	return (
+	return daySelection ? (
 		<Select
 			items={weekOptions}
 			label={t('label.day', 'Day')}
@@ -67,7 +67,7 @@ const WeekdaySelect = ({
 			disabled={disabled}
 			selection={daySelection}
 		/>
-	);
+	) : null;
 };
 
 export default WeekdaySelect;
