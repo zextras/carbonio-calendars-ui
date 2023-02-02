@@ -12,7 +12,7 @@ import { CALENDAR_ROUTE, PANEL_VIEW } from '../constants';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
 import { updateParticipationStatus } from '../store/slices/appointments-slice';
-import { ActionsContext, PanelView } from '../types/actions';
+import { ActionsContext } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
@@ -20,101 +20,7 @@ import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
 
-export const openAppointment =
-	({
-		event,
-		panelView,
-		context
-	}: {
-		event: EventType;
-		panelView: PanelView;
-		context: ActionsContext;
-	}): ((ev: Event) => void) =>
-	(): void => {
-		context?.onClose && context?.onClose();
-		if (panelView === PANEL_VIEW.APP) {
-			const path = event.resource.ridZ
-				? `/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-				: `/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`;
-			replaceHistory(path);
-		}
-		if (panelView === PANEL_VIEW.SEARCH) {
-			const path = event.resource.ridZ
-				? `/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-				: `/${EventActionsEnum.EXPAND}/${event.resource.id}`;
-			replaceHistory(path);
-		}
-	};
-
-export const acceptInvitation =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(): void => {
-		context
-			.dispatch(
-				sendInviteResponse({
-					inviteId: event.resource.inviteId,
-					updateOrganizer: true,
-					action: 'ACCEPT'
-				})
-			)
-			.then(() =>
-				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
-			);
-	};
-
-export const declineInvitation =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(): void => {
-		context
-			.dispatch(
-				sendInviteResponse({
-					inviteId: event.resource.inviteId,
-					updateOrganizer: true,
-					action: 'DECLINE'
-				})
-			)
-			.then(() =>
-				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'DE' }))
-			);
-	};
-
-export const acceptAsTentative =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(): void => {
-		context
-			.dispatch(
-				sendInviteResponse({
-					inviteId: event.resource.inviteId,
-					updateOrganizer: true,
-					action: 'TENTATIVE'
-				})
-			)
-			.then(() =>
-				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
-			);
-	};
-
-export const deletePermanently =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(ev: Event): void => {
-		if (ev) ev.preventDefault();
-		context?.onClose && context?.onClose();
-		const closeModal = context.createModal(
-			{
-				children: (
-					<StoreProvider>
-						<DeletePermanently onClose={(): void => closeModal()} event={event} context={context} />
-					</StoreProvider>
-				),
-				onClose: () => {
-					closeModal();
-				}
-			},
-			true
-		);
-	};
-
-export const moveToTrash =
+export const createCopy =
 	({
 		event,
 		invite,
@@ -122,50 +28,38 @@ export const moveToTrash =
 	}: {
 		event: EventType;
 		invite: Invite;
-		context: ActionsContext;
-	}): ((ev: Event) => void) =>
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+	}): ((ev?: Event) => void) =>
 	(): void => {
+		const eventToCopy = { ...event, resource: omit(event.resource, 'id') } as EventType;
 		context?.onClose && context?.onClose();
-		const closeModal = context.createModal(
-			{
-				children: (
-					<StoreProvider>
-						<DeleteEventModal
-							event={event}
-							invite={invite}
-							context={context}
-							onClose={(): void => closeModal()}
-						/>
-					</StoreProvider>
-				),
-				onClose: () => {
-					closeModal();
-				}
-			},
-			true
-		);
-	};
-
-export const moveAppointment =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev: Event) => void) =>
-	(ev: Event): void => {
-		if (ev) ev.preventDefault();
-
-		context?.onClose && context?.onClose();
-		const closeModal = context.createModal(
-			{
-				maxHeight: '90vh',
-				children: (
-					<StoreProvider>
-						<MoveApptModal event={event} onClose={(): void => closeModal()} />
-					</StoreProvider>
-				),
-				onClose: () => {
-					closeModal();
-				}
-			},
-			true
-		);
+		const identities = getIdentityItems();
+		const organizer = find(identities, ['identityName', 'DEFAULT']);
+		const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
+		const isInstance = !event?.resource?.isRecurrent && !!event?.resource?.ridZ;
+		const { editor, callbacks } = generateEditor({
+			event: eventToCopy,
+			invite,
+			context: {
+				folders: context.folders,
+				dispatch: context.dispatch,
+				panel: context.panel ?? true,
+				organizer,
+				recur: isSeries ? invite.recurrenceRule : undefined,
+				exceptId: undefined,
+				isInstance,
+				isSeries,
+				isException: false
+			}
+		});
+		addBoard({
+			url: `${CALENDAR_ROUTE}/`,
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			title: editor.title,
+			...editor,
+			callbacks
+		});
 	};
 
 export const editAppointment =
@@ -177,7 +71,7 @@ export const editAppointment =
 		event: EventType;
 		invite: Invite;
 		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
-	}): ((ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void) =>
+	}): ((ev?: Event) => void) =>
 	(): void => {
 		if (context?.panelView === PANEL_VIEW.APP) {
 			generateEditor({
@@ -212,7 +106,49 @@ export const editAppointment =
 		}
 	};
 
-export const createCopy =
+export const moveAppointment =
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	(ev?: Event): void => {
+		if (ev) ev.preventDefault();
+
+		context?.onClose && context?.onClose();
+		const closeModal = context.createModal(
+			{
+				maxHeight: '90vh',
+				children: (
+					<StoreProvider>
+						<MoveApptModal event={event} onClose={(): void => closeModal()} />
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal();
+				}
+			},
+			true
+		);
+	};
+
+export const deletePermanently =
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	(ev?: Event): void => {
+		if (ev) ev.preventDefault();
+		context?.onClose && context?.onClose();
+		const closeModal = context.createModal(
+			{
+				children: (
+					<StoreProvider>
+						<DeletePermanently onClose={(): void => closeModal()} event={event} context={context} />
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal();
+				}
+			},
+			true
+		);
+	};
+
+export const moveToTrash =
 	({
 		event,
 		invite,
@@ -220,36 +156,91 @@ export const createCopy =
 	}: {
 		event: EventType;
 		invite: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
-	}): ((ev?: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent) => void) =>
+		context: ActionsContext;
+	}): ((ev?: Event) => void) =>
 	(): void => {
-		const eventToCopy = { ...event, resource: omit(event.resource, 'id') } as EventType;
 		context?.onClose && context?.onClose();
-		const identities = getIdentityItems();
-		const organizer = find(identities, ['identityName', 'DEFAULT']);
-		const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
-		const isInstance = !event?.resource?.isRecurrent && !!event?.resource?.ridZ;
-		const { editor, callbacks } = generateEditor({
-			event: eventToCopy,
-			invite,
-			context: {
-				folders: context.folders,
-				dispatch: context.dispatch,
-				panel: context.panel ?? true,
-				organizer,
-				recur: isSeries ? invite.recurrenceRule : undefined,
-				exceptId: undefined,
-				isInstance,
-				isSeries,
-				isException: false
-			}
-		});
-		addBoard({
-			url: `${CALENDAR_ROUTE}/`,
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			title: editor.title,
-			...editor,
-			callbacks
-		});
+		const closeModal = context.createModal(
+			{
+				children: (
+					<StoreProvider>
+						<DeleteEventModal
+							event={event}
+							invite={invite}
+							context={context}
+							onClose={(): void => closeModal()}
+						/>
+					</StoreProvider>
+				),
+				onClose: () => {
+					closeModal();
+				}
+			},
+			true
+		);
+	};
+
+export const openAppointment =
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	(): void => {
+		context?.onClose && context?.onClose();
+		if (context?.panelView === PANEL_VIEW.APP) {
+			const path = event.resource.ridZ
+				? `/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				: `/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`;
+			replaceHistory(path);
+		}
+		if (context?.panelView === PANEL_VIEW.SEARCH) {
+			const path = event.resource.ridZ
+				? `/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				: `/${EventActionsEnum.EXPAND}/${event.resource.id}`;
+			replaceHistory(path);
+		}
+	};
+export const acceptInvitation =
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	(): void => {
+		context
+			.dispatch(
+				sendInviteResponse({
+					inviteId: event.resource.inviteId,
+					updateOrganizer: true,
+					action: 'ACCEPT'
+				})
+			)
+			.then(() =>
+				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
+			);
+	};
+
+export const declineInvitation =
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	(): void => {
+		context
+			.dispatch(
+				sendInviteResponse({
+					inviteId: event.resource.inviteId,
+					updateOrganizer: true,
+					action: 'DECLINE'
+				})
+			)
+			.then(() =>
+				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'DE' }))
+			);
+	};
+
+export const acceptAsTentative =
+	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	(): void => {
+		context
+			.dispatch(
+				sendInviteResponse({
+					inviteId: event.resource.inviteId,
+					updateOrganizer: true,
+					action: 'TENTATIVE'
+				})
+			)
+			.then(() =>
+				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
+			);
 	};

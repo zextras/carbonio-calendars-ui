@@ -12,7 +12,7 @@ import { PANEL_VIEW } from '../constants';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import { PanelView } from '../types/actions';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
-import { editAppointmentItem } from '../actions/appointment-actions-items';
+import { editEventItem } from '../actions/appointment-actions-items';
 import { useCalendarFolders } from './use-calendar-folders';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -45,7 +45,7 @@ export const useEventPanelViewHeaderActions = (event: any): any => {
 					event,
 					context
 				}),
-				editAppointmentItem({ event, invite, context })
+				editEventItem({ event, invite, context })
 		  ]
 		: [
 				applyTag({

@@ -14,7 +14,6 @@ import { EditorCalendarSelector } from './parts/editor-calendar-selector';
 import { EditorComposer } from './parts/editor-composer';
 import { EditorDatePicker } from './parts/editor-date-picker';
 import { EditorDropZone } from './parts/editor-dropzone';
-import { EditorRecurrence } from './parts/editor-recurrence';
 import { EditorReminder } from './parts/editor-reminder';
 import { EditorSummary } from './parts/editor-summary';
 import { EditorFreeBusySelector } from './parts/editor-free-busy-selector';
@@ -24,6 +23,7 @@ import { EditorPrivateCheckbox } from './parts/editor-private-checkbox';
 import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
+import { EditorRecurrence } from './parts/recurrence';
 
 export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): ReactElement | null =>
 	editorId && callbacks ? (

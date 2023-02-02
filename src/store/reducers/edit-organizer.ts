@@ -272,6 +272,28 @@ export const editEditorRecurrenceReducer = ({ editors }: EditorSlice, { payload 
 	}
 };
 
+export const editEditorRecurrenceFrequencyReducer = (
+	{ editors }: EditorSlice,
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	{ payload }: any
+): void => {
+	if (payload?.id && editors?.[payload?.id] && editors[payload.id]?.recur) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].recur[0].add[0].rule[0].freq = payload.freq;
+	}
+};
+
+export const editEditorRecurrenceIntervalReducer = (
+	{ editors }: EditorSlice,
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	{ payload }: any
+): void => {
+	if (payload?.id && editors?.[payload?.id] && editors[payload.id]?.recur) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].recur[0].add[0].rule[0].interval[0].ival = payload.ival;
+	}
+};
+
 export const deleteEditorReducer = (
 	editor: EditorSlice,
 	{ payload }: { payload: { id: string } }

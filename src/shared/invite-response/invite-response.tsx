@@ -13,6 +13,7 @@ import {
 	Tooltip,
 	Chip
 } from '@zextras/carbonio-design-system';
+import { find } from 'lodash';
 import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
@@ -30,11 +31,11 @@ import { CALENDAR_ROUTE } from '../../constants';
 import BodyMessageRenderer from '../../commons/body-message-renderer';
 import { useInvite } from '../../hooks/use-invite';
 import { StoreProvider } from '../../store/redux';
+import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 
 /**
-   @todo: momentary variables to dynamize
+   @todo: haveEquipment - momentary variables to dynamize
 * */
-const chatLink = false;
 const haveEquipment = false;
 
 export function mailToContact(contact: object): Action | undefined {
@@ -70,7 +71,7 @@ type InviteResponse = {
 	isAttendee: boolean;
 };
 
-type Participant = {
+export type Participant = {
 	a: string;
 	d: string;
 	ptst: 'NE' | 'AC' | 'TE' | 'DE' | 'DG' | 'CO' | 'IN' | 'WE' | 'DF';
@@ -111,6 +112,13 @@ const InviteResponse: FC<InviteResponse> = ({
 			).format(`HH:mm`)}]`
 		);
 	}, [invite]);
+
+	const room = useMemo(
+		() => find(invite[0]?.comp[0].xprop, ['name', CRB_XPROPS.MEETING_ROOM]),
+		[invite]
+	);
+	const roomName = find(room?.xparam ?? {}, ['name', CRB_XPARAMS.ROOM_NAME])?.value;
+	const roomLink = find(room?.xparam ?? {}, ['name', CRB_XPARAMS.ROOM_LINK])?.value;
 
 	const apptTimeZone = useMemo(
 		() =>
@@ -269,18 +277,19 @@ const InviteResponse: FC<InviteResponse> = ({
 					</Row>
 				)}
 
-				{chatLink && (
+				{roomName && roomLink && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large' }}>
-						<Tooltip placement="left" label={t('tooltip.virtual_chat', 'Virtual Chat')}>
+						<Tooltip placement="top" label={t('tooltip.virtual_room', 'Virtual room')}>
 							<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
 								<Icon size="large" icon="VideoOutline" />
 							</Row>
 						</Tooltip>
-
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<Tooltip placement="right" label="link">
-								<LinkText color="primary" size="medium" overflow="break-word">
-									{t('tooltip.chat_room', 'Chat&#39;s room')}
+							<Tooltip placement="right" label={roomLink}>
+								<LinkText color="gray1" size="medium" overflow="break-word">
+									<a href={roomLink} target="_blank" rel="noreferrer">
+										{roomName}
+									</a>
 								</LinkText>
 							</Tooltip>
 						</Row>

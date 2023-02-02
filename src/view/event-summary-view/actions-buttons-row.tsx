@@ -9,7 +9,7 @@ import React, { ReactElement, useMemo } from 'react';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { ReplyButtonsPartSmall } from '../../commons/reply-buttons-small';
-import { useEventSummaryViewActions } from '../../hooks/use-event-summary-view-actions';
+import { useEventActions } from '../../hooks/use-event-actions';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 import OrganizerActions from './organizer-actions';
@@ -28,7 +28,7 @@ export const ActionsButtonsRow = ({
 	invite: Invite;
 }): ReactElement => {
 	const [t] = useTranslation();
-	const actions = useEventSummaryViewActions({
+	const actions = useEventActions({
 		onClose,
 		event
 	});

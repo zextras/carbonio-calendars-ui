@@ -29,6 +29,7 @@ shell.getUserAccount.mockImplementation(() => userAccount);
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
+		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',

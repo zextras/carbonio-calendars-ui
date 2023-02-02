@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
-import { omit } from 'lodash';
 import { ActionsContext, PanelView } from '../types/actions';
-import { EventActionsEnum } from '../types/enums/event-actions-enum';
+import { EventActionsEnum, EventActionsId } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import {
@@ -21,22 +20,27 @@ import {
 	openAppointment
 } from './appointment-actions-fn';
 
-export const openAppointmentItem = ({
+type AppointmentActionsItems = {
+	id: EventActionsId;
+	icon: string;
+	disabled: boolean;
+	label: string;
+	click: (ev?: Event) => void;
+};
+
+export const openEventItem = ({
 	event,
-	panelView,
 	context
 }: {
 	event: EventType;
-	panelView: PanelView;
-	context: any;
-}): any => ({
+	context: ActionsContext;
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.EXPAND,
 	icon: 'ExpandOutline',
 	disabled: false,
-	label: t('event.action.expand', 'Open in Displayer'),
+	label: t('event.action.expand', 'Open'),
 	click: openAppointment({
 		event,
-		panelView,
 		context
 	})
 });
@@ -47,7 +51,7 @@ export const acceptInvitationItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.ACCEPT,
 	icon: 'CheckmarkOutline',
 	label: t('event.action.accept', 'Accept'),
@@ -61,7 +65,7 @@ export const declineInvitationItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.DECLINE,
 	icon: 'CloseOutline',
 	label: t('event.action.decline', 'Decline'),
@@ -75,7 +79,7 @@ export const acceptAsTentativeItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.TENTATIVE,
 	icon: 'QuestionMark',
 	label: t('label.tentative', 'Tentative'),
@@ -83,13 +87,13 @@ export const acceptAsTentativeItem = ({
 	click: acceptAsTentative({ event, context })
 });
 
-export const moveAppointmentItem = ({
+export const moveEventItem = ({
 	event,
 	context
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.MOVE,
 	icon: 'MoveOutline',
 	label:
@@ -108,7 +112,7 @@ export const moveApptToTrashItem = ({
 	invite: Invite;
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.TRASH,
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
@@ -122,14 +126,15 @@ export const deletePermanentlyItem = ({
 }: {
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
-	id: 'deletePermanently',
+}): AppointmentActionsItems => ({
+	id: EventActionsEnum.DELETE_PERMANENTLY,
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
+	disabled: false,
 	click: deletePermanently({ event, context })
 });
 
-export const editAppointmentItem = ({
+export const editEventItem = ({
 	invite,
 	event,
 	context
@@ -137,15 +142,18 @@ export const editAppointmentItem = ({
 	invite: Invite;
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Edit2Outline',
 	label: t('label.edit', 'Edit'),
-	disabled: !event?.haveWriteAccess,
+	disabled:
+		!event?.haveWriteAccess ||
+		event.resource.calendar.id === FOLDERS.TRASH ||
+		!event.resource.iAmOrganizer,
 	click: editAppointment({ event, invite, context })
 });
 
-export const createCopyItem = ({
+export const copyEventItem = ({
 	invite,
 	event,
 	context
@@ -153,10 +161,35 @@ export const createCopyItem = ({
 	invite: Invite;
 	event: EventType;
 	context: ActionsContext;
-}): any => ({
+}): AppointmentActionsItems => ({
 	id: EventActionsEnum.EDIT,
 	icon: 'Copy',
-	label: t('label.create_copy', 'Create a Copy'),
+	label: t('label.create_copy', 'Copy'),
 	disabled: false,
 	click: createCopy({ event, invite, context })
 });
+
+export const deleteEventItem = ({
+	invite,
+	event,
+	context
+}: {
+	invite: Invite;
+	event: EventType;
+	context: ActionsContext;
+}): AppointmentActionsItems =>
+	event.resource.calendar.id === FOLDERS.TRASH
+		? {
+				id: EventActionsEnum.DELETE_PERMANENTLY,
+				icon: 'DeletePermanentlyOutline',
+				label: t('label.delete_permanently', 'Delete permanently'),
+				disabled: !event?.haveWriteAccess,
+				click: deletePermanently({ event, context })
+		  }
+		: {
+				id: EventActionsEnum.TRASH,
+				icon: 'Trash2Outline',
+				label: t('label.delete', 'Delete'),
+				disabled: !event?.haveWriteAccess,
+				click: moveToTrash({ event, invite, context })
+		  };
