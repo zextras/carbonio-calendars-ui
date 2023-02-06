@@ -3,6 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import {
+	ButtonOld as Button,
+	Checkbox,
+	Icon,
+	ModalManagerContext,
+	Padding,
+	Row,
+	SnackbarManagerContext,
+	Text
+} from '@zextras/carbonio-design-system';
 import React, {
 	ReactElement,
 	SyntheticEvent,
@@ -11,26 +21,18 @@ import React, {
 	useMemo,
 	useState
 } from 'react';
-import {
-	ModalManagerContext,
-	SnackbarManagerContext,
-	Row,
-	Text,
-	Padding,
-	Icon,
-	Checkbox,
-	ButtonOld as Button
-} from '@zextras/carbonio-design-system';
 
+import { Tag, Tags, ZIMBRA_STANDARD_COLORS, t, useTags } from '@zextras/carbonio-shell-ui';
 import { find, includes, reduce } from 'lodash';
-import { ZIMBRA_STANDARD_COLORS, useTags, Tag, Tags, t } from '@zextras/carbonio-shell-ui';
 import { Dispatch } from 'redux';
+import DeleteTagModal from '../../carbonio-ui-commons/components/tags/delete-tag-modal';
+import { TagsActionsType } from '../../carbonio-ui-commons/constants';
+import { ItemType } from '../../carbonio-ui-commons/types/tags';
 import { itemActionRequest } from '../../soap/item-action-request';
-import { TagsActionsType, TagType } from '../../types/tags';
-import CreateUpdateTagModal from './create-update-tag-modal';
-import DeleteTagModal from './delete-tag-modal';
-import { EventType } from '../../types/event';
 import { StoreProvider } from '../../store/redux';
+import { EventType } from '../../types/event';
+import { TagType } from '../../types/tags';
+import CreateUpdateTagModal from '../../carbonio-ui-commons/components/tags/create-update-tag-modal';
 
 export type ReturnType = {
 	id: string;
@@ -51,7 +53,7 @@ export type ArgumentType = {
 	createModal?: unknown;
 	createSnackbar?: unknown;
 	items?: ReturnType;
-	tag?: TagType;
+	tag?: ItemType;
 };
 
 export type ContextType = {
@@ -244,14 +246,19 @@ export const applyTag = ({
 }: {
 	event: EventType;
 	context: ContextType;
-}): {
-	id: string;
-	items: TagType[];
-	customComponent?: ReactElement;
-	label?: string;
-	icon?: string;
-	disabled?: boolean;
-} => {
+}):
+	| {
+			id: TagsActionsType.Apply;
+			items: Array<{
+				id: string;
+				label?: string;
+				icon?: string;
+				keepOpen: boolean;
+				customComponent: React.ReactElement;
+			}>;
+			customComponent: JSX.Element;
+	  }
+	| { icon: string; disabled: boolean; id: TagsActionsType.Apply; label: string; items: any[] } => {
 	const tagItem = reduce(
 		context.tags,
 		(

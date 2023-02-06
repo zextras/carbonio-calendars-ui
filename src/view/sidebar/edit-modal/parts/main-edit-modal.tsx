@@ -13,51 +13,69 @@ import {
 	Padding,
 	Row,
 	Select,
+	SelectItem,
 	SnackbarManagerContext,
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { includes, isEmpty, map, find, isNull, omitBy } from 'lodash';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { FOLDERS, useUserAccounts } from '@zextras/carbonio-shell-ui';
-import ModalFooter from '../../../../commons/modal-footer';
-import { ModalHeader } from '../../../../commons/modal-header';
-import { folderAction } from '../../../../store/actions/calendar-actions';
-import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
-import { GranteeInfo } from './grantee-info';
-import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
+import { FOLDERS, Folder, Grant, useFolders, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
+import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
+import { TFunction, useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import styled, { DefaultTheme } from 'styled-components';
+import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
-import { selectAllCalendars } from '../../../../store/selectors/calendars';
+import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
+import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
+import { folderAction } from '../../../../store/actions/calendar-actions';
+import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
+import { GranteeInfo } from './grantee-info';
+import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
+import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';
 
 const Square = styled.div`
 	width: 1.125rem;
 	height: 1.125rem;
 	position: relative;
 	top: -0.1875rem;
-	border: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
-	background: ${({ color }) => color};
+	border: 0.0625rem solid
+		${({ theme }: { theme: DefaultTheme }): string => theme.palette.gray2.regular};
+	background: ${({ color }: { color: string }): string => color};
 	border-radius: 0.25rem;
 `;
 const ColorContainer = styled(Container)`
-	border-bottom: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid
+		${({ theme }: { theme: DefaultTheme }): string => theme.palette.gray2.regular};
 `;
 
 const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 `;
 
-const LabelFactory = ({ selected, label, open, focus }) => {
+type LabelFactoryProps = {
+	selected: Array<ColorIcon>;
+	label: string;
+	open: boolean;
+	focus: boolean;
+};
+
+type ColorIcon = {
+	label: string;
+	value: string;
+	customComponent: JSX.Element;
+};
+
+const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) => {
 	const colorName = useMemo(() => selected?.[0]?.label, [selected]);
 	const squareColor = useMemo(
 		() =>
 			colorName === 'custom'
-				? selected?.[0]?.color
-				: ZIMBRA_STANDARD_COLORS[Number(selected?.[0]?.value)].color,
+				? selected?.[0]?.value
+				: ZIMBRA_STANDARD_COLORS[parseInt(selected?.[0]?.value, 10)].color,
 		[colorName, selected]
 	);
+
 	return (
 		<ColorContainer
 			orientation="horizontal"
@@ -83,7 +101,7 @@ const LabelFactory = ({ selected, label, open, focus }) => {
 					<TextUpperCase>{colorName}</TextUpperCase>
 				</Row>
 				<Padding right="small">
-					<Square color={squareColor} />
+					<Square color={squareColor ?? '0'} />
 				</Padding>
 			</Row>
 			<Icon
@@ -96,51 +114,70 @@ const LabelFactory = ({ selected, label, open, focus }) => {
 	);
 };
 
-const getStatusItems = (t) =>
+const getStatusItems = (t: TFunction): Array<ColorIcon> =>
 	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
-		label: t(el.label),
+		label: t(el.label ?? ''),
 		value: index.toString(),
 		customComponent: (
-			<Container
-				width="100%"
-				takeAvailableSpace
-				mainAlignment="space-between"
-				orientation="horizontal"
-				height="fit"
-			>
+			<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
 				<Padding left="small">
-					<TextUpperCase>{t(el.label)}</TextUpperCase>
+					<TextUpperCase>{t(el.label ?? '')}</TextUpperCase>
 				</Padding>
 				<Square color={el.color} />
 			</Container>
 		)
 	}));
 
-export const MainEditModal = ({ folder, totalAppointments, grant }) => {
-	const allCalendars = useSelector(selectAllCalendars);
+type MainEditModalProps = {
+	folder: Folder;
+	totalAppointments: number;
+	grant: Grant;
+};
+
+type EditModalContexType = {
+	setModal: (modal: string) => void;
+	onClose: () => void;
+	setActiveGrant: (grant: Grant) => void;
+};
+
+export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointments, grant }) => {
+	const allCalendars = useFolders();
+
+	const iconColor = useMemo(
+		() =>
+			folder.color ? ZIMBRA_STANDARD_COLORS[parseInt(folder.color, 10)] : setCalendarColor(folder),
+		[folder]
+	);
+
 	const [inputValue, setInputValue] = useState(folder.name || '');
-	const [freeBusy, setFreeBusy] = useState(folder.freeBusy || false);
+	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const [t] = useTranslation();
 	const dispatch = useDispatch();
 	const checked = useMemo(() => folder.checked, [folder]);
 
-	const { setModal, onClose, setActiveGrant } = useContext(EditModalContext);
+	const { setModal, onClose, setActiveGrant } = useContext<EditModalContexType>(EditModalContext);
 	const accounts = useUserAccounts();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [hovered, setHovered] = useState({});
 
 	const colors = useMemo(() => getStatusItems(t), [t]);
 	const onMouseEnter = useCallback((item) => {
-		// setHovered(true);
 		setHovered(item);
 	}, []);
 	const onMouseLeave = useCallback(() => {
 		setHovered({});
 	}, []);
-	const folderArray = useMemo(() => {
-		map(allCalendars, (f) => (f.label === folder.name ? null : f.label));
-	}, [allCalendars, folder]);
+
+	const folderArray = useMemo(
+		() =>
+			map(allCalendars, (f) =>
+				f.name === folder.name || (f.view !== FOLDER_VIEW.appointment && parseInt(f.id, 10) > 16)
+					? null
+					: f.name
+			),
+		[allCalendars, folder]
+	);
 
 	const showDupWarning = useMemo(
 		() => includes(folderArray, inputValue),
@@ -149,7 +186,7 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 
 	const disabled = useMemo(
 		() =>
-			folder?.id === '10'
+			folder?.id === FOLDERS.CALENDAR
 				? false
 				: inputValue.indexOf('/') > -1 ||
 				  inputValue.length === 0 ||
@@ -158,13 +195,12 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 				  showDupWarning,
 		[inputValue, folder, showDupWarning]
 	);
+	const defaultColor = useMemo(() => find(colors, { label: iconColor.label }), [colors, iconColor]);
 
-	const defaultColor = useMemo(
-		() => find(colors, { label: folder?.color?.label }) ?? folder?.color,
-		[colors, folder]
+	const [selectedColor, setSelectedColor] = useState<SelectItem[] | number | string>(
+		defaultColor?.value || 0
 	);
-	const [selectedColor, setSelectedColor] = useState(defaultColor?.value || 0);
-	const defaultChecked = useMemo(() => folder?.freeBusy || false, [folder]);
+	const defaultChecked = false;
 	const onConfirm = useCallback(() => {
 		if (inputValue) {
 			dispatch(
@@ -173,7 +209,7 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 					op: 'update',
 					changes: omitBy(
 						{
-							parent: folder.parent ?? FOLDERS.USER_ROOT,
+							parent: folder.parent?.id ?? FOLDERS.USER_ROOT,
 							name: inputValue,
 							color: selectedColor,
 							excludeFreeBusy: freeBusy,
@@ -183,28 +219,31 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 						isNull
 					)
 				})
-			).then((res) => {
-				if (res.type.includes('fulfilled')) {
-					createSnackbar({
-						key: `folder-action-success`,
-						replace: true,
-						type: 'success',
-						hideButton: true,
-						label: t('label.changes_saved', 'Changes saved'),
-						autoHideTimeout: 3000
-					});
-				} else {
-					createSnackbar({
-						key: `folder-action-success`,
-						replace: true,
-						type: 'error',
-						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000
-					});
-				}
-				onClose();
-			});
+			)
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				.then((res) => {
+					if (res.type.includes('fulfilled')) {
+						createSnackbar({
+							key: `folder-action-success`,
+							replace: true,
+							type: 'success',
+							hideButton: true,
+							label: t('label.changes_saved', 'Changes saved'),
+							autoHideTimeout: 3000
+						});
+					} else {
+						createSnackbar({
+							key: `folder-action-success`,
+							replace: true,
+							type: 'error',
+							hideButton: true,
+							label: t('label.error_try_again', 'Something went wrong, please try again'),
+							autoHideTimeout: 3000
+						});
+					}
+					onClose();
+				});
 			setInputValue('');
 			setSelectedColor(0);
 			setFreeBusy(false);
@@ -243,27 +282,30 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 					folder: folder.id,
 					accounts
 				})
-			).then((res) => {
-				if (res.type.includes('fulfilled')) {
-					createSnackbar({
-						key: `folder-action-success`,
-						replace: true,
-						type: 'info',
-						hideButton: true,
-						label: t('share_invite_resent', 'Share invite resent'),
-						autoHideTimeout: 3000
-					});
-				} else {
-					createSnackbar({
-						key: `folder-action-success`,
-						replace: true,
-						type: 'error',
-						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000
-					});
-				}
-			});
+			)
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				.then((res) => {
+					if (res.type.includes('fulfilled')) {
+						createSnackbar({
+							key: `folder-action-success`,
+							replace: true,
+							type: 'info',
+							hideButton: true,
+							label: t('share_invite_resent', 'Share invite resent'),
+							autoHideTimeout: 3000
+						});
+					} else {
+						createSnackbar({
+							key: `folder-action-success`,
+							replace: true,
+							type: 'error',
+							hideButton: true,
+							label: t('label.error_try_again', 'Something went wrong, please try again'),
+							autoHideTimeout: 3000
+						});
+					}
+				});
 		},
 		[accounts, createSnackbar, dispatch, folder, t]
 	);
@@ -298,7 +340,9 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 							label={placeholder}
 							backgroundColor="gray5"
 							defaultValue={inputValue}
-							onChange={(e) => setInputValue(e.target.value)}
+							onChange={(e): void => {
+								setInputValue(e.target.value);
+							}}
 							disabled
 						/>
 					</Tooltip>
@@ -307,7 +351,9 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 						label={placeholder}
 						backgroundColor="gray5"
 						defaultValue={inputValue}
-						onChange={(e) => setInputValue(e.target.value)}
+						onChange={(e): void => {
+							setInputValue(e.target.value);
+						}}
 					/>
 				)}
 			</Container>
@@ -370,7 +416,7 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 					)}
 				/>
 			</Container>
-			{!isEmpty(folder?.acl) && !folder.owner && (
+			{!isEmpty(folder?.acl) && !(folder.isLink && folder.owner) && (
 				<>
 					<Container
 						padding={{ top: 'small', bottom: 'small' }}
@@ -383,7 +429,7 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 					</Container>
 					<Container
 						padding={{ top: 'small', bottom: 'small' }}
-						mainAlignment="flex"
+						mainAlignment="flex-start"
 						crossAlignment="flex-start"
 						orientation="horizontal"
 						height="fit"
@@ -409,7 +455,9 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 									<Button
 										type="outlined"
 										label={t('label.edit', 'Edit')}
-										onClick={() => onEdit(item)}
+										onClick={(): void => {
+											onEdit(item);
+										}}
 										isSmall
 									/>
 								</Tooltip>
@@ -419,7 +467,9 @@ export const MainEditModal = ({ folder, totalAppointments, grant }) => {
 										type="outlined"
 										label={t('label.revoke', 'Revoke')}
 										color="error"
-										onClick={() => onRevoke(item)}
+										onClick={(): void => {
+											onRevoke(item);
+										}}
 										isSmall
 									/>
 								</Tooltip>

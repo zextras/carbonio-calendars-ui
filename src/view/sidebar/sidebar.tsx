@@ -1,0 +1,108 @@
+/*
+ * SPDX-FileCopyrightText: 2021 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+import { ThemeProvider } from '@mui/material';
+import { Accordion, AccordionItemType, Container, Divider } from '@zextras/carbonio-design-system';
+import { Folder, useFoldersByView } from '@zextras/carbonio-shell-ui';
+import React, { FC, useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
+import useGetTagsAccordion from '../../carbonio-ui-commons/components/tags/use-get-tags-accordions';
+import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
+import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
+import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
+import { recursiveToggleCheck } from '../../commons/utilities';
+import { selectEnd, selectStart } from '../../store/selectors/calendars';
+import { CollapsedSidebarItems } from './collapsed-sidebar-items';
+import { FoldersComponent } from './custom-components/folders-component';
+import {
+	addAllCalendarsItem,
+	composeSharesAccordionItems as getSharesAccordionItems,
+	removeLinkFolders
+} from './utils';
+
+type SidebarComponentProps = {
+	foldersAccordionItems: Folder[];
+	sharesAccordionItems: AccordionItemType;
+	tagsAccordionItems: AccordionItemType;
+};
+
+const SidebarComponent: FC<SidebarComponentProps> = ({
+	foldersAccordionItems,
+	sharesAccordionItems,
+	tagsAccordionItems
+}) => {
+	const [selectedFolder, setSelectedFolder] = useState<string>('');
+
+	return (
+		<Container orientation="vertical" height="fit" width="fill">
+			<SidebarAccordionMui
+				accordions={foldersAccordionItems}
+				folderId={selectedFolder}
+				localStorageName="open_calendars_folders"
+				AccordionCustomComponent={FoldersComponent}
+				setSelectedFolder={setSelectedFolder}
+			/>
+			<Divider />
+			<Accordion items={[tagsAccordionItems]} />
+			<Divider />
+			<Accordion items={[sharesAccordionItems]} />
+		</Container>
+	);
+};
+const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
+
+const Sidebar: FC<SidebarProps> = ({ expanded }) => {
+	const folders = useFoldersByView(FOLDER_VIEW.appointment);
+
+	const folderItems = removeLinkFolders({ folders });
+
+	const foldersAccordionItems = addAllCalendarsItem({ folders: folderItems });
+
+	const dispatch = useDispatch();
+	const start = useSelector(selectStart);
+	const end = useSelector(selectEnd);
+
+	const sharesItemsOnClick = useCallback(
+		(folder: Folder): void =>
+			recursiveToggleCheck({
+				folder,
+				checked: !!folder.checked,
+				end,
+				start,
+				dispatchGetMiniCal: true,
+				dispatch
+			}),
+		[dispatch, end, start]
+	);
+
+	const sharesAccordionItems = getSharesAccordionItems({
+		folders,
+		onClick: sharesItemsOnClick
+	});
+
+	const tagsAccordionItems = useGetTagsAccordion();
+
+	return (
+		<>
+			<ThemeProvider theme={themeMui}>
+				{expanded ? (
+					<MemoSidebar
+						foldersAccordionItems={foldersAccordionItems}
+						sharesAccordionItems={sharesAccordionItems}
+						tagsAccordionItems={tagsAccordionItems}
+					/>
+				) : (
+					foldersAccordionItems[0].children.map((folder) => (
+						<CollapsedSidebarItems key={folder.id} item={folder} />
+					))
+				)}
+			</ThemeProvider>
+		</>
+	);
+};
+
+export default Sidebar;

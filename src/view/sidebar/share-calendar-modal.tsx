@@ -3,39 +3,34 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-/* eslint-disable import/extensions */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import {
+	Checkbox,
+	ChipInput,
 	Container,
 	Input,
-	Select,
-	Text,
-	Checkbox,
+	ModalManagerContext,
 	Row,
-	ChipInput,
+	Select,
 	SnackbarManagerContext,
-	ModalManagerContext
+	Text
 } from '@zextras/carbonio-design-system';
-import { map } from 'lodash';
 import { t, useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { map } from 'lodash';
+import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
+import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import {
+	ShareCalendarRoleOptions,
 	ShareCalendarWithOptions,
-	findLabel,
-	ShareCalendarRoleOptions
-	// @ts-ignore
+	findLabel
 } from '../../settings/components/utils';
-import { shareCalendar } from '../../store/actions/share-calendar';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
-import ModalFooter from '../../commons/modal-footer';
-// @ts-ignore
-import { ModalHeader } from '../../commons/modal-header';
-import { ShareCalendarModalProps } from '../../types/share-calendar';
-// eslint-disable-next-line import/no-named-as-default,import/no-named-as-default-member
-import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
+import { shareCalendar } from '../../store/actions/share-calendar';
 import { StoreProvider } from '../../store/redux';
+import { ShareCalendarModalProps } from '../../types/share-calendar';
+import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
 
 export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	folder,
@@ -74,6 +69,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	}, []);
 
 	const openShareUrlModal = (): void => {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		const closeModal = createModal(
 			{
@@ -95,6 +91,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	};
 	const onConfirm = (): void => {
 		dispatch(
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			shareCalendar({
 				sendNotification,
@@ -105,9 +102,12 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				folder: folder.id,
 				accounts,
 				allowToSeePrvtAppt
-			}) // @ts-ignore
+			})
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 		).then((res: any) => {
 			if (res.type.includes('fulfilled')) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				createSnackbar({
 					key: `folder-action-success`,
@@ -117,9 +117,11 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
 					autoHideTimeout: 3000
 				});
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				sendNotification &&
 					dispatch(
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
 						sendShareCalendarNotification({
 							sendNotification,
@@ -129,9 +131,12 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							shareWithUserRole,
 							folder: folder.id,
 							accounts
-						}) // @ts-ignore
+						})
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
 					).then((res2: any) => {
 						if (!res2.type.includes('fulfilled')) {
+							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 							// @ts-ignore
 							createSnackbar({
 								key: `folder-action-success`,
@@ -181,6 +186,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			>
 				{integrationAvailable ? (
 					<ContactInput
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
 						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
 						onChange={onChange}
@@ -192,6 +198,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
 						background="gray4"
 						onChange={(ev: any): any => {
+							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 							// @ts-ignore
 							setContacts(map(ev, (contact) => ({ email: contact.address })));
 						}}

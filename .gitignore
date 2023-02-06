@@ -6,6 +6,7 @@
 /build/
 /dist/
 /.idea/
+/.vscode/
 /sdk/
 /e2e/output/
 /junit.xml
