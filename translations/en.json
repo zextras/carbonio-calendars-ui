@@ -48,7 +48,7 @@
         "action": {
             "accept": "Accept",
             "decline": "Decline",
-            "expand": "Open in Displayer",
+            "expand": "Open",
             "invitation_not_sent_yet": "The invitation has not been sent yet",
             "needs_action": "Needs action",
             "no": "No",
@@ -121,7 +121,7 @@
         "continue": "Continue",
         "create": "Create",
         "create_appt_settings": "Creating Appointments",
-        "create_copy": "Create a Copy",
+        "create_copy": "Copy",
         "create_new_calendar": "Create a New Calendar",
         "create_tag": "Create Tag",
         "custom": "Custom",
@@ -282,6 +282,7 @@
         "appointment_invitation_sent": "Appointment invitation sent",
         "appointment_type_handle": "{{name}} is a recurring appointment. Would you like to open only this instance or the series?",
         "are_organizer": "are the organizer",
+        "copy": "Copy",
         "delete_all_occurences": "Delete all occurrences",
         "delete_future_occurences": "Delete this instance and all future occurrences",
         "delete_future_occurences_warning": "This will also delete all exceptions (before and after this instance) in the series",
@@ -528,6 +529,7 @@
     "shared_items": "Shared items",
     "shares_info": "Shares Info",
     "snackbar": {
+        "email_copied_to_clipboard": "Email copied to clipboard.",
         "invite": {
             "error": "Error"
         },
@@ -643,7 +645,7 @@
         "location": "Location",
         "resend": "Send mail notification about this share",
         "revoke": "Revoke access",
-        "virtual_chat": "Virtual Chat"
+        "virtual_room": "Virtual Room"
     },
     "type": "Type",
     "workflow": "WorkFlow",

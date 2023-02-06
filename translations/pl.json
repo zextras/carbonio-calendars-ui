@@ -20,7 +20,7 @@
             "accept": "Akceptuj",
             "decline": "Odrzuć",
             "no": "Nie",
-            "expand": "Otwórz na Ekranie wyświetlającym",
+            "expand": "Otwórz na ekranie wyświetlającym",
             "needs_action": "Potrzebuje działania",
             "invitation_not_sent_yet": "Zaproszenie nie zostało jeszcze wysłane"
         },
@@ -96,7 +96,7 @@
         "download_1": "Pobierz wszystkie",
         "download_2": "Pobierz wszystkie",
         "edit": "Edytuj",
-        "edit_access": "Edytuj dostęp do {{name}}",
+        "edit_access": "Edytuj dostęp",
         "edits_saved": "Zmiany zostały pomyślnie zapisane",
         "email_input_message": "Wprowadź adresy mailowe",
         "empty": "Pusty",
@@ -236,7 +236,8 @@
         "cancel": "anuluj",
         "subject": "Temat",
         "new_time_proposed": "Nowy zaproponowany czas",
-        "appointment_is_private": "To spotkanie jest prywatne."
+        "appointment_is_private": "To spotkanie jest prywatne.",
+        "create_copy": "Stwórz kopię"
     },
     "message": {
         "modal": {
@@ -307,7 +308,7 @@
         "optional_participant_2": "{{count}} Opcjonalnych",
         "edit_series_warning": "Jeśli zmodyfikujesz serię, wszystkie poprzednio usunięte lub zmodyfikowane przypadki zostaną przywrócone z nowymi ustawieniami serii.",
         "appointment_invitation_sent": "Zaproszenie na spotkanie zostało wysłane",
-        "want_to_edit_modified_msg": "Czy chcesz edytować wiadomość dot. modyfikacji spotkania?",
+        "want_to_edit_modified_msg": "Uczestnicy zostaną powiadomieni o zmianach przez wiadomość e-mail. Czy chcesz utworzyć niestandardową wiadomość?",
         "meeting_modified": "Następujące spotkanie zostało zmodyfikowane"
     },
     "participants": {
@@ -389,7 +390,7 @@
             "default_appt_dur": "Domyślna długość trwania spotkania",
             "default_calendar": "Domyślny kalendarz",
             "delete_invt_on_rply": "Usuń zaproszenie po odpowiedzi",
-            "enable_reminder_sound": "Wydaj dźwięk (wymaga pluginu QuickTime lub W?indows Media)",
+            "enable_reminder_sound": "Wydaj dźwięk (wymaga pluginu QuickTime lub Windows Media)",
             "enter_email": "Wpisz adres e-mail"
         },
         "options": {
@@ -531,7 +532,8 @@
             "share_calendar_role": {
                 "admin": "Administrator (może wyświetlać, edytować, dodawać, usuwać oraz zarządzać)",
                 "viewer": "Wyświetlający (może wyświetlać)",
-                "manager": "Manager (może wyświetlać, edytować, dodawać oraz usuwać)"
+                "manager": "Manager (może wyświetlać, edytować, dodawać oraz usuwać)",
+                "none": "Brak uprawnień"
             },
             "share_calendar_with": {
                 "internal_users_groups": "Użytkownicy lub grupy z mojej domeny",
@@ -656,7 +658,10 @@
         "calendar_sharing_status_0": "Udostępniono {{count}} osobie",
         "calendar_sharing_status_1": "Udostępniono {{count}} osobom",
         "calendar_sharing_status_2": "Udostępniono {{count}} osobom",
-        "calendar_sharing_status_one": "Udostępniono 1 osobie"
+        "calendar_sharing_status_one": "Udostępniono 1 osobie",
+        "revoke": "Odbierz dostęp",
+        "resend": "Wyślij powiadomienie e-mail dot. tego udostępnienia",
+        "edit": "Edytuj właściwości udostępniania"
     },
     "type": "Typ",
     "workflow": "Organizacja Pracy",

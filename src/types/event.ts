@@ -94,6 +94,7 @@ export type EventResource = {
 	alarmData?: AlarmData;
 	name: string;
 	hasException?: boolean;
+	isRespRequested: boolean;
 };
 
 export type DateType = moment.Moment | Date | number;
@@ -103,7 +104,7 @@ export type EventType = {
 	end: Moment | Date;
 	resource: EventResource;
 	allDay: boolean;
-	permission: boolean;
+	isShared: boolean;
 	title: string;
 	id: string;
 	haveWriteAccess: boolean;

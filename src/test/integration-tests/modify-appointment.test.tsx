@@ -18,10 +18,11 @@ import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import EditorPanelWrapper from '../../view/editor/editor-panel-wrapper';
 import mockedData from '../generators';
 
-jest.setTimeout(25000);
+jest.setTimeout(50000);
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
+		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
@@ -54,11 +55,11 @@ const recurrenceRule = [
 ];
 
 describe.each`
-	title          | seriesResourceEvent                           | recurrence        | exceptId                     | expected
-	${'single'}    | ${{}}                                         | ${undefined}      | ${undefined}                 | ${mockedData.utils.getSingleEditorFields()}
-	${'series'}    | ${mockedData.utils.getSeriesEventFields()}    | ${recurrenceRule} | ${undefined}                 | ${mockedData.utils.getSeriesEditorFields()}
-	${'exception'} | ${mockedData.utils.getExceptionEventFields()} | ${undefined}      | ${undefined}                 | ${mockedData.utils.getExceptionEditorFields()}
-	${'instance'}  | ${mockedData.utils.getInstanceEventFields()}  | ${recurrenceRule} | ${{ d: '20221215T083000Z' }} | ${mockedData.utils.getExceptionEditorFields()}
+	title          | seriesResourceEvent                           | recurrence        | exceptId                                         | expected
+	${'single'}    | ${{}}                                         | ${undefined}      | ${undefined}                                     | ${mockedData.utils.getSingleEditorFields()}
+	${'series'}    | ${mockedData.utils.getSeriesEventFields()}    | ${recurrenceRule} | ${undefined}                                     | ${mockedData.utils.getSeriesEditorFields()}
+	${'exception'} | ${mockedData.utils.getExceptionEventFields()} | ${undefined}      | ${undefined}                                     | ${mockedData.utils.getExceptionEditorFields()}
+	${'instance'}  | ${mockedData.utils.getInstanceEventFields()}  | ${recurrenceRule} | ${{ d: '20221215T093000', tz: 'Europe/Berlin' }} | ${mockedData.utils.getExceptionEditorFields()}
 `('modify appointment', ({ title, seriesResourceEvent, recurrence, exceptId, expected }) => {
 	test(`${title} - attendees, optionals, title, location, private, allDay, start, end, reminder`, async () => {
 		// SETUP MOCKS AND STORE

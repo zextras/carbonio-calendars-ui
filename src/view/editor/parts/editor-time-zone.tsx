@@ -29,13 +29,13 @@ export const EditorTimezone = ({ editorId, callbacks }: EditorProps): ReactEleme
 	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	useEffect(() => {
-		if (timezone) {
+		if (timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE') {
 			setValue({
 				label: findLabel(timeZonesOptions, timezone),
 				value: timezone
 			});
 		}
-	}, [timeZonesOptions, timezone]);
+	}, [timeZonesOptions, timezone, zimbraPrefUseTimeZoneListInCalendar]);
 
 	return value && zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? (
 		<Select

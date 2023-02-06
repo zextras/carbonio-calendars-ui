@@ -90,7 +90,7 @@
         "dismiss": "ABLEHNEN",
         "dismiss_plural": "ALLE ABLEHNEN",
         "display": "Ansicht",
-        "edit_access": "{{name}}'s Zugriff bearbeiten",
+        "edit_access": "Zugriff bearbeiten",
         "end_date": "Enddatum",
         "end_date_and_time": "Enddatum und Zeit",
         "every_weekday": "Jeder Wochentag",
@@ -247,7 +247,8 @@
         "new_time_proposed": "Neuer Uhrzeitvorschlag",
         "subject": "Betreff",
         "cancel": "abbrechen",
-        "appointment_is_private": "Dieser Termin ist privat."
+        "appointment_is_private": "Dieser Termin ist privat.",
+        "create_copy": "Eine Kopie erstellen"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -464,7 +465,8 @@
             "share_calendar_role": {
                 "admin": "Admin (kann sehen, bearbeiten, hinzufügen, entfernen und verwalten)",
                 "manager": "Manager (kann sehen, bearbeiten, hinzufügen und entfernen)",
-                "viewer": "Zuschauer (kann sehen)"
+                "viewer": "Zuschauer (kann sehen)",
+                "none": "Keine"
             }
         },
         "note": {
@@ -523,7 +525,10 @@
         "virtual_chat": "Virtueller Chat",
         "calendar_sharing_status": "Mit {{count}} Person geteilt",
         "calendar_sharing_status_plural": "Mit {{count}} Personen geteilt",
-        "calendar_sharing_status_one": "Mit 1 Person geteilt"
+        "calendar_sharing_status_one": "Mit 1 Person geteilt",
+        "revoke": "Zugriff widerrufen",
+        "resend": "E-Mail Benachrichtigung über dieses geteilte Element senden",
+        "edit": "Eigenschaften für das Teilen bearbeiten"
     },
     "share_invite_resent": "Einladung zum Teilen erneut gesendet",
     "shared_folders": "Geteilte Kalender",

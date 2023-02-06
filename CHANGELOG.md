@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.0.0...v1.1.0) (2023-02-02)
+
+
+### Features
+
+* send and copy mail from apointment large preview ([ac1cd33](https://github.com/zextras/carbonio-calendars-ui/commit/ac1cd3375c007bdead9da11c6902ddc9a49eb1d9))
+
+
+### Bug Fixes
+
+* adding notice header in every file ([1eeecdc](https://github.com/zextras/carbonio-calendars-ui/commit/1eeecdcaaa4033b9055dad8012c067e82cec44d4))
+* copyToClipboard and sendEmail for organizer in appointmentlarge preview ([a0f509f](https://github.com/zextras/carbonio-calendars-ui/commit/a0f509faf13e882d6ef6669ed864784c17613726))
+* dropdown event actions ([#220](https://github.com/zextras/carbonio-calendars-ui/issues/220)) ([f75c916](https://github.com/zextras/carbonio-calendars-ui/commit/f75c916519a02010bcdb87c8688edf60872774a3))
+* edit action works as intended ([d7eecb3](https://github.com/zextras/carbonio-calendars-ui/commit/d7eecb3b914b94c091c679800536f15f9ad83e1c))
+* information regarding virtual room inside appointment email ([2c332a0](https://github.com/zextras/carbonio-calendars-ui/commit/2c332a030a62c8be301071c72fde56b63d99c2f0))
+
+## [1.0.0](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.43...v1.0.0) (2023-01-18)
+
+
+### Features
+
+* update translations ([d8eaf78](https://github.com/zextras/carbonio-calendars-ui/commit/d8eaf78fe1cde196719c2c40ff61de414af1b3e7))
+
+### [0.1.43](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.42...v0.1.43) (2023-01-16)
+
+
+### Bug Fixes
+
+* saving appointments doesn't send it to the attendees ([25e2cc8](https://github.com/zextras/carbonio-calendars-ui/commit/25e2cc861ba475d42bbfeaef8f0383168df7a397))
+
+### [0.1.42](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.41...v0.1.42) (2023-01-05)
+
+
+### Bug Fixes
+
+* black color tags don't throw errors ([#200](https://github.com/zextras/carbonio-calendars-ui/issues/200)) ([ba94857](https://github.com/zextras/carbonio-calendars-ui/commit/ba9485726878fc0aa6cf259d11700c69c257c8e2))
+* code cleanup ([7de52d2](https://github.com/zextras/carbonio-calendars-ui/commit/7de52d250609e7f52a3996c0ca60a3336530c1c4))
+* displaying as free by default the status of all day appointments ([#207](https://github.com/zextras/carbonio-calendars-ui/issues/207)) ([b81d5fe](https://github.com/zextras/carbonio-calendars-ui/commit/b81d5fec38fa3dba9672b9de771eafc609f1662e))
+* event dropdown menu closes once an action is clicked ([#206](https://github.com/zextras/carbonio-calendars-ui/issues/206)) ([95f1268](https://github.com/zextras/carbonio-calendars-ui/commit/95f1268c32988bb18ee6857459d88d0a992aae52))
+* moved appointment need action icon to the left ([c277304](https://github.com/zextras/carbonio-calendars-ui/commit/c27730418f875bac2b7ea1c7b565aaea273c0150))
+* moved not responded appointment icon on the left ([6bc3c8d](https://github.com/zextras/carbonio-calendars-ui/commit/6bc3c8d2b697f336dd983563e30d9175d1b58c37))
+* trying to open a private appointment does not breaks UI ([803dadc](https://github.com/zextras/carbonio-calendars-ui/commit/803dadc8687e4cb7912bbf43bbb1174e5025b195))
+* updated edit cancellation msg transation ([95fb6f6](https://github.com/zextras/carbonio-calendars-ui/commit/95fb6f60f67f6e825affae1820fd86e15db76b83))
+* using notice from commons ([3880db4](https://github.com/zextras/carbonio-calendars-ui/commit/3880db4e18182f510e4676a045def1e4ea00fd4e))
+
 ### [0.1.41](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.40...v0.1.41) (2022-12-07)
 
 ### [0.1.40](https://github.com/zextras/carbonio-calendars-ui/compare/v0.1.39...v0.1.40) (2022-12-07)

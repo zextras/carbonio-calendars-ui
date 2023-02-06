@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "0.1.41",
+	"version": "1.1.0",
 	"description": "Calendar module for Zextras Carbonio",
 	"main": "src/app.jsx",
 	"engines": {
@@ -81,9 +81,9 @@
 		"@mui/material": "^5.10.6",
 		"@reduxjs/toolkit": "^1.6.2",
 		"@testing-library/react-hooks": "^8.0.1",
-		"@zextras/carbonio-design-system": "^1.1.0",
-		"@zextras/carbonio-shell-ui": "^1.1.0",
-		"@zextras/carbonio-ui-preview": "^1.0.0",
+		"@zextras/carbonio-design-system": "1.1.0",
+		"@zextras/carbonio-shell-ui": "1.1.0",
+		"@zextras/carbonio-ui-preview": "1.0.0",
 		"core-js": "3.19.1",
 		"date-arithmetic": "^4.1.0",
 		"formik": "2.1.4",

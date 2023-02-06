@@ -186,7 +186,8 @@
         "new_time_proposed": "เวลาใหม่ที่เสนอ",
         "subject": "เรื่อง",
         "cancel": "ยกเลิก",
-        "appointment_is_private": "การนัดหมายเป็นแบบส่วนตัว"
+        "appointment_is_private": "การนัดหมายเป็นแบบส่วนตัว",
+        "create_copy": "สร้างสำเนา"
     },
     "calendar": {
         "modal": {
@@ -364,7 +365,8 @@
             "share_calendar_role": {
                 "admin": "ผู้ดูแลระบบ (สามารถดู, แก้ไข, เพิ่ม, ลบ, และจัดการได้)",
                 "manager": "ผู้จัดการ (สามารถดู, แก้ไข, เพิ่ม, และลบ)",
-                "viewer": "ผู้ชม (สามารถดูได้)"
+                "viewer": "ผู้ชม (สามารถดูได้)",
+                "none": "ไม่มี"
             },
             "share_calendar_with": {
                 "internal_users_groups": "ผู้ใช้ภายในหรือกลุ่ม",
@@ -465,7 +467,9 @@
         "chat_room": "ลิงก์ของห้องเสมือนจริง",
         "virtual_chat": "แชทเสมือนจริง",
         "calendar_sharing_status_one": "แชร์กับ 1 คน",
-        "calendar_sharing_status": "แชร์กับ {{count}} คน"
+        "calendar_sharing_status": "แชร์กับ {{count}} คน",
+        "revoke": "เพิกถอนการเข้าถึง",
+        "edit": "แก้ไขคุณสมบัติการแชร์"
     },
     "button": {
         "customize_modal": "เปิด Customize Modal"

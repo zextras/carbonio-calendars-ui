@@ -41,7 +41,7 @@
         "dismiss": "Desconsiderar",
         "dismiss_plural": "Desconsiderar todo",
         "display": "Mostrar",
-        "edit_access": "Editar el acceso de {{name}}",
+        "edit_access": "Editar el acceso",
         "email_input_message": "Introducir direcciones de correo electrónico",
         "enable_dlgtn_for_ical": "Activar delegación para el cliente CalDAV de iCal de Apple",
         "end_date": "Fecha de finalización",
@@ -177,7 +177,8 @@
         "new_time_proposed": "Nueva hora propuesta",
         "subject": "Asunto",
         "cancel": "Cancelar",
-        "appointment_is_private": "La cita es privada."
+        "appointment_is_private": "La cita es privada.",
+        "create_copy": "Crear una copia"
     },
     "action": {
         "send": "Enviar",
@@ -373,7 +374,8 @@
             "share_calendar_role": {
                 "viewer": "Visualizador (puede ver)",
                 "admin": "Administrador (puede ver, editar, remover y administrar)",
-                "manager": "Gerente (puede ver, editar, añadir y remover)"
+                "manager": "Gerente (puede ver, editar, añadir y remover)",
+                "none": "Ninguno"
             },
             "share_calendar_with": {
                 "external_guests": "Invitados externos (solo pueden ver)",
@@ -523,7 +525,10 @@
         "calendar_sharing_status": "Compartido con {{count}} persona",
         "calendar_sharing_status_plural": "Compartido con {{count}} personas",
         "virtual_chat": "Chat virtual",
-        "calendar_sharing_status_one": "Compartido con 1 persona"
+        "calendar_sharing_status_one": "Compartido con 1 persona",
+        "revoke": "Revocar acceso",
+        "resend": "Enviar notificación por correo de esta aportación",
+        "edit": "Editar propiedades de compartición"
     },
     "share_invite_resent": "Invitación para acceder a la compartición reenviada",
     "shared_folders": "Calendarios compartidos",

@@ -221,7 +221,7 @@
         "time_zones": "时区",
         "to": "至",
         "display": "显示",
-        "edit_access": "编辑 {{name}} 的访问权限",
+        "edit_access": "编辑 的访问权限",
         "email_input_message": "输入邮件地址",
         "end_after": "以下条件后结束：",
         "enable_dlgtn_for_ical": "为 Apple iCal CalDAV 客户端启用委派",
@@ -307,7 +307,8 @@
         "new_time_proposed": "建议的新时间",
         "subject": "主题",
         "cancel": "取消",
-        "appointment_is_private": "预约为私密。"
+        "appointment_is_private": "预约为私密。",
+        "create_copy": "创建副本"
     },
     "months": {
         "april": "四月",
@@ -405,7 +406,8 @@
             "share_calendar_role": {
                 "admin": "Admin（可查看、编辑、添加、移除并进行管理）",
                 "manager": "管理者（可查看、编辑、添加与移除）",
-                "viewer": "查看者（可查看）"
+                "viewer": "查看者（可查看）",
+                "none": "无"
             },
             "share_calendar_with": {
                 "external_guests": "外部访客（仅查看）",
@@ -500,7 +502,10 @@
         "chat_room": "虚拟房间链接",
         "virtual_chat": "虚拟聊天",
         "calendar_sharing_status": " ",
-        "calendar_sharing_status_one": "已与 1 人分享"
+        "calendar_sharing_status_one": "已与 1 人分享",
+        "revoke": "撤销访问权限",
+        "resend": "发送有关此共享的邮件通知",
+        "edit": "编辑共享属性"
     },
     "workflow": "工作流",
     "write": "编写",
