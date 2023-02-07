@@ -213,7 +213,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 								<ShareCalendarModal
 									folder={item}
 									closeFn={(): void => closeModal()}
-									grant={item?.acl?.grant}
+									grant={item?.acl?.grant ?? []}
 								/>
 							</StoreProvider>
 						),

@@ -11,6 +11,7 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { EventType } from '../../types/event';
 import { useTagExist } from '../tags/tag-actions';
+import { TagType } from '../../types/tags';
 
 const NeedActionIcon = styled(Icon)`
 	position: relative;

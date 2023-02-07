@@ -354,12 +354,10 @@ export const useTagsArrayFromStore = (): Array<TagType> => {
 	);
 };
 
-export const useTagExist = (tags: Array<TagType>): boolean => {
+export const useTagExist = (tags: Array<Tag>): boolean => {
 	const tagsArrayFromStore = useTagsArrayFromStore();
 	return useMemo(
 		() =>
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			reduce(
 				tags,
 				(acc: boolean, v: Tag) => {

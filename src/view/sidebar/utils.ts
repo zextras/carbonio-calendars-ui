@@ -63,7 +63,7 @@ export function getSharesItemChildren({
 					label: item.name,
 					icon: getFolderIcon({ item, checked: item.checked ?? false }),
 					onClick: () => onClick(item),
-					CustomComponent: FoldersComponent
+					CustomComponent: FoldersComponent as AccordionItemType['CustomComponent']
 				});
 			}
 			if (item?.children.length > 0) flattenSharesItems(item.children);

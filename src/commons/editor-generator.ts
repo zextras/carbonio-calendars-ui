@@ -303,14 +303,20 @@ export const createCallbacks = (
 	} => dispatch(editEditorAllDay({ id, allDay, start, end }));
 
 	const onTimeZoneChange = (timezone: string): any =>
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		dispatch(editEditorTimezone({ id, timezone }));
 
 	const onReminderChange = (reminder: string): any =>
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		dispatch(editEditorReminder({ id, reminder }));
 
 	const onRecurrenceChange = (
 		recur: any
 	): { payload: undefined; type: string } | { payload: { id: string; recur: any }; type: string } =>
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		dispatch(editEditorRecurrence({ id, recur }));
 
 	const createAppointmentFn = (draft: boolean, editor: Editor): Promise<any> =>

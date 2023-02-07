@@ -18,12 +18,14 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder, Grant, useFolders, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { Folder, FOLDERS, Grant, useFolders, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled, { DefaultTheme } from 'styled-components';
+import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';
+import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
@@ -31,8 +33,6 @@ import { setCalendarColor } from '../../../../normalizations/normalizations-util
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { GranteeInfo } from './grantee-info';
-import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
-import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';
 
 const Square = styled.div`
 	width: 1.125rem;
@@ -54,16 +54,10 @@ const TextUpperCase = styled(Text)`
 `;
 
 type LabelFactoryProps = {
-	selected: Array<ColorIcon>;
-	label: string;
+	selected: Array<SelectItem>;
+	label: string | undefined;
 	open: boolean;
 	focus: boolean;
-};
-
-type ColorIcon = {
-	label: string;
-	value: string;
-	customComponent: JSX.Element;
 };
 
 const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) => {
@@ -74,7 +68,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 				? selected?.[0]?.value
 				: ZIMBRA_STANDARD_COLORS[parseInt(selected?.[0]?.value, 10)].color,
 		[colorName, selected]
-	);
+	) as string;
 
 	return (
 		<ColorContainer
@@ -114,7 +108,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 	);
 };
 
-const getStatusItems = (t: TFunction): Array<ColorIcon> =>
+const getStatusItems = (t: TFunction): Array<SelectItem> =>
 	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
 		label: t(el.label ?? ''),
 		value: index.toString(),
@@ -195,10 +189,13 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 				  showDupWarning,
 		[inputValue, folder, showDupWarning]
 	);
-	const defaultColor = useMemo(() => find(colors, { label: iconColor.label }), [colors, iconColor]);
+	const defaultColor = useMemo(
+		() => find(colors, { label: iconColor.label }) ?? { label: '', value: '' },
+		[colors, iconColor]
+	);
 
-	const [selectedColor, setSelectedColor] = useState<SelectItem[] | number | string>(
-		defaultColor?.value || 0
+	const [selectedColor, setSelectedColor] = useState<SelectItem[] | number | string | null>(
+		defaultColor?.value
 	);
 	const defaultChecked = false;
 	const onConfirm = useCallback(() => {
