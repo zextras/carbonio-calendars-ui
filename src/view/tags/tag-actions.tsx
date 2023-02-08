@@ -32,7 +32,7 @@ import { itemActionRequest } from '../../soap/item-action-request';
 import { StoreProvider } from '../../store/redux';
 import { EventType } from '../../types/event';
 import { TagType } from '../../types/tags';
-import CreateUpdateTagModal from '../../carbonio-ui-commons/components/tags/create-update-tag-modal';
+import CreateUpdateTagModal from './create-update-tag-modal';
 
 export type ReturnType = {
 	id: string;

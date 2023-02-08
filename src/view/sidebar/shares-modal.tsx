@@ -6,6 +6,7 @@
 import {
 	Accordion,
 	AccordionItem,
+	AccordionItemType,
 	Checkbox,
 	Container,
 	Icon,
@@ -117,13 +118,13 @@ export const SharesModal: FC<{ calendars: ResFolder; onClose: () => void }> = ({
 				label: getFolderTranslatedName({ folderId: FOLDERS.USER_ROOT, folderName: 'Root' }),
 				level: 0,
 				open: true,
-				items: map(values(data ?? filteredFolders), (v) => ({
-					id: v[0].ownerId,
+				items: map(values(data ?? filteredFolders), (value) => ({
+					id: value[0].ownerId,
 					label: (
 						<Trans
 							i18nKey="label.shares_items"
 							defaults="<bold>{{user}}</bold>'s shared calendars"
-							values={{ user: v[0].ownerName }}
+							values={{ user: value[0].ownerName }}
 							components={{
 								bold: (
 									<span
@@ -134,7 +135,7 @@ export const SharesModal: FC<{ calendars: ResFolder; onClose: () => void }> = ({
 						/>
 					) as unknown as string,
 					open: true,
-					items: v,
+					items: value,
 					background: undefined
 				})),
 				background: undefined,

@@ -10,7 +10,6 @@ import { Folder, useFoldersByView } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
-import useGetTagsAccordion from '../../carbonio-ui-commons/components/tags/use-get-tags-accordions';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
@@ -23,6 +22,7 @@ import {
 	composeSharesAccordionItems as getSharesAccordionItems,
 	removeLinkFolders
 } from './utils';
+import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
 	foldersAccordionItems: Folder[];
