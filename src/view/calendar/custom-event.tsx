@@ -20,12 +20,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { EventType } from '../../types/event';
-import { EventSummaryView } from '../event-summary-view/event-summary-view';
+import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { getInvite } from '../../store/actions/get-invite';
-import { CustomEventComponent } from './custom-event-component';
+import { MemoCustomEventComponent } from './custom-event-component';
 import { StoreProvider } from '../../store/redux';
 
 type CustomEventProps = {
@@ -33,7 +33,7 @@ type CustomEventProps = {
 	title: string;
 };
 
-export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
+const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
@@ -139,7 +139,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 					contextMenu
 					width="cal(min(100%,12.5rem))"
 					style={{ width: '100%', height: '100%' }}
-					items={actions}
+					items={actions ?? []}
 					display="block"
 					onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
 						if (e) (e as Event)?.stopImmediatePropagation?.();
@@ -163,7 +163,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 							crossAlignment="center"
 							mainAlignment="flex-start"
 						>
-							<CustomEventComponent tags={tags} event={event} title={title} />
+							<MemoCustomEventComponent tags={tags} event={event} title={title} />
 							{event.resource.class === 'PRI' && (
 								<Tooltip label={t('label.private', 'Private')} placement="top">
 									<Row padding={{ left: 'extrasmall' }}>
@@ -208,7 +208,7 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 				</Dropdown>
 			</Container>
 			{open && (
-				<EventSummaryView
+				<MemoEventSummaryView
 					anchorRef={anchorRef}
 					event={event}
 					open={open}
@@ -219,3 +219,5 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 		</>
 	);
 };
+
+export const MemoCustomEvent = React.memo(CustomEvent);

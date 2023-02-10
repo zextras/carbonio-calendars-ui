@@ -12,7 +12,7 @@ import { CALENDAR_ROUTE, PANEL_VIEW } from '../constants';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
 import { updateParticipationStatus } from '../store/slices/appointments-slice';
-import { ActionsContext } from '../types/actions';
+import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
@@ -29,7 +29,7 @@ export const createCopy =
 		event: EventType;
 		invite: Invite;
 		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
-	}): ((ev?: Event) => void) =>
+	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const eventToCopy = { ...event, resource: omit(event.resource, 'id') } as EventType;
 		context?.onClose && context?.onClose();
@@ -71,7 +71,7 @@ export const editAppointment =
 		event: EventType;
 		invite: Invite;
 		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
-	}): ((ev?: Event) => void) =>
+	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		if (context?.panelView === PANEL_VIEW.APP) {
 			generateEditor({
@@ -107,8 +107,14 @@ export const editAppointment =
 	};
 
 export const moveAppointment =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
-	(ev?: Event): void => {
+	({
+		event,
+		context
+	}: {
+		event: EventType;
+		context: ActionsContext;
+	}): ((e: ActionsClick) => void) =>
+	(ev?: ActionsClick): void => {
 		if (ev) ev.preventDefault();
 
 		context?.onClose && context?.onClose();
@@ -129,8 +135,14 @@ export const moveAppointment =
 	};
 
 export const deletePermanently =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
-	(ev?: Event): void => {
+	({
+		event,
+		context
+	}: {
+		event: EventType;
+		context: ActionsContext;
+	}): ((e: ActionsClick) => void) =>
+	(ev?: ActionsClick): void => {
 		if (ev) ev.preventDefault();
 		context?.onClose && context?.onClose();
 		const closeModal = context.createModal(
@@ -157,7 +169,7 @@ export const moveToTrash =
 		event: EventType;
 		invite: Invite;
 		context: ActionsContext;
-	}): ((ev?: Event) => void) =>
+	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		context?.onClose && context?.onClose();
 		const closeModal = context.createModal(
@@ -181,7 +193,13 @@ export const moveToTrash =
 	};
 
 export const openAppointment =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	({
+		event,
+		context
+	}: {
+		event: EventType;
+		context: ActionsContext;
+	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		context?.onClose && context?.onClose();
 		if (context?.panelView === PANEL_VIEW.APP) {
@@ -198,7 +216,13 @@ export const openAppointment =
 		}
 	};
 export const acceptInvitation =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	({
+		event,
+		context
+	}: {
+		event: EventType;
+		context: ActionsContext;
+	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		context
 			.dispatch(
@@ -214,7 +238,13 @@ export const acceptInvitation =
 	};
 
 export const declineInvitation =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	({
+		event,
+		context
+	}: {
+		event: EventType;
+		context: ActionsContext;
+	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		context
 			.dispatch(
@@ -230,7 +260,13 @@ export const declineInvitation =
 	};
 
 export const acceptAsTentative =
-	({ event, context }: { event: EventType; context: ActionsContext }): ((ev?: Event) => void) =>
+	({
+		event,
+		context
+	}: {
+		event: EventType;
+		context: ActionsContext;
+	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		context
 			.dispatch(

@@ -22,18 +22,19 @@ import {
 	ButtonOld as Button
 } from '@zextras/carbonio-design-system';
 
-import { find, includes, reduce } from 'lodash';
-import { ZIMBRA_STANDARD_COLORS, useTags, Tag, Tags, t } from '@zextras/carbonio-shell-ui';
-import { Dispatch } from 'redux';
+import { differenceBy, includes, noop, reduce } from 'lodash';
+import { ZIMBRA_STANDARD_COLORS, useTags, Tag, t } from '@zextras/carbonio-shell-ui';
 import { itemActionRequest } from '../../soap/item-action-request';
-import { TagsActionsType, TagType } from '../../types/tags';
+import { ActionsProps } from '../../types/actions';
+import { EventActionsEnum, EventActionsId } from '../../types/enums/event-actions-enum';
+import { TagType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from './delete-tag-modal';
 import { EventType } from '../../types/event';
 import { StoreProvider } from '../../store/redux';
 
 export type ReturnType = {
-	id: string;
+	id: EventActionsId;
 	icon: string;
 	label: string;
 	click?: (arg: React.SyntheticEvent<EventTarget> | KeyboardEvent) => void;
@@ -45,8 +46,6 @@ export type ReturnType = {
 	}>;
 };
 
-export type TagsFromStoreType = Record<string, Tag>;
-
 export type ArgumentType = {
 	createModal?: unknown;
 	createSnackbar?: unknown;
@@ -54,16 +53,8 @@ export type ArgumentType = {
 	tag?: TagType;
 };
 
-export type ContextType = {
-	createAndApplyTag: (arg: any) => any;
-	createModal: any;
-	createSnackbar: unknown;
-	dispatch: Dispatch;
-	replaceHistory: (arg: any) => void;
-	tags: Tags;
-};
 export const createTag = ({ createModal }: ArgumentType): ReturnType => ({
-	id: TagsActionsType.NEW,
+	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
 	click: (e): void => {
@@ -89,10 +80,10 @@ export const createAndApplyTag = ({
 	context,
 	event
 }: {
-	context: ContextType;
+	context: ActionsProps['context'];
 	event: EventType;
 }): ReturnType => ({
-	id: TagsActionsType.NEW,
+	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
 	click: (e: SyntheticEvent<EventTarget> | KeyboardEvent): void => {
@@ -114,7 +105,7 @@ export const createAndApplyTag = ({
 	}
 });
 export const editTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
-	id: TagsActionsType.EDIT,
+	id: EventActionsEnum.EDIT_TAGS,
 	icon: 'Edit2Outline',
 	label: t('label.edit_tag', 'Edit Tag'),
 	click: (e): void => {
@@ -139,7 +130,7 @@ export const editTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 });
 
 export const deleteTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
-	id: TagsActionsType.DELETE,
+	id: EventActionsEnum.DELETE_TAG,
 	icon: 'Untag',
 	label: t('label.delete_tag', 'Delete Tag'),
 	click: (e): void => {
@@ -243,14 +234,15 @@ export const applyTag = ({
 	event
 }: {
 	event: EventType;
-	context: ContextType;
+	context: ActionsProps['context'];
 }): {
-	id: string;
+	id: EventActionsId;
 	items: TagType[];
+	click: () => void;
 	customComponent?: ReactElement;
-	label?: string;
-	icon?: string;
-	disabled?: boolean;
+	label: string;
+	icon: string;
+	disabled: boolean;
 } => {
 	const tagItem = reduce(
 		context.tags,
@@ -294,8 +286,12 @@ export const applyTag = ({
 	});
 	return event.haveWriteAccess
 		? {
-				id: TagsActionsType.Apply,
+				id: EventActionsEnum.APPLY_TAG,
 				items: tagItem,
+				click: noop,
+				icon: 'TagsMoreOutline',
+				label: t('label.tags', 'Tags'),
+				disabled: false,
 				customComponent: (
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						<Padding right="small">
@@ -310,8 +306,9 @@ export const applyTag = ({
 				)
 		  }
 		: {
-				id: TagsActionsType.Apply,
+				id: EventActionsEnum.APPLY_TAG,
 				items: [],
+				click: noop,
 				label: t('label.tags', 'Tags'),
 				icon: 'TagsMoreOutline',
 				disabled: true
@@ -337,7 +334,7 @@ export const useTagsArrayFromStore = (): Array<TagType> => {
 		() =>
 			reduce(
 				tagsFromStore,
-				(acc: Array<TagType>, v: any) => {
+				(acc: Array<TagType>, v: TagType) => {
 					acc.push(v);
 					return acc;
 				},
@@ -350,18 +347,7 @@ export const useTagsArrayFromStore = (): Array<TagType> => {
 export const useTagExist = (tags: Array<TagType>): boolean => {
 	const tagsArrayFromStore = useTagsArrayFromStore();
 	return useMemo(
-		() =>
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			reduce(
-				tags,
-				(acc: boolean, v: Tag) => {
-					let tmp = false;
-					if (find(tagsArrayFromStore, { id: v?.id })) tmp = true;
-					return tmp;
-				},
-				false
-			),
+		() => tags?.length > 0 && differenceBy(tags, tagsArrayFromStore, 'id')?.length === 0,
 		[tags, tagsArrayFromStore]
 	);
 };

@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import React from 'react';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
