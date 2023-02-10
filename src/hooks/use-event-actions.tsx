@@ -6,7 +6,7 @@
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { omit } from 'lodash';
-import { useContext, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	acceptAsTentativeItem,
@@ -19,11 +19,23 @@ import {
 	openEventItem
 } from '../actions/appointment-actions-items';
 import { selectInstanceInvite } from '../store/selectors/invites';
+import {
+	ActionsProps,
+	PanelView,
+	InstanceActionsItems,
+	SeriesActionsItems,
+	ActionsClick
+} from '../types/actions';
+import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 import { useCalendarFolders } from './use-calendar-folders';
 
-const getInstanceActionsItems = ({ event, invite, context }: any): any => [
+const getInstanceActionsItems = ({
+	event,
+	invite,
+	context
+}: ActionsProps): InstanceActionsItems => [
 	openEventItem({
 		event,
 		context
@@ -42,14 +54,15 @@ const getInstanceActionsItems = ({ event, invite, context }: any): any => [
 		: [])
 ];
 
-const getRecurrentActionsItems = ({ event, invite, context }: any): any => {
-	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as any;
+const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): SeriesActionsItems => {
+	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as EventType;
 	return [
 		{
-			id: 'instance',
+			id: EventActionsEnum.INSTANCE,
 			icon: 'CalendarOutline',
 			label: t('label.instance', 'Instance'),
-			click: (ev?: Event): void => {
+			disabled: false,
+			click: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
@@ -71,10 +84,11 @@ const getRecurrentActionsItems = ({ event, invite, context }: any): any => {
 			]
 		},
 		{
-			id: 'series',
+			id: EventActionsEnum.SERIES,
 			icon: 'CalendarOutline',
 			label: t('label.series', 'Series'),
-			click: (ev?: Event): void => {
+			disabled: false,
+			click: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
@@ -99,8 +113,8 @@ const getRecurrentActionsItems = ({ event, invite, context }: any): any => {
 	];
 };
 
-const getTrashActions = ({ event, invite, context }: any): any => {
-	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as any;
+const getTrashActions = ({ event, invite, context }: ActionsProps): InstanceActionsItems => {
+	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as EventType;
 	return [
 		openEventItem({
 			event: seriesEvent,
@@ -120,7 +134,7 @@ export const useEventActions = ({
 }: {
 	onClose?: () => void;
 	event?: EventType;
-}): any => {
+}): InstanceActionsItems | SeriesActionsItems | undefined => {
 	const invite = useSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
@@ -134,7 +148,7 @@ export const useEventActions = ({
 			createAndApplyTag,
 			replaceHistory,
 			createModal,
-			panelView: 'app',
+			panelView: 'app' as PanelView,
 			dispatch,
 			createSnackbar,
 			onClose

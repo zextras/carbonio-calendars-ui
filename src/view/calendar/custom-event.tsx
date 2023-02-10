@@ -20,12 +20,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { EventType } from '../../types/event';
-import { EventSummaryView } from '../event-summary-view/event-summary-view';
+import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { getInvite } from '../../store/actions/get-invite';
-import { CustomEventComponent } from './custom-event-component';
+import { MemoCustomEventComponent } from './custom-event-component';
 import { StoreProvider } from '../../store/redux';
 
 type CustomEventProps = {
@@ -33,7 +33,7 @@ type CustomEventProps = {
 	title: string;
 };
 
-export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
+const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const dispatch = useDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
@@ -135,80 +135,82 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 	return (
 		<>
 			<Container ref={anchorRef} height="100%" data-testid="calendar-event">
-				<Dropdown
-					contextMenu
-					width="cal(min(100%,12.5rem))"
-					style={{ width: '100%', height: '100%' }}
-					items={actions}
-					display="block"
-					onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
-						if (e) (e as Event)?.stopImmediatePropagation?.();
-					}}
-					onOpen={getEventInvite}
-				>
-					<Container
-						width="fill"
-						height="fill"
-						background="transparent"
-						mainAlignment="flex-start"
-						crossAlignment="flex-start"
-						onDoubleClick={showPanelView}
-						onClick={toggleOpen}
-						data-testid="calendar-event-inner-container"
+				{actions && (
+					<Dropdown
+						contextMenu
+						width="cal(min(100%,12.5rem))"
+						style={{ width: '100%', height: '100%' }}
+						items={actions}
+						display="block"
+						onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
+							if (e) (e as Event)?.stopImmediatePropagation?.();
+						}}
+						onOpen={getEventInvite}
 					>
 						<Container
-							orientation="horizontal"
 							width="fill"
-							height="fit"
-							crossAlignment="center"
+							height="fill"
+							background="transparent"
 							mainAlignment="flex-start"
+							crossAlignment="flex-start"
+							onDoubleClick={showPanelView}
+							onClick={toggleOpen}
+							data-testid="calendar-event-inner-container"
 						>
-							<CustomEventComponent tags={tags} event={event} title={title} />
-							{event.resource.class === 'PRI' && (
-								<Tooltip label={t('label.private', 'Private')} placement="top">
-									<Row padding={{ left: 'extrasmall' }}>
-										<Icon color="currentColor" icon="Lock" style={{ minWidth: '1rem' }} />
-									</Row>
-								</Tooltip>
-							)}
-							{event.resource.inviteNeverSent && (
-								<Tooltip
-									label={t(
-										'event.action.invitation_not_sent_yet',
-										'The invitation has not been sent yet'
-									)}
-									placement="bottom"
-								>
-									<Row padding={{ left: 'extrasmall' }}>
-										<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '1rem' }} />
-									</Row>
+							<Container
+								orientation="horizontal"
+								width="fill"
+								height="fit"
+								crossAlignment="center"
+								mainAlignment="flex-start"
+							>
+								<MemoCustomEventComponent tags={tags} event={event} title={title} />
+								{event.resource.class === 'PRI' && (
+									<Tooltip label={t('label.private', 'Private')} placement="top">
+										<Row padding={{ left: 'extrasmall' }}>
+											<Icon color="currentColor" icon="Lock" style={{ minWidth: '1rem' }} />
+										</Row>
+									</Tooltip>
+								)}
+								{event.resource.inviteNeverSent && (
+									<Tooltip
+										label={t(
+											'event.action.invitation_not_sent_yet',
+											'The invitation has not been sent yet'
+										)}
+										placement="bottom"
+									>
+										<Row padding={{ left: 'extrasmall' }}>
+											<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '1rem' }} />
+										</Row>
+									</Tooltip>
+								)}
+							</Container>
+							{!event.allDay && (
+								<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
+									<Container
+										orientation="horizontal"
+										width="fill"
+										crossAlignment="flex-start"
+										mainAlignment="flex-start"
+									>
+										<Text
+											overflow="break-word"
+											color="currentColor"
+											style={{ lineHeight: '1.4em' }}
+											weight="bold"
+										>
+											{title}
+										</Text>
+									</Container>
 								</Tooltip>
 							)}
 						</Container>
-						{!event.allDay && (
-							<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
-								<Container
-									orientation="horizontal"
-									width="fill"
-									crossAlignment="flex-start"
-									mainAlignment="flex-start"
-								>
-									<Text
-										overflow="break-word"
-										color="currentColor"
-										style={{ lineHeight: '1.4em' }}
-										weight="bold"
-									>
-										{title}
-									</Text>
-								</Container>
-							</Tooltip>
-						)}
-					</Container>
-				</Dropdown>
+					</Dropdown>
+				)}
 			</Container>
 			{open && (
-				<EventSummaryView
+				<MemoEventSummaryView
 					anchorRef={anchorRef}
 					event={event}
 					open={open}
@@ -219,3 +221,5 @@ export const CustomEvent = ({ event, title }: CustomEventProps): ReactElement =>
 		</>
 	);
 };
+
+export const MemoCustomEvent = React.memo(CustomEvent);

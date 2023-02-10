@@ -227,3 +227,5 @@ export const CustomEventComponent = ({
 		</Row>
 	);
 };
+
+export const MemoCustomEventComponent = React.memo(CustomEventComponent);

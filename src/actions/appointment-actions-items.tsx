@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
-import { ActionsContext, PanelView } from '../types/actions';
-import { EventActionsEnum, EventActionsId } from '../types/enums/event-actions-enum';
+import { ActionsContext, AppointmentActionsItems } from '../types/actions';
+import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import {
@@ -19,14 +19,6 @@ import {
 	moveToTrash,
 	openAppointment
 } from './appointment-actions-fn';
-
-type AppointmentActionsItems = {
-	id: EventActionsId;
-	icon: string;
-	disabled: boolean;
-	label: string;
-	click: (ev?: Event) => void;
-};
 
 export const openEventItem = ({
 	event,
@@ -162,7 +154,7 @@ export const copyEventItem = ({
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EventActionsEnum.EDIT,
+	id: EventActionsEnum.CREATE_COPY,
 	icon: 'Copy',
 	label: t('label.create_copy', 'Copy'),
 	disabled: false,

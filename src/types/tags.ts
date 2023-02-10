@@ -5,13 +5,6 @@
  */
 
 import { ReactElement } from 'react';
-// eslint-disable-next-line no-shadow
-export enum TagsActionsType {
-	NEW = 'new',
-	DELETE = 'delete',
-	EDIT = 'edit',
-	Apply = 'apply'
-}
 
 export type TagType = {
 	customComponent?: ReactElement;
