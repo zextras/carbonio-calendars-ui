@@ -111,7 +111,7 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 	} = getPrefs();
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
 	const defaultCalendar = find(folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
-	const timezoneGuessed = Intl.DateTimeFormat()?.resolvedOptions()?.timeZone;
+	const timezoneGuessed = moment.tz.guess();
 	const defaultTimezone =
 		zimbraPrefUseTimeZoneListInCalendar === 'TRUE'
 			? zimbraPrefTimeZoneId ?? timezoneGuessed
