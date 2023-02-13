@@ -45,6 +45,7 @@ export type AppointmentActionsItems = {
 	disabled: boolean;
 	label: string;
 	click: (ev: ActionsClick) => void;
+	tooltipLabel: string;
 };
 
 export type InstanceActionsItems = Array<AppointmentActionsItems>;
@@ -55,6 +56,7 @@ export type SeriesActionsItems = [
 		icon: 'CalendarOutline';
 		label: string;
 		disabled: false;
+		tooltipLabel: string;
 		click: (ev: ActionsClick) => void;
 		items: Array<AppointmentActionsItems>;
 	},
@@ -63,6 +65,7 @@ export type SeriesActionsItems = [
 		icon: 'CalendarOutline';
 		label: string;
 		disabled: false;
+		tooltipLabel: string;
 		click: (ev: ActionsClick) => void;
 		items: Array<AppointmentActionsItems>;
 	}

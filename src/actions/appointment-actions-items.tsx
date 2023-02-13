@@ -30,6 +30,7 @@ export const openEventItem = ({
 	id: EventActionsEnum.EXPAND,
 	icon: 'ExpandOutline',
 	disabled: false,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	label: t('event.action.expand', 'Open'),
 	click: openAppointment({
 		event,
@@ -48,6 +49,7 @@ export const acceptInvitationItem = ({
 	icon: 'CheckmarkOutline',
 	label: t('event.action.accept', 'Accept'),
 	disabled: event?.resource?.participationStatus === 'AC',
+	tooltipLabel: t('label.action_performed', 'You already performed this action'),
 	click: acceptInvitation({ event, context })
 });
 
@@ -62,6 +64,7 @@ export const declineInvitationItem = ({
 	icon: 'CloseOutline',
 	label: t('event.action.decline', 'Decline'),
 	disabled: event?.resource?.participationStatus === 'DE',
+	tooltipLabel: t('label.action_performed', 'You already performed this action'),
 	click: declineInvitation({ event, context })
 });
 
@@ -76,6 +79,7 @@ export const acceptAsTentativeItem = ({
 	icon: 'QuestionMark',
 	label: t('label.tentative', 'Tentative'),
 	disabled: event?.resource?.participationStatus === 'TE',
+	tooltipLabel: t('label.action_performed', 'You already performed this action'),
 	click: acceptAsTentative({ event, context })
 });
 
@@ -87,12 +91,13 @@ export const moveEventItem = ({
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.MOVE,
-	icon: 'MoveOutline',
+	icon: event.resource.calendar.id === FOLDERS.TRASH ? 'RestoreOutline' : 'MoveOutline',
 	label:
 		event.resource.calendar.id === FOLDERS.TRASH
 			? t('label.restore', 'Restore')
 			: t('label.move', 'Move'),
 	disabled: !event?.haveWriteAccess,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	click: moveAppointment({ event, context })
 });
 
@@ -109,6 +114,7 @@ export const moveApptToTrashItem = ({
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
 	disabled: !event?.haveWriteAccess,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	click: moveToTrash({ event, invite, context })
 });
 
@@ -123,6 +129,7 @@ export const deletePermanentlyItem = ({
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
 	disabled: false,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	click: deletePermanently({ event, context })
 });
 
@@ -142,6 +149,7 @@ export const editEventItem = ({
 		!event?.haveWriteAccess ||
 		event.resource.calendar.id === FOLDERS.TRASH ||
 		!event.resource.iAmOrganizer,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	click: editAppointment({ event, invite, context })
 });
 
@@ -158,6 +166,7 @@ export const copyEventItem = ({
 	icon: 'Copy',
 	label: t('label.create_copy', 'Copy'),
 	disabled: false,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	click: createCopy({ event, invite, context })
 });
 
@@ -176,6 +185,7 @@ export const deleteEventItem = ({
 				icon: 'DeletePermanentlyOutline',
 				label: t('label.delete_permanently', 'Delete permanently'),
 				disabled: !event?.haveWriteAccess,
+				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				click: deletePermanently({ event, context })
 		  }
 		: {
@@ -183,5 +193,6 @@ export const deleteEventItem = ({
 				icon: 'Trash2Outline',
 				label: t('label.delete', 'Delete'),
 				disabled: !event?.haveWriteAccess,
+				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				click: moveToTrash({ event, invite, context })
 		  };

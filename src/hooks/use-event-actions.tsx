@@ -62,6 +62,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 			icon: 'CalendarOutline',
 			label: t('label.instance', 'Instance'),
 			disabled: false,
+			tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 			click: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},
@@ -88,6 +89,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 			icon: 'CalendarOutline',
 			label: t('label.series', 'Series'),
 			disabled: false,
+			tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 			click: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},

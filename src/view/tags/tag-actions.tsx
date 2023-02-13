@@ -240,6 +240,7 @@ export const applyTag = ({
 	items: TagType[];
 	click: () => void;
 	customComponent?: ReactElement;
+	tooltipLabel: string;
 	label: string;
 	icon: string;
 	disabled: boolean;
@@ -292,6 +293,7 @@ export const applyTag = ({
 				icon: 'TagsMoreOutline',
 				label: t('label.tags', 'Tags'),
 				disabled: false,
+				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				customComponent: (
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						<Padding right="small">
@@ -309,6 +311,7 @@ export const applyTag = ({
 				id: EventActionsEnum.APPLY_TAG,
 				items: [],
 				click: noop,
+				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				label: t('label.tags', 'Tags'),
 				icon: 'TagsMoreOutline',
 				disabled: true
