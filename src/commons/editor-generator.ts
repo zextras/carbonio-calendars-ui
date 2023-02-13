@@ -3,24 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder, getUserAccount, LinkFolder, t } from '@zextras/carbonio-shell-ui';
-import {
-	every,
-	find,
-	includes,
-	isEmpty,
-	isNaN,
-	last,
-	matches,
-	omit,
-	split,
-	startsWith,
-	without
-} from 'lodash';
+import { Folder, getUserAccount, LinkFolder } from '@zextras/carbonio-shell-ui';
+import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { Dispatch } from 'redux';
 import momentLocalizer from 'react-widgets-moment';
-import { TimeZonesOptions } from '../settings/components/utils';
 import { setCalendarColor } from '../normalizations/normalizations-utils';
 import { proposeNewTime } from '../store/actions/propose-new-time';
 import { PREFS_DEFAULTS } from '../constants';
@@ -39,8 +26,6 @@ import {
 	editEditorLocation,
 	editEditorOptionalAttendees,
 	editEditorRecurrence,
-	editEditorRecurrenceFrequency,
-	editEditorRecurrenceInterval,
 	editEditorReminder,
 	editEditorRoom,
 	editEditorText,
@@ -103,19 +88,11 @@ export const disabledFields = {
 
 export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor => {
 	const identities = getIdentityItems();
-	const {
-		zimbraPrefTimeZoneId,
-		zimbraPrefUseTimeZoneListInCalendar,
-		zimbraPrefCalendarDefaultApptDuration,
-		zimbraPrefCalendarApptReminderWarningTime
-	} = getPrefs();
+	const { zimbraPrefCalendarDefaultApptDuration, zimbraPrefCalendarApptReminderWarningTime } =
+		getPrefs();
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
 	const defaultCalendar = find(folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
-	const timezoneGuessed = moment.tz.guess(true);
-	const defaultTimezone =
-		zimbraPrefUseTimeZoneListInCalendar === 'TRUE'
-			? zimbraPrefTimeZoneId ?? timezoneGuessed
-			: timezoneGuessed;
+	const defaultTimezone = moment.tz.guess(true);
 
 	return {
 		attach: undefined,

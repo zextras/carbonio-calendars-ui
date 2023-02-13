@@ -132,7 +132,6 @@ const generateMp = (msg: Editor): any => ({
 
 const generateInvite = (editorData: Editor): any => {
 	const at = [];
-	const { zimbraPrefUseTimeZoneListInCalendar } = getPrefs();
 
 	at.push(
 		...editorData.attendees.map((c: any) => ({
