@@ -157,7 +157,7 @@ export const editEditorRoomReducer = ({ editors }: EditorSlice, { payload }: Roo
 		}
 		if (attendees) {
 			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].attendees = attendees;
+			editors[payload.id].attendees = union(editors[payload.id].attendees, attendees);
 		}
 	}
 };

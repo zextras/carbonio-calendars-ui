@@ -86,8 +86,8 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		(queryStr: Array<{ label: string; value?: string }>, reset: boolean) => {
 			setResultLabel(t('label.loading_results', 'Loading Results...'));
 			setLoading(true);
-			const spanStart = moment().startOf('day').valueOf();
-			const spanEnd = moment().startOf('day').add(1209600000, 'milliseconds').valueOf();
+			const spanStart = moment().startOf('day').subtract(1, 'months').valueOf();
+			const spanEnd = moment().startOf('day').add(1, 'months').valueOf();
 
 			const queryMap = `${queryStr
 				.map((c) => c.value ?? c.label)

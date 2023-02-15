@@ -3,6 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import {
+	ButtonOld as Button,
+	Checkbox,
+	Icon,
+	ModalManagerContext,
+	Padding,
+	Row,
+	SnackbarManagerContext,
+	Text
+} from '@zextras/carbonio-design-system';
 import React, {
 	ReactElement,
 	SyntheticEvent,
@@ -11,27 +21,17 @@ import React, {
 	useMemo,
 	useState
 } from 'react';
-import {
-	ModalManagerContext,
-	SnackbarManagerContext,
-	Row,
-	Text,
-	Padding,
-	Icon,
-	Checkbox,
-	ButtonOld as Button
-} from '@zextras/carbonio-design-system';
-
 import { differenceBy, includes, noop, reduce } from 'lodash';
 import { ZIMBRA_STANDARD_COLORS, useTags, Tag, t } from '@zextras/carbonio-shell-ui';
+import { ItemType } from '../../carbonio-ui-commons/types/tags';
 import { itemActionRequest } from '../../soap/item-action-request';
 import { ActionsProps } from '../../types/actions';
 import { EventActionsEnum, EventActionsId } from '../../types/enums/event-actions-enum';
 import { TagType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
-import DeleteTagModal from './delete-tag-modal';
 import { EventType } from '../../types/event';
 import { StoreProvider } from '../../store/redux';
+import DeleteTagModal from '../../carbonio-ui-commons/components/tags/delete-tag-modal';
 
 export type ReturnType = {
 	id: EventActionsId;
@@ -50,7 +50,7 @@ export type ArgumentType = {
 	createModal?: unknown;
 	createSnackbar?: unknown;
 	items?: ReturnType;
-	tag?: TagType;
+	tag?: ItemType;
 };
 
 export const createTag = ({ createModal }: ArgumentType): ReturnType => ({
@@ -347,7 +347,7 @@ export const useTagsArrayFromStore = (): Array<TagType> => {
 	);
 };
 
-export const useTagExist = (tags: Array<TagType>): boolean => {
+export const useTagExist = (tags: Array<Tag>): boolean => {
 	const tagsArrayFromStore = useTagsArrayFromStore();
 	return useMemo(
 		() => tags?.length > 0 && differenceBy(tags, tagsArrayFromStore, 'id')?.length === 0,

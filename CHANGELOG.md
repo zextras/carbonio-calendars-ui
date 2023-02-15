@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.1.0...v1.1.1) (2023-02-14)
+
+
+### Bug Fixes
+
+* appointment timezone can be modified from editor ([718592d](https://github.com/zextras/carbonio-calendars-ui/commit/718592de70cdfba476553e1d08eab59ebd5c8ed3))
+
 ## [1.1.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.0.0...v1.1.0) (2023-02-02)
 
 

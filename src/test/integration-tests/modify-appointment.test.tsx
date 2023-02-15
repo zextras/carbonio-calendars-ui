@@ -69,7 +69,6 @@ describe.each`
 		const event = mockedData.getEvent({ resource: seriesResourceEvent });
 		const invite = mockedData.getInvite({ event, context: { recurrenceRule: recurrence } });
 		const store = configureStore({ reducer: combineReducers(reducers) });
-
 		const context = {
 			panelView: 'app' as PanelView,
 			folders: mockedData.calendars.getCalendarsArray(),
