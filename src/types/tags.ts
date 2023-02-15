@@ -5,23 +5,19 @@
  */
 
 import { ReactElement } from 'react';
-// eslint-disable-next-line no-shadow
-export enum TagsActionsType {
-	NEW = 'new',
-	DELETE = 'delete',
-	EDIT = 'edit',
-	Apply = 'apply'
-}
 
 export type TagType = {
-	customComponent?: ReactElement;
-	active?: boolean;
-	color?: number;
-	divider?: boolean;
-	id: string;
-	label?: string;
-	name?: string;
-	open?: boolean;
-	keepOpen?: boolean;
-	CustomComponent?: ReactElement;
+	item: {
+		customComponent?: ReactElement;
+		active?: boolean;
+		color?: number;
+		divider?: boolean;
+		id: string;
+		label?: string;
+		name?: string;
+		open?: boolean;
+		keepOpen?: boolean;
+		CustomComponent?: ReactElement;
+		items: Array<TagType>;
+	};
 };

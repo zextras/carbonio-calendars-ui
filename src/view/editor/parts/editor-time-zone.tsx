@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Select } from '@zextras/carbonio-design-system';
-import React, { ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../carbonio-ui-commons/utils/use-prefs';
@@ -21,31 +21,38 @@ type SelectValue =
 
 export const EditorTimezone = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
-	const [value, setValue] = useState<SelectValue>(undefined);
 	const timezone = useSelector(selectEditorTimezone(editorId));
-	const { onTimeZoneChange } = callbacks;
-	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
-	const { zimbraPrefUseTimeZoneListInCalendar } = usePrefs();
-	const disabled = useSelector(selectEditorDisabled(editorId));
 
-	useEffect(() => {
+	const { zimbraPrefUseTimeZoneListInCalendar } = usePrefs();
+	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
+
+	const [value, setValue] = useState<SelectValue>(() => {
 		if (timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE') {
-			setValue({
-				label: findLabel(timeZonesOptions, timezone),
-				value: timezone
-			});
+			const label = findLabel(timeZonesOptions, timezone);
+			if (label) {
+				return {
+					label,
+					value: timezone
+				};
+			}
 		}
-	}, [timeZonesOptions, timezone, zimbraPrefUseTimeZoneListInCalendar]);
+		return undefined;
+	});
+	const { onTimeZoneChange } = callbacks;
+	const disabled = useSelector(selectEditorDisabled(editorId));
 
 	return value && zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? (
 		<Select
 			items={timeZonesOptions}
 			multiple={false}
 			onChange={(item): void => {
-				// Typescript is pointing to the wrong overload
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				onTimeZoneChange(item?.value);
+				if (item) {
+					const newTimezone = findLabel(timeZonesOptions, item);
+					if (newTimezone) {
+						setValue({ label: newTimezone, value: item });
+					}
+					onTimeZoneChange(item);
+				}
 			}}
 			selection={value}
 			disabled={disabled?.timezone}

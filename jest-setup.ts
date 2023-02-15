@@ -41,7 +41,8 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-	moment.tz.setDefault('Europe/Rome');
+	moment.tz.setDefault('Europe/Berlin');
+	moment.tz.guess = jest.fn().mockImplementation(() => 'Europe/Berlin');
 	jest.setSystemTime(new Date('2022-01-01'));
 	defaultBeforeEachTest();
 });

@@ -3,13 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t, FOLDERS } from '@zextras/carbonio-shell-ui';
 import { TextProps } from '@zextras/carbonio-design-system';
+import { AccordionFolder, FOLDERS, Folder, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import { ReminderItem } from '../types/appointment-reminder';
 
+import { SIDEBAR_ITEMS } from '../constants/sidebar';
+import { folderAction } from '../store/actions/calendar-actions';
+import { getMiniCal } from '../store/actions/get-mini-cal';
+import { searchAppointments } from '../store/actions/search-appointments';
+import { updateCalendar } from '../store/slices/calendars-slice';
 import { DateType } from '../types/event';
+import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
 
@@ -306,7 +312,15 @@ export const translatedSystemFolders = (): Array<string> => [
 	t('label.trash', 'Trash')
 ];
 
-export const getFolderTranslatedName = (folderId: string, folderName: string): string => {
+type GetFolderTranslatedName = {
+	folderId: string;
+	folderName: string;
+};
+
+export const getFolderTranslatedName = ({
+	folderId,
+	folderName
+}: GetFolderTranslatedName): string => {
 	let translationKey;
 	switch (folderId) {
 		case FOLDERS.USER_ROOT:
@@ -323,4 +337,124 @@ export const getFolderTranslatedName = (folderId: string, folderName: string): s
 	}
 
 	return t(`label.${translationKey}`, folderName);
+};
+
+export const getFolderIconNameForAccordionFolder = (folder: AccordionFolder): string | null => {
+	const systemFolders = [
+		FOLDERS.USER_ROOT,
+		FOLDERS.INBOX,
+		FOLDERS.TRASH,
+		FOLDERS.DRAFTS,
+		FOLDERS.SPAM,
+		FOLDERS.SENT
+	];
+
+	if (folder.id === FOLDERS.USER_ROOT || folder.folder?.oname === ROOT_NAME) {
+		return null;
+	}
+
+	if (folder.id && systemFolders.includes(folder.id)) {
+		switch (folder.id) {
+			case FOLDERS.INBOX:
+				return 'InboxOutline';
+			case FOLDERS.DRAFTS:
+				return 'FileOutline';
+			case FOLDERS.SENT:
+				return 'PaperPlaneOutline';
+			case FOLDERS.SPAM:
+				return 'SlashOutline';
+			case FOLDERS.TRASH:
+				return 'Trash2Outline';
+			default:
+				return 'FolderOutline';
+		}
+	}
+	if (
+		folder.id?.charAt(folder.id.length - 2) === ':' &&
+		systemFolders.includes(folder.id.slice(-1))
+	) {
+		switch (folder.id.slice(-1)) {
+			case FOLDERS.INBOX:
+				return 'InboxOutline';
+			case FOLDERS.DRAFTS:
+				return 'FileOutline';
+			case FOLDERS.SENT:
+				return 'PaperPlaneOutline';
+			case FOLDERS.SPAM:
+				return 'SlashOutline';
+			case FOLDERS.TRASH:
+				return 'Trash2Outline';
+			default:
+				return 'FolderOutline';
+		}
+	}
+	return 'FolderOutline';
+};
+
+export const getFolderIconColor = (f: Folder): string => {
+	if (f?.color) {
+		return Number(f.color) < 10
+			? ZIMBRA_STANDARD_COLORS[Number(f.color)].color
+			: f?.rgb ?? ZIMBRA_STANDARD_COLORS[0].color;
+	}
+	return ZIMBRA_STANDARD_COLORS[0].color;
+};
+
+export type RecursiveToggleCheckProps = {
+	folder: Folder;
+	checked: boolean;
+	end: number;
+	start: number;
+	dispatchGetMiniCal?: boolean;
+	dispatch: any;
+};
+
+export function recursiveToggleCheck({
+	folder,
+	checked,
+	end,
+	start,
+	dispatchGetMiniCal,
+	dispatch
+}: RecursiveToggleCheckProps): void {
+	const foldersToToggleIds: Array<string> = [];
+	const checkAllChildren = (itemToCheck: Folder): void => {
+		if (itemToCheck.id !== 'all') {
+			foldersToToggleIds.push(itemToCheck.id);
+		}
+		if (itemToCheck.children.length > 0) {
+			itemToCheck.children.forEach((child) => {
+				checkAllChildren(child);
+			});
+		}
+	};
+
+	// remove item 'all' from an array of strings
+	checkAllChildren(folder);
+
+	dispatch(
+		folderAction({
+			id: foldersToToggleIds,
+			changes: { checked },
+			op: checked ? '!check' : 'check'
+		})
+	).then((res: { meta: { arg: { op: string } } }) => {
+		if (res?.meta?.arg?.op === 'check') {
+			dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
+			dispatchGetMiniCal &&
+				dispatch(getMiniCal({ start, end })).then((response: { payload: { error: any } }) => {
+					if (response?.payload?.error) {
+						dispatch(updateCalendar(response?.payload?.error));
+					}
+				});
+		}
+	});
+}
+
+export const getFolderIcon = ({ item, checked }: { item: Folder; checked: boolean }): string => {
+	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME)) return '';
+	if (item.id === FOLDERS.TRASH) return checked ? 'Trash2' : 'Trash2Outline';
+	if (item.id === SIDEBAR_ITEMS.ALL_CALENDAR) return checked ? 'Calendar2' : 'CalendarOutline';
+	if (item.isLink) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
+	return checked ? 'Calendar2' : 'CalendarOutline';
 };

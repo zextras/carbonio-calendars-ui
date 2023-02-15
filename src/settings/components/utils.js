@@ -816,4 +816,4 @@ export const validEmailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
 export const validEmail = (email) => !!validEmailRegex.test(email);
 
-export const findLabel = (list, value) => find(list, (item) => item.value === value).label;
+export const findLabel = (list, value) => find(list, (item) => item.value === value)?.label;

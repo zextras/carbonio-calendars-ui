@@ -3,37 +3,28 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
+import React, { FC, SyntheticEvent, useCallback, useContext, useMemo } from 'react';
+import { t, useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
 import {
 	AccordionItem,
 	Dropdown,
 	Row,
 	Icon,
 	Padding,
-	Tooltip
+	Tooltip,
+	ModalManagerContext
 } from '@zextras/carbonio-design-system';
 import { reduce } from 'lodash';
-import { useGetTagsActions } from '../view/tags/tag-actions';
-import { CALENDAR_ROUTE } from '../constants';
+import { ItemType, TagsAccordionItems } from '../../carbonio-ui-commons/types/tags';
+import { createTag, useGetTagsActions } from './tag-actions';
 
-type ItemType = {
-	CustomComponent: ReactElement | any;
-	active: boolean;
-	color: number;
-	divider: boolean;
-	id: string;
-	label: string;
-	name: string;
-	open: boolean;
-	actions?: Array<unknown>;
-};
 type ItemProps = {
 	item: ItemType;
 };
 
-const CustomComp = (props: ItemProps): ReactElement => {
+const CustomComp: FC<ItemProps> = (props) => {
 	const actions = useGetTagsActions({ tag: props?.item });
+
 	const triggerSearch = useCallback(
 		() =>
 			runSearch(
@@ -51,7 +42,7 @@ const CustomComp = (props: ItemProps): ReactElement => {
 						value: `tag:"${props?.item?.name}"`
 					}
 				],
-				CALENDAR_ROUTE
+				'mails'
 			),
 		[props?.item?.color, props?.item?.name]
 	);
@@ -59,11 +50,8 @@ const CustomComp = (props: ItemProps): ReactElement => {
 	return (
 		<Dropdown contextMenu items={actions} display="block" width="fit" onClick={triggerSearch}>
 			<Row mainAlignment="flex-start" height="fit" padding={{ left: 'large' }} takeAvailableSpace>
-				<Icon
-					size="large"
-					icon="Tag"
-					customColor={ZIMBRA_STANDARD_COLORS[props?.item?.color].hex}
-				/>
+				<Icon size="large" icon="Tag" color={ZIMBRA_STANDARD_COLORS[props?.item?.color ?? 0].hex} />
+
 				<Padding right="large" />
 				<Tooltip label={props?.item?.name} placement="right" maxWidth="100%">
 					<AccordionItem {...props} height="2.5rem" />
@@ -72,30 +60,51 @@ const CustomComp = (props: ItemProps): ReactElement => {
 		</Dropdown>
 	);
 };
-const useGetTagsAccordion = (): ItemType[] => {
+
+export const TagLabel: FC<ItemType> = (props) => {
+	const createModal = useContext(ModalManagerContext) as () => () => void;
+	return (
+		<Dropdown contextMenu display="block" width="fit" items={[createTag({ createModal })]}>
+			<Row mainAlignment="flex-start" padding={{ horizontal: 'large' }} takeAvailableSpace>
+				<Icon size="large" icon="TagsMoreOutline" /> <Padding right="large" />
+				<AccordionItem {...{ ...props, color: `${props.color}` }} height="2.5rem" />
+			</Row>
+		</Dropdown>
+	);
+};
+
+const useGetTagsAccordion = (): TagsAccordionItems => {
 	const tagsFromStore = useTags();
+
 	return useMemo(
-		() =>
-			reduce(
+		() => ({
+			id: 'Tags',
+			label: t('label.tags', 'Tags'),
+			active: false,
+			open: false,
+			onClick: (e: SyntheticEvent<Element, Event> | KeyboardEvent): void => {
+				e.stopPropagation();
+			},
+			CustomComponent: TagLabel,
+			items: reduce(
 				tagsFromStore,
 				(acc: Array<ItemType>, v) => {
 					const item = {
 						id: v.id,
+						item: v,
 						active: false,
 						color: v.color || 0,
-						divider: false,
 						label: v.name,
 						name: v.name,
 						open: false,
 						CustomComponent: CustomComp
 					};
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
 					acc.push(item);
 					return acc;
 				},
 				[]
-			),
+			)
+		}),
 		[tagsFromStore]
 	);
 };

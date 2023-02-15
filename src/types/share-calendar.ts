@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Grant } from '@zextras/carbonio-shell-ui';
+import { Folder, Grant } from '@zextras/carbonio-shell-ui';
 import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
 
 export type ShareCalendarModalProps = {
-	folder: any;
+	folder: Folder;
 	closeFn?: any;
 	onGoBack?: any;
 	secondaryLabel?: string;
