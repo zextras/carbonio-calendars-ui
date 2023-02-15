@@ -3,23 +3,30 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useContext } from 'react';
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { FOLDERS, Folder, t } from '@zextras/carbonio-shell-ui';
+import React, { SyntheticEvent, useContext } from 'react';
 import { useDispatch } from 'react-redux';
-import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
-import { NewModal } from '../view/sidebar/new-modal';
 import { folderAction } from '../store/actions/calendar-actions';
-import { EmptyModal } from '../view/sidebar/empty-modal';
-import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
-import { DeleteModal } from '../view/sidebar/delete-modal';
 import { getFolder } from '../store/actions/get-folder';
-import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
-import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
-import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
 import { StoreProvider } from '../store/redux';
+import { DeleteModal } from '../view/sidebar/delete-modal';
+import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
+import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
+import { EmptyModal } from '../view/sidebar/empty-modal';
+import { NewModal } from '../view/sidebar/new-modal';
+import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
+import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
 
-export const useCalendarActions = (item) => {
+type CalendarActionsProps = {
+	id: string;
+	icon: string;
+	label: string;
+	click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
+	disabled?: boolean;
+};
+export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> => {
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
@@ -29,7 +36,7 @@ export const useCalendarActions = (item) => {
 			id: FOLDER_ACTIONS.NEW,
 			icon: 'CalendarOutline',
 			label: t('label.new_calendar', 'New calendar'),
-			click: (e) => {
+			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -37,7 +44,7 @@ export const useCalendarActions = (item) => {
 					{
 						children: (
 							<StoreProvider>
-								<NewModal onClose={() => closeModal()} />
+								<NewModal onClose={(): void => closeModal()} />
 							</StoreProvider>
 						)
 					},
@@ -49,46 +56,47 @@ export const useCalendarActions = (item) => {
 			id: FOLDER_ACTIONS.MOVE_TO_ROOT,
 			icon: 'MoveOutline',
 			label: t('action.move_to_root', 'Move to root'),
-			click: (e) => {
+			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
-				dispatch(
-					folderAction({ id: item.id, op: 'move', changes: { parent: FOLDERS.USER_ROOT } })
-				).then((res) => {
-					if (res.type.includes('fulfilled')) {
-						createSnackbar({
-							key: `calendar-moved-root`,
-							replace: true,
-							type: item?.parent === FOLDERS.TRASH ? 'success' : 'info',
-							hideButton: true,
-							label:
-								item?.parent === FOLDERS.TRASH
-									? t('label.error_try_again', 'Something went wrong, please try again')
-									: t(
-											'message.snackbar.calendar_moved_to_root_folder',
-											'Calendar moved to Root folder'
-									  ),
-							autoHideTimeout: 3000
-						});
-					} else {
-						createSnackbar({
-							key: `calendar-moved-root-error`,
-							replace: true,
-							type: 'error',
-							hideButton: true,
-							label: t('label.error_try_again', 'Something went wrong, please try again'),
-							autoHideTimeout: 3000
-						});
-					}
-				});
+				dispatch(folderAction({ id: item.id, op: 'move', changes: { parent: FOLDERS.USER_ROOT } }))
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					.then((res) => {
+						if (res.type.includes('fulfilled')) {
+							createSnackbar({
+								key: `calendar-moved-root`,
+								replace: true,
+								type: item?.parent?.id === FOLDERS.TRASH ? 'success' : 'info',
+								hideButton: true,
+								label:
+									item?.parent?.id === FOLDERS.TRASH
+										? t('label.error_try_again', 'Something went wrong, please try again')
+										: t(
+												'message.snackbar.calendar_moved_to_root_folder',
+												'Calendar moved to Root folder'
+										  ),
+								autoHideTimeout: 3000
+							});
+						} else {
+							createSnackbar({
+								key: `calendar-moved-root-error`,
+								replace: true,
+								type: 'error',
+								hideButton: true,
+								label: t('label.error_try_again', 'Something went wrong, please try again'),
+								autoHideTimeout: 3000
+							});
+						}
+					});
 			}
 		},
 		{
 			id: FOLDER_ACTIONS.EMPTY_TRASH,
 			icon: 'SlashOutline',
 			label: t('action.empty_trash', 'Empty Trash'),
-			click: (e) => {
+			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -96,7 +104,7 @@ export const useCalendarActions = (item) => {
 					{
 						children: (
 							<StoreProvider>
-								<EmptyModal onClose={() => closeModal()} />
+								<EmptyModal onClose={(): void => closeModal()} />
 							</StoreProvider>
 						)
 					},
@@ -109,7 +117,7 @@ export const useCalendarActions = (item) => {
 			id: FOLDER_ACTIONS.EDIT,
 			icon: 'Edit2Outline',
 			label: t('action.edit_calendar_properties', 'Edit calendar properties'),
-			click: (e) => {
+			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -121,7 +129,7 @@ export const useCalendarActions = (item) => {
 									folder={item}
 									grant={item.acl?.grant}
 									totalAppointments={item.n}
-									onClose={() => closeModal()}
+									onClose={(): void => closeModal()}
 								/>
 							</StoreProvider>
 						),
@@ -136,7 +144,7 @@ export const useCalendarActions = (item) => {
 			id: FOLDER_ACTIONS.DELETE,
 			icon: 'Trash2Outline',
 			label: t('action.delete_calendar', 'Delete calendar'),
-			click: (e) => {
+			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -144,7 +152,7 @@ export const useCalendarActions = (item) => {
 					{
 						children: (
 							<StoreProvider>
-								<DeleteModal folder={item} onClose={() => closeModal()} />
+								<DeleteModal folder={item} onClose={(): void => closeModal()} />
 							</StoreProvider>
 						)
 					},
@@ -156,7 +164,7 @@ export const useCalendarActions = (item) => {
 			id: FOLDER_ACTIONS.REMOVE_FROM_LIST,
 			icon: 'CloseOutline',
 			label: t('remove_from_this_list', 'Remove from this list'),
-			click: (e) => {
+			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 					dispatch(folderAction({ id: item.id, op: FOLDER_ACTIONS.DELETE }));
@@ -167,39 +175,45 @@ export const useCalendarActions = (item) => {
 			id: FOLDER_ACTIONS.SHARES_INFO,
 			icon: 'InfoOutline',
 			label: t('shares_info', 'Shares Info'),
-			click: (e) => {
+			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
-				dispatch(getFolder(item.id)).then((res) => {
-					if (res.type.includes('fulfilled')) {
-						const closeModal = createModal(
-							{
-								children: (
-									<StoreProvider>
-										<SharesInfoModal onClose={() => closeModal()} folder={res.payload.link} />
-									</StoreProvider>
-								)
-							},
-							true
-						);
-					}
-				});
+				dispatch(getFolder(item.id))
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					.then((res) => {
+						if (res.type.includes('fulfilled')) {
+							const closeModal = createModal(
+								{
+									children: (
+										<StoreProvider>
+											<SharesInfoModal
+												onClose={(): void => closeModal()}
+												folder={res.payload.link}
+											/>
+										</StoreProvider>
+									)
+								},
+								true
+							);
+						}
+					});
 			}
 		},
 		{
 			id: FOLDER_ACTIONS.SHARE,
 			icon: 'SharedCalendarOutline',
 			label: t('action.share_calendar', 'Share Calendar'),
-			click: () => {
+			click: (): void => {
 				const closeModal = createModal(
 					{
 						children: (
 							<StoreProvider>
 								<ShareCalendarModal
 									folder={item}
-									totalAppointments={item.n}
-									closeFn={() => closeModal()}
+									closeFn={(): void => closeModal()}
+									grant={item?.acl?.grant ?? []}
 								/>
 							</StoreProvider>
 						),
@@ -214,12 +228,12 @@ export const useCalendarActions = (item) => {
 			icon: 'Copy',
 			label: t('action.calendar_access_share', 'Calendar access share'),
 			disabled: !item?.acl?.grant,
-			click: () => {
+			click: (): void => {
 				const closeModal = createModal(
 					{
 						children: (
 							<StoreProvider>
-								<ShareCalendarUrlModal folder={item} onClose={() => closeModal()} />
+								<ShareCalendarUrlModal folder={item} onClose={(): void => closeModal()} />
 							</StoreProvider>
 						),
 						maxHeight: '70vh',
@@ -255,9 +269,7 @@ export const useCalendarActions = (item) => {
 						action.id !== FOLDER_ACTIONS.SHARES_INFO
 				)
 				.map((action) =>
-					action.id !== FOLDER_ACTIONS.NEW || action.id === FOLDER_ACTIONS.DELETE
-						? { ...action, disabled: true }
-						: action
+					action.id !== FOLDER_ACTIONS.NEW ? { ...action, disabled: true } : action
 				);
 		// trash
 		case FOLDERS.TRASH:
@@ -272,7 +284,7 @@ export const useCalendarActions = (item) => {
 				);
 		// customizable folders
 		default:
-			return item?.owner
+			return item.isLink && item?.owner
 				? actions
 						.filter(
 							(action) =>
@@ -294,10 +306,13 @@ export const useCalendarActions = (item) => {
 								action.id !== FOLDER_ACTIONS.SHARES_INFO
 						)
 						.map((action) => {
-							if (item?.parent === FOLDERS.USER_ROOT && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
+							if (
+								item?.parent?.id === FOLDERS.USER_ROOT &&
+								action.id === FOLDER_ACTIONS.MOVE_TO_ROOT
+							) {
 								return { ...action, disabled: true };
 							}
-							if (item?.parent === FOLDERS.TRASH && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
+							if (item?.parent?.id === FOLDERS.TRASH && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
 								return { ...action, label: t('label.restore_calendar', 'Restore calendar') };
 							}
 							return action;

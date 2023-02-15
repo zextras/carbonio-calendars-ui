@@ -3,12 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
-import { ModalHeader } from '../../commons/modal-header';
+import { Folder } from '@zextras/carbonio-shell-ui';
+import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 
-export const ShareInfoRow = ({ icon, label, text }) => (
+export const ShareInfoRow: FC<{
+	icon: string;
+	label: string;
+	text: string | number | undefined;
+}> = ({ icon, label, text }) => (
 	<Row width="fill" mainAlignment="flex-start" padding={{ all: 'small' }}>
 		<Row padding={{ right: 'small' }}>
 			<Icon icon={icon} />
@@ -22,7 +27,12 @@ export const ShareInfoRow = ({ icon, label, text }) => (
 	</Row>
 );
 
-export const SharesInfoModal = ({ onClose, folder }) => {
+type SharesInfoModalProps = {
+	onClose: () => void;
+	folder: Folder & { owner?: string };
+};
+
+export const SharesInfoModal: FC<SharesInfoModalProps> = ({ onClose, folder }) => {
 	const [t] = useTranslation();
 
 	const text = (/r/.test(folder.perm || '') ? `${t('read', 'Read')}` : '')
@@ -51,7 +61,7 @@ export const SharesInfoModal = ({ onClose, folder }) => {
 			<ShareInfoRow
 				icon="CalendarModOutline"
 				label={`${t('type', 'Type')}`}
-				text={t('shared_folders', 'Shared Calendars')}
+				text={t('shared_folders', 'Shared Calendars') as string}
 			/>
 			<ShareInfoRow
 				icon="UnlockOutline"

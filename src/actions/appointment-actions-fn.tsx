@@ -209,6 +209,8 @@ export const acceptInvitation =
 				})
 			)
 			.then(() =>
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
 			);
 	};
@@ -225,6 +227,8 @@ export const declineInvitation =
 				})
 			)
 			.then(() =>
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'DE' }))
 			);
 	};
@@ -241,6 +245,8 @@ export const acceptAsTentative =
 				})
 			)
 			.then(() =>
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
 			);
 	};

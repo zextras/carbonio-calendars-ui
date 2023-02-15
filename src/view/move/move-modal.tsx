@@ -3,14 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { AccordionItemType, Container, Input, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { TFunction } from 'i18next';
-import React, { useState, useMemo, useCallback, ReactElement } from 'react';
-import { Input, Container, Text, AccordionItemType } from '@zextras/carbonio-design-system';
-import { filter, startsWith, reduce, isEmpty } from 'lodash';
+import { filter, isEmpty, reduce, startsWith } from 'lodash';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ModalHeader } from '../../commons/modal-header';
-import ModalFooter from '../../commons/modal-footer';
+import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
+import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { getFolderTranslatedName } from '../../commons/utilities';
 import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { selectCalendars } from '../../store/selectors/calendars';
@@ -122,7 +122,7 @@ export const MoveModal = ({
 			[
 				{
 					id: FOLDERS.USER_ROOT,
-					label: getFolderTranslatedName(FOLDERS.USER_ROOT, 'Root'),
+					label: getFolderTranslatedName({ folderId: FOLDERS.USER_ROOT, folderName: 'Root' }),
 					level: 0,
 					open: true,
 					items: nestFilteredFolders(folders, '1', filterFromInput),
