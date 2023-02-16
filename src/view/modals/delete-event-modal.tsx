@@ -24,7 +24,6 @@ const ItalicText = styled(Text)`
 type DeleteEventModalProps = {
 	event: EventType;
 	invite: Invite;
-	context: any;
 	onClose: () => void;
 };
 
@@ -134,14 +133,13 @@ const DeleteEventModalContent = ({
 export const DeleteEventModal = ({
 	event,
 	invite,
-	context,
 	onClose
 }: DeleteEventModalProps): ReactElement => {
 	const { isOrganizer, isException, participants } = invite;
 	const participantsSize = useMemo(() => size(participants), [participants]);
 	const dispatch = useDispatch();
 	const calendarFolders = useCalendarFolders();
-	const isInstance = context?.isInstance;
+	const isInstance = !!event.resource.ridZ;
 	const isRecurrent = !!invite.recurrenceRule;
 	const isSeries = isRecurrent && !isInstance;
 	const isSingleInstance = isInstance && !isRecurrent;

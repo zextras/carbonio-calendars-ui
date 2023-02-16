@@ -176,12 +176,7 @@ export const moveToTrash =
 			{
 				children: (
 					<StoreProvider>
-						<DeleteEventModal
-							event={event}
-							invite={invite}
-							context={context}
-							onClose={(): void => closeModal()}
-						/>
+						<DeleteEventModal event={event} invite={invite} onClose={(): void => closeModal()} />
 					</StoreProvider>
 				),
 				onClose: () => {
