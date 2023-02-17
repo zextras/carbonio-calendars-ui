@@ -72,7 +72,7 @@ export const EventSummaryView = ({
 			}));
 	}, []);
 
-	return invite ? (
+	return (
 		<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
 			<Container
 				padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }}
@@ -84,14 +84,16 @@ export const EventSummaryView = ({
 				{timeData && <TimeInfoRow timeInfoData={timeData} showIcon />}
 				{locationData && <LocationRow locationData={locationData} showIcon />}
 				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
-				<ParticipantsRow event={event} invite={invite} />
+				{invite && <ParticipantsRow event={event} invite={invite} />}
 				{event?.resource?.tags?.length > 0 && <TagsRow event={event} />}
 				{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
 					<DescriptionFragmentRow event={event} />
 				)}
 				<Divider />
-				<ActionsButtonsRow onClose={onClose} event={event} invite={invite} />
+				<ActionsButtonsRow onClose={onClose} event={event} />
 			</Container>
 		</Popover>
-	) : null;
+	);
 };
+
+export const MemoEventSummaryView = React.memo(EventSummaryView);

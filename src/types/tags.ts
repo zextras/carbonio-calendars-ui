@@ -7,17 +7,14 @@
 import { ReactElement } from 'react';
 
 export type TagType = {
-	item: {
-		customComponent?: ReactElement;
-		active?: boolean;
-		color?: number;
-		divider?: boolean;
-		id: string;
-		label?: string;
-		name?: string;
-		open?: boolean;
-		keepOpen?: boolean;
-		CustomComponent?: ReactElement;
-		items: Array<TagType>;
-	};
+	customComponent?: ReactElement;
+	active?: boolean;
+	color?: number;
+	divider?: boolean;
+	id: string;
+	label?: string;
+	name?: string;
+	open?: boolean;
+	keepOpen?: boolean;
+	CustomComponent?: ReactElement;
 };

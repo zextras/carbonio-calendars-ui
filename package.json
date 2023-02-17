@@ -101,7 +101,7 @@
 		"react-widgets-moment": "4.0.30",
 		"redux": "^4.2.1",
 		"styled-components": "^5.3.6",
-		"zustand": "^3.7.2"
+		"zustand": "^4.3.3"
 	},
 	"browserslist": [
 		">1%",

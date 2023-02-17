@@ -97,6 +97,7 @@
     },
     "label": {
         "access_revoked": "Access revoked",
+        "action_performed": "You already performed this action",
         "add_share": "Add share",
         "all_calendars": "All calendars",
         "all_day": "All day",
@@ -185,6 +186,7 @@
         "new_tag": "New Tag",
         "new_time_proposed": "New Time Proposed",
         "no_end_date": "No end date",
+        "no_rights": "You do not have permission to perform this action",
         "no_special_char_allowed": "Name should not contain any special character",
         "no_subject": "No subject",
         "no_title": "No Title",

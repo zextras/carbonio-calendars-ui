@@ -6,7 +6,6 @@
 import {
 	Accordion,
 	AccordionItem,
-	AccordionItemType,
 	Checkbox,
 	Container,
 	Icon,

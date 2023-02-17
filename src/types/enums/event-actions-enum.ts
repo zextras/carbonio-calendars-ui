@@ -22,7 +22,13 @@ export const EventActionsEnum = {
 	REPLY: 'reply',
 	FIND_SHARES: 'find_shares',
 	EXPAND_SERIES: 'expand_series',
-	DELETE_PERMANENTLY: 'deletePermanently'
+	DELETE_PERMANENTLY: 'deletePermanently',
+	NEW_TAG: 'new_tag',
+	DELETE_TAG: 'delete_tag',
+	EDIT_TAG: 'edit_tag',
+	APPLY_TAG: 'apply_tag',
+	INSTANCE: 'instance',
+	SERIES: 'series'
 } as const;
 
 type ObjectValues<T> = T[keyof T];

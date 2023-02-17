@@ -29,11 +29,7 @@ type CustomEventComponentProps = {
 	title: string;
 };
 
-export const CustomEventComponent = ({
-	event,
-	tags,
-	title
-}: CustomEventComponentProps): ReactElement => {
+const CustomEventComponent = ({ event, tags, title }: CustomEventComponentProps): ReactElement => {
 	const [showDropdown, setShowDropdown] = useState(false);
 	const onIconClick = useCallback((ev) => {
 		ev.stopPropagation();
@@ -228,3 +224,5 @@ export const CustomEventComponent = ({
 		</Row>
 	);
 };
+
+export const MemoCustomEventComponent = React.memo(CustomEventComponent);
