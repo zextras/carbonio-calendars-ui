@@ -24,7 +24,7 @@ import {
 import { useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { workWeek } from '../../utils/work-week';
 import CalendarStyle from './calendar-style';
-import { CustomEvent } from './custom-event';
+import { MemoCustomEvent } from './custom-event';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
@@ -49,7 +49,7 @@ const CalendarSyncWithRange = () => {
 
 const customComponents = {
 	toolbar: CustomToolbar,
-	event: (props) => <CustomEvent {...props} />,
+	event: (props) => <MemoCustomEvent {...props} />,
 	eventWrapper: CustomEventWrapper
 };
 
