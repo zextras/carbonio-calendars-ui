@@ -6,22 +6,17 @@
 import { isNil, debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { Input } from '@zextras/carbonio-design-system';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorLocation } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import { editEditorLocation } from '../../../store/slices/editor-slice';
 
-type EditorTitleProps = {
-	editorId: string;
-	callbacks: EditorCallbacks;
-};
-
-export const EditorLocation = ({ editorId, callbacks }: EditorTitleProps): ReactElement | null => {
+export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
-	const location = useSelector(selectEditorLocation(editorId));
+	const location = useAppSelector(selectEditorLocation(editorId));
 	const [value, setValue] = useState(location ?? '');
-	const { onLocationChange } = callbacks;
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (location) {
@@ -31,11 +26,17 @@ export const EditorLocation = ({ editorId, callbacks }: EditorTitleProps): React
 
 	const debounceInput = useMemo(
 		() =>
-			debounce(onLocationChange, 500, {
-				trailing: true,
-				leading: false
-			}),
-		[onLocationChange]
+			debounce(
+				(loc) => {
+					dispatch(editEditorLocation({ id: editorId, location: loc }));
+				},
+				500,
+				{
+					trailing: true,
+					leading: false
+				}
+			),
+		[dispatch, editorId]
 	);
 
 	const onChange = useCallback(

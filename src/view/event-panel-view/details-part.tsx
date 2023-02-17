@@ -7,12 +7,11 @@ import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-
 import React, { ReactElement, useMemo } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { isNil, omitBy } from 'lodash';
+import { useAppSelector } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { Calendar } from '../../types/store/calendars';
 import { Invite } from '../../types/store/invite';
-import { Store } from '../../types/store/store';
 import { ImageAndIconPart } from './image-and-icon-part';
 import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { LocationRow } from '../event-summary-view/location-row';
@@ -82,7 +81,7 @@ export const DetailsPart = ({
 	isPrivate,
 	invite
 }: DetailsPartProps): ReactElement | null => {
-	const calendar = useSelector(selectCalendar(event.resource.calendar.id));
+	const calendar = useAppSelector(selectCalendar(event.resource.calendar.id));
 
 	const timeData = useMemo(
 		() =>

@@ -6,19 +6,19 @@
 import { Tooltip } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorIsRichText } from '../../../store/selectors/editor';
-import { EditorProps } from '../../../types/editor';
+import { editIsRichText } from '../../../store/slices/editor-slice';
 import { ResizedIconCheckbox } from './editor-styled-components';
 
-export const EditorRichTextButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
-	const { onToggleRichText } = callbacks;
-	const isRichText = useSelector(selectEditorIsRichText(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+export const EditorRichTextButton = ({ editorId }: { editorId: string }): ReactElement => {
+	const isRichText = useAppSelector(selectEditorIsRichText(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	const onClick = useCallback(() => {
-		onToggleRichText(!isRichText);
-	}, [isRichText, onToggleRichText]);
+		dispatch(editIsRichText({ id: editorId, isRichText: !isRichText }));
+	}, [dispatch, editorId, isRichText]);
 
 	return (
 		<Tooltip label={t('tooltip.enable_disable_rich_text', 'Enable/Disable rich text editor')}>

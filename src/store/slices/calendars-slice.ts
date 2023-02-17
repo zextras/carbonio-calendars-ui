@@ -7,6 +7,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
 import moment from 'moment';
 import { Calendar } from '../../types/store/calendars';
+import { CalendarSlice } from '../../types/store/store';
 import { folderAction } from '../actions/calendar-actions';
 import { createCalendar } from '../actions/create-calendar';
 import { getFolder } from '../actions/get-folder';
@@ -30,14 +31,16 @@ import { setRangeReducer } from '../reducers/set-range';
 import { shareCalenderFullFilled } from '../reducers/share-calender-reducers';
 import { handleUpdateCalendar } from '../reducers/update-calendar';
 
+const initialState: CalendarSlice = {
+	status: 'idle',
+	calendars: {} as Record<string, Calendar>,
+	start: moment().subtract('7', 'days').valueOf(),
+	end: moment().add('15', 'days').valueOf()
+};
+
 export const calendarsSlice = createSlice({
 	name: 'calendars',
-	initialState: {
-		status: 'idle',
-		calendars: {} as Record<string, Calendar>,
-		start: moment().subtract('7', 'days').valueOf(),
-		end: moment().add('15', 'days').valueOf()
-	},
+	initialState,
 	reducers: {
 		handleCreatedCalendars: produce(handleCreatedCalendarsReducer),
 		handleModifiedCalendars: produce(handleModifiedCalendarsReducer),

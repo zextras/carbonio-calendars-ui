@@ -9,11 +9,11 @@ import { size } from 'lodash';
 import moment from 'moment';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
 import { generateEditor } from '../commons/editor-generator';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
+import { useAppDispatch } from '../store/redux/hooks';
 import { EventType } from '../types/event';
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
@@ -110,7 +110,7 @@ export const useDeleteActions = (
 	context: AccountContext
 ): UseDeleteActionsType => {
 	const [t] = useTranslation();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext) as (obj: SnackbarArgumentType) => void;
 	const [deleteAll, setDeleteAll] = useState(true);
 	const [notifyOrganizer, setNotifyOrganizer] = useState(false);
@@ -215,7 +215,7 @@ export const useDeleteActions = (
 						}
 					]
 				};
-				const { editor } = generateEditor({
+				const editor = generateEditor({
 					event,
 					invite: modifiedInvite,
 					context: {

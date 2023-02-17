@@ -6,11 +6,11 @@
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { FOLDERS, Folder, t } from '@zextras/carbonio-shell-ui';
 import React, { SyntheticEvent, useContext } from 'react';
-import { useDispatch } from 'react-redux';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getFolder } from '../store/actions/get-folder';
 import { StoreProvider } from '../store/redux';
+import { useAppDispatch } from '../store/redux/hooks';
 import { DeleteModal } from '../view/sidebar/delete-modal';
 import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
 import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
@@ -28,7 +28,7 @@ type CalendarActionsProps = {
 };
 export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> => {
 	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const actions = [
@@ -179,26 +179,20 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 				if (e) {
 					e.stopPropagation();
 				}
-				dispatch(getFolder(item.id))
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					.then((res) => {
-						if (res.type.includes('fulfilled')) {
-							const closeModal = createModal(
-								{
-									children: (
-										<StoreProvider>
-											<SharesInfoModal
-												onClose={(): void => closeModal()}
-												folder={res.payload.link}
-											/>
-										</StoreProvider>
-									)
-								},
-								true
-							);
-						}
-					});
+				dispatch(getFolder(item.id)).then((res) => {
+					if (res.type.includes('fulfilled')) {
+						const closeModal = createModal(
+							{
+								children: (
+									<StoreProvider>
+										<SharesInfoModal onClose={(): void => closeModal()} folder={res.payload.link} />
+									</StoreProvider>
+								)
+							},
+							true
+						);
+					}
+				});
 			}
 		},
 		{

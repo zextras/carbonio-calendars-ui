@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
-import produce from 'immer';
+import { AppointmentsSlice } from '../../types/store/store';
 import { moveAppointmentRequest } from '../actions/move-appointment';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
 import { modifyAppointmentRequest } from '../actions/modify-appointment';
@@ -52,17 +52,19 @@ import {
 	handleModifyAppointmentRejected
 } from '../reducers/modify-appointment';
 
+const initialState: AppointmentsSlice = {
+	status: 'init',
+	appointments: {}
+};
+
 export const appointmentsSlice = createSlice({
 	name: 'appointments',
-	initialState: {
-		status: 'init',
-		appointments: {}
-	},
+	initialState,
 	reducers: {
 		updateParticipationStatus: handleUpdateParticipationStatus,
 		updateAppointment: updateAppointmentReducer,
-		handleModifiedAppointments: produce(handleModifiedAppointmentsReducer),
-		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer)
+		handleModifiedAppointments: handleModifiedAppointmentsReducer,
+		handleCreatedAppointments: handleCreatedAppointmentsReducer
 	},
 	extraReducers: (builder) => {
 		builder.addCase(modifyAppointmentRequest.pending, handleModifyAppointmentPending);

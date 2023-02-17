@@ -8,14 +8,13 @@ import { Container } from '@zextras/carbonio-design-system';
 import { isEmpty, map, reduce } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { searchAppointments } from '../../store/actions/search-appointments';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
-import { Store } from '../../types/store/store';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
 
@@ -44,7 +43,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		query: []
 	});
 	const [loading, setLoading] = useState(false);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const { path } = useRouteMatch();
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
 	const [resultLabel, setResultLabel] = useState<string>(t('label.results_for', 'Results for: '));
@@ -57,7 +56,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		[zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch]
 	);
 
-	const calendars = useSelector(selectCalendars);
+	const calendars = useAppSelector(selectCalendars);
 	const searchInFolders = useMemo(
 		() =>
 			reduce(
@@ -154,7 +153,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		}
 	}, [query, search, searchResults.query, isInvalidQuery, t]);
 
-	const appointments = useSelector((state: Store) =>
+	const appointments = useAppSelector((state) =>
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
 	);
 	return (

@@ -5,190 +5,191 @@
  */
 import { Editor, IdentityItem } from '../../types/editor';
 import { InviteFreeBusy } from '../../types/store/invite';
-import { Store } from '../../types/store/store';
+import type { RootState } from '../redux';
 
 export const selectEditor =
 	(id: string) =>
-	(state: Store): Editor =>
+	(state: RootState): Editor =>
 		state.editor.editors[id];
 
-export const selectActiveEditorId = (state: Store): string | undefined => state?.editor?.activeId;
+export const selectActiveEditorId = (state: RootState): string | undefined =>
+	state?.editor?.activeId;
 
-export const selectActiveEditor = (state: Store): Editor | undefined =>
+export const selectActiveEditor = (state: RootState): Editor | undefined =>
 	state?.editor?.activeId ? state?.editor?.editors?.[state.editor.activeId] : undefined;
 
-export const selectSearchActiveId = (state: Store): string | undefined =>
+export const selectSearchActiveId = (state: RootState): string | undefined =>
 	state.editor.searchActiveId;
 
-export function selectEditors(state: Store): Record<string, Editor> {
+export function selectEditors(state: RootState): Record<string, Editor> {
 	return state.editor.editors;
 }
 
 export const selectEditorIsRichText =
 	(id: string) =>
-	(state: Store): boolean | undefined =>
+	(state: RootState): boolean | undefined =>
 		state?.editor?.editors?.[id]?.isRichText;
 
 export const selectOrganizer =
 	(id: string) =>
-	(state: Store): IdentityItem =>
+	(state: RootState): IdentityItem =>
 		state?.editor?.editors?.[id]?.organizer;
 
 export const selectEditorTitle =
 	(id: string) =>
-	(state: Store): string | undefined =>
+	(state: RootState): string | undefined =>
 		state?.editor?.editors?.[id]?.title;
 
 export const selectEditorLocation =
 	(id: string) =>
-	(state: Store): string | undefined =>
+	(state: RootState): string | undefined =>
 		state?.editor?.editors?.[id]?.location;
 
 export const selectEditorRoom =
 	(id: string) =>
-	(state: Store): { room: string; label: string } | undefined =>
+	(state: RootState): { room: string; label: string } | undefined =>
 		state?.editor?.editors?.[id]?.room;
 
 export const selectEditorAttendees =
 	(id: string) =>
-	(state: Store): Array<any> =>
+	(state: RootState): Array<any> =>
 		state?.editor?.editors?.[id]?.attendees;
 
 export const selectEditorOptionalAttendees =
 	(id: string) =>
-	(state: Store): Array<any> =>
+	(state: RootState): Array<any> =>
 		state?.editor?.editors?.[id]?.optionalAttendees;
 
 export const selectEditorAllDay =
 	(id: string) =>
-	(state: Store): boolean | undefined =>
+	(state: RootState): boolean | undefined =>
 		state?.editor?.editors?.[id]?.allDay;
 
 export const selectEditorFreeBusy =
 	(id: string) =>
-	(state: Store): InviteFreeBusy | undefined =>
+	(state: RootState): InviteFreeBusy | undefined =>
 		state?.editor?.editors?.[id]?.freeBusy;
 
 export const selectEditorClass =
 	(id: string) =>
-	(state: Store): string | undefined =>
+	(state: RootState): string | undefined =>
 		state?.editor?.editors?.[id]?.class;
 
 export const selectEditorStart =
 	(id: string) =>
-	(state: Store): number | undefined =>
+	(state: RootState): number | undefined =>
 		state?.editor?.editors?.[id]?.start;
 
 export const selectEditorEnd =
 	(id: string) =>
-	(state: Store): number | undefined =>
+	(state: RootState): number | undefined =>
 		state?.editor?.editors?.[id]?.end;
 
 export const selectEditorRichText =
 	(id: string) =>
-	(state: Store): string =>
+	(state: RootState): string =>
 		state?.editor?.editors?.[id]?.richText;
 
 export const selectEditorPlainText =
 	(id: string) =>
-	(state: Store): string =>
+	(state: RootState): string =>
 		state?.editor?.editors?.[id]?.plainText;
 
 export const selectEditorTimezone =
 	(id: string) =>
-	(state: Store): string | undefined =>
+	(state: RootState): string | undefined =>
 		state?.editor?.editors?.[id]?.timezone;
 
 export const selectEditorReminder =
 	(id: string) =>
-	(state: Store): string | undefined =>
+	(state: RootState): string | undefined =>
 		state?.editor?.editors?.[id]?.reminder;
 
 export const selectEditorRecurrence =
 	(id: string) =>
-	(state: Store): any =>
+	(state: RootState): any =>
 		state?.editor?.editors?.[id]?.recur;
 
 export const selectEditorRecurrenceFrequency =
 	(id: string) =>
-	(state: Store): string | undefined =>
+	(state: RootState): string | undefined =>
 		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.freq;
 
 export const selectEditorRecurrenceInterval =
 	(id: string) =>
-	(state: Store): { ival: number } | undefined =>
+	(state: RootState): { ival: number } | undefined =>
 		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.interval?.[0]?.ival && {
 			ival: state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.interval?.[0]?.ival
 		};
 
 export const selectEditorRecurrenceByDay =
 	(id: string) =>
-	(state: Store): { wkday: Array<{ day: string }> } | undefined =>
+	(state: RootState): { wkday: Array<{ day: string }> } | undefined =>
 		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.byday?.[0]?.wkday && {
 			wkday: state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.byday?.[0]?.wkday
 		};
 
 export const selectEditorRecurrenceUntilDate =
 	(id: string) =>
-	(state: Store): string | undefined =>
+	(state: RootState): string | undefined =>
 		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.until?.[0]?.d;
 
 export const selectEditorRecurrenceSetPos =
 	(id: string) =>
-	(state: Store): string | undefined =>
+	(state: RootState): string | undefined =>
 		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.bysetpos?.poslist;
 
 export const selectEditorRecurrenceCount =
 	(id: string) =>
-	(state: Store): number | undefined =>
+	(state: RootState): number | undefined =>
 		state?.editor?.editors?.[id]?.recur?.[0]?.add?.[0]?.rule?.[0]?.count?.[0]?.num;
 
 export const selectEditorCalendar =
 	(id: string) =>
-	(state: Store): any =>
+	(state: RootState): any =>
 		state?.editor?.editors?.[id]?.calendar;
 
 export const selectEditorIsNew =
 	(id: string) =>
-	(state: Store): boolean =>
+	(state: RootState): boolean =>
 		state?.editor?.editors?.[id]?.isNew;
 
 export const selectEditorInviteId =
 	(id: string) =>
-	(state: Store): string | undefined =>
+	(state: RootState): string | undefined =>
 		state?.editor?.editors?.[id]?.inviteId;
 
 export const selectEditorAttachmentFiles =
 	(id: string) =>
-	(state: Store): Array<any> =>
+	(state: RootState): Array<any> =>
 		state?.editor?.editors?.[id]?.attachmentFiles;
 
 export const selectEditorAttach =
 	(id: string) =>
-	(state: Store): Array<any> =>
+	(state: RootState): Array<any> =>
 		state?.editor?.editors?.[id]?.attach?.mp;
 
 export const selectEditorDisabled =
 	(id: string) =>
-	(state: Store): Record<string, boolean> =>
+	(state: RootState): Record<string, boolean> =>
 		state?.editor?.editors?.[id]?.disabled;
 
 export const selectIsInstance =
 	(id: string) =>
-	(state: Store): boolean =>
+	(state: RootState): boolean =>
 		state?.editor?.editors?.[id]?.isInstance;
 
 export const selectIsSeries =
 	(id: string) =>
-	(state: Store): boolean =>
+	(state: RootState): boolean =>
 		state?.editor?.editors?.[id]?.isSeries;
 
 export const selectIsException =
 	(id: string) =>
-	(state: Store): boolean =>
+	(state: RootState): boolean =>
 		state?.editor?.editors?.[id]?.isException;
 
 export const selectEditorPanel =
 	(id: string) =>
-	(state: Store): boolean =>
+	(state: RootState): boolean =>
 		state?.editor?.editors?.[id]?.panel;

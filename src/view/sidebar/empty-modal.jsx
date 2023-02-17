@@ -6,15 +6,15 @@
 import React, { useContext } from 'react';
 import { Text, Container, Padding, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { folderAction } from '../../store/actions/calendar-actions';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
+import { useAppDispatch } from '../../store/redux/hooks';
 
 export const EmptyModal = ({ onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [t] = useTranslation();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const onConfirm = () => {
 		dispatch(folderAction({ id: '3', op: 'empty', changes: { recursive: true } })).then((res) => {

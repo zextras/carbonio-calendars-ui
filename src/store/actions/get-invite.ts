@@ -6,15 +6,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getMessageRequest } from '../../soap/get-message-request';
 
+export type GetInviteArguments = { inviteId: string; ridZ?: string };
+
 export const getInvite = createAsyncThunk(
 	'invites/get invite',
-	async (
-		{ inviteId, ridZ }: { inviteId: string; ridZ?: string },
-		{ rejectWithValue }
-	): Promise<any> => {
+	async ({ inviteId, ridZ }: GetInviteArguments, { rejectWithValue }): Promise<any> => {
 		const response = await getMessageRequest({ inviteId, ridZ });
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		if (response?.error) {
 			return rejectWithValue(response);
 		}

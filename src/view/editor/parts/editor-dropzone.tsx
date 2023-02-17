@@ -6,24 +6,21 @@
 import { map } from 'lodash';
 import React, { DragEvent, ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
-import { EditorCallbacks } from '../../../types/editor';
+import { useAppDispatch } from '../../../store/redux/hooks';
+import { editEditorAttachments } from '../../../store/slices/editor-slice';
 import { addAttachments } from './editor-attachments-button';
 import { DropZoneAttachment } from './editor-dropzone-attachments';
 
 type DropzoneProps = {
 	editorId: string;
-	callbacks: EditorCallbacks;
 	expanded?: boolean;
 	children: ReactNode;
 };
 
-export const EditorDropZone = ({
-	editorId,
-	callbacks,
-	children
-}: DropzoneProps): ReactElement | null => {
+export const EditorDropZone = ({ editorId, children }: DropzoneProps): ReactElement | null => {
 	const [dropZoneEnable, setDropZoneEnable] = useState(false);
 	const parts: never[] = useMemo(() => [], []);
+	const dispatch = useAppDispatch();
 
 	const onDragOver = useCallback((event: DragEvent): void => {
 		event.preventDefault();
@@ -44,11 +41,17 @@ export const EditorDropZone = ({
 						size: file.s,
 						aid: file.aid
 					}));
-					callbacks.onAttachmentsChange({ aid: map(payload, (el) => el.aid), mp }, attachments);
+					dispatch(
+						editEditorAttachments({
+							id: editorId,
+							attach: { aid: map(payload, (el) => el.aid), mp },
+							attachmentFiles: attachments
+						})
+					);
 				});
 			}
 		},
-		[callbacks, editorId, parts]
+		[dispatch, editorId, parts]
 	);
 
 	const onDragLeave = useCallback((event: DragEvent): void => {

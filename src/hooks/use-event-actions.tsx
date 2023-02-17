@@ -7,7 +7,6 @@ import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-d
 import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { omit } from 'lodash';
 import React, { useContext, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
 	acceptAsTentativeItem,
 	acceptInvitationItem,
@@ -18,6 +17,7 @@ import {
 	moveEventItem,
 	openEventItem
 } from '../actions/appointment-actions-items';
+import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import {
 	ActionsProps,
@@ -137,8 +137,8 @@ export const useEventActions = ({
 	onClose?: () => void;
 	event?: EventType;
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
-	const invite = useSelector(selectInstanceInvite(event?.resource?.inviteId));
-	const dispatch = useDispatch();
+	const invite = useAppSelector(selectInstanceInvite(event?.resource?.inviteId));
+	const dispatch = useAppDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);

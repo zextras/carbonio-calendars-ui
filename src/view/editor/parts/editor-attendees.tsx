@@ -8,18 +8,20 @@ import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttendees,
 	selectEditorDisabled,
 	selectEditorOptionalAttendees
 } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import {
+	editEditorAttendees,
+	editEditorOptionalAttendees
+} from '../../../store/slices/editor-slice';
 
 type EditorAttendeesProps = {
 	editorId: string;
-	callbacks: EditorCallbacks;
 };
 
 export const AttendeesContainer = styled.div`
@@ -36,22 +38,35 @@ export const AttendeesContainer = styled.div`
 	}
 `;
 
-export const EditorAttendees = ({ editorId, callbacks }: EditorAttendeesProps): ReactElement => {
+export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElement => {
 	const [t] = useTranslation();
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const [showOptionals, setShowOptional] = useState(false);
 	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
-	const { onAttendeesChange, onOptionalAttendeesChange } = callbacks;
+	const dispatch = useAppDispatch();
 
-	const attendees = useSelector(selectEditorAttendees(editorId));
-	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const attendees = useAppSelector(selectEditorAttendees(editorId));
+	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
-	// const isDisabled = useMemo(() => updateAppTime || proposeNewTime, []);
 	const hasError = useMemo(() => some(attendees ?? [], { error: true }), [attendees]);
 	const optionalHasError = useMemo(
 		() => some(optionalAttendees ?? [], { error: true }),
 		[optionalAttendees]
+	);
+
+	const onChange = useCallback(
+		(value) => {
+			dispatch(editEditorAttendees({ id: editorId, attendees: value }));
+		},
+		[dispatch, editorId]
+	);
+
+	const onOptionalsChange = useCallback(
+		(value) => {
+			dispatch(editEditorOptionalAttendees({ id: editorId, optionalAttendees: value }));
+		},
+		[dispatch, editorId]
 	);
 
 	return (
@@ -69,7 +84,7 @@ export const EditorAttendees = ({ editorId, callbacks }: EditorAttendeesProps): 
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
 								placeholder={t('label.attendee_plural', 'Attendees')}
-								onChange={onAttendeesChange}
+								onChange={onChange}
 								defaultValue={attendees}
 								disabled={disabled?.attendees}
 							/>
@@ -78,7 +93,7 @@ export const EditorAttendees = ({ editorId, callbacks }: EditorAttendeesProps): 
 								placeholder={t('label.attendee_plural', 'Attendees')}
 								background="gray5"
 								onChange={(items: any): void => {
-									onAttendeesChange(items);
+									onChange(items);
 								}}
 								defaultValue={attendees}
 								hasError={hasError}
@@ -111,7 +126,7 @@ export const EditorAttendees = ({ editorId, callbacks }: EditorAttendeesProps): 
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
 								placeholder={t('label.optional_plural', 'Optionals')}
-								onChange={onOptionalAttendeesChange}
+								onChange={onOptionalsChange}
 								defaultValue={optionalAttendees}
 								disabled={disabled?.optionalAttendees}
 							/>
@@ -119,9 +134,7 @@ export const EditorAttendees = ({ editorId, callbacks }: EditorAttendeesProps): 
 							<ChipInput
 								placeholder={t('label.optional_plural', 'Optionals')}
 								background="gray5"
-								onChange={(items: any): void => {
-									onOptionalAttendeesChange(items);
-								}}
+								onChange={onOptionalsChange}
 								defaultValue={optionalAttendees}
 								hasError={optionalHasError}
 								errorLabel=""

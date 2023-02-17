@@ -16,9 +16,9 @@ import {
 	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
 import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useEventActions } from '../../hooks/use-event-actions';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 import { selectInstanceInvite } from '../../store/selectors/invites';
@@ -34,13 +34,13 @@ type CustomEventProps = {
 };
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const anchorRef = useRef(null);
 	const [open, setOpen] = useState(false);
 	const { action } = useParams<{ action: string }>();
-	const invite = useSelector(selectInstanceInvite(event.resource.inviteId));
+	const invite = useAppSelector(selectInstanceInvite(event.resource.inviteId));
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const getEventInvite = useCallback(() => {
 		if (!invite) {

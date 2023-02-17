@@ -6,17 +6,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { sendInviteReplyRequest } from '../../soap/send-invite-reply-request';
 
+export type SendInviteResponseArguments = {
+	inviteId: string;
+	action: string;
+	updateOrganizer: boolean;
+	fromMail?: boolean;
+};
+
 export const sendInviteResponse = createAsyncThunk(
 	'invites/sendInviteResponse',
-	async ({
-		inviteId,
-		action,
-		updateOrganizer
-	}: {
-		inviteId: string;
-		action: string;
-		updateOrganizer: boolean;
-	}): Promise<any> => {
+	async ({ inviteId, action, updateOrganizer }: SendInviteResponseArguments): Promise<any> => {
 		const response = await sendInviteReplyRequest({ id: inviteId, action, updateOrganizer });
 		return { response };
 	}

@@ -4,32 +4,28 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector } from '../../store/redux/hooks';
 import { Header } from './header';
 import { EditorPanel } from '../editor/editor-panel';
 import { selectSearchActiveId } from '../../store/selectors/editor';
-import { createCallbacks } from '../../commons/editor-generator';
 
 export const Editor = (): ReactElement | null => {
-	const editorId = useSelector(selectSearchActiveId);
-	const dispatch = useDispatch();
-	const callbacks = useMemo(
-		() => (editorId ? createCallbacks(editorId, { dispatch }) : undefined),
-		[dispatch, editorId]
-	);
+	const editorId = useAppSelector(selectSearchActiveId);
+
 	const close = useCallback(() => {
 		replaceHistory('');
 	}, []);
-	return editorId && callbacks ? (
+
+	return editorId ? (
 		<Container
 			mainAlignment="flex-start"
 			padding={{ bottom: 'medium' }}
 			style={{ overflowY: 'hidden' }}
 		>
 			<Header title={''} closeAction={close} actions={[]} />
-			<EditorPanel editorId={editorId} callbacks={callbacks} />
+			<EditorPanel editorId={editorId} />
 		</Container>
 	) : null;
 };

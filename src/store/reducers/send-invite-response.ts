@@ -3,28 +3,29 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const sendInviteResponsePending = (state: any, { meta }: any): void => {
-	if (meta.arg.fromMail) {
-		// in case if invite respnse is sent from mail
-	} else {
+
+import { PayloadAction } from '@reduxjs/toolkit';
+import { FulfilledResponse, InvitesSlice, PendingResponse } from '../../types/store/store';
+import { SendInviteResponseArguments } from '../actions/send-invite-response';
+
+export const sendInviteResponsePending = (
+	state: InvitesSlice,
+	action: PayloadAction<undefined, string, PendingResponse<SendInviteResponseArguments>>
+): void => {
+	if (!action.meta.arg.fromMail) {
 		state.status = 'pending';
 	}
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const sendInviteResponseFulfilled = (state: any, { meta }: any): void => {
-	if (meta.arg.fromMail) {
-		// in case if invite respnse is sent from mail
-	} else {
-		// eslint-disable-next-line no-param-reassign
+export const sendInviteResponseFulfilled = (
+	state: InvitesSlice,
+	action: PayloadAction<undefined, string, FulfilledResponse<SendInviteResponseArguments>>
+): void => {
+	if (!action.meta.arg.fromMail) {
 		state.status = 'fulfilled';
 	}
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const sendInviteResponseRejected = (state: any, action: any): void => {
-	// TODO: better handling setting error only in that message
+export const sendInviteResponseRejected = (state: InvitesSlice): void => {
 	state.status = 'error';
-	throw new Error(action);
 };

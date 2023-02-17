@@ -7,9 +7,9 @@ import { Avatar, Container, Icon, Row, Text } from '@zextras/carbonio-design-sys
 import moment from 'moment';
 import React, { ReactElement, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
+import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
 	selectEditorCalendar,
@@ -37,13 +37,13 @@ const TitleRow = ({ children }: { children: ReactElement }): ReactElement => (
 
 export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement => {
 	const [t] = useTranslation();
-	const start = useSelector(selectEditorStart(editorId));
-	const end = useSelector(selectEditorEnd(editorId));
-	const location = useSelector(selectEditorLocation(editorId));
-	const room = useSelector(selectEditorRoom(editorId));
-	const title = useSelector(selectEditorTitle(editorId));
-	const calendar = useSelector(selectEditorCalendar(editorId));
-	const allDay = useSelector(selectEditorAllDay(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const end = useAppSelector(selectEditorEnd(editorId));
+	const location = useAppSelector(selectEditorLocation(editorId));
+	const room = useAppSelector(selectEditorRoom(editorId));
+	const title = useAppSelector(selectEditorTitle(editorId));
+	const calendar = useAppSelector(selectEditorCalendar(editorId));
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
 
 	const apptDateTime = useMemo(() => {
 		const diff = moment(end).diff(moment(start), 'days');

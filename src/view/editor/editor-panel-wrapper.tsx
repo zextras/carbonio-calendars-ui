@@ -17,9 +17,8 @@ import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isNil, map } from 'lodash';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { createCallbacks } from '../../commons/editor-generator';
+import { useAppSelector } from '../../store/redux/hooks';
 import { selectActiveEditorId, selectEditorTitle } from '../../store/selectors/editor';
 import { EditorPanel } from './editor-panel';
 
@@ -57,7 +56,7 @@ type HeaderProps = {
 const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement | null => {
 	const [t] = useTranslation();
 
-	const title = useSelector(selectEditorTitle(editorId));
+	const title = useAppSelector(selectEditorTitle(editorId));
 
 	const headerItems = useMemo(
 		() => [
@@ -118,13 +117,8 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement 
 };
 
 const EditorPanelWrapper = (): ReactElement | null => {
-	const editorId = useSelector(selectActiveEditorId);
-	const dispatch = useDispatch();
+	const editorId = useAppSelector(selectActiveEditorId);
 	const [expanded, setExpanded] = useState(false);
-	const callbacks = useMemo(
-		() => (editorId ? createCallbacks(editorId, { dispatch }) : undefined),
-		[dispatch, editorId]
-	);
 
 	useEffect(() => {
 		if (!editorId) {
@@ -132,7 +126,7 @@ const EditorPanelWrapper = (): ReactElement | null => {
 		}
 	}, [editorId]);
 
-	return editorId && callbacks ? (
+	return editorId ? (
 		<>
 			{expanded && <BackgroundContainer data-testid="EditorBackgroundContainer" />}
 			<AppointmentCardContainer
@@ -141,7 +135,7 @@ const EditorPanelWrapper = (): ReactElement | null => {
 				data-testid="AppointmentCardContainer"
 			>
 				<Header editorId={editorId} expanded={expanded} setExpanded={setExpanded} />
-				<EditorPanel editorId={editorId} callbacks={callbacks} expanded={expanded} />
+				<EditorPanel editorId={editorId} expanded={expanded} />
 			</AppointmentCardContainer>
 		</>
 	) : null;

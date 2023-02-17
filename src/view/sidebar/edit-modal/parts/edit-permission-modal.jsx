@@ -15,7 +15,6 @@ import {
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
@@ -23,6 +22,7 @@ import { findLabel } from '../../../../settings/components/utils';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { shareCalendar } from '../../../../store/actions/share-calendar';
 import { GranteeInfo } from './grantee-info';
+import { useAppDispatch } from '../../../../store/redux/hooks';
 
 export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 	const [t] = useTranslation();
@@ -30,7 +30,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 	const [standardMessage, setStandardMessage] = useState('');
 	const { onClose, roleOptions } = useContext(EditModalContext);
 	const accounts = useUserAccounts();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [shareWithUserRole, setshareWithUserRole] = useState('');
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);

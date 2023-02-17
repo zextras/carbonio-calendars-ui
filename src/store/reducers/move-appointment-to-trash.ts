@@ -3,16 +3,34 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import { cloneDeep, filter } from 'lodash';
+import {
+	AppointmentsSlice,
+	FulfilledResponse,
+	InvitesSlice,
+	PendingResponse,
+	RejectedResponse
+} from '../../types/store/store';
+import {
+	MoveAppointmentToTrashArguments,
+	MoveAppointmentToTrashReturnType
+} from '../actions/move-appointment-to-trash';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const moveAppointmentToTrashPending = (state: any, { meta }: any): void => {
-	const { ridZ, deleteSingleInstance, id } = meta.arg;
+export const moveAppointmentToTrashPending = (
+	state: AppointmentsSlice,
+	action: PayloadAction<
+		MoveAppointmentToTrashReturnType,
+		string,
+		PendingResponse<MoveAppointmentToTrashArguments>
+	>
+): void => {
+	const { ridZ, deleteSingleInstance, id } = action.meta.arg;
 
 	state.status = 'pending';
 	if (state.appointments) {
 		// eslint-disable-next-line no-param-reassign
-		meta.arg.prevState = cloneDeep(state);
+		action.meta.arg.prevState = cloneDeep(state);
 		deleteSingleInstance
 			? (state.appointments[id].inst = filter(
 					state.appointments[id].inst,
@@ -22,24 +40,40 @@ export const moveAppointmentToTrashPending = (state: any, { meta }: any): void =
 	}
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const moveAppointmentToTrashFulfilled = (state: any, { meta }: any): void => {
+export const moveAppointmentToTrashFulfilled = (
+	state: InvitesSlice | AppointmentsSlice,
+	action: PayloadAction<
+		MoveAppointmentToTrashReturnType,
+		string,
+		FulfilledResponse<MoveAppointmentToTrashArguments>
+	>
+): void => {
 	state.status = 'fulFilled';
-	const { inviteId, ridZ, deleteSingleInstance, isRecurrent, id } = meta.arg;
-	if (state.invites) {
-		if (!deleteSingleInstance) delete state?.invites?.[inviteId];
+	const { inviteId, ridZ, deleteSingleInstance, isRecurrent, id } = action.meta.arg;
+	if ((state as InvitesSlice).invites) {
+		if (!deleteSingleInstance) delete (state as InvitesSlice)?.invites?.[inviteId];
 	}
 
-	if (state.appointments && isRecurrent) {
-		state.appointments[id].inst = filter(state.appointments[id].inst, (inst) => inst.ridZ !== ridZ);
+	if ((state as AppointmentsSlice).appointments && isRecurrent) {
+		(state as AppointmentsSlice).appointments[id].inst = filter(
+			(state as AppointmentsSlice).appointments[id].inst,
+			(inst) => inst.ridZ !== ridZ
+		);
 	}
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const moveAppointmentToTrashRejected = (state: any, { meta }: any): void => {
+export const moveAppointmentToTrashRejected = (
+	state: AppointmentsSlice,
+	action: PayloadAction<
+		unknown,
+		string,
+		RejectedResponse<MoveAppointmentToTrashArguments>,
+		SerializedError
+	>
+): void => {
 	if (state.appointments) {
 		// eslint-disable-next-line no-param-reassign
-		state = meta.arg.prevState;
+		state = action.meta.arg.prevState;
 		state.status = 'error';
 	}
 };

@@ -6,14 +6,14 @@
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
 import { useContext, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { openAppointment } from '../actions/appointment-actions-fn';
+import { useAppDispatch } from '../store/redux/hooks';
 import { PanelView } from '../types/actions';
 import { createAndApplyTag } from '../view/tags/tag-actions';
 import { useCalendarFolders } from './use-calendar-folders';
 
 export const useSearchViewActions = ({ event }: { event?: any }): any => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);

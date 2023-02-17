@@ -30,7 +30,6 @@ import {
 } from 'lodash';
 import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
@@ -38,6 +37,7 @@ import { SidebarCustomItem } from '../../carbonio-ui-commons/types/sidebar';
 import { ResFolder } from '../../carbonio-ui-commons/utils';
 import { getFolderTranslatedName } from '../../commons/utilities';
 import { createMountpoint } from '../../store/actions/create-mountpoint';
+import { useAppDispatch } from '../../store/redux/hooks';
 
 const ContainerEl = styled(Container)`
 	overflow-y: auto;
@@ -85,7 +85,7 @@ export const SharesModal: FC<{ calendars: ResFolder; onClose: () => void }> = ({
 }) => {
 	const [links, setLinks] = useState([]);
 	const [data, setData] = useState<any>();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const onConfirm = useCallback(() => {
 		dispatch(createMountpoint(links));
 		onClose();

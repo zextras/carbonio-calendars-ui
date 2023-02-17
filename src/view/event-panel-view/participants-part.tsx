@@ -7,7 +7,7 @@ import React, { ReactElement, useMemo } from 'react';
 import { Avatar, Container, Row, Text, Chip } from '@zextras/carbonio-design-system';
 import { Trans } from 'react-i18next';
 import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../store/redux/hooks';
 import { selectCalendar } from '../../store/selectors/calendars';
 import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
 import { ParticipantsDisplayer } from './participants-displayer';
@@ -25,7 +25,7 @@ export const ParticipantsPart = ({
 	participants
 }: ParticipantProps): ReactElement => {
 	const account = useUserAccount();
-	const calendar = useSelector(selectCalendar(invite.ciFolder));
+	const calendar = useAppSelector(selectCalendar(invite.ciFolder));
 	const iAmAttendee = useMemo(
 		() => (!invite.isOrganizer && !calendar?.owner) ?? false,
 		[calendar?.owner, invite.isOrganizer]

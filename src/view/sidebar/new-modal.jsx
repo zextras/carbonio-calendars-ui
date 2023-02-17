@@ -17,13 +17,13 @@ import {
 } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
 import { t } from '@zextras/carbonio-shell-ui';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
 import { selectAllCalendars } from '../../store/selectors/calendars';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 
 const Square = styled.div`
 	width: 1.125rem;
@@ -101,7 +101,7 @@ const getStatusItems = () =>
 	}));
 
 export const NewModal = ({ onClose }) => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [inputValue, setInputValue] = useState('');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
@@ -109,7 +109,7 @@ export const NewModal = ({ onClose }) => {
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useContext(SnackbarManagerContext);
 
-	const folders = useSelector(selectAllCalendars);
+	const folders = useAppSelector(selectAllCalendars);
 
 	const folderArray = useMemo(() => map(folders, (f) => f.label), [folders]);
 

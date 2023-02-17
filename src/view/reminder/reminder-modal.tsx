@@ -8,7 +8,6 @@ import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { ModalHeader } from '../../commons/modal-header';
 import { generateEditor } from '../../commons/editor-generator';
 import ModalFooter from '../../commons/modal-footer';
@@ -17,8 +16,8 @@ import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
+import { useAppDispatch } from '../../store/redux/hooks';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
-import { EditorCallbacks } from '../../types/editor';
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
 
@@ -32,7 +31,7 @@ export const ReminderModal = ({
 	const [showNewTimeModal, setShowNewTimeModal] = useState(false);
 	const [activeReminder, setActiveReminder] = useState<ReminderItem | undefined>(undefined);
 	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const openModal = useMemo(() => !isEmpty(reminders), [reminders]);
 
@@ -76,7 +75,7 @@ export const ReminderModal = ({
 					start: activeReminder.start,
 					end: activeReminder.end
 				};
-				const { editor, callbacks } = generateEditor({
+				const editor = generateEditor({
 					event,
 					invite,
 					context: {
@@ -88,9 +87,8 @@ export const ReminderModal = ({
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
 					title: editor.title ?? '',
-					...editor,
-					callbacks
-				} as unknown as Board & { callbacks: EditorCallbacks });
+					...editor
+				} as unknown as Board);
 				dismissAll();
 			}
 		});

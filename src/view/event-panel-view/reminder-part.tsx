@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, ButtonOld as Button, Dropdown } from '@zextras/carbonio-design-system';
-import { t, useFolders } from '@zextras/carbonio-shell-ui';
-import { filter, noop } from 'lodash';
+import { t } from '@zextras/carbonio-shell-ui';
+import { noop } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
+import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 
@@ -23,7 +23,7 @@ export const ReminderPart = ({
 	invite: Invite;
 	event: EventType;
 }): ReactElement | null => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const setSnooze = useCallback(
 		(time) => {
@@ -31,7 +31,7 @@ export const ReminderPart = ({
 				...invite,
 				alarmValue: time
 			};
-			const { editor } = generateEditor({
+			const editor = generateEditor({
 				event,
 				invite: editorInvite,
 				context: {

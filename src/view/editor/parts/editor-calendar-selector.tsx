@@ -3,31 +3,48 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement } from 'react';
-import { useSelector } from 'react-redux';
+import { getUserAccount } from '@zextras/carbonio-shell-ui';
+import React, { ReactElement, useCallback } from 'react';
 import { Row } from '@zextras/carbonio-design-system';
 import { selectEditorCalendar, selectEditorDisabled } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import { editEditorCalendar } from '../../../store/slices/editor-slice';
 import { CalendarSelector } from './calendar-selector';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 
-type EditorCalendarSelectorProps = {
-	editorId: string;
-	callbacks: EditorCallbacks;
-};
+export const EditorCalendarSelector = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const calendar = useAppSelector(selectEditorCalendar(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
-export const EditorCalendarSelector = ({
-	editorId,
-	callbacks
-}: EditorCalendarSelectorProps): ReactElement | null => {
-	const { onCalendarChange } = callbacks;
-	const calendar = useSelector(selectEditorCalendar(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
-
+	const onChange = useCallback(
+		(value) => {
+			const account = getUserAccount();
+			if (value) {
+				const calResource = {
+					id: value.id,
+					name: value.name,
+					color: value.color
+				};
+				const organizer = {
+					email: value.owner ?? '',
+					name: '',
+					sentBy: account.name
+				};
+				const data = {
+					id: editorId,
+					calendar: calResource,
+					organizer: value.isShared ? organizer : undefined
+				};
+				dispatch(editEditorCalendar(data));
+			}
+		},
+		[dispatch, editorId]
+	);
 	return (
 		<Row height="fit" width="fill" padding={{ top: 'large' }}>
 			<CalendarSelector
 				calendarId={calendar?.id}
-				onCalendarChange={onCalendarChange}
+				onCalendarChange={onChange}
 				disabled={disabled?.calendar}
 			/>
 		</Row>

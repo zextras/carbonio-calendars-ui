@@ -9,15 +9,16 @@ import { isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { generateEditor } from '../commons/editor-generator';
+import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from '../constants';
+import { useAppDispatch } from '../store/redux/hooks';
 import { useCalendarFolders } from './use-calendar-folders';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
-import { AppDispatch, StoreProvider } from '../store/redux';
+import { StoreProvider } from '../store/redux';
 import { setRange } from '../store/slices/calendars-slice';
 import { useCalendarDate, useIsSummaryViewOpen } from '../store/zustand/hooks';
 import { useAppStatusStore } from '../store/zustand/store';
@@ -37,7 +38,7 @@ export const useCalendarComponentUtils = (): {
 	const [date, setDate] = useState(calendarDate);
 	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const { action } = useParams<{
@@ -100,7 +101,7 @@ export const useCalendarComponentUtils = (): {
 						allDay: !!isAllDay,
 						panel: false
 					};
-					const { editor, callbacks } = generateEditor({
+					const editor = generateEditor({
 						event,
 						invite,
 						context: {
@@ -114,7 +115,7 @@ export const useCalendarComponentUtils = (): {
 							)
 						}
 					});
-					callbacks.onSave({ draft, editor, isNew: false }).then((res) => {
+					onSave({ draft, editor, isNew: false, dispatch }).then((res) => {
 						if (res?.response) {
 							const success = res?.response;
 							getBridgedFunctions()?.createSnackbar({
@@ -137,7 +138,7 @@ export const useCalendarComponentUtils = (): {
 								<StoreProvider>
 									<ModifyStandardMessageModal
 										title={t('label.edit')}
-										onClose={(): any => closeModal()}
+										onClose={(): void => closeModal()}
 										confirmLabel={t('action.send_edit', 'Send Edit')}
 										onConfirm={(context): void => {
 											onConfirm(false, context);
@@ -196,7 +197,7 @@ export const useCalendarComponentUtils = (): {
 								<StoreProvider>
 									<AppointmentTypeHandlingModal
 										event={event}
-										onClose={(): any => closeModal()}
+										onClose={(): void => closeModal()}
 										onSeries={onEntireSeries}
 										onInstance={onSingleInstance}
 									/>
@@ -221,7 +222,7 @@ export const useCalendarComponentUtils = (): {
 					moment(e.end).minutes() === moment(e.start).minutes() &&
 					!moment(e.start).isSame(moment(e.end));
 				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
-				const { editor, callbacks } = generateEditor({
+				const editor = generateEditor({
 					context: {
 						dispatch,
 						folders: calendarFolders,
@@ -236,10 +237,7 @@ export const useCalendarComponentUtils = (): {
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
 					title: editor.title ?? '',
-					...editor,
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					callbacks
+					...editor
 				});
 			}
 		},

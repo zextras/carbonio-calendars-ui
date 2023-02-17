@@ -7,14 +7,14 @@ import { Container, SnackbarManagerContext, Text } from '@zextras/carbonio-desig
 import { FOLDERS, Folder } from '@zextras/carbonio-shell-ui';
 import React, { FC, useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { folderAction } from '../../store/actions/calendar-actions';
+import { useAppDispatch } from '../../store/redux/hooks';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const onConfirm = (): void => {
 		onClose();

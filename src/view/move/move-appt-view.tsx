@@ -5,8 +5,8 @@
  */
 import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import React, { useState, useCallback, ReactElement } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { NewModal } from './new-calendar-modal';
 import { MoveModal } from './move-modal';
@@ -18,8 +18,8 @@ type MoveAppointmentProps = {
 };
 
 export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactElement | null => {
-	const dispatch = useDispatch();
-	const currentFolder = useSelector(selectCalendar(event.resource.calendar.id));
+	const dispatch = useAppDispatch();
+	const currentFolder = useAppSelector(selectCalendar(event.resource.calendar.id));
 	const [showNewFolderModal, setShowNewFolderModal] = useState(false);
 
 	const toggleModal = useCallback(

@@ -8,26 +8,21 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
 	selectEditorDisabled,
 	selectEditorEnd,
 	selectEditorStart
 } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import { editEditorAllDay } from '../../../store/slices/editor-slice';
 
-type AllDayProps = {
-	editorId: string;
-	callbacks: EditorCallbacks;
-};
-
-export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): ReactElement | null => {
-	const allDay = useSelector(selectEditorAllDay(editorId));
-	const start = useSelector(selectEditorStart(editorId));
-	const end = useSelector(selectEditorEnd(editorId));
-	const { onAllDayChange } = callbacks;
-	const disabled = useSelector(selectEditorDisabled(editorId));
+export const EditorAllDayCheckbox = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const end = useAppSelector(selectEditorEnd(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	const startDate = useMemo(() => (start ? new Date(start) : undefined), [start]);
 	const endDate = useMemo(() => (end ? new Date(end) : undefined), [end]);
@@ -38,11 +33,13 @@ export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): Reac
 			if (e && startDate && endDate) {
 				const startValue = startDate.setHours(0, 0, 0, 0);
 				const endValue = startValue + diff;
-				onAllDayChange(!allDay, startValue, endValue);
+				dispatch(
+					editEditorAllDay({ id: editorId, allDay: !allDay, start: startValue, end: endValue })
+				);
 			}
-			onAllDayChange(!allDay);
+			dispatch(editEditorAllDay({ id: editorId, allDay: !allDay }));
 		},
-		[allDay, diff, endDate, onAllDayChange, startDate]
+		[allDay, diff, dispatch, editorId, endDate, startDate]
 	);
 
 	return !isNil(allDay) ? (

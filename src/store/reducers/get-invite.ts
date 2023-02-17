@@ -3,17 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { PayloadAction } from '@reduxjs/toolkit';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
-import { InvitesSlice } from '../../types/store/store';
+import { FulfilledResponse, InvitesSlice } from '../../types/store/store';
+import { GetInviteArguments } from '../actions/get-invite';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function getInviteFulfilled(state: InvitesSlice, { meta, payload }: any): void {
-	const { m } = payload;
-	const invite = normalizeInvite(m?.[0]);
-	state.invites = {
-		...state.invites,
-		[meta.arg.inviteId]: invite
-	};
+export function getInviteFulfilled(
+	state: InvitesSlice,
+	action: PayloadAction<{ m: any }, string, FulfilledResponse<GetInviteArguments>>
+): void {
+	const { m } = action.payload;
+	state.invites[action.meta.arg.inviteId] = normalizeInvite(m?.[0]);
 }
 
 export function getInviteRejected(state: InvitesSlice): void {

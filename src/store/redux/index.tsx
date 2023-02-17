@@ -23,13 +23,9 @@ const store = configureStore({
 	devTools: {
 		name: CALENDAR_APP_ID
 	},
-	// middleware: __CARBONIO_DEV__
-	// 	? // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-	// 	  (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
-	// 	: // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-	// 	  (getDefaultMiddleware) => getDefaultMiddleware(),
 	reducer: combineReducers(reducers)
 });
 
 export const StoreProvider: FC = ({ children }) => <Provider store={store}>{children}</Provider>;
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

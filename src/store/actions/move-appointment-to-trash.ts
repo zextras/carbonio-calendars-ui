@@ -5,6 +5,7 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { cancelAppointmentRequest } from '../../soap/cancel-appointment-request';
+import type { RootState } from '../redux';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function getMp({ t, fullInvite, newMessage }: any) {
@@ -61,7 +62,19 @@ function createMessageForDelete({ invite, t, newMessage }: any) {
 	};
 }
 
-export const moveAppointmentToTrash = createAsyncThunk(
+export type MoveAppointmentToTrashArguments = any;
+export type MoveAppointmentToTrashReturnType =
+	| { response: any; inviteId: string }
+	| undefined
+	| unknown;
+
+export const moveAppointmentToTrash = createAsyncThunk<
+	MoveAppointmentToTrashReturnType,
+	MoveAppointmentToTrashArguments,
+	{
+		state: RootState;
+	}
+>(
 	'appointments/moveAppointmentToTrash',
 	async (
 		{
@@ -73,10 +86,10 @@ export const moveAppointmentToTrash = createAsyncThunk(
 			s,
 			inv,
 			newMessage
-		}: any,
-		{ getState }
+		}: MoveAppointmentToTrashArguments,
+		thunkApi
 	) => {
-		const state: any = getState();
+		const state = thunkApi.getState();
 		const invite = inv ?? state.invites.invites[inviteId];
 		const m = createMessageForDelete({ invite, t, newMessage });
 		const response = await cancelAppointmentRequest({
