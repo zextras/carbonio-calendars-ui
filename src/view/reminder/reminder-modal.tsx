@@ -56,42 +56,42 @@ export const ReminderModal = ({
 	);
 
 	const setNewTime = useCallback(() => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		dispatch(getInvite({ inviteId: activeReminder.inviteId })).then(({ payload }) => {
-			if (activeReminder) {
-				const invite = normalizeInvite(payload.m?.[0]);
-				const event = {
-					resource: {
-						calendar: activeReminder.calendar,
-						isRecurrent: activeReminder.isRecurrent,
-						isException: !!activeReminder.isException,
-						location: activeReminder.location,
-						inviteId: activeReminder.inviteId,
-						id: activeReminder.id
-					},
-					title: activeReminder.name,
-					allDay: activeReminder.allDay,
-					start: activeReminder.start,
-					end: activeReminder.end
-				};
-				const editor = generateEditor({
-					event,
-					invite,
-					context: {
-						dispatch,
-						folders: calendarFolders,
-						panel: false
-					}
-				});
-				addBoard({
-					url: `${CALENDAR_ROUTE}/`,
-					title: editor.title ?? '',
-					...editor
-				} as unknown as Board);
-				dismissAll();
-			}
-		});
+		if (activeReminder) {
+			dispatch(getInvite({ inviteId: activeReminder.inviteId })).then(({ payload }) => {
+				if (payload) {
+					const invite = normalizeInvite(payload.m?.[0]);
+					const event = {
+						resource: {
+							calendar: activeReminder.calendar,
+							isRecurrent: activeReminder.isRecurrent,
+							isException: !!activeReminder.isException,
+							location: activeReminder.location,
+							inviteId: activeReminder.inviteId,
+							id: activeReminder.id
+						},
+						title: activeReminder.name,
+						allDay: activeReminder.allDay,
+						start: activeReminder.start,
+						end: activeReminder.end
+					};
+					const editor = generateEditor({
+						event,
+						invite,
+						context: {
+							dispatch,
+							folders: calendarFolders,
+							panel: false
+						}
+					});
+					addBoard({
+						url: `${CALENDAR_ROUTE}/`,
+						title: editor.title ?? '',
+						...editor
+					} as unknown as Board);
+					dismissAll();
+				}
+			});
+		}
 	}, [activeReminder, calendarFolders, dismissAll, dispatch]);
 
 	const headerLabel = useMemo(

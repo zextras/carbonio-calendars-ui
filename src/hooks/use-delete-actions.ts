@@ -228,7 +228,7 @@ export const useDeleteActions = (
 				const draft = !(size(invite?.participants) > 0);
 				return deleteAll || isTheFirstInstance
 					? deleteEvent(event, ctxt)
-					: dispatch(modifyAppointment({ id: editor.id, draft }));
+					: dispatch(modifyAppointment({ editor, draft }));
 			};
 			deleteFunction()
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment

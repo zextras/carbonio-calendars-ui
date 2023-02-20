@@ -5,12 +5,13 @@
  */
 import { PayloadAction } from '@reduxjs/toolkit';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
+import { GetMessageReturnType } from '../../soap/get-message-request';
 import { FulfilledResponse, InvitesSlice } from '../../types/store/store';
 import { GetInviteArguments } from '../actions/get-invite';
 
 export function getInviteFulfilled(
 	state: InvitesSlice,
-	action: PayloadAction<{ m: any }, string, FulfilledResponse<GetInviteArguments>>
+	action: PayloadAction<GetMessageReturnType, string, FulfilledResponse<GetInviteArguments>>
 ): void {
 	const { m } = action.payload;
 	state.invites[action.meta.arg.inviteId] = normalizeInvite(m?.[0]);

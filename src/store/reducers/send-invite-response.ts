@@ -5,12 +5,13 @@
  */
 
 import { PayloadAction } from '@reduxjs/toolkit';
+import { SendInviteReplyReturnType } from '../../soap/send-invite-reply-request';
 import { FulfilledResponse, InvitesSlice, PendingResponse } from '../../types/store/store';
-import { SendInviteResponseArguments } from '../actions/send-invite-response';
+import { SendInviteArguments } from '../actions/send-invite-response';
 
 export const sendInviteResponsePending = (
 	state: InvitesSlice,
-	action: PayloadAction<undefined, string, PendingResponse<SendInviteResponseArguments>>
+	action: PayloadAction<undefined, string, PendingResponse<SendInviteArguments>>
 ): void => {
 	if (!action.meta.arg.fromMail) {
 		state.status = 'pending';
@@ -19,7 +20,7 @@ export const sendInviteResponsePending = (
 
 export const sendInviteResponseFulfilled = (
 	state: InvitesSlice,
-	action: PayloadAction<undefined, string, FulfilledResponse<SendInviteResponseArguments>>
+	action: PayloadAction<SendInviteReplyReturnType, string, FulfilledResponse<SendInviteArguments>>
 ): void => {
 	if (!action.meta.arg.fromMail) {
 		state.status = 'fulfilled';

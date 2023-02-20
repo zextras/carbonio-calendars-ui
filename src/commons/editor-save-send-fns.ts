@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Dispatch } from 'redux';
 import { createAppointment } from '../store/actions/new-create-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { proposeNewTime } from '../store/actions/propose-new-time';
+import { AppDispatch } from '../store/redux';
 import { updateEditor } from '../store/slices/editor-slice';
 import { Editor } from '../types/editor';
 
@@ -17,10 +17,8 @@ const createAppointmentFn = ({
 }: {
 	draft: boolean;
 	editor: Editor;
-	dispatch: Dispatch;
+	dispatch: AppDispatch;
 }): Promise<any> =>
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	dispatch(createAppointment({ draft, editor })).then(({ payload }) => {
 		const { response } = payload;
 		if (payload?.response) {
@@ -36,10 +34,8 @@ const modifyAppointmentFn = ({
 }: {
 	draft: boolean;
 	editor: Editor;
-	dispatch: Dispatch;
+	dispatch: AppDispatch;
 }): Promise<any> =>
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	dispatch(modifyAppointment({ draft, editor })).then(({ payload }) => {
 		const { response, error } = payload;
 		if (response && !error) {
@@ -49,16 +45,14 @@ const modifyAppointmentFn = ({
 		return Promise.resolve(payload);
 	});
 
-const onProposeNewTime = ({
+const onProposeNewTime = async ({
 	editorId,
 	dispatch
 }: {
 	editorId: string;
-	dispatch: Dispatch;
+	dispatch: AppDispatch;
 }): Promise<any> =>
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	dispatch(proposeNewTime({ id })).then(({ payload }) => {
+	dispatch(proposeNewTime({ id: editorId })).then(({ payload }) => {
 		const { response, editor, error } = payload;
 		if (response && !error) {
 			dispatch(updateEditor({ id: editorId, editor }));
@@ -76,7 +70,7 @@ export const onSave = ({
 	draft?: boolean;
 	isNew?: boolean;
 	editor: Editor;
-	dispatch: Dispatch;
+	dispatch: AppDispatch;
 }): Promise<any> =>
 	isNew
 		? createAppointmentFn({ draft, editor, dispatch })
@@ -89,7 +83,7 @@ export const onSend = ({
 }: {
 	isNew: boolean;
 	editor: Editor;
-	dispatch: Dispatch;
+	dispatch: AppDispatch;
 }): Promise<any> =>
 	editor?.isProposeNewTime
 		? onProposeNewTime({ editorId: editor.id, dispatch })

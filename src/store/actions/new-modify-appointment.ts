@@ -12,6 +12,7 @@ import {
 	findAttachments,
 	retrieveAttachmentsType
 } from '../../normalizations/normalizations-utils';
+import { Editor } from '../../types/editor';
 import { Invite } from '../../types/store/invite';
 import { getPrefs } from '../../carbonio-ui-commons/utils/get-prefs';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
@@ -82,7 +83,10 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 
 export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
-	async ({ draft, editor }: any, { rejectWithValue }: any): Promise<any> => {
+	async (
+		{ draft, editor }: { draft: boolean; editor: Editor },
+		{ rejectWithValue }: any
+	): Promise<any> => {
 		const { zimbraPrefUseTimeZoneListInCalendar } = getPrefs();
 
 		if (editor) {
@@ -100,6 +104,8 @@ export const modifyAppointment = createAsyncThunk(
 					},
 					isNil
 				);
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				const body = generateSoapMessageFromEditor({ ...editor, draft, exceptId });
 				const res: { calItemId: string; invId: string } = await soapFetch(
 					'CreateAppointmentException',

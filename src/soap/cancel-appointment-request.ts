@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { SendInviteReplyReturnType } from './send-invite-reply-request';
 
 type Props = {
 	deleteSingleInstance: boolean;
@@ -14,6 +15,12 @@ type Props = {
 	s: number;
 };
 
+export type CancelAppointmentRejectedType = { error: boolean; m?: never; Fault: any };
+export type CancelAppointmentFulfilledType = { m: any; Fault?: never; error?: never };
+export type CancelAppointmentReturnType =
+	| CancelAppointmentFulfilledType
+	| CancelAppointmentRejectedType;
+
 export const cancelAppointmentRequest = async ({
 	deleteSingleInstance,
 	inst,
@@ -21,7 +28,7 @@ export const cancelAppointmentRequest = async ({
 	isOrganizer,
 	m,
 	s
-}: Props): Promise<any> => {
+}: Props): Promise<CancelAppointmentReturnType> => {
 	const body = deleteSingleInstance
 		? {
 				_jsns: 'urn:zimbraMail',
@@ -37,5 +44,6 @@ export const cancelAppointmentRequest = async ({
 				comp: '0',
 				m: isOrganizer ? m : { ...m, e: [] }
 		  };
-	return soapFetch('CancelAppointment', body);
+	const response: CancelAppointmentReturnType = await soapFetch('CancelAppointment', body);
+	return response?.Fault ? { ...response.Fault, error: true } : response;
 };

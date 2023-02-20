@@ -4,7 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { cancelAppointmentRequest } from '../../soap/cancel-appointment-request';
+import {
+	CancelAppointmentRejectedType,
+	cancelAppointmentRequest
+} from '../../soap/cancel-appointment-request';
 import type { RootState } from '../redux';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -73,6 +76,7 @@ export const moveAppointmentToTrash = createAsyncThunk<
 	MoveAppointmentToTrashArguments,
 	{
 		state: RootState;
+		rejectValue: CancelAppointmentRejectedType;
 	}
 >(
 	'appointments/moveAppointmentToTrash',
@@ -87,9 +91,9 @@ export const moveAppointmentToTrash = createAsyncThunk<
 			inv,
 			newMessage
 		}: MoveAppointmentToTrashArguments,
-		thunkApi
+		{ getState, rejectWithValue }
 	) => {
-		const state = thunkApi.getState();
+		const state = getState();
 		const invite = inv ?? state.invites.invites[inviteId];
 		const m = createMessageForDelete({ invite, t, newMessage });
 		const response = await cancelAppointmentRequest({
@@ -100,6 +104,9 @@ export const moveAppointmentToTrash = createAsyncThunk<
 			m,
 			isOrganizer
 		});
+		if ((response as CancelAppointmentRejectedType)?.error) {
+			return rejectWithValue(response as CancelAppointmentRejectedType);
+		}
 		return { response, inviteId };
 	}
 );

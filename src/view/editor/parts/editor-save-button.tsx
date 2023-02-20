@@ -60,7 +60,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 				},
 				true
 			);
-		} else
+		} else {
 			onSave({ draft: !!attendeesLength, isNew, editor, dispatch }).then(({ response }) => {
 				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
@@ -73,6 +73,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 					autoHideTimeout: 3000
 				});
 			});
+		}
 	}, [editor, action, attendeesLength, isNew, dispatch, createModal, editorId, t]);
 
 	return (

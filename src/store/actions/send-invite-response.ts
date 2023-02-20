@@ -4,19 +4,30 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { sendInviteReplyRequest } from '../../soap/send-invite-reply-request';
+import {
+	SendInviteReplyFulfilledType,
+	SendInviteReplyRejectedType,
+	sendInviteReplyRequest
+} from '../../soap/send-invite-reply-request';
 
-export type SendInviteResponseArguments = {
+export type SendInviteArguments = {
 	inviteId: string;
 	action: string;
 	updateOrganizer: boolean;
 	fromMail?: boolean;
 };
 
-export const sendInviteResponse = createAsyncThunk(
+export const sendInviteResponse = createAsyncThunk<
+	SendInviteReplyFulfilledType,
+	SendInviteArguments,
+	{ rejectValue: SendInviteReplyRejectedType }
+>(
 	'invites/sendInviteResponse',
-	async ({ inviteId, action, updateOrganizer }: SendInviteResponseArguments): Promise<any> => {
+	async ({ inviteId, action, updateOrganizer }, { rejectWithValue }) => {
 		const response = await sendInviteReplyRequest({ id: inviteId, action, updateOrganizer });
-		return { response };
+		if ((response as SendInviteReplyRejectedType)?.error) {
+			return rejectWithValue(response as SendInviteReplyRejectedType);
+		}
+		return response as SendInviteReplyFulfilledType;
 	}
 );
