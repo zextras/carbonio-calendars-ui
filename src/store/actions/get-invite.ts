@@ -7,19 +7,19 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
 	GetMessageRejectedType,
 	getMessageRequest,
-	GetMessageFulfilledType
+	GetMessageReturnType
 } from '../../soap/get-message-request';
 
 export type GetInviteArguments = { inviteId: string; ridZ?: string };
 
 export const getInvite = createAsyncThunk<
-	GetMessageFulfilledType,
+	GetMessageReturnType,
 	GetInviteArguments,
 	{ rejectValue: GetMessageRejectedType }
 >('invites/get invite', async ({ inviteId, ridZ }, { rejectWithValue }) => {
 	const response = await getMessageRequest({ inviteId, ridZ });
-	if ((response as GetMessageRejectedType)?.error) {
-		return rejectWithValue(response as GetMessageRejectedType);
+	if (response?.error) {
+		return rejectWithValue(response);
 	}
-	return response as GetMessageFulfilledType;
+	return response;
 });

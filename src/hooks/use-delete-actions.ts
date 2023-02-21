@@ -131,15 +131,13 @@ export const useDeleteActions = (
 				dispatch(
 					moveAppointmentRequest({
 						id: event.resource.id,
-						l: event.resource.calendar.id
+						l: event.resource.calendar.id,
+						inviteId: event.resource.inviteId
 					})
-				)
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					.then((res: { type: string | string[] }) => {
-						onBoardClose && onBoardClose();
-						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
-					});
+				).then((res: { type: string | string[] }) => {
+					onBoardClose && onBoardClose();
+					generateAppointmentRestoredSnackbar(res, t, createSnackbar);
+				});
 			};
 			context.replaceHistory('');
 			const ctxt = {
@@ -175,14 +173,12 @@ export const useDeleteActions = (
 				dispatch(
 					moveAppointmentRequest({
 						id: event.resource.id,
-						l: event.resource.calendar.id
+						l: event.resource.calendar.id,
+						inviteId: event.resource.inviteId
 					})
-				)
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					.then((res: { type: string | string[] }) => {
-						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
-					});
+				).then((res: { type: string | string[] }) => {
+					generateAppointmentRestoredSnackbar(res, t, createSnackbar);
+				});
 			};
 			context.replaceHistory('');
 			const ctxt = {

@@ -26,7 +26,7 @@ import { getFolderFullFilled } from '../reducers/get-folder';
 import { handleCreatedCalendarsReducer } from '../reducers/handle-created-calendars';
 import { handleDeletedCalendarsReducer } from '../reducers/handle-deleted-calendars';
 import { handleModifiedCalendarsReducer } from '../reducers/handle-modified-calendars';
-import { handleSyncReducer, handleCalendarsRefreshReducer } from '../reducers/handle-sync';
+import { handleCalendarsRefreshReducer } from '../reducers/handle-sync';
 import { setRangeReducer } from '../reducers/set-range';
 import { shareCalenderFullFilled } from '../reducers/share-calender-reducers';
 import { handleUpdateCalendar } from '../reducers/update-calendar';
@@ -45,7 +45,6 @@ export const calendarsSlice = createSlice({
 		handleCreatedCalendars: produce(handleCreatedCalendarsReducer),
 		handleModifiedCalendars: produce(handleModifiedCalendarsReducer),
 		handleDeletedCalendars: produce(handleDeletedCalendarsReducer),
-		handleCalendarsSync: handleSyncReducer,
 		handleCalendarsRefresh: handleCalendarsRefreshReducer,
 		setRange: setRangeReducer,
 		updateCalendar: handleUpdateCalendar

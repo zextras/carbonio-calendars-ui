@@ -81,6 +81,7 @@ export const generateSoapMessageFromInvite = (invite: Invite): any => {
 	};
 };
 
+// todo: this thunk is not using redux! convert to regular async function
 export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
 	async (

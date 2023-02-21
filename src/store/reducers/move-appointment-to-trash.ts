@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { PayloadAction, SerializedError } from '@reduxjs/toolkit';
-import { cloneDeep, filter } from 'lodash';
+import { filter } from 'lodash';
 import {
 	AppointmentsSlice,
 	FulfilledResponse,
@@ -12,6 +12,7 @@ import {
 	PendingResponse,
 	RejectedResponse
 } from '../../types/store/store';
+import { ModifyAppointmentRejectedType } from '../actions/modify-appointment';
 import {
 	MoveAppointmentToTrashArguments,
 	MoveAppointmentToTrashReturnType
@@ -19,18 +20,14 @@ import {
 
 export const moveAppointmentToTrashPending = (
 	state: AppointmentsSlice,
-	action: PayloadAction<
-		MoveAppointmentToTrashReturnType,
-		string,
-		PendingResponse<MoveAppointmentToTrashArguments>
-	>
+	{ meta }: PayloadAction<undefined, string, PendingResponse<MoveAppointmentToTrashArguments>>
 ): void => {
-	const { ridZ, deleteSingleInstance, id } = action.meta.arg;
+	const { ridZ, deleteSingleInstance, id } = meta.arg;
 
 	state.status = 'pending';
 	if (state.appointments) {
 		// eslint-disable-next-line no-param-reassign
-		action.meta.arg.prevState = cloneDeep(state);
+		meta.arg.previousState = state.appointments;
 		deleteSingleInstance
 			? (state.appointments[id].inst = filter(
 					state.appointments[id].inst,
@@ -64,16 +61,17 @@ export const moveAppointmentToTrashFulfilled = (
 
 export const moveAppointmentToTrashRejected = (
 	state: AppointmentsSlice,
-	action: PayloadAction<
-		unknown,
+	{
+		meta
+	}: PayloadAction<
+		ModifyAppointmentRejectedType | undefined,
 		string,
 		RejectedResponse<MoveAppointmentToTrashArguments>,
 		SerializedError
 	>
 ): void => {
-	if (state.appointments) {
-		// eslint-disable-next-line no-param-reassign
-		state = action.meta.arg.prevState;
+	if (meta.arg.previousState) {
+		state.appointments = meta.arg.previousState;
 		state.status = 'error';
 	}
 };

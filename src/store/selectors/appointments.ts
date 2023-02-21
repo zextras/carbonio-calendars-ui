@@ -5,6 +5,7 @@
  */
 import { find, values, reduce, filter } from 'lodash';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
+import { EventType } from '../../types/event';
 import { Appointment, InstanceReference } from '../../types/store/appointments';
 import { Calendar } from '../../types/store/calendars';
 import type { RootState } from '../redux';
@@ -38,7 +39,7 @@ export function getSelectedEvents(
 	{ appointments }: RootState,
 	idMap: Record<string, Array<string>>,
 	calendars: Record<string, Calendar>
-): Array<any> {
+): Array<EventType> {
 	return normalizeCalendarEvents(
 		values(
 			reduce(

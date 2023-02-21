@@ -4,7 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { isNil, omitBy } from 'lodash';
-import { moveAppointmentToTrash } from '../store/actions/move-appointment-to-trash';
+import {
+	moveAppointmentToTrash,
+	MoveAppointmentToTrashArguments
+} from '../store/actions/move-appointment-to-trash';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { AppDispatch } from '../store/redux';
 import { EventType } from '../types/event';
@@ -52,6 +55,6 @@ export const deleteEvent = (
 			id
 		},
 		isNil
-	);
+	) as MoveAppointmentToTrashArguments;
 	return context.dispatch(moveAppointmentToTrash(moveToTrashArgs));
 };

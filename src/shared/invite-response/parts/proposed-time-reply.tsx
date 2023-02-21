@@ -14,7 +14,7 @@ import {
 import { t, useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
 import { appointmentToEvent } from '../../../hooks/use-invite-to-event';
-import { getAppointmentAndInvite } from '../../../store/actions/get-appointment';
+import { getAppointmentAndInvite } from '../../../commons/get-appointment';
 import { modifyAppointmentRequest } from '../../../store/actions/modify-appointment';
 import { normalizeAppointmentFromCreation } from '../../../normalizations/normalize-appointments';
 import { useAppDispatch } from '../../../store/redux/hooks';
@@ -55,7 +55,6 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				modifyAppointmentRequest({
 					appt: requiredEvent,
 					invite: normalizedInvite,
-					id: 0,
 					mailInvite: invite,
 					account: accounts[0]
 				})

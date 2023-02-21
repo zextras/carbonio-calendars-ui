@@ -29,7 +29,6 @@ import {
 	searchAppointmentsPending,
 	searchAppointmentsRejected
 } from '../reducers/search-appointments';
-import { updateAppointmentReducer } from '../reducers/update-appointment';
 import { handleUpdateParticipationStatus } from '../reducers/update-participation-status';
 import {
 	deleteAppointmentPermanentlyFulfilled,
@@ -62,7 +61,6 @@ export const appointmentsSlice = createSlice({
 	initialState,
 	reducers: {
 		updateParticipationStatus: handleUpdateParticipationStatus,
-		updateAppointment: updateAppointmentReducer,
 		handleModifiedAppointments: handleModifiedAppointmentsReducer,
 		handleCreatedAppointments: handleCreatedAppointmentsReducer
 	},
@@ -91,7 +89,6 @@ export const appointmentsSlice = createSlice({
 	}
 });
 
-export const { updateAppointment, handleModifiedAppointments, updateParticipationStatus } =
-	appointmentsSlice.actions;
+export const { handleModifiedAppointments, updateParticipationStatus } = appointmentsSlice.actions;
 
 export default appointmentsSlice.reducer;

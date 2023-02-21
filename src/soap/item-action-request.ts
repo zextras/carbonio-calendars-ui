@@ -6,26 +6,34 @@
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 
+export type ItemActionRejectedType = { error: boolean; m?: never; Fault: any };
+export type ItemActionFulfilledType = { m: any; Fault?: never; error?: never };
+export type ItemActionReturnType = ItemActionFulfilledType | ItemActionRejectedType;
+
 export const itemActionRequest = async ({
 	inviteId,
+	id,
 	op,
 	tagName,
 	parent
 }: {
-	inviteId: string;
+	inviteId?: string;
+	id?: string;
 	op: string;
 	tagName?: string;
 	parent?: string;
-}): Promise<any> =>
-	soapFetch('ItemAction', {
+}): Promise<ItemActionReturnType> => {
+	const response: ItemActionReturnType = await soapFetch('ItemAction', {
 		_jsns: 'urn:zimbraMail',
 		action: omitBy(
 			{
 				op,
-				id: inviteId,
+				id: inviteId ?? id,
 				tn: tagName,
 				l: parent
 			},
 			isNil
 		)
 	});
+	return response?.Fault ? { ...response.Fault, error: true } : response;
+};

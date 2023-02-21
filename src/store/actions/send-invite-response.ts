@@ -5,9 +5,9 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
-	SendInviteReplyFulfilledType,
 	SendInviteReplyRejectedType,
-	sendInviteReplyRequest
+	sendInviteReplyRequest,
+	SendInviteReplyReturnType
 } from '../../soap/send-invite-reply-request';
 
 export type SendInviteArguments = {
@@ -18,16 +18,16 @@ export type SendInviteArguments = {
 };
 
 export const sendInviteResponse = createAsyncThunk<
-	SendInviteReplyFulfilledType,
+	SendInviteReplyReturnType,
 	SendInviteArguments,
 	{ rejectValue: SendInviteReplyRejectedType }
 >(
 	'invites/sendInviteResponse',
 	async ({ inviteId, action, updateOrganizer }, { rejectWithValue }) => {
 		const response = await sendInviteReplyRequest({ id: inviteId, action, updateOrganizer });
-		if ((response as SendInviteReplyRejectedType)?.error) {
-			return rejectWithValue(response as SendInviteReplyRejectedType);
+		if (response?.error) {
+			return rejectWithValue(response);
 		}
-		return response as SendInviteReplyFulfilledType;
+		return response;
 	}
 );

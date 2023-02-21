@@ -99,22 +99,23 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 					offset: reset ? 0 : searchResults.offset,
 					sortBy: searchResults.sortBy
 				})
-			) // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				.then(({ payload }: any) => {
+			)
+				.then(({ payload }) => {
 					setLoading(true);
-					const ids = reduce(
-						payload.appt,
-						(acc, v) => ({ ...acc, [v.id]: map(v.inst, 'ridZ') }),
-						{}
-					);
-					setSearchResults({
-						query: queryStr,
-						appointments: ids,
-						more: payload.more,
-						offset: (payload.offset ?? 0) + 100,
-						sortBy: payload.sortBy ?? 'none'
-					});
+					if (payload) {
+						const ids = reduce(
+							payload.appt,
+							(acc, v) => ({ ...acc, [v.id]: map(v.inst, 'ridZ') }),
+							{}
+						);
+						setSearchResults({
+							query: queryStr,
+							appointments: ids,
+							more: payload.more ?? false,
+							offset: (payload.offset ?? 0) + 100,
+							sortBy: payload.sortBy ?? 'none'
+						});
+					}
 					setLoading(false);
 				})
 

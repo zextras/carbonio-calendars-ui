@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { SendInviteReplyReturnType } from './send-invite-reply-request';
 
 type Props = {
 	deleteSingleInstance: boolean;

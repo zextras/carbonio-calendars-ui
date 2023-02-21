@@ -37,10 +37,10 @@ export const DeletePermanently = ({
 		context
 			.dispatch(
 				deleteAppointmentPermanent({
-					inviteId: event.resource.inviteId
+					id: event.resource.id
 				})
 			)
-			.then((res: any) => {
+			.then((res) => {
 				onClose();
 				if (res.type.includes('fulfilled')) {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -69,7 +69,7 @@ export const DeletePermanently = ({
 					});
 				}
 			});
-	}, [context, event.resource.inviteId, onClose]);
+	}, [context, event.resource.id, onClose]);
 
 	return (
 		<Container
