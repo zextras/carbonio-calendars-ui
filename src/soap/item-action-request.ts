@@ -8,11 +8,13 @@ import { isNil, omitBy } from 'lodash';
 
 export const itemActionRequest = async ({
 	inviteId,
+	id,
 	op,
 	tagName,
 	parent
 }: {
-	inviteId: string;
+	inviteId?: string;
+	id?: string;
 	op: string;
 	tagName?: string;
 	parent?: string;
@@ -22,7 +24,7 @@ export const itemActionRequest = async ({
 		action: omitBy(
 			{
 				op,
-				id: inviteId,
+				id: inviteId ?? id,
 				tn: tagName,
 				l: parent
 			},
