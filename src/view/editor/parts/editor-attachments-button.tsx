@@ -76,7 +76,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 			...getFilesAction,
 			label: t('composer.attachment.url', 'Add public link from Files'),
 			icon: 'Link2',
-			id: 'carbonio_files_action',
+			id: 'carbonio_files_action_link',
 			disabled: !getFilesActionAvailable || !getLinkAvailable,
 			click: (): void => {
 				setOpenDD(false);
@@ -97,22 +97,19 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 		[getFilesFromDrive]
 	);
 
-	const [filesSelectFilesAction, filesSelectFilesActionAvailable] =
-		getIntegratedFunction('select-nodes');
-
 	const addFileItem = useMemo(
 		() => ({
-			...filesSelectFilesAction,
+			...getFilesAction,
 			label: t('composer.attachment.files', 'Add from Files'),
 			icon: 'DriveOutline',
 			id: 'carbonio_files_action',
-			disabled: !filesSelectFilesActionAvailable || !getFilesAvailable,
+			disabled: !getFilesActionAvailable || !getFilesAvailable,
 			click: (): void => {
 				setOpenDD(false);
-				filesSelectFilesAction && filesSelectFilesAction(actionTarget);
+				getFilesAction && getFilesAction(actionTarget);
 			}
 		}),
-		[actionTarget, filesSelectFilesAction, filesSelectFilesActionAvailable, getFilesAvailable]
+		[actionTarget, getFilesAction, getFilesActionAvailable, getFilesAvailable]
 	);
 
 	const attachmentsItems = useMemo(
