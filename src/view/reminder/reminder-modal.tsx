@@ -115,7 +115,12 @@ export const ReminderModal = ({
 	);
 
 	return (
-		<CustomModal open={openModal} onClose={(): null => null} maxHeight="90vh">
+		<CustomModal
+			open={openModal}
+			onClose={(): null => null}
+			maxHeight="90vh"
+			data-testid="reminder-modal"
+		>
 			{showNewTimeModal ? (
 				<SetNewAppointmentTimeModal toggleModal={toggleModal} setNewTime={setNewTime} />
 			) : (

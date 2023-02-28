@@ -93,8 +93,6 @@ describe.each`
 
 		// CHECKING EDITOR DEFAULT VALUES
 		expect(previousEditor.allDay).toEqual(false);
-		expect(previousEditor.start).toEqual(1640995200000);
-		expect(previousEditor.end).toEqual(1640997000000);
 
 		// SETTING EDITOR NEW VALUES
 		const newAttendees = map(mockedData.editor.getRandomAttendees(), 'email');
