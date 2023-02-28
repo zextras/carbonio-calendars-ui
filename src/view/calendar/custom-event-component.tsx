@@ -3,14 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
-import moment from 'moment';
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
+import { Tag, Tags, ZIMBRA_STANDARD_COLORS, t } from '@zextras/carbonio-shell-ui';
 import { includes, reduce } from 'lodash';
-import { Tags, ZIMBRA_STANDARD_COLORS, Tag, t } from '@zextras/carbonio-shell-ui';
+import moment from 'moment';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import styled from 'styled-components';
 import { EventType } from '../../types/event';
 import { useTagExist } from '../tags/tag-actions';
+import { TagType } from '../../types/tags';
 
 const NeedActionIcon = styled(Icon)`
 	position: relative;
@@ -28,11 +29,7 @@ type CustomEventComponentProps = {
 	title: string;
 };
 
-export const CustomEventComponent = ({
-	event,
-	tags,
-	title
-}: CustomEventComponentProps): ReactElement => {
+const CustomEventComponent = ({ event, tags, title }: CustomEventComponentProps): ReactElement => {
 	const [showDropdown, setShowDropdown] = useState(false);
 	const onIconClick = useCallback((ev) => {
 		ev.stopPropagation();
@@ -227,3 +224,5 @@ export const CustomEventComponent = ({
 		</Row>
 	);
 };
+
+export const MemoCustomEventComponent = React.memo(CustomEventComponent);

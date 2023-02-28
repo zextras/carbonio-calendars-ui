@@ -4,19 +4,19 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import { Input, Padding, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
-import { createTag, renameTag, changeTagColor, t } from '@zextras/carbonio-shell-ui';
-import ModalFooter from '../../commons/modal-footer';
-import { ModalHeader } from '../../commons/modal-header';
+import { changeTagColor, createTag, renameTag, t } from '@zextras/carbonio-shell-ui';
+import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
+import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { ItemType } from '../../carbonio-ui-commons/types/tags';
 import ColorPicker from '../../commons/color-select';
 import { itemActionRequest } from '../../soap/item-action-request';
-import { TagType } from '../../types/tags';
 
 type ComponentProps = {
 	onClose: () => void;
 	editMode?: boolean;
-	tag?: TagType;
+	tag?: ItemType;
 	event?: any;
 };
 const NonSupportedCharacters = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/;

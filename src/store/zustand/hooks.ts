@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useAppStatusStore } from './store';
+import { AppState, useAppStatusStore } from './store';
 
-export const useCalendarView = (): string => useAppStatusStore((s) => s.calendarView);
-export const useCalendarDate = (): Date => useAppStatusStore((s) => s.date);
+export const useCalendarView = (): string => useAppStatusStore((s: AppState) => s.calendarView);
+export const useCalendarDate = (): Date => useAppStatusStore((s: AppState) => s.date);
 export const useIsSummaryViewOpen = (): boolean =>
-	useAppStatusStore((s) => s.summaryViewCounter > 0);
+	useAppStatusStore((s: AppState) => s.summaryViewCounter > 0);
