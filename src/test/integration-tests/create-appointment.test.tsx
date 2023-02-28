@@ -5,7 +5,7 @@
  */
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { map, values } from 'lodash';
 import React from 'react';
 import {
@@ -60,8 +60,10 @@ describe('create single appointment with default values', () => {
 		expect(screen.getByRole('button', { name: /send/i })).toBeDisabled();
 		expect(previousEditor.isNew).toEqual(true);
 
-		// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
-		await user.click(screen.getByRole('button', { name: /save/i }));
+		await waitFor(() => {
+			// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
+			user.click(screen.getByRole('button', { name: /save/i }));
+		});
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);
 
@@ -132,9 +134,17 @@ describe('create single appointment with custom values', () => {
 		await user.click(screen.getByText(/busy/i));
 
 		// SETTING ATTENDEES AND OPTIONAL ATTENDEES
-		await user.type(screen.getByRole('textbox', { name: /attendees/i }), newAttendeesInput);
-		await user.click(screen.getByRole('button', { name: /optionals/i }));
-		await user.type(screen.getByRole('textbox', { name: /optionals/i }), newOptionalsInput);
+		await waitFor(() => {
+			user.type(screen.getByRole('textbox', { name: /attendees/i }), newAttendeesInput);
+		});
+
+		await waitFor(() => {
+			user.click(screen.getByRole('button', { name: /optionals/i }));
+		});
+
+		await waitFor(() => {
+			user.type(screen.getByRole('textbox', { name: 'Optionals' }), newOptionalsInput);
+		});
 
 		// SETTING PRIVATE AND ALLDAY
 		// todo: this is really unstable and a better solution must be found
@@ -144,10 +154,6 @@ describe('create single appointment with custom values', () => {
 		await user.click(privateCheckbox);
 		await user.click(allDayCheckbox);
 
-		// SELECTING DIFFERENT CALENDAR
-		// await user.click(screen.getByText('Calendar'));
-		// await user.click(screen.getByText(/Test/i));
-
 		// SELECTING DIFFERENT REMINDER VALUE
 		await user.click(screen.getByText(/reminder/i));
 		await user.click(screen.getByText(/1 minute before/i));
@@ -155,8 +161,10 @@ describe('create single appointment with custom values', () => {
 		// DEBOUNCE TIMER FOR INPUT FIELDS
 		jest.advanceTimersByTime(500);
 
-		// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
-		await user.click(screen.getByRole('button', { name: /save/i }));
+		await waitFor(() => {
+			// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
+			user.click(screen.getByRole('button', { name: /save/i }));
+		});
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);

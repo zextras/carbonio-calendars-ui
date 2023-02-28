@@ -13,7 +13,14 @@ import { MemoCustomEvent } from './custom-event';
 
 test('click edit appointment from event summary view as organizer', async () => {
 	const event = mockedData.getEvent();
-	const store = configureStore({ reducer: combineReducers(reducers) });
+	const invite = mockedData.getInvite({ event });
+	const mockedInviteSlice = {
+		invites: {
+			[invite.id]: invite
+		}
+	};
+	const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+	const store = configureStore({ reducer: combineReducers(reducers), preloadedState: emptyStore });
 	const { user } = setupTest(<MemoCustomEvent event={event} title={event.title} />, {
 		store
 		// keep it for reference
