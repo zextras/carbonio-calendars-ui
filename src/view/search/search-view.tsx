@@ -18,6 +18,7 @@ import { selectCalendars } from '../../store/selectors/calendars';
 import { Store } from '../../types/store/store';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
+import AdvancedFilterModal from './advance-filter-modal';
 
 type SearchProps = {
 	useQuery: () => [Array<any>, (arg: any) => void];
@@ -44,6 +45,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		query: []
 	});
 	const [loading, setLoading] = useState(false);
+	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
 	const dispatch = useDispatch();
 	const { path } = useRouteMatch();
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
@@ -82,13 +84,15 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		[searchInFolders]
 	);
 
+	const [spanStart, setSpanStart] = useState(() =>
+		moment().startOf('day').subtract(1, 'months').valueOf()
+	);
+	const [spanEnd, setSpanEnd] = useState(() => moment().startOf('day').add(1, 'months').valueOf());
+
 	const search = useCallback(
 		(queryStr: Array<{ label: string; value?: string }>, reset: boolean) => {
-			setResultLabel(t('label.loading_results', 'Loading Results...'));
+			setResultLabel(t('label.results_for', 'Results for: '));
 			setLoading(true);
-			const spanStart = moment().startOf('day').subtract(1, 'months').valueOf();
-			const spanEnd = moment().startOf('day').add(1, 'months').valueOf();
-
 			const queryMap = `${queryStr
 				.map((c) => c.value ?? c.label)
 				.join(' ')} ${foldersToSearchInQuery}`;
@@ -135,8 +139,18 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 					);
 				});
 		},
-		[t, foldersToSearchInQuery, dispatch, searchResults.offset, searchResults.sortBy, updateQuery]
+		[
+			t,
+			foldersToSearchInQuery,
+			dispatch,
+			spanStart,
+			spanEnd,
+			searchResults.offset,
+			searchResults.sortBy,
+			updateQuery
+		]
 	);
+	const [filterCount, setFilterCount] = useState(0);
 
 	const loadMore = useCallback(() => {
 		if (!loading && searchResults && !isEmpty(searchResults.appointments) && searchResults.more) {
@@ -147,9 +161,11 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	useEffect(() => {
 		if (query && query.length > 0 && query !== searchResults.query && !isInvalidQuery) {
 			search(query, true);
+			setFilterCount(1);
 		}
 		if (query && query.length === 0) {
 			setIsInvalidQuery(false);
+			setFilterCount(0);
 			setResultLabel(t('label.results_for', 'Results for: '));
 		}
 	}, [query, search, searchResults.query, isInvalidQuery, t]);
@@ -158,19 +174,40 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
 	);
 	return (
-		<Container style={{ whiteSpace: 'nowrap' }}>
-			<ResultsHeader label={resultLabel} />
-			<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
-				<Switch>
-					<Route path={`${path}/:action?/:apptId?/:ridZ?`}>
-						<SearchList loadMore={loadMore} appointments={appointments} loading={loading} />
-						<Container background="gray5" width="75%" mainAlignment="center">
-							<SearchPanel appointments={appointments} />
-						</Container>
-					</Route>
-				</Switch>
+		<>
+			<Container style={{ whiteSpace: 'nowrap' }}>
+				<ResultsHeader label={resultLabel} />
+				<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
+					<Switch>
+						<Route path={`${path}/:action?/:apptId?/:ridZ?`}>
+							<SearchList
+								loadMore={loadMore}
+								appointments={appointments}
+								loading={loading}
+								filterCount={filterCount}
+								setShowAdvanceFilters={setShowAdvanceFilters}
+								searchDisabled={false}
+								dateStart={spanStart}
+								dateEnd={spanEnd}
+							/>
+							<Container background="gray5" width="75%" mainAlignment="center">
+								<SearchPanel appointments={appointments} />
+							</Container>
+						</Route>
+					</Switch>
+				</Container>
 			</Container>
-		</Container>
+			<AdvancedFilterModal
+				query={query}
+				updateQuery={updateQuery}
+				open={showAdvanceFilters}
+				onClose={(): void => setShowAdvanceFilters(false)}
+				dateStart={spanStart}
+				dateEnd={spanEnd}
+				setDateStart={setSpanStart}
+				setDateEnd={setSpanEnd}
+			/>
+		</>
 	);
 };
 

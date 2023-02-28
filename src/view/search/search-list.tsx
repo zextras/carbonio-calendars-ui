@@ -3,19 +3,27 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, List } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
+import { Container, List, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import React, { ReactComponentElement } from 'react';
 import { useParams } from 'react-router-dom';
 import { sortBy } from 'lodash';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+import moment from 'moment';
 import SearchListItem from './search-list-item';
 import ShimmerList from './shimmer-list';
+import { AdvancedFilterButton } from './parts/advanced-filter-button';
 
 type SearchListProps = {
 	appointments: Array<any>;
 	loadMore: () => any;
 	loading: boolean;
+	searchDisabled: boolean;
+	filterCount: number;
+	setShowAdvanceFilters: (show: boolean) => void;
+	dateStart: number;
+	dateEnd: number;
 };
 
 export type RoutesParams = {
@@ -27,7 +35,12 @@ export type RoutesParams = {
 const SearchList = ({
 	appointments,
 	loadMore,
-	loading
+	loading,
+	searchDisabled,
+	filterCount,
+	setShowAdvanceFilters,
+	dateStart,
+	dateEnd
 }: SearchListProps): ReactComponentElement<any> => {
 	const { apptId, ridZ } = useParams<RoutesParams>();
 
@@ -36,8 +49,27 @@ const SearchList = ({
 			background="gray6"
 			width="25%"
 			mainAlignment="flex-start"
+			crossAlignment="flex-start"
 			data-testid="CalendarsSearchResultListContainer"
 		>
+			<Row
+				padding={{ horizontal: 'small', top: 'medium', bottom: 'small' }}
+				orientation="horizontal"
+				mainAlignment="flex-start"
+			>
+				<Text size="medium" color="secondary">
+					{t('search.from_date', 'From Date')} {moment(dateStart).format('DD/MM/YYYY')}
+				</Text>
+				<Padding left="medium" />
+				<Text size="medium" color="secondary">
+					{t('search.to_date', 'to Date')} {moment(dateEnd).format('DD/MM/YYYY')}
+				</Text>
+			</Row>
+			<AdvancedFilterButton
+				setShowAdvanceFilters={setShowAdvanceFilters}
+				filterCount={filterCount}
+				searchDisabled={searchDisabled}
+			/>
 			{loading ? (
 				<ShimmerList />
 			) : (
