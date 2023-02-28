@@ -167,10 +167,9 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 							crossAlignment="center"
 							mainAlignment="flex-start"
 						>
-							<MemoCustomEventComponent tags={tags} event={event} title={title} />
 							{event.resource.class === 'PRI' && (
 								<Tooltip label={t('label.private', 'Private')} placement="top">
-									<Row padding={{ left: 'extrasmall' }}>
+									<Row padding={{ right: 'extrasmall' }}>
 										<Icon color="currentColor" icon="Lock" style={{ minWidth: '1rem' }} />
 									</Row>
 								</Tooltip>
@@ -183,11 +182,12 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 									)}
 									placement="bottom"
 								>
-									<Row padding={{ left: 'extrasmall' }}>
+									<Row padding={{ right: 'extrasmall' }}>
 										<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '1rem' }} />
 									</Row>
 								</Tooltip>
 							)}
+							<MemoCustomEventComponent tags={tags} event={event} title={title} />
 						</Container>
 						{!event.allDay && (
 							<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>

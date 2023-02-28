@@ -106,7 +106,7 @@ const SearchListItem = ({ item, active }) => {
 		(ev) => {
 			const open = openAppointment({
 				event: item,
-				panelView: PANEL_VIEW.SEARCH
+				context: { panelView: PANEL_VIEW.SEARCH }
 			});
 			if (!invite) {
 				dispatch(getInvite({ inviteId: item.resource.inviteId })).then(() => {

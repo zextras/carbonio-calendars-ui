@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design-system';
-import { getAction, t } from '@zextras/carbonio-shell-ui';
+import { getIntegratedFunction, t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -67,23 +67,19 @@ export const EditorAttachmentsButton = ({ editorId }: EditorProps): ReactElement
 		[getLink]
 	);
 
-	const [getFilesAction, getFilesActionAvailable] = getAction(
-		'carbonio_files_action',
-		'files-select-nodes',
-		actionURLTarget
-	);
+	const [getFilesAction, getFilesActionAvailable] = getIntegratedFunction('select-nodes');
 	const publicUrlItem = useMemo(
 		() => ({
-			...getFilesAction,
 			label: t('composer.attachment.url', 'Add public link from Files'),
 			icon: 'Link2',
+			id: 'carbonio_files_action_link',
 			disabled: !getFilesActionAvailable || !getLinkAvailable,
-			click: (a: any): void => {
+			click: (): void => {
 				setOpenDD(false);
-				getFilesAction?.click && getFilesAction.click(a);
+				getFilesAction && getFilesAction(actionURLTarget);
 			}
 		}),
-		[getFilesAction, getFilesActionAvailable, getLinkAvailable]
+		[actionURLTarget, getFilesAction, getFilesActionAvailable, getLinkAvailable]
 	);
 
 	const actionTarget = useMemo(
@@ -97,24 +93,18 @@ export const EditorAttachmentsButton = ({ editorId }: EditorProps): ReactElement
 		[getFilesFromDrive]
 	);
 
-	const [filesSelectFilesAction, filesSelectFilesActionAvailable] = getAction(
-		'carbonio_files_action',
-		'files-select-nodes',
-		actionTarget
-	);
-
 	const addFileItem = useMemo(
 		() => ({
-			...filesSelectFilesAction,
 			label: t('composer.attachment.files', 'Add from Files'),
 			icon: 'DriveOutline',
-			disabled: !filesSelectFilesActionAvailable || !getFilesAvailable,
-			click: (a: any): void => {
+			id: 'carbonio_files_action',
+			disabled: !getFilesActionAvailable || !getFilesAvailable,
+			click: (): void => {
 				setOpenDD(false);
-				filesSelectFilesAction?.click && filesSelectFilesAction.click(a);
+				getFilesAction && getFilesAction(actionTarget);
 			}
 		}),
-		[filesSelectFilesAction, filesSelectFilesActionAvailable, getFilesAvailable]
+		[actionTarget, getFilesAction, getFilesActionAvailable, getFilesAvailable]
 	);
 
 	const attachmentsItems = useMemo(
@@ -134,13 +124,11 @@ export const EditorAttachmentsButton = ({ editorId }: EditorProps): ReactElement
 			},
 			{
 				...addFileItem,
-				id: addFileItem.id ?? '',
-				type: addFileItem.type as 'divider' | undefined
+				id: addFileItem.id ?? ''
 			},
 			{
 				...publicUrlItem,
-				id: publicUrlItem.id ?? '',
-				type: publicUrlItem.type as 'divider' | undefined
+				id: publicUrlItem.id ?? ''
 			}
 		],
 		[onFileClick, addFileItem, publicUrlItem]
