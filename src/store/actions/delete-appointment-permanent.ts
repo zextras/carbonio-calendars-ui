@@ -8,8 +8,8 @@ import { itemActionRequest } from '../../soap/item-action-request';
 
 export const deleteAppointmentPermanent = createAsyncThunk(
 	'appointments/deleteAppointmentPermanent',
-	async ({ inviteId }: { inviteId: string }): Promise<{ response: any; inviteId: string }> => {
-		const response = await itemActionRequest({ inviteId, op: 'delete' });
-		return { response, inviteId };
+	async ({ id }: { id: string }): Promise<{ response: any; id: string }> => {
+		const response = await itemActionRequest({ id, op: 'delete' });
+		return { response, id };
 	}
 );

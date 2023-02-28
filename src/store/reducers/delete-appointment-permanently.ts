@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
 export const deleteAppointmentPermanentlyPending = (state: any, { meta }: any) => {
 	const { id } = meta.arg;
@@ -17,6 +18,6 @@ export const deleteAppointmentPermanentlyFulfilled = (state: any): void => {
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const deleteAppointmentPermanentlyRejected = (state: any, { meta }: any) => {
+export const deleteAppointmentPermanentlyRejected = (state: any, { meta, payload }: any) => {
 	state.appointments = meta.arg.prevApntState;
 };
