@@ -122,7 +122,7 @@ const CustomEventComponent = ({ event, tags, title }: CustomEventComponentProps)
 				event.resource?.participationStatus === 'NE' && (
 					<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
 						<Row style={{ padding: 'none' }} mainAlignment="center">
-							<Padding right="small">
+							<Padding right="extrasmall">
 								<NeedActionIcon icon="CalendarWarning" color="primary" />
 							</Padding>
 						</Row>
@@ -171,7 +171,7 @@ const CustomEventComponent = ({ event, tags, title }: CustomEventComponentProps)
 					event.resource?.participationStatus === 'NE' && (
 						<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
 							<Row style={{ padding: 'none' }} mainAlignment="center">
-								<Padding right="small">
+								<Padding right="extrasmall">
 									<NeedActionIcon icon="CalendarWarning" color="primary" />
 								</Padding>
 							</Row>
