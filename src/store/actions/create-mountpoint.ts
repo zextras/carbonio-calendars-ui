@@ -24,16 +24,6 @@ export const createMountpoint = createAsyncThunk(
 			})),
 			_jsns: 'urn:zimbra'
 		};
-		const response = await batchRequest(body);
-		if (response.CreateMountpointResponse && !response.Fault) {
-			// all the links have been mounted
-		}
-		if (response.CreateMountpointResponse && response.Fault) {
-			// at least one failed, how many?
-		}
-		if (!response.CreateMountpointResponse && response.Fault) {
-			// not even one has been mounted
-		}
-		return response;
+		return batchRequest(body);
 	}
 );
