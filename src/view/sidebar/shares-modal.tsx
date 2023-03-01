@@ -112,10 +112,10 @@ export const SharesModal: FC<{ calendars: ResFolder; onClose: () => void }> = ({
 					replace: true,
 					type: 'warning',
 					label: t('mountpoint_warning', {
-						count: failsLength,
+						failed: failsLength,
 						total: totalLength,
 						defaultValue:
-							"{{count}} out of {{total}} shared calendars couldn't be added to the Shared Calendars"
+							"{{failed}} out of {{total}} shared calendars couldn't be added to the Shared Calendars"
 					}),
 					autoHideTimeout: 3000
 				});
