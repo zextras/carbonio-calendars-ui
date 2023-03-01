@@ -19,6 +19,7 @@ import { Store } from '../../types/store/store';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
 import AdvancedFilterModal from './advance-filter-modal';
+import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
 type SearchProps = {
 	useQuery: () => [Array<any>, (arg: any) => void];
@@ -84,10 +85,8 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		[searchInFolders]
 	);
 
-	const [spanStart, setSpanStart] = useState(() =>
-		moment().startOf('day').subtract(1, 'months').valueOf()
-	);
-	const [spanEnd, setSpanEnd] = useState(() => moment().startOf('day').add(1, 'months').valueOf());
+	const [spanStart, setSpanStart] = useState(() => DEFAULT_DATE_START);
+	const [spanEnd, setSpanEnd] = useState(() => DEFAULT_DATE_END);
 
 	const search = useCallback(
 		(queryStr: Array<{ label: string; value?: string }>, reset: boolean) => {

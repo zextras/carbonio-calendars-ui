@@ -13,6 +13,7 @@ import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import KeywordRow from './parts/keyword-row';
 import FromDateToDateRow from './parts/from-date-to-date-row';
+import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
 type KeywordState = Array<{
 	id: string;
@@ -75,8 +76,7 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 		setOtherKeywords(updatedQuery);
 	}, [query, queryArray]);
     
-    const DEFAULT_DATE_START = moment().startOf('day').subtract(1, 'months').valueOf();
-    const DEFAULT_DATE_END = moment().startOf('day').add(1, 'months').valueOf();
+
 
 	const resetFilters = useCallback(() => {
         setFromDate(DEFAULT_DATE_START);
@@ -85,7 +85,7 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
         setDateEnd(DEFAULT_DATE_END);
         updateQuery([]);
 		setFolder([]);
-	}, [DEFAULT_DATE_END, DEFAULT_DATE_START, setDateEnd, setDateStart, updateQuery]);
+	}, [setDateEnd, setDateStart, updateQuery]);
 
 	const queryToBe = useMemo<Array<QueryChip>>(
 		() => concat(otherKeywords, folder),
