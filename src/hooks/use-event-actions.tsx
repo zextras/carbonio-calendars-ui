@@ -20,11 +20,11 @@ import {
 } from '../actions/appointment-actions-items';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import {
+	ActionsClick,
 	ActionsProps,
-	PanelView,
 	InstanceActionsItems,
-	SeriesActionsItems,
-	ActionsClick
+	PanelView,
+	SeriesActionsItems
 } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
@@ -132,10 +132,12 @@ const getTrashActions = ({ event, invite, context }: ActionsProps): InstanceActi
 
 export const useEventActions = ({
 	onClose,
-	event
+	event,
+	context
 }: {
 	onClose?: () => void;
 	event?: EventType;
+	context?: { panelView: PanelView };
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
 	const invite = useSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useDispatch();
@@ -143,7 +145,7 @@ export const useEventActions = ({
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const calendarFolders = useCalendarFolders();
-	const context = useMemo(
+	const _context = useMemo(
 		() => ({
 			tags,
 			folders: calendarFolders,
@@ -153,9 +155,10 @@ export const useEventActions = ({
 			panelView: 'app' as PanelView,
 			dispatch,
 			createSnackbar,
-			onClose
+			onClose,
+			...context
 		}),
-		[calendarFolders, createModal, createSnackbar, dispatch, onClose, tags]
+		[calendarFolders, context, createModal, createSnackbar, dispatch, onClose, tags]
 	);
 	return useMemo(() => {
 		if (!event || !invite) return undefined;
@@ -163,10 +166,10 @@ export const useEventActions = ({
 		const { isRecurrent, calendar } = event.resource;
 
 		if (calendar.id === FOLDERS.TRASH) {
-			return getTrashActions({ event, invite, context });
+			return getTrashActions({ event, invite, context: _context });
 		}
 		return isRecurrent
-			? getRecurrentActionsItems({ event, invite, context })
-			: getInstanceActionsItems({ event, invite, context });
-	}, [context, event, invite]);
+			? getRecurrentActionsItems({ event, invite, context: _context })
+			: getInstanceActionsItems({ event, invite, context: _context });
+	}, [_context, event, invite]);
 };

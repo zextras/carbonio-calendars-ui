@@ -1,7 +1,7 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.1.1",
-	"description": "Calendar module for Zextras Carbonio",
+	"version": "1.1.2",
+	"description": "Calendars module",
 	"main": "src/app.jsx",
 	"engines": {
 		"node": "v16",

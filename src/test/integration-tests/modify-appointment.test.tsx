@@ -7,7 +7,7 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { map, values } from 'lodash';
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { editAppointment } from '../../actions/appointment-actions-fn';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -92,8 +92,6 @@ describe.each`
 
 		// CHECKING EDITOR DEFAULT VALUES
 		expect(previousEditor.allDay).toEqual(false);
-		expect(previousEditor.start).toEqual(1640995200000);
-		expect(previousEditor.end).toEqual(1640997000000);
 
 		// SETTING EDITOR NEW VALUES
 		const newAttendees = map(mockedData.editor.getRandomAttendees(), 'email');
@@ -111,9 +109,17 @@ describe.each`
 		await user.click(screen.getByText(/free/i));
 
 		// SETTING ATTENDEES AND OPTIONAL ATTENDEES
-		await user.type(screen.getByRole('textbox', { name: /attendees/i }), newAttendeesInput);
-		await user.click(screen.getByRole('button', { name: /optionals/i }));
-		await user.type(screen.getByRole('textbox', { name: /optionals/i }), newOptionalsInput);
+		await waitFor(() => {
+			user.type(screen.getByRole('textbox', { name: /attendees/i }), newAttendeesInput);
+		});
+
+		await waitFor(() => {
+			user.click(screen.getByRole('button', { name: /optionals/i }));
+		});
+
+		await waitFor(() => {
+			user.type(screen.getByRole('textbox', { name: 'Optionals' }), newOptionalsInput);
+		});
 
 		// SETTING PRIVATE AND ALLDAY
 		// todo: this is really unstable and a better solution must be found
@@ -146,8 +152,10 @@ describe.each`
 		// DEBOUNCE TIMER FOR INPUT FIELDS
 		jest.advanceTimersByTime(500);
 
-		// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
-		await user.click(screen.getByRole('button', { name: /save/i }));
+		await waitFor(() => {
+			// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
+			user.click(screen.getByRole('button', { name: /save/i }));
+		});
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);

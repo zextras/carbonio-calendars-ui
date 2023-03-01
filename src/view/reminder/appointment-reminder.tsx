@@ -5,7 +5,7 @@
  */
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useState, useEffect, useMemo } from 'react';
-import { compact, filter, find, forEach, includes, isEmpty, map } from 'lodash';
+import { compact, filter, find, forEach, includes, isEmpty, map, reduce } from 'lodash';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { getTimeToDisplayData } from '../../commons/utilities';
@@ -65,23 +65,30 @@ export const AppointmentReminder = (): ReactElement | null => {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			const remindersToNotify = [] as Array<ReminderItem>;
-			forEach(appointmentsToRemind, (appt) => {
-				const difference = moment(appt?.alarmData?.[0]?.nextAlarm).diff(moment(), 'seconds', true);
-				if (difference <= 0) {
-					const isAlreadyAdded = find(reminders, {
-						start: appt.start,
-						key: appt.key,
-						end: appt.end
-					});
-					if (!isAlreadyAdded) {
-						remindersToNotify.push(appt);
-						setReminders((rem) => ({
-							...rem,
-							[appt.key]: appt
-						}));
+			const newValue = reduce(
+				appointmentsToRemind,
+				(acc, reminder) => {
+					const difference = moment(reminder?.alarmData?.[0]?.nextAlarm).diff(
+						moment(),
+						'seconds',
+						true
+					);
+					if (difference <= 0) {
+						const isAlreadyAdded = find(reminders, {
+							start: reminder.start,
+							key: reminder.key,
+							end: reminder.end
+						});
+						if (!isAlreadyAdded) {
+							remindersToNotify.push(reminder);
+						}
+						return { ...acc, [reminder.key]: reminder };
 					}
-				}
-			});
+					return acc;
+				},
+				{}
+			);
+			setReminders(newValue);
 			if (remindersToNotify?.length > 0) {
 				notificationAudio.play();
 				forEach(remindersToNotify, (rem) => {
