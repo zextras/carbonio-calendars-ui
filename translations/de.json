@@ -67,7 +67,8 @@
         "edit_series_warning": "Da Sie mit der Änderung der gesamten Serie fortfahren, werden alle bereits gelöschten oder veränderten Ereignisse mit den neuen Serieneinstellungen wiederhergestellt.",
         "appointment_invitation_sent": "Termineinladung gesendet",
         "meeting_modified": "Das folgende Meeting wurde geändert",
-        "want_to_edit_modified_msg": "Möchten Sie die geänderte Nachricht des Termins bearbeiten?"
+        "want_to_edit_modified_msg": "Möchten Sie die geänderte Nachricht des Termins bearbeiten?",
+        "copy": "Kopieren"
     },
     "label": {
         "invitation_not_sent": "Sie haben die Einladung noch nicht an die Teilnehmer geschickt",
@@ -248,7 +249,7 @@
         "subject": "Betreff",
         "cancel": "abbrechen",
         "appointment_is_private": "Dieser Termin ist privat.",
-        "create_copy": "Eine Kopie erstellen"
+        "create_copy": "Kopieren"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -314,7 +315,7 @@
         "action": {
             "accept": "Akzeptieren",
             "decline": "Ablehnen",
-            "expand": "In der Anzeige öffnen",
+            "expand": "Öffnen",
             "no": "Nein",
             "yes": "Ja",
             "needs_action": "Handlungsbedarf",
@@ -522,13 +523,13 @@
         "equipment": "Ausstattung",
         "location": "Ort",
         "chat_room": "Link des virtuellen Raums",
-        "virtual_chat": "Virtueller Chat",
         "calendar_sharing_status": "Mit {{count}} Person geteilt",
         "calendar_sharing_status_plural": "Mit {{count}} Personen geteilt",
         "calendar_sharing_status_one": "Mit 1 Person geteilt",
         "revoke": "Zugriff widerrufen",
         "resend": "E-Mail Benachrichtigung über dieses geteilte Element senden",
-        "edit": "Eigenschaften für das Teilen bearbeiten"
+        "edit": "Eigenschaften für das Teilen bearbeiten",
+        "virtual_room": "Virtueller Raum"
     },
     "share_invite_resent": "Einladung zum Teilen erneut gesendet",
     "shared_folders": "Geteilte Kalender",

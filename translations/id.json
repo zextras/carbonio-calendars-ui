@@ -53,7 +53,7 @@
         "custom_repeat": "Pengulangan Kustom",
         "add_share": "Tambahkan berbagi",
         "default_appt_vsblty": "Visibilitas janji temu default",
-        "edit_access": "Edit akses {{name}}",
+        "edit_access": "Edit akses",
         "email_input_message": "Masukkan alamat email",
         "every": "Setiap",
         "every_day": "Setiap hari",
@@ -178,14 +178,15 @@
         "tag": "Tag",
         "share_public_link": "Bagikan Tautan Publik",
         "select": "Pilih",
-        "root": "Akar",
+        "root": "Root",
         "choose_file": "Pilih file",
         "public_link_description": "Dibuat dari {{title}} pada {{date}}",
         "continue": "Lanjutkan",
         "new_time_proposed": "Waktu Baru yang Diusulkan",
         "subject": "Subjek",
         "cancel": "Batal",
-        "appointment_is_private": "Janji temu bersifat pribadi."
+        "appointment_is_private": "Janji temu bersifat pribadi.",
+        "create_copy": "Salin"
     },
     "calendar": {
         "modal": {
@@ -200,7 +201,7 @@
             "no": "Tidak",
             "yes": "Ya",
             "decline": "Tolak",
-            "expand": "Buka di Displayer",
+            "expand": "Buka",
             "needs_action": "Memerlukan tindakan",
             "invitation_not_sent_yet": "Undangan belum dikirim"
         },
@@ -304,7 +305,8 @@
         "edit_series_warning": "Karena Anda melanjutkan dengan modifikasi seri, semua instans yang sebelumnya dihapus atau diubah akan dipulihkan dengan pengaturan seri baru.",
         "appointment_invitation_sent": "Undangan janji temu dikirim",
         "meeting_modified": "Rapat berikut telah diubah",
-        "want_to_edit_modified_msg": "Ingin mengedit pesan janji temu yang dimodifikasi?"
+        "want_to_edit_modified_msg": "Perubahan akan diberitahukan melalui email kepada para peserta. Anda ingin menambahkan pesan kustom?",
+        "copy": "Salin"
     },
     "months": {
         "april": "April",
@@ -403,7 +405,8 @@
             "share_calendar_role": {
                 "manager": "Pengelola (dapat melihat, mengedit, menambahkan, dan menghapus)",
                 "viewer": "Pemirsa (dapat melihat)",
-                "admin": "Admin (bisa melihat,mengedit,menambahkan,menghapus,dan mengelola)"
+                "admin": "Admin (bisa melihat,mengedit,menambahkan,menghapus,dan mengelola)",
+                "none": "Tidak Ada"
             },
             "share_calendar_with": {
                 "internal_users_groups": "Pengguna atau Grup Internal",
@@ -431,7 +434,8 @@
         "url_copied": "{{title}} disalin",
         "share_folder_success": "Kalender berhasil dibagikan",
         "tag_removed": "Tag {{tag}}: dihapus",
-        "tag_applied": "Tag {{tag}} diterapkan"
+        "tag_applied": "Tag {{tag}} diterapkan",
+        "email_copied_to_clipboard": "Email disalin ke clipboard."
     },
     "success": "Berhasil",
     "add": "Tambahkan",
@@ -495,9 +499,12 @@
         "equipment": "Peralatan",
         "location": "Lokasi",
         "chat_room": "Tautan Ruang Virtual",
-        "virtual_chat": "Chat Virtual",
         "calendar_sharing_status_one": "Dibagikan kepada 1 oarang",
-        "calendar_sharing_status": "Dibagikan kepada {{count}} orang"
+        "calendar_sharing_status": "Dibagikan kepada {{count}} orang",
+        "virtual_room": "Ruang Virtual",
+        "revoke": "Batalkan akses",
+        "resend": "Kirim pemberitahuan email tentang berbagi ini",
+        "edit": "Edit properti berbagi"
     },
     "share_invite_resent": "Undangan berbagi dikirim ulang",
     "shared_folders": "Kalender Bersama",
