@@ -55,7 +55,7 @@
         "days": "วัน",
         "default_appt_vsblty": "การเปิดเผยการนัดหมายเริ่มต้น",
         "default_view": "มุมมองเริ่มต้น",
-        "edit_access": "แก้ไขการเข้าถึงของ {{name}}",
+        "edit_access": "แก้ไขการเข้าถึง",
         "delete_permanently": "ลบอย่างถาวร",
         "dismiss": "ยกเลิกทั้งหมด",
         "display": "แสดง",
@@ -72,7 +72,7 @@
         "free_busy": "ว่าง/ไม่ว่าง",
         "from": "จาก",
         "ics_url": "ICS URL",
-        "instance": "กรณีตัวอย่าง",
+        "instance": "อินสแตนซ์",
         "invites": "คำเชิญ",
         "resend": "ส่งซ้ำ",
         "revoke": "เพิกถอน",
@@ -187,7 +187,7 @@
         "subject": "เรื่อง",
         "cancel": "ยกเลิก",
         "appointment_is_private": "การนัดหมายเป็นแบบส่วนตัว",
-        "create_copy": "สร้างสำเนา"
+        "create_copy": "คัดลอก"
     },
     "calendar": {
         "modal": {
@@ -217,7 +217,7 @@
             "no": "ไม่",
             "yes": "ใช่",
             "decline": "ปฏิเสธ",
-            "expand": "เปิดใน Displayer",
+            "expand": "เปิด",
             "needs_action": "การดำเนินการที่จำเป็น",
             "invitation_not_sent_yet": "ยังไม่ได้ส่งคำเชิญ"
         },
@@ -355,7 +355,8 @@
         "share_folder_success": "แชร์ปฏิทินเรียบร้อยแล้ว",
         "url_copied": "{{title}} คัดลอกแล้ว",
         "tag_applied": "ใช้แท็ก {{tag}} แล้ว",
-        "tag_removed": "นำแท็ก {{tag}} ออกแล้ว"
+        "tag_removed": "นำแท็ก {{tag}} ออกแล้ว",
+        "email_copied_to_clipboard": "คัดลอกอีเมลไปยังคลิปบอร์ดแล้ว"
     },
     "success": "สำเร็จ",
     "add": "เพิ่ม",
@@ -452,7 +453,8 @@
         "edit_series_warning": "ในขณะที่คุณดำเนินการแก้ไขซีรีส์ อินสแตนซ์ที่ถูกลบหรือแก้ไขก่อนหน้านี้ทั้งหมดจะถูกกู้คืนด้วยการตั้งค่าซีรีส์ใหม่",
         "appointment_invitation_sent": "ส่งคำเชิญนัดหมายแล้ว",
         "meeting_modified": "การประชุมต่อไปนี้ได้รับการแก้ไขแล้ว",
-        "want_to_edit_modified_msg": "คุณต้องการแก้ไขข้อความการนัดหมายที่เปลี่ยนแปลงแล้วหรือไม่?"
+        "want_to_edit_modified_msg": "จะแจ้งการเปลี่ยนแปลงผ่านทางอีเมลไปยังผู้เข้าร่วม คุณต้องการเพิ่มข้อความที่กำหนดเองหรือไม่?",
+        "copy": "คัดลอก"
     },
     "type": "รูปแบบ",
     "tooltip": {
@@ -465,11 +467,12 @@
         "equipment": "อุปกรณ์",
         "location": "สถานที่",
         "chat_room": "ลิงก์ของห้องเสมือนจริง",
-        "virtual_chat": "แชทเสมือนจริง",
         "calendar_sharing_status_one": "แชร์กับ 1 คน",
         "calendar_sharing_status": "แชร์กับ {{count}} คน",
         "revoke": "เพิกถอนการเข้าถึง",
-        "edit": "แก้ไขคุณสมบัติการแชร์"
+        "edit": "แก้ไขคุณสมบัติการแชร์",
+        "virtual_room": "ห้องเสมือนจริง",
+        "resend": "ส่งอีเมลแจ้งเตือนเกี่ยวกับการแชร์นี้"
     },
     "button": {
         "customize_modal": "เปิด Customize Modal"
