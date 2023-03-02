@@ -65,7 +65,8 @@
         "edit_series_warning": "シリーズの変更を進めると、以前に削除または変更されたインスタンスすべてが新しいシリーズ設定で復元されます。",
         "appointment_invitation_sent": "予約招待状を送信しました",
         "meeting_modified": "次の会議が変更されました",
-        "want_to_edit_modified_msg": "変更された予定のメッセージを編集しますか？"
+        "want_to_edit_modified_msg": "変更は参加者にメールで通知されます。カスタムメッセージを追加しますか？",
+        "copy": "コピー"
     },
     "action": {
         "send": "送信",
@@ -88,7 +89,7 @@
             "no": "いいえ",
             "yes": "はい",
             "decline": "拒否する",
-            "expand": "ディスプレイヤーで開く",
+            "expand": "ファイルを開く",
             "needs_action": "アクションが必要です",
             "invitation_not_sent_yet": "招待状はまだ送信されていません"
         },
@@ -139,7 +140,7 @@
         "default_appt_vsblty": "デフォルトの予定の可視性",
         "default_view": "デフォルトビュー",
         "delete_permanently": "完全に削除する",
-        "edit_access": "{{name}}のアクセス権を編集する",
+        "edit_access": "アクセスを編集する",
         "dismiss": "すべて却下する",
         "display": "表示",
         "email_input_message": "メールアドレスを入力してください",
@@ -275,7 +276,7 @@
         "subject": "件名",
         "cancel": "キャンセル",
         "appointment_is_private": "予定は非公開です。",
-        "create_copy": "コピーを作成"
+        "create_copy": "コピー"
     },
     "folder": {
         "modal": {
@@ -451,7 +452,8 @@
         "url_copied": "{{title}}がコピーされました",
         "share_folder_success": "カレンダーが共有されました",
         "tag_applied": "{{tag}} タグが適用されました",
-        "tag_removed": "{{tag}} タグが削除されました"
+        "tag_removed": "{{tag}} タグが削除されました",
+        "email_copied_to_clipboard": "メールをクリップボードにコピーしました。"
     },
     "success": "成功",
     "type": "タイプ",
@@ -491,12 +493,13 @@
         "chat": "機器",
         "equipment": "機器",
         "location": "場所",
-        "virtual_chat": "バーチャルチャット",
         "chat_room": "バーチャルルームのリンク",
         "calendar_sharing_status_one": "1人と共有されました",
         "calendar_sharing_status": "{{count}}人と共有されました",
         "revoke": "アクセス権を取り消す",
-        "edit": "共有プロパティを編集する"
+        "edit": "共有プロパティを編集する",
+        "virtual_room": "バーチャルルーム",
+        "resend": "この共有に関するメール通知を再送信します"
     },
     "workflow": "ワークフロー",
     "write": "書く",

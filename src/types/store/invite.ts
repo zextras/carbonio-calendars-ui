@@ -104,7 +104,7 @@ export type AlarmData = [
 		nextAlarm?: number;
 		alarmInstStart?: number;
 		action: AlarmDataActions;
-		desc: AlarmDataDescription | Record<string, never>;
+		desc: AlarmDataDescription;
 		trigger: AlarmDataTrigger;
 	}
 ];

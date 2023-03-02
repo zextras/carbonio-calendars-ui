@@ -72,7 +72,7 @@ const normalizeEventResource = ({
 	uid: appt.uid,
 	tags: appt.tags ?? [],
 	neverSent: inst?.neverSent ?? appt.neverSent,
-	isRespRequested: invite?.isRespRequested ?? false
+	isRespRequested: (inst?.ptst ?? appt.ptst) === 'NE' ?? false
 });
 
 export const normalizeCalendarEvent = ({

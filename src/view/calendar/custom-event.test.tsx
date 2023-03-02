@@ -9,12 +9,19 @@ import React from 'react';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
-import { CustomEvent } from './custom-event';
+import { MemoCustomEvent } from './custom-event';
 
 test('click edit appointment from event summary view as organizer', async () => {
 	const event = mockedData.getEvent();
-	const store = configureStore({ reducer: combineReducers(reducers) });
-	const { user } = setupTest(<CustomEvent event={event} title={event.title} />, {
+	const invite = mockedData.getInvite({ event });
+	const mockedInviteSlice = {
+		invites: {
+			[invite.id]: invite
+		}
+	};
+	const emptyStore = mockedData.store.mockReduxStore({ invites: mockedInviteSlice });
+	const store = configureStore({ reducer: combineReducers(reducers), preloadedState: emptyStore });
+	const { user } = setupTest(<MemoCustomEvent event={event} title={event.title} />, {
 		store
 		// keep it for reference
 		// initialEntries: ['/fake-calendarId/expand/fake-apptId/fake-ridZ'],

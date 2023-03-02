@@ -37,7 +37,7 @@ export const DeletePermanently = ({
 		context
 			.dispatch(
 				deleteAppointmentPermanent({
-					inviteId: event.resource.inviteId
+					id: event.resource.id
 				})
 			)
 			.then((res: any) => {
@@ -69,7 +69,7 @@ export const DeletePermanently = ({
 					});
 				}
 			});
-	}, [context, event.resource.inviteId, onClose]);
+	}, [context, event.resource.id, onClose]);
 
 	return (
 		<Container

@@ -3,8 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useEffect, useMemo, useRef } from 'react';
-import styled from 'styled-components';
 import {
 	Container,
 	Divider,
@@ -13,93 +11,163 @@ import {
 	IconButton,
 	Row,
 	Text,
-	useHiddenCount
+	Tooltip
 } from '@zextras/carbonio-design-system';
+import { FOLDERS, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { filter, find, noop } from 'lodash';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { map, noop, some } from 'lodash';
+import styled from 'styled-components';
+import { extractBody } from '../../commons/body-message-renderer';
+import StyledDivider from '../../commons/styled-divider';
+import { useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
-import { useEventPanelViewHeaderActions } from '../../hooks/use-event-panel-view-header-actions';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
+import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
+import { selectCalendar } from '../../store/selectors/calendars';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
 import { ExceptionReference } from '../../types/store/appointments';
 import { AppointmentCardContainer } from '../editor/editor-panel-wrapper';
-import { ParticipantsPart } from './participants-part';
-import StyledDivider from '../../commons/styled-divider';
-import { extractBody } from '../../commons/body-message-renderer';
-import { selectCalendar } from '../../store/selectors/calendars';
-import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
-import { DetailsPart } from './details-part';
-import { ReplyButtonsPart } from './reply-buttons-part';
-import { MessagePart } from './message-part';
-import { ReminderPart } from './reminder-part';
 import { AttachmentsBlock } from './attachments-part';
+import { DetailsPart } from './details-part';
+import { MessagePart } from './message-part';
+import { ParticipantsPart } from './participants-part';
+import { ReminderPart } from './reminder-part';
+import { ReplyButtonsPart } from './reply-buttons-part';
 
 const BodyContainer = styled(Container)`
 	overflow-y: auto;
 `;
 
-const ActionButtons = ({ actions }: { actions: Array<any> }): ReactElement => {
-	const actionContainerRef = useRef(null);
-	const [, recalculateHiddenActions] = useHiddenCount(actionContainerRef, true);
+const ActionButtons = ({
+	actions,
+	event
+}: {
+	actions: Array<any>;
+	event: EventType;
+}): ReactElement | null => {
+	const primaryAction = useMemo(() => {
+		if (event) {
+			if (event.resource.calendar.id === FOLDERS.TRASH) {
+				return find(actions?.[0]?.items ?? actions, ['id', EventActionsEnum.MOVE]);
+			}
+			if (!event.resource.ridZ) {
+				// SERIES ACTIONS
+				const move = find(actions?.[1]?.items ?? actions, ['id', EventActionsEnum.MOVE]);
+				const edit = find(actions?.[1]?.items ?? actions, ['id', EventActionsEnum.EDIT]);
+				const copy = find(actions?.[1]?.items ?? actions, ['id', EventActionsEnum.CREATE_COPY]);
+				if (!event.resource.iAmOrganizer && !event.isShared) {
+					if (!edit.disabled) {
+						return edit;
+					}
+					return move;
+				}
+				if (!edit.disabled) {
+					return edit;
+				}
+				return copy;
+			}
+			// INSTANCE ACTIONS
+			const move = find(actions?.[0]?.items ?? actions, ['id', EventActionsEnum.MOVE]);
+			const edit = find(actions?.[0]?.items ?? actions, ['id', EventActionsEnum.EDIT]);
+			const copy = find(actions?.[0]?.items ?? actions, ['id', EventActionsEnum.CREATE_COPY]);
+			if (!event.resource.iAmOrganizer && !event.isShared) {
+				if (!edit.disabled) {
+					return edit;
+				}
+				return move ?? copy;
+			}
+			if (!edit.disabled) {
+				return edit;
+			}
+			return copy;
+		}
+		return undefined;
+	}, [actions, event]);
 
-	useEffect(() => {
-		recalculateHiddenActions();
-	}, [actions, recalculateHiddenActions]);
+	const otherActions = useMemo(() => {
+		if (event && primaryAction) {
+			if (!event.resource.ridZ) {
+				return filter(
+					actions?.[1]?.items ?? actions,
+					(a) =>
+						!a.disabled &&
+						a.id !== EventActionsEnum.EXPAND &&
+						a.id !== EventActionsEnum.ACCEPT &&
+						a.id !== EventActionsEnum.TENTATIVE &&
+						a.id !== EventActionsEnum.DECLINE &&
+						a.id !== primaryAction.id
+				);
+			}
+			return filter(
+				actions?.[0]?.items ?? actions,
+				(a) =>
+					!a.disabled &&
+					a.id !== EventActionsEnum.EXPAND &&
+					a.id !== EventActionsEnum.ACCEPT &&
+					a.id !== EventActionsEnum.TENTATIVE &&
+					a.id !== EventActionsEnum.DECLINE &&
+					a.id !== primaryAction.id
+			);
+		}
+		return undefined;
+	}, [actions, event, primaryAction]);
 
-	return (
+	return primaryAction ? (
 		<Row wrap="nowrap" height="100%" mainAlignment="flex-end" style={{ maxWidth: '10rem' }}>
-			<Row
-				//	ref={actionContainerRef}
-				height="2.5rem"
-				mainAlignment="flex-start"
-				style={{ overflow: 'hidden' }}
-			>
-				{actions &&
-					map(actions, (action) =>
-						action.items ? (
-							<Dropdown items={action.items} key={`button ${action.id}`}>
-								<Row takeAvailableSpace>
-									<IconButton icon="TagsMoreOutline" onClick={noop} />
-								</Row>
-							</Dropdown>
-						) : (
-							<IconButton key={action.id} icon={action.icon} onClick={action.click} />
-						)
-					)}
+			<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
+				{primaryAction && primaryAction?.items ? (
+					<Dropdown items={primaryAction.items} key={`button ${primaryAction.id}`}>
+						<Row takeAvailableSpace>
+							<Tooltip placement="top" label={primaryAction.label}>
+								<IconButton icon="TagsMoreOutline" onClick={noop} />
+							</Tooltip>
+						</Row>
+					</Dropdown>
+				) : (
+					<Tooltip placement="top" label={primaryAction.label}>
+						<IconButton
+							key={primaryAction.id}
+							icon={primaryAction.icon}
+							onClick={primaryAction.click}
+						/>
+					</Tooltip>
+				)}
 			</Row>
-			{/* IconButton disabled until the actions are active
-			<Padding right="medium">
-				<IconButton icon="MoreVertical" />
-			</Padding>
-			*/}
+			{otherActions && otherActions?.length > 0 && (
+				<>
+					{otherActions.length > 1 ? (
+						<Dropdown items={otherActions}>
+							<Row takeAvailableSpace>
+								<IconButton icon="MoreVertical" onClick={noop} />
+							</Row>
+						</Dropdown>
+					) : (
+						<Tooltip placement="top" label={otherActions?.[0]?.label}>
+							<IconButton
+								key={otherActions?.[0]?.id}
+								icon={otherActions?.[0]?.icon}
+								onClick={otherActions?.[0]?.click}
+							/>
+						</Tooltip>
+					)}
+				</>
+			)}
 		</Row>
-	);
+	) : null;
 };
-
-const ExpandButton = ({ actions }: { actions: Array<any> }): ReactElement => (
-	<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
-		{actions &&
-			map(actions, (action) => (
-				<IconButton key={action.id} icon={action.icon} onClick={action.click} />
-			))}
-	</Row>
-);
 
 export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
 	const [t] = useTranslation();
-	const actions = useEventPanelViewHeaderActions(event);
-
-	const eventIsEditable = useMemo(() => some(actions, { id: EventActionsEnum.EDIT }), [actions]);
-	const expandedButton = useMemo(() => some(actions, { id: EventActionsEnum.EXPAND }), [actions]);
-
 	const close = useCallback(() => {
 		replaceHistory('');
 	}, []);
+	const actions = useEventActions({ onClose: close, event });
 
 	return (
 		<>
@@ -113,35 +181,29 @@ export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
 				padding={{ vertical: 'small' }}
 			>
 				<Row padding={{ horizontal: 'large' }}>
-					<Icon icon={eventIsEditable ? 'NewAppointmentOutline' : 'CalendarModOutline'} />
+					<Icon icon={'CalendarModOutline'} />
 				</Row>
 				<Row takeAvailableSpace mainAlignment="flex-start">
 					<Text size="medium" overflow="ellipsis">
 						{event.title || t('label.no_subject', 'No subject')}
 					</Text>
 				</Row>
-				{expandedButton && <ExpandButton actions={actions} />}
 				<Row padding={{ right: 'extrasmall' }}>
 					<IconButton size="medium" icon="CloseOutline" onClick={close} />
 				</Row>
 			</Row>
 			<Divider />
-
-			{eventIsEditable && (
-				<Row
-					mainAlignment="flex-end"
-					crossAlignment="center"
-					orientation="horizontal"
-					background="gray5"
-					width="fill"
-					height="3rem"
-					padding={{ vertical: 'small' }}
-				>
-					<Row>
-						<ActionButtons actions={actions} />
-					</Row>
-				</Row>
-			)}
+			<Row
+				mainAlignment="flex-end"
+				crossAlignment="center"
+				orientation="horizontal"
+				background="gray5"
+				width="fill"
+				height="3rem"
+				padding={{ vertical: 'small' }}
+			>
+				<Row>{actions && <ActionButtons actions={actions} event={event} />}</Row>
+			</Row>
 		</>
 	);
 };

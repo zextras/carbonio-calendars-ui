@@ -178,7 +178,7 @@
         "subject": "Asunto",
         "cancel": "Cancelar",
         "appointment_is_private": "La cita es privada.",
-        "create_copy": "Crear una copia"
+        "create_copy": "Copiar"
     },
     "action": {
         "send": "Enviar",
@@ -201,7 +201,7 @@
             "no": "No",
             "yes": "Sí",
             "decline": "Rechazar",
-            "expand": "Abrir en visualizador",
+            "expand": "Abrir",
             "needs_action": "Necesita acción",
             "invitation_not_sent_yet": "La invitación todavía no ha sido enviada"
         },
@@ -403,7 +403,8 @@
         "share_folder_success": "Calendario compartido con éxito",
         "url_copied": "{{title}} copiado",
         "tag_applied": "Etiqueta {{tag}} aplicada",
-        "tag_removed": "Etiqueta {{tag}} eliminada"
+        "tag_removed": "Etiqueta {{tag}} eliminada",
+        "email_copied_to_clipboard": "Email copiado al portapapeles."
     },
     "success": "Éxito",
     "type": "Tipo",
@@ -477,7 +478,8 @@
         "edit_series_warning": "Cuando procedas con la modificación de las series, todas las instancias borradas o modificadas anteriormente serán restauradas con los ajustes de las nuevas series.",
         "appointment_invitation_sent": "Invitación a cita enviada",
         "meeting_modified": "La siguiente reunión ha sido modificada",
-        "want_to_edit_modified_msg": "¿Quieres editar el mensaje de la cita modificada?"
+        "want_to_edit_modified_msg": "Los cambios serán notificados por email a los asistentes. ¿Te gustaría añadir un mensaje personalizado?",
+        "copy": "Copiar"
     },
     "button": {
         "customize_modal": "Abrir modo de personalización"
@@ -524,11 +526,11 @@
         "chat_room": "Enlace de la Sala Virtual",
         "calendar_sharing_status": "Compartido con {{count}} persona",
         "calendar_sharing_status_plural": "Compartido con {{count}} personas",
-        "virtual_chat": "Chat virtual",
         "calendar_sharing_status_one": "Compartido con 1 persona",
         "revoke": "Revocar acceso",
         "resend": "Enviar notificación por correo de esta aportación",
-        "edit": "Editar propiedades de compartición"
+        "edit": "Editar propiedades de compartición",
+        "virtual_room": "Sala virtual"
     },
     "share_invite_resent": "Invitación para acceder a la compartición reenviada",
     "shared_folders": "Calendarios compartidos",

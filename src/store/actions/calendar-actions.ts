@@ -18,10 +18,10 @@ export const folderAction = createAsyncThunk(
 		changes
 	}: {
 		id: Array<string> | string;
-		zid: string;
+		zid?: string;
 		op: string;
 		changes?: any;
-	}): Promise<any> => {
+	}) => {
 		if (isArray(id)) {
 			const body: FolderActionRequest = {
 				_jsns: 'urn:zimbra',
@@ -32,13 +32,13 @@ export const folderAction = createAsyncThunk(
 					_jsns: 'urn:zimbraMail'
 				}))
 			};
-			return batchRequest(body);
+			return batchRequest(body) as Promise<unknown>;
 		}
 		return folderActionRequest({
 			id,
 			op,
 			zid,
 			changes
-		});
+		}) as Promise<unknown>;
 	}
 );

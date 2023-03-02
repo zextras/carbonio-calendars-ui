@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import create, { StoreApi, UseBoundStore } from 'zustand';
+import { create } from 'zustand';
 
 export type AppState = {
 	calendarView: string;
@@ -15,4 +15,4 @@ export const useAppStatusStore = create<AppState>(() => ({
 	calendarView: '',
 	date: new Date(),
 	summaryViewCounter: 0
-})) as UseBoundStore<AppState, StoreApi<AppState>>;
+}));

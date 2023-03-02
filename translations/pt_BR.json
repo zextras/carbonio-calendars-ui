@@ -178,7 +178,7 @@
         "subject": "Assunto",
         "cancel": "Cancelar",
         "appointment_is_private": "O compromisso é privado.",
-        "create_copy": "Criar uma cópia"
+        "create_copy": "Copiar"
     },
     "action": {
         "send": "Enviar",
@@ -201,7 +201,7 @@
             "no": "Não",
             "yes": "Sim",
             "decline": "Recusar",
-            "expand": "Abrir no Visualizador",
+            "expand": "Abrir",
             "needs_action": "Requer ação",
             "invitation_not_sent_yet": "O convite ainda não foi enviado"
         },
@@ -307,7 +307,8 @@
         "edit_series_warning": "Ao prosseguir com a modificação da série, todas as instâncias excluídas ou modificadas anteriormente serão restauradas com as novas configurações da série.",
         "appointment_invitation_sent": "Convite de compromisso enviado",
         "meeting_modified": "A seguinte reunião foi alterada",
-        "want_to_edit_modified_msg": "Deseja editar a mensagem do compromisso alterado?"
+        "want_to_edit_modified_msg": "As alterações serão informadas por e-mail aos participantes. Gostaria de incluir uma mensagem personalizada?",
+        "copy": "Copiar"
     },
     "months": {
         "april": "Abril",
@@ -465,7 +466,8 @@
         "url_copied": "{{title}} copiado",
         "share_folder_success": "Calendário compartilhado com sucesso",
         "tag_applied": "Etiqueta {{tag}} aplicada",
-        "tag_removed": "Etiqueta {{tag}} removida"
+        "tag_removed": "Etiqueta {{tag}} removida",
+        "email_copied_to_clipboard": "E-mail copiado para a área de transferência."
     },
     "success": "Sucesso",
     "type": "Tipo",
@@ -508,13 +510,13 @@
         "equipment": "Equipamento",
         "location": "Localização",
         "chat_room": "Link da Sala virtual",
-        "virtual_chat": "Chat virtual",
         "calendar_sharing_status": "Compartilhado com {{count}} pessoa",
         "calendar_sharing_status_plural": "",
         "calendar_sharing_status_one": "Compartilhado com 1 pessoa",
         "revoke": "Revogar acesso",
         "resend": "Enviar notificação por e-mail sobre este compartilhamento",
-        "edit": "Editar propriedades de compartilhamento"
+        "edit": "Editar propriedades de compartilhamento",
+        "virtual_room": "Sala Virtual"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",
