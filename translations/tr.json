@@ -35,7 +35,7 @@
         "action": {
             "accept": "Kabul Et",
             "decline": "Reddet",
-            "expand": "Görüntüleyicide Aç",
+            "expand": "Aç",
             "no": "Hayır",
             "yes": "Evet",
             "needs_action": "Yapılması gerekenler",
@@ -160,7 +160,8 @@
         "appointment_invitation_sent": "Randevu daveti gönderildi",
         "want_to_edit_modified_msg": "Katılımcılara değişiklikler hakkında bilgilendirme e-postası gönderilecek. Özel bir mesaj eklemek ister misiniz?",
         "meeting_modified": "Bu toplantı değiştirildi",
-        "search_hints": " "
+        "search_hints": " ",
+        "copy": "Kopyala"
     },
     "search": {
         "organized_by": "Organize eden"
@@ -173,7 +174,8 @@
         "share_folder_success": "Takvim başarıyla paylaşıldı",
         "url_copied": "{{title}} kopyalandı",
         "tag_applied": "{{tag}} etiketi uygulandı",
-        "tag_removed": "{{tag}} etiketi kaldırıldı"
+        "tag_removed": "{{tag}} etiketi kaldırıldı",
+        "email_copied_to_clipboard": "Eposta panoya kopyalandı."
     },
     "label": {
         "invitation_not_sent": "Katılımcılara henüz davet göndermediniz",
@@ -356,7 +358,7 @@
         "appointment_is_private": "Bu özel randevudur.",
         "search_hint": " ",
         "select_in": " ",
-        "create_copy": "Kopya oluştur"
+        "create_copy": "Kopyala"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -395,11 +397,11 @@
         "calendar_sharing_status_plural": "{{count}} kişi ile paylaşıldı",
         "equipment": "Donanım",
         "location": "Yer",
-        "virtual_chat": "Sanal Sohbet",
         "calendar_sharing_status_one": "1 kişi ile paylaşıldı",
         "revoke": "Erişimi iptal et",
         "resend": "Bu paylaşım hakkında e-posta bildirimi gönder",
-        "edit": "Paylaşım özelliklerini düzenle"
+        "edit": "Paylaşım özelliklerini düzenle",
+        "virtual_room": "Sanal Oda"
     },
     "revoke_with_custom_message": "Özel bildirim göndererek erişim yetkisini kaldır",
     "settings": {

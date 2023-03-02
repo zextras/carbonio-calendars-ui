@@ -45,7 +45,7 @@
         "delete_permanently": "हमेशा के लिए डिलीट करें",
         "invitation_not_sent": "आपने अभी तक आमंत्रण नहीं भेजा है",
         "every_year_on": "हर वर्ष",
-        "edit_access": "{{name}} की एक्सेस में बदलाव करें",
+        "edit_access": "एक्सेस में बदलाव करें",
         "email_input_message": "ई-एड्रेस एंटर करें",
         "enable_dlgtn_for_ical": "ऐपल आइकैल कैल्डैव के लिए प्रतिनिधित्व सक्रिय करें",
         "end_after": "अंत करें",
@@ -185,7 +185,7 @@
         "subject": "विषय",
         "cancel": "कैंसल करें",
         "appointment_is_private": "एपाइंटमेंट प्राइवेट है।",
-        "create_copy": "एक प्रतिलिपि बनाएँ"
+        "create_copy": "कॉपी करें"
     },
     "action": {
         "send": "भेजें",
@@ -270,7 +270,8 @@
         "edit_series_warning": "जैसे-जैसे आप सीरीज़ में बदलाव करते जाएंगे, पहले डिलीट किए या बदले इन्सटेन्स नई सीरीज़ सेटिंग्स से रिस्टोर होते जाएंगे।",
         "appointment_invitation_sent": "एप्पोइंटमेंट आमंत्रण भेजा गया",
         "meeting_modified": "निम्न मीटिंग बदल दी गई है",
-        "want_to_edit_modified_msg": "क्या आप बदले गए एप्पोइंटमेंट के मैसेज को एडिट करना चाहते हैं?"
+        "want_to_edit_modified_msg": "बदलाव मीटिंग अटेंड करने वालों को ईमेल के जरिए सूचित कर दिए जाएंगे। क्या आप कोई कस्टम मैसेज डालना चाहते हैं?",
+        "copy": "कॉपी करें"
     },
     "event": {
         "action": {
@@ -278,7 +279,7 @@
             "yes": "हाँ",
             "accept": "स्वीकार करें",
             "decline": "अस्वीकृत",
-            "expand": "डिस्प्ले में देखें",
+            "expand": "खोलें",
             "needs_action": "कार्यवाई की आवश्यकता है",
             "invitation_not_sent_yet": "इन्विटेशन अभी तक भेजा नहीं गया है"
         },
@@ -440,7 +441,8 @@
         "proposed_time_accepted": "आपने दिए टाइम को स्वीकार कर लिया",
         "url_copied": "{{title}} कॉपी किया गया",
         "tag_applied": "{{tag}} टैग अप्लाई हो गया",
-        "tag_removed": "{{tag}} टैग हटाया गया"
+        "tag_removed": "{{tag}} टैग हटाया गया",
+        "email_copied_to_clipboard": "ईमेल क्लिपबोर्ड पर कॉपी हो गई।"
     },
     "success": "सफलता",
     "type": "टाइप करें",
@@ -517,13 +519,13 @@
         "equipment": "उपकरण",
         "location": "स्थान",
         "chat_room": "Virtual Room लिंक",
-        "virtual_chat": "वर्चुअल चैट",
         "calendar_sharing_status": "{{count}} व्यक्ति के साथ शेयर किया गया",
         "calendar_sharing_status_plural": "{{count}} व्यक्तियों के साथ शेयर किया गया",
         "calendar_sharing_status_one": "1 व्यक्ति के साथ शेयर किया गया",
         "revoke": "एक्सेस बंद करें",
         "resend": "इस शेयर के बारे में मेल नोटिफिकेशन भेजें",
-        "edit": "शेयर गुणों में संशोधन"
+        "edit": "शेयर गुणों में संशोधन",
+        "virtual_room": "वर्चुअल रूम"
     },
     "remove_from_this_list": "इस लिस्ट से हटाएँ",
     "resend_mail_notification_about_this_share": "इस शेयर के बारे में ई-मेल नोटिफिकेशन भेजें",

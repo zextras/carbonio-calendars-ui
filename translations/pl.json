@@ -20,7 +20,7 @@
             "accept": "Akceptuj",
             "decline": "Odrzuć",
             "no": "Nie",
-            "expand": "Otwórz na ekranie wyświetlającym",
+            "expand": "Otwórz",
             "needs_action": "Potrzebuje działania",
             "invitation_not_sent_yet": "Zaproszenie nie zostało jeszcze wysłane"
         },
@@ -186,7 +186,7 @@
         "share": "Udostępnij",
         "timezone_pref_msg": "Godziny zależą od Twoich ustawień stref czasowych.",
         "the": " ",
-        "propose_new_time": "ZAPROPONUJ NOWY TERMIIN",
+        "propose_new_time": "ZAPROPONUJ NOWY CZAS",
         "app_name": "Kalendarze",
         "delete_tag_name": "Usuń Tag {{name}}",
         "from": "od",
@@ -237,7 +237,7 @@
         "subject": "Temat",
         "new_time_proposed": "Nowy zaproponowany czas",
         "appointment_is_private": "To spotkanie jest prywatne.",
-        "create_copy": "Stwórz kopię"
+        "create_copy": "Skopiuj"
     },
     "message": {
         "modal": {
@@ -309,7 +309,8 @@
         "edit_series_warning": "Jeśli zmodyfikujesz serię, wszystkie poprzednio usunięte lub zmodyfikowane przypadki zostaną przywrócone z nowymi ustawieniami serii.",
         "appointment_invitation_sent": "Zaproszenie na spotkanie zostało wysłane",
         "want_to_edit_modified_msg": "Uczestnicy zostaną powiadomieni o zmianach przez wiadomość e-mail. Czy chcesz utworzyć niestandardową wiadomość?",
-        "meeting_modified": "Następujące spotkanie zostało zmodyfikowane"
+        "meeting_modified": "Następujące spotkanie zostało zmodyfikowane",
+        "copy": "Skopiuj"
     },
     "participants": {
         "Attendees_tentative_count_0": "<strong>{{count}} uczestnik </strong> odpowiedział: Niepewne",
@@ -433,7 +434,8 @@
         "proposed_time_accepted": "Zaakceptowano zaproponowany czas",
         "url_copied": "skopiowano {{title}}",
         "tag_applied": "Tag {{tag}} został zastosowany",
-        "tag_removed": "Tag {{tag}} został zdjęty"
+        "tag_removed": "Tag {{tag}} został zdjęty",
+        "email_copied_to_clipboard": "E-mail został skopiowany do schowka."
     },
     "timezone": {
         "brussels_copenhagen_madrid_paris ": "{{value}} Bruksela, Kopenhaga, Madryt, Paryż",
@@ -653,7 +655,6 @@
         "chat_room": "Link do wirtualnego pokoju",
         "equipment": "Ekwipunek",
         "location": "Lokalizacja",
-        "virtual_chat": "Wirtualny Czat",
         "chat": "Ekwipunek",
         "calendar_sharing_status_0": "Udostępniono {{count}} osobie",
         "calendar_sharing_status_1": "Udostępniono {{count}} osobom",
@@ -661,7 +662,8 @@
         "calendar_sharing_status_one": "Udostępniono 1 osobie",
         "revoke": "Odbierz dostęp",
         "resend": "Wyślij powiadomienie e-mail dot. tego udostępnienia",
-        "edit": "Edytuj właściwości udostępniania"
+        "edit": "Edytuj właściwości udostępniania",
+        "virtual_room": "Wirtualny pokój"
     },
     "type": "Typ",
     "workflow": "Organizacja Pracy",
