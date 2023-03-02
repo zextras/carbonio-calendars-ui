@@ -11,6 +11,7 @@ import {
 	Icon,
 	Input,
 	Row,
+	SnackbarManagerContext,
 	Text
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
@@ -28,7 +29,7 @@ import {
 	uniqWith,
 	values
 } from 'lodash';
-import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -86,10 +87,54 @@ export const SharesModal: FC<{ calendars: ResFolder; onClose: () => void }> = ({
 	const [links, setLinks] = useState([]);
 	const [data, setData] = useState<any>();
 	const dispatch = useDispatch();
+	const createSnackbar = useContext(SnackbarManagerContext);
 	const onConfirm = useCallback(() => {
-		dispatch(createMountpoint(links));
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		dispatch(createMountpoint(links)).then(({ payload }) => {
+			if (payload.CreateMountpointResponse && !payload.Fault) {
+				createSnackbar({
+					key: `mountpoint`,
+					replace: true,
+					type: 'success',
+					label: t(
+						'mountpoint_success',
+						'The share has been added successfully to the Shared Calendars section'
+					),
+					autoHideTimeout: 3000
+				});
+			}
+			if (payload.CreateMountpointResponse && payload.Fault) {
+				const failsLength = payload?.Fault?.length;
+				const totalLength = failsLength + payload.CreateMountpointResponse.length;
+				createSnackbar({
+					key: `mountpoint`,
+					replace: true,
+					type: 'warning',
+					label: t('mountpoint_warning', {
+						failed: failsLength,
+						total: totalLength,
+						defaultValue:
+							"{{failed}} out of {{total}} shared calendars couldn't be added to the Shared Calendars"
+					}),
+					autoHideTimeout: 3000
+				});
+			}
+			if (!payload.CreateMountpointResponse && payload.Fault) {
+				createSnackbar({
+					key: `mountpoint`,
+					replace: true,
+					type: 'error',
+					label: t(
+						'mountpoint_error',
+						"The share couldn't be added to the Shared Calendars section"
+					),
+					autoHideTimeout: 3000
+				});
+			}
+		});
 		onClose();
-	}, [dispatch, links, onClose]);
+	}, [createSnackbar, dispatch, links, onClose]);
 
 	const shared = map(calendars, (calendar) => ({
 		id: `${calendar.ownerName} - ${calendar.folderId} - ${calendar.granteeType} - ${calendar.granteeName}`,

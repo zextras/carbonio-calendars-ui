@@ -381,6 +381,9 @@
         "october": "October",
         "september": "September"
     },
+    "mountpoint_error": "The share couldn't be added to the Shared Calendars section",
+    "mountpoint_success": "The share has been added successfully to the Shared Calendars section",
+    "mountpoint_warning": "{{failed}} out of {{total}} shared calendars couldn't be added to the Shared Calendars",
     "owner": "Owner",
     "participants": {
         "AC_with_count": "Accepted",
