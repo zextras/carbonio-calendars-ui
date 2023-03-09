@@ -215,7 +215,7 @@
         "subject": "Onderwerp",
         "cancel": "annuleren",
         "appointment_is_private": "De afspraak is privé.",
-        "create_copy": "Een kopie maken"
+        "create_copy": "Kopieren"
     },
     "event": {
         "action": {
@@ -223,7 +223,7 @@
             "no": "Nee",
             "yes": "Ja",
             "decline": "Weigeren",
-            "expand": "In Displayer openen",
+            "expand": "Openen",
             "needs_action": "Heeft actie nodig",
             "invitation_not_sent_yet": "De uitnodiging is nog niet verstuurd"
         },
@@ -331,7 +331,8 @@
         "edit_series_warning": "Terwijl u de reeks wijzigt, worden alle eerder verwijderde of gewijzigde instanties hersteld met de nieuwe reeksinstellingen.",
         "appointment_invitation_sent": "Afspraak uitnodiging verzonden",
         "meeting_modified": "De volgende vergadering is gewijzigd",
-        "want_to_edit_modified_msg": "Wilt u het bericht van de gewijzigde afspraak bewerken?"
+        "want_to_edit_modified_msg": "De wijzigingen worden per e-mail aan de deelnemers meegedeeld. Wilt u een aangepast bericht toevoegen?",
+        "copy": "Kopieren"
     },
     "months": {
         "april": "April",
@@ -444,7 +445,8 @@
         "url_copied": "{{title}} gekopieerd",
         "share_folder_success": "Kalender met succes gedeeld",
         "tag_removed": "{{tag}} tag verwijderd",
-        "tag_applied": "{{tag}} tag toegepast"
+        "tag_applied": "{{tag}} tag toegepast",
+        "email_copied_to_clipboard": "E-mail gekopieerd naar klembord."
     },
     "success": "Succes",
     "type": "Type",
@@ -492,13 +494,13 @@
         "equipment": "Uitrusting",
         "location": "Locatie",
         "chat_room": "Link naar virtuele ruimte",
-        "virtual_chat": "Virtuele Chat",
         "calendar_sharing_status": "Gedeeld met {{count}} persoon",
         "calendar_sharing_status_plural": "Gedeeld met {{count}} personen",
         "calendar_sharing_status_one": "Gedeeld met 1 persoon",
         "revoke": "Toegang intrekken",
         "resend": "E-mailbericht over dit aandeel verzenden",
-        "edit": "Deeleigenschappen bewerken"
+        "edit": "Deeleigenschappen bewerken",
+        "virtual_room": "Virtuele Kamer"
     },
     "button": {
         "customize_modal": "Modal aanpassen openen"

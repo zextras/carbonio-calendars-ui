@@ -10,12 +10,12 @@
         "location": "Luogo",
         "calendar_sharing_status": "Condiviso con {{count}} persone",
         "calendar_sharing_status_plural": "",
-        "virtual_chat": "Chat Virtuale",
         "chat_room": "Link alla Stanza Virtuale",
         "calendar_sharing_status_one": "Condiviso con una persona",
         "revoke": "Revoca accesso",
         "resend": "Invia notifica per questa condivisione",
-        "edit": "Modifica proprietà di condivisione"
+        "edit": "Modifica proprietà di condivisione",
+        "virtual_room": "Stanza Virtuale"
     },
     "reminder": {
         "week_before": "{{count}} settimana fa",
@@ -131,7 +131,8 @@
         "edit_series_warning": "Procedendo con le modifiche alla serie, tutte le istanze precedentemente modificate o eliminate, verranno ripristinate secondo le nuove impostazioni di questa serie.",
         "appointment_invitation_sent": "Invito all'appuntamento inviato",
         "want_to_edit_modified_msg": "Le modifiche verranno notificate ai partecipanti via email. Vuoi aggiungere un messaggio personalizzato?",
-        "meeting_modified": "La riunione seguente è stata modificata"
+        "meeting_modified": "La riunione seguente è stata modificata",
+        "copy": "Copia"
     },
     "label": {
         "to": "A",
@@ -312,7 +313,7 @@
         "subject": "Oggetto",
         "new_time_proposed": "Nuovo Orario Proposto",
         "appointment_is_private": "L'appuntamento è privato.",
-        "create_copy": "Crea una copia"
+        "create_copy": "Copia"
     },
     "action": {
         "send": "Invia",
@@ -368,7 +369,7 @@
             "decline": "Rifiuta",
             "no": "No",
             "yes": "Sì",
-            "expand": "Apri nel visulizzatore",
+            "expand": "Apri",
             "needs_action": "Necessita azione",
             "invitation_not_sent_yet": "L'invito non è ancora stato inviato"
         },
@@ -408,7 +409,8 @@
         "share_folder_success": "Calendario condiviso correttamente",
         "url_copied": "{{title}} copiato",
         "tag_applied": "Etichetta {{tag}} applicata",
-        "tag_removed": "Etichetta {{tag}} rimossa"
+        "tag_removed": "Etichetta {{tag}} rimossa",
+        "email_copied_to_clipboard": "Email copiata negli appunti."
     },
     "add": "Aggiungi",
     "allowed_actions": "Azioni consentite",

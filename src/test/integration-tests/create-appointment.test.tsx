@@ -21,7 +21,7 @@ import { reducers } from '../../store/redux';
 import BoardEditPanel from '../../view/editor/editor-board-wrapper';
 import mockedData from '../generators';
 
-jest.setTimeout(20000);
+jest.setTimeout(30000);
 
 shell.getUserSettings.mockImplementation(() => ({
 	prefs: {

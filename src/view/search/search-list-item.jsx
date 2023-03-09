@@ -12,7 +12,6 @@ import {
 	Row,
 	Avatar,
 	Icon,
-	Divider,
 	Text,
 	Padding,
 	Tooltip
@@ -277,7 +276,6 @@ const SearchListItem = ({ item, active }) => {
 					</Row>
 				</Container>
 			</Row>
-			<Divider />
 		</Container>
 	);
 };
