@@ -46,7 +46,7 @@ export const selectEditorLocation =
 
 export const selectEditorRoom =
 	(id: string) =>
-	(state: Store): { room: string; label: string } | undefined =>
+	(state: Store): Editor['room'] | undefined =>
 		state?.editor?.editors?.[id]?.room;
 
 export const selectEditorAttendees =

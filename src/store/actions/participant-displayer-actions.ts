@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import { InviteParticipant } from '../../types/store/invite';
 import { mailToContact } from '../../shared/invite-response/invite-response';
 
 export const copyEmailToClipboard = (email: string): void => {

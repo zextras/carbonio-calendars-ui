@@ -103,8 +103,34 @@ export type EditorProps = {
 	expanded?: boolean;
 };
 
+type DisabledField =
+	| 'title'
+	| 'location'
+	| 'organizer'
+	| 'virtualRoom'
+	| 'richTextButton'
+	| 'attachmentsButton'
+	| 'saveButton'
+	| 'sendButton'
+	| 'freeBusySelector'
+	| 'calendarSelector'
+	| 'attendees'
+	| 'optionalAttendees'
+	| 'datePicker'
+	| 'timezone'
+	| 'attachments'
+	| 'freeBusy'
+	| 'calendar'
+	| 'private'
+	| 'allDay'
+	| 'reminder'
+	| 'recurrence'
+	| 'composer';
+
 export type Editor = {
-	disabled: Record<string, boolean>;
+	disabled: Partial<{
+		[k in DisabledField]: boolean;
+	}>;
 	uid?: string | undefined;
 	ridZ?: string | undefined;
 	draft?: boolean | undefined;
@@ -121,12 +147,15 @@ export type Editor = {
 	organizer?: any;
 	title?: string;
 	location?: string;
-	room?: any;
+	room?: {
+		label: string;
+		link: string;
+	};
 	attendees: any[];
 	optionalAttendees: any[];
 	allDay?: boolean;
 	freeBusy?: InviteFreeBusy;
-	class?: string;
+	class?: InviteClass;
 	start?: number;
 	end?: number;
 	inviteId?: string | undefined;
