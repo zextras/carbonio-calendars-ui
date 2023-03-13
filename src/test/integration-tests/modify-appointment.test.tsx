@@ -159,8 +159,8 @@ describe.each`
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);
-		expect(updatedEditor.start).toEqual(1641160800000);
-		expect(updatedEditor.end).toEqual(1641162600000);
+		expect(updatedEditor.start).toEqual(1641157200000);
+		expect(updatedEditor.end).toEqual(1641159000000);
 		expect(updatedEditor.attendees).toHaveLength(newAttendees.length);
 		expect(updatedEditor.optionalAttendees).toHaveLength(newOptionals.length);
 

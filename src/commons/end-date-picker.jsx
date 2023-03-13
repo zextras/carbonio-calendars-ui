@@ -6,16 +6,21 @@
 import React, { useCallback, useMemo } from 'react';
 import { DateTimePicker } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import moment from 'moment';
 import DatePickerCustomComponent from './date-picker-custom-component';
 
 export default function EndDatePicker({ start, end, timezone, allDay, diff, onChange }) {
 	const onEndChange = useCallback(
-		(d) =>
-			onChange({
-				end: d.getTime(),
-				start: d.getTime() > start ? start : d.getTime() - diff
-			}),
-		[onChange, start, diff]
+		(d) => {
+			const applyOffset = d.setTime(d.getTime() - d.getTimezoneOffset() * 60_000);
+			const actualTime = new Date(applyOffset).toISOString().replace('Z', '');
+			const endTime = moment.tz(actualTime, timezone).valueOf();
+			return onChange({
+				end: endTime,
+				start: endTime > start ? start : endTime - diff
+			});
+		},
+		[onChange, timezone, start, diff]
 	);
 	const endDate = useMemo(
 		() =>

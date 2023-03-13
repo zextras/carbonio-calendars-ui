@@ -12,14 +12,16 @@ import DatePickerCustomComponent from './date-picker-custom-component';
 export default function StartDatePicker({ start, timezone, allDay, diff, onChange }) {
 	const onStartChange = useCallback(
 		(d) => {
-			const startTime = moment(d).valueOf();
+			const applyOffset = d.setTime(d.getTime() - d.getTimezoneOffset() * 60_000);
+			const actualTime = new Date(applyOffset).toISOString().replace('Z', '');
+			const startTime = moment.tz(actualTime, timezone).valueOf();
 			const endTime = startTime + diff;
 			return onChange({
 				start: startTime,
 				end: endTime
 			});
 		},
-		[onChange, diff]
+		[timezone, diff, onChange]
 	);
 
 	const startDate = useMemo(
