@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
 import {
+	selectDefaultEditorTimezone,
 	selectEditorAllDay,
 	selectEditorCalendar,
 	selectEditorEnd,
@@ -46,29 +47,30 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const calendar = useSelector(selectEditorCalendar(editorId));
 	const allDay = useSelector(selectEditorAllDay(editorId));
 	const timezone = useSelector(selectEditorTimezone(editorId));
+	const defaultTimezone = useSelector(selectDefaultEditorTimezone(editorId));
 
 	const apptDateTime = useMemo(() => {
-		if (timezone) {
+		if (defaultTimezone) {
 			const diff = moment(end).diff(moment(start), 'days');
 			const allDayString =
 				allDay && diff > 0
-					? `${moment(start).tz(timezone).format(`dddd, DD MMMM, YYYY`)} -
-	           ${moment(end).tz(timezone).format(`dddd, DD MMMM, YYYY`)} - ${t(
+					? `${moment(start).tz(defaultTimezone).format(`dddd, DD MMMM, YYYY`)} -
+	           ${moment(end).tz(defaultTimezone).format(`dddd, DD MMMM, YYYY`)} - ${t(
 							'label.all_day',
 							'All day'
 					  )}`
-					: `${moment(start).tz(timezone).format(`dddd, DD MMMM, YYYY`)} - ${t(
+					: `${moment(start).tz(defaultTimezone).format(`dddd, DD MMMM, YYYY`)} - ${t(
 							'label.all_day',
 							'All day'
 					  )}`;
 
 			return allDay
 				? allDayString
-				: `${moment(start).tz(timezone).format(`dddd, DD MMMM, YYYY HH:mm`)} -
-	           ${moment(end).tz(timezone).format(' HH:mm')}`;
+				: `${moment(start).tz(defaultTimezone).format(`dddd, DD MMMM, YYYY HH:mm`)} -
+	           ${moment(end).tz(defaultTimezone).format(' HH:mm')}`;
 		}
 		return undefined;
-	}, [timezone, end, start, allDay, t]);
+	}, [defaultTimezone, end, start, allDay, t]);
 
 	const apptLocation = useMemo(
 		() => (timezone ? `GMT ${moment(start).tz(timezone).format('Z')} ${timezone}` : undefined),
