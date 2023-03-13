@@ -4,7 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { differenceBy, find, isNil, noop, reject, toUpper } from 'lodash';
-import { Button, Dropdown, Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
+import {
+	Button,
+	Dropdown,
+	Icon,
+	Padding,
+	Row,
+	Shimmer,
+	Text
+} from '@zextras/carbonio-design-system';
 import React, { ReactElement, useMemo } from 'react';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
@@ -289,7 +297,7 @@ export const ActionsButtonsRow = ({
 }: {
 	onClose: () => void;
 	event: EventType;
-}): ReactElement | null => {
+}): ReactElement => {
 	const actions = useEventActions({
 		onClose,
 		event
@@ -309,5 +317,20 @@ export const ActionsButtonsRow = ({
 		}
 		return <InstanceActionsButtons actions={actions as InstanceActionsItems} />;
 	}
-	return null;
+	return (
+		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
+			<Padding right="small" style={{ display: 'flex' }}>
+				{/* todo: remove after completion of CDS-139 */}
+				{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+				{/* @ts-ignore */}
+				<Shimmer.Button />
+				<Padding left="small">
+					{/* todo: remove after completion of CDS-139 */}
+					{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+					{/* @ts-ignore */}
+					<Shimmer.Button />
+				</Padding>
+			</Padding>
+		</Row>
+	);
 };
