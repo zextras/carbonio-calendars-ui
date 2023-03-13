@@ -264,7 +264,7 @@ export const useDeleteActions = (
 				createSnackbar,
 				inst: {
 					d: invite?.start?.tz
-						? moment(event.start).format('YYYYMMDD[T]HHmmss')
+						? moment(event.start).tz(invite?.start?.tz).format('YYYYMMDD[T]HHmmss')
 						: moment(event.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
 					tz: invite?.start?.tz
 				},

@@ -11,7 +11,8 @@ import {
 	selectEditorAllDay,
 	selectEditorDisabled,
 	selectEditorEnd,
-	selectEditorStart
+	selectEditorStart,
+	selectDefaultEditorTimezone
 } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 import StartDatePicker from '../../../commons/start-date-picker';
@@ -24,6 +25,7 @@ type DatePickerProps = {
 };
 
 export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): ReactElement | null => {
+	const defaultTimezone = useSelector(selectDefaultEditorTimezone(editorId));
 	const allDay = useSelector(selectEditorAllDay(editorId));
 	const start = useSelector(selectEditorStart(editorId));
 	const end = useSelector(selectEditorEnd(editorId));
@@ -36,6 +38,7 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 			<StartDatePicker
 				start={start}
 				end={end}
+				timezone={defaultTimezone}
 				onChange={onDateChange}
 				diff={diff}
 				allDay={allDay}
@@ -45,6 +48,7 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 			<EndDatePicker
 				start={start}
 				end={end}
+				timezone={defaultTimezone}
 				onChange={onDateChange}
 				diff={diff}
 				allDay={allDay}

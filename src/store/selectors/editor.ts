@@ -99,6 +99,11 @@ export const selectEditorTimezone =
 	(state: Store): string | undefined =>
 		state?.editor?.editors?.[id]?.timezone;
 
+export const selectDefaultEditorTimezone =
+	(id: string) =>
+	(state: Store): string | undefined =>
+		state?.editor?.editors?.[id]?.defaultTimezone;
+
 export const selectEditorReminder =
 	(id: string) =>
 	(state: Store): string | undefined =>

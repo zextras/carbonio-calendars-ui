@@ -7,6 +7,7 @@ import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import moment, { Moment } from 'moment';
 import React, { ReactElement, useMemo } from 'react';
+import { Invite } from '../../types/store/invite';
 
 type TimeInfoProps = {
 	allDay?: boolean;
@@ -16,28 +17,38 @@ type TimeInfoProps = {
 
 export const TimeInfoRow = ({
 	timeInfoData,
+	invite,
 	showIcon = false
 }: {
 	timeInfoData: TimeInfoProps;
+	invite: Invite;
 	showIcon?: boolean;
-}): ReactElement => {
+}): ReactElement | null => {
 	const date = useMemo(() => {
-		if (timeInfoData.allDay) {
-			const startDate = moment(timeInfoData.start);
-			const dayOfWeek = startDate.format('dddd');
-			return `${dayOfWeek}, ${startDate.format('LL')} - ${t('label.all_day', 'All day')}`;
+		if (invite.tz) {
+			if (timeInfoData.allDay) {
+				const startDate = moment(timeInfoData.start).tz(invite.tz);
+				const dayOfWeek = startDate.format('dddd');
+				return `${dayOfWeek}, ${startDate.format('LL')} - ${t('label.all_day', 'All day')}`;
+			}
+			return `${moment(timeInfoData.start).tz(invite.tz).format('LLLL')} - ${moment(
+				timeInfoData.end
+			)
+				.tz(invite.tz)
+				.format('LT')}`;
 		}
-		return `${moment(timeInfoData.start).format('LLLL')} - ${moment(timeInfoData.end).format(
-			'LT'
-		)}`;
-	}, [timeInfoData.allDay, timeInfoData.end, timeInfoData.start]);
+		return undefined;
+	}, [invite.tz, timeInfoData.allDay, timeInfoData.end, timeInfoData.start]);
 
 	const gmtDate = useMemo(
-		() => `${moment(timeInfoData.start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
-		[timeInfoData.start]
+		() =>
+			invite.tz
+				? `${moment(timeInfoData.start).tz(invite.tz).format('Z')} ${invite.tz}`
+				: undefined,
+		[invite.tz, timeInfoData.start]
 	);
 
-	return (
+	return date ? (
 		<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 			<Row takeAvailableSpace mainAlignment="flex-start">
 				{showIcon && (
@@ -53,5 +64,5 @@ export const TimeInfoRow = ({
 				</Text>
 			</Row>
 		</Row>
-	);
+	) : null;
 };

@@ -5,13 +5,10 @@
  */
 import React, { useCallback, useMemo } from 'react';
 import { DateTimePicker } from '@zextras/carbonio-design-system';
-import momentLocalizer from 'react-widgets-moment';
 import { t } from '@zextras/carbonio-shell-ui';
 import DatePickerCustomComponent from './date-picker-custom-component';
 
-momentLocalizer();
-
-export default function EndDatePicker({ start, end, allDay, diff, onChange }) {
+export default function EndDatePicker({ start, end, timezone, allDay, diff, onChange }) {
 	const onEndChange = useCallback(
 		(d) =>
 			onChange({
@@ -20,7 +17,13 @@ export default function EndDatePicker({ start, end, allDay, diff, onChange }) {
 			}),
 		[onChange, start, diff]
 	);
-	const endDate = useMemo(() => new Date(end), [end]);
+	const endDate = useMemo(
+		() =>
+			timezone
+				? new Date(new Date(end).toLocaleString('en-US', { timeZone: timezone }))
+				: new Date(end),
+		[end, timezone]
+	);
 	const dateFormat = useMemo(() => (allDay ? 'dd/MM/yyyy' : 'dd/MM/yyyy HH:mm'), [allDay]);
 	const label = useMemo(
 		() =>

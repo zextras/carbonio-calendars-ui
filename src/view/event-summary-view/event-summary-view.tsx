@@ -81,7 +81,7 @@ export const EventSummaryView = ({
 				<TitleRow event={event} />
 				<NeverSentWarningRow neverSent={event?.resource?.inviteNeverSent} />
 				<CalendarInfoRow />
-				{timeData && <TimeInfoRow timeInfoData={timeData} showIcon />}
+				{invite && timeData && <TimeInfoRow timeInfoData={timeData} invite={invite} showIcon />}
 				{locationData && <LocationRow locationData={locationData} showIcon />}
 				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
 				{invite && <ParticipantsRow event={event} invite={invite} />}

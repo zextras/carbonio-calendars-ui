@@ -130,6 +130,7 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		}),
 		inviteId: undefined,
 		timezone: defaultTimezone,
+		defaultTimezone,
 		reminder: zimbraPrefCalendarApptReminderWarningTime as string,
 		recur: undefined,
 		richText: '',

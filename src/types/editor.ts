@@ -160,6 +160,7 @@ export type Editor = {
 	end?: number;
 	inviteId?: string | undefined;
 	timezone?: string | undefined;
+	defaultTimezone?: string | undefined;
 	reminder?: string | undefined;
 	recur?: any;
 	id: string;

@@ -132,7 +132,7 @@ export const DetailsPart = ({
 						/>
 						{calendar && <CalendarInfo calendar={calendar} />}
 					</Container>
-					{timeData && <TimeInfoRow timeInfoData={timeData} />}
+					{invite && timeData && <TimeInfoRow timeInfoData={timeData} invite={invite} />}
 					{locationData && locationData?.class !== 'PRI' && (
 						<LocationRow locationData={locationData} />
 					)}
