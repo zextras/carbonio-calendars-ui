@@ -17,6 +17,7 @@ import {
 	selectEditorLocation,
 	selectEditorRoom,
 	selectEditorStart,
+	selectEditorTimezone,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 
@@ -44,24 +45,34 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const title = useSelector(selectEditorTitle(editorId));
 	const calendar = useSelector(selectEditorCalendar(editorId));
 	const allDay = useSelector(selectEditorAllDay(editorId));
+	const timezone = useSelector(selectEditorTimezone(editorId));
 
 	const apptDateTime = useMemo(() => {
-		const diff = moment(end).diff(moment(start), 'days');
-		const allDayString =
-			allDay && diff > 0
-				? `${moment(start).format(`dddd, DD MMMM, YYYY`)} -
-	           ${moment(end).format(`dddd, DD MMMM, YYYY`)} - ${t('label.all_day', 'All day')}`
-				: `${moment(start).format(`dddd, DD MMMM, YYYY`)} - ${t('label.all_day', 'All day')}`;
+		if (timezone) {
+			const diff = moment(end).diff(moment(start), 'days');
+			const allDayString =
+				allDay && diff > 0
+					? `${moment(start).tz(timezone).format(`dddd, DD MMMM, YYYY`)} -
+	           ${moment(end).tz(timezone).format(`dddd, DD MMMM, YYYY`)} - ${t(
+							'label.all_day',
+							'All day'
+					  )}`
+					: `${moment(start).tz(timezone).format(`dddd, DD MMMM, YYYY`)} - ${t(
+							'label.all_day',
+							'All day'
+					  )}`;
 
-		return allDay
-			? allDayString
-			: `${moment(start).format(`dddd, DD MMMM, YYYY HH:mm`)} -
-	           ${moment(end).format(' HH:mm')}`;
-	}, [end, start, allDay, t]);
+			return allDay
+				? allDayString
+				: `${moment(start).tz(timezone).format(`dddd, DD MMMM, YYYY HH:mm`)} -
+	           ${moment(end).tz(timezone).format(' HH:mm')}`;
+		}
+		return undefined;
+	}, [timezone, end, start, allDay, t]);
 
 	const apptLocation = useMemo(
-		() => `GMT ${moment(start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
-		[start]
+		() => (timezone ? `GMT ${moment(start).tz(timezone).format('Z')} ${timezone}` : undefined),
+		[start, timezone]
 	);
 
 	const virtualRoom = useMemo(() => room?.label, [room?.label]);
