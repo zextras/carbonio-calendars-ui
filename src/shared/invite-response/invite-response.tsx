@@ -24,7 +24,6 @@ import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { EditorCallbacks } from '../../types/editor';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
-import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { inviteToEvent } from '../../hooks/use-invite-to-event';
 import { getInvite } from '../../store/actions/get-invite';
 import { CALENDAR_ROUTE } from '../../constants';
@@ -158,7 +157,7 @@ const InviteResponse: FC<InviteResponse> = ({
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		dispatch(getInvite({ inviteId })).then((res) => {
-			const normalizedInvite = normalizeInvite(res.payload.m?.[0]);
+			const normalizedInvite = res.payload;
 			const requiredEvent = inviteToEvent(normalizedInvite);
 
 			const { editor, callbacks } = generateEditor({

@@ -14,7 +14,6 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
-import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { AppDispatch, StoreProvider } from '../store/redux';
 import { setRange } from '../store/slices/calendars-slice';
@@ -80,16 +79,15 @@ export const useCalendarComponentUtils = (): {
 			dispatch(
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
 			).then(({ payload }) => {
-				const inviteStart = moment(payload.m[0].inv[0].comp[0].s[0].u);
+				const inviteStart = moment(payload.start.u);
 				const eventStart = moment(event.start);
 				const dropStart = moment(start);
-				const inviteEnd = moment(payload.m[0].inv[0].comp[0].e[0].u);
+				const inviteEnd = moment(payload.end.u);
 				const eventEnd = moment(event.end);
 				const dropEnd = moment(end);
 				const eventAllDay = event.allDay;
 				const startTime = getStart({ isSeries, dropStart, isAllDay, inviteStart, eventStart });
 				const endTime = getEnd({ isSeries, dropEnd, isAllDay, inviteEnd, eventEnd, eventAllDay });
-				const invite = normalizeInvite(payload.m[0]);
 
 				const onConfirm = (draft: boolean, context?: any): void => {
 					const contextObj = {
@@ -102,7 +100,7 @@ export const useCalendarComponentUtils = (): {
 					};
 					const { editor, callbacks } = generateEditor({
 						event,
-						invite,
+						invite: payload,
 						context: {
 							...contextObj,
 							...omitBy(
@@ -130,7 +128,7 @@ export const useCalendarComponentUtils = (): {
 						}
 					});
 				};
-				if (size(invite.participants) > 0) {
+				if (size(payload.participants) > 0) {
 					const closeModal = createModal(
 						{
 							children: (
@@ -143,7 +141,7 @@ export const useCalendarComponentUtils = (): {
 											onConfirm(false, context);
 											closeModal();
 										}}
-										invite={invite}
+										invite={payload}
 										isEdited
 									/>
 								</StoreProvider>

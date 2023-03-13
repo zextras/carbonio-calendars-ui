@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { getMessageRequest } from '../../soap/get-message-request';
 
 export const getInvite = createAsyncThunk(
@@ -18,6 +19,6 @@ export const getInvite = createAsyncThunk(
 		if (response?.error) {
 			return rejectWithValue(response);
 		}
-		return response;
+		return normalizeInvite(response.m?.[0]);
 	}
 );

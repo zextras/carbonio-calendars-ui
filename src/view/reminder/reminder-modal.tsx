@@ -14,7 +14,6 @@ import { generateEditor } from '../../commons/editor-generator';
 import ModalFooter from '../../commons/modal-footer';
 import { CALENDAR_ROUTE } from '../../constants';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
-import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
@@ -61,7 +60,6 @@ export const ReminderModal = ({
 		// @ts-ignore
 		dispatch(getInvite({ inviteId: activeReminder.inviteId })).then(({ payload }) => {
 			if (activeReminder) {
-				const invite = normalizeInvite(payload.m?.[0]);
 				const event = {
 					resource: {
 						calendar: activeReminder.calendar,
@@ -78,7 +76,7 @@ export const ReminderModal = ({
 				};
 				const { editor, callbacks } = generateEditor({
 					event,
-					invite,
+					invite: payload,
 					context: {
 						dispatch,
 						folders: calendarFolders,

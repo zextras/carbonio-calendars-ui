@@ -138,7 +138,7 @@ export const editEventItem = ({
 	event,
 	context
 }: {
-	invite: Invite;
+	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
@@ -158,7 +158,7 @@ export const copyEventItem = ({
 	event,
 	context
 }: {
-	invite: Invite;
+	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
@@ -175,7 +175,7 @@ export const deleteEventItem = ({
 	event,
 	context
 }: {
-	invite: Invite;
+	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems =>
