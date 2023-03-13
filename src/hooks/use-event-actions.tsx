@@ -45,7 +45,7 @@ const getInstanceActionsItems = ({
 	moveEventItem({ event, context }),
 	copyEventItem({ event, invite, context }),
 	applyTag({ event, context }),
-	...(event?.resource?.isRespRequested
+	...(!event.resource.iAmOrganizer && !event.isShared
 		? [
 				acceptInvitationItem({ event, context }),
 				declineInvitationItem({ event, context }),
@@ -75,7 +75,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				deleteEventItem({ event, invite, context }),
 				copyEventItem({ event, invite, context }),
 				applyTag({ event, context }),
-				...(event?.resource?.isRespRequested
+				...(!event.resource.iAmOrganizer && !event.isShared
 					? [
 							acceptInvitationItem({ event, context }),
 							declineInvitationItem({ event, context }),
@@ -103,7 +103,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				moveEventItem({ event: seriesEvent, context }),
 				copyEventItem({ event: seriesEvent, invite, context }),
 				applyTag({ event, context }),
-				...(event?.resource?.isRespRequested
+				...(!event.resource.iAmOrganizer && !event.isShared
 					? [
 							acceptInvitationItem({ event: seriesEvent, context }),
 							declineInvitationItem({ event: seriesEvent, context }),
