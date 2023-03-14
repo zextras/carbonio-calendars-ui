@@ -12,7 +12,9 @@
         "send_cancellation": "Kirim Pembatalan",
         "share_calendar": "Bagikan Kalender",
         "empty_trash_confirmation": "Tindakan ini akan menghapus semua item dalam Email, Kontak, Kalender, Tugas, dan Tas Kantor. Yakin ingin menghapus semua yang ada di dalam folder sampah ini secara permanen?",
-        "send_edit": "Kirim Edit"
+        "send_edit": "Kirim Edit",
+        "reset": "Reset",
+        "search": "Cari"
     },
     "label": {
         "attachment": "lampiran",
@@ -186,7 +188,11 @@
         "subject": "Subjek",
         "cancel": "Batal",
         "appointment_is_private": "Janji temu bersifat pribadi.",
-        "create_copy": "Salin"
+        "create_copy": "Salin",
+        "action_performed": "Anda telah melakukan tindakan ini",
+        "no_rights": "Anda tidak memiliki izin untuk melakukan tindakan ini",
+        "single_advanced_filter": "Filter Lanjutan",
+        "keywords": "Kata sandi"
     },
     "calendar": {
         "modal": {
@@ -484,7 +490,9 @@
     "remove_from_this_list": "Hapus dari daftar ini",
     "resend_mail_notification_about_this_share": "Kirim notifikasi email tentang berbagi ini",
     "search": {
-        "organized_by": "dikelola oleh"
+        "organized_by": "dikelola oleh",
+        "from_date": "Dari Tanggal",
+        "to_date": "Ke Tanggal"
     },
     "revoke_access": "Batalkan akses",
     "revoke_without_notification": "Batalkan akses tanpa mengirim pemberitahuan",
@@ -621,5 +629,8 @@
     "preview": {
         "close": "Tutup Pratinjau"
     },
-    "recurrent_in_allday": "Anda tidak dapat menyeret janji temu berulang di semua slot hari"
+    "recurrent_in_allday": "Anda tidak dapat menyeret janji temu berulang di semua slot hari",
+    "mountpoint_error": "Berbagi tidak bisa ditambahkan ke bagian Kalender Bersama",
+    "mountpoint_success": "Berbagi berhasil ditambahkan ke bagian Kalender Bersama",
+    "mountpoint_warning": "{{failed}} dari {{total}} kalender bersama tidak bisa ditambahkan ke Kalender Bersama"
 }
