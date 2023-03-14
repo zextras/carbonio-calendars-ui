@@ -17,6 +17,7 @@ export type Attendee = {
 
 export type InviteClass = 'PUB' | 'PRI' | 'CON';
 /* flags = 'u' | 'f' | 'a' | 'r' | 's' | 'w' | 'v' | 'd' | 'x' | 'n' | '!' | '?' | '+' */
+
 export type InviteFreeBusy = 'F' | 'B' | 'T' | 'U';
 export type InviteOrganizer = {
 	a: string;

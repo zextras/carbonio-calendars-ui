@@ -18,6 +18,7 @@ import { registerRestHandler } from './src/carbonio-ui-commons/test/mocks/networ
 import { handleCreateAppointmentExceptionRequest } from './src/test/mocks/network/msw/handle-create-appointment-exception';
 import { handleCreateFolderRequest } from './src/test/mocks/network/msw/handle-create-folder';
 import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
+import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
 import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite';
 import { handleItemActionRequest } from './src/test/mocks/network/msw/handle-item-action';
 import { handleModifyAppointmentRequest } from './src/test/mocks/network/msw/handle-modify-appointment';
@@ -37,11 +38,12 @@ beforeAll(() => {
 		rest.post('/service/soap/GetMsgRequest', handleGetInvite),
 		rest.post('/service/soap/CreateFolderRequest', handleCreateFolderRequest),
 		rest.post('/service/soap/CreateAppointmentRequest', handleCreateAppointmentRequest),
+		rest.post('/service/soap/CancelAppointmentRequest', handleCancelAppointmentRequest),
 		rest.post(
 			'/service/soap/CreateAppointmentExceptionRequest',
 			handleCreateAppointmentExceptionRequest
 		),
-		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest)
+		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest),
 	];
 	registerRestHandler(...h);
 	defaultBeforeAllTests();

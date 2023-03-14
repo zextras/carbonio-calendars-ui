@@ -30,8 +30,8 @@ const generateAppointmentDeletedSnackbar = (
 	if (res.type.includes('fulfilled')) {
 		let snackbarLabel =
 			undoAction === undefined
-				? t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash')
-				: t('message.snackbar.appointment_permanently_deleted', 'Appointment permanently deleted');
+				? t('message.snackbar.appointment_permanently_deleted', 'Appointment permanently deleted')
+				: t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash');
 		if (isRecurrentSeries) {
 			snackbarLabel = t(
 				'message.snackbar.series_deleted',
@@ -87,7 +87,7 @@ const generateAppointmentRestoredSnackbar = (
 };
 
 type AccountContext = {
-	isInstance?: boolean;
+	isSingleInstance?: boolean;
 	dispatch: Dispatch;
 	replaceHistory: (a: string) => void;
 	onClose: () => void;
@@ -145,7 +145,7 @@ export const useDeleteActions = (
 			const ctxt = {
 				dispatch,
 				t,
-				isInstance: context.isInstance,
+				isInstance: context.isSingleInstance,
 				createSnackbar,
 				newMessage: newMessage?.text?.[0]
 			};
@@ -154,14 +154,14 @@ export const useDeleteActions = (
 					onBoardClose && onBoardClose();
 					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreAppointment);
 				})
-				.then(
+				.then(() => {
 					setTimeout(() => {
 						if (notifyOrganizer && !isCanceled) {
 							onBoardClose && onBoardClose();
 							sendResponse(event, ctxt);
 						}
-					}, 5000)
-				);
+					}, 5000);
+				});
 		},
 		[event, context, createSnackbar, dispatch, notifyOrganizer, t]
 	);
@@ -188,11 +188,12 @@ export const useDeleteActions = (
 			const ctxt = {
 				dispatch,
 				t,
-				isInstance: context.isInstance,
+				isInstance: context.isSingleInstance,
 				createSnackbar,
 				newMessage: newMessage?.text?.[0]
 			};
-			const untilDate = moment(event?.resource?.ridZ).subtract(1, 'day').format('YYYYMMDD');
+			const eventDate = event?.resource?.ridZ ?? event.start.valueOf();
+			const untilDate = moment(eventDate).subtract(1, 'day').format('YYYYMMDD');
 			const deleteFunction = (): void => {
 				const modifiedInvite = {
 					...invite,
@@ -220,7 +221,7 @@ export const useDeleteActions = (
 					invite: modifiedInvite,
 					context: {
 						dispatch: context.dispatch,
-						isInstance: context.isInstance,
+						isInstance: context.isSingleInstance,
 						folders: context.folders
 					}
 				});
@@ -228,7 +229,7 @@ export const useDeleteActions = (
 				const draft = !(size(invite?.participants) > 0);
 				return deleteAll || isTheFirstInstance
 					? deleteEvent(event, ctxt)
-					: dispatch(modifyAppointment({ id: editor.id, draft }));
+					: dispatch(modifyAppointment({ editor, draft }));
 			};
 			deleteFunction()
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -259,7 +260,7 @@ export const useDeleteActions = (
 				dispatch,
 				newMessage: newMessage?.text?.[0],
 				t,
-				isInstance: context.isInstance,
+				isInstance: context.isSingleInstance,
 				createSnackbar,
 				inst: {
 					d: invite?.start?.tz
