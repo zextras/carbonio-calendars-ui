@@ -313,7 +313,13 @@
         "subject": "Oggetto",
         "new_time_proposed": "Nuovo Orario Proposto",
         "appointment_is_private": "L'appuntamento è privato.",
-        "create_copy": "Copia"
+        "create_copy": "Copia",
+        "keywords": "Parole chiave",
+        "no_rights": "Non hai i permessi per effettuare questa azione",
+        "single_advanced_filter": "Filtri Avanzati",
+        "action_performed": "Hai già completato questa azione",
+        "advanced_filters": "{{count}} Filtro Avanzato",
+        "advanced_filters_plural": "{{count}} Filtri Avanzati"
     },
     "action": {
         "send": "Invia",
@@ -328,7 +334,9 @@
         "share_calendar": "Condividi Calendario",
         "calendar_access_share": "Condivisione accesso calendario",
         "empty_trash_confirmation": "Tutti gli elementi che appartengono a Email, Contatti, Calendari, Impegni e valigetta verranno eliminati. Vuoi procedere spostando tutto nel cestino?",
-        "send_edit": "Invia Modifica"
+        "send_edit": "Invia Modifica",
+        "search": "Cerca",
+        "reset": "Reimposta"
     },
     "button": {
         "customize_modal": "Personalizza"
@@ -389,7 +397,9 @@
         }
     },
     "search": {
-        "organized_by": "organizzato da"
+        "organized_by": "organizzato da",
+        "from_date": "Dal giorno",
+        "to_date": "Al giorno"
     },
     "find_calendar_shares": "Trova Condivisoni Calendario",
     "items": {
@@ -646,5 +656,8 @@
     "preview": {
         "close": "Chiudi Anteprima"
     },
-    "recurrent_in_allday": "Non è possibile trascinare un appuntamento ricorrente dove è già presente un appuntamento che occupa l'intera giornata"
+    "recurrent_in_allday": "Non è possibile trascinare un appuntamento ricorrente dove è già presente un appuntamento che occupa l'intera giornata",
+    "mountpoint_error": "Non è stato possibile aggiungere la condivisione alla sezione Calendari Condivisi",
+    "mountpoint_success": "La condivisione è stata aggiunta con successo alla sezione Calendari Condivisi",
+    "mountpoint_warning": "{{failed}} su {{total}} dei calendari non sono stati aggiunti ai Calendari Condivisi"
 }

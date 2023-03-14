@@ -178,7 +178,13 @@
         "subject": "Assunto",
         "cancel": "Cancelar",
         "appointment_is_private": "O compromisso é privado.",
-        "create_copy": "Copiar"
+        "create_copy": "Copiar",
+        "action_performed": "Você já realizou esta ação",
+        "advanced_filters": "{{count}} Filtro Avançado",
+        "advanced_filters_plural": "{{count}} Filtros Avançados",
+        "keywords": "Palavras-chave",
+        "no_rights": "Você não tem permissão para realizar esta ação",
+        "single_advanced_filter": "Filtros Avançados"
     },
     "action": {
         "send": "Enviar",
@@ -193,7 +199,9 @@
         "calendar_access_share": "Compartilhamento de acesso ao calendário",
         "edit_calendar_properties": "Editar propriedades do calendário",
         "empty_trash_confirmation": "Esta ação vai excluir todos os itens da lixeira. Tem certeza que deseja continuar?",
-        "send_edit": "Enviar Edição"
+        "send_edit": "Enviar Edição",
+        "reset": "Redefinir",
+        "search": "Buscar"
     },
     "event": {
         "action": {
@@ -530,7 +538,9 @@
     "revoke_without_custom_message": "Revogar acesso enviando a notificação padrão",
     "revoke_without_notification": "Revogar acesso sem enviar notificação",
     "search": {
-        "organized_by": "organizado por"
+        "organized_by": "organizado por",
+        "from_date": "Desde o Dia",
+        "to_date": "Até o Dia"
     },
     "share_invite_resent": "Convite de compartilhamento reenviado",
     "shared_items": "Itens compartilhados",
@@ -646,5 +656,8 @@
     "preview": {
         "close": "Fechar pré-visualização"
     },
-    "recurrent_in_allday": "Você não pode arrastar um compromisso recorrente para um horário de dia inteiro"
+    "recurrent_in_allday": "Você não pode arrastar um compromisso recorrente para um horário de dia inteiro",
+    "mountpoint_error": "O compartilhamento não pode ser adicionado na aba de Calendários Compartilhados",
+    "mountpoint_success": "O compartilhamento foi adicionado com sucesso na aba de Calendários Compartilhados",
+    "mountpoint_warning": "{{failed}} de {{total}} calendários compartilhados não puderam ser adicionados aos Calendários Compartilhados"
 }

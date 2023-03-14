@@ -249,7 +249,9 @@
         "subject": "Betreff",
         "cancel": "abbrechen",
         "appointment_is_private": "Dieser Termin ist privat.",
-        "create_copy": "Kopieren"
+        "create_copy": "Kopieren",
+        "keywords": "Schlüsselwörter",
+        "single_advanced_filter": "Erweiterte Filter"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -288,7 +290,9 @@
         "edit_calendar_properties": "Kalendereigenschaften bearbeiten",
         "send_cancellation": "Abbruch senden",
         "empty_trash_confirmation": "Diese Aktion wird alle Elemente in E-Mails, Kontakte, Kalender, Aufgaben und Aktentasche löschen. Sind Sie sicher, dass Sie alles in diesen Papierkörben endgültig löschen möchten?",
-        "send_edit": "Bearbeiten senden"
+        "send_edit": "Bearbeiten senden",
+        "reset": "Wiederherstellen",
+        "search": "Suchen"
     },
     "calendar": {
         "modal": {
