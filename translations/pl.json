@@ -12,7 +12,9 @@
         "send": "Wyślij",
         "send_cancellation": "Wyślij anulację",
         "share_calendar": "Udostępnij kalendarz",
-        "send_edit": "Wyślij edycję"
+        "send_edit": "Wyślij edycję",
+        "reset": "Zresetuj",
+        "search": "Wyszukaj"
     },
     "event": {
         "action": {
@@ -44,7 +46,7 @@
                 "title2": "Stwórz nowy kalendarz"
             },
             "restore": {
-                "footer": "Stwórz i Przywróć"
+                "footer": "Stwórz i przywróć"
             }
         },
         "share_info": "Udostępnij informacje"
@@ -206,7 +208,7 @@
         },
         "create_tag": "Stwórz Tag",
         "delete_tag": "Usuń Tag",
-        "edit_tag": "Edytuj Tag",
+        "edit_tag": "Edytuj tag",
         "edit_tag_name": "Edytuj Tag {{name}}",
         "entire_serires": "CAŁA SERIA",
         "loading_results": "Ładowanie wyników...",
@@ -237,7 +239,14 @@
         "subject": "Temat",
         "new_time_proposed": "Nowy zaproponowany czas",
         "appointment_is_private": "To spotkanie jest prywatne.",
-        "create_copy": "Skopiuj"
+        "create_copy": "Skopiuj",
+        "action_performed": "Już wykonałeś tę czynność",
+        "advanced_filters_0": "{{count}} zaawansowany filtr",
+        "advanced_filters_1": "{{count}} zaawansowane filtry",
+        "advanced_filters_2": "{{count}} zaawansowanych filtrów",
+        "keywords": "Słowa kluczowe",
+        "no_rights": "Nie masz uprawnień, aby wykonać tę czynność",
+        "single_advanced_filter": "Zaawansowane filtry"
     },
     "message": {
         "modal": {
@@ -612,7 +621,9 @@
     "revoke_without_custom_message": "Odbierz dostęp i wyślij domyślną notkę",
     "revoke_without_notification": "Odbierz dostęp i nie wysyłaj notatki",
     "search": {
-        "organized_by": "zorganizowane przez"
+        "organized_by": "zorganizowane przez",
+        "from_date": "Data rozpoczęcia",
+        "to_date": "Data zakończenia"
     },
     "share_invite_resent": "Zaproszenie do udostępnienia zostało wysłane ponownie",
     "shared_folders": "Udostępnione kalendarze",
@@ -622,7 +633,7 @@
         "snackbar": {
             "tag_created": "Tag {{name}} został stworzony pomyślnie",
             "tag_deleted": "Tag {{name}} został usunięty",
-            "tag_not_updated": "Coś poszło nie tak, Tag nie został zaktualizowany. Spróbuj ponownie.",
+            "tag_not_updated": "Coś poszło nie tak, tag nie został zaktualizowany. Spróbuj ponownie.",
             "tag_updated": "Tag został zaktualizowany pomyślnie"
         }
     },
@@ -671,5 +682,8 @@
     "preview": {
         "close": "Zamknij podgląd"
     },
-    "recurrent_in_allday": "Nie można umieścić powtarzającego się spotkania w oknie cały dzień"
+    "recurrent_in_allday": "Nie można umieścić powtarzającego się spotkania w oknie cały dzień",
+    "mountpoint_error": "Nie udało się dodać udostępnienia do udostępnionych kalendarzy",
+    "mountpoint_success": "Udostępnienie zostało dodane do udostępnionych kalendarzy",
+    "mountpoint_warning": "Nie udało się dodać {{failed}} z {{total}} kalendarzy do udostępnionych kalendarzy"
 }

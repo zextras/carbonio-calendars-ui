@@ -89,7 +89,9 @@
         "edit_message": "编辑消息",
         "empty_trash": "清空垃圾箱",
         "empty_trash_confirmation": "此操作将删除邮件、联系人、日历、任务和公文包垃圾文件夹中的所有项目。确定要永久性删除垃圾文件夹中的所有内容吗？",
-        "send_edit": "发送编辑"
+        "send_edit": "发送编辑",
+        "reset": "重置",
+        "search": "搜索"
     },
     "event": {
         "action": {
@@ -309,7 +311,12 @@
         "subject": "主题",
         "cancel": "取消",
         "appointment_is_private": "预约为私密。",
-        "create_copy": "拷贝"
+        "create_copy": "拷贝",
+        "action_performed": "您已执行此操作",
+        "advanced_filters": " ",
+        "keywords": "关键词",
+        "no_rights": "您没有执行此操作的权限",
+        "single_advanced_filter": "高级过滤条件"
     },
     "months": {
         "april": "四月",
@@ -481,7 +488,9 @@
     "revoke_with_custom_message": "撤销访问权限并发送自定义通知",
     "revoke_without_notification": "撤销访问权限并不发送通知",
     "search": {
-        "organized_by": "组织方"
+        "organized_by": "组织方",
+        "from_date": "起始日期",
+        "to_date": "截止日期"
     },
     "share_invite_resent": "共享邀请重发",
     "button": {
@@ -624,5 +633,8 @@
     "preview": {
         "close": "关闭预览"
     },
-    "recurrent_in_allday": "您无法将重复预约拖动至全天空槽中"
+    "recurrent_in_allday": "您无法将重复预约拖动至全天空槽中",
+    "mountpoint_error": "无法将共享添加至共享日历部分",
+    "mountpoint_success": "共享已成功添加至共享日历部分",
+    "mountpoint_warning": "{{failed}}/{{total}}已共享日历无法被添加至共享日历"
 }
