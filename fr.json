@@ -12,7 +12,9 @@
         "edit_calendar_properties": "Modifier les propriétés du calendrier",
         "send_cancellation": "Envoyer l'annulation",
         "empty_trash_confirmation": "Cette action supprimera tous les éléments des dossiers de la corbeille E-mail, Contacts, Calendrier, Tâches et Portefeuille. Êtes-vous sûr de vouloir supprimer définitivement tout ce qui se trouve dans ces dossiers de la corbeille ?",
-        "send_edit": "Envoyer la modification"
+        "send_edit": "Envoyer la modification",
+        "search": "Rechercher",
+        "reset": "Réinitialisation"
     },
     "add": "Ajouter",
     "administer": "Administrer",
@@ -258,14 +260,20 @@
         "share_public_link": "Partager lien public",
         "select": "Sélectionner",
         "root": "Racine",
-        "public_link_description": "Généré à partir de {{titre}} le {{date}}.",
+        "public_link_description": "Généré à partir de {{title}} le {{date}}",
         "continue": "Continuer",
-        "choose_file": "Choisir fichier",
+        "choose_file": "Choisir un fichier",
         "cancel": "annuler",
         "subject": "Objet",
         "new_time_proposed": "Nouvel horaire proposé",
         "appointment_is_private": "Cet évènement est privé.",
-        "create_copy": "Copier"
+        "create_copy": "Copier",
+        "action_performed": "Vous avez déjà réalisé cette action",
+        "advanced_filters": "{{count}} Filtre avancé",
+        "advanced_filters_plural": "{{count}} Filtres avancés",
+        "keywords": "Mots-clé",
+        "no_rights": "Vous n'avez pas les droits pour réaliser cette action",
+        "single_advanced_filter": "Filtres avancés"
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -509,8 +517,8 @@
         "add_attachments": "Ajouter des pièces jointes",
         "copy_ics_url": "Copier l'url du SCI",
         "chat_room": "Lien de la Salle Virtuelle",
-        "calendar_sharing_status": "Partagé avec {{nombre}} personne",
-        "calendar_sharing_status_plural": "Partagé avec {{nombre}} personnes",
+        "calendar_sharing_status": "Partagé avec {{count}} personne",
+        "calendar_sharing_status_plural": "Partagé avec {{count}} personnes",
         "equipment": "Équipement",
         "location": "Emplacement",
         "chat": "Équipement",
@@ -541,7 +549,9 @@
     "revoke_without_custom_message": "Révoquer l'accès en envoyant une notification standard",
     "revoke_without_notification": "Révoquer l'accès sans envoyer de notification",
     "search": {
-        "organized_by": "organisé par"
+        "organized_by": "organisé par",
+        "from_date": "Date de début",
+        "to_date": "Date de fin"
     },
     "shared_folders": "Calendriers partagés",
     "shared_items": "Eléments partagés",
@@ -646,5 +656,8 @@
     "preview": {
         "close": "Fermer la prévisualisation"
     },
-    "recurrent_in_allday": "Vous ne pouvez pas déplacer un évènement récurent dans un créneau de journée complète"
+    "recurrent_in_allday": "Vous ne pouvez pas déplacer un évènement récurent dans un créneau de journée complète",
+    "mountpoint_error": "Le partage ne peut être ajouté à la section Calendrier partagés",
+    "mountpoint_success": "Le partage a été ajouté avec succès à la section Calendriers partagés",
+    "mountpoint_warning": "{{failed}} sur {{total}} calendriers partagés n'ont pas pu être ajouté aux Calendriers partagés"
 }

@@ -8,7 +8,9 @@
         "empty_trash_confirmation": "This action will delete all items in E-mail, Contacts, Calendar, Tasks and Briefcase trash folders. Are you sure that you want to permanently delete everything in these trash folders?",
         "move_to_root": "Move to root",
         "preview": "Click to preview",
+        "reset": "Reset",
         "save_to_preview": "Save to preview",
+        "search": "Search",
         "send": "Send",
         "send_cancellation": "Send Cancellation",
         "send_edit": "Send Edit",
@@ -97,7 +99,10 @@
     },
     "label": {
         "access_revoked": "Access revoked",
+        "action_performed": "You already performed this action",
         "add_share": "Add share",
+        "advanced_filters": "{{count}} Advanced Filter",
+        "advanced_filters_plural": "",
         "all_calendars": "All calendars",
         "all_day": "All day",
         "app_name": "Calendars",
@@ -173,6 +178,7 @@
         "instance": "Instance",
         "invitation_not_sent": "You haven't sent the invitation to the attendees yet",
         "invites": "Invites",
+        "keywords": "Keywords",
         "loading": "Loading...",
         "loading_results": "Loading Results...",
         "location": "Location",
@@ -185,6 +191,7 @@
         "new_tag": "New Tag",
         "new_time_proposed": "New Time Proposed",
         "no_end_date": "No end date",
+        "no_rights": "You do not have permission to perform this action",
         "no_special_char_allowed": "Name should not contain any special character",
         "no_subject": "No subject",
         "no_title": "No Title",
@@ -241,6 +248,7 @@
         "show": "Show",
         "show_declined_meetings": "Show declined meetings",
         "show_plural": "Show all",
+        "single_advanced_filter": "Advanced Filters",
         "single_instance": "SINGLE INSTANCE",
         "snooze": "Snooze",
         "start_date": "Start date",
@@ -373,6 +381,9 @@
         "october": "October",
         "september": "September"
     },
+    "mountpoint_error": "The share couldn't be added to the Shared Calendars section",
+    "mountpoint_success": "The share has been added successfully to the Shared Calendars section",
+    "mountpoint_warning": "{{failed}} out of {{total}} shared calendars couldn't be added to the Shared Calendars",
     "owner": "Owner",
     "participants": {
         "AC_with_count": "Accepted",
@@ -445,7 +456,9 @@
     "revoke_without_custom_message": "Revoke access sending a standard notification",
     "revoke_without_notification": "Revoke access without sending a notification",
     "search": {
-        "organized_by": "organized by"
+        "from_date": "From Date",
+        "organized_by": "organized by",
+        "to_date": "To Date"
     },
     "settings": {
         "ical_note": "Apple iCal can be configured to access your Calendars using the CalDAV protocol.When this preference is enabled,shared calendars are displayed in the ical account's Delegation tab so you can delegate access to your Calendars to other users.",
