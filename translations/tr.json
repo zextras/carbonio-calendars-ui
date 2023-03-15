@@ -12,7 +12,9 @@
         "share_calendar": "Takvimi paylaş",
         "edit_calendar_properties": "Takvim özelliklerini düzenle",
         "empty_trash_confirmation": "E-Posta, Kişiler, Takvim, Görevler ve Çanta çöp kutularındaki tüm öğeler silinecek. Bu çöp kutularındaki herşeyi tamamen silmek istediğinizden emin misiniz?",
-        "send_edit": "Gönder Düzenle"
+        "send_edit": "Gönder Düzenle",
+        "reset": "Sıfırla",
+        "search": "Ara"
     },
     "edit_share_properties": "Paylaşım özelliklerini düzenle",
     "button": {
@@ -164,7 +166,9 @@
         "copy": "Kopyala"
     },
     "search": {
-        "organized_by": "Organize eden"
+        "organized_by": "Organize eden",
+        "from_date": "Bu Tarihten",
+        "to_date": "Bu Tarihe"
     },
     "snackbar": {
         "invite": {
@@ -351,14 +355,20 @@
         "root": "Kök",
         "public_link_description": "Başlık {{title}} 'dan {{date}} tarihinde oluşturuldu",
         "continue": "İlerle",
-        "choose_file": "Dosya seç",
+        "choose_file": "Dosya seçin",
         "cancel": "iptal",
         "subject": "Konu",
         "new_time_proposed": "Yeni Saat Önerildi",
         "appointment_is_private": "Bu özel randevudur.",
         "search_hint": " ",
         "select_in": " ",
-        "create_copy": "Kopyala"
+        "create_copy": "Kopyala",
+        "action_performed": "Bu işlemi önceden tamamladınız",
+        "advanced_filters": "{{count}} Gelişmiş Filtre",
+        "advanced_filters_plural": "{{count}} Gelişmiş Filtre",
+        "keywords": "Anahtar kelimeler",
+        "no_rights": "Bu işlemi yapmak için izniniz yok",
+        "single_advanced_filter": "Gelişmiş Filtreler"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -649,5 +659,8 @@
     "preview": {
         "close": "Önizlemeyi Kapat"
     },
-    "recurrent_in_allday": "Tekrarlanan randevuyu tüm gün alanına taşıyamazsınız"
+    "recurrent_in_allday": "Tekrarlanan randevuyu tüm gün alanına taşıyamazsınız",
+    "mountpoint_success": "Paylaşılan Takvimler bölümüne paylaşım başarıyla eklendi",
+    "mountpoint_error": "Paylaşılan Takvimler bölümüne paylaşım eklenemedi",
+    "mountpoint_warning": "{{total}} paylaşılan takvimden {{failed}} takvim Paylaşılan Takvimler bölümüne eklenemedi"
 }
