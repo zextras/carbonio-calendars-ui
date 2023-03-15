@@ -30,20 +30,23 @@ const setResourceDate = ({
 	if (allDay) {
 		return timezone
 			? {
-					d: moment(time).tz(timezone).startOf('day').format('YYYYMMDD')
+					d: moment(time).startOf('day').format('YYYYMMDD'),
+					tz: timezone
 			  }
 			: {
-					d: moment(time).startOf('day').format('YYYYMMDD')
+					d: moment(time).utc().startOf('day').format('YYYYMMDD')
 			  };
 	}
-	return timezone
-		? {
-				d: moment(time).tz(timezone).format('YYYYMMDD[T]HHmmss'),
-				tz: timezone
-		  }
-		: {
-				d: moment(time).utc().format('YYYYMMDD[T]HHmmss[Z]')
-		  };
+	if (timezone) {
+		const dateFormat = moment(time).format('YYYYMMDD[T]HHmmss');
+		return {
+			d: dateFormat,
+			tz: timezone
+		};
+	}
+	return {
+		d: moment(time).utc().format('YYYYMMDD[T]HHmmss[Z]')
+	};
 };
 
 const generateParticipantInformation = (resource: Editor): Array<Participants> =>
