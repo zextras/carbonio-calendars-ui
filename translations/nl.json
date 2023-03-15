@@ -12,7 +12,9 @@
         "send_cancellation": "Annulering verzenden",
         "share_calendar": "Kalender delen",
         "empty_trash_confirmation": "Deze actie verwijdert alle items in de E-mail, Contacten, Agenda, Taken en Brievenbus prullenmappen. Weet u zeker dat u alles in deze prullenmappen permanent wilt verwijderen?",
-        "send_edit": "Bewerking versturen"
+        "send_edit": "Bewerking versturen",
+        "reset": "Opnieuw instellen",
+        "search": "Zoeken"
     },
     "reminder": {
         "never": "Nooit",
@@ -215,7 +217,13 @@
         "subject": "Onderwerp",
         "cancel": "annuleren",
         "appointment_is_private": "De afspraak is privé.",
-        "create_copy": "Kopieren"
+        "create_copy": "Kopieren",
+        "action_performed": "U heeft deze actie al uitgevoerd",
+        "advanced_filters": "{{count}} geavanceerde filter",
+        "advanced_filters_plural": "{{count}} geavanceerde filters",
+        "keywords": "Zoekwoorden",
+        "no_rights": "U heeft geen toestemming om deze actie uit te voeren",
+        "single_advanced_filter": "Geavanceerde Filters"
     },
     "event": {
         "action": {
@@ -458,7 +466,9 @@
         }
     },
     "search": {
-        "organized_by": "georganiseerd door"
+        "organized_by": "georganiseerd door",
+        "from_date": "Van datum",
+        "to_date": "Tot datum"
     },
     "participants": {
         "Accepted": "aanvaard",
@@ -646,5 +656,8 @@
     "preview": {
         "close": "Voorbeeld sluiten"
     },
-    "recurrent_in_allday": "U kunt een terugkerende afspraak niet in slot voor een hele dag slepen"
+    "recurrent_in_allday": "U kunt een terugkerende afspraak niet in slot voor een hele dag slepen",
+    "mountpoint_error": "Het deel kon niet worden toegevoegd aan de sectie Gedeelde agenda's",
+    "mountpoint_success": "Het deel is succesvol toegevoegd aan de sectie Gedeelde agenda's",
+    "mountpoint_warning": "{{failed}} van {{total}} gedeelde kalenders konden niet worden toegevoegd aan de Gedeelde kalenders"
 }

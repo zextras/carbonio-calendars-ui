@@ -185,7 +185,12 @@
         "subject": "विषय",
         "cancel": "कैंसल करें",
         "appointment_is_private": "एपाइंटमेंट प्राइवेट है।",
-        "create_copy": "कॉपी करें"
+        "create_copy": "कॉपी करें",
+        "action_performed": "आप यह एक्शन पहले ही कर चुके हैं",
+        "advanced_filters": "{{count}} एड्वान्स्ड फिल्टर",
+        "advanced_filters_plural": "{{count}} एड्वान्स्ड फिल्टर",
+        "no_rights": "आपको इस काम को करने की परमीशन नहीं है",
+        "single_advanced_filter": "एड्वान्स्ड फ़िल्टर"
     },
     "action": {
         "send": "भेजें",
@@ -200,7 +205,9 @@
         "move_to_root": "मूल पर ले जाएँ",
         "share_calendar": "कैलेंडर साझा करें",
         "empty_trash_confirmation": "ऐसा करने से आपकी ईमेल, Contacts, Calendar, Tasks और Briefcase के रद्दी फोल्डरों के सभी आइटम डिलीट हो जाएंगे। क्या आप वाकई में इन रद्दी फोल्डरों की हर चीज जो परमानेंट डिलीट करना चाहते हैं?",
-        "send_edit": "बदलाव भेजें"
+        "send_edit": "बदलाव भेजें",
+        "reset": "रीसेट करें",
+        "search": "खोजें"
     },
     "message": {
         "you": "आप",
@@ -506,7 +513,9 @@
     "freebusy": "ख़ाली व्यस्त",
     "insert": "सम्मिलित करना",
     "search": {
-        "organized_by": "इनके द्वारा ऑर्गनाइज़"
+        "organized_by": "इनके द्वारा ऑर्गनाइज़",
+        "from_date": "इस तारीख से",
+        "to_date": "इस तारीख तक"
     },
     "revoke_without_notification": "बिना किसी सूचना के एक्सेस खत्म करें",
     "tooltip": {
@@ -646,5 +655,8 @@
     "preview": {
         "close": "प्रीव्यू बंद करें"
     },
-    "recurrent_in_allday": "आप बार-बार आने वाले एपोइंटमेंट को किसी पूरे दिन के स्लॉट में ड्रैग नहीं कर सकते"
+    "recurrent_in_allday": "आप बार-बार आने वाले एपोइंटमेंट को किसी पूरे दिन के स्लॉट में ड्रैग नहीं कर सकते",
+    "mountpoint_error": "शेयर को Shared Calendars सेक्शन में नहीं जोड़ा जा सका",
+    "mountpoint_success": "शेर को Shared Calendars सेक्शन में जोड़ दिया गया है",
+    "mountpoint_warning": "{{total}} में से {{failed}} शेयर्ड कैलेंडर Shared Calendars में नहीं जोड़े जा सके"
 }

@@ -81,7 +81,9 @@
         "calendar_access_share": "カレンダーのアクセスシェア",
         "edit_calendar_properties": "カレンダーのプロパティを編集する",
         "empty_trash_confirmation": "この操作により、メール、連絡先、カレンダー、タスク、ブリーフケースのゴミ箱のフォルダ内のアイテムがすべて削除されます。本当にこうしたゴミ箱フォルダ内のすべてを完全に削除しますか？",
-        "send_edit": "編集を送信する"
+        "send_edit": "編集を送信する",
+        "reset": "リセット",
+        "search": "検索"
     },
     "event": {
         "action": {
@@ -269,14 +271,18 @@
         "share_public_link": "パブリックリンクを共有する",
         "select": "選択",
         "root": "ルート",
-        "choose_file": "ファイルを選択する",
+        "choose_file": "ファイルを選ぶ",
         "public_link_description": "{{date}}に{{title}}から生成されました",
         "continue": "続行する",
         "new_time_proposed": "時刻変更依頼",
         "subject": "件名",
         "cancel": "キャンセル",
         "appointment_is_private": "予定は非公開です。",
-        "create_copy": "コピー"
+        "create_copy": "コピー",
+        "action_performed": "すでにこの操作を実行しました",
+        "keywords": "キーワード",
+        "no_rights": "このアクションを実行する権限がありません",
+        "single_advanced_filter": "高度なフィルター"
     },
     "folder": {
         "modal": {
@@ -482,7 +488,9 @@
     "freebusy": "空き時間",
     "insert": "挿入する",
     "search": {
-        "organized_by": "主催者"
+        "organized_by": "主催者",
+        "from_date": "開始日",
+        "to_date": "終了日"
     },
     "tooltip": {
         "add_attachments": "添付ファイルを追加する",
@@ -621,5 +629,8 @@
     "preview": {
         "close": "プレビューを閉じる"
     },
-    "recurrent_in_allday": "定期的な予定を終日スロットにドラッグすることはできません"
+    "recurrent_in_allday": "定期的な予定を終日スロットにドラッグすることはできません",
+    "mountpoint_success": "共有が共有カレンダーセクションに正常に追加されました",
+    "mountpoint_warning": "{{total}} 個の共有カレンダーのうち {{failed}} 個を共有カレンダーに追加できませんでした",
+    "mountpoint_error": "共有を共有予定表セクションに追加できませんでした"
 }
