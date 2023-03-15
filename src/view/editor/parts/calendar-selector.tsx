@@ -38,12 +38,13 @@ export const CalendarSelector = ({
 		() => (showCalWithWritePerm ? filter(calendars, 'haveWriteAccess') : calendars),
 		[calendars, showCalWithWritePerm]
 	);
+
 	const requiredCalendars = useMemo(
 		() =>
 			excludeTrash
 				? filter(
 						calWithWritePerm,
-						(cal) => cal.id !== FOLDERS.TRASH && cal.parent !== FOLDERS.TRASH
+						(cal) => cal.id !== FOLDERS.TRASH && !cal.absFolderPath?.includes('/Trash')
 				  )
 				: calWithWritePerm,
 		[calWithWritePerm, excludeTrash]
