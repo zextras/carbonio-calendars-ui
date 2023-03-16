@@ -29,6 +29,7 @@ export const EditorCalendarSelector = ({
 				calendarId={calendar?.id}
 				onCalendarChange={onCalendarChange}
 				disabled={disabled?.calendar}
+				excludeTrash
 			/>
 		</Row>
 	);
