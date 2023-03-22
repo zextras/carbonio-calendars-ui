@@ -13,9 +13,11 @@ import {
 	registerActions,
 	registerComponents,
 	ACTION_TYPES,
-	t
+	t,
+	registerFunctions,
+	addBoard
 } from '@zextras/carbonio-shell-ui';
-import { isEmpty } from 'lodash';
+import { identity, isEmpty, pick, pickBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
@@ -29,6 +31,9 @@ import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { selectCalendars } from './store/selectors/calendars';
 import { selectApptStatus } from './store/selectors/appointments';
 import { searchAppointments } from './store/actions/search-appointments';
+import { CalendarIntegrations, EventActionsEnum } from './types/enums/event-actions-enum';
+import { generateEditor } from './commons/editor-generator';
+import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -128,6 +133,10 @@ const AppRegistrations = () => {
 	}, []);
 
 	useEffect(() => {
+		registerFunctions({
+			id: CalendarIntegrations.CREATE_APPOINTMENT,
+			fn: createAppointmentIntegration(dispatch, calendars)
+		});
 		registerActions({
 			action: () => ({
 				id: 'new-appointment',
@@ -147,7 +156,7 @@ const AppRegistrations = () => {
 			// @ts-ignore
 			component: InviteResponse
 		});
-	}, [onClickNewButton]);
+	}, [calendars, dispatch, onClickNewButton]);
 	return null;
 };
 

@@ -14,7 +14,8 @@
         "send": "Send",
         "send_cancellation": "Send Cancellation",
         "send_edit": "Send Edit",
-        "share_calendar": "Share Calendar"
+        "share_calendar": "Share Calendar",
+        "show_original": "Show original"
     },
     "add": "Add",
     "administer": "Administer",

@@ -5,6 +5,7 @@
  */
 import { createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
+import { Appointment } from '../../types/store/appointments';
 import { moveAppointmentRequest } from '../actions/move-appointment';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
 import { modifyAppointmentRequest } from '../actions/modify-appointment';
@@ -56,7 +57,7 @@ export const appointmentsSlice = createSlice({
 	name: 'appointments',
 	initialState: {
 		status: 'init',
-		appointments: {}
+		appointments: {} as Record<string, Appointment>
 	},
 	reducers: {
 		updateParticipationStatus: handleUpdateParticipationStatus,
