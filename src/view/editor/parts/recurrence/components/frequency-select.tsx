@@ -6,13 +6,12 @@
 import { Select } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 
 const FrequencySelect = (): ReactElement => {
 	const context = useContext(RecurrenceContext);
-	const [t] = useTranslation();
 
 	const { repetitionItems } = useRecurrenceItems();
 

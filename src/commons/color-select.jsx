@@ -66,7 +66,7 @@ const getStatusItems = (t) =>
 	}));
 
 export default function ColorSelect({ t, onChange, defaultColor = 0, label }) {
-	const colors = useMemo(() => getStatusItems(t), [t]);
+	const colors = useMemo(() => getStatusItems(), []);
 	const defaultSelection = useMemo(() => colors[defaultColor], [colors, defaultColor]);
 	return (
 		<Select

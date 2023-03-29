@@ -6,14 +6,13 @@
 import { Select } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import React, { ReactElement, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
 import { useAppSelector } from '../../../hooks/redux';
 import { useIdentityItems } from '../../../hooks/use-idenity-items';
 import { selectEditorDisabled, selectOrganizer } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
 export const EditorOrganizer = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
-	const [t] = useTranslation();
 	const identities = useIdentityItems();
 	const organizer = useAppSelector(selectOrganizer(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));

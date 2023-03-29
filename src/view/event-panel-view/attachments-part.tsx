@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo, useRef, useState, useContext, ReactElement } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 import { map, filter, reduce, uniqBy, find } from 'lodash';
 import {
@@ -114,7 +114,6 @@ const Attachment = ({
 	const { createPreview } = useContext(PreviewsManagerContext);
 	const extension = getFileExtension(att);
 	const sizeLabel = useMemo(() => humanFileSize(att.size), [att.size]);
-	const [t] = useTranslation();
 	const inputRef = useRef<HTMLAnchorElement>(null);
 	const inputRef2 = useRef<HTMLAnchorElement>(null);
 	const downloadAttachment = useCallback(() => {
@@ -150,7 +149,7 @@ const Attachment = ({
 				inputRef2.current.click();
 			}
 		},
-		[att, createPreview, link, t]
+		[att, createPreview, link]
 	);
 	return (
 		<AttachmentContainer
@@ -255,7 +254,6 @@ export const AttachmentsBlock = ({
 	isEditor = false,
 	disabled
 }: AttachmentsBlockProps): ReactElement => {
-	const [t] = useTranslation();
 	const [expanded, setExpanded] = useState(false);
 	const theme = useTheme();
 

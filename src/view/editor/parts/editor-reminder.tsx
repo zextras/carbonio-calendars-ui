@@ -4,16 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Icon, Row, Select, SelectProps, Text } from '@zextras/carbonio-design-system';
-import { TFunction } from 'i18next';
 import { find } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../hooks/redux';
 import { selectEditorDisabled, selectEditorReminder } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
-const getReminderItems = (t: TFunction): Array<{ label: string; value: string }> => [
+const getReminderItems = (): Array<{ label: string; value: string }> => [
 	{ label: t('reminder.never', 'Never'), value: 'never' },
 	{ label: t('reminder.at_time_of_event', 'At the time of the event'), value: '0' },
 	{
@@ -206,8 +205,7 @@ type SelectValue =
 	| undefined;
 
 export const EditorReminder = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
-	const [t] = useTranslation();
-	const reminderItems = useMemo(() => getReminderItems(t), [t]);
+	const reminderItems = useMemo(() => getReminderItems(), []);
 	const reminder = useAppSelector(selectEditorReminder(editorId));
 	const { onReminderChange } = callbacks;
 	const disabled = useAppSelector(selectEditorDisabled(editorId));

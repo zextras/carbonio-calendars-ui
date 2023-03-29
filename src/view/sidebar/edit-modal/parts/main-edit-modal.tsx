@@ -18,11 +18,9 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder, Grant, useFolders, useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { TFunction } from 'i18next';
+import { FOLDERS, Folder, Grant, useFolders, useUserAccounts, t } from '@zextras/carbonio-shell-ui';
 import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import styled, { DefaultTheme } from 'styled-components';
 import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
@@ -109,7 +107,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 	);
 };
 
-const getStatusItems = (t: TFunction): Array<SelectItem> =>
+const getStatusItems = (): Array<SelectItem> =>
 	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
 		label: t(el.label ?? ''),
 		value: index.toString(),
@@ -147,7 +145,6 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const [inputValue, setInputValue] = useState(folder.name || '');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const checked = useMemo(() => folder.checked, [folder]);
 
@@ -156,7 +153,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [hovered, setHovered] = useState({});
 
-	const colors = useMemo(() => getStatusItems(t), [t]);
+	const colors = useMemo(() => getStatusItems(), []);
 	const onMouseEnter = useCallback((item) => {
 		setHovered(item);
 	}, []);
@@ -256,8 +253,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		grant,
 		inputValue,
 		onClose,
-		selectedColor,
-		t
+		selectedColor
 	]);
 
 	const onShare = useCallback(() => {
@@ -305,7 +301,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					}
 				});
 		},
-		[accounts, createSnackbar, dispatch, folder, t]
+		[accounts, createSnackbar, dispatch, folder]
 	);
 
 	const onEdit = useCallback(
@@ -315,9 +311,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		},
 		[setModal, setActiveGrant]
 	);
-	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
+	const title = useMemo(() => t('label.edit_access', 'Edit access'), []);
 
-	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
+	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), []);
 
 	return (
 		<Container padding="0.5rem 0.5rem 1.5rem">

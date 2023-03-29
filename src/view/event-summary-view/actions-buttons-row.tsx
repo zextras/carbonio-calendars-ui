@@ -6,8 +6,7 @@
 import { differenceBy, find, isNil, noop, reject, toUpper } from 'lodash';
 import { Button, Dropdown, Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useMemo } from 'react';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { useEventActions } from '../../hooks/use-event-actions';
 import {
 	AppointmentActionsItems,
@@ -18,7 +17,6 @@ import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 
 const TrashActionsButtons = ({ actions }: { actions: InstanceActionsItems }): ReactElement => {
-	const [t] = useTranslation();
 	const primaryAction = useMemo(() => find(actions, ['id', EventActionsEnum.MOVE]), [actions]);
 	const otherActions = useMemo(
 		() => reject(actions, ['id', primaryAction?.id]),
@@ -78,7 +76,6 @@ const ResponseActionsButtons = ({
 	actions: InstanceActionsItems | SeriesActionsItems;
 	event: EventType;
 }): ReactElement => {
-	const [t] = useTranslation();
 	const isResponseStillRequested =
 		!isNil(event.resource?.participationStatus) && event.resource?.participationStatus === 'NE';
 	const responseItems = useMemo<Array<AppointmentActionsItems> | undefined>(() => {
@@ -129,7 +126,7 @@ const ResponseActionsButtons = ({
 					}
 			  ]
 			: undefined;
-	}, [actions, t]);
+	}, [actions]);
 	const primaryAction = useMemo(() => {
 		if (isResponseStillRequested) {
 			return {
@@ -146,7 +143,7 @@ const ResponseActionsButtons = ({
 			return { items: responseItems, label: t('label.tentative', 'Tentative'), color: 'warning' };
 		}
 		return { items: responseItems, label: t('event.action.no', 'No'), color: 'error' };
-	}, [event.resource?.participationStatus, isResponseStillRequested, responseItems, t]);
+	}, [event.resource?.participationStatus, isResponseStillRequested, responseItems]);
 
 	const secondaryActions = useMemo(() => {
 		if (responseItems) {
@@ -200,49 +197,40 @@ const ResponseActionsButtons = ({
 	);
 };
 
-const RecurrentActionsButtons = ({ actions }: { actions: SeriesActionsItems }): ReactElement => {
-	const [t] = useTranslation();
-
-	return (
-		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
-			<Padding right="small" style={{ display: 'flex' }}>
-				{actions?.[1]?.items?.length > 0 && (
+const RecurrentActionsButtons = ({ actions }: { actions: SeriesActionsItems }): ReactElement => (
+	<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
+		<Padding right="small" style={{ display: 'flex' }}>
+			{actions?.[1]?.items?.length > 0 && (
+				<Dropdown data-testid={`series-options`} items={actions?.[1]?.items} placement="bottom-end">
+					<Button
+						type="outlined"
+						label={t('label.series', 'SERIES')}
+						icon="ChevronDown"
+						onClick={noop}
+					/>
+				</Dropdown>
+			)}
+			{actions?.[0]?.items?.length > 0 && (
+				<Padding left="small">
 					<Dropdown
-						data-testid={`series-options`}
-						items={actions?.[1]?.items}
+						data-testid={`instance-options`}
+						items={actions?.[0]?.items}
 						placement="bottom-end"
 					>
 						<Button
 							type="outlined"
-							label={t('label.series', 'SERIES')}
+							label={t('label.instance', 'INSTANCE')}
 							icon="ChevronDown"
 							onClick={noop}
 						/>
 					</Dropdown>
-				)}
-				{actions?.[0]?.items?.length > 0 && (
-					<Padding left="small">
-						<Dropdown
-							data-testid={`instance-options`}
-							items={actions?.[0]?.items}
-							placement="bottom-end"
-						>
-							<Button
-								type="outlined"
-								label={t('label.instance', 'INSTANCE')}
-								icon="ChevronDown"
-								onClick={noop}
-							/>
-						</Dropdown>
-					</Padding>
-				)}
-			</Padding>
-		</Row>
-	);
-};
+				</Padding>
+			)}
+		</Padding>
+	</Row>
+);
 
 const InstanceActionsButtons = ({ actions }: { actions: InstanceActionsItems }): ReactElement => {
-	const [t] = useTranslation();
 	const primaryAction = useMemo(() => {
 		const edit = find(actions, ['id', EventActionsEnum.EDIT]);
 		const open = find(actions, ['id', EventActionsEnum.EXPAND]);

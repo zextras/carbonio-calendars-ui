@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Button, ChipInput, Container, Row } from '@zextras/carbonio-design-system';
-import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
+import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useAppSelector } from '../../../hooks/redux';
 import {
@@ -37,7 +36,6 @@ export const AttendeesContainer = styled.div`
 `;
 
 export const EditorAttendees = ({ editorId, callbacks }: EditorAttendeesProps): ReactElement => {
-	const [t] = useTranslation();
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const [showOptionals, setShowOptional] = useState(false);
 	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);

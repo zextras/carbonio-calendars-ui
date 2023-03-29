@@ -6,7 +6,7 @@
 import { Input } from '@zextras/carbonio-design-system';
 import { debounce, isNil } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
 import { useAppSelector } from '../../../hooks/redux';
 import { selectEditorDisabled, selectEditorTitle } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
@@ -17,7 +17,6 @@ type EditorTitleProps = {
 };
 
 export const EditorTitle = ({ editorId, callbacks }: EditorTitleProps): ReactElement | null => {
-	const [t] = useTranslation();
 	const title = useAppSelector(selectEditorTitle(editorId));
 	const [value, setValue] = useState(title ?? '');
 	const { onSubjectChange } = callbacks;

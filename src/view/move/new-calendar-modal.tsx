@@ -15,11 +15,10 @@ import {
 	SelectProps,
 	Text
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import { TFunction } from 'i18next';
 import { includes, map } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
@@ -123,8 +122,6 @@ type NewModalProps = {
 };
 
 export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps): ReactElement => {
-	const [t] = useTranslation();
-
 	const dispatch = useAppDispatch();
 	const [inputValue, setInputValue] = useState('');
 	const folders = useAppSelector(selectCalendars);
@@ -204,7 +201,7 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 		onClose();
 	}, [onClose]);
 
-	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
+	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), []);
 
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	return (

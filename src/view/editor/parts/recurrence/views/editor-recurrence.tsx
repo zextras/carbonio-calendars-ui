@@ -7,7 +7,7 @@ import { Icon, LabelFactoryProps, Row, Select, Text } from '@zextras/carbonio-de
 import { find, toUpper } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { t } from '@zextras/carbonio-shell-ui';
 import { ColorContainer, TextUpperCase } from '../../../../../commons/styled-components';
 import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import { useAppSelector } from '../../../../../hooks/redux';
@@ -59,7 +59,6 @@ const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): Reac
 const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
 	const recur = useAppSelector(selectEditorRecurrence(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
-	const [t] = useTranslation();
 	const start = useAppSelector(selectEditorStart(editorId));
 	const { onRecurrenceChange } = callbacks;
 
@@ -96,7 +95,7 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 				customComponent: <CustomRepeatSelectItem editorId={editorId} callbacks={callbacks} />
 			}
 		],
-		[callbacks, editorId, t]
+		[callbacks, editorId]
 	);
 
 	const initialValue = useMemo(() => {

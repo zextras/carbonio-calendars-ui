@@ -45,7 +45,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 	const accept = useCallback(() => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
-		dispatch(getAppointmentAndInvite({ aptId: id, inviteId })).then((res) => {
+		dispatch(getAppointmentAndInvite({ aptId: id, inviteId })).then((res: Payload) => {
 			const { appointment, invite } = res.payload;
 			const normalizedAppointment = normalizeAppointmentFromCreation(appointment, {});
 			const normalizedInvite = invite.inv[0].comp

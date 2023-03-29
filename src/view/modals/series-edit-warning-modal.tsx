@@ -13,7 +13,6 @@ import {
 	t
 } from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { selectEditorAttendees, selectEditorPanel } from '../../store/selectors/editor';
@@ -48,7 +47,7 @@ export const SeriesEditWarningModal = ({
 
 	const board = useBoard();
 	const panel = useAppSelector(selectEditorPanel(editorId));
-	const attendeesLength = useAppSelector(selectEditorAttendees)?.length;
+	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
 
 	const title = useMemo(() => t('label.warning', 'Warning'), []);
 	const label = useMemo(() => t('label.continue', 'Continue'), []);
