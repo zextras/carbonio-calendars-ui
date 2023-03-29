@@ -304,7 +304,7 @@ describe('Delete event modal', () => {
 		});
 		const newStore = store.getState().appointments.appointments[event.resource.id];
 		expect(newStore.l).toBe('3');
-		const snackbar = await screen.findByText(/Appointment moved to trash/i);
+		const snackbar = await screen.findByText('message.snackbar.appt_moved_to_trash');
 		expect(snackbar).toBeVisible();
 	});
 
@@ -324,7 +324,9 @@ describe('Delete event modal', () => {
 		const exceptionNewStore =
 			store.getState().appointments.appointments[exceptionEvent.resource.id];
 		expect(exceptionNewStore.l).toBe('10');
-		const exceptionSnackbar = await screen.findByText(/Appointment permanently deleted/i);
+		const exceptionSnackbar = await screen.findByText(
+			'message.snackbar.appointment_permanently_deleted'
+		);
 		const exceptionInstance = find(exceptionNewStore.inst, ['ex', true]);
 		expect(exceptionInstance).toBeUndefined();
 		expect(exceptionSnackbar).toBeVisible();
@@ -345,7 +347,9 @@ describe('Delete event modal', () => {
 		});
 		const instanceNewStore = store.getState().appointments.appointments[instanceEvent.resource.id];
 		expect(instanceNewStore.l).toBe('10');
-		const instanceSnackbar = await screen.findByText(/Appointment permanently deleted/i);
+		const instanceSnackbar = await screen.findByText(
+			'message.snackbar.appointment_permanently_deleted'
+		);
 		const instance = find(instanceNewStore.inst, ['ridZ', `${INSTANCE_RIDZ}T120000Z`]);
 		expect(instance).toBeUndefined();
 		expect(instanceSnackbar).toBeVisible();
@@ -362,16 +366,14 @@ describe('Delete event modal', () => {
 			{ store }
 		);
 		await waitFor(() => {
-			user.click(screen.getByRole('button', { name: /label\.delete/i }));
+			user.click(screen.getByRole('button', { name: 'label.delete' }));
 		});
 		await waitFor(() => {
 			user.click(screen.getByText(/action\.send_cancellation/i));
 		});
 		const seriesNewStore = store.getState().appointments.appointments[seriesEvent.resource.id];
 		expect(seriesNewStore.l).toBe('3');
-		const seriesSnackbar = await screen.findByText(
-			/Series successfully deleted. Attendees will receive the cancellation notification./i
-		);
+		const seriesSnackbar = await screen.findByText('message.snackbar.series_deleted');
 		expect(seriesSnackbar).toBeVisible();
 	});
 
@@ -389,16 +391,14 @@ describe('Delete event modal', () => {
 			user.click(screen.getByTestId('icon: Square'));
 		});
 		await waitFor(() => {
-			user.click(screen.getByRole('button', { name: /label\.delete/i }));
+			user.click(screen.getByRole('button', { name: 'label.delete' }));
 		});
 		await waitFor(() => {
 			user.click(screen.getByText(/action\.send_cancellation/i));
 		});
 		const newStore = store.getState().appointments.appointments[seriesEvent.resource.id];
 		expect(newStore.l).toBe('10');
-		const futureOccurrenciesSnackbar = await screen.findByText(
-			/Series successfully deleted. Attendees will receive the cancellation notification./i
-		);
+		const futureOccurrenciesSnackbar = await screen.findByText('message.snackbar.series_deleted');
 		expect(futureOccurrenciesSnackbar).toBeVisible();
 	});
 
@@ -420,16 +420,14 @@ describe('Delete event modal', () => {
 			user.click(screen.getByTestId('icon: Square'));
 		});
 		await waitFor(() => {
-			user.click(screen.getByRole('button', { name: /label\.delete/i }));
+			user.click(screen.getByRole('button', { name: 'label.delete' }));
 		});
 		await waitFor(() => {
 			user.click(screen.getByText(/action\.send_cancellation/i));
 		});
 		const newStore = store.getState().appointments.appointments[seriesEvent.resource.id];
 		expect(newStore.l).toBe('3');
-		const futureOccurrenciesSnackbar = await screen.findByText(
-			/Series successfully deleted. Attendees will receive the cancellation notification./i
-		);
+		const futureOccurrenciesSnackbar = await screen.findByText('message.snackbar.series_deleted');
 		expect(futureOccurrenciesSnackbar).toBeVisible();
 	});
 });

@@ -109,30 +109,24 @@ describe.each`
 
 		// SETTING NEW TITLE, LOCATION, FREEBUSY
 		const titleSelector = screen.getByRole('textbox', {
-			name: t('label.event_title', 'Event title')
+			name: 'label.event_title'
 		});
-		const locationSelector = screen.getByRole('textbox', { name: t('label.location', 'Location') });
+		const locationSelector = screen.getByRole('textbox', { name: 'label.location' });
 		await user.type(titleSelector, newTitle);
 		await user.type(locationSelector, newLocation);
 		await user.click(screen.getByText(/free/i));
 
 		// SETTING ATTENDEES AND OPTIONAL ATTENDEES
 		await waitFor(() => {
-			user.type(
-				screen.getByRole('textbox', { name: t('label.attendee_plural') }),
-				newAttendeesInput
-			);
+			user.type(screen.getByRole('textbox', { name: 'label.attendee_plural' }), newAttendeesInput);
 		});
 
 		await waitFor(() => {
-			user.click(screen.getByRole('button', { name: t('label.optional_plural') }));
+			user.click(screen.getByRole('button', { name: 'label.optional_plural' }));
 		});
 
 		await waitFor(() => {
-			user.type(
-				screen.getByRole('textbox', { name: t('label.optional_plural') }),
-				newOptionalsInput
-			);
+			user.type(screen.getByRole('textbox', { name: 'label.optional_plural' }), newOptionalsInput);
 		});
 
 		// SETTING PRIVATE AND ALLDAY
@@ -160,12 +154,8 @@ describe.each`
 		await user.click(screen.getByText(/10:00 pm/i));
 
 		// SELECTING DIFFERENT REMINDER VALUE
-		await user.click(screen.getByText(t('label.reminder', 'Reminder')));
-
-		const buttonReminder = screen.getByTestId('editor-reminder');
-		await user.click(buttonReminder);
-		console.log({ buttonReminder });
-		await screen.findByText('reminder.minute_before', {});
+		await user.click(screen.getByText('label.reminder'));
+		await user.click(screen.getAllByText('reminder.minute_before', { exact: false })[0]);
 
 		// DEBOUNCE TIMER FOR INPUT FIELDS
 		jest.advanceTimersByTime(500);
@@ -196,7 +186,7 @@ describe.each`
 			autoHideTimeout: 3000,
 			hideButton: true,
 			key: 'calendar-moved-root',
-			label: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+			label: 'message.snackbar.calendar_edits_saved',
 			replace: true,
 			type: 'info'
 		});

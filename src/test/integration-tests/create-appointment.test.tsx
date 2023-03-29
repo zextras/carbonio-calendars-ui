@@ -133,23 +133,23 @@ describe('create single appointment with custom values', () => {
 		await user.click(screen.getByText(new RegExp(identity2.fullName, 'i')));
 
 		// SETTING NEW TITLE, LOCATION, FREEBUSY
-		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
-		const locationSelector = screen.getByRole('textbox', { name: /Location/i });
+		const titleSelector = screen.getByRole('textbox', { name: 'label.event_title' });
+		const locationSelector = screen.getByRole('textbox', { name: 'label.location' });
 		await user.type(titleSelector, newTitle);
 		await user.type(locationSelector, newLocation);
 		await user.click(screen.getByText(/busy/i));
 
 		// SETTING ATTENDEES AND OPTIONAL ATTENDEES
 		await waitFor(() => {
-			user.type(screen.getByRole('textbox', { name: /attendees/i }), newAttendeesInput);
+			user.type(screen.getByRole('textbox', { name: 'label.attendee_plural' }), newAttendeesInput);
 		});
 
 		await waitFor(() => {
-			user.click(screen.getByRole('button', { name: /optionals/i }));
+			user.click(screen.getByRole('button', { name: 'label.optional_plural' }));
 		});
 
 		await waitFor(() => {
-			user.type(screen.getByRole('textbox', { name: 'Optionals' }), newOptionalsInput);
+			user.type(screen.getByRole('textbox', { name: 'label.optional_plural' }), newOptionalsInput);
 		});
 
 		// SETTING PRIVATE AND ALLDAY
@@ -161,15 +161,15 @@ describe('create single appointment with custom values', () => {
 		await user.click(allDayCheckbox);
 
 		// SELECTING DIFFERENT REMINDER VALUE
-		await user.click(screen.getByText(/reminder/i));
-		await user.click(screen.getByText(/1 minute before/i));
+		await user.click(screen.getByText('label.reminder'));
+		await user.click(screen.getAllByText('reminder.minute_before', { exact: false })[0]);
 
 		// DEBOUNCE TIMER FOR INPUT FIELDS
 		jest.advanceTimersByTime(500);
 
 		await waitFor(() => {
 			// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
-			user.click(screen.getByRole('button', { name: /save/i }));
+			user.click(screen.getByRole('button', { name: 'label.save' }));
 		});
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
@@ -183,7 +183,7 @@ describe('create single appointment with custom values', () => {
 			autoHideTimeout: 3000,
 			hideButton: true,
 			key: 'calendar-moved-root',
-			label: 'Edits saved correctly',
+			label: 'message.snackbar.calendar_edits_saved',
 			replace: true,
 			type: 'info'
 		});
