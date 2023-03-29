@@ -3,33 +3,34 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
 import {
-	Container,
-	Row,
 	Avatar,
+	Container,
 	Icon,
-	Text,
 	Padding,
+	Row,
+	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { find, reduce, includes } from 'lodash';
-import { useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
-import { selectCalendars } from '../../store/selectors/calendars';
-import { useTagExist } from '../tags/tag-actions';
-import { selectInstanceInvite } from '../../store/selectors/invites';
-import { getInvite } from '../../store/actions/get-invite';
+import { ZIMBRA_STANDARD_COLORS, useTags } from '@zextras/carbonio-shell-ui';
+import { find, includes, reduce } from 'lodash';
+import moment from 'moment';
+import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { openAppointment } from '../../actions/appointment-actions-fn';
 import { PANEL_VIEW } from '../../constants';
+import { useAppSelector } from '../../hooks/redux';
+import { getInvite } from '../../store/actions/get-invite';
+import { useAppDispatch } from '../../store/redux';
+import { selectCalendars } from '../../store/selectors/calendars';
+import { selectInstanceInvite } from '../../store/selectors/invites';
+import { useTagExist } from '../tags/tag-actions';
 
 const SearchListItem = ({ item, active }) => {
 	const isShared = item?.resource?.l?.includes(':');
-	const calendars = useSelector(selectCalendars);
-	const invite = useSelector(selectInstanceInvite(item?.resource?.inviteId));
-	const dispatch = useDispatch();
+	const calendars = useAppSelector(selectCalendars);
+	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
+	const dispatch = useAppDispatch();
 
 	const cal = isShared
 		? find(calendars, (f) => `${f.zid}:${f.rid}` === item.resource?.l)

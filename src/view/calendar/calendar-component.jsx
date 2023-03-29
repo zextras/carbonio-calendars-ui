@@ -5,15 +5,17 @@
  */
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { minBy } from 'lodash';
+import moment from 'moment-timezone';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
-import moment from 'moment-timezone';
+import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
+import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../store/actions/search-appointments';
+import { useAppDispatch, useAppSelector } from '../../store/redux';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
 	selectCalendars,
@@ -25,11 +27,9 @@ import { useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks
 import { workWeek } from '../../utils/work-week';
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
+import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
-import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
-import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
-import CustomEventWrapper from './custom-event-wrapper';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -37,9 +37,9 @@ const BigCalendar = withDragAndDrop(Calendar);
 const views = { month: true, week: true, day: true, work_week: WorkView };
 
 const CalendarSyncWithRange = () => {
-	const start = useSelector(selectStart);
-	const end = useSelector(selectEnd);
-	const dispatch = useDispatch();
+	const start = useAppSelector(selectStart);
+	const end = useAppSelector(selectEnd);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
@@ -54,8 +54,8 @@ const customComponents = {
 };
 
 export default function CalendarComponent() {
-	const appointments = useSelector(selectAppointmentsArray);
-	const selectedCalendars = useSelector(selectCheckedCalendarsMap);
+	const appointments = useAppSelector(selectAppointmentsArray);
+	const selectedCalendars = useAppSelector(selectCheckedCalendarsMap);
 	const theme = useContext(ThemeContext);
 	const prefs = usePrefs();
 	const calendarView = useCalendarView();
@@ -63,7 +63,7 @@ export default function CalendarComponent() {
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
-	const calendars = useSelector(selectCalendars);
+	const calendars = useAppSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
 

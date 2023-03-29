@@ -4,21 +4,21 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 /* eslint-disable import/extensions */
-import React, { FC, ReactElement, useCallback, useContext } from 'react';
 import {
-	SnackbarManagerContext,
-	Container,
-	Padding,
 	ButtonOld as Button,
-	Divider
+	Container,
+	Divider,
+	Padding,
+	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { useDispatch } from 'react-redux';
-import { normalizeInvite } from '../../../normalizations/normalize-invite';
+import React, { FC, ReactElement, useCallback, useContext } from 'react';
 import { appointmentToEvent } from '../../../hooks/use-invite-to-event';
+import { normalizeAppointmentFromCreation } from '../../../normalizations/normalize-appointments';
+import { normalizeInvite } from '../../../normalizations/normalize-invite';
 import { getAppointmentAndInvite } from '../../../store/actions/get-appointment';
 import { modifyAppointmentRequest } from '../../../store/actions/modify-appointment';
-import { normalizeAppointmentFromCreation } from '../../../normalizations/normalize-appointments';
+import { useAppDispatch } from '../../../hooks/redux';
 
 type ProposedTimeReply = {
 	invite: any;
@@ -39,7 +39,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 	to
 }): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const accounts = useUserAccounts();
 	const [openComposer, available] = useIntegratedFunction('compose');
 	const accept = useCallback(() => {

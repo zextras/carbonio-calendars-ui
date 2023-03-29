@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
-import React, { useState, useCallback, ReactElement } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { ReactElement, useCallback, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
-import { EventType } from '../../types/event';
-import { NewModal } from './new-calendar-modal';
-import { MoveModal } from './move-modal';
 import { selectCalendar } from '../../store/selectors/calendars';
+import { EventType } from '../../types/event';
+import { MoveModal } from './move-modal';
+import { NewModal } from './new-calendar-modal';
 
 type MoveAppointmentProps = {
 	onClose: () => void;
@@ -18,8 +18,8 @@ type MoveAppointmentProps = {
 };
 
 export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactElement | null => {
-	const dispatch = useDispatch();
-	const currentFolder = useSelector(selectCalendar(event.resource.calendar.id));
+	const dispatch = useAppDispatch();
+	const currentFolder = useAppSelector(selectCalendar(event.resource.calendar.id));
 	const [showNewFolderModal, setShowNewFolderModal] = useState(false);
 
 	const toggleModal = useCallback(

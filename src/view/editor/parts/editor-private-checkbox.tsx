@@ -6,7 +6,7 @@
 import { Checkbox } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../../hooks/redux';
 import { selectEditorClass, selectEditorDisabled } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
@@ -21,8 +21,8 @@ export const EditorPrivateCheckbox = ({
 }: EditorPrivateCheckboxProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const { onPrivateChange } = callbacks;
-	const apptClass = useSelector(selectEditorClass(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const apptClass = useAppSelector(selectEditorClass(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	const onClick = useCallback(() => {
 		const newValue = apptClass === 'PRI' ? 'PUB' : 'PRI';

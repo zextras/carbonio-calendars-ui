@@ -5,10 +5,10 @@
  */
 import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS, t, useUserSettings } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import { PREFS_DEFAULTS } from '../../../constants';
+import { useAppSelector } from '../../../hooks/redux';
 import { selectCalendarsArray } from '../../../store/selectors/calendars';
 import { Calendar } from '../../../types/store/calendars';
 import LabelFactory, { Square } from './select-label-factory';
@@ -32,7 +32,7 @@ export const CalendarSelector = ({
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
-	const calendars = useSelector(selectCalendarsArray);
+	const calendars = useAppSelector(selectCalendarsArray);
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
 	const calWithWritePerm = useMemo(
 		() => (showCalWithWritePerm ? filter(calendars, 'haveWriteAccess') : calendars),

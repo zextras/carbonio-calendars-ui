@@ -6,15 +6,16 @@
 import {
 	Divider,
 	ModalBody,
-	ModalHeader,
 	ModalFooter,
+	ModalHeader,
 	Padding,
 	Text
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import React, { ReactElement, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { RecurrenceContext } from '../../../../../commons/recurrence-context';
+import { useAppSelector } from '../../../../../hooks/redux';
 import {
 	selectEditorRecurrenceCount,
 	selectEditorRecurrenceFrequency,
@@ -25,13 +26,12 @@ import {
 	RecurrenceEndValue,
 	RecurrenceStartValue
 } from '../../../../../types/editor';
-import DailyOptions from './daily-options';
 import FrequencySelect from '../components/frequency-select';
+import DailyOptions from './daily-options';
 import MonthlyOptions from './monthly-options';
 import RecurrenceEndOptions from './recurrence-end-options';
 import WeeklyOptions from './weekly-options';
 import YearlyOptions from './yearly-options';
-import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 
 const setEndInitialValue = (
 	count: number | undefined,
@@ -58,9 +58,9 @@ const CustomRecurrenceModal = ({
 	callbacks,
 	onClose
 }: CustomRecurrenceModalProps): ReactElement => {
-	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
-	const count = useSelector(selectEditorRecurrenceCount(editorId));
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
+	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
+	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
 	const { onRecurrenceChange } = callbacks;
 
 	const [frequency, setFrequency] = useState(freq);

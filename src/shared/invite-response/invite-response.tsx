@@ -3,35 +3,35 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useMemo, useEffect, useCallback, useState } from 'react';
 import {
+	Chip,
 	Container,
-	Row,
-	Icon,
-	Text,
 	Divider,
-	Tooltip,
-	Chip
+	Icon,
+	Row,
+	Text,
+	Tooltip
 } from '@zextras/carbonio-design-system';
+import { Action, Board, addBoard, getAction, t } from '@zextras/carbonio-shell-ui';
 import { find } from 'lodash';
-import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
-import { addBoard, getAction, Action, t, Board } from '@zextras/carbonio-shell-ui';
-import { useDispatch } from 'react-redux';
+import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import BodyMessageRenderer from '../../commons/body-message-renderer';
 import { generateEditor } from '../../commons/editor-generator';
+import { CALENDAR_ROUTE } from '../../constants';
+import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
+import { useAppDispatch } from '../../hooks/redux';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
+import { useInvite } from '../../hooks/use-invite';
+import { inviteToEvent } from '../../hooks/use-invite-to-event';
+import { normalizeInvite } from '../../normalizations/normalize-invite';
+import { getInvite } from '../../store/actions/get-invite';
+import { StoreProvider } from '../../store/redux';
 import { EditorCallbacks } from '../../types/editor';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
-import { normalizeInvite } from '../../normalizations/normalize-invite';
-import { inviteToEvent } from '../../hooks/use-invite-to-event';
-import { getInvite } from '../../store/actions/get-invite';
-import { CALENDAR_ROUTE } from '../../constants';
-import BodyMessageRenderer from '../../commons/body-message-renderer';
-import { useInvite } from '../../hooks/use-invite';
-import { StoreProvider } from '../../store/redux';
-import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 
 /**
    @todo: haveEquipment - momentary variables to dynamize
@@ -93,7 +93,7 @@ const InviteResponse: FC<InviteResponse> = ({
 	parent,
 	isAttendee
 }): ReactElement => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	useEffect(() => {
 		if (!mailMsg.read) {

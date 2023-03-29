@@ -3,10 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useTranslation } from 'react-i18next';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { useDispatch } from 'react-redux';
 import {
 	Checkbox,
 	Container,
@@ -15,12 +11,16 @@ import {
 	SnackbarManagerContext,
 	Text
 } from '@zextras/carbonio-design-system';
-import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
-import { folderAction } from '../../../../store/actions/calendar-actions';
-import { ModalHeader } from '../../../../commons/modal-header';
-import ModalFooter from '../../../../commons/modal-footer';
-import { GranteeInfo } from './grantee-info';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
+import ModalFooter from '../../../../commons/modal-footer';
+import { ModalHeader } from '../../../../commons/modal-header';
+import { folderAction } from '../../../../store/actions/calendar-actions';
+import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
+import { useAppDispatch } from '../../../../store/redux';
+import { GranteeInfo } from './grantee-info';
 
 export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 	const [t] = useTranslation();
@@ -28,7 +28,7 @@ export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 	const [standardMessage, setStandardMessage] = useState('');
 	const { onClose } = useContext(EditModalContext);
 	const accounts = useUserAccounts();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const tooltipLabel = useMemo(() => {

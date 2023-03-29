@@ -4,21 +4,20 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
-import React, { ReactElement, useMemo } from 'react';
-import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { isNil, omitBy } from 'lodash';
+import React, { ReactElement, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import { useAppSelector } from '../../hooks/redux';
+import { selectCalendar } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
 import { Calendar } from '../../types/store/calendars';
 import { Invite } from '../../types/store/invite';
-import { Store } from '../../types/store/store';
-import { ImageAndIconPart } from './image-and-icon-part';
-import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { LocationRow } from '../event-summary-view/location-row';
-import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
 import TagsRow from '../event-summary-view/tags-row';
-import { selectCalendar } from '../../store/selectors/calendars';
+import { TimeInfoRow } from '../event-summary-view/time-info-row';
+import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
+import { ImageAndIconPart } from './image-and-icon-part';
 
 const PaddedRow = styled(Row)`
 	padding: 0.25rem 0.25rem;
@@ -82,7 +81,7 @@ export const DetailsPart = ({
 	isPrivate,
 	invite
 }: DetailsPartProps): ReactElement | null => {
-	const calendar = useSelector(selectCalendar(event.resource.calendar.id));
+	const calendar = useAppSelector(selectCalendar(event.resource.calendar.id));
 
 	const timeData = useMemo(
 		() =>

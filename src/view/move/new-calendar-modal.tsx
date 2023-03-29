@@ -3,29 +3,29 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { TFunction } from 'i18next';
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import {
+	Checkbox,
 	Container,
+	Icon,
 	Input,
 	Padding,
-	Select,
-	Text,
-	Checkbox,
 	Row,
-	Icon,
+	Select,
 	SelectItem,
-	SelectProps
+	SelectProps,
+	Text
 } from '@zextras/carbonio-design-system';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { includes, map } from 'lodash';
 import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../../commons/zimbra-standard-colors';
-import { createCalendar } from '../../store/actions/create-calendar';
-import { ModalHeader } from '../../commons/modal-header';
+import { TFunction } from 'i18next';
+import { includes, map } from 'lodash';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import ModalFooter from '../../commons/modal-footer';
+import { ModalHeader } from '../../commons/modal-header';
+import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../../commons/zimbra-standard-colors';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { createCalendar } from '../../store/actions/create-calendar';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
 import { Calendar } from '../../types/store/calendars';
@@ -125,9 +125,9 @@ type NewModalProps = {
 export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [inputValue, setInputValue] = useState('');
-	const folders = useSelector(selectCalendars);
+	const folders = useAppSelector(selectCalendars);
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const colors = useMemo(() => getStatusItems(), []);

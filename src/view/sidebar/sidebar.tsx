@@ -8,13 +8,14 @@ import { ThemeProvider } from '@mui/material';
 import { Accordion, AccordionItemType, Container, Divider } from '@zextras/carbonio-design-system';
 import { Folder, useFoldersByView } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { recursiveToggleCheck } from '../../commons/utilities';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
+import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 import { CollapsedSidebarItems } from './collapsed-sidebar-items';
 import { FoldersComponent } from './custom-components/folders-component';
 import {
@@ -22,7 +23,6 @@ import {
 	composeSharesAccordionItems as getSharesAccordionItems,
 	removeLinkFolders
 } from './utils';
-import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
 	foldersAccordionItems: Folder[];
@@ -62,9 +62,9 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 
 	const foldersAccordionItems = addAllCalendarsItem({ folders: folderItems });
 
-	const dispatch = useDispatch();
-	const start = useSelector(selectStart);
-	const end = useSelector(selectEnd);
+	const dispatch = useAppDispatch();
+	const start = useAppSelector(selectStart);
+	const end = useAppSelector(selectEnd);
 
 	const sharesItemsOnClick = useCallback(
 		(folder: Folder): void =>

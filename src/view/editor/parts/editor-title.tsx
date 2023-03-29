@@ -3,11 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Input } from '@zextras/carbonio-design-system';
 import { debounce, isNil } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { Input } from '@zextras/carbonio-design-system';
+import { useAppSelector } from '../../../hooks/redux';
 import { selectEditorDisabled, selectEditorTitle } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
@@ -18,10 +18,10 @@ type EditorTitleProps = {
 
 export const EditorTitle = ({ editorId, callbacks }: EditorTitleProps): ReactElement | null => {
 	const [t] = useTranslation();
-	const title = useSelector(selectEditorTitle(editorId));
+	const title = useAppSelector(selectEditorTitle(editorId));
 	const [value, setValue] = useState(title ?? '');
 	const { onSubjectChange } = callbacks;
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	useEffect(() => {
 		if (title) {

@@ -31,13 +31,13 @@ import {
 } from 'lodash';
 import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { SidebarCustomItem } from '../../carbonio-ui-commons/types/sidebar';
 import { ResFolder } from '../../carbonio-ui-commons/utils';
 import { getFolderTranslatedName } from '../../commons/utilities';
+import { useAppDispatch } from '../../hooks/redux';
 import { createMountpoint } from '../../store/actions/create-mountpoint';
 
 const ContainerEl = styled(Container)`
@@ -86,7 +86,7 @@ export const SharesModal: FC<{ calendars: ResFolder; onClose: () => void }> = ({
 }) => {
 	const [links, setLinks] = useState([]);
 	const [data, setData] = useState<any>();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const onConfirm = useCallback(() => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment

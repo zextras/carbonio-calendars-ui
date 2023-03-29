@@ -17,11 +17,11 @@ import { FOLDERS, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { filter, find, noop } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { extractBody } from '../../commons/body-message-renderer';
 import StyledDivider from '../../commons/styled-divider';
+import { useAppSelector } from '../../hooks/redux';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
@@ -211,9 +211,9 @@ export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
 export default function EventPanelView(): ReactElement | null {
 	const { calendarId, apptId, ridZ } = useParams<RouteParams>();
 
-	const calendar = useSelector(selectCalendar(calendarId));
-	const appointment = useSelector(selectAppointment(apptId));
-	const instance = useSelector(selectAppointmentInstance(apptId, ridZ));
+	const calendar = useAppSelector(selectCalendar(calendarId));
+	const appointment = useAppSelector(selectAppointment(apptId));
+	const instance = useAppSelector(selectAppointmentInstance(apptId, ridZ));
 	const invite = useInvite((instance as ExceptionReference)?.inviteId ?? appointment?.inviteId);
 
 	const event = useMemo(() => {

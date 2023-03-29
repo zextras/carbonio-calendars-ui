@@ -3,10 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
-import { isNaN, isNil, isNumber } from 'lodash';
-import moment from 'moment';
-import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import {
 	Container,
 	Icon,
@@ -17,10 +13,14 @@ import {
 	Row,
 	Text
 } from '@zextras/carbonio-design-system';
-import { useSelector } from 'react-redux';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import { t } from '@zextras/carbonio-shell-ui';
+import { isNaN, isNil, isNumber } from 'lodash';
+import moment from 'moment';
+import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import momentLocalizer from 'react-widgets-moment';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
+import { useAppSelector } from '../../../../../hooks/redux';
 import Styler from '../../../../../settings/components/date-picker-style';
 import {
 	selectEditorAllDay,
@@ -88,10 +88,10 @@ const radioInitialState = (count: number | undefined, until: string | undefined)
 
 const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement => {
 	const { newEndValue, setNewEndValue } = useContext(RecurrenceContext);
-	const start = useSelector(selectEditorStart(editorId));
-	const allDay = useSelector(selectEditorAllDay(editorId));
-	const count = useSelector(selectEditorRecurrenceCount(editorId));
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
+	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
 
 	const [radioValue, setRadioValue] = useState(() => radioInitialState(count, until));
 	const [inputValue, setInputValue] = useState(count ?? '1');

@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useMemo } from 'react';
-import { Container, Text, Icon, Divider, Row, Padding } from '@zextras/carbonio-design-system';
-import moment from 'moment';
-import styled from 'styled-components';
+import { Container, Divider, Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { reduce } from 'lodash';
-import { useSelector } from 'react-redux';
+import moment from 'moment';
+import React, { ReactElement, useMemo } from 'react';
+import styled from 'styled-components';
+import { useAppSelector } from '../../hooks/redux';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { EventType } from '../../types/event';
 import { Parts } from '../../types/store/invite';
@@ -32,7 +32,7 @@ const findAttachments = (parts: Parts, acc: Parts): Parts =>
 
 export const TrashRow = ({ event }: { event: EventType }): ReactElement => {
 	const { inviteId, participationStatus } = event.resource;
-	const invite = useSelector(selectInstanceInvite(inviteId));
+	const invite = useAppSelector(selectInstanceInvite(inviteId));
 
 	const attachments = useMemo(() => findAttachments(invite?.parts ?? [], []), [invite]);
 

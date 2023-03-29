@@ -3,11 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil, debounce } from 'lodash';
+import { Input } from '@zextras/carbonio-design-system';
+import { debounce, isNil } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { Input } from '@zextras/carbonio-design-system';
+import { useAppSelector } from '../../../hooks/redux';
 import { selectEditorDisabled, selectEditorLocation } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
@@ -18,10 +18,10 @@ type EditorTitleProps = {
 
 export const EditorLocation = ({ editorId, callbacks }: EditorTitleProps): ReactElement | null => {
 	const [t] = useTranslation();
-	const location = useSelector(selectEditorLocation(editorId));
+	const location = useAppSelector(selectEditorLocation(editorId));
 	const [value, setValue] = useState(location ?? '');
 	const { onLocationChange } = callbacks;
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	useEffect(() => {
 		if (location) {

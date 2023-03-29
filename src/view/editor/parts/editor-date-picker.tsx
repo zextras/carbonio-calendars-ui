@@ -4,9 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Padding } from '@zextras/carbonio-design-system';
-import React, { ReactElement, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import moment from 'moment';
+import React, { ReactElement, useMemo } from 'react';
+import Styler from '../../../commons/date-picker-style';
+import EndDatePicker from '../../../commons/end-date-picker';
+import StartDatePicker from '../../../commons/start-date-picker';
+import { useAppSelector } from '../../../hooks/redux';
 import {
 	selectEditorAllDay,
 	selectEditorDisabled,
@@ -14,9 +17,6 @@ import {
 	selectEditorStart
 } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
-import StartDatePicker from '../../../commons/start-date-picker';
-import EndDatePicker from '../../../commons/end-date-picker';
-import Styler from '../../../commons/date-picker-style';
 
 type DatePickerProps = {
 	editorId: string;
@@ -24,11 +24,11 @@ type DatePickerProps = {
 };
 
 export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): ReactElement | null => {
-	const allDay = useSelector(selectEditorAllDay(editorId));
-	const start = useSelector(selectEditorStart(editorId));
-	const end = useSelector(selectEditorEnd(editorId));
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const end = useAppSelector(selectEditorEnd(editorId));
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const { onDateChange } = callbacks;
 
 	return start && end ? (

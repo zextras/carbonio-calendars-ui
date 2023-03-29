@@ -3,26 +3,26 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useMemo, useState } from 'react';
 import {
+	Checkbox,
 	Container,
+	Icon,
 	Input,
 	Padding,
-	Select,
-	Text,
-	Checkbox,
 	Row,
-	Icon,
-	SnackbarManagerContext
+	Select,
+	SnackbarManagerContext,
+	Text
 } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
-import { includes, map } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
 import { t } from '@zextras/carbonio-shell-ui';
+import { includes, map } from 'lodash';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import ModalFooter from '../../commons/modal-footer';
+import { ModalHeader } from '../../commons/modal-header';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { createCalendar } from '../../store/actions/create-calendar';
-import { ModalHeader } from '../../commons/modal-header';
-import ModalFooter from '../../commons/modal-footer';
+import { useAppDispatch, useAppSelector } from '../../store/redux';
 import { selectAllCalendars } from '../../store/selectors/calendars';
 
 const Square = styled.div`
@@ -101,7 +101,7 @@ const getStatusItems = () =>
 	}));
 
 export const NewModal = ({ onClose }) => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [inputValue, setInputValue] = useState('');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
@@ -109,7 +109,7 @@ export const NewModal = ({ onClose }) => {
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useContext(SnackbarManagerContext);
 
-	const folders = useSelector(selectAllCalendars);
+	const folders = useAppSelector(selectAllCalendars);
 
 	const folderArray = useMemo(() => map(folders, (f) => f.label), [folders]);
 

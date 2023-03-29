@@ -4,12 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ModalManagerContext } from '@zextras/carbonio-design-system';
-import { addBoard, getBridgedFunctions, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { addBoard, getBridgedFunctions, replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { generateEditor } from '../commons/editor-generator';
@@ -35,7 +34,6 @@ export const useCalendarComponentUtils = (): {
 } => {
 	const calendarDate = useCalendarDate();
 	const [date, setDate] = useState(calendarDate);
-	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
 	const dispatch = useDispatch<AppDispatch>();
 	const calendarFolders = useCalendarFolders();
@@ -156,7 +154,7 @@ export const useCalendarComponentUtils = (): {
 				}
 			});
 		},
-		[calendarFolders, createModal, dispatch, getEnd, getStart, t]
+		[calendarFolders, createModal, dispatch, getEnd, getStart]
 	);
 
 	const onEventDrop = useCallback(
@@ -210,7 +208,7 @@ export const useCalendarComponentUtils = (): {
 				}
 			}
 		},
-		[createModal, onDropFn, t]
+		[createModal, onDropFn]
 	);
 
 	const handleSelect = useCallback(
@@ -243,7 +241,7 @@ export const useCalendarComponentUtils = (): {
 				});
 			}
 		},
-		[action, calendarFolders, dispatch, summaryViewOpen, t]
+		[action, calendarFolders, dispatch, summaryViewOpen]
 	);
 
 	const resizeEvent = useCallback((): null => null, []);

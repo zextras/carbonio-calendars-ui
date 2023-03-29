@@ -7,7 +7,7 @@ import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import { useCallback, useContext } from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../../store/redux';
 import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
 
 export const uploadToFiles = async (node, uploadTo) => {
@@ -20,8 +20,8 @@ export const uploadToFiles = async (node, uploadTo) => {
 
 export const useGetFilesFromDrive = ({ editorId, onAttachmentsChange }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const attachmentFiles = useSelector(selectEditorAttachmentFiles(editorId));
-	const parts = useSelector(selectEditorAttach(editorId));
+	const attachmentFiles = useAppSelector(selectEditorAttachmentFiles(editorId));
+	const parts = useAppSelector(selectEditorAttach(editorId));
 	const [uploadTo, isAvailable] = useIntegratedFunction('upload-to-target-and-get-target-id');
 
 	const confirmAction = useCallback(

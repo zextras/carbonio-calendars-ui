@@ -3,23 +3,21 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, reduce } from 'lodash';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
+import { DEFAULT_DATE_END, DEFAULT_DATE_START } from '../../constants/advance-filter-modal';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { getSelectedEvents } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { Store } from '../../types/store/store';
+import AdvancedFilterModal from './advance-filter-modal';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
-import AdvancedFilterModal from './advance-filter-modal';
-import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
 type SearchProps = {
 	useQuery: () => [Array<any>, (arg: any) => void];
@@ -37,7 +35,6 @@ export type SearchResults = {
 
 const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	const [query, updateQuery] = useQuery();
-	const [t] = useTranslation();
 	const [searchResults, setSearchResults] = useState<SearchResults>({
 		appointments: {},
 		more: false,
@@ -47,7 +44,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	});
 	const [loading, setLoading] = useState(false);
 	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const { path } = useRouteMatch();
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
 	const [resultLabel, setResultLabel] = useState<string>(t('label.results_for', 'Results for: '));
@@ -60,7 +57,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		[zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch]
 	);
 
-	const calendars = useSelector(selectCalendars);
+	const calendars = useAppSelector(selectCalendars);
 	const searchInFolders = useMemo(
 		() =>
 			reduce(
@@ -139,7 +136,6 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 				});
 		},
 		[
-			t,
 			foldersToSearchInQuery,
 			dispatch,
 			spanStart,
@@ -167,9 +163,9 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 			setFilterCount(0);
 			setResultLabel(t('label.results_for', 'Results for: '));
 		}
-	}, [query, search, searchResults.query, isInvalidQuery, t]);
+	}, [query, search, searchResults.query, isInvalidQuery]);
 
-	const appointments = useSelector((state: Store) =>
+	const appointments = useAppSelector((state: Store) =>
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
 	);
 	return (

@@ -4,15 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, CustomModal } from '@zextras/carbonio-design-system';
-import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
+import { Board, addBoard, t } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { ModalHeader } from '../../commons/modal-header';
 import { generateEditor } from '../../commons/editor-generator';
 import ModalFooter from '../../commons/modal-footer';
+import { ModalHeader } from '../../commons/modal-header';
 import { CALENDAR_ROUTE } from '../../constants';
+import { useAppDispatch } from '../../hooks/redux';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
@@ -32,7 +32,7 @@ export const ReminderModal = ({
 	const [showNewTimeModal, setShowNewTimeModal] = useState(false);
 	const [activeReminder, setActiveReminder] = useState<ReminderItem | undefined>(undefined);
 	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const openModal = useMemo(() => !isEmpty(reminders), [reminders]);
 

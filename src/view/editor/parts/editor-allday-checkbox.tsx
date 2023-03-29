@@ -16,6 +16,7 @@ import {
 	selectEditorStart
 } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
+import { useAppSelector } from '../../../hooks/redux';
 
 type AllDayProps = {
 	editorId: string;
@@ -23,11 +24,11 @@ type AllDayProps = {
 };
 
 export const EditorAllDayCheckbox = ({ editorId, callbacks }: AllDayProps): ReactElement | null => {
-	const allDay = useSelector(selectEditorAllDay(editorId));
-	const start = useSelector(selectEditorStart(editorId));
-	const end = useSelector(selectEditorEnd(editorId));
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const end = useAppSelector(selectEditorEnd(editorId));
 	const { onAllDayChange } = callbacks;
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	const startDate = useMemo(() => (start ? new Date(start) : undefined), [start]);
 	const endDate = useMemo(() => (end ? new Date(end) : undefined), [end]);

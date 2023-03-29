@@ -3,15 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Avatar, Chip, Container, Row, Text } from '@zextras/carbonio-design-system';
+import { t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useMemo } from 'react';
-import { Avatar, Container, Row, Text, Chip } from '@zextras/carbonio-design-system';
 import { Trans } from 'react-i18next';
-import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../hooks/redux';
+import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
 import { selectCalendar } from '../../store/selectors/calendars';
 import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
 import { ParticipantsDisplayer } from './participants-displayer';
-import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
 
 type ParticipantProps = {
 	invite: Invite;
@@ -25,7 +25,7 @@ export const ParticipantsPart = ({
 	participants
 }: ParticipantProps): ReactElement => {
 	const account = useUserAccount();
-	const calendar = useSelector(selectCalendar(invite.ciFolder));
+	const calendar = useAppSelector(selectCalendar(invite.ciFolder));
 	const iAmAttendee = useMemo(
 		() => (!invite.isOrganizer && !calendar?.owner) ?? false,
 		[calendar?.owner, invite.isOrganizer]

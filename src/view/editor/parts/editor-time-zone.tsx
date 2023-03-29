@@ -6,9 +6,9 @@
 import { Select } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../carbonio-ui-commons/utils/use-prefs';
-import { findLabel, TimeZonesOptions } from '../../../settings/components/utils';
+import { useAppSelector } from '../../../hooks/redux';
+import { TimeZonesOptions, findLabel } from '../../../settings/components/utils';
 import { selectEditorDisabled, selectEditorTimezone } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
 
@@ -21,7 +21,7 @@ type SelectValue =
 
 export const EditorTimezone = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
-	const timezone = useSelector(selectEditorTimezone(editorId));
+	const timezone = useAppSelector(selectEditorTimezone(editorId));
 
 	const { zimbraPrefUseTimeZoneListInCalendar } = usePrefs();
 	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
@@ -39,7 +39,7 @@ export const EditorTimezone = ({ editorId, callbacks }: EditorProps): ReactEleme
 		return undefined;
 	});
 	const { onTimeZoneChange } = callbacks;
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	return value && zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? (
 		<Select

@@ -4,25 +4,22 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
-import { Folder } from '@zextras/carbonio-shell-ui';
+import { Folder, t } from '@zextras/carbonio-shell-ui';
 import { size } from 'lodash';
 import moment from 'moment';
 import { useCallback, useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
-import { generateEditor } from '../commons/editor-generator';
-import { modifyAppointment } from '../store/actions/new-modify-appointment';
-import { EventType } from '../types/event';
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
+import { generateEditor } from '../commons/editor-generator';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
+import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { SnackbarArgumentType } from '../types/delete-appointment';
+import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { useAppDispatch } from './redux';
 
 const generateAppointmentDeletedSnackbar = (
 	res: { type: string | string[] },
-	t: TFunction,
 	createSnackbar: (obj: SnackbarArgumentType) => void,
 	undoAction?: () => void,
 	isRecurrentSeries?: boolean
@@ -62,7 +59,6 @@ const generateAppointmentDeletedSnackbar = (
 
 const generateAppointmentRestoredSnackbar = (
 	res: { type: string | string[] },
-	t: TFunction,
 	createSnackbar: (obj: SnackbarArgumentType) => void
 ): void => {
 	if (res.type.includes('fulfilled')) {
@@ -109,8 +105,7 @@ export const useDeleteActions = (
 	invite: Invite,
 	context: AccountContext
 ): UseDeleteActionsType => {
-	const [t] = useTranslation();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext) as (obj: SnackbarArgumentType) => void;
 	const [deleteAll, setDeleteAll] = useState(true);
 	const [notifyOrganizer, setNotifyOrganizer] = useState(false);
@@ -138,7 +133,7 @@ export const useDeleteActions = (
 					// @ts-ignore
 					.then((res: { type: string | string[] }) => {
 						onBoardClose && onBoardClose();
-						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
+						generateAppointmentRestoredSnackbar(res, createSnackbar);
 					});
 			};
 			context.replaceHistory('');
@@ -152,7 +147,7 @@ export const useDeleteActions = (
 			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {
 					onBoardClose && onBoardClose();
-					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreAppointment);
+					generateAppointmentDeletedSnackbar(res, createSnackbar, restoreAppointment);
 				})
 				.then(() => {
 					setTimeout(() => {
@@ -163,7 +158,7 @@ export const useDeleteActions = (
 					}, 5000);
 				});
 		},
-		[event, context, createSnackbar, dispatch, notifyOrganizer, t]
+		[event, context, createSnackbar, dispatch, notifyOrganizer]
 	);
 
 	const deleteRecurrentSerie = useCallback(
@@ -181,7 +176,7 @@ export const useDeleteActions = (
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					.then((res: { type: string | string[] }) => {
-						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
+						generateAppointmentRestoredSnackbar(res, createSnackbar);
 					});
 			};
 			context.replaceHistory('');
@@ -236,7 +231,7 @@ export const useDeleteActions = (
 				// @ts-ignore
 				.then((res: { type: string | string[] }) => {
 					onBoardClose && onBoardClose();
-					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreRecurrentSeries, true);
+					generateAppointmentDeletedSnackbar(res, createSnackbar, restoreRecurrentSeries, true);
 				})
 				.then(
 					setTimeout(() => {
@@ -248,7 +243,7 @@ export const useDeleteActions = (
 				);
 		},
 
-		[event, context, createSnackbar, deleteAll, dispatch, invite, notifyOrganizer, t]
+		[event, context, createSnackbar, deleteAll, dispatch, invite, notifyOrganizer]
 	);
 
 	const deleteRecurrentInstance = useCallback(
@@ -273,7 +268,7 @@ export const useDeleteActions = (
 			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {
 					onBoardClose && onBoardClose();
-					generateAppointmentDeletedSnackbar(res, t, createSnackbar);
+					generateAppointmentDeletedSnackbar(res, createSnackbar);
 				})
 				.then(
 					setTimeout(() => {
@@ -284,7 +279,7 @@ export const useDeleteActions = (
 					}, 5000)
 				);
 		},
-		[event, context, createSnackbar, dispatch, invite?.start?.tz, notifyOrganizer, t]
+		[event, context, createSnackbar, dispatch, invite?.start?.tz, notifyOrganizer]
 	);
 
 	return useMemo(

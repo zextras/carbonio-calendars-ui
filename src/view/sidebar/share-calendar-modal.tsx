@@ -18,9 +18,9 @@ import {
 import { t, useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { useAppDispatch } from '../../hooks/redux';
 import {
 	ShareCalendarRoleOptions,
 	ShareCalendarWithOptions,
@@ -39,7 +39,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	secondaryLabel,
 	grant
 }): ReactElement => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');

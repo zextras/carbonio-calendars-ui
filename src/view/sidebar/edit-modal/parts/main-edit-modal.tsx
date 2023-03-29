@@ -19,10 +19,10 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, Folder, Grant, useFolders, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { TFunction } from 'i18next';
 import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
-import { TFunction, useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import styled, { DefaultTheme } from 'styled-components';
 import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
@@ -33,6 +33,7 @@ import { setCalendarColor } from '../../../../normalizations/normalizations-util
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { GranteeInfo } from './grantee-info';
+import { useAppDispatch } from '../../../../hooks/redux';
 
 const Square = styled.div`
 	width: 1.125rem;
@@ -147,7 +148,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const [t] = useTranslation();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const checked = useMemo(() => folder.checked, [folder]);
 
 	const { setModal, onClose, setActiveGrant } = useContext<EditModalContexType>(EditModalContext);

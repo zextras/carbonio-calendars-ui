@@ -3,13 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { differenceWith, isEqual, isNaN, isNil, isNumber, map, omitBy } from 'lodash';
 import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react';
-import { Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
-import { isNumber, isNaN, map, differenceWith, isEqual, omitBy, isNil } from 'lodash';
-import { useSelector } from 'react-redux';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
+import { useAppSelector } from '../../../../../hooks/redux';
 import {
 	selectEditorRecurrenceByDay,
 	selectEditorRecurrenceFrequency,
@@ -81,9 +81,9 @@ const startValueInitialState = (
 
 const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
-	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
-	const interval = useSelector(selectEditorRecurrenceInterval(editorId));
-	const byday = useSelector(selectEditorRecurrenceByDay(editorId));
+	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const interval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+	const byday = useAppSelector(selectEditorRecurrenceByDay(editorId));
 
 	const [radioValue, setRadioValue] = useState(() => initialState(freq, interval, byday));
 

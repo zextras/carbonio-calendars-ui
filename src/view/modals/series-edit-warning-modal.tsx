@@ -18,6 +18,7 @@ import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { selectEditorAttendees, selectEditorPanel } from '../../store/selectors/editor';
 import { Editor } from '../../types/editor';
+import { useAppSelector } from '../../hooks/redux';
 
 type ModalProps = {
 	onClose: () => void;
@@ -46,8 +47,8 @@ export const SeriesEditWarningModal = ({
 	);
 
 	const board = useBoard();
-	const panel = useSelector(selectEditorPanel(editorId));
-	const attendeesLength = useSelector(selectEditorAttendees)?.length;
+	const panel = useAppSelector(selectEditorPanel(editorId));
+	const attendeesLength = useAppSelector(selectEditorAttendees)?.length;
 
 	const title = useMemo(() => t('label.warning', 'Warning'), []);
 	const label = useMemo(() => t('label.continue', 'Continue'), []);

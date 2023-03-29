@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
+import { TFunction } from 'i18next';
 import { find } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { TFunction, useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '../../../hooks/redux';
 import { selectEditorDisabled, selectEditorFreeBusy } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 import LabelFactory, { Square } from './select-label-factory';
@@ -75,9 +76,9 @@ export const EditorFreeBusySelector = ({
 }: EditorFreeBusyProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const statusItems = useMemo(() => getStatusItems(t), [t]);
-	const freeBusy = useSelector(selectEditorFreeBusy(editorId));
+	const freeBusy = useAppSelector(selectEditorFreeBusy(editorId));
 	const { onDisplayStatusChange } = callbacks;
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	const getNewSelection = useCallback(
 		(e) => find(statusItems, ['value', e]) ?? statusItems[0],

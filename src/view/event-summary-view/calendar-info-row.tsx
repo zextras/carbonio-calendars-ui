@@ -5,13 +5,13 @@
  */
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import React, { ReactElement } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useAppSelector } from '../../hooks/redux';
 import { selectCalendar } from '../../store/selectors/calendars';
 
 export const CalendarInfoRow = (): ReactElement => {
 	const { calendarId } = useParams<{ calendarId: string }>();
-	const calendar = useSelector(selectCalendar(calendarId));
+	const calendar = useAppSelector(selectCalendar(calendarId));
 
 	return (
 		<>

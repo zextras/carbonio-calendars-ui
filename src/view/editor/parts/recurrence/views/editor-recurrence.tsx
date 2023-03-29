@@ -8,9 +8,9 @@ import { find, toUpper } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { ColorContainer, TextUpperCase } from '../../../../../commons/styled-components';
 import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
+import { useAppSelector } from '../../../../../hooks/redux';
 import {
 	selectEditorDisabled,
 	selectEditorRecurrence,
@@ -57,10 +57,10 @@ const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): Reac
 );
 
 const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
-	const recur = useSelector(selectEditorRecurrence(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const recur = useAppSelector(selectEditorRecurrence(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();
-	const start = useSelector(selectEditorStart(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
 	const { onRecurrenceChange } = callbacks;
 
 	const recurrenceItems = useMemo(

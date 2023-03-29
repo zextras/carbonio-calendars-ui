@@ -5,10 +5,9 @@
  */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+import { Row } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { Row } from '@zextras/carbonio-design-system';
 import { selectEditorDisabled, selectEditorRoom } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
@@ -23,8 +22,8 @@ export const EditorVirtualRoom = ({
 }: EditorRoomProps): ReactElement | null => {
 	const [RoomSelector, isRoomAvailable] = useIntegratedComponent('room-selector');
 	const { onRoomChange } = callbacks;
-	const room = useSelector(selectEditorRoom(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const room = useAppSelector(selectEditorRoom(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	return isRoomAvailable ? (
 		<Row height="fit" width="fill" padding={{ top: 'large' }}>

@@ -3,30 +3,31 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil } from 'lodash';
-import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
 	Container,
-	Text,
-	Icon,
-	Row,
-	Tooltip,
 	Dropdown,
+	Icon,
 	ModalManagerContext,
-	SnackbarManagerContext
+	Row,
+	SnackbarManagerContext,
+	Text,
+	Tooltip
 } from '@zextras/carbonio-design-system';
 import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
-import { useDispatch, useSelector } from 'react-redux';
+import { isNil } from 'lodash';
+import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useEventActions } from '../../hooks/use-event-actions';
+import { getInvite } from '../../store/actions/get-invite';
+import { StoreProvider } from '../../store/redux';
+import { selectInstanceInvite } from '../../store/selectors/invites';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
-import { selectInstanceInvite } from '../../store/selectors/invites';
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
-import { getInvite } from '../../store/actions/get-invite';
 import { MemoCustomEventComponent } from './custom-event-component';
-import { StoreProvider } from '../../store/redux';
 
 type CustomEventProps = {
 	event: EventType;
@@ -34,13 +35,13 @@ type CustomEventProps = {
 };
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const anchorRef = useRef(null);
 	const [open, setOpen] = useState(false);
 	const { action } = useParams<{ action: string }>();
-	const invite = useSelector(selectInstanceInvite(event.resource.inviteId));
+	const invite = useAppSelector(selectInstanceInvite(event.resource.inviteId));
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const getEventInvite = useCallback(() => {
 		if (!invite) {

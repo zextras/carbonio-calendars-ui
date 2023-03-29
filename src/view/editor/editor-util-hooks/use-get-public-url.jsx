@@ -9,7 +9,7 @@ import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import moment from 'moment';
 import { useCallback, useContext, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../../hooks/redux';
 import {
 	selectEditorPlainText,
 	selectEditorRichText,
@@ -19,9 +19,9 @@ import {
 export const useGetPublicUrl = ({ editorId, onTextChange }) => {
 	const [getLink, getLinkAvailable] = useIntegratedFunction('get-link');
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const richText = useSelector(selectEditorRichText(editorId));
-	const plainText = useSelector(selectEditorPlainText(editorId));
-	const title = useSelector(selectEditorTitle(editorId));
+	const richText = useAppSelector(selectEditorRichText(editorId));
+	const plainText = useAppSelector(selectEditorPlainText(editorId));
+	const title = useAppSelector(selectEditorTitle(editorId));
 	const description = useMemo(
 		() =>
 			t('label.public_link_description', {

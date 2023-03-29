@@ -7,10 +7,10 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import React, { FC } from 'react';
 import { Provider } from 'react-redux';
 import { CALENDAR_APP_ID } from '../../constants';
-import invitesSliceReducer from '../slices/invites-slice';
+import appointmentsSliceReducer from '../slices/appointments-slice';
 import calendarsSliceReducer from '../slices/calendars-slice';
 import editorSliceReducer from '../slices/editor-slice';
-import appointmentsSliceReducer from '../slices/appointments-slice';
+import invitesSliceReducer from '../slices/invites-slice';
 
 export const reducers = {
 	appointments: appointmentsSliceReducer,
@@ -32,4 +32,6 @@ const store = configureStore({
 });
 
 export const StoreProvider: FC = ({ children }) => <Provider store={store}>{children}</Provider>;
+
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

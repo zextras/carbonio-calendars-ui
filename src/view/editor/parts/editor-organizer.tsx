@@ -7,7 +7,7 @@ import { Select } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../../hooks/redux';
 import { useIdentityItems } from '../../../hooks/use-idenity-items';
 import { selectEditorDisabled, selectOrganizer } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
@@ -15,8 +15,8 @@ import { EditorProps } from '../../../types/editor';
 export const EditorOrganizer = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const identities = useIdentityItems();
-	const organizer = useSelector(selectOrganizer(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const organizer = useAppSelector(selectOrganizer(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const { onOrganizerChange } = callbacks;
 
 	const onChange = useCallback(

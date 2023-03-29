@@ -4,23 +4,23 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useState, useEffect, useMemo } from 'react';
 import { compact, filter, find, forEach, includes, isEmpty, map, reduce } from 'lodash';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
+import sound from '../../assets/notification.mp3';
 import { getTimeToDisplayData } from '../../commons/utilities';
+import { useAppSelector } from '../../hooks/redux';
 import { normalizeReminderItem } from '../../normalizations/normalize-reminder';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
 import { showNotification } from '../notifications';
 import { ReminderModal } from './reminder-modal';
-import sound from '../../assets/notification.mp3';
 
 export const AppointmentReminder = (): ReactElement | null => {
 	const [reminders, setReminders] = useState<Reminders>({});
-	const appointments = useSelector(selectAppointmentsArray);
-	const calendars = useSelector(selectCalendars);
+	const appointments = useAppSelector(selectAppointmentsArray);
+	const calendars = useAppSelector(selectCalendars);
 
 	const alarms = useMemo(() => {
 		const appts = filter(appointments, 'alarmData');

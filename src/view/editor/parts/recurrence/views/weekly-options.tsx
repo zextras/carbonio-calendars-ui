@@ -23,6 +23,7 @@ import { workWeek, WorkWeekDay } from '../../../../../utils/work-week';
 import { IntervalInput } from '../components/interval-input';
 import { WeekdayCheckboxes } from '../components/weekday-checkboxes';
 import WeekdaySelect from '../components/weekday-select';
+import { useAppSelector } from '../../../../../hooks/redux';
 
 const RADIO_VALUES = {
 	QUICK_OPTIONS: 'QuickOptions',
@@ -114,9 +115,9 @@ const selectInitialValue = (
 
 const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
-	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
-	const interval = useSelector(selectEditorRecurrenceInterval(editorId));
-	const byday = useSelector(selectEditorRecurrenceByDay(editorId));
+	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const interval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+	const byday = useAppSelector(selectEditorRecurrenceByDay(editorId));
 
 	const prefs = usePrefs();
 

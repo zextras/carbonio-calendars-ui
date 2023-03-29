@@ -8,8 +8,8 @@ import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { useAppSelector } from '../../../hooks/redux';
 import {
 	selectEditorAttendees,
 	selectEditorDisabled,
@@ -43,9 +43,9 @@ export const EditorAttendees = ({ editorId, callbacks }: EditorAttendeesProps): 
 	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
 	const { onAttendeesChange, onOptionalAttendeesChange } = callbacks;
 
-	const attendees = useSelector(selectEditorAttendees(editorId));
-	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const attendees = useAppSelector(selectEditorAttendees(editorId));
+	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	// const isDisabled = useMemo(() => updateAppTime || proposeNewTime, []);
 	const hasError = useMemo(() => some(attendees ?? [], { error: true }), [attendees]);

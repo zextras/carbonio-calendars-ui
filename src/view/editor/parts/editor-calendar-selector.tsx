@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement } from 'react';
-import { useSelector } from 'react-redux';
 import { Row } from '@zextras/carbonio-design-system';
+import React, { ReactElement } from 'react';
+import { useAppSelector } from '../../../hooks/redux';
 import { selectEditorCalendar, selectEditorDisabled } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 import { CalendarSelector } from './calendar-selector';
@@ -20,8 +20,8 @@ export const EditorCalendarSelector = ({
 	callbacks
 }: EditorCalendarSelectorProps): ReactElement | null => {
 	const { onCalendarChange } = callbacks;
-	const calendar = useSelector(selectEditorCalendar(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const calendar = useAppSelector(selectEditorCalendar(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	return (
 		<Row height="fit" width="fill" padding={{ top: 'large' }}>

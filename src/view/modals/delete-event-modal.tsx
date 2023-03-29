@@ -3,19 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { size } from 'lodash';
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
 import { Spinner, replaceHistory, t } from '@zextras/carbonio-shell-ui';
-import { useDispatch } from 'react-redux';
+import { size } from 'lodash';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import ModalFooter from '../../commons/modal-footer';
+import { ModalHeader } from '../../commons/modal-header';
+import { useAppDispatch } from '../../hooks/redux';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
+import { UseDeleteActionsType, useDeleteActions } from '../../hooks/use-delete-actions';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
-import { ModalHeader } from '../../commons/modal-header';
 import { ModifyStandardMessageModal } from './modify-standard-message-modal';
-import { useDeleteActions, UseDeleteActionsType } from '../../hooks/use-delete-actions';
 
 const ItalicText = styled(Text)`
 	font-style: italic;
@@ -137,7 +137,7 @@ export const DeleteEventModal = ({
 }: DeleteEventModalProps): ReactElement => {
 	const { isOrganizer, isException, participants } = invite;
 	const participantsSize = useMemo(() => size(participants), [participants]);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const isInstance = !!event.resource.ridZ;
 	const isRecurrent = !!invite.recurrenceRule;

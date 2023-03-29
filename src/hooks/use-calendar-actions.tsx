@@ -6,7 +6,6 @@
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { FOLDERS, Folder, t } from '@zextras/carbonio-shell-ui';
 import React, { SyntheticEvent, useContext } from 'react';
-import { useDispatch } from 'react-redux';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getFolder } from '../store/actions/get-folder';
@@ -18,6 +17,7 @@ import { EmptyModal } from '../view/sidebar/empty-modal';
 import { NewModal } from '../view/sidebar/new-modal';
 import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
 import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
+import { useAppDispatch } from './redux';
 
 type CalendarActionsProps = {
 	id: string;
@@ -28,7 +28,7 @@ type CalendarActionsProps = {
 };
 export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> => {
 	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const actions = [

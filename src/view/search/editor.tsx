@@ -3,18 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Container } from '@zextras/carbonio-design-system';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { Container } from '@zextras/carbonio-design-system';
-import { useDispatch, useSelector } from 'react-redux';
-import { Header } from './header';
-import { EditorPanel } from '../editor/editor-panel';
-import { selectSearchActiveId } from '../../store/selectors/editor';
 import { createCallbacks } from '../../commons/editor-generator';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { selectSearchActiveId } from '../../store/selectors/editor';
+import { EditorPanel } from '../editor/editor-panel';
+import { Header } from './header';
 
 export const Editor = (): ReactElement | null => {
-	const editorId = useSelector(selectSearchActiveId);
-	const dispatch = useDispatch();
+	const editorId = useAppSelector(selectSearchActiveId);
+	const dispatch = useAppDispatch();
 	const callbacks = useMemo(
 		() => (editorId ? createCallbacks(editorId, { dispatch }) : undefined),
 		[dispatch, editorId]

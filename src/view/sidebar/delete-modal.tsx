@@ -4,18 +4,17 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, Folder, t } from '@zextras/carbonio-shell-ui';
 import React, { FC, useContext, useMemo } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { Trans } from 'react-i18next';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { useAppDispatch } from '../../hooks/redux';
 import { folderAction } from '../../store/actions/calendar-actions';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useDispatch();
-	const [t] = useTranslation();
+	const dispatch = useAppDispatch();
 	const onConfirm = (): void => {
 		onClose();
 		const restoreEvent = (): void => {
@@ -82,7 +81,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				}
 			});
 	};
-	const title = useMemo(() => t('label.delete', 'Delete'), [t]);
+	const title = useMemo(() => t('label.delete', 'Delete'), []);
 	return folder ? (
 		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader title={title} onClose={onClose} />
