@@ -13,10 +13,9 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { filter, find, noop } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { extractBody } from '../../commons/body-message-renderer';
@@ -163,7 +162,6 @@ const ActionButtons = ({
 };
 
 export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
-	const [t] = useTranslation();
 	const close = useCallback(() => {
 		replaceHistory('');
 	}, []);

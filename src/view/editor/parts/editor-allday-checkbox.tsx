@@ -8,7 +8,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../../hooks/redux';
 import {
 	selectEditorAllDay,
 	selectEditorDisabled,
@@ -16,7 +16,6 @@ import {
 	selectEditorStart
 } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
-import { useAppSelector } from '../../../hooks/redux';
 
 type AllDayProps = {
 	editorId: string;

@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Container, ContainerProps, Icon, Padding, Text } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement } from 'react';
-import { Container, Icon, Text, Padding, ContainerProps } from '@zextras/carbonio-design-system';
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 const BackDropLayout = styled(Container)`
@@ -62,70 +62,57 @@ export const DropZoneAttachment = ({
 	onDragOver,
 	onDrop,
 	onDragLeave
-}: DropzoneProps): ReactElement => {
-	const [t] = useTranslation();
-	return (
-		<>
-			<BackDropLayout
-				onDragOver={onDragOver}
-				onDrop={onDrop}
-				onDragLeave={onDragLeave}
-				borderRadius="half"
-			>
-				<DropBackground>
-					<BackDropLayoutInnerBox>
-						<Padding all="medium">
-							<BackDropLayoutContentBox>
-								<Container mainAlignment="center">
-									<DropBoxIconGroup mainAlignment="center" orientation="horizontal">
-										<Padding right="small" left="small">
-											<Icon
-												icon="ImageOutline"
-												height="2.1875rem"
-												width="2.1875rem"
-												color="primary"
-											/>
-										</Padding>
-										<Padding right="small" left="small">
-											<Icon
-												icon="FileAddOutline"
-												height="2.1875rem"
-												width="2.1875rem"
-												color="primary"
-											/>
-										</Padding>
-										<Padding right="small" left="small">
-											<Icon
-												icon="FilmOutline"
-												height="2.1875rem"
-												width="2.1875rem"
-												color="primary"
-											/>
-										</Padding>
-									</DropBoxIconGroup>
-									<Container mainAlignment="center" height="auto">
-										<Text color="primary" weight="bold">
-											{t('composer.attachment.draganddrop.title', 'Drag&Drop Mode')}
-										</Text>
-										<Padding top="small" />
-										<DetailText
-											size="medium"
-											weight="regular"
+}: DropzoneProps): ReactElement => (
+	<>
+		<BackDropLayout
+			onDragOver={onDragOver}
+			onDrop={onDrop}
+			onDragLeave={onDragLeave}
+			borderRadius="half"
+		>
+			<DropBackground>
+				<BackDropLayoutInnerBox>
+					<Padding all="medium">
+						<BackDropLayoutContentBox>
+							<Container mainAlignment="center">
+								<DropBoxIconGroup mainAlignment="center" orientation="horizontal">
+									<Padding right="small" left="small">
+										<Icon
+											icon="ImageOutline"
+											height="2.1875rem"
+											width="2.1875rem"
 											color="primary"
-											overflow="break-word"
-										>
-											{t(
-												'composer.attachment.draganddrop.content',
-												'Drop here your attachements to quickly add them to the appointment'
-											)}
-										</DetailText>
-									</Container>
+										/>
+									</Padding>
+									<Padding right="small" left="small">
+										<Icon
+											icon="FileAddOutline"
+											height="2.1875rem"
+											width="2.1875rem"
+											color="primary"
+										/>
+									</Padding>
+									<Padding right="small" left="small">
+										<Icon icon="FilmOutline" height="2.1875rem" width="2.1875rem" color="primary" />
+									</Padding>
+								</DropBoxIconGroup>
+								<Container mainAlignment="center" height="auto">
+									<Text color="primary" weight="bold">
+										{t('composer.attachment.draganddrop.title', 'Drag&Drop Mode')}
+									</Text>
+									<Padding top="small" />
+									<DetailText size="medium" weight="regular" color="primary" overflow="break-word">
+										{t(
+											'composer.attachment.draganddrop.content',
+											'Drop here your attachements to quickly add them to the appointment'
+										)}
+									</DetailText>
 								</Container>
-							</BackDropLayoutContentBox>
-						</Padding>
-					</BackDropLayoutInnerBox>
-				</DropBackground>
-			</BackDropLayout>
-		</>
-	);
-};
+							</Container>
+						</BackDropLayoutContentBox>
+					</Padding>
+				</BackDropLayoutInnerBox>
+			</DropBackground>
+		</BackDropLayout>
+	</>
+);

@@ -3,35 +3,25 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-	Checkbox,
-	Container,
-	Input,
-	Row,
-	Select,
-	SnackbarManagerContext,
-	Text
-} from '@zextras/carbonio-design-system';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { Checkbox, Container, Input, Row, Select, Text } from '@zextras/carbonio-design-system';
+import { getBridgedFunctions, t, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
+import { useAppDispatch } from '../../../../hooks/redux';
 import { findLabel } from '../../../../settings/components/utils';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { shareCalendar } from '../../../../store/actions/share-calendar';
-import { useAppDispatch } from '../../../../store/redux';
 import { GranteeInfo } from './grantee-info';
 
 export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
-	const [t] = useTranslation();
 	const [sendNotification, setSendNotification] = useState(false);
 	const [standardMessage, setStandardMessage] = useState('');
 	const { onClose, roleOptions } = useContext(EditModalContext);
 	const accounts = useUserAccounts();
 	const dispatch = useAppDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = getBridgedFunctions()?.createSnackbar;
 	const [shareWithUserRole, setshareWithUserRole] = useState('');
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
 
@@ -88,7 +78,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 		setshareWithUserRole(shareRole);
 	}, []);
 
-	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
+	const title = useMemo(() => t('label.edit_access', 'Edit access'), []);
 	return (
 		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader title={title} onClose={onClose} />

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Avatar, Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
 import React, { ReactElement, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
 import { useAppSelector } from '../../../hooks/redux';
@@ -36,7 +36,6 @@ const TitleRow = ({ children }: { children: ReactElement }): ReactElement => (
 );
 
 export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement => {
-	const [t] = useTranslation();
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const location = useAppSelector(selectEditorLocation(editorId));
@@ -57,7 +56,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 			? allDayString
 			: `${moment(start).format(`dddd, DD MMMM, YYYY HH:mm`)} -
 	           ${moment(end).format(' HH:mm')}`;
-	}, [end, start, allDay, t]);
+	}, [end, start, allDay]);
 
 	const apptLocation = useMemo(
 		() => `GMT ${moment(start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,

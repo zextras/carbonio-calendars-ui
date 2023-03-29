@@ -3,17 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Padding, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
-import React, { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Container, Padding, Text } from '@zextras/carbonio-design-system';
+import { getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
+import React from 'react';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
+import { useAppDispatch } from '../../hooks/redux';
 import { folderAction } from '../../store/actions/calendar-actions';
-import { useAppDispatch } from '../../store/redux';
 
 export const EmptyModal = ({ onClose }) => {
-	const createSnackbar = useContext(SnackbarManagerContext);
-	const [t] = useTranslation();
+	const createSnackbar = getBridgedFunctions()?.createSnackbar;
 	const dispatch = useAppDispatch();
 
 	const onConfirm = () => {

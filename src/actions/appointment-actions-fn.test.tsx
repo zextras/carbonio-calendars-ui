@@ -5,6 +5,7 @@
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
@@ -17,6 +18,10 @@ shell.getUserSettings.mockImplementation(() => ({
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	},
+	props: [...defaultSettings.props],
+	attrs: {
+		...defaultSettings.attrs
 	}
 }));
 

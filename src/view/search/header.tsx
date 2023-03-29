@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useTranslation } from 'react-i18next';
 import {
 	Divider,
 	Icon,
@@ -12,8 +11,9 @@ import {
 	Text,
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
-import React, { ReactElement, useEffect, useRef } from 'react';
+import { t } from '@zextras/carbonio-shell-ui';
 import { map, some } from 'lodash';
+import React, { ReactElement, useEffect, useRef } from 'react';
 
 const ActionButtons = ({ actions }: { actions: any[] }): JSX.Element => {
 	const actionContainerRef = useRef(null);
@@ -61,7 +61,6 @@ type HeaderProps = {
 };
 
 export const Header = ({ title, actions, closeAction }: HeaderProps): ReactElement => {
-	const [t] = useTranslation();
 	const eventIsEditable = some(actions, { id: 'edit' });
 	const expandedButton = some(actions, { id: 'expand' });
 

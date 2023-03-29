@@ -9,19 +9,19 @@ import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
-import { AppDispatch, StoreProvider } from '../store/redux';
+import { StoreProvider } from '../store/redux';
 import { setRange } from '../store/slices/calendars-slice';
 import { useCalendarDate, useIsSummaryViewOpen } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
 import { ModifyStandardMessageModal } from '../view/modals/modify-standard-message-modal';
+import { useAppDispatch } from './redux';
 import { useCalendarFolders } from './use-calendar-folders';
 
 export const useCalendarComponentUtils = (): {
@@ -35,7 +35,7 @@ export const useCalendarComponentUtils = (): {
 	const calendarDate = useCalendarDate();
 	const [date, setDate] = useState(calendarDate);
 	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const { action } = useParams<{

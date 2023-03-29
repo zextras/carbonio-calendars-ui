@@ -14,11 +14,18 @@ import {
 	Row,
 	Select,
 	SelectItem,
-	SnackbarManagerContext,
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder, Grant, useFolders, useUserAccounts, t } from '@zextras/carbonio-shell-ui';
+import {
+	FOLDERS,
+	Folder,
+	Grant,
+	getBridgedFunctions,
+	t,
+	useFolders,
+	useUserAccounts
+} from '@zextras/carbonio-shell-ui';
 import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
 import styled, { DefaultTheme } from 'styled-components';
@@ -27,11 +34,11 @@ import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
+import { useAppDispatch } from '../../../../hooks/redux';
 import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { GranteeInfo } from './grantee-info';
-import { useAppDispatch } from '../../../../hooks/redux';
 
 const Square = styled.div`
 	width: 1.125rem;
@@ -150,7 +157,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const { setModal, onClose, setActiveGrant } = useContext<EditModalContexType>(EditModalContext);
 	const accounts = useUserAccounts();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = getBridgedFunctions()?.createSnackbar;
 	const [hovered, setHovered] = useState({});
 
 	const colors = useMemo(() => getStatusItems(), []);

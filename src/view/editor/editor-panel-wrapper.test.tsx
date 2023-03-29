@@ -16,6 +16,7 @@ import {
 	getMockedAccountItem
 } from '../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import mockedData from '../../test/generators';
+import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 
 jest.setTimeout(50000);
 
@@ -34,6 +35,10 @@ shell.getUserSettings.mockImplementation(() => ({
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	},
+	props: [...defaultSettings.props],
+	attrs: {
+		...defaultSettings.attrs
 	}
 }));
 

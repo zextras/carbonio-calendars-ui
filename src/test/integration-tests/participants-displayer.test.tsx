@@ -3,16 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { screen } from '@testing-library/react';
-import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { screen } from '@testing-library/react';
 import { t } from '@zextras/carbonio-shell-ui';
+import React from 'react';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { PREFS_DEFAULTS } from '../../constants';
+import * as ParticipantDisplayerAction from '../../store/actions/participant-displayer-actions';
 import { reducers } from '../../store/redux';
 import { DisplayedParticipant } from '../../view/event-panel-view/participants-displayer';
-import * as ParticipantDisplayerAction from '../../store/actions/participant-displayer-actions';
 
 jest.setTimeout(20000);
 
@@ -22,6 +23,10 @@ shell.getUserSettings.mockImplementation(() => ({
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	},
+	props: [...defaultSettings.props],
+	attrs: {
+		...defaultSettings.attrs
 	}
 }));
 

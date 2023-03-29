@@ -5,10 +5,10 @@
  */
 
 import { DropdownItem } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { filter } from 'lodash';
 import moment from 'moment';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { AlarmType } from '../../types/event';
 
 // interface DropdownItem {
@@ -41,8 +41,6 @@ export const useGetReminderItems = (
 	setSnooze: (arg1: number, arg2?: boolean) => void,
 	alarmData: Array<AlarmType>
 ): DropdownItem[] => {
-	const [t] = useTranslation();
-
 	const diff = useMemo(
 		() => moment(alarmData?.[0]?.alarmInstStart).diff(moment(), 'seconds'),
 		[alarmData]
@@ -134,7 +132,7 @@ export const useGetReminderItems = (
 					value: 60 * 60
 				}
 			] as Option[],
-		[t]
+		[]
 	);
 
 	const afterList = useMemo(
@@ -201,7 +199,7 @@ export const useGetReminderItems = (
 					value: 60 * 60
 				}
 			] as Option[],
-		[t]
+		[]
 	);
 
 	return useMemo(() => {

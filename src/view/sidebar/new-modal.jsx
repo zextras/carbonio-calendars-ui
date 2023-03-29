@@ -21,8 +21,8 @@ import styled from 'styled-components';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { createCalendar } from '../../store/actions/create-calendar';
-import { useAppDispatch, useAppSelector } from '../../store/redux';
 import { selectAllCalendars } from '../../store/selectors/calendars';
 
 const Square = styled.div`

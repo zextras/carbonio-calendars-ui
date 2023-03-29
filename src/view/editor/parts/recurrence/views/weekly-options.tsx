@@ -3,27 +3,26 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { differenceWith, filter, find, isEqual, isNil, map, omitBy } from 'lodash';
 import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Container, Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
-import { find, differenceWith, map, isEqual, filter, omitBy, isNil } from 'lodash';
-import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
 import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
+import { useAppSelector } from '../../../../../hooks/redux';
 import {
 	selectEditorRecurrenceByDay,
 	selectEditorRecurrenceFrequency,
 	selectEditorRecurrenceInterval
 } from '../../../../../store/selectors/editor';
 import { Byday, Interval, RecurrenceStartValue } from '../../../../../types/editor';
-import { workWeek, WorkWeekDay } from '../../../../../utils/work-week';
+import { WorkWeekDay, workWeek } from '../../../../../utils/work-week';
 import { IntervalInput } from '../components/interval-input';
 import { WeekdayCheckboxes } from '../components/weekday-checkboxes';
 import WeekdaySelect from '../components/weekday-select';
-import { useAppSelector } from '../../../../../hooks/redux';
 
 const RADIO_VALUES = {
 	QUICK_OPTIONS: 'QuickOptions',

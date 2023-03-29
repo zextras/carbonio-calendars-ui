@@ -6,6 +6,7 @@
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
+import { t } from '@zextras/carbonio-shell-ui';
 import { map, values } from 'lodash';
 import React from 'react';
 import {
@@ -13,6 +14,7 @@ import {
 	getMockedAccountItem
 } from '../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupHook, setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { createCallbacks } from '../../commons/editor-generator';
 import { PREFS_DEFAULTS } from '../../constants';
@@ -30,6 +32,10 @@ shell.getUserSettings.mockImplementation(() => ({
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	},
+	props: [...defaultSettings.props],
+	attrs: {
+		...defaultSettings.attrs
 	}
 }));
 
@@ -73,7 +79,7 @@ describe('create single appointment with default values', () => {
 			autoHideTimeout: 3000,
 			hideButton: true,
 			key: 'calendar-moved-root',
-			label: 'Edits saved correctly',
+			label: t('message.snackbar.calendar_edits_saved'),
 			replace: true,
 			type: 'info'
 		});

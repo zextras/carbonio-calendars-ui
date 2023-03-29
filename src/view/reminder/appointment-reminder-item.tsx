@@ -13,10 +13,10 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { noop } from 'lodash';
 import moment from 'moment';
 import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { getTimeToDisplayData } from '../../commons/utilities';
 import { useAppDispatch } from '../../hooks/redux';
 import { getLocationUrl } from '../../normalizations/normalize-calendar-events';
@@ -34,7 +34,6 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 }): ReactElement => {
 	const { start, id, isRecurrent, end, alarmData, location, name, isOrg, key } = reminderItem;
 	const dispatch = useAppDispatch();
-	const [t] = useTranslation();
 	const [now, setNow] = useState<DateType>(moment().valueOf());
 
 	const locationUrl = useMemo(() => getLocationUrl(location), [location]);

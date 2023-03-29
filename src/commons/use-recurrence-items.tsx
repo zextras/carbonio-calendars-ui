@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { t } from '@zextras/carbonio-shell-ui';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { RECURRENCE_FREQUENCY } from '../constants/recurrence';
 
 type UseRecurrenceItems = {
@@ -15,8 +15,6 @@ type UseRecurrenceItems = {
 	repetitionItems: Array<{ label: string; value: string }>;
 };
 export const useRecurrenceItems = (): UseRecurrenceItems => {
-	const [t] = useTranslation();
-
 	const months = useMemo(
 		() => [
 			{ label: t('months.january', 'January'), value: '1' },
@@ -32,7 +30,7 @@ export const useRecurrenceItems = (): UseRecurrenceItems => {
 			{ label: t('months.november', 'November'), value: '11' },
 			{ label: t('months.december', 'December'), value: '12' }
 		],
-		[t]
+		[]
 	);
 
 	const ordinalNumbers = useMemo(
@@ -43,7 +41,7 @@ export const useRecurrenceItems = (): UseRecurrenceItems => {
 			{ label: t('items.fourth', 'Fourth'), value: '4' },
 			{ label: t('items.last', 'Last'), value: '-1' }
 		],
-		[t]
+		[]
 	);
 
 	const weekDays = useMemo(
@@ -56,7 +54,7 @@ export const useRecurrenceItems = (): UseRecurrenceItems => {
 			{ label: t('label.week_day.saturday', 'Saturday'), value: 'SA' },
 			{ label: t('label.week_day.sunday', 'Sunday'), value: 'SU' }
 		],
-		[t]
+		[]
 	);
 
 	const weekOptions = useMemo(
@@ -66,7 +64,7 @@ export const useRecurrenceItems = (): UseRecurrenceItems => {
 			{ label: t('items.working_day', 'Working day'), value: 'MO,TU,WE,TH,FR' },
 			...weekDays
 		],
-		[t, weekDays]
+		[weekDays]
 	);
 
 	const repetitionItems = useMemo(
@@ -76,7 +74,7 @@ export const useRecurrenceItems = (): UseRecurrenceItems => {
 			{ label: t('repeat.monthly', 'Monthly'), value: RECURRENCE_FREQUENCY.MONTHLY },
 			{ label: t('repeat.yearly', 'Yearly'), value: RECURRENCE_FREQUENCY.YEARLY }
 		],
-		[t]
+		[]
 	);
 
 	return {

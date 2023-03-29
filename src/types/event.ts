@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import moment, { Moment } from 'moment';
+import type { Moment } from 'moment';
 import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 import {
 	AlarmData,
@@ -97,7 +97,7 @@ export type EventResource = {
 	isRespRequested: boolean;
 };
 
-export type DateType = moment.Moment | Date | number;
+export type DateType = Moment | Date | number;
 
 export type EventType = {
 	start: Moment | Date;

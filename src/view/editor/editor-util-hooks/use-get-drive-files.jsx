@@ -7,7 +7,7 @@ import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import { useCallback, useContext } from 'react';
-import { useAppSelector } from '../../../store/redux';
+import { useAppSelector } from '../../../hooks/redux';
 import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
 
 export const uploadToFiles = async (node, uploadTo) => {

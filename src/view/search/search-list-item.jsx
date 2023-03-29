@@ -12,16 +12,14 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { ZIMBRA_STANDARD_COLORS, useTags } from '@zextras/carbonio-shell-ui';
+import { ZIMBRA_STANDARD_COLORS, t, useTags } from '@zextras/carbonio-shell-ui';
 import { find, includes, reduce } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { openAppointment } from '../../actions/appointment-actions-fn';
 import { PANEL_VIEW } from '../../constants';
-import { useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { getInvite } from '../../store/actions/get-invite';
-import { useAppDispatch } from '../../store/redux';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { useTagExist } from '../tags/tag-actions';
@@ -35,7 +33,6 @@ const SearchListItem = ({ item, active }) => {
 	const cal = isShared
 		? find(calendars, (f) => `${f.zid}:${f.rid}` === item.resource?.l)
 		: find(calendars, (f) => f.id === item.resource?.l);
-	const [t] = useTranslation();
 
 	const hasAttachments = useMemo(() => item.resource?.flags?.includes('a'), [item.resource?.flags]);
 	const showPtstIcon = useMemo(

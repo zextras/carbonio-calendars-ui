@@ -3,20 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
-import { MainEditModal } from './parts/main-edit-modal';
-import { ShareCalendarModal } from '../share-calendar-modal';
-import { ShareRevokeModal } from './parts/revoke-modal';
+import { soapFetch, t } from '@zextras/carbonio-shell-ui';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { EditModalContext } from '../../../commons/edit-modal-context';
-import { EditPermissionModal } from './parts/edit-permission-modal';
 import { ShareCalendarRoleOptions } from '../../../settings/components/utils';
+import { ShareCalendarModal } from '../share-calendar-modal';
+import { EditPermissionModal } from './parts/edit-permission-modal';
+import { MainEditModal } from './parts/main-edit-modal';
+import { ShareRevokeModal } from './parts/revoke-modal';
 
 export const EditModal = ({ onClose, folder, totalAppointments }) => {
 	const [activeGrant, setActiveGrant] = useState({});
 	const [modal, setModal] = useState('main');
-	const [t] = useTranslation();
 	const [grant, setGrant] = useState({});
 
 	const roleOptions = useMemo(

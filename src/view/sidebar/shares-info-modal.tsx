@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
-import { Folder } from '@zextras/carbonio-shell-ui';
+import { Folder, t } from '@zextras/carbonio-shell-ui';
 import React, { FC } from 'react';
-import { useTranslation } from 'react-i18next';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 
 export const ShareInfoRow: FC<{
@@ -33,8 +32,6 @@ type SharesInfoModalProps = {
 };
 
 export const SharesInfoModal: FC<SharesInfoModalProps> = ({ onClose, folder }) => {
-	const [t] = useTranslation();
-
 	const text = (/r/.test(folder.perm || '') ? `${t('read', 'Read')}` : '')
 		.concat(/w/.test(folder.perm || '') ? `, ${t('write', 'Write')}` : '')
 		.concat(/i/.test(folder.perm || '') ? `, ${t('insert', 'Insert')}` : '')

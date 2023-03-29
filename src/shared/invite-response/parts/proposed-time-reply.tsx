@@ -13,12 +13,12 @@ import {
 } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import React, { FC, ReactElement, useCallback, useContext } from 'react';
+import { useAppDispatch } from '../../../hooks/redux';
 import { appointmentToEvent } from '../../../hooks/use-invite-to-event';
 import { normalizeAppointmentFromCreation } from '../../../normalizations/normalize-appointments';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
 import { getAppointmentAndInvite } from '../../../store/actions/get-appointment';
 import { modifyAppointmentRequest } from '../../../store/actions/modify-appointment';
-import { useAppDispatch } from '../../../hooks/redux';
 
 type ProposedTimeReply = {
 	invite: any;

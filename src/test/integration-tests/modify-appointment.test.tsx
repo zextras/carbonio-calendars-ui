@@ -5,11 +5,13 @@
  */
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { screen, waitFor } from '@testing-library/react';
+import { t } from '@zextras/carbonio-shell-ui';
 import { map, values } from 'lodash';
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
 import { editAppointment } from '../../actions/appointment-actions-fn';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { PREFS_DEFAULTS } from '../../constants';
 import { reducers } from '../../store/redux';
@@ -27,6 +29,10 @@ shell.getUserSettings.mockImplementation(() => ({
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	},
+	props: [...defaultSettings.props],
+	attrs: {
+		...defaultSettings.attrs
 	}
 }));
 
@@ -102,23 +108,31 @@ describe.each`
 		const newOptionalsInput = newOptionals.join(' ');
 
 		// SETTING NEW TITLE, LOCATION, FREEBUSY
-		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
-		const locationSelector = screen.getByRole('textbox', { name: /Location/i });
+		const titleSelector = screen.getByRole('textbox', {
+			name: t('label.event_title', 'Event title')
+		});
+		const locationSelector = screen.getByRole('textbox', { name: t('label.location', 'Location') });
 		await user.type(titleSelector, newTitle);
 		await user.type(locationSelector, newLocation);
 		await user.click(screen.getByText(/free/i));
 
 		// SETTING ATTENDEES AND OPTIONAL ATTENDEES
 		await waitFor(() => {
-			user.type(screen.getByRole('textbox', { name: /attendees/i }), newAttendeesInput);
+			user.type(
+				screen.getByRole('textbox', { name: t('label.attendee_plural') }),
+				newAttendeesInput
+			);
 		});
 
 		await waitFor(() => {
-			user.click(screen.getByRole('button', { name: /optionals/i }));
+			user.click(screen.getByRole('button', { name: t('label.optional_plural') }));
 		});
 
 		await waitFor(() => {
-			user.type(screen.getByRole('textbox', { name: 'Optionals' }), newOptionalsInput);
+			user.type(
+				screen.getByRole('textbox', { name: t('label.optional_plural') }),
+				newOptionalsInput
+			);
 		});
 
 		// SETTING PRIVATE AND ALLDAY
@@ -146,15 +160,19 @@ describe.each`
 		await user.click(screen.getByText(/10:00 pm/i));
 
 		// SELECTING DIFFERENT REMINDER VALUE
-		await user.click(screen.getByText(/reminder/i));
-		await user.click(screen.getByText(/1 minute before/i));
+		await user.click(screen.getByText(t('label.reminder', 'Reminder')));
+
+		const buttonReminder = screen.getByTestId('editor-reminder');
+		await user.click(buttonReminder);
+		console.log({ buttonReminder });
+		await screen.findByText('reminder.minute_before', {});
 
 		// DEBOUNCE TIMER FOR INPUT FIELDS
 		jest.advanceTimersByTime(500);
 
 		await waitFor(() => {
 			// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
-			user.click(screen.getByRole('button', { name: /save/i }));
+			user.click(screen.getByRole('button', { name: t('label.save') }));
 		});
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
@@ -178,7 +196,7 @@ describe.each`
 			autoHideTimeout: 3000,
 			hideButton: true,
 			key: 'calendar-moved-root',
-			label: 'Edits saved correctly',
+			label: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
 			replace: true,
 			type: 'info'
 		});

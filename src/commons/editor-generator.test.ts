@@ -10,10 +10,11 @@ import {
 	createFakeIdentity,
 	getMockedAccountItem
 } from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
+import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
-import { disabledFields, EditorContext, generateEditor } from './editor-generator';
+import { EditorContext, disabledFields, generateEditor } from './editor-generator';
 
 const identity1 = createFakeIdentity();
 
@@ -41,6 +42,10 @@ shell.getUserSettings.mockImplementation(() => ({
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	},
+	props: [...defaultSettings.props],
+	attrs: {
+		...defaultSettings.attrs
 	}
 }));
 

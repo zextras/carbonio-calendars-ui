@@ -4,9 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Input, Padding, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
-import { changeTagColor, createTag, renameTag, t } from '@zextras/carbonio-shell-ui';
-import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+import { Input, Padding, Text } from '@zextras/carbonio-design-system';
+import {
+	changeTagColor,
+	createTag,
+	getBridgedFunctions,
+	renameTag,
+	t
+} from '@zextras/carbonio-shell-ui';
+import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { ItemType } from '../../carbonio-ui-commons/types/tags';
@@ -26,7 +32,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 	tag,
 	event
 }): ReactElement => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = getBridgedFunctions()?.createSnackbar;
 	const [name, setName] = useState(tag?.name || '');
 	const [color, setColor] = useState(tag?.color || 0);
 	const title = useMemo(

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import React, { ReactElement, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useAppSelector } from '../../hooks/redux';
 import { selectCalendar } from '../../store/selectors/calendars';
@@ -44,19 +44,16 @@ const SubjectRow = ({ subject, calendarColor, isPrivate }: SubjectProps): ReactE
 	</Container>
 );
 
-const InviteNeverSentRow = (): ReactElement => {
-	const [t] = useTranslation();
-	return (
-		<PaddedRow takeAvailableSpace>
-			<Icon icon="AlertCircleOutline" color="error" />
-			<Padding horizontal="small">
-				<Text color="error">
-					{t('label.invitation_not_sent', "You haven't sent the invitation to the attendees yet")}
-				</Text>
-			</Padding>
-		</PaddedRow>
-	);
-};
+const InviteNeverSentRow = (): ReactElement => (
+	<PaddedRow takeAvailableSpace>
+		<Icon icon="AlertCircleOutline" color="error" />
+		<Padding horizontal="small">
+			<Text color="error">
+				{t('label.invitation_not_sent', "You haven't sent the invitation to the attendees yet")}
+			</Text>
+		</Padding>
+	</PaddedRow>
+);
 
 const CalendarInfo = ({ calendar }: { calendar: Calendar }): ReactElement => (
 	<Tooltip label={calendar.name} placement="left">

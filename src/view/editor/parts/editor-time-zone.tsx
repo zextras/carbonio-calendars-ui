@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Select } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { usePrefs } from '../../../carbonio-ui-commons/utils/use-prefs';
 import { useAppSelector } from '../../../hooks/redux';
 import { TimeZonesOptions, findLabel } from '../../../settings/components/utils';
@@ -20,11 +20,10 @@ type SelectValue =
 	| undefined;
 
 export const EditorTimezone = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
-	const [t] = useTranslation();
 	const timezone = useAppSelector(selectEditorTimezone(editorId));
 
 	const { zimbraPrefUseTimeZoneListInCalendar } = usePrefs();
-	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
+	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), []);
 
 	const [value, setValue] = useState<SelectValue>(() => {
 		if (timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE') {

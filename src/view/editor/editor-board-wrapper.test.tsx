@@ -8,6 +8,8 @@ import { screen } from '@testing-library/react';
 import { Board } from '@zextras/carbonio-shell-ui';
 import React from 'react';
 import { Dispatch } from 'redux';
+import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
+import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { createCallbacks } from '../../commons/editor-generator';
 import { PREFS_DEFAULTS } from '../../constants';
@@ -15,7 +17,6 @@ import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { Editor, EditorCallbacks } from '../../types/editor';
 import BoardEditPanel from './editor-board-wrapper';
-import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 
 const initBoard = ({
 	editorId,
@@ -82,6 +83,10 @@ shell.getUserSettings.mockImplementation(() => ({
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	},
+	props: [...defaultSettings.props],
+	attrs: {
+		...defaultSettings.attrs
 	}
 }));
 

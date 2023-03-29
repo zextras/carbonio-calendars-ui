@@ -12,10 +12,10 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { useAppDispatch, useAppSelector } from '../../store/redux';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
 	selectCalendars,

@@ -3,13 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import { moveAppointmentToTrash } from '../store/actions/move-appointment-to-trash';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { EventType } from '../types/event';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const generateSnackbar = ({ res, t, createSnackbar }: any): any => {
+export const generateSnackbar = ({ res, createSnackbar }: any): any => {
 	if (!res.type.includes('fulfilled')) {
 		createSnackbar({
 			key: `delete`,

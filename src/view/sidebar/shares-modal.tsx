@@ -11,10 +11,9 @@ import {
 	Icon,
 	Input,
 	Row,
-	SnackbarManagerContext,
 	Text
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import {
 	filter,
 	groupBy,
@@ -29,7 +28,7 @@ import {
 	uniqWith,
 	values
 } from 'lodash';
-import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
@@ -87,7 +86,7 @@ export const SharesModal: FC<{ calendars: ResFolder; onClose: () => void }> = ({
 	const [links, setLinks] = useState([]);
 	const [data, setData] = useState<any>();
 	const dispatch = useAppDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = getBridgedFunctions()?.createSnackbar;
 	const onConfirm = useCallback(() => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore

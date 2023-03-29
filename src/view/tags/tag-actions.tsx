@@ -10,9 +10,16 @@ import {
 	ModalManagerContext,
 	Padding,
 	Row,
-	SnackbarManagerContext,
 	Text
 } from '@zextras/carbonio-design-system';
+import {
+	Tag,
+	ZIMBRA_STANDARD_COLORS,
+	getBridgedFunctions,
+	t,
+	useTags
+} from '@zextras/carbonio-shell-ui';
+import { differenceBy, includes, noop, reduce } from 'lodash';
 import React, {
 	ReactElement,
 	SyntheticEvent,
@@ -21,17 +28,15 @@ import React, {
 	useMemo,
 	useState
 } from 'react';
-import { differenceBy, includes, noop, reduce } from 'lodash';
-import { ZIMBRA_STANDARD_COLORS, useTags, Tag, t } from '@zextras/carbonio-shell-ui';
+import DeleteTagModal from '../../carbonio-ui-commons/components/tags/delete-tag-modal';
 import { ItemType } from '../../carbonio-ui-commons/types/tags';
 import { itemActionRequest } from '../../soap/item-action-request';
+import { StoreProvider } from '../../store/redux';
 import { ActionsProps } from '../../types/actions';
 import { EventActionsEnum, EventActionsId } from '../../types/enums/event-actions-enum';
+import { EventType } from '../../types/event';
 import { TagType } from '../../types/tags';
 import CreateUpdateTagModal from './create-update-tag-modal';
-import { EventType } from '../../types/event';
-import { StoreProvider } from '../../store/redux';
-import DeleteTagModal from '../../carbonio-ui-commons/components/tags/delete-tag-modal';
 
 export type ReturnType = {
 	id: EventActionsId;
@@ -155,7 +160,7 @@ export const deleteTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 });
 
 export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType }): ReactElement => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = getBridgedFunctions()?.createSnackbar;
 
 	const [checked, setChecked] = useState(includes(event.resource.tags, tag.id));
 	const [isHovering, setIsHovering] = useState(false);
@@ -320,7 +325,7 @@ export const applyTag = ({
 
 export const useGetTagsActions = ({ tag }: ArgumentType): Array<ReturnType> => {
 	const createModal = useContext(ModalManagerContext);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = getBridgedFunctions()?.createSnackbar;
 	return useMemo(
 		() => [
 			createTag({ createModal }),

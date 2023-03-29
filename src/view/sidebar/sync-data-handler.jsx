@@ -6,8 +6,8 @@
 import { useNotify, useRefresh } from '@zextras/carbonio-shell-ui';
 import { forEach, isEmpty, reduce, sortBy } from 'lodash';
 import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { useAppDispatch, useAppSelector } from '../../store/redux';
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
 import { handleModifiedAppointments } from '../../store/slices/appointments-slice';
 import {

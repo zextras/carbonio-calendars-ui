@@ -3,23 +3,24 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
-import { editSettings, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
 import {
 	Container,
 	FormSection,
 	FormSubSection,
-	SnackbarManagerContext,
-	Shimmer
+	Shimmer,
+	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
-import { map, filter, isEqual, uniqBy } from 'lodash';
+import { SettingsHeader, editSettings, t } from '@zextras/carbonio-shell-ui';
+import { filter, isEqual, map, uniqBy } from 'lodash';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
+import { getRightsRequest } from '../soap/get-rights-request';
+import AppleICalSettings from './apple-ical-settings';
+import { differenceObject, validEmail } from './components/utils';
+import CreateAppSettings from './creating-app-settings-view';
 import CustomScheduleModal from './custom-schedule-modal';
 import GeneralSettingView from './general-settings-view';
-import WorkWeekSettingsView from './work-week-settings-view';
-import AppleICalSettings from './apple-ical-settings';
-import CreateAppSettings from './creating-app-settings-view';
 import PermissionSettings from './permissions-settings-view';
-import { differenceObject, validEmail } from './components/utils';
 import {
 	creatingAppointmentsSubSection,
 	generalSubSection,
@@ -27,8 +28,7 @@ import {
 	permissionsSubSection,
 	workWeekSubSection
 } from './sub-sections';
-import { getRightsRequest } from '../soap/get-rights-request';
-import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
+import WorkWeekSettingsView from './work-week-settings-view';
 
 export default function CalendarSettingsView() {
 	const settings = usePrefs();

@@ -16,7 +16,6 @@ import {
 import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useEventActions } from '../../hooks/use-event-actions';

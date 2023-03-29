@@ -234,6 +234,7 @@ export const EditorReminder = ({ editorId, callbacks }: EditorProps): ReactEleme
 	return selected ? (
 		<Select
 			items={reminderItems}
+			data-testid="editor-reminder"
 			disabled={disabled?.reminder}
 			label={t('label.reminder', 'Reminder')}
 			dropdownMaxHeight="12.5rem"

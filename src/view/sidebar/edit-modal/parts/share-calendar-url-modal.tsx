@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useContext } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { Container, SnackbarManagerContext, Text, Padding } from '@zextras/carbonio-design-system';
-import { ShareCalendarUrlProps } from '../../../../types/share-calendar';
+import { Container, Padding, Text } from '@zextras/carbonio-design-system';
+import { getBridgedFunctions, t, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import React, { FC, ReactElement } from 'react';
+import { Trans } from 'react-i18next';
 import { ModalHeader } from '../../../../commons/modal-header';
+import { ShareCalendarUrlProps } from '../../../../types/share-calendar';
 import { UrlColumn } from './url-column';
 
 const getUrl = (type: string, user: string, folderName: string): string => {
@@ -29,10 +29,8 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 	onClose,
 	isFromEditModal
 }): ReactElement => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = getBridgedFunctions()?.createSnackbar;
 	const accounts = useUserAccounts();
-
-	const [t] = useTranslation();
 
 	const onUrlCopied = (title: string, type: string) => (): void => {
 		const text = getUrl(type, accounts[0].name, folder.name);

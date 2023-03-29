@@ -13,10 +13,9 @@ import {
 	Row,
 	Text
 } from '@zextras/carbonio-design-system';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { isNil, map } from 'lodash';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { createCallbacks } from '../../commons/editor-generator';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
@@ -55,8 +54,6 @@ type HeaderProps = {
 };
 
 const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement | null => {
-	const [t] = useTranslation();
-
 	const title = useAppSelector(selectEditorTitle(editorId));
 
 	const headerItems = useMemo(

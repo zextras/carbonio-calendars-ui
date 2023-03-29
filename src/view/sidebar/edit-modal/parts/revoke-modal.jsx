@@ -3,33 +3,24 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-	Checkbox,
-	Container,
-	Input,
-	Row,
-	SnackbarManagerContext,
-	Text
-} from '@zextras/carbonio-design-system';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { Checkbox, Container, Input, Row, Text } from '@zextras/carbonio-design-system';
+import { getBridgedFunctions, t, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
+import { useAppDispatch } from '../../../../hooks/redux';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
-import { useAppDispatch } from '../../../../store/redux';
 import { GranteeInfo } from './grantee-info';
 
 export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
-	const [t] = useTranslation();
 	const [sendNotification, setSendNotification] = useState(false);
 	const [standardMessage, setStandardMessage] = useState('');
 	const { onClose } = useContext(EditModalContext);
 	const accounts = useUserAccounts();
 	const dispatch = useAppDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = getBridgedFunctions()?.createSnackbar;
 
 	const tooltipLabel = useMemo(() => {
 		if (sendNotification && standardMessage !== '') {
@@ -39,7 +30,7 @@ export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 			return t('revoke_without_custom_message', 'Revoke access sending a standard notification');
 		}
 		return t('revoke_without_notification', 'Revoke access without sending a notification');
-	}, [sendNotification, standardMessage, t]);
+	}, [sendNotification, standardMessage]);
 
 	const onConfirm = useCallback(() => {
 		dispatch(folderAction({ id: folder.id, zid: grant.zid, op: '!grant' })).then((res) => {
@@ -83,8 +74,7 @@ export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 		grant.zid,
 		onGoBack,
 		sendNotification,
-		standardMessage,
-		t
+		standardMessage
 	]);
 
 	return (

@@ -256,23 +256,25 @@ export const getTimeToDisplayData = (
 	size: TextProps['size'];
 	text: string;
 } => {
+	const currentTimeNumber = moment(currentTime).valueOf();
+
 	const { start, end, alarmData } = reminder;
 	const difference = moment(end).diff(moment(start), 'seconds');
-	if (start.valueOf() < currentTime && end.valueOf() > currentTime) {
+	if (start.valueOf() < currentTimeNumber && end.valueOf() > currentTimeNumber) {
 		return {
 			color: 'info',
 			size: 'large',
 			text: t('label.ongoing', 'Ongoing')
 		};
 	}
-	if (start.valueOf() === currentTime) {
+	if (start.valueOf() === currentTimeNumber) {
 		return {
 			color: 'info',
 			size: 'large',
 			text: t('label.now', 'Now')
 		};
 	}
-	if (start.valueOf() < currentTime) {
+	if (start.valueOf() < currentTimeNumber) {
 		return {
 			color: 'error',
 			size: 'large',
@@ -281,8 +283,8 @@ export const getTimeToDisplayData = (
 	}
 	if (alarmData && alarmData?.[0] && alarmData?.[0]?.alarmInstStart) {
 		if (
-			alarmData[0].alarmInstStart < currentTime &&
-			moment(alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() > currentTime
+			alarmData[0].alarmInstStart < currentTimeNumber &&
+			moment(alarmData[0].alarmInstStart).add(difference, 'seconds').valueOf() > currentTimeNumber
 		) {
 			return {
 				color: 'info',
@@ -290,7 +292,7 @@ export const getTimeToDisplayData = (
 				text: t('label.ongoing', 'Ongoing')
 			};
 		}
-		if (alarmData[0].alarmInstStart < currentTime) {
+		if (alarmData[0].alarmInstStart < currentTimeNumber) {
 			return {
 				color: 'error',
 				size: 'large',

@@ -3,15 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback, useMemo } from 'react';
-import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
+import { Chip, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import { includes, map, reduce } from 'lodash';
+import React, { FC, ReactElement, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 // ignored because shows warning for runSearch Not exported
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
+import { ZIMBRA_STANDARD_COLORS, runSearch, t, useTags } from '@zextras/carbonio-shell-ui';
 import { CALENDAR_ROUTE } from '../../constants';
 import { EventType } from '../../types/event';
 
@@ -25,7 +24,6 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 	event,
 	hideIcon = false
 }): ReactElement => {
-	const [t] = useTranslation();
 	const tagsFromStore = useTags();
 	const tags = useMemo(
 		() =>
@@ -44,7 +42,7 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 			),
 		[event?.resource?.tags, tagsFromStore]
 	);
-	const tagLabel = useMemo(() => t('label.tags', 'Tags'), [t]);
+	const tagLabel = useMemo(() => t('label.tags', 'Tags'), []);
 
 	const triggerSearch = useCallback(
 		(tagToSearch) =>

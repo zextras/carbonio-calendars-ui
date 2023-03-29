@@ -8,6 +8,7 @@
 import { Row } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import React from 'react';
+import { useAppSelector } from '../../../hooks/redux';
 import { selectEditorDisabled, selectEditorRoom } from '../../../store/selectors/editor';
 import { EditorCallbacks } from '../../../types/editor';
 
