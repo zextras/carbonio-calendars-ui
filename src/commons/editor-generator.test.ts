@@ -198,7 +198,7 @@ describe('Editor generator', () => {
 				title: 'Single istance',
 				location: 'Location',
 				room: {
-					name: 'Room name',
+					label: 'Room name',
 					link: 'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'
 				},
 				attendees: [],
@@ -262,7 +262,7 @@ describe('Editor generator', () => {
 			expect(editor.title).toBe('Single istance');
 			expect(editor.location).toBe('Location');
 			expect(editor.room).toBeDefined();
-			expect(editor.room).toHaveProperty('name', 'Room name');
+			expect(editor.room).toHaveProperty('label', 'Room name');
 			expect(editor.room).toHaveProperty(
 				'link',
 				'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'

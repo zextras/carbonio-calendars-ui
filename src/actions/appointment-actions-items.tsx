@@ -196,3 +196,18 @@ export const deleteEventItem = ({
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				click: moveToTrash({ event, invite, context })
 		  };
+
+export const showOriginal = ({ event }: { event: EventType }): AppointmentActionsItems => ({
+	id: EventActionsEnum.SHOW_ORIGINAL,
+	icon: 'CodeOutline',
+	label: t('action.show_original', 'Show original'),
+	disabled: false,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	click: (ev): void => {
+		if (ev) ev.preventDefault();
+		window.open(
+			`/service/home/~/?auth=co&id=${event.resource.id}&mime=text/plain&noAttach=1&icalAttach=none`,
+			'_blank'
+		);
+	}
+});

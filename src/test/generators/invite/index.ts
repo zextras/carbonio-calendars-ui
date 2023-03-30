@@ -32,8 +32,8 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 		class: event?.resource?.class ?? 'PUB',
 		compNum: event?.resource?.compNum ?? 0,
 		date: 1667382630000,
-		textDescription: [], // event doesn't have this
-		htmlDescription: [], // event doesn't have this
+		textDescription: [{ _content: '' }], // event doesn't have this
+		htmlDescription: [{ _content: '' }], // event doesn't have this
 		end: {
 			d: moment(event?.end).utc().format('YYYYMMDD[T]HHmmss[Z]'),
 			u: event?.end?.valueOf() ?? 1667382630000

@@ -28,9 +28,15 @@ export const EventActionsEnum = {
 	EDIT_TAG: 'edit_tag',
 	APPLY_TAG: 'apply_tag',
 	INSTANCE: 'instance',
-	SERIES: 'series'
+	SERIES: 'series',
+	SHOW_ORIGINAL: 'show_original'
+} as const;
+
+export const CalendarIntegrations = {
+	CREATE_APPOINTMENT: 'create_appointment'
 } as const;
 
 type ObjectValues<T> = T[keyof T];
 
+export type CalendarIntegrationId = ObjectValues<typeof CalendarIntegrations>;
 export type EventActionsId = ObjectValues<typeof EventActionsEnum>;
