@@ -216,7 +216,7 @@ export const useDeleteActions = (
 						}
 					]
 				};
-				const { editor } = generateEditor({
+				const editor = generateEditor({
 					event,
 					invite: modifiedInvite,
 					context: {

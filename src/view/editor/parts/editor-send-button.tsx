@@ -12,8 +12,9 @@ import {
 } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { onSend } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
 import {
 	selectEditor,
@@ -26,7 +27,7 @@ import { EditorProps } from '../../../types/editor';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
-export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
+export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const attendees = useSelector(selectEditorAttendees(editorId));
 	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
@@ -35,8 +36,8 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const disabled = useSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();
 	const board = useBoard();
+	const dispatch = useDispatch();
 
-	const { onSend } = callbacks;
 	const { action } = useParams<{ action: string }>();
 	const isDisabled = useMemo(
 		() => disabled?.sendButton || (!attendees?.length && !optionalAttendees?.length),
@@ -69,7 +70,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				true
 			);
 		} else
-			onSend(isNew, editor).then(({ response }) => {
+			onSend({ isNew, editor, dispatch }).then(({ response }) => {
 				if (editor?.panel && response) {
 					replaceHistory('');
 				} else if (board) {
@@ -86,7 +87,7 @@ export const EditorSendButton = ({ editorId, callbacks }: EditorProps): ReactEle
 					autoHideTimeout: 3000
 				});
 			});
-	}, [action, board, createModal, editor, editorId, isNew, onSend, t]);
+	}, [action, board, createModal, dispatch, editor, editorId, isNew, t]);
 
 	return (
 		<Button

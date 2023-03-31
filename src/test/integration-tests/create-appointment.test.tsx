@@ -14,7 +14,6 @@ import {
 } from '../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { setupHook, setupTest } from '../../carbonio-ui-commons/test/test-setup';
-import { createCallbacks } from '../../commons/editor-generator';
 import { PREFS_DEFAULTS } from '../../constants';
 import { useOnClickNewButton } from '../../hooks/on-click-new-button';
 import { reducers } from '../../store/redux';
@@ -50,7 +49,6 @@ describe('create single appointment with default values', () => {
 
 		shell.useBoard.mockImplementation(() => ({
 			...previousEditor,
-			callbacks: createCallbacks(previousEditor?.id ?? '', { dispatch: store.dispatch }),
 			dispatch: store.dispatch
 		}));
 
@@ -96,7 +94,6 @@ describe('create single appointment with custom values', () => {
 
 		shell.useBoard.mockImplementation(() => ({
 			...previousEditor,
-			callbacks: createCallbacks(previousEditor?.id ?? '', { dispatch: store.dispatch }),
 			dispatch: store.dispatch
 		}));
 

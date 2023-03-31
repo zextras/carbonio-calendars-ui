@@ -7,9 +7,10 @@ import { Select, Icon, Row, Container, Text, SelectProps } from '@zextras/carbon
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 import { find } from 'lodash';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { selectEditorDisabled, selectEditorReminder } from '../../../store/selectors/editor';
+import { editEditorReminder } from '../../../store/slices/editor-slice';
 import { EditorProps } from '../../../types/editor';
 
 const getReminderItems = (t: TFunction): Array<{ label: string; value: string }> => [
@@ -204,12 +205,12 @@ type SelectValue =
 	  }
 	| undefined;
 
-export const EditorReminder = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
+export const EditorReminder = ({ editorId }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const reminderItems = useMemo(() => getReminderItems(t), [t]);
 	const reminder = useSelector(selectEditorReminder(editorId));
-	const { onReminderChange } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
+	const dispatch = useDispatch();
 
 	const getNewSelection = useCallback(
 		(e) => find(reminderItems, ['value', e]) ?? reminderItems[0],
@@ -220,10 +221,10 @@ export const EditorReminder = ({ editorId, callbacks }: EditorProps): ReactEleme
 
 	const onChange = useCallback(
 		(e) => {
-			onReminderChange(e);
+			dispatch(editEditorReminder({ id: editorId, reminder: e }));
 			setSelected(getNewSelection(e));
 		},
-		[getNewSelection, onReminderChange]
+		[dispatch, editorId, getNewSelection]
 	);
 
 	useEffect(() => {

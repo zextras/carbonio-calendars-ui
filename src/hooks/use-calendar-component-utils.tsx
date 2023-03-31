@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { generateEditor } from '../commons/editor-generator';
+import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from '../constants';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
@@ -100,7 +101,7 @@ export const useCalendarComponentUtils = (): {
 						allDay: !!isAllDay,
 						panel: false
 					};
-					const { editor, callbacks } = generateEditor({
+					const editor = generateEditor({
 						event,
 						invite,
 						context: {
@@ -114,7 +115,7 @@ export const useCalendarComponentUtils = (): {
 							)
 						}
 					});
-					callbacks.onSave({ draft, editor, isNew: false }).then((res) => {
+					onSave({ draft, editor, isNew: false, dispatch }).then((res) => {
 						if (res?.response) {
 							const success = res?.response;
 							getBridgedFunctions()?.createSnackbar({
@@ -137,7 +138,7 @@ export const useCalendarComponentUtils = (): {
 								<StoreProvider>
 									<ModifyStandardMessageModal
 										title={t('label.edit')}
-										onClose={(): any => closeModal()}
+										onClose={(): void => closeModal()}
 										confirmLabel={t('action.send_edit', 'Send Edit')}
 										onConfirm={(context): void => {
 											onConfirm(false, context);
@@ -196,7 +197,7 @@ export const useCalendarComponentUtils = (): {
 								<StoreProvider>
 									<AppointmentTypeHandlingModal
 										event={event}
-										onClose={(): any => closeModal()}
+										onClose={(): void => closeModal()}
 										onSeries={onEntireSeries}
 										onInstance={onSingleInstance}
 									/>
@@ -221,7 +222,7 @@ export const useCalendarComponentUtils = (): {
 					moment(e.end).minutes() === moment(e.start).minutes() &&
 					!moment(e.start).isSame(moment(e.end));
 				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
-				const { editor, callbacks } = generateEditor({
+				const editor = generateEditor({
 					context: {
 						dispatch,
 						folders: calendarFolders,
@@ -236,10 +237,7 @@ export const useCalendarComponentUtils = (): {
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
 					title: editor.title ?? '',
-					...editor,
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					callbacks
+					...editor
 				});
 			}
 		},
