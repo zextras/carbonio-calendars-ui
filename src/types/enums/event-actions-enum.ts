@@ -28,7 +28,8 @@ export const EventActionsEnum = {
 	EDIT_TAG: 'edit_tag',
 	APPLY_TAG: 'apply_tag',
 	INSTANCE: 'instance',
-	SERIES: 'series'
+	SERIES: 'series',
+	SHOW_ORIGINAL: 'show_original'
 } as const;
 
 export const CalendarIntegrations = {

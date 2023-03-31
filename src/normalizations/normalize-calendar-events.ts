@@ -3,8 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import it from '@faker-js/faker/dist/types/locales/it';
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
-import { find, reduce, map, isEmpty } from 'lodash';
+import { find, reduce, map, isEmpty, some } from 'lodash';
 import moment from 'moment';
 import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
@@ -93,7 +94,26 @@ export const normalizeCalendarEvent = ({
 	const start = instanceStart || (invite as Invite)?.start?.u || appointment.inst?.[0]?.s;
 	const dur = (instance as ExceptionReference)?.dur ?? appointment.dur;
 	const user = getUserAccount();
-	const iAmOrganizer = appointment?.or?.a && user?.name ? appointment?.or?.a === user?.name : false;
+
+	// It is my account/alias/identity
+	const itIsMe = !!find(
+		user.identities.identity,
+		({ name, _attrs }) =>
+			name === appointment?.or?.a || _attrs.zimbraPrefFromAddress === appointment?.or?.a
+	);
+
+	// It is not my account but I can create appointments with it
+	const sentByMe = some(
+		user.identities.identity,
+		({ name, _attrs }) =>
+			name === appointment?.or?.sentBy || _attrs.zimbraPrefFromAddress === appointment?.or?.sentBy
+	);
+
+	// if sentBy it is not my personal account/alias/identity
+	const isNotMyAccount = appointment?.or?.a && user?.name && appointment?.or?.sentBy;
+
+	const iAmOrganizer = isNotMyAccount ? itIsMe && sentByMe : sentByMe || itIsMe || false;
+
 	return {
 		start: allDay ? new Date(moment(start).startOf('day').valueOf()) : new Date(start),
 		end: allDay
@@ -131,7 +151,7 @@ export const normalizeCalendarEvents = (
 				(acc, appt) => {
 					const isShared = appt?.l?.includes(':');
 					const cal = isShared
-						? find(calendars, (f) => `${f.zid}:${f.rid}` === appt.l)
+						? find(calendars, (f) => `${f.zid}:${f.rid}` === appt.l || f.id === appt.l)
 						: find(calendars, (f) => f.id === appt.l);
 					return cal
 						? [
