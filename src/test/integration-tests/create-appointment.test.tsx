@@ -13,6 +13,7 @@ import {
 	getMockedAccountItem
 } from '../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupHook, setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { createCallbacks } from '../../commons/editor-generator';
 import { PREFS_DEFAULTS } from '../../constants';
@@ -24,7 +25,9 @@ import mockedData from '../generators';
 jest.setTimeout(30000);
 
 shell.getUserSettings.mockImplementation(() => ({
+	...defaultSettings,
 	prefs: {
+		...defaultSettings.prefs,
 		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',

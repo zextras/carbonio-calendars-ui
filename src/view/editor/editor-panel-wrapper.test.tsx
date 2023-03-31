@@ -6,6 +6,7 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import EditorPanelWrapper from './editor-panel-wrapper';
 import { reducers } from '../../store/redux';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -28,7 +29,9 @@ shell.useUserAccount.mockImplementation(() => userAccount);
 shell.getUserAccount.mockImplementation(() => userAccount);
 
 shell.getUserSettings.mockImplementation(() => ({
+	...defaultSettings,
 	prefs: {
+		...defaultSettings.prefs,
 		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',

@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getFolder } from '../store/actions/get-folder';
-import { StoreProvider } from '../store/redux';
+import { AppDispatch, StoreProvider } from '../store/redux';
 import { DeleteModal } from '../view/sidebar/delete-modal';
 import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
 import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
@@ -28,7 +28,7 @@ type CalendarActionsProps = {
 };
 export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> => {
 	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const actions = [

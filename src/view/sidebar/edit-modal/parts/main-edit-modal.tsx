@@ -33,6 +33,7 @@ import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colo
 import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
+import { AppDispatch } from '../../../../store/redux';
 import { GranteeInfo } from './grantee-info';
 
 const Square = styled.div`
@@ -148,7 +149,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const [t] = useTranslation();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const checked = useMemo(() => folder.checked, [folder]);
 
 	const { setModal, onClose, setActiveGrant } = useContext<EditModalContexType>(EditModalContext);
