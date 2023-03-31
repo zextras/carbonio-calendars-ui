@@ -8,16 +8,16 @@ import { screen, waitFor } from '@testing-library/react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import moment from 'moment';
 import { find } from 'lodash';
+import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../carbonio-ui-commons/test/test-setup';
+import { PREFS_DEFAULTS } from '../constants';
 import mockedData from '../test/generators';
 import { reducers } from '../store/redux';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { Appointment } from '../types/store/appointments';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 
-shell.getUserSettings.mockImplementation(() => ({
-	prefs: {}
-}));
+shell.getUserSettings.mockImplementation(() => defaultSettings);
 
 describe('Delete event modal', () => {
 	const SERIES_RIDZ = '20230302';

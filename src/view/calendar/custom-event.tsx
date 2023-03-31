@@ -26,7 +26,7 @@ import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { getInvite } from '../../store/actions/get-invite';
 import { MemoCustomEventComponent } from './custom-event-component';
-import { StoreProvider } from '../../store/redux';
+import { AppDispatch, StoreProvider } from '../../store/redux';
 
 type CustomEventProps = {
 	event: EventType;
@@ -34,7 +34,7 @@ type CustomEventProps = {
 };
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const anchorRef = useRef(null);

@@ -13,6 +13,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { searchAppointments } from '../../store/actions/search-appointments';
+import { AppDispatch } from '../../store/redux';
 import { getSelectedEvents } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { Store } from '../../types/store/store';
@@ -47,7 +48,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	});
 	const [loading, setLoading] = useState(false);
 	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const { path } = useRouteMatch();
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
 	const [resultLabel, setResultLabel] = useState<string>(t('label.results_for', 'Results for: '));

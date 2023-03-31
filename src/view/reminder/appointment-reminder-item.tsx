@@ -22,6 +22,7 @@ import { getTimeToDisplayData } from '../../commons/utilities';
 import { getLocationUrl } from '../../normalizations/normalize-calendar-events';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../../store/actions/snooze-appointment-reminder';
+import { AppDispatch } from '../../store/redux';
 import { ApptReminderCardProps } from '../../types/appointment-reminder';
 import { DateType } from '../../types/event';
 import { useGetReminderItems } from './reminder-time-options';
@@ -33,7 +34,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	setActiveReminder
 }): ReactElement => {
 	const { start, id, isRecurrent, end, alarmData, location, name, isOrg, key } = reminderItem;
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const [t] = useTranslation();
 	const [now, setNow] = useState<DateType>(moment().valueOf());
 

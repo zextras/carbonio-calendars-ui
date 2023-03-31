@@ -11,12 +11,11 @@ import React, { FC, SyntheticEvent, useCallback, useContext, useMemo } from 'rea
 import { useDispatch } from 'react-redux';
 import { ResFolder } from '../../../../carbonio-ui-commons/utils';
 import { getShareInfo } from '../../../../store/actions/get-share-info';
-import { StoreProvider } from '../../../../store/redux';
+import { AppDispatch, StoreProvider } from '../../../../store/redux';
 import { SharesModal } from '../../shares-modal';
 
 export const ButtonFindShares: FC = () => {
-	const dispatch = useDispatch();
-	// eslint-disable-next-line @typescript-eslint/ban-types
+	const dispatch = useDispatch<AppDispatch>(); // eslint-disable-next-line @typescript-eslint/ban-types
 	const createModal = useContext(ModalManagerContext) as Function;
 
 	const label = useMemo(() => t('label.find_shares', 'Find shares'), []);
