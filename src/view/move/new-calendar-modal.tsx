@@ -157,8 +157,6 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 					color: selectedColor,
 					excludeFreeBusy: freeBusy
 				})
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 			).then((newCalendarRes: any) => {
 				if (newCalendarRes.type.includes('fulfilled')) {
 					action({

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Select, Icon, Row, Container, Text, SelectProps } from '@zextras/carbonio-design-system';
-import { TFunction } from 'i18next';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { find } from 'lodash';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';

@@ -8,11 +8,14 @@
         "empty_trash_confirmation": "This action will delete all items in E-mail, Contacts, Calendar, Tasks and Briefcase trash folders. Are you sure that you want to permanently delete everything in these trash folders?",
         "move_to_root": "Move to root",
         "preview": "Click to preview",
+        "reset": "Reset",
         "save_to_preview": "Save to preview",
+        "search": "Search",
         "send": "Send",
         "send_cancellation": "Send Cancellation",
         "send_edit": "Send Edit",
-        "share_calendar": "Share Calendar"
+        "share_calendar": "Share Calendar",
+        "show_original": "Show original"
     },
     "add": "Add",
     "administer": "Administer",
@@ -99,6 +102,8 @@
         "access_revoked": "Access revoked",
         "action_performed": "You already performed this action",
         "add_share": "Add share",
+        "advanced_filters": "{{count}} Advanced Filter",
+        "advanced_filters_plural": "",
         "all_calendars": "All calendars",
         "all_day": "All day",
         "app_name": "Calendars",
@@ -132,9 +137,9 @@
         "default_appt_vsblty": "Default appointment visibility",
         "default_view": "Default view",
         "delete": "Delete",
+        "delete_plural": "Delete all",
         "delete_instance": "Are you sure you want to delete this instance of “{title}” appointment?",
         "delete_permanently": "Delete permanently",
-        "delete_plural": "Delete all",
         "delete_tag": "Delete Tag",
         "delete_tag_name": "Delete {{name}} tag",
         "discard_changes": "DISCARD CHANGES",
@@ -174,8 +179,9 @@
         "instance": "Instance",
         "invitation_not_sent": "You haven't sent the invitation to the attendees yet",
         "invites": "Invites",
-        "loading": "Loading...",
-        "loading_results": "Loading Results...",
+        "keywords": "Keywords",
+        "loading": "Loading…",
+        "loading_results": "Loading Results…",
         "location": "Location",
         "maybe": "maybe",
         "month": "Month",
@@ -241,8 +247,9 @@
         "shares_items": "<bold>{{user}}</bold>'s shared calendars",
         "sharing_of_this_folder": "Sharing of this folder",
         "show": "Show",
-        "show_declined_meetings": "Show declined meetings",
         "show_plural": "Show all",
+        "show_declined_meetings": "Show declined meetings",
+        "single_advanced_filter": "Advanced Filters",
         "single_instance": "SINGLE INSTANCE",
         "snooze": "Snooze",
         "start_date": "Start date",
@@ -301,7 +308,7 @@
                 "sure_delete_appointment_permanently": "By deleting permanently this appointment you will not be able to recover it anymore, continue?"
             }
         },
-        "more": "More...",
+        "more": "More…",
         "optional_participant": "{{count}} Optional",
         "optional_participant_plural": "{{count}} Optionals",
         "organizer": "Organizer",
@@ -375,6 +382,9 @@
         "october": "October",
         "september": "September"
     },
+    "mountpoint_error": "The share couldn't be added to the Shared Calendars section",
+    "mountpoint_success": "The share has been added successfully to the Shared Calendars section",
+    "mountpoint_warning": "{{failed}} out of {{total}} shared calendars couldn't be added to the Shared Calendars",
     "owner": "Owner",
     "participants": {
         "AC_with_count": "Accepted",
@@ -447,7 +457,9 @@
     "revoke_without_custom_message": "Revoke access sending a standard notification",
     "revoke_without_notification": "Revoke access without sending a notification",
     "search": {
-        "organized_by": "organized by"
+        "from_date": "From Date",
+        "organized_by": "organized by",
+        "to_date": "To Date"
     },
     "settings": {
         "ical_note": "Apple iCal can be configured to access your Calendars using the CalDAV protocol.When this preference is enabled,shared calendars are displayed in the ical account's Delegation tab so you can delegate access to your Calendars to other users.",
@@ -634,8 +646,8 @@
     "tooltip": {
         "add_attachments": "Add attachments",
         "calendar_sharing_status": "Shared with {{count}} people",
-        "calendar_sharing_status_one": "Shared with 1 person",
         "calendar_sharing_status_plural": "",
+        "calendar_sharing_status_one": "Shared with 1 person",
         "chat": "Equipment",
         "chat_room": "Virtual Room's link",
         "copy_ics_url": "Copy ICS url",

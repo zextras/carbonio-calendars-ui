@@ -12,7 +12,9 @@
         "send_cancellation": "Annulering verzenden",
         "share_calendar": "Kalender delen",
         "empty_trash_confirmation": "Deze actie verwijdert alle items in de E-mail, Contacten, Agenda, Taken en Brievenbus prullenmappen. Weet u zeker dat u alles in deze prullenmappen permanent wilt verwijderen?",
-        "send_edit": "Bewerking versturen"
+        "send_edit": "Bewerking versturen",
+        "reset": "Opnieuw instellen",
+        "search": "Zoeken"
     },
     "reminder": {
         "never": "Nooit",
@@ -166,7 +168,7 @@
         "settings_saved": "Instellingen opgeslagen",
         "trash_emptied": "Prullenbak met succes leeggemaakt",
         "exclude_free_busy": "Laat deze kalender buiten beschouwing bij de rapportage van de vrije/actieve tijden",
-        "loading": "Wordt geladen...",
+        "loading": "Wordt geladen…",
         "maybe": "misschien",
         "propose_new_time": "NIEUWE TIJD VOORSTELLEN",
         "role": "rol",
@@ -184,7 +186,7 @@
         "app_name": "Kalenders",
         "new_appointment": "Nieuwe afspraak",
         "preview": "Voorbeeld",
-        "loading_results": "Resultaten laden...",
+        "loading_results": "Resultaten laden…",
         "create_tag": "Tag creëren",
         "delete_tag": "Tag verwijderen",
         "delete_tag_name": "{{name}} tag verwijderen",
@@ -215,7 +217,13 @@
         "subject": "Onderwerp",
         "cancel": "annuleren",
         "appointment_is_private": "De afspraak is privé.",
-        "create_copy": "Een kopie maken"
+        "create_copy": "Kopieren",
+        "action_performed": "U heeft deze actie al uitgevoerd",
+        "advanced_filters": "{{count}} geavanceerde filter",
+        "advanced_filters_plural": "{{count}} geavanceerde filters",
+        "keywords": "Zoekwoorden",
+        "no_rights": "U heeft geen toestemming om deze actie uit te voeren",
+        "single_advanced_filter": "Geavanceerde Filters"
     },
     "event": {
         "action": {
@@ -223,7 +231,7 @@
             "no": "Nee",
             "yes": "Ja",
             "decline": "Weigeren",
-            "expand": "In Displayer openen",
+            "expand": "Openen",
             "needs_action": "Heeft actie nodig",
             "invitation_not_sent_yet": "De uitnodiging is nog niet verstuurd"
         },
@@ -323,7 +331,7 @@
         "appointment_type_handle": "{{name}} is een terugkerende afspraak. Wilt u alleen deze afspraak of de hele serie openen?",
         "organizer": "Organisator",
         "send_email": "E-mail sturen",
-        "more": "Meer...",
+        "more": "Meer…",
         "required_participant": "{{count}} Deelnemer",
         "required_participant_plural": "{{count}} Deelnemers",
         "optional_participant": "{{count}} Optioneel",
@@ -331,7 +339,8 @@
         "edit_series_warning": "Terwijl u de reeks wijzigt, worden alle eerder verwijderde of gewijzigde instanties hersteld met de nieuwe reeksinstellingen.",
         "appointment_invitation_sent": "Afspraak uitnodiging verzonden",
         "meeting_modified": "De volgende vergadering is gewijzigd",
-        "want_to_edit_modified_msg": "Wilt u het bericht van de gewijzigde afspraak bewerken?"
+        "want_to_edit_modified_msg": "De wijzigingen worden per e-mail aan de deelnemers meegedeeld. Wilt u een aangepast bericht toevoegen?",
+        "copy": "Kopieren"
     },
     "months": {
         "april": "April",
@@ -444,7 +453,8 @@
         "url_copied": "{{title}} gekopieerd",
         "share_folder_success": "Kalender met succes gedeeld",
         "tag_removed": "{{tag}} tag verwijderd",
-        "tag_applied": "{{tag}} tag toegepast"
+        "tag_applied": "{{tag}} tag toegepast",
+        "email_copied_to_clipboard": "E-mail gekopieerd naar klembord."
     },
     "success": "Succes",
     "type": "Type",
@@ -456,7 +466,9 @@
         }
     },
     "search": {
-        "organized_by": "georganiseerd door"
+        "organized_by": "georganiseerd door",
+        "from_date": "Van datum",
+        "to_date": "Tot datum"
     },
     "participants": {
         "Accepted": "aanvaard",
@@ -492,13 +504,13 @@
         "equipment": "Uitrusting",
         "location": "Locatie",
         "chat_room": "Link naar virtuele ruimte",
-        "virtual_chat": "Virtuele Chat",
         "calendar_sharing_status": "Gedeeld met {{count}} persoon",
         "calendar_sharing_status_plural": "Gedeeld met {{count}} personen",
         "calendar_sharing_status_one": "Gedeeld met 1 persoon",
         "revoke": "Toegang intrekken",
         "resend": "E-mailbericht over dit aandeel verzenden",
-        "edit": "Deeleigenschappen bewerken"
+        "edit": "Deeleigenschappen bewerken",
+        "virtual_room": "Virtuele Kamer"
     },
     "button": {
         "customize_modal": "Modal aanpassen openen"
@@ -644,5 +656,8 @@
     "preview": {
         "close": "Voorbeeld sluiten"
     },
-    "recurrent_in_allday": "U kunt een terugkerende afspraak niet in slot voor een hele dag slepen"
+    "recurrent_in_allday": "U kunt een terugkerende afspraak niet in slot voor een hele dag slepen",
+    "mountpoint_error": "Het deel kon niet worden toegevoegd aan de sectie Gedeelde agenda's",
+    "mountpoint_success": "Het deel is succesvol toegevoegd aan de sectie Gedeelde agenda's",
+    "mountpoint_warning": "{{failed}} van {{total}} gedeelde kalenders konden niet worden toegevoegd aan de Gedeelde kalenders"
 }

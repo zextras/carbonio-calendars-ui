@@ -12,7 +12,9 @@
         "share_calendar": "Takvimi paylaş",
         "edit_calendar_properties": "Takvim özelliklerini düzenle",
         "empty_trash_confirmation": "E-Posta, Kişiler, Takvim, Görevler ve Çanta çöp kutularındaki tüm öğeler silinecek. Bu çöp kutularındaki herşeyi tamamen silmek istediğinizden emin misiniz?",
-        "send_edit": "Gönder Düzenle"
+        "send_edit": "Gönder Düzenle",
+        "reset": "Sıfırla",
+        "search": "Ara"
     },
     "edit_share_properties": "Paylaşım özelliklerini düzenle",
     "button": {
@@ -35,7 +37,7 @@
         "action": {
             "accept": "Kabul Et",
             "decline": "Reddet",
-            "expand": "Görüntüleyicide Aç",
+            "expand": "Aç",
             "no": "Hayır",
             "yes": "Evet",
             "needs_action": "Yapılması gerekenler",
@@ -149,7 +151,7 @@
         "delete_tag_message1": "{{name}} etiketini silmek istediğinizden emin misiniz?",
         "delete_tag_message2": "Silinince önceden işaretlenmiş tüm öğelerden etiket kaldırılacak.",
         "appointment_type_handle": "{{name}} tekrarlanan bir randevu. Sadece bu rendevuyu mu yoksa tekrarlama serisini mi açmak istersiniz?",
-        "more": "Daha fazla...",
+        "more": "Daha fazla…",
         "optional_participant": "{{count}} İsteğe bağlı",
         "optional_participant_plural": "{{count}} İsteğe bağlı",
         "organizer": "Organize eden",
@@ -160,10 +162,13 @@
         "appointment_invitation_sent": "Randevu daveti gönderildi",
         "want_to_edit_modified_msg": "Katılımcılara değişiklikler hakkında bilgilendirme e-postası gönderilecek. Özel bir mesaj eklemek ister misiniz?",
         "meeting_modified": "Bu toplantı değiştirildi",
-        "search_hints": " "
+        "search_hints": " ",
+        "copy": "Kopyala"
     },
     "search": {
-        "organized_by": "Organize eden"
+        "organized_by": "Organize eden",
+        "from_date": "Bu Tarihten",
+        "to_date": "Bu Tarihe"
     },
     "snackbar": {
         "invite": {
@@ -173,7 +178,8 @@
         "share_folder_success": "Takvim başarıyla paylaşıldı",
         "url_copied": "{{title}} kopyalandı",
         "tag_applied": "{{tag}} etiketi uygulandı",
-        "tag_removed": "{{tag}} etiketi kaldırıldı"
+        "tag_removed": "{{tag}} etiketi kaldırıldı",
+        "email_copied_to_clipboard": "Eposta panoya kopyalandı."
     },
     "label": {
         "invitation_not_sent": "Katılımcılara henüz davet göndermediniz",
@@ -332,7 +338,7 @@
         "edit_tag": "Etiketi düzenle",
         "edit_tag_name": "{{name}} etiketi düzenle",
         "entire_serires": "TÜM SERİLER",
-        "loading_results": "Sonuçlar yükleniyor...",
+        "loading_results": "Sonuçlar yükleniyor…",
         "new_tag": "Yeni Etiket",
         "other_actions": "Diğer işlemler",
         "results_for_error": "Arama sorgusu başlatılamadı, silip yeniden deneyin: ",
@@ -349,14 +355,20 @@
         "root": "Kök",
         "public_link_description": "Başlık {{title}} 'dan {{date}} tarihinde oluşturuldu",
         "continue": "İlerle",
-        "choose_file": "Dosya seç",
+        "choose_file": "Dosya seçin",
         "cancel": "iptal",
         "subject": "Konu",
         "new_time_proposed": "Yeni Saat Önerildi",
         "appointment_is_private": "Bu özel randevudur.",
         "search_hint": " ",
         "select_in": " ",
-        "create_copy": "Kopya oluştur"
+        "create_copy": "Kopyala",
+        "action_performed": "Bu işlemi önceden tamamladınız",
+        "advanced_filters": "{{count}} Gelişmiş Filtre",
+        "advanced_filters_plural": "{{count}} Gelişmiş Filtre",
+        "keywords": "Anahtar kelimeler",
+        "no_rights": "Bu işlemi yapmak için izniniz yok",
+        "single_advanced_filter": "Gelişmiş Filtreler"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -395,11 +407,11 @@
         "calendar_sharing_status_plural": "{{count}} kişi ile paylaşıldı",
         "equipment": "Donanım",
         "location": "Yer",
-        "virtual_chat": "Sanal Sohbet",
         "calendar_sharing_status_one": "1 kişi ile paylaşıldı",
         "revoke": "Erişimi iptal et",
         "resend": "Bu paylaşım hakkında e-posta bildirimi gönder",
-        "edit": "Paylaşım özelliklerini düzenle"
+        "edit": "Paylaşım özelliklerini düzenle",
+        "virtual_room": "Sanal Oda"
     },
     "revoke_with_custom_message": "Özel bildirim göndererek erişim yetkisini kaldır",
     "settings": {
@@ -647,5 +659,8 @@
     "preview": {
         "close": "Önizlemeyi Kapat"
     },
-    "recurrent_in_allday": "Tekrarlanan randevuyu tüm gün alanına taşıyamazsınız"
+    "recurrent_in_allday": "Tekrarlanan randevuyu tüm gün alanına taşıyamazsınız",
+    "mountpoint_success": "Paylaşılan Takvimler bölümüne paylaşım başarıyla eklendi",
+    "mountpoint_error": "Paylaşılan Takvimler bölümüne paylaşım eklenemedi",
+    "mountpoint_warning": "{{total}} paylaşılan takvimden {{failed}} takvim Paylaşılan Takvimler bölümüne eklenemedi"
 }

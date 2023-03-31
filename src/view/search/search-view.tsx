@@ -6,7 +6,6 @@
 import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
 import { isEmpty, map, reduce } from 'lodash';
-import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
@@ -17,6 +16,8 @@ import { getSelectedEvents } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
+import AdvancedFilterModal from './advance-filter-modal';
+import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
 type SearchProps = {
 	useQuery: () => [Array<any>, (arg: any) => void];
@@ -44,6 +45,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	});
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
+	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
 	const { path } = useRouteMatch();
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
 	const [resultLabel, setResultLabel] = useState<string>(t('label.results_for', 'Results for: '));
@@ -81,13 +83,13 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		[searchInFolders]
 	);
 
+	const [spanStart, setSpanStart] = useState(() => DEFAULT_DATE_START);
+	const [spanEnd, setSpanEnd] = useState(() => DEFAULT_DATE_END);
+
 	const search = useCallback(
 		(queryStr: Array<{ label: string; value?: string }>, reset: boolean) => {
-			setResultLabel(t('label.loading_results', 'Loading Results...'));
+			setResultLabel(t('label.results_for', 'Results for: '));
 			setLoading(true);
-			const spanStart = moment().startOf('day').subtract(1, 'months').valueOf();
-			const spanEnd = moment().startOf('day').add(1, 'months').valueOf();
-
 			const queryMap = `${queryStr
 				.map((c) => c.value ?? c.label)
 				.join(' ')} ${foldersToSearchInQuery}`;
@@ -135,8 +137,18 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 					);
 				});
 		},
-		[t, foldersToSearchInQuery, dispatch, searchResults.offset, searchResults.sortBy, updateQuery]
+		[
+			t,
+			foldersToSearchInQuery,
+			dispatch,
+			spanStart,
+			spanEnd,
+			searchResults.offset,
+			searchResults.sortBy,
+			updateQuery
+		]
 	);
+	const [filterCount, setFilterCount] = useState(0);
 
 	const loadMore = useCallback(() => {
 		if (!loading && searchResults && !isEmpty(searchResults.appointments) && searchResults.more) {
@@ -147,9 +159,11 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	useEffect(() => {
 		if (query && query.length > 0 && query !== searchResults.query && !isInvalidQuery) {
 			search(query, true);
+			setFilterCount(1);
 		}
 		if (query && query.length === 0) {
 			setIsInvalidQuery(false);
+			setFilterCount(0);
 			setResultLabel(t('label.results_for', 'Results for: '));
 		}
 	}, [query, search, searchResults.query, isInvalidQuery, t]);
@@ -158,19 +172,40 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
 	);
 	return (
-		<Container style={{ whiteSpace: 'nowrap' }}>
-			<ResultsHeader label={resultLabel} />
-			<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
-				<Switch>
-					<Route path={`${path}/:action?/:apptId?/:ridZ?`}>
-						<SearchList loadMore={loadMore} appointments={appointments} loading={loading} />
-						<Container background="gray5" width="75%" mainAlignment="center">
-							<SearchPanel appointments={appointments} />
-						</Container>
-					</Route>
-				</Switch>
+		<>
+			<Container style={{ whiteSpace: 'nowrap' }}>
+				<ResultsHeader label={resultLabel} />
+				<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
+					<Switch>
+						<Route path={`${path}/:action?/:apptId?/:ridZ?`}>
+							<SearchList
+								loadMore={loadMore}
+								appointments={appointments}
+								loading={loading}
+								filterCount={filterCount}
+								setShowAdvanceFilters={setShowAdvanceFilters}
+								searchDisabled={false}
+								dateStart={spanStart}
+								dateEnd={spanEnd}
+							/>
+							<Container background="gray5" width="75%" mainAlignment="center">
+								<SearchPanel appointments={appointments} />
+							</Container>
+						</Route>
+					</Switch>
+				</Container>
 			</Container>
-		</Container>
+			<AdvancedFilterModal
+				query={query}
+				updateQuery={updateQuery}
+				open={showAdvanceFilters}
+				onClose={(): void => setShowAdvanceFilters(false)}
+				dateStart={spanStart}
+				dateEnd={spanEnd}
+				setDateStart={setSpanStart}
+				setDateEnd={setSpanEnd}
+			/>
+		</>
 	);
 };
 

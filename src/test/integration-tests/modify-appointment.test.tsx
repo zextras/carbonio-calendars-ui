@@ -11,6 +11,7 @@ import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { editAppointment } from '../../actions/appointment-actions-fn';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { PREFS_DEFAULTS } from '../../constants';
 import { reducers } from '../../store/redux';
@@ -19,10 +20,12 @@ import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import EditorPanelWrapper from '../../view/editor/editor-panel-wrapper';
 import mockedData from '../generators';
 
-jest.setTimeout(50000);
+jest.setTimeout(55000);
 
 shell.getUserSettings.mockImplementation(() => ({
+	...defaultSettings,
 	prefs: {
+		...defaultSettings.prefs,
 		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',

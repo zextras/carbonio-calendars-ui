@@ -64,10 +64,16 @@ export const disabledFields = {
 
 export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor => {
 	const identities = getIdentityItems();
-	const { zimbraPrefCalendarDefaultApptDuration, zimbraPrefCalendarApptReminderWarningTime } =
-		getPrefs();
+	const {
+		zimbraPrefCalendarDefaultApptDuration,
+		zimbraPrefCalendarApptReminderWarningTime,
+		zimbraPrefDefaultCalendarId
+	} = getPrefs();
 	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
-	const defaultCalendar = find(folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
+	const defaultCalendar = find(folders, [
+		'id',
+		zimbraPrefDefaultCalendarId ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
+	]);
 	const defaultTimezone = moment.tz.guess(true);
 
 	return {

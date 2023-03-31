@@ -15,7 +15,8 @@ import {
 	deleteEventItem,
 	editEventItem,
 	moveEventItem,
-	openEventItem
+	openEventItem,
+	showOriginal
 } from '../actions/appointment-actions-items';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import { selectInstanceInvite } from '../store/selectors/invites';
@@ -44,6 +45,7 @@ const getInstanceActionsItems = ({
 	deleteEventItem({ event, invite, context }),
 	moveEventItem({ event, context }),
 	copyEventItem({ event, invite, context }),
+	showOriginal({ event }),
 	applyTag({ event, context }),
 	...(invite.isRespRequested
 		? [
@@ -74,6 +76,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				editEventItem({ event, invite, context }),
 				deleteEventItem({ event, invite, context }),
 				copyEventItem({ event, invite, context }),
+				showOriginal({ event }),
 				applyTag({ event, context }),
 				...(invite.isRespRequested
 					? [
@@ -102,6 +105,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				deleteEventItem({ event: seriesEvent, invite, context }),
 				moveEventItem({ event: seriesEvent, context }),
 				copyEventItem({ event: seriesEvent, invite, context }),
+				showOriginal({ event }),
 				applyTag({ event, context }),
 				...(invite.isRespRequested
 					? [
@@ -126,6 +130,7 @@ const getTrashActions = ({ event, invite, context }: ActionsProps): InstanceActi
 		deleteEventItem({ event: seriesEvent, invite, context }),
 		moveEventItem({ event: seriesEvent, context }),
 		copyEventItem({ event: seriesEvent, invite, context }),
+		showOriginal({ event }),
 		applyTag({ event, context })
 	];
 };

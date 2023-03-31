@@ -12,7 +12,9 @@
         "send": "Wyślij",
         "send_cancellation": "Wyślij anulację",
         "share_calendar": "Udostępnij kalendarz",
-        "send_edit": "Wyślij edycję"
+        "send_edit": "Wyślij edycję",
+        "reset": "Zresetuj",
+        "search": "Wyszukaj"
     },
     "event": {
         "action": {
@@ -20,7 +22,7 @@
             "accept": "Akceptuj",
             "decline": "Odrzuć",
             "no": "Nie",
-            "expand": "Otwórz na ekranie wyświetlającym",
+            "expand": "Otwórz",
             "needs_action": "Potrzebuje działania",
             "invitation_not_sent_yet": "Zaproszenie nie zostało jeszcze wysłane"
         },
@@ -44,7 +46,7 @@
                 "title2": "Stwórz nowy kalendarz"
             },
             "restore": {
-                "footer": "Stwórz i Przywróć"
+                "footer": "Stwórz i przywróć"
             }
         },
         "share_info": "Udostępnij informacje"
@@ -186,11 +188,11 @@
         "share": "Udostępnij",
         "timezone_pref_msg": "Godziny zależą od Twoich ustawień stref czasowych.",
         "the": " ",
-        "propose_new_time": "ZAPROPONUJ NOWY TERMIIN",
+        "propose_new_time": "ZAPROPONUJ NOWY CZAS",
         "app_name": "Kalendarze",
         "delete_tag_name": "Usuń Tag {{name}}",
         "from": "od",
-        "loading": "Ładowanie...",
+        "loading": "Ładowanie…",
         "maybe": "może",
         "exclude_free_busy": "Wyklucz ten kalendarz z informowania o statusie wolny/zajęty",
         "role": "rola",
@@ -206,10 +208,10 @@
         },
         "create_tag": "Stwórz Tag",
         "delete_tag": "Usuń Tag",
-        "edit_tag": "Edytuj Tag",
+        "edit_tag": "Edytuj tag",
         "edit_tag_name": "Edytuj Tag {{name}}",
         "entire_serires": "CAŁA SERIA",
-        "loading_results": "Ładowanie wyników...",
+        "loading_results": "Ładowanie wyników…",
         "new_tag": "Nowy tag",
         "no_special_char_allowed": "Nazwa nie może zawierać żadnych znaków specjalnych",
         "other_actions": "Inne czynności",
@@ -237,7 +239,14 @@
         "subject": "Temat",
         "new_time_proposed": "Nowy zaproponowany czas",
         "appointment_is_private": "To spotkanie jest prywatne.",
-        "create_copy": "Stwórz kopię"
+        "create_copy": "Skopiuj",
+        "action_performed": "Już wykonałeś tę czynność",
+        "advanced_filters_0": "{{count}} zaawansowany filtr",
+        "advanced_filters_1": "{{count}} zaawansowane filtry",
+        "advanced_filters_2": "{{count}} zaawansowanych filtrów",
+        "keywords": "Słowa kluczowe",
+        "no_rights": "Nie masz uprawnień, aby wykonać tę czynność",
+        "single_advanced_filter": "Zaawansowane filtry"
     },
     "message": {
         "modal": {
@@ -297,7 +306,7 @@
         "delete_tag_message1": "Czy na pewno chcesz usunąć Tag {{name}}?",
         "delete_tag_message2": "Po usunięciu Tag zostanie zdjęty z każdego elementu oznaczonego nim.",
         "appointment_type_handle": "{{name}} to powtarzające się spotkanie. Chcesz otworzyć tylko ten przypadek czy serię?",
-        "more": "Więcej...",
+        "more": "Więcej…",
         "organizer": "Organizator",
         "required_participant_0": "{{count}} Uczestnik",
         "required_participant_1": "{{count}} Uczestników",
@@ -309,7 +318,8 @@
         "edit_series_warning": "Jeśli zmodyfikujesz serię, wszystkie poprzednio usunięte lub zmodyfikowane przypadki zostaną przywrócone z nowymi ustawieniami serii.",
         "appointment_invitation_sent": "Zaproszenie na spotkanie zostało wysłane",
         "want_to_edit_modified_msg": "Uczestnicy zostaną powiadomieni o zmianach przez wiadomość e-mail. Czy chcesz utworzyć niestandardową wiadomość?",
-        "meeting_modified": "Następujące spotkanie zostało zmodyfikowane"
+        "meeting_modified": "Następujące spotkanie zostało zmodyfikowane",
+        "copy": "Skopiuj"
     },
     "participants": {
         "Attendees_tentative_count_0": "<strong>{{count}} uczestnik </strong> odpowiedział: Niepewne",
@@ -433,7 +443,8 @@
         "proposed_time_accepted": "Zaakceptowano zaproponowany czas",
         "url_copied": "skopiowano {{title}}",
         "tag_applied": "Tag {{tag}} został zastosowany",
-        "tag_removed": "Tag {{tag}} został zdjęty"
+        "tag_removed": "Tag {{tag}} został zdjęty",
+        "email_copied_to_clipboard": "E-mail został skopiowany do schowka."
     },
     "timezone": {
         "brussels_copenhagen_madrid_paris ": "{{value}} Bruksela, Kopenhaga, Madryt, Paryż",
@@ -610,7 +621,9 @@
     "revoke_without_custom_message": "Odbierz dostęp i wyślij domyślną notkę",
     "revoke_without_notification": "Odbierz dostęp i nie wysyłaj notatki",
     "search": {
-        "organized_by": "zorganizowane przez"
+        "organized_by": "zorganizowane przez",
+        "from_date": "Data rozpoczęcia",
+        "to_date": "Data zakończenia"
     },
     "share_invite_resent": "Zaproszenie do udostępnienia zostało wysłane ponownie",
     "shared_folders": "Udostępnione kalendarze",
@@ -620,7 +633,7 @@
         "snackbar": {
             "tag_created": "Tag {{name}} został stworzony pomyślnie",
             "tag_deleted": "Tag {{name}} został usunięty",
-            "tag_not_updated": "Coś poszło nie tak, Tag nie został zaktualizowany. Spróbuj ponownie.",
+            "tag_not_updated": "Coś poszło nie tak, tag nie został zaktualizowany. Spróbuj ponownie.",
             "tag_updated": "Tag został zaktualizowany pomyślnie"
         }
     },
@@ -653,7 +666,6 @@
         "chat_room": "Link do wirtualnego pokoju",
         "equipment": "Ekwipunek",
         "location": "Lokalizacja",
-        "virtual_chat": "Wirtualny Czat",
         "chat": "Ekwipunek",
         "calendar_sharing_status_0": "Udostępniono {{count}} osobie",
         "calendar_sharing_status_1": "Udostępniono {{count}} osobom",
@@ -661,7 +673,8 @@
         "calendar_sharing_status_one": "Udostępniono 1 osobie",
         "revoke": "Odbierz dostęp",
         "resend": "Wyślij powiadomienie e-mail dot. tego udostępnienia",
-        "edit": "Edytuj właściwości udostępniania"
+        "edit": "Edytuj właściwości udostępniania",
+        "virtual_room": "Wirtualny pokój"
     },
     "type": "Typ",
     "workflow": "Organizacja Pracy",
@@ -669,5 +682,8 @@
     "preview": {
         "close": "Zamknij podgląd"
     },
-    "recurrent_in_allday": "Nie można umieścić powtarzającego się spotkania w oknie cały dzień"
+    "recurrent_in_allday": "Nie można umieścić powtarzającego się spotkania w oknie cały dzień",
+    "mountpoint_error": "Nie udało się dodać udostępnienia do udostępnionych kalendarzy",
+    "mountpoint_success": "Udostępnienie zostało dodane do udostępnionych kalendarzy",
+    "mountpoint_warning": "Nie udało się dodać {{failed}} z {{total}} kalendarzy do udostępnionych kalendarzy"
 }

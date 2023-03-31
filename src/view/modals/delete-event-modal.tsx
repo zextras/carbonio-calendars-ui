@@ -154,7 +154,7 @@ export const DeleteEventModal = ({
 	}, []);
 
 	const actions = useDeleteActions(event, invite, {
-		isInstance,
+		isSingleInstance: isException || isInstanceOfSeries || false,
 		replaceHistory,
 		onClose,
 		dispatch,

@@ -59,14 +59,15 @@
         "appointment_type_handle": "{{name}}是定期预约。您是想打开此实例还是整个系列？",
         "organizer": "组织者",
         "send_email": "发送邮件",
-        "more": "更多...",
+        "more": "更多…",
         "required_participant": "{{count}} 参与者",
         "optional_participant": "{{count}} 可选",
         "search_hints": " ",
         "edit_series_warning": "当您修改系列时，所有先前被删除或修改的实例都将按照新的系列设置进行恢复。",
         "appointment_invitation_sent": "预约邀请已发送",
         "meeting_modified": "以下会议有改动",
-        "want_to_edit_modified_msg": "是否编辑已修改的预约消息？"
+        "want_to_edit_modified_msg": "此变更将通过邮件通知参与者。是否添加自定义消息？",
+        "copy": "拷贝"
     },
     "calendar": {
         "modal": {
@@ -88,7 +89,9 @@
         "edit_message": "编辑消息",
         "empty_trash": "清空垃圾箱",
         "empty_trash_confirmation": "此操作将删除邮件、联系人、日历、任务和公文包垃圾文件夹中的所有项目。确定要永久性删除垃圾文件夹中的所有内容吗？",
-        "send_edit": "发送编辑"
+        "send_edit": "发送编辑",
+        "reset": "重置",
+        "search": "搜索"
     },
     "event": {
         "action": {
@@ -96,7 +99,7 @@
             "no": "否",
             "yes": "是",
             "decline": "拒绝",
-            "expand": "在显示工具中打开",
+            "expand": "打开",
             "needs_action": "需要操作",
             "invitation_not_sent_yet": "尚未发送邀请"
         },
@@ -262,7 +265,7 @@
         "new_appointment": "新预约",
         "exclude_free_busy": "在报告空闲/忙碌时间排除此日历",
         "maybe": "可能",
-        "loading": "加载中...",
+        "loading": "加载中…",
         "week_day": {
             "saturday": "星期六",
             "sunday": "星期日",
@@ -282,7 +285,7 @@
         "delete_tag": "删除标签",
         "delete_tag_name": "删除 {{name}} 标签",
         "edit_tag": "编辑标签",
-        "loading_results": "正在加载结果...",
+        "loading_results": "正在加载结果…",
         "results_for_error": "无法开始搜索，清除并重试： ",
         "tag_max_length": "最多允许 128 个字符",
         "tag_name": "标签名称",
@@ -308,7 +311,12 @@
         "subject": "主题",
         "cancel": "取消",
         "appointment_is_private": "预约为私密。",
-        "create_copy": "创建副本"
+        "create_copy": "拷贝",
+        "action_performed": "您已执行此操作",
+        "advanced_filters": " ",
+        "keywords": "关键词",
+        "no_rights": "您没有执行此操作的权限",
+        "single_advanced_filter": "高级过滤条件"
     },
     "months": {
         "april": "四月",
@@ -437,7 +445,8 @@
         "url_copied": "{{title}}已复制",
         "proposed_time_accepted": "您接受了提议的时间",
         "tag_applied": "{{tag}} 标签已应用",
-        "tag_removed": "{{tag}} 标签已移除"
+        "tag_removed": "{{tag}} 标签已移除",
+        "email_copied_to_clipboard": "邮件已复制到剪贴板。"
     },
     "success": "成功",
     "type": "类型",
@@ -479,7 +488,9 @@
     "revoke_with_custom_message": "撤销访问权限并发送自定义通知",
     "revoke_without_notification": "撤销访问权限并不发送通知",
     "search": {
-        "organized_by": "组织方"
+        "organized_by": "组织方",
+        "from_date": "起始日期",
+        "to_date": "截止日期"
     },
     "share_invite_resent": "共享邀请重发",
     "button": {
@@ -500,12 +511,12 @@
         "equipment": "设备",
         "location": "位置",
         "chat_room": "虚拟房间链接",
-        "virtual_chat": "虚拟聊天",
         "calendar_sharing_status": " ",
         "calendar_sharing_status_one": "已与 1 人分享",
         "revoke": "撤销访问权限",
         "resend": "发送有关此共享的邮件通知",
-        "edit": "编辑共享属性"
+        "edit": "编辑共享属性",
+        "virtual_room": "虚拟房间"
     },
     "workflow": "工作流",
     "write": "编写",
@@ -622,5 +633,8 @@
     "preview": {
         "close": "关闭预览"
     },
-    "recurrent_in_allday": "您无法将重复预约拖动至全天空槽中"
+    "recurrent_in_allday": "您无法将重复预约拖动至全天空槽中",
+    "mountpoint_error": "无法将共享添加至共享日历部分",
+    "mountpoint_success": "共享已成功添加至共享日历部分",
+    "mountpoint_warning": "{{failed}}/{{total}}已共享日历无法被添加至共享日历"
 }

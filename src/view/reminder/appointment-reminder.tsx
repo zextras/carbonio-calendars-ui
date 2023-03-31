@@ -92,7 +92,7 @@ export const AppointmentReminder = (): ReactElement | null => {
 			if (remindersToNotify?.length > 0) {
 				notificationAudio.play();
 				forEach(remindersToNotify, (rem) => {
-					const { text } = getTimeToDisplayData(rem, moment());
+					const { text } = getTimeToDisplayData(rem, moment().valueOf());
 					showNotification(rem?.name, text);
 				});
 			}

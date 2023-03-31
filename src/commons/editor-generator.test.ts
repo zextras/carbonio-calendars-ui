@@ -10,6 +10,7 @@ import {
 	createFakeIdentity,
 	getMockedAccountItem
 } from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
+import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
@@ -35,7 +36,9 @@ shell.useUserAccount.mockImplementation(() => userAccount);
 shell.getUserAccount.mockImplementation(() => userAccount);
 
 shell.getUserSettings.mockImplementation(() => ({
+	...defaultSettings,
 	prefs: {
+		...defaultSettings.prefs,
 		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
@@ -176,7 +179,7 @@ describe('Editor generator', () => {
 				title: 'Single istance',
 				location: 'Location',
 				room: {
-					name: 'Room name',
+					label: 'Room name',
 					link: 'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'
 				},
 				attendees: [],
@@ -239,7 +242,7 @@ describe('Editor generator', () => {
 			expect(editor.title).toBe('Single istance');
 			expect(editor.location).toBe('Location');
 			expect(editor.room).toBeDefined();
-			expect(editor.room).toHaveProperty('name', 'Room name');
+			expect(editor.room).toHaveProperty('label', 'Room name');
 			expect(editor.room).toHaveProperty(
 				'link',
 				'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'

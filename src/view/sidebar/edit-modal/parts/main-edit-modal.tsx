@@ -18,7 +18,7 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { Folder, FOLDERS, Grant, useFolders, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, Folder, Grant, useFolders, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -65,9 +65,9 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 	const colorName = useMemo(() => selected?.[0]?.label, [selected]);
 	const squareColor = useMemo(
 		() =>
-			colorName === 'custom'
+			(colorName === 'custom'
 				? selected?.[0]?.value
-				: ZIMBRA_STANDARD_COLORS[parseInt(selected?.[0]?.value, 10)].color,
+				: ZIMBRA_STANDARD_COLORS[parseInt(selected?.[0]?.value, 10)]?.color) || '',
 		[colorName, selected]
 	) as string;
 

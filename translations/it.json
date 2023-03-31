@@ -10,12 +10,12 @@
         "location": "Luogo",
         "calendar_sharing_status": "Condiviso con {{count}} persone",
         "calendar_sharing_status_plural": "",
-        "virtual_chat": "Chat Virtuale",
         "chat_room": "Link alla Stanza Virtuale",
         "calendar_sharing_status_one": "Condiviso con una persona",
         "revoke": "Revoca accesso",
         "resend": "Invia notifica per questa condivisione",
-        "edit": "Modifica proprietà di condivisione"
+        "edit": "Modifica proprietà di condivisione",
+        "virtual_room": "Stanza Virtuale"
     },
     "reminder": {
         "week_before": "{{count}} settimana fa",
@@ -122,7 +122,7 @@
         "delete_tag_message1": "Vuoi eliminare l'etichetta {{name}}?",
         "delete_tag_message2": "Una volta eliminata, verrà eliminata anche da tutti gli elementi su cui è utilizzata.",
         "organizer": "Organizzatore",
-        "more": "Altro...",
+        "more": "Altro…",
         "optional_participant": "{{count}} Opzionale",
         "optional_participant_plural": "{{count}} Opzionali",
         "required_participant": "{{count}} Partecipante",
@@ -131,7 +131,8 @@
         "edit_series_warning": "Procedendo con le modifiche alla serie, tutte le istanze precedentemente modificate o eliminate, verranno ripristinate secondo le nuove impostazioni di questa serie.",
         "appointment_invitation_sent": "Invito all'appuntamento inviato",
         "want_to_edit_modified_msg": "Le modifiche verranno notificate ai partecipanti via email. Vuoi aggiungere un messaggio personalizzato?",
-        "meeting_modified": "La riunione seguente è stata modificata"
+        "meeting_modified": "La riunione seguente è stata modificata",
+        "copy": "Copia"
     },
     "label": {
         "to": "A",
@@ -156,7 +157,7 @@
         "busy": "Occupato",
         "attendee_plural": "Partecipanti",
         "attachment": "Allegato",
-        "attachment_plural": "{{count}} Allegati",
+        "attachment_plural": "allegati",
         "all_day": "Tutto il giorno",
         "all_calendars": "Tutti i calendari",
         "download": "Scarica",
@@ -275,7 +276,7 @@
         },
         "weeks_on": "Settimana(e) di",
         "role": "ruolo",
-        "loading": "Caricamento...",
+        "loading": "Caricamento…",
         "maybe": "forse",
         "share_with": "condividi con",
         "today": "oggi",
@@ -291,7 +292,7 @@
         "other_actions": "Altre azioni",
         "single_instance": "SINGOLA ISTANZA",
         "edit_tag_name": "Modifica etichetta {{name}}",
-        "loading_results": "Caricamento Risultati in corso...",
+        "loading_results": "Caricamento risultati in corso…",
         "results_for_error": "Impossibile iniziare la ricerca, cancella e riprova: ",
         "select_color": "Seleziona Colore",
         "tag_max_length": "Il numero massimo di caratteri consentiti è 128",
@@ -312,7 +313,13 @@
         "subject": "Oggetto",
         "new_time_proposed": "Nuovo Orario Proposto",
         "appointment_is_private": "L'appuntamento è privato.",
-        "create_copy": "Crea una copia"
+        "create_copy": "Copia",
+        "keywords": "Parole chiave",
+        "no_rights": "Non hai i permessi per effettuare questa azione",
+        "single_advanced_filter": "Filtri Avanzati",
+        "action_performed": "Hai già completato questa azione",
+        "advanced_filters": "{{count}} Filtro Avanzato",
+        "advanced_filters_plural": "{{count}} Filtri Avanzati"
     },
     "action": {
         "send": "Invia",
@@ -327,7 +334,9 @@
         "share_calendar": "Condividi Calendario",
         "calendar_access_share": "Condivisione accesso calendario",
         "empty_trash_confirmation": "Tutti gli elementi che appartengono a Email, Contatti, Calendari, Impegni e valigetta verranno eliminati. Vuoi procedere spostando tutto nel cestino?",
-        "send_edit": "Invia Modifica"
+        "send_edit": "Invia Modifica",
+        "search": "Cerca",
+        "reset": "Reimposta"
     },
     "button": {
         "customize_modal": "Personalizza"
@@ -368,7 +377,7 @@
             "decline": "Rifiuta",
             "no": "No",
             "yes": "Sì",
-            "expand": "Apri nel visulizzatore",
+            "expand": "Apri",
             "needs_action": "Necessita azione",
             "invitation_not_sent_yet": "L'invito non è ancora stato inviato"
         },
@@ -388,7 +397,9 @@
         }
     },
     "search": {
-        "organized_by": "organizzato da"
+        "organized_by": "organizzato da",
+        "from_date": "Dal giorno",
+        "to_date": "Al giorno"
     },
     "find_calendar_shares": "Trova Condivisoni Calendario",
     "items": {
@@ -408,7 +419,8 @@
         "share_folder_success": "Calendario condiviso correttamente",
         "url_copied": "{{title}} copiato",
         "tag_applied": "Etichetta {{tag}} applicata",
-        "tag_removed": "Etichetta {{tag}} rimossa"
+        "tag_removed": "Etichetta {{tag}} rimossa",
+        "email_copied_to_clipboard": "Email copiata negli appunti."
     },
     "add": "Aggiungi",
     "allowed_actions": "Azioni consentite",
@@ -644,5 +656,8 @@
     "preview": {
         "close": "Chiudi Anteprima"
     },
-    "recurrent_in_allday": "Non è possibile trascinare un appuntamento ricorrente dove è già presente un appuntamento che occupa l'intera giornata"
+    "recurrent_in_allday": "Non è possibile trascinare un appuntamento ricorrente dove è già presente un appuntamento che occupa l'intera giornata",
+    "mountpoint_error": "Non è stato possibile aggiungere la condivisione alla sezione Calendari Condivisi",
+    "mountpoint_success": "La condivisione è stata aggiunta con successo alla sezione Calendari Condivisi",
+    "mountpoint_warning": "{{failed}} su {{total}} dei calendari non sono stati aggiunti ai Calendari Condivisi"
 }

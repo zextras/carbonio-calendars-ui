@@ -7,10 +7,12 @@
 import { Button, Container, ModalManagerContext } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
+import { filter, isEqual, uniqWith } from 'lodash';
 import { getShareInfo } from '../../../store/actions/get-share-info';
 import { StoreProvider } from '../../../store/redux';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { SharesModal } from '../shares-modal';
+import { ResFolder } from '../../../carbonio-ui-commons/utils';
 
 export const SharesComponent = (): ReactElement => {
 	const createModal = useContext(ModalManagerContext);
@@ -26,12 +28,16 @@ export const SharesComponent = (): ReactElement => {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				.then((res) => {
+					const resCalendars: Array<ResFolder> = uniqWith(
+						filter(res.calendars, ['view', 'appointment']),
+						isEqual
+					);
 					if (res.isFulfilled) {
 						const closeModal = createModal(
 							{
 								children: (
 									<StoreProvider>
-										<SharesModal calendars={res.calendars} onClose={(): void => closeModal()} />
+										<SharesModal calendars={resCalendars} onClose={(): void => closeModal()} />
 									</StoreProvider>
 								)
 							},

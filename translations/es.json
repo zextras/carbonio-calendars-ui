@@ -6,7 +6,7 @@
         "busy": "Ocupado",
         "custom": "Personalizado",
         "download": "Descargar",
-        "download_plural": "Descargar todos",
+        "download_plural": "Descargar todo",
         "edit": "Editar",
         "edit_share": "Editar compartición",
         "free": "Gratis",
@@ -24,24 +24,24 @@
         "custom_repeat": "Repetición personalizada",
         "day": "Día",
         "days": "Días",
-        "end_after": "Finalizar después de",
+        "end_after": "Finalizar tras",
         "weeks_on": "Semana(s) de",
-        "sharing_of_this_folder": "Compartición de esta carpeta",
+        "sharing_of_this_folder": "Uso compartido de esta carpeta",
         "add_share": "Añadir compartición",
         "apple_ical": "iCal de Apple",
         "auto_add_rcvd_app": "Añadir las citas recibidas automáticamente al calendario",
-        "calendar": "Calendario",
+        "calendar": "Calendarios",
         "calendar_setting": "Propiedades del calendario",
         "cancelled": "Cancelado",
-        "create_appt_settings": "Creando citas",
+        "create_appt_settings": "Citas",
         "create_new_calendar": "Crear nuevo calendario",
-        "default_appt_vsblty": "Visibilidad de citas por defecto",
+        "default_appt_vsblty": "Visibilidad de la cita por defecto",
         "default_view": "Vista por defecto",
-        "delete_permanently": "Eliminar permanentemente",
+        "delete_permanently": "Eliminar definitivamente",
         "dismiss": "Desconsiderar",
         "dismiss_plural": "Desconsiderar todo",
         "display": "Mostrar",
-        "edit_access": "Editar el acceso",
+        "edit_access": "Editar permisos",
         "email_input_message": "Introducir direcciones de correo electrónico",
         "enable_dlgtn_for_ical": "Activar delegación para el cliente CalDAV de iCal de Apple",
         "end_date": "Fecha de finalización",
@@ -98,16 +98,16 @@
         "week": "Semana",
         "work_hour": "Horario laboral",
         "work_week": "Semana laboral",
-        "tentative": "provisional",
-        "your_pref_timezone_msg": "Tu huso horario preferido es GMT +01:00 Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena.",
+        "tentative": "Provisional",
+        "your_pref_timezone_msg": "La zona horaria preferida es GMT +01:00 Ámsterdam, Berlín, Berna, Roma, Estocolmo, Viena.",
         "snooze": "Posponer",
         "create": "Crear",
         "delete": "Eliminar",
         "delete_plural": "Eliminar todo",
-        "calendar_shared": "El calendario ha sido compartido correctamente",
-        "empty": "Vacía",
-        "edits_saved": "Ediciones guardadas correctamente",
-        "error_try_again": "Algo ha salido mal. Por favor intenta de nuevo",
+        "calendar_shared": "Se ha compartido el calendario",
+        "empty": "Vaciar",
+        "edits_saved": "Se han guardado los cambios",
+        "error_try_again": "Algo salió mal. Intenta nuevamente",
         "move": "Mover",
         "new_calendar": "Nuevo calendario",
         "none": "Ninguno",
@@ -115,7 +115,7 @@
         "ok": "OK",
         "restore": "Restaurar",
         "restore_calendar": "Restaurar calendario",
-        "start_week_on": "Empezar la semana el",
+        "start_week_on": "Primer día de la semana",
         "undo": "Deshacer",
         "results_for": "Resultados para:",
         "appt_reminder": "Recordatorio de cita",
@@ -127,9 +127,9 @@
         "event_title": "Título del evento",
         "on_behalf_of": "{{accountName}} en nombre de {{identity}} <{{otherAccount}}>",
         "settings_saved": "Ajustes guardados",
-        "trash_emptied": "Papelera vaciada con éxito",
-        "new_appointment": "Nueva reunión",
-        "role": "rol",
+        "trash_emptied": "La Papelera ha sido vaciada",
+        "new_appointment": "Nueva cita",
+        "role": "Permiso",
         "today": "hoy",
         "week_day": {
             "friday": "Viernes",
@@ -141,7 +141,7 @@
             "wednesday": "Miércoles"
         },
         "exclude_free_busy": "Excluir este calendario al informar disponibilidad libre/ocupado",
-        "loading": "Cargando...",
+        "loading": "Cargando…",
         "maybe": "tal vez",
         "propose_new_time": "PROPONER UN NUEVO HORARIO",
         "share_with": "compartir con",
@@ -151,16 +151,16 @@
         "new_tag": "Nueva etiqueta",
         "other_actions": "Otras acciones",
         "single_instance": "UNA SOLA INSTANCIA",
-        "create_tag": "Crear Etiqueta",
-        "delete_tag": "Eliminar etiqueta",
-        "loading_results": "Cargando resultados...",
-        "no_special_char_allowed": "El nombre no debe contener ningún carácter especial",
-        "results_for_error": "No se puede realizar la búsqueda, bórrala y vuelve a intentarlo: ",
-        "select_color": "Elige un color",
+        "create_tag": "Nueva Etiqueta",
+        "delete_tag": "Eliminar Etiqueta",
+        "loading_results": "Cargando resultados…",
+        "no_special_char_allowed": "El nombre no puede contener caracteres especiales",
+        "results_for_error": "No se puede realizar la búsqueda. Vuelve a intentarlo: ",
+        "select_color": "Seleccionar color",
         "tag_max_length": "Máximo 128 caracteres permitidos",
         "tag_name": "Nombre de la etiqueta",
         "tags": "Etiquetas",
-        "delete_tag_name": "Eliminar etiqueta {{name}}",
+        "delete_tag_name": "Eliminar etiqueta",
         "edit_tag": "Editar etiqueta",
         "edit_tag_name": "Editar etiqueta {{name}}",
         "scheduled_in": "Agenda",
@@ -171,14 +171,21 @@
         "share_public_link": "Compartir enlace público",
         "select": "Seleccionar",
         "root": "Raíz",
-        "choose_file": "Elegir archivo",
-        "public_link_description": "Generado de  {{title}} en {{date}}",
+        "choose_file": "Seleccionar archivo",
+        "public_link_description": "Generado de {{title}} en {{date}}",
         "continue": "Continuar",
         "new_time_proposed": "Nueva hora propuesta",
         "subject": "Asunto",
         "cancel": "Cancelar",
         "appointment_is_private": "La cita es privada.",
-        "create_copy": "Crear una copia"
+        "create_copy": "Copiar",
+        "keywords": "Palabras clave",
+        "action_performed": "Ya has realizado esta acción",
+        "advanced_filters_0": "filtro avanzado",
+        "advanced_filters_1": "filtros avanzados",
+        "advanced_filters_2": "",
+        "no_rights": "No tienes los permisos necesarios para realizar esta acción",
+        "single_advanced_filter": "Filtros avanzados"
     },
     "action": {
         "send": "Enviar",
@@ -187,13 +194,15 @@
         "move_to_root": "Mover al directorio raíz",
         "preview": "Clic para previsualizar",
         "edit_message": "Editar mensaje",
-        "save_to_preview": "Salvar para previsualizar",
+        "save_to_preview": "Guardar para previsualizar",
         "send_cancellation": "Enviar cancelación",
         "calendar_access_share": "Compartición de acceso al calendario",
         "edit_calendar_properties": "Editar propiedades del calendario",
         "share_calendar": "Compartir calendario",
-        "empty_trash_confirmation": "Esta acción eliminará todos los elementos de la papelera. ¿Estás seguro que quieres continuar?",
-        "send_edit": "Enviar edición"
+        "empty_trash_confirmation": "Esta acción eliminará todos los elementos de la Papelera, incluyendo e-mails, citas, contactos y tareas. ¿Seguro que quieres continuar?",
+        "send_edit": "Enviar edición",
+        "search": "Buscar",
+        "reset": "Restablecer"
     },
     "event": {
         "action": {
@@ -201,7 +210,7 @@
             "no": "No",
             "yes": "Sí",
             "decline": "Rechazar",
-            "expand": "Abrir en visualizador",
+            "expand": "Abrir",
             "needs_action": "Necesita acción",
             "invitation_not_sent_yet": "La invitación todavía no ha sido enviada"
         },
@@ -220,7 +229,7 @@
         "modal": {
             "move": {
                 "body": {
-                    "message3": "Elige un calendario hacia donde mover las citas seleccionadas:"
+                    "message3": "Elige el calendario hacia donde mover las cita seleccionada:"
                 },
                 "input": {
                     "filter": "Filtrar Calendarios"
@@ -230,7 +239,7 @@
                 "footer": "Crear y restaurar"
             },
             "footer": {
-                "go_back": "Volver"
+                "go_back": "Atrás"
             },
             "new": {
                 "duplicate_warning": "Ya existe un calendario con el mismo nombre",
@@ -272,18 +281,20 @@
         "Attendees_declined_count_plural": "<strong>{{count}} asistentes </strong> han rechazado",
         "NE_with_count": "No contestó",
         "NE_with_count_plural": "No contestaron ({{count}})",
-        "Tentative": "aceptado provisoriamente",
+        "Tentative": "Aceptado como provisional",
         "DE_with_count": "Rechazado ({{count}})",
         "DE_with_count_plural": "Rechazados ({{count}})",
         "Invited_Visitor": "han sido invitados",
         "Not_answered": "no contestaron",
-        "TE_with_count": "En duda",
-        "TE_with_count_plural": "En duda {{count}}",
+        "TE_with_count_0": "Provisional",
+        "TE_with_count_1": "Provisional ({{count}})",
+        "TE_with_count_2": "",
         "visitors": "y otros {{others}} asistentes",
         "Attendees_accepted_count": "<strong>asistente </strong> ha aceptado",
         "Attendees_accepted_count_plural": "<strong>{{count}} asistentes </strong> han aceptado",
-        "Attendees_tentative_count": "<strong> asistente </strong> ha aceptado provisionalmente",
-        "Attendees_tentative_count_plural": "<strong>{{count}} asistentes </strong> han aceptado provisionalmente"
+        "Attendees_tentative_count_0": "<strong>{{count}} asistente </strong> ha aceptado provisionalmente",
+        "Attendees_tentative_count_1": "<strong>{{count}} asistentes </strong> han aceptado provisionalmente",
+        "Attendees_tentative_count_2": ""
     },
     "read": "Leido",
     "reminder": {
@@ -299,7 +310,7 @@
         "week_before_plural": "{{count}} semanas antes",
         "all_time": "Toda la duración del evento",
         "modal": {
-            "set_new_time_message": "¿Quieres definir un nuevo horario para la cita perdida? Si haces clic en ACEPTAR, todos los demás recordatorios serán descartados automáticamente."
+            "set_new_time_message": "¿Quieres asignar un nuevo horario a la cita perdida? Si haces clic en ACEPTAR, todos los demás recordatorios serán descartados automáticamente."
         },
         "hours": "{{count}} hora",
         "hours_plural": "{{count}} horas",
@@ -324,7 +335,7 @@
                 "public": "Público"
             },
             "default_view": {
-                "list": "Vista de lista",
+                "list": "Lista",
                 "month": "Vista por mes",
                 "day": "Vista por día",
                 "work_week": "Vista por semana laboral",
@@ -372,27 +383,27 @@
     "share": {
         "options": {
             "share_calendar_role": {
-                "viewer": "Visualizador (puede ver)",
-                "admin": "Administrador (puede ver, editar, remover y administrar)",
-                "manager": "Gerente (puede ver, editar, añadir y remover)",
+                "viewer": "Visualizar (puede ver)",
+                "admin": "Control total (puede ver, editar, remover y administrar)",
+                "manager": "Administrar (puede ver, editar, añadir y remover)",
                 "none": "Ninguno"
             },
             "share_calendar_with": {
-                "external_guests": "Invitados externos (solo pueden ver)",
+                "external_guests": "Invitados externos (solo ver)",
                 "internal_users_groups": "Usuarios o grupos internos",
-                "public": "Público (solo ver, no necesita contraseña)"
+                "public": "Público (solo ver, no se necesita contraseña)"
             }
         },
         "label": {
-            "allow_to_see_private_appt": "Permitir al/los usuario(s) ver mis citas privadas",
+            "allow_to_see_private_appt": "Permitir a los usuarios ver mis citas privadas",
             "send_notification": "Enviar notificaciones sobre esta compartición"
         },
         "placeholder": {
             "recipients_address": "Direcciones de correo electrónico de los destinatarios",
-            "standard_message": "Añadir nota al mensaje estándar"
+            "standard_message": "Añadir una nota al mensaje estándar"
         },
         "note": {
-            "share_note": "El mensaje estándar muestra tu nombre, el nombre del elemento compartido, los permisos otorgados a los destinatarios y la información de inicio de sesión."
+            "share_note": "El mensaje estándar muestra tu nombre, el nombre del recurso compartido, los permisos otorgados a los usuarios y la información de acceso, si fuera necesaria."
         }
     },
     "snackbar": {
@@ -400,10 +411,11 @@
             "error": "Error"
         },
         "proposed_time_accepted": "Has aceptado la hora propuesta",
-        "share_folder_success": "Calendario compartido con éxito",
+        "share_folder_success": "Se ha compartido el calendario",
         "url_copied": "{{title}} copiado",
         "tag_applied": "Etiqueta {{tag}} aplicada",
-        "tag_removed": "Etiqueta {{tag}} eliminada"
+        "tag_removed": "Etiqueta {{tag}} eliminada",
+        "email_copied_to_clipboard": "Email copiado al portapapeles."
     },
     "success": "Éxito",
     "type": "Tipo",
@@ -414,30 +426,30 @@
         "are_organizer": "eres el organizador",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> es el organizador",
         "snackbar": {
-            "appt_moved": "La cita ha sido movida correctamente a",
-            "appointment_permanently_deleted_succesfully": "Acción realizada con éxito",
-            "appt_moved_to_trash": "Cita movida a la papelera",
-            "appt_restored": "Cita restaurada correctamente en",
-            "calendar_deleted_successfully": "Calendario eliminado con éxito.",
+            "appt_moved": "La cita ha sido movida a",
+            "appointment_permanently_deleted_succesfully": "La eliminación definitiva ha sido completada",
+            "appt_moved_to_trash": "La cita se ha eliminado",
+            "appt_restored": "La cita ha sido restaurada en",
+            "calendar_deleted_successfully": "El calendario ha sido eliminado.",
             "calendar_moved_to_root_folder": "El calendario ha sido movido a la carpeta raíz",
             "calendar_moved_to_trash": "El calendario ha sido movido a la papelera",
             "invite": {
                 "accept": "Has respondido como \"Aceptado\"",
                 "decline": "Has respondido como \"Rechazado\"",
-                "tentative": "Has contestado como \"En duda\""
+                "tentative": "Has respondido como provisional"
             },
             "new_calendar_created": "Nuevo calendario creado",
-            "calendar_permanently_deleted": "El calendario ha sido eliminado permanentemente",
-            "calendar_restored": "El calendario ha sido restaurado con éxito",
-            "appointment_permanently_deleted": "La reunión ha sido eliminada permanentemente",
-            "calendar_edits_saved": "Ediciones guardadas correctamente",
-            "series_deleted": "Serie borrada con éxito. Los asistentes recibirán una notificación de la cancelación.",
-            "some_link_copying_error": "Parece que hay un problema al generar el enlace público para algunos archivos. Por favor intenta de nuevo",
-            "some_att_add_fails": "Parece que hay un problema al añadir algunos archivos adjuntos, por favor, prueba de nuevo",
-            "link_copying_error": "Parece haber un problema al generar el enlace público. Por favor intenta de nuevo",
-            "att_err_adding": "Parece que hay un problema al añadir los archivos adjuntos, por favor, prueba de nuevo",
-            "all_link_copied": "Enlace público copiado con éxito",
-            "all_att_added": "Archivos adjuntos añadidos con éxito"
+            "calendar_permanently_deleted": "Calendario eliminado definitivamente",
+            "calendar_restored": "El calendario ha sido restaurado",
+            "appointment_permanently_deleted": "Cita eliminada definitivamente",
+            "calendar_edits_saved": "Se han guardado los cambios",
+            "series_deleted": "Se ha eliminado la serie. Los asistentes recibirán una notificación de la cancelación.",
+            "some_link_copying_error": "Hay un problema al generar el enlace público para algunos archivos. Intenta nuevamente",
+            "some_att_add_fails": "Hay un problema al agregar algunos archivos adjuntos. Intenta nuevamente",
+            "link_copying_error": "Error al generar el enlace público. Por favor intenta nuevamente",
+            "att_err_adding": "Ha habido un problema al agregar los adjuntos. Intenta nuevamente",
+            "all_link_copied": "El enlace público ha sido copiado al portapapeles",
+            "all_att_added": "Los adjuntos han sido añadidos"
         },
         "invite_has_no_message": "Esta invitación no contiene texto",
         "invited_you": "te ha invitado a un evento",
@@ -447,8 +459,8 @@
         "meeting_canceled": "La siguiente reunión ha sido cancelada",
         "modal": {
             "delete": {
-                "sure_delete_appointment_all_instances_permanently": "Esta acción eliminará todas las incidencias de esta cita y no podrás recuperarla ¿continuar?",
-                "sure_delete_appointment_permanently": "Eliminando permanentemente esta cita. No podrás recuperarla ¿continuar?"
+                "sure_delete_appointment_all_instances_permanently": "Esta acción eliminará todas las instancias de esta cita y ya no podrás recuperarlas ¿continuar?",
+                "sure_delete_appointment_permanently": "Al eliminar definitivamente esta cita ya no podrás recuperarla ¿continuar?"
             }
         },
         "share_calendar_url_note": "Solo tus colaboradores pueden acceder a los datos por medio de estos enlaces.",
@@ -456,17 +468,17 @@
         "sure_to_delete_appointment": "¿Seguro que quieres eliminar la cita?",
         "want_to_edit_cancellation_msg": "¿Seguro que quieres editar el mensaje de cancelación de la cita?",
         "want_to_send_cancellation_msg": "¿Quieres enviar un mensaje de cancelación a los asistentes?",
-        "you_sure_delete_calendar": "¿Seguro que quieres eliminar el calendario {{name}} de forma permanente?",
-        "you_sure_move_calendar_trash": "¿Seguro que quieres eliminar el calendario {{name}}?",
+        "you_sure_delete_calendar": "¿Seguro que quieres eliminar definitivamente el calendario \"{{name}}\"?",
+        "you_sure_move_calendar_trash": "¿Seguro que quieres eliminar el calendario \"{{name}}\"?",
         "delete_future_occurences_warning": "Esto también eliminará todas las excepciones (antes y después de esta instancia) en las series",
         "share_calendar_url_msg": "Puedes compartir rápidamente {{title}} con otros colaboradores utilizando uno de estos enlaces:",
         "share_calendar_url_note2": "Solo tus colaboradores pueden acceder a los datos por medio de estos enlaces. <br/> También puedes encontrar los enlaces haciendo clic derecho en tu lista de calendarios.",
         "somebody_invited_you": "<strong>{{somebody}}</strong> te ha invitado",
-        "sure_to_delete_appointment_permanently": "¿Seguro que quieres eliminar esta cita de forma permanente?",
-        "you_sure_delete_instance": "¿Seguro que quieres eliminar esta instancia de la cita {{title}}?",
-        "appointment_type_handle": "{{name}} es una cita recurrente. ¿Te gustaría abrir solo esta instancia o toda la serie?",
-        "delete_tag_message1": "¿Seguro que quieres borrar la etiqueta {{name}}?",
-        "delete_tag_message2": "Una vez borrada, se quitará de cada elemento marcado con ella.",
+        "sure_to_delete_appointment_permanently": "¿Seguro que quieres eliminar definitivamente esta cita?",
+        "you_sure_delete_instance": "¿Seguro que quieres eliminar esta instancia de la cita \"{{title}}\"?",
+        "appointment_type_handle": "{{name}} es una cita recurrente. ¿Quieres abrir solo esta instancia o toda la serie?",
+        "delete_tag_message1": "¿Seguro que quieres eliminar la etiqueta \"{{name}}\"?",
+        "delete_tag_message2": "Una vez eliminada, será removida de cada elemento marcado con ella.",
         "organizer": "Organizador",
         "more": "Más…",
         "optional_participant": "{{count}} Opcional",
@@ -474,15 +486,16 @@
         "required_participant": "{{count}} Participante",
         "required_participant_plural": "{{count}} Participantes",
         "send_email": "Enviar un e-mail",
-        "edit_series_warning": "Cuando procedas con la modificación de las series, todas las instancias borradas o modificadas anteriormente serán restauradas con los ajustes de las nuevas series.",
-        "appointment_invitation_sent": "Invitación a cita enviada",
+        "edit_series_warning": "Al continuar con la modificación de las series, todas las instancias eliminadas o modificadas anteriormente serán restauradas con los ajustes de las nuevas series.",
+        "appointment_invitation_sent": "Invitación enviada",
         "meeting_modified": "La siguiente reunión ha sido modificada",
-        "want_to_edit_modified_msg": "¿Quieres editar el mensaje de la cita modificada?"
+        "want_to_edit_modified_msg": "Los cambios serán notificados por e-mail a los asistentes. ¿Te gustaría añadir un mensaje personalizado?",
+        "copy": "Copiar"
     },
     "button": {
         "customize_modal": "Abrir modo de personalización"
     },
-    "administer": "Administrar",
+    "administer": "Control total",
     "allowed_actions": "Acciones permitidas",
     "freebusy": "Libre/Ocupado",
     "cannot_edit_name": "No es posible editar el nombre de un calendario del sistema",
@@ -495,11 +508,11 @@
             },
             "local": "Adjuntar desde Mi PC",
             "drive": "Adjuntar desde Drive",
-            "url": "Agregar enlace público desde Drive",
-            "files": "Añadir desde Files"
+            "url": "Adjuntar enlace público desde Files",
+            "files": "Adjuntar desde Files"
         }
     },
-    "edit_share_properties": "Editar propiedades de compartición",
+    "edit_share_properties": "Editar propiedades del recurso compartido",
     "find_calendar_shares": "Encontrar comparticiones del calendario",
     "find_shares": "Encontrar comparticiones",
     "insert": "Insertar",
@@ -509,7 +522,9 @@
     "revoke_without_custom_message": "Revocar acceso enviando una notificación estándar",
     "revoke_without_notification": "Revocar acceso sin enviar notificación",
     "search": {
-        "organized_by": "organizado por"
+        "organized_by": "organizado por",
+        "from_date": "Desde",
+        "to_date": "Hasta"
     },
     "resend_mail_notification_about_this_share": "Enviar una notificación por e-mail sobre esta compartición",
     "tooltip": {
@@ -517,18 +532,18 @@
         "copy_ics_url": "Copiar enlace de ICS",
         "copy_outlook_url": "Copiar enlace de Outlook",
         "copy_vector_url": "Copiar enlace de visualización",
-        "enable_disable_rich_text": "Activar/Desactivar editor de texto enriquecido",
-        "chat": "Equipamiento",
-        "equipment": "Equipamiento",
+        "enable_disable_rich_text": "Activa/Desactiva editor de texto enriquecido",
+        "chat": "Recurso",
+        "equipment": "Recuros",
         "location": "Ubicación",
         "chat_room": "Enlace de la Sala Virtual",
         "calendar_sharing_status": "Compartido con {{count}} persona",
         "calendar_sharing_status_plural": "Compartido con {{count}} personas",
-        "virtual_chat": "Chat virtual",
         "calendar_sharing_status_one": "Compartido con 1 persona",
         "revoke": "Revocar acceso",
         "resend": "Enviar notificación por correo de esta aportación",
-        "edit": "Editar propiedades de compartición"
+        "edit": "Editar propiedades del recurso compartido",
+        "virtual_room": "Sala Virtual"
     },
     "share_invite_resent": "Invitación para acceder a la compartición reenviada",
     "shared_folders": "Calendarios compartidos",
@@ -536,7 +551,7 @@
     "shares_info": "Información sobre las comparticiones",
     "workflow": "Flujo de trabajo",
     "write": "Escribe",
-    "appt_restored_successfully": "Cita restaurada con éxito",
+    "appt_restored_successfully": "La cita ha sido restaurada",
     "timezone": {
         "gmt_02": "{{value}} GMT-02",
         "gmt_11": "{{value}} GMT-11",
@@ -576,7 +591,7 @@
         "cuiaba": "{{value}} Cuiabá",
         "damascus": "{{value}} Damasco",
         "darwin": "{{value}} Darwin",
-        "dateline": "{{value}} Línea de cambio de fecha",
+        "dateline": "{{value}} Fecha",
         "dhaka": "{{value}} Dhaka",
         "egypt": "{{value}} Egipto",
         "ekaterinburg_rtz_4": "{{value}} Ekaterimburgo (RTZ 4)",
@@ -634,15 +649,18 @@
     "messages": {
         "format_as_plain_text": "Texto sin formato",
         "snackbar": {
-            "tag_not_updated": "Algo salió mal, etiqueta no actualizada. Por favor, prueba de nuevo.",
-            "tag_created": "Etiqueta {{name}} creada con éxito",
-            "tag_deleted": "{{name}} etiqueta borrada con éxito",
-            "tag_updated": "Etiqueta actualizada con éxito"
+            "tag_not_updated": "Algo salió mal, la etiqueta no pudo ser actualizada. Intenta nuevamente.",
+            "tag_created": "Se ha creado la etiqueta \"{{name}}\"",
+            "tag_deleted": "Se ha eliminado la etiqueta \"{{name}}\"",
+            "tag_updated": "La etiqueta ha sido actualizada"
         }
     },
     "has_attachments": "Tiene adjuntos",
     "preview": {
         "close": "Cerrar vista previa"
     },
-    "recurrent_in_allday": "No puedes arrastrar una cita recurrente en un espacio para todo un día"
+    "recurrent_in_allday": "No es posible arrastrar una cita recurrente hacia un espacio de día entero",
+    "mountpoint_warning": "{{failed}} de {{total}} calendarios compartidos no han podido ser añadidos a Calendarios compartidos",
+    "mountpoint_error": "No se pudo añadir la compartición a la sección Calendarios compartidos",
+    "mountpoint_success": "La compartición se ha añadido a la sección Calendarios compartidos"
 }

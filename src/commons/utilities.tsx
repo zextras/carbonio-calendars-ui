@@ -8,13 +8,11 @@ import { AccordionFolder, FOLDERS, Folder, ROOT_NAME, t } from '@zextras/carboni
 import { isNil } from 'lodash';
 import moment from 'moment';
 import { ReminderItem } from '../types/appointment-reminder';
-
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
 import { searchAppointments } from '../store/actions/search-appointments';
 import { updateCalendar } from '../store/slices/calendars-slice';
-import { DateType } from '../types/event';
 import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
@@ -250,7 +248,7 @@ export const convertToDecimal = (source: string): string => {
 
 export const getTimeToDisplayData = (
 	reminder: ReminderItem,
-	currentTime: DateType
+	currentTime: number
 ): {
 	color: TextProps['color'];
 	size: TextProps['size'];

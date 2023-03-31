@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.2.2...v1.3.0) (2023-03-30)
+
+
+### Features
+
+* enable external module to create appointments ([#248](https://github.com/zextras/carbonio-calendars-ui/issues/248)) ([07235a2](https://github.com/zextras/carbonio-calendars-ui/commit/07235a2e4e020fa1e668f7d90a767b517d29a529))
+* enable managing of aliases and identities appointments ([65cb31d](https://github.com/zextras/carbonio-calendars-ui/commit/65cb31d8d1d8dfe74fa964fbc565c3a89cad1a17))
+* plain data of an appointment ([10d20fb](https://github.com/zextras/carbonio-calendars-ui/commit/10d20fbde54c20cd17f773aef4f9d39146659ea4))
+
+
+### Bug Fixes
+
+* find shares in calendar ([ee67524](https://github.com/zextras/carbonio-calendars-ui/commit/ee67524b5d6f384a81c642a3de70d60187cc0b04))
+* remove thrash and thrashed calendars from appointment creation in calendar selector ([9ea43f9](https://github.com/zextras/carbonio-calendars-ui/commit/9ea43f9c0220052d9bc580fbd91d84b51f997056))
+* remove thrash and thrashed calendars from appointment creation in calendar selector ([629d48e](https://github.com/zextras/carbonio-calendars-ui/commit/629d48eea54273907c1ac099c4a72f38126a78e3))
+* settings calendar as starting default in appointment create ([25099a9](https://github.com/zextras/carbonio-calendars-ui/commit/25099a935183a56e3e60dccd49f8636fad9c8c6a))
+
+### [1.2.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.2.1...v1.2.2) (2023-03-22)
+
+### [1.2.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.2.0...v1.2.1) (2023-03-14)
+
+## [1.2.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.1.2...v1.2.0) (2023-03-02)
+
+
+### Features
+
+* calendar advanced filters ([926b4cb](https://github.com/zextras/carbonio-calendars-ui/commit/926b4cb6744975d927b26110c7f389cd15fe7e7c))
+* display snackbar feedback when adding a new mountpoint ([0420459](https://github.com/zextras/carbonio-calendars-ui/commit/0420459f738a04fcc0f02b747640bdc084791a12))
+* updating files integration ([4984566](https://github.com/zextras/carbonio-calendars-ui/commit/49845661acaca7fd2e68999147ef25f8766baa14))
+
+
+### Bug Fixes
+
+* actions are consistent in every menu ([c128a95](https://github.com/zextras/carbonio-calendars-ui/commit/c128a958af133163adeccf6b4d6c6300269508e1))
+* adding tooltip to disabled items ([c807be7](https://github.com/zextras/carbonio-calendars-ui/commit/c807be781be4b7ed2ed3fecdaf71bd4cff5c03a1))
+* applying same summaryview behaviour between edit and open action ([e61b8d3](https://github.com/zextras/carbonio-calendars-ui/commit/e61b8d3f7f1b681a1e46271137395945f7f283d5))
+* appointment icons aligned to the left ([cd761b9](https://github.com/zextras/carbonio-calendars-ui/commit/cd761b91fcb6949166d844b9261b255216025815))
+* both moderator and attendees in appointment list after virtual room creation ([f8a282f](https://github.com/zextras/carbonio-calendars-ui/commit/f8a282ff71c00cbdd6909c0db6816ba885e1a456))
+* delete instances of a series ([5c18d47](https://github.com/zextras/carbonio-calendars-ui/commit/5c18d47456ae6d83d520a323e5d7785d9d9d7422))
+* hardcoded appointmentSearch start and end time ([f32ca9e](https://github.com/zextras/carbonio-calendars-ui/commit/f32ca9e5cf08ef8d982e72990eb5d0799e2c4921))
+* reminders of deleted apppintments are deleted ([314836c](https://github.com/zextras/carbonio-calendars-ui/commit/314836cfa946b4c290ce8a2186eb21da6335424c))
+* summary view and displayer behaviour ([5cf4287](https://github.com/zextras/carbonio-calendars-ui/commit/5cf4287c784fc1b6788beba0eb3dbe2b4397c76f))
+* **test:** updating test dependencies and fix failing tests ([ab22d5c](https://github.com/zextras/carbonio-calendars-ui/commit/ab22d5c272ca052022f5ca7b1a773cd7640c84bc))
+
 ### [1.1.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.1.1...v1.1.2) (2023-02-28)
 
 

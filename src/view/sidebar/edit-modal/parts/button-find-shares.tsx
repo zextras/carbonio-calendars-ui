@@ -16,34 +16,30 @@ import { SharesModal } from '../../shares-modal';
 
 export const ButtonFindShares: FC = () => {
 	const dispatch = useAppDispatch();
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	const createModal = useContext(ModalManagerContext) as Function;
+	const createModal = useContext(ModalManagerContext);
 
 	const label = useMemo(() => t('label.find_shares', 'Find shares'), []);
 	const openFindShares = useCallback(
 		(ev: SyntheticEvent<HTMLButtonElement, Event> | KeyboardEvent): void => {
 			ev.stopPropagation();
-			dispatch(getShareInfo())
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				.then((res: any) => {
-					if (res.type.includes('fulfilled') && res.payload?.share?.length > 0) {
-						const resFolders: Array<ResFolder> = uniqWith(
-							filter(res.payload.share, ['view', 'message']),
-							isEqual
-						);
-						const closeModal = createModal(
-							{
-								children: (
-									<StoreProvider>
-										<SharesModal calendars={resFolders} onClose={(): void => closeModal()} />
-									</StoreProvider>
-								)
-							},
-							true
-						);
-					}
-				});
+			dispatch(getShareInfo()).then((res: any) => {
+				if (res.type.includes('fulfilled') && res.payload?.share?.length > 0) {
+					const resFolders: Array<ResFolder> = uniqWith(
+						filter(res.payload.share, ['view', 'message']),
+						isEqual
+					);
+					const closeModal = createModal(
+						{
+							children: (
+								<StoreProvider>
+									<SharesModal calendars={resFolders} onClose={(): void => closeModal()} />
+								</StoreProvider>
+							)
+						},
+						true
+					);
+				}
+			});
 		},
 		[createModal, dispatch]
 	);

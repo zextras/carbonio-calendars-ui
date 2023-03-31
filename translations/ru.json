@@ -6,7 +6,7 @@
         "at_time_of_event": "Во время мероприятия",
         "week_before_0": "{{count}} неделю до",
         "week_before_1": "{{count}} недель до",
-        "week_before_2": "{count}} недель до",
+        "week_before_2": "{{count}} недель до",
         "never": "Никогда",
         "minute_before_0": "{{count}} минута до",
         "minute_before_1": "{{count}} минут до",
@@ -35,12 +35,12 @@
         "TE_with_count_0": "Под вопросом ({{count}})",
         "TE_with_count_1": "Под вопросом ({{count}})",
         "TE_with_count_2": "Под вопросом ({{count}})",
-        "NE_with_count_0": "Не ответил",
-        "NE_with_count_1": "Не ответили",
-        "NE_with_count_2": "Не ответили",
-        "DE_with_count_0": "Отклонил",
-        "DE_with_count_1": "Отклонили",
-        "DE_with_count_2": "Отклонили",
+        "NE_with_count_0": "Не ответил {{count}}",
+        "NE_with_count_1": "Не ответили {{count}}",
+        "NE_with_count_2": "Не ответили {{count}}",
+        "DE_with_count_0": "Отклонил {{count}}",
+        "DE_with_count_1": "Отклонили {{count}}",
+        "DE_with_count_2": "Отклонили {{count}}",
         "visitors": "и другие {{others}} участники",
         "Tentative": "предварительно принято",
         "Not_answered": "не ответил",
@@ -118,7 +118,7 @@
         "appointment_type_handle": "{{name}} повторяющаяся встреча. Вы хотите открыть только этот экземпляр или серию?",
         "delete_tag_message1": "Вы уверены, что хотите удалить тег {{name}}?",
         "delete_tag_message2": "После удаления он будет удален из каждого элемента, отмеченного им.",
-        "more": "Больше...",
+        "more": "Больше…",
         "optional_participant_0": "{{count}} Необязательно",
         "optional_participant_1": "{{count}} Необязательно",
         "optional_participant_2": "{{count}} Необязательно",
@@ -130,7 +130,8 @@
         "edit_series_warning": "По мере редактирования серии все ранее удаленные или измененные экземпляры будут восстановлены с новыми настройками серии.",
         "appointment_invitation_sent": "Приглашение на встречу отправлено",
         "want_to_edit_modified_msg": "Сообщение об изменении будет отправлено участникам по электронной почте. Хотите добавить собственное сообщение?",
-        "meeting_modified": "Следующая встреча была изменена"
+        "meeting_modified": "Следующая встреча была изменена",
+        "copy": "Копировать"
     },
     "label": {
         "optional_0": "Необязательный",
@@ -207,7 +208,7 @@
         "delete_permanently": "Удалить навсегда",
         "email_input_message": "Введите адреса электронной почты",
         "invites": "Приглашения",
-        "shares_items": "{{value}}Общие календари",
+        "shares_items": "<bold>{{user}}</bold> Общие календари",
         "dismiss_0": "Отклонить",
         "dismiss_1": "Отклонить",
         "dismiss_2": "Отклонить",
@@ -261,7 +262,7 @@
         "calendar_shared": "Доступ к календарю успешно предоставлен",
         "changes_saved": "Изменения сохранены",
         "delete_instance": "Вы действительно хотите удалить этот экземпляр встречи «{title}»?",
-        "on_behalf_of": "({{accountName}} от {{identitiy}} <{{otherAccount}}>",
+        "on_behalf_of": "({{accountName}} от {{identity}} <{{otherAccount}}>",
         "settings_saved": "Настройки сохранены",
         "start_week_on": "Начать неделю",
         "trash_emptied": "Корзина успешно очищена",
@@ -281,7 +282,7 @@
             "saturday": "Суббота"
         },
         "exclude_free_busy": "Исключить этот календарь при сообщении времени занятости",
-        "loading": "Загрузка...",
+        "loading": "Загрузка…",
         "role": "роль",
         "share_with": "поделиться с",
         "today": "сегодня",
@@ -301,7 +302,7 @@
         "tag_max_length": "Допускается не более 128 символов",
         "tag_name": "Имя Тега",
         "tags": "Теги",
-        "loading_results": "Загрузка результатов...",
+        "loading_results": "Загрузка результатов…",
         "scheduled_in": "Ежедневник",
         "no_title": "Без заголовка",
         "warning": "Внимание",
@@ -317,7 +318,14 @@
         "subject": "Тема",
         "new_time_proposed": "Предложено новое время",
         "appointment_is_private": "Личная встреча.",
-        "create_copy": "Создать копию"
+        "create_copy": "Копировать",
+        "action_performed": "Вы уже выполнили это действие",
+        "advanced_filters_0": "{{count}} Расширенный фильр",
+        "advanced_filters_1": "{{count}} Расширенные фильтры",
+        "advanced_filters_2": "{{count}} Расширенные фильтры",
+        "keywords": "Ключевые слова",
+        "no_rights": "У вас нет разрешения на выполнение этого действия",
+        "single_advanced_filter": "Расширенные фильтры"
     },
     "tooltip": {
         "enable_disable_rich_text": "Включение/отключение редактора форматированного текста",
@@ -328,7 +336,6 @@
         "chat": "Оборудование",
         "equipment": "Оборудование",
         "location": "Место",
-        "virtual_chat": "Конференц-зал",
         "chat_room": "Ссылка на виртуальную комнату",
         "calendar_sharing_status_0": "Поделился с {{count}}",
         "calendar_sharing_status_1": "Поделился {{count}}",
@@ -336,7 +343,8 @@
         "calendar_sharing_status_one": "Поделился с одним пользователем",
         "revoke": "Отозвать доступ",
         "resend": "Отправить уведомление по электронной почте об этом совместном ресурсе",
-        "edit": "Изменить свойства общего доступа"
+        "edit": "Изменить свойства общего доступа",
+        "virtual_room": "Конференц зал"
     },
     "action": {
         "send": "Отправить",
@@ -351,7 +359,9 @@
         "share_calendar": "Поделиться Календарем",
         "edit_calendar_properties": "Изменить свойства календаря",
         "empty_trash_confirmation": "Это действие удалит все элементы из папок электронной почты, контактов, календаря, задач и портфеля. Вы уверены, что хотите навсегда удалить все папки находящиеся в этой корзине?",
-        "send_edit": "Отправить изменения"
+        "send_edit": "Отправить изменения",
+        "reset": "Сбросить",
+        "search": "Поиск"
     },
     "folder": {
         "modal": {
@@ -392,7 +402,7 @@
     "event": {
         "action": {
             "accept": "Принято",
-            "expand": "Открыть в Displayer",
+            "expand": "Открыть",
             "decline": "Отклонить",
             "no": "Нет",
             "yes": "Да",
@@ -535,7 +545,8 @@
         "url_copied": "{{title}} скопировано",
         "share_folder_success": "Доступ к календарю предоставлен",
         "tag_applied": "Тег {{tag}} применен",
-        "tag_removed": "Тег {{tag}} удален"
+        "tag_removed": "Тег {{tag}} удален",
+        "email_copied_to_clipboard": "Email скопирован в буфер обмена."
     },
     "owner": "Владелец",
     "workflow": "Рабочий процесс",
@@ -549,7 +560,9 @@
     "revoke_access": "Отменить доступ",
     "revoke_without_notification": "Отозвать доступ без отправки уведомления",
     "search": {
-        "organized_by": "организован"
+        "organized_by": "организован",
+        "from_date": "С даты",
+        "to_date": "До даты"
     },
     "shared_folders": "Общие календари",
     "shared_items": "Общие элементы",
@@ -668,5 +681,8 @@
     "preview": {
         "close": "Закрыть предварительный просмотр"
     },
-    "recurrent_in_allday": "Вы не можете перетащить повторяющуюся встречу в слот на весь день"
+    "recurrent_in_allday": "Вы не можете перетащить повторяющуюся встречу в слот на весь день",
+    "mountpoint_error": "Не удалось добавить общий ресурс в раздел «Общие календари»",
+    "mountpoint_success": "Общий ресурс успешно добавлен в раздел «Общие календари»",
+    "mountpoint_warning": "{{failed}} из {{total}} общих календарей не удалось добавить в Общие календари"
 }

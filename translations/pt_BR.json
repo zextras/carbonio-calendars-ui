@@ -140,7 +140,7 @@
         },
         "role": "função",
         "exclude_free_busy": "Excluir este calendário ao informar os horários livres/ocupados",
-        "loading": "Carregando...",
+        "loading": "Carregando…",
         "maybe": "talvez",
         "share_with": "compartilhar com",
         "app_name": "Calendários",
@@ -152,7 +152,7 @@
         "delete_tag_name": "Excluir etiqueta {{name}}",
         "edit_tag": "Editar Etiqueta",
         "edit_tag_name": "Editar etiqueta {{name}}",
-        "loading_results": "Carregando resultados...",
+        "loading_results": "Carregando resultados…",
         "no_special_char_allowed": "O nome não deve conter caracteres especiais",
         "results_for_error": "Não foi possível completar a busca, limpe-a e tente novamente: ",
         "select_color": "Selecionar cor",
@@ -178,7 +178,13 @@
         "subject": "Assunto",
         "cancel": "Cancelar",
         "appointment_is_private": "O compromisso é privado.",
-        "create_copy": "Criar uma cópia"
+        "create_copy": "Copiar",
+        "action_performed": "Você já realizou esta ação",
+        "advanced_filters": "{{count}} Filtro Avançado",
+        "advanced_filters_plural": "{{count}} Filtros Avançados",
+        "keywords": "Palavras-chave",
+        "no_rights": "Você não tem permissão para realizar esta ação",
+        "single_advanced_filter": "Filtros Avançados"
     },
     "action": {
         "send": "Enviar",
@@ -193,7 +199,9 @@
         "calendar_access_share": "Compartilhamento de acesso ao calendário",
         "edit_calendar_properties": "Editar propriedades do calendário",
         "empty_trash_confirmation": "Esta ação vai excluir todos os itens da lixeira. Tem certeza que deseja continuar?",
-        "send_edit": "Enviar Edição"
+        "send_edit": "Enviar Edição",
+        "reset": "Redefinir",
+        "search": "Buscar"
     },
     "event": {
         "action": {
@@ -201,7 +209,7 @@
             "no": "Não",
             "yes": "Sim",
             "decline": "Recusar",
-            "expand": "Abrir no Visualizador",
+            "expand": "Abrir",
             "needs_action": "Requer ação",
             "invitation_not_sent_yet": "O convite ainda não foi enviado"
         },
@@ -298,7 +306,7 @@
         "delete_tag_message2": "Uma vez excluída, ela será removida de todos os itens marcados com a mesma.",
         "appointment_type_handle": "{{name}} é um compromisso recorrente. Você gostaria de abrir apenas esta instância ou toda a série?",
         "organizer": "Organizador",
-        "more": "Mais...",
+        "more": "Mais…",
         "send_email": "Enviar um e-mail",
         "required_participant": "{{count}} Participante",
         "required_participant_plural": "{{count}} Participantes",
@@ -307,7 +315,8 @@
         "edit_series_warning": "Ao prosseguir com a modificação da série, todas as instâncias excluídas ou modificadas anteriormente serão restauradas com as novas configurações da série.",
         "appointment_invitation_sent": "Convite de compromisso enviado",
         "meeting_modified": "A seguinte reunião foi alterada",
-        "want_to_edit_modified_msg": "Deseja editar a mensagem do compromisso alterado?"
+        "want_to_edit_modified_msg": "As alterações serão informadas por e-mail aos participantes. Gostaria de incluir uma mensagem personalizada?",
+        "copy": "Copiar"
     },
     "months": {
         "april": "Abril",
@@ -465,7 +474,8 @@
         "url_copied": "{{title}} copiado",
         "share_folder_success": "Calendário compartilhado com sucesso",
         "tag_applied": "Etiqueta {{tag}} aplicada",
-        "tag_removed": "Etiqueta {{tag}} removida"
+        "tag_removed": "Etiqueta {{tag}} removida",
+        "email_copied_to_clipboard": "E-mail copiado para a área de transferência."
     },
     "success": "Sucesso",
     "type": "Tipo",
@@ -508,13 +518,13 @@
         "equipment": "Equipamento",
         "location": "Localização",
         "chat_room": "Link da Sala virtual",
-        "virtual_chat": "Chat virtual",
         "calendar_sharing_status": "Compartilhado com {{count}} pessoa",
         "calendar_sharing_status_plural": "",
         "calendar_sharing_status_one": "Compartilhado com 1 pessoa",
         "revoke": "Revogar acesso",
         "resend": "Enviar notificação por e-mail sobre este compartilhamento",
-        "edit": "Editar propriedades de compartilhamento"
+        "edit": "Editar propriedades de compartilhamento",
+        "virtual_room": "Sala Virtual"
     },
     "cannot_edit_name": "Você não pode editar o nome do calendário do sistema",
     "edit_share_properties": "Editar propriedades de compartilhamento",
@@ -528,7 +538,9 @@
     "revoke_without_custom_message": "Revogar acesso enviando a notificação padrão",
     "revoke_without_notification": "Revogar acesso sem enviar notificação",
     "search": {
-        "organized_by": "organizado por"
+        "organized_by": "organizado por",
+        "from_date": "Desde o Dia",
+        "to_date": "Até o Dia"
     },
     "share_invite_resent": "Convite de compartilhamento reenviado",
     "shared_items": "Itens compartilhados",
@@ -644,5 +656,8 @@
     "preview": {
         "close": "Fechar pré-visualização"
     },
-    "recurrent_in_allday": "Você não pode arrastar um compromisso recorrente para um horário de dia inteiro"
+    "recurrent_in_allday": "Você não pode arrastar um compromisso recorrente para um horário de dia inteiro",
+    "mountpoint_error": "O compartilhamento não pode ser adicionado na aba de Calendários Compartilhados",
+    "mountpoint_success": "O compartilhamento foi adicionado com sucesso na aba de Calendários Compartilhados",
+    "mountpoint_warning": "{{failed}} de {{total}} calendários compartilhados não puderam ser adicionados aos Calendários Compartilhados"
 }

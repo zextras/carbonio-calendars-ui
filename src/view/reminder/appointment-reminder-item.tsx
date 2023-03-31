@@ -23,7 +23,6 @@ import { dismissApptReminder } from '../../store/actions/dismiss-appointment-rem
 import { snoozeApptReminder } from '../../store/actions/snooze-appointment-reminder';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ApptReminderCardProps } from '../../types/appointment-reminder';
-import { DateType } from '../../types/event';
 import { useGetReminderItems } from './reminder-time-options';
 
 export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
@@ -35,7 +34,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const { start, id, isRecurrent, end, alarmData, location, name, isOrg, key } = reminderItem;
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
-	const [now, setNow] = useState<DateType>(moment().valueOf());
+	const [now, setNow] = useState(moment().valueOf());
 
 	const locationUrl = useMemo(() => getLocationUrl(location), [location]);
 

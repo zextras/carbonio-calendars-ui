@@ -11,7 +11,10 @@
         "calendar_access_share": "Partage d'accès au calendrier",
         "edit_calendar_properties": "Modifier les propriétés du calendrier",
         "send_cancellation": "Envoyer l'annulation",
-        "empty_trash_confirmation": "Cette action supprimera tous les éléments des dossiers de la corbeille E-mail, Contacts, Calendrier, Tâches et Portefeuille. Êtes-vous sûr de vouloir supprimer définitivement tout ce qui se trouve dans ces dossiers de la corbeille ?"
+        "empty_trash_confirmation": "Cette action supprimera tous les éléments des dossiers de la corbeille E-mail, Contacts, Calendrier, Tâches et Portefeuille. Êtes-vous sûr de vouloir supprimer définitivement tout ce qui se trouve dans ces dossiers de la corbeille ?",
+        "send_edit": "Envoyer la modification",
+        "search": "Rechercher",
+        "reset": "Réinitialisation"
     },
     "add": "Ajouter",
     "administer": "Administrer",
@@ -44,7 +47,7 @@
             "accept": "Accepter",
             "no": "Non",
             "yes": "Oui",
-            "expand": "Étendre la fenêtre",
+            "expand": "Ouvrir",
             "needs_action": "Une action est requise",
             "invitation_not_sent_yet": "L'invitation n'a pas encore été envoyée"
         },
@@ -114,7 +117,7 @@
         "download": "Télécharger",
         "download_plural": "Télécharger tout",
         "edit": "Modifier",
-        "edit_access": "Modifier les accès de {{name}}",
+        "edit_access": "Modifier les accès",
         "edit_share": "Modifier le partage",
         "email_input_message": "Saisir les adresses email",
         "enable_dlgtn_for_ical": "Activer la délégation pour le client Apple iCal CalDAV",
@@ -215,7 +218,7 @@
         "delete_instance": "Êtes vous sûr de vouloir supprimer cette instance de l'évènement “{title}” ?",
         "settings_saved": "Paramètres enregistrés",
         "new_appointment": "Nouveau rendez-vous",
-        "loading": "Chargement...",
+        "loading": "Chargement…",
         "maybe": "peut-être",
         "share_with": "partagé avec",
         "propose_new_time": "PROPOSER UN NOUVEL HORAIRE",
@@ -237,7 +240,7 @@
         "edit_tag": "Modifier l'étiquette",
         "edit_tag_name": "Modifier l'étiquette {{name}}",
         "entire_serires": "TOUTE LES SÉRIE",
-        "loading_results": "Chargement des résultats...",
+        "loading_results": "Chargement des résultats…",
         "new_tag": "Nouvelle étiquette",
         "no_special_char_allowed": "Le nom ne doit pas contenir de caractère spécial",
         "other_actions": "Autres actions",
@@ -257,13 +260,20 @@
         "share_public_link": "Partager lien public",
         "select": "Sélectionner",
         "root": "Racine",
-        "public_link_description": "Généré à partir de {{titre}} le {{date}}.",
+        "public_link_description": "Généré à partir de {{title}} le {{date}}",
         "continue": "Continuer",
-        "choose_file": "Choisir fichier",
+        "choose_file": "Choisir un fichier",
         "cancel": "annuler",
         "subject": "Objet",
         "new_time_proposed": "Nouvel horaire proposé",
-        "appointment_is_private": "Cet évènement est privé."
+        "appointment_is_private": "Cet évènement est privé.",
+        "create_copy": "Copier",
+        "action_performed": "Vous avez déjà réalisé cette action",
+        "advanced_filters": "{{count}} Filtre avancé",
+        "advanced_filters_plural": "{{count}} Filtres avancés",
+        "keywords": "Mots-clé",
+        "no_rights": "Vous n'avez pas les droits pour réaliser cette action",
+        "single_advanced_filter": "Filtres avancés"
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -325,7 +335,7 @@
         "delete_tag_message1": "Êtes-vous sûr de vouloir supprimer l'étiquette {{name}} ?",
         "delete_tag_message2": "Une fois supprimée, elle sera supprimée de l'ensemble des éléments associés.",
         "appointment_type_handle": "{{name}} est un rendez-vous récurent. Souhaitez-vous ouvrir uniquement cette instance ou la série ?",
-        "more": "Plus...",
+        "more": "Plus…",
         "organizer": "Organisateur",
         "send_email": "Envoyer un email",
         "optional_participant": "{{count}} Optionnel",
@@ -334,8 +344,9 @@
         "required_participant_plural": "{{count}} Participants",
         "edit_series_warning": "Au fur et à mesure de la modification de la série, toutes les instances précédemment supprimées ou modifiées seront restaurées avec les nouveaux paramètres de la série.",
         "appointment_invitation_sent": "Envoi d'une invitation à un rendez-vous",
-        "want_to_edit_modified_msg": "Souhaitez-vous éditer le message personnalisé de cet évènement ?",
-        "meeting_modified": "L'évènement suivant a été modifié"
+        "want_to_edit_modified_msg": "Les changement seront notifiés par email aux participants. Souhaitez-vous ajouter un message personnalisé ?",
+        "meeting_modified": "L'évènement suivant a été modifié",
+        "copy": "Copier"
     },
     "months": {
         "april": "Avril",
@@ -381,8 +392,8 @@
         "hour_before_plural": "{{count}} heures avant",
         "all_time": "Toute la durée de l'événement",
         "at_time_of_event": "Au moment de l'évènement",
-        "day_before": "{{count} jour avant",
-        "day_before_plural": "{{count} jours avant",
+        "day_before": "{{count}} jour avant",
+        "day_before_plural": "{{count}} jours avant",
         "minute_before": "{{count}} minute avant",
         "minute_before_plural": "{{count}} minutes avant",
         "never": "Jamais",
@@ -468,7 +479,8 @@
         "share_folder_success": "Ce calendrier a été partagé avec succès",
         "url_copied": "{{title}} copié",
         "tag_applied": "Étiquette {{tag}} appliquée",
-        "tag_removed": "L'étiquette {{tag}} a été supprimée"
+        "tag_removed": "L'étiquette {{tag}} a été supprimée",
+        "email_copied_to_clipboard": "l'email a été copié dans le presse-papier."
     },
     "share_invite_resent": "Invitation à partager envoyée",
     "resend_mail_notification_about_this_share": "Envoyer une notification par email à propos de ce partage",
@@ -484,7 +496,8 @@
             "share_calendar_role": {
                 "admin": "Admin (peut voir, modifier, ajouter, supprimer et administrer)",
                 "manager": "Gestionnaire (peut voir, modifier, ajouter et supprimer)",
-                "viewer": "Visionneur (peut voir)"
+                "viewer": "Visionneur (peut voir)",
+                "none": "Aucun"
             },
             "share_calendar_with": {
                 "external_guests": "Invité(e)s externes (vue seulement)",
@@ -504,13 +517,16 @@
         "add_attachments": "Ajouter des pièces jointes",
         "copy_ics_url": "Copier l'url du SCI",
         "chat_room": "Lien de la Salle Virtuelle",
-        "calendar_sharing_status": "Partagé avec {{nombre}} personne",
-        "calendar_sharing_status_plural": "Partagé avec {{nombre}} personnes",
+        "calendar_sharing_status": "Partagé avec {{count}} personne",
+        "calendar_sharing_status_plural": "Partagé avec {{count}} personnes",
         "equipment": "Équipement",
         "location": "Emplacement",
-        "virtual_chat": "Discussion virtuelle",
         "chat": "Équipement",
-        "calendar_sharing_status_one": "Partagé avec 1 personne"
+        "calendar_sharing_status_one": "Partagé avec 1 personne",
+        "edit": "Modifier les propriétés de partage",
+        "resend": "Envoyer par email les notifications à propos de ce partage",
+        "revoke": "Révoquer les accès",
+        "virtual_room": "Salle virtuelle"
     },
     "type": "Type",
     "workflow": "Flux de travail",
@@ -533,7 +549,9 @@
     "revoke_without_custom_message": "Révoquer l'accès en envoyant une notification standard",
     "revoke_without_notification": "Révoquer l'accès sans envoyer de notification",
     "search": {
-        "organized_by": "organisé par"
+        "organized_by": "organisé par",
+        "from_date": "Date de début",
+        "to_date": "Date de fin"
     },
     "shared_folders": "Calendriers partagés",
     "shared_items": "Eléments partagés",
@@ -638,5 +656,8 @@
     "preview": {
         "close": "Fermer la prévisualisation"
     },
-    "recurrent_in_allday": "Vous ne pouvez pas déplacer un évènement récurent dans un créneau de journée complète"
+    "recurrent_in_allday": "Vous ne pouvez pas déplacer un évènement récurent dans un créneau de journée complète",
+    "mountpoint_error": "Le partage ne peut être ajouté à la section Calendrier partagés",
+    "mountpoint_success": "Le partage a été ajouté avec succès à la section Calendriers partagés",
+    "mountpoint_warning": "{{failed}} sur {{total}} calendriers partagés n'ont pas pu être ajouté aux Calendriers partagés"
 }

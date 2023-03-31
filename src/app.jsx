@@ -13,7 +13,8 @@ import {
 	registerActions,
 	registerComponents,
 	ACTION_TYPES,
-	t
+	t,
+	registerFunctions
 } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
@@ -29,6 +30,8 @@ import { selectCalendars } from './store/selectors/calendars';
 import { selectApptStatus } from './store/selectors/appointments';
 import { searchAppointments } from './store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from './store/redux/hooks';
+import { CalendarIntegrations } from './types/enums/event-actions-enum';
+import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -128,6 +131,10 @@ const AppRegistrations = () => {
 	}, []);
 
 	useEffect(() => {
+		registerFunctions({
+			id: CalendarIntegrations.CREATE_APPOINTMENT,
+			fn: createAppointmentIntegration(dispatch, calendars)
+		});
 		registerActions({
 			action: () => ({
 				id: 'new-appointment',
@@ -143,11 +150,9 @@ const AppRegistrations = () => {
 		});
 		registerComponents({
 			id: 'invites-reply',
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			component: InviteResponse
 		});
-	}, [onClickNewButton]);
+	}, [calendars, dispatch, onClickNewButton]);
 	return null;
 };
 

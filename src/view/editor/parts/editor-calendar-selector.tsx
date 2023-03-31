@@ -46,6 +46,7 @@ export const EditorCalendarSelector = ({ editorId }: { editorId: string }): Reac
 				calendarId={calendar?.id}
 				onCalendarChange={onChange}
 				disabled={disabled?.calendar}
+				excludeTrash
 			/>
 		</Row>
 	);
