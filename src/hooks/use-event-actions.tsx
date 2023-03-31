@@ -47,7 +47,7 @@ const getInstanceActionsItems = ({
 	copyEventItem({ event, invite, context }),
 	showOriginal({ event }),
 	applyTag({ event, context }),
-	...(invite.isRespRequested
+	...(!event.resource.iAmOrganizer && !event.isShared
 		? [
 				acceptInvitationItem({ event, context }),
 				declineInvitationItem({ event, context }),
@@ -78,7 +78,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(invite.isRespRequested
+				...(!event.resource.iAmOrganizer && !event.isShared
 					? [
 							acceptInvitationItem({ event, context }),
 							declineInvitationItem({ event, context }),
@@ -107,7 +107,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event: seriesEvent, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(invite.isRespRequested
+				...(!event.resource.iAmOrganizer && !event.isShared
 					? [
 							acceptInvitationItem({ event: seriesEvent, context }),
 							declineInvitationItem({ event: seriesEvent, context }),
@@ -166,7 +166,7 @@ export const useEventActions = ({
 		[calendarFolders, context, createModal, createSnackbar, dispatch, onClose, tags]
 	);
 	return useMemo(() => {
-		if (!event || !invite) return undefined;
+		if (!event) return undefined;
 
 		const { isRecurrent, calendar } = event.resource;
 

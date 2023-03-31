@@ -71,9 +71,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				hideButton: true
 			});
 		} else if (event?.resource?.isRecurrent) {
-			// I'm disabling lint as the DS is not defining the type
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			const closeModal = createModal(
 				{
 					children: (
