@@ -46,7 +46,7 @@ const generateAppointmentDeletedSnackbar = (
 			autoHideTimeout: 3000,
 			hideButton: true,
 			actionLabel: t('label.undo', 'Undo'),
-			onActionClick: () => (undoAction ? undoAction() : null)
+			onActionClick: () => (undoAction ? undoAction() : undefined)
 		});
 	} else {
 		createSnackbar({

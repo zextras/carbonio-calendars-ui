@@ -21,7 +21,8 @@ import {
 import { FOLDERS, Folder, Grant, useFolders, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
-import { TFunction, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useDispatch } from 'react-redux';
 import styled, { DefaultTheme } from 'styled-components';
 import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';

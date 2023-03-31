@@ -47,7 +47,7 @@ export type SnackbarArgumentType = {
 	autoHideTimeout: number;
 	hideButton: boolean;
 	actionLabel?: string;
-	onActionClick?: TFunction;
+	onActionClick?: () => void;
 };
 export type DeleteApptFunctionType = {
 	id?: string;
