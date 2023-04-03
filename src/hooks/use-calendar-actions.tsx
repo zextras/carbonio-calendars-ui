@@ -23,7 +23,7 @@ type CalendarActionsProps = {
 	id: string;
 	icon: string;
 	label: string;
-	click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
+	onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
 	disabled?: boolean;
 };
 export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> => {
@@ -36,7 +36,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.NEW,
 			icon: 'CalendarOutline',
 			label: t('label.new_calendar', 'New calendar'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -56,7 +56,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.MOVE_TO_ROOT,
 			icon: 'MoveOutline',
 			label: t('action.move_to_root', 'Move to root'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -96,7 +96,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.EMPTY_TRASH,
 			icon: 'SlashOutline',
 			label: t('action.empty_trash', 'Empty Trash'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -117,7 +117,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.EDIT,
 			icon: 'Edit2Outline',
 			label: t('action.edit_calendar_properties', 'Edit calendar properties'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -144,7 +144,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.DELETE,
 			icon: 'Trash2Outline',
 			label: t('action.delete_calendar', 'Delete calendar'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -164,7 +164,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.REMOVE_FROM_LIST,
 			icon: 'CloseOutline',
 			label: t('remove_from_this_list', 'Remove from this list'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 					dispatch(folderAction({ id: item.id, op: FOLDER_ACTIONS.DELETE }));
@@ -175,7 +175,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.SHARES_INFO,
 			icon: 'InfoOutline',
 			label: t('shares_info', 'Shares Info'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -205,7 +205,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.SHARE,
 			icon: 'SharedCalendarOutline',
 			label: t('action.share_calendar', 'Share Calendar'),
-			click: (): void => {
+			onClick: (): void => {
 				const closeModal = createModal(
 					{
 						children: (
@@ -228,7 +228,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			icon: 'Copy',
 			label: t('action.calendar_access_share', 'Calendar access share'),
 			disabled: !item?.acl?.grant,
-			click: (): void => {
+			onClick: (): void => {
 				const closeModal = createModal(
 					{
 						children: (

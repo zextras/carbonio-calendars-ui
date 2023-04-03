@@ -77,7 +77,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 			icon: 'Link2',
 			id: 'carbonio_files_action_link',
 			disabled: !getFilesActionAvailable || !getLinkAvailable,
-			click: (): void => {
+			onClick: (): void => {
 				setOpenDD(false);
 				getFilesAction && getFilesAction(actionURLTarget);
 			}
@@ -102,7 +102,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 			icon: 'DriveOutline',
 			id: 'carbonio_files_action',
 			disabled: !getFilesActionAvailable || !getFilesAvailable,
-			click: (): void => {
+			onClick: (): void => {
 				setOpenDD(false);
 				getFilesAction && getFilesAction(actionTarget);
 			}
@@ -116,7 +116,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 				id: 'localAttachment',
 				icon: 'MonitorOutline',
 				label: t('composer.attachment.local', 'Add from local'),
-				click: onFileClick,
+				onClick: onFileClick,
 				customComponent: (
 					<>
 						<Icon icon="MonitorOutline" size="medium" />

@@ -142,7 +142,7 @@ const AppRegistrations = () => {
 				id: 'new-appointment',
 				label: t('label.new_appointment', 'New Appointment'),
 				icon: 'CalendarModOutline',
-				click: onClickNewButton,
+				onClick: onClickNewButton,
 				disabled: false,
 				group: CALENDAR_APP_ID,
 				primary: true

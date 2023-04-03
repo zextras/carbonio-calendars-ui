@@ -151,7 +151,7 @@ const InviteResponse: FC<InviteResponse> = ({
 		// disabled because click expect a click event
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
-		mailToContact(obj)?.click();
+		mailToContact(obj)?.onClick();
 	};
 
 	const proposeNewTimeCb = useCallback(() => {
