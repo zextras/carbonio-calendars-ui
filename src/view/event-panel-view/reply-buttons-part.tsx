@@ -8,6 +8,7 @@ import React, { ReactElement, useCallback } from 'react';
 import { ButtonOld as Button, Container, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
+import { AppDispatch } from '../../store/redux';
 import { ParticipationStatus } from '../../types/store/invite';
 
 type ReplyButtonProps = {
@@ -20,7 +21,7 @@ export const ReplyButtonsPart = ({
 	participationStatus
 }: ReplyButtonProps): ReactElement => {
 	const [t] = useTranslation();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const replyAction = useCallback(
 		(action) => {

@@ -10,6 +10,7 @@ import {
 	createFakeIdentity,
 	getMockedAccountItem
 } from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
+import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
@@ -35,7 +36,9 @@ shell.useUserAccount.mockImplementation(() => userAccount);
 shell.getUserAccount.mockImplementation(() => userAccount);
 
 shell.getUserSettings.mockImplementation(() => ({
+	...defaultSettings,
 	prefs: {
+		...defaultSettings.prefs,
 		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',

@@ -26,6 +26,7 @@ import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../../commons/zimbra-st
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
+import { AppDispatch } from '../../store/redux';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
 import { Calendar } from '../../types/store/calendars';
@@ -125,7 +126,7 @@ type NewModalProps = {
 export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
 
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const [inputValue, setInputValue] = useState('');
 	const folders = useSelector(selectCalendars);
 	const [freeBusy, setFreeBusy] = useState(false);

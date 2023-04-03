@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
+import { AppDispatch } from '../../store/redux';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 
@@ -23,7 +24,7 @@ export const ReminderPart = ({
 	invite: Invite;
 	event: EventType;
 }): ReactElement | null => {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const calendarFolders = useCalendarFolders();
 	const setSnooze = useCallback(
 		(time) => {

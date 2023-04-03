@@ -6,8 +6,9 @@
 import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { TFunction, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { selectEditorDisabled, selectEditorFreeBusy } from '../../../store/selectors/editor';
 import { editEditorDisplayStatus } from '../../../store/slices/editor-slice';
 import LabelFactory, { Square } from './select-label-factory';

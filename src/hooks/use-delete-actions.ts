@@ -14,6 +14,7 @@ import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
 import { generateEditor } from '../commons/editor-generator';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
+import { AppDispatch } from '../store/redux';
 import { EventType } from '../types/event';
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
@@ -46,7 +47,7 @@ const generateAppointmentDeletedSnackbar = (
 			autoHideTimeout: 3000,
 			hideButton: true,
 			actionLabel: t('label.undo', 'Undo'),
-			onActionClick: () => (undoAction ? undoAction() : null)
+			onActionClick: () => (undoAction ? undoAction() : undefined)
 		});
 	} else {
 		createSnackbar({
@@ -110,7 +111,7 @@ export const useDeleteActions = (
 	context: AccountContext
 ): UseDeleteActionsType => {
 	const [t] = useTranslation();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const createSnackbar = useContext(SnackbarManagerContext) as (obj: SnackbarArgumentType) => void;
 	const [deleteAll, setDeleteAll] = useState(true);
 	const [notifyOrganizer, setNotifyOrganizer] = useState(false);

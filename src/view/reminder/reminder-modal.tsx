@@ -17,6 +17,7 @@ import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
+import { AppDispatch } from '../../store/redux';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
@@ -31,7 +32,7 @@ export const ReminderModal = ({
 	const [showNewTimeModal, setShowNewTimeModal] = useState(false);
 	const [activeReminder, setActiveReminder] = useState<ReminderItem | undefined>(undefined);
 	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const calendarFolders = useCalendarFolders();
 	const openModal = useMemo(() => !isEmpty(reminders), [reminders]);
 
