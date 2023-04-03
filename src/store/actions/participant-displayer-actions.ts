@@ -34,5 +34,5 @@ export const sendMsg = (email: string, name: string): void => {
 	// disabled because click expect a click event
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
-	mailToContact(obj)?.onClick();
+	mailToContact(obj)?.click();
 };
