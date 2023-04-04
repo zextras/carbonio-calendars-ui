@@ -34,7 +34,7 @@ export type PanelView = 'app' | 'board' | 'search';
 
 export type ActionsProps = {
 	event: EventType;
-	invite: Invite;
+	invite?: Invite;
 	context: ActionsContext;
 };
 
