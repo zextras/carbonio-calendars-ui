@@ -11,11 +11,12 @@ import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { searchAppointments } from '../../store/actions/search-appointments';
+import { AppDispatch } from '../../store/redux';
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
 
 export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 	const { name, checked = undefined } = item;
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const start = useSelector(selectStart);
 	const end = useSelector(selectEnd);
 

@@ -11,10 +11,11 @@ import { useDispatch } from 'react-redux';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { folderAction } from '../../store/actions/calendar-actions';
+import { AppDispatch } from '../../store/redux';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const [t] = useTranslation();
 	const onConfirm = (): void => {
 		onClose();

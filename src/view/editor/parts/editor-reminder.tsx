@@ -5,7 +5,8 @@
  */
 import { Select, Icon, Row, Container, Text, SelectProps } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { TFunction, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { find } from 'lodash';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';

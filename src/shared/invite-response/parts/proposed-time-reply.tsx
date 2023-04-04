@@ -19,6 +19,7 @@ import { appointmentToEvent } from '../../../hooks/use-invite-to-event';
 import { getAppointmentAndInvite } from '../../../store/actions/get-appointment';
 import { modifyAppointmentRequest } from '../../../store/actions/modify-appointment';
 import { normalizeAppointmentFromCreation } from '../../../normalizations/normalize-appointments';
+import { AppDispatch } from '../../../store/redux';
 
 type ProposedTimeReply = {
 	invite: any;
@@ -39,13 +40,13 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 	to
 }): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const accounts = useUserAccounts();
 	const [openComposer, available] = useIntegratedFunction('compose');
 	const accept = useCallback(() => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		dispatch(getAppointmentAndInvite({ aptId: id, inviteId })).then((res) => {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			const { appointment, invite } = res.payload;
 			const normalizedAppointment = normalizeAppointmentFromCreation(appointment, {});
 			const normalizedInvite = invite.inv[0].comp

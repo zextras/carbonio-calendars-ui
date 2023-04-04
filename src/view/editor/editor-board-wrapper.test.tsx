@@ -8,6 +8,7 @@ import { screen } from '@testing-library/react';
 import { Board } from '@zextras/carbonio-shell-ui';
 import React from 'react';
 import { Dispatch } from 'redux';
+import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { createCallbacks } from '../../commons/editor-generator';
 import { PREFS_DEFAULTS } from '../../constants';
@@ -76,7 +77,9 @@ const initBoard = ({
 });
 
 shell.getUserSettings.mockImplementation(() => ({
+	...defaultSettings,
 	prefs: {
+		...defaultSettings.prefs,
 		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
