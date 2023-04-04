@@ -21,7 +21,6 @@ import { addBoard, getAction, Action, t, Board } from '@zextras/carbonio-shell-u
 import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
-import { EditorCallbacks } from '../../types/editor';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
@@ -161,7 +160,7 @@ const InviteResponse: FC<InviteResponse> = ({
 			const normalizedInvite = normalizeInvite(res.payload.m?.[0]);
 			const requiredEvent = inviteToEvent(normalizedInvite);
 
-			const { editor, callbacks } = generateEditor({
+			const editor = generateEditor({
 				event: requiredEvent,
 				invite: normalizedInvite,
 				context: {
@@ -193,9 +192,8 @@ const InviteResponse: FC<InviteResponse> = ({
 				addBoard({
 					url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.[0]?.inv[0]?.comp[0]?.apptId}`,
 					title: editor?.title ?? '',
-					...editor,
-					callbacks
-				} as unknown as Board & { callbacks: EditorCallbacks });
+					...editor
+				} as unknown as Board);
 			}
 		});
 	}, [calendarFolders, dispatch, inviteId]);

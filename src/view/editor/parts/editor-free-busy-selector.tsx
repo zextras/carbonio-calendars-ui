@@ -6,16 +6,15 @@
 import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { useSelector } from 'react-redux';
 import { selectEditorDisabled, selectEditorFreeBusy } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import { editEditorDisplayStatus } from '../../../store/slices/editor-slice';
 import LabelFactory, { Square } from './select-label-factory';
 
 type EditorFreeBusyProps = {
 	editorId: string;
-	callbacks: EditorCallbacks;
 };
 
 type ItemProps = {
@@ -39,7 +38,7 @@ const STATUS_VALUES = {
 	OUT_OF_OFFICE: 'O'
 };
 
-const getStatusItems = (t: TFunction<'translation'>): Array<any> => [
+const getStatusItems = (t: TFunction): Array<any> => [
 	{
 		label: t('label.free', 'Free'),
 		value: STATUS_VALUES.FREE,
@@ -70,15 +69,12 @@ const getStatusItems = (t: TFunction<'translation'>): Array<any> => [
 	}
 ];
 
-export const EditorFreeBusySelector = ({
-	editorId,
-	callbacks
-}: EditorFreeBusyProps): ReactElement | null => {
+export const EditorFreeBusySelector = ({ editorId }: EditorFreeBusyProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const statusItems = useMemo(() => getStatusItems(t), [t]);
 	const freeBusy = useSelector(selectEditorFreeBusy(editorId));
-	const { onDisplayStatusChange } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
+	const dispatch = useDispatch();
 
 	const getNewSelection = useCallback(
 		(e) => find(statusItems, ['value', e]) ?? statusItems[0],
@@ -88,11 +84,11 @@ export const EditorFreeBusySelector = ({
 	const [selected, setSelected] = useState(getNewSelection(freeBusy));
 
 	const onChange = useCallback(
-		(e) => {
-			onDisplayStatusChange(e);
-			setSelected(getNewSelection(e));
+		(value) => {
+			dispatch(editEditorDisplayStatus({ id: editorId, freeBusy: value }));
+			setSelected(getNewSelection(value));
 		},
-		[getNewSelection, onDisplayStatusChange]
+		[dispatch, editorId, getNewSelection]
 	);
 
 	useEffect(() => {

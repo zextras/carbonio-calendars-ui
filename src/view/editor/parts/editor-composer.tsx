@@ -6,7 +6,7 @@
 import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
 import { debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
 	selectEditorDisabled,
@@ -14,7 +14,7 @@ import {
 	selectEditorPlainText,
 	selectEditorRichText
 } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import { editEditorText } from '../../../store/slices/editor-slice';
 
 const TextArea = styled.textarea`
 	box-sizing: border-box;
@@ -72,17 +72,16 @@ const EditorWrapper = styled.div`
 
 type ComposerProps = {
 	editorId: string;
-	callbacks: EditorCallbacks;
 };
 
-export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactElement | null => {
+export const EditorComposer = ({ editorId }: ComposerProps): ReactElement | null => {
 	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
-	const { onTextChange } = callbacks;
 
 	const isRichText = useSelector(selectEditorIsRichText(editorId));
 	const richText = useSelector(selectEditorRichText(editorId));
 	const plainText = useSelector(selectEditorPlainText(editorId));
 	const disabled = useSelector(selectEditorDisabled(editorId));
+	const dispatch = useDispatch();
 
 	const [plainTextValue, setPlainTextValue] = useState(plainText ?? '');
 	const [richTextValue, setRichTextValue] = useState(richText ?? '');
@@ -94,11 +93,17 @@ export const EditorComposer = ({ editorId, callbacks }: ComposerProps): ReactEle
 
 	const debounceInput = useMemo(
 		() =>
-			debounce(onTextChange, 500, {
-				trailing: true,
-				leading: false
-			}),
-		[onTextChange]
+			debounce(
+				([htmlText, plain]) => {
+					dispatch(editEditorText({ id: editorId, richText: htmlText, plainText: plain }));
+				},
+				500,
+				{
+					trailing: true,
+					leading: false
+				}
+			),
+		[dispatch, editorId]
 	);
 
 	const onRichTextChange = useCallback(

@@ -25,8 +25,8 @@ import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
 import { EditorRecurrence } from './parts/recurrence';
 
-export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): ReactElement | null =>
-	editorId && callbacks ? (
+export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement | null =>
+	editorId ? (
 		<Container
 			background="gray5"
 			padding={{ horizontal: 'large', bottom: 'large' }}
@@ -35,47 +35,47 @@ export const EditorPanel = ({ editorId, callbacks, expanded }: EditorProps): Rea
 			style={{ overflow: 'auto' }}
 			data-testid="EditorPanel"
 		>
-			<EditorActions editorId={editorId} callbacks={callbacks} />
+			<EditorActions editorId={editorId} />
 			<EditorSummary editorId={editorId} />
 			<Divider />
-			<EditorDropZone editorId={editorId} callbacks={callbacks}>
+			<EditorDropZone editorId={editorId}>
 				<Container style={{ overflowY: 'auto' }} height="fit">
-					<EditorOrganizer editorId={editorId} callbacks={callbacks} />
+					<EditorOrganizer editorId={editorId} />
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorTitle editorId={editorId} callbacks={callbacks} />
+						<EditorTitle editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorLocation editorId={editorId} callbacks={callbacks} />
+						<EditorLocation editorId={editorId} />
 					</Row>
-					<EditorVirtualRoom editorId={editorId} callbacks={callbacks} />
+					<EditorVirtualRoom editorId={editorId} />
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorAttendees editorId={editorId} callbacks={callbacks} />
+						<EditorAttendees editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorFreeBusySelector editorId={editorId} callbacks={callbacks} />
+						<EditorFreeBusySelector editorId={editorId} />
 					</Row>
-					<EditorCalendarSelector editorId={editorId} callbacks={callbacks} />
+					<EditorCalendarSelector editorId={editorId} />
 					<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
-						<EditorPrivateCheckbox editorId={editorId} callbacks={callbacks} />
+						<EditorPrivateCheckbox editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorDatePicker editorId={editorId} callbacks={callbacks} />
+						<EditorDatePicker editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorTimezone editorId={editorId} callbacks={callbacks} expanded={expanded} />
+						<EditorTimezone editorId={editorId} expanded={expanded} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
-						<EditorAllDayCheckbox editorId={editorId} callbacks={callbacks} />
+						<EditorAllDayCheckbox editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorReminder editorId={editorId} callbacks={callbacks} expanded={expanded} />
+						<EditorReminder editorId={editorId} expanded={expanded} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorRecurrence editorId={editorId} callbacks={callbacks} expanded={expanded} />
+						<EditorRecurrence editorId={editorId} expanded={expanded} />
 					</Row>
-					<EditorAttachments editorId={editorId} callbacks={callbacks} expanded={expanded} />
+					<EditorAttachments editorId={editorId} expanded={expanded} />
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorComposer editorId={editorId} callbacks={callbacks} />
+						<EditorComposer editorId={editorId} />
 					</Row>
 				</Container>
 			</EditorDropZone>

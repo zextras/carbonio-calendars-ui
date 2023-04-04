@@ -13,7 +13,7 @@ import {
 	t
 } from '@zextras/carbonio-shell-ui';
 import React, { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { selectEditorAttendees, selectEditorPanel } from '../../store/selectors/editor';
@@ -52,10 +52,11 @@ export const SeriesEditWarningModal = ({
 	const title = useMemo(() => t('label.warning', 'Warning'), []);
 	const label = useMemo(() => t('label.continue', 'Continue'), []);
 	const secondaryActionLabel = useMemo(() => t('label.discard_changes', 'Discard Changes'), []);
+	const dispatch = useDispatch();
 
 	const onConfirm = useCallback(() => {
 		isSending
-			? action(isNew, editor).then(({ response }: any) => {
+			? action({ isNew, editor, dispatch }).then(({ response }: any) => {
 					if (panel && response) {
 						replaceHistory('');
 					}
@@ -71,7 +72,7 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  })
-			: action({ draft: !attendeesLength, isNew, editor }).then(({ response }: any) => {
+			: action({ draft: !attendeesLength, isNew, editor, dispatch }).then(({ response }: any) => {
 					getBridgedFunctions().createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
@@ -84,7 +85,7 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  });
-	}, [action, attendeesLength, editor, isNew, isSending, onClose, panel]);
+	}, [action, attendeesLength, dispatch, editor, isNew, isSending, onClose, panel]);
 
 	const onDiscard = useCallback(() => {
 		onClose();

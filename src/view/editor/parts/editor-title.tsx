@@ -6,22 +6,21 @@
 import { debounce, isNil } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Input } from '@zextras/carbonio-design-system';
 import { selectEditorDisabled, selectEditorTitle } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import { editEditorTitle } from '../../../store/slices/editor-slice';
 
 type EditorTitleProps = {
 	editorId: string;
-	callbacks: EditorCallbacks;
 };
 
-export const EditorTitle = ({ editorId, callbacks }: EditorTitleProps): ReactElement | null => {
+export const EditorTitle = ({ editorId }: EditorTitleProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const title = useSelector(selectEditorTitle(editorId));
 	const [value, setValue] = useState(title ?? '');
-	const { onSubjectChange } = callbacks;
 	const disabled = useSelector(selectEditorDisabled(editorId));
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (title) {
@@ -31,11 +30,17 @@ export const EditorTitle = ({ editorId, callbacks }: EditorTitleProps): ReactEle
 
 	const debounceInput = useMemo(
 		() =>
-			debounce(onSubjectChange, 500, {
-				trailing: true,
-				leading: false
-			}),
-		[onSubjectChange]
+			debounce(
+				(text) => {
+					dispatch(editEditorTitle({ id: editorId, title: text }));
+				},
+				500,
+				{
+					trailing: true,
+					leading: false
+				}
+			),
+		[dispatch, editorId]
 	);
 
 	const onChange = useCallback(

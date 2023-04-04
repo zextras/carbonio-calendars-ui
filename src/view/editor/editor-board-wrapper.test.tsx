@@ -7,26 +7,16 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { Board } from '@zextras/carbonio-shell-ui';
 import React from 'react';
-import { Dispatch } from 'redux';
 import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
-import { createCallbacks } from '../../commons/editor-generator';
 import { PREFS_DEFAULTS } from '../../constants';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
-import { Editor, EditorCallbacks } from '../../types/editor';
+import { Editor } from '../../types/editor';
 import BoardEditPanel from './editor-board-wrapper';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 
-const initBoard = ({
-	editorId,
-	isNew,
-	dispatch
-}: {
-	editorId: string;
-	isNew: boolean;
-	dispatch: Dispatch;
-}): Board & { callbacks: EditorCallbacks } & Editor => ({
+const initBoard = ({ editorId, isNew }: { editorId: string; isNew: boolean }): Board & Editor => ({
 	url: 'calendars/',
 	title: 'Nuovo appuntamento',
 	panel: false,
@@ -71,7 +61,6 @@ const initBoard = ({
 		composer: false
 	},
 	id: editorId,
-	callbacks: createCallbacks(editorId, { dispatch }),
 	app: 'carbonio-calendars-ui',
 	icon: 'CalendarModOutline'
 });
@@ -106,9 +95,7 @@ describe('Editor board wrapper', () => {
 			createSnackbar: jest.fn()
 		}));
 
-		shell.useBoard.mockImplementation(() =>
-			initBoard({ editorId, isNew, dispatch: store.dispatch })
-		);
+		shell.useBoard.mockImplementation(() => initBoard({ editorId, isNew }));
 		setupTest(<BoardEditPanel />, { store });
 
 		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();

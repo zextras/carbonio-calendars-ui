@@ -7,8 +7,9 @@ import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
 import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { onSave } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import {
@@ -21,7 +22,7 @@ import {
 import { EditorProps } from '../../../types/editor';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
-export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
+export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	const title = useSelector(selectEditorTitle(editorId));
 	const isNew = useSelector(selectEditorIsNew(editorId));
 	const editor = useSelector(selectEditor(editorId));
@@ -29,15 +30,11 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 	const disabled = useSelector(selectEditorDisabled(editorId));
 	const attendeesLength = useSelector(selectEditorAttendees(editorId))?.length;
 	const [t] = useTranslation();
-
-	const { onSave } = callbacks;
+	const dispatch = useDispatch();
 	const { action } = useParams<{ action: string }>();
 
 	const onClick = useCallback(() => {
 		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
-			// It's ignore because the createModal Function is not typed
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			const closeModal = createModal(
 				{
 					size: 'large',
@@ -59,8 +56,8 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 				},
 				true
 			);
-		} else
-			onSave({ draft: !!attendeesLength, isNew, editor }).then(({ response }) => {
+		} else {
+			onSave({ draft: !!attendeesLength, isNew, editor, dispatch }).then(({ response }) => {
 				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
@@ -72,7 +69,8 @@ export const EditorSaveButton = ({ editorId, callbacks }: EditorProps): ReactEle
 					autoHideTimeout: 3000
 				});
 			});
-	}, [editor, action, onSave, attendeesLength, isNew, createModal, editorId, t]);
+		}
+	}, [editor, action, createModal, isNew, editorId, attendeesLength, dispatch, t]);
 
 	return (
 		<Button

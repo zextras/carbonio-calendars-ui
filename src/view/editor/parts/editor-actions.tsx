@@ -11,7 +11,7 @@ import { EditorRichTextButton } from './editor-richtext-button';
 import { EditorSaveButton } from './editor-save-button';
 import { EditorSendButton } from './editor-send-button';
 
-export const EditorActions = ({ editorId, callbacks }: EditorProps): ReactElement => (
+export const EditorActions = ({ editorId }: EditorProps): ReactElement => (
 	<Row
 		orientation="horizontal"
 		padding={{ top: 'small', bottom: 'small' }}
@@ -19,10 +19,10 @@ export const EditorActions = ({ editorId, callbacks }: EditorProps): ReactElemen
 		width="fill"
 		mainAlignment="flex-end"
 	>
-		<EditorRichTextButton editorId={editorId} callbacks={callbacks} />
-		<EditorAttachmentsButton editorId={editorId} callbacks={callbacks} />
-		<EditorSaveButton editorId={editorId} callbacks={callbacks} />
+		<EditorRichTextButton editorId={editorId} />
+		<EditorAttachmentsButton editorId={editorId} />
+		<EditorSaveButton editorId={editorId} />
 		<Padding left="medium" />
-		<EditorSendButton editorId={editorId} callbacks={callbacks} />
+		<EditorSendButton editorId={editorId} />
 	</Row>
 );
