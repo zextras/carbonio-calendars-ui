@@ -109,8 +109,8 @@ export type Editor = {
 	reminder?: string | undefined;
 	recur?: any;
 	id: string;
-	panel: boolean;
 	searchPanel?: boolean;
+	panel: boolean;
 	attach?: any;
 	isProposeNewTime?: boolean;
 };

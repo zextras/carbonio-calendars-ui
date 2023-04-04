@@ -178,8 +178,7 @@ export const generateEditor = ({
 		context
 	});
 
-	const newEditor: Editor = { ...editor, calendar: omit(editor.calendar, ['parent', 'children']) };
-
+	const newEditor = { ...editor, calendar: omit(editor.calendar, ['parent', 'children']) };
 	context.dispatch(createNewEditor(newEditor));
 
 	return newEditor;

@@ -158,7 +158,6 @@ const InviteResponse: FC<InviteResponse> = ({
 			if (payload) {
 				const normalizedInvite = normalizeInvite(payload.m?.[0]);
 				const requiredEvent = inviteToEvent(normalizedInvite);
-
 				const editor = generateEditor({
 					event: requiredEvent,
 					invite: normalizedInvite,

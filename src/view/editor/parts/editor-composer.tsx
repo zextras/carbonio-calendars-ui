@@ -77,7 +77,6 @@ export const EditorComposer = ({ editorId }: { editorId: string }): ReactElement
 	const plainText = useAppSelector(selectEditorPlainText(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
-
 	const [plainTextValue, setPlainTextValue] = useState(plainText ?? '');
 	const [richTextValue, setRichTextValue] = useState(richText ?? '');
 

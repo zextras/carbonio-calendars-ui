@@ -36,9 +36,6 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 
 	const onClick = useCallback(() => {
 		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
-			// It's ignore because the createModal Function is not typed
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			const closeModal = createModal(
 				{
 					size: 'large',

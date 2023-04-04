@@ -23,6 +23,7 @@ export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement
 	const [t] = useTranslation();
 	const timezone = useAppSelector(selectEditorTimezone(editorId));
 	const dispatch = useAppDispatch();
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	const { zimbraPrefUseTimeZoneListInCalendar } = usePrefs();
 	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
@@ -39,7 +40,6 @@ export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement
 		}
 		return undefined;
 	});
-	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	const onChange = useCallback(
 		(item): void => {

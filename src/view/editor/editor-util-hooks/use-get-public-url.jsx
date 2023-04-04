@@ -55,8 +55,6 @@ export const useGetPublicUrl = ({ editorId }) => {
 							'message.snackbar.some_link_copying_error',
 							'There seems to be a problem while generating public url for some files, please try again'
 					  );
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 				createSnackbar({
 					key: `public-link`,
 					replace: true,

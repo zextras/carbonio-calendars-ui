@@ -16,7 +16,7 @@ import {
 	Text
 } from '@zextras/carbonio-design-system';
 import { t, useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { map } from 'lodash';
+import { isNil, map, some } from 'lodash';
 import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
@@ -58,6 +58,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const createModal = useContext(ModalManagerContext);
 	const accounts = useUserAccounts();
 
+	const chipsHaveErrors = useMemo(() => some(contacts, 'error'), [contacts]);
 	const title = useMemo(() => `${t('label.share', 'Share')} ${folder?.name}`, [folder?.name]);
 
 	const onShareWithChange = useCallback((shareWith) => {
@@ -178,120 +179,133 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					}}
 				/>
 			</Container>
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-			>
-				{integrationAvailable ? (
-					<ContactInput
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
-						onChange={onChange}
-						background="gray5"
-						defaultValue={contacts}
-					/>
-				) : (
-					<ChipInput
-						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
-						background="gray4"
-						onChange={(ev: any): any => {
-							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-							// @ts-ignore
-							setContacts(map(ev, (contact) => ({ email: contact.address })));
-						}}
-					/>
-				)}
-			</Container>
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-			>
-				<Checkbox
-					value={allowToSeePrvtAppt}
-					defaultChecked={allowToSeePrvtAppt}
-					onClick={(): void => setAllowToSeePrvtAppt(!allowToSeePrvtAppt)}
-					label={t(
-						'share.label.allow_to_see_private_appt',
-						'Allow user(s) to see my private appointments'
-					)}
-				/>
-			</Container>
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-			>
-				<Select
-					items={shareCalendarRoleOptions}
-					background="gray5"
-					label={t('label.role', 'role')}
-					onChange={onShareRoleChange}
-					disablePortal
-					defaultSelection={{
-						value: 'r',
-						label: findLabel(shareCalendarRoleOptions, 'r')
-					}}
-				/>
-			</Container>
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-			>
-				<Checkbox
-					value={sendNotification}
-					defaultChecked={sendNotification}
-					onClick={(): void => setSendNotification(!sendNotification)}
-					label={t('share.label.send_notification', 'Send notification about this share')}
-				/>
-			</Container>
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-			>
-				<Input
-					label={t('share.placeholder.standard_message', 'Add a note to standard message')}
-					value={standardMessage}
-					onChange={(ev: any): void => {
-						setStandardMessage(ev.target.value);
-					}}
-					disabled={!sendNotification}
-				/>
-			</Container>
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-				orientation="horizontal"
-			>
-				<Row padding={{ right: 'small' }}>
-					<Text weight="bold" size="small">
-						Note:
-					</Text>
-				</Row>
-				<Row>
-					<Text overflow="break-word" size="small" color="secondary">
-						{t(
-							'share.note.share_note',
-							'The standard message displays your name, the name of the shared item, pemissions granted to the recipients, and sign in information.'
+			{shareWithUserType === 'usr' && (
+				<>
+					<Container
+						padding={{ top: 'small', bottom: 'small' }}
+						mainAlignment="center"
+						crossAlignment="flex-start"
+						height="fit"
+					>
+						{integrationAvailable ? (
+							<ContactInput
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								placeholder={t(
+									'share.placeholder.recipients_address',
+									'Recipients e-mail addresses'
+								)}
+								onChange={onChange}
+								background="gray5"
+								defaultValue={contacts}
+							/>
+						) : (
+							<ChipInput
+								placeholder={t(
+									'share.placeholder.recipients_address',
+									'Recipients e-mail addresses'
+								)}
+								background="gray4"
+								onChange={(ev: any): any => {
+									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+									// @ts-ignore
+									setContacts(map(ev, (contact) => ({ email: contact.address })));
+								}}
+							/>
 						)}
-					</Text>
-				</Row>
-			</Container>
+					</Container>
+					<Container
+						padding={{ top: 'small', bottom: 'small' }}
+						mainAlignment="center"
+						crossAlignment="flex-start"
+						height="fit"
+					>
+						<Checkbox
+							value={allowToSeePrvtAppt}
+							defaultChecked={allowToSeePrvtAppt}
+							onClick={(): void => setAllowToSeePrvtAppt(!allowToSeePrvtAppt)}
+							label={t(
+								'share.label.allow_to_see_private_appt',
+								'Allow user(s) to see my private appointments'
+							)}
+						/>
+					</Container>
+					<Container
+						padding={{ top: 'small', bottom: 'small' }}
+						mainAlignment="center"
+						crossAlignment="flex-start"
+						height="fit"
+					>
+						<Select
+							items={shareCalendarRoleOptions}
+							background="gray5"
+							label={t('label.role', 'role')}
+							onChange={onShareRoleChange}
+							disablePortal
+							defaultSelection={{
+								value: 'r',
+								label: findLabel(shareCalendarRoleOptions, 'r')
+							}}
+						/>
+					</Container>
+					<Container
+						padding={{ top: 'small', bottom: 'small' }}
+						mainAlignment="center"
+						crossAlignment="flex-start"
+						height="fit"
+					>
+						<Checkbox
+							value={sendNotification}
+							defaultChecked={sendNotification}
+							onClick={(): void => setSendNotification(!sendNotification)}
+							label={t('share.label.send_notification', 'Send notification about this share')}
+						/>
+					</Container>
+					<Container
+						padding={{ top: 'small', bottom: 'small' }}
+						mainAlignment="center"
+						crossAlignment="flex-start"
+						height="fit"
+					>
+						<Input
+							label={t('share.placeholder.standard_message', 'Add a note to standard message')}
+							value={standardMessage}
+							onChange={(ev: any): void => {
+								setStandardMessage(ev.target.value);
+							}}
+							disabled={!sendNotification}
+						/>
+					</Container>
+					<Container
+						padding={{ top: 'small', bottom: 'small' }}
+						mainAlignment="center"
+						crossAlignment="flex-start"
+						height="fit"
+						orientation="horizontal"
+					>
+						<Row padding={{ right: 'small' }}>
+							<Text weight="bold" size="small">
+								Note:
+							</Text>
+						</Row>
+						<Row>
+							<Text overflow="break-word" size="small" color="secondary">
+								{t(
+									'share.note.share_note',
+									'The standard message displays your name, the name of the shared item, pemissions granted to the recipients, and sign in information.'
+								)}
+							</Text>
+						</Row>
+					</Container>
+				</>
+			)}
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('action.share_calendar', 'Share Calendar')}
-				disabled={contacts?.length < 1}
+				disabled={
+					(!isNil(shareWithUserType) && shareWithUserType !== 'pub' && contacts?.length < 1) ||
+					chipsHaveErrors
+				}
 				secondaryAction={onGoBack}
 				secondaryLabel={secondaryLabel}
 			/>

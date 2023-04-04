@@ -134,7 +134,7 @@ const ActionButtons = ({
 						<IconButton
 							key={primaryAction.id}
 							icon={primaryAction.icon}
-							onClick={primaryAction.click}
+							onClick={primaryAction.onClick}
 						/>
 					</Tooltip>
 				)}
@@ -152,7 +152,7 @@ const ActionButtons = ({
 							<IconButton
 								key={otherActions?.[0]?.id}
 								icon={otherActions?.[0]?.icon}
-								onClick={otherActions?.[0]?.click}
+								onClick={otherActions?.[0]?.onClick}
 							/>
 						</Tooltip>
 					)}

@@ -25,7 +25,6 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
-
 	const onChange = useCallback(
 		({ start: newStartValue, end: newEndValue }) => {
 			dispatch(editEditorDate({ id: editorId, start: newStartValue, end: newEndValue }));

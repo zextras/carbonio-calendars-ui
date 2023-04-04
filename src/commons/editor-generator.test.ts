@@ -56,7 +56,7 @@ describe('Editor generator', () => {
 				context
 			});
 
-			// expect editor and callbacks returned from function
+			// expect editor returned from function
 			expect(editor).toBeDefined();
 
 			// expect default disabled fields to false

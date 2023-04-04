@@ -64,13 +64,13 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement 
 				id: 'expand',
 				icon: expanded ? 'Collapse' : 'Expand',
 				label: '',
-				click: (): void => setExpanded((e: boolean) => !e)
+				onClick: (): void => setExpanded((e: boolean) => !e)
 			},
 			{
 				id: 'close',
 				icon: 'CloseOutline',
 				label: '',
-				click: (): void => {
+				onClick: (): void => {
 					replaceHistory('');
 				}
 			}
@@ -104,7 +104,7 @@ const Header = ({ editorId, expanded, setExpanded }: HeaderProps): ReactElement 
 							<IconButton
 								key={action.id}
 								icon={action.icon}
-								onClick={action.click}
+								onClick={action.onClick}
 								data-testid={action.id}
 							/>
 						))}

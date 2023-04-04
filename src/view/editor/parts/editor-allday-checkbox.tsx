@@ -23,7 +23,6 @@ export const EditorAllDayCheckbox = ({ editorId }: { editorId: string }): ReactE
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
-
 	const startDate = useMemo(() => (start ? new Date(start) : undefined), [start]);
 	const endDate = useMemo(() => (end ? new Date(end) : undefined), [end]);
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);

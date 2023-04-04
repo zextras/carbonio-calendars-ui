@@ -30,6 +30,7 @@ import { selectCalendars } from './store/selectors/calendars';
 import { selectApptStatus } from './store/selectors/appointments';
 import { searchAppointments } from './store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from './store/redux/hooks';
+
 import { CalendarIntegrations } from './types/enums/event-actions-enum';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 
@@ -140,7 +141,7 @@ const AppRegistrations = () => {
 				id: 'new-appointment',
 				label: t('label.new_appointment', 'New Appointment'),
 				icon: 'CalendarModOutline',
-				click: onClickNewButton,
+				onClick: onClickNewButton,
 				disabled: false,
 				group: CALENDAR_APP_ID,
 				primary: true
