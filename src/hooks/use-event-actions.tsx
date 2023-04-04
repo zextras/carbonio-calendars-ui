@@ -65,7 +65,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 			label: t('label.instance', 'Instance'),
 			disabled: false,
 			tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-			click: (ev: ActionsClick): void => {
+			onClick: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
@@ -93,7 +93,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 			label: t('label.series', 'Series'),
 			disabled: false,
 			tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-			click: (ev: ActionsClick): void => {
+			onClick: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},
 			items: [
