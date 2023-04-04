@@ -3,30 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder, Grant } from '@zextras/carbonio-shell-ui';
-import { TFunction } from 'i18next';
-import { Dispatch } from 'redux';
+import { Grant } from '@zextras/carbonio-shell-ui';
 
 export type ShareCalendarModalProps = {
-	folder: Folder;
-	closeFn?: any;
-	onGoBack?: any;
+	folderName: string;
+	folderId: string;
+	closeFn?: () => void;
+	onGoBack?: () => void;
 	secondaryLabel?: string;
 	isFromEditModal?: boolean;
 	grant: Array<Grant>;
 };
 
-export type ResponseActionsProps = {
-	dispatch: Dispatch;
-	t: TFunction;
-	createSnackbar: any;
-	zid: string;
-	view: string;
-	rid: string;
-};
-
 export type ShareCalendarUrlProps = {
-	folder: any;
+	folderName: string;
 	onClose: () => void;
 	isFromEditModal?: boolean;
 };

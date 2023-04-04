@@ -33,7 +33,8 @@ import { ShareCalendarModalProps } from '../../types/share-calendar';
 import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
 
 export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
-	folder,
+	folderName,
+	folderId,
 	closeFn,
 	onGoBack,
 	secondaryLabel,
@@ -59,7 +60,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const accounts = useUserAccounts();
 
 	const chipsHaveErrors = useMemo(() => some(contacts, 'error'), [contacts]);
-	const title = useMemo(() => `${t('label.share', 'Share')} ${folder?.name}`, [folder?.name]);
+	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName]);
 
 	const onShareWithChange = useCallback((shareWith) => {
 		setshareWithUserType(shareWith);
@@ -77,7 +78,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				children: (
 					<StoreProvider>
 						<ShareCalendarUrlModal
-							folder={folder}
+							folderName={folderName}
 							onClose={(): void => closeModal()}
 							isFromEditModal
 						/>
@@ -88,7 +89,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			},
 			true
 		);
-		closeFn();
+		closeFn && closeFn();
 	};
 	const onConfirm = (): void => {
 		dispatch(
@@ -100,7 +101,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				contacts,
 				shareWithUserType,
 				shareWithUserRole,
-				folder: folder.id,
+				folder: folderId,
 				accounts,
 				allowToSeePrvtAppt
 			})
@@ -130,7 +131,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							contacts,
 							shareWithUserType,
 							shareWithUserRole,
-							folder: folder.id,
+							folder: folderId,
 							accounts
 						})
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -169,7 +170,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			>
 				<Select
 					items={shareCalendarWithOptions}
-					background="gray5"
+					background={'gray5'}
 					label={t('label.share_with', 'share with')}
 					disablePortal
 					onChange={onShareWithChange}
@@ -196,7 +197,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 									'Recipients e-mail addresses'
 								)}
 								onChange={onChange}
-								background="gray5"
+								background={'gray5'}
 								defaultValue={contacts}
 							/>
 						) : (
@@ -205,7 +206,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 									'share.placeholder.recipients_address',
 									'Recipients e-mail addresses'
 								)}
-								background="gray4"
+								background={'gray4'}
 								onChange={(ev: any): any => {
 									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 									// @ts-ignore
@@ -238,7 +239,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					>
 						<Select
 							items={shareCalendarRoleOptions}
-							background="gray5"
+							background={'gray5'}
 							label={t('label.role', 'role')}
 							onChange={onShareRoleChange}
 							disablePortal
