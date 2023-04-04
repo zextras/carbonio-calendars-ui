@@ -33,7 +33,7 @@ const ActionButtons = ({ actions }: { actions: any[] }): JSX.Element => {
 			>
 				{actions &&
 					map(actions, (action) => (
-						<IconButton key={action.id} icon={action.icon} onClick={action.click} />
+						<IconButton key={action.id} icon={action.icon} onClick={action.onClick} />
 					))}
 			</Row>
 			{/* IconButton disabled until the actions are active
@@ -49,7 +49,7 @@ const ExpandButton = ({ actions }: { actions: any[] }): ReactElement => (
 	<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 		{actions &&
 			map(actions, (action) => (
-				<IconButton key={action.id} icon={action.icon} onClick={action.click} />
+				<IconButton key={action.id} icon={action.icon} onClick={action.onClick} />
 			))}
 	</Row>
 );

@@ -7,8 +7,9 @@ import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import { useCallback, useContext } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
+import { editEditorAttachments } from '../../../store/slices/editor-slice';
 
 export const uploadToFiles = async (node, uploadTo) => {
 	const upload = await uploadTo({ nodeId: node.id, targetModule: 'CALENDARS' });
@@ -18,11 +19,12 @@ export const uploadToFiles = async (node, uploadTo) => {
 	};
 };
 
-export const useGetFilesFromDrive = ({ editorId, onAttachmentsChange }) => {
+export const useGetFilesFromDrive = ({ editorId }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const attachmentFiles = useSelector(selectEditorAttachmentFiles(editorId));
 	const parts = useSelector(selectEditorAttach(editorId));
 	const [uploadTo, isAvailable] = useIntegratedFunction('upload-to-target-and-get-target-id');
+	const dispatch = useDispatch();
 
 	const confirmAction = useCallback(
 		(nodes) => {
@@ -62,14 +64,17 @@ export const useGetFilesFromDrive = ({ editorId, onAttachmentsChange }) => {
 						aid: file.value.res.attachmentId
 					}));
 					const attachmentFilesArr = [...(attachmentFiles ?? []), ...attachments];
-					onAttachmentsChange(
-						{ aid: map(success, (i) => i.value.res.attachmentId), mp: parts },
-						attachmentFilesArr
+					dispatch(
+						editEditorAttachments({
+							id: editorId,
+							attach: { aid: map(success, (i) => i.value.res.attachmentId), mp: parts },
+							attachmentFIles: attachmentFilesArr
+						})
 					);
 				});
 			}
 		},
-		[attachmentFiles, createSnackbar, isAvailable, onAttachmentsChange, parts, uploadTo]
+		[attachmentFiles, createSnackbar, dispatch, editorId, isAvailable, parts, uploadTo]
 	);
 	return [confirmAction, isAvailable];
 };

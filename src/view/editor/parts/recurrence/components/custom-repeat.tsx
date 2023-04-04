@@ -7,16 +7,9 @@ import { Button, Container, ModalManagerContext } from '@zextras/carbonio-design
 import React, { ReactElement, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StoreProvider } from '../../../../../store/redux';
-import { EditorCallbacks } from '../../../../../types/editor';
 import CustomRecurrenceModal from '../views/custom-recurrence-modal';
 
-const CustomRepeatSelectItem = ({
-	editorId,
-	callbacks
-}: {
-	editorId: string;
-	callbacks: EditorCallbacks;
-}): ReactElement => {
+const CustomRepeatSelectItem = ({ editorId }: { editorId: string }): ReactElement => {
 	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
 
@@ -26,11 +19,7 @@ const CustomRepeatSelectItem = ({
 				maxHeight: '90vh',
 				children: (
 					<StoreProvider>
-						<CustomRecurrenceModal
-							editorId={editorId}
-							callbacks={callbacks}
-							onClose={(): void => closeModal()}
-						/>
+						<CustomRecurrenceModal editorId={editorId} onClose={(): void => closeModal()} />
 					</StoreProvider>
 				),
 				onClose: () => {
@@ -39,7 +28,7 @@ const CustomRepeatSelectItem = ({
 			},
 			true
 		);
-	}, [callbacks, createModal, editorId]);
+	}, [createModal, editorId]);
 
 	return (
 		<Container width="fill" mainAlignment="center" orientation="horizontal">

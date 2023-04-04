@@ -39,7 +39,7 @@ export const createCopy =
 			const organizer = find(identities, ['identityName', 'DEFAULT']);
 			const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
 			const isInstance = !event?.resource?.isRecurrent && !!event?.resource?.ridZ;
-			const { editor, callbacks } = generateEditor({
+			const editor = generateEditor({
 				event: eventToCopy,
 				invite,
 				context: {
@@ -59,8 +59,7 @@ export const createCopy =
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				title: editor.title,
-				...editor,
-				callbacks
+				...editor
 			});
 		};
 		if (!_invite) {
@@ -268,8 +267,6 @@ export const acceptInvitation =
 				})
 			)
 			.then(() =>
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
 			);
 	};
@@ -292,8 +289,6 @@ export const declineInvitation =
 				})
 			)
 			.then(() =>
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'DE' }))
 			);
 	};
@@ -316,8 +311,6 @@ export const acceptAsTentative =
 				})
 			)
 			.then(() =>
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
 			);
 	};

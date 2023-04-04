@@ -14,10 +14,9 @@ import {
 	registerComponents,
 	ACTION_TYPES,
 	t,
-	registerFunctions,
-	addBoard
+	registerFunctions
 } from '@zextras/carbonio-shell-ui';
-import { identity, isEmpty, pick, pickBy } from 'lodash';
+import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
@@ -31,8 +30,7 @@ import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { selectCalendars } from './store/selectors/calendars';
 import { selectApptStatus } from './store/selectors/appointments';
 import { searchAppointments } from './store/actions/search-appointments';
-import { CalendarIntegrations, EventActionsEnum } from './types/enums/event-actions-enum';
-import { generateEditor } from './commons/editor-generator';
+import { CalendarIntegrations } from './types/enums/event-actions-enum';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 
 const LazyCalendarView = lazy(() =>
@@ -142,7 +140,7 @@ const AppRegistrations = () => {
 				id: 'new-appointment',
 				label: t('label.new_appointment', 'New Appointment'),
 				icon: 'CalendarModOutline',
-				click: onClickNewButton,
+				onClick: onClickNewButton,
 				disabled: false,
 				group: CALENDAR_APP_ID,
 				primary: true
@@ -152,8 +150,6 @@ const AppRegistrations = () => {
 		});
 		registerComponents({
 			id: 'invites-reply',
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			component: InviteResponse
 		});
 	}, [calendars, dispatch, onClickNewButton]);

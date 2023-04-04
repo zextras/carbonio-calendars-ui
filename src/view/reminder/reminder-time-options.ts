@@ -16,7 +16,7 @@ import { AlarmType } from '../../types/event';
 // 	id: string;
 // 	label: string;
 // 	icon?: string;
-// 	click?: (e: React.SyntheticEvent<HTMLElement> | KeyboardEvent) => void;
+// 	onClick?: (e: React.SyntheticEvent<HTMLElement> | KeyboardEvent) => void;
 // 	selected?: boolean;
 // 	customComponent?: React.ReactNode;
 // 	disabled?: boolean;
@@ -27,7 +27,7 @@ import { AlarmType } from '../../types/event';
 // type ReturnType = Array<{
 // 	id: string;
 // 	label?: string;
-// 	click?: () => void;
+// 	onClick?: () => void;
 // 	value: number;
 // 	type?: 'divider';
 // }>;
@@ -208,7 +208,7 @@ export const useGetReminderItems = (
 		const createDropDownItem = (option: Option): DropdownItem => ({
 			id: option.id,
 			label: option.label,
-			click: (): void => setSnooze(option.value / 60, option.beforeEvent ?? true)
+			onClick: (): void => setSnooze(option.value / 60, option.beforeEvent ?? true)
 		});
 
 		return [

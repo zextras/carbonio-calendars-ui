@@ -9,19 +9,22 @@ import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import moment from 'moment';
 import { useCallback, useContext, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
 	selectEditorPlainText,
 	selectEditorRichText,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
+import { editEditorText } from '../../../store/slices/editor-slice';
 
-export const useGetPublicUrl = ({ editorId, onTextChange }) => {
+export const useGetPublicUrl = ({ editorId }) => {
 	const [getLink, getLinkAvailable] = useIntegratedFunction('get-link');
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const richText = useSelector(selectEditorRichText(editorId));
 	const plainText = useSelector(selectEditorPlainText(editorId));
 	const title = useSelector(selectEditorTitle(editorId));
+	const dispatch = useDispatch();
+
 	const description = useMemo(
 		() =>
 			t('label.public_link_description', {
@@ -52,8 +55,6 @@ export const useGetPublicUrl = ({ editorId, onTextChange }) => {
 							'message.snackbar.some_link_copying_error',
 							'There seems to be a problem while generating public url for some files, please try again'
 					  );
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 				createSnackbar({
 					key: `public-link`,
 					replace: true,
@@ -71,10 +72,10 @@ export const useGetPublicUrl = ({ editorId, onTextChange }) => {
 						''
 					)}`.concat(richText)
 				];
-				onTextChange(newText);
+				dispatch(editEditorText({ id: editorId, richText: newText[0], plainText: newText[1] }));
 			});
 		},
-		[getLink, createSnackbar, plainText, richText, onTextChange, description]
+		[getLink, description, createSnackbar, plainText, richText, dispatch, editorId]
 	);
 	return [getPublicUrl, getLinkAvailable];
 };
