@@ -8,9 +8,9 @@ import { find, toUpper } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { ColorContainer, TextUpperCase } from '../../../../../commons/styled-components';
 import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
+import { useAppDispatch, useAppSelector } from '../../../../../store/redux/hooks';
 import {
 	selectEditorDisabled,
 	selectEditorRecurrence,
@@ -58,11 +58,11 @@ const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): Reac
 );
 
 const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null => {
-	const recur = useSelector(selectEditorRecurrence(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const recur = useAppSelector(selectEditorRecurrence(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();
-	const start = useSelector(selectEditorStart(editorId));
-	const dispatch = useDispatch();
+	const start = useAppSelector(selectEditorStart(editorId));
+	const dispatch = useAppDispatch();
 
 	const recurrenceItems = useMemo(
 		() => [
@@ -164,7 +164,7 @@ const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null => {
 				}
 			}
 		},
-		[dispatch, editorId, recurrenceItems, start]
+		[recurrenceItems, dispatch, editorId, start]
 	);
 
 	return initialValue ? (

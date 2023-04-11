@@ -7,7 +7,6 @@ import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-d
 import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { omit } from 'lodash';
 import React, { useContext, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
 	acceptAsTentativeItem,
 	acceptInvitationItem,
@@ -19,6 +18,7 @@ import {
 	openEventItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
+import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import {
 	ActionsClick,
@@ -47,7 +47,7 @@ const getInstanceActionsItems = ({
 	copyEventItem({ event, invite, context }),
 	showOriginal({ event }),
 	applyTag({ event, context }),
-	...(invite.isRespRequested
+	...(!event.resource.iAmOrganizer && !event.isShared
 		? [
 				acceptInvitationItem({ event, context }),
 				declineInvitationItem({ event, context }),
@@ -78,7 +78,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(invite.isRespRequested
+				...(!event.resource.iAmOrganizer && !event.isShared
 					? [
 							acceptInvitationItem({ event, context }),
 							declineInvitationItem({ event, context }),
@@ -107,7 +107,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event: seriesEvent, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(invite.isRespRequested
+				...(!event.resource.iAmOrganizer && !event.isShared
 					? [
 							acceptInvitationItem({ event: seriesEvent, context }),
 							declineInvitationItem({ event: seriesEvent, context }),
@@ -144,8 +144,8 @@ export const useEventActions = ({
 	event?: EventType;
 	context?: { panelView: PanelView };
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
-	const invite = useSelector(selectInstanceInvite(event?.resource?.inviteId));
-	const dispatch = useDispatch();
+	const invite = useAppSelector(selectInstanceInvite(event?.resource?.inviteId));
+	const dispatch = useAppDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const createSnackbar = useContext(SnackbarManagerContext);
@@ -166,7 +166,7 @@ export const useEventActions = ({
 		[calendarFolders, context, createModal, createSnackbar, dispatch, onClose, tags]
 	);
 	return useMemo(() => {
-		if (!event || !invite) return undefined;
+		if (!event) return undefined;
 
 		const { isRecurrent, calendar } = event.resource;
 

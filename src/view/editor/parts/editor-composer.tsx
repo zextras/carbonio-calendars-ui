@@ -6,8 +6,8 @@
 import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
 import { debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorDisabled,
 	selectEditorIsRichText,
@@ -70,19 +70,13 @@ const EditorWrapper = styled.div`
 	}
 `;
 
-type ComposerProps = {
-	editorId: string;
-};
-
-export const EditorComposer = ({ editorId }: ComposerProps): ReactElement | null => {
+export const EditorComposer = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
-
-	const isRichText = useSelector(selectEditorIsRichText(editorId));
-	const richText = useSelector(selectEditorRichText(editorId));
-	const plainText = useSelector(selectEditorPlainText(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
-
+	const isRichText = useAppSelector(selectEditorIsRichText(editorId));
+	const richText = useAppSelector(selectEditorRichText(editorId));
+	const plainText = useAppSelector(selectEditorPlainText(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 	const [plainTextValue, setPlainTextValue] = useState(plainText ?? '');
 	const [richTextValue, setRichTextValue] = useState(richText ?? '');
 

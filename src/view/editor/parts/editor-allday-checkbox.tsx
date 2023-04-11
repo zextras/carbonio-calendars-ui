@@ -8,7 +8,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
 	selectEditorDisabled,
@@ -17,16 +17,12 @@ import {
 } from '../../../store/selectors/editor';
 import { editEditorAllDay } from '../../../store/slices/editor-slice';
 
-type AllDayProps = {
-	editorId: string;
-};
-
-export const EditorAllDayCheckbox = ({ editorId }: AllDayProps): ReactElement | null => {
-	const allDay = useSelector(selectEditorAllDay(editorId));
-	const start = useSelector(selectEditorStart(editorId));
-	const end = useSelector(selectEditorEnd(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
+export const EditorAllDayCheckbox = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const end = useAppSelector(selectEditorEnd(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 	const startDate = useMemo(() => (start ? new Date(start) : undefined), [start]);
 	const endDate = useMemo(() => (end ? new Date(end) : undefined), [end]);
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);

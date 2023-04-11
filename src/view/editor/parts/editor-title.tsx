@@ -6,21 +6,17 @@
 import { debounce, isNil } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { Input } from '@zextras/carbonio-design-system';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorTitle } from '../../../store/selectors/editor';
 import { editEditorTitle } from '../../../store/slices/editor-slice';
 
-type EditorTitleProps = {
-	editorId: string;
-};
-
-export const EditorTitle = ({ editorId }: EditorTitleProps): ReactElement | null => {
+export const EditorTitle = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
-	const title = useSelector(selectEditorTitle(editorId));
+	const title = useAppSelector(selectEditorTitle(editorId));
 	const [value, setValue] = useState(title ?? '');
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (title) {

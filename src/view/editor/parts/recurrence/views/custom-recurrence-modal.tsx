@@ -14,7 +14,7 @@ import {
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import React, { ReactElement, useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../../../store/redux/hooks';
 import {
 	selectEditorRecurrenceCount,
 	selectEditorRecurrenceFrequency,
@@ -50,10 +50,10 @@ type CustomRecurrenceModalProps = {
 };
 
 const CustomRecurrenceModal = ({ editorId, onClose }: CustomRecurrenceModalProps): ReactElement => {
-	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
-	const count = useSelector(selectEditorRecurrenceCount(editorId));
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
-	const dispatch = useDispatch();
+	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
+	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
+	const dispatch = useAppDispatch();
 
 	const [frequency, setFrequency] = useState(freq);
 

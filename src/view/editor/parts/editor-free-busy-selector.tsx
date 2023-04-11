@@ -6,16 +6,12 @@
 import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorFreeBusy } from '../../../store/selectors/editor';
 import { editEditorDisplayStatus } from '../../../store/slices/editor-slice';
 import LabelFactory, { Square } from './select-label-factory';
-
-type EditorFreeBusyProps = {
-	editorId: string;
-};
 
 type ItemProps = {
 	label: string;
@@ -69,12 +65,12 @@ const getStatusItems = (t: TFunction): Array<any> => [
 	}
 ];
 
-export const EditorFreeBusySelector = ({ editorId }: EditorFreeBusyProps): ReactElement | null => {
+export const EditorFreeBusySelector = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
 	const statusItems = useMemo(() => getStatusItems(t), [t]);
-	const freeBusy = useSelector(selectEditorFreeBusy(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
+	const freeBusy = useAppSelector(selectEditorFreeBusy(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	const getNewSelection = useCallback(
 		(e) => find(statusItems, ['value', e]) ?? statusItems[0],

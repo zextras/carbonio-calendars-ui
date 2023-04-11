@@ -7,9 +7,9 @@ import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design
 import { getIntegratedFunction, t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { uploadParts } from '../../../commons/upload-parts';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttach,
 	selectEditorAttachmentFiles,
@@ -38,10 +38,10 @@ export const addAttachments = async (
 export const EditorAttachmentsButton = ({ editorId }: EditorProps): ReactElement => {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [openDD, setOpenDD] = useState(false);
-	const attachmentFiles = useSelector(selectEditorAttachmentFiles(editorId));
-	const parts = useSelector(selectEditorAttach(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
+	const attachmentFiles = useAppSelector(selectEditorAttachmentFiles(editorId));
+	const parts = useAppSelector(selectEditorAttach(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	const onFileClick = useCallback(() => {
 		setOpenDD(false);
@@ -54,9 +54,7 @@ export const EditorAttachmentsButton = ({ editorId }: EditorProps): ReactElement
 		editorId
 	});
 
-	const [getFilesFromDrive, getFilesAvailable] = useGetFilesFromDrive({
-		editorId
-	});
+	const [getFilesFromDrive, getFilesAvailable] = useGetFilesFromDrive({ editorId });
 
 	const actionURLTarget = useMemo(
 		() => ({

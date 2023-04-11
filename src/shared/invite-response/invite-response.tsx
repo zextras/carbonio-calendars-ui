@@ -18,9 +18,9 @@ import styled from 'styled-components';
 import moment from 'moment';
 import 'moment-timezone';
 import { addBoard, getAction, Action, t, Board } from '@zextras/carbonio-shell-ui';
-import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
+import { useAppDispatch } from '../../store/redux/hooks';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
@@ -92,7 +92,7 @@ const InviteResponse: FC<InviteResponse> = ({
 	parent,
 	isAttendee
 }): ReactElement => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	useEffect(() => {
 		if (!mailMsg.read) {
@@ -154,46 +154,45 @@ const InviteResponse: FC<InviteResponse> = ({
 	};
 
 	const proposeNewTimeCb = useCallback(() => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		dispatch(getInvite({ inviteId })).then((res) => {
-			const normalizedInvite = normalizeInvite(res.payload.m?.[0]);
-			const requiredEvent = inviteToEvent(normalizedInvite);
-
-			const editor = generateEditor({
-				event: requiredEvent,
-				invite: normalizedInvite,
-				context: {
-					dispatch,
-					folders: calendarFolders,
-					isProposeNewTime: true,
-					panel: false,
-					disabled: {
-						title: true,
-						location: true,
-						organizer: true,
-						virtualRoom: true,
-						richTextButton: true,
-						attachmentsButton: true,
-						saveButton: true,
-						attendees: true,
-						optionalAttendees: true,
-						freeBusy: true,
-						calendar: true,
-						private: true,
-						allDay: true,
-						reminder: true,
-						recurrence: true,
-						composer: true
+		dispatch(getInvite({ inviteId })).then(({ payload }) => {
+			if (payload) {
+				const normalizedInvite = normalizeInvite(payload.m?.[0]);
+				const requiredEvent = inviteToEvent(normalizedInvite);
+				const editor = generateEditor({
+					event: requiredEvent,
+					invite: normalizedInvite,
+					context: {
+						dispatch,
+						folders: calendarFolders,
+						isProposeNewTime: true,
+						panel: false,
+						disabled: {
+							title: true,
+							location: true,
+							organizer: true,
+							virtualRoom: true,
+							richTextButton: true,
+							attachmentsButton: true,
+							saveButton: true,
+							attendees: true,
+							optionalAttendees: true,
+							freeBusy: true,
+							calendar: true,
+							private: true,
+							allDay: true,
+							reminder: true,
+							recurrence: true,
+							composer: true
+						}
 					}
+				});
+				if (editor.id) {
+					addBoard({
+						url: `${CALENDAR_ROUTE}/edit?edit=${payload?.m?.[0]?.inv[0]?.comp[0]?.apptId}`,
+						title: editor?.title ?? '',
+						...editor
+					} as unknown as Board);
 				}
-			});
-			if (editor.id) {
-				addBoard({
-					url: `${CALENDAR_ROUTE}/edit?edit=${res?.payload?.m?.[0]?.inv[0]?.comp[0]?.apptId}`,
-					title: editor?.title ?? '',
-					...editor
-				} as unknown as Board);
 			}
 		});
 	}, [calendarFolders, dispatch, inviteId]);

@@ -8,7 +8,6 @@ import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { ModalHeader } from '../../commons/modal-header';
 import { generateEditor } from '../../commons/editor-generator';
 import ModalFooter from '../../commons/modal-footer';
@@ -17,7 +16,7 @@ import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
-import { AppDispatch } from '../../store/redux';
+import { useAppDispatch } from '../../store/redux/hooks';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
@@ -32,7 +31,7 @@ export const ReminderModal = ({
 	const [showNewTimeModal, setShowNewTimeModal] = useState(false);
 	const [activeReminder, setActiveReminder] = useState<ReminderItem | undefined>(undefined);
 	const toggleModal = useCallback(() => setShowNewTimeModal(!showNewTimeModal), [showNewTimeModal]);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const openModal = useMemo(() => !isEmpty(reminders), [reminders]);
 
@@ -57,42 +56,42 @@ export const ReminderModal = ({
 	);
 
 	const setNewTime = useCallback(() => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		dispatch(getInvite({ inviteId: activeReminder.inviteId })).then(({ payload }) => {
-			if (activeReminder) {
-				const invite = normalizeInvite(payload.m?.[0]);
-				const event = {
-					resource: {
-						calendar: activeReminder.calendar,
-						isRecurrent: activeReminder.isRecurrent,
-						isException: !!activeReminder.isException,
-						location: activeReminder.location,
-						inviteId: activeReminder.inviteId,
-						id: activeReminder.id
-					},
-					title: activeReminder.name,
-					allDay: activeReminder.allDay,
-					start: activeReminder.start,
-					end: activeReminder.end
-				};
-				const editor = generateEditor({
-					event,
-					invite,
-					context: {
-						dispatch,
-						folders: calendarFolders,
-						panel: false
-					}
-				});
-				addBoard({
-					url: `${CALENDAR_ROUTE}/`,
-					title: editor.title ?? '',
-					...editor
-				} as unknown as Board);
-				dismissAll();
-			}
-		});
+		if (activeReminder) {
+			dispatch(getInvite({ inviteId: activeReminder.inviteId })).then(({ payload }) => {
+				if (payload) {
+					const invite = normalizeInvite(payload.m?.[0]);
+					const event = {
+						resource: {
+							calendar: activeReminder.calendar,
+							isRecurrent: activeReminder.isRecurrent,
+							isException: !!activeReminder.isException,
+							location: activeReminder.location,
+							inviteId: activeReminder.inviteId,
+							id: activeReminder.id
+						},
+						title: activeReminder.name,
+						allDay: activeReminder.allDay,
+						start: activeReminder.start,
+						end: activeReminder.end
+					};
+					const editor = generateEditor({
+						event,
+						invite,
+						context: {
+							dispatch,
+							folders: calendarFolders,
+							panel: false
+						}
+					});
+					addBoard({
+						url: `${CALENDAR_ROUTE}/`,
+						title: editor.title ?? '',
+						...editor
+					} as unknown as Board);
+					dismissAll();
+				}
+			});
+		}
 	}, [activeReminder, calendarFolders, dismissAll, dispatch]);
 
 	const headerLabel = useMemo(

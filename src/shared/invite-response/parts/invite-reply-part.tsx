@@ -15,7 +15,7 @@ import {
 	Row,
 	Checkbox
 } from '@zextras/carbonio-design-system';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../../store/redux/hooks';
 import { CalendarSelector } from '../../../view/editor/parts/calendar-selector';
 import { sendResponse } from '../invite-reply-actions';
 
@@ -36,7 +36,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 	const [notifyOrganizer, setNotifyOrganizer] = useState(true);
 	const [activeCalendar, setActiveCalendar] = useState(null);
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const onAction = useCallback(
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -6,21 +6,17 @@
 import { isNil, debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { Input } from '@zextras/carbonio-design-system';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorLocation } from '../../../store/selectors/editor';
 import { editEditorLocation } from '../../../store/slices/editor-slice';
 
-type EditorTitleProps = {
-	editorId: string;
-};
-
-export const EditorLocation = ({ editorId }: EditorTitleProps): ReactElement | null => {
+export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
-	const location = useSelector(selectEditorLocation(editorId));
+	const location = useAppSelector(selectEditorLocation(editorId));
 	const [value, setValue] = useState(location ?? '');
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (location) {

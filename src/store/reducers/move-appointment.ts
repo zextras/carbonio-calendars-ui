@@ -3,26 +3,39 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const moveAppointmentPending = (state: any, { meta }: any) => {
-	if (meta.arg.fromMail) {
-		// do some stuff if required in future
-	} else {
+import { PayloadAction, SerializedError } from '@reduxjs/toolkit';
+import { ItemActionRejectedType } from '../../soap/item-action-request';
+import { AppointmentsSlice, PendingResponse, RejectedResponse } from '../../types/store/store';
+import { MoveAppointmentArguments } from '../actions/move-appointment';
+
+export const moveAppointmentPending = (
+	state: AppointmentsSlice,
+	{ meta }: PayloadAction<undefined, string, PendingResponse<MoveAppointmentArguments>>
+): void => {
+	if (!meta.arg.fromMail) {
 		const { l, id } = meta.arg;
 		// eslint-disable-next-line no-param-reassign
-		meta.prevApntState = state.appointments;
+		meta.arg.previousState = state.appointments;
 		state.appointments[id].l = l;
 	}
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const moveAppointmentFulfilled = (state: any): void => {
+export const moveAppointmentFulfilled = (state: AppointmentsSlice): void => {
 	state.status = 'completed';
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const moveAppointmentRejected = (state: any, { meta }: any) => {
-	if (!meta.arg.fromMail) {
-		state.appointments = meta.arg.prevApntState;
+export const moveAppointmentRejected = (
+	state: AppointmentsSlice,
+	{
+		meta
+	}: PayloadAction<
+		ItemActionRejectedType | undefined,
+		string,
+		RejectedResponse<MoveAppointmentArguments>,
+		SerializedError
+	>
+): void => {
+	if (!meta.arg.fromMail && meta.arg.previousState) {
+		state.appointments = meta.arg.previousState;
 	}
 };

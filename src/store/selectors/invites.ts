@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Invite } from '../../types/store/invite';
-import { Store } from '../../types/store/store';
+import type { RootState } from '../redux';
 
 export const selectInstanceInvite =
-	(inviteId?: string): ((state: Store) => Invite | undefined) =>
-	(state: Store): Invite | undefined =>
+	(inviteId?: string): ((state: RootState) => Invite | undefined) =>
+	(state: RootState): Invite | undefined =>
 		inviteId ? state?.invites?.invites?.[inviteId] : undefined;

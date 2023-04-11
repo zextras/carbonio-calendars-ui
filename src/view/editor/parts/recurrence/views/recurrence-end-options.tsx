@@ -17,11 +17,11 @@ import {
 	Row,
 	Text
 } from '@zextras/carbonio-design-system';
-import { useSelector } from 'react-redux';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import momentLocalizer from 'react-widgets-moment';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import Styler from '../../../../../settings/components/date-picker-style';
+import { useAppSelector } from '../../../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
 	selectEditorRecurrenceCount,
@@ -88,10 +88,10 @@ const radioInitialState = (count: number | undefined, until: string | undefined)
 
 const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement => {
 	const { newEndValue, setNewEndValue } = useContext(RecurrenceContext);
-	const start = useSelector(selectEditorStart(editorId));
-	const allDay = useSelector(selectEditorAllDay(editorId));
-	const count = useSelector(selectEditorRecurrenceCount(editorId));
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
+	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
 
 	const [radioValue, setRadioValue] = useState(() => radioInitialState(count, until));
 	const [inputValue, setInputValue] = useState(count ?? '1');

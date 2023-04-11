@@ -7,9 +7,9 @@ import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useState, useEffect, useMemo } from 'react';
 import { compact, filter, find, forEach, includes, isEmpty, map, reduce } from 'lodash';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
 import { getTimeToDisplayData } from '../../commons/utilities';
 import { normalizeReminderItem } from '../../normalizations/normalize-reminder';
+import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
@@ -19,8 +19,8 @@ import sound from '../../assets/notification.mp3';
 
 export const AppointmentReminder = (): ReactElement | null => {
 	const [reminders, setReminders] = useState<Reminders>({});
-	const appointments = useSelector(selectAppointmentsArray);
-	const calendars = useSelector(selectCalendars);
+	const appointments = useAppSelector(selectAppointmentsArray);
+	const calendars = useAppSelector(selectCalendars);
 
 	const alarms = useMemo(() => {
 		const appts = filter(appointments, 'alarmData');
@@ -92,7 +92,7 @@ export const AppointmentReminder = (): ReactElement | null => {
 			if (remindersToNotify?.length > 0) {
 				notificationAudio.play();
 				forEach(remindersToNotify, (rem) => {
-					const { text } = getTimeToDisplayData(rem, moment());
+					const { text } = getTimeToDisplayData(rem, moment().valueOf());
 					showNotification(rem?.name, text);
 				});
 			}

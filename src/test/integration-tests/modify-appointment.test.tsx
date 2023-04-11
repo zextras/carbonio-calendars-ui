@@ -5,6 +5,7 @@
  */
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { act } from '@testing-library/react-hooks';
 import { map, values } from 'lodash';
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';

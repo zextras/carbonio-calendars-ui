@@ -18,7 +18,6 @@ import {
 import { t, useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { isNil, map, some } from 'lodash';
 import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import {
@@ -29,6 +28,7 @@ import {
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
 import { shareCalendar } from '../../store/actions/share-calendar';
 import { StoreProvider } from '../../store/redux';
+import { useAppDispatch } from '../../store/redux/hooks';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
 import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
 
@@ -40,7 +40,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	secondaryLabel,
 	grant
 }): ReactElement => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');

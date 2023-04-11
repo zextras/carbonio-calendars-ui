@@ -4,31 +4,29 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
-import produce from 'immer';
+import { InvitesSlice } from '../../types/store/store';
 import { getInvite } from '../actions/get-invite';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
 import { sendInviteResponse } from '../actions/send-invite-response';
 import { getInviteFulfilled, getInviteRejected } from '../reducers/get-invite';
 import { handleModifiedInvitesReducer } from '../reducers/handle-modified-invites';
-import {
-	moveAppointmentToTrashFulfilled,
-	moveAppointmentToTrashPending,
-	moveAppointmentToTrashRejected
-} from '../reducers/move-appointment-to-trash';
+import { moveAppointmentToTrashFulfilled } from '../reducers/move-appointment-to-trash';
 import {
 	sendInviteResponseFulfilled,
 	sendInviteResponsePending,
 	sendInviteResponseRejected
 } from '../reducers/send-invite-response';
 
+const initialState: InvitesSlice = {
+	status: 'idle',
+	invites: {}
+};
+
 export const invitesSlice = createSlice({
 	name: 'invites',
-	initialState: {
-		status: 'idle',
-		invites: {}
-	},
+	initialState,
 	reducers: {
-		handleModifiedInvites: produce(handleModifiedInvitesReducer)
+		handleModifiedInvites: handleModifiedInvitesReducer
 	},
 	extraReducers: (builder) => {
 		builder.addCase(getInvite.fulfilled, getInviteFulfilled);
@@ -36,8 +34,6 @@ export const invitesSlice = createSlice({
 		builder.addCase(sendInviteResponse.pending, sendInviteResponsePending);
 		builder.addCase(sendInviteResponse.fulfilled, sendInviteResponseFulfilled);
 		builder.addCase(sendInviteResponse.rejected, sendInviteResponseRejected);
-		builder.addCase(moveAppointmentToTrash.pending, moveAppointmentToTrashPending);
-		builder.addCase(moveAppointmentToTrash.rejected, moveAppointmentToTrashRejected);
 		builder.addCase(moveAppointmentToTrash.fulfilled, moveAppointmentToTrashFulfilled);
 	}
 });

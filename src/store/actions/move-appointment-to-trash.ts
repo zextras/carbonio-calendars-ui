@@ -4,7 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { cancelAppointmentRequest } from '../../soap/cancel-appointment-request';
+import { TFunction } from 'i18next';
+import {
+	CancelAppointmentRejectedType,
+	cancelAppointmentRequest,
+	CancelAppointmentReturnType
+} from '../../soap/cancel-appointment-request';
+import { AppointmentsSlice } from '../../types/store/store';
+import type { RootState } from '../redux';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function getMp({ t, fullInvite, newMessage }: any) {
@@ -61,22 +68,41 @@ function createMessageForDelete({ invite, t, newMessage }: any) {
 	};
 }
 
-export const moveAppointmentToTrash = createAsyncThunk(
+export type MoveAppointmentToTrashArguments = {
+	inviteId: string;
+	t: TFunction;
+	isOrganizer: boolean;
+	deleteSingleInstance: boolean;
+	inst: any;
+	s: any;
+	inv?: any;
+	newMessage: any;
+	ridZ: any;
+	recur: boolean;
+	isRecurrent: boolean;
+	id: string;
+	previousState?: AppointmentsSlice['appointments'];
+};
+
+export type MoveAppointmentToTrashReturnType = {
+	response: CancelAppointmentReturnType;
+	inviteId: string;
+};
+
+export const moveAppointmentToTrash = createAsyncThunk<
+	MoveAppointmentToTrashReturnType,
+	MoveAppointmentToTrashArguments,
+	{
+		state: RootState;
+		rejectValue: CancelAppointmentRejectedType;
+	}
+>(
 	'appointments/moveAppointmentToTrash',
 	async (
-		{
-			inviteId,
-			t,
-			isOrganizer = true,
-			deleteSingleInstance = false,
-			inst,
-			s,
-			inv,
-			newMessage
-		}: any,
-		{ getState }
+		{ inviteId, t, isOrganizer = true, deleteSingleInstance = false, inst, s, inv, newMessage },
+		{ getState, rejectWithValue }
 	) => {
-		const state: any = getState();
+		const state = getState();
 		const invite = inv ?? state.invites.invites[inviteId];
 		const m = createMessageForDelete({ invite, t, newMessage });
 		const response = await cancelAppointmentRequest({
@@ -87,6 +113,9 @@ export const moveAppointmentToTrash = createAsyncThunk(
 			m,
 			isOrganizer
 		});
+		if (response?.error) {
+			return rejectWithValue(response);
+		}
 		return { response, inviteId };
 	}
 );

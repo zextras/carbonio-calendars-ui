@@ -4,8 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { isNil, omitBy } from 'lodash';
-import { moveAppointmentToTrash } from '../store/actions/move-appointment-to-trash';
+import {
+	moveAppointmentToTrash,
+	MoveAppointmentToTrashArguments
+} from '../store/actions/move-appointment-to-trash';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
+import { AppDispatch } from '../store/redux';
 import { EventType } from '../types/event';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -21,8 +25,7 @@ export const generateSnackbar = ({ res, t, createSnackbar }: any): any => {
 	}
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const sendResponse = (event: any, context: any): any =>
+export const sendResponse = (event: EventType, context: { dispatch: AppDispatch }): Promise<any> =>
 	context.dispatch(
 		sendInviteResponse({
 			inviteId: event.resource.inviteId,
@@ -52,6 +55,6 @@ export const deleteEvent = (
 			id
 		},
 		isNil
-	);
+	) as MoveAppointmentToTrashArguments;
 	return context.dispatch(moveAppointmentToTrash(moveToTrashArgs));
 };

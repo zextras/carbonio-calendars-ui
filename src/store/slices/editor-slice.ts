@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
-import { EditorSlice } from '../../types/store/store';
+import type { EditorSlice } from '../../types/store/store';
 import {
 	editEditorAllDayReducer,
 	editEditorAttendeesReducer,
@@ -24,38 +24,21 @@ import {
 	editIsRichTextReducer,
 	editEditorAttachmentsReducer,
 	updateEditorReducer,
-	deleteEditorReducer,
-	editEditorRecurrenceFrequencyReducer,
-	editEditorRecurrenceIntervalReducer
-} from '../reducers/edit-organizer';
-import {
-	editAppointmentDataReducer,
-	editAttendeesReducer,
-	editOptionalAttendeesReducer,
-	editResourceDataReducer,
-	editRoomReducer,
-	openEditorReducer
+	newEditorReducer
 } from '../reducers/editor-reducers';
-import { newEditorReducer } from '../reducers/new-editor';
-import { Editor } from '../../types/editor';
 
 const initialState: EditorSlice = {
 	status: 'idle',
-	editors: {} as Record<string, Editor>,
+	editors: {},
 	editorPanel: undefined,
 	activeId: undefined,
 	searchActiveId: undefined
 };
+
 export const editorSlice = createSlice({
 	name: 'editor',
 	initialState,
 	reducers: {
-		editAppointmentData: editAppointmentDataReducer,
-		editResourceData: editResourceDataReducer,
-		editAttendees: editAttendeesReducer,
-		editRoom: editRoomReducer,
-		editOptionalAttendees: editOptionalAttendeesReducer,
-		openEditor: openEditorReducer,
 		createNewEditor: newEditorReducer,
 		editIsRichText: editIsRichTextReducer,
 		editEditorAttachments: editEditorAttachmentsReducer,
@@ -74,19 +57,11 @@ export const editorSlice = createSlice({
 		editEditorTimezone: editEditorTimezoneReducer,
 		editEditorReminder: editEditorReminderReducer,
 		editEditorRecurrence: editEditorRecurrenceReducer,
-		editEditorRecurrenceFrequency: editEditorRecurrenceFrequencyReducer,
-		editEditorRecurrenceInterval: editEditorRecurrenceIntervalReducer,
-		deleteEditor: deleteEditorReducer,
 		updateEditor: updateEditorReducer
 	}
 });
 
 export const {
-	editAppointmentData,
-	openEditor,
-	editRoom,
-	editAttendees,
-	editOptionalAttendees,
 	createNewEditor,
 	editIsRichText,
 	editEditorAttachments,
@@ -105,9 +80,6 @@ export const {
 	editEditorTimezone,
 	editEditorReminder,
 	editEditorRecurrence,
-	editEditorRecurrenceFrequency,
-	editEditorRecurrenceInterval,
-	deleteEditor,
 	updateEditor
 } = editorSlice.actions;
 

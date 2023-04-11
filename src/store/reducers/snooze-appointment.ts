@@ -3,23 +3,41 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import { cloneDeep } from 'lodash';
+import { SnoozeCalendarItemAlarmRejectedType } from '../../soap/snooze-calendar-item-alarm-request';
+import { AppointmentsSlice, PendingResponse, RejectedResponse } from '../../types/store/store';
+import { SnoozeApptReminderArguments } from '../actions/snooze-appointment-reminder';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const snoozeApptReminderPending = (state: any, { meta }: any) => {
+export const snoozeApptReminderPending = (
+	state: AppointmentsSlice,
+	{ meta }: PayloadAction<unknown, string, PendingResponse<SnoozeApptReminderArguments>>
+): void => {
 	// eslint-disable-next-line no-param-reassign
-	meta.arg.prevState = cloneDeep(state);
-	// eslint-disable-next-line array-callback-return
-	state.appointments[meta.arg.id].alarmData[0].nextAlarm = meta.arg.until;
+	meta.arg.previousState = cloneDeep(state.appointments);
+	const alarmData = state?.appointments?.[meta.arg.id]?.alarmData;
+	if (alarmData && alarmData?.[0]?.nextAlarm) {
+		alarmData[0].nextAlarm = meta.arg.until;
+	}
 };
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const snoozeApptReminderFulfilled = (state: any): void => {
+
+export const snoozeApptReminderFulfilled = (state: AppointmentsSlice): void => {
 	state.status = 'fulFilled';
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const snoozeApptReminderRejected = (state: any, { meta }: any) => {
-	// eslint-disable-next-line no-param-reassign
-	state = meta.arg.prevState;
+export const snoozeApptReminderRejected = (
+	state: AppointmentsSlice,
+	{
+		meta
+	}: PayloadAction<
+		SnoozeCalendarItemAlarmRejectedType | undefined,
+		string,
+		RejectedResponse<SnoozeApptReminderArguments>,
+		SerializedError
+	>
+): void => {
+	if (meta.arg.previousState) {
+		state.appointments = meta.arg.previousState;
+	}
 	state.status = 'error';
 };
