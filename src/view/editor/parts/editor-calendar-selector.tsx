@@ -5,22 +5,16 @@
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Row } from '@zextras/carbonio-design-system';
 import { selectEditorCalendar, selectEditorDisabled } from '../../../store/selectors/editor';
 import { editEditorCalendar } from '../../../store/slices/editor-slice';
 import { CalendarSelector } from './calendar-selector';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 
-type EditorCalendarSelectorProps = {
-	editorId: string;
-};
-
-export const EditorCalendarSelector = ({
-	editorId
-}: EditorCalendarSelectorProps): ReactElement | null => {
-	const calendar = useSelector(selectEditorCalendar(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
+export const EditorCalendarSelector = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const calendar = useAppSelector(selectEditorCalendar(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	const onChange = useCallback(
 		(value) => {

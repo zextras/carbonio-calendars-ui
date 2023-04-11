@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-/* eslint-disable import/extensions */
 import React, { FC, ReactElement, useCallback, useContext } from 'react';
 import {
 	SnackbarManagerContext,
@@ -13,16 +12,16 @@ import {
 	Divider
 } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { useDispatch } from 'react-redux';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
 import { appointmentToEvent } from '../../../hooks/use-invite-to-event';
-import { getAppointmentAndInvite } from '../../../store/actions/get-appointment';
+import { getAppointmentAndInvite } from '../../../commons/get-appointment';
 import { modifyAppointmentRequest } from '../../../store/actions/modify-appointment';
 import { normalizeAppointmentFromCreation } from '../../../normalizations/normalize-appointments';
-import { AppDispatch } from '../../../store/redux';
+import { useAppDispatch } from '../../../store/redux/hooks';
+import { Invite } from '../../../types/store/invite';
 
 type ProposedTimeReply = {
-	invite: any;
+	invite: Invite;
 	id: string;
 	inviteId: string;
 	moveToTrash: () => void;
@@ -33,41 +32,34 @@ type ProposedTimeReply = {
 const ProposedTimeReply: FC<ProposedTimeReply> = ({
 	id,
 	inviteId,
-	invite: Invite,
+	invite,
 	moveToTrash,
 	title,
 	fragment,
 	to
 }): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const accounts = useUserAccounts();
 	const [openComposer, available] = useIntegratedFunction('compose');
 	const accept = useCallback(() => {
-		dispatch(getAppointmentAndInvite({ aptId: id, inviteId })).then((res) => {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			const { appointment, invite } = res.payload;
+		getAppointmentAndInvite({ aptId: id, inviteId }).then((res) => {
+			const { appointment, invite: _invite } = res;
 			const normalizedAppointment = normalizeAppointmentFromCreation(appointment, {});
-			const normalizedInvite = invite.inv[0].comp
-				? normalizeInvite(invite)
-				: normalizeInvite({ ...invite, inv: appointment.inv });
+			const normalizedInvite = _invite.inv[0].comp
+				? normalizeInvite(_invite)
+				: normalizeInvite({ ..._invite, inv: appointment.inv });
 			const requiredEvent = appointmentToEvent(normalizedInvite, normalizedAppointment.id);
 
 			dispatch(
 				modifyAppointmentRequest({
 					appt: requiredEvent,
 					invite: normalizedInvite,
-					id: 0,
-					mailInvite: Invite,
+					mailInvite: invite,
 					account: accounts[0]
 				})
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 			).then((result) => {
 				if (result.type.includes('fulfilled')) {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
 					createSnackbar({
 						key: 'proposedTimeAccepted',
 						replace: true,
@@ -77,8 +69,6 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 						autoHideTimeout: 3000
 					});
 				} else {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
 					createSnackbar({
 						key: 'proposedTimeAccepted',
 						replace: true,
@@ -91,7 +81,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				moveToTrash();
 			});
 		});
-	}, [dispatch, id, inviteId, Invite, accounts, moveToTrash, createSnackbar]);
+	}, [dispatch, id, inviteId, invite, accounts, moveToTrash, createSnackbar]);
 	const decline = useCallback(() => {
 		if (available)
 			openComposer(null, {

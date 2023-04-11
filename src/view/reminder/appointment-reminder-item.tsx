@@ -17,14 +17,12 @@ import { noop } from 'lodash';
 import moment from 'moment';
 import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { getTimeToDisplayData } from '../../commons/utilities';
 import { getLocationUrl } from '../../normalizations/normalize-calendar-events';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../../store/actions/snooze-appointment-reminder';
-import { AppDispatch } from '../../store/redux';
+import { useAppDispatch } from '../../store/redux/hooks';
 import { ApptReminderCardProps } from '../../types/appointment-reminder';
-import { DateType } from '../../types/event';
 import { useGetReminderItems } from './reminder-time-options';
 
 export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
@@ -34,9 +32,9 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	setActiveReminder
 }): ReactElement => {
 	const { start, id, isRecurrent, end, alarmData, location, name, isOrg, key } = reminderItem;
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
-	const [now, setNow] = useState<DateType>(moment().valueOf());
+	const [now, setNow] = useState(moment().valueOf());
 
 	const locationUrl = useMemo(() => getLocationUrl(location), [location]);
 

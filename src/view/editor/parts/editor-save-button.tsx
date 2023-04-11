@@ -7,10 +7,10 @@ import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
 import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { onSave } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import {
 	selectEditor,
@@ -23,14 +23,15 @@ import { EditorProps } from '../../../types/editor';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
-	const title = useSelector(selectEditorTitle(editorId));
-	const isNew = useSelector(selectEditorIsNew(editorId));
-	const editor = useSelector(selectEditor(editorId));
+	const title = useAppSelector(selectEditorTitle(editorId));
+	const isNew = useAppSelector(selectEditorIsNew(editorId));
+	const editor = useAppSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const attendeesLength = useSelector(selectEditorAttendees(editorId))?.length;
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
 	const [t] = useTranslation();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
+
 	const { action } = useParams<{ action: string }>();
 
 	const onClick = useCallback(() => {
@@ -70,7 +71,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 				});
 			});
 		}
-	}, [editor, action, createModal, isNew, editorId, attendeesLength, dispatch, t]);
+	}, [editor, action, attendeesLength, isNew, dispatch, createModal, editorId, t]);
 
 	return (
 		<Button

@@ -15,7 +15,6 @@ import {
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, Folder, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import React, { FC, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {
 	getFolderIcon,
@@ -25,6 +24,7 @@ import {
 import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEnd, selectStart } from '../../../store/selectors/calendars';
 
 type FoldersComponentProps = {
@@ -62,9 +62,9 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	);
 
 	const ddItems = useCalendarActions(item);
-	const start = useSelector(selectStart);
-	const end = useSelector(selectEnd);
-	const dispatch = useDispatch();
+	const start = useAppSelector(selectStart);
+	const end = useAppSelector(selectEnd);
+	const dispatch = useAppDispatch();
 
 	const onClick = (): void =>
 		recursiveToggleCheck({

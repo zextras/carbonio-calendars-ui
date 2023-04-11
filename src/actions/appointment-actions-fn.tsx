@@ -9,6 +9,7 @@ import React from 'react';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import { CALENDAR_ROUTE, PANEL_VIEW } from '../constants';
+import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
@@ -65,9 +66,10 @@ export const createCopy =
 		if (!_invite) {
 			context
 				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
-				.then((res: { payload: Invite }) => {
+				.then((res) => {
 					if (res.payload) {
-						copy(res.payload);
+						const invite = normalizeInvite(res.payload.m[0]);
+						copy(invite);
 					}
 				});
 		} else {
@@ -122,9 +124,10 @@ export const editAppointment =
 		if (!_invite) {
 			context
 				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
-				.then((res: { payload: Invite }) => {
+				.then((res) => {
 					if (res.payload) {
-						edit(res.payload);
+						const invite = normalizeInvite(res.payload.m[0]);
+						edit(invite);
 					}
 				});
 		} else {
@@ -216,9 +219,10 @@ export const moveToTrash =
 		if (!_invite) {
 			context
 				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
-				.then((res: { payload: Invite }) => {
+				.then((res) => {
 					if (res.payload) {
-						trashEvent(res.payload);
+						const invite = normalizeInvite(res.payload.m[0]);
+						trashEvent(invite);
 					}
 				});
 		} else {

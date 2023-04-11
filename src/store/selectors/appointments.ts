@@ -5,40 +5,41 @@
  */
 import { find, values, reduce, filter } from 'lodash';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
+import { EventType } from '../../types/event';
 import { Appointment, InstanceReference } from '../../types/store/appointments';
 import { Calendar } from '../../types/store/calendars';
-import { Store } from '../../types/store/store';
+import type { RootState } from '../redux';
 
-export function selectAllAppointments({ appointments }: Store): Record<string, Appointment> {
+export function selectAllAppointments({ appointments }: RootState): Record<string, Appointment> {
 	return appointments?.appointments;
 }
 
-export function selectAppointmentsArray({ appointments }: Store): Array<Appointment> {
+export function selectAppointmentsArray({ appointments }: RootState): Array<Appointment> {
 	return values(appointments?.appointments);
 }
 
 export const selectAppointment =
-	(id: string | undefined): (({ appointments }: Store) => Appointment | undefined) =>
-	({ appointments }: Store): Appointment | undefined =>
+	(id: string | undefined): (({ appointments }: RootState) => Appointment | undefined) =>
+	({ appointments }: RootState): Appointment | undefined =>
 		id ? appointments?.appointments?.[id] : undefined;
 
 export const selectAppointmentInstance =
 	(
 		apptId: string | undefined,
 		ridZ: string | undefined
-	): (({ appointments }: Store) => InstanceReference | undefined) =>
-	({ appointments }: Store): InstanceReference | undefined =>
+	): (({ appointments }: RootState) => InstanceReference | undefined) =>
+	({ appointments }: RootState): InstanceReference | undefined =>
 		apptId && ridZ ? find(appointments?.appointments?.[apptId]?.inst, ['ridZ', ridZ]) : undefined;
 
-export function selectApptStatus({ appointments }: Store): string {
+export function selectApptStatus({ appointments }: RootState): string {
 	return appointments?.status;
 }
 
 export function getSelectedEvents(
-	{ appointments }: Store,
+	{ appointments }: RootState,
 	idMap: Record<string, Array<string>>,
 	calendars: Record<string, Calendar>
-): Array<any> {
+): Array<EventType> {
 	return normalizeCalendarEvents(
 		values(
 			reduce(

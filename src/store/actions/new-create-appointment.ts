@@ -250,6 +250,7 @@ export const generateSoapMessageFromEditor = (msg: Editor): any =>
 		isNil
 	);
 
+// todo: this thunk is not using redux! convert to regular async function
 export const createAppointment = createAsyncThunk(
 	'appointment/create new appointment',
 	async ({ draft, editor }: any, { rejectWithValue }: any): Promise<any> => {

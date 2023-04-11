@@ -62,13 +62,13 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 						<EditorDatePicker editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorTimezone editorId={editorId} expanded={expanded} />
+						<EditorTimezone editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
 						<EditorAllDayCheckbox editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorReminder editorId={editorId} expanded={expanded} />
+						<EditorReminder editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
 						<EditorRecurrence editorId={editorId} expanded={expanded} />

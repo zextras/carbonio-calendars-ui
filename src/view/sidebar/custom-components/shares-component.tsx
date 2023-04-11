@@ -7,16 +7,16 @@
 import { Button, Container, ModalManagerContext } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { filter, isEqual, uniqWith } from 'lodash';
 import { getShareInfo } from '../../../store/actions/get-share-info';
-import { AppDispatch, StoreProvider } from '../../../store/redux';
+import { StoreProvider } from '../../../store/redux';
+import { useAppDispatch } from '../../../store/redux/hooks';
 import { SharesModal } from '../shares-modal';
 import { ResFolder } from '../../../carbonio-ui-commons/utils';
 
 export const SharesComponent = (): ReactElement => {
 	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const label = useMemo(() => t('find_shares', 'Find shares'), []);
 
 	const onClick = useCallback(

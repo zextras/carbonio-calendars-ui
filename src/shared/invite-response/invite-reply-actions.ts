@@ -5,14 +5,14 @@
  */
 /* eslint-disable import/extensions */
 import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
-import { Dispatch } from 'redux';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
+import { AppDispatch } from '../../store/redux';
 
 type ResponseAction = {
 	inviteId: string;
 	notifyOrganizer: boolean;
 	action: string;
-	dispatch: Dispatch;
+	dispatch: AppDispatch;
 	activeCalendar: any;
 	createSnackbar: any;
 	parent: string;
@@ -27,14 +27,12 @@ export const sendResponse = ({
 	parent
 }: ResponseAction): void => {
 	dispatch(
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		sendInviteResponse({
 			inviteId,
 			updateOrganizer: notifyOrganizer,
 			action
 		})
-	).then((res: any): void => {
+	).then((res): void => {
 		if (res.type.includes('fulfilled')) {
 			if (parent) {
 				replaceHistory(`/folder/${parent}`);
@@ -58,9 +56,6 @@ export const sendResponse = ({
 						moveAppointment({ inviteId, l: activeCalendar?.zid || '10', fromMail: true })
 					);
 			}
-
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			createSnackbar({
 				key: `invite_${action}`,
 				replace: true,
@@ -69,8 +64,6 @@ export const sendResponse = ({
 				autoHideTimeout: 3000
 			});
 		} else {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			createSnackbar({
 				key: `invite_${action}_error`,
 				replace: true,

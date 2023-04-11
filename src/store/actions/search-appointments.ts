@@ -5,33 +5,40 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isNil, omitBy } from 'lodash';
-import { searchRequest } from '../../soap/search-request';
+import { SearchRejectedType, searchRequest, SearchReturnType } from '../../soap/search-request';
 import { SearchRequestProps } from '../../types/soap/soap-actions';
+import { AppointmentsSlice } from '../../types/store/store';
+import type { RootState } from '../redux';
 import { selectAllCheckedCalendarsQuery } from '../selectors/calendars';
 
-export const searchAppointments = createAsyncThunk(
+export type SearchAppointmentsArguments = {
+	spanStart: number;
+	spanEnd: number;
+	query?: string;
+	offset?: number;
+	sortBy?: string;
+	previousState?: AppointmentsSlice['appointments'];
+};
+
+export const searchAppointments = createAsyncThunk<
+	SearchReturnType,
+	SearchAppointmentsArguments,
+	{
+		state: RootState;
+		rejectValue: SearchRejectedType;
+	}
+>(
 	'calendars/search',
-	async (
-		{
-			spanStart,
-			spanEnd,
-			query,
-			offset,
-			sortBy
-		}: {
-			spanStart: number;
-			spanEnd: number;
-			query?: string;
-			offset?: number;
-			sortBy?: string;
-		},
-		{ getState }: any
-	): Promise<unknown> => {
+	async ({ spanStart, spanEnd, query, offset, sortBy }, { getState, rejectWithValue }) => {
 		const _content = query ?? selectAllCheckedCalendarsQuery(getState());
 		const arg = omitBy(
 			{ start: spanStart, end: spanEnd, content: _content, sortBy, offset },
 			isNil
 		) as SearchRequestProps;
-		return searchRequest(arg);
+		const response = await searchRequest(arg);
+		if (response?.error) {
+			return rejectWithValue(response);
+		}
+		return response;
 	}
 );

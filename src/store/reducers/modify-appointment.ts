@@ -3,11 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import moment from 'moment';
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleModifyAppointmentPending = (state: any, { meta }: any) => {
+import { AppointmentsSlice, PendingResponse, RejectedResponse } from '../../types/store/store';
+import {
+	ModifyAppointmentArguments,
+	ModifyAppointmentRejectedType
+} from '../actions/modify-appointment';
+
+export const handleModifyAppointmentPending = (
+	state: AppointmentsSlice,
+	{ meta }: PayloadAction<unknown, string, PendingResponse<ModifyAppointmentArguments>>
+): void => {
 	// eslint-disable-next-line no-param-reassign
-	meta.prevApntState = state.appointments;
+	meta.arg.previousState = state.appointments;
 	state.appointments[meta?.arg?.appt?.resource?.id].inst[0].s = Number(
 		moment(meta.arg.mailInvite[0].comp[0].s[0].u).format('x')
 	);
@@ -17,13 +26,23 @@ export const handleModifyAppointmentPending = (state: any, { meta }: any) => {
 	state.status = 'pending';
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleModifyAppointmentFulfilled = (state: any) => {
-	state.status = 'fullfiled';
+export const handleModifyAppointmentFulfilled = (state: AppointmentsSlice): void => {
+	state.status = 'fulfilled';
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const handleModifyAppointmentRejected = (state: any, { meta }: any): void => {
+export const handleModifyAppointmentRejected = (
+	state: AppointmentsSlice,
+	{
+		meta
+	}: PayloadAction<
+		ModifyAppointmentRejectedType | undefined,
+		string,
+		RejectedResponse<ModifyAppointmentArguments>,
+		SerializedError
+	>
+): void => {
 	state.status = 'failed';
-	state.appointments = meta.arg.prevApntState;
+	if (meta.arg.previousState) {
+		state.appointments = meta.arg.previousState;
+	}
 };

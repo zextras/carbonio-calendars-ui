@@ -8,8 +8,8 @@ import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttendees,
 	selectEditorDisabled,
@@ -43,11 +43,11 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const [showOptionals, setShowOptional] = useState(false);
 	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
+	const dispatch = useAppDispatch();
 
-	const attendees = useSelector(selectEditorAttendees(editorId));
-	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
+	const attendees = useAppSelector(selectEditorAttendees(editorId));
+	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	const hasError = useMemo(() => some(attendees ?? [], { error: true }), [attendees]);
 	const optionalHasError = useMemo(
@@ -134,9 +134,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							<ChipInput
 								placeholder={t('label.optional_plural', 'Optionals')}
 								background="gray5"
-								onChange={(items: any): void => {
-									onOptionalsChange(items);
-								}}
+								onChange={onOptionalsChange}
 								defaultValue={optionalAttendees}
 								hasError={optionalHasError}
 								errorLabel=""

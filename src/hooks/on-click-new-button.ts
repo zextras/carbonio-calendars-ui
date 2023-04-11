@@ -5,14 +5,14 @@
  */
 import { addBoard, t } from '@zextras/carbonio-shell-ui';
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
+import { useAppDispatch } from '../store/redux/hooks';
 import { useCalendarFolders } from './use-calendar-folders';
 
 export const useOnClickNewButton = (): ((ev?: MouseEvent) => void) => {
 	const calendarFolders = useCalendarFolders();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	return useCallback(
 		(ev) => {

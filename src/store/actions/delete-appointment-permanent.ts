@@ -4,12 +4,33 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { itemActionRequest } from '../../soap/item-action-request';
+import {
+	ItemActionRejectedType,
+	itemActionRequest,
+	ItemActionReturnType
+} from '../../soap/item-action-request';
+import { AppointmentsSlice } from '../../types/store/store';
 
-export const deleteAppointmentPermanent = createAsyncThunk(
-	'appointments/deleteAppointmentPermanent',
-	async ({ id }: { id: string }): Promise<{ response: any; id: string }> => {
-		const response = await itemActionRequest({ id, op: 'delete' });
-		return { response, id };
+export type DeleteAppointmentArguments = {
+	id: string;
+	previousState?: AppointmentsSlice['appointments'];
+};
+
+export type DeleteAppointmentReturnType = {
+	response: ItemActionReturnType;
+	id: string;
+};
+
+export const deleteAppointmentPermanent = createAsyncThunk<
+	DeleteAppointmentReturnType,
+	DeleteAppointmentArguments,
+	{
+		rejectValue: ItemActionRejectedType;
 	}
-);
+>('appointments/deleteAppointmentPermanent', async ({ id }, { rejectWithValue }) => {
+	const response = await itemActionRequest({ id, op: 'delete' });
+	if (response?.error) {
+		return rejectWithValue(response);
+	}
+	return { response, id };
+});

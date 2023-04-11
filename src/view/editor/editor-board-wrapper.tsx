@@ -9,6 +9,7 @@ import { EditorPanel } from './editor-panel';
 
 const BoardEditPanel = (): ReactElement | null => {
 	const board = useBoard();
+
 	return board?.id ? <EditorPanel editorId={board?.id} /> : null;
 };
 export default BoardEditPanel;

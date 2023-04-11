@@ -6,7 +6,6 @@
 import { useEffect, useState } from 'react';
 import { isEmpty, reduce, forEach, sortBy } from 'lodash';
 import { useRefresh, useNotify } from '@zextras/carbonio-shell-ui';
-import { useDispatch, useSelector } from 'react-redux';
 import { handleModifiedInvites } from '../../store/slices/invites-slice';
 import {
 	handleCalendarsRefresh,
@@ -17,15 +16,16 @@ import {
 import { handleModifiedAppointments } from '../../store/slices/appointments-slice';
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
 import { searchAppointments } from '../../store/actions/search-appointments';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 
 export const SyncDataHandler = () => {
 	const refresh = useRefresh();
 	const notifyList = useNotify();
 	const [seq, setSeq] = useState(-1);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [initialized, setInitialized] = useState(false);
-	const start = useSelector(selectStart);
-	const end = useSelector(selectEnd);
+	const start = useAppSelector(selectStart);
+	const end = useAppSelector(selectEnd);
 	useEffect(() => {
 		if (!isEmpty(refresh) && !initialized) {
 			dispatch(handleCalendarsRefresh(refresh));

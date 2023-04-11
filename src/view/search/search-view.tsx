@@ -6,17 +6,14 @@
 import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
 import { isEmpty, map, reduce } from 'lodash';
-import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { AppDispatch } from '../../store/redux';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
 import { selectCalendars } from '../../store/selectors/calendars';
-import { Store } from '../../types/store/store';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
 import AdvancedFilterModal from './advance-filter-modal';
@@ -47,8 +44,8 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		query: []
 	});
 	const [loading, setLoading] = useState(false);
+	const dispatch = useAppDispatch();
 	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
-	const dispatch = useDispatch<AppDispatch>();
 	const { path } = useRouteMatch();
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
 	const [resultLabel, setResultLabel] = useState<string>(t('label.results_for', 'Results for: '));
@@ -61,7 +58,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		[zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch]
 	);
 
-	const calendars = useSelector(selectCalendars);
+	const calendars = useAppSelector(selectCalendars);
 	const searchInFolders = useMemo(
 		() =>
 			reduce(
@@ -104,22 +101,23 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 					offset: reset ? 0 : searchResults.offset,
 					sortBy: searchResults.sortBy
 				})
-			) // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				.then(({ payload }: any) => {
+			)
+				.then(({ payload }) => {
 					setLoading(true);
-					const ids = reduce(
-						payload.appt,
-						(acc, v) => ({ ...acc, [v.id]: map(v.inst, 'ridZ') }),
-						{}
-					);
-					setSearchResults({
-						query: queryStr,
-						appointments: ids,
-						more: payload.more,
-						offset: (payload.offset ?? 0) + 100,
-						sortBy: payload.sortBy ?? 'none'
-					});
+					if (payload) {
+						const ids = reduce(
+							payload.appt,
+							(acc, v) => ({ ...acc, [v.id]: map(v.inst, 'ridZ') }),
+							{}
+						);
+						setSearchResults({
+							query: queryStr,
+							appointments: ids,
+							more: payload.more ?? false,
+							offset: (payload.offset ?? 0) + 100,
+							sortBy: payload.sortBy ?? 'none'
+						});
+					}
 					setLoading(false);
 				})
 
@@ -170,7 +168,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		}
 	}, [query, search, searchResults.query, isInvalidQuery, t]);
 
-	const appointments = useSelector((state: Store) =>
+	const appointments = useAppSelector((state) =>
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
 	);
 	return (

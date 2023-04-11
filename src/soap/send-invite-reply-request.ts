@@ -5,6 +5,10 @@
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 
+export type SendInviteReplyRejectedType = { error: boolean; m?: never; Fault: any };
+export type SendInviteReplyFulfilledType = { m: any; Fault?: never; error?: never };
+export type SendInviteReplyReturnType = SendInviteReplyFulfilledType | SendInviteReplyRejectedType;
+
 export const sendInviteReplyRequest = async ({
 	id,
 	action,
@@ -13,8 +17,8 @@ export const sendInviteReplyRequest = async ({
 	id: string;
 	action: string;
 	updateOrganizer: boolean;
-}): Promise<any> =>
-	soapFetch('SendInviteReply', {
+}): Promise<SendInviteReplyReturnType> => {
+	const response: SendInviteReplyReturnType = await soapFetch('SendInviteReply', {
 		_jsns: 'urn:zimbraMail',
 		id,
 		compNum: 0,
@@ -22,3 +26,5 @@ export const sendInviteReplyRequest = async ({
 		rt: 'r',
 		updateOrganizer
 	});
+	return response?.Fault ? { ...response.Fault, error: true } : response;
+};

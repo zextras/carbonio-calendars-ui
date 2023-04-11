@@ -3,9 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const handleUpdateParticipationStatus = (state: any, { payload }: any): any => {
-	const { status, apptId } = payload;
+import { PayloadAction } from '@reduxjs/toolkit';
+import { ParticipationStatus } from '../../types/store/invite';
+import { AppointmentsSlice } from '../../types/store/store';
+
+export const handleUpdateParticipationStatus = (
+	state: AppointmentsSlice,
+	action: PayloadAction<{ status: ParticipationStatus; apptId: string }>
+): void => {
+	const { status, apptId } = action.payload;
 	state.appointments[apptId] = {
 		...state.appointments[apptId],
 		ptst: status

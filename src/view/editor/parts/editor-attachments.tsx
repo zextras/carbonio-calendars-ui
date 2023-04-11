@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttachmentFiles,
 	selectEditorDisabled,
@@ -20,11 +20,10 @@ type EditorAttachmentsProps = {
 };
 
 export const EditorAttachments = ({ editorId }: EditorAttachmentsProps): ReactElement | null => {
-	const attachmentFiles = useSelector(selectEditorAttachmentFiles(editorId));
-	const inviteId = useSelector(selectEditorInviteId(editorId));
-	const title = useSelector(selectEditorTitle(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
+	const attachmentFiles = useAppSelector(selectEditorAttachmentFiles(editorId));
+	const inviteId = useAppSelector(selectEditorInviteId(editorId));
+	const title = useAppSelector(selectEditorTitle(editorId));
+	const dispatch = useAppDispatch();
 
 	const onAttachmentsChange = useCallback(
 		(attach, attachments) => {
@@ -38,6 +37,7 @@ export const EditorAttachments = ({ editorId }: EditorAttachmentsProps): ReactEl
 		},
 		[dispatch, editorId]
 	);
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	return attachmentFiles?.length > 0 && title ? (
 		<AttachmentsBlock

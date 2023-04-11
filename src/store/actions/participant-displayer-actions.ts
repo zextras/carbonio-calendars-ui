@@ -6,6 +6,7 @@
 import { t, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import { mailToContact } from '../../shared/invite-response/invite-response';
 
+// todo: this is not using redux! convert to regular async function
 export const copyEmailToClipboard = (email: string): void => {
 	navigator.clipboard.writeText(email).then(() => {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment

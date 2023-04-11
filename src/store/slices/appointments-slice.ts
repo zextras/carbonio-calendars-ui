@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
-import produce from 'immer';
-import { Appointment } from '../../types/store/appointments';
+import { AppointmentsSlice } from '../../types/store/store';
 import { moveAppointmentRequest } from '../actions/move-appointment';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
 import { modifyAppointmentRequest } from '../actions/modify-appointment';
@@ -30,7 +29,6 @@ import {
 	searchAppointmentsPending,
 	searchAppointmentsRejected
 } from '../reducers/search-appointments';
-import { updateAppointmentReducer } from '../reducers/update-appointment';
 import { handleUpdateParticipationStatus } from '../reducers/update-participation-status';
 import {
 	deleteAppointmentPermanentlyFulfilled,
@@ -53,17 +51,18 @@ import {
 	handleModifyAppointmentRejected
 } from '../reducers/modify-appointment';
 
+const initialState: AppointmentsSlice = {
+	status: 'init',
+	appointments: {}
+};
+
 export const appointmentsSlice = createSlice({
 	name: 'appointments',
-	initialState: {
-		status: 'init',
-		appointments: {} as Record<string, Appointment>
-	},
+	initialState,
 	reducers: {
 		updateParticipationStatus: handleUpdateParticipationStatus,
-		updateAppointment: updateAppointmentReducer,
-		handleModifiedAppointments: produce(handleModifiedAppointmentsReducer),
-		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer)
+		handleModifiedAppointments: handleModifiedAppointmentsReducer,
+		handleCreatedAppointments: handleCreatedAppointmentsReducer
 	},
 	extraReducers: (builder) => {
 		builder.addCase(modifyAppointmentRequest.pending, handleModifyAppointmentPending);
@@ -90,7 +89,6 @@ export const appointmentsSlice = createSlice({
 	}
 });
 
-export const { updateAppointment, handleModifiedAppointments, updateParticipationStatus } =
-	appointmentsSlice.actions;
+export const { handleModifiedAppointments, updateParticipationStatus } = appointmentsSlice.actions;
 
 export default appointmentsSlice.reducer;

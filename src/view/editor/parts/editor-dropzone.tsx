@@ -6,7 +6,7 @@
 import { map } from 'lodash';
 import React, { DragEvent, ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
 import { Container } from '@zextras/carbonio-design-system';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../../store/redux/hooks';
 import { editEditorAttachments } from '../../../store/slices/editor-slice';
 import { addAttachments } from './editor-attachments-button';
 import { DropZoneAttachment } from './editor-dropzone-attachments';
@@ -20,7 +20,7 @@ type DropzoneProps = {
 export const EditorDropZone = ({ editorId, children }: DropzoneProps): ReactElement | null => {
 	const [dropZoneEnable, setDropZoneEnable] = useState(false);
 	const parts: never[] = useMemo(() => [], []);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const onDragOver = useCallback((event: DragEvent): void => {
 		event.preventDefault();

@@ -12,10 +12,10 @@ import {
 } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { onSend } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditor,
 	selectEditorAttendees,
@@ -28,15 +28,15 @@ import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
-	const attendees = useSelector(selectEditorAttendees(editorId));
-	const optionalAttendees = useSelector(selectEditorOptionalAttendees(editorId));
-	const isNew = useSelector(selectEditorIsNew(editorId));
-	const editor = useSelector(selectEditor(editorId));
+	const attendees = useAppSelector(selectEditorAttendees(editorId));
+	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
+	const isNew = useAppSelector(selectEditorIsNew(editorId));
+	const editor = useAppSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();
 	const board = useBoard();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const { action } = useParams<{ action: string }>();
 	const isDisabled = useMemo(

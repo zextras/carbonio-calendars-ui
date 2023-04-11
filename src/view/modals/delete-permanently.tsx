@@ -40,7 +40,7 @@ export const DeletePermanently = ({
 					id: event.resource.id
 				})
 			)
-			.then((res: any) => {
+			.then((res) => {
 				onClose();
 				if (res.type.includes('fulfilled')) {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment

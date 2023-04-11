@@ -8,11 +8,10 @@ import React, { ReactElement, useCallback, useEffect, useMemo, useState } from '
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { find } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorReminder } from '../../../store/selectors/editor';
 import { editEditorReminder } from '../../../store/slices/editor-slice';
-import { EditorProps } from '../../../types/editor';
 
 const getReminderItems = (t: TFunction): Array<{ label: string; value: string }> => [
 	{ label: t('reminder.never', 'Never'), value: 'never' },
@@ -206,12 +205,12 @@ type SelectValue =
 	  }
 	| undefined;
 
-export const EditorReminder = ({ editorId }: EditorProps): ReactElement | null => {
+export const EditorReminder = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
 	const reminderItems = useMemo(() => getReminderItems(t), [t]);
-	const reminder = useSelector(selectEditorReminder(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const dispatch = useDispatch();
+	const reminder = useAppSelector(selectEditorReminder(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	const getNewSelection = useCallback(
 		(e) => find(reminderItems, ['value', e]) ?? reminderItems[0],
