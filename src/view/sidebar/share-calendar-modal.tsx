@@ -206,6 +206,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 									'share.placeholder.recipients_address',
 									'Recipients e-mail addresses'
 								)}
+								hasError
 								background={'gray4'}
 								onChange={(ev: any): any => {
 									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -220,6 +221,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 						mainAlignment="center"
 						crossAlignment="flex-start"
 						height="fit"
+						data-testid={'privateCheckboxContainer'}
 					>
 						<Checkbox
 							value={allowToSeePrvtAppt}
@@ -254,6 +256,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 						mainAlignment="center"
 						crossAlignment="flex-start"
 						height="fit"
+						data-testid={'sendNotificationCheckboxContainer'}
 					>
 						<Checkbox
 							value={sendNotification}
