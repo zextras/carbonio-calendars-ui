@@ -11,7 +11,6 @@ import { reducers } from '../../store/redux';
 import { ShareCalendarModal } from './share-calendar-modal';
 
 describe('share-calendar-modal', () => {
-	// share with
 	test('share with has 2 options, internal is selected by default, confirm button is disabled', async () => {
 		const closeFn = jest.fn();
 		const grant = [
@@ -102,7 +101,7 @@ describe('share-calendar-modal', () => {
 		expect(standardMessage).not.toBeInTheDocument();
 		expect(shareNotes).not.toBeInTheDocument();
 	});
-	test('when share with internals is selected, other fields are rendered', () => {
+	test('when share with internals is selected, other fields are rendered', async () => {
 		const closeFn = jest.fn();
 		const grant = [
 			{
@@ -121,6 +120,7 @@ describe('share-calendar-modal', () => {
 			/>,
 			{ store }
 		);
+
 		const chipInput = screen.getByRole('textbox', {
 			name: /share\.placeholder\.recipients_address/i
 		});
@@ -138,8 +138,7 @@ describe('share-calendar-modal', () => {
 		expect(standardMessage).toBeInTheDocument();
 		expect(shareNotes).toBeInTheDocument();
 	});
-	// chipInput
-	test('chipInput is empty by default, confirm button is disabled', () => {
+	test('chipInput is empty by default, confirm button is disabled', async () => {
 		const closeFn = jest.fn();
 		const grant = [
 			{
@@ -310,7 +309,7 @@ describe('share-calendar-modal', () => {
 		expect(adminRoleOption).toBeInTheDocument();
 		expect(managerRoleOption).toBeInTheDocument();
 	});
-	test('send notification for the share is checked by default', () => {
+	test('send notification for the share is checked by default', async () => {
 		const closeFn = jest.fn();
 		const grant = [
 			{
@@ -336,7 +335,7 @@ describe('share-calendar-modal', () => {
 
 		expect(sendNotificationCheckbox).toBeInTheDocument();
 	});
-	test('when send notification is checked the message field is enabled and empty', () => {
+	test('when send notification is checked the message field is enabled and empty', async () => {
 		const closeFn = jest.fn();
 		const grant = [
 			{
