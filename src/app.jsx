@@ -123,6 +123,7 @@ const AppRegistrations = () => {
 		});
 		addSearchView({
 			route: CALENDAR_ROUTE,
+			label: t('label.app_name', 'Calendars'),
 			component: SearchView
 		});
 		addBoardView({
