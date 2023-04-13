@@ -14,7 +14,8 @@
         "empty_trash_confirmation": "E-Posta, Kişiler, Takvim, Görevler ve Çanta çöp kutularındaki tüm öğeler silinecek. Bu çöp kutularındaki herşeyi tamamen silmek istediğinizden emin misiniz?",
         "send_edit": "Gönder Düzenle",
         "reset": "Sıfırla",
-        "search": "Ara"
+        "search": "Ara",
+        "show_original": "Orjinali göster"
     },
     "edit_share_properties": "Paylaşım özelliklerini düzenle",
     "button": {

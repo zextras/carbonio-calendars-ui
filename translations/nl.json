@@ -14,7 +14,8 @@
         "empty_trash_confirmation": "Deze actie verwijdert alle items in de E-mail, Contacten, Agenda, Taken en Brievenbus prullenmappen. Weet u zeker dat u alles in deze prullenmappen permanent wilt verwijderen?",
         "send_edit": "Bewerking versturen",
         "reset": "Opnieuw instellen",
-        "search": "Zoeken"
+        "search": "Zoeken",
+        "show_original": "Origineel weergeven"
     },
     "reminder": {
         "never": "Nooit",

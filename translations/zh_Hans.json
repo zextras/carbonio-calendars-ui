@@ -91,7 +91,8 @@
         "empty_trash_confirmation": "此操作将删除邮件、联系人、日历、任务和公文包垃圾文件夹中的所有项目。确定要永久性删除垃圾文件夹中的所有内容吗？",
         "send_edit": "发送编辑",
         "reset": "重置",
-        "search": "搜索"
+        "search": "搜索",
+        "show_original": "显示原文"
     },
     "event": {
         "action": {

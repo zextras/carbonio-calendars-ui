@@ -14,7 +14,8 @@
         "empty_trash_confirmation": "Tindakan ini akan menghapus semua item dalam Email, Kontak, Kalender, Tugas, dan Tas Kantor. Yakin ingin menghapus semua yang ada di dalam folder sampah ini secara permanen?",
         "send_edit": "Kirim Edit",
         "reset": "Reset",
-        "search": "Cari"
+        "search": "Cari",
+        "show_original": "Tampilkan aslinya"
     },
     "label": {
         "attachment": "lampiran",
