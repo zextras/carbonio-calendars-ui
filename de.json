@@ -48,7 +48,7 @@
         "sure_to_delete_appointment": "Sind Sie sicher, dass Sie diesen Termin löschen möchten?",
         "sure_to_delete_appointment_permanently": "Sind Sie sicher, dass Sie diesen Termin endgültig löschen möchten?",
         "want_to_edit_cancellation_msg": "Möchten Sie die Absagenachricht des Termins bearbeiten?",
-        "you_are_organizer": "<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>",
+        "you_are_organizer": "<Row><Text> <BoldText> Du  </BoldText>bist der Veranstalter</Text></Row>",
         "you_sure_delete_calendar": "Sind Sie sicher, dass Sie den {{name}} Kalender endgültig löschen möchten?",
         "you_sure_move_calendar_trash": "Sind Sie sicher, dass Sie den {{name}} Kalender löschen möchten?",
         "share_calendar_url_msg": "Sie können {{title}} schnell mit Ihren Kollegen teilen, indem Sie einen dieser URLs benutzen:",
@@ -59,7 +59,7 @@
         "appointment_type_handle": "{{name}} ist ein Serientermin. Möchten Sie nur diesen Termin oder die ganze Serie öffnen?",
         "organizer": "Organisator",
         "send_email": "E-Mail senden",
-        "more": "Mehr …",
+        "more": "Mehr…",
         "required_participant": "{{count}} Teilnehmer",
         "required_participant_plural": "{{count}} Teilnehmer",
         "optional_participant": "{{count}} Optional",
@@ -67,7 +67,7 @@
         "edit_series_warning": "Da Sie mit der Änderung der gesamten Serie fortfahren, werden alle bereits gelöschten oder veränderten Ereignisse mit den neuen Serieneinstellungen wiederhergestellt.",
         "appointment_invitation_sent": "Termineinladung gesendet",
         "meeting_modified": "Das folgende Meeting wurde geändert",
-        "want_to_edit_modified_msg": "Möchten Sie die geänderte Nachricht des Termins bearbeiten?",
+        "want_to_edit_modified_msg": "Die Änderungen werden den Teilnehmern per E-Mail mitgeteilt. Möchten Sie eine eigene Nachricht hinzufügen?",
         "copy": "Kopieren"
     },
     "label": {
@@ -114,11 +114,11 @@
         "regular": "Normal",
         "resend": "Erneut senden",
         "revoke": "Widerrufen",
-        "revoke_share": "Teilen von {{title}} widerrufen",
+        "revoke_share": "Das Teilen von {{title}} widerrufen",
         "series": "Serientermine",
         "set_new_time": "Neue Zeit festlegen",
         "share_calendar_url": "{{title}} Zugang teilen",
-        "shares_items": "<bold>{{user}}</bold>'s shared calendars",
+        "shares_items": "<bold>{{user}}</bold>'s freigegebener Kalender",
         "sharing_of_this_folder": "Teilen dieses Ordners",
         "show": "Anzeigen",
         "show_plural": "Alle anzeigen",
@@ -220,8 +220,8 @@
         "preview": "Vorschau",
         "create_tag": "Tag erstellen",
         "delete_tag": "Delete tag",
-        "edit_tag": "Edit Tag",
-        "loading_results": "Ergebnisse laden…",
+        "edit_tag": "Tag bearbeiten",
+        "loading_results": "Egebnisse laden…",
         "no_special_char_allowed": "Der Name darf keine Sonderzeichen enthalten",
         "select_color": "Farbe auswählen",
         "tag_max_length": "Maximal 128 Zeichen sind erlaubt",
@@ -251,7 +251,11 @@
         "appointment_is_private": "Dieser Termin ist privat.",
         "create_copy": "Kopieren",
         "keywords": "Schlüsselwörter",
-        "single_advanced_filter": "Erweiterte Filter"
+        "single_advanced_filter": "Erweiterte Filter",
+        "advanced_filters": "Erweiterter Filter {{count}}",
+        "advanced_filters_plural": "Erweiterte Filter {{count}}",
+        "no_rights": "Sie haben für diese Aktion keine Berechtigung",
+        "action_performed": "Sie haben diese Aktion bereits durchgeführt"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",
@@ -292,7 +296,8 @@
         "empty_trash_confirmation": "Diese Aktion wird alle Elemente in E-Mails, Kontakte, Kalender, Aufgaben und Aktentasche löschen. Sind Sie sicher, dass Sie alles in diesen Papierkörben endgültig löschen möchten?",
         "send_edit": "Bearbeiten senden",
         "reset": "Wiederherstellen",
-        "search": "Suchen"
+        "search": "Suchen",
+        "show_original": "Original anzeigen"
     },
     "calendar": {
         "modal": {
@@ -370,7 +375,9 @@
     "freebusy": "FreeBusy",
     "insert": "Eingeben",
     "search": {
-        "organized_by": "organisiert von"
+        "organized_by": "organisiert von",
+        "from_date": "Anfangsdatum",
+        "to_date": "Enddatum"
     },
     "reminder": {
         "at_time_of_event": "Zum Zeitpunkt des Events",
@@ -511,7 +518,8 @@
         "share_folder_success": "Kalender erfolgreich geteilt",
         "url_copied": "{{title}} kopiert",
         "tag_applied": "{{tag}} Tag angewendet",
-        "tag_removed": "{{tag}} Tag entfernt"
+        "tag_removed": "{{tag}} Tag entfernt",
+        "email_copied_to_clipboard": "E-Mail in die Zwischenablage kopiert."
     },
     "success": "Erfolg",
     "button": {
@@ -555,12 +563,12 @@
         "moscow_st_petersburg_volgograd_rtz_2": "{{value}} Moskau, St. Petersburg, Wolgograd (RTZ 2)",
         "sarajevo_skopje_warsaw_zagreb": "{{value}} Sarajevo, Skopje, Warschau, Zagreb",
         "vladivostok_magadan": "{{value}} vladivostok_magadan_rtz_9",
-        "abu_dhabi_muscat": "{{value}} Abu Dhabi, Muscat",
+        "abu_dhabi_muscat": "{{value}} Abu Dhabi, Muskat",
         "alaska": "{{value}} Alaska",
         "anadyr_petropavlovsk_kamchatsky_rtz11": "{{value}} Anadyr, Petropavlovsk-Kamchatsky (RTZ 11)",
         "argentina": "{{value}} Argentinien",
         "arizona": "{{value}} Arizona",
-        "asuncion": "{{value}} Asuncion",
+        "asuncion": "{{value}} Asunción",
         "athens_beirut_bucharest_istanbul": "{{value}} Athen, Beirut, Bukarest, Istanbul",
         "atlantic_time_canada": "{{value}} Atlantische Zeit (Kanada)",
         "azores": "{{value}} Azoren",
@@ -569,7 +577,7 @@
         "bangkok_hanoi_jakarta": "{{value}} Bangkok, Hanoi, Jakarta",
         "beirut": "{{value}} Beirut",
         "belgrade_bratislava_budapest_ljubljana_prague": "{{value}} Belgrad, Bratislava, Budapest, Ljubljana, Prag",
-        "brasilia": "{{value}} Brasilia",
+        "brasilia": "{{value}} Brasília",
         "britain_ireland_portugal": "{{value}} Großbritannien, Irland, Portugal",
         "cape_verde_is": "{{value}} Kap Verde",
         "caracas": "{{value}} Caracas",
@@ -581,7 +589,7 @@
         "christmas_island": "{{value}} Weihnachtsinsel",
         "colombia": "{{value}} Kolumbien",
         "coordinated_universal_time": "{{value}} Koordinierte Weltzeit",
-        "cuiaba": "{{value}} Cuiaba",
+        "cuiaba": "{{value}} Cuiabá",
         "damascus": "{{value}} Damaskus",
         "darwin": "{{value}} Darwin",
         "dateline": "{{value}} Datumsgrenze",
@@ -604,7 +612,7 @@
         "kathmandu": "{{value}} Katmandu",
         "korea": "{{value}} Korea",
         "krasnoyarsk_rtz_6": "{{value}} Krasnojarsk (RTZ 6)",
-        "kuwait_riyadh": "{{value}} Kuwait, Riyadh",
+        "kuwait_riyadh": "{{value}} Kuwait, Riad",
         "la_paz": "{{value}} La Paz",
         "manaus": "{{value}} Manaus",
         "mid_atlantic": "{{value}} Mittelatlantik",
@@ -620,7 +628,7 @@
         "pyongyang": "{{value}} Pjöngjang",
         "samoa": "{{value}} Samoa",
         "saskatchewan": "{{value}} Saskatchewan",
-        "sri_jayawardenepura_kotte": "{{value}} Sri Jayawardenepura Kotte",
+        "sri_jayawardenepura_kotte": "{{value}} Sri Jayawardenepura",
         "tbilisi": "{{value}} Tiflis",
         "tehran": "{{value}} Teheran",
         "us_canada_central": "{{value}} US/Kanada Zentral",
@@ -649,5 +657,8 @@
     "preview": {
         "close": "Vorschau schließen"
     },
-    "recurrent_in_allday": "Sie können einen Serientermin nicht in einen Tagesslot ziehen"
+    "recurrent_in_allday": "Sie können einen Serientermin nicht in einen Tagesslot ziehen",
+    "mountpoint_error": "Die Freigabe konnte nicht zum Abschnitt \"Gemeinsame Kalender\" hinzugefügt werden",
+    "mountpoint_success": "Die Freigabe wurde erfolgreich zum Abschnitt \"Gemeinsame Kalender\" hinzugefügt",
+    "mountpoint_warning": "{{failed}} von {{total}} freigegebenen Kalendern konnten nicht zu den freigegebenen Kalendern hinzugefügt werden"
 }
