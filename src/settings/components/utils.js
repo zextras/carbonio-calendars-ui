@@ -770,11 +770,6 @@ export const ShareCalendarWithOptions = () => [
 		value: 'usr'
 	},
 	{
-		label: t('share.options.share_calendar_with.external_guests', 'External guests (view only)'),
-		value: '',
-		disabled: true
-	},
-	{
 		label: t(
 			'share.options.share_calendar_with.public',
 			'Public (view only, no password required)'

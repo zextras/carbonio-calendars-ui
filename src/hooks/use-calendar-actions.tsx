@@ -205,13 +205,17 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 						children: (
 							<StoreProvider>
 								<ShareCalendarModal
-									folder={item}
+									folderName={item.name}
+									folderId={item.id}
 									closeFn={(): void => closeModal()}
 									grant={item?.acl?.grant ?? []}
 								/>
 							</StoreProvider>
 						),
-						maxHeight: '70vh'
+						maxHeight: '70vh',
+						onClose: () => {
+							closeModal();
+						}
 					},
 					true
 				);
@@ -227,7 +231,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 					{
 						children: (
 							<StoreProvider>
-								<ShareCalendarUrlModal folder={item} onClose={(): void => closeModal()} />
+								<ShareCalendarUrlModal folderName={item.name} onClose={(): void => closeModal()} />
 							</StoreProvider>
 						),
 						maxHeight: '70vh',
