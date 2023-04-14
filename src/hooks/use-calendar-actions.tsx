@@ -106,7 +106,10 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 							<StoreProvider>
 								<EmptyModal onClose={(): void => closeModal()} />
 							</StoreProvider>
-						)
+						),
+						onClose: () => {
+							closeModal();
+						}
 					},
 					true
 				);
