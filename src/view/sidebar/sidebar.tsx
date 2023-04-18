@@ -6,7 +6,7 @@
 
 import { ThemeProvider } from '@mui/material';
 import { Accordion, AccordionItemType, Container, Divider } from '@zextras/carbonio-design-system';
-import { Folder, useFoldersByView } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, Folder, useFoldersByView } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useState } from 'react';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
@@ -45,6 +45,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 				localStorageName="open_calendars_folders"
 				AccordionCustomComponent={FoldersComponent}
 				setSelectedFolder={setSelectedFolder}
+				initialExpanded={[FOLDERS.USER_ROOT]}
 			/>
 			<Divider />
 			<Accordion items={[tagsAccordionItems]} />
