@@ -6,10 +6,11 @@
 
 import { ThemeProvider } from '@mui/material';
 import { Accordion, AccordionItemType, Container, Divider } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder, useFoldersByView } from '@zextras/carbonio-shell-ui';
+import { Folder, FolderView } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useState } from 'react';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
+import { useFoldersByView } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { recursiveToggleCheck } from '../../commons/utilities';
@@ -45,7 +46,6 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 				localStorageName="open_calendars_folders"
 				AccordionCustomComponent={FoldersComponent}
 				setSelectedFolder={setSelectedFolder}
-				initialExpanded={[FOLDERS.USER_ROOT]}
 			/>
 			<Divider />
 			<Accordion items={[tagsAccordionItems]} />
@@ -57,7 +57,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
-	const folders = useFoldersByView(FOLDER_VIEW.appointment);
+	const folders = useFoldersByView(FOLDER_VIEW.appointment as FolderView);
 
 	const folderItems = removeLinkFolders({ folders });
 
