@@ -14,7 +14,8 @@
         "share_calendar": "Udostępnij kalendarz",
         "send_edit": "Wyślij edycję",
         "reset": "Zresetuj",
-        "search": "Wyszukaj"
+        "search": "Wyszukaj",
+        "show_original": "Pokaż oryginał"
     },
     "event": {
         "action": {
@@ -586,8 +587,8 @@
                 "title": "Tryb Przeciągnij i upuść"
             },
             "drive": "Dodaj z Dysku",
-            "url": "Dodaj publiczny link z Files",
-            "files": "Dodaj z Files"
+            "url": "Dodaj publiczny link z Plików",
+            "files": "Dodaj z Plików"
         }
     },
     "edit_share_properties": "Edytuj właściwości udostępniania",

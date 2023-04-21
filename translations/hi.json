@@ -190,7 +190,8 @@
         "advanced_filters": "{{count}} एड्वान्स्ड फिल्टर",
         "advanced_filters_plural": "{{count}} एड्वान्स्ड फिल्टर",
         "no_rights": "आपको इस काम को करने की परमीशन नहीं है",
-        "single_advanced_filter": "एड्वान्स्ड फ़िल्टर"
+        "single_advanced_filter": "एड्वान्स्ड फ़िल्टर",
+        "keywords": "कीवर्ड"
     },
     "action": {
         "send": "भेजें",
@@ -207,7 +208,8 @@
         "empty_trash_confirmation": "ऐसा करने से आपकी ईमेल, Contacts, Calendar, Tasks और Briefcase के रद्दी फोल्डरों के सभी आइटम डिलीट हो जाएंगे। क्या आप वाकई में इन रद्दी फोल्डरों की हर चीज जो परमानेंट डिलीट करना चाहते हैं?",
         "send_edit": "बदलाव भेजें",
         "reset": "रीसेट करें",
-        "search": "खोजें"
+        "search": "खोजें",
+        "show_original": "ओरिजिनल दिखाएँ"
     },
     "message": {
         "you": "आप",

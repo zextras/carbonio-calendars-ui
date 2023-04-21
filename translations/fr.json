@@ -14,7 +14,8 @@
         "empty_trash_confirmation": "Cette action supprimera tous les éléments des dossiers de la corbeille E-mail, Contacts, Calendrier, Tâches et Portefeuille. Êtes-vous sûr de vouloir supprimer définitivement tout ce qui se trouve dans ces dossiers de la corbeille ?",
         "send_edit": "Envoyer la modification",
         "search": "Rechercher",
-        "reset": "Réinitialisation"
+        "reset": "Réinitialisation",
+        "show_original": "Voir l'original"
     },
     "add": "Ajouter",
     "administer": "Administrer",
