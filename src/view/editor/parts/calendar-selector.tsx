@@ -55,14 +55,16 @@ export const CalendarSelector = ({
 				requiredCalendars,
 				(cal) =>
 					({
-						label: cal.name,
+						label: cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name,
 						value: cal.id,
 						color: cal.color.color || 0,
 						customComponent: (
 							<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
 								<Square color={cal.color.color || 'gray6'} />
 								<Padding left="small">
-									<Text>{cal.name}</Text>
+									<Text>
+										{cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name}
+									</Text>
 								</Padding>
 							</Container>
 						)

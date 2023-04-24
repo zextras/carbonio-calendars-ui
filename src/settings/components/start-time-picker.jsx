@@ -7,6 +7,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Container, DateTimePicker, Padding, Text } from '@zextras/carbonio-design-system';
 import momentLocalizer from 'react-widgets-moment';
 import moment from 'moment';
+import { t } from '@zextras/carbonio-shell-ui';
 import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
 
 momentLocalizer();
@@ -79,6 +80,7 @@ export default function StartDatePicker({ start, onChange, day, showEnd, disable
 				timeIntervals={30}
 				dateFormat="hh:mm aa"
 				onChange={onStartChange}
+				timeCaption={t('label.time', 'Time')}
 				customInput={
 					<DatePickerCustomComponent
 						label={label}
