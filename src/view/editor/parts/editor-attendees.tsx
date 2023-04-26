@@ -109,7 +109,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 						orientation="horizontal"
 					>
 						<Button
-							label={t('label.optional_plural', 'Optionals')}
+							label={t('label.optionals', 'Optionals')}
 							type="ghost"
 							labelColor="secondary"
 							style={{ padding: 0 }}
@@ -125,14 +125,14 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							<ContactInput
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
-								placeholder={t('label.optional_plural', 'Optionals')}
+								placeholder={t('label.optionals', 'Optionals')}
 								onChange={onOptionalsChange}
 								defaultValue={optionalAttendees}
 								disabled={disabled?.optionalAttendees}
 							/>
 						) : (
 							<ChipInput
-								placeholder={t('label.optional_plural', 'Optionals')}
+								placeholder={t('label.optionals', 'Optionals')}
 								background="gray5"
 								onChange={onOptionalsChange}
 								defaultValue={optionalAttendees}
