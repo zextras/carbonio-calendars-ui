@@ -254,7 +254,8 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 				.map((action) =>
 					action.id !== FOLDER_ACTIONS.NEW &&
 					action.id !== FOLDER_ACTIONS.EDIT &&
-					action.id !== FOLDER_ACTIONS.SHARE
+					action.id !== FOLDER_ACTIONS.SHARE &&
+					action.id !== FOLDER_ACTIONS.SHARE_URL
 						? { ...action, disabled: true }
 						: action
 				);
