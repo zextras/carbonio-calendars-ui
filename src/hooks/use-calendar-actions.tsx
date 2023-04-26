@@ -225,7 +225,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.SHARE_URL,
 			icon: 'Copy',
 			label: t('action.calendar_access_share', 'Calendar access share'),
-			disabled: !item?.acl?.grant,
+			disabled: item?.id === FOLDERS.TRASH || item?.id?.includes(':'),
 			onClick: (): void => {
 				const closeModal = createModal(
 					{
