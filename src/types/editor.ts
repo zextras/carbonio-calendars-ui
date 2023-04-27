@@ -44,62 +44,8 @@ export type Room = {
 	attendees: any;
 };
 
-export type EditorCallbacks = {
-	onToggleRichText: (isRichText: boolean) => void;
-	onAttachmentsChange: (attach: any, attachmentFiles: any) => void;
-	onOrganizerChange: (data: IdentityItem) => void;
-	onSubjectChange: (data: string) => void;
-	onLocationChange: (data: string) => void;
-	onRoomChange: (data: Room) => void;
-	onAttendeesChange: (attendees: Array<Attendee>) => {
-		payload: { id: string; attendees: Attendee[] };
-		type: string;
-	};
-	onOptionalAttendeesChange: (optionalAttendees: Array<Attendee>) => {
-		payload: { id: string; optionalAttendees: Array<Attendee> };
-		type: string;
-	};
-	onDisplayStatusChange: (data: InviteFreeBusy) => void;
-	onCalendarChange: (calendar: Calendar) => void;
-	onPrivateChange: (data: InviteClass) => void;
-	onDateChange: (date: { start: number; end: number }) => {
-		payload: { id: string | undefined; start: number; end: number };
-		type: string;
-	};
-	onTextChange: ([plainText, richText]: [plainText: string, richText: string]) => {
-		payload: { id: string | undefined; richText: string; plainText: string };
-	};
-	onAllDayChange: (
-		allDay: boolean,
-		start?: number,
-		end?: number
-	) => {
-		payload: {
-			id: string | undefined;
-			allDay: boolean;
-			start?: number | undefined;
-			end?: number | undefined;
-		};
-		type: string;
-	};
-	onTimeZoneChange: (timezone: string) => void;
-	onReminderChange: (reminder: string) => void;
-	onRecurrenceChange: (recurrenceRule: any) => void;
-	onSave: ({
-		draft,
-		isNew,
-		editor
-	}: {
-		draft?: boolean;
-		isNew?: boolean;
-		editor: Editor;
-	}) => Promise<any>;
-	onSend: (isNew: boolean, editor: Editor) => Promise<any>;
-};
-
 export type EditorProps = {
 	editorId: string;
-	callbacks: EditorCallbacks;
 	expanded?: boolean;
 };
 
@@ -163,6 +109,8 @@ export type Editor = {
 	reminder?: string | undefined;
 	recur?: any;
 	id: string;
+	searchPanel?: boolean;
 	panel: boolean;
 	attach?: any;
+	isProposeNewTime?: boolean;
 };

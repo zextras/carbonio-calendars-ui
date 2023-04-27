@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import {
@@ -24,12 +23,13 @@ import { selectInstanceInvite } from '../../store/selectors/invites';
 import { getInvite } from '../../store/actions/get-invite';
 import { openAppointment } from '../../actions/appointment-actions-fn';
 import { PANEL_VIEW } from '../../constants';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 
 const SearchListItem = ({ item, active }) => {
 	const isShared = item?.resource?.l?.includes(':');
-	const calendars = useSelector(selectCalendars);
-	const invite = useSelector(selectInstanceInvite(item?.resource?.inviteId));
-	const dispatch = useDispatch();
+	const calendars = useAppSelector(selectCalendars);
+	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
+	const dispatch = useAppDispatch();
 
 	const cal = isShared
 		? find(calendars, (f) => `${f.zid}:${f.rid}` === item.resource?.l)

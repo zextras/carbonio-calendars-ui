@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, ButtonOld as Button, Dropdown } from '@zextras/carbonio-design-system';
-import { t, useFolders } from '@zextras/carbonio-shell-ui';
-import { filter, noop } from 'lodash';
+import { t } from '@zextras/carbonio-shell-ui';
+import { noop } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { generateEditor } from '../../commons/editor-generator';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
+import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 
@@ -23,7 +23,7 @@ export const ReminderPart = ({
 	invite: Invite;
 	event: EventType;
 }): ReactElement | null => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const setSnooze = useCallback(
 		(time) => {
@@ -31,7 +31,7 @@ export const ReminderPart = ({
 				...invite,
 				alarmValue: time
 			};
-			const { editor } = generateEditor({
+			const editor = generateEditor({
 				event,
 				invite: editorInvite,
 				context: {
@@ -40,7 +40,7 @@ export const ReminderPart = ({
 					panel: true
 				}
 			});
-			dispatch(modifyAppointment({ id: editor.id, draft: !(invite?.attendees?.length > 0) }));
+			dispatch(modifyAppointment({ editor, draft: !(invite?.attendees?.length > 0) }));
 		},
 		[calendarFolders, dispatch, event, invite]
 	);
@@ -49,7 +49,7 @@ export const ReminderPart = ({
 			{
 				id: '1',
 				label: t('reminder.at_time_of_event', 'At the time of the event'),
-				click: () => setSnooze(0)
+				onClick: () => setSnooze(0)
 			},
 			{
 				id: '2',
@@ -59,7 +59,7 @@ export const ReminderPart = ({
 					defaultValue_plural: '{{count}} minutes before'
 				}),
 
-				click: () => setSnooze(1)
+				onClick: () => setSnooze(1)
 			},
 			{
 				id: '3',
@@ -68,7 +68,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} minute before',
 					defaultValue_plural: '{{count}} minutes before'
 				}),
-				click: () => setSnooze(5)
+				onClick: () => setSnooze(5)
 			},
 			{
 				id: '4',
@@ -77,7 +77,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} minute before',
 					defaultValue_plural: '{{count}} minutes before'
 				}),
-				click: () => setSnooze('10')
+				onClick: () => setSnooze('10')
 			},
 			{
 				id: '5',
@@ -86,7 +86,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} minute before',
 					defaultValue_plural: '{{count}} minutes before'
 				}),
-				click: () => setSnooze(15)
+				onClick: () => setSnooze(15)
 			},
 			{
 				id: '6',
@@ -95,7 +95,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} minute before',
 					defaultValue_plural: '{{count}} minutes before'
 				}),
-				click: () => setSnooze(30)
+				onClick: () => setSnooze(30)
 			},
 			{
 				id: '7',
@@ -104,7 +104,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} minute before',
 					defaultValue_plural: '{{count}} minutes before'
 				}),
-				click: () => setSnooze(45)
+				onClick: () => setSnooze(45)
 			},
 			{
 				id: '8',
@@ -113,7 +113,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} hour before',
 					defaultValue_plural: '{{count}} hours before'
 				}),
-				click: () => setSnooze(60)
+				onClick: () => setSnooze(60)
 			},
 			{
 				id: '9',
@@ -122,7 +122,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} hour before',
 					defaultValue_plural: '{{count}} hours before'
 				}),
-				click: () => setSnooze(120)
+				onClick: () => setSnooze(120)
 			},
 			{
 				id: '10',
@@ -131,7 +131,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} hour before',
 					defaultValue_plural: '{{count}} hours before'
 				}),
-				click: () => setSnooze(240)
+				onClick: () => setSnooze(240)
 			},
 			{
 				id: '11',
@@ -140,7 +140,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} hour before',
 					defaultValue_plural: '{{count}} hours before'
 				}),
-				click: () => setSnooze(300)
+				onClick: () => setSnooze(300)
 			},
 			{
 				id: '12',
@@ -149,7 +149,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} hour before',
 					defaultValue_plural: '{{count}} hours before'
 				}),
-				click: () => setSnooze(18 * 60)
+				onClick: () => setSnooze(18 * 60)
 			},
 			{
 				id: '13',
@@ -158,7 +158,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} day before',
 					defaultValue_plural: '{{count}} days before'
 				}),
-				click: () => setSnooze(24 * 60)
+				onClick: () => setSnooze(24 * 60)
 			},
 			{
 				id: '14',
@@ -167,7 +167,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} day before',
 					defaultValue_plural: '{{count}} days before'
 				}),
-				click: () => setSnooze(48 * 60)
+				onClick: () => setSnooze(48 * 60)
 			},
 			{
 				id: '15',
@@ -176,7 +176,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} day before',
 					defaultValue_plural: '{{count}} days before'
 				}),
-				click: () => setSnooze(72 * 60)
+				onClick: () => setSnooze(72 * 60)
 			},
 			{
 				id: '16',
@@ -185,7 +185,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} day before',
 					defaultValue_plural: '{{count}} days before'
 				}),
-				click: () => setSnooze(4 * 24 * 60)
+				onClick: () => setSnooze(4 * 24 * 60)
 			},
 			{
 				id: '17',
@@ -194,7 +194,7 @@ export const ReminderPart = ({
 					defaultValue: '{{count}} week before',
 					defaultValue_plural: '{{count}} weeks before'
 				}),
-				click: () => setSnooze(7 * 24 * 60)
+				onClick: () => setSnooze(7 * 24 * 60)
 			}
 		],
 		[setSnooze]

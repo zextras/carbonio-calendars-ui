@@ -29,7 +29,7 @@ const TrashActionsButtons = ({ actions }: { actions: InstanceActionsItems }): Re
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
 			<Padding right="small" style={{ display: 'flex' }}>
 				{primaryAction && (
-					<Button type="outlined" label={primaryAction.label} onClick={primaryAction.click} />
+					<Button type="outlined" label={primaryAction.label} onClick={primaryAction.onClick} />
 				)}
 				{otherActions?.length > 0 && (
 					<Padding left="small">
@@ -260,7 +260,7 @@ const InstanceActionsButtons = ({ actions }: { actions: InstanceActionsItems }):
 		<Row width="fill" mainAlignment="flex-end" padding={{ all: 'small' }}>
 			<Padding right="small" style={{ display: 'flex' }}>
 				{primaryAction && (
-					<Button type="outlined" label={primaryAction.label} onClick={primaryAction.click} />
+					<Button type="outlined" label={primaryAction.label} onClick={primaryAction.onClick} />
 				)}
 				{secondaryActions?.length > 0 && (
 					<Padding left="small">

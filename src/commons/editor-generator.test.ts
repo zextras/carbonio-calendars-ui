@@ -10,6 +10,7 @@ import {
 	createFakeIdentity,
 	getMockedAccountItem
 } from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
+import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
@@ -35,7 +36,9 @@ shell.useUserAccount.mockImplementation(() => userAccount);
 shell.getUserAccount.mockImplementation(() => userAccount);
 
 shell.getUserSettings.mockImplementation(() => ({
+	...defaultSettings,
 	prefs: {
+		...defaultSettings.prefs,
 		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
 		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
@@ -49,34 +52,12 @@ describe('Editor generator', () => {
 		test('standard single appointment', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const context = { folders, dispatch: store.dispatch };
-			const { editor, callbacks } = generateEditor({
+			const editor = generateEditor({
 				context
 			});
 
-			// expect editor and callbacks returned from function
+			// expect editor returned from function
 			expect(editor).toBeDefined();
-			expect(callbacks).toBeDefined();
-
-			// expect all callbacks
-			expect(callbacks).toHaveProperty('onToggleRichText');
-			expect(callbacks).toHaveProperty('onAttachmentsChange');
-			expect(callbacks).toHaveProperty('onOrganizerChange');
-			expect(callbacks).toHaveProperty('onSubjectChange');
-			expect(callbacks).toHaveProperty('onLocationChange');
-			expect(callbacks).toHaveProperty('onRoomChange');
-			expect(callbacks).toHaveProperty('onAttendeesChange');
-			expect(callbacks).toHaveProperty('onOptionalAttendeesChange');
-			expect(callbacks).toHaveProperty('onDisplayStatusChange');
-			expect(callbacks).toHaveProperty('onCalendarChange');
-			expect(callbacks).toHaveProperty('onPrivateChange');
-			expect(callbacks).toHaveProperty('onDateChange');
-			expect(callbacks).toHaveProperty('onTextChange');
-			expect(callbacks).toHaveProperty('onAllDayChange');
-			expect(callbacks).toHaveProperty('onTimeZoneChange');
-			expect(callbacks).toHaveProperty('onReminderChange');
-			expect(callbacks).toHaveProperty('onRecurrenceChange');
-			expect(callbacks).toHaveProperty('onSave');
-			expect(callbacks).toHaveProperty('onSend');
 
 			// expect default disabled fields to false
 			expect(editor.disabled).toEqual(disabledFields);
@@ -126,7 +107,7 @@ describe('Editor generator', () => {
 			});
 			const invite = mockedData.getInvite({ event });
 			const context = { folders, dispatch: store.dispatch };
-			const { editor } = generateEditor({ event, invite, context });
+			const editor = generateEditor({ event, invite, context });
 
 			expect(editor.isSeries).toBe(true);
 			expect(editor.isException).toBe(false);
@@ -142,7 +123,7 @@ describe('Editor generator', () => {
 			});
 			const invite = mockedData.getInvite({ event });
 			const context = { folders, dispatch: store.dispatch };
-			const { editor } = generateEditor({ event, invite, context });
+			const editor = generateEditor({ event, invite, context });
 
 			expect(editor.isSeries).toBe(true);
 			expect(editor.isException).toBe(false);
@@ -158,7 +139,7 @@ describe('Editor generator', () => {
 			});
 			const invite = mockedData.getInvite({ event });
 			const context = { folders, dispatch: store.dispatch };
-			const { editor } = generateEditor({ event, invite, context });
+			const editor = generateEditor({ event, invite, context });
 
 			expect(editor.isSeries).toBe(false);
 			expect(editor.isException).toBe(true);
@@ -237,11 +218,10 @@ describe('Editor generator', () => {
 				}
 			};
 
-			const { editor, callbacks } = generateEditor({ context });
+			const editor = generateEditor({ context });
 
 			// expect editor and callbacks returned from function
 			expect(editor).toBeDefined();
-			expect(callbacks).toBeDefined();
 
 			// expect default disabled fields to false
 			expect(editor.disabled).toEqual(disabledFields);

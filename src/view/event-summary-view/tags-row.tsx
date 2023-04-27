@@ -57,8 +57,6 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 						avatarIcon: 'Tag',
 						background: 'gray2',
 						hasAvatar: true,
-						isGeneric: false,
-						isQueryFilter: true,
 						label: `tag:${tagToSearch?.name}`,
 						value: `tag:"${tagToSearch?.name}"`
 					}

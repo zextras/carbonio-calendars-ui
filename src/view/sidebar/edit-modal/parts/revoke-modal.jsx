@@ -6,7 +6,6 @@
 import { useTranslation } from 'react-i18next';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { useDispatch } from 'react-redux';
 import {
 	Checkbox,
 	Container,
@@ -21,6 +20,7 @@ import { ModalHeader } from '../../../../commons/modal-header';
 import ModalFooter from '../../../../commons/modal-footer';
 import { GranteeInfo } from './grantee-info';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
+import { useAppDispatch } from '../../../../store/redux/hooks';
 
 export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 	const [t] = useTranslation();
@@ -28,7 +28,7 @@ export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 	const [standardMessage, setStandardMessage] = useState('');
 	const { onClose } = useContext(EditModalContext);
 	const accounts = useUserAccounts();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const tooltipLabel = useMemo(() => {

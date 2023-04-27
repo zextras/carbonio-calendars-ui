@@ -5,6 +5,7 @@
  */
 import { Folder, Tags } from '@zextras/carbonio-shell-ui';
 import React from 'react';
+import { AppDispatch } from '../store/redux';
 import { EventActionsId } from './enums/event-actions-enum';
 import { EventType } from './event';
 import { Invite } from './store/invite';
@@ -19,7 +20,7 @@ export type ActionsContext = {
 	createAndApplyTag: (arg: any) => any;
 	createModal: any;
 	createSnackbar: unknown;
-	dispatch: any;
+	dispatch: AppDispatch;
 	replaceHistory?: (arg: any) => void;
 	tags: Tags;
 	onClose?: () => void;
@@ -33,7 +34,7 @@ export type PanelView = 'app' | 'board' | 'search';
 
 export type ActionsProps = {
 	event: EventType;
-	invite: Invite;
+	invite?: Invite;
 	context: ActionsContext;
 };
 
@@ -44,7 +45,7 @@ export type AppointmentActionsItems = {
 	icon: string;
 	disabled: boolean;
 	label: string;
-	click: (ev: ActionsClick) => void;
+	onClick: (ev: ActionsClick) => void;
 	tooltipLabel: string;
 };
 
@@ -57,7 +58,7 @@ export type SeriesActionsItems = [
 		label: string;
 		disabled: false;
 		tooltipLabel: string;
-		click: (ev: ActionsClick) => void;
+		onClick: (ev: ActionsClick) => void;
 		items: Array<AppointmentActionsItems>;
 	},
 	{
@@ -66,7 +67,7 @@ export type SeriesActionsItems = [
 		label: string;
 		disabled: false;
 		tooltipLabel: string;
-		click: (ev: ActionsClick) => void;
+		onClick: (ev: ActionsClick) => void;
 		items: Array<AppointmentActionsItems>;
 	}
 ];

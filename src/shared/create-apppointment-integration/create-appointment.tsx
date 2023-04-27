@@ -58,7 +58,7 @@ const createAppointmentIntegration =
 			'plainText',
 			'disabled'
 		]);
-		const { editor, callbacks } = generateEditor({
+		const editor = generateEditor({
 			context: {
 				dispatch,
 				folders,
@@ -69,10 +69,7 @@ const createAppointmentIntegration =
 		addBoard({
 			url: `${CALENDAR_ROUTE}/`,
 			title: editor.title ?? '',
-			...editor,
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			callbacks
+			...editor
 		});
 	};
 

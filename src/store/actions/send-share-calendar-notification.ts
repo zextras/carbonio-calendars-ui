@@ -6,6 +6,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { map } from 'lodash';
 
+// todo: this thunk is not using redux! convert to regular async function
 export const sendShareCalendarNotification = createAsyncThunk(
 	'calendar/sendShareCalendarNotification',
 	async (data: any) =>

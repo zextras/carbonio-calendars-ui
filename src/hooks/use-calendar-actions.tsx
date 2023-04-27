@@ -6,10 +6,10 @@
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { FOLDERS, Folder, t } from '@zextras/carbonio-shell-ui';
 import React, { SyntheticEvent, useContext } from 'react';
-import { useDispatch } from 'react-redux';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getFolder } from '../store/actions/get-folder';
+import { useAppDispatch } from '../store/redux/hooks';
 import { StoreProvider } from '../store/redux';
 import { DeleteModal } from '../view/sidebar/delete-modal';
 import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
@@ -23,12 +23,12 @@ type CalendarActionsProps = {
 	id: string;
 	icon: string;
 	label: string;
-	click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
+	onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
 	disabled?: boolean;
 };
 export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> => {
 	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const actions = [
@@ -36,7 +36,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.NEW,
 			icon: 'CalendarOutline',
 			label: t('label.new_calendar', 'New calendar'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -56,7 +56,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.MOVE_TO_ROOT,
 			icon: 'MoveOutline',
 			label: t('action.move_to_root', 'Move to root'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -96,7 +96,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.EMPTY_TRASH,
 			icon: 'SlashOutline',
 			label: t('action.empty_trash', 'Empty Trash'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -117,7 +117,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.EDIT,
 			icon: 'Edit2Outline',
 			label: t('action.edit_calendar_properties', 'Edit calendar properties'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -144,7 +144,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.DELETE,
 			icon: 'Trash2Outline',
 			label: t('action.delete_calendar', 'Delete calendar'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
@@ -164,7 +164,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.REMOVE_FROM_LIST,
 			icon: 'CloseOutline',
 			label: t('remove_from_this_list', 'Remove from this list'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 					dispatch(folderAction({ id: item.id, op: FOLDER_ACTIONS.DELETE }));
@@ -175,49 +175,47 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.SHARES_INFO,
 			icon: 'InfoOutline',
 			label: t('shares_info', 'Shares Info'),
-			click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
+			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
 				}
-				dispatch(getFolder(item.id))
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					.then((res) => {
-						if (res.type.includes('fulfilled')) {
-							const closeModal = createModal(
-								{
-									children: (
-										<StoreProvider>
-											<SharesInfoModal
-												onClose={(): void => closeModal()}
-												folder={res.payload.link}
-											/>
-										</StoreProvider>
-									)
-								},
-								true
-							);
-						}
-					});
+				dispatch(getFolder(item.id)).then((res) => {
+					if (res.type.includes('fulfilled')) {
+						const closeModal = createModal(
+							{
+								children: (
+									<StoreProvider>
+										<SharesInfoModal onClose={(): void => closeModal()} folder={res.payload.link} />
+									</StoreProvider>
+								)
+							},
+							true
+						);
+					}
+				});
 			}
 		},
 		{
 			id: FOLDER_ACTIONS.SHARE,
 			icon: 'SharedCalendarOutline',
 			label: t('action.share_calendar', 'Share Calendar'),
-			click: (): void => {
+			onClick: (): void => {
 				const closeModal = createModal(
 					{
 						children: (
 							<StoreProvider>
 								<ShareCalendarModal
-									folder={item}
+									folderName={item.name}
+									folderId={item.id}
 									closeFn={(): void => closeModal()}
 									grant={item?.acl?.grant ?? []}
 								/>
 							</StoreProvider>
 						),
-						maxHeight: '70vh'
+						maxHeight: '70vh',
+						onClose: () => {
+							closeModal();
+						}
 					},
 					true
 				);
@@ -227,13 +225,13 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			id: FOLDER_ACTIONS.SHARE_URL,
 			icon: 'Copy',
 			label: t('action.calendar_access_share', 'Calendar access share'),
-			disabled: !item?.acl?.grant,
-			click: (): void => {
+			disabled: item?.id === FOLDERS.TRASH || item?.id?.includes(':'),
+			onClick: (): void => {
 				const closeModal = createModal(
 					{
 						children: (
 							<StoreProvider>
-								<ShareCalendarUrlModal folder={item} onClose={(): void => closeModal()} />
+								<ShareCalendarUrlModal folderName={item.name} onClose={(): void => closeModal()} />
 							</StoreProvider>
 						),
 						maxHeight: '70vh',
@@ -256,7 +254,8 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 				.map((action) =>
 					action.id !== FOLDER_ACTIONS.NEW &&
 					action.id !== FOLDER_ACTIONS.EDIT &&
-					action.id !== FOLDER_ACTIONS.SHARE
+					action.id !== FOLDER_ACTIONS.SHARE &&
+					action.id !== FOLDER_ACTIONS.SHARE_URL
 						? { ...action, disabled: true }
 						: action
 				);

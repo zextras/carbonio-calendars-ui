@@ -14,17 +14,14 @@ import {
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import React, { ReactElement, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../../../store/redux/hooks';
 import {
 	selectEditorRecurrenceCount,
 	selectEditorRecurrenceFrequency,
 	selectEditorRecurrenceUntilDate
 } from '../../../../../store/selectors/editor';
-import {
-	EditorCallbacks,
-	RecurrenceEndValue,
-	RecurrenceStartValue
-} from '../../../../../types/editor';
+import { editEditorRecurrence } from '../../../../../store/slices/editor-slice';
+import { RecurrenceEndValue, RecurrenceStartValue } from '../../../../../types/editor';
 import DailyOptions from './daily-options';
 import FrequencySelect from '../components/frequency-select';
 import MonthlyOptions from './monthly-options';
@@ -49,19 +46,14 @@ const setEndInitialValue = (
 
 type CustomRecurrenceModalProps = {
 	editorId: string;
-	callbacks: EditorCallbacks;
 	onClose: () => void;
 };
 
-const CustomRecurrenceModal = ({
-	editorId,
-	callbacks,
-	onClose
-}: CustomRecurrenceModalProps): ReactElement => {
-	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
-	const count = useSelector(selectEditorRecurrenceCount(editorId));
-	const until = useSelector(selectEditorRecurrenceUntilDate(editorId));
-	const { onRecurrenceChange } = callbacks;
+const CustomRecurrenceModal = ({ editorId, onClose }: CustomRecurrenceModalProps): ReactElement => {
+	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
+	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
+	const dispatch = useAppDispatch();
 
 	const [frequency, setFrequency] = useState(freq);
 
@@ -69,15 +61,16 @@ const CustomRecurrenceModal = ({
 	const [newEndValue, setNewEndValue] = useState(() => setEndInitialValue(count, until));
 
 	const onConfirm = useCallback(() => {
-		onRecurrenceChange({
+		const recur = {
 			add: {
 				rule: omitBy({ ...(newStartValue ?? {}), ...(newEndValue ?? {}), freq: frequency }, isNil)
 			}
-		});
+		};
+		dispatch(editEditorRecurrence({ id: editorId, recur }));
 		onClose();
 		setNewStartValue(undefined);
 		setNewEndValue(undefined);
-	}, [onRecurrenceChange, newStartValue, newEndValue, frequency, onClose]);
+	}, [newStartValue, newEndValue, frequency, dispatch, editorId, onClose]);
 
 	const recurrenceContextValue = {
 		newStartValue,

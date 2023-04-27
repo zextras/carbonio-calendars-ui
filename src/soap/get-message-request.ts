@@ -6,14 +6,18 @@
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 
+export type GetMessageRejectedType = { error: boolean; m?: never; Fault: any };
+export type GetMessageFulfilledType = { m: any; Fault?: never; error?: never };
+export type GetMessageReturnType = GetMessageFulfilledType | GetMessageRejectedType;
+
 export const getMessageRequest = async ({
 	inviteId,
 	ridZ
 }: {
 	inviteId: string;
 	ridZ?: string;
-}): Promise<any> => {
-	const response = await soapFetch('GetMsg', {
+}): Promise<GetMessageReturnType> => {
+	const response: GetMessageReturnType = await soapFetch('GetMsg', {
 		_jsns: 'urn:zimbraMail',
 		m: omitBy(
 			{
@@ -37,7 +41,5 @@ export const getMessageRequest = async ({
 			isNil
 		)
 	});
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	return response?.Fault ? { ...response.Fault, error: true } : response;
 };

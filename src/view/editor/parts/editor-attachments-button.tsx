@@ -7,14 +7,15 @@ import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design
 import { getIntegratedFunction, t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { uploadParts } from '../../../commons/upload-parts';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttach,
 	selectEditorAttachmentFiles,
 	selectEditorDisabled
 } from '../../../store/selectors/editor';
+import { editEditorAttachments } from '../../../store/slices/editor-slice';
 import { EditorProps } from '../../../types/editor';
 import { ResizedIconCheckbox } from './editor-styled-components';
 import { useGetPublicUrl } from '../editor-util-hooks/use-get-public-url';
@@ -34,13 +35,13 @@ export const addAttachments = async (
 	return { payload: res, mp: parts, files };
 };
 
-export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): ReactElement => {
+export const EditorAttachmentsButton = ({ editorId }: EditorProps): ReactElement => {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [openDD, setOpenDD] = useState(false);
-	const attachmentFiles = useSelector(selectEditorAttachmentFiles(editorId));
-	const parts = useSelector(selectEditorAttach(editorId));
-	const { onAttachmentsChange, onTextChange } = callbacks;
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const attachmentFiles = useAppSelector(selectEditorAttachmentFiles(editorId));
+	const parts = useAppSelector(selectEditorAttach(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
 
 	const onFileClick = useCallback(() => {
 		setOpenDD(false);
@@ -50,14 +51,10 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 	}, []);
 
 	const [getLink, getLinkAvailable] = useGetPublicUrl({
-		editorId,
-		onTextChange
+		editorId
 	});
 
-	const [getFilesFromDrive, getFilesAvailable] = useGetFilesFromDrive({
-		editorId,
-		onAttachmentsChange
-	});
+	const [getFilesFromDrive, getFilesAvailable] = useGetFilesFromDrive({ editorId });
 
 	const actionURLTarget = useMemo(
 		() => ({
@@ -77,7 +74,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 			icon: 'Link2',
 			id: 'carbonio_files_action_link',
 			disabled: !getFilesActionAvailable || !getLinkAvailable,
-			click: (): void => {
+			onClick: (): void => {
 				setOpenDD(false);
 				getFilesAction && getFilesAction(actionURLTarget);
 			}
@@ -102,7 +99,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 			icon: 'DriveOutline',
 			id: 'carbonio_files_action',
 			disabled: !getFilesActionAvailable || !getFilesAvailable,
-			click: (): void => {
+			onClick: (): void => {
 				setOpenDD(false);
 				getFilesAction && getFilesAction(actionTarget);
 			}
@@ -116,7 +113,7 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 				id: 'localAttachment',
 				icon: 'MonitorOutline',
 				label: t('composer.attachment.local', 'Add from local'),
-				click: onFileClick,
+				onClick: onFileClick,
 				customComponent: (
 					<>
 						<Icon icon="MonitorOutline" size="medium" />
@@ -149,10 +146,16 @@ export const EditorAttachmentsButton = ({ editorId, callbacks }: EditorProps): R
 					aid: file.aid
 				}));
 				const attachmentFilesArr = [...(attachmentFiles ?? []), ...attachments];
-				onAttachmentsChange({ aid: map(payload, (el) => el.aid), mp }, attachmentFilesArr);
+				dispatch(
+					editEditorAttachments({
+						id: editorId,
+						attach: { aid: map(payload, (el) => el.aid), mp },
+						attachmentFiles: attachmentFilesArr
+					})
+				);
 			});
 		}
-	}, [editorId, parts, onAttachmentsChange, attachmentFiles]);
+	}, [editorId, parts, attachmentFiles, dispatch]);
 
 	return (
 		<>

@@ -7,12 +7,12 @@ import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Container, Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import { find, differenceWith, map, isEqual, filter, omitBy, isNil } from 'lodash';
-import { useSelector } from 'react-redux';
 import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
 import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
+import { useAppSelector } from '../../../../../store/redux/hooks';
 import {
 	selectEditorRecurrenceByDay,
 	selectEditorRecurrenceFrequency,
@@ -114,9 +114,9 @@ const selectInitialValue = (
 
 const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
-	const freq = useSelector(selectEditorRecurrenceFrequency(editorId));
-	const interval = useSelector(selectEditorRecurrenceInterval(editorId));
-	const byday = useSelector(selectEditorRecurrenceByDay(editorId));
+	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
+	const interval = useAppSelector(selectEditorRecurrenceInterval(editorId));
+	const byday = useAppSelector(selectEditorRecurrenceByDay(editorId));
 
 	const prefs = usePrefs();
 

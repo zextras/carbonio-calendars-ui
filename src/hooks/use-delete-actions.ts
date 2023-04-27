@@ -9,11 +9,11 @@ import { size } from 'lodash';
 import moment from 'moment';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
 import { generateEditor } from '../commons/editor-generator';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
+import { useAppDispatch } from '../store/redux/hooks';
 import { EventType } from '../types/event';
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
@@ -46,7 +46,7 @@ const generateAppointmentDeletedSnackbar = (
 			autoHideTimeout: 3000,
 			hideButton: true,
 			actionLabel: t('label.undo', 'Undo'),
-			onActionClick: () => (undoAction ? undoAction() : null)
+			onActionClick: () => (undoAction ? undoAction() : undefined)
 		});
 	} else {
 		createSnackbar({
@@ -110,7 +110,7 @@ export const useDeleteActions = (
 	context: AccountContext
 ): UseDeleteActionsType => {
 	const [t] = useTranslation();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext) as (obj: SnackbarArgumentType) => void;
 	const [deleteAll, setDeleteAll] = useState(true);
 	const [notifyOrganizer, setNotifyOrganizer] = useState(false);
@@ -131,15 +131,13 @@ export const useDeleteActions = (
 				dispatch(
 					moveAppointmentRequest({
 						id: event.resource.id,
-						l: event.resource.calendar.id
+						l: event.resource.calendar.id,
+						inviteId: event.resource.inviteId
 					})
-				)
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					.then((res: { type: string | string[] }) => {
-						onBoardClose && onBoardClose();
-						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
-					});
+				).then((res: { type: string | string[] }) => {
+					onBoardClose && onBoardClose();
+					generateAppointmentRestoredSnackbar(res, t, createSnackbar);
+				});
 			};
 			context.replaceHistory('');
 			const ctxt = {
@@ -175,14 +173,12 @@ export const useDeleteActions = (
 				dispatch(
 					moveAppointmentRequest({
 						id: event.resource.id,
-						l: event.resource.calendar.id
+						l: event.resource.calendar.id,
+						inviteId: event.resource.inviteId
 					})
-				)
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					.then((res: { type: string | string[] }) => {
-						generateAppointmentRestoredSnackbar(res, t, createSnackbar);
-					});
+				).then((res: { type: string | string[] }) => {
+					generateAppointmentRestoredSnackbar(res, t, createSnackbar);
+				});
 			};
 			context.replaceHistory('');
 			const ctxt = {
@@ -216,7 +212,7 @@ export const useDeleteActions = (
 						}
 					]
 				};
-				const { editor } = generateEditor({
+				const editor = generateEditor({
 					event,
 					invite: modifiedInvite,
 					context: {

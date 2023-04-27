@@ -3,25 +3,40 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { cloneDeep } from 'lodash';
+import { PayloadAction, SerializedError } from '@reduxjs/toolkit';
+import { cloneDeep, forEach } from 'lodash';
+import { DismissCalendarItemAlarmRejectedType } from '../../soap/dismiss-calendar-item-alarm-request';
+import { AppointmentsSlice, PendingResponse, RejectedResponse } from '../../types/store/store';
+import { DismissApptReminderArguments } from '../actions/dismiss-appointment-reminder';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const dismissAppointmentPending = (state: any, { meta }: any) => {
+export const dismissAppointmentPending = (
+	state: AppointmentsSlice,
+	{ meta }: PayloadAction<unknown, string, PendingResponse<DismissApptReminderArguments>>
+): void => {
 	// eslint-disable-next-line no-param-reassign
-	meta.arg.prevState = cloneDeep(state);
-	// eslint-disable-next-line array-callback-return
-	meta.arg.dismissItems.map((apt: any): void => {
-		state.appointments[apt.id].alarmData = undefined;
+	meta.arg.previousState = cloneDeep(state.appointments);
+	forEach(meta.arg.dismissItems, (appt: any): void => {
+		state.appointments[appt.id].alarmData = undefined;
 	});
 };
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const dismissAppointmentFulfilled = (state: any): void => {
+
+export const dismissAppointmentFulfilled = (state: AppointmentsSlice): void => {
 	state.status = 'fulFilled';
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const dismissAppointmentRejected = (state: any, { meta }: any) => {
-	// eslint-disable-next-line no-param-reassign
-	state = meta.arg.prevState;
+export const dismissAppointmentRejected = (
+	state: AppointmentsSlice,
+	{
+		meta
+	}: PayloadAction<
+		DismissCalendarItemAlarmRejectedType | undefined,
+		string,
+		RejectedResponse<DismissApptReminderArguments>,
+		SerializedError
+	>
+): void => {
+	if (meta.arg.previousState) {
+		state.appointments = meta.arg.previousState;
+	}
 	state.status = 'error';
 };

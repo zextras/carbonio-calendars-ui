@@ -7,11 +7,11 @@
 import { SyntheticEvent } from 'react';
 
 export type ActionItem = {
-	click: (ev?: Event) => void;
+	onClick: (ev?: Event) => void;
 	icon: string;
 	id: string;
 	items?: Array<{
-		click?: (ev?: Event) => void;
+		onClick?: (ev?: Event) => void;
 		disabled?: boolean;
 		icon?: string;
 		id?: string;
@@ -20,11 +20,11 @@ export type ActionItem = {
 	label: string;
 };
 export type ActionItemDD = {
-	click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
+	onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
 	icon: string;
 	id: string;
 	items: Array<{
-		click: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
+		onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent) => void;
 		disabled: boolean;
 		icon: string;
 		id: string;

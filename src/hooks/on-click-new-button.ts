@@ -5,19 +5,19 @@
  */
 import { addBoard, t } from '@zextras/carbonio-shell-ui';
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
+import { useAppDispatch } from '../store/redux/hooks';
 import { useCalendarFolders } from './use-calendar-folders';
 
 export const useOnClickNewButton = (): ((ev?: MouseEvent) => void) => {
 	const calendarFolders = useCalendarFolders();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	return useCallback(
 		(ev) => {
 			ev?.preventDefault?.();
-			const { editor, callbacks } = generateEditor({
+			const editor = generateEditor({
 				context: {
 					title: t('label.new_appointment', 'New Appointment'),
 					panel: false,
@@ -28,10 +28,7 @@ export const useOnClickNewButton = (): ((ev?: MouseEvent) => void) => {
 			addBoard({
 				url: `${CALENDAR_ROUTE}/`,
 				title: editor.title ?? '',
-				...editor,
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				callbacks
+				...editor
 			});
 		},
 		[calendarFolders, dispatch]

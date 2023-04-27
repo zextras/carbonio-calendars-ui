@@ -7,68 +7,27 @@ import { Container, SnackbarManagerContext, Text } from '@zextras/carbonio-desig
 import { FOLDERS, Folder } from '@zextras/carbonio-shell-ui';
 import React, { FC, useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { folderAction } from '../../store/actions/calendar-actions';
+import { useAppDispatch } from '../../store/redux/hooks';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const onConfirm = (): void => {
 		onClose();
 		const restoreEvent = (): void => {
-			dispatch(folderAction({ id: folder.id, op: 'move', changes: folder }))
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				.then((res) => {
-					if (res.type.includes('fulfilled')) {
-						createSnackbar({
-							key: 'send',
-							replace: true,
-							type: 'success',
-							label: t('message.snackbar.calendar_restored', 'Calendar restored successfully'),
-							autoHideTimeout: 3000,
-							hideButton: true
-						});
-					} else {
-						createSnackbar({
-							key: 'send',
-							replace: true,
-							type: 'error',
-							label: t('label.error_try_again', 'Something went wrong, please try again'),
-							autoHideTimeout: 3000,
-							hideButton: true
-						});
-					}
-				});
-		};
-		dispatch(
-			folderAction({
-				id: folder.id,
-				op: folder.parent?.id === FOLDERS.USER_ROOT ? 'trash' : 'delete'
-			})
-		)
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			.then((res) => {
+			dispatch(folderAction({ id: folder.id, op: 'move', changes: folder })).then((res) => {
 				if (res.type.includes('fulfilled')) {
 					createSnackbar({
 						key: 'send',
 						replace: true,
-						type: 'info',
-						label:
-							folder.parent?.id === FOLDERS.USER_ROOT
-								? t('message.snackbar.calendar_moved_to_trash', 'Calendar moved to trash')
-								: t(
-										'message.snackbar.calendar_permanently_deleted',
-										'Calendar permanently deleted'
-								  ),
-						autoHideTimeout: 5000,
-						hideButton: folder.parent?.id !== FOLDERS.USER_ROOT,
-						actionLabel: t('label.undo', 'Undo'),
-						onActionClick: () => restoreEvent()
+						type: 'success',
+						label: t('message.snackbar.calendar_restored', 'Calendar restored successfully'),
+						autoHideTimeout: 3000,
+						hideButton: true
 					});
 				} else {
 					createSnackbar({
@@ -81,6 +40,38 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 					});
 				}
 			});
+		};
+		dispatch(
+			folderAction({
+				id: folder.id,
+				op: folder.parent?.id === FOLDERS.USER_ROOT ? 'trash' : 'delete'
+			})
+		).then((res) => {
+			if (res.type.includes('fulfilled')) {
+				createSnackbar({
+					key: 'send',
+					replace: true,
+					type: 'info',
+					label:
+						folder.parent?.id === FOLDERS.USER_ROOT
+							? t('message.snackbar.calendar_moved_to_trash', 'Calendar moved to trash')
+							: t('message.snackbar.calendar_permanently_deleted', 'Calendar permanently deleted'),
+					autoHideTimeout: 5000,
+					hideButton: folder.parent?.id !== FOLDERS.USER_ROOT,
+					actionLabel: t('label.undo', 'Undo'),
+					onActionClick: () => restoreEvent()
+				});
+			} else {
+				createSnackbar({
+					key: 'send',
+					replace: true,
+					type: 'error',
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			}
+		});
 	};
 	const title = useMemo(() => t('label.delete', 'Delete'), [t]);
 	return folder ? (

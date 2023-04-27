@@ -32,7 +32,7 @@ export const openEventItem = ({
 	disabled: false,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	label: t('event.action.expand', 'Open'),
-	click: openAppointment({
+	onClick: openAppointment({
 		event,
 		context
 	})
@@ -50,7 +50,7 @@ export const acceptInvitationItem = ({
 	label: t('event.action.accept', 'Accept'),
 	disabled: event?.resource?.participationStatus === 'AC',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	click: acceptInvitation({ event, context })
+	onClick: acceptInvitation({ event, context })
 });
 
 export const declineInvitationItem = ({
@@ -65,7 +65,7 @@ export const declineInvitationItem = ({
 	label: t('event.action.decline', 'Decline'),
 	disabled: event?.resource?.participationStatus === 'DE',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	click: declineInvitation({ event, context })
+	onClick: declineInvitation({ event, context })
 });
 
 export const acceptAsTentativeItem = ({
@@ -80,7 +80,7 @@ export const acceptAsTentativeItem = ({
 	label: t('label.tentative', 'Tentative'),
 	disabled: event?.resource?.participationStatus === 'TE',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	click: acceptAsTentative({ event, context })
+	onClick: acceptAsTentative({ event, context })
 });
 
 export const moveEventItem = ({
@@ -98,7 +98,7 @@ export const moveEventItem = ({
 			: t('label.move', 'Move'),
 	disabled: !event?.haveWriteAccess,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	click: moveAppointment({ event, context })
+	onClick: moveAppointment({ event, context })
 });
 
 export const moveApptToTrashItem = ({
@@ -106,7 +106,7 @@ export const moveApptToTrashItem = ({
 	event,
 	context
 }: {
-	invite: Invite;
+	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
@@ -115,7 +115,7 @@ export const moveApptToTrashItem = ({
 	label: t('label.delete', 'Delete'),
 	disabled: !event?.haveWriteAccess,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	click: moveToTrash({ event, invite, context })
+	onClick: moveToTrash({ event, invite, context })
 });
 
 export const deletePermanentlyItem = ({
@@ -130,7 +130,7 @@ export const deletePermanentlyItem = ({
 	label: t('label.delete_permanently', 'Delete permanently'),
 	disabled: false,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	click: deletePermanently({ event, context })
+	onClick: deletePermanently({ event, context })
 });
 
 export const editEventItem = ({
@@ -138,7 +138,7 @@ export const editEventItem = ({
 	event,
 	context
 }: {
-	invite: Invite;
+	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
@@ -150,7 +150,7 @@ export const editEventItem = ({
 		event.resource.calendar.id === FOLDERS.TRASH ||
 		!event.resource.iAmOrganizer,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	click: editAppointment({ event, invite, context })
+	onClick: editAppointment({ event, invite, context })
 });
 
 export const copyEventItem = ({
@@ -158,7 +158,7 @@ export const copyEventItem = ({
 	event,
 	context
 }: {
-	invite: Invite;
+	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
@@ -167,7 +167,7 @@ export const copyEventItem = ({
 	label: t('label.create_copy', 'Copy'),
 	disabled: false,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	click: createCopy({ event, invite, context })
+	onClick: createCopy({ event, invite, context })
 });
 
 export const deleteEventItem = ({
@@ -175,7 +175,7 @@ export const deleteEventItem = ({
 	event,
 	context
 }: {
-	invite: Invite;
+	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems =>
@@ -186,7 +186,7 @@ export const deleteEventItem = ({
 				label: t('label.delete_permanently', 'Delete permanently'),
 				disabled: !event?.haveWriteAccess,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-				click: deletePermanently({ event, context })
+				onClick: deletePermanently({ event, context })
 		  }
 		: {
 				id: EventActionsEnum.TRASH,
@@ -194,7 +194,7 @@ export const deleteEventItem = ({
 				label: t('label.delete', 'Delete'),
 				disabled: !event?.haveWriteAccess,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-				click: moveToTrash({ event, invite, context })
+				onClick: moveToTrash({ event, invite, context })
 		  };
 
 export const showOriginal = ({ event }: { event: EventType }): AppointmentActionsItems => ({
@@ -203,7 +203,7 @@ export const showOriginal = ({ event }: { event: EventType }): AppointmentAction
 	label: t('action.show_original', 'Show original'),
 	disabled: false,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	click: (ev): void => {
+	onClick: (ev): void => {
 		if (ev) ev.preventDefault();
 		window.open(
 			`/service/home/~/?auth=co&id=${event.resource.id}&mime=text/plain&noAttach=1&icalAttach=none`,

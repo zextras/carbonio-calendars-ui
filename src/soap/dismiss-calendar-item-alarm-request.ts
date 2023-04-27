@@ -6,14 +6,22 @@
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { DateType } from '../types/event';
 
-type DismissItem = Array<{ id: string; dismissedAt: DateType }>;
+export type DismissItem = Array<{ id: string; dismissedAt: DateType }>;
+
+export type DismissCalendarItemAlarmRejectedType = { error: boolean; m?: never; Fault: any };
+export type DismissCalendarItemAlarmFulfilledType = { m: any; Fault?: never; error?: never };
+export type DismissCalendarItemAlarmReturnType =
+	| DismissCalendarItemAlarmFulfilledType
+	| DismissCalendarItemAlarmRejectedType;
 
 export const dismissCalendarItemAlarmRequest = async ({
 	items
 }: {
 	items: DismissItem;
-}): Promise<any> =>
-	soapFetch('DismissCalendarItemAlarm', {
+}): Promise<DismissCalendarItemAlarmReturnType> => {
+	const response: DismissCalendarItemAlarmReturnType = await soapFetch('DismissCalendarItemAlarm', {
 		_jsns: 'urn:zimbraMail',
 		appt: items
 	});
+	return response?.Fault ? { ...response.Fault, error: true } : response;
+};

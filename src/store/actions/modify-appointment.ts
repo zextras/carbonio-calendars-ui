@@ -5,7 +5,9 @@
  */
 import moment from 'moment';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { Account, soapFetch } from '@zextras/carbonio-shell-ui';
+import { Invite } from '../../types/store/invite';
+import { AppointmentsSlice } from '../../types/store/store';
 
 function generateBodyRequest(
 	app: {
@@ -15,9 +17,9 @@ function generateBodyRequest(
 		end: moment.MomentInput;
 		title: string;
 	},
-	invite: any,
-	account: { displayName: any; name: any }
-): any {
+	invite: Invite,
+	account: Account
+): string {
 	const attendees = invite.attendees.map((a: any) => a.email).join(', ');
 	const date = app.allDay
 		? moment(app.start).format('LL')
@@ -30,11 +32,26 @@ function generateBodyRequest(
 		app?.resource?.plainText ?? ''
 	}`;
 }
+export type ModifyAppointmentArguments = {
+	appt: any;
+	invite?: any;
+	mailInvite: any;
+	account: Account;
+	previousState?: AppointmentsSlice['appointments'];
+};
+export type ModifyAppointmentRejectedType = { error: boolean; m?: never; Fault: any };
+export type ModifyAppointmentFulfilledType = { m: any; Fault?: never; error?: never };
+export type ModifyAppointmentReturnType =
+	| ModifyAppointmentFulfilledType
+	| ModifyAppointmentRejectedType;
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const modifyAppointmentRequest = createAsyncThunk(
+export const modifyAppointmentRequest = createAsyncThunk<
+	ModifyAppointmentReturnType,
+	ModifyAppointmentArguments,
+	{ rejectValue: ModifyAppointmentRejectedType }
+>(
 	'appointment/accept-proposed-time',
-	async ({ appt, invite, mailInvite, account }: any): Promise<unknown> => {
+	async ({ appt, invite, mailInvite, account }, { rejectWithValue }) => {
 		const at = [];
 		at.push(
 			...invite.attendees.map(
@@ -54,7 +71,7 @@ export const modifyAppointmentRequest = createAsyncThunk(
 			t: 't'
 		}));
 
-		const result = await soapFetch('ModifyAppointment', {
+		const response: ModifyAppointmentReturnType = await soapFetch('ModifyAppointment', {
 			id: appt.resource.inviteId,
 			comp: '0',
 			m: {
@@ -128,6 +145,9 @@ export const modifyAppointmentRequest = createAsyncThunk(
 			rev: appt.resource.rev,
 			_jsns: 'urn:zimbraMail'
 		});
-		return result;
+		if (response?.error) {
+			return rejectWithValue(response);
+		}
+		return response;
 	}
 );

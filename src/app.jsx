@@ -14,11 +14,9 @@ import {
 	registerComponents,
 	ACTION_TYPES,
 	t,
-	registerFunctions,
-	addBoard
+	registerFunctions
 } from '@zextras/carbonio-shell-ui';
-import { identity, isEmpty, pick, pickBy } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
@@ -31,8 +29,9 @@ import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { selectCalendars } from './store/selectors/calendars';
 import { selectApptStatus } from './store/selectors/appointments';
 import { searchAppointments } from './store/actions/search-appointments';
-import { CalendarIntegrations, EventActionsEnum } from './types/enums/event-actions-enum';
-import { generateEditor } from './commons/editor-generator';
+import { useAppDispatch, useAppSelector } from './store/redux/hooks';
+
+import { CalendarIntegrations } from './types/enums/event-actions-enum';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 
 const LazyCalendarView = lazy(() =>
@@ -93,9 +92,9 @@ const SearchView = (props) => (
 
 const AppRegistrations = () => {
 	const onClickNewButton = useOnClickNewButton();
-	const calendars = useSelector(selectCalendars);
-	const status = useSelector(selectApptStatus);
-	const dispatch = useDispatch();
+	const calendars = useAppSelector(selectCalendars);
+	const status = useAppSelector(selectApptStatus);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (!isEmpty(calendars) && status === 'init') {
@@ -124,6 +123,7 @@ const AppRegistrations = () => {
 		});
 		addSearchView({
 			route: CALENDAR_ROUTE,
+			label: t('label.app_name', 'Calendars'),
 			component: SearchView
 		});
 		addBoardView({
@@ -142,7 +142,7 @@ const AppRegistrations = () => {
 				id: 'new-appointment',
 				label: t('label.new_appointment', 'New Appointment'),
 				icon: 'CalendarModOutline',
-				click: onClickNewButton,
+				onClick: onClickNewButton,
 				disabled: false,
 				group: CALENDAR_APP_ID,
 				primary: true
@@ -152,8 +152,6 @@ const AppRegistrations = () => {
 		});
 		registerComponents({
 			id: 'invites-reply',
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			component: InviteResponse
 		});
 	}, [calendars, dispatch, onClickNewButton]);

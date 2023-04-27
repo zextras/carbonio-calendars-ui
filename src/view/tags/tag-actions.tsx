@@ -37,7 +37,7 @@ export type ReturnType = {
 	id: EventActionsId;
 	icon: string;
 	label: string;
-	click?: (arg: React.SyntheticEvent<EventTarget> | KeyboardEvent) => void;
+	onClick?: (arg: React.SyntheticEvent<EventTarget> | KeyboardEvent) => void;
 	items?: Array<{
 		customComponent: ReactElement;
 		id: string;
@@ -57,7 +57,7 @@ export const createTag = ({ createModal }: ArgumentType): ReturnType => ({
 	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
-	click: (e): void => {
+	onClick: (e): void => {
 		if (e) {
 			e.stopPropagation();
 		}
@@ -86,7 +86,7 @@ export const createAndApplyTag = ({
 	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
-	click: (e: SyntheticEvent<EventTarget> | KeyboardEvent): void => {
+	onClick: (e: SyntheticEvent<EventTarget> | KeyboardEvent): void => {
 		if (e) {
 			e.stopPropagation();
 		}
@@ -108,7 +108,7 @@ export const editTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 	id: EventActionsEnum.EDIT_TAGS,
 	icon: 'Edit2Outline',
 	label: t('label.edit_tag', 'Edit Tag'),
-	click: (e): void => {
+	onClick: (e): void => {
 		if (e) {
 			e.stopPropagation();
 		}
@@ -133,7 +133,7 @@ export const deleteTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 	id: EventActionsEnum.DELETE_TAG,
 	icon: 'Untag',
 	label: t('label.delete_tag', 'Delete Tag'),
-	click: (e): void => {
+	onClick: (e): void => {
 		if (e) {
 			e.stopPropagation();
 		}
@@ -238,7 +238,7 @@ export const applyTag = ({
 }): {
 	id: EventActionsId;
 	items: TagType[];
-	click: () => void;
+	onClick: () => void;
 	customComponent?: ReactElement;
 	tooltipLabel: string;
 	label: string;
@@ -281,7 +281,7 @@ export const applyTag = ({
 				type="outlined"
 				size="fill"
 				isSmall
-				onClick={(): void => context.createAndApplyTag({ context, event }).click()}
+				onClick={(): void => context.createAndApplyTag({ context, event }).onClick()}
 			/>
 		)
 	});
@@ -289,7 +289,7 @@ export const applyTag = ({
 		? {
 				id: EventActionsEnum.APPLY_TAG,
 				items: tagItem,
-				click: noop,
+				onClick: noop,
 				icon: 'TagsMoreOutline',
 				label: t('label.tags', 'Tags'),
 				disabled: false,
@@ -310,7 +310,7 @@ export const applyTag = ({
 		: {
 				id: EventActionsEnum.APPLY_TAG,
 				items: [],
-				click: noop,
+				onClick: noop,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				label: t('label.tags', 'Tags'),
 				icon: 'TagsMoreOutline',

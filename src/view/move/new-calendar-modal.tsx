@@ -18,7 +18,6 @@ import {
 	SelectProps
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
 import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
@@ -26,6 +25,7 @@ import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../../commons/zimbra-st
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectCalendars } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
 import { Calendar } from '../../types/store/calendars';
@@ -125,9 +125,9 @@ type NewModalProps = {
 export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [inputValue, setInputValue] = useState('');
-	const folders = useSelector(selectCalendars);
+	const folders = useAppSelector(selectCalendars);
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const colors = useMemo(() => getStatusItems(), []);
@@ -157,8 +157,6 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 					color: selectedColor,
 					excludeFreeBusy: freeBusy
 				})
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 			).then((newCalendarRes: any) => {
 				if (newCalendarRes.type.includes('fulfilled')) {
 					action({

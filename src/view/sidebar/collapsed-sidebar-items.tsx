@@ -6,18 +6,18 @@
 import { Container, IconButton, Padding, Row, Tooltip } from '@zextras/carbonio-design-system';
 import { FOLDERS, Folder } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { searchAppointments } from '../../store/actions/search-appointments';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
 
 export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 	const { name, checked = undefined } = item;
-	const dispatch = useDispatch();
-	const start = useSelector(selectStart);
-	const end = useSelector(selectEnd);
+	const dispatch = useAppDispatch();
+	const start = useAppSelector(selectStart);
+	const end = useAppSelector(selectEnd);
 
 	const recursiveToggleCheck = useCallback(
 		(folder: Folder) => {

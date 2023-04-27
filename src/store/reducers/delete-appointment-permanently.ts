@@ -3,21 +3,37 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { PayloadAction, SerializedError } from '@reduxjs/toolkit';
+import { ItemActionRejectedType } from '../../soap/item-action-request';
+import { AppointmentsSlice, PendingResponse, RejectedResponse } from '../../types/store/store';
+import { DeleteAppointmentArguments } from '../actions/delete-appointment-permanent';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const deleteAppointmentPermanentlyPending = (state: any, { meta }: any) => {
+export const deleteAppointmentPermanentlyPending = (
+	state: AppointmentsSlice,
+	{ meta }: PayloadAction<unknown, string, PendingResponse<DeleteAppointmentArguments>>
+): void => {
 	const { id } = meta.arg;
 	// eslint-disable-next-line no-param-reassign
-	meta.prevApntState = state.appointments;
+	meta.arg.previousState = state.appointments;
 	delete state.appointments[id];
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const deleteAppointmentPermanentlyFulfilled = (state: any): void => {
+export const deleteAppointmentPermanentlyFulfilled = (state: AppointmentsSlice): void => {
 	state.status = 'completed';
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const deleteAppointmentPermanentlyRejected = (state: any, { meta, payload }: any) => {
-	state.appointments = meta.arg.prevApntState;
+export const deleteAppointmentPermanentlyRejected = (
+	state: AppointmentsSlice,
+	{
+		meta
+	}: PayloadAction<
+		ItemActionRejectedType | undefined,
+		string,
+		RejectedResponse<DeleteAppointmentArguments>,
+		SerializedError
+	>
+): void => {
+	if (meta.arg.previousState) {
+		state.appointments = meta.arg.previousState;
+	}
 };

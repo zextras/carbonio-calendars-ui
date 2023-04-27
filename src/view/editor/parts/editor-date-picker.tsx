@@ -4,39 +4,40 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Padding } from '@zextras/carbonio-design-system';
-import React, { ReactElement, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import moment from 'moment';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
 	selectEditorDisabled,
 	selectEditorEnd,
 	selectEditorStart
 } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import { editEditorDate } from '../../../store/slices/editor-slice';
 import StartDatePicker from '../../../commons/start-date-picker';
 import EndDatePicker from '../../../commons/end-date-picker';
 import Styler from '../../../commons/date-picker-style';
 
-type DatePickerProps = {
-	editorId: string;
-	callbacks: EditorCallbacks;
-};
-
-export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): ReactElement | null => {
-	const allDay = useSelector(selectEditorAllDay(editorId));
-	const start = useSelector(selectEditorStart(editorId));
-	const end = useSelector(selectEditorEnd(editorId));
+export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const end = useAppSelector(selectEditorEnd(editorId));
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
-	const disabled = useSelector(selectEditorDisabled(editorId));
-	const { onDateChange } = callbacks;
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
+	const onChange = useCallback(
+		({ start: newStartValue, end: newEndValue }) => {
+			dispatch(editEditorDate({ id: editorId, start: newStartValue, end: newEndValue }));
+		},
+		[dispatch, editorId]
+	);
 
 	return start && end ? (
 		<Styler allDay={allDay} orientation="horizontal" height="fit" mainAlignment="flex-start">
 			<StartDatePicker
 				start={start}
 				end={end}
-				onChange={onDateChange}
+				onChange={onChange}
 				diff={diff}
 				allDay={allDay}
 				disabled={disabled?.datePicker}
@@ -45,7 +46,7 @@ export const EditorDatePicker = ({ editorId, callbacks }: DatePickerProps): Reac
 			<EndDatePicker
 				start={start}
 				end={end}
-				onChange={onDateChange}
+				onChange={onChange}
 				diff={diff}
 				allDay={allDay}
 				disabled={disabled?.datePicker}

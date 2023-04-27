@@ -8,14 +8,15 @@ import { find, toUpper } from 'lodash';
 import moment from 'moment';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { ColorContainer, TextUpperCase } from '../../../../../commons/styled-components';
 import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
+import { useAppDispatch, useAppSelector } from '../../../../../store/redux/hooks';
 import {
 	selectEditorDisabled,
 	selectEditorRecurrence,
 	selectEditorStart
 } from '../../../../../store/selectors/editor';
+import { editEditorRecurrence } from '../../../../../store/slices/editor-slice';
 import { EditorProps } from '../../../../../types/editor';
 import CustomRepeatSelectItem from '../components/custom-repeat';
 import RepeatItemComponent from '../components/repeat-item-component';
@@ -56,12 +57,12 @@ const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): Reac
 	</ColorContainer>
 );
 
-const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | null => {
-	const recur = useSelector(selectEditorRecurrence(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null => {
+	const recur = useAppSelector(selectEditorRecurrence(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();
-	const start = useSelector(selectEditorStart(editorId));
-	const { onRecurrenceChange } = callbacks;
+	const start = useAppSelector(selectEditorStart(editorId));
+	const dispatch = useAppDispatch();
 
 	const recurrenceItems = useMemo(
 		() => [
@@ -93,10 +94,10 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 			{
 				label: t('label.custom', 'Custom'),
 				value: RECURRENCE_FREQUENCY.CUSTOM,
-				customComponent: <CustomRepeatSelectItem editorId={editorId} callbacks={callbacks} />
+				customComponent: <CustomRepeatSelectItem editorId={editorId} />
 			}
 		],
-		[callbacks, editorId, t]
+		[editorId, t]
 	);
 
 	const initialValue = useMemo(() => {
@@ -118,40 +119,52 @@ const EditorRecurrence = ({ editorId, callbacks }: EditorProps): ReactElement | 
 					case RECURRENCE_FREQUENCY.MONTHLY:
 					case RECURRENCE_FREQUENCY.YEARLY:
 						setSelected(find(recurrenceItems, { value: ev }) ?? recurrenceItems[0]);
-						onRecurrenceChange([
-							{
-								add: [{ rule: [defaultValue] }]
-							}
-						]);
+						dispatch(
+							editEditorRecurrence({
+								id: editorId,
+								recur: [
+									{
+										add: [{ rule: [defaultValue] }]
+									}
+								]
+							})
+						);
 						break;
 					case RECURRENCE_FREQUENCY.WEEKLY:
 						setSelected(find(recurrenceItems, { value: ev }) ?? recurrenceItems[0]);
-						onRecurrenceChange([
-							{
-								add: [
+						dispatch(
+							editEditorRecurrence({
+								id: editorId,
+								recur: [
 									{
-										rule: [
+										add: [
 											{
-												...defaultValue,
-												byday: {
-													wkday: [{ day: toUpper(`${moment(start).format('dddd').slice(0, 2)}`) }]
-												}
+												rule: [
+													{
+														...defaultValue,
+														byday: {
+															wkday: [
+																{ day: toUpper(`${moment(start).format('dddd').slice(0, 2)}`) }
+															]
+														}
+													}
+												]
 											}
 										]
 									}
 								]
-							}
-						]);
+							})
+						);
 						break;
 					default:
 						setSelected(
 							find(recurrenceItems, { value: RECURRENCE_FREQUENCY.NEVER }) ?? recurrenceItems[0]
 						);
-						onRecurrenceChange(undefined);
+						dispatch(editEditorRecurrence({ id: editorId, recur: undefined }));
 				}
 			}
 		},
-		[onRecurrenceChange, recurrenceItems, start]
+		[recurrenceItems, dispatch, editorId, start]
 	);
 
 	return initialValue ? (

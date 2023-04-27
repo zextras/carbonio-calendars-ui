@@ -6,28 +6,25 @@
 import { Checkbox } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorClass, selectEditorDisabled } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import { editEditorClass } from '../../../store/slices/editor-slice';
 
-type EditorPrivateCheckboxProps = {
-	editorId: string;
-	callbacks: EditorCallbacks;
-};
-
-export const EditorPrivateCheckbox = ({
-	editorId,
-	callbacks
-}: EditorPrivateCheckboxProps): ReactElement | null => {
+export const EditorPrivateCheckbox = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
-	const { onPrivateChange } = callbacks;
-	const apptClass = useSelector(selectEditorClass(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const dispatch = useAppDispatch();
+	const apptClass = useAppSelector(selectEditorClass(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	const onClick = useCallback(() => {
 		const newValue = apptClass === 'PRI' ? 'PUB' : 'PRI';
-		onPrivateChange(newValue);
-	}, [apptClass, onPrivateChange]);
+		dispatch(
+			editEditorClass({
+				id: editorId,
+				class: newValue
+			})
+		);
+	}, [apptClass, dispatch, editorId]);
 
 	return (
 		<Checkbox

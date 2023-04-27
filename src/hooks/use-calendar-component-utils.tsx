@@ -10,20 +10,21 @@ import { isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { generateEditor } from '../commons/editor-generator';
+import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from '../constants';
+import { useAppDispatch } from '../store/redux/hooks';
+import { useCalendarFolders } from './use-calendar-folders';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
-import { AppDispatch, StoreProvider } from '../store/redux';
+import { StoreProvider } from '../store/redux';
 import { setRange } from '../store/slices/calendars-slice';
 import { useCalendarDate, useIsSummaryViewOpen } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
 import { ModifyStandardMessageModal } from '../view/modals/modify-standard-message-modal';
-import { useCalendarFolders } from './use-calendar-folders';
 
 export const useCalendarComponentUtils = (): {
 	onEventDrop: (a: any) => void;
@@ -37,7 +38,7 @@ export const useCalendarComponentUtils = (): {
 	const [date, setDate] = useState(calendarDate);
 	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const { action } = useParams<{
@@ -80,79 +81,81 @@ export const useCalendarComponentUtils = (): {
 			dispatch(
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
 			).then(({ payload }) => {
-				const inviteStart = moment(payload.m[0].inv[0].comp[0].s[0].u);
-				const eventStart = moment(event.start);
-				const dropStart = moment(start);
-				const inviteEnd = moment(payload.m[0].inv[0].comp[0].e[0].u);
-				const eventEnd = moment(event.end);
-				const dropEnd = moment(end);
-				const eventAllDay = event.allDay;
-				const startTime = getStart({ isSeries, dropStart, isAllDay, inviteStart, eventStart });
-				const endTime = getEnd({ isSeries, dropEnd, isAllDay, inviteEnd, eventEnd, eventAllDay });
-				const invite = normalizeInvite(payload.m[0]);
+				if (payload) {
+					const inviteStart = moment(payload.m[0].inv[0].comp[0].s[0].u);
+					const eventStart = moment(event.start);
+					const dropStart = moment(start);
+					const inviteEnd = moment(payload.m[0].inv[0].comp[0].e[0].u);
+					const eventEnd = moment(event.end);
+					const dropEnd = moment(end);
+					const eventAllDay = event.allDay;
+					const startTime = getStart({ isSeries, dropStart, isAllDay, inviteStart, eventStart });
+					const endTime = getEnd({ isSeries, dropEnd, isAllDay, inviteEnd, eventEnd, eventAllDay });
+					const invite = normalizeInvite(payload.m[0]);
 
-				const onConfirm = (draft: boolean, context?: any): void => {
-					const contextObj = {
-						dispatch,
-						folders: calendarFolders,
-						start: startTime,
-						end: endTime,
-						allDay: !!isAllDay,
-						panel: false
+					const onConfirm = (draft: boolean, context?: any): void => {
+						const contextObj = {
+							dispatch,
+							folders: calendarFolders,
+							start: startTime,
+							end: endTime,
+							allDay: !!isAllDay,
+							panel: false
+						};
+						const editor = generateEditor({
+							event,
+							invite,
+							context: {
+								...contextObj,
+								...omitBy(
+									{
+										richText: context?.text?.[1],
+										plainText: context?.text?.[0]
+									},
+									isNil
+								)
+							}
+						});
+						onSave({ draft, editor, isNew: false, dispatch }).then((res) => {
+							if (res?.response) {
+								const success = res?.response;
+								getBridgedFunctions()?.createSnackbar({
+									key: `calendar-moved-root`,
+									replace: true,
+									type: success ? 'info' : 'warning',
+									hideButton: true,
+									label: !success
+										? t('label.error_try_again', 'Something went wrong, please try again')
+										: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+									autoHideTimeout: 3000
+								});
+							}
+						});
 					};
-					const { editor, callbacks } = generateEditor({
-						event,
-						invite,
-						context: {
-							...contextObj,
-							...omitBy(
-								{
-									richText: context?.text?.[1],
-									plainText: context?.text?.[0]
-								},
-								isNil
-							)
-						}
-					});
-					callbacks.onSave({ draft, editor, isNew: false }).then((res) => {
-						if (res?.response) {
-							const success = res?.response;
-							getBridgedFunctions()?.createSnackbar({
-								key: `calendar-moved-root`,
-								replace: true,
-								type: success ? 'info' : 'warning',
-								hideButton: true,
-								label: !success
-									? t('label.error_try_again', 'Something went wrong, please try again')
-									: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-								autoHideTimeout: 3000
-							});
-						}
-					});
-				};
-				if (size(invite.participants) > 0) {
-					const closeModal = createModal(
-						{
-							children: (
-								<StoreProvider>
-									<ModifyStandardMessageModal
-										title={t('label.edit')}
-										onClose={(): any => closeModal()}
-										confirmLabel={t('action.send_edit', 'Send Edit')}
-										onConfirm={(context): void => {
-											onConfirm(false, context);
-											closeModal();
-										}}
-										invite={invite}
-										isEdited
-									/>
-								</StoreProvider>
-							)
-						},
-						true
-					);
-				} else {
-					onConfirm(true);
+					if (size(invite.participants) > 0) {
+						const closeModal = createModal(
+							{
+								children: (
+									<StoreProvider>
+										<ModifyStandardMessageModal
+											title={t('label.edit')}
+											onClose={(): void => closeModal()}
+											confirmLabel={t('action.send_edit', 'Send Edit')}
+											onConfirm={(context): void => {
+												onConfirm(false, context);
+												closeModal();
+											}}
+											invite={invite}
+											isEdited
+										/>
+									</StoreProvider>
+								)
+							},
+							true
+						);
+					} else {
+						onConfirm(true);
+					}
 				}
 			});
 		},
@@ -196,7 +199,7 @@ export const useCalendarComponentUtils = (): {
 								<StoreProvider>
 									<AppointmentTypeHandlingModal
 										event={event}
-										onClose={(): any => closeModal()}
+										onClose={(): void => closeModal()}
 										onSeries={onEntireSeries}
 										onInstance={onSingleInstance}
 									/>
@@ -221,7 +224,7 @@ export const useCalendarComponentUtils = (): {
 					moment(e.end).minutes() === moment(e.start).minutes() &&
 					!moment(e.start).isSame(moment(e.end));
 				const end = isAllDay ? moment(e.end).subtract(1, 'day') : moment(e.end);
-				const { editor, callbacks } = generateEditor({
+				const editor = generateEditor({
 					context: {
 						dispatch,
 						folders: calendarFolders,
@@ -236,10 +239,7 @@ export const useCalendarComponentUtils = (): {
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
 					title: editor.title ?? '',
-					...editor,
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					callbacks
+					...editor
 				});
 			}
 		},

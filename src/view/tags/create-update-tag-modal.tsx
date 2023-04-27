@@ -12,12 +12,13 @@ import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-heade
 import { ItemType } from '../../carbonio-ui-commons/types/tags';
 import ColorPicker from '../../commons/color-select';
 import { itemActionRequest } from '../../soap/item-action-request';
+import { EventType } from '../../types/event';
 
 type ComponentProps = {
 	onClose: () => void;
 	editMode?: boolean;
 	tag?: ItemType;
-	event?: any;
+	event?: EventType;
 };
 const NonSupportedCharacters = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/;
 const CreateUpdateTagModal: FC<ComponentProps> = ({
@@ -88,7 +89,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 	);
 	const onCreate = useCallback(
 		() =>
-			createTag({ name, color }).then((res: any) => {
+			createTag({ name, color }).then((res) => {
 				if (res.tag) {
 					if (event) {
 						applyNewlyCreatedTag({ inviteId: event.resource.id, tagName: res.tag?.[0]?.name });

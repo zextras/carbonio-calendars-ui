@@ -6,29 +6,29 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { ReactElement, useCallback } from 'react';
 import { Row } from '@zextras/carbonio-design-system';
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorRoom } from '../../../store/selectors/editor';
-import { EditorCallbacks } from '../../../types/editor';
+import { editEditorRoom } from '../../../store/slices/editor-slice';
 
-type EditorRoomProps = {
-	editorId: string;
-	callbacks: EditorCallbacks;
-};
-
-export const EditorVirtualRoom = ({
-	editorId,
-	callbacks
-}: EditorRoomProps): ReactElement | null => {
+export const EditorVirtualRoom = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [RoomSelector, isRoomAvailable] = useIntegratedComponent('room-selector');
-	const { onRoomChange } = callbacks;
-	const room = useSelector(selectEditorRoom(editorId));
-	const disabled = useSelector(selectEditorDisabled(editorId));
+	const room = useAppSelector(selectEditorRoom(editorId));
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+
+	const dispatch = useAppDispatch();
+
+	const onChange = useCallback(
+		(roomData) => {
+			dispatch(editEditorRoom({ id: editorId, room: roomData }));
+		},
+		[dispatch, editorId]
+	);
 
 	return isRoomAvailable ? (
 		<Row height="fit" width="fill" padding={{ top: 'large' }}>
-			<RoomSelector onChange={onRoomChange} defaultValue={room} disabled={disabled?.virtualRoom} />
+			<RoomSelector onChange={onChange} defaultValue={room} disabled={disabled?.virtualRoom} />
 		</Row>
 	) : null;
 };

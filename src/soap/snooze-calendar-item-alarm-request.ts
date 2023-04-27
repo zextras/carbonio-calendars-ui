@@ -5,14 +5,22 @@
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 
+export type SnoozeCalendarItemAlarmRejectedType = { error: boolean; Fault: any };
+export type SnoozeCalendarItemAlarmFulfilledType = { Fault?: never; error?: never };
+export type SnoozeCalendarItemAlarmReturnType =
+	| SnoozeCalendarItemAlarmFulfilledType
+	| SnoozeCalendarItemAlarmRejectedType;
+
 export const snoozeCalendarItemAlarmRequest = async ({
 	id,
 	until
 }: {
 	id: string;
 	until: number;
-}): Promise<any> =>
-	soapFetch('SnoozeCalendarItemAlarm', {
+}): Promise<SnoozeCalendarItemAlarmReturnType> => {
+	const response: SnoozeCalendarItemAlarmReturnType = await soapFetch('SnoozeCalendarItemAlarm', {
 		_jsns: 'urn:zimbraMail',
 		appt: [{ id, until }]
 	});
+	return response?.Fault ? { ...response.Fault, error: true } : response;
+};

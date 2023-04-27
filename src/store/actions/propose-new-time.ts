@@ -6,8 +6,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { counterAppointmentRequest } from '../../soap/counter-appointment-request';
 
-/* todo: currently not used. To deprecate in favour of the new editor structure  */
-
 export const proposeNewTime = createAsyncThunk(
 	'calendars/proposeNewTime',
 	async ({ id }: { id: string }, { getState, rejectWithValue }): Promise<any> => {

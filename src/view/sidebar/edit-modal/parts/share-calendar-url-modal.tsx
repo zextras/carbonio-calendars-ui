@@ -25,7 +25,7 @@ const getUrl = (type: string, user: string, folderName: string): string => {
 	}
 };
 const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
-	folder,
+	folderName,
 	onClose,
 	isFromEditModal
 }): ReactElement => {
@@ -35,7 +35,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 	const [t] = useTranslation();
 
 	const onUrlCopied = (title: string, type: string) => (): void => {
-		const text = getUrl(type, accounts[0].name, folder.name);
+		const text = getUrl(type, accounts[0].name, folderName);
 		navigator.clipboard.writeText(text).then(() => {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
@@ -53,7 +53,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader
 				title={t('label.share_calendar_url', {
-					title: folder.name,
+					title: folderName,
 					defaultValue: '{{title}} access share'
 				})}
 				onClose={onClose}
@@ -62,7 +62,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 				<Container crossAlignment="baseline">
 					<Text overflow="break-word">
 						{t('message.share_calendar_url_msg', {
-							title: folder.name,
+							title: folderName,
 							defaultValue:
 								'You can quickly share {{title}} with your collaborators using one of these URLs:'
 						})}

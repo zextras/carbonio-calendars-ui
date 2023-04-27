@@ -5,30 +5,30 @@
  */
 import { filter, find, reduce, values } from 'lodash';
 import { Calendar } from '../../types/store/calendars';
-import { Store } from '../../types/store/store';
+import type { RootState } from '../redux';
 
 export const selectCalendar =
-	(id: string | undefined): ((state: Store) => Calendar | undefined) =>
-	(state: Store): Calendar | undefined =>
+	(id: string | undefined): ((state: RootState) => Calendar | undefined) =>
+	(state: RootState): Calendar | undefined =>
 		find(state?.calendars?.calendars, ['id', id]);
 
-export function selectCalendars(state: Store): Record<string, Calendar> {
+export function selectCalendars(state: RootState): Record<string, Calendar> {
 	return state.calendars ? state.calendars.calendars : {};
 }
 
-export function selectCalendarsArray(state: Store): Array<Calendar> {
+export function selectCalendarsArray(state: RootState): Array<Calendar> {
 	return values?.(state?.calendars?.calendars) ?? [];
 }
 
-export function selectAllCalendars(state: Store): Array<Calendar> {
+export function selectAllCalendars(state: RootState): Array<Calendar> {
 	return values?.(state?.calendars?.calendars) ?? [];
 }
 
-export function selectStatus(state: Store): string {
+export function selectStatus(state: RootState): string {
 	return state?.invites?.status;
 }
 
-export function selectAllCheckedCalendarsQuery({ calendars }: Store): string {
+export function selectAllCheckedCalendarsQuery({ calendars }: RootState): string {
 	const calendarsArr = filter(
 		values<Calendar>(calendars?.calendars),
 		(f) => f.checked && !f.broken
@@ -40,15 +40,15 @@ export function selectAllCheckedCalendarsQuery({ calendars }: Store): string {
 	);
 }
 
-export function selectUncheckedCalendars({ calendars }: Store): Array<Calendar> {
+export function selectUncheckedCalendars({ calendars }: RootState): Array<Calendar> {
 	return filter(calendars?.calendars, ['checked', false]);
 }
 
-export function selectCheckedCalendars({ calendars }: Store): Array<Calendar> {
+export function selectCheckedCalendars({ calendars }: RootState): Array<Calendar> {
 	return filter(calendars?.calendars, ['checked', true]);
 }
 
-export function selectCheckedCalendarsMap({ calendars }: Store): Record<string, Calendar> {
+export function selectCheckedCalendarsMap({ calendars }: RootState): Record<string, Calendar> {
 	return reduce(
 		filter(calendars?.calendars, ['checked', true]),
 		(acc, v) => ({
@@ -59,10 +59,10 @@ export function selectCheckedCalendarsMap({ calendars }: Store): Record<string, 
 	);
 }
 
-export function selectStart(state: Store): number {
+export function selectStart(state: RootState): number {
 	return state?.calendars?.start;
 }
 
-export function selectEnd(state: Store): number {
+export function selectEnd(state: RootState): number {
 	return state?.calendars?.end;
 }

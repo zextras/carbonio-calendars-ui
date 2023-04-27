@@ -6,9 +6,9 @@
 import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS, t, useUserSettings } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { filter, find, map } from 'lodash';
 import { PREFS_DEFAULTS } from '../../../constants';
+import { useAppSelector } from '../../../store/redux/hooks';
 import { selectCalendarsArray } from '../../../store/selectors/calendars';
 import { Calendar } from '../../../types/store/calendars';
 import LabelFactory, { Square } from './select-label-factory';
@@ -32,7 +32,7 @@ export const CalendarSelector = ({
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
-	const calendars = useSelector(selectCalendarsArray);
+	const calendars = useAppSelector(selectCalendarsArray);
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
 	const calWithWritePerm = useMemo(
 		() => (showCalWithWritePerm ? filter(calendars, 'haveWriteAccess') : calendars),
@@ -55,14 +55,16 @@ export const CalendarSelector = ({
 				requiredCalendars,
 				(cal) =>
 					({
-						label: cal.name,
+						label: cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name,
 						value: cal.id,
 						color: cal.color.color || 0,
 						customComponent: (
 							<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
 								<Square color={cal.color.color || 'gray6'} />
 								<Padding left="small">
-									<Text>{cal.name}</Text>
+									<Text>
+										{cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name}
+									</Text>
 								</Padding>
 							</Container>
 						)

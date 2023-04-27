@@ -6,14 +6,15 @@
 
 import { ThemeProvider } from '@mui/material';
 import { Accordion, AccordionItemType, Container, Divider } from '@zextras/carbonio-design-system';
-import { Folder, useFoldersByView } from '@zextras/carbonio-shell-ui';
+import { Folder, FolderView } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
+import { useFoldersByView } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { recursiveToggleCheck } from '../../commons/utilities';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
 import { CollapsedSidebarItems } from './collapsed-sidebar-items';
 import { FoldersComponent } from './custom-components/folders-component';
@@ -56,15 +57,15 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
-	const folders = useFoldersByView(FOLDER_VIEW.appointment);
+	const folders = useFoldersByView(FOLDER_VIEW.appointment as FolderView);
 
 	const folderItems = removeLinkFolders({ folders });
 
 	const foldersAccordionItems = addAllCalendarsItem({ folders: folderItems });
 
-	const dispatch = useDispatch();
-	const start = useSelector(selectStart);
-	const end = useSelector(selectEnd);
+	const dispatch = useAppDispatch();
+	const start = useAppSelector(selectStart);
+	const end = useAppSelector(selectEnd);
 
 	const sharesItemsOnClick = useCallback(
 		(folder: Folder): void =>
