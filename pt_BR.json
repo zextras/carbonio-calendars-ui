@@ -412,7 +412,7 @@
                 "allow_all": "Permitir a visualização do meu status livre/ocupado por usuários internos e externos"
             },
             "default_view": {
-                "day": "Dia",
+                "day": "Modo claro",
                 "month": "Mês",
                 "week": "Semana",
                 "work_week": "Semana de trabalho",
