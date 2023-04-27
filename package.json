@@ -81,7 +81,7 @@
 		"@reduxjs/toolkit": "^1.9.3",
 		"@testing-library/react-hooks": "^8.0.1",
 		"@zextras/carbonio-design-system": "^1.2.0",
-		"@zextras/carbonio-shell-ui": "^2.1.0",
+		"@zextras/carbonio-shell-ui": "^3.0.1",
 		"@zextras/carbonio-ui-preview": "^1.1.0",
 		"core-js": "^3.27.2",
 		"date-arithmetic": "^4.1.0",
