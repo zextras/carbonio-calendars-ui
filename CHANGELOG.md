@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.3.1...v1.3.2) (2023-04-27)
+
+
+### Bug Fixes
+
+* allow the possibility to publicly shares a calendar ([2ffbb56](https://github.com/zextras/carbonio-calendars-ui/commit/2ffbb566bacf626f4cadb14c714b30d3b213c656))
+* broken translations ([e1fff0c](https://github.com/zextras/carbonio-calendars-ui/commit/e1fff0cb6094392a20d33861b4908fc386cdac4b))
+* remove click prop in favor of onClick ([2b2c574](https://github.com/zextras/carbonio-calendars-ui/commit/2b2c5742861d8a86e3aef9c9521675b793a60b70))
+* removing callbacks from editor generator ([2faab0b](https://github.com/zextras/carbonio-calendars-ui/commit/2faab0b2565931205913be2a94f0f4f75d7b7ed2))
+* set root folder expanded initialy ([4c9b640](https://github.com/zextras/carbonio-calendars-ui/commit/4c9b64003adace1978f07fd2d85fd6e4f8a734fe))
+* share url action is available for main calendar ([2da28a5](https://github.com/zextras/carbonio-calendars-ui/commit/2da28a525eff95c2af79c350d054ddb8bca99954))
+* translate label for search module selector ([2a06fd3](https://github.com/zextras/carbonio-calendars-ui/commit/2a06fd37c3d6dafacb8fe7ffdcd54db983ef4597))
+* update redux types and dependencies ([d3b496b](https://github.com/zextras/carbonio-calendars-ui/commit/d3b496bb3dc753df617b319de3cb4584148a1e3d))
+* using folders management from commons submodule ([39c26ae](https://github.com/zextras/carbonio-calendars-ui/commit/39c26aee7fe942a9d6a18f1a2aaacac9067fd3d6))
+
 ### [1.3.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.3.0...v1.3.1) (2023-04-13)
 
 ## [1.3.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.2.2...v1.3.0) (2023-03-30)
