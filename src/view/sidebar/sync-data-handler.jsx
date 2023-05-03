@@ -5,9 +5,10 @@
  */
 import { useEffect, useState } from 'react';
 import { isEmpty, reduce, forEach, sortBy } from 'lodash';
-import { useNotify } from '@zextras/carbonio-shell-ui';
+import { useNotify, useRefresh } from '@zextras/carbonio-shell-ui';
 import { handleModifiedInvites } from '../../store/slices/invites-slice';
 import {
+	handleCalendarsRefresh,
 	handleCreatedCalendars,
 	handleDeletedCalendars,
 	handleModifiedCalendars
@@ -20,11 +21,24 @@ import { folderWorker } from '../../carbonio-ui-commons/worker';
 import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
 
 export const SyncDataHandler = () => {
+	const refresh = useRefresh();
 	const notifyList = useNotify();
 	const [seq, setSeq] = useState(-1);
 	const dispatch = useAppDispatch();
 	const start = useAppSelector(selectStart);
 	const end = useAppSelector(selectEnd);
+	const [initialized, setInitialized] = useState(false);
+
+	useEffect(() => {
+		if (!isEmpty(refresh) && !initialized) {
+			folderWorker.postMessage({
+				op: 'refresh',
+				folder: refresh.folder ?? []
+			});
+			dispatch(handleCalendarsRefresh(refresh));
+			setInitialized(true);
+		}
+	}, [dispatch, initialized, refresh]);
 
 	useEffect(() => {
 		if (notifyList.length > 0) {
