@@ -45,6 +45,7 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 			includeTime={!allDay}
 			defaultValue={startDate}
 			onChange={onStartChange}
+			timeCaption={t('label.time', 'Time')}
 			customInput={
 				<DatePickerCustomComponent
 					label={label}

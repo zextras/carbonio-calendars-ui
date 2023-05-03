@@ -37,6 +37,7 @@ export default function EndDatePicker({ start, end, allDay, diff, onChange }) {
 			includeTime={!allDay}
 			defaultValue={endDate}
 			onChange={onEndChange}
+			timeCaption={t('label.time', 'Time')}
 			customInput={
 				<DatePickerCustomComponent
 					label={label}
