@@ -3,11 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder, LinkFolder } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { Dispatch } from 'redux';
 import momentLocalizer from 'react-widgets-moment';
+import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { setCalendarColor } from '../normalizations/normalizations-utils';
 import { PREFS_DEFAULTS } from '../constants';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';

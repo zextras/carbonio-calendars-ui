@@ -5,8 +5,9 @@
  */
 
 import { AccordionItemType } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
 import { every, filter, forEach, map, reject } from 'lodash';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { getFolderIcon } from '../../commons/utilities';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 import { FoldersComponent } from './custom-components/folders-component';
@@ -18,10 +19,7 @@ export function addAllCalendarsItem({ folders }: { folders: Array<Folder> }): Ar
 		const subItems = reject(
 			folder.children,
 			(c) =>
-				c?.parent?.id === FOLDERS.TRASH ||
-				c?.id === FOLDERS.TRASH ||
-				c.isLink ||
-				c.name === ROOT_NAME
+				c?.parent === FOLDERS.TRASH || c?.id === FOLDERS.TRASH || c.isLink || c.name === ROOT_NAME
 		);
 		const allItems = {
 			name: t('label.all_calendars', 'All calendars'),

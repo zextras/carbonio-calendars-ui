@@ -31,10 +31,6 @@ export const SyncDataHandler = () => {
 
 	useEffect(() => {
 		if (!isEmpty(refresh) && !initialized) {
-			folderWorker.postMessage({
-				op: 'refresh',
-				folder: refresh.folder ?? []
-			});
 			dispatch(handleCalendarsRefresh(refresh));
 			setInitialized(true);
 		}
