@@ -17,8 +17,6 @@ import { handleModifiedAppointments } from '../../store/slices/appointments-slic
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { folderWorker } from '../../carbonio-ui-commons/worker';
-import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
 
 export const SyncDataHandler = () => {
 	const refresh = useRefresh();
@@ -40,11 +38,6 @@ export const SyncDataHandler = () => {
 		if (notifyList.length > 0) {
 			forEach(sortBy(notifyList, 'seq'), (notify) => {
 				if (!isEmpty(notify) && (notify.seq > seq || (seq > 1 && notify.seq === 1))) {
-					folderWorker.postMessage({
-						op: 'notify',
-						notify,
-						state: useFolderStore.getState().folders
-					});
 					if (notify.created) {
 						if (notify.created.folder || notify.created.link) {
 							dispatch(

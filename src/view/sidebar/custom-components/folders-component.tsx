@@ -13,9 +13,10 @@ import {
 	Row,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import React, { FC, useMemo } from 'react';
 import styled from 'styled-components';
+import { isRoot } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import {
 	getFolderIcon,
@@ -40,10 +41,6 @@ const FittedRow = styled(Row)`
 export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	const { checked } = item;
 	const accountName = useUserAccount().name;
-	const isRootAccount = useMemo(
-		() => item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME),
-		[item]
-	);
 
 	const accordionItem = useMemo(
 		() =>
@@ -104,7 +101,7 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 		return <></>;
 	}
 
-	return isRootAccount ? (
+	return isRoot(item) ? (
 		<FittedRow>
 			<Padding left="small">
 				<Avatar

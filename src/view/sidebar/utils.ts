@@ -5,8 +5,9 @@
  */
 
 import { AccordionItemType } from '@zextras/carbonio-design-system';
-import { FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
-import { every, filter, forEach, map, reject } from 'lodash';
+import { t } from '@zextras/carbonio-shell-ui';
+import { every, filter, forEach, map, reduce, reject } from 'lodash';
+import { isRoot, isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { getFolderIcon } from '../../commons/utilities';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
@@ -14,31 +15,33 @@ import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
 
 export function addAllCalendarsItem({ folders }: { folders: Array<Folder> }): Array<Folder> {
-	const result: Array<Folder> = [];
-	folders.forEach((folder) => {
-		const subItems = reject(
-			folder.children,
-			(c) =>
-				c?.parent === FOLDERS.TRASH || c?.id === FOLDERS.TRASH || c.isLink || c.name === ROOT_NAME
-		);
-		const allItems = {
-			name: t('label.all_calendars', 'All calendars'),
-			id: SIDEBAR_ITEMS.ALL_CALENDAR,
-			children: subItems,
-			checked: every(subItems, ['checked', true]),
-			uuid: '',
-			activesyncdisabled: false,
-			recursive: true,
-			deletable: false,
-			isLink: false,
-			depth: 0,
-			reminder: false,
-			broken: false
-		};
-		folder.children.unshift(allItems);
-		result.push(folder);
-	});
-	return result;
+	return reduce(
+		folders,
+		(acc, folder) => {
+			const subItems = reject(folder.children, (c) => isRoot(c));
+
+			const itemsWhichAffectsAllCalendarCheckedStatus = reject(
+				folder.children,
+				(c) => isRoot(c) || isTrashOrNestedInIt(c)
+			);
+			const allItems = {
+				name: t('label.all_calendars', 'All calendars'),
+				id: SIDEBAR_ITEMS.ALL_CALENDAR,
+				children: subItems,
+				checked: every(itemsWhichAffectsAllCalendarCheckedStatus, ['checked', true]),
+				uuid: '',
+				activesyncdisabled: false,
+				recursive: true,
+				deletable: false,
+				isLink: false,
+				depth: 0,
+				reminder: false,
+				broken: false
+			};
+			return [...acc, { ...folder, children: [allItems, ...subItems] }];
+		},
+		[] as Array<Folder>
+	);
 }
 
 type GetSharesItemChildrenProps = {

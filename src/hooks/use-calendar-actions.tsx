@@ -7,6 +7,7 @@ import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-d
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import React, { SyntheticEvent, useContext } from 'react';
 import { Folder } from '../carbonio-ui-commons/types/folder';
+import { hasParentId } from '../carbonio-ui-commons/worker/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getFolder } from '../store/actions/get-folder';
@@ -243,7 +244,8 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			}
 		}
 	];
-	switch (item.id) {
+	const id = item.id.split(':')?.[1] ?? item.id;
+	switch (id) {
 		case FOLDERS.CALENDAR:
 			return actions
 				.filter(
@@ -306,10 +308,13 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 								action.id !== FOLDER_ACTIONS.SHARES_INFO
 						)
 						.map((action) => {
-							if (item?.parent === FOLDERS.USER_ROOT && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
+							if (
+								hasParentId(item, FOLDERS.USER_ROOT) &&
+								action.id === FOLDER_ACTIONS.MOVE_TO_ROOT
+							) {
 								return { ...action, disabled: true };
 							}
-							if (item?.parent === FOLDERS.TRASH && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
+							if (hasParentId(item, FOLDERS.TRASH) && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
 								return { ...action, label: t('label.restore_calendar', 'Restore calendar') };
 							}
 							return action;

@@ -7,6 +7,7 @@ import { TextProps } from '@zextras/carbonio-design-system';
 import { AccordionFolder, FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
+import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
 import type { Folder } from '../carbonio-ui-commons/types/folder';
 import { ReminderItem } from '../types/appointment-reminder';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
@@ -390,6 +391,14 @@ export const getFolderIconNameForAccordionFolder = (folder: AccordionFolder): st
 	return 'FolderOutline';
 };
 
+export const getFolderIcon = ({ item, checked }: { item: Folder; checked: boolean }): string => {
+	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME)) return '';
+	if (item.id === FOLDERS.TRASH) return checked ? 'Trash2' : 'Trash2Outline';
+	if (item.id === SIDEBAR_ITEMS.ALL_CALENDAR) return checked ? 'Calendar2' : 'CalendarOutline';
+	if (item.isLink) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
+	return checked ? 'Calendar2' : 'CalendarOutline';
+};
+
 export const getFolderIconColor = (f: Folder): string => {
 	if (f?.color) {
 		return Number(f.color) < 10
@@ -418,7 +427,10 @@ export function recursiveToggleCheck({
 }: RecursiveToggleCheckProps): void {
 	const foldersToToggleIds: Array<string> = [];
 	const checkAllChildren = (itemToCheck: Folder): void => {
-		if (itemToCheck.id !== 'all') {
+		const isInTrash = isTrashOrNestedInIt(itemToCheck);
+		if (folder.id === 'all' && itemToCheck.id !== 'all' && !isInTrash) {
+			foldersToToggleIds.push(itemToCheck.id);
+		} else if (folder.id !== 'all') {
 			foldersToToggleIds.push(itemToCheck.id);
 		}
 		if (itemToCheck.children.length > 0) {
@@ -449,11 +461,3 @@ export function recursiveToggleCheck({
 		}
 	});
 }
-
-export const getFolderIcon = ({ item, checked }: { item: Folder; checked: boolean }): string => {
-	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME)) return '';
-	if (item.id === FOLDERS.TRASH) return checked ? 'Trash2' : 'Trash2Outline';
-	if (item.id === SIDEBAR_ITEMS.ALL_CALENDAR) return checked ? 'Calendar2' : 'CalendarOutline';
-	if (item.isLink) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
-	return checked ? 'Calendar2' : 'CalendarOutline';
-};

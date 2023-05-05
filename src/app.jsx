@@ -34,6 +34,7 @@ import { CalendarIntegrations } from './types/enums/event-actions-enum';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
+import { useFolder } from './carbonio-ui-commons/store/zustand/folder';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -160,7 +161,7 @@ const AppRegistrations = () => {
 };
 
 export default function App() {
-	useFoldersController(FOLDER_VIEW.appointment);
+	useFoldersController(FOLDER_VIEW?.appointment);
 	return (
 		<StoreProvider>
 			<AppRegistrations />
