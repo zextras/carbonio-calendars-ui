@@ -54,7 +54,7 @@ export function getSharesItemChildren({
 
 	const flattenSharesItems = (items: Array<Folder>): void => {
 		forEach(items, (item) => {
-			if (item?.isLink) {
+			if (item?.isLink && !item?.id?.split?.(':')?.includes(FOLDERS.USER_ROOT)) {
 				children.push({
 					...item,
 					items: [],

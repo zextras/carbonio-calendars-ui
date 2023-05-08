@@ -8,7 +8,7 @@ import { ThemeProvider } from '@mui/material';
 import { Accordion, AccordionItemType, Container, Divider } from '@zextras/carbonio-design-system';
 import React, { FC, useCallback, useState } from 'react';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
-import { useFoldersArray } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
@@ -56,7 +56,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
-	const folders = useFoldersArray();
+	const folders = useRootsArray();
 
 	const folderItems = removeLinkFolders({ folders });
 
