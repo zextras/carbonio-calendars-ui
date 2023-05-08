@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder } from '@zextras/carbonio-shell-ui';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { FC, useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { useAppDispatch } from '../../store/redux/hooks';
 
@@ -44,7 +45,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 		dispatch(
 			folderAction({
 				id: folder.id,
-				op: folder.parent?.id === FOLDERS.USER_ROOT ? 'trash' : 'delete'
+				op: folder.parent === FOLDERS.USER_ROOT ? 'trash' : 'delete'
 			})
 		).then((res) => {
 			if (res.type.includes('fulfilled')) {
@@ -53,11 +54,11 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 					replace: true,
 					type: 'info',
 					label:
-						folder.parent?.id === FOLDERS.USER_ROOT
+						folder.parent === FOLDERS.USER_ROOT
 							? t('message.snackbar.calendar_moved_to_trash', 'Calendar moved to trash')
 							: t('message.snackbar.calendar_permanently_deleted', 'Calendar permanently deleted'),
 					autoHideTimeout: 5000,
-					hideButton: folder.parent?.id !== FOLDERS.USER_ROOT,
+					hideButton: folder.parent !== FOLDERS.USER_ROOT,
 					actionLabel: t('label.undo', 'Undo'),
 					onActionClick: () => restoreEvent()
 				});
@@ -84,7 +85,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				height="fit"
 			>
 				<Text overflow="break-word">
-					{folder.parent?.id === FOLDERS.USER_ROOT ? (
+					{folder.parent === FOLDERS.USER_ROOT ? (
 						<Trans
 							i18nKey="message.you_sure_move_calendar_trash"
 							defaults={'Are you sure you want to  delete the "{{name}}" calendar?'}

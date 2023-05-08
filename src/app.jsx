@@ -30,9 +30,10 @@ import { selectCalendars } from './store/selectors/calendars';
 import { selectApptStatus } from './store/selectors/appointments';
 import { searchAppointments } from './store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from './store/redux/hooks';
-
 import { CalendarIntegrations } from './types/enums/event-actions-enum';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
+import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
+import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -159,6 +160,7 @@ const AppRegistrations = () => {
 };
 
 export default function App() {
+	useFoldersController(FOLDER_VIEW.appointment);
 	return (
 		<StoreProvider>
 			<AppRegistrations />

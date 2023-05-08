@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, IconButton, Padding, Row, Tooltip } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder } from '@zextras/carbonio-shell-ui';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useMemo } from 'react';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -59,7 +60,7 @@ export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 	}, [checked, item]);
 
 	const iconColor = item.color
-		? ZIMBRA_STANDARD_COLORS[parseInt(item.color, 10)].color
+		? ZIMBRA_STANDARD_COLORS[item.color].color
 		: setCalendarColor(item).color;
 
 	return (
