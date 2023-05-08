@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.3.2...v1.3.3) (2023-05-08)
+
+
+### Bug Fixes
+
+* **editor:** html composer keeps the html formatting ([170787d](https://github.com/zextras/carbonio-calendars-ui/commit/170787dd48cc1197307b097b6dd7c24dda0d705a))
+
 ### [1.3.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.3.1...v1.3.2) (2023-04-27)
 
 
