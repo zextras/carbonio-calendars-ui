@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { TextProps } from '@zextras/carbonio-design-system';
-import { AccordionFolder, FOLDERS, Folder, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
+import { AccordionFolder, FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
+import type { Folder } from '../carbonio-ui-commons/types/folder';
 import { ReminderItem } from '../types/appointment-reminder';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
