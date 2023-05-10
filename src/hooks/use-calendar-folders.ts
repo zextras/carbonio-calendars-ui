@@ -3,11 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder, useFolders } from '@zextras/carbonio-shell-ui';
-import { filter } from 'lodash';
-import { useMemo } from 'react';
+import { useFoldersArray } from '../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../carbonio-ui-commons/types/folder';
 
-export const useCalendarFolders = (): Array<Folder> => {
-	const folders = useFolders();
-	return useMemo(() => filter(folders, ['view', 'appointment']), [folders]);
-};
+export const useCalendarFolders = (): Array<Folder> => useFoldersArray();
