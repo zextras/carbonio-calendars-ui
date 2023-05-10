@@ -336,7 +336,8 @@
         "empty_trash_confirmation": "Tutti gli elementi che appartengono a Email, Contatti, Calendari, Impegni e valigetta verranno eliminati. Vuoi procedere spostando tutto nel cestino?",
         "send_edit": "Invia Modifica",
         "search": "Cerca",
-        "reset": "Reimposta"
+        "reset": "Reimposta",
+        "show_original": "Mostra originale"
     },
     "button": {
         "customize_modal": "Personalizza"
