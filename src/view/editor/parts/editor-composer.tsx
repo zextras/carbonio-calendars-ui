@@ -5,7 +5,7 @@
  */
 import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
 import { debounce } from 'lodash';
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ComponentType, ReactElement, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -70,25 +70,70 @@ const EditorWrapper = styled.div`
 	}
 `;
 
-export const EditorComposer = ({ editorId }: { editorId: string }): ReactElement | null => {
-	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
-	const isRichText = useAppSelector(selectEditorIsRichText(editorId));
-	const richText = useAppSelector(selectEditorRichText(editorId));
+const PlainComposer = ({ editorId }: { editorId: string }): JSX.Element => {
 	const plainText = useAppSelector(selectEditorPlainText(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
+
 	const dispatch = useAppDispatch();
+
 	const [plainTextValue, setPlainTextValue] = useState(plainText ?? '');
-	const [richTextValue, setRichTextValue] = useState(richText ?? '');
+
+	const debounceInput = useMemo(
+		() =>
+			debounce(
+				([plain, htmlText]) => {
+					dispatch(editEditorText({ id: editorId, richText: htmlText, plainText: plain }));
+				},
+				500,
+				{
+					trailing: true,
+					leading: false
+				}
+			),
+		[dispatch, editorId]
+	);
 
 	const textAreaLabel = useMemo(
 		() => t('messages.format_as_plain_text', 'Format as Plain Text'),
 		[]
 	);
 
+	const onPlainTextChange = useCallback(
+		(e) => {
+			setPlainTextValue(e.target.value);
+			debounceInput([e.target.value, e.target.value]);
+		},
+		[debounceInput]
+	);
+
+	return (
+		<TextArea
+			placeholder={textAreaLabel}
+			value={plainTextValue}
+			onChange={onPlainTextChange}
+			disabled={disabled?.composer}
+			data-testid="editor-textArea"
+		/>
+	);
+};
+
+const HtmlComposer = ({
+	Composer,
+	editorId
+}: {
+	editorId: string;
+	Composer: ComponentType<unknown>;
+}): JSX.Element => {
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const richText = useAppSelector(selectEditorRichText(editorId));
+	const dispatch = useAppDispatch();
+
+	const [richTextValue, setRichTextValue] = useState(richText ?? '');
+
 	const debounceInput = useMemo(
 		() =>
 			debounce(
-				([htmlText, plain]) => {
+				([plain, htmlText]) => {
 					dispatch(editEditorText({ id: editorId, richText: htmlText, plainText: plain }));
 				},
 				500,
@@ -103,54 +148,36 @@ export const EditorComposer = ({ editorId }: { editorId: string }): ReactElement
 	const onRichTextChange = useCallback(
 		(e) => {
 			setRichTextValue(e[1]);
-			setPlainTextValue(e[0]);
 			debounceInput(e);
 		},
 		[debounceInput]
 	);
 
-	const onPlainTextChange = useCallback(
-		(e) => {
-			setPlainTextValue(e.target.value);
-			debounceInput([e.target.value, e.target.value]);
-		},
-		[debounceInput]
+	return (
+		<EditorWrapper>
+			<Composer
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				onEditorChange={onRichTextChange}
+				minHeight="12.5rem"
+				value={richTextValue}
+				disabled={disabled?.composer}
+				data-testid="editor-composer"
+			/>
+		</EditorWrapper>
 	);
+};
 
-	useEffect(() => {
-		if (plainText) {
-			setPlainTextValue(plainText);
-		}
-	}, [plainText]);
-
-	useEffect(() => {
-		if (richText) {
-			setRichTextValue(richText);
-		}
-	}, [richText]);
+export const EditorComposer = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const [Composer, composerIsAvailable] = useIntegratedComponent('composer');
+	const isRichText = useAppSelector(selectEditorIsRichText(editorId));
 
 	return (
 		<>
 			{composerIsAvailable && isRichText ? (
-				<EditorWrapper>
-					<Composer
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						onEditorChange={onRichTextChange}
-						minHeight="12.5rem"
-						value={richTextValue}
-						disabled={disabled?.composer}
-						data-testid="editor-composer"
-					/>
-				</EditorWrapper>
+				<HtmlComposer Composer={Composer} editorId={editorId} />
 			) : (
-				<TextArea
-					placeholder={textAreaLabel}
-					value={plainTextValue}
-					onChange={onPlainTextChange}
-					disabled={disabled?.composer}
-					data-testid="editor-textArea"
-				/>
+				<PlainComposer editorId={editorId} />
 			)}
 		</>
 	);
