@@ -39,7 +39,7 @@ const FittedRow = styled(Row)`
 
 export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	const { checked } = item;
-	const accountName = useUserAccount().name;
+	const { displayName } = useUserAccount();
 	const isRootAccount = useMemo(
 		() => item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME),
 		[item]
@@ -51,7 +51,7 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 				...item,
 				label:
 					item.id === FOLDERS.USER_ROOT
-						? accountName
+						? displayName
 						: getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? '',
 				icon: getFolderIcon({ item, checked: !!checked }),
 				iconColor: item.color
@@ -59,7 +59,7 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 					: setCalendarColor(item).color,
 				textProps: { size: 'small' }
 			} as AccordionItemType),
-		[item, accountName, checked]
+		[item, displayName, checked]
 	);
 
 	const ddItems = useCalendarActions(item);
