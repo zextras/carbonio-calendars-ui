@@ -5,8 +5,8 @@
  */
 
 import { AccordionItemType } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
 import { every, filter, forEach, map, reduce, reject } from 'lodash';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { isRoot, isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { getFolderIcon } from '../../commons/utilities';
@@ -57,7 +57,7 @@ export function getSharesItemChildren({
 
 	const flattenSharesItems = (items: Array<Folder>): void => {
 		forEach(items, (item) => {
-			if (item?.isLink) {
+			if (item?.isLink && !item?.id?.split?.(':')?.includes(FOLDERS.USER_ROOT)) {
 				children.push({
 					...item,
 					items: [],
