@@ -140,7 +140,7 @@
         "settings_saved": "Pengaturan disimpan",
         "trash_emptied": "Sampah berhasil dikosongkan",
         "loading": "Memuat…",
-        "role": "peran",
+        "role": "Peran",
         "today": "hari ini",
         "week_day": {
             "friday": "Jumat",
@@ -154,7 +154,7 @@
         "exclude_free_busy": "Kecualikan kalender ini saat melaporkan waktu bebas/sibuk",
         "maybe": "mungkin",
         "propose_new_time": "AJUKAN WAKTU BARU",
-        "share_with": "bagikan kepada",
+        "share_with": "Bagikan kepada",
         "app_name": "Kalender",
         "new_appointment": "Janji temu baru",
         "preview": "Pratinjau",
@@ -193,7 +193,10 @@
         "action_performed": "Anda telah melakukan tindakan ini",
         "no_rights": "Anda tidak memiliki izin untuk melakukan tindakan ini",
         "single_advanced_filter": "Filter Lanjutan",
-        "keywords": "Kata sandi"
+        "keywords": "Kata sandi",
+        "advanced_filters_0": "{{count}} Filter Lanjutan",
+        "optionals": "Opsional",
+        "time": "Waktu"
     },
     "calendar": {
         "modal": {

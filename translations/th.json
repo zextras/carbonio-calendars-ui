@@ -191,7 +191,10 @@
         "action_performed": "คุณได้ดำเนินการนี้แล้ว",
         "keywords": "คำหลัก",
         "no_rights": "คุณไม่ได้รับอนุญาตให้ดำเนินการนี้",
-        "single_advanced_filter": "ตัวกรองขั้นสูง"
+        "single_advanced_filter": "ตัวกรองขั้นสูง",
+        "advanced_filters_0": "{{count}} ตัวกรองขั้นสูง",
+        "optionals": "ไม่จำเป็น",
+        "time": "เวลา"
     },
     "calendar": {
         "modal": {
