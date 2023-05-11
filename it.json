@@ -275,10 +275,10 @@
             "wednesday": "Mercoledì"
         },
         "weeks_on": "Settimana(e) di",
-        "role": "ruolo",
+        "role": "Ruolo",
         "loading": "Caricamento…",
         "maybe": "forse",
-        "share_with": "condividi con",
+        "share_with": "Condividi con",
         "today": "oggi",
         "exclude_free_busy": "Escludi questo calendario dalle impostazioni definite per lo stato libero/occupato",
         "preview": "Anteprima",
@@ -319,7 +319,9 @@
         "single_advanced_filter": "Filtri Avanzati",
         "action_performed": "Hai già completato questa azione",
         "advanced_filters": "{{count}} Filtro Avanzato",
-        "advanced_filters_plural": "{{count}} Filtri Avanzati"
+        "advanced_filters_plural": "{{count}} Filtri Avanzati",
+        "time": "Orario",
+        "optionals": "Opzionali"
     },
     "action": {
         "send": "Invia",

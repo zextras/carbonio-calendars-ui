@@ -150,7 +150,7 @@
         "app_name": "कैलेंडर",
         "exclude_free_busy": "फ्री/बिजी टाइम रिपोर्ट करते समय इस कैलेंडर को शामिल न करें",
         "maybe": "शायद",
-        "share_with": "इनके साथ शेयर",
+        "share_with": "इनके साथ शेयर करें",
         "propose_new_time": "नया टाइम प्रोपोज करें",
         "new_appointment": "नया एपोइंटमेंट",
         "preview": "प्रीव्यू",
@@ -191,7 +191,9 @@
         "advanced_filters_plural": "{{count}} एड्वान्स्ड फिल्टर",
         "no_rights": "आपको इस काम को करने की परमीशन नहीं है",
         "single_advanced_filter": "एड्वान्स्ड फ़िल्टर",
-        "keywords": "कीवर्ड"
+        "keywords": "कीवर्ड",
+        "optionals": "विकल्‍प",
+        "time": "समय"
     },
     "action": {
         "send": "भेजें",

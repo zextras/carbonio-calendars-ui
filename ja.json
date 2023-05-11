@@ -283,7 +283,10 @@
         "action_performed": "すでにこの操作を実行しました",
         "keywords": "キーワード",
         "no_rights": "このアクションを実行する権限がありません",
-        "single_advanced_filter": "高度なフィルター"
+        "single_advanced_filter": "高度なフィルター",
+        "advanced_filters_0": "{{count}}高度なフィルター",
+        "optionals": "オプション",
+        "time": "時間"
     },
     "folder": {
         "modal": {
