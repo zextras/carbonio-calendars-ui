@@ -5,6 +5,7 @@
  */
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { isNil } from 'lodash';
 import React, { SyntheticEvent, useContext } from 'react';
 import { Folder } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
@@ -107,12 +108,16 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 							<StoreProvider>
 								<EmptyModal onClose={(): void => closeModal()} />
 							</StoreProvider>
-						)
+						),
+						onClose: () => {
+							closeModal();
+						}
 					},
 					true
 				);
 			},
-			disabled: item.id !== FOLDERS.TRASH
+			disabled:
+				item.id !== FOLDERS.TRASH || (item.id === FOLDERS.TRASH && !isNil(item?.n) && item?.n < 1)
 		},
 		{
 			id: FOLDER_ACTIONS.EDIT,
