@@ -172,8 +172,8 @@
         "loading": "Wordt geladen…",
         "maybe": "misschien",
         "propose_new_time": "NIEUWE TIJD VOORSTELLEN",
-        "role": "rol",
-        "share_with": "delen met",
+        "role": "Rol",
+        "share_with": "Delen met",
         "today": "vandaag",
         "week_day": {
             "friday": "Vrijdag",
@@ -224,7 +224,9 @@
         "advanced_filters_plural": "{{count}} geavanceerde filters",
         "keywords": "Zoekwoorden",
         "no_rights": "U heeft geen toestemming om deze actie uit te voeren",
-        "single_advanced_filter": "Geavanceerde Filters"
+        "single_advanced_filter": "Geavanceerde Filters",
+        "optionals": "Opties",
+        "time": "Tijd"
     },
     "event": {
         "action": {

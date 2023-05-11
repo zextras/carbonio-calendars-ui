@@ -255,7 +255,9 @@
         "advanced_filters": "Erweiterter Filter {{count}}",
         "advanced_filters_plural": "Erweiterte Filter {{count}}",
         "no_rights": "Sie haben für diese Aktion keine Berechtigung",
-        "action_performed": "Sie haben diese Aktion bereits durchgeführt"
+        "action_performed": "Sie haben diese Aktion bereits durchgeführt",
+        "optionals": "Optionen",
+        "time": "Zeit"
     },
     "participants": {
         "Invited_Visitor": "wurden eingeladen",

@@ -317,7 +317,9 @@
         "advanced_filters": " ",
         "keywords": "关键词",
         "no_rights": "您没有执行此操作的权限",
-        "single_advanced_filter": "高级过滤条件"
+        "single_advanced_filter": "高级过滤条件",
+        "optionals": "可选项",
+        "time": "时间"
     },
     "months": {
         "april": "四月",
