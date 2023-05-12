@@ -317,7 +317,7 @@
         "loading": "Yükleniyor…",
         "maybe": "belki",
         "role": "Rol",
-        "share_with": "paylaş",
+        "share_with": "Paylaş",
         "today": "bugün",
         "week_day": {
             "friday": "Cuma",
@@ -369,7 +369,9 @@
         "advanced_filters_plural": "{{count}} Gelişmiş Filtre",
         "keywords": "Anahtar kelimeler",
         "no_rights": "Bu işlemi yapmak için izniniz yok",
-        "single_advanced_filter": "Gelişmiş Filtreler"
+        "single_advanced_filter": "Gelişmiş Filtreler",
+        "optionals": "İsteğe bağlı",
+        "time": "Zaman"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
