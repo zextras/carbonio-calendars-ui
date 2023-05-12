@@ -13,7 +13,6 @@ import {
 	ModalManager,
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
-import { Folder, FolderView } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useState } from 'react';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
 import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
