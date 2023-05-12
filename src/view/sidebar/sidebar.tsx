@@ -16,9 +16,9 @@ import {
 import { Folder, FolderView } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useState } from 'react';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
-import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
-import { useFoldersByView } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { recursiveToggleCheck } from '../../commons/utilities';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
@@ -64,7 +64,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
-	const folders = useFoldersByView(FOLDER_VIEW.appointment as FolderView);
+	const folders = useRootsArray();
 
 	const folderItems = removeLinkFolders({ folders });
 

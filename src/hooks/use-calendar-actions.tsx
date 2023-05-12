@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder, t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { isNil } from 'lodash';
 import React, { SyntheticEvent, useContext } from 'react';
+import { Folder } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getFolder } from '../store/actions/get-folder';
@@ -68,10 +70,10 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 							createSnackbar({
 								key: `calendar-moved-root`,
 								replace: true,
-								type: item?.parent?.id === FOLDERS.TRASH ? 'success' : 'info',
+								type: item?.parent === FOLDERS.TRASH ? 'success' : 'info',
 								hideButton: true,
 								label:
-									item?.parent?.id === FOLDERS.TRASH
+									item?.parent === FOLDERS.TRASH
 										? t('label.error_try_again', 'Something went wrong, please try again')
 										: t(
 												'message.snackbar.calendar_moved_to_root_folder',
@@ -106,12 +108,16 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 							<StoreProvider>
 								<EmptyModal onClose={(): void => closeModal()} />
 							</StoreProvider>
-						)
+						),
+						onClose: () => {
+							closeModal();
+						}
 					},
 					true
 				);
 			},
-			disabled: item.id !== FOLDERS.TRASH
+			disabled:
+				item.id !== FOLDERS.TRASH || (item.id === FOLDERS.TRASH && !isNil(item?.n) && item?.n < 1)
 		},
 		{
 			id: FOLDER_ACTIONS.EDIT,
@@ -305,13 +311,10 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 								action.id !== FOLDER_ACTIONS.SHARES_INFO
 						)
 						.map((action) => {
-							if (
-								item?.parent?.id === FOLDERS.USER_ROOT &&
-								action.id === FOLDER_ACTIONS.MOVE_TO_ROOT
-							) {
+							if (item?.parent === FOLDERS.USER_ROOT && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
 								return { ...action, disabled: true };
 							}
-							if (item?.parent?.id === FOLDERS.TRASH && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
+							if (item?.parent === FOLDERS.TRASH && action.id === FOLDER_ACTIONS.MOVE_TO_ROOT) {
 								return { ...action, label: t('label.restore_calendar', 'Restore calendar') };
 							}
 							return action;

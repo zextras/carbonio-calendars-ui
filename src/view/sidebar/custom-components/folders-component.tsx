@@ -13,9 +13,10 @@ import {
 	Row,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import React, { FC, useMemo } from 'react';
 import styled from 'styled-components';
+import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import {
 	getFolderIcon,
 	getFolderTranslatedName,
@@ -38,7 +39,7 @@ const FittedRow = styled(Row)`
 
 export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	const { checked } = item;
-	const accountName = useUserAccount().name;
+	const { displayName } = useUserAccount();
 	const isRootAccount = useMemo(
 		() => item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME),
 		[item]
@@ -50,15 +51,15 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 				...item,
 				label:
 					item.id === FOLDERS.USER_ROOT
-						? accountName
+						? displayName
 						: getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? '',
 				icon: getFolderIcon({ item, checked: !!checked }),
 				iconColor: item.color
-					? ZIMBRA_STANDARD_COLORS[parseInt(item.color, 10)].color
+					? ZIMBRA_STANDARD_COLORS[item.color].color
 					: setCalendarColor(item).color,
 				textProps: { size: 'small' }
 			} as AccordionItemType),
-		[item, accountName, checked]
+		[item, displayName, checked]
 	);
 
 	const ddItems = useCalendarActions(item);

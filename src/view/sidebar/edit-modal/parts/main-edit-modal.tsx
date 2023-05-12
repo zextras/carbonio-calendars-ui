@@ -18,7 +18,7 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, Folder, Grant, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, Grant, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +27,8 @@ import styled, { DefaultTheme } from 'styled-components';
 import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
-import { useFolders } from '../../../../carbonio-ui-commons/store/zustand/folder';
+import { useFoldersArray } from '../../../../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../../../../carbonio-ui-commons/types/folder';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
 import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
@@ -137,11 +138,10 @@ type EditModalContexType = {
 };
 
 export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointments, grant }) => {
-	const allCalendars = useFolders();
+	const allCalendars = useFoldersArray();
 
 	const iconColor = useMemo(
-		() =>
-			folder.color ? ZIMBRA_STANDARD_COLORS[parseInt(folder.color, 10)] : setCalendarColor(folder),
+		() => (folder.color ? ZIMBRA_STANDARD_COLORS[folder.color] : setCalendarColor(folder)),
 		[folder]
 	);
 
@@ -208,7 +208,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					op: 'update',
 					changes: omitBy(
 						{
-							parent: folder.parent?.id ?? FOLDERS.USER_ROOT,
+							parent: folder.parent ?? FOLDERS.USER_ROOT,
 							name: inputValue,
 							color: selectedColor,
 							excludeFreeBusy: freeBusy,

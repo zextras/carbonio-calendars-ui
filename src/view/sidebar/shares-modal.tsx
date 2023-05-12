@@ -80,7 +80,7 @@ const CustomItem: FC<SidebarCustomItem> = ({ item }) => {
 	);
 };
 
-export const SharesModal: FC<{ calendars: ResFolder; onClose: () => void }> = ({
+export const SharesModal: FC<{ calendars: ResFolder[]; onClose: () => void }> = ({
 	calendars,
 	onClose
 }) => {
@@ -135,9 +135,9 @@ export const SharesModal: FC<{ calendars: ResFolder; onClose: () => void }> = ({
 	}, [createSnackbar, dispatch, links, onClose]);
 
 	const shared = map(calendars, (calendar) => ({
-		id: `${calendar.ownerName} - ${calendar.folderId} - ${calendar.granteeType} - ${calendar.granteeName}`,
+		id: `${calendar?.ownerName} - ${calendar.folderId} - ${calendar.granteeType} - ${calendar.granteeName}`,
 		label: getFolderTranslatedName({
-			folderId: calendar.folderId,
+			folderId: calendar.folderId ?? '',
 			folderName: last(split(calendar.folderPath, '/')) ?? ''
 		}),
 		open: true,

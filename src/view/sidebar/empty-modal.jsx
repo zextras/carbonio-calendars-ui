@@ -18,6 +18,7 @@ export const EmptyModal = ({ onClose }) => {
 
 	const onConfirm = () => {
 		dispatch(folderAction({ id: '3', op: 'empty', changes: { recursive: true } })).then((res) => {
+			onClose();
 			if (res.type.includes('fulfilled')) {
 				createSnackbar({
 					key: `folder-action-success`,
