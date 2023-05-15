@@ -5,7 +5,14 @@
  */
 
 import { ThemeProvider } from '@mui/material';
-import { Accordion, AccordionItemType, Container, Divider } from '@zextras/carbonio-design-system';
+import {
+	Accordion,
+	AccordionItemType,
+	Container,
+	Divider,
+	ModalManager,
+	SnackbarManager
+} from '@zextras/carbonio-design-system';
 import React, { FC, useCallback, useState } from 'react';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
 import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
@@ -87,21 +94,23 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 	const tagsAccordionItems = useGetTagsAccordion();
 
 	return (
-		<>
-			<ThemeProvider theme={themeMui}>
-				{expanded ? (
-					<MemoSidebar
-						foldersAccordionItems={foldersAccordionItems}
-						sharesAccordionItems={sharesAccordionItems}
-						tagsAccordionItems={tagsAccordionItems}
-					/>
-				) : (
-					foldersAccordionItems[0].children.map((folder) => (
-						<CollapsedSidebarItems key={folder.id} item={folder} />
-					))
-				)}
-			</ThemeProvider>
-		</>
+		<ModalManager>
+			<SnackbarManager>
+				<ThemeProvider theme={themeMui}>
+					{expanded ? (
+						<MemoSidebar
+							foldersAccordionItems={foldersAccordionItems}
+							sharesAccordionItems={sharesAccordionItems}
+							tagsAccordionItems={tagsAccordionItems}
+						/>
+					) : (
+						foldersAccordionItems[0].children.map((folder) => (
+							<CollapsedSidebarItems key={folder.id} item={folder} />
+						))
+					)}
+				</ThemeProvider>
+			</SnackbarManager>
+		</ModalManager>
 	);
 };
 
