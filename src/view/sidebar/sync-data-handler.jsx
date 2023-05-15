@@ -13,7 +13,10 @@ import {
 	handleDeletedCalendars,
 	handleModifiedCalendars
 } from '../../store/slices/calendars-slice';
-import { handleModifiedAppointments } from '../../store/slices/appointments-slice';
+import {
+	handleDeletedAppointments,
+	handleModifiedAppointments
+} from '../../store/slices/appointments-slice';
 import { selectEnd, selectStart } from '../../store/selectors/calendars';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
@@ -101,6 +104,7 @@ export const SyncDataHandler = () => {
 					}
 					if (notify.deleted) {
 						dispatch(handleDeletedCalendars(notify.deleted));
+						dispatch(handleDeletedAppointments(notify.deleted));
 					}
 					setSeq(notify.seq);
 				}

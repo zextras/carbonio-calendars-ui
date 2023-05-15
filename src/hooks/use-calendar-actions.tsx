@@ -117,7 +117,13 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 				);
 			},
 			disabled:
-				item.id !== FOLDERS.TRASH || (item.id === FOLDERS.TRASH && !isNil(item?.n) && item?.n < 1)
+				item.id !== FOLDERS.TRASH ||
+				(item.id === FOLDERS.TRASH &&
+					!isNil(item?.n) &&
+					item?.n < 1 &&
+					item.id === FOLDERS.TRASH &&
+					!isNil(item?.children) &&
+					item.children.length < 1)
 		},
 		{
 			id: FOLDER_ACTIONS.EDIT,
