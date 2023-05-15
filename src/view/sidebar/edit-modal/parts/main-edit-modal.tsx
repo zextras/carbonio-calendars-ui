@@ -80,7 +80,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 			crossAlignment="center"
 			mainAlignment="space-between"
 			borderRadius="half"
-			background="gray5"
+			background={'gray5'}
 			padding={{
 				all: 'small'
 			}}
@@ -218,31 +218,28 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						isNull
 					)
 				})
-			)
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				.then((res) => {
-					if (res.type.includes('fulfilled')) {
-						createSnackbar({
-							key: `folder-action-success`,
-							replace: true,
-							type: 'success',
-							hideButton: true,
-							label: t('label.changes_saved', 'Changes saved'),
-							autoHideTimeout: 3000
-						});
-					} else {
-						createSnackbar({
-							key: `folder-action-success`,
-							replace: true,
-							type: 'error',
-							hideButton: true,
-							label: t('label.error_try_again', 'Something went wrong, please try again'),
-							autoHideTimeout: 3000
-						});
-					}
-					onClose();
-				});
+			).then((res) => {
+				if (res.type.includes('fulfilled')) {
+					createSnackbar({
+						key: `folder-action-success`,
+						replace: true,
+						type: 'success',
+						hideButton: true,
+						label: t('label.changes_saved', 'Changes saved'),
+						autoHideTimeout: 3000
+					});
+				} else {
+					createSnackbar({
+						key: `folder-action-success`,
+						replace: true,
+						type: 'error',
+						hideButton: true,
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000
+					});
+				}
+				onClose();
+			});
 			setInputValue('');
 			setSelectedColor(0);
 			setFreeBusy(false);
@@ -281,30 +278,27 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					folder: folder.id,
 					accounts
 				})
-			)
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				.then((res) => {
-					if (res.type.includes('fulfilled')) {
-						createSnackbar({
-							key: `folder-action-success`,
-							replace: true,
-							type: 'info',
-							hideButton: true,
-							label: t('share_invite_resent', 'Share invite resent'),
-							autoHideTimeout: 3000
-						});
-					} else {
-						createSnackbar({
-							key: `folder-action-success`,
-							replace: true,
-							type: 'error',
-							hideButton: true,
-							label: t('label.error_try_again', 'Something went wrong, please try again'),
-							autoHideTimeout: 3000
-						});
-					}
-				});
+			).then((res) => {
+				if (res.type.includes('fulfilled')) {
+					createSnackbar({
+						key: `folder-action-success`,
+						replace: true,
+						type: 'info',
+						hideButton: true,
+						label: t('share_invite_resent', 'Share invite resent'),
+						autoHideTimeout: 3000
+					});
+				} else {
+					createSnackbar({
+						key: `folder-action-success`,
+						replace: true,
+						type: 'error',
+						hideButton: true,
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000
+					});
+				}
+			});
 		},
 		[accounts, createSnackbar, dispatch, folder, t]
 	);
@@ -372,13 +366,13 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			>
 				<Row orientation="vertical" width="50%" crossAlignment="flex-start">
 					<Text size="small" color="secondary">
-						Type
+						{t('type', 'Type')}
 					</Text>
 					<Text>{t('label.calendar', 'Calendar')}</Text>
 				</Row>
 				<Row orientation="vertical" width="50%" crossAlignment="flex-start">
 					<Text size="small" color="secondary">
-						Appointments
+						{t('appointments', 'Appointments')}
 					</Text>
 					<Text>{totalAppointments}</Text>
 				</Row>
