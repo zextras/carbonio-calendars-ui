@@ -5,12 +5,12 @@
  */
 import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import React, { useState, useCallback, ReactElement } from 'react';
+import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
+import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { NewModal } from './new-calendar-modal';
 import { MoveModal } from './move-modal';
-import { selectCalendar } from '../../store/selectors/calendars';
 
 type MoveAppointmentProps = {
 	onClose: () => void;
@@ -19,7 +19,7 @@ type MoveAppointmentProps = {
 
 export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactElement | null => {
 	const dispatch = useAppDispatch();
-	const currentFolder = useAppSelector(selectCalendar(event.resource.calendar.id));
+	const currentFolder = useFolder(event.resource.calendar.id);
 	const [showNewFolderModal, setShowNewFolderModal] = useState(false);
 
 	const toggleModal = useCallback(
@@ -28,8 +28,6 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 	);
 
 	const moveAppt = (data: any): void => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		dispatch(moveAppointmentRequest(data)).then((res: any) => {
 			if (res.type.includes('fulfilled')) {
 				getBridgedFunctions().createSnackbar({

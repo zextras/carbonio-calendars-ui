@@ -3,14 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import it from '@faker-js/faker/dist/types/locales/it';
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { find, reduce, map, isEmpty, some } from 'lodash';
 import moment from 'moment';
+import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
-import { Calendar } from '../types/store/calendars';
 import { Invite } from '../types/store/invite';
+import { setCalendarColor } from './normalizations-utils';
 
 export const getLocationUrl = (location: string): string | undefined => {
 	const regex = /\bhttps?:\/\/\S+/g;
@@ -29,7 +29,7 @@ const normalizeEventResource = ({
 	iAmOrganizer
 }: {
 	appt: Appointment;
-	calendar: Calendar;
+	calendar: Folder;
 	inst?: ExceptionReference;
 	invite?: Invite;
 	iAmOrganizer: boolean;
@@ -41,14 +41,14 @@ const normalizeEventResource = ({
 	calendar: {
 		id: calendar.id,
 		name: calendar.name,
-		color: calendar.color,
-		owner: calendar.owner
+		color: setCalendarColor({ color: calendar.color, rgb: calendar?.rgb }),
+		owner: (calendar as LinkFolder)?.owner
 	},
 	flags: appt.flags,
 	dur: inst?.dur ?? appt.dur,
 	iAmOrganizer,
-	iAmVisitor: !!(!iAmOrganizer && calendar.owner) ?? false,
-	iAmAttendee: (!iAmOrganizer && !calendar.owner) ?? false,
+	iAmVisitor: !!(!iAmOrganizer && (calendar as LinkFolder)?.owner) ?? false,
+	iAmAttendee: (!iAmOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
 	status: inst?.status ?? appt.status,
 	location: inst?.loc ?? appt.loc,
 	locationUrl: getLocationUrl(inst?.loc ?? appt.loc ?? ''),
@@ -82,7 +82,7 @@ export const normalizeCalendarEvent = ({
 	instance,
 	invite
 }: {
-	calendar: Calendar;
+	calendar: Folder;
 	appointment: Appointment;
 	instance?: InstanceReference;
 	invite?: Invite;
@@ -137,13 +137,13 @@ export const normalizeCalendarEvent = ({
 			instance?.ridZ ?? ''
 		}`,
 		isShared: appointment?.l?.includes(':'),
-		haveWriteAccess: calendar?.haveWriteAccess
+		haveWriteAccess: calendar.perm ? /w/.test(calendar.perm) : true
 	};
 };
 
 export const normalizeCalendarEvents = (
 	appts: Array<Appointment>,
-	calendars: Record<string, Calendar>
+	calendars: Record<string, Folder>
 ): Array<EventType> =>
 	!isEmpty(appts)
 		? reduce(
@@ -151,7 +151,11 @@ export const normalizeCalendarEvents = (
 				(acc, appt) => {
 					const isShared = appt?.l?.includes(':');
 					const cal = isShared
-						? find(calendars, (f) => `${f.zid}:${f.rid}` === appt.l || f.id === appt.l)
+						? find(
+								calendars,
+								(f) =>
+									`${(f as LinkFolder).zid}:${(f as LinkFolder).rid}` === appt.l || f.id === appt.l
+						  )
 						: find(calendars, (f) => f.id === appt.l);
 					return cal
 						? [

@@ -17,17 +17,17 @@ import {
 } from '@zextras/carbonio-design-system';
 import { find, reduce, includes } from 'lodash';
 import { useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
-import { selectCalendars } from '../../store/selectors/calendars';
 import { useTagExist } from '../tags/tag-actions';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { getInvite } from '../../store/actions/get-invite';
 import { openAppointment } from '../../actions/appointment-actions-fn';
 import { PANEL_VIEW } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 
 const SearchListItem = ({ item, active }) => {
 	const isShared = item?.resource?.l?.includes(':');
-	const calendars = useAppSelector(selectCalendars);
+	const calendars = useFoldersMap();
 	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
 	const dispatch = useAppDispatch();
 

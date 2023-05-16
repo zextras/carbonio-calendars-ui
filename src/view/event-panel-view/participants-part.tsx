@@ -7,8 +7,8 @@ import React, { ReactElement, useMemo } from 'react';
 import { Avatar, Container, Row, Text, Chip } from '@zextras/carbonio-design-system';
 import { Trans } from 'react-i18next';
 import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
-import { useAppSelector } from '../../store/redux/hooks';
-import { selectCalendar } from '../../store/selectors/calendars';
+import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
+import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
 import { ParticipantsDisplayer } from './participants-displayer';
 import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
@@ -25,10 +25,10 @@ export const ParticipantsPart = ({
 	participants
 }: ParticipantProps): ReactElement => {
 	const account = useUserAccount();
-	const calendar = useAppSelector(selectCalendar(invite.ciFolder));
+	const calendar = useFolder(invite.ciFolder);
 	const iAmAttendee = useMemo(
-		() => (!invite.isOrganizer && !calendar?.owner) ?? false,
-		[calendar?.owner, invite.isOrganizer]
+		() => (!invite.isOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
+		[calendar, invite.isOrganizer]
 	);
 	return (
 		<Container
@@ -59,7 +59,7 @@ export const ParticipantsPart = ({
 					</Text>
 				</Row>
 			)}
-			{!invite.isOrganizer && !calendar?.owner ? (
+			{!invite.isOrganizer && !(calendar as LinkFolder)?.owner ? (
 				<Row mainAlignment="flex-start" crossAlignment="flex-start" padding={{ vertical: 'small' }}>
 					<Avatar
 						label={organizer.d ?? organizer.a ?? organizer.url ?? ''}

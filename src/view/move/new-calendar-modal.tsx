@@ -21,14 +21,14 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
 import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectCalendars } from '../../store/selectors/calendars';
+import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
-import { Calendar } from '../../types/store/calendars';
 
 const Square = styled.div`
 	width: 1.125rem;
@@ -118,7 +118,7 @@ type NewModalProps = {
 	toggleModal: () => void;
 	onClose: () => void;
 	event: EventType;
-	currentFolder: Calendar;
+	currentFolder: Folder;
 	action: (arg: ActionArgs) => void;
 };
 
@@ -127,7 +127,7 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 
 	const dispatch = useAppDispatch();
 	const [inputValue, setInputValue] = useState('');
-	const folders = useAppSelector(selectCalendars);
+	const folders = useFoldersMap();
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const colors = useMemo(() => getStatusItems(), []);

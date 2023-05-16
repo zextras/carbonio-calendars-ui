@@ -19,6 +19,8 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
+import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { extractBody } from '../../commons/body-message-renderer';
 import StyledDivider from '../../commons/styled-divider';
 import { useEventActions } from '../../hooks/use-event-actions';
@@ -27,7 +29,6 @@ import { getAlarmToString } from '../../normalizations/normalizations-utils';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
-import { selectCalendar } from '../../store/selectors/calendars';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
@@ -211,7 +212,7 @@ export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
 export default function EventPanelView(): ReactElement | null {
 	const { calendarId, apptId, ridZ } = useParams<RouteParams>();
 
-	const calendar = useAppSelector(selectCalendar(calendarId));
+	const calendar = useFolder(calendarId);
 	const appointment = useAppSelector(selectAppointment(apptId));
 	const instance = useAppSelector(selectAppointmentInstance(apptId, ridZ));
 	const invite = useInvite((instance as ExceptionReference)?.inviteId ?? appointment?.inviteId);
@@ -251,7 +252,7 @@ export default function EventPanelView(): ReactElement | null {
 						invite={invite}
 					/>
 					<StyledDivider />
-					{!event.resource.iAmOrganizer && !calendar?.owner && invite && (
+					{!event.resource.iAmOrganizer && !(calendar as LinkFolder)?.owner && invite && (
 						<>
 							<ReplyButtonsPart
 								inviteId={event.resource.inviteId}

@@ -59,9 +59,7 @@ export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 		return checked ? 'Calendar2' : 'CalendarOutline';
 	}, [checked, item]);
 
-	const iconColor = item.color
-		? ZIMBRA_STANDARD_COLORS[item.color].color
-		: setCalendarColor(item).color;
+	const iconColor = setCalendarColor({ color: item.color, rgb: item.rgb })?.color;
 
 	return (
 		<Container width="fill" height="fit">

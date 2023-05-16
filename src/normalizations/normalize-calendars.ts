@@ -17,9 +17,10 @@ export const normalizeCalendar = (folder: Folder): Calendar => ({
 	freeBusy: /b/.test(folder.f ?? ''),
 	deletable: folder.deletable,
 	absFolderPath: folder.absFolderPath,
+	// todo: remove ts-ignore once types are defined properly
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
-	color: folder.color ? ZIMBRA_STANDARD_COLORS[folder.color] : setCalendarColor(folder),
+	color: setCalendarColor({ color: folder.color, rgb: folder.rgb }),
 	id: folder.id,
 	name: folder.name,
 	n: folder.n ?? 0,

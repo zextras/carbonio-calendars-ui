@@ -7,11 +7,12 @@ import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useState, useEffect, useMemo } from 'react';
 import { compact, filter, find, forEach, includes, isEmpty, map, reduce } from 'lodash';
 import moment from 'moment';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { getTimeToDisplayData } from '../../commons/utilities';
 import { normalizeReminderItem } from '../../normalizations/normalize-reminder';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
-import { selectCalendars } from '../../store/selectors/calendars';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
 import { showNotification } from '../notifications';
 import { ReminderModal } from './reminder-modal';
@@ -20,7 +21,7 @@ import sound from '../../assets/notification.mp3';
 export const AppointmentReminder = (): ReactElement | null => {
 	const [reminders, setReminders] = useState<Reminders>({});
 	const appointments = useAppSelector(selectAppointmentsArray);
-	const calendars = useAppSelector(selectCalendars);
+	const calendars = useFoldersMap();
 
 	const alarms = useMemo(() => {
 		const appts = filter(appointments, 'alarmData');
@@ -29,7 +30,7 @@ export const AppointmentReminder = (): ReactElement | null => {
 				const isShared = appt?.l?.includes(':');
 				const defaultCalendar = calendars?.['10'];
 				const cal = isShared
-					? find(calendars, (f) => `${f.zid}:${f.rid}` === appt.l)
+					? find(calendars, (f) => `${(f as LinkFolder).zid}:${(f as LinkFolder).rid}` === appt.l)
 					: find(calendars, (f) => f.id === appt.l);
 				return normalizeReminderItem({ calendar: cal ?? defaultCalendar, appointment: appt });
 			})

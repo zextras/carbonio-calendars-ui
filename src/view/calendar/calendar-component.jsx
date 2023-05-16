@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { minBy } from 'lodash';
+import { filter, isEmpty, minBy } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
@@ -14,12 +14,7 @@ import moment from 'moment-timezone';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
-import {
-	selectCalendars,
-	selectCheckedCalendarsMap,
-	selectEnd,
-	selectStart
-} from '../../store/selectors/calendars';
+import { selectEnd, selectStart } from '../../store/selectors/calendars';
 import { useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
 import { workWeek } from '../../utils/work-week';
 import CalendarStyle from './calendar-style';
@@ -30,6 +25,7 @@ import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import CustomEventWrapper from './custom-event-wrapper';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -55,7 +51,8 @@ const customComponents = {
 
 export default function CalendarComponent() {
 	const appointments = useAppSelector(selectAppointmentsArray);
-	const selectedCalendars = useAppSelector(selectCheckedCalendarsMap);
+	const calendars = useFoldersMap();
+	const selectedCalendars = filter(calendars, ['checked', true]);
 	const theme = useContext(ThemeContext);
 	const prefs = usePrefs();
 	const calendarView = useCalendarView();
@@ -63,7 +60,6 @@ export default function CalendarComponent() {
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
-	const calendars = useAppSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
 
@@ -177,7 +173,7 @@ export default function CalendarComponent() {
 
 	return (
 		<>
-			<CalendarSyncWithRange />
+			{!isEmpty(calendars) && <CalendarSyncWithRange />}
 			<CalendarStyle
 				primaryCalendar={primaryCalendar}
 				summaryViewOpen={summaryViewOpen}

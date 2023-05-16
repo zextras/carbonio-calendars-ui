@@ -54,9 +54,7 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 						? displayName
 						: getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? '',
 				icon: getFolderIcon({ item, checked: !!checked }),
-				iconColor: item.color
-					? ZIMBRA_STANDARD_COLORS[item.color].color
-					: setCalendarColor(item).color,
+				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
 				textProps: { size: 'small' }
 			} as AccordionItemType),
 		[item, displayName, checked]

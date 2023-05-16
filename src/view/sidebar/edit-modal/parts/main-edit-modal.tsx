@@ -140,10 +140,7 @@ type EditModalContexType = {
 export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointments, grant }) => {
 	const allCalendars = useFoldersArray();
 
-	const iconColor = useMemo(
-		() => (folder.color ? ZIMBRA_STANDARD_COLORS[folder.color] : setCalendarColor(folder)),
-		[folder]
-	);
+	const iconColor = setCalendarColor({ color: folder.color, rgb: folder.rgb });
 
 	const [inputValue, setInputValue] = useState(folder.name || '');
 	const [freeBusy, setFreeBusy] = useState(false);

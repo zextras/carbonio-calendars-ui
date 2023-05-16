@@ -10,10 +10,10 @@ import { filter, isEmpty, reduce, startsWith } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { getFolderTranslatedName } from '../../commons/utilities';
 import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
-import { useAppSelector } from '../../store/redux/hooks';
-import { selectCalendars } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
 import { Calendar } from '../../types/store/calendars';
 import { FolderItem } from './folder-item';
@@ -31,7 +31,7 @@ type MoveModalProps = {
 	toggleModal: () => void;
 	onClose: () => void;
 	event: EventType;
-	currentFolder: Calendar;
+	currentFolder: Folder;
 	action: (arg: ActionArgs) => void;
 };
 
@@ -42,7 +42,7 @@ export const MoveModal = ({
 	currentFolder,
 	action
 }: MoveModalProps): ReactElement => {
-	const folders = useAppSelector(selectCalendars);
+	const folders = useFoldersMap();
 	const [input, setInput] = useState('');
 	const [folderDestination, setFolderDestination] = useState<Calendar>({} as Calendar);
 	const [isSameFolder, setIsSameFolder] = useState(false);
@@ -70,7 +70,7 @@ export const MoveModal = ({
 		event.resource.id,
 		onClose
 	]);
-	const filterFromInput = useMemo<Calendar[]>(
+	const filterFromInput = useMemo<Array<Folder>>(
 		() =>
 			filter(folders, (v) => {
 				if (isEmpty(v)) {

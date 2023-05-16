@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { find, values, reduce, filter } from 'lodash';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { EventType } from '../../types/event';
 import { Appointment, InstanceReference } from '../../types/store/appointments';
@@ -38,7 +39,7 @@ export function selectApptStatus({ appointments }: RootState): string {
 export function getSelectedEvents(
 	{ appointments }: RootState,
 	idMap: Record<string, Array<string>>,
-	calendars: Record<string, Calendar>
+	calendars: Record<string, Folder>
 ): Array<EventType> {
 	return normalizeCalendarEvents(
 		values(

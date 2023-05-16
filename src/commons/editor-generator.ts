@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import de from '@faker-js/faker/dist/types/locales/de';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { Dispatch } from 'redux';
@@ -81,10 +82,8 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		calendar: defaultCalendar
 			? {
 					id: defaultCalendar.id,
-					name: defaultCalendar.name, // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					color: defaultCalendar.color // @ts-ignore
-						? ZIMBRA_STANDARD_COLORS[defaultCalendar.color]
-						: setCalendarColor(defaultCalendar),
+					name: defaultCalendar.name,
+					color: setCalendarColor({ color: defaultCalendar.color, rgb: defaultCalendar.rgb }),
 					owner: (defaultCalendar as LinkFolder)?.owner
 			  }
 			: undefined,

@@ -4,16 +4,16 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
+import { Folder } from '../carbonio-ui-commons/types/folder';
 import { ReminderItem } from '../types/appointment-reminder';
 import { Appointment } from '../types/store/appointments';
-import { Calendar } from '../types/store/calendars';
 
 export const normalizeReminderItem = ({
 	appointment,
 	calendar
 }: {
 	appointment: Appointment;
-	calendar: Calendar;
+	calendar: Folder;
 }): ReminderItem | undefined => {
 	if (appointment.alarmData) {
 		const user = getUserAccount();

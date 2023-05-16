@@ -131,11 +131,30 @@ export const getAlarmToString = (alarm: any): any => {
 	return null;
 };
 
-export const setCalendarColor = (folder: Folder): ZimbraColorType =>
-	folder.rgb
+export const setCalendarColorFromRGB = (color: string | undefined): ZimbraColorType =>
+	color
 		? {
-				color: folder.rgb,
+				color,
 				label: 'custom',
-				background: setLightness(0.9, folder.rgb)
+				background: setLightness(0.9, color)
 		  }
 		: ZIMBRA_STANDARD_COLORS[0];
+
+export const setCalendarColorFromNumber = (color: number | undefined): ZimbraColorType =>
+	color ? ZIMBRA_STANDARD_COLORS[color] : ZIMBRA_STANDARD_COLORS[0];
+
+export const setCalendarColor = ({
+	rgb,
+	color
+}: {
+	rgb?: string;
+	color?: number;
+}): ZimbraColorType => {
+	if (rgb) {
+		return setCalendarColorFromRGB(rgb);
+	}
+	if (color) {
+		return setCalendarColorFromNumber(color);
+	}
+	return ZIMBRA_STANDARD_COLORS[0];
+};

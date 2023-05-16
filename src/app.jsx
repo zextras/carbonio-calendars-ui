@@ -26,7 +26,6 @@ import { getSettingsSubSections } from './settings/sub-sections';
 import { StoreProvider } from './store/redux';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
-import { selectCalendars } from './store/selectors/calendars';
 import { selectApptStatus } from './store/selectors/appointments';
 import { searchAppointments } from './store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from './store/redux/hooks';
@@ -34,6 +33,7 @@ import { CalendarIntegrations } from './types/enums/event-actions-enum';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
+import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -93,7 +93,7 @@ const SearchView = (props) => (
 
 const AppRegistrations = () => {
 	const onClickNewButton = useOnClickNewButton();
-	const calendars = useAppSelector(selectCalendars);
+	const calendars = useFoldersMap();
 	const status = useAppSelector(selectApptStatus);
 	const dispatch = useAppDispatch();
 
