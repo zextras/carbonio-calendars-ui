@@ -20,9 +20,9 @@ import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
 import { findLabel } from '../../../../settings/components/utils';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
-import { shareCalendar } from '../../../../store/actions/share-calendar';
 import { GranteeInfo } from './grantee-info';
 import { useAppDispatch } from '../../../../store/redux/hooks';
+import { folderAction } from '../../../../store/actions/calendar-actions';
 
 export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 	const [t] = useTranslation();
@@ -36,19 +36,17 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
 
 	const onConfirm = () => {
-		dispatch(
-			shareCalendar({
-				sendNotification,
-				standardMessage,
-				contacts: [{ email: grant.d || grant.zid }],
-				shareWithUserRole,
-				folder: folder.id,
-				accounts,
-				allowToSeePrvtAppt,
-				grant
-			})
-		).then((res) => {
-			if (res.type.includes('fulfilled')) {
+		const grants = [
+			{
+				gt: 'usr',
+				inh: '1',
+				d: grant.d || grant.zid,
+				perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
+				pw: ''
+			}
+		];
+		folderAction({ id: folder.id, op: 'grant', changes: { grant: grants } }).then((res) => {
+			if (!res.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
@@ -70,7 +68,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 					).then((res2) => {
 						if (!res2.type.includes('fulfilled')) {
 							createSnackbar({
-								key: `folder-action-success`,
+								key: `folder-action-failed`,
 								replace: true,
 								type: 'error',
 								hideButton: true,

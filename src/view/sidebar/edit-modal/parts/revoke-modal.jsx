@@ -42,8 +42,8 @@ export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 	}, [sendNotification, standardMessage, t]);
 
 	const onConfirm = useCallback(() => {
-		dispatch(folderAction({ id: folder.id, zid: grant.zid, op: '!grant' })).then((res) => {
-			if (res.type.includes('fulfilled')) {
+		folderAction({ id: folder.id, zid: grant.zid, op: '!grant' }).then((res) => {
+			if (!res.Fault) {
 				sendNotification &&
 					dispatch(
 						sendShareCalendarNotification({

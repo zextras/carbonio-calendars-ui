@@ -3,15 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import { createFolderRequest } from '../../soap/create-folder-request';
 import { extractCalendars } from '../../utils/store/calendars';
 
-export const createCalendar = createAsyncThunk(
-	'calendars/create',
-	async ({ name, parent, color, excludeFreeBusy }: any, { requestId }) => {
-		const res = await createFolderRequest({ name, parent, color, excludeFreeBusy });
-		const folders = extractCalendars(res.folder);
-		return [folders, requestId];
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const createCalendar = async ({
+	name,
+	parent,
+	color,
+	excludeFreeBusy
+}: any): Promise<any> => {
+	const res = await createFolderRequest({ name, parent, color, excludeFreeBusy });
+	if (res.folder) {
+		return extractCalendars(res.folder);
 	}
-);
+	return res;
+};

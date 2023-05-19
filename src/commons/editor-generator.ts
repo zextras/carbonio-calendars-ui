@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import de from '@faker-js/faker/dist/types/locales/de';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import { Dispatch } from 'redux';
@@ -17,7 +16,6 @@ import { Editor } from '../types/editor';
 import { Invite } from '../types/store/invite';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { getIdentityItems } from './get-identity-items';
-import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 
 momentLocalizer(moment);
 

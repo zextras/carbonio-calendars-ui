@@ -129,15 +129,13 @@ export const NewModal = ({ onClose }) => {
 
 	const onConfirm = () => {
 		if (inputValue) {
-			dispatch(
-				createCalendar({
-					parent: '1',
-					name: inputValue,
-					color: selectedColor,
-					excludeFreeBusy: freeBusy
-				})
-			).then((res) => {
-				if (res.type.includes('fulfilled')) {
+			createCalendar({
+				parent: '1',
+				name: inputValue,
+				color: selectedColor,
+				excludeFreeBusy: freeBusy
+			}).then((res) => {
+				if (!res.Fault) {
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
@@ -148,7 +146,7 @@ export const NewModal = ({ onClose }) => {
 					});
 				} else {
 					createSnackbar({
-						key: `folder-action-success`,
+						key: `folder-action-failed`,
 						replace: true,
 						type: 'error',
 						hideButton: true,

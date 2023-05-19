@@ -9,17 +9,15 @@ import { useTranslation } from 'react-i18next';
 import { folderAction } from '../../store/actions/calendar-actions';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { useAppDispatch } from '../../store/redux/hooks';
 
 export const EmptyModal = ({ onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [t] = useTranslation();
-	const dispatch = useAppDispatch();
 
 	const onConfirm = () => {
-		dispatch(folderAction({ id: '3', op: 'empty', changes: { recursive: true } })).then((res) => {
+		folderAction({ id: '3', op: 'empty', changes: { recursive: true } }).then((res) => {
 			onClose();
-			if (res.type.includes('fulfilled')) {
+			if (!res.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,

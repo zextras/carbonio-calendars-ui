@@ -5,15 +5,15 @@
  */
 import { TextProps } from '@zextras/carbonio-design-system';
 import { AccordionFolder, FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
-import { isNil } from 'lodash';
+import { forEach, isNil, map } from 'lodash';
 import moment from 'moment';
+import { getUpdateFolder } from '../carbonio-ui-commons/store/zustand/folder';
 import type { Folder } from '../carbonio-ui-commons/types/folder';
 import { ReminderItem } from '../types/appointment-reminder';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
 import { searchAppointments } from '../store/actions/search-appointments';
-import { updateCalendar } from '../store/slices/calendars-slice';
 import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
@@ -431,19 +431,20 @@ export function recursiveToggleCheck({
 	// remove item 'all' from an array of strings
 	checkAllChildren(folder);
 
-	dispatch(
-		folderAction({
-			id: foldersToToggleIds,
-			changes: { checked },
-			op: checked ? '!check' : 'check'
-		})
-	).then((res: { meta: { arg: { op: string } } }) => {
-		if (res?.meta?.arg?.op === 'check') {
+	folderAction({
+		id: foldersToToggleIds,
+		changes: { checked },
+		op: checked ? '!check' : 'check'
+	}).then((res: any) => {
+		if (!res?.Fault && res?.meta?.arg?.op === 'check') {
 			dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 			dispatchGetMiniCal &&
 				dispatch(getMiniCal({ start, end })).then((response: { payload: { error: any } }) => {
+					const updateFolder = getUpdateFolder();
 					if (response?.payload?.error) {
-						dispatch(updateCalendar(response?.payload?.error));
+						forEach(response?.payload?.error, ({ id }) => {
+							updateFolder(id, { broken: true });
+						});
 					}
 				});
 		}

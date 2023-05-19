@@ -199,24 +199,22 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const defaultChecked = false;
 	const onConfirm = useCallback(() => {
 		if (inputValue) {
-			dispatch(
-				folderAction({
-					id: folder.id,
-					op: 'update',
-					changes: omitBy(
-						{
-							parent: folder.parent ?? FOLDERS.USER_ROOT,
-							name: inputValue,
-							color: selectedColor,
-							excludeFreeBusy: freeBusy,
-							checked,
-							grant
-						},
-						isNull
-					)
-				})
-			).then((res) => {
-				if (res.type.includes('fulfilled')) {
+			folderAction({
+				id: folder.id,
+				op: 'update',
+				changes: omitBy(
+					{
+						parent: folder.parent ?? FOLDERS.USER_ROOT,
+						name: inputValue,
+						color: selectedColor,
+						excludeFreeBusy: freeBusy,
+						checked,
+						grant
+					},
+					isNull
+				)
+			}).then((res) => {
+				if (!res.Fault) {
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
@@ -244,7 +242,6 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	}, [
 		checked,
 		createSnackbar,
-		dispatch,
 		folder.id,
 		folder.parent,
 		freeBusy,

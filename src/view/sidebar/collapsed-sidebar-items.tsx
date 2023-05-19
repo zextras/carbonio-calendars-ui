@@ -7,18 +7,17 @@ import { Container, IconButton, Padding, Row, Tooltip } from '@zextras/carbonio-
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useMemo } from 'react';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
-import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectEnd, selectStart } from '../../store/selectors/calendars';
+import { useAppDispatch } from '../../store/redux/hooks';
+import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 
 export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 	const { name, checked = undefined } = item;
 	const dispatch = useAppDispatch();
-	const start = useAppSelector(selectStart);
-	const end = useAppSelector(selectEnd);
+	const start = useRangeStart();
+	const end = useRangeEnd();
 
 	const recursiveToggleCheck = useCallback(
 		(folder: Folder) => {
@@ -35,20 +34,15 @@ export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 			};
 
 			checkAllChildren(folder);
-			dispatch(
-				folderAction({
-					id: foldersToToggleIds,
-					changes: { checked },
-					op: checked ? '!check' : 'check'
-				})
-			)
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				.then((res: { meta: { arg: { op: string } } }) => {
-					if (res?.meta?.arg?.op === 'check') {
-						dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
-					}
-				});
+			folderAction({
+				id: foldersToToggleIds,
+				changes: { checked },
+				op: checked ? '!check' : 'check'
+			}).then((res: any) => {
+				if (!res.Fault && res?.meta?.arg?.op === 'check') {
+					dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
+				}
+			});
 		},
 		[checked, dispatch, end, start]
 	);

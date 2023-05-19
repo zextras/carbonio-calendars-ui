@@ -25,7 +25,11 @@ export const folderActionRequest = async ({
 			recursive: changes?.recursive,
 			name: changes?.name,
 			color: changes?.color,
-			f: `${changes?.excludeFreeBusy ? 'b' : ''}${changes?.checked ? '#' : ''}`,
+			grant: changes?.grant,
+			f:
+				changes?.excludeFreeBusy || changes?.checked
+					? `${changes?.excludeFreeBusy ? 'b' : ''}${changes?.checked ? '#' : ''}`
+					: undefined,
 			zid
 		},
 		isNil

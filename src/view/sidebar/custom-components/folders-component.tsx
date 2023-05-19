@@ -22,11 +22,10 @@ import {
 	getFolderTranslatedName,
 	recursiveToggleCheck
 } from '../../../commons/utilities';
-import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEnd, selectStart } from '../../../store/selectors/calendars';
+import { useAppDispatch } from '../../../store/redux/hooks';
+import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
 
 type FoldersComponentProps = {
 	item: Folder;
@@ -61,8 +60,8 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	);
 
 	const ddItems = useCalendarActions(item);
-	const start = useAppSelector(selectStart);
-	const end = useAppSelector(selectEnd);
+	const start = useRangeStart();
+	const end = useRangeEnd();
 	const dispatch = useAppDispatch();
 
 	const onClick = (): void =>

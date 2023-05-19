@@ -14,8 +14,12 @@ import moment from 'moment-timezone';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
-import { selectEnd, selectStart } from '../../store/selectors/calendars';
-import { useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
+import {
+	useCalendarView,
+	useIsSummaryViewOpen,
+	useRangeEnd,
+	useRangeStart
+} from '../../store/zustand/hooks';
 import { workWeek } from '../../utils/work-week';
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
@@ -33,8 +37,8 @@ const BigCalendar = withDragAndDrop(Calendar);
 const views = { month: true, week: true, day: true, work_week: WorkView };
 
 const CalendarSyncWithRange = () => {
-	const start = useAppSelector(selectStart);
-	const end = useAppSelector(selectEnd);
+	const start = useRangeStart();
+	const end = useRangeEnd();
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {

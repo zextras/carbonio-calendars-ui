@@ -48,7 +48,8 @@ export const EditModal = ({ onClose, folder, totalAppointments }) => {
 
 				{(modal === 'share' && (
 					<ShareCalendarModal
-						folder={folder}
+						folderName={folder.name}
+						folderId={folder.id}
 						closeFn={onClose}
 						onGoBack={onGoBack}
 						secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}

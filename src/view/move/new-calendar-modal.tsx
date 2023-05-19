@@ -27,7 +27,6 @@ import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../../commons/zimbra-st
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
-import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 
 const Square = styled.div`
@@ -124,8 +123,6 @@ type NewModalProps = {
 
 export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
-
-	const dispatch = useAppDispatch();
 	const [inputValue, setInputValue] = useState('');
 	const folders = useFoldersMap();
 	const [freeBusy, setFreeBusy] = useState(false);
@@ -150,15 +147,13 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 
 	const onConfirm = (): void => {
 		if (inputValue) {
-			dispatch(
-				createCalendar({
-					parent: '1',
-					name: inputValue,
-					color: selectedColor,
-					excludeFreeBusy: freeBusy
-				})
-			).then((newCalendarRes: any) => {
-				if (newCalendarRes.type.includes('fulfilled')) {
+			createCalendar({
+				parent: '1',
+				name: inputValue,
+				color: selectedColor,
+				excludeFreeBusy: freeBusy
+			}).then((newCalendarRes: any) => {
+				if (!newCalendarRes.Fault) {
 					action({
 						inviteId: event.resource.inviteId,
 						t,
