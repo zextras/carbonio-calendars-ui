@@ -9,15 +9,9 @@ import React, { FC, useCallback, useMemo } from 'react';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { folderAction } from '../../store/actions/calendar-actions';
-import { searchAppointments } from '../../store/actions/search-appointments';
-import { useAppDispatch } from '../../store/redux/hooks';
-import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 
 export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 	const { name, checked = undefined } = item;
-	const dispatch = useAppDispatch();
-	const start = useRangeStart();
-	const end = useRangeEnd();
 
 	const recursiveToggleCheck = useCallback(
 		(folder: Folder) => {
@@ -38,13 +32,9 @@ export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 				id: foldersToToggleIds,
 				changes: { checked },
 				op: checked ? '!check' : 'check'
-			}).then((res: any) => {
-				if (!res.Fault && res?.meta?.arg?.op === 'check') {
-					dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
-				}
 			});
 		},
-		[checked, dispatch, end, start]
+		[checked]
 	);
 
 	const icon = useMemo(() => {

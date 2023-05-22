@@ -96,7 +96,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 			perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
 			pw: ''
 		}));
-		folderAction({ id: folderId, op: 'grant', changes: { grant: granted } }).then((res: any) => {
+		folderAction({ id: folderId, op: 'grant', changes: { grant: granted } }).then((res) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,

@@ -35,7 +35,10 @@ export const CalendarSelector = ({
 	const calendars = useFoldersArray();
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
 	const calWithWritePerm = useMemo(
-		() => (showCalWithWritePerm ? filter(calendars, 'haveWriteAccess') : calendars),
+		() =>
+			showCalWithWritePerm
+				? filter(calendars, (calendar) => (calendar.perm ? /w/.test(calendar.perm) : true))
+				: calendars,
 		[calendars, showCalWithWritePerm]
 	);
 

@@ -14,7 +14,7 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import {
@@ -24,8 +24,6 @@ import {
 } from '../../../commons/utilities';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
-import { useAppDispatch } from '../../../store/redux/hooks';
-import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
 
 type FoldersComponentProps = {
 	item: Folder;
@@ -60,19 +58,15 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	);
 
 	const ddItems = useCalendarActions(item);
-	const start = useRangeStart();
-	const end = useRangeEnd();
-	const dispatch = useAppDispatch();
 
-	const onClick = (): void =>
-		recursiveToggleCheck({
-			folder: item,
-			checked: !!checked,
-			end,
-			start,
-			dispatchGetMiniCal: true,
-			dispatch
-		});
+	const onClick = useCallback(
+		(): void =>
+			recursiveToggleCheck({
+				folder: item,
+				checked: !!checked
+			}),
+		[checked, item]
+	);
 
 	const SharedStatusIcon = useMemo(() => {
 		if (!item.acl?.grant || !item.acl?.grant?.length) {

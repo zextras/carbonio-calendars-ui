@@ -3,8 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
-import React, { useState, useCallback, ReactElement } from 'react';
+import React, { useState, useCallback, ReactElement, useContext } from 'react';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { useAppDispatch } from '../../store/redux/hooks';
@@ -21,7 +22,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 	const dispatch = useAppDispatch();
 	const currentFolder = useFolder(event.resource.calendar.id);
 	const [showNewFolderModal, setShowNewFolderModal] = useState(false);
-
+	const createSnackbar = useContext(SnackbarManagerContext);
 	const toggleModal = useCallback(
 		() => setShowNewFolderModal(!showNewFolderModal),
 		[showNewFolderModal]
@@ -30,7 +31,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 	const moveAppt = (data: any): void => {
 		dispatch(moveAppointmentRequest(data)).then((res: any) => {
 			if (res.type.includes('fulfilled')) {
-				getBridgedFunctions().createSnackbar({
+				createSnackbar({
 					key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
 					replace: true,
 					type: 'info',
@@ -46,7 +47,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 					autoHideTimeout: 3000
 				});
 			} else {
-				getBridgedFunctions().createSnackbar({
+				createSnackbar({
 					key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
 					replace: true,
 					type: 'error',

@@ -20,8 +20,6 @@ import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { recursiveToggleCheck } from '../../commons/utilities';
-import { useAppDispatch } from '../../store/redux/hooks';
-import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 import { CollapsedSidebarItems } from './collapsed-sidebar-items';
 import { FoldersComponent } from './custom-components/folders-component';
 import {
@@ -69,21 +67,13 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 
 	const foldersAccordionItems = addAllCalendarsItem({ folders: folderItems });
 
-	const dispatch = useAppDispatch();
-	const start = useRangeStart();
-	const end = useRangeEnd();
-
 	const sharesItemsOnClick = useCallback(
 		(folder: Folder): void =>
 			recursiveToggleCheck({
 				folder,
-				checked: !!folder.checked,
-				end,
-				start,
-				dispatchGetMiniCal: true,
-				dispatch
+				checked: !!folder.checked
 			}),
-		[dispatch, end, start]
+		[]
 	);
 
 	const sharesAccordionItems = getSharesAccordionItems({

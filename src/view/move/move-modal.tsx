@@ -5,7 +5,6 @@
  */
 import { AccordionItemType, Container, Input, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
-import { TFunction } from 'i18next';
 import { filter, isEmpty, reduce, startsWith } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
@@ -13,16 +12,13 @@ import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-heade
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { getFolderTranslatedName } from '../../commons/utilities';
-import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { EventType } from '../../types/event';
 import { Calendar } from '../../types/store/calendars';
 import { FolderItem } from './folder-item';
 
 type ActionArgs = {
 	inviteId: string;
-	t: TFunction;
 	l: string;
-	color: ZimbraColorType;
 	id: string;
 	destinationCalendarName: string;
 };
@@ -50,9 +46,7 @@ export const MoveModal = ({
 		if (folderDestination?.id !== currentFolder.id) {
 			action({
 				inviteId: event.resource.inviteId,
-				t,
 				l: folderDestination.id,
-				color: folderDestination.color,
 				id: event.resource.id,
 				destinationCalendarName: folderDestination.name
 			});
@@ -62,7 +56,6 @@ export const MoveModal = ({
 		}
 	}, [
 		folderDestination.id,
-		folderDestination.color,
 		folderDestination.name,
 		currentFolder.id,
 		action,

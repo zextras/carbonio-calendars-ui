@@ -33,7 +33,7 @@ export const EditModal = ({ onClose, folder, totalAppointments }) => {
 			_jsns: 'urn:zimbraMail',
 			folder: { l: folder.id }
 		}).then((res) => {
-			if (res?.folder) {
+			if (res?.folder?.[0]?.acl?.grant) {
 				setGrant(res.folder[0].acl.grant);
 			}
 		});
