@@ -8,6 +8,7 @@ import React from 'react';
 import { screen, waitFor, within, act } from '@testing-library/react';
 import { rest } from 'msw';
 import { find } from 'lodash';
+import { faker } from '@faker-js/faker';
 import type { FolderView } from '../../carbonio-ui-commons/types/folder';
 import { setupTest, setupHook } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
@@ -16,13 +17,14 @@ import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import { useCalendarActions } from '../../hooks/use-calendar-actions';
 
 describe('main-calendar-modal', () => {
+	const fullName = faker.name.fullName();
 	test('change color', async () => {
 		const closeFn = jest.fn();
 		const grant = {
 			zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
 			gt: 'usr',
 			perm: 'r',
-			d: 'gabriele.marino@zextras.com'
+			d: faker.internet.email(fullName)
 		} as const;
 		const folder = {
 			absFolderPath: '/calendar 1',
@@ -64,7 +66,7 @@ describe('main-calendar-modal', () => {
 			zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
 			gt: 'usr',
 			perm: 'r',
-			d: 'gabriele.marino@zextras.com'
+			d: faker.internet.email(fullName)
 		} as const;
 		const folder = {
 			absFolderPath: '/calendar 1',
@@ -125,7 +127,7 @@ describe('main-calendar-modal', () => {
 			zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
 			gt: 'usr',
 			perm: 'r',
-			d: 'gabriele.marino@zextras.com'
+			d: faker.internet.email(fullName)
 		} as const;
 		const folder = {
 			absFolderPath: '/calendar 1',
@@ -222,7 +224,7 @@ describe('main-calendar-modal', () => {
 			zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
 			gt: 'usr',
 			perm: 'r',
-			d: 'gabriele.marino@zextras.com'
+			d: faker.internet.email(fullName)
 		} as const;
 		const folder = {
 			absFolderPath: '/calendar 1',
