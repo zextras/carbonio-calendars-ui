@@ -39,7 +39,7 @@ const getResponse = (): SuccessSoapResponse<any> => ({
 								zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
 								gt: 'usr',
 								perm: 'r',
-								d: 'gabriele.marino@zextras.com'
+								d: faker.internet.email(faker.name.fullName())
 							}
 						]
 					}
