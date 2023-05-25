@@ -13,12 +13,13 @@ import {
 	ModalManager,
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
-import { Folder, FolderView } from '@zextras/carbonio-shell-ui';
-import React, { FC, useCallback, useState } from 'react';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { find, map, orderBy, reject } from 'lodash';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
-import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
-import { useFoldersByView } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { recursiveToggleCheck } from '../../commons/utilities';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
@@ -64,12 +65,31 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
-	const folders = useFoldersByView(FOLDER_VIEW.appointment as FolderView);
+	const folders = useRootsArray();
 
 	const folderItems = removeLinkFolders({ folders });
 
 	const foldersAccordionItems = addAllCalendarsItem({ folders: folderItems });
 
+	const sortedFolders = useMemo(
+		() =>
+			map(foldersAccordionItems, (accountRoot) => {
+				const allCalendarFolder = find(accountRoot.children, ['id', 'all']);
+				const calendar = find(accountRoot.children, ['id', FOLDERS.CALENDAR]);
+				const trash = find(accountRoot.children, ['id', FOLDERS.TRASH]);
+				const others = reject(
+					accountRoot.children,
+					(f) => f.id === 'all' || f.id === FOLDERS.CALENDAR || f.id === FOLDERS.TRASH
+				);
+				return allCalendarFolder && calendar && trash
+					? {
+							...accountRoot,
+							children: [allCalendarFolder, calendar, trash, ...orderBy(others, ['name'], ['asc'])]
+					  }
+					: accountRoot;
+			}),
+		[foldersAccordionItems]
+	);
 	const dispatch = useAppDispatch();
 	const start = useAppSelector(selectStart);
 	const end = useAppSelector(selectEnd);
@@ -100,7 +120,7 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 				<ThemeProvider theme={themeMui}>
 					{expanded ? (
 						<MemoSidebar
-							foldersAccordionItems={foldersAccordionItems}
+							foldersAccordionItems={sortedFolders}
 							sharesAccordionItems={sharesAccordionItems}
 							tagsAccordionItems={tagsAccordionItems}
 						/>

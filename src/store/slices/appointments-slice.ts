@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
+import produce from 'immer';
 import { AppointmentsSlice } from '../../types/store/store';
 import { moveAppointmentRequest } from '../actions/move-appointment';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
@@ -13,6 +14,7 @@ import { deleteAppointmentPermanent } from '../actions/delete-appointment-perman
 import { dismissApptReminder } from '../actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../actions/snooze-appointment-reminder';
 import { handleCreatedAppointmentsReducer } from '../reducers/handle-created-appointments';
+import { handleDeletedAppointmentsReducer } from '../reducers/handle-deleted-appointments';
 import { handleModifiedAppointmentsReducer } from '../reducers/handle-modified-appointments';
 import {
 	moveAppointmentFulfilled,
@@ -60,9 +62,10 @@ export const appointmentsSlice = createSlice({
 	name: 'appointments',
 	initialState,
 	reducers: {
-		updateParticipationStatus: handleUpdateParticipationStatus,
-		handleModifiedAppointments: handleModifiedAppointmentsReducer,
-		handleCreatedAppointments: handleCreatedAppointmentsReducer
+		updateParticipationStatus: produce(handleUpdateParticipationStatus),
+		handleModifiedAppointments: produce(handleModifiedAppointmentsReducer),
+		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer),
+		handleDeletedAppointments: produce(handleDeletedAppointmentsReducer)
 	},
 	extraReducers: (builder) => {
 		builder.addCase(modifyAppointmentRequest.pending, handleModifyAppointmentPending);
@@ -89,6 +92,7 @@ export const appointmentsSlice = createSlice({
 	}
 });
 
-export const { handleModifiedAppointments, updateParticipationStatus } = appointmentsSlice.actions;
+export const { handleModifiedAppointments, updateParticipationStatus, handleDeletedAppointments } =
+	appointmentsSlice.actions;
 
 export default appointmentsSlice.reducer;

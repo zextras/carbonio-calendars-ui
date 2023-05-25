@@ -3,8 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder, Tags } from '@zextras/carbonio-shell-ui';
+import { Tags } from '@zextras/carbonio-shell-ui';
 import React from 'react';
+import { Folder } from '../carbonio-ui-commons/types/folder';
 import { AppDispatch } from '../store/redux';
 import { EventActionsId } from './enums/event-actions-enum';
 import { EventType } from './event';
