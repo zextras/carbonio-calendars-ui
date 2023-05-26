@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.3.5",
+	"version": "1.3.6",
 	"description": "Calendars module",
 	"main": "src/app.jsx",
 	"engines": {
@@ -19,8 +19,8 @@
 		"lint": "eslint --ext .js,.jsx,.ts,.tsx --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
 		"sdk-setup": "npm ci --prefix sdk",
 		"test": "jest",
-		"pull-translations": "git subtree pull -P translations git@bitbucket.org:zextras/com_zextras_zapp_calendar.git master --squash",
-		"push-translations": "git subtree push -P translations git@bitbucket.org:zextras/com_zextras_zapp_calendar.git"
+		"pull-translations": "git subtree pull -P translations git@github.com:Zextras/carbonio-calendars-ui-i18n.git master --squash",
+		"push-translations": "git subtree push -P translations git@github.com:Zextras/carbonio-calendars-ui-i18n.git"
 	},
 	"keywords": [],
 	"author": "Zextras Crab Onions Team <https://www.zextras.com/carbonio/>",
@@ -54,8 +54,8 @@
 		"@types/react-redux": "^7.1.25",
 		"@types/react-router-dom": "^5.3.3",
 		"@types/styled-components": "^5.1.26",
-		"@zextras/carbonio-ui-configs": "^0.1.11",
-		"@zextras/carbonio-ui-sdk": "^1.5.1",
+		"@zextras/carbonio-ui-configs": "0.1.11",
+		"@zextras/carbonio-ui-sdk": "^1.5.3",
 		"babel-plugin-i18next-extract": "^0.9.0",
 		"babel-plugin-styled-components": "^2.0.7",
 		"eslint-plugin-jest-dom": "^4.0.3",
@@ -81,8 +81,8 @@
 		"@mui/material": "^5.10.6",
 		"@reduxjs/toolkit": "^1.9.3",
 		"@testing-library/react-hooks": "^8.0.1",
-		"@zextras/carbonio-design-system": "^1.2.0",
-		"@zextras/carbonio-shell-ui": "^3.0.1",
+		"@zextras/carbonio-design-system": "^2.1.0",
+		"@zextras/carbonio-shell-ui": "^3.0.2",
 		"@zextras/carbonio-ui-preview": "^1.1.0",
 		"core-js": "^3.27.2",
 		"date-arithmetic": "^4.1.0",
@@ -112,7 +112,7 @@
 		"not dead"
 	],
 	"carbonio": {
-		"translations_repository": "git@bitbucket.org:zextras/com_zextras_zapp_calendar.git",
+		"translations_repository": "git@github.com:Zextras/carbonio-calendars-ui-i18n.git",
 		"name": "carbonio-calendars-ui",
 		"priority": 6,
 		"attrKey": "zimbraFeatureCalendarEnabled",

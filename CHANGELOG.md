@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.6](https://github.com/zextras/carbonio-calendars-ui/compare/v1.3.5...v1.3.6) (2023-05-25)
+
+
+### Bug Fixes
+
+* accordion avatar component on secondary bar is generated using the correct string ([0a6a419](https://github.com/zextras/carbonio-calendars-ui/commit/0a6a4197d0cccba50bed57e0b0fb89686e394592))
+* empty trash deletes and removes its appointments from view ([ca79000](https://github.com/zextras/carbonio-calendars-ui/commit/ca790006096c0970851f44ec7561a77302a8bce7))
+* **modal:** empty trash in calendar modal closes when confirm button … ([#271](https://github.com/zextras/carbonio-calendars-ui/issues/271)) ([0e7a31e](https://github.com/zextras/carbonio-calendars-ui/commit/0e7a31e5dd7a0add3eb887e191a5dd4b3be939e8))
+* sorting accordion folders ([fc4269a](https://github.com/zextras/carbonio-calendars-ui/commit/fc4269a99a5f4dd1dcdce061d4ce5844c71c7223))
+
 ### [1.3.5](https://github.com/zextras/carbonio-calendars-ui/compare/v1.3.4...v1.3.5) (2023-05-12)
 
 
