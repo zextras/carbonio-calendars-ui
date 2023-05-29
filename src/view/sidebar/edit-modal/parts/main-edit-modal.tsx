@@ -309,7 +309,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 
 	return (
-		<Container padding="0.5rem 0.5rem 1.5rem">
+		<Container data-testid="MainEditModal" padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader onClose={onClose} title={title} />
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}
