@@ -12,8 +12,7 @@ import { ModalHeader } from '../../../../commons/modal-header';
 import { UrlColumn } from './url-column';
 
 const getUrl = (type: string, user: string, folderName: string): string => {
-	const domain =
-		window.location.hostname === 'localhost' ? 'crb2.zimbraopen.com' : window.location.hostname;
+	const domain = window.location.hostname;
 	return type === 'ics'
 		? `https://${domain}/home/${user}/${folderName}.ics`
 		: `webcals://${domain}/home/${user}/${folderName}`;
