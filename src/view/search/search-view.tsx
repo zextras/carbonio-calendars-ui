@@ -9,11 +9,12 @@ import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
-import { selectCalendars } from '../../store/selectors/calendars';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
 import AdvancedFilterModal from './advance-filter-modal';
@@ -58,19 +59,19 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		[zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch]
 	);
 
-	const calendars = useAppSelector(selectCalendars);
+	const calendars = useFoldersMap();
 	const searchInFolders = useMemo(
 		() =>
 			reduce(
 				calendars,
-				(acc: Array<string>, v: any, k: string) => {
+				(acc: Array<string>, v: Folder, k: string) => {
 					if (v.id === FOLDERS.TRASH && includeTrash && v.checked) {
 						acc.push(k);
 					}
-					if (v.isShared && includeSharedFolders && v.checked) {
+					if (v.isLink && includeSharedFolders && v.checked) {
 						acc.push(k);
 					}
-					if (v.id !== FOLDERS.TRASH && !v.isShared && v.checked) acc.push(k);
+					if (v.id !== FOLDERS.TRASH && !v.isLink && v.checked) acc.push(k);
 					return acc;
 				},
 				[]

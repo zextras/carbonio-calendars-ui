@@ -16,8 +16,6 @@ import {
 	t,
 	registerFunctions
 } from '@zextras/carbonio-shell-ui';
-import { isEmpty } from 'lodash';
-import moment from 'moment';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 import InviteResponse from './shared/invite-response/invite-response';
 import Notifications from './view/notifications';
@@ -26,14 +24,12 @@ import { getSettingsSubSections } from './settings/sub-sections';
 import { StoreProvider } from './store/redux';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
-import { selectCalendars } from './store/selectors/calendars';
-import { selectApptStatus } from './store/selectors/appointments';
-import { searchAppointments } from './store/actions/search-appointments';
-import { useAppDispatch, useAppSelector } from './store/redux/hooks';
+import { useAppDispatch } from './store/redux/hooks';
 import { CalendarIntegrations } from './types/enums/event-actions-enum';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
+import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -93,18 +89,8 @@ const SearchView = (props) => (
 
 const AppRegistrations = () => {
 	const onClickNewButton = useOnClickNewButton();
-	const calendars = useAppSelector(selectCalendars);
-	const status = useAppSelector(selectApptStatus);
+	const calendars = useFoldersMap();
 	const dispatch = useAppDispatch();
-
-	useEffect(() => {
-		if (!isEmpty(calendars) && status === 'init') {
-			const now = moment();
-			const start = now.startOf('isoWeek').valueOf();
-			const end = now.endOf('isoWeek').valueOf();
-			dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
-		}
-	}, [dispatch, status, calendars]);
 
 	useEffect(() => {
 		addRoute({

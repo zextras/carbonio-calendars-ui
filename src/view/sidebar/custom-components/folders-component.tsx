@@ -14,7 +14,7 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import {
@@ -22,11 +22,8 @@ import {
 	getFolderTranslatedName,
 	recursiveToggleCheck
 } from '../../../commons/utilities';
-import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEnd, selectStart } from '../../../store/selectors/calendars';
 
 type FoldersComponentProps = {
 	item: Folder;
@@ -54,28 +51,22 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 						? displayName
 						: getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? '',
 				icon: getFolderIcon({ item, checked: !!checked }),
-				iconColor: item.color
-					? ZIMBRA_STANDARD_COLORS[item.color].color
-					: setCalendarColor(item).color,
+				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
 				textProps: { size: 'small' }
 			} as AccordionItemType),
 		[item, displayName, checked]
 	);
 
 	const ddItems = useCalendarActions(item);
-	const start = useAppSelector(selectStart);
-	const end = useAppSelector(selectEnd);
-	const dispatch = useAppDispatch();
 
-	const onClick = (): void =>
-		recursiveToggleCheck({
-			folder: item,
-			checked: !!checked,
-			end,
-			start,
-			dispatchGetMiniCal: true,
-			dispatch
-		});
+	const onClick = useCallback(
+		(): void =>
+			recursiveToggleCheck({
+				folder: item,
+				checked: !!checked
+			}),
+		[checked, item]
+	);
 
 	const SharedStatusIcon = useMemo(() => {
 		if (!item.acl?.grant || !item.acl?.grant?.length) {

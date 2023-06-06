@@ -72,16 +72,14 @@ describe('Editor panel wrapper', () => {
 		test('toggle expand action', async () => {
 			const isNew = false;
 			const editorId = mockedData.utils.getRandomEditorId(isNew);
-			const calendars = {
-				calendars: mockedData.store.getCalendarSliceItem()
-			};
+
 			const editor = mockedData.editor.getEditor({ editor: { id: editorId }, folders });
 			const editorSlice = {
 				activeId: editorId,
 				editors: mockedData.store.getEditorSliceItem({ editor })
 			};
 
-			const emptyStore = mockedData.store.mockReduxStore({ calendars, editor: editorSlice });
+			const emptyStore = mockedData.store.mockReduxStore({ editor: editorSlice });
 
 			const store = configureStore({
 				reducer: combineReducers(reducers),

@@ -37,10 +37,8 @@ const getDefaultEditor = ({
 		calendar: editorCalendar
 			? {
 					id: editorCalendar.id,
-					name: editorCalendar.name, // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					color: editorCalendar.color // @ts-ignore
-						? ZIMBRA_STANDARD_COLORS[editorCalendar.color]
-						: setCalendarColor(editorCalendar),
+					name: editorCalendar.name,
+					color: setCalendarColor({ color: editorCalendar.color, rgb: editorCalendar.rgb }),
 					owner: (editorCalendar as LinkFolder)?.owner
 			  }
 			: undefined,
@@ -136,10 +134,8 @@ const getEditor = ({
 		calendar: editorCalendar
 			? {
 					id: editorCalendar.id,
-					name: editorCalendar.name, // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					color: editorCalendar.color // @ts-ignore
-						? ZIMBRA_STANDARD_COLORS[editorCalendar.color]
-						: setCalendarColor(editorCalendar),
+					name: editorCalendar.name,
+					color: setCalendarColor({ color: editorCalendar.color, rgb: editorCalendar.rgb }),
 					owner: (editorCalendar as LinkFolder)?.owner
 			  }
 			: undefined,

@@ -33,7 +33,7 @@ export const EditModal = ({ onClose, folder, totalAppointments }) => {
 			_jsns: 'urn:zimbraMail',
 			folder: { l: folder.id }
 		}).then((res) => {
-			if (res?.folder) {
+			if (res?.folder?.[0]?.acl?.grant) {
 				setGrant(res.folder[0].acl.grant);
 			}
 		});
@@ -48,7 +48,8 @@ export const EditModal = ({ onClose, folder, totalAppointments }) => {
 
 				{(modal === 'share' && (
 					<ShareCalendarModal
-						folder={folder}
+						folderName={folder.name}
+						folderId={folder.id}
 						closeFn={onClose}
 						onGoBack={onGoBack}
 						secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}

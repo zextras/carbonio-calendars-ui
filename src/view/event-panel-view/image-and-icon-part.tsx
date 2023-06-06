@@ -6,6 +6,7 @@
 import React, { ReactElement } from 'react';
 import { Avatar, Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
+import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 
 const IconContainer = styled(Avatar)`
 	width: 3rem;
@@ -17,9 +18,9 @@ export const ImageAndIconPart = ({
 	color
 }: {
 	icon?: string;
-	color: string;
+	color: ZimbraColorType;
 }): ReactElement => (
 	<Container>
-		<IconContainer icon={icon} label="" background={color} />
+		<IconContainer icon={icon} label="" background={color.color} />
 	</Container>
 );

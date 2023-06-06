@@ -5,10 +5,12 @@
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import React from 'react';
-import { screen, waitFor, within, act } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { rest } from 'msw';
 import { find } from 'lodash';
 import { faker } from '@faker-js/faker';
+import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
+import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import type { FolderView } from '../../carbonio-ui-commons/types/folder';
 import { setupTest, setupHook } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
@@ -16,34 +18,75 @@ import { EditModal } from './edit-modal/edit-modal';
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import { useCalendarActions } from '../../hooks/use-calendar-actions';
 
+const fullName = faker.name.fullName();
+
+const roots = generateRoots();
+const grant = {
+	zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
+	gt: 'usr',
+	perm: 'r',
+	d: faker.internet.email(fullName)
+} as const;
+
+const folder = {
+	absFolderPath: '/calendar 1',
+	id: '2048',
+	l: '1',
+	name: 'Calendar 1',
+	view: 'appointment' as FolderView,
+	n: 1,
+	uuid: 'abcd',
+	recursive: false,
+	deletable: false,
+	activesyncdisabled: true,
+	isLink: false,
+	depth: 1,
+	children: [],
+	reminder: false,
+	broken: false
+};
+
+const setupFoldersStore = (): void => {
+	useFolderStore.setState(() => ({
+		roots: {
+			...roots,
+			USER: {
+				...roots.USER,
+				children: [folder]
+			}
+		},
+		folders: {}
+	}));
+};
+
+const setupInterceptor = (): Promise<any> =>
+	new Promise<any>((resolve, reject) => {
+		// Register a handler for the REST call
+		getSetupServer().use(
+			rest.post('/service/soap/FolderActionrequest', async (req, res, ctx) => {
+				if (!req) {
+					reject(new Error('Empty request'));
+				}
+				const cal = (await req.json()).Body.FolderActionRequest.action;
+				resolve(cal);
+				return res(
+					ctx.json({
+						Body: {
+							FolderActionResponse: cal
+						}
+					})
+				);
+			})
+		);
+	});
 describe('main-calendar-modal', () => {
-	const fullName = faker.name.fullName();
 	test('change color', async () => {
+		const editSavingInterceptor = setupInterceptor();
 		const closeFn = jest.fn();
-		const grant = {
-			zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
-			gt: 'usr',
-			perm: 'r',
-			d: faker.internet.email(fullName)
-		} as const;
-		const folder = {
-			absFolderPath: '/calendar 1',
-			id: '2048',
-			l: '1',
-			name: 'Calendar 1',
-			view: 'appointment' as FolderView,
-			n: 1,
-			uuid: 'abcd',
-			recursive: false,
-			deletable: false,
-			activesyncdisabled: true,
-			isLink: false,
-			depth: 1,
-			children: [],
-			reminder: false,
-			broken: false
-		};
+
 		const store = configureStore({ reducer: combineReducers(reducers) });
+		setupFoldersStore();
+
 		const { user } = setupTest(
 			<EditModal folder={folder} totalAppointments={folder.n} grant={grant} onClose={closeFn} />,
 			{
@@ -56,35 +99,16 @@ describe('main-calendar-modal', () => {
 		await user.click(screen.getByText(/black/i));
 		await user.click(screen.getByText(/red/i));
 		await user.click(screen.getByText(/ok/i));
+
+		const newCalendar = await editSavingInterceptor;
 		await waitFor(() => {
-			expect(store.getState().calendars.calendars[folder.id].color.label).toBe('red');
+			expect(newCalendar.color).toBe('2');
 		});
 	});
 	test('change name', async () => {
+		const editSavingInterceptor = setupInterceptor();
+		setupFoldersStore();
 		const closeFn = jest.fn();
-		const grant = {
-			zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
-			gt: 'usr',
-			perm: 'r',
-			d: faker.internet.email(fullName)
-		} as const;
-		const folder = {
-			absFolderPath: '/calendar 1',
-			id: '2048',
-			l: '1',
-			name: 'Calendar 1',
-			view: 'appointment' as FolderView,
-			n: 1,
-			uuid: 'abcd',
-			recursive: false,
-			deletable: false,
-			activesyncdisabled: true,
-			isLink: false,
-			depth: 1,
-			children: [],
-			reminder: false,
-			broken: false
-		};
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { user } = setupTest(
@@ -93,20 +117,6 @@ describe('main-calendar-modal', () => {
 				store
 			}
 		);
-
-		const editSavingInterceptor = new Promise<any>((resolve, reject) => {
-			// Register a handler for the REST call
-			getSetupServer().use(
-				rest.post('/service/soap/FolderActionrequest', async (req, res, ctx) => {
-					if (!req) {
-						reject(new Error('Empty request'));
-					}
-					const cal = (await req.json()).Body.FolderActionRequest.action;
-					resolve(cal);
-					return res(ctx.json({}));
-				})
-			);
-		});
 
 		await waitFor(() => {
 			expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
@@ -116,36 +126,16 @@ describe('main-calendar-modal', () => {
 		});
 		await user.type(calendarName, '23');
 		await user.click(screen.getByText(/ok/i));
+
 		const newCalendar = await editSavingInterceptor;
 		await waitFor(() => {
 			expect(newCalendar.name).toBe('Calendar 123');
 		});
 	});
 	test('edit free-busy', async () => {
+		const editSavingInterceptor = setupInterceptor();
+		setupFoldersStore();
 		const closeFn = jest.fn();
-		const grant = {
-			zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
-			gt: 'usr',
-			perm: 'r',
-			d: faker.internet.email(fullName)
-		} as const;
-		const folder = {
-			absFolderPath: '/calendar 1',
-			id: '2048',
-			l: '1',
-			name: 'Calendar 1',
-			view: 'appointment' as FolderView,
-			n: 1,
-			uuid: 'abcd',
-			recursive: false,
-			deletable: false,
-			activesyncdisabled: true,
-			isLink: false,
-			depth: 1,
-			children: [],
-			reminder: false,
-			broken: false
-		};
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { user } = setupTest(
@@ -155,49 +145,19 @@ describe('main-calendar-modal', () => {
 			}
 		);
 
-		const editSavingInterceptor = new Promise<any>((resolve, reject) => {
-			// Register a handler for the REST call
-			getSetupServer().use(
-				rest.post('/service/soap/FolderActionrequest', async (req, res, ctx) => {
-					if (!req) {
-						reject(new Error('Empty request'));
-					}
-					const cal = (await req.json()).Body.FolderActionRequest.action;
-					resolve(cal);
-					return res(ctx.json({}));
-				})
-			);
-		});
-
 		const freeBusyCheckbox = screen.getByTestId('icon: Square');
 		expect(freeBusyCheckbox).toBeInTheDocument();
 		await waitFor(() => {
 			user.click(freeBusyCheckbox);
 		});
 		await user.click(screen.getByText(/ok/i));
+
 		const newCalendar = await editSavingInterceptor;
 		await waitFor(() => {
 			expect(newCalendar.excludeFreeBusy).toBeUndefined();
 		});
 	});
 	test('close modal', async () => {
-		const folder = {
-			absFolderPath: '/calendar 1',
-			id: '2048',
-			l: '1',
-			name: 'Calendar 1',
-			view: 'appointment' as FolderView,
-			n: 1,
-			uuid: 'abcd',
-			recursive: false,
-			deletable: false,
-			activesyncdisabled: true,
-			isLink: false,
-			depth: 1,
-			children: [],
-			reminder: false,
-			broken: false
-		};
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { user } = setupTest(<></>, {
 			store
@@ -220,29 +180,6 @@ describe('main-calendar-modal', () => {
 	});
 	test('add share', async () => {
 		const closeFn = jest.fn();
-		const grant = {
-			zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
-			gt: 'usr',
-			perm: 'r',
-			d: faker.internet.email(fullName)
-		} as const;
-		const folder = {
-			absFolderPath: '/calendar 1',
-			id: '2048',
-			l: '1',
-			name: 'Calendar 1',
-			view: 'appointment' as FolderView,
-			n: 1,
-			uuid: 'abcd',
-			recursive: false,
-			deletable: false,
-			activesyncdisabled: true,
-			isLink: false,
-			depth: 1,
-			children: [],
-			reminder: false,
-			broken: false
-		};
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { user } = setupTest(

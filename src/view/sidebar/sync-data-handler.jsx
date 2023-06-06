@@ -8,31 +8,24 @@ import { isEmpty, reduce, forEach, sortBy } from 'lodash';
 import { useNotify, useRefresh } from '@zextras/carbonio-shell-ui';
 import { handleModifiedInvites } from '../../store/slices/invites-slice';
 import {
-	handleCalendarsRefresh,
-	handleCreatedCalendars,
-	handleDeletedCalendars,
-	handleModifiedCalendars
-} from '../../store/slices/calendars-slice';
-import {
 	handleDeletedAppointments,
 	handleModifiedAppointments
 } from '../../store/slices/appointments-slice';
-import { selectEnd, selectStart } from '../../store/selectors/calendars';
 import { searchAppointments } from '../../store/actions/search-appointments';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
+import { useAppDispatch } from '../../store/redux/hooks';
+import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 
 export const SyncDataHandler = () => {
 	const refresh = useRefresh();
 	const notifyList = useNotify();
 	const [seq, setSeq] = useState(-1);
 	const dispatch = useAppDispatch();
-	const start = useAppSelector(selectStart);
-	const end = useAppSelector(selectEnd);
+	const start = useRangeStart();
+	const end = useRangeEnd();
 	const [initialized, setInitialized] = useState(false);
 
 	useEffect(() => {
 		if (!isEmpty(refresh) && !initialized) {
-			dispatch(handleCalendarsRefresh(refresh));
 			setInitialized(true);
 		}
 	}, [dispatch, initialized, refresh]);
@@ -42,27 +35,11 @@ export const SyncDataHandler = () => {
 			forEach(sortBy(notifyList, 'seq'), (notify) => {
 				if (!isEmpty(notify) && (notify.seq > seq || (seq > 1 && notify.seq === 1))) {
 					if (notify.created) {
-						if (notify.created.folder || notify.created.link) {
-							dispatch(
-								handleCreatedCalendars([
-									...(notify.created.folder ?? []),
-									...(notify.created.link ?? [])
-								])
-							);
-						}
 						if (notify.created.appt) {
 							dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
 						}
 					}
 					if (notify.modified) {
-						if (notify.modified.folder || notify.modified.link) {
-							dispatch(
-								handleModifiedCalendars([
-									...(notify.modified.folder ?? []),
-									...(notify.modified.link ?? [])
-								])
-							);
-						}
 						if (notify.modified.appt) {
 							// probably unnecessary
 							const apptToUpdate = reduce(
@@ -96,7 +73,6 @@ export const SyncDataHandler = () => {
 						}
 					}
 					if (notify.deleted) {
-						dispatch(handleDeletedCalendars(notify.deleted));
 						dispatch(handleDeletedAppointments(notify.deleted));
 					}
 					setSeq(notify.seq);

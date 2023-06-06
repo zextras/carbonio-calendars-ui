@@ -8,16 +8,16 @@ import React, { ReactElement, useMemo } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { isNil, omitBy } from 'lodash';
-import { useAppSelector } from '../../store/redux/hooks';
+import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
+import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
+import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
-import { Calendar } from '../../types/store/calendars';
 import { Invite } from '../../types/store/invite';
 import { ImageAndIconPart } from './image-and-icon-part';
 import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { LocationRow } from '../event-summary-view/location-row';
 import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
 import TagsRow from '../event-summary-view/tags-row';
-import { selectCalendar } from '../../store/selectors/calendars';
 
 const PaddedRow = styled(Row)`
 	padding: 0.25rem 0.25rem;
@@ -58,10 +58,10 @@ const InviteNeverSentRow = (): ReactElement => {
 	);
 };
 
-const CalendarInfo = ({ calendar }: { calendar: Calendar }): ReactElement => (
-	<Tooltip label={calendar.name} placement="left">
+const CalendarInfo = ({ name, color }: { name: string; color: ZimbraColorType }): ReactElement => (
+	<Tooltip label={name} placement="left">
 		<div>
-			<CalendarIcon icon="Calendar2" size="medium" customColor={calendar.color.color} />
+			<CalendarIcon icon="Calendar2" size="medium" customColor={color.color} />
 		</div>
 	</Tooltip>
 );
@@ -81,7 +81,12 @@ export const DetailsPart = ({
 	isPrivate,
 	invite
 }: DetailsPartProps): ReactElement | null => {
-	const calendar = useAppSelector(selectCalendar(event.resource.calendar.id));
+	const calendar = useFolder(event.resource.calendar.id);
+
+	const color = useMemo(
+		() => setCalendarColor({ rgb: calendar?.rgb, color: calendar?.color }),
+		[calendar?.color, calendar?.rgb]
+	);
 
 	const timeData = useMemo(
 		() =>
@@ -115,21 +120,17 @@ export const DetailsPart = ({
 			width="fill"
 			height="fit"
 			padding={{ top: 'large', horizontal: 'large', bottom: 'small' }}
-			background="gray6"
+			background={'gray6'}
 		>
 			<Row orientation="row" width="fill" takeAvailableSpace>
 				<Container width="fit">
-					<ImageAndIconPart color={calendar.color.color || 'primary'} />
+					<ImageAndIconPart color={color} />
 				</Container>
 				<Padding right="large" />
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
-						<SubjectRow
-							subject={subject}
-							calendarColor={calendar.color.color}
-							isPrivate={isPrivate}
-						/>
-						{calendar && <CalendarInfo calendar={calendar} />}
+						<SubjectRow subject={subject} calendarColor={color.color} isPrivate={isPrivate} />
+						<CalendarInfo name={calendar?.name} color={color} />
 					</Container>
 					{timeData && <TimeInfoRow timeInfoData={timeData} />}
 					{locationData && locationData?.class !== 'PRI' && (

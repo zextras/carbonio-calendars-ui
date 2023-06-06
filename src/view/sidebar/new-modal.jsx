@@ -22,8 +22,8 @@ import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
-import { selectAllCalendars } from '../../store/selectors/calendars';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
+import { useAppDispatch } from '../../store/redux/hooks';
+import { useFoldersArray } from '../../carbonio-ui-commons/store/zustand/folder';
 
 const Square = styled.div`
 	width: 1.125rem;
@@ -109,7 +109,7 @@ export const NewModal = ({ onClose }) => {
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useContext(SnackbarManagerContext);
 
-	const folders = useAppSelector(selectAllCalendars);
+	const folders = useFoldersArray();
 
 	const folderArray = useMemo(() => map(folders, (f) => f.label), [folders]);
 
@@ -129,15 +129,13 @@ export const NewModal = ({ onClose }) => {
 
 	const onConfirm = () => {
 		if (inputValue) {
-			dispatch(
-				createCalendar({
-					parent: '1',
-					name: inputValue,
-					color: selectedColor,
-					excludeFreeBusy: freeBusy
-				})
-			).then((res) => {
-				if (res.type.includes('fulfilled')) {
+			createCalendar({
+				parent: '1',
+				name: inputValue,
+				color: selectedColor,
+				excludeFreeBusy: freeBusy
+			}).then((res) => {
+				if (!res.Fault) {
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
@@ -148,7 +146,7 @@ export const NewModal = ({ onClose }) => {
 					});
 				} else {
 					createSnackbar({
-						key: `folder-action-success`,
+						key: `folder-action-failed`,
 						replace: true,
 						type: 'error',
 						hideButton: true,

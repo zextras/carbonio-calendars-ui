@@ -5,7 +5,6 @@
  */
 import { Editor } from '../editor';
 import { Appointment } from './appointments';
-import { Calendar } from './calendars';
 import { Invite } from './invite';
 
 type GenericResponse<T> = {
@@ -33,13 +32,6 @@ export type PendingResponse<T> = GenericResponse<T> & {
 
 export type FulfilledResponse<T> = GenericResponse<T> & {
 	requestStatus: 'fulfilled';
-};
-
-export type CalendarSlice = {
-	status: string;
-	calendars: Record<string, Calendar>;
-	start: number;
-	end: number;
 };
 
 export type AppointmentsSlice = {

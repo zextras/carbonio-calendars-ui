@@ -11,17 +11,15 @@ import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-foote
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { folderAction } from '../../store/actions/calendar-actions';
-import { useAppDispatch } from '../../store/redux/hooks';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const onConfirm = (): void => {
 		onClose();
 		const restoreEvent = (): void => {
-			dispatch(folderAction({ id: folder.id, op: 'move', changes: folder })).then((res) => {
-				if (res.type.includes('fulfilled')) {
+			folderAction({ id: folder.id, op: 'move', changes: folder }).then((res) => {
+				if (!res.Fault) {
 					createSnackbar({
 						key: 'send',
 						replace: true,
@@ -42,13 +40,11 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				}
 			});
 		};
-		dispatch(
-			folderAction({
-				id: folder.id,
-				op: folder.parent === FOLDERS.USER_ROOT ? 'trash' : 'delete'
-			})
-		).then((res) => {
-			if (res.type.includes('fulfilled')) {
+		folderAction({
+			id: folder.id,
+			op: folder.parent === FOLDERS.USER_ROOT ? 'trash' : 'delete'
+		}).then((res) => {
+			if (!res.Fault) {
 				createSnackbar({
 					key: 'send',
 					replace: true,

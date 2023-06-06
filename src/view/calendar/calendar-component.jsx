@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { minBy } from 'lodash';
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import { filter, forEach, isEmpty, minBy } from 'lodash';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
@@ -15,12 +15,11 @@ import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
-	selectCalendars,
-	selectCheckedCalendarsMap,
-	selectEnd,
-	selectStart
-} from '../../store/selectors/calendars';
-import { useCalendarView, useIsSummaryViewOpen } from '../../store/zustand/hooks';
+	useCalendarView,
+	useIsSummaryViewOpen,
+	useRangeEnd,
+	useRangeStart
+} from '../../store/zustand/hooks';
 import { workWeek } from '../../utils/work-week';
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
@@ -30,6 +29,9 @@ import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import CustomEventWrapper from './custom-event-wrapper';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
+import { getUpdateFolder, useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useCheckedFolders } from '../../hooks/use-checked-folders';
+import { getMiniCal } from '../../store/actions/get-mini-cal';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -37,13 +39,28 @@ const BigCalendar = withDragAndDrop(Calendar);
 const views = { month: true, week: true, day: true, work_week: WorkView };
 
 const CalendarSyncWithRange = () => {
-	const start = useAppSelector(selectStart);
-	const end = useAppSelector(selectEnd);
+	const [currentChecked, setCurrentChecked] = useState(0);
+	const checked = useCheckedFolders();
 	const dispatch = useAppDispatch();
+	const start = useRangeStart();
+	const end = useRangeEnd();
 
 	useEffect(() => {
-		dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
-	}, [dispatch, end, start]);
+		if (checked?.length) {
+			setCurrentChecked(checked?.length);
+			if (checked?.length > currentChecked) {
+				dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
+				dispatch(getMiniCal({ start, end })).then((response) => {
+					const updateFolder = getUpdateFolder();
+					if (response?.payload?.error) {
+						forEach(response?.payload?.error, ({ id }) => {
+							updateFolder(id, { broken: true });
+						});
+					}
+				});
+			}
+		}
+	}, [checked?.length, currentChecked, dispatch, end, start]);
 	return null;
 };
 
@@ -55,7 +72,8 @@ const customComponents = {
 
 export default function CalendarComponent() {
 	const appointments = useAppSelector(selectAppointmentsArray);
-	const selectedCalendars = useAppSelector(selectCheckedCalendarsMap);
+	const calendars = useFoldersMap();
+	const selectedCalendars = filter(calendars, ['checked', true]);
 	const theme = useContext(ThemeContext);
 	const prefs = usePrefs();
 	const calendarView = useCalendarView();
@@ -63,7 +81,6 @@ export default function CalendarComponent() {
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
-	const calendars = useAppSelector(selectCalendars);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
 
@@ -177,7 +194,7 @@ export default function CalendarComponent() {
 
 	return (
 		<>
-			<CalendarSyncWithRange />
+			{!isEmpty(calendars) && <CalendarSyncWithRange />}
 			<CalendarStyle
 				primaryCalendar={primaryCalendar}
 				summaryViewOpen={summaryViewOpen}

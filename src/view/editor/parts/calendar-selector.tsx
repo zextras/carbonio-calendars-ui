@@ -7,15 +7,15 @@ import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-
 import { FOLDERS, t, useUserSettings } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { filter, find, map } from 'lodash';
+import { useFoldersArray } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import { PREFS_DEFAULTS } from '../../../constants';
-import { useAppSelector } from '../../../store/redux/hooks';
-import { selectCalendarsArray } from '../../../store/selectors/calendars';
-import { Calendar } from '../../../types/store/calendars';
+import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import LabelFactory, { Square } from './select-label-factory';
 
 type CalendarSelectorProps = {
 	calendarId: string;
-	onCalendarChange: (calendar: Calendar) => void;
+	onCalendarChange: (calendar: Folder) => void;
 	label?: string;
 	excludeTrash?: boolean;
 	updateAppTime?: boolean;
@@ -32,10 +32,13 @@ export const CalendarSelector = ({
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
-	const calendars = useAppSelector(selectCalendarsArray);
+	const calendars = useFoldersArray();
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
 	const calWithWritePerm = useMemo(
-		() => (showCalWithWritePerm ? filter(calendars, 'haveWriteAccess') : calendars),
+		() =>
+			showCalWithWritePerm
+				? filter(calendars, (calendar) => (calendar.perm ? /w/.test(calendar.perm) : true))
+				: calendars,
 		[calendars, showCalWithWritePerm]
 	);
 
@@ -51,25 +54,24 @@ export const CalendarSelector = ({
 	);
 	const calendarItems = useMemo(
 		() =>
-			map(
-				requiredCalendars,
-				(cal) =>
-					({
-						label: cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name,
-						value: cal.id,
-						color: cal.color.color || 0,
-						customComponent: (
-							<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
-								<Square color={cal.color.color || 'gray6'} />
-								<Padding left="small">
-									<Text>
-										{cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name}
-									</Text>
-								</Padding>
-							</Container>
-						)
-					} as SelectItem)
-			),
+			map(requiredCalendars, (cal) => {
+				const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
+				return {
+					label: cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name,
+					value: cal.id,
+					color: color.color || 0,
+					customComponent: (
+						<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
+							<Square color={color.color || 'gray6'} />
+							<Padding left="small">
+								<Text>
+									{cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name}
+								</Text>
+							</Padding>
+						</Container>
+					)
+				} as SelectItem;
+			}),
 		[requiredCalendars]
 	);
 

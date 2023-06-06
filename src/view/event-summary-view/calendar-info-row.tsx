@@ -6,24 +6,20 @@
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import React, { ReactElement } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAppSelector } from '../../store/redux/hooks';
-import { selectCalendar } from '../../store/selectors/calendars';
+import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
+import { setCalendarColor } from '../../normalizations/normalizations-utils';
 
 export const CalendarInfoRow = (): ReactElement => {
 	const { calendarId } = useParams<{ calendarId: string }>();
-	const calendar = useAppSelector(selectCalendar(calendarId));
-
+	const calendar = useFolder(calendarId);
+	const color = setCalendarColor({ color: calendar?.color, rgb: calendar?.rgb });
 	return (
 		<>
 			{calendar && (
 				<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						<Padding right="small">
-							<Icon
-								icon="Calendar2"
-								size="medium"
-								customColor={calendar?.color?.color ?? 'primary'}
-							/>
+							<Icon icon="Calendar2" size="medium" customColor={color.color} />
 						</Padding>
 						<Text overflow="break-word" size="medium" weight="bold">
 							{calendar?.name}
