@@ -7,8 +7,10 @@ import { TextProps } from '@zextras/carbonio-design-system';
 import { AccordionFolder, FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
 import { forEach, isNil, map } from 'lodash';
 import moment from 'moment';
+import { Dispatch } from 'redux';
 import { getUpdateFolder, useFoldersArray } from '../carbonio-ui-commons/store/zustand/folder';
 import type { Folder } from '../carbonio-ui-commons/types/folder';
+import { AppDispatch } from '../store/redux';
 import { ReminderItem } from '../types/appointment-reminder';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
@@ -402,9 +404,20 @@ export const getFolderIconColor = (f: Folder): string => {
 export type RecursiveToggleCheckProps = {
 	folder: Folder;
 	checked: boolean;
+	start: number;
+	end: number;
+	dispatch: AppDispatch;
+	query: string;
 };
 
-export function recursiveToggleCheck({ folder, checked }: RecursiveToggleCheckProps): void {
+export function recursiveToggleCheck({
+	folder,
+	checked,
+	dispatch,
+	start,
+	end,
+	query
+}: RecursiveToggleCheckProps): void {
 	const foldersToToggleIds: Array<string> = [];
 	const checkAllChildren = (itemToCheck: Folder): void => {
 		if (itemToCheck.id !== 'all') {
@@ -425,6 +438,24 @@ export function recursiveToggleCheck({ folder, checked }: RecursiveToggleCheckPr
 		id: foldersToToggleIds,
 		changes: { checked },
 		op
+	}).then((res) => {
+		if (op === 'check' && !res.Fault) {
+			dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
+			dispatch(getMiniCal({ start, end })).then((response) => {
+				const updateFolder = getUpdateFolder();
+				// todo: remove ts ignore once getMiniCal is typed
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				if (response?.payload?.Fault) {
+					// todo: remove ts ignore once getMiniCal is typed
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					forEach(response?.payload?.Fault, ({ id }) => {
+						updateFolder(id, { broken: true });
+					});
+				}
+			});
+		}
 	});
 }
 

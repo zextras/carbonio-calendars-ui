@@ -22,6 +22,9 @@ import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { recursiveToggleCheck } from '../../commons/utilities';
+import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
+import { useAppDispatch } from '../../store/redux/hooks';
+import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 import { CollapsedSidebarItems } from './collapsed-sidebar-items';
 import { FoldersComponent } from './custom-components/folders-component';
 import {
@@ -64,6 +67,10 @@ const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 	const folders = useRootsArray();
+	const dispatch = useAppDispatch();
+	const start = useRangeStart();
+	const end = useRangeEnd();
+	const query = useCheckedCalendarsQuery();
 
 	const folderItems = removeLinkFolders({ folders });
 
@@ -93,9 +100,13 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 		(folder: Folder): void =>
 			recursiveToggleCheck({
 				folder,
-				checked: !!folder.checked
+				checked: !!folder.checked,
+				dispatch,
+				start,
+				end,
+				query
 			}),
-		[]
+		[dispatch, end, query, start]
 	);
 
 	const sharesAccordionItems = getSharesAccordionItems({

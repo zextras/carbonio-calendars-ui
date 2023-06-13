@@ -23,7 +23,10 @@ import {
 	recursiveToggleCheck
 } from '../../../commons/utilities';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
+import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
+import { useAppDispatch } from '../../../store/redux/hooks';
+import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
 
 type FoldersComponentProps = {
 	item: Folder;
@@ -37,6 +40,11 @@ const FittedRow = styled(Row)`
 export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	const { checked } = item;
 	const { displayName } = useUserAccount();
+	const dispatch = useAppDispatch();
+	const start = useRangeStart();
+	const end = useRangeEnd();
+	const query = useCheckedCalendarsQuery();
+
 	const isRootAccount = useMemo(
 		() => item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME),
 		[item]
@@ -63,9 +71,13 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 		(): void =>
 			recursiveToggleCheck({
 				folder: item,
-				checked: !!checked
+				checked: !!checked,
+				dispatch,
+				start,
+				end,
+				query
 			}),
-		[checked, item]
+		[checked, dispatch, end, item, query, start]
 	);
 
 	const SharedStatusIcon = useMemo(() => {

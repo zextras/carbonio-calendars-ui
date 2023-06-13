@@ -14,6 +14,7 @@ import {
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
+import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 
 export const SyncDataHandler = () => {
 	const refresh = useRefresh();
@@ -23,6 +24,7 @@ export const SyncDataHandler = () => {
 	const start = useRangeStart();
 	const end = useRangeEnd();
 	const [initialized, setInitialized] = useState(false);
+	const query = useCheckedCalendarsQuery();
 
 	useEffect(() => {
 		if (!isEmpty(refresh) && !initialized) {
@@ -36,7 +38,7 @@ export const SyncDataHandler = () => {
 				if (!isEmpty(notify) && (notify.seq > seq || (seq > 1 && notify.seq === 1))) {
 					if (notify.created) {
 						if (notify.created.appt) {
-							dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
+							dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
 						}
 					}
 					if (notify.modified) {
@@ -55,7 +57,7 @@ export const SyncDataHandler = () => {
 							if (apptToUpdate?.length > 0) {
 								dispatch(handleModifiedAppointments(apptToUpdate));
 							}
-							dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
+							dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
 
 							const invites = reduce(
 								notify.modified.appt,
@@ -79,7 +81,7 @@ export const SyncDataHandler = () => {
 				}
 			});
 		}
-	}, [dispatch, end, notifyList, seq, start]);
+	}, [dispatch, end, notifyList, query, seq, start]);
 
 	return null;
 };

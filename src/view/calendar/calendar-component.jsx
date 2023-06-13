@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { filter, forEach, isEmpty, minBy } from 'lodash';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { filter, isEmpty, minBy } from 'lodash';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
@@ -29,9 +29,8 @@ import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import CustomEventWrapper from './custom-event-wrapper';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { getUpdateFolder, useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { useCheckedFolders } from '../../hooks/use-checked-folders';
-import { getMiniCal } from '../../store/actions/get-mini-cal';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -39,28 +38,14 @@ const BigCalendar = withDragAndDrop(Calendar);
 const views = { month: true, week: true, day: true, work_week: WorkView };
 
 const CalendarSyncWithRange = () => {
-	const [currentChecked, setCurrentChecked] = useState(0);
-	const checked = useCheckedFolders();
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
+	const query = useCheckedCalendarsQuery();
 
 	useEffect(() => {
-		if (checked?.length) {
-			setCurrentChecked(checked?.length);
-			if (checked?.length > currentChecked) {
-				dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
-				dispatch(getMiniCal({ start, end })).then((response) => {
-					const updateFolder = getUpdateFolder();
-					if (response?.payload?.error) {
-						forEach(response?.payload?.error, ({ id }) => {
-							updateFolder(id, { broken: true });
-						});
-					}
-				});
-			}
-		}
-	}, [checked?.length, currentChecked, dispatch, end, start]);
+		dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
+	}, [dispatch, end, query, start]);
 	return null;
 };
 

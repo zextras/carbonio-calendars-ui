@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { filter, isNil, map, omitBy } from 'lodash';
-import { getFoldersArray } from '../../carbonio-ui-commons/store/zustand/folder';
+import { isNil, omitBy } from 'lodash';
 import { SearchRejectedType, searchRequest, SearchReturnType } from '../../soap/search-request';
 import { SearchRequestProps } from '../../types/soap/soap-actions';
 import { AppointmentsSlice } from '../../types/store/store';
@@ -30,13 +29,8 @@ export const searchAppointments = createAsyncThunk<
 >(
 	'calendars/search',
 	async ({ spanStart, spanEnd, query, offset, sortBy }, { rejectWithValue }) => {
-		const calendars = getFoldersArray();
-		const checkedCalendarsQuery = map(filter(calendars, ['checked', true]), (result, id) =>
-			id === 0 ? `inid:"${result.id}"` : `OR inid:"${result.id}"`
-		).join(' ');
-		const _content = query ?? checkedCalendarsQuery;
 		const arg = omitBy(
-			{ start: spanStart, end: spanEnd, content: _content, sortBy, offset },
+			{ start: spanStart, end: spanEnd, content: query, sortBy, offset },
 			isNil
 		) as SearchRequestProps;
 		const response = await searchRequest(arg);
