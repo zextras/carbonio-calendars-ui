@@ -49,12 +49,14 @@ export const EditorTitle = ({ editorId }: { editorId: string }): ReactElement | 
 
 	return !isNil(title) ? (
 		<Input
-			label={t('label.event_title', 'Event title')}
+			label={`${t('label.event_title', 'Event title')}*`}
 			value={value}
 			onChange={onChange}
 			disabled={disabled?.title}
 			backgroundColor="gray5"
 			data-testid="editor-title"
+			// eslint-disable-next-line jsx-a11y/no-autofocus
+			autoFocus
 		/>
 	) : null;
 };

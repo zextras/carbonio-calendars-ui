@@ -49,6 +49,7 @@ describe('create single appointment with default values', () => {
 		await result.current();
 		const previousEditor = values(store.getState().editor.editors)[0];
 		expect(previousEditor).toBeDefined();
+		const newTitle = faker.random.word();
 
 		shell.useBoard.mockImplementation(() => ({
 			...previousEditor,
@@ -57,10 +58,15 @@ describe('create single appointment with default values', () => {
 
 		// RENDER BOARD PANEL
 		const { user } = setupTest(<BoardEditPanel />, { store });
+		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
 		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
 		expect(screen.getByRole('button', { name: /send/i })).toBeDisabled();
+		expect(screen.getByRole('button', { name: /save/i })).toBeDisabled();
 		expect(previousEditor.isNew).toEqual(true);
-
+		await user.type(titleSelector, newTitle);
+		await waitFor(() => {
+			expect(screen.getByRole('button', { name: /save/i })).toBeEnabled();
+		});
 		await waitFor(() => {
 			// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
 			user.click(screen.getByRole('button', { name: /save/i }));
