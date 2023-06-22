@@ -6,9 +6,11 @@
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { map, values } from 'lodash';
+import { rest } from 'msw';
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { editAppointment } from '../../actions/appointment-actions-fn';
+import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -104,6 +106,23 @@ describe.each`
 		const newAttendeesInput = newAttendees.join(' ');
 		const newOptionalsInput = newOptionals.join(' ');
 
+		getSetupServer().use(
+			rest.post('/service/soap/getFreeBusyRequest', async (req, res, ctx) =>
+				res(
+					ctx.json({
+						Header: {
+							context: {
+								session: { id: 191337, _content: 191337 }
+							}
+						},
+						Body: {
+							GetFreeBusyResponse: { usr: map(newAttendees, (attendee) => ({ id: attendee })) }
+						}
+					})
+				)
+			)
+		);
+
 		// SETTING NEW TITLE, LOCATION, FREEBUSY
 		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
 		const locationSelector = screen.getByRole('textbox', { name: /Location/i });
@@ -141,12 +160,15 @@ describe.each`
 
 		await user.click(screen.getByTestId('start-picker'));
 
-		await user.click(
-			screen.getByRole('option', {
-				name: /choose sunday, january 2nd, 2022/i
-			})
+		await waitFor(() =>
+			user.click(
+				screen.getByRole('option', {
+					name: /choose sunday, january 2nd, 2022/i
+				})
+			)
 		);
-		await user.click(screen.getByText(/10:00 pm/i));
+
+		await waitFor(() => user.click(screen.getByText(/10:00 pm/i)));
 
 		// SELECTING DIFFERENT REMINDER VALUE
 		await user.click(screen.getByText(/reminder/i));

@@ -102,9 +102,9 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		allDay: false,
 		freeBusy: 'B',
 		class: 'PUB',
-		start: moment().valueOf(),
+		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
 		end: getEndTime({
-			start: moment().valueOf(),
+			start: moment().set('second', 0).set('millisecond', 0).valueOf(),
 			duration: zimbraPrefCalendarDefaultApptDuration as string
 		}),
 		inviteId: undefined,

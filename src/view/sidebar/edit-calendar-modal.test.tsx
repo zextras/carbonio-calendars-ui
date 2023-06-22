@@ -162,7 +162,7 @@ describe('main-calendar-modal', () => {
 		const { user } = setupTest(<></>, {
 			store
 		});
-		const { result } = setupHook(() => useCalendarActions(folder), { store });
+		const { result } = setupHook(useCalendarActions, { store, initialProps: [folder] });
 		const editFn = find(result.current, ['id', 'edit']);
 		await waitFor(() => {
 			editFn.onClick();

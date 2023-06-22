@@ -55,6 +55,11 @@ export const selectEditorAttendees =
 	(state: RootState): Array<any> =>
 		state?.editor?.editors?.[id]?.attendees;
 
+export const selectEditorUid =
+	(id: string) =>
+	(state: RootState): string | undefined =>
+		state?.editor?.editors?.[id]?.uid;
+
 export const selectEditorOptionalAttendees =
 	(id: string) =>
 	(state: RootState): Array<any> =>
