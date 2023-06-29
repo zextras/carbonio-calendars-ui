@@ -173,8 +173,8 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 				</Container>
 			</AttendeesContainer>
 			{AnyoneIsBusyAtTimeOfEvent && (
-				<Row height="fit" width="fill" mainAlignment={'flex-start'} padding={{ vertical: 'small' }}>
-					<Text color="error">
+				<Row height="fit" width="fill" mainAlignment={'flex-start'} padding={{ top: 'small' }}>
+					<Text size="small" color="error">
 						{t(
 							'attendees_unavailable',
 							'One or more attendees are not available at the selected time of the event'
