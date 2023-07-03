@@ -51,15 +51,16 @@ const getDate = (time) => {
 	);
 };
 export default function StartDatePicker({ start, onChange, day, showEnd, disabled, label }) {
-	getDate(start);
 	const onStartChange = useCallback(
 		(d) => {
-			onChange({
-				start: showEnd,
-				hour: moment(d).hour() < 10 ? `0${moment(d).hour()}` : moment(d).hour(),
-				minute: moment(d).minute() < 10 ? `0${moment(d).minute()}` : moment(d).minute(),
-				day
-			});
+			if (d) {
+				onChange({
+					start: showEnd,
+					hour: moment(d).hour() < 10 ? `0${moment(d).hour()}` : moment(d).hour(),
+					minute: moment(d).minute() < 10 ? `0${moment(d).minute()}` : moment(d).minute(),
+					day
+				});
+			}
 		},
 		[onChange, day, showEnd]
 	);
