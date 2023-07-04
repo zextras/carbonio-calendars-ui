@@ -10,7 +10,6 @@ import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types/folder';
 import { getPrefs } from '../../../carbonio-ui-commons/utils/get-prefs';
 import { disabledFields, getEndTime } from '../../../commons/editor-generator';
 import { getIdentityItems } from '../../../commons/get-identity-items';
-import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
 import { PREFS_DEFAULTS } from '../../../constants';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { Editor, IdentityItem } from '../../../types/editor';
@@ -171,11 +170,13 @@ const getEditor = ({
 	};
 };
 
-const getSingle = (context: {
-	folders?: any;
-	organizer?: IdentityItem;
-	editor?: Editor;
-}): Editor => {
+const getSingle = (
+	context: {
+		folders?: any;
+		organizer?: IdentityItem;
+		editor?: Editor;
+	} = {}
+): Editor => {
 	const defaultEditor = getDefaultEditor({
 		folders: context.folders,
 		organizer: context.organizer
@@ -189,11 +190,13 @@ const getSingle = (context: {
 	};
 };
 
-const getInstanceOfSeries = (context: {
-	folders?: any;
-	organizer?: IdentityItem;
-	editor?: Editor;
-}): Editor => {
+const getInstanceOfSeries = (
+	context: {
+		folders?: any;
+		organizer?: IdentityItem;
+		editor?: Editor;
+	} = {}
+): Editor => {
 	const defaultEditor = getDefaultEditor({
 		folders: context.folders,
 		organizer: context.organizer
@@ -207,11 +210,13 @@ const getInstanceOfSeries = (context: {
 	};
 };
 
-const getException = (context: {
-	folders?: any;
-	organizer?: IdentityItem;
-	editor?: Editor;
-}): Editor => {
+const getException = (
+	context: {
+		folders?: any;
+		organizer?: IdentityItem;
+		editor?: Editor;
+	} = {}
+): Editor => {
 	const defaultEditor = getDefaultEditor({
 		folders: context.folders,
 		organizer: context.organizer
@@ -225,11 +230,13 @@ const getException = (context: {
 	};
 };
 
-const getSeries = (context: {
-	folders?: any;
-	organizer?: IdentityItem;
-	editor?: Editor;
-}): Editor => {
+const getSeries = (
+	context: {
+		folders?: any;
+		organizer?: IdentityItem;
+		editor?: Editor;
+	} = {}
+): Editor => {
 	const defaultEditor = getDefaultEditor({
 		folders: context.folders,
 		organizer: context.organizer

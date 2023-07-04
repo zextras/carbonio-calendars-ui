@@ -91,8 +91,8 @@ const setEditorDate = ({
 		};
 	}
 	return {
-		start: moment().valueOf(),
-		end: moment().valueOf() + endDur
+		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
+		end: moment().set('second', 0).set('millisecond', 0).valueOf() + endDur
 	};
 };
 

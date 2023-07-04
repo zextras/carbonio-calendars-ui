@@ -21,6 +21,7 @@ import { handleGetFolderRequest } from './src/test/mocks/network/msw/handle-get-
 import { handleFolderActionRequest } from './src/test/mocks/network/msw/handle-folder-action';
 import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
 import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
+import { handleGetFreeBusy } from './src/test/mocks/network/msw/handle-get-free-busy';
 import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite';
 import { handleItemActionRequest } from './src/test/mocks/network/msw/handle-item-action';
 import { handleModifyAppointmentRequest } from './src/test/mocks/network/msw/handle-modify-appointment';
@@ -37,6 +38,7 @@ failOnConsole({
 beforeAll(() => {
 	const h = [
 		rest.post('/service/soap/ItemActionRequest', handleItemActionRequest),
+		rest.post('/service/soap/GetFreeBusyRequest', handleGetFreeBusy),
 		rest.post('/service/soap/GetMsgRequest', handleGetInvite),
 		rest.post('/service/soap/CreateFolderRequest', handleCreateFolderRequest),
 		rest.post('/service/soap/GetFolderRequest', handleGetFolderRequest),
