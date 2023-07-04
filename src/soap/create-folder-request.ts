@@ -16,7 +16,7 @@ export const createFolderRequest = async ({
 		_jsns: 'urn:zimbraMail',
 		folder: {
 			color,
-			f: excludeFreeBusy ? 'b' : '',
+			f: excludeFreeBusy ? 'b' : '#',
 			l: parent,
 			name,
 			view: 'appointment'
