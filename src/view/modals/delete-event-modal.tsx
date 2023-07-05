@@ -34,7 +34,6 @@ type DeleteEventModalContentProps = {
 	isException: boolean;
 	isInstanceOfSeries: boolean;
 	invite: Invite;
-	event: EventType;
 	onConfirm: () => void;
 	onClose: () => void;
 	isSeries: boolean;
@@ -47,12 +46,11 @@ const DeleteEventModalContent = ({
 	isException,
 	isInstanceOfSeries,
 	invite,
-	event,
 	onConfirm,
 	onClose,
 	isSeries
 }: DeleteEventModalContentProps): ReactElement => {
-	const { name } = invite;
+	const { name, isOrganizer } = invite;
 	const displayMessage = useMemo(() => {
 		if (isSingleInstance || isException) {
 			return t(
@@ -81,7 +79,7 @@ const DeleteEventModalContent = ({
 				crossAlignment="baseline"
 			>
 				<Text overflow="break-word">{displayMessage}</Text>
-				{isSeries && !isException && event.resource.iAmOrganizer && (
+				{isSeries && !isException && isOrganizer && (
 					<>
 						<Padding top="small" />
 						<Checkbox
@@ -109,7 +107,7 @@ const DeleteEventModalContent = ({
 						</Padding>
 					</>
 				)}
-				{!event.resource.iAmOrganizer && (
+				{!isOrganizer && (
 					<>
 						<Padding top="small" />
 						<Checkbox
@@ -146,7 +144,7 @@ export const DeleteEventModal = ({
 	const isInstanceOfSeries = isRecurrent && isInstance;
 
 	const [isAskingConfirmation, setIsAskingConfirmation] = useState<boolean>(
-		() => participantsSize > 0 && (isException || isInstance)
+		() => participantsSize > 0 && (isException || isInstance) && isOrganizer
 	);
 
 	const toggleAskConfirmation = useCallback(() => {
@@ -213,7 +211,6 @@ export const DeleteEventModal = ({
 					isException={isException}
 					isInstanceOfSeries={isInstanceOfSeries}
 					invite={invite}
-					event={event}
 					onConfirm={onConfirm}
 					onClose={onClose}
 					isSeries={isSeries}
