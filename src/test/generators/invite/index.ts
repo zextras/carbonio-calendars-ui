@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { faker } from '@faker-js/faker';
 import moment from 'moment';
 import { getAlarmToString } from '../../../normalizations/normalizations-utils';
 import { EventResource, EventResourceCalendar, EventType } from '../../../types/event';
-import { Invite } from '../../../types/store/invite';
+import { Invite, ParticipationRoles, ParticipationStatus } from '../../../types/store/invite';
 
 type CalendarProps = { calendar: Partial<EventResourceCalendar> };
 type ResourceProps = {
@@ -19,11 +20,31 @@ type GetInviteProps = { context?: Partial<Invite>; event?: GetEventProps };
 const getDefaultInvite = (event?: GetEventProps): Invite => {
 	const folderId = event?.resource?.calendar?.id ?? 'folderId';
 	const alarmStringValue = event?.resource?.alarm || null;
+	const attendeeFirstName = faker.name.firstName();
+	const attendeeLastName = faker.name.lastName();
+	const attendeeFullName = faker.name.fullName({
+		firstName: attendeeFirstName,
+		lastName: attendeeLastName
+	});
+
+	const attendeeEmail = faker.internet.email(attendeeFirstName, attendeeLastName);
+
+	const attendee =
+		event?.resource?.iAmAttendee ?? event?.resource?.hasOtherAttendees
+			? {
+					a: attendeeEmail,
+					d: attendeeFullName,
+					ptst: 'AC' as ParticipationStatus,
+					role: 'REQ' as ParticipationRoles,
+					rsvp: true,
+					url: attendeeEmail
+			  }
+			: undefined;
 	return {
 		apptId: event?.resource?.id ?? 'apptId',
 		id: event?.resource?.inviteId ?? 'id',
 		ciFolder: folderId,
-		attendees: [], // event doesn't have this
+		attendees: attendee ? [attendee] : [],
 		parent: folderId,
 		flags: event?.resource?.flags ?? '',
 		parts: [], // event doesn't have this
@@ -38,8 +59,8 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 			d: moment(event?.end).utc().format('YYYYMMDD[T]HHmmss[Z]'),
 			u: event?.end?.valueOf() ?? 1667382630000
 		},
-		freeBusy: event?.resource?.freeBusy ?? 'F',
-		freeBusyActualStatus: event?.resource?.freeBusy ?? 'F',
+		freeBusy: event?.resource?.freeBusy ?? 'B',
+		freeBusyActualStatus: event?.resource?.freeBusy ?? 'B',
 		fragment: event?.resource?.fragment ?? '',
 		isOrganizer: event?.resource?.iAmOrganizer ?? true,
 		location: event?.resource?.location ?? '',
@@ -77,42 +98,26 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 			mp: []
 		},
 		attachmentFiles: [],
-		participants: {
-			AC: [
-				{
-					name: 'name',
-					email: 'email',
-					isOptional: false,
-					response: 'AC'
-				}
-			]
-		},
+		participants: attendee
+			? {
+					AC: [
+						{
+							email: attendee.a,
+							isOptional: !(attendee.role === 'REQ'),
+							name: attendeeFullName,
+							response: attendee.ptst as ParticipationStatus
+						}
+					]
+			  }
+			: {},
 		alarm: event?.resource?.alarm ?? true,
-		alarmData: event?.resource?.alarmData ?? [
-			{
-				nextAlarm: 123456789,
-				alarmInstStart: 123456789,
-				action: 'DISPLAY',
-				desc: { description: '' },
-				trigger: [
-					{
-						rel: [
-							{
-								m: 0,
-								neg: 'TRUE',
-								related: 'START'
-							}
-						]
-					}
-				]
-			}
-		],
+		alarmData: event?.resource?.alarmData,
 		ms: 1,
 		rev: 1,
 		meta: [{}],
 		allDay: event?.allDay ?? false,
 		xprop: undefined,
-		neverSent: event?.resource?.inviteNeverSent ?? true,
+		neverSent: event?.resource?.inviteNeverSent ?? false,
 		locationUrl: event?.resource?.locationUrl ?? ''
 	};
 };
