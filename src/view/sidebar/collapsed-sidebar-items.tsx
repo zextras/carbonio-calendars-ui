@@ -7,18 +7,11 @@ import { Container, IconButton, Padding, Row, Tooltip } from '@zextras/carbonio-
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useMemo } from 'react';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
-import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { folderAction } from '../../store/actions/calendar-actions';
-import { searchAppointments } from '../../store/actions/search-appointments';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectEnd, selectStart } from '../../store/selectors/calendars';
 
 export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 	const { name, checked = undefined } = item;
-	const dispatch = useAppDispatch();
-	const start = useAppSelector(selectStart);
-	const end = useAppSelector(selectEnd);
 
 	const recursiveToggleCheck = useCallback(
 		(folder: Folder) => {
@@ -35,22 +28,13 @@ export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 			};
 
 			checkAllChildren(folder);
-			dispatch(
-				folderAction({
-					id: foldersToToggleIds,
-					changes: { checked },
-					op: checked ? '!check' : 'check'
-				})
-			)
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				.then((res: { meta: { arg: { op: string } } }) => {
-					if (res?.meta?.arg?.op === 'check') {
-						dispatch(searchAppointments({ spanEnd: end, spanStart: start }));
-					}
-				});
+			folderAction({
+				id: foldersToToggleIds,
+				changes: { checked },
+				op: checked ? '!check' : 'check'
+			});
 		},
-		[checked, dispatch, end, start]
+		[checked]
 	);
 
 	const icon = useMemo(() => {
@@ -59,9 +43,7 @@ export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 		return checked ? 'Calendar2' : 'CalendarOutline';
 	}, [checked, item]);
 
-	const iconColor = item.color
-		? ZIMBRA_STANDARD_COLORS[item.color].color
-		: setCalendarColor(item).color;
+	const iconColor = setCalendarColor({ color: item.color, rgb: item.rgb })?.color;
 
 	return (
 		<Container width="fill" height="fit">

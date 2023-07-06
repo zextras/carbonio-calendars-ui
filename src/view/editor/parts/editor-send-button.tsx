@@ -73,7 +73,8 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 			onSend({ isNew, editor, dispatch }).then(({ response }) => {
 				if (editor?.panel && response) {
 					replaceHistory('');
-				} else if (board) {
+				}
+				if (board && response) {
 					closeBoard(board?.id);
 				}
 				getBridgedFunctions().createSnackbar({

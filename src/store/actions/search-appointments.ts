@@ -9,7 +9,6 @@ import { SearchRejectedType, searchRequest, SearchReturnType } from '../../soap/
 import { SearchRequestProps } from '../../types/soap/soap-actions';
 import { AppointmentsSlice } from '../../types/store/store';
 import type { RootState } from '../redux';
-import { selectAllCheckedCalendarsQuery } from '../selectors/calendars';
 
 export type SearchAppointmentsArguments = {
 	spanStart: number;
@@ -29,10 +28,9 @@ export const searchAppointments = createAsyncThunk<
 	}
 >(
 	'calendars/search',
-	async ({ spanStart, spanEnd, query, offset, sortBy }, { getState, rejectWithValue }) => {
-		const _content = query ?? selectAllCheckedCalendarsQuery(getState());
+	async ({ spanStart, spanEnd, query, offset, sortBy }, { rejectWithValue }) => {
 		const arg = omitBy(
-			{ start: spanStart, end: spanEnd, content: _content, sortBy, offset },
+			{ start: spanStart, end: spanEnd, content: query, sortBy, offset },
 			isNil
 		) as SearchRequestProps;
 		const response = await searchRequest(arg);

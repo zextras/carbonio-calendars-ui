@@ -3,8 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { TFunction } from 'i18next';
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import {
 	Container,
 	Input,
@@ -15,20 +14,20 @@ import {
 	Row,
 	Icon,
 	SelectItem,
-	SelectProps
+	SelectProps,
+	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { includes, map } from 'lodash';
-import { FOLDERS, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
-import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../../commons/zimbra-standard-colors';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { ModalHeader } from '../../commons/modal-header';
 import ModalFooter from '../../commons/modal-footer';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectCalendars } from '../../store/selectors/calendars';
 import { EventType } from '../../types/event';
-import { Calendar } from '../../types/store/calendars';
 
 const Square = styled.div`
 	width: 1.125rem;
@@ -59,7 +58,7 @@ const LabelFactory: SelectProps['LabelFactory'] = ({
 		crossAlignment="center"
 		mainAlignment="space-between"
 		borderRadius="half"
-		background="gray5"
+		background={'gray5'}
 		padding={{
 			all: 'small'
 		}}
@@ -107,9 +106,7 @@ const getStatusItems = (): SelectItem[] =>
 
 type ActionArgs = {
 	inviteId: string;
-	t: TFunction;
 	l: string;
-	color: ZimbraColorType;
 	id: string;
 	destinationCalendarName: string;
 };
@@ -118,21 +115,19 @@ type NewModalProps = {
 	toggleModal: () => void;
 	onClose: () => void;
 	event: EventType;
-	currentFolder: Calendar;
+	currentFolder: Folder;
 	action: (arg: ActionArgs) => void;
 };
 
 export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
-
-	const dispatch = useAppDispatch();
 	const [inputValue, setInputValue] = useState('');
-	const folders = useAppSelector(selectCalendars);
+	const folders = useFoldersMap();
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const colors = useMemo(() => getStatusItems(), []);
 	const [selectedColor, setSelectedColor] = useState(0);
-
+	const createSnackbar = useContext(SnackbarManagerContext);
 	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);
 	const showDupWarning = useMemo(
 		() => includes(folderArray, inputValue),
@@ -150,34 +145,30 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 
 	const onConfirm = (): void => {
 		if (inputValue) {
-			dispatch(
-				createCalendar({
-					parent: '1',
-					name: inputValue,
-					color: selectedColor,
-					excludeFreeBusy: freeBusy
-				})
-			).then((newCalendarRes: any) => {
-				if (newCalendarRes.type.includes('fulfilled')) {
+			createCalendar({
+				parent: '1',
+				name: inputValue,
+				color: selectedColor,
+				excludeFreeBusy: freeBusy
+			}).then((newCalendarRes) => {
+				if (!newCalendarRes.Fault) {
 					action({
 						inviteId: event.resource.inviteId,
-						t,
-						l: Object.keys(newCalendarRes.payload[0])[0],
-						color: ZIMBRA_STANDARD_COLORS[Number(newCalendarRes.meta.arg.color)],
-						destinationCalendarName: inputValue,
+						l: newCalendarRes.id,
+						destinationCalendarName: newCalendarRes.name,
 						id: event.resource.id
 					});
-					getBridgedFunctions().createSnackbar({
+					createSnackbar({
 						key: `new`,
 						replace: true,
-						type: 'primary',
+						type: 'success',
 						label: t('message.snackbar.new_calendar_created', 'New calendar created'),
 						autoHideTimeout: 3000,
 						hideButton: true
 					});
 					onClose();
 				} else {
-					getBridgedFunctions().createSnackbar({
+					createSnackbar({
 						key: `move`,
 						replace: true,
 						type: 'error',
@@ -234,8 +225,10 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 			<Padding vertical="medium" />
 			<Select
 				label={'Select color'}
-				onChange={(): void => {
-					// setSelectedColor
+				onChange={(value): void => {
+					if (value) {
+						setSelectedColor(parseInt(value, 10));
+					}
 				}}
 				items={colors}
 				defaultSelection={colors[0]}
@@ -257,7 +250,7 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 				label={
 					event.resource.calendar.id === FOLDERS.TRASH
 						? t('folder.modal.restore.footer', 'Create and Restore')
-						: t('label.empty', 'Empty')
+						: t('label.create', 'Create')
 				}
 				disabled={disabled}
 			/>

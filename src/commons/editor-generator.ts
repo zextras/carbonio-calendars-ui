@@ -16,7 +16,6 @@ import { Editor } from '../types/editor';
 import { Invite } from '../types/store/invite';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { getIdentityItems } from './get-identity-items';
-import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 
 momentLocalizer(moment);
 
@@ -81,10 +80,8 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		calendar: defaultCalendar
 			? {
 					id: defaultCalendar.id,
-					name: defaultCalendar.name, // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					color: defaultCalendar.color // @ts-ignore
-						? ZIMBRA_STANDARD_COLORS[defaultCalendar.color]
-						: setCalendarColor(defaultCalendar),
+					name: defaultCalendar.name,
+					color: setCalendarColor({ color: defaultCalendar.color, rgb: defaultCalendar.rgb }),
 					owner: (defaultCalendar as LinkFolder)?.owner
 			  }
 			: undefined,
@@ -105,9 +102,9 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		allDay: false,
 		freeBusy: 'B',
 		class: 'PUB',
-		start: moment().valueOf(),
+		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
 		end: getEndTime({
-			start: moment().valueOf(),
+			start: moment().set('second', 0).set('millisecond', 0).valueOf(),
 			duration: zimbraPrefCalendarDefaultApptDuration as string
 		}),
 		inviteId: undefined,

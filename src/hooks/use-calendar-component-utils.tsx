@@ -19,8 +19,7 @@ import { useCalendarFolders } from './use-calendar-folders';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { StoreProvider } from '../store/redux';
-import { setRange } from '../store/slices/calendars-slice';
-import { useCalendarDate, useIsSummaryViewOpen } from '../store/zustand/hooks';
+import { useCalendarDate, useIsSummaryViewOpen, useSetRange } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
@@ -41,6 +40,7 @@ export const useCalendarComponentUtils = (): {
 	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const summaryViewOpen = useIsSummaryViewOpen();
+	const setRange = useSetRange();
 	const { action } = useParams<{
 		action: typeof EventActionsEnum.EXPAND | typeof EventActionsEnum.EDIT | undefined;
 	}>();
@@ -253,22 +253,18 @@ export const useCalendarComponentUtils = (): {
 			if (range.length) {
 				const min = datesMin(...range);
 				const max = datesMax(...range);
-				dispatch(
-					setRange({
-						start: moment(min).startOf('day').valueOf(),
-						end: moment(max).endOf('day').valueOf()
-					})
-				);
+				setRange({
+					start: moment(min).startOf('day').valueOf(),
+					end: moment(max).endOf('day').valueOf()
+				});
 			} else {
-				dispatch(
-					setRange({
-						start: moment(range.start).startOf('day').valueOf(),
-						end: moment(range.end).endOf('day').valueOf()
-					})
-				);
+				setRange({
+					start: moment(range.start).startOf('day').valueOf(),
+					end: moment(range.end).endOf('day').valueOf()
+				});
 			}
 		},
-		[dispatch]
+		[setRange]
 	);
 
 	const onNavigate = useCallback(

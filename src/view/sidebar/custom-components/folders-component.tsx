@@ -14,7 +14,7 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import {
@@ -22,11 +22,11 @@ import {
 	getFolderTranslatedName,
 	recursiveToggleCheck
 } from '../../../commons/utilities';
-import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
+import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEnd, selectStart } from '../../../store/selectors/calendars';
+import { useAppDispatch } from '../../../store/redux/hooks';
+import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
 
 type FoldersComponentProps = {
 	item: Folder;
@@ -40,6 +40,11 @@ const FittedRow = styled(Row)`
 export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	const { checked } = item;
 	const { displayName } = useUserAccount();
+	const dispatch = useAppDispatch();
+	const start = useRangeStart();
+	const end = useRangeEnd();
+	const query = useCheckedCalendarsQuery();
+
 	const isRootAccount = useMemo(
 		() => item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME),
 		[item]
@@ -54,28 +59,26 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 						? displayName
 						: getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? '',
 				icon: getFolderIcon({ item, checked: !!checked }),
-				iconColor: item.color
-					? ZIMBRA_STANDARD_COLORS[item.color].color
-					: setCalendarColor(item).color,
+				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
 				textProps: { size: 'small' }
 			} as AccordionItemType),
 		[item, displayName, checked]
 	);
 
 	const ddItems = useCalendarActions(item);
-	const start = useAppSelector(selectStart);
-	const end = useAppSelector(selectEnd);
-	const dispatch = useAppDispatch();
 
-	const onClick = (): void =>
-		recursiveToggleCheck({
-			folder: item,
-			checked: !!checked,
-			end,
-			start,
-			dispatchGetMiniCal: true,
-			dispatch
-		});
+	const onClick = useCallback(
+		(): void =>
+			recursiveToggleCheck({
+				folder: item,
+				checked: !!checked,
+				dispatch,
+				start,
+				end,
+				query
+			}),
+		[checked, dispatch, end, item, query, start]
+	);
 
 	const SharedStatusIcon = useMemo(() => {
 		if (!item.acl?.grant || !item.acl?.grant?.length) {

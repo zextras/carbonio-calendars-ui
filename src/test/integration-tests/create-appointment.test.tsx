@@ -7,7 +7,9 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { map, values } from 'lodash';
+import { rest } from 'msw';
 import React from 'react';
+import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import {
 	createFakeIdentity,
 	getMockedAccountItem
@@ -121,6 +123,23 @@ describe('create single appointment with custom values', () => {
 		const newLocation = faker.random.word();
 		const newAttendeesInput = newAttendees.join(' ');
 		const newOptionalsInput = newOptionals.join(' ');
+
+		getSetupServer().use(
+			rest.post('/service/soap/getFreeBusyRequest', async (req, res, ctx) =>
+				res(
+					ctx.json({
+						Header: {
+							context: {
+								session: { id: 191337, _content: 191337 }
+							}
+						},
+						Body: {
+							GetFreeBusyResponse: { usr: map(newAttendees, (attendee) => ({ id: attendee })) }
+						}
+					})
+				)
+			)
+		);
 
 		// SETTING NEW ORGANIZER
 		await user.click(screen.getByText(new RegExp(previousEditor.organizer.fullName, 'i')));

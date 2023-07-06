@@ -6,14 +6,8 @@
 import { faker } from '@faker-js/faker';
 import { Folder } from '@zextras/carbonio-shell-ui';
 import { isNil, reduce, values } from 'lodash';
-import moment from 'moment';
 import { Editor, IdentityItem } from '../../../types/editor';
-import {
-	AppointmentsSlice,
-	CalendarSlice,
-	EditorSlice,
-	InvitesSlice
-} from '../../../types/store/store';
+import { AppointmentsSlice, EditorSlice, InvitesSlice } from '../../../types/store/store';
 import utils from '../utils';
 import cals from '../calendar';
 import editors from '../editor';
@@ -31,7 +25,6 @@ type EditorSliceItem = {
 };
 
 type Reducers = {
-	calendars?: Partial<CalendarSlice>;
 	appointments?: Partial<AppointmentsSlice>;
 	invites?: Partial<InvitesSlice>;
 	editor?: Partial<EditorSlice>;
@@ -85,15 +78,8 @@ const getEditorSliceItem = (
 };
 
 const mockReduxStore = (reducers: Reducers = {}): any => {
-	const { calendars = {}, editor = {}, appointments = {}, invites = {} } = reducers;
+	const { editor = {}, appointments = {}, invites = {} } = reducers;
 	return {
-		calendars: {
-			calendars: {},
-			status: 'idle',
-			start: moment().subtract('7', 'days').valueOf(),
-			end: moment().add('15', 'days').valueOf(),
-			...calendars
-		},
 		editor: {
 			activeId: undefined,
 			editorPanel: undefined,

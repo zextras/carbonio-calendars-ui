@@ -405,7 +405,7 @@ export default function CalendarSettingsView() {
 				orientation="vertical"
 				mainAlignment="baseline"
 				crossAlignment="baseline"
-				background="gray5"
+				background={'gray5'}
 				style={{ overflowY: 'auto' }}
 			>
 				<FormSection width="50%" minWidth="calc(min(100%, 32rem))">

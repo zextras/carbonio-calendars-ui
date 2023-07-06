@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-
 import {
 	Checkbox,
 	ChipInput,
@@ -25,8 +24,8 @@ import {
 	ShareCalendarWithOptions,
 	findLabel
 } from '../../settings/components/utils';
+import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
-import { shareCalendar } from '../../store/actions/share-calendar';
 import { StoreProvider } from '../../store/redux';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
@@ -52,7 +51,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 
 	const [sendNotification, setSendNotification] = useState(true);
 	const [standardMessage, setStandardMessage] = useState('');
-	const [contacts, setContacts] = useState([]);
+	const [contacts, setContacts] = useState<any>([]);
 	const [shareWithUserType, setshareWithUserType] = useState('usr');
 	const [shareWithUserRole, setshareWithUserRole] = useState('r');
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
@@ -71,8 +70,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	}, []);
 
 	const openShareUrlModal = (): void => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		const closeModal = createModal(
 			{
 				children: (
@@ -92,25 +89,15 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		closeFn && closeFn();
 	};
 	const onConfirm = (): void => {
-		dispatch(
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			shareCalendar({
-				sendNotification,
-				standardMessage,
-				contacts,
-				shareWithUserType,
-				shareWithUserRole,
-				folder: folderId,
-				accounts,
-				allowToSeePrvtAppt
-			})
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-		).then((res: any) => {
-			if (res.type.includes('fulfilled')) {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
+		const granted = map(contacts, (contact) => ({
+			gt: 'usr',
+			inh: '1',
+			d: contact.email,
+			perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
+			pw: ''
+		}));
+		folderAction({ id: folderId, op: 'grant', changes: { grant: granted } }).then((res) => {
+			if (!res.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
@@ -119,12 +106,8 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
 					autoHideTimeout: 3000
 				});
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 				sendNotification &&
 					dispatch(
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
 						sendShareCalendarNotification({
 							sendNotification,
 							standardMessage,
@@ -134,14 +117,10 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							folder: folderId,
 							accounts
 						})
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
 					).then((res2: any) => {
 						if (!res2.type.includes('fulfilled')) {
-							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-							// @ts-ignore
 							createSnackbar({
-								key: `folder-action-success`,
+								key: `folder-action-failed`,
 								replace: true,
 								type: 'error',
 								hideButton: true,

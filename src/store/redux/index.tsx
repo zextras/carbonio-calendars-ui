@@ -8,13 +8,11 @@ import React, { FC } from 'react';
 import { Provider } from 'react-redux';
 import { CALENDAR_APP_ID } from '../../constants';
 import invitesSliceReducer from '../slices/invites-slice';
-import calendarsSliceReducer from '../slices/calendars-slice';
 import editorSliceReducer from '../slices/editor-slice';
 import appointmentsSliceReducer from '../slices/appointments-slice';
 
 export const reducers = {
 	appointments: appointmentsSliceReducer,
-	calendars: calendarsSliceReducer,
 	editor: editorSliceReducer,
 	invites: invitesSliceReducer
 };

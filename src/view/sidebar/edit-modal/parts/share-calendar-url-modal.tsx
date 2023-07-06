@@ -12,17 +12,10 @@ import { ModalHeader } from '../../../../commons/modal-header';
 import { UrlColumn } from './url-column';
 
 const getUrl = (type: string, user: string, folderName: string): string => {
-	const domain =
-		window.location.hostname === 'localhost' ? 'crb2.zimbraopen.com' : window.location.hostname;
-
-	switch (type) {
-		case 'ics':
-			return `https://${domain}/home/${user}/${folderName}.ics`;
-		case 'html':
-			return `https://${domain}/home/${user}/${folderName}.html`;
-		default:
-			return `webcals://${domain}/home/${user}/${folderName}`;
-	}
+	const domain = window.location.hostname;
+	return type === 'ics'
+		? `https://${domain}/home/${user}/${folderName}.ics`
+		: `webcals://${domain}/home/${user}/${folderName}`;
 };
 const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 	folderName,
@@ -75,12 +68,6 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 						onUrlCopied={onUrlCopied}
 						tooltip={t('tooltip.copy_ics_url', 'Copy ICS url')}
 						type="ics"
-					/>
-					<UrlColumn
-						label={t('label.view_url', 'View URL')}
-						tooltip={t('tooltip.copy_vector_url', 'Copy View url')}
-						onUrlCopied={onUrlCopied}
-						type="html"
 					/>
 					<UrlColumn
 						label={t('label.outlook_url', 'Outlook URL')}

@@ -7,11 +7,10 @@ import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-d
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import React, { SyntheticEvent, useContext } from 'react';
+import { getFolderRequest } from '../carbonio-ui-commons/soap/get-folder';
 import { Folder } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
-import { getFolder } from '../store/actions/get-folder';
-import { useAppDispatch } from '../store/redux/hooks';
 import { StoreProvider } from '../store/redux';
 import { DeleteModal } from '../view/sidebar/delete-modal';
 import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
@@ -30,7 +29,6 @@ type CalendarActionsProps = {
 };
 export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> => {
 	const createModal = useContext(ModalManagerContext);
-	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const actions = [
@@ -62,11 +60,9 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 				if (e) {
 					e.stopPropagation();
 				}
-				dispatch(folderAction({ id: item.id, op: 'move', changes: { parent: FOLDERS.USER_ROOT } }))
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					.then((res) => {
-						if (res.type.includes('fulfilled')) {
+				folderAction({ id: item.id, op: 'move', changes: { parent: FOLDERS.USER_ROOT } }).then(
+					(res) => {
+						if (!res.Fault) {
 							createSnackbar({
 								key: `calendar-moved-root`,
 								replace: true,
@@ -91,7 +87,8 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 								autoHideTimeout: 3000
 							});
 						}
-					});
+					}
+				);
 			}
 		},
 		{
@@ -179,7 +176,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
 				if (e) {
 					e.stopPropagation();
-					dispatch(folderAction({ id: item.id, op: FOLDER_ACTIONS.DELETE }));
+					folderAction({ id: item.id, op: FOLDER_ACTIONS.DELETE });
 				}
 			}
 		},
@@ -191,13 +188,13 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 				if (e) {
 					e.stopPropagation();
 				}
-				dispatch(getFolder(item.id)).then((res) => {
-					if (res.type.includes('fulfilled')) {
+				getFolderRequest({ id: item.id }).then((res) => {
+					if (!res.Fault) {
 						const closeModal = createModal(
 							{
 								children: (
 									<StoreProvider>
-										<SharesInfoModal onClose={(): void => closeModal()} folder={res.payload.link} />
+										<SharesInfoModal onClose={(): void => closeModal()} folder={res.link} />
 									</StoreProvider>
 								)
 							},
