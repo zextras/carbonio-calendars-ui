@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.3.6...v1.4.0) (2023-07-06)
+
+
+### Features
+
+* users can see appointments' attendees availability ([#299](https://github.com/zextras/carbonio-calendars-ui/issues/299)) ([334cef1](https://github.com/zextras/carbonio-calendars-ui/commit/334cef14f8ab1abc777ef842e46526ef14187f52))
+
+
+### Bug Fixes
+
+* board open until appointment is saved correctly ([50e9343](https://github.com/zextras/carbonio-calendars-ui/commit/50e9343558a450541645d9241ff7fe4c274f8ea8))
+* browsing the calendar will load the events ([e6d1756](https://github.com/zextras/carbonio-calendars-ui/commit/e6d175619822e3aa022c04654e7a3c50968a4ead))
+* calendar time-picker does not block the application ([1c93f2a](https://github.com/zextras/carbonio-calendars-ui/commit/1c93f2a950392db9909d2f4aa2849ec06463460a))
+* deleting an appointment wont notify everyone ([e7bd427](https://github.com/zextras/carbonio-calendars-ui/commit/e7bd427b1eae3760388c02a3aea3850002d278f8))
+* migrating folders store from redux to zustand in commons submodule ([cb45dfd](https://github.com/zextras/carbonio-calendars-ui/commit/cb45dfda7faa33911a8191b0d11d6a65606bb017))
+* new calendar active as default ([e6ea947](https://github.com/zextras/carbonio-calendars-ui/commit/e6ea947a3d4c04be1afe6dd25f195cdb8302cc4f))
+* new calendar active as default ([9a100f0](https://github.com/zextras/carbonio-calendars-ui/commit/9a100f0cbc805ec525e5ccdcc15c00063bd1e9ec))
+* remove html link ([70efcbd](https://github.com/zextras/carbonio-calendars-ui/commit/70efcbdc6abc3bbe8cb821a0421553c8afc02fb4))
+* removed hardcoded crb2 string ([a5d0087](https://github.com/zextras/carbonio-calendars-ui/commit/a5d00875c217a8e5bff7ad4d6f955bb78c6af22f))
+
 ### [1.3.6](https://github.com/zextras/carbonio-calendars-ui/compare/v1.3.5...v1.3.6) (2023-05-25)
 
 
