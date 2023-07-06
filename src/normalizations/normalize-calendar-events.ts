@@ -99,14 +99,14 @@ export const normalizeCalendarEvent = ({
 	const itIsMe = !!find(
 		user.identities.identity,
 		({ name, _attrs }) =>
-			name === appointment?.or?.a || _attrs.zimbraPrefFromAddress === appointment?.or?.a
+			name === appointment?.or?.a || _attrs?.zimbraPrefFromAddress === appointment?.or?.a
 	);
 
 	// It is not my account but I can create appointments with it
 	const sentByMe = some(
 		user.identities.identity,
 		({ name, _attrs }) =>
-			name === appointment?.or?.sentBy || _attrs.zimbraPrefFromAddress === appointment?.or?.sentBy
+			name === appointment?.or?.sentBy || _attrs?.zimbraPrefFromAddress === appointment?.or?.sentBy
 	);
 
 	// if sentBy it is not my personal account/alias/identity
