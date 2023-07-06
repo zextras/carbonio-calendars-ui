@@ -307,7 +307,7 @@
         "you_sure_delete_instance": "Czy na pewno chcesz usunąć ten przypadek spotkania {{title}} ?",
         "you_sure_move_calendar_trash": "Czy na pewno chcesz usunąć kalendarz {{name}}?",
         "delete_tag_message1": "Czy na pewno chcesz usunąć Tag {{name}}?",
-        "delete_tag_message2": "Po usunięciu Tag zostanie zdjęty z każdego elementu oznaczonego nim.",
+        "delete_tag_message2": "Po usunięciu tag zostanie zdjęty z każdego elementu oznaczonego nim.",
         "appointment_type_handle": "{{name}} to powtarzające się spotkanie. Chcesz otworzyć tylko ten przypadek czy serię?",
         "more": "Więcej…",
         "organizer": "Organizator",
