@@ -6,39 +6,23 @@
 import { Checkbox } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
-import moment from 'moment';
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import {
-	selectEditorAllDay,
-	selectEditorDisabled,
-	selectEditorEnd,
-	selectEditorStart
-} from '../../../store/selectors/editor';
+import { selectEditorAllDay, selectEditorDisabled } from '../../../store/selectors/editor';
 import { editEditorAllDay } from '../../../store/slices/editor-slice';
 
 export const EditorAllDayCheckbox = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
-	const start = useAppSelector(selectEditorStart(editorId));
-	const end = useAppSelector(selectEditorEnd(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
-	const startDate = useMemo(() => (start ? new Date(start) : undefined), [start]);
-	const endDate = useMemo(() => (end ? new Date(end) : undefined), [end]);
-	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
 
 	const onClick = useCallback(
 		(e) => {
-			if (e && startDate && endDate) {
-				const startValue = startDate.setHours(0, 0, 0, 0);
-				const endValue = startValue + diff;
-				dispatch(
-					editEditorAllDay({ id: editorId, allDay: !allDay, start: startValue, end: endValue })
-				);
+			if (e) {
+				dispatch(editEditorAllDay({ id: editorId, allDay: !allDay }));
 			}
-			dispatch(editEditorAllDay({ id: editorId, allDay: !allDay }));
 		},
-		[allDay, diff, dispatch, editorId, endDate, startDate]
+		[allDay, dispatch, editorId]
 	);
 
 	return !isNil(allDay) ? (
