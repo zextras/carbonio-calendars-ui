@@ -237,7 +237,7 @@
         "delete": "Elimina",
         "delete_plural": "Elimina tutti",
         "discard_changes": "ELIMINA MODIFICHE",
-        "empty": "Vuoto",
+        "empty": "Svuota",
         "error_try_again": "Qualcosa è andato storto, riprova",
         "event_title": "Titolo dell'evento",
         "move": "Sposta",
@@ -320,7 +320,7 @@
         "action_performed": "Hai già completato questa azione",
         "advanced_filters": "{{count}} Filtro Avanzato",
         "advanced_filters_plural": "{{count}} Filtri Avanzati",
-        "time": "Orario",
+        "time": "Ora",
         "optionals": "Opzionali"
     },
     "action": {

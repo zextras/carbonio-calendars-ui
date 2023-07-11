@@ -32,8 +32,8 @@ export type RecurrenceStartValue = {
 export type IdentityItem = {
 	value: string;
 	label: string;
-	address: string;
-	fullName: string;
+	address?: string;
+	fullName?: string;
 	type?: string;
 	identityName?: string;
 };

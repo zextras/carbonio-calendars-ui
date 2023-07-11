@@ -1,7 +1,15 @@
 {
     "composer": {
         "attachment": {
-            "local": "افزودن از حافظه دستگاه"
+            "local": "افزودن از حافظه دستگاه",
+            "contactsMod": "اضافه کردن کارت تماس",
+            "draganddrop": {
+                "title": "حالت کشیدن و رها کردن",
+                "content": "پیوست‌های خود را اینجا رها کنید تا سریعاً آنها را به قرار اضافه کنید"
+            },
+            "drive": "از Drive اضافه کنید",
+            "files": "از Files اضافه کنید",
+            "url": "پیوند عمومی را از Files اضافه کنید"
         }
     },
     "action": {
@@ -17,6 +25,55 @@
         "save_to_preview": "برای پیش نمایش ذخیره کنید",
         "send": "فرستادن",
         "send_cancellation": "ارسال لغو",
-        "share_calendar": "اشتراک گذاری تقویم"
-    }
+        "share_calendar": "اشتراک گذاری تقویم",
+        "search": "جستجو",
+        "reset": "ریست",
+        "show_original": "نمایش نسخه اصلی"
+    },
+    "event": {
+        "action": {
+            "accept": "پذیرش",
+            "decline": "امتناع",
+            "expand": "باز کردن",
+            "invitation_not_sent_yet": "دعوتنامه هنوز ارسال نشده است",
+            "needs_action": "نیازمند اقدام",
+            "yes": "بله",
+            "no": "خیر"
+        },
+        "is_exception": "استثنا"
+    },
+    "find_shares": "اشتراک را پیدا کنید",
+    "folder": {
+        "modal": {
+            "footer": {
+                "go_back": "بازگشت"
+            },
+            "move": {
+                "input": {
+                    "filter": "فیلتر کردن تقویم ها"
+                },
+                "body": {
+                    "message3": "برای انتقال قرار ملاقات در نظر گرفته شده، تقویمی را انتخاب کنید:"
+                }
+            }
+        }
+    },
+    "administer": "اداره کننده",
+    "appointments": "قرار ملاقات ها",
+    "appt_restored_successfully": "قرار با موفقیت بازیابی شد",
+    "button": {
+        "customize_modal": "باز کردن مودال شخصی سازی"
+    },
+    "cannot_edit_name": "شما نمی توانید نام یک تقویم سیستم را ویرایش کنید",
+    "edit_share_properties": "ویژگی های اشتراک را ویرایش کنید",
+    "add": "اضافه کردن",
+    "allowed_actions": "اعمال مجاز",
+    "calendar": {
+        "modal": {
+            "custom_schedule": {
+                "title": "شخصی سازی ساعات کاری"
+            }
+        }
+    },
+    "find_calendar_shares": "اشتراک‌های تقویم را پیدا کنید"
 }
