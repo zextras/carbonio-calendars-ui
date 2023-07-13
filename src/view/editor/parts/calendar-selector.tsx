@@ -3,15 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useMemo } from 'react';
+
 import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS, t, useUserSettings } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useCallback, useMemo } from 'react';
-import { filter, find, map } from 'lodash';
-import { useFoldersArray } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { filter, find, map, reject } from 'lodash';
+
+import LabelFactory, { Square } from './select-label-factory';
+import { getFoldersArrayByRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types/folder';
 import { PREFS_DEFAULTS } from '../../../constants';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
-import LabelFactory, { Square } from './select-label-factory';
 
 type CalendarSelectorProps = {
 	calendarId: string;
@@ -32,12 +34,20 @@ export const CalendarSelector = ({
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
-	const calendars = useFoldersArray();
+	// todo: This selector is ignoring shared accounts. Replace with useFoldersArray once shared accounts will be available.
+	// REFS: IRIS-2589
+	const allCalendars = getFoldersArrayByRoot(FOLDERS.USER_ROOT);
+	const calendars = reject(
+		allCalendars,
+		(item) => item.name === 'USER_ROOT' || (item as LinkFolder).oname === 'USER_ROOT'
+	);
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
 	const calWithWritePerm = useMemo(
 		() =>
 			showCalWithWritePerm
-				? filter(calendars, (calendar) => (calendar.perm ? /w/.test(calendar.perm) : true))
+				? filter(calendars, (calendar) =>
+						calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
+				  )
 				: calendars,
 		[calendars, showCalWithWritePerm]
 	);
