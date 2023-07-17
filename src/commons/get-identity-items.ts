@@ -28,7 +28,7 @@ export const getIdentityItems = (): Array<IdentityItem> => {
 			label,
 			address: item._attrs?.zimbraPrefFromAddress,
 			fullName: item._attrs?.zimbraPrefFromDisplay,
-			type: item._attrs.zimbraPrefFromAddressType,
+			type: item._attrs?.zimbraPrefFromAddressType,
 			identityName: item.name
 		};
 	});
