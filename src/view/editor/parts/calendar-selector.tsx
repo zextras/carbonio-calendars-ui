@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-design-system';
-import { FOLDERS, LinkFolder, t, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, LinkFolder, ROOT_NAME, t, useUserSettings } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import { filter, find, map, reject } from 'lodash';
 import { getFoldersArrayByRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
@@ -37,7 +37,7 @@ export const CalendarSelector = ({
 	const allCalendars = getFoldersArrayByRoot(FOLDERS.USER_ROOT);
 	const calendars = reject(
 		allCalendars,
-		(item) => item.name === 'USER_ROOT' || (item as LinkFolder).oname === 'USER_ROOT'
+		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME
 	);
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
 	const calWithWritePerm = useMemo(

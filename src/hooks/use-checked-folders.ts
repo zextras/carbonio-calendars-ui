@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, ROOT_NAME } from '@zextras/carbonio-shell-ui';
 import { filter, reject } from 'lodash';
 import { useMemo } from 'react';
 import { getFoldersArrayByRoot } from '../carbonio-ui-commons/store/zustand/folder';
@@ -15,7 +15,7 @@ export const useCheckedFolders = (): Array<Folder> => {
 	const allCalendars = getFoldersArrayByRoot(FOLDERS.USER_ROOT);
 	const calendars = reject(
 		allCalendars,
-		(item) => item.name === 'USER_ROOT' || (item as LinkFolder).oname === 'USER_ROOT'
+		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME
 	);
 
 	return useMemo(() => filter(calendars, ['checked', true]), [calendars]);
