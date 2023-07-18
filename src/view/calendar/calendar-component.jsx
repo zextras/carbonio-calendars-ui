@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { filter, isEmpty, minBy } from 'lodash';
+import { isEmpty, minBy } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
@@ -29,8 +29,8 @@ import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import CustomEventWrapper from './custom-event-wrapper';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
+import { useCheckedFolders } from '../../hooks/use-checked-folders';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
@@ -57,8 +57,7 @@ const customComponents = {
 
 export default function CalendarComponent() {
 	const appointments = useAppSelector(selectAppointmentsArray);
-	const calendars = useFoldersMap();
-	const selectedCalendars = filter(calendars, ['checked', true]);
+	const calendars = useCheckedFolders();
 	const theme = useContext(ThemeContext);
 	const prefs = usePrefs();
 	const calendarView = useCalendarView();
@@ -86,8 +85,8 @@ export default function CalendarComponent() {
 	);
 
 	const events = useMemo(
-		() => normalizeCalendarEvents(appointments, selectedCalendars),
-		[appointments, selectedCalendars]
+		() => normalizeCalendarEvents(appointments, calendars),
+		[appointments, calendars]
 	);
 
 	const startHour = useMemo(
