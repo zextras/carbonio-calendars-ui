@@ -89,7 +89,7 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 				return allCalendarFolder && calendar && trash
 					? {
 							...accountRoot,
-							children: [allCalendarFolder, calendar, trash, ...orderBy(others, ['name'], ['asc'])]
+							children: [allCalendarFolder, calendar, trash, ...others]
 					  }
 					: accountRoot;
 			}),

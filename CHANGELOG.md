@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.0...v1.4.1) (2023-07-18)
+
+
+### Bug Fixes
+
+* sidebar folders sorting ([e33ddd8](https://github.com/zextras/carbonio-calendars-ui/commit/e33ddd8aaa4ec0a5aeb90e32276e68cdce2a7627))
+
 ## [1.4.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.3.6...v1.4.0) (2023-07-06)
 
 
