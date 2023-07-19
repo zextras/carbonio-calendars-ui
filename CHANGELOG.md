@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.1...v1.4.2) (2023-07-18)
+
+
+### Bug Fixes
+
+* folders which are not from main account are ignored ([be35446](https://github.com/zextras/carbonio-calendars-ui/commit/be35446b78c46e4ced662ecaab18908910bad446))
+* replace hardcoded strings with constants ([849ceb6](https://github.com/zextras/carbonio-calendars-ui/commit/849ceb6b3db84f17dfc49916d84d73f9aa785e9b))
+
 ### [1.4.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.0...v1.4.1) (2023-07-18)
 
 
