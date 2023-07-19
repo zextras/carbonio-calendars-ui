@@ -258,12 +258,17 @@ export const useDeleteActions = (
 				t,
 				isInstance: context.isSingleInstance,
 				createSnackbar,
-				inst: {
-					d: invite?.start?.tz
-						? moment(event.start).format('YYYYMMDD[T]HHmmss')
-						: moment(event.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
-					tz: invite?.start?.tz
-				},
+				inst: event.allDay
+					? {
+							d: moment(event.start).format('YYYYMMDD'),
+							tz: invite?.start?.tz
+					  }
+					: {
+							d: invite?.start?.tz
+								? moment(event.start).format('YYYYMMDD[T]HHmmss')
+								: moment(event.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+							tz: invite?.start?.tz
+					  },
 				s: moment(event.start).valueOf()
 			};
 			deleteEvent(event, ctxt)
