@@ -309,7 +309,11 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 
 	return (
-		<Container data-testid="MainEditModal" padding="0.5rem 0.5rem 1.5rem">
+		<Container
+			data-testid="MainEditModal"
+			padding="0.5rem 0.5rem 1.5rem"
+			style={{ overflowY: 'auto' }}
+		>
 			<ModalHeader onClose={onClose} title={title} />
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}
@@ -410,7 +414,6 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						mainAlignment="center"
 						crossAlignment="flex-start"
 						orientation="horizontal"
-						height="fit"
 					>
 						<Divider />
 					</Container>
@@ -419,63 +422,64 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"
 						orientation="horizontal"
-						height="fit"
 					>
 						<Text weight="bold">{t('label.sharing_of_this_folder', 'Sharing of this folder')}</Text>
 					</Container>
-					{map(grant, (item, index) => (
-						<Container
-							orientation="horizontal"
-							mainAlignment="flex-end"
-							padding={{ bottom: 'small' }}
-							key={index}
-						>
-							<GranteeInfo grant={item} hovered={hovered} />
+					<Container style={{ overflowY: 'auto' }} padding="small" mainAlignment="flex-start">
+						{map(grant, (item, index) => (
 							<Container
 								orientation="horizontal"
 								mainAlignment="flex-end"
-								onMouseEnter={onMouseEnter}
-								onMouseLeave={onMouseLeave}
-								maxWidth="fit"
+								padding={{ bottom: 'small' }}
+								key={index}
 							>
-								<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
-									<Button
-										type="outlined"
-										label={t('label.edit', 'Edit')}
-										onClick={(): void => {
-											onEdit(item);
-										}}
-										isSmall
-									/>
-								</Tooltip>
-								<Padding horizontal="extrasmall" />
-								<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
-									<Button
-										type="outlined"
-										label={t('label.revoke', 'Revoke')}
-										color="error"
-										onClick={(): void => {
-											onRevoke(item);
-										}}
-										isSmall
-									/>
-								</Tooltip>
-								<Padding horizontal="extrasmall" />
-								<Tooltip
-									label={t('tooltip.resend', 'Send mail notification about this share')}
-									placement="top"
-									maxWidth="18.75rem"
+								<GranteeInfo grant={item} hovered={hovered} />
+								<Container
+									orientation="horizontal"
+									mainAlignment="flex-end"
+									onMouseEnter={onMouseEnter}
+									onMouseLeave={onMouseLeave}
+									maxWidth="fit"
 								>
-									<Button
-										type="outlined"
-										label={t('label.resend', 'Resend')}
-										onClick={onResend}
-										isSmall
-									/>
-								</Tooltip>
+									<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
+										<Button
+											type="outlined"
+											label={t('label.edit', 'Edit')}
+											onClick={(): void => {
+												onEdit(item);
+											}}
+											isSmall
+										/>
+									</Tooltip>
+									<Padding horizontal="extrasmall" />
+									<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
+										<Button
+											type="outlined"
+											label={t('label.revoke', 'Revoke')}
+											color="error"
+											onClick={(): void => {
+												onRevoke(item);
+											}}
+											isSmall
+										/>
+									</Tooltip>
+									<Padding horizontal="extrasmall" />
+									<Tooltip
+										label={t('tooltip.resend', 'Send mail notification about this share')}
+										placement="top"
+										maxWidth="18.75rem"
+									>
+										<Button
+											type="outlined"
+											label={t('label.resend', 'Resend')}
+											onClick={onResend}
+											isSmall
+										/>
+									</Tooltip>
+								</Container>
 							</Container>
-						</Container>
-					))}
+						))}
+					</Container>
 				</>
 			)}
 			<ModalFooter
