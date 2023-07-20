@@ -50,8 +50,6 @@ type TextPayload = {
 type AllDayPayload = {
 	id: string | undefined;
 	allDay: boolean;
-	start?: number;
-	end?: number;
 };
 
 type AttendeePayload = { id: string; attendees: Attendee[] };
@@ -252,14 +250,6 @@ export const editEditorAllDayReducer = (
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].allDay = payload.allDay;
-		if (payload.start) {
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].start = payload.start;
-		}
-		if (payload.end) {
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].end = payload.end;
-		}
 	}
 };
 
