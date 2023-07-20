@@ -349,7 +349,7 @@
         "NE_with_count_0": "Brak odpowiedzi",
         "NE_with_count_1": "Brak odpowiedzi ({{count}})",
         "NE_with_count_2": "Brak odpowiedzi ({{count}})",
-        "Tentative": "Zaakceptowano jako niepewne",
+        "Tentative": "Odpowiedziano jako niepewne",
         "TE_with_count_0": "Niepewne",
         "TE_with_count_1": "Niepewne ({{count}})",
         "TE_with_count_2": "Niepewne ({{count}})",
