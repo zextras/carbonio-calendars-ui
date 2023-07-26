@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
-import { ActionsContext, AppointmentActionsItems } from '../types/actions';
-import { EventActionsEnum } from '../types/enums/event-actions-enum';
-import { EventType } from '../types/event';
-import { Invite } from '../types/store/invite';
+
 import {
 	acceptAsTentative,
 	acceptInvitation,
@@ -19,6 +16,10 @@ import {
 	moveToTrash,
 	openAppointment
 } from './appointment-actions-fn';
+import { ActionsContext, AppointmentActionsItems } from '../types/actions';
+import { EventActionsEnum } from '../types/enums/event-actions-enum';
+import { EventType } from '../types/event';
+import { Invite } from '../types/store/invite';
 
 export const openEventItem = ({
 	event,
@@ -148,7 +149,9 @@ export const editEventItem = ({
 	disabled:
 		!event?.haveWriteAccess ||
 		event.resource.calendar.id === FOLDERS.TRASH ||
-		!event.resource.iAmOrganizer,
+		(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
+		(!!event.resource.calendar.owner &&
+			event.resource.calendar.owner !== event.resource.organizer.email),
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	onClick: editAppointment({ event, invite, context })
 });
