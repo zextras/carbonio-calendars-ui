@@ -3,19 +3,21 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { size } from 'lodash';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
 import { Spinner, replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { size } from 'lodash';
 import styled from 'styled-components';
+
+import { ModifyStandardMessageModal } from './modify-standard-message-modal';
 import ModalFooter from '../../commons/modal-footer';
+import { ModalHeader } from '../../commons/modal-header';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
+import { useDeleteActions, UseDeleteActionsType } from '../../hooks/use-delete-actions';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
-import { ModalHeader } from '../../commons/modal-header';
-import { ModifyStandardMessageModal } from './modify-standard-message-modal';
-import { useDeleteActions, UseDeleteActionsType } from '../../hooks/use-delete-actions';
 
 const ItalicText = styled(Text)`
 	font-style: italic;
@@ -144,7 +146,11 @@ export const DeleteEventModal = ({
 	const isInstanceOfSeries = isRecurrent && isInstance;
 
 	const [isAskingConfirmation, setIsAskingConfirmation] = useState<boolean>(
-		() => participantsSize > 0 && (isException || isInstance) && isOrganizer
+		() =>
+			participantsSize > 0 &&
+			(isException || isInstance) &&
+			isOrganizer &&
+			!event.resource.inviteNeverSent
 	);
 
 	const toggleAskConfirmation = useCallback(() => {
@@ -167,7 +173,12 @@ export const DeleteEventModal = ({
 			return actions?.deleteNonRecurrentEvent;
 		}
 		if (isSeries) {
-			if (isOrganizer && participantsSize > 0 && !isAskingConfirmation) {
+			if (
+				isOrganizer &&
+				participantsSize > 0 &&
+				!isAskingConfirmation &&
+				!event.resource.inviteNeverSent
+			) {
 				return toggleAskConfirmation;
 			}
 			return actions?.deleteRecurrentSerie;
@@ -175,8 +186,8 @@ export const DeleteEventModal = ({
 		return actions?.deleteNonRecurrentEvent;
 	}, [
 		isException,
-		isSingleInstance,
 		isInstanceOfSeries,
+		isSingleInstance,
 		isSeries,
 		actions?.deleteNonRecurrentEvent,
 		actions?.deleteRecurrentInstance,
@@ -184,6 +195,7 @@ export const DeleteEventModal = ({
 		isOrganizer,
 		participantsSize,
 		isAskingConfirmation,
+		event.resource.inviteNeverSent,
 		toggleAskConfirmation
 	]);
 
