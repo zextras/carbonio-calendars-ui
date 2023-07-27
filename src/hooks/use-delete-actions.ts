@@ -3,21 +3,23 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { useCallback, useContext, useMemo, useState } from 'react';
+
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { TFunction } from 'i18next';
 import { size } from 'lodash';
 import moment from 'moment';
-import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
+
+import { deleteEvent, sendResponse } from '../actions/delete-actions';
 import { Folder } from '../carbonio-ui-commons/types/folder';
 import { generateEditor } from '../commons/editor-generator';
+import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../store/redux/hooks';
-import { EventType } from '../types/event';
-import { deleteEvent, sendResponse } from '../actions/delete-actions';
-import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { SnackbarArgumentType } from '../types/delete-appointment';
+import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 
 const generateAppointmentDeletedSnackbar = (
@@ -25,7 +27,8 @@ const generateAppointmentDeletedSnackbar = (
 	t: TFunction,
 	createSnackbar: (obj: SnackbarArgumentType) => void,
 	undoAction?: () => void,
-	isRecurrentSeries?: boolean
+	isRecurrentSeries?: boolean,
+	isDraft?: boolean
 ): void => {
 	if (res.type.includes('fulfilled')) {
 		let snackbarLabel =
@@ -33,10 +36,17 @@ const generateAppointmentDeletedSnackbar = (
 				? t('message.snackbar.appointment_permanently_deleted', 'Appointment permanently deleted')
 				: t('message.snackbar.appt_moved_to_trash', 'Appointment moved to trash');
 		if (isRecurrentSeries) {
-			snackbarLabel = t(
-				'message.snackbar.series_deleted',
-				'Series successfully deleted. Attendees will receive the cancellation notification.'
-			);
+			if (isDraft) {
+				snackbarLabel = t(
+					'message.snackbar.series_deleted_no_notification',
+					'Series moved to trash'
+				);
+			} else {
+				snackbarLabel = t(
+					'message.snackbar.series_deleted',
+					'Series moved to trash. Attendees will receive the cancellation notification'
+				);
+			}
 		}
 		createSnackbar({
 			key: 'send',
@@ -232,7 +242,14 @@ export const useDeleteActions = (
 				// @ts-ignore
 				.then((res: { type: string | string[] }) => {
 					onBoardClose && onBoardClose();
-					generateAppointmentDeletedSnackbar(res, t, createSnackbar, restoreRecurrentSeries, true);
+					generateAppointmentDeletedSnackbar(
+						res,
+						t,
+						createSnackbar,
+						restoreRecurrentSeries,
+						true,
+						event.resource.inviteNeverSent
+					);
 				})
 				.then(
 					setTimeout(() => {

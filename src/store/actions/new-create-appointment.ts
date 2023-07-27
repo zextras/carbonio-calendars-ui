@@ -7,14 +7,14 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
+
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { Editor } from '../../types/editor';
-import { getPrefs } from '../../carbonio-ui-commons/utils/get-prefs';
 
 type Participants = {
-	a: string | undefined;
-	p: string | undefined;
+	a?: string;
+	p?: string;
 	t: string;
 };
 
@@ -40,6 +40,41 @@ const setResourceDate = ({
 		: {
 				d: moment(time).utc().format('YYYYMMDD[T]HHmmss[Z]')
 		  };
+};
+
+const newGenerateParticipantInformation = (resource: Editor): Array<Participants> => {
+	const organizerParticipant = resource.calendar?.owner
+		? [
+				{
+					a: resource?.organizer?.address ?? resource?.organizer?.label,
+					p: resource?.organizer?.fullName,
+					t: 's'
+				},
+				{
+					a: resource.calendar?.owner,
+					t: 'f'
+				}
+		  ]
+		: [
+				{
+					a: resource?.organizer?.address ?? resource?.organizer?.label,
+					p: resource?.organizer?.fullName,
+					t: 'f'
+				}
+		  ];
+	return resource?.draft
+		? organizerParticipant
+		: concat(
+				map(concat(resource?.attendees, resource?.optionalAttendees), (attendee) => ({
+					a: attendee?.email ?? attendee?.label,
+					p:
+						attendee?.firstName && attendee?.lastname
+							? `${attendee.firstName} ${attendee.lastname}`
+							: attendee.label,
+					t: 't'
+				})),
+				organizerParticipant
+		  );
 };
 
 const generateParticipantInformation = (resource: Editor): Array<Participants> =>
@@ -153,6 +188,15 @@ const generateInvite = (editorData: Editor): any => {
 			}))
 		);
 
+	const organizer = editorData.calendar?.owner
+		? {
+				a: editorData.calendar.owner,
+				sentBy: editorData.organizer.address
+		  }
+		: {
+				a: editorData.organizer.address,
+				d: editorData.organizer.fullName
+		  };
 	return {
 		comp: [
 			{
@@ -194,10 +238,7 @@ const generateInvite = (editorData: Editor): any => {
 				fb: editorData.freeBusy,
 				loc: editorData.location,
 				name: editorData.title,
-				or: {
-					a: editorData.organizer.address,
-					d: editorData.organizer.fullName
-				},
+				or: organizer,
 				recur:
 					(editorData?.isInstance && editorData?.isSeries) || editorData?.isException
 						? undefined
@@ -237,7 +278,7 @@ export const generateSoapMessageFromEditor = (msg: Editor): any =>
 								aid: msg?.attach?.aid?.length > 0 ? msg?.attach?.aid?.join(',') : undefined
 						  }
 						: undefined,
-					e: generateParticipantInformation(msg),
+					e: newGenerateParticipantInformation(msg),
 					inv: generateInvite(msg),
 					l: msg?.calendar?.id,
 					mp: generateMp(msg),
