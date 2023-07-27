@@ -42,7 +42,7 @@ const setResourceDate = ({
 		  };
 };
 
-const newGenerateParticipantInformation = (resource: Editor): Array<Participants> => {
+const generateParticipantInformation = (resource: Editor): Array<Participants> => {
 	const organizerParticipant = resource.calendar?.owner
 		? [
 				{
@@ -76,31 +76,6 @@ const newGenerateParticipantInformation = (resource: Editor): Array<Participants
 				organizerParticipant
 		  );
 };
-
-const generateParticipantInformation = (resource: Editor): Array<Participants> =>
-	resource?.draft
-		? [
-				{
-					a: resource?.organizer?.address ?? resource?.organizer?.label,
-					p: resource?.organizer?.fullName,
-					t: 'f'
-				}
-		  ]
-		: concat(
-				map(concat(resource?.attendees, resource?.optionalAttendees), (attendee) => ({
-					a: attendee?.email ?? attendee?.label,
-					p:
-						attendee?.firstName && attendee?.lastname
-							? `${attendee.firstName} ${attendee.lastname}`
-							: attendee.label,
-					t: 't'
-				})),
-				{
-					a: resource?.organizer?.address ?? resource?.organizer?.label,
-					p: resource?.organizer?.fullName,
-					t: 'f'
-				}
-		  );
 
 function generateHtmlBodyRequest(app: Editor): any {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
@@ -278,7 +253,7 @@ export const generateSoapMessageFromEditor = (msg: Editor): any =>
 								aid: msg?.attach?.aid?.length > 0 ? msg?.attach?.aid?.join(',') : undefined
 						  }
 						: undefined,
-					e: newGenerateParticipantInformation(msg),
+					e: generateParticipantInformation(msg),
 					inv: generateInvite(msg),
 					l: msg?.calendar?.id,
 					mp: generateMp(msg),
