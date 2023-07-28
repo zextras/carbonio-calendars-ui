@@ -108,4 +108,5 @@ export type EventType = {
 	title: string;
 	id: string;
 	haveWriteAccess: boolean;
+	sentByMe: boolean;
 };

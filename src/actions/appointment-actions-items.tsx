@@ -149,9 +149,7 @@ export const editEventItem = ({
 	disabled:
 		!event?.haveWriteAccess ||
 		event.resource.calendar.id === FOLDERS.TRASH ||
-		(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
-		(!!event.resource.calendar.owner &&
-			event.resource.calendar.owner !== event.resource.organizer.email),
+		(!event.resource.iAmOrganizer && !event?.sentByMe && !event?.haveWriteAccess),
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	onClick: editAppointment({ event, invite, context })
 });
