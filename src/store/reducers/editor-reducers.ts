@@ -33,7 +33,6 @@ type RoomPayload = {
 type CalendarPayload = {
 	id: string;
 	calendar: EventResourceCalendar;
-	organizer: { email: string; name: string; sentBy: string } | undefined;
 };
 
 type ClassPayload = {
@@ -202,10 +201,6 @@ export const editEditorCalendarReducer = (
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].calendar = payload.calendar;
-		if (payload.organizer) {
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].organizer = payload.organizer;
-		}
 	}
 };
 

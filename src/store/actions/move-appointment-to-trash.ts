@@ -5,6 +5,7 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TFunction } from 'i18next';
+
 import {
 	CancelAppointmentRejectedType,
 	cancelAppointmentRequest,
@@ -58,11 +59,13 @@ function createMessageForDelete({ invite, t, newMessage }: any) {
 			t: 'f'
 		}
 	];
-	return {
-		e:
-			getParticipants(Object.entries(invite?.participants).flatMap(([_, value]) => value)).concat(
+	const participants = invite.neverSent
+		? organizer
+		: getParticipants(Object.entries(invite?.participants).flatMap(([_, value]) => value)).concat(
 				organizer
-			) ?? organizer,
+		  ) ?? organizer;
+	return {
+		e: participants,
 		su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,
 		mp: getMp({ t, fullInvite: invite, newMessage })
 	};
