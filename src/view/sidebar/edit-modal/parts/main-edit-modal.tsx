@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
+
 import {
 	ButtonOld as Button,
 	Checkbox,
@@ -19,11 +21,12 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, Grant, useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
-import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
+import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import styled, { DefaultTheme } from 'styled-components';
+
+import { GranteeInfo } from './grantee-info';
 import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
@@ -35,7 +38,6 @@ import { setCalendarColor } from '../../../../normalizations/normalizations-util
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
-import { GranteeInfo } from './grantee-info';
 
 const Square = styled.div`
 	width: 1.125rem;
@@ -128,7 +130,7 @@ const getStatusItems = (t: TFunction): Array<SelectItem> =>
 type MainEditModalProps = {
 	folder: Folder;
 	totalAppointments: number;
-	grant: Grant;
+	grant: Grant[];
 };
 
 type EditModalContexType = {
@@ -426,59 +428,63 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						<Text weight="bold">{t('label.sharing_of_this_folder', 'Sharing of this folder')}</Text>
 					</Container>
 					<Container style={{ overflowY: 'auto' }} padding="small" mainAlignment="flex-start">
-						{map(grant, (item, index) => (
-							<Container
-								orientation="horizontal"
-								mainAlignment="flex-end"
-								padding={{ bottom: 'small' }}
-								key={index}
-							>
-								<GranteeInfo grant={item} hovered={hovered} />
+						{grant &&
+							grant.length > 0 &&
+							map(grant, (item, index) => (
 								<Container
 									orientation="horizontal"
 									mainAlignment="flex-end"
-									onMouseEnter={onMouseEnter}
-									onMouseLeave={onMouseLeave}
-									maxWidth="fit"
+									padding={{ bottom: 'small' }}
+									key={index}
 								>
-									<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
-										<Button
-											type="outlined"
-											label={t('label.edit', 'Edit')}
-											onClick={(): void => {
-												onEdit(item);
-											}}
-											isSmall
-										/>
-									</Tooltip>
-									<Padding horizontal="extrasmall" />
-									<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
-										<Button
-											type="outlined"
-											label={t('label.revoke', 'Revoke')}
-											color="error"
-											onClick={(): void => {
-												onRevoke(item);
-											}}
-											isSmall
-										/>
-									</Tooltip>
-									<Padding horizontal="extrasmall" />
-									<Tooltip
-										label={t('tooltip.resend', 'Send mail notification about this share')}
-										placement="top"
-										maxWidth="18.75rem"
+									<GranteeInfo grant={item} hovered={hovered} />
+									<Container
+										orientation="horizontal"
+										mainAlignment="flex-end"
+										onMouseEnter={onMouseEnter}
+										onMouseLeave={onMouseLeave}
+										maxWidth="fit"
 									>
-										<Button
-											type="outlined"
-											label={t('label.resend', 'Resend')}
-											onClick={onResend}
-											isSmall
-										/>
-									</Tooltip>
+										<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
+											<Button
+												type="outlined"
+												label={t('label.edit', 'Edit')}
+												onClick={(): void => {
+													onEdit(item);
+												}}
+												isSmall
+											/>
+										</Tooltip>
+										<Padding horizontal="extrasmall" />
+										<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
+											<Button
+												type="outlined"
+												label={t('label.revoke', 'Revoke')}
+												color="error"
+												onClick={(): void => {
+													onRevoke(item);
+												}}
+												isSmall
+											/>
+										</Tooltip>
+										<Padding horizontal="extrasmall" />
+										<Tooltip
+											label={t('tooltip.resend', 'Send mail notification about this share')}
+											placement="top"
+											maxWidth="18.75rem"
+										>
+											<Button
+												type="outlined"
+												label={t('label.resend', 'Resend')}
+												onClick={(): void => {
+													onResend(item);
+												}}
+												isSmall
+											/>
+										</Tooltip>
+									</Container>
 								</Container>
-							</Container>
-						))}
+							))}
 					</Container>
 				</>
 			)}

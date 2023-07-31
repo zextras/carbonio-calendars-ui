@@ -12,8 +12,8 @@ import {
 	SnackbarManagerContext,
 	Text
 } from '@zextras/carbonio-design-system';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import { useUserAccounts, Grant } from '@zextras/carbonio-shell-ui';
+import React, { useCallback, useContext, useMemo, useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
@@ -23,19 +23,31 @@ import { sendShareCalendarNotification } from '../../../../store/actions/send-sh
 import { GranteeInfo } from './grantee-info';
 import { useAppDispatch } from '../../../../store/redux/hooks';
 import { folderAction } from '../../../../store/actions/calendar-actions';
+import { Folder } from '../../../../carbonio-ui-commons/types/folder';
 
-export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
+type EditPermissionModalProps = {
+	folder: Folder;
+	grant: Grant;
+	onGoBack: () => void;
+};
+
+type EditModalContexType = {
+	roleOptions: Array<{ label: string; value: string }>;
+	onClose: () => void;
+};
+
+export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, grant, onGoBack }) => {
 	const [t] = useTranslation();
 	const [sendNotification, setSendNotification] = useState(false);
 	const [standardMessage, setStandardMessage] = useState('');
-	const { onClose, roleOptions } = useContext(EditModalContext);
+	const { onClose, roleOptions } = useContext<EditModalContexType>(EditModalContext);
 	const accounts = useUserAccounts();
 	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [shareWithUserRole, setshareWithUserRole] = useState('');
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
 
-	const onConfirm = () => {
+	const onConfirm = (): void => {
 		const grants = [
 			{
 				gt: 'usr',
@@ -88,7 +100,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 
 	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
 	return (
-		<Container padding="0.5rem 0.5rem 1.5rem">
+		<Container data-testid="EditPermissionModal" padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader title={title} onClose={onClose} />
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}
@@ -107,7 +119,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 				<Checkbox
 					value={allowToSeePrvtAppt}
 					defaultChecked={allowToSeePrvtAppt}
-					onClick={() => setAllowToSeePrvtAppt(!allowToSeePrvtAppt)}
+					onClick={(): void => setAllowToSeePrvtAppt(!allowToSeePrvtAppt)}
 					label={t(
 						'share.label.allow_to_see_private_appt',
 						'Allow user(s) to see my private appointments'
@@ -141,7 +153,7 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 				<Checkbox
 					value={sendNotification}
 					defaultChecked={sendNotification}
-					onClick={() => setSendNotification(!sendNotification)}
+					onClick={(): void => setSendNotification(!sendNotification)}
 					label={t('share.label.send_notification', 'Send notification about this share')}
 				/>
 			</Container>
@@ -154,10 +166,10 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 				<Input
 					label={t('share.placeholder.standard_message', 'Add a note to standard message')}
 					value={standardMessage}
-					onChange={(ev) => {
+					onChange={(ev): void => {
 						setStandardMessage(ev.target.value);
 					}}
-					background="gray5"
+					backgroundColor="gray5"
 					disabled={!sendNotification}
 				/>
 			</Container>
@@ -187,7 +199,6 @@ export const EditPermissionModal = ({ folder, grant, onGoBack }) => {
 				secondaryAction={onGoBack}
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
 				label={t('label.edit_share', 'Edit share')}
-				t={t}
 			/>
 		</Container>
 	);
