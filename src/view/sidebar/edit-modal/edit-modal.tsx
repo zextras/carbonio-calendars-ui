@@ -3,21 +3,33 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
-import { MainEditModal } from './parts/main-edit-modal';
-import { ShareCalendarModal } from '../share-calendar-modal';
-import { ShareRevokeModal } from './parts/revoke-modal';
-import { EditModalContext } from '../../../commons/edit-modal-context';
-import { EditPermissionModal } from './parts/edit-permission-modal';
-import { ShareCalendarRoleOptions } from '../../../settings/components/utils';
+import React, { FC, useCallback, useMemo, useState, useEffect } from 'react';
 
-export const EditModal = ({ onClose, folder, totalAppointments }) => {
+import { Grant } from '@zextras/carbonio-shell-ui';
+import { useTranslation } from 'react-i18next';
+
+import { EditPermissionModal } from './parts/edit-permission-modal';
+import { MainEditModal } from './parts/main-edit-modal';
+import { ShareRevokeModal } from './parts/revoke-modal';
+import { getFolderRequest } from '../../../carbonio-ui-commons/soap/get-folder';
+import { useFolder, getUpdateFolder } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { EditModalContext } from '../../../commons/edit-modal-context';
+import { ShareCalendarRoleOptions } from '../../../settings/components/utils';
+import { ShareCalendarModal } from '../share-calendar-modal';
+
+type EditModalProps = {
+	folder: Folder;
+	totalAppointments: number;
+	onClose: () => void;
+};
+
+export const EditModal: FC<EditModalProps> = ({ onClose, folder, totalAppointments }) => {
 	const [activeGrant, setActiveGrant] = useState({});
 	const [modal, setModal] = useState('main');
 	const [t] = useTranslation();
-	const [grant, setGrant] = useState({});
+
+	const grant = useFolder(folder.id)?.acl?.grant as Grant[];
 
 	const roleOptions = useMemo(
 		() => ShareCalendarRoleOptions(grant?.[0]?.perm?.includes('p')),
@@ -29,21 +41,23 @@ export const EditModal = ({ onClose, folder, totalAppointments }) => {
 	}, [setModal]);
 
 	useEffect(() => {
-		soapFetch('GetFolder', {
-			_jsns: 'urn:zimbraMail',
-			folder: { l: folder.id }
-		}).then((res) => {
-			if (res?.folder?.[0]?.acl?.grant) {
-				setGrant(res.folder[0].acl.grant);
+		const updateFolder = getUpdateFolder();
+		getFolderRequest({ id: folder.id }).then((res: [Folder]) => {
+			if (res?.[0]?.acl?.grant) {
+				updateFolder(folder.id, { acl: { grant: res?.[0]?.acl?.grant } });
 			}
 		});
-	}, [folder.id]);
+	}, [folder]);
 
 	return (
 		<>
 			<EditModalContext.Provider value={{ setModal, onClose, roleOptions, setActiveGrant }}>
 				{modal === 'main' && (
-					<MainEditModal folder={folder} totalAppointments={totalAppointments} grant={grant} />
+					<MainEditModal
+						folder={folder}
+						totalAppointments={totalAppointments}
+						grant={grant ?? []}
+					/>
 				)}
 
 				{(modal === 'share' && (
@@ -59,7 +73,11 @@ export const EditModal = ({ onClose, folder, totalAppointments }) => {
 					(modal === 'revoke' && (
 						<ShareRevokeModal
 							folder={folder}
-							grant={Object.keys(activeGrant).length > 0 ? activeGrant : folder?.acl?.grant[0]}
+							grant={
+								Object.keys(activeGrant).length > 0
+									? (activeGrant as Grant)
+									: (folder?.acl?.grant[0] as Grant)
+							}
 							onGoBack={onGoBack}
 						/>
 					))}
@@ -67,7 +85,11 @@ export const EditModal = ({ onClose, folder, totalAppointments }) => {
 				{modal === 'edit' && (
 					<EditPermissionModal
 						folder={folder}
-						grant={Object.keys(activeGrant).length > 0 ? activeGrant : folder?.acl?.grant[0]}
+						grant={
+							Object.keys(activeGrant).length > 0
+								? (activeGrant as Grant)
+								: (folder?.acl?.grant[0] as Grant)
+						}
 						onGoBack={onGoBack}
 					/>
 				)}

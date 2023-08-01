@@ -26,6 +26,7 @@ import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite'
 import { handleItemActionRequest } from './src/test/mocks/network/msw/handle-item-action';
 import { handleModifyAppointmentRequest } from './src/test/mocks/network/msw/handle-modify-appointment';
 import { handleSendInviteReplyRequest } from './src/test/mocks/network/msw/handle-send-invite-reply';
+import { handleSendShareNotificationRequest } from './src/test/mocks/network/msw/handle-send-share-notification';
 
 global.Notification = jest.fn() as unknown as jest.Mocked<typeof Notification>;
 global.Audio = jest.fn().mockImplementation(() => ({
@@ -51,7 +52,8 @@ beforeAll(() => {
 			'/service/soap/CreateAppointmentExceptionRequest',
 			handleCreateAppointmentExceptionRequest
 		),
-		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest)
+		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest),
+		rest.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest) 
 	];
 	registerRestHandler(...h);
 	defaultBeforeAllTests();

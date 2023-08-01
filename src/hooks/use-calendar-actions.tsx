@@ -136,8 +136,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 							<StoreProvider>
 								<EditModal
 									folder={item}
-									grant={item.acl?.grant}
-									totalAppointments={item.n}
+									totalAppointments={item.n ?? 0}
 									onClose={(): void => closeModal()}
 								/>
 							</StoreProvider>

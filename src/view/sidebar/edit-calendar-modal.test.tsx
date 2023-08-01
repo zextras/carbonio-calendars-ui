@@ -21,12 +21,6 @@ import { useCalendarActions } from '../../hooks/use-calendar-actions';
 const fullName = faker.name.fullName();
 
 const roots = generateRoots();
-const grant = {
-	zid: '0e9d1df6-30df-4e1d-aff6-212908045221',
-	gt: 'usr',
-	perm: 'r',
-	d: faker.internet.email(fullName)
-} as const;
 
 const folder = {
 	absFolderPath: '/calendar 1',
@@ -88,7 +82,7 @@ describe('main-calendar-modal', () => {
 		setupFoldersStore();
 
 		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} grant={grant} onClose={closeFn} />,
+			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
 			{
 				store
 			}
@@ -112,7 +106,7 @@ describe('main-calendar-modal', () => {
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} grant={grant} onClose={closeFn} />,
+			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
 			{
 				store
 			}
@@ -139,7 +133,7 @@ describe('main-calendar-modal', () => {
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} grant={grant} onClose={closeFn} />,
+			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
 			{
 				store
 			}
@@ -183,7 +177,7 @@ describe('main-calendar-modal', () => {
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} grant={grant} onClose={closeFn} />,
+			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
 			{
 				store
 			}
