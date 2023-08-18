@@ -3,16 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import React from 'react';
 import { act, screen, waitFor } from '@testing-library/react';
+
+import { DeleteEventModal } from './delete-event-modal';
+import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { populateFoldersStore } from '../../carbonio-ui-commons/test/mocks/store/folders';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
-import { DeleteEventModal } from './delete-event-modal';
-import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 
 describe('delete event modal', () => {
 	const participantFirstName = faker.name.firstName();
@@ -21,9 +23,21 @@ describe('delete event modal', () => {
 		firstName: participantFirstName,
 		lastName: participantLastName
 	});
+
 	const participantEmail = faker.internet.email(participantFirstName, participantLastName);
 
+	const draftOrganizer = {
+		name: participantFirstName,
+		email: participantEmail
+	};
+
 	const singleEventAsOrganizer = mockedData.getEvent();
+	const draftSingleEvent = mockedData.getEvent({
+		resource: {
+			organizer: draftOrganizer,
+			inviteNeverSent: true
+		}
+	});
 	const singleEventAsParticipant = mockedData.getEvent({
 		resource: {
 			hasOtherAttendees: false,
@@ -67,6 +81,36 @@ describe('delete event modal', () => {
 		}
 	});
 
+	const draftSingleInvite = mockedData.getInvite({
+		event: draftSingleEvent,
+		context: {
+			attendees: [
+				{
+					a: participantEmail,
+					d: participantFullName,
+					ptst: 'AC',
+					role: 'REQ',
+					rsvp: true,
+					url: participantEmail
+				}
+			],
+			participants: {
+				AC: [
+					{
+						name: participantFirstName,
+						email: participantEmail,
+						isOptional: false,
+						response: 'AC'
+					}
+				]
+			}
+		}
+	});
+
+	const draftAppointment = mockedData.getAppointment({
+		event: draftSingleEvent
+	});
+
 	const singleAppointmentAsOrganizer = mockedData.getAppointment({
 		event: singleEventAsOrganizer
 	});
@@ -80,14 +124,16 @@ describe('delete event modal', () => {
 		invites: {
 			[singleInviteAsOrganizerNoParticipants.id]: singleInviteAsOrganizerNoParticipants,
 			[singleInviteAsParticipant.id]: singleInviteAsParticipant,
-			[singleInviteAsOrganizerWithParticipants.id]: singleInviteAsOrganizerWithParticipants
+			[singleInviteAsOrganizerWithParticipants.id]: singleInviteAsOrganizerWithParticipants,
+			[draftSingleInvite.id]: draftSingleInvite
 		}
 	};
 
 	const appointments = {
 		appointments: {
 			[singleEventAsOrganizer.resource.id]: singleAppointmentAsOrganizer,
-			[singleEventAsParticipant.resource.id]: singleAppointmentAsParticipant
+			[singleEventAsParticipant.resource.id]: singleAppointmentAsParticipant,
+			[draftSingleEvent.resource.id]: draftAppointment
 		}
 	};
 
@@ -103,6 +149,10 @@ describe('delete event modal', () => {
 		});
 		describe('he is the organizer', () => {
 			describe('there is a participant', () => {
+				describe('deleting a draft', () => {
+					test.todo('wont open the modal to send cancellation');
+					test.todo('cancel request will not include other participants');
+				});
 				test.todo('organizer can send a custom cancellation message');
 				test.todo('organizer can send a standard cancellation message');
 			});
@@ -140,6 +190,84 @@ describe('delete event modal', () => {
 				expect(screen.queryByText(/label\.notify_organizer/i)).not.toBeInTheDocument();
 			});
 			describe('there is a participant', () => {
+				describe('deleting a draft', () => {
+					test('wont open the modal to send cancellation', async () => {
+						const store = configureStore({
+							reducer: combineReducers(reducers),
+							preloadedState: emptyStore
+						});
+						const onClose = jest.fn();
+						populateFoldersStore('appointment');
+
+						setupTest(
+							<DeleteEventModal
+								event={draftSingleEvent}
+								invite={draftSingleInvite}
+								onClose={onClose}
+							/>,
+							{
+								store
+							}
+						);
+						expect(
+							screen.queryByRole('button', {
+								name: /action\.send_cancellation/i
+							})
+						).not.toBeInTheDocument();
+
+						expect(screen.getByText('label.delete new-event-1')).toBeInTheDocument();
+						expect(screen.getByText(/message\.sure_to_delete_appointment/i)).toBeInTheDocument();
+						expect(
+							screen.getByRole('button', {
+								name: 'label.delete'
+							})
+						).toBeInTheDocument();
+					});
+					test('cancel request will not include other participants', async () => {
+						// it is useful to make sure the cancellation message is not sent to draft participants
+
+						const spy = jest.spyOn(shell, 'soapFetch');
+						const store = configureStore({
+							reducer: combineReducers(reducers),
+							preloadedState: emptyStore
+						});
+						const onClose = jest.fn();
+						populateFoldersStore('appointment');
+
+						const { user } = setupTest(
+							<DeleteEventModal
+								event={draftSingleEvent}
+								invite={draftSingleInvite}
+								onClose={onClose}
+							/>,
+							{
+								store
+							}
+						);
+
+						user.click(
+							screen.getByRole('button', {
+								name: 'label.delete'
+							})
+						);
+
+						act(() => {
+							jest.advanceTimersByTime(6000);
+						});
+
+						await waitFor(() =>
+							expect(spy).toHaveBeenCalledWith(
+								'CancelAppointment',
+								expect.objectContaining({
+									m: expect.objectContaining({
+										e: [{ a: participantEmail, p: participantFirstName, t: 'f' }]
+									})
+								})
+							)
+						);
+						jest.clearAllMocks();
+					});
+				});
 				test('modal ui sections', () => {
 					const store = configureStore({
 						reducer: combineReducers(reducers),
