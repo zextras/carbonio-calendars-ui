@@ -129,7 +129,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 		onClose
 	});
 
-	// if (event.resource.id === '48920') debugger;
 	useEffect(() => {
 		if (!isNil(action)) {
 			setOpen(false);

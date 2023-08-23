@@ -102,18 +102,13 @@ export const normalizeCalendarEvent = ({
 		({ name, _attrs }) =>
 			name === appointment?.or?.a || _attrs?.zimbraPrefFromAddress === appointment?.or?.a
 	);
+
 	// It is not my calendar but I saved/sent it
 	const sentByMe = some(
 		user.identities.identity,
 		({ name, _attrs }) =>
 			name === appointment?.or?.sentBy || _attrs?.zimbraPrefFromAddress === appointment?.or?.sentBy
 	);
-	/*
-
-	// if sentBy it is not my personal account/alias/identity
-	const itIsNotMyCalendar = !itIsMe && sentByMe;
-
-	const iAmOrganizer = itIsNotMyCalendar ? itIsMe && sentByMe : sentByMe || itIsMe || false; */
 
 	return {
 		start: allDay ? new Date(moment(start).startOf('day').valueOf()) : new Date(start),
