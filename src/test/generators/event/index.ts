@@ -92,8 +92,7 @@ const getDefaultEvent = (): EventType => {
 		allDay: false,
 		id,
 		isShared: false,
-		haveWriteAccess: true,
-		sentByMe: false
+		haveWriteAccess: true
 	};
 };
 

@@ -49,6 +49,7 @@ export type EventResourceCalendar = {
 	color: ZimbraColorType;
 	owner?: string | undefined;
 	isShared?: boolean;
+	perm?: string;
 };
 
 export type EventResource = {
@@ -108,5 +109,4 @@ export type EventType = {
 	title: string;
 	id: string;
 	haveWriteAccess: boolean;
-	sentByMe: boolean;
 };

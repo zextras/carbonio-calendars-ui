@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
-import { find, reduce, map, isEmpty, some } from 'lodash';
+import { find, reduce, map, isEmpty } from 'lodash';
 import moment from 'moment';
 
 import { setCalendarColor } from './normalizations-utils';
@@ -43,7 +43,8 @@ const normalizeEventResource = ({
 		id: calendar.id,
 		name: calendar.name,
 		color: setCalendarColor({ color: calendar.color, rgb: calendar?.rgb }),
-		owner: (calendar as LinkFolder)?.owner
+		owner: (calendar as LinkFolder)?.owner,
+		perm: calendar?.perm
 	},
 	flags: appt.flags,
 	dur: inst?.dur ?? appt.dur,
@@ -96,20 +97,6 @@ export const normalizeCalendarEvent = ({
 	const dur = (instance as ExceptionReference)?.dur ?? appointment.dur;
 	const user = getUserAccount();
 
-	// It is my account/alias/identity
-	const itIsMe = !!find(
-		user.identities.identity,
-		({ name, _attrs }) =>
-			name === appointment?.or?.a || _attrs?.zimbraPrefFromAddress === appointment?.or?.a
-	);
-
-	// It is not my calendar but I saved/sent it
-	const sentByMe = some(
-		user.identities.identity,
-		({ name, _attrs }) =>
-			name === appointment?.or?.sentBy || _attrs?.zimbraPrefFromAddress === appointment?.or?.sentBy
-	);
-
 	return {
 		start: allDay ? new Date(moment(start).startOf('day').valueOf()) : new Date(start),
 		end: allDay
@@ -122,7 +109,7 @@ export const normalizeCalendarEvent = ({
 			: new Date(start + dur),
 		resource: normalizeEventResource({
 			appt: appointment,
-			iAmOrganizer: itIsMe,
+			iAmOrganizer: user.name === appointment?.or?.a,
 			calendar,
 			inst: instance as ExceptionReference,
 			invite
@@ -133,8 +120,7 @@ export const normalizeCalendarEvent = ({
 			instance?.ridZ ?? ''
 		}`,
 		isShared: appointment?.l?.includes(':'),
-		haveWriteAccess: calendar.perm ? /w/.test(calendar.perm) : true,
-		sentByMe
+		haveWriteAccess: calendar.perm ? /w/.test(calendar.perm) : true
 	};
 };
 
