@@ -57,7 +57,7 @@ const normalizeEventResource = ({
 	class: inst?.class ?? appt.class,
 	freeBusy: inst?.fb ?? appt.fb,
 	hasChangesNotNotified: inst?.draft ?? appt.draft ?? false,
-	inviteNeverSent: appt.neverSent || false,
+	inviteNeverSent: inst?.neverSent ?? appt.neverSent ?? false,
 	hasOtherAttendees: inst?.otherAtt ?? appt.otherAtt ?? false,
 	isRecurrent: inst?.recur ?? appt.recur,
 	isException: inst?.ex ?? false,
@@ -73,7 +73,7 @@ const normalizeEventResource = ({
 	alarmData: invite?.alarmData ?? appt?.alarmData?.[0]?.alarm,
 	uid: appt.uid,
 	tags: appt.tags ?? [],
-	neverSent: inst?.neverSent ?? appt.neverSent,
+	neverSent: inst?.neverSent ?? appt.neverSent ?? false,
 	isRespRequested: (inst?.ptst ?? appt.ptst) === 'NE' ?? false
 });
 
@@ -115,7 +115,6 @@ export const normalizeCalendarEvent = ({
 
 	const iAmOrganizer = itIsNotMyCalendar ? itIsMe && sentByMe : sentByMe || itIsMe || false; */
 
-	// if (instance?.ridZ === '20230724T170000Z') debugger;
 	return {
 		start: allDay ? new Date(moment(start).startOf('day').valueOf()) : new Date(start),
 		end: allDay
