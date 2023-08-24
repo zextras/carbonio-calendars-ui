@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { useTranslation } from 'react-i18next';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import React, { useCallback, useContext, useMemo, useState, FC, ReactElement } from 'react';
+import { useUserAccounts, Grant } from '@zextras/carbonio-shell-ui';
 import {
 	Checkbox,
 	Container,
@@ -21,12 +21,26 @@ import ModalFooter from '../../../../commons/modal-footer';
 import { GranteeInfo } from './grantee-info';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import { useAppDispatch } from '../../../../store/redux/hooks';
+import { Folder } from '../../../../carbonio-ui-commons/types/folder';
 
-export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
+type ShareRevokeModalProps = {
+	folder: Folder;
+	grant: Grant;
+	onGoBack: () => void;
+};
+type EditModalContexType = {
+	onClose: () => void;
+};
+
+export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
+	folder,
+	grant,
+	onGoBack
+}): ReactElement => {
 	const [t] = useTranslation();
 	const [sendNotification, setSendNotification] = useState(false);
 	const [standardMessage, setStandardMessage] = useState('');
-	const { onClose } = useContext(EditModalContext);
+	const { onClose } = useContext<EditModalContexType>(EditModalContext);
 	const accounts = useUserAccounts();
 	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
@@ -88,7 +102,7 @@ export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 	]);
 
 	return (
-		<Container padding="0.5rem 0.5rem 1.5rem">
+		<Container data-testid="RevokeModal" padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader
 				title={t('label.revoke_share', {
 					title: folder.name,
@@ -114,7 +128,7 @@ export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 					iconSize="medium"
 					value={sendNotification}
 					defaultChecked={sendNotification}
-					onClick={() => setSendNotification(!sendNotification)}
+					onClick={(): void => setSendNotification(!sendNotification)}
 					label={t('share.label.send_notification', 'Send notification about this share')}
 				/>
 			</Container>
@@ -127,7 +141,7 @@ export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 				<Input
 					label={t('share.placeholder.standard_message', 'Add a note to standard message')}
 					value={standardMessage}
-					onChange={(ev) => {
+					onChange={(ev): void => {
 						setStandardMessage(ev.target.value);
 					}}
 					disabled={!sendNotification}
@@ -161,7 +175,6 @@ export const ShareRevokeModal = ({ folder, grant, onGoBack }) => {
 				secondaryAction={onGoBack}
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
 				label={t('label.revoke', 'Revoke')}
-				t={t}
 				tooltip={tooltipLabel}
 			/>
 		</Container>
