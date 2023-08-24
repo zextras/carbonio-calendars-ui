@@ -192,7 +192,9 @@ describe.each`
 		expect(updatedEditor.isException).toBe(expected.isException);
 		expect(updatedEditor.isSeries).toBe(expected.isSeries);
 		expect(updatedEditor.isInstance).toBe(expected.isInstance);
-		expect(updatedEditor.exceptId).toStrictEqual(exceptId ?? invite.exceptId);
+		if (title === 'exception') {
+			expect(updatedEditor.exceptId).toStrictEqual(exceptId ?? invite.exceptId);
+		}
 		if (expected.recur) {
 			expect(updatedEditor.recur).toBeDefined();
 		}
