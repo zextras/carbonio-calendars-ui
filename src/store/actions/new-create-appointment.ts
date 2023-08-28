@@ -5,7 +5,7 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { concat, includes, isNil, map, omitBy } from 'lodash';
+import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
@@ -43,25 +43,32 @@ const setResourceDate = ({
 };
 
 const generateParticipantInformation = (resource: Editor): Array<Participants> => {
-	const organizerParticipant = resource.calendar?.owner
-		? [
-				{
-					a: resource?.organizer?.address ?? resource?.organizer?.label,
-					p: resource?.organizer?.fullName,
+	const sender =
+		resource.organizer.address === resource?.sender?.address &&
+		resource.organizer.label === resource.sender.label &&
+		resource.organizer.identityName === resource.sender.identityName
+			? undefined
+			: {
+					a: resource?.sender?.address ?? resource?.sender?.label,
+					p: resource?.sender?.fullName,
 					t: 's'
-				},
+			  };
+	const organizerParticipant = resource.calendar?.owner
+		? compact([
 				{
 					a: resource.calendar?.owner,
 					t: 'f'
-				}
-		  ]
-		: [
+				},
+				sender
+		  ])
+		: compact([
 				{
 					a: resource?.organizer?.address ?? resource?.organizer?.label,
 					p: resource?.organizer?.fullName,
 					t: 'f'
-				}
-		  ];
+				},
+				sender
+		  ]);
 	return resource?.draft
 		? organizerParticipant
 		: concat(
@@ -166,12 +173,26 @@ const generateInvite = (editorData: Editor): any => {
 	const organizer = editorData.calendar?.owner
 		? {
 				a: editorData.calendar.owner,
-				sentBy: editorData.organizer.address
+				sentBy: editorData.sender.address
 		  }
-		: {
-				a: editorData.organizer.address,
-				d: editorData.organizer.fullName
-		  };
+		: omitBy(
+				{
+					a: editorData.organizer.address,
+					d:
+						editorData.organizer.address === editorData?.sender?.address &&
+						editorData.organizer.label === editorData.sender.label &&
+						editorData.organizer.identityName === editorData.sender.identityName
+							? undefined
+							: editorData.organizer.fullName,
+					sentBy:
+						editorData.organizer.address === editorData?.sender?.address &&
+						editorData.organizer.label === editorData.sender.label &&
+						editorData.organizer.identityName === editorData.sender.identityName
+							? undefined
+							: editorData.sender.address
+				},
+				isNil
+		  );
 	return {
 		comp: [
 			{

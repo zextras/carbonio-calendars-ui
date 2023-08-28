@@ -118,11 +118,6 @@ export const normalizeEditor = ({
 		const compiledEditor = omitBy(
 			{
 				calendar: omit(find(context?.folders, ['id', calendarId]), 'parent'),
-				organizer: {
-					label: `${invite.organizer.d ?? invite.organizer.a}`,
-					address: invite.organizer.a,
-					fullName: invite.organizer.d
-				},
 				id: emptyEditor.id,
 				ridZ: event?.resource?.ridZ,
 				attach: invite.attach,
