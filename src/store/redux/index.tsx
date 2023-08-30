@@ -6,6 +6,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import React, { FC } from 'react';
 import { Provider } from 'react-redux';
+import { Store } from 'redux';
 import { CALENDAR_APP_ID } from '../../constants';
 import invitesSliceReducer from '../slices/invites-slice';
 import editorSliceReducer from '../slices/editor-slice';
@@ -17,7 +18,7 @@ export const reducers = {
 	invites: invitesSliceReducer
 };
 
-const store = configureStore({
+const store: Store = configureStore({
 	devTools: {
 		name: CALENDAR_APP_ID
 	},
