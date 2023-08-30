@@ -6,11 +6,12 @@
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { find, reduce, map, isEmpty, some } from 'lodash';
 import moment from 'moment';
+
+import { setCalendarColor } from './normalizations-utils';
 import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { Invite } from '../types/store/invite';
-import { setCalendarColor } from './normalizations-utils';
 
 export const getLocationUrl = (location: string): string | undefined => {
 	const regex = /\bhttps?:\/\/\S+/g;
@@ -47,7 +48,7 @@ const normalizeEventResource = ({
 	flags: appt.flags,
 	dur: inst?.dur ?? appt.dur,
 	iAmOrganizer,
-	iAmVisitor: !!(!iAmOrganizer && (calendar as LinkFolder)?.owner) ?? false,
+	iAmVisitor: !!(!iAmOrganizer && (calendar as LinkFolder)?.owner) ?? false, // todo: unused, can be removed
 	iAmAttendee: (!iAmOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
 	status: inst?.status ?? appt.status,
 	location: inst?.loc ?? appt.loc,
@@ -56,7 +57,7 @@ const normalizeEventResource = ({
 	class: inst?.class ?? appt.class,
 	freeBusy: inst?.fb ?? appt.fb,
 	hasChangesNotNotified: inst?.draft ?? appt.draft ?? false,
-	inviteNeverSent: appt.neverSent || false,
+	inviteNeverSent: inst?.neverSent ?? appt.neverSent ?? false,
 	hasOtherAttendees: inst?.otherAtt ?? appt.otherAtt ?? false,
 	isRecurrent: inst?.recur ?? appt.recur,
 	isException: inst?.ex ?? false,
@@ -72,7 +73,7 @@ const normalizeEventResource = ({
 	alarmData: invite?.alarmData ?? appt?.alarmData?.[0]?.alarm,
 	uid: appt.uid,
 	tags: appt.tags ?? [],
-	neverSent: inst?.neverSent ?? appt.neverSent,
+	neverSent: inst?.neverSent ?? appt.neverSent ?? false,
 	isRespRequested: (inst?.ptst ?? appt.ptst) === 'NE' ?? false
 });
 
@@ -102,17 +103,12 @@ export const normalizeCalendarEvent = ({
 			name === appointment?.or?.a || _attrs?.zimbraPrefFromAddress === appointment?.or?.a
 	);
 
-	// It is not my account but I can create appointments with it
+	// It is not my calendar but I saved/sent it
 	const sentByMe = some(
 		user.identities.identity,
 		({ name, _attrs }) =>
 			name === appointment?.or?.sentBy || _attrs?.zimbraPrefFromAddress === appointment?.or?.sentBy
 	);
-
-	// if sentBy it is not my personal account/alias/identity
-	const isNotMyAccount = appointment?.or?.a && user?.name && appointment?.or?.sentBy;
-
-	const iAmOrganizer = isNotMyAccount ? itIsMe && sentByMe : sentByMe || itIsMe || false;
 
 	return {
 		start: allDay ? new Date(moment(start).startOf('day').valueOf()) : new Date(start),
@@ -126,7 +122,7 @@ export const normalizeCalendarEvent = ({
 			: new Date(start + dur),
 		resource: normalizeEventResource({
 			appt: appointment,
-			iAmOrganizer,
+			iAmOrganizer: itIsMe,
 			calendar,
 			inst: instance as ExceptionReference,
 			invite
@@ -137,7 +133,8 @@ export const normalizeCalendarEvent = ({
 			instance?.ridZ ?? ''
 		}`,
 		isShared: appointment?.l?.includes(':'),
-		haveWriteAccess: calendar.perm ? /w/.test(calendar.perm) : true
+		haveWriteAccess: calendar.perm ? /w/.test(calendar.perm) : true,
+		sentByMe
 	};
 };
 

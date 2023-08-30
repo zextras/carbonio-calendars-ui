@@ -3,22 +3,24 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+
 import { ModalManagerContext } from '@zextras/carbonio-design-system';
 import { addBoard, getBridgedFunctions, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+
+import { useCalendarFolders } from './use-calendar-folders';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from '../constants';
-import { useAppDispatch } from '../store/redux/hooks';
-import { useCalendarFolders } from './use-calendar-folders';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { StoreProvider } from '../store/redux';
+import { useAppDispatch } from '../store/redux/hooks';
 import { useCalendarDate, useIsSummaryViewOpen, useSetRange } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
@@ -132,7 +134,12 @@ export const useCalendarComponentUtils = (): {
 							}
 						});
 					};
-					if (size(invite.participants) > 0) {
+					if (
+						size(invite.participants) > 0 &&
+						(invite.isException || !!event.resource.ridZ) &&
+						invite.isOrganizer &&
+						!event.resource.inviteNeverSent
+					) {
 						const closeModal = createModal(
 							{
 								children: (
