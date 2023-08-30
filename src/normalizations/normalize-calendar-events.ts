@@ -96,7 +96,6 @@ export const normalizeCalendarEvent = ({
 	const start = instanceStart || (invite as Invite)?.start?.u || appointment.inst?.[0]?.s;
 	const dur = (instance as ExceptionReference)?.dur ?? appointment.dur;
 	const user = getUserAccount();
-
 	return {
 		start: allDay ? new Date(moment(start).startOf('day').valueOf()) : new Date(start),
 		end: allDay
