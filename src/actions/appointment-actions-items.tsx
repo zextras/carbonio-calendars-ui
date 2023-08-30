@@ -147,12 +147,14 @@ export const editEventItem = ({
 	icon: 'Edit2Outline',
 	label: t('label.edit', 'Edit'),
 	disabled:
-		!event?.haveWriteAccess ||
+		// if the event is on trash
 		event.resource.calendar.id === FOLDERS.TRASH ||
-		(!event.resource.iAmOrganizer && !event?.sentByMe && !event?.haveWriteAccess) ||
+		// if user is owner of the calendar but he is not the organizer
+		(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
+		// if it is inside a shared calendar and user doesn't have write access
 		(!!event.resource.calendar.owner &&
-			event.resource.calendar.owner !== event.resource.organizer.email) ||
-		(!event.resource.calendar.owner && !event.resource.iAmOrganizer),
+			(event.resource.calendar.owner !== event.resource.organizer.email ||
+				!event?.haveWriteAccess)),
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	onClick: editAppointment({ event, invite, context })
 });
