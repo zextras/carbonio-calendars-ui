@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.4](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.3...v1.4.4) (2023-08-31)
+
+
+### Bug Fixes
+
+* allow users to delete or modify all day instances of recurring series ([281b9f8](https://github.com/zextras/carbonio-calendars-ui/commit/281b9f8f886e25400fd2b79b5884f2c5d5884500))
+* deleting a draft wont send cancellation messages to attendees ([c102b55](https://github.com/zextras/carbonio-calendars-ui/commit/c102b557bedfce52e3efc17ebbd108cba0161da9))
+* edit access modal shared users list is updated when a user is revoked ([66e141e](https://github.com/zextras/carbonio-calendars-ui/commit/66e141e7861ed4a068df0f7468d89588d3ad3da2))
+* memo appointments selector ([#322](https://github.com/zextras/carbonio-calendars-ui/issues/322)) ([efef639](https://github.com/zextras/carbonio-calendars-ui/commit/efef639b7f7f49da0a6871fc27141d0280b2e80b))
+* on share access share modal wont show up ([cd15f4d](https://github.com/zextras/carbonio-calendars-ui/commit/cd15f4d7ad84d1be1764c51e9dd9ff3bf5bb96e4))
+* restoring a calendar displays the correct snackbar message ([#324](https://github.com/zextras/carbonio-calendars-ui/issues/324)) ([4e63405](https://github.com/zextras/carbonio-calendars-ui/commit/4e6340509ae2c92455544cae8982394bca923e96))
+* send email from attendee chip opens a new pre-filled board ([8fd9176](https://github.com/zextras/carbonio-calendars-ui/commit/8fd9176dd298fd4808dc5ef7cc142c5ca0250f00))
+* share calendar modal content is not overflowing ([c5f35e7](https://github.com/zextras/carbonio-calendars-ui/commit/c5f35e7d28062d6ee4603a30272ca7981be738ac))
+* user can create appointments in shared calendars ([4d24ce3](https://github.com/zextras/carbonio-calendars-ui/commit/4d24ce37738aad953598d14bc2f2e4de738243b9))
+
 ### [1.4.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.2...v1.4.3) (2023-07-20)
 
 ### [1.4.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.1...v1.4.2) (2023-07-18)
