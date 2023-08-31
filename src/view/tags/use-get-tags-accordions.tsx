@@ -30,14 +30,10 @@ const CustomComp: FC<ItemProps> = (props) => {
 			runSearch(
 				[
 					{
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
 						avatarBackground: ZIMBRA_STANDARD_COLORS[props?.item?.color || 0].hex,
 						avatarIcon: 'Tag',
 						background: 'gray2',
 						hasAvatar: true,
-						isGeneric: false,
-						isQueryFilter: true,
 						label: `tag:${props?.item?.name}`,
 						value: `tag:"${props?.item?.name}"`
 					}
