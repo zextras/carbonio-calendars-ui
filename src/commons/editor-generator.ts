@@ -94,6 +94,7 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		isNew: startsWith(id, 'new'),
 		attachmentFiles: [],
 		organizer: defaultOrganizer,
+		sender: defaultOrganizer,
 		title: '',
 		location: '',
 		room: undefined,
@@ -175,8 +176,7 @@ export const generateEditor = ({
 		context
 	});
 
-	const newEditor = { ...editor, calendar: omit(editor.calendar, ['parent', 'children']) };
-	context.dispatch(createNewEditor(newEditor));
+	context.dispatch(createNewEditor(editor));
 
-	return newEditor;
+	return editor;
 };

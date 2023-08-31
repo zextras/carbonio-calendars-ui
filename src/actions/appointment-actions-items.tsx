@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
-import { ActionsContext, AppointmentActionsItems } from '../types/actions';
-import { EventActionsEnum } from '../types/enums/event-actions-enum';
-import { EventType } from '../types/event';
-import { Invite } from '../types/store/invite';
+
 import {
 	acceptAsTentative,
 	acceptInvitation,
@@ -19,6 +16,10 @@ import {
 	moveToTrash,
 	openAppointment
 } from './appointment-actions-fn';
+import { ActionsContext, AppointmentActionsItems } from '../types/actions';
+import { EventActionsEnum } from '../types/enums/event-actions-enum';
+import { EventType } from '../types/event';
+import { Invite } from '../types/store/invite';
 
 export const openEventItem = ({
 	event,
@@ -146,9 +147,14 @@ export const editEventItem = ({
 	icon: 'Edit2Outline',
 	label: t('label.edit', 'Edit'),
 	disabled:
-		!event?.haveWriteAccess ||
+		// if the event is on trash
 		event.resource.calendar.id === FOLDERS.TRASH ||
-		!event.resource.iAmOrganizer,
+		// if user is owner of the calendar but he is not the organizer
+		(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
+		// if it is inside a shared calendar and user doesn't have write access
+		(!!event.resource.calendar.owner &&
+			(event.resource.calendar.owner !== event.resource.organizer.email ||
+				!event?.haveWriteAccess)),
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	onClick: editAppointment({ event, invite, context })
 });

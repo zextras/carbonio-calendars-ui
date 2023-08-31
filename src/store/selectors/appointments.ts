@@ -3,21 +3,26 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { createSelector } from '@reduxjs/toolkit';
 import { find, values, reduce, filter } from 'lodash';
+
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { EventType } from '../../types/event';
 import { Appointment, InstanceReference } from '../../types/store/appointments';
-import { Calendar } from '../../types/store/calendars';
+import { AppointmentsSlice } from '../../types/store/store';
 import type { RootState } from '../redux';
 
-export function selectAllAppointments({ appointments }: RootState): Record<string, Appointment> {
-	return appointments?.appointments;
-}
+const selectAppointmentsSlice = (state: RootState): AppointmentsSlice => state.appointments;
 
-export function selectAppointmentsArray({ appointments }: RootState): Array<Appointment> {
-	return values(appointments?.appointments);
-}
+export const selectAppointments = createSelector(
+	[selectAppointmentsSlice],
+	(slice) => slice.appointments
+);
+
+export const selectAppointmentsArray = createSelector([selectAppointments], (collections) =>
+	values(collections)
+);
 
 export const selectAppointment =
 	(id: string | undefined): (({ appointments }: RootState) => Appointment | undefined) =>

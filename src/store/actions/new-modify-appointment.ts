@@ -92,13 +92,13 @@ export const modifyAppointment = createAsyncThunk(
 				const exceptId = omitBy(
 					editor.allDay
 						? {
-								d: moment(editor.start).format('YYYYMMDD'),
+								d: moment(editor.ridZ).format('YYYYMMDD'),
 								tz: editor.timezone
 						  }
 						: {
 								d: editor.timezone
-									? moment(editor.start).format('YYYYMMDD[T]HHmmss')
-									: moment(editor.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+									? moment(editor.ridZ).format('YYYYMMDD[T]HHmmss')
+									: moment(editor.ridZ).utc().format('YYYYMMDD[T]HHmmss[Z]'),
 								tz: editor.timezone
 						  },
 					isNil

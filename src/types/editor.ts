@@ -91,6 +91,7 @@ export type Editor = {
 	plainText: string;
 	richText: string;
 	organizer?: any;
+	sender?: any;
 	title?: string;
 	location?: string;
 	room?: {
