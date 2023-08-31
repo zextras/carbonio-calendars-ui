@@ -5,14 +5,15 @@
  */
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { isNil, union } from 'lodash';
+
 import type { Editor, IdentityItem, Room } from '../../types/editor';
 import type { EventResourceCalendar } from '../../types/event';
 import type { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
 import type { EditorSlice } from '../../types/store/store';
 
-type OrganizerPayload = {
+type SenderPayload = {
 	id: string | undefined;
-	organizer: IdentityItem;
+	sender: IdentityItem;
 };
 
 type TitlePayload = {
@@ -33,7 +34,6 @@ type RoomPayload = {
 type CalendarPayload = {
 	id: string;
 	calendar: EventResourceCalendar;
-	organizer: { email: string; name: string; sentBy: string } | undefined;
 };
 
 type ClassPayload = {
@@ -50,8 +50,6 @@ type TextPayload = {
 type AllDayPayload = {
 	id: string | undefined;
 	allDay: boolean;
-	start?: number;
-	end?: number;
 };
 
 type AttendeePayload = { id: string; attendees: Attendee[] };
@@ -109,25 +107,23 @@ export const editEditorAttachmentsReducer = (
 	{ editors }: EditorSlice,
 	{ payload }: PayloadAction<AttachmentFilesPayload>
 ): void => {
-	if (payload?.id) {
-		if (editors?.[payload?.id]) {
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].attachmentFiles = payload.attachmentFiles;
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].attach = {
-				...payload.attach,
-				aid: union(editors[payload.id]?.attach?.aid ?? [], payload?.attach?.aid ?? [])
-			};
-		}
+	if (payload?.id && editors?.[payload?.id]) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].attachmentFiles = payload.attachmentFiles;
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].attach = {
+			...payload.attach,
+			aid: union(editors[payload.id]?.attach?.aid ?? [], payload?.attach?.aid ?? [])
+		};
 	}
 };
-export const editOrganizerReducer = (
+export const editSenderReducer = (
 	{ editors }: EditorSlice,
-	{ payload }: PayloadAction<OrganizerPayload>
+	{ payload }: PayloadAction<SenderPayload>
 ): void => {
-	if (payload?.id && editors?.[payload?.id]?.organizer && payload?.organizer) {
+	if (payload?.id && editors?.[payload?.id]?.sender && payload?.sender) {
 		const editor = editors[payload.id];
-		editor.organizer = payload.organizer;
+		editor.sender = payload.sender;
 	}
 };
 
@@ -204,10 +200,6 @@ export const editEditorCalendarReducer = (
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].calendar = payload.calendar;
-		if (payload.organizer) {
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].organizer = payload.organizer;
-		}
 	}
 };
 
@@ -252,14 +244,6 @@ export const editEditorAllDayReducer = (
 	if (payload?.id && editors?.[payload?.id]) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].allDay = payload.allDay;
-		if (payload.start) {
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].start = payload.start;
-		}
-		if (payload.end) {
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].end = payload.end;
-		}
 	}
 };
 

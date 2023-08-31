@@ -12,7 +12,7 @@ export type ShareCalendarModalProps = {
 	onGoBack?: () => void;
 	secondaryLabel?: string;
 	isFromEditModal?: boolean;
-	grant: Array<Grant>;
+	grant?: Array<Grant>;
 };
 
 export type ShareCalendarUrlProps = {

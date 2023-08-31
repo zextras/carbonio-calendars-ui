@@ -5,16 +5,16 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { concat, includes, isNil, map, omitBy } from 'lodash';
+import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
+
 import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { Editor } from '../../types/editor';
-import { getPrefs } from '../../carbonio-ui-commons/utils/get-prefs';
 
 type Participants = {
-	a: string | undefined;
-	p: string | undefined;
+	a?: string;
+	p?: string;
 	t: string;
 };
 
@@ -42,15 +42,35 @@ const setResourceDate = ({
 		  };
 };
 
-const generateParticipantInformation = (resource: Editor): Array<Participants> =>
-	resource?.draft
-		? [
+const generateParticipantInformation = (resource: Editor): Array<Participants> => {
+	const sender =
+		resource.organizer.address === resource?.sender?.address &&
+		resource.organizer.label === resource.sender.label &&
+		resource.organizer.identityName === resource.sender.identityName
+			? undefined
+			: {
+					a: resource?.sender?.address ?? resource?.sender?.label,
+					p: resource?.sender?.fullName,
+					t: 's'
+			  };
+	const organizerParticipant = resource.calendar?.owner
+		? compact([
+				{
+					a: resource.calendar?.owner,
+					t: 'f'
+				},
+				sender
+		  ])
+		: compact([
 				{
 					a: resource?.organizer?.address ?? resource?.organizer?.label,
 					p: resource?.organizer?.fullName,
 					t: 'f'
-				}
-		  ]
+				},
+				sender
+		  ]);
+	return resource?.draft
+		? organizerParticipant
 		: concat(
 				map(concat(resource?.attendees, resource?.optionalAttendees), (attendee) => ({
 					a: attendee?.email ?? attendee?.label,
@@ -60,12 +80,9 @@ const generateParticipantInformation = (resource: Editor): Array<Participants> =
 							: attendee.label,
 					t: 't'
 				})),
-				{
-					a: resource?.organizer?.address ?? resource?.organizer?.label,
-					p: resource?.organizer?.fullName,
-					t: 'f'
-				}
+				organizerParticipant
 		  );
+};
 
 function generateHtmlBodyRequest(app: Editor): any {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
@@ -153,6 +170,29 @@ const generateInvite = (editorData: Editor): any => {
 			}))
 		);
 
+	const organizer = editorData.calendar?.owner
+		? {
+				a: editorData.calendar.owner,
+				sentBy: editorData.sender.address
+		  }
+		: omitBy(
+				{
+					a: editorData.organizer.address,
+					d:
+						editorData.organizer.address === editorData?.sender?.address &&
+						editorData.organizer.label === editorData.sender.label &&
+						editorData.organizer.identityName === editorData.sender.identityName
+							? undefined
+							: editorData.organizer.fullName,
+					sentBy:
+						editorData.organizer.address === editorData?.sender?.address &&
+						editorData.organizer.label === editorData.sender.label &&
+						editorData.organizer.identityName === editorData.sender.identityName
+							? undefined
+							: editorData.sender.address
+				},
+				isNil
+		  );
 	return {
 		comp: [
 			{
@@ -194,10 +234,7 @@ const generateInvite = (editorData: Editor): any => {
 				fb: editorData.freeBusy,
 				loc: editorData.location,
 				name: editorData.title,
-				or: {
-					a: editorData.organizer.address,
-					d: editorData.organizer.fullName
-				},
+				or: organizer,
 				recur:
 					(editorData?.isInstance && editorData?.isSeries) || editorData?.isException
 						? undefined

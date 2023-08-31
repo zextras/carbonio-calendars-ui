@@ -14,7 +14,6 @@ import {
 } from '../../normalizations/normalizations-utils';
 import { Editor } from '../../types/editor';
 import { Invite } from '../../types/store/invite';
-import { getPrefs } from '../../carbonio-ui-commons/utils/get-prefs';
 import { generateSoapMessageFromEditor } from './new-create-appointment';
 
 export const generateSoapMessageFromInvite = (invite: Invite): any => {
@@ -88,21 +87,20 @@ export const modifyAppointment = createAsyncThunk(
 		{ draft, editor }: { draft: boolean; editor: Editor },
 		{ rejectWithValue }: any
 	): Promise<any> => {
-		const { zimbraPrefUseTimeZoneListInCalendar } = getPrefs();
-
 		if (editor) {
 			if (editor.isSeries && editor.isInstance && !editor.isException) {
 				const exceptId = omitBy(
-					{
-						d:
-							editor?.timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE'
-								? moment(editor.ridZ).format('YYYYMMDD[T]HHmmss')
-								: moment(editor.ridZ).utc().format('YYYYMMDD[T]HHmmss[Z]'),
-						tz:
-							editor?.timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE'
-								? editor?.timezone
-								: undefined
-					},
+					editor.allDay
+						? {
+								d: moment(editor.ridZ).format('YYYYMMDD'),
+								tz: editor.timezone
+						  }
+						: {
+								d: editor.timezone
+									? moment(editor.ridZ).format('YYYYMMDD[T]HHmmss')
+									: moment(editor.ridZ).utc().format('YYYYMMDD[T]HHmmss[Z]'),
+								tz: editor.timezone
+						  },
 					isNil
 				);
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment

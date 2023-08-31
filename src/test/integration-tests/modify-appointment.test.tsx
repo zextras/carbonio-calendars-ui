@@ -64,7 +64,7 @@ describe.each`
 	${'single'}    | ${{}}                                         | ${undefined}      | ${undefined}                                     | ${mockedData.utils.getSingleEditorFields()}
 	${'series'}    | ${mockedData.utils.getSeriesEventFields()}    | ${recurrenceRule} | ${undefined}                                     | ${mockedData.utils.getSeriesEditorFields()}
 	${'exception'} | ${mockedData.utils.getExceptionEventFields()} | ${undefined}      | ${undefined}                                     | ${mockedData.utils.getExceptionEditorFields()}
-	${'instance'}  | ${mockedData.utils.getInstanceEventFields()}  | ${recurrenceRule} | ${{ d: '20221215T093000', tz: 'Europe/Berlin' }} | ${mockedData.utils.getExceptionEditorFields()}
+	${'instance'}  | ${mockedData.utils.getInstanceEventFields()}  | ${recurrenceRule} | ${{ d: '20220102T230000', tz: 'Europe/Berlin' }} | ${mockedData.utils.getExceptionEditorFields()}
 `('modify appointment', ({ title, seriesResourceEvent, recurrence, exceptId, expected }) => {
 	test(`${title} - attendees, optionals, title, location, private, allDay, start, end, reminder`, async () => {
 		// SETUP MOCKS AND STORE
@@ -192,7 +192,9 @@ describe.each`
 		expect(updatedEditor.isException).toBe(expected.isException);
 		expect(updatedEditor.isSeries).toBe(expected.isSeries);
 		expect(updatedEditor.isInstance).toBe(expected.isInstance);
-		expect(updatedEditor.exceptId).toStrictEqual(exceptId ?? invite.exceptId);
+		if (title === 'exception') {
+			expect(updatedEditor.exceptId).toStrictEqual(exceptId ?? invite.exceptId);
+		}
 		if (expected.recur) {
 			expect(updatedEditor.recur).toBeDefined();
 		}

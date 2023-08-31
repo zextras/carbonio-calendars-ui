@@ -6,9 +6,9 @@
 import {
 	Checkbox,
 	ChipInput,
+	ChipItem,
 	Container,
 	Input,
-	ModalManagerContext,
 	Row,
 	Select,
 	SnackbarManagerContext,
@@ -26,10 +26,8 @@ import {
 } from '../../settings/components/utils';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
-import { StoreProvider } from '../../store/redux';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
-import ShareCalendarUrlModal from './edit-modal/parts/share-calendar-url-modal';
 
 export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	folderName,
@@ -55,7 +53,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const [shareWithUserType, setshareWithUserType] = useState('usr');
 	const [shareWithUserRole, setshareWithUserRole] = useState('r');
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
-	const createModal = useContext(ModalManagerContext);
 	const accounts = useUserAccounts();
 
 	const chipsHaveErrors = useMemo(() => some(contacts, 'error'), [contacts]);
@@ -69,25 +66,6 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 		setshareWithUserRole(shareRole);
 	}, []);
 
-	const openShareUrlModal = (): void => {
-		const closeModal = createModal(
-			{
-				children: (
-					<StoreProvider>
-						<ShareCalendarUrlModal
-							folderName={folderName}
-							onClose={(): void => closeModal()}
-							isFromEditModal
-						/>
-					</StoreProvider>
-				),
-				maxHeight: '70vh',
-				size: 'medium'
-			},
-			true
-		);
-		closeFn && closeFn();
-	};
 	const onConfirm = (): void => {
 		const granted = map(contacts, (contact) => ({
 			gt: 'usr',
@@ -117,7 +95,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							folder: folderId,
 							accounts
 						})
-					).then((res2: any) => {
+					).then((res2) => {
 						if (!res2.type.includes('fulfilled')) {
 							createSnackbar({
 								key: `folder-action-failed`,
@@ -131,7 +109,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					});
 			}
 		});
-		openShareUrlModal();
+		closeFn && closeFn();
 	};
 
 	const onChange = useCallback((ev) => {
@@ -187,7 +165,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 								)}
 								hasError
 								background={'gray4'}
-								onChange={(ev: any): any => {
+								onChange={(ev: ChipItem<any>[]): void => {
 									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 									// @ts-ignore
 									setContacts(map(ev, (contact) => ({ email: contact.address })));
@@ -253,7 +231,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 						<Input
 							label={t('share.placeholder.standard_message', 'Add a note to standard message')}
 							value={standardMessage}
-							onChange={(ev: any): void => {
+							onChange={(ev): void => {
 								setStandardMessage(ev.target.value);
 							}}
 							disabled={!sendNotification}
