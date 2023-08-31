@@ -35,6 +35,11 @@ export const selectOrganizer =
 	(state: RootState): IdentityItem =>
 		state?.editor?.editors?.[id]?.organizer;
 
+export const selectSender =
+	(id: string) =>
+	(state: RootState): IdentityItem =>
+		state?.editor?.editors?.[id]?.sender;
+
 export const selectEditorTitle =
 	(id: string) =>
 	(state: RootState): string | undefined =>
