@@ -207,8 +207,8 @@
             "tuesday": "Wtorek",
             "wednesday": "Środa"
         },
-        "create_tag": "Stwórz Tag",
-        "delete_tag": "Usuń Tag",
+        "create_tag": "Stwórz tag",
+        "delete_tag": "Usuń tag",
         "edit_tag": "Edytuj tag",
         "edit_tag_name": "Edytuj Tag {{name}}",
         "entire_serires": "CAŁA SERIA",
