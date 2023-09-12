@@ -6,7 +6,7 @@
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
 
-/* todo: currently not used. To integrate with the new editor structure  */
+import { generateParticipantInformation } from '../store/actions/new-create-appointment';
 
 export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promise<any> =>
 	soapFetch('CounterAppointment', {
@@ -16,7 +16,7 @@ export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promis
 		ms: appt.ms,
 		rev: appt.rev,
 		m: {
-			e: [{ a: appt.organizer.address, t: 't' }],
+			e: generateParticipantInformation(appt),
 			inv: {
 				comp: [
 					{

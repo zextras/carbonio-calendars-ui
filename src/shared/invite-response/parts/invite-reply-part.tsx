@@ -3,9 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
-/* eslint-disable import/extensions */
 import React, { FC, ReactElement, useCallback, useState, useContext } from 'react';
+
 import {
 	SnackbarManagerContext,
 	Container,
@@ -15,15 +14,15 @@ import {
 	Row,
 	Checkbox
 } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
+
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { CalendarSelector } from '../../../view/editor/parts/calendar-selector';
 import { sendResponse } from '../invite-reply-actions';
 
 type InviteReplyPart = {
 	inviteId: string;
-	invite: any;
 	participationStatus: string;
-	compNum: string;
 	proposeNewTime: () => void;
 	parent: string;
 };

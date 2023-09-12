@@ -5,12 +5,13 @@
  */
 import { filter, find, isNil, map, omit, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
+
+import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Editor } from '../types/editor';
 import { Invite } from '../types/store/invite';
-import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -115,6 +116,19 @@ export const normalizeEditor = ({
 		const editorType = { isSeries, isInstance, isException };
 
 		const { start, end } = setEditorDate({ editorType, event, invite });
+
+		const isRichText = !(
+			invite?.textDescription?.[0]?._content && !invite?.htmlDescription?.[0]?._content
+		);
+
+		const plainText = invite?.textDescription?.[0]?._content
+			? extractBody(invite?.textDescription?.[0]?._content) ?? ''
+			: '';
+
+		const richText = invite?.htmlDescription?.[0]?._content
+			? extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? ''
+			: '';
+
 		const compiledEditor = omitBy(
 			{
 				calendar: omit(find(context?.folders, ['id', calendarId]), 'parent'),
@@ -141,8 +155,9 @@ export const normalizeEditor = ({
 				inviteId: event?.resource?.inviteId,
 				reminder: invite?.alarmValue,
 				recur: !isInstance ? invite.recurrenceRule : undefined,
-				richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
-				plainText: extractBody(invite?.textDescription?.[0]?._content) ?? '',
+				richText,
+				plainText,
+				isRichText,
 				uid: invite?.uid,
 				ms: invite?.ms,
 				rev: invite?.rev
