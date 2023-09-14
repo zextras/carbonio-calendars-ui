@@ -5,12 +5,14 @@
  */
 import { filter, find, isNil, map, omit, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
+
+import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Editor } from '../types/editor';
+import { DateType } from '../types/event';
 import { Invite } from '../types/store/invite';
-import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -57,6 +59,11 @@ export type EventPropType = {
 	end: Date | Moment;
 };
 
+const getLocalTime = (date: number | DateType, timezone?: string): number =>
+	timezone
+		? moment(date).valueOf() + moment(date).tz(timezone).utcOffset() * 60_000
+		: moment(date).valueOf();
+
 const setEditorDate = ({
 	editorType,
 	invite,
@@ -70,8 +77,21 @@ const setEditorDate = ({
 	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
 		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
-	if (event) {
+	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
+			const convertedStartDate = getLocalTime(invite?.start?.u, invite?.tz);
+			const convertedEndDate = getLocalTime(invite?.end?.u, invite?.tz);
+			if (
+				invite.tz &&
+				moment(invite?.start?.u).tz(invite.tz).utcOffset() !== moment(invite?.start?.u).utcOffset()
+			) {
+				return {
+					start: event?.allDay
+						? moment(convertedStartDate)?.startOf('date').valueOf()
+						: convertedStartDate,
+					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
+				};
+			}
 			return {
 				start: event?.allDay
 					? moment(invite?.start?.u)?.startOf('date').valueOf()
@@ -81,14 +101,24 @@ const setEditorDate = ({
 					: moment(invite?.end?.u).valueOf()
 			};
 		}
-		return {
-			start: event?.allDay
-				? moment(event?.start)?.startOf('date').valueOf()
-				: moment(event?.start).valueOf(),
-			end: event?.allDay
-				? moment(event?.end)?.endOf('date').valueOf()
-				: moment(event?.end).valueOf()
-		};
+		const convertedStartDate = getLocalTime(event.start, invite?.tz);
+		const convertedEndDate = getLocalTime(event.end, invite?.tz);
+		return invite?.tz &&
+			moment(event?.start).tz(invite.tz).utcOffset() !== moment(event?.start).utcOffset()
+			? {
+					start: event?.allDay
+						? moment(convertedStartDate)?.startOf('date').valueOf()
+						: convertedStartDate,
+					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
+			  }
+			: {
+					start: event?.allDay
+						? moment(event?.start)?.startOf('date').valueOf()
+						: moment(event?.start).valueOf(),
+					end: event?.allDay
+						? moment(event?.end)?.endOf('date').valueOf()
+						: moment(event?.end).valueOf()
+			  };
 	}
 	return {
 		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
