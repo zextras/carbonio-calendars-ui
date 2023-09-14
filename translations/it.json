@@ -86,13 +86,14 @@
             "calendar_restored": "Calendario ripristinato correttamente",
             "appointment_permanently_deleted": "Appuntamento eliminato definitivamente",
             "calendar_edits_saved": "Modifiche salvate correttamente",
-            "series_deleted": "La serie di appuntamenti è stata cancellata correttamente. Gli invitati riceveranno una notifica di avvenuta cancellazione.",
+            "series_deleted": "La serie di appuntamenti è stata spostata nel cestino. Gli invitati riceveranno una notifica di avvenuta cancellazione.",
             "some_link_copying_error": "Sembra esserci stato un problema durante la generazione dell'url pubblico di alcuni file, riprova",
             "some_att_add_fails": "Sembra esserci stato un problema durante l'aggiunta di alcuni allegati, riprova",
             "link_copying_error": "Sembra esserci stato un problema durante la generazione del link pubblico, riprova",
             "att_err_adding": "Sembra esserci stato un problema durante l'aggiunta degli allegati, riprova",
             "all_link_copied": "Link pubblico copiato con successo",
-            "all_att_added": "Allegati aggiunti correttamente"
+            "all_att_added": "Allegati aggiunti correttamente",
+            "series_deleted_no_notification": "Serie spostata nel cestino."
         },
         "share_calendar_url_note2": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.<br/> Puoi trovare questi collegamenti anche con un clic destro del mouse sull'elenco dei calendari.",
         "share_calendar_url_note": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.",
@@ -662,5 +663,7 @@
     "recurrent_in_allday": "Non è possibile trascinare un appuntamento ricorrente dove è già presente un appuntamento che occupa l'intera giornata",
     "mountpoint_error": "Non è stato possibile aggiungere la condivisione alla sezione Calendari Condivisi",
     "mountpoint_success": "La condivisione è stata aggiunta con successo alla sezione Calendari Condivisi",
-    "mountpoint_warning": "{{failed}} su {{total}} dei calendari non sono stati aggiunti ai Calendari Condivisi"
+    "mountpoint_warning": "{{failed}} su {{total}} dei calendari non sono stati aggiunti ai Calendari Condivisi",
+    "attendee_unavailable": "Partecipante non disponibile nell'orario selezionato per l'evento",
+    "attendees_unavailable": "Uno o più partecipanti non sono disponibili all’ora selezionata per l'evento"
 }

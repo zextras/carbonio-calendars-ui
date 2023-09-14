@@ -293,13 +293,14 @@
             "calendar_restored": "Kalender met succes hersteld",
             "appointment_permanently_deleted": "Afspraak permanent verwijderd",
             "calendar_edits_saved": "Bewerkingen correct opgeslagen",
-            "series_deleted": "Serie succesvol verwijderd. Deelnemers ontvangen een bericht van annulering.",
+            "series_deleted": "Serie verplaatst naar prullenbak. Deelnemers ontvangen de annuleringsmelding.",
             "some_link_copying_error": "Er lijkt een probleem te zijn met het genereren van de publieke url voor sommige bestanden, probeer het opnieuw",
             "some_att_add_fails": "Er lijkt een probleem te zijn bij het toevoegen van enkele bijlagen, probeer het opnieuw",
             "link_copying_error": "Er lijkt een probleem te zijn tijdens het genereren van de publieke link, probeer het opnieuw",
             "att_err_adding": "Er lijkt een probleem te zijn bij het toevoegen van bijlagen, probeer het opnieuw",
             "all_link_copied": "Publieke link met succes gekopieerd",
-            "all_att_added": "Bijlagen met succes toegevoegd"
+            "all_att_added": "Bijlagen met succes toegevoegd",
+            "series_deleted_no_notification": "Serie verplaatst naar prullenbak."
         },
         "you": "U",
         "are_organizer": "zijn de organisator",
@@ -662,5 +663,7 @@
     "recurrent_in_allday": "U kunt een terugkerende afspraak niet in slot voor een hele dag slepen",
     "mountpoint_error": "Het deel kon niet worden toegevoegd aan de sectie Gedeelde agenda's",
     "mountpoint_success": "Het deel is succesvol toegevoegd aan de sectie Gedeelde agenda's",
-    "mountpoint_warning": "{{failed}} van {{total}} gedeelde kalenders konden niet worden toegevoegd aan de Gedeelde kalenders"
+    "mountpoint_warning": "{{failed}} van {{total}} gedeelde kalenders konden niet worden toegevoegd aan de Gedeelde kalenders",
+    "attendee_unavailable": "Deelnemer niet beschikbaar op het geselecteerde tijdstip van het evenement",
+    "attendees_unavailable": "Een of meer deelnemers zijn niet beschikbaar op het geselecteerde tijdstip van het evenement"
 }

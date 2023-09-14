@@ -233,13 +233,14 @@
             "calendar_restored": "Calendar वापस लाया गया",
             "appointment_permanently_deleted": "एप्पोइंटमेंट परमानेंट डिलीट कर दिया गया",
             "calendar_edits_saved": "बदलाव ठीक से सेव हो गए",
-            "series_deleted": "सीरीज़ डिलीट कर दी गई। अटेंड करने वालों को कैंसल होने का नोटिफ़िकेशन मिलेगा।",
+            "series_deleted": "सीरीज़ रद्दी में भेजी गई। अटेंड करने वालों को कैंसल होने का नोटिफ़िकेशन मिलेगा।",
             "some_link_copying_error": "कुछ फाइलों के लिए पब्लिक url बनाते समय कोई समस्या हुई, दोबारा कोशिश करें",
             "some_att_add_fails": "कुछ अटैचमेंट जोड़ने में कुछ समस्या आ रही है, कृपया दोबारा कोशिश करें",
             "link_copying_error": "पब्लिक लिंक बनाते समय कोई समस्या हुई, दोबारा कोशिश करें",
             "att_err_adding": "अटैचमेंट जोड़ने में कुछ समस्या आ रही है, कृपया दोबारा कोशिश करें",
             "all_link_copied": "पब्लिक लिंक कॉपी हुई",
-            "all_att_added": "अटैचमेंट जोड़ा गया"
+            "all_att_added": "अटैचमेंट जोड़ा गया",
+            "series_deleted_no_notification": "सीरीज़ को रद्दी में ले जाया गया।"
         },
         "somebody_is_organizer": "ऑर्गनाइज़र <strong>{{somebody}}</strong> है",
         "are_organizer": "वाक्य इस तरह से माना जाएगा मानो आप ऑर्गनाइज़र हों",
@@ -662,5 +663,7 @@
     "recurrent_in_allday": "आप बार-बार आने वाले एपोइंटमेंट को किसी पूरे दिन के स्लॉट में ड्रैग नहीं कर सकते",
     "mountpoint_error": "शेयर को Shared Calendars सेक्शन में नहीं जोड़ा जा सका",
     "mountpoint_success": "शेर को Shared Calendars सेक्शन में जोड़ दिया गया है",
-    "mountpoint_warning": "{{total}} में से {{failed}} शेयर्ड कैलेंडर Shared Calendars में नहीं जोड़े जा सके"
+    "mountpoint_warning": "{{total}} में से {{failed}} शेयर्ड कैलेंडर Shared Calendars में नहीं जोड़े जा सके",
+    "attendee_unavailable": "इवेंट के चुने हुए समय पर प्रतिभागी उपलब्ध नहीं है",
+    "attendees_unavailable": "इवेंट के चुने हुए समय पर एक या अधिक प्रतिभागी उपलब्ध नहीं हैं"
 }
