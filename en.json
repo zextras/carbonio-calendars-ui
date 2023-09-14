@@ -22,6 +22,8 @@
     "allowed_actions": "Allowed actions",
     "appointments": "Appointments",
     "appt_restored_successfully": "Appointment restored successfully",
+    "attendee_unavailable": "Attendee not available at the selected time of the event",
+    "attendees_unavailable": "One or more attendees are not available at the selected time of the event",
     "button": {
         "customize_modal": "Open Customize Modal"
     },
@@ -343,7 +345,8 @@
             },
             "link_copying_error": "There seems to be a problem while generating public link, please try again",
             "new_calendar_created": "New calendar created",
-            "series_deleted": "Series successfully deleted. Attendees will receive the cancellation notification.",
+            "series_deleted": "Series moved to trash. Attendees will receive the cancellation notification.",
+            "series_deleted_no_notification": "Series moved to trash.",
             "some_att_add_fails": "There seems to be a problem when adding some attachments, please try again",
             "some_link_copying_error": "There seems to be a problem while generating public url for some files, please try again"
         },
