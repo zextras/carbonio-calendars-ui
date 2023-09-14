@@ -19,13 +19,14 @@
             "calendar_restored": "カレンダーが復元されました",
             "appointment_permanently_deleted": "予定は完全に削除されました",
             "calendar_edits_saved": "編集内容が保存されました",
-            "series_deleted": "シリーズが削除されました。 参加者にキャンセル通知が届きます。",
+            "series_deleted": "シリーズはゴミ箱に移動されました。 参加者にはキャンセル通知が届きます。",
             "some_link_copying_error": "一部のファイルのパブリックURLの生成中に問題が発生したようです。再度お試しください",
             "some_att_add_fails": "添付ファイルを追加する際に問題が生じたようです。再度お試しください",
             "link_copying_error": "パブリックリンクの生成中に問題が発生したようです。再度お試しください",
             "att_err_adding": "添付ファイルを追加する際に問題が生じたようです。再度お試しください",
             "all_link_copied": "パブリックリンクがコピーされました",
-            "all_att_added": "添付ファイルが追加されました"
+            "all_att_added": "添付ファイルが追加されました",
+            "series_deleted_no_notification": "シリーズがゴミ箱に移動されました。"
         },
         "are_organizer": "は主催者です",
         "somebody_is_organizer": "<strong>{{somebody}}</strong> は主催者です",
@@ -636,5 +637,7 @@
     "recurrent_in_allday": "定期的な予定を終日スロットにドラッグすることはできません",
     "mountpoint_success": "共有が共有カレンダーセクションに正常に追加されました",
     "mountpoint_warning": "{{total}} 個の共有カレンダーのうち {{failed}} 個を共有カレンダーに追加できませんでした",
-    "mountpoint_error": "共有を共有予定表セクションに追加できませんでした"
+    "mountpoint_error": "共有を共有予定表セクションに追加できませんでした",
+    "attendee_unavailable": "選択されたイベントの時間に参加者が不在です",
+    "attendees_unavailable": "選択されたイベントの時間に複数の参加者は参加できません"
 }

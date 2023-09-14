@@ -1,6 +1,6 @@
 {
     "action": {
-        "empty_trash_confirmation": "Ta czynność usunie wszystkie elementy w koszach: Skrzynki pocztowej, Kontaktów, Kalendarza, Zadań oraz Aktówki. Czy na pewno chcesz trwale usunąć całą zawartość tych koszy?",
+        "empty_trash_confirmation": "Ta czynność usunie wszystkie elementy w koszach: E-mailów, Kontaktów, Kalendarza, Zadań oraz Aktówki. Czy na pewno chcesz trwale usunąć całą zawartość tych koszy?",
         "calendar_access_share": "Udostępnij dostęp do kalendarza",
         "delete_calendar": "Usuń kalendarz",
         "edit_calendar_properties": "Edytuj właściwości kalendarza",
@@ -290,13 +290,14 @@
             },
             "new_calendar_created": "Nowy kalendarz został utworzony",
             "calendar_edits_saved": "Zmiany zostały zapisane",
-            "series_deleted": "Seria została usunięta pomyślnie. Uczestnicy otrzymają powiadomienie o anulacji.",
+            "series_deleted": "Seria została przeniesiona do kosza. Uczestnicy otrzymają powiadomienie o anulacji.",
             "some_link_copying_error": "Wygląda na to, że wystąpił problem przy generowaniu publicznego url dla niektórych plików, spróbuj ponownie",
             "some_att_add_fails": "Wystąpił problem podczas dodawania niektórych z załączników, spróbuj ponownie",
             "link_copying_error": "Wygląda na to, że wystąpił problem przy generowaniu linku, spróbuj ponownie",
             "att_err_adding": "Wystąpił błąd przy dodawaniu załączników, spróbuj ponownie",
             "all_link_copied": "Publiczny link został skopiowany",
-            "all_att_added": "Załączniki zostały dodane pomyślnie"
+            "all_att_added": "Załączniki zostały dodane pomyślnie",
+            "series_deleted_no_notification": "Seria została przeniesiona do kosza."
         },
         "sure_to_delete_appointment_permanently": "Na pewno chcesz trwale usunąć to spotkanie?",
         "want_to_send_cancellation_msg": "Czy chcesz wysłać wiadomość dot. anulacji spotkania do uczestników?",
@@ -418,11 +419,11 @@
                 "public": "Publiczne"
             },
             "free_busy_opts": {
-                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej domeny na sprawdzanie swojego statusu Wolny/zajęty",
-                "allow_domain": "Zezwól tylko użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/zajęty",
-                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej domeny na sprawdzanie swojego statusu Wolny/zajęty",
-                "allow_internal": "Zezwól tylko użytkownikom spoza swojej domeny na sprawdzanie swojego statusu Wolny/zajęty",
-                "allow_none": "Nie zezwalaj nikomu na sprawdzanie swojego statusu Wolny/Zajęty"
+                "allow_all": "Zezwól użytkownikom spoza jak i ze swojej domeny na sprawdzanie swojego statusu wolny/zajęty",
+                "allow_domain": "Zezwól tylko użytkownikom ze swojej domeny na sprawdzanie swojego statusu wolny/zajęty",
+                "allow_following": "Zezwól tylko wybranym użytkownikom ze swojej domeny na sprawdzanie swojego statusu wolny/zajęty",
+                "allow_internal": "Zezwól tylko użytkownikom spoza swojej domeny na sprawdzanie swojego statusu wolny/zajęty",
+                "allow_none": "Nie zezwalaj nikomu na sprawdzanie swojego statusu wolny/zajęty"
             },
             "invt_opts": {
                 "allow_all": "Zezwól użytkownikom spoza jak i z mojej domeny na zapraszanie mnie na spotkania",
@@ -688,5 +689,7 @@
     "recurrent_in_allday": "Nie można umieścić powtarzającego się spotkania w oknie cały dzień",
     "mountpoint_error": "Nie udało się dodać udostępnienia do udostępnionych kalendarzy",
     "mountpoint_success": "Udostępnienie zostało dodane do udostępnionych kalendarzy",
-    "mountpoint_warning": "Nie udało się dodać {{failed}} z {{total}} kalendarzy do udostępnionych kalendarzy"
+    "mountpoint_warning": "Nie udało się dodać {{failed}} z {{total}} kalendarzy do udostępnionych kalendarzy",
+    "attendee_unavailable": "Uczestnik nie jest dostępny o wybranym czasie",
+    "attendees_unavailable": "Jeden lub więcej uczestników nie jest dostępnych o wybranym czasie"
 }
