@@ -15,6 +15,7 @@ type GrantAction = {
 	zid: string;
 	d: string;
 };
+type JsnsZimbraMail = 'urn:zimbraMail';
 
 const updateFolderGrants = (action: GrantAction, grant: Grant): void => {
 	const currentFolder = getFolder(action.id);
@@ -59,11 +60,26 @@ export const folderAction = async ({
 		const body: FolderActionRequest = {
 			_jsns: 'urn:zimbra',
 			onerror: 'continue',
-			FolderActionRequest: map(changes.grant, (grant, idx) => ({
-				action: { op, id, grant: [grant] },
-				requestId: parseInt(idx, 10),
-				_jsns: 'urn:zimbraMail'
-			}))
+			FolderActionRequest: [
+				{
+					requestId: 0,
+					_jsns: 'urn:zimbraMail',
+					action: {
+						op,
+						id,
+						color: changes.color,
+						name: changes.name,
+						f: changes.excludeFreeBusy ? 'b#' : '#',
+						l: changes.parent
+					}
+				},
+
+				...map(changes.grant, (grant: Grant, idx) => ({
+					requestId: parseInt(idx + 1, 10),
+					_jsns: 'urn:zimbraMail' as JsnsZimbraMail,
+					action: { op: 'grant', id, grant: [grant] }
+				}))
+			]
 		};
 		const res = await batchRequest(body);
 		if (op === 'grant' && !res.Fault && res.FolderActionResponse.length > 1) {
