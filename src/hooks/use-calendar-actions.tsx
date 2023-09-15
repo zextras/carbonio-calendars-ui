@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { SyntheticEvent, useContext } from 'react';
+
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
-import React, { SyntheticEvent, useContext } from 'react';
+
 import { getFolderRequest } from '../carbonio-ui-commons/soap/get-folder';
 import { Folder } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
@@ -70,7 +72,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 								hideButton: true,
 								label:
 									item?.parent === FOLDERS.TRASH
-										? t('label.error_try_again', 'Something went wrong, please try again')
+										? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
 										: t(
 												'message.snackbar.calendar_moved_to_root_folder',
 												'Calendar moved to Root folder'

@@ -18,13 +18,14 @@
             "calendar_restored": "Kalender erfolgreich wiederhergestellt",
             "appointment_permanently_deleted": "Termin permanent gelöscht",
             "calendar_edits_saved": "Änderungen korrekt gespeichert",
-            "series_deleted": "Serie erfolgreich gelöscht. Die Teilnehmer erhalten eine Absagebenachrichtigung.",
+            "series_deleted": "Die Serie wurde in den Papierkorb verschoben. Die Teilnehmer erhalten die Absagebenachrichtigung.",
             "some_link_copying_error": "Es scheint ein Problem bei der Erstellung der öffentlichen URL für einige Dateien zu geben, bitte versuchen Sie es erneut",
             "some_att_add_fails": "Es scheint ein Problem beim Hinzufügen einiger Anhänge zu geben, bitte versuchen Sie es erneut",
             "link_copying_error": "Es scheint ein Problem bei der Erstellung des öffentlichen Links zu geben, bitte versuchen Sie es erneut",
             "att_err_adding": "Es scheint ein Problem beim Hinzufügen von Anhängen zu geben, bitte versuchen Sie es erneut",
             "all_link_copied": "Öffentlicher Link erfolgreich kopiert",
-            "all_att_added": "Anlagen erfolgreich hinzugefügt"
+            "all_att_added": "Anlagen erfolgreich hinzugefügt",
+            "series_deleted_no_notification": "Die Serie wurde in den Papierkorb verschoben."
         },
         "are_organizer": "sind der Organisator",
         "somebody_invited_you": "<strong>{{somebody}}</strong> hat Sie eingeladen",
@@ -662,5 +663,7 @@
     "recurrent_in_allday": "Sie können einen Serientermin nicht in einen Tagesslot ziehen",
     "mountpoint_error": "Die Freigabe konnte nicht zum Abschnitt \"Gemeinsame Kalender\" hinzugefügt werden",
     "mountpoint_success": "Die Freigabe wurde erfolgreich zum Abschnitt \"Gemeinsame Kalender\" hinzugefügt",
-    "mountpoint_warning": "{{failed}} von {{total}} freigegebenen Kalendern konnten nicht zu den freigegebenen Kalendern hinzugefügt werden"
+    "mountpoint_warning": "{{failed}} von {{total}} freigegebenen Kalendern konnten nicht zu den freigegebenen Kalendern hinzugefügt werden",
+    "attendee_unavailable": "Der Teilnehmer ist zum ausgewählten Zeitpunkt der Veranstaltung nicht verfügbar",
+    "attendees_unavailable": "Ein oder mehrere Teilnehmer sind zum ausgewählten Zeitpunkt der Veranstaltung nicht verfügbar"
 }

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
+
 import type { EditorSlice } from '../../types/store/store';
 import {
 	editEditorAllDayReducer,
@@ -19,12 +20,12 @@ import {
 	editEditorTextReducer,
 	editEditorTimezoneReducer,
 	editLocationReducer,
-	editOrganizerReducer,
 	editTitleReducer,
 	editIsRichTextReducer,
 	editEditorAttachmentsReducer,
 	updateEditorReducer,
-	newEditorReducer
+	newEditorReducer,
+	editSenderReducer
 } from '../reducers/editor-reducers';
 
 const initialState: EditorSlice = {
@@ -42,7 +43,7 @@ export const editorSlice = createSlice({
 		createNewEditor: newEditorReducer,
 		editIsRichText: editIsRichTextReducer,
 		editEditorAttachments: editEditorAttachmentsReducer,
-		editOrganizer: editOrganizerReducer,
+		editSender: editSenderReducer,
 		editEditorTitle: editTitleReducer,
 		editEditorLocation: editLocationReducer,
 		editEditorRoom: editEditorRoomReducer,
@@ -65,7 +66,7 @@ export const {
 	createNewEditor,
 	editIsRichText,
 	editEditorAttachments,
-	editOrganizer,
+	editSender,
 	editEditorTitle,
 	editEditorLocation,
 	editEditorRoom,

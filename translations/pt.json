@@ -88,8 +88,8 @@
         "revoke_share": "Cancelar a partilha de {{title}}",
         "series": "Série",
         "set_new_time": "Definir novo horário",
-        "share_calendar_url": "Acesso compartilhado para {{title}}",
-        "shares_items": "Calendários compartilhados de <bold>{{user}}</bold>",
+        "share_calendar_url": "Acesso partilhado para {{title}}",
+        "shares_items": "Calendários partilhados de <bold>{{user}}</bold>",
         "sharing_of_this_folder": "Compartilhamento desta pasta",
         "show_declined_meetings": "Mostrar reuniões recusadas",
         "start_date": "Data de início",
@@ -124,7 +124,7 @@
         "restore_calendar": "Restaurar calendário",
         "results_for": "Resultados para:",
         "access_revoked": "Acesso revogado",
-        "calendar_shared": "Calendário compartilhado com sucesso",
+        "calendar_shared": "Calendário partilhado com sucesso",
         "changes_saved": "Alterações salvas",
         "discard_changes": "DESCARTAR MODIFICAÇÕES",
         "delete_instance": "Tem certeza que deseja excluir esta instância do compromisso “{title}”?",
@@ -424,16 +424,16 @@
             },
             "invt_opts": {
                 "allow_none": "Não permitir que ninguém me convide para reuniões",
-                "allow_following": "Permitir que apenas os seguintes usuários internos me enviem convites para reuniões",
-                "allow_internal": "Permitir que apenas usuários internos me enviem convites para reuniões",
-                "allow_all": "Permitir que usuários internos e externos me enviem convites para reuniões"
+                "allow_following": "Permitir que apenas os seguintes utilizadores internos me enviem convites para reuniões",
+                "allow_internal": "Permitir que apenas utilizadores internos me enviem convites para reuniões",
+                "allow_all": "Permitir que utilizadores internos e externos me enviem convites para reuniões"
             },
             "free_busy_opts": {
-                "allow_internal": "Permitir a visualização do meu status livre/ocupado apenas aos usuários dos domínios internos",
+                "allow_internal": "Permitir a visualização do meu estado livre/ocupado apenas aos utilizadores dos domínios internos",
                 "allow_none": "Não permitir a visualização do meu status livre/ocupado a ninguém",
-                "allow_domain": "Permitir a visualização do meu status livre/ocupado apenas aos usuários do meu domínio",
-                "allow_following": "Permitir a visualização do meu status livre/ocupado apenas aos usuários internos",
-                "allow_all": "Permitir a visualização do meu status livre/ocupado por usuários internos e externos"
+                "allow_domain": "Permitir a visualização do meu estado livre/ocupado apenas aos utilizadores do meu domínio",
+                "allow_following": "Permitir a visualização do meu estado livre/ocupado apenas aos utilizadores internos",
+                "allow_all": "Permitir a visualização do meu estado livre/ocupado por utilizadores internos e externos"
             },
             "default_view": {
                 "day": "Modo claro",
@@ -449,7 +449,7 @@
             }
         },
         "label": {
-            "snd_autorply_users": "Enviar resposta automática aos usuários que não tem permitido me convidar",
+            "snd_autorply_users": "Enviar uma resposta automática aos utilizadores que não têm permissão para me convidar",
             "invitation_response": "Resposta ao convite",
             "default_appt_dur": "Duração padrão dos compromissos",
             "default_calendar": "Calendário padrão",
@@ -465,8 +465,8 @@
             "span_time": "Período de tempo"
         },
         "invalid_email": "Não é um e-mail válido",
-        "permissions_note": "Os usuários abaixo devem fazer parte deste sistema de e-mail (zextras.com). Você pode usar o endereço de e-mail completo ou apenas o nome de usuário.",
-        "ical_note": "iCal da Apple pode ser configurado para acessar seus calendários usando o protocolo CalDAV. Quando esta opção for ativada, os calendários compartilhados são exibidos na aba de Delegação de conta iCal para que você possa delegar o acesso a seus calendários a outros usuários."
+        "permissions_note": "Os utilizadores abaixo devem fazer parte deste sistema de e-mail. Pode usar o endereço de e-mail completo ou apenas o nome de utilizador.",
+        "ical_note": "iCal da Apple pode ser configurado para aceder aos seus calendários usando o protocolo CalDAV. Quando esta opção for ativada, os calendários partilhados são mostrados na aba de Delegação de conta iCal para que possa delegar o acesso aos seus calendários a outros utilizadores."
     },
     "share": {
         "options": {
@@ -478,20 +478,20 @@
             },
             "share_calendar_with": {
                 "external_guests": "Convidados externos (apenas visualizar)",
-                "internal_users_groups": "Usuários ou grupos internos",
+                "internal_users_groups": "Utilizadores ou grupos internos",
                 "public": "Público (apenas ver, senha não requerida)"
             }
         },
         "label": {
             "send_notification": "Enviar notificação sobre este compartilhamento",
-            "allow_to_see_private_appt": "Permitir que os usuários vejam meus compromissos particulares"
+            "allow_to_see_private_appt": "Permitir que os utilizadores vejam os meus compromissos particulares"
         },
         "placeholder": {
             "recipients_address": "Endereço de e-mail dos destinatários",
             "standard_message": "Adicionar nota à mensagem padrão"
         },
         "note": {
-            "share_note": "A mensagem padrão exibe seu nome, o nome do item compartilhado, as permissões concedidas aos destinatários e as informações de acesso."
+            "share_note": "A mensagem padrão mostra o seu nome, o nome do item partilhado, as permissões concedidas aos destinatários e as informações de acesso."
         }
     },
     "snackbar": {
@@ -500,7 +500,7 @@
         },
         "proposed_time_accepted": "Você aceitou a hora proposta",
         "url_copied": "{{title}} copiado",
-        "share_folder_success": "Calendário compartilhado com sucesso",
+        "share_folder_success": "Calendário partilhado com sucesso",
         "tag_applied": "Marcador \"{{tag}}\" aplicado",
         "tag_removed": "Marcador \"{{tag}}\" removido",
         "email_copied_to_clipboard": "E-mail copiado para a área de transferência."
@@ -535,7 +535,7 @@
     "button": {
         "customize_modal": "Abrir menú de personalização"
     },
-    "shared_folders": "Calendários compartilhados",
+    "shared_folders": "Calendários partilhados",
     "tooltip": {
         "add_attachments": "Adicionar anexos",
         "enable_disable_rich_text": "Ativar/desativar editor de texto enriquecido",
@@ -549,7 +549,7 @@
         "calendar_sharing_status_0": "Partilhado com {{count}} pessoa",
         "calendar_sharing_status_1": "Partilhado com {{count}} pessoas",
         "calendar_sharing_status_2": "Partilhado com {{count}} pessoas",
-        "calendar_sharing_status_one": "Compartilhado com 1 pessoa",
+        "calendar_sharing_status_one": "Partilhado com 1 pessoa",
         "revoke": "Revogar acesso",
         "resend": "Enviar notificação por e-mail sobre este compartilhamento",
         "edit": "Editar propriedades do compartilhamento",
@@ -572,7 +572,7 @@
         "to_date": "Até"
     },
     "share_invite_resent": "Convite de compartilhamento reenviado",
-    "shared_items": "Itens compartilhados",
+    "shared_items": "Itens partilhados",
     "shares_info": "Informações dos compartilhamentos",
     "write": "Escrever",
     "workflow": "Fluxo de trabalho",
@@ -686,7 +686,7 @@
         "close": "Fechar pré-visualização"
     },
     "recurrent_in_allday": "Você não pode arrastar um compromisso recorrente para um intervalo de dia inteiro",
-    "mountpoint_error": "Não foi possível adicionar na seção de Calendários compartilhados",
-    "mountpoint_success": "Adicionado com sucesso na seção de Calendários compartilhados",
-    "mountpoint_warning": "{{failed}} de {{total}} calendários não puderam ser adicionados aos Calendários compartilhados"
+    "mountpoint_error": "Não foi possível adicionar na seção de Calendários partilhados",
+    "mountpoint_success": "Adicionado com sucesso na seção de Calendários partilhados",
+    "mountpoint_warning": "{{failed}} de {{total}} calendários não puderam ser adicionados aos Calendários partilhados"
 }

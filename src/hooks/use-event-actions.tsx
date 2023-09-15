@@ -3,10 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { useContext, useMemo } from 'react';
+
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { omit } from 'lodash';
-import React, { useContext, useMemo } from 'react';
+
+import { useCalendarFolders } from './use-calendar-folders';
 import {
 	acceptAsTentativeItem,
 	acceptInvitationItem,
@@ -30,7 +33,6 @@ import {
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
-import { useCalendarFolders } from './use-calendar-folders';
 
 const getInstanceActionsItems = ({
 	event,
@@ -47,7 +49,11 @@ const getInstanceActionsItems = ({
 	copyEventItem({ event, invite, context }),
 	showOriginal({ event }),
 	applyTag({ event, context }),
-	...(!event.resource.iAmOrganizer && !event.isShared
+	...(!event.resource.iAmOrganizer &&
+	event.haveWriteAccess &&
+	((!!event.resource.calendar.owner &&
+		event.resource.calendar.owner !== event.resource.organizer.email) ||
+		!event.resource.calendar.owner)
 		? [
 				acceptInvitationItem({ event, context }),
 				declineInvitationItem({ event, context }),
@@ -78,7 +84,11 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(!event.resource.iAmOrganizer && !event.isShared
+				...(!event.resource.iAmOrganizer &&
+				event.haveWriteAccess &&
+				((!!event.resource.calendar.owner &&
+					event.resource.calendar.owner !== event.resource.organizer.email) ||
+					!event.resource.calendar.owner)
 					? [
 							acceptInvitationItem({ event, context }),
 							declineInvitationItem({ event, context }),
@@ -107,7 +117,11 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event: seriesEvent, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(!event.resource.iAmOrganizer && !event.isShared
+				...(!event.resource.iAmOrganizer &&
+				event.haveWriteAccess &&
+				((!!event.resource.calendar.owner &&
+					event.resource.calendar.owner !== event.resource.organizer.email) ||
+					!event.resource.calendar.owner)
 					? [
 							acceptInvitationItem({ event: seriesEvent, context }),
 							declineInvitationItem({ event: seriesEvent, context }),

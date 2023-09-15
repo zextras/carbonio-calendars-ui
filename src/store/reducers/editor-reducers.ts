@@ -5,14 +5,15 @@
  */
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { isNil, union } from 'lodash';
+
 import type { Editor, IdentityItem, Room } from '../../types/editor';
 import type { EventResourceCalendar } from '../../types/event';
 import type { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
 import type { EditorSlice } from '../../types/store/store';
 
-type OrganizerPayload = {
+type SenderPayload = {
 	id: string | undefined;
-	organizer: IdentityItem;
+	sender: IdentityItem;
 };
 
 type TitlePayload = {
@@ -106,25 +107,23 @@ export const editEditorAttachmentsReducer = (
 	{ editors }: EditorSlice,
 	{ payload }: PayloadAction<AttachmentFilesPayload>
 ): void => {
-	if (payload?.id) {
-		if (editors?.[payload?.id]) {
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].attachmentFiles = payload.attachmentFiles;
-			// eslint-disable-next-line no-param-reassign
-			editors[payload.id].attach = {
-				...payload.attach,
-				aid: union(editors[payload.id]?.attach?.aid ?? [], payload?.attach?.aid ?? [])
-			};
-		}
+	if (payload?.id && editors?.[payload?.id]) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].attachmentFiles = payload.attachmentFiles;
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].attach = {
+			...payload.attach,
+			aid: union(editors[payload.id]?.attach?.aid ?? [], payload?.attach?.aid ?? [])
+		};
 	}
 };
-export const editOrganizerReducer = (
+export const editSenderReducer = (
 	{ editors }: EditorSlice,
-	{ payload }: PayloadAction<OrganizerPayload>
+	{ payload }: PayloadAction<SenderPayload>
 ): void => {
-	if (payload?.id && editors?.[payload?.id]?.organizer && payload?.organizer) {
+	if (payload?.id && editors?.[payload?.id]?.sender && payload?.sender) {
 		const editor = editors[payload.id];
-		editor.organizer = payload.organizer;
+		editor.sender = payload.sender;
 	}
 };
 
