@@ -271,13 +271,14 @@
             "calendar_restored": "Kalender berhasil dipulihkan",
             "appointment_permanently_deleted": "Janji temu dihapus permanen",
             "calendar_edits_saved": "Hasil edit disimpan dengan benar",
-            "series_deleted": "Seri berhasil dihapus. Peserta akan menerima notifikasi pembatalan.",
+            "series_deleted": "Seri dipindahkan ke sampah. Peserta akan menerima notifikasi pembatalan.",
             "some_link_copying_error": "Tampaknya ada masalah saat membuat url publik untuk beberapa file, coba lagi",
             "some_att_add_fails": "Tampaknya ada masalah saat menambahkan beberapa lampiran, coba lagi",
             "link_copying_error": "Tampaknya ada masalah saat membuat tautan publik, coba lagi",
             "att_err_adding": "Tampaknya ada masalah saat menambahkan lampiran, coba lagi",
             "all_link_copied": "Tautan publik berhasil disalin",
-            "all_att_added": "Lampiran berhasil ditambahkan"
+            "all_att_added": "Lampiran berhasil ditambahkan",
+            "series_deleted_no_notification": "Seri dipindahkan ke sampah."
         },
         "invite_has_no_message": "Undangan ini tidak berisi pesan teks",
         "invited_you": "mengundang Anda ke acara",
@@ -636,5 +637,7 @@
     "recurrent_in_allday": "Anda tidak dapat menyeret janji temu berulang di semua slot hari",
     "mountpoint_error": "Berbagi tidak bisa ditambahkan ke bagian Kalender Bersama",
     "mountpoint_success": "Berbagi berhasil ditambahkan ke bagian Kalender Bersama",
-    "mountpoint_warning": "{{failed}} dari {{total}} kalender bersama tidak bisa ditambahkan ke Kalender Bersama"
+    "mountpoint_warning": "{{failed}} dari {{total}} kalender bersama tidak bisa ditambahkan ke Kalender Bersama",
+    "attendee_unavailable": "Peserta tidak tersedia pada waktu acara yang dipilih",
+    "attendees_unavailable": "Satu peserta atau lebih tidak tersedia di waktu acara yang dipilih"
 }
