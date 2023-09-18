@@ -58,7 +58,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 			}
 		];
 		folderAction({ id: folder.id, op: 'grant', changes: { grant: grants } }).then((res) => {
-			if (!res.Fault) {
+			if (!res?.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
