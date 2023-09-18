@@ -56,7 +56,7 @@ export const folderAction = async ({
 		};
 		return batchRequest(body);
 	}
-	if (changes?.grant?.length > 1) {
+	if (changes?.grant?.length) {
 		const body: FolderActionRequest = {
 			_jsns: 'urn:zimbra',
 			onerror: 'continue',
@@ -82,7 +82,7 @@ export const folderAction = async ({
 			]
 		};
 		const res = await batchRequest(body);
-		if (op === 'grant' && !res.Fault && res.FolderActionResponse.length > 1) {
+		if (op === 'grant' && !res?.Fault && res?.FolderActionResponse?.length > 1) {
 			forEach(res.FolderActionResponse, (response) => {
 				if (!response.Fault) {
 					const currentUserGrant = find(changes.grant, ['d', response?.action?.d]);
