@@ -143,11 +143,12 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const allCalendars = useFoldersArray();
 
 	const iconColor = setCalendarColor({ color: folder.color, rgb: folder.rgb });
+	const [t] = useTranslation();
+	const colors = useMemo(() => getStatusItems(t), [t]);
 
 	const [inputValue, setInputValue] = useState(folder.name || '');
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const checked = useMemo(() => folder.checked, [folder]);
 
@@ -156,7 +157,6 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const [hovered, setHovered] = useState({});
 
-	const colors = useMemo(() => getStatusItems(t), [t]);
 	const onMouseEnter = useCallback((item) => {
 		setHovered(item);
 	}, []);
@@ -198,6 +198,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const [selectedColor, setSelectedColor] = useState<SelectItem[] | number | string | null>(
 		defaultColor?.value
 	);
+
 	const defaultChecked = false;
 	const onConfirm = useCallback(() => {
 		if (inputValue) {
@@ -388,7 +389,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					label={t('label.calendar_color', 'Calendar color')}
 					onChange={setSelectedColor}
 					items={colors}
-					selection={defaultColor}
+					defaultSelection={defaultColor}
 					LabelFactory={LabelFactory}
 				/>
 			</Container>

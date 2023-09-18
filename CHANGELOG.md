@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.6](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.5...v1.4.6) (2023-09-18)
+
+
+### Bug Fixes
+
+* change color inside edit calendar modal ([3138021](https://github.com/zextras/carbonio-calendars-ui/commit/3138021af3c7f97090e87de4804327c677a7f643))
+* change color inside edit calendar modal ([19da197](https://github.com/zextras/carbonio-calendars-ui/commit/19da19769e84ecba5c706d13be3e7f8ca6a6336c))
+
 ### [1.4.5](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.4...v1.4.5) (2023-09-14)
 
 ### [1.4.4](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.3...v1.4.4) (2023-08-31)

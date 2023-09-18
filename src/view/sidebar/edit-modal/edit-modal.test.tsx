@@ -84,6 +84,23 @@ const setupInterceptor = (): Promise<any> =>
 				);
 			})
 		);
+
+		getSetupServer().use(
+			rest.post('/service/soap/BatchRequest', async (req, res, ctx) => {
+				if (!req) {
+					reject(new Error('Empty request'));
+				}
+				const cal = (await req.json()).Body.BatchRequest.FolderActionRequest;
+				resolve(cal);
+				return res(
+					ctx.json({
+						Body: {
+							FolderActionResponse: cal
+						}
+					})
+				);
+			})
+		);
 	});
 
 describe('edit modal', () => {
@@ -122,10 +139,10 @@ describe('edit modal', () => {
 			expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
 		});
 		await waitFor(() => {
-			expect(interceptorResponse.action.grant[0].perm).toBe('rwidxa');
+			expect(interceptorResponse[1].action.grant[0].perm).toBe('rwidxa');
 		});
 		await waitFor(() => {
-			expect(interceptorResponse.action.grant[0].d).toBe('test1@email.it');
+			expect(interceptorResponse[1].action.grant[0].d).toBe('test1@email.it');
 		});
 	});
 	test('If the folder is shared with someone, the shared list should be visible', async () => {

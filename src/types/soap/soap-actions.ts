@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Grant } from '@zextras/carbonio-shell-ui';
+
 export type SearchRequestProps = {
 	start: number;
 	end: number;
@@ -20,6 +22,7 @@ export type FolderAction = {
 	color?: number;
 	f?: string;
 	zid?: string;
+	grant?: Grant | Grant[];
 };
 
 type GenericRequest = {
