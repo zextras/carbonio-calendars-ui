@@ -59,10 +59,28 @@ export type EventPropType = {
 	end: Date | Moment;
 };
 
-const getLocalTime = (date: number | DateType, timezone?: string): number =>
-	timezone
-		? moment(date).valueOf() + moment(date).tz(timezone).utcOffset() * 60_000
-		: moment(date).valueOf();
+export const getLocalTime = (
+	date: number | DateType,
+	timezone?: string,
+	localTimezone?: string
+): number => {
+	const dateValueOf = moment(date).valueOf();
+
+	if (timezone) {
+		const dateInTimezone = moment(date).tz(timezone);
+		const localOffset = localTimezone
+			? moment().tz(localTimezone).utcOffset()
+			: moment().utcOffset();
+		const appointmentOffset = dateInTimezone.utcOffset();
+		const offSetFromUTC = appointmentOffset - localOffset;
+		const offSet = offSetFromUTC * 60_000;
+		return dateValueOf + offSet;
+	}
+	return dateValueOf;
+};
+
+export const isTimezoneDifferentFromLocal = (date: number | DateType, timezone: string): boolean =>
+	moment(date).tz(timezone).utcOffset() !== moment(date).utcOffset();
 
 const setEditorDate = ({
 	editorType,
@@ -81,10 +99,7 @@ const setEditorDate = ({
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
 			const convertedStartDate = getLocalTime(invite?.start?.u, invite?.tz);
 			const convertedEndDate = getLocalTime(invite?.end?.u, invite?.tz);
-			if (
-				invite.tz &&
-				moment(invite?.start?.u).tz(invite.tz).utcOffset() !== moment(invite?.start?.u).utcOffset()
-			) {
+			if (invite.tz && isTimezoneDifferentFromLocal(invite.start.u, invite.tz)) {
 				return {
 					start: event?.allDay
 						? moment(convertedStartDate)?.startOf('date').valueOf()
@@ -103,8 +118,7 @@ const setEditorDate = ({
 		}
 		const convertedStartDate = getLocalTime(event.start, invite?.tz);
 		const convertedEndDate = getLocalTime(event.end, invite?.tz);
-		return invite?.tz &&
-			moment(event?.start).tz(invite.tz).utcOffset() !== moment(event?.start).utcOffset()
+		return invite?.tz && isTimezoneDifferentFromLocal(event.start, invite.tz)
 			? {
 					start: event?.allDay
 						? moment(convertedStartDate)?.startOf('date').valueOf()

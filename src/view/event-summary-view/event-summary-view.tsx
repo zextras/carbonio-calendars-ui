@@ -4,22 +4,25 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useEffect, useMemo } from 'react';
+
 import { Container, Divider, Popover } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith } from 'lodash';
+import moment from 'moment';
+
+import { ActionsButtonsRow } from './actions-buttons-row';
+import { CalendarInfoRow } from './calendar-info-row';
+import { DescriptionFragmentRow } from './description-fragment-row';
+import { LocationRow } from './location-row';
+import { NeverSentWarningRow } from './never-sent-warning-row';
+import { ParticipantsRow } from './participants-row';
+import TagsRow from './tags-row';
+import { TimeInfoRow } from './time-info-row';
+import { TitleRow } from './title-row';
+import { VirtualRoomRow } from './virtual-room-row';
+import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
-import { TitleRow } from './title-row';
-import { NeverSentWarningRow } from './never-sent-warning-row';
-import { CalendarInfoRow } from './calendar-info-row';
-import { LocationRow } from './location-row';
-import { ParticipantsRow } from './participants-row';
-import { DescriptionFragmentRow } from './description-fragment-row';
-import { ActionsButtonsRow } from './actions-buttons-row';
-import { TimeInfoRow } from './time-info-row';
-import { VirtualRoomRow } from './virtual-room-row';
-import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
-import TagsRow from './tags-row';
 
 type EventSummaryProps = {
 	anchorRef: React.RefObject<HTMLElement>;
@@ -37,8 +40,8 @@ export const EventSummaryView = ({
 	invite
 }: EventSummaryProps): ReactElement | null => {
 	const timeData = useMemo(
-		() =>
-			omitBy(
+		() => ({
+			...omitBy(
 				{
 					allDay: event.allDay,
 					start: event.start,
@@ -46,7 +49,9 @@ export const EventSummaryView = ({
 				},
 				isNil
 			),
-		[event.allDay, event.end, event.start]
+			...{ timezone: invite?.tz ?? moment.tz.guess() }
+		}),
+		[event.allDay, event.end, event.start, invite?.tz]
 	);
 
 	const locationData = useMemo(
