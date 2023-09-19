@@ -665,5 +665,7 @@
     "recurrent_in_allday": "Tekrarlanan randevuyu tüm gün alanına taşıyamazsınız",
     "mountpoint_success": "Paylaşılan Takvimler bölümüne paylaşım başarıyla eklendi",
     "mountpoint_error": "Paylaşılan Takvimler bölümüne paylaşım eklenemedi",
-    "mountpoint_warning": "{{total}} paylaşılan takvimden {{failed}} takvim Paylaşılan Takvimler bölümüne eklenemedi"
+    "mountpoint_warning": "{{total}} paylaşılan takvimden {{failed}} takvim Paylaşılan Takvimler bölümüne eklenemedi",
+    "attendee_unavailable": "Seçilen etkinlik saatinde katılımcı yok",
+    "attendees_unavailable": "Seçilen etkinlik saatinde bir veya daha fazla katılımcı yok"
 }
