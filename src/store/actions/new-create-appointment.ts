@@ -7,8 +7,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
+import { HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../../constants';
 
-import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { Editor } from '../../types/editor';
 
@@ -42,7 +42,7 @@ const setResourceDate = ({
 		  };
 };
 
-const generateParticipantInformation = (resource: Editor): Array<Participants> => {
+export const generateParticipantInformation = (resource: Editor): Array<Participants> => {
 	const sender =
 		resource.organizer.address === resource?.sender?.address &&
 		resource.organizer.label === resource.sender.label &&
@@ -97,7 +97,7 @@ function generateHtmlBodyRequest(app: Editor): any {
 		: '';
 	const defaultMessage =
 		app?.room && !includes(app.richText, ROOM_DIVIDER) ? virtualRoomHtml : meetingHtml;
-	return `<html><body id='htmlmode'>${defaultMessage}${app.richText}`;
+	return `${HTML_OPENING_TAG}${defaultMessage}${app.richText}${HTML_CLOSING_TAG}`;
 }
 
 function generateBodyRequest(app: Editor): any {
@@ -108,19 +108,19 @@ function generateBodyRequest(app: Editor): any {
 		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
 
 	const virtualRoomMessage = app?.room?.label
-		? `-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\n${
+		? `${ROOM_DIVIDER}\n${
 				app.organizer.fullName ?? ''
 		  } have invited you to a virtual meeting on Carbonio Chats system!\n\nJoin the meeting now on ${
 				app.room.label
 		  }\n\n${
 				app.room.link
-		  } \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::- \n`
+		  } \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n${ROOM_DIVIDER}\n`
 		: '';
-	const meetingMessage = `-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\n${
+	const meetingMessage = `${ROOM_DIVIDER}\n${
 		app.organizer.fullName ?? ''
 	} have invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: "${
 		app.organizer.fullName
-	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-`;
+	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n${ROOM_DIVIDER}`;
 	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
 
 	return `${defaultMessage}\n${app.plainText}`;

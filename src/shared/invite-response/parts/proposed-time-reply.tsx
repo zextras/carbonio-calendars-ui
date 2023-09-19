@@ -3,7 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { map } from 'lodash';
 import React, { FC, ReactElement, useCallback, useContext } from 'react';
+
 import {
 	SnackbarManagerContext,
 	Container,
@@ -11,36 +13,41 @@ import {
 	ButtonOld as Button,
 	Divider
 } from '@zextras/carbonio-design-system';
-import { t, useIntegratedFunction, useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { normalizeInvite } from '../../../normalizations/normalize-invite';
-import { appointmentToEvent } from '../../../hooks/use-invite-to-event';
+import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
+
+import { generateEditor } from '../../../commons/editor-generator';
 import { getAppointmentAndInvite } from '../../../commons/get-appointment';
-import { modifyAppointmentRequest } from '../../../store/actions/modify-appointment';
+import { useCalendarFolders } from '../../../hooks/use-calendar-folders';
+import { appointmentToEvent } from '../../../hooks/use-invite-to-event';
 import { normalizeAppointmentFromCreation } from '../../../normalizations/normalize-appointments';
+import { normalizeInvite } from '../../../normalizations/normalize-invite';
+import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../../../store/redux/hooks';
-import { Invite } from '../../../types/store/invite';
+import { updateEditor } from '../../../store/slices/editor-slice';
 
 type ProposedTimeReply = {
-	invite: Invite;
 	id: string;
 	inviteId: string;
-	moveToTrash: () => void;
+	moveToTrash?: () => void;
 	title: string;
 	fragment: string;
-	to: { address: string; fullName: string; name: string; type: string };
+	start: number;
+	end: number;
+	to: Array<{ address: string; fullName: string; name: string; type: string }>;
 };
 const ProposedTimeReply: FC<ProposedTimeReply> = ({
 	id,
 	inviteId,
-	invite,
 	moveToTrash,
 	title,
 	fragment,
+	start,
+	end,
 	to
 }): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const dispatch = useAppDispatch();
-	const accounts = useUserAccounts();
+	const calendarFolders = useCalendarFolders();
 	const [openComposer, available] = useIntegratedFunction('compose');
 	const accept = useCallback(() => {
 		getAppointmentAndInvite({ aptId: id, inviteId }).then((res) => {
@@ -50,38 +57,39 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				? normalizeInvite(_invite)
 				: normalizeInvite({ ..._invite, inv: appointment.inv });
 			const requiredEvent = appointmentToEvent(normalizedInvite, normalizedAppointment.id);
-
-			dispatch(
-				modifyAppointmentRequest({
-					appt: requiredEvent,
-					invite: normalizedInvite,
-					mailInvite: invite,
-					account: accounts[0]
-				})
-			).then((result) => {
-				if (result.type.includes('fulfilled')) {
-					createSnackbar({
-						key: 'proposedTimeAccepted',
-						replace: true,
-						type: 'success',
-						hideButton: true,
-						label: t('snackbar.proposed_time_accepted', 'You accepted the proposed time'),
-						autoHideTimeout: 3000
-					});
-				} else {
-					createSnackbar({
-						key: 'proposedTimeAccepted',
-						replace: true,
-						type: 'error',
-						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000
-					});
+			const editor = generateEditor({
+				event: requiredEvent,
+				invite: normalizedInvite,
+				context: {
+					attendees: map(normalizedInvite.attendees, (attendee) => ({ email: attendee.a })),
+					start,
+					end,
+					folders: calendarFolders,
+					dispatch,
+					panel: false
 				}
-				moveToTrash();
+			});
+
+			dispatch(modifyAppointment({ draft: false, editor })).then(({ payload }) => {
+				const { response, error } = payload;
+				if (response && !error) {
+					dispatch(updateEditor({ id: payload.editor.id, editor: payload.editor }));
+				}
+				createSnackbar({
+					key: error ? 'proposedTimeDeclined' : 'proposedTimeAccepted',
+					replace: true,
+					type: error ? 'error' : 'success',
+					hideButton: true,
+					label: error
+						? t('label.error_try_again', 'Something went wrong, please try again')
+						: t('snackbar.proposed_time_accepted', 'You accepted the proposed time'),
+					autoHideTimeout: 3000
+				});
+				moveToTrash?.();
 			});
 		});
-	}, [dispatch, id, inviteId, invite, accounts, moveToTrash, createSnackbar]);
+	}, [id, inviteId, start, end, calendarFolders, dispatch, createSnackbar, moveToTrash]);
+
 	const decline = useCallback(() => {
 		if (available)
 			openComposer(null, {
@@ -90,6 +98,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				to
 			});
 	}, [available, openComposer, title, fragment, to]);
+
 	return (
 		<>
 			<Container

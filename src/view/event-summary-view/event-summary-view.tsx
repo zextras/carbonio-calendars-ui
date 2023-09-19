@@ -19,7 +19,7 @@ import TagsRow from './tags-row';
 import { TimeInfoRow } from './time-info-row';
 import { TitleRow } from './title-row';
 import { VirtualRoomRow } from './virtual-room-row';
-import { ROOM_DIVIDER } from '../../commons/body-message-renderer';
+import { ROOM_DIVIDER } from '../../constants';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
