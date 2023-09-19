@@ -650,7 +650,6 @@
         "yangon": "{{value}} Yangon",
         "yerevan": "{{value}} Yerevan"
     },
-    "timezone_tooltip": "Date and time on creation timezone:",
     "tooltip": {
         "add_attachments": "Add attachments",
         "calendar_sharing_status": "Shared with {{count}} people",
