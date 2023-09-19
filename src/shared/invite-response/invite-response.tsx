@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, ReactElement, useMemo, useEffect, useCallback, useState } from 'react';
+
 import {
 	Container,
 	Row,
@@ -13,24 +14,24 @@ import {
 	Tooltip,
 	Chip
 } from '@zextras/carbonio-design-system';
-import { find } from 'lodash';
-import styled from 'styled-components';
+import { addBoard, getAction, Action, t, Board, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { filter, find } from 'lodash';
 import moment from 'moment';
+import styled from 'styled-components';
 import 'moment-timezone';
-import { addBoard, getAction, Action, t, Board } from '@zextras/carbonio-shell-ui';
-import { generateEditor } from '../../commons/editor-generator';
-import { useCalendarFolders } from '../../hooks/use-calendar-folders';
-import { useAppDispatch } from '../../store/redux/hooks';
+
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
-import { normalizeInvite } from '../../normalizations/normalize-invite';
-import { inviteToEvent } from '../../hooks/use-invite-to-event';
-import { getInvite } from '../../store/actions/get-invite';
-import { CALENDAR_ROUTE } from '../../constants';
 import BodyMessageRenderer from '../../commons/body-message-renderer';
-import { useInvite } from '../../hooks/use-invite';
-import { StoreProvider } from '../../store/redux';
+import { generateEditor } from '../../commons/editor-generator';
+import { CALENDAR_ROUTE } from '../../constants';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
+import { inviteToEvent } from '../../hooks/use-invite-to-event';
+import { normalizeInvite } from '../../normalizations/normalize-invite';
+import { getInvite } from '../../store/actions/get-invite';
+import { StoreProvider } from '../../store/redux';
+import { useAppDispatch } from '../../store/redux/hooks';
 
 /**
    @todo: haveEquipment - momentary variables to dynamize
@@ -57,17 +58,11 @@ const LinkText = styled(Text)`
 `;
 
 type InviteResponse = {
-	inviteId: string;
-	invite: any;
-	participationStatus: string;
-	compNum: string;
-	method: string;
-	moveToTrash: () => void;
-	mailMsg: any;
-	onLoadChange: () => void;
-	to: { address: string; fullName: string; name: string; type: string };
-	parent: string;
-	isAttendee: boolean;
+	mailMsg: any & {
+		participants: { address: string; fullName: string; name: string; type: string };
+	};
+	moveToTrash?: () => void;
+	onLoadChange?: () => void;
 };
 
 export type Participant = {
@@ -80,64 +75,76 @@ export type Participant = {
 };
 
 const InviteResponse: FC<InviteResponse> = ({
-	inviteId,
-	participationStatus,
-	invite,
-	compNum,
-	method,
-	moveToTrash,
 	mailMsg,
-	onLoadChange,
-	to,
-	parent,
-	isAttendee
+	moveToTrash,
+	onLoadChange
 }): ReactElement => {
 	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
+	const account = useUserAccount();
+	const invite = normalizeInvite({ ...mailMsg, inv: mailMsg.invite });
+
+	const isAttendee = useMemo(
+		() => invite?.organizer?.a !== account.name,
+		[account.name, invite?.organizer?.a]
+	);
+
+	const to = useMemo(
+		() =>
+			filter(
+				mailMsg.participants as [{ address: string; fullName: string; name: string; type: string }],
+				{ type: 'f' }
+			),
+		[mailMsg?.participants]
+	);
+
+	const method = mailMsg.invite[0]?.comp[0].method;
+
+	const { parent } = mailMsg;
+
+	const inviteId = invite.apptId ? `${invite.apptId}-${invite.id}` : invite.id;
+
+	const participationStatus = mailMsg?.invite?.[0]?.replies?.[0].reply?.[0]?.ptst ?? '';
+
 	useEffect(() => {
-		if (!mailMsg.read) {
+		if (!mailMsg.read && onLoadChange) {
 			onLoadChange();
 		}
 	}, [mailMsg.read, onLoadChange]);
-	const fullInvite = useInvite(mailMsg?.id);
 
 	const apptTime = useMemo(() => {
-		if (invite[0]?.comp[0]?.allDay) {
-			return moment(invite[0]?.comp[0].s[0].d).format(`dddd, DD MMM, YYYY`);
+		if (invite.allDay) {
+			return moment(invite.start.d).format(`dddd, DD MMM, YYYY`);
 		}
-		return moment(invite[0]?.comp[0].s[0].u).format(
-			`dddd, DD MMM, YYYY [${moment(invite[0]?.comp[0].s[0].u).format(`HH:mm`)}]-[${moment(
-				invite[0]?.comp[0].e[0].u
+		return moment(invite.start.u).format(
+			`dddd, DD MMM, YYYY [${moment(invite.start.u).format(`HH:mm`)}]-[${moment(
+				invite.end.u
 			).format(`HH:mm`)}]`
 		);
 	}, [invite]);
 
-	const room = useMemo(
-		() => find(invite[0]?.comp[0].xprop, ['name', CRB_XPROPS.MEETING_ROOM]),
-		[invite]
-	);
-	const roomName = find(room?.xparam ?? {}, ['name', CRB_XPARAMS.ROOM_NAME])?.value;
-	const roomLink = find(room?.xparam ?? {}, ['name', CRB_XPARAMS.ROOM_LINK])?.value;
+	const room = useMemo(() => find(invite.xprop, ['name', CRB_XPROPS.MEETING_ROOM]), [invite]);
+	const roomName = find(room?.xparam, ['name', CRB_XPARAMS.ROOM_NAME])?.value;
+	const roomLink = find(room?.xparam, ['name', CRB_XPARAMS.ROOM_LINK])?.value;
 
 	const apptTimeZone = useMemo(
-		() =>
-			`${moment(invite[0]?.comp[0].s[0].u).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
+		() => `${moment(invite.start.u).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
 		[invite]
 	);
 
 	const [maxReqParticipantsToShow, setMaxReqParticipantsToShow] = useState(4);
 	const requiredParticipants = useMemo(
-		() => invite[0]?.comp[0].at.filter((user: Participant) => user.role === 'REQ'),
+		() => invite.attendees.filter((user: Participant) => user.role === 'REQ'),
 		[invite]
 	);
 
 	const [maxOptParticipantsToShow, setMaxOptParticipantsToShow] = useState(5);
 	const optionalParticipants = useMemo(
-		() => invite[0]?.comp[0].at.filter((user: Participant) => user.role === 'OPT'),
+		() => invite.attendees.filter((user: Participant) => user.role === 'OPT'),
 		[invite]
 	);
 
-	const replyMsg = (user: Participant): void => {
+	const replyMsg = (user: { a?: string; d?: string }): void => {
 		const obj = {
 			email: {
 				email: {
@@ -147,10 +154,11 @@ const InviteResponse: FC<InviteResponse> = ({
 			firstName: user.d ?? user.d ?? user.a,
 			middleName: ''
 		};
-		// disabled because click expect a click event
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		mailToContact(obj)?.click();
+
+		mailToContact(obj)
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			?.onClick?.();
 	};
 
 	const proposeNewTimeCb = useCallback(() => {
@@ -165,6 +173,12 @@ const InviteResponse: FC<InviteResponse> = ({
 						dispatch,
 						folders: calendarFolders,
 						isProposeNewTime: true,
+						attendees: [
+							{
+								email: requiredEvent.resource.organizer.a ?? requiredEvent.resource.organizer.url,
+								id: requiredEvent.resource.organizer.a ?? requiredEvent.resource.organizer.url
+							}
+						],
 						panel: false,
 						disabled: {
 							title: true,
@@ -181,8 +195,7 @@ const InviteResponse: FC<InviteResponse> = ({
 							private: true,
 							allDay: true,
 							reminder: true,
-							recurrence: true,
-							composer: true
+							recurrence: true
 						}
 					}
 				});
@@ -207,14 +220,14 @@ const InviteResponse: FC<InviteResponse> = ({
 					) : (
 						<>
 							<Text weight="regular" size="large" style={{ fontSize: '1.125rem' }}>
-								{`${invite[0]?.comp[0]?.or?.d || invite[0]?.comp[0]?.or?.a} ${t(
+								{`${invite.organizer?.d ?? invite.organizer?.a} ${t(
 									'message.invited_you',
 									'invited you to '
 								)}`}
 							</Text>
 							&nbsp;
 							<Text weight="bold" size="large" style={{ fontSize: '1.125rem' }}>
-								{mailMsg.subject ? mailMsg.subject : invite[0]?.comp[0].name}
+								{mailMsg.subject ? mailMsg.subject : invite?.name}
 							</Text>
 						</>
 					)}
@@ -235,13 +248,14 @@ const InviteResponse: FC<InviteResponse> = ({
 					? parent !== '5' && (
 							// eslint-disable-next-line react/jsx-indent
 							<ProposedTimeReply
-								invite={invite}
-								id={invite[0]?.comp?.[0]?.apptId}
+								id={invite?.apptId}
 								inviteId={inviteId}
+								start={invite?.start?.u}
+								end={invite?.end?.u}
 								moveToTrash={moveToTrash}
 								title={mailMsg.subject}
 								to={to}
-								fragment={invite[0]?.comp?.[0]?.fr}
+								fragment={invite?.fragment}
 							/>
 					  )
 					: isAttendee && (
@@ -249,14 +263,12 @@ const InviteResponse: FC<InviteResponse> = ({
 							<InviteReplyPart
 								inviteId={inviteId}
 								participationStatus={participationStatus}
-								invite={invite}
-								compNum={compNum}
 								proposeNewTime={proposeNewTimeCb}
 								parent={parent}
 							/>
 					  )}
 
-				{invite[0]?.comp[0].loc && (
+				{invite?.location && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large' }}>
 						<Tooltip placement="left" label={t('tooltip.location', 'Location')}>
 							<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
@@ -265,9 +277,9 @@ const InviteResponse: FC<InviteResponse> = ({
 						</Tooltip>
 
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<Tooltip placement="right" label={invite[0]?.comp[0]?.or?.a}>
+							<Tooltip placement="right" label={invite?.organizer?.a}>
 								<Text size="medium" overflow="break-word">
-									{invite[0]?.comp[0].loc}
+									{invite?.location}
 								</Text>
 							</Tooltip>
 						</Row>
@@ -332,14 +344,14 @@ const InviteResponse: FC<InviteResponse> = ({
 							</Row>
 
 							<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
-								{invite[0]?.comp[0]?.or?.d ? (
-									<Tooltip placement="top" label={invite[0]?.comp[0]?.or?.a} maxWidth="100%">
+								{invite?.organizer?.d ? (
+									<Tooltip placement="top" label={invite?.organizer?.a} maxWidth="100%">
 										<div>
 											<Chip
-												avatarLabel={invite[0]?.comp[0]?.or?.d}
+												avatarLabel={invite?.organizer?.d}
 												label={
 													<>
-														<Text size="small">{invite[0]?.comp[0]?.or?.d}</Text>&nbsp;
+														<Text size="small">{invite?.organizer?.d}</Text>&nbsp;
 														<Text size="small" color="secondary">
 															({t('message.organizer')})
 														</Text>
@@ -353,7 +365,7 @@ const InviteResponse: FC<InviteResponse> = ({
 														label: t('message.send_email'),
 														type: 'button',
 														icon: 'EmailOutline',
-														onClick: () => replyMsg(invite[0]?.comp[0]?.or)
+														onClick: () => replyMsg(invite?.organizer)
 													}
 												]}
 											/>
@@ -361,10 +373,10 @@ const InviteResponse: FC<InviteResponse> = ({
 									</Tooltip>
 								) : (
 									<Chip
-										avatarLabel={invite[0]?.comp[0]?.or?.a}
+										avatarLabel={invite?.organizer?.a}
 										label={
 											<>
-												<Text>{invite[0]?.comp[0]?.or?.a}</Text>&nbsp;
+												<Text>{invite?.organizer?.a}</Text>&nbsp;
 												<Text color="secondary">({t('message.organizer')})</Text>
 											</>
 										}
@@ -376,7 +388,7 @@ const InviteResponse: FC<InviteResponse> = ({
 												label: t('message.send_email'),
 												type: 'button',
 												icon: 'EmailOutline',
-												onClick: () => replyMsg(invite[0]?.comp[0]?.or)
+												onClick: () => replyMsg(invite?.organizer)
 											}
 										]}
 									/>
@@ -515,29 +527,22 @@ const InviteResponse: FC<InviteResponse> = ({
 						</Row>
 					)}
 				</Row>
-
-				{fullInvite && (
-					<Row
-						width="100%"
-						crossAlignment="flex-start"
-						mainAlignment="flex-start"
-						padding={{ bottom: 'large' }}
-					>
-						<Row width="100%" padding={{ vertical: 'medium' }}>
-							<Divider />
-						</Row>
-						<Row padding={{ right: 'small' }}>
-							<Icon size="large" icon="MessageSquareOutline" />
-						</Row>
-						<Row takeAvailableSpace mainAlignment="flex-start">
-							<BodyMessageRenderer
-								fullInvite={fullInvite}
-								inviteId={inviteId}
-								parts={fullInvite?.parts}
-							/>
-						</Row>
+				<Row
+					width="100%"
+					crossAlignment="flex-start"
+					mainAlignment="flex-start"
+					padding={{ bottom: 'large' }}
+				>
+					<Row width="100%" padding={{ vertical: 'medium' }}>
+						<Divider />
 					</Row>
-				)}
+					<Row padding={{ right: 'small' }}>
+						<Icon size="large" icon="MessageSquareOutline" />
+					</Row>
+					<Row takeAvailableSpace mainAlignment="flex-start">
+						<BodyMessageRenderer fullInvite={invite} inviteId={inviteId} parts={invite?.parts} />
+					</Row>
+				</Row>
 			</Container>
 		</InviteContainer>
 	);

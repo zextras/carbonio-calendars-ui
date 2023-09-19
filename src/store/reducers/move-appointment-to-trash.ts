@@ -5,6 +5,7 @@
  */
 import { PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import { filter } from 'lodash';
+
 import {
 	AppointmentsSlice,
 	FulfilledResponse,
@@ -12,11 +13,12 @@ import {
 	PendingResponse,
 	RejectedResponse
 } from '../../types/store/store';
-import { ModifyAppointmentRejectedType } from '../actions/modify-appointment';
 import {
 	MoveAppointmentToTrashArguments,
 	MoveAppointmentToTrashReturnType
 } from '../actions/move-appointment-to-trash';
+
+type ModifyAppointmentRejectedType = { error: boolean; m?: never; Fault: any };
 
 export const moveAppointmentToTrashPending = (
 	state: AppointmentsSlice,

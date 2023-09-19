@@ -7,17 +7,15 @@ import { soapFetch } from '@zextras/carbonio-shell-ui';
 
 export const getAppointmentAndInvite = async ({
 	aptId,
-	uid,
 	inviteId
 }: {
-	uid?: string;
 	aptId: string;
 	inviteId: string;
 }): Promise<{ appointment: any; invite: any }> => {
 	const result = (await soapFetch('Batch', {
 		GetAppointmentRequest: {
 			id: aptId,
-			uid,
+			includeContent: '1',
 			_jsns: 'urn:zimbraMail'
 		},
 		GetMsgRequest: {

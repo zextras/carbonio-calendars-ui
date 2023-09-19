@@ -5,14 +5,24 @@
  */
 import { createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
+
 import { AppointmentsSlice } from '../../types/store/store';
-import { moveAppointmentRequest } from '../actions/move-appointment';
-import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
-import { modifyAppointmentRequest } from '../actions/modify-appointment';
-import { searchAppointments } from '../actions/search-appointments';
 import { deleteAppointmentPermanent } from '../actions/delete-appointment-permanent';
 import { dismissApptReminder } from '../actions/dismiss-appointment-reminder';
+import { moveAppointmentRequest } from '../actions/move-appointment';
+import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
+import { searchAppointments } from '../actions/search-appointments';
 import { snoozeApptReminder } from '../actions/snooze-appointment-reminder';
+import {
+	deleteAppointmentPermanentlyFulfilled,
+	deleteAppointmentPermanentlyPending,
+	deleteAppointmentPermanentlyRejected
+} from '../reducers/delete-appointment-permanently';
+import {
+	dismissAppointmentFulfilled,
+	dismissAppointmentPending,
+	dismissAppointmentRejected
+} from '../reducers/dismiss-appointment';
 import { handleCreatedAppointmentsReducer } from '../reducers/handle-created-appointments';
 import { handleDeletedAppointmentsReducer } from '../reducers/handle-deleted-appointments';
 import { handleModifiedAppointmentsReducer } from '../reducers/handle-modified-appointments';
@@ -31,27 +41,12 @@ import {
 	searchAppointmentsPending,
 	searchAppointmentsRejected
 } from '../reducers/search-appointments';
-import { handleUpdateParticipationStatus } from '../reducers/update-participation-status';
-import {
-	deleteAppointmentPermanentlyFulfilled,
-	deleteAppointmentPermanentlyPending,
-	deleteAppointmentPermanentlyRejected
-} from '../reducers/delete-appointment-permanently';
-import {
-	dismissAppointmentFulfilled,
-	dismissAppointmentPending,
-	dismissAppointmentRejected
-} from '../reducers/dismiss-appointment';
 import {
 	snoozeApptReminderFulfilled,
 	snoozeApptReminderPending,
 	snoozeApptReminderRejected
 } from '../reducers/snooze-appointment';
-import {
-	handleModifyAppointmentPending,
-	handleModifyAppointmentFulfilled,
-	handleModifyAppointmentRejected
-} from '../reducers/modify-appointment';
+import { handleUpdateParticipationStatus } from '../reducers/update-participation-status';
 
 const initialState: AppointmentsSlice = {
 	status: 'init',
@@ -68,9 +63,6 @@ export const appointmentsSlice = createSlice({
 		handleDeletedAppointments: produce(handleDeletedAppointmentsReducer)
 	},
 	extraReducers: (builder) => {
-		builder.addCase(modifyAppointmentRequest.pending, handleModifyAppointmentPending);
-		builder.addCase(modifyAppointmentRequest.fulfilled, handleModifyAppointmentFulfilled);
-		builder.addCase(modifyAppointmentRequest.rejected, handleModifyAppointmentRejected);
 		builder.addCase(moveAppointmentToTrash.pending, moveAppointmentToTrashPending);
 		builder.addCase(moveAppointmentToTrash.rejected, moveAppointmentToTrashRejected);
 		builder.addCase(moveAppointmentToTrash.fulfilled, moveAppointmentToTrashFulfilled);
