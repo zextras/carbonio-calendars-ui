@@ -9,7 +9,7 @@ import { useGetEventTimezoneString } from './use-get-event-timezone';
 import { setupHook } from '../carbonio-ui-commons/test/test-setup';
 
 describe('useGetEventTimezone', () => {
-	const EuropeBerlinGMT = 'GMT +01:00 Europe/Berlin';
+	const europeBerlinGMT = 'GMT +01:00 Europe/Berlin';
 	test('When creation timezone is the same as local', () => {
 		const { result } = setupHook(useGetEventTimezoneString, {
 			initialProps: [
@@ -34,7 +34,7 @@ describe('useGetEventTimezone', () => {
 		expect(result.current.localTimeString).toStrictEqual(
 			'Tuesday, 19 September, 2023 21:00 - 21:30'
 		);
-		expect(result.current.localTimezoneString).toStrictEqual(EuropeBerlinGMT);
+		expect(result.current.localTimezoneString).toStrictEqual(europeBerlinGMT);
 		expect(result.current.eventTimeString).toStrictEqual(
 			'Wednesday, 20 September, 2023 02:00 - 02:30'
 		);
@@ -48,8 +48,8 @@ describe('useGetEventTimezone', () => {
 
 		expect(result.current).toStrictEqual(expect.objectContaining({ showTimezoneTooltip: true }));
 		expect(result.current.localTimeString).toStrictEqual('Tuesday, 19 September, 2023 - All day');
-		expect(result.current.localTimezoneString).toStrictEqual(EuropeBerlinGMT);
+		expect(result.current.localTimezoneString).toStrictEqual(europeBerlinGMT);
 		expect(result.current.eventTimeString).toStrictEqual('Wednesday, 20 September, 2023 - All day');
-		expect(result.current.eventTimezoneString).toStrictEqual(EuropeBerlinGMT);
+		expect(result.current.eventTimezoneString).toStrictEqual(europeBerlinGMT);
 	});
 });
