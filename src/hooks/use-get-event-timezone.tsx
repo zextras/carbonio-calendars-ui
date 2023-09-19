@@ -51,20 +51,19 @@ export const useGetEventTimezoneString = (
 
 			return allDay
 				? allDayString
-				: `${startEvent.format(completeFormat)} -
-	           ${endEvent.format(timeFormat)}`;
+				: `${startEvent.format(completeFormat)} - ${endEvent.format(timeFormat)}`;
 		},
 		[allDay, allDayLabel]
 	);
 
 	const getTimeZoneString = useCallback(
 		(_start, _timezone) => {
-			if (_timezone) {
+			if (_timezone && !allDay) {
 				return `GMT ${moment(_start).startOf('year').tz(_timezone).format('Z')} ${_timezone}`;
 			}
 			return `GMT ${moment(_start).startOf('year').tz(localTimezone).format('Z')} ${localTimezone}`;
 		},
-		[localTimezone]
+		[allDay, localTimezone]
 	);
 
 	const getTimezoneTooltip = useCallback(

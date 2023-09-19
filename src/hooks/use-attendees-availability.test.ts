@@ -6,10 +6,11 @@
 import { waitFor } from '@testing-library/react';
 import { map } from 'lodash';
 import moment from 'moment';
-import { setupHook } from '../carbonio-ui-commons/test/test-setup';
-import mockedData from '../test/generators';
+
 import { useAttendeesAvailability } from './use-attendees-availability';
+import { setupHook } from '../carbonio-ui-commons/test/test-setup';
 import * as handler from '../soap/get-free-busy-request';
+import mockedData from '../test/generators';
 
 describe('use attendees availability', () => {
 	describe('no user interaction - pre-populated editor', () => {
