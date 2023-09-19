@@ -40,7 +40,6 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 			onChange={onStartChange}
 			dateFormat={dateFormat}
 			includeTime={!allDay}
-			data-testid={'start-picker'}
 		/>
 	);
 }

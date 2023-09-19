@@ -32,7 +32,6 @@ export default function EndDatePicker({ start, end, allDay, diff, onChange }) {
 			onChange={onEndChange}
 			dateFormat={dateFormat}
 			includeTime={!allDay}
-			data-testid={'end-picker'}
 		/>
 	);
 }
