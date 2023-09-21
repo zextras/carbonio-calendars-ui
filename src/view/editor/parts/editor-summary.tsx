@@ -122,7 +122,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 						{showTimezoneTooltip && (
 							<Tooltip label={eventTimezoneTooltip}>
 								<Padding left="small">
-									<Icon icon="GlobeOutline" />
+									<Icon icon="GlobeOutline" color="gray1" />
 								</Padding>
 							</Tooltip>
 						)}
