@@ -8,6 +8,7 @@ import React, { SyntheticEvent, useContext } from 'react';
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
+import { newCalendarItem } from '../actions/calendar-actions-items';
 
 import { getFolderRequest } from '../carbonio-ui-commons/soap/get-folder';
 import { Folder } from '../carbonio-ui-commons/types/folder';
@@ -18,7 +19,6 @@ import { DeleteModal } from '../view/sidebar/delete-modal';
 import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
 import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
 import { EmptyModal } from '../view/sidebar/empty-modal';
-import { NewModal } from '../view/sidebar/new-modal';
 import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
 import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
 
@@ -34,26 +34,7 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const actions = [
-		{
-			id: FOLDER_ACTIONS.NEW,
-			icon: 'CalendarOutline',
-			label: t('label.new_calendar', 'New calendar'),
-			onClick: (e: SyntheticEvent<HTMLElement, Event> | KeyboardEvent): void => {
-				if (e) {
-					e.stopPropagation();
-				}
-				const closeModal = createModal(
-					{
-						children: (
-							<StoreProvider>
-								<NewModal onClose={(): void => closeModal()} />
-							</StoreProvider>
-						)
-					},
-					true
-				);
-			}
-		},
+		newCalendarItem({ createModal }),
 		{
 			id: FOLDER_ACTIONS.MOVE_TO_ROOT,
 			icon: 'MoveOutline',
