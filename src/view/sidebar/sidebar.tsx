@@ -57,21 +57,24 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 };
 const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
 
-const addFindSharesItem = (foldersAccordionItems: Array<Folder>): Array<Folder> => [
-	{
-		...(foldersAccordionItems?.[0] ?? {}),
-		children: [
-			...(foldersAccordionItems?.[0]?.children ?? []),
-			{
-				id: 'find_shares',
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				disableHover: true
-			}
-		]
-	},
-	...(reject(foldersAccordionItems, ['id', '1']) ?? [])
-];
+const addFindSharesItem = (foldersAccordionItems: Array<Folder>): Array<Folder> =>
+	foldersAccordionItems?.length > 0
+		? [
+				{
+					...(foldersAccordionItems?.[0] ?? {}),
+					children: [
+						...(foldersAccordionItems?.[0]?.children ?? []),
+						{
+							id: 'find_shares',
+							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+							// @ts-ignore
+							disableHover: true
+						}
+					]
+				},
+				...(reject(foldersAccordionItems, ['id', '1']) ?? [])
+		  ]
+		: [];
 
 const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 	useMemo(
