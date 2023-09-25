@@ -5,6 +5,8 @@
  */
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
 
+import { ROOM_DIVIDER } from '../../../../constants';
+
 const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
 		context: {
@@ -63,18 +65,16 @@ const getResponse = (): SuccessSoapResponse<any> => ({
 													desc: [{}]
 												}
 											],
-											fr: '-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::- Carbonio Admin have invited you to a new meeting! Subject: New ...',
+											fr: `${ROOM_DIVIDER} Carbonio Admin have invited you to a new meeting! Subject: New ...`,
 											noBlob: true,
 											desc: [
 												{
-													_content:
-														'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\nCarbonio Admin have invited you to a new meeting!\n\nSubject: New appointment \nOrganizer: "Carbonio Admin \n\nTime: Monday, November 7, 2022 5:27 PM - 5:27 PM\n \nInvitees:  \n\n\n-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-\n'
+													_content: `${ROOM_DIVIDER}\nCarbonio Admin have invited you to a new meeting!\n\nSubject: New appointment \nOrganizer: "Carbonio Admin \n\nTime: Monday, November 7, 2022 5:27 PM - 5:27 PM\n \nInvitees:  \n\n\n${ROOM_DIVIDER}\n`
 												}
 											],
 											descHtml: [
 												{
-													_content:
-														'<html><body id="htmlmode">-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-<h3>Carbonio Admin have invited you to a new meeting!</h3><p>Subject: New appointment</p><p>Organizer: Carbonio Admin</p><p>Location: </p><p>Time: Monday, November 7, 2022 5:27 PM - 5:27 PM</p><p>Invitees: </p><br />-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-</body></html>'
+													_content: `<html><body id="htmlmode">${ROOM_DIVIDER}<h3>Carbonio Admin have invited you to a new meeting!</h3><p>Subject: New appointment</p><p>Organizer: Carbonio Admin</p><p>Location: </p><p>Time: Monday, November 7, 2022 5:27 PM - 5:27 PM</p><p>Invitees: </p><br />${ROOM_DIVIDER}</body></html>`
 												}
 											],
 											fba: 'B',
