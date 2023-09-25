@@ -4,19 +4,19 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { TextProps } from '@zextras/carbonio-design-system';
-import { AccordionFolder, FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
-import { forEach, isNil, map } from 'lodash';
+import { FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
+import { forEach, isNil, reduce } from 'lodash';
 import moment from 'moment';
-import { Dispatch } from 'redux';
-import { getUpdateFolder, useFoldersArray } from '../carbonio-ui-commons/store/zustand/folder';
+
+import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
+import { getUpdateFolder } from '../carbonio-ui-commons/store/zustand/folder';
 import type { Folder } from '../carbonio-ui-commons/types/folder';
-import { AppDispatch } from '../store/redux';
-import { ReminderItem } from '../types/appointment-reminder';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
 import { searchAppointments } from '../store/actions/search-appointments';
-import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
+import { AppDispatch } from '../store/redux';
+import { ReminderItem } from '../types/appointment-reminder';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
 
@@ -306,13 +306,6 @@ export const getTimeToDisplayData = (
 	};
 };
 
-export const translatedSystemFolders = (): Array<string> => [
-	t('label.root', 'Root'),
-	t('label.all_calendars', 'All calendars'),
-	t('label.calendar', 'Calendar'),
-	t('label.trash', 'Trash')
-];
-
 type GetFolderTranslatedName = {
 	folderId: string;
 	folderName: string;
@@ -322,74 +315,18 @@ export const getFolderTranslatedName = ({
 	folderId,
 	folderName
 }: GetFolderTranslatedName): string => {
-	let translationKey;
 	switch (folderId) {
 		case FOLDERS.USER_ROOT:
-			translationKey = 'root';
-			break;
+			return t(`label.root`, folderName);
+		case 'all':
+			return t('label.all_calendars', 'All calendars');
 		case FOLDERS.CALENDAR:
-			translationKey = 'calendar';
-			break;
+			return t(`label.calendar`, folderName);
 		case FOLDERS.TRASH:
-			translationKey = 'trash';
-			break;
+			return t(`label.trash`, folderName);
 		default:
 			return folderName;
 	}
-
-	return t(`label.${translationKey}`, folderName);
-};
-
-export const getFolderIconNameForAccordionFolder = (folder: AccordionFolder): string | null => {
-	const systemFolders = [
-		FOLDERS.USER_ROOT,
-		FOLDERS.INBOX,
-		FOLDERS.TRASH,
-		FOLDERS.DRAFTS,
-		FOLDERS.SPAM,
-		FOLDERS.SENT
-	];
-
-	if (folder.id === FOLDERS.USER_ROOT || folder.folder?.oname === ROOT_NAME) {
-		return null;
-	}
-
-	if (folder.id && systemFolders.includes(folder.id)) {
-		switch (folder.id) {
-			case FOLDERS.INBOX:
-				return 'InboxOutline';
-			case FOLDERS.DRAFTS:
-				return 'FileOutline';
-			case FOLDERS.SENT:
-				return 'PaperPlaneOutline';
-			case FOLDERS.SPAM:
-				return 'SlashOutline';
-			case FOLDERS.TRASH:
-				return 'Trash2Outline';
-			default:
-				return 'FolderOutline';
-		}
-	}
-	if (
-		folder.id?.charAt(folder.id.length - 2) === ':' &&
-		systemFolders.includes(folder.id.slice(-1))
-	) {
-		switch (folder.id.slice(-1)) {
-			case FOLDERS.INBOX:
-				return 'InboxOutline';
-			case FOLDERS.DRAFTS:
-				return 'FileOutline';
-			case FOLDERS.SENT:
-				return 'PaperPlaneOutline';
-			case FOLDERS.SPAM:
-				return 'SlashOutline';
-			case FOLDERS.TRASH:
-				return 'Trash2Outline';
-			default:
-				return 'FolderOutline';
-		}
-	}
-	return 'FolderOutline';
 };
 
 export const getFolderIconColor = (f: Folder): string => {
@@ -410,6 +347,22 @@ export type RecursiveToggleCheckProps = {
 	query: string;
 };
 
+const checkAllChildren = (_folder: Array<Folder>, checked: boolean): Array<string> =>
+	reduce(
+		_folder,
+		(acc, itemToCheck) => {
+			if (itemToCheck.children.length > 0) {
+				return itemToCheck.id === 'all' || itemToCheck.checked !== checked
+					? [...acc, ...checkAllChildren(itemToCheck.children, checked)]
+					: [...acc, itemToCheck.id, ...checkAllChildren(itemToCheck.children, checked)];
+			}
+			return itemToCheck.id === 'all' || itemToCheck.checked !== checked
+				? acc
+				: [...acc, itemToCheck.id];
+		},
+		[] as Array<string>
+	);
+
 export function recursiveToggleCheck({
 	folder,
 	checked,
@@ -418,20 +371,7 @@ export function recursiveToggleCheck({
 	end,
 	query
 }: RecursiveToggleCheckProps): void {
-	const foldersToToggleIds: Array<string> = [];
-	const checkAllChildren = (itemToCheck: Folder): void => {
-		if (itemToCheck.id !== 'all') {
-			foldersToToggleIds.push(itemToCheck.id);
-		}
-		if (itemToCheck.children.length > 0) {
-			itemToCheck.children.forEach((child) => {
-				checkAllChildren(child);
-			});
-		}
-	};
-
-	// remove item 'all' from an array of strings
-	checkAllChildren(folder);
+	const foldersToToggleIds: Array<string> = checkAllChildren([folder], checked);
 
 	const op = checked ? '!check' : 'check';
 	folderAction({
