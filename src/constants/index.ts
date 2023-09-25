@@ -11,7 +11,7 @@ export const PANEL_VIEW = {
 	APP: 'app',
 	BOARD: 'board',
 	SEARCH: 'search'
-};
+} as const;
 
 export const PREFS_DEFAULTS = {
 	DEFAULT_CALENDAR_ID: '10'
