@@ -7,6 +7,7 @@ import React, { ReactElement, useEffect, useMemo } from 'react';
 
 import { Container, Divider, Popover } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith } from 'lodash';
+import moment from 'moment';
 
 import { ActionsButtonsRow } from './actions-buttons-row';
 import { CalendarInfoRow } from './calendar-info-row';
@@ -39,8 +40,8 @@ export const EventSummaryView = ({
 	invite
 }: EventSummaryProps): ReactElement | null => {
 	const timeData = useMemo(
-		() =>
-			omitBy(
+		() => ({
+			...omitBy(
 				{
 					allDay: event.allDay,
 					start: event.start,
@@ -48,7 +49,9 @@ export const EventSummaryView = ({
 				},
 				isNil
 			),
-		[event.allDay, event.end, event.start]
+			...{ timezone: invite?.tz ?? moment.tz.guess() }
+		}),
+		[event.allDay, event.end, event.start, invite?.tz]
 	);
 
 	const locationData = useMemo(

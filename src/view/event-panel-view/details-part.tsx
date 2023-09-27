@@ -3,21 +3,24 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useMemo } from 'react';
-import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
+
+import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { isNil, omitBy } from 'lodash';
+import moment from 'moment';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+
+import { ImageAndIconPart } from './image-and-icon-part';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
-import { ImageAndIconPart } from './image-and-icon-part';
-import { TimeInfoRow } from '../event-summary-view/time-info-row';
 import { LocationRow } from '../event-summary-view/location-row';
-import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
 import TagsRow from '../event-summary-view/tags-row';
+import { TimeInfoRow } from '../event-summary-view/time-info-row';
+import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
 
 const PaddedRow = styled(Row)`
 	padding: 0.25rem 0.25rem;
@@ -89,8 +92,8 @@ export const DetailsPart = ({
 	);
 
 	const timeData = useMemo(
-		() =>
-			omitBy(
+		() => ({
+			...omitBy(
 				{
 					allDay: event.allDay,
 					start: event.start,
@@ -98,7 +101,9 @@ export const DetailsPart = ({
 				},
 				isNil
 			),
-		[event.allDay, event.end, event.start]
+			...{ timezone: invite?.tz ?? moment.tz.guess() }
+		}),
+		[event.allDay, event.end, event.start, invite?.tz]
 	);
 
 	const locationData = useMemo(

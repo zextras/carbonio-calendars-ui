@@ -3,12 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { screen, waitFor } from '@testing-library/react';
 import { map, values } from 'lodash';
 import { rest } from 'msw';
-import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+
 import { editAppointment } from '../../actions/appointment-actions-fn';
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
@@ -158,7 +160,11 @@ describe.each`
 
 		expect(values(store.getState().editor.editors)[0].allDay).toEqual(false);
 
-		await user.click(screen.getByTestId('start-picker'));
+		await user.click(
+			screen.getByRole('textbox', {
+				name: /label\.start_date_and_time/i
+			})
+		);
 
 		await waitFor(() =>
 			user.click(

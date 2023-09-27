@@ -35,8 +35,7 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	return start && end ? (
 		<Styler allDay={allDay} orientation="horizontal" height="fit" mainAlignment="flex-start">
 			<StartDatePicker
-				start={start}
-				end={end}
+				start={new Date(start)}
 				onChange={onChange}
 				diff={diff}
 				allDay={allDay}
@@ -45,7 +44,7 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 			<Padding left="small" />
 			<EndDatePicker
 				start={start}
-				end={end}
+				end={new Date(end)}
 				onChange={onChange}
 				diff={diff}
 				allDay={allDay}

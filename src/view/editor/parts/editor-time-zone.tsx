@@ -3,13 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Select } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
+import { Select } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
+
 import { usePrefs } from '../../../carbonio-ui-commons/utils/use-prefs';
 import { findLabel, TimeZonesOptions } from '../../../settings/components/utils';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorDisabled, selectEditorTimezone } from '../../../store/selectors/editor';
+import {
+	selectEditorAllDay,
+	selectEditorDisabled,
+	selectEditorTimezone
+} from '../../../store/selectors/editor';
 import { editEditorTimezone } from '../../../store/slices/editor-slice';
 
 type SelectValue =
@@ -22,6 +28,7 @@ type SelectValue =
 export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
 	const timezone = useAppSelector(selectEditorTimezone(editorId));
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const dispatch = useAppDispatch();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
@@ -54,7 +61,7 @@ export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement
 		[dispatch, editorId, timeZonesOptions]
 	);
 
-	return value && zimbraPrefUseTimeZoneListInCalendar === 'TRUE' ? (
+	return value && zimbraPrefUseTimeZoneListInCalendar === 'TRUE' && !allDay ? (
 		<Select
 			items={timeZonesOptions}
 			multiple={false}
