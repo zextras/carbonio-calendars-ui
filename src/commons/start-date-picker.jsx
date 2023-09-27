@@ -4,13 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo } from 'react';
+
 import { DateTimePicker } from '@zextras/carbonio-design-system';
-import momentLocalizer from 'react-widgets-moment';
 import { t } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
-import DatePickerCustomComponent from './date-picker-custom-component';
-
-momentLocalizer();
 
 export default function StartDatePicker({ start, allDay, diff, onChange }) {
 	const onStartChange = useCallback(
@@ -25,7 +22,6 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 		[onChange, diff]
 	);
 
-	const startDate = useMemo(() => new Date(start), [start]);
 	const label = useMemo(
 		() =>
 			`${
@@ -36,25 +32,14 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 		[allDay]
 	);
 	const dateFormat = useMemo(() => (allDay ? 'dd/MM/yyyy' : 'dd/MM/yyyy HH:mm'), [allDay]);
+
 	return (
 		<DateTimePicker
-			width="100%"
-			style={{ zIndex: 10 }}
-			dateFormat={dateFormat}
 			label={label}
-			includeTime={!allDay}
-			defaultValue={startDate}
+			defaultValue={start}
 			onChange={onStartChange}
-			timeCaption={t('label.time', 'Time')}
-			customInput={
-				<DatePickerCustomComponent
-					label={label}
-					value={startDate}
-					onChange={onStartChange}
-					utcOffset={-60}
-					testId="start-picker"
-				/>
-			}
+			dateFormat={dateFormat}
+			includeTime={!allDay}
 		/>
 	);
 }
