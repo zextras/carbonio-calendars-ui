@@ -25,6 +25,7 @@ import styled from 'styled-components';
 
 import { useFoldersArrayByRoot, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
@@ -260,7 +261,7 @@ export const NewModal = ({
 				secondaryAction={toggleModal}
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
 				label={
-					event?.resource?.calendar?.id === FOLDERS.TRASH
+					event && hasId(event.resource.calendar, FOLDERS.TRASH)
 						? t('folder.modal.restore.footer', 'Create and Restore')
 						: t('label.create', 'Create')
 				}
