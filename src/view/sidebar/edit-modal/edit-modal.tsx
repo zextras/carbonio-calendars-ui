@@ -20,11 +20,10 @@ import { ShareCalendarModal } from '../share-calendar-modal';
 
 type EditModalProps = {
 	folder: Folder;
-	totalAppointments: number;
 	onClose: () => void;
 };
 
-export const EditModal: FC<EditModalProps> = ({ onClose, folder, totalAppointments }) => {
+export const EditModal: FC<EditModalProps> = ({ onClose, folder }) => {
 	const [activeGrant, setActiveGrant] = useState({});
 	const [modal, setModal] = useState('main');
 	const [t] = useTranslation();
@@ -53,11 +52,7 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folder, totalAppointmen
 		<>
 			<EditModalContext.Provider value={{ setModal, onClose, roleOptions, setActiveGrant }}>
 				{modal === 'main' && (
-					<MainEditModal
-						folder={folder}
-						totalAppointments={totalAppointments}
-						grant={grant ?? []}
-					/>
+					<MainEditModal folder={folder} totalAppointments={folder?.n ?? 0} grant={grant ?? []} />
 				)}
 
 				{(modal === 'share' && (

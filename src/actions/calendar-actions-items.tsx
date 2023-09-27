@@ -5,8 +5,9 @@
  */
 import React from 'react';
 
+import { CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { isNil } from 'lodash';
+import { find, isNil, map, some } from 'lodash';
 
 import {
 	deleteCalendar,
@@ -19,13 +20,15 @@ import {
 	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
-import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
+import { getFoldersArray } from '../carbonio-ui-commons/store/zustand/folder';
+import {
+	isNestedInTrash,
+	isTrashOrNestedInIt
+} from '../carbonio-ui-commons/store/zustand/folder/utils';
 import { FOLDERS } from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui-constants';
-import { CalendarActionsId, FOLDER_ACTIONS } from '../constants/sidebar';
-
-type CalendarActionsContext = {
-	createModal: any;
-};
+import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { hasId } from '../carbonio-ui-commons/worker/handle-message';
+import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 
 export type CalendarActionsItems = {
 	id: CalendarActionsId;
@@ -35,50 +38,77 @@ export type CalendarActionsItems = {
 	onClick: (ev: React.SyntheticEvent | KeyboardEvent) => void;
 	tooltipLabel: string;
 };
-export const newCalendarItem = ({ createModal }: CalendarActionsContext): CalendarActionsItems => ({
+
+const noPermissionLabel = t('label.no_rights', 'You do not have permission to perform this action');
+
+export const newCalendarItem = ({
+	createModal,
+	item
+}: {
+	createModal: CreateModalFn;
+	item: Folder;
+}): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.NEW,
 	icon: 'CalendarOutline',
 	label: t('label.new_calendar', 'New calendar'),
-	disabled: false,
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: newCalendar({ createModal })
+	disabled: isTrashOrNestedInIt(item),
+	tooltipLabel: noPermissionLabel,
+	onClick: newCalendar({ createModal, item })
 });
 
 export const moveToRootItem = ({
 	createSnackbar,
 	item
 }: {
-	createSnackbar: any;
-	item: any;
-}): CalendarActionsItems => ({
-	id: FOLDER_ACTIONS.MOVE_TO_ROOT,
-	icon: 'MoveOutline',
-	label: isTrashOrNestedInIt(item)
-		? t('label.restore_calendar', 'Restore calendar')
-		: t('action.move_to_root', 'Move to root'),
-	disabled: false,
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: moveToRoot({ createSnackbar, item })
-});
+	createSnackbar: CreateSnackbarFn;
+	item: Folder;
+}): CalendarActionsItems => {
+	const folders = getFoldersArray();
+	const parentFoldersNames = item?.absFolderPath?.split('/');
+	const parentFolders =
+		map(parentFoldersNames, (f) => find(folders, (ff) => ff.name === f) ?? '') ?? [];
+	const hasLinksInItsPath = some(parentFolders, ['isLink', true]) ?? false;
+	return {
+		id: FOLDER_ACTIONS.MOVE_TO_ROOT,
+		icon: 'MoveOutline',
+		label: isNestedInTrash(item)
+			? t('label.restore_calendar', 'Restore calendar')
+			: t('action.move_to_root', 'Move to root'),
+		disabled:
+			hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+			hasId(item, FOLDERS.CALENDAR) ||
+			item.depth < 2 ||
+			hasLinksInItsPath ||
+			!!(item as LinkFolder)?.owner,
+		tooltipLabel: noPermissionLabel,
+		onClick: moveToRoot({ createSnackbar, item })
+	};
+};
 
 export const emptyTrashItem = ({
 	createModal,
 	item
 }: {
-	createModal: any;
-	item: any;
+	createModal: CreateModalFn;
+	item: Folder;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EMPTY_TRASH,
 	icon: 'SlashOutline',
 	label: t('action.empty_trash', 'Empty Trash'),
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: emptyTrash({ createModal }),
+	tooltipLabel:
+		hasId(item, FOLDERS.TRASH) &&
+		!isNil(item?.n) &&
+		item?.n < 1 &&
+		!isNil(item?.children) &&
+		item.children.length < 1
+			? t('action.Trash_already_empty', 'trash is already empty')
+			: noPermissionLabel,
+	onClick: emptyTrash({ createModal, item }),
 	disabled:
-		item.id !== FOLDERS.TRASH ||
-		(item.id === FOLDERS.TRASH &&
+		!hasId(item, FOLDERS.TRASH) ||
+		(hasId(item, FOLDERS.TRASH) &&
 			!isNil(item?.n) &&
 			item?.n < 1 &&
-			item.id === FOLDERS.TRASH &&
 			!isNil(item?.children) &&
 			item.children.length < 1)
 });
@@ -87,82 +117,99 @@ export const editCalendarItem = ({
 	createModal,
 	item
 }: {
-	createModal: any;
-	item: any;
+	createModal: CreateModalFn;
+	item: Folder;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EDIT,
 	icon: 'Edit2Outline',
 	label: t('action.edit_calendar_properties', 'Edit calendar properties'),
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	tooltipLabel: noPermissionLabel,
 	onClick: editCalendar({ createModal, item }),
-	disabled: false
+	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
 });
 
 export const deleteCalendarItem = ({
 	createModal,
 	item
 }: {
-	createModal: any;
-	item: any;
+	createModal: CreateModalFn;
+	item: Folder;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.DELETE,
 	icon: 'Trash2Outline',
-	label: t('action.delete_calendar', 'Delete calendar'),
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	label: isNestedInTrash(item)
+		? t('label.delete_permanently', 'Delete permanently')
+		: t('action.delete_calendar', 'Delete calendar'),
+	tooltipLabel: noPermissionLabel,
 	onClick: deleteCalendar({ createModal, item }),
-	disabled: false
+	disabled:
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		hasId(item, FOLDERS.CALENDAR) ||
+		hasId(item, FOLDERS.TRASH)
 });
 
-export const removeFromListItem = ({ item }: { item: any }): CalendarActionsItems => ({
+export const removeFromListItem = ({
+	item,
+	createSnackbar
+}: {
+	item: Folder;
+	createSnackbar: CreateSnackbarFn;
+}): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.REMOVE_FROM_LIST,
 	icon: 'CloseOutline',
 	label: t('remove_from_this_list', 'Remove from this list'),
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: removeFromList({ item }),
-	disabled: false
+	tooltipLabel: noPermissionLabel,
+	onClick: removeFromList({ item, createSnackbar }),
+	disabled:
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		hasId(item, FOLDERS.CALENDAR) ||
+		isTrashOrNestedInIt(item)
 });
 
 export const sharesInfoItem = ({
 	createModal,
 	item
 }: {
-	item: any;
-	createModal: any;
+	item: Folder;
+	createModal: CreateModalFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SHARES_INFO,
 	icon: 'InfoOutline',
 	label: t('shares_info', 'Shares Info'),
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	tooltipLabel: noPermissionLabel,
 	onClick: sharesInfo({ createModal, item }),
-	disabled: false
+	disabled:
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		hasId(item, FOLDERS.CALENDAR) ||
+		isTrashOrNestedInIt(item)
 });
 
 export const shareCalendarItem = ({
 	createModal,
 	item
 }: {
-	item: any;
-	createModal: any;
+	item: Folder;
+	createModal: CreateModalFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SHARE,
 	icon: 'SharedCalendarOutline',
 	label: t('action.share_calendar', 'Share Calendar'),
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	tooltipLabel: noPermissionLabel,
 	onClick: shareCalendar({ createModal, item }),
-	disabled: false
+	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
 });
 
 export const shareCalendarUrlItem = ({
 	createModal,
 	item
 }: {
-	item: any;
-	createModal: any;
+	item: Folder;
+	createModal: CreateModalFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SHARE_URL,
 	icon: 'Copy',
 	label: t('action.calendar_access_share', 'Calendar access share'),
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	tooltipLabel: noPermissionLabel,
 	onClick: shareCalendarUrl({ createModal, item }),
-	disabled: item?.id === FOLDERS.TRASH || item?.id?.includes(':') // todo: update condition
+	disabled: isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)
 });

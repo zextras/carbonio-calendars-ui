@@ -5,25 +5,33 @@
  */
 import React from 'react';
 
+import { CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
+import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
-import { FOLDERS } from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui-constants';
+import { Folder } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS } from '../constants/sidebar';
 import { getFolderRequest } from '../soap/get-folder-request';
 import { folderAction } from '../store/actions/calendar-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick } from '../types/actions';
+import { NewModal } from '../view/move/new-calendar-modal';
 import { DeleteModal } from '../view/sidebar/delete-modal';
 import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
 import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
 import { EmptyModal } from '../view/sidebar/empty-modal';
-import { NewModal } from '../view/sidebar/new-modal';
 import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
 import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
 
 export const newCalendar =
-	({ createModal }: { createModal: any }): ((e?: ActionsClick) => void) =>
+	({
+		createModal,
+		item
+	}: {
+		createModal: CreateModalFn;
+		item: Folder;
+	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
@@ -32,7 +40,7 @@ export const newCalendar =
 			{
 				children: (
 					<StoreProvider>
-						<NewModal onClose={(): void => closeModal()} />
+						<NewModal onClose={(): void => closeModal()} folder={item} />
 					</StoreProvider>
 				)
 			},
@@ -41,43 +49,51 @@ export const newCalendar =
 	};
 
 export const moveToRoot =
-	({ createSnackbar, item }: { createSnackbar: any; item: any }): ((e?: ActionsClick) => void) =>
+	({
+		createSnackbar,
+		item
+	}: {
+		createSnackbar: CreateSnackbarFn;
+		item: Folder;
+	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
 		}
-		folderAction({ id: item.id, op: 'move', changes: { parent: FOLDERS.USER_ROOT } }).then(
-			(res) => {
-				if (!res.Fault) {
-					createSnackbar({
-						key: `calendar-moved-root`,
-						replace: true,
-						type: isTrashOrNestedInIt(item) ? 'success' : 'info',
-						hideButton: true,
-						label: isTrashOrNestedInIt(item)
-							? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
-							: t(
-									'message.snackbar.calendar_moved_to_root_folder',
-									'Calendar moved to Root folder'
-							  ),
-						autoHideTimeout: 3000
-					});
-				} else {
-					createSnackbar({
-						key: `calendar-moved-root-error`,
-						replace: true,
-						type: 'error',
-						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000
-					});
-				}
+		const root = getRoot(item.id);
+		folderAction({ id: item.id, op: 'move', changes: { parent: root?.id ?? '1' } }).then((res) => {
+			if (!res.Fault) {
+				createSnackbar({
+					key: `calendar-moved-root`,
+					replace: true,
+					type: isTrashOrNestedInIt(item) ? 'success' : 'info',
+					hideButton: true,
+					label: isTrashOrNestedInIt(item)
+						? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
+						: t('message.snackbar.calendar_moved_to_root_folder', 'Calendar moved to Root folder'),
+					autoHideTimeout: 3000
+				});
+			} else {
+				createSnackbar({
+					key: `calendar-moved-root-error`,
+					replace: true,
+					type: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
 			}
-		);
+		});
 	};
 
 export const emptyTrash =
-	({ createModal }: { createModal: any }): ((e?: ActionsClick) => void) =>
+	({
+		createModal,
+		item
+	}: {
+		createModal: CreateModalFn;
+		item: Folder;
+	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
@@ -86,7 +102,7 @@ export const emptyTrash =
 			{
 				children: (
 					<StoreProvider>
-						<EmptyModal onClose={(): void => closeModal()} />
+						<EmptyModal onClose={(): void => closeModal()} folder={item} />
 					</StoreProvider>
 				),
 				onClose: () => {
@@ -98,7 +114,13 @@ export const emptyTrash =
 	};
 
 export const editCalendar =
-	({ createModal, item }: { createModal: any; item: any }): ((e?: ActionsClick) => void) =>
+	({
+		createModal,
+		item
+	}: {
+		createModal: CreateModalFn;
+		item: Folder;
+	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
@@ -107,11 +129,7 @@ export const editCalendar =
 			{
 				children: (
 					<StoreProvider>
-						<EditModal
-							folder={item}
-							totalAppointments={item.n ?? 0}
-							onClose={(): void => closeModal()}
-						/>
+						<EditModal folder={item} onClose={(): void => closeModal()} />
 					</StoreProvider>
 				),
 				maxHeight: '70vh',
@@ -122,7 +140,13 @@ export const editCalendar =
 	};
 
 export const deleteCalendar =
-	({ createModal, item }: { createModal: any; item: any }): ((e?: ActionsClick) => void) =>
+	({
+		createModal,
+		item
+	}: {
+		createModal: CreateModalFn;
+		item: Folder;
+	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
@@ -140,16 +164,48 @@ export const deleteCalendar =
 	};
 
 export const removeFromList =
-	({ item }: { item: any }): ((e?: ActionsClick) => void) =>
+	({
+		item,
+		createSnackbar
+	}: {
+		item: Folder;
+		createSnackbar: CreateSnackbarFn;
+	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
 		}
-		folderAction({ id: item.id, op: FOLDER_ACTIONS.DELETE });
+		folderAction({ id: item.id, op: FOLDER_ACTIONS.DELETE }).then((res) => {
+			if (!res.Fault) {
+				createSnackbar({
+					key: `shared-calendar-removed`,
+					replace: true,
+					type: 'info',
+					hideButton: true,
+					label: t('message.snackbar.shared_calendar_removed', 'Calendar removed successfully'),
+					autoHideTimeout: 3000
+				});
+			} else {
+				createSnackbar({
+					key: `shared-calendar-removed-error`,
+					replace: true,
+					type: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
+			}
+		});
 	};
 
 export const sharesInfo =
-	({ item, createModal }: { item: any; createModal: any }): ((e?: ActionsClick) => void) =>
+	({
+		item,
+		createModal
+	}: {
+		item: Folder;
+		createModal: CreateModalFn;
+	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
@@ -160,7 +216,7 @@ export const sharesInfo =
 					{
 						children: (
 							<StoreProvider>
-								<SharesInfoModal onClose={(): void => closeModal()} folder={res.link} />
+								<SharesInfoModal onClose={(): void => closeModal()} folder={res.link[0]} />
 							</StoreProvider>
 						)
 					},
@@ -171,7 +227,13 @@ export const sharesInfo =
 	};
 
 export const shareCalendar =
-	({ item, createModal }: { item: any; createModal: any }): ((e?: ActionsClick) => void) =>
+	({
+		item,
+		createModal
+	}: {
+		item: Folder;
+		createModal: CreateModalFn;
+	}): ((e?: ActionsClick) => void) =>
 	() => {
 		const closeModal = createModal(
 			{
@@ -195,7 +257,13 @@ export const shareCalendar =
 	};
 
 export const shareCalendarUrl =
-	({ item, createModal }: { item: any; createModal: any }): ((e?: ActionsClick) => void) =>
+	({
+		item,
+		createModal
+	}: {
+		item: Folder;
+		createModal: CreateModalFn;
+	}): ((e?: ActionsClick) => void) =>
 	() => {
 		const closeModal = createModal(
 			{

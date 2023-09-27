@@ -7,6 +7,7 @@ import { TextProps } from '@zextras/carbonio-design-system';
 import { FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
 import { forEach, isNil, reduce } from 'lodash';
 import moment from 'moment';
+import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 
 import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 import { getUpdateFolder } from '../carbonio-ui-commons/store/zustand/folder';
@@ -352,11 +353,11 @@ const checkAllChildren = (_folder: Array<Folder>, checked: boolean): Array<strin
 		_folder,
 		(acc, itemToCheck) => {
 			if (itemToCheck.children.length > 0) {
-				return itemToCheck.id === 'all' || itemToCheck.checked !== checked
+				return hasId(itemToCheck, SIDEBAR_ITEMS.ALL_CALENDAR) || itemToCheck.checked !== checked
 					? [...acc, ...checkAllChildren(itemToCheck.children, checked)]
 					: [...acc, itemToCheck.id, ...checkAllChildren(itemToCheck.children, checked)];
 			}
-			return itemToCheck.id === 'all' || itemToCheck.checked !== checked
+			return hasId(itemToCheck, SIDEBAR_ITEMS.ALL_CALENDAR) || itemToCheck.checked !== checked
 				? acc
 				: [...acc, itemToCheck.id];
 		},
@@ -401,8 +402,8 @@ export function recursiveToggleCheck({
 
 export const getFolderIcon = ({ item, checked }: { item: Folder; checked: boolean }): string => {
 	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME)) return '';
-	if (item.id === FOLDERS.TRASH) return checked ? 'Trash2' : 'Trash2Outline';
-	if (item.id === SIDEBAR_ITEMS.ALL_CALENDAR) return checked ? 'Calendar2' : 'CalendarOutline';
+	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';
+	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return checked ? 'Calendar2' : 'CalendarOutline';
 	if (item.isLink) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
 	return checked ? 'Calendar2' : 'CalendarOutline';
 };

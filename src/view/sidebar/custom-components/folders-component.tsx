@@ -15,15 +15,18 @@ import {
 	Row,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 
+import { isRoot } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import {
 	getFolderIcon,
 	getFolderTranslatedName,
 	recursiveToggleCheck
 } from '../../../commons/utilities';
+import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
 import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
@@ -39,56 +42,56 @@ const FittedRow = styled(Row)`
 	height: 3rem;
 `;
 
-export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
-	const { checked } = item;
-	const { displayName } = useUserAccount();
+const ContextMenuItem = ({
+	children,
+	item
+}: {
+	children: JSX.Element;
+	item: Folder;
+}): JSX.Element => {
+	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
+	const items = useCalendarActions(item);
+
+	return isAllCalendar ? (
+		children
+	) : (
+		<Dropdown items={items} contextMenu width="100%" display="block">
+			{children}
+		</Dropdown>
+	);
+};
+
+const RootChildren = ({
+	accordionItem,
+	item
+}: {
+	accordionItem: AccordionItemType;
+	item: Folder;
+}): JSX.Element => {
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
 	const query = useCheckedCalendarsQuery();
 
-	const isRootAccount = useMemo(
-		() => item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME),
-		[item]
-	);
-
-	const accordionItem = useMemo(
-		() =>
-			({
-				...item,
-				label:
-					item.id === FOLDERS.USER_ROOT
-						? displayName
-						: getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? '',
-				icon: getFolderIcon({ item, checked: !!checked }),
-				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
-				textProps: { size: 'small' }
-			} as AccordionItemType),
-		[item, displayName, checked]
-	);
-
-	const ddItems = useCalendarActions(item);
-
 	const onClick = useCallback(
 		(): void =>
 			recursiveToggleCheck({
 				folder: item,
-				checked: !!checked,
+				checked: !!item.checked,
 				dispatch,
 				start,
 				end,
 				query
 			}),
-		[checked, dispatch, end, item, query, start]
+		[dispatch, end, item, query, start]
 	);
-
 	const SharedStatusIcon = useMemo(() => {
 		if (!item.acl?.grant || !item.acl?.grant?.length) {
 			return '';
 		}
 
 		const tooltipText = t('tooltip.calendar_sharing_status', {
-			count: item.acl.grant.length,
+			count: item?.acl?.grant?.length,
 			defaultValue_one: 'Shared with 1 person',
 			defaultValue: 'Shared with {{count}} people'
 		});
@@ -102,28 +105,10 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 				</Tooltip>
 			</Padding>
 		);
-	}, [item]);
+	}, [item?.acl?.grant]);
 
-	// hide folders where a share was provided and subsequently removed
-	if (item.isLink && item.broken) {
-		return <></>;
-	}
-
-	return isRootAccount ? (
-		<FittedRow>
-			<Padding left="small">
-				<Avatar
-					label={accordionItem.label ?? ''}
-					colorLabel={accordionItem.iconColor}
-					size="medium"
-				/>
-			</Padding>
-			<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
-				<AccordionItem item={accordionItem} />
-			</Tooltip>
-		</FittedRow>
-	) : (
-		<Dropdown items={ddItems} contextMenu width="100%" display="block">
+	return (
+		<ContextMenuItem item={item}>
 			<Row onClick={onClick}>
 				<Padding left="small" />
 				<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
@@ -131,6 +116,52 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 				</Tooltip>
 				{SharedStatusIcon}
 			</Row>
-		</Dropdown>
+		</ContextMenuItem>
 	);
+};
+
+const RootAccount = ({ accordionItem }: { accordionItem: AccordionItemType }): JSX.Element => (
+	<FittedRow>
+		<Padding left="small">
+			<Avatar
+				label={accordionItem.label ?? ''}
+				colorLabel={accordionItem.iconColor}
+				size="medium"
+			/>
+		</Padding>
+		<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
+			<AccordionItem item={accordionItem} />
+		</Tooltip>
+	</FittedRow>
+);
+
+export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
+	const { displayName } = useUserAccount();
+
+	const isRootAccount = useMemo(() => isRoot(item), [item]);
+	const accordionItem = useMemo(
+		() =>
+			({
+				...item,
+				label:
+					item.id === FOLDERS.USER_ROOT
+						? displayName
+						: getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? '',
+				icon: getFolderIcon({ item, checked: !!item.checked }),
+				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
+				textProps: { size: 'small' }
+			} as AccordionItemType),
+		[item, displayName]
+	);
+
+	// hide folders where a share was provided and subsequently removed
+	if (item.isLink && item.broken) {
+		return <></>;
+	}
+
+	if (isRootAccount) {
+		return <RootAccount accordionItem={accordionItem} />;
+	}
+
+	return <RootChildren accordionItem={accordionItem} item={item} />;
 };

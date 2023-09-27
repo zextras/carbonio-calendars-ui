@@ -3,15 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
-import { FOLDERS, getBridgedFunctions, t } from '@zextras/carbonio-shell-ui';
 import React, { useState, useCallback, ReactElement, useContext } from 'react';
+
+import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+
+import { MoveModal } from './move-modal';
+import { NewModal } from './new-calendar-modal';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
+import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
-import { NewModal } from './new-calendar-modal';
-import { MoveModal } from './move-modal';
 
 type MoveAppointmentProps = {
 	onClose: () => void;
@@ -32,23 +35,22 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 		dispatch(moveAppointmentRequest(data)).then((res: any) => {
 			if (res.type.includes('fulfilled')) {
 				createSnackbar({
-					key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
+					key: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'restore' : 'move',
 					replace: true,
 					type: 'info',
 					hideButton: true,
-					label:
-						event.resource.calendar.id === FOLDERS.TRASH
-							? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
-									data.destinationCalendarName
-							  }`
-							: `${t('message.snackbar.appt_moved', 'Appointment moved successfully to')} ${
-									data.destinationCalendarName
-							  }`,
+					label: hasId(event.resource.calendar, FOLDERS.TRASH)
+						? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
+								data.destinationCalendarName
+						  }`
+						: `${t('message.snackbar.appt_moved', 'Appointment moved successfully to')} ${
+								data.destinationCalendarName
+						  }`,
 					autoHideTimeout: 3000
 				});
 			} else {
 				createSnackbar({
-					key: event.resource.calendar.id === FOLDERS.TRASH ? 'restore' : 'move',
+					key: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'restore' : 'move',
 					replace: true,
 					type: 'error',
 					hideButton: true,
@@ -65,7 +67,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 				<NewModal
 					toggleModal={toggleModal}
 					onClose={onClose}
-					currentFolder={currentFolder}
+					folder={currentFolder}
 					event={event}
 					action={moveAppt}
 				/>

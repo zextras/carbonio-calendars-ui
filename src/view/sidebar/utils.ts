@@ -16,7 +16,7 @@ export function addAllCalendarsItem(folders: Array<Folder>): Array<Folder> {
 		const subItems = reject(folder.children, (c) => isTrashOrNestedInIt(c));
 		const allItems = {
 			name: t('label.all_calendars', 'All calendars'),
-			id: SIDEBAR_ITEMS.ALL_CALENDAR,
+			id: `${folder.id}:${SIDEBAR_ITEMS.ALL_CALENDAR}`,
 			children: subItems,
 			checked: every(subItems, ['checked', true]),
 			uuid: '',

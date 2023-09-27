@@ -27,6 +27,8 @@ import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
+import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
+import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
@@ -80,12 +82,17 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 	useMemo(
 		() =>
 			map(folders, (accountRoot) => {
-				const allCalendarFolder = find(accountRoot.children, ['id', 'all']);
-				const calendar = find(accountRoot.children, ['id', FOLDERS.CALENDAR]);
-				const trash = find(accountRoot.children, ['id', FOLDERS.TRASH]);
+				const allCalendarFolder = find(accountRoot.children, (child) =>
+					hasId(child, SIDEBAR_ITEMS.ALL_CALENDAR)
+				);
+				const calendar = find(accountRoot.children, (f) => hasId(f, FOLDERS.CALENDAR));
+				const trash = find(accountRoot.children, (f) => hasId(f, FOLDERS.TRASH));
 				const others = reject(
 					accountRoot.children,
-					(f) => f.id === 'all' || f.id === FOLDERS.CALENDAR || f.id === FOLDERS.TRASH
+					(f) =>
+						hasId(f, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+						hasId(f, FOLDERS.CALENDAR) ||
+						hasId(f, FOLDERS.TRASH)
 				);
 				return allCalendarFolder && calendar && trash
 					? {

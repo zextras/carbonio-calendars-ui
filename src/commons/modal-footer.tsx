@@ -5,9 +5,11 @@
  */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable import/extensions */
+import React, { FC, ReactElement } from 'react';
+
 import { Button, Container, Divider, Padding, Tooltip } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { FC, ReactElement } from 'react';
+
 import { ModalFooterProps } from '../carbonio-ui-commons/types';
 
 const ModalFooter: FC<ModalFooterProps> = ({

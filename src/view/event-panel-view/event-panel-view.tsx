@@ -21,6 +21,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { extractBody } from '../../commons/body-message-renderer';
 import StyledDivider from '../../commons/styled-divider';
 import { useEventActions } from '../../hooks/use-event-actions';
@@ -54,7 +55,7 @@ const ActionButtons = ({
 }): ReactElement | null => {
 	const primaryAction = useMemo(() => {
 		if (event) {
-			if (event.resource.calendar.id === FOLDERS.TRASH) {
+			if (hasId(event.resource.calendar, FOLDERS.TRASH)) {
 				return find(actions?.[0]?.items ?? actions, ['id', EventActionsEnum.MOVE]);
 			}
 			if (!event.resource.ridZ) {
