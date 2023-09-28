@@ -288,7 +288,8 @@
             "link_copying_error": "Parece haver um problema ao gerar o link público. Tente de novo",
             "att_err_adding": "Parece haver um problema ao adicionar os anexos. Tente novamente",
             "all_link_copied": "Link público copiado para a área de transferência",
-            "all_att_added": "Anexos adicionados com sucesso"
+            "all_att_added": "Anexos adicionados com sucesso",
+            "series_deleted_no_notification": "A série foi movida para a lixeira."
         },
         "share_calendar_url_note2": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.<br/>Também é possível encontrar esses links clicando com o botão direito em sua lista de calendários.",
         "delete_all_occurences": "Excluir todas as ocorrências",
@@ -688,5 +689,7 @@
     "recurrent_in_allday": "Você não pode arrastar um compromisso recorrente para um intervalo de dia inteiro",
     "mountpoint_error": "Não foi possível adicionar na seção de Calendários compartilhados",
     "mountpoint_success": "Adicionado com sucesso na seção de Calendários compartilhados",
-    "mountpoint_warning": "{{failed}} de {{total}} calendários não puderam ser adicionados aos Calendários compartilhados"
+    "mountpoint_warning": "{{failed}} de {{total}} calendários não puderam ser adicionados aos Calendários compartilhados",
+    "attendee_unavailable": "Participante não disponível na hora do evento",
+    "attendees_unavailable": "Um ou mais participantes não estão disponíveis na hora selecionada"
 }
