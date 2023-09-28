@@ -469,7 +469,8 @@
             "link_copying_error": "Error al generar el enlace público. Por favor intenta nuevamente",
             "att_err_adding": "Ha habido un problema al agregar los adjuntos. Intenta nuevamente",
             "all_link_copied": "El enlace público ha sido copiado al portapapeles",
-            "all_att_added": "Los adjuntos han sido añadidos"
+            "all_att_added": "Los adjuntos han sido añadidos",
+            "series_deleted_no_notification": "Serie movida a la papelera."
         },
         "invite_has_no_message": "Esta invitación no contiene mensaje de texto",
         "invited_you": "te ha invitado a un evento",
@@ -684,5 +685,7 @@
     "recurrent_in_allday": "No es posible arrastrar una cita recurrente hacia un espacio de día entero",
     "mountpoint_warning": "{{failed}} de {{total}} calendarios no han podido ser añadidos a Calendarios compartidos",
     "mountpoint_error": "No se pudo añadir a la sección de Calendarios compartidos",
-    "mountpoint_success": "Se ha añadido correctamente a la sección de Calendarios compartidos"
+    "mountpoint_success": "Se ha añadido correctamente a la sección de Calendarios compartidos",
+    "attendee_unavailable": "El participante no está disponible a la hora seleccionada del evento",
+    "attendees_unavailable": "Uno o más participantes no están disponibles a la hora seleccionada del evento"
 }
