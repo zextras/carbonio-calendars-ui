@@ -235,7 +235,6 @@ export const useCalendarComponentUtils = (): {
 					context: {
 						dispatch,
 						folders: calendarFolders,
-						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
 						end: end.valueOf(),
 						allDay: isAllDay ?? false,
@@ -250,7 +249,7 @@ export const useCalendarComponentUtils = (): {
 				});
 			}
 		},
-		[action, calendarFolders, dispatch, summaryViewOpen, t]
+		[action, calendarFolders, dispatch, summaryViewOpen]
 	);
 
 	const resizeEvent = useCallback((): null => null, []);

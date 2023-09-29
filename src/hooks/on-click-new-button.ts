@@ -19,7 +19,6 @@ export const useOnClickNewButton = (): ((ev?: MouseEvent) => void) => {
 			ev?.preventDefault?.();
 			const editor = generateEditor({
 				context: {
-					title: t('label.new_appointment', 'New Appointment'),
 					panel: false,
 					dispatch,
 					folders: calendarFolders
