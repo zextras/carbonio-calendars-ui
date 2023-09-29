@@ -11,6 +11,7 @@ import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Editor } from '../types/editor';
+import { DateType } from '../types/event';
 import { Invite } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -58,6 +59,29 @@ export type EventPropType = {
 	end: Date | Moment;
 };
 
+export const getLocalTime = (
+	date: number | DateType,
+	timezone?: string,
+	localTimezone?: string
+): number => {
+	const dateValueOf = moment(date).valueOf();
+
+	if (timezone) {
+		const dateInTimezone = moment(date).tz(timezone);
+		const localOffset = localTimezone
+			? moment().tz(localTimezone).utcOffset()
+			: moment().utcOffset();
+		const appointmentOffset = dateInTimezone.utcOffset();
+		const offSetFromUTC = appointmentOffset - localOffset;
+		const offSet = offSetFromUTC * 60_000;
+		return dateValueOf + offSet;
+	}
+	return dateValueOf;
+};
+
+export const isTimezoneDifferentFromLocal = (date: number | DateType, timezone: string): boolean =>
+	moment(date).tz(timezone).utcOffset() !== moment(date).utcOffset();
+
 const setEditorDate = ({
 	editorType,
 	invite,
@@ -71,8 +95,18 @@ const setEditorDate = ({
 	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
 		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
-	if (event) {
+	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
+			const convertedStartDate = getLocalTime(invite?.start?.u, invite?.tz);
+			const convertedEndDate = getLocalTime(invite?.end?.u, invite?.tz);
+			if (invite.tz && isTimezoneDifferentFromLocal(invite.start.u, invite.tz)) {
+				return {
+					start: event?.allDay
+						? moment(convertedStartDate)?.startOf('date').valueOf()
+						: convertedStartDate,
+					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
+				};
+			}
 			return {
 				start: event?.allDay
 					? moment(invite?.start?.u)?.startOf('date').valueOf()
@@ -82,14 +116,23 @@ const setEditorDate = ({
 					: moment(invite?.end?.u).valueOf()
 			};
 		}
-		return {
-			start: event?.allDay
-				? moment(event?.start)?.startOf('date').valueOf()
-				: moment(event?.start).valueOf(),
-			end: event?.allDay
-				? moment(event?.end)?.endOf('date').valueOf()
-				: moment(event?.end).valueOf()
-		};
+		const convertedStartDate = getLocalTime(event.start, invite?.tz);
+		const convertedEndDate = getLocalTime(event.end, invite?.tz);
+		return invite?.tz && isTimezoneDifferentFromLocal(event.start, invite.tz)
+			? {
+					start: event?.allDay
+						? moment(convertedStartDate)?.startOf('date').valueOf()
+						: convertedStartDate,
+					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
+			  }
+			: {
+					start: event?.allDay
+						? moment(event?.start)?.startOf('date').valueOf()
+						: moment(event?.start).valueOf(),
+					end: event?.allDay
+						? moment(event?.end)?.endOf('date').valueOf()
+						: moment(event?.end).valueOf()
+			  };
 	}
 	return {
 		start: moment().set('second', 0).set('millisecond', 0).valueOf(),

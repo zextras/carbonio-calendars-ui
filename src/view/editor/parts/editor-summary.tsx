@@ -3,12 +3,24 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Avatar, Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
-import moment from 'moment';
 import React, { ReactElement, useMemo } from 'react';
+
+import {
+	Avatar,
+	Container,
+	Icon,
+	Padding,
+	Row,
+	Text,
+	Tooltip
+} from '@zextras/carbonio-design-system';
+import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+
 import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
+import { useGetEventTimezoneString } from '../../../hooks/use-get-event-timezone';
+import { getLocalTime } from '../../../normalizations/normalize-editor';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
@@ -17,6 +29,7 @@ import {
 	selectEditorLocation,
 	selectEditorRoom,
 	selectEditorStart,
+	selectEditorTimezone,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 
@@ -30,7 +43,12 @@ export const AvatarComp = styled(Avatar)`
 `;
 
 const TitleRow = ({ children }: { children: ReactElement }): ReactElement => (
-	<Container mainAlignment="flex-start" crossAlignment="flex-start" padding={{ top: 'extrasmall' }}>
+	<Container
+		mainAlignment="flex-start"
+		crossAlignment="flex-start"
+		padding={{ top: 'extrasmall' }}
+		orientation="horizontal"
+	>
 		{children}
 	</Container>
 );
@@ -39,32 +57,30 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const [t] = useTranslation();
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
+	const timezone = useAppSelector(selectEditorTimezone(editorId));
 	const location = useAppSelector(selectEditorLocation(editorId));
 	const room = useAppSelector(selectEditorRoom(editorId));
 	const title = useAppSelector(selectEditorTitle(editorId));
 	const calendar = useAppSelector(selectEditorCalendar(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 
-	const apptDateTime = useMemo(() => {
-		const diff = moment(end).diff(moment(start), 'days');
-		const allDayString =
-			allDay && diff > 0
-				? `${moment(start).format(`dddd, DD MMMM, YYYY`)} -
-	           ${moment(end).format(`dddd, DD MMMM, YYYY`)} - ${t('label.all_day', 'All day')}`
-				: `${moment(start).format(`dddd, DD MMMM, YYYY`)} - ${t('label.all_day', 'All day')}`;
+	const virtualRoom = useMemo(() => room?.label, [room?.label]);
 
-		return allDay
-			? allDayString
-			: `${moment(start).format(`dddd, DD MMMM, YYYY HH:mm`)} -
-	           ${moment(end).format(' HH:mm')}`;
-	}, [end, start, allDay, t]);
+	const localTimezone = useMemo(() => moment.tz.guess(), []);
 
-	const apptLocation = useMemo(
-		() => `GMT ${moment(start).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
-		[start]
+	/* start and end value are already converted to the creation timezone value, so to convert it back to the local timezone we need to convert it again to local */
+	const localStart = useMemo(
+		() => getLocalTime(start ?? 0, localTimezone, timezone),
+		[localTimezone, start, timezone]
+	);
+	const localEnd = useMemo(
+		() => getLocalTime(end ?? 0, localTimezone, timezone),
+		[end, localTimezone, timezone]
 	);
 
-	const virtualRoom = useMemo(() => room?.label, [room?.label]);
+	const { eventTimeString, eventTimezoneString, showTimezoneTooltip, eventTimezoneTooltip } =
+		useGetEventTimezoneString(localStart, localEnd, allDay, timezone);
+
 	return (
 		<Row
 			height="fit"
@@ -99,13 +115,22 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 					/>
 				</Container>
 				<TitleRow>
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{apptDateTime}
-					</Text>
+					<>
+						<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
+							{eventTimeString}
+						</Text>
+						{showTimezoneTooltip && (
+							<Tooltip label={eventTimezoneTooltip}>
+								<Padding left="small">
+									<Icon icon="GlobeOutline" color="gray1" />
+								</Padding>
+							</Tooltip>
+						)}
+					</>
 				</TitleRow>
 				<TitleRow>
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{apptLocation}
+						{eventTimezoneString}
 					</Text>
 				</TitleRow>
 				<TitleRow>

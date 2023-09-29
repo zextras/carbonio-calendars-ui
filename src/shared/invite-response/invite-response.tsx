@@ -12,12 +12,14 @@ import {
 	Text,
 	Divider,
 	Tooltip,
-	Chip
+	Chip,
+	Padding
 } from '@zextras/carbonio-design-system';
 import { addBoard, getAction, Action, t, Board, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { filter, find } from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
+
 import 'moment-timezone';
 
 import InviteReplyPart from './parts/invite-reply-part';
@@ -27,6 +29,7 @@ import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../constants';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
+import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
 import { inviteToEvent } from '../../hooks/use-invite-to-event';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { getInvite } from '../../store/actions/get-invite';
@@ -209,6 +212,10 @@ const InviteResponse: FC<InviteResponse> = ({
 			}
 		});
 	}, [calendarFolders, dispatch, inviteId]);
+
+	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
+		useGetEventTimezoneString(invite.start.u, invite.end.u, invite.allDay, invite.tz);
+
 	return (
 		<InviteContainer padding={{ all: 'extralarge' }}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
@@ -233,16 +240,21 @@ const InviteResponse: FC<InviteResponse> = ({
 					)}
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
-					<Row width="100%" mainAlignment="flex-start" padding={{ top: 'extrasmall' }}>
-						<Text overflow="break-word" style={{ fontSize: '0.875rem' }}>
-							{apptTime}
-						</Text>
-					</Row>
-					<Row width="100%" mainAlignment="flex-start" padding={{ top: 'small' }}>
-						<Text color="gray1" size="small" overflow="break-word" style={{ fontSize: '0.875rem' }}>
-							GMT {apptTimeZone}
-						</Text>
-					</Row>
+					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
+						{localTimeString}
+					</Text>
+					{showTimezoneTooltip && (
+						<Tooltip label={localTimezoneTooltip}>
+							<Padding left="small">
+								<Icon icon="GlobeOutline" color="gray1" />
+							</Padding>
+						</Tooltip>
+					)}
+				</Row>
+				<Row width="100%" mainAlignment="flex-start">
+					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
+						{localTimezoneString}
+					</Text>{' '}
 				</Row>
 				{method === 'COUNTER'
 					? parent !== '5' && (
