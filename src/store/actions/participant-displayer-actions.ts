@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t, getBridgedFunctions } from '@zextras/carbonio-shell-ui';
+
 import { mailToContact } from '../../shared/invite-response/invite-response';
 
 // todo: this is not using redux! convert to regular async function
@@ -32,8 +33,8 @@ export const sendMsg = (email: string, name: string): void => {
 		firstName: name ?? email,
 		middleName: ''
 	};
-	// disabled because click expect a click event
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	mailToContact(obj)?.onClick();
+	mailToContact(obj)
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		?.onClick?.();
 };

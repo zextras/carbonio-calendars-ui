@@ -7,9 +7,8 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { replace } from 'lodash';
 import { t } from '@zextras/carbonio-shell-ui';
+import { ROOM_DIVIDER } from '../constants';
 
-export const ROOM_DIVIDER =
-	'-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::-';
 export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER}`, 's');
 
 const replaceLinkToAnchor = (content) => {

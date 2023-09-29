@@ -7,6 +7,7 @@ import '@testing-library/jest-dom';
 import failOnConsole from 'jest-fail-on-console';
 import moment from 'moment-timezone';
 import { rest } from 'msw';
+
 import {
 	defaultAfterAllTests,
 	defaultAfterEachTest,
@@ -15,12 +16,12 @@ import {
 	getFailOnConsoleDefaultConfig
 } from './src/carbonio-ui-commons/test/jest-setup';
 import { registerRestHandler } from './src/carbonio-ui-commons/test/mocks/network/msw/handlers';
+import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
+import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
 import { handleCreateAppointmentExceptionRequest } from './src/test/mocks/network/msw/handle-create-appointment-exception';
 import { handleCreateFolderRequest } from './src/test/mocks/network/msw/handle-create-folder';
-import { handleGetFolderRequest } from './src/test/mocks/network/msw/handle-get-folder';
 import { handleFolderActionRequest } from './src/test/mocks/network/msw/handle-folder-action';
-import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
-import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
+import { handleGetFolderRequest } from './src/test/mocks/network/msw/handle-get-folder';
 import { handleGetFreeBusy } from './src/test/mocks/network/msw/handle-get-free-busy';
 import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite';
 import { handleItemActionRequest } from './src/test/mocks/network/msw/handle-item-action';
@@ -53,7 +54,7 @@ beforeAll(() => {
 			handleCreateAppointmentExceptionRequest
 		),
 		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest),
-		rest.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest) 
+		rest.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest)
 	];
 	registerRestHandler(...h);
 	defaultBeforeAllTests();

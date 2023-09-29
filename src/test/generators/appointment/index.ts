@@ -6,6 +6,7 @@
 import { faker } from '@faker-js/faker';
 import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
+import { ROOM_DIVIDER } from '../../../constants';
 import { EventType } from '../../../types/event';
 import { Appointment } from '../../../types/store/appointments';
 import {
@@ -31,7 +32,7 @@ const getDefaultAppointment = (): Appointment => {
 		flags: '',
 		alarm: false,
 		fb: 'B' as InviteFreeBusy,
-		fr: `-:::_::_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_::_:_::- ${organizerFirstName} ${organizerLastName} have invited you to a new meeting! Subject: ...`,
+		fr: `${ROOM_DIVIDER} ${organizerFirstName} ${organizerLastName} have invited you to a new meeting! Subject: ...`,
 		d: moment().valueOf(),
 		fba: 'B' as InviteFreeBusy,
 		md: 0,

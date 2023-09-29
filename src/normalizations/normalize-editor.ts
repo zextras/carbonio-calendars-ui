@@ -5,12 +5,14 @@
  */
 import { filter, find, isNil, map, omit, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
+
+import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Editor } from '../types/editor';
+import { DateType } from '../types/event';
 import { Invite } from '../types/store/invite';
-import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -57,6 +59,29 @@ export type EventPropType = {
 	end: Date | Moment;
 };
 
+export const getLocalTime = (
+	date: number | DateType,
+	timezone?: string,
+	localTimezone?: string
+): number => {
+	const dateValueOf = moment(date).valueOf();
+
+	if (timezone) {
+		const dateInTimezone = moment(date).tz(timezone);
+		const localOffset = localTimezone
+			? moment().tz(localTimezone).utcOffset()
+			: moment().utcOffset();
+		const appointmentOffset = dateInTimezone.utcOffset();
+		const offSetFromUTC = appointmentOffset - localOffset;
+		const offSet = offSetFromUTC * 60_000;
+		return dateValueOf + offSet;
+	}
+	return dateValueOf;
+};
+
+export const isTimezoneDifferentFromLocal = (date: number | DateType, timezone: string): boolean =>
+	moment(date).tz(timezone).utcOffset() !== moment(date).utcOffset();
+
 const setEditorDate = ({
 	editorType,
 	invite,
@@ -70,8 +95,18 @@ const setEditorDate = ({
 	const endDur = (zimbraPrefCalendarDefaultApptDuration as string)?.includes('m')
 		? parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 60 * 1000
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
-	if (event) {
+	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
+			const convertedStartDate = getLocalTime(invite?.start?.u, invite?.tz);
+			const convertedEndDate = getLocalTime(invite?.end?.u, invite?.tz);
+			if (invite.tz && isTimezoneDifferentFromLocal(invite.start.u, invite.tz)) {
+				return {
+					start: event?.allDay
+						? moment(convertedStartDate)?.startOf('date').valueOf()
+						: convertedStartDate,
+					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
+				};
+			}
 			return {
 				start: event?.allDay
 					? moment(invite?.start?.u)?.startOf('date').valueOf()
@@ -81,14 +116,23 @@ const setEditorDate = ({
 					: moment(invite?.end?.u).valueOf()
 			};
 		}
-		return {
-			start: event?.allDay
-				? moment(event?.start)?.startOf('date').valueOf()
-				: moment(event?.start).valueOf(),
-			end: event?.allDay
-				? moment(event?.end)?.endOf('date').valueOf()
-				: moment(event?.end).valueOf()
-		};
+		const convertedStartDate = getLocalTime(event.start, invite?.tz);
+		const convertedEndDate = getLocalTime(event.end, invite?.tz);
+		return invite?.tz && isTimezoneDifferentFromLocal(event.start, invite.tz)
+			? {
+					start: event?.allDay
+						? moment(convertedStartDate)?.startOf('date').valueOf()
+						: convertedStartDate,
+					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
+			  }
+			: {
+					start: event?.allDay
+						? moment(event?.start)?.startOf('date').valueOf()
+						: moment(event?.start).valueOf(),
+					end: event?.allDay
+						? moment(event?.end)?.endOf('date').valueOf()
+						: moment(event?.end).valueOf()
+			  };
 	}
 	return {
 		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
@@ -115,6 +159,19 @@ export const normalizeEditor = ({
 		const editorType = { isSeries, isInstance, isException };
 
 		const { start, end } = setEditorDate({ editorType, event, invite });
+
+		const isRichText = !(
+			invite?.textDescription?.[0]?._content && !invite?.htmlDescription?.[0]?._content
+		);
+
+		const plainText = invite?.textDescription?.[0]?._content
+			? extractBody(invite?.textDescription?.[0]?._content) ?? ''
+			: '';
+
+		const richText = invite?.htmlDescription?.[0]?._content
+			? extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? ''
+			: '';
+
 		const compiledEditor = omitBy(
 			{
 				calendar: omit(find(context?.folders, ['id', calendarId]), 'parent'),
@@ -141,8 +198,9 @@ export const normalizeEditor = ({
 				inviteId: event?.resource?.inviteId,
 				reminder: invite?.alarmValue,
 				recur: !isInstance ? invite.recurrenceRule : undefined,
-				richText: extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '',
-				plainText: extractBody(invite?.textDescription?.[0]?._content) ?? '',
+				richText,
+				plainText,
+				isRichText,
 				uid: invite?.uid,
 				ms: invite?.ms,
 				rev: invite?.rev

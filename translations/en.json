@@ -48,6 +48,7 @@
             "url": "Add public link from Files"
         }
     },
+    "creation_timezone_tooltip": "Date and time on creation timezone:",
     "edit_share_properties": "Edit share properties",
     "event": {
         "action": {
@@ -291,6 +292,7 @@
         "work_week": "Work week",
         "your_pref_timezone_msg": "Your preferred timezone is: GMT +01:00 Amsterdam, Berlin, Bern, Rome, Stockholm,Vienna."
     },
+    "local_timezone_tooltip": "Date and time on local timezone:",
     "message": {
         "appointment_invitation_sent": "Appointment invitation sent",
         "appointment_type_handle": "{{name}} is a recurring appointment. Would you like to open only this instance or the series?",
