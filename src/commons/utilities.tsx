@@ -7,11 +7,12 @@ import { TextProps } from '@zextras/carbonio-design-system';
 import { FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
 import { forEach, isNil, reduce } from 'lodash';
 import moment from 'moment';
-import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 
 import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
+import { isLinkChild } from '../actions/calendar-actions-items';
 import { getUpdateFolder } from '../carbonio-ui-commons/store/zustand/folder';
 import type { Folder } from '../carbonio-ui-commons/types/folder';
+import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
@@ -404,6 +405,6 @@ export const getFolderIcon = ({ item, checked }: { item: Folder; checked: boolea
 	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME)) return '';
 	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';
 	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return checked ? 'Calendar2' : 'CalendarOutline';
-	if (item.isLink) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
+	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
 	return checked ? 'Calendar2' : 'CalendarOutline';
 };

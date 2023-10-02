@@ -6,6 +6,7 @@
 import { Container, IconButton, Padding, Row, Tooltip } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useMemo } from 'react';
+import { isLinkChild } from '../../actions/calendar-actions-items';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
@@ -41,7 +42,8 @@ export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 
 	const icon = useMemo(() => {
 		if (item.id === FOLDERS.TRASH) return checked ? 'Trash2' : 'Trash2Outline';
-		if (item.isLink && item.owner) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
+		if ((item.isLink && item.owner) || isLinkChild(item))
+			return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
 		return checked ? 'Calendar2' : 'CalendarOutline';
 	}, [checked, item]);
 
