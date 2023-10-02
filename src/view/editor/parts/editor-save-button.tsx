@@ -77,7 +77,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 		<Button
 			label={t('label.save', 'Save')}
 			icon="SaveOutline"
-			disabled={disabled?.saveButton ?? !title?.length}
+			disabled={disabled?.saveButton || !title?.length}
 			onClick={onClick}
 			type="outlined"
 		/>

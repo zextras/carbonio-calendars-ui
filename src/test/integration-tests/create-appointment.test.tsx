@@ -45,6 +45,7 @@ describe('create single appointment with default values', () => {
 		const snackbarSpy = jest.spyOn(module, 'createSnackbar');
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { result } = setupHook(useOnClickNewButton, { store });
+		const newTitle = faker.random.word();
 
 		// CREATE APPOINTMENT FROM CREATE NEW APPOINTMENT BUTTON FUNCTION
 		expect(store.getState().editor.editors).toEqual({});
@@ -62,6 +63,12 @@ describe('create single appointment with default values', () => {
 		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
 		expect(screen.getByRole('button', { name: /send/i })).toBeDisabled();
 		expect(previousEditor.isNew).toEqual(true);
+
+		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
+		await user.type(titleSelector, newTitle);
+
+		// DEBOUNCE TIMER FOR INPUT FIELDS
+		jest.advanceTimersByTime(500);
 
 		await waitFor(() => {
 			// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
