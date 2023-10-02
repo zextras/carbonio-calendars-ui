@@ -10,7 +10,7 @@ import { FOLDERS, LinkFolder, ROOT_NAME, t, useUserSettings } from '@zextras/car
 import { filter, find, map, reject } from 'lodash';
 
 import LabelFactory, { Square } from './select-label-factory';
-import { getFoldersArrayByRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { useFoldersArray } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
@@ -36,9 +36,7 @@ export const CalendarSelector = ({
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
-	// todo: This selector is ignoring shared accounts. Replace with useFoldersArray once shared accounts will be available.
-	// REFS: IRIS-2589
-	const allCalendars = getFoldersArrayByRoot(FOLDERS.USER_ROOT);
+	const allCalendars = useFoldersArray();
 	const calendars = reject(
 		allCalendars,
 		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME

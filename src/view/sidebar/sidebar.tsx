@@ -49,7 +49,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 				folderId={selectedFolder}
 				localStorageName="open_calendars_folders"
 				AccordionCustomComponent={FoldersComponent}
-				buttonFindShares={<SharesComponent />}
+				buttonFindShares={<SharesComponent key={'calendar-find-share'} />}
 				setSelectedFolder={setSelectedFolder}
 			/>
 			<Divider />
