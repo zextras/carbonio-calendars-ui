@@ -39,9 +39,12 @@ export type CalendarActionsItems = {
 	tooltipLabel: string;
 };
 
-const noPermissionLabel = t('label.no_rights', 'You do not have permission to perform this action');
+export const noPermissionLabel = t(
+	'label.no_rights',
+	'You do not have permission to perform this action'
+);
 
-export const isLinkChild = (item: Folder): boolean => {
+export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
 	const folders = getFoldersArray();
 	const parentFoldersNames = item?.absFolderPath?.split('/');
 	const parentFolders =
@@ -54,7 +57,7 @@ export const newCalendarItem = ({
 	item
 }: {
 	createModal: CreateModalFn;
-	item: Folder;
+	item: { id: string; perm?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.NEW,
 	icon: 'CalendarOutline',
@@ -69,7 +72,7 @@ export const moveToRootItem = ({
 	item
 }: {
 	createSnackbar: CreateSnackbarFn;
-	item: Folder;
+	item: { id: string; absFolderPath?: string; depth: number };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.MOVE_TO_ROOT,
 	icon: 'MoveOutline',
@@ -77,6 +80,7 @@ export const moveToRootItem = ({
 		? t('label.restore_calendar', 'Restore calendar')
 		: t('action.move_to_root', 'Move to root'),
 	disabled:
+		hasId(item, FOLDERS.TRASH) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		hasId(item, FOLDERS.CALENDAR) ||
 		item.depth < 2 ||
@@ -91,7 +95,7 @@ export const emptyTrashItem = ({
 	item
 }: {
 	createModal: CreateModalFn;
-	item: Folder;
+	item: { id: string; children?: Array<Folder>; n?: number };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EMPTY_TRASH,
 	icon: 'SlashOutline',
@@ -119,7 +123,7 @@ export const editCalendarItem = ({
 	item
 }: {
 	createModal: CreateModalFn;
-	item: Folder;
+	item: { id: string; absFolderPath?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EDIT,
 	icon: 'Edit2Outline',
