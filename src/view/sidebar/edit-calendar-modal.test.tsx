@@ -48,7 +48,9 @@ const setupFoldersStore = (): void => {
 				children: [folder]
 			}
 		},
-		folders: {}
+		folders: {
+			[folder.id]: folder
+		}
 	}));
 };
 
@@ -80,7 +82,7 @@ describe('main-calendar-modal', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 
-		const { user } = setupTest(<EditModal folder={folder} onClose={closeFn} />, {
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 		await waitFor(() => {
@@ -101,7 +103,7 @@ describe('main-calendar-modal', () => {
 		const closeFn = jest.fn();
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const { user } = setupTest(<EditModal folder={folder} onClose={closeFn} />, {
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 
@@ -125,7 +127,7 @@ describe('main-calendar-modal', () => {
 		const closeFn = jest.fn();
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const { user } = setupTest(<EditModal folder={folder} onClose={closeFn} />, {
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 
@@ -166,7 +168,7 @@ describe('main-calendar-modal', () => {
 		const closeFn = jest.fn();
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const { user } = setupTest(<EditModal folder={folder} onClose={closeFn} />, {
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 		await waitFor(() => {

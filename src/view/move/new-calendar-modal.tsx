@@ -24,7 +24,6 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { useFoldersArrayByRoot, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
@@ -118,7 +117,7 @@ type NewModalProps = {
 	toggleModal?: () => void;
 	onClose: () => void;
 	event?: EventType;
-	folder: Folder;
+	folderId: string;
 	action?: (arg: ActionArgs) => void;
 };
 
@@ -127,7 +126,7 @@ export const NewModal = ({
 	toggleModal,
 	event,
 	action,
-	folder
+	folderId
 }: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const [inputValue, setInputValue] = useState('');
@@ -136,7 +135,7 @@ export const NewModal = ({
 	const colors = useMemo(() => getStatusItems(), []);
 	const [selectedColor, setSelectedColor] = useState(0);
 	const createSnackbar = useSnackbar();
-	const root = useRoot(folder.id);
+	const root = useRoot(folderId);
 
 	const folders = useFoldersArrayByRoot(root?.id ?? '1');
 	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);

@@ -67,7 +67,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 				<NewModal
 					toggleModal={toggleModal}
 					onClose={onClose}
-					folder={currentFolder}
+					folderId={currentFolder.id}
 					event={event}
 					action={moveAppt}
 				/>

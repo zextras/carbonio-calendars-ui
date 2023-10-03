@@ -19,16 +19,16 @@ import { ShareCalendarRoleOptions } from '../../../settings/components/utils';
 import { ShareCalendarModal } from '../share-calendar-modal';
 
 type EditModalProps = {
-	folder: Folder;
+	folderId: string;
 	onClose: () => void;
 };
 
-export const EditModal: FC<EditModalProps> = ({ onClose, folder }) => {
+export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 	const [activeGrant, setActiveGrant] = useState({});
 	const [modal, setModal] = useState('main');
 	const [t] = useTranslation();
-
-	const grant = useFolder(folder.id)?.acl?.grant as Grant[];
+	const folder = useFolder(folderId);
+	const grant = folder?.acl?.grant;
 
 	const roleOptions = useMemo(
 		() => ShareCalendarRoleOptions(grant?.[0]?.perm?.includes('p')),
@@ -41,31 +41,31 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folder }) => {
 
 	useEffect(() => {
 		const updateFolder = getUpdateFolder();
-		getFolderRequest({ id: folder.id }).then((res: [Folder]) => {
+		getFolderRequest({ id: folderId }).then((res: [Folder]) => {
 			if (res?.[0]?.acl?.grant) {
-				updateFolder(folder.id, { acl: { grant: res?.[0]?.acl?.grant } });
+				updateFolder(folderId, { acl: { grant: res?.[0]?.acl?.grant } });
 			}
 		});
-	}, [folder]);
+	}, [folderId]);
 
 	return (
 		<>
 			<EditModalContext.Provider value={{ setModal, onClose, roleOptions, setActiveGrant }}>
-				{modal === 'main' && (
+				{modal === 'main' && folder && (
 					<MainEditModal folder={folder} totalAppointments={folder?.n ?? 0} grant={grant ?? []} />
 				)}
 
-				{(modal === 'share' && (
+				{(modal === 'share' && folder && (
 					<ShareCalendarModal
 						folderName={folder.name}
-						folderId={folder.id}
+						folderId={folderId}
 						closeFn={onClose}
 						onGoBack={onGoBack}
 						secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
 						grant={grant}
 					/>
 				)) ||
-					(modal === 'revoke' && (
+					(modal === 'revoke' && folder && (
 						<ShareRevokeModal
 							folder={folder}
 							grant={
@@ -77,7 +77,7 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folder }) => {
 						/>
 					))}
 
-				{modal === 'edit' && (
+				{modal === 'edit' && folder && (
 					<EditPermissionModal
 						folder={folder}
 						grant={

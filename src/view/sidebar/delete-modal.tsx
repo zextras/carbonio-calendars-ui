@@ -13,6 +13,7 @@ import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-foote
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { isNestedInTrash } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { folderAction } from '../../store/actions/calendar-actions';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
@@ -56,7 +57,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 						? t('message.snackbar.calendar_permanently_deleted', 'Calendar permanently deleted')
 						: t('message.snackbar.calendar_moved_to_trash', 'Calendar moved to trash'),
 					autoHideTimeout: 5000,
-					hideButton: folder.parent !== FOLDERS.USER_ROOT,
+					hideButton: folder ? hasId(folder, FOLDERS.USER_ROOT) : true,
 					actionLabel: t('label.undo', 'Undo'),
 					onActionClick: () => restoreEvent()
 				});

@@ -112,7 +112,7 @@ describe('edit modal', () => {
 		setupFoldersStore();
 		const editRoleInterceptor = setupInterceptor();
 
-		const { user } = setupTest(<EditModal folder={folder} onClose={closeFn} />, {
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 		await waitFor(() => {
@@ -149,7 +149,7 @@ describe('edit modal', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 
-		setupTest(<EditModal folder={folder} onClose={closeFn} />, {
+		setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 		await waitFor(() => {
@@ -171,7 +171,7 @@ describe('edit modal', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 
-		setupTest(<EditModal folder={folder} onClose={closeFn} />, {
+		setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 		await waitFor(() => {
@@ -188,7 +188,7 @@ describe('edit modal', () => {
 		setupFoldersStore();
 		const revokeInterceptor = setupInterceptor();
 
-		const { user } = setupTest(<EditModal folder={folder} onClose={closeFn} />, {
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 		await waitFor(() => {
@@ -222,7 +222,7 @@ describe('edit modal', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 
-		const { user } = setupTest(<EditModal folder={folder} onClose={closeFn} />, {
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 		await waitFor(() => {

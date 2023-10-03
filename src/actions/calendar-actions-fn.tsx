@@ -30,7 +30,7 @@ export const newCalendar =
 		item
 	}: {
 		createModal: CreateModalFn;
-		item: Folder;
+		item: { id: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
@@ -40,7 +40,7 @@ export const newCalendar =
 			{
 				children: (
 					<StoreProvider>
-						<NewModal onClose={(): void => closeModal()} folder={item} />
+						<NewModal onClose={(): void => closeModal()} folderId={item.id} />
 					</StoreProvider>
 				)
 			},
@@ -54,7 +54,7 @@ export const moveToRoot =
 		item
 	}: {
 		createSnackbar: CreateSnackbarFn;
-		item: Folder;
+		item: { id: string; absFolderPath?: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
@@ -92,7 +92,7 @@ export const emptyTrash =
 		item
 	}: {
 		createModal: CreateModalFn;
-		item: Folder;
+		item: { id: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
@@ -102,7 +102,7 @@ export const emptyTrash =
 			{
 				children: (
 					<StoreProvider>
-						<EmptyModal onClose={(): void => closeModal()} folder={item} />
+						<EmptyModal onClose={(): void => closeModal()} folderId={item.id} />
 					</StoreProvider>
 				),
 				onClose: () => {
@@ -119,7 +119,7 @@ export const editCalendar =
 		item
 	}: {
 		createModal: CreateModalFn;
-		item: Folder;
+		item: { id: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
@@ -129,7 +129,7 @@ export const editCalendar =
 			{
 				children: (
 					<StoreProvider>
-						<EditModal folder={item} onClose={(): void => closeModal()} />
+						<EditModal folderId={item.id} onClose={(): void => closeModal()} />
 					</StoreProvider>
 				),
 				maxHeight: '70vh',
@@ -168,7 +168,7 @@ export const removeFromList =
 		item,
 		createSnackbar
 	}: {
-		item: Folder;
+		item: { id: string };
 		createSnackbar: CreateSnackbarFn;
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
@@ -203,7 +203,7 @@ export const sharesInfo =
 		item,
 		createModal
 	}: {
-		item: Folder;
+		item: { id: string };
 		createModal: CreateModalFn;
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
@@ -211,7 +211,7 @@ export const sharesInfo =
 			e.stopPropagation();
 		}
 		getFolderRequest({ id: item.id }).then((res) => {
-			if (!res.Fault) {
+			if (!res.Fault && res.link) {
 				const closeModal = createModal(
 					{
 						children: (
@@ -261,7 +261,7 @@ export const shareCalendarUrl =
 		item,
 		createModal
 	}: {
-		item: Folder;
+		item: { name: string };
 		createModal: CreateModalFn;
 	}): ((e?: ActionsClick) => void) =>
 	() => {

@@ -8,23 +8,22 @@ import React from 'react';
 import { Text, Container, Padding, useSnackbar } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import { Folder } from '../../carbonio-ui-commons/types/folder';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { folderAction } from '../../store/actions/calendar-actions';
 
 export const EmptyModal = ({
 	onClose,
-	folder
+	folderId
 }: {
 	onClose: () => void;
-	folder: Folder;
+	folderId: string;
 }): JSX.Element => {
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 
 	const onConfirm = (): void => {
-		folderAction({ id: folder.id, op: 'empty', changes: { recursive: true } }).then((res) => {
+		folderAction({ id: folderId, op: 'empty', changes: { recursive: true } }).then((res) => {
 			onClose();
 			if (!res.Fault) {
 				createSnackbar({

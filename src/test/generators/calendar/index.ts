@@ -5,8 +5,9 @@
  */
 import { faker } from '@faker-js/faker';
 import { nanoid } from '@reduxjs/toolkit';
-import { Folder } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
+
+import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import utils from '../utils';
 
 type CalendarsArrayProps = {
