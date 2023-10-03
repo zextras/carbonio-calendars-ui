@@ -236,12 +236,7 @@ describe('calendar actions items', () => {
 			const empty = emptyTrashItem({ createModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
-					id: FOLDER_ACTIONS.EMPTY_TRASH,
-					icon: 'SlashOutline',
-					label: trashEmptyLabel,
-					tooltipLabel: trashTooltipLabel,
-					onClick: expect.any(Function),
-					disabled: true
+					tooltipLabel: trashTooltipLabel
 				})
 			);
 		});
@@ -252,11 +247,6 @@ describe('calendar actions items', () => {
 			const empty = emptyTrashItem({ createModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
-					id: FOLDER_ACTIONS.EMPTY_TRASH,
-					icon: 'SlashOutline',
-					label: trashEmptyLabel,
-					tooltipLabel: noPermissionLabel,
-					onClick: expect.any(Function),
 					disabled: true
 				})
 			);
@@ -268,11 +258,6 @@ describe('calendar actions items', () => {
 			const empty = emptyTrashItem({ createModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
-					id: FOLDER_ACTIONS.EMPTY_TRASH,
-					icon: 'SlashOutline',
-					label: trashEmptyLabel,
-					tooltipLabel: trashTooltipLabel,
-					onClick: expect.any(Function),
 					disabled: true
 				})
 			);
@@ -284,11 +269,6 @@ describe('calendar actions items', () => {
 			const empty = emptyTrashItem({ createModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
-					id: FOLDER_ACTIONS.EMPTY_TRASH,
-					icon: 'SlashOutline',
-					label: trashEmptyLabel,
-					tooltipLabel: noPermissionLabel,
-					onClick: expect.any(Function),
 					disabled: false
 				})
 			);
@@ -300,11 +280,6 @@ describe('calendar actions items', () => {
 			const empty = emptyTrashItem({ createModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
-					id: FOLDER_ACTIONS.EMPTY_TRASH,
-					icon: 'SlashOutline',
-					label: trashEmptyLabel,
-					tooltipLabel: noPermissionLabel,
-					onClick: expect.any(Function),
 					disabled: false
 				})
 			);

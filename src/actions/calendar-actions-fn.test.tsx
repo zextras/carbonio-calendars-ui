@@ -142,18 +142,15 @@ describe('calendar-actions-fn', () => {
 		});
 	});
 	describe('shares info fn', () => {
-		test('Characterization test - if response received does not contain links the creatModal is not called and a snackbar is not created', () => {
+		test('Characterization test - if response received does not contain links the creatModal is not called', () => {
 			const createModal = jest.fn();
-			const createSnackBar = jest.fn();
 			const item = { id: '10' };
 			const sharesInfoFn = sharesInfo({ createModal, item });
 			sharesInfoFn();
 			expect(createModal).toHaveBeenCalledTimes(0);
-			expect(createSnackBar).toHaveBeenCalledTimes(0);
 		});
 		test('Characterization test - if request fails the creatModal is not called and a snackbar is not created', () => {
 			const createModal = jest.fn();
-			const createSnackBar = jest.fn();
 			getSetupServer().use(
 				rest.post(FOLDER_ACTION_REQUEST_PATH, async (req, res, ctx) =>
 					res(
@@ -169,7 +166,6 @@ describe('calendar-actions-fn', () => {
 			const sharesInfoFn = sharesInfo({ createModal, item });
 			sharesInfoFn();
 			expect(createModal).toHaveBeenCalledTimes(0);
-			expect(createSnackBar).toHaveBeenCalledTimes(0);
 		});
 		test('when the request is successful it calls creatModal once and snackbar is not created', async () => {
 			const createModal = jest.fn();
