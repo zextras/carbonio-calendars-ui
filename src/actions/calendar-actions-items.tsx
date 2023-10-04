@@ -63,7 +63,10 @@ export const newCalendarItem = ({
 	id: FOLDER_ACTIONS.NEW,
 	icon: 'CalendarOutline',
 	label: t('label.new_calendar', 'New calendar'),
-	disabled: isTrashOrNestedInIt(item) || (item.perm ? !/w/.test(item.perm) : false),
+	disabled:
+		isTrashOrNestedInIt(item) ||
+		(item.perm ? !/w/.test(item.perm) : false) ||
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR),
 	tooltipLabel: noPermissionLabel,
 	onClick: newCalendar({ createModal, item })
 });
@@ -168,6 +171,7 @@ export const removeFromListItem = ({
 	tooltipLabel: noPermissionLabel,
 	onClick: removeFromList({ item, createSnackbar }),
 	disabled:
+		!(item as LinkFolder).isLink ||
 		isLinkChild(item) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		hasId(item, FOLDERS.CALENDAR) ||
@@ -187,6 +191,7 @@ export const sharesInfoItem = ({
 	tooltipLabel: noPermissionLabel,
 	onClick: sharesInfo({ createModal, item }),
 	disabled:
+		!(item as LinkFolder).isLink ||
 		isLinkChild(item) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		hasId(item, FOLDERS.CALENDAR) ||
@@ -223,5 +228,8 @@ export const shareCalendarUrlItem = ({
 	label: t('action.calendar_access_share', 'Calendar access share'),
 	tooltipLabel: noPermissionLabel,
 	onClick: shareCalendarUrl({ createModal, item }),
-	disabled: isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)
+	disabled:
+		(item as LinkFolder).isLink ||
+		isTrashOrNestedInIt(item) ||
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)
 });

@@ -108,9 +108,11 @@ describe('calendar actions items', () => {
 		});
 		test.each([
 			{ id: FOLDERS.TRASH },
+			{ id: SIDEBAR_ITEMS.ALL_CALENDAR },
 			{ id: `153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
 			{ id: '154', perm: 'r' },
 			{ id: `${randomUUID}:${FOLDERS.TRASH}` },
+			{ id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
 			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
 			{ id: `${randomUUID}:154`, perm: 'r' }
 		])(genericTestTitleForEachCases, (item) => {
@@ -371,6 +373,7 @@ describe('calendar actions items', () => {
 		});
 		test.each([
 			childFolder,
+			{ ...mockedData.calendars.getCalendar(), id: '153' },
 			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.CALENDAR },
 			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.TRASH },
 			{ id: `153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
@@ -378,6 +381,7 @@ describe('calendar actions items', () => {
 				...mockedData.calendars.getCalendar(),
 				id: `${FOLDERS.USER_ROOT}:${SIDEBAR_ITEMS.ALL_CALENDAR}`
 			},
+			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:153` },
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.CALENDAR}` },
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.TRASH}` },
 			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
@@ -412,6 +416,7 @@ describe('calendar actions items', () => {
 		});
 		test.each([
 			childFolder,
+			{ ...mockedData.calendars.getCalendar(), id: '153' },
 			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.CALENDAR },
 			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.TRASH },
 			{ id: `153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
@@ -419,6 +424,7 @@ describe('calendar actions items', () => {
 				...mockedData.calendars.getCalendar(),
 				id: `${FOLDERS.USER_ROOT}:${SIDEBAR_ITEMS.ALL_CALENDAR}`
 			},
+			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:153` },
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.CALENDAR}` },
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.TRASH}` },
 			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH },

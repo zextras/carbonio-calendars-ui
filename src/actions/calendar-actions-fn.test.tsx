@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { waitFor } from '@testing-library/react';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { rest } from 'msw';
 
 import {
@@ -25,7 +26,7 @@ const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 describe('calendar-actions-fn', () => {
 	test('new calendar fn on click create modal is called once', () => {
 		const createModal = jest.fn();
-		const item = { id: '10' };
+		const item = { id: FOLDERS.CALENDAR };
 		const newCalendarFn = newCalendar({ createModal, item });
 		newCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
@@ -33,7 +34,7 @@ describe('calendar-actions-fn', () => {
 	describe('move to root fn - on click request to backend to move the folder under the root', () => {
 		test('when the request is successful it creates an info snackbar', async () => {
 			const createSnackbar = jest.fn();
-			const item = { id: '10' };
+			const item = { id: FOLDERS.CALENDAR };
 			const moveToRootFn = moveToRoot({ createSnackbar, item });
 			await moveToRootFn();
 			await waitFor(() => {
@@ -59,7 +60,7 @@ describe('calendar-actions-fn', () => {
 				)
 			);
 			const createSnackbar = jest.fn();
-			const item = { id: '10' };
+			const item = { id: FOLDERS.CALENDAR };
 			const moveToRootFn = moveToRoot({ createSnackbar, item });
 			await moveToRootFn();
 			await waitFor(() => {
@@ -76,14 +77,14 @@ describe('calendar-actions-fn', () => {
 	});
 	test('empty trash fn', () => {
 		const createModal = jest.fn();
-		const item = { id: '10' };
+		const item = { id: FOLDERS.CALENDAR };
 		const emptyTrashFn = emptyTrash({ createModal, item });
 		emptyTrashFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('edit calendar fn', () => {
 		const createModal = jest.fn();
-		const item = { id: '10' };
+		const item = { id: FOLDERS.CALENDAR };
 		const editCalendarFn = editCalendar({ createModal, item });
 		editCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
@@ -98,7 +99,7 @@ describe('calendar-actions-fn', () => {
 	describe('on click request to backend should remove the folder mountpoint', () => {
 		test('when the request is successful it creates an info snackbar', async () => {
 			const createSnackbar = jest.fn();
-			const item = { id: '10' };
+			const item = { id: FOLDERS.CALENDAR };
 			const removeFromListFn = removeFromList({ createSnackbar, item });
 			await removeFromListFn();
 			await waitFor(() => {
@@ -124,7 +125,7 @@ describe('calendar-actions-fn', () => {
 				)
 			);
 			const createSnackbar = jest.fn();
-			const item = { id: '10' };
+			const item = { id: FOLDERS.CALENDAR };
 			const removeFromListFn = removeFromList({ createSnackbar, item });
 			await removeFromListFn();
 			await waitFor(() => {
@@ -142,7 +143,7 @@ describe('calendar-actions-fn', () => {
 	describe('shares info fn', () => {
 		test('Characterization test - if response received does not contain links the creatModal is not called and no action is performed', () => {
 			const createModal = jest.fn();
-			const item = { id: '10' };
+			const item = { id: FOLDERS.CALENDAR };
 			const sharesInfoFn = sharesInfo({ createModal, item });
 			sharesInfoFn();
 			expect(createModal).toHaveBeenCalledTimes(0);
@@ -160,14 +161,14 @@ describe('calendar-actions-fn', () => {
 					)
 				)
 			);
-			const item = { id: '10' };
+			const item = { id: FOLDERS.CALENDAR };
 			const sharesInfoFn = sharesInfo({ createModal, item });
 			sharesInfoFn();
 			expect(createModal).toHaveBeenCalledTimes(0);
 		});
 		test('when the request is successful it calls creatModal once', async () => {
 			const createModal = jest.fn();
-			const item = { id: '10' };
+			const item = { id: FOLDERS.CALENDAR };
 
 			getSetupServer().use(
 				rest.post('/service/soap/GetFolderRequest', async (req, res, ctx) =>

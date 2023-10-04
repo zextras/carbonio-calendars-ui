@@ -5,8 +5,6 @@
  */
 
 // eslint-disable-next-line no-shadow
-import { CalendarIntegrations, EventActionsEnum } from '../types/enums/event-actions-enum';
-
 export enum FOLDER_ACTIONS {
 	MOVE_TO_ROOT = 'moveToRoot',
 	EMPTY_TRASH = 'emptyTrash',
