@@ -4,15 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Container, Text } from '@zextras/carbonio-design-system';
-import {
-	closeBoard,
-	getBridgedFunctions,
-	replaceHistory,
-	useBoard,
-	t
-} from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
+
+import { Container, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
+import { closeBoard, replaceHistory, useBoard, t } from '@zextras/carbonio-shell-ui';
+
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
@@ -49,6 +45,7 @@ export const SeriesEditWarningModal = ({
 	const panel = useAppSelector(selectEditorPanel(editorId));
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
 	const dispatch = useAppDispatch();
+	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const title = useMemo(() => t('label.warning', 'Warning'), []);
 	const label = useMemo(() => t('label.continue', 'Continue'), []);
@@ -60,7 +57,7 @@ export const SeriesEditWarningModal = ({
 					if (panel && response) {
 						replaceHistory('');
 					}
-					getBridgedFunctions().createSnackbar({
+					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
 						type: response ? 'info' : 'warning',
@@ -73,7 +70,7 @@ export const SeriesEditWarningModal = ({
 					onClose();
 			  })
 			: action({ draft: !attendeesLength, isNew, editor, dispatch }).then(({ response }: any) => {
-					getBridgedFunctions().createSnackbar({
+					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
 						type: response ? 'info' : 'warning',
@@ -85,7 +82,7 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  });
-	}, [action, attendeesLength, dispatch, editor, isNew, isSending, onClose, panel]);
+	}, [action, attendeesLength, createSnackbar, dispatch, editor, isNew, isSending, onClose, panel]);
 
 	const onDiscard = useCallback(() => {
 		onClose();

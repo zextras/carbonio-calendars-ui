@@ -40,9 +40,6 @@ shell.getUserSettings.mockImplementation(() => ({
 describe('create single appointment with default values', () => {
 	test('from board panel', async () => {
 		// SETUP MOCKS, STORE AND HOOK
-		const module = { createSnackbar: jest.fn() };
-		shell.getBridgedFunctions.mockImplementation(() => module);
-		const snackbarSpy = jest.spyOn(module, 'createSnackbar');
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { result } = setupHook(useOnClickNewButton, { store });
 		const newTitle = faker.random.word();
@@ -77,24 +74,14 @@ describe('create single appointment with default values', () => {
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);
 
-		// SNACKBAR DISPLAY CORRECTLY
-		expect(snackbarSpy).toHaveBeenCalledTimes(1);
-		expect(snackbarSpy).toHaveBeenCalledWith({
-			autoHideTimeout: 3000,
-			hideButton: true,
-			key: 'calendar-moved-root',
-			label: 'Edits saved correctly',
-			replace: true,
-			type: 'info'
-		});
+		const snackbar = screen.getByText(/edits saved correctly/i);
+
+		expect(snackbar).toBeInTheDocument();
 	});
 });
 describe('create single appointment with custom values', () => {
 	test('from board panel', async () => {
 		// SETUP MOCKS, STORE AND HOOK
-		const module = { createSnackbar: jest.fn() };
-		shell.getBridgedFunctions.mockImplementation(() => module);
-		const snackbarSpy = jest.spyOn(module, 'createSnackbar');
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { result } = setupHook(useOnClickNewButton, { store });
 
@@ -195,17 +182,8 @@ describe('create single appointment with custom values', () => {
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);
 
-		// CHECKING ALL CHANGED PARAMETERS
+		const snackbar = screen.getByText(/edits saved correctly/i);
 
-		// SNACKBAR DISPLAY CORRECTLY
-		expect(snackbarSpy).toHaveBeenCalledTimes(1);
-		expect(snackbarSpy).toHaveBeenCalledWith({
-			autoHideTimeout: 3000,
-			hideButton: true,
-			key: 'calendar-moved-root',
-			label: 'Edits saved correctly',
-			replace: true,
-			type: 'info'
-		});
+		expect(snackbar).toBeInTheDocument();
 	});
 });

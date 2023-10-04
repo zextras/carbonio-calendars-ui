@@ -3,17 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { screen } from '@testing-library/react';
 import React from 'react';
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { t } from '@zextras/carbonio-shell-ui';
+import { screen, waitFor } from '@testing-library/react';
+
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { PREFS_DEFAULTS } from '../../constants';
+import * as ParticipantDisplayerAction from '../../store/actions/participant-displayer-actions';
 import { reducers } from '../../store/redux';
 import { DisplayedParticipant } from '../../view/event-panel-view/participants-displayer';
-import * as ParticipantDisplayerAction from '../../store/actions/participant-displayer-actions';
 
 jest.setTimeout(20000);
 
@@ -31,10 +32,7 @@ shell.getUserSettings.mockImplementation(() => ({
 
 describe('participants displayer', () => {
 	test('copy email to clipboard', async () => {
-		const module = { createSnackbar: jest.fn() };
-		shell.getBridgedFunctions.mockImplementation(() => module);
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const snackbarSpy = jest.spyOn(module, 'createSnackbar');
 		const clipboardCopySpy = jest.spyOn(ParticipantDisplayerAction, 'copyEmailToClipboard');
 		const { user } = setupTest(
 			<DisplayedParticipant
@@ -50,17 +48,11 @@ describe('participants displayer', () => {
 
 		expect(screen.getByTestId('DisplayedParticipant')).toBeInTheDocument();
 		expect(screen.getByTestId('icon: Copy')).toBeInTheDocument();
-		await user.click(screen.getByTestId('icon: Copy'));
-		expect(clipboardCopySpy).toHaveBeenCalledTimes(1);
-		expect(snackbarSpy).toHaveBeenCalledTimes(1);
-		expect(snackbarSpy).toHaveBeenCalledWith({
-			key: `clipboard-copy-success`,
-			replace: true,
-			type: 'success',
-			hideButton: true,
-			label: t('snackbar.email_copied_to_clipboard', 'Email copied to clipboard.'),
-			autoHideTimeout: 3000
+		await waitFor(() => {
+			user.click(screen.getByTestId('icon: Copy'));
 		});
+		expect(clipboardCopySpy).toHaveBeenCalledTimes(1);
+		expect(screen.getByText('snackbar.email_copied_to_clipboard')).toBeInTheDocument();
 	});
 
 	test('send E-mail', async () => {
