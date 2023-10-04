@@ -47,6 +47,7 @@ export const noPermissionLabel = t(
 export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
 	const folders = getFoldersArray();
 	const parentFoldersNames = item?.absFolderPath?.split('/');
+	parentFoldersNames?.pop(); // removing itself from results
 	const parentFolders =
 		map(parentFoldersNames, (f) => find(folders, (ff) => ff.name === f) ?? '') ?? [];
 	return some(parentFolders, ['isLink', true]) ?? false;
@@ -158,7 +159,7 @@ export const removeFromListItem = ({
 	item,
 	createSnackbar
 }: {
-	item: Folder;
+	item: { id: string; absFolderPath?: string };
 	createSnackbar: CreateSnackbarFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.REMOVE_FROM_LIST,
@@ -167,7 +168,7 @@ export const removeFromListItem = ({
 	tooltipLabel: noPermissionLabel,
 	onClick: removeFromList({ item, createSnackbar }),
 	disabled:
-		!isLinkChild(item) ||
+		isLinkChild(item) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		hasId(item, FOLDERS.CALENDAR) ||
 		isTrashOrNestedInIt(item)
@@ -177,7 +178,7 @@ export const sharesInfoItem = ({
 	createModal,
 	item
 }: {
-	item: Folder;
+	item: { id: string; absFolderPath?: string };
 	createModal: CreateModalFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SHARES_INFO,
@@ -186,7 +187,7 @@ export const sharesInfoItem = ({
 	tooltipLabel: noPermissionLabel,
 	onClick: sharesInfo({ createModal, item }),
 	disabled:
-		!isLinkChild(item) ||
+		isLinkChild(item) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		hasId(item, FOLDERS.CALENDAR) ||
 		isTrashOrNestedInIt(item)
@@ -214,7 +215,7 @@ export const shareCalendarUrlItem = ({
 	createModal,
 	item
 }: {
-	item: Folder;
+	item: { name: string; id: string; absFolderPath?: string };
 	createModal: CreateModalFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SHARE_URL,

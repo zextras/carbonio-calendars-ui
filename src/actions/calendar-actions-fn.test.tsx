@@ -20,10 +20,6 @@ import {
 import { getSetupServer } from '../carbonio-ui-commons/test/jest-setup';
 import mockedData from '../test/generators';
 
-afterEach(() => {
-	getSetupServer().resetHandlers();
-});
-
 const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 
 describe('calendar-actions-fn', () => {
@@ -75,6 +71,7 @@ describe('calendar-actions-fn', () => {
 					label: 'label.error_try_again'
 				})
 			);
+			getSetupServer().resetHandlers();
 		});
 	});
 	test('empty trash fn', () => {
@@ -139,17 +136,18 @@ describe('calendar-actions-fn', () => {
 					label: 'label.error_try_again'
 				})
 			);
+			getSetupServer().resetHandlers();
 		});
 	});
 	describe('shares info fn', () => {
-		test('Characterization test - if response received does not contain links the creatModal is not called', () => {
+		test('Characterization test - if response received does not contain links the creatModal is not called and no action is performed', () => {
 			const createModal = jest.fn();
 			const item = { id: '10' };
 			const sharesInfoFn = sharesInfo({ createModal, item });
 			sharesInfoFn();
 			expect(createModal).toHaveBeenCalledTimes(0);
 		});
-		test('Characterization test - if request fails the creatModal is not called and a snackbar is not created', () => {
+		test('Characterization test - if request fails the creatModal is not called and no action is performed', () => {
 			const createModal = jest.fn();
 			getSetupServer().use(
 				rest.post(FOLDER_ACTION_REQUEST_PATH, async (req, res, ctx) =>
@@ -167,9 +165,8 @@ describe('calendar-actions-fn', () => {
 			sharesInfoFn();
 			expect(createModal).toHaveBeenCalledTimes(0);
 		});
-		test('when the request is successful it calls creatModal once and snackbar is not created', async () => {
+		test('when the request is successful it calls creatModal once', async () => {
 			const createModal = jest.fn();
-			const createSnackBar = jest.fn();
 			const item = { id: '10' };
 
 			getSetupServer().use(
@@ -191,7 +188,7 @@ describe('calendar-actions-fn', () => {
 			await waitFor(() => {
 				expect(createModal).toHaveBeenCalledTimes(1);
 			});
-			expect(createSnackBar).toHaveBeenCalledTimes(0);
+			getSetupServer().resetHandlers();
 		});
 	});
 	test('shares calendar fn on click create modal is called once', () => {
@@ -201,7 +198,7 @@ describe('calendar-actions-fn', () => {
 		shareCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
-	test('shares calendar url fn  on click create modal is called once', () => {
+	test('shares calendar url fn on click create modal is called once', () => {
 		const createModal = jest.fn();
 		const item = { name: 'calendar' };
 		const shareCalendarUrlFn = shareCalendarUrl({ createModal, item });
