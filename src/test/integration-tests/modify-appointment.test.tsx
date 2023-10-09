@@ -20,7 +20,7 @@ import { PREFS_DEFAULTS } from '../../constants';
 import { reducers } from '../../store/redux';
 import { PanelView } from '../../types/actions';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
-import EditorPanelWrapper from '../../view/editor/editor-panel-wrapper';
+import { EditorPanel } from '../../view/editor/editor-panel';
 import mockedData from '../generators';
 
 jest.setTimeout(55000);
@@ -35,6 +35,10 @@ shell.getUserSettings.mockImplementation(() => ({
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
 	}
+}));
+
+shell.useBoardHooks.mockImplementation(() => ({
+	updateBoard: jest.fn()
 }));
 
 const recurrenceRule = [
@@ -85,14 +89,16 @@ describe.each`
 		const previousEditor = values(store.getState().editor.editors)[0];
 		expect(previousEditor).toBeDefined();
 		expect(previousEditor.isNew).toEqual(false);
-		expect(store.getState().editor.activeId).toBeDefined();
 
 		const initialEntries = [
 			`/calendars/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
 		];
 
 		// RENDER EDITOR PANEL VIEW
-		const { user } = setupTest(<EditorPanelWrapper />, { store, initialEntries });
+		const { user } = setupTest(<EditorPanel editorId={previousEditor.id} />, {
+			store,
+			initialEntries
+		});
 
 		// CHECKING EDITOR DEFAULT VALUES
 		expect(previousEditor.allDay).toEqual(false);
