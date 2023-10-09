@@ -25,7 +25,7 @@ import { addAllCalendarsItem } from './utils';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
 import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
-import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
@@ -92,7 +92,8 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 					(f) =>
 						hasId(f, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 						hasId(f, FOLDERS.CALENDAR) ||
-						hasId(f, FOLDERS.TRASH)
+						hasId(f, FOLDERS.TRASH) ||
+						(f as LinkFolder)?.broken === true
 				);
 				return allCalendarFolder && calendar && trash
 					? {
