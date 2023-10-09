@@ -3,16 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
-import {
-	closeBoard,
-	getBridgedFunctions,
-	replaceHistory,
-	useBoard
-} from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
+
+import {
+	Button,
+	ModalManagerContext,
+	SnackbarManagerContext
+} from '@zextras/carbonio-design-system';
+import { closeBoard, replaceHistory, useBoard } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+
 import { onSend } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
@@ -33,6 +34,8 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
+	const createSnackbar = useContext(SnackbarManagerContext);
+
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();
 	const board = useBoard();
@@ -45,9 +48,6 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	);
 	const onClick = useCallback(() => {
 		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
-			// It's ignore because the createModal Function is not typed
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			const closeModal = createModal(
 				{
 					size: 'large',
@@ -77,7 +77,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 				if (board && response) {
 					closeBoard(board?.id);
 				}
-				getBridgedFunctions().createSnackbar({
+				createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
 					type: response ? 'info' : 'warning',
@@ -88,7 +88,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 					autoHideTimeout: 3000
 				});
 			});
-	}, [action, board, createModal, dispatch, editor, editorId, isNew, t]);
+	}, [action, board, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
 
 	return (
 		<Button
