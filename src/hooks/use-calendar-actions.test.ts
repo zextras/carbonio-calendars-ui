@@ -7,11 +7,116 @@ import { faker } from '@faker-js/faker';
 import { t } from '@zextras/carbonio-shell-ui';
 
 import { useCalendarActions } from './use-calendar-actions';
+import { useFolderStore } from '../carbonio-ui-commons/store/zustand/folder';
 import { FOLDERS } from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import { generateRoots } from '../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { setupHook } from '../carbonio-ui-commons/test/test-setup';
+import { FolderView } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 
 const randomUUID = faker.datatype.uuid();
+const roots = generateRoots();
+
+const sharedChildFolder = {
+	absFolderPath: '/Calendar 1/Calendar child',
+	id: `${randomUUID}:153`,
+	l: `${randomUUID}:2048`,
+	name: 'Calendar child',
+	view: 'appointment' as FolderView,
+	n: 1,
+	uuid: 'abcddefg',
+	recursive: false,
+	deletable: false,
+	activesyncdisabled: true,
+	isLink: false,
+	depth: 2,
+	children: [],
+	reminder: false,
+	broken: false,
+	acl: {
+		grant: []
+	}
+};
+
+const sharedFolder = {
+	absFolderPath: '/Calendar 1',
+	id: `${randomUUID}:2048`,
+	l: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}`,
+	name: 'Calendar 1',
+	owner: 'random owner',
+	view: 'appointment' as FolderView,
+	n: 1,
+	uuid: 'abcd',
+	recursive: false,
+	deletable: false,
+	activesyncdisabled: true,
+	isLink: true,
+	depth: 1,
+	children: [sharedChildFolder],
+	reminder: false,
+	broken: false,
+	acl: {
+		grant: []
+	},
+	perm: 'rwixda'
+};
+
+const mainChildFolder = {
+	absFolderPath: '/Calendar 1/Calendar child',
+	id: `${randomUUID}:153`,
+	l: `${randomUUID}:2048`,
+	name: 'Calendar child',
+	view: 'appointment' as FolderView,
+	n: 1,
+	uuid: 'abcddefg',
+	recursive: false,
+	deletable: false,
+	activesyncdisabled: true,
+	isLink: false,
+	depth: 2,
+	children: [],
+	reminder: false,
+	broken: false,
+	acl: {
+		grant: []
+	}
+};
+
+const mainFolder = {
+	absFolderPath: '/Calendar 1',
+	id: `${randomUUID}:2048`,
+	l: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}`,
+	name: 'Calendar 1',
+	owner: 'random owner',
+	view: 'appointment' as FolderView,
+	n: 1,
+	uuid: 'abcd',
+	recursive: false,
+	deletable: false,
+	activesyncdisabled: true,
+	isLink: true,
+	depth: 1,
+	children: [mainChildFolder],
+	reminder: false,
+	broken: false,
+	acl: {
+		grant: []
+	},
+	perm: 'rwixda'
+};
+
+const setupFoldersStore = (): void => {
+	useFolderStore.setState(() => ({
+		roots: {
+			...roots,
+			USER: {
+				...roots.USER,
+				children: [mainFolder]
+			}
+		},
+		folders: { [mainFolder.id]: mainFolder, [sharedFolder.id]: sharedFolder }
+	}));
+};
 
 describe('use calendar actions', () => {
 	describe('allCalendar folder has 0 actions', () => {
@@ -476,48 +581,37 @@ describe('use calendar actions', () => {
 		});
 	});
 
-	describe('nested folder in link folder with view permission', () => {
-		// todo: unskip and complete with correct data
-		test.skip('in main account has 7 actions', () => {
-			// todo: setupFoldersStore with the parent link folder in it to make the isLinkChild fn work properly
-			const nestedFolderItem = {
-				name: 'nested folder',
-				id: `154`,
-				absFolderPath: '/link folder/nested folder',
-				l: `${randomUUID}:153`,
-				children: [],
-				checked: true,
-				uuid: '',
-				activesyncdisabled: false,
-				recursive: true,
-				deletable: true,
-				isLink: false,
-				depth: 2,
-				reminder: false,
-				broken: false
-			};
+	describe('nested folder in link folder with admin or manager permission', () => {
+		test('in main account has 7 actions', () => {
+			setupFoldersStore();
 			const { result } = setupHook(useCalendarActions, {
-				initialProps: [nestedFolderItem]
+				initialProps: [mainChildFolder]
 			});
 
-			expect(result.current.length).toBe(7);
+			expect(result.current.length).toBe(5);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.REMOVE_FROM_LIST }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARES_INFO }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE })
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
 			]);
 		});
 
-		test.todo('in shared account has 7 actions');
-	});
+		test('in shared account has 7 actions', () => {
+			setupFoldersStore();
+			const { result } = setupHook(useCalendarActions, {
+				initialProps: [sharedChildFolder]
+			});
 
-	describe('nested folder in link folder with admin or manager permission', () => {
-		test.todo('in main account has 7 actions');
-
-		test.todo('in shared account has 7 actions');
+			expect(result.current.length).toBe(5);
+			expect(result.current).toStrictEqual([
+				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
+			]);
+		});
 	});
 });
