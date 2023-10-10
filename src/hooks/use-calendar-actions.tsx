@@ -10,6 +10,7 @@ import {
 	deleteCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
+	findSharesItem,
 	moveToRootItem,
 	newCalendarItem,
 	removeFromListItem,
@@ -40,9 +41,10 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 		editCalendarItem({ createModal, item }),
 		deleteCalendarItem({ createModal, item }),
 		removeFromListItem({ item, createSnackbar }),
-		sharesInfoItem({ item, createModal }),
 		shareCalendarItem({ createModal, item }),
-		shareCalendarUrlItem({ createModal, item })
+		shareCalendarUrlItem({ createModal, item }),
+		findSharesItem({ createModal, item }),
+		sharesInfoItem({ item, createModal })
 	];
 
 	return filter(actions, ['disabled', false]);

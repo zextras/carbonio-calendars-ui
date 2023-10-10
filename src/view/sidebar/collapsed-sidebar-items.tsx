@@ -6,9 +6,9 @@
 import { Container, IconButton, Padding, Row, Tooltip } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useMemo } from 'react';
-import { isLinkChild } from '../../actions/calendar-actions-items';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
+import { isLinkChild } from '../../commons/utilities';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { folderAction } from '../../store/actions/calendar-actions';

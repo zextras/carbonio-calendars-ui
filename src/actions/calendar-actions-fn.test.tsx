@@ -11,6 +11,7 @@ import {
 	deleteCalendar,
 	editCalendar,
 	emptyTrash,
+	findShares,
 	moveToRoot,
 	newCalendar,
 	removeFromList,
@@ -205,5 +206,32 @@ describe('calendar-actions-fn', () => {
 		const shareCalendarUrlFn = shareCalendarUrl({ createModal, item });
 		shareCalendarUrlFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
+	});
+	test('find shares fn on click create modal is called once', async () => {
+		const createModal = jest.fn();
+		const findSharesFn = findShares({ createModal });
+		findSharesFn();
+		await waitFor(() => {
+			expect(createModal).toHaveBeenCalledTimes(1);
+		});
+	});
+	test('find shares fn on click if response is empty create modal is not called', async () => {
+		getSetupServer().use(
+			rest.post('/service/soap/GetShareInfoRequest', async (req, res, ctx) =>
+				res(
+					ctx.json({
+						Body: {
+							GetShareInfoResponse: {}
+						}
+					})
+				)
+			)
+		);
+		const createModal = jest.fn();
+		const findSharesFn = findShares({ createModal });
+		findSharesFn();
+		await waitFor(() => {
+			expect(createModal).toHaveBeenCalledTimes(0);
+		});
 	});
 });
