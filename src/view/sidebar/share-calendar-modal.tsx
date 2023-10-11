@@ -3,20 +3,25 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+
 import {
 	Checkbox,
 	ChipInput,
 	ChipItem,
 	Container,
+	Icon,
 	Input,
+	Padding,
 	Row,
 	Select,
 	SnackbarManagerContext,
-	Text
+	Text,
+	Tooltip
 } from '@zextras/carbonio-design-system';
 import { t, useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { isNil, map, some } from 'lodash';
-import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import {
@@ -28,6 +33,50 @@ import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
+
+type SharePrivateCheckboxProps = {
+	allowToSeePrvtAppt: boolean;
+	setAllowToSeePrvtAppt: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const SharePrivateCheckbox: FC<SharePrivateCheckboxProps> = ({
+	allowToSeePrvtAppt,
+	setAllowToSeePrvtAppt
+}): ReactElement => {
+	const privateInfoTooltipLabel = useMemo(
+		() =>
+			t(
+				'private_info_tooltip',
+				"When sharing a calendar, other users can see your appointment details (title, description, and attendees) except for the ones marked as private. In this case, other users will see your free/busy time but not the appointment details. Would you like other users to display also your private appointments' detail?"
+			),
+		[]
+	);
+	return (
+		<Container
+			padding={{ top: 'small', bottom: 'small' }}
+			mainAlignment="flex-start"
+			crossAlignment="center"
+			height="fit"
+			data-testid={'privateCheckboxContainer'}
+			orientation="horizontal"
+		>
+			<Checkbox
+				value={allowToSeePrvtAppt}
+				defaultChecked={allowToSeePrvtAppt}
+				onClick={(): void => setAllowToSeePrvtAppt(!allowToSeePrvtAppt)}
+				label={t(
+					'share.label.allow_to_see_private_appt',
+					'Allow user(s) to see private appointments’ detail'
+				)}
+			/>
+			<Tooltip label={privateInfoTooltipLabel}>
+				<Padding left="small">
+					<Icon icon="InfoOutline" />
+				</Padding>
+			</Tooltip>
+		</Container>
+	);
+};
 
 export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	folderName,
@@ -173,23 +222,10 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							/>
 						)}
 					</Container>
-					<Container
-						padding={{ top: 'small', bottom: 'small' }}
-						mainAlignment="center"
-						crossAlignment="flex-start"
-						height="fit"
-						data-testid={'privateCheckboxContainer'}
-					>
-						<Checkbox
-							value={allowToSeePrvtAppt}
-							defaultChecked={allowToSeePrvtAppt}
-							onClick={(): void => setAllowToSeePrvtAppt(!allowToSeePrvtAppt)}
-							label={t(
-								'share.label.allow_to_see_private_appt',
-								'Allow user(s) to see my private appointments'
-							)}
-						/>
-					</Container>
+					<SharePrivateCheckbox
+						allowToSeePrvtAppt={allowToSeePrvtAppt}
+						setAllowToSeePrvtAppt={setAllowToSeePrvtAppt}
+					/>
 					<Container
 						padding={{ top: 'small', bottom: 'small' }}
 						mainAlignment="center"
