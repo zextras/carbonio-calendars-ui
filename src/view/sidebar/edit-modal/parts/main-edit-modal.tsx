@@ -32,6 +32,7 @@ import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
 import { useFoldersArray } from '../../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../../../carbonio-ui-commons/types/folder';
+import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
 import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
@@ -181,12 +182,11 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const disabled = useMemo(
 		() =>
-			folder?.id === FOLDERS.CALENDAR
+			hasId(folder, FOLDERS.CALENDAR)
 				? false
 				: inputValue.indexOf('/') > -1 ||
 				  inputValue.length === 0 ||
-				  inputValue === 'Calendar' ||
-				  inputValue === 'calendar' ||
+				  inputValue.toLowerCase() === 'calendar' ||
 				  showDupWarning,
 		[inputValue, folder, showDupWarning]
 	);
@@ -324,7 +324,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 				crossAlignment="flex-start"
 				height="fit"
 			>
-				{folder?.id === FOLDERS.CALENDAR ? (
+				{hasId(folder, FOLDERS.CALENDAR) ? (
 					<Tooltip
 						label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
 						placement="top"

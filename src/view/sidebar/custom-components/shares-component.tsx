@@ -9,11 +9,14 @@ import React, { ReactElement, useContext, useMemo } from 'react';
 import { Button, Container, ModalManagerContext } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
+import { findShares } from '../../../actions/calendar-actions-fn';
+
 export const SharesComponent = (): ReactElement => {
 	const createModal = useContext(ModalManagerContext);
 	const label = useMemo(() => t('find_shares', 'Find shares'), []);
 
 	const onClick = useMemo(() => findShares({ createModal }), [createModal]);
+
 	return (
 		<Container padding={{ horizontal: 'medium', vertical: 'small' }}>
 			<Button type="outlined" label={label} width="fill" color="primary" onClick={onClick} />

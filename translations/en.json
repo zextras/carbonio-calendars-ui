@@ -1,5 +1,6 @@
 {
     "action": {
+        "Trash_already_empty": "trash is already empty",
         "calendar_access_share": "Calendar’s access share",
         "delete_calendar": "Delete calendar",
         "edit_calendar_properties": "Edit calendar properties",
@@ -349,6 +350,7 @@
             "new_calendar_created": "New calendar created",
             "series_deleted": "Series moved to trash. Attendees will receive the cancellation notification.",
             "series_deleted_no_notification": "Series moved to trash.",
+            "shared_calendar_removed": "Calendar removed successfully",
             "some_att_add_fails": "There seems to be a problem when adding some attachments, please try again",
             "some_link_copying_error": "There seems to be a problem while generating public url for some files, please try again"
         },
@@ -447,7 +449,7 @@
         "week_before": "{{count}} week before",
         "week_before_plural": "{{count}} weeks before"
     },
-    "remove_from_this_list": "Remove from this list",
+    "remove_from_this_list": "Remove shared calendar",
     "repeat": {
         "customize": "Customize",
         "daily": "Daily",
@@ -663,6 +665,7 @@
         "edit": "Edit share properties",
         "enable_disable_rich_text": "Enable/Disable rich text editor",
         "equipment": "Equipment",
+        "folder_linked_status": "Linked to me",
         "location": "Location",
         "resend": "Send mail notification about this share",
         "revoke": "Revoke access",

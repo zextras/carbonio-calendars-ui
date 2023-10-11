@@ -7,6 +7,9 @@ import { Container, IconButton, Padding, Row, Tooltip } from '@zextras/carbonio-
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { FC, useCallback, useMemo } from 'react';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
+import { isLinkChild } from '../../commons/utilities';
+import { SIDEBAR_ITEMS } from '../../constants/sidebar';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { folderAction } from '../../store/actions/calendar-actions';
 
@@ -17,7 +20,7 @@ export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 		(folder: Folder) => {
 			const foldersToToggleIds: Array<string> = [];
 			const checkAllChildren = (itemToCheck: Folder): void => {
-				if (itemToCheck.id !== 'all') {
+				if (hasId(itemToCheck, SIDEBAR_ITEMS.ALL_CALENDAR)) {
 					foldersToToggleIds.push(itemToCheck.id);
 				}
 				if (itemToCheck.children.length > 0) {
@@ -39,7 +42,8 @@ export const CollapsedSidebarItems: FC<{ item: Folder }> = ({ item }) => {
 
 	const icon = useMemo(() => {
 		if (item.id === FOLDERS.TRASH) return checked ? 'Trash2' : 'Trash2Outline';
-		if (item.isLink && item.owner) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
+		if ((item.isLink && item.owner) || isLinkChild(item))
+			return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
 		return checked ? 'Calendar2' : 'CalendarOutline';
 	}, [checked, item]);
 

@@ -16,6 +16,7 @@ import {
 	moveToTrash,
 	openAppointment
 } from './appointment-actions-fn';
+import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { ActionsContext, AppointmentActionsItems } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
@@ -92,11 +93,10 @@ export const moveEventItem = ({
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.MOVE,
-	icon: event.resource.calendar.id === FOLDERS.TRASH ? 'RestoreOutline' : 'MoveOutline',
-	label:
-		event.resource.calendar.id === FOLDERS.TRASH
-			? t('label.restore', 'Restore')
-			: t('label.move', 'Move'),
+	icon: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'RestoreOutline' : 'MoveOutline',
+	label: hasId(event.resource.calendar, FOLDERS.TRASH)
+		? t('label.restore', 'Restore')
+		: t('label.move', 'Move'),
 	disabled: !event?.haveWriteAccess,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	onClick: moveAppointment({ event, context })
@@ -148,7 +148,7 @@ export const editEventItem = ({
 	label: t('label.edit', 'Edit'),
 	disabled:
 		// if the event is on trash
-		event.resource.calendar.id === FOLDERS.TRASH ||
+		hasId(event.resource.calendar, FOLDERS.TRASH) ||
 		// if user is owner of the calendar but he is not the organizer
 		(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
 		// if it is inside a shared calendar and user doesn't have write access
@@ -185,7 +185,7 @@ export const deleteEventItem = ({
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems =>
-	event.resource.calendar.id === FOLDERS.TRASH
+	hasId(event.resource.calendar, FOLDERS.TRASH)
 		? {
 				id: EventActionsEnum.DELETE_PERMANENTLY,
 				icon: 'DeletePermanentlyOutline',

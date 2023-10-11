@@ -15,6 +15,7 @@ import {
 	defaultBeforeEachTest,
 	getFailOnConsoleDefaultConfig
 } from './src/carbonio-ui-commons/test/jest-setup';
+import { handleGetShareInfoRequest } from './src/carbonio-ui-commons/test/mocks/network/msw/handle-get-share-info';
 import { registerRestHandler } from './src/carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
 import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
@@ -54,7 +55,8 @@ beforeAll(() => {
 			handleCreateAppointmentExceptionRequest
 		),
 		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest),
-		rest.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest)
+		rest.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest),
+		rest.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest)
 	];
 	registerRestHandler(...h);
 	defaultBeforeAllTests();
