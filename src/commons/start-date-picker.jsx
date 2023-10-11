@@ -35,6 +35,7 @@ export default function StartDatePicker({ start, allDay, diff, onChange }) {
 
 	return (
 		<DateTimePicker
+			width="100%"
 			label={label}
 			defaultValue={start}
 			onChange={onStartChange}

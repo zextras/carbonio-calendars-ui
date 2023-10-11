@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Padding } from '@zextras/carbonio-design-system';
+import { Padding, Row } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 import moment from 'moment';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
@@ -33,23 +33,27 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	);
 
 	return start && end ? (
-		<Styler allDay={allDay} orientation="horizontal" height="fit" mainAlignment="flex-start">
-			<StartDatePicker
-				start={new Date(start)}
-				onChange={onChange}
-				diff={diff}
-				allDay={allDay}
-				disabled={disabled?.datePicker}
-			/>
+		<>
+			<Row takeAvailableSpace>
+				<StartDatePicker
+					start={new Date(start)}
+					onChange={onChange}
+					diff={diff}
+					allDay={allDay}
+					disabled={disabled?.datePicker}
+				/>
+			</Row>
 			<Padding left="small" />
-			<EndDatePicker
-				start={start}
-				end={new Date(end)}
-				onChange={onChange}
-				diff={diff}
-				allDay={allDay}
-				disabled={disabled?.datePicker}
-			/>
-		</Styler>
+			<Row takeAvailableSpace>
+				<EndDatePicker
+					start={start}
+					end={new Date(end)}
+					onChange={onChange}
+					diff={diff}
+					allDay={allDay}
+					disabled={disabled?.datePicker}
+				/>
+			</Row>
+		</>
 	) : null;
 };
