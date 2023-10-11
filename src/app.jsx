@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { lazy, useEffect, Suspense } from 'react';
+
+import { SnackbarManager, ModalManager } from '@zextras/carbonio-design-system';
 import {
 	Spinner,
 	addRoute,
@@ -16,20 +18,21 @@ import {
 	t,
 	registerFunctions
 } from '@zextras/carbonio-shell-ui';
-import { SyncDataHandler } from './view/sidebar/sync-data-handler';
-import InviteResponse from './shared/invite-response/invite-response';
-import Notifications from './view/notifications';
+
+import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
+import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
+import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
-import { getSettingsSubSections } from './settings/sub-sections';
-import { StoreProvider } from './store/redux';
-import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
+import { getSettingsSubSections } from './settings/sub-sections';
+import { createAppointmentIntegration } from './shared/create-apppointment-integration';
+import InviteResponse from './shared/invite-response/invite-response';
+import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
 import { CalendarIntegrations } from './types/enums/event-actions-enum';
-import { createAppointmentIntegration } from './shared/create-apppointment-integration';
-import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
-import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
-import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
+import Notifications from './view/notifications';
+import { AppointmentReminder } from './view/reminder/appointment-reminder';
+import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 
 const LazyCalendarView = lazy(() =>
 	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -51,7 +54,11 @@ const LazySearchView = lazy(() =>
 const CalendarView = () => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<LazyCalendarView />
+			<SnackbarManager>
+				<ModalManager>
+					<LazyCalendarView />
+				</ModalManager>
+			</SnackbarManager>
 		</StoreProvider>
 	</Suspense>
 );
@@ -59,14 +66,22 @@ const CalendarView = () => (
 const EditorView = () => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<LazyEditorView />
+			<SnackbarManager>
+				<ModalManager>
+					<LazyEditorView />
+				</ModalManager>
+			</SnackbarManager>
 		</StoreProvider>
 	</Suspense>
 );
 const SettingsView = () => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<LazySettingsView />
+			<SnackbarManager>
+				<ModalManager>
+					<LazySettingsView />
+				</ModalManager>
+			</SnackbarManager>
 		</StoreProvider>
 	</Suspense>
 );
@@ -74,7 +89,11 @@ const SettingsView = () => (
 const SidebarView = (props) => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<LazySidebarView {...props} />
+			<SnackbarManager>
+				<ModalManager>
+					<LazySidebarView {...props} />{' '}
+				</ModalManager>
+			</SnackbarManager>
 		</StoreProvider>
 	</Suspense>
 );
@@ -82,7 +101,11 @@ const SidebarView = (props) => (
 const SearchView = (props) => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<LazySearchView {...props} />
+			<SnackbarManager>
+				<ModalManager>
+					<LazySearchView {...props} />{' '}
+				</ModalManager>
+			</SnackbarManager>
 		</StoreProvider>
 	</Suspense>
 );
