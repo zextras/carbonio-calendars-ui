@@ -5,8 +5,8 @@
  */
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
-import { ModalManagerContext } from '@zextras/carbonio-design-system';
-import { addBoard, getBridgedFunctions, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
@@ -39,6 +39,8 @@ export const useCalendarComponentUtils = (): {
 	const [date, setDate] = useState(calendarDate);
 	const [t] = useTranslation();
 	const createModal = useContext(ModalManagerContext);
+	const createSnackbar = useContext(SnackbarManagerContext);
+
 	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const summaryViewOpen = useIsSummaryViewOpen();
@@ -121,7 +123,7 @@ export const useCalendarComponentUtils = (): {
 						onSave({ draft, editor, isNew: false, dispatch }).then((res) => {
 							if (res?.response) {
 								const success = res?.response;
-								getBridgedFunctions()?.createSnackbar({
+								createSnackbar({
 									key: `calendar-moved-root`,
 									replace: true,
 									type: success ? 'info' : 'warning',
@@ -166,14 +168,14 @@ export const useCalendarComponentUtils = (): {
 				}
 			});
 		},
-		[calendarFolders, createModal, dispatch, getEnd, getStart, t]
+		[calendarFolders, createModal, createSnackbar, dispatch, getEnd, getStart, t]
 	);
 
 	const onEventDrop = useCallback(
 		(appt) => {
 			const { start, end, event, isAllDay } = appt;
 			if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
-				getBridgedFunctions()?.createSnackbar({
+				createSnackbar({
 					key: `recurrent-moved-in-allDay`,
 					replace: true,
 					type: 'warning',
@@ -220,7 +222,7 @@ export const useCalendarComponentUtils = (): {
 				}
 			}
 		},
-		[createModal, onDropFn, t]
+		[createModal, createSnackbar, onDropFn, t]
 	);
 
 	const handleSelect = useCallback(
@@ -235,7 +237,6 @@ export const useCalendarComponentUtils = (): {
 					context: {
 						dispatch,
 						folders: calendarFolders,
-						title: t('label.new_appointment', 'New Appointment'),
 						start: moment(e.start).valueOf(),
 						end: end.valueOf(),
 						allDay: isAllDay ?? false,
@@ -250,7 +251,7 @@ export const useCalendarComponentUtils = (): {
 				});
 			}
 		},
-		[action, calendarFolders, dispatch, summaryViewOpen, t]
+		[action, calendarFolders, dispatch, summaryViewOpen]
 	);
 
 	const resizeEvent = useCallback((): null => null, []);

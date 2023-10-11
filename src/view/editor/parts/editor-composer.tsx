@@ -163,6 +163,7 @@ const HtmlComposer = ({
 				value={richTextValue}
 				disabled={disabled?.composer}
 				data-testid="editor-composer"
+				customInitOptions={{ auto_focus: false }}
 			/>
 		</EditorWrapper>
 	);

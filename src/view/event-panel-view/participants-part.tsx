@@ -3,15 +3,24 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useMemo } from 'react';
-import { Avatar, Container, Row, Text, Chip } from '@zextras/carbonio-design-system';
-import { Trans } from 'react-i18next';
+import React, { ReactElement, useContext, useMemo } from 'react';
+
+import {
+	Avatar,
+	Container,
+	Row,
+	Text,
+	Chip,
+	SnackbarManagerContext
+} from '@zextras/carbonio-design-system';
 import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
+import { Trans } from 'react-i18next';
+
+import { ParticipantsDisplayer } from './participants-displayer';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
-import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
-import { ParticipantsDisplayer } from './participants-displayer';
 import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
+import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
 
 type ParticipantProps = {
 	invite: Invite;
@@ -26,6 +35,7 @@ export const ParticipantsPart = ({
 }: ParticipantProps): ReactElement => {
 	const account = useUserAccount();
 	const calendar = useFolder(invite.ciFolder);
+	const createSnackbar = useContext(SnackbarManagerContext);
 	const iAmAttendee = useMemo(
 		() => (!invite.isOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
 		[calendar, invite.isOrganizer]
@@ -38,7 +48,7 @@ export const ParticipantsPart = ({
 			width="fill"
 			height="fit"
 			padding={{ horizontal: 'large', vertical: 'medium' }}
-			background="gray6"
+			background={'gray6'}
 		>
 			{invite?.organizer?.a === account.name && (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
@@ -85,7 +95,7 @@ export const ParticipantsPart = ({
 						>
 							<Chip
 								label={organizer.a || organizer.d}
-								background="gray3"
+								background={'gray3'}
 								color="text"
 								data-testid={'Chip'}
 								hasAvatar={false}
@@ -102,7 +112,7 @@ export const ParticipantsPart = ({
 										label: t('message.copy', 'Copy'),
 										type: 'button',
 										icon: 'Copy',
-										onClick: () => copyEmailToClipboard(organizer.a)
+										onClick: () => copyEmailToClipboard(organizer.a, createSnackbar)
 									}
 								]}
 							/>

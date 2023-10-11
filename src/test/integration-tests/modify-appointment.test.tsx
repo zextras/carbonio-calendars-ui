@@ -70,9 +70,6 @@ describe.each`
 `('modify appointment', ({ title, seriesResourceEvent, recurrence, exceptId, expected }) => {
 	test(`${title} - attendees, optionals, title, location, private, allDay, start, end, reminder`, async () => {
 		// SETUP MOCKS AND STORE
-		const module = { createSnackbar: jest.fn() };
-		shell.getBridgedFunctions.mockImplementation(() => module);
-		const snackbarSpy = jest.spyOn(module, 'createSnackbar');
 		const event = mockedData.getEvent({ resource: seriesResourceEvent });
 		const invite = mockedData.getInvite({ event, context: { recurrenceRule: recurrence } });
 		const store = configureStore({ reducer: combineReducers(reducers) });
@@ -205,15 +202,8 @@ describe.each`
 			expect(updatedEditor.recur).toBeDefined();
 		}
 
-		// SNACKBAR DISPLAY CORRECTLY
-		expect(snackbarSpy).toHaveBeenCalledTimes(1);
-		expect(snackbarSpy).toHaveBeenCalledWith({
-			autoHideTimeout: 3000,
-			hideButton: true,
-			key: 'calendar-moved-root',
-			label: 'Edits saved correctly',
-			replace: true,
-			type: 'info'
-		});
+		const snackbar = screen.getByText(/edits saved correctly/i);
+
+		expect(snackbar).toBeInTheDocument();
 	});
 });

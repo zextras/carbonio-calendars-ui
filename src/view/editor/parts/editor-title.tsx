@@ -55,6 +55,8 @@ export const EditorTitle = ({ editorId }: { editorId: string }): ReactElement | 
 			disabled={disabled?.title}
 			backgroundColor="gray5"
 			data-testid="editor-title"
+			// eslint-disable-next-line jsx-a11y/no-autofocus
+			autoFocus
 		/>
 	) : null;
 };

@@ -24,12 +24,14 @@ import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { extractBody } from '../../commons/body-message-renderer';
 import StyledDivider from '../../commons/styled-divider';
+import { PANEL_VIEW } from '../../constants';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
+import { PanelView } from '../../types/actions';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
@@ -164,12 +166,18 @@ const ActionButtons = ({
 	) : null;
 };
 
-export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
+export const DisplayerHeader = ({
+	event,
+	panelView
+}: {
+	event: EventType;
+	panelView: PanelView;
+}): ReactElement => {
 	const [t] = useTranslation();
 	const close = useCallback(() => {
 		replaceHistory('');
 	}, []);
-	const actions = useEventActions({ onClose: close, event });
+	const actions = useEventActions({ onClose: close, event, context: { panelView } });
 
 	return (
 		<>
@@ -230,7 +238,7 @@ export default function EventPanelView(): ReactElement | null {
 	);
 	return event && invite ? (
 		<AppointmentCardContainer mainAlignment="flex-start">
-			<DisplayerHeader event={event} />
+			<DisplayerHeader event={event} panelView={PANEL_VIEW.APP} />
 			<Container
 				padding={{ all: 'none' }}
 				mainAlignment="flex-start"
