@@ -30,10 +30,7 @@ import {
 
 const initialState: EditorSlice = {
 	status: 'idle',
-	editors: {},
-	editorPanel: undefined,
-	activeId: undefined,
-	searchActiveId: undefined
+	editors: {}
 };
 
 export const editorSlice = createSlice({

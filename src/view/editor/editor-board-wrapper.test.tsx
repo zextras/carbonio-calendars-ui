@@ -3,66 +3,78 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { Board } from '@zextras/carbonio-shell-ui';
-import React from 'react';
+
+import BoardEditPanel from './editor-board-wrapper';
+import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { PREFS_DEFAULTS } from '../../constants';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { Editor } from '../../types/editor';
-import BoardEditPanel from './editor-board-wrapper';
-import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 
-const initBoard = ({ editorId, isNew }: { editorId: string; isNew: boolean }): Board & Editor => ({
+const initBoard = ({
+	editorId,
+	isNew
+}: {
+	editorId: string;
+	isNew: boolean;
+}): Board & { editor: Editor } => ({
 	url: 'calendars/',
 	title: 'Nuovo appuntamento',
-	panel: false,
-	isException: false,
-	isSeries: false,
-	isInstance: true,
-	isRichText: true,
-	isNew,
-	attachmentFiles: [],
-	location: '',
-	attendees: [],
-	optionalAttendees: [],
-	allDay: false,
-	freeBusy: 'B',
-	class: 'PUB',
-	start: 1667834497505,
-	end: 1667834497505,
-	timezone: 'Europe/Berlin',
-	reminder: '5',
-	richText: '',
-	plainText: '',
-	disabled: {
-		richTextButton: false,
-		attachmentsButton: false,
-		saveButton: false,
-		sendButton: false,
-		organizer: false,
-		title: false,
-		location: false,
-		virtualRoom: false,
-		attendees: false,
-		optionalAttendees: false,
-		freeBusySelector: false,
-		calendarSelector: false,
-		private: false,
-		datePicker: false,
-		timezone: false,
-		allDay: false,
-		reminder: false,
-		recurrence: false,
-		attachments: false,
-		composer: false
-	},
 	id: editorId,
 	app: 'carbonio-calendars-ui',
-	icon: 'CalendarModOutline'
+	icon: 'CalendarModOutline',
+	editor: {
+		id: editorId,
+		title: 'Nuovo appuntamento',
+		panel: false,
+		isException: false,
+		isSeries: false,
+		isInstance: true,
+		isRichText: true,
+		isNew,
+		attachmentFiles: [],
+		location: '',
+		attendees: [],
+		optionalAttendees: [],
+		allDay: false,
+		freeBusy: 'B',
+		class: 'PUB',
+		start: 1667834497505,
+		end: 1667834497505,
+		timezone: 'Europe/Berlin',
+		reminder: '5',
+		richText: '',
+		plainText: '',
+		disabled: {
+			richTextButton: false,
+			attachmentsButton: false,
+			saveButton: false,
+			sendButton: false,
+			organizer: false,
+			title: false,
+			location: false,
+			virtualRoom: false,
+			attendees: false,
+			optionalAttendees: false,
+			freeBusySelector: false,
+			calendarSelector: false,
+			private: false,
+			datePicker: false,
+			timezone: false,
+			allDay: false,
+			reminder: false,
+			recurrence: false,
+			attachments: false,
+			composer: false
+		}
+	}
 });
 
 shell.getUserSettings.mockImplementation(() => ({
@@ -75,6 +87,10 @@ shell.getUserSettings.mockImplementation(() => ({
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
 	}
+}));
+
+shell.useBoardHooks.mockImplementation(() => ({
+	updateBoard: jest.fn()
 }));
 
 describe('Editor board wrapper', () => {

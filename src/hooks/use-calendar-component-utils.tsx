@@ -246,8 +246,10 @@ export const useCalendarComponentUtils = (): {
 				});
 				addBoard({
 					url: `${CALENDAR_ROUTE}/`,
-					title: editor.title ?? '',
-					...editor
+					title: editor?.title ?? '',
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					editor
 				});
 			}
 		},
