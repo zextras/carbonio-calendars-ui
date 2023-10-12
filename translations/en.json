@@ -427,6 +427,7 @@
     "preview": {
         "close": "Close Preview"
     },
+    "private_info_tooltip": "When sharing a calendar, other users can see your appointment details (title, description, and attendees) except for the ones marked as private. In this case, other users will see your free/busy time but not the appointment details. Would you like other users to display also your private appointments' detail?",
     "read": "Read",
     "recurrent_in_allday": "You cannot drag a recurrent appointment in a all day slot",
     "reminder": {
@@ -525,7 +526,7 @@
     },
     "share": {
         "label": {
-            "allow_to_see_private_appt": "Allow user(s) to see my private appointments",
+            "allow_to_see_private_appt": "Allow user(s) to see private appointments’ detail",
             "send_notification": "Send notification about this share"
         },
         "note": {
