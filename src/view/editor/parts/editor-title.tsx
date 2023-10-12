@@ -3,10 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { debounce, isNil } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { Input } from '@zextras/carbonio-design-system';
+import { useBoardHooks } from '@zextras/carbonio-shell-ui';
+import { debounce, isNil } from 'lodash';
+import { useTranslation } from 'react-i18next';
+
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorTitle } from '../../../store/selectors/editor';
 import { editEditorTitle } from '../../../store/slices/editor-slice';
@@ -17,12 +20,16 @@ export const EditorTitle = ({ editorId }: { editorId: string }): ReactElement | 
 	const [value, setValue] = useState(title ?? '');
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
+	const boardUtilities = useBoardHooks();
+	const updateBoard = boardUtilities?.updateBoard;
 
 	useEffect(() => {
 		if (title) {
 			setValue(title);
 		}
-	}, [title]);
+		const newBoardTitle = title?.length ? title : t('new_appointment', 'New appointment');
+		updateBoard({ title: newBoardTitle });
+	}, [t, title, updateBoard]);
 
 	const debounceInput = useMemo(
 		() =>

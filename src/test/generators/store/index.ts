@@ -81,10 +81,7 @@ const mockReduxStore = (reducers: Reducers = {}): any => {
 	const { editor = {}, appointments = {}, invites = {} } = reducers;
 	return {
 		editor: {
-			activeId: undefined,
-			editorPanel: undefined,
 			editors: {},
-			searchActiveId: undefined,
 			status: 'idle',
 			...editor
 		},

@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { Suspense, lazy, ReactElement } from 'react';
+
 import { Button, Container } from '@zextras/carbonio-design-system';
 import { noop } from 'lodash';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import EditorPanelWrapper from '../editor/editor-panel-wrapper';
-import EventPanelView from '../event-panel-view/event-panel-view';
+
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import EventPanelView from '../event-panel-view/event-panel-view';
 
 const CalendarComponent = lazy(
 	() => import(/* webpackChunkName: "calendar-component" */ './calendar-component')
@@ -20,7 +21,7 @@ export default function CalendarView(): ReactElement {
 
 	return (
 		<Container
-			background="gray6"
+			background={'gray6'}
 			padding={{ all: 'large' }}
 			style={{ overflowY: 'auto', position: 'relative' }}
 			data-testid="MainCalendarContainer"
@@ -38,9 +39,6 @@ export default function CalendarView(): ReactElement {
 					</Suspense>
 					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
 						<EventPanelView />
-					</Route>
-					<Route path={`${path}/:calendarId/:action(${EventActionsEnum.EDIT})/:apptId/:ridZ?`}>
-						<EditorPanelWrapper />
 					</Route>
 				</Route>
 			</Switch>
