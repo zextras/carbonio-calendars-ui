@@ -7,12 +7,12 @@
 import React, { useCallback, useContext, useMemo } from 'react';
 
 import { Container, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
-import { closeBoard, replaceHistory, useBoard, t } from '@zextras/carbonio-shell-ui';
+import { closeBoard, useBoard, t } from '@zextras/carbonio-shell-ui';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectEditorAttendees, selectEditorPanel } from '../../store/selectors/editor';
+import { selectEditorAttendees } from '../../store/selectors/editor';
 import { Editor } from '../../types/editor';
 
 type ModalProps = {
@@ -42,7 +42,6 @@ export const SeriesEditWarningModal = ({
 	);
 
 	const board = useBoard();
-	const panel = useAppSelector(selectEditorPanel(editorId));
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
 	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
@@ -54,9 +53,6 @@ export const SeriesEditWarningModal = ({
 	const onConfirm = useCallback(() => {
 		isSending
 			? action({ isNew, editor, dispatch }).then(({ response }: any) => {
-					if (panel && response) {
-						replaceHistory('');
-					}
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
@@ -82,16 +78,14 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  });
-	}, [action, attendeesLength, createSnackbar, dispatch, editor, isNew, isSending, onClose, panel]);
+	}, [action, attendeesLength, createSnackbar, dispatch, editor, isNew, isSending, onClose]);
 
 	const onDiscard = useCallback(() => {
 		onClose();
-		if (panel) {
-			replaceHistory('');
-		} else if (board) {
+		if (board) {
 			closeBoard(board?.id);
 		}
-	}, [board, onClose, panel]);
+	}, [board, onClose]);
 	return (
 		<Container
 			padding={{ all: 'large' }}

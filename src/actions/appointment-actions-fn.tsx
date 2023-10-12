@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { find, omit } from 'lodash';
-import React from 'react';
+
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import { CALENDAR_ROUTE, PANEL_VIEW } from '../constants';
@@ -57,10 +59,10 @@ export const createCopy =
 			});
 			addBoard({
 				url: `${CALENDAR_ROUTE}/`,
+				title: editor?.title ?? '',
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				title: editor.title,
-				...editor
+				editor
 			});
 		};
 		if (!_invite) {
@@ -89,37 +91,22 @@ export const editAppointment =
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const edit = (invite: Invite): void => {
-			if (context?.panelView === PANEL_VIEW.APP) {
-				generateEditor({
-					event,
-					invite,
-					context: {
-						folders: context.folders,
-						dispatch: context.dispatch,
-						panel: context.panel ?? true
-					}
-				});
-				const path = event.resource.ridZ
-					? `/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
-					: `/${event.resource.calendar.id}/${EventActionsEnum.EDIT}/${event.resource.id}`;
-				replaceHistory(path);
-			}
-			if (context?.panelView === PANEL_VIEW.SEARCH) {
-				generateEditor({
-					event,
-					invite,
-					context: {
-						searchPanel: true,
-						panel: false,
-						dispatch: context.dispatch,
-						folders: context.folders
-					}
-				});
-				const path = event.resource.ridZ
-					? `/${EventActionsEnum.EDIT}/${event.resource.id}/${event.resource.ridZ}`
-					: `/${EventActionsEnum.EDIT}/${event.resource.id}`;
-				replaceHistory(path);
-			}
+			const editor = generateEditor({
+				event,
+				invite,
+				context: {
+					panel: false,
+					dispatch: context.dispatch,
+					folders: context.folders
+				}
+			});
+			addBoard({
+				url: `${CALENDAR_ROUTE}/`,
+				title: editor?.title ?? '',
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				editor
+			});
 		};
 		if (!_invite) {
 			context

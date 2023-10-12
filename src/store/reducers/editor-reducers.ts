@@ -84,12 +84,6 @@ type AttachmentFilesPayload = {
 export const newEditorReducer = (state: EditorSlice, action: PayloadAction<Editor>): void => {
 	if (action.payload) {
 		state.editors[action.payload.id] = action.payload;
-		if (action.payload.panel) {
-			state.activeId = action.payload.id;
-		}
-		if (action.payload.searchPanel) {
-			state.searchActiveId = action.payload.id;
-		}
 	}
 };
 

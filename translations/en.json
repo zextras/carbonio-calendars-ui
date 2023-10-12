@@ -394,6 +394,8 @@
     "mountpoint_error": "The share couldn't be added to the Shared Calendars section",
     "mountpoint_success": "The share has been added successfully to the Shared Calendars section",
     "mountpoint_warning": "{{failed}} out of {{total}} shared calendars couldn't be added to the Shared Calendars",
+    "new_appointment": "New appointment",
+    "no_title": "",
     "owner": "Owner",
     "participants": {
         "AC_with_count": "Accepted",
