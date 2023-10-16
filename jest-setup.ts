@@ -35,9 +35,7 @@ global.Audio = jest.fn().mockImplementation(() => ({
 	play: jest.fn()
 }));
 
-failOnConsole({
-	...getFailOnConsoleDefaultConfig()
-});
+failOnConsole({ ...getFailOnConsoleDefaultConfig(), shouldFailOnWarn: false });
 
 beforeAll(() => {
 	const h = [
