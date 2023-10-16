@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+
 import {
 	Accordion,
 	AccordionItem,
@@ -29,9 +31,9 @@ import {
 	uniqWith,
 	values
 } from 'lodash';
-import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
+
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { SidebarCustomItem } from '../../carbonio-ui-commons/types/sidebar';
@@ -219,7 +221,7 @@ export const SharesModal: FC<{ calendars: ResFolder[]; onClose: () => void }> = 
 				/>
 			</Row>
 			<ContainerEl orientation="vertical" mainAlignment="flex-start" maxHeight="40vh">
-				<Accordion items={nestedData} background="gray6" />
+				<Accordion items={nestedData} background={'gray6'} />
 			</ContainerEl>
 			<Row padding="small" width="fill" mainAlignment="flex-end">
 				<ModalFooter onConfirm={onConfirm} label={t('add', 'Add')} disabled={links?.length <= 0} />

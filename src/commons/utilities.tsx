@@ -4,21 +4,40 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { TextProps } from '@zextras/carbonio-design-system';
-import { AccordionFolder, FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
-import { forEach, isNil, map } from 'lodash';
+import { FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
+import { find, forEach, isNil, map, reduce, some } from 'lodash';
 import moment from 'moment';
-import { Dispatch } from 'redux';
-import { getUpdateFolder, useFoldersArray } from '../carbonio-ui-commons/store/zustand/folder';
+
+import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
+import {
+	getFoldersArray,
+	getRoot,
+	getUpdateFolder
+} from '../carbonio-ui-commons/store/zustand/folder';
 import type { Folder } from '../carbonio-ui-commons/types/folder';
-import { AppDispatch } from '../store/redux';
-import { ReminderItem } from '../types/appointment-reminder';
+import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
 import { searchAppointments } from '../store/actions/search-appointments';
-import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
+import { AppDispatch } from '../store/redux';
+import { ReminderItem } from '../types/appointment-reminder';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
+
+export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
+	const folders = getFoldersArray();
+	const parentFoldersNames = item?.absFolderPath?.split('/');
+	parentFoldersNames?.pop(); // removing itself from results
+	const parentFolders =
+		map(parentFoldersNames, (f) => find(folders, (ff) => ff.name === f) ?? '') ?? [];
+	return some(parentFolders, ['isLink', true]) ?? false;
+};
+
+export const isMainRootChild = (item: { id: string }): boolean => {
+	const root = getRoot(item.id);
+	return root?.id === FOLDERS.USER_ROOT ?? false;
+};
 
 export const calcColor = (label: string, theme: unknown): string => {
 	let sum = 0;
@@ -306,13 +325,6 @@ export const getTimeToDisplayData = (
 	};
 };
 
-export const translatedSystemFolders = (): Array<string> => [
-	t('label.root', 'Root'),
-	t('label.all_calendars', 'All calendars'),
-	t('label.calendar', 'Calendar'),
-	t('label.trash', 'Trash')
-];
-
 type GetFolderTranslatedName = {
 	folderId: string;
 	folderName: string;
@@ -322,74 +334,18 @@ export const getFolderTranslatedName = ({
 	folderId,
 	folderName
 }: GetFolderTranslatedName): string => {
-	let translationKey;
 	switch (folderId) {
 		case FOLDERS.USER_ROOT:
-			translationKey = 'root';
-			break;
+			return t(`label.root`, folderName);
+		case 'all':
+			return t('label.all_calendars', 'All calendars');
 		case FOLDERS.CALENDAR:
-			translationKey = 'calendar';
-			break;
+			return t(`label.calendar`, folderName);
 		case FOLDERS.TRASH:
-			translationKey = 'trash';
-			break;
+			return t(`label.trash`, folderName);
 		default:
 			return folderName;
 	}
-
-	return t(`label.${translationKey}`, folderName);
-};
-
-export const getFolderIconNameForAccordionFolder = (folder: AccordionFolder): string | null => {
-	const systemFolders = [
-		FOLDERS.USER_ROOT,
-		FOLDERS.INBOX,
-		FOLDERS.TRASH,
-		FOLDERS.DRAFTS,
-		FOLDERS.SPAM,
-		FOLDERS.SENT
-	];
-
-	if (folder.id === FOLDERS.USER_ROOT || folder.folder?.oname === ROOT_NAME) {
-		return null;
-	}
-
-	if (folder.id && systemFolders.includes(folder.id)) {
-		switch (folder.id) {
-			case FOLDERS.INBOX:
-				return 'InboxOutline';
-			case FOLDERS.DRAFTS:
-				return 'FileOutline';
-			case FOLDERS.SENT:
-				return 'PaperPlaneOutline';
-			case FOLDERS.SPAM:
-				return 'SlashOutline';
-			case FOLDERS.TRASH:
-				return 'Trash2Outline';
-			default:
-				return 'FolderOutline';
-		}
-	}
-	if (
-		folder.id?.charAt(folder.id.length - 2) === ':' &&
-		systemFolders.includes(folder.id.slice(-1))
-	) {
-		switch (folder.id.slice(-1)) {
-			case FOLDERS.INBOX:
-				return 'InboxOutline';
-			case FOLDERS.DRAFTS:
-				return 'FileOutline';
-			case FOLDERS.SENT:
-				return 'PaperPlaneOutline';
-			case FOLDERS.SPAM:
-				return 'SlashOutline';
-			case FOLDERS.TRASH:
-				return 'Trash2Outline';
-			default:
-				return 'FolderOutline';
-		}
-	}
-	return 'FolderOutline';
 };
 
 export const getFolderIconColor = (f: Folder): string => {
@@ -410,6 +366,22 @@ export type RecursiveToggleCheckProps = {
 	query: string;
 };
 
+const checkAllChildren = (_folder: Array<Folder>, checked: boolean): Array<string> =>
+	reduce(
+		_folder,
+		(acc, itemToCheck) => {
+			if (itemToCheck.children.length > 0) {
+				return hasId(itemToCheck, SIDEBAR_ITEMS.ALL_CALENDAR) || itemToCheck.checked !== checked
+					? [...acc, ...checkAllChildren(itemToCheck.children, checked)]
+					: [...acc, itemToCheck.id, ...checkAllChildren(itemToCheck.children, checked)];
+			}
+			return hasId(itemToCheck, SIDEBAR_ITEMS.ALL_CALENDAR) || itemToCheck.checked !== checked
+				? acc
+				: [...acc, itemToCheck.id];
+		},
+		[] as Array<string>
+	);
+
 export function recursiveToggleCheck({
 	folder,
 	checked,
@@ -418,20 +390,7 @@ export function recursiveToggleCheck({
 	end,
 	query
 }: RecursiveToggleCheckProps): void {
-	const foldersToToggleIds: Array<string> = [];
-	const checkAllChildren = (itemToCheck: Folder): void => {
-		if (itemToCheck.id !== 'all') {
-			foldersToToggleIds.push(itemToCheck.id);
-		}
-		if (itemToCheck.children.length > 0) {
-			itemToCheck.children.forEach((child) => {
-				checkAllChildren(child);
-			});
-		}
-	};
-
-	// remove item 'all' from an array of strings
-	checkAllChildren(folder);
+	const foldersToToggleIds: Array<string> = checkAllChildren([folder], checked);
 
 	const op = checked ? '!check' : 'check';
 	folderAction({
@@ -461,8 +420,8 @@ export function recursiveToggleCheck({
 
 export const getFolderIcon = ({ item, checked }: { item: Folder; checked: boolean }): string => {
 	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME)) return '';
-	if (item.id === FOLDERS.TRASH) return checked ? 'Trash2' : 'Trash2Outline';
-	if (item.id === SIDEBAR_ITEMS.ALL_CALENDAR) return checked ? 'Calendar2' : 'CalendarOutline';
-	if (item.isLink) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
+	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';
+	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return checked ? 'Calendar2' : 'CalendarOutline';
+	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
 	return checked ? 'Calendar2' : 'CalendarOutline';
 };

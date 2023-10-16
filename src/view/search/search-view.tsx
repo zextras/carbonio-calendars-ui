@@ -12,6 +12,7 @@ import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
+import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
@@ -65,13 +66,13 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 			reduce(
 				calendars,
 				(acc: Array<string>, v: Folder, k: string) => {
-					if (v.id === FOLDERS.TRASH && includeTrash && v.checked) {
+					if (hasId(v, FOLDERS.TRASH) && includeTrash && v.checked) {
 						acc.push(k);
 					}
 					if (v.isLink && includeSharedFolders && v.checked) {
 						acc.push(k);
 					}
-					if (v.id !== FOLDERS.TRASH && !v.isLink && v.checked) acc.push(k);
+					if (!hasId(v, FOLDERS.TRASH) && !v.isLink && v.checked) acc.push(k);
 					return acc;
 				},
 				[]

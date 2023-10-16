@@ -65,7 +65,7 @@ export const folderAction = async ({
 					requestId: 0,
 					_jsns: 'urn:zimbraMail',
 					action: {
-						op,
+						op: op === 'grant' ? 'update' : op,
 						id,
 						color: changes.color,
 						name: changes.name,

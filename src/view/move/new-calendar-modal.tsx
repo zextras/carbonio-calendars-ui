@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
 import {
 	Container,
 	Input,
@@ -15,18 +16,19 @@ import {
 	Icon,
 	SelectItem,
 	SelectProps,
-	SnackbarManagerContext
+	useSnackbar
 } from '@zextras/carbonio-design-system';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { includes, map } from 'lodash';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../carbonio-ui-commons/types/folder';
+
+import { useFoldersArrayByRoot, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
+import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
+import ModalFooter from '../../commons/modal-footer';
+import { ModalHeader } from '../../commons/modal-header';
 import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
 import { createCalendar } from '../../store/actions/create-calendar';
-import { ModalHeader } from '../../commons/modal-header';
-import ModalFooter from '../../commons/modal-footer';
 import { EventType } from '../../types/event';
 
 const Square = styled.div`
@@ -112,22 +114,30 @@ type ActionArgs = {
 };
 
 type NewModalProps = {
-	toggleModal: () => void;
+	toggleModal?: () => void;
 	onClose: () => void;
-	event: EventType;
-	currentFolder: Folder;
-	action: (arg: ActionArgs) => void;
+	event?: EventType;
+	folderId: string;
+	action?: (arg: ActionArgs) => void;
 };
 
-export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps): ReactElement => {
+export const NewModal = ({
+	onClose,
+	toggleModal,
+	event,
+	action,
+	folderId
+}: NewModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const [inputValue, setInputValue] = useState('');
-	const folders = useFoldersMap();
 	const [freeBusy, setFreeBusy] = useState(false);
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 	const colors = useMemo(() => getStatusItems(), []);
 	const [selectedColor, setSelectedColor] = useState(0);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
+	const root = useRoot(folderId);
+
+	const folders = useFoldersArrayByRoot(root?.id ?? '1');
 	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);
 	const showDupWarning = useMemo(
 		() => includes(folderArray, inputValue),
@@ -146,18 +156,20 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 	const onConfirm = (): void => {
 		if (inputValue) {
 			createCalendar({
-				parent: '1',
+				parent: root?.id ?? '1',
 				name: inputValue,
 				color: selectedColor,
 				excludeFreeBusy: freeBusy
 			}).then((newCalendarRes) => {
 				if (!newCalendarRes.Fault) {
-					action({
-						inviteId: event.resource.inviteId,
-						l: newCalendarRes.id,
-						destinationCalendarName: newCalendarRes.name,
-						id: event.resource.id
-					});
+					action &&
+						event &&
+						action({
+							inviteId: event.resource.inviteId,
+							l: newCalendarRes.id,
+							destinationCalendarName: newCalendarRes.name,
+							id: event.resource.id
+						});
 					createSnackbar({
 						key: `new`,
 						replace: true,
@@ -248,7 +260,7 @@ export const NewModal = ({ onClose, toggleModal, event, action }: NewModalProps)
 				secondaryAction={toggleModal}
 				secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
 				label={
-					event.resource.calendar.id === FOLDERS.TRASH
+					event && hasId(event.resource.calendar, FOLDERS.TRASH)
 						? t('folder.modal.restore.footer', 'Create and Restore')
 						: t('label.create', 'Create')
 				}

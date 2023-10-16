@@ -14,7 +14,8 @@ export enum FOLDER_ACTIONS {
 	NEW = 'new',
 	DELETE = 'delete',
 	SHARE = 'share',
-	SHARE_URL = 'share_url'
+	SHARE_URL = 'share_url',
+	FIND_SHARES = 'find_shares'
 }
 
 // eslint-disable-next-line no-shadow
@@ -22,3 +23,7 @@ export enum SIDEBAR_ITEMS {
 	ALL_CALENDAR = 'all',
 	SHARES = 'shares'
 }
+
+type ObjectValues<T> = T[keyof T];
+
+export type CalendarActionsId = ObjectValues<typeof FOLDER_ACTIONS>;

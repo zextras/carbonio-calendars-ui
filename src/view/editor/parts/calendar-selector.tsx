@@ -3,15 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useMemo } from 'react';
+
 import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS, LinkFolder, ROOT_NAME, t, useUserSettings } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useCallback, useMemo } from 'react';
 import { filter, find, map, reject } from 'lodash';
-import { getFoldersArrayByRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
+
+import LabelFactory, { Square } from './select-label-factory';
+import { useFoldersArray } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { PREFS_DEFAULTS } from '../../../constants';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
-import LabelFactory, { Square } from './select-label-factory';
 
 type CalendarSelectorProps = {
 	calendarId: string;
@@ -32,9 +36,7 @@ export const CalendarSelector = ({
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
-	// todo: This selector is ignoring shared accounts. Replace with useFoldersArray once shared accounts will be available.
-	// REFS: IRIS-2589
-	const allCalendars = getFoldersArrayByRoot(FOLDERS.USER_ROOT);
+	const allCalendars = useFoldersArray();
 	const calendars = reject(
 		allCalendars,
 		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME
@@ -53,10 +55,7 @@ export const CalendarSelector = ({
 	const requiredCalendars = useMemo(
 		() =>
 			excludeTrash
-				? filter(
-						calWithWritePerm,
-						(cal) => cal.id !== FOLDERS.TRASH && !cal.absFolderPath?.includes('/Trash')
-				  )
+				? filter(calWithWritePerm, (cal) => !isTrashOrNestedInIt(cal))
 				: calWithWritePerm,
 		[calWithWritePerm, excludeTrash]
 	);
@@ -64,17 +63,16 @@ export const CalendarSelector = ({
 		() =>
 			map(requiredCalendars, (cal) => {
 				const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
+				const labelName = hasId(cal, FOLDERS.CALENDAR) ? t('label.calendar', 'Calendar') : cal.name;
 				return {
-					label: cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name,
+					label: labelName,
 					value: cal.id,
 					color: color.color || 0,
 					customComponent: (
 						<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
 							<Square color={color.color || 'gray6'} />
 							<Padding left="small">
-								<Text>
-									{cal.id === FOLDERS.CALENDAR ? t('label.calendar', 'Calendar') : cal.name}
-								</Text>
+								<Text>{labelName}</Text>
 							</Padding>
 						</Container>
 					)
