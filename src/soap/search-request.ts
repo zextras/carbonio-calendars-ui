@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
+
 import { SearchRequestProps } from '../types/soap/soap-actions';
 
 export type SearchRejectedType = {
@@ -42,6 +43,17 @@ export const searchRequest = async ({
 		query: {
 			_content: content
 		}
+	});
+	return response?.Fault ? { ...response.Fault, error: true } : response;
+};
+
+export const searchResources = async (name: string): Promise<SearchReturnType> => {
+	const response: SearchReturnType = await soapFetch('AutoCompleteGal', {
+		limit: 20,
+		name,
+		needExp: 1,
+		type: 'resource',
+		_jsns: 'urn:zimbraAccount'
 	});
 	return response?.Fault ? { ...response.Fault, error: true } : response;
 };

@@ -7,6 +7,8 @@ import { isNil, debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@zextras/carbonio-design-system';
+import { searchResources } from '../../../soap/search-request';
+import { autoCompleteGalRequest, searchAppointments } from '../../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorLocation } from '../../../store/selectors/editor';
 import { editEditorLocation } from '../../../store/slices/editor-slice';
@@ -28,6 +30,7 @@ export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement
 		() =>
 			debounce(
 				(loc) => {
+					dispatch(autoCompleteGalRequest({ value: loc }));
 					dispatch(editEditorLocation({ id: editorId, location: loc }));
 				},
 				500,
