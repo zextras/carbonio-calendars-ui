@@ -12,15 +12,6 @@ export const selectEditor =
 	(state: RootState): Editor =>
 		state.editor.editors[id];
 
-export const selectActiveEditorId = (state: RootState): string | undefined =>
-	state?.editor?.activeId;
-
-export const selectActiveEditor = (state: RootState): Editor | undefined =>
-	state?.editor?.activeId ? state?.editor?.editors?.[state.editor.activeId] : undefined;
-
-export const selectSearchActiveId = (state: RootState): string | undefined =>
-	state.editor.searchActiveId;
-
 export function selectEditors(state: RootState): Record<string, Editor> {
 	return state.editor.editors;
 }
@@ -203,8 +194,3 @@ export const selectIsException =
 	(id: string) =>
 	(state: RootState): boolean =>
 		state?.editor?.editors?.[id]?.isException;
-
-export const selectEditorPanel =
-	(id: string) =>
-	(state: RootState): boolean =>
-		state?.editor?.editors?.[id]?.panel;

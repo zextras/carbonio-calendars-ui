@@ -113,13 +113,14 @@
             "calendar_restored": "Takvim başarıyla geri alındı",
             "appointment_permanently_deleted": "Randevu kalıcı olarak silindi",
             "calendar_edits_saved": "Değişiklikler başarıyla kaydedildi",
-            "series_deleted": "Seri başarıyla silindi. Katılımcılara iptal bildirimi gönderilecek.",
+            "series_deleted": "Seri çöp kutusuna taşındı. Katılımcılara iptal bildirimi gönderilecek.",
             "some_link_copying_error": "Bazı dosyalar için genel bağlantı oluşturulurken bir sorun oluştu, lütfen tekrar deneyin",
             "some_att_add_fails": "Bazı ekler eklenirken bir sorun oluştu, lütfen tekrar deneyin",
             "link_copying_error": "Genel bağlantı oluşturulurken bir sorun oluştu, lütfen tekrar deneyin",
             "att_err_adding": "Ekler eklenirken bir sorun oluştu, lütfen tekrar deneyin",
             "all_link_copied": "Genel bağlantı başarıyla kopyalandı",
-            "all_att_added": "Ekler başarıyla eklendi"
+            "all_att_added": "Ekler başarıyla eklendi",
+            "series_deleted_no_notification": "Seriler çöp kutusuna taşındı."
         },
         "are_organizer": "organize eden",
         "meeting_canceled": "Bu toplantı iptal edildi",

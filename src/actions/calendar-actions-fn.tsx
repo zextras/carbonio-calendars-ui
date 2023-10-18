@@ -7,12 +7,15 @@ import React from 'react';
 
 import { CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { filter, isEqual, uniqWith } from 'lodash';
 
 import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../carbonio-ui-commons/types/folder';
+import { ResFolder } from '../carbonio-ui-commons/utils';
 import { FOLDER_ACTIONS } from '../constants/sidebar';
 import { getFolderRequest } from '../soap/get-folder-request';
+import { getShareInfoRequest } from '../soap/get-share-info-request';
 import { folderAction } from '../store/actions/calendar-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick } from '../types/actions';
@@ -23,6 +26,7 @@ import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calend
 import { EmptyModal } from '../view/sidebar/empty-modal';
 import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
 import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
+import { SharesModal } from '../view/sidebar/shares-modal';
 
 export const newCalendar =
 	({
@@ -277,4 +281,27 @@ export const shareCalendarUrl =
 			},
 			true
 		);
+	};
+
+export const findShares =
+	({ createModal }: { createModal: CreateModalFn }): ((e?: ActionsClick) => void) =>
+	() => {
+		getShareInfoRequest().then((res) => {
+			const resCalendars: Array<ResFolder> = uniqWith(
+				filter(res.calendars, ['view', 'appointment']),
+				isEqual
+			);
+			if (res.isFulfilled) {
+				const closeModal = createModal(
+					{
+						children: (
+							<StoreProvider>
+								<SharesModal calendars={resCalendars} onClose={(): void => closeModal()} />
+							</StoreProvider>
+						)
+					},
+					true
+				);
+			}
+		});
 	};

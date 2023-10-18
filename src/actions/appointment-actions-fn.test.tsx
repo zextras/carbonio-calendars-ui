@@ -50,10 +50,6 @@ describe('actions', () => {
 		};
 		const action = createCopy({ event, invite, context });
 		action();
-		const { activeId } = store.getState().editor;
-		const editor = store.getState().editor.editors[activeId as string];
-		expect(activeId).toBeDefined();
-		expect(editor).toBeDefined();
 		expect(boardSpy).toHaveBeenCalled();
 	});
 });

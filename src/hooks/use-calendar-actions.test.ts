@@ -11,7 +11,7 @@ import { useFolderStore } from '../carbonio-ui-commons/store/zustand/folder';
 import { FOLDERS } from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { generateRoots } from '../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { setupHook } from '../carbonio-ui-commons/test/test-setup';
-import { FolderView } from '../carbonio-ui-commons/types/folder';
+import { Folder, FolderView } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 
 const randomUUID = faker.datatype.uuid();
@@ -65,6 +65,7 @@ const mainChildFolder = {
 	absFolderPath: '/Calendar 1/Calendar child',
 	id: `${randomUUID}:153`,
 	l: `${randomUUID}:2048`,
+	parent: `${randomUUID}:2048`,
 	name: 'Calendar child',
 	view: 'appointment' as FolderView,
 	n: 1,
@@ -85,7 +86,8 @@ const mainChildFolder = {
 const mainFolder = {
 	absFolderPath: '/Calendar 1',
 	id: `${randomUUID}:2048`,
-	l: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}`,
+	l: FOLDERS.USER_ROOT,
+	parent: FOLDERS.USER_ROOT,
 	name: 'Calendar 1',
 	owner: 'random owner',
 	view: 'appointment' as FolderView,
@@ -105,16 +107,28 @@ const mainFolder = {
 	perm: 'rwixda'
 };
 
-const setupFoldersStore = (): void => {
+const setupFoldersStore = (item?: Folder, foldersToAdd?: Record<string, Folder>): void => {
 	useFolderStore.setState(() => ({
 		roots: {
 			...roots,
 			USER: {
 				...roots.USER,
-				children: [mainFolder]
+				children: item ? [mainFolder, item] : [mainFolder]
 			}
 		},
-		folders: { [mainFolder.id]: mainFolder, [sharedFolder.id]: sharedFolder }
+		folders: item
+			? {
+					[roots.USER.id]: roots.USER,
+					[mainFolder.id]: mainFolder,
+					[sharedFolder.id]: sharedFolder,
+					[item.id]: item,
+					...foldersToAdd
+			  }
+			: {
+					[roots.USER.id]: roots.USER,
+					[mainFolder.id]: mainFolder,
+					[sharedFolder.id]: sharedFolder
+			  }
 	}));
 };
 
@@ -165,61 +179,65 @@ describe('use calendar actions', () => {
 			expect(result.current).toStrictEqual([]);
 		});
 	});
-	describe('calendar folder has 4 actions', () => {
-		test('calendar main account', () => {
-			const calendarItem = {
-				name: 'calendar',
-				id: FOLDERS.CALENDAR,
-				children: [],
-				checked: true,
-				uuid: '',
-				activesyncdisabled: false,
-				recursive: true,
-				deletable: false,
-				isLink: false,
-				depth: 0,
-				reminder: false,
-				broken: false
-			};
-			const { result } = setupHook(useCalendarActions, {
-				initialProps: [calendarItem]
-			});
+	test('main account calendar folder has 5 actions', () => {
+		const calendarItem = {
+			name: 'calendar',
+			id: FOLDERS.CALENDAR,
+			l: FOLDERS.USER_ROOT,
+			parent: FOLDERS.USER_ROOT,
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: false,
+			isLink: false,
+			depth: 0,
+			reminder: false,
+			broken: false
+		};
+		setupFoldersStore(calendarItem);
 
-			expect(result.current.length).toBe(4);
-			expect(result.current).toStrictEqual([
-				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
-			]);
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [calendarItem]
 		});
-		test('calendar shared account', () => {
-			const calendarItem = {
-				name: 'calendar',
-				id: `${randomUUID}:${FOLDERS.CALENDAR}`,
-				children: [],
-				checked: true,
-				uuid: '',
-				activesyncdisabled: false,
-				recursive: true,
-				deletable: false,
-				isLink: false,
-				depth: 0,
-				reminder: false,
-				broken: false
-			};
-			const { result } = setupHook(useCalendarActions, {
-				initialProps: [calendarItem]
-			});
 
-			expect(result.current.length).toBe(4);
-			expect(result.current).toStrictEqual([
-				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
-			]);
+		expect(result.current.length).toBe(5);
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES })
+		]);
+	});
+	test('shared account calendar has 4 actions', () => {
+		const calendarItem = {
+			name: 'calendar',
+			id: `${randomUUID}:${FOLDERS.CALENDAR}`,
+			children: [],
+			checked: true,
+			uuid: '',
+			activesyncdisabled: false,
+			recursive: true,
+			deletable: false,
+			isLink: false,
+			depth: 0,
+			reminder: false,
+			broken: false
+		};
+
+		const { result } = setupHook(useCalendarActions, {
+			initialProps: [calendarItem]
 		});
+
+		expect(result.current.length).toBe(4);
+		expect(result.current).toStrictEqual([
+			expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
+		]);
 	});
 	describe('trash folder has 1 action', () => {
 		test('trash main account', () => {
@@ -329,11 +347,12 @@ describe('use calendar actions', () => {
 	});
 	describe('custom folder has 5 actions', () => {
 		test('custom folder main account', () => {
-			const trashedItem = {
+			const customItem = {
 				name: 'custom folder',
 				id: '154',
 				absFolderPath: '/custom folder',
 				l: FOLDERS.USER_ROOT,
+				parent: FOLDERS.USER_ROOT,
 				children: [],
 				checked: true,
 				uuid: '',
@@ -345,17 +364,19 @@ describe('use calendar actions', () => {
 				reminder: false,
 				broken: false
 			};
+			setupFoldersStore(customItem);
 			const { result } = setupHook(useCalendarActions, {
-				initialProps: [trashedItem]
+				initialProps: [customItem]
 			});
 
-			expect(result.current.length).toBe(5);
+			expect(result.current.length).toBe(6);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES })
 			]);
 		});
 		test('shared account', () => {
@@ -389,13 +410,14 @@ describe('use calendar actions', () => {
 			]);
 		});
 	});
-	describe('nested custom folder has 6 actions', () => {
-		test('nested custom folder main account', () => {
+	describe('nested custom folder', () => {
+		test('in main account has 7 actions', () => {
 			const customNestedItem = {
-				name: 'custom folder',
-				id: '154',
-				absFolderPath: '/parent folder/custom folder',
-				l: '153',
+				name: 'custom nested folder',
+				id: '153',
+				absFolderPath: '/custom folder/custom nested folder',
+				l: '154',
+				parent: '154',
 				children: [],
 				checked: true,
 				uuid: '',
@@ -407,21 +429,42 @@ describe('use calendar actions', () => {
 				reminder: false,
 				broken: false
 			};
+
+			const customItem = {
+				name: 'custom folder',
+				id: '154',
+				absFolderPath: '/custom folder',
+				l: FOLDERS.USER_ROOT,
+				parent: FOLDERS.USER_ROOT,
+				children: [customNestedItem],
+				checked: true,
+				uuid: '',
+				activesyncdisabled: false,
+				recursive: true,
+				deletable: true,
+				isLink: false,
+				depth: 1,
+				reminder: false,
+				broken: false
+			};
+			setupFoldersStore(customItem, { [customNestedItem.id]: customNestedItem });
+
 			const { result } = setupHook(useCalendarActions, {
 				initialProps: [customNestedItem]
 			});
 
-			expect(result.current.length).toBe(6);
+			expect(result.current.length).toBe(7);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES })
 			]);
 		});
-		test('nested custom folder shared account', () => {
+		test('in shared account has 6 actions', () => {
 			const customNestedItem = {
 				name: 'custom folder',
 				id: `${randomUUID}:154`,
@@ -453,13 +496,14 @@ describe('use calendar actions', () => {
 			]);
 		});
 	});
-	describe('link folder with view permission has 3 actions', () => {
-		test('link folder main account', () => {
+	describe('link folder with view permission', () => {
+		test('in main account has 4 actions', () => {
 			const linkItem = {
 				name: 'link folder',
 				id: `${randomUUID}:154`,
 				absFolderPath: '/link folder',
 				l: '1',
+				parent: '1',
 				children: [],
 				checked: true,
 				uuid: '',
@@ -472,18 +516,20 @@ describe('use calendar actions', () => {
 				broken: false,
 				perm: 'r'
 			};
+			setupFoldersStore(linkItem);
 			const { result } = setupHook(useCalendarActions, {
 				initialProps: [linkItem]
 			});
 
-			expect(result.current.length).toBe(3);
+			expect(result.current.length).toBe(4);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.REMOVE_FROM_LIST }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARES_INFO })
 			]);
 		});
-		test('link folder shared account', () => {
+		test('link folder shared account  has 3 actions', () => {
 			const linkItem = {
 				name: 'link folder',
 				id: `${randomUUID}:154`,
@@ -501,6 +547,7 @@ describe('use calendar actions', () => {
 				broken: false,
 				perm: 'r'
 			};
+			setupFoldersStore();
 			const { result } = setupHook(useCalendarActions, {
 				initialProps: [linkItem]
 			});
@@ -514,13 +561,14 @@ describe('use calendar actions', () => {
 		});
 	});
 
-	describe('link folder with admin or manager permission has 6 actions', () => {
-		test('link folder main account', () => {
+	describe('link folder with admin or manager permission', () => {
+		test('in main account has 7 actions', () => {
 			const linkItem = {
 				name: 'link folder',
 				id: `${randomUUID}:154`,
 				absFolderPath: '/link folder',
 				l: FOLDERS.USER_ROOT,
+				parent: FOLDERS.USER_ROOT,
 				children: [],
 				checked: true,
 				uuid: '',
@@ -533,21 +581,23 @@ describe('use calendar actions', () => {
 				broken: false,
 				perm: 'rwidxa'
 			};
+			setupFoldersStore(linkItem);
 			const { result } = setupHook(useCalendarActions, {
 				initialProps: [linkItem]
 			});
 
-			expect(result.current.length).toBe(6);
+			expect(result.current.length).toBe(7);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.REMOVE_FROM_LIST }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARES_INFO }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE })
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARES_INFO })
 			]);
 		});
-		test('link folder shared account', () => {
+		test('in shared account has 6 actions', () => {
 			const linkItem = {
 				name: 'link folder',
 				id: `${randomUUID}:154`,
@@ -565,8 +615,29 @@ describe('use calendar actions', () => {
 				broken: false,
 				perm: 'rwidxa'
 			};
+			setupFoldersStore();
+
 			const { result } = setupHook(useCalendarActions, {
 				initialProps: [linkItem]
+			});
+			expect(result.current.length).toBe(6);
+			expect(result.current).toStrictEqual([
+				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.REMOVE_FROM_LIST }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARES_INFO })
+			]);
+		});
+	});
+
+	describe('nested folder in link folder with admin or manager permission', () => {
+		test('in main account has 6 actions', () => {
+			setupFoldersStore(mainFolder, { [mainChildFolder.id]: mainChildFolder });
+
+			const { result } = setupHook(useCalendarActions, {
+				initialProps: [mainChildFolder]
 			});
 
 			expect(result.current.length).toBe(6);
@@ -574,31 +645,13 @@ describe('use calendar actions', () => {
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.REMOVE_FROM_LIST }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARES_INFO }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE })
-			]);
-		});
-	});
-
-	describe('nested folder in link folder with admin or manager permission', () => {
-		test('in main account has 7 actions', () => {
-			setupFoldersStore();
-			const { result } = setupHook(useCalendarActions, {
-				initialProps: [mainChildFolder]
-			});
-
-			expect(result.current.length).toBe(5);
-			expect(result.current).toStrictEqual([
-				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES })
 			]);
 		});
 
-		test('in shared account has 7 actions', () => {
+		test('in shared account has 5 actions', () => {
 			setupFoldersStore();
 			const { result } = setupHook(useCalendarActions, {
 				initialProps: [sharedChildFolder]

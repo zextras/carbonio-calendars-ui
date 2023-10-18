@@ -24,6 +24,7 @@ import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import {
 	getFolderIcon,
 	getFolderTranslatedName,
+	isLinkChild,
 	recursiveToggleCheck
 } from '../../../commons/utilities';
 import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
@@ -85,27 +86,31 @@ const RootChildren = ({
 			}),
 		[dispatch, end, item, query, start]
 	);
-	const SharedStatusIcon = useMemo(() => {
-		if (!item.acl?.grant || !item.acl?.grant?.length) {
-			return '';
-		}
 
-		const tooltipText = t('tooltip.calendar_sharing_status', {
-			count: item?.acl?.grant?.length,
-			defaultValue_one: 'Shared with 1 person',
-			defaultValue: 'Shared with {{count}} people'
-		});
-
-		return (
+	const sharedStatusIcon = useMemo(() => {
+		const RowWithIcon = (icon: string, color: string, tooltipText: string): JSX.Element => (
 			<Padding left="small">
 				<Tooltip placement="right" label={tooltipText}>
 					<Row>
-						<Icon icon="ArrowCircleRight" customColor="#ffb74d" size="medium" />
+						<Icon icon={icon} color={color} size="medium" />
 					</Row>
 				</Tooltip>
 			</Padding>
 		);
-	}, [item?.acl?.grant]);
+		if (item.isLink || isLinkChild(item)) {
+			const tooltipText = t('tooltip.folder_linked_status', 'Linked to me');
+			return RowWithIcon('Linked', 'linked', tooltipText);
+		}
+		if (item.acl?.grant) {
+			const tooltipText = t('tooltip.calendar_sharing_status', {
+				count: item?.acl?.grant?.length,
+				defaultValue_one: 'Shared with 1 person',
+				defaultValue: 'Shared with {{count}} people'
+			});
+			return RowWithIcon('Shared', 'shared', tooltipText);
+		}
+		return '';
+	}, [item]);
 
 	return (
 		<ContextMenuItem item={item}>
@@ -114,7 +119,7 @@ const RootChildren = ({
 				<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
 					<AccordionItem item={accordionItem} />
 				</Tooltip>
-				{SharedStatusIcon}
+				{sharedStatusIcon}
 			</Row>
 		</ContextMenuItem>
 	);

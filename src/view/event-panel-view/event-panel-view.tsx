@@ -3,8 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useMemo } from 'react';
+
 import {
 	Container,
+	ContainerProps,
 	Divider,
 	Dropdown,
 	Icon,
@@ -15,35 +18,50 @@ import {
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { filter, find, noop } from 'lodash';
-import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
-import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
-import { extractBody } from '../../commons/body-message-renderer';
-import StyledDivider from '../../commons/styled-divider';
-import { useEventActions } from '../../hooks/use-event-actions';
-import { useInvite } from '../../hooks/use-invite';
-import { getAlarmToString } from '../../normalizations/normalizations-utils';
-import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
-import { useAppSelector } from '../../store/redux/hooks';
-import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
-import { EventType } from '../../types/event';
-import { RouteParams } from '../../types/route-params';
-import { ExceptionReference } from '../../types/store/appointments';
-import { AppointmentCardContainer } from '../editor/editor-panel-wrapper';
+
 import { AttachmentsBlock } from './attachments-part';
 import { DetailsPart } from './details-part';
 import { MessagePart } from './message-part';
 import { ParticipantsPart } from './participants-part';
 import { ReminderPart } from './reminder-part';
 import { ReplyButtonsPart } from './reply-buttons-part';
+import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
+import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
+import { extractBody } from '../../commons/body-message-renderer';
+import StyledDivider from '../../commons/styled-divider';
+import { PANEL_VIEW } from '../../constants';
+import { useEventActions } from '../../hooks/use-event-actions';
+import { useInvite } from '../../hooks/use-invite';
+import { getAlarmToString } from '../../normalizations/normalizations-utils';
+import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
+import { useAppSelector } from '../../store/redux/hooks';
+import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
+import { PanelView } from '../../types/actions';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import { EventType } from '../../types/event';
+import { RouteParams } from '../../types/route-params';
+import { ExceptionReference } from '../../types/store/appointments';
 
 const BodyContainer = styled(Container)`
 	overflow-y: auto;
+`;
+
+const AppointmentCardContainer = styled(Container)<ContainerProps & { expanded?: boolean }>`
+	z-index: 10;
+	position: absolute;
+	top: ${(): string => '1rem'};
+	right: ${(): string => '1rem'};
+	bottom: ${({ expanded }): string => (expanded ? '0' : '1rem')};
+	left: ${({ expanded }): string => (expanded ? '1rem' : 'max(calc(100% - 42.5rem), 0.75rem)')};
+	transition: left 0.2s ease-in-out;
+	height: auto;
+	width: auto;
+	max-height: 100%;
+	padding: 0;
 `;
 
 const ActionButtons = ({
@@ -164,12 +182,18 @@ const ActionButtons = ({
 	) : null;
 };
 
-export const DisplayerHeader = ({ event }: { event: any }): ReactElement => {
+export const DisplayerHeader = ({
+	event,
+	panelView
+}: {
+	event: EventType;
+	panelView: PanelView;
+}): ReactElement => {
 	const [t] = useTranslation();
 	const close = useCallback(() => {
 		replaceHistory('');
 	}, []);
-	const actions = useEventActions({ onClose: close, event });
+	const actions = useEventActions({ onClose: close, event, context: { panelView } });
 
 	return (
 		<>
@@ -230,7 +254,7 @@ export default function EventPanelView(): ReactElement | null {
 	);
 	return event && invite ? (
 		<AppointmentCardContainer mainAlignment="flex-start">
-			<DisplayerHeader event={event} />
+			<DisplayerHeader event={event} panelView={PANEL_VIEW.APP} />
 			<Container
 				padding={{ all: 'none' }}
 				mainAlignment="flex-start"

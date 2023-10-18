@@ -3,12 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import React from 'react';
+
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { ShareCalendarModal } from './share-calendar-modal';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
-import { ShareCalendarModal } from './share-calendar-modal';
 
 describe('share-calendar-modal', () => {
 	test('share with has 2 options, internal is selected by default, confirm button is disabled', async () => {
@@ -228,6 +231,35 @@ describe('share-calendar-modal', () => {
 
 		expect(uncheckedPrivate).toBeInTheDocument();
 	});
+
+	test('allow users to see my private appointments has also an info icon with tooltip', async () => {
+		const closeFn = jest.fn();
+		const grant = [
+			{
+				zid: '1',
+				gt: 'usr',
+				perm: 'r'
+			} as const
+		];
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		setupTest(
+			<ShareCalendarModal
+				folderName={'testName'}
+				folderId={'testId1'}
+				closeFn={closeFn}
+				grant={grant}
+			/>,
+			{ store }
+		);
+		const infoPrivateCheckbox = screen.getByTestId('icon: InfoOutline');
+
+		expect(infoPrivateCheckbox).toBeInTheDocument();
+
+		userEvent.hover(infoPrivateCheckbox);
+		await screen.findByText('private_info_tooltip');
+		expect(screen.getByText('private_info_tooltip')).toBeVisible();
+	});
+
 	test('allow users to see my private appointments is checked on click', async () => {
 		const closeFn = jest.fn();
 		const grant = [

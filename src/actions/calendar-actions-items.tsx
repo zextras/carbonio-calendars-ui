@@ -7,12 +7,13 @@ import React from 'react';
 
 import { CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { find, isNil, map, some } from 'lodash';
+import { isNil } from 'lodash';
 
 import {
 	deleteCalendar,
 	editCalendar,
 	emptyTrash,
+	findShares,
 	moveToRoot,
 	newCalendar,
 	removeFromList,
@@ -20,7 +21,6 @@ import {
 	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
-import { getFoldersArray } from '../carbonio-ui-commons/store/zustand/folder';
 import {
 	isNestedInTrash,
 	isTrashOrNestedInIt
@@ -28,6 +28,7 @@ import {
 import { FOLDERS } from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui-constants';
 import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
+import { isLinkChild, isMainRootChild } from '../commons/utilities';
 import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 
 export type CalendarActionsItems = {
@@ -43,15 +44,6 @@ export const noPermissionLabel = t(
 	'label.no_rights',
 	'You do not have permission to perform this action'
 );
-
-export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
-	const folders = getFoldersArray();
-	const parentFoldersNames = item?.absFolderPath?.split('/');
-	parentFoldersNames?.pop(); // removing itself from results
-	const parentFolders =
-		map(parentFoldersNames, (f) => find(folders, (ff) => ff.name === f) ?? '') ?? [];
-	return some(parentFolders, ['isLink', true]) ?? false;
-};
 
 export const newCalendarItem = ({
 	createModal,
@@ -167,7 +159,7 @@ export const removeFromListItem = ({
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.REMOVE_FROM_LIST,
 	icon: 'CloseOutline',
-	label: t('remove_from_this_list', 'Remove from this list'),
+	label: t('remove_from_this_list', 'Remove shared calendar'),
 	tooltipLabel: noPermissionLabel,
 	onClick: removeFromList({ item, createSnackbar }),
 	disabled:
@@ -232,4 +224,20 @@ export const shareCalendarUrlItem = ({
 		(item as LinkFolder).isLink ||
 		isTrashOrNestedInIt(item) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)
+});
+
+export const findSharesItem = ({
+	createModal,
+	item
+}: {
+	item: { name: string; id: string; absFolderPath?: string };
+	createModal: CreateModalFn;
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.FIND_SHARES,
+	icon: 'PlusOutline',
+	label: t('find_shares', 'Find shares'),
+	tooltipLabel: noPermissionLabel,
+	onClick: findShares({ createModal }),
+	disabled:
+		isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || !isMainRootChild(item)
 });

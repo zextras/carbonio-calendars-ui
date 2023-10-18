@@ -5,12 +5,15 @@
  */
 import { TextProps } from '@zextras/carbonio-design-system';
 import { FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
-import { forEach, isNil, reduce } from 'lodash';
+import { find, forEach, isNil, map, reduce, some } from 'lodash';
 import moment from 'moment';
 
 import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
-import { isLinkChild } from '../actions/calendar-actions-items';
-import { getUpdateFolder } from '../carbonio-ui-commons/store/zustand/folder';
+import {
+	getFoldersArray,
+	getRoot,
+	getUpdateFolder
+} from '../carbonio-ui-commons/store/zustand/folder';
 import type { Folder } from '../carbonio-ui-commons/types/folder';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
@@ -21,6 +24,20 @@ import { AppDispatch } from '../store/redux';
 import { ReminderItem } from '../types/appointment-reminder';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
+
+export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
+	const folders = getFoldersArray();
+	const parentFoldersNames = item?.absFolderPath?.split('/');
+	parentFoldersNames?.pop(); // removing itself from results
+	const parentFolders =
+		map(parentFoldersNames, (f) => find(folders, (ff) => ff.name === f) ?? '') ?? [];
+	return some(parentFolders, ['isLink', true]) ?? false;
+};
+
+export const isMainRootChild = (item: { id: string }): boolean => {
+	const root = getRoot(item.id);
+	return root?.id === FOLDERS.USER_ROOT ?? false;
+};
 
 export const calcColor = (label: string, theme: unknown): string => {
 	let sum = 0;

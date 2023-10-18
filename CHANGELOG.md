@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.5.0...v1.5.1) (2023-10-12)
+
+## [1.5.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.6...v1.5.0) (2023-09-29)
+
+
+### Features
+
+* appointments shows creation timezone and time ([9581d3f](https://github.com/zextras/carbonio-calendars-ui/commit/9581d3ff03521935093ae67d3abb7b91dda10c97))
+
+
+### Bug Fixes
+
+* accepting a proposed new time will lose the original description ([2419a42](https://github.com/zextras/carbonio-calendars-ui/commit/2419a42ecaca81243bb5551213eed1fa5220a202))
+* appointments from search result can be edited by the organizer ([417cb98](https://github.com/zextras/carbonio-calendars-ui/commit/417cb98e2f226daba399fe26d93752836d7296ea))
+* reminders appear even if user never navigate to calendar app ([#328](https://github.com/zextras/carbonio-calendars-ui/issues/328)) ([1817e43](https://github.com/zextras/carbonio-calendars-ui/commit/1817e43b2a52e6d60ad245bf954d05cbd0e0379b))
+
 ### [1.4.6](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.5...v1.4.6) (2023-09-18)
 
 

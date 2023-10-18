@@ -6,6 +6,7 @@
 import { Container } from '@zextras/carbonio-design-system';
 import React, { ComponentProps, ReactComponentElement } from 'react';
 import styled from 'styled-components';
+import { PANEL_VIEW } from '../../constants';
 import { useInvite } from '../../hooks/use-invite';
 import { DisplayerHeader } from '../event-panel-view/event-panel-view';
 import StyledDivider from '../../commons/styled-divider';
@@ -34,7 +35,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 		>
 			{event && (
 				<Container padding={{ all: 'none' }} mainAlignment="flex-start">
-					<DisplayerHeader event={event} />
+					<DisplayerHeader event={event} panelView={PANEL_VIEW.SEARCH} />
 					<BodyContainer
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"

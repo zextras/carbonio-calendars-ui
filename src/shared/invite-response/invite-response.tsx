@@ -204,9 +204,11 @@ const InviteResponse: FC<InviteResponse> = ({
 				});
 				if (editor.id) {
 					addBoard({
-						url: `${CALENDAR_ROUTE}/edit?edit=${payload?.m?.[0]?.inv[0]?.comp[0]?.apptId}`,
+						url: `${CALENDAR_ROUTE}/`,
 						title: editor?.title ?? '',
-						...editor
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						editor
 					} as unknown as Board);
 				}
 			}
