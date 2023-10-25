@@ -23,6 +23,11 @@ export const EditorDropZone = ({ editorId, children }: DropzoneProps): ReactElem
 	const dispatch = useAppDispatch();
 
 	const onDragOver = useCallback((event: DragEvent): void => {
+		const eventType = event?.dataTransfer?.types;
+		if (eventType?.includes('contact')) {
+			setDropZoneEnable(false);
+			return;
+		}
 		event.preventDefault();
 		setDropZoneEnable(true);
 	}, []);
