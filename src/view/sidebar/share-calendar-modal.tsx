@@ -238,6 +238,9 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 							label={t('label.role', 'Role')}
 							onChange={onShareRoleChange}
 							disablePortal
+							dropdownWidth={'auto'}
+							dropdownMaxWidth={'unset'}
+							placement={'bottom-start'}
 							defaultSelection={{
 								value: 'r',
 								label: findLabel(shareCalendarRoleOptions, 'r')
