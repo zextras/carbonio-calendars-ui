@@ -166,7 +166,11 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	}, []);
 
 	return (
-		<Container data-testid="ShareCalendarModal" padding="0.5rem 0.5rem 1.5rem">
+		<Container
+			data-testid="ShareCalendarModal"
+			padding="0.5rem 0.5rem 1.5rem"
+			style={{ overflowY: 'auto' }}
+		>
 			<ModalHeader onClose={closeFn} title={title} />
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}

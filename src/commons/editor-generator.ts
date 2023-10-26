@@ -5,17 +5,18 @@
  */
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
-import { Dispatch } from 'redux';
 import momentLocalizer from 'react-widgets-moment';
+import { Dispatch } from 'redux';
+
+import { getIdentityItems } from './get-identity-items';
 import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
-import { setCalendarColor } from '../normalizations/normalizations-utils';
+import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { PREFS_DEFAULTS } from '../constants';
+import { setCalendarColor } from '../normalizations/normalizations-utils';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
 import { createNewEditor } from '../store/slices/editor-slice';
 import { Editor } from '../types/editor';
 import { Invite } from '../types/store/invite';
-import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
-import { getIdentityItems } from './get-identity-items';
 
 momentLocalizer(moment);
 
@@ -46,6 +47,7 @@ export const disabledFields = {
 	organizer: false,
 	title: false,
 	location: false,
+	meetingRoom: false,
 	virtualRoom: false,
 	attendees: false,
 	optionalAttendees: false,
@@ -97,6 +99,7 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		sender: defaultOrganizer,
 		title: '',
 		location: '',
+		meetingRoom: undefined,
 		room: undefined,
 		attendees: [],
 		optionalAttendees: [],

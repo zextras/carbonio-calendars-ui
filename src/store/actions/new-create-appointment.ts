@@ -7,8 +7,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
-import { HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../../constants';
 
+import { HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { Editor } from '../../types/editor';
 
@@ -42,17 +42,19 @@ const setResourceDate = ({
 		  };
 };
 
+const isEventSentFromOrganizer = (organizer: any, sender: any): boolean =>
+	organizer.address === sender?.address &&
+	organizer.label === sender.label &&
+	organizer.identityName === sender.identityName;
+
 export const generateParticipantInformation = (resource: Editor): Array<Participants> => {
-	const sender =
-		resource.organizer.address === resource?.sender?.address &&
-		resource.organizer.label === resource.sender.label &&
-		resource.organizer.identityName === resource.sender.identityName
-			? undefined
-			: {
-					a: resource?.sender?.address ?? resource?.sender?.label,
-					p: resource?.sender?.fullName,
-					t: 's'
-			  };
+	const sender = isEventSentFromOrganizer(resource.organizer, resource.sender)
+		? undefined
+		: {
+				a: resource?.sender?.address ?? resource?.sender?.label,
+				p: resource?.sender?.fullName,
+				t: 's'
+		  };
 	const organizerParticipant = resource.calendar?.owner
 		? compact([
 				{
@@ -84,7 +86,7 @@ export const generateParticipantInformation = (resource: Editor): Array<Particip
 		  );
 };
 
-function generateHtmlBodyRequest(app: Editor): any {
+function generateHtmlBodyRequest(app: Editor): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 
 	const date = app.allDay
@@ -100,7 +102,7 @@ function generateHtmlBodyRequest(app: Editor): any {
 	return `${HTML_OPENING_TAG}${defaultMessage}${app.richText}${HTML_CLOSING_TAG}`;
 }
 
-function generateBodyRequest(app: Editor): any {
+function generateBodyRequest(app: Editor): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 
 	const date = app.allDay
@@ -170,6 +172,20 @@ const generateInvite = (editorData: Editor): any => {
 			}))
 		);
 
+	editorData?.meetingRoom &&
+		at.push(
+			...editorData.meetingRoom.map((c) => ({
+				a: c?.email,
+				d: c.label,
+				role: 'NON',
+				ptst: 'NE',
+				rsvp: true,
+				url: c?.email,
+				cutype: 'ROO'
+			}))
+		);
+
+	const isAlsoSender = isEventSentFromOrganizer(editorData.organizer, editorData.sender);
 	const organizer = editorData.calendar?.owner
 		? {
 				a: editorData.calendar.owner,
@@ -178,18 +194,8 @@ const generateInvite = (editorData: Editor): any => {
 		: omitBy(
 				{
 					a: editorData.organizer.address,
-					d:
-						editorData.organizer.address === editorData?.sender?.address &&
-						editorData.organizer.label === editorData.sender.label &&
-						editorData.organizer.identityName === editorData.sender.identityName
-							? undefined
-							: editorData.organizer.fullName,
-					sentBy:
-						editorData.organizer.address === editorData?.sender?.address &&
-						editorData.organizer.label === editorData.sender.label &&
-						editorData.organizer.identityName === editorData.sender.identityName
-							? undefined
-							: editorData.sender.address
+					d: isAlsoSender ? undefined : editorData.organizer.fullName,
+					sentBy: isAlsoSender ? undefined : editorData.sender.address
 				},
 				isNil
 		  );

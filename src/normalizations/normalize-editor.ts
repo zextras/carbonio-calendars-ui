@@ -12,7 +12,7 @@ import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Editor } from '../types/editor';
 import { DateType } from '../types/event';
-import { Invite } from '../types/store/invite';
+import { Attendee, Invite } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -26,6 +26,12 @@ export const getVirtualRoom = (xprop: any): { label: string; link: string } | un
 
 	return undefined;
 };
+
+const getMeetingRooms = (attendees: Array<Attendee>): Array<{ email: string; label: string }> =>
+	map(filter(attendees, ['cutype', 'ROO']), (at) => ({
+		label: at.d,
+		email: at.a
+	}));
 
 const getAttendees = (attendees: any[], role: string): any[] =>
 	map(filter(attendees, ['role', role]), (at) =>
@@ -186,6 +192,7 @@ export const normalizeEditor = ({
 				exceptId: invite?.exceptId,
 				title: event?.title,
 				location: event?.resource?.location,
+				meetingRoom: getMeetingRooms(invite.attendees),
 				room: getVirtualRoom(invite.xprop),
 				attendees: getAttendees(invite.attendees, 'REQ'),
 				optionalAttendees: getAttendees(invite.attendees, 'OPT'),

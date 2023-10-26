@@ -5,18 +5,20 @@
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 
-import { SearchRequestProps } from '../types/soap/soap-actions';
+import { Cn, SearchRequestProps } from '../types/soap/soap-actions';
 
 export type SearchRejectedType = {
 	error: boolean;
 	Fault: any;
 	appt?: never;
+	cn?: never;
 	more?: never;
 	offset?: never;
 	sortBy?: never;
 };
 export type SearchFulfilledType = {
-	appt: any;
+	cn?: Cn;
+	appt?: any;
 	Fault?: never;
 	error?: never;
 	more: boolean;
@@ -47,11 +49,12 @@ export const searchRequest = async ({
 	return response?.Fault ? { ...response.Fault, error: true } : response;
 };
 
-export const searchResources = async (name: string): Promise<SearchReturnType> => {
+export const searchResources = async (name: string, offset?: number): Promise<SearchReturnType> => {
 	const response: SearchReturnType = await soapFetch('AutoCompleteGal', {
-		limit: 20,
 		name,
+		limit: 100,
 		needExp: 1,
+		offset,
 		type: 'resource',
 		_jsns: 'urn:zimbraAccount'
 	});
