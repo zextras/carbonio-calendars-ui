@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within, act } from '@testing-library/react';
 import { Grant } from '@zextras/carbonio-shell-ui';
 import { rest } from 'msw';
+
 import { EditModal } from './edit-modal';
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
@@ -110,12 +112,9 @@ describe('edit modal', () => {
 		setupFoldersStore();
 		const editRoleInterceptor = setupInterceptor();
 
-		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
-			{
-				store
-			}
-		);
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+			store
+		});
 		await waitFor(() => {
 			expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
 		});
@@ -150,7 +149,7 @@ describe('edit modal', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 
-		setupTest(<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />, {
+		setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 		await waitFor(() => {
@@ -172,7 +171,7 @@ describe('edit modal', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 
-		setupTest(<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />, {
+		setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 			store
 		});
 		await waitFor(() => {
@@ -189,12 +188,9 @@ describe('edit modal', () => {
 		setupFoldersStore();
 		const revokeInterceptor = setupInterceptor();
 
-		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
-			{
-				store
-			}
-		);
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+			store
+		});
 		await waitFor(() => {
 			expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
 		});
@@ -226,12 +222,9 @@ describe('edit modal', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 
-		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
-			{
-				store
-			}
-		);
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+			store
+		});
 		await waitFor(() => {
 			expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
 		});

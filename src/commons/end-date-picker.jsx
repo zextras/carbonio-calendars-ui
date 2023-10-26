@@ -27,6 +27,7 @@ export default function EndDatePicker({ start, end, allDay, diff, onChange }) {
 	);
 	return (
 		<DateTimePicker
+			width="100%"
 			label={label}
 			defaultValue={end}
 			onChange={onEndChange}

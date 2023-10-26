@@ -4,11 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useMemo } from 'react';
-import moment from 'moment';
+
 import { add as datesAdd } from 'date-arithmetic';
-import TimeGrid from 'react-big-calendar/lib/TimeGrid';
 import { find, findLast, reduce } from 'lodash';
+import moment from 'moment';
 import { Navigate } from 'react-big-calendar';
+import TimeGrid from 'react-big-calendar/lib/TimeGrid';
+
 import { WorkWeekDay } from '../../utils/work-week';
 
 // Needed by the "range" and "title" functions
@@ -39,7 +41,11 @@ export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement 
 	// Looks horrible but there is no other way to pass and sync the workingSchedule
 	schedule = useMemo(() => workingSchedule, [workingSchedule]);
 	const [min, max, range] = useMemo(
-		() => [moment(date).startOf('day'), moment(date).endOf('day'), WorkView.range(date)],
+		() => [
+			new Date(moment(date).startOf('day').valueOf()),
+			new Date(moment(date).endOf('day').valueOf()),
+			WorkView.range(date)
+		],
 		[date]
 	);
 

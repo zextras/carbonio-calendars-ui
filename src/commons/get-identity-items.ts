@@ -10,7 +10,7 @@ import { IdentityItem } from '../types/editor';
 export const getIdentityItems = (): Array<IdentityItem> => {
 	const account = getUserAccount();
 
-	const sortedList = sortBy(account.identities.identity, ({ name }) =>
+	const sortedList = sortBy(account?.identities.identity, ({ name }) =>
 		name === 'DEFAULT' ? 0 : 1
 	);
 

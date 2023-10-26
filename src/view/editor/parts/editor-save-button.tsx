@@ -3,15 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
-import { getBridgedFunctions } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext } from 'react';
+
+import {
+	Button,
+	ModalManagerContext,
+	SnackbarManagerContext
+} from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+
 import { onSave } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import {
 	selectEditor,
 	selectEditorAttendees,
@@ -20,6 +24,7 @@ import {
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
+import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
@@ -27,6 +32,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
+	const createSnackbar = useContext(SnackbarManagerContext);
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
 	const [t] = useTranslation();
@@ -59,7 +65,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 			);
 		} else {
 			onSave({ draft: !!attendeesLength, isNew, editor, dispatch }).then(({ response }) => {
-				getBridgedFunctions().createSnackbar({
+				createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
 					type: response ? 'info' : 'warning',
@@ -71,13 +77,13 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 				});
 			});
 		}
-	}, [editor, action, attendeesLength, isNew, dispatch, createModal, editorId, t]);
+	}, [editor, action, createModal, isNew, editorId, attendeesLength, dispatch, createSnackbar, t]);
 
 	return (
 		<Button
 			label={t('label.save', 'Save')}
 			icon="SaveOutline"
-			disabled={disabled?.saveButton ?? !title?.length}
+			disabled={disabled?.saveButton || !title?.length}
 			onClick={onClick}
 			type="outlined"
 		/>

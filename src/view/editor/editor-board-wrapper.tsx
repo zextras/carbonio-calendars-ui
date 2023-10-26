@@ -3,13 +3,21 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useBoard } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement } from 'react';
+
+import { useBoard } from '@zextras/carbonio-shell-ui';
+
 import { EditorPanel } from './editor-panel';
 
 const BoardEditPanel = (): ReactElement | null => {
 	const board = useBoard();
-
-	return board?.id ? <EditorPanel editorId={board?.id} /> : null;
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	if (!board?.editor?.id) {
+		return null;
+	}
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	return <EditorPanel editorId={board?.editor?.id} />;
 };
 export default BoardEditPanel;

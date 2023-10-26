@@ -3,12 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { map, values } from 'lodash';
 import { rest } from 'msw';
-import React from 'react';
+
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import {
 	createFakeIdentity,
@@ -37,14 +39,16 @@ shell.getUserSettings.mockImplementation(() => ({
 	}
 }));
 
+shell.useBoardHooks.mockImplementation(() => ({
+	updateBoard: jest.fn()
+}));
+
 describe('create single appointment with default values', () => {
 	test('from board panel', async () => {
 		// SETUP MOCKS, STORE AND HOOK
-		const module = { createSnackbar: jest.fn() };
-		shell.getBridgedFunctions.mockImplementation(() => module);
-		const snackbarSpy = jest.spyOn(module, 'createSnackbar');
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { result } = setupHook(useOnClickNewButton, { store });
+		const newTitle = faker.random.word();
 
 		// CREATE APPOINTMENT FROM CREATE NEW APPOINTMENT BUTTON FUNCTION
 		expect(store.getState().editor.editors).toEqual({});
@@ -53,7 +57,7 @@ describe('create single appointment with default values', () => {
 		expect(previousEditor).toBeDefined();
 
 		shell.useBoard.mockImplementation(() => ({
-			...previousEditor,
+			editor: previousEditor,
 			dispatch: store.dispatch
 		}));
 
@@ -63,6 +67,12 @@ describe('create single appointment with default values', () => {
 		expect(screen.getByRole('button', { name: /send/i })).toBeDisabled();
 		expect(previousEditor.isNew).toEqual(true);
 
+		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
+		await user.type(titleSelector, newTitle);
+
+		// DEBOUNCE TIMER FOR INPUT FIELDS
+		jest.advanceTimersByTime(500);
+
 		await waitFor(() => {
 			// CHECKING IF EDITOR IS UPDATED AFTER CREATE APPOINTMENT SUCCESSFUL REQUEST
 			user.click(screen.getByRole('button', { name: /save/i }));
@@ -70,24 +80,14 @@ describe('create single appointment with default values', () => {
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);
 
-		// SNACKBAR DISPLAY CORRECTLY
-		expect(snackbarSpy).toHaveBeenCalledTimes(1);
-		expect(snackbarSpy).toHaveBeenCalledWith({
-			autoHideTimeout: 3000,
-			hideButton: true,
-			key: 'calendar-moved-root',
-			label: 'Edits saved correctly',
-			replace: true,
-			type: 'info'
-		});
+		const snackbar = screen.getByText(/edits saved correctly/i);
+
+		expect(snackbar).toBeInTheDocument();
 	});
 });
 describe('create single appointment with custom values', () => {
 	test('from board panel', async () => {
 		// SETUP MOCKS, STORE AND HOOK
-		const module = { createSnackbar: jest.fn() };
-		shell.getBridgedFunctions.mockImplementation(() => module);
-		const snackbarSpy = jest.spyOn(module, 'createSnackbar');
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { result } = setupHook(useOnClickNewButton, { store });
 
@@ -98,7 +98,7 @@ describe('create single appointment with custom values', () => {
 		expect(previousEditor).toBeDefined();
 
 		shell.useBoard.mockImplementation(() => ({
-			...previousEditor,
+			editor: previousEditor,
 			dispatch: store.dispatch
 		}));
 
@@ -188,17 +188,8 @@ describe('create single appointment with custom values', () => {
 		const updatedEditor = values(store.getState().editor.editors)[0];
 		expect(updatedEditor.isNew).toEqual(false);
 
-		// CHECKING ALL CHANGED PARAMETERS
+		const snackbar = screen.getByText(/edits saved correctly/i);
 
-		// SNACKBAR DISPLAY CORRECTLY
-		expect(snackbarSpy).toHaveBeenCalledTimes(1);
-		expect(snackbarSpy).toHaveBeenCalledWith({
-			autoHideTimeout: 3000,
-			hideButton: true,
-			key: 'calendar-moved-root',
-			label: 'Edits saved correctly',
-			replace: true,
-			type: 'info'
-		});
+		expect(snackbar).toBeInTheDocument();
 	});
 });

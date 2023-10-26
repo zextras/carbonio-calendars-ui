@@ -1,0 +1,14 @@
+{
+    "action": {
+        "search": "Keresés",
+        "reset": "Visszaállítás",
+        "show_original": "Mutassa az eredetit"
+    },
+    "composer": {
+        "attachment": {
+            "files": "Hozzáadás a fájlokból",
+            "local": "Hozzáadás a helyi mappából",
+            "url": "Nyilvános link hozzáadása a fájlokból"
+        }
+    }
+}

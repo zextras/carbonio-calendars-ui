@@ -47,7 +47,4 @@ export type InvitesSlice = {
 export type EditorSlice = {
 	status: string;
 	editors: Record<string, Editor>;
-	editorPanel: string | undefined;
-	activeId: string | undefined;
-	searchActiveId: string | undefined;
 };

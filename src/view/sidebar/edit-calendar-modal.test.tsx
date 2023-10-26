@@ -3,22 +3,21 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import React from 'react';
-import { screen, waitFor, within } from '@testing-library/react';
-import { rest } from 'msw';
-import { find } from 'lodash';
-import { faker } from '@faker-js/faker';
-import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
-import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import type { FolderView } from '../../carbonio-ui-commons/types/folder';
-import { setupTest, setupHook } from '../../carbonio-ui-commons/test/test-setup';
-import { reducers } from '../../store/redux';
-import { EditModal } from './edit-modal/edit-modal';
-import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
-import { useCalendarActions } from '../../hooks/use-calendar-actions';
 
-const fullName = faker.name.fullName();
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { screen, waitFor, within } from '@testing-library/react';
+import { find } from 'lodash';
+import { rest } from 'msw';
+
+import { EditModal } from './edit-modal/edit-modal';
+import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
+import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
+import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
+import { setupTest, setupHook } from '../../carbonio-ui-commons/test/test-setup';
+import type { FolderView } from '../../carbonio-ui-commons/types/folder';
+import { useCalendarActions } from '../../hooks/use-calendar-actions';
+import { reducers } from '../../store/redux';
 
 const roots = generateRoots();
 
@@ -49,7 +48,9 @@ const setupFoldersStore = (): void => {
 				children: [folder]
 			}
 		},
-		folders: {}
+		folders: {
+			[folder.id]: folder
+		}
 	}));
 };
 
@@ -81,12 +82,9 @@ describe('main-calendar-modal', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 
-		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
-			{
-				store
-			}
-		);
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+			store
+		});
 		await waitFor(() => {
 			expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
 		});
@@ -105,12 +103,9 @@ describe('main-calendar-modal', () => {
 		const closeFn = jest.fn();
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
-			{
-				store
-			}
-		);
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+			store
+		});
 
 		await waitFor(() => {
 			expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
@@ -132,12 +127,9 @@ describe('main-calendar-modal', () => {
 		const closeFn = jest.fn();
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
-			{
-				store
-			}
-		);
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+			store
+		});
 
 		const freeBusyCheckbox = screen.getByTestId('icon: Square');
 		expect(freeBusyCheckbox).toBeInTheDocument();
@@ -176,12 +168,9 @@ describe('main-calendar-modal', () => {
 		const closeFn = jest.fn();
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const { user } = setupTest(
-			<EditModal folder={folder} totalAppointments={folder.n} onClose={closeFn} />,
-			{
-				store
-			}
-		);
+		const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+			store
+		});
 		await waitFor(() => {
 			expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
 		});
