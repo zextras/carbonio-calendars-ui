@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.5.1...v1.6.0) (2023-10-26)
+
+
+### Features
+
+* adding info tooltip to share calendar private checkbox ([#345](https://github.com/zextras/carbonio-calendars-ui/issues/345)) ([2d0ca57](https://github.com/zextras/carbonio-calendars-ui/commit/2d0ca574a24d84e5d64d18ccabdd0b503de5cd93))
+* appointments are editable from the board ([#343](https://github.com/zextras/carbonio-calendars-ui/issues/343)) ([0055aab](https://github.com/zextras/carbonio-calendars-ui/commit/0055aabdaf2d291eaa35048f04ca425f4c435b1a))
+* modal and snackbar manager available in entrypoints ([#346](https://github.com/zextras/carbonio-calendars-ui/issues/346)) ([8abf1e8](https://github.com/zextras/carbonio-calendars-ui/commit/8abf1e8862dfa2313322d31e2640d43c3b327a90))
+
+
+### Bug Fixes
+
+* autofocus on appointment title ([e6d5da3](https://github.com/zextras/carbonio-calendars-ui/commit/e6d5da3686bc007d275ddf602b70c75758ce11ca))
+* management of permissions of Calendar ([02fe604](https://github.com/zextras/carbonio-calendars-ui/commit/02fe6044fec2f907cacebce2540773f80834a556))
+
 ### [1.5.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.5.0...v1.5.1) (2023-10-12)
 
 ## [1.5.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.4.6...v1.5.0) (2023-09-29)
