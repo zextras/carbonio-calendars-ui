@@ -13,6 +13,7 @@ import { ActionsButtonsRow } from './actions-buttons-row';
 import { CalendarInfoRow } from './calendar-info-row';
 import { DescriptionFragmentRow } from './description-fragment-row';
 import { LocationRow } from './location-row';
+import { MeetingRoomsRow } from './meeting-rooms-row';
 import { NeverSentWarningRow } from './never-sent-warning-row';
 import { ParticipantsRow } from './participants-row';
 import TagsRow from './tags-row';
@@ -88,6 +89,7 @@ export const EventSummaryView = ({
 				<CalendarInfoRow />
 				{timeData && <TimeInfoRow timeInfoData={timeData} showIcon />}
 				{locationData && <LocationRow locationData={locationData} showIcon />}
+				{invite && <MeetingRoomsRow invite={invite} showIcon />}
 				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
 				{invite && <ParticipantsRow event={event} invite={invite} />}
 				{event?.resource?.tags?.length > 0 && <TagsRow event={event} />}

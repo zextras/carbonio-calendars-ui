@@ -16,7 +16,7 @@ import {
 	Padding
 } from '@zextras/carbonio-design-system';
 import { addBoard, getAction, Action, t, Board, useUserAccount } from '@zextras/carbonio-shell-ui';
-import { filter, find } from 'lodash';
+import { filter, find, map } from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -26,7 +26,7 @@ import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import BodyMessageRenderer from '../../commons/body-message-renderer';
 import { generateEditor } from '../../commons/editor-generator';
-import { CALENDAR_ROUTE } from '../../constants';
+import { CALENDAR_RESOURCES, CALENDAR_ROUTE } from '../../constants';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
@@ -129,6 +129,16 @@ const InviteResponse: FC<InviteResponse> = ({
 	const room = useMemo(() => find(invite.xprop, ['name', CRB_XPROPS.MEETING_ROOM]), [invite]);
 	const roomName = find(room?.xparam, ['name', CRB_XPARAMS.ROOM_NAME])?.value;
 	const roomLink = find(room?.xparam, ['name', CRB_XPARAMS.ROOM_LINK])?.value;
+
+	const meetingRooms = useMemo(
+		() => filter(invite.attendees, ['cutype', CALENDAR_RESOURCES.ROOM]),
+		[invite.attendees]
+	);
+
+	const rooms = useMemo(
+		() => map(meetingRooms, (meetingRoom) => meetingRoom.d).join(', '),
+		[meetingRooms]
+	);
 
 	const apptTimeZone = useMemo(
 		() => `${moment(invite.start.u).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
@@ -314,6 +324,23 @@ const InviteResponse: FC<InviteResponse> = ({
 										{roomName}
 									</a>
 								</LinkText>
+							</Tooltip>
+						</Row>
+					</Row>
+				)}
+
+				{meetingRooms?.length && (
+					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large', bottom: 'small' }}>
+						<Tooltip placement="left" label={t('tooltip.meetingRooms', 'MeetingRooms')}>
+							<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
+								<Icon size="large" icon="BuildingOutline" />
+							</Row>
+						</Tooltip>
+						<Row takeAvailableSpace mainAlignment="flex-start">
+							<Tooltip placement="right" label={t('tooltip.meetingRooms', 'MeetingRooms')}>
+								<Text size="medium" overflow="break-word">
+									{rooms}
+								</Text>
 							</Tooltip>
 						</Row>
 					</Row>

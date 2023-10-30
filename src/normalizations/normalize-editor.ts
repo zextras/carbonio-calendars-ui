@@ -8,7 +8,7 @@ import moment, { Moment } from 'moment';
 
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
-import { PREFS_DEFAULTS } from '../constants';
+import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { Editor } from '../types/editor';
 import { DateType } from '../types/event';
@@ -28,7 +28,7 @@ export const getVirtualRoom = (xprop: any): { label: string; link: string } | un
 };
 
 const getMeetingRooms = (attendees: Array<Attendee>): Array<{ email: string; label: string }> =>
-	map(filter(attendees, ['cutype', 'ROO']), (at) => ({
+	map(filter(attendees, ['cutype', CALENDAR_RESOURCES.ROOM]), (at) => ({
 		label: at.d,
 		email: at.a
 	}));
