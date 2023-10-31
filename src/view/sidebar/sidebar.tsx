@@ -18,7 +18,7 @@ import {
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { find, map, reject } from 'lodash';
 
-import { CollapsedSidebarItems } from './collapsed-sidebar-items';
+import { CollapsedSidebarItem } from './collapsed-sidebar-items';
 import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
 import { addAllCalendarsItem } from './utils';
@@ -129,7 +129,7 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 						/>
 					) : (
 						foldersAccordionItems[0].children.map((folder) => (
-							<CollapsedSidebarItems key={folder.id} item={folder} />
+							<CollapsedSidebarItem key={folder.id} item={folder} />
 						))
 					)}
 				</ThemeProvider>
