@@ -9,6 +9,7 @@ export type ParticipationStatus = 'TE' | 'AC' | 'DE' | 'NE' | 'DG' | 'CO' | 'IN'
 export type Attendee = {
 	a: string;
 	d: string;
+	cutype: string;
 	ptst: ParticipationStatus;
 	role: ParticipationRoles;
 	rsvp: boolean;

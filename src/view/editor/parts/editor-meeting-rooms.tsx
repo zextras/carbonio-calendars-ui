@@ -48,7 +48,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 		}
 	}, [meetingRoom, meetingRooms, selection]);
 
-	return meetingRooms ? (
+	return (
 		<Select
 			items={meetingRooms}
 			background={'gray5'}
@@ -58,5 +58,5 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 			selection={selection}
 			multiple
 		/>
-	) : null;
+	);
 };
