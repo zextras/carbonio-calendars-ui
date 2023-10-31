@@ -128,7 +128,7 @@ export const normalizeCalendarEvent = ({
 			: new Date(start + dur),
 		resource: normalizeEventResource({
 			appt: appointment,
-			iAmOrganizer: user.name === appointment?.or?.a,
+			iAmOrganizer: user?.name === appointment?.or?.a,
 			calendar,
 			inst: instance as ExceptionReference,
 			invite
