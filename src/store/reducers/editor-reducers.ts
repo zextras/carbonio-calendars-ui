@@ -6,7 +6,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { isNil, union } from 'lodash';
 
-import type { Editor, IdentityItem, MeetingRoom, Room } from '../../types/editor';
+import type { Editor, IdentityItem, Resource, Room } from '../../types/editor';
 import type { EventResourceCalendar } from '../../types/event';
 import type { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
 import type { EditorSlice } from '../../types/store/store';
@@ -143,11 +143,21 @@ export const editLocationReducer = (
 
 export const editEditorMeetingRoomReducer = (
 	{ editors }: EditorSlice,
-	{ payload }: PayloadAction<{ id: string; meetingRoom: Array<MeetingRoom> }>
+	{ payload }: PayloadAction<{ id: string; meetingRoom: Array<Resource> }>
 ): void => {
 	if (payload?.id && !isNil(editors?.[payload?.id])) {
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].meetingRoom = payload.meetingRoom;
+	}
+};
+
+export const editEditorEquipmentReducer = (
+	{ editors }: EditorSlice,
+	{ payload }: PayloadAction<{ id: string; equipment: Array<Resource> }>
+): void => {
+	if (payload?.id && !isNil(editors?.[payload?.id])) {
+		// eslint-disable-next-line no-param-reassign
+		editors[payload.id].equipment = payload.equipment;
 	}
 };
 

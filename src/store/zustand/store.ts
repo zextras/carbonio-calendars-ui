@@ -5,7 +5,7 @@
  */
 import moment from 'moment';
 import { create } from 'zustand';
-import { MeetingRoom } from '../../types/editor';
+import { Resource } from '../../types/editor';
 
 export type SetRange = ({ start, end }: { start: number; end: number }) => void;
 export type CalendarRange = {
@@ -19,7 +19,7 @@ export type AppState = {
 	summaryViewCounter: number;
 	range: CalendarRange;
 	setRange: SetRange;
-	resources: Array<MeetingRoom> | undefined;
+	resources: Array<Resource> | undefined;
 };
 
 export const useAppStatusStore = create<AppState>((set) => ({

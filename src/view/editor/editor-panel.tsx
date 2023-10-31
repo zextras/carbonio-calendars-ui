@@ -18,6 +18,7 @@ import { EditorDropZone } from './parts/editor-dropzone';
 import { EditorFreeBusySelector } from './parts/editor-free-busy-selector';
 import { EditorLocation } from './parts/editor-location';
 import { EditorMeetingRooms } from './parts/editor-meeting-rooms';
+import { EditorEquipment } from './parts/editor-equipment';
 import { EditorOrganizer } from './parts/editor-organizer';
 import { EditorPrivateCheckbox } from './parts/editor-private-checkbox';
 import { EditorReminder } from './parts/editor-reminder';
@@ -53,6 +54,9 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
 						<EditorMeetingRooms editorId={editorId} />
+					</Row>
+					<Row height="fit" width="fill" padding={{ top: 'large' }}>
+						<EditorEquipment editorId={editorId} />
 					</Row>
 					<EditorVirtualRoom editorId={editorId} />
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>

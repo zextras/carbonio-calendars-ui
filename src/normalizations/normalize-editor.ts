@@ -33,6 +33,12 @@ const getMeetingRooms = (attendees: Array<Attendee>): Array<{ email: string; lab
 		email: at.a
 	}));
 
+const getEquipments = (attendees: Array<Attendee>): Array<{ email: string; label: string }> =>
+	map(filter(attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]), (at) => ({
+		label: at.d,
+		email: at.a
+	}));
+
 const getAttendees = (attendees: any[], role: string): any[] =>
 	map(filter(attendees, ['role', role]), (at) =>
 		omitBy(
@@ -193,6 +199,7 @@ export const normalizeEditor = ({
 				title: event?.title,
 				location: event?.resource?.location,
 				meetingRoom: getMeetingRooms(invite.attendees),
+				equipment: getEquipments(invite.attendees),
 				room: getVirtualRoom(invite.xprop),
 				attendees: getAttendees(invite.attendees, 'REQ'),
 				optionalAttendees: getAttendees(invite.attendees, 'OPT'),
