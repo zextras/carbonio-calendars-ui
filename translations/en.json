@@ -671,6 +671,7 @@
         "equipment": "Equipment",
         "folder_linked_status": "Linked to me",
         "location": "Location",
+        "meetingRooms": "MeetingRooms",
         "resend": "Send mail notification about this share",
         "revoke": "Revoke access",
         "virtual_room": "Virtual Room"

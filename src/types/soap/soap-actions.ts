@@ -5,7 +5,7 @@
  */
 import { Grant } from '@zextras/carbonio-shell-ui';
 
-export type Cn = Array<{
+export type Contact = {
 	id: string;
 	l: string;
 	d: number;
@@ -26,7 +26,9 @@ export type Cn = Array<{
 	};
 	ref: string;
 	sf: string;
-}>;
+};
+
+export type Cn = Array<Contact>;
 
 export type SearchRequestProps = {
 	start: number;
