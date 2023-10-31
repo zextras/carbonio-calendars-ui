@@ -6,8 +6,8 @@
 import { useEffect, useState } from 'react';
 
 import { map } from 'lodash';
+import { searchResources } from '../../../soap/search-resources';
 
-import { searchResources } from '../../../soap/search-request';
 import { useAppStatusStore } from '../../../store/zustand/store';
 import { MeetingRoom } from '../../../types/editor';
 import { Cn } from '../../../types/soap/soap-actions';

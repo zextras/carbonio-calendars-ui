@@ -48,15 +48,3 @@ export const searchRequest = async ({
 	});
 	return response?.Fault ? { ...response.Fault, error: true } : response;
 };
-
-export const searchResources = async (name: string, offset?: number): Promise<SearchReturnType> => {
-	const response: SearchReturnType = await soapFetch('AutoCompleteGal', {
-		name,
-		limit: 100,
-		needExp: 1,
-		offset,
-		type: 'resource',
-		_jsns: 'urn:zimbraAccount'
-	});
-	return response?.Fault ? { ...response.Fault, error: true } : response;
-};

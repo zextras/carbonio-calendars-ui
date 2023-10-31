@@ -6,12 +6,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isNil, omitBy } from 'lodash';
 
-import {
-	SearchRejectedType,
-	searchRequest,
-	searchResources,
-	SearchReturnType
-} from '../../soap/search-request';
+import { SearchRejectedType, searchRequest, SearchReturnType } from '../../soap/search-request';
 import { SearchRequestProps } from '../../types/soap/soap-actions';
 import { AppointmentsSlice } from '../../types/store/store';
 import type { RootState } from '../redux';
@@ -46,18 +41,3 @@ export const searchAppointments = createAsyncThunk<
 		return response;
 	}
 );
-
-export const autoCompleteGalRequest = createAsyncThunk<
-	SearchReturnType,
-	{ value: string },
-	{
-		state: RootState;
-		rejectValue: SearchRejectedType;
-	}
->('calendars/search', async ({ value }, { rejectWithValue }) => {
-	const response = await searchResources(value);
-	if (response?.error) {
-		return rejectWithValue(response);
-	}
-	return response;
-});

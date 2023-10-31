@@ -131,7 +131,10 @@ describe.each`
 		// SETTING NEW TITLE, LOCATION, FREEBUSY
 		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
 		const locationSelector = screen.getByRole('textbox', { name: /Location/i });
-		await user.type(titleSelector, newTitle);
+
+		await waitFor(() => {
+			user.type(titleSelector, newTitle);
+		});
 		await user.type(locationSelector, newLocation);
 		await user.click(screen.getByText(/free/i));
 
