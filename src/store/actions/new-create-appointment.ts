@@ -80,7 +80,12 @@ export const generateParticipantInformation = (resource: Editor): Array<Particip
 		? organizerParticipant
 		: concat(
 				map(
-					concat(resource?.attendees, resource?.optionalAttendees, resource?.meetingRoom ?? []),
+					concat(
+						resource?.attendees,
+						resource?.optionalAttendees,
+						resource?.meetingRoom ?? [],
+						resource?.equipment ?? []
+					),
 					(attendee) => ({
 						a: attendee?.email ?? attendee?.label,
 						p:
