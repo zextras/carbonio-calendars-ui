@@ -5,12 +5,13 @@
  */
 import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
 
+import { Button, ModalManagerContext } from '@zextras/carbonio-design-system';
 import {
-	Button,
-	ModalManagerContext,
-	SnackbarManagerContext
-} from '@zextras/carbonio-design-system';
-import { closeBoard, replaceHistory, useBoard } from '@zextras/carbonio-shell-ui';
+	closeBoard,
+	replaceHistory,
+	useBoard,
+	getBridgedFunctions
+} from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { onSend } from '../../../commons/editor-save-send-fns';
@@ -39,7 +40,6 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
-	const createSnackbar = useContext(SnackbarManagerContext);
 
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();
@@ -94,7 +94,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 				if (board && response) {
 					closeBoard(board?.id);
 				}
-				createSnackbar({
+				getBridgedFunctions().createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
 					type: response ? 'info' : 'warning',
@@ -105,7 +105,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 					autoHideTimeout: 3000
 				});
 			});
-	}, [board, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
+	}, [board, createModal, dispatch, editor, editorId, isNew, t]);
 
 	return (
 		<Button
