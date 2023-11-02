@@ -211,8 +211,17 @@ describe.each`
 			expect(updatedEditor.recur).toBeDefined();
 		}
 
-		const snackbar = screen.getByText(/edits saved correctly/i);
+		if (title === 'series') {
+			await waitFor(() => {
+				user.click(screen.getByRole('button', { name: /continue/i }));
+			});
+			const snackbar = screen.getByText('message.snackbar.calendar_edits_saved');
 
-		expect(snackbar).toBeInTheDocument();
+			expect(snackbar).toBeInTheDocument();
+		} else {
+			const snackbar = screen.getByText(/edits saved correctly/i);
+
+			expect(snackbar).toBeInTheDocument();
+		}
 	});
 });

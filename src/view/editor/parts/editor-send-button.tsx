@@ -12,7 +12,6 @@ import {
 } from '@zextras/carbonio-design-system';
 import { closeBoard, replaceHistory, useBoard } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 
 import { onSend } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
@@ -27,7 +26,6 @@ import {
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
-import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
@@ -45,7 +43,6 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const board = useBoard();
 	const dispatch = useAppDispatch();
 
-	const { action } = useParams<{ action: string }>();
 	const isDisabled = useMemo(
 		() =>
 			disabled?.sendButton ||
@@ -60,7 +57,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 		]
 	);
 	const onClick = useCallback(() => {
-		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
+		if (editor.isSeries && !isNew && !editor.isInstance) {
 			const closeModal = createModal(
 				{
 					size: 'large',
@@ -101,7 +98,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 					autoHideTimeout: 3000
 				});
 			});
-	}, [action, board, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
+	}, [board, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
 
 	return (
 		<Button

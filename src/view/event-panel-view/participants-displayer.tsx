@@ -15,9 +15,8 @@ import {
 	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { isEmpty, reduce, reject } from 'lodash';
+import { isEmpty } from 'lodash';
 
-import { CALENDAR_RESOURCES } from '../../constants';
 import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
 import { InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
@@ -135,27 +134,10 @@ const Dropdown = ({ label, participants, width }: DropdownProps): ReactElement |
 };
 
 export const ParticipantsDisplayer = ({
-	participants: _participants
+	participants
 }: {
 	participants: InviteParticipants;
 }): ReactElement | null => {
-	const participants: InviteParticipants = useMemo(
-		() =>
-			reduce(
-				_participants,
-				(acc, participantGroup, key) => {
-					const newValue = reject(participantGroup, ['cutype', CALENDAR_RESOURCES.ROOM]);
-					return newValue.length
-						? {
-								...acc,
-								[key]: newValue
-						  }
-						: acc;
-				},
-				{}
-			),
-		[_participants]
-	);
 	const width = Object.keys(participants).length === 1 ? '100%' : '50%';
 	if (isEmpty(participants)) return null;
 	if (Object.keys(participants).length === 0) return null;

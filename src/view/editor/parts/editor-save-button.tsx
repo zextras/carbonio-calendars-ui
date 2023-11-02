@@ -11,7 +11,6 @@ import {
 	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 
 import { onSave } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
@@ -21,10 +20,10 @@ import {
 	selectEditorAttendees,
 	selectEditorDisabled,
 	selectEditorIsNew,
+	selectEditorMeetingRoom,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
-import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
@@ -35,13 +34,12 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
+	const meetingRoomLength = useAppSelector(selectEditorMeetingRoom(editorId))?.length;
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const { action } = useParams<{ action: string }>();
-
 	const onClick = useCallback(() => {
-		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
+		if (editor.isSeries && !isNew && !editor.isInstance) {
 			const closeModal = createModal(
 				{
 					size: 'large',
@@ -64,20 +62,32 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 				true
 			);
 		} else {
-			onSave({ draft: !!attendeesLength, isNew, editor, dispatch }).then(({ response }) => {
-				createSnackbar({
-					key: `calendar-moved-root`,
-					replace: true,
-					type: response ? 'info' : 'warning',
-					hideButton: true,
-					label: !response
-						? t('label.error_try_again', 'Something went wrong, please try again')
-						: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-					autoHideTimeout: 3000
-				});
-			});
+			onSave({ draft: !!attendeesLength || !!meetingRoomLength, isNew, editor, dispatch }).then(
+				({ response }) => {
+					createSnackbar({
+						key: `calendar-moved-root`,
+						replace: true,
+						type: response ? 'info' : 'warning',
+						hideButton: true,
+						label: !response
+							? t('label.error_try_again', 'Something went wrong, please try again')
+							: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+						autoHideTimeout: 3000
+					});
+				}
+			);
 		}
-	}, [editor, action, createModal, isNew, editorId, attendeesLength, dispatch, createSnackbar, t]);
+	}, [
+		editor,
+		isNew,
+		createModal,
+		editorId,
+		attendeesLength,
+		meetingRoomLength,
+		dispatch,
+		createSnackbar,
+		t
+	]);
 
 	return (
 		<Button

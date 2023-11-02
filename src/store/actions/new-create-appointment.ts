@@ -79,14 +79,17 @@ export const generateParticipantInformation = (resource: Editor): Array<Particip
 	return resource?.draft
 		? organizerParticipant
 		: concat(
-				map(concat(resource?.attendees, resource?.optionalAttendees), (attendee) => ({
-					a: attendee?.email ?? attendee?.label,
-					p:
-						attendee?.firstName && attendee?.lastname
-							? `${attendee.firstName} ${attendee.lastname}`
-							: attendee.label,
-					t: 't'
-				})),
+				map(
+					concat(resource?.attendees, resource?.optionalAttendees, resource?.meetingRoom ?? []),
+					(attendee) => ({
+						a: attendee?.email ?? attendee?.label,
+						p:
+							attendee?.firstName && attendee?.lastname
+								? `${attendee.firstName} ${attendee.lastname}`
+								: attendee.label,
+						t: 't'
+					})
+				),
 				organizerParticipant
 		  );
 };
