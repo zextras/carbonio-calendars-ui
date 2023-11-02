@@ -7,10 +7,9 @@ import React, { ReactElement, useMemo } from 'react';
 
 import { Avatar, Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { Account, t, useUserAccount } from '@zextras/carbonio-shell-ui';
-import { map, reduce, reject } from 'lodash';
+import { map, reduce } from 'lodash';
 import { Trans } from 'react-i18next';
 
-import { CALENDAR_RESOURCES } from '../../constants';
 import { EventType } from '../../types/event';
 import { Invite, InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
@@ -213,27 +212,11 @@ type ParticipantsDisplayerSmallType = {
 };
 
 const ParticipantsDisplayerSmall = ({
-	participants: _participants,
+	participants,
 	event
 }: ParticipantsDisplayerSmallType): ReactElement | null => {
 	const loggedInUser = useUserAccount();
-	const participants: InviteParticipants = useMemo(
-		() =>
-			reduce(
-				_participants,
-				(acc, participantGroup, key) => {
-					const newValue = reject(participantGroup, ['cutype', CALENDAR_RESOURCES.ROOM]);
-					return newValue.length
-						? {
-								...acc,
-								[key]: newValue
-						  }
-						: acc;
-				},
-				{}
-			),
-		[_participants]
-	);
+
 	if (!participants || Object.keys(participants)?.length === 0) return null;
 	const pt = calculateSize(participants);
 	return (
