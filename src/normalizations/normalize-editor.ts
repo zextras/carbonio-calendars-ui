@@ -97,9 +97,11 @@ const setEditorDate = ({
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
-			const convertedStartDate = getLocalTime(invite?.start?.u, invite?.tz);
-			const convertedEndDate = getLocalTime(invite?.end?.u, invite?.tz);
-			if (invite.tz && isTimezoneDifferentFromLocal(invite.start.u, invite.tz)) {
+			const start = invite?.start?.u ?? moment(invite?.start?.d);
+			const end = invite?.end?.u ?? moment(invite?.end?.d);
+			const convertedStartDate = getLocalTime(start, invite?.tz);
+			const convertedEndDate = getLocalTime(end, invite?.tz);
+			if (invite.tz && isTimezoneDifferentFromLocal(start, invite.tz)) {
 				return {
 					start: event?.allDay
 						? moment(convertedStartDate)?.startOf('date').valueOf()
@@ -108,12 +110,8 @@ const setEditorDate = ({
 				};
 			}
 			return {
-				start: event?.allDay
-					? moment(invite?.start?.u)?.startOf('date').valueOf()
-					: moment(invite?.start?.u).valueOf(),
-				end: event?.allDay
-					? moment(invite?.end?.u)?.endOf('date').valueOf()
-					: moment(invite?.end?.u).valueOf()
+				start: event?.allDay ? moment(start)?.startOf('date').valueOf() : moment(start).valueOf(),
+				end: event?.allDay ? moment(end)?.endOf('date').valueOf() : moment(end).valueOf()
 			};
 		}
 		const convertedStartDate = getLocalTime(event.start, invite?.tz);
