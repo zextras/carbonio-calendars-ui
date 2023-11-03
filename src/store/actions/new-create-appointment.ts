@@ -7,8 +7,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
-import { HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../../constants';
 
+import { HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { Editor } from '../../types/editor';
 
