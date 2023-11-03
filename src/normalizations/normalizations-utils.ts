@@ -22,16 +22,13 @@ export const retrieveAttachmentsType = (original: any, disposition: any, dataID:
 export const normalizeInviteParticipants = (participants: any): any =>
 	groupBy(
 		uniqBy(
-			map(
-				filter(participants, (p) => p.cutype !== 'RES'),
-				(p) => ({
-					name: p.d,
-					email: p.a,
-					isOptional: p.role === 'OPT' || false,
-					response: p.ptst,
-					cutype: p.cutype
-				})
-			),
+			map(participants, (p) => ({
+				name: p.d,
+				email: p.a,
+				isOptional: p.role === 'OPT' || false,
+				response: p.ptst,
+				cutype: p.cutype
+			})),
 			'email'
 		),
 		(p) => p.response
