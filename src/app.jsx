@@ -5,7 +5,7 @@
  */
 import React, { lazy, useEffect, Suspense } from 'react';
 
-import { SnackbarManager, ModalManager } from '@zextras/carbonio-design-system';
+import { ModalManager } from '@zextras/carbonio-design-system';
 import {
 	Spinner,
 	addRoute,
@@ -54,11 +54,9 @@ const LazySearchView = lazy(() =>
 const CalendarView = () => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<SnackbarManager>
-				<ModalManager>
-					<LazyCalendarView />
-				</ModalManager>
-			</SnackbarManager>
+			<ModalManager>
+				<LazyCalendarView />
+			</ModalManager>
 		</StoreProvider>
 	</Suspense>
 );
@@ -66,22 +64,18 @@ const CalendarView = () => (
 const EditorView = () => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<SnackbarManager>
-				<ModalManager>
-					<LazyEditorView />
-				</ModalManager>
-			</SnackbarManager>
+			<ModalManager>
+				<LazyEditorView />
+			</ModalManager>
 		</StoreProvider>
 	</Suspense>
 );
 const SettingsView = () => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<SnackbarManager>
-				<ModalManager>
-					<LazySettingsView />
-				</ModalManager>
-			</SnackbarManager>
+			<ModalManager>
+				<LazySettingsView />
+			</ModalManager>
 		</StoreProvider>
 	</Suspense>
 );
@@ -89,11 +83,9 @@ const SettingsView = () => (
 const SidebarView = (props) => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<SnackbarManager>
-				<ModalManager>
-					<LazySidebarView {...props} />{' '}
-				</ModalManager>
-			</SnackbarManager>
+			<ModalManager>
+				<LazySidebarView {...props} />{' '}
+			</ModalManager>
 		</StoreProvider>
 	</Suspense>
 );
@@ -101,11 +93,9 @@ const SidebarView = (props) => (
 const SearchView = (props) => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
-			<SnackbarManager>
-				<ModalManager>
-					<LazySearchView {...props} />{' '}
-				</ModalManager>
-			</SnackbarManager>
+			<ModalManager>
+				<LazySearchView {...props} />{' '}
+			</ModalManager>
 		</StoreProvider>
 	</Suspense>
 );
