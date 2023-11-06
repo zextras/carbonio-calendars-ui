@@ -112,6 +112,6 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	ms: inv.ms || 0,
 	rev: inv.rev || 0,
 	xprop: inv.comp?.[0]?.xprop,
-	neverSent: inv?.[0]?.comp?.[0]?.neverSent ?? false,
-	locationUrl: getLocationUrl(inv?.[0]?.comp?.[0]?.loc ?? '')
+	neverSent: inv?.comp?.[0]?.neverSent ?? false,
+	locationUrl: getLocationUrl(inv?.comp?.[0]?.loc ?? '')
 });

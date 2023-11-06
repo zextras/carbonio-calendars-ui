@@ -3,14 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { filter, find, isNil, map, omit, omitBy } from 'lodash';
+import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 
+import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
+import { LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
-import { Editor } from '../types/editor';
+import { CalendarEditor, Editor } from '../types/editor';
 import { DateType } from '../types/event';
 import { Invite } from '../types/store/invite';
 
@@ -140,6 +142,17 @@ const setEditorDate = ({
 	};
 };
 
+export const normalizeCalendarEditor = (folder: CalendarEditor): CalendarEditor => {
+	const root = getRoot(folder.id);
+	return {
+		id: folder.id,
+		name: folder.name,
+		rgb: folder.rgb,
+		color: folder.color,
+		owner: folder.owner ?? (root as LinkFolder)?.owner
+	};
+};
+
 export const normalizeEditor = ({
 	invite,
 	event,
@@ -172,9 +185,13 @@ export const normalizeEditor = ({
 			? extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? ''
 			: '';
 
+		const folder = find(context?.folders, ['id', calendarId]);
+
+		const calendar = normalizeCalendarEditor(folder);
+
 		const compiledEditor = omitBy(
 			{
-				calendar: omit(find(context?.folders, ['id', calendarId]), 'parent'),
+				calendar,
 				id: emptyEditor.id,
 				ridZ: event?.resource?.ridZ,
 				attach: invite.attach,
