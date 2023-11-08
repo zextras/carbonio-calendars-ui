@@ -3,19 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-	Button,
-	ChipInput,
-	Text,
-	Container,
-	Row,
-	ChipInputProps
-} from '@zextras/carbonio-design-system';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
+import { Button, ChipInput, Text, Container, Row } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { find, intersectionBy, map, some } from 'lodash';
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+
+import { getIsBusyAtTimeOfTheEvent } from './attendees-chip';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -31,7 +27,6 @@ import {
 	editEditorAttendees,
 	editEditorOptionalAttendees
 } from '../../../store/slices/editor-slice';
-import { AttendeesChip, getIsBusyAtTimeOfTheEvent } from './attendees-chip';
 
 type EditorAttendeesProps = {
 	editorId: string;
@@ -56,7 +51,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 	const [showOptionals, setShowOptional] = useState(false);
 	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
-
 	const dispatch = useAppDispatch();
 	const attendees = useAppSelector(selectEditorAttendees(editorId));
 	const uid = useAppSelector(selectEditorUid(editorId));
@@ -76,13 +70,14 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 
 	const onChange = useCallback(
 		(value) => {
+			const _attendees = map(value, (chip) => ({
+				...chip,
+				email: chip?.email ?? chip?.label
+			}));
 			dispatch(
 				editEditorAttendees({
 					id: editorId,
-					attendees: map(value, (chip) => ({
-						...chip,
-						email: chip?.email ?? chip?.label
-					}))
+					attendees: _attendees
 				})
 			);
 		},
@@ -107,21 +102,48 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			),
 		[allDay, attendeesAvailabilityList, availableChips, end, start]
 	);
+	const defaultValue = useMemo(() => {
+		if (attendees?.length > 0) {
+			return map(attendees, (chip) => {
+				const chipLabel = chip.email ?? chip.label;
+				const currentChipAvailability = find(attendeesAvailabilityList, ['email', chipLabel]);
 
-	const CustomChipComponent = useCallback<
-		(args: React.ComponentProps<NonNullable<ChipInputProps['ChipComponent']>>) => JSX.Element
-	>(
-		(props) => (
-			<AttendeesChip
-				{...props}
-				start={start}
-				allDay={allDay}
-				end={end}
-				attendeesAvailabilityList={attendeesAvailabilityList}
-			/>
-		),
-		[start, allDay, end, attendeesAvailabilityList]
-	);
+				if (currentChipAvailability) {
+					const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
+						currentChipAvailability,
+						start,
+						end,
+						attendeesAvailabilityList,
+						allDay
+					);
+					const actions = isBusyAtTimeOfEvent
+						? [
+								{
+									id: 'unavailable',
+									label: t(
+										'attendee_unavailable',
+										'Attendee not available at the selected time of the event'
+									),
+									color: 'error',
+									type: 'icon',
+									icon: 'AlertTriangle'
+								} as const
+						  ]
+						: undefined;
+					return {
+						...chip,
+						email: chip?.email ?? chip?.label,
+						actions
+					};
+				}
+				return {
+					...chip,
+					email: chip?.email ?? chip?.label
+				};
+			});
+		}
+		return [];
+	}, [allDay, attendees, attendeesAvailabilityList, end, start, t]);
 
 	return (
 		<>
@@ -139,8 +161,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								// @ts-ignore
 								placeholder={t('label.attendee_plural', 'Attendees')}
 								onChange={onChange}
-								defaultValue={attendees}
-								ChipComponent={CustomChipComponent}
+								defaultValue={defaultValue}
 								disabled={disabled?.attendees}
 							/>
 						) : (
@@ -148,10 +169,9 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.attendee_plural', 'Attendees')}
 								background={'gray5'}
 								onChange={onChange}
-								defaultValue={attendees}
+								defaultValue={defaultValue}
 								hasError={hasError}
 								errorLabel=""
-								ChipComponent={CustomChipComponent}
 								disabled={disabled?.attendees}
 							/>
 						)}
