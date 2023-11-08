@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.6.0...v1.6.1) (2023-11-06)
+
+
+### Bug Fixes
+
+* allow user to modify appointments inside shared calendar ([51ee5f8](https://github.com/zextras/carbonio-calendars-ui/commit/51ee5f8f6213a999cc16a04766a44e4dcf5ab988))
+
 ## [1.6.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.5.1...v1.6.0) (2023-10-26)
 
 

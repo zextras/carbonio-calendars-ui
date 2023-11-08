@@ -6,7 +6,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { isNil, union } from 'lodash';
 
-import type { Editor, IdentityItem, Room } from '../../types/editor';
+import type { CalendarEditor, Editor, IdentityItem, Room } from '../../types/editor';
 import type { EventResourceCalendar } from '../../types/event';
 import type { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
 import type { EditorSlice } from '../../types/store/store';
@@ -33,7 +33,7 @@ type RoomPayload = {
 
 type CalendarPayload = {
 	id: string;
-	calendar: EventResourceCalendar;
+	calendar: CalendarEditor;
 };
 
 type ClassPayload = {
