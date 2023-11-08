@@ -429,6 +429,7 @@ describe('use calendar actions', () => {
 				reminder: false,
 				broken: false
 			};
+
 			const customItem = {
 				name: 'custom folder',
 				id: '154',
