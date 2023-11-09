@@ -15,7 +15,8 @@
         "send_edit": "Wyślij edycję",
         "reset": "Zresetuj",
         "search": "Wyszukaj",
-        "show_original": "Pokaż oryginał"
+        "show_original": "Pokaż oryginał",
+        "Trash_already_empty": "kosz jest już pusty"
     },
     "event": {
         "action": {
@@ -297,7 +298,8 @@
             "att_err_adding": "Wystąpił błąd przy dodawaniu załączników, spróbuj ponownie",
             "all_link_copied": "Publiczny link został skopiowany",
             "all_att_added": "Załączniki zostały dodane pomyślnie",
-            "series_deleted_no_notification": "Seria została przeniesiona do kosza."
+            "series_deleted_no_notification": "Seria została przeniesiona do kosza.",
+            "shared_calendar_removed": "Kalendarz został usunięty"
         },
         "sure_to_delete_appointment_permanently": "Na pewno chcesz trwale usunąć to spotkanie?",
         "want_to_send_cancellation_msg": "Czy chcesz wysłać wiadomość dot. anulacji spotkania do uczestników?",
@@ -315,7 +317,7 @@
         "required_participant_0": "{{count}} Uczestnik",
         "required_participant_1": "{{count}} Uczestników",
         "required_participant_2": "{{count}} Uczestników",
-        "send_email": "Wyślij e-mail",
+        "send_email": "Wyślij e-maila",
         "optional_participant_0": "{{count}} Opcjonalny",
         "optional_participant_1": "{{count}} Opcjonalnych",
         "optional_participant_2": "{{count}} Opcjonalnych",
@@ -545,9 +547,9 @@
         },
         "options": {
             "share_calendar_role": {
-                "admin": "Administrator (może wyświetlać, edytować, dodawać, usuwać oraz zarządzać)",
+                "admin": "Edytor (może wyświetlać, edytować, dodawać i usuwać, ale nie może akceptować ani ponownie udostępniać spotkań)                ",
                 "viewer": "Wyświetlający (może wyświetlać)",
-                "manager": "Manager (może wyświetlać, edytować, dodawać oraz usuwać)",
+                "manager": "Manager (może wyświetlać, edytować, dodawać, usuwać, akceptować i ponownie udostępniać spotkań)",
                 "none": "Brak uprawnień"
             },
             "share_calendar_with": {
@@ -561,7 +563,7 @@
             "standard_message": "Dodaj notatkę do domyślnej wiadomości"
         },
         "label": {
-            "allow_to_see_private_appt": "Pozwól użytkownikom widzieć moje prywatne spotkania",
+            "allow_to_see_private_appt": "Pozwól użytkownikom widzieć szczegóły prywatnych spotkań",
             "send_notification": "Wyślij powiadomienie o tym udostępnieniu"
         }
     },
@@ -657,7 +659,7 @@
     },
     "owner": "Właściciel",
     "read": "Czytanie",
-    "remove_from_this_list": "Usuń z tej listy",
+    "remove_from_this_list": "Usuń udostępniony kalendarz",
     "revoke_access": "Odbierz dostęp",
     "shares_info": "Udostępnione informacje",
     "success": "Sukces",
@@ -678,7 +680,8 @@
         "revoke": "Odbierz dostęp",
         "resend": "Wyślij powiadomienie e-mail dot. tego udostępnienia",
         "edit": "Edytuj właściwości udostępniania",
-        "virtual_room": "Wirtualny pokój"
+        "virtual_room": "Wirtualny pokój",
+        "folder_linked_status": "Powiązane ze mną"
     },
     "type": "Typ",
     "workflow": "Organizacja Pracy",
@@ -691,5 +694,9 @@
     "mountpoint_success": "Udostępnienie zostało dodane do udostępnionych kalendarzy",
     "mountpoint_warning": "Nie udało się dodać {{failed}} z {{total}} kalendarzy do udostępnionych kalendarzy",
     "attendee_unavailable": "Uczestnik nie jest dostępny o wybranym czasie",
-    "attendees_unavailable": "Jeden lub więcej uczestników nie jest dostępnych o wybranym czasie"
+    "attendees_unavailable": "Jeden lub więcej uczestników nie jest dostępnych o wybranym czasie",
+    "creation_timezone_tooltip": "Data i czas w strefie czasowej tworzonego elementu:",
+    "new_appointment": "Nowe spotkanie",
+    "local_timezone_tooltip": "Data i czas w lokalnej strefie czasowej:",
+    "private_info_tooltip": "Kiedy udostępniasz kalendarz inni użytkownicy mogą zobaczyć szczegóły spotkań (tytuł, opis, uczestnicy) jeśli nie są one oznaczone jako prywatne. Jeśli są oznaczone jako prywatne, inni użytkownicy widzą czy jesteś wolny lub zajęty, ale nie widzą szczegółów spotkań. Czy chcesz, żeby inni użytkownicy widzieli szczegóły również Twoich prywatnych spotkań?"
 }
