@@ -11,7 +11,8 @@ import {
 	IconButton,
 	ButtonProps,
 	pseudoClasses,
-	Tooltip
+	Tooltip,
+	Padding
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import styled, { css, SimpleInterpolation } from 'styled-components';
@@ -106,28 +107,42 @@ export const CustomToolbar = ({
 				orientation="horizontal"
 				width="fill"
 				height="3rem"
-				mainAlignment="baseline"
-				crossAlignment="stretch"
+				mainAlignment="flex-start"
 				background={'gray5'}
 				padding={{ horizontal: 'small' }}
 			>
-				<Container width="fit" orientation="horizontal" mainAlignment="flex-start" gap={'0.3rem'}>
+				<Container width="max-content" orientation="horizontal" mainAlignment="flex-start">
 					<Button
 						label={t('label.today', 'today')}
 						type="outlined"
 						onClick={today}
-						style={{ minWidth: 'fit-content' }}
+						minWidth={'fit-content'}
 					/>
-					<Container width="fit" orientation="horizontal" mainAlignment="flex-start">
-						<Tooltip label={leftClickLabel}>
-							<IconButton iconColor="primary" icon="ChevronLeft" onClick={prev} />
-						</Tooltip>
-						<Tooltip label={rightClickLabel}>
-							<IconButton iconColor="primary" icon="ChevronRight" onClick={next} />
-						</Tooltip>
-					</Container>
+					<Padding left={'1rem'} />
+					<Tooltip label={leftClickLabel}>
+						<IconButton
+							iconColor="primary"
+							icon="ChevronLeft"
+							onClick={prev}
+							minWidth={'max-content'}
+						/>
+					</Tooltip>
+					<Padding horizontal={'.25rem'} />
+					<Tooltip label={rightClickLabel}>
+						<IconButton
+							iconColor="primary"
+							icon="ChevronRight"
+							onClick={next}
+							minWidth={'max-content'}
+						/>
+					</Tooltip>
 				</Container>
-				<Container orientation="horizontal" mainAlignment="flex-start">
+				<Container
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					style={{ minWidth: 0, flexBasis: 'content', flexGrow: 1 }}
+				>
+					<Padding left={'1rem'} />
 					<Button
 						type="ghost"
 						label={label}
