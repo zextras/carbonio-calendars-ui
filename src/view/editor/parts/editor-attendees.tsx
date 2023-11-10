@@ -7,12 +7,16 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Button, ChipInput, Text, Container, Row } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { find, intersectionBy, map, some } from 'lodash';
+import { find, intersectionBy, isNil, map, some, startsWith } from 'lodash';
+import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import { getIsBusyAtTimeOfTheEvent } from './attendees-chip';
-import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
+import {
+	AttendeesAvailabilityListType,
+	AttendeesAvailabilityType,
+	useAttendeesAvailability
+} from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
@@ -27,6 +31,7 @@ import {
 	editEditorAttendees,
 	editEditorOptionalAttendees
 } from '../../../store/slices/editor-slice';
+import { Editor } from '../../../types/editor';
 
 type EditorAttendeesProps = {
 	editorId: string;
@@ -45,6 +50,62 @@ export const AttendeesContainer = styled.div`
 		}
 	}
 `;
+
+export const getIsBusyAtTimeOfTheEvent = (
+	item: AttendeesAvailabilityType,
+	start: Editor['start'],
+	end: Editor['end'],
+	attendeesAvailabilityList: AttendeesAvailabilityListType,
+	isAllDay: Editor['allDay']
+): boolean => {
+	if (start && end && attendeesAvailabilityList && !isNil(isAllDay)) {
+		const startDate = moment(start);
+		const endDate = moment(end);
+
+		const startDay = startDate.format('DDMMYYYY');
+		const endDay = endDate.format('DDMMYYYY');
+		const diffInDays = endDate.diff(startDate, 'days');
+		const startHour = startDate.format('HHmm');
+		const endHour = endDate.format('HHmm');
+
+		if (isAllDay) {
+			const diffInDaysAllDay = endDate
+				.add(1, 'day')
+				.startOf('day')
+				.diff(startDate.startOf('day'), 'days');
+			return diffInDaysAllDay > 1
+				? false
+				: !!find(
+						(item.t ?? []).concat(item.b ?? []),
+						(slot) =>
+							moment(slot.s).format('DD') === startDate.format('DD') ||
+							moment(slot.e).format('DD') === startDate.format('DD')
+				  );
+		}
+
+		// from 00:00 to 00:00
+		const lastsEntireDay = diffInDays === 1 && startHour === endHour && startsWith(startHour, '00');
+		const endsTheSameDay = startDay === endDay;
+		if (lastsEntireDay || endsTheSameDay) {
+			return !!find(
+				(item.t ?? []).concat(item.b ?? []),
+				(slot) =>
+					// appointment starts while attendee is busy
+					(start > slot.s && start < slot.e) ||
+					// the appointment ends while attendee is busy
+					(end > slot.s && end < slot.e) ||
+					// the appointment starts before the attendee is busy and ends after the attendee is busy
+					(start < slot.s && end > slot.e) ||
+					// the appointment starts when the attendee has another appointment starting at the same time
+					start === slot.s ||
+					// the appointment ends when the attendee has another appointment ending at the same time
+					end === slot.e
+			);
+		}
+	}
+
+	return false;
+};
 
 export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElement => {
 	const [t] = useTranslation();
