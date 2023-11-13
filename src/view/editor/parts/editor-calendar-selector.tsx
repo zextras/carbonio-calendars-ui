@@ -8,8 +8,7 @@ import React, { ReactElement, useCallback } from 'react';
 import { Row } from '@zextras/carbonio-design-system';
 
 import { CalendarSelector } from './calendar-selector';
-import { getRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { LinkFolder } from '../../../carbonio-ui-commons/types/folder';
+import { normalizeCalendarEditor } from '../../../normalizations/normalize-editor';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorCalendarId, selectEditorDisabled } from '../../../store/selectors/editor';
 import { editEditorCalendar } from '../../../store/slices/editor-slice';
@@ -22,17 +21,10 @@ export const EditorCalendarSelector = ({ editorId }: { editorId: string }): Reac
 	const onChange = useCallback(
 		(value) => {
 			if (value) {
-				const root = getRoot(value.id);
-
-				const calResource = {
-					id: value.id,
-					name: value.name,
-					color: value.color,
-					owner: value.owner ?? (root as LinkFolder)?.owner
-				};
+				const calendar = normalizeCalendarEditor(value);
 				const data = {
 					id: editorId,
-					calendar: calResource
+					calendar
 				};
 				dispatch(editEditorCalendar(data));
 			}
