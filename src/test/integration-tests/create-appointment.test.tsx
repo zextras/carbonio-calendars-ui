@@ -3,12 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { map, values } from 'lodash';
 import { rest } from 'msw';
-import React from 'react';
+
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import {
 	createFakeIdentity,
@@ -37,6 +39,10 @@ shell.getUserSettings.mockImplementation(() => ({
 	}
 }));
 
+shell.useBoardHooks.mockImplementation(() => ({
+	updateBoard: jest.fn()
+}));
+
 describe('create single appointment with default values', () => {
 	test('from board panel', async () => {
 		// SETUP MOCKS, STORE AND HOOK
@@ -51,7 +57,7 @@ describe('create single appointment with default values', () => {
 		expect(previousEditor).toBeDefined();
 
 		shell.useBoard.mockImplementation(() => ({
-			...previousEditor,
+			editor: previousEditor,
 			dispatch: store.dispatch
 		}));
 
@@ -92,7 +98,7 @@ describe('create single appointment with custom values', () => {
 		expect(previousEditor).toBeDefined();
 
 		shell.useBoard.mockImplementation(() => ({
-			...previousEditor,
+			editor: previousEditor,
 			dispatch: store.dispatch
 		}));
 

@@ -3,9 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { EventResourceCalendar } from './event';
-import { Calendar } from './store/calendars';
-import { Attendee, InviteClass, InviteFreeBusy } from './store/invite';
+import { InviteClass, InviteFreeBusy } from './store/invite';
+
+export type CalendarEditor = {
+	id: string;
+	name: string;
+	rgb?: string;
+	color?: number | undefined;
+	owner: string | undefined;
+};
 
 export type Count = { count: { num: number } };
 export type Until = {
@@ -80,7 +86,7 @@ export type Editor = {
 	uid?: string | undefined;
 	ridZ?: string | undefined;
 	draft?: boolean | undefined;
-	calendar?: Partial<EventResourceCalendar>;
+	calendar?: CalendarEditor;
 	exceptId?: { d: string; tz: string } | undefined;
 	isException: boolean;
 	isInstance: boolean;

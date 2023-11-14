@@ -3,32 +3,34 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Divider, Row } from '@zextras/carbonio-design-system';
 import React, { ReactElement } from 'react';
-import { EditorProps } from '../../types/editor';
-import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
+
+import { Container, Divider, Row } from '@zextras/carbonio-design-system';
+
 import { EditorActions } from './parts/editor-actions';
+import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
 import { EditorAttachments } from './parts/editor-attachments';
 import { EditorAttendees } from './parts/editor-attendees';
 import { EditorCalendarSelector } from './parts/editor-calendar-selector';
 import { EditorComposer } from './parts/editor-composer';
 import { EditorDatePicker } from './parts/editor-date-picker';
 import { EditorDropZone } from './parts/editor-dropzone';
-import { EditorReminder } from './parts/editor-reminder';
-import { EditorSummary } from './parts/editor-summary';
 import { EditorFreeBusySelector } from './parts/editor-free-busy-selector';
 import { EditorLocation } from './parts/editor-location';
 import { EditorOrganizer } from './parts/editor-organizer';
 import { EditorPrivateCheckbox } from './parts/editor-private-checkbox';
+import { EditorReminder } from './parts/editor-reminder';
+import { EditorSummary } from './parts/editor-summary';
 import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
 import { EditorRecurrence } from './parts/recurrence';
+import { EditorProps } from '../../types/editor';
 
 export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement | null =>
 	editorId ? (
 		<Container
-			background="gray5"
+			background={'gray5'}
 			padding={{ horizontal: 'large', bottom: 'large' }}
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"

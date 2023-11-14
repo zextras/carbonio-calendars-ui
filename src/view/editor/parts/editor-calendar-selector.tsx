@@ -8,41 +8,38 @@ import React, { ReactElement, useCallback } from 'react';
 import { Row } from '@zextras/carbonio-design-system';
 
 import { CalendarSelector } from './calendar-selector';
+import { normalizeCalendarEditor } from '../../../normalizations/normalize-editor';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorCalendar, selectEditorDisabled } from '../../../store/selectors/editor';
+import { selectEditorCalendarId, selectEditorDisabled } from '../../../store/selectors/editor';
 import { editEditorCalendar } from '../../../store/slices/editor-slice';
 
 export const EditorCalendarSelector = ({ editorId }: { editorId: string }): ReactElement | null => {
-	const calendar = useAppSelector(selectEditorCalendar(editorId));
+	const calendarId = useAppSelector(selectEditorCalendarId(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
 
 	const onChange = useCallback(
 		(value) => {
 			if (value) {
-				const calResource = {
-					id: value.id,
-					name: value.name,
-					color: value.color,
-					owner: value.owner
-				};
+				const calendar = normalizeCalendarEditor(value);
 				const data = {
 					id: editorId,
-					calendar: calResource
+					calendar
 				};
 				dispatch(editEditorCalendar(data));
 			}
 		},
 		[dispatch, editorId]
 	);
-	return (
+
+	return calendarId ? (
 		<Row height="fit" width="fill" padding={{ top: 'large' }}>
 			<CalendarSelector
-				calendarId={calendar?.id}
+				calendarId={calendarId}
 				onCalendarChange={onChange}
 				disabled={disabled?.calendar}
 				excludeTrash
 			/>
 		</Row>
-	);
+	) : null;
 };

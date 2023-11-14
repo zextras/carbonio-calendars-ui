@@ -6,7 +6,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { isNil, union } from 'lodash';
 
-import type { Editor, IdentityItem, Room } from '../../types/editor';
+import type { CalendarEditor, Editor, IdentityItem, Room } from '../../types/editor';
 import type { EventResourceCalendar } from '../../types/event';
 import type { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
 import type { EditorSlice } from '../../types/store/store';
@@ -33,7 +33,7 @@ type RoomPayload = {
 
 type CalendarPayload = {
 	id: string;
-	calendar: EventResourceCalendar;
+	calendar: CalendarEditor;
 };
 
 type ClassPayload = {
@@ -84,12 +84,6 @@ type AttachmentFilesPayload = {
 export const newEditorReducer = (state: EditorSlice, action: PayloadAction<Editor>): void => {
 	if (action.payload) {
 		state.editors[action.payload.id] = action.payload;
-		if (action.payload.panel) {
-			state.activeId = action.payload.id;
-		}
-		if (action.payload.searchPanel) {
-			state.searchActiveId = action.payload.id;
-		}
 	}
 };
 

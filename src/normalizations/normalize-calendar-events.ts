@@ -8,7 +8,9 @@ import { find, reduce, map, isEmpty } from 'lodash';
 import moment from 'moment';
 
 import { setCalendarColor } from './normalizations-utils';
+import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { Invite } from '../types/store/invite';
@@ -22,6 +24,29 @@ export const getLocationUrl = (location: string): string | undefined => {
 
 export const getDaysFromMillis = (milliseconds: number): number => milliseconds / 3600 / 1000 / 24;
 
+const getCalendarResource = (calendar: {
+	id: string;
+	name: string;
+	color?: number;
+	rgb?: string;
+	perm?: string;
+}): {
+	owner: string | undefined;
+	color: ZimbraColorType;
+	perm: string | undefined;
+	name: string;
+	id: string;
+} => {
+	const root = getRoot(calendar.id);
+
+	return {
+		id: calendar.id,
+		name: calendar.name,
+		color: setCalendarColor({ color: calendar.color, rgb: calendar?.rgb }),
+		owner: (calendar as LinkFolder)?.owner ?? (root as LinkFolder)?.owner,
+		perm: calendar?.perm
+	};
+};
 const normalizeEventResource = ({
 	appt,
 	calendar,
@@ -39,13 +64,7 @@ const normalizeEventResource = ({
 	inviteId: inst?.inviteId ?? appt.inviteId,
 	ridZ: inst?.ridZ,
 	name: inst?.name ?? appt.name,
-	calendar: {
-		id: calendar.id,
-		name: calendar.name,
-		color: setCalendarColor({ color: calendar.color, rgb: calendar?.rgb }),
-		owner: (calendar as LinkFolder)?.owner,
-		perm: calendar?.perm
-	},
+	calendar: getCalendarResource(calendar),
 	flags: appt.flags,
 	dur: inst?.dur ?? appt.dur,
 	iAmOrganizer,
@@ -109,7 +128,7 @@ export const normalizeCalendarEvent = ({
 			: new Date(start + dur),
 		resource: normalizeEventResource({
 			appt: appointment,
-			iAmOrganizer: user.name === appointment?.or?.a,
+			iAmOrganizer: user?.name === appointment?.or?.a,
 			calendar,
 			inst: instance as ExceptionReference,
 			invite
