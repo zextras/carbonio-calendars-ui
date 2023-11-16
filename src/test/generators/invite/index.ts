@@ -34,6 +34,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 			? {
 					a: attendeeEmail,
 					d: attendeeFullName,
+					cutype: '',
 					ptst: 'AC' as ParticipationStatus,
 					role: 'REQ' as ParticipationRoles,
 					rsvp: true,

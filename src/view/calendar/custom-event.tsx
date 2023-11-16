@@ -108,11 +108,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				});
 			} else {
 				getEventInvite();
-				if (
-					e.detail === 1 &&
-					!open &&
-					(action === EventActionsEnum.EXPAND || action === EventActionsEnum.EDIT || isNil(action))
-				) {
+				if (e.detail === 1 && !open && (action === EventActionsEnum.EXPAND || isNil(action))) {
 					setOpen(true);
 				}
 			}

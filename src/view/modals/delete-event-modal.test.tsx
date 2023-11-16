@@ -63,6 +63,7 @@ describe('delete event modal', () => {
 					a: participantEmail,
 					d: participantFullName,
 					ptst: 'AC',
+					cutype: '',
 					role: 'REQ',
 					rsvp: true,
 					url: participantEmail
@@ -89,6 +90,7 @@ describe('delete event modal', () => {
 					a: participantEmail,
 					d: participantFullName,
 					ptst: 'AC',
+					cutype: '',
 					role: 'REQ',
 					rsvp: true,
 					url: participantEmail

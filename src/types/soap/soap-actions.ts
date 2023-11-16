@@ -5,6 +5,31 @@
  */
 import { Grant } from '@zextras/carbonio-shell-ui';
 
+export type Contact = {
+	id: string;
+	l: string;
+	d: number;
+	rev: number;
+	fileAsStr: string;
+	_attrs: {
+		lastName: string;
+		notes: string;
+		fileAs: string;
+		zimbraId: string;
+		zimbraAccountCalendarUserType: string; // 'RESOURCE'
+		createTimeStamp: string;
+		objectClass: Array<string>;
+		zimbraCalResType: string; // 'Location'
+		fullName: string;
+		modifyTimeStamp: string;
+		email: string;
+	};
+	ref: string;
+	sf: string;
+};
+
+export type Cn = Array<Contact>;
+
 export type SearchRequestProps = {
 	start: number;
 	end: number;

@@ -54,6 +54,7 @@ export type EditorProps = {
 	editorId: string;
 	expanded?: boolean;
 };
+export type MeetingRoom = { id: string; label: string; value: string; email: string; type: string };
 
 type DisabledField =
 	| 'title'
@@ -100,6 +101,7 @@ export type Editor = {
 	sender?: any;
 	title?: string;
 	location?: string;
+	meetingRoom?: Array<MeetingRoom> | undefined;
 	room?: {
 		label: string;
 		link: string;

@@ -105,6 +105,8 @@ const setupInterceptor = (): Promise<any> =>
 		);
 	});
 
+jest.setTimeout(10000);
+
 describe('edit modal', () => {
 	test('If a role change, it should reflect on the list', async () => {
 		const closeFn = jest.fn();

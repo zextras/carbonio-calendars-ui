@@ -188,6 +188,7 @@
         "loading_results": "Loading Results…",
         "location": "Location",
         "maybe": "maybe",
+        "meeting_room": "Meeting room",
         "month": "Month",
         "months": "Months",
         "move": "Move",
@@ -670,6 +671,7 @@
         "equipment": "Equipment",
         "folder_linked_status": "Linked to me",
         "location": "Location",
+        "meetingRooms": "MeetingRooms",
         "resend": "Send mail notification about this share",
         "revoke": "Revoke access",
         "virtual_room": "Virtual Room"

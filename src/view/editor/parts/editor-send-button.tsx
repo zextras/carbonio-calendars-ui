@@ -12,7 +12,6 @@ import {
 } from '@zextras/carbonio-design-system';
 import { closeBoard, replaceHistory, useBoard } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 
 import { onSend } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
@@ -22,15 +21,18 @@ import {
 	selectEditorAttendees,
 	selectEditorDisabled,
 	selectEditorIsNew,
-	selectEditorOptionalAttendees
+	selectEditorMeetingRoom,
+	selectEditorOptionalAttendees,
+	selectEditorTitle
 } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
-import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const attendees = useAppSelector(selectEditorAttendees(editorId));
+	const title = useAppSelector(selectEditorTitle(editorId));
 	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
+	const meetingRooms = useAppSelector(selectEditorMeetingRoom(editorId));
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
@@ -41,13 +43,21 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const board = useBoard();
 	const dispatch = useAppDispatch();
 
-	const { action } = useParams<{ action: string }>();
 	const isDisabled = useMemo(
-		() => disabled?.sendButton || (!attendees?.length && !optionalAttendees?.length),
-		[attendees?.length, disabled?.sendButton, optionalAttendees?.length]
+		() =>
+			disabled?.sendButton ||
+			(!attendees?.length && !optionalAttendees?.length && !meetingRooms?.length) ||
+			!title?.length,
+		[
+			attendees?.length,
+			disabled?.sendButton,
+			meetingRooms?.length,
+			optionalAttendees?.length,
+			title?.length
+		]
 	);
 	const onClick = useCallback(() => {
-		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
+		if (editor.isSeries && !isNew && !editor.isInstance) {
 			const closeModal = createModal(
 				{
 					size: 'large',
@@ -88,7 +98,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 					autoHideTimeout: 3000
 				});
 			});
-	}, [action, board, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
+	}, [board, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
 
 	return (
 		<Button
