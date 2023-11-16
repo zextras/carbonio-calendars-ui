@@ -396,6 +396,9 @@
     "mountpoint_success": "The share has been added successfully to the Shared Calendars section",
     "mountpoint_warning": "{{failed}} out of {{total}} shared calendars couldn't be added to the Shared Calendars",
     "new_appointment": "New appointment",
+    "next_day": "Next day",
+    "next_month": "Next month",
+    "next_week": "Next week",
     "no_title": "",
     "owner": "Owner",
     "participants": {
@@ -428,6 +431,9 @@
     "preview": {
         "close": "Close Preview"
     },
+    "previous_day": "Previous day",
+    "previous_month": "Previous month",
+    "previous_week": "Previous week",
     "private_info_tooltip": "When sharing a calendar, other users can see your appointment details (title, description, and attendees) except for the ones marked as private. In this case, other users will see your free/busy time but not the appointment details. Would you like other users to display also your private appointments' detail?",
     "read": "Read",
     "recurrent_in_allday": "You cannot drag a recurrent appointment in a all day slot",
