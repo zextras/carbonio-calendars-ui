@@ -15,6 +15,7 @@ export const useMeetingRooms = (): Array<Resource> =>
 
 export const useEquipments = (): Array<Resource> =>
 	useAppStatusStore((s: AppState) => filter(s.resources, ['type', 'Equipment']));
+
 export const useIsSummaryViewOpen = (): boolean =>
 	useAppStatusStore((s: AppState) => s.summaryViewCounter > 0);
 

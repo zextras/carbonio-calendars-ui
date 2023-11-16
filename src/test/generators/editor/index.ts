@@ -11,7 +11,6 @@ import { getPrefs } from '../../../carbonio-ui-commons/utils/get-prefs';
 import { disabledFields, getEndTime } from '../../../commons/editor-generator';
 import { getIdentityItems } from '../../../commons/get-identity-items';
 import { PREFS_DEFAULTS } from '../../../constants';
-import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { Editor, IdentityItem } from '../../../types/editor';
 import utils from '../utils';
 
@@ -37,7 +36,8 @@ const getDefaultEditor = ({
 			? {
 					id: editorCalendar.id,
 					name: editorCalendar.name,
-					color: setCalendarColor({ color: editorCalendar.color, rgb: editorCalendar.rgb }),
+					rgb: editorCalendar.rgb,
+					color: editorCalendar.color,
 					owner: (editorCalendar as LinkFolder)?.owner
 			  }
 			: undefined,
@@ -134,7 +134,8 @@ const getEditor = ({
 			? {
 					id: editorCalendar.id,
 					name: editorCalendar.name,
-					color: setCalendarColor({ color: editorCalendar.color, rgb: editorCalendar.rgb }),
+					rgb: editorCalendar.rgb,
+					color: editorCalendar.color,
 					owner: (editorCalendar as LinkFolder)?.owner
 			  }
 			: undefined,

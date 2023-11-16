@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Editor, IdentityItem, Resource } from '../../types/editor';
+
 import { InviteFreeBusy } from '../../types/store/invite';
 import type { RootState } from '../redux';
 

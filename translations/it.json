@@ -15,7 +15,8 @@
         "revoke": "Revoca accesso",
         "resend": "Invia notifica per questa condivisione",
         "edit": "Modifica proprietà di condivisione",
-        "virtual_room": "Stanza Virtuale"
+        "virtual_room": "Stanza Virtuale",
+        "folder_linked_status": "Collegato a me"
     },
     "reminder": {
         "week_before_0": "{{count}} settimana prima",
@@ -95,7 +96,8 @@
             "att_err_adding": "Sembra esserci stato un problema durante l'aggiunta degli allegati, riprova",
             "all_link_copied": "Link pubblico copiato con successo",
             "all_att_added": "Allegati aggiunti correttamente",
-            "series_deleted_no_notification": "Serie spostata nel cestino."
+            "series_deleted_no_notification": "Serie spostata nel cestino.",
+            "shared_calendar_removed": "Calendario eliminato correttamente"
         },
         "share_calendar_url_note2": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.<br/> Puoi trovare questi collegamenti anche con un clic destro del mouse sull'elenco dei calendari.",
         "share_calendar_url_note": "Solo i tuoi collaboratori possono accedere ai tuoi dati utilizzando questi URL.",
@@ -342,7 +344,8 @@
         "send_edit": "Invia Modifica",
         "search": "Cerca",
         "reset": "Reimposta",
-        "show_original": "Mostra originale"
+        "show_original": "Mostra originale",
+        "Trash_already_empty": "il cestino è vuoto"
     },
     "button": {
         "customize_modal": "Personalizza"
@@ -444,8 +447,8 @@
                 "internal_users_groups": "Utenti Interni o Gruppi"
             },
             "share_calendar_role": {
-                "manager": "Manager (visualizza, modifica, aggiungi e rimuovi)",
-                "admin": "Amministratore (visualizza, modifica, aggiungi, rimuovi e gestisci)",
+                "manager": "Manager (visualizza, modifica, aggiungi, rimuovi, accetta e condividi appuntamenti)",
+                "admin": "Editor (visualizza, modifica, aggiungi, rimuovi e gestisci ma non può accettare o condividere appuntamenti)                ",
                 "viewer": "Visualizzatore (visualizza)",
                 "none": "Nessuno"
             }
@@ -455,7 +458,7 @@
             "standard_message": "Aggiungi nota a messaggio predefinito"
         },
         "label": {
-            "allow_to_see_private_appt": "Consenti agli utenti di vedere i miei appuntamenti privati",
+            "allow_to_see_private_appt": "Consenti agli utenti di vedere i dettagli dei miei appuntamenti privati",
             "send_notification": "Invia notifica per questa condivisione"
         },
         "note": {
@@ -541,7 +544,7 @@
     },
     "owner": "Proprietario",
     "read": "Letto",
-    "remove_from_this_list": "Rimuovi da questa lista",
+    "remove_from_this_list": "Rimuovi calendario condiviso",
     "revoke_access": "Revoca accesso",
     "revoke_with_custom_message": "Revoca accesso e invia una notifica personalizzata",
     "revoke_without_custom_message": "Revoca accesso e invia una notifica standard",
@@ -667,5 +670,9 @@
     "mountpoint_success": "La condivisione è stata aggiunta con successo alla sezione Calendari Condivisi",
     "mountpoint_warning": "{{failed}} su {{total}} dei calendari non sono stati aggiunti ai Calendari Condivisi",
     "attendee_unavailable": "Partecipante non disponibile nell'orario selezionato per l'evento",
-    "attendees_unavailable": "Uno o più partecipanti non sono disponibili all’ora selezionata per l'evento"
+    "attendees_unavailable": "Uno o più partecipanti non sono disponibili all’ora selezionata per l'evento",
+    "creation_timezone_tooltip": "Data e ora sul fuso orario di creazione:",
+    "local_timezone_tooltip": "Data e ora sul fuso orario locale:",
+    "new_appointment": "Nuovo appuntamento",
+    "private_info_tooltip": "Quando condividi un calendario, gli altri utenti potranno vedere i dettagli dei tuoi appuntamenti (titolo, descrizione e partecipanti) ad eccezione di quelli contrassegnati come privati. In questo caso, gli altri utenti vedranno segnalato come libero/occupato lo slot ma non vedranno i dettagli dell'appuntamento. Vuoi che gli altri utenti possano vedere anche i dettagli degli appuntamenti privati?"
 }

@@ -132,7 +132,7 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 		return <EmptyBody />;
 	}
 
-	if (fullInvite?.htmlDescription) {
+	if (fullInvite?.htmlDescription?.[0]?._content) {
 		const originalHtml = fullInvite?.htmlDescription?.[0]?._content ?? '';
 		const roomHtmlDesc = roomValidationRegEx?.exec(originalHtml)?.[0];
 		const htmlContent = roomHtmlDesc ? replace(originalHtml, roomHtmlDesc, '') : originalHtml;

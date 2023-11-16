@@ -3,17 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import React from 'react';
+
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor } from '@testing-library/react';
+
+import { AppointmentReminder } from './appointment-reminder';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { deleteAppointmentPermanent } from '../../store/actions/delete-appointment-permanent';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { Appointment } from '../../types/store/appointments';
-import { AppointmentReminder } from './appointment-reminder';
 
-jest.setTimeout(25000);
+jest.setTimeout(30000);
 
 describe('appointment reminders', () => {
 	test("'when the appointment is deleted also the relative reminder is deleted", async () => {

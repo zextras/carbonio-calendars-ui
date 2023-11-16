@@ -5,6 +5,7 @@
  */
 import moment from 'moment';
 import { create } from 'zustand';
+
 import { Resource } from '../../types/editor';
 
 export type SetRange = ({ start, end }: { start: number; end: number }) => void;
