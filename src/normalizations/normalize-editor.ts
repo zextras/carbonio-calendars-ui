@@ -45,7 +45,9 @@ const getAttendees = (attendees: any[], role: string): any[] =>
 				fullName: at?.d,
 				id: `${at?.a} ${at.d}`,
 				label: at?.d,
-				lastName: undefined
+				lastName: undefined,
+				isGroup: at.isGroup,
+				exp: at.exp
 			},
 			isNil
 		)
