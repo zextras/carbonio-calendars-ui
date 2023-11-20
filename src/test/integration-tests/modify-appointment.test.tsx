@@ -131,7 +131,10 @@ describe.each`
 		// SETTING NEW TITLE, LOCATION, FREEBUSY
 		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
 		const locationSelector = screen.getByRole('textbox', { name: /Location/i });
-		await user.type(titleSelector, newTitle);
+
+		await waitFor(() => {
+			user.type(titleSelector, newTitle);
+		});
 		await user.type(locationSelector, newLocation);
 		await user.click(screen.getByText(/free/i));
 
@@ -208,8 +211,17 @@ describe.each`
 			expect(updatedEditor.recur).toBeDefined();
 		}
 
-		const snackbar = screen.getByText(/edits saved correctly/i);
+		if (title === 'series') {
+			await waitFor(() => {
+				user.click(screen.getByRole('button', { name: /continue/i }));
+			});
+			const snackbar = screen.getByText('message.snackbar.calendar_edits_saved');
 
-		expect(snackbar).toBeInTheDocument();
+			expect(snackbar).toBeInTheDocument();
+		} else {
+			const snackbar = screen.getByText(/edits saved correctly/i);
+
+			expect(snackbar).toBeInTheDocument();
+		}
 	});
 });

@@ -28,7 +28,8 @@ export const normalizeInviteParticipants = (participants: any): any =>
 					name: p.d,
 					email: p.a,
 					isOptional: p.role === 'OPT' || false,
-					response: p.ptst
+					response: p.ptst,
+					cutype: p.cutype
 				})
 			),
 			'email'

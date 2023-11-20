@@ -50,7 +50,7 @@ export const useCalendarComponentUtils = (): {
 	}>();
 
 	useEffect(() => {
-		if (action && action !== EventActionsEnum.EXPAND && action !== EventActionsEnum.EDIT) {
+		if (action && action !== EventActionsEnum.EXPAND) {
 			replaceHistory('');
 		}
 	}, [action]);

@@ -10,6 +10,7 @@ import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { MeetingRoomsRow } from '../event-summary-view/meeting-rooms-row';
 
 import { ImageAndIconPart } from './image-and-icon-part';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
@@ -141,6 +142,7 @@ export const DetailsPart = ({
 					{locationData && locationData?.class !== 'PRI' && (
 						<LocationRow locationData={locationData} />
 					)}
+					<MeetingRoomsRow invite={invite} />
 					{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} />}
 					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
 				</Row>

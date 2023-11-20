@@ -17,7 +17,7 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, replaceHistory } from '@zextras/carbonio-shell-ui';
-import { filter, find, noop } from 'lodash';
+import { filter, find, noop, startsWith } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -33,7 +33,7 @@ import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { extractBody } from '../../commons/body-message-renderer';
 import StyledDivider from '../../commons/styled-divider';
-import { PANEL_VIEW } from '../../constants';
+import { PANEL_VIEW, ROOM_DIVIDER } from '../../constants';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
@@ -293,12 +293,14 @@ export default function EventPanelView(): ReactElement | null {
 							participants={invite?.participants}
 						/>
 					)}
-					{invite && extractBody(invite.textDescription?.[0]?._content) && (
-						<>
-							<StyledDivider />
-							<MessagePart fullInvite={invite} inviteId={invite.id} parts={invite.parts} />
-						</>
-					)}
+					{invite &&
+						extractBody(invite.textDescription?.[0]?._content) &&
+						!startsWith(invite.textDescription?.[0]?._content ?? '', ROOM_DIVIDER) && (
+							<>
+								<StyledDivider />
+								<MessagePart fullInvite={invite} inviteId={invite.id} parts={invite.parts} />
+							</>
+						)}
 					<StyledDivider />
 					{invite && <ReminderPart alarmString={alarmString} invite={invite} event={event} />}
 					{invite?.attachmentFiles.length > 0 && (

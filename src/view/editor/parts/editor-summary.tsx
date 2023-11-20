@@ -14,6 +14,7 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
+import { map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -27,6 +28,7 @@ import {
 	selectEditorCalendar,
 	selectEditorEnd,
 	selectEditorLocation,
+	selectEditorMeetingRoom,
 	selectEditorRoom,
 	selectEditorStart,
 	selectEditorTimezone,
@@ -59,10 +61,19 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const timezone = useAppSelector(selectEditorTimezone(editorId));
 	const location = useAppSelector(selectEditorLocation(editorId));
+	const meetingRoom = useAppSelector(selectEditorMeetingRoom(editorId));
 	const room = useAppSelector(selectEditorRoom(editorId));
 	const title = useAppSelector(selectEditorTitle(editorId));
 	const calendar = useAppSelector(selectEditorCalendar(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
+
+	const meetingRoomField = useMemo(() => {
+		if (meetingRoom && meetingRoom.length > 0) {
+			const res = map(meetingRoom, (roo) => roo.label);
+			return res.join(', ');
+		}
+		return meetingRoom;
+	}, [meetingRoom]);
 
 	const virtualRoom = useMemo(() => room?.label, [room?.label]);
 
@@ -136,6 +147,11 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 				<TitleRow>
 					<Text overflow="ellipsis" color="secondary" size="small">
 						{location}
+					</Text>
+				</TitleRow>
+				<TitleRow>
+					<Text overflow="ellipsis" color="secondary" size="small">
+						{meetingRoomField}
 					</Text>
 				</TitleRow>
 				{virtualRoom && (

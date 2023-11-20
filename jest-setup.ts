@@ -17,6 +17,7 @@ import {
 } from './src/carbonio-ui-commons/test/jest-setup';
 import { handleGetShareInfoRequest } from './src/carbonio-ui-commons/test/mocks/network/msw/handle-get-share-info';
 import { registerRestHandler } from './src/carbonio-ui-commons/test/mocks/network/msw/handlers';
+import { handleAutoCompleteGalRequest } from './src/test/mocks/network/msw/handle-autocomplete-gal-request';
 import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
 import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
 import { handleCreateAppointmentExceptionRequest } from './src/test/mocks/network/msw/handle-create-appointment-exception';
@@ -48,6 +49,7 @@ beforeAll(() => {
 		rest.post('/service/soap/FolderActionRequest', handleFolderActionRequest),
 		rest.post('/service/soap/CreateAppointmentRequest', handleCreateAppointmentRequest),
 		rest.post('/service/soap/CancelAppointmentRequest', handleCancelAppointmentRequest),
+		rest.post('/service/soap/AutoCompleteGalRequest', handleAutoCompleteGalRequest),
 		rest.post(
 			'/service/soap/CreateAppointmentExceptionRequest',
 			handleCreateAppointmentExceptionRequest
