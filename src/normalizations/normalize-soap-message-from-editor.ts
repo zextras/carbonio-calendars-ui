@@ -52,16 +52,19 @@ const setResourceDate = ({
 		  };
 };
 
-export const generateParticipantInformation = (resource: Editor): Array<Participants> => {
+export const generateParticipantInformation = (resource: Editor): Array<Partial<Participants>> => {
 	const user = getUserAccount();
 
 	const sender = isEventSentFromOrganizer(user?.name ?? '', resource.sender)
 		? undefined
-		: {
-				a: resource?.sender?.address ?? resource?.sender?.label,
-				p: resource?.sender?.fullName,
-				t: 's'
-		  };
+		: omitBy<Participants>(
+				{
+					a: resource?.sender?.address ?? resource?.sender?.label,
+					p: resource?.sender?.fullName,
+					t: 's'
+				},
+				isNil
+		  );
 	const organizerParticipant = resource.calendar?.owner
 		? compact([
 				{
@@ -70,17 +73,22 @@ export const generateParticipantInformation = (resource: Editor): Array<Particip
 				},
 				sender
 		  ])
-		: compact([
-				{
-					a: resource?.organizer?.address ?? resource?.organizer?.label,
-					p: resource?.organizer?.fullName,
-					t: 'f'
-				},
+		: compact<Partial<Participants>>([
+				omitBy<Participants>(
+					{
+						a: user?.name,
+						p: isTheSameIdentity(resource.organizer, resource.sender)
+							? resource?.organizer?.fullName
+							: resource.sender.fullName,
+						t: 'f'
+					},
+					isNil
+				),
 				sender
 		  ]);
 	return resource?.draft
 		? organizerParticipant
-		: concat(
+		: concat<Partial<Participants>>(
 				map(
 					concat(resource?.attendees, resource?.optionalAttendees, resource?.meetingRoom ?? []),
 					(attendee) => ({

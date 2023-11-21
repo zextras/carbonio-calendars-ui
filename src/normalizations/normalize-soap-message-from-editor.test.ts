@@ -33,9 +33,6 @@ const sharedAccountEditorFolder = {
 	owner: 'random_shared_owner@mail.com'
 };
 
-const sentByParameter = 'there will be a sentBy parameter';
-const customAddressMail = `and the user send the message using a custom zimbraPrefFromAddress email, ${sentByParameter}`;
-
 describe('normalize soap message from editor', () => {
 	describe('when the user is the organizer ', () => {
 		describe('and the appointment is inside his calendar ', () => {
@@ -55,10 +52,21 @@ describe('normalize soap message from editor', () => {
 					const body = normalizeSoapMessageFromEditor(editor);
 					expect(body.m.inv.comp[0].or.sentBy).toBeUndefined();
 					expect(body.m.inv.comp[0].or.a).toBe(mainAccount.email);
+					expect(body.m.e).toStrictEqual([
+						{
+							a: mainAccount.email,
+							p: mainAccount.fullName,
+							t: 'f'
+						}
+					]);
 				});
-				test(customAddressMail, () => {
+				test('user send the message using preferred email, there will be sentBy parameter', () => {
+					const customIdentity = {
+						...mainAccount,
+						_attrs: { zimbraPrefFromAddress: identity.email }
+					};
 					const userAccount = getMockedAccountItem({
-						identity1: { ...mainAccount, _attrs: { zimbraPrefFromAddress: identity.email } },
+						identity1: customIdentity,
 						identity2: identity
 					});
 
@@ -74,11 +82,23 @@ describe('normalize soap message from editor', () => {
 					const body = normalizeSoapMessageFromEditor(editor);
 					expect(body.m.inv.comp[0].or.sentBy).toBe(identity.email);
 					expect(body.m.inv.comp[0].or.a).toBe(mainAccount.email);
+					expect(body.m.e).toStrictEqual([
+						{
+							a: mainAccount.email,
+							p: mainAccount.fullName,
+							t: 'f'
+						},
+						{
+							a: identity.email,
+							p: mainAccount.fullName,
+							t: 's'
+						}
+					]);
 				});
 			});
 			describe('and he is using an identity ', () => {
 				describe('with different email from the main account ', () => {
-					test(sentByParameter, () => {
+					test('there will be a sentBy', () => {
 						const userAccount = getMockedAccountItem({
 							identity1: mainAccount,
 							identity2: identity
@@ -99,8 +119,20 @@ describe('normalize soap message from editor', () => {
 						const body = normalizeSoapMessageFromEditor(editor);
 						expect(body.m.inv.comp[0].or.a).toBe(mainAccount.email);
 						expect(body.m.inv.comp[0].or.sentBy).toBe(identities[1].address);
+						expect(body.m.e).toStrictEqual([
+							{
+								a: mainAccount.email,
+								p: mainAccount.fullName,
+								t: 'f'
+							},
+							{
+								a: identities[1].address,
+								p: identities[1].fullName,
+								t: 's'
+							}
+						]);
 					});
-					test(customAddressMail, () => {
+					test('user send the message using preferred email, there will be a sentBy', () => {
 						const userAccount = getMockedAccountItem({
 							identity1: mainAccount,
 							identity2: { ...identity, _attrs: { zimbraPrefFromAddress: identity2.email } },
@@ -121,7 +153,19 @@ describe('normalize soap message from editor', () => {
 						});
 						const body = normalizeSoapMessageFromEditor(editor);
 						expect(body.m.inv.comp[0].or.a).toBe(mainAccount.email);
-						expect(body.m.inv.comp[0].or.sentBy).toBe(identities[2].address);
+						expect(body.m.inv.comp[0].or.sentBy).toBe(identities[1].address);
+						expect(body.m.e).toStrictEqual([
+							{
+								a: mainAccount.email,
+								p: mainAccount.fullName,
+								t: 'f'
+							},
+							{
+								a: identities[1].address,
+								p: identities[1].fullName,
+								t: 's'
+							}
+						]);
 					});
 				});
 				describe('with the same email as the main account, there wont be a sentBy parameter', () => {
@@ -152,6 +196,12 @@ describe('normalize soap message from editor', () => {
 						expect(body.m.inv.comp[0].or.d).toBeUndefined();
 						expect(body.m.inv.comp[0].or.a).toBe(mainAccount.email);
 						expect(body.m.inv.comp[0].or.sentBy).toBeUndefined();
+						expect(body.m.e).toStrictEqual([
+							{
+								a: mainAccount.email,
+								t: 'f'
+							}
+						]);
 					});
 					test('if fullName is available there will be a d parameter', () => {
 						const userAccount = getMockedAccountItem({
@@ -184,7 +234,7 @@ describe('normalize soap message from editor', () => {
 		});
 		describe('and the appointment is inside a shared calendar ', () => {
 			describe('and he is not using identities ', () => {
-				test(sentByParameter, () => {
+				test('sentBy will be available', () => {
 					const userAccount = getMockedAccountItem({ identity1: mainAccount, identity2: identity });
 
 					shell.getUserAccount.mockImplementation(() => userAccount);
@@ -200,7 +250,7 @@ describe('normalize soap message from editor', () => {
 					expect(body.m.inv.comp[0].or.sentBy).toBe(mainAccount.email);
 					expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
 				});
-				test(customAddressMail, () => {
+				test('and the user send the message using a custom zimbraPrefFromAddress email - there will be a sentBy parameter', () => {
 					const userAccount = getMockedAccountItem({
 						identity1: { ...mainAccount, _attrs: { zimbraPrefFromAddress: identity.email } },
 						identity2: identity
@@ -222,7 +272,7 @@ describe('normalize soap message from editor', () => {
 			});
 			describe('and he is using an identity ', () => {
 				describe('with different email from the main account ', () => {
-					test(sentByParameter, () => {
+					test('there will be a sentBy parameter in the request', () => {
 						const userAccount = getMockedAccountItem({
 							identity1: mainAccount,
 							identity2: identity
@@ -244,7 +294,7 @@ describe('normalize soap message from editor', () => {
 						expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
 						expect(body.m.inv.comp[0].or.sentBy).toBe(identities[1].address);
 					});
-					test(customAddressMail, () => {
+					test('and the user send the message using a custom zimbraPrefFromAddress email, there will be a sent parameter', () => {
 						const userAccount = getMockedAccountItem({
 							identity1: mainAccount,
 							identity2: { ...identity, _attrs: { zimbraPrefFromAddress: identity2.email } },
