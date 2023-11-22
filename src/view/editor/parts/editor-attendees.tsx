@@ -233,7 +233,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								onChange={onChange}
 								defaultValue={defaultValue}
 								hasError={hasError}
-								errorLabel=""
+								description={hasError ? '' : undefined}
 								disabled={disabled?.attendees}
 							/>
 						)}
@@ -247,7 +247,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 						<Button
 							label={t('label.optionals', 'Optionals')}
 							type="ghost"
-							labelColor="secondary"
+							color="secondary"
 							style={{ padding: 0 }}
 							onClick={toggleOptionals}
 						/>
@@ -284,7 +284,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								onChange={onOptionalsChange}
 								defaultValue={optionalAttendees}
 								hasError={optionalHasError}
-								errorLabel=""
+								description={optionalHasError ? '' : undefined}
 								disabled={disabled?.optionalAttendees}
 							/>
 						)}
