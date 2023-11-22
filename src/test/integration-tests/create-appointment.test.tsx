@@ -110,7 +110,14 @@ describe('create single appointment with custom values', () => {
 		const newOptionals = map(mockedData.editor.getRandomAttendees(), 'email');
 		const identity2 = createFakeIdentity();
 
-		const userAccount = getMockedAccountItem({ identity1: previousEditor.organizer, identity2 });
+		const userAccount = getMockedAccountItem({
+			identity1: {
+				...previousEditor.organizer,
+				id: faker.datatype.uuid(),
+				email: faker.internet.email()
+			},
+			identity2
+		});
 
 		shell.useUserAccount.mockImplementation(() => userAccount);
 		shell.getUserAccount.mockImplementation(() => userAccount);

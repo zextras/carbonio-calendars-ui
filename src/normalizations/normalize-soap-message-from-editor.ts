@@ -54,38 +54,37 @@ const setResourceDate = ({
 
 export const generateParticipantInformation = (resource: Editor): Array<Partial<Participants>> => {
 	const user = getUserAccount();
+	const iAmOrganizer = isEventSentFromOrganizer(user?.name ?? '', resource.sender);
+	const iAmNotUsingAnIdentity = isTheSameIdentity(resource.organizer, resource.sender);
+	const isNotMyCalendar = resource.calendar?.owner;
 
-	const sender = isEventSentFromOrganizer(user?.name ?? '', resource.sender)
-		? undefined
-		: omitBy<Participants>(
-				{
-					a: resource?.sender?.address ?? resource?.sender?.label,
-					p: resource?.sender?.fullName,
-					t: 's'
-				},
-				isNil
-		  );
-	const organizerParticipant = resource.calendar?.owner
-		? compact([
-				{
-					a: resource.calendar?.owner,
-					t: 'f'
-				},
-				sender
-		  ])
-		: compact<Partial<Participants>>([
-				omitBy<Participants>(
-					{
-						a: user?.name,
-						p: isTheSameIdentity(resource.organizer, resource.sender)
-							? resource?.organizer?.fullName
-							: resource.sender.fullName,
-						t: 'f'
-					},
-					isNil
-				),
-				sender
-		  ]);
+	const mainAccountOrganizer = omitBy<Participants>(
+		{
+			a: user?.name,
+			p: resource?.organizer?.fullName,
+			t: 'f'
+		},
+		isNil
+	);
+
+	const sharedCalendarOrganizer = {
+		a: resource.calendar?.owner,
+		t: 'f'
+	};
+
+	const sender = omitBy<Participants>(
+		{
+			a: resource?.sender?.address ?? resource?.sender?.label,
+			p: resource?.sender?.fullName,
+			t: 's'
+		},
+		isNil
+	);
+
+	const organizer = isNotMyCalendar ? sharedCalendarOrganizer : mainAccountOrganizer;
+	const sentFrom = iAmOrganizer && iAmNotUsingAnIdentity && !isNotMyCalendar ? undefined : sender;
+
+	const organizerParticipant = compact([organizer, sentFrom]);
 	return resource?.draft
 		? organizerParticipant
 		: concat<Partial<Participants>>(

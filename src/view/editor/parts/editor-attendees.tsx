@@ -224,6 +224,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								onChange={onChange}
 								defaultValue={defaultValue}
 								disabled={disabled?.attendees}
+								dragAndDropEnabled
 							/>
 						) : (
 							<ChipInput
@@ -274,6 +275,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								onChange={onOptionalsChange}
 								defaultValue={optionalAttendees}
 								disabled={disabled?.optionalAttendees}
+								dragAndDropEnabled
 							/>
 						) : (
 							<ChipInput

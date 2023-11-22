@@ -33,6 +33,8 @@ const sharedAccountEditorFolder = {
 	owner: 'random_shared_owner@mail.com'
 };
 
+const addressPrefKey = 'zimbraPrefFromAddress';
+
 describe('normalize soap message from editor', () => {
 	describe('when the user is the organizer ', () => {
 		describe('and the appointment is inside his calendar ', () => {
@@ -63,7 +65,7 @@ describe('normalize soap message from editor', () => {
 				test('user send the message using preferred email, there will be sentBy parameter', () => {
 					const customIdentity = {
 						...mainAccount,
-						_attrs: { zimbraPrefFromAddress: identity.email }
+						_attrs: { [addressPrefKey]: identity.email }
 					};
 					const userAccount = getMockedAccountItem({
 						identity1: customIdentity,
@@ -99,9 +101,14 @@ describe('normalize soap message from editor', () => {
 			describe('and he is using an identity ', () => {
 				describe('with different email from the main account ', () => {
 					test('there will be a sentBy', () => {
+						const customIdentity = {
+							...identity,
+							_attrs: { [addressPrefKey]: identity2.email }
+						};
 						const userAccount = getMockedAccountItem({
 							identity1: mainAccount,
-							identity2: identity
+							identity2: customIdentity,
+							identity3: identity2
 						});
 
 						shell.getUserAccount.mockImplementation(() => userAccount);
@@ -126,7 +133,7 @@ describe('normalize soap message from editor', () => {
 								t: 'f'
 							},
 							{
-								a: identities[1].address,
+								a: identities[2].address,
 								p: identities[1].fullName,
 								t: 's'
 							}
@@ -135,7 +142,7 @@ describe('normalize soap message from editor', () => {
 					test('user send the message using preferred email, there will be a sentBy', () => {
 						const userAccount = getMockedAccountItem({
 							identity1: mainAccount,
-							identity2: { ...identity, _attrs: { zimbraPrefFromAddress: identity2.email } },
+							identity2: { ...identity, _attrs: { [addressPrefKey]: identity2.email } },
 							identity3: identity2
 						});
 
@@ -175,9 +182,13 @@ describe('normalize soap message from editor', () => {
 							identity1: mainAccount,
 							identity2: {
 								...identity,
+								// todo: shell AccountRightTarget type is wrong and does not allow to pass fullName as undefined
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
 								fullName: undefined,
-								_attrs: { zimbraPrefFromAddress: mainAccount.email }
-							}
+								_attrs: { [addressPrefKey]: mainAccount.email }
+							},
+							identity3: identity2
 						});
 
 						shell.getUserAccount.mockImplementation(() => userAccount);
@@ -199,7 +210,12 @@ describe('normalize soap message from editor', () => {
 						expect(body.m.e).toStrictEqual([
 							{
 								a: mainAccount.email,
+								p: mainAccount.fullName,
 								t: 'f'
+							},
+							{
+								a: mainAccount.email,
+								t: 's'
 							}
 						]);
 					});
@@ -208,8 +224,9 @@ describe('normalize soap message from editor', () => {
 							identity1: mainAccount,
 							identity2: {
 								...identity,
-								_attrs: { zimbraPrefFromAddress: mainAccount.email }
-							}
+								_attrs: { [addressPrefKey]: mainAccount.email }
+							},
+							identity3: identity2
 						});
 
 						shell.getUserAccount.mockImplementation(() => userAccount);
@@ -228,6 +245,18 @@ describe('normalize soap message from editor', () => {
 						expect(body.m.inv.comp[0].or.d).toBe(identity.fullName);
 						expect(body.m.inv.comp[0].or.a).toBe(mainAccount.email);
 						expect(body.m.inv.comp[0].or.sentBy).toBeUndefined();
+						expect(body.m.e).toStrictEqual([
+							{
+								a: mainAccount.email,
+								p: mainAccount.fullName,
+								t: 'f'
+							},
+							{
+								a: mainAccount.email,
+								p: identities[1].fullName,
+								t: 's'
+							}
+						]);
 					});
 				});
 			});
@@ -249,10 +278,21 @@ describe('normalize soap message from editor', () => {
 					const body = normalizeSoapMessageFromEditor(editor);
 					expect(body.m.inv.comp[0].or.sentBy).toBe(mainAccount.email);
 					expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
+					expect(body.m.e).toStrictEqual([
+						{
+							a: sharedEditorFolder.owner,
+							t: 'f'
+						},
+						{
+							a: mainAccount.email,
+							p: mainAccount.fullName,
+							t: 's'
+						}
+					]);
 				});
-				test('and the user send the message using a custom zimbraPrefFromAddress email - there will be a sentBy parameter', () => {
+				test('and the user send the message using a custom email - there will be a sentBy parameter', () => {
 					const userAccount = getMockedAccountItem({
-						identity1: { ...mainAccount, _attrs: { zimbraPrefFromAddress: identity.email } },
+						identity1: { ...mainAccount, _attrs: { [addressPrefKey]: identity.email } },
 						identity2: identity
 					});
 
@@ -268,6 +308,17 @@ describe('normalize soap message from editor', () => {
 					const body = normalizeSoapMessageFromEditor(editor);
 					expect(body.m.inv.comp[0].or.sentBy).toBe(identity.email);
 					expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
+					expect(body.m.e).toStrictEqual([
+						{
+							a: sharedEditorFolder.owner,
+							t: 'f'
+						},
+						{
+							a: identity.email,
+							p: mainAccount.fullName,
+							t: 's'
+						}
+					]);
 				});
 			});
 			describe('and he is using an identity ', () => {
@@ -293,11 +344,22 @@ describe('normalize soap message from editor', () => {
 						const body = normalizeSoapMessageFromEditor(editor);
 						expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
 						expect(body.m.inv.comp[0].or.sentBy).toBe(identities[1].address);
+						expect(body.m.e).toStrictEqual([
+							{
+								a: sharedEditorFolder.owner,
+								t: 'f'
+							},
+							{
+								a: identities[1].address,
+								p: identities[1].fullName,
+								t: 's'
+							}
+						]);
 					});
-					test('and the user send the message using a custom zimbraPrefFromAddress email, there will be a sent parameter', () => {
+					test('and the user send the message using a custom email, there will be a sent parameter', () => {
 						const userAccount = getMockedAccountItem({
 							identity1: mainAccount,
-							identity2: { ...identity, _attrs: { zimbraPrefFromAddress: identity2.email } },
+							identity2: { ...identity, _attrs: { [addressPrefKey]: identity2.email } },
 							identity3: identity2
 						});
 
@@ -316,6 +378,17 @@ describe('normalize soap message from editor', () => {
 						const body = normalizeSoapMessageFromEditor(editor);
 						expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
 						expect(body.m.inv.comp[0].or.sentBy).toBe(identities[2].address);
+						expect(body.m.e).toStrictEqual([
+							{
+								a: sharedEditorFolder.owner,
+								t: 'f'
+							},
+							{
+								a: identity2.email,
+								p: identities[1].fullName,
+								t: 's'
+							}
+						]);
 					});
 				});
 				test('with the same email as the main account, there will be a sentBy parameter', () => {
@@ -323,7 +396,7 @@ describe('normalize soap message from editor', () => {
 						identity1: mainAccount,
 						identity2: {
 							...identity,
-							_attrs: { zimbraPrefFromAddress: mainAccount.email }
+							_attrs: { [addressPrefKey]: mainAccount.email }
 						}
 					});
 
@@ -343,6 +416,17 @@ describe('normalize soap message from editor', () => {
 					expect(body.m.inv.comp[0].or.d).toBeUndefined();
 					expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
 					expect(body.m.inv.comp[0].or.sentBy).toBe(mainAccount.email);
+					expect(body.m.e).toStrictEqual([
+						{
+							a: sharedEditorFolder.owner,
+							t: 'f'
+						},
+						{
+							a: identities[1].address,
+							p: identities[1].fullName,
+							t: 's'
+						}
+					]);
 				});
 			});
 		});
@@ -370,10 +454,21 @@ describe('normalize soap message from editor', () => {
 				const body = normalizeSoapMessageFromEditor(editor);
 				expect(body.m.inv.comp[0].or.sentBy).toBe(mainAccount.email);
 				expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
+				expect(body.m.e).toStrictEqual([
+					{
+						a: sharedEditorFolder.owner,
+						t: 'f'
+					},
+					{
+						a: mainAccount.email,
+						p: mainAccount.fullName,
+						t: 's'
+					}
+				]);
 			});
-			test('user send the message from his main account using a custom zimbraPrefFromAddress email', () => {
+			test('user send the message from his main account using a custom email', () => {
 				const userAccount = getMockedAccountItem({
-					identity1: { ...mainAccount, _attrs: { zimbraPrefFromAddress: identity.email } },
+					identity1: { ...mainAccount, _attrs: { [addressPrefKey]: identity.email } },
 					identity2: identity
 				});
 
@@ -392,6 +487,17 @@ describe('normalize soap message from editor', () => {
 				const body = normalizeSoapMessageFromEditor(editor);
 				expect(body.m.inv.comp[0].or.sentBy).toBe(identities[0].address);
 				expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
+				expect(body.m.e).toStrictEqual([
+					{
+						a: sharedEditorFolder.owner,
+						t: 'f'
+					},
+					{
+						a: identity.email,
+						p: mainAccount.fullName,
+						t: 's'
+					}
+				]);
 			});
 			test('user send the message from an identity', () => {
 				const userAccount = getMockedAccountItem({
@@ -414,6 +520,17 @@ describe('normalize soap message from editor', () => {
 				const body = normalizeSoapMessageFromEditor(editor);
 				expect(body.m.inv.comp[0].or.sentBy).toBe(identity.email);
 				expect(body.m.inv.comp[0].or.a).toBe(sharedEditorFolder.owner);
+				expect(body.m.e).toStrictEqual([
+					{
+						a: sharedEditorFolder.owner,
+						t: 'f'
+					},
+					{
+						a: identity.email,
+						p: identity.fullName,
+						t: 's'
+					}
+				]);
 			});
 		});
 		describe('when the appointment is inside a calendar of a shared account', () => {
@@ -434,10 +551,21 @@ describe('normalize soap message from editor', () => {
 				const body = normalizeSoapMessageFromEditor(editor);
 				expect(body.m.inv.comp[0].or.sentBy).toBe(mainAccount.email);
 				expect(body.m.inv.comp[0].or.a).toBe(sharedAccountEditorFolder.owner);
+				expect(body.m.e).toStrictEqual([
+					{
+						a: sharedAccountEditorFolder.owner,
+						t: 'f'
+					},
+					{
+						a: mainAccount.email,
+						p: mainAccount.fullName,
+						t: 's'
+					}
+				]);
 			});
-			test('user send the message from his main account using a custom zimbraPrefFromAddress email', () => {
+			test('user send the message from his main account using a custom email', () => {
 				const userAccount = getMockedAccountItem({
-					identity1: { ...mainAccount, _attrs: { zimbraPrefFromAddress: identity.email } }
+					identity1: { ...mainAccount, _attrs: { [addressPrefKey]: identity.email } }
 				});
 
 				shell.getUserAccount.mockImplementation(() => userAccount);
@@ -454,8 +582,19 @@ describe('normalize soap message from editor', () => {
 				const body = normalizeSoapMessageFromEditor(editor);
 				expect(body.m.inv.comp[0].or.sentBy).toBe(identities[0].address);
 				expect(body.m.inv.comp[0].or.a).toBe(sharedAccountEditorFolder.owner);
+				expect(body.m.e).toStrictEqual([
+					{
+						a: sharedAccountEditorFolder.owner,
+						t: 'f'
+					},
+					{
+						a: identity.email,
+						p: mainAccount.fullName,
+						t: 's'
+					}
+				]);
 			});
-			test('user send the message from from an identity', () => {
+			test('user send the message from an identity', () => {
 				const userAccount = getMockedAccountItem({
 					identity1: mainAccount,
 					identity2: identity
@@ -476,6 +615,17 @@ describe('normalize soap message from editor', () => {
 				const body = normalizeSoapMessageFromEditor(editor);
 				expect(body.m.inv.comp[0].or.sentBy).toBe(identities[1].address);
 				expect(body.m.inv.comp[0].or.a).toBe(sharedAccountEditorFolder.owner);
+				expect(body.m.e).toStrictEqual([
+					{
+						a: sharedAccountEditorFolder.owner,
+						t: 'f'
+					},
+					{
+						a: identities[1].address,
+						p: identities[1].fullName,
+						t: 's'
+					}
+				]);
 			});
 		});
 	});
