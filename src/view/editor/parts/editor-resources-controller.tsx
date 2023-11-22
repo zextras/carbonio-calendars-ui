@@ -9,7 +9,7 @@ import { map } from 'lodash';
 
 import { searchResources } from '../../../soap/search-resources';
 import { useAppStatusStore } from '../../../store/zustand/store';
-import { MeetingRoom } from '../../../types/editor';
+import { Resource } from '../../../types/editor';
 import { Cn, Contact } from '../../../types/soap/soap-actions';
 
 const normalizeResources = (
@@ -26,7 +26,7 @@ const getAllResources = async (
 	resources = [] as Cn,
 	value = '',
 	offset = 0
-): Promise<Array<MeetingRoom>> => {
+): Promise<Array<Resource>> => {
 	const response = await searchResources(value, offset);
 	if (response.cn) {
 		const newValue = resources.concat(response.cn);
@@ -39,7 +39,7 @@ const getAllResources = async (
 };
 
 export const EditorResourcesController = (): null => {
-	const [resources, setResources] = useState<Array<MeetingRoom> | undefined>();
+	const [resources, setResources] = useState<Array<Resource> | undefined>();
 
 	useEffect(() => {
 		if (!resources) {

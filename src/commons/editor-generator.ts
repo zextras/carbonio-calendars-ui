@@ -101,6 +101,7 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		title: '',
 		location: '',
 		meetingRoom: undefined,
+		equipment: undefined,
 		room: undefined,
 		attendees: [],
 		optionalAttendees: [],

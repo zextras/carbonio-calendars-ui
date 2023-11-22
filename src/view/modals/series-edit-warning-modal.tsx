@@ -12,7 +12,11 @@ import { closeBoard, useBoard, t } from '@zextras/carbonio-shell-ui';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectEditorAttendees, selectEditorMeetingRoom } from '../../store/selectors/editor';
+import {
+	selectEditorAttendees,
+	selectEditorEquipment,
+	selectEditorMeetingRoom
+} from '../../store/selectors/editor';
 import { Editor } from '../../types/editor';
 
 type ModalProps = {
@@ -44,6 +48,7 @@ export const SeriesEditWarningModal = ({
 	const board = useBoard();
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
 	const meetingRoomLength = useAppSelector(selectEditorMeetingRoom(editorId))?.length;
+	const equipmentsLength = useAppSelector(selectEditorEquipment(editorId))?.length;
 	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
@@ -66,27 +71,31 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  })
-			: action({ draft: !!attendeesLength || !!meetingRoomLength, isNew, editor, dispatch }).then(
-					({ response }: any) => {
-						createSnackbar({
-							key: `calendar-moved-root`,
-							replace: true,
-							type: response ? 'info' : 'warning',
-							hideButton: true,
-							label: !response
-								? t('label.error_try_again', 'Something went wrong, please try again')
-								: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-							autoHideTimeout: 3000
-						});
-						onClose();
-					}
-			  );
+			: action({
+					draft: !!attendeesLength || !!meetingRoomLength || !!equipmentsLength,
+					isNew,
+					editor,
+					dispatch
+			  }).then(({ response }: any) => {
+					createSnackbar({
+						key: `calendar-moved-root`,
+						replace: true,
+						type: response ? 'info' : 'warning',
+						hideButton: true,
+						label: !response
+							? t('label.error_try_again', 'Something went wrong, please try again')
+							: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+						autoHideTimeout: 3000
+					});
+					onClose();
+			  });
 	}, [
 		action,
 		attendeesLength,
 		createSnackbar,
 		dispatch,
 		editor,
+		equipmentsLength,
 		isNew,
 		isSending,
 		meetingRoomLength,

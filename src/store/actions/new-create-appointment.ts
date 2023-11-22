@@ -80,7 +80,12 @@ export const generateParticipantInformation = (resource: Editor): Array<Particip
 		? organizerParticipant
 		: concat(
 				map(
-					concat(resource?.attendees, resource?.optionalAttendees, resource?.meetingRoom ?? []),
+					concat(
+						resource?.attendees,
+						resource?.optionalAttendees,
+						resource?.meetingRoom ?? [],
+						resource?.equipment ?? []
+					),
 					(attendee) => ({
 						a: attendee?.email ?? attendee?.label,
 						p:
@@ -190,6 +195,19 @@ const generateInvite = (editorData: Editor): any => {
 				rsvp: true,
 				url: c?.email,
 				cutype: CALENDAR_RESOURCES.ROOM
+			}))
+		);
+
+	editorData?.equipment &&
+		at.push(
+			...editorData.equipment.map((c) => ({
+				a: c?.email,
+				d: c.label,
+				role: 'NON',
+				ptst: 'NE',
+				rsvp: true,
+				url: c?.email,
+				cutype: CALENDAR_RESOURCES.RESOURCE
 			}))
 		);
 
