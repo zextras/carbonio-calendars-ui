@@ -276,6 +276,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								defaultValue={optionalAttendees}
 								dragAndDropEnabled
 								disabled={disabled?.optionalAttendees}
+								dragAndDropEnabled
 							/>
 						) : (
 							<ChipInput

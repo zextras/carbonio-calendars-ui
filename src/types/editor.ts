@@ -9,8 +9,8 @@ export type CalendarEditor = {
 	id: string;
 	name: string;
 	rgb?: string;
-	color?: number | undefined;
-	owner: string | undefined;
+	color?: number;
+	owner?: string;
 };
 
 export type Count = { count: { num: number } };

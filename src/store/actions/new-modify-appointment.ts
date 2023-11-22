@@ -9,11 +9,11 @@ import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
 
-import { generateSoapMessageFromEditor } from './new-create-appointment';
 import {
 	findAttachments,
 	retrieveAttachmentsType
 } from '../../normalizations/normalizations-utils';
+import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-soap-message-from-editor';
 import { Editor } from '../../types/editor';
 
 // todo: this thunk is not using redux! convert to regular async function
@@ -41,7 +41,7 @@ export const modifyAppointment = createAsyncThunk(
 				);
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				const body = generateSoapMessageFromEditor({ ...editor, draft, exceptId });
+				const body = normalizeSoapMessageFromEditor({ ...editor, draft, exceptId });
 				const res: { calItemId: string; invId: string } = await soapFetch(
 					'CreateAppointmentException',
 					body
@@ -63,7 +63,7 @@ export const modifyAppointment = createAsyncThunk(
 				};
 				return { response, editor: updatedEditor };
 			}
-			const body = generateSoapMessageFromEditor({ ...editor, draft });
+			const body = normalizeSoapMessageFromEditor({ ...editor, draft });
 			const res: { calItemId: string; echo: any } = await soapFetch('ModifyAppointment', body);
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
