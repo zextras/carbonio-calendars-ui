@@ -27,6 +27,7 @@ import {
 	selectEditorAllDay,
 	selectEditorCalendar,
 	selectEditorEnd,
+	selectEditorEquipment,
 	selectEditorLocation,
 	selectEditorMeetingRoom,
 	selectEditorRoom,
@@ -62,6 +63,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const timezone = useAppSelector(selectEditorTimezone(editorId));
 	const location = useAppSelector(selectEditorLocation(editorId));
 	const meetingRoom = useAppSelector(selectEditorMeetingRoom(editorId));
+	const equipments = useAppSelector(selectEditorEquipment(editorId));
 	const room = useAppSelector(selectEditorRoom(editorId));
 	const title = useAppSelector(selectEditorTitle(editorId));
 	const calendar = useAppSelector(selectEditorCalendar(editorId));
@@ -74,6 +76,14 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 		}
 		return meetingRoom;
 	}, [meetingRoom]);
+
+	const equipmentsField = useMemo(() => {
+		if (equipments && equipments.length > 0) {
+			const res = map(equipments, (eq) => eq.label);
+			return res.join(', ');
+		}
+		return equipments;
+	}, [equipments]);
 
 	const virtualRoom = useMemo(() => room?.label, [room?.label]);
 
@@ -154,6 +164,13 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 						{meetingRoomField}
 					</Text>
 				</TitleRow>
+				{equipmentsField && (
+					<TitleRow>
+						<Text overflow="ellipsis" color="secondary" size="small">
+							{equipmentsField}
+						</Text>
+					</TitleRow>
+				)}
 				{virtualRoom && (
 					<TitleRow>
 						<Text overflow="ellipsis" color="secondary" size="small">

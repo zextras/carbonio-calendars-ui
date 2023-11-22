@@ -11,7 +11,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within } from '@testing-library/react';
 import { map, values } from 'lodash';
 
-import { EditorMeetingRooms } from './editor-meeting-rooms';
+import { EditorEquipment } from './editor-equipment';
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
@@ -71,17 +71,15 @@ const setupFilledAppStatusStore = (items: Array<Resource>): void => {
 	}));
 };
 
-const MEETING_ROOM = 'Meeting room';
-
-describe('editor meeting rooms', () => {
+describe('editor equipment', () => {
 	test('The component is visible on screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
 
 		setupEmptyAppStatusStore();
-		setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
-		const meetingRoomSelector = await screen.findByText(MEETING_ROOM);
-		expect(meetingRoomSelector).toBeInTheDocument();
+		setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		const equipmentSelector = await screen.findByText('Equipment');
+		expect(equipmentSelector).toBeInTheDocument();
 	});
 
 	test('On single selection the redux store value is updated', async () => {
@@ -94,17 +92,17 @@ describe('editor meeting rooms', () => {
 				label,
 				value: label,
 				email: faker.internet.email(),
-				type: 'Location'
+				type: 'Equipment'
 			};
 		});
 		setupFilledAppStatusStore(items);
-		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
-		await user.click(screen.getByText(MEETING_ROOM));
+		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		await user.click(screen.getByText('Equipment'));
 
 		await user.click(screen.getByText(items[0].label));
 		const updatedEditor = values(store.getState().editor.editors)[0];
 
-		expect(updatedEditor.meetingRoom).toStrictEqual([items[0]]);
+		expect(updatedEditor.equipment).toStrictEqual([items[0]]);
 	});
 
 	test('On multiple selection the redux store value is updated', async () => {
@@ -117,21 +115,21 @@ describe('editor meeting rooms', () => {
 				label,
 				value: label,
 				email: faker.internet.email(),
-				type: 'Location'
+				type: 'Equipment'
 			};
 		});
 		setupFilledAppStatusStore(items);
-		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
-		await user.click(screen.getByText(MEETING_ROOM));
+		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		await user.click(screen.getByText('Equipment'));
 
 		await user.click(screen.getByText(items[0].label));
 		await user.click(screen.getByText(items[1].label));
 		const updatedEditor = values(store.getState().editor.editors)[0];
 
-		expect(updatedEditor.meetingRoom).toStrictEqual([items[0], items[1]]);
+		expect(updatedEditor.equipment).toStrictEqual([items[0], items[1]]);
 	});
 
-	test('On all selection the redux store value is updated with all rooms', async () => {
+	test('On all selection the redux store value is updated with all equipments', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
 		const items = map({ length: 3 }, () => {
@@ -141,20 +139,20 @@ describe('editor meeting rooms', () => {
 				label,
 				value: label,
 				email: faker.internet.email(),
-				type: 'Location'
+				type: 'Equipment'
 			};
 		});
 		setupFilledAppStatusStore(items);
-		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
-		await user.click(screen.getByText(MEETING_ROOM));
+		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		await user.click(screen.getByText('Equipment'));
 
 		await user.click(screen.getByText('All'));
 		const updatedEditor = values(store.getState().editor.editors)[0];
 
-		expect(updatedEditor.meetingRoom).toStrictEqual(items);
+		expect(updatedEditor.equipment).toStrictEqual(items);
 	});
 
-	test('clicking an already selected room will deselect it', async () => {
+	test('clicking an already selected equipment will deselect it', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
 		const items = map({ length: 3 }, () => {
@@ -164,22 +162,22 @@ describe('editor meeting rooms', () => {
 				label,
 				value: label,
 				email: faker.internet.email(),
-				type: 'Location'
+				type: 'Equipment'
 			};
 		});
 		setupFilledAppStatusStore(items);
-		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
-		await user.click(screen.getByText(MEETING_ROOM));
+		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		await user.click(screen.getByText('Equipment'));
 
 		await user.click(screen.getByText(items[0].label));
 		await user.click(within(screen.getByTestId('dropdown-popper-list')).getByText(items[0].label));
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
 
-		expect(updatedEditor.meetingRoom).toStrictEqual([]);
+		expect(updatedEditor.equipment).toStrictEqual([]);
 	});
 
-	test('default meeting room selection is visible on screen', async () => {
+	test('default equipment selection is visible on screen', async () => {
 		setupFoldersStore();
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const items = map({ length: 3 }, () => {
@@ -189,20 +187,20 @@ describe('editor meeting rooms', () => {
 				label,
 				value: label,
 				email: faker.internet.email(),
-				type: 'Location'
+				type: 'Equipment'
 			};
 		});
 		const event = mockedData.getEvent();
 		const invite = mockedData.getInvite({
 			context: {
-				attendees: map(items, (room) => ({
-					d: room.label,
+				attendees: map(items, (equipment) => ({
+					d: equipment.label,
 					ptst: 'AC',
 					role: 'REQ',
 					url: '',
 					rsvp: true,
-					a: room.email,
-					cutype: CALENDAR_RESOURCES.ROOM
+					a: equipment.email,
+					cutype: CALENDAR_RESOURCES.RESOURCE
 				}))
 			},
 			event
@@ -214,7 +212,7 @@ describe('editor meeting rooms', () => {
 		});
 
 		setupFilledAppStatusStore(items);
-		setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
+		setupTest(<EditorEquipment editorId={editor.id} />, { store });
 
 		expect(
 			screen.getByText(`${items[0].label}, ${items[1].label}, ${items[2].label}`)

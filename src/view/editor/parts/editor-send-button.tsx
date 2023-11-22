@@ -20,6 +20,7 @@ import {
 	selectEditor,
 	selectEditorAttendees,
 	selectEditorDisabled,
+	selectEditorEquipment,
 	selectEditorIsNew,
 	selectEditorMeetingRoom,
 	selectEditorOptionalAttendees,
@@ -33,6 +34,8 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const title = useAppSelector(selectEditorTitle(editorId));
 	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
 	const meetingRooms = useAppSelector(selectEditorMeetingRoom(editorId));
+	const equipments = useAppSelector(selectEditorEquipment(editorId));
+
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
 	const createModal = useContext(ModalManagerContext);
@@ -46,11 +49,15 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const isDisabled = useMemo(
 		() =>
 			disabled?.sendButton ||
-			(!attendees?.length && !optionalAttendees?.length && !meetingRooms?.length) ||
+			(!attendees?.length &&
+				!optionalAttendees?.length &&
+				!meetingRooms?.length &&
+				!equipments?.length) ||
 			!title?.length,
 		[
 			attendees?.length,
 			disabled?.sendButton,
+			equipments?.length,
 			meetingRooms?.length,
 			optionalAttendees?.length,
 			title?.length

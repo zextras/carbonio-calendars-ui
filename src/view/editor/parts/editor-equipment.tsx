@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+ * SPDX-FileCopyrightText: 2023 Zextras <https://www.zextras.com>
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
@@ -10,26 +10,27 @@ import { compact, find, map, xorBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorDisabled, selectEditorMeetingRoom } from '../../../store/selectors/editor';
-import { editEditorMeetingRoom } from '../../../store/slices/editor-slice';
-import { useMeetingRooms } from '../../../store/zustand/hooks';
+import { selectEditorEquipment, selectEditorDisabled } from '../../../store/selectors/editor';
+import { editEditorEquipment } from '../../../store/slices/editor-slice';
+import { useEquipments } from '../../../store/zustand/hooks';
 import { Resource } from '../../../types/editor';
 
-export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactElement | null => {
+export const EditorEquipment = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
-	const disabled = useAppSelector(selectEditorDisabled(editorId));
-	const meetingRoom = useAppSelector(selectEditorMeetingRoom(editorId));
+	const equipments = useEquipments();
+
+	const equipment = useAppSelector(selectEditorEquipment(editorId));
 	const [selection, setSelection] = useState<Array<Resource> | undefined>(undefined);
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
-	const meetingRooms = useMeetingRooms();
 
 	const onChange = useCallback(
 		(e) => {
 			if (e) {
 				if (e.length > 0) {
-					dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: e }));
+					dispatch(editEditorEquipment({ id: editorId, equipment: e }));
 				} else {
-					dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: [] }));
+					dispatch(editEditorEquipment({ id: editorId, equipment: [] }));
 				}
 			}
 			setSelection(e);
@@ -38,21 +39,21 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 	);
 
 	useEffect(() => {
-		if (meetingRoom && meetingRoom?.length > 0) {
+		if (equipment && equipment?.length > 0) {
 			const selected = compact(
-				map(meetingRoom, (room) => find(meetingRooms, (r) => room.email === r.email))
+				map(equipment, (eq) => find(equipments, (r) => eq.email === r.email))
 			);
 			if (selected.length > 0 && xorBy(selected, selection, 'id')?.length > 0) {
 				setSelection(selected);
 			}
 		}
-	}, [meetingRoom, meetingRooms, selection]);
+	}, [equipment, equipments, selection]);
 
-	return meetingRooms ? (
+	return equipments ? (
 		<Select
-			items={meetingRooms}
+			items={equipments}
 			background={'gray5'}
-			label={t('label.meeting_room', 'Meeting room')}
+			label={t('label.equipment', 'Equipment')}
 			onChange={onChange}
 			disabled={disabled?.meetingRoom}
 			selection={selection}
