@@ -26,7 +26,8 @@ import {
 	updateEditorReducer,
 	newEditorReducer,
 	editSenderReducer,
-	editEditorMeetingRoomReducer
+	editEditorMeetingRoomReducer,
+	editEditorEquipmentReducer
 } from '../reducers/editor-reducers';
 
 const initialState: EditorSlice = {
@@ -52,6 +53,7 @@ export const editorSlice = createSlice({
 		editEditorClass: editEditorClassReducer,
 		editEditorDate: editEditorDateReducer,
 		editEditorMeetingRoom: editEditorMeetingRoomReducer,
+		editEditorEquipment: editEditorEquipmentReducer,
 		editEditorText: editEditorTextReducer,
 		editEditorAllDay: editEditorAllDayReducer,
 		editEditorTimezone: editEditorTimezoneReducer,
@@ -70,6 +72,7 @@ export const {
 	editEditorLocation,
 	editEditorRoom,
 	editEditorMeetingRoom,
+	editEditorEquipment,
 	editEditorAttendees,
 	editEditorOptionalAttendees,
 	editEditorDisplayStatus,

@@ -15,6 +15,7 @@ import { EditorCalendarSelector } from './parts/editor-calendar-selector';
 import { EditorComposer } from './parts/editor-composer';
 import { EditorDatePicker } from './parts/editor-date-picker';
 import { EditorDropZone } from './parts/editor-dropzone';
+import { EditorEquipment } from './parts/editor-equipment';
 import { EditorFreeBusySelector } from './parts/editor-free-busy-selector';
 import { EditorLocation } from './parts/editor-location';
 import { EditorMeetingRooms } from './parts/editor-meeting-rooms';
@@ -53,6 +54,9 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
 						<EditorMeetingRooms editorId={editorId} />
+					</Row>
+					<Row height="fit" width="fill" padding={{ top: 'large' }}>
+						<EditorEquipment editorId={editorId} />
 					</Row>
 					<EditorVirtualRoom editorId={editorId} />
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>

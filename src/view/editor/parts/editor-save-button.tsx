@@ -19,6 +19,7 @@ import {
 	selectEditor,
 	selectEditorAttendees,
 	selectEditorDisabled,
+	selectEditorEquipment,
 	selectEditorIsNew,
 	selectEditorMeetingRoom,
 	selectEditorTitle
@@ -35,6 +36,8 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
 	const meetingRoomLength = useAppSelector(selectEditorMeetingRoom(editorId))?.length;
+	const equipmentsLength = useAppSelector(selectEditorEquipment(editorId))?.length;
+
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 
@@ -62,20 +65,23 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 				true
 			);
 		} else {
-			onSave({ draft: !!attendeesLength || !!meetingRoomLength, isNew, editor, dispatch }).then(
-				({ response }) => {
-					createSnackbar({
-						key: `calendar-moved-root`,
-						replace: true,
-						type: response ? 'info' : 'warning',
-						hideButton: true,
-						label: !response
-							? t('label.error_try_again', 'Something went wrong, please try again')
-							: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
-						autoHideTimeout: 3000
-					});
-				}
-			);
+			onSave({
+				draft: !!attendeesLength || !!meetingRoomLength || !!equipmentsLength,
+				isNew,
+				editor,
+				dispatch
+			}).then(({ response }) => {
+				createSnackbar({
+					key: `calendar-moved-root`,
+					replace: true,
+					type: response ? 'info' : 'warning',
+					hideButton: true,
+					label: !response
+						? t('label.error_try_again', 'Something went wrong, please try again')
+						: t('message.snackbar.calendar_edits_saved', 'Edits saved correctly'),
+					autoHideTimeout: 3000
+				});
+			});
 		}
 	}, [
 		editor,
@@ -84,6 +90,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 		editorId,
 		attendeesLength,
 		meetingRoomLength,
+		equipmentsLength,
 		dispatch,
 		createSnackbar,
 		t

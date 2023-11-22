@@ -54,7 +54,14 @@ export type EditorProps = {
 	editorId: string;
 	expanded?: boolean;
 };
-export type MeetingRoom = { id: string; label: string; value: string; email: string; type: string };
+
+export type Resource = {
+	id: string;
+	label: string;
+	value: string;
+	email: string;
+	type: string;
+};
 
 type DisabledField =
 	| 'title'
@@ -78,7 +85,9 @@ type DisabledField =
 	| 'allDay'
 	| 'reminder'
 	| 'recurrence'
-	| 'composer';
+	| 'composer'
+	| 'equipment'
+	| 'meetingRoom';
 
 export type Editor = {
 	disabled: Partial<{
@@ -101,7 +110,8 @@ export type Editor = {
 	sender?: any;
 	title?: string;
 	location?: string;
-	meetingRoom?: Array<MeetingRoom> | undefined;
+	meetingRoom?: Array<Resource> | undefined;
+	equipment?: Array<Resource> | undefined;
 	room?: {
 		label: string;
 		link: string;
