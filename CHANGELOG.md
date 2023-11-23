@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.6.3...v1.7.0) (2023-11-23)
+
+
+### Features
+
+* editor equipments ([21ea8ca](https://github.com/zextras/carbonio-calendars-ui/commit/21ea8ca618df504227235b2d69f62cc4954d6fcf))
+* enable drag and drop of contacts in editor ([94a267d](https://github.com/zextras/carbonio-calendars-ui/commit/94a267d8248a421237de9d7a5030943ce5bbc43e))
+* meeting rooms ([fc8ce71](https://github.com/zextras/carbonio-calendars-ui/commit/fc8ce716f4442aca0562600fe2e7e322ade425a3))
+* showing calendars' owners inside editor calendar selector ([14d2796](https://github.com/zextras/carbonio-calendars-ui/commit/14d279660273b1c5f95085fd623c804d38c36224))
+
+
+### Bug Fixes
+
+* appointment displayer supports plain text description ([e99f830](https://github.com/zextras/carbonio-calendars-ui/commit/e99f8309ca57c68cb4a168deabdb0a92bd4cd89b))
+* distribution lists are recognized when user try to edit an appointment  ([1f3f496](https://github.com/zextras/carbonio-calendars-ui/commit/1f3f4965793bbc7eba498bdc6ad5571b6346f4fc))
+* equipments are visibile inside the views ([b43de25](https://github.com/zextras/carbonio-calendars-ui/commit/b43de252b94761192d621120541e6c69d264e67d))
+* meeting room select updates properly ([baf9d61](https://github.com/zextras/carbonio-calendars-ui/commit/baf9d61ec1a139c0ccfc44c7e04cc44688411c45))
+* modify of a series will open an editor with correct start and end dates ([#357](https://github.com/zextras/carbonio-calendars-ui/issues/357)) ([16747ba](https://github.com/zextras/carbonio-calendars-ui/commit/16747bafaa3e56408a99b78382dda0ff6621a164))
+* remove chip custom component from editor attendees field ([bec8abd](https://github.com/zextras/carbonio-calendars-ui/commit/bec8abd080befb0f12526dcf1c52ff9ad803bce4))
+* removed getBridgedFunction from snackbar ([34fe3be](https://github.com/zextras/carbonio-calendars-ui/commit/34fe3be1fba4f40df4fc30ad278656dbeb49d802))
+* toolbar components style and spacing ([a2358f9](https://github.com/zextras/carbonio-calendars-ui/commit/a2358f97f755bdd542ae60d298f630a823b58e67))
+* users can create or modify appointments using identities ([a61206c](https://github.com/zextras/carbonio-calendars-ui/commit/a61206c8ea5466db9a0e0f40a5af6efec088f209))
+
 ### [1.6.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.6.2...v1.6.3) (2023-11-09)
 
 ### [1.6.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.6.1...v1.6.2) (2023-11-06)
