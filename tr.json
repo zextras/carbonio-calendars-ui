@@ -15,7 +15,8 @@
         "send_edit": "Gönder Düzenle",
         "reset": "Sıfırla",
         "search": "Ara",
-        "show_original": "Orjinali göster"
+        "show_original": "Orjinali göster",
+        "Trash_already_empty": "çöp kutusu zaten boş"
     },
     "edit_share_properties": "Paylaşım özelliklerini düzenle",
     "button": {
@@ -120,7 +121,8 @@
             "att_err_adding": "Ekler eklenirken bir sorun oluştu, lütfen tekrar deneyin",
             "all_link_copied": "Genel bağlantı başarıyla kopyalandı",
             "all_att_added": "Ekler başarıyla eklendi",
-            "series_deleted_no_notification": "Seriler çöp kutusuna taşındı."
+            "series_deleted_no_notification": "Seriler çöp kutusuna taşındı.",
+            "shared_calendar_removed": "Takvim başarıyla kaldırıldı"
         },
         "are_organizer": "organize eden",
         "meeting_canceled": "Bu toplantı iptal edildi",
@@ -181,7 +183,7 @@
         "url_copied": "{{title}} kopyalandı",
         "tag_applied": "{{tag}} etiketi uygulandı",
         "tag_removed": "{{tag}} etiketi kaldırıldı",
-        "email_copied_to_clipboard": "Eposta panoya kopyalandı."
+        "email_copied_to_clipboard": "E-posta panoya kopyalandı."
     },
     "label": {
         "invitation_not_sent": "Katılımcılara henüz davet göndermediniz",
@@ -415,7 +417,8 @@
         "revoke": "Erişimi iptal et",
         "resend": "Bu paylaşım hakkında e-posta bildirimi gönder",
         "edit": "Paylaşım özelliklerini düzenle",
-        "virtual_room": "Sanal Oda"
+        "virtual_room": "Sanal Oda",
+        "folder_linked_status": "Benimle bağlantılı"
     },
     "revoke_with_custom_message": "Özel bildirim göndererek erişim yetkisini kaldır",
     "settings": {
@@ -483,12 +486,12 @@
     "share": {
         "label": {
             "send_notification": "Bu paylaşım hakkında bildirim gönder",
-            "allow_to_see_private_appt": "Kullanıcı(lar)ın benim özel randevularımı görmesine izin ver"
+            "allow_to_see_private_appt": "Kullanıcı(lar)ın özel randevuların ayrıntılarını görmesine izin ver"
         },
         "options": {
             "share_calendar_role": {
-                "admin": "Admin (Görüntüler, düzenler, ekler, kaldırır ve yönetir)",
-                "manager": "Yönetim (Görüntüler, düzenler, ekler ve kaldırır)",
+                "admin": "Editör (Görüntüler, düzenler, ekler ve siler, ancak randevuları kabul edemez veya yeniden paylaşamaz)                ",
+                "manager": "Yönetici (randevuları görüntüler, düzenler, ekler, siler ve yeniden paylaşabilir)",
                 "viewer": "Görüntüleme (Görüntüler)",
                 "none": "Yok"
             },
@@ -544,7 +547,7 @@
         "second_before": "{{count}} saniye önce",
         "second_before_plural": "{{count}} saniye önce"
     },
-    "remove_from_this_list": "Bu listeden kaldır",
+    "remove_from_this_list": "Paylaşılan takvimi kaldır",
     "revoke_access": "Erişimi iptal et",
     "revoke_without_custom_message": "Standart bildirim göndererek erişim yetkisini kaldır",
     "revoke_without_notification": "Bildirim göndermeden erişim yetkisini kaldır",
@@ -668,5 +671,9 @@
     "mountpoint_error": "Paylaşılan Takvimler bölümüne paylaşım eklenemedi",
     "mountpoint_warning": "{{total}} paylaşılan takvimden {{failed}} takvim Paylaşılan Takvimler bölümüne eklenemedi",
     "attendee_unavailable": "Seçilen etkinlik saatinde katılımcı yok",
-    "attendees_unavailable": "Seçilen etkinlik saatinde bir veya daha fazla katılımcı yok"
+    "attendees_unavailable": "Seçilen etkinlik saatinde bir veya daha fazla katılımcı yok",
+    "new_appointment": "Yeni Randevu",
+    "creation_timezone_tooltip": "Oluşturma saat dilimindeki tarih ve saat:",
+    "local_timezone_tooltip": "Yerel saat dilimindeki tarih ve saat:",
+    "private_info_tooltip": "Bir takvimi paylaşırken, diğer kullanıcılar özel olarak işaretlenenler dışında randevu ayrıntılarınızı (başlık, açıklama ve katılımcılar) görebilir. Bu durumda diğer kullanıcılar serbest/meşgul zamanınızı görebilir fakat randevu detaylarını göremezler. Diğer kullanıcıların, özel randevularınızın detaylarını da görüntülemesini ister misiniz?"
 }
