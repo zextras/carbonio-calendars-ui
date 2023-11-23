@@ -627,6 +627,7 @@ describe('normalize soap message from editor', () => {
 					}
 				]);
 			});
+			test.todo('user send the message from the shared account identity');
 		});
 	});
 });
