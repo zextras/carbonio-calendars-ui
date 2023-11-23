@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.6.3",
+	"version": "1.7.0",
 	"description": "Calendars module",
 	"main": "src/app.jsx",
 	"engines": {
@@ -82,7 +82,7 @@
 		"@reduxjs/toolkit": "^1.9.3",
 		"@testing-library/react-hooks": "^8.0.1",
 		"@zextras/carbonio-design-system": "^4.0.0",
-		"@zextras/carbonio-shell-ui": "^4.0.1",
+		"@zextras/carbonio-shell-ui": "^5.0.0",
 		"@zextras/carbonio-ui-preview": "^1.2.2",
 		"core-js": "^3.27.2",
 		"date-arithmetic": "^4.1.0",

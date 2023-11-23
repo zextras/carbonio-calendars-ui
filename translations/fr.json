@@ -15,7 +15,8 @@
         "send_edit": "Envoyer la modification",
         "search": "Rechercher",
         "reset": "Réinitialisation",
-        "show_original": "Voir l'original"
+        "show_original": "Voir l'original",
+        "Trash_already_empty": "la corbeille est déjà vide"
     },
     "add": "Ajouter",
     "administer": "Administrer",
@@ -320,7 +321,8 @@
             "att_err_adding": "Il semble y avoir un problème lors de l'ajout de pièces jointes, veuillez réessayer",
             "all_link_copied": "Le lien public a été copié avec succès",
             "all_att_added": "Les pièces jointes ont été ajoutées avec succès",
-            "series_deleted_no_notification": "La série a été déplacée à la corbeille."
+            "series_deleted_no_notification": "La série a été déplacée à la corbeille.",
+            "shared_calendar_removed": "Calendrier enlevé avec succès"
         },
         "somebody_is_organizer": "<strong>{{somebody}}</strong> est l'organisateur",
         "sure_to_delete_all_occurences_appointment": "Êtes-vous sûr de vouloir supprimer toutes les occurrences de ce rendez-vous ?",
@@ -509,22 +511,22 @@
         "url_copied": "{{title}} copié",
         "tag_applied": "Étiquette {{tag}} appliquée",
         "tag_removed": "L'étiquette {{tag}} a été supprimée",
-        "email_copied_to_clipboard": "l'email a été copié dans le presse-papier."
+        "email_copied_to_clipboard": "L'email a été copié dans le presse papier."
     },
     "share_invite_resent": "Invitation à partager envoyée",
     "resend_mail_notification_about_this_share": "Envoyer une notification par email à propos de ce partage",
     "share": {
         "label": {
             "send_notification": "Envoyer une notification concernant ce partage",
-            "allow_to_see_private_appt": "Autoriser un ou plusieurs utilisateurs à voir mes rendez-vous privés"
+            "allow_to_see_private_appt": "Autoriser un ou plusieurs utilisateurs à voir les détails des rendez-vous privés"
         },
         "note": {
             "share_note": "Le message standard affiche votre nom, le nom de l'élément partagé, les autorisations accordées aux destinataires et les informations de connexion."
         },
         "options": {
             "share_calendar_role": {
-                "admin": "Admin (peut voir, modifier, ajouter, supprimer et administrer)",
-                "manager": "Gestionnaire (peut voir, modifier, ajouter et supprimer)",
+                "admin": "Éditeur (peut voir, modifier, ajouter, supprimer, mais ne peut pas accepter ou repartager des rendez-vous)                ",
+                "manager": "Gestionnaire (peut voir, modifier, ajouter, supprimer, accepter et repartager les rendez-vous)",
                 "viewer": "Visionneur (peut voir)",
                 "none": "Aucun"
             },
@@ -556,7 +558,8 @@
         "edit": "Modifier les propriétés de partage",
         "resend": "Envoyer par email les notifications à propos de ce partage",
         "revoke": "Révoquer les accès",
-        "virtual_room": "Salle virtuelle"
+        "virtual_room": "Salle virtuelle",
+        "folder_linked_status": "Lié à moi"
     },
     "type": "Type",
     "workflow": "Flux de travail",
@@ -574,7 +577,7 @@
         }
     },
     "read": "Lire",
-    "remove_from_this_list": "Retirer de cette liste",
+    "remove_from_this_list": "Retirer le calendrier partagé",
     "revoke_access": "Révoquer l'accès",
     "revoke_without_custom_message": "Révoquer l'accès en envoyant une notification standard",
     "revoke_without_notification": "Révoquer l'accès sans envoyer de notification",
@@ -691,5 +694,9 @@
     "mountpoint_success": "Le partage a été ajouté avec succès à la section Calendriers partagés",
     "mountpoint_warning": "{{failed}} sur {{total}} calendriers partagés n'ont pas pu être ajouté aux Calendriers partagés",
     "attendees_unavailable": "Un ou plusieurs participants ne sont pas disponibles à l'heure de l'évènement",
-    "attendee_unavailable": "Le participant n'est pas disponible à l'heure de l'évènement"
+    "attendee_unavailable": "Le participant n'est pas disponible à l'heure de l'évènement",
+    "creation_timezone_tooltip": "Date et heure du fuseau horaire de création :",
+    "local_timezone_tooltip": "Date et heure du fuseau horaire local :",
+    "new_appointment": "Nouveau rendez-vous",
+    "private_info_tooltip": "Lorsque vous partagez un calendrier, les autres utilisateurs peuvent voir les détails de votre rendez-vous (titre, description et participants), à l'exception de ceux qui sont marqués comme étant privés. Dans ce cas, les autres utilisateurs verront votre temps libre/occupé mais pas les détails du rendez-vous. Souhaitez-vous que les autres utilisateurs puissent également voir les détails de vos rendez-vous privés ?"
 }

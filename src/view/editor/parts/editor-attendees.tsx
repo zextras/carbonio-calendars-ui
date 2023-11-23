@@ -274,7 +274,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.optionals', 'Optionals')}
 								onChange={onOptionalsChange}
 								defaultValue={optionalAttendees}
-								dragAndDropEnabled
 								disabled={disabled?.optionalAttendees}
 							/>
 						) : (
