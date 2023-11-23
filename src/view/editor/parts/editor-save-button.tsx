@@ -11,7 +11,6 @@ import {
 	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 
 import { onSave } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
@@ -20,11 +19,12 @@ import {
 	selectEditor,
 	selectEditorAttendees,
 	selectEditorDisabled,
+	selectEditorEquipment,
 	selectEditorIsNew,
+	selectEditorMeetingRoom,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 import { EditorProps } from '../../../types/editor';
-import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
 import { SeriesEditWarningModal } from '../../modals/series-edit-warning-modal';
 
 export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
@@ -35,13 +35,14 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
+	const meetingRoomLength = useAppSelector(selectEditorMeetingRoom(editorId))?.length;
+	const equipmentsLength = useAppSelector(selectEditorEquipment(editorId))?.length;
+
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const { action } = useParams<{ action: string }>();
-
 	const onClick = useCallback(() => {
-		if (editor.isSeries && action === EventActionsEnum.EDIT && !editor.isInstance) {
+		if (editor.isSeries && !isNew && !editor.isInstance) {
 			const closeModal = createModal(
 				{
 					size: 'large',
@@ -64,7 +65,12 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 				true
 			);
 		} else {
-			onSave({ draft: !!attendeesLength, isNew, editor, dispatch }).then(({ response }) => {
+			onSave({
+				draft: !!attendeesLength || !!meetingRoomLength || !!equipmentsLength,
+				isNew,
+				editor,
+				dispatch
+			}).then(({ response }) => {
 				createSnackbar({
 					key: `calendar-moved-root`,
 					replace: true,
@@ -77,7 +83,18 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 				});
 			});
 		}
-	}, [editor, action, createModal, isNew, editorId, attendeesLength, dispatch, createSnackbar, t]);
+	}, [
+		editor,
+		isNew,
+		createModal,
+		editorId,
+		attendeesLength,
+		meetingRoomLength,
+		equipmentsLength,
+		dispatch,
+		createSnackbar,
+		t
+	]);
 
 	return (
 		<Button

@@ -5,11 +5,11 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { Container, Padding, Select, SelectItem, Text } from '@zextras/carbonio-design-system';
+import { Select } from '@zextras/carbonio-design-system';
 import { FOLDERS, LinkFolder, ROOT_NAME, t, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { filter, find, map, reject } from 'lodash';
 
-import LabelFactory, { Square } from './select-label-factory';
+import LabelFactory, { ItemFactory } from './select-label-factory';
 import { useFoldersArray } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
@@ -22,7 +22,6 @@ type CalendarSelectorProps = {
 	onCalendarChange: (calendar: Folder) => void;
 	label?: string;
 	excludeTrash?: boolean;
-	updateAppTime?: boolean;
 	showCalWithWritePerm?: boolean;
 	disabled?: boolean;
 };
@@ -32,7 +31,6 @@ export const CalendarSelector = ({
 	onCalendarChange,
 	label,
 	excludeTrash = false,
-	updateAppTime = false,
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
@@ -65,20 +63,24 @@ export const CalendarSelector = ({
 				const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
 				const labelName = hasId(cal, FOLDERS.CALENDAR) ? t('label.calendar', 'Calendar') : cal.name;
 				return {
+					...cal,
 					label: labelName,
 					value: cal.id,
-					color: color.color || 0,
+					color: color.color,
 					customComponent: (
-						<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
-							<Square color={color.color || 'gray6'} />
-							<Padding left="small">
-								<Text>{labelName}</Text>
-							</Padding>
-						</Container>
+						<ItemFactory
+							disabled={disabled ?? false}
+							absFolderPath={cal.absFolderPath}
+							color={color.color}
+							isLink={cal.isLink}
+							label={labelName}
+							acl={cal.acl}
+							id={cal.id}
+						/>
 					)
-				} as SelectItem;
+				};
 			}),
-		[requiredCalendars]
+		[disabled, requiredCalendars]
 	);
 
 	const defaultCalendarSelection = useMemo(() => {
@@ -107,9 +109,10 @@ export const CalendarSelector = ({
 			label={label || t('label.calendar', 'Calendar')}
 			onChange={onSelectedCalendarChange}
 			items={calendarItems}
+			maxWidth={'fill'}
 			defaultSelection={defaultCalendarSelection}
 			disablePortal
-			disabled={updateAppTime || disabled}
+			disabled={disabled}
 			LabelFactory={LabelFactory}
 		/>
 	) : null;

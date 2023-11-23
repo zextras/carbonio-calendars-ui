@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
 import React, { FC, ReactElement, useCallback } from 'react';
+
 import { Container, ChipInput, ChipItem } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 
 type ComponentProps = {
 	compProps: {
@@ -40,7 +41,10 @@ const KeywordRow: FC<ComponentProps> = ({ compProps }): ReactElement => {
 						placeholder={t('label.keywords', 'Keywords')}
 						background="gray5"
 						value={otherKeywords}
-						confirmChipOnSpace={false}
+						separators={[
+							{ key: 'Enter', ctrlKey: false },
+							{ key: ',', ctrlKey: false }
+						]}
 						onChange={keywordOnChange}
 						onAdd={keywordChipOnAdd}
 					/>

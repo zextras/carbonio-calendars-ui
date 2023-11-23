@@ -12,7 +12,11 @@ import { closeBoard, useBoard, t } from '@zextras/carbonio-shell-ui';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectEditorAttendees } from '../../store/selectors/editor';
+import {
+	selectEditorAttendees,
+	selectEditorEquipment,
+	selectEditorMeetingRoom
+} from '../../store/selectors/editor';
 import { Editor } from '../../types/editor';
 
 type ModalProps = {
@@ -43,6 +47,8 @@ export const SeriesEditWarningModal = ({
 
 	const board = useBoard();
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
+	const meetingRoomLength = useAppSelector(selectEditorMeetingRoom(editorId))?.length;
+	const equipmentsLength = useAppSelector(selectEditorEquipment(editorId))?.length;
 	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
 
@@ -65,7 +71,12 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  })
-			: action({ draft: !attendeesLength, isNew, editor, dispatch }).then(({ response }: any) => {
+			: action({
+					draft: !!attendeesLength || !!meetingRoomLength || !!equipmentsLength,
+					isNew,
+					editor,
+					dispatch
+			  }).then(({ response }: any) => {
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
@@ -78,7 +89,18 @@ export const SeriesEditWarningModal = ({
 					});
 					onClose();
 			  });
-	}, [action, attendeesLength, createSnackbar, dispatch, editor, isNew, isSending, onClose]);
+	}, [
+		action,
+		attendeesLength,
+		createSnackbar,
+		dispatch,
+		editor,
+		equipmentsLength,
+		isNew,
+		isSending,
+		meetingRoomLength,
+		onClose
+	]);
 
 	const onDiscard = useCallback(() => {
 		onClose();

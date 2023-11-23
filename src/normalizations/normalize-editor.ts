@@ -10,11 +10,11 @@ import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
-import { PREFS_DEFAULTS } from '../constants';
+import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
 import { DateType } from '../types/event';
-import { Invite } from '../types/store/invite';
+import { Attendee, Invite } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -29,6 +29,18 @@ export const getVirtualRoom = (xprop: any): { label: string; link: string } | un
 	return undefined;
 };
 
+const getMeetingRooms = (attendees: Array<Attendee>): Array<{ email: string; label: string }> =>
+	map(filter(attendees, ['cutype', CALENDAR_RESOURCES.ROOM]), (at) => ({
+		label: at.d,
+		email: at.a
+	}));
+
+const getEquipments = (attendees: Array<Attendee>): Array<{ email: string; label: string }> =>
+	map(filter(attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]), (at) => ({
+		label: at.d,
+		email: at.a
+	}));
+
 const getAttendees = (attendees: any[], role: string): any[] =>
 	map(filter(attendees, ['role', role]), (at) =>
 		omitBy(
@@ -39,7 +51,9 @@ const getAttendees = (attendees: any[], role: string): any[] =>
 				fullName: at?.d,
 				id: `${at?.a} ${at.d}`,
 				label: at?.d,
-				lastName: undefined
+				lastName: undefined,
+				isGroup: at.isGroup,
+				exp: at.exp
 			},
 			isNil
 		)
@@ -99,9 +113,11 @@ const setEditorDate = ({
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
-			const convertedStartDate = getLocalTime(invite?.start?.u, invite?.tz);
-			const convertedEndDate = getLocalTime(invite?.end?.u, invite?.tz);
-			if (invite.tz && isTimezoneDifferentFromLocal(invite.start.u, invite.tz)) {
+			const start = invite?.start?.u ?? moment(invite?.start?.d);
+			const end = invite?.end?.u ?? moment(invite?.end?.d);
+			const convertedStartDate = getLocalTime(start, invite?.tz);
+			const convertedEndDate = getLocalTime(end, invite?.tz);
+			if (invite.tz && isTimezoneDifferentFromLocal(start, invite.tz)) {
 				return {
 					start: event?.allDay
 						? moment(convertedStartDate)?.startOf('date').valueOf()
@@ -110,12 +126,8 @@ const setEditorDate = ({
 				};
 			}
 			return {
-				start: event?.allDay
-					? moment(invite?.start?.u)?.startOf('date').valueOf()
-					: moment(invite?.start?.u).valueOf(),
-				end: event?.allDay
-					? moment(invite?.end?.u)?.endOf('date').valueOf()
-					: moment(invite?.end?.u).valueOf()
+				start: event?.allDay ? moment(start)?.startOf('date').valueOf() : moment(start).valueOf(),
+				end: event?.allDay ? moment(end)?.endOf('date').valueOf() : moment(end).valueOf()
 			};
 		}
 		const convertedStartDate = getLocalTime(event.start, invite?.tz);
@@ -203,6 +215,8 @@ export const normalizeEditor = ({
 				exceptId: invite?.exceptId,
 				title: event?.title,
 				location: event?.resource?.location,
+				meetingRoom: getMeetingRooms(invite.attendees),
+				equipment: getEquipments(invite.attendees),
 				room: getVirtualRoom(invite.xprop),
 				attendees: getAttendees(invite.attendees, 'REQ'),
 				optionalAttendees: getAttendees(invite.attendees, 'OPT'),

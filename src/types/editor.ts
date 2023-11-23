@@ -9,8 +9,8 @@ export type CalendarEditor = {
 	id: string;
 	name: string;
 	rgb?: string;
-	color?: number | undefined;
-	owner: string | undefined;
+	color?: number;
+	owner?: string;
 };
 
 export type Count = { count: { num: number } };
@@ -55,6 +55,14 @@ export type EditorProps = {
 	expanded?: boolean;
 };
 
+export type Resource = {
+	id: string;
+	label: string;
+	value: string;
+	email: string;
+	type: string;
+};
+
 type DisabledField =
 	| 'title'
 	| 'location'
@@ -77,7 +85,9 @@ type DisabledField =
 	| 'allDay'
 	| 'reminder'
 	| 'recurrence'
-	| 'composer';
+	| 'composer'
+	| 'equipment'
+	| 'meetingRoom';
 
 export type Editor = {
 	disabled: Partial<{
@@ -100,6 +110,8 @@ export type Editor = {
 	sender?: any;
 	title?: string;
 	location?: string;
+	meetingRoom?: Array<Resource> | undefined;
+	equipment?: Array<Resource> | undefined;
 	room?: {
 		label: string;
 		link: string;

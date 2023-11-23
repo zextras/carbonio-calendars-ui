@@ -5,6 +5,7 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isNil, omitBy } from 'lodash';
+
 import { SearchRejectedType, searchRequest, SearchReturnType } from '../../soap/search-request';
 import { SearchRequestProps } from '../../types/soap/soap-actions';
 import { AppointmentsSlice } from '../../types/store/store';

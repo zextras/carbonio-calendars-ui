@@ -5,8 +5,7 @@
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
-
-import { generateParticipantInformation } from '../store/actions/new-create-appointment';
+import { generateParticipantInformation } from '../normalizations/normalize-soap-message-from-editor';
 
 export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promise<any> =>
 	soapFetch('CounterAppointment', {

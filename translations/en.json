@@ -166,6 +166,7 @@
         "end_date": "End date",
         "end_date_and_time": "End date and time",
         "entire_serires": "ENTIRE SERIES",
+        "equipment": "Equipment",
         "error_try_again": "Something went wrong, please try again",
         "event_title": "Event title",
         "every": "Every",
@@ -188,6 +189,7 @@
         "loading_results": "Loading Results…",
         "location": "Location",
         "maybe": "maybe",
+        "meeting_room": "Meeting room",
         "month": "Month",
         "months": "Months",
         "move": "Move",
@@ -395,6 +397,9 @@
     "mountpoint_success": "The share has been added successfully to the Shared Calendars section",
     "mountpoint_warning": "{{failed}} out of {{total}} shared calendars couldn't be added to the Shared Calendars",
     "new_appointment": "New appointment",
+    "next_day": "Next day",
+    "next_month": "Next month",
+    "next_week": "Next week",
     "no_title": "",
     "owner": "Owner",
     "participants": {
@@ -427,6 +432,9 @@
     "preview": {
         "close": "Close Preview"
     },
+    "previous_day": "Previous day",
+    "previous_month": "Previous month",
+    "previous_week": "Previous week",
     "private_info_tooltip": "When sharing a calendar, other users can see your appointment details (title, description, and attendees) except for the ones marked as private. In this case, other users will see your free/busy time but not the appointment details. Would you like other users to display also your private appointments' detail?",
     "read": "Read",
     "recurrent_in_allday": "You cannot drag a recurrent appointment in a all day slot",
@@ -659,7 +667,7 @@
         "add_attachments": "Add attachments",
         "calendar_sharing_status": "Shared with {{count}} people",
         "calendar_sharing_status_one": "Shared with 1 person",
-        "calendar_sharing_status_plural": "",
+        "calendar_sharing_status_plural": "Shared with {{count}} people",
         "chat": "Equipment",
         "chat_room": "Virtual Room's link",
         "copy_ics_url": "Copy ICS url",
@@ -670,6 +678,7 @@
         "equipment": "Equipment",
         "folder_linked_status": "Linked to me",
         "location": "Location",
+        "meetingRooms": "MeetingRooms",
         "resend": "Send mail notification about this share",
         "revoke": "Revoke access",
         "virtual_room": "Virtual Room"

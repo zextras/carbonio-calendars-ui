@@ -6,6 +6,8 @@
 import moment from 'moment';
 import { create } from 'zustand';
 
+import { Resource } from '../../types/editor';
+
 export type SetRange = ({ start, end }: { start: number; end: number }) => void;
 export type CalendarRange = {
 	start: number;
@@ -18,12 +20,14 @@ export type AppState = {
 	summaryViewCounter: number;
 	range: CalendarRange;
 	setRange: SetRange;
+	resources: Array<Resource> | undefined;
 };
 
 export const useAppStatusStore = create<AppState>((set) => ({
 	calendarView: '',
 	date: new Date(),
 	summaryViewCounter: 0,
+	resources: undefined,
 	range: {
 		start: moment().subtract('7', 'days').valueOf(),
 		end: moment().add('15', 'days').valueOf()

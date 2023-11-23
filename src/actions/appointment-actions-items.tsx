@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { find } from 'lodash';
 
 import {
 	acceptAsTentative,
@@ -16,6 +17,7 @@ import {
 	moveToTrash,
 	openAppointment
 } from './appointment-actions-fn';
+import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { ActionsContext, AppointmentActionsItems } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
@@ -142,23 +144,25 @@ export const editEventItem = ({
 	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
-}): AppointmentActionsItems => ({
-	id: EventActionsEnum.EDIT,
-	icon: 'Edit2Outline',
-	label: t('label.edit', 'Edit'),
-	disabled:
-		// if the event is on trash
-		hasId(event.resource.calendar, FOLDERS.TRASH) ||
-		// if user is owner of the calendar but he is not the organizer
-		(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
-		// if it is inside a shared calendar and user doesn't have write access
-		(!!event.resource.calendar.owner &&
-			(event.resource.calendar.owner !== event.resource.organizer.email ||
-				!event?.haveWriteAccess)),
-	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: editAppointment({ event, invite, context })
-});
-
+}): AppointmentActionsItems => {
+	const absFolderPath = find(context.folders, ['id', event.resource.calendar.id])?.absFolderPath;
+	return {
+		id: EventActionsEnum.EDIT,
+		icon: 'Edit2Outline',
+		label: t('label.edit', 'Edit'),
+		disabled:
+			// if the event is in trash or nested in it
+			isTrashOrNestedInIt({ id: event.resource.calendar.id, absFolderPath }) ||
+			// if user is owner of the calendar but he is not the organizer
+			(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
+			// if it is inside a shared calendar or user doesn't have write access
+			(!!event.resource.calendar.owner &&
+				(event.resource.calendar.owner !== event.resource.organizer.email ||
+					!event?.haveWriteAccess)),
+		tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+		onClick: editAppointment({ event, invite, context })
+	};
+};
 export const copyEventItem = ({
 	invite,
 	event,

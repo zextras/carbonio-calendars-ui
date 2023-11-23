@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Editor, IdentityItem } from '../../types/editor';
+import { Editor, IdentityItem, Resource } from '../../types/editor';
+
 import { InviteFreeBusy } from '../../types/store/invite';
 import type { RootState } from '../redux';
 
@@ -179,6 +180,16 @@ export const selectEditorDisabled =
 	(id: string) =>
 	(state: RootState): Record<string, boolean> =>
 		state?.editor?.editors?.[id]?.disabled;
+
+export const selectEditorMeetingRoom =
+	(id: string) =>
+	(state: RootState): Array<Resource> | undefined =>
+		state?.editor?.editors?.[id]?.meetingRoom;
+
+export const selectEditorEquipment =
+	(id: string) =>
+	(state: RootState): Array<Resource> | undefined =>
+		state?.editor?.editors?.[id]?.equipment;
 
 export const selectIsInstance =
 	(id: string) =>

@@ -14,6 +14,7 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
+import { map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -26,7 +27,9 @@ import {
 	selectEditorAllDay,
 	selectEditorCalendar,
 	selectEditorEnd,
+	selectEditorEquipment,
 	selectEditorLocation,
+	selectEditorMeetingRoom,
 	selectEditorRoom,
 	selectEditorStart,
 	selectEditorTimezone,
@@ -59,10 +62,28 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const timezone = useAppSelector(selectEditorTimezone(editorId));
 	const location = useAppSelector(selectEditorLocation(editorId));
+	const meetingRoom = useAppSelector(selectEditorMeetingRoom(editorId));
+	const equipments = useAppSelector(selectEditorEquipment(editorId));
 	const room = useAppSelector(selectEditorRoom(editorId));
 	const title = useAppSelector(selectEditorTitle(editorId));
 	const calendar = useAppSelector(selectEditorCalendar(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
+
+	const meetingRoomField = useMemo(() => {
+		if (meetingRoom && meetingRoom.length > 0) {
+			const res = map(meetingRoom, (roo) => roo.label);
+			return res.join(', ');
+		}
+		return meetingRoom;
+	}, [meetingRoom]);
+
+	const equipmentsField = useMemo(() => {
+		if (equipments && equipments.length > 0) {
+			const res = map(equipments, (eq) => eq.label);
+			return res.join(', ');
+		}
+		return equipments;
+	}, [equipments]);
 
 	const virtualRoom = useMemo(() => room?.label, [room?.label]);
 
@@ -138,6 +159,18 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 						{location}
 					</Text>
 				</TitleRow>
+				<TitleRow>
+					<Text overflow="ellipsis" color="secondary" size="small">
+						{meetingRoomField}
+					</Text>
+				</TitleRow>
+				{equipmentsField && (
+					<TitleRow>
+						<Text overflow="ellipsis" color="secondary" size="small">
+							{equipmentsField}
+						</Text>
+					</TitleRow>
+				)}
 				{virtualRoom && (
 					<TitleRow>
 						<Text overflow="ellipsis" color="secondary" size="small">

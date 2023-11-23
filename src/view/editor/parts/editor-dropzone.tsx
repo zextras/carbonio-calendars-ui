@@ -3,13 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { map } from 'lodash';
 import React, { DragEvent, ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
+
 import { Container } from '@zextras/carbonio-design-system';
-import { useAppDispatch } from '../../../store/redux/hooks';
-import { editEditorAttachments } from '../../../store/slices/editor-slice';
+import { map } from 'lodash';
+
 import { addAttachments } from './editor-attachments-button';
 import { DropZoneAttachment } from './editor-dropzone-attachments';
+import { useAppDispatch } from '../../../store/redux/hooks';
+import { editEditorAttachments } from '../../../store/slices/editor-slice';
 
 type DropzoneProps = {
 	editorId: string;
@@ -23,6 +25,11 @@ export const EditorDropZone = ({ editorId, children }: DropzoneProps): ReactElem
 	const dispatch = useAppDispatch();
 
 	const onDragOver = useCallback((event: DragEvent): void => {
+		const eventType = event?.dataTransfer?.types;
+		if (eventType?.includes('contact')) {
+			setDropZoneEnable(false);
+			return;
+		}
 		event.preventDefault();
 		setDropZoneEnable(true);
 	}, []);

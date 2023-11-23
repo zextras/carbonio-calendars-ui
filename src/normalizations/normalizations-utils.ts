@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import { filter, groupBy, map, reduce, uniqBy } from 'lodash';
+import { groupBy, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
-import { Folder } from '../carbonio-ui-commons/types/folder';
+
 import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../commons/zimbra-standard-colors';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -22,15 +22,13 @@ export const retrieveAttachmentsType = (original: any, disposition: any, dataID:
 export const normalizeInviteParticipants = (participants: any): any =>
 	groupBy(
 		uniqBy(
-			map(
-				filter(participants, (p) => p.cutype !== 'RES'),
-				(p) => ({
-					name: p.d,
-					email: p.a,
-					isOptional: p.role === 'OPT' || false,
-					response: p.ptst
-				})
-			),
+			map(participants, (p) => ({
+				name: p.d,
+				email: p.a,
+				isOptional: p.role === 'OPT' || false,
+				response: p.ptst,
+				cutype: p.cutype
+			})),
 			'email'
 		),
 		(p) => p.response

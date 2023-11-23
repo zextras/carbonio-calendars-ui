@@ -68,7 +68,10 @@ describe('create single appointment with default values', () => {
 		expect(previousEditor.isNew).toEqual(true);
 
 		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
-		await user.type(titleSelector, newTitle);
+
+		await waitFor(() => {
+			user.type(titleSelector, newTitle);
+		});
 
 		// DEBOUNCE TIMER FOR INPUT FIELDS
 		jest.advanceTimersByTime(500);
@@ -107,7 +110,14 @@ describe('create single appointment with custom values', () => {
 		const newOptionals = map(mockedData.editor.getRandomAttendees(), 'email');
 		const identity2 = createFakeIdentity();
 
-		const userAccount = getMockedAccountItem({ identity1: previousEditor.organizer, identity2 });
+		const userAccount = getMockedAccountItem({
+			identity1: {
+				...previousEditor.organizer,
+				id: faker.datatype.uuid(),
+				email: faker.internet.email()
+			},
+			identity2
+		});
 
 		shell.useUserAccount.mockImplementation(() => userAccount);
 		shell.getUserAccount.mockImplementation(() => userAccount);
@@ -142,12 +152,15 @@ describe('create single appointment with custom values', () => {
 		);
 
 		// SETTING NEW ORGANIZER
-		await user.click(screen.getByText(new RegExp(previousEditor.organizer.fullName, 'i')));
-		await user.click(screen.getByText(new RegExp(identity2.fullName, 'i')));
+		await waitFor(() => {
+			user.click(screen.getByText(new RegExp(previousEditor.organizer.fullName, 'i')));
+		});
+		await user.click(screen.getByText(new RegExp(identity2?.fullName ?? '', 'i')));
 
 		// SETTING NEW TITLE, LOCATION, FREEBUSY
 		const titleSelector = screen.getByRole('textbox', { name: /Event title/i });
 		const locationSelector = screen.getByRole('textbox', { name: /Location/i });
+
 		await user.type(titleSelector, newTitle);
 		await user.type(locationSelector, newLocation);
 		await user.click(screen.getByText(/busy/i));

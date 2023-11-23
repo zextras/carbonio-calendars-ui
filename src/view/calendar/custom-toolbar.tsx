@@ -3,16 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
-import React, { FC, ReactElement, useCallback } from 'react';
-import styled, { css, SimpleInterpolation } from 'styled-components';
+import React, { FC, ReactElement, useCallback, useMemo } from 'react';
+
 import {
 	Container,
 	Button,
 	IconButton,
 	ButtonProps,
-	pseudoClasses
+	pseudoClasses,
+	Tooltip,
+	Padding
 } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
+import styled, { css, SimpleInterpolation } from 'styled-components';
+
 import { useAppStatusStore } from '../../store/zustand/store';
 
 const ButtonWrapper = styled.div`
@@ -55,6 +59,7 @@ export const CustomToolbar = ({
 	onNavigate,
 	view
 }: CustomToolbarProps): ReactElement => {
+	const [t] = useTranslation();
 	const today = useCallback(() => onNavigate('TODAY'), [onNavigate]);
 	const next = useCallback(() => onNavigate('NEXT'), [onNavigate]);
 	const prev = useCallback(() => onNavigate('PREV'), [onNavigate]);
@@ -75,6 +80,26 @@ export const CustomToolbar = ({
 		return onView('work_week');
 	}, [onView]);
 
+	const leftClickLabel = useMemo(() => {
+		if (view === 'month') {
+			return t('previous_month', 'Previous month');
+		}
+		if (view === 'week' || view === 'work_week') {
+			return t('previous_week', 'Previous week');
+		}
+		return t('previous_day', 'Previous day');
+	}, [t, view]);
+
+	const rightClickLabel = useMemo(() => {
+		if (view === 'month') {
+			return t('next_month', 'Next month');
+		}
+		if (view === 'week' || view === 'work_week') {
+			return t('next_week', 'Next week');
+		}
+		return t('next_day', 'Next day');
+	}, [t, view]);
+
 	return (
 		<Container width="fill" height="fit" padding={{ bottom: 'small' }}>
 			<Container
@@ -82,28 +107,48 @@ export const CustomToolbar = ({
 				orientation="horizontal"
 				width="fill"
 				height="3rem"
-				mainAlignment="baseline"
-				crossAlignment="stretch"
-				background="gray5"
+				mainAlignment="flex-start"
+				background={'gray5'}
 				padding={{ horizontal: 'small' }}
 			>
-				<Container width="fit" orientation="horizontal" mainAlignment="flex-start">
+				<Container width="max-content" orientation="horizontal" mainAlignment="flex-start">
 					<Button
 						label={t('label.today', 'today')}
 						type="outlined"
 						onClick={today}
-						style={{ minWidth: 'fit-content' }}
+						minWidth={'fit-content'}
 					/>
+					<Padding left={'1rem'} />
+					<Tooltip label={leftClickLabel}>
+						<IconButton
+							iconColor="primary"
+							icon="ChevronLeft"
+							onClick={prev}
+							minWidth={'max-content'}
+						/>
+					</Tooltip>
+					<Padding horizontal={'.25rem'} />
+					<Tooltip label={rightClickLabel}>
+						<IconButton
+							iconColor="primary"
+							icon="ChevronRight"
+							onClick={next}
+							minWidth={'max-content'}
+						/>
+					</Tooltip>
 				</Container>
-				<Container orientation="horizontal" mainAlignment="center">
-					<IconButton iconColor="primary" icon="ChevronLeft" onClick={prev} />
+				<Container
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					style={{ minWidth: 0, flexBasis: 'content', flexGrow: 1 }}
+				>
+					<Padding left={'1rem'} />
 					<Button
 						type="ghost"
 						label={label}
 						onClick={(): null => null}
 						data-testid="CurrentDateContainer"
 					/>
-					<IconButton iconColor="primary" icon="ChevronRight" onClick={next} />
 				</Container>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
 					<CustomButton

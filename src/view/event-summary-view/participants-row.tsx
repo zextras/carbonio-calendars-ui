@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useMemo } from 'react';
-import { Trans } from 'react-i18next';
-import { Account, t, useUserAccount } from '@zextras/carbonio-shell-ui';
+
 import { Avatar, Container, Padding, Row, Text } from '@zextras/carbonio-design-system';
+import { Account, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { map, reduce } from 'lodash';
+import { Trans } from 'react-i18next';
+
 import { EventType } from '../../types/event';
 import { Invite, InviteParticipant, InviteParticipants } from '../../types/store/invite';
 
@@ -214,6 +216,7 @@ const ParticipantsDisplayerSmall = ({
 	event
 }: ParticipantsDisplayerSmallType): ReactElement | null => {
 	const loggedInUser = useUserAccount();
+
 	if (!participants || Object.keys(participants)?.length === 0) return null;
 	const pt = calculateSize(participants);
 	return (

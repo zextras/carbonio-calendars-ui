@@ -25,3 +25,8 @@ export const MESSAGE_DIVIDER =
 
 export const HTML_OPENING_TAG = "<html><body id='htmlmode'>";
 export const HTML_CLOSING_TAG = '</body></html>';
+
+export const CALENDAR_RESOURCES = {
+	ROOM: 'ROO',
+	RESOURCE: 'RES'
+} as const;
