@@ -97,7 +97,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 								<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
 									<Icon icon={(isSelected && 'CheckmarkSquare') || 'Square' || ''} />
 									<Padding horizontal={'small'}>
-										<Text weight={isSelected ? 'bold' : 'regular'}>{room?.email}</Text>
+										<Text weight={isSelected ? 'bold' : 'regular'}>{room?.label}</Text>
 									</Padding>
 									<Tooltip
 										label={t(
