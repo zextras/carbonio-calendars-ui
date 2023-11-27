@@ -9,7 +9,7 @@ import moment from 'moment';
 
 import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../constants';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
-import { Editor } from '../types/editor';
+import { CalendarEditor, CalendarOrganizer, CalendarSender, Editor } from '../types/editor';
 
 type Participants = {
 	a?: string;
@@ -55,8 +55,9 @@ const setResourceDate = ({
 export const generateParticipantInformation = (resource: Editor): Array<Partial<Participants>> => {
 	const user = getUserAccount();
 	const iAmOrganizer = isEventSentFromOrganizer(user?.name ?? '', resource.sender);
-	const iAmNotUsingAnIdentity = isTheSameIdentity(resource.organizer, resource.sender);
+	const isSameIdentity = isTheSameIdentity(resource.organizer, resource.sender);
 	const isNotMyCalendar = resource.calendar?.owner;
+	const isSharedAccount = isTheSameEmail(resource.calendar?.owner ?? '', resource.sender);
 
 	const mainAccountOrganizer = omitBy<Participants>(
 		{
@@ -82,7 +83,8 @@ export const generateParticipantInformation = (resource: Editor): Array<Partial<
 	);
 
 	const organizer = isNotMyCalendar ? sharedCalendarOrganizer : mainAccountOrganizer;
-	const sentFrom = iAmOrganizer && iAmNotUsingAnIdentity && !isNotMyCalendar ? undefined : sender;
+	const sentFrom =
+		(iAmOrganizer && isSameIdentity && !isNotMyCalendar) || isSharedAccount ? undefined : sender;
 
 	const organizerParticipant = compact([organizer, sentFrom]);
 	return resource?.draft
@@ -171,11 +173,61 @@ const generateMp = (msg: Editor): { ct: string; mp: Array<{ ct: string; content:
 		  ]
 });
 
-const generateInvite = (editorData: Editor): any => {
+const getOrganizer = ({
+	calendar,
+	sender,
+	organizer
+}: {
+	calendar?: CalendarEditor;
+	sender: CalendarSender;
+	organizer: CalendarOrganizer;
+}): { a?: string; d?: string; sentBy?: string } => {
 	const user = getUserAccount();
 
-	const at = [];
+	const isAlsoSender = isEventSentFromOrganizer(user?.name ?? '', sender);
+	const isSameIdentity = isTheSameIdentity(organizer, sender);
+	const isSameEmail = isTheSameEmail(user?.name ?? '', sender);
+	const isSharedAccount = isTheSameEmail(calendar?.owner ?? '', sender);
 
+	if (!calendar?.owner) {
+		if (isAlsoSender && isSameIdentity) {
+			return omitBy(
+				{
+					a: user?.name,
+					d: organizer.fullName,
+					sentBy: isSameEmail ? undefined : sender.address
+				},
+				isNil
+			);
+		}
+		return omitBy(
+			{
+				a: user?.name,
+				d: sender.fullName,
+				sentBy: isSameEmail ? undefined : sender.address
+			},
+			isNil
+		);
+	}
+	if (isSharedAccount) {
+		return {
+			a: calendar.owner,
+			d: sender.fullName
+		};
+	}
+	return {
+		a: calendar.owner,
+		sentBy: sender.address
+	};
+};
+
+const generateInvite = (editorData: Editor): any => {
+	const at = [];
+	const organizer = getOrganizer({
+		calendar: editorData?.calendar,
+		sender: editorData.sender,
+		organizer: editorData.organizer
+	});
 	at.push(
 		...editorData.attendees.map((c: any) => ({
 			a: c?.email ?? c?.label,
@@ -209,25 +261,6 @@ const generateInvite = (editorData: Editor): any => {
 			}))
 		);
 
-	const isAlsoSender = isEventSentFromOrganizer(user?.name ?? '', editorData.sender);
-	const isSameIdentity = isTheSameIdentity(editorData.organizer, editorData.sender);
-	const isSameEmail = isTheSameEmail(user?.name ?? '', editorData.sender);
-	const organizer = editorData.calendar?.owner
-		? {
-				a: editorData.calendar.owner,
-				sentBy: editorData.sender.address
-		  }
-		: omitBy(
-				{
-					a: user?.name,
-					d:
-						isAlsoSender && isSameIdentity
-							? editorData.organizer.fullName
-							: editorData.sender.fullName,
-					sentBy: isSameEmail ? undefined : editorData.sender.address
-				},
-				isNil
-		  );
 	return {
 		comp: [
 			{
