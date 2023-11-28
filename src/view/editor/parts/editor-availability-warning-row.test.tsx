@@ -10,7 +10,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { map } from 'lodash';
 import moment from 'moment';
-import { CALENDAR_RESOURCES } from '../../../constants';
 
 import {
 	EditorAvailabilityWarningRow,
@@ -18,13 +17,14 @@ import {
 } from './editor-availability-warning-row';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../commons/editor-generator';
+import { CALENDAR_RESOURCES } from '../../../constants';
 import { reducers } from '../../../store/redux';
 
 const dateFormat = 'YYYY/MM/DD';
 
 describe('editor availability warning row', () => {
 	describe('getIsBusyAtTimeOfTheEvent', () => {
-		test('When an attendee is not busy at the time of the event its chip wont show a warning icon', () => {
+		test('When an attendee is not busy at the time of the event the function return false', () => {
 			const attendeeId = faker.internet.email();
 
 			const item = {
@@ -50,7 +50,7 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(false);
 		});
 		// (start > slot.s && start < slot.e)
-		test('If the appointment starts while attendee is busy its chip will show a warning icon', () => {
+		test('If the appointment starts while attendee is busy the function return true', () => {
 			const attendeeId = faker.internet.email();
 			const slotS = moment().subtract(15, 'minutes').valueOf();
 			const slotE = moment().add(15, 'minutes').valueOf();
@@ -77,7 +77,7 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(true);
 		});
 		// (end > slot.s && end < slot.e)
-		test('If the appointment ends while attendee is busy its chip will show a warning icon', () => {
+		test('If the appointment ends while attendee is busy the function return true', () => {
 			const attendeeId = faker.internet.email();
 			const slotS = moment().valueOf();
 			const slotE = moment().add(30, 'minutes').valueOf();
@@ -104,7 +104,7 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(true);
 		});
 		// (start < slot.s && end > slot.e)
-		test('If the appointment starts before the attendee is busy but ends after the attendee is busy its chip will show a warning icon', () => {
+		test('If the appointment starts before the attendee is busy but ends after the attendee is busy the function return true', () => {
 			const attendeeId = faker.internet.email();
 			const slotS = moment().valueOf();
 			const slotE = moment().add(15, 'minutes').valueOf();
@@ -131,7 +131,7 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(true);
 		});
 		// start === slot.s
-		test('If the appointment starts when the attendee has another appointment starting at the same time its chip will show a warning icon', () => {
+		test('If the appointment starts when the attendee has another appointment starting at the same time the function return true', () => {
 			const attendeeId = faker.internet.email();
 			const slotS = moment().valueOf();
 			const slotE = moment().add(30, 'minutes').valueOf();
@@ -158,7 +158,7 @@ describe('editor availability warning row', () => {
 			expect(isBusy).toBe(true);
 		});
 		// end === slot.e
-		test('If the appointment ends when the attendee has another appointment ending at the same time its chip will show a warning icon', () => {
+		test('If the appointment ends when the attendee has another appointment ending at the same time the function return true', () => {
 			const attendeeId = faker.internet.email();
 			const slotS = moment().valueOf();
 			const slotE = moment().add(30, 'minutes').valueOf();
@@ -186,7 +186,7 @@ describe('editor availability warning row', () => {
 
 			expect(isBusy).toBe(true);
 		});
-		test('If the appointment ends on a different day from start the attendee chip wont show any warning icon', () => {
+		test('If the appointment ends on a different day from start the function return false', () => {
 			const slotS = moment().add(5, 'minutes').valueOf();
 			const slotE = moment().add(30, 'minutes').valueOf();
 
@@ -214,7 +214,7 @@ describe('editor availability warning row', () => {
 
 			expect(isBusy).toBe(false);
 		});
-		test('If the appointment lasts all day but allDay is not checked the attendee chip will show a warning icon', () => {
+		test('If the appointment lasts all day but allDay is not checked the function return true', () => {
 			const slotS = moment().add(5, 'minutes').valueOf();
 			const slotE = moment().add(30, 'minutes').valueOf();
 
@@ -243,7 +243,7 @@ describe('editor availability warning row', () => {
 
 			expect(isBusy).toBe(true);
 		});
-		test('If the appointment is all day for 1 day and the attendee is busy its chip will show a warning icon', () => {
+		test('If the appointment is all day for 1 day and the attendee is busy the function return true', () => {
 			const slotS = moment().add(5, 'minutes').valueOf();
 			const slotE = moment().add(30, 'minutes').valueOf();
 
@@ -272,7 +272,7 @@ describe('editor availability warning row', () => {
 
 			expect(isBusy).toBe(true);
 		});
-		test('If the appointment is all day for 1 day and the attendee is not busy its chip wont show a warning icon', () => {
+		test('If the appointment is all day for 1 day and the attendee is not busy the function return false', () => {
 			const start = moment().valueOf();
 			const end = moment().add(30, 'minutes').valueOf();
 
@@ -298,7 +298,7 @@ describe('editor availability warning row', () => {
 
 			expect(isBusy).toBe(false);
 		});
-		test('If the appointment is all day for more than 1 day and the attendee is not busy its chip wont show a warning icon', () => {
+		test('If the appointment is all day for more than 1 day and the attendee is not busy the function return false', () => {
 			const start = moment().valueOf();
 			const end = moment().add(2, 'days').valueOf();
 
