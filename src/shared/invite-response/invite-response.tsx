@@ -16,7 +16,7 @@ import {
 	Padding
 } from '@zextras/carbonio-design-system';
 import { addBoard, getAction, Action, t, Board, useUserAccount } from '@zextras/carbonio-shell-ui';
-import { filter, find, map, startsWith } from 'lodash';
+import { filter, find, includes, map, startsWith } from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -105,7 +105,8 @@ const InviteResponse: FC<InviteResponse> = ({
 
 	const { parent } = mailMsg;
 
-	const inviteId = invite.apptId ? `${invite.apptId}-${invite.id}` : invite.id;
+	const inviteId =
+		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
 
 	const participationStatus = mailMsg?.invite?.[0]?.replies?.[0].reply?.[0]?.ptst ?? '';
 
