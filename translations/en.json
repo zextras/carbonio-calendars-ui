@@ -23,7 +23,9 @@
     "allowed_actions": "Allowed actions",
     "appointments": "Appointments",
     "appt_restored_successfully": "Appointment restored successfully",
+    "attendee_room_unavailable": "Room not available at the selected time of the event",
     "attendee_unavailable": "Attendee not available at the selected time of the event",
+    "attendees_rooms_unavailable": "One or more Meeting Rooms are not available at the selected time of the event",
     "attendees_unavailable": "One or more attendees are not available at the selected time of the event",
     "button": {
         "customize_modal": "Open Customize Modal"
