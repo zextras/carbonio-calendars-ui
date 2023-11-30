@@ -49,7 +49,10 @@ type CustomRecurrenceModalProps = {
 	onClose: () => void;
 };
 
-const CustomRecurrenceModal = ({ editorId, onClose }: CustomRecurrenceModalProps): ReactElement => {
+export const CustomRecurrenceModal = ({
+	editorId,
+	onClose
+}: CustomRecurrenceModalProps): ReactElement => {
 	const freq = useAppSelector(selectEditorRecurrenceFrequency(editorId));
 	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
 	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));

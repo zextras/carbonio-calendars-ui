@@ -5,7 +5,7 @@
  */
 import { Select } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
-import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
@@ -18,9 +18,15 @@ const FrequencySelect = (): ReactElement => {
 
 	const initialValue = useMemo(() => {
 		const value = find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0];
-		context?.setFrequency(value?.value);
 		return value;
 	}, [repetitionItems, context]);
+
+	useEffect(() => {
+		if (initialValue) {
+			const value = find(repetitionItems, { value: context?.frequency }) ?? repetitionItems[0];
+			context?.setFrequency(value?.value);
+		}
+	}, [context, initialValue, repetitionItems]);
 
 	const onChange = useCallback(
 		(ev) => {

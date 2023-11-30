@@ -14,13 +14,15 @@ type MonthSelectProps = {
 	setValue: React.Dispatch<React.SetStateAction<{ label: string; value: string }>>;
 	onChange: (ev: number) => void;
 	disabled: boolean;
+	testId?: string | undefined;
 };
 
 export const MonthSelect = ({
 	value,
 	setValue,
 	onChange,
-	disabled
+	disabled,
+	testId
 }: MonthSelectProps): ReactElement => {
 	const { months } = useRecurrenceItems();
 
@@ -49,6 +51,7 @@ export const MonthSelect = ({
 			width="fit"
 			disabled={disabled}
 			selection={value}
+			data-testid={testId}
 		/>
 	);
 };

@@ -11,7 +11,7 @@ import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';
-import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
+import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import { useAppSelector } from '../../../../../store/redux/hooks';
 import {
 	selectEditorRecurrenceByDay,
@@ -23,11 +23,6 @@ import { workWeek, WorkWeekDay } from '../../../../../utils/work-week';
 import { IntervalInput } from '../components/interval-input';
 import { WeekdayCheckboxes } from '../components/weekday-checkboxes';
 import WeekdaySelect from '../components/weekday-select';
-
-const RADIO_VALUES = {
-	QUICK_OPTIONS: 'QuickOptions',
-	CUSTOM_OPTIONS: 'CustomOptions'
-};
 
 const defaultState = {
 	freq: RECURRENCE_FREQUENCY.WEEKLY,
@@ -224,6 +219,7 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 					</Row>
 				}
 				value={RADIO_VALUES.QUICK_OPTIONS}
+				name={RADIO_VALUES.QUICK_OPTIONS}
 			/>
 			<Radio
 				size="small"
