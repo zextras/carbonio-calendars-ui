@@ -261,6 +261,19 @@ const generateInvite = (editorData: Editor): any => {
 			}))
 		);
 
+	editorData?.equipment &&
+		at.push(
+			...editorData.equipment.map((c) => ({
+				a: c?.email,
+				d: c.label,
+				role: 'NON',
+				ptst: 'NE',
+				rsvp: true,
+				url: c?.email,
+				cutype: CALENDAR_RESOURCES.RESOURCE
+			}))
+		);
+
 	return {
 		comp: [
 			{
