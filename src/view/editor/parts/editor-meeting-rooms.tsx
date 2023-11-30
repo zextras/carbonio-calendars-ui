@@ -75,52 +75,52 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 	}, [meetingRoom, meetingRooms, selection]);
 
 	const meetingRoomsAvailability = useMemo(() => {
-		if (meetingRooms?.length > 0) {
-			return map(meetingRooms, (room) => {
-				const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
-				const isSelected = find(selection, ['email', room.email]);
-
-				if (roomInList) {
-					const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
-						roomInList,
-						start,
-						end,
-						attendeesAvailabilityList,
-						allDay
-					);
-
-					if (isBusyAtTimeOfEvent) {
-						return {
-							...room,
-							email: room?.email ?? room?.label,
-							customComponent: (
-								<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
-									<Icon icon={(isSelected && 'CheckmarkSquare') || 'Square' || ''} />
-									<Padding horizontal={'small'}>
-										<Text weight={isSelected ? 'bold' : 'regular'}>{room?.label}</Text>
-									</Padding>
-									<Tooltip
-										label={t(
-											'attendee_room_unavailable',
-											'Room not available at the selected time of the event'
-										)}
-									>
-										<Row>
-											<Icon icon="AlertTriangle" color="error" />
-										</Row>
-									</Tooltip>
-								</Container>
-							)
-						};
-					}
-				}
-				return {
-					...room,
-					email: room?.email ?? room?.label
-				};
-			});
+		if (!meetingRooms?.length) {
+			return [];
 		}
-		return [];
+		return map(meetingRooms, (room) => {
+			const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
+			const isSelected = find(selection, ['email', room.email]);
+
+			if (roomInList) {
+				const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
+					roomInList,
+					start,
+					end,
+					attendeesAvailabilityList,
+					allDay
+				);
+
+				if (isBusyAtTimeOfEvent) {
+					return {
+						...room,
+						email: room?.email ?? room?.label,
+						customComponent: (
+							<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
+								<Icon icon={(isSelected && 'CheckmarkSquare') || 'Square' || ''} />
+								<Padding horizontal={'small'}>
+									<Text weight={isSelected ? 'bold' : 'regular'}>{room?.label}</Text>
+								</Padding>
+								<Tooltip
+									label={t(
+										'attendee_room_unavailable',
+										'Room not available at the selected time of the event'
+									)}
+								>
+									<Row>
+										<Icon icon="AlertTriangle" color="error" />
+									</Row>
+								</Tooltip>
+							</Container>
+						)
+					};
+				}
+			}
+			return {
+				...room,
+				email: room?.email ?? room?.label
+			};
+		});
 	}, [allDay, attendeesAvailabilityList, end, meetingRooms, selection, start, t]);
 
 	return meetingRoomsAvailability ? (
@@ -137,7 +137,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 			<EditorAvailabilityWarningRow
 				label={t(
 					'attendees_rooms_unavailable',
-					'One or more rooms are not available at the selected time of the event'
+					'One or more Meeting Rooms are not available at the selected time of the event'
 				)}
 				list={attendeesAvailabilityList}
 				items={meetingRoom ?? []}

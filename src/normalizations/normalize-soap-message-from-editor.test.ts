@@ -16,6 +16,15 @@ const mainAccount = createFakeIdentity();
 const identity = createFakeIdentity();
 const identity2 = createFakeIdentity();
 
+const sharedAccountIdentity = {
+	id: 'shared_account_id',
+	firstName: 'shared',
+	lastName: 'account',
+	fullName: 'shared account',
+	userName: `random userName`,
+	email: 'shared_account@mail.com'
+};
+
 const mainAccountEditorFolder = {
 	id: '10',
 	name: 'Calendar'
@@ -28,9 +37,9 @@ const sharedEditorFolder = {
 };
 
 const sharedAccountEditorFolder = {
-	id: 'shared:id',
-	name: 'shared account',
-	owner: 'random_shared_owner@mail.com'
+	id: `sharedAccountFolder:${sharedAccountIdentity.id}`,
+	name: 'shared account folder',
+	owner: sharedAccountIdentity.email
 };
 
 const addressPrefKey = 'zimbraPrefFromAddress';
@@ -624,6 +633,35 @@ describe('normalize soap message from editor', () => {
 						a: identities[1].address,
 						p: identities[1].fullName,
 						t: 's'
+					}
+				]);
+			});
+			test('user send the message from the shared account identity', () => {
+				const userAccount = getMockedAccountItem({
+					identity1: mainAccount,
+					identity2: identity,
+					identity3: sharedAccountIdentity
+				});
+
+				shell.getUserAccount.mockImplementation(() => userAccount);
+
+				const identities = getIdentityItems();
+
+				const editor = generateEditor({
+					context: {
+						folders: [],
+						dispatch: jest.fn(),
+						calendar: sharedAccountEditorFolder,
+						sender: identities[2]
+					}
+				});
+				const body = normalizeSoapMessageFromEditor(editor);
+				expect(body.m.inv.comp[0].or.sentBy).toBeUndefined();
+				expect(body.m.inv.comp[0].or.a).toBe(sharedAccountEditorFolder.owner);
+				expect(body.m.e).toStrictEqual([
+					{
+						a: sharedAccountEditorFolder.owner,
+						t: 'f'
 					}
 				]);
 			});

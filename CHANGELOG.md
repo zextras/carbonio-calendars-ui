@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.1...v1.7.2) (2023-11-30)
+
+
+### Bug Fixes
+
+* equipments are setted properly ([6e08b33](https://github.com/zextras/carbonio-calendars-ui/commit/6e08b334e36756c7f729afb59a50ffa96b7b2d16))
+
+### [1.7.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.0...v1.7.1) (2023-11-27)
+
+
+### Bug Fixes
+
+* simplify organizer and sender when they are the same identity ([1d47065](https://github.com/zextras/carbonio-calendars-ui/commit/1d47065d2e8760ba9ed8e4cd2caa98fd6a6e41f1))
+
 ## [1.7.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.6.3...v1.7.0) (2023-11-23)
 
 
