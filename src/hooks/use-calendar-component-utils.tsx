@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
-import { isEqual, isNil, omit, omitBy, size } from 'lodash';
+import { debounce, isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -258,7 +258,7 @@ export const useCalendarComponentUtils = (): {
 
 	const resizeEvent = useCallback((): null => null, []);
 
-	const onRangeChange = useCallback(
+	const _onRangeChange = useCallback(
 		(range) => {
 			if (range.length) {
 				const min = datesMin(...range);
@@ -275,6 +275,15 @@ export const useCalendarComponentUtils = (): {
 			}
 		},
 		[setRange]
+	);
+
+	const onRangeChange = useMemo(
+		() =>
+			debounce(_onRangeChange, 200, {
+				trailing: true,
+				leading: false
+			}),
+		[_onRangeChange]
 	);
 
 	const onNavigate = useCallback(
