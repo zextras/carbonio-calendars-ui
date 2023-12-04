@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+
 import { Container, Text } from '@zextras/carbonio-design-system';
-import { replace } from 'lodash';
 import { t } from '@zextras/carbonio-shell-ui';
+import { isNull, replace } from 'lodash';
+
 import { ROOM_DIVIDER } from '../constants';
 
 export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER}`, 's');
@@ -54,33 +56,22 @@ function TextMessageRenderer({ text }) {
 
 function HtmlMessageRenderer({ msgId, body, parts }) {
 	const iframeRef = useRef();
-	const onIframeLoad = useCallback((ev) => {
-		ev.persist();
-		const styleTag = document.createElement('style');
-		const styles = `
-			body {
-				margin: 0;
-				overflow-y: hidden;
-				font-family: Roboto, sans-serif;
-				font-size: 0.875rem;
-			}
-			body pre, body pre * {
-				white-space: pre-wrap;
-				word-wrap: break-word !important;
-				text-wrap: suppress !important;
-			}
-			img {
-				max-width: 100%
-			}
-			
-		`;
-		styleTag.textContent = styles;
-		iframeRef.current.contentDocument.head.append(styleTag);
-		iframeRef.current.style.display = 'block';
-		iframeRef.current.style.height = `${
-			iframeRef.current.contentDocument.body.querySelector('div').scrollHeight
-		}px`;
+
+	const convertInRem = useCallback((px, base = 16) => {
+		let tempPx = px;
+		if (typeof px === 'string' || px instanceof String) tempPx = tempPx.replace('px', '');
+
+		tempPx = parseInt(tempPx, 10);
+		return `${(1 / base) * tempPx}rem`;
 	}, []);
+
+	const calculateHeight = useCallback(() => {
+		if (!isNull(iframeRef.current)) {
+			const scrollHeight = iframeRef.current.contentDocument.querySelector('html')?.scrollHeight;
+			iframeRef.current.style.height = '0';
+			iframeRef.current.style.height = convertInRem(scrollHeight ?? '0');
+		}
+	}, [convertInRem]);
 
 	const updatedBody = useMemo(() => replaceLinkToAnchor(body), [body]);
 
@@ -95,8 +86,8 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 			<iframe
 				title={msgId}
 				ref={iframeRef}
-				onLoad={onIframeLoad}
-				style={{ border: 'none', width: '100%', display: 'none' }}
+				onLoad={calculateHeight}
+				style={{ border: 'none', width: '100%' }}
 			/>
 		</div>
 	);

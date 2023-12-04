@@ -123,7 +123,9 @@ function generateHtmlBodyRequest(app: Editor): string {
 		: '';
 	const defaultMessage =
 		app?.room && !includes(app.richText, ROOM_DIVIDER) ? virtualRoomHtml : meetingHtml;
-	return `${HTML_OPENING_TAG}${defaultMessage}${app.richText}${HTML_CLOSING_TAG}`;
+	return attendees?.length
+		? `${HTML_OPENING_TAG}${defaultMessage}${app.richText}${HTML_CLOSING_TAG}`
+		: app.richText;
 }
 
 function generateBodyRequest(app: Editor): string {
@@ -149,7 +151,7 @@ function generateBodyRequest(app: Editor): string {
 	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n${ROOM_DIVIDER}`;
 	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
 
-	return `${defaultMessage}\n${app.plainText}`;
+	return attendees?.length ? `${defaultMessage}\n${app.plainText}` : app.plainText;
 }
 
 const generateMp = (msg: Editor): { ct: string; mp: Array<{ ct: string; content: string }> } => ({
