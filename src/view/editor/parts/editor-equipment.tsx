@@ -5,15 +5,7 @@
  */
 import React, { ReactElement, useCallback, useEffect, useState, useMemo } from 'react';
 
-import {
-	Container,
-	Icon,
-	Padding,
-	Row,
-	Select,
-	Tooltip,
-	Text
-} from '@zextras/carbonio-design-system';
+import { Select } from '@zextras/carbonio-design-system';
 import { compact, find, map, xorBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -21,6 +13,7 @@ import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
+import { ResourceCustomComponent } from './resource-custom-component';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -98,22 +91,7 @@ export const EditorEquipment = ({ editorId }: { editorId: string }): ReactElemen
 						..._equipment,
 						email: _equipment?.email ?? _equipment?.label,
 						customComponent: (
-							<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
-								<Icon icon={(isSelected && 'CheckmarkSquare') || 'Square' || ''} />
-								<Padding horizontal={'small'}>
-									<Text weight={isSelected ? 'bold' : 'regular'}>{_equipment?.label}</Text>
-								</Padding>
-								<Tooltip
-									label={t(
-										'attendee_equipment_unavailable',
-										'Equipment not available at the selected time of the event'
-									)}
-								>
-									<Row>
-										<Icon icon="AlertTriangle" color="error" />
-									</Row>
-								</Tooltip>
-							</Container>
+							<ResourceCustomComponent isSelected={!!isSelected} label={_equipment.label} />
 						)
 					};
 				}
@@ -123,7 +101,7 @@ export const EditorEquipment = ({ editorId }: { editorId: string }): ReactElemen
 				email: _equipment?.email ?? _equipment?.label
 			};
 		});
-	}, [allDay, attendeesAvailabilityList, end, equipments, selection, start, t]);
+	}, [allDay, attendeesAvailabilityList, end, equipments, selection, start]);
 
 	return equipmentsAvailability ? (
 		<>

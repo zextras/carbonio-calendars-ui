@@ -5,15 +5,7 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
-import {
-	Container,
-	Icon,
-	Padding,
-	Row,
-	Select,
-	Text,
-	Tooltip
-} from '@zextras/carbonio-design-system';
+import { Select } from '@zextras/carbonio-design-system';
 import { compact, find, map, xorBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -21,6 +13,7 @@ import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
+import { ResourceCustomComponent } from './resource-custom-component';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -96,22 +89,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 						...room,
 						email: room?.email ?? room?.label,
 						customComponent: (
-							<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
-								<Icon icon={(isSelected && 'CheckmarkSquare') || 'Square' || ''} />
-								<Padding horizontal={'small'}>
-									<Text weight={isSelected ? 'bold' : 'regular'}>{room?.label}</Text>
-								</Padding>
-								<Tooltip
-									label={t(
-										'attendee_room_unavailable',
-										'Room not available at the selected time of the event'
-									)}
-								>
-									<Row>
-										<Icon icon="AlertTriangle" color="error" />
-									</Row>
-								</Tooltip>
-							</Container>
+							<ResourceCustomComponent label={room.label} isSelected={!!isSelected} />
 						)
 					};
 				}
@@ -121,7 +99,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 				email: room?.email ?? room?.label
 			};
 		});
-	}, [allDay, attendeesAvailabilityList, end, meetingRooms, selection, start, t]);
+	}, [allDay, attendeesAvailabilityList, end, meetingRooms, selection, start]);
 
 	return meetingRoomsAvailability ? (
 		<>
