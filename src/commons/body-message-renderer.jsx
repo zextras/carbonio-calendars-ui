@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
@@ -56,6 +56,7 @@ function TextMessageRenderer({ text }) {
 
 function HtmlMessageRenderer({ msgId, body, parts }) {
 	const iframeRef = useRef();
+	const divRef = useRef();
 
 	const convertInRem = useCallback((px, base = 16) => {
 		let tempPx = px;
@@ -75,14 +76,53 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 
 	const updatedBody = useMemo(() => replaceLinkToAnchor(body), [body]);
 
-	useEffect(() => {
-		iframeRef.current.contentDocument.open();
-		iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
-		iframeRef.current.contentDocument.close();
-	}, [body, parts, msgId, updatedBody]);
+	useLayoutEffect(() => {
+		if (!isNull(iframeRef.current) && !isNull(iframeRef.current.contentDocument)) {
+			iframeRef.current.contentDocument.open();
+			iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
+			iframeRef.current.contentDocument.close();
+		}
+		const styleTag = document.createElement('style');
+		styleTag.textContent = `
+			max-width: 100% !important;
+			body {
+				max-width: 100% !important;
+				margin: 0;
+				overflow-y: hidden;
+				font-family: Roboto, sans-serif;
+				font-size: 0.875rem;
+				background-color: #ffffff;
+			}
+			body pre, body pre * {
+				white-space: pre-wrap;
+				word-wrap: anywhere !important;
+				text-wrap: suppress !important;
+			}
+			img {
+				max-width: 100%
+			}
+			tbody{position:relative !important}
+			td{
+				max-width: 100% !important;
+				overflow-wrap: anywhere !important;
+			}
+			#bodyTable {
+				height: fit-content
+			}
+		`;
+		if (!isNull(iframeRef.current) && !isNull(iframeRef.current.contentDocument))
+			iframeRef.current.contentDocument.head.append(styleTag);
+
+		calculateHeight();
+
+		const resizeObserver = new ResizeObserver(calculateHeight);
+		divRef.current && resizeObserver.observe(divRef.current);
+
+		return () => resizeObserver.disconnect();
+	}, [calculateHeight, msgId, parts, updatedBody]);
 
 	return (
-		<div className="force-white-bg" style={{ width: '100%' }}>
+		<div ref={divRef} className="force-white-bg" style={{ width: '100%' }}>
 			<iframe
 				title={msgId}
 				ref={iframeRef}
