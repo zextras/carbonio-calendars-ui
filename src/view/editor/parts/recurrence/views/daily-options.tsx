@@ -8,7 +8,7 @@ import React, { ReactElement, useCallback, useContext, useEffect, useState } fro
 import { Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import { isNumber, isNaN, map, differenceWith, isEqual, omitBy, isNil } from 'lodash';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
-import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
+import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import { useAppSelector } from '../../../../../store/redux/hooks';
 import {
 	selectEditorRecurrenceByDay,
@@ -17,12 +17,6 @@ import {
 } from '../../../../../store/selectors/editor';
 import { Byday, Interval, RecurrenceStartValue } from '../../../../../types/editor';
 import { IntervalInput } from '../components/interval-input';
-
-const RADIO_VALUES = {
-	EVERYDAY: 'Everyday',
-	WORKING_DAY: 'Working_day',
-	EVERY_X_DAY: 'Every_x_days'
-};
 
 const defaultState = {
 	freq: RECURRENCE_FREQUENCY.DAILY,

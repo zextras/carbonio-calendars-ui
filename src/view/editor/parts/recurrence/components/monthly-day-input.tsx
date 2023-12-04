@@ -13,13 +13,15 @@ type IntervalInputProps = {
 	setValue: React.Dispatch<React.SetStateAction<number | ''>>;
 	onChange: (ev: number) => void;
 	disabled: boolean;
+	testId?: string | undefined;
 };
 
 export const MonthlyDayInput = ({
 	disabled,
 	setValue,
 	onChange,
-	value
+	value,
+	testId
 }: IntervalInputProps): ReactElement => {
 	const onMonthChange = useCallback(
 		(ev) => {
@@ -48,6 +50,7 @@ export const MonthlyDayInput = ({
 			onChange={onMonthChange}
 			disabled={disabled}
 			hasError={(isNumber(value) && !isNaN(value) && (value < 1 || value > 31)) || !isNumber(value)}
+			data-testid={testId}
 		/>
 	);
 };
