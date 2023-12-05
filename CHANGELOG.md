@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.2...v1.7.3) (2023-12-05)
+
+
+### Bug Fixes
+
+* appointment description is fully visible on appointment details ([b5e6fa5](https://github.com/zextras/carbonio-calendars-ui/commit/b5e6fa5ba4f073d3d661a3cce9f2f0757b501162))
+
 ### [1.7.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.1...v1.7.2) (2023-11-30)
 
 
