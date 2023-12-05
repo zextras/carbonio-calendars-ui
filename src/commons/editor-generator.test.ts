@@ -5,6 +5,8 @@
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import moment from 'moment';
+
+import { disabledFields, EditorContext, generateEditor } from './editor-generator';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
 import {
 	createFakeIdentity,
@@ -14,7 +16,6 @@ import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
-import { disabledFields, EditorContext, generateEditor } from './editor-generator';
 
 const identity1 = createFakeIdentity();
 
@@ -264,6 +265,28 @@ describe('Editor generator', () => {
 			expect(editor.attachmentFiles[0].name).toBe('2');
 			expect(editor.attachmentFiles[0].filename).toBe('filename_1.gif');
 			expect(editor.attachmentFiles[0].disposition).toBe('attachment');
+		});
+	});
+	describe('Edit event', () => {
+		test('event without organizer has the calendar owner as default', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const event = mockedData.getEvent({
+				resource: {
+					organizer: undefined,
+					calendar: folder
+				}
+			});
+			const invite = mockedData.getInvite({ event });
+
+			const context = { folders, dispatch: store.dispatch };
+			const editor = generateEditor({
+				context,
+				invite,
+				event
+			});
+			expect(editor.organizer.address).toBe(identity1.email);
+			expect(editor.organizer.fullName).toBe(identity1.fullName);
 		});
 	});
 });

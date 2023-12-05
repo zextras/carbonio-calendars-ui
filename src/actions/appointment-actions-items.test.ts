@@ -8,6 +8,40 @@ import { FOLDERS } from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui-con
 import mockedData from '../test/generators';
 
 describe('edit event item', () => {
+	test('if an event has no organizer it is still editable', () => {
+		const folder = {
+			id: FOLDERS.CALENDAR,
+			l: '1',
+			name: 'Calendar',
+			view: 'appointment',
+			absFolderPath: '/'
+		};
+
+		const folders = mockedData.calendars.getCalendarsArray({ folders: [folder] });
+
+		const event = mockedData.getEvent({
+			resource: {
+				organizer: undefined,
+				calendar: folder
+			}
+		});
+		const invite = mockedData.getInvite({ event });
+		const context = {
+			createAndApplyTag: jest.fn(),
+			createModal: jest.fn(),
+			createSnackbar: jest.fn(),
+			dispatch: jest.fn(),
+			tags: {
+				0: {
+					id: '1',
+					name: 'one'
+				}
+			},
+			folders
+		};
+		const editAction = editEventItem({ invite, event, context });
+		expect(editAction.disabled).toBe(false);
+	});
 	describe('is disabled when', () => {
 		test('the event is on trash', () => {
 			const folder = {

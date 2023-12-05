@@ -299,12 +299,12 @@ export const ActionsButtonsRow = ({
 			return <TrashActionsButtons actions={actions as InstanceActionsItems} />;
 		}
 		if (event.resource.isRecurrent) {
-			if (!event.resource.iAmOrganizer && !event.isShared) {
+			if (event.resource.organizer && !event.resource.iAmOrganizer && !event.isShared) {
 				return <ResponseActionsButtons actions={actions} event={event} />;
 			}
 			return <RecurrentActionsButtons actions={actions as SeriesActionsItems} />;
 		}
-		if (!event.resource.iAmOrganizer && !event.isShared) {
+		if (event.resource.organizer && !event.resource.iAmOrganizer && !event.isShared) {
 			return <ResponseActionsButtons actions={actions} event={event} />;
 		}
 		return <InstanceActionsButtons actions={actions as InstanceActionsItems} />;

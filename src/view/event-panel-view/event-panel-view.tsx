@@ -16,7 +16,7 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, replaceHistory, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { filter, find, noop, startsWith } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -53,10 +53,10 @@ const BodyContainer = styled(Container)`
 const AppointmentCardContainer = styled(Container)<ContainerProps & { expanded?: boolean }>`
 	z-index: 10;
 	position: absolute;
-	top: ${(): string => '1rem'};
-	right: ${(): string => '1rem'};
-	bottom: ${({ expanded }): string => (expanded ? '0' : '1rem')};
-	left: ${({ expanded }): string => (expanded ? '1rem' : 'max(calc(100% - 42.5rem), 0.75rem)')};
+	top: 1rem;
+	right: 1rem;
+	bottom: 1rem;
+	left: max(calc(100% - 42.5rem), 0.75rem);
 	transition: left 0.2s ease-in-out;
 	height: auto;
 	width: auto;
@@ -236,7 +236,7 @@ export const DisplayerHeader = ({
 
 export default function EventPanelView(): ReactElement | null {
 	const { calendarId, apptId, ridZ } = useParams<RouteParams>();
-
+	const user = useUserAccount();
 	const calendar = useFolder(calendarId);
 	const appointment = useAppSelector(selectAppointment(apptId));
 	const instance = useAppSelector(selectAppointmentInstance(apptId, ridZ));
@@ -277,35 +277,46 @@ export default function EventPanelView(): ReactElement | null {
 						invite={invite}
 					/>
 					<StyledDivider />
-					{!event.resource.iAmOrganizer && !(calendar as LinkFolder)?.owner && invite && (
+					{event.resource.organizer &&
+						!event.resource.iAmOrganizer &&
+						!(calendar as LinkFolder)?.owner &&
+						invite &&
+						!!find(invite.attendees, ['d', (calendar as LinkFolder)?.owner ?? user?.name]) && (
+							<>
+								<ReplyButtonsPart
+									inviteId={event.resource.inviteId}
+									participationStatus={event.resource.participationStatus}
+								/>
+								<StyledDivider />
+							</>
+						)}
+					{invite && event && invite.organizer && (
 						<>
-							<ReplyButtonsPart
-								inviteId={event.resource.inviteId}
-								participationStatus={event.resource.participationStatus}
+							<ParticipantsPart
+								invite={invite}
+								event={event}
+								organizer={invite.organizer}
+								participants={invite?.participants}
 							/>
 							<StyledDivider />
 						</>
-					)}
-					{invite && invite.organizer && (
-						<ParticipantsPart
-							invite={invite}
-							organizer={invite.organizer}
-							participants={invite?.participants}
-						/>
 					)}
 					{invite &&
 						extractBody(invite.textDescription?.[0]?._content) &&
 						!startsWith(invite.textDescription?.[0]?._content ?? '', ROOM_DIVIDER) && (
 							<>
-								<StyledDivider />
 								<MessagePart fullInvite={invite} inviteId={invite.id} parts={invite.parts} />
+								<StyledDivider />
 							</>
 						)}
-					<StyledDivider />
-					{invite && <ReminderPart alarmString={alarmString} invite={invite} event={event} />}
+					{invite && alarmString && (
+						<>
+							<ReminderPart alarmString={alarmString} invite={invite} event={event} />
+							<StyledDivider />
+						</>
+					)}
 					{invite?.attachmentFiles.length > 0 && (
 						<>
-							<StyledDivider />
 							<Container padding={{ top: 'small', horizontal: 'large' }} background="gray6">
 								<AttachmentsBlock
 									attachments={invite?.attachmentFiles}
@@ -313,6 +324,7 @@ export default function EventPanelView(): ReactElement | null {
 									subject={event.title}
 								/>
 							</Container>
+							<StyledDivider />
 						</>
 					)}
 				</BodyContainer>

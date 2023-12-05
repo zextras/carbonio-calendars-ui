@@ -3,20 +3,22 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container } from '@zextras/carbonio-design-system';
 import React, { ComponentProps, ReactComponentElement } from 'react';
+
+import { Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
+
+import { extractBody } from '../../commons/body-message-renderer';
+import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
 import { useInvite } from '../../hooks/use-invite';
-import { DisplayerHeader } from '../event-panel-view/event-panel-view';
-import StyledDivider from '../../commons/styled-divider';
-import { ReminderPart } from '../event-panel-view/reminder-part';
-import { MessagePart } from '../event-panel-view/message-part';
-import { extractBody } from '../../commons/body-message-renderer';
-import { ParticipantsPart } from '../event-panel-view/participants-part';
-import { ReplyButtonsPart } from '../event-panel-view/reply-buttons-part';
-import { DetailsPart } from '../event-panel-view/details-part';
 import { AttachmentsBlock } from '../event-panel-view/attachments-part';
+import { DetailsPart } from '../event-panel-view/details-part';
+import { DisplayerHeader } from '../event-panel-view/event-panel-view';
+import { MessagePart } from '../event-panel-view/message-part';
+import { ParticipantsPart } from '../event-panel-view/participants-part';
+import { ReminderPart } from '../event-panel-view/reminder-part';
+import { ReplyButtonsPart } from '../event-panel-view/reply-buttons-part';
 
 const BodyContainer = styled(Container)`
 	overflow-x: hidden;
@@ -51,40 +53,47 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 							invite={invite}
 						/>
 						<StyledDivider />
-						{!event?.resource?.iAmOrganizer && !event?.resource?.owner && invite && (
+						{event.resource.organizer &&
+							!event?.resource?.iAmOrganizer &&
+							!event?.resource?.owner &&
+							invite && (
+								<>
+									<ReplyButtonsPart
+										inviteId={event?.resource?.inviteId}
+										participationStatus={event?.resource?.participationStatus}
+									/>
+									<StyledDivider />
+								</>
+							)}
+						{invite && event && invite.organizer && (
 							<>
-								<ReplyButtonsPart
-									inviteId={event?.resource?.inviteId}
-									participationStatus={event?.resource?.participationStatus}
+								<ParticipantsPart
+									invite={invite}
+									event={event}
+									organizer={invite.organizer}
+									participants={invite?.participants}
 								/>
 								<StyledDivider />
 							</>
 						)}
-						{invite && invite.organizer && (
-							<ParticipantsPart
-								invite={invite}
-								organizer={invite.organizer}
-								participants={invite?.participants}
-							/>
-						)}
 						{invite && extractBody(invite?.textDescription?.[0]?._content) && (
 							<Container>
-								<StyledDivider />
 								<MessagePart
 									fullInvite={invite}
 									inviteId={event?.resource?.inviteId}
 									parts={invite?.parts}
 								/>
+								<StyledDivider />
 							</Container>
 						)}
-
-						<StyledDivider />
-						{invite && (
-							<ReminderPart alarmString={invite?.alarmString} invite={invite} event={event} />
+						{invite && invite?.alarmString && (
+							<>
+								<ReminderPart alarmString={invite?.alarmString} invite={invite} event={event} />
+								<StyledDivider />
+							</>
 						)}
 						{invite?.attachmentFiles?.length > 0 && (
 							<>
-								<StyledDivider />
 								<Container padding={{ all: 'medium' }} background="gray6">
 									<AttachmentsBlock
 										attachments={invite?.attachmentFiles}
@@ -92,6 +101,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 										subject={event?.title}
 									/>
 								</Container>
+								<StyledDivider />
 							</>
 						)}
 					</BodyContainer>
