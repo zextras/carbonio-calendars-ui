@@ -10,6 +10,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor } from '@testing-library/react';
 
 import { DeleteEventModal } from './delete-event-modal';
+import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { populateFoldersStore } from '../../carbonio-ui-commons/test/mocks/store/folders';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -177,7 +178,7 @@ describe('delete event modal', () => {
 					preloadedState: emptyStore
 				});
 				const onClose = jest.fn();
-				populateFoldersStore('appointment');
+				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 				setupTest(
 					<DeleteEventModal
@@ -199,7 +200,7 @@ describe('delete event modal', () => {
 							preloadedState: emptyStore
 						});
 						const onClose = jest.fn();
-						populateFoldersStore('appointment');
+						populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 						setupTest(
 							<DeleteEventModal
@@ -234,7 +235,7 @@ describe('delete event modal', () => {
 							preloadedState: emptyStore
 						});
 						const onClose = jest.fn();
-						populateFoldersStore('appointment');
+						populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 						const { user } = setupTest(
 							<DeleteEventModal
@@ -277,7 +278,7 @@ describe('delete event modal', () => {
 					});
 					const onClose = jest.fn();
 
-					populateFoldersStore('appointment');
+					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 					setupTest(
 						<DeleteEventModal
@@ -315,7 +316,7 @@ describe('delete event modal', () => {
 						.spyOn(shell, 'useIntegratedFunction')
 						.mockReturnValue([composer, true]);
 
-					populateFoldersStore('appointment');
+					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 					const { user } = setupTest(
 						<DeleteEventModal
@@ -347,7 +348,7 @@ describe('delete event modal', () => {
 					const onClose = jest.fn();
 
 					const spy = jest.spyOn(shell, 'soapFetch');
-					populateFoldersStore('appointment');
+					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 					const { user } = setupTest(
 						<DeleteEventModal
@@ -400,7 +401,7 @@ describe('delete event modal', () => {
 					});
 					const onClose = jest.fn();
 
-					populateFoldersStore('appointment');
+					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 					setupTest(
 						<DeleteEventModal
@@ -426,7 +427,7 @@ describe('delete event modal', () => {
 					});
 					const onClose = jest.fn();
 
-					populateFoldersStore('appointment');
+					populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 					const { user } = setupTest(
 						<DeleteEventModal
@@ -462,7 +463,7 @@ describe('delete event modal', () => {
 				});
 				const onClose = jest.fn();
 
-				populateFoldersStore('appointment');
+				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 				setupTest(
 					<DeleteEventModal
@@ -492,7 +493,7 @@ describe('delete event modal', () => {
 				const onClose = jest.fn();
 				const spy = jest.spyOn(shell, 'soapFetch');
 
-				populateFoldersStore('appointment');
+				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 				const { user } = setupTest(
 					<DeleteEventModal
@@ -544,7 +545,7 @@ describe('delete event modal', () => {
 				const onClose = jest.fn();
 				const spy = jest.spyOn(shell, 'soapFetch');
 
-				populateFoldersStore('appointment');
+				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 				const { user } = setupTest(
 					<DeleteEventModal
@@ -587,7 +588,7 @@ describe('delete event modal', () => {
 				const onClose = jest.fn();
 				const spy = jest.spyOn(shell, 'soapFetch');
 
-				populateFoldersStore('appointment');
+				populateFoldersStore({ view: FOLDER_VIEW.appointment });
 
 				const { user } = setupTest(
 					<DeleteEventModal
