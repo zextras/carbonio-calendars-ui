@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
+
 import { Container, Text } from '@zextras/carbonio-design-system';
-import { replace } from 'lodash';
 import { t } from '@zextras/carbonio-shell-ui';
+import { isNull, replace } from 'lodash';
+
 import { ROOM_DIVIDER } from '../constants';
 
 export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER}`, 's');
@@ -54,49 +56,78 @@ function TextMessageRenderer({ text }) {
 
 function HtmlMessageRenderer({ msgId, body, parts }) {
 	const iframeRef = useRef();
-	const onIframeLoad = useCallback((ev) => {
-		ev.persist();
+	const divRef = useRef();
+
+	const convertInRem = useCallback((px, base = 16) => {
+		let tempPx = px;
+		if (typeof px === 'string' || px instanceof String) tempPx = tempPx.replace('px', '');
+
+		tempPx = parseInt(tempPx, 10);
+		return `${(1 / base) * tempPx}rem`;
+	}, []);
+
+	const calculateHeight = useCallback(() => {
+		if (!isNull(iframeRef.current)) {
+			const scrollHeight = iframeRef.current.contentDocument.querySelector('html')?.scrollHeight;
+			iframeRef.current.style.height = '0';
+			iframeRef.current.style.height = convertInRem(scrollHeight ?? '0');
+		}
+	}, [convertInRem]);
+
+	const updatedBody = useMemo(() => replaceLinkToAnchor(body), [body]);
+
+	useLayoutEffect(() => {
+		if (!isNull(iframeRef.current) && !isNull(iframeRef.current.contentDocument)) {
+			iframeRef.current.contentDocument.open();
+			iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
+			iframeRef.current.contentDocument.close();
+		}
 		const styleTag = document.createElement('style');
-		const styles = `
+		styleTag.textContent = `
+			max-width: 100% !important;
 			body {
+				max-width: 100% !important;
 				margin: 0;
 				overflow-y: hidden;
 				font-family: Roboto, sans-serif;
 				font-size: 0.875rem;
+				background-color: #ffffff;
 			}
 			body pre, body pre * {
 				white-space: pre-wrap;
-				word-wrap: break-word !important;
+				word-wrap: anywhere !important;
 				text-wrap: suppress !important;
 			}
 			img {
 				max-width: 100%
 			}
-			
+			tbody{position:relative !important}
+			td{
+				max-width: 100% !important;
+				overflow-wrap: anywhere !important;
+			}
+			#bodyTable {
+				height: fit-content
+			}
 		`;
-		styleTag.textContent = styles;
-		iframeRef.current.contentDocument.head.append(styleTag);
-		iframeRef.current.style.display = 'block';
-		iframeRef.current.style.height = `${
-			iframeRef.current.contentDocument.body.querySelector('div').scrollHeight
-		}px`;
-	}, []);
+		if (!isNull(iframeRef.current) && !isNull(iframeRef.current.contentDocument))
+			iframeRef.current.contentDocument.head.append(styleTag);
 
-	const updatedBody = useMemo(() => replaceLinkToAnchor(body), [body]);
+		calculateHeight();
 
-	useEffect(() => {
-		iframeRef.current.contentDocument.open();
-		iframeRef.current.contentDocument.write(`<div>${updatedBody}</div>`);
-		iframeRef.current.contentDocument.close();
-	}, [body, parts, msgId, updatedBody]);
+		const resizeObserver = new ResizeObserver(calculateHeight);
+		divRef.current && resizeObserver.observe(divRef.current);
+
+		return () => resizeObserver.disconnect();
+	}, [calculateHeight, msgId, parts, updatedBody]);
 
 	return (
-		<div className="force-white-bg" style={{ width: '100%' }}>
+		<div ref={divRef} className="force-white-bg" style={{ width: '100%' }}>
 			<iframe
 				title={msgId}
 				ref={iframeRef}
-				onLoad={onIframeLoad}
-				style={{ border: 'none', width: '100%', display: 'none' }}
+				onLoad={calculateHeight}
+				style={{ border: 'none', width: '100%' }}
 			/>
 		</div>
 	);
