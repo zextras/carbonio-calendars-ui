@@ -307,8 +307,7 @@ export default function EventPanelView(): ReactElement | null {
 							<StyledDivider />
 						</>
 					)}
-					<StyledDivider />
-					{invite && (
+					{invite && alarmString && (
 						<>
 							<ReminderPart alarmString={alarmString} invite={invite} event={event} />
 							<StyledDivider />
