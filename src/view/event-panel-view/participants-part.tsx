@@ -17,22 +17,28 @@ import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
 import { Trans } from 'react-i18next';
 
 import { ParticipantsDisplayer } from './participants-displayer';
+import { ParticipantsDisplayerSmall } from './participants-displayer-small';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
+import { EventType } from '../../types/event';
 import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
 
 type ParticipantProps = {
 	invite: Invite;
+	event: EventType;
 	organizer: InviteOrganizer;
 	participants: InviteParticipants;
+	isSummary?: boolean;
 };
 
 export const ParticipantsPart = ({
 	invite,
+	event,
 	organizer,
-	participants
-}: ParticipantProps): ReactElement => {
+	participants,
+	isSummary
+}: ParticipantProps): ReactElement | null => {
 	const account = useUserAccount();
 	const calendar = useFolder(invite.ciFolder);
 	const createSnackbar = useContext(SnackbarManagerContext);
@@ -40,20 +46,20 @@ export const ParticipantsPart = ({
 		() => (!invite.isOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
 		[calendar, invite.isOrganizer]
 	);
-	return (
+	return organizer ? (
 		<Container
 			orientation="vertical"
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
 			width="fill"
 			height="fit"
-			padding={{ horizontal: 'large', vertical: 'medium' }}
+			padding={isSummary ? { vertical: 'small' } : { horizontal: 'large', vertical: 'medium' }}
 			background={'gray6'}
 		>
 			{invite?.organizer?.a === account.name && (
 				<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 					<Avatar
-						style={{ width: '3rem', height: '3rem' }}
+						size={isSummary ? 'small' : 'large'}
 						label={account.name ?? account.displayName ?? ''}
 					/>
 					<Text style={{ padding: '0 0.5rem' }}>
@@ -73,7 +79,7 @@ export const ParticipantsPart = ({
 				<Row mainAlignment="flex-start" crossAlignment="flex-start" padding={{ vertical: 'small' }}>
 					<Avatar
 						label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
-						style={{ width: '3rem', height: '3rem' }}
+						size={isSummary ? 'small' : 'large'}
 					/>
 					<Row
 						mainAlignment="flex-start"
@@ -124,7 +130,7 @@ export const ParticipantsPart = ({
 				!iAmAttendee && (
 					<Row mainAlignment="flex-start" crossAlignment="center" width="fill">
 						<Avatar
-							style={{ width: '3rem', height: '3rem' }}
+							size={isSummary ? 'small' : 'large'}
 							label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
 						/>
 						<Text style={{ padding: '0 0.5rem' }}>
@@ -137,7 +143,11 @@ export const ParticipantsPart = ({
 					</Row>
 				)
 			)}
-			<ParticipantsDisplayer participants={participants} />
+			{isSummary ? (
+				<ParticipantsDisplayerSmall participants={participants} event={event} />
+			) : (
+				<ParticipantsDisplayer participants={participants} />
+			)}
 		</Container>
-	);
+	) : null;
 };
