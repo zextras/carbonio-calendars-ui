@@ -3,11 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Button, Container, ModalManagerContext } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useCallback, useContext } from 'react';
+
+import { Button, Container, ModalManagerContext } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
+
 import { StoreProvider } from '../../../../../store/redux';
-import CustomRecurrenceModal from '../views/custom-recurrence-modal';
+import { CustomRecurrenceModal } from '../views/custom-recurrence-modal';
 
 const CustomRepeatSelectItem = ({ editorId }: { editorId: string }): ReactElement => {
 	const [t] = useTranslation();

@@ -3,6 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import EditorRecurrence from './views/editor-recurrence';
+import { EditorRecurrence } from './views/editor-recurrence';
 
 export { EditorRecurrence };

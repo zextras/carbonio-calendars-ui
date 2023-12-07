@@ -57,7 +57,7 @@ const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): Reac
 	</ColorContainer>
 );
 
-const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null => {
+export const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null => {
 	const recur = useAppSelector(selectEditorRecurrence(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();

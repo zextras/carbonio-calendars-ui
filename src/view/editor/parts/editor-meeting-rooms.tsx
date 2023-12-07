@@ -3,14 +3,27 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Select } from '@zextras/carbonio-design-system';
 import { compact, find, map, xorBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import {
+	EditorAvailabilityWarningRow,
+	getIsBusyAtTimeOfTheEvent
+} from './editor-availability-warning-row';
+import { ResourceCustomComponent } from './resource-custom-component';
+import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorDisabled, selectEditorMeetingRoom } from '../../../store/selectors/editor';
+import {
+	selectEditorAllDay,
+	selectEditorDisabled,
+	selectEditorEnd,
+	selectEditorMeetingRoom,
+	selectEditorStart,
+	selectEditorUid
+} from '../../../store/selectors/editor';
 import { editEditorMeetingRoom } from '../../../store/slices/editor-slice';
 import { useMeetingRooms } from '../../../store/zustand/hooks';
 import { Resource } from '../../../types/editor';
@@ -22,6 +35,12 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 	const [selection, setSelection] = useState<Array<Resource> | undefined>(undefined);
 	const dispatch = useAppDispatch();
 	const meetingRooms = useMeetingRooms();
+	const start = useAppSelector(selectEditorStart(editorId));
+	const end = useAppSelector(selectEditorEnd(editorId));
+	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const uid = useAppSelector(selectEditorUid(editorId));
+
+	const attendeesAvailabilityList = useAttendeesAvailability(start, meetingRooms, uid);
 
 	const onChange = useCallback(
 		(e) => {
@@ -48,15 +67,60 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 		}
 	}, [meetingRoom, meetingRooms, selection]);
 
-	return meetingRooms ? (
-		<Select
-			items={meetingRooms}
-			background={'gray5'}
-			label={t('label.meeting_room', 'Meeting room')}
-			onChange={onChange}
-			disabled={disabled?.meetingRoom}
-			selection={selection}
-			multiple
-		/>
+	const meetingRoomsAvailability = useMemo(() => {
+		if (!meetingRooms?.length) {
+			return [];
+		}
+		return map(meetingRooms, (room) => {
+			const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
+			const isSelected = find(selection, ['email', room.email]);
+
+			if (roomInList) {
+				const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
+					roomInList,
+					start,
+					end,
+					attendeesAvailabilityList,
+					allDay
+				);
+
+				if (isBusyAtTimeOfEvent) {
+					return {
+						...room,
+						email: room?.email ?? room?.label,
+						customComponent: (
+							<ResourceCustomComponent label={room.label} isSelected={!!isSelected} />
+						)
+					};
+				}
+			}
+			return {
+				...room,
+				email: room?.email ?? room?.label
+			};
+		});
+	}, [allDay, attendeesAvailabilityList, end, meetingRooms, selection, start]);
+
+	return meetingRoomsAvailability ? (
+		<>
+			<Select
+				items={meetingRoomsAvailability}
+				background={'gray5'}
+				label={t('label.meeting_room', 'Meeting room')}
+				onChange={onChange}
+				disabled={disabled?.meetingRoom}
+				selection={selection}
+				multiple
+			/>
+			<EditorAvailabilityWarningRow
+				label={t(
+					'attendees_rooms_unavailable',
+					'One or more Meeting Rooms are not available at the selected time of the event'
+				)}
+				list={attendeesAvailabilityList}
+				items={meetingRoom ?? []}
+				editorId={editorId}
+			/>
+		</>
 	) : null;
 };
