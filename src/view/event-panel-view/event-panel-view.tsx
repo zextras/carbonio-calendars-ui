@@ -252,6 +252,12 @@ export default function EventPanelView(): ReactElement | null {
 		() => getAlarmToString(event?.resource?.alarmData),
 		[event?.resource?.alarmData]
 	);
+
+	const messageHasABody = useMemo(() => {
+		const body = extractBody(invite?.textDescription?.[0]?._content);
+		return body?.length > 0;
+	}, [invite?.textDescription]);
+
 	return event && invite ? (
 		<AppointmentCardContainer mainAlignment="flex-start">
 			<DisplayerHeader event={event} panelView={PANEL_VIEW.APP} />
@@ -293,7 +299,7 @@ export default function EventPanelView(): ReactElement | null {
 							participants={invite?.participants}
 						/>
 					)}
-					{invite && extractBody(invite.textDescription?.[0]?._content) && (
+					{invite && messageHasABody && (
 						<>
 							<StyledDivider />
 							<MessagePart fullInvite={invite} inviteId={invite.id} parts={invite.parts} />
