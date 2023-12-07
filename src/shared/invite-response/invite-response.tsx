@@ -16,7 +16,7 @@ import {
 	Padding
 } from '@zextras/carbonio-design-system';
 import { addBoard, getAction, Action, t, Board, useUserAccount } from '@zextras/carbonio-shell-ui';
-import { filter, find, map, startsWith } from 'lodash';
+import { filter, find, map } from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -26,7 +26,7 @@ import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import BodyMessageRenderer, { extractBody } from '../../commons/body-message-renderer';
 import { generateEditor } from '../../commons/editor-generator';
-import { CALENDAR_RESOURCES, CALENDAR_ROUTE, ROOM_DIVIDER } from '../../constants';
+import { CALENDAR_RESOURCES, CALENDAR_ROUTE } from '../../constants';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
@@ -227,6 +227,11 @@ const InviteResponse: FC<InviteResponse> = ({
 
 	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
 		useGetEventTimezoneString(invite.start.u, invite.end.u, invite.allDay, invite.tz);
+
+	const messageHasABody = useMemo(() => {
+		const body = extractBody(invite?.textDescription?.[0]?._content);
+		return body?.length > 0;
+	}, [invite?.textDescription]);
 
 	return (
 		<InviteContainer padding={{ all: 'extralarge' }}>
@@ -568,30 +573,24 @@ const InviteResponse: FC<InviteResponse> = ({
 						</Row>
 					)}
 				</Row>
-				{invite &&
-					extractBody(invite.textDescription?.[0]?._content) &&
-					!startsWith(invite.textDescription?.[0]?._content ?? '', ROOM_DIVIDER) && (
-						<Row
-							width="100%"
-							crossAlignment="flex-start"
-							mainAlignment="flex-start"
-							padding={{ bottom: 'large' }}
-						>
-							<Row width="100%" padding={{ vertical: 'medium' }}>
-								<Divider />
-							</Row>
-							<Row padding={{ right: 'small' }}>
-								<Icon size="large" icon="MessageSquareOutline" />
-							</Row>
-							<Row takeAvailableSpace mainAlignment="flex-start">
-								<BodyMessageRenderer
-									fullInvite={invite}
-									inviteId={inviteId}
-									parts={invite?.parts}
-								/>
-							</Row>
+				{invite && messageHasABody && (
+					<Row
+						width="100%"
+						crossAlignment="flex-start"
+						mainAlignment="flex-start"
+						padding={{ bottom: 'large' }}
+					>
+						<Row width="100%" padding={{ vertical: 'medium' }}>
+							<Divider />
 						</Row>
-					)}
+						<Row padding={{ right: 'small' }}>
+							<Icon size="large" icon="MessageSquareOutline" />
+						</Row>
+						<Row takeAvailableSpace mainAlignment="flex-start">
+							<BodyMessageRenderer fullInvite={invite} inviteId={inviteId} parts={invite?.parts} />
+						</Row>
+					</Row>
+				)}
 			</Container>
 		</InviteContainer>
 	);
