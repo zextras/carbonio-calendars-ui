@@ -3,10 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Chip, Container } from '@zextras/carbonio-design-system';
 import React, { useContext, useMemo } from 'react';
+
+import { Chip, Container } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+
 import { EditModalContext } from '../../../../commons/edit-modal-context';
+import { SHARE_USER_TYPE } from '../../../../constants';
 import { findLabel } from '../../../../settings/components/utils';
 
 const HoverChip = styled(Chip)`
@@ -15,6 +19,7 @@ const HoverChip = styled(Chip)`
 `;
 
 export const GranteeInfo = ({ grant, hovered }) => {
+	const [t] = useTranslation();
 	const { roleOptions } = useContext(EditModalContext);
 
 	const role = useMemo(
@@ -23,9 +28,10 @@ export const GranteeInfo = ({ grant, hovered }) => {
 	);
 
 	const label = useMemo(() => {
+		const publicLabel = grant.gt === SHARE_USER_TYPE.PUBLIC ? t('public', 'public') : ''; // todo: find a default value
 		const composeLabel = (name) => `${name} - ${role}`;
-		return grant.d ? composeLabel(grant.d) : composeLabel(grant.zid);
-	}, [grant, role]);
+		return composeLabel(grant.d ?? grant.zid ?? publicLabel);
+	}, [grant.d, grant.gt, grant.zid, role, t]);
 
 	return (
 		<Container crossAlignment="flex-start">

@@ -10,7 +10,8 @@ import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { folderAction } from '../../store/actions/calendar-actions';
+import { FOLDER_OPERATIONS } from '../../constants/api';
+import { folderAction } from '../../store/actions/new-calendar-actions';
 
 export const EmptyModal = ({
 	onClose,
@@ -23,7 +24,7 @@ export const EmptyModal = ({
 	const [t] = useTranslation();
 
 	const onConfirm = (): void => {
-		folderAction({ id: folderId, op: 'empty', changes: { recursive: true } }).then((res) => {
+		folderAction([{ id: folderId, op: FOLDER_OPERATIONS.EMPTY, recursive: true }]).then((res) => {
 			onClose();
 			if (!res.Fault) {
 				createSnackbar({

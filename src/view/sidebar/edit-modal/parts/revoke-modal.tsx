@@ -3,9 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useTranslation } from 'react-i18next';
 import React, { useCallback, useContext, useMemo, useState, FC, ReactElement } from 'react';
-import { useUserAccounts, Grant } from '@zextras/carbonio-shell-ui';
+
 import {
 	Checkbox,
 	Container,
@@ -14,14 +13,19 @@ import {
 	SnackbarManagerContext,
 	Text
 } from '@zextras/carbonio-design-system';
-import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
-import { folderAction } from '../../../../store/actions/calendar-actions';
-import { ModalHeader } from '../../../../commons/modal-header';
-import ModalFooter from '../../../../commons/modal-footer';
+import { useUserAccounts, Grant } from '@zextras/carbonio-shell-ui';
+import { useTranslation } from 'react-i18next';
+
 import { GranteeInfo } from './grantee-info';
-import { EditModalContext } from '../../../../commons/edit-modal-context';
-import { useAppDispatch } from '../../../../store/redux/hooks';
 import { Folder } from '../../../../carbonio-ui-commons/types/folder';
+import { EditModalContext } from '../../../../commons/edit-modal-context';
+import ModalFooter from '../../../../commons/modal-footer';
+import { ModalHeader } from '../../../../commons/modal-header';
+import { PUBLIC_SHARE_ZID, SHARE_USER_TYPE } from '../../../../constants';
+import { FOLDER_OPERATIONS } from '../../../../constants/api';
+import { folderAction } from '../../../../store/actions/new-calendar-actions';
+import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
+import { useAppDispatch } from '../../../../store/redux/hooks';
 
 type ShareRevokeModalProps = {
 	folder: Folder;
@@ -56,7 +60,13 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 	}, [sendNotification, standardMessage, t]);
 
 	const onConfirm = useCallback(() => {
-		folderAction({ id: folder.id, zid: grant.zid, op: '!grant' }).then((res) => {
+		folderAction([
+			{
+				id: folder.id,
+				zid: grant.gt === SHARE_USER_TYPE.PUBLIC ? PUBLIC_SHARE_ZID : grant.zid,
+				op: FOLDER_OPERATIONS.REVOKE_GRANT
+			}
+		]).then((res) => {
 			if (!res.Fault) {
 				sendNotification &&
 					dispatch(
@@ -92,8 +102,9 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 		accounts,
 		createSnackbar,
 		dispatch,
-		folder,
+		folder.id,
 		grant.d,
+		grant.gt,
 		grant.zid,
 		onGoBack,
 		sendNotification,

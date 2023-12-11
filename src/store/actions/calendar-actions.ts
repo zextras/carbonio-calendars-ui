@@ -3,8 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Grant } from '@zextras/carbonio-shell-ui';
+/* import { Grant } from '@zextras/carbonio-shell-ui';
 import { find, forEach, isArray, map, reject } from 'lodash';
+
 import { getFolder, getUpdateFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { batchRequest } from '../../soap/batch-request';
 import { folderActionRequest } from '../../soap/folder-action-request';
@@ -104,4 +105,4 @@ export const folderAction = async ({
 		updateFolderGrants(res.action, changes.grant);
 	}
 	return res;
-};
+}; */

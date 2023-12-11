@@ -14,7 +14,8 @@ import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-heade
 import { isNestedInTrash } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
-import { folderAction } from '../../store/actions/calendar-actions';
+import { FOLDER_OPERATIONS } from '../../constants/api';
+import { folderAction } from '../../store/actions/new-calendar-actions';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);
@@ -22,7 +23,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 	const onConfirm = (): void => {
 		onClose();
 		const restoreEvent = (): void => {
-			folderAction({ id: folder.id, op: 'move', changes: folder }).then((res) => {
+			folderAction([{ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }]).then((res) => {
 				if (!res.Fault) {
 					createSnackbar({
 						key: 'send',
@@ -44,10 +45,12 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				}
 			});
 		};
-		folderAction({
-			id: folder.id,
-			op: isNestedInTrash(folder) ? 'delete' : 'trash'
-		}).then((res) => {
+		folderAction([
+			{
+				id: folder.id,
+				op: isNestedInTrash(folder) ? FOLDER_OPERATIONS.DELETE : FOLDER_OPERATIONS.TRASH
+			}
+		]).then((res) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: 'send',

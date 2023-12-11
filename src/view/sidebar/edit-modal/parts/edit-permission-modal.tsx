@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { useCallback, useContext, useMemo, useState, FC } from 'react';
+
 import {
 	Checkbox,
 	Container,
@@ -13,17 +15,19 @@ import {
 	Text
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts, Grant } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useContext, useMemo, useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { GranteeInfo } from './grantee-info';
+import { Folder } from '../../../../carbonio-ui-commons/types/folder';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
+import { SHARE_USER_TYPE } from '../../../../constants';
+import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { findLabel } from '../../../../settings/components/utils';
+import { folderAction } from '../../../../store/actions/new-calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
-import { GranteeInfo } from './grantee-info';
 import { useAppDispatch } from '../../../../store/redux/hooks';
-import { folderAction } from '../../../../store/actions/calendar-actions';
-import { Folder } from '../../../../carbonio-ui-commons/types/folder';
 
 type EditPermissionModalProps = {
 	folder: Folder;
@@ -50,14 +54,14 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 	const onConfirm = (): void => {
 		const grants = [
 			{
-				gt: 'usr',
+				gt: SHARE_USER_TYPE.USER,
 				inh: '1',
 				d: grant.d || grant.zid,
 				perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
 				pw: ''
 			}
 		];
-		folderAction({ id: folder.id, op: 'grant', changes: { grant: grants } }).then((res) => {
+		folderAction([{ id: folder.id, op: FOLDER_OPERATIONS.GRANT, grant: grants }]).then((res) => {
 			if (!res?.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,
@@ -134,7 +138,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 			>
 				<Select
 					items={roleOptions}
-					background="gray5"
+					background={'gray5'}
 					label={t('label.role', 'Role')}
 					onChange={onShareRoleChange}
 					disablePortal
