@@ -7,7 +7,6 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within, act } from '@testing-library/react';
-import { Grant } from '@zextras/carbonio-shell-ui';
 import { rest } from 'msw';
 
 import { EditModal } from './edit-modal';
@@ -15,7 +14,7 @@ import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folde
 import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
 import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import type { FolderView } from '../../../carbonio-ui-commons/types/folder';
+import type { FolderView, Grant } from '../../../carbonio-ui-commons/types/folder';
 import * as handler from '../../../store/actions/send-share-calendar-notification';
 import { reducers } from '../../../store/redux';
 
@@ -71,7 +70,7 @@ const setupInterceptor = (): Promise<any> =>
 	new Promise<any>((resolve, reject) => {
 		// Register a handler for the REST call
 		getSetupServer().use(
-			rest.post('/service/soap/FolderActionrequest', async (req, res, ctx) => {
+			rest.post('/service/soap/FolderActionRequest', async (req, res, ctx) => {
 				if (!req) {
 					reject(new Error('Empty request'));
 				}
@@ -140,10 +139,10 @@ describe('edit modal', () => {
 			expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
 		});
 		await waitFor(() => {
-			expect(interceptorResponse[1].action.grant[0].perm).toBe('rwidxa');
+			expect(interceptorResponse.action.grant[0].perm).toBe('rwidxa');
 		});
 		await waitFor(() => {
-			expect(interceptorResponse[1].action.grant[0].d).toBe('test1@email.it');
+			expect(interceptorResponse.action.grant[0].d).toBe('test1@email.it');
 		});
 	});
 	test('If the folder is shared with someone, the shared list should be visible', async () => {

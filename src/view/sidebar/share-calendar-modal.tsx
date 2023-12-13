@@ -121,7 +121,7 @@ const UserShare = ({
 	const [standardMessage, setStandardMessage] = useState('');
 	const [contacts, setContacts] = useState<Contacts>([]);
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
-	const [disabled, setDisabled] = useState(false);
+	const disabled = useMemo(() => !contacts.length || some(contacts, 'error'), [contacts]);
 
 	const shareCalendarRoleOptions = useMemo(
 		() => ShareCalendarRoleOptions(grant?.[0]?.perm?.includes('p')),
@@ -142,12 +142,6 @@ const UserShare = ({
 		[setshareWithUserRole]
 	);
 
-	useEffect(() => {
-		if (!contacts || some(contacts, 'error')) {
-			setDisabled(true);
-		}
-	}, [contacts, setDisabled]);
-
 	const onConfirm = useCallback((): void => {
 		const granted = map(contacts, (contact) => ({
 			gt: SHARE_USER_TYPE.USER,
@@ -156,7 +150,7 @@ const UserShare = ({
 			perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
 			pw: ''
 		}));
-		folderAction([{ id: folderId, op: FOLDER_OPERATIONS.GRANT, grant: granted }]).then((res) => {
+		folderAction({ id: folderId, op: FOLDER_OPERATIONS.GRANT, grant: granted }).then((res) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,
@@ -339,7 +333,7 @@ const PublicShare = ({
 			perm: 'r',
 			pw: ''
 		};
-		folderAction([{ id: folderId, op: FOLDER_OPERATIONS.GRANT, grant }]).then((res) => {
+		folderAction({ id: folderId, op: FOLDER_OPERATIONS.GRANT, grant }).then((res) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,

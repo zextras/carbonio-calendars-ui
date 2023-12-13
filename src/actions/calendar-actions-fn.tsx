@@ -65,7 +65,7 @@ export const moveToRoot =
 			e.stopPropagation();
 		}
 		const root = getRoot(item.id);
-		folderAction([{ id: item.id, op: FOLDER_OPERATIONS.MOVE, l: root?.id ?? '1' }]).then(
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.MOVE, l: root?.id ?? '1' }).then(
 			(res: { Fault?: string }) => {
 				if (!res.Fault) {
 					createSnackbar({
@@ -184,29 +184,27 @@ export const removeFromList =
 		if (e) {
 			e.stopPropagation();
 		}
-		folderAction([{ id: item.id, op: FOLDER_OPERATIONS.DELETE }]).then(
-			(res: { Fault?: string }) => {
-				if (!res.Fault) {
-					createSnackbar({
-						key: `shared-calendar-removed`,
-						replace: true,
-						type: 'info',
-						hideButton: true,
-						label: t('message.snackbar.shared_calendar_removed', 'Calendar removed successfully'),
-						autoHideTimeout: 3000
-					});
-				} else {
-					createSnackbar({
-						key: `shared-calendar-removed-error`,
-						replace: true,
-						type: 'error',
-						hideButton: true,
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000
-					});
-				}
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then((res: { Fault?: string }) => {
+			if (!res.Fault) {
+				createSnackbar({
+					key: `shared-calendar-removed`,
+					replace: true,
+					type: 'info',
+					hideButton: true,
+					label: t('message.snackbar.shared_calendar_removed', 'Calendar removed successfully'),
+					autoHideTimeout: 3000
+				});
+			} else {
+				createSnackbar({
+					key: `shared-calendar-removed-error`,
+					replace: true,
+					type: 'error',
+					hideButton: true,
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000
+				});
 			}
-		);
+		});
 	};
 
 export const sharesInfo =

@@ -13,6 +13,8 @@ import { ShareCalendarModal } from './share-calendar-modal';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
 
+const dropdownID = 'dropdown-popper-list';
+
 describe('share-calendar-modal', () => {
 	test('share with has 2 options, internal is selected by default, confirm button is disabled', async () => {
 		const closeFn = jest.fn();
@@ -38,18 +40,18 @@ describe('share-calendar-modal', () => {
 			screen.getByText(/share\.options\.share_calendar_with\.internal_users_groups/i)
 		).toBeInTheDocument();
 
-		await user.click(screen.getByText(/label\.share_with/i));
+		await user.click(screen.getByText(/share with/i));
 
-		const dropdownInternalOption = within(screen.getByTestId('dropdown-popper-list')).getByText(
+		const dropdownInternalOption = within(screen.getByTestId(dropdownID)).getByText(
 			/share\.options\.share_calendar_with\.internal_users_groups/i
 		);
 
-		const dropdownPublicOption = within(screen.getByTestId('dropdown-popper-list')).getByText(
+		const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
 			/share\.options\.share_calendar_with\.public/i
 		);
 
 		const confirmButton = screen.getByRole('button', {
-			name: /action\.share_calendar/i
+			name: /Share Calendar/i
 		});
 
 		expect(dropdownInternalOption).toBeInTheDocument();
@@ -76,25 +78,25 @@ describe('share-calendar-modal', () => {
 			{ store }
 		);
 
-		await user.click(screen.getByText(/label\.share_with/i));
+		await user.click(screen.getByText(/share with/i));
 
-		const dropdownPublicOption = within(screen.getByTestId('dropdown-popper-list')).getByText(
+		const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
 			/share\.options\.share_calendar_with\.public/i
 		);
 
 		await user.click(dropdownPublicOption);
 
 		const chipInput = screen.queryByRole('textbox', {
-			name: /share\.placeholder\.recipients_address/i
+			name: /Recipients e-mail addresses/i
 		});
 		const privateCheckbox = screen.queryByText(/share\.label\.allow_to_see_private_appt/i);
 		const roleSelector = screen.queryByText(/label\.role/i);
 		const notificationCheckbox = screen.queryByText(/share\.label\.send_notification/i);
 		const standardMessage = screen.queryByRole('textbox', {
-			name: /share\.placeholder\.standard_message/i
+			name: /Add a note to standard message/i
 		});
 		const shareNotes = screen.queryByText(/share\.note\.share_note/i);
-		const confirmButton = screen.getByText(/action\.share_calendar/i);
+		const confirmButton = screen.getByText(/Share Calendar/i);
 
 		expect(confirmButton).toBeEnabled();
 		expect(chipInput).not.toBeInTheDocument();
@@ -125,15 +127,17 @@ describe('share-calendar-modal', () => {
 		);
 
 		const chipInput = screen.getByRole('textbox', {
-			name: /share\.placeholder\.recipients_address/i
+			name: /Recipients e-mail addresses/i
 		});
-		const privateCheckbox = screen.getByText(/share\.label\.allow_to_see_private_appt/i);
-		const roleSelector = screen.getByText(/label\.role/i);
-		const notificationCheckbox = screen.getByText(/share\.label\.send_notification/i);
+		const privateCheckbox = screen.getByText(
+			/allow user\(s\) to see private appointments’ detail/i
+		);
+		const roleSelector = screen.getByText('Role');
+		const notificationCheckbox = screen.getByText(/send notification about this share/i);
 		const standardMessage = screen.getByRole('textbox', {
-			name: /share\.placeholder\.standard_message/i
+			name: /Add a note to standard message/i
 		});
-		const shareNotes = screen.getByText(/share\.note\.share_note/i);
+		const shareNotes = screen.getByText(/note:/i);
 		expect(chipInput).toBeInTheDocument();
 		expect(privateCheckbox).toBeInTheDocument();
 		expect(roleSelector).toBeInTheDocument();
@@ -161,11 +165,11 @@ describe('share-calendar-modal', () => {
 			{ store }
 		);
 		const chipInput = screen.getByRole('textbox', {
-			name: /share\.placeholder\.recipients_address/i
+			name: /Recipients e-mail addresses/i
 		});
 
 		const confirmButton = screen.getByRole('button', {
-			name: /action\.share_calendar/i
+			name: /Share Calendar/i
 		});
 
 		expect(chipInput).toHaveValue('');
@@ -193,10 +197,10 @@ describe('share-calendar-modal', () => {
 			{ store }
 		);
 		const chipInput = screen.getByRole('textbox', {
-			name: /share\.placeholder\.recipients_address/i
+			name: /Recipients e-mail addresses/i
 		});
 		const confirmButton = screen.getByRole('button', {
-			name: /action\.share_calendar/i
+			name: /Share Calendar/i
 		});
 		if (chipInput) {
 			await user.type(chipInput, 'ale');
@@ -256,8 +260,10 @@ describe('share-calendar-modal', () => {
 		expect(infoPrivateCheckbox).toBeInTheDocument();
 
 		userEvent.hover(infoPrivateCheckbox);
-		await screen.findByText('private_info_tooltip');
-		expect(screen.getByText('private_info_tooltip')).toBeVisible();
+
+		const tooltipTextElement = await screen.findByText(/When sharing a calendar/i);
+
+		expect(tooltipTextElement).toBeVisible();
 	});
 
 	test('allow users to see my private appointments is checked on click', async () => {
@@ -320,19 +326,19 @@ describe('share-calendar-modal', () => {
 
 		await user.click(roleLabel);
 
-		const viewerRoleOption = within(screen.getByTestId('dropdown-popper-list')).getByText(
+		const viewerRoleOption = within(screen.getByTestId(dropdownID)).getByText(
 			/share\.options\.share_calendar_role\.viewer/i
 		);
 
-		const noPermissionRoleOption = within(screen.getByTestId('dropdown-popper-list')).getByText(
+		const noPermissionRoleOption = within(screen.getByTestId(dropdownID)).getByText(
 			/share\.options\.share_calendar_role\.none/i
 		);
 
-		const adminRoleOption = within(screen.getByTestId('dropdown-popper-list')).getByText(
+		const adminRoleOption = within(screen.getByTestId(dropdownID)).getByText(
 			/share\.options\.share_calendar_role\.admin/i
 		);
 
-		const managerRoleOption = within(screen.getByTestId('dropdown-popper-list')).getByText(
+		const managerRoleOption = within(screen.getByTestId(dropdownID)).getByText(
 			/share\.options\.share_calendar_role\.manager/i
 		);
 
@@ -394,7 +400,7 @@ describe('share-calendar-modal', () => {
 		expect(sendNotificationCheckbox).toBeInTheDocument();
 
 		const standardMessage = screen.getByRole('textbox', {
-			name: /share\.placeholder\.standard_message/i
+			name: /Add a note to standard message/i
 		});
 
 		expect(standardMessage).toBeEnabled();
@@ -430,7 +436,7 @@ describe('share-calendar-modal', () => {
 		});
 
 		const standardMessage = screen.getByRole('textbox', {
-			name: /share\.placeholder\.standard_message/i
+			name: /Add a note to standard message/i
 		});
 
 		expect(standardMessage).toBeDisabled();

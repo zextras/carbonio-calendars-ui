@@ -23,7 +23,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 	const onConfirm = (): void => {
 		onClose();
 		const restoreEvent = (): void => {
-			folderAction([{ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }]).then((res) => {
+			folderAction({ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }).then((res) => {
 				if (!res.Fault) {
 					createSnackbar({
 						key: 'send',
@@ -45,12 +45,10 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				}
 			});
 		};
-		folderAction([
-			{
-				id: folder.id,
-				op: isNestedInTrash(folder) ? FOLDER_OPERATIONS.DELETE : FOLDER_OPERATIONS.TRASH
-			}
-		]).then((res) => {
+		folderAction({
+			id: folder.id,
+			op: isNestedInTrash(folder) ? FOLDER_OPERATIONS.DELETE : FOLDER_OPERATIONS.TRASH
+		}).then((res) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: 'send',

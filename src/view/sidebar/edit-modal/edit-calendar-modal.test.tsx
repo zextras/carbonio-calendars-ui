@@ -10,14 +10,14 @@ import { screen, waitFor, within } from '@testing-library/react';
 import { find } from 'lodash';
 import { rest } from 'msw';
 
-import { EditModal } from './edit-modal/edit-modal';
-import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
-import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
-import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import { setupTest, setupHook } from '../../carbonio-ui-commons/test/test-setup';
-import type { FolderView } from '../../carbonio-ui-commons/types/folder';
-import { useCalendarActions } from '../../hooks/use-calendar-actions';
-import { reducers } from '../../store/redux';
+import { EditModal } from './edit-modal';
+import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
+import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/roots-generator';
+import { setupTest, setupHook } from '../../../carbonio-ui-commons/test/test-setup';
+import type { FolderView } from '../../../carbonio-ui-commons/types/folder';
+import { useCalendarActions } from '../../../hooks/use-calendar-actions';
+import { reducers } from '../../../store/redux';
 
 const roots = generateRoots();
 
@@ -58,7 +58,7 @@ const setupInterceptor = (): Promise<any> =>
 	new Promise<any>((resolve, reject) => {
 		// Register a handler for the REST call
 		getSetupServer().use(
-			rest.post('/service/soap/FolderActionrequest', async (req, res, ctx) => {
+			rest.post('/service/soap/FolderActionRequest', async (req, res, ctx) => {
 				if (!req) {
 					reject(new Error('Empty request'));
 				}
@@ -74,6 +74,7 @@ const setupInterceptor = (): Promise<any> =>
 			})
 		);
 	});
+
 describe('main-calendar-modal', () => {
 	test('change color', async () => {
 		const editSavingInterceptor = setupInterceptor();
@@ -132,7 +133,7 @@ describe('main-calendar-modal', () => {
 		});
 
 		const freeBusyCheckbox = screen.getByTestId('icon: Square');
-		expect(freeBusyCheckbox).toBeInTheDocument();
+
 		await waitFor(() => {
 			user.click(freeBusyCheckbox);
 		});
@@ -140,7 +141,7 @@ describe('main-calendar-modal', () => {
 
 		const newCalendar = await editSavingInterceptor;
 		await waitFor(() => {
-			expect(newCalendar.excludeFreeBusy).toBeUndefined();
+			expect(newCalendar.excludeFreeBusy).toBe(true);
 		});
 	});
 	test('close modal', async () => {

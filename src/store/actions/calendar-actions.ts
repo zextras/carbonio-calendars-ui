@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-/* import { Grant } from '@zextras/carbonio-shell-ui';
+/*
 import { find, forEach, isArray, map, reject } from 'lodash';
 
 import { getFolder, getUpdateFolder } from '../../carbonio-ui-commons/store/zustand/folder';

@@ -17,12 +17,12 @@ import {
 	LabelFactoryProps,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { Grant } from '@zextras/carbonio-shell-ui/types/misc';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { FOLDERS } from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui-constants';
+import { Grant } from '../../../carbonio-ui-commons/types/folder';
 import { isLinkChild } from '../../../commons/utilities';
 
 export const Square = styled.div`

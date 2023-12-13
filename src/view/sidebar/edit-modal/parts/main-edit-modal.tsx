@@ -20,7 +20,7 @@ import {
 	Tooltip,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, Grant, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import type { TFunction } from 'i18next';
 import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal
 import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
 import { useFoldersArray } from '../../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../../../carbonio-ui-commons/types/folder';
+import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
@@ -237,8 +237,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						id: folder.id
 				  }
 				: undefined;
-		const actions = compact([actionRename, actionColor, actionFreeBusy]);
-		if (actions.length) {
+		const actionsArray = compact([actionRename, actionColor, actionFreeBusy]);
+		if (actionsArray.length) {
+			const actions = actionsArray.length > 1 ? actionsArray : actionsArray[0];
 			folderAction(actions).then((res: { Fault?: string }) => {
 				if (!res.Fault) {
 					createSnackbar({

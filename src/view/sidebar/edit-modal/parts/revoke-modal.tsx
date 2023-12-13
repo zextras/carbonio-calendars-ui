@@ -60,13 +60,11 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 	}, [sendNotification, standardMessage, t]);
 
 	const onConfirm = useCallback(() => {
-		folderAction([
-			{
-				id: folder.id,
-				zid: grant.gt === SHARE_USER_TYPE.PUBLIC ? PUBLIC_SHARE_ZID : grant.zid,
-				op: FOLDER_OPERATIONS.REVOKE_GRANT
-			}
-		]).then((res) => {
+		folderAction({
+			id: folder.id,
+			zid: grant.gt === SHARE_USER_TYPE.PUBLIC ? PUBLIC_SHARE_ZID : grant.zid,
+			op: FOLDER_OPERATIONS.REVOKE_GRANT
+		}).then((res) => {
 			if (!res.Fault) {
 				sendNotification &&
 					dispatch(

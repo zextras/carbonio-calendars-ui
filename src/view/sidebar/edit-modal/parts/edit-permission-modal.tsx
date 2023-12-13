@@ -14,11 +14,11 @@ import {
 	SnackbarManagerContext,
 	Text
 } from '@zextras/carbonio-design-system';
-import { useUserAccounts, Grant } from '@zextras/carbonio-shell-ui';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { GranteeInfo } from './grantee-info';
-import { Folder } from '../../../../carbonio-ui-commons/types/folder';
+import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
@@ -35,7 +35,7 @@ type EditPermissionModalProps = {
 	onGoBack: () => void;
 };
 
-type EditModalContexType = {
+type EditModalContextType = {
 	roleOptions: Array<{ label: string; value: string }>;
 	onClose: () => void;
 };
@@ -44,12 +44,12 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 	const [t] = useTranslation();
 	const [sendNotification, setSendNotification] = useState(false);
 	const [standardMessage, setStandardMessage] = useState('');
-	const { onClose, roleOptions } = useContext<EditModalContexType>(EditModalContext);
+	const { onClose, roleOptions } = useContext<EditModalContextType>(EditModalContext);
 	const accounts = useUserAccounts();
 	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const [shareWithUserRole, setshareWithUserRole] = useState('');
-	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
+	const [shareWithUserRole, setShareWithUserRole] = useState('');
+	const [allowToSeePrivateAppointment, setAllowToSeePrivateAppointment] = useState(false);
 
 	const onConfirm = (): void => {
 		const grants = [
@@ -57,11 +57,11 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 				gt: SHARE_USER_TYPE.USER,
 				inh: '1',
 				d: grant.d || grant.zid,
-				perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
+				perm: `${shareWithUserRole}${allowToSeePrivateAppointment ? 'p' : ''}`,
 				pw: ''
 			}
 		];
-		folderAction([{ id: folder.id, op: FOLDER_OPERATIONS.GRANT, grant: grants }]).then((res) => {
+		folderAction({ id: folder.id, op: FOLDER_OPERATIONS.GRANT, grant: grants }).then((res) => {
 			if (!res?.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,
@@ -99,7 +99,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 	};
 
 	const onShareRoleChange = useCallback((shareRole) => {
-		setshareWithUserRole(shareRole);
+		setShareWithUserRole(shareRole);
 	}, []);
 
 	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
@@ -121,9 +121,9 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 				height="fit"
 			>
 				<Checkbox
-					value={allowToSeePrvtAppt}
-					defaultChecked={allowToSeePrvtAppt}
-					onClick={(): void => setAllowToSeePrvtAppt(!allowToSeePrvtAppt)}
+					value={allowToSeePrivateAppointment}
+					defaultChecked={allowToSeePrivateAppointment}
+					onClick={(): void => setAllowToSeePrivateAppointment((prevValue) => !prevValue)}
 					label={t(
 						'share.label.allow_to_see_private_appt',
 						'Allow user(s) to see my private appointments'
