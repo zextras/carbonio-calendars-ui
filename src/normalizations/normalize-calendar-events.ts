@@ -83,10 +83,13 @@ const normalizeEventResource = ({
 	isException: inst?.ex ?? false,
 	hasException: inst?.hasEx ?? appt.hasEx ?? false,
 	participationStatus: inst?.ptst ?? appt.ptst,
-	organizer: {
-		name: appt?.or?.d,
-		email: appt?.or?.a
-	},
+	organizer:
+		appt?.or?.d || appt?.or?.a
+			? {
+					name: appt?.or?.d,
+					email: appt?.or?.a
+			  }
+			: undefined,
 	compNum: appt.compNum,
 	apptStart: inst?.s,
 	alarm: appt.alarm,

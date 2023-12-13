@@ -34,6 +34,16 @@ import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 
+const isAnInvite = (event: EventType): boolean =>
+	event.resource.organizer
+		? !event.resource.iAmOrganizer &&
+		  event.haveWriteAccess &&
+		  ((!!event.resource.calendar.owner &&
+				event.resource.organizer &&
+				event.resource.calendar.owner !== event.resource.organizer.email) ||
+				!event.resource.calendar.owner)
+		: false;
+
 const getInstanceActionsItems = ({
 	event,
 	invite,
@@ -49,11 +59,7 @@ const getInstanceActionsItems = ({
 	copyEventItem({ event, invite, context }),
 	showOriginal({ event }),
 	applyTag({ event, context }),
-	...(!event.resource.iAmOrganizer &&
-	event.haveWriteAccess &&
-	((!!event.resource.calendar.owner &&
-		event.resource.calendar.owner !== event.resource.organizer.email) ||
-		!event.resource.calendar.owner)
+	...(isAnInvite(event)
 		? [
 				acceptInvitationItem({ event, context }),
 				declineInvitationItem({ event, context }),
@@ -84,11 +90,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(!event.resource.iAmOrganizer &&
-				event.haveWriteAccess &&
-				((!!event.resource.calendar.owner &&
-					event.resource.calendar.owner !== event.resource.organizer.email) ||
-					!event.resource.calendar.owner)
+				...(isAnInvite(event)
 					? [
 							acceptInvitationItem({ event, context }),
 							declineInvitationItem({ event, context }),
@@ -117,11 +119,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event: seriesEvent, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(!event.resource.iAmOrganizer &&
-				event.haveWriteAccess &&
-				((!!event.resource.calendar.owner &&
-					event.resource.calendar.owner !== event.resource.organizer.email) ||
-					!event.resource.calendar.owner)
+				...(isAnInvite(event)
 					? [
 							acceptInvitationItem({ event: seriesEvent, context }),
 							declineInvitationItem({ event: seriesEvent, context }),

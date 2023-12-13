@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import moment, { Moment } from 'moment';
-import { ZimbraColorType } from '../commons/zimbra-standard-colors';
+
 import {
 	AlarmData,
 	InviteClass,
@@ -12,6 +12,7 @@ import {
 	InviteStatus,
 	ParticipationStatus
 } from './store/invite';
+import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 
 export type AlarmType = {
 	alarm: AlarmData;
@@ -78,10 +79,12 @@ export type EventResource = {
 	hasOtherAttendees: boolean;
 	isRecurrent: boolean;
 	participationStatus: ParticipationStatus;
-	organizer: {
-		name: string;
-		email: string;
-	};
+	organizer:
+		| {
+				name?: string;
+				email?: string;
+		  }
+		| undefined;
 	room?: any;
 	start?: DateType;
 	uid?: string;
