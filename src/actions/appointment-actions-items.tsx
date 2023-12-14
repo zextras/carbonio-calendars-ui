@@ -150,15 +150,16 @@ export const editEventItem = ({
 		id: EventActionsEnum.EDIT,
 		icon: 'Edit2Outline',
 		label: t('label.edit', 'Edit'),
-		disabled:
-			// if the event is in trash or nested in it
-			isTrashOrNestedInIt({ id: event.resource.calendar.id, absFolderPath }) ||
-			// if user is owner of the calendar but he is not the organizer
-			(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
-			// if it is inside a shared calendar or user doesn't have write access
-			(!!event.resource.calendar.owner &&
-				(event.resource.calendar.owner !== event.resource.organizer.email ||
-					!event?.haveWriteAccess)),
+		disabled: event.resource.organizer
+			? // if the event is in trash or nested in it
+			  isTrashOrNestedInIt({ id: event.resource.calendar.id, absFolderPath }) ||
+			  // if user is owner of the calendar but he is not the organizer
+			  (!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
+			  // if it is inside a shared calendar or user doesn't have write access
+			  (!!event.resource.calendar.owner &&
+					(event.resource.calendar.owner !== event.resource.organizer?.email ||
+						!event?.haveWriteAccess))
+			: false,
 		tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 		onClick: editAppointment({ event, invite, context })
 	};
