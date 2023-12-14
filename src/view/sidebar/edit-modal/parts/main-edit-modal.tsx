@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 
 import {
 	ButtonOld as Button,
@@ -33,8 +33,9 @@ import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
 import { useFoldersArray } from '../../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';
-import { EditModalContext } from '../../../../commons/edit-modal-context';
+import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
+import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
 import { folderAction } from '../../../../store/actions/new-calendar-actions';
@@ -136,12 +137,6 @@ type MainEditModalProps = {
 	grant: Grant[];
 };
 
-type EditModalContexType = {
-	setModal: (modal: string) => void;
-	onClose: () => void;
-	setActiveGrant: (grant: Grant) => void;
-};
-
 export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointments, grant }) => {
 	const allCalendars = useFoldersArray();
 
@@ -149,7 +144,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const accounts = useUserAccounts();
 	const createSnackbar = useSnackbar();
 	const dispatch = useAppDispatch();
-	const { setModal, onClose, setActiveGrant } = useContext<EditModalContexType>(EditModalContext);
+	const { setModal, onClose, setActiveGrant } = useEditModalContext();
 
 	const colors = useMemo(() => getStatusItems(t), [t]);
 
@@ -167,17 +162,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const [folderName, setFolderName] = useState(defaultFolderName);
 	const [freeBusy, setFreeBusy] = useState(defaultFreeBusy);
 
-	const [hovered, setHovered] = useState({});
-
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-
-	const onMouseEnter = useCallback((item) => {
-		setHovered(item);
-	}, []);
-
-	const onMouseLeave = useCallback(() => {
-		setHovered({});
-	}, []);
 
 	const folderArray = useMemo(
 		() =>
@@ -331,7 +316,10 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		[setModal, setActiveGrant]
 	);
 
-	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
+	const title = useMemo(
+		() => t('action.edit_calendar_properties', 'Edit calendar properties'),
+		[t]
+	);
 
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 
@@ -462,25 +450,23 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									padding={{ bottom: 'small' }}
 									key={index}
 								>
-									<GranteeInfo grant={item} hovered={hovered} />
-									<Container
-										orientation="horizontal"
-										mainAlignment="flex-end"
-										onMouseEnter={onMouseEnter}
-										onMouseLeave={onMouseLeave}
-										maxWidth="fit"
-									>
-										<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
-											<Button
-												type="outlined"
-												label={t('label.edit', 'Edit')}
-												onClick={(): void => {
-													onEdit(item);
-												}}
-												isSmall
-											/>
-										</Tooltip>
-										<Padding horizontal="extrasmall" />
+									<GranteeInfo grant={item} />
+									<Container orientation="horizontal" mainAlignment="flex-end" maxWidth="fit">
+										{item.gt !== SHARE_USER_TYPE.PUBLIC && (
+											<>
+												<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
+													<Button
+														type="outlined"
+														label={t('label.edit', 'Edit')}
+														onClick={(): void => {
+															onEdit(item);
+														}}
+														isSmall
+													/>
+												</Tooltip>
+												<Padding horizontal="extrasmall" />
+											</>
+										)}
 										<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
 											<Button
 												type="outlined"
@@ -492,21 +478,25 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 												isSmall
 											/>
 										</Tooltip>
-										<Padding horizontal="extrasmall" />
-										<Tooltip
-											label={t('tooltip.resend', 'Send mail notification about this share')}
-											placement="top"
-											maxWidth="18.75rem"
-										>
-											<Button
-												type="outlined"
-												label={t('label.resend', 'Resend')}
-												onClick={(): void => {
-													onResend(item);
-												}}
-												isSmall
-											/>
-										</Tooltip>
+										{item.gt !== SHARE_USER_TYPE.PUBLIC && (
+											<>
+												<Padding horizontal="extrasmall" />
+												<Tooltip
+													label={t('tooltip.resend', 'Send mail notification about this share')}
+													placement="top"
+													maxWidth="18.75rem"
+												>
+													<Button
+														type="outlined"
+														label={t('label.resend', 'Resend')}
+														onClick={(): void => {
+															onResend(item);
+														}}
+														isSmall
+													/>
+												</Tooltip>
+											</>
+										)}
 									</Container>
 								</Container>
 							))}

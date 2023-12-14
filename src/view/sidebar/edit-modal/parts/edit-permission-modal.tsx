@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 import { GranteeInfo } from './grantee-info';
 import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
-import { EditModalContext } from '../../../../commons/edit-modal-context';
+import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
 import { SHARE_USER_TYPE } from '../../../../constants';
@@ -35,16 +35,11 @@ type EditPermissionModalProps = {
 	onGoBack: () => void;
 };
 
-type EditModalContextType = {
-	roleOptions: Array<{ label: string; value: string }>;
-	onClose: () => void;
-};
-
 export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, grant, onGoBack }) => {
 	const [t] = useTranslation();
 	const [sendNotification, setSendNotification] = useState(false);
 	const [standardMessage, setStandardMessage] = useState('');
-	const { onClose, roleOptions } = useContext<EditModalContextType>(EditModalContext);
+	const { onClose, roleOptions } = useEditModalContext();
 	const accounts = useUserAccounts();
 	const dispatch = useAppDispatch();
 	const createSnackbar = useContext(SnackbarManagerContext);
