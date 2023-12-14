@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, ButtonOld as Button, Dropdown } from '@zextras/carbonio-design-system';
+import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { noop } from 'lodash';
 import React, { ReactElement, useCallback, useMemo } from 'react';
