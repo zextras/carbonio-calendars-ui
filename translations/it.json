@@ -8,15 +8,17 @@
         "chat": "Attrezzatura",
         "equipment": "Attrezzatura",
         "location": "Luogo",
-        "calendar_sharing_status": "Condiviso con {{count}} persone",
-        "calendar_sharing_status_plural": "",
+        "calendar_sharing_status_0": "Condiviso con {{count}} persona",
+        "calendar_sharing_status_1": "Condiviso con {{count}} persone",
+        "calendar_sharing_status_2": "",
         "chat_room": "Link alla Stanza Virtuale",
         "calendar_sharing_status_one": "Condiviso con una persona",
         "revoke": "Revoca accesso",
         "resend": "Invia notifica per questa condivisione",
         "edit": "Modifica proprietà di condivisione",
         "virtual_room": "Stanza Virtuale",
-        "folder_linked_status": "Collegato a me"
+        "folder_linked_status": "Collegato a me",
+        "meetingRooms": "Sale riunioni"
     },
     "reminder": {
         "week_before_0": "{{count}} settimana prima",
@@ -326,7 +328,9 @@
         "advanced_filters": "{{count}} Filtro Avanzato",
         "advanced_filters_plural": "{{count}} Filtri Avanzati",
         "time": "Ora",
-        "optionals": "Opzionali"
+        "optionals": "Opzionali",
+        "equipment": "Attrezzatura",
+        "meeting_room": "Sala riunioni"
     },
     "action": {
         "send": "Invia",
@@ -674,5 +678,11 @@
     "creation_timezone_tooltip": "Data e ora sul fuso orario di creazione:",
     "local_timezone_tooltip": "Data e ora sul fuso orario locale:",
     "new_appointment": "Nuovo appuntamento",
-    "private_info_tooltip": "Quando condividi un calendario, gli altri utenti potranno vedere i dettagli dei tuoi appuntamenti (titolo, descrizione e partecipanti) ad eccezione di quelli contrassegnati come privati. In questo caso, gli altri utenti vedranno segnalato come libero/occupato lo slot ma non vedranno i dettagli dell'appuntamento. Vuoi che gli altri utenti possano vedere anche i dettagli degli appuntamenti privati?"
+    "private_info_tooltip": "Quando condividi un calendario, gli altri utenti potranno vedere i dettagli dei tuoi appuntamenti (titolo, descrizione e partecipanti) ad eccezione di quelli contrassegnati come privati. In questo caso, gli altri utenti vedranno segnalato come libero/occupato lo slot ma non vedranno i dettagli dell'appuntamento. Vuoi che gli altri utenti possano vedere anche i dettagli degli appuntamenti privati?",
+    "next_day": "Giorno successivo",
+    "next_month": "Mese successivo",
+    "next_week": "Settimana successiva",
+    "previous_day": "Giorno precedente",
+    "previous_month": "Mese precedente",
+    "previous_week": "Settimana precedente"
 }
