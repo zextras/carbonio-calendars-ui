@@ -15,96 +15,218 @@ import { reducers } from '../../store/redux';
 
 const dropdownID = 'dropdown-popper-list';
 
-describe('share-calendar-modal', () => {
-	test('share with has 2 options, internal is selected by default, confirm button is disabled', async () => {
-		const closeFn = jest.fn();
-		const grant = [
-			{
-				zid: '1',
-				gt: 'usr',
-				perm: 'r'
-			} as const
-		];
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const { user } = setupTest(
-			<ShareCalendarModal
-				folderName={'testName'}
-				folderId={'testId1'}
-				closeFn={closeFn}
-				grant={grant}
-			/>,
-			{ store }
-		);
-
-		expect(
-			screen.getByText(/share\.options\.share_calendar_with\.internal_users_groups/i)
-		).toBeInTheDocument();
-
-		await user.click(screen.getByText(/share with/i));
-
-		const dropdownInternalOption = within(screen.getByTestId(dropdownID)).getByText(
-			/share\.options\.share_calendar_with\.internal_users_groups/i
-		);
-
-		const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
-			/share\.options\.share_calendar_with\.public/i
-		);
-
-		const confirmButton = screen.getByRole('button', {
-			name: /Share Calendar/i
-		});
-
-		expect(dropdownInternalOption).toBeInTheDocument();
-		expect(dropdownPublicOption).toBeInTheDocument();
-		expect(confirmButton).toBeDisabled();
+describe('the share calendar modal is composed by', () => {
+	describe('the modal header. It is composed by', () => {
+		test.todo('the title "Share" followed by the calendar name');
+		test.todo('the close button, on click will call the modal onclose');
 	});
-	test('when share with internals is not selected, other fields are not rendered, confirm button is enabled', async () => {
-		const closeFn = jest.fn();
-		const grant = [
-			{
-				zid: '1',
-				gt: 'usr',
-				perm: 'r'
-			} as const
-		];
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const { user } = setupTest(
-			<ShareCalendarModal
-				folderName={'testName'}
-				folderId={'testId1'}
-				closeFn={closeFn}
-				grant={grant}
-			/>,
-			{ store }
-		);
+	describe('the modal body. It is composed by', () => {
+		describe('"share with" selector which allow the user to specify the share type', () => {
+			test.todo('has the label "Share with"');
+			describe('has two options.', () => {
+				test.todo('public');
+				test('internal. It is selected by default', async () => {
+					const closeFn = jest.fn();
+					const grant = [
+						{
+							zid: '1',
+							gt: 'usr',
+							perm: 'r'
+						} as const
+					];
+					const store = configureStore({ reducer: combineReducers(reducers) });
+					const { user } = setupTest(
+						<ShareCalendarModal
+							folderName={'testName'}
+							folderId={'testId1'}
+							closeFn={closeFn}
+							grant={grant}
+						/>,
+						{ store }
+					);
 
-		await user.click(screen.getByText(/share with/i));
+					expect(
+						screen.getByText(/share\.options\.share_calendar_with\.internal_users_groups/i)
+					).toBeVisible();
 
-		const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
-			/share\.options\.share_calendar_with\.public/i
-		);
+					await user.click(screen.getByText(/share with/i));
 
-		await user.click(dropdownPublicOption);
+					const dropdownInternalOption = within(screen.getByTestId(dropdownID)).getByText(
+						/share\.options\.share_calendar_with\.internal_users_groups/i
+					);
 
-		const chipInput = screen.queryByRole('textbox', {
-			name: /Recipients e-mail addresses/i
+					const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
+						/share\.options\.share_calendar_with\.public/i
+					);
+
+					const confirmButton = screen.getByRole('button', {
+						name: /Share Calendar/i
+					});
+
+					expect(dropdownInternalOption).toBeInTheDocument();
+					expect(dropdownPublicOption).toBeInTheDocument();
+					expect(confirmButton).toBeDisabled();
+				});
+			});
 		});
-		const privateCheckbox = screen.queryByText(/share\.label\.allow_to_see_private_appt/i);
-		const roleSelector = screen.queryByText(/label\.role/i);
-		const notificationCheckbox = screen.queryByText(/share\.label\.send_notification/i);
-		const standardMessage = screen.queryByRole('textbox', {
-			name: /Add a note to standard message/i
-		});
-		const shareNotes = screen.queryByText(/share\.note\.share_note/i);
-		const confirmButton = screen.getByText(/Share Calendar/i);
+		describe('when internal is selected there are also the following fields', () => {
+			test.todo('the "recipients e-mail addresses" input');
+			test.todo('the field to enable users to see private appointments');
+			test.todo('the role selector to assign to the shared user');
+			test.todo('the field to send a notification to the shared user');
+			describe('the field to add a message to the invitation', () => {
+				test.todo('has the label "add a note to standard message"');
+				test('this field is checked by default', async () => {
+					const closeFn = jest.fn();
+					const grant = [
+						{
+							zid: '1',
+							gt: 'usr',
+							perm: 'r'
+						} as const
+					];
+					const store = configureStore({ reducer: combineReducers(reducers) });
+					setupTest(
+						<ShareCalendarModal
+							folderName={'testName'}
+							folderId={'testId1'}
+							closeFn={closeFn}
+							grant={grant}
+						/>,
+						{ store }
+					);
 
-		expect(confirmButton).toBeEnabled();
-		expect(chipInput).not.toBeInTheDocument();
-		expect(privateCheckbox).not.toBeInTheDocument();
-		expect(roleSelector).not.toBeInTheDocument();
-		expect(notificationCheckbox).not.toBeInTheDocument();
-		expect(standardMessage).not.toBeInTheDocument();
-		expect(shareNotes).not.toBeInTheDocument();
+					const sendNotificationCheckbox = within(
+						screen.getByTestId('sendNotificationCheckboxContainer')
+					).getByTestId('icon: CheckmarkSquare');
+
+					expect(sendNotificationCheckbox).toBeInTheDocument();
+				});
+				test('if send notification is checked this field is enabled and empty', async () => {
+					const closeFn = jest.fn();
+					const grant = [
+						{
+							zid: '1',
+							gt: 'usr',
+							perm: 'r'
+						} as const
+					];
+					const store = configureStore({ reducer: combineReducers(reducers) });
+					setupTest(
+						<ShareCalendarModal
+							folderName={'testName'}
+							folderId={'testId1'}
+							closeFn={closeFn}
+							grant={grant}
+						/>,
+						{ store }
+					);
+
+					const sendNotificationCheckbox = within(
+						screen.getByTestId('sendNotificationCheckboxContainer')
+					).getByTestId('icon: CheckmarkSquare');
+
+					expect(sendNotificationCheckbox).toBeInTheDocument();
+
+					const standardMessage = screen.getByRole('textbox', {
+						name: /Add a note to standard message/i
+					});
+
+					expect(standardMessage).toBeEnabled();
+					expect(standardMessage).toHaveValue('');
+				});
+				test('if send notification is unchecked this field is disabled', async () => {
+					const closeFn = jest.fn();
+					const grant = [
+						{
+							zid: '1',
+							gt: 'usr',
+							perm: 'r'
+						} as const
+					];
+					const store = configureStore({ reducer: combineReducers(reducers) });
+					const { user } = setupTest(
+						<ShareCalendarModal
+							folderName={'testName'}
+							folderId={'testId1'}
+							closeFn={closeFn}
+							grant={grant}
+						/>,
+						{ store }
+					);
+
+					const sendNotificationCheckbox = within(
+						screen.getByTestId('sendNotificationCheckboxContainer')
+					).getByTestId('icon: CheckmarkSquare');
+
+					expect(sendNotificationCheckbox).toBeInTheDocument();
+					await waitFor(() => {
+						user.click(sendNotificationCheckbox);
+					});
+
+					const standardMessage = screen.getByRole('textbox', {
+						name: /Add a note to standard message/i
+					});
+
+					expect(standardMessage).toBeDisabled();
+				});
+			});
+			test.todo('an information note about the share message');
+		});
+	});
+	describe('the modal footer with the "share calendar" button', () => {
+		test('when share publicly is selected, other fields are not rendered, confirm button is enabled', async () => {
+			const closeFn = jest.fn();
+			const grant = [
+				{
+					zid: '1',
+					gt: 'usr',
+					perm: 'r'
+				} as const
+			];
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const { user } = setupTest(
+				<ShareCalendarModal
+					folderName={'testName'}
+					folderId={'testId1'}
+					closeFn={closeFn}
+					grant={grant}
+				/>,
+				{ store }
+			);
+
+			await waitFor(() => {
+				user.click(screen.getByText(/share with/i));
+			});
+
+			const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
+				/share\.options\.share_calendar_with\.public/i
+			);
+
+			await waitFor(() => {
+				user.click(dropdownPublicOption);
+			});
+
+			const chipInput = screen.queryByRole('textbox', {
+				name: /Recipients e-mail addresses/i
+			});
+			const privateCheckbox = screen.queryByText(/share\.label\.allow_to_see_private_appt/i);
+			const roleSelector = screen.queryByText(/label\.role/i);
+			const notificationCheckbox = screen.queryByText(/share\.label\.send_notification/i);
+			const standardMessage = screen.queryByRole('textbox', {
+				name: /Add a note to standard message/i
+			});
+			const shareNotes = screen.queryByText(/share\.note\.share_note/i);
+			const confirmButton = screen.getByText(/Share Calendar/i);
+
+			expect(confirmButton).toBeEnabled();
+			expect(chipInput).not.toBeInTheDocument();
+			expect(privateCheckbox).not.toBeInTheDocument();
+			expect(roleSelector).not.toBeInTheDocument();
+			expect(notificationCheckbox).not.toBeInTheDocument();
+			expect(standardMessage).not.toBeInTheDocument();
+			expect(shareNotes).not.toBeInTheDocument();
+		});
 	});
 	test('when share with internals is selected, other fields are rendered', async () => {
 		const closeFn = jest.fn();
@@ -235,7 +357,6 @@ describe('share-calendar-modal', () => {
 
 		expect(uncheckedPrivate).toBeInTheDocument();
 	});
-
 	test('allow users to see my private appointments has also an info icon with tooltip', async () => {
 		const closeFn = jest.fn();
 		const grant = [
@@ -265,7 +386,6 @@ describe('share-calendar-modal', () => {
 
 		expect(tooltipTextElement).toBeVisible();
 	});
-
 	test('allow users to see my private appointments is checked on click', async () => {
 		const closeFn = jest.fn();
 		const grant = [
@@ -346,99 +466,5 @@ describe('share-calendar-modal', () => {
 		expect(viewerRoleOption).toBeInTheDocument();
 		expect(adminRoleOption).toBeInTheDocument();
 		expect(managerRoleOption).toBeInTheDocument();
-	});
-	test('send notification for the share is checked by default', async () => {
-		const closeFn = jest.fn();
-		const grant = [
-			{
-				zid: '1',
-				gt: 'usr',
-				perm: 'r'
-			} as const
-		];
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		setupTest(
-			<ShareCalendarModal
-				folderName={'testName'}
-				folderId={'testId1'}
-				closeFn={closeFn}
-				grant={grant}
-			/>,
-			{ store }
-		);
-
-		const sendNotificationCheckbox = within(
-			screen.getByTestId('sendNotificationCheckboxContainer')
-		).getByTestId('icon: CheckmarkSquare');
-
-		expect(sendNotificationCheckbox).toBeInTheDocument();
-	});
-	test('when send notification is checked the message field is enabled and empty', async () => {
-		const closeFn = jest.fn();
-		const grant = [
-			{
-				zid: '1',
-				gt: 'usr',
-				perm: 'r'
-			} as const
-		];
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		setupTest(
-			<ShareCalendarModal
-				folderName={'testName'}
-				folderId={'testId1'}
-				closeFn={closeFn}
-				grant={grant}
-			/>,
-			{ store }
-		);
-
-		const sendNotificationCheckbox = within(
-			screen.getByTestId('sendNotificationCheckboxContainer')
-		).getByTestId('icon: CheckmarkSquare');
-
-		expect(sendNotificationCheckbox).toBeInTheDocument();
-
-		const standardMessage = screen.getByRole('textbox', {
-			name: /Add a note to standard message/i
-		});
-
-		expect(standardMessage).toBeEnabled();
-		expect(standardMessage).toHaveValue('');
-	});
-	test('when send notification is unchecked the message field is disabled', async () => {
-		const closeFn = jest.fn();
-		const grant = [
-			{
-				zid: '1',
-				gt: 'usr',
-				perm: 'r'
-			} as const
-		];
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const { user } = setupTest(
-			<ShareCalendarModal
-				folderName={'testName'}
-				folderId={'testId1'}
-				closeFn={closeFn}
-				grant={grant}
-			/>,
-			{ store }
-		);
-
-		const sendNotificationCheckbox = within(
-			screen.getByTestId('sendNotificationCheckboxContainer')
-		).getByTestId('icon: CheckmarkSquare');
-
-		expect(sendNotificationCheckbox).toBeInTheDocument();
-		await waitFor(() => {
-			user.click(sendNotificationCheckbox);
-		});
-
-		const standardMessage = screen.getByRole('textbox', {
-			name: /Add a note to standard message/i
-		});
-
-		expect(standardMessage).toBeDisabled();
 	});
 });
