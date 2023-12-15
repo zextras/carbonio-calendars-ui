@@ -552,7 +552,7 @@
         "share_folder_success": "Доступ к календарю предоставлен",
         "tag_applied": "Тег {{tag}} применен",
         "tag_removed": "Тег {{tag}} удален",
-        "email_copied_to_clipboard": "Email скопирован в буфер обмена."
+        "email_copied_to_clipboard": "Письмо скопировано в буфер обмена."
     },
     "owner": "Владелец",
     "workflow": "Рабочий процесс",
