@@ -19,7 +19,6 @@ import * as FolderAction from '../../../soap/folder-action-request';
 import * as SendShare from '../../../store/actions/send-share-calendar-notification';
 import { reducers } from '../../../store/redux';
 
-jest.setTimeout(100000);
 const grants: Array<Grant> = [
 	{
 		zid: '302e2e8b-676d-4c93-aaa4-21e47bd3eeb9',
