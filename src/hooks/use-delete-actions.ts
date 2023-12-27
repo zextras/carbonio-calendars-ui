@@ -155,7 +155,8 @@ export const useDeleteActions = (
 				t,
 				isInstance: context.isSingleInstance,
 				createSnackbar,
-				newMessage: newMessage?.text?.[0]
+				newMessage: newMessage?.text?.[0],
+				folders: context.folders
 			};
 			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {
@@ -286,7 +287,8 @@ export const useDeleteActions = (
 								: moment(event.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
 							tz: invite?.start?.tz
 					  },
-				s: moment(event.start).valueOf()
+				s: moment(event.start).valueOf(),
+				folders: context.folders
 			};
 			deleteEvent(event, ctxt)
 				.then((res: { type: string | string[] }) => {

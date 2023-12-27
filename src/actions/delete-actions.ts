@@ -3,7 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil, omitBy } from 'lodash';
+import { find, isNil, omitBy } from 'lodash';
+
+import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
 import {
 	moveAppointmentToTrash,
 	MoveAppointmentToTrashArguments
@@ -11,6 +13,7 @@ import {
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { AppDispatch } from '../store/redux';
 import { EventType } from '../types/event';
+import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const generateSnackbar = ({ res, t, createSnackbar }: any): any => {
@@ -39,7 +42,8 @@ export const deleteEvent = (
 	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 	context: any
 ): any => {
-	const { inviteId, id, isRecurrent, ridZ, iAmOrganizer } = event.resource;
+	const absFolderPath = find(context.folders, ['id', event.resource.calendar.id])?.absFolderPath;
+	const { inviteId, id, isRecurrent, ridZ } = event.resource;
 	const moveToTrashArgs = omitBy(
 		{
 			inviteId,
@@ -47,7 +51,7 @@ export const deleteEvent = (
 			t: context.t,
 			recur: context?.recur,
 			isRecurrent,
-			isOrganizer: iAmOrganizer,
+			isOrganizer: isOrganizerOrHaveEqualRights(event, absFolderPath),
 			deleteSingleInstance: context.isInstance ?? true,
 			newMessage: context.newMessage,
 			inst: context?.inst,
