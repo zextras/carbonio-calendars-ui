@@ -17,11 +17,11 @@ export type EditModalContextType = {
 export const EditModalContext = React.createContext<EditModalContextType | null>(null);
 
 export const useEditModalContext = (): EditModalContextType => {
-	const currentUserContext = useContext(EditModalContext);
+	const editModalContext = useContext(EditModalContext);
 
-	if (!currentUserContext) {
-		throw new Error('useCurrentUser has to be used within <CurrentUserContext.Provider>');
+	if (!editModalContext) {
+		throw new Error('useEditModalContext has to be used within <EditModalContext.Provider>');
 	}
 
-	return currentUserContext;
+	return editModalContext;
 };

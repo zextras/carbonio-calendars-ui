@@ -39,7 +39,7 @@ import {
 	ShareCalendarWithOptions,
 	findLabel
 } from '../../settings/components/utils';
-import { folderAction } from '../../store/actions/new-calendar-actions';
+import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ShareCalendarModalProps } from '../../types/share-calendar';

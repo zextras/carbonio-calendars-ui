@@ -19,7 +19,7 @@ import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { getMiniCal } from '../store/actions/get-mini-cal';
-import { folderAction } from '../store/actions/new-calendar-actions';
+import { folderAction } from '../store/actions/calendar-actions';
 import { searchAppointments } from '../store/actions/search-appointments';
 import { AppDispatch } from '../store/redux';
 import { ReminderItem } from '../types/appointment-reminder';

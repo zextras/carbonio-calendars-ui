@@ -38,7 +38,7 @@ import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colo
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
-import { folderAction } from '../../../../store/actions/new-calendar-actions';
+import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
 

@@ -15,7 +15,7 @@ import { isNestedInTrash } from '../../carbonio-ui-commons/store/zustand/folder/
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { FOLDER_OPERATIONS } from '../../constants/api';
-import { folderAction } from '../../store/actions/new-calendar-actions';
+import { folderAction } from '../../store/actions/calendar-actions';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
 	const createSnackbar = useContext(SnackbarManagerContext);

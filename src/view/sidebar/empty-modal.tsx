@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { FOLDER_OPERATIONS } from '../../constants/api';
-import { folderAction } from '../../store/actions/new-calendar-actions';
+import { folderAction } from '../../store/actions/calendar-actions';
 
 export const EmptyModal = ({
 	onClose,

@@ -16,7 +16,7 @@ import { ResFolder } from '../carbonio-ui-commons/utils';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { getFolderRequest } from '../soap/get-folder-request';
 import { getShareInfoRequest } from '../soap/get-share-info-request';
-import { folderAction } from '../store/actions/new-calendar-actions';
+import { folderAction } from '../store/actions/calendar-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick } from '../types/actions';
 import { NewModal } from '../view/move/new-calendar-modal';

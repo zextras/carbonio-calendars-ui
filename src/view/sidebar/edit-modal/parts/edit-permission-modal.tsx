@@ -25,7 +25,7 @@ import { ModalHeader } from '../../../../commons/modal-header';
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { findLabel } from '../../../../settings/components/utils';
-import { folderAction } from '../../../../store/actions/new-calendar-actions';
+import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
 
