@@ -231,7 +231,7 @@
         "warning": "Ostrzeżenie",
         "trash": "Kosz",
         "tag": "Tag",
-        "share_public_link": "Udostępnij Publiczny Link",
+        "share_public_link": "Udostępnij publiczny link",
         "select": "Wybierz",
         "root": "Źródło",
         "public_link_description": "Wygenerowano z {{title}} dnia {{date}}",
@@ -250,7 +250,9 @@
         "no_rights": "Nie masz uprawnień, aby wykonać tę czynność",
         "single_advanced_filter": "Zaawansowane filtry",
         "optionals": "Opcjonalni",
-        "time": "Czas"
+        "time": "Czas",
+        "equipment": "Ekwipunek",
+        "meeting_room": "Pokój spotkań"
     },
     "message": {
         "modal": {
@@ -667,7 +669,7 @@
         "add_attachments": "Dodaj załączniki",
         "copy_ics_url": "Skopiuj adres ICS",
         "copy_outlook_url": "Skopiuj link do Outlooka",
-        "copy_vector_url": "Skopiuj link do Widoku",
+        "copy_vector_url": "Skopiuj link do widoku",
         "enable_disable_rich_text": "Włącz/Wyłącz rozbudowany edytor tekstu",
         "chat_room": "Link do wirtualnego pokoju",
         "equipment": "Ekwipunek",
@@ -681,10 +683,11 @@
         "resend": "Wyślij powiadomienie e-mail dot. tego udostępnienia",
         "edit": "Edytuj właściwości udostępniania",
         "virtual_room": "Wirtualny pokój",
-        "folder_linked_status": "Powiązane ze mną"
+        "folder_linked_status": "Powiązane ze mną",
+        "meetingRooms": "Pokoje spotkań"
     },
     "type": "Typ",
-    "workflow": "Organizacja Pracy",
+    "workflow": "Organizacja pracy",
     "write": "Pisanie",
     "preview": {
         "close": "Zamknij podgląd"
@@ -698,5 +701,11 @@
     "creation_timezone_tooltip": "Data i czas w strefie czasowej tworzonego elementu:",
     "new_appointment": "Nowe spotkanie",
     "local_timezone_tooltip": "Data i czas w lokalnej strefie czasowej:",
-    "private_info_tooltip": "Kiedy udostępniasz kalendarz inni użytkownicy mogą zobaczyć szczegóły spotkań (tytuł, opis, uczestnicy) jeśli nie są one oznaczone jako prywatne. Jeśli są oznaczone jako prywatne, inni użytkownicy widzą czy jesteś wolny lub zajęty, ale nie widzą szczegółów spotkań. Czy chcesz, żeby inni użytkownicy widzieli szczegóły również Twoich prywatnych spotkań?"
+    "private_info_tooltip": "Kiedy udostępniasz kalendarz inni użytkownicy mogą zobaczyć szczegóły spotkań (tytuł, opis, uczestnicy) jeśli nie są one oznaczone jako prywatne. Jeśli są oznaczone jako prywatne, inni użytkownicy widzą czy jesteś wolny lub zajęty, ale nie widzą szczegółów spotkań. Czy chcesz, żeby inni użytkownicy widzieli szczegóły również Twoich prywatnych spotkań?",
+    "next_day": "Następny dzień",
+    "next_month": "Następny miesiąc",
+    "next_week": "Następny tydzień",
+    "previous_day": "Poprzedni dzień",
+    "previous_month": "Poprzedni miesiąc",
+    "previous_week": "Poprzedni tydzień"
 }
