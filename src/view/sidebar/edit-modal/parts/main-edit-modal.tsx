@@ -6,7 +6,7 @@
 import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
 
 import {
-	ButtonOld as Button,
+	Button,
 	Checkbox,
 	Container,
 	Divider,
@@ -453,7 +453,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 												onClick={(): void => {
 													onEdit(item);
 												}}
-												isSmall
+												size="small"
 											/>
 										</Tooltip>
 										<Padding horizontal="extrasmall" />
@@ -465,7 +465,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 												onClick={(): void => {
 													onRevoke(item);
 												}}
-												isSmall
+												size="small"
 											/>
 										</Tooltip>
 										<Padding horizontal="extrasmall" />
@@ -480,7 +480,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 												onClick={(): void => {
 													onResend(item);
 												}}
-												isSmall
+												size="small"
 											/>
 										</Tooltip>
 									</Container>

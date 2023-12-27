@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useCallback } from 'react';
-import { ButtonOld as Button, Container, Padding } from '@zextras/carbonio-design-system';
+import { Button, Container, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { useAppDispatch } from '../../store/redux/hooks';

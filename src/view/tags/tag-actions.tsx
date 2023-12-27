@@ -3,16 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import {
-	ButtonOld as Button,
-	Checkbox,
-	Icon,
-	ModalManagerContext,
-	Padding,
-	Row,
-	SnackbarManagerContext,
-	Text
-} from '@zextras/carbonio-design-system';
 import React, {
 	ReactElement,
 	SyntheticEvent,
@@ -21,17 +11,29 @@ import React, {
 	useMemo,
 	useState
 } from 'react';
-import { differenceBy, includes, noop, reduce } from 'lodash';
+
+import {
+	Button,
+	Checkbox,
+	Icon,
+	ModalManagerContext,
+	Padding,
+	Row,
+	SnackbarManagerContext,
+	Text
+} from '@zextras/carbonio-design-system';
 import { ZIMBRA_STANDARD_COLORS, useTags, Tag, t } from '@zextras/carbonio-shell-ui';
+import { differenceBy, includes, noop, reduce } from 'lodash';
+
+import CreateUpdateTagModal from './create-update-tag-modal';
+import DeleteTagModal from '../../carbonio-ui-commons/components/tags/delete-tag-modal';
 import { ItemType } from '../../carbonio-ui-commons/types/tags';
 import { itemActionRequest } from '../../soap/item-action-request';
+import { StoreProvider } from '../../store/redux';
 import { ActionsProps } from '../../types/actions';
 import { EventActionsEnum, EventActionsId } from '../../types/enums/event-actions-enum';
-import { TagType } from '../../types/tags';
-import CreateUpdateTagModal from './create-update-tag-modal';
 import { EventType } from '../../types/event';
-import { StoreProvider } from '../../store/redux';
-import DeleteTagModal from '../../carbonio-ui-commons/components/tags/delete-tag-modal';
+import { TagType } from '../../types/tags';
 
 export type ReturnType = {
 	id: EventActionsId;
@@ -279,8 +281,8 @@ export const applyTag = ({
 			<Button
 				label={t('label.new_tag', 'New Tag')}
 				type="outlined"
-				size="fill"
-				isSmall
+				width="fill"
+				size="small"
 				onClick={(): void => context.createAndApplyTag({ context, event }).onClick()}
 			/>
 		)
