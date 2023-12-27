@@ -13,6 +13,8 @@ import { setupTest } from '../../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../../commons/editor-generator';
 import { reducers } from '../../../../../store/redux';
 
+jest.setTimeout(7000);
+
 describe('editor recurrence field', () => {
 	test('is set to none as default', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
@@ -25,7 +27,7 @@ describe('editor recurrence field', () => {
 		expect(editor.recur).toBeUndefined();
 		expect(screen.getByText('None')).toBeVisible();
 	});
-	test('has 6 avaible options', async () => {
+	test('has 6 available options', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
 

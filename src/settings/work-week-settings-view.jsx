@@ -8,7 +8,7 @@ import {
 	Container,
 	Padding,
 	Text,
-	ButtonOld as Button,
+	Button,
 	Row,
 	Divider,
 	Checkbox
@@ -75,7 +75,7 @@ export default function WorkWeekSettings({
 			</Row>
 			<Row width="100%" padding={{ all: 'small' }}>
 				<Button
-					size="fill"
+					width="fill"
 					type="outlined"
 					label={t('button.customize_modal', 'Open Customize Modal')}
 					color="primary"

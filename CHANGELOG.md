@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.7](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.6...v1.7.7) (2023-12-15)
+
 ### [1.7.6](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.5...v1.7.6) (2023-12-07)
 
 
