@@ -29,6 +29,7 @@ import {
 	selectEditorStart
 } from '../../../../../store/selectors/editor';
 import { Count } from '../../../../../types/editor';
+import { RADIO_VALUES } from '../../../../../constants/recurrence';
 
 momentLocalizer();
 
@@ -78,12 +79,12 @@ export const SimplifiedCustomDatePicker = ({
 
 const radioInitialState = (count: number | undefined, until: string | undefined): string => {
 	if (count) {
-		return 'end_after_count';
+		return RADIO_VALUES.END_AFTER_COUNT;
 	}
 	if (until) {
-		return 'end_after_until';
+		return RADIO_VALUES.END_AFTER_UNTIL;
 	}
-	return 'no_end';
+	return RADIO_VALUES.NO_END_DATE;
 };
 
 const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement => {
@@ -118,7 +119,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 					convertedInputToNumber > 0
 				) {
 					setInputValue(convertedInputToNumber);
-					if (radioValue === 'end_after_count') {
+					if (radioValue === RADIO_VALUES.END_AFTER_COUNT) {
 						setNewEndValue({
 							count: {
 								num: convertedInputToNumber
@@ -134,17 +135,17 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 	const onRadioValueChange = useCallback(
 		(ev) => {
 			switch (ev) {
-				case 'no_end':
+				case RADIO_VALUES.NO_END_DATE:
 					setNewEndValue(undefined);
 					setRadioValue(ev);
 					break;
-				case 'end_after_count':
+				case RADIO_VALUES.END_AFTER_COUNT:
 					setNewEndValue({
 						count: { num: parseInt(`${inputValue}`, 10) }
 					});
 					setRadioValue(ev);
 					break;
-				case 'end_after_until':
+				case RADIO_VALUES.END_AFTER_UNTIL:
 					setNewEndValue({
 						until: {
 							d: moment(pickerValue).format('YYYYMMDD')
@@ -154,7 +155,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 					break;
 				default:
 					setNewEndValue(undefined);
-					setRadioValue('no_end');
+					setRadioValue(RADIO_VALUES.NO_END_DATE);
 					break;
 			}
 		},
@@ -177,7 +178,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 				size="small"
 				iconColor="primary"
 				label={t('label.no_end_date', 'No end date')}
-				value="no_end"
+				value={RADIO_VALUES.NO_END_DATE}
 			/>
 			<Radio
 				size="small"
@@ -199,14 +200,14 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 								width="fit"
 								label={t('label.occurrences', 'Occurence(s)')}
 								value={inputValue}
-								disabled={radioValue !== 'end_after_count'}
+								disabled={radioValue !== RADIO_VALUES.END_AFTER_COUNT}
 								onChange={onInputValueChange}
 								hasError={!isNil(num) && (num > 99 || num < 1 || !isNumber(num))}
 							/>
 						</Row>
 					</Row>
 				}
-				value="end_after_count"
+				value={RADIO_VALUES.END_AFTER_COUNT}
 			/>
 			<Radio
 				size="small"
@@ -228,13 +229,13 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 									start={initialPickerValue}
 									allDay={allDay}
 									onChange={onDateChange}
-									disabled={radioValue !== 'end_after_until'}
+									disabled={radioValue !== RADIO_VALUES.END_AFTER_UNTIL}
 								/>
 							</Styler>
 						</Row>
 					</Row>
 				}
-				value="end_after_until"
+				value={RADIO_VALUES.END_AFTER_UNTIL}
 			/>
 		</RadioGroup>
 	);

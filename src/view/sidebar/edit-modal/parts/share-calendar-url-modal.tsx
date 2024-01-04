@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, ReactElement, useContext } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+
 import { Container, SnackbarManagerContext, Text, Padding } from '@zextras/carbonio-design-system';
-import { ShareCalendarUrlProps } from '../../../../types/share-calendar';
-import { ModalHeader } from '../../../../commons/modal-header';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { Trans, useTranslation } from 'react-i18next';
+
 import { UrlColumn } from './url-column';
+import { ModalHeader } from '../../../../commons/modal-header';
+import { ShareCalendarUrlProps } from '../../../../types/share-calendar';
 
 const getUrl = (type: string, user: string, folderName: string): string => {
 	const domain = window.location.hostname;

@@ -10,7 +10,7 @@ import {
 	SnackbarManagerContext,
 	Container,
 	Padding,
-	ButtonOld as Button,
+	Button,
 	Divider
 } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';

@@ -13,7 +13,7 @@ import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../carbonio-ui-commons/types/folder';
 import { ResFolder } from '../carbonio-ui-commons/utils';
-import { FOLDER_ACTIONS } from '../constants/sidebar';
+import { FOLDER_OPERATIONS } from '../constants/api';
 import { getFolderRequest } from '../soap/get-folder-request';
 import { getShareInfoRequest } from '../soap/get-share-info-request';
 import { folderAction } from '../store/actions/calendar-actions';
@@ -65,29 +65,34 @@ export const moveToRoot =
 			e.stopPropagation();
 		}
 		const root = getRoot(item.id);
-		folderAction({ id: item.id, op: 'move', changes: { parent: root?.id ?? '1' } }).then((res) => {
-			if (!res.Fault) {
-				createSnackbar({
-					key: `calendar-moved-root`,
-					replace: true,
-					type: isTrashOrNestedInIt(item) ? 'success' : 'info',
-					hideButton: true,
-					label: isTrashOrNestedInIt(item)
-						? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
-						: t('message.snackbar.calendar_moved_to_root_folder', 'Calendar moved to Root folder'),
-					autoHideTimeout: 3000
-				});
-			} else {
-				createSnackbar({
-					key: `calendar-moved-root-error`,
-					replace: true,
-					type: 'error',
-					hideButton: true,
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
-					autoHideTimeout: 3000
-				});
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.MOVE, l: root?.id ?? '1' }).then(
+			(res: { Fault?: string }) => {
+				if (!res.Fault) {
+					createSnackbar({
+						key: `calendar-moved-root`,
+						replace: true,
+						type: isTrashOrNestedInIt(item) ? 'success' : 'info',
+						hideButton: true,
+						label: isTrashOrNestedInIt(item)
+							? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
+							: t(
+									'message.snackbar.calendar_moved_to_root_folder',
+									'Calendar moved to Root folder'
+							  ),
+						autoHideTimeout: 3000
+					});
+				} else {
+					createSnackbar({
+						key: `calendar-moved-root-error`,
+						replace: true,
+						type: 'error',
+						hideButton: true,
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000
+					});
+				}
 			}
-		});
+		);
 	};
 
 export const emptyTrash =
@@ -179,7 +184,7 @@ export const removeFromList =
 		if (e) {
 			e.stopPropagation();
 		}
-		folderAction({ id: item.id, op: FOLDER_ACTIONS.DELETE }).then((res) => {
+		folderAction({ id: item.id, op: FOLDER_OPERATIONS.DELETE }).then((res: { Fault?: string }) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: `shared-calendar-removed`,

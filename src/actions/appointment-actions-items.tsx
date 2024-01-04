@@ -23,6 +23,7 @@ import { ActionsContext, AppointmentActionsItems } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
 
 export const openEventItem = ({
 	event,
@@ -150,16 +151,7 @@ export const editEventItem = ({
 		id: EventActionsEnum.EDIT,
 		icon: 'Edit2Outline',
 		label: t('label.edit', 'Edit'),
-		disabled: event.resource.organizer
-			? // if the event is in trash or nested in it
-			  isTrashOrNestedInIt({ id: event.resource.calendar.id, absFolderPath }) ||
-			  // if user is owner of the calendar but he is not the organizer
-			  (!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
-			  // if it is inside a shared calendar or user doesn't have write access
-			  (!!event.resource.calendar.owner &&
-					(event.resource.calendar.owner !== event.resource.organizer?.email ||
-						!event?.haveWriteAccess))
-			: false,
+		disabled: !isOrganizerOrHaveEqualRights(event, absFolderPath),
 		tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 		onClick: editAppointment({ event, invite, context })
 	};

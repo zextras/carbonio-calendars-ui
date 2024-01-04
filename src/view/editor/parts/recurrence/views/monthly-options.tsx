@@ -9,17 +9,12 @@ import { Container, Padding, Radio, RadioGroup, Row, Text } from '@zextras/carbo
 import { map } from 'lodash';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
-import { RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
+import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import { RecurrenceStartValue } from '../../../../../types/editor';
 import { IntervalInput } from '../components/interval-input';
 import { MonthlyDayInput } from '../components/monthly-day-input';
 import { OrdinalNumberSelect } from '../components/ordinal-number-select';
 import WeekdaySelect from '../components/weekday-select';
-
-const RADIO_VALUES = {
-	DAY_OF_MONTH: 'DayOfTheMonth',
-	MONTHLY_CUSTOMIZED: 'MonthlyCustomized'
-};
 
 const MonthlyOptions = (): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
@@ -161,6 +156,7 @@ const MonthlyOptions = (): ReactElement | null => {
 							setValue={setMoDayList}
 							onChange={onMoDayListChange}
 							disabled={radioValue !== RADIO_VALUES.DAY_OF_MONTH}
+							testId={'montly_day_input'}
 						/>
 						<Padding horizontal="small">
 							<Text>{t('label.every', 'every')}</Text>

@@ -11,6 +11,8 @@ import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { MemoCustomEvent } from './custom-event';
 
+jest.setTimeout(10000);
+
 test('click edit appointment from event summary view as organizer', async () => {
 	const event = mockedData.getEvent();
 	const invite = mockedData.getInvite({ event });

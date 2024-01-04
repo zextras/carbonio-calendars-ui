@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useCallback, useContext, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 
 import {
-	ButtonOld as Button,
+	Button,
 	Checkbox,
 	Container,
 	Divider,
@@ -16,13 +16,13 @@ import {
 	Row,
 	Select,
 	SelectItem,
-	SnackbarManagerContext,
 	Text,
-	Tooltip
+	Tooltip,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, Grant, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import type { TFunction } from 'i18next';
-import { find, includes, isEmpty, isNull, map, omitBy } from 'lodash';
+import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled, { DefaultTheme } from 'styled-components';
 
@@ -31,10 +31,12 @@ import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal
 import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
 import { useFoldersArray } from '../../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../../../carbonio-ui-commons/types/folder';
+import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';
-import { EditModalContext } from '../../../../commons/edit-modal-context';
+import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
+import { SHARE_USER_TYPE } from '../../../../constants';
+import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
@@ -50,6 +52,7 @@ const Square = styled.div`
 	background: ${({ color }: { color: string }): string => color};
 	border-radius: 0.25rem;
 `;
+
 const ColorContainer = styled(Container)`
 	border-bottom: 0.0625rem solid
 		${({ theme }: { theme: DefaultTheme }): string => theme.palette.gray2.regular};
@@ -134,89 +137,97 @@ type MainEditModalProps = {
 	grant: Grant[];
 };
 
-type EditModalContexType = {
-	setModal: (modal: string) => void;
-	onClose: () => void;
-	setActiveGrant: (grant: Grant) => void;
-};
-
 export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointments, grant }) => {
 	const allCalendars = useFoldersArray();
 
-	const iconColor = setCalendarColor({ color: folder.color, rgb: folder.rgb });
 	const [t] = useTranslation();
+	const accounts = useUserAccounts();
+	const createSnackbar = useSnackbar();
+	const dispatch = useAppDispatch();
+	const { setModal, onClose, setActiveGrant } = useEditModalContext();
+
 	const colors = useMemo(() => getStatusItems(t), [t]);
 
-	const [inputValue, setInputValue] = useState(folder.name || '');
-	const [freeBusy, setFreeBusy] = useState(false);
+	const defaultFreeBusy = /b/.test(folder.f ?? '');
+	const defaultFolderName = folder.name || '';
+	const defaultColor = useMemo(
+		() =>
+			find(colors, { label: setCalendarColor({ color: folder.color, rgb: folder.rgb }).label }) ?? {
+				label: '',
+				value: ''
+			},
+		[colors, folder?.color, folder?.rgb]
+	);
+
+	const [folderName, setFolderName] = useState(defaultFolderName);
+	const [freeBusy, setFreeBusy] = useState(defaultFreeBusy);
+
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
-	const dispatch = useAppDispatch();
-	const checked = useMemo(() => folder.checked, [folder]);
 
-	const { setModal, onClose, setActiveGrant } = useContext<EditModalContexType>(EditModalContext);
-	const accounts = useUserAccounts();
-	const createSnackbar = useContext(SnackbarManagerContext);
-	const [hovered, setHovered] = useState({});
-
-	const onMouseEnter = useCallback((item) => {
-		setHovered(item);
-	}, []);
-	const onMouseLeave = useCallback(() => {
-		setHovered({});
-	}, []);
+	const isNotACalendarFolderAndIsNotASystemFolder = useCallback(
+		(f) => f.view !== FOLDER_VIEW.appointment && parseInt(f.id, 10) > 16,
+		[]
+	);
 
 	const folderArray = useMemo(
 		() =>
 			map(allCalendars, (f) =>
-				f.name === folder.name || (f.view !== FOLDER_VIEW.appointment && parseInt(f.id, 10) > 16)
-					? null
-					: f.name
+				f.name === defaultFolderName || isNotACalendarFolderAndIsNotASystemFolder(f) ? null : f.name
 			),
-		[allCalendars, folder]
+		[allCalendars, defaultFolderName, isNotACalendarFolderAndIsNotASystemFolder]
 	);
 
 	const showDupWarning = useMemo(
-		() => includes(folderArray, inputValue),
-		[inputValue, folderArray]
+		() => includes(folderArray, folderName),
+		[folderName, folderArray]
 	);
 
 	const disabled = useMemo(
 		() =>
 			hasId(folder, FOLDERS.CALENDAR)
 				? false
-				: inputValue.indexOf('/') > -1 ||
-				  inputValue.length === 0 ||
-				  inputValue.toLowerCase() === 'calendar' ||
+				: folderName.indexOf('/') > -1 ||
+				  folderName.length === 0 ||
+				  folderName.toLowerCase() === 'calendar' ||
 				  showDupWarning,
-		[inputValue, folder, showDupWarning]
-	);
-	const defaultColor = useMemo(
-		() => find(colors, { label: iconColor.label }) ?? { label: '', value: '' },
-		[colors, iconColor]
+		[folderName, folder, showDupWarning]
 	);
 
-	const [selectedColor, setSelectedColor] = useState<SelectItem[] | number | string | null>(
-		defaultColor?.value
+	const [selectedColor, setSelectedColor] = useState<SelectItem>(defaultColor);
+
+	const onSelectedColorChange = useCallback(
+		(newColor) => {
+			const newResult = find(colors, {
+				label: setCalendarColor({ color: newColor }).label
+			});
+			if (newResult) {
+				setSelectedColor(newResult);
+			}
+		},
+		[colors]
 	);
 
-	const defaultChecked = false;
 	const onConfirm = useCallback(() => {
-		if (inputValue) {
-			folderAction({
-				id: folder.id,
-				op: 'update',
-				changes: omitBy(
-					{
-						parent: folder.parent ?? FOLDERS.USER_ROOT,
-						name: inputValue,
-						color: selectedColor,
-						excludeFreeBusy: freeBusy,
-						checked,
-						grant
-					},
-					isNull
-				)
-			}).then((res) => {
+		const actionRename =
+			folderName?.length && folderName !== defaultFolderName
+				? { op: FOLDER_OPERATIONS.RENAME, name: folderName, id: folder.id }
+				: undefined;
+		const actionColor =
+			selectedColor && selectedColor?.value !== defaultColor?.value
+				? { op: FOLDER_OPERATIONS.COLOR, color: selectedColor.value, id: folder.id }
+				: undefined;
+		const actionFreeBusy =
+			freeBusy !== defaultFreeBusy
+				? {
+						op: FOLDER_OPERATIONS.FREE_BUSY,
+						excludeFreeBusy: !defaultFreeBusy,
+						id: folder.id
+				  }
+				: undefined;
+		const actionsArray = compact([actionRename, actionColor, actionFreeBusy]);
+		if (actionsArray.length) {
+			const actions = actionsArray.length > 1 ? actionsArray : actionsArray[0];
+			folderAction(actions).then((res: { Fault?: string }) => {
 				if (!res.Fault) {
 					createSnackbar({
 						key: `folder-action-success`,
@@ -238,20 +249,19 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 				}
 				onClose();
 			});
-			setInputValue('');
-			setSelectedColor(0);
-			setFreeBusy(false);
+		} else {
+			onClose();
 		}
 	}, [
-		checked,
-		createSnackbar,
+		folderName,
+		defaultFolderName,
 		folder.id,
-		folder.parent,
-		freeBusy,
-		grant,
-		inputValue,
-		onClose,
 		selectedColor,
+		defaultColor?.value,
+		freeBusy,
+		defaultFreeBusy,
+		onClose,
+		createSnackbar,
 		t
 	]);
 
@@ -307,7 +317,11 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		},
 		[setModal, setActiveGrant]
 	);
-	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);
+
+	const title = useMemo(
+		() => t('action.edit_calendar_properties', 'Edit calendar properties'),
+		[t]
+	);
 
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 
@@ -333,9 +347,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						<Input
 							label={placeholder}
 							backgroundColor="gray5"
-							defaultValue={inputValue}
+							defaultValue={folderName}
 							onChange={(e): void => {
-								setInputValue(e.target.value);
+								setFolderName(e.target.value);
 							}}
 							disabled
 						/>
@@ -344,9 +358,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					<Input
 						label={placeholder}
 						backgroundColor="gray5"
-						defaultValue={inputValue}
+						defaultValue={folderName}
 						onChange={(e): void => {
-							setInputValue(e.target.value);
+							setFolderName(e.target.value);
 						}}
 					/>
 				)}
@@ -387,9 +401,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			>
 				<Select
 					label={t('label.calendar_color', 'Calendar color')}
-					onChange={setSelectedColor}
+					onChange={onSelectedColorChange}
 					items={colors}
-					defaultSelection={defaultColor}
+					defaultSelection={selectedColor}
 					LabelFactory={LabelFactory}
 				/>
 			</Container>
@@ -402,7 +416,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			>
 				<Checkbox
 					value={freeBusy}
-					defaultChecked={defaultChecked}
+					defaultChecked={defaultFreeBusy}
 					onClick={toggleFreeBusy}
 					label={t(
 						'label.exclude_free_busy',
@@ -438,25 +452,23 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									padding={{ bottom: 'small' }}
 									key={index}
 								>
-									<GranteeInfo grant={item} hovered={hovered} />
-									<Container
-										orientation="horizontal"
-										mainAlignment="flex-end"
-										onMouseEnter={onMouseEnter}
-										onMouseLeave={onMouseLeave}
-										maxWidth="fit"
-									>
-										<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
-											<Button
-												type="outlined"
-												label={t('label.edit', 'Edit')}
-												onClick={(): void => {
-													onEdit(item);
-												}}
-												isSmall
-											/>
-										</Tooltip>
-										<Padding horizontal="extrasmall" />
+									<GranteeInfo grant={item} />
+									<Container orientation="horizontal" mainAlignment="flex-end" maxWidth="fit">
+										{item.gt !== SHARE_USER_TYPE.PUBLIC && (
+											<>
+												<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
+													<Button
+														type="outlined"
+														label={t('label.edit', 'Edit')}
+														onClick={(): void => {
+															onEdit(item);
+														}}
+														size="small"
+													/>
+												</Tooltip>
+												<Padding horizontal="extrasmall" />
+											</>
+										)}
 										<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
 											<Button
 												type="outlined"
@@ -465,24 +477,28 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 												onClick={(): void => {
 													onRevoke(item);
 												}}
-												isSmall
+												size="small"
 											/>
 										</Tooltip>
-										<Padding horizontal="extrasmall" />
-										<Tooltip
-											label={t('tooltip.resend', 'Send mail notification about this share')}
-											placement="top"
-											maxWidth="18.75rem"
-										>
-											<Button
-												type="outlined"
-												label={t('label.resend', 'Resend')}
-												onClick={(): void => {
-													onResend(item);
-												}}
-												isSmall
-											/>
-										</Tooltip>
+										{item.gt !== SHARE_USER_TYPE.PUBLIC && (
+											<>
+												<Padding horizontal="extrasmall" />
+												<Tooltip
+													label={t('tooltip.resend', 'Send mail notification about this share')}
+													placement="top"
+													maxWidth="18.75rem"
+												>
+													<Button
+														type="outlined"
+														label={t('label.resend', 'Resend')}
+														onClick={(): void => {
+															onResend(item);
+														}}
+														size="small"
+													/>
+												</Tooltip>
+											</>
+										)}
 									</Container>
 								</Container>
 							))}
