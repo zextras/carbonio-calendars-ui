@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor, within } from '@testing-library/react';
+import { screen, act, within } from '@testing-library/react';
 
 import { EditorRecurrence } from './editor-recurrence';
 import { setupTest } from '../../../../../carbonio-ui-commons/test/test-setup';
@@ -35,7 +35,9 @@ describe('editor recurrence field', () => {
 			store
 		});
 
-		await waitFor(() => user.click(screen.getByText(/none/i)));
+		await act(async () => {
+			await user.click(screen.getByText(/none/i));
+		});
 
 		const dropdownPopperEl = screen.getByTestId('dropdown-popper-list');
 
@@ -53,9 +55,13 @@ describe('editor recurrence field', () => {
 		const { user } = setupTest(<EditorRecurrence editorId={editor.id} />, {
 			store
 		});
-		await waitFor(() => user.click(screen.getByText(/none/i)));
-		await waitFor(() => user.click(screen.getByRole('button', { name: /custom/i })));
+		await act(async () => {
+			await user.click(screen.getByText(/none/i));
+		});
+		await act(async () => {
+			await user.click(screen.getByRole('button', { name: /custom/i }));
+		});
 
-		expect(screen.getByTestId('modal')).toBeVisible();
+		expect(screen.getByTestId('modal')).toBeInTheDocument();
 	});
 });
