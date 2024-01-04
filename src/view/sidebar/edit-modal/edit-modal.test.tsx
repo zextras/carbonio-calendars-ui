@@ -7,7 +7,6 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { EditModal } from './edit-modal';
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
@@ -118,8 +117,6 @@ const setupFoldersStore = (): void => {
 	}));
 };
 
-const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-
 describe('the edit calendar modal is composed by', () => {
 	describe('the modal header. It is composed by', () => {
 		test('the title "edit calendar properties" which is the same for every folder', () => {
@@ -136,7 +133,7 @@ describe('the edit calendar modal is composed by', () => {
 			setupFoldersStore();
 			const closeFn = jest.fn();
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+			const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 				store
 			});
 
@@ -155,10 +152,8 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
+				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
 				});
 
 				const title = screen.getByRole('textbox', {
@@ -172,10 +167,8 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
+				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
 				});
 
 				const title = screen.getByRole('textbox', {
@@ -189,10 +182,8 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-						store
-					});
+				setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+					store
 				});
 
 				const title = screen.getByRole('textbox', {
@@ -207,10 +198,8 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-						store
-					});
+				const { user } = setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+					store
 				});
 
 				const title = screen.getByRole('textbox', {
@@ -231,10 +220,8 @@ describe('the edit calendar modal is composed by', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupFoldersStore();
 
-			act(() => {
-				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
+			setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+				store
 			});
 
 			expect(screen.getByText('Type')).toBeVisible();
@@ -249,10 +236,8 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
+				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
 				});
 
 				expect(screen.getByText(/calendar color/i)).toBeVisible();
@@ -263,10 +248,8 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-						store
-					});
+				setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+					store
 				});
 
 				expect(screen.getByText(/magenta/i)).toBeVisible();
@@ -279,10 +262,8 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
+				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
 				});
 
 				expect(screen.getByTestId('icon: Square')).toBeVisible();
@@ -293,10 +274,8 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
+				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
 				});
 
 				expect(
@@ -310,11 +289,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-						store
-					});
+				setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+					store
 				});
+
 				const sharingSection = screen.queryByText(`Sharing of this folder`);
 				expect(sharingSection).not.toBeInTheDocument();
 			});
@@ -323,11 +301,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				act(() => {
-					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
+				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
 				});
+
 				const sharingSection = screen.getByText(`Sharing of this folder`);
 				expect(sharingSection).toBeVisible();
 			});
@@ -335,10 +312,9 @@ describe('the edit calendar modal is composed by', () => {
 				const closeFn = jest.fn();
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
-				act(() => {
-					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
+
+				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
 				});
 
 				const user1WithRole = screen.getByText(`${grants[0].d} - Viewer`);
@@ -352,10 +328,8 @@ describe('the edit calendar modal is composed by', () => {
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupFoldersStore();
 
-					act(() => {
-						setupTest(<EditModal folderId={publicFolder.id} onClose={closeFn} />, {
-							store
-						});
+					setupTest(<EditModal folderId={publicFolder.id} onClose={closeFn} />, {
+						store
 					});
 
 					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
@@ -366,10 +340,8 @@ describe('the edit calendar modal is composed by', () => {
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupFoldersStore();
 
-					act(() => {
-						setupTest(<EditModal folderId={publicFolder.id} onClose={closeFn} />, {
-							store
-						});
+					setupTest(<EditModal folderId={publicFolder.id} onClose={closeFn} />, {
+						store
 					});
 
 					expect(screen.queryByRole('button', { name: /resend/i })).not.toBeInTheDocument();
@@ -384,10 +356,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
 
 						expect(screen.getAllByRole('button', { name: /edit/i })[0]).toBeVisible();
@@ -397,10 +367,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
 
 						await user.click(screen.getAllByRole('button', { name: /edit/i })[0]);
@@ -413,10 +381,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
 
 						expect(screen.getAllByRole('button', { name: /revoke/i })[0]).toBeVisible();
@@ -427,10 +393,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
 
 						await user.click(screen.getAllByRole('button', { name: /revoke/i })[0]);
@@ -453,10 +417,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
 
 						expect(screen.getAllByRole('button', { name: /resend/i })[0]).toBeVisible();
@@ -467,10 +429,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
 
 						await act(async () => {
@@ -494,11 +454,10 @@ describe('the edit calendar modal is composed by', () => {
 				setupFoldersStore();
 				const store = configureStore({ reducer: combineReducers(reducers) });
 
-				act(() => {
-					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
+				const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
 				});
+
 				const addShareBtn = screen.getByRole('button', {
 					name: /add share/i
 				});
@@ -510,11 +469,11 @@ describe('the edit calendar modal is composed by', () => {
 				const closeFn = jest.fn();
 				setupFoldersStore();
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				act(() => {
-					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
+
+				const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
 				});
+
 				const addShareBtn = screen.getByRole('button', {
 					name: /add share/i
 				});
@@ -533,10 +492,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
 
 						const title = screen.getByRole('textbox', {
@@ -564,10 +521,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
 
 						const title = screen.getByRole('textbox', {
@@ -590,10 +545,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
 						await user.click(screen.getByText(/black/i));
 						await user.click(screen.getByText(/red/i));
@@ -615,11 +568,10 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-								store
-							});
+						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
 						});
+
 						await user.click(screen.getByText(/black/i));
 						await user.click(
 							within(screen.getByTestId('dropdown-popper-list')).getByText(/black/i)
@@ -638,10 +590,8 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						act(() => {
-							setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-								store
-							});
+						const { user } = setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+							store
 						});
 
 						await act(async () => {
@@ -665,10 +615,9 @@ describe('the edit calendar modal is composed by', () => {
 
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
-						act(() => {
-							setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-								store
-							});
+
+						const { user } = setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+							store
 						});
 
 						await act(async () => {
@@ -690,10 +639,8 @@ describe('the edit calendar modal is composed by', () => {
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupFoldersStore();
 
-					act(() => {
-						setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
-						});
+					const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
 					});
 
 					const title = screen.getByRole('textbox', {
