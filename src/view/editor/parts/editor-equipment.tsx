@@ -13,7 +13,7 @@ import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
-import { ResourceCustomComponent } from './resource-custom-component';
+import { ResourceCustomDropdownComponent } from './resource-custom-dropdown-component';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -47,11 +47,7 @@ export const EditorEquipment = ({ editorId }: { editorId: string }): ReactElemen
 	const onChange = useCallback(
 		(e) => {
 			if (e) {
-				if (e.length > 0) {
-					dispatch(editEditorEquipment({ id: editorId, equipment: e }));
-				} else {
-					dispatch(editEditorEquipment({ id: editorId, equipment: [] }));
-				}
+				dispatch(editEditorEquipment({ id: editorId, equipment: e.length > 0 ? e : [] }));
 			}
 			setSelection(e);
 		},
@@ -75,7 +71,6 @@ export const EditorEquipment = ({ editorId }: { editorId: string }): ReactElemen
 		}
 		return map(equipments, (_equipment) => {
 			const equipmentInList = find(attendeesAvailabilityList, ['email', _equipment.email]);
-			const isSelected = find(selection, ['email', _equipment.email]);
 
 			if (equipmentInList) {
 				const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
@@ -90,9 +85,7 @@ export const EditorEquipment = ({ editorId }: { editorId: string }): ReactElemen
 					return {
 						..._equipment,
 						email: _equipment?.email ?? _equipment?.label,
-						customComponent: (
-							<ResourceCustomComponent isSelected={!!isSelected} label={_equipment.label} />
-						)
+						customComponent: <ResourceCustomDropdownComponent label={_equipment.label} />
 					};
 				}
 			}

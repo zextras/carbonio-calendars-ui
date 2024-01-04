@@ -5,7 +5,7 @@
  */
 import React, { useMemo } from 'react';
 
-import { Row, Text } from '@zextras/carbonio-design-system';
+import { ChipItem, Row, Text } from '@zextras/carbonio-design-system';
 import { find, intersectionBy, isNil, startsWith } from 'lodash';
 import moment from 'moment';
 
@@ -85,7 +85,7 @@ export const EditorAvailabilityWarningRow = ({
 }: {
 	label: string;
 	list: AttendeesAvailabilityListType;
-	items: Resource[];
+	items: ChipItem[];
 	editorId: string;
 }): JSX.Element | null => {
 	const start = useAppSelector(selectEditorStart(editorId));

@@ -22,11 +22,14 @@ import { EditorMeetingRooms } from './parts/editor-meeting-rooms';
 import { EditorOrganizer } from './parts/editor-organizer';
 import { EditorPrivateCheckbox } from './parts/editor-private-checkbox';
 import { EditorReminder } from './parts/editor-reminder';
-import { EditorResourcesController } from './parts/editor-resources-controller';
+import { EditorResourceComponent } from './parts/editor-resource-component';
+import { EditorResourcesController, EditorResourcesControllerV2 } from './parts/editor-resources-controller';
 import { EditorSummary } from './parts/editor-summary';
 import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
+import { NewEquipments } from './parts/new-equipments';
+import { NewMeetingRooms } from './parts/new-meeting-rooms';
 import { EditorRecurrence } from './parts/recurrence';
 import { EditorProps } from '../../types/editor';
 
@@ -53,10 +56,10 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 						<EditorLocation editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorMeetingRooms editorId={editorId} />
+						<NewMeetingRooms editorId={editorId} />
 					</Row>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorEquipment editorId={editorId} />
+						<NewEquipments editorId={editorId} />
 					</Row>
 					<EditorVirtualRoom editorId={editorId} />
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
@@ -90,6 +93,6 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 					</Row>
 				</Container>
 			</EditorDropZone>
-			<EditorResourcesController />
+			<EditorResourcesControllerV2 editorId={editorId} />
 		</Container>
 	) : null;

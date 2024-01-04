@@ -13,7 +13,7 @@ import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
-import { ResourceCustomComponent } from './resource-custom-component';
+import { ResourceCustomDropdownComponent } from './resource-custom-dropdown-component';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -45,11 +45,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 	const onChange = useCallback(
 		(e) => {
 			if (e) {
-				if (e.length > 0) {
-					dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: e }));
-				} else {
-					dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: [] }));
-				}
+				dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: e.length > 0 ? e : [] }));
 			}
 			setSelection(e);
 		},
@@ -73,7 +69,6 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 		}
 		return map(meetingRooms, (room) => {
 			const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
-			const isSelected = find(selection, ['email', room.email]);
 
 			if (roomInList) {
 				const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
@@ -88,9 +83,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 					return {
 						...room,
 						email: room?.email ?? room?.label,
-						customComponent: (
-							<ResourceCustomComponent label={room.label} isSelected={!!isSelected} />
-						)
+						customComponent: <ResourceCustomDropdownComponent label={room.label} />
 					};
 				}
 			}

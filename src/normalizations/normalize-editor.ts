@@ -29,17 +29,29 @@ export const getVirtualRoom = (xprop: any): { label: string; link: string } | un
 	return undefined;
 };
 
-const getMeetingRooms = (attendees: Array<Attendee>): Array<{ email: string; label: string }> =>
-	map(filter(attendees, ['cutype', CALENDAR_RESOURCES.ROOM]), (at) => ({
-		label: at.d,
-		email: at.a
-	}));
+const getMeetingRooms = (
+	attendees: Array<Attendee>
+): Array<{ email: string; label: string }> | undefined => {
+	const rooms = filter(attendees, ['cutype', CALENDAR_RESOURCES.ROOM]);
+	return rooms.length
+		? map(rooms, (at) => ({
+				label: at.d,
+				email: at.a
+		  }))
+		: undefined;
+};
 
-const getEquipments = (attendees: Array<Attendee>): Array<{ email: string; label: string }> =>
-	map(filter(attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]), (at) => ({
-		label: at.d,
-		email: at.a
-	}));
+const getEquipments = (
+	attendees: Array<Attendee>
+): Array<{ email: string; label: string }> | undefined => {
+	const equipments = filter(attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]);
+	return equipments.length
+		? map(equipments, (at) => ({
+				label: at.d,
+				email: at.a
+		  }))
+		: undefined;
+};
 
 const getAttendees = (attendees: any[], role: string): any[] =>
 	map(filter(attendees, ['role', role]), (at) =>

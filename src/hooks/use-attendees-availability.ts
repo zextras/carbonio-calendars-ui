@@ -22,7 +22,7 @@ export type AttendeesAvailabilityListType = Array<AttendeesAvailabilityType> | u
 
 export const useAttendeesAvailability = (
 	start: Editor['start'],
-	attendees: Editor['attendees'],
+	attendees: Editor['attendees'] | undefined,
 	excludeUid?: string | undefined
 ): AttendeesAvailabilityListType => {
 	const [previousStart, setPreviousStart] = useState<Editor['start']>(start);

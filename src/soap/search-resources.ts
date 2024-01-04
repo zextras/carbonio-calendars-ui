@@ -7,10 +7,14 @@ import { soapFetch } from '@zextras/carbonio-shell-ui';
 
 import { SearchReturnType } from './search-request';
 
-export const searchResources = async (name: string, offset?: number): Promise<SearchReturnType> => {
+export const searchResources = async (
+	name: string,
+	offset = 0,
+	limit = 20
+): Promise<SearchReturnType> => {
 	const response: SearchReturnType = await soapFetch('AutoCompleteGal', {
 		name,
-		limit: 100,
+		limit,
 		needExp: 1,
 		offset,
 		type: 'resource',

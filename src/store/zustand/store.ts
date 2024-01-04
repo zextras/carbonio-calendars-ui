@@ -20,14 +20,16 @@ export type AppState = {
 	summaryViewCounter: number;
 	range: CalendarRange;
 	setRange: SetRange;
-	resources: Array<Resource> | undefined;
+	equipment: Array<Resource> | undefined;
+	meetingRoom: Array<Resource> | undefined;
 };
 
 export const useAppStatusStore = create<AppState>((set) => ({
 	calendarView: '',
 	date: new Date(),
 	summaryViewCounter: 0,
-	resources: undefined,
+	equipment: undefined,
+	meetingRoom: undefined,
 	range: {
 		start: moment().subtract('7', 'days').valueOf(),
 		end: moment().add('15', 'days').valueOf()
