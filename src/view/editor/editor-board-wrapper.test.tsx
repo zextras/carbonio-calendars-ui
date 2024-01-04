@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { Board } from '@zextras/carbonio-shell-ui';
 
 import BoardEditPanel from './editor-board-wrapper';
@@ -94,12 +94,14 @@ shell.useBoardHooks.mockImplementation(() => ({
 }));
 
 describe('Editor board wrapper', () => {
-	test('it does not render without board id', () => {
+	test('it does not render without board id', async () => {
 		const store = configureStore({
 			reducer: combineReducers(reducers)
 		});
 
-		setupTest(<BoardEditPanel />, { store });
+		await act(async () => {
+			await setupTest(<BoardEditPanel />, { store });
+		});
 		expect(screen.queryByTestId('EditorPanel')).not.toBeInTheDocument();
 	});
 	test('it renders with board id', async () => {
@@ -112,7 +114,9 @@ describe('Editor board wrapper', () => {
 		}));
 
 		shell.useBoard.mockImplementation(() => initBoard({ editorId, isNew }));
-		setupTest(<BoardEditPanel />, { store });
+		await act(async () => {
+			await setupTest(<BoardEditPanel />, { store });
+		});
 
 		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
 	});
