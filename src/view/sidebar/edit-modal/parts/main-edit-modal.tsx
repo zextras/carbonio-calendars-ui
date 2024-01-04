@@ -164,15 +164,19 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 
+	const isNotACalendarFolderAndHasAGreaterIDThan16 = useCallback(
+		(f) => f.view !== FOLDER_VIEW.appointment && parseInt(f.id, 10) > 16,
+		[]
+	);
+
 	const folderArray = useMemo(
 		() =>
 			map(allCalendars, (f) =>
-				f.name === defaultFolderName ||
-				(f.view !== FOLDER_VIEW.appointment && parseInt(f.id, 10) > 16)
+				f.name === defaultFolderName || isNotACalendarFolderAndHasAGreaterIDThan16(f)
 					? null
 					: f.name
 			),
-		[allCalendars, defaultFolderName]
+		[allCalendars, defaultFolderName, isNotACalendarFolderAndHasAGreaterIDThan16]
 	);
 
 	const showDupWarning = useMemo(

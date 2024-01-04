@@ -6,7 +6,8 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor, within, act } from '@testing-library/react';
+import { screen, within, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { EditModal } from './edit-modal';
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
@@ -117,6 +118,8 @@ const setupFoldersStore = (): void => {
 	}));
 };
 
+const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+
 describe('the edit calendar modal is composed by', () => {
 	describe('the modal header. It is composed by', () => {
 		test('the title "edit calendar properties" which is the same for every folder', () => {
@@ -133,16 +136,14 @@ describe('the edit calendar modal is composed by', () => {
 			setupFoldersStore();
 			const closeFn = jest.fn();
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+			setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
 				store
 			});
 
 			const closeBtn = within(screen.getByTestId('MainEditModal')).getByTestId(
 				'icon: CloseOutline'
 			);
-			await waitFor(() => {
-				user.click(closeBtn);
-			});
+			await user.click(closeBtn);
 			expect(closeFn).toHaveBeenCalledTimes(1);
 		});
 	});
@@ -154,11 +155,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 
 				const title = screen.getByRole('textbox', {
@@ -172,11 +172,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 
 				const title = screen.getByRole('textbox', {
@@ -190,11 +189,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 
 				const title = screen.getByRole('textbox', {
@@ -209,11 +207,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				const { user } = setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 
 				const title = screen.getByRole('textbox', {
@@ -234,11 +231,10 @@ describe('the edit calendar modal is composed by', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupFoldersStore();
 
-			setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-				store
-			});
-			await waitFor(() => {
-				expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+			act(() => {
+				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+					store
+				});
 			});
 
 			expect(screen.getByText('Type')).toBeVisible();
@@ -253,11 +249,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 
 				expect(screen.getByText(/calendar color/i)).toBeVisible();
@@ -268,11 +263,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 
 				expect(screen.getByText(/magenta/i)).toBeVisible();
@@ -285,11 +279,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 
 				expect(screen.getByTestId('icon: Square')).toBeVisible();
@@ -300,11 +293,10 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 
 				expect(
@@ -318,59 +310,35 @@ describe('the edit calendar modal is composed by', () => {
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 				const sharingSection = screen.queryByText(`Sharing of this folder`);
-				await waitFor(() => {
-					expect(sharingSection).not.toBeInTheDocument();
-				});
+				expect(sharingSection).not.toBeInTheDocument();
 			});
 			test('if the folder is shared with someone, the shared section should be visible', async () => {
 				const closeFn = jest.fn();
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
 
-				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-				});
-				const sharingSection = screen.getByText(`Sharing of this folder`);
-				await waitFor(() => {
-					expect(sharingSection).toBeVisible();
-				});
-			});
-			test('has a "Sharing of this folder" title', async () => {
-				const closeFn = jest.fn();
-				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupFoldersStore();
-
-				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 				const sharingSection = screen.getByText(`Sharing of this folder`);
-				await waitFor(() => {
-					expect(sharingSection).toBeVisible();
-				});
+				expect(sharingSection).toBeVisible();
 			});
 			test('it shows a list of all users this folder has been shared to and their relative roles', async () => {
 				const closeFn = jest.fn();
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupFoldersStore();
-
-				setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 
 				const user1WithRole = screen.getByText(`${grants[0].d} - Viewer`);
@@ -384,12 +352,13 @@ describe('the edit calendar modal is composed by', () => {
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupFoldersStore();
 
-					setupTest(<EditModal folderId={publicFolder.id} onClose={closeFn} />, {
-						store
+					act(() => {
+						setupTest(<EditModal folderId={publicFolder.id} onClose={closeFn} />, {
+							store
+						});
 					});
-					await waitFor(() => {
-						expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-					});
+
+					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
 					expect(screen.getByText(/public - viewer/i)).toBeVisible();
 				});
 				test('public user has only the revoke action available', async () => {
@@ -397,12 +366,12 @@ describe('the edit calendar modal is composed by', () => {
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupFoldersStore();
 
-					setupTest(<EditModal folderId={publicFolder.id} onClose={closeFn} />, {
-						store
+					act(() => {
+						setupTest(<EditModal folderId={publicFolder.id} onClose={closeFn} />, {
+							store
+						});
 					});
-					await waitFor(() => {
-						expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-					});
+
 					expect(screen.queryByRole('button', { name: /resend/i })).not.toBeInTheDocument();
 					expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
 					expect(screen.getByRole('button', { name: /revoke/i })).toBeInTheDocument();
@@ -415,12 +384,12 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-						});
+
 						expect(screen.getAllByRole('button', { name: /edit/i })[0]).toBeVisible();
 					});
 					test('on click it will open the edit permission modal', async () => {
@@ -428,16 +397,14 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-						});
+
 						await user.click(screen.getAllByRole('button', { name: /edit/i })[0]);
-						await waitFor(() => {
-							expect(screen.getByTestId('EditPermissionModal')).toBeInTheDocument();
-						});
+						expect(screen.getByTestId('EditPermissionModal')).toBeInTheDocument();
 					});
 				});
 				describe('revoke', () => {
@@ -446,12 +413,12 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-						});
+
 						expect(screen.getAllByRole('button', { name: /revoke/i })[0]).toBeVisible();
 					});
 					test('on click a request to the server will be sent containing only the related user', async () => {
@@ -460,20 +427,18 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-						});
+
 						await user.click(screen.getAllByRole('button', { name: /revoke/i })[0]);
-						await waitFor(() => {
-							expect(screen.getByTestId('RevokeModal')).toBeInTheDocument();
+						expect(screen.getByTestId('RevokeModal')).toBeInTheDocument();
+						await act(async () => {
+							await user.click(within(screen.getByTestId('RevokeModal')).getByText('Revoke'));
 						});
-						await user.click(within(screen.getByTestId('RevokeModal')).getByText('Revoke'));
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-						});
+						expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
 						expect(spy).toHaveBeenCalledTimes(1);
 						expect(spy).toHaveBeenCalledWith({
 							id: folder.id,
@@ -488,12 +453,12 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
-						});
+
 						expect(screen.getAllByRole('button', { name: /resend/i })[0]).toBeVisible();
 					});
 					test('on click a request to the server will be sent containing only the related user invitation', async () => {
@@ -502,19 +467,16 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
-						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
 
-						act(() => {
-							user.click(screen.getAllByRole('button', { name: /resend/i })[0]);
+						await act(async () => {
+							await user.click(screen.getAllByRole('button', { name: /resend/i })[0]);
 						});
-						await waitFor(() => {
-							expect(sendAgainSpy).toHaveBeenCalledTimes(1);
-						});
+						expect(sendAgainSpy).toHaveBeenCalledTimes(1);
 						expect(sendAgainSpy).toHaveBeenCalledWith(
 							expect.objectContaining({ contacts: [{ email: grants[0].d }] })
 						);
@@ -531,42 +493,33 @@ describe('the edit calendar modal is composed by', () => {
 
 				setupFoldersStore();
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+
+				act(() => {
+					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 				const addShareBtn = screen.getByRole('button', {
 					name: /add share/i
 				});
-				await waitFor(() => {
-					user.click(addShareBtn);
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('ShareCalendarModal')).toBeInTheDocument();
-				});
+				await user.click(addShareBtn);
+				expect(screen.getByTestId('ShareCalendarModal')).toBeInTheDocument();
 			});
 			// unmounting the component will discard all the unsaved changes done by the user
 			test('on click it will unmount the edit modal', async () => {
 				const closeFn = jest.fn();
 				setupFoldersStore();
 				const store = configureStore({ reducer: combineReducers(reducers) });
-				const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-					store
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+				act(() => {
+					setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+						store
+					});
 				});
 				const addShareBtn = screen.getByRole('button', {
 					name: /add share/i
 				});
-				await waitFor(() => {
-					user.click(addShareBtn);
-				});
-				await waitFor(() => {
-					expect(screen.queryByTestId('MainEditModal')).not.toBeInTheDocument();
-				});
+				await user.click(addShareBtn);
+				expect(screen.queryByTestId('MainEditModal')).not.toBeInTheDocument();
 			});
 		});
 		describe('ok button', () => {
@@ -580,11 +533,10 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
-						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
 
 						const title = screen.getByRole('textbox', {
@@ -593,9 +545,8 @@ describe('the edit calendar modal is composed by', () => {
 
 						await user.clear(title);
 						await user.type(title, 'New Calendar name');
-
-						await waitFor(() => {
-							user.click(screen.getByText('OK'));
+						await act(async () => {
+							await user.click(screen.getByText('OK'));
 						});
 
 						expect(spy).toHaveBeenCalledTimes(1);
@@ -613,11 +564,10 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
-						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
 
 						const title = screen.getByRole('textbox', {
@@ -626,10 +576,7 @@ describe('the edit calendar modal is composed by', () => {
 
 						await user.clear(title);
 						await user.type(title, folder.name);
-
-						await waitFor(() => {
-							user.click(screen.getByText('OK'));
-						});
+						await user.click(screen.getByText('OK'));
 
 						expect(spy).not.toHaveBeenCalled();
 					});
@@ -643,16 +590,15 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
-						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
 						await user.click(screen.getByText(/black/i));
 						await user.click(screen.getByText(/red/i));
-						await waitFor(() => {
-							user.click(screen.getByText('OK'));
+						await act(async () => {
+							await user.click(screen.getByText('OK'));
 						});
 
 						expect(spy).toHaveBeenCalledTimes(1);
@@ -669,20 +615,16 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-							store
-						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+						act(() => {
+							setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+								store
+							});
 						});
 						await user.click(screen.getByText(/black/i));
 						await user.click(
 							within(screen.getByTestId('dropdown-popper-list')).getByText(/black/i)
 						);
-
-						await waitFor(() => {
-							user.click(screen.getByText('OK'));
-						});
+						await user.click(screen.getByText('OK'));
 
 						expect(spy).not.toHaveBeenCalled();
 					});
@@ -696,18 +638,17 @@ describe('the edit calendar modal is composed by', () => {
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
 
-						const { user } = setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-							store
-						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+						act(() => {
+							setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+								store
+							});
 						});
 
-						await waitFor(() => {
-							user.click(screen.getByTestId('icon: CheckmarkSquare'));
+						await act(async () => {
+							await user.click(screen.getByTestId('icon: CheckmarkSquare'));
 						});
-						await waitFor(() => {
-							user.click(screen.getByText('OK'));
+						await act(async () => {
+							await user.click(screen.getByText('OK'));
 						});
 
 						expect(spy).toHaveBeenCalledTimes(1);
@@ -724,25 +665,19 @@ describe('the edit calendar modal is composed by', () => {
 
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupFoldersStore();
-
-						const { user } = setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
-							store
-						});
-						await waitFor(() => {
-							expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+						act(() => {
+							setupTest(<EditModal folderId={systemFolder.id} onClose={closeFn} />, {
+								store
+							});
 						});
 
-						await waitFor(() => {
-							user.click(screen.getByTestId('icon: CheckmarkSquare'));
+						await act(async () => {
+							await user.click(screen.getByTestId('icon: CheckmarkSquare'));
 						});
-
-						await waitFor(() => {
-							user.click(screen.getByTestId('icon: Square'));
+						await act(async () => {
+							await user.click(screen.getByTestId('icon: Square'));
 						});
-
-						await waitFor(() => {
-							user.click(screen.getByText('OK'));
-						});
+						await user.click(screen.getByText('OK'));
 
 						expect(spy).not.toHaveBeenCalled();
 					});
@@ -755,11 +690,10 @@ describe('the edit calendar modal is composed by', () => {
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupFoldersStore();
 
-					const { user } = setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
-						store
-					});
-					await waitFor(() => {
-						expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+					act(() => {
+						setupTest(<EditModal folderId={folder.id} onClose={closeFn} />, {
+							store
+						});
 					});
 
 					const title = screen.getByRole('textbox', {
@@ -772,12 +706,11 @@ describe('the edit calendar modal is composed by', () => {
 					await user.click(screen.getByText(/black/i));
 					await user.click(screen.getByText(/red/i));
 
-					await waitFor(() => {
-						user.click(screen.getByTestId('icon: Square'));
+					await act(async () => {
+						await user.click(screen.getByTestId('icon: Square'));
 					});
-
-					await waitFor(() => {
-						user.click(screen.getByText('OK'));
+					await act(async () => {
+						await user.click(screen.getByText('OK'));
 					});
 
 					expect(spy).toHaveBeenCalledTimes(1);
