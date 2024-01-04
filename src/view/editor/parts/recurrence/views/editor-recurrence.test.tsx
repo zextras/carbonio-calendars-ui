@@ -16,12 +16,14 @@ import { reducers } from '../../../../../store/redux';
 jest.setTimeout(7000);
 
 describe('editor recurrence field', () => {
-	test('is set to none as default', () => {
+	test('is set to none as default', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
 
-		setupTest(<EditorRecurrence editorId={editor.id} />, {
-			store
+		await act(async () => {
+			await setupTest(<EditorRecurrence editorId={editor.id} />, {
+				store
+			});
 		});
 
 		expect(editor.recur).toBeUndefined();
