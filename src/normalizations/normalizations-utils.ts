@@ -139,7 +139,7 @@ export const setCalendarColorFromRGB = (color: string | undefined): ZimbraColorT
 		: ZIMBRA_STANDARD_COLORS[0];
 
 export const setCalendarColorFromNumber = (color: number | undefined): ZimbraColorType =>
-	color ? ZIMBRA_STANDARD_COLORS[color] : ZIMBRA_STANDARD_COLORS[0];
+	ZIMBRA_STANDARD_COLORS?.[color ?? 0] ?? ZIMBRA_STANDARD_COLORS[0];
 
 export const setCalendarColor = ({
 	rgb,

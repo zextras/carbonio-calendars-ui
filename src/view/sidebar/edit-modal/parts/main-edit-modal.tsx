@@ -75,7 +75,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 		() =>
 			(colorName === 'custom'
 				? selected?.[0]?.value
-				: ZIMBRA_STANDARD_COLORS[parseInt(selected?.[0]?.value, 10)]?.color) || '',
+				: ZIMBRA_STANDARD_COLORS[parseInt(selected[0].value, 10)]?.color) || '',
 		[colorName, selected]
 	) as string;
 

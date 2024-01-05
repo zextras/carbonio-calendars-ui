@@ -78,7 +78,7 @@ const LabelFactory: SelectProps['LabelFactory'] = ({
 				<TextUpperCase>{selected?.[0].label}</TextUpperCase>
 			</Row>
 			<Padding right="small">
-				<Square color={ZIMBRA_STANDARD_COLORS[Number(selected?.[0].value)].color} />
+				<Square color={ZIMBRA_STANDARD_COLORS[Number(selected[0].value)].color} />
 			</Padding>
 		</Row>
 		<Icon

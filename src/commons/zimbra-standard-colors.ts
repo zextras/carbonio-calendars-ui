@@ -11,15 +11,15 @@ export type ZimbraColorType = {
 
 export const ZIMBRA_STANDARD_COLORS: Array<ZimbraColorType> = [
 	{ color: '#000000', background: '#E6E9ED', label: 'black' },
-	{ color: '#0097A7', background: '#E5F4F6', label: 'aquamarine' },
-	{ color: '#ef5350', background: '#FDEDED', label: 'red' },
-	{ color: '#ec407a', background: '#FDECF1', label: 'magenta' },
-	{ color: '#7e57c2', background: '#F2EEF9', label: 'purple' },
-	{ color: '#5c6bc0', background: '#EEF0F9', label: 'violet' },
-	{ color: '#29B6F6', background: '#E9F8FE', label: 'cyan' },
-	{ color: '#26a69a', background: '#E9F6F5', label: 'sage' },
-	{ color: '#66BB6A', background: '#EFF8F0', label: 'green' },
-	{ color: '#FF7043', background: '#FFF0EC', label: 'orange' }
+	{ color: '#007AFF', background: '#E6E9ED', label: 'blue' },
+	{ color: '#5AC8FA', background: '#E5F4F6', label: 'cyan' },
+	{ color: '#34C759', background: '#FDEDED', label: 'green' },
+	{ color: '#AF52DE', background: '#FDECF1', label: 'purple' },
+	{ color: '#FF3B30', background: '#F2EEF9', label: 'red' },
+	{ color: '#FFCC00', background: '#EEF0F9', label: 'yellow' },
+	{ color: '#FF2D55', background: '#E9F8FE', label: 'pink' },
+	{ color: '#8E8E93', background: '#E9F6F5', label: 'grey' },
+	{ color: '#FF9500', background: '#FFF0EC', label: 'orange' }
 ];
 
 /*
