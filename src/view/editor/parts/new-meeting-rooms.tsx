@@ -65,9 +65,13 @@ export const NewMeetingRooms = ({ editorId }: { editorId: string }): ReactElemen
 					const res = map(meetingResources, (result) => ({
 						id: result.fileAsStr,
 						label: result.fileAsStr,
+						icon: 'BuildingOutline',
 						value: {
 							label: result.fileAsStr,
-							email: result._attrs.email
+							email: result._attrs.email,
+							avatarIcon: 'BuildingOutline',
+							avatarBackground: 'transparent',
+							avatarColor: 'gray0'
 						}
 					}));
 					useAppStatusStore.setState({ meetingRoom: uniqBy(remoteResources, 'label') });

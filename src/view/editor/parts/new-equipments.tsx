@@ -65,9 +65,13 @@ export const NewEquipments = ({ editorId }: { editorId: string }): ReactElement 
 					const res = map(equipmentResource, (result) => ({
 						id: result.fileAsStr,
 						label: result.fileAsStr,
+						icon: 'BriefcaseOutline',
 						value: {
 							label: result.fileAsStr,
-							email: result._attrs.email
+							email: result._attrs.email,
+							avatarIcon: 'BriefcaseOutline',
+							avatarBackground: 'transparent',
+							avatarColor: 'gray0'
 						}
 					}));
 					useAppStatusStore.setState({ equipment: uniqBy(remoteResources, 'label') });
