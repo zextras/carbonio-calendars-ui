@@ -34,7 +34,7 @@ export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement
 
 	const { zimbraPrefUseTimeZoneListInCalendar } = usePrefs();
 	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
-
+	const timezoneLabel = t('timezones', 'Timezones');
 	const [value, setValue] = useState<SelectValue>(() => {
 		if (timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE') {
 			const label = findLabel(timeZonesOptions, timezone);
@@ -61,8 +61,9 @@ export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement
 		[dispatch, editorId, timeZonesOptions]
 	);
 
-	return value && zimbraPrefUseTimeZoneListInCalendar === 'TRUE' && !allDay ? (
+	return zimbraPrefUseTimeZoneListInCalendar === 'TRUE' && !allDay ? (
 		<Select
+			label={timezoneLabel}
 			items={timeZonesOptions}
 			multiple={false}
 			onChange={onChange}
