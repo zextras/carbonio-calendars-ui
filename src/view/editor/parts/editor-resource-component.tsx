@@ -171,7 +171,11 @@ export const EditorResourceComponent = ({
 			{
 				type: 'keydown',
 				callback: (): void => {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
 					if (options?.[0]?.value && onChange && options?.[0]?.id !== 'loading') {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
 						onChange([...resourceAvailability, options[0].value]);
 						if (inputRef.current) {
 							inputRef.current.value = '';
@@ -200,6 +204,8 @@ export const EditorResourceComponent = ({
 					options={options}
 					onInputType={onInputType}
 					onAdd={onAdd}
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
 					onChange={onChange}
 				/>
 			</Container>

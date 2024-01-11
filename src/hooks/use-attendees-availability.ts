@@ -5,7 +5,7 @@
  */
 import { map, differenceBy, filter, includes, find } from 'lodash';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getFreeBusyRequest } from '../soap/get-free-busy-request';
 import { Editor } from '../types/editor';
 
@@ -124,5 +124,5 @@ export const useAttendeesAvailability = (
 		}
 	}, [attendees, attendeesAvailabilityList, excludeUid, previousStart, start]);
 
-	return attendeesAvailabilityList;
+	return useMemo(() => attendeesAvailabilityList, [attendeesAvailabilityList]);
 };
