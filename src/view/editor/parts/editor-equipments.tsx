@@ -12,16 +12,33 @@ import { useTranslation } from 'react-i18next';
 import { EditorResourceComponent, Loader, normalizeResources } from './editor-resource-component';
 import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorMeetingRoom } from '../../../store/selectors/editor';
-import { editEditorMeetingRoom } from '../../../store/slices/editor-slice';
+import { selectEditorEquipment } from '../../../store/selectors/editor';
+import { editEditorEquipment } from '../../../store/slices/editor-slice';
 import { useAppStatusStore } from '../../../store/zustand/store';
 import { Resource } from '../../../types/editor';
 
-export const NewMeetingRooms = ({ editorId }: { editorId: string }): ReactElement | null => {
+export const EditorEquipments = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 
-	const meetingRoomsValue = useAppSelector(selectEditorMeetingRoom(editorId));
+	const equipmentValue = useAppSelector(selectEditorEquipment(editorId));
+
+	const equipmentChipValue = useMemo(
+		() =>
+			map(
+				equipmentValue,
+				(result) =>
+					({
+						id: result.id,
+						label: result.label,
+						email: result.email,
+						avatarIcon: 'BriefcaseOutline',
+						avatarBackground: 'transparent',
+						avatarColor: 'gray0'
+					} as const)
+			),
+		[equipmentValue]
+	);
 
 	const [options, setOptions] = useState<Array<DropdownItem>>([]);
 
@@ -29,18 +46,18 @@ export const NewMeetingRooms = ({ editorId }: { editorId: string }): ReactElemen
 		(e: Array<Resource>) => {
 			if (e) {
 				const newValue = e.length > 0 ? uniqBy(e, 'label') : [];
-				dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: newValue }));
+				dispatch(editEditorEquipment({ id: editorId, equipment: newValue }));
 			}
 		},
 		[dispatch, editorId]
 	);
 
-	const placeholder = useMemo(() => t('label.meeting_room', 'Meeting room'), [t]);
+	const placeholder = useMemo(() => t('label.equipment', 'Equipment'), [t]);
 	const warningLabel = useMemo(
 		() =>
 			t(
-				'attendees_rooms_unavailable',
-				'One or more Meeting Rooms are not available at the selected time of the event'
+				'attendees_equipments_unavailable',
+				'One or more Equipments are not available at the selected time of the event'
 			),
 		[t]
 	);
@@ -56,25 +73,19 @@ export const NewMeetingRooms = ({ editorId }: { editorId: string }): ReactElemen
 			]);
 			searchResources(e.textContent).then((response) => {
 				if (!response.error) {
-					const meetingResources = filter(
+					const equipmentResource = filter(
 						response.cn,
-						(cn) => cn._attrs.zimbraCalResType === 'Location'
+						(cn) => cn._attrs.zimbraCalResType === 'Equipment'
 					);
-					const remoteResources = map(meetingResources, (result) => normalizeResources(result));
+					const remoteResources = map(equipmentResource, (result) => normalizeResources(result));
 
-					const res = map(meetingResources, (result) => ({
+					const res = map(equipmentResource, (result) => ({
 						id: result.fileAsStr,
 						label: result.fileAsStr,
-						icon: 'BuildingOutline',
-						value: {
-							label: result.fileAsStr,
-							email: result._attrs.email,
-							avatarIcon: 'BuildingOutline',
-							avatarBackground: 'transparent',
-							avatarColor: 'gray0'
-						}
+						icon: 'BriefcaseOutline',
+						value: normalizeResources(result)
 					}));
-					useAppStatusStore.setState({ meetingRoom: uniqBy(remoteResources, 'label') });
+					useAppStatusStore.setState({ equipment: uniqBy(remoteResources, 'label') });
 					setOptions(res);
 				}
 			});
@@ -87,7 +98,7 @@ export const NewMeetingRooms = ({ editorId }: { editorId: string }): ReactElemen
 			editorId={editorId}
 			onInputType={onInputType}
 			placeholder={placeholder}
-			resourcesValue={meetingRoomsValue ?? []}
+			resourcesValue={equipmentChipValue ?? []}
 			options={options}
 			setOptions={setOptions}
 			warningLabel={warningLabel}

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-export type ParticipationRoles = 'REQ' | 'OPT';
+export type ParticipationRoles = 'REQ' | 'OPT' | 'NON';
 export type ParticipationStatus = 'TE' | 'AC' | 'DE' | 'NE' | 'DG' | 'CO' | 'IN' | 'WE' | 'DF';
 export type Attendee = {
 	a: string;
@@ -58,6 +58,7 @@ export type InviteParticipant = {
 	email: string;
 	isOptional: boolean;
 	response: ParticipationStatus;
+	cutype?: string;
 };
 
 export type InviteParticipants = Partial<{

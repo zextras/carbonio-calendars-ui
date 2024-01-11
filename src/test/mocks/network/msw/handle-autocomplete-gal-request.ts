@@ -5,7 +5,41 @@
  */
 import { faker } from '@faker-js/faker';
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
-import { map } from 'lodash';
+import { isNull, map, omitBy } from 'lodash';
+
+import { Resource } from '../../../../types/editor';
+
+export const getCustomResources = (resources?: Array<Resource>): SuccessSoapResponse<any> => ({
+	Header: {
+		context: {
+			session: {
+				id: 1403,
+				_content: 1403
+			}
+		}
+	},
+	Body: {
+		AutoCompleteGalResponse: omitBy(
+			{
+				cn: resources
+					? map(resources, (r) => ({
+							id: r.id,
+							fileAsStr: r.label,
+							_attrs: {
+								zimbraCalResType: r.type,
+								email: r.email
+							}
+					  }))
+					: undefined,
+				sortBy: 'dateDesc',
+				offset: 0,
+				more: false,
+				_jsns: 'urn:zimbraAccount'
+			},
+			isNull
+		)
+	}
+});
 
 export const getLessThan100Resources = (): SuccessSoapResponse<any> => ({
 	Header: {

@@ -28,6 +28,7 @@ import { handleGetFreeBusy } from './src/test/mocks/network/msw/handle-get-free-
 import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite';
 import { handleItemActionRequest } from './src/test/mocks/network/msw/handle-item-action';
 import { handleModifyAppointmentRequest } from './src/test/mocks/network/msw/handle-modify-appointment';
+import { handleSearchCalendarResourcesRequest } from './src/test/mocks/network/msw/handle-search-calendar-resoruces';
 import { handleSendInviteReplyRequest } from './src/test/mocks/network/msw/handle-send-invite-reply';
 import { handleSendShareNotificationRequest } from './src/test/mocks/network/msw/handle-send-share-notification';
 
@@ -56,7 +57,8 @@ beforeAll(() => {
 		),
 		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest),
 		rest.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest),
-		rest.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest)
+		rest.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest),
+		rest.post('/service/soap/SearchCalendarResourcesRequest', handleSearchCalendarResourcesRequest)
 	];
 	registerRestHandler(...h);
 	defaultBeforeAllTests();

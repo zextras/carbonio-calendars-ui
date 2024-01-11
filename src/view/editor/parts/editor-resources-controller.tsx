@@ -5,16 +5,13 @@
  */
 import { useEffect, useState } from 'react';
 
-import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 
-import { SearchReturnType } from '../../../soap/search-request';
-import { searchResources } from '../../../soap/search-resources';
+import { searchCalendarResourcesRequest } from '../../../soap/search-calendar-resources-request';
 import { useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorEquipment, selectEditorMeetingRoom } from '../../../store/selectors/editor';
 import { useAppStatusStore } from '../../../store/zustand/store';
-import { Resource } from '../../../types/editor';
-import { Cn, Contact } from '../../../types/soap/soap-actions';
+import { Contact } from '../../../types/soap/soap-actions';
 
 const normalizeResources = (
 	r: Contact
@@ -26,55 +23,7 @@ const normalizeResources = (
 	type: r._attrs.zimbraCalResType
 });
 
-const getAllResources = async (
-	resources = [] as Cn,
-	value = '',
-	offset = 0
-): Promise<Array<Resource>> => {
-	const response = await searchResources(value, offset, 100);
-	if (response.cn) {
-		const newValue = resources.concat(response.cn);
-		if (response.more) {
-			return getAllResources(newValue, value, response.cn.length);
-		}
-		return map(newValue, (r) => normalizeResources(r));
-	}
-	return map(resources, (r) => normalizeResources(r));
-};
-
-export const EditorResourcesController = (): null => {
-	const [resources, setResources] = useState<Array<Resource> | undefined>();
-
-	useEffect(() => {
-		if (!resources) {
-			getAllResources().then((res) => {
-				useAppStatusStore.setState({ resources: res });
-				setResources(res);
-			});
-		}
-	}, [resources]);
-	return null;
-};
-
-export const searchCalendarResourcesRequest = async (value: string): Promise<SearchReturnType> => {
-	const response: SearchReturnType = await soapFetch('SearchCalendarResources', {
-		attrs: 'email,zimbraCalResType,fullName',
-		searchFilter: {
-			conds: {
-				or: '1',
-				cond: {
-					attr: 'zimbraCalResType',
-					op: 'eq',
-					value
-				}
-			}
-		},
-		_jsns: 'urn:zimbraAccount'
-	});
-	return response?.Fault ? { ...response.Fault, error: true } : response;
-};
-
-export const EditorResourcesControllerV2 = ({ editorId }: { editorId: string }): null => {
+export const EditorResourcesController = ({ editorId }: { editorId: string }): null => {
 	const meetingRoomsValue = useAppSelector(selectEditorMeetingRoom(editorId));
 	const equipmentsValue = useAppSelector(selectEditorEquipment(editorId));
 
@@ -86,7 +35,9 @@ export const EditorResourcesControllerV2 = ({ editorId }: { editorId: string }):
 				searchCalendarResourcesRequest('Location').then((res) => {
 					setIsLoading(true);
 					useAppStatusStore.setState({
-						meetingRoom: map(res.calresource, (r) => normalizeResources(r))
+						meetingRoom: res.calresource
+							? map(res.calresource, (r) => normalizeResources(r))
+							: undefined
 					});
 				});
 			}
@@ -94,7 +45,9 @@ export const EditorResourcesControllerV2 = ({ editorId }: { editorId: string }):
 				searchCalendarResourcesRequest('Equipment').then((res) => {
 					setIsLoading(true);
 					useAppStatusStore.setState({
-						equipment: map(res.calresource, (r) => normalizeResources(r))
+						equipment: res.calresource
+							? map(res.calresource, (r) => normalizeResources(r))
+							: undefined
 					});
 				});
 			}

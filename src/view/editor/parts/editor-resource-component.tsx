@@ -30,7 +30,7 @@ import {
 	selectEditorStart,
 	selectEditorUid
 } from '../../../store/selectors/editor';
-import { Resource } from '../../../types/editor';
+import { ChipResource, Resource } from '../../../types/editor';
 import { Contact } from '../../../types/soap/soap-actions';
 
 interface SkeletonTileProps {
@@ -96,7 +96,7 @@ export const EditorResourceComponent = ({
 	onChange: (e: Array<Resource>) => void;
 	onInputType: ChipInputProps['onInputType'];
 	placeholder: string;
-	resourcesValue: Array<Resource>;
+	resourcesValue: Array<ChipResource>;
 	options: Array<DropdownItem>;
 	setOptions: (e: Array<DropdownItem>) => void;
 	warningLabel: string;
