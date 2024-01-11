@@ -108,7 +108,7 @@ const AppRegistrations = () => {
 	useEffect(() => {
 		addRoute({
 			route: CALENDAR_ROUTE,
-			position: 2,
+			position: 200,
 			visible: true,
 			label: t('label.app_name', 'Calendars'),
 			primaryBar: 'CalendarModOutline',
