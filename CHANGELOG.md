@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.8.0...v1.8.1) (2024-01-12)
+
+
+### Bug Fixes
+
+* fixes on attendees chips ([68582af](https://github.com/zextras/carbonio-calendars-ui/commit/68582af4d286ffa2fff725eb5ecca484ccb6a883))
+* update module sorting position parameter ([c1c4b2f](https://github.com/zextras/carbonio-calendars-ui/commit/c1c4b2f86c429f62a5282a0c47ef3f2c62586a20))
+
 ## [1.8.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.7...v1.8.0) (2024-01-04)
 
 
