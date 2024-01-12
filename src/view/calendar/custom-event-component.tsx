@@ -3,15 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { Tag, Tags, ZIMBRA_STANDARD_COLORS, t } from '@zextras/carbonio-shell-ui';
 import { includes, reduce } from 'lodash';
 import moment from 'moment';
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
+
 import { EventType } from '../../types/event';
 import { useTagExist } from '../tags/tag-actions';
-import { TagType } from '../../types/tags';
 
 const NeedActionIcon = styled(Icon)`
 	position: relative;
@@ -131,12 +132,14 @@ const CustomEventComponent = ({ event, tags, title }: CustomEventComponentProps)
 			<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
 				<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
 					<Text color="currentColor" weight="medium" style={{ overflow: 'visible' }}>
-						{`${moment(event.start).format('LT')} -`}
+						{`${moment(event.start).format('LT')} - ${moment(event.end).format('LT')}`}
 					</Text>
 					<Padding left="small" />
-					<Text overflow="ellipsis" color="currentColor" weight="bold" size="small">
-						{title}
-					</Text>
+					{eventDiff <= 15 && (
+						<Text overflow="ellipsis" color="currentColor" weight="bold" size="small">
+							{title}
+						</Text>
+					)}
 				</Row>
 			</Tooltip>
 			{/* {event?.resource?.isException && (
