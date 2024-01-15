@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { useEffect, useMemo, useState } from 'react';
+
 import { map, differenceBy, filter, includes, find } from 'lodash';
 import moment from 'moment';
-import { useEffect, useMemo, useState } from 'react';
+
 import { getFreeBusyRequest } from '../soap/get-free-busy-request';
 import { Editor } from '../types/editor';
 
@@ -26,19 +28,22 @@ export const useAttendeesAvailability = (
 	excludeUid?: string | undefined
 ): AttendeesAvailabilityListType => {
 	const [previousStart, setPreviousStart] = useState<Editor['start']>(start);
-
+	const attendeesWithEmail = useMemo(
+		() => filter(attendees, (attendee) => !!attendee.email),
+		[attendees]
+	);
 	const [attendeesAvailabilityList, setAttendeesAvailabilityList] =
 		useState<AttendeesAvailabilityListType>(undefined);
 
 	useEffect(() => {
-		if (start && attendees && attendees.length > 0) {
+		if (start && attendeesWithEmail && attendeesWithEmail.length > 0) {
 			const currentStartDay = moment(start).format('YYYY/MM/DD');
 
 			const newRangeStart = moment(start).startOf('day').valueOf();
 			const newRangeEnd = moment(start).endOf('day').valueOf();
 
 			if (!attendeesAvailabilityList) {
-				const uid = map(attendees, (attendee) => attendee.email).join(',');
+				const uid = map(attendeesWithEmail, (attendee) => attendee.email).join(',');
 
 				getFreeBusyRequest({ s: newRangeStart, e: newRangeEnd, uid, excludeUid }).then(
 					(response) => {
@@ -55,7 +60,7 @@ export const useAttendeesAvailability = (
 				);
 			}
 			if (attendeesAvailabilityList) {
-				const newAttendees = differenceBy(attendees, attendeesAvailabilityList, 'email');
+				const newAttendees = differenceBy(attendeesWithEmail, attendeesAvailabilityList, 'email');
 				if (newAttendees.length) {
 					const uid = map(newAttendees, (attendee) => attendee.email).join(',');
 
@@ -122,7 +127,7 @@ export const useAttendeesAvailability = (
 				}
 			}
 		}
-	}, [attendees, attendeesAvailabilityList, excludeUid, previousStart, start]);
+	}, [attendeesWithEmail, attendeesAvailabilityList, excludeUid, previousStart, start]);
 
 	return useMemo(() => attendeesAvailabilityList, [attendeesAvailabilityList]);
 };

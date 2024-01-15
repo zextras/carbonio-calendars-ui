@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.8.0...v1.8.1) (2024-01-12)
+
+
+### Bug Fixes
+
+* fixes on attendees chips ([68582af](https://github.com/zextras/carbonio-calendars-ui/commit/68582af4d286ffa2fff725eb5ecca484ccb6a883))
+* update module sorting position parameter ([c1c4b2f](https://github.com/zextras/carbonio-calendars-ui/commit/c1c4b2f86c429f62a5282a0c47ef3f2c62586a20))
+
+## [1.8.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.7...v1.8.0) (2024-01-04)
+
+
+### Features
+
+* equipment availability ([#382](https://github.com/zextras/carbonio-calendars-ui/issues/382)) ([02e088c](https://github.com/zextras/carbonio-calendars-ui/commit/02e088c3a8b6828a48a81218a18ebf7f21b7bba3))
+* meeting room availability ([#375](https://github.com/zextras/carbonio-calendars-ui/issues/375)) ([380ac21](https://github.com/zextras/carbonio-calendars-ui/commit/380ac217e2137ae1e6053f3c4da070cd72e46403))
+
+
+### Bug Fixes
+
+* appointment is removed for all the participants when is cancelled ([#396](https://github.com/zextras/carbonio-calendars-ui/issues/396)) ([96903a8](https://github.com/zextras/carbonio-calendars-ui/commit/96903a86a81785870f425b40d38fada4cc9c92df))
+* calendars can be publicly shared ([275f9bf](https://github.com/zextras/carbonio-calendars-ui/commit/275f9bf71ac9c545e71b532ba888e06fee0d28ed))
+* reply to invites from shared accounts ([#381](https://github.com/zextras/carbonio-calendars-ui/issues/381)) ([0175da1](https://github.com/zextras/carbonio-calendars-ui/commit/0175da15d07665f17b586ddb6718b06345ed2173))
+
 ### [1.7.7](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.6...v1.7.7) (2023-12-15)
 
 ### [1.7.6](https://github.com/zextras/carbonio-calendars-ui/compare/v1.7.5...v1.7.6) (2023-12-07)

@@ -24,6 +24,6 @@ export enum SIDEBAR_ITEMS {
 	SHARES = 'shares'
 }
 
-type ObjectValues<T> = T[keyof T];
+export type ObjectValues<T> = T[keyof T];
 
 export type CalendarActionsId = ObjectValues<typeof FOLDER_ACTIONS>;

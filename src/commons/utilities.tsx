@@ -16,9 +16,10 @@ import {
 } from '../carbonio-ui-commons/store/zustand/folder';
 import type { Folder } from '../carbonio-ui-commons/types/folder';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
+import { FOLDER_OPERATIONS } from '../constants/api';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
-import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
+import { folderAction } from '../store/actions/calendar-actions';
 import { searchAppointments } from '../store/actions/search-appointments';
 import { AppDispatch } from '../store/redux';
 import { ReminderItem } from '../types/appointment-reminder';
@@ -392,13 +393,13 @@ export function recursiveToggleCheck({
 }: RecursiveToggleCheckProps): void {
 	const foldersToToggleIds: Array<string> = checkAllChildren([folder], checked);
 
-	const op = checked ? '!check' : 'check';
-	folderAction({
-		id: foldersToToggleIds,
-		changes: { checked },
+	const op = checked ? FOLDER_OPERATIONS.UNCHECK : FOLDER_OPERATIONS.CHECK;
+	const actions = map(foldersToToggleIds, (id) => ({
+		id,
 		op
-	}).then((res) => {
-		if (op === 'check' && !res.Fault) {
+	}));
+	folderAction(actions).then((res) => {
+		if (op === FOLDER_OPERATIONS.CHECK && !res.Fault) {
 			dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
 			dispatch(getMiniCal({ start, end })).then((response) => {
 				const updateFolder = getUpdateFolder();

@@ -7,7 +7,7 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Button, ChipInput, Container, Row } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { find, map, some } from 'lodash';
+import { find, map, reject, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
@@ -73,14 +73,10 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 
 	const onChange = useCallback(
 		(value) => {
-			const _attendees = map(value, (chip) => ({
-				...chip,
-				email: chip?.email ?? chip?.label
-			}));
 			dispatch(
 				editEditorAttendees({
 					id: editorId,
-					attendees: _attendees
+					attendees: value
 				})
 			);
 		},
@@ -97,8 +93,12 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const defaultValue = useMemo(() => {
 		if (attendees?.length > 0) {
 			return map(attendees, (chip) => {
-				const chipLabel = chip.email ?? chip.label;
-				const currentChipAvailability = find(attendeesAvailabilityList, ['email', chipLabel]);
+				const currentChipAvailability = find(attendeesAvailabilityList, ['email', chip.email]);
+
+				const oldActions =
+					(chip.actions && !chip.error) || !chip.email
+						? reject(chip.actions, ['icon', 'EditOutline'])
+						: chip.actions;
 
 				if (currentChipAvailability) {
 					const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
@@ -108,30 +108,30 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 						attendeesAvailabilityList,
 						allDay
 					);
-					const actions = isBusyAtTimeOfEvent
-						? [
-								{
-									id: 'unavailable',
-									label: t(
-										'attendee_unavailable',
-										'Attendee not available at the selected time of the event'
-									),
-									color: 'error',
-									type: 'icon',
-									icon: 'AlertTriangle'
-								} as const
-						  ]
-						: undefined;
+
+					const actions =
+						isBusyAtTimeOfEvent && !find(oldActions, ['id', 'unavailable'])
+							? [
+									...(oldActions ?? []),
+									{
+										id: 'unavailable',
+										label: t(
+											'attendee_unavailable',
+											'Attendee not available at the selected time of the event'
+										),
+										color: 'error',
+										type: 'icon',
+										icon: 'AlertTriangle'
+									} as const
+							  ]
+							: oldActions;
 					return {
 						...chip,
-						email: chip?.email ?? chip?.label,
+						error: !chip.email ? false : chip.error,
 						actions
 					};
 				}
-				return {
-					...chip,
-					email: chip?.email ?? chip?.label
-				};
+				return { ...chip, error: !chip.email ? false : chip.error, actions: oldActions };
 			});
 		}
 		return [];

@@ -30,3 +30,10 @@ export const CALENDAR_RESOURCES = {
 	ROOM: 'ROO',
 	RESOURCE: 'RES'
 } as const;
+
+export const SHARE_USER_TYPE = {
+	USER: 'usr',
+	PUBLIC: 'pub'
+} as const;
+
+export const PUBLIC_SHARE_ZID = '99999999-9999-9999-9999-999999999999';

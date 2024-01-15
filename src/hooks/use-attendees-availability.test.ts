@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { map } from 'lodash';
 import moment from 'moment';
 
@@ -90,8 +90,8 @@ describe('use attendees availability', () => {
 			});
 
 			rerender();
-			await waitFor(() => {
-				expect(spy).toHaveBeenCalled();
+			await act(async () => {
+				await expect(spy).toHaveBeenCalled();
 			});
 			expect(spy).toHaveBeenCalledTimes(1);
 			expect(spy).toHaveBeenCalledWith({ s: rangeStart, e: rangeEnd, uid });
