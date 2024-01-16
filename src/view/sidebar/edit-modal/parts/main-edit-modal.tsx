@@ -34,9 +34,9 @@ import { useFoldersArray } from '../../../../carbonio-ui-commons/store/zustand/f
 import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
-import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
+import { CALENDARS_STANDARD_COLORS } from '../../../../constants/calendar';
 import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
@@ -75,7 +75,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 		() =>
 			(colorName === 'custom'
 				? selected?.[0]?.value
-				: ZIMBRA_STANDARD_COLORS[parseInt(selected[0].value, 10)]?.color) || '',
+				: CALENDARS_STANDARD_COLORS[parseInt(selected[0].value, 10)]?.color) || '',
 		[colorName, selected]
 	) as string;
 
@@ -118,7 +118,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 };
 
 const getStatusItems = (t: TFunction): Array<SelectItem> =>
-	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
+	CALENDARS_STANDARD_COLORS.map((el, index) => ({
 		label: t(el.label ?? ''),
 		value: index.toString(),
 		customComponent: (
