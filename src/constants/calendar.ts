@@ -18,7 +18,7 @@ export const WEEK_SCHEDULE = [
 
 export const CALENDARS_STANDARD_COLORS: Array<CalendarsColorType> = [
 	{ color: '#000000', background: '#E6E9ED', label: 'black' },
-	{ color: '#007AFF', background: '#D3EBF8', label: 'blue' },
+	{ color: '#007AFF', background: '#F4FBFF', label: 'blue' },
 	{ color: '#5AC8FA', background: '#E9F8FE', label: 'cyan' },
 	{ color: '#34C759', background: '#EFF8F0', label: 'green' },
 	{ color: '#AF52DE', background: '#F2EEF9', label: 'purple' },
