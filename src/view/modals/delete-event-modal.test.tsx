@@ -8,6 +8,7 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor } from '@testing-library/react';
+import { PARTICIPANT_ROLE } from '../../constants/api';
 
 import { DeleteEventModal } from './delete-event-modal';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
@@ -65,7 +66,7 @@ describe('delete event modal', () => {
 					d: participantFullName,
 					ptst: 'AC',
 					cutype: '',
-					role: 'REQ',
+					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
 					url: participantEmail
 				}
@@ -92,7 +93,7 @@ describe('delete event modal', () => {
 					d: participantFullName,
 					ptst: 'AC',
 					cutype: '',
-					role: 'REQ',
+					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
 					url: participantEmail
 				}

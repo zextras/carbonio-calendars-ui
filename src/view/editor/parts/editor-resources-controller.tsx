@@ -7,47 +7,51 @@ import { useEffect, useState } from 'react';
 
 import { map } from 'lodash';
 
-import { searchResources } from '../../../soap/search-resources';
+import { searchCalendarResourcesRequest } from '../../../soap/search-calendar-resources-request';
+import { useAppSelector } from '../../../store/redux/hooks';
+import { selectEditorEquipment, selectEditorMeetingRoom } from '../../../store/selectors/editor';
 import { useAppStatusStore } from '../../../store/zustand/store';
-import { Resource } from '../../../types/editor';
-import { Cn, Contact } from '../../../types/soap/soap-actions';
+import { Contact } from '../../../types/soap/soap-actions';
 
 const normalizeResources = (
 	r: Contact
 ): { id: string; label: string; value: string; email: string; type: string } => ({
 	id: r.id,
-	label: r.fileAsStr,
-	value: r.fileAsStr,
+	label: r._attrs.fullName,
+	value: r._attrs.fullName,
 	email: r._attrs.email,
 	type: r._attrs.zimbraCalResType
 });
 
-const getAllResources = async (
-	resources = [] as Cn,
-	value = '',
-	offset = 0
-): Promise<Array<Resource>> => {
-	const response = await searchResources(value, offset);
-	if (response.cn) {
-		const newValue = resources.concat(response.cn);
-		if (response.more) {
-			return getAllResources(newValue, value, response.cn.length);
-		}
-		return map(newValue, (r) => normalizeResources(r));
-	}
-	return map(resources, (r) => normalizeResources(r));
-};
+export const EditorResourcesController = ({ editorId }: { editorId: string }): null => {
+	const meetingRoomsValue = useAppSelector(selectEditorMeetingRoom(editorId));
+	const equipmentsValue = useAppSelector(selectEditorEquipment(editorId));
 
-export const EditorResourcesController = (): null => {
-	const [resources, setResources] = useState<Array<Resource> | undefined>();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (!resources) {
-			getAllResources().then((res) => {
-				useAppStatusStore.setState({ resources: res });
-				setResources(res);
-			});
+		if (!isLoading) {
+			if (meetingRoomsValue) {
+				searchCalendarResourcesRequest('Location').then((res) => {
+					setIsLoading(true);
+					useAppStatusStore.setState({
+						meetingRoom: res.calresource
+							? map(res.calresource, (r) => normalizeResources(r))
+							: undefined
+					});
+				});
+			}
+			if (equipmentsValue) {
+				searchCalendarResourcesRequest('Equipment').then((res) => {
+					setIsLoading(true);
+					useAppStatusStore.setState({
+						equipment: res.calresource
+							? map(res.calresource, (r) => normalizeResources(r))
+							: undefined
+					});
+				});
+			}
 		}
-	}, [resources]);
+	}, [equipmentsValue, isLoading, meetingRoomsValue, setIsLoading]);
 	return null;
 };

@@ -4,7 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-export type ParticipationRoles = 'REQ' | 'OPT';
+import { ParticipantRoleType } from '../../constants/api';
+
+// role = CHAir, REQuired, OPTional, NON-participant (ie informational)
+export type ParticipationRoles = ParticipantRoleType;
 export type ParticipationStatus = 'TE' | 'AC' | 'DE' | 'NE' | 'DG' | 'CO' | 'IN' | 'WE' | 'DF';
 export type Attendee = {
 	a: string;
@@ -58,6 +61,7 @@ export type InviteParticipant = {
 	email: string;
 	isOptional: boolean;
 	response: ParticipationStatus;
+	cutype?: string;
 };
 
 export type InviteParticipants = Partial<{

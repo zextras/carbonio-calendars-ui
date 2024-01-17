@@ -27,6 +27,7 @@ import ProposedTimeReply from './parts/proposed-time-reply';
 import BodyMessageRenderer, { extractBody } from '../../commons/body-message-renderer';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_RESOURCES, CALENDAR_ROUTE } from '../../constants';
+import { PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
@@ -66,15 +67,6 @@ type InviteResponse = {
 	};
 	moveToTrash?: () => void;
 	onLoadChange?: () => void;
-};
-
-export type Participant = {
-	a: string;
-	d: string;
-	ptst: 'NE' | 'AC' | 'TE' | 'DE' | 'DG' | 'CO' | 'IN' | 'WE' | 'DF';
-	role: 'OPT' | 'REQ';
-	rsvp: boolean;
-	url: string;
 };
 
 const InviteResponse: FC<InviteResponse> = ({
@@ -148,13 +140,13 @@ const InviteResponse: FC<InviteResponse> = ({
 
 	const [maxReqParticipantsToShow, setMaxReqParticipantsToShow] = useState(4);
 	const requiredParticipants = useMemo(
-		() => invite.attendees.filter((user: Participant) => user.role === 'REQ'),
+		() => invite.attendees.filter((user) => user.role === PARTICIPANT_ROLE.REQUIRED),
 		[invite]
 	);
 
 	const [maxOptParticipantsToShow, setMaxOptParticipantsToShow] = useState(5);
 	const optionalParticipants = useMemo(
-		() => invite.attendees.filter((user: Participant) => user.role === 'OPT'),
+		() => invite.attendees.filter((user) => user.role === PARTICIPANT_ROLE.OPTIONAL),
 		[invite]
 	);
 
@@ -441,7 +433,7 @@ const InviteResponse: FC<InviteResponse> = ({
 									/>
 								)}
 							</Row>
-							{requiredParticipants.map((p: Participant, index: number) => (
+							{requiredParticipants.map((p, index: number) => (
 								<>
 									{index < maxReqParticipantsToShow && (
 										<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
@@ -514,7 +506,7 @@ const InviteResponse: FC<InviteResponse> = ({
 										})}
 									</Text>
 								</Row>
-								{optionalParticipants.map((p: Participant, index: number) => (
+								{optionalParticipants.map((p, index: number) => (
 									<>
 										{index < maxOptParticipantsToShow && (
 											<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
