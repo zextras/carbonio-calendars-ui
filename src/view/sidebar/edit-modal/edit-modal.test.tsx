@@ -7,6 +7,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within, act } from '@testing-library/react';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 
 import { EditModal } from './edit-modal';
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
@@ -574,7 +575,7 @@ describe('the edit calendar modal is composed by', () => {
 
 						await user.click(screen.getByText(/black/i));
 						await user.click(
-							within(screen.getByTestId('dropdown-popper-list')).getByText(/black/i)
+							within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(/black/i)
 						);
 						await user.click(screen.getByText('OK'));
 

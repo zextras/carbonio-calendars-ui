@@ -11,6 +11,7 @@ import { LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
+import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
 import { DateType } from '../types/event';
@@ -230,8 +231,8 @@ export const normalizeEditor = ({
 				meetingRoom: getMeetingRooms(invite.attendees),
 				equipment: getEquipments(invite.attendees),
 				room: getVirtualRoom(invite.xprop),
-				attendees: getAttendees(invite.attendees, 'REQ'),
-				optionalAttendees: getAttendees(invite.attendees, 'OPT'),
+				attendees: getAttendees(invite.attendees, PARTICIPANT_ROLE.REQUIRED),
+				optionalAttendees: getAttendees(invite.attendees, PARTICIPANT_ROLE.OPTIONAL),
 				allDay: event?.allDay,
 				freeBusy: invite.freeBusy,
 				class: invite.class,

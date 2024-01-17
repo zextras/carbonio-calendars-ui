@@ -71,6 +71,7 @@ export type ChipResource = {
 	avatarBackground: 'transparent';
 	avatarColor: 'gray0';
 };
+
 type DisabledField =
 	| 'title'
 	| 'location'

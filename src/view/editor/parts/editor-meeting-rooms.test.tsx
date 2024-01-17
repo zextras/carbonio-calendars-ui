@@ -17,6 +17,7 @@ import { EditorMeetingRooms } from './editor-meeting-rooms';
 import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../commons/editor-generator';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { reducers } from '../../../store/redux';
 import { useAppStatusStore } from '../../../store/zustand/store';
 import { getCustomResources } from '../../../test/mocks/network/msw/handle-autocomplete-gal-request';
@@ -71,10 +72,10 @@ describe('Editor meeting rooms', () => {
 				type: 'Location'
 			};
 		});
-		const handler = getCustomResources(items);
+		const soapResponse = getCustomResources(items);
 		getSetupServer().use(
 			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
-				res(ctx.json(handler))
+				res(ctx.json(soapResponse))
 			)
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
@@ -87,7 +88,7 @@ describe('Editor meeting rooms', () => {
 			jest.runOnlyPendingTimers();
 		});
 
-		const dropdown = await screen.findByTestId('dropdown-popper-list');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 		expect(within(dropdown).getByText(items[0].label)).toBeVisible();
 		expect(within(dropdown).getByText(items[1].label)).toBeVisible();
 		expect(within(dropdown).getByText(items[2].label)).toBeVisible();
@@ -106,13 +107,13 @@ describe('Editor meeting rooms', () => {
 				type: 'Location'
 			};
 		});
-		const handler = getCustomResources(items);
+		const soapResponse = getCustomResources(items);
 
 		setupBackendResponse([items[0]]);
 
 		getSetupServer().use(
 			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
-				res(ctx.json(handler))
+				res(ctx.json(soapResponse))
 			)
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
@@ -125,7 +126,7 @@ describe('Editor meeting rooms', () => {
 			jest.runOnlyPendingTimers();
 		});
 
-		const dropdown = await screen.findByTestId('dropdown-popper-list');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
 		await act(async () => {
 			await user.click(within(dropdown).getByText(items[0].label));
@@ -147,13 +148,13 @@ describe('Editor meeting rooms', () => {
 				type: 'Location'
 			};
 		});
-		const handler = getCustomResources(items);
+		const soapResponse = getCustomResources(items);
 
 		setupBackendResponse([items[0]]);
 
 		getSetupServer().use(
 			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
-				res(ctx.json(handler))
+				res(ctx.json(soapResponse))
 			)
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
@@ -166,7 +167,7 @@ describe('Editor meeting rooms', () => {
 			jest.runOnlyPendingTimers();
 		});
 
-		const dropdown = await screen.findByTestId('dropdown-popper-list');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
 		await act(async () => {
 			await user.keyboard('[Enter]');

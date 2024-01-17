@@ -171,9 +171,11 @@ export const EditorResourceComponent = ({
 			{
 				type: 'keydown',
 				callback: (): void => {
+					// todo: ignoring cause dropdown can't receive value prop
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					if (options?.[0]?.value && onChange && options?.[0]?.id !== 'loading') {
+						// todo: ignoring cause dropdown can't receive value prop
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
 						onChange([...resourceAvailability, options[0].value]);
@@ -204,6 +206,7 @@ export const EditorResourceComponent = ({
 					options={options}
 					onInputType={onInputType}
 					onAdd={onAdd}
+					// todo: fix chip value
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					onChange={onChange}

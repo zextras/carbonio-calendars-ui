@@ -27,6 +27,7 @@ import ProposedTimeReply from './parts/proposed-time-reply';
 import BodyMessageRenderer, { extractBody } from '../../commons/body-message-renderer';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_RESOURCES, CALENDAR_ROUTE } from '../../constants';
+import { PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
@@ -139,13 +140,13 @@ const InviteResponse: FC<InviteResponse> = ({
 
 	const [maxReqParticipantsToShow, setMaxReqParticipantsToShow] = useState(4);
 	const requiredParticipants = useMemo(
-		() => invite.attendees.filter((user) => user.role === 'REQ'),
+		() => invite.attendees.filter((user) => user.role === PARTICIPANT_ROLE.REQUIRED),
 		[invite]
 	);
 
 	const [maxOptParticipantsToShow, setMaxOptParticipantsToShow] = useState(5);
 	const optionalParticipants = useMemo(
-		() => invite.attendees.filter((user) => user.role === 'OPT'),
+		() => invite.attendees.filter((user) => user.role === PARTICIPANT_ROLE.OPTIONAL),
 		[invite]
 	);
 

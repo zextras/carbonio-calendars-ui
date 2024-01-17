@@ -36,7 +36,7 @@ export const CalendarIntegrations = {
 	CREATE_APPOINTMENT: 'create_appointment'
 } as const;
 
-type ObjectValues<T> = T[keyof T];
+export type ObjectValues<T> = T[keyof T];
 
 export type CalendarIntegrationId = ObjectValues<typeof CalendarIntegrations>;
 export type EventActionsId = ObjectValues<typeof EventActionsEnum>;

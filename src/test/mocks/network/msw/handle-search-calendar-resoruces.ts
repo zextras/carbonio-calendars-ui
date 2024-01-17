@@ -65,6 +65,7 @@ const getEquipmentResponse = (): SuccessSoapResponse<any> => ({
 	}
 });
 
+// TODO: fix types with the msw handlers refactor
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type

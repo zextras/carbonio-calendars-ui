@@ -8,6 +8,7 @@ import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 
 import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../constants';
+import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, CalendarOrganizer, CalendarSender, Editor } from '../types/editor';
 
@@ -234,7 +235,7 @@ const generateInvite = (editorData: Editor): any => {
 		...editorData.attendees.map((c: any) => ({
 			a: c?.email ?? c?.label,
 			d: c?.firstName && c?.lastname ? `${c.firstName} ${c.lastname}` : c.label,
-			role: 'REQ',
+			role: PARTICIPANT_ROLE.REQUIRED,
 			ptst: 'NE',
 			rsvp: '1'
 		}))
@@ -244,7 +245,7 @@ const generateInvite = (editorData: Editor): any => {
 			...editorData.optionalAttendees.map((c: any) => ({
 				a: c?.email ?? c?.label,
 				d: c.firstName && c.lastname ? `${c.firstName} ${c.lastname}` : c.label,
-				role: 'OPT',
+				role: PARTICIPANT_ROLE.OPTIONAL,
 				ptst: 'NE',
 				rsvp: '1'
 			}))
@@ -255,7 +256,7 @@ const generateInvite = (editorData: Editor): any => {
 			...editorData.meetingRoom.map((c) => ({
 				a: c?.email,
 				d: c.label,
-				role: 'NON',
+				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
 				ptst: 'NE',
 				rsvp: true,
 				url: c?.email,
@@ -268,7 +269,7 @@ const generateInvite = (editorData: Editor): any => {
 			...editorData.equipment.map((c) => ({
 				a: c?.email,
 				d: c.label,
-				role: 'NON',
+				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
 				ptst: 'NE',
 				rsvp: true,
 				url: c?.email,

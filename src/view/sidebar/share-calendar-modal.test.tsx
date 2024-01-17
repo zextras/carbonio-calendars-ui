@@ -14,11 +14,11 @@ import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { Grant } from '../../carbonio-ui-commons/types/folder';
 import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
+import { TEST_SELECTORS } from '../../constants/test-utils';
 import * as FolderAction from '../../soap/folder-action-request';
 import * as SendShare from '../../store/actions/send-share-calendar-notification';
 import { reducers } from '../../store/redux';
 
-const dropdownID = 'dropdown-popper-list';
 const checkedIcon = 'icon: CheckmarkSquare';
 
 describe('the share calendar modal is composed by', () => {
@@ -121,11 +121,11 @@ describe('the share calendar modal is composed by', () => {
 
 				await user.click(screen.getByText(/share with/i));
 
-				const dropdownInternalOption = within(screen.getByTestId(dropdownID)).getByText(
-					/share\.options\.share_calendar_with\.internal_users_groups/i
-				);
+				const dropdownInternalOption = within(
+					screen.getByTestId(TEST_SELECTORS.DROPDOWN)
+				).getByText(/share\.options\.share_calendar_with\.internal_users_groups/i);
 
-				const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
+				const dropdownPublicOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 					/share\.options\.share_calendar_with\.public/i
 				);
 
@@ -181,7 +181,7 @@ describe('the share calendar modal is composed by', () => {
 				user.click(screen.getByText(/share with/i));
 			});
 
-			const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
+			const dropdownPublicOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 				/share\.options\.share_calendar_with\.public/i
 			);
 
@@ -413,19 +413,19 @@ describe('the share calendar modal is composed by', () => {
 					expect(roleLabel).toBeVisible();
 					await user.click(roleLabel);
 
-					const viewerRoleOption = within(screen.getByTestId(dropdownID)).getByText(
+					const viewerRoleOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 						/share\.options\.share_calendar_role\.viewer/i
 					);
 
-					const noPermissionRoleOption = within(screen.getByTestId(dropdownID)).getByText(
-						/share\.options\.share_calendar_role\.none/i
-					);
+					const noPermissionRoleOption = within(
+						screen.getByTestId(TEST_SELECTORS.DROPDOWN)
+					).getByText(/share\.options\.share_calendar_role\.none/i);
 
-					const adminRoleOption = within(screen.getByTestId(dropdownID)).getByText(
+					const adminRoleOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 						/share\.options\.share_calendar_role\.admin/i
 					);
 
-					const managerRoleOption = within(screen.getByTestId(dropdownID)).getByText(
+					const managerRoleOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 						/share\.options\.share_calendar_role\.manager/i
 					);
 
@@ -636,7 +636,7 @@ describe('the share calendar modal is composed by', () => {
 				user.click(screen.getByText(/share with/i));
 			});
 
-			const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
+			const dropdownPublicOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 				/share\.options\.share_calendar_with\.public/i
 			);
 
@@ -729,7 +729,7 @@ describe('the share calendar modal is composed by', () => {
 					user.click(screen.getByText(/share with/i));
 				});
 
-				const dropdownPublicOption = within(screen.getByTestId(dropdownID)).getByText(
+				const dropdownPublicOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 					/share\.options\.share_calendar_with\.public/i
 				);
 
@@ -861,9 +861,9 @@ describe('the share calendar modal is composed by', () => {
 						user.click(roleSelector);
 					});
 
-					const noPermissionRoleOption = within(screen.getByTestId(dropdownID)).getByText(
-						/share\.options\.share_calendar_role\.none/i
-					);
+					const noPermissionRoleOption = within(
+						screen.getByTestId(TEST_SELECTORS.DROPDOWN)
+					).getByText(/share\.options\.share_calendar_role\.none/i);
 
 					await waitFor(() => {
 						user.click(noPermissionRoleOption);
@@ -911,7 +911,7 @@ describe('the share calendar modal is composed by', () => {
 						user.click(roleSelector);
 					});
 
-					const viewerRoleOption = within(screen.getByTestId(dropdownID)).getByText(
+					const viewerRoleOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 						/share\.options\.share_calendar_role\.viewer/i
 					);
 
@@ -961,7 +961,7 @@ describe('the share calendar modal is composed by', () => {
 						user.click(roleSelector);
 					});
 
-					const adminRoleOption = within(screen.getByTestId(dropdownID)).getByText(
+					const adminRoleOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 						/share\.options\.share_calendar_role\.admin/i
 					);
 
@@ -1011,7 +1011,7 @@ describe('the share calendar modal is composed by', () => {
 						user.click(roleSelector);
 					});
 
-					const managerRoleOption = within(screen.getByTestId(dropdownID)).getByText(
+					const managerRoleOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 						/share\.options\.share_calendar_role\.manager/i
 					);
 
