@@ -13,9 +13,9 @@ import styled from 'styled-components';
 
 import { ImageAndIconPart } from './image-and-icon-part';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
-import { ZimbraColorType } from '../../commons/zimbra-standard-colors';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
+import { CalendarsColorType } from '../../types/store/calendars';
 import { Invite } from '../../types/store/invite';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { LocationRow } from '../event-summary-view/location-row';
@@ -63,7 +63,13 @@ const InviteNeverSentRow = (): ReactElement => {
 	);
 };
 
-const CalendarInfo = ({ name, color }: { name: string; color: ZimbraColorType }): ReactElement => (
+const CalendarInfo = ({
+	name,
+	color
+}: {
+	name: string;
+	color: CalendarsColorType;
+}): ReactElement => (
 	<Tooltip label={name} placement="left">
 		<div>
 			<CalendarIcon icon="Calendar2" size="medium" customColor={color.color} />

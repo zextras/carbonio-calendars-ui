@@ -6,11 +6,11 @@
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { find, reduce, map, isEmpty } from 'lodash';
 import moment from 'moment';
+import { CalendarsColorType } from '../types/store/calendars';
 
 import { setCalendarColor } from './normalizations-utils';
 import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
-import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { Invite } from '../types/store/invite';
@@ -32,7 +32,7 @@ const getCalendarResource = (calendar: {
 	perm?: string;
 }): {
 	owner: string | undefined;
-	color: ZimbraColorType;
+	color: CalendarsColorType;
 	perm: string | undefined;
 	name: string;
 	id: string;

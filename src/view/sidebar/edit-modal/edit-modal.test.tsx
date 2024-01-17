@@ -252,7 +252,7 @@ describe('the edit calendar modal is composed by', () => {
 					store
 				});
 
-				expect(screen.getByText(/magenta/i)).toBeVisible();
+				expect(screen.getByText(/green/i)).toBeVisible();
 			});
 		});
 		describe('a section to exclude the calendar from the free busy times, composed by', () => {
@@ -556,7 +556,7 @@ describe('the edit calendar modal is composed by', () => {
 
 						expect(spy).toHaveBeenCalledTimes(1);
 						expect(spy).toHaveBeenCalledWith({
-							color: '2',
+							color: '5',
 							id: folder.id,
 							op: FOLDER_OPERATIONS.COLOR
 						});
