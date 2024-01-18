@@ -8,19 +8,12 @@ import React from 'react';
 import { Container, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-export const ResourceCustomComponent = ({
-	isSelected = false,
-	label = ''
-}: {
-	isSelected: boolean;
-	label: string;
-}): JSX.Element => {
+export const ResourceCustomDropdownComponent = ({ label = '' }: { label: string }): JSX.Element => {
 	const [t] = useTranslation();
 	return (
 		<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
-			<Icon icon={(isSelected && 'CheckmarkSquare') || 'Square' || ''} />
-			<Padding horizontal={'small'}>
-				<Text weight={isSelected ? 'bold' : 'regular'}>{label}</Text>
+			<Padding right={'small'}>
+				<Text weight={'regular'}>{label}</Text>
 			</Padding>
 			<Tooltip
 				label={t(

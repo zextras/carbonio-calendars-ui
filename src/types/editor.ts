@@ -63,6 +63,15 @@ export type Resource = {
 	type: string;
 };
 
+export type ChipResource = {
+	id: string;
+	label: string;
+	email: string;
+	avatarIcon: 'BriefcaseOutline' | 'BuildingOutline';
+	avatarBackground: 'transparent';
+	avatarColor: 'gray0';
+};
+
 type DisabledField =
 	| 'title'
 	| 'location'

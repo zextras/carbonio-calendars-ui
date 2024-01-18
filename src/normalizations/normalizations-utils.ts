@@ -7,7 +7,8 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { groupBy, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
 
-import { ZIMBRA_STANDARD_COLORS, ZimbraColorType } from '../commons/zimbra-standard-colors';
+import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
+import { CalendarsColorType } from '../types/store/calendars';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const retrieveAttachmentsType = (original: any, disposition: any, dataID: any): any =>
@@ -129,17 +130,17 @@ export const getAlarmToString = (alarm: any): any => {
 	return null;
 };
 
-export const setCalendarColorFromRGB = (color: string | undefined): ZimbraColorType =>
+export const setCalendarColorFromRGB = (color: string | undefined): CalendarsColorType =>
 	color
 		? {
 				color,
 				label: 'custom',
 				background: setLightness(0.9, color)
 		  }
-		: ZIMBRA_STANDARD_COLORS[0];
+		: CALENDARS_STANDARD_COLORS[0];
 
-export const setCalendarColorFromNumber = (color: number | undefined): ZimbraColorType =>
-	color ? ZIMBRA_STANDARD_COLORS[color] : ZIMBRA_STANDARD_COLORS[0];
+export const setCalendarColorFromNumber = (color: number | undefined): CalendarsColorType =>
+	CALENDARS_STANDARD_COLORS?.[color ?? 0] ?? CALENDARS_STANDARD_COLORS[0];
 
 export const setCalendarColor = ({
 	rgb,
@@ -147,12 +148,12 @@ export const setCalendarColor = ({
 }: {
 	rgb?: string;
 	color?: number;
-}): ZimbraColorType => {
+}): CalendarsColorType => {
 	if (rgb) {
 		return setCalendarColorFromRGB(rgb);
 	}
 	if (color) {
 		return setCalendarColorFromNumber(color);
 	}
-	return ZIMBRA_STANDARD_COLORS[0];
+	return CALENDARS_STANDARD_COLORS[0];
 };

@@ -5,9 +5,11 @@
  */
 import { faker } from '@faker-js/faker';
 import moment from 'moment';
+
+import { PARTICIPANT_ROLE } from '../../../constants/api';
 import { getAlarmToString } from '../../../normalizations/normalizations-utils';
 import { EventResource, EventResourceCalendar, EventType } from '../../../types/event';
-import { Invite, ParticipationRoles, ParticipationStatus } from '../../../types/store/invite';
+import { Invite, ParticipationStatus } from '../../../types/store/invite';
 
 type CalendarProps = { calendar: Partial<EventResourceCalendar> };
 type ResourceProps = {
@@ -31,15 +33,15 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 
 	const attendee =
 		event?.resource?.iAmAttendee ?? event?.resource?.hasOtherAttendees
-			? {
+			? ({
 					a: attendeeEmail,
 					d: attendeeFullName,
 					cutype: '',
-					ptst: 'AC' as ParticipationStatus,
-					role: 'REQ' as ParticipationRoles,
+					ptst: 'AC',
+					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
 					url: attendeeEmail
-			  }
+			  } as const)
 			: undefined;
 	return {
 		apptId: event?.resource?.id ?? 'apptId',
@@ -104,7 +106,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 					AC: [
 						{
 							email: attendee.a,
-							isOptional: !(attendee.role === 'REQ'),
+							isOptional: !(attendee.role === PARTICIPANT_ROLE.REQUIRED),
 							name: attendeeFullName,
 							response: attendee.ptst as ParticipationStatus
 						}

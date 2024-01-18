@@ -142,7 +142,6 @@ const RootAccount = ({ accordionItem }: { accordionItem: AccordionItemType }): J
 
 export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	const { displayName } = useUserAccount();
-
 	const isRootAccount = useMemo(() => isRoot(item), [item]);
 	const accordionItem = useMemo(
 		() =>

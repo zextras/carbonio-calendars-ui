@@ -19,7 +19,7 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import { ZIMBRA_STANDARD_COLORS } from '../../../commons/zimbra-standard-colors';
+import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
 import { useGetEventTimezoneString } from '../../../hooks/use-get-event-timezone';
 import { getLocalTime } from '../../../normalizations/normalize-editor';
 import { useAppSelector } from '../../../store/redux/hooks';
@@ -114,7 +114,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 				size="large"
 				icon="Calendar2"
 				style={{
-					background: calendar?.color?.color ?? ZIMBRA_STANDARD_COLORS?.[0]?.color
+					background: calendar?.color?.color ?? CALENDARS_STANDARD_COLORS?.[0]?.color
 				}}
 				label=""
 			/>
@@ -132,7 +132,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 					</Text>
 					<Icon
 						icon="Calendar2"
-						customColor={calendar?.color?.color ?? ZIMBRA_STANDARD_COLORS?.[0]?.color}
+						customColor={calendar?.color?.color ?? CALENDARS_STANDARD_COLORS?.[0]?.color}
 					/>
 				</Container>
 				<TitleRow>
