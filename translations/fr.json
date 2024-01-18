@@ -707,5 +707,10 @@
     "next_week": "Semaine suivante",
     "previous_day": "Jour précédent",
     "previous_month": "Mois précédent",
-    "previous_week": "Semaine précédente"
+    "previous_week": "Semaine précédente",
+    "attendees_rooms_unavailable": "Une ou plusieurs salles sont indisponibles à l'heure choisie pour l'événement",
+    "attendee_room_unavailable": "Salle indisponible à l'heure choisie pour l'événement",
+    "public": "publique",
+    "attendees_equipments_unavailable": "Un ou plusieurs équipement sont indisponibles à l'heure choisie pour l'événement",
+    "attendee_equipment_unavailable": "Matériel indisponible à l'heure choisie pour l'événement"
 }

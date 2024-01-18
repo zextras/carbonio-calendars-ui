@@ -684,5 +684,10 @@
     "next_week": "Settimana successiva",
     "previous_day": "Giorno precedente",
     "previous_month": "Mese precedente",
-    "previous_week": "Settimana precedente"
+    "previous_week": "Settimana precedente",
+    "attendee_equipment_unavailable": "Partecipante non disponibile nell'orario selezionato per l'evento",
+    "attendees_equipments_unavailable": "Uno o più partecipanti non sono disponibili nell'orario selezionato per l'evento",
+    "public": "pubblico",
+    "attendee_room_unavailable": "Stanza non disponibile nell'orario selezionato per l'evento",
+    "attendees_rooms_unavailable": "Una o più Meeting Room non sono disponibili nell'orario selezionato per l'evento"
 }
