@@ -26,7 +26,7 @@ import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled, { DefaultTheme } from 'styled-components';
 
-import { GranteeInfo } from './grantee-info';
+import { GranteeChip } from './grantee-chip';
 import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
@@ -56,6 +56,12 @@ const Square = styled.div`
 const ColorContainer = styled(Container)`
 	border-bottom: 0.0625rem solid
 		${({ theme }: { theme: DefaultTheme }): string => theme.palette.gray2.regular};
+`;
+
+const StyledContainer = styled(Container)`
+	min-width: 0;
+	flex-basis: 0;
+	flex-grow: 1;
 `;
 
 const TextUpperCase = styled(Text)`
@@ -452,8 +458,10 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									padding={{ bottom: 'small' }}
 									key={index}
 								>
-									<GranteeInfo grant={item} />
-									<Container orientation="horizontal" mainAlignment="flex-end" maxWidth="fit">
+									<StyledContainer crossAlignment="flex-start">
+										<GranteeChip grant={item} />
+									</StyledContainer>
+									<Container orientation="horizontal" mainAlignment="flex-end" width={'fit'}>
 										{item.gt !== SHARE_USER_TYPE.PUBLIC && (
 											<>
 												<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
