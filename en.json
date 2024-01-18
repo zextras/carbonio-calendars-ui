@@ -23,7 +23,11 @@
     "allowed_actions": "Allowed actions",
     "appointments": "Appointments",
     "appt_restored_successfully": "Appointment restored successfully",
+    "attendee_equipment_unavailable": "Equipment not available at the selected time of the event",
+    "attendee_room_unavailable": "Room not available at the selected time of the event",
     "attendee_unavailable": "Attendee not available at the selected time of the event",
+    "attendees_equipments_unavailable": "One or more Equipments are not available at the selected time of the event",
+    "attendees_rooms_unavailable": "One or more Meeting Rooms are not available at the selected time of the event",
     "attendees_unavailable": "One or more attendees are not available at the selected time of the event",
     "button": {
         "customize_modal": "Open Customize Modal"
@@ -436,6 +440,7 @@
     "previous_month": "Previous month",
     "previous_week": "Previous week",
     "private_info_tooltip": "When sharing a calendar, other users can see your appointment details (title, description, and attendees) except for the ones marked as private. In this case, other users will see your free/busy time but not the appointment details. Would you like other users to display also your private appointments' detail?",
+    "public": "public",
     "read": "Read",
     "recurrent_in_allday": "You cannot drag a recurrent appointment in a all day slot",
     "reminder": {
