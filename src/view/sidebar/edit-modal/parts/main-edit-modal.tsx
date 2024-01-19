@@ -448,10 +448,15 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					>
 						<Text weight="bold">{t('label.sharing_of_this_folder', 'Sharing of this folder')}</Text>
 					</Container>
-					<Container style={{ overflowY: 'auto' }} padding="small" mainAlignment="flex-start">
-						{grant &&
-							grant.length > 0 &&
-							map(grant, (item, index) => (
+
+					{grant && grant.length > 0 && (
+						<Container
+							style={{ overflowY: 'auto' }}
+							padding="small"
+							mainAlignment="flex-start"
+							minHeight={grant.length === 1 ? '2rem' : '4rem'}
+						>
+							{map(grant, (item, index) => (
 								<Container
 									orientation="horizontal"
 									mainAlignment="flex-end"
@@ -510,7 +515,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									</Container>
 								</Container>
 							))}
-					</Container>
+						</Container>
+					)}
 				</>
 			)}
 			<ModalFooter
