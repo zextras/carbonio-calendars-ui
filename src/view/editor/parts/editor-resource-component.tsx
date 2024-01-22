@@ -90,7 +90,8 @@ export const EditorResourceComponent = ({
 	onInputType,
 	options,
 	setOptions,
-	warningLabel
+	warningLabel,
+	singleWarningLabel
 }: {
 	editorId: string;
 	onChange: (e: Array<Resource>) => void;
@@ -100,6 +101,7 @@ export const EditorResourceComponent = ({
 	options: Array<DropdownItem>;
 	setOptions: (e: Array<DropdownItem>) => void;
 	warningLabel: string;
+	singleWarningLabel: string;
 }): JSX.Element | null => {
 	const [t] = useTranslation();
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -147,10 +149,7 @@ export const EditorResourceComponent = ({
 					const actions = [
 						{
 							id: 'unavailable',
-							label: t(
-								'attendee_unavailable',
-								'Attendee not available at the selected time of the event'
-							),
+							label: singleWarningLabel,
 							color: 'error',
 							type: 'icon',
 							icon: 'AlertTriangle'
@@ -164,7 +163,7 @@ export const EditorResourceComponent = ({
 			}
 			return room;
 		});
-	}, [allDay, attendeesAvailabilityList, end, resourcesValue, start, t]);
+	}, [allDay, attendeesAvailabilityList, end, resourcesValue, singleWarningLabel, start]);
 
 	const backspaceEvent = useMemo<KeyboardPresetObj[]>(
 		() => [
