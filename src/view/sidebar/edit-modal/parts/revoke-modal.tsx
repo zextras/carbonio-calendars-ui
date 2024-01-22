@@ -16,7 +16,7 @@ import {
 import { useUserAccounts, Grant } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
-import { GranteeInfo } from './grantee-info';
+import { GranteeChip } from './grantee-chip';
 import { Folder } from '../../../../carbonio-ui-commons/types/folder';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
@@ -122,7 +122,7 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 				crossAlignment="flex-start"
 				height="fit"
 			>
-				<GranteeInfo grant={grant} />
+				<GranteeChip grant={grant} />
 			</Container>
 			{grant.gt !== SHARE_USER_TYPE.PUBLIC && (
 				<>

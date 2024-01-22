@@ -7,7 +7,6 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within, act } from '@testing-library/react';
-import { TEST_SELECTORS } from '../../../constants/test-utils';
 
 import { EditModal } from './edit-modal';
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
@@ -15,6 +14,7 @@ import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/r
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import type { FolderView, Grant } from '../../../carbonio-ui-commons/types/folder';
 import { FOLDER_OPERATIONS } from '../../../constants/api';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 import * as BatchAction from '../../../soap/batch-request';
 import * as FolderAction from '../../../soap/folder-action-request';
 import * as SendShare from '../../../store/actions/send-share-calendar-notification';
@@ -138,9 +138,7 @@ describe('the edit calendar modal is composed by', () => {
 				store
 			});
 
-			const closeBtn = within(screen.getByTestId('MainEditModal')).getByTestId(
-				'icon: CloseOutline'
-			);
+			const closeBtn = within(screen.getByTestId('MainEditModal')).getByTestId('icon: Close');
 			await user.click(closeBtn);
 			expect(closeFn).toHaveBeenCalledTimes(1);
 		});
