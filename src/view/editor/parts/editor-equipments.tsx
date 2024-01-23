@@ -56,7 +56,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 	const warningLabel = useMemo(
 		() =>
 			t(
-				'attendee_unavailable',
+				'attendees_equipments_unavailable',
 				'One or more Equipments are not available at the selected time of the event'
 			),
 		[t]
