@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import '@testing-library/jest-dom';
+import { configure } from '@testing-library/react';
 import failOnConsole from 'jest-fail-on-console';
 import moment from 'moment-timezone';
 import { rest } from 'msw';
@@ -36,6 +37,10 @@ global.Notification = jest.fn() as unknown as jest.Mocked<typeof Notification>;
 global.Audio = jest.fn().mockImplementation(() => ({
 	play: jest.fn()
 }));
+
+configure({
+	asyncUtilTimeout: 2000
+});
 
 failOnConsole({ ...getFailOnConsoleDefaultConfig(), shouldFailOnWarn: false });
 
