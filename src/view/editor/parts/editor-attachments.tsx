@@ -22,7 +22,7 @@ type EditorAttachmentsProps = {
 export const EditorAttachments = ({ editorId }: EditorAttachmentsProps): ReactElement | null => {
 	const attachmentFiles = useAppSelector(selectEditorAttachmentFiles(editorId));
 	const inviteId = useAppSelector(selectEditorInviteId(editorId));
-	const title = useAppSelector(selectEditorTitle(editorId));
+	const title = useAppSelector(selectEditorTitle(editorId)) ?? '';
 	const dispatch = useAppDispatch();
 
 	const onAttachmentsChange = useCallback(
@@ -39,7 +39,7 @@ export const EditorAttachments = ({ editorId }: EditorAttachmentsProps): ReactEl
 	);
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
-	return attachmentFiles?.length > 0 && title ? (
+	return attachmentFiles?.length > 0 ? (
 		<AttachmentsBlock
 			attachments={attachmentFiles}
 			id={inviteId}
