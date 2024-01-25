@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react';
+
 import { Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { isNumber, isNaN, map, differenceWith, isEqual, omitBy, isNil } from 'lodash';
+
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import { useAppSelector } from '../../../../../store/redux/hooks';

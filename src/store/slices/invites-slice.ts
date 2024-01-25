@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSlice } from '@reduxjs/toolkit';
+
 import { InvitesSlice } from '../../types/store/store';
 import { getInvite } from '../actions/get-invite';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';

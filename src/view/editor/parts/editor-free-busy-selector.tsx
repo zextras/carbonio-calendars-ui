@@ -3,15 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
-import { find } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+
+import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
 import type { TFunction } from 'i18next';
+import { find } from 'lodash';
+import { useTranslation } from 'react-i18next';
+
+import LabelFactory, { Square } from './select-label-factory';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorFreeBusy } from '../../../store/selectors/editor';
 import { editEditorDisplayStatus } from '../../../store/slices/editor-slice';
-import LabelFactory, { Square } from './select-label-factory';
 
 type ItemProps = {
 	label: string;

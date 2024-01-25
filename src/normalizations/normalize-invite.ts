@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { filter, find, isNil } from 'lodash';
-import { Invite } from '../types/store/invite';
+
 import {
 	normalizeMailPartMapFn,
 	getAlarmToString,
@@ -13,6 +13,7 @@ import {
 	findAttachments
 } from './normalizations-utils';
 import { getLocationUrl } from './normalize-calendar-events';
+import { Invite } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeInvite = (m: any): Invite => ({

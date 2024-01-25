@@ -5,6 +5,7 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { filter, map, values } from 'lodash';
+
 import { getMiniCalRequest } from '../../soap/get-mini-cal-request';
 import { Calendar } from '../../types/store/calendars';
 

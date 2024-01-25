@@ -3,12 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { useCallback, useContext } from 'react';
+
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
-import { useCallback, useContext } from 'react';
-import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
+
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
+import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
 import { editEditorAttachments } from '../../../store/slices/editor-slice';
 
 export const uploadToFiles = async (node, uploadTo) => {

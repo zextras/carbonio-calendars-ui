@@ -19,6 +19,7 @@ import {
 	editEventItem,
 	moveEventItem,
 	openEventItem,
+	proposeNewTimeItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
@@ -34,7 +35,7 @@ import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 
-const isAnInvite = (event: EventType): boolean =>
+export const isAnInvite = (event: EventType): boolean =>
 	event.resource.organizer
 		? !event.resource.iAmOrganizer &&
 		  event.haveWriteAccess &&
@@ -63,7 +64,8 @@ const getInstanceActionsItems = ({
 		? [
 				acceptInvitationItem({ event, context }),
 				declineInvitationItem({ event, context }),
-				acceptAsTentativeItem({ event, context })
+				acceptAsTentativeItem({ event, context }),
+				proposeNewTimeItem({ event, context })
 		  ]
 		: [])
 ];
@@ -94,7 +96,8 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 					? [
 							acceptInvitationItem({ event, context }),
 							declineInvitationItem({ event, context }),
-							acceptAsTentativeItem({ event, context })
+							acceptAsTentativeItem({ event, context }),
+							proposeNewTimeItem({ event, context })
 					  ]
 					: [])
 			]
@@ -123,7 +126,8 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 					? [
 							acceptInvitationItem({ event: seriesEvent, context }),
 							declineInvitationItem({ event: seriesEvent, context }),
-							acceptAsTentativeItem({ event: seriesEvent, context })
+							acceptAsTentativeItem({ event: seriesEvent, context }),
+							proposeNewTimeItem({ event, context })
 					  ]
 					: [])
 			]

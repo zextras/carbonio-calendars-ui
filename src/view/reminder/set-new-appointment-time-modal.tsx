@@ -3,11 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Padding, Text } from '@zextras/carbonio-design-system';
 import React, { FC, ReactElement } from 'react';
+
+import { Container, Padding, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { ModalHeader } from '../../commons/modal-header';
+
 import ModalFooter from '../../commons/modal-footer';
+import { ModalHeader } from '../../commons/modal-header';
 import { SetNewTimeModalProps } from '../../types/appointment-reminder';
 
 export const SetNewAppointmentTimeModal: FC<SetNewTimeModalProps> = ({

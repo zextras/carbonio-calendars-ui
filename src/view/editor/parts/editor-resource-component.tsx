@@ -90,7 +90,8 @@ export const EditorResourceComponent = ({
 	onInputType,
 	options,
 	setOptions,
-	warningLabel
+	warningLabel,
+	disabled
 }: {
 	editorId: string;
 	onChange: (e: Array<Resource>) => void;
@@ -100,6 +101,7 @@ export const EditorResourceComponent = ({
 	options: Array<DropdownItem>;
 	setOptions: (e: Array<DropdownItem>) => void;
 	warningLabel: string;
+	disabled?: boolean;
 }): JSX.Element | null => {
 	const [t] = useTranslation();
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -210,6 +212,7 @@ export const EditorResourceComponent = ({
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					onChange={onChange}
+					disabled={disabled}
 				/>
 			</Container>
 			<EditorAvailabilityWarningRow

@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { map } from 'lodash';
 import React, { FC, ReactElement, useCallback, useContext } from 'react';
 
 import {
@@ -14,6 +13,7 @@ import {
 	Divider
 } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
+import { map } from 'lodash';
 
 import { generateEditor } from '../../../commons/editor-generator';
 import { getAppointmentAndInvite } from '../../../commons/get-appointment';
@@ -112,8 +112,8 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
-						label={t('event.action.yes', 'yes')}
-						icon="Checkmark"
+						label={t('event.action.accept', 'Accept')}
+						icon="CheckmarkOutline"
 						color="success"
 						onClick={accept}
 					/>
@@ -121,7 +121,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
-						label={t('event.action.no', 'no')}
+						label={t('event.action.decline', 'Decline')}
 						icon="Close"
 						color="error"
 						onClick={decline}

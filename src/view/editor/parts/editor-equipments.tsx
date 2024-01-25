@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { EditorResourceComponent, Loader, normalizeResources } from './editor-resource-component';
 import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorEquipment } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectEditorEquipment } from '../../../store/selectors/editor';
 import { editEditorEquipment } from '../../../store/slices/editor-slice';
 import { useAppStatusStore } from '../../../store/zustand/store';
 import { Resource } from '../../../types/editor';
@@ -20,7 +20,7 @@ import { Resource } from '../../../types/editor';
 export const EditorEquipments = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
-
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const equipmentValue = useAppSelector(selectEditorEquipment(editorId));
 
 	const equipmentChipValue = useMemo(
@@ -102,6 +102,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 			options={options}
 			setOptions={setOptions}
 			warningLabel={warningLabel}
+			disabled={disabled?.equipment}
 		/>
 	);
 };

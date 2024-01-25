@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { EditorResourceComponent, Loader, normalizeResources } from './editor-resource-component';
 import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorMeetingRoom } from '../../../store/selectors/editor';
+import { selectEditorDisabled, selectEditorMeetingRoom } from '../../../store/selectors/editor';
 import { editEditorMeetingRoom } from '../../../store/slices/editor-slice';
 import { useAppStatusStore } from '../../../store/zustand/store';
 import { Resource } from '../../../types/editor';
@@ -20,6 +20,7 @@ import { Resource } from '../../../types/editor';
 export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
+	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	const meetingRoomsValue = useAppSelector(selectEditorMeetingRoom(editorId));
 
@@ -102,6 +103,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 			options={options}
 			setOptions={setOptions}
 			warningLabel={warningLabel}
+			disabled={disabled?.equipment}
 		/>
 	);
 };

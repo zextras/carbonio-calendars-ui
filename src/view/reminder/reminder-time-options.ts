@@ -4,11 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { useMemo } from 'react';
+
 import { DropdownItem } from '@zextras/carbonio-design-system';
 import { filter } from 'lodash';
 import moment from 'moment';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import { AlarmType } from '../../types/event';
 
 // interface DropdownItem {

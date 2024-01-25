@@ -16,6 +16,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
+import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { CalendarSelector } from '../../../view/editor/parts/calendar-selector';
 import { sendResponse } from '../invite-reply-actions';
@@ -33,7 +34,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 	parent
 }): ReactElement => {
 	const [notifyOrganizer, setNotifyOrganizer] = useState(true);
-	const [activeCalendar, setActiveCalendar] = useState(null);
+	const [activeCalendar, setActiveCalendar] = useState<Folder | null>(null);
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const dispatch = useAppDispatch();
 
@@ -68,10 +69,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Container width="65%" mainAlignment="flex-start">
 					<CalendarSelector
 						calendarId="10"
-						onCalendarChange={(cal: any): void => setActiveCalendar(cal)}
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						style={{ maxWidth: '48%', width: '48%' }}
+						onCalendarChange={(cal): void => setActiveCalendar(cal)}
 						label={t('label.scheduled_in', 'Scheduled in')}
 						excludeTrash
 					/>
@@ -92,8 +90,8 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Padding right="small" vertical="large">
 					<Button
 						type="outlined"
-						label={t('event.action.yes', 'yes')}
-						icon="Checkmark"
+						label={t('event.action.accept', 'Accept')}
+						icon="CheckmarkOutline"
 						color="success"
 						onClick={onAction('ACCEPT')}
 						disabled={participationStatus === 'AC'}
@@ -103,7 +101,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 					<Button
 						type="outlined"
 						label={t('label.maybe', 'maybe')}
-						icon="QuestionMark"
+						icon="QuestionMarkOutline"
 						color="warning"
 						onClick={onAction('TENTATIVE')}
 						disabled={participationStatus === 'TE'}
@@ -112,8 +110,8 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
-						label={t('event.action.no', 'no')}
-						icon="Close"
+						label={t('event.action.decline', 'Decline')}
+						icon="CloseOutline"
 						color="error"
 						onClick={onAction('DECLINE')}
 						disabled={participationStatus === 'DE'}
@@ -121,8 +119,8 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				</Padding>
 				<Padding right="small" vertical="large">
 					<Button
-						label={t('label.propose_new_time', 'PROPOSE NEW TIME')}
-						icon="RefreshOutline"
+						label={t('label.propose_new_time', 'Propose new time')}
+						icon="ClockOutline"
 						color="primary"
 						type="outlined"
 						onClick={proposeNewTime}

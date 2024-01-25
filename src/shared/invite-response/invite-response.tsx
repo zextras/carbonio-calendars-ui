@@ -201,7 +201,10 @@ const InviteResponse: FC<InviteResponse> = ({
 							private: true,
 							allDay: true,
 							reminder: true,
-							recurrence: true
+							recurrence: true,
+							meetingRoom: true,
+							equipment: true,
+							timezone: true
 						}
 					}
 				});

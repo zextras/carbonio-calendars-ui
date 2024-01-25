@@ -3,8 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Divider, Text, Row, IconButton } from '@zextras/carbonio-design-system';
 import React from 'react';
+
+import { Container, Divider, Text, Row, IconButton } from '@zextras/carbonio-design-system';
 
 export const ModalHeader = ({ title, onClose }) => (
 	<>

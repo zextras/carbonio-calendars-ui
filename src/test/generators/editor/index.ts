@@ -5,6 +5,7 @@
  */
 import { find, map, startsWith } from 'lodash';
 import moment from 'moment';
+
 import { createFakeIdentity } from '../../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types/folder';
 import { getPrefs } from '../../../carbonio-ui-commons/utils/get-prefs';

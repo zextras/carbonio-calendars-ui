@@ -5,14 +5,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, ReactElement, useState, useCallback, useMemo, useEffect } from 'react';
+
 import { CustomModal, Container, ChipProps } from '@zextras/carbonio-design-system';
-import { concat, filter, includes, map } from 'lodash';
 import { QueryChip, t } from '@zextras/carbonio-shell-ui';
-import moment from 'moment';
+import { concat, filter, includes, map } from 'lodash';
+
+import FromDateToDateRow from './parts/from-date-to-date-row';
+import KeywordRow from './parts/keyword-row';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import KeywordRow from './parts/keyword-row';
-import FromDateToDateRow from './parts/from-date-to-date-row';
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
 type KeywordState = Array<{

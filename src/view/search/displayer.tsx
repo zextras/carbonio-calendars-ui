@@ -58,10 +58,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 							!event?.resource?.owner &&
 							invite && (
 								<>
-									<ReplyButtonsPart
-										inviteId={event?.resource?.inviteId}
-										participationStatus={event?.resource?.participationStatus}
-									/>
+									<ReplyButtonsPart invite={invite} event={event} />
 									<StyledDivider />
 								</>
 							)}

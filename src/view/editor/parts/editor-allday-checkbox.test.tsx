@@ -3,13 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
-import React from 'react';
+
+import { EditorAllDayCheckbox } from './editor-allday-checkbox';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../commons/editor-generator';
 import { reducers } from '../../../store/redux';
-import { EditorAllDayCheckbox } from './editor-allday-checkbox';
 
 describe('editor all day checkbox', () => {
 	test('on click editor inside store will have all day option set as true', async () => {

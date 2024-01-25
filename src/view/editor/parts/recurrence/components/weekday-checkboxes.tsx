@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback } from 'react';
+
 import { Checkbox, Container } from '@zextras/carbonio-design-system';
 import { find, map, reject } from 'lodash';
-import React, { ReactElement, useCallback } from 'react';
+
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 
 type WeekdayCheckboxesProps = {

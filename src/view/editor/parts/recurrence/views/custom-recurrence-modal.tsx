@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useState } from 'react';
+
 import {
 	Divider,
 	ModalBody,
@@ -13,7 +15,13 @@ import {
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
-import React, { ReactElement, useCallback, useState } from 'react';
+
+import DailyOptions from './daily-options';
+import MonthlyOptions from './monthly-options';
+import RecurrenceEndOptions from './recurrence-end-options';
+import WeeklyOptions from './weekly-options';
+import YearlyOptions from './yearly-options';
+import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useAppDispatch, useAppSelector } from '../../../../../store/redux/hooks';
 import {
 	selectEditorRecurrenceCount,
@@ -22,13 +30,7 @@ import {
 } from '../../../../../store/selectors/editor';
 import { editEditorRecurrence } from '../../../../../store/slices/editor-slice';
 import { RecurrenceEndValue, RecurrenceStartValue } from '../../../../../types/editor';
-import DailyOptions from './daily-options';
 import FrequencySelect from '../components/frequency-select';
-import MonthlyOptions from './monthly-options';
-import RecurrenceEndOptions from './recurrence-end-options';
-import WeeklyOptions from './weekly-options';
-import YearlyOptions from './yearly-options';
-import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 
 const setEndInitialValue = (
 	count: number | undefined,

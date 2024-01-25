@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { PayloadAction } from '@reduxjs/toolkit';
+
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { GetMessageReturnType } from '../../soap/get-message-request';
 import { FulfilledResponse, InvitesSlice } from '../../types/store/store';

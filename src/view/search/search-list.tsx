@@ -3,17 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
-import { Container, List, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import React, { ReactComponentElement } from 'react';
-import { useParams } from 'react-router-dom';
+
+import { Container, List, Row, Text, Padding } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { sortBy } from 'lodash';
+import moment from 'moment';
+import { useParams } from 'react-router-dom';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import moment from 'moment';
+
+import { AdvancedFilterButton } from './parts/advanced-filter-button';
 import SearchListItem from './search-list-item';
 import ShimmerList from './shimmer-list';
-import { AdvancedFilterButton } from './parts/advanced-filter-button';
 
 type SearchListProps = {
 	appointments: Array<any>;

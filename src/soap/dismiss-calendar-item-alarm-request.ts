@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
+
 import { DateType } from '../types/event';
 
 export type DismissItem = Array<{ id: string; dismissedAt: DateType }>;

@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isEqual, transform, isObject, find } from 'lodash';
 import { t } from '@zextras/carbonio-shell-ui';
+import { isEqual, transform, isObject, find } from 'lodash';
 
 export const ShowReminderOptions = () => [
 	{ label: t('reminder.never', 'Never'), value: '0' },

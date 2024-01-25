@@ -5,6 +5,7 @@
  */
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { forEach, isNil, map, omitBy } from 'lodash';
+
 import { normalizeInviteFromSync } from '../../normalizations/normalize-invite';
 import type { Invite } from '../../types/store/invite';
 import type { InvitesSlice } from '../../types/store/store';
