@@ -16,7 +16,7 @@
 		"postpublish": "pinst --enable",
 		"type-check": "tsc --noEmit",
 		"type-check:watch": "npm run type-check -- --watch",
-		"lint": "eslint --ext .js,.jsx,.ts,.tsx --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src --fix",
+		"lint": "eslint --ext .js,.jsx,.ts,.tsx --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
 		"sdk-setup": "npm ci --prefix sdk",
 		"test": "jest",
 		"pull-translations": "git subtree pull -P translations git@github.com:Zextras/carbonio-calendars-ui-i18n.git master --squash",
