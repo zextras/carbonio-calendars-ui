@@ -205,6 +205,8 @@ export default function CalendarComponent() {
 				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
 				onEventDrop={onEventDrop}
 				onEventResize={resizeEvent}
+				showMultiDayTimes
+				dayLayoutAlgorithm={'no-overlap'}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
 				resizableAccessor={() => false}
