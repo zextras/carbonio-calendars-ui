@@ -206,7 +206,6 @@ export default function CalendarComponent() {
 				onEventDrop={onEventDrop}
 				onEventResize={resizeEvent}
 				showMultiDayTimes
-				dayLayoutAlgorithm={'no-overlap'}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
 				resizableAccessor={() => false}
