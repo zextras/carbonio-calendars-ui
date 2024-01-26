@@ -62,6 +62,10 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 			),
 		[t]
 	);
+	const singleWarningLabel = useMemo(
+		() => t('attendee_room_unavailable', 'Room not available at the selected time of the event'),
+		[t]
+	);
 	const onInputType = useCallback((e) => {
 		if (e.textContent && e.textContent !== '') {
 			setOptions([
@@ -104,6 +108,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 			setOptions={setOptions}
 			warningLabel={warningLabel}
 			disabled={disabled?.equipment}
+			singleWarningLabel={singleWarningLabel}
 		/>
 	);
 };

@@ -15,7 +15,6 @@ import {
 	useKeyboard
 } from '@zextras/carbonio-design-system';
 import { find, map } from 'lodash';
-import { useTranslation } from 'react-i18next';
 import styled, { DefaultTheme } from 'styled-components';
 
 import {
@@ -91,7 +90,8 @@ export const EditorResourceComponent = ({
 	options,
 	setOptions,
 	warningLabel,
-	disabled
+	disabled,
+	singleWarningLabel
 }: {
 	editorId: string;
 	onChange: (e: Array<Resource>) => void;
@@ -102,8 +102,8 @@ export const EditorResourceComponent = ({
 	setOptions: (e: Array<DropdownItem>) => void;
 	warningLabel: string;
 	disabled?: boolean;
+	singleWarningLabel: string;
 }): JSX.Element | null => {
-	const [t] = useTranslation();
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const start = useAppSelector(selectEditorStart(editorId));
@@ -149,10 +149,7 @@ export const EditorResourceComponent = ({
 					const actions = [
 						{
 							id: 'unavailable',
-							label: t(
-								'attendee_unavailable',
-								'Attendee not available at the selected time of the event'
-							),
+							label: singleWarningLabel,
 							color: 'error',
 							type: 'icon',
 							icon: 'AlertTriangle'
@@ -166,7 +163,7 @@ export const EditorResourceComponent = ({
 			}
 			return room;
 		});
-	}, [allDay, attendeesAvailabilityList, end, resourcesValue, start, t]);
+	}, [allDay, attendeesAvailabilityList, end, resourcesValue, singleWarningLabel, start]);
 
 	const backspaceEvent = useMemo<KeyboardPresetObj[]>(
 		() => [
