@@ -16,13 +16,16 @@ import {
 import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-soap-message-from-editor';
 import { Editor } from '../../types/editor';
 
-// todo: this thunk is not using redux! convert to regular async function
-export const modifyAppointment = createAsyncThunk(
+export type ModifyAppointmentReturnType = { res: { calItemId: string; echo: any }; editor: Editor };
+export type ModifyAppointmentArguments = { draft: boolean; editor: Editor };
+
+export const modifyAppointment = createAsyncThunk<
+	ModifyAppointmentReturnType,
+	ModifyAppointmentArguments,
+	{ rejectValue: any }
+>(
 	'appointment/modify appointment',
-	async (
-		{ draft, editor }: { draft: boolean; editor: Editor },
-		{ rejectWithValue }: any
-	): Promise<any> => {
+	async ({ draft, editor }, { rejectWithValue }: any): Promise<any> => {
 		if (editor) {
 			if (editor.isSeries && editor.isInstance && !editor.isException) {
 				const exceptId = omitBy(
