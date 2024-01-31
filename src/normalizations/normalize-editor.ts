@@ -16,6 +16,7 @@ import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
 import { DateType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
+import { getInstanceExceptionId } from '../utils/event';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -210,7 +211,9 @@ export const normalizeEditor = ({
 			? extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? ''
 			: '';
 
-		const folder = find(context?.folders, ['id', calendarId]);
+		const folder =
+			find(context?.folders, ['id', calendarId]) ??
+			find(context?.folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
 
 		const calendar = normalizeCalendarEditor(folder);
 
@@ -225,7 +228,15 @@ export const normalizeEditor = ({
 				isInstance,
 				isSeries,
 				isException,
-				exceptId: invite?.exceptId,
+				/* it is always available in case an exception must be created from this event. Make sure to handle the
+				 	condition where needed to remove it from message creation */
+				exceptId:
+					invite?.exceptId ??
+					getInstanceExceptionId({
+						start: event.start,
+						tz: invite?.start?.tz,
+						allDay: event?.allDay
+					}),
 				title: event?.title,
 				location: event?.resource?.location,
 				meetingRoom: getMeetingRooms(invite.attendees),

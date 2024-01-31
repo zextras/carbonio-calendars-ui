@@ -3,11 +3,22 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import moment from 'moment';
+
 import { Invite } from '../types/store/invite';
 
 export const inviteToEvent = (invite: Invite): any => ({
-	start: invite.start.u ? invite.start.u : invite.start,
-	end: invite.end.u ? invite.end.u : invite.end,
+	start: invite.allDay
+		? new Date(moment(invite?.start?.d).startOf('day').valueOf())
+		: new Date(invite?.start?.u),
+	end: invite.allDay
+		? new Date(
+				moment(invite?.start?.d)
+					.add(moment(invite.end.d).diff(moment(invite.start.d)), 'days')
+					.endOf('day')
+					.valueOf()
+		  )
+		: new Date(invite.start.u + moment(invite.end.d).diff(moment(invite.start.d))),
 	resource: {
 		id: invite.apptId,
 		inviteId: invite.id,
@@ -39,7 +50,7 @@ export const inviteToEvent = (invite: Invite): any => ({
 		rev: invite.rev
 	},
 	title: invite.name,
-	allDay: false
+	allDay: invite.allDay ?? false
 });
 
 export const appointmentToEvent = (invite: Invite, id: string): any => ({

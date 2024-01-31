@@ -6,15 +6,33 @@
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
 
+import { HTML_OPENING_TAG } from '../constants';
 import { generateParticipantInformation } from '../normalizations/normalize-soap-message-from-editor';
+import { Editor } from '../types/editor';
 
-export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promise<any> =>
-	soapFetch('CounterAppointment', {
+export type CounterAppointmentRejectedType = {
+	error: boolean;
+	Fault: any;
+	jsns?: never;
+};
+export type CounterAppointmentFulfilledType = {
+	jsns?: string;
+	Fault?: never;
+	error?: never;
+};
+export type CounterAppointmentReturnType =
+	| CounterAppointmentFulfilledType
+	| CounterAppointmentRejectedType;
+
+export const counterAppointmentRequest = async ({
+	appt
+}: {
+	appt: Editor;
+}): Promise<CounterAppointmentReturnType> => {
+	const res: CounterAppointmentReturnType = await soapFetch('CounterAppointment', {
 		_jsns: 'urn:zimbraMail',
 		comp: '0',
-		id: appt.inviteId,
-		ms: appt.ms,
-		rev: appt.rev,
+		id: appt.inviteId?.includes('-') ? appt.inviteId : undefined,
 		m: {
 			e: generateParticipantInformation(appt),
 			inv: {
@@ -28,6 +46,8 @@ export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promis
 							tz: appt?.timezone,
 							d: moment(moment(appt.end)).format('YYYYMMDDTHHmm00')
 						},
+						exceptId:
+							appt?.isException || (appt?.isSeries && appt?.isInstance) ? appt.exceptId : undefined,
 						or: { a: appt.organizer?.address },
 						s: {
 							tz: appt?.timezone,
@@ -41,7 +61,7 @@ export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promis
 				mp: [
 					{
 						ct: 'text/html',
-						content: `<html><body id='htmlmode3'>
+						content: `${HTML_OPENING_TAG}
 							<table>
 								<tr height="1.5rem"><td>New Time Proposed</td></tr>
 								<tr height="1.5rem"><td>Subject: ${appt.title}</td></tr>
@@ -72,3 +92,5 @@ export const counterAppointmentRequest = async ({ appt }: { appt: any }): Promis
 			su: `New Time Proposed: ${appt.title}`
 		}
 	});
+	return res?.Fault ? { ...res.Fault, error: true } : res;
+};

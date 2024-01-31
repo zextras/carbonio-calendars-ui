@@ -100,7 +100,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
-						label={t('label.maybe', 'maybe')}
+						label={t('label.tentative', 'tentative')}
 						icon="QuestionMarkOutline"
 						color="warning"
 						onClick={onAction('TENTATIVE')}

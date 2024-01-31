@@ -5,21 +5,26 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { counterAppointmentRequest } from '../../soap/counter-appointment-request';
+import {
+	CounterAppointmentRejectedType,
+	counterAppointmentRequest
+} from '../../soap/counter-appointment-request';
+import { RootState } from '../redux';
 
-export const proposeNewTime = createAsyncThunk(
-	'calendars/proposeNewTime',
-	async ({ id }: { id: string }, { getState, rejectWithValue }): Promise<any> => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		const appt = getState()?.editor?.editors?.[id];
-		const res = await counterAppointmentRequest({ appt });
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		const response = res?.Fault ? { ...res.Fault, error: true } : res;
-		if (response?.error) {
-			return rejectWithValue(response);
-		}
-		return { response: res, editor: appt };
+export const proposeNewTime = createAsyncThunk<
+	// it is impossible to write down the proper type due to other missing types around the functions
+	any,
+	{ id: string },
+	{
+		state: RootState;
+		rejectValue: CounterAppointmentRejectedType;
 	}
-);
+>('calendars/proposeNewTime', async ({ id }, { getState, rejectWithValue }) => {
+	const editor = getState()?.editor?.editors?.[id];
+	const res = await counterAppointmentRequest({ appt: editor });
+
+	if (res?.error) {
+		return rejectWithValue(res);
+	}
+	return { response: res, editor };
+});

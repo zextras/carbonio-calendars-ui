@@ -21,6 +21,7 @@ import { useAppDispatch } from '../store/redux/hooks';
 import { SnackbarArgumentType } from '../types/delete-appointment';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { getInstanceExceptionId } from '../utils/event';
 
 const generateAppointmentDeletedSnackbar = (
 	res: { type: string | string[] },
@@ -276,17 +277,11 @@ export const useDeleteActions = (
 				t,
 				isInstance: context.isSingleInstance,
 				createSnackbar,
-				inst: event.allDay
-					? {
-							d: moment(event.start).format('YYYYMMDD'),
-							tz: invite?.start?.tz
-					  }
-					: {
-							d: invite?.start?.tz
-								? moment(event.start).format('YYYYMMDD[T]HHmmss')
-								: moment(event.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
-							tz: invite?.start?.tz
-					  },
+				inst: getInstanceExceptionId({
+					start: event.start,
+					tz: invite?.start?.tz,
+					allDay: event?.allDay
+				}),
 				s: moment(event.start).valueOf(),
 				folders: context.folders
 			};

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Button, Container, Padding } from '@zextras/carbonio-design-system';
@@ -67,7 +68,7 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 			<Padding horizontal="small" />
 			<Button
 				type="outlined"
-				label={t('label.maybe', 'maybe')}
+				label={t('label.tentative', 'tentative')}
 				icon="QuestionMarkOutline"
 				color="warning"
 				onClick={(): void => replyAction('TENTATIVE')}

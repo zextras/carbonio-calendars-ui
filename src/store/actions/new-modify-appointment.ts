@@ -3,11 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import { isNil, omitBy } from 'lodash';
-import moment from 'moment';
 
 import {
 	findAttachments,
@@ -16,7 +13,6 @@ import {
 import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-soap-message-from-editor';
 import { Editor } from '../../types/editor';
 
-// todo: this thunk is not using redux! convert to regular async function
 export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
 	async (
@@ -25,23 +21,7 @@ export const modifyAppointment = createAsyncThunk(
 	): Promise<any> => {
 		if (editor) {
 			if (editor.isSeries && editor.isInstance && !editor.isException) {
-				const exceptId = omitBy(
-					editor.allDay
-						? {
-								d: moment(editor.ridZ).format('YYYYMMDD'),
-								tz: editor.timezone
-						  }
-						: {
-								d: editor.timezone
-									? moment(editor.ridZ).format('YYYYMMDD[T]HHmmss')
-									: moment(editor.ridZ).utc().format('YYYYMMDD[T]HHmmss[Z]'),
-								tz: editor.timezone
-						  },
-					isNil
-				);
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				const body = normalizeSoapMessageFromEditor({ ...editor, draft, exceptId });
+				const body = normalizeSoapMessageFromEditor({ ...editor, draft });
 				const res: { calItemId: string; invId: string } = await soapFetch(
 					'CreateAppointmentException',
 					body
@@ -58,8 +38,7 @@ export const modifyAppointment = createAsyncThunk(
 					isInstance: true,
 					isException: true,
 					isNew: false,
-					inviteId: response.invId,
-					exceptId
+					inviteId: response.invId
 				};
 				return { response, editor: updatedEditor };
 			}

@@ -63,9 +63,9 @@ const getInstanceActionsItems = ({
 	...(isAnInvite(event)
 		? [
 				acceptInvitationItem({ event, context }),
-				declineInvitationItem({ event, context }),
 				acceptAsTentativeItem({ event, context }),
-				proposeNewTimeItem({ event, context })
+				declineInvitationItem({ event, context }),
+				proposeNewTimeItem({ event, invite, context })
 		  ]
 		: [])
 ];
@@ -95,9 +95,9 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				...(isAnInvite(event)
 					? [
 							acceptInvitationItem({ event, context }),
-							declineInvitationItem({ event, context }),
 							acceptAsTentativeItem({ event, context }),
-							proposeNewTimeItem({ event, context })
+							declineInvitationItem({ event, context }),
+							proposeNewTimeItem({ event, invite, context })
 					  ]
 					: [])
 			]
@@ -125,9 +125,9 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				...(isAnInvite(event)
 					? [
 							acceptInvitationItem({ event: seriesEvent, context }),
-							declineInvitationItem({ event: seriesEvent, context }),
 							acceptAsTentativeItem({ event: seriesEvent, context }),
-							proposeNewTimeItem({ event, context })
+							declineInvitationItem({ event: seriesEvent, context }),
+							proposeNewTimeItem({ event, invite, context })
 					  ]
 					: [])
 			]
