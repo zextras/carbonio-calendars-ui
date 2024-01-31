@@ -37,20 +37,15 @@ import { getInvite } from '../../store/actions/get-invite';
 import { StoreProvider } from '../../store/redux';
 import { useAppDispatch } from '../../store/redux/hooks';
 
-/**
-   @todo: haveEquipment - momentary variables to dynamize
-* */
-const haveEquipment = false;
-
 export function mailToContact(contact: object): Action | undefined {
 	const [mailTo, available] = getAction('contact-list', 'mail-to', [contact]);
 	return available ? mailTo : undefined;
 }
 
 const InviteContainer = styled(Container)`
-	border: 0.0625rem solid ${({ theme }: any): string => theme.palette.gray2.regular};
+	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 	border-radius: 0.875rem;
-	margin: ${({ theme }: any): string => theme.sizes.padding.extrasmall};
+	margin: ${({ theme }): string => theme.sizes.padding.extrasmall};
 `;
 
 const LinkText = styled(Text)`
@@ -108,17 +103,6 @@ const InviteResponse: FC<InviteResponse> = ({
 		}
 	}, [mailMsg.read, onLoadChange]);
 
-	const apptTime = useMemo(() => {
-		if (invite.allDay) {
-			return moment(invite.start.d).format(`dddd, DD MMM, YYYY`);
-		}
-		return moment(invite.start.u).format(
-			`dddd, DD MMM, YYYY [${moment(invite.start.u).format(`HH:mm`)}]-[${moment(
-				invite.end.u
-			).format(`HH:mm`)}]`
-		);
-	}, [invite]);
-
 	const room = useMemo(() => find(invite.xprop, ['name', CRB_XPROPS.MEETING_ROOM]), [invite]);
 	const roomName = find(room?.xparam, ['name', CRB_XPARAMS.ROOM_NAME])?.value;
 	const roomLink = find(room?.xparam, ['name', CRB_XPARAMS.ROOM_LINK])?.value;
@@ -128,14 +112,19 @@ const InviteResponse: FC<InviteResponse> = ({
 		[invite.attendees]
 	);
 
+	const equipments = useMemo(
+		() => filter(invite.attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]),
+		[invite.attendees]
+	);
+
+	const equipmentsString = useMemo(
+		() => map(equipments, (equipment) => equipment.d).join(', '),
+		[equipments]
+	);
+
 	const rooms = useMemo(
 		() => map(meetingRooms, (meetingRoom) => meetingRoom.d).join(', '),
 		[meetingRooms]
-	);
-
-	const apptTimeZone = useMemo(
-		() => `${moment(invite.start.u).tz(moment.tz.guess()).format('Z')} ${moment.tz.guess()}`,
-		[invite]
 	);
 
 	const [maxReqParticipantsToShow, setMaxReqParticipantsToShow] = useState(4);
@@ -219,11 +208,18 @@ const InviteResponse: FC<InviteResponse> = ({
 	}, [calendarFolders, dispatch, inviteId]);
 
 	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
-		useGetEventTimezoneString(invite.start.u, invite.end.u, invite.allDay, invite.tz);
+		useGetEventTimezoneString(
+			moment(invite.start?.d ?? invite.start.u),
+			moment(invite.end?.d ?? invite.end.u),
+			invite.allDay,
+			invite.tz
+		);
 
 	const messageHasABody = useMemo(() => {
 		const body = extractBody(invite?.textDescription?.[0]?._content);
-		return body?.length > 0;
+		/* TODO: appointments descriptions needs a refactor. Currently appointments descriptions are created with a double
+		    quotes inside breaking the first condition */
+		return body?.length > 0 && body !== '"';
 	}, [invite?.textDescription]);
 
 	return (
@@ -327,7 +323,7 @@ const InviteResponse: FC<InviteResponse> = ({
 					</Row>
 				)}
 
-				{meetingRooms?.length && (
+				{meetingRooms && meetingRooms?.length > 0 && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large', bottom: 'small' }}>
 						<Tooltip placement="left" label={t('tooltip.meetingRooms', 'MeetingRooms')}>
 							<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
@@ -344,7 +340,7 @@ const InviteResponse: FC<InviteResponse> = ({
 					</Row>
 				)}
 
-				{haveEquipment && (
+				{equipments && equipments.length > 0 && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large', bottom: 'small' }}>
 						<Tooltip placement="left" label={t('tooltip.equipment', 'Equipment')}>
 							<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
@@ -354,7 +350,7 @@ const InviteResponse: FC<InviteResponse> = ({
 						<Row takeAvailableSpace mainAlignment="flex-start">
 							<Tooltip placement="right" label={t('tooltip.equipment', 'Equipment')}>
 								<Text size="medium" overflow="break-word">
-									{/* TODO: Equipment name */}
+									{equipmentsString}
 								</Text>
 							</Tooltip>
 						</Row>
@@ -396,7 +392,7 @@ const InviteResponse: FC<InviteResponse> = ({
 														</Text>
 													</>
 												}
-												background="gray3"
+												background={'gray3'}
 												color="secondary"
 												actions={[
 													{
@@ -419,7 +415,7 @@ const InviteResponse: FC<InviteResponse> = ({
 												<Text color="secondary">({t('message.organizer')})</Text>
 											</>
 										}
-										background="gray3"
+										background={'gray3'}
 										color="text"
 										actions={[
 											{
@@ -442,7 +438,7 @@ const InviteResponse: FC<InviteResponse> = ({
 													<div>
 														<Chip
 															label={p.d}
-															background="gray3"
+															background={'gray3'}
 															color="text"
 															actions={[
 																{
@@ -459,7 +455,7 @@ const InviteResponse: FC<InviteResponse> = ({
 											) : (
 												<Chip
 													label={p.a}
-													background="gray3"
+													background={'gray3'}
 													color="text"
 													actions={[
 														{
@@ -515,7 +511,7 @@ const InviteResponse: FC<InviteResponse> = ({
 														<div>
 															<Chip
 																label={p.d}
-																background="gray3"
+																background={'gray3'}
 																color="text"
 																actions={[
 																	{
@@ -532,7 +528,7 @@ const InviteResponse: FC<InviteResponse> = ({
 												) : (
 													<Chip
 														label={p.a}
-														background="gray3"
+														background={'gray3'}
 														color="text"
 														actions={[
 															{

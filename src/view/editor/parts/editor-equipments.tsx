@@ -61,6 +61,15 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 			),
 		[t]
 	);
+	const singleWarningLabel = useMemo(
+		() =>
+			t(
+				'attendee_equipment_unavailable',
+				'Equipment not available at the selected time of the event'
+			),
+		[t]
+	);
+
 	const onInputType = useCallback((e) => {
 		if (e.textContent && e.textContent !== '') {
 			setOptions([
@@ -102,6 +111,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 			options={options}
 			setOptions={setOptions}
 			warningLabel={warningLabel}
+			singleWarningLabel={singleWarningLabel}
 		/>
 	);
 };
