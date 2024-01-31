@@ -171,6 +171,11 @@ export const selectEditorAttachmentFiles =
 	(state: RootState): Array<any> =>
 		state?.editor?.editors?.[id]?.attachmentFiles;
 
+export const selectEditorAttachmentAid =
+	(id: string) =>
+	(state: RootState): Array<string> =>
+		state?.editor?.editors?.[id]?.attach?.aid;
+
 export const selectEditorAttach =
 	(id: string) =>
 	(state: RootState): Array<any> =>
