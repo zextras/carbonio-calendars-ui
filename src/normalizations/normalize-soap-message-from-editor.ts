@@ -334,7 +334,7 @@ const generateInvite = (editorData: Editor): any => {
 					allDay: editorData?.allDay,
 					timezone: editorData?.timezone
 				}),
-				exceptId: editorData?.isException ? editorData.exceptId : undefined,
+				exceptId: editorData.exceptId,
 				class: editorData.class,
 				draft: editorData.draft ? 1 : 0
 			}

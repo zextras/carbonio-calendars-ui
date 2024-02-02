@@ -12,6 +12,7 @@ import {
 } from '../../normalizations/normalizations-utils';
 import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-soap-message-from-editor';
 import { Editor } from '../../types/editor';
+import { getInstanceExceptionId } from '../../utils/event';
 
 export const modifyAppointment = createAsyncThunk(
 	'appointment/modify appointment',
@@ -21,7 +22,13 @@ export const modifyAppointment = createAsyncThunk(
 	): Promise<any> => {
 		if (editor) {
 			if (editor.isSeries && editor.isInstance && !editor.isException) {
-				const body = normalizeSoapMessageFromEditor({ ...editor, draft });
+				const exceptId =
+					editor?.exceptId ??
+					getInstanceExceptionId({
+						start: new Date(editor.originalStart),
+						allDay: editor.allDay
+					});
+				const body = normalizeSoapMessageFromEditor({ ...editor, draft, exceptId });
 				const res: { calItemId: string; invId: string } = await soapFetch(
 					'CreateAppointmentException',
 					body

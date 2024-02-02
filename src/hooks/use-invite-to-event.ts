@@ -14,7 +14,12 @@ export const inviteToEvent = (invite: Invite): any => ({
 	end: invite.allDay
 		? new Date(
 				moment(invite?.start?.d)
-					.add(moment(invite.end.d).diff(moment(invite.start.d)), 'days')
+					.add(
+						moment
+							.duration(moment(invite.end.d).diff(moment(invite.start.d)), 'milliseconds')
+							.asDays(),
+						'days'
+					)
 					.endOf('day')
 					.valueOf()
 		  )

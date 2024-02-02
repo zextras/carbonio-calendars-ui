@@ -108,7 +108,7 @@ export type Editor = {
 	ridZ?: string | undefined;
 	draft?: boolean | undefined;
 	calendar?: CalendarEditor;
-	exceptId?: { d: string; tz: string } | undefined;
+	exceptId?: { d: string; tz: string | undefined } | undefined;
 	isException: boolean;
 	isInstance: boolean;
 	isSeries: boolean;
@@ -132,6 +132,8 @@ export type Editor = {
 	allDay?: boolean;
 	freeBusy?: InviteFreeBusy;
 	class?: InviteClass;
+	originalStart: number;
+	originalEnd: number;
 	start?: number;
 	end?: number;
 	inviteId?: string | undefined;

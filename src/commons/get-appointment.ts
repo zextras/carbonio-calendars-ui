@@ -78,23 +78,12 @@ export const normalizeFromGetAppointment = (appt: any): Appointment => <Appointm
 					? appt.inv[0].comp[0].e[0].u - appt.inv[0].comp[0].s[0].u
 					: undefined,
 			allDay: appt?.inv?.[0]?.comp?.[0]?.allDay ?? false,
-			inst:
-				appt?.id && appt?.inv?.[0]?.comp?.[0] && appt?.inv?.length === 1
-					? [
-							{
-								recur: false,
-								ridZ: appt?.inv?.[0]?.comp?.[0]?.s?.[0]?.d,
-								s: appt?.inv?.[0]?.comp?.[0]?.s?.[0]?.u,
-								title: appt?.inv?.[0]?.comp?.[0]?.name
-							}
-					  ]
-					: undefined,
 			draft: appt?.inv?.[0]?.comp?.[0]?.draft,
 			inviteId: appt?.id && appt?.inv?.[0] ? `${appt.id}-${appt.inv[0].id}` : undefined,
 			isOrg: appt?.inv?.[0]?.comp?.[0]?.isOrg,
 			loc: appt?.inv?.[0]?.comp?.[0]?.loc,
 			otherAtt: appt?.inv?.[0]?.comp?.[0]?.otherAtt,
-			recur: appt?.inv?.[0]?.comp?.[0]?.recur,
+			recur: !!appt?.inv?.[0]?.comp?.[0]?.recur,
 			name: appt?.inv?.[0]?.comp?.[0]?.name,
 			meta: appt?.meta,
 			neverSent: appt?.inv?.[0]?.comp?.[0]?.neverSent,

@@ -127,7 +127,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 							acceptInvitationItem({ event: seriesEvent, context }),
 							acceptAsTentativeItem({ event: seriesEvent, context }),
 							declineInvitationItem({ event: seriesEvent, context }),
-							proposeNewTimeItem({ event, invite, context })
+							proposeNewTimeItem({ event: seriesEvent, invite, context })
 					  ]
 					: [])
 			]

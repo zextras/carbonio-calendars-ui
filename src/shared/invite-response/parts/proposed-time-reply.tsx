@@ -14,6 +14,7 @@ import {
 } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { find, map } from 'lodash';
+import moment from 'moment';
 
 import { generateEditor } from '../../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../../commons/get-appointment';
@@ -82,7 +83,12 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 							invite,
 							context: {
 								attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
-								isException: invite?.isException ?? false,
+								isInstance: !!ridZ,
+								originalStart:
+									moment(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d).valueOf() ?? start,
+								originalEnd:
+									moment(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d).valueOf() ?? end,
+								exceptId: msg?.invite?.[0]?.comp?.[0]?.exceptId,
 								start,
 								end,
 								folders: calendarFolders,

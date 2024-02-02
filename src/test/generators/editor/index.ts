@@ -56,6 +56,11 @@ const getDefaultEditor = ({
 		allDay: false,
 		freeBusy: 'B',
 		class: 'PUB',
+		originalStart: moment().valueOf(),
+		originalEnd: getEndTime({
+			start: moment().valueOf(),
+			duration: zimbraPrefCalendarDefaultApptDuration
+		}),
 		start: moment().valueOf(),
 		end: getEndTime({
 			start: moment().valueOf(),
@@ -154,6 +159,11 @@ const getEditor = ({
 		allDay: false,
 		freeBusy: 'B',
 		class: 'PUB',
+		originalStart: moment().valueOf(),
+		originalEnd: getEndTime({
+			start: moment().valueOf(),
+			duration: zimbraPrefCalendarDefaultApptDuration
+		}),
 		start: moment().valueOf(),
 		end: getEndTime({
 			start: moment().valueOf(),

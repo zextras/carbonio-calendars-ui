@@ -228,15 +228,7 @@ export const normalizeEditor = ({
 				isInstance,
 				isSeries,
 				isException,
-				/* it is always available in case an exception must be created from this event. Make sure to handle the
-				 	condition where needed to remove it from message creation */
-				exceptId:
-					invite?.exceptId ??
-					getInstanceExceptionId({
-						start: event.start,
-						tz: invite?.start?.tz,
-						allDay: event?.allDay
-					}),
+				exceptId: invite?.exceptId,
 				title: event?.title,
 				location: event?.resource?.location,
 				meetingRoom: getMeetingRooms(invite.attendees),
@@ -247,6 +239,8 @@ export const normalizeEditor = ({
 				allDay: event?.allDay,
 				freeBusy: invite.freeBusy,
 				class: invite.class,
+				originalStart: start,
+				originalEnd: end,
 				start,
 				end,
 				timezone: invite?.start?.tz,

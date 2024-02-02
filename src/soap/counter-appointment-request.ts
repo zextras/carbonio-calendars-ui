@@ -9,6 +9,7 @@ import moment from 'moment';
 import { HTML_OPENING_TAG } from '../constants';
 import { generateParticipantInformation } from '../normalizations/normalize-soap-message-from-editor';
 import { Editor } from '../types/editor';
+import { getInstanceExceptionId } from '../utils/event';
 
 export type CounterAppointmentRejectedType = {
 	error: boolean;
@@ -47,7 +48,13 @@ export const counterAppointmentRequest = async ({
 							d: moment(moment(appt.end)).format('YYYYMMDDTHHmm00')
 						},
 						exceptId:
-							appt?.isException || (appt?.isSeries && appt?.isInstance) ? appt.exceptId : undefined,
+							appt?.isException || (appt?.isSeries && appt?.isInstance)
+								? appt.exceptId ??
+								  getInstanceExceptionId({
+										start: new Date(appt.originalStart),
+										allDay: appt.allDay
+								  })
+								: undefined,
 						or: { a: appt.organizer?.address },
 						s: {
 							tz: appt?.timezone,
