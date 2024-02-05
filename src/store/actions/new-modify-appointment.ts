@@ -14,12 +14,16 @@ import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-s
 import { Editor } from '../../types/editor';
 import { getInstanceExceptionId } from '../../utils/event';
 
-export const modifyAppointment = createAsyncThunk(
+export type ModifyAppointmentReturnType = { res: { calItemId: string; echo: any }; editor: Editor };
+export type ModifyAppointmentArguments = { draft: boolean; editor: Editor };
+
+export const modifyAppointment = createAsyncThunk<
+	ModifyAppointmentReturnType,
+	ModifyAppointmentArguments,
+	{ rejectValue: any }
+>(
 	'appointment/modify appointment',
-	async (
-		{ draft, editor }: { draft: boolean; editor: Editor },
-		{ rejectWithValue }: any
-	): Promise<any> => {
+	async ({ draft, editor }, { rejectWithValue }: any): Promise<any> => {
 		if (editor) {
 			if (editor.isSeries && editor.isInstance && !editor.isException) {
 				const exceptId =

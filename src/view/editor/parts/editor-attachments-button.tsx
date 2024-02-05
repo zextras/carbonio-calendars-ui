@@ -7,7 +7,7 @@ import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'rea
 
 import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { getIntegratedFunction, t } from '@zextras/carbonio-shell-ui';
-import { map } from 'lodash';
+import { map, union } from 'lodash';
 import styled from 'styled-components';
 
 import { ResizedIconCheckbox } from './editor-styled-components';
@@ -15,6 +15,7 @@ import { uploadParts } from '../../../commons/upload-parts';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttach,
+	selectEditorAttachmentAid,
 	selectEditorAttachmentFiles,
 	selectEditorDisabled
 } from '../../../store/selectors/editor';
@@ -41,6 +42,7 @@ export const EditorAttachmentsButton = ({ editorId }: EditorProps): ReactElement
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [openDD, setOpenDD] = useState(false);
 	const attachmentFiles = useAppSelector(selectEditorAttachmentFiles(editorId));
+	const attachAid = useAppSelector(selectEditorAttachmentAid(editorId));
 	const parts = useAppSelector(selectEditorAttach(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
@@ -151,13 +153,19 @@ export const EditorAttachmentsButton = ({ editorId }: EditorProps): ReactElement
 				dispatch(
 					editEditorAttachments({
 						id: editorId,
-						attach: { aid: map(payload, (el) => el.aid), mp },
+						attach: {
+							aid: union(
+								attachAid,
+								map(payload, (el) => el.aid)
+							),
+							mp
+						},
 						attachmentFiles: attachmentFilesArr
 					})
 				);
 			});
 		}
-	}, [editorId, parts, attachmentFiles, dispatch]);
+	}, [editorId, parts, attachmentFiles, dispatch, attachAid]);
 
 	return (
 		<>
