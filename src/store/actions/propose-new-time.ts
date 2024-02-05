@@ -9,10 +9,10 @@ import {
 	CounterAppointmentRejectedType,
 	counterAppointmentRequest
 } from '../../soap/counter-appointment-request';
-import { RootState } from '../redux';
+import type { RootState } from '../redux';
 
+// it is impossible to write down the proper type due to other missing types around the functions
 export const proposeNewTime = createAsyncThunk<
-	// it is impossible to write down the proper type due to other missing types around the functions
 	any,
 	{ id: string },
 	{

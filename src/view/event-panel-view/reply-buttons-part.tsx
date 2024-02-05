@@ -68,7 +68,7 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 			<Padding horizontal="small" />
 			<Button
 				type="outlined"
-				label={t('label.tentative', 'tentative')}
+				label={t('label.tentative', 'Tentative')}
 				icon="QuestionMarkOutline"
 				color="warning"
 				onClick={(): void => replyAction('TENTATIVE')}

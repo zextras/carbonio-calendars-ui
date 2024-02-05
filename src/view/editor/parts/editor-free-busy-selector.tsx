@@ -44,11 +44,11 @@ const getStatusItems = (t: TFunction): Array<any> => [
 		customComponent: <StatusItemComponent label={t('label.free', 'Free')} color="#ffffff" />
 	},
 	{
-		label: t('label.tentative', 'tentative'),
+		label: t('label.tentative', 'Tentative'),
 		value: STATUS_VALUES.TENTATIVE,
 		color: '#ffc107',
 		customComponent: (
-			<StatusItemComponent label={t('label.tentative', 'tentative')} color="#ffc107" />
+			<StatusItemComponent label={t('label.tentative', 'Tentative')} color="#ffc107" />
 		)
 	},
 	{

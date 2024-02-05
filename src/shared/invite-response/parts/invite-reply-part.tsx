@@ -187,7 +187,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({ inviteId, message }): ReactEleme
 				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
-						label={t('label.tentative', 'tentative')}
+						label={t('label.tentative', 'Tentative')}
 						icon="QuestionMarkOutline"
 						color="warning"
 						onClick={onAction('TENTATIVE')}

@@ -9,12 +9,13 @@ import { InvitesSlice } from '../../types/store/store';
 import { getInvite } from '../actions/get-invite';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
 import { modifyAppointment } from '../actions/new-modify-appointment';
+import { proposeNewTime } from '../actions/propose-new-time';
 import { sendInviteResponse } from '../actions/send-invite-response';
 import { getInviteFulfilled, getInviteRejected } from '../reducers/get-invite';
 import { handleModifiedInvitesReducer } from '../reducers/handle-modified-invites';
 import { modifyAppointmentFullfilled } from '../reducers/modify-appointment-response';
 import { moveAppointmentToTrashFulfilled } from '../reducers/move-appointment-to-trash';
-
+import { proposeNewTimeFulfilled } from '../reducers/propose-new-time';
 import {
 	sendInviteResponseFulfilled,
 	sendInviteResponsePending,
@@ -40,6 +41,7 @@ export const invitesSlice = createSlice({
 		builder.addCase(sendInviteResponse.rejected, sendInviteResponseRejected);
 		builder.addCase(moveAppointmentToTrash.fulfilled, moveAppointmentToTrashFulfilled);
 		builder.addCase(modifyAppointment.fulfilled, modifyAppointmentFullfilled);
+		builder.addCase(proposeNewTime.fulfilled, proposeNewTimeFulfilled);
 	}
 });
 
