@@ -12,9 +12,10 @@ import {
 	Button,
 	Divider
 } from '@zextras/carbonio-design-system';
-import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
+import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { find, map } from 'lodash';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 import { generateEditor } from '../../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../../commons/get-appointment';
@@ -46,11 +47,13 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 	msg,
 	to
 }): ReactElement => {
+	const [t] = useTranslation();
 	const createSnackbar = useContext(SnackbarManagerContext);
 	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const [openComposer, available] = useIntegratedFunction('compose');
-	const accept = useCallback(() => {
+
+	const acceptProposedTime = useCallback(() => {
 		getAppointment(id).then((res) => {
 			if (res?.appt[0]) {
 				const inviteToNormalize =
@@ -118,7 +121,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				});
 			}
 		});
-	}, [calendarFolders, createSnackbar, dispatch, end, id, moveToTrash, msg?.invite, start]);
+	}, [calendarFolders, createSnackbar, dispatch, end, id, moveToTrash, msg?.invite, start, t]);
 
 	const decline = useCallback(() => {
 		if (available)
@@ -127,7 +130,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 				subject: `${t('label.proposal_declined', 'Proposal declined')}${title}`,
 				to
 			});
-	}, [available, openComposer, title, fragment, to]);
+	}, [available, openComposer, fragment, t, title, to]);
 
 	return (
 		<>
@@ -145,7 +148,7 @@ const ProposedTimeReply: FC<ProposedTimeReply> = ({
 						label={t('event.action.accept', 'Accept')}
 						icon="CheckmarkOutline"
 						color="success"
-						onClick={accept}
+						onClick={acceptProposedTime}
 					/>
 				</Padding>
 				<Padding right="small" vertical="medium">

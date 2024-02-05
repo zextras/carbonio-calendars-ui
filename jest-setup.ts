@@ -24,6 +24,7 @@ import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/han
 import { handleCreateAppointmentExceptionRequest } from './src/test/mocks/network/msw/handle-create-appointment-exception';
 import { handleCreateFolderRequest } from './src/test/mocks/network/msw/handle-create-folder';
 import { handleFolderActionRequest } from './src/test/mocks/network/msw/handle-folder-action';
+import { handleGetAppointmentRequest } from './src/test/mocks/network/msw/handle-get-appointment';
 import { handleGetFolderRequest } from './src/test/mocks/network/msw/handle-get-folder';
 import { handleGetFreeBusy } from './src/test/mocks/network/msw/handle-get-free-busy';
 import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite';
@@ -63,7 +64,8 @@ beforeAll(() => {
 		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest),
 		rest.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest),
 		rest.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest),
-		rest.post('/service/soap/SearchCalendarResourcesRequest', handleSearchCalendarResourcesRequest)
+		rest.post('/service/soap/SearchCalendarResourcesRequest', handleSearchCalendarResourcesRequest),
+		rest.post('/service/soap/GetAppointmentRequest', handleGetAppointmentRequest)
 	];
 	registerRestHandler(...h);
 	defaultBeforeAllTests();

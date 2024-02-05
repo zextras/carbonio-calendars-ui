@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useMemo, useEffect, useCallback, useState } from 'react';
+import React, { FC, ReactElement, useMemo, useState } from 'react';
 
 import {
 	Container,
@@ -15,9 +15,10 @@ import {
 	Chip,
 	Padding
 } from '@zextras/carbonio-design-system';
-import { addBoard, getAction, Action, t, Board, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import 'moment-timezone';
@@ -25,17 +26,12 @@ import 'moment-timezone';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import BodyMessageRenderer, { extractBody } from '../../commons/body-message-renderer';
-import { generateEditor } from '../../commons/editor-generator';
-import { CALENDAR_RESOURCES, CALENDAR_ROUTE } from '../../constants';
+import { CALENDAR_RESOURCES } from '../../constants';
 import { PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
-import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
-import { inviteToEvent } from '../../hooks/use-invite-to-event';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
-import { getInvite } from '../../store/actions/get-invite';
 import { StoreProvider } from '../../store/redux';
-import { useAppDispatch } from '../../store/redux/hooks';
 
 export function mailToContact(contact: object): Action | undefined {
 	const [mailTo, available] = getAction('contact-list', 'mail-to', [contact]);
@@ -61,18 +57,12 @@ type InviteResponse = {
 		participants: { address: string; fullName: string; name: string; type: string };
 	};
 	moveToTrash?: () => void;
-	onLoadChange?: () => void;
 };
 
-const InviteResponse: FC<InviteResponse> = ({
-	mailMsg,
-	moveToTrash,
-	onLoadChange
-}): ReactElement => {
-	const dispatch = useAppDispatch();
-	const calendarFolders = useCalendarFolders();
+export const InviteResponse: FC<InviteResponse> = ({ mailMsg, moveToTrash }): ReactElement => {
 	const account = useUserAccount();
 	const invite = normalizeInvite({ ...mailMsg, inv: mailMsg.invite });
+	const [t] = useTranslation();
 
 	const isAttendee = useMemo(
 		() => invite?.organizer?.a !== account.name,
@@ -89,19 +79,6 @@ const InviteResponse: FC<InviteResponse> = ({
 	);
 
 	const method = mailMsg.invite[0]?.comp[0].method;
-
-	const { parent } = mailMsg;
-
-	const inviteId =
-		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
-
-	const participationStatus = mailMsg?.invite?.[0]?.replies?.[0].reply?.[0]?.ptst ?? '';
-
-	useEffect(() => {
-		if (!mailMsg.read && onLoadChange) {
-			onLoadChange();
-		}
-	}, [mailMsg.read, onLoadChange]);
 
 	const room = useMemo(() => find(invite.xprop, ['name', CRB_XPROPS.MEETING_ROOM]), [invite]);
 	const roomName = find(room?.xparam, ['name', CRB_XPARAMS.ROOM_NAME])?.value;
@@ -156,60 +133,6 @@ const InviteResponse: FC<InviteResponse> = ({
 			?.onClick?.();
 	};
 
-	const proposeNewTimeCb = useCallback(() => {
-		dispatch(getInvite({ inviteId })).then(({ payload }) => {
-			if (payload) {
-				const normalizedInvite = normalizeInvite(payload.m?.[0]);
-				const requiredEvent = inviteToEvent(normalizedInvite);
-				const editor = generateEditor({
-					event: requiredEvent,
-					invite: normalizedInvite,
-					context: {
-						dispatch,
-						folders: calendarFolders,
-						isProposeNewTime: true,
-						attendees: [
-							{
-								email: requiredEvent.resource.organizer.a ?? requiredEvent.resource.organizer.url,
-								id: requiredEvent.resource.organizer.a ?? requiredEvent.resource.organizer.url
-							}
-						],
-						panel: false,
-						disabled: {
-							title: true,
-							location: true,
-							organizer: true,
-							virtualRoom: true,
-							richTextButton: true,
-							attachmentsButton: true,
-							saveButton: true,
-							attendees: true,
-							optionalAttendees: true,
-							freeBusy: true,
-							calendar: true,
-							private: true,
-							allDay: true,
-							reminder: true,
-							recurrence: true,
-							meetingRoom: true,
-							equipment: true,
-							timezone: true
-						}
-					}
-				});
-				if (editor.id) {
-					addBoard({
-						url: `${CALENDAR_ROUTE}/`,
-						title: editor?.title ?? '',
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						editor
-					} as unknown as Board);
-				}
-			}
-		});
-	}, [calendarFolders, dispatch, inviteId]);
-
 	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
 		useGetEventTimezoneString(
 			moment(invite.start?.d ?? invite.start.u),
@@ -224,6 +147,9 @@ const InviteResponse: FC<InviteResponse> = ({
 		    quotes inside breaking the first condition */
 		return body?.length > 0 && body !== '"';
 	}, [invite?.textDescription]);
+
+	const inviteId =
+		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
 
 	return (
 		<InviteContainer padding={{ all: 'extralarge' }}>
@@ -266,7 +192,7 @@ const InviteResponse: FC<InviteResponse> = ({
 					</Text>{' '}
 				</Row>
 				{method === 'COUNTER'
-					? parent !== '5' && (
+					? mailMsg.parent !== '5' && (
 							// eslint-disable-next-line react/jsx-indent
 							<ProposedTimeReply
 								id={invite?.apptId}
@@ -279,15 +205,7 @@ const InviteResponse: FC<InviteResponse> = ({
 								fragment={invite?.fragment}
 							/>
 					  )
-					: isAttendee && (
-							// eslint-disable-next-line react/jsx-indent
-							<InviteReplyPart
-								inviteId={inviteId}
-								participationStatus={participationStatus}
-								proposeNewTime={proposeNewTimeCb}
-								parent={parent}
-							/>
-					  )}
+					: isAttendee && <InviteReplyPart inviteId={inviteId} message={mailMsg} />}
 
 				{invite?.location && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large' }}>
@@ -432,10 +350,90 @@ const InviteResponse: FC<InviteResponse> = ({
 									/>
 								)}
 							</Row>
-							{requiredParticipants.map((p, index: number) => (
-								<>
-									{index < maxReqParticipantsToShow && (
-										<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
+							{requiredParticipants.map((p, index: number) =>
+								index < maxReqParticipantsToShow ? (
+									<Row
+										mainAlignment="flex-start"
+										width="100%"
+										padding={{ top: 'small' }}
+										key={`${p.d ?? p.a}-${index}-1`}
+									>
+										{p.d ? (
+											<Tooltip placement="top" label={p.a} maxWidth="100%">
+												<div>
+													<Chip
+														label={p.d}
+														background={'gray3'}
+														color="text"
+														actions={[
+															{
+																id: 'action2',
+																label: t('message.send_email'),
+																type: 'button',
+																icon: 'EmailOutline',
+																onClick: () => replyMsg(p)
+															}
+														]}
+													/>
+												</div>
+											</Tooltip>
+										) : (
+											<Chip
+												label={p.a}
+												background={'gray3'}
+												color="text"
+												actions={[
+													{
+														id: 'action2',
+														label: t('message.send_email'),
+														type: 'button',
+														icon: 'EmailOutline',
+														onClick: () => replyMsg(p)
+													}
+												]}
+											/>
+										)}
+									</Row>
+								) : null
+							)}
+							{maxReqParticipantsToShow < requiredParticipants.length && (
+								<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
+									<LinkText
+										color="primary"
+										size="medium"
+										onClick={(): void => setMaxReqParticipantsToShow(requiredParticipants.length)}
+										overflow="break-word"
+									>
+										{t('message.more', 'More...')}
+									</LinkText>
+								</Row>
+							)}
+						</Row>
+					</Row>
+
+					{optionalParticipants.length > 0 && (
+						<Row width="50%" mainAlignment="flex-start" crossAlignment="flex-start">
+							<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
+								<Icon size="large" icon="OptionalInviteeOutline" />
+							</Row>
+							<Row takeAvailableSpace mainAlignment="flex-start" crossAlignment="flex-start">
+								<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'extrasmall' }}>
+									<Text overflow="break-word">
+										{t('message.optional_participant', {
+											count: optionalParticipants.length,
+											defaultValue: '{{count}} Optional',
+											defaultValue_plural: '{{count}} Optionals'
+										})}
+									</Text>
+								</Row>
+								{optionalParticipants.map((p, index: number) =>
+									index < maxOptParticipantsToShow ? (
+										<Row
+											mainAlignment="flex-start"
+											width="100%"
+											padding={{ top: 'small' }}
+											key={`${p.d ?? p.a}-${index}-2`}
+										>
 											{p.d ? (
 												<Tooltip placement="top" label={p.a} maxWidth="100%">
 													<div>
@@ -472,82 +470,8 @@ const InviteResponse: FC<InviteResponse> = ({
 												/>
 											)}
 										</Row>
-									)}
-								</>
-							))}
-							{maxReqParticipantsToShow < requiredParticipants.length && (
-								<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
-									<LinkText
-										color="primary"
-										size="medium"
-										onClick={(): void => setMaxReqParticipantsToShow(requiredParticipants.length)}
-										overflow="break-word"
-									>
-										{t('message.more', 'More...')}
-									</LinkText>
-								</Row>
-							)}
-						</Row>
-					</Row>
-
-					{optionalParticipants.length > 0 && (
-						<Row width="50%" mainAlignment="flex-start" crossAlignment="flex-start">
-							<Row mainAlignment="flex-start" padding={{ right: 'small' }}>
-								<Icon size="large" icon="OptionalInviteeOutline" />
-							</Row>
-							<Row takeAvailableSpace mainAlignment="flex-start" crossAlignment="flex-start">
-								<Row mainAlignment="flex-start" width="100%" padding={{ bottom: 'extrasmall' }}>
-									<Text overflow="break-word">
-										{t('message.optional_participant', {
-											count: optionalParticipants.length,
-											defaultValue: '{{count}} Optional',
-											defaultValue_plural: '{{count}} Optionals'
-										})}
-									</Text>
-								</Row>
-								{optionalParticipants.map((p, index: number) => (
-									<>
-										{index < maxOptParticipantsToShow && (
-											<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
-												{p.d ? (
-													<Tooltip placement="top" label={p.a} maxWidth="100%">
-														<div>
-															<Chip
-																label={p.d}
-																background={'gray3'}
-																color="text"
-																actions={[
-																	{
-																		id: 'action2',
-																		label: t('message.send_email'),
-																		type: 'button',
-																		icon: 'EmailOutline',
-																		onClick: () => replyMsg(p)
-																	}
-																]}
-															/>
-														</div>
-													</Tooltip>
-												) : (
-													<Chip
-														label={p.a}
-														background={'gray3'}
-														color="text"
-														actions={[
-															{
-																id: 'action2',
-																label: t('message.send_email'),
-																type: 'button',
-																icon: 'EmailOutline',
-																onClick: () => replyMsg(p)
-															}
-														]}
-													/>
-												)}
-											</Row>
-										)}
-									</>
-								))}
+									) : null
+								)}
 								{maxOptParticipantsToShow < optionalParticipants.length && (
 									<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
 										<LinkText

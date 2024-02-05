@@ -31,7 +31,7 @@ export const getVirtualRoom = (xprop: any): { label: string; link: string } | un
 	return undefined;
 };
 
-const getMeetingRooms = (
+export const getMeetingRooms = (
 	attendees: Array<Attendee>
 ): Array<{ email: string; label: string }> | undefined => {
 	const rooms = filter(attendees, ['cutype', CALENDAR_RESOURCES.ROOM]);
@@ -43,7 +43,7 @@ const getMeetingRooms = (
 		: undefined;
 };
 
-const getEquipments = (
+export const getEquipments = (
 	attendees: Array<Attendee>
 ): Array<{ email: string; label: string }> | undefined => {
 	const equipments = filter(attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]);

@@ -26,7 +26,7 @@ import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
-import InviteResponse from './shared/invite-response/invite-response';
+import InviteResponseComp from './shared/invite-response/invite-response';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
 import { CalendarIntegrations } from './types/enums/event-actions-enum';
@@ -152,7 +152,7 @@ const AppRegistrations = () => {
 		});
 		registerComponents({
 			id: 'invites-reply',
-			component: InviteResponse
+			component: InviteResponseComp
 		});
 	}, [calendars, dispatch, onClickNewButton]);
 	return null;

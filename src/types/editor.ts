@@ -56,20 +56,20 @@ export type EditorProps = {
 };
 
 export type Resource = {
-	id: string;
+	id?: string;
 	label: string;
-	value: string;
+	value?: string;
 	email: string;
-	type: string;
+	type?: string;
 };
 
 export type ChipResource = {
-	id: string;
+	id?: string;
 	label: string;
 	email: string;
-	avatarIcon: 'BriefcaseOutline' | 'BuildingOutline';
-	avatarBackground: 'transparent';
-	avatarColor: 'gray0';
+	avatarIcon?: 'BriefcaseOutline' | 'BuildingOutline';
+	avatarBackground?: 'transparent';
+	avatarColor?: 'gray0';
 };
 
 type DisabledField =
