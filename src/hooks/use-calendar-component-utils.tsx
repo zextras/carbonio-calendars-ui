@@ -24,14 +24,19 @@ import { useAppDispatch } from '../store/redux/hooks';
 import { useCalendarDate, useIsSummaryViewOpen, useSetRange } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
+import { EventType } from '../types/event';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
 import { ModifyStandardMessageModal } from '../view/modals/modify-standard-message-modal';
 
 export const useCalendarComponentUtils = (): {
-	onEventDrop: (a: any) => void;
-	handleSelect: (e: any) => void;
-	resizeEvent: () => null;
-	onRangeChange: (a: any) => void;
+	onEventDropOrResize: (a: {
+		start: Date;
+		end: Date;
+		event: EventType;
+		isAllDay?: boolean;
+	}) => void;
+	handleSelect: (e: { start: Date; end: Date }) => void;
+	onRangeChange: (a: { end: Date; start: Date } | Array<Date>) => void;
 	onNavigate: (a: Date) => void;
 	date: Date;
 } => {
@@ -80,7 +85,7 @@ export const useCalendarComponentUtils = (): {
 		[]
 	);
 
-	const onDropFn = useCallback(
+	const onDropOrResizeFn = useCallback(
 		({ start, end, event, isAllDay, isSeries }) => {
 			dispatch(
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
@@ -97,7 +102,7 @@ export const useCalendarComponentUtils = (): {
 					const endTime = getEnd({ isSeries, dropEnd, isAllDay, inviteEnd, eventEnd, eventAllDay });
 					const invite = normalizeInvite(payload.m[0]);
 
-					const onConfirm = (draft: boolean, context?: any): void => {
+					const onConfirm = (draft: boolean, context?: { text: Array<string> }): void => {
 						const contextObj = {
 							dispatch,
 							folders: calendarFolders,
@@ -171,10 +176,10 @@ export const useCalendarComponentUtils = (): {
 		[calendarFolders, createModal, createSnackbar, dispatch, getEnd, getStart, t]
 	);
 
-	const onEventDrop = useCallback(
-		(appt) => {
-			const { start, end, event, isAllDay } = appt;
-			if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
+	const onEventDropOrResize = useCallback(
+		({ start, end, event, isAllDay }) => {
+			const allDay = moment(event.end).day() === moment(event.start).day() && !!isAllDay;
+			if (allDay && event.resource.isRecurrent && !event.resource.isException) {
 				createSnackbar({
 					key: `recurrent-moved-in-allDay`,
 					replace: true,
@@ -189,17 +194,17 @@ export const useCalendarComponentUtils = (): {
 			} else if (
 				!isEqual(event.start, start) ||
 				!isEqual(event.end, end) ||
-				event.allDay !== !!isAllDay
+				event.allDay !== allDay
 			) {
 				const onEntireSeries = (): void => {
 					const seriesEvent = {
 						...event,
 						resource: omit(event.resource, 'ridZ')
 					};
-					onDropFn({ start, end, event: seriesEvent, isAllDay, isSeries: true });
+					onDropOrResizeFn({ start, end, event: seriesEvent, isAllDay: allDay, isSeries: true });
 				};
 				const onSingleInstance = (): void => {
-					onDropFn({ start, end, event, isAllDay });
+					onDropOrResizeFn({ start, end, event, isAllDay: allDay });
 				};
 				if (event.resource.isRecurrent) {
 					const closeModal = createModal(
@@ -218,11 +223,11 @@ export const useCalendarComponentUtils = (): {
 						true
 					);
 				} else {
-					onDropFn({ start, end, event, isAllDay });
+					onDropOrResizeFn({ start, end, event, isAllDay: allDay });
 				}
 			}
 		},
-		[createModal, createSnackbar, onDropFn, t]
+		[createModal, createSnackbar, onDropOrResizeFn, t]
 	);
 
 	const handleSelect = useCallback(
@@ -256,8 +261,6 @@ export const useCalendarComponentUtils = (): {
 		[action, calendarFolders, dispatch, summaryViewOpen]
 	);
 
-	const resizeEvent = useCallback((): null => null, []);
-
 	const onRangeChange = useCallback(
 		(range) => {
 			if (range.length) {
@@ -285,5 +288,5 @@ export const useCalendarComponentUtils = (): {
 		[setDate]
 	);
 
-	return { onEventDrop, handleSelect, resizeEvent, onRangeChange, onNavigate, date };
+	return { onEventDropOrResize, handleSelect, onRangeChange, onNavigate, date };
 };

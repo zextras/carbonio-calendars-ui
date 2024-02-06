@@ -3,18 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { useCallback, useMemo } from 'react';
+
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { map, reduce } from 'lodash';
-import React, { useCallback, useMemo } from 'react';
-import { ModalHeader } from '../../commons/modal-header';
+
 import ModalFooter from '../../commons/modal-footer';
+import { ModalHeader } from '../../commons/modal-header';
 import { Invite } from '../../types/store/invite';
 
 type MessageModalProps = {
 	title: string;
 	onClose: () => void;
-	onConfirm: (arg?: object) => void;
+	onConfirm: (arg?: { text: Array<string> }) => void;
 	invite: Invite;
 	confirmLabel: string;
 	isEdited?: boolean;
