@@ -27,7 +27,7 @@ export const sendInviteResponseFulfilled = (
 		state.status = 'fulfilled';
 	}
 	if (action.payload) {
-		delete state.invites[action?.payload?.invId];
+		delete state.invites[action.meta.arg.inviteId];
 	}
 };
 
