@@ -22,7 +22,6 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import 'moment-timezone';
-
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import BodyMessageRenderer, { extractBody } from '../../commons/body-message-renderer';
@@ -32,6 +31,7 @@ import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
+import type { InviteResponseArguments } from '../../types/integrations';
 
 export function mailToContact(contact: object): Action | undefined {
 	const [mailTo, available] = getAction('contact-list', 'mail-to', [contact]);
@@ -52,14 +52,10 @@ const LinkText = styled(Text)`
 	}
 `;
 
-type InviteResponse = {
-	mailMsg: any & {
-		participants: { address: string; fullName: string; name: string; type: string };
-	};
-	moveToTrash?: () => void;
-};
-
-export const InviteResponse: FC<InviteResponse> = ({ mailMsg, moveToTrash }): ReactElement => {
+export const InviteResponse: FC<InviteResponseArguments> = ({
+	mailMsg,
+	moveToTrash
+}): ReactElement => {
 	const account = useUserAccount();
 	const invite = normalizeInvite({ ...mailMsg, inv: mailMsg.invite });
 	const [t] = useTranslation();
@@ -512,7 +508,7 @@ export const InviteResponse: FC<InviteResponse> = ({ mailMsg, moveToTrash }): Re
 	);
 };
 
-const InviteResponseComp: FC<InviteResponse> = (props) => (
+const InviteResponseComp: FC<InviteResponseArguments> = (props) => (
 	<StoreProvider>
 		<InviteResponse {...props} />
 	</StoreProvider>
