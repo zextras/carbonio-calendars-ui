@@ -20,6 +20,7 @@ import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { getInstanceExceptionId } from '../utils/event';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
@@ -243,16 +244,28 @@ export const openAppointment =
 export const acceptInvitation =
 	({
 		event,
+		invite,
 		context
 	}: {
 		event: EventType;
+		invite?: Invite;
 		context: ActionsContext;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
+		const exceptId =
+			context.isInstance || event.resource.isException
+				? getInstanceExceptionId({
+						start: event.start,
+						allDay: event.allDay,
+						tz: invite?.tz
+				  })
+				: undefined;
+
 		context
 			.dispatch(
 				sendInviteResponse({
 					inviteId: event.resource.inviteId,
+					exceptId,
 					updateOrganizer: true,
 					action: 'ACCEPT'
 				})
@@ -265,16 +278,27 @@ export const acceptInvitation =
 export const declineInvitation =
 	({
 		event,
+		invite,
 		context
 	}: {
 		event: EventType;
+		invite?: Invite;
 		context: ActionsContext;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
+		const exceptId =
+			context.isInstance || event.resource.isException
+				? getInstanceExceptionId({
+						start: event.start,
+						allDay: event.allDay,
+						tz: invite?.tz
+				  })
+				: undefined;
 		context
 			.dispatch(
 				sendInviteResponse({
 					inviteId: event.resource.inviteId,
+					exceptId,
 					updateOrganizer: true,
 					action: 'DECLINE'
 				})
@@ -287,16 +311,27 @@ export const declineInvitation =
 export const acceptAsTentative =
 	({
 		event,
+		invite,
 		context
 	}: {
 		event: EventType;
+		invite?: Invite;
 		context: ActionsContext;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
+		const exceptId =
+			context.isInstance || event.resource.isException
+				? getInstanceExceptionId({
+						start: event.start,
+						allDay: event.allDay,
+						tz: invite?.tz
+				  })
+				: undefined;
 		context
 			.dispatch(
 				sendInviteResponse({
 					inviteId: event.resource.inviteId,
+					exceptId,
 					updateOrganizer: true,
 					action: 'TENTATIVE'
 				})

@@ -18,6 +18,7 @@ const normalizeApptInstanceRef = (instRef: any): ExceptionReference => ({
 	dur: instRef.dur,
 	loc: instRef?.loc,
 	name: instRef.name,
+	ptst: instRef.ptst,
 	neverSent: instRef.neverSent,
 	or: instRef.or,
 	otherAtt: instRef.otherAtt,

@@ -9,6 +9,7 @@ import { DATE_FORMAT } from '../constants';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 
+export type InstanceExceptionId = { d: string; tz: string | undefined };
 export const getInstanceExceptionId = ({
 	start,
 	tz,
@@ -17,7 +18,7 @@ export const getInstanceExceptionId = ({
 	start?: EventType['start'];
 	tz?: Invite['start']['tz'];
 	allDay?: EventType['allDay'];
-}): { d: string; tz: string | undefined } =>
+}): InstanceExceptionId =>
 	allDay
 		? {
 				d: moment(start).format(DATE_FORMAT.ALL_DAY),

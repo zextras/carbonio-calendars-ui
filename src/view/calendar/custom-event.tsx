@@ -3,7 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+	ReactElement,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from 'react';
 
 import {
 	Container,
@@ -16,16 +24,13 @@ import {
 	SnackbarManagerContext
 } from '@zextras/carbonio-design-system';
 import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
-import { isNil } from 'lodash';
+import { debounce, isNil } from 'lodash';
 import { useParams } from 'react-router-dom';
 
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { MemoCustomEventComponent } from './custom-event-component';
 import { useEventActions } from '../../hooks/use-event-actions';
-import { getInvite } from '../../store/actions/get-invite';
 import { StoreProvider } from '../../store/redux';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectInstanceInvite } from '../../store/selectors/invites';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
@@ -36,19 +41,12 @@ type CustomEventProps = {
 };
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
-	const dispatch = useAppDispatch();
 	const createModal = useContext(ModalManagerContext);
 	const tags = useTags();
 	const anchorRef = useRef(null);
 	const [open, setOpen] = useState(false);
 	const { action } = useParams<{ action: string }>();
-	const invite = useAppSelector(selectInstanceInvite(event.resource.inviteId));
 	const createSnackbar = useContext(SnackbarManagerContext);
-	const getEventInvite = useCallback(() => {
-		if (!invite) {
-			dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
-		}
-	}, [dispatch, event.resource.inviteId, event.resource.ridZ, invite]);
 
 	const onEntireSeries = useCallback((): void => {
 		replaceHistory(
@@ -106,14 +104,31 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
-			} else {
-				getEventInvite();
-				if (e.detail === 1 && !open && (action === EventActionsEnum.EXPAND || isNil(action))) {
-					setOpen(true);
-				}
+			} else if (e.detail === 1 && !open && (action === EventActionsEnum.EXPAND || isNil(action))) {
+				setOpen(true);
 			}
 		},
-		[event?.resource?.class, event?.haveWriteAccess, createSnackbar, getEventInvite, action, open]
+		[event?.resource?.class, event?.haveWriteAccess, createSnackbar, action, open]
+	);
+
+	const debounceClick = useMemo(
+		() =>
+			debounce(
+				(e) => {
+					if (e.type === 'dblclick') {
+						showPanelView();
+					}
+					if (e.type === 'click') {
+						toggleOpen(e);
+					}
+				},
+				200,
+				{
+					trailing: true,
+					leading: false
+				}
+			),
+		[showPanelView, toggleOpen]
 	);
 
 	const onClose = useCallback(() => {
@@ -143,16 +158,15 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 					onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
 						if (e) (e as Event)?.stopImmediatePropagation?.();
 					}}
-					onOpen={getEventInvite}
 				>
 					<Container
 						width="fill"
 						height="fill"
-						background="transparent"
+						background={'transparent'}
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"
-						onDoubleClick={showPanelView}
-						onClick={toggleOpen}
+						onDoubleClick={debounceClick}
+						onClick={debounceClick}
 						data-testid="calendar-event-inner-container"
 					>
 						<Container
@@ -211,8 +225,8 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 					anchorRef={anchorRef}
 					event={event}
 					open={open}
-					invite={invite}
 					onClose={onClose}
+					inviteId={event.resource.inviteId}
 				/>
 			)}
 		</>

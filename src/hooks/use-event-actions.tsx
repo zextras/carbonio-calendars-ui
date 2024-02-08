@@ -72,6 +72,7 @@ const getInstanceActionsItems = ({
 
 const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): SeriesActionsItems => {
 	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as EventType;
+	const contextOverride = { ...context, isInstance: true };
 	return [
 		{
 			id: EventActionsEnum.INSTANCE,
@@ -94,9 +95,9 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				applyTag({ event, context }),
 				...(isAnInvite(event)
 					? [
-							acceptInvitationItem({ event, context }),
-							acceptAsTentativeItem({ event, context }),
-							declineInvitationItem({ event, context }),
+							acceptInvitationItem({ event, invite, context: contextOverride }),
+							acceptAsTentativeItem({ event, invite, context: contextOverride }),
+							declineInvitationItem({ event, invite, context: contextOverride }),
 							proposeNewTimeItem({ event, invite, context })
 					  ]
 					: [])

@@ -22,16 +22,16 @@ import { TimeInfoRow } from './time-info-row';
 import { TitleRow } from './title-row';
 import { VirtualRoomRow } from './virtual-room-row';
 import { ROOM_DIVIDER } from '../../constants';
+import { useInvite } from '../../hooks/use-invite';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { EventType } from '../../types/event';
-import { Invite } from '../../types/store/invite';
 
 type EventSummaryProps = {
 	anchorRef: React.RefObject<HTMLElement>;
 	open: boolean;
 	event: EventType;
 	onClose: () => void;
-	invite: Invite | undefined;
+	inviteId: string | undefined;
 };
 
 export const EventSummaryView = ({
@@ -39,8 +39,10 @@ export const EventSummaryView = ({
 	open,
 	event,
 	onClose,
-	invite
+	inviteId
 }: EventSummaryProps): ReactElement | null => {
+	const invite = useInvite(inviteId);
+
 	const timeData = useMemo(
 		() => ({
 			...omitBy(
