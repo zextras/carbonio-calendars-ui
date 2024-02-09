@@ -178,8 +178,7 @@ export const useCalendarComponentUtils = (): {
 
 	const onEventDropOrResize = useCallback(
 		({ start, end, event, isAllDay }) => {
-			const allDay = moment(event.end).day() === moment(event.start).day() && !!isAllDay;
-			if (allDay && event.resource.isRecurrent && !event.resource.isException) {
+			if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
 				createSnackbar({
 					key: `recurrent-moved-in-allDay`,
 					replace: true,
@@ -194,17 +193,17 @@ export const useCalendarComponentUtils = (): {
 			} else if (
 				!isEqual(event.start, start) ||
 				!isEqual(event.end, end) ||
-				event.allDay !== allDay
+				event.allDay !== isAllDay
 			) {
 				const onEntireSeries = (): void => {
 					const seriesEvent = {
 						...event,
 						resource: omit(event.resource, 'ridZ')
 					};
-					onDropOrResizeFn({ start, end, event: seriesEvent, isAllDay: allDay, isSeries: true });
+					onDropOrResizeFn({ start, end, event: seriesEvent, isAllDay, isSeries: true });
 				};
 				const onSingleInstance = (): void => {
-					onDropOrResizeFn({ start, end, event, isAllDay: allDay });
+					onDropOrResizeFn({ start, end, event, isAllDay });
 				};
 				if (event.resource.isRecurrent) {
 					const closeModal = createModal(
@@ -223,7 +222,7 @@ export const useCalendarComponentUtils = (): {
 						true
 					);
 				} else {
-					onDropOrResizeFn({ start, end, event, isAllDay: allDay });
+					onDropOrResizeFn({ start, end, event, isAllDay });
 				}
 			}
 		},

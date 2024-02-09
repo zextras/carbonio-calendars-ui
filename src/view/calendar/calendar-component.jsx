@@ -129,6 +129,17 @@ export default function CalendarComponent() {
 		[theme?.palette?.gray3?.regular, theme?.palette?.gray6?.regular, workingSchedule]
 	);
 
+	const eventPropGetter = useCallback(
+		(event) => ({
+			style: {
+				backgroundColor: event.resource.calendar.color.background,
+				color: event.resource.calendar.color.color,
+				border: `0.0625rem solid ${event.resource.calendar.color.color}`
+			}
+		}),
+		[]
+	);
+
 	const slotPropGetter = useCallback(
 		(newDate) => ({
 			style: {
@@ -216,6 +227,7 @@ export default function CalendarComponent() {
 				onRangeChange={onRangeChange}
 				dayPropGetter={dayPropGetter}
 				slotPropGetter={slotPropGetter}
+				eventPropGetter={eventPropGetter}
 				workingSchedule={workingSchedule}
 				onSelectSlot={handleSelect}
 				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
@@ -223,6 +235,7 @@ export default function CalendarComponent() {
 				onEventResize={onEventDropOrResize}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
+				showAllEvents
 				resizableAccessor={draggableOrResizableAccessor}
 				onSelecting={() => !summaryViewOpen && !action}
 				draggableAccessor={draggableOrResizableAccessor}
