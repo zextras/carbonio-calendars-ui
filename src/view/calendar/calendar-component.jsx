@@ -34,7 +34,6 @@ import {
 import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 import { workWeek } from '../../utils/work-week';
 
-const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
 
 const views = { month: true, week: true, day: true, work_week: WorkView };
@@ -53,7 +52,7 @@ const CalendarSyncWithRange = () => {
 
 const customComponents = {
 	toolbar: CustomToolbar,
-	event: (props) => <MemoCustomEvent {...props} />,
+	event: MemoCustomEvent,
 	eventWrapper: CustomEventWrapper
 };
 
@@ -203,6 +202,7 @@ export default function CalendarComponent() {
 		[calendars]
 	);
 
+	const scrollToTime = useMemo(() => new Date(0, 0, 0, startHour, -15, 0), [startHour]);
 	return (
 		<>
 			{!isEmpty(calendars) && <CalendarSyncWithRange />}
@@ -223,19 +223,18 @@ export default function CalendarComponent() {
 				style={{ width: '100%' }}
 				components={customComponents}
 				views={views}
-				tooltipAccessor={nullAccessor}
+				tooltipAccessor={null}
 				onRangeChange={onRangeChange}
 				dayPropGetter={dayPropGetter}
 				slotPropGetter={slotPropGetter}
 				eventPropGetter={eventPropGetter}
 				workingSchedule={workingSchedule}
 				onSelectSlot={handleSelect}
-				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
+				scrollToTime={scrollToTime}
 				onEventDrop={onEventDropOrResize}
 				onEventResize={onEventDropOrResize}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
-				showAllEvents
 				resizableAccessor={draggableOrResizableAccessor}
 				onSelecting={() => !summaryViewOpen && !action}
 				draggableAccessor={draggableOrResizableAccessor}

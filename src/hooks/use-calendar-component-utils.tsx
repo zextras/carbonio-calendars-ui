@@ -62,7 +62,7 @@ export const useCalendarComponentUtils = (): {
 
 	const getStart = useCallback(({ isAllDay, dropStart, isSeries, inviteStart, eventStart }) => {
 		if (isAllDay) {
-			return dropStart.startOf('day');
+			return dropStart.startOf('day').valueOf();
 		}
 		if (isSeries) {
 			const diff = dropStart.diff(eventStart);
@@ -74,7 +74,7 @@ export const useCalendarComponentUtils = (): {
 	const getEnd = useCallback(
 		({ isAllDay, dropEnd, isSeries, inviteEnd, eventEnd, eventAllDay }) => {
 			if (isAllDay || eventAllDay) {
-				return dropEnd.startOf('day');
+				return dropEnd.startOf('day').valueOf();
 			}
 			if (isSeries) {
 				const diff = dropEnd.diff(eventEnd);
