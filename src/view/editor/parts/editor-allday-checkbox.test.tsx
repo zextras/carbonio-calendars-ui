@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 
 import { EditorAllDayCheckbox } from './editor-allday-checkbox';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
@@ -25,7 +25,9 @@ describe('editor all day checkbox', () => {
 		expect(previousEditor.allDay).toEqual(false);
 
 		const allDayCheckbox = screen.getByTestId('icon: Square');
-		await user.click(allDayCheckbox);
+		await act(async () => {
+			await user.click(allDayCheckbox);
+		});
 
 		const updatedEditor = store.getState().editor.editors[editor.id];
 		expect(updatedEditor.allDay).toEqual(true);

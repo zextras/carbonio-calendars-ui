@@ -28,16 +28,50 @@ import {
 	getVirtualRoom
 } from '../../../normalizations/normalize-editor';
 import { useAppDispatch } from '../../../store/redux/hooks';
+import { Editor } from '../../../types/editor';
+import type {
+	InviteReplyPartArguments,
+	InviteResponseArguments
+} from '../../../types/integrations';
 import { CalendarSelector } from '../../../view/editor/parts/calendar-selector';
 import { sendResponse } from '../invite-reply-actions';
 
-type InviteReplyPart = {
-	inviteId: string;
-	message: any & {
-		participants: { address: string; fullName: string; name: string; type: string };
-	};
-};
-const InviteReplyPart: FC<InviteReplyPart> = ({ inviteId, message }): ReactElement => {
+const normalizeEditorFromMailMessage = (
+	messageData: InviteResponseArguments['mailMsg']
+): Partial<Editor> => ({
+	isException: messageData.ex ?? false,
+	exceptId: messageData.exceptId,
+	isSeries: !!messageData.recur,
+	isInstance: !messageData.recur,
+	isRichText: true,
+	isNew: false,
+	attachmentFiles: [],
+	title: messageData.name,
+	location: messageData.loc,
+	allDay: messageData.allDay ?? false,
+	freeBusy: messageData.fb,
+	class: messageData.class,
+	timezone: messageData?.s[0]?.tz ?? moment.tz.guess(true),
+	recur: messageData.recur,
+	richText: messageData.descHtml[0]?._content ?? '',
+	plainText: messageData.desc[0]?._content ?? '',
+	meetingRoom: getMeetingRooms(messageData.at),
+	equipment: getEquipments(messageData.at),
+	room: getVirtualRoom(messageData.xprop),
+	uid: messageData.uid,
+	originalStart: messageData.s[0].u ?? moment(messageData.s[0].d).valueOf(),
+	originalEnd: messageData.e[0].u ?? moment(messageData.e[0].d).valueOf(),
+	start: messageData.s[0].u ?? moment(messageData.s[0].d).valueOf(),
+	end: messageData.e[0].u ?? moment(messageData.e[0].d).valueOf(),
+	attendees: [
+		{
+			email: messageData.or.a ?? messageData.or.url,
+			id: messageData.or.a ?? messageData.or.url
+		}
+	]
+});
+
+const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): ReactElement => {
 	const [notifyOrganizer, setNotifyOrganizer] = useState(true);
 	const [activeCalendar, setActiveCalendar] = useState<Folder | null>(null);
 	const createSnackbar = useContext(SnackbarManagerContext);
@@ -46,20 +80,16 @@ const InviteReplyPart: FC<InviteReplyPart> = ({ inviteId, message }): ReactEleme
 	const calendarFolders = useCalendarFolders();
 
 	const proposeNewTimeCb = useCallback(() => {
-		// TODO: refactor editor normalization
-		// const editorContext = normalizeEditorContextFromMailMsg(message);
+		const messageData = message.invite[0].comp[0];
+		const partialEditor = normalizeEditorFromMailMessage(messageData);
+
 		const editor = generateEditor({
 			context: {
 				dispatch,
 				folders: calendarFolders,
 				isProposeNewTime: true,
-				attendees: [
-					{
-						email: message.invite[0].comp[0].or.a ?? message.invite[0].comp[0].or.url,
-						id: message.invite[0].comp[0].or.a ?? message.invite[0].comp[0].or.url
-					}
-				],
 				panel: false,
+				inviteId,
 				disabled: {
 					title: true,
 					location: true,
@@ -80,34 +110,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({ inviteId, message }): ReactEleme
 					equipment: true,
 					timezone: true
 				},
-				isException: message.invite[0].comp[0].ex ?? false,
-				exceptId: message.invite[0].comp[0].exceptId,
-				isSeries: !!message.invite[0].comp[0].recur,
-				isInstance: !message.invite[0].comp[0].recur,
-				isRichText: true,
-				isNew: false,
-				attachmentFiles: [],
-				title: message.invite[0].comp[0].name,
-				location: message.invite[0].comp[0].loc,
-				allDay: message.invite[0].comp[0].allDay ?? false,
-				freeBusy: message.invite[0].comp[0].fb,
-				class: message.invite[0].comp[0].class,
-				inviteId,
-				timezone: message.invite[0].comp[0]?.s[0]?.tz ?? moment.tz.guess(true),
-				recur: message.invite[0].comp[0].recur,
-				richText: message.invite[0].comp[0].descHtml[0]?._content ?? '',
-				plainText: message.invite[0].comp[0].desc[0]?._content ?? '',
-				meetingRoom: getMeetingRooms(message.invite[0].comp[0].at),
-				equipment: getEquipments(message.invite[0].comp[0].at),
-				room: getVirtualRoom(message.invite[0].comp[0].xprop),
-				uid: message.invite[0].comp[0].uid,
-				originalStart:
-					message.invite[0].comp[0].s[0].u ?? moment(message.invite[0].comp[0].s[0].d).valueOf(),
-				originalEnd:
-					message.invite[0].comp[0].e[0].u ?? moment(message.invite[0].comp[0].e[0].d).valueOf(),
-				start:
-					message.invite[0].comp[0].s[0].u ?? moment(message.invite[0].comp[0].s[0].d).valueOf(),
-				end: message.invite[0].comp[0].e[0].u ?? moment(message.invite[0].comp[0].e[0].d).valueOf()
+				...partialEditor
 			}
 		});
 		if (editor.id) {
@@ -138,6 +141,8 @@ const InviteReplyPart: FC<InviteReplyPart> = ({ inviteId, message }): ReactEleme
 			},
 		[createSnackbar, inviteId, notifyOrganizer, activeCalendar, dispatch, message.parent]
 	);
+
+	// TODO: find a more readable and descriptive way to handle this data
 	const participationStatus = useMemo(
 		() => message?.invite?.[0]?.replies?.[0].reply?.[0]?.ptst ?? '',
 		[message?.invite]

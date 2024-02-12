@@ -26,18 +26,9 @@ import { getInvite } from '../../../store/actions/get-invite';
 import { modifyAppointment } from '../../../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { updateEditor } from '../../../store/slices/editor-slice';
+import { ProposedTimeReplyArguments } from '../../../types/integrations';
 
-type ProposedTimeReply = {
-	id: string;
-	moveToTrash?: () => void;
-	title: string;
-	fragment: string;
-	start: number;
-	end: number;
-	msg: any;
-	to: Array<{ address: string; fullName: string; name: string; type: string }>;
-};
-const ProposedTimeReply: FC<ProposedTimeReply> = ({
+const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	id,
 	moveToTrash,
 	title,
