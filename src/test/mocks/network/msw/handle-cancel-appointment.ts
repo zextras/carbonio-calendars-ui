@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
-import { some } from 'lodash';
 
 const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: {

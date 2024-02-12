@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { find } from 'lodash';
-import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useMemo } from 'react';
+
+import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
+import { find } from 'lodash';
+
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { XPropProps } from '../../types/store/invite';
 

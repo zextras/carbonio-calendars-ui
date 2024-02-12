@@ -5,6 +5,7 @@
  */
 /* eslint-disable import/extensions */
 import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
+
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { AppDispatch } from '../../store/redux';
 

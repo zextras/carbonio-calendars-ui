@@ -3,15 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, {
-	FC,
-	ReactElement,
-	useCallback,
-	useContext,
-	useEffect,
-	useMemo,
-	useState
-} from 'react';
+import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 
 import {
 	Checkbox,
@@ -33,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import {
 	ShareCalendarRoleOptions,
@@ -43,7 +36,6 @@ import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
-import { SHARE_USER_TYPE } from '../../constants';
 
 type SharePrivateCheckboxProps = {
 	allowToSeePrvtAppt: boolean;

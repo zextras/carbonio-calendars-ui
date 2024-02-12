@@ -3,11 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
+
 import { Dropdown, Icon, Padding, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { getIntegratedFunction, t } from '@zextras/carbonio-shell-ui';
 import { map, union } from 'lodash';
-import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
+
+import { ResizedIconCheckbox } from './editor-styled-components';
 import { uploadParts } from '../../../commons/upload-parts';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -18,9 +21,8 @@ import {
 } from '../../../store/selectors/editor';
 import { editEditorAttachments } from '../../../store/slices/editor-slice';
 import { EditorProps } from '../../../types/editor';
-import { ResizedIconCheckbox } from './editor-styled-components';
-import { useGetPublicUrl } from '../editor-util-hooks/use-get-public-url';
 import { useGetFilesFromDrive } from '../editor-util-hooks/use-get-drive-files';
+import { useGetPublicUrl } from '../editor-util-hooks/use-get-public-url';
 
 const FileInput = styled.input`
 	display: none;

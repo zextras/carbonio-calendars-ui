@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+import { createCopy } from './appointment-actions-fn';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
-import { createCopy } from './appointment-actions-fn';
 
 shell.getUserSettings.mockImplementation(() => ({
 	...defaultSettings,

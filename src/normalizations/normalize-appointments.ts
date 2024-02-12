@@ -5,6 +5,7 @@
  */
 import { filter, isNil, map, omitBy, reduce } from 'lodash';
 import moment from 'moment';
+
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

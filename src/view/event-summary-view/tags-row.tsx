@@ -4,14 +4,16 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, ReactElement, useCallback, useMemo } from 'react';
+
 import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
+import { useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
 import { includes, map, reduce } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 // ignored because shows warning for runSearch Not exported
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
-import { useTranslation } from 'react-i18next';
+
 import { CALENDAR_ROUTE } from '../../constants';
 import { EventType } from '../../types/event';
 

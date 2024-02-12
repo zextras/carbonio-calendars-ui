@@ -305,3 +305,73 @@ export const acceptAsTentative =
 				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
 			);
 	};
+
+export const proposeNewTimeFn =
+	({
+		event,
+		invite: _invite,
+		context
+	}: {
+		event: EventType;
+		invite?: Invite;
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+	}): ((e?: ActionsClick) => void) =>
+	(): void => {
+		const proposeTime = (invite: Invite): void => {
+			const editor = generateEditor({
+				event,
+				invite,
+				context: {
+					panel: false,
+					dispatch: context.dispatch,
+					folders: context.folders,
+					isProposeNewTime: true,
+					attendees: [
+						{
+							email: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email,
+							id: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email
+						}
+					],
+					disabled: {
+						title: true,
+						location: true,
+						organizer: true,
+						virtualRoom: true,
+						richTextButton: true,
+						attachmentsButton: true,
+						saveButton: true,
+						attendees: true,
+						optionalAttendees: true,
+						freeBusy: true,
+						calendar: true,
+						private: true,
+						allDay: true,
+						reminder: true,
+						recurrence: true,
+						meetingRoom: true,
+						equipment: true,
+						timezone: true
+					}
+				}
+			});
+			addBoard({
+				url: `${CALENDAR_ROUTE}/`,
+				title: editor?.title ?? '',
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				editor
+			});
+		};
+		if (!_invite) {
+			context
+				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
+				.then((res) => {
+					if (res.payload) {
+						const invite = normalizeInvite(res.payload.m[0]);
+						proposeTime(invite);
+					}
+				});
+		} else {
+			proposeTime(_invite);
+		}
+	};

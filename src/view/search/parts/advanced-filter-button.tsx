@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC } from 'react';
+
 import { Button, Container, Tooltip } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 
 const BorderContainer = styled(Container)`
 	border-bottom: 0.0625rem solid ${({ theme }): string => theme?.palette?.gray2?.regular};

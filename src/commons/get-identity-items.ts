@@ -5,6 +5,7 @@
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { compact, map, sortBy } from 'lodash';
+
 import { IdentityItem } from '../types/editor';
 
 export const getIdentityItems = (): Array<IdentityItem> => {

@@ -53,10 +53,12 @@ const onProposeNewTime = async ({
 	dispatch: AppDispatch;
 }): Promise<any> =>
 	dispatch(proposeNewTime({ id: editorId })).then(({ payload }) => {
-		const { response, editor, error } = payload;
-		if (response && !error) {
-			dispatch(updateEditor({ id: editorId, editor }));
-			return Promise.resolve({ response, editor });
+		if (payload) {
+			const { response, editor, error } = payload;
+			if (response && !error) {
+				dispatch(updateEditor({ id: editorId, editor }));
+				return Promise.resolve({ response, editor });
+			}
 		}
 		return Promise.resolve(payload);
 	});

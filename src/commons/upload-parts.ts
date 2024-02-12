@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { map } from 'lodash';
+
 import { convertToDecimal } from './utilities';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

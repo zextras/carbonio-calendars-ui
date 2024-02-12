@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement } from 'react';
-import styled from 'styled-components';
-import { setLightness } from 'polished';
+
 import moment from 'moment';
+import { setLightness } from 'polished';
+import styled from 'styled-components';
+
 import { EventType } from '../../types/event';
 
 export const CustomEventWrapperStyler = styled.div<{ event: EventType }>`

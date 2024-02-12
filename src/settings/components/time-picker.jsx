@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import momentLocalizer from 'react-widgets-moment';
+
 import { Container } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import momentLocalizer from 'react-widgets-moment';
+
 import Styler from './date-picker-style';
 // import EndDatePicker from './end-date-picker';
 import StartTimePicker from './start-time-picker';

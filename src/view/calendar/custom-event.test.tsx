@@ -3,13 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
-import React from 'react';
+
+import { MemoCustomEvent } from './custom-event';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
-import { MemoCustomEvent } from './custom-event';
 
 jest.setTimeout(10000);
 

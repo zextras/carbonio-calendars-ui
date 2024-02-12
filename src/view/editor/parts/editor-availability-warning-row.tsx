@@ -19,7 +19,7 @@ import {
 	selectEditorEnd,
 	selectEditorStart
 } from '../../../store/selectors/editor';
-import { Editor, Resource } from '../../../types/editor';
+import { Editor } from '../../../types/editor';
 
 export const getIsBusyAtTimeOfTheEvent = (
 	item: AttendeesAvailabilityType,

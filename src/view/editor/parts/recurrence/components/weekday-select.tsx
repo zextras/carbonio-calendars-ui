@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useMemo } from 'react';
+
 import { Select, SelectItem } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual, map } from 'lodash';
-import React, { ReactElement, useCallback, useMemo } from 'react';
+
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 
 type WeekDaySelectorProps = {

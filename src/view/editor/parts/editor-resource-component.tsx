@@ -15,7 +15,6 @@ import {
 	useKeyboard
 } from '@zextras/carbonio-design-system';
 import { find, map } from 'lodash';
-import { useTranslation } from 'react-i18next';
 import styled, { DefaultTheme } from 'styled-components';
 
 import {
@@ -91,6 +90,7 @@ export const EditorResourceComponent = ({
 	options,
 	setOptions,
 	warningLabel,
+	disabled,
 	singleWarningLabel
 }: {
 	editorId: string;
@@ -101,9 +101,9 @@ export const EditorResourceComponent = ({
 	options: Array<DropdownItem>;
 	setOptions: (e: Array<DropdownItem>) => void;
 	warningLabel: string;
+	disabled?: boolean;
 	singleWarningLabel: string;
 }): JSX.Element | null => {
-	const [t] = useTranslation();
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const start = useAppSelector(selectEditorStart(editorId));
@@ -209,6 +209,7 @@ export const EditorResourceComponent = ({
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					onChange={onChange}
+					disabled={disabled}
 				/>
 			</Container>
 			<EditorAvailabilityWarningRow

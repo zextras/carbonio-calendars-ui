@@ -3,14 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { useContext, useMemo } from 'react';
+
 import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { replaceHistory, useTags } from '@zextras/carbonio-shell-ui';
-import { useContext, useMemo } from 'react';
+
+import { useCalendarFolders } from './use-calendar-folders';
 import { openAppointment } from '../actions/appointment-actions-fn';
 import { useAppDispatch } from '../store/redux/hooks';
 import { PanelView } from '../types/actions';
 import { createAndApplyTag } from '../view/tags/tag-actions';
-import { useCalendarFolders } from './use-calendar-folders';
 
 export const useSearchViewActions = ({ event }: { event?: any }): any => {
 	const dispatch = useAppDispatch();
