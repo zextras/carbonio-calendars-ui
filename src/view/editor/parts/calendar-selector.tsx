@@ -6,16 +6,28 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Select } from '@zextras/carbonio-design-system';
-import { FOLDERS, LinkFolder, ROOT_NAME, t, useUserSettings } from '@zextras/carbonio-shell-ui';
+import {
+	FOLDERS,
+	LinkFolder,
+	ROOT_NAME,
+	t,
+	useRoot,
+	useUserSettings
+} from '@zextras/carbonio-shell-ui';
 import { filter, find, map, reject } from 'lodash';
 
 import LabelFactory, { ItemFactory } from './select-label-factory';
-import { useFoldersArray } from '../../../carbonio-ui-commons/store/zustand/folder';
+import {
+	getRootAccountId,
+	useFoldersArray,
+	useFoldersArrayByRoot
+} from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { PREFS_DEFAULTS } from '../../../constants';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
+import store from '../../../test/generators/store';
 
 type CalendarSelectorProps = {
 	calendarId: string;
@@ -34,12 +46,18 @@ export const CalendarSelector = ({
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
+	const rootAccountId = getRootAccountId(calendarId);
+
+	const allCalendarsByRoot = useFoldersArrayByRoot(rootAccountId ?? FOLDERS.USER_ROOT);
 	const allCalendars = useFoldersArray();
+
 	const calendars = reject(
-		allCalendars,
+		rootAccountId?.includes(':') ? allCalendarsByRoot : allCalendars,
 		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME
 	);
+
 	const { zimbraPrefDefaultCalendarId } = useUserSettings().prefs;
+
 	const calWithWritePerm = useMemo(
 		() =>
 			showCalWithWritePerm

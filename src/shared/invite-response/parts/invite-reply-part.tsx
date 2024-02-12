@@ -67,7 +67,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				</Container>
 				<Container width="65%" mainAlignment="flex-start">
 					<CalendarSelector
-						calendarId="10"
+						calendarId={parent}
 						onCalendarChange={(cal: any): void => setActiveCalendar(cal)}
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
