@@ -188,7 +188,7 @@ export default function CalendarComponent() {
 		}
 	}, [calendarView, prefs?.zimbraPrefCalendarInitialView]);
 
-	const draggableOrResizableAccessor = useCallback(
+	const draggableAccessor = useCallback(
 		(calendarEvent) => {
 			if (calendarEvent) {
 				const absFolderPath = find(calendars, [
@@ -196,6 +196,25 @@ export default function CalendarComponent() {
 					calendarEvent.resource.calendar.id
 				])?.absFolderPath;
 				return isOrganizerOrHaveEqualRights(calendarEvent, absFolderPath);
+			}
+			return false;
+		},
+		[calendars]
+	);
+
+	const resizableAccessor = useCallback(
+		(calendarEvent) => {
+			if (calendarEvent) {
+				const absFolderPath = find(calendars, [
+					'id',
+					calendarEvent.resource.calendar.id
+				])?.absFolderPath;
+				return (
+					isOrganizerOrHaveEqualRights(calendarEvent, absFolderPath) &&
+					(!calendarEvent.allDay ||
+						(!calendarEvent.allDay &&
+							moment(calendarEvent.start).day() === moment(calendarEvent.end).day()))
+				);
 			}
 			return false;
 		},
@@ -235,9 +254,9 @@ export default function CalendarComponent() {
 				onEventResize={onEventDropOrResize}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
-				resizableAccessor={draggableOrResizableAccessor}
+				resizableAccessor={resizableAccessor}
 				onSelecting={() => !summaryViewOpen && !action}
-				draggableAccessor={draggableOrResizableAccessor}
+				draggableAccessor={draggableAccessor}
 			/>
 		</>
 	);
