@@ -4,17 +4,19 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { useCallback, useContext, useMemo } from 'react';
+
 import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import moment from 'moment';
-import { useCallback, useContext, useMemo } from 'react';
+
+import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorPlainText,
 	selectEditorRichText,
 	selectEditorTitle
 } from '../../../store/selectors/editor';
-import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { editEditorText } from '../../../store/slices/editor-slice';
 
 export const useGetPublicUrl = ({ editorId }) => {

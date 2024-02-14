@@ -4,17 +4,19 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { useEffect, useState } from 'react';
-import { isEmpty, reduce, forEach, sortBy } from 'lodash';
+
 import { useNotify, useRefresh } from '@zextras/carbonio-shell-ui';
-import { handleModifiedInvites } from '../../store/slices/invites-slice';
+import { isEmpty, reduce, forEach, sortBy } from 'lodash';
+
+import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
+import { searchAppointments } from '../../store/actions/search-appointments';
+import { useAppDispatch } from '../../store/redux/hooks';
 import {
 	handleDeletedAppointments,
 	handleModifiedAppointments
 } from '../../store/slices/appointments-slice';
-import { searchAppointments } from '../../store/actions/search-appointments';
-import { useAppDispatch } from '../../store/redux/hooks';
+import { handleModifiedInvites } from '../../store/slices/invites-slice';
 import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
-import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 
 export const SyncDataHandler = () => {
 	const refresh = useRefresh();

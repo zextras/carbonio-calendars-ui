@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useTranslation } from 'react-i18next';
+import React, { ReactElement, useEffect, useRef } from 'react';
+
 import {
 	Divider,
 	Icon,
@@ -12,8 +13,8 @@ import {
 	Text,
 	useHiddenCount
 } from '@zextras/carbonio-design-system';
-import React, { ReactElement, useEffect, useRef } from 'react';
 import { map, some } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 const ActionButtons = ({ actions }: { actions: any[] }): JSX.Element => {
 	const actionContainerRef = useRef(null);

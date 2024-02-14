@@ -3,10 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
-import { isNaN, isNil, isNumber } from 'lodash';
-import moment from 'moment';
 import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+
 import {
 	Container,
 	Icon,
@@ -17,9 +15,14 @@ import {
 	Row,
 	Text
 } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
+import { isNaN, isNil, isNumber } from 'lodash';
+import moment from 'moment';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import momentLocalizer from 'react-widgets-moment';
+
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
+import { RADIO_VALUES } from '../../../../../constants/recurrence';
 import Styler from '../../../../../settings/components/date-picker-style';
 import { useAppSelector } from '../../../../../store/redux/hooks';
 import {
@@ -29,7 +32,6 @@ import {
 	selectEditorStart
 } from '../../../../../store/selectors/editor';
 import { Count } from '../../../../../types/editor';
-import { RADIO_VALUES } from '../../../../../constants/recurrence';
 
 momentLocalizer();
 

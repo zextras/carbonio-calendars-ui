@@ -46,6 +46,8 @@ const initBoard = ({
 		allDay: false,
 		freeBusy: 'B',
 		class: 'PUB',
+		originalStart: 1667834497505,
+		originalEnd: 1667834497505,
 		start: 1667834497505,
 		end: 1667834497505,
 		timezone: 'Europe/Berlin',

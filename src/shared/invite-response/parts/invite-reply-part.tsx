@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback, useState, useContext } from 'react';
+import React, { FC, ReactElement, useCallback, useState, useContext, useMemo } from 'react';
 
 import {
 	SnackbarManagerContext,
@@ -14,28 +14,115 @@ import {
 	Row,
 	Checkbox
 } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
+import { addBoard, Board } from '@zextras/carbonio-shell-ui';
+import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
+import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { generateEditor } from '../../../commons/editor-generator';
+import { CALENDAR_ROUTE } from '../../../constants';
+import { useCalendarFolders } from '../../../hooks/use-calendar-folders';
+import {
+	getEquipments,
+	getMeetingRooms,
+	getVirtualRoom
+} from '../../../normalizations/normalize-editor';
 import { useAppDispatch } from '../../../store/redux/hooks';
+import { Editor } from '../../../types/editor';
+import type {
+	InviteReplyPartArguments,
+	InviteResponseArguments
+} from '../../../types/integrations';
 import { CalendarSelector } from '../../../view/editor/parts/calendar-selector';
 import { sendResponse } from '../invite-reply-actions';
 
-type InviteReplyPart = {
-	inviteId: string;
-	participationStatus: string;
-	proposeNewTime: () => void;
-	parent: string;
-};
-const InviteReplyPart: FC<InviteReplyPart> = ({
-	inviteId,
-	participationStatus,
-	proposeNewTime,
-	parent
-}): ReactElement => {
+const normalizeEditorFromMailMessage = (
+	messageData: InviteResponseArguments['mailMsg']
+): Partial<Editor> => ({
+	isException: messageData.ex ?? false,
+	exceptId: messageData.exceptId,
+	isSeries: !!messageData.recur,
+	isInstance: !messageData.recur,
+	isRichText: true,
+	isNew: false,
+	attachmentFiles: [],
+	title: messageData.name,
+	location: messageData.loc,
+	allDay: messageData.allDay ?? false,
+	freeBusy: messageData.fb,
+	class: messageData.class,
+	timezone: messageData?.s[0]?.tz ?? moment.tz.guess(true),
+	recur: messageData.recur,
+	richText: messageData.descHtml[0]?._content ?? '',
+	plainText: messageData.desc[0]?._content ?? '',
+	meetingRoom: getMeetingRooms(messageData.at),
+	equipment: getEquipments(messageData.at),
+	room: getVirtualRoom(messageData.xprop),
+	uid: messageData.uid,
+	originalStart: messageData.s[0].u ?? moment(messageData.s[0].d).valueOf(),
+	originalEnd: messageData.e[0].u ?? moment(messageData.e[0].d).valueOf(),
+	start: messageData.s[0].u ?? moment(messageData.s[0].d).valueOf(),
+	end: messageData.e[0].u ?? moment(messageData.e[0].d).valueOf(),
+	attendees: [
+		{
+			email: messageData.or.a ?? messageData.or.url,
+			id: messageData.or.a ?? messageData.or.url
+		}
+	]
+});
+
+const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): ReactElement => {
 	const [notifyOrganizer, setNotifyOrganizer] = useState(true);
-	const [activeCalendar, setActiveCalendar] = useState(null);
+	const [activeCalendar, setActiveCalendar] = useState<Folder | null>(null);
 	const createSnackbar = useContext(SnackbarManagerContext);
+	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
+	const calendarFolders = useCalendarFolders();
+
+	const proposeNewTimeCb = useCallback(() => {
+		const messageData = message.invite[0].comp[0];
+		const partialEditor = normalizeEditorFromMailMessage(messageData);
+
+		const editor = generateEditor({
+			context: {
+				dispatch,
+				folders: calendarFolders,
+				isProposeNewTime: true,
+				panel: false,
+				inviteId,
+				disabled: {
+					title: true,
+					location: true,
+					organizer: true,
+					virtualRoom: true,
+					richTextButton: true,
+					attachmentsButton: true,
+					saveButton: true,
+					attendees: true,
+					optionalAttendees: true,
+					freeBusy: true,
+					calendar: true,
+					private: true,
+					allDay: true,
+					reminder: true,
+					recurrence: true,
+					meetingRoom: true,
+					equipment: true,
+					timezone: true
+				},
+				...partialEditor
+			}
+		});
+		if (editor.id) {
+			addBoard({
+				url: `${CALENDAR_ROUTE}/`,
+				title: editor?.title ?? '',
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				editor
+			} as unknown as Board);
+		}
+	}, [calendarFolders, dispatch, inviteId, message.invite]);
 
 	const onAction = useCallback(
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -49,10 +136,16 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 					notifyOrganizer,
 					activeCalendar,
 					dispatch,
-					parent
+					parent: message.parent
 				});
 			},
-		[dispatch, inviteId, notifyOrganizer, activeCalendar, createSnackbar, parent]
+		[createSnackbar, inviteId, notifyOrganizer, activeCalendar, dispatch, message.parent]
+	);
+
+	// TODO: find a more readable and descriptive way to handle this data
+	const participationStatus = useMemo(
+		() => message?.invite?.[0]?.replies?.[0].reply?.[0]?.ptst ?? '',
+		[message?.invite]
 	);
 	return (
 		<>
@@ -68,10 +161,7 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Container width="65%" mainAlignment="flex-start">
 					<CalendarSelector
 						calendarId="10"
-						onCalendarChange={(cal: any): void => setActiveCalendar(cal)}
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						style={{ maxWidth: '48%', width: '48%' }}
+						onCalendarChange={(cal): void => setActiveCalendar(cal)}
 						label={t('label.scheduled_in', 'Scheduled in')}
 						excludeTrash
 					/>
@@ -92,8 +182,8 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Padding right="small" vertical="large">
 					<Button
 						type="outlined"
-						label={t('event.action.yes', 'yes')}
-						icon="Checkmark"
+						label={t('event.action.accept', 'Accept')}
+						icon="CheckmarkOutline"
 						color="success"
 						onClick={onAction('ACCEPT')}
 						disabled={participationStatus === 'AC'}
@@ -102,8 +192,8 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
-						label={t('label.maybe', 'maybe')}
-						icon="QuestionMark"
+						label={t('label.tentative', 'Tentative')}
+						icon="QuestionMarkOutline"
 						color="warning"
 						onClick={onAction('TENTATIVE')}
 						disabled={participationStatus === 'TE'}
@@ -112,8 +202,8 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				<Padding right="small" vertical="medium">
 					<Button
 						type="outlined"
-						label={t('event.action.no', 'no')}
-						icon="Close"
+						label={t('event.action.decline', 'Decline')}
+						icon="CloseOutline"
 						color="error"
 						onClick={onAction('DECLINE')}
 						disabled={participationStatus === 'DE'}
@@ -121,11 +211,11 @@ const InviteReplyPart: FC<InviteReplyPart> = ({
 				</Padding>
 				<Padding right="small" vertical="large">
 					<Button
-						label={t('label.propose_new_time', 'PROPOSE NEW TIME')}
-						icon="RefreshOutline"
+						label={t('label.propose_new_time', 'Propose new time')}
+						icon="ClockOutline"
 						color="primary"
 						type="outlined"
-						onClick={proposeNewTime}
+						onClick={proposeNewTimeCb}
 					/>
 				</Padding>
 			</Row>

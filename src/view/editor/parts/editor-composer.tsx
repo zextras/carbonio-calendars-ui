@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ComponentType, ReactElement, useCallback, useMemo, useState } from 'react';
+
 import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
 import { debounce } from 'lodash';
-import React, { ComponentType, ReactElement, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
+
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorDisabled,

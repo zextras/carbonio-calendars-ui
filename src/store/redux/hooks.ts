@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+
 import { AppDispatch, RootState } from './index';
 
 export const useAppDispatch: () => AppDispatch = useDispatch;

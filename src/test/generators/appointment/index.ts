@@ -6,6 +6,7 @@
 import { faker } from '@faker-js/faker';
 import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
+
 import { ROOM_DIVIDER } from '../../../constants';
 import { EventType } from '../../../types/event';
 import { Appointment } from '../../../types/store/appointments';

@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement } from 'react';
+
+import { Icon, Row, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
-import { Icon, Row, Text } from '@zextras/carbonio-design-system';
-import React, { ReactElement } from 'react';
 
 const WarningText = styled(Text)`
 	color: #d74942;

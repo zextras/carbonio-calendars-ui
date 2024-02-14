@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo, useRef, useState, useContext, ReactElement } from 'react';
-import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { map, filter, reduce, uniqBy, find } from 'lodash';
+
 import {
 	Container,
 	Icon,
@@ -22,8 +20,12 @@ import {
 	getColor
 } from '@zextras/carbonio-design-system';
 import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
-import { getFileExtension, calcColor } from '../../commons/utilities';
+import { map, filter, reduce, uniqBy, find } from 'lodash';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+
 import { humanFileSize, previewType } from '../../commons/file-preview';
+import { getFileExtension, calcColor } from '../../commons/utilities';
 
 const getAttachmentsLink = (
 	messageId: string,

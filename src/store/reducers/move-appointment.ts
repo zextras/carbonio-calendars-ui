@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { PayloadAction, SerializedError } from '@reduxjs/toolkit';
+
 import { ItemActionRejectedType } from '../../soap/item-action-request';
 import { AppointmentsSlice, PendingResponse, RejectedResponse } from '../../types/store/store';
 import { MoveAppointmentArguments } from '../actions/move-appointment';

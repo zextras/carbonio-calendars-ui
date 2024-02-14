@@ -56,20 +56,20 @@ export type EditorProps = {
 };
 
 export type Resource = {
-	id: string;
+	id?: string;
 	label: string;
-	value: string;
+	value?: string;
 	email: string;
-	type: string;
+	type?: string;
 };
 
 export type ChipResource = {
-	id: string;
+	id?: string;
 	label: string;
 	email: string;
-	avatarIcon: 'BriefcaseOutline' | 'BuildingOutline';
-	avatarBackground: 'transparent';
-	avatarColor: 'gray0';
+	avatarIcon?: 'BriefcaseOutline' | 'BuildingOutline';
+	avatarBackground?: 'transparent';
+	avatarColor?: 'gray0';
 };
 
 type DisabledField =
@@ -108,7 +108,7 @@ export type Editor = {
 	ridZ?: string | undefined;
 	draft?: boolean | undefined;
 	calendar?: CalendarEditor;
-	exceptId?: { d: string; tz: string } | undefined;
+	exceptId?: { d: string; tz: string | undefined } | undefined;
 	isException: boolean;
 	isInstance: boolean;
 	isSeries: boolean;
@@ -132,6 +132,8 @@ export type Editor = {
 	allDay?: boolean;
 	freeBusy?: InviteFreeBusy;
 	class?: InviteClass;
+	originalStart: number;
+	originalEnd: number;
 	start?: number;
 	end?: number;
 	inviteId?: string | undefined;

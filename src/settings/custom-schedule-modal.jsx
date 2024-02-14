@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
+
 import { Container, Text, CustomModal, Row, Checkbox } from '@zextras/carbonio-design-system';
-import { map } from 'lodash';
 import { t } from '@zextras/carbonio-shell-ui';
+import { map } from 'lodash';
+
 import TimePicker from './components/time-picker';
 import { getWeekDay } from './components/utils';
-import { ModalHeader } from '../commons/modal-header';
 import ModalFooter from '../commons/modal-footer';
+import { ModalHeader } from '../commons/modal-header';
 
 export default function CustomScheduleModal({
 	open,

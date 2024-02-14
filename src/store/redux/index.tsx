@@ -3,13 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import React, { FC } from 'react';
+
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+
 import { CALENDAR_APP_ID } from '../../constants';
-import invitesSliceReducer from '../slices/invites-slice';
-import editorSliceReducer from '../slices/editor-slice';
 import appointmentsSliceReducer from '../slices/appointments-slice';
+import editorSliceReducer from '../slices/editor-slice';
+import invitesSliceReducer from '../slices/invites-slice';
 
 export const reducers = {
 	appointments: appointmentsSliceReducer,

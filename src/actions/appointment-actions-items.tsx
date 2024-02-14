@@ -15,9 +15,9 @@ import {
 	editAppointment,
 	moveAppointment,
 	moveToTrash,
-	openAppointment
+	openAppointment,
+	proposeNewTimeFn
 } from './appointment-actions-fn';
-import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { ActionsContext, AppointmentActionsItems } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
@@ -81,11 +81,28 @@ export const acceptAsTentativeItem = ({
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.TENTATIVE,
-	icon: 'QuestionMark',
+	icon: 'QuestionMarkOutline',
 	label: t('label.tentative', 'Tentative'),
 	disabled: event?.resource?.participationStatus === 'TE',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
 	onClick: acceptAsTentative({ event, context })
+});
+
+export const proposeNewTimeItem = ({
+	invite,
+	event,
+	context
+}: {
+	invite?: Invite;
+	event: EventType;
+	context: ActionsContext;
+}): AppointmentActionsItems => ({
+	id: EventActionsEnum.PROPOSE_NEW_TIME,
+	icon: 'ClockOutline',
+	label: t('label.propose_new_time', 'Propose new time'),
+	disabled: false,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	onClick: proposeNewTimeFn({ event, invite, context })
 });
 
 export const moveEventItem = ({
