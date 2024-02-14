@@ -15,7 +15,6 @@ import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
-import { updateParticipationStatus } from '../store/slices/appointments-slice';
 import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
@@ -261,18 +260,14 @@ export const acceptInvitation =
 				  })
 				: undefined;
 
-		context
-			.dispatch(
-				sendInviteResponse({
-					inviteId: event.resource.inviteId,
-					exceptId,
-					updateOrganizer: true,
-					action: 'ACCEPT'
-				})
-			)
-			.then(() =>
-				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
-			);
+		context.dispatch(
+			sendInviteResponse({
+				inviteId: event.resource.inviteId,
+				exceptId,
+				updateOrganizer: true,
+				action: 'ACCEPT'
+			})
+		);
 	};
 
 export const declineInvitation =
@@ -294,18 +289,14 @@ export const declineInvitation =
 						tz: invite?.tz
 				  })
 				: undefined;
-		context
-			.dispatch(
-				sendInviteResponse({
-					inviteId: event.resource.inviteId,
-					exceptId,
-					updateOrganizer: true,
-					action: 'DECLINE'
-				})
-			)
-			.then(() =>
-				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'DE' }))
-			);
+		context.dispatch(
+			sendInviteResponse({
+				inviteId: event.resource.inviteId,
+				exceptId,
+				updateOrganizer: true,
+				action: 'DECLINE'
+			})
+		);
 	};
 
 export const acceptAsTentative =
@@ -327,18 +318,14 @@ export const acceptAsTentative =
 						tz: invite?.tz
 				  })
 				: undefined;
-		context
-			.dispatch(
-				sendInviteResponse({
-					inviteId: event.resource.inviteId,
-					exceptId,
-					updateOrganizer: true,
-					action: 'TENTATIVE'
-				})
-			)
-			.then(() =>
-				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
-			);
+		context.dispatch(
+			sendInviteResponse({
+				inviteId: event.resource.inviteId,
+				exceptId,
+				updateOrganizer: true,
+				action: 'TENTATIVE'
+			})
+		);
 	};
 
 export const proposeNewTimeFn =

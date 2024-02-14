@@ -95,7 +95,7 @@ export const normalizeAppointmentFromCreation = (appt: any, editor: any, id?: st
 	md: appt.md,
 	flags: appt.f ?? '',
 	ms: appt.ms,
-	ptst: 'AC',
+	ptst: appt.ptst,
 	dur: editor.end - editor.start,
 	rev: appt.rev,
 	status: appt.inv[0].comp[0].status,
