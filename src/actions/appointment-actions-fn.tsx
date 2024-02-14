@@ -249,7 +249,7 @@ export const acceptInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: ActionsContext;
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -283,7 +283,7 @@ export const declineInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: ActionsContext;
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -316,7 +316,7 @@ export const acceptAsTentative =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: ActionsContext;
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
