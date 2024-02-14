@@ -10,6 +10,7 @@ import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 
 export type InstanceExceptionId = { d: string; tz: string | undefined };
+
 export const getInstanceExceptionId = ({
 	start,
 	tz,
