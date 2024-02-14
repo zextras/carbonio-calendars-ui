@@ -6,14 +6,7 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Select } from '@zextras/carbonio-design-system';
-import {
-	FOLDERS,
-	LinkFolder,
-	ROOT_NAME,
-	t,
-	useRoot,
-	useUserSettings
-} from '@zextras/carbonio-shell-ui';
+import { FOLDERS, LinkFolder, ROOT_NAME, t, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { filter, find, map, reject } from 'lodash';
 
 import LabelFactory, { ItemFactory } from './select-label-factory';
@@ -26,8 +19,10 @@ import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { PREFS_DEFAULTS } from '../../../constants';
-import { setCalendarColor } from '../../../normalizations/normalizations-utils';
-import store from '../../../test/generators/store';
+import {
+	setCalendarColor,
+	setCalendarColorFromNumber
+} from '../../../normalizations/normalizations-utils';
 
 type CalendarSelectorProps = {
 	calendarId: string;
@@ -107,9 +102,15 @@ export const CalendarSelector = ({
 			zimbraPrefDefaultCalendarId ?? PREFS_DEFAULTS?.DEFAULT_CALENDAR_ID
 		]);
 		const defaultCalendar = {
-			value: defaultCal?.id ?? requiredCalendars?.[0]?.id,
-			label: defaultCal?.name ?? requiredCalendars?.[0]?.name,
-			color: defaultCal?.color ?? requiredCalendars?.[0]?.color
+			id: requiredCalendars?.[0]?.id ?? defaultCal?.id,
+			acl: requiredCalendars?.[0]?.acl ?? defaultCal?.acl,
+			isLink: requiredCalendars?.[0]?.isLink ?? defaultCal?.isLink,
+			absFolderPath: requiredCalendars?.[0]?.absFolderPath ?? defaultCal?.absFolderPath,
+			value: requiredCalendars?.[0]?.id ?? defaultCal?.id,
+			label: requiredCalendars?.[0]?.name ?? defaultCal?.name,
+			color: requiredCalendars?.[0]?.color
+				? setCalendarColorFromNumber(requiredCalendars?.[0]?.color).color
+				: defaultCal?.color
 		};
 		return find(calendarItems, ['value', calendarId]) ?? defaultCalendar;
 	}, [requiredCalendars, zimbraPrefDefaultCalendarId, calendarItems, calendarId]);
