@@ -26,6 +26,9 @@ export const sendInviteResponseFulfilled = (
 	if (!action.meta.arg.fromMail) {
 		state.status = 'fulfilled';
 	}
+	if (action.payload) {
+		delete state.invites[action.meta.arg.inviteId];
+	}
 };
 
 export const sendInviteResponseRejected = (state: InvitesSlice): void => {

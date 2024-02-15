@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 
 import { MemoCustomEvent } from './custom-event';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -15,7 +15,7 @@ import mockedData from '../../test/generators';
 
 jest.setTimeout(10000);
 
-test('click edit appointment from event summary view as organizer', async () => {
+test('single click over the event will open the summary view', async () => {
 	const event = mockedData.getEvent();
 	const invite = mockedData.getInvite({ event });
 	const mockedInviteSlice = {
@@ -27,12 +27,14 @@ test('click edit appointment from event summary view as organizer', async () => 
 	const store = configureStore({ reducer: combineReducers(reducers), preloadedState: emptyStore });
 	const { user } = setupTest(<MemoCustomEvent event={event} title={event.title} />, {
 		store
-		// keep it for reference
-		// initialEntries: ['/fake-calendarId/expand/fake-apptId/fake-ridZ'],
-		// path: '/:calendarId?/:action?/:apptId?/:ridZ?'
 	});
 	expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
+
 	await user.click(screen.getByTestId('calendar-event-inner-container'));
+	act(() => {
+		jest.advanceTimersByTime(250);
+	});
+
 	// this means the summary view is open
-	expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
+	expect(screen.getByRole('button', { name: /instance/i })).toBeInTheDocument();
 });
