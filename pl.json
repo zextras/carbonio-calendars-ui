@@ -1,7 +1,7 @@
 {
     "action": {
         "empty_trash_confirmation": "Ta czynność usunie wszystkie elementy w koszach: E-mailów, Kontaktów, Kalendarza, Zadań oraz Aktówki. Czy na pewno chcesz trwale usunąć całą zawartość tych koszy?",
-        "calendar_access_share": "Udostępnij dostęp do kalendarza",
+        "calendar_access_share": "Udostępnij kalendarz (ICS/Outlook)",
         "delete_calendar": "Usuń kalendarz",
         "edit_calendar_properties": "Edytuj właściwości kalendarza",
         "edit_message": "Edytuj wiadomość",
@@ -66,15 +66,15 @@
         "appt_reminder_1": "Przypomnienia o spotkaniu",
         "appt_reminder_2": "Przypomnień o spotkaniu",
         "attachment_0": "Załącznik",
-        "attachment_1": "Załączniki",
-        "attachment_2": "Załączników",
+        "attachment_1": "załączniki",
+        "attachment_2": "załączników",
         "attendee_plural": "Uczestnicy",
         "busy": "Zajęty",
         "calendar": "Kalendarz",
         "auto_add_rcvd_app": "Automatycznie dodawaj otrzymane propozycje spotkań do kalendarza",
         "calendar_color": "Kolor kalendarza",
         "calendar_setting": "Ustawienia kalendarza",
-        "calendar_shared": "Pomyślnie udostępniono kalendarz",
+        "calendar_shared": "Kalendarz został udostępniony",
         "cancelled": "Anulowano",
         "changes_saved": "Zmiany zostały zapisane",
         "create": "Stwórz",
@@ -148,7 +148,7 @@
         "save": "Zapisz",
         "series": "Seria",
         "set_new_time": "Ustaw nowy czas",
-        "share_calendar_url": "Udostępnij dostęp do {{title}}",
+        "share_calendar_url": "Udostępnij {{title}} (ICS/Outlook)",
         "shares_items": "Udostępnione kalendarze użytkownika <bold>{{user}}</bold>",
         "sharing_of_this_folder": "Udostępnianie tego folderu",
         "show_0": "Pokaż",
@@ -161,7 +161,7 @@
         "start_week_on": "Dzień rozpoczęcia tygodnia",
         "time_zones": "Strefy czasowe",
         "tentative": "Niepewne",
-        "trash_emptied": "Kosz opróżniony pomyślnie",
+        "trash_emptied": "Kosz został opróżniony",
         "type_name_here": "Nazwa kalendarza",
         "undo": "Cofnij",
         "view_url": "Zobacz adres URL",
@@ -272,20 +272,20 @@
         "delete_future_occurences_warning": "Ta czynność usunie również wszystkie wyjątki (przed i po tym przypadku) w serii",
         "invited_you": "Zaprosił(a) Cię na wydarzenie",
         "meeting_canceled": "Następujące spotkanie zostało anulowane",
-        "share_calendar_url_msg": "Możesz szybko udostępnić {{title}} swoim współpracownikom klikjąc na jeden z tych linków:",
+        "share_calendar_url_msg": "Możesz szybko udostępnić {{title}} Twoim współpracownikom klikając na jeden z tych linków:",
         "share_calendar_url_note": "Tylko Twoi współpracownicy mają dostęp do Twoich danych przy użyciu tych linków.",
         "invite_has_no_message": "To zaproszenie nie zawiera tekstu",
         "snackbar": {
             "appointment_permanently_deleted": "Spotkanie zostało trwale usunięte",
-            "appt_moved": "Spotkanie zostało pomyślnie przeniesione do",
+            "appt_moved": "Spotkanie zostało przeniesione do",
             "appt_moved_to_trash": "Spotkanie zostało przeniesione do kosza",
             "appt_restored": "Spotkanie zostało przywrócone do",
-            "appointment_permanently_deleted_succesfully": "Trwałe usunięcie zostało pomyślnie ukończone",
-            "calendar_deleted_successfully": "Kalendarz został pomyślnie usunięty.",
+            "appointment_permanently_deleted_succesfully": "Trwałe usunięcie zostało ukończone",
+            "calendar_deleted_successfully": "Kalendarz został usunięty.",
             "calendar_moved_to_root_folder": "Kalendarz został przeniesiony do Folderu źródłowego",
             "calendar_moved_to_trash": "Kalendarz został przeniesiony do kosza",
             "calendar_permanently_deleted": "Kalendarz został trwale usunięty",
-            "calendar_restored": "Kalendarz został pomyślnie przywrócony",
+            "calendar_restored": "Kalendarz został przywrócony",
             "invite": {
                 "accept": "Odpowiedziałeś: Zaakceptowano",
                 "decline": "Odpowiedziałeś: Odrzucono",
@@ -299,7 +299,7 @@
             "link_copying_error": "Wygląda na to, że wystąpił problem przy generowaniu linku, spróbuj ponownie",
             "att_err_adding": "Wystąpił błąd przy dodawaniu załączników, spróbuj ponownie",
             "all_link_copied": "Publiczny link został skopiowany",
-            "all_att_added": "Załączniki zostały dodane pomyślnie",
+            "all_att_added": "Załączniki zostały dodane",
             "series_deleted_no_notification": "Seria została przeniesiona do kosza.",
             "shared_calendar_removed": "Kalendarz został usunięty"
         },
@@ -444,7 +444,7 @@
         "invalid_email": "Nieprawidłowy adres e-mail"
     },
     "snackbar": {
-        "share_folder_success": "Kalendarz został udostępniony pomyślnie",
+        "share_folder_success": "Kalendarz został udostępniony",
         "invite": {
             "error": "Błąd"
         },
@@ -591,7 +591,7 @@
             "local": "Dodaj z tego urządzenia",
             "draganddrop": {
                 "content": "Upuść tutaj załączniki, żeby szybko dodać je do spotkania",
-                "title": "Tryb Przeciągnij i upuść"
+                "title": "Tryb przeciągnij i upuść"
             },
             "drive": "Dodaj z Dysku",
             "url": "Dodaj publiczny link z Plików",
