@@ -9,10 +9,24 @@ import { InstanceExceptionId } from '../utils/event';
 
 export type SendInviteReplyRejectedType = {
 	error: boolean;
-	Fault: any;
-	apptId: never;
-	calItemId: never;
-	invId: never;
+	Fault?: {
+		Code: {
+			Value: string;
+		};
+		Reason: {
+			Text: string;
+		};
+		Detail: {
+			Error: {
+				Code: string;
+				Trace: string;
+				_jsns: string;
+			};
+		};
+	};
+	apptId?: never;
+	calItemId?: never;
+	invId?: never;
 };
 export type SendInviteReplyFulfilledType = {
 	Fault?: never;
