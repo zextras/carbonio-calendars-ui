@@ -161,10 +161,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 				<Container width="65%" mainAlignment="flex-start">
 					<CalendarSelector
 						calendarId={message.parent}
-						onCalendarChange={(cal: any): void => setActiveCalendar(cal)}
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						style={{ maxWidth: '48%', width: '48%' }}
+						onCalendarChange={(cal): void => setActiveCalendar(cal)}
 						label={t('label.scheduled_in', 'Scheduled in')}
 						excludeTrash
 					/>
