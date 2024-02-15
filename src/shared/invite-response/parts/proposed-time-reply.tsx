@@ -3,15 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback, useContext } from 'react';
+import React, { FC, ReactElement, useCallback } from 'react';
 
-import {
-	SnackbarManagerContext,
-	Container,
-	Padding,
-	Button,
-	Divider
-} from '@zextras/carbonio-design-system';
+import { Container, Padding, Button, Divider, useSnackbar } from '@zextras/carbonio-design-system';
 import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { find, map } from 'lodash';
 import moment from 'moment';
@@ -39,7 +33,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	to
 }): ReactElement => {
 	const [t] = useTranslation();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
 	const [openComposer, available] = useIntegratedFunction('compose');

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 
 import {
 	Checkbox,
@@ -15,9 +15,9 @@ import {
 	Padding,
 	Row,
 	Select,
-	SnackbarManagerContext,
 	Text,
-	Tooltip
+	Tooltip,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { map, some } from 'lodash';
@@ -104,7 +104,7 @@ const UserShare = ({
 
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 
@@ -315,7 +315,7 @@ const PublicShare = ({
 	folderId,
 	closeFn
 }: Omit<ShareCalendarModalProps, 'folderName' | 'grant'>): JSX.Element => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 
 	const onConfirm = useCallback((): void => {
