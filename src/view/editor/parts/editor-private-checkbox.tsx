@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Checkbox } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useCallback } from 'react';
+
+import { Checkbox } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
+
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorClass, selectEditorDisabled } from '../../../store/selectors/editor';
 import { editEditorClass } from '../../../store/slices/editor-slice';

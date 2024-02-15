@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useMemo } from 'react';
+
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 
 type LocationProps = {

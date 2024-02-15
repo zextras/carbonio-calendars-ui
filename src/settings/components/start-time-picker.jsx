@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo } from 'react';
+
 import { Container, DateTimePicker, Padding, Text } from '@zextras/carbonio-design-system';
-import momentLocalizer from 'react-widgets-moment';
-import moment from 'moment';
 import { t } from '@zextras/carbonio-shell-ui';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets-moment';
+
 import DatePickerCustomComponent from '../../commons/date-picker-custom-component';
 
 momentLocalizer();

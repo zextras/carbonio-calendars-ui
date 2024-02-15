@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, SyntheticEvent, useCallback, useContext, useMemo } from 'react';
-import { t, useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
+
 import {
 	AccordionItem,
 	Dropdown,
@@ -14,9 +14,11 @@ import {
 	Tooltip,
 	ModalManagerContext
 } from '@zextras/carbonio-design-system';
+import { t, useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
 import { reduce } from 'lodash';
-import { ItemType, TagsAccordionItems } from '../../carbonio-ui-commons/types/tags';
+
 import { createTag, useGetTagsActions } from './tag-actions';
+import { ItemType, TagsAccordionItems } from '../../carbonio-ui-commons/types/tags';
 
 type ItemProps = {
 	item: ItemType;

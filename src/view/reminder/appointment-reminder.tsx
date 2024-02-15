@@ -3,10 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useState, useEffect, useMemo } from 'react';
+
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { compact, filter, find, forEach, includes, isEmpty, map, reduce } from 'lodash';
 import moment from 'moment';
+
+import { ReminderModal } from './reminder-modal';
+import sound from '../../assets/notification.mp3';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { getTimeToDisplayData } from '../../commons/utilities';
@@ -18,8 +22,6 @@ import { selectAppointmentsArray, selectApptStatus } from '../../store/selectors
 import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
 import { showNotification } from '../notifications';
-import { ReminderModal } from './reminder-modal';
-import sound from '../../assets/notification.mp3';
 
 export const AppointmentReminder = (): ReactElement | null => {
 	const [reminders, setReminders] = useState<Reminders>({});

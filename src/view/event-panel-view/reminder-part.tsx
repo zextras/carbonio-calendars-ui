@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useMemo } from 'react';
+
 import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { noop } from 'lodash';
-import React, { ReactElement, useCallback, useMemo } from 'react';
+
 import { generateEditor } from '../../commons/editor-generator';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';

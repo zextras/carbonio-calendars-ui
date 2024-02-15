@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isNil, debounce } from 'lodash';
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+
 import { Input } from '@zextras/carbonio-design-system';
+import { isNil, debounce } from 'lodash';
+import { useTranslation } from 'react-i18next';
+
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorLocation } from '../../../store/selectors/editor';
 import { editEditorLocation } from '../../../store/slices/editor-slice';

@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { useCallback, useMemo } from 'react';
+
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { useCallback, useMemo } from 'react';
+
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { deleteAppointmentPermanent } from '../../store/actions/delete-appointment-permanent';

@@ -3,16 +3,28 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { isEmpty, minBy } from 'lodash';
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
-import moment from 'moment-timezone';
+
+import CalendarStyle from './calendar-style';
+import { MemoCustomEvent } from './custom-event';
+import CustomEventWrapper from './custom-event-wrapper';
+import { CustomToolbar } from './custom-toolbar';
+import { WorkView } from './work-view';
+import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
+import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
+import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
+import { useCheckedFolders } from '../../hooks/use-checked-folders';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../store/actions/search-appointments';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
 	useCalendarView,
@@ -21,16 +33,6 @@ import {
 	useRangeStart
 } from '../../store/zustand/hooks';
 import { workWeek } from '../../utils/work-week';
-import CalendarStyle from './calendar-style';
-import { MemoCustomEvent } from './custom-event';
-import { CustomToolbar } from './custom-toolbar';
-import { WorkView } from './work-view';
-import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
-import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
-import CustomEventWrapper from './custom-event-wrapper';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
-import { useCheckedFolders } from '../../hooks/use-checked-folders';
 
 const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);

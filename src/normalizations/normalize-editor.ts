@@ -16,6 +16,7 @@ import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
 import { DateType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
+import { getInstanceExceptionId } from '../utils/event';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -30,7 +31,7 @@ export const getVirtualRoom = (xprop: any): { label: string; link: string } | un
 	return undefined;
 };
 
-const getMeetingRooms = (
+export const getMeetingRooms = (
 	attendees: Array<Attendee>
 ): Array<{ email: string; label: string }> | undefined => {
 	const rooms = filter(attendees, ['cutype', CALENDAR_RESOURCES.ROOM]);
@@ -42,7 +43,7 @@ const getMeetingRooms = (
 		: undefined;
 };
 
-const getEquipments = (
+export const getEquipments = (
 	attendees: Array<Attendee>
 ): Array<{ email: string; label: string }> | undefined => {
 	const equipments = filter(attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]);
@@ -210,7 +211,9 @@ export const normalizeEditor = ({
 			? extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? ''
 			: '';
 
-		const folder = find(context?.folders, ['id', calendarId]);
+		const folder =
+			find(context?.folders, ['id', calendarId]) ??
+			find(context?.folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
 
 		const calendar = normalizeCalendarEditor(folder);
 
@@ -236,6 +239,8 @@ export const normalizeEditor = ({
 				allDay: event?.allDay,
 				freeBusy: invite.freeBusy,
 				class: invite.class,
+				originalStart: start,
+				originalEnd: end,
 				start,
 				end,
 				timezone: invite?.start?.tz,

@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Folder } from '../carbonio-ui-commons/types/folder';
 import { useCheckedCalendarsQuery } from './use-checked-calendars-query';
 import { useFolderStore } from '../carbonio-ui-commons/store/zustand/folder';
 import { setupHook } from '../carbonio-ui-commons/test/test-setup';
+import { Folder } from '../carbonio-ui-commons/types/folder';
 import mockedData from '../test/generators';
 
 const acceptedFolder = mockedData.calendars.getCalendar({ checked: true });

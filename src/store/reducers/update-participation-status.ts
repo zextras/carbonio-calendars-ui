@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { PayloadAction } from '@reduxjs/toolkit';
+
 import { ParticipationStatus } from '../../types/store/invite';
 import { AppointmentsSlice } from '../../types/store/store';
 

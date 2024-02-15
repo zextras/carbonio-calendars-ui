@@ -3,11 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { differenceBy, find, isNil, noop, reject, toUpper } from 'lodash';
-import { Button, Dropdown, Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useMemo } from 'react';
+
+import { Button, Dropdown, Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { differenceBy, find, isNil, noop, reject, toUpper } from 'lodash';
 import { useTranslation } from 'react-i18next';
+
 import { useEventActions } from '../../hooks/use-event-actions';
 import {
 	AppointmentActionsItems,
@@ -95,14 +97,19 @@ const ResponseActionsButtons = ({
 			EventActionsEnum.DECLINE
 		]);
 
-		return accept && tentative && decline
+		const propose = find((actions as SeriesActionsItems)?.[0]?.items ?? actions, [
+			'id',
+			EventActionsEnum.PROPOSE_NEW_TIME
+		]);
+
+		return accept && tentative && decline && propose
 			? [
 					{
 						...accept,
 						customComponent: (
 							<DropdownItemCustomComponent
-								label={toUpper(t('event.action.yes', 'Yes'))}
-								icon={'CheckmarkCircle2'}
+								label={toUpper(t('event.action.accept', 'Accept'))}
+								icon={'CheckmarkOutline'}
 								color={'success'}
 							/>
 						)
@@ -112,7 +119,7 @@ const ResponseActionsButtons = ({
 						customComponent: (
 							<DropdownItemCustomComponent
 								label={toUpper(t('label.tentative', 'Tentative'))}
-								icon={'QuestionMarkCircle'}
+								icon={'QuestionMarkOutline'}
 								color={'warning'}
 							/>
 						)
@@ -121,9 +128,19 @@ const ResponseActionsButtons = ({
 						...decline,
 						customComponent: (
 							<DropdownItemCustomComponent
-								label={toUpper(t('event.action.no', 'No'))}
-								icon={'CloseCircle'}
+								label={toUpper(t('event.action.decline', 'Decline'))}
+								icon={'CloseOutline'}
 								color={'error'}
+							/>
+						)
+					},
+					{
+						...propose,
+						customComponent: (
+							<DropdownItemCustomComponent
+								label={toUpper(t('label.propose_new_time', 'Propose new time'))}
+								icon={'ClockOutline'}
+								color={'primary'}
 							/>
 						)
 					}
@@ -140,12 +157,12 @@ const ResponseActionsButtons = ({
 		}
 
 		if (event.resource?.participationStatus === 'AC') {
-			return { items: responseItems, label: t('event.action.yes', 'Yes'), color: 'success' };
+			return { items: responseItems, label: t('event.action.accept', 'Accept'), color: 'success' };
 		}
 		if (event.resource?.participationStatus === 'TE') {
 			return { items: responseItems, label: t('label.tentative', 'Tentative'), color: 'warning' };
 		}
-		return { items: responseItems, label: t('event.action.no', 'No'), color: 'error' };
+		return { items: responseItems, label: t('event.action.decline', 'Decline'), color: 'error' };
 	}, [event.resource?.participationStatus, isResponseStillRequested, responseItems, t]);
 
 	const secondaryActions = useMemo(() => {

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { find, forEach, merge } from 'lodash';
+
 import { normalizeAppointmentsFromNotify } from '../../normalizations/normalize-appointments';
 import { AppointmentsSlice } from '../../types/store/store';
 

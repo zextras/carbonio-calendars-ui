@@ -6,11 +6,12 @@
 import { faker } from '@faker-js/faker';
 import { Folder } from '@zextras/carbonio-shell-ui';
 import { isNil, reduce, values } from 'lodash';
+
 import { Editor, IdentityItem } from '../../../types/editor';
 import { AppointmentsSlice, EditorSlice, InvitesSlice } from '../../../types/store/store';
-import utils from '../utils';
 import cals from '../calendar';
 import editors from '../editor';
+import utils from '../utils';
 
 type CalendarSliceItem = {
 	length?: number;

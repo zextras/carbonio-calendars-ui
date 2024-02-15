@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import { find, values } from 'lodash';
 
 import { CustomRecurrenceModal } from './custom-recurrence-modal';
@@ -43,22 +43,22 @@ describe('custom recurrence modal', () => {
 			store
 		});
 
-		await waitFor(() => {
-			user.click(screen.getByText(/daily/i));
+		await act(async () => {
+			await user.click(screen.getByText(/daily/i));
 		});
-		await waitFor(() => {
-			user.click(screen.getByText(/weekly/i));
+		await act(async () => {
+			await user.click(screen.getByText(/weekly/i));
 		});
 
 		const allRatios = screen.getAllByRole('radio');
 		const everyDayRadio = find(allRatios, ['value', RADIO_VALUES.QUICK_OPTIONS]);
 		const daySelectOption = screen.getByText(/label.day/i);
 
-		await waitFor(() => {
-			user.click(screen.getByText(/label.day/i));
+		await act(async () => {
+			await user.click(screen.getByText(/label.day/i));
 		});
-		await waitFor(() => {
-			user.click(screen.getByText(/weekend day/i));
+		await act(async () => {
+			await user.click(screen.getByText(/weekend day/i));
 		});
 
 		expect(everyDayRadio).toBeChecked();
@@ -72,11 +72,11 @@ describe('custom recurrence modal', () => {
 			store
 		});
 
-		await waitFor(() => {
-			user.click(screen.getByText(/daily/i));
+		await act(async () => {
+			await user.click(screen.getByText(/daily/i));
 		});
-		await waitFor(() => {
-			user.click(screen.getByText(/monthly/i));
+		await act(async () => {
+			await user.click(screen.getByText(/monthly/i));
 		});
 
 		const allRatios = screen.getAllByRole('radio');
@@ -96,11 +96,11 @@ describe('custom recurrence modal', () => {
 			store
 		});
 
-		await waitFor(() => {
-			user.click(screen.getByText(/daily/i));
+		await act(async () => {
+			await user.click(screen.getByText(/daily/i));
 		});
-		await waitFor(() => {
-			user.click(screen.getByText(/yearly/i));
+		await act(async () => {
+			await user.click(screen.getByText(/yearly/i));
 		});
 
 		const allRatios = screen.getAllByRole('radio');
@@ -127,8 +127,8 @@ describe('On modal confirmation, the editor should have the selected values', ()
 			store
 		});
 
-		await waitFor(() => {
-			user.click(screen.getByText(/customize/i));
+		await act(async () => {
+			await user.click(screen.getByText(/customize/i));
 		});
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
@@ -145,15 +145,15 @@ describe('On modal confirmation, the editor should have the selected values', ()
 			store
 		});
 
-		await waitFor(() => {
-			user.click(screen.getByText(/daily/i));
+		await act(async () => {
+			await user.click(screen.getByText(/daily/i));
 		});
-		await waitFor(() => {
-			user.click(screen.getByText(/weekly/i));
+		await act(async () => {
+			await user.click(screen.getByText(/weekly/i));
 		});
 
-		await waitFor(() => {
-			user.click(screen.getByText(/customize/i));
+		await act(async () => {
+			await user.click(screen.getByText(/customize/i));
 		});
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
@@ -170,15 +170,15 @@ describe('On modal confirmation, the editor should have the selected values', ()
 			store
 		});
 
-		await waitFor(() => {
-			user.click(screen.getByText(/daily/i));
+		await act(async () => {
+			await user.click(screen.getByText(/daily/i));
 		});
-		await waitFor(() => {
-			user.click(screen.getByText(/monthly/i));
+		await act(async () => {
+			await user.click(screen.getByText(/monthly/i));
 		});
 
-		await waitFor(() => {
-			user.click(screen.getByText(/customize/i));
+		await act(async () => {
+			await user.click(screen.getByText(/customize/i));
 		});
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
@@ -205,14 +205,14 @@ describe('On modal confirmation, the editor should have the selected values', ()
 			store
 		});
 
-		await waitFor(() => {
-			user.click(screen.getByText(/daily/i));
+		await act(async () => {
+			await user.click(screen.getByText(/daily/i));
 		});
-		await waitFor(() => {
-			user.click(screen.getByText(/yearly/i));
+		await act(async () => {
+			await user.click(screen.getByText(/yearly/i));
 		});
-		await waitFor(() => {
-			user.click(screen.getByText(/customize/i));
+		await act(async () => {
+			await user.click(screen.getByText(/customize/i));
 		});
 
 		const updatedEditor = values(store.getState().editor.editors)[0];

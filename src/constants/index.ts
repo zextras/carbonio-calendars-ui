@@ -37,3 +37,9 @@ export const SHARE_USER_TYPE = {
 } as const;
 
 export const PUBLIC_SHARE_ZID = '99999999-9999-9999-9999-999999999999';
+
+export const DATE_FORMAT = {
+	ALL_DAY: 'YYYYMMDD',
+	LOCAL: 'YYYYMMDD[T]HHmmss',
+	UTC: 'YYYYMMDD[T]HHmmss[Z]'
+};
