@@ -104,10 +104,7 @@ export const editEditorAttachmentsReducer = (
 		// eslint-disable-next-line no-param-reassign
 		editors[payload.id].attachmentFiles = payload.attachmentFiles;
 		// eslint-disable-next-line no-param-reassign
-		editors[payload.id].attach = {
-			...payload.attach,
-			aid: union(editors[payload.id]?.attach?.aid ?? [], payload?.attach?.aid ?? [])
-		};
+		editors[payload.id].attach = payload?.attach;
 	}
 };
 export const editSenderReducer = (

@@ -5,6 +5,7 @@
  */
 import { TFunction } from 'i18next';
 import { Dispatch } from 'redux';
+
 import { EventType } from './event';
 import { TransProps } from './i18next';
 

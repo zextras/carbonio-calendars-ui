@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Editor } from '../editor';
 import { Appointment } from './appointments';
 import { Invite } from './invite';
+import { Editor } from '../editor';
 
 type GenericResponse<T> = {
 	arg: T;

@@ -5,6 +5,7 @@
  */
 import moment, { Moment } from 'moment';
 
+import { CalendarsColorType } from './store/calendars';
 import {
 	AlarmData,
 	InviteClass,
@@ -12,7 +13,6 @@ import {
 	InviteStatus,
 	ParticipationStatus
 } from './store/invite';
-import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 
 export type AlarmType = {
 	alarm: AlarmData;
@@ -47,7 +47,7 @@ export type EventResourceCalendar = {
 	appointments?: [{ ids: string }];
 	id: string;
 	name: string;
-	color: ZimbraColorType;
+	color: CalendarsColorType;
 	owner?: string | undefined;
 	isShared?: boolean;
 	perm?: string;

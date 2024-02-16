@@ -10,9 +10,9 @@ import moment from 'moment';
 import { setCalendarColor } from './normalizations-utils';
 import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
-import { ZimbraColorType } from '../commons/zimbra-standard-colors';
 import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
+import { CalendarsColorType } from '../types/store/calendars';
 import { Invite } from '../types/store/invite';
 
 export const getLocationUrl = (location: string): string | undefined => {
@@ -32,7 +32,7 @@ const getCalendarResource = (calendar: {
 	perm?: string;
 }): {
 	owner: string | undefined;
-	color: ZimbraColorType;
+	color: CalendarsColorType;
 	perm: string | undefined;
 	name: string;
 	id: string;

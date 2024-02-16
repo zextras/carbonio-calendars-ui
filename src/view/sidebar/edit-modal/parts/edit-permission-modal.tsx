@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useMemo, useState, FC } from 'react';
+import React, { useCallback, useMemo, useState, FC } from 'react';
 
 import {
 	Checkbox,
@@ -11,13 +11,13 @@ import {
 	Input,
 	Row,
 	Select,
-	SnackbarManagerContext,
-	Text
+	Text,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
-import { GranteeInfo } from './grantee-info';
+import { GranteeChip } from './grantee-chip';
 import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
@@ -42,7 +42,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 	const { onClose, roleOptions } = useEditModalContext();
 	const accounts = useUserAccounts();
 	const dispatch = useAppDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const [shareWithUserRole, setShareWithUserRole] = useState('');
 	const [allowToSeePrivateAppointment, setAllowToSeePrivateAppointment] = useState(false);
 
@@ -107,7 +107,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 				crossAlignment="flex-start"
 				height="fit"
 			>
-				<GranteeInfo grant={grant} />
+				<GranteeChip grant={grant} />
 			</Container>
 			<Container
 				padding={{ top: 'small', bottom: 'small' }}

@@ -11,6 +11,7 @@ import { screen, act, within } from '@testing-library/react';
 import { EditorRecurrence } from './editor-recurrence';
 import { setupTest } from '../../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../../commons/editor-generator';
+import { TEST_SELECTORS } from '../../../../../constants/test-utils';
 import { reducers } from '../../../../../store/redux';
 
 jest.setTimeout(7000);
@@ -41,7 +42,7 @@ describe('editor recurrence field', () => {
 			await user.click(screen.getByText(/none/i));
 		});
 
-		const dropdownPopperEl = screen.getByTestId('dropdown-popper-list');
+		const dropdownPopperEl = screen.getByTestId(TEST_SELECTORS.DROPDOWN);
 
 		expect(within(dropdownPopperEl).getByText(/none/i)).toBeVisible();
 		expect(within(dropdownPopperEl).getByText(/every day/i)).toBeVisible();

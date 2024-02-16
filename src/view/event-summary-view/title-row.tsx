@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Divider, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import React, { ReactElement, useMemo } from 'react';
-import { reduce, includes } from 'lodash';
+
+import { Divider, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import { Tag, useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
+import { reduce, includes } from 'lodash';
+
 import { EventType } from '../../types/event';
 
 export const TitleRow = ({ event }: { event: EventType }): ReactElement => {

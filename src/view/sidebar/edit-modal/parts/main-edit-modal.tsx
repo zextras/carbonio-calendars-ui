@@ -12,6 +12,9 @@ import {
 	Divider,
 	Icon,
 	Input,
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
 	Padding,
 	Row,
 	Select,
@@ -26,17 +29,15 @@ import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled, { DefaultTheme } from 'styled-components';
 
-import { GranteeInfo } from './grantee-info';
-import ModalFooter from '../../../../carbonio-ui-commons/components/modals/modal-footer';
-import ModalHeader from '../../../../carbonio-ui-commons/components/modals/modal-header';
+import { GranteeChip } from './grantee-chip';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
 import { useFoldersArray } from '../../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
-import { ZIMBRA_STANDARD_COLORS } from '../../../../commons/zimbra-standard-colors';
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
+import { CALENDARS_STANDARD_COLORS } from '../../../../constants/calendar';
 import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
@@ -58,6 +59,12 @@ const ColorContainer = styled(Container)`
 		${({ theme }: { theme: DefaultTheme }): string => theme.palette.gray2.regular};
 `;
 
+const StyledContainer = styled(Container)`
+	min-width: 0;
+	flex-basis: 0;
+	flex-grow: 1;
+`;
+
 const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 `;
@@ -75,7 +82,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 		() =>
 			(colorName === 'custom'
 				? selected?.[0]?.value
-				: ZIMBRA_STANDARD_COLORS[parseInt(selected?.[0]?.value, 10)]?.color) || '',
+				: CALENDARS_STANDARD_COLORS[parseInt(selected[0].value, 10)]?.color) || '',
 		[colorName, selected]
 	) as string;
 
@@ -118,7 +125,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 };
 
 const getStatusItems = (t: TFunction): Array<SelectItem> =>
-	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
+	CALENDARS_STANDARD_COLORS.map((el, index) => ({
 		label: t(el.label ?? ''),
 		value: index.toString(),
 		customComponent: (
@@ -331,19 +338,27 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			padding="0.5rem 0.5rem 1.5rem"
 			style={{ overflowY: 'auto' }}
 		>
-			<ModalHeader onClose={onClose} title={title} />
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				height="fit"
-			>
-				{hasId(folder, FOLDERS.CALENDAR) ? (
-					<Tooltip
-						label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
-						placement="top"
-						maxWidth="fit"
-					>
+			<ModalHeader onClose={onClose} title={title} showCloseIcon />
+			<Divider />
+			<ModalBody style={{ padding: '0.5rem' }}>
+				<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
+					{hasId(folder, FOLDERS.CALENDAR) ? (
+						<Tooltip
+							label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
+							placement="top"
+							maxWidth="fit"
+						>
+							<Input
+								label={placeholder}
+								backgroundColor="gray5"
+								defaultValue={folderName}
+								onChange={(e): void => {
+									setFolderName(e.target.value);
+								}}
+								disabled
+							/>
+						</Tooltip>
+					) : (
 						<Input
 							label={placeholder}
 							backgroundColor="gray5"
@@ -351,168 +366,175 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 							onChange={(e): void => {
 								setFolderName(e.target.value);
 							}}
-							disabled
 						/>
-					</Tooltip>
-				) : (
-					<Input
-						label={placeholder}
-						backgroundColor="gray5"
-						defaultValue={folderName}
-						onChange={(e): void => {
-							setFolderName(e.target.value);
-						}}
-					/>
-				)}
-			</Container>
-			{showDupWarning && (
-				<Padding all="small">
-					<Text size="small" color="error">
-						{t('folder.modal.new.duplicate_warning', 'Calendar with the same name already exists')}
-					</Text>
-				</Padding>
-			)}
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				orientation="horizontal"
-				height="fit"
-			>
-				<Row orientation="vertical" width="50%" crossAlignment="flex-start">
-					<Text size="small" color="secondary">
-						{t('type', 'Type')}
-					</Text>
-					<Text>{t('label.calendar', 'Calendar')}</Text>
-				</Row>
-				<Row orientation="vertical" width="50%" crossAlignment="flex-start">
-					<Text size="small" color="secondary">
-						{t('appointments', 'Appointments')}
-					</Text>
-					<Text>{totalAppointments}</Text>
-				</Row>
-			</Container>
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				orientation="horizontal"
-				height="fit"
-			>
-				<Select
-					label={t('label.calendar_color', 'Calendar color')}
-					onChange={onSelectedColorChange}
-					items={colors}
-					defaultSelection={selectedColor}
-					LabelFactory={LabelFactory}
-				/>
-			</Container>
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="flex-start"
-				crossAlignment="flex-start"
-				orientation="horizontal"
-				height="fit"
-			>
-				<Checkbox
-					value={freeBusy}
-					defaultChecked={defaultFreeBusy}
-					onClick={toggleFreeBusy}
-					label={t(
-						'label.exclude_free_busy',
-						'Exclude this calendar when reporting the free/busy times'
 					)}
-				/>
-			</Container>
-			{!isEmpty(folder?.acl) && !(folder.isLink && folder.owner) && (
-				<>
-					<Container
-						padding={{ top: 'small', bottom: 'small' }}
-						mainAlignment="center"
-						crossAlignment="flex-start"
-						orientation="horizontal"
-					>
-						<Divider />
-					</Container>
-					<Container
-						padding={{ top: 'small', bottom: 'small' }}
-						mainAlignment="flex-start"
-						crossAlignment="flex-start"
-						orientation="horizontal"
-					>
-						<Text weight="bold">{t('label.sharing_of_this_folder', 'Sharing of this folder')}</Text>
-					</Container>
-					<Container style={{ overflowY: 'auto' }} padding="small" mainAlignment="flex-start">
-						{grant &&
-							grant.length > 0 &&
-							map(grant, (item, index) => (
+				</Container>
+				{showDupWarning && (
+					<Padding all="small">
+						<Text size="small" color="error">
+							{t(
+								'folder.modal.new.duplicate_warning',
+								'Calendar with the same name already exists'
+							)}
+						</Text>
+					</Padding>
+				)}
+				<Container
+					padding={{ top: 'small', bottom: 'small' }}
+					mainAlignment="center"
+					crossAlignment="flex-start"
+					orientation="horizontal"
+					height="fit"
+				>
+					<Row orientation="vertical" width="50%" crossAlignment="flex-start">
+						<Text size="small" color="secondary">
+							{t('type', 'Type')}
+						</Text>
+						<Text>{t('label.calendar', 'Calendar')}</Text>
+					</Row>
+					<Row orientation="vertical" width="50%" crossAlignment="flex-start">
+						<Text size="small" color="secondary">
+							{t('appointments', 'Appointments')}
+						</Text>
+						<Text>{totalAppointments}</Text>
+					</Row>
+				</Container>
+				<Container
+					padding={{ top: 'small', bottom: 'small' }}
+					mainAlignment="center"
+					crossAlignment="flex-start"
+					orientation="horizontal"
+					height="fit"
+				>
+					<Select
+						label={t('label.calendar_color', 'Calendar color')}
+						onChange={onSelectedColorChange}
+						items={colors}
+						defaultSelection={selectedColor}
+						LabelFactory={LabelFactory}
+					/>
+				</Container>
+				<Container
+					padding={{ top: 'small', bottom: 'small' }}
+					mainAlignment="flex-start"
+					crossAlignment="flex-start"
+					orientation="horizontal"
+					height="fit"
+				>
+					<Checkbox
+						value={freeBusy}
+						defaultChecked={defaultFreeBusy}
+						onClick={toggleFreeBusy}
+						label={t(
+							'label.exclude_free_busy',
+							'Exclude this calendar when reporting the free/busy times'
+						)}
+					/>
+				</Container>
+				{!isEmpty(folder?.acl) && !(folder.isLink && folder.owner) && (
+					<>
+						<Container
+							padding={{ top: 'small', bottom: 'small' }}
+							mainAlignment="center"
+							crossAlignment="flex-start"
+							orientation="horizontal"
+						>
+							<Divider />
+						</Container>
+						<Container
+							padding={{ top: 'small', bottom: 'small' }}
+							mainAlignment="flex-start"
+							crossAlignment="flex-start"
+							orientation="horizontal"
+						>
+							<Text weight="bold">
+								{t('label.sharing_of_this_folder', 'Sharing of this folder')}
+							</Text>
+						</Container>
+						<>
+							{grant && grant.length > 0 && (
 								<Container
-									orientation="horizontal"
-									mainAlignment="flex-end"
-									padding={{ bottom: 'small' }}
-									key={index}
+									style={{ overflowY: 'auto' }}
+									mainAlignment="flex-start"
+									minHeight={grant.length === 1 ? '2rem' : '4rem'}
+									maxHeight={'4rem'}
+									padding={{ right: 'small' }}
 								>
-									<GranteeInfo grant={item} />
-									<Container orientation="horizontal" mainAlignment="flex-end" maxWidth="fit">
-										{item.gt !== SHARE_USER_TYPE.PUBLIC && (
-											<>
-												<Tooltip label={t('tooltip.edit', 'Edit share properties')} placement="top">
+									{map(grant, (item, index) => (
+										<Container
+											orientation="horizontal"
+											mainAlignment="flex-end"
+											padding={{ bottom: 'small' }}
+											key={index}
+										>
+											<StyledContainer crossAlignment="flex-start">
+												<GranteeChip grant={item} />
+											</StyledContainer>
+											<Container orientation="horizontal" mainAlignment="flex-end" width={'fit'}>
+												{item.gt !== SHARE_USER_TYPE.PUBLIC && (
+													<>
+														<Tooltip
+															label={t('tooltip.edit', 'Edit share properties')}
+															placement="top"
+														>
+															<Button
+																type="outlined"
+																label={t('label.edit', 'Edit')}
+																onClick={(): void => {
+																	onEdit(item);
+																}}
+																size="small"
+															/>
+														</Tooltip>
+														<Padding horizontal="extrasmall" />
+													</>
+												)}
+												<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
 													<Button
 														type="outlined"
-														label={t('label.edit', 'Edit')}
+														label={t('label.revoke', 'Revoke')}
+														color="error"
 														onClick={(): void => {
-															onEdit(item);
+															onRevoke(item);
 														}}
 														size="small"
 													/>
 												</Tooltip>
-												<Padding horizontal="extrasmall" />
-											</>
-										)}
-										<Tooltip label={t('revoke_access', 'Revoke access')} placement="top">
-											<Button
-												type="outlined"
-												label={t('label.revoke', 'Revoke')}
-												color="error"
-												onClick={(): void => {
-													onRevoke(item);
-												}}
-												size="small"
-											/>
-										</Tooltip>
-										{item.gt !== SHARE_USER_TYPE.PUBLIC && (
-											<>
-												<Padding horizontal="extrasmall" />
-												<Tooltip
-													label={t('tooltip.resend', 'Send mail notification about this share')}
-													placement="top"
-													maxWidth="18.75rem"
-												>
-													<Button
-														type="outlined"
-														label={t('label.resend', 'Resend')}
-														onClick={(): void => {
-															onResend(item);
-														}}
-														size="small"
-													/>
-												</Tooltip>
-											</>
-										)}
-									</Container>
+												{item.gt !== SHARE_USER_TYPE.PUBLIC && (
+													<>
+														<Padding horizontal="extrasmall" />
+														<Tooltip
+															label={t('tooltip.resend', 'Send mail notification about this share')}
+															placement="top"
+															maxWidth="18.75rem"
+														>
+															<Button
+																type="outlined"
+																label={t('label.resend', 'Resend')}
+																onClick={(): void => {
+																	onResend(item);
+																}}
+																size="small"
+															/>
+														</Tooltip>
+													</>
+												)}
+											</Container>
+										</Container>
+									))}
 								</Container>
-							))}
-					</Container>
-				</>
-			)}
+							)}
+						</>
+					</>
+				)}
+			</ModalBody>
+			<Divider />
 			<ModalFooter
 				onConfirm={onConfirm}
-				label={t('label.ok', 'OK')}
-				secondaryAction={onShare}
-				secondaryLabel={t('label.add_share', 'Add share')}
-				secondaryBtnType="outlined"
-				secondaryColor="primary"
-				disabled={disabled}
+				confirmLabel={t('label.ok', 'OK')}
+				confirmDisabled={disabled}
+				onSecondaryAction={onShare}
+				secondaryActionLabel={t('label.add_share', 'Add share')}
 			/>
 		</Container>
 	);

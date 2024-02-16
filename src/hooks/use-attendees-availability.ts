@@ -24,7 +24,7 @@ export type AttendeesAvailabilityListType = Array<AttendeesAvailabilityType> | u
 
 export const useAttendeesAvailability = (
 	start: Editor['start'],
-	attendees: Editor['attendees'],
+	attendees: Editor['attendees'] | undefined,
 	excludeUid?: string | undefined
 ): AttendeesAvailabilityListType => {
 	const [previousStart, setPreviousStart] = useState<Editor['start']>(start);
@@ -129,5 +129,5 @@ export const useAttendeesAvailability = (
 		}
 	}, [attendeesWithEmail, attendeesAvailabilityList, excludeUid, previousStart, start]);
 
-	return attendeesAvailabilityList;
+	return useMemo(() => attendeesAvailabilityList, [attendeesAvailabilityList]);
 };

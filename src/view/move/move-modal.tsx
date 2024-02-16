@@ -3,10 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
 import { AccordionItemType, Container, Input, Text } from '@zextras/carbonio-design-system';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 import { filter, isEmpty, reduce, startsWith } from 'lodash';
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
+import { FolderItem } from './folder-item';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
@@ -14,7 +17,6 @@ import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { getFolderTranslatedName } from '../../commons/utilities';
 import { EventType } from '../../types/event';
 import { Calendar } from '../../types/store/calendars';
-import { FolderItem } from './folder-item';
 
 type ActionArgs = {
 	inviteId: string;

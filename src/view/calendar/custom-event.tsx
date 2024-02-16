@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useRef } from 'react';
 
 import {
 	Container,
@@ -12,8 +12,9 @@ import {
 	Row,
 	Tooltip,
 	Dropdown,
-	ModalManagerContext,
-	SnackbarManagerContext
+	Popover,
+	useModal,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
@@ -22,10 +23,9 @@ import { useParams } from 'react-router-dom';
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { MemoCustomEventComponent } from './custom-event-component';
 import { useEventActions } from '../../hooks/use-event-actions';
-import { getInvite } from '../../store/actions/get-invite';
 import { StoreProvider } from '../../store/redux';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
-import { selectInstanceInvite } from '../../store/selectors/invites';
+import { useSummaryView } from '../../store/zustand/hooks';
+import { useAppStatusStore } from '../../store/zustand/store';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
@@ -36,19 +36,12 @@ type CustomEventProps = {
 };
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
-	const dispatch = useAppDispatch();
-	const createModal = useContext(ModalManagerContext);
+	const createModal = useModal();
 	const tags = useTags();
 	const anchorRef = useRef(null);
-	const [open, setOpen] = useState(false);
 	const { action } = useParams<{ action: string }>();
-	const invite = useAppSelector(selectInstanceInvite(event.resource.inviteId));
-	const createSnackbar = useContext(SnackbarManagerContext);
-	const getEventInvite = useCallback(() => {
-		if (!invite) {
-			dispatch(getInvite({ inviteId: event.resource.inviteId, ridZ: event.resource.ridZ }));
-		}
-	}, [dispatch, event.resource.inviteId, event.resource.ridZ, invite]);
+	const createSnackbar = useSnackbar();
+	const summaryViewId = useSummaryView();
 
 	const onEntireSeries = useCallback((): void => {
 		replaceHistory(
@@ -106,18 +99,15 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
-			} else {
-				getEventInvite();
-				if (e.detail === 1 && !open && (action === EventActionsEnum.EXPAND || isNil(action))) {
-					setOpen(true);
-				}
+			} else if (e.detail === 1 && (action === EventActionsEnum.EXPAND || isNil(action))) {
+				useAppStatusStore.setState({ summaryViewId: event.id });
 			}
 		},
-		[event?.resource?.class, event?.haveWriteAccess, createSnackbar, getEventInvite, action, open]
+		[event?.resource?.class, event?.haveWriteAccess, event.id, action, createSnackbar]
 	);
 
 	const onClose = useCallback(() => {
-		setOpen(false);
+		useAppStatusStore.setState({ summaryViewId: undefined });
 	}, []);
 
 	const actions = useEventActions({
@@ -127,7 +117,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 
 	useEffect(() => {
 		if (!isNil(action)) {
-			setOpen(false);
+			useAppStatusStore.setState({ summaryViewId: undefined });
 		}
 	}, [action]);
 
@@ -143,12 +133,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 					onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
 						if (e) (e as Event)?.stopImmediatePropagation?.();
 					}}
-					onOpen={getEventInvite}
 				>
 					<Container
 						width="fill"
 						height="fill"
-						background="transparent"
+						background={'transparent'}
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"
 						onDoubleClick={showPanelView}
@@ -206,15 +195,15 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 					</Container>
 				</Dropdown>
 			</Container>
-			{open && (
-				<MemoEventSummaryView
-					anchorRef={anchorRef}
-					event={event}
-					open={open}
-					invite={invite}
-					onClose={onClose}
-				/>
-			)}
+			<Popover
+				anchorEl={anchorRef}
+				open={summaryViewId === event.id}
+				styleAsModal
+				placement="left"
+				onClose={onClose}
+			>
+				<MemoEventSummaryView event={event} onClose={onClose} inviteId={event.resource.inviteId} />
+			</Popover>
 		</>
 	);
 };

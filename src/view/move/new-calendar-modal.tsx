@@ -27,7 +27,7 @@ import { useFoldersArrayByRoot, useRoot } from '../../carbonio-ui-commons/store/
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { ZIMBRA_STANDARD_COLORS } from '../../commons/zimbra-standard-colors';
+import { CALENDARS_STANDARD_COLORS } from '../../constants/calendar';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { EventType } from '../../types/event';
 
@@ -78,7 +78,7 @@ const LabelFactory: SelectProps['LabelFactory'] = ({
 				<TextUpperCase>{selected?.[0].label}</TextUpperCase>
 			</Row>
 			<Padding right="small">
-				<Square color={ZIMBRA_STANDARD_COLORS[Number(selected?.[0].value)].color} />
+				<Square color={CALENDARS_STANDARD_COLORS[Number(selected[0].value)].color} />
 			</Padding>
 		</Row>
 		<Icon
@@ -90,7 +90,7 @@ const LabelFactory: SelectProps['LabelFactory'] = ({
 	</ColorContainer>
 );
 const getStatusItems = (): SelectItem[] =>
-	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
+	CALENDARS_STANDARD_COLORS.map((el, index) => ({
 		background: el.background,
 		label: el.label ?? '',
 		value: index.toString(),

@@ -3,13 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import {
-	Button,
-	ModalManagerContext,
-	SnackbarManagerContext
-} from '@zextras/carbonio-design-system';
+import { Button, useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { closeBoard, replaceHistory, useBoard } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
@@ -38,8 +34,8 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
-	const createModal = useContext(ModalManagerContext);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createModal = useModal();
+	const createSnackbar = useSnackbar();
 
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [t] = useTranslation();

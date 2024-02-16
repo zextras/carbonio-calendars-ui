@@ -4,22 +4,24 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
+
 import { Container } from '@zextras/carbonio-design-system';
+import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+
+import AdvancedFilterModal from './advance-filter-modal';
+import SearchList from './search-list';
+import SearchPanel from './search-panel';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
+import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
-import SearchList from './search-list';
-import SearchPanel from './search-panel';
-import AdvancedFilterModal from './advance-filter-modal';
-import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
 type SearchProps = {
 	useQuery: () => [Array<any>, (arg: any) => void];

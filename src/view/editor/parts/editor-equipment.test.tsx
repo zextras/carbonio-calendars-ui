@@ -8,29 +8,27 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor, within } from '@testing-library/react';
-import { map, values } from 'lodash';
+import { act, screen, waitFor, within } from '@testing-library/react';
+import { map } from 'lodash';
 import moment from 'moment';
 import { rest } from 'msw';
 
-import { EditorEquipment } from './editor-equipment';
-import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { EditorEquipments } from './editor-equipments';
 import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
-import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { FolderView } from '../../../carbonio-ui-commons/types/folder';
 import { generateEditor } from '../../../commons/editor-generator';
-import { CALENDAR_RESOURCES } from '../../../constants';
-import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { reducers } from '../../../store/redux';
 import { useAppStatusStore } from '../../../store/zustand/store';
-import mockedData from '../../../test/generators';
+import { getCustomResources } from '../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { handleGetFreeBusyCustomResponse } from '../../../test/mocks/network/msw/handle-get-free-busy';
 import { Resource } from '../../../types/editor';
 
-const setupBackendResponse = (
-	items: { id: string; label: string; value: string; email: string; type: string }[]
-): void => {
+const setupEmptyAppStatusStore = (): void => {
+	useAppStatusStore.setState(() => ({ equipment: [] }));
+};
+
+const setupBackendResponse = (items: Resource[]): void => {
 	const freeBusyArrayItems = map(items, (item) => ({
 		id: item.email,
 		f: [
@@ -48,70 +46,24 @@ const setupBackendResponse = (
 	);
 };
 
-const roots = generateRoots();
-const folder = {
-	absFolderPath: '/Calendar 1',
-	id: '10',
-	l: SIDEBAR_ITEMS.ALL_CALENDAR,
-	name: 'Calendar 1',
-	owner: 'random owner',
-	view: 'appointment' as FolderView,
-	n: 1,
-	uuid: 'abcd',
-	recursive: false,
-	deletable: false,
-	activesyncdisabled: true,
-	isLink: true,
-	depth: 1,
-	children: [],
-	reminder: false,
-	broken: false,
-	acl: {
-		grant: []
-	}
-};
-
-const setupFoldersStore = (): void => {
-	useFolderStore.setState(() => ({
-		roots: {
-			...roots,
-			USER: {
-				...roots.USER,
-				children: [folder]
-			}
-		},
-		folders: { [folder.id]: folder }
-	}));
-};
-
-const setupEmptyAppStatusStore = (): void => {
-	useAppStatusStore.setState(() => ({ resources: [] }));
-};
-
-const setupFilledAppStatusStore = (items: Array<Resource>): void => {
-	useAppStatusStore.setState(() => ({
-		resources: items
-	}));
-};
-
-describe('editor equipment', () => {
+describe('Editor equipment', () => {
 	test('The component is visible on screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
 
 		setupEmptyAppStatusStore();
-		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 		await waitFor(() => {
 			user.click(screen.getByText('Equipment'));
 		});
 		expect(screen.getByText('Equipment')).toBeInTheDocument();
 	});
 
-	test('On single selection the redux store value is updated', async () => {
+	test('On type options are visible on screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
-		const items = map({ length: 3 }, () => {
-			const label = faker.commerce.productName();
+		const items = map({ length: 3 }, (_, index) => {
+			const label = `resource ${index}`;
 			return {
 				id: faker.datatype.uuid(),
 				label,
@@ -120,26 +72,33 @@ describe('editor equipment', () => {
 				type: 'Equipment'
 			};
 		});
-		setupFilledAppStatusStore(items);
-		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		const handler = getCustomResources(items);
+		getSetupServer().use(
+			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
+				res(ctx.json(handler))
+			)
+		);
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
-		setupBackendResponse(items);
-
-		await waitFor(() => {
-			user.click(screen.getByText('Equipment'));
+		await act(async () => {
+			await user.type(screen.getByText('Equipment'), 'resource');
 		});
 
-		await user.click(screen.getByText(items[0].label));
-		const updatedEditor = values(store.getState().editor.editors)[0];
+		act(() => {
+			jest.runOnlyPendingTimers();
+		});
 
-		expect(updatedEditor.equipment).toStrictEqual([items[0]]);
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		expect(within(dropdown).getByText(items[0].label)).toBeVisible();
+		expect(within(dropdown).getByText(items[1].label)).toBeVisible();
+		expect(within(dropdown).getByText(items[2].label)).toBeVisible();
 	});
 
-	test('On multiple selection the redux store value is updated', async () => {
+	test('Clicking on the option will update the editor', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
-		const items = map({ length: 3 }, () => {
-			const label = faker.commerce.productName();
+		const items = map({ length: 3 }, (_, index) => {
+			const label = `resource ${index}`;
 			return {
 				id: faker.datatype.uuid(),
 				label,
@@ -148,27 +107,39 @@ describe('editor equipment', () => {
 				type: 'Equipment'
 			};
 		});
-		setupFilledAppStatusStore(items);
-		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		const handler = getCustomResources(items);
 
-		setupBackendResponse(items);
+		setupBackendResponse([items[0]]);
 
-		await waitFor(() => {
-			user.click(screen.getByText('Equipment'));
+		getSetupServer().use(
+			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
+				res(ctx.json(handler))
+			)
+		);
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
+		await act(async () => {
+			await user.type(screen.getByText('Equipment'), 'resource');
 		});
 
-		await user.click(screen.getByText(items[0].label));
-		await user.click(screen.getByText(items[1].label));
-		const updatedEditor = values(store.getState().editor.editors)[0];
+		act(() => {
+			jest.runOnlyPendingTimers();
+		});
 
-		expect(updatedEditor.equipment).toStrictEqual([items[0], items[1]]);
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+
+		await act(async () => {
+			await user.click(within(dropdown).getByText(items[0].label));
+		});
+		expect(dropdown).not.toBeInTheDocument();
+		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
 
-	test('On all selection the redux store value is updated with all equipments', async () => {
+	test('Pressing enter will update the editor', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
-		const items = map({ length: 3 }, () => {
-			const label = faker.commerce.productName();
+		const items = map({ length: 3 }, (_, index) => {
+			const label = `resource ${index}`;
 			return {
 				id: faker.datatype.uuid(),
 				label,
@@ -177,95 +148,31 @@ describe('editor equipment', () => {
 				type: 'Equipment'
 			};
 		});
-		setupFilledAppStatusStore(items);
-		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		const handler = getCustomResources(items);
 
-		setupBackendResponse(items);
+		setupBackendResponse([items[0]]);
 
-		await waitFor(() => {
-			user.click(screen.getByText('Equipment'));
+		getSetupServer().use(
+			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
+				res(ctx.json(handler))
+			)
+		);
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
+		await act(async () => {
+			await user.type(screen.getByText('Equipment'), 'resource');
 		});
 
-		await user.click(screen.getByText('All'));
-		const updatedEditor = values(store.getState().editor.editors)[0];
-
-		expect(updatedEditor.equipment).toStrictEqual(items);
-	});
-
-	test('clicking an already selected equipment will deselect it', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
-		const items = map({ length: 3 }, () => {
-			const label = faker.commerce.productName();
-			return {
-				id: faker.datatype.uuid(),
-				label,
-				value: label,
-				email: faker.internet.email(),
-				type: 'Equipment'
-			};
-		});
-		setupFilledAppStatusStore(items);
-		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
-
-		setupBackendResponse(items);
-
-		await waitFor(() => {
-			user.click(screen.getByText('Equipment'));
-		});
-		await user.click(screen.getByText(items[0].label));
-		await user.click(within(screen.getByTestId('dropdown-popper-list')).getByText(items[0].label));
-
-		const updatedEditor = values(store.getState().editor.editors)[0];
-
-		expect(updatedEditor.equipment).toStrictEqual([]);
-	});
-
-	test('default equipment selection is visible on screen', async () => {
-		setupFoldersStore();
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const items = map({ length: 3 }, () => {
-			const label = faker.commerce.productName();
-			return {
-				id: faker.datatype.uuid(),
-				label,
-				value: label,
-				email: faker.internet.email(),
-				type: 'Equipment'
-			};
-		});
-		const event = mockedData.getEvent();
-		const invite = mockedData.getInvite({
-			context: {
-				attendees: map(items, (equipment) => ({
-					d: equipment.label,
-					ptst: 'AC',
-					role: 'REQ',
-					url: '',
-					rsvp: true,
-					a: equipment.email,
-					cutype: CALENDAR_RESOURCES.RESOURCE
-				}))
-			},
-			event
-		});
-		const editor = generateEditor({
-			event,
-			invite,
-			context: { dispatch: store.dispatch, folders: [folder] }
+		act(() => {
+			jest.runOnlyPendingTimers();
 		});
 
-		setupFilledAppStatusStore(items);
-		const { user } = setupTest(<EditorEquipment editorId={editor.id} />, { store });
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
-		setupBackendResponse(items);
-
-		await waitFor(() => {
-			user.click(screen.getByText('Equipment'));
+		await act(async () => {
+			await user.keyboard('[Enter]');
 		});
-
-		expect(
-			screen.getByText(`${items[0].label}, ${items[1].label}, ${items[2].label}`)
-		).toBeInTheDocument();
+		expect(dropdown).not.toBeInTheDocument();
+		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
 });

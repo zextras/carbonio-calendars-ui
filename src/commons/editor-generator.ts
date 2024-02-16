@@ -12,7 +12,6 @@ import { getIdentityItems } from './get-identity-items';
 import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { PREFS_DEFAULTS } from '../constants';
-import { setCalendarColor } from '../normalizations/normalizations-utils';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
 import { createNewEditor } from '../store/slices/editor-slice';
 import { Editor } from '../types/editor';
@@ -49,6 +48,7 @@ export const disabledFields = {
 	location: false,
 	meetingRoom: false,
 	virtualRoom: false,
+	equipment: false,
 	attendees: false,
 	optionalAttendees: false,
 	freeBusySelector: false,
@@ -108,6 +108,11 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 		allDay: false,
 		freeBusy: 'B',
 		class: 'PUB',
+		originalStart: moment().set('second', 0).set('millisecond', 0).valueOf(),
+		originalEnd: getEndTime({
+			start: moment().set('second', 0).set('millisecond', 0).valueOf(),
+			duration: zimbraPrefCalendarDefaultApptDuration as string
+		}),
 		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
 		end: getEndTime({
 			start: moment().set('second', 0).set('millisecond', 0).valueOf(),

@@ -3,20 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useMemo, useState, FC, ReactElement } from 'react';
+import React, { useCallback, useMemo, useState, FC, ReactElement } from 'react';
 
 import {
 	Checkbox,
 	Container,
 	Input,
 	Row,
-	SnackbarManagerContext,
-	Text
+	Text,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts, Grant } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
-import { GranteeInfo } from './grantee-info';
+import { GranteeChip } from './grantee-chip';
 import { Folder } from '../../../../carbonio-ui-commons/types/folder';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
@@ -44,7 +44,7 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 	const { onClose } = useEditModalContext();
 	const accounts = useUserAccounts();
 	const dispatch = useAppDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 
 	const tooltipLabel = useMemo(() => {
 		if (sendNotification && standardMessage !== '') {
@@ -122,7 +122,7 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 				crossAlignment="flex-start"
 				height="fit"
 			>
-				<GranteeInfo grant={grant} />
+				<GranteeChip grant={grant} />
 			</Container>
 			{grant.gt !== SHARE_USER_TYPE.PUBLIC && (
 				<>

@@ -3,14 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+
 import { Container, CustomModal } from '@zextras/carbonio-design-system';
 import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
-import { ModalHeader } from '../../commons/modal-header';
+
+import { AppointmentReminderItem } from './appointment-reminder-item';
+import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
 import { generateEditor } from '../../commons/editor-generator';
 import ModalFooter from '../../commons/modal-footer';
+import { ModalHeader } from '../../commons/modal-header';
 import { CALENDAR_ROUTE } from '../../constants';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
@@ -18,8 +22,6 @@ import { dismissApptReminder } from '../../store/actions/dismiss-appointment-rem
 import { getInvite } from '../../store/actions/get-invite';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ReminderItem, Reminders } from '../../types/appointment-reminder';
-import { AppointmentReminderItem } from './appointment-reminder-item';
-import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
 
 export const ReminderModal = ({
 	reminders,

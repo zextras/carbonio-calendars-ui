@@ -3,36 +3,39 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback } from 'react';
+import React, { ReactElement, useMemo } from 'react';
+
 import { Button, Container, Padding } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { sendInviteResponse } from '../../store/actions/send-invite-response';
+
+import {
+	acceptAsTentative,
+	acceptInvitation,
+	declineInvitation,
+	proposeNewTimeFn
+} from '../../actions/appointment-actions-fn';
+import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { useAppDispatch } from '../../store/redux/hooks';
-import { ParticipationStatus } from '../../types/store/invite';
+import { EventType } from '../../types/event';
+import { Invite } from '../../types/store/invite';
 
 type ReplyButtonProps = {
-	inviteId: string;
-	participationStatus: ParticipationStatus;
+	event: EventType;
+	invite: Invite;
 };
 
-export const ReplyButtonsPart = ({
-	inviteId,
-	participationStatus
-}: ReplyButtonProps): ReactElement => {
+export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElement => {
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
+	const folders = useCalendarFolders();
 
-	const replyAction = useCallback(
-		(action) => {
-			dispatch(
-				sendInviteResponse({
-					inviteId,
-					updateOrganizer: true,
-					action
-				})
-			);
-		},
-		[dispatch, inviteId]
+	const context = useMemo(
+		() => ({
+			dispatch,
+			folders,
+			isInstance: !!event.resource.ridZ
+		}),
+		[dispatch, event.resource.ridZ, folders]
 	);
 
 	return (
@@ -43,33 +46,41 @@ export const ReplyButtonsPart = ({
 			width="fill"
 			height="fit"
 			padding={{ all: 'large' }}
-			background="gray6"
+			background={'gray6'}
 		>
 			<Button
 				type="outlined"
-				label={t('event.action.yes', 'yes')}
-				icon="CheckmarkCircle2"
+				label={t('event.action.accept', 'Accept')}
+				icon="CheckmarkOutline"
 				color="success"
-				onClick={(): void => replyAction('ACCEPT')}
-				disabled={participationStatus === 'AC'}
+				onClick={acceptInvitation({ event, invite, context })}
+				disabled={event.resource.participationStatus === 'AC'}
 			/>
 			<Padding horizontal="small" />
 			<Button
 				type="outlined"
-				label={t('label.maybe', 'maybe')}
-				icon="QuestionMarkCircle"
+				label={t('label.tentative', 'Tentative')}
+				icon="QuestionMarkOutline"
 				color="warning"
-				onClick={(): void => replyAction('TENTATIVE')}
-				disabled={participationStatus === 'TE'}
+				onClick={acceptAsTentative({ event, invite, context })}
+				disabled={event.resource.participationStatus === 'TE'}
 			/>
 			<Padding horizontal="small" />
 			<Button
 				type="outlined"
-				label={t('event.action.no', 'no')}
-				icon="CloseCircle"
+				label={t('event.action.decline', 'Decline')}
+				icon="CloseOutline"
 				color="error"
-				onClick={(): void => replyAction('DECLINE')}
-				disabled={participationStatus === 'DE'}
+				onClick={declineInvitation({ event, invite, context })}
+				disabled={event.resource.participationStatus === 'DE'}
+			/>
+			<Padding horizontal="small" />
+			<Button
+				type="outlined"
+				label={t('label.propose_new_time', 'Propose new time')}
+				icon="ClockOutline"
+				color="primary"
+				onClick={proposeNewTimeFn({ event, invite, context })}
 			/>
 		</Container>
 	);

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import '@testing-library/jest-dom';
+import { configure } from '@testing-library/react';
 import failOnConsole from 'jest-fail-on-console';
 import moment from 'moment-timezone';
 import { rest } from 'msw';
@@ -23,11 +24,13 @@ import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/han
 import { handleCreateAppointmentExceptionRequest } from './src/test/mocks/network/msw/handle-create-appointment-exception';
 import { handleCreateFolderRequest } from './src/test/mocks/network/msw/handle-create-folder';
 import { handleFolderActionRequest } from './src/test/mocks/network/msw/handle-folder-action';
+import { handleGetAppointmentRequest } from './src/test/mocks/network/msw/handle-get-appointment';
 import { handleGetFolderRequest } from './src/test/mocks/network/msw/handle-get-folder';
 import { handleGetFreeBusy } from './src/test/mocks/network/msw/handle-get-free-busy';
 import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite';
 import { handleItemActionRequest } from './src/test/mocks/network/msw/handle-item-action';
 import { handleModifyAppointmentRequest } from './src/test/mocks/network/msw/handle-modify-appointment';
+import { handleSearchCalendarResourcesRequest } from './src/test/mocks/network/msw/handle-search-calendar-resoruces';
 import { handleSendInviteReplyRequest } from './src/test/mocks/network/msw/handle-send-invite-reply';
 import { handleSendShareNotificationRequest } from './src/test/mocks/network/msw/handle-send-share-notification';
 
@@ -35,6 +38,10 @@ global.Notification = jest.fn() as unknown as jest.Mocked<typeof Notification>;
 global.Audio = jest.fn().mockImplementation(() => ({
 	play: jest.fn()
 }));
+
+configure({
+	asyncUtilTimeout: 2000
+});
 
 failOnConsole({ ...getFailOnConsoleDefaultConfig(), shouldFailOnWarn: false });
 
@@ -56,7 +63,9 @@ beforeAll(() => {
 		),
 		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest),
 		rest.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest),
-		rest.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest)
+		rest.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest),
+		rest.post('/service/soap/SearchCalendarResourcesRequest', handleSearchCalendarResourcesRequest),
+		rest.post('/service/soap/GetAppointmentRequest', handleGetAppointmentRequest)
 	];
 	registerRestHandler(...h);
 	defaultBeforeAllTests();

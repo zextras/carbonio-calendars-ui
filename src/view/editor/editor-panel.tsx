@@ -14,8 +14,7 @@ import { EditorAttendees } from './parts/editor-attendees';
 import { EditorCalendarSelector } from './parts/editor-calendar-selector';
 import { EditorComposer } from './parts/editor-composer';
 import { EditorDatePicker } from './parts/editor-date-picker';
-import { EditorDropZone } from './parts/editor-dropzone';
-import { EditorEquipment } from './parts/editor-equipment';
+import { EditorEquipments } from './parts/editor-equipments';
 import { EditorFreeBusySelector } from './parts/editor-free-busy-selector';
 import { EditorLocation } from './parts/editor-location';
 import { EditorMeetingRooms } from './parts/editor-meeting-rooms';
@@ -43,53 +42,60 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 			<EditorActions editorId={editorId} />
 			<EditorSummary editorId={editorId} />
 			<Divider />
-			<EditorDropZone editorId={editorId}>
-				<Container style={{ overflowY: 'auto' }} height="fit">
-					<EditorOrganizer editorId={editorId} />
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorTitle editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorLocation editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorMeetingRooms editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorEquipment editorId={editorId} />
-					</Row>
-					<EditorVirtualRoom editorId={editorId} />
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorAttendees editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorFreeBusySelector editorId={editorId} />
-					</Row>
-					<EditorCalendarSelector editorId={editorId} />
-					<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
-						<EditorPrivateCheckbox editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorDatePicker editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorTimezone editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
-						<EditorAllDayCheckbox editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorReminder editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorRecurrence editorId={editorId} expanded={expanded} />
-					</Row>
-					<EditorAttachments editorId={editorId} expanded={expanded} />
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorComposer editorId={editorId} />
-					</Row>
-				</Container>
-			</EditorDropZone>
-			<EditorResourcesController />
+			<Container
+				height="fit"
+				background={'gray6'}
+				mainAlignment="flex-start"
+				crossAlignment="flex-start"
+				padding={{ all: 'large', bottom: 'extralarge' }}
+				style={{
+					overflowY: 'auto'
+				}}
+			>
+				<EditorOrganizer editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorTitle editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorLocation editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorMeetingRooms editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorEquipments editorId={editorId} />
+				</Row>
+				<EditorVirtualRoom editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorAttendees editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorFreeBusySelector editorId={editorId} />
+				</Row>
+				<EditorCalendarSelector editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
+					<EditorPrivateCheckbox editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorDatePicker editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorTimezone editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
+					<EditorAllDayCheckbox editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorReminder editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorRecurrence editorId={editorId} expanded={expanded} />
+				</Row>
+				<EditorAttachments editorId={editorId} expanded={expanded} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorComposer editorId={editorId} />
+				</Row>
+			</Container>
+			<EditorResourcesController editorId={editorId} />
 		</Container>
 	) : null;

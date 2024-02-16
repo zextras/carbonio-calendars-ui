@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback } from 'react';
+
 import { Input } from '@zextras/carbonio-design-system';
 import { isNaN, isNumber } from 'lodash';
-import React, { ReactElement, useCallback } from 'react';
 
 type IntervalInputProps = {
 	label: string;

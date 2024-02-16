@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Editor, IdentityItem, Resource } from '../../types/editor';
-
 import { InviteFreeBusy } from '../../types/store/invite';
 import type { RootState } from '../redux';
 
@@ -170,6 +169,11 @@ export const selectEditorAttachmentFiles =
 	(id: string) =>
 	(state: RootState): Array<any> =>
 		state?.editor?.editors?.[id]?.attachmentFiles;
+
+export const selectEditorAttachmentAid =
+	(id: string) =>
+	(state: RootState): Array<string> =>
+		state?.editor?.editors?.[id]?.attach?.aid;
 
 export const selectEditorAttach =
 	(id: string) =>

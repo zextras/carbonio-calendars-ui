@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useCallback, useMemo } from 'react';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
+
 import {
 	Container,
 	Row,
@@ -15,15 +14,18 @@ import {
 	Padding,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { find, reduce, includes } from 'lodash';
 import { useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
-import { useTagExist } from '../tags/tag-actions';
-import { selectInstanceInvite } from '../../store/selectors/invites';
-import { getInvite } from '../../store/actions/get-invite';
+import { find, reduce, includes } from 'lodash';
+import moment from 'moment';
+import { useTranslation } from 'react-i18next';
+
 import { openAppointment } from '../../actions/appointment-actions-fn';
-import { PANEL_VIEW } from '../../constants';
-import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { PANEL_VIEW } from '../../constants';
+import { getInvite } from '../../store/actions/get-invite';
+import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
+import { selectInstanceInvite } from '../../store/selectors/invites';
+import { useTagExist } from '../tags/tag-actions';
 
 const SearchListItem = ({ item, active }) => {
 	const isShared = item?.resource?.l?.includes(':');
@@ -43,12 +45,12 @@ const SearchListItem = ({ item, active }) => {
 	);
 	const [color, icon] = useMemo(() => {
 		if (item.resource?.ptst === 'TE') {
-			return ['warning', 'QuestionMarkCircle'];
+			return ['warning', 'QuestionMarkOutline'];
 		}
 		if (item.resource?.ptst === 'DE') {
-			return ['error', 'CloseCircle'];
+			return ['error', 'CloseOutline'];
 		}
-		return ['success', 'CheckmarkCircle2'];
+		return ['success', 'CheckmarkOutline'];
 	}, [item.resource?.ptst]);
 
 	const timeString = useMemo(

@@ -5,7 +5,7 @@
  */
 import React, { useMemo } from 'react';
 
-import { Chip, Container } from '@zextras/carbonio-design-system';
+import { Chip } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +13,7 @@ import { Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../constants';
 
-export const GranteeInfo = ({ grant }: { grant: Grant }): JSX.Element => {
+export const GranteeChip = ({ grant }: { grant: Grant }): JSX.Element => {
 	const [t] = useTranslation();
 	const { roleOptions } = useEditModalContext();
 
@@ -24,9 +24,5 @@ export const GranteeInfo = ({ grant }: { grant: Grant }): JSX.Element => {
 		return `${grant.d ?? grant.zid ?? publicLabel} - ${role?.label}`;
 	}, [grant.d, grant.gt, grant.zid, role, t]);
 
-	return (
-		<Container crossAlignment="flex-start">
-			<Chip label={label} />
-		</Container>
-	);
+	return <Chip label={label} maxWidth={'fill'} />;
 };

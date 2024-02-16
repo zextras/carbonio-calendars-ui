@@ -3,13 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback } from 'react';
+
 import { Tooltip } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import React, { ReactElement, useCallback } from 'react';
+
+import { ResizedIconCheckbox } from './editor-styled-components';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorIsRichText } from '../../../store/selectors/editor';
 import { editIsRichText } from '../../../store/slices/editor-slice';
-import { ResizedIconCheckbox } from './editor-styled-components';
 
 export const EditorRichTextButton = ({ editorId }: { editorId: string }): ReactElement => {
 	const isRichText = useAppSelector(selectEditorIsRichText(editorId));

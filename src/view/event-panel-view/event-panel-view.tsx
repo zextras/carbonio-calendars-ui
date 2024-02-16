@@ -16,7 +16,7 @@ import {
 	Text,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, replaceHistory, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { filter, find, noop } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -34,7 +34,7 @@ import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { extractBody } from '../../commons/body-message-renderer';
 import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
-import { useEventActions } from '../../hooks/use-event-actions';
+import { isAnInvite, useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
@@ -121,6 +121,7 @@ const ActionButtons = ({
 						a.id !== EventActionsEnum.ACCEPT &&
 						a.id !== EventActionsEnum.TENTATIVE &&
 						a.id !== EventActionsEnum.DECLINE &&
+						a.id !== EventActionsEnum.PROPOSE_NEW_TIME &&
 						a.id !== primaryAction.id
 				);
 			}
@@ -132,6 +133,7 @@ const ActionButtons = ({
 					a.id !== EventActionsEnum.ACCEPT &&
 					a.id !== EventActionsEnum.TENTATIVE &&
 					a.id !== EventActionsEnum.DECLINE &&
+					a.id !== EventActionsEnum.PROPOSE_NEW_TIME &&
 					a.id !== primaryAction.id
 			);
 		}
@@ -236,7 +238,6 @@ export const DisplayerHeader = ({
 
 export default function EventPanelView(): ReactElement | null {
 	const { calendarId, apptId, ridZ } = useParams<RouteParams>();
-	const user = useUserAccount();
 	const calendar = useFolder(calendarId);
 	const appointment = useAppSelector(selectAppointment(apptId));
 	const instance = useAppSelector(selectAppointmentInstance(apptId, ridZ));
@@ -255,10 +256,16 @@ export default function EventPanelView(): ReactElement | null {
 
 	const messageHasABody = useMemo(() => {
 		const body = extractBody(invite?.textDescription?.[0]?._content);
-		return body?.length > 0;
+		/* TODO: appointments descriptions needs a refactor. Currently appointments descriptions are created with a double
+		    quotes inside breaking the first condition */
+		return body?.length > 0 && body !== '"';
 	}, [invite?.textDescription]);
 
-	return event && invite ? (
+	if (!event || !invite) {
+		return null;
+	}
+
+	return (
 		<AppointmentCardContainer mainAlignment="flex-start">
 			<DisplayerHeader event={event} panelView={PANEL_VIEW.APP} />
 			<Container
@@ -286,17 +293,13 @@ export default function EventPanelView(): ReactElement | null {
 					{event.resource.organizer &&
 						!event.resource.iAmOrganizer &&
 						!(calendar as LinkFolder)?.owner &&
-						invite &&
-						!!find(invite.attendees, ['d', (calendar as LinkFolder)?.owner ?? user?.name]) && (
+						isAnInvite(event) && (
 							<>
-								<ReplyButtonsPart
-									inviteId={event.resource.inviteId}
-									participationStatus={event.resource.participationStatus}
-								/>
+								<ReplyButtonsPart event={event} invite={invite} />
 								<StyledDivider />
 							</>
 						)}
-					{invite && event && invite.organizer && (
+					{invite.organizer && (
 						<>
 							<ParticipantsPart
 								invite={invite}
@@ -307,13 +310,13 @@ export default function EventPanelView(): ReactElement | null {
 							<StyledDivider />
 						</>
 					)}
-					{invite && messageHasABody && (
+					{messageHasABody && (
 						<>
 							<MessagePart fullInvite={invite} inviteId={invite.id} parts={invite.parts} />
 							<StyledDivider />
 						</>
 					)}
-					{invite && alarmString && (
+					{alarmString && (
 						<>
 							<ReminderPart alarmString={alarmString} invite={invite} event={event} />
 							<StyledDivider />
@@ -334,5 +337,5 @@ export default function EventPanelView(): ReactElement | null {
 				</BodyContainer>
 			</Container>
 		</AppointmentCardContainer>
-	) : null;
+	);
 }

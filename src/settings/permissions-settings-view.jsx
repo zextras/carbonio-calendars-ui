@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
+
 import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
 import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';

@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import React, { FC } from 'react';
+
+import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
+
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 

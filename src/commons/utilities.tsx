@@ -8,7 +8,6 @@ import { FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
 import { find, forEach, isNil, map, reduce, some } from 'lodash';
 import moment from 'moment';
 
-import { ZIMBRA_STANDARD_COLORS } from './zimbra-standard-colors';
 import {
 	getFoldersArray,
 	getRoot,
@@ -17,9 +16,10 @@ import {
 import type { Folder } from '../carbonio-ui-commons/types/folder';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { FOLDER_OPERATIONS } from '../constants/api';
+import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
-import { getMiniCal } from '../store/actions/get-mini-cal';
 import { folderAction } from '../store/actions/calendar-actions';
+import { getMiniCal } from '../store/actions/get-mini-cal';
 import { searchAppointments } from '../store/actions/search-appointments';
 import { AppDispatch } from '../store/redux';
 import { ReminderItem } from '../types/appointment-reminder';
@@ -352,10 +352,10 @@ export const getFolderTranslatedName = ({
 export const getFolderIconColor = (f: Folder): string => {
 	if (f?.color) {
 		return Number(f.color) < 10
-			? ZIMBRA_STANDARD_COLORS[Number(f.color)].color
-			: f?.rgb ?? ZIMBRA_STANDARD_COLORS[0].color;
+			? CALENDARS_STANDARD_COLORS[Number(f.color)].color
+			: f?.rgb ?? CALENDARS_STANDARD_COLORS[0].color;
 	}
-	return ZIMBRA_STANDARD_COLORS[0].color;
+	return CALENDARS_STANDARD_COLORS[0].color;
 };
 
 export type RecursiveToggleCheckProps = {

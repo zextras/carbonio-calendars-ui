@@ -5,9 +5,11 @@
  */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement, useCallback } from 'react';
+
 import { Row } from '@zextras/carbonio-design-system';
+import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
+
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorRoom } from '../../../store/selectors/editor';
 import { editEditorRoom } from '../../../store/slices/editor-slice';

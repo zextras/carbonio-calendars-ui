@@ -3,10 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { ReactElement, useCallback } from 'react';
+
 import { Select } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual } from 'lodash';
-import React, { ReactElement, useCallback } from 'react';
+
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 
 type OrdinalNumberSelectProps = {

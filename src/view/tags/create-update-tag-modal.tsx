@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+
 import { Input, Padding, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
 import { changeTagColor, createTag, renameTag, t } from '@zextras/carbonio-shell-ui';
-import React, { FC, ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { ItemType } from '../../carbonio-ui-commons/types/tags';

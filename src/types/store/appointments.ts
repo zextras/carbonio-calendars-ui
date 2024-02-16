@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { AlarmType } from '../event';
 import { InviteClass, InviteFreeBusy, InviteStatus, ParticipationStatus } from './invite';
+import { AlarmType } from '../event';
 
 export type SingleReference = {
 	recur: boolean;

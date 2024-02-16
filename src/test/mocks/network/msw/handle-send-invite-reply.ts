@@ -8,12 +8,7 @@ import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/so
 
 const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
-		context: {
-			session: {
-				id: 1403,
-				_content: 1403
-			}
-		}
+		context: {}
 	},
 	Body: {
 		SendInviteReplyResponse: {

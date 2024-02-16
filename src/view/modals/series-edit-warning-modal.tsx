@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useCallback, useContext, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
-import { Container, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
+import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { closeBoard, useBoard, t } from '@zextras/carbonio-shell-ui';
 
 import ModalFooter from '../../commons/modal-footer';
@@ -50,7 +50,7 @@ export const SeriesEditWarningModal = ({
 	const meetingRoomLength = useAppSelector(selectEditorMeetingRoom(editorId))?.length;
 	const equipmentsLength = useAppSelector(selectEditorEquipment(editorId))?.length;
 	const dispatch = useAppDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 
 	const title = useMemo(() => t('label.warning', 'Warning'), []);
 	const label = useMemo(() => t('label.continue', 'Continue'), []);

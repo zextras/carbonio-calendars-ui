@@ -11,10 +11,12 @@ import { LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
+import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
 import { DateType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
+import { getInstanceExceptionId } from '../utils/event';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getVirtualRoom = (xprop: any): { label: string; link: string } | undefined => {
@@ -29,17 +31,29 @@ export const getVirtualRoom = (xprop: any): { label: string; link: string } | un
 	return undefined;
 };
 
-const getMeetingRooms = (attendees: Array<Attendee>): Array<{ email: string; label: string }> =>
-	map(filter(attendees, ['cutype', CALENDAR_RESOURCES.ROOM]), (at) => ({
-		label: at.d,
-		email: at.a
-	}));
+export const getMeetingRooms = (
+	attendees: Array<Attendee>
+): Array<{ email: string; label: string }> | undefined => {
+	const rooms = filter(attendees, ['cutype', CALENDAR_RESOURCES.ROOM]);
+	return rooms.length
+		? map(rooms, (at) => ({
+				label: at.d,
+				email: at.a
+		  }))
+		: undefined;
+};
 
-const getEquipments = (attendees: Array<Attendee>): Array<{ email: string; label: string }> =>
-	map(filter(attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]), (at) => ({
-		label: at.d,
-		email: at.a
-	}));
+export const getEquipments = (
+	attendees: Array<Attendee>
+): Array<{ email: string; label: string }> | undefined => {
+	const equipments = filter(attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]);
+	return equipments.length
+		? map(equipments, (at) => ({
+				label: at.d,
+				email: at.a
+		  }))
+		: undefined;
+};
 
 const getAttendees = (attendees: any[], role: string): any[] =>
 	map(filter(attendees, ['role', role]), (at) =>
@@ -197,7 +211,9 @@ export const normalizeEditor = ({
 			? extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? ''
 			: '';
 
-		const folder = find(context?.folders, ['id', calendarId]);
+		const folder =
+			find(context?.folders, ['id', calendarId]) ??
+			find(context?.folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
 
 		const calendar = normalizeCalendarEditor(folder);
 
@@ -218,11 +234,13 @@ export const normalizeEditor = ({
 				meetingRoom: getMeetingRooms(invite.attendees),
 				equipment: getEquipments(invite.attendees),
 				room: getVirtualRoom(invite.xprop),
-				attendees: getAttendees(invite.attendees, 'REQ'),
-				optionalAttendees: getAttendees(invite.attendees, 'OPT'),
+				attendees: getAttendees(invite.attendees, PARTICIPANT_ROLE.REQUIRED),
+				optionalAttendees: getAttendees(invite.attendees, PARTICIPANT_ROLE.OPTIONAL),
 				allDay: event?.allDay,
 				freeBusy: invite.freeBusy,
 				class: invite.class,
+				originalStart: start,
+				originalEnd: end,
 				start,
 				end,
 				timezone: invite?.start?.tz,

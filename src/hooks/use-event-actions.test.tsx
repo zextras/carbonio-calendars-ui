@@ -4,17 +4,19 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import moment from 'moment';
+import { screen, waitFor } from '@testing-library/react';
 import { find } from 'lodash';
+import moment from 'moment';
+
+import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../carbonio-ui-commons/test/test-setup';
-import mockedData from '../test/generators';
 import { reducers } from '../store/redux';
-import { DeleteEventModal } from '../view/modals/delete-event-modal';
+import mockedData from '../test/generators';
 import { Appointment } from '../types/store/appointments';
-import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import { DeleteEventModal } from '../view/modals/delete-event-modal';
 
 shell.getUserSettings.mockImplementation(() => defaultSettings);
 // the entire test suites is skipped because it is going to be removed once "IRIS-4483" will be completed
