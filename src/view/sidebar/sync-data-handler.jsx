@@ -38,42 +38,38 @@ export const SyncDataHandler = () => {
 		if (notifyList.length > 0) {
 			forEach(sortBy(notifyList, 'seq'), (notify) => {
 				if (!isEmpty(notify) && (notify.seq > seq || (seq > 1 && notify.seq === 1))) {
-					if (notify.created) {
-						if (notify.created.appt) {
-							dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
-						}
+					if (notify.created && notify.created.appt) {
+						dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
 					}
-					if (notify.modified) {
-						if (notify.modified.appt) {
-							// probably unnecessary
-							const apptToUpdate = reduce(
-								notify.modified.appt,
-								(acc, v) => {
-									if (v.l) {
-										return [...acc, v];
-									}
-									return acc;
-								},
-								[]
-							);
-							if (apptToUpdate?.length > 0) {
-								dispatch(handleModifiedAppointments(apptToUpdate));
-							}
-							dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
+					if (notify.modified && notify.modified.appt) {
+						// probably unnecessary
+						const apptToUpdate = reduce(
+							notify.modified.appt,
+							(acc, v) => {
+								if (v.l) {
+									return [...acc, v];
+								}
+								return acc;
+							},
+							[]
+						);
+						if (apptToUpdate?.length > 0) {
+							dispatch(handleModifiedAppointments(apptToUpdate));
+						}
+						dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
 
-							const invites = reduce(
-								notify.modified.appt,
-								(acc, v) => {
-									if (v?.inv?.length > 0) {
-										return [...acc, ...v.inv];
-									}
-									return acc;
-								},
-								[]
-							);
-							if (invites?.length > 0) {
-								dispatch(handleModifiedInvites(invites));
-							}
+						const invites = reduce(
+							notify.modified.appt,
+							(acc, v) => {
+								if (v?.inv?.length > 0) {
+									return [...acc, ...v.inv];
+								}
+								return acc;
+							},
+							[]
+						);
+						if (invites?.length > 0) {
+							dispatch(handleModifiedInvites(invites));
 						}
 					}
 					if (notify.deleted) {

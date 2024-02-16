@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useContext, useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 
-import { Container, SnackbarManagerContext, Text } from '@zextras/carbonio-design-system';
+import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -18,7 +18,7 @@ import { FOLDER_OPERATIONS } from '../../constants/api';
 import { folderAction } from '../../store/actions/calendar-actions';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 	const onConfirm = (): void => {
 		onClose();

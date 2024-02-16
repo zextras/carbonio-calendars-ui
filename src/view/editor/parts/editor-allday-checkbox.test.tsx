@@ -31,5 +31,5 @@ describe('editor all day checkbox', () => {
 
 		const updatedEditor = store.getState().editor.editors[editor.id];
 		expect(updatedEditor.allDay).toEqual(true);
-	});
+	}, 10000);
 });

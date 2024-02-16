@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isEqual, isNil, omit, omitBy, size } from 'lodash';
@@ -43,8 +43,8 @@ export const useCalendarComponentUtils = (): {
 	const calendarDate = useCalendarDate();
 	const [date, setDate] = useState(calendarDate);
 	const [t] = useTranslation();
-	const createModal = useContext(ModalManagerContext);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createModal = useModal();
+	const createSnackbar = useSnackbar();
 
 	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();

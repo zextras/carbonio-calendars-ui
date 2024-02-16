@@ -160,7 +160,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 				</Container>
 				<Container width="65%" mainAlignment="flex-start">
 					<CalendarSelector
-						calendarId="10"
+						calendarId={message.parent}
 						onCalendarChange={(cal): void => setActiveCalendar(cal)}
 						label={t('label.scheduled_in', 'Scheduled in')}
 						excludeTrash

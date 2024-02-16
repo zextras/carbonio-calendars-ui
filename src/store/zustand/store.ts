@@ -17,7 +17,7 @@ export type CalendarRange = {
 export type AppState = {
 	calendarView: string;
 	date: Date;
-	summaryViewCounter: number;
+	summaryViewId: string | undefined;
 	range: CalendarRange;
 	setRange: SetRange;
 	equipment: Array<Resource> | undefined;
@@ -27,7 +27,7 @@ export type AppState = {
 export const useAppStatusStore = create<AppState>((set) => ({
 	calendarView: '',
 	date: new Date(),
-	summaryViewCounter: 0,
+	summaryViewId: undefined,
 	equipment: undefined,
 	meetingRoom: undefined,
 	range: {

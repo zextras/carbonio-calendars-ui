@@ -46,7 +46,6 @@ import {
 	snoozeApptReminderPending,
 	snoozeApptReminderRejected
 } from '../reducers/snooze-appointment';
-import { handleUpdateParticipationStatus } from '../reducers/update-participation-status';
 
 const initialState: AppointmentsSlice = {
 	status: 'init',
@@ -57,7 +56,6 @@ export const appointmentsSlice = createSlice({
 	name: 'appointments',
 	initialState,
 	reducers: {
-		updateParticipationStatus: produce(handleUpdateParticipationStatus),
 		handleModifiedAppointments: produce(handleModifiedAppointmentsReducer),
 		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer),
 		handleDeletedAppointments: produce(handleDeletedAppointmentsReducer)
@@ -84,7 +82,6 @@ export const appointmentsSlice = createSlice({
 	}
 });
 
-export const { handleModifiedAppointments, updateParticipationStatus, handleDeletedAppointments } =
-	appointmentsSlice.actions;
+export const { handleModifiedAppointments, handleDeletedAppointments } = appointmentsSlice.actions;
 
 export default appointmentsSlice.reducer;

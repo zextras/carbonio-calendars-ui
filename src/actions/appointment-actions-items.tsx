@@ -45,9 +45,11 @@ export const openEventItem = ({
 
 export const acceptInvitationItem = ({
 	event,
+	invite,
 	context
 }: {
 	event: EventType;
+	invite?: Invite;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.ACCEPT,
@@ -55,14 +57,16 @@ export const acceptInvitationItem = ({
 	label: t('event.action.accept', 'Accept'),
 	disabled: event?.resource?.participationStatus === 'AC',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	onClick: acceptInvitation({ event, context })
+	onClick: acceptInvitation({ event, context, invite })
 });
 
 export const declineInvitationItem = ({
 	event,
+	invite,
 	context
 }: {
 	event: EventType;
+	invite?: Invite;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.DECLINE,
@@ -70,14 +74,16 @@ export const declineInvitationItem = ({
 	label: t('event.action.decline', 'Decline'),
 	disabled: event?.resource?.participationStatus === 'DE',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	onClick: declineInvitation({ event, context })
+	onClick: declineInvitation({ event, context, invite })
 });
 
 export const acceptAsTentativeItem = ({
 	event,
+	invite,
 	context
 }: {
 	event: EventType;
+	invite?: Invite;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.TENTATIVE,
@@ -85,7 +91,7 @@ export const acceptAsTentativeItem = ({
 	label: t('label.tentative', 'Tentative'),
 	disabled: event?.resource?.participationStatus === 'TE',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	onClick: acceptAsTentative({ event, context })
+	onClick: acceptAsTentative({ event, context, invite })
 });
 
 export const proposeNewTimeItem = ({

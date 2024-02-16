@@ -3,16 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useContext, useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 
-import {
-	Avatar,
-	Container,
-	Row,
-	Text,
-	Chip,
-	SnackbarManagerContext
-} from '@zextras/carbonio-design-system';
+import { Avatar, Container, Row, Text, Chip, useSnackbar } from '@zextras/carbonio-design-system';
 import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
 import { Trans } from 'react-i18next';
 
@@ -41,7 +34,7 @@ export const ParticipantsPart = ({
 }: ParticipantProps): ReactElement | null => {
 	const account = useUserAccount();
 	const calendar = useFolder(invite.ciFolder);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const iAmAttendee = useMemo(
 		() => (!invite.isOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
 		[calendar, invite.isOrganizer]

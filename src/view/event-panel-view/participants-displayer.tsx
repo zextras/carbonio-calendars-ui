@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import {
 	Avatar,
@@ -12,7 +12,7 @@ import {
 	Row,
 	Text,
 	Chip,
-	SnackbarManagerContext
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
@@ -25,7 +25,7 @@ export const DisplayedParticipant = ({
 }: {
 	participant: InviteParticipant;
 }): ReactElement => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	return (
 		<Row
 			data-testid={'DisplayedParticipant'}

@@ -10,10 +10,12 @@ import {
 	sendInviteReplyRequest,
 	SendInviteReplyReturnType
 } from '../../soap/send-invite-reply-request';
+import { InstanceExceptionId } from '../../utils/event';
 
 export type SendInviteArguments = {
 	inviteId: string;
 	action: string;
+	exceptId?: InstanceExceptionId | undefined;
 	updateOrganizer: boolean;
 	fromMail?: boolean;
 };
@@ -24,8 +26,13 @@ export const sendInviteResponse = createAsyncThunk<
 	{ rejectValue: SendInviteReplyRejectedType }
 >(
 	'invites/sendInviteResponse',
-	async ({ inviteId, action, updateOrganizer }, { rejectWithValue }) => {
-		const response = await sendInviteReplyRequest({ id: inviteId, action, updateOrganizer });
+	async ({ inviteId, action, updateOrganizer, exceptId }, { rejectWithValue }) => {
+		const response = await sendInviteReplyRequest({
+			id: inviteId,
+			action,
+			updateOrganizer,
+			exceptId
+		});
 		if (response?.error) {
 			return rejectWithValue(response);
 		}
