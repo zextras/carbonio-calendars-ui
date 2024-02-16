@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useState, useCallback, ReactElement, useContext } from 'react';
+import React, { useState, useCallback, ReactElement } from 'react';
 
-import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { useSnackbar } from '@zextras/carbonio-design-system';
 import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
 
 import { MoveModal } from './move-modal';
@@ -25,7 +25,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 	const dispatch = useAppDispatch();
 	const currentFolder = useFolder(event.resource.calendar.id);
 	const [showNewFolderModal, setShowNewFolderModal] = useState(false);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const toggleModal = useCallback(
 		() => setShowNewFolderModal(!showNewFolderModal),
 		[showNewFolderModal]
