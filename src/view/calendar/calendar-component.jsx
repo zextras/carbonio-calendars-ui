@@ -211,6 +211,8 @@ export default function CalendarComponent() {
 				])?.absFolderPath;
 				return (
 					isOrganizerOrHaveEqualRights(calendarEvent, absFolderPath) &&
+					// disabling every appointment placed in the all day position until a bug is fixed:
+					// https://github.com/jquense/react-big-calendar/issues/2432
 					(!calendarEvent.allDay ||
 						(!calendarEvent.allDay &&
 							moment(calendarEvent.start).day() === moment(calendarEvent.end).day()))
