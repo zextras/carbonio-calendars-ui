@@ -6,6 +6,8 @@
 import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 
+import { FOLDERS } from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { AppDispatch } from '../../store/redux';
@@ -15,7 +17,7 @@ type ResponseAction = {
 	notifyOrganizer: boolean;
 	action: string;
 	dispatch: AppDispatch;
-	activeCalendar: any;
+	activeCalendar: Folder | null;
 	createSnackbar: CreateSnackbarFn;
 	parent: string;
 };
@@ -54,13 +56,13 @@ export const sendResponse = ({
 				autoHideTimeout: 3000
 			});
 			if (action === 'ACCEPT' || action === 'TENTATIVE') {
-				activeCalendar &&
-					activeCalendar?.id !== '10' &&
-					activeCalendar?.zid !== '10' &&
+				const calendarId = activeCalendar?.id ?? (activeCalendar as LinkFolder)?.zid;
+				calendarId &&
+					calendarId !== FOLDERS.CALENDAR &&
 					dispatch(
 						moveAppointmentRequest({
 							id: inviteId,
-							l: activeCalendar?.id || activeCalendar?.zid || '10'
+							l: calendarId || FOLDERS.CALENDAR
 						})
 					);
 			}
