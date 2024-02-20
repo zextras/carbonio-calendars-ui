@@ -193,7 +193,7 @@ export const useCalendarComponentUtils = (): {
 			} else if (
 				!isEqual(event.start, start) ||
 				!isEqual(event.end, end) ||
-				(event.allDay !== !!isAllDay && (!isEqual(event.start, start) || !isEqual(event.end, end)))
+				(event.allDay !== !!isAllDay && moment(event.start).day() === moment(event.end).day())
 			) {
 				const onEntireSeries = (): void => {
 					const seriesEvent = {
