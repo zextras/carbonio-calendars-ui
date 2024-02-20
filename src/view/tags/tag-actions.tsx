@@ -167,7 +167,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 
 			itemActionRequest({
 				op: value ? '!tag' : 'tag',
-				inviteId: event.resource.id,
+				id: event.resource.id,
 				tagName: tag.name
 			})
 				.then(() => {

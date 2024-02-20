@@ -141,9 +141,8 @@ export const useDeleteActions = (
 				isCanceled = true;
 				dispatch(
 					moveAppointmentRequest({
-						id: event.resource.id,
-						l: event.resource.calendar.id,
-						inviteId: event.resource.inviteId
+						id: event.resource.inviteId,
+						l: event.resource.calendar.id
 					})
 				).then((res: { type: string | string[] }) => {
 					onBoardClose && onBoardClose();
@@ -184,9 +183,8 @@ export const useDeleteActions = (
 				isCanceled = true;
 				dispatch(
 					moveAppointmentRequest({
-						id: event.resource.id,
-						l: event.resource.calendar.id,
-						inviteId: event.resource.inviteId
+						id: event.resource.inviteId,
+						l: event.resource.calendar.id
 					})
 				).then((res: { type: string | string[] }) => {
 					generateAppointmentRestoredSnackbar(res, t, createSnackbar);

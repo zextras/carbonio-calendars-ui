@@ -56,7 +56,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 		({ inviteId, tagName }) => {
 			itemActionRequest({
 				op: 'tag',
-				inviteId,
+				id: inviteId,
 				tagName
 			})
 				.then(() => {

@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-/* eslint-disable import/extensions */
+import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 
+import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { AppDispatch } from '../../store/redux';
 
@@ -15,7 +16,7 @@ type ResponseAction = {
 	action: string;
 	dispatch: AppDispatch;
 	activeCalendar: any;
-	createSnackbar: any;
+	createSnackbar: CreateSnackbarFn;
 	parent: string;
 };
 export const sendResponse = ({
@@ -45,18 +46,6 @@ export const sendResponse = ({
 					: action === 'TENTATIVE'
 					? t('message.snackbar.invite.tentative', 'You’ve replied as Tentative')
 					: t('message.snackbar.invite.decline', 'You’ve replied as Declined');
-
-			if (action === 'ACCEPT' || action === 'TENTATIVE') {
-				activeCalendar &&
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					activeCalendar?.zid !== '10' &&
-					dispatch(
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						moveAppointment({ inviteId, l: activeCalendar?.zid || '10', fromMail: true })
-					);
-			}
 			createSnackbar({
 				key: `invite_${action}`,
 				replace: true,
@@ -64,6 +53,17 @@ export const sendResponse = ({
 				label: snackbarLabel,
 				autoHideTimeout: 3000
 			});
+			if (action === 'ACCEPT' || action === 'TENTATIVE') {
+				activeCalendar &&
+					activeCalendar?.id !== '10' &&
+					activeCalendar?.zid !== '10' &&
+					dispatch(
+						moveAppointmentRequest({
+							id: inviteId,
+							l: activeCalendar?.id || activeCalendar?.zid || '10'
+						})
+					);
+			}
 		} else {
 			createSnackbar({
 				key: `invite_${action}_error`,
