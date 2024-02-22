@@ -42,6 +42,7 @@ const InviteContainer = styled(Container)`
 	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 	border-radius: 0.875rem;
 	margin: ${({ theme }): string => theme.sizes.padding.extrasmall};
+	padding: ${({ theme }): string => theme.sizes.padding.extralarge};
 `;
 
 const LinkText = styled(Text)`
@@ -148,7 +149,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
 
 	return (
-		<InviteContainer padding={{ all: 'extralarge' }}>
+		<InviteContainer data-testid={'invite-response'}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
 				<Row width="fill" mainAlignment="flex-start" padding={{ bottom: 'extrasmall' }}>
 					{method === 'COUNTER' ? (
@@ -160,7 +161,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							<Text weight="regular" size="large" style={{ fontSize: '1.125rem' }}>
 								{`${invite.organizer?.d ?? invite.organizer?.a} ${t(
 									'message.invited_you',
-									'invited you to '
+									'invited you to an event'
 								)}`}
 							</Text>
 							&nbsp;

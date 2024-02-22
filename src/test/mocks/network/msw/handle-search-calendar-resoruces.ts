@@ -20,7 +20,7 @@ const getLocationResponse = (): SuccessSoapResponse<any> => ({
 			calresource: [
 				{
 					name: 'location@location.com',
-					id: faker.datatype.uuid(),
+					id: faker.string.uuid(),
 					_attrs: {
 						zimbraCalResType: 'Location',
 						fullName: 'location',
@@ -49,7 +49,7 @@ const getEquipmentResponse = (): SuccessSoapResponse<any> => ({
 			calresource: [
 				{
 					name: 'equipment@equipment.com',
-					id: faker.datatype.uuid(),
+					id: faker.string.uuid(),
 					_attrs: {
 						zimbraCalResType: 'Equipment',
 						fullName: 'equipment',

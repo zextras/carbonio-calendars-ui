@@ -40,6 +40,7 @@ import {
 	singleGetMsgAllDayResponse,
 	singleGetMsgResponse
 } from '../../test/mocks/network/msw/handle-get-invite';
+import 'jest-styled-components';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
@@ -64,6 +65,64 @@ afterEach(() => {
 });
 
 describe('invite response', () => {
+	describe('invite-response component', () => {
+		test('have a container with border of 0.0625rem solid regular', () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				store
+			});
+			const container = screen.getByTestId('invite-response');
+			expect(container).toHaveStyleRule('border', '0.0625rem solid #cfd5dc');
+		});
+		test('have a container with border radius of 0.875rem', () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				store
+			});
+			const container = screen.getByTestId('invite-response');
+			expect(container).toHaveStyleRule('border-radius', '0.875rem');
+		});
+		test('have a container with margin extrasmall', () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				store
+			});
+			const container = screen.getByTestId('invite-response');
+			expect(container).toHaveStyleRule('margin', '0.25rem');
+		});
+		test('have a container with padding extralarge', () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				store
+			});
+			const container = screen.getByTestId('invite-response');
+			expect(container).toHaveStyleRule('padding', '1.5rem');
+		});
+		test('inside the container there is a string composed as organizer + invited you to an event + event name', () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+				store
+			});
+			const organizer = mailMsg.invite[0].comp[0].or.d;
+			const title = mailMsg.invite[0].comp[0].name;
+			const organizerString = screen.getByText(`${organizer} invited you to an event`);
+			const titleString = screen.getByText(title);
+			expect(organizerString).toBeVisible();
+			expect(titleString).toBeVisible();
+			expect(titleString).toHaveStyleRule('font-size', '1.125rem');
+		});
+	});
+
 	describe('on propose new time action', () => {
 		test('an editor is created', async () => {
 			setupFoldersStore();

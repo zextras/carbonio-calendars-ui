@@ -65,7 +65,7 @@ describe('Editor meeting rooms', () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				label,
 				value: label,
 				email: faker.internet.email(),
@@ -100,7 +100,7 @@ describe('Editor meeting rooms', () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				label,
 				value: label,
 				email: faker.internet.email(),
@@ -141,7 +141,7 @@ describe('Editor meeting rooms', () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				label,
 				value: label,
 				email: faker.internet.email(),

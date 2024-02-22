@@ -53,7 +53,7 @@ export const getLessThan100Resources = (): SuccessSoapResponse<any> => ({
 	Body: {
 		AutoCompleteGalResponse: {
 			cn: map({ length: 90 }, () => ({
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				fileAsStr: faker.company.name(),
 				_attrs: {
 					zimbraCalResType: 'Location',

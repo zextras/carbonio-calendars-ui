@@ -14,7 +14,7 @@ import { setupHook } from '../carbonio-ui-commons/test/test-setup';
 import { Folder, FolderView } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 
-const randomUUID = faker.datatype.uuid();
+const randomUUID = faker.string.uuid();
 const roots = generateRoots();
 
 const sharedChildFolder = {

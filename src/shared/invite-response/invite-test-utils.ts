@@ -7,6 +7,7 @@ import { rest } from 'msw';
 
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import { ObjectValues } from '../../constants/sidebar';
+import { InviteResponseArguments } from '../../types/integrations';
 
 const senderMail = 'sender@mail.com';
 const receiverMail = 'receiver@mail.com';
@@ -30,7 +31,7 @@ export const buildMailMessageType = (
 	method: MessageMethod,
 	type: MessageType,
 	allDay: boolean
-): unknown => {
+): InviteResponseArguments['mailMsg'] => {
 	const s = [
 		allDay
 			? {
