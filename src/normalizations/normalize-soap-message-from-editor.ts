@@ -111,71 +111,6 @@ export const generateParticipantInformation = (resource: Editor): Array<Partial<
 		  );
 };
 
-function generateHtmlBodyRequest(app: Editor): string {
-	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
-
-	const date = app.allDay
-		? moment(app.start).format('LL')
-		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
-
-	const meetingHtml = `${ROOM_DIVIDER}<h3>${app.organizer.fullName} have invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${app.organizer.fullName}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
-	const virtualRoomHtml = app?.room?.label
-		? `${ROOM_DIVIDER}<h3>${app.organizer.fullName} invited you to a virtual meeting on Carbonio Chats system.</h3><p>Join the meeting now on <a href="${app.room.link}">${app.room.label}</a></p><p>You can join the meeting via Web or by using native applications:</p><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a><br/>${ROOM_DIVIDER}`
-		: '';
-	const defaultMessage =
-		app?.room && !includes(app.richText, ROOM_DIVIDER) ? virtualRoomHtml : meetingHtml;
-	return attendees?.length
-		? `${HTML_OPENING_TAG}${defaultMessage}${app.richText}${HTML_CLOSING_TAG}`
-		: app.richText;
-}
-
-function generateBodyRequest(app: Editor): string {
-	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
-
-	const date = app.allDay
-		? moment(app.start).format('LL')
-		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
-
-	const virtualRoomMessage = app?.room?.label
-		? `${ROOM_DIVIDER}\n${
-				app.organizer.fullName ?? ''
-		  } have invited you to a virtual meeting on Carbonio Chats system!\n\nJoin the meeting now on ${
-				app.room.label
-		  }\n\n${
-				app.room.link
-		  } \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n${ROOM_DIVIDER}\n`
-		: '';
-	const meetingMessage = `${ROOM_DIVIDER}\n${
-		app.organizer.fullName ?? ''
-	} have invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: "${
-		app.organizer.fullName
-	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n${ROOM_DIVIDER}`;
-	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
-
-	return attendees?.length ? `${defaultMessage}\n${app.plainText}` : app.plainText;
-}
-
-const generateMp = (msg: Editor): { ct: string; mp: Array<{ ct: string; content: string }> } => ({
-	ct: 'multipart/alternative',
-	mp: msg.isRichText
-		? [
-				{
-					ct: 'text/html',
-					content: generateHtmlBodyRequest(msg)
-				},
-				{
-					ct: 'text/plain',
-					content: generateBodyRequest(msg)
-				}
-		  ]
-		: [
-				{
-					ct: 'text/plain',
-					content: generateBodyRequest(msg)
-				}
-		  ]
-});
-
 const getOrganizer = ({
 	calendar,
 	sender,
@@ -223,6 +158,79 @@ const getOrganizer = ({
 		sentBy: sender.address
 	};
 };
+
+function generateHtmlBodyRequest(app: Editor): string {
+	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
+	const organizer = getOrganizer({
+		calendar: app?.calendar,
+		sender: app.sender,
+		organizer: app.organizer
+	});
+	const date = app.allDay
+		? moment(app.start).format('LL')
+		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
+
+	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.d} have invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.d}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
+	const virtualRoomHtml = app?.room?.label
+		? `${ROOM_DIVIDER}<h3>${organizer.d} invited you to a virtual meeting on Carbonio Chats system.</h3><p>Join the meeting now on <a href="${app.room.link}">${app.room.label}</a></p><p>You can join the meeting via Web or by using native applications:</p><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a><br/>${ROOM_DIVIDER}`
+		: '';
+	const defaultMessage =
+		app?.room && !includes(app.richText, ROOM_DIVIDER) ? virtualRoomHtml : meetingHtml;
+	return attendees?.length
+		? `${HTML_OPENING_TAG}${defaultMessage}${app.richText}${HTML_CLOSING_TAG}`
+		: app.richText;
+}
+
+function generateBodyRequest(app: Editor): string {
+	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
+	const organizer = getOrganizer({
+		calendar: app?.calendar,
+		sender: app.sender,
+		organizer: app.organizer
+	});
+	const date = app.allDay
+		? moment(app.start).format('LL')
+		: `${moment(app.start).format('LLLL')} - ${moment(app.end).format('LT')}`;
+
+	const virtualRoomMessage = app?.room?.label
+		? `${ROOM_DIVIDER}\n${
+				organizer.d ?? ''
+		  } have invited you to a virtual meeting on Carbonio Chats system!\n\nJoin the meeting now on ${
+				app.room.label
+		  }\n\n${
+				app.room.link
+		  } \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n${ROOM_DIVIDER}\n`
+		: '';
+	const meetingMessage = `${ROOM_DIVIDER}\n${
+		organizer.d ?? ''
+	} have invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: "${
+		organizer.d
+	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n${ROOM_DIVIDER}`;
+	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
+
+	return attendees?.length ? `${defaultMessage}\n${app.plainText}` : app.plainText;
+}
+
+const generateMp = (msg: Editor): { ct: string; mp: Array<{ ct: string; content: string }> } => ({
+	ct: 'multipart/alternative',
+	mp: msg.isRichText
+		? [
+				{
+					ct: 'text/html',
+					content: generateHtmlBodyRequest(msg)
+				},
+				{
+					ct: 'text/plain',
+					content: generateBodyRequest(msg)
+				}
+		  ]
+		: [
+				{
+					ct: 'text/plain',
+					content: generateBodyRequest(msg)
+				}
+		  ]
+});
 
 const generateInvite = (editorData: Editor): any => {
 	const at = [];
