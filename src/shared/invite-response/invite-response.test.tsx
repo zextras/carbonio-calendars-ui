@@ -8,6 +8,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
+import moment from 'moment-timezone';
 
 import clearAllMocks = jest.clearAllMocks;
 import { InviteResponse } from './invite-response';
@@ -65,7 +66,7 @@ afterEach(() => {
 });
 
 describe('invite response', () => {
-	describe('invite-response component', () => {
+	describe('invite-response component, case invitation email', () => {
 		test('have a container with border of 0.0625rem solid regular', () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
@@ -106,20 +107,75 @@ describe('invite response', () => {
 			const container = screen.getByTestId('invite-response');
 			expect(container).toHaveStyleRule('padding', '1.5rem');
 		});
-		test('inside the container there is a string composed as organizer + invited you to an event + event name', () => {
-			setupFoldersStore();
-			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
-				store
+		describe('inside the container there is ', () => {
+			test('a string composed by organizer + invited you to an event + event name. Event name is bold', () => {
+				setupFoldersStore();
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					store
+				});
+				const organizer = mailMsg.invite[0].comp[0].or.d;
+				const title = mailMsg.invite[0].comp[0].name;
+				const organizerString = screen.getByText(`${organizer} invited you to an event`);
+				const titleString = screen.getByText(title);
+				expect(organizerString).toBeVisible();
+				expect(titleString).toBeVisible();
+				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
 			});
-			const organizer = mailMsg.invite[0].comp[0].or.d;
-			const title = mailMsg.invite[0].comp[0].name;
-			const organizerString = screen.getByText(`${organizer} invited you to an event`);
-			const titleString = screen.getByText(title);
-			expect(organizerString).toBeVisible();
-			expect(titleString).toBeVisible();
-			expect(titleString).toHaveStyleRule('font-size', '1.125rem');
+			test('a string with the user local time of the event', () => {
+				setupFoldersStore();
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					store
+				});
+
+				const localTimeString = screen.getByText(/tuesday, 30 january, 2024 09:00 - 09:30/i);
+
+				expect(localTimeString).toBeVisible();
+			});
+			test('a string with the user local time of the event', () => {
+				setupFoldersStore();
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					store
+				});
+
+				const localTimezoneString = screen.getByText(/gmt \+01:00 europe\/berlin/i);
+
+				expect(localTimezoneString).toBeVisible();
+			});
+			test.skip('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
+				const currentTimezone = 'Asia/Kolkata';
+				moment.tz.guess = jest.fn().mockImplementation(() => currentTimezone);
+				moment.tz.setDefault(currentTimezone);
+				setupFoldersStore();
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					store
+				});
+
+				const timezoneIcon = screen.getByTestId('icon: GlobeOutline');
+
+				expect(timezoneIcon).toBeVisible();
+
+				user.hover(timezoneIcon);
+
+				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
+
+				const tooltipLocalTime = await screen.findByText(
+					/tuesday, 30 january, 2024 09:00 - 09:30/i
+				);
+
+				const tooltipLocalTimeZone = await screen.findByText(/GMT \+01:00 Europe\/Berlin/i);
+
+				expect(tooltipTitleString).toBeVisible();
+				expect(tooltipLocalTime).toBeVisible();
+				expect(tooltipLocalTimeZone).toBeVisible();
+			});
 		});
 	});
 
