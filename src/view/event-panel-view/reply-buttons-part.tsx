@@ -28,7 +28,6 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const folders = useCalendarFolders();
-
 	const context = useMemo(
 		() => ({
 			dispatch,
