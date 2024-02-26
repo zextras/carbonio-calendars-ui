@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, SyntheticEvent, useCallback, useContext, useMemo } from 'react';
+import React, { FC, SyntheticEvent, useCallback, useMemo } from 'react';
 
 import {
 	AccordionItem,
@@ -12,7 +12,7 @@ import {
 	Icon,
 	Padding,
 	Tooltip,
-	ModalManagerContext
+	useModal
 } from '@zextras/carbonio-design-system';
 import { t, useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
 import { reduce } from 'lodash';
@@ -60,7 +60,7 @@ const CustomComp: FC<ItemProps> = (props) => {
 };
 
 export const TagLabel: FC<ItemType> = (props) => {
-	const createModal = useContext(ModalManagerContext) as () => () => void;
+	const createModal = useModal();
 	return (
 		<Dropdown contextMenu display="block" width="fit" items={[createTag({ createModal })]}>
 			<Row mainAlignment="flex-start" padding={{ horizontal: 'large' }} takeAvailableSpace>

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
-import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 import moment from 'moment';
@@ -21,7 +21,7 @@ import { editEditorText } from '../../../store/slices/editor-slice';
 
 export const useGetPublicUrl = ({ editorId }) => {
 	const [getLink, getLinkAvailable] = useIntegratedFunction('get-link');
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const richText = useAppSelector(selectEditorRichText(editorId));
 	const plainText = useAppSelector(selectEditorPlainText(editorId));
 	const title = useAppSelector(selectEditorTitle(editorId));
