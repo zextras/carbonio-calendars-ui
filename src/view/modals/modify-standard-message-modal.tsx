@@ -16,7 +16,7 @@ import { Invite } from '../../types/store/invite';
 type MessageModalProps = {
 	title: string;
 	onClose: () => void;
-	onConfirm: (arg?: object) => void;
+	onConfirm: (arg?: { text: Array<string> }) => void;
 	invite: Invite;
 	confirmLabel: string;
 	isEdited?: boolean;
