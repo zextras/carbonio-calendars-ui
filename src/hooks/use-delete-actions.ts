@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
-import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { CreateSnackbarFn, useSnackbar } from '@zextras/carbonio-design-system';
 import { TFunction } from 'i18next';
 import { size } from 'lodash';
 import moment from 'moment';
@@ -18,14 +18,14 @@ import { generateEditor } from '../commons/editor-generator';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../store/redux/hooks';
-import { SnackbarArgumentType } from '../types/delete-appointment';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { getInstanceExceptionId } from '../utils/event';
 
 const generateAppointmentDeletedSnackbar = (
 	res: { type: string | string[] },
 	t: TFunction,
-	createSnackbar: (obj: SnackbarArgumentType) => void,
+	createSnackbar: CreateSnackbarFn,
 	undoAction?: () => void,
 	isRecurrentSeries?: boolean,
 	isDraft?: boolean
@@ -73,7 +73,7 @@ const generateAppointmentDeletedSnackbar = (
 const generateAppointmentRestoredSnackbar = (
 	res: { type: string | string[] },
 	t: TFunction,
-	createSnackbar: (obj: SnackbarArgumentType) => void
+	createSnackbar: CreateSnackbarFn
 ): void => {
 	if (res.type.includes('fulfilled')) {
 		createSnackbar({
@@ -121,7 +121,7 @@ export const useDeleteActions = (
 ): UseDeleteActionsType => {
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext) as (obj: SnackbarArgumentType) => void;
+	const createSnackbar = useSnackbar();
 	const [deleteAll, setDeleteAll] = useState(true);
 	const [notifyOrganizer, setNotifyOrganizer] = useState(false);
 	const toggleNotifyOrganizer = useCallback(() => {
@@ -140,9 +140,8 @@ export const useDeleteActions = (
 				isCanceled = true;
 				dispatch(
 					moveAppointmentRequest({
-						id: event.resource.id,
-						l: event.resource.calendar.id,
-						inviteId: event.resource.inviteId
+						id: event.resource.inviteId,
+						l: event.resource.calendar.id
 					})
 				).then((res: { type: string | string[] }) => {
 					onBoardClose && onBoardClose();
@@ -183,9 +182,8 @@ export const useDeleteActions = (
 				isCanceled = true;
 				dispatch(
 					moveAppointmentRequest({
-						id: event.resource.id,
-						l: event.resource.calendar.id,
-						inviteId: event.resource.inviteId
+						id: event.resource.inviteId,
+						l: event.resource.calendar.id
 					})
 				).then((res: { type: string | string[] }) => {
 					generateAppointmentRestoredSnackbar(res, t, createSnackbar);
@@ -276,17 +274,11 @@ export const useDeleteActions = (
 				t,
 				isInstance: context.isSingleInstance,
 				createSnackbar,
-				inst: event.allDay
-					? {
-							d: moment(event.start).format('YYYYMMDD'),
-							tz: invite?.start?.tz
-					  }
-					: {
-							d: invite?.start?.tz
-								? moment(event.start).format('YYYYMMDD[T]HHmmss')
-								: moment(event.start).utc().format('YYYYMMDD[T]HHmmss[Z]'),
-							tz: invite?.start?.tz
-					  },
+				inst: getInstanceExceptionId({
+					start: event.start,
+					tz: invite?.start?.tz,
+					allDay: event?.allDay
+				}),
 				s: moment(event.start).valueOf(),
 				folders: context.folders
 			};

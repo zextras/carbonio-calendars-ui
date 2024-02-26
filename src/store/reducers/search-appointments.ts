@@ -5,6 +5,7 @@
  */
 import { PayloadAction } from '@reduxjs/toolkit';
 import { values } from 'lodash';
+
 import { normalizeAppointments } from '../../normalizations/normalize-appointments';
 import { SearchReturnType } from '../../soap/search-request';
 import { AppointmentsSlice, FulfilledResponse } from '../../types/store/store';

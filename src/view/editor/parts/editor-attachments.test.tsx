@@ -5,13 +5,15 @@
  */
 
 import React from 'react';
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
-import mockedData from '../../../test/generators';
+
+import { EditorAttachments } from './editor-attachments';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../commons/editor-generator';
 import { reducers } from '../../../store/redux';
-import { EditorAttachments } from './editor-attachments';
+import mockedData from '../../../test/generators';
 
 jest.setTimeout(50000);
 

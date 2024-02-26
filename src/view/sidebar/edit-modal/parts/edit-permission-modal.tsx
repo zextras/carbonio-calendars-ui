@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useMemo, useState, FC } from 'react';
+import React, { useCallback, useMemo, useState, FC } from 'react';
 
 import {
 	Checkbox,
@@ -11,8 +11,8 @@ import {
 	Input,
 	Row,
 	Select,
-	SnackbarManagerContext,
-	Text
+	Text,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +42,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 	const { onClose, roleOptions } = useEditModalContext();
 	const accounts = useUserAccounts();
 	const dispatch = useAppDispatch();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const [shareWithUserRole, setShareWithUserRole] = useState('');
 	const [allowToSeePrivateAppointment, setAllowToSeePrivateAppointment] = useState(false);
 

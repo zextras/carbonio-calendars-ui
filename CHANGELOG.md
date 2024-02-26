@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.8.2...v1.9.0) (2024-02-16)
+
+
+### Features
+
+* editor timezone field ([#399](https://github.com/zextras/carbonio-calendars-ui/issues/399)) ([91d8416](https://github.com/zextras/carbonio-calendars-ui/commit/91d84168feda00b13ee895070231282709b912c7))
+* user can propose a new time of an event from calendar ([c0acfb4](https://github.com/zextras/carbonio-calendars-ui/commit/c0acfb43b52c7a2867a5d1bde07f53f101e1f0a6))
+* user can propose new time from calendar events ([b371248](https://github.com/zextras/carbonio-calendars-ui/commit/b37124828ac7afa4169d597c410c364e197348d4))
+
+
+### Bug Fixes
+
+* appointments invite displays correct date ([5fe55aa](https://github.com/zextras/carbonio-calendars-ui/commit/5fe55aad6c68e18017c235131cbe0ba42a1fd5a6))
+* change blue background color ([eb73f34](https://github.com/zextras/carbonio-calendars-ui/commit/eb73f34e7519d882ed393f1f2b590d9e184dab7f))
+* event end time ([#401](https://github.com/zextras/carbonio-calendars-ui/issues/401)) ([e54a476](https://github.com/zextras/carbonio-calendars-ui/commit/e54a476857921ed4f4d3dd3f80e3bde48cea81ec))
+* folder colors update ([b8a479d](https://github.com/zextras/carbonio-calendars-ui/commit/b8a479dc247d4e26edae657c15826f45bb0f7463))
+* modal scrolls without hiding components ([5e888c9](https://github.com/zextras/carbonio-calendars-ui/commit/5e888c97bad851390af68add63b4ebd9df63fd94))
+* **share modal:** long chips will fill only the available space ([9401842](https://github.com/zextras/carbonio-calendars-ui/commit/9401842350fcf9b4a45e635e7ad337c91e1b1354))
+* **share modal:** long chips will fill only the available space ([2ca00a0](https://github.com/zextras/carbonio-calendars-ui/commit/2ca00a02818c2c260506bea8890b51c55e48b30f))
+* sharers are visible in small screen ([b1e16a0](https://github.com/zextras/carbonio-calendars-ui/commit/b1e16a002c51accc7a8518e3e71fff153478901d))
+* update colors ([2202742](https://github.com/zextras/carbonio-calendars-ui/commit/220274233c94041990019af2c0bf4f6fcdadb06e))
+* update resources editor inputs ([5f9c6d9](https://github.com/zextras/carbonio-calendars-ui/commit/5f9c6d982735db6f7426f85642602ffcee797b44))
+* wrong string in equipment and meeting room chips icon ([e4dca91](https://github.com/zextras/carbonio-calendars-ui/commit/e4dca918f53b2048cbd96430ffec4b87dc412994))
+
 ### [1.8.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.8.1...v1.8.2) (2024-01-18)
 
 ### [1.8.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.8.0...v1.8.1) (2024-01-12)

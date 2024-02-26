@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { useEffect, useState } from 'react';
+
 import { getInvite } from '../store/actions/get-invite';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import { selectInstanceInvite } from '../store/selectors/invites';

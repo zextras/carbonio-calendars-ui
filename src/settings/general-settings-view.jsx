@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { useMemo } from 'react';
+
 import {
 	Container,
 	Padding,
@@ -14,6 +15,7 @@ import {
 	Input
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+
 import {
 	ShowReminderOptions,
 	DefaultViewOptions,

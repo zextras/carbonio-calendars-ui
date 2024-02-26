@@ -3,13 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 
-import {
-	Button,
-	ModalManagerContext,
-	SnackbarManagerContext
-} from '@zextras/carbonio-design-system';
+import { Button, useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { onSave } from '../../../commons/editor-save-send-fns';
@@ -31,8 +27,8 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	const title = useAppSelector(selectEditorTitle(editorId));
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
-	const createModal = useContext(ModalManagerContext);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createModal = useModal();
+	const createSnackbar = useSnackbar();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
 	const meetingRoomLength = useAppSelector(selectEditorMeetingRoom(editorId))?.length;

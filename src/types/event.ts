@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import moment, { Moment } from 'moment';
-import { CalendarsColorType } from './store/calendars';
 
+import { CalendarsColorType } from './store/calendars';
 import {
 	AlarmData,
 	InviteClass,

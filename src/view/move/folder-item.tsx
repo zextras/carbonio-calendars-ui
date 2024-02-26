@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
 import React, { ReactElement } from 'react';
+
 import {
 	Container,
 	Text,
@@ -12,6 +12,7 @@ import {
 	AccordionItemType,
 	AccordionDivider
 } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 
 const ContainerEl = styled(Container)`

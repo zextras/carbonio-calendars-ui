@@ -15,11 +15,11 @@ import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
-import { updateParticipationStatus } from '../store/slices/appointments-slice';
 import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { getInstanceExceptionId } from '../utils/event';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
@@ -243,65 +243,157 @@ export const openAppointment =
 export const acceptInvitation =
 	({
 		event,
+		invite,
 		context
 	}: {
 		event: EventType;
-		context: ActionsContext;
+		invite?: Invite;
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
-		context
-			.dispatch(
-				sendInviteResponse({
-					inviteId: event.resource.inviteId,
-					updateOrganizer: true,
-					action: 'ACCEPT'
-				})
-			)
-			.then(() =>
-				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
-			);
+		const exceptId =
+			context.isInstance || event.resource.isException
+				? getInstanceExceptionId({
+						start: event.start,
+						allDay: event.allDay,
+						tz: invite?.tz
+				  })
+				: undefined;
+
+		context.dispatch(
+			sendInviteResponse({
+				inviteId: event.resource.inviteId,
+				exceptId,
+				updateOrganizer: true,
+				action: 'ACCEPT'
+			})
+		);
 	};
 
 export const declineInvitation =
 	({
 		event,
+		invite,
 		context
 	}: {
 		event: EventType;
-		context: ActionsContext;
+		invite?: Invite;
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
-		context
-			.dispatch(
-				sendInviteResponse({
-					inviteId: event.resource.inviteId,
-					updateOrganizer: true,
-					action: 'DECLINE'
-				})
-			)
-			.then(() =>
-				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'DE' }))
-			);
+		const exceptId =
+			context.isInstance || event.resource.isException
+				? getInstanceExceptionId({
+						start: event.start,
+						allDay: event.allDay,
+						tz: invite?.tz
+				  })
+				: undefined;
+		context.dispatch(
+			sendInviteResponse({
+				inviteId: event.resource.inviteId,
+				exceptId,
+				updateOrganizer: true,
+				action: 'DECLINE'
+			})
+		);
 	};
 
 export const acceptAsTentative =
 	({
 		event,
+		invite,
 		context
 	}: {
 		event: EventType;
-		context: ActionsContext;
+		invite?: Invite;
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
+		const exceptId =
+			context.isInstance || event.resource.isException
+				? getInstanceExceptionId({
+						start: event.start,
+						allDay: event.allDay,
+						tz: invite?.tz
+				  })
+				: undefined;
+		context.dispatch(
+			sendInviteResponse({
+				inviteId: event.resource.inviteId,
+				exceptId,
+				updateOrganizer: true,
+				action: 'TENTATIVE'
+			})
+		);
+	};
+
+export const proposeNewTimeFn =
+	({
+		event,
+		invite: _invite,
 		context
-			.dispatch(
-				sendInviteResponse({
-					inviteId: event.resource.inviteId,
-					updateOrganizer: true,
-					action: 'TENTATIVE'
-				})
-			)
-			.then(() =>
-				context.dispatch(updateParticipationStatus({ apptId: event.resource.id, status: 'AC' }))
-			);
+	}: {
+		event: EventType;
+		invite?: Invite;
+		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+	}): ((e?: ActionsClick) => void) =>
+	(): void => {
+		const proposeTime = (invite: Invite): void => {
+			const editor = generateEditor({
+				event,
+				invite,
+				context: {
+					panel: false,
+					dispatch: context.dispatch,
+					folders: context.folders,
+					isProposeNewTime: true,
+					attendees: [
+						{
+							email: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email,
+							id: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email
+						}
+					],
+					disabled: {
+						title: true,
+						location: true,
+						organizer: true,
+						virtualRoom: true,
+						richTextButton: true,
+						attachmentsButton: true,
+						saveButton: true,
+						attendees: true,
+						optionalAttendees: true,
+						freeBusy: true,
+						calendar: true,
+						private: true,
+						allDay: true,
+						reminder: true,
+						recurrence: true,
+						meetingRoom: true,
+						equipment: true,
+						timezone: true
+					}
+				}
+			});
+			addBoard({
+				url: `${CALENDAR_ROUTE}/`,
+				title: editor?.title ?? '',
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				editor
+			});
+		};
+		if (!_invite) {
+			context
+				.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
+				.then((res) => {
+					if (res.payload) {
+						const invite = normalizeInvite(res.payload.m[0]);
+						proposeTime(invite);
+					}
+				});
+		} else {
+			proposeTime(_invite);
+		}
 	};

@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isEqual, isNil, omit, omitBy, size } from 'lodash';
@@ -24,22 +24,27 @@ import { useAppDispatch } from '../store/redux/hooks';
 import { useCalendarDate, useIsSummaryViewOpen, useSetRange } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
+import { EventType } from '../types/event';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
 import { ModifyStandardMessageModal } from '../view/modals/modify-standard-message-modal';
 
 export const useCalendarComponentUtils = (): {
-	onEventDrop: (a: any) => void;
-	handleSelect: (e: any) => void;
-	resizeEvent: () => null;
-	onRangeChange: (a: any) => void;
+	onEventDropOrResize: (a: {
+		start: Date;
+		end: Date;
+		event: EventType;
+		isAllDay?: boolean;
+	}) => void;
+	handleSelect: (e: { start: Date; end: Date }) => void;
+	onRangeChange: (a: { end: Date; start: Date } | Array<Date>) => void;
 	onNavigate: (a: Date) => void;
 	date: Date;
 } => {
 	const calendarDate = useCalendarDate();
 	const [date, setDate] = useState(calendarDate);
 	const [t] = useTranslation();
-	const createModal = useContext(ModalManagerContext);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createModal = useModal();
+	const createSnackbar = useSnackbar();
 
 	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
@@ -57,7 +62,7 @@ export const useCalendarComponentUtils = (): {
 
 	const getStart = useCallback(({ isAllDay, dropStart, isSeries, inviteStart, eventStart }) => {
 		if (isAllDay) {
-			return dropStart.startOf('day');
+			return dropStart.startOf('day').valueOf();
 		}
 		if (isSeries) {
 			const diff = dropStart.diff(eventStart);
@@ -69,7 +74,7 @@ export const useCalendarComponentUtils = (): {
 	const getEnd = useCallback(
 		({ isAllDay, dropEnd, isSeries, inviteEnd, eventEnd, eventAllDay }) => {
 			if (isAllDay || eventAllDay) {
-				return dropEnd.startOf('day');
+				return dropEnd.startOf('day').valueOf();
 			}
 			if (isSeries) {
 				const diff = dropEnd.diff(eventEnd);
@@ -80,7 +85,7 @@ export const useCalendarComponentUtils = (): {
 		[]
 	);
 
-	const onDropFn = useCallback(
+	const onDropOrResizeFn = useCallback(
 		({ start, end, event, isAllDay, isSeries }) => {
 			dispatch(
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
@@ -97,7 +102,7 @@ export const useCalendarComponentUtils = (): {
 					const endTime = getEnd({ isSeries, dropEnd, isAllDay, inviteEnd, eventEnd, eventAllDay });
 					const invite = normalizeInvite(payload.m[0]);
 
-					const onConfirm = (draft: boolean, context?: any): void => {
+					const onConfirm = (draft: boolean, context?: { text: Array<string> }): void => {
 						const contextObj = {
 							dispatch,
 							folders: calendarFolders,
@@ -171,9 +176,8 @@ export const useCalendarComponentUtils = (): {
 		[calendarFolders, createModal, createSnackbar, dispatch, getEnd, getStart, t]
 	);
 
-	const onEventDrop = useCallback(
-		(appt) => {
-			const { start, end, event, isAllDay } = appt;
+	const onEventDropOrResize = useCallback(
+		({ start, end, event, isAllDay }) => {
 			if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
 				createSnackbar({
 					key: `recurrent-moved-in-allDay`,
@@ -189,17 +193,17 @@ export const useCalendarComponentUtils = (): {
 			} else if (
 				!isEqual(event.start, start) ||
 				!isEqual(event.end, end) ||
-				event.allDay !== !!isAllDay
+				(event.allDay !== !!isAllDay && moment(event.start).day() === moment(event.end).day())
 			) {
 				const onEntireSeries = (): void => {
 					const seriesEvent = {
 						...event,
 						resource: omit(event.resource, 'ridZ')
 					};
-					onDropFn({ start, end, event: seriesEvent, isAllDay, isSeries: true });
+					onDropOrResizeFn({ start, end, event: seriesEvent, isAllDay, isSeries: true });
 				};
 				const onSingleInstance = (): void => {
-					onDropFn({ start, end, event, isAllDay });
+					onDropOrResizeFn({ start, end, event, isAllDay });
 				};
 				if (event.resource.isRecurrent) {
 					const closeModal = createModal(
@@ -218,11 +222,11 @@ export const useCalendarComponentUtils = (): {
 						true
 					);
 				} else {
-					onDropFn({ start, end, event, isAllDay });
+					onDropOrResizeFn({ start, end, event, isAllDay });
 				}
 			}
 		},
-		[createModal, createSnackbar, onDropFn, t]
+		[createModal, createSnackbar, onDropOrResizeFn, t]
 	);
 
 	const handleSelect = useCallback(
@@ -256,8 +260,6 @@ export const useCalendarComponentUtils = (): {
 		[action, calendarFolders, dispatch, summaryViewOpen]
 	);
 
-	const resizeEvent = useCallback((): null => null, []);
-
 	const onRangeChange = useCallback(
 		(range) => {
 			if (range.length) {
@@ -285,5 +287,5 @@ export const useCalendarComponentUtils = (): {
 		[setDate]
 	);
 
-	return { onEventDrop, handleSelect, resizeEvent, onRangeChange, onNavigate, date };
+	return { onEventDropOrResize, handleSelect, onRangeChange, onNavigate, date };
 };

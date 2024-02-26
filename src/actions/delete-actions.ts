@@ -5,7 +5,6 @@
  */
 import { find, isNil, omitBy } from 'lodash';
 
-import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
 import {
 	moveAppointmentToTrash,
 	MoveAppointmentToTrashArguments

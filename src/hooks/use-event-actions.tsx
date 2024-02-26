@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { omit } from 'lodash';
 
@@ -19,6 +19,7 @@ import {
 	editEventItem,
 	moveEventItem,
 	openEventItem,
+	proposeNewTimeItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
@@ -34,7 +35,7 @@ import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 
-const isAnInvite = (event: EventType): boolean =>
+export const isAnInvite = (event: EventType): boolean =>
 	event.resource.organizer
 		? !event.resource.iAmOrganizer &&
 		  event.haveWriteAccess &&
@@ -62,14 +63,16 @@ const getInstanceActionsItems = ({
 	...(isAnInvite(event)
 		? [
 				acceptInvitationItem({ event, context }),
+				acceptAsTentativeItem({ event, context }),
 				declineInvitationItem({ event, context }),
-				acceptAsTentativeItem({ event, context })
+				proposeNewTimeItem({ event, invite, context })
 		  ]
 		: [])
 ];
 
 const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): SeriesActionsItems => {
 	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as EventType;
+	const contextOverride = { ...context, isInstance: true };
 	return [
 		{
 			id: EventActionsEnum.INSTANCE,
@@ -92,9 +95,10 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				applyTag({ event, context }),
 				...(isAnInvite(event)
 					? [
-							acceptInvitationItem({ event, context }),
-							declineInvitationItem({ event, context }),
-							acceptAsTentativeItem({ event, context })
+							acceptInvitationItem({ event, invite, context: contextOverride }),
+							acceptAsTentativeItem({ event, invite, context: contextOverride }),
+							declineInvitationItem({ event, invite, context: contextOverride }),
+							proposeNewTimeItem({ event, invite, context })
 					  ]
 					: [])
 			]
@@ -122,8 +126,9 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				...(isAnInvite(event)
 					? [
 							acceptInvitationItem({ event: seriesEvent, context }),
+							acceptAsTentativeItem({ event: seriesEvent, context }),
 							declineInvitationItem({ event: seriesEvent, context }),
-							acceptAsTentativeItem({ event: seriesEvent, context })
+							proposeNewTimeItem({ event: seriesEvent, invite, context })
 					  ]
 					: [])
 			]
@@ -158,9 +163,9 @@ export const useEventActions = ({
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
 	const invite = useAppSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useAppDispatch();
-	const createModal = useContext(ModalManagerContext);
+	const createModal = useModal();
 	const tags = useTags();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const calendarFolders = useCalendarFolders();
 	const _context = useMemo(
 		() => ({

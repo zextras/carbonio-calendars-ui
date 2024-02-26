@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
+
 import { Container, Padding, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+
 import { CalendarSelector } from '../view/editor/parts/calendar-selector';
 
 export default function CreatingAppointmentSettings({ settingsObj, updateSettings }) {

@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+
 import {
 	Container,
 	Dropdown,
@@ -15,15 +17,15 @@ import {
 } from '@zextras/carbonio-design-system';
 import { noop } from 'lodash';
 import moment from 'moment';
-import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useGetReminderItems } from './reminder-time-options';
 import { getTimeToDisplayData } from '../../commons/utilities';
 import { getLocationUrl } from '../../normalizations/normalize-calendar-events';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { snoozeApptReminder } from '../../store/actions/snooze-appointment-reminder';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ApptReminderCardProps } from '../../types/appointment-reminder';
-import { useGetReminderItems } from './reminder-time-options';
 
 export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	reminderItem,

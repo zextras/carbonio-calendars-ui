@@ -7,6 +7,231 @@ import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/so
 
 import { ROOM_DIVIDER } from '../../../../constants';
 
+const uid = '71c5949a-69e2-48e7-b4c2-3765f6a4eaed';
+const senderMail = 'sender@mail.com';
+const receiverMail = 'receiver@mail.com';
+const tz = 'Europe/Berlin';
+
+export const singleGetMsgResponse = {
+	m: [
+		{
+			s: 0,
+			d: 1707139010000,
+			l: '10',
+			f: '',
+			tn: '',
+			t: '',
+			meta: [{}],
+			rev: 3693,
+			md: 1707139010,
+			ms: 3693,
+			id: '1484-1483',
+			inv: [
+				{
+					type: 'appt',
+					comp: [
+						{
+							method: 'REQUEST',
+							compNum: 0,
+							rsvp: false,
+							name: 'test single',
+							loc: '',
+							at: [
+								{
+									a: receiverMail,
+									url: receiverMail,
+									d: 'receiver fullName',
+									role: 'REQ',
+									ptst: 'NE',
+									rsvp: true
+								}
+							],
+							alarm: [
+								{
+									action: 'DISPLAY',
+									trigger: [
+										{
+											rel: [
+												{
+													neg: true,
+													m: 5,
+													related: 'START'
+												}
+											]
+										}
+									],
+									desc: [{}]
+								}
+							],
+							fr: 'message fragment',
+							noBlob: true,
+							desc: [
+								{
+									_content: ''
+								}
+							],
+							descHtml: [
+								{
+									_content: ''
+								}
+							],
+							fba: 'B',
+							fb: 'B',
+							transp: 'O',
+							or: {
+								a: senderMail,
+								url: senderMail,
+								d: 'send fullName'
+							},
+							url: '',
+							isOrg: true,
+							x_uid: uid,
+							uid,
+							seq: 0,
+							d: 1707139010000,
+							calItemId: '1484',
+							apptId: '1484',
+							ciFolder: '10',
+							status: 'CONF',
+							class: 'PUB',
+							s: [
+								{
+									d: '20240205T160000',
+									tz,
+									u: 1707145200000
+								}
+							],
+							e: [
+								{
+									tz,
+									u: 1707147000000,
+									d: '20240205T163000'
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	_jsns: 'urn:zimbraMail'
+};
+
+export const singleGetMsgAllDayResponse = {
+	...singleGetMsgResponse,
+	m: [
+		{
+			...singleGetMsgResponse.m[0],
+			inv: [
+				{
+					...singleGetMsgResponse.m[0].inv[0],
+					comp: [
+						{
+							...singleGetMsgResponse.m[0].inv[0].comp[0],
+							s: [
+								{
+									d: '20240206'
+								}
+							],
+							e: [
+								{
+									d: '20240206'
+								}
+							],
+							allDay: true
+						}
+					]
+				}
+			]
+		}
+	]
+};
+
+export const seriesGetMsgResponse = {
+	...singleGetMsgResponse,
+	m: [
+		{
+			...singleGetMsgResponse.m[0],
+			inv: [
+				{
+					...singleGetMsgResponse.m[0].inv[0],
+					comp: [
+						{
+							...singleGetMsgResponse.m[0].inv[0].comp[0],
+							recur: [
+								{
+									add: [
+										{
+											rule: [
+												{
+													freq: 'DAI',
+													until: [
+														{
+															d: '20260204T090000Z'
+														}
+													],
+													interval: [
+														{
+															ival: 1
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							],
+							s: [
+								{
+									d: '20240205T160000',
+									tz,
+									u: 1707145200000
+								}
+							],
+							e: [
+								{
+									tz,
+									u: 1707147000000,
+									d: '20240205T163000'
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+};
+
+export const seriesGetMsgAllDayResponse = {
+	...seriesGetMsgResponse,
+	m: [
+		{
+			...seriesGetMsgResponse.m[0],
+			inv: [
+				{
+					...seriesGetMsgResponse.m[0].inv[0],
+					comp: [
+						{
+							...seriesGetMsgResponse.m[0].inv[0].comp[0],
+							allDay: true,
+							s: [
+								{
+									d: '20240205'
+								}
+							],
+							e: [
+								{
+									d: '20240205'
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+};
 const getSoapInvite = ({ context }: { context: { id: string } }): any => ({
 	s: 0,
 	d: 1670259003000,

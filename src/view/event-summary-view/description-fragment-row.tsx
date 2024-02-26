@@ -3,8 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Icon, Row, Text } from '@zextras/carbonio-design-system';
 import React, { ReactElement } from 'react';
+
+import { Icon, Row, Text } from '@zextras/carbonio-design-system';
+
 import { EventType } from '../../types/event';
 
 export const DescriptionFragmentRow = ({ event }: { event: EventType }): ReactElement => (

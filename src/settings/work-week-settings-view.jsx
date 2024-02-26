@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
+
 import {
 	Container,
 	Padding,
@@ -13,8 +14,9 @@ import {
 	Divider,
 	Checkbox
 } from '@zextras/carbonio-design-system';
-import { map } from 'lodash';
 import { t } from '@zextras/carbonio-shell-ui';
+import { map } from 'lodash';
+
 import TimePicker from './components/time-picker';
 import { getWeekDay } from './components/utils';
 

@@ -44,7 +44,7 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 			<Divider />
 			<Container
 				height="fit"
-				background="gray6"
+				background={'gray6'}
 				mainAlignment="flex-start"
 				crossAlignment="flex-start"
 				padding={{ all: 'large', bottom: 'extralarge' }}

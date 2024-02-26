@@ -5,6 +5,7 @@
  */
 import { filter, isNil, map, omitBy, reduce } from 'lodash';
 import moment from 'moment';
+
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -17,6 +18,7 @@ const normalizeApptInstanceRef = (instRef: any): ExceptionReference => ({
 	dur: instRef.dur,
 	loc: instRef?.loc,
 	name: instRef.name,
+	ptst: instRef.ptst,
 	neverSent: instRef.neverSent,
 	or: instRef.or,
 	otherAtt: instRef.otherAtt,
@@ -93,7 +95,7 @@ export const normalizeAppointmentFromCreation = (appt: any, editor: any, id?: st
 	md: appt.md,
 	flags: appt.f ?? '',
 	ms: appt.ms,
-	ptst: 'AC',
+	ptst: appt.ptst,
 	dur: editor.end - editor.start,
 	rev: appt.rev,
 	status: appt.inv[0].comp[0].status,

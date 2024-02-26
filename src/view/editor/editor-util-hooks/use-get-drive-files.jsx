@@ -3,12 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { useCallback } from 'react';
+
+import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
-import { useCallback, useContext } from 'react';
-import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
+
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
+import { selectEditorAttach, selectEditorAttachmentFiles } from '../../../store/selectors/editor';
 import { editEditorAttachments } from '../../../store/slices/editor-slice';
 
 export const uploadToFiles = async (node, uploadTo) => {
@@ -20,7 +22,7 @@ export const uploadToFiles = async (node, uploadTo) => {
 };
 
 export const useGetFilesFromDrive = ({ editorId }) => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const attachmentFiles = useAppSelector(selectEditorAttachmentFiles(editorId));
 	const parts = useAppSelector(selectEditorAttach(editorId));
 	const [uploadTo, isAvailable] = useIntegratedFunction('upload-to-target-and-get-target-id');

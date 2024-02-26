@@ -26,11 +26,7 @@ import {
 import { handleCreatedAppointmentsReducer } from '../reducers/handle-created-appointments';
 import { handleDeletedAppointmentsReducer } from '../reducers/handle-deleted-appointments';
 import { handleModifiedAppointmentsReducer } from '../reducers/handle-modified-appointments';
-import {
-	moveAppointmentFulfilled,
-	moveAppointmentPending,
-	moveAppointmentRejected
-} from '../reducers/move-appointment';
+import { moveAppointmentFulfilled } from '../reducers/move-appointment';
 import {
 	moveAppointmentToTrashFulfilled,
 	moveAppointmentToTrashPending,
@@ -46,7 +42,6 @@ import {
 	snoozeApptReminderPending,
 	snoozeApptReminderRejected
 } from '../reducers/snooze-appointment';
-import { handleUpdateParticipationStatus } from '../reducers/update-participation-status';
 
 const initialState: AppointmentsSlice = {
 	status: 'init',
@@ -57,7 +52,6 @@ export const appointmentsSlice = createSlice({
 	name: 'appointments',
 	initialState,
 	reducers: {
-		updateParticipationStatus: produce(handleUpdateParticipationStatus),
 		handleModifiedAppointments: produce(handleModifiedAppointmentsReducer),
 		handleCreatedAppointments: produce(handleCreatedAppointmentsReducer),
 		handleDeletedAppointments: produce(handleDeletedAppointmentsReducer)
@@ -67,8 +61,6 @@ export const appointmentsSlice = createSlice({
 		builder.addCase(moveAppointmentToTrash.rejected, moveAppointmentToTrashRejected);
 		builder.addCase(moveAppointmentToTrash.fulfilled, moveAppointmentToTrashFulfilled);
 		builder.addCase(moveAppointmentRequest.fulfilled, moveAppointmentFulfilled);
-		builder.addCase(moveAppointmentRequest.pending, moveAppointmentPending);
-		builder.addCase(moveAppointmentRequest.rejected, moveAppointmentRejected);
 		builder.addCase(deleteAppointmentPermanent.pending, deleteAppointmentPermanentlyPending);
 		builder.addCase(deleteAppointmentPermanent.fulfilled, deleteAppointmentPermanentlyFulfilled);
 		builder.addCase(deleteAppointmentPermanent.rejected, deleteAppointmentPermanentlyRejected);
@@ -84,7 +76,6 @@ export const appointmentsSlice = createSlice({
 	}
 });
 
-export const { handleModifiedAppointments, updateParticipationStatus, handleDeletedAppointments } =
-	appointmentsSlice.actions;
+export const { handleModifiedAppointments, handleDeletedAppointments } = appointmentsSlice.actions;
 
 export default appointmentsSlice.reducer;

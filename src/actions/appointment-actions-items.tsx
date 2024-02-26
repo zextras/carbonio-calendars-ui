@@ -15,9 +15,9 @@ import {
 	editAppointment,
 	moveAppointment,
 	moveToTrash,
-	openAppointment
+	openAppointment,
+	proposeNewTimeFn
 } from './appointment-actions-fn';
-import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { ActionsContext, AppointmentActionsItems } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
@@ -45,9 +45,11 @@ export const openEventItem = ({
 
 export const acceptInvitationItem = ({
 	event,
+	invite,
 	context
 }: {
 	event: EventType;
+	invite?: Invite;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.ACCEPT,
@@ -55,14 +57,16 @@ export const acceptInvitationItem = ({
 	label: t('event.action.accept', 'Accept'),
 	disabled: event?.resource?.participationStatus === 'AC',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	onClick: acceptInvitation({ event, context })
+	onClick: acceptInvitation({ event, context, invite })
 });
 
 export const declineInvitationItem = ({
 	event,
+	invite,
 	context
 }: {
 	event: EventType;
+	invite?: Invite;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.DECLINE,
@@ -70,22 +74,41 @@ export const declineInvitationItem = ({
 	label: t('event.action.decline', 'Decline'),
 	disabled: event?.resource?.participationStatus === 'DE',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	onClick: declineInvitation({ event, context })
+	onClick: declineInvitation({ event, context, invite })
 });
 
 export const acceptAsTentativeItem = ({
 	event,
+	invite,
 	context
 }: {
 	event: EventType;
+	invite?: Invite;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
 	id: EventActionsEnum.TENTATIVE,
-	icon: 'QuestionMark',
+	icon: 'QuestionMarkOutline',
 	label: t('label.tentative', 'Tentative'),
 	disabled: event?.resource?.participationStatus === 'TE',
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
-	onClick: acceptAsTentative({ event, context })
+	onClick: acceptAsTentative({ event, context, invite })
+});
+
+export const proposeNewTimeItem = ({
+	invite,
+	event,
+	context
+}: {
+	invite?: Invite;
+	event: EventType;
+	context: ActionsContext;
+}): AppointmentActionsItems => ({
+	id: EventActionsEnum.PROPOSE_NEW_TIME,
+	icon: 'ClockOutline',
+	label: t('label.propose_new_time', 'Propose new time'),
+	disabled: false,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	onClick: proposeNewTimeFn({ event, invite, context })
 });
 
 export const moveEventItem = ({

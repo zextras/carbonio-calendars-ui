@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React, { ReactElement, useMemo } from 'react';
+
 import { Container, Text, Icon, Divider, Row, Padding } from '@zextras/carbonio-design-system';
+import { reduce } from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
-import { reduce } from 'lodash';
+
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { EventType } from '../../types/event';

@@ -374,7 +374,9 @@
         "no_rights": "Bu işlemi yapmak için izniniz yok",
         "single_advanced_filter": "Gelişmiş Filtreler",
         "optionals": "İsteğe bağlı",
-        "time": "Zaman"
+        "time": "Zaman",
+        "equipment": "Donanım",
+        "meeting_room": "Toplantı odası"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -418,7 +420,8 @@
         "resend": "Bu paylaşım hakkında e-posta bildirimi gönder",
         "edit": "Paylaşım özelliklerini düzenle",
         "virtual_room": "Sanal Oda",
-        "folder_linked_status": "Benimle bağlantılı"
+        "folder_linked_status": "Benimle bağlantılı",
+        "meetingRooms": "Toplantı Odaları"
     },
     "revoke_with_custom_message": "Özel bildirim göndererek erişim yetkisini kaldır",
     "settings": {
@@ -671,9 +674,20 @@
     "mountpoint_error": "Paylaşılan Takvimler bölümüne paylaşım eklenemedi",
     "mountpoint_warning": "{{total}} paylaşılan takvimden {{failed}} takvim Paylaşılan Takvimler bölümüne eklenemedi",
     "attendee_unavailable": "Seçilen etkinlik saatinde katılımcı yok",
-    "attendees_unavailable": "Seçilen etkinlik saatinde bir veya daha fazla katılımcı yok",
+    "attendees_unavailable": "Seçilen etkinlik saatinde bir veya daha fazla katılımcı uygun değil",
     "new_appointment": "Yeni Randevu",
     "creation_timezone_tooltip": "Oluşturma saat dilimindeki tarih ve saat:",
     "local_timezone_tooltip": "Yerel saat dilimindeki tarih ve saat:",
-    "private_info_tooltip": "Bir takvimi paylaşırken, diğer kullanıcılar özel olarak işaretlenenler dışında randevu ayrıntılarınızı (başlık, açıklama ve katılımcılar) görebilir. Bu durumda diğer kullanıcılar serbest/meşgul zamanınızı görebilir fakat randevu detaylarını göremezler. Diğer kullanıcıların, özel randevularınızın detaylarını da görüntülemesini ister misiniz?"
+    "private_info_tooltip": "Bir takvimi paylaşırken, diğer kullanıcılar özel olarak işaretlenenler dışında randevu ayrıntılarınızı (başlık, açıklama ve katılımcılar) görebilir. Bu durumda diğer kullanıcılar serbest/meşgul zamanınızı görebilir fakat randevu detaylarını göremezler. Diğer kullanıcıların, özel randevularınızın detaylarını da görüntülemesini ister misiniz?",
+    "previous_day": "Önceki gün",
+    "previous_week": "Önceki hafta",
+    "previous_month": "Önceki ay",
+    "attendee_room_unavailable": "Seçilen etkinlik saatinde oda kullanıma uygun değil",
+    "attendees_equipments_unavailable": "Seçilen etkinlik saatinde bir veya daha fazla donanım kullanıma uygun değil",
+    "attendee_equipment_unavailable": "Seçilen etkinlik saatinde donanım kullanıma uygun değil",
+    "attendees_rooms_unavailable": "Seçilen etkinlik saatinde bir veya daha fazla Toplantı Odası kullanıma uygun değil",
+    "next_month": "Gelecek ay",
+    "next_week": "Gelecek hafta",
+    "public": "genel",
+    "next_day": "Sonraki gün"
 }

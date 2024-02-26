@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useEffect, useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 
-import { Container, Divider, Popover } from '@zextras/carbonio-design-system';
+import { Container, Divider } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith } from 'lodash';
 import moment from 'moment';
 
@@ -22,25 +22,22 @@ import { TimeInfoRow } from './time-info-row';
 import { TitleRow } from './title-row';
 import { VirtualRoomRow } from './virtual-room-row';
 import { ROOM_DIVIDER } from '../../constants';
-import { useAppStatusStore } from '../../store/zustand/store';
+import { useInvite } from '../../hooks/use-invite';
 import { EventType } from '../../types/event';
-import { Invite } from '../../types/store/invite';
 
 type EventSummaryProps = {
-	anchorRef: React.RefObject<HTMLElement>;
-	open: boolean;
 	event: EventType;
 	onClose: () => void;
-	invite: Invite | undefined;
+	inviteId: string | undefined;
 };
 
 export const EventSummaryView = ({
-	anchorRef,
-	open,
 	event,
 	onClose,
-	invite
+	inviteId
 }: EventSummaryProps): ReactElement | null => {
+	const invite = useInvite(inviteId);
+
 	const timeData = useMemo(
 		() => ({
 			...omitBy(
@@ -69,39 +66,24 @@ export const EventSummaryView = ({
 		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
 	);
 
-	useEffect(() => {
-		useAppStatusStore.setState(({ summaryViewCounter }) => ({
-			summaryViewCounter: summaryViewCounter + 1
-		}));
-		return () =>
-			useAppStatusStore.setState(({ summaryViewCounter }) => ({
-				summaryViewCounter: summaryViewCounter - 1
-			}));
-	}, []);
-
 	return (
-		<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
-			<Container
-				padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }}
-				width="25rem"
-			>
-				<TitleRow event={event} />
-				<NeverSentWarningRow neverSent={event?.resource?.inviteNeverSent} />
-				<CalendarInfoRow />
-				{timeData && <TimeInfoRow timeInfoData={timeData} showIcon />}
-				{locationData && <LocationRow locationData={locationData} showIcon />}
-				{invite && <MeetingRoomsRow invite={invite} showIcon />}
-				{invite && <EquipmentsRow invite={invite} showIcon />}
-				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
-				{invite && <ParticipantsRow event={event} invite={invite} />}
-				{event?.resource?.tags?.length > 0 && <TagsRow event={event} />}
-				{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
-					<DescriptionFragmentRow event={event} />
-				)}
-				<Divider />
-				<ActionsButtonsRow onClose={onClose} event={event} />
-			</Container>
-		</Popover>
+		<Container padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }} width="25rem">
+			<TitleRow event={event} />
+			<NeverSentWarningRow neverSent={event?.resource?.inviteNeverSent} />
+			<CalendarInfoRow />
+			{timeData && <TimeInfoRow timeInfoData={timeData} showIcon />}
+			{locationData && <LocationRow locationData={locationData} showIcon />}
+			{invite && <MeetingRoomsRow invite={invite} showIcon />}
+			{invite && <EquipmentsRow invite={invite} showIcon />}
+			{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
+			{invite && <ParticipantsRow event={event} invite={invite} />}
+			{event?.resource?.tags?.length > 0 && <TagsRow event={event} />}
+			{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
+				<DescriptionFragmentRow event={event} />
+			)}
+			<Divider />
+			<ActionsButtonsRow onClose={onClose} event={event} />
+		</Container>
 	);
 };
 
