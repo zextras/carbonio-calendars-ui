@@ -101,6 +101,7 @@ const publicFolder = {
 		]
 	}
 };
+const newCalendarName = 'New Calendar name';
 const setupFoldersStore = (): void => {
 	useFolderStore.setState(() => ({
 		roots: {
@@ -500,14 +501,14 @@ describe('the edit calendar modal is composed by', () => {
 						});
 
 						await user.clear(title);
-						await user.type(title, 'New Calendar name');
+						await user.type(title, newCalendarName);
 						await act(async () => {
 							await user.click(screen.getByText('OK'));
 						});
 
 						expect(spy).toHaveBeenCalledTimes(1);
 						expect(spy).toHaveBeenCalledWith({
-							name: 'New Calendar name',
+							name: newCalendarName,
 							id: folder.id,
 							op: FOLDER_OPERATIONS.RENAME
 						});
@@ -647,7 +648,7 @@ describe('the edit calendar modal is composed by', () => {
 					});
 
 					await user.clear(title);
-					await user.type(title, 'New Calendar name');
+					await user.type(title, newCalendarName);
 
 					await user.click(screen.getByText(/black/i));
 					await user.click(screen.getByText(/red/i));

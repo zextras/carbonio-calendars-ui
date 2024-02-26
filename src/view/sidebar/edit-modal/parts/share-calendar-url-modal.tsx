@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useContext } from 'react';
+import React, { FC, ReactElement } from 'react';
 
-import { Container, SnackbarManagerContext, Text, Padding } from '@zextras/carbonio-design-system';
+import { Container, Text, Padding, useSnackbar } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -24,7 +24,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 	onClose,
 	isFromEditModal
 }): ReactElement => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const accounts = useUserAccounts();
 
 	const [t] = useTranslation();
@@ -32,8 +32,6 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 	const onUrlCopied = (title: string, type: string) => (): void => {
 		const text = getUrl(type, accounts[0].name, folderName);
 		navigator.clipboard.writeText(text).then(() => {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			createSnackbar({
 				key: `folder-action-success`,
 				replace: true,

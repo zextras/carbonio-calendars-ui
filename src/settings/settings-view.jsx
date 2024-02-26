@@ -3,14 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 import {
 	Container,
 	FormSection,
 	FormSubSection,
-	SnackbarManagerContext,
-	Shimmer
+	Shimmer,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { editSettings, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
 import { map, filter, isEqual, uniqBy } from 'lodash';
@@ -45,7 +45,7 @@ export default function CalendarSettingsView() {
 	const [currentInvite, setCurrentInvite] = useState(null);
 	const [allowedFBUsers, setAllowedFBUsers] = useState([]);
 	const [allowedInivteUsers, setAllowedInivteUsers] = useState([]);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 
 	const getUserRights = async () => {
 		const response = await getRightsRequest();

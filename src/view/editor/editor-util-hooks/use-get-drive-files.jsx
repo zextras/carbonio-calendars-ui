@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 
-import { SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { filter, map } from 'lodash';
 
@@ -22,7 +22,7 @@ export const uploadToFiles = async (node, uploadTo) => {
 };
 
 export const useGetFilesFromDrive = ({ editorId }) => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const attachmentFiles = useAppSelector(selectEditorAttachmentFiles(editorId));
 	const parts = useAppSelector(selectEditorAttach(editorId));
 	const [uploadTo, isAvailable] = useIntegratedFunction('upload-to-target-and-get-target-id');

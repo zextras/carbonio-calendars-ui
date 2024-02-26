@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import { ModalManagerContext, SnackbarManagerContext } from '@zextras/carbonio-design-system';
+import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { omit } from 'lodash';
 
@@ -163,9 +163,9 @@ export const useEventActions = ({
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
 	const invite = useAppSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useAppDispatch();
-	const createModal = useContext(ModalManagerContext);
+	const createModal = useModal();
 	const tags = useTags();
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const calendarFolders = useCalendarFolders();
 	const _context = useMemo(
 		() => ({
