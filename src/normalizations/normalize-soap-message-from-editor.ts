@@ -327,7 +327,11 @@ const generateInvite = (editorData: Editor): any => {
 				loc: editorData.location,
 				name: editorData.title,
 				or: {
+					or: omitBy({
 					a: organizer.email,
+					d: organizer.name,
+					sentBy: organizer.sentBy
+				}, isNil),
 					d: organizer.name,
 					sentBy: organizer.sentBy
 				},
