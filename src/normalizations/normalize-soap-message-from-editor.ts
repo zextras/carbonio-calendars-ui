@@ -326,15 +326,14 @@ const generateInvite = (editorData: Editor): any => {
 				fb: editorData.freeBusy,
 				loc: editorData.location,
 				name: editorData.title,
-				or: {
-					or: omitBy({
-					a: organizer.email,
-					d: organizer.name,
-					sentBy: organizer.sentBy
-				}, isNil),
-					d: organizer.name,
-					sentBy: organizer.sentBy
-				},
+				or: omitBy(
+					{
+						a: organizer.email,
+						d: organizer.name,
+						sentBy: organizer.sentBy
+					},
+					isNil
+				),
 				recur:
 					(editorData?.isInstance && editorData?.isSeries) || editorData?.isException
 						? undefined
