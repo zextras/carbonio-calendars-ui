@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
-import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, replaceHistory, t } from '@zextras/carbonio-shell-ui';
 
-import { FOLDERS } from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
