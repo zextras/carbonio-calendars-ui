@@ -5,8 +5,7 @@
  */
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { isEmpty, minBy } from 'lodash';
+import { find, isEmpty, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
@@ -32,9 +31,9 @@ import {
 	useRangeEnd,
 	useRangeStart
 } from '../../store/zustand/hooks';
+import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 import { workWeek } from '../../utils/work-week';
 
-const nullAccessor = () => null;
 const BigCalendar = withDragAndDrop(Calendar);
 
 const views = { month: true, week: true, day: true, work_week: WorkView };
@@ -53,7 +52,7 @@ const CalendarSyncWithRange = () => {
 
 const customComponents = {
 	toolbar: CustomToolbar,
-	event: (props) => <MemoCustomEvent {...props} />,
+	event: MemoCustomEvent,
 	eventWrapper: CustomEventWrapper
 };
 
@@ -70,7 +69,7 @@ export default function CalendarComponent() {
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
 
-	const { onEventDrop, handleSelect, resizeEvent, onRangeChange, onNavigate, date } =
+	const { onEventDropOrResize, handleSelect, onRangeChange, onNavigate, date } =
 		useCalendarComponentUtils();
 
 	if (prefs.zimbraPrefLocale) {
@@ -129,6 +128,17 @@ export default function CalendarComponent() {
 		[theme?.palette?.gray3?.regular, theme?.palette?.gray6?.regular, workingSchedule]
 	);
 
+	const eventPropGetter = useCallback(
+		(event) => ({
+			style: {
+				backgroundColor: event.resource.calendar.color.background,
+				color: event.resource.calendar.color.color,
+				border: `0.0625rem solid ${event.resource.calendar.color.color}`
+			}
+		}),
+		[]
+	);
+
 	const slotPropGetter = useCallback(
 		(newDate) => ({
 			style: {
@@ -178,6 +188,42 @@ export default function CalendarComponent() {
 		}
 	}, [calendarView, prefs?.zimbraPrefCalendarInitialView]);
 
+	const draggableAccessor = useCallback(
+		(calendarEvent) => {
+			if (calendarEvent) {
+				const absFolderPath = find(calendars, [
+					'id',
+					calendarEvent.resource.calendar.id
+				])?.absFolderPath;
+				return isOrganizerOrHaveEqualRights(calendarEvent, absFolderPath);
+			}
+			return false;
+		},
+		[calendars]
+	);
+
+	const resizableAccessor = useCallback(
+		(calendarEvent) => {
+			if (calendarEvent) {
+				const absFolderPath = find(calendars, [
+					'id',
+					calendarEvent.resource.calendar.id
+				])?.absFolderPath;
+				return (
+					isOrganizerOrHaveEqualRights(calendarEvent, absFolderPath) &&
+					// disabling every appointment placed in the all day position until a bug is fixed:
+					// https://github.com/jquense/react-big-calendar/issues/2432
+					(!calendarEvent.allDay ||
+						(!calendarEvent.allDay &&
+							moment(calendarEvent.start).day() === moment(calendarEvent.end).day()))
+				);
+			}
+			return false;
+		},
+		[calendars]
+	);
+
+	const scrollToTime = useMemo(() => new Date(0, 0, 0, startHour, -15, 0), [startHour]);
 	return (
 		<>
 			{!isEmpty(calendars) && <CalendarSyncWithRange />}
@@ -198,22 +244,21 @@ export default function CalendarComponent() {
 				style={{ width: '100%' }}
 				components={customComponents}
 				views={views}
-				tooltipAccessor={nullAccessor}
+				tooltipAccessor={null}
 				onRangeChange={onRangeChange}
 				dayPropGetter={dayPropGetter}
 				slotPropGetter={slotPropGetter}
+				eventPropGetter={eventPropGetter}
 				workingSchedule={workingSchedule}
 				onSelectSlot={handleSelect}
-				scrollToTime={new Date(0, 0, 0, startHour, -15, 0)}
-				onEventDrop={onEventDrop}
-				onEventResize={resizeEvent}
+				scrollToTime={scrollToTime}
+				onEventDrop={onEventDropOrResize}
+				onEventResize={onEventDropOrResize}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
-				resizableAccessor={() => false}
+				resizableAccessor={resizableAccessor}
 				onSelecting={() => !summaryViewOpen && !action}
-				draggableAccessor={(event) =>
-					event.resource.iAmOrganizer && event.resource.calendar.id !== FOLDERS.TRASH
-				}
+				draggableAccessor={draggableAccessor}
 			/>
 		</>
 	);
