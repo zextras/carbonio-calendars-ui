@@ -184,7 +184,7 @@
         "weeks_on": "Semaine(s) de",
         "work_hour": "Heure travaillée",
         "work_week": "Semaine travaillée",
-        "tentative": "tentative",
+        "tentative": "Tentative",
         "every_day": "Chaque jour",
         "find_shares": "Sélectionner les calendriers que vous souhaitez voir dans l'arborescence des calendriers",
         "ics_url": "URL ICS",
@@ -230,7 +230,7 @@
         "loading": "Chargement…",
         "maybe": "peut-être",
         "share_with": "Partagé avec",
-        "propose_new_time": "PROPOSER UN NOUVEL HORAIRE",
+        "propose_new_time": "Proposer un nouvel horaire",
         "app_name": "Calendriers",
         "exclude_free_busy": "Ne pas inclure ce calendrier dans la gestion des disponibilités",
         "week_day": {
@@ -712,5 +712,6 @@
     "attendee_room_unavailable": "Salle indisponible à l'heure choisie pour l'événement",
     "public": "publique",
     "attendees_equipments_unavailable": "Un ou plusieurs équipement sont indisponibles à l'heure choisie pour l'événement",
-    "attendee_equipment_unavailable": "Matériel indisponible à l'heure choisie pour l'événement"
+    "attendee_equipment_unavailable": "Matériel indisponible à l'heure choisie pour l'événement",
+    "timezones": "Fuseaux horaires"
 }
