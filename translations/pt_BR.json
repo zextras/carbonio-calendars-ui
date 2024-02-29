@@ -151,7 +151,7 @@
         "maybe": "talvez",
         "share_with": "Compartilhar com",
         "app_name": "Calendários",
-        "propose_new_time": "PROPOR NOVO HORÁRIO",
+        "propose_new_time": "Propôr um novo horário",
         "new_appointment": "Novo compromisso",
         "preview": "Pré-visualizar",
         "create_tag": "Criar marcador",
@@ -194,7 +194,9 @@
         "no_rights": "Você não tem permissão para realizar esta ação",
         "single_advanced_filter": "Filtros avançados",
         "optionals": "Opcionais",
-        "time": "Hora"
+        "time": "Hora",
+        "equipment": "Recursos",
+        "meeting_room": "Sala de reuniões"
     },
     "action": {
         "send": "Enviar",
@@ -212,7 +214,8 @@
         "send_edit": "Enviar alteração",
         "reset": "Redefinir",
         "search": "Buscar",
-        "show_original": "Mostrar original"
+        "show_original": "Mostrar original",
+        "Trash_already_empty": "A lixeira já está vazia"
     },
     "event": {
         "action": {
@@ -282,14 +285,15 @@
             "calendar_restored": "Calendário restaurado com sucesso",
             "appointment_permanently_deleted": "Compromisso excluído permanentemente",
             "calendar_edits_saved": "Edições salvas corretamente",
-            "series_deleted": "Série excluída com sucesso. Os participantes receberão a notificação de cancelamento.",
+            "series_deleted": "Série excluída. Os participantes receberão a notificação de cancelamento.",
             "some_link_copying_error": "Parece haver um problema ao gerar o link público para alguns arquivos. Tente de novo",
             "some_att_add_fails": "Parece haver um problema ao adicionar alguns anexos. Tente novamente",
             "link_copying_error": "Parece haver um problema ao gerar o link público. Tente de novo",
             "att_err_adding": "Parece haver um problema ao adicionar os anexos. Tente novamente",
             "all_link_copied": "Link público copiado para a área de transferência",
             "all_att_added": "Anexos adicionados com sucesso",
-            "series_deleted_no_notification": "A série foi movida para a lixeira."
+            "series_deleted_no_notification": "A série foi movida para a lixeira.",
+            "shared_calendar_removed": "Calendário removido corretamente"
         },
         "share_calendar_url_note2": "Apenas seus colaboradores podem acessar seus dados usando essas URLs.<br/>Também é possível encontrar esses links clicando com o botão direito em sua lista de calendários.",
         "delete_all_occurences": "Excluir todas as ocorrências",
@@ -472,8 +476,8 @@
     "share": {
         "options": {
             "share_calendar_role": {
-                "admin": "Administrador (pode visualizar, adicionar, remover e administrar)",
-                "manager": "Gerenciador (pode visualizar, editar, adicionar e remover)",
+                "admin": "Editor (pode visualizar, editar, adicionar e eliminar mas não pode aceitar ou compartilhar compromissos)                ",
+                "manager": "Gerenciador (pode visualizar, editar, adicionar, remover aceitar e compartilhar compromissos)",
                 "viewer": "Visualizador (pode apenas visualizar)",
                 "none": "Nenhum"
             },
@@ -549,12 +553,14 @@
         "chat_room": "Link da sala virtual",
         "calendar_sharing_status_0": "Compartilhado com {{count}} pessoa",
         "calendar_sharing_status_1": "Compartilhado com {{count}} pessoas",
-        "calendar_sharing_status_2": "",
+        "calendar_sharing_status_2": "Compartilhado com {{count}} pessoas",
         "calendar_sharing_status_one": "Compartilhado com 1 pessoa",
         "revoke": "Revogar acesso",
         "resend": "Enviar notificação por e-mail sobre este compartilhamento",
         "edit": "Editar propriedades do compartilhamento",
-        "virtual_room": "Sala Virtual"
+        "virtual_room": "Sala Virtual",
+        "meetingRooms": "Salas de reuniões",
+        "folder_linked_status": "Vinculado a mim"
     },
     "cannot_edit_name": "Não é possível editar o nome de um calendário do sistema",
     "edit_share_properties": "Editar propriedades do compartilhamento",
@@ -562,7 +568,7 @@
     "find_shares": "Localizar compartilhamentos",
     "insert": "Inserir",
     "freebusy": "Livre/Ocupado",
-    "remove_from_this_list": "Remover desta lista",
+    "remove_from_this_list": "Remover calendário compartilhado",
     "revoke_access": "Revogar acesso",
     "revoke_with_custom_message": "Revogar acesso enviando uma notificação personalizada",
     "revoke_without_custom_message": "Revogar acesso enviando a notificação padrão",
@@ -691,5 +697,21 @@
     "mountpoint_success": "Adicionado com sucesso na seção de Calendários compartilhados",
     "mountpoint_warning": "{{failed}} de {{total}} calendários não puderam ser adicionados aos Calendários compartilhados",
     "attendee_unavailable": "Participante não disponível na hora do evento",
-    "attendees_unavailable": "Um ou mais participantes não estão disponíveis na hora selecionada"
+    "attendees_unavailable": "Um ou mais participantes não estão disponíveis na hora selecionada",
+    "next_day": "Dia seguinte",
+    "next_month": "Mês seguinte",
+    "next_week": "Semana seguinte",
+    "previous_week": "Semana anterior",
+    "creation_timezone_tooltip": "Data e hora na zona horária de criação:",
+    "local_timezone_tooltip": "Data e hora da zona horária local:",
+    "new_appointment": "Nova reunião",
+    "attendee_equipment_unavailable": "Os Recursos não estão disponíveis à hora selecionada do evento",
+    "attendee_room_unavailable": "A Sala não está disponível à hora selecionada do evento",
+    "attendees_equipments_unavailable": "Um ou mais Recursos não estão disponíveis à hora selecionada do evento",
+    "attendees_rooms_unavailable": "Uma ou mais reuniões não estão disponíveis à hora selecionada do evento",
+    "previous_day": "Dia anterior",
+    "previous_month": "Mês anterior",
+    "public": "Público",
+    "private_info_tooltip": "Ao compartilhar um calendário, os outros usuários podem ver os detalhes do compromisso (título, descrição e participantes), exceto os marcados como privados. Nesse caso, os outros usuários verão seu horário livre/ocupado, mas não os detalhes do compromisso. Deseja que os outros usuários também exibam os detalhes dos seus compromissos privados?",
+    "timezones": "Zonas horárias"
 }
