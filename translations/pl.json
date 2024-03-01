@@ -190,7 +190,7 @@
         "share": "Udostępnij",
         "timezone_pref_msg": "Godziny zależą od Twoich ustawień stref czasowych.",
         "the": " ",
-        "propose_new_time": "ZAPROPONUJ NOWY CZAS",
+        "propose_new_time": "Zaproponuj nowy czas",
         "app_name": "Kalendarze",
         "delete_tag_name": "Usuń etykietę {{name}}",
         "from": "od",
@@ -712,5 +712,6 @@
     "attendee_room_unavailable": "Pokój nie jest dostępny o wybranym czasie wydarzenia",
     "attendees_rooms_unavailable": "Co najmniej jeden pokój spotkań nie jest dostępny o wybranym czasie wydarzenia",
     "public": "publiczne",
-    "attendees_equipments_unavailable": "Co najmniej jeden ekwipunek nie jest dostępny o wybranym czasie wydarzenia"
+    "attendees_equipments_unavailable": "Co najmniej jeden ekwipunek nie jest dostępny o wybranym czasie wydarzenia",
+    "timezones": "Strefy czasowe"
 }

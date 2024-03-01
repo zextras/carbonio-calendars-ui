@@ -316,7 +316,7 @@
         "on_behalf_of": "({{accountName}} ,bu kullanıcı yerine {{identity}} <{{otherAccount}}>",
         "new_appointment": "Yeni Randevu",
         "app_name": "Takvimler",
-        "propose_new_time": "YENİ ZAMAN ÖNER",
+        "propose_new_time": "Yeni saat öner",
         "loading": "Yükleniyor…",
         "maybe": "belki",
         "role": "Rol",
