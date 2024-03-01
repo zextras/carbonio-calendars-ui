@@ -18,9 +18,12 @@ type CreateAppointmentContextType = {
 	calendar?: Editor['calendar'];
 	isRichText?: Editor['isRichText'];
 	organizer?: Editor['organizer'];
+	sender?: Editor['sender'];
 	title?: Editor['title'];
 	location?: Editor['location'];
 	room?: Editor['room'];
+	meetingRoom?: Editor['meetingRoom'];
+	equipment?: Editor['equipment'];
 	attendees?: Array<{ email: string }>;
 	optionalAttendees?: Array<{ email: string }>;
 	allDay?: Editor['allDay'];
@@ -43,9 +46,12 @@ const createAppointmentIntegration =
 			'calendar',
 			'isRichText',
 			'organizer',
+			'sender',
 			'title',
 			'location',
 			'room',
+			'meetingRoom',
+			'equipment',
 			'attendees',
 			'optionalAttendees',
 			'allDay',
