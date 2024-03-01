@@ -15,15 +15,18 @@ import {
 	Chip,
 	Padding
 } from '@zextras/carbonio-design-system';
-import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { getAction, Action, useUserAccount, ROOT_NAME } from '@zextras/carbonio-shell-ui';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import 'moment-timezone';
+import { MESSAGE_METHOD } from './invite-test-utils';
+import { AvailabilityChecker } from './parts/availability-checker';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
+import { getRootAccountId, useRootByUser } from '../../carbonio-ui-commons/store/zustand/folder';
 import BodyMessageRenderer, { extractBody } from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { PARTICIPANT_ROLE } from '../../constants/api';
@@ -60,6 +63,9 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const account = useUserAccount();
 	const invite = normalizeInvite({ ...mailMsg, inv: mailMsg.invite });
 	const [t] = useTranslation();
+
+	const rootAccountId = getRootAccountId(mailMsg.parent);
+	const root = useRootByUser(rootAccountId ?? ROOT_NAME);
 
 	const isAttendee = useMemo(
 		() => invite?.organizer?.a !== account.name,
@@ -101,7 +107,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		[meetingRooms]
 	);
 
-	const [maxReqParticipantsToShow, setMaxReqParticipantsToShow] = useState(4);
+	const [maxReqParticipantsToShow, setMaxReqParticipantsToShow] = useState(2);
 	const requiredParticipants = useMemo(
 		() => invite.attendees.filter((user) => user.role === PARTICIPANT_ROLE.REQUIRED),
 		[invite]
@@ -120,7 +126,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					mail: user.a
 				}
 			},
-			firstName: user.d ?? user.d ?? user.a,
+			firstName: user.d ?? user.a,
 			middleName: ''
 		};
 
@@ -148,6 +154,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const inviteId =
 		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
 
+	const requiredSlice = requiredParticipants.slice(0, maxReqParticipantsToShow);
 	return (
 		<InviteContainer data-testid={'invite-response'}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
@@ -188,6 +195,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						{localTimezoneString}
 					</Text>{' '}
 				</Row>
+				{method === MESSAGE_METHOD.REQUEST && <AvailabilityChecker />}
 				{method === 'COUNTER'
 					? mailMsg.parent !== '5' && (
 							// eslint-disable-next-line react/jsx-indent
@@ -347,52 +355,22 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 									/>
 								)}
 							</Row>
-							{requiredParticipants.map((p, index: number) =>
-								index < maxReqParticipantsToShow ? (
-									<Row
-										mainAlignment="flex-start"
-										width="100%"
-										padding={{ top: 'small' }}
-										key={`${p.d ?? p.a}-${index}-1`}
-									>
-										{p.d ? (
-											<Tooltip placement="top" label={p.a} maxWidth="100%">
-												<div>
-													<Chip
-														label={p.d}
-														background={'gray3'}
-														color="text"
-														actions={[
-															{
-																id: 'action2',
-																label: t('message.send_email'),
-																type: 'button',
-																icon: 'EmailOutline',
-																onClick: () => replyMsg(p)
-															}
-														]}
-													/>
-												</div>
-											</Tooltip>
-										) : (
-											<Chip
-												label={p.a}
-												background={'gray3'}
-												color="text"
-												actions={[
-													{
-														id: 'action2',
-														label: t('message.send_email'),
-														type: 'button',
-														icon: 'EmailOutline',
-														onClick: () => replyMsg(p)
-													}
-												]}
-											/>
-										)}
-									</Row>
-								) : null
-							)}
+							{requiredSlice.map((p, index: number) => (
+								<Row
+									mainAlignment="flex-start"
+									width="100%"
+									padding={{ top: 'small' }}
+									key={`${p.d ?? p.a}-${index}-1`}
+								>
+									{
+										<Tooltip placement="top" label={p.a ?? p.d ?? ''} maxWidth="100%">
+											<div>
+												<Chip label={p.d ?? p.a} />
+											</div>
+										</Tooltip>
+									}
+								</Row>
+							))}
 							{maxReqParticipantsToShow < requiredParticipants.length && (
 								<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
 									<LinkText
@@ -423,52 +401,22 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 										})}
 									</Text>
 								</Row>
-								{optionalParticipants.map((p, index: number) =>
-									index < maxOptParticipantsToShow ? (
-										<Row
-											mainAlignment="flex-start"
-											width="100%"
-											padding={{ top: 'small' }}
-											key={`${p.d ?? p.a}-${index}-2`}
-										>
-											{p.d ? (
-												<Tooltip placement="top" label={p.a} maxWidth="100%">
-													<div>
-														<Chip
-															label={p.d}
-															background={'gray3'}
-															color="text"
-															actions={[
-																{
-																	id: 'action2',
-																	label: t('message.send_email'),
-																	type: 'button',
-																	icon: 'EmailOutline',
-																	onClick: () => replyMsg(p)
-																}
-															]}
-														/>
-													</div>
-												</Tooltip>
-											) : (
-												<Chip
-													label={p.a}
-													background={'gray3'}
-													color="text"
-													actions={[
-														{
-															id: 'action2',
-															label: t('message.send_email'),
-															type: 'button',
-															icon: 'EmailOutline',
-															onClick: () => replyMsg(p)
-														}
-													]}
-												/>
-											)}
-										</Row>
-									) : null
-								)}
+								{optionalParticipants.slice(0, maxOptParticipantsToShow).map((p, index: number) => (
+									<Row
+										mainAlignment="flex-start"
+										width="100%"
+										padding={{ top: 'small' }}
+										key={`${p.d ?? p.a}-${index}-2`}
+									>
+										{
+											<Tooltip placement="top" label={p.d ?? p.a} maxWidth="100%">
+												<div>
+													<Chip label={p.d ?? p.a} />
+												</div>
+											</Tooltip>
+										}
+									</Row>
+								))}
 								{maxOptParticipantsToShow < optionalParticipants.length && (
 									<Row mainAlignment="flex-start" width="100%" padding={{ top: 'small' }}>
 										<LinkText

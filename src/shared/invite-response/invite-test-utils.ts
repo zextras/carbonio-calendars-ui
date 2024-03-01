@@ -11,6 +11,7 @@ import { InviteResponseArguments } from '../../types/integrations';
 
 const senderMail = 'sender@mail.com';
 const receiverMail = 'receiver@mail.com';
+const receiver2Mail = 'receiver2@mail.com';
 const tz = 'Europe/Berlin';
 
 export const MESSAGE_METHOD = {
@@ -76,6 +77,13 @@ export const buildMailMessageType = (
 				name: 'receiver',
 				fullName: 'receiver fullName',
 				email: receiverMail
+			},
+			{
+				type: 't',
+				address: receiver2Mail,
+				name: 'receiver 2',
+				fullName: 'receiver2 fullName',
+				email: receiver2Mail
 			}
 		],
 		tags: [],
@@ -99,12 +107,20 @@ export const buildMailMessageType = (
 								role: 'REQ',
 								ptst: 'NE',
 								rsvp: true
+							},
+							{
+								a: receiver2Mail,
+								url: receiver2Mail,
+								d: 'receiver2 fullName',
+								role: 'OPT',
+								ptst: 'NE',
+								rsvp: true
 							}
 						],
 						alarm: [],
 						fr: 'message fragment',
 						noBlob: true,
-						desc: [],
+						desc: [{ _content: 'test description' }],
 						descHtml: [],
 						fb: 'B',
 						transp: 'O',
