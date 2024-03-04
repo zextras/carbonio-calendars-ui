@@ -15,21 +15,20 @@ import {
 	Chip,
 	Padding
 } from '@zextras/carbonio-design-system';
-import { getAction, Action, useUserAccount, ROOT_NAME } from '@zextras/carbonio-shell-ui';
+import { getAction, Action, useUserAccount, FOLDERS } from '@zextras/carbonio-shell-ui';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import 'moment-timezone';
-import { MESSAGE_METHOD } from './invite-test-utils';
 import { AvailabilityChecker } from './parts/availability-checker';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
-import { getRootAccountId, useRootByUser } from '../../carbonio-ui-commons/store/zustand/folder';
+import { getRootAccountId, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
 import BodyMessageRenderer, { extractBody } from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
-import { PARTICIPANT_ROLE } from '../../constants/api';
+import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
@@ -64,8 +63,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const invite = normalizeInvite({ ...mailMsg, inv: mailMsg.invite });
 	const [t] = useTranslation();
 
-	const rootAccountId = getRootAccountId(mailMsg.parent);
-	const root = useRootByUser(rootAccountId ?? ROOT_NAME);
+	const rootAccountId = getRootAccountId(mailMsg.parent) ?? FOLDERS.USER_ROOT;
+	const root = useRoot(rootAccountId);
 
 	const isAttendee = useMemo(
 		() => invite?.organizer?.a !== account.name,
@@ -195,7 +194,16 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						{localTimezoneString}
 					</Text>{' '}
 				</Row>
-				{method === MESSAGE_METHOD.REQUEST && <AvailabilityChecker />}
+				{method === MESSAGE_METHOD.REQUEST && root?.name && (
+					<AvailabilityChecker
+						email={root.name}
+						rootId={root.id}
+						start={invite?.start?.u ?? moment(mailMsg.invite[0].comp[0].s[0].d).valueOf()}
+						end={invite?.end?.u ?? moment(mailMsg.invite[0].comp[0].e[0].d).valueOf()}
+						allDay={invite.allDay ?? false}
+						uid={invite.uid}
+					/>
+				)}
 				{method === 'COUNTER'
 					? mailMsg.parent !== '5' && (
 							// eslint-disable-next-line react/jsx-indent

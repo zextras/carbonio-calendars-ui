@@ -4,31 +4,30 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
+import { keyBy, values } from 'lodash';
 import moment from 'moment-timezone';
 
-import clearAllMocks = jest.clearAllMocks;
 import { InviteResponse } from './invite-response';
 import {
 	buildMailMessageType,
-	MESSAGE_METHOD,
 	MESSAGE_TYPE,
 	setupServerSingleEventResponse
 } from './invite-test-utils';
 import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
+import { ROOT_NAME } from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import * as handler from '../../commons/get-appointment';
+import * as getFreeBusyResponseHandler from '../../soap/get-free-busy-request';
 import * as getMsgHandler from '../../soap/get-message-request';
 import * as moveAppointmentHandler from '../../store/actions/move-appointment';
 import * as modifyAppointmentHandler from '../../store/actions/new-modify-appointment';
 import * as sendInviteResponseHandler from '../../store/actions/send-invite-response';
-import * as getFreeBusyResponseHandler from '../../soap/get-free-busy-request';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import {
@@ -46,6 +45,7 @@ import {
 	singleGetMsgResponse
 } from '../../test/mocks/network/msw/handle-get-invite';
 import 'jest-styled-components';
+import { MESSAGE_METHOD } from '../../constants/api';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
@@ -53,14 +53,8 @@ const folder2 = mockedData.calendars.getCalendar();
 
 const setupFoldersStore = (): void => {
 	useFolderStore.setState(() => ({
-		roots: {
-			...roots,
-			USER: {
-				...roots.USER,
-				children: [folder, folder2]
-			}
-		},
 		folders: {
+			...keyBy(roots, 'id'),
 			[folder.id]: folder,
 			[folder2.id]: folder2
 		}
@@ -68,7 +62,7 @@ const setupFoldersStore = (): void => {
 };
 
 afterEach(() => {
-	clearAllMocks();
+	jest.clearAllMocks();
 });
 
 describe('invite response component', () => {
@@ -189,17 +183,40 @@ describe('invite response component', () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					expect(getFreeBusyHandler).toHaveBeenCalledWith(
-						expect.objectContaining({
-							uid: "aashish.khanna@zextras.com"
-						})
-					);
+					await waitFor(() => {
+						expect(getFreeBusyHandler).toHaveBeenCalledWith(
+							expect.objectContaining({
+								uid: ROOT_NAME
+							})
+						);
+					});
 				});
-				test.todo('if the appointment is received by the secondary account, it will be the one used');
+				test('if the appointment is received by the secondary account, it will be the one used', async () => {
+					const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+					setupFoldersStore();
+					const rootsArray = values(roots);
+					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
+						parent: rootsArray[1].uuid
+					});
+					const store = configureStore({ reducer: combineReducers(reducers) });
+
+					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+						store
+					});
+
+					await waitFor(() => {
+						expect(getFreeBusyHandler).toHaveBeenCalledWith(
+							expect.objectContaining({
+								uid: rootsArray[1].name
+							})
+						);
+					});
+				});
 			});
 			test('a checkbox to notify the organizer checked by default', () => {
 				setupFoldersStore();

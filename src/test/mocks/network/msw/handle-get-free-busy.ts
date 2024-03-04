@@ -19,19 +19,19 @@ export const getEmptyResponse = (): GetFreeBusyResponse => ({
 });
 type TimeSlot = { s: number; e: number };
 type TimeSlots = Array<TimeSlot>;
-type AvailabilitySLots = { f?: TimeSlots; b?: TimeSlots; t?: TimeSlots; id?: string };
+export type AvailabilitySlots = { f?: TimeSlots; b?: TimeSlots; t?: TimeSlots; id?: string };
 type GetFreeBusyResponse = {
 	_jsns: string;
 	Header: { context: { session: { id: number; _content: number } } };
 	Body: {
 		GetFreeBusyResponse: {
 			_jsns: string;
-			usr: Array<AvailabilitySLots> | [];
+			usr: Array<AvailabilitySlots> | [];
 		};
 	};
 };
 export const handleGetFreeBusyCustomResponse = (
-	arg?: Array<AvailabilitySLots>
+	arg?: Array<AvailabilitySlots>
 ): GetFreeBusyResponse => ({
 	Header: {
 		context: {

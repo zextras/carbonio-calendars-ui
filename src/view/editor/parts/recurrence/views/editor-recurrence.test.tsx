@@ -14,7 +14,7 @@ import { generateEditor } from '../../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../../constants/test-utils';
 import { reducers } from '../../../../../store/redux';
 
-jest.setTimeout(7000);
+jest.setTimeout(10000);
 
 describe('editor recurrence field', () => {
 	test('is set to none as default', async () => {

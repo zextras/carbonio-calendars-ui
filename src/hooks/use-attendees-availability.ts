@@ -55,7 +55,9 @@ export const useAttendeesAvailability = (
 							b: item.b ?? [],
 							requestedDays: [currentStartDay]
 						}));
-						setAttendeesAvailabilityList(newAttendeesInRangeRetrievedList);
+						if (newAttendeesInRangeRetrievedList.length) {
+							setAttendeesAvailabilityList(newAttendeesInRangeRetrievedList);
+						}
 					}
 				);
 			}

@@ -6,18 +6,14 @@
 import { rest } from 'msw';
 
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
+import { MESSAGE_METHOD } from '../../constants/api';
 import { ObjectValues } from '../../constants/sidebar';
-import { InviteResponseArguments } from '../../types/integrations';
+import { InviteResponseArguments, MailMsg } from '../../types/integrations';
 
 const senderMail = 'sender@mail.com';
 const receiverMail = 'receiver@mail.com';
 const receiver2Mail = 'receiver2@mail.com';
 const tz = 'Europe/Berlin';
-
-export const MESSAGE_METHOD = {
-	COUNTER: 'COUNTER',
-	REQUEST: 'REQUEST'
-} as const;
 
 export const MESSAGE_TYPE = {
 	SINGLE: 'SINGLE',
@@ -31,7 +27,8 @@ type MessageType = ObjectValues<typeof MESSAGE_TYPE>;
 export const buildMailMessageType = (
 	method: MessageMethod,
 	type: MessageType,
-	allDay: boolean
+	allDay: boolean,
+	context?: Partial<MailMsg>
 ): InviteResponseArguments['mailMsg'] => {
 	const s = [
 		allDay
@@ -137,7 +134,8 @@ export const buildMailMessageType = (
 						class: 'PUB',
 						allDay,
 						s,
-						e
+						e,
+						...(context?.invite?.[0]?.comp?.[0] ?? {})
 					}
 				]
 			}
@@ -158,7 +156,8 @@ export const buildMailMessageType = (
 		isSentByMe: false,
 		isInvite: true,
 		isReplied: false,
-		isReadReceiptRequested: true
+		isReadReceiptRequested: true,
+		...(context ?? {})
 	};
 	if (type === MESSAGE_TYPE.SINGLE) {
 		return singleEventMessageRequest;
