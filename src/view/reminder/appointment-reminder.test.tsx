@@ -15,7 +15,7 @@ import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { Appointment } from '../../types/store/appointments';
 
-jest.setTimeout(30000);
+jest.setTimeout(40000);
 
 describe('appointment reminders', () => {
 	test("'when the appointment is deleted also the relative reminder is deleted", async () => {

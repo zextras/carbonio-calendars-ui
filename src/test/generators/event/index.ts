@@ -7,10 +7,10 @@ import { getEndTime } from '../../../commons/editor-generator';
 import { EventResource, EventResourceCalendar, EventType } from '../../../types/event';
 import utils from '../utils';
 
-type CalendarProps = { calendar: Partial<EventResourceCalendar> };
+type CalendarProps = { calendar?: Partial<EventResourceCalendar> };
 
 type ResourceProps = {
-	resource: Partial<Omit<Partial<EventResource>, 'calendar'> & CalendarProps>;
+	resource?: Partial<Omit<Partial<EventResource>, 'calendar'> & CalendarProps>;
 };
 
 type GetEventProps = Omit<Partial<EventType>, 'resource'> & ResourceProps;

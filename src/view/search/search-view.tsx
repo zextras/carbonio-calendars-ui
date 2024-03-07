@@ -14,7 +14,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import AdvancedFilterModal from './advance-filter-modal';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useFoldersArray, useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
@@ -62,19 +62,19 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		[zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch]
 	);
 
-	const calendars = useFoldersMap();
+	const calendars = useFoldersArray();
 	const searchInFolders = useMemo(
 		() =>
 			reduce(
 				calendars,
-				(acc: Array<string>, v: Folder, k: string) => {
+				(acc: Array<string>, v: Folder, k: number) => {
 					if (hasId(v, FOLDERS.TRASH) && includeTrash && v.checked) {
-						acc.push(k);
+						acc.push(String(k));
 					}
 					if (v.isLink && includeSharedFolders && v.checked) {
-						acc.push(k);
+						acc.push(String(k));
 					}
-					if (!hasId(v, FOLDERS.TRASH) && !v.isLink && v.checked) acc.push(k);
+					if (!hasId(v, FOLDERS.TRASH) && !v.isLink && v.checked) acc.push(String(k));
 					return acc;
 				},
 				[]

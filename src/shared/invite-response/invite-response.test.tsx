@@ -18,7 +18,6 @@ import {
 	setupServerSingleEventResponse
 } from './invite-test-utils';
 import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
-import { ROOT_NAME } from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -179,6 +178,15 @@ describe('invite response component', () => {
 			});
 			describe('a row which inform the user about his availability', () => {
 				test('if the appointment is received by the primary account, it will be the one used', async () => {
+					const name = 'sam@mail.com';
+					shell.useUserAccount.mockImplementation(() => ({
+						name,
+						displayName: name,
+						id: '0e9d1df6-30df-4e1d-aff6-212908045221',
+						identities: { identity: [] },
+						rights: { targets: [] },
+						signatures: { signature: [] }
+					}));
 					const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
@@ -191,7 +199,7 @@ describe('invite response component', () => {
 					await waitFor(() => {
 						expect(getFreeBusyHandler).toHaveBeenCalledWith(
 							expect.objectContaining({
-								uid: ROOT_NAME
+								uid: name
 							})
 						);
 					});

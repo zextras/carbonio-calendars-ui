@@ -7,7 +7,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { rest } from 'msw';
 
 import { AvailabilityChecker } from './availability-checker';
@@ -375,7 +375,7 @@ describe('availability checker component', () => {
 
 						await user.click(chevronDownOutline);
 
-						const appointmentCardContainer = screen.getByTestId(/appointmentCardContainer/i);
+						const appointmentCardContainer = screen.getByTestId(/ShimmerContainer/i);
 						expect(appointmentCardContainer).toBeVisible();
 					});
 				});

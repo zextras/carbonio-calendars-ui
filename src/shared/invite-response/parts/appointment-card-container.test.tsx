@@ -8,14 +8,17 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { keyBy, values } from 'lodash';
+import { rest } from 'msw';
 
 import { AppointmentCardContainer } from './appointment-card-container';
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
 import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import * as getSearchRequestHandler from '../../../soap/search-request';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
+import { filledSearchResponse } from '../../../test/mocks/network/msw/handle-search-request';
 
 const roots = generateRoots();
 const rootsArray = values(roots);
@@ -32,11 +35,20 @@ const setupFoldersStore = (): void => {
 	}));
 };
 
+const handleSearchRequest = (): void => {
+	getSetupServer().use(
+		rest.post('/service/soap/SearchRequest', async (req, res, ctx) =>
+			res(ctx.json(filledSearchResponse()))
+		)
+	);
+};
+
 describe('appointment card container component', () => {
 	test('will call a search request', async () => {
 		const start = new Date().getTime();
 		const end = new Date().setUTCHours(15, 30, 0, 0);
 		const searchRequestHandler = jest.spyOn(getSearchRequestHandler, 'searchRequest');
+
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 		setupTest(<AppointmentCardContainer start={start} end={end} rootId={rootsArray[1].id} />, {
@@ -47,16 +59,43 @@ describe('appointment card container component', () => {
 			expect(searchRequestHandler).toHaveBeenCalledTimes(1);
 		});
 	});
+	test.todo('will exclude trash and links from the search request query');
 	test('will show a shimmer list while waiting for data', async () => {
 		const start = new Date().getTime();
 		const end = new Date().setUTCHours(15, 30, 0, 0);
+		const searchRequestHandler = jest.spyOn(getSearchRequestHandler, 'searchRequest');
+
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		setupFoldersStore();
 		setupTest(<AppointmentCardContainer start={start} end={end} rootId={rootsArray[1].id} />, {
 			store
 		});
 
-		const shimmerList = screen.getByTestId(/ShimmerAppointmentCardContainer/i);
+		await waitFor(() => {
+			expect(searchRequestHandler).toHaveBeenCalledTimes(1);
+		});
+
+		const shimmerList = screen.getByTestId('ShimmerContainer');
 		expect(shimmerList).toBeVisible();
+	});
+	test('if data is retrieved it will show an appointment card container', async () => {
+		const start = new Date().getTime();
+		const end = new Date().setUTCHours(15, 30, 0, 0);
+		const searchRequestHandler = jest.spyOn(getSearchRequestHandler, 'searchRequest');
+
+		handleSearchRequest();
+
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		setupFoldersStore();
+		setupTest(<AppointmentCardContainer start={start} end={end} rootId={rootsArray[1].id} />, {
+			store
+		});
+
+		await waitFor(() => {
+			expect(searchRequestHandler).toHaveBeenCalledTimes(1);
+		});
+
+		const eventListContainer = screen.getByTestId('AppointmentCardContainer');
+		expect(eventListContainer).toBeVisible();
 	});
 });

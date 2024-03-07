@@ -148,7 +148,7 @@ export const normalizeCalendarEvent = ({
 
 export const normalizeCalendarEvents = (
 	appts: Array<Appointment>,
-	calendars: Record<string, Folder>
+	calendars: Array<Folder>
 ): Array<EventType> =>
 	!isEmpty(appts)
 		? reduce(

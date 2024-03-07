@@ -4,28 +4,43 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import { Container, Row, Shimmer } from '@zextras/carbonio-design-system';
+import { Container, Padding, Row, Shimmer } from '@zextras/carbonio-design-system';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { filter, map } from 'lodash';
+import { filter, map, values } from 'lodash';
 
+import { AppointmentCard } from './appointment-card';
 import { useFoldersArrayByRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
+import { normalizeAppointments } from '../../../normalizations/normalize-appointments';
+import { normalizeCalendarEvents } from '../../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../../store/actions/search-appointments';
 import { useAppDispatch } from '../../../store/redux/hooks';
+import { EventType } from '../../../types/event';
 
-const useAppointmentsInRange = (start: number, end: number, rootId: string): null => {
+const useAppointmentsInRange = (
+	start: number,
+	end: number,
+	rootId: string,
+	uid?: string
+): Array<EventType> | undefined => {
+	const [events, setEvents] = useState<Array<EventType> | undefined>(undefined);
 	const dispatch = useAppDispatch();
 	const calendars = useFoldersArrayByRoot(rootId);
 
-	const filteredCalendars = filter(
-		calendars,
-		(calendar) =>
-			!/b/.test(calendar?.f ?? '') &&
-			!(calendar as LinkFolder).broken &&
-			!hasId({ id: calendar.id }, FOLDERS.TRASH)
+	const filteredCalendars = useMemo(
+		() =>
+			filter(
+				calendars,
+				(calendar) =>
+					!/b/.test(calendar?.f ?? '') &&
+					!(calendar as LinkFolder).broken &&
+					!hasId({ id: calendar.id }, FOLDERS.TRASH) &&
+					!(calendar as LinkFolder).isLink
+			),
+		[calendars]
 	);
 
 	const query = useMemo(
@@ -35,31 +50,45 @@ const useAppointmentsInRange = (start: number, end: number, rootId: string): nul
 			).join(' '),
 		[filteredCalendars]
 	);
+
 	useEffect(() => {
-		if (start && end) {
-			dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
+		if (start && end && !events) {
+			dispatch(searchAppointments({ spanEnd: end, spanStart: start, query })).then((response) => {
+				if (response?.payload?.appt?.length) {
+					const toNormalize = filter(
+						response.payload.appt,
+						(appt) => appt.fb !== 'F' && appt.uid !== uid
+					);
+					if (toNormalize.length) {
+						const appointments = values(normalizeAppointments(toNormalize));
+						const selectedEvents = normalizeCalendarEvents(appointments, calendars);
+						setEvents(selectedEvents);
+					} else {
+						setEvents([]);
+					}
+				}
+			});
 		}
-	}, [dispatch, end, query, start]);
-	return null;
+	}, [calendars, dispatch, end, events, query, start, uid]);
+
+	return events;
 };
 
 export const AppointmentCardContainer = ({
 	start,
 	end,
-	rootId
+	rootId,
+	uid
 }: {
 	start: number;
 	end: number;
 	rootId: string;
+	uid?: string;
 }): JSX.Element => {
-	const something = useAppointmentsInRange(start, end, rootId);
-	if (!something) {
+	const events = useAppointmentsInRange(start, end, rootId, uid);
+	if (!events) {
 		return (
-			<Container
-				width={'fill'}
-				padding={{ top: 'medium' }}
-				data-testid="ShimmerAppointmentCardContainer"
-			>
+			<Container width={'fill'} padding={{ top: 'medium' }} data-testid="ShimmerContainer">
 				<Row width={'fill'} padding={{ bottom: 'small' }}>
 					<Shimmer.ListItem width="100%" type={3} />
 				</Row>
@@ -72,5 +101,22 @@ export const AppointmentCardContainer = ({
 			</Container>
 		);
 	}
-	return <Container data-testid="AppointmentCardContainer" />;
+	return (
+		<Container
+			data-testid="AppointmentCardContainer"
+			width={'fill'}
+			padding={{ top: 'medium', right: 'small' }}
+			height={'10rem'}
+			style={{ overflowY: 'auto' }}
+			mainAlignment="flex-start"
+			crossAlignment="flex-start"
+		>
+			{map(events, (event, index) => (
+				<>
+					<AppointmentCard event={event} />
+					{index < events.length - 1 && <Padding bottom={'small'} />}
+				</>
+			))}
+		</Container>
+	);
 };

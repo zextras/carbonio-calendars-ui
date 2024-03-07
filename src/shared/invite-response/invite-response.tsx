@@ -15,7 +15,7 @@ import {
 	Chip,
 	Padding
 } from '@zextras/carbonio-design-system';
-import { getAction, Action, useUserAccount, FOLDERS } from '@zextras/carbonio-shell-ui';
+import { getAction, Action, useUserAccount, FOLDERS, ROOT_NAME } from '@zextras/carbonio-shell-ui';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -65,7 +65,10 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 
 	const rootAccountId = getRootAccountId(mailMsg.parent) ?? FOLDERS.USER_ROOT;
 	const root = useRoot(rootAccountId);
-
+	const email = useMemo(
+		() => (root?.name === ROOT_NAME ? account.name : root?.name ?? account.name),
+		[account.name, root?.name]
+	);
 	const isAttendee = useMemo(
 		() => invite?.organizer?.a !== account.name,
 		[account.name, invite?.organizer?.a]
@@ -194,9 +197,9 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						{localTimezoneString}
 					</Text>{' '}
 				</Row>
-				{method === MESSAGE_METHOD.REQUEST && root?.name && (
+				{method === MESSAGE_METHOD.REQUEST && root && (
 					<AvailabilityChecker
-						email={root.name}
+						email={email}
 						rootId={root.id}
 						start={invite?.start?.u ?? moment(mailMsg.invite[0].comp[0].s[0].d).valueOf()}
 						end={invite?.end?.u ?? moment(mailMsg.invite[0].comp[0].e[0].d).valueOf()}
