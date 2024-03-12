@@ -17,7 +17,15 @@ export type TagItems = Tag & {
 	label: string;
 };
 
-export const TagIconComponent = ({ event }: { event: EventType }): JSX.Element => {
+export const TagIconComponent = ({
+	event,
+	showInnerTooltip,
+	hideInnerTooltip
+}: {
+	event: EventType;
+	showInnerTooltip?: () => void;
+	hideInnerTooltip?: () => void;
+}): JSX.Element => {
 	const [showDropdown, setShowDropdown] = useState(false);
 	const onIconClick = useCallback((ev) => {
 		ev.stopPropagation();
@@ -106,7 +114,16 @@ export const TagIconComponent = ({ event }: { event: EventType }): JSX.Element =
 			{showTagIcon && (
 				<Tooltip placement="top" label={tagName}>
 					<Padding left="extrasmall">
-						<Icon size="medium" data-testid="TagSingleIcon" icon={tagIcon} color={tagIconColor} />
+						<Icon
+							size="medium"
+							data-testid="TagSingleIcon"
+							icon={tagIcon}
+							color={tagIconColor}
+							onMouseEnter={showInnerTooltip}
+							onMouseLeave={hideInnerTooltip}
+							onFocus={showInnerTooltip}
+							onBlur={hideInnerTooltip}
+						/>
 					</Padding>
 				</Tooltip>
 			)}
@@ -119,6 +136,10 @@ export const TagIconComponent = ({ event }: { event: EventType }): JSX.Element =
 							icon={tagIcon}
 							onClick={onIconClick}
 							color={tagIconColor}
+							onMouseEnter={showInnerTooltip}
+							onMouseLeave={hideInnerTooltip}
+							onFocus={showInnerTooltip}
+							onBlur={hideInnerTooltip}
 						/>
 					</Padding>
 				</Dropdown>

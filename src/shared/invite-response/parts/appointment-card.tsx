@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import {
 	Container,
@@ -47,6 +47,8 @@ const useEventTimeString = (start: Moment | Date, end: Moment | Date, allDay: bo
 
 export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element => {
 	const [t] = useTranslation();
+	const [tooltipVisible, setTooltipVisible] = useState(false);
+
 	const onClick = useCallback(() => {
 		pushHistory({
 			route: CALENDAR_ROUTE,
@@ -55,8 +57,21 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ]);
 
 	const eventTimeString = useEventTimeString(event.start, event.end, event.allDay);
+
+	const showInnerTooltip = useCallback(() => {
+		setTooltipVisible(true);
+	}, []);
+
+	const hideInnerTooltip = useCallback(() => {
+		setTooltipVisible(false);
+	}, []);
+
 	return (
-		<Tooltip label={t('label.show_event', 'Double click to see more details on Calendars')}>
+		<Tooltip
+			placement={'top'}
+			label={t('label.show_event', 'Double click to see more details on Calendars')}
+			disabled={tooltipVisible}
+		>
 			<Container
 				data-testid={`cardContainer-${event.id}`}
 				mainAlignment="flex-start"
@@ -65,10 +80,20 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 				background={event.resource.calendar.color.background}
 				borderColor={event.resource.calendar.color.color}
 				padding={{ all: 'extrasmall' }}
+				height={'fit'}
+				style={{ overflowY: 'auto', cursor: 'pointer' }}
 			>
 				<Tooltip placement="top" label={event.resource.calendar.name}>
 					<Row padding={{ all: 'extrasmall' }}>
-						<Icon icon="Calendar2" size="large" color={event.resource.calendar.color.color} />
+						<Icon
+							icon="Calendar2"
+							size="large"
+							color={event.resource.calendar.color.color}
+							onMouseEnter={showInnerTooltip}
+							onMouseLeave={hideInnerTooltip}
+							onFocus={showInnerTooltip}
+							onBlur={hideInnerTooltip}
+						/>
 					</Row>
 				</Tooltip>
 				<Container style={{ overflowX: 'auto' }}>
@@ -86,11 +111,40 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 						>
 							{eventTimeString}
 						</TextWithTooltip>
-						<Row mainAlignment="flex-end">
+						<Row mainAlignment="flex-end" style={{ overflowX: 'visible' }} wrap={'nowrap'}>
 							{event.resource.class === 'PRI' && (
 								<Tooltip label={t('label.private', 'Private')} placement="top">
 									<Padding left="extrasmall">
-										<Icon color={event.resource.calendar.color.color} icon="Lock" size="medium" />
+										<Icon
+											color={event.resource.calendar.color.color}
+											icon="Lock"
+											size="medium"
+											onMouseEnter={showInnerTooltip}
+											onMouseLeave={hideInnerTooltip}
+											onFocus={showInnerTooltip}
+											onBlur={hideInnerTooltip}
+										/>
+									</Padding>
+								</Tooltip>
+							)}
+							{event?.resource?.inviteNeverSent && (
+								<Tooltip
+									label={t(
+										'label.invitation_not_sent',
+										"You haven't sent the invitation to the attendees yet"
+									)}
+									placement="top"
+								>
+									<Padding left="extrasmall">
+										<Icon
+											icon="AlertCircleOutline"
+											size="medium"
+											color="#D74942" // TODO: understand if a custom color is still needed, if so use a constant instead
+											onMouseEnter={showInnerTooltip}
+											onMouseLeave={hideInnerTooltip}
+											onFocus={showInnerTooltip}
+											onBlur={hideInnerTooltip}
+										/>
 									</Padding>
 								</Tooltip>
 							)}
@@ -99,11 +153,23 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 								event.resource?.participationStatus === 'NE' && (
 									<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
 										<Padding left="extrasmall">
-											<Icon icon="CalendarWarning" color="primary" size="medium" />
+											<Icon
+												icon="CalendarWarning"
+												color="primary"
+												size="medium"
+												onMouseEnter={showInnerTooltip}
+												onMouseLeave={hideInnerTooltip}
+												onFocus={showInnerTooltip}
+												onBlur={hideInnerTooltip}
+											/>
 										</Padding>
 									</Tooltip>
 								)}
-							<TagIconComponent event={event} />
+							<TagIconComponent
+								event={event}
+								showInnerTooltip={showInnerTooltip}
+								hideInnerTooltip={hideInnerTooltip}
+							/>
 						</Row>
 					</Row>
 					<Row

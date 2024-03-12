@@ -106,16 +106,19 @@ export const AppointmentCardContainer = ({
 			data-testid="AppointmentCardContainer"
 			width={'fill'}
 			padding={{ top: 'medium', right: 'small' }}
-			height={'10rem'}
+			maxHeight={'10rem'}
 			style={{ overflowY: 'auto' }}
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
 		>
 			{map(events, (event, index) => (
-				<>
+				<Container
+					key={`externalCardContainer-${event.id}`}
+					data-testid={`externalCardContainer-${event.id}`}
+				>
 					<AppointmentCard event={event} />
 					{index < events.length - 1 && <Padding bottom={'small'} />}
-				</>
+				</Container>
 			))}
 		</Container>
 	);
