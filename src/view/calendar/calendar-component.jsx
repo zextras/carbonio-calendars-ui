@@ -14,7 +14,6 @@ import { ThemeContext } from 'styled-components';
 
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
-import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
@@ -52,8 +51,7 @@ const CalendarSyncWithRange = () => {
 
 const customComponents = {
 	toolbar: CustomToolbar,
-	event: MemoCustomEvent,
-	eventWrapper: CustomEventWrapper
+	event: MemoCustomEvent
 };
 
 export default function CalendarComponent() {
@@ -133,7 +131,15 @@ export default function CalendarComponent() {
 			style: {
 				backgroundColor: event.resource.calendar.color.background,
 				color: event.resource.calendar.color.color,
-				border: `0.0625rem solid ${event.resource.calendar.color.color}`
+				border: `0.0625rem solid ${event.resource.calendar.color.color}`,
+				padding:
+					moment(event.end).diff(event.start, 'minutes') >= 30
+						? '0.25rem 0.5rem'
+						: '0.0625rem 0.5rem 0.25rem 0.5rem !important',
+				borderRadius: '0.25rem',
+				transition: 'border 0.15s ease-in-out, background 0.15s ease-in-out',
+				boxShadow: '0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)',
+				cursor: 'pointer'
 			}
 		}),
 		[]
