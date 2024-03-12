@@ -432,7 +432,9 @@ export default createGlobalStyle`
 
   .rbc-day-slot.rbc-time-column.rbc-slot-selecting {
 		cursor: ns-resize; }
-
+  .rbc-event-label {
+    display: none;
+  }
 	.rbc-time-view {
 		display: flex;
 		flex-direction: column;

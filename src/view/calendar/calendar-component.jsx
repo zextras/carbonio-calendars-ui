@@ -229,27 +229,27 @@ export default function CalendarComponent() {
 		[calendars]
 	);
 
-	const scrollToTime = useMemo(() => new Date(0, 0, 0, startHour, -15, 0), [startHour]);
+	const scrollToTime = useMemo(() => new Date().setHours(startHour), [startHour]);
 	return (
 		<>
 			{!isEmpty(calendars) && <CalendarSyncWithRange />}
 			<CalendarStyle
 				primaryCalendar={primaryCalendar}
-				summaryViewOpen={summaryViewOpen}
 				action={action}
+				summaryViewOpen={summaryViewOpen}
 			/>
 			<BigCalendar
-				selectable
-				localizer={localizer}
-				defaultView={defaultView}
+				views={views}
 				events={events}
+				localizer={localizer}
+				selectable
+				defaultView={defaultView}
 				date={date}
 				onNavigate={onNavigate}
 				startAccessor="start"
 				endAccessor="end"
 				style={{ width: '100%' }}
 				components={customComponents}
-				views={views}
 				tooltipAccessor={null}
 				onRangeChange={onRangeChange}
 				dayPropGetter={dayPropGetter}
@@ -260,7 +260,6 @@ export default function CalendarComponent() {
 				scrollToTime={scrollToTime}
 				onEventDrop={onEventDropOrResize}
 				onEventResize={onEventDropOrResize}
-				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
 				resizableAccessor={resizableAccessor}
 				onSelecting={() => !summaryViewOpen && !action}
