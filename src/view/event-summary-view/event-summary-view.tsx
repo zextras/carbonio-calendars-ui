@@ -67,11 +67,7 @@ export const EventSummaryView = ({
 	);
 
 	return (
-		<Container
-			padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }}
-			width="25rem"
-			style={{ zIndex: 3 }}
-		>
+		<Container padding={{ top: 'medium', horizontal: 'small', bottom: 'extrasmall' }} width="25rem">
 			<TitleRow event={event} />
 			<NeverSentWarningRow neverSent={event?.resource?.inviteNeverSent} />
 			<CalendarInfoRow />
