@@ -19,7 +19,6 @@ let schedule: WorkWeekDay[] = [];
 export interface WorkViewProps {
 	date: Date;
 	workingSchedule: WorkWeekDay[];
-	enableAutoScroll: boolean;
 }
 
 export interface WorkWeekBounds {
@@ -37,7 +36,7 @@ export interface WorkViewComponent extends React.FC<WorkViewProps> {
 }
 
 export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement => {
-	const { date, workingSchedule, enableAutoScroll = true } = props;
+	const { date, workingSchedule } = props;
 
 	// Looks horrible but there is no other way to pass and sync the workingSchedule
 	schedule = useMemo(() => workingSchedule, [workingSchedule]);
@@ -50,9 +49,7 @@ export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement 
 		[date]
 	);
 
-	return (
-		<TimeGrid {...props} range={range} max={max} min={min} enableAutoScroll={enableAutoScroll} />
-	);
+	return <TimeGrid {...props} range={range} max={max} min={min} />;
 };
 
 // Called by BigCalendar on week change
@@ -71,7 +68,10 @@ WorkView.range = (rangeDate: Date): Date[] => {
 	);
 };
 
-WorkView.navigate = (navigateDate: Date, action): Date => {
+// no-unused-vars: Actually called by BigCalendar
+// no-explicit-any: Navigate enums are declared "any" by BigCalendar
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+WorkView.navigate = (navigateDate: Date, action: any): Date => {
 	switch (action) {
 		case Navigate.PREVIOUS:
 			return datesAdd(navigateDate, -7, 'day');
@@ -94,6 +94,8 @@ WorkView.weekBounds = (week: WorkWeekDay[]): WorkWeekBounds => {
 	} as WorkWeekBounds;
 };
 
+// no-unused-vars: Actually called by BigCalendar
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 WorkView.title = (titleDate: Date): string => {
 	const { start, end } = WorkView.weekBounds(schedule);
 	const startDate = moment(titleDate).day(start);

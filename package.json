@@ -79,7 +79,6 @@
 		"typescript": "^4.9.0"
 	},
 	"dependencies": {
-		"@babel/runtime": "^7.24.0",
 		"@emotion/react": "^11.10.4",
 		"@emotion/styled": "^11.10.4",
 		"@mui/icons-material": "^5.10.6",
@@ -99,7 +98,7 @@
 		"polished": "^4.2.2",
 		"prop-types": "^15.8.1",
 		"react": "^17.0.2",
-		"react-big-calendar": "1.11.2",
+		"react-big-calendar": "0.38.1",
 		"react-dom": "^17.0.2",
 		"react-i18next": "^12.1.5",
 		"react-redux": "^8.0.5",
