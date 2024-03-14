@@ -48,7 +48,7 @@ describe('create single appointment with default values', () => {
 		// SETUP MOCKS, STORE AND HOOK
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { result } = setupHook(useOnClickNewButton, { store });
-		const newTitle = faker.random.word();
+		const newTitle = faker.lorem.word();
 
 		// CREATE APPOINTMENT FROM CREATE NEW APPOINTMENT BUTTON FUNCTION
 		expect(store.getState().editor.editors).toEqual({});
@@ -113,7 +113,7 @@ describe('create single appointment with custom values', () => {
 		const userAccount = getMockedAccountItem({
 			identity1: {
 				...previousEditor.organizer,
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				email: faker.internet.email()
 			},
 			identity2
@@ -129,8 +129,8 @@ describe('create single appointment with custom values', () => {
 		expect(previousEditor.isNew).toEqual(true);
 
 		// SETTING EDITOR NEW VALUES
-		const newTitle = faker.random.word();
-		const newLocation = faker.random.word();
+		const newTitle = faker.lorem.word();
+		const newLocation = faker.lorem.word();
 		const newAttendeesInput = newAttendees.join(' ');
 		const newOptionalsInput = newOptionals.join(' ');
 

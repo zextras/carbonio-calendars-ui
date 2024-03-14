@@ -9,7 +9,7 @@ import { createFakeIdentity } from '../../../carbonio-ui-commons/test/mocks/acco
 import { IdentityItem } from '../../../types/editor';
 
 const getRandomInRange = ({ min = 1, max = 3 }: { min?: number; max?: number } = {}): number =>
-	faker.datatype.number({ max, min });
+	faker.number.int({ max, min });
 
 const getRandomCalendarFlags = (): string => {
 	const flags = ['', '#', '~', 'o', 'y', 'i', '*', 'b'];

@@ -23,12 +23,15 @@ type GetAppointmentProps = {
 };
 
 const getDefaultAppointment = (): Appointment => {
-	const organizerFirstName = faker.name.firstName();
-	const organizerLastName = faker.name.lastName();
-	const organizerEmail = faker.internet.email(organizerFirstName, organizerLastName);
+	const organizerFirstName = faker.person.firstName();
+	const organizerLastName = faker.person.lastName();
+	const organizerEmail = faker.internet.email({
+		firstName: organizerFirstName,
+		lastName: organizerLastName
+	});
 
 	return {
-		id: faker.datatype.uuid(),
+		id: faker.string.uuid(),
 		class: 'PUB' as InviteClass,
 		flags: '',
 		alarm: false,
@@ -54,7 +57,7 @@ const getDefaultAppointment = (): Appointment => {
 			}
 		],
 		draft: false,
-		inviteId: faker.datatype.uuid(),
+		inviteId: faker.string.uuid(),
 		isOrg: true,
 		or: {
 			a: organizerEmail,
@@ -65,7 +68,7 @@ const getDefaultAppointment = (): Appointment => {
 		otherAtt: false,
 		recur: false,
 		l: '10',
-		name: faker.random.word(),
+		name: faker.lorem.word(),
 		neverSent: false,
 		s: 0,
 		tags: []

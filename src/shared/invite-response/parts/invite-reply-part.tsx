@@ -147,7 +147,6 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	);
 	return (
 		<>
-			<Padding top="small" />
 			<Row width="fill" mainAlignment="space-between" padding={{ vertical: 'small' }}>
 				<Container width="35%" mainAlignment="flex-start" crossAlignment="baseline">
 					<Checkbox

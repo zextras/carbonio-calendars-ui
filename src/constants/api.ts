@@ -24,6 +24,11 @@ export const PARTICIPANT_ROLE = {
 	NON_PARTICIPANT: 'NON'
 } as const;
 
+export const MESSAGE_METHOD = {
+	COUNTER: 'COUNTER',
+	REQUEST: 'REQUEST'
+} as const;
+
 export const SEARCH_RESOURCES_ATTRS = {
 	EMAIL: 'email',
 	CAL_RES_TYPE: 'zimbraCalResType',

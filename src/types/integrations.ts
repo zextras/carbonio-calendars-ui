@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+// TODO: this type should be exposed by mail. Wait for a future implementation to be typed properly
+export type MailMsg = any;
+
 export type InviteResponseArguments = {
-	// TODO: this type should be exposed by mail. Wait for a future implementation to be typed properly
-	mailMsg: any;
+	mailMsg: MailMsg;
 	moveToTrash?: () => void;
 };
 

@@ -22,14 +22,17 @@ type GetInviteProps = { context?: Partial<Invite>; event?: GetEventProps };
 const getDefaultInvite = (event?: GetEventProps): Invite => {
 	const folderId = event?.resource?.calendar?.id ?? 'folderId';
 	const alarmStringValue = event?.resource?.alarm || null;
-	const attendeeFirstName = faker.name.firstName();
-	const attendeeLastName = faker.name.lastName();
-	const attendeeFullName = faker.name.fullName({
+	const attendeeFirstName = faker.person.firstName();
+	const attendeeLastName = faker.person.lastName();
+	const attendeeFullName = faker.person.fullName({
 		firstName: attendeeFirstName,
 		lastName: attendeeLastName
 	});
 
-	const attendeeEmail = faker.internet.email(attendeeFirstName, attendeeLastName);
+	const attendeeEmail = faker.internet.email({
+		firstName: attendeeFirstName,
+		lastName: attendeeLastName
+	});
 
 	const attendee =
 		event?.resource?.iAmAttendee ?? event?.resource?.hasOtherAttendees

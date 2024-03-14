@@ -19,14 +19,17 @@ import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 
 describe('delete event modal', () => {
-	const participantFirstName = faker.name.firstName();
-	const participantLastName = faker.name.lastName();
-	const participantFullName = faker.name.fullName({
+	const participantFirstName = faker.person.firstName();
+	const participantLastName = faker.person.lastName();
+	const participantFullName = faker.person.fullName({
 		firstName: participantFirstName,
 		lastName: participantLastName
 	});
 
-	const participantEmail = faker.internet.email(participantFirstName, participantLastName);
+	const participantEmail = faker.internet.email({
+		firstName: participantFirstName,
+		lastName: participantLastName
+	});
 
 	const draftOrganizer = {
 		name: participantFirstName,

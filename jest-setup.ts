@@ -31,6 +31,7 @@ import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite'
 import { handleItemActionRequest } from './src/test/mocks/network/msw/handle-item-action';
 import { handleModifyAppointmentRequest } from './src/test/mocks/network/msw/handle-modify-appointment';
 import { handleSearchCalendarResourcesRequest } from './src/test/mocks/network/msw/handle-search-calendar-resoruces';
+import { handleSearchRequest } from './src/test/mocks/network/msw/handle-search-request';
 import { handleSendInviteReplyRequest } from './src/test/mocks/network/msw/handle-send-invite-reply';
 import { handleSendShareNotificationRequest } from './src/test/mocks/network/msw/handle-send-share-notification';
 
@@ -54,6 +55,7 @@ beforeAll(() => {
 		rest.post('/service/soap/CreateFolderRequest', handleCreateFolderRequest),
 		rest.post('/service/soap/GetFolderRequest', handleGetFolderRequest),
 		rest.post('/service/soap/FolderActionRequest', handleFolderActionRequest),
+		rest.post('/service/soap/SearchRequest', handleSearchRequest),
 		rest.post('/service/soap/CreateAppointmentRequest', handleCreateAppointmentRequest),
 		rest.post('/service/soap/CancelAppointmentRequest', handleCancelAppointmentRequest),
 		rest.post('/service/soap/AutoCompleteGalRequest', handleAutoCompleteGalRequest),

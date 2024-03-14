@@ -106,8 +106,8 @@ describe.each`
 		// SETTING EDITOR NEW VALUES
 		const newAttendees = map(mockedData.editor.getRandomAttendees(), 'email');
 		const newOptionals = map(mockedData.editor.getRandomAttendees(), 'email');
-		const newTitle = faker.random.word();
-		const newLocation = faker.random.word();
+		const newTitle = faker.lorem.word();
+		const newLocation = faker.lorem.word();
 		const newAttendeesInput = newAttendees.join(' ');
 		const newOptionalsInput = newOptionals.join(' ');
 
