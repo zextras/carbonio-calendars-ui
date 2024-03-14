@@ -17,6 +17,7 @@ import {
 	declineInvitationItem,
 	deleteEventItem,
 	editEventItem,
+	exportAppointmentICSItem,
 	moveEventItem,
 	openEventItem,
 	proposeNewTimeItem,
@@ -67,7 +68,8 @@ const getInstanceActionsItems = ({
 				declineInvitationItem({ event, context }),
 				proposeNewTimeItem({ event, invite, context })
 		  ]
-		: [])
+		: []),
+	exportAppointmentICSItem({ event })
 ];
 
 const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): SeriesActionsItems => {
@@ -100,7 +102,8 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 							declineInvitationItem({ event, invite, context: contextOverride }),
 							proposeNewTimeItem({ event, invite, context })
 					  ]
-					: [])
+					: []),
+				exportAppointmentICSItem({ event })
 			]
 		},
 		{
@@ -130,7 +133,8 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 							declineInvitationItem({ event: seriesEvent, context }),
 							proposeNewTimeItem({ event: seriesEvent, invite, context })
 					  ]
-					: [])
+					: []),
+				exportAppointmentICSItem({ event })
 			]
 		}
 	];
@@ -148,7 +152,8 @@ const getTrashActions = ({ event, invite, context }: ActionsProps): InstanceActi
 		moveEventItem({ event: seriesEvent, context }),
 		copyEventItem({ event: seriesEvent, invite, context }),
 		showOriginal({ event }),
-		applyTag({ event, context })
+		applyTag({ event, context }),
+		exportAppointmentICSItem({ event })
 	];
 };
 
