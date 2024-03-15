@@ -255,3 +255,19 @@ export const exportAppointmentICSItem = ({
 	onClick: exportCalendarICSFn({ item }),
 	disabled: isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)
 });
+
+export const importCalendarICSItem = (
+	item: { name: string; id: string; absFolderPath?: string },
+	ref?: React.RefObject<HTMLInputElement>
+): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.UPLOAD,
+	icon: 'Upload',
+	label: t('action.calendar_upload', 'Import ics file'),
+	tooltipLabel: noPermissionLabel,
+	onClick: (): void => {
+		if (ref?.current) {
+			ref.current.click();
+		}
+	},
+	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
+});

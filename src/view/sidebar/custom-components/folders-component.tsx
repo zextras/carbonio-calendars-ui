@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback, useMemo, useRef } from 'react';
 
 import {
 	AccordionItem,
@@ -13,11 +13,14 @@ import {
 	Icon,
 	Padding,
 	Row,
-	Tooltip
+	Tooltip,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, t, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 
+import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
+import { getRootAccountId, useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isRoot } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
@@ -31,6 +34,7 @@ import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
 import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
+import { NoOpRequest } from '../../../soap/noop-request';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
 
@@ -43,15 +47,21 @@ const FittedRow = styled(Row)`
 	height: 3rem;
 `;
 
+const FileInput = styled.input`
+	display: none;
+`;
+
 const ContextMenuItem = ({
 	children,
+	inputRef,
 	item
 }: {
 	children: JSX.Element;
+	inputRef: React.RefObject<HTMLInputElement>;
 	item: Folder;
 }): JSX.Element => {
 	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
-	const items = useCalendarActions(item);
+	const items = useCalendarActions(item, inputRef);
 
 	return isAllCalendar ? (
 		children
@@ -73,6 +83,12 @@ const RootChildren = ({
 	const start = useRangeStart();
 	const end = useRangeEnd();
 	const query = useCheckedCalendarsQuery();
+	const inputRef = useRef<HTMLInputElement>(null);
+	const createSnackbar = useSnackbar();
+
+	const user = useUserAccount();
+	const rootAccountId = getRootAccountId(item.id);
+	const root = useRoot(rootAccountId ?? FOLDERS.USER_ROOT);
 
 	const onClick = useCallback(
 		(): void =>
@@ -112,16 +128,49 @@ const RootChildren = ({
 		return '';
 	}, [item]);
 
+	const userMail = useMemo(
+		() => (root?.name === ROOT_NAME ? user.name : root?.name ?? user.name),
+		[root, user.name]
+	);
+
+	const onFileInputChange = useCallback(() => {
+		if (inputRef?.current?.files) {
+			createSnackbar({
+				key: `import ongoing`,
+				replace: true,
+				type: 'info',
+				label: t('label.import_calendar_ongoing', 'Import into the selected calendar in progress.'),
+				autoHideTimeout: 3000,
+				hideButton: true
+			});
+			importCalendarICSFn(inputRef?.current?.files, userMail, item.name).then(() => {
+				NoOpRequest().then(() => {
+					createSnackbar({
+						key: `import success`,
+						replace: true,
+						type: 'success',
+						label: t('label.import_calendar_success', 'Import successful'),
+						autoHideTimeout: 3000,
+						hideButton: true
+					});
+				});
+			});
+		}
+	}, [createSnackbar, item.name, userMail]);
+
 	return (
-		<ContextMenuItem item={item}>
-			<Row onClick={onClick}>
-				<Padding left="small" />
-				<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
-					<AccordionItem item={accordionItem} />
-				</Tooltip>
-				{sharedStatusIcon}
-			</Row>
-		</ContextMenuItem>
+		<>
+			<ContextMenuItem item={item} inputRef={inputRef}>
+				<Row onClick={onClick}>
+					<Padding left="small" />
+					<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
+						<AccordionItem item={accordionItem} />
+					</Tooltip>
+					{sharedStatusIcon}
+				</Row>
+			</ContextMenuItem>
+			<FileInput type="file" ref={inputRef} onChange={onFileInputChange} />
+		</>
 	);
 };
 
