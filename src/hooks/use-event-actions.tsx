@@ -102,8 +102,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 							declineInvitationItem({ event, invite, context: contextOverride }),
 							proposeNewTimeItem({ event, invite, context })
 					  ]
-					: []),
-				exportAppointmentICSItem({ event })
+					: [])
 			]
 		},
 		{
