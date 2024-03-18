@@ -14,7 +14,13 @@ import {
 	Padding,
 	Row,
 	Tooltip,
-	useSnackbar
+	useModal,
+	useSnackbar,
+	ModalHeader,
+	ModalFooter,
+	ModalBody,
+	Divider,
+	Text
 } from '@zextras/carbonio-design-system';
 import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
@@ -85,6 +91,7 @@ const RootChildren = ({
 	const query = useCheckedCalendarsQuery();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const createSnackbar = useSnackbar();
+	const createModal = useModal();
 
 	const user = useUserAccount();
 	const rootAccountId = getRootAccountId(item.id);
@@ -133,14 +140,13 @@ const RootChildren = ({
 		[root, user.name]
 	);
 
-	const onFileInputChange = useCallback(() => {
+	const confirmModal = useCallback(() => {
 		if (inputRef?.current?.files) {
 			createSnackbar({
 				key: `import ongoing`,
 				replace: true,
 				type: 'info',
 				label: t('label.import_calendar_ongoing', 'Import into the selected calendar in progress.'),
-				autoHideTimeout: 3000,
 				hideButton: true
 			});
 			importCalendarICSFn(inputRef?.current?.files, userMail, item.name).then(() => {
@@ -158,6 +164,53 @@ const RootChildren = ({
 		}
 	}, [createSnackbar, item.name, userMail]);
 
+	const onFileInputChange = useCallback(() => {
+		if (inputRef?.current?.files) {
+			const closeModal = createModal(
+				{
+					size: 'small',
+					children: (
+						<>
+							<ModalHeader
+								title={t('import_appointments', 'Import appointments')}
+								showCloseIcon
+								onClose={(): void => {
+									closeModal();
+								}}
+							/>
+							<Divider />
+							<ModalBody>
+								<Text overflow="break-word">
+									{t('message.import_appointment_modal', {
+										fileName: inputRef?.current?.files[0].name,
+										calendarName: item.name,
+										defaultValue:
+											'The appointments contained within {{fileName}} will be imported into the "{{calendarName}}" calendar.'
+									})}
+								</Text>
+							</ModalBody>
+							<Divider />
+							<ModalFooter
+								onConfirm={(): void => {
+									closeModal();
+									confirmModal();
+								}}
+								onClose={(): void => {
+									closeModal();
+								}}
+								confirmLabel={t('import', 'Import')}
+							/>
+						</>
+					),
+					onClose: () => {
+						closeModal();
+					}
+				},
+				true
+			);
+		}
+	}, [confirmModal, createModal, item.name]);
+
 	return (
 		<>
 			<ContextMenuItem item={item} inputRef={inputRef}>
@@ -169,7 +222,7 @@ const RootChildren = ({
 					{sharedStatusIcon}
 				</Row>
 			</ContextMenuItem>
-			<FileInput type="file" ref={inputRef} onChange={onFileInputChange} />
+			<FileInput type="file" ref={inputRef} onChange={onFileInputChange} accept=".ics" />
 		</>
 	);
 };
