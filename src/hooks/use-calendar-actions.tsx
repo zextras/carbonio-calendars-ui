@@ -45,12 +45,12 @@ export const useCalendarActions = (
 		emptyTrashItem({ createModal, item }),
 		editCalendarItem({ createModal, item }),
 		deleteCalendarItem({ createModal, item }),
-		exportAppointmentICSItem({ item }),
 		removeFromListItem({ item, createSnackbar }),
 		shareCalendarItem({ createModal, item }),
 		shareCalendarUrlItem({ createModal, item }),
 		findSharesItem({ createModal, item }),
 		sharesInfoItem({ item, createModal }),
+		exportAppointmentICSItem({ item }),
 		importCalendarICSItem(item, inputRef)
 	];
 
