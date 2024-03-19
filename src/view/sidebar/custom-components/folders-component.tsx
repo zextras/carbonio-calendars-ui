@@ -62,10 +62,10 @@ const ContextMenuItem = ({
 	inputRef,
 	item
 }: {
-	children: JSX.Element;
+	children: React.JSX.Element;
 	inputRef: React.RefObject<HTMLInputElement>;
 	item: Folder;
-}): JSX.Element => {
+}): React.JSX.Element => {
 	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
 	const items = useCalendarActions(item, inputRef);
 
@@ -78,13 +78,23 @@ const ContextMenuItem = ({
 	);
 };
 
+const RowWithIcon = (icon: string, color: string, tooltipText: string): React.JSX.Element => (
+	<Padding left="small">
+		<Tooltip placement="right" label={tooltipText}>
+			<Row>
+				<Icon icon={icon} color={color} size="medium" />
+			</Row>
+		</Tooltip>
+	</Padding>
+);
+
 const RootChildren = ({
 	accordionItem,
 	item
 }: {
 	accordionItem: AccordionItemType;
 	item: Folder;
-}): JSX.Element => {
+}): React.JSX.Element => {
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
@@ -111,15 +121,6 @@ const RootChildren = ({
 	);
 
 	const sharedStatusIcon = useMemo(() => {
-		const RowWithIcon = (icon: string, color: string, tooltipText: string): JSX.Element => (
-			<Padding left="small">
-				<Tooltip placement="right" label={tooltipText}>
-					<Row>
-						<Icon icon={icon} color={color} size="medium" />
-					</Row>
-				</Tooltip>
-			</Padding>
-		);
 		if (item.isLink || isLinkChild(item)) {
 			const tooltipText = t('tooltip.folder_linked_status', 'Linked to me');
 			return RowWithIcon('Linked', 'linked', tooltipText);
@@ -149,17 +150,28 @@ const RootChildren = ({
 				label: t('label.import_calendar_ongoing', 'Import into the selected calendar in progress.'),
 				hideButton: true
 			});
-			importCalendarICSFn(inputRef?.current?.files, userMail, item.name).then(() => {
-				NoOpRequest().then(() => {
+			importCalendarICSFn(inputRef?.current?.files, userMail, item.name).then((res) => {
+				if (res[0].status === 200) {
+					NoOpRequest().then(() => {
+						createSnackbar({
+							key: `import success`,
+							replace: true,
+							type: 'success',
+							label: t('label.import_calendar_success', 'Import successful'),
+							autoHideTimeout: 3000,
+							hideButton: true
+						});
+					});
+				} else {
 					createSnackbar({
-						key: `import success`,
+						key: `import failed`,
 						replace: true,
-						type: 'success',
-						label: t('label.import_calendar_success', 'Import successful'),
+						type: 'error',
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000,
 						hideButton: true
 					});
-				});
+				}
 			});
 		}
 	}, [createSnackbar, item.name, userMail]);
@@ -227,7 +239,11 @@ const RootChildren = ({
 	);
 };
 
-const RootAccount = ({ accordionItem }: { accordionItem: AccordionItemType }): JSX.Element => (
+const RootAccount = ({
+	accordionItem
+}: {
+	accordionItem: AccordionItemType;
+}): React.JSX.Element => (
 	<FittedRow>
 		<Padding left="small">
 			<Avatar

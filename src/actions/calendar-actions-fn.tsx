@@ -334,8 +334,8 @@ export const importCalendarICSFn = async (
 	files: FileList,
 	userMail: string,
 	calendarName: string
-): Promise<void> => {
-	await Promise.all(
+): Promise<Array<{ status: number }>> =>
+	Promise.all(
 		map(files, (file) =>
 			fetch(`/home/${userMail}/${calendarName}?fmt=ics&charset=UTF-8`, {
 				headers: {
@@ -347,4 +347,3 @@ export const importCalendarICSFn = async (
 			})
 		)
 	);
-};

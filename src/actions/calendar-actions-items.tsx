@@ -257,7 +257,7 @@ export const exportAppointmentICSItem = ({
 });
 
 export const importCalendarICSItem = (
-	item: { name: string; id: string; absFolderPath?: string },
+	item: Folder,
 	ref?: React.RefObject<HTMLInputElement>
 ): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.UPLOAD,
@@ -269,5 +269,9 @@ export const importCalendarICSItem = (
 			ref.current.click();
 		}
 	},
-	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
+	disabled:
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		isTrashOrNestedInIt(item) ||
+		(item as LinkFolder).isLink ||
+		isLinkChild(item)
 });
