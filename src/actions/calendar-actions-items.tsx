@@ -250,7 +250,7 @@ export const exportAppointmentICSItem = ({
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EXPORT_ICS,
 	icon: 'Download',
-	label: t('action.export_calendar_ics', 'Export ics file'),
+	label: t('action.export_calendar_ics', 'Export ICS file'),
 	tooltipLabel: noPermissionLabel,
 	onClick: exportCalendarICSFn({ item }),
 	disabled: isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)
@@ -262,7 +262,7 @@ export const importCalendarICSItem = (
 ): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.UPLOAD,
 	icon: 'Upload',
-	label: t('action.calendar_upload', 'Import ics file'),
+	label: t('action.calendar_upload', 'Import ICS file'),
 	tooltipLabel: noPermissionLabel,
 	onClick: (): void => {
 		if (ref?.current) {
