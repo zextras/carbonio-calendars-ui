@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
-import { omit } from 'lodash';
+import { compact, find, omit } from 'lodash';
 
 import { useCalendarFolders } from './use-calendar-folders';
 import {
@@ -23,11 +23,15 @@ import {
 	proposeNewTimeItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
+import { LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { isLinkChild } from '../commons/utilities';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import {
 	ActionsClick,
+	ActionsContext,
 	ActionsProps,
+	AppointmentActionsItems,
 	InstanceActionsItems,
 	PanelView,
 	SeriesActionsItems
@@ -46,31 +50,50 @@ export const isAnInvite = (event: EventType): boolean =>
 				!event.resource.calendar.owner)
 		: false;
 
-const getInstanceActionsItems = ({
+const getInviteActionsArray = ({
 	event,
-	invite,
-	context
-}: ActionsProps): InstanceActionsItems => [
-	openEventItem({
-		event,
-		context
-	}),
-	editEventItem({ event, invite, context }),
-	deleteEventItem({ event, invite, context }),
-	moveEventItem({ event, context }),
-	copyEventItem({ event, invite, context }),
-	showOriginal({ event }),
-	applyTag({ event, context }),
-	...(isAnInvite(event)
+	context,
+	invite
+}: ActionsProps): AppointmentActionsItems[] =>
+	isAnInvite(event)
 		? [
 				acceptInvitationItem({ event, context }),
 				acceptAsTentativeItem({ event, context }),
 				declineInvitationItem({ event, context }),
 				proposeNewTimeItem({ event, invite, context })
 		  ]
-		: []),
-	exportAppointmentICSItem({ event })
-];
+		: [];
+
+const getExportICSItem = ({
+	event,
+	context
+}: {
+	event: EventType;
+	context: ActionsContext;
+}): AppointmentActionsItems | false | undefined => {
+	const folder = find(context.folders, ['id', event.resource.calendar.id]);
+	return (
+		folder &&
+		(!(folder as LinkFolder).isLink || isLinkChild(folder)) &&
+		exportAppointmentICSItem({ event })
+	);
+};
+
+const getInstanceActionsItems = ({ event, invite, context }: ActionsProps): InstanceActionsItems =>
+	compact([
+		openEventItem({
+			event,
+			context
+		}),
+		editEventItem({ event, invite, context }),
+		deleteEventItem({ event, invite, context }),
+		moveEventItem({ event, context }),
+		copyEventItem({ event, invite, context }),
+		showOriginal({ event }),
+		applyTag({ event, context }),
+		...getInviteActionsArray({ event, invite, context }),
+		getExportICSItem({ event, context })
+	]);
 
 const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): SeriesActionsItems => {
 	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as EventType;
@@ -95,14 +118,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(isAnInvite(event)
-					? [
-							acceptInvitationItem({ event, invite, context: contextOverride }),
-							acceptAsTentativeItem({ event, invite, context: contextOverride }),
-							declineInvitationItem({ event, invite, context: contextOverride }),
-							proposeNewTimeItem({ event, invite, context })
-					  ]
-					: [])
+				...getInviteActionsArray({ event, invite, context: contextOverride })
 			]
 		},
 		{
@@ -114,7 +130,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 			onClick: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},
-			items: [
+			items: compact([
 				openEventItem({
 					event: seriesEvent,
 					context
@@ -125,23 +141,16 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event: seriesEvent, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...(isAnInvite(event)
-					? [
-							acceptInvitationItem({ event: seriesEvent, context }),
-							acceptAsTentativeItem({ event: seriesEvent, context }),
-							declineInvitationItem({ event: seriesEvent, context }),
-							proposeNewTimeItem({ event: seriesEvent, invite, context })
-					  ]
-					: []),
-				exportAppointmentICSItem({ event })
-			]
+				...getInviteActionsArray({ event: seriesEvent, invite, context }),
+				getExportICSItem({ event: seriesEvent, context })
+			])
 		}
 	];
 };
 
 const getTrashActions = ({ event, invite, context }: ActionsProps): InstanceActionsItems => {
 	const seriesEvent = { ...event, resource: omit(event.resource, 'ridZ') } as EventType;
-	return [
+	return compact([
 		openEventItem({
 			event: seriesEvent,
 			context
@@ -152,8 +161,8 @@ const getTrashActions = ({ event, invite, context }: ActionsProps): InstanceActi
 		copyEventItem({ event: seriesEvent, invite, context }),
 		showOriginal({ event }),
 		applyTag({ event, context }),
-		exportAppointmentICSItem({ event })
-	];
+		getExportICSItem({ event: seriesEvent, context })
+	]);
 };
 
 export const useEventActions = ({
