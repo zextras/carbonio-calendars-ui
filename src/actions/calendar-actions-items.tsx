@@ -256,6 +256,6 @@ export const exportAppointmentICSItem = ({
 	disabled:
 		isTrashOrNestedInIt(item) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
-		!(item as LinkFolder).isLink ||
+		(item as LinkFolder).isLink ||
 		isLinkChild(item)
 });
