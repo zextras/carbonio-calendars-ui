@@ -86,7 +86,7 @@ export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor =>
 					rgb: defaultCalendar.rgb,
 					color: defaultCalendar.color,
 					owner: (defaultCalendar as LinkFolder)?.owner
-			  }
+				}
 			: undefined,
 		panel: false,
 		isException: false,

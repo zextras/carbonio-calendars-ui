@@ -38,8 +38,8 @@ import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 export const isAnInvite = (event: EventType): boolean =>
 	event.resource.organizer
 		? !event.resource.iAmOrganizer &&
-		  event.haveWriteAccess &&
-		  ((!!event.resource.calendar.owner &&
+			event.haveWriteAccess &&
+			((!!event.resource.calendar.owner &&
 				event.resource.organizer &&
 				event.resource.calendar.owner !== event.resource.organizer.email) ||
 				!event.resource.calendar.owner)
@@ -66,7 +66,7 @@ const getInstanceActionsItems = ({
 				acceptAsTentativeItem({ event, context }),
 				declineInvitationItem({ event, context }),
 				proposeNewTimeItem({ event, invite, context })
-		  ]
+			]
 		: [])
 ];
 
@@ -99,7 +99,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 							acceptAsTentativeItem({ event, invite, context: contextOverride }),
 							declineInvitationItem({ event, invite, context: contextOverride }),
 							proposeNewTimeItem({ event, invite, context })
-					  ]
+						]
 					: [])
 			]
 		},
@@ -129,7 +129,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 							acceptAsTentativeItem({ event: seriesEvent, context }),
 							declineInvitationItem({ event: seriesEvent, context }),
 							proposeNewTimeItem({ event: seriesEvent, invite, context })
-					  ]
+						]
 					: [])
 			]
 		}

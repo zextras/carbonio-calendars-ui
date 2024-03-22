@@ -46,7 +46,9 @@ export const CustomEventWrapperStyler = styled.div<{ event: EventType }>`
 		cursor: pointer;
 		width: 100%;
 		text-align: left;
-		transition: border 0.15s ease-in-out, background 0.15s ease-in-out;
+		transition:
+			border 0.15s ease-in-out,
+			background 0.15s ease-in-out;
 		box-shadow: 0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5);
 	}
 	.rbc-slot-selecting .rbc-event {

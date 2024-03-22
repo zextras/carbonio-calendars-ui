@@ -6,6 +6,9 @@
 
 import { faker } from '@faker-js/faker';
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
+import { HttpResponse, HttpResponseResolver } from 'msw';
+
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 
 const getLocationResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
@@ -66,14 +69,18 @@ const getEquipmentResponse = (): SuccessSoapResponse<any> => ({
 });
 
 // TODO: fix types with the msw handlers refactor
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleSearchCalendarResourcesRequest = (req, res, ctx) => {
-	if (req.body.Body.SearchCalendarResourcesRequest.searchFilter.conds.cond.value === 'Location') {
+export const handleSearchCalendarResourcesRequest: HttpResponseResolver<
+	never,
+	CarbonioMailboxRestHandlerRequest<any>,
+	SuccessSoapResponse<any>
+> = async ({ request }) => {
+	if (
+		(await request.json()).Body.SearchCalendarResourcesRequest.searchFilter.conds.cond.value ===
+		'Location'
+	) {
 		const response = getLocationResponse();
-		return res(ctx.json(response));
+		return HttpResponse.json(response);
 	}
 	const response = getEquipmentResponse();
-	return res(ctx.json(response));
+	return HttpResponse.json(response);
 };
