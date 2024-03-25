@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
+import { HttpResponse, HttpResponseResolver } from 'msw';
+
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import mockedData from '../../../generators';
 
 export const filledSearchResponse = (): SuccessSoapResponse<any> => ({
@@ -52,10 +55,11 @@ const emptySearchResponse = (): SuccessSoapResponse<any> => ({
 });
 
 // TODO: fix types with the msw handlers refactor
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleSearchRequest = (req, res, ctx) => {
+export const handleSearchRequest: HttpResponseResolver<
+	never,
+	CarbonioMailboxRestHandlerRequest<any>,
+	SuccessSoapResponse<any>
+> = () => {
 	const response = emptySearchResponse();
-	return res(ctx.json(response));
+	return HttpResponse.json(response);
 };

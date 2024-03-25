@@ -5,6 +5,9 @@
  */
 import { faker } from '@faker-js/faker';
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
+import { HttpResponse, HttpResponseResolver } from 'msw';
+
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 
 const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
@@ -50,10 +53,11 @@ const getResponse = (): SuccessSoapResponse<any> => ({
 	}
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleGetFolderRequest = (req, res, ctx) => {
+export const handleGetFolderRequest: HttpResponseResolver<
+	never,
+	CarbonioMailboxRestHandlerRequest<any>,
+	SuccessSoapResponse<any>
+> = () => {
 	const response = getResponse();
-	return res(ctx.json(response));
+	return HttpResponse.json(response);
 };

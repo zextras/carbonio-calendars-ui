@@ -6,8 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { act, screen, waitFor, within } from '@testing-library/react';
 
 import { ShareCalendarModal } from './share-calendar-modal';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -346,7 +345,7 @@ describe('the share calendar modal is composed by', () => {
 						} as const
 					];
 					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(
+					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
 							folderId={'testId1'}
@@ -357,9 +356,11 @@ describe('the share calendar modal is composed by', () => {
 					);
 					const infoPrivateCheckbox = screen.getByTestId('icon: InfoOutline');
 
-					expect(infoPrivateCheckbox).toBeInTheDocument();
+					expect(infoPrivateCheckbox).toBeVisible();
 
-					userEvent.hover(infoPrivateCheckbox);
+					act(() => {
+						user.hover(infoPrivateCheckbox);
+					});
 
 					const tooltipTextElement = await screen.findByText(/When sharing a calendar/i);
 

@@ -389,12 +389,12 @@ export const AttachmentsBlock = ({
 										count: attachmentsCount,
 										defaultValue: 'Delete',
 										defaultValue_plural: 'Delete all'
-								  })
+									})
 								: t('label.download', {
 										count: attachmentsCount,
 										defaultValue: 'Download',
 										defaultValue_plural: 'Download all'
-								  })}
+									})}
 						</Link>
 					</Row>
 

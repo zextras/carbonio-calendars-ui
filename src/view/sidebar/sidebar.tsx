@@ -75,7 +75,7 @@ const addFindSharesItem = (foldersAccordionItems: Array<Folder>): Array<Folder> 
 					]
 				},
 				...(reject(foldersAccordionItems, ['id', '1']) ?? [])
-		  ]
+			]
 		: [];
 
 const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
@@ -99,7 +99,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 					? {
 							...accountRoot,
 							children: [allCalendarFolder, calendar, trash, ...others]
-					  }
+						}
 					: accountRoot;
 			}),
 		[folders]

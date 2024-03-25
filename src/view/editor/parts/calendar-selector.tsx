@@ -60,7 +60,7 @@ export const CalendarSelector = ({
 			showCalWithWritePerm
 				? filter(calendars, (calendar) =>
 						calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
-				  )
+					)
 				: calendars,
 		[calendars, showCalWithWritePerm]
 	);

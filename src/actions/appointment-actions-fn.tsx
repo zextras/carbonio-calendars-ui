@@ -257,7 +257,7 @@ export const acceptInvitation =
 						start: event.start,
 						allDay: event.allDay,
 						tz: invite?.tz
-				  })
+					})
 				: undefined;
 
 		context.dispatch(
@@ -287,7 +287,7 @@ export const declineInvitation =
 						start: event.start,
 						allDay: event.allDay,
 						tz: invite?.tz
-				  })
+					})
 				: undefined;
 		context.dispatch(
 			sendInviteResponse({
@@ -316,7 +316,7 @@ export const acceptAsTentative =
 						start: event.start,
 						allDay: event.allDay,
 						tz: invite?.tz
-				  })
+					})
 				: undefined;
 		context.dispatch(
 			sendInviteResponse({

@@ -70,13 +70,13 @@ export const SeriesEditWarningModal = ({
 						autoHideTimeout: 3000
 					});
 					onClose();
-			  })
+				})
 			: action({
 					draft: !!attendeesLength || !!meetingRoomLength || !!equipmentsLength,
 					isNew,
 					editor,
 					dispatch
-			  }).then(({ response }: any) => {
+				}).then(({ response }: any) => {
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
@@ -88,7 +88,7 @@ export const SeriesEditWarningModal = ({
 						autoHideTimeout: 3000
 					});
 					onClose();
-			  });
+				});
 	}, [
 		action,
 		attendeesLength,

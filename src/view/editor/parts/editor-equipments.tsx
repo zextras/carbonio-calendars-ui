@@ -35,7 +35,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 						avatarIcon: 'BriefcaseOutline',
 						avatarBackground: 'transparent',
 						avatarColor: 'gray0'
-					} as const)
+					}) as const
 			),
 		[equipmentValue]
 	);

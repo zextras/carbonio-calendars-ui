@@ -55,8 +55,8 @@ color: ${({ theme, disabled, $showPrimary }): string =>
 	disabled
 		? theme.palette.text.disabled
 		: $showPrimary
-		? theme.palette.primary.regular
-		: theme.palette.secondary.regular}};`;
+			? theme.palette.primary.regular
+			: theme.palette.secondary.regular}};`;
 
 export const StyledIcon = styled(Icon)<IconProps & { $showPrimary?: boolean }>`
 color: ${({ theme, disabled, $showPrimary }): string =>
@@ -64,8 +64,8 @@ color: ${({ theme, disabled, $showPrimary }): string =>
 	disabled
 		? theme.palette.text.disabled
 		: $showPrimary
-		? theme.palette.primary.regular
-		: theme.palette.secondary.regular}};`;
+			? theme.palette.primary.regular
+			: theme.palette.secondary.regular}};`;
 
 interface CustomSelectItem extends SelectItem {
 	id?: string;

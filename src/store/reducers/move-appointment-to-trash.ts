@@ -34,7 +34,7 @@ export const moveAppointmentToTrashPending = (
 			? (state.appointments[id].inst = filter(
 					state.appointments[id].inst,
 					(inst) => inst.ridZ !== ridZ
-			  ))
+				))
 			: (state.appointments[id].l = '3');
 	}
 };

@@ -40,7 +40,7 @@ const getDefaultEditor = ({
 					rgb: editorCalendar.rgb,
 					color: editorCalendar.color,
 					owner: (editorCalendar as LinkFolder)?.owner
-			  }
+				}
 			: undefined,
 		panel: false,
 		exceptId: undefined,
@@ -143,7 +143,7 @@ const getEditor = ({
 					rgb: editorCalendar.rgb,
 					color: editorCalendar.color,
 					owner: (editorCalendar as LinkFolder)?.owner
-			  }
+				}
 			: undefined,
 		panel: false,
 		exceptId: undefined,

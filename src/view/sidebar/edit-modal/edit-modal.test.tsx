@@ -7,9 +7,11 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within, act } from '@testing-library/react';
+import { http, HttpResponse } from 'msw';
 
 import { EditModal } from './edit-modal';
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
 import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import type { FolderView, Grant } from '../../../carbonio-ui-commons/types/folder';
@@ -120,6 +122,12 @@ const setupFoldersStore = (): void => {
 };
 
 describe('the edit calendar modal is composed by', () => {
+	beforeAll(() => {
+		getSetupServer().use(
+			http.post('/service/soap/BatchRequest', () => HttpResponse.json({ Body: { Fault: {} } }))
+		);
+	});
+
 	describe('the modal header. It is composed by', () => {
 		test('the title "edit calendar properties" which is the same for every folder', () => {
 			setupFoldersStore();

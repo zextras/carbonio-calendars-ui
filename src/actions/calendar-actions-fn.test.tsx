@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { FOLDERS } from '@zextras/carbonio-shell-ui';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import {
 	deleteCalendar,
@@ -37,7 +37,9 @@ describe('calendar-actions-fn', () => {
 			const createSnackbar = jest.fn();
 			const item = { id: FOLDERS.CALENDAR };
 			const moveToRootFn = moveToRoot({ createSnackbar, item });
-			await moveToRootFn();
+			await act(async () => {
+				moveToRootFn();
+			});
 			await waitFor(() => {
 				expect(createSnackbar).toHaveBeenCalledTimes(1);
 			});
@@ -50,20 +52,18 @@ describe('calendar-actions-fn', () => {
 		});
 		test('when the request fails, it creates an error snackbar', async () => {
 			getSetupServer().use(
-				rest.post(FOLDER_ACTION_REQUEST_PATH, async (req, res, ctx) =>
-					res(
-						ctx.json({
-							Body: {
-								Fault: {}
-							}
-						})
-					)
+				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
+					HttpResponse.json({
+						Body: {
+							Fault: {}
+						}
+					})
 				)
 			);
 			const createSnackbar = jest.fn();
 			const item = { id: FOLDERS.CALENDAR };
 			const moveToRootFn = moveToRoot({ createSnackbar, item });
-			await moveToRootFn();
+			await act(async () => moveToRootFn());
 			await waitFor(() => {
 				expect(createSnackbar).toHaveBeenCalledTimes(1);
 			});
@@ -102,7 +102,7 @@ describe('calendar-actions-fn', () => {
 			const createSnackbar = jest.fn();
 			const item = { id: FOLDERS.CALENDAR };
 			const removeFromListFn = removeFromList({ createSnackbar, item });
-			await removeFromListFn();
+			await act(async () => removeFromListFn());
 			await waitFor(() => {
 				expect(createSnackbar).toHaveBeenCalledTimes(1);
 			});
@@ -115,20 +115,18 @@ describe('calendar-actions-fn', () => {
 		});
 		test('when the request fails, it creates an error snackbar', async () => {
 			getSetupServer().use(
-				rest.post(FOLDER_ACTION_REQUEST_PATH, async (req, res, ctx) =>
-					res(
-						ctx.json({
-							Body: {
-								Fault: {}
-							}
-						})
-					)
+				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
+					HttpResponse.json({
+						Body: {
+							Fault: {}
+						}
+					})
 				)
 			);
 			const createSnackbar = jest.fn();
 			const item = { id: FOLDERS.CALENDAR };
 			const removeFromListFn = removeFromList({ createSnackbar, item });
-			await removeFromListFn();
+			await act(async () => removeFromListFn());
 			await waitFor(() => {
 				expect(createSnackbar).toHaveBeenCalledTimes(1);
 			});
@@ -152,14 +150,12 @@ describe('calendar-actions-fn', () => {
 		test('Characterization test - if request fails the creatModal is not called and no action is performed', () => {
 			const createModal = jest.fn();
 			getSetupServer().use(
-				rest.post(FOLDER_ACTION_REQUEST_PATH, async (req, res, ctx) =>
-					res(
-						ctx.json({
-							Body: {
-								Fault: {}
-							}
-						})
-					)
+				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
+					HttpResponse.json({
+						Body: {
+							Fault: {}
+						}
+					})
 				)
 			);
 			const item = { id: FOLDERS.CALENDAR };
@@ -172,21 +168,19 @@ describe('calendar-actions-fn', () => {
 			const item = { id: FOLDERS.CALENDAR };
 
 			getSetupServer().use(
-				rest.post('/service/soap/GetFolderRequest', async (req, res, ctx) =>
-					res(
-						ctx.json({
-							Body: {
-								GetFolderResponse: {
-									link: [item]
-								}
+				http.post('/service/soap/GetFolderRequest', async () =>
+					HttpResponse.json({
+						Body: {
+							GetFolderResponse: {
+								link: [item]
 							}
-						})
-					)
+						}
+					})
 				)
 			);
 
 			const sharesInfoFn = sharesInfo({ createModal, item });
-			await sharesInfoFn();
+			await act(async () => sharesInfoFn());
 			await waitFor(() => {
 				expect(createModal).toHaveBeenCalledTimes(1);
 			});
@@ -210,21 +204,19 @@ describe('calendar-actions-fn', () => {
 	test('find shares fn on click create modal is called once', async () => {
 		const createModal = jest.fn();
 		const findSharesFn = findShares({ createModal });
-		findSharesFn();
+		await act(async () => findSharesFn());
 		await waitFor(() => {
 			expect(createModal).toHaveBeenCalledTimes(1);
 		});
 	});
 	test('find shares fn on click if response is empty create modal is not called', async () => {
 		getSetupServer().use(
-			rest.post('/service/soap/GetShareInfoRequest', async (req, res, ctx) =>
-				res(
-					ctx.json({
-						Body: {
-							GetShareInfoResponse: {}
-						}
-					})
-				)
+			http.post('/service/soap/GetShareInfoRequest', async () =>
+				HttpResponse.json({
+					Body: {
+						GetShareInfoResponse: {}
+					}
+				})
 			)
 		);
 		const createModal = jest.fn();

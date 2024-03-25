@@ -45,8 +45,8 @@ export const sendResponse = ({
 				action === 'ACCEPT'
 					? t('message.snackbar.invite.accept', 'You’ve replied as Accepted')
 					: action === 'TENTATIVE'
-					? t('message.snackbar.invite.tentative', 'You’ve replied as Tentative')
-					: t('message.snackbar.invite.decline', 'You’ve replied as Declined');
+						? t('message.snackbar.invite.tentative', 'You’ve replied as Tentative')
+						: t('message.snackbar.invite.decline', 'You’ve replied as Declined');
 			createSnackbar({
 				key: `invite_${action}`,
 				replace: true,

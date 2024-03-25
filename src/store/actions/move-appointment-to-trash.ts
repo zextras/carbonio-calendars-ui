@@ -63,7 +63,7 @@ function createMessageForDelete({ invite, t, newMessage }: any) {
 		? organizer
 		: getParticipants(Object.entries(invite?.participants).flatMap(([_, value]) => value)).concat(
 				organizer
-		  ) ?? organizer;
+			) ?? organizer;
 	return {
 		e: participants,
 		su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,

@@ -344,7 +344,8 @@ const Styler = styled(Container)`
 	.rw-filter-input {
 	}
 	.rw-widget-input.rw-state-focus {
-		box-shadow: 0 0 0.5rem rgba(102, 175, 233, 0.6),
+		box-shadow:
+			0 0 0.5rem rgba(102, 175, 233, 0.6),
 			inset 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.075);
 	}
 	.rw-list {

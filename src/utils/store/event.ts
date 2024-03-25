@@ -12,11 +12,11 @@ export const isOrganizerOrHaveEqualRights = (
 ): boolean =>
 	!(event.resource.organizer
 		? // if the event is in trash or nested in it
-		  isTrashOrNestedInIt({ id: event.resource.calendar.id, absFolderPath }) ||
-		  // if user is owner of the calendar but he is not the organizer
-		  (!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
-		  // if it is inside a shared calendar or user doesn't have write access
-		  (!!event.resource.calendar.owner &&
+			isTrashOrNestedInIt({ id: event.resource.calendar.id, absFolderPath }) ||
+			// if user is owner of the calendar but he is not the organizer
+			(!event.resource.calendar.owner && !event.resource.iAmOrganizer) ||
+			// if it is inside a shared calendar or user doesn't have write access
+			(!!event.resource.calendar.owner &&
 				(event.resource.calendar.owner !== event.resource.organizer?.email ||
 					!event?.haveWriteAccess))
 		: false);

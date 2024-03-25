@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
+import { HttpResponse, HttpResponseResolver } from 'msw';
 
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { ROOM_DIVIDER } from '../../../../constants';
 
 const getResponse = (): SuccessSoapResponse<any> => ({
@@ -121,11 +123,11 @@ const getResponse = (): SuccessSoapResponse<any> => ({
 	}
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleModifyAppointmentRequest = (req, res, ctx) => {
-	const resp = req.body.Body.ModifyAppointmentRequest;
+export const handleModifyAppointmentRequest: HttpResponseResolver<
+	never,
+	CarbonioMailboxRestHandlerRequest<any>,
+	SuccessSoapResponse<any>
+> = () => {
 	const response = getResponse();
-	return res(ctx.json(response));
+	return HttpResponse.json(response);
 };

@@ -5,16 +5,20 @@
  */
 
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
+import { HttpResponse, HttpResponseResolver } from 'msw';
+
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 
 const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: { context: { change: { token: 15778 } } },
 	Body: { SendShareNotificationResponse: { _jsns: 'urn:zimbraMail' } }
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleSendShareNotificationRequest = (req, res, ctx) => {
+export const handleSendShareNotificationRequest: HttpResponseResolver<
+	never,
+	CarbonioMailboxRestHandlerRequest<any>,
+	SuccessSoapResponse<any>
+> = () => {
 	const response = getResponse();
-	return res(ctx.json(response));
+	return HttpResponse.json(response);
 };

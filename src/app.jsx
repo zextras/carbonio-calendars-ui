@@ -34,21 +34,21 @@ import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
 
-const LazyCalendarView = lazy(() =>
-	import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
+const LazyCalendarView = lazy(
+	() => import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
 );
 
-const LazyEditorView = lazy(() =>
-	import(/* webpackChunkName: "calendar-edit" */ './view/editor/editor-board-wrapper')
+const LazyEditorView = lazy(
+	() => import(/* webpackChunkName: "calendar-edit" */ './view/editor/editor-board-wrapper')
 );
-const LazySettingsView = lazy(() =>
-	import(/* webpackChunkName: "settings-view" */ './settings/settings-view')
+const LazySettingsView = lazy(
+	() => import(/* webpackChunkName: "settings-view" */ './settings/settings-view')
 );
-const LazySidebarView = lazy(() =>
-	import(/* webpackChunkName: "sidebar-view" */ './view/sidebar/sidebar')
+const LazySidebarView = lazy(
+	() => import(/* webpackChunkName: "sidebar-view" */ './view/sidebar/sidebar')
 );
-const LazySearchView = lazy(() =>
-	import(/* webpackChunkName: "search-view" */ './view/search/search-view')
+const LazySearchView = lazy(
+	() => import(/* webpackChunkName: "search-view" */ './view/search/search-view')
 );
 
 const CalendarView = () => (

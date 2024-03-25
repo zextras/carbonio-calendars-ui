@@ -177,7 +177,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 							: t('snackbar.tag_applied', {
 									tag: tag.name,
 									defaultValue: '"{{tag}}" tag applied'
-							  }),
+								}),
 						autoHideTimeout: 3000
 					});
 				})
@@ -296,7 +296,7 @@ export const applyTag = ({
 						</Row>
 					</Row>
 				)
-		  }
+			}
 		: {
 				id: EventActionsEnum.APPLY_TAG,
 				items: [],
@@ -305,7 +305,7 @@ export const applyTag = ({
 				label: labelTag,
 				icon: 'TagsMoreOutline',
 				disabled: true
-		  };
+			};
 };
 
 export const useGetTagsActions = ({ tag }: ArgumentType): Array<ReturnType> => {

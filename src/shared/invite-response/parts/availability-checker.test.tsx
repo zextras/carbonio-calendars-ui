@@ -7,8 +7,8 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, waitFor } from '@testing-library/react';
-import { rest } from 'msw';
+import { screen, waitFor } from '@testing-library/react';
+import { http, HttpResponse } from 'msw';
 
 import { AvailabilityChecker } from './availability-checker';
 import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
@@ -20,17 +20,15 @@ import 'jest-styled-components';
 
 const handleGetFreeBusy = (customResponse: Array<AvailabilitySlots>): void => {
 	getSetupServer().use(
-		rest.post('/service/soap/GetFreeBusyRequest', async (req, res, ctx) =>
-			res(
-				ctx.json({
-					Body: {
-						GetFreeBusyResponse: {
-							usr: customResponse,
-							_jsns: 'urn:zimbraMail'
-						}
+		http.post('/service/soap/GetFreeBusyRequest', async () =>
+			HttpResponse.json({
+				Body: {
+					GetFreeBusyResponse: {
+						usr: customResponse,
+						_jsns: 'urn:zimbraMail'
 					}
-				})
-			)
+				}
+			})
 		)
 	);
 };
