@@ -213,7 +213,7 @@ describe('use calendar actions', () => {
 			expect.objectContaining({ id: FOLDER_ACTIONS.UPLOAD })
 		]);
 	});
-	test('shared account calendar has 5 actions', () => {
+	test('shared account calendar has 6 actions', () => {
 		const calendarItem = {
 			name: 'calendar',
 			id: `${randomUUID}:${FOLDERS.CALENDAR}`,
