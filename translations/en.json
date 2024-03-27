@@ -4,6 +4,7 @@
         "calendar_access_share": "Calendar’s access share",
         "calendar_upload": "Import ICS file",
         "delete_calendar": "Delete calendar",
+        "download_ics": "Download ICS",
         "edit_calendar_properties": "Edit calendar properties",
         "edit_message": "Edit Message",
         "empty_trash": "Empty Trash",

@@ -29,7 +29,8 @@ export const EventActionsEnum = {
 	APPLY_TAG: 'apply_tag',
 	INSTANCE: 'instance',
 	SERIES: 'series',
-	SHOW_ORIGINAL: 'show_original'
+	SHOW_ORIGINAL: 'show_original',
+	DOWNLOAD_ICS: 'download_ics'
 } as const;
 
 export const CalendarIntegrations = {
