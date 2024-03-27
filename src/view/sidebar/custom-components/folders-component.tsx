@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback, useMemo, useRef } from 'react';
 
 import {
 	AccordionItem,
@@ -13,11 +13,20 @@ import {
 	Icon,
 	Padding,
 	Row,
-	Tooltip
+	Tooltip,
+	useModal,
+	useSnackbar,
+	ModalHeader,
+	ModalFooter,
+	ModalBody,
+	Divider,
+	Text
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, t, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 
+import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
+import { getRootAccountId, useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isRoot } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
@@ -31,6 +40,7 @@ import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
 import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
+import { NoOpRequest } from '../../../soap/noop-request';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
 
@@ -43,15 +53,21 @@ const FittedRow = styled(Row)`
 	height: 3rem;
 `;
 
+const FileInput = styled.input`
+	display: none;
+`;
+
 const ContextMenuItem = ({
 	children,
+	inputRef,
 	item
 }: {
-	children: JSX.Element;
+	children: React.JSX.Element;
+	inputRef: React.RefObject<HTMLInputElement>;
 	item: Folder;
-}): JSX.Element => {
+}): React.JSX.Element => {
 	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
-	const items = useCalendarActions(item);
+	const items = useCalendarActions(item, inputRef);
 
 	return isAllCalendar ? (
 		children
@@ -62,17 +78,34 @@ const ContextMenuItem = ({
 	);
 };
 
+const RowWithIcon = (icon: string, color: string, tooltipText: string): React.JSX.Element => (
+	<Padding left="small">
+		<Tooltip placement="right" label={tooltipText}>
+			<Row>
+				<Icon icon={icon} color={color} size="medium" />
+			</Row>
+		</Tooltip>
+	</Padding>
+);
+
 const RootChildren = ({
 	accordionItem,
 	item
 }: {
 	accordionItem: AccordionItemType;
 	item: Folder;
-}): JSX.Element => {
+}): React.JSX.Element => {
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
 	const query = useCheckedCalendarsQuery();
+	const inputRef = useRef<HTMLInputElement>(null);
+	const createSnackbar = useSnackbar();
+	const createModal = useModal();
+
+	const user = useUserAccount();
+	const rootAccountId = getRootAccountId(item.id);
+	const root = useRoot(rootAccountId ?? FOLDERS.USER_ROOT);
 
 	const onClick = useCallback(
 		(): void =>
@@ -88,15 +121,6 @@ const RootChildren = ({
 	);
 
 	const sharedStatusIcon = useMemo(() => {
-		const RowWithIcon = (icon: string, color: string, tooltipText: string): JSX.Element => (
-			<Padding left="small">
-				<Tooltip placement="right" label={tooltipText}>
-					<Row>
-						<Icon icon={icon} color={color} size="medium" />
-					</Row>
-				</Tooltip>
-			</Padding>
-		);
 		if (item.isLink || isLinkChild(item)) {
 			const tooltipText = t('tooltip.folder_linked_status', 'Linked to me');
 			return RowWithIcon('Linked', 'linked', tooltipText);
@@ -112,20 +136,114 @@ const RootChildren = ({
 		return '';
 	}, [item]);
 
+	const userMail = useMemo(
+		() => (root?.name === ROOT_NAME ? user.name : root?.name ?? user.name),
+		[root, user.name]
+	);
+
+	const confirmModal = useCallback(() => {
+		if (inputRef?.current?.files) {
+			createSnackbar({
+				key: `import ongoing`,
+				replace: true,
+				type: 'info',
+				label: t('label.import_calendar_ongoing', 'Import into the selected calendar in progress.'),
+				hideButton: true
+			});
+			importCalendarICSFn(inputRef?.current?.files, userMail, item.name).then((res) => {
+				if (res[0].status === 200) {
+					NoOpRequest().then(() => {
+						createSnackbar({
+							key: `import success`,
+							replace: true,
+							type: 'success',
+							label: t('label.import_calendar_success', 'Import successful'),
+							autoHideTimeout: 3000,
+							hideButton: true
+						});
+					});
+				} else {
+					createSnackbar({
+						key: `import failed`,
+						replace: true,
+						type: 'error',
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000,
+						hideButton: true
+					});
+				}
+			});
+		}
+	}, [createSnackbar, item.name, userMail]);
+
+	const onFileInputChange = useCallback(() => {
+		if (inputRef?.current?.files) {
+			const closeModal = createModal(
+				{
+					size: 'small',
+					children: (
+						<>
+							<ModalHeader
+								title={t('import_appointments', 'Import appointments')}
+								showCloseIcon
+								onClose={(): void => {
+									closeModal();
+								}}
+							/>
+							<Divider />
+							<ModalBody>
+								<Text overflow="break-word">
+									{t('message.import_appointment_modal', {
+										fileName: inputRef?.current?.files[0].name,
+										calendarName: item.name,
+										defaultValue:
+											'The appointments contained within {{fileName}} will be imported into the "{{calendarName}}" calendar.'
+									})}
+								</Text>
+							</ModalBody>
+							<Divider />
+							<ModalFooter
+								onConfirm={(): void => {
+									closeModal();
+									confirmModal();
+								}}
+								onClose={(): void => {
+									closeModal();
+								}}
+								confirmLabel={t('import', 'Import')}
+							/>
+						</>
+					),
+					onClose: () => {
+						closeModal();
+					}
+				},
+				true
+			);
+		}
+	}, [confirmModal, createModal, item.name]);
+
 	return (
-		<ContextMenuItem item={item}>
-			<Row onClick={onClick}>
-				<Padding left="small" />
-				<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
-					<AccordionItem item={accordionItem} />
-				</Tooltip>
-				{sharedStatusIcon}
-			</Row>
-		</ContextMenuItem>
+		<>
+			<ContextMenuItem item={item} inputRef={inputRef}>
+				<Row onClick={onClick}>
+					<Padding left="small" />
+					<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
+						<AccordionItem item={accordionItem} />
+					</Tooltip>
+					{sharedStatusIcon}
+				</Row>
+			</ContextMenuItem>
+			<FileInput type="file" ref={inputRef} onChange={onFileInputChange} accept=".ics" />
+		</>
 	);
 };
 
-const RootAccount = ({ accordionItem }: { accordionItem: AccordionItemType }): JSX.Element => (
+const RootAccount = ({
+	accordionItem
+}: {
+	accordionItem: AccordionItemType;
+}): React.JSX.Element => (
 	<FittedRow>
 		<Padding left="small">
 			<Avatar

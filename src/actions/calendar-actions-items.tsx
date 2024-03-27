@@ -246,16 +246,32 @@ export const findSharesItem = ({
 export const exportAppointmentICSItem = ({
 	item
 }: {
-	item: { name: string; id: string; absFolderPath?: string };
+	item: { name: string; id: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EXPORT_ICS,
 	icon: 'Download',
 	label: t('action.export_calendar_ics', 'Export ICS file'),
 	tooltipLabel: noPermissionLabel,
 	onClick: exportCalendarICSFn({ item }),
+	disabled: isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)
+});
+
+export const importCalendarICSItem = (
+	item: Folder,
+	ref?: React.RefObject<HTMLInputElement>
+): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.UPLOAD,
+	icon: 'Upload',
+	label: t('action.calendar_upload', 'Import ICS file'),
+	tooltipLabel: noPermissionLabel,
+	onClick: (): void => {
+		if (ref?.current) {
+			ref.current.click();
+		}
+	},
 	disabled:
-		isTrashOrNestedInIt(item) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		isTrashOrNestedInIt(item) ||
 		(item as LinkFolder).isLink ||
 		isLinkChild(item)
 });

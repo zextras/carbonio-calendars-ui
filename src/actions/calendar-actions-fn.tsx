@@ -7,7 +7,7 @@ import React from 'react';
 
 import { CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { filter, isEqual, lowerCase, uniqWith } from 'lodash';
+import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import moment from 'moment';
 
 import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
@@ -329,3 +329,21 @@ export const exportCalendarICSFn =
 			`/service/home/~/?auth=co&id=${item.id}&mime=text/plain&noAttach=1&icalAttach=none`
 		);
 	};
+
+export const importCalendarICSFn = async (
+	files: FileList,
+	userMail: string,
+	calendarName: string
+): Promise<Array<{ status: number }>> =>
+	Promise.all(
+		map(files, (file) =>
+			fetch(`/home/${userMail}/${calendarName}?fmt=ics&charset=UTF-8`, {
+				headers: {
+					'Content-Type': 'text/calendar',
+					'Access-Control-Allow-Origin': 'same origin'
+				},
+				method: 'POST',
+				body: file
+			})
+		)
+	);
