@@ -179,7 +179,7 @@ describe('use calendar actions', () => {
 			expect(result.current).toStrictEqual([]);
 		});
 	});
-	test('main account calendar folder has 5 actions', () => {
+	test('main account calendar folder has 6 actions', () => {
 		const calendarItem = {
 			name: 'calendar',
 			id: FOLDERS.CALENDAR,
@@ -202,16 +202,17 @@ describe('use calendar actions', () => {
 			initialProps: [calendarItem]
 		});
 
-		expect(result.current.length).toBe(5);
+		expect(result.current.length).toBe(6);
 		expect(result.current).toStrictEqual([
 			expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
-			expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES })
+			expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS })
 		]);
 	});
-	test('shared account calendar has 4 actions', () => {
+	test('shared account calendar has 5 actions', () => {
 		const calendarItem = {
 			name: 'calendar',
 			id: `${randomUUID}:${FOLDERS.CALENDAR}`,
@@ -231,12 +232,13 @@ describe('use calendar actions', () => {
 			initialProps: [calendarItem]
 		});
 
-		expect(result.current.length).toBe(4);
+		expect(result.current.length).toBe(5);
 		expect(result.current).toStrictEqual([
 			expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
-			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
+			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
+			expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS })
 		]);
 	});
 	describe('trash folder has 1 action', () => {
@@ -345,7 +347,7 @@ describe('use calendar actions', () => {
 			]);
 		});
 	});
-	describe('custom folder has 5 actions', () => {
+	describe('custom folder has different number of actions', () => {
 		test('custom folder main account', () => {
 			const customItem = {
 				name: 'custom folder',
@@ -369,14 +371,15 @@ describe('use calendar actions', () => {
 				initialProps: [customItem]
 			});
 
-			expect(result.current.length).toBe(6);
+			expect(result.current.length).toBe(7);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES })
+				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS })
 			]);
 		});
 		test('shared account', () => {
@@ -400,18 +403,19 @@ describe('use calendar actions', () => {
 				initialProps: [trashedItem]
 			});
 
-			expect(result.current.length).toBe(5);
+			expect(result.current.length).toBe(6);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS })
 			]);
 		});
 	});
 	describe('nested custom folder', () => {
-		test('in main account has 7 actions', () => {
+		test('in main account has 8 actions', () => {
 			const customNestedItem = {
 				name: 'custom nested folder',
 				id: '153',
@@ -453,7 +457,7 @@ describe('use calendar actions', () => {
 				initialProps: [customNestedItem]
 			});
 
-			expect(result.current.length).toBe(7);
+			expect(result.current.length).toBe(8);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT }),
@@ -461,10 +465,11 @@ describe('use calendar actions', () => {
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES })
+				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS })
 			]);
 		});
-		test('in shared account has 6 actions', () => {
+		test('in shared account has 7 actions', () => {
 			const customNestedItem = {
 				name: 'custom folder',
 				id: `${randomUUID}:154`,
@@ -485,14 +490,15 @@ describe('use calendar actions', () => {
 				initialProps: [customNestedItem]
 			});
 
-			expect(result.current.length).toBe(6);
+			expect(result.current.length).toBe(7);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
+				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
+				expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS })
 			]);
 		});
 	});
@@ -529,7 +535,7 @@ describe('use calendar actions', () => {
 				expect.objectContaining({ id: FOLDER_ACTIONS.SHARES_INFO })
 			]);
 		});
-		test('link folder shared account  has 3 actions', () => {
+		test('link folder shared account has 3 actions', () => {
 			const linkItem = {
 				name: 'link folder',
 				id: `${randomUUID}:154`,

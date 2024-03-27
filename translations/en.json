@@ -8,6 +8,7 @@
         "edit_message": "Edit Message",
         "empty_trash": "Empty Trash",
         "empty_trash_confirmation": "This action will delete all items in E-mail, Contacts, Calendar, Tasks and Briefcase trash folders. Are you sure that you want to permanently delete everything in these trash folders?",
+        "export_calendar_ics": "Export ICS file",
         "move_to_root": "Move to root",
         "preview": "Click to preview",
         "reset": "Reset",

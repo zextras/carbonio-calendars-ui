@@ -15,7 +15,8 @@ export enum FOLDER_ACTIONS {
 	DELETE = 'delete',
 	SHARE = 'share',
 	SHARE_URL = 'share_url',
-	FIND_SHARES = 'find_shares'
+	FIND_SHARES = 'find_shares',
+	EXPORT_ICS = 'export_ics'
 }
 
 // eslint-disable-next-line no-shadow

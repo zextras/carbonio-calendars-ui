@@ -7,7 +7,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { rest } from 'msw';
 
 import { AvailabilityChecker } from './availability-checker';

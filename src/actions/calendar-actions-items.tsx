@@ -13,6 +13,7 @@ import {
 	deleteCalendar,
 	editCalendar,
 	emptyTrash,
+	exportCalendarICSFn,
 	findShares,
 	moveToRoot,
 	newCalendar,
@@ -240,4 +241,21 @@ export const findSharesItem = ({
 	onClick: findShares({ createModal }),
 	disabled:
 		isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || !isMainRootChild(item)
+});
+
+export const exportAppointmentICSItem = ({
+	item
+}: {
+	item: { name: string; id: string; absFolderPath?: string };
+}): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.EXPORT_ICS,
+	icon: 'Download',
+	label: t('action.export_calendar_ics', 'Export ICS file'),
+	tooltipLabel: noPermissionLabel,
+	onClick: exportCalendarICSFn({ item }),
+	disabled:
+		isTrashOrNestedInIt(item) ||
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		(item as LinkFolder).isLink ||
+		isLinkChild(item)
 });
