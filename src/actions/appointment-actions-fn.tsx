@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
-import { find, omit } from 'lodash';
+import { find, lowerCase, omit } from 'lodash';
 
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
@@ -396,4 +396,21 @@ export const proposeNewTimeFn =
 		} else {
 			proposeTime(_invite);
 		}
+	};
+
+export const exportAppointmentICSFn =
+	({ event }: { event: EventType }): ((e?: ActionsClick) => void) =>
+	(): void => {
+		const downloadICS = (name: string, uri: string): void => {
+			const link = document.createElement('a');
+			link.download = name;
+			link.href = uri;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		};
+		downloadICS(
+			`${lowerCase(event?.title)}.ics`,
+			`/service/home/~/?auth=co&id=${event.resource.id}&mime=text/plain&noAttach=1&icalAttach=none`
+		);
 	};
