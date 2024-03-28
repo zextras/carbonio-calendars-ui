@@ -243,17 +243,17 @@ export const findSharesItem = ({
 		isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || !isMainRootChild(item)
 });
 
-export const exportAppointmentICSItem = ({
-	item
-}: {
-	item: { name: string; id: string };
-}): CalendarActionsItems => ({
+export const exportAppointmentICSItem = ({ item }: { item: Folder }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EXPORT_ICS,
 	icon: 'Download',
 	label: t('action.export_calendar_ics', 'Export ICS file'),
 	tooltipLabel: noPermissionLabel,
 	onClick: exportCalendarICSFn({ item }),
-	disabled: isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)
+	disabled:
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		isTrashOrNestedInIt(item) ||
+		(item as LinkFolder).isLink ||
+		isLinkChild(item)
 });
 
 export const importCalendarICSItem = (
