@@ -44,14 +44,17 @@ export const useGetEventTimezoneString = (
 			const completeFormat = `${dayFormat} ${timeFormat}`;
 			const diff = endEvent.diff(startEvent, 'days');
 			const allDayString =
-				allDay && diff > 0
+				diff > 0
 					? `${startEvent.format(dayFormat)} -
 	           ${endEvent.format(dayFormat)} - ${allDayLabel}`
 					: `${startEvent.format(dayFormat)} - ${allDayLabel}`;
 
-			return allDay
-				? allDayString
-				: `${startEvent.format(completeFormat)} - ${endEvent.format(timeFormat)}`;
+			const notAllDayString =
+				diff > 0
+					? `${startEvent.format(completeFormat)} - ${endEvent.format(completeFormat)}`
+					: `${startEvent.format(completeFormat)} - ${endEvent.format(timeFormat)}`;
+
+			return allDay ? allDayString : notAllDayString;
 		},
 		[allDay, allDayLabel]
 	);
