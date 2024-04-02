@@ -21,7 +21,7 @@ type GetInviteProps = { context?: Partial<Invite>; event?: GetEventProps };
 
 const getDefaultInvite = (event?: GetEventProps): Invite => {
 	const folderId = event?.resource?.calendar?.id ?? 'folderId';
-	const alarmStringValue = event?.resource?.alarm || null;
+	const alarmStringValue = event?.resource?.alarmData;
 	const attendeeFirstName = faker.person.firstName();
 	const attendeeLastName = faker.person.lastName();
 	const attendeeFullName = faker.person.fullName({
@@ -54,7 +54,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 		parent: folderId,
 		flags: event?.resource?.flags ?? '',
 		parts: [], // event doesn't have this
-		alarmValue: event?.resource?.alarmData?.[0]?.trigger?.[0]?.rel?.[0]?.m.toString(),
+		alarmValue: event?.resource?.alarmData?.[0]?.trigger?.[0]?.rel?.[0]?.m?.toString(),
 		alarmString: getAlarmToString(alarmStringValue) ?? 'never',
 		class: event?.resource?.class ?? 'PUB',
 		compNum: event?.resource?.compNum ?? 0,
@@ -109,7 +109,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 					AC: [
 						{
 							email: attendee.a,
-							isOptional: !(attendee.role === PARTICIPANT_ROLE.REQUIRED),
+							isOptional: attendee.role !== PARTICIPANT_ROLE.REQUIRED,
 							name: attendeeFullName,
 							response: attendee.ptst as ParticipationStatus
 						}

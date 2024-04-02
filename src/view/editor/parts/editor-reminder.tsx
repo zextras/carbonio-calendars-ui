@@ -16,8 +16,8 @@ import { selectEditorDisabled, selectEditorReminder } from '../../../store/selec
 import { editEditorReminder } from '../../../store/slices/editor-slice';
 
 const getReminderItems = (t: TFunction): Array<{ label: string; value: string }> => [
-	{ label: t('reminder.never', 'Never'), value: '0' },
-	{ label: t('reminder.at_time_of_event', 'At the time of the event'), value: '-1' },
+	{ label: t('reminder.never', 'Never'), value: '-1' },
+	{ label: t('reminder.at_time_of_event', 'At the time of the event'), value: '0' },
 	{
 		label: t('reminder.minute_before', {
 			count: 1,

@@ -10,7 +10,8 @@ import {
 	getAlarmToString,
 	normalizeInviteParticipants,
 	retrieveAttachmentsType,
-	findAttachments
+	findAttachments,
+	getAlarmValue
 } from './normalizations-utils';
 import { getLocationUrl } from './normalize-calendar-events';
 import { Invite } from '../types/store/invite';
@@ -26,8 +27,8 @@ export const normalizeInvite = (m: any): Invite => ({
 	parent: m.l,
 	flags: m.f,
 	parts: m.mp ? normalizeMailPartMapFn(m.mp) : [],
-	alarmString: getAlarmToString(m?.inv?.[0]?.comp?.[0]?.alarm || null) ?? 'never',
-	alarmValue: m?.inv?.[0]?.comp?.[0]?.alarm?.[0]?.trigger?.[0]?.rel?.[0].m?.toString(),
+	alarmString: getAlarmToString(m?.inv?.[0]?.comp?.[0]?.alarm),
+	alarmValue: getAlarmValue(m?.inv?.[0]?.comp?.[0]?.alarm?.[0]?.trigger?.[0]?.rel?.[0]),
 	class: m?.inv?.[0]?.comp?.[0]?.class,
 	compNum: m?.inv?.[0]?.comp?.[0]?.compNum, // Component number of the invite
 	date: m.d,
@@ -78,8 +79,8 @@ export const normalizeInviteFromSync = (inv: any): Invite => ({
 	parent: inv?.comp?.[0]?.ciFolder, // id folder
 	flags: inv.f, // read,unread,attachments,ecc...
 	parts: inv.mp ? normalizeMailPartMapFn(inv.mp) : [],
-	alarmString: getAlarmToString(inv.comp?.[0]?.alarm || null) ?? 'never',
-	alarmValue: `${inv.comp?.[0]?.alarm?.[0].trigger[0].rel[0].m}`,
+	alarmString: getAlarmToString(inv?.comp?.[0]?.alarm),
+	alarmValue: getAlarmValue(inv?.comp?.[0]?.alarm?.[0]?.trigger?.[0]?.rel?.[0]),
 	class: inv.comp?.[0]?.class,
 	compNum: inv.comp?.[0]?.compNum, // Component number of the invite
 	date: inv.d, // todo: check what date is
