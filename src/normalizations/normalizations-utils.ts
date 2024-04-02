@@ -79,7 +79,7 @@ export const getAlarmValue = (rel?: {
 	const MINUTES_PER_HOUR = 60;
 	const SECONDS_PER_MINUTE = 60;
 	if (!rel) {
-		return '-1';
+		return '0';
 	}
 	if (rel.s) {
 		return rel.s.toString();
