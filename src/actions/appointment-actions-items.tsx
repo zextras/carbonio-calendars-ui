@@ -13,6 +13,7 @@ import {
 	declineInvitation,
 	deletePermanently,
 	editAppointment,
+	exportAppointmentICSFn,
 	moveAppointment,
 	moveToTrash,
 	openAppointment,
@@ -236,4 +237,17 @@ export const showOriginal = ({ event }: { event: EventType }): AppointmentAction
 			'_blank'
 		);
 	}
+});
+
+export const exportAppointmentICSItem = ({
+	event
+}: {
+	event: EventType;
+}): AppointmentActionsItems => ({
+	id: EventActionsEnum.DOWNLOAD_ICS,
+	icon: 'Download',
+	label: t('action.download_ics', 'Download ICS'),
+	disabled: false,
+	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+	onClick: exportAppointmentICSFn({ event })
 });

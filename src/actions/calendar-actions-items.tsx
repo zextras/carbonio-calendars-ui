@@ -13,6 +13,7 @@ import {
 	deleteCalendar,
 	editCalendar,
 	emptyTrash,
+	exportCalendarICSFn,
 	findShares,
 	moveToRoot,
 	newCalendar,
@@ -240,4 +241,37 @@ export const findSharesItem = ({
 	onClick: findShares({ createModal }),
 	disabled:
 		isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || !isMainRootChild(item)
+});
+
+export const exportAppointmentICSItem = ({ item }: { item: Folder }): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.EXPORT_ICS,
+	icon: 'Download',
+	label: t('action.export_calendar_ics', 'Export ICS file'),
+	tooltipLabel: noPermissionLabel,
+	onClick: exportCalendarICSFn({ item }),
+	disabled:
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		isTrashOrNestedInIt(item) ||
+		(item as LinkFolder).isLink ||
+		isLinkChild(item)
+});
+
+export const importCalendarICSItem = (
+	item: Folder,
+	ref?: React.RefObject<HTMLInputElement>
+): CalendarActionsItems => ({
+	id: FOLDER_ACTIONS.UPLOAD,
+	icon: 'Upload',
+	label: t('action.calendar_upload', 'Import ICS file'),
+	tooltipLabel: noPermissionLabel,
+	onClick: (): void => {
+		if (ref?.current) {
+			ref.current.click();
+		}
+	},
+	disabled:
+		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
+		isTrashOrNestedInIt(item) ||
+		(item as LinkFolder).isLink ||
+		isLinkChild(item)
 });

@@ -10,7 +10,9 @@ import {
 	deleteCalendarItem,
 	editCalendarItem,
 	emptyTrashItem,
+	exportAppointmentICSItem,
 	findSharesItem,
+	importCalendarICSItem,
 	moveToRootItem,
 	newCalendarItem,
 	removeFromListItem,
@@ -28,7 +30,10 @@ type CalendarActionsProps = {
 	onClick: (e: ActionsClick) => void;
 	disabled?: boolean;
 };
-export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> => {
+export const useCalendarActions = (
+	item: Folder,
+	inputRef?: React.RefObject<HTMLInputElement>
+): Array<CalendarActionsProps> => {
 	const createModal = useModal();
 	const createSnackbar = useSnackbar();
 
@@ -44,7 +49,9 @@ export const useCalendarActions = (item: Folder): Array<CalendarActionsProps> =>
 		shareCalendarItem({ createModal, item }),
 		shareCalendarUrlItem({ createModal, item }),
 		findSharesItem({ createModal, item }),
-		sharesInfoItem({ item, createModal })
+		sharesInfoItem({ item, createModal }),
+		exportAppointmentICSItem({ item }),
+		importCalendarICSItem(item, inputRef)
 	];
 
 	return filter(actions, ['disabled', false]);
