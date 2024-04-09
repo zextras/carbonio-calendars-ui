@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
+import { HttpResponse, HttpResponseResolver } from 'msw';
 
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { ROOM_DIVIDER } from '../../../../constants';
 
 const uid = '71c5949a-69e2-48e7-b4c2-3765f6a4eaed';
@@ -337,11 +339,18 @@ const getResponse = (id: string): SuccessSoapResponse<any> => ({
 	}
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleGetInvite = (req, res, ctx) => {
-	const { id } = req.body.Body.GetMsgRequest.m;
+export const handleGetInvite: HttpResponseResolver<
+	never,
+	CarbonioMailboxRestHandlerRequest<{ m: { id: string } }>,
+	SuccessSoapResponse<any>
+> = async ({ request }) => {
+	const {
+		Body: {
+			GetMsgRequest: {
+				m: { id }
+			}
+		}
+	} = await request.json();
 	const response = getResponse(id);
-	return res(ctx.json(response));
+	return HttpResponse.json(response);
 };

@@ -9,7 +9,7 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { map, values } from 'lodash';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import {
@@ -135,19 +135,17 @@ describe('create single appointment with custom values', () => {
 		const newOptionalsInput = newOptionals.join(' ');
 
 		getSetupServer().use(
-			rest.post('/service/soap/getFreeBusyRequest', async (req, res, ctx) =>
-				res(
-					ctx.json({
-						Header: {
-							context: {
-								session: { id: 191337, _content: 191337 }
-							}
-						},
-						Body: {
-							GetFreeBusyResponse: { usr: map(newAttendees, (attendee) => ({ id: attendee })) }
+			http.post('/service/soap/getFreeBusyRequest', async () =>
+				HttpResponse.json({
+					Header: {
+						context: {
+							session: { id: 191337, _content: 191337 }
 						}
-					})
-				)
+					},
+					Body: {
+						GetFreeBusyResponse: { usr: map(newAttendees, (attendee) => ({ id: attendee })) }
+					}
+				})
 			)
 		);
 

@@ -8,7 +8,7 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { keyBy, values } from 'lodash';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { AppointmentCardContainer } from './appointment-card-container';
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
@@ -37,9 +37,7 @@ const setupFoldersStore = (): void => {
 
 const handleSearchRequest = (): void => {
 	getSetupServer().use(
-		rest.post('/service/soap/SearchRequest', async (req, res, ctx) =>
-			res(ctx.json(filledSearchResponse()))
-		)
+		http.post('/service/soap/SearchRequest', async () => HttpResponse.json(filledSearchResponse()))
 	);
 };
 

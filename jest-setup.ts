@@ -7,7 +7,7 @@ import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
 import failOnConsole from 'jest-fail-on-console';
 import moment from 'moment-timezone';
-import { rest } from 'msw';
+import { http } from 'msw';
 
 import {
 	defaultAfterAllTests,
@@ -48,26 +48,26 @@ failOnConsole({ ...getFailOnConsoleDefaultConfig(), shouldFailOnWarn: false });
 
 beforeAll(() => {
 	const h = [
-		rest.post('/service/soap/SendInviteReplyRequest', handleSendInviteReplyRequest),
-		rest.post('/service/soap/ItemActionRequest', handleItemActionRequest),
-		rest.post('/service/soap/GetFreeBusyRequest', handleGetFreeBusy),
-		rest.post('/service/soap/GetMsgRequest', handleGetInvite),
-		rest.post('/service/soap/CreateFolderRequest', handleCreateFolderRequest),
-		rest.post('/service/soap/GetFolderRequest', handleGetFolderRequest),
-		rest.post('/service/soap/FolderActionRequest', handleFolderActionRequest),
-		rest.post('/service/soap/SearchRequest', handleSearchRequest),
-		rest.post('/service/soap/CreateAppointmentRequest', handleCreateAppointmentRequest),
-		rest.post('/service/soap/CancelAppointmentRequest', handleCancelAppointmentRequest),
-		rest.post('/service/soap/AutoCompleteGalRequest', handleAutoCompleteGalRequest),
-		rest.post(
+		http.post('/service/soap/SendInviteReplyRequest', handleSendInviteReplyRequest),
+		http.post('/service/soap/ItemActionRequest', handleItemActionRequest),
+		http.post('/service/soap/GetFreeBusyRequest', handleGetFreeBusy),
+		http.post('/service/soap/GetMsgRequest', handleGetInvite),
+		http.post('/service/soap/CreateFolderRequest', handleCreateFolderRequest),
+		http.post('/service/soap/GetFolderRequest', handleGetFolderRequest),
+		http.post('/service/soap/FolderActionRequest', handleFolderActionRequest),
+		http.post('/service/soap/SearchRequest', handleSearchRequest),
+		http.post('/service/soap/CreateAppointmentRequest', handleCreateAppointmentRequest),
+		http.post('/service/soap/CancelAppointmentRequest', handleCancelAppointmentRequest),
+		http.post('/service/soap/AutoCompleteGalRequest', handleAutoCompleteGalRequest),
+		http.post(
 			'/service/soap/CreateAppointmentExceptionRequest',
 			handleCreateAppointmentExceptionRequest
 		),
-		rest.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest),
-		rest.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest),
-		rest.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest),
-		rest.post('/service/soap/SearchCalendarResourcesRequest', handleSearchCalendarResourcesRequest),
-		rest.post('/service/soap/GetAppointmentRequest', handleGetAppointmentRequest)
+		http.post('/service/soap/ModifyAppointmentRequest', handleModifyAppointmentRequest),
+		http.post('/service/soap/SendShareNotificationRequest', handleSendShareNotificationRequest),
+		http.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest),
+		http.post('/service/soap/SearchCalendarResourcesRequest', handleSearchCalendarResourcesRequest),
+		http.post('/service/soap/GetAppointmentRequest', handleGetAppointmentRequest)
 	];
 	registerRestHandler(...h);
 	defaultBeforeAllTests();

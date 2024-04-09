@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
+import { HttpResponse, HttpResponseResolver } from 'msw';
+
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 
 const uid = '71c5949a-69e2-48e7-b4c2-3765f6a4eaed';
 const senderMail = 'sender@mail.com';
@@ -297,10 +300,11 @@ const getResponse = (): SuccessSoapResponse<any> => ({
 	Body: { GetAppointmentResponse: { ...singleAppointmentResponse, _jsns: 'urn:zimbraMail' } }
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleGetAppointmentRequest = (req, res, ctx) => {
+export const handleGetAppointmentRequest: HttpResponseResolver<
+	never,
+	CarbonioMailboxRestHandlerRequest<any>,
+	SuccessSoapResponse<any>
+> = () => {
 	const response = getResponse();
-	return res(ctx.json(response));
+	return HttpResponse.json(response);
 };

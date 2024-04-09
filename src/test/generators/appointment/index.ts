@@ -97,7 +97,7 @@ export default (context: GetAppointmentProps | undefined = {}): Appointment => {
 										ridZ: moment(event.resource.start).format('YYYYMMDD[T]HHmmss[Z]'),
 										s: moment(event.resource.start).valueOf()
 									}
-							  ]
+								]
 							: undefined,
 						or:
 							event?.resource?.organizer?.email && event?.resource?.organizer?.name
@@ -105,15 +105,15 @@ export default (context: GetAppointmentProps | undefined = {}): Appointment => {
 										a: event.resource.organizer.email,
 										d: event.resource.organizer.name,
 										url: event.resource.organizer.email
-								  }
+									}
 								: undefined
 					},
 					isNil
 				),
 				...(context?.appointment ?? {})
-		  }
+			}
 		: {
 				...baseEvent,
 				...(context?.appointment ?? {})
-		  };
+			};
 };

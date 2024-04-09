@@ -88,7 +88,7 @@ const normalizeEventResource = ({
 			? {
 					name: appt?.or?.d,
 					email: appt?.or?.a
-			  }
+				}
 			: undefined,
 	compNum: appt.compNum,
 	apptStart: inst?.s,
@@ -127,7 +127,7 @@ export const normalizeCalendarEvent = ({
 						.add(getDaysFromMillis(dur) - 1, 'days')
 						.endOf('day')
 						.valueOf()
-			  )
+				)
 			: new Date(start + dur),
 		resource: normalizeEventResource({
 			appt: appointment,
@@ -160,7 +160,7 @@ export const normalizeCalendarEvents = (
 								calendars,
 								(f) =>
 									`${(f as LinkFolder).zid}:${(f as LinkFolder).rid}` === appt.l || f.id === appt.l
-						  )
+							)
 						: find(calendars, (f) => f.id === appt.l);
 					return cal
 						? [
@@ -172,9 +172,9 @@ export const normalizeCalendarEvents = (
 										instance: inst
 									})
 								)
-						  ]
+							]
 						: acc;
 				},
 				[] as Array<EventType>
-		  )
+			)
 		: [];

@@ -79,7 +79,7 @@ export const moveToRoot =
 							: t(
 									'message.snackbar.calendar_moved_to_root_folder',
 									'Calendar moved to Root folder'
-							  ),
+								),
 						autoHideTimeout: 3000
 					});
 				} else {

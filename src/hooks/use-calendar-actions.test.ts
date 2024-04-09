@@ -123,12 +123,12 @@ const setupFoldersStore = (item?: Folder, foldersToAdd?: Record<string, Folder>)
 					[sharedFolder.id]: sharedFolder,
 					[item.id]: item,
 					...foldersToAdd
-			  }
+				}
 			: {
 					[roots.USER.id]: roots.USER,
 					[mainFolder.id]: mainFolder,
 					[sharedFolder.id]: sharedFolder
-			  }
+				}
 	}));
 };
 

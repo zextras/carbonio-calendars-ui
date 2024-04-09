@@ -40,29 +40,35 @@ import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 
-export const isAnInvite = (event: EventType): boolean =>
-	event.resource.organizer
-		? !event.resource.iAmOrganizer &&
-		  event.haveWriteAccess &&
-		  ((!!event.resource.calendar.owner &&
+export const isAnInvite = (event: EventType): boolean => {
+	if (event.resource.organizer) {
+		return (
+			!event.resource.iAmOrganizer &&
+			event.haveWriteAccess &&
+			((!!event.resource.calendar.owner &&
 				event.resource.organizer &&
 				event.resource.calendar.owner !== event.resource.organizer.email) ||
 				!event.resource.calendar.owner)
-		: false;
+		);
+	}
+	return false;
+};
 
 const getInviteActionsArray = ({
 	event,
 	context,
 	invite
-}: ActionsProps): AppointmentActionsItems[] =>
-	isAnInvite(event)
-		? [
-				acceptInvitationItem({ event, context }),
-				acceptAsTentativeItem({ event, context }),
-				declineInvitationItem({ event, context }),
-				proposeNewTimeItem({ event, invite, context })
-		  ]
-		: [];
+}: ActionsProps): AppointmentActionsItems[] => {
+	if (isAnInvite(event)) {
+		return [
+			acceptInvitationItem({ event, context }),
+			acceptAsTentativeItem({ event, context }),
+			declineInvitationItem({ event, context }),
+			proposeNewTimeItem({ event, invite, context })
+		];
+	}
+	return [];
+};
 
 const getExportICSItem = ({
 	event,
