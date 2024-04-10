@@ -286,13 +286,13 @@ const generateInvite = (editorData: Editor): any => {
 		comp: [
 			{
 				alarm:
-					editorData?.reminder !== 'never' && editorData.reminder !== 'undefined'
+					editorData?.reminder && editorData?.reminder !== '0'
 						? [
 								{
 									action: 'DISPLAY',
 									trigger: {
 										rel: {
-											m: editorData.reminder,
+											m: editorData.reminder === '-1' ? '0' : editorData.reminder,
 											related: 'START',
 											neg: '1'
 										}

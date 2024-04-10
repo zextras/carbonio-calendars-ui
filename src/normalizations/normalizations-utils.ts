@@ -9,6 +9,7 @@ import { setLightness } from 'polished';
 
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
 import { CalendarsColorType } from '../types/store/calendars';
+import { AlarmData } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const retrieveAttachmentsType = (original: any, disposition: any, dataID: any): any =>
@@ -66,8 +67,39 @@ export const findAttachments = (parts: any, acc: any): any =>
 		acc
 	);
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const getAlarmToString = (alarm: any): any => {
+export const getAlarmValue = (rel?: {
+	s?: number;
+	m?: number;
+	h?: number;
+	d?: number;
+	w?: number;
+}): string => {
+	const DAY_PER_WEEK = 7;
+	const HOUR_PER_DAY = 24;
+	const MINUTES_PER_HOUR = 60;
+	const SECONDS_PER_MINUTE = 60;
+	if (!rel) {
+		return '0';
+	}
+	if (rel.s) {
+		return rel.s.toString();
+	}
+	if (rel.m) {
+		return (rel.m * SECONDS_PER_MINUTE).toString();
+	}
+	if (rel.h) {
+		return (rel.h * SECONDS_PER_MINUTE * MINUTES_PER_HOUR).toString();
+	}
+	if (rel.d) {
+		return (rel.d * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY).toString();
+	}
+	if (rel.w) {
+		return (rel.w * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK).toString();
+	}
+	return '-1';
+};
+
+export const getAlarmToString = (alarm?: AlarmData): string => {
 	const DAY_PER_WEEK = 7;
 	const HOUR_PER_DAY = 24;
 	const MINUTES_PER_HOUR = 60;
@@ -127,7 +159,7 @@ export const getAlarmToString = (alarm: any): any => {
 			});
 		}
 	}
-	return null;
+	return 'never';
 };
 
 export const setCalendarColorFromRGB = (color: string | undefined): CalendarsColorType =>
