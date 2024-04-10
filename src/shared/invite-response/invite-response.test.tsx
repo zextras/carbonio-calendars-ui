@@ -146,6 +146,45 @@ describe('invite response component', () => {
 
 				expect(localTimezoneString).toBeVisible();
 			});
+			test('if the event lasts multiple days non all day there will be the complete format for both start and end time', async () => {
+				setupFoldersStore();
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
+					invite: [
+						{
+							comp: [
+								{
+									s: [
+										{
+											d: '20240128T090000',
+											tz: 'Europe/Berlin',
+											u: moment('20240128T090000').valueOf()
+										}
+									],
+									e: [
+										{
+											d: '20240130T093000',
+											tz: 'Europe/Berlin',
+											u: moment('20240130T093000').valueOf()
+										}
+									]
+								}
+							]
+						}
+					]
+				});
+
+				const store = configureStore({ reducer: combineReducers(reducers) });
+
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					store
+				});
+
+				const localTimeString = screen.getByText(
+					/Sunday, 28 January, 2024 09:00 - Tuesday, 30 January, 2024 09:30/i
+				);
+
+				expect(localTimeString).toBeVisible();
+			});
 			// skipped, there is a bug to fix first
 			test.skip('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				const currentTimezone = 'Asia/Kolkata';

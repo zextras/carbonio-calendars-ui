@@ -11,6 +11,32 @@ import { useTranslation } from 'react-i18next';
 import { getLocalTime, isTimezoneDifferentFromLocal } from '../normalizations/normalize-editor';
 import { DateType } from '../types/event';
 
+export const getTimeString = (
+	_start: number | undefined,
+	_end: number | undefined,
+	allDay: boolean | undefined,
+	allDayLabel: string
+): string => {
+	const startEvent = moment(_start);
+	const endEvent = moment(_end);
+	const dayFormat = 'dddd, DD MMMM, YYYY';
+	const timeFormat = 'HH:mm';
+	const completeFormat = `${dayFormat} ${timeFormat}`;
+	const diff = endEvent.diff(startEvent, 'days');
+	const allDayString =
+		diff > 0
+			? `${startEvent.format(dayFormat)} -
+	           ${endEvent.format(dayFormat)} - ${allDayLabel}`
+			: `${startEvent.format(dayFormat)} - ${allDayLabel}`;
+
+	const notAllDayString =
+		diff > 0
+			? `${startEvent.format(completeFormat)} - ${endEvent.format(completeFormat)}`
+			: `${startEvent.format(completeFormat)} - ${endEvent.format(timeFormat)}`;
+
+	return allDay ? allDayString : notAllDayString;
+};
+
 export const useGetEventTimezoneString = (
 	start: number | DateType,
 	end: number | DateType,
@@ -35,27 +61,6 @@ export const useGetEventTimezoneString = (
 	const eventStart = useMemo(() => getLocalTime(start, timezone), [start, timezone]);
 	const eventEnd = useMemo(() => getLocalTime(end, timezone), [end, timezone]);
 
-	const getTimeString = useCallback(
-		(_start, _end) => {
-			const startEvent = moment(_start);
-			const endEvent = moment(_end);
-			const dayFormat = 'dddd, DD MMMM, YYYY';
-			const timeFormat = 'HH:mm';
-			const completeFormat = `${dayFormat} ${timeFormat}`;
-			const diff = endEvent.diff(startEvent, 'days');
-			const allDayString =
-				allDay && diff > 0
-					? `${startEvent.format(dayFormat)} -
-	           ${endEvent.format(dayFormat)} - ${allDayLabel}`
-					: `${startEvent.format(dayFormat)} - ${allDayLabel}`;
-
-			return allDay
-				? allDayString
-				: `${startEvent.format(completeFormat)} - ${endEvent.format(timeFormat)}`;
-		},
-		[allDay, allDayLabel]
-	);
-
 	const getTimeZoneString = useCallback(
 		(_start, _timezone) => {
 			if (_timezone && !allDay) {
@@ -79,13 +84,13 @@ export const useGetEventTimezoneString = (
 		[]
 	);
 	const localTimeString = useMemo(
-		() => getTimeString(localStart, localEnd),
-		[getTimeString, localStart, localEnd]
+		() => getTimeString(localStart, localEnd, allDay, allDayLabel),
+		[localStart, localEnd, allDay, allDayLabel]
 	);
 
 	const eventTimeString = useMemo(
-		() => getTimeString(eventStart, eventEnd),
-		[getTimeString, eventStart, eventEnd]
+		() => getTimeString(eventStart, eventEnd, allDay, allDayLabel),
+		[eventStart, eventEnd, allDay, allDayLabel]
 	);
 
 	const localTimezoneString = useMemo(
