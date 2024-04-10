@@ -48,10 +48,10 @@ const setResourceDate = ({
 		? {
 				d: moment(time).format('YYYYMMDD[T]HHmmss'),
 				tz: timezone
-		  }
+			}
 		: {
 				d: moment(time).utc().format('YYYYMMDD[T]HHmmss[Z]')
-		  };
+			};
 };
 
 export const generateParticipantInformation = (resource: Editor): Array<Partial<Participants>> => {
@@ -109,7 +109,7 @@ export const generateParticipantInformation = (resource: Editor): Array<Partial<
 					})
 				),
 				organizerParticipant
-		  );
+			);
 };
 
 const getOrganizer = ({
@@ -192,11 +192,11 @@ function generateBodyRequest(app: Editor): string {
 	const virtualRoomMessage = app?.room?.label
 		? `${ROOM_DIVIDER}\n${
 				organizer.name ?? ''
-		  } have invited you to a virtual meeting on Carbonio Chats system!\n\nJoin the meeting now on ${
+			} have invited you to a virtual meeting on Carbonio Chats system!\n\nJoin the meeting now on ${
 				app.room.label
-		  }\n\n${
+			}\n\n${
 				app.room.link
-		  } \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n${ROOM_DIVIDER}\n`
+			} \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n${ROOM_DIVIDER}\n`
 		: '';
 	const meetingMessage = `${ROOM_DIVIDER}\n${
 		organizer.name ?? ''
@@ -220,13 +220,13 @@ const generateMp = (msg: Editor): { ct: string; mp: Array<{ ct: string; content:
 					ct: 'text/plain',
 					content: generateBodyRequest(msg)
 				}
-		  ]
+			]
 		: [
 				{
 					ct: 'text/plain',
 					content: generateBodyRequest(msg)
 				}
-		  ]
+			]
 });
 
 const generateInvite = (editorData: Editor): any => {
@@ -298,7 +298,7 @@ const generateInvite = (editorData: Editor): any => {
 										}
 									}
 								}
-						  ]
+							]
 						: undefined,
 				xprop: editorData?.room
 					? [
@@ -316,7 +316,7 @@ const generateInvite = (editorData: Editor): any => {
 									}
 								]
 							}
-					  ]
+						]
 					: undefined,
 				at,
 				allDay: editorData.allDay ? '1' : '0',
@@ -367,7 +367,7 @@ export const normalizeSoapMessageFromEditor = (msg: Editor): any =>
 						? {
 								mp: msg?.attach?.mp,
 								aid: msg?.attach?.aid?.length > 0 ? msg?.attach?.aid?.join(',') : undefined
-						  }
+							}
 						: undefined,
 					e: generateParticipantInformation(msg),
 					inv: generateInvite(msg),

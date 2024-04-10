@@ -22,7 +22,7 @@ export const workWeek = (zimbraPrefCalendarWorkingHours: string): WorkWeekDay[] 
 					working: t.split(':')[1] !== 'N',
 					start: t.split(':')[2],
 					end: t.split(':')[3]
-				} as WorkWeekDay)
+				}) as WorkWeekDay
 		),
 		'day'
 	);

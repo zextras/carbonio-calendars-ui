@@ -136,7 +136,7 @@ export const setCalendarColorFromRGB = (color: string | undefined): CalendarsCol
 				color,
 				label: 'custom',
 				background: setLightness(0.9, color)
-		  }
+			}
 		: CALENDARS_STANDARD_COLORS[0];
 
 export const setCalendarColorFromNumber = (color: number | undefined): CalendarsColorType =>

@@ -5,7 +5,9 @@
  */
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
 import { some } from 'lodash';
+import { HttpResponse, HttpResponseResolver } from 'msw';
 
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { ROOM_DIVIDER } from '../../../../constants';
 
 const getResponse = (): SuccessSoapResponse<any> => ({
@@ -122,11 +124,34 @@ const getResponse = (): SuccessSoapResponse<any> => ({
 	}
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleCreateAppointmentRequest = (req, res, ctx) => {
-	const resp = req.body.Body.CreateAppointmentRequest;
+/**
+ * Temporary type to workaround a bad type in Shell
+ * @see SHELL-203
+ */
+type CustomErrorSoapResponseBody = {
+	Fault: {
+		Code: {
+			Value: string;
+		};
+		Reason: {
+			Text: string;
+		};
+		Detail: {
+			Error: {
+				Code: string;
+				Trace: string;
+				_jsns: string;
+			};
+		};
+	};
+};
+
+export const handleCreateAppointmentRequest: HttpResponseResolver<
+	never,
+	CarbonioMailboxRestHandlerRequest<any>,
+	SuccessSoapResponse<any> | CustomErrorSoapResponseBody
+> = async ({ request }) => {
+	const resp = (await request.json()).Body.CreateAppointmentRequest;
 	if (!resp?.m) {
 		const response = {
 			Fault: {
@@ -145,7 +170,7 @@ export const handleCreateAppointmentRequest = (req, res, ctx) => {
 				}
 			}
 		};
-		return res(ctx.json(response));
+		return HttpResponse.json(response);
 	}
 	if (resp?.m) {
 		if (resp?.m?.e && some(resp?.m?.e, (item) => !item.a)) {
@@ -166,7 +191,7 @@ export const handleCreateAppointmentRequest = (req, res, ctx) => {
 					}
 				}
 			};
-			return res(ctx.json(response));
+			return HttpResponse.json(response);
 		}
 		if (
 			resp?.m?.mp?.attach?.mp &&
@@ -189,7 +214,7 @@ export const handleCreateAppointmentRequest = (req, res, ctx) => {
 					}
 				}
 			};
-			return res(ctx.json(response));
+			return HttpResponse.json(response);
 		}
 		if (resp?.m?.mp?.attach?.m && !resp?.m?.mp?.attach?.m?.id) {
 			const response = {
@@ -209,7 +234,7 @@ export const handleCreateAppointmentRequest = (req, res, ctx) => {
 					}
 				}
 			};
-			return res(ctx.json(response));
+			return HttpResponse.json(response);
 		}
 		if (resp?.m?.mp?.attach?.cn && !resp?.m?.mp?.attach?.cn?.id) {
 			const response = {
@@ -229,7 +254,7 @@ export const handleCreateAppointmentRequest = (req, res, ctx) => {
 					}
 				}
 			};
-			return res(ctx.json(response));
+			return HttpResponse.json(response);
 		}
 		if (resp?.m?.inv[0]?.comp[0]?.exceptId && !resp?.m?.inv[0]?.comp[0]?.exceptId?.d) {
 			const response = {
@@ -249,9 +274,9 @@ export const handleCreateAppointmentRequest = (req, res, ctx) => {
 					}
 				}
 			};
-			return res(ctx.json(response));
+			return HttpResponse.json(response);
 		}
 	}
 	const response = getResponse();
-	return res(ctx.json(response));
+	return HttpResponse.json(response);
 };

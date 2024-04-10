@@ -49,14 +49,14 @@ const getCalendarSliceItem = (
 				? {
 						...acc,
 						[item.id]: item
-				  }
+					}
 				: {
 						...acc,
 						[item.id]: {
 							...item,
 							items: hasItems ? values(getCalendarSliceItem({ length: itemNumbers })) : []
 						}
-				  };
+					};
 		},
 		{ 10: cals.defaultCalendar }
 	);

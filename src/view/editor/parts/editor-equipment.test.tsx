@@ -9,12 +9,14 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
+import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
 import { map } from 'lodash';
 import moment from 'moment';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { EditorEquipments } from './editor-equipments';
 import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
+import { CarbonioMailboxRestHandlerRequest } from '../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
@@ -42,7 +44,7 @@ const setupBackendResponse = (items: Resource[]): void => {
 	const response = handleGetFreeBusyCustomResponse(freeBusyArrayItems);
 
 	getSetupServer().use(
-		rest.post('/service/soap/GetFreeBusyRequest', (req, res, ctx) => res(ctx.json(response)))
+		http.post('/service/soap/GetFreeBusyRequest', () => HttpResponse.json(response))
 	);
 };
 
@@ -74,9 +76,7 @@ describe('Editor equipment', () => {
 		});
 		const handler = getCustomResources(items);
 		getSetupServer().use(
-			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
-				res(ctx.json(handler))
-			)
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
 		);
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
@@ -112,9 +112,7 @@ describe('Editor equipment', () => {
 		setupBackendResponse([items[0]]);
 
 		getSetupServer().use(
-			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
-				res(ctx.json(handler))
-			)
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
 		);
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
@@ -153,8 +151,9 @@ describe('Editor equipment', () => {
 		setupBackendResponse([items[0]]);
 
 		getSetupServer().use(
-			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
-				res(ctx.json(handler))
+			http.post<never, CarbonioMailboxRestHandlerRequest<any>, SuccessSoapResponse<any>>(
+				'/service/soap/AutoCompleteGalRequest',
+				async () => HttpResponse.json(handler)
 			)
 		);
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });

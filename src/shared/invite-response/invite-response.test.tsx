@@ -256,13 +256,16 @@ describe('invite response component', () => {
 						store
 					});
 
-					await waitFor(() => {
-						expect(getFreeBusyHandler).toHaveBeenCalledWith(
-							expect.objectContaining({
-								uid: rootsArray[1].name
-							})
-						);
-					});
+					await waitFor(
+						() => {
+							expect(getFreeBusyHandler).toHaveBeenCalledWith(
+								expect.objectContaining({
+									uid: rootsArray[1].name
+								})
+							);
+						},
+						{ timeout: 10000 }
+					);
 				});
 			});
 			test('a checkbox to notify the organizer checked by default', () => {

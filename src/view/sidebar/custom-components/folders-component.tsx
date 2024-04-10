@@ -272,7 +272,7 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 				icon: getFolderIcon({ item, checked: !!item.checked }),
 				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
 				textProps: { size: 'small' }
-			} as AccordionItemType),
+			}) as AccordionItemType,
 		[item, displayName]
 	);
 
