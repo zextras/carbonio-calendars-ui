@@ -344,14 +344,15 @@
         "location": "Место",
         "chat_room": "Ссылка на виртуальную комнату",
         "calendar_sharing_status_0": "Поделился с {{count}}",
-        "calendar_sharing_status_1": "Поделился {{count}}",
-        "calendar_sharing_status_2": "Поделился {{count}}",
+        "calendar_sharing_status_1": "Поделился с {{count}}",
+        "calendar_sharing_status_2": "Поделился с {{count}}",
         "calendar_sharing_status_one": "Поделился с одним пользователем",
         "revoke": "Отозвать доступ",
         "resend": "Отправить уведомление по электронной почте об этом совместном ресурсе",
         "edit": "Изменить свойства общего доступа",
         "virtual_room": "Конференц зал",
-        "meetingRooms": "Комнаты"
+        "meetingRooms": "Комнаты",
+        "folder_linked_status": "Связано со мной"
     },
     "action": {
         "send": "Отправить",
@@ -370,7 +371,7 @@
         "reset": "Сбросить",
         "search": "Поиск",
         "show_original": "Показать оригинал",
-        "Trash_already_empty": "корзина очищена"
+        "Trash_already_empty": "Корзина очищена"
     },
     "folder": {
         "modal": {
@@ -705,5 +706,11 @@
     "previous_month": "Прошлый месяц",
     "previous_week": "Прошлая неделя",
     "creation_timezone_tooltip": "Дата и время в часовом поясе создания:",
-    "local_timezone_tooltip": "Дата и время по местному часовому поясу:"
+    "local_timezone_tooltip": "Дата и время по местному часовому поясу:",
+    "attendee_equipment_unavailable": "Оборудование недоступно в выбранное время мероприятия",
+    "attendee_room_unavailable": "Зал недоступен в выбранное время мероприятия",
+    "attendees_equipments_unavailable": "Одно или несколько видов оборудования недоступны в выбранное время мероприятия",
+    "attendees_rooms_unavailable": "Одна или несколько виртуальных комнат недоступны в выбранное время мероприятия",
+    "public": "публичная",
+    "timezones": "Часовые пояса"
 }

@@ -143,7 +143,7 @@
     },
     "label": {
         "to": "A",
-        "tentative": "forse",
+        "tentative": "Tentativo",
         "no_subject": "Nessun oggetto",
         "start_date_and_time": "Data ed ora di inizio",
         "start_date": "Data di inizio",
@@ -271,7 +271,7 @@
         "share_calendar_url": "{{title}} accesso condiviso",
         "new_appointment": "Nuovo appuntamento",
         "app_name": "Calendari",
-        "propose_new_time": "PROPONI NUOVO ORARIO",
+        "propose_new_time": "Proponi nuovo orario",
         "week_day": {
             "friday": "Venerdì",
             "monday": "Lunedì",
@@ -689,5 +689,6 @@
     "attendees_equipments_unavailable": "Uno o più partecipanti non sono disponibili nell'orario selezionato per l'evento",
     "public": "pubblico",
     "attendee_room_unavailable": "Stanza non disponibile nell'orario selezionato per l'evento",
-    "attendees_rooms_unavailable": "Una o più Meeting Room non sono disponibili nell'orario selezionato per l'evento"
+    "attendees_rooms_unavailable": "Una o più Meeting Room non sono disponibili nell'orario selezionato per l'evento",
+    "timezones": "Fuso orario"
 }
