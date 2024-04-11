@@ -24,7 +24,7 @@ import { Folder, FolderView } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import mockedData from '../test/generators';
 
-const randomUUID = faker.datatype.uuid();
+const randomUUID = faker.string.uuid();
 const TRASH_SUB_FOLDER_PATH = '/Trash/subFolder';
 const genericTestItemTitleForIconItem =
 	'is an item with properties id, icon, label, tooltipLabel, onClick, disabled';

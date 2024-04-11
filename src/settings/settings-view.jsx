@@ -3,14 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 import {
 	Container,
 	FormSection,
 	FormSubSection,
-	SnackbarManagerContext,
-	Shimmer
+	Shimmer,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { editSettings, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
 import { map, filter, isEqual, uniqBy } from 'lodash';
@@ -45,7 +45,7 @@ export default function CalendarSettingsView() {
 	const [currentInvite, setCurrentInvite] = useState(null);
 	const [allowedFBUsers, setAllowedFBUsers] = useState([]);
 	const [allowedInivteUsers, setAllowedInivteUsers] = useState([]);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 
 	const getUserRights = async () => {
 		const response = await getRightsRequest();
@@ -122,7 +122,7 @@ export default function CalendarSettingsView() {
 				? map(
 						filter(invite, (i) => i.gt === 'usr'),
 						(r) => ({ email: r.d })
-				  )
+					)
 				: [],
 		[invite]
 	);
@@ -132,7 +132,7 @@ export default function CalendarSettingsView() {
 				? map(
 						filter(freeBusy, (fb) => fb.gt === 'usr'),
 						(r) => ({ email: r.d })
-				  )
+					)
 				: [],
 		[freeBusy]
 	);
@@ -200,20 +200,20 @@ export default function CalendarSettingsView() {
 							? {
 									...schedule,
 									end: `${data.hour}${data.minute}`
-							  }
+								}
 							: schedule
 					)
-			  )
+				)
 			: setWorkingSchedule(
 					workingSchedule.map((schedule) =>
 						schedule.day === data.day
 							? {
 									...schedule,
 									start: `${data.hour}${data.minute}`
-							  }
+								}
 							: schedule
 					)
-			  );
+				);
 	};
 
 	useEffect(() => {
@@ -238,7 +238,7 @@ export default function CalendarSettingsView() {
 						? {
 								...schedule,
 								working: !schedule.working
-						  }
+							}
 						: schedule
 				)
 			),
@@ -357,13 +357,13 @@ export default function CalendarSettingsView() {
 						...schedule,
 						end: `${data.hour}${data.minute}`
 					}))
-			  )
+				)
 			: setWorkingSchedule(
 					workingSchedule.map((schedule) => ({
 						...schedule,
 						start: `${data.hour}${data.minute}`
 					}))
-			  );
+				);
 	};
 
 	const disabled = useMemo(

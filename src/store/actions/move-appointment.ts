@@ -10,16 +10,12 @@ import {
 	ItemActionRejectedType,
 	ItemActionReturnType
 } from '../../soap/item-action-request';
-import { AppointmentsSlice } from '../../types/store/store';
 
 export type MoveAppointmentArguments = {
 	id: string;
 	l: string;
-	inviteId: string;
-	fromMail?: boolean;
-	previousState?: AppointmentsSlice['appointments'];
 };
-export type MoveAppointmentReturnType = { response: ItemActionReturnType; inviteId: string };
+export type MoveAppointmentReturnType = ItemActionReturnType;
 
 export const moveAppointmentRequest = createAsyncThunk<
 	MoveAppointmentReturnType,
@@ -27,10 +23,10 @@ export const moveAppointmentRequest = createAsyncThunk<
 	{
 		rejectValue: ItemActionRejectedType;
 	}
->('appointments/moveAppointment', async ({ id, l, inviteId }, { rejectWithValue }) => {
-	const response = await itemActionRequest({ inviteId: id, op: 'move', parent: l });
+>('appointments/moveAppointment', async ({ id, l }, { rejectWithValue }) => {
+	const response = await itemActionRequest({ id, op: 'move', parent: l });
 	if (response?.error) {
 		return rejectWithValue(response);
 	}
-	return { response, inviteId };
+	return response;
 });

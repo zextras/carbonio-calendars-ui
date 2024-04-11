@@ -3,19 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
+import { MESSAGE_METHOD } from '../../constants/api';
 import { ObjectValues } from '../../constants/sidebar';
+import { InviteResponseArguments, MailMsg } from '../../types/integrations';
 
 const senderMail = 'sender@mail.com';
 const receiverMail = 'receiver@mail.com';
+const receiver2Mail = 'receiver2@mail.com';
 const tz = 'Europe/Berlin';
-
-export const MESSAGE_METHOD = {
-	COUNTER: 'COUNTER',
-	REQUEST: 'REQUEST'
-} as const;
 
 export const MESSAGE_TYPE = {
 	SINGLE: 'SINGLE',
@@ -29,29 +27,30 @@ type MessageType = ObjectValues<typeof MESSAGE_TYPE>;
 export const buildMailMessageType = (
 	method: MessageMethod,
 	type: MessageType,
-	allDay: boolean
-): unknown => {
+	allDay: boolean,
+	context?: Partial<MailMsg>
+): InviteResponseArguments['mailMsg'] => {
 	const s = [
 		allDay
 			? {
 					d: '20240130'
-			  }
+				}
 			: {
 					d: '20240130T090000',
 					tz,
 					u: 1706601600000
-			  }
+				}
 	];
 	const e = [
 		allDay
 			? {
 					d: '20240130'
-			  }
+				}
 			: {
 					tz,
 					u: 1706603400000,
 					d: '20240130T093000'
-			  }
+				}
 	];
 	const singleEventMessageRequest = {
 		conversation: '-56149',
@@ -75,6 +74,13 @@ export const buildMailMessageType = (
 				name: 'receiver',
 				fullName: 'receiver fullName',
 				email: receiverMail
+			},
+			{
+				type: 't',
+				address: receiver2Mail,
+				name: 'receiver 2',
+				fullName: 'receiver2 fullName',
+				email: receiver2Mail
 			}
 		],
 		tags: [],
@@ -98,12 +104,20 @@ export const buildMailMessageType = (
 								role: 'REQ',
 								ptst: 'NE',
 								rsvp: true
+							},
+							{
+								a: receiver2Mail,
+								url: receiver2Mail,
+								d: 'receiver2 fullName',
+								role: 'OPT',
+								ptst: 'NE',
+								rsvp: true
 							}
 						],
 						alarm: [],
 						fr: 'message fragment',
 						noBlob: true,
-						desc: [],
+						desc: [{ _content: 'test description' }],
 						descHtml: [],
 						fb: 'B',
 						transp: 'O',
@@ -120,7 +134,8 @@ export const buildMailMessageType = (
 						class: 'PUB',
 						allDay,
 						s,
-						e
+						e,
+						...(context?.invite?.[0]?.comp?.[0] ?? {})
 					}
 				]
 			}
@@ -141,7 +156,8 @@ export const buildMailMessageType = (
 		isSentByMe: false,
 		isInvite: true,
 		isReplied: false,
-		isReadReceiptRequested: true
+		isReadReceiptRequested: true,
+		...(context ?? {})
 	};
 	if (type === MESSAGE_TYPE.SINGLE) {
 		return singleEventMessageRequest;
@@ -221,25 +237,21 @@ export const setupServerSingleEventResponse = (
 	getMsgResponse: unknown
 ): void => {
 	getSetupServer().use(
-		rest.post('/service/soap/GetAppointmentRequest', async (req, res, ctx) =>
-			res(
-				ctx.json({
-					Body: {
-						GetAppointmentResponse: getAppointmentResponse
-					}
-				})
-			)
+		http.post('/service/soap/GetAppointmentRequest', async () =>
+			HttpResponse.json({
+				Body: {
+					GetAppointmentResponse: getAppointmentResponse
+				}
+			})
 		)
 	);
 	getSetupServer().use(
-		rest.post('/service/soap/GetMsgRequest', async (req, res, ctx) =>
-			res(
-				ctx.json({
-					Body: {
-						GetMsgResponse: getMsgResponse
-					}
-				})
-			)
+		http.post('/service/soap/GetMsgRequest', async () =>
+			HttpResponse.json({
+				Body: {
+					GetMsgResponse: getMsgResponse
+				}
+			})
 		)
 	);
 };

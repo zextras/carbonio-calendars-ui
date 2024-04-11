@@ -6,7 +6,9 @@
 import { faker } from '@faker-js/faker';
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
 import { isNull, map, omitBy } from 'lodash';
+import { HttpResponse, HttpResponseResolver } from 'msw';
 
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { Resource } from '../../../../types/editor';
 
 export const getCustomResources = (resources?: Array<Resource>): SuccessSoapResponse<any> => ({
@@ -29,7 +31,7 @@ export const getCustomResources = (resources?: Array<Resource>): SuccessSoapResp
 								zimbraCalResType: r.type,
 								email: r.email
 							}
-					  }))
+						}))
 					: undefined,
 				sortBy: 'dateDesc',
 				offset: 0,
@@ -53,7 +55,7 @@ export const getLessThan100Resources = (): SuccessSoapResponse<any> => ({
 	Body: {
 		AutoCompleteGalResponse: {
 			cn: map({ length: 90 }, () => ({
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				fileAsStr: faker.company.name(),
 				_attrs: {
 					zimbraCalResType: 'Location',
@@ -84,10 +86,11 @@ const getEmptyResponse = (): SuccessSoapResponse<any> => ({
 	}
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types,@typescript-eslint/explicit-function-return-type
-export const handleAutoCompleteGalRequest = (req, res, ctx) => {
+export const handleAutoCompleteGalRequest: HttpResponseResolver<
+	never,
+	CarbonioMailboxRestHandlerRequest<any>,
+	SuccessSoapResponse<any>
+> = () => {
 	const response = getEmptyResponse();
-	return res(ctx.json(response));
+	return HttpResponse.json(response);
 };

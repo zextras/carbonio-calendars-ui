@@ -81,7 +81,7 @@ export type XPropProps = [
 	}
 ];
 
-type AlarmDataActions =
+export type AlarmDataActions =
 	| 'DISPLAY'
 	| 'AUDIO'
 	| 'EMAIL'
@@ -97,7 +97,11 @@ type AlarmDataTrigger = [
 	{
 		rel: [
 			{
-				m: number;
+				s?: number;
+				h?: number;
+				d?: number;
+				w?: number;
+				m?: number;
 				neg: string;
 				related: 'START' | 'END';
 			}

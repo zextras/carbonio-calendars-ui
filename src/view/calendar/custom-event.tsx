@@ -16,7 +16,7 @@ import {
 	useModal,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import { useParams } from 'react-router-dom';
 
@@ -37,7 +37,6 @@ type CustomEventProps = {
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const createModal = useModal();
-	const tags = useTags();
 	const anchorRef = useRef(null);
 	const { action } = useParams<{ action: string }>();
 	const createSnackbar = useSnackbar();
@@ -171,7 +170,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 									</Row>
 								</Tooltip>
 							)}
-							<MemoCustomEventComponent tags={tags} event={event} title={title} />
+							<MemoCustomEventComponent event={event} title={title} />
 						</Container>
 						{!event.allDay && (
 							<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>

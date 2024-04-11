@@ -44,7 +44,7 @@ export function selectApptStatus({ appointments }: RootState): string {
 export function getSelectedEvents(
 	{ appointments }: RootState,
 	idMap: Record<string, Array<string>>,
-	calendars: Record<string, Folder>
+	calendars: Array<Folder>
 ): Array<EventType> {
 	return normalizeCalendarEvents(
 		values(

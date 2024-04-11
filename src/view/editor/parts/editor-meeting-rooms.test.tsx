@@ -11,7 +11,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import { map } from 'lodash';
 import moment from 'moment';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { EditorMeetingRooms } from './editor-meeting-rooms';
 import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
@@ -42,7 +42,7 @@ const setupBackendResponse = (items: Resource[]): void => {
 	const response = handleGetFreeBusyCustomResponse(freeBusyArrayItems);
 
 	getSetupServer().use(
-		rest.post('/service/soap/GetFreeBusyRequest', (req, res, ctx) => res(ctx.json(response)))
+		http.post('/service/soap/GetFreeBusyRequest', () => HttpResponse.json(response))
 	);
 };
 
@@ -65,7 +65,7 @@ describe('Editor meeting rooms', () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				label,
 				value: label,
 				email: faker.internet.email(),
@@ -74,9 +74,7 @@ describe('Editor meeting rooms', () => {
 		});
 		const soapResponse = getCustomResources(items);
 		getSetupServer().use(
-			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
-				res(ctx.json(soapResponse))
-			)
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(soapResponse))
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
@@ -100,7 +98,7 @@ describe('Editor meeting rooms', () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				label,
 				value: label,
 				email: faker.internet.email(),
@@ -112,9 +110,7 @@ describe('Editor meeting rooms', () => {
 		setupBackendResponse([items[0]]);
 
 		getSetupServer().use(
-			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
-				res(ctx.json(soapResponse))
-			)
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(soapResponse))
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
@@ -141,7 +137,7 @@ describe('Editor meeting rooms', () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				label,
 				value: label,
 				email: faker.internet.email(),
@@ -153,9 +149,7 @@ describe('Editor meeting rooms', () => {
 		setupBackendResponse([items[0]]);
 
 		getSetupServer().use(
-			rest.post('/service/soap/AutoCompleteGalRequest', async (req, res, ctx) =>
-				res(ctx.json(soapResponse))
-			)
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(soapResponse))
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 

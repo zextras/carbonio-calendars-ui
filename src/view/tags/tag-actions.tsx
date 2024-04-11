@@ -3,24 +3,19 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, {
-	ReactElement,
-	SyntheticEvent,
-	useCallback,
-	useContext,
-	useMemo,
-	useState
-} from 'react';
+import React, { ReactElement, SyntheticEvent, useCallback, useMemo, useState } from 'react';
 
 import {
 	Button,
 	Checkbox,
+	CreateModalFn,
+	CreateSnackbarFn,
 	Icon,
-	ModalManagerContext,
 	Padding,
 	Row,
-	SnackbarManagerContext,
-	Text
+	Text,
+	useModal,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { ZIMBRA_STANDARD_COLORS, useTags, Tag, t } from '@zextras/carbonio-shell-ui';
 import { differenceBy, includes, noop, reduce } from 'lodash';
@@ -49,11 +44,13 @@ export type ReturnType = {
 };
 
 export type ArgumentType = {
-	createModal?: unknown;
-	createSnackbar?: unknown;
+	createModal?: CreateModalFn;
+	createSnackbar?: CreateSnackbarFn;
 	items?: ReturnType;
 	tag?: ItemType;
 };
+
+const labelTag: string = t('label.tags', 'Tags');
 
 export const createTag = ({ createModal }: ArgumentType): ReturnType => ({
 	id: EventActionsEnum.NEW_TAG,
@@ -63,13 +60,12 @@ export const createTag = ({ createModal }: ArgumentType): ReturnType => ({
 		if (e) {
 			e.stopPropagation();
 		}
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		const closeModal = createModal(
+
+		const closeModal = createModal?.(
 			{
 				children: (
 					<StoreProvider>
-						<CreateUpdateTagModal onClose={(): void => closeModal()} />
+						<CreateUpdateTagModal onClose={(): void => closeModal?.()} />
 					</StoreProvider>
 				)
 			},
@@ -157,7 +153,7 @@ export const deleteTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 });
 
 export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType }): ReactElement => {
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 
 	const [checked, setChecked] = useState(includes(event.resource.tags, tag.id));
 	const [isHovering, setIsHovering] = useState(false);
@@ -167,12 +163,10 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 
 			itemActionRequest({
 				op: value ? '!tag' : 'tag',
-				inviteId: event.resource.id,
+				id: event.resource.id,
 				tagName: tag.name
 			})
 				.then(() => {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
 					createSnackbar({
 						key: `tag`,
 						replace: true,
@@ -183,13 +177,11 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 							: t('snackbar.tag_applied', {
 									tag: tag.name,
 									defaultValue: '"{{tag}}" tag applied'
-							  }),
+								}),
 						autoHideTimeout: 3000
 					});
 				})
 				.catch(() => {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
 					createSnackbar({
 						key: `tag`,
 						replace: true,
@@ -202,8 +194,6 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 		},
 		[event?.resource?.id, createSnackbar, tag.name]
 	);
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	const tagColor = useMemo(() => ZIMBRA_STANDARD_COLORS[tag.color || 0].hex, [tag.color]);
 	const tagIcon = useMemo(() => (checked ? 'Tag' : 'TagOutline'), [checked]);
 	const tagIconOnHovered = useMemo(() => (checked ? 'Untag' : 'Tag'), [checked]);
@@ -266,8 +256,6 @@ export const applyTag = ({
 				keepOpen: true,
 				customComponent: <TagsDropdownItem tag={v} event={event} />
 			};
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			acc.push(item);
 			return acc;
 		},
@@ -293,7 +281,7 @@ export const applyTag = ({
 				items: tagItem,
 				onClick: noop,
 				icon: 'TagsMoreOutline',
-				label: t('label.tags', 'Tags'),
+				label: labelTag,
 				disabled: false,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				customComponent: (
@@ -303,26 +291,26 @@ export const applyTag = ({
 						</Padding>
 						<Row takeAvailableSpace mainAlignment="space-between">
 							<Padding right="small">
-								<Text>{t('label.tags', 'Tags')}</Text>
+								<Text>{labelTag}</Text>
 							</Padding>
 						</Row>
 					</Row>
 				)
-		  }
+			}
 		: {
 				id: EventActionsEnum.APPLY_TAG,
 				items: [],
 				onClick: noop,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-				label: t('label.tags', 'Tags'),
+				label: labelTag,
 				icon: 'TagsMoreOutline',
 				disabled: true
-		  };
+			};
 };
 
 export const useGetTagsActions = ({ tag }: ArgumentType): Array<ReturnType> => {
-	const createModal = useContext(ModalManagerContext);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createModal = useModal();
+	const createSnackbar = useSnackbar();
 	return useMemo(
 		() => [
 			createTag({ createModal }),

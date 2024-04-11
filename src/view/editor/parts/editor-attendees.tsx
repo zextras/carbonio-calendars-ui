@@ -52,8 +52,6 @@ export const AttendeesContainer = styled.div`
 export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElement => {
 	const [t] = useTranslation();
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
-	const [showOptionals, setShowOptional] = useState(false);
-	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
 	const dispatch = useAppDispatch();
 	const attendees = useAppSelector(selectEditorAttendees(editorId));
 	const uid = useAppSelector(selectEditorUid(editorId));
@@ -62,6 +60,9 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
+
+	const [showOptionals, setShowOptional] = useState(!!optionalAttendees?.length);
+	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, attendees, uid);
 
@@ -123,7 +124,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 										type: 'icon',
 										icon: 'AlertTriangle'
 									} as const
-							  ]
+								]
 							: oldActions;
 					return {
 						...chip,

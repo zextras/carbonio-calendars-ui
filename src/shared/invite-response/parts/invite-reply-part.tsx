@@ -3,16 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback, useState, useContext, useMemo } from 'react';
+import React, { FC, ReactElement, useCallback, useState, useMemo } from 'react';
 
 import {
-	SnackbarManagerContext,
 	Container,
 	Padding,
 	Button,
 	Divider,
 	Row,
-	Checkbox
+	Checkbox,
+	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { addBoard, Board } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
@@ -74,7 +74,7 @@ const normalizeEditorFromMailMessage = (
 const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): ReactElement => {
 	const [notifyOrganizer, setNotifyOrganizer] = useState(true);
 	const [activeCalendar, setActiveCalendar] = useState<Folder | null>(null);
-	const createSnackbar = useContext(SnackbarManagerContext);
+	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
@@ -125,9 +125,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	}, [calendarFolders, dispatch, inviteId, message.invite]);
 
 	const onAction = useCallback(
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		(action: string): any =>
+		(action: string): (() => void) =>
 			(): void => {
 				sendResponse({
 					action,
@@ -149,7 +147,6 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	);
 	return (
 		<>
-			<Padding top="small" />
 			<Row width="fill" mainAlignment="space-between" padding={{ vertical: 'small' }}>
 				<Container width="35%" mainAlignment="flex-start" crossAlignment="baseline">
 					<Checkbox

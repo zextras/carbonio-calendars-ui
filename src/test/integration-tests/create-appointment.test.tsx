@@ -9,7 +9,7 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { map, values } from 'lodash';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import {
@@ -48,7 +48,7 @@ describe('create single appointment with default values', () => {
 		// SETUP MOCKS, STORE AND HOOK
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const { result } = setupHook(useOnClickNewButton, { store });
-		const newTitle = faker.random.word();
+		const newTitle = faker.lorem.word();
 
 		// CREATE APPOINTMENT FROM CREATE NEW APPOINTMENT BUTTON FUNCTION
 		expect(store.getState().editor.editors).toEqual({});
@@ -113,7 +113,7 @@ describe('create single appointment with custom values', () => {
 		const userAccount = getMockedAccountItem({
 			identity1: {
 				...previousEditor.organizer,
-				id: faker.datatype.uuid(),
+				id: faker.string.uuid(),
 				email: faker.internet.email()
 			},
 			identity2
@@ -129,25 +129,23 @@ describe('create single appointment with custom values', () => {
 		expect(previousEditor.isNew).toEqual(true);
 
 		// SETTING EDITOR NEW VALUES
-		const newTitle = faker.random.word();
-		const newLocation = faker.random.word();
+		const newTitle = faker.lorem.word();
+		const newLocation = faker.lorem.word();
 		const newAttendeesInput = newAttendees.join(' ');
 		const newOptionalsInput = newOptionals.join(' ');
 
 		getSetupServer().use(
-			rest.post('/service/soap/getFreeBusyRequest', async (req, res, ctx) =>
-				res(
-					ctx.json({
-						Header: {
-							context: {
-								session: { id: 191337, _content: 191337 }
-							}
-						},
-						Body: {
-							GetFreeBusyResponse: { usr: map(newAttendees, (attendee) => ({ id: attendee })) }
+			http.post('/service/soap/getFreeBusyRequest', async () =>
+				HttpResponse.json({
+					Header: {
+						context: {
+							session: { id: 191337, _content: 191337 }
 						}
-					})
-				)
+					},
+					Body: {
+						GetFreeBusyResponse: { usr: map(newAttendees, (attendee) => ({ id: attendee })) }
+					}
+				})
 			)
 		);
 

@@ -11,13 +11,11 @@ export type ItemActionFulfilledType = { m: any; Fault?: never; error?: never };
 export type ItemActionReturnType = ItemActionFulfilledType | ItemActionRejectedType;
 
 export const itemActionRequest = async ({
-	inviteId,
 	id,
 	op,
 	tagName,
 	parent
 }: {
-	inviteId?: string;
 	id?: string;
 	op: string;
 	tagName?: string;
@@ -28,7 +26,7 @@ export const itemActionRequest = async ({
 		action: omitBy(
 			{
 				op,
-				id: inviteId ?? id,
+				id,
 				tn: tagName,
 				l: parent
 			},

@@ -7,7 +7,8 @@ import React from 'react';
 
 import { CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { filter, isEqual, uniqWith } from 'lodash';
+import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
+import moment from 'moment';
 
 import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
@@ -78,7 +79,7 @@ export const moveToRoot =
 							: t(
 									'message.snackbar.calendar_moved_to_root_folder',
 									'Calendar moved to Root folder'
-							  ),
+								),
 						autoHideTimeout: 3000
 					});
 				} else {
@@ -310,3 +311,39 @@ export const findShares =
 			}
 		});
 	};
+
+export const exportCalendarICSFn =
+	({ item }: { item: { name: string; id: string } }): ((e?: ActionsClick) => void) =>
+	() => {
+		const downloadICS = (name: string, uri: string): void => {
+			const link = document.createElement('a');
+			link.download = name;
+			link.href = uri;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		};
+		const dateFormat = moment().format('YYYY-MM-DD');
+		downloadICS(
+			`${lowerCase(item?.name)}-${dateFormat}.ics`,
+			`/service/home/~/?auth=co&id=${item.id}&mime=text/plain&noAttach=1&icalAttach=none`
+		);
+	};
+
+export const importCalendarICSFn = async (
+	files: FileList,
+	userMail: string,
+	calendarName: string
+): Promise<Array<{ status: number }>> =>
+	Promise.all(
+		map(files, (file) =>
+			fetch(`/home/${userMail}/${calendarName}?fmt=ics&charset=UTF-8`, {
+				headers: {
+					'Content-Type': 'text/calendar',
+					'Access-Control-Allow-Origin': 'same origin'
+				},
+				method: 'POST',
+				body: file
+			})
+		)
+	);

@@ -21,15 +21,18 @@ type GetInviteProps = { context?: Partial<Invite>; event?: GetEventProps };
 
 const getDefaultInvite = (event?: GetEventProps): Invite => {
 	const folderId = event?.resource?.calendar?.id ?? 'folderId';
-	const alarmStringValue = event?.resource?.alarm || null;
-	const attendeeFirstName = faker.name.firstName();
-	const attendeeLastName = faker.name.lastName();
-	const attendeeFullName = faker.name.fullName({
+	const alarmStringValue = event?.resource?.alarmData;
+	const attendeeFirstName = faker.person.firstName();
+	const attendeeLastName = faker.person.lastName();
+	const attendeeFullName = faker.person.fullName({
 		firstName: attendeeFirstName,
 		lastName: attendeeLastName
 	});
 
-	const attendeeEmail = faker.internet.email(attendeeFirstName, attendeeLastName);
+	const attendeeEmail = faker.internet.email({
+		firstName: attendeeFirstName,
+		lastName: attendeeLastName
+	});
 
 	const attendee =
 		event?.resource?.iAmAttendee ?? event?.resource?.hasOtherAttendees
@@ -41,7 +44,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
 					url: attendeeEmail
-			  } as const)
+				} as const)
 			: undefined;
 	return {
 		apptId: event?.resource?.id ?? 'apptId',
@@ -51,7 +54,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 		parent: folderId,
 		flags: event?.resource?.flags ?? '',
 		parts: [], // event doesn't have this
-		alarmValue: event?.resource?.alarmData?.[0]?.trigger?.[0]?.rel?.[0]?.m.toString(),
+		alarmValue: event?.resource?.alarmData?.[0]?.trigger?.[0]?.rel?.[0]?.m?.toString(),
 		alarmString: getAlarmToString(alarmStringValue) ?? 'never',
 		class: event?.resource?.class ?? 'PUB',
 		compNum: event?.resource?.compNum ?? 0,
@@ -93,7 +96,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 						tz: 'string',
 						rangeType: 1
 					}
-			  ]
+				]
 			: undefined,
 		tagNamesList: '',
 		tags: event?.resource?.tags ?? [],
@@ -106,12 +109,12 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 					AC: [
 						{
 							email: attendee.a,
-							isOptional: !(attendee.role === PARTICIPANT_ROLE.REQUIRED),
+							isOptional: attendee.role !== PARTICIPANT_ROLE.REQUIRED,
 							name: attendeeFullName,
 							response: attendee.ptst as ParticipationStatus
 						}
 					]
-			  }
+				}
 			: {},
 		alarm: event?.resource?.alarm ?? true,
 		alarmData: event?.resource?.alarmData,

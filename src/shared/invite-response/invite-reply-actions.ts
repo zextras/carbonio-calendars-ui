@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-/* eslint-disable import/extensions */
-import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
+import { FOLDERS, replaceHistory, t } from '@zextras/carbonio-shell-ui';
 
+import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { AppDispatch } from '../../store/redux';
 
@@ -14,8 +16,8 @@ type ResponseAction = {
 	notifyOrganizer: boolean;
 	action: string;
 	dispatch: AppDispatch;
-	activeCalendar: any;
-	createSnackbar: any;
+	activeCalendar: Folder | null;
+	createSnackbar: CreateSnackbarFn;
 	parent: string;
 };
 export const sendResponse = ({
@@ -43,20 +45,8 @@ export const sendResponse = ({
 				action === 'ACCEPT'
 					? t('message.snackbar.invite.accept', 'You’ve replied as Accepted')
 					: action === 'TENTATIVE'
-					? t('message.snackbar.invite.tentative', 'You’ve replied as Tentative')
-					: t('message.snackbar.invite.decline', 'You’ve replied as Declined');
-
-			if (action === 'ACCEPT' || action === 'TENTATIVE') {
-				activeCalendar &&
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					activeCalendar?.zid !== '10' &&
-					dispatch(
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						moveAppointment({ inviteId, l: activeCalendar?.zid || '10', fromMail: true })
-					);
-			}
+						? t('message.snackbar.invite.tentative', 'You’ve replied as Tentative')
+						: t('message.snackbar.invite.decline', 'You’ve replied as Declined');
 			createSnackbar({
 				key: `invite_${action}`,
 				replace: true,
@@ -64,6 +54,17 @@ export const sendResponse = ({
 				label: snackbarLabel,
 				autoHideTimeout: 3000
 			});
+			if (action === 'ACCEPT' || action === 'TENTATIVE') {
+				const calendarId = activeCalendar?.id ?? (activeCalendar as LinkFolder)?.zid;
+				calendarId &&
+					calendarId !== FOLDERS.CALENDAR &&
+					dispatch(
+						moveAppointmentRequest({
+							id: inviteId,
+							l: calendarId || FOLDERS.CALENDAR
+						})
+					);
+			}
 		} else {
 			createSnackbar({
 				key: `invite_${action}_error`,

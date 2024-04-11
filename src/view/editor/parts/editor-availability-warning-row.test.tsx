@@ -331,13 +331,13 @@ describe('editor availability warning row', () => {
 			const busyStart = moment().add(5, 'hours').valueOf();
 			const busyEnd = moment().add(5, 'hours').add(30, 'minutes').valueOf();
 
-			const roomId = faker.datatype.uuid();
+			const roomId = faker.string.uuid();
 			const roomEmail = faker.internet.email();
 
 			const editorMeetingRoomItem = {
 				id: roomId,
-				label: faker.random.word(),
-				value: faker.random.word(),
+				label: faker.lorem.word(),
+				value: faker.lorem.word(),
 				email: roomEmail,
 				type: CALENDAR_RESOURCES.ROOM
 			};
@@ -377,14 +377,14 @@ describe('editor availability warning row', () => {
 			});
 
 			const items = map({ length: 4 }, () => ({
-				id: faker.datatype.uuid(),
-				label: faker.random.word(),
-				value: faker.random.word(),
+				id: faker.string.uuid(),
+				label: faker.lorem.word(),
+				value: faker.lorem.word(),
 				email: faker.internet.email(),
 				type: CALENDAR_RESOURCES.ROOM
 			})).concat([editorMeetingRoomItem]);
 
-			const label = faker.random.words(10);
+			const label = faker.lorem.words(10);
 			setupTest(
 				<EditorAvailabilityWarningRow
 					editorId={editor.id}
@@ -404,13 +404,13 @@ describe('editor availability warning row', () => {
 			const freeStart = moment().startOf('day').valueOf();
 			const freeEnd = moment().add(5, 'hours').valueOf();
 
-			const roomId = faker.datatype.uuid();
+			const roomId = faker.string.uuid();
 			const roomEmail = faker.internet.email();
 
 			const editorMeetingRoomItem = {
 				id: roomId,
-				label: faker.random.word(),
-				value: faker.random.word(),
+				label: faker.lorem.word(),
+				value: faker.lorem.word(),
 				email: roomEmail,
 				type: CALENDAR_RESOURCES.ROOM
 			};
@@ -450,14 +450,14 @@ describe('editor availability warning row', () => {
 			});
 
 			const items = map({ length: 4 }, () => ({
-				id: faker.datatype.uuid(),
-				label: faker.random.word(),
-				value: faker.random.word(),
+				id: faker.string.uuid(),
+				label: faker.lorem.word(),
+				value: faker.lorem.word(),
 				email: faker.internet.email(),
 				type: CALENDAR_RESOURCES.ROOM
 			})).concat([editorMeetingRoomItem]);
 
-			const label = faker.random.words(10);
+			const label = faker.lorem.words(10);
 			setupTest(
 				<EditorAvailabilityWarningRow
 					editorId={editor.id}

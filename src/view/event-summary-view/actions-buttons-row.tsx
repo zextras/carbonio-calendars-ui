@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-
 import React, { ReactElement } from 'react';
 
 import { Button, Dropdown, Padding, Row } from '@zextras/carbonio-design-system';

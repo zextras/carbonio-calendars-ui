@@ -6,8 +6,9 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Select } from '@zextras/carbonio-design-system';
-import { FOLDERS, LinkFolder, ROOT_NAME, t, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, LinkFolder, ROOT_NAME, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { filter, find, map, reject } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import LabelFactory, { ItemFactory } from './select-label-factory';
 import {
@@ -41,6 +42,7 @@ export const CalendarSelector = ({
 	showCalWithWritePerm = true,
 	disabled
 }: CalendarSelectorProps): ReactElement | null => {
+	const [t] = useTranslation();
 	const rootAccountId = getRootAccountId(calendarId);
 
 	const allCalendarsByRoot = useFoldersArrayByRoot(rootAccountId ?? FOLDERS.USER_ROOT);
@@ -58,7 +60,7 @@ export const CalendarSelector = ({
 			showCalWithWritePerm
 				? filter(calendars, (calendar) =>
 						calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
-				  )
+					)
 				: calendars,
 		[calendars, showCalWithWritePerm]
 	);
@@ -93,7 +95,7 @@ export const CalendarSelector = ({
 					)
 				};
 			}),
-		[disabled, requiredCalendars]
+		[disabled, requiredCalendars, t]
 	);
 
 	const defaultCalendarSelection = useMemo(() => {

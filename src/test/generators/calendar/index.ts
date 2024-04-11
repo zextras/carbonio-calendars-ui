@@ -38,7 +38,7 @@ const getCalendar = (calendar?: any): Folder => {
 		i4u: undefined,
 		isLink: false,
 		l: '1',
-		luuid: faker.datatype.uuid(),
+		luuid: faker.string.uuid(),
 		md: undefined,
 		meta: undefined,
 		ms: 1,
@@ -52,7 +52,7 @@ const getCalendar = (calendar?: any): Folder => {
 		s: 0,
 		u: undefined,
 		url: undefined,
-		uuid: faker.datatype.uuid(),
+		uuid: faker.string.uuid(),
 		view: 'appointment',
 		webOfflineSyncDays: 0,
 		...(calendar ?? {})

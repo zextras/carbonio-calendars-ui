@@ -9,7 +9,7 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { map, values } from 'lodash';
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { editAppointment } from '../../actions/appointment-actions-fn';
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
@@ -106,25 +106,23 @@ describe.each`
 		// SETTING EDITOR NEW VALUES
 		const newAttendees = map(mockedData.editor.getRandomAttendees(), 'email');
 		const newOptionals = map(mockedData.editor.getRandomAttendees(), 'email');
-		const newTitle = faker.random.word();
-		const newLocation = faker.random.word();
+		const newTitle = faker.lorem.word();
+		const newLocation = faker.lorem.word();
 		const newAttendeesInput = newAttendees.join(' ');
 		const newOptionalsInput = newOptionals.join(' ');
 
 		getSetupServer().use(
-			rest.post('/service/soap/getFreeBusyRequest', async (req, res, ctx) =>
-				res(
-					ctx.json({
-						Header: {
-							context: {
-								session: { id: 191337, _content: 191337 }
-							}
-						},
-						Body: {
-							GetFreeBusyResponse: { usr: map(newAttendees, (attendee) => ({ id: attendee })) }
+			http.post('/service/soap/getFreeBusyRequest', async () =>
+				HttpResponse.json({
+					Header: {
+						context: {
+							session: { id: 191337, _content: 191337 }
 						}
-					})
-				)
+					},
+					Body: {
+						GetFreeBusyResponse: { usr: map(newAttendees, (attendee) => ({ id: attendee })) }
+					}
+				})
 			)
 		);
 
