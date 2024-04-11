@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.9.1...v1.10.0) (2024-04-11)
+
+
+### Features
+
+* events can be resized from calendar view ([8e10b0e](https://github.com/zextras/carbonio-calendars-ui/commit/8e10b0eae21a3b16387569d20c411d0f0b3e4e72))
+* show availability from mail invitation ([fcb2dfe](https://github.com/zextras/carbonio-calendars-ui/commit/fcb2dfe9ee15b7ae98443259eb6f563cc836b6c3))
+* update create component integration with the new fields ([a9d139a](https://github.com/zextras/carbonio-calendars-ui/commit/a9d139a6cc159e80b42707eafbc7f66973a66283))
+* user can export appointments ([4a1f632](https://github.com/zextras/carbonio-calendars-ui/commit/4a1f63294f71481d6683b43e662c34c744a519a3))
+* user can export calendar ics ([02a11ce](https://github.com/zextras/carbonio-calendars-ui/commit/02a11ce07b60aefdefe3a6129167510047d95c6d))
+* user can import calendar ics ([291ab9d](https://github.com/zextras/carbonio-calendars-ui/commit/291ab9df52927c2196e0e73d2c181c3f2c0290d8))
+
+
+### Bug Fixes
+
+* correct the organizer of invitation send by a shared account ([#420](https://github.com/zextras/carbonio-calendars-ui/issues/420)) ([ec8b78c](https://github.com/zextras/carbonio-calendars-ui/commit/ec8b78cb8d60e4a64f0b6e3006d3f98aea44ce6a))
+* export disabled in shared link ([9c906d4](https://github.com/zextras/carbonio-calendars-ui/commit/9c906d4707d7e7ec61b081859f63ef0a26e6f9fe))
+* export disabled in shared link ([834cd4b](https://github.com/zextras/carbonio-calendars-ui/commit/834cd4b87acbc2df06c1f470da834e36a7d79f54))
+* show optionals field if they are available ([5f361c7](https://github.com/zextras/carbonio-calendars-ui/commit/5f361c75dde9afc64acdf534dcadc87cfb1de3b8))
+* show optionals field if they are available ([ed0c0d5](https://github.com/zextras/carbonio-calendars-ui/commit/ed0c0d5461bffae6cf90206d54f228860808dc98))
+* user can fire click events properly ([3dda1c1](https://github.com/zextras/carbonio-calendars-ui/commit/3dda1c147bca19b4299ebff46b7d846319a65270))
+* user can select a different calendar from mail invitation ([0001eca](https://github.com/zextras/carbonio-calendars-ui/commit/0001eca503fd406e970a6a81d940a16a15f93204))
+* user can unset appointments reminder ([c08f282](https://github.com/zextras/carbonio-calendars-ui/commit/c08f2820df5d4dd79735b86e17a172129c8d934f))
+* when an appointment lasts multiple days both dates are complete ([c03c22a](https://github.com/zextras/carbonio-calendars-ui/commit/c03c22a631860de86b28605ff282191afc496d29))
+
 ### [1.9.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.9.0...v1.9.1) (2024-02-29)
 
 ## [1.9.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.8.2...v1.9.0) (2024-02-16)
