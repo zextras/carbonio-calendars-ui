@@ -109,7 +109,7 @@
         "delete_permanently": "Supprimer définitivement",
         "default_view": "Vue par défaut",
         "apple_ical": "Apple iCal",
-        "attachment_0": "Pièce jointe",
+        "attachment_0": "pièce jointe",
         "attachment_1": "pièces jointes",
         "attachment_2": "pièces jointes",
         "auto_add_rcvd_app": "Ajouter automatiquement les rendez-vous reçus dans le calendrier",
@@ -513,7 +513,7 @@
         "url_copied": "{{title}} copié",
         "tag_applied": "Étiquette {{tag}} appliquée",
         "tag_removed": "L'étiquette {{tag}} a été supprimée",
-        "email_copied_to_clipboard": "L'email a été copié dans le presse papier."
+        "email_copied_to_clipboard": "Email copié dans le presse papier."
     },
     "share_invite_resent": "Invitation à partager envoyée",
     "resend_mail_notification_about_this_share": "Envoyer une notification par email à propos de ce partage",
