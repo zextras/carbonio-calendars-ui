@@ -67,14 +67,14 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		() =>
 			reduce(
 				calendars,
-				(acc: Array<string>, v: Folder, k: number) => {
+				(acc: Array<string>, v: Folder) => {
 					if (hasId(v, FOLDERS.TRASH) && includeTrash && v.checked) {
-						acc.push(String(k));
+						acc.push(v.id);
 					}
 					if (v.isLink && includeSharedFolders && v.checked) {
-						acc.push(String(k));
+						acc.push(v.id);
 					}
-					if (!hasId(v, FOLDERS.TRASH) && !v.isLink && v.checked) acc.push(String(k));
+					if (!hasId(v, FOLDERS.TRASH) && !v.isLink && v.checked) acc.push(v.id);
 					return acc;
 				},
 				[]
@@ -83,7 +83,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	);
 
 	const foldersToSearchInQuery = useMemo(
-		() => `( ${map(searchInFolders, (folder) => `inid:"${folder}"`).join(' OR ')})`,
+		() => map(searchInFolders, (folder) => `inid:"${folder}"`).join(' OR '),
 		[searchInFolders]
 	);
 
@@ -192,7 +192,7 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 								dateStart={spanStart}
 								dateEnd={spanEnd}
 							/>
-							<Container background="gray5" width="75%" mainAlignment="center">
+							<Container background={'gray5'} width="75%" mainAlignment="center">
 								<SearchPanel appointments={appointments} />
 							</Container>
 						</Route>
