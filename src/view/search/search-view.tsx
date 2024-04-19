@@ -82,10 +82,10 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		[calendars, includeSharedFolders, includeTrash]
 	);
 
-	const foldersToSearchInQuery = useMemo(
-		() => map(searchInFolders, (folder) => `inid:"${folder}"`).join(' OR '),
-		[searchInFolders]
-	);
+	const foldersToSearchInQuery = useMemo(() => {
+		const folderString = map(searchInFolders, (folder) => `inid:"${folder}"`).join(' OR ');
+		return `( ${folderString})`;
+	}, [searchInFolders]);
 
 	const [spanStart, setSpanStart] = useState(() => DEFAULT_DATE_START);
 	const [spanEnd, setSpanEnd] = useState(() => DEFAULT_DATE_END);
