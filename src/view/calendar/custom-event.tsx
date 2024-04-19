@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useEffect, useRef } from 'react';
+import React, { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
 	Container,
@@ -41,6 +41,15 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const { action } = useParams<{ action: string }>();
 	const createSnackbar = useSnackbar();
 	const summaryViewId = useSummaryView();
+	const [tooltipDisabled, setTooltipDisabled] = useState(false);
+
+	const enableOuterTooltip = useCallback(() => {
+		setTooltipDisabled(false);
+	}, []);
+
+	const disableOuterTooltip = useCallback(() => {
+		setTooltipDisabled(true);
+	}, []);
 
 	const onEntireSeries = useCallback((): void => {
 		replaceHistory(
@@ -122,78 +131,112 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 
 	return (
 		<>
-			<Container ref={anchorRef} height="100%" data-testid="calendar-event">
-				<Dropdown
-					contextMenu
-					width="cal(min(100%,12.5rem))"
-					style={{ width: '100%', height: '100%' }}
-					items={actions ?? []}
-					display="block"
-					onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
-						if (e) (e as Event)?.stopImmediatePropagation?.();
-					}}
-				>
-					<Container
-						width="fill"
-						height="fill"
-						background={'transparent'}
-						mainAlignment="flex-start"
-						crossAlignment="flex-start"
-						onDoubleClick={showPanelView}
-						onClick={toggleOpen}
-						data-testid="calendar-event-inner-container"
+			<Tooltip
+				label={title}
+				placement="top"
+				disabled={event.resource.class === 'PRI' || tooltipDisabled}
+			>
+				<Container ref={anchorRef} height="100%" data-testid="calendar-event">
+					<Dropdown
+						contextMenu
+						width="cal(min(100%,12.5rem))"
+						style={{ width: '100%', height: '100%' }}
+						items={actions ?? []}
+						display="block"
+						onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
+							if (e) (e as Event)?.stopImmediatePropagation?.();
+						}}
 					>
 						<Container
-							orientation="horizontal"
 							width="fill"
-							height="fit"
-							crossAlignment="center"
+							height="fill"
+							background={'transparent'}
 							mainAlignment="flex-start"
+							crossAlignment="flex-start"
+							onDoubleClick={showPanelView}
+							onClick={toggleOpen}
+							data-testid="calendar-event-inner-container"
 						>
-							{event.resource.class === 'PRI' && (
-								<Tooltip label={t('label.private', 'Private')} placement="top">
-									<Row padding={{ right: 'extrasmall' }}>
-										<Icon color="currentColor" icon="Lock" style={{ minWidth: '1rem' }} />
-									</Row>
-								</Tooltip>
-							)}
-							{event.resource.inviteNeverSent && (
-								<Tooltip
-									label={t(
-										'event.action.invitation_not_sent_yet',
-										'The invitation has not been sent yet'
-									)}
-									placement="bottom"
-								>
-									<Row padding={{ right: 'extrasmall' }}>
-										<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '1rem' }} />
-									</Row>
-								</Tooltip>
-							)}
-							<MemoCustomEventComponent event={event} title={title} />
-						</Container>
-						{!event.allDay && (
-							<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
+							<Container
+								orientation="horizontal"
+								width="fill"
+								height="fit"
+								crossAlignment="center"
+								mainAlignment="flex-start"
+							>
+								{event.resource.class === 'PRI' && (
+									<Tooltip label={t('label.private', 'Private')} placement="top">
+										<Row padding={{ right: 'extrasmall' }}>
+											<Icon color="currentColor" icon="Lock" style={{ minWidth: '1rem' }} />
+										</Row>
+									</Tooltip>
+								)}
+								{event.resource.inviteNeverSent && (
+									<Tooltip
+										label={t(
+											'event.action.invitation_not_sent_yet',
+											'The invitation has not been sent yet'
+										)}
+										placement="bottom"
+									>
+										<Row padding={{ right: 'extrasmall' }}>
+											<Icon color="error" icon="AlertCircleOutline" style={{ minWidth: '1rem' }} />
+										</Row>
+									</Tooltip>
+								)}
+								<MemoCustomEventComponent event={event} title={title} />
+							</Container>
+							{!event.allDay && (
 								<Container
 									orientation="horizontal"
 									width="fill"
 									crossAlignment="flex-start"
 									mainAlignment="flex-start"
 								>
-									<Text
-										overflow="break-word"
-										color="currentColor"
-										style={{ lineHeight: '1.4em' }}
-										weight="bold"
+									<Row
+										orientation="horizontal"
+										wrap="nowrap"
+										height="fill"
+										crossAlignment="flex-start"
 									>
-										{title}
-									</Text>
+										{event?.resource?.isRecurrent && (
+											<Row
+												crossAlignment="flex-start"
+												height="fill"
+												onMouseEnter={disableOuterTooltip}
+												onMouseLeave={enableOuterTooltip}
+												onFocus={disableOuterTooltip}
+												onBlur={enableOuterTooltip}
+											>
+												<Tooltip
+													label={t('label.recurrent_appointment', 'Recurrent appointment')}
+													placement="top"
+												>
+													<Row
+														padding={{ vertical: 'extrasmall', right: 'extrasmall' }}
+														crossAlignment="flex-start"
+													>
+														<Icon icon="Repeat" style={{ minWidth: '1rem' }} />
+													</Row>
+												</Tooltip>
+											</Row>
+										)}
+										<Text
+											overflow="break-word"
+											color="currentColor"
+											style={{ lineHeight: '1.4em' }}
+											weight="bold"
+										>
+											{title}
+										</Text>
+									</Row>
 								</Container>
-							</Tooltip>
-						)}
-					</Container>
-				</Dropdown>
-			</Container>
+							)}
+						</Container>
+					</Dropdown>
+				</Container>
+			</Tooltip>
+
 			<Popover
 				anchorEl={anchorRef}
 				open={summaryViewId === event.id}
