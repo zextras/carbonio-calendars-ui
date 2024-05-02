@@ -46,7 +46,6 @@ export const useCalendarActions = (
 		editCalendarItem({ createModal, item }),
 		deleteCalendarItem({ createModal, item }),
 		removeFromListItem({ item, createSnackbar }),
-		shareCalendarItem({ createModal, item }),
 		shareCalendarUrlItem({ createModal, item }),
 		findSharesItem({ createModal, item }),
 		sharesInfoItem({ item, createModal }),

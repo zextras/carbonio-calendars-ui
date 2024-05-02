@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.10.0...v1.10.1) (2024-04-29)
+
+
+### Bug Fixes
+
+* fix query string composition ([cbb83dd](https://github.com/zextras/carbonio-calendars-ui/commit/cbb83dd125aee42443e047a66491461629629185))
+* search view query is passing worng ids ([23de62c](https://github.com/zextras/carbonio-calendars-ui/commit/23de62c8a115b4044b83a9cb3eeb9700814d9c8a))
+
 ## [1.10.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.9.1...v1.10.0) (2024-04-11)
 
 
