@@ -100,6 +100,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const summaryViewId = useSummaryView();
 	const [t] = useTranslation();
 	const [isOuterTooltipDisabled, setIsOuterTooltipDisabled] = useState(false);
+	const recurrentLabel = t('label.recurrent', 'Recurrent appointment');
 
 	const eventDiff = useMemo(
 		() => moment(event.end).diff(event.start, 'minutes'),
@@ -237,7 +238,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										iconName={'Repeat'}
 										iconColor={'currentColor'}
 										isIconVisible={event.resource.isRecurrent}
-										tooltipLabel={'Recurrent'}
+										tooltipLabel={recurrentLabel}
 										disableOuterTooltip={setIsOuterTooltipDisabled}
 									/>
 								)}
@@ -309,7 +310,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 																	iconName={'Repeat'}
 																	iconColor={'currentColor'}
 																	isIconVisible={event.resource.isRecurrent}
-																	tooltipLabel={'Recurrent'}
+																	tooltipLabel={recurrentLabel}
 																	disableOuterTooltip={setIsOuterTooltipDisabled}
 																/>
 															)}
@@ -333,7 +334,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												iconName={'Repeat'}
 												iconColor={'currentColor'}
 												isIconVisible={event.resource.isRecurrent}
-												tooltipLabel={'Recurrent'}
+												tooltipLabel={recurrentLabel}
 												disableOuterTooltip={setIsOuterTooltipDisabled}
 											/>
 										)}

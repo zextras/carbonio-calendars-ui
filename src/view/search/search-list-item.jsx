@@ -162,6 +162,18 @@ const SearchListItem = ({ item, active }) => {
 							mainAlignment="flex-end"
 							takeAvailableSpace={!iconsStyle}
 						>
+							{item.resource?.isRecurrent && (
+								<>
+									<Padding left="small" />
+									<Row mainAlignment="flex-end">
+										<Tooltip label={t('label.recurrent', 'Recurrent appointment')}>
+											<div>
+												<Icon icon="Repeat" size="medium" color="gray0" />
+											</div>
+										</Tooltip>
+									</Row>
+								</>
+							)}
 							{showTagIcon && (
 								<Padding left="small">
 									<Icon data-testid="TagIcon" icon={tagIcon} color={tagIconColor} />
@@ -191,18 +203,6 @@ const SearchListItem = ({ item, active }) => {
 										<Tooltip label={t('is_private', 'Is private')}>
 											<div>
 												<Icon data-testid="LockIcon" icon="Lock" size="medium" color="gray0" />
-											</div>
-										</Tooltip>
-									</Row>
-								</>
-							)}
-							{item.resource?.isRecurrent && (
-								<>
-									<Padding left="small" />
-									<Row mainAlignment="flex-end">
-										<Tooltip label={t('is_recurrent', 'Is recurrent')}>
-											<div>
-												<Icon data-testid="Refresh" icon="Refresh" size="medium" color="gray0" />
 											</div>
 										</Tooltip>
 									</Row>
