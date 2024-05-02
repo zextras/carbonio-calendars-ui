@@ -7,26 +7,22 @@ import React, { ReactElement, useCallback, useContext, useMemo, useState } from 
 
 import {
 	Container,
-	Icon,
+	DateTimePicker,
 	Input,
-	Padding,
 	Radio,
 	RadioGroup,
 	Row,
 	Text
 } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
 import { isNaN, isNil, isNumber } from 'lodash';
 import moment from 'moment';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import { useTranslation } from 'react-i18next';
 import momentLocalizer from 'react-widgets-moment';
 
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { RADIO_VALUES } from '../../../../../constants/recurrence';
-import Styler from '../../../../../settings/components/date-picker-style';
 import { useAppSelector } from '../../../../../store/redux/hooks';
 import {
-	selectEditorAllDay,
 	selectEditorRecurrenceCount,
 	selectEditorRecurrenceUntilDate,
 	selectEditorStart
@@ -34,50 +30,6 @@ import {
 import { Count } from '../../../../../types/editor';
 
 momentLocalizer();
-
-type SimplifiedCustomDatePickerProps = {
-	start: number;
-	allDay: boolean | undefined;
-	onChange: (d: Date) => void;
-	disabled?: boolean;
-};
-
-export const SimplifiedCustomDatePicker = ({
-	start,
-	allDay,
-	disabled,
-	onChange
-}: SimplifiedCustomDatePickerProps): ReactElement => {
-	const startDate = useMemo(() => new Date(start), [start]);
-
-	return (
-		<>
-			<Styler
-				allDay={allDay}
-				orientation="horizontal"
-				height="fit"
-				mainAlignment="flex-start"
-				backgroundColor="gray5"
-			>
-				<Container crossAlignment="flex-start" style={{ maxWidth: '31.25rem' }}>
-					<DateTimePicker
-						time={false}
-						valueFormat={{ month: 'short', year: 'numeric' }}
-						defaultValue={startDate}
-						onChange={onChange}
-						disabled={disabled}
-						format="DD MMM YYYY"
-						dateIcon={
-							<Padding all="small">
-								<Icon icon="CalendarOutline" />
-							</Padding>
-						}
-					/>
-				</Container>
-			</Styler>
-		</>
-	);
-};
 
 const radioInitialState = (count: number | undefined, until: string | undefined): string => {
 	if (count) {
@@ -92,7 +44,6 @@ const radioInitialState = (count: number | undefined, until: string | undefined)
 const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement => {
 	const { newEndValue, setNewEndValue } = useContext(RecurrenceContext);
 	const start = useAppSelector(selectEditorStart(editorId));
-	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const count = useAppSelector(selectEditorRecurrenceCount(editorId));
 	const until = useAppSelector(selectEditorRecurrenceUntilDate(editorId));
 
@@ -100,7 +51,8 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 	const [inputValue, setInputValue] = useState(count ?? '1');
 
 	const initialPickerValue = useMemo(
-		() => (until ? moment(until).valueOf() : start ?? new Date().valueOf()),
+		() =>
+			until ? new Date(moment(until).valueOf()) : new Date(moment(start).valueOf()) ?? new Date(),
 		[start, until]
 	);
 
@@ -164,16 +116,23 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 		[inputValue, pickerValue, setNewEndValue]
 	);
 
+	const num = useMemo(() => (newEndValue as Count)?.count?.num, [newEndValue]);
+	const [t] = useTranslation();
+	const endAfterString = useMemo(() => t('label.end_after', 'End after'), [t]);
+	const isDatePickerDisabled = useMemo(
+		() => radioValue !== RADIO_VALUES.END_AFTER_UNTIL,
+		[radioValue]
+	);
 	const onDateChange = useCallback(
 		(d) => {
-			const fullData = moment(d.valueOf()).format('YYYYMMDD');
-			setPickerValue(d.valueOf());
-			setNewEndValue({ until: { d: fullData } });
+			if (!isDatePickerDisabled) {
+				const fullData = moment(d.valueOf()).format('YYYYMMDD');
+				setPickerValue(d.valueOf());
+				setNewEndValue({ until: { d: fullData } });
+			}
 		},
-		[setNewEndValue]
+		[isDatePickerDisabled, setNewEndValue]
 	);
-	const num = useMemo(() => (newEndValue as Count)?.count?.num, [newEndValue]);
-
 	return (
 		<RadioGroup value={radioValue} onChange={onRadioValueChange}>
 			<Radio
@@ -194,7 +153,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 							wrap="nowrap"
 							padding={{ right: 'small' }}
 						>
-							<Text>{t('label.end_after', 'End after')}</Text>
+							<Text>{endAfterString}</Text>
 						</Row>
 						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
 							<Input
@@ -223,17 +182,19 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 							wrap="nowrap"
 							padding={{ right: 'small' }}
 						>
-							<Text>{t('label.end_after', 'End after')}</Text>
+							<Text>{endAfterString}</Text>
 						</Row>
 						<Row width="fit" orientation="horizontal" mainAlignment="flex-start" wrap="nowrap">
-							<Styler orientation="horizontal" allDay height="fit" mainAlignment="space-between">
-								<SimplifiedCustomDatePicker
-									start={initialPickerValue}
-									allDay={allDay}
+							<Container crossAlignment="flex-start" style={{ maxWidth: '31.25rem' }}>
+								<DateTimePicker
+									label={endAfterString}
+									includeTime={false}
+									defaultValue={initialPickerValue}
 									onChange={onDateChange}
-									disabled={radioValue !== RADIO_VALUES.END_AFTER_UNTIL}
+									disabled={isDatePickerDisabled}
+									dateFormat="dd/MM/yyyy"
 								/>
-							</Styler>
+							</Container>
 						</Row>
 					</Row>
 				}
