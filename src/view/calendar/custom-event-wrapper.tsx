@@ -5,7 +5,6 @@
  */
 import React, { ReactElement } from 'react';
 
-import moment from 'moment';
 import { setLightness } from 'polished';
 import styled from 'styled-components';
 
@@ -38,10 +37,6 @@ export const CustomEventWrapperStyler = styled.div<{ event: EventType }>`
 			`0.0625rem solid ${event.resource.calendar.color.color} !important`};
 		box-sizing: border-box;
 		margin: 0;
-		padding: ${({ event }): string =>
-			moment(event.end).diff(event.start, 'minutes') >= 30
-				? '0.25rem 0.5rem'
-				: '0.0625rem 0.5rem 0.25rem 0.5rem !important'};
 		border-radius: 0.25rem;
 		cursor: pointer;
 		width: 100%;

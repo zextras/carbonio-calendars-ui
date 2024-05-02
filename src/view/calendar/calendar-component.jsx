@@ -133,7 +133,8 @@ export default function CalendarComponent() {
 			style: {
 				backgroundColor: event.resource.calendar.color.background,
 				color: event.resource.calendar.color.color,
-				border: `0.0625rem solid ${event.resource.calendar.color.color}`
+				border: `0.0625rem solid ${event.resource.calendar.color.color}`,
+				padding: 0
 			}
 		}),
 		[]
