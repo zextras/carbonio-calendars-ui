@@ -31,6 +31,7 @@ import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
+import { getLocalTime } from '../../normalizations/normalize-editor';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
@@ -138,13 +139,26 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 			?.onClick?.();
 	};
 
+	const localTimezone = useMemo(() => moment.tz.guess(), []);
+
+	/* start and end value are already converted to the creation timezone value, so to convert it back to the local timezone we need to convert it again to local */
+	const localStart = useMemo(
+		() =>
+			getLocalTime(
+				moment(invite.start?.d ?? invite.start.u).valueOf() ?? 0,
+				localTimezone,
+				invite.tz
+			),
+		[invite.start?.d, invite.start.u, invite.tz, localTimezone]
+	);
+	const localEnd = useMemo(
+		() =>
+			getLocalTime(moment(invite.end?.d ?? invite.end.u).valueOf() ?? 0, localTimezone, invite.tz),
+		[invite.end?.d, invite.end.u, invite.tz, localTimezone]
+	);
+
 	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
-		useGetEventTimezoneString(
-			moment(invite.start?.d ?? invite.start.u),
-			moment(invite.end?.d ?? invite.end.u),
-			invite.allDay,
-			invite.tz
-		);
+		useGetEventTimezoneString(localStart, localEnd, invite.allDay, invite.tz);
 
 	const messageHasABody = useMemo(() => {
 		const body = extractBody(invite?.textDescription?.[0]?._content);
