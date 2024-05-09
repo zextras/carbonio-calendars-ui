@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.10.1...v1.10.2) (2024-05-09)
+
+
+### Bug Fixes
+
+* mail invitation shows correct string inside world icon ([fcba6dd](https://github.com/zextras/carbonio-calendars-ui/commit/fcba6dd24a75e6dd9f972657d5bd57cd35577054))
+
 ### [1.10.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.10.0...v1.10.1) (2024-04-29)
 
 
