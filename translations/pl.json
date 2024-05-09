@@ -16,7 +16,10 @@
         "reset": "Zresetuj",
         "search": "Wyszukaj",
         "show_original": "Pokaż oryginał",
-        "Trash_already_empty": "kosz jest już pusty"
+        "Trash_already_empty": "kosz jest już pusty",
+        "download_ics": "Pobierz ICS",
+        "export_calendar_ics": "Eksportuj plik ICS",
+        "calendar_upload": "Importuj plik ICS"
     },
     "event": {
         "action": {
@@ -227,7 +230,7 @@
         "to": "do",
         "preview": "Podgląd",
         "no_title": "Brak tytułu",
-        "scheduled_in": "Kalendarz",
+        "scheduled_in": "Zaplanowano na",
         "warning": "Ostrzeżenie",
         "trash": "Kosz",
         "tag": "Etykieta",
@@ -252,7 +255,13 @@
         "optionals": "Opcjonalni",
         "time": "Czas",
         "equipment": "Ekwipunek",
-        "meeting_room": "Pokój spotkań"
+        "meeting_room": "Pokój spotkań",
+        "import_calendar_ongoing": "Trwa import do wybranego kalendarza.",
+        "available": "Jesteś dostępny",
+        "check_availability": "Sprawdź Twoją dostępność",
+        "checking_availability": "Sprawdzanie Twojej dostępności",
+        "import_calendar_success": "Import się powiódł",
+        "show_event": "Kliknij dwukrotnie, aby zobaczyć więcej szczegółów w Kalendarzach"
     },
     "message": {
         "modal": {
@@ -327,7 +336,8 @@
         "appointment_invitation_sent": "Zaproszenie na spotkanie zostało wysłane",
         "want_to_edit_modified_msg": "Uczestnicy zostaną powiadomieni o zmianach przez wiadomość e-mail. Czy chcesz utworzyć niestandardową wiadomość?",
         "meeting_modified": "Następujące spotkanie zostało zmodyfikowane",
-        "copy": "Skopiuj"
+        "copy": "Skopiuj",
+        "import_appointment_modal": "Spotkania zawarte w {{fileName}} zostaną zaimportowane do kalendarza \"{{calendarName}}\"."
     },
     "participants": {
         "Attendees_tentative_count_0": "<strong>{{count}} uczestnik </strong> odpowiedział: Niepewne",
@@ -713,5 +723,7 @@
     "attendees_rooms_unavailable": "Co najmniej jeden pokój spotkań nie jest dostępny o wybranym czasie wydarzenia",
     "public": "publiczne",
     "attendees_equipments_unavailable": "Co najmniej jeden ekwipunek nie jest dostępny o wybranym czasie wydarzenia",
-    "timezones": "Strefy czasowe"
+    "timezones": "Strefy czasowe",
+    "import": "Importuj",
+    "import_appointments": "Importuj spotkania"
 }

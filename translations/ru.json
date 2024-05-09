@@ -133,7 +133,8 @@
         "appointment_invitation_sent": "Приглашение на встречу отправлено",
         "want_to_edit_modified_msg": "Сообщение об изменении будет отправлено участникам по электронной почте. Хотите добавить собственное сообщение?",
         "meeting_modified": "Следующая встреча была изменена",
-        "copy": "Копировать"
+        "copy": "Копировать",
+        "import_appointment_modal": "Встречи, содержащиеся в {{fileName}}, будут импортированы в календарь \"{{calendarName}}\"."
     },
     "label": {
         "optional_0": "Необязательный",
@@ -305,7 +306,7 @@
         "tag_name": "Имя Тега",
         "tags": "Теги",
         "loading_results": "Загрузка результатов…",
-        "scheduled_in": "Ежедневник",
+        "scheduled_in": "Запланировано в",
         "no_title": "Без заголовка",
         "warning": "Внимание",
         "trash": "Корзина",
@@ -331,7 +332,13 @@
         "optionals": "Необязательные участники",
         "time": "Время",
         "equipment": "Оборудование",
-        "meeting_room": "Комната"
+        "meeting_room": "Комната",
+        "available": "Вы доступны",
+        "show_event": "Щелкните дважды для просмотра подробной информации о календарях",
+        "check_availability": "Проверить свою доступность",
+        "checking_availability": "Проверка вашей доступности",
+        "import_calendar_ongoing": "Выполняется импорт в выбранный календарь.",
+        "import_calendar_success": "Импорт выполнен успешно"
     },
     "tooltip": {
         "enable_disable_rich_text": "Включение/отключение редактора форматированного текста",
@@ -371,7 +378,10 @@
         "reset": "Сбросить",
         "search": "Поиск",
         "show_original": "Показать оригинал",
-        "Trash_already_empty": "Корзина очищена"
+        "Trash_already_empty": "Корзина очищена",
+        "calendar_upload": "Импортировать файл ICS",
+        "download_ics": "Скачать ICS",
+        "export_calendar_ics": "Экспортировать файл ICS"
     },
     "folder": {
         "modal": {
@@ -712,5 +722,7 @@
     "attendees_equipments_unavailable": "Одно или несколько видов оборудования недоступны в выбранное время мероприятия",
     "attendees_rooms_unavailable": "Одна или несколько виртуальных комнат недоступны в выбранное время мероприятия",
     "public": "публичная",
-    "timezones": "Часовые пояса"
+    "timezones": "Часовые пояса",
+    "import": "Импортировать",
+    "import_appointments": "Импортировать встречи"
 }
