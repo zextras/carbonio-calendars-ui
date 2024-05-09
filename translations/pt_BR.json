@@ -17,7 +17,7 @@
         "download_2": "",
         "attachment_0": "Anexo",
         "attachment_1": "Anexos",
-        "attachment_2": "",
+        "attachment_2": "Anexos",
         "month": "Mês",
         "invitation_not_sent": "Você ainda não enviou o convite aos participantes",
         "calendar_color": "Cor do calendário",
@@ -171,7 +171,7 @@
         "other_actions": "Outras ações",
         "single_instance": "UMA ÚNICA INSTÂNCIA",
         "no_title": "Sem título",
-        "scheduled_in": "Agenda",
+        "scheduled_in": "Agendado em",
         "warning": "Atenção",
         "trash": "Lixeira",
         "tag": "Marcador",
@@ -195,8 +195,14 @@
         "single_advanced_filter": "Filtros avançados",
         "optionals": "Opcionais",
         "time": "Hora",
-        "equipment": "Recursos",
-        "meeting_room": "Sala de reuniões"
+        "equipment": "Equipamento",
+        "meeting_room": "Sala de reuniões",
+        "available": "Você está disponível",
+        "check_availability": "Verificar sua disponibilidade",
+        "checking_availability": "Verificando sua disponibilidade",
+        "import_calendar_ongoing": "Importação para o calendário selecionado em andamento.",
+        "import_calendar_success": "Importação concluída com sucesso",
+        "show_event": "Clique duas vezes para ver mais detalhes sobre os Calendários"
     },
     "action": {
         "send": "Enviar",
@@ -215,7 +221,10 @@
         "reset": "Redefinir",
         "search": "Buscar",
         "show_original": "Mostrar original",
-        "Trash_already_empty": "A lixeira já está vazia"
+        "Trash_already_empty": "A lixeira já está vazia",
+        "calendar_upload": "Importar arquivo ICS",
+        "download_ics": "Baixar ICS",
+        "export_calendar_ics": "Exportar arquivo ICS"
     },
     "event": {
         "action": {
@@ -334,7 +343,8 @@
         "appointment_invitation_sent": "Convite de compromisso enviado",
         "meeting_modified": "A seguinte reunião foi modificada",
         "want_to_edit_modified_msg": "As alterações serão informadas por e-mail aos participantes. Gostaria de incluir uma mensagem personalizada?",
-        "copy": "Copiar"
+        "copy": "Copiar",
+        "import_appointment_modal": "O compromisso de {{fileName}} será importado para o calendário \"{{calendarName}}\"."
     },
     "months": {
         "april": "Abril",
@@ -508,7 +518,7 @@
         "share_folder_success": "Calendário compartilhado com sucesso",
         "tag_applied": "Marcador \"{{tag}}\" aplicado",
         "tag_removed": "Marcador \"{{tag}}\" removido",
-        "email_copied_to_clipboard": "E-mail copiado para a área de transferência."
+        "email_copied_to_clipboard": "E-mail copiado para área de transferência."
     },
     "success": "Sucesso",
     "type": "Tipo",
@@ -713,5 +723,7 @@
     "previous_month": "Mês anterior",
     "public": "Público",
     "private_info_tooltip": "Ao compartilhar um calendário, os outros usuários podem ver os detalhes do compromisso (título, descrição e participantes), exceto os marcados como privados. Nesse caso, os outros usuários verão seu horário livre/ocupado, mas não os detalhes do compromisso. Deseja que os outros usuários também exibam os detalhes dos seus compromissos privados?",
-    "timezones": "Zonas horárias"
+    "timezones": "Zonas horárias",
+    "import": "Importar",
+    "import_appointments": "Importar compromissos"
 }

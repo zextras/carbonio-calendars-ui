@@ -16,7 +16,10 @@
         "reset": "Sıfırla",
         "search": "Ara",
         "show_original": "Orjinali göster",
-        "Trash_already_empty": "çöp kutusu zaten boş"
+        "Trash_already_empty": "çöp kutusu zaten boş",
+        "calendar_upload": "ICS Dosyasını İçeri Aktar",
+        "download_ics": "ICS'yi indir",
+        "export_calendar_ics": "ICS dosyasını dışa aktar"
     },
     "edit_share_properties": "Paylaşım özelliklerini düzenle",
     "button": {
@@ -376,7 +379,10 @@
         "optionals": "İsteğe bağlı",
         "time": "Zaman",
         "equipment": "Donanım",
-        "meeting_room": "Toplantı odası"
+        "meeting_room": "Toplantı odası",
+        "available": "Uygun durumdasınız",
+        "check_availability": "Uygunluk durumunuzu kontrol edin",
+        "checking_availability": "Uygunluk durumu kontrolü"
     },
     "resend_mail_notification_about_this_share": "Bu paylaşım hakkında posta bildirimi gönder",
     "participants": {
@@ -689,5 +695,7 @@
     "next_month": "Gelecek ay",
     "next_week": "Gelecek hafta",
     "public": "genel",
-    "next_day": "Sonraki gün"
+    "next_day": "Sonraki gün",
+    "import": "İçeri Aktar",
+    "import_appointments": "Randevuları içeri aktar"
 }

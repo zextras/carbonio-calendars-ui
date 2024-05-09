@@ -16,7 +16,10 @@
         "search": "Rechercher",
         "reset": "Réinitialisation",
         "show_original": "Voir l'original",
-        "Trash_already_empty": "la corbeille est déjà vide"
+        "Trash_already_empty": "la corbeille est déjà vide",
+        "download_ics": "Télécharger le fichier ICS",
+        "calendar_upload": "Importer un fichier ICS",
+        "export_calendar_ics": "Exporter le fichier ICS"
     },
     "add": "Ajouter",
     "administer": "Administrer",
@@ -140,7 +143,7 @@
         "general": "Général",
         "invitation_not_sent": "Vous n'avez pas encore envoyé l'invitation aux participants",
         "invites": "Invitations",
-        "location": "Emplacement",
+        "location": "Informations complémentaires",
         "month": "Mois",
         "months": "Mois",
         "no_subject": "Pas d'objet",
@@ -262,7 +265,7 @@
         "delete_tag": "Supprimer l'étiquette",
         "delete_tag_name": "Supprimer l'étiquette {{name}}",
         "no_title": "Pas de titre",
-        "scheduled_in": "Calendrier",
+        "scheduled_in": "Planifié dans",
         "warning": "Avertissement",
         "trash": "Corbeille",
         "tag": "Étiquette",
@@ -287,7 +290,13 @@
         "time": "Horaire",
         "optionals": "Optionnels",
         "equipment": "Équipement",
-        "meeting_room": "Salle de réunion"
+        "meeting_room": "Salle de réunion",
+        "import_calendar_success": "Import réalisé avec succès",
+        "check_availability": "Vérifiez votre disponibilité",
+        "checking_availability": "Vérification de votre disponibilité",
+        "available": "Vous êtes disponible",
+        "import_calendar_ongoing": "Import dans le calendrier choisi en cours.",
+        "show_event": "Double cliquez pour voir plus de détails sur les Calendriers"
     },
     "edit_share_properties": "Éditer les propriétés de partage",
     "find_calendar_shares": "Chercher les partages de calendrier",
@@ -364,7 +373,8 @@
         "appointment_invitation_sent": "Envoi d'une invitation à un rendez-vous",
         "want_to_edit_modified_msg": "Les changement seront notifiés par email aux participants. Souhaitez-vous ajouter un message personnalisé ?",
         "meeting_modified": "L'évènement suivant a été modifié",
-        "copy": "Copier"
+        "copy": "Copier",
+        "import_appointment_modal": "Les rendez-vous contenus dans {{fileName}} seront importés dans le calendrier \"{{calendarName}}\"."
     },
     "months": {
         "april": "Avril",
@@ -554,7 +564,7 @@
         "calendar_sharing_status_1": "Partagé avec {{count}} personnes",
         "calendar_sharing_status_2": "Partagé avec {{count}} personnes",
         "equipment": "Équipement",
-        "location": "Emplacement",
+        "location": "Informations complémentaires",
         "chat": "Équipement",
         "calendar_sharing_status_one": "Partagé avec 1 personne",
         "edit": "Modifier les propriétés de partage",
@@ -713,5 +723,7 @@
     "public": "publique",
     "attendees_equipments_unavailable": "Un ou plusieurs équipement sont indisponibles à l'heure choisie pour l'événement",
     "attendee_equipment_unavailable": "Matériel indisponible à l'heure choisie pour l'événement",
-    "timezones": "Fuseaux horaires"
+    "timezones": "Fuseaux horaires",
+    "import_appointments": "Importer des rendez-vous",
+    "import": "Importer"
 }
