@@ -17,7 +17,8 @@ import {
 	ACTION_TYPES,
 	registerFunctions,
 	SearchViewProps,
-	SecondaryBarComponentProps
+	SecondaryBarComponentProps,
+	AnyFunction
 } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
@@ -139,9 +140,7 @@ const AppRegistrations = (): null => {
 	useEffect(() => {
 		registerFunctions({
 			id: CalendarIntegrations.CREATE_APPOINTMENT,
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			fn: createAppointmentIntegration(dispatch, calendars)
+			fn: createAppointmentIntegration(dispatch, calendars) as AnyFunction
 		});
 		registerActions({
 			action: () => ({
