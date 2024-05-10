@@ -43,3 +43,5 @@ export const DATE_FORMAT = {
 	LOCAL: 'YYYYMMDD[T]HHmmss',
 	UTC: 'YYYYMMDD[T]HHmmss[Z]'
 };
+
+export const UPDATE_VIEW_EVENT = 'updateView';
