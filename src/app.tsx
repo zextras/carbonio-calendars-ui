@@ -15,13 +15,15 @@ import {
 	registerActions,
 	registerComponents,
 	ACTION_TYPES,
-	t,
-	registerFunctions
+	registerFunctions,
+	SearchViewProps,
+	SecondaryBarComponentProps
 } from '@zextras/carbonio-shell-ui';
+import { useTranslation } from 'react-i18next';
 
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
-import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
+import { useFoldersArray } from './carbonio-ui-commons/store/zustand/folder';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
@@ -51,7 +53,7 @@ const LazySearchView = lazy(
 	() => import(/* webpackChunkName: "search-view" */ './view/search/search-view')
 );
 
-const CalendarView = () => (
+const CalendarView = (): React.JSX.Element => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
 			<ModalManager>
@@ -61,7 +63,7 @@ const CalendarView = () => (
 	</Suspense>
 );
 
-const EditorView = () => (
+const EditorView = (): React.JSX.Element => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
 			<ModalManager>
@@ -70,7 +72,7 @@ const EditorView = () => (
 		</StoreProvider>
 	</Suspense>
 );
-const SettingsView = () => (
+const SettingsView = (): React.JSX.Element => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
 			<ModalManager>
@@ -80,7 +82,7 @@ const SettingsView = () => (
 	</Suspense>
 );
 
-const SidebarView = (props) => (
+const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
 			<ModalManager>
@@ -90,7 +92,7 @@ const SidebarView = (props) => (
 	</Suspense>
 );
 
-const SearchView = (props) => (
+const SearchView = (props: SearchViewProps): React.JSX.Element => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
 			<ModalManager>
@@ -100,41 +102,45 @@ const SearchView = (props) => (
 	</Suspense>
 );
 
-const AppRegistrations = () => {
+const AppRegistrations = (): null => {
 	const onClickNewButton = useOnClickNewButton();
-	const calendars = useFoldersMap();
+	const calendars = useFoldersArray();
 	const dispatch = useAppDispatch();
+	const [t] = useTranslation();
 
 	useEffect(() => {
+		const appLabel = t('label.app_name', 'Calendars');
 		addRoute({
 			route: CALENDAR_ROUTE,
 			position: 200,
 			visible: true,
-			label: t('label.app_name', 'Calendars'),
+			label: appLabel,
 			primaryBar: 'CalendarModOutline',
 			secondaryBar: SidebarView,
 			appView: CalendarView
 		});
 		addSettingsView({
 			route: CALENDAR_ROUTE,
-			label: t('label.app_name', 'Calendars'),
+			label: appLabel,
 			component: SettingsView,
-			subSections: getSettingsSubSections(t)
+			subSections: getSettingsSubSections()
 		});
 		addSearchView({
 			route: CALENDAR_ROUTE,
-			label: t('label.app_name', 'Calendars'),
+			label: appLabel,
 			component: SearchView
 		});
 		addBoardView({
 			route: CALENDAR_ROUTE,
 			component: EditorView
 		});
-	}, []);
+	}, [t]);
 
 	useEffect(() => {
 		registerFunctions({
 			id: CalendarIntegrations.CREATE_APPOINTMENT,
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			fn: createAppointmentIntegration(dispatch, calendars)
 		});
 		registerActions({
@@ -154,11 +160,12 @@ const AppRegistrations = () => {
 			id: 'invites-reply',
 			component: InviteResponseComp
 		});
-	}, [calendars, dispatch, onClickNewButton]);
+	}, [calendars, dispatch, onClickNewButton, t]);
+
 	return null;
 };
 
-export default function App() {
+export default function App(): React.JSX.Element {
 	useFoldersController(FOLDER_VIEW.appointment);
 	return (
 		<StoreProvider>
