@@ -11,7 +11,7 @@ declare module 'i18next' {
 	interface CustomTypeOptions {
 		// custom resources type
 		resources: {
-			[defaultNs: i18next.TypeOptions['defaultNS']];
+			[defaultNs: i18next.TypeOptions['defaultNS']]: Record<string, string>;
 		};
 		returnNull: false;
 		jsonFormat: 'v4';
