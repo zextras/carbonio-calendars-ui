@@ -15,7 +15,6 @@ import { ImageAndIconPart } from './image-and-icon-part';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
-import { CalendarsColorType } from '../../types/store/calendars';
 import { Invite } from '../../types/store/invite';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { LocationRow } from '../event-summary-view/location-row';
@@ -146,11 +145,13 @@ export const DetailsPart = ({
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
 						<SubjectRow subject={subject} calendarColor={color.color} isPrivate={isPrivate} />
-						<CustomIconInfo
-							tooltipLabel={t('label.recurrent', 'Recurrent appointment')}
-							color={'0'}
-							icon={'Repeat'}
-						/>
+						{event.resource.isRecurrent && (
+							<CustomIconInfo
+								tooltipLabel={t('label.recurrent', 'Recurrent appointment')}
+								color={'0'}
+								icon={'Repeat'}
+							/>
+						)}
 						<Padding right={'small'} />
 						<CustomIconInfo tooltipLabel={calendar?.name} color={color.color} icon={'Calendar2'} />
 					</Container>
