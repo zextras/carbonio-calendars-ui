@@ -239,7 +239,7 @@
         "proposal_declined": "Proposal declined",
         "propose_new_time": "Propose new time",
         "public_link_description": "Generated from {{title}} on {{date}}",
-        "recurrent_appointment": "Recurrent appointment",
+        "recurrent": "Recurrent appointment",
         "regular": "Regular",
         "reminder": "Reminder",
         "repeat": "Repeat",
