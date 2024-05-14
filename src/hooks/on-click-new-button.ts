@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useCallback } from 'react';
+import { SyntheticEvent, useCallback } from 'react';
 
 import { addBoard } from '@zextras/carbonio-shell-ui';
 
@@ -12,7 +12,9 @@ import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
 import { useAppDispatch } from '../store/redux/hooks';
 
-export const useOnClickNewButton = (): ((ev?: MouseEvent) => void) => {
+export const useOnClickNewButton = (): ((
+	ev?: SyntheticEvent<HTMLElement, Event> | KeyboardEvent
+) => void) => {
 	const calendarFolders = useCalendarFolders();
 	const dispatch = useAppDispatch();
 
