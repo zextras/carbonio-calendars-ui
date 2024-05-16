@@ -1,6 +1,7 @@
 {
     "action": {
         "Trash_already_empty": "trash is already empty",
+        "answer": "Answer",
         "calendar_access_share": "Calendar’s access share",
         "calendar_upload": "Import ICS file",
         "delete_calendar": "Delete calendar",
