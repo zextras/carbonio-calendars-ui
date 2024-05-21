@@ -17,17 +17,15 @@ import { getAppointmentDurationString } from '../../utils/get-appointment-durati
 import type { RootState } from '../redux';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function getMp({ t, fullInvite, newMessage }: any) {
+function getMp({ t, fullInvite, newMessage, deleteSingleInstance }: any) {
 	const meetingCanceled =
-		newMessage || `${t('message.meeting_canceled', 'The following meeting has been cancelled')}:`;
+		newMessage ?? `${t('message.meeting_canceled', 'The following meeting has been cancelled')}:`;
 
 	const originalInviteTitle = t('message.original_invite', `-----Original Invite-----`);
 
-	const originalInviteContentPlain = fullInvite.textDescription
-		? fullInvite.textDescription[0]._content
-		: '';
+	const originalInviteContentPlain = fullInvite?.textDescription?.[0]?._content ?? '';
 
-	const originalInviteContentHtml = fullInvite.htmlDescription[0]._content.slice(6);
+	const originalInviteContentHtml = fullInvite?.htmlDescription?.[0]?._content?.slice?.(6) ?? '';
 
 	const date = getAppointmentDurationString(
 		t,
@@ -35,9 +33,10 @@ function getMp({ t, fullInvite, newMessage }: any) {
 		fullInvite.end.u ?? 0,
 		fullInvite.allDay ?? false
 	);
-	const instance = fullInvite.recurrenceRule
-		? t('label.series', 'series')
-		: t('label.instance', 'instance');
+	const instance =
+		!fullInvite.recurrenceRule || deleteSingleInstance
+			? t('label.instance', 'instance')
+			: t('label.series', 'series');
 
 	const instanceData = `"${fullInvite?.name ?? ''}" ${lowerCase(instance)}, ${date}`;
 
