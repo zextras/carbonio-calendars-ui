@@ -6,6 +6,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TFunction } from 'i18next';
 import { lowerCase } from 'lodash';
+import moment from 'moment';
 
 import {
 	CancelAppointmentRejectedType,
@@ -17,7 +18,7 @@ import { getAppointmentDurationString } from '../../utils/get-appointment-durati
 import type { RootState } from '../redux';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function getMp({ t, fullInvite, newMessage, deleteSingleInstance }: any) {
+function getMp({ t, fullInvite, newMessage, deleteSingleInstance, inst }: any) {
 	const meetingCanceled =
 		newMessage ?? `${t('message.meeting_canceled', 'The following meeting has been cancelled')}:`;
 
@@ -29,8 +30,8 @@ function getMp({ t, fullInvite, newMessage, deleteSingleInstance }: any) {
 
 	const date = getAppointmentDurationString(
 		t,
-		fullInvite.start.u ?? 0,
-		fullInvite.end.u ?? 0,
+		moment(inst?.d).valueOf() ?? fullInvite.start.u ?? 0,
+		moment(inst?.d).valueOf() + (fullInvite.end.u - fullInvite.start.u) ?? fullInvite.end.u ?? 0,
 		fullInvite.allDay ?? false
 	);
 	const instance =
@@ -40,19 +41,28 @@ function getMp({ t, fullInvite, newMessage, deleteSingleInstance }: any) {
 
 	const instanceData = `"${fullInvite?.name ?? ''}" ${lowerCase(instance)}, ${date}`;
 
+	const originalContentPlainSection = originalInviteContentPlain
+		? `\n\n${originalInviteTitle}\n\n${originalInviteContentPlain}`
+		: '';
+
+	const originalContentHtmlSection = originalInviteContentHtml
+		? `<br/><br/>${originalInviteTitle}<br/><br/>${originalInviteContentHtml}`
+		: '';
+
 	const mp = {
 		ct: 'multipart/alternative',
 		mp: [
 			{
 				ct: 'text/plain',
-				content: `${meetingCanceled}\n\n${instanceData}\n\n${originalInviteTitle}\n\n${originalInviteContentPlain}`
+				content: `${meetingCanceled}\n\n${instanceData}${originalContentPlainSection}`
 			}
 		]
 	};
+
 	if (fullInvite.htmlDescription) {
 		mp.mp.push({
 			ct: 'text/html',
-			content: `<html><h3>${meetingCanceled}</h3>${instanceData}<br/><br/>${originalInviteTitle}<br/><br/>${originalInviteContentHtml}`
+			content: `<html><h3>${meetingCanceled}</h3>${instanceData}${originalContentHtmlSection}`
 		});
 	}
 	return mp;
@@ -68,7 +78,7 @@ function getParticipants(participants: any) {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function createMessageForDelete({ invite, t, newMessage }: any) {
+function createMessageForDelete({ invite, t, newMessage, deleteSingleInstance, inst }: any) {
 	const organizer = [
 		{
 			a: invite?.organizer?.a,
@@ -84,7 +94,7 @@ function createMessageForDelete({ invite, t, newMessage }: any) {
 	return {
 		e: participants,
 		su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,
-		mp: getMp({ t, fullInvite: invite, newMessage })
+		mp: getMp({ t, fullInvite: invite, newMessage, deleteSingleInstance, inst })
 	};
 }
 
@@ -124,7 +134,7 @@ export const moveAppointmentToTrash = createAsyncThunk<
 	) => {
 		const state = getState();
 		const invite = inv ?? state.invites.invites[inviteId];
-		const m = createMessageForDelete({ invite, t, newMessage });
+		const m = createMessageForDelete({ invite, t, newMessage, deleteSingleInstance, inst });
 		const response = await cancelAppointmentRequest({
 			deleteSingleInstance,
 			id: inviteId,
