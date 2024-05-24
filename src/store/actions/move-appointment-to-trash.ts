@@ -5,35 +5,52 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TFunction } from 'i18next';
-import { lowerCase } from 'lodash';
-import moment from 'moment';
+import { compact, lowerCase } from 'lodash';
 
 import {
 	CancelAppointmentRejectedType,
 	cancelAppointmentRequest,
 	CancelAppointmentReturnType
 } from '../../soap/cancel-appointment-request';
+import { Invite } from '../../types/store/invite';
 import { AppointmentsSlice } from '../../types/store/store';
-import { getAppointmentDurationString } from '../../utils/get-appointment-duration-string';
+import { formatAppointmentRange, parseDateFromICS } from '../../utils/dates';
+import { InstanceExceptionId } from '../../utils/event';
 import type { RootState } from '../redux';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function getMp({ t, fullInvite, newMessage, deleteSingleInstance, inst }: any) {
+type MessagePart = { ct: string; mp: { ct: string; content: string }[] };
+
+export const buildMessagePart = ({
+	t,
+	fullInvite,
+	newMessage,
+	deleteSingleInstance = true,
+	inst
+}: {
+	t: TFunction;
+	fullInvite: Invite;
+	deleteSingleInstance?: boolean;
+	newMessage?: string;
+	inst?: InstanceExceptionId;
+}): MessagePart => {
 	const meetingCanceled =
 		newMessage ?? `${t('message.meeting_canceled', 'The following meeting has been cancelled')}:`;
-
+	const allDayLabel = t('label.all_day', 'All day');
 	const originalInviteTitle = t('message.original_invite', `-----Original Invite-----`);
 
 	const originalInviteContentPlain = fullInvite?.textDescription?.[0]?._content ?? '';
 
 	const originalInviteContentHtml = fullInvite?.htmlDescription?.[0]?._content?.slice?.(6) ?? '';
 
-	const date = getAppointmentDurationString(
-		t,
-		moment(inst?.d).valueOf() ?? fullInvite.start.u ?? 0,
-		moment(inst?.d).valueOf() + (fullInvite.end.u - fullInvite.start.u) ?? fullInvite.end.u ?? 0,
-		fullInvite.allDay ?? false
-	);
+	const dur = fullInvite.end.u - fullInvite.start.u;
+
+	const date = formatAppointmentRange({
+		start: inst?.d ? parseDateFromICS(inst.d).getTime() : fullInvite.start.u ?? 0,
+		end: inst?.d ? parseDateFromICS(inst?.d).getTime() + dur : fullInvite.end.u ?? 0,
+		allDay: fullInvite.allDay ?? false,
+		allDayLabel,
+		timezone: inst?.tz
+	});
 	const instance =
 		!fullInvite.recurrenceRule || deleteSingleInstance
 			? t('label.instance', 'instance')
@@ -49,24 +66,23 @@ function getMp({ t, fullInvite, newMessage, deleteSingleInstance, inst }: any) {
 		? `<br/><br/>${originalInviteTitle}<br/><br/>${originalInviteContentHtml}`
 		: '';
 
-	const mp = {
-		ct: 'multipart/alternative',
-		mp: [
-			{
-				ct: 'text/plain',
-				content: `${meetingCanceled}\n\n${instanceData}${originalContentPlainSection}`
-			}
-		]
+	const plainMessagePart = {
+		ct: 'text/plain',
+		content: `${meetingCanceled}\n\n${instanceData}${originalContentPlainSection}`
 	};
 
-	if (fullInvite.htmlDescription) {
-		mp.mp.push({
-			ct: 'text/html',
-			content: `<html><h3>${meetingCanceled}</h3>${instanceData}${originalContentHtmlSection}`
-		});
-	}
-	return mp;
-}
+	const htmlMessagePart = fullInvite.htmlDescription
+		? {
+				ct: 'text/html',
+				content: `<html><h3>${meetingCanceled}</h3>${instanceData}${originalContentHtmlSection}</html>`
+			}
+		: undefined;
+
+	return {
+		ct: 'multipart/alternative',
+		mp: compact([plainMessagePart, htmlMessagePart])
+	};
+};
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function getParticipants(participants: any) {
@@ -77,8 +93,19 @@ function getParticipants(participants: any) {
 	}));
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function createMessageForDelete({ invite, t, newMessage, deleteSingleInstance, inst }: any) {
+function createMessageForDelete({
+	invite,
+	t,
+	newMessage,
+	deleteSingleInstance,
+	inst
+}: {
+	t: TFunction;
+	invite: Invite;
+	deleteSingleInstance: boolean;
+	newMessage: string;
+	inst: InstanceExceptionId;
+}): { e: any; su: string; mp: MessagePart } {
 	const organizer = [
 		{
 			a: invite?.organizer?.a,
@@ -94,7 +121,7 @@ function createMessageForDelete({ invite, t, newMessage, deleteSingleInstance, i
 	return {
 		e: participants,
 		su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,
-		mp: getMp({ t, fullInvite: invite, newMessage, deleteSingleInstance, inst })
+		mp: buildMessagePart({ t, fullInvite: invite, newMessage, deleteSingleInstance, inst })
 	};
 }
 
@@ -103,11 +130,11 @@ export type MoveAppointmentToTrashArguments = {
 	t: TFunction;
 	isOrganizer: boolean;
 	deleteSingleInstance: boolean;
-	inst: any;
-	s: any;
-	inv?: any;
-	newMessage: any;
-	ridZ: any;
+	inst: InstanceExceptionId;
+	s: number;
+	inv?: Invite;
+	newMessage: string;
+	ridZ: string;
 	recur: boolean;
 	isRecurrent: boolean;
 	id: string;

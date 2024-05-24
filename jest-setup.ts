@@ -76,6 +76,11 @@ beforeAll(() => {
 beforeEach(() => {
 	moment.tz.setDefault('Europe/Berlin');
 	moment.tz.guess = jest.fn().mockImplementation(() => 'Europe/Berlin');
+	const originalDateResolvedOptions = new Intl.DateTimeFormat().resolvedOptions();
+	jest.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockReturnValue({
+		...originalDateResolvedOptions,
+		timeZone: 'Europe/Rome'
+	});
 	jest.setSystemTime(new Date('2022-01-01'));
 	defaultBeforeEachTest();
 });
