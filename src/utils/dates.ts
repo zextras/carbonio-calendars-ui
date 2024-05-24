@@ -16,23 +16,17 @@ export const parseDateFromICS = (icsString: string): Date => {
 	return new Date(strYear, strMonth, strDay, strHour, strMin, strSec);
 };
 
-export const formatAppointmentRange = ({
-	start,
-	end,
+const dateTimeFormat = ({
 	locale,
-	allDay,
-	allDayLabel,
 	timezone,
+	allDay,
 	inOptions
 }: {
-	start: number;
-	end: number;
 	locale?: string;
-	allDay: boolean;
-	allDayLabel: string;
 	timezone?: string;
+	allDay: boolean;
 	inOptions?: Partial<Intl.DateTimeFormatOptions>;
-}): string => {
+}): Intl.DateTimeFormat => {
 	const localToApply =
 		locale ??
 		getUserSettings().prefs.zimbraPrefLocale ??
@@ -54,7 +48,29 @@ export const formatAppointmentRange = ({
 		...inOptions
 	} as const;
 
-	const formattedRange = new Intl.DateTimeFormat(localToApply, options).formatRange(start, end);
+	return new Intl.DateTimeFormat(localToApply, options);
+};
 
+export const formatAppointmentRange = ({
+	start,
+	end,
+	locale,
+	allDay,
+	allDayLabel,
+	timezone,
+	inOptions
+}: {
+	start: number;
+	end: number;
+	locale?: string;
+	allDay: boolean;
+	allDayLabel: string;
+	timezone?: string;
+	inOptions?: Partial<Intl.DateTimeFormatOptions>;
+}): string => {
+	const formattedRange = dateTimeFormat({ locale, timezone, allDay, inOptions }).formatRange(
+		start,
+		end
+	);
 	return allDay ? `${formattedRange} - ${allDayLabel}` : formattedRange;
 };
