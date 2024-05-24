@@ -155,8 +155,8 @@ export const ParticipantsDisplayer = ({
 				<Dropdown
 					label={t('participants.AC_with_count', {
 						count: participants.AC?.length ?? 0,
-						defaultValue: 'Accepted',
-						defaultValue_plural: 'Accepted ({{count}})'
+						defaultValue_one: 'Accepted',
+						defaultValue_other: 'Accepted ({{count}})'
 					}).toUpperCase()}
 					participants={participants.AC}
 					width={width}
@@ -166,8 +166,8 @@ export const ParticipantsDisplayer = ({
 				<Dropdown
 					label={t('participants.NE_with_count', {
 						count: participants.NE?.length ?? 0,
-						defaultValue: "Didn't answer ({{count}})",
-						defaultValue_plural: "Didn't answer ({{count}})"
+						defaultValue_one: "Didn't answer ({{count}})",
+						defaultValue_other: "Didn't answer ({{count}})"
 					}).toUpperCase()}
 					participants={participants.NE}
 					width={width}
@@ -177,8 +177,8 @@ export const ParticipantsDisplayer = ({
 				<Dropdown
 					label={t('participants.TE_with_count', {
 						count: participants?.TE?.length ?? 0,
-						defaultValue: 'Tentative',
-						defaultValue_plural: 'Tentative ({{count}})'
+						defaultValue_one: 'Tentative',
+						defaultValue_other: 'Tentative ({{count}})'
 					}).toUpperCase()}
 					participants={participants.TE}
 					width={width}
@@ -188,8 +188,8 @@ export const ParticipantsDisplayer = ({
 				<Dropdown
 					label={t('participants.DE_with_count', {
 						count: participants.DE?.length ?? 0,
-						defaultValue: 'Declined',
-						defaultValue_plural: 'Declined ({{count}})'
+						defaultValue_one: 'Declined',
+						defaultValue_other: 'Declined ({{count}})'
 					}).toUpperCase()}
 					participants={participants.DE}
 					width={width}

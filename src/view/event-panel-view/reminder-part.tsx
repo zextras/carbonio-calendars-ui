@@ -6,8 +6,8 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
 import { noop } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import { generateEditor } from '../../commons/editor-generator';
 import { useCalendarFolders } from '../../hooks/use-calendar-folders';
@@ -27,6 +27,38 @@ export const ReminderPart = ({
 }): ReactElement | null => {
 	const dispatch = useAppDispatch();
 	const calendarFolders = useCalendarFolders();
+	const [t] = useTranslation();
+
+	const getMinuteLabel = useCallback(
+		(count) =>
+			t('reminder.minute_before', {
+				count,
+				defaultValue_one: '{{count}} minute before',
+				defaultValue_other: '{{count}} minutes before'
+			}),
+		[t]
+	);
+
+	const getHourLabel = useCallback(
+		(count) =>
+			t('reminder.hour_before', {
+				count,
+				defaultValue_one: '{{count}} hour before',
+				defaultValue_other: '{{count}} hours before'
+			}),
+		[t]
+	);
+
+	const getDayLabel = useCallback(
+		(count) =>
+			t('reminder.day_before', {
+				count,
+				defaultValue_one: '{{count}} day before',
+				defaultValue_other: '{{count}} days before'
+			}),
+		[t]
+	);
+
 	const setSnooze = useCallback(
 		(time) => {
 			const editorInvite = {
@@ -44,7 +76,7 @@ export const ReminderPart = ({
 					panel: true
 				}
 			});
-			dispatch(modifyAppointment({ editor, draft: !(invite?.attendees?.length > 0) }));
+			dispatch(modifyAppointment({ editor, draft: invite?.attendees?.length <= 0 }));
 		},
 		[calendarFolders, dispatch, event, invite]
 	);
@@ -58,151 +90,90 @@ export const ReminderPart = ({
 			},
 			{
 				id: '2',
-				label: t('reminder.minute_before', {
-					count: 1,
-					defaultValue: '{{count}} minute before',
-					defaultValue_plural: '{{count}} minutes before'
-				}),
-
+				label: getMinuteLabel(1),
 				onClick: () => setSnooze('1')
 			},
 			{
 				id: '3',
-				label: t('reminder.minute_before', {
-					count: 5,
-					defaultValue: '{{count}} minute before',
-					defaultValue_plural: '{{count}} minutes before'
-				}),
+				label: getMinuteLabel(5),
 				onClick: () => setSnooze('5')
 			},
 			{
 				id: '4',
-				label: t('reminder.minute_before', {
-					count: 10,
-					defaultValue: '{{count}} minute before',
-					defaultValue_plural: '{{count}} minutes before'
-				}),
+				label: getMinuteLabel(10),
 				onClick: () => setSnooze('10')
 			},
 			{
 				id: '5',
-				label: t('reminder.minute_before', {
-					count: 15,
-					defaultValue: '{{count}} minute before',
-					defaultValue_plural: '{{count}} minutes before'
-				}),
+				label: getMinuteLabel(15),
 				onClick: () => setSnooze('15')
 			},
 			{
 				id: '6',
-				label: t('reminder.minute_before', {
-					count: 30,
-					defaultValue: '{{count}} minute before',
-					defaultValue_plural: '{{count}} minutes before'
-				}),
+				label: getMinuteLabel(30),
 				onClick: () => setSnooze('30')
 			},
 			{
 				id: '7',
-				label: t('reminder.minute_before', {
-					count: 45,
-					defaultValue: '{{count}} minute before',
-					defaultValue_plural: '{{count}} minutes before'
-				}),
+				label: getMinuteLabel(45),
 				onClick: () => setSnooze('45')
 			},
 			{
 				id: '8',
-				label: t('reminder.hour_before', {
-					count: 1,
-					defaultValue: '{{count}} hour before',
-					defaultValue_plural: '{{count}} hours before'
-				}),
+				label: getHourLabel(1),
 				onClick: () => setSnooze('60')
 			},
 			{
 				id: '9',
-				label: t('reminder.hour_before', {
-					count: 2,
-					defaultValue: '{{count}} hour before',
-					defaultValue_plural: '{{count}} hours before'
-				}),
+				label: getHourLabel(2),
 				onClick: () => setSnooze('120')
 			},
 			{
 				id: '10',
-				label: t('reminder.hour_before', {
-					count: 4,
-					defaultValue: '{{count}} hour before',
-					defaultValue_plural: '{{count}} hours before'
-				}),
+				label: getHourLabel(4),
 				onClick: () => setSnooze('240')
 			},
 			{
 				id: '11',
-				label: t('reminder.hour_before', {
-					count: 5,
-					defaultValue: '{{count}} hour before',
-					defaultValue_plural: '{{count}} hours before'
-				}),
+				label: getHourLabel(5),
 				onClick: () => setSnooze('300')
 			},
 			{
 				id: '12',
-				label: t('reminder.hour_before', {
-					count: 18,
-					defaultValue: '{{count}} hour before',
-					defaultValue_plural: '{{count}} hours before'
-				}),
+				label: getHourLabel(18),
 				onClick: () => setSnooze((18 * 60).toString())
 			},
 			{
 				id: '13',
-				label: t('reminder.day_before', {
-					count: 1,
-					defaultValue: '{{count}} day before',
-					defaultValue_plural: '{{count}} days before'
-				}),
+				label: getDayLabel(1),
 				onClick: () => setSnooze((24 * 60).toString())
 			},
 			{
 				id: '14',
-				label: t('reminder.day_before', {
-					count: 2,
-					defaultValue: '{{count}} day before',
-					defaultValue_plural: '{{count}} days before'
-				}),
+				label: getDayLabel(2),
 				onClick: () => setSnooze((48 * 60).toString())
 			},
 			{
 				id: '15',
-				label: t('reminder.day_before', {
-					count: 3,
-					defaultValue: '{{count}} day before',
-					defaultValue_plural: '{{count}} days before'
-				}),
+				label: getDayLabel(3),
 				onClick: () => setSnooze((72 * 60).toString())
 			},
 			{
 				id: '16',
-				label: t('reminder.day_before', {
-					count: 4,
-					defaultValue: '{{count}} day before',
-					defaultValue_plural: '{{count}} days before'
-				}),
+				label: getDayLabel(4),
 				onClick: () => setSnooze((4 * 24 * 60).toString())
 			},
 			{
 				id: '17',
 				label: t('reminder.week_before', {
 					count: 1,
-					defaultValue: '{{count}} week before',
-					defaultValue_plural: '{{count}} weeks before'
+					defaultValue_one: '{{count}} week before',
+					defaultValue_other: '{{count}} weeks before'
 				}),
 				onClick: () => setSnooze((7 * 24 * 60).toString())
 			}
 		],
-		[setSnooze]
+		[getDayLabel, getHourLabel, getMinuteLabel, setSnooze, t]
 	);
 	return alarmString ? (
 		<Container

@@ -323,8 +323,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 								<Text overflow="break-word">
 									{t('message.required_participant', {
 										count: requiredParticipants.length,
-										defaultValue: '{{count}} Participant',
-										defaultValue_plural: '{{count}} Participants'
+										defaultValue_one: '{{count}} Participant',
+										defaultValue_other: '{{count}} Participants'
 									})}
 								</Text>
 							</Row>
@@ -421,8 +421,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 									<Text overflow="break-word">
 										{t('message.optional_participant', {
 											count: optionalParticipants.length,
-											defaultValue: '{{count}} Optional',
-											defaultValue_plural: '{{count}} Optionals'
+											defaultValue_one: '{{count}} Optional',
+											defaultValue_other: '{{count}} Optionals'
 										})}
 									</Text>
 								</Row>

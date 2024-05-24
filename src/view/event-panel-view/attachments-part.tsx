@@ -332,16 +332,16 @@ export const AttachmentsBlock = ({
 								<Text color="gray1">
 									{t('label.attachment', {
 										count: attachmentsCount,
-										defaultValue: 'Attachment',
-										defaultValue_plural: '{{count}} Attachments'
+										defaultValue_one: 'Attachment',
+										defaultValue_other: '{{count}} Attachments'
 									})}
 								</Text>
 							)}
 							{attachmentsCount === 1 && (
 								<Text color="gray1">{`1 ${t('label.attachment', {
 									count: attachmentsCount,
-									defaultValue: 'Attachment',
-									defaultValue_plural: '{{count}} Attachments'
+									defaultValue_one: 'Attachment',
+									defaultValue_other: '{{count}} Attachments'
 								})}`}</Text>
 							)}
 							{attachmentsCount > 2 &&
@@ -351,8 +351,8 @@ export const AttachmentsBlock = ({
 											<Text color="primary">
 												{t('label.attachment', {
 													count: attachmentsCount,
-													defaultValue: 'Attachment',
-													defaultValue_plural: '{{count}} Attachments'
+													defaultValue_one: 'Attachment',
+													defaultValue_other: '{{count}} Attachments'
 												})}
 											</Text>
 										</Padding>
@@ -364,13 +364,13 @@ export const AttachmentsBlock = ({
 											<Text color="primary">
 												{t('label.show', {
 													count: attachmentsCount,
-													defaultValue: 'Show',
-													defaultValue_plural: 'Show all'
+													defaultValue_one: 'Show',
+													defaultValue_other: 'Show all'
 												})}{' '}
 												{t('label.attachment', {
 													count: attachmentsCount,
-													defaultValue: 'Attachment',
-													defaultValue_plural: '{{count}} Attachments'
+													defaultValue_one: 'Attachment',
+													defaultValue_other: '{{count}} Attachments'
 												})}
 											</Text>
 										</Padding>
@@ -387,13 +387,13 @@ export const AttachmentsBlock = ({
 							{isEditor
 								? t('label.delete', {
 										count: attachmentsCount,
-										defaultValue: 'Delete',
-										defaultValue_plural: 'Delete all'
+										defaultValue_one: 'Delete',
+										defaultValue_other: 'Delete all'
 									})
 								: t('label.download', {
 										count: attachmentsCount,
-										defaultValue: 'Download',
-										defaultValue_plural: 'Download all'
+										defaultValue_one: 'Download',
+										defaultValue_other: 'Download all'
 									})}
 						</Link>
 					</Row>

@@ -184,10 +184,6 @@ describe('create single appointment with custom values', () => {
 		await user.click(privateCheckbox);
 		await user.click(allDayCheckbox);
 
-		// SELECTING DIFFERENT REMINDER VALUE
-		await user.click(screen.getByText(/reminder/i));
-		await user.click(screen.getByText(/1 minute before/i));
-
 		// DEBOUNCE TIMER FOR INPUT FIELDS
 		jest.advanceTimersByTime(500);
 

@@ -102,8 +102,8 @@ export const ReminderModal = ({
 		() =>
 			t(`label.appt_reminder`, {
 				count: Object.keys(reminders)?.length ?? 1,
-				defaultValue: 'Appointment Reminder',
-				defaultValue_Plural: 'Appointment Reminders'
+				defaultValue_one: 'Appointment Reminder',
+				defaultValue_other: 'Appointment Reminders'
 			}),
 		[reminders]
 	);
@@ -112,8 +112,8 @@ export const ReminderModal = ({
 		() =>
 			t('label.dismiss', {
 				count: Object.keys(reminders)?.length ?? 1,
-				defaultValue: 'Dismiss',
-				defaultValue_Plural: 'Dismiss all'
+				defaultValue_one: 'Dismiss',
+				defaultValue_other: 'Dismiss all'
 			}),
 		[reminders]
 	);

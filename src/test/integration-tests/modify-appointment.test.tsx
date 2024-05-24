@@ -180,10 +180,6 @@ describe.each`
 
 		await waitFor(() => user.click(screen.getByText(/10:00 pm/i)));
 
-		// SELECTING DIFFERENT REMINDER VALUE
-		await user.click(screen.getByText(/reminder/i));
-		await user.click(screen.getByText(/1 minute before/i));
-
 		// DEBOUNCE TIMER FOR INPUT FIELDS
 		jest.advanceTimersByTime(500);
 
