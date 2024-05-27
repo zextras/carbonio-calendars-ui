@@ -43,3 +43,8 @@ export const DATE_FORMAT = {
 	LOCAL: 'YYYYMMDD[T]HHmmss',
 	UTC: 'YYYYMMDD[T]HHmmss[Z]'
 };
+
+export const MS_PER_MINUTE = 60000;
+export const MS_PER_HOUR = 3600000;
+export const MS_PER_DAY = 86400000;
+export const MS_PER_MONTH = 2629746000;

@@ -5,6 +5,8 @@
  */
 import { getUserSettings } from '@zextras/carbonio-shell-ui';
 
+import { MS_PER_DAY, MS_PER_HOUR, MS_PER_MINUTE, MS_PER_MONTH } from '../constants';
+
 export const parseDateFromICS = (icsString: string): Date => {
 	const strYear = parseInt(icsString.substring(0, 4), 10);
 	const strMonth = parseInt(icsString.substring(4, 6), 10) - 1;
@@ -73,4 +75,56 @@ export const formatAppointmentRange = ({
 		end
 	);
 	return allDay ? `${formattedRange} - ${allDayLabel}` : formattedRange;
+};
+
+const subtractMinute = (date: Date, duration: number): Date =>
+	new Date(date.getTime() - duration * MS_PER_MINUTE);
+
+const subtractHour = (date: Date, duration: number): Date =>
+	new Date(date.getTime() - duration * MS_PER_HOUR);
+
+const subtractDay = (date: Date, duration: number): Date =>
+	new Date(date.getTime() - duration * MS_PER_DAY);
+
+const subtractMonth = (date: Date, duration: number): Date =>
+	new Date(date.getTime() - duration * MS_PER_MONTH);
+
+const addMinute = (date: Date, duration: number): Date =>
+	new Date(date.getTime() + duration * MS_PER_MINUTE);
+
+const addHour = (date: Date, duration: number): Date =>
+	new Date(date.getTime() + duration * MS_PER_HOUR);
+
+const addDay = (date: Date, duration: number): Date =>
+	new Date(date.getTime() + duration * MS_PER_DAY);
+
+const addMonth = (date: Date, duration: number): Date =>
+	new Date(date.getTime() + duration * MS_PER_MONTH);
+
+export const dateUtils: {
+	add: {
+		minute: (date: Date, duration: number) => Date;
+		hour: (date: Date, duration: number) => Date;
+		day: (date: Date, duration: number) => Date;
+		month: (date: Date, duration: number) => Date;
+	};
+	subtract: {
+		minute: (date: Date, duration: number) => Date;
+		hour: (date: Date, duration: number) => Date;
+		day: (date: Date, duration: number) => Date;
+		month: (date: Date, duration: number) => Date;
+	};
+} = {
+	add: {
+		minute: addMinute,
+		hour: addHour,
+		day: addDay,
+		month: addMonth
+	},
+	subtract: {
+		minute: subtractMinute,
+		hour: subtractHour,
+		day: subtractDay,
+		month: subtractMonth
+	}
 };
