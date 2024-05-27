@@ -11,7 +11,7 @@ import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { filter, map, values } from 'lodash';
 
 import { AppointmentCard } from './appointment-card';
-import { useFoldersByRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMapByRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { normalizeAppointments } from '../../../normalizations/normalize-appointments';
@@ -28,7 +28,7 @@ const useAppointmentsInRange = (
 ): Array<EventType> | undefined => {
 	const [events, setEvents] = useState<Array<EventType> | undefined>(undefined);
 	const dispatch = useAppDispatch();
-	const calendars = useFoldersByRoot(rootId);
+	const calendars = useFoldersMapByRoot(rootId);
 
 	const filteredCalendars = useMemo(
 		() =>

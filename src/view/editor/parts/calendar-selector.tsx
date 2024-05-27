@@ -13,8 +13,8 @@ import { useTranslation } from 'react-i18next';
 import LabelFactory, { ItemFactory } from './select-label-factory';
 import {
 	getRootAccountId,
-	useFoldersByRoot,
-	useFoldersMap
+	useFoldersMap,
+	useFoldersMapByRoot
 } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
@@ -45,7 +45,7 @@ export const CalendarSelector = ({
 	const [t] = useTranslation();
 	const rootAccountId = getRootAccountId(calendarId);
 
-	const allCalendarsByRoot = useFoldersByRoot(rootAccountId ?? FOLDERS.USER_ROOT);
+	const allCalendarsByRoot = useFoldersMapByRoot(rootAccountId ?? FOLDERS.USER_ROOT);
 	const allCalendars = useFoldersMap();
 
 	const calendars = reject(
