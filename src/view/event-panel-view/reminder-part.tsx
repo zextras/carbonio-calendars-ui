@@ -9,8 +9,8 @@ import { Container, Button, Dropdown } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { noop } from 'lodash';
 
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../../commons/editor-generator';
-import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { modifyAppointment } from '../../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
@@ -26,7 +26,7 @@ export const ReminderPart = ({
 	event: EventType;
 }): ReactElement | null => {
 	const dispatch = useAppDispatch();
-	const calendarFolders = useCalendarFolders();
+	const calendarFolders = useFoldersMap();
 	const setSnooze = useCallback(
 		(time) => {
 			const editorInvite = {

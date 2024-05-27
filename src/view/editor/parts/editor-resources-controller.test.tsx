@@ -27,7 +27,7 @@ describe('editor resources controller', () => {
 		const searchResourcesSpy = jest.spyOn(searchResourcesHandler, 'searchCalendarResourcesRequest');
 		setupAppStatusStore();
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const context = { folders: [], dispatch: store.dispatch };
+		const context = { folders: {}, dispatch: store.dispatch };
 		const editor = generateEditor({ context });
 		await act(async () => {
 			await setupTest(<EditorResourcesController editorId={editor.id} />, { store });
@@ -76,7 +76,7 @@ describe('editor resources controller', () => {
 			}
 		});
 		const folder = mockedData.calendars.defaultCalendar;
-		const context = { folders: [folder], dispatch: store.dispatch };
+		const context = { folders: { [folder.id]: folder }, dispatch: store.dispatch };
 
 		const editor = generateEditor({ event, invite, context });
 		await act(async () => {
@@ -127,7 +127,7 @@ describe('editor resources controller', () => {
 			}
 		});
 		const folder = mockedData.calendars.defaultCalendar;
-		const context = { folders: [folder], dispatch: store.dispatch };
+		const context = { folders: { [folder.id]: folder }, dispatch: store.dispatch };
 
 		const editor = generateEditor({ event, invite, context });
 		await act(async () => {
@@ -195,7 +195,7 @@ describe('editor resources controller', () => {
 			}
 		});
 		const folder = mockedData.calendars.defaultCalendar;
-		const context = { folders: [folder], dispatch: store.dispatch };
+		const context = { folders: { [folder.id]: folder }, dispatch: store.dispatch };
 
 		const editor = generateEditor({ event, invite, context });
 		await act(async () => {

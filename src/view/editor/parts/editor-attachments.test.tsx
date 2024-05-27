@@ -25,7 +25,7 @@ const folder = {
 	view: 'appointment'
 };
 
-const folders = mockedData.calendars.getCalendarsArray({ folders: [folder] });
+const folders = mockedData.calendars.getCalendarsMap({ folders: [folder.id] });
 
 describe('editor attachments', () => {
 	test('clicking on delete  on an existing attachment will remove the attachment', async () => {

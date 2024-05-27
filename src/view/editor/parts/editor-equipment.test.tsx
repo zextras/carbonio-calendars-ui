@@ -51,7 +51,7 @@ const setupBackendResponse = (items: Resource[]): void => {
 describe('Editor equipment', () => {
 	test('The component is visible on screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		setupEmptyAppStatusStore();
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
@@ -63,7 +63,7 @@ describe('Editor equipment', () => {
 
 	test('On type options are visible on screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
@@ -96,7 +96,7 @@ describe('Editor equipment', () => {
 
 	test('Clicking on the option will update the editor', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
@@ -135,7 +135,7 @@ describe('Editor equipment', () => {
 
 	test('Pressing enter will update the editor', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {

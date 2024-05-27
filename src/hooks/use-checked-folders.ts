@@ -7,11 +7,11 @@ import { useMemo } from 'react';
 
 import { filter } from 'lodash';
 
-import { useFoldersArray } from '../carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../carbonio-ui-commons/types/folder';
 
 export const useCheckedFolders = (): Array<Folder> => {
-	const calendars = useFoldersArray();
+	const calendars = useFoldersMap();
 
 	return useMemo(() => filter(calendars, ['checked', true]), [calendars]);
 };
