@@ -15,7 +15,6 @@ import { ImageAndIconPart } from './image-and-icon-part';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
-import { CalendarsColorType } from '../../types/store/calendars';
 import { Invite } from '../../types/store/invite';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { LocationRow } from '../event-summary-view/location-row';
@@ -28,7 +27,7 @@ const PaddedRow = styled(Row)`
 	padding: 0.25rem 0.25rem;
 `;
 
-const CalendarIcon = styled(Icon)`
+const CustomIcon = styled(Icon)`
 	width: 1.125rem;
 	height: 1.125rem;
 `;
@@ -63,16 +62,18 @@ const InviteNeverSentRow = (): ReactElement => {
 	);
 };
 
-const CalendarInfo = ({
-	name,
-	color
+const CustomIconInfo = ({
+	tooltipLabel,
+	color,
+	icon
 }: {
-	name: string;
-	color: CalendarsColorType;
+	tooltipLabel: string;
+	color: string;
+	icon: string;
 }): ReactElement => (
-	<Tooltip label={name} placement="left">
+	<Tooltip label={tooltipLabel} placement="left">
 		<div>
-			<CalendarIcon icon="Calendar2" size="medium" customColor={color.color} />
+			<CustomIcon icon={icon} size="medium" customColor={color} />
 		</div>
 	</Tooltip>
 );
@@ -93,6 +94,7 @@ export const DetailsPart = ({
 	invite
 }: DetailsPartProps): ReactElement | null => {
 	const calendar = useFolder(event.resource.calendar.id);
+	const [t] = useTranslation();
 
 	const color = useMemo(
 		() => setCalendarColor({ rgb: calendar?.rgb, color: calendar?.color }),
@@ -143,7 +145,15 @@ export const DetailsPart = ({
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
 						<SubjectRow subject={subject} calendarColor={color.color} isPrivate={isPrivate} />
-						<CalendarInfo name={calendar?.name} color={color} />
+						{event.resource.isRecurrent && (
+							<CustomIconInfo
+								tooltipLabel={t('label.recurrent', 'Recurrent appointment')}
+								color={'0'}
+								icon={'Repeat'}
+							/>
+						)}
+						<Padding right={'small'} />
+						<CustomIconInfo tooltipLabel={calendar?.name} color={color.color} icon={'Calendar2'} />
 					</Container>
 					{timeData && <TimeInfoRow timeInfoData={timeData} />}
 					{locationData && locationData?.class !== 'PRI' && (

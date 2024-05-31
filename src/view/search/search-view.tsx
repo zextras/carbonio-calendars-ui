@@ -6,7 +6,7 @@
 import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, QueryChip, SearchViewProps } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
@@ -23,21 +23,15 @@ import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
 
-type SearchProps = {
-	useQuery: () => [Array<any>, (arg: any) => void];
-	ResultsHeader: FC<{ label: string }>;
-	useDisableSearch: () => [boolean, (arg: any) => void];
-};
-
 export type SearchResults = {
 	appointments: Record<string, string[]>;
 	more: boolean;
 	offset: number;
 	sortBy: string;
-	query: Array<{ label: string }>;
+	query: QueryChip[];
 };
 
-const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
+const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	const [query, updateQuery] = useQuery();
 	const [t] = useTranslation();
 	const [searchResults, setSearchResults] = useState<SearchResults>({
@@ -52,7 +46,8 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
 	const { path } = useRouteMatch();
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
-	const [resultLabel, setResultLabel] = useState<string>(t('label.results_for', 'Results for: '));
+	const defaultResultLabel = useMemo(() => t('label.results_for', 'Results for: '), [t]);
+	const [resultLabel, setResultLabel] = useState<string>(defaultResultLabel);
 	const [isInvalidQuery, setIsInvalidQuery] = useState<boolean>(false);
 	const [includeTrash, includeSharedFolders] = useMemo(
 		() => [
@@ -91,8 +86,8 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 	const [spanEnd, setSpanEnd] = useState(() => DEFAULT_DATE_END);
 
 	const search = useCallback(
-		(queryStr: Array<{ label: string; value?: string }>, reset: boolean) => {
-			setResultLabel(t('label.results_for', 'Results for: '));
+		(queryStr: QueryChip[], reset: boolean) => {
+			setResultLabel(defaultResultLabel);
 			setLoading(true);
 			const queryMap = `${queryStr
 				.map((c) => c.value ?? c.label)
@@ -142,14 +137,15 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 				});
 		},
 		[
-			t,
+			defaultResultLabel,
 			foldersToSearchInQuery,
 			dispatch,
 			spanStart,
 			spanEnd,
 			searchResults.offset,
 			searchResults.sortBy,
-			updateQuery
+			updateQuery,
+			t
 		]
 	);
 	const [filterCount, setFilterCount] = useState(0);
@@ -168,9 +164,9 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 		if (query && query.length === 0) {
 			setIsInvalidQuery(false);
 			setFilterCount(0);
-			setResultLabel(t('label.results_for', 'Results for: '));
+			setResultLabel(defaultResultLabel);
 		}
-	}, [query, search, searchResults.query, isInvalidQuery, t]);
+	}, [query, search, searchResults.query, isInvalidQuery, t, defaultResultLabel]);
 
 	const appointments = useAppSelector((state) =>
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
@@ -200,7 +196,13 @@ const SearchView: FC<SearchProps> = ({ useQuery, ResultsHeader }) => {
 				</Container>
 			</Container>
 			<AdvancedFilterModal
+				// TOFIX-SHELL: fix updateQueryFunction inside shell type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				query={query}
+				// TOFIX-SHELL: fix updateQueryFunction inside shell type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				updateQuery={updateQuery}
 				open={showAdvanceFilters}
 				onClose={(): void => setShowAdvanceFilters(false)}
