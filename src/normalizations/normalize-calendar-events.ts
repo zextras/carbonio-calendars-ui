@@ -9,7 +9,7 @@ import moment from 'moment';
 
 import { setCalendarColor } from './normalizations-utils';
 import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
-import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { Folder, Folders, LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { CalendarsColorType } from '../types/store/calendars';
@@ -148,7 +148,7 @@ export const normalizeCalendarEvent = ({
 
 export const normalizeCalendarEvents = (
 	appts: Array<Appointment>,
-	calendars: Array<Folder>
+	calendars: Folders
 ): Array<EventType> =>
 	!isEmpty(appts)
 		? reduce(

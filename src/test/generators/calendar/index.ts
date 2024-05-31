@@ -5,9 +5,9 @@
  */
 import { faker } from '@faker-js/faker';
 import { nanoid } from '@reduxjs/toolkit';
-import { map } from 'lodash';
+import { reduce } from 'lodash';
 
-import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { Folder, Folders } from '../../../carbonio-ui-commons/types/folder';
 import utils from '../utils';
 
 type CalendarsArrayProps = {
@@ -66,12 +66,32 @@ const defaultCalendar = {
 	haveWriteAccess: true
 };
 
-const getCalendarsArray = ({ length = 1, folders } = {} as CalendarsArrayProps): Array<any> => {
-	if (length === 0) return [defaultCalendar];
+const getCalendarsMap = ({ length = 1, folders } = {} as CalendarsArrayProps): Folders => {
+	if (length === 0) return { [defaultCalendar.id]: defaultCalendar };
 	if (folders?.length && folders?.length > 0) {
-		return [defaultCalendar, ...map(folders, getCalendar)];
+		return {
+			[defaultCalendar.id]: defaultCalendar,
+			...reduce(
+				folders,
+				(acc, v) => {
+					const calendar = getCalendar(v);
+					return { ...acc, [calendar.id]: calendar };
+				},
+				{} as Folders
+			)
+		};
 	}
-	return [defaultCalendar, ...map(Array(length), getCalendar)];
+	return {
+		[defaultCalendar.id]: defaultCalendar,
+		...reduce(
+			Array(length),
+			(acc) => {
+				const calendar = getCalendar();
+				return { ...acc, [calendar.id]: calendar };
+			},
+			{} as Folders
+		)
+	};
 };
 
-export default { defaultCalendar, getCalendar, getCalendarsArray };
+export default { defaultCalendar, getCalendar, getCalendarsMap };

@@ -35,7 +35,7 @@ describe('actions', () => {
 			view: 'appointment'
 		};
 
-		const folders = mockedData.calendars.getCalendarsArray({ folders: [folder] });
+		const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
 		const onClose = jest.fn();
 
 		const store = configureStore({

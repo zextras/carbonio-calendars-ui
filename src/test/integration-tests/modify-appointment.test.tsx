@@ -79,7 +79,7 @@ describe.each`
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const context = {
 			panelView: 'app' as PanelView,
-			folders: mockedData.calendars.getCalendarsArray(),
+			folders: mockedData.calendars.getCalendarsMap(),
 			dispatch: store.dispatch
 		};
 

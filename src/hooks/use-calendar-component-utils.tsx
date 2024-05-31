@@ -13,7 +13,7 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import { useCalendarFolders } from './use-calendar-folders';
+import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from '../constants';
@@ -47,7 +47,7 @@ export const useCalendarComponentUtils = (): {
 	const createSnackbar = useSnackbar();
 
 	const dispatch = useAppDispatch();
-	const calendarFolders = useCalendarFolders();
+	const calendarFolders = useFoldersMap();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const setRange = useSetRange();
 	const { action } = useParams<{
