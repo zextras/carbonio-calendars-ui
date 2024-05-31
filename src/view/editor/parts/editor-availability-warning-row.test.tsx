@@ -369,7 +369,7 @@ describe('editor availability warning row', () => {
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
-					folders: [],
+					folders: {},
 					start: busyStart,
 					end: busyEnd,
 					meetingRoom: [editorMeetingRoomItem]
@@ -442,7 +442,7 @@ describe('editor availability warning row', () => {
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
-					folders: [],
+					folders: {},
 					start: freeStart,
 					end: freeEnd,
 					meetingRoom: [editorMeetingRoomItem]

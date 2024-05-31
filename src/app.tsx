@@ -24,7 +24,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
-import { useFoldersArray } from './carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
 import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
@@ -105,7 +105,7 @@ const SearchView = (props: SearchViewProps): React.JSX.Element => (
 
 const AppRegistrations = (): null => {
 	const onClickNewButton = useOnClickNewButton();
-	const calendars = useFoldersArray();
+	const calendars = useFoldersMap();
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 
