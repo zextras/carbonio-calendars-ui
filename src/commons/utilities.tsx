@@ -9,7 +9,7 @@ import { find, forEach, isNil, map, reduce, some } from 'lodash';
 import moment from 'moment';
 
 import {
-	getFoldersArray,
+	getFoldersMap,
 	getRoot,
 	getUpdateFolder
 } from '../carbonio-ui-commons/store/zustand/folder';
@@ -27,7 +27,7 @@ import { ReminderItem } from '../types/appointment-reminder';
 const FileExtensionRegex = /^.+\.([^.]+)$/;
 
 export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
-	const folders = getFoldersArray();
+	const folders = getFoldersMap();
 	const parentFoldersNames = item?.absFolderPath?.split('/');
 	parentFoldersNames?.pop(); // removing itself from results
 	const parentFolders =
