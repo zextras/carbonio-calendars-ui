@@ -24,7 +24,12 @@ export const EmptyModal = ({
 	const [t] = useTranslation();
 
 	const onConfirm = (): void => {
-		folderAction({ id: folderId, op: FOLDER_OPERATIONS.EMPTY, recursive: true }).then((res) => {
+		folderAction({
+			id: folderId,
+			op: FOLDER_OPERATIONS.EMPTY,
+			recursive: true,
+			type: 'appointments'
+		}).then((res) => {
 			onClose();
 			if (!res.Fault) {
 				createSnackbar({
