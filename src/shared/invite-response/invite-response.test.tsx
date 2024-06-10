@@ -908,7 +908,7 @@ describe('invite response component', () => {
 						store
 					});
 
-					const participantString = screen.getByText(/message.required_participant/i);
+					const participantString = screen.getByText(/1 participant/i);
 
 					expect(participantString).toBeVisible();
 				});
@@ -939,7 +939,7 @@ describe('invite response component', () => {
 						store
 					});
 
-					const participantString = screen.getByText(/message.optional_participant/i);
+					const participantString = screen.getByText(/1 optional/i);
 
 					expect(participantString).toBeVisible();
 				});
@@ -1508,7 +1508,7 @@ describe('invite response component', () => {
 						store
 					});
 
-					const participantString = screen.getByText(/message.optional_participant/i);
+					const participantString = screen.getByText(/1 optional/i);
 
 					expect(participantString).toBeVisible();
 				});
