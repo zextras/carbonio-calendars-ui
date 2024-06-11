@@ -11,15 +11,11 @@ describe('dates utils', () => {
 	describe('parseDateFromICS', () => {
 		test('if icsString has length > 8 it will also parse hours, minutes and seconds', () => {
 			const result = parseDateFromICS('20241203T140342');
-			expect(result.toString()).toBe(
-				'Tue Dec 03 2024 14:03:42 GMT+0100 (Ora standard dell’Europa centrale)'
-			);
+			expect(result.toString()).toMatch('Tue Dec 03 2024 14:03:42 GMT+0100');
 		});
 		test('if icsString has length < 8 it wont parse hours, minutes and seconds and value them as 0', () => {
 			const result = parseDateFromICS('20241203');
-			expect(result.toString()).toBe(
-				'Tue Dec 03 2024 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)'
-			);
+			expect(result.toString()).toMatch('Tue Dec 03 2024 00:00:00 GMT+0100');
 		});
 	});
 	describe('formatAppointmentRange', () => {
