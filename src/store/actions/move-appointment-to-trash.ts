@@ -41,12 +41,20 @@ export const buildMessagePart = ({
 	const originalInviteContentPlain = fullInvite?.textDescription?.[0]?._content ?? '';
 
 	const originalInviteContentHtml = fullInvite?.htmlDescription?.[0]?._content?.slice?.(6) ?? '';
+	const startAsString = inst?.d ?? fullInvite.start.d;
+	const endAsString = inst?.d ?? fullInvite.end.d;
 
-	const dur = fullInvite.end.u - fullInvite.start.u;
+	const parsedStart = parseDateFromICS(startAsString).valueOf();
+	const parsedEnd = parseDateFromICS(endAsString).valueOf();
+
+	const dur = (fullInvite?.end?.u ?? parsedEnd) - (fullInvite?.start?.u ?? parsedStart);
+
+	const startToFormat = startAsString ? parsedStart : fullInvite.start.u ?? 0;
+	const endToFormat = endAsString && inst?.d ? parsedEnd + dur : parsedEnd ?? fullInvite.end.u ?? 0;
 
 	const date = formatAppointmentRange({
-		start: inst?.d ? parseDateFromICS(inst.d).getTime() : fullInvite.start.u ?? 0,
-		end: inst?.d ? parseDateFromICS(inst?.d).getTime() + dur : fullInvite.end.u ?? 0,
+		start: startToFormat,
+		end: endToFormat,
 		allDay: fullInvite.allDay ?? false,
 		allDayLabel,
 		timezone: inst?.tz

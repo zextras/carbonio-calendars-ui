@@ -9,23 +9,26 @@ export const parseDateFromICS = (icsString: string): Date => {
 	const strYear = parseInt(icsString.substring(0, 4), 10);
 	const strMonth = parseInt(icsString.substring(4, 6), 10) - 1;
 	const strDay = parseInt(icsString.substring(6, 8), 10);
-	const strHour = parseInt(icsString.substring(9, 11), 10);
-	const strMin = parseInt(icsString.substring(11, 13), 10);
-	const strSec = parseInt(icsString.substring(13, 15), 10);
+	if (icsString.length > 8) {
+		const strHour = parseInt(icsString.substring(9, 11), 10);
+		const strMin = parseInt(icsString.substring(11, 13), 10);
+		const strSec = parseInt(icsString.substring(13, 15), 10);
+		return new Date(strYear, strMonth, strDay, strHour, strMin, strSec);
+	}
 
-	return new Date(strYear, strMonth, strDay, strHour, strMin, strSec);
+	return new Date(strYear, strMonth, strDay);
 };
 
 const dateTimeFormat = ({
 	locale,
 	timezone,
 	allDay,
-	inOptions
+	intlOptions
 }: {
 	locale?: string;
 	timezone?: string;
 	allDay: boolean;
-	inOptions?: Partial<Intl.DateTimeFormatOptions>;
+	intlOptions?: Partial<Intl.DateTimeFormatOptions>;
 }): Intl.DateTimeFormat => {
 	const localToApply =
 		locale ??
@@ -45,7 +48,7 @@ const dateTimeFormat = ({
 		minute: allDay ? undefined : 'numeric',
 		timeZone: timezoneToApply,
 		timeZoneName: allDay ? undefined : 'short',
-		...inOptions
+		...intlOptions
 	} as const;
 
 	return new Intl.DateTimeFormat(localToApply, options);
@@ -58,7 +61,7 @@ export const formatAppointmentRange = ({
 	allDay,
 	allDayLabel,
 	timezone,
-	inOptions
+	intlOptions
 }: {
 	start: number;
 	end: number;
@@ -66,9 +69,9 @@ export const formatAppointmentRange = ({
 	allDay: boolean;
 	allDayLabel: string;
 	timezone?: string;
-	inOptions?: Partial<Intl.DateTimeFormatOptions>;
+	intlOptions?: Partial<Intl.DateTimeFormatOptions>;
 }): string => {
-	const formattedRange = dateTimeFormat({ locale, timezone, allDay, inOptions }).formatRange(
+	const formattedRange = dateTimeFormat({ locale, timezone, allDay, intlOptions }).formatRange(
 		start,
 		end
 	);

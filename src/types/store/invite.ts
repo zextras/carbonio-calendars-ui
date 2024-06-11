@@ -36,7 +36,7 @@ export type InviteDescription = {
 export type InviteDateFormat = {
 	d: string;
 	tz?: string;
-	u: number;
+	u?: number;
 };
 
 export type InviteStatus =

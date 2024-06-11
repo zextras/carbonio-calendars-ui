@@ -34,7 +34,7 @@ describe('move appointment to trash', () => {
 					mp: expect.arrayContaining([
 						expect.objectContaining({
 							content: expect.stringMatching(
-								/instance, Thursday, March 21, 2024, 10:30\u2009–\u200911:00\u202fAM/i
+								/instance, Thursday, March 21, 2024, 9:30\u2009–\u200910:00\u202fAM/i
 							)
 						})
 					])
@@ -63,6 +63,61 @@ describe('move appointment to trash', () => {
 							content: expect.stringMatching(
 								/instance, Monday, March 18, 2024, 9:30\u2009–\u200910:00\u202fAM/i
 							)
+						})
+					])
+				})
+			);
+		});
+		test('if the date of the instance is all day, the date will have all day at the end', async () => {
+			const t = setupTMock();
+			const fullInvite = mockedData.getInvite({
+				context: {
+					allDay: true,
+					start: { d: '20240318' },
+					end: { d: '20240318' },
+					name: 'test'
+				}
+			});
+
+			const inst = { d: '20240321', tz: undefined };
+
+			const result = buildMessagePart({
+				t,
+				fullInvite,
+				inst
+			});
+
+			expect(result).toStrictEqual(
+				expect.objectContaining({
+					mp: expect.arrayContaining([
+						expect.objectContaining({
+							content: expect.stringMatching(/instance, Thursday, March 21, 2024 - All day/i)
+						})
+					])
+				})
+			);
+		});
+		test('if the date of the event is all day, the date will have all day at the end', async () => {
+			const t = setupTMock();
+			const fullInvite = mockedData.getInvite({
+				context: {
+					allDay: true,
+					start: { d: '20240318' },
+					end: { d: '20240318' },
+					name: 'test'
+				}
+			});
+
+			const result = buildMessagePart({
+				t,
+				fullInvite
+			});
+
+			expect(result).toStrictEqual(
+				expect.objectContaining({
+					mp: expect.arrayContaining([
+						expect.objectContaining({
+							content: expect.stringMatching(/instance, Monday, March 18, 2024 - All day/i)
 						})
 					])
 				})

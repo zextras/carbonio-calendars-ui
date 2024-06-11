@@ -14,7 +14,7 @@ import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { PREFS_DEFAULTS } from '../../constants';
 import * as ParticipantDisplayerAction from '../../store/actions/participant-displayer-actions';
 import { reducers } from '../../store/redux';
-import { DisplayedParticipant } from '../../view/event-panel-view/participants-displayer';
+import { DisplayedParticipant } from './participants-displayer';
 
 jest.setTimeout(20000);
 
