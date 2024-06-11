@@ -31,7 +31,7 @@ import styled, { DefaultTheme } from 'styled-components';
 
 import { GranteeChip } from './grantee-chip';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
-import { useFoldersArray } from '../../../../carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMap } from '../../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
@@ -145,7 +145,7 @@ type MainEditModalProps = {
 };
 
 export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointments, grant }) => {
-	const allCalendars = useFoldersArray();
+	const allCalendars = useFoldersMap();
 
 	const [t] = useTranslation();
 	const accounts = useUserAccounts();

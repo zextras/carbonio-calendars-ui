@@ -16,7 +16,7 @@ import { reducers } from '../../../store/redux';
 describe('editor all day checkbox', () => {
 	test('on click editor inside store will have all day option set as true', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<EditorAllDayCheckbox editorId={editor.id} />, { store });
 

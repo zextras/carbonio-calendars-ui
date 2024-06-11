@@ -23,7 +23,7 @@ import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import { useFoldersArrayByRoot, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMapByRoot, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
@@ -137,7 +137,7 @@ export const NewModal = ({
 	const createSnackbar = useSnackbar();
 	const root = useRoot(folderId);
 
-	const folders = useFoldersArrayByRoot(root?.id ?? '1');
+	const folders = useFoldersMapByRoot(root?.id ?? '1');
 	const folderArray = useMemo(() => map(folders, (f) => f.name), [folders]);
 	const showDupWarning = useMemo(
 		() => includes(folderArray, inputValue),

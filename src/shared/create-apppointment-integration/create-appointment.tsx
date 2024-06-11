@@ -7,7 +7,7 @@ import { addBoard } from '@zextras/carbonio-shell-ui';
 import { pick } from 'lodash';
 import { Dispatch } from 'redux';
 
-import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { Folders } from '../../carbonio-ui-commons/types/folder';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../constants';
 import { Editor } from '../../types/editor';
@@ -40,7 +40,7 @@ type CreateAppointmentContextType = {
 };
 
 const createAppointmentIntegration =
-	(dispatch: Dispatch, folders: Array<Folder>) =>
+	(dispatch: Dispatch, folders: Folders) =>
 	(context: CreateAppointmentContextType): void => {
 		const contextToApply = pick(context, [
 			'calendar',

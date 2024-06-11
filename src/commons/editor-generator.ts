@@ -9,7 +9,7 @@ import momentLocalizer from 'react-widgets-moment';
 import { Dispatch } from 'redux';
 
 import { getIdentityItems } from './get-identity-items';
-import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { Folder, Folders, LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { PREFS_DEFAULTS } from '../constants';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
@@ -63,7 +63,7 @@ export const disabledFields = {
 	composer: false
 };
 
-export const createEmptyEditor = (id: string, folders: Array<Folder>): Editor => {
+export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 	const identities = getIdentityItems();
 	const {
 		zimbraPrefCalendarDefaultApptDuration,
@@ -156,7 +156,7 @@ export const applyContextToEditor = ({
 export type EditorContext = {
 	isInstance?: boolean;
 	dispatch: Dispatch;
-	folders: Array<Folder>;
+	folders: Folders;
 	isProposeNewTime?: boolean;
 	panel?: boolean;
 	searchPanel?: boolean;

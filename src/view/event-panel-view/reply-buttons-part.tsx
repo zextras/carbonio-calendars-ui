@@ -14,7 +14,7 @@ import {
 	declineInvitation,
 	proposeNewTimeFn
 } from '../../actions/appointment-actions-fn';
-import { useCalendarFolders } from '../../hooks/use-calendar-folders';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
@@ -27,7 +27,7 @@ type ReplyButtonProps = {
 export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElement => {
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
-	const folders = useCalendarFolders();
+	const folders = useFoldersMap();
 	const context = useMemo(
 		() => ({
 			dispatch,

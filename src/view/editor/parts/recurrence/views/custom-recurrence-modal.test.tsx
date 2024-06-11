@@ -20,7 +20,7 @@ jest.setTimeout(10000);
 describe('custom recurrence modal', () => {
 	test('“daily” selection, “every day” option, “no end date” is selected by default', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={jest.fn()} />, {
 			store
@@ -37,7 +37,7 @@ describe('custom recurrence modal', () => {
 	});
 	test('selecting “weekly” from select will change the default starting point to “every” + “day” selection', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={jest.fn()} />, {
 			store
@@ -66,7 +66,7 @@ describe('custom recurrence modal', () => {
 	});
 	test('selecting “monthly” from select will change the default starting point to “day”(text) + “day”(input) + “every”(text) + “months”(input)', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={jest.fn()} />, {
 			store
@@ -90,7 +90,7 @@ describe('custom recurrence modal', () => {
 	});
 	test('selecting “yearly” from select will change the default starting point to “every day on”(text) + “day”(input) + “of”(text) + “month”(select)', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={jest.fn()} />, {
 			store
@@ -121,7 +121,7 @@ describe('custom recurrence modal', () => {
 describe('On modal confirmation, the editor should have the selected values', () => {
 	test('daily option default customization', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={jest.fn()} />, {
 			store
@@ -139,7 +139,7 @@ describe('On modal confirmation, the editor should have the selected values', ()
 	});
 	test('weekly option default customization', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={jest.fn()} />, {
 			store
@@ -164,7 +164,7 @@ describe('On modal confirmation, the editor should have the selected values', ()
 	});
 	test('monthly option default customization', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={jest.fn()} />, {
 			store
@@ -199,7 +199,7 @@ describe('On modal confirmation, the editor should have the selected values', ()
 	});
 	test('yearly option default customization', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<CustomRecurrenceModal editorId={editor.id} onClose={jest.fn()} />, {
 			store

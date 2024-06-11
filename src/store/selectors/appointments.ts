@@ -6,7 +6,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { find, values, reduce, filter } from 'lodash';
 
-import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { Folder, Folders } from '../../carbonio-ui-commons/types/folder';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { EventType } from '../../types/event';
 import { Appointment, InstanceReference } from '../../types/store/appointments';
@@ -44,7 +44,7 @@ export function selectApptStatus({ appointments }: RootState): string {
 export function getSelectedEvents(
 	{ appointments }: RootState,
 	idMap: Record<string, Array<string>>,
-	calendars: Array<Folder>
+	calendars: Folders
 ): Array<EventType> {
 	return normalizeCalendarEvents(
 		values(

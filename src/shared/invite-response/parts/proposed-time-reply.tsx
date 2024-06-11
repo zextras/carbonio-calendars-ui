@@ -11,9 +11,9 @@ import { find, map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
+import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../../commons/get-appointment';
-import { useCalendarFolders } from '../../../hooks/use-calendar-folders';
 import { normalizeCalendarEvent } from '../../../normalizations/normalize-calendar-events';
 import { normalizeInvite } from '../../../normalizations/normalize-invite';
 import { getInvite } from '../../../store/actions/get-invite';
@@ -35,7 +35,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	const [t] = useTranslation();
 	const createSnackbar = useSnackbar();
 	const dispatch = useAppDispatch();
-	const calendarFolders = useCalendarFolders();
+	const calendarFolders = useFoldersMap();
 	const [openComposer, available] = useIntegratedFunction('compose');
 
 	const acceptProposedTime = useCallback(() => {
