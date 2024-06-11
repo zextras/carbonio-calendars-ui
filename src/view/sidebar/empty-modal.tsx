@@ -64,8 +64,8 @@ export const EmptyModal = ({
 			<Padding all="small">
 				<Text overflow="break-word">
 					{t(
-						'action.empty_trash_confirmation',
-						'This action will delete all items in E-mail, Contacts, Calendar, Tasks and Briefcase trash folders. Are you sure that you want to permanently delete everything in these trash folders?'
+						'action.empty_trash_deleting_confirmation',
+						'You are deleting all items in the Calendar trash folder. The deletion is permanent. Are you sure you want to delete all the items?'
 					)}
 				</Text>
 			</Padding>
