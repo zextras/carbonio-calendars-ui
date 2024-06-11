@@ -76,7 +76,9 @@ describe('dates utils', () => {
 					}
 				});
 
-				expect(result).toEqual('Monday, March 18, 2024, 9:30\u2009–\u200910:00\u202fAM Italy Time');
+				expect(result).toEqual(
+					'Monday, March 18, 2024, 9:30\u2009–\u200910:00\u202fAM Germany Time'
+				);
 			});
 		});
 	});

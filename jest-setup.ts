@@ -79,7 +79,7 @@ beforeEach(() => {
 	const originalDateResolvedOptions = new Intl.DateTimeFormat().resolvedOptions();
 	jest.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockReturnValue({
 		...originalDateResolvedOptions,
-		timeZone: 'Europe/Rome'
+		timeZone: 'Europe/Berlin'
 	});
 	jest.setSystemTime(new Date('2022-01-01'));
 	defaultBeforeEachTest();
