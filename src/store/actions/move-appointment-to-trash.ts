@@ -44,8 +44,8 @@ export const buildMessagePart = ({
 	const startAsString = inst?.d ?? fullInvite.start.d;
 	const endAsString = inst?.d ?? fullInvite.end.d;
 
-	const parsedStart = parseDateFromICS(startAsString).valueOf();
-	const parsedEnd = parseDateFromICS(endAsString).valueOf();
+	const parsedStart = parseDateFromICS(startAsString, inst?.tz ?? fullInvite?.end?.tz).valueOf();
+	const parsedEnd = parseDateFromICS(endAsString, inst?.tz ?? fullInvite?.end?.tz).valueOf();
 
 	const dur = (fullInvite?.end?.u ?? parsedEnd) - (fullInvite?.start?.u ?? parsedStart);
 

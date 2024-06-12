@@ -97,6 +97,95 @@ describe('move appointment to trash', () => {
 				})
 			);
 		});
+		test('if the date of the instance has a different timezone from local, creation timezone will be used', async () => {
+			const t = setupTMock();
+			const currentTz = 'Asia/Kolkata';
+			const fullInvite = mockedData.getInvite({
+				context: {
+					start: { d: '20240611T083000', tz: currentTz, u: 1718074800000 },
+					end: { d: '20240611T090000', tz: currentTz, u: 1718076600000 },
+					name: 'test'
+				}
+			});
+			const inst = { d: '20240615T083000', tz: currentTz };
+
+			const result = buildMessagePart({
+				t,
+				fullInvite,
+				inst
+			});
+
+			expect(result).toStrictEqual(
+				expect.objectContaining({
+					mp: expect.arrayContaining([
+						expect.objectContaining({
+							content: expect.stringMatching(
+								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+5:30/i
+							)
+						})
+					])
+				})
+			);
+		});
+		test('if the date of the instance has the same timezone as the local, local timezone will be used', async () => {
+			const t = setupTMock();
+			const localTimezone = 'Europe/Berlin';
+			const fullInvite = mockedData.getInvite({
+				context: {
+					start: { d: '20240611T083000', tz: localTimezone, u: 1718074800000 },
+					end: { d: '20240611T090000', tz: localTimezone, u: 1718076600000 },
+					name: 'test'
+				}
+			});
+			const inst = { d: '20240615T083000', tz: localTimezone };
+
+			const result = buildMessagePart({
+				t,
+				fullInvite,
+				inst
+			});
+
+			expect(result).toStrictEqual(
+				expect.objectContaining({
+					mp: expect.arrayContaining([
+						expect.objectContaining({
+							content: expect.stringMatching(
+								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+2/i
+							)
+						})
+					])
+				})
+			);
+		});
+		test('if the date of the instance has no timezone, local timezone will be used', async () => {
+			const t = setupTMock();
+			const fullInvite = mockedData.getInvite({
+				context: {
+					start: { d: '20240611T083000', u: 1718074800000 },
+					end: { d: '20240611T090000', u: 1718076600000 },
+					name: 'test'
+				}
+			});
+			const inst = { d: '20240615T083000', tz: undefined };
+
+			const result = buildMessagePart({
+				t,
+				fullInvite,
+				inst
+			});
+
+			expect(result).toStrictEqual(
+				expect.objectContaining({
+					mp: expect.arrayContaining([
+						expect.objectContaining({
+							content: expect.stringMatching(
+								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+2/i
+							)
+						})
+					])
+				})
+			);
+		});
 		test('if the date of the event is all day, the date will have all day at the end', async () => {
 			const t = setupTMock();
 			const fullInvite = mockedData.getInvite({

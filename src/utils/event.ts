@@ -27,7 +27,7 @@ export const getInstanceExceptionId = ({
 			}
 		: {
 				d: tz
-					? moment(start).format(DATE_FORMAT.LOCAL)
+					? moment(start).tz(tz).format(DATE_FORMAT.LOCAL)
 					: moment(start).utc().format(DATE_FORMAT.UTC),
 				tz
 			};
