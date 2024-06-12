@@ -194,7 +194,7 @@ describe('calendar actions items', () => {
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.EMPTY_TRASH,
-					icon: 'SlashOutline',
+					icon: 'DeletePermanentlyOutline',
 					label: trashEmptyLabel,
 					tooltipLabel: noPermissionLabel,
 					onClick: expect.any(Function),
