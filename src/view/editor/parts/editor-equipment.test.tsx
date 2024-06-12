@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
-import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
 import { map } from 'lodash';
 import moment from 'moment';
 import { http, HttpResponse } from 'msw';
