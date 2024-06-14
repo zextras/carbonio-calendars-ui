@@ -47,8 +47,9 @@ export type AppointmentActionsItems = {
 	id: EventActionsId;
 	icon: string;
 	disabled: boolean;
+	keepOpen?: boolean;
 	label: string;
-	onClick: (ev: ActionsClick) => void;
+	onClick?: (ev: ActionsClick) => void;
 	tooltipLabel: string;
 };
 
