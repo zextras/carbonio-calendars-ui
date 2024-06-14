@@ -30,7 +30,8 @@ export const EventActionsEnum = {
 	INSTANCE: 'instance',
 	SERIES: 'series',
 	SHOW_ORIGINAL: 'show_original',
-	DOWNLOAD_ICS: 'download_ics'
+	DOWNLOAD_ICS: 'download_ics',
+	ANSWER: 'answer'
 } as const;
 
 export const CalendarIntegrations = {

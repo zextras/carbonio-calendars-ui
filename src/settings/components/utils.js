@@ -12,136 +12,136 @@ export const ShowReminderOptions = () => [
 	{
 		label: t('reminder.minute_before', {
 			count: 1,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: '1'
 	},
 	{
 		label: t('reminder.minute_before', {
 			count: 5,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: '5'
 	},
 	{
 		label: t('reminder.minute_before', {
 			count: 10,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: '10'
 	},
 	{
 		label: t('reminder.minute_before', {
 			count: 15,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: '15'
 	},
 	{
 		label: t('reminder.minute_before', {
 			count: 30,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: '30'
 	},
 	{
 		label: t('reminder.minute_before', {
 			count: 45,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: '45'
 	},
 	{
 		label: t('reminder.hour_before', {
 			count: 1,
-			defaultValue: '{{count}} hour before',
-			defaultValue_plural: '{{count}} hours before'
+			defaultValue_one: '{{count}} hour before',
+			defaultValue_other: '{{count}} hours before'
 		}),
 		value: '60'
 	},
 	{
 		label: t('reminder.hour_before', {
 			count: 2,
-			defaultValue: '{{count}} hour before',
-			defaultValue_plural: '{{count}} hours before'
+			defaultValue_one: '{{count}} hour before',
+			defaultValue_other: '{{count}} hours before'
 		}),
 		value: '120'
 	},
 	{
 		label: t('reminder.hour_before', {
 			count: 4,
-			defaultValue: '{{count}} hour before',
-			defaultValue_plural: '{{count}} hours before'
+			defaultValue_one: '{{count}} hour before',
+			defaultValue_other: '{{count}} hours before'
 		}),
 		value: '240'
 	},
 	{
 		label: t('reminder.hour_before', {
 			count: 5,
-			defaultValue: '{{count}} hour before',
-			defaultValue_plural: '{{count}} hours before'
+			defaultValue_one: '{{count}} hour before',
+			defaultValue_other: '{{count}} hours before'
 		}),
 		value: '300'
 	},
 	{
 		label: t('reminder.hour_before', {
 			count: 18,
-			defaultValue: '{{count}} hour before',
-			defaultValue_plural: '{{count}} hours before'
+			defaultValue_one: '{{count}} hour before',
+			defaultValue_other: '{{count}} hours before'
 		}),
 		value: '1080'
 	},
 	{
 		label: t('reminder.day_before', {
 			count: 1,
-			defaultValue: '{{count}} day before',
-			defaultValue_plural: '{{count}} days before'
+			defaultValue_one: '{{count}} day before',
+			defaultValue_other: '{{count}} days before'
 		}),
 		value: '1440'
 	},
 	{
 		label: t('reminder.day_before', {
 			count: 2,
-			defaultValue: '{{count}} day before',
-			defaultValue_plural: '{{count}} days before'
+			defaultValue_one: '{{count}} day before',
+			defaultValue_other: '{{count}} days before'
 		}),
 		value: '2880'
 	},
 	{
 		label: t('reminder.day_before', {
 			count: 3,
-			defaultValue: '{{count}} day before',
-			defaultValue_plural: '{{count}} days before'
+			defaultValue_one: '{{count}} day before',
+			defaultValue_other: '{{count}} days before'
 		}),
 		value: '4320'
 	},
 	{
 		label: t('reminder.day_before', {
 			count: 4,
-			defaultValue: '{{count}} day before',
-			defaultValue_plural: '{{count}} days before'
+			defaultValue_one: '{{count}} day before',
+			defaultValue_other: '{{count}} days before'
 		}),
 		value: '5760'
 	},
 	{
 		label: t('reminder.week_before', {
 			count: 1,
-			defaultValue: '{{count}} week before',
-			defaultValue_plural: '{{count}} weeks before'
+			defaultValue_one: '{{count}} week before',
+			defaultValue_other: '{{count}} weeks before'
 		}),
 		value: '10080'
 	},
 	{
 		label: t('reminder.week_before', {
 			count: 2,
-			defaultValue: '{{count}} week before',
-			defaultValue_plural: '{{count}} weeks before'
+			defaultValue_one: '{{count}} week before',
+			defaultValue_other: '{{count}} weeks before'
 		}),
 		value: '20160'
 	}
@@ -714,32 +714,32 @@ export const SpanTimeOptions = (isMinutesFormat) => [
 	{
 		label: t('reminder.minute_before', {
 			count: 30,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: isMinutesFormat ? '30m' : '1800'
 	},
 	{
 		label: t('reminder.minute_before', {
 			count: 60,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: isMinutesFormat ? '60m' : '3600'
 	},
 	{
 		label: t('reminder.minute_before', {
 			count: 90,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: isMinutesFormat ? '90m' : '5400'
 	},
 	{
 		label: t('reminder.minute_before', {
 			count: 120,
-			defaultValue: '{{count}} minute before',
-			defaultValue_plural: '{{count}} minutes before'
+			defaultValue_one: '{{count}} minute before',
+			defaultValue_other: '{{count}} minutes before'
 		}),
 		value: isMinutesFormat ? '120m' : '7200'
 	}

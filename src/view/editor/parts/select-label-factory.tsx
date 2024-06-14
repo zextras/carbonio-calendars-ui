@@ -124,8 +124,8 @@ export const ItemFactory = ({
 		if (acl?.grant) {
 			const tooltipText = t('tooltip.calendar_sharing_status', {
 				count: acl?.grant?.length,
-				defaultValue_plural: 'Shared with {{count}} people',
-				defaultValue: 'Shared with 1 person'
+				defaultValue_one: 'Shared with 1 person',
+				defaultValue_other: 'Shared with {{count}} people'
 			});
 			return <RowWithIcon icon={'Shared'} color={'shared'} tooltipText={tooltipText} />;
 		}
