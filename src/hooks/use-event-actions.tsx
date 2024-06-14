@@ -9,7 +9,6 @@ import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { compact, find, omit } from 'lodash';
 
-import { useCalendarFolders } from './use-calendar-folders';
 import {
 	answerToEventItem,
 	copyEventItem,
@@ -20,6 +19,7 @@ import {
 	openEventItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
+import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { isLinkChild } from '../commons/utilities';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
@@ -152,7 +152,7 @@ export const useEventActions = ({
 	const createModal = useModal();
 	const tags = useTags();
 	const createSnackbar = useSnackbar();
-	const calendarFolders = useCalendarFolders();
+	const calendarFolders = useFoldersMap();
 	const _context = useMemo(
 		() => ({
 			tags,

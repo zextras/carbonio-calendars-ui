@@ -3,12 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { Suspense, lazy, ReactElement } from 'react';
+import React, { Suspense, lazy, ReactElement, useEffect } from 'react';
 
 import { Button, Container } from '@zextras/carbonio-design-system';
 import { noop } from 'lodash';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
+import { UPDATE_VIEW_EVENT } from '../../constants';
+import { NoOpRequest } from '../../soap/noop-request';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import EventPanelView from '../event-panel-view/event-panel-view';
 
@@ -18,6 +20,14 @@ const CalendarComponent = lazy(
 
 export default function CalendarView(): ReactElement {
 	const { path } = useRouteMatch();
+
+	useEffect(() => {
+		window.addEventListener(UPDATE_VIEW_EVENT, NoOpRequest);
+
+		return () => {
+			window.removeEventListener(UPDATE_VIEW_EVENT, NoOpRequest);
+		};
+	}, []);
 
 	return (
 		<Container

@@ -7,7 +7,7 @@ import { SyntheticEvent, useCallback } from 'react';
 
 import { addBoard } from '@zextras/carbonio-shell-ui';
 
-import { useCalendarFolders } from './use-calendar-folders';
+import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
 import { useAppDispatch } from '../store/redux/hooks';
@@ -15,7 +15,7 @@ import { useAppDispatch } from '../store/redux/hooks';
 export const useOnClickNewButton = (): ((
 	ev?: SyntheticEvent<HTMLElement, Event> | KeyboardEvent
 ) => void) => {
-	const calendarFolders = useCalendarFolders();
+	const calendarFolders = useFoldersMap();
 	const dispatch = useAppDispatch();
 
 	return useCallback(

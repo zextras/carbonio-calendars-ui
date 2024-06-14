@@ -165,11 +165,7 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 										</Padding>
 									</Tooltip>
 								)}
-							<TagIconComponent
-								event={event}
-								showInnerTooltip={showInnerTooltip}
-								hideInnerTooltip={hideInnerTooltip}
-							/>
+							<TagIconComponent event={event} disableOuterTooltip={setTooltipVisible} />
 						</Row>
 					</Row>
 					<Row

@@ -3,7 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, {
+	Dispatch,
+	ReactElement,
+	SetStateAction,
+	useCallback,
+	useMemo,
+	useState
+} from 'react';
 
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { Tag, useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
@@ -19,13 +26,11 @@ export type TagItems = Tag & {
 
 export const TagIconComponent = ({
 	event,
-	showInnerTooltip,
-	hideInnerTooltip
+	disableOuterTooltip
 }: {
 	event: EventType;
-	showInnerTooltip?: () => void;
-	hideInnerTooltip?: () => void;
-}): JSX.Element => {
+	disableOuterTooltip: Dispatch<SetStateAction<boolean>>;
+}): React.JSX.Element => {
 	const [showDropdown, setShowDropdown] = useState(false);
 	const onIconClick = useCallback((ev) => {
 		ev.stopPropagation();
@@ -119,10 +124,10 @@ export const TagIconComponent = ({
 							data-testid="TagSingleIcon"
 							icon={tagIcon}
 							color={tagIconColor}
-							onMouseEnter={showInnerTooltip}
-							onMouseLeave={hideInnerTooltip}
-							onFocus={showInnerTooltip}
-							onBlur={hideInnerTooltip}
+							onMouseEnter={(): void => disableOuterTooltip(true)}
+							onMouseLeave={(): void => disableOuterTooltip(false)}
+							onFocus={(): void => disableOuterTooltip(true)}
+							onBlur={(): void => disableOuterTooltip(false)}
 						/>
 					</Padding>
 				</Tooltip>
@@ -136,10 +141,10 @@ export const TagIconComponent = ({
 							icon={tagIcon}
 							onClick={onIconClick}
 							color={tagIconColor}
-							onMouseEnter={showInnerTooltip}
-							onMouseLeave={hideInnerTooltip}
-							onFocus={showInnerTooltip}
-							onBlur={hideInnerTooltip}
+							onMouseEnter={(): void => disableOuterTooltip(true)}
+							onMouseLeave={(): void => disableOuterTooltip(false)}
+							onFocus={(): void => disableOuterTooltip(true)}
+							onBlur={(): void => disableOuterTooltip(false)}
 						/>
 					</Padding>
 				</Dropdown>

@@ -95,7 +95,7 @@ export const emptyTrashItem = ({
 	item: { id: string; children?: Array<Folder>; n?: number };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EMPTY_TRASH,
-	icon: 'SlashOutline',
+	icon: 'DeletePermanentlyOutline',
 	label: t('action.empty_trash', 'Empty Trash'),
 	tooltipLabel:
 		hasId(item, FOLDERS.TRASH) &&

@@ -31,7 +31,7 @@ const folder = {
 	view: 'appointment'
 };
 
-const folders = mockedData.calendars.getCalendarsArray({ folders: [folder] });
+const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
 
 shell.useUserAccount.mockImplementation(() => userAccount);
 shell.getUserAccount.mockImplementation(() => userAccount);

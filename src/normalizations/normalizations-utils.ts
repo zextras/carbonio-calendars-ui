@@ -124,38 +124,38 @@ export const getAlarmToString = (alarm?: AlarmData): string => {
 					seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK);
 				return t('reminder.week_before', {
 					count: weeks,
-					defaultValue: '{{count}} week before',
-					defaultValue_plural: '{{count}} weeks before'
+					defaultValue_one: '{{count}} week before',
+					defaultValue_other: '{{count}} weeks before'
 				});
 			}
 			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY) === 0) {
 				const days = seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY);
 				return t('reminder.day_before', {
 					count: days,
-					defaultValue: '{{count}} day before',
-					defaultValue_plural: '{{count}} days before'
+					defaultValue_one: '{{count}} day before',
+					defaultValue_other: '{{count}} days before'
 				});
 			}
 			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR) === 0) {
 				const hours = seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR);
 				return t('reminder.hour_before', {
 					count: hours,
-					defaultValue: '{{count}} hour before',
-					defaultValue_plural: '{{count}} hours before'
+					defaultValue_one: '{{count}} hour before',
+					defaultValue_other: '{{count}} hours before'
 				});
 			}
 			if (seconds % SECONDS_PER_MINUTE === 0) {
 				const minutes = seconds / SECONDS_PER_MINUTE;
 				return t('reminder.minute_before', {
 					count: minutes,
-					defaultValue: '{{count}} minute before',
-					defaultValue_plural: '{{count}} minutes before'
+					defaultValue_one: '{{count}} minute before',
+					defaultValue_other: '{{count}} minutes before'
 				});
 			}
 			return t('reminder.second_before', {
 				count: seconds,
-				defaultValue: '{{count}} second before',
-				defaultValue_plural: '{{count}} seconds before'
+				defaultValue_one: '{{count}} second before',
+				defaultValue_other: '{{count}} seconds before'
 			});
 		}
 	}

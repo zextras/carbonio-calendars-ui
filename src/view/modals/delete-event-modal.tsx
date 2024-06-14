@@ -11,9 +11,9 @@ import { size } from 'lodash';
 import styled from 'styled-components';
 
 import { ModifyStandardMessageModal } from './modify-standard-message-modal';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { useCalendarFolders } from '../../hooks/use-calendar-folders';
 import { useDeleteActions, UseDeleteActionsType } from '../../hooks/use-delete-actions';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
@@ -138,7 +138,7 @@ export const DeleteEventModal = ({
 	const { isOrganizer, isException, participants } = invite;
 	const participantsSize = useMemo(() => size(participants), [participants]);
 	const dispatch = useAppDispatch();
-	const calendarFolders = useCalendarFolders();
+	const calendarFolders = useFoldersMap();
 	const isInstance = !!event.resource.ridZ;
 	const isRecurrent = !!invite.recurrenceRule;
 	const isSeries = isRecurrent && !isInstance;
