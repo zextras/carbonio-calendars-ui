@@ -72,7 +72,7 @@ export const moveAppointmentToTrashRejected = (
 		SerializedError
 	>
 ): void => {
-	if (meta.arg.previousState) {
+	if (meta?.arg?.previousState) {
 		state.appointments = meta.arg.previousState;
 		state.status = 'error';
 	}
