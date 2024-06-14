@@ -60,78 +60,78 @@ export const useGetReminderItems = (
 				{
 					id: t('reminder.minute_before', {
 						count: 1,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					label: t('reminder.minute_before', {
 						count: 1,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					value: 60
 				},
 				{
 					id: t('reminder.minute_before', {
 						count: 5,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					label: t('reminder.minute_before', {
 						count: 5,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					value: 5 * 60
 				},
 				{
 					id: t('reminder.minute_before', {
 						count: 10,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					label: t('reminder.minute_before', {
 						count: 10,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					value: 10 * 60
 				},
 				{
 					id: t('reminder.minute_before', {
 						count: 15,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					label: t('reminder.minute_before', {
 						count: 15,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					value: 15 * 60
 				},
 				{
 					id: t('reminder.minute_before', {
 						count: 30,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					label: t('reminder.minute_before', {
 						count: 30,
-						defaultValue: '{{count}} minute before',
-						defaultValue_plural: '{{count}} minutes before'
+						defaultValue_one: '{{count}} minute before',
+						defaultValue_other: '{{count}} minutes before'
 					}),
 					value: 15 * 60
 				},
 				{
 					id: t('reminder.hour_before', {
 						count: 1,
-						defaultValue: '{{count}} hour before',
-						defaultValue_plural: '{{count}} hours before'
+						defaultValue_one: '{{count}} hour before',
+						defaultValue_other: '{{count}} hours before'
 					}),
 					label: t('reminder.hour_before', {
 						count: 1,
-						defaultValue: '{{count}} hour before',
-						defaultValue_plural: '{{count}} hours before'
+						defaultValue_one: '{{count}} hour before',
+						defaultValue_other: '{{count}} hours before'
 					}),
 					value: 60 * 60
 				}
@@ -146,8 +146,8 @@ export const useGetReminderItems = (
 					id: 'reminder_after_1',
 					label: t('reminder.minutes', {
 						count: 1,
-						defaultValue: '{{count}} minute ',
-						defaultValue_plural: '{{count}} minutes'
+						defaultValue_one: '{{count}} minute ',
+						defaultValue_other: '{{count}} minutes'
 					}),
 					beforeEvent: false,
 					value: 60
@@ -156,8 +156,8 @@ export const useGetReminderItems = (
 					id: 'reminder_after_5',
 					label: t('reminder.minutes', {
 						count: 5,
-						defaultValue: '{{count}} minute',
-						defaultValue_plural: '{{count}} minutes'
+						defaultValue_one: '{{count}} minute',
+						defaultValue_other: '{{count}} minutes'
 					}),
 					beforeEvent: false,
 					value: 5 * 60
@@ -166,8 +166,8 @@ export const useGetReminderItems = (
 					id: 'reminder_after_10',
 					label: t('reminder.minutes', {
 						count: 10,
-						defaultValue: '{{count}} minute',
-						defaultValue_plural: '{{count}} minutes'
+						defaultValue_one: '{{count}} minute',
+						defaultValue_other: '{{count}} minutes'
 					}),
 					beforeEvent: false,
 					value: 10 * 60
@@ -176,8 +176,8 @@ export const useGetReminderItems = (
 					id: 'reminder_after_15',
 					label: t('reminder.minutes', {
 						count: 15,
-						defaultValue: '{{count}} minute',
-						defaultValue_plural: '{{count}} minutes'
+						defaultValue_one: '{{count}} minute',
+						defaultValue_other: '{{count}} minutes'
 					}),
 					beforeEvent: false,
 					value: 15 * 60
@@ -186,8 +186,8 @@ export const useGetReminderItems = (
 					id: 'reminder_after_30',
 					label: t('reminder.minutes', {
 						count: 30,
-						defaultValue: '{{count}} minute',
-						defaultValue_plural: '{{count}} minutes '
+						defaultValue_one: '{{count}} minute',
+						defaultValue_other: '{{count}} minutes '
 					}),
 					beforeEvent: false,
 					value: 30 * 60
@@ -196,8 +196,8 @@ export const useGetReminderItems = (
 					id: 'reminder_after_60',
 					label: t('reminder.hours', {
 						count: 1,
-						defaultValue: '{{count}} hour',
-						defaultValue_plural: '{{count}} hours'
+						defaultValue_one: '{{count}} hour',
+						defaultValue_other: '{{count}} hours'
 					}),
 					beforeEvent: false,
 					value: 60 * 60
