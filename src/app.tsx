@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 import React, { lazy, useEffect, Suspense } from 'react';
 
 import { ModalManager } from '@zextras/carbonio-design-system';
@@ -17,9 +18,9 @@ import {
 	ACTION_TYPES,
 	registerFunctions,
 	SearchViewProps,
-	SecondaryBarComponentProps,
-	AnyFunction
+	SecondaryBarComponentProps
 } from '@zextras/carbonio-shell-ui';
+import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { useTranslation } from 'react-i18next';
 
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';

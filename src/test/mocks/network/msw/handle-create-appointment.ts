@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui/types/network/soap';
+import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
 import { HttpResponse, HttpResponseResolver } from 'msw';
 
