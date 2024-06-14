@@ -48,6 +48,7 @@ export type FolderAction = {
 	f?: string;
 	zid?: string;
 	grant?: Grant | Grant[];
+	type?: string;
 };
 
 type GenericRequest = {
