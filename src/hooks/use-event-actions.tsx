@@ -10,16 +10,13 @@ import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui'
 import { compact, find, omit } from 'lodash';
 
 import {
-	acceptAsTentativeItem,
-	acceptInvitationItem,
+	answerToEventItem,
 	copyEventItem,
-	declineInvitationItem,
 	deleteEventItem,
 	editEventItem,
 	exportAppointmentICSItem,
 	moveEventItem,
 	openEventItem,
-	proposeNewTimeItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
@@ -39,36 +36,6 @@ import {
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
-
-export const isAnInvite = (event: EventType): boolean => {
-	if (event.resource.organizer) {
-		return (
-			!event.resource.iAmOrganizer &&
-			event.haveWriteAccess &&
-			((!!event.resource.calendar.owner &&
-				event.resource.organizer &&
-				event.resource.calendar.owner !== event.resource.organizer.email) ||
-				!event.resource.calendar.owner)
-		);
-	}
-	return false;
-};
-
-const getInviteActionsArray = ({
-	event,
-	context,
-	invite
-}: ActionsProps): AppointmentActionsItems[] => {
-	if (isAnInvite(event)) {
-		return [
-			acceptInvitationItem({ event, context }),
-			acceptAsTentativeItem({ event, context }),
-			declineInvitationItem({ event, context }),
-			proposeNewTimeItem({ event, invite, context })
-		];
-	}
-	return [];
-};
 
 const getExportICSItem = ({
 	event,
@@ -97,7 +64,7 @@ const getInstanceActionsItems = ({ event, invite, context }: ActionsProps): Inst
 		copyEventItem({ event, invite, context }),
 		showOriginal({ event }),
 		applyTag({ event, context }),
-		...getInviteActionsArray({ event, invite, context }),
+		answerToEventItem({ event, invite, context }),
 		getExportICSItem({ event, context })
 	]);
 
@@ -114,7 +81,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 			onClick: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},
-			items: [
+			items: compact([
 				openEventItem({
 					event,
 					context
@@ -124,8 +91,8 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...getInviteActionsArray({ event, invite, context: contextOverride })
-			]
+				answerToEventItem({ event, invite, context: contextOverride })
+			])
 		},
 		{
 			id: EventActionsEnum.SERIES,
@@ -147,7 +114,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				copyEventItem({ event: seriesEvent, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
-				...getInviteActionsArray({ event: seriesEvent, invite, context }),
+				answerToEventItem({ event: seriesEvent, invite, context }),
 				getExportICSItem({ event: seriesEvent, context })
 			])
 		}

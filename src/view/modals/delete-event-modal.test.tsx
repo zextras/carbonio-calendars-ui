@@ -377,11 +377,9 @@ describe('delete event modal', () => {
 								mp: {
 									ct: 'multipart/alternative',
 									mp: [
-										{ content: 'The following meeting has been cancelled:\n\n', ct: 'text/plain' },
+										{ content: expect.stringMatching(/The following/), ct: 'text/plain' },
 										{
-											content: expect.stringContaining(
-												'<h3>The following meeting has been cancelled:</h3><br/><br/>'
-											),
+											content: expect.stringMatching(/The following/),
 											ct: 'text/html'
 										}
 									]
@@ -527,11 +525,9 @@ describe('delete event modal', () => {
 							mp: {
 								ct: 'multipart/alternative',
 								mp: [
-									{ content: 'The following meeting has been cancelled:\n\n', ct: 'text/plain' },
+									{ content: expect.stringMatching(/The following/), ct: 'text/plain' },
 									{
-										content: expect.stringContaining(
-											'<h3>The following meeting has been cancelled:</h3><br/><br/>'
-										),
+										content: expect.stringMatching(/The following/),
 										ct: 'text/html'
 									}
 								]

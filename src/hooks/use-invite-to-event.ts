@@ -10,7 +10,7 @@ import { Invite } from '../types/store/invite';
 export const inviteToEvent = (invite: Invite): any => ({
 	start: invite.allDay
 		? new Date(moment(invite?.start?.d).startOf('day').valueOf())
-		: new Date(invite?.start?.u),
+		: new Date(moment(invite?.start?.d).valueOf() ?? invite?.start?.u),
 	end: invite.allDay
 		? new Date(
 				moment(invite?.start?.d)
@@ -23,7 +23,10 @@ export const inviteToEvent = (invite: Invite): any => ({
 					.endOf('day')
 					.valueOf()
 			)
-		: new Date(invite.start.u + moment(invite.end.d).diff(moment(invite.start.d))),
+		: new Date(
+				(invite?.start?.u ?? moment(invite?.start?.d).valueOf()) +
+					moment(invite.end.d).diff(moment(invite.start.d))
+			),
 	resource: {
 		id: invite.apptId,
 		inviteId: invite.id,
