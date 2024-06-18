@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.10.3...v1.11.0) (2024-06-18)
+
+
+### Features
+
+* convert app entrypoint to typescript ([220b0b7](https://github.com/zextras/carbonio-calendars-ui/commit/220b0b76b6b967768c61b279f394a1f76df26bb5))
+* group all the reply actions in one menu item ([2ca03c8](https://github.com/zextras/carbonio-calendars-ui/commit/2ca03c883d15a62a6778f55c20998e8c9cdd1fd3))
+* remove redundant 'Share calendar' option in calendar's contextual menu ([6d3abc1](https://github.com/zextras/carbonio-calendars-ui/commit/6d3abc1d6748b5c8c4bfaf8aa907877a2619dd54))
+* show recurrent icon in calendar grid ([e4951ba](https://github.com/zextras/carbonio-calendars-ui/commit/e4951bab04379cbed71221756293b08749e13587))
+* update view uses shell new implementation ([7c5d9ca](https://github.com/zextras/carbonio-calendars-ui/commit/7c5d9ca63941757698ac16ef8316583399883b82))
+* update view uses shell new implementation ([2c0251b](https://github.com/zextras/carbonio-calendars-ui/commit/2c0251b4b92169e52873aa7f076bb9ce60a06cce))
+* use json v4 for translations updates ([a726f30](https://github.com/zextras/carbonio-calendars-ui/commit/a726f30845995b795f0d1476f71df1260930c512))
+
+
+### Bug Fixes
+
+* add new optional attribute type in folderactionrequest for empty operation ([6fd79c6](https://github.com/zextras/carbonio-calendars-ui/commit/6fd79c6de69ee598d23b27f4803ec5af9db9a70a))
+* cancellation message displays cancelled event ([50b065b](https://github.com/zextras/carbonio-calendars-ui/commit/50b065b9d0a25be6a4a5bddfa5d5a47515404056))
+* change emptry trash menu icon ([fe06d67](https://github.com/zextras/carbonio-calendars-ui/commit/fe06d67f1d97cf0be198cc95de75f2f6517d6b07))
+* change empty trash folder confirmation message ([f99d755](https://github.com/zextras/carbonio-calendars-ui/commit/f99d7558dbfe9d14bcf6b6caa2c6987362b2b03f))
+* recurrence end date picker does not create overflow inside the modal ([b68093b](https://github.com/zextras/carbonio-calendars-ui/commit/b68093b139590513b6136480d51d2af435fb64a2))
+* update submodule and store hook usage ([cc9b085](https://github.com/zextras/carbonio-calendars-ui/commit/cc9b08538f10755fd8614eb1c2db3349299bfdeb))
+* update zustand store hooks ([60e0e63](https://github.com/zextras/carbonio-calendars-ui/commit/60e0e6364c0ec6a172ef20b44da9fe16036291b9))
+* update zustand store hooks ([9edbce1](https://github.com/zextras/carbonio-calendars-ui/commit/9edbce1d0c0901ef05c4ef37f6444727d01691c0))
+
 ### [1.10.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.10.2...v1.10.3) (2024-05-09)
 
 ### [1.10.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.10.1...v1.10.2) (2024-05-09)
