@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { Button, ChipInput, Container, Row } from '@zextras/carbonio-design-system';
+import { Button, ChipInput, Container, Row, useSnackbar } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { find, map, reject, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,7 @@ import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
+import { getOrderedAccountIds } from '../../../carbonio-ui-commons/helpers/identities';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -24,7 +25,8 @@ import {
 	selectEditorEnd,
 	selectEditorOptionalAttendees,
 	selectEditorStart,
-	selectEditorUid
+	selectEditorUid,
+	selectSender
 } from '../../../store/selectors/editor';
 import {
 	editEditorAttendees,
@@ -60,8 +62,11 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
+	const sender = useAppSelector(selectSender(editorId));
+	const createSnackbar = useSnackbar();
 
 	const [showOptionals, setShowOptional] = useState(!!optionalAttendees?.length);
+	const [orderedAccountIds, setOrderedAccountIds] = useState<Array<string>>([]);
 	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, attendees, uid);
@@ -71,6 +76,23 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		() => some(optionalAttendees ?? [], { error: true }),
 		[optionalAttendees]
 	);
+
+	useEffect(() => {
+		getOrderedAccountIds(sender ? sender.address : '')
+			.then((ids) => {
+				setOrderedAccountIds(ids);
+			})
+			.catch(() => {
+				createSnackbar({
+					key: `ordered-account-ids`,
+					replace: true,
+					type: 'error',
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			});
+	}, [createSnackbar, sender, t]);
 
 	const onChange = useCallback(
 		(value) => {
@@ -157,6 +179,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								defaultValue={defaultValue}
 								disabled={disabled?.attendees}
 								dragAndDropEnabled
+								orderedAccountIds={orderedAccountIds}
 							/>
 						) : (
 							<ChipInput
@@ -207,6 +230,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								defaultValue={optionalAttendees}
 								disabled={disabled?.optionalAttendees}
 								dragAndDropEnabled
+								orderedAccountIds={orderedAccountIds}
 							/>
 						) : (
 							<ChipInput

@@ -55,7 +55,7 @@ describe('normalize soap message from editor', () => {
 
 					const editor = generateEditor({
 						context: {
-							folders: [],
+							folders: {},
 							dispatch: jest.fn(),
 							calendar: mainAccountEditorFolder
 						}
@@ -85,7 +85,7 @@ describe('normalize soap message from editor', () => {
 
 					const editor = generateEditor({
 						context: {
-							folders: [],
+							folders: {},
 							dispatch: jest.fn(),
 							calendar: mainAccountEditorFolder
 						}
@@ -126,7 +126,7 @@ describe('normalize soap message from editor', () => {
 
 						const editor = generateEditor({
 							context: {
-								folders: [],
+								folders: {},
 								dispatch: jest.fn(),
 								calendar: mainAccountEditorFolder,
 								sender: identities[1]
@@ -161,7 +161,7 @@ describe('normalize soap message from editor', () => {
 
 						const editor = generateEditor({
 							context: {
-								folders: [],
+								folders: {},
 								dispatch: jest.fn(),
 								calendar: mainAccountEditorFolder,
 								sender: identities[1]
@@ -206,7 +206,7 @@ describe('normalize soap message from editor', () => {
 
 						const editor = generateEditor({
 							context: {
-								folders: [],
+								folders: {},
 								dispatch: jest.fn(),
 								calendar: mainAccountEditorFolder,
 								sender: identities[1]
@@ -244,7 +244,7 @@ describe('normalize soap message from editor', () => {
 
 						const editor = generateEditor({
 							context: {
-								folders: [],
+								folders: {},
 								dispatch: jest.fn(),
 								calendar: mainAccountEditorFolder,
 								sender: identities[1]
@@ -279,7 +279,7 @@ describe('normalize soap message from editor', () => {
 
 					const editor = generateEditor({
 						context: {
-							folders: [],
+							folders: {},
 							dispatch: jest.fn(),
 							calendar: sharedEditorFolder
 						}
@@ -309,7 +309,7 @@ describe('normalize soap message from editor', () => {
 
 					const editor = generateEditor({
 						context: {
-							folders: [],
+							folders: {},
 							dispatch: jest.fn(),
 							calendar: sharedEditorFolder
 						}
@@ -344,7 +344,7 @@ describe('normalize soap message from editor', () => {
 
 						const editor = generateEditor({
 							context: {
-								folders: [],
+								folders: {},
 								dispatch: jest.fn(),
 								calendar: sharedEditorFolder,
 								sender: identities[1]
@@ -378,7 +378,7 @@ describe('normalize soap message from editor', () => {
 
 						const editor = generateEditor({
 							context: {
-								folders: [],
+								folders: {},
 								dispatch: jest.fn(),
 								calendar: sharedEditorFolder,
 								sender: identities[1]
@@ -415,7 +415,7 @@ describe('normalize soap message from editor', () => {
 
 					const editor = generateEditor({
 						context: {
-							folders: [],
+							folders: {},
 							dispatch: jest.fn(),
 							calendar: sharedEditorFolder,
 							sender: identities[1]
@@ -454,7 +454,7 @@ describe('normalize soap message from editor', () => {
 
 				const editor = generateEditor({
 					context: {
-						folders: [],
+						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedEditorFolder,
 						sender: identities[0]
@@ -487,7 +487,7 @@ describe('normalize soap message from editor', () => {
 
 				const editor = generateEditor({
 					context: {
-						folders: [],
+						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedEditorFolder,
 						sender: identities[0]
@@ -520,7 +520,7 @@ describe('normalize soap message from editor', () => {
 
 				const editor = generateEditor({
 					context: {
-						folders: [],
+						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedEditorFolder,
 						sender: identities[1]
@@ -552,7 +552,7 @@ describe('normalize soap message from editor', () => {
 
 				const editor = generateEditor({
 					context: {
-						folders: [],
+						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedAccountEditorFolder
 					}
@@ -583,7 +583,7 @@ describe('normalize soap message from editor', () => {
 
 				const editor = generateEditor({
 					context: {
-						folders: [],
+						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedAccountEditorFolder
 					}
@@ -615,7 +615,7 @@ describe('normalize soap message from editor', () => {
 
 				const editor = generateEditor({
 					context: {
-						folders: [],
+						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedAccountEditorFolder,
 						sender: identities[1]
@@ -649,7 +649,7 @@ describe('normalize soap message from editor', () => {
 
 				const editor = generateEditor({
 					context: {
-						folders: [],
+						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedAccountEditorFolder,
 						sender: identities[2]

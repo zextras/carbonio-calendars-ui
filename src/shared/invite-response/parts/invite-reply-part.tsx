@@ -18,10 +18,10 @@ import { addBoard, Board } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
+import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../../../constants';
-import { useCalendarFolders } from '../../../hooks/use-calendar-folders';
 import {
 	getEquipments,
 	getMeetingRooms,
@@ -77,7 +77,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
-	const calendarFolders = useCalendarFolders();
+	const calendarFolders = useFoldersMap();
 
 	const proposeNewTimeCb = useCallback(() => {
 		const messageData = message.invite[0].comp[0];

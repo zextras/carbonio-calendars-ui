@@ -9,6 +9,6 @@ import { defaultConfig } from './src/carbonio-ui-commons/test/jest-config';
 
 /* * For a detailed explanation regarding each configuration property and type check, visit: * https://jestjs.io/docs/configuration */
 
-process.env.TZ = 'CEST';
+process.env.TZ = 'Europe/Berlin';
 const config: Config = { ...defaultConfig };
 export default config;

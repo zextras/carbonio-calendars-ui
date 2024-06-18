@@ -20,7 +20,7 @@ import {
 	proposeNewTimeFn
 } from './appointment-actions-fn';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
-import { ActionsContext, AppointmentActionsItems } from '../types/actions';
+import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
@@ -251,3 +251,49 @@ export const exportAppointmentICSItem = ({
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 	onClick: exportAppointmentICSFn({ event })
 });
+
+const getInviteActionsArray = ({
+	event,
+	context,
+	invite
+}: ActionsProps): AppointmentActionsItems[] => [
+	acceptInvitationItem({ event, context }),
+	acceptAsTentativeItem({ event, context }),
+	declineInvitationItem({ event, context }),
+	proposeNewTimeItem({ event, invite, context })
+];
+
+export const isAnInvite = (event: EventType): boolean => {
+	if (event.resource.organizer) {
+		return (
+			!event.resource.iAmOrganizer &&
+			event.haveWriteAccess &&
+			((!!event.resource.calendar.owner &&
+				event.resource.organizer &&
+				event.resource.calendar.owner !== event.resource.organizer.email) ||
+				!event.resource.calendar.owner)
+		);
+	}
+	return false;
+};
+
+export const answerToEventItem = ({
+	event,
+	invite,
+	context
+}: {
+	event: EventType;
+	invite?: Invite;
+	context: ActionsContext;
+}): (AppointmentActionsItems & { items: Array<AppointmentActionsItems> }) | undefined =>
+	isAnInvite(event)
+		? {
+				id: EventActionsEnum.ANSWER,
+				icon: 'ReplyAll',
+				items: getInviteActionsArray({ event, invite, context }),
+				label: t('action.answer', 'Answer'),
+				disabled: false,
+				keepOpen: true,
+				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action')
+			}
+		: undefined;

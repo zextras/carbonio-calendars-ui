@@ -17,7 +17,7 @@ describe('edit event item', () => {
 			absFolderPath: '/'
 		};
 
-		const folders = mockedData.calendars.getCalendarsArray({ folders: [folder] });
+		const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
 
 		const event = mockedData.getEvent({
 			resource: {
@@ -52,7 +52,7 @@ describe('edit event item', () => {
 				absFolderPath: '/Trash/'
 			};
 
-			const folders = mockedData.calendars.getCalendarsArray({ folders: [folder] });
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
 
 			const event = mockedData.getEvent({
 				resource: {
@@ -94,7 +94,7 @@ describe('edit event item', () => {
 				children: [subFolder]
 			};
 
-			const folders = mockedData.calendars.getCalendarsArray({ folders: [folder, subFolder] });
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder, subFolder] });
 
 			const event = mockedData.getEvent({
 				resource: {
@@ -127,7 +127,7 @@ describe('edit event item', () => {
 				absFolderPath: '/Calendar/'
 			};
 
-			const folders = mockedData.calendars.getCalendarsArray({ folders: [folder] });
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
 
 			const event = mockedData.getEvent({
 				resource: {
@@ -162,7 +162,7 @@ describe('edit event item', () => {
 				owner: 'owner@mail.com'
 			};
 
-			const folders = mockedData.calendars.getCalendarsArray({ folders: [folder] });
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
 
 			const event = mockedData.getEvent({
 				resource: {

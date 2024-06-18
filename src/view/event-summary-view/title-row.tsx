@@ -5,13 +5,15 @@
  */
 import React, { ReactElement, useMemo } from 'react';
 
-import { Divider, Icon, Row, Text } from '@zextras/carbonio-design-system';
+import { Divider, Icon, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { Tag, useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
 import { reduce, includes } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import { EventType } from '../../types/event';
 
 export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
+	const [t] = useTranslation();
 	const tags = useTags();
 	const tagItems = useMemo(
 		() =>
@@ -53,6 +55,13 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 				</Row>
 				{event.resource.class !== 'PRI' && (
 					<>
+						{event?.resource?.isRecurrent && (
+							<Tooltip label={t('label.recurrent', 'Recurrent appointment')} placement="top">
+								<Row padding={{ right: 'small' }}>
+									<Icon color="0" icon="Repeat" />
+								</Row>
+							</Tooltip>
+						)}
 						<Row padding={{ right: 'small' }}>
 							{event?.resource?.tags?.length > 0 && (
 								<Icon color={tagIconColor ? `${tagIconColor}` : '0'} icon={tagIcon} />

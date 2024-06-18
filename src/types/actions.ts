@@ -10,7 +10,7 @@ import { Tags } from '@zextras/carbonio-shell-ui';
 import { EventActionsId } from './enums/event-actions-enum';
 import { EventType } from './event';
 import { Invite } from './store/invite';
-import { Folder } from '../carbonio-ui-commons/types/folder';
+import { Folders } from '../carbonio-ui-commons/types/folder';
 import { AppDispatch } from '../store/redux';
 
 export type ActionsContext = {
@@ -30,7 +30,7 @@ export type ActionsContext = {
 	panel?: boolean;
 	searchPanel?: boolean;
 	panelView?: PanelView;
-	folders: Array<Folder>;
+	folders: Folders;
 };
 
 export type PanelView = 'app' | 'board' | 'search';
@@ -47,8 +47,9 @@ export type AppointmentActionsItems = {
 	id: EventActionsId;
 	icon: string;
 	disabled: boolean;
+	keepOpen?: boolean;
 	label: string;
-	onClick: (ev: ActionsClick) => void;
+	onClick?: (ev: ActionsClick) => void;
 	tooltipLabel: string;
 };
 

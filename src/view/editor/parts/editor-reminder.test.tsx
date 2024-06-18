@@ -26,7 +26,7 @@ shell.getUserSettings.mockImplementation(() => ({
 describe('editor reminder', () => {
 	test('if setting is set to 0 the default selected value will be never', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		setupTest(<EditorReminder editorId={editor.id} />, { store });
 

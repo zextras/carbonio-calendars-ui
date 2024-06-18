@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
-import { Folder } from '../carbonio-ui-commons/types/folder';
+import { Folder, Folders } from '../carbonio-ui-commons/types/folder';
 import { generateEditor } from '../commons/editor-generator';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
@@ -101,7 +101,7 @@ type AccountContext = {
 	dispatch: Dispatch;
 	replaceHistory: (a: string) => void;
 	onClose: () => void;
-	folders: Array<Folder>;
+	folders: Folders;
 };
 
 export type UseDeleteActionsType = {

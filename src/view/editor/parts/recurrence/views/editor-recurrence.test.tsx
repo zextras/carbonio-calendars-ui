@@ -19,7 +19,7 @@ jest.setTimeout(10000);
 describe('editor recurrence field', () => {
 	test('is set to none as default', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		await act(async () => {
 			await setupTest(<EditorRecurrence editorId={editor.id} />, {
@@ -32,7 +32,7 @@ describe('editor recurrence field', () => {
 	});
 	test('has 6 available options', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<EditorRecurrence editorId={editor.id} />, {
 			store
@@ -53,7 +53,7 @@ describe('editor recurrence field', () => {
 	});
 	test('clicking on “custom“ will open a modal', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: [] } });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		const { user } = setupTest(<EditorRecurrence editorId={editor.id} />, {
 			store
