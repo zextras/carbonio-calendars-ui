@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.10.3",
+	"version": "1.11.0",
 	"description": "Calendars module",
 	"main": "src/app.tsx",
 	"engines": {
@@ -86,9 +86,9 @@
 		"@testing-library/react-hooks": "^8.0.1",
 		"@types/webpack": "^5.28.2",
 		"@types/webpack-env": "^1.18.1",
-		"@zextras/carbonio-design-system": "^5.0.0",
-		"@zextras/carbonio-shell-ui": "^7.0.0",
-		"@zextras/carbonio-ui-preview": "^1.2.3",
+		"@zextras/carbonio-design-system": "^5.1.0",
+		"@zextras/carbonio-shell-ui": "^7.0.1",
+		"@zextras/carbonio-ui-preview": "^1.2.5",
 		"core-js": "^3.36.1",
 		"date-arithmetic": "^4.1.0",
 		"i18next": "^22.4.13",
