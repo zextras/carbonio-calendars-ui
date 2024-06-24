@@ -74,27 +74,11 @@ export const getAlarmValue = (rel?: {
 	d?: number;
 	w?: number;
 }): string => {
-	const DAY_PER_WEEK = 7;
-	const HOUR_PER_DAY = 24;
-	const MINUTES_PER_HOUR = 60;
-	const SECONDS_PER_MINUTE = 60;
 	if (!rel) {
 		return '0';
 	}
-	if (rel.s) {
-		return rel.s.toString();
-	}
-	if (rel.m) {
-		return (rel.m * SECONDS_PER_MINUTE).toString();
-	}
-	if (rel.h) {
-		return (rel.h * SECONDS_PER_MINUTE * MINUTES_PER_HOUR).toString();
-	}
-	if (rel.d) {
-		return (rel.d * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY).toString();
-	}
-	if (rel.w) {
-		return (rel.w * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK).toString();
+	if(rel.m) {
+		return rel.m.toString();
 	}
 	return '-1';
 };
