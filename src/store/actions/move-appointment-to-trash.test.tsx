@@ -127,6 +127,35 @@ describe('move appointment to trash', () => {
 				})
 			);
 		});
+		test('if the date of the appointment has a different timezone from local, creation timezone will be used', async () => {
+			const t = setupTMock();
+			const currentTz = 'Asia/Kolkata';
+			const fullInvite = mockedData.getInvite({
+				context: {
+					start: { d: '20240615T083000', tz: currentTz, u: 1718074800000 },
+					end: { d: '20240615T090000', tz: currentTz, u: 1718076600000 },
+					tz: currentTz,
+					name: 'test'
+				}
+			});
+
+			const result = buildMessagePart({
+				t,
+				fullInvite
+			});
+
+			expect(result).toStrictEqual(
+				expect.objectContaining({
+					mp: expect.arrayContaining([
+						expect.objectContaining({
+							content: expect.stringMatching(
+								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+5:30/i
+							)
+						})
+					])
+				})
+			);
+		});
 		test('if the date of the instance has the same timezone as the local, local timezone will be used', async () => {
 			const t = setupTMock();
 			const localTimezone = 'Europe/Berlin';
@@ -143,6 +172,35 @@ describe('move appointment to trash', () => {
 				t,
 				fullInvite,
 				inst
+			});
+
+			expect(result).toStrictEqual(
+				expect.objectContaining({
+					mp: expect.arrayContaining([
+						expect.objectContaining({
+							content: expect.stringMatching(
+								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+2/i
+							)
+						})
+					])
+				})
+			);
+		});
+		test('if the date of the appointment has the same timezone as the local, local timezone will be used', async () => {
+			const t = setupTMock();
+			const localTimezone = 'Europe/Berlin';
+			const fullInvite = mockedData.getInvite({
+				context: {
+					tz: localTimezone,
+					start: { d: '20240615T083000', tz: localTimezone, u: 1718074800000 },
+					end: { d: '20240615T090000', tz: localTimezone, u: 1718076600000 },
+					name: 'test'
+				}
+			});
+
+			const result = buildMessagePart({
+				t,
+				fullInvite
 			});
 
 			expect(result).toStrictEqual(
