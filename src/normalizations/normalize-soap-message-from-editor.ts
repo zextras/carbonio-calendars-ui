@@ -46,7 +46,7 @@ const setResourceDate = ({
 	}
 	return timezone
 		? {
-				d: moment(time).tz(timezone).format('YYYYMMDD[T]HHmmss'),
+				d: moment(time).format('YYYYMMDD[T]HHmmss'),
 				tz: timezone
 			}
 		: {
