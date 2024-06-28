@@ -218,7 +218,7 @@ export const deleteEventItem = ({
 		: {
 				id: EventActionsEnum.TRASH,
 				icon: 'Trash2Outline',
-				label: t('label.delete', 'Delete'),
+				label: t('action.delete', 'Delete'),
 				disabled: !event?.haveWriteAccess,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				onClick: moveToTrash({ event, invite, context })
