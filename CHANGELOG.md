@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.11.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.1...v1.11.2) (2024-07-01)
+
+
+### Bug Fixes
+
+* normalization message from editor does not use timezone ([3f34268](https://github.com/zextras/carbonio-calendars-ui/commit/3f342684bb847b50c1c658dff4034b23d7b65036))
+
 ### [1.11.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.0...v1.11.1) (2024-06-28)
 
 
