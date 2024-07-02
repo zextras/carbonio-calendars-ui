@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.11.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.2...v1.11.3) (2024-07-02)
+
+
+### Bug Fixes
+
+* using creation timezone on cancellation message in case of single events or series ([e7d3f92](https://github.com/zextras/carbonio-calendars-ui/commit/e7d3f92629c44917c672b6e29ddece3fff9b2c05))
+* using creation timezone on cancellation message in case of single events or series ([ff89f3f](https://github.com/zextras/carbonio-calendars-ui/commit/ff89f3fca89f8158507adeaec6cfb342d698c1c0))
+
 ### [1.11.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.1...v1.11.2) (2024-07-01)
 
 
