@@ -50,3 +50,5 @@ export const DAYS_PER_WEEK = 7;
 export const HOURS_PER_DAY = 24;
 export const MINUTES_PER_HOUR = 60;
 export const SECONDS_PER_MINUTE = 60;
+export const MINUTES_PER_WEEK = MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK
+export const MINUTES_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR
