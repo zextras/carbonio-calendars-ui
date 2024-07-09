@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { t } from '@zextras/carbonio-shell-ui';
-import { groupBy, map, reduce, uniqBy } from 'lodash';
+import { groupBy, isNil, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
 
+import { DAY_PER_WEEK, HOUR_PER_DAY, MINUTES_PER_HOUR, SECONDS_PER_MINUTE } from '../constants';
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
 import { CalendarsColorType } from '../types/store/calendars';
 import { AlarmData } from '../types/store/invite';
+import { daysInMinutes, hoursInMinutes, secondsInMinutes, weeksInMinutes } from '../utils/times';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const retrieveAttachmentsType = (original: any, disposition: any, dataID: any): any =>
@@ -67,44 +69,54 @@ export const findAttachments = (parts: any, acc: any): any =>
 		acc
 	);
 
-export const getAlarmValue = (rel?: {
+export type Rel = {
 	s?: number;
 	m?: number;
 	h?: number;
 	d?: number;
 	w?: number;
-}): string => {
-	const DAY_PER_WEEK = 7;
-	const HOUR_PER_DAY = 24;
-	const MINUTES_PER_HOUR = 60;
-	const SECONDS_PER_MINUTE = 60;
-	if (!rel) {
-		return '0';
+};
+
+const isAtTheTimeOfTheEvent = (relativeTrigger: Rel): boolean =>
+	relativeTrigger?.s === 0 ||
+	relativeTrigger?.m === 0 ||
+	relativeTrigger?.h === 0 ||
+	relativeTrigger?.d === 0 ||
+	relativeTrigger?.w === 0;
+
+export const getAlarmValueInMinutes = (relativeTrigger?: Rel): string => {
+	const AT_THE_TIME_OF_THE_EVENT = '-1';
+	const NO_TRIGGER = '0';
+	const MINIMUM_TRIGGER_VALUE = '1';
+
+	if (!relativeTrigger) {
+		return NO_TRIGGER;
 	}
-	if (rel.s) {
-		return rel.s.toString();
+	if (isAtTheTimeOfTheEvent(relativeTrigger)) {
+		return AT_THE_TIME_OF_THE_EVENT;
 	}
-	if (rel.m) {
-		return (rel.m * SECONDS_PER_MINUTE).toString();
+	if (!isNil(relativeTrigger.s)) {
+		if (relativeTrigger.s % SECONDS_PER_MINUTE === 0) {
+			return secondsInMinutes(relativeTrigger.s).toString();
+		}
+		return MINIMUM_TRIGGER_VALUE;
 	}
-	if (rel.h) {
-		return (rel.h * SECONDS_PER_MINUTE * MINUTES_PER_HOUR).toString();
+	if (!isNil(relativeTrigger.m)) {
+		return relativeTrigger.m.toString();
 	}
-	if (rel.d) {
-		return (rel.d * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY).toString();
+	if (!isNil(relativeTrigger.h)) {
+		return hoursInMinutes(relativeTrigger.h).toString();
 	}
-	if (rel.w) {
-		return (rel.w * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK).toString();
+	if (!isNil(relativeTrigger.d)) {
+		return daysInMinutes(relativeTrigger.d).toString();
 	}
-	return '-1';
+	if (!isNil(relativeTrigger.w)) {
+		return weeksInMinutes(relativeTrigger.w).toString();
+	}
+	return AT_THE_TIME_OF_THE_EVENT;
 };
 
 export const getAlarmToString = (alarm?: AlarmData): string => {
-	const DAY_PER_WEEK = 7;
-	const HOUR_PER_DAY = 24;
-	const MINUTES_PER_HOUR = 60;
-	const SECONDS_PER_MINUTE = 60;
-
 	if (alarm && alarm[0] && alarm[0].action === 'DISPLAY') {
 		const rel = alarm[0].trigger[0].rel[0];
 
