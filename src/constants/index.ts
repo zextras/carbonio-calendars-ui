@@ -46,7 +46,7 @@ export const DATE_FORMAT = {
 
 export const UPDATE_VIEW_EVENT = 'updateView';
 
-export const DAY_PER_WEEK = 7;
-export const HOUR_PER_DAY = 24;
+export const DAYS_PER_WEEK = 7;
+export const HOURS_PER_DAY = 24;
 export const MINUTES_PER_HOUR = 60;
 export const SECONDS_PER_MINUTE = 60;

@@ -7,7 +7,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { groupBy, isNil, map, reduce, uniqBy } from 'lodash';
 import { setLightness } from 'polished';
 
-import { DAY_PER_WEEK, HOUR_PER_DAY, MINUTES_PER_HOUR, SECONDS_PER_MINUTE } from '../constants';
+import { DAYS_PER_WEEK, HOURS_PER_DAY, MINUTES_PER_HOUR, SECONDS_PER_MINUTE } from '../constants';
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
 import { CalendarsColorType } from '../types/store/calendars';
 import { AlarmData } from '../types/store/invite';
@@ -125,23 +125,23 @@ export const getAlarmToString = (alarm?: AlarmData): string => {
 				(rel.s || 0) +
 				(rel.m || 0) * SECONDS_PER_MINUTE +
 				(rel.h || 0) * SECONDS_PER_MINUTE * MINUTES_PER_HOUR +
-				(rel.d || 0) * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY +
-				(rel.w || 0) * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK;
+				(rel.d || 0) * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY +
+				(rel.w || 0) * SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK;
 
 			if ((rel.s || 0) + (rel.m || 0) + (rel.h || 0) + (rel.d || 0) + (rel.w || 0) === 0) {
 				return t('reminder.at_time_of_event', 'At the time of the event');
 			}
-			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK) === 0) {
+			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK) === 0) {
 				const weeks =
-					seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY * DAY_PER_WEEK);
+					seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY * DAYS_PER_WEEK);
 				return t('reminder.week_before', {
 					count: weeks,
 					defaultValue_one: '{{count}} week before',
 					defaultValue_other: '{{count}} weeks before'
 				});
 			}
-			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY) === 0) {
-				const days = seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOUR_PER_DAY);
+			if (seconds % (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY) === 0) {
+				const days = seconds / (SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HOURS_PER_DAY);
 				return t('reminder.day_before', {
 					count: days,
 					defaultValue_one: '{{count}} day before',
