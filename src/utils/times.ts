@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { DAYS_PER_WEEK, HOURS_PER_DAY, MINUTES_PER_HOUR, SECONDS_PER_MINUTE } from '../constants';
+import { DAYS_PER_WEEK, HOURS_PER_DAY, MINUTES_PER_HOUR, MINUTES_PER_WEEK, SECONDS_PER_MINUTE } from '../constants';
 
 function convertsInMinutes(factor: number): (value: number) => number {
 	return (value: number) => value * factor;
@@ -11,6 +11,17 @@ function convertsInMinutes(factor: number): (value: number) => number {
 function convertsInMinutes2(value: number): (factor: number) => number {
 	return (factor: number) => value / factor;
 }
+
+function converts(fn: (value: number, factor: number) => number): (factor: number) => (value: number) => number {
+	return (factor: number) => (value: number) => fn(value, factor);
+}
+
+const convertIn = converts((value, factor) => value * factor);
+const convertFrom = converts((value, factor) => value / factor);
+
+const minutesToWeeks = convertFrom(MINUTES_PER_WEEK);
+const minutesFromWeeks = convertIn(MINUTES_PER_WEEK);
+const secondsToMinutes = convertFrom(SECONDS_PER_MINUTE);
 
 export const secondsInMinutes = (seconds: number): number => seconds / SECONDS_PER_MINUTE;
 export const hoursInMinutes = convertsInMinutes(MINUTES_PER_HOUR);
