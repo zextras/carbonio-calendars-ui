@@ -3,7 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { normalizeSoapMessageFromEditor } from './normalize-soap-message-from-editor';
+import {
+	normalizeSoapMessageFromEditor,
+	setAlarmValue
+} from './normalize-soap-message-from-editor';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
 import {
 	createFakeIdentity,
@@ -665,6 +668,33 @@ describe('normalize soap message from editor', () => {
 					}
 				]);
 			});
+		});
+	});
+	describe('setAlarmValue', () => {
+		test('It will set a week value if possible', () => {
+			const reminder = '20160';
+			const result = setAlarmValue(reminder);
+			expect(result).toStrictEqual(expect.objectContaining({ w: 2 }));
+		});
+		test('It will set a day value if possible', () => {
+			const reminder = '2880';
+			const result = setAlarmValue(reminder);
+			expect(result).toStrictEqual(expect.objectContaining({ d: 2 }));
+		});
+		test('It will set a hour value if possible', () => {
+			const reminder = '120';
+			const result = setAlarmValue(reminder);
+			expect(result).toStrictEqual(expect.objectContaining({ h: 2 }));
+		});
+		test('It will set a minute value if possible', () => {
+			const reminder = '15';
+			const result = setAlarmValue(reminder);
+			expect(result).toStrictEqual(expect.objectContaining({ m: 15 }));
+		});
+		test('It will set 0 minutes when param is -1', () => {
+			const reminder = '-1';
+			const result = setAlarmValue(reminder);
+			expect(result).toStrictEqual(expect.objectContaining({ m: 0 }));
 		});
 	});
 });
