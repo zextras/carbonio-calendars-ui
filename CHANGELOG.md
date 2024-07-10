@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.11.4](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.3...v1.11.4) (2024-07-10)
+
+
+### Bug Fixes
+
+* correct reminder value on appointment edit ([bb79994](https://github.com/zextras/carbonio-calendars-ui/commit/bb799945ff7268674586e059bbd856f93f425e0e))
+* correct reminder value on appointment edit ([4f743e1](https://github.com/zextras/carbonio-calendars-ui/commit/4f743e1469963b4e5b726509cd108c0257d4edb4))
+
 ### [1.11.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.2...v1.11.3) (2024-07-02)
 
 
