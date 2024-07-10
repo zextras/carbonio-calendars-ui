@@ -9,7 +9,7 @@ import { Dispatch } from 'redux';
 
 import { Folders } from '../../carbonio-ui-commons/types/folder';
 import { generateEditor } from '../../commons/editor-generator';
-import { CALENDAR_ROUTE } from '../../constants';
+import { CALENDAR_BOARD_ID } from '../../constants';
 import { Editor } from '../../types/editor';
 
 // todo: enable the possibility to include attachments
@@ -75,7 +75,7 @@ const createAppointmentIntegration =
 			}
 		});
 		addBoard({
-			url: `${CALENDAR_ROUTE}/`,
+			boardViewId: CALENDAR_BOARD_ID,
 			title: editor?.title ?? '',
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore

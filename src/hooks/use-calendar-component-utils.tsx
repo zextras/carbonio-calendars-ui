@@ -16,7 +16,7 @@ import { useParams } from 'react-router-dom';
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
-import { CALENDAR_ROUTE } from '../constants';
+import { CALENDAR_BOARD_ID } from '../constants';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { StoreProvider } from '../store/redux';
@@ -249,7 +249,7 @@ export const useCalendarComponentUtils = (): {
 					}
 				});
 				addBoard({
-					url: `${CALENDAR_ROUTE}/`,
+					boardViewId: CALENDAR_BOARD_ID,
 					title: editor?.title ?? '',
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore

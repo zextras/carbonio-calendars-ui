@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next';
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
 import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
-import { CALENDAR_APP_ID, CALENDAR_ROUTE } from './constants';
+import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
@@ -133,7 +133,7 @@ const AppRegistrations = (): null => {
 			component: SearchView
 		});
 		addBoardView({
-			route: CALENDAR_ROUTE,
+			id: CALENDAR_BOARD_ID,
 			component: EditorView
 		});
 	}, [t]);
