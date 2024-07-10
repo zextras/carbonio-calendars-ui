@@ -22,7 +22,7 @@
 		"sdk-setup": "npm ci --prefix sdk",
 		"test:ci": "jest --testTimeout=10000 --maxWorkers=50%",
 		"test:dev": "jest --testTimeout=10000 --maxWorkers=2",
-		"test": "is-ci && npm run test:ci || npm run test:dev --watch",
+		"test": "is-ci && npm run test:ci || npm run test:dev",
 		"build:dev": "sdk build --dev --pkgRel $(date +%s)"
 	},
 	"keywords": [],
