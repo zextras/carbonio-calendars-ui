@@ -17,9 +17,9 @@ import {
 	isDaysInMinutes,
 	isHoursInMinutes,
 	isWeeksInMinutes,
-	minutesInDays,
-	minutesInHours,
-	minutesInWeeks
+	minutesToDays,
+	minutesToHours,
+	minutesToWeeks
 } from '../utils/times';
 
 type Participants = {
@@ -74,19 +74,19 @@ export const setAlarmValue = (reminderInMinutes: string): { related: 'START'; ne
 
 	if (isWeeksInMinutes(minutes)) {
 		return {
-			w: minutesInWeeks(minutes),
+			w: minutesToWeeks(minutes),
 			...unchangedProps
 		};
 	}
 	if (isDaysInMinutes(minutes)) {
 		return {
-			d: minutesInDays(minutes),
+			d: minutesToDays(minutes),
 			...unchangedProps
 		};
 	}
 	if (isHoursInMinutes(minutes)) {
 		return {
-			h: minutesInHours(minutes),
+			h: minutesToHours(minutes),
 			...unchangedProps
 		};
 	}

@@ -11,7 +11,7 @@ import { DAYS_PER_WEEK, HOURS_PER_DAY, MINUTES_PER_HOUR, SECONDS_PER_MINUTE } fr
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
 import { CalendarsColorType } from '../types/store/calendars';
 import { AlarmData } from '../types/store/invite';
-import { daysInMinutes, hoursInMinutes, secondsInMinutes, weeksInMinutes } from '../utils/times';
+import { daysToMinutes, hoursToMinutes, secondsToMinutes, weeksToMinutes } from '../utils/times';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const retrieveAttachmentsType = (original: any, disposition: any, dataID: any): any =>
@@ -97,7 +97,7 @@ export const getAlarmValueInMinutes = (relativeTrigger?: Rel): string => {
 	}
 	if (!isNil(relativeTrigger.s)) {
 		if (relativeTrigger.s % SECONDS_PER_MINUTE === 0) {
-			return secondsInMinutes(relativeTrigger.s).toString();
+			return secondsToMinutes(relativeTrigger.s).toString();
 		}
 		return MINIMUM_TRIGGER_VALUE;
 	}
@@ -105,13 +105,13 @@ export const getAlarmValueInMinutes = (relativeTrigger?: Rel): string => {
 		return relativeTrigger.m.toString();
 	}
 	if (!isNil(relativeTrigger.h)) {
-		return hoursInMinutes(relativeTrigger.h).toString();
+		return hoursToMinutes(relativeTrigger.h).toString();
 	}
 	if (!isNil(relativeTrigger.d)) {
-		return daysInMinutes(relativeTrigger.d).toString();
+		return daysToMinutes(relativeTrigger.d).toString();
 	}
 	if (!isNil(relativeTrigger.w)) {
-		return weeksInMinutes(relativeTrigger.w).toString();
+		return weeksToMinutes(relativeTrigger.w).toString();
 	}
 	return AT_THE_TIME_OF_THE_EVENT;
 };
