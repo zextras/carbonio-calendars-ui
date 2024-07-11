@@ -62,7 +62,6 @@ export default function CalendarComponent() {
 	const theme = useContext(ThemeContext);
 	const prefs = usePrefs();
 	const calendarView = useCalendarView();
-	const timeZone = prefs.zimbraPrefTimeZoneId;
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
@@ -105,9 +104,8 @@ export default function CalendarComponent() {
 		(newDate) => {
 			if (workingSchedule?.[moment(newDate).day()]?.working) {
 				if (
-					moment(newDate).tz(timeZone).format('HHmm') >=
-						workingSchedule[moment(newDate).day()].start &&
-					moment(newDate).tz(timeZone).format('HHmm') < workingSchedule[moment(newDate).day()].end
+					moment(newDate).format('HHmm') >= workingSchedule[moment(newDate).day()].start &&
+					moment(newDate).format('HHmm') < workingSchedule[moment(newDate).day()].end
 				) {
 					return theme.palette.gray6.regular;
 				}
@@ -115,7 +113,7 @@ export default function CalendarComponent() {
 			}
 			return theme.palette.gray5.regular;
 		},
-		[theme?.palette?.gray5?.regular, theme?.palette?.gray6?.regular, timeZone, workingSchedule]
+		[theme?.palette?.gray5?.regular, theme?.palette?.gray6?.regular, workingSchedule]
 	);
 
 	const slotDayBorderColor = useCallback(
