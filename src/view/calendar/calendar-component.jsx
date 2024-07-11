@@ -102,10 +102,14 @@ export default function CalendarComponent() {
 
 	const selectSlotBgColor = useCallback(
 		(newDate) => {
-			if (workingSchedule?.[moment(newDate).day()]?.working) {
+			const dayOfTheWeek = newDate.getDay();
+			const hourSlot =
+				String(newDate.getHours()).padStart(2, '0') + String(newDate.getMinutes()).padStart(2, '0');
+
+			if (workingSchedule?.[dayOfTheWeek]?.working) {
 				if (
-					moment(newDate).format('HHmm') >= workingSchedule[moment(newDate).day()].start &&
-					moment(newDate).format('HHmm') < workingSchedule[moment(newDate).day()].end
+					hourSlot >= workingSchedule[dayOfTheWeek].start &&
+					hourSlot < workingSchedule[dayOfTheWeek].end
 				) {
 					return theme.palette.gray6.regular;
 				}
@@ -118,7 +122,9 @@ export default function CalendarComponent() {
 
 	const slotDayBorderColor = useCallback(
 		(newDate) => {
-			if (workingSchedule?.[moment(newDate).day()]?.working) {
+			const dayOfTheWeek = newDate.getDay();
+
+			if (workingSchedule?.[dayOfTheWeek]?.working) {
 				return theme.palette.gray3.regular;
 			}
 			return theme.palette.gray6.regular;
@@ -154,8 +160,8 @@ export default function CalendarComponent() {
 			style: {
 				backgroundColor:
 					// eslint-disable-next-line no-nested-ternary
-					workingSchedule?.[moment(newDate).day()]?.working
-						? moment().isSame(moment(newDate), 'day')
+					workingSchedule?.[newDate.getDay()]?.working
+						? new Date().getDay() === newDate.getDay()
 							? theme.palette.highlight.regular
 							: theme.palette.gray6.regular
 						: theme.palette.gray3.regular,
@@ -214,7 +220,7 @@ export default function CalendarComponent() {
 					// https://github.com/jquense/react-big-calendar/issues/2432
 					(!calendarEvent.allDay ||
 						(!calendarEvent.allDay &&
-							moment(calendarEvent.start).day() === moment(calendarEvent.end).day()))
+							new Date(calendarEvent.start).getDay() === new Date(calendarEvent.end).getDay()))
 				);
 			}
 			return false;
