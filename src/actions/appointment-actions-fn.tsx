@@ -10,7 +10,7 @@ import { find, lowerCase, omit } from 'lodash';
 
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
-import { CALENDAR_ROUTE, PANEL_VIEW } from '../constants';
+import { CALENDAR_BOARD_ID, PANEL_VIEW } from '../constants';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
@@ -58,7 +58,7 @@ export const createCopy =
 				}
 			});
 			addBoard({
-				url: `${CALENDAR_ROUTE}/`,
+				boardViewId: CALENDAR_BOARD_ID,
 				title: editor?.title ?? '',
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
@@ -101,7 +101,7 @@ export const editAppointment =
 				}
 			});
 			addBoard({
-				url: `${CALENDAR_ROUTE}/`,
+				boardViewId: CALENDAR_BOARD_ID,
 				title: editor?.title ?? '',
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
@@ -377,7 +377,7 @@ export const proposeNewTimeFn =
 				}
 			});
 			addBoard({
-				url: `${CALENDAR_ROUTE}/`,
+				boardViewId: CALENDAR_BOARD_ID,
 				title: editor?.title ?? '',
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore

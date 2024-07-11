@@ -45,6 +45,7 @@ import {
 } from '../../test/mocks/network/msw/handle-get-invite';
 import 'jest-styled-components';
 import { MESSAGE_METHOD } from '../../constants/api';
+import { CALENDAR_BOARD_ID } from '../../constants';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
@@ -718,7 +719,9 @@ describe('invite response component', () => {
 						});
 						expect(boardSpy).toHaveBeenCalled();
 						expect(boardSpy).toHaveBeenCalledTimes(1);
-						expect(boardSpy).toHaveBeenCalledWith(expect.objectContaining({ url: 'calendars/' }));
+						expect(boardSpy).toHaveBeenCalledWith(
+							expect.objectContaining({ boardViewId: CALENDAR_BOARD_ID })
+						);
 					});
 					test('if the event is non recurrent a non recurrent editor is created', async () => {
 						setupFoldersStore();

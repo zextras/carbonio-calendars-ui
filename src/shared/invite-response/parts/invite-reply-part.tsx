@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
 import { generateEditor } from '../../../commons/editor-generator';
-import { CALENDAR_ROUTE } from '../../../constants';
+import { CALENDAR_BOARD_ID } from '../../../constants';
 import {
 	getEquipments,
 	getMeetingRooms,
@@ -115,7 +115,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 		});
 		if (editor.id) {
 			addBoard({
-				url: `${CALENDAR_ROUTE}/`,
+				boardViewId: CALENDAR_BOARD_ID,
 				title: editor?.title ?? '',
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
