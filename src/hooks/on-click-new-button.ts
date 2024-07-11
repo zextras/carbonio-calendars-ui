@@ -9,7 +9,7 @@ import { addBoard } from '@zextras/carbonio-shell-ui';
 
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../commons/editor-generator';
-import { CALENDAR_ROUTE } from '../constants';
+import { CALENDAR_BOARD_ID } from '../constants';
 import { useAppDispatch } from '../store/redux/hooks';
 
 export const useOnClickNewButton = (): ((
@@ -30,7 +30,7 @@ export const useOnClickNewButton = (): ((
 			});
 
 			addBoard({
-				url: `${CALENDAR_ROUTE}/`,
+				boardViewId: CALENDAR_BOARD_ID,
 				title: editor.title ?? '',
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore

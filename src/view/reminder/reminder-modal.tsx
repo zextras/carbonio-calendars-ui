@@ -16,7 +16,6 @@ import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../../commons/editor-generator';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { CALENDAR_ROUTE } from '../../constants';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
@@ -86,7 +85,7 @@ export const ReminderModal = ({
 						}
 					});
 					addBoard({
-						url: `${CALENDAR_ROUTE}/`,
+						boardViewId: 'CALENDAR_BOARD_ID',
 						title: editor?.title ?? '',
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
