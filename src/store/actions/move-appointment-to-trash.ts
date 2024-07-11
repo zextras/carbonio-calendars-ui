@@ -57,7 +57,7 @@ export const buildMessagePart = ({
 		end: endToFormat,
 		allDay: fullInvite.allDay ?? false,
 		allDayLabel,
-		timezone: inst?.tz
+		timezone: inst?.tz ?? fullInvite?.tz
 	});
 	const instance =
 		!fullInvite.recurrenceRule || deleteSingleInstance

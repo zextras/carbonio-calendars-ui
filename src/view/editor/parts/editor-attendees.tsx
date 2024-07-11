@@ -174,7 +174,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							<ContactInput
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
-								placeholder={t('label.attendee_plural', 'Attendees')}
+								placeholder={t('label.attendees', 'Attendees')}
 								onChange={onChange}
 								defaultValue={defaultValue}
 								disabled={disabled?.attendees}
@@ -183,7 +183,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							/>
 						) : (
 							<ChipInput
-								placeholder={t('label.attendee_plural', 'Attendees')}
+								placeholder={t('label.attendees', 'Attendees')}
 								background={'gray5'}
 								onChange={onChange}
 								defaultValue={defaultValue}

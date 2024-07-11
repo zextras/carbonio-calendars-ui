@@ -7,11 +7,20 @@ import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { compact, concat, includes, isNil, map, omitBy } from 'lodash';
 import moment from 'moment';
 
+import { Rel } from './normalizations-utils';
 import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { getTimeString } from '../hooks/use-get-event-timezone';
 import { CalendarEditor, CalendarOrganizer, CalendarSender, Editor } from '../types/editor';
+import {
+	isDaysInMinutes,
+	isHoursInMinutes,
+	isWeeksInMinutes,
+	minutesToDays,
+	minutesToHours,
+	minutesToWeeks
+} from '../utils/times';
 
 type Participants = {
 	a?: string;
@@ -46,12 +55,52 @@ const setResourceDate = ({
 	}
 	return timezone
 		? {
-				d: moment(time).tz(timezone).format('YYYYMMDD[T]HHmmss'),
+				d: moment(time).format('YYYYMMDD[T]HHmmss'),
 				tz: timezone
 			}
 		: {
 				d: moment(time).utc().format('YYYYMMDD[T]HHmmss[Z]')
 			};
+};
+
+export const setAlarmValue = (reminderInMinutes: string): { related: 'START'; neg: '1' } & Rel => {
+	const minutes = parseFloat(reminderInMinutes);
+	const AT_THE_TIME_OF_THE_EVENT = -1;
+
+	const unchangedProps = {
+		related: 'START',
+		neg: '1'
+	} as const;
+
+	if (isWeeksInMinutes(minutes)) {
+		return {
+			w: minutesToWeeks(minutes),
+			...unchangedProps
+		};
+	}
+	if (isDaysInMinutes(minutes)) {
+		return {
+			d: minutesToDays(minutes),
+			...unchangedProps
+		};
+	}
+	if (isHoursInMinutes(minutes)) {
+		return {
+			h: minutesToHours(minutes),
+			...unchangedProps
+		};
+	}
+	if (minutes === AT_THE_TIME_OF_THE_EVENT) {
+		return {
+			m: 0,
+			...unchangedProps
+		};
+	}
+	return {
+		m: minutes,
+		related: 'START',
+		neg: '1'
+	};
 };
 
 export const generateParticipantInformation = (resource: Editor): Array<Partial<Participants>> => {
@@ -291,11 +340,7 @@ const generateInvite = (editorData: Editor): any => {
 								{
 									action: 'DISPLAY',
 									trigger: {
-										rel: {
-											m: editorData.reminder === '-1' ? '0' : editorData.reminder,
-											related: 'START',
-											neg: '1'
-										}
+										rel: setAlarmValue(editorData.reminder)
 									}
 								}
 							]

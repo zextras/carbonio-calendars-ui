@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.11.4](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.3...v1.11.4) (2024-07-10)
+
+
+### Bug Fixes
+
+* correct reminder value on appointment edit ([bb79994](https://github.com/zextras/carbonio-calendars-ui/commit/bb799945ff7268674586e059bbd856f93f425e0e))
+* correct reminder value on appointment edit ([4f743e1](https://github.com/zextras/carbonio-calendars-ui/commit/4f743e1469963b4e5b726509cd108c0257d4edb4))
+
+### [1.11.3](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.2...v1.11.3) (2024-07-02)
+
+
+### Bug Fixes
+
+* using creation timezone on cancellation message in case of single events or series ([e7d3f92](https://github.com/zextras/carbonio-calendars-ui/commit/e7d3f92629c44917c672b6e29ddece3fff9b2c05))
+* using creation timezone on cancellation message in case of single events or series ([ff89f3f](https://github.com/zextras/carbonio-calendars-ui/commit/ff89f3fca89f8158507adeaec6cfb342d698c1c0))
+
+### [1.11.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.1...v1.11.2) (2024-07-01)
+
+
+### Bug Fixes
+
+* normalization message from editor does not use timezone ([3f34268](https://github.com/zextras/carbonio-calendars-ui/commit/3f342684bb847b50c1c658dff4034b23d7b65036))
+
+### [1.11.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.0...v1.11.1) (2024-06-28)
+
+
+### Bug Fixes
+
+* update missing or broken translations ([c70319d](https://github.com/zextras/carbonio-calendars-ui/commit/c70319dba62be51811b9c3b948ab035b95cbf5d8))
+
 ## [1.11.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.10.3...v1.11.0) (2024-06-18)
 
 
