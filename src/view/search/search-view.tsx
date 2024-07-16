@@ -6,15 +6,16 @@
 import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
-import { FOLDERS, QueryChip, SearchViewProps } from '@zextras/carbonio-shell-ui';
+import { QueryChip, SearchViewProps } from '@zextras/carbonio-shell-ui';
 import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 
 import AdvancedFilterModal from './advance-filter-modal';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';

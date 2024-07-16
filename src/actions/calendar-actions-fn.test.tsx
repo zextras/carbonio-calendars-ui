@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { act, waitFor } from '@testing-library/react';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { http, HttpResponse } from 'msw';
 
 import {
@@ -19,6 +18,7 @@ import {
 	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
+import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { getSetupServer } from '../carbonio-ui-commons/test/jest-setup';
 import mockedData from '../test/generators';
 

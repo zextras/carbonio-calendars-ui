@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 import { find } from 'lodash';
 
 import {
@@ -19,6 +19,7 @@ import {
 	openAppointment,
 	proposeNewTimeFn
 } from './appointment-actions-fn';
+import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';

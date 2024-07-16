@@ -6,12 +6,13 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { AccordionItemType, Container, Input, Text } from '@zextras/carbonio-design-system';
-import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 import { filter, isEmpty, reduce, startsWith } from 'lodash';
 
 import { FolderItem } from './folder-item';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { getFolderTranslatedName } from '../../commons/utilities';

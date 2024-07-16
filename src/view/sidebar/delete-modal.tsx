@@ -6,11 +6,11 @@
 import React, { FC, useMemo } from 'react';
 
 import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { isNestedInTrash } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';

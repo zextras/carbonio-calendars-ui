@@ -300,7 +300,9 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 															overflow: textOverflow
 														}}
 													>
-														{`${moment(event.start).format('LT')} - ${moment(event.end).format('LT')}`}
+														{`${moment(event.start).format('LT')} - ${moment(event.end).format(
+															'LT'
+														)}`}
 													</Text>
 													<Padding left="small" />
 													{eventDiff <= 15 && (

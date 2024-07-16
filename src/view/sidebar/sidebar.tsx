@@ -15,7 +15,6 @@ import {
 	ModalManager,
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { find, map, reject } from 'lodash';
 
 import { CollapsedSidebarItem } from './collapsed-sidebar-items';
@@ -23,6 +22,7 @@ import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
 import { addAllCalendarsItem } from './utils';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';

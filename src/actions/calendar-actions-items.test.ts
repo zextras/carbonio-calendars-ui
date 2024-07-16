@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { faker } from '@faker-js/faker';
-import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 
 import {
 	deleteCalendarItem,
@@ -18,6 +18,7 @@ import {
 	shareCalendarUrlItem,
 	sharesInfoItem
 } from './calendar-actions-items';
+import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { useFolderStore } from '../carbonio-ui-commons/store/zustand/folder';
 import { generateRoots } from '../carbonio-ui-commons/test/mocks/folders/roots-generator';
 import { Folder, FolderView } from '../carbonio-ui-commons/types/folder';

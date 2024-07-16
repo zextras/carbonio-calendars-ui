@@ -6,10 +6,11 @@
 import React, { useState, useCallback, ReactElement } from 'react';
 
 import { useSnackbar } from '@zextras/carbonio-design-system';
-import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 
 import { MoveModal } from './move-modal';
 import { NewModal } from './new-calendar-modal';
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
