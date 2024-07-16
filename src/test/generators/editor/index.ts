@@ -23,14 +23,12 @@ const getDefaultEditor = ({
 	organizer?: IdentityItem;
 }): Omit<Editor, 'isException' | 'isSeries' | 'isInstance'> => {
 	const identities = getIdentityItems();
-	const {
-		zimbraPrefTimeZoneId,
-		zimbraPrefCalendarDefaultApptDuration,
-		zimbraPrefCalendarApptReminderWarningTime
-	} = getPrefs();
+	const { zimbraPrefCalendarDefaultApptDuration, zimbraPrefCalendarApptReminderWarningTime } =
+		getPrefs();
 	const editorOrganizer = find(identities, ['identityName', organizer?.identityName ?? 'DEFAULT']);
 	const editorCalendar = find(folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
 	const id = utils.getRandomEditorId();
+	const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 	return {
 		attach: undefined,
 		calendar: editorCalendar
@@ -67,7 +65,7 @@ const getDefaultEditor = ({
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
 		inviteId: undefined,
-		timezone: zimbraPrefTimeZoneId,
+		timezone,
 		reminder: zimbraPrefCalendarApptReminderWarningTime,
 		recur: undefined,
 		richText: '',
@@ -125,15 +123,14 @@ const getEditor = ({
 	organizer?: IdentityItem;
 }): Editor => {
 	const identities = getIdentityItems();
-	const {
-		zimbraPrefTimeZoneId,
-		zimbraPrefCalendarDefaultApptDuration,
-		zimbraPrefCalendarApptReminderWarningTime
-	} = getPrefs();
+	const { zimbraPrefCalendarDefaultApptDuration, zimbraPrefCalendarApptReminderWarningTime } =
+		getPrefs();
 	const editorOrganizer = find(identities, ['identityName', organizer?.identityName ?? 'DEFAULT']);
 	const editorCalendar = find(folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
 	const id = editor?.id ?? utils.getRandomEditorId();
 	const editorType = getRandomEditorType();
+	const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 	return {
 		attach: undefined,
 		calendar: editorCalendar
@@ -170,7 +167,7 @@ const getEditor = ({
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
 		inviteId: undefined,
-		timezone: zimbraPrefTimeZoneId,
+		timezone,
 		reminder: zimbraPrefCalendarApptReminderWarningTime,
 		recur: undefined,
 		richText: '',
