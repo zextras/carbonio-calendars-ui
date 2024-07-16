@@ -83,7 +83,7 @@ export const buildMessagePart = ({
 		? {
 				ct: 'text/html',
 				content: `<html><h3>${meetingCanceled}</h3>${instanceData}${originalContentHtmlSection}</html>`
-		  }
+			}
 		: undefined;
 
 	return {
@@ -125,7 +125,7 @@ function createMessageForDelete({
 		? organizer
 		: getParticipants(Object.entries(invite?.participants).flatMap(([_, value]) => value)).concat(
 				organizer
-		  ) ?? organizer;
+			) ?? organizer;
 	return {
 		e: participants,
 		su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,

@@ -52,7 +52,7 @@ export const AdvancedFilterButton: FC<AdvancedFilterButtonProps> = ({
 									count: filterCount,
 									defaultValue_one: '{{count}} Advanced Filter',
 									defaultValue_other: '{{count}} Advanced Filters'
-							  })
+								})
 					}
 					disabled={searchDisabled}
 					icon="Options2Outline"

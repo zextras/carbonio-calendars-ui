@@ -44,7 +44,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
 					url: attendeeEmail
-			  } as const)
+				} as const)
 			: undefined;
 	return {
 		apptId: event?.resource?.id ?? 'apptId',
@@ -96,7 +96,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 						tz: 'string',
 						rangeType: 1
 					}
-			  ]
+				]
 			: undefined,
 		tagNamesList: '',
 		tags: event?.resource?.tags ?? [],
@@ -114,7 +114,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 							response: attendee.ptst as ParticipationStatus
 						}
 					]
-			  }
+				}
 			: {},
 		alarm: event?.resource?.alarm ?? true,
 		alarmData: event?.resource?.alarmData,

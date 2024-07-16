@@ -31,7 +31,7 @@ export const getCustomResources = (resources?: Array<Resource>): SuccessSoapResp
 								zimbraCalResType: r.type,
 								email: r.email
 							}
-					  }))
+						}))
 					: undefined,
 				sortBy: 'dateDesc',
 				offset: 0,

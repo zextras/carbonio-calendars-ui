@@ -195,9 +195,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			hasId(folder, FOLDERS.CALENDAR)
 				? false
 				: folderName.indexOf('/') > -1 ||
-				  folderName.length === 0 ||
-				  folderName.toLowerCase() === 'calendar' ||
-				  showDupWarning,
+					folderName.length === 0 ||
+					folderName.toLowerCase() === 'calendar' ||
+					showDupWarning,
 		[folderName, folder, showDupWarning]
 	);
 
@@ -230,7 +230,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						op: FOLDER_OPERATIONS.FREE_BUSY,
 						excludeFreeBusy: !defaultFreeBusy,
 						id: folder.id
-				  }
+					}
 				: undefined;
 		const actionsArray = compact([actionRename, actionColor, actionFreeBusy]);
 		if (actionsArray.length) {

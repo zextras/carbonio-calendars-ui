@@ -215,7 +215,7 @@ export const deleteEventItem = ({
 				disabled: !event?.haveWriteAccess,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				onClick: deletePermanently({ event, context })
-		  }
+			}
 		: {
 				id: EventActionsEnum.TRASH,
 				icon: 'Trash2Outline',
@@ -223,7 +223,7 @@ export const deleteEventItem = ({
 				disabled: !event?.haveWriteAccess,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				onClick: moveToTrash({ event, invite, context })
-		  };
+			};
 
 export const showOriginal = ({ event }: { event: EventType }): AppointmentActionsItems => ({
 	id: EventActionsEnum.SHOW_ORIGINAL,
@@ -296,5 +296,5 @@ export const answerToEventItem = ({
 				disabled: false,
 				keepOpen: true,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action')
-		  }
+			}
 		: undefined;

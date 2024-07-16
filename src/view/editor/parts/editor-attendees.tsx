@@ -146,7 +146,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 										type: 'icon',
 										icon: 'AlertTriangle'
 									} as const
-							  ]
+								]
 							: oldActions;
 					return {
 						...chip,

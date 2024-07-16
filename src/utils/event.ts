@@ -24,10 +24,10 @@ export const getInstanceExceptionId = ({
 		? {
 				d: moment(start).format(DATE_FORMAT.ALL_DAY),
 				tz
-		  }
+			}
 		: {
 				d: tz
 					? moment(start).tz(tz).format(DATE_FORMAT.LOCAL)
 					: moment(start).utc().format(DATE_FORMAT.UTC),
 				tz
-		  };
+			};

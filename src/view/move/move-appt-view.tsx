@@ -43,10 +43,10 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 					label: hasId(event.resource.calendar, FOLDERS.TRASH)
 						? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
 								data.destinationCalendarName
-						  }`
+							}`
 						: `${t('message.snackbar.appt_moved', 'Appointment moved successfully to')} ${
 								data.destinationCalendarName
-						  }`,
+							}`,
 					autoHideTimeout: 3000
 				});
 			} else {

@@ -236,7 +236,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 								msg={mailMsg}
 								fragment={invite?.fragment}
 							/>
-					  )
+						)
 					: isAttendee && <InviteReplyPart inviteId={inviteId} message={mailMsg} />}
 
 				{invite?.location && (
