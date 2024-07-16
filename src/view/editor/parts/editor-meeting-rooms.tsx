@@ -36,7 +36,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 						avatarIcon: 'BuildingOutline',
 						avatarBackground: 'transparent',
 						avatarColor: 'gray0'
-					}) as const
+					} as const)
 			),
 		[meetingRoomsValue]
 	);

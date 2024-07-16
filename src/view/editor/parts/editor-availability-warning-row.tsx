@@ -50,7 +50,7 @@ export const getIsBusyAtTimeOfTheEvent = (
 						(slot) =>
 							moment(slot.s).format('DD') === startDate.format('DD') ||
 							moment(slot.e).format('DD') === startDate.format('DD')
-					);
+				  );
 		}
 
 		// from 00:00 to 00:00
