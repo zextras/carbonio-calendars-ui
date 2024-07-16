@@ -38,7 +38,7 @@ export const getMeetingRooms = (
 		? map(rooms, (at) => ({
 				label: at.d,
 				email: at.a
-			}))
+		  }))
 		: undefined;
 };
 
@@ -50,7 +50,7 @@ export const getEquipments = (
 		? map(equipments, (at) => ({
 				label: at.d,
 				email: at.a
-			}))
+		  }))
 		: undefined;
 };
 
@@ -151,7 +151,7 @@ const setEditorDate = ({
 						? moment(convertedStartDate)?.startOf('date').valueOf()
 						: convertedStartDate,
 					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
-				}
+			  }
 			: {
 					start: event?.allDay
 						? moment(event?.start)?.startOf('date').valueOf()
@@ -159,7 +159,7 @@ const setEditorDate = ({
 					end: event?.allDay
 						? moment(event?.end)?.endOf('date').valueOf()
 						: moment(event?.end).valueOf()
-				};
+			  };
 	}
 	return {
 		start: moment().set('second', 0).set('millisecond', 0).valueOf(),

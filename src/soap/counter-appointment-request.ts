@@ -66,10 +66,10 @@ export const counterAppointmentRequest = async ({
 								<tr height="1.5rem"><td>Subject: ${appt.title}</td></tr>
 								<tr height="1.5rem" style="color:#2b73d2;font-weight:bold">
 									<td>Time: ${moment(appt.start).format('dddd, D MMMM, YYYY, HH:mm:ss')} - ${moment(appt.end).format(
-										'HH:mm:ss'
-									)} GMT ${moment(appt.start)
-										.tz(moment.tz.guess())
-										.format('Z')} ${moment.tz.guess()} [MODIFIED]</td>
+							'HH:mm:ss'
+						)} GMT ${moment(appt.start)
+							.tz(moment.tz.guess())
+							.format('Z')} ${moment.tz.guess()} [MODIFIED]</td>
 								</tr>
 							</table>\n<div>*~*~*~*~*~*~*~*~*~*</div><br>
 							${appt?.richText}
@@ -82,8 +82,8 @@ export const counterAppointmentRequest = async ({
 							${moment(appt.start)
 								.tz(moment.tz.guess())
 								.format('Z')} ${moment.tz.guess()} [MODIFIED]\n\n*~*~*~*~*~*~*~*~*~*\n\n${
-								appt.plainText
-							}`,
+							appt.plainText
+						}`,
 						ct: 'text/plain'
 					}
 				]

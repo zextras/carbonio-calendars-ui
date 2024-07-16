@@ -36,13 +36,13 @@ export const cancelAppointmentRequest = async ({
 				comp: '0',
 				s,
 				m: isOrganizer ? m : { ...m, e: [] }
-			}
+		  }
 		: {
 				_jsns: 'urn:zimbraMail',
 				id,
 				comp: '0',
 				m: isOrganizer ? m : { ...m, e: [] }
-			};
+		  };
 	const response: CancelAppointmentReturnType = await soapFetch('CancelAppointment', body);
 	return response?.Fault ? { ...response.Fault, error: true } : response;
 };

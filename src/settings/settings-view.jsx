@@ -122,7 +122,7 @@ export default function CalendarSettingsView() {
 				? map(
 						filter(invite, (i) => i.gt === 'usr'),
 						(r) => ({ email: r.d })
-					)
+				  )
 				: [],
 		[invite]
 	);
@@ -132,7 +132,7 @@ export default function CalendarSettingsView() {
 				? map(
 						filter(freeBusy, (fb) => fb.gt === 'usr'),
 						(r) => ({ email: r.d })
-					)
+				  )
 				: [],
 		[freeBusy]
 	);
@@ -200,20 +200,20 @@ export default function CalendarSettingsView() {
 							? {
 									...schedule,
 									end: `${data.hour}${data.minute}`
-								}
+							  }
 							: schedule
 					)
-				)
+			  )
 			: setWorkingSchedule(
 					workingSchedule.map((schedule) =>
 						schedule.day === data.day
 							? {
 									...schedule,
 									start: `${data.hour}${data.minute}`
-								}
+							  }
 							: schedule
 					)
-				);
+			  );
 	};
 
 	useEffect(() => {
@@ -238,7 +238,7 @@ export default function CalendarSettingsView() {
 						? {
 								...schedule,
 								working: !schedule.working
-							}
+						  }
 						: schedule
 				)
 			),
@@ -357,13 +357,13 @@ export default function CalendarSettingsView() {
 						...schedule,
 						end: `${data.hour}${data.minute}`
 					}))
-				)
+			  )
 			: setWorkingSchedule(
 					workingSchedule.map((schedule) => ({
 						...schedule,
 						start: `${data.hour}${data.minute}`
 					}))
-				);
+			  );
 	};
 
 	const disabled = useMemo(

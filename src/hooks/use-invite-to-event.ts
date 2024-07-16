@@ -22,11 +22,11 @@ export const inviteToEvent = (invite: Invite): any => ({
 					)
 					.endOf('day')
 					.valueOf()
-			)
+		  )
 		: new Date(
 				(invite?.start?.u ?? moment(invite?.start?.d).valueOf()) +
 					moment(invite.end.d).diff(moment(invite.start.d))
-			),
+		  ),
 	resource: {
 		id: invite.apptId,
 		inviteId: invite.id,

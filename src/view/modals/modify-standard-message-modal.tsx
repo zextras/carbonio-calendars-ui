@@ -59,11 +59,11 @@ export const ModifyStandardMessageModal = ({
 				? t(
 						'message.want_to_edit_modified_msg',
 						"Do you want to edit the modified appointment's message?"
-					)
+				  )
 				: t(
 						'message.want_to_edit_cancellation_msg',
 						'Do you want to edit the appointment cancellation message?'
-					),
+				  ),
 		[isEdited]
 	);
 

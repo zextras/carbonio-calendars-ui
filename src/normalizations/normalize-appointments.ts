@@ -159,7 +159,7 @@ export const normalizeAppointmentFromNotify = (appt: any): Appointment => <Appoi
 								s: appt?.inv?.[0]?.comp?.[0]?.s?.[0]?.u,
 								title: appt?.inv?.[0]?.comp?.[0]?.name
 							}
-						]
+					  ]
 					: undefined,
 			draft: appt?.inv?.[0]?.comp?.[0]?.draft,
 			inviteId: appt?.id && appt?.inv?.[0] ? `${appt.id}-${appt.inv[0].id}` : undefined,
@@ -185,5 +185,5 @@ export const normalizeAppointmentsFromNotify = (
 				appts,
 				(acc, appt) => ({ ...acc, [appt.id]: normalizeAppointmentFromNotify(appt) }),
 				{}
-			)
+		  )
 		: undefined;

@@ -34,23 +34,23 @@ export const buildMailMessageType = (
 		allDay
 			? {
 					d: '20240130'
-				}
+			  }
 			: {
 					d: '20240130T090000',
 					tz,
 					u: 1706601600000
-				}
+			  }
 	];
 	const e = [
 		allDay
 			? {
 					d: '20240130'
-				}
+			  }
 			: {
 					tz,
 					u: 1706603400000,
 					d: '20240130T093000'
-				}
+			  }
 	];
 	const singleEventMessageRequest = {
 		conversation: '-56149',
