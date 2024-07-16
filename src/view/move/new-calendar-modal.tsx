@@ -18,11 +18,11 @@ import {
 	SelectProps,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useFoldersMapByRoot, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import ModalFooter from '../../commons/modal-footer';

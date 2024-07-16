@@ -6,7 +6,7 @@
 import { useMemo } from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
-import { FOLDERS, replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
 import { compact, find, omit } from 'lodash';
 
 import {
@@ -36,6 +36,7 @@ import {
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
+import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 
 const getExportICSItem = ({
 	event,

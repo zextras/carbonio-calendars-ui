@@ -15,7 +15,7 @@ import {
 	Chip,
 	Padding
 } from '@zextras/carbonio-design-system';
-import { getAction, Action, useUserAccount, FOLDERS, ROOT_NAME } from '@zextras/carbonio-shell-ui';
+import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,8 @@ import 'moment-timezone';
 import { AvailabilityChecker } from './parts/availability-checker';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
+import { ROOT_NAME } from '../../carbonio-ui-commons/constants';
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { getRootAccountId, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
 import BodyMessageRenderer, { extractBody } from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
@@ -234,7 +236,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 								msg={mailMsg}
 								fragment={invite?.fragment}
 							/>
-						)
+					  )
 					: isAttendee && <InviteReplyPart inviteId={inviteId} message={mailMsg} />}
 
 				{invite?.location && (

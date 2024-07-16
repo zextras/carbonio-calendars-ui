@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 import { find } from 'lodash';
 
 import {
@@ -19,6 +19,7 @@ import {
 	openAppointment,
 	proposeNewTimeFn
 } from './appointment-actions-fn';
+import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/actions';
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
@@ -214,7 +215,7 @@ export const deleteEventItem = ({
 				disabled: !event?.haveWriteAccess,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				onClick: deletePermanently({ event, context })
-			}
+		  }
 		: {
 				id: EventActionsEnum.TRASH,
 				icon: 'Trash2Outline',
@@ -222,7 +223,7 @@ export const deleteEventItem = ({
 				disabled: !event?.haveWriteAccess,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
 				onClick: moveToTrash({ event, invite, context })
-			};
+		  };
 
 export const showOriginal = ({ event }: { event: EventType }): AppointmentActionsItems => ({
 	id: EventActionsEnum.SHOW_ORIGINAL,
@@ -295,5 +296,5 @@ export const answerToEventItem = ({
 				disabled: false,
 				keepOpen: true,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action')
-			}
+		  }
 		: undefined;

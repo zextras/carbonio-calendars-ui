@@ -16,7 +16,7 @@ import {
 	Text,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 import {
 	filter,
 	groupBy,
@@ -36,6 +36,7 @@ import styled from 'styled-components';
 
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { SidebarCustomItem } from '../../carbonio-ui-commons/types/sidebar';
 import { ResFolder } from '../../carbonio-ui-commons/utils';
 import { getFolderTranslatedName } from '../../commons/utilities';

@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
-import { FOLDERS, replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
@@ -45,8 +46,8 @@ export const sendResponse = ({
 				action === 'ACCEPT'
 					? t('message.snackbar.invite.accept', 'You’ve replied as Accepted')
 					: action === 'TENTATIVE'
-						? t('message.snackbar.invite.tentative', 'You’ve replied as Tentative')
-						: t('message.snackbar.invite.decline', 'You’ve replied as Declined');
+					? t('message.snackbar.invite.tentative', 'You’ve replied as Tentative')
+					: t('message.snackbar.invite.decline', 'You’ve replied as Declined');
 			createSnackbar({
 				key: `invite_${action}`,
 				replace: true,

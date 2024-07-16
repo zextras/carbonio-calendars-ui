@@ -6,11 +6,13 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Select } from '@zextras/carbonio-design-system';
-import { FOLDERS, LinkFolder, ROOT_NAME, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { LinkFolder, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { filter, find, map, reject } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import LabelFactory, { ItemFactory } from './select-label-factory';
+import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
+import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import {
 	getRootAccountId,
 	useFoldersMap,
@@ -60,7 +62,7 @@ export const CalendarSelector = ({
 			showCalWithWritePerm
 				? filter(calendars, (calendar) =>
 						calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
-					)
+				  )
 				: calendars,
 		[calendars, showCalWithWritePerm]
 	);

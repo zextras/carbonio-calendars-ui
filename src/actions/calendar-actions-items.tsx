@@ -22,11 +22,11 @@ import {
 	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
+import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import {
 	isNestedInTrash,
 	isTrashOrNestedInIt
 } from '../carbonio-ui-commons/store/zustand/folder/utils';
-import { FOLDERS } from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui-constants';
 import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { isLinkChild, isMainRootChild } from '../commons/utilities';

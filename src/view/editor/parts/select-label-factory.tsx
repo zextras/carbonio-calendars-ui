@@ -20,8 +20,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
+import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { FOLDERS } from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui-constants';
 import { Grant } from '../../../carbonio-ui-commons/types/folder';
 import { isLinkChild } from '../../../commons/utilities';
 
@@ -55,8 +55,8 @@ color: ${({ theme, disabled, $showPrimary }): string =>
 	disabled
 		? theme.palette.text.disabled
 		: $showPrimary
-			? theme.palette.primary.regular
-			: theme.palette.secondary.regular}};`;
+		? theme.palette.primary.regular
+		: theme.palette.secondary.regular}};`;
 
 export const StyledIcon = styled(Icon)<IconProps & { $showPrimary?: boolean }>`
 color: ${({ theme, disabled, $showPrimary }): string =>
@@ -64,8 +64,8 @@ color: ${({ theme, disabled, $showPrimary }): string =>
 	disabled
 		? theme.palette.text.disabled
 		: $showPrimary
-			? theme.palette.primary.regular
-			: theme.palette.secondary.regular}};`;
+		? theme.palette.primary.regular
+		: theme.palette.secondary.regular}};`;
 
 interface CustomSelectItem extends SelectItem {
 	id?: string;
