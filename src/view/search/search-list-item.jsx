@@ -14,12 +14,13 @@ import {
 	Padding,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
+import { useTags } from '@zextras/carbonio-shell-ui';
 import { find, reduce, includes } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 import { openAppointment } from '../../actions/appointment-actions-fn';
+import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { PANEL_VIEW } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
