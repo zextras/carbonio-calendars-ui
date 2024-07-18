@@ -29,6 +29,7 @@ import {
 	workWeekSubSection
 } from './sub-sections';
 import WorkWeekSettingsView from './work-week-settings-view';
+import { useUpdateView } from '../carbonio-ui-commons/hooks/use-update-view';
 import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
 import { getRightsRequest } from '../soap/get-rights-request';
 
@@ -46,6 +47,7 @@ export default function CalendarSettingsView() {
 	const [allowedFBUsers, setAllowedFBUsers] = useState([]);
 	const [allowedInivteUsers, setAllowedInivteUsers] = useState([]);
 	const createSnackbar = useSnackbar();
+	useUpdateView();
 
 	const getUserRights = async () => {
 		const response = await getRightsRequest();

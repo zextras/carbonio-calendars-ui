@@ -23,6 +23,7 @@ import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-fi
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
+import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
 
 export type SearchResults = {
 	appointments: Record<string, string[]>;
@@ -59,6 +60,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	);
 
 	const calendars = useFoldersMap();
+	useUpdateView();
 	const searchInFolders = useMemo(
 		() =>
 			reduce(
