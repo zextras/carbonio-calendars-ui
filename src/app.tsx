@@ -18,7 +18,8 @@ import {
 	ACTION_TYPES,
 	registerFunctions,
 	SearchViewProps,
-	SecondaryBarComponentProps
+	SecondaryBarComponentProps,
+	upsertApp
 } from '@zextras/carbonio-shell-ui';
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { useTranslation } from 'react-i18next';
@@ -120,6 +121,11 @@ const AppRegistrations = (): null => {
 			primaryBar: 'CalendarModOutline',
 			secondaryBar: SidebarView,
 			appView: CalendarView
+		});
+		upsertApp({
+			name: CALENDAR_APP_ID,
+			display: appLabel,
+			description: t('label.app_description', 'Calendars module')
 		});
 		addSettingsView({
 			route: CALENDAR_ROUTE,
