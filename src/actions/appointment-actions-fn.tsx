@@ -134,16 +134,18 @@ export const moveAppointment =
 		if (ev) ev.preventDefault();
 
 		context?.onClose && context?.onClose();
-		const closeModal = context.createModal(
+		const modalId = 'move-appointment';
+		context.createModal(
 			{
+				id: modalId,
 				maxHeight: '90vh',
 				children: (
 					<StoreProvider>
-						<MoveApptModal event={event} onClose={(): void => closeModal()} />
+						<MoveApptModal event={event} onClose={(): void => context.closeModal(modalId)} />
 					</StoreProvider>
 				),
 				onClose: () => {
-					closeModal();
+					context.closeModal(modalId);
 				}
 			},
 			true
@@ -161,15 +163,21 @@ export const deletePermanently =
 	(ev?: ActionsClick): void => {
 		if (ev) ev.preventDefault();
 		context?.onClose && context?.onClose();
-		const closeModal = context.createModal(
+		const modalId = 'delete-permanently';
+		context.createModal(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<DeletePermanently onClose={(): void => closeModal()} event={event} context={context} />
+						<DeletePermanently
+							onClose={(): void => context.closeModal(modalId)}
+							event={event}
+							context={context}
+						/>
 					</StoreProvider>
 				),
 				onClose: () => {
-					closeModal();
+					context.closeModal(modalId);
 				}
 			},
 			true
@@ -189,15 +197,21 @@ export const moveToTrash =
 	(): void => {
 		const trashEvent = (invite: Invite): void => {
 			context?.onClose && context?.onClose();
-			const closeModal = context.createModal(
+			const modalId = 'move-to-trash';
+			context.createModal(
 				{
+					id: modalId,
 					children: (
 						<StoreProvider>
-							<DeleteEventModal event={event} invite={invite} onClose={(): void => closeModal()} />
+							<DeleteEventModal
+								event={event}
+								invite={invite}
+								onClose={(): void => context.closeModal(modalId)}
+							/>
 						</StoreProvider>
 					),
 					onClose: () => {
-						closeModal();
+						context.closeModal(modalId);
 					}
 				},
 				true

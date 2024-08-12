@@ -29,6 +29,7 @@ describe('edit event item', () => {
 		const context = {
 			createAndApplyTag: jest.fn(),
 			createModal: jest.fn(),
+			closeModal: jest.fn(),
 			createSnackbar: jest.fn(),
 			dispatch: jest.fn(),
 			tags: {
@@ -63,6 +64,7 @@ describe('edit event item', () => {
 			const context = {
 				createAndApplyTag: jest.fn(),
 				createModal: jest.fn(),
+				closeModal: jest.fn(),
 				createSnackbar: jest.fn(),
 				dispatch: jest.fn(),
 				tags: {
@@ -105,6 +107,7 @@ describe('edit event item', () => {
 			const context = {
 				createAndApplyTag: jest.fn(),
 				createModal: jest.fn(),
+				closeModal: jest.fn(),
 				createSnackbar: jest.fn(),
 				dispatch: jest.fn(),
 				tags: {
@@ -139,6 +142,7 @@ describe('edit event item', () => {
 			const context = {
 				createAndApplyTag: jest.fn(),
 				createModal: jest.fn(),
+				closeModal: jest.fn(),
 				createSnackbar: jest.fn(),
 				dispatch: jest.fn(),
 				tags: {
@@ -178,6 +182,7 @@ describe('edit event item', () => {
 			const context = {
 				createAndApplyTag: jest.fn(),
 				createModal: jest.fn(),
+				closeModal: jest.fn(),
 				createSnackbar: jest.fn(),
 				dispatch: jest.fn(),
 				tags: {
