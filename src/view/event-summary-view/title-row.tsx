@@ -43,7 +43,7 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 				{event.resource.class === 'PRI' && (
 					<Row padding={{ all: 'small' }}>
 						<Icon
-							customColor={event.resource.calendar.color.color}
+							color={event.resource.calendar.color.color}
 							icon="LockOutline"
 							style={{ minWidth: '1rem' }}
 						/>

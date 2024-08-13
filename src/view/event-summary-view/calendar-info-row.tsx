@@ -21,7 +21,7 @@ export const CalendarInfoRow = (): ReactElement => {
 				<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 					<Row takeAvailableSpace mainAlignment="flex-start">
 						<Padding right="small">
-							<Icon icon="Calendar2" size="medium" customColor={color.color} />
+							<Icon icon="Calendar2" size="medium" color={color.color} />
 						</Padding>
 						<Text overflow="break-word" size="medium" weight="bold">
 							{calendar?.name}

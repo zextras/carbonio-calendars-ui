@@ -40,7 +40,7 @@ type SubjectProps = {
 
 const SubjectRow = ({ subject, calendarColor, isPrivate }: SubjectProps): ReactElement => (
 	<Container mainAlignment="flex-start" orientation="horizontal">
-		{isPrivate && <Icon icon="Lock" customColor={calendarColor} style={{ padding: '0.25rem' }} />}
+		{isPrivate && <Icon icon="Lock" color={calendarColor} style={{ padding: '0.25rem' }} />}
 		<Text size="small" overflow="break-word" style={{ fontWeight: '600' }}>
 			{subject}
 		</Text>
@@ -73,7 +73,7 @@ const CustomIconInfo = ({
 }): ReactElement => (
 	<Tooltip label={tooltipLabel} placement="left">
 		<div>
-			<CustomIcon icon={icon} size="medium" customColor={color} />
+			<CustomIcon icon={icon} size="medium" color={color} />
 		</div>
 	</Tooltip>
 );
