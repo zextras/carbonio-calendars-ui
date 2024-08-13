@@ -12,10 +12,10 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { findShares } from '../../../actions/calendar-actions-fn';
 
 export const SharesComponent = (): ReactElement => {
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 	const label = useMemo(() => t('find_shares', 'Find shares'), []);
 
-	const onClick = useMemo(() => findShares({ createModal }), [createModal]);
+	const onClick = useMemo(() => findShares({ createModal, closeModal }), [closeModal, createModal]);
 
 	return (
 		<Container padding={{ horizontal: 'medium', vertical: 'small' }}>

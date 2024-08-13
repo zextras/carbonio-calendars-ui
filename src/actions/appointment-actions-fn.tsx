@@ -32,7 +32,10 @@ export const createCopy =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const copy = (invite: Invite): void => {
@@ -87,7 +90,10 @@ export const editAppointment =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const edit = (invite: Invite): void => {
@@ -262,7 +268,10 @@ export const acceptInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -292,7 +301,10 @@ export const declineInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -321,7 +333,10 @@ export const acceptAsTentative =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -350,7 +365,10 @@ export const proposeNewTimeFn =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const proposeTime = (invite: Invite): void => {

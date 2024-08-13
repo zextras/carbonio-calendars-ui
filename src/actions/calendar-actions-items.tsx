@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
+import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 
@@ -48,9 +48,11 @@ export const noPermissionLabel = t(
 
 export const newCalendarItem = ({
 	createModal,
+	closeModal,
 	item
 }: {
 	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
 	item: { id: string; perm?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.NEW,
@@ -61,7 +63,7 @@ export const newCalendarItem = ({
 		(item.perm ? !/w/.test(item.perm) : false) ||
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR),
 	tooltipLabel: noPermissionLabel,
-	onClick: newCalendar({ createModal, item })
+	onClick: newCalendar({ createModal, closeModal, item })
 });
 
 export const moveToRootItem = ({
@@ -89,9 +91,11 @@ export const moveToRootItem = ({
 
 export const emptyTrashItem = ({
 	createModal,
+	closeModal,
 	item
 }: {
 	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
 	item: { id: string; children?: Array<Folder>; n?: number };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EMPTY_TRASH,
@@ -105,7 +109,7 @@ export const emptyTrashItem = ({
 		item.children.length < 1
 			? t('action.Trash_already_empty', 'trash is already empty')
 			: noPermissionLabel,
-	onClick: emptyTrash({ createModal, item }),
+	onClick: emptyTrash({ createModal, closeModal, item }),
 	disabled:
 		!hasId(item, FOLDERS.TRASH) ||
 		(hasId(item, FOLDERS.TRASH) &&
@@ -117,24 +121,28 @@ export const emptyTrashItem = ({
 
 export const editCalendarItem = ({
 	createModal,
+	closeModal,
 	item
 }: {
 	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
 	item: { id: string; absFolderPath?: string };
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EDIT,
 	icon: 'Edit2Outline',
 	label: t('action.edit_calendar_properties', 'Edit calendar properties'),
 	tooltipLabel: noPermissionLabel,
-	onClick: editCalendar({ createModal, item }),
+	onClick: editCalendar({ createModal, closeModal, item }),
 	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
 });
 
 export const deleteCalendarItem = ({
 	createModal,
+	closeModal,
 	item
 }: {
 	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
 	item: Folder;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.DELETE,
@@ -143,7 +151,7 @@ export const deleteCalendarItem = ({
 		? t('label.delete_permanently', 'Delete permanently')
 		: t('action.delete_calendar', 'Delete calendar'),
 	tooltipLabel: noPermissionLabel,
-	onClick: deleteCalendar({ createModal, item }),
+	onClick: deleteCalendar({ createModal, closeModal, item }),
 	disabled:
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		hasId(item, FOLDERS.CALENDAR) ||
@@ -173,16 +181,18 @@ export const removeFromListItem = ({
 
 export const sharesInfoItem = ({
 	createModal,
+	closeModal,
 	item
 }: {
 	item: { id: string; absFolderPath?: string };
 	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SHARES_INFO,
 	icon: 'InfoOutline',
 	label: t('shares_info', 'Shares Info'),
 	tooltipLabel: noPermissionLabel,
-	onClick: sharesInfo({ createModal, item }),
+	onClick: sharesInfo({ createModal, closeModal, item }),
 	disabled:
 		!(item as LinkFolder).isLink ||
 		isLinkChild(item) ||
@@ -193,16 +203,18 @@ export const sharesInfoItem = ({
 
 export const shareCalendarItem = ({
 	createModal,
+	closeModal,
 	item
 }: {
 	item: Folder;
 	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SHARE,
 	icon: 'SharedCalendarOutline',
 	label: t('action.share_calendar', 'Share Calendar'),
 	tooltipLabel: noPermissionLabel,
-	onClick: shareCalendar({ createModal, item }),
+	onClick: shareCalendar({ createModal, closeModal, item }),
 	disabled:
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		isTrashOrNestedInIt(item) ||
@@ -211,16 +223,18 @@ export const shareCalendarItem = ({
 
 export const shareCalendarUrlItem = ({
 	createModal,
+	closeModal,
 	item
 }: {
 	item: { name: string; id: string; absFolderPath?: string };
 	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.SHARE_URL,
 	icon: 'Copy',
 	label: t('action.calendar_access_share', 'Calendar access share'),
 	tooltipLabel: noPermissionLabel,
-	onClick: shareCalendarUrl({ createModal, item }),
+	onClick: shareCalendarUrl({ createModal, closeModal, item }),
 	disabled:
 		(item as LinkFolder).isLink ||
 		isTrashOrNestedInIt(item) ||
@@ -229,16 +243,18 @@ export const shareCalendarUrlItem = ({
 
 export const findSharesItem = ({
 	createModal,
+	closeModal,
 	item
 }: {
 	item: { name: string; id: string; absFolderPath?: string };
 	createModal: CreateModalFn;
+	closeModal: CloseModalFn;
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.FIND_SHARES,
 	icon: 'PlusOutline',
 	label: t('find_shares', 'Find shares'),
 	tooltipLabel: noPermissionLabel,
-	onClick: findShares({ createModal }),
+	onClick: findShares({ createModal, closeModal }),
 	disabled:
 		isTrashOrNestedInIt(item) || hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || !isMainRootChild(item)
 });
