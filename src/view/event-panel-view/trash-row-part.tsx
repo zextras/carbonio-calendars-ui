@@ -65,7 +65,7 @@ export const TrashRow = ({ event }: { event: EventType }): ReactElement => {
 					mainAlignment="baseline"
 					padding={{ horizontal: 'large' }}
 				>
-					<Icon icon="Pricetags" customColor={event.resource.calendar.color.color} />
+					<Icon icon="Pricetags" color={event.resource.calendar.color.color} />
 					<Padding horizontal="extrasmall">
 						{' '}
 						{attachments.length > 0 && <Icon icon="AttachOutline" />}

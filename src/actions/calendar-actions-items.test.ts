@@ -94,8 +94,9 @@ describe('calendar actions items', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const item = { id: FOLDERS.CALENDAR };
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const newItem = newCalendarItem({ createModal, item });
+			const newItem = newCalendarItem({ createModal, closeModal, item });
 			expect(newItem).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.NEW,
@@ -118,8 +119,9 @@ describe('calendar actions items', () => {
 			{ id: `${randomUUID}:154`, perm: 'r' }
 		])(genericTestTitleForEachCases, (item) => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const newItem = newCalendarItem({ createModal, item });
+			const newItem = newCalendarItem({ createModal, closeModal, item });
 			expect(newItem).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
@@ -190,8 +192,9 @@ describe('calendar actions items', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const item = { id: FOLDERS.TRASH, n: 2, children: [] };
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const empty = emptyTrashItem({ createModal, item });
+			const empty = emptyTrashItem({ createModal, closeModal, item });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.EMPTY_TRASH,
@@ -206,8 +209,9 @@ describe('calendar actions items', () => {
 		test('return tooltipLabel "trash is already empty" when n is 0 and children is an empty array', () => {
 			const trash = { id: FOLDERS.TRASH, n: 0, children: [] };
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const empty = emptyTrashItem({ createModal, item: trash });
+			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
 					tooltipLabel: trashTooltipLabel
@@ -217,8 +221,9 @@ describe('calendar actions items', () => {
 		test('return disabled set to true when folder is not trash', () => {
 			const trash = { id: FOLDERS.CALENDAR, n: 1, children: [] };
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const empty = emptyTrashItem({ createModal, item: trash });
+			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
@@ -228,8 +233,9 @@ describe('calendar actions items', () => {
 		test('return disabled set to true when n === 0 and children.length === 0', () => {
 			const trash = { id: FOLDERS.TRASH, n: 0, children: [] };
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const empty = emptyTrashItem({ createModal, item: trash });
+			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
@@ -239,8 +245,9 @@ describe('calendar actions items', () => {
 		test('return disabled set to false when n > 0', () => {
 			const trash = { id: FOLDERS.TRASH, n: 1, children: [] };
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const empty = emptyTrashItem({ createModal, item: trash });
+			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
 					disabled: false
@@ -250,8 +257,9 @@ describe('calendar actions items', () => {
 		test('return disabled set to false when children.length > 0', () => {
 			const trash = { id: FOLDERS.TRASH, n: 0, children: [{ id: '1235' } as Folder] };
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const empty = emptyTrashItem({ createModal, item: trash });
+			const empty = emptyTrashItem({ createModal, closeModal, item: trash });
 			expect(empty).toStrictEqual(
 				expect.objectContaining({
 					disabled: false
@@ -263,8 +271,9 @@ describe('calendar actions items', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const item = { id: FOLDERS.CALENDAR, absFolderPath: '/Calendar' };
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const editItem = editCalendarItem({ createModal, item });
+			const editItem = editCalendarItem({ createModal, closeModal, item });
 			expect(editItem).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.EDIT,
@@ -285,8 +294,9 @@ describe('calendar actions items', () => {
 			{ id: `${randomUUID}:153`, absFolderPath: TRASH_SUB_FOLDER_PATH }
 		])(genericTestTitleForEachCases, (item) => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const editItem = editCalendarItem({ createModal, item });
+			const editItem = editCalendarItem({ createModal, closeModal, item });
 			expect(editItem).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
@@ -302,8 +312,9 @@ describe('calendar actions items', () => {
 				absFolderPath: '/randomFolder'
 			};
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const deleteItem = deleteCalendarItem({ createModal, item });
+			const deleteItem = deleteCalendarItem({ createModal, closeModal, item });
 			expect(deleteItem).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.DELETE,
@@ -324,8 +335,9 @@ describe('calendar actions items', () => {
 			}
 		])('return "label.delete_permanently" when the calendar is nested in trash', (item) => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const deleteItem = deleteCalendarItem({ createModal, item });
+			const deleteItem = deleteCalendarItem({ createModal, closeModal, item });
 			expect(deleteItem).toStrictEqual(
 				expect.objectContaining({
 					label: 'label.delete_permanently'
@@ -346,8 +358,9 @@ describe('calendar actions items', () => {
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.CALENDAR}` }
 		])(genericTestTitleForEachCases, (item) => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const deleteItem = deleteCalendarItem({ createModal, item });
+			const deleteItem = deleteCalendarItem({ createModal, closeModal, item });
 			expect(deleteItem).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
@@ -401,9 +414,10 @@ describe('calendar actions items', () => {
 	describe('sharesInfoItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 			setupFoldersStore();
 
-			const sharesInfo = sharesInfoItem({ createModal, item: folder });
+			const sharesInfo = sharesInfoItem({ createModal, closeModal, item: folder });
 			expect(sharesInfo).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.SHARES_INFO,
@@ -432,8 +446,9 @@ describe('calendar actions items', () => {
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` }
 		])(genericTestTitleForEachCases, (item) => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 			setupFoldersStore();
-			const sharesInfo = sharesInfoItem({ createModal, item });
+			const sharesInfo = sharesInfoItem({ createModal, closeModal, item });
 			expect(sharesInfo).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
@@ -444,9 +459,10 @@ describe('calendar actions items', () => {
 	describe('shareCalendarItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 			setupFoldersStore();
 
-			const shareCalendar = shareCalendarItem({ createModal, item: childFolder });
+			const shareCalendar = shareCalendarItem({ createModal, closeModal, item: childFolder });
 			expect(shareCalendar).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.SHARE,
@@ -476,8 +492,9 @@ describe('calendar actions items', () => {
 			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` }
 		])(genericTestTitleForEachCases, (item) => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 			setupFoldersStore();
-			const shareCalendar = shareCalendarItem({ createModal, item });
+			const shareCalendar = shareCalendarItem({ createModal, closeModal, item });
 			expect(shareCalendar).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
@@ -488,10 +505,11 @@ describe('calendar actions items', () => {
 	describe('shareCalendarUrlItem', () => {
 		test(genericTestItemTitleForIconItem, () => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 			setupFoldersStore();
 
 			const item = { name: 'random Folder', id: '154' };
-			const shareCalendarUrl = shareCalendarUrlItem({ createModal, item });
+			const shareCalendarUrl = shareCalendarUrlItem({ createModal, closeModal, item });
 			expect(shareCalendarUrl).toStrictEqual(
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.SHARE_URL,
@@ -519,8 +537,9 @@ describe('calendar actions items', () => {
 			}
 		])(genericTestTitleForEachCases, (item) => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 
-			const shareCalendarUrl = shareCalendarUrlItem({ createModal, item });
+			const shareCalendarUrl = shareCalendarUrlItem({ createModal, closeModal, item });
 			expect(shareCalendarUrl).toStrictEqual(
 				expect.objectContaining({
 					disabled: true

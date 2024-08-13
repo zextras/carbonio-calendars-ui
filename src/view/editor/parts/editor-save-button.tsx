@@ -27,7 +27,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	const title = useAppSelector(selectEditorTitle(editorId));
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const attendeesLength = useAppSelector(selectEditorAttendees(editorId))?.length;
@@ -39,15 +39,17 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 
 	const onClick = useCallback(() => {
 		if (editor.isSeries && !isNew && !editor.isInstance) {
-			const closeModal = createModal(
+			const modalId = 'series-edit-warning';
+			createModal(
 				{
+					id: modalId,
 					size: 'large',
 					children: (
 						<StoreProvider>
 							<SeriesEditWarningModal
 								action={onSave}
 								isSending={false}
-								onClose={(): void => closeModal()}
+								onClose={(): void => closeModal(modalId)}
 								isNew={isNew}
 								editorId={editorId}
 								editor={editor}
@@ -55,7 +57,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 						</StoreProvider>
 					),
 					onClose: () => {
-						closeModal();
+						closeModal(modalId);
 					}
 				},
 				true
@@ -84,6 +86,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 		isNew,
 		createModal,
 		editorId,
+		closeModal,
 		attendeesLength,
 		meetingRoomLength,
 		equipmentsLength,

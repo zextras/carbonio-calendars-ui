@@ -32,7 +32,10 @@ export const createCopy =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const copy = (invite: Invite): void => {
@@ -87,7 +90,10 @@ export const editAppointment =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const edit = (invite: Invite): void => {
@@ -134,16 +140,18 @@ export const moveAppointment =
 		if (ev) ev.preventDefault();
 
 		context?.onClose && context?.onClose();
-		const closeModal = context.createModal(
+		const modalId = 'move-appointment';
+		context.createModal(
 			{
+				id: modalId,
 				maxHeight: '90vh',
 				children: (
 					<StoreProvider>
-						<MoveApptModal event={event} onClose={(): void => closeModal()} />
+						<MoveApptModal event={event} onClose={(): void => context.closeModal(modalId)} />
 					</StoreProvider>
 				),
 				onClose: () => {
-					closeModal();
+					context.closeModal(modalId);
 				}
 			},
 			true
@@ -161,15 +169,21 @@ export const deletePermanently =
 	(ev?: ActionsClick): void => {
 		if (ev) ev.preventDefault();
 		context?.onClose && context?.onClose();
-		const closeModal = context.createModal(
+		const modalId = 'delete-permanently';
+		context.createModal(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<DeletePermanently onClose={(): void => closeModal()} event={event} context={context} />
+						<DeletePermanently
+							onClose={(): void => context.closeModal(modalId)}
+							event={event}
+							context={context}
+						/>
 					</StoreProvider>
 				),
 				onClose: () => {
-					closeModal();
+					context.closeModal(modalId);
 				}
 			},
 			true
@@ -189,15 +203,21 @@ export const moveToTrash =
 	(): void => {
 		const trashEvent = (invite: Invite): void => {
 			context?.onClose && context?.onClose();
-			const closeModal = context.createModal(
+			const modalId = 'move-to-trash';
+			context.createModal(
 				{
+					id: modalId,
 					children: (
 						<StoreProvider>
-							<DeleteEventModal event={event} invite={invite} onClose={(): void => closeModal()} />
+							<DeleteEventModal
+								event={event}
+								invite={invite}
+								onClose={(): void => context.closeModal(modalId)}
+							/>
 						</StoreProvider>
 					),
 					onClose: () => {
-						closeModal();
+						context.closeModal(modalId);
 					}
 				},
 				true
@@ -248,7 +268,10 @@ export const acceptInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -278,7 +301,10 @@ export const declineInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -307,7 +333,10 @@ export const acceptAsTentative =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -336,7 +365,10 @@ export const proposeNewTimeFn =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<ActionsContext, 'createAndApplyTag' | 'createModal' | 'createSnackbar' | 'tags'>;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const proposeTime = (invite: Invite): void => {

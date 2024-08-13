@@ -16,7 +16,6 @@ import {
 	moveToRootItem,
 	newCalendarItem,
 	removeFromListItem,
-	shareCalendarItem,
 	shareCalendarUrlItem,
 	sharesInfoItem
 } from '../actions/calendar-actions-items';
@@ -34,21 +33,21 @@ export const useCalendarActions = (
 	item: Folder,
 	inputRef?: React.RefObject<HTMLInputElement>
 ): Array<CalendarActionsProps> => {
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
 
 	if (!item) return [];
 
 	const actions = [
-		newCalendarItem({ createModal, item }),
+		newCalendarItem({ createModal, closeModal, item }),
 		moveToRootItem({ createSnackbar, item }),
-		emptyTrashItem({ createModal, item }),
-		editCalendarItem({ createModal, item }),
-		deleteCalendarItem({ createModal, item }),
+		emptyTrashItem({ createModal, closeModal, item }),
+		editCalendarItem({ createModal, closeModal, item }),
+		deleteCalendarItem({ createModal, closeModal, item }),
 		removeFromListItem({ item, createSnackbar }),
-		shareCalendarUrlItem({ createModal, item }),
-		findSharesItem({ createModal, item }),
-		sharesInfoItem({ item, createModal }),
+		shareCalendarUrlItem({ createModal, closeModal, item }),
+		findSharesItem({ createModal, closeModal, item }),
+		sharesInfoItem({ item, createModal, closeModal }),
 		exportAppointmentICSItem({ item }),
 		importCalendarICSItem(item, inputRef)
 	];

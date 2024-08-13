@@ -19,6 +19,7 @@ import {
 	openEventItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
+import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { isLinkChild } from '../commons/utilities';
@@ -36,7 +37,6 @@ import {
 import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 
 const getExportICSItem = ({
 	event,
@@ -150,24 +150,25 @@ export const useEventActions = ({
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
 	const invite = useAppSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useAppDispatch();
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 	const tags = useTags();
 	const createSnackbar = useSnackbar();
 	const calendarFolders = useFoldersMap();
-	const _context = useMemo(
+	const _context = useMemo<ActionsContext>(
 		() => ({
 			tags,
 			folders: calendarFolders,
 			createAndApplyTag,
 			replaceHistory,
 			createModal,
+			closeModal,
 			panelView: 'app' as PanelView,
 			dispatch,
 			createSnackbar,
 			onClose,
 			...context
 		}),
-		[calendarFolders, context, createModal, createSnackbar, dispatch, onClose, tags]
+		[calendarFolders, closeModal, context, createModal, createSnackbar, dispatch, onClose, tags]
 	);
 	return useMemo(() => {
 		if (!event) return undefined;

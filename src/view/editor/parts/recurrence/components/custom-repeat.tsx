@@ -13,24 +13,26 @@ import { CustomRecurrenceModal } from '../views/custom-recurrence-modal';
 
 const CustomRepeatSelectItem = ({ editorId }: { editorId: string }): ReactElement => {
 	const [t] = useTranslation();
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 
 	const onClick = useCallback(() => {
-		const closeModal = createModal(
+		const modalId = 'custom-recurrence';
+		createModal(
 			{
+				id: modalId,
 				maxHeight: '90vh',
 				children: (
 					<StoreProvider>
-						<CustomRecurrenceModal editorId={editorId} onClose={(): void => closeModal()} />
+						<CustomRecurrenceModal editorId={editorId} onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
 				),
 				onClose: () => {
-					closeModal();
+					closeModal(modalId);
 				}
 			},
 			true
 		);
-	}, [createModal, editorId]);
+	}, [closeModal, createModal, editorId]);
 
 	return (
 		<Container width="fill" mainAlignment="center" orientation="horizontal">

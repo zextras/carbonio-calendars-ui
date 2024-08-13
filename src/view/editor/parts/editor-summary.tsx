@@ -132,7 +132,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 					</Text>
 					<Icon
 						icon="Calendar2"
-						customColor={calendar?.color?.color ?? CALENDARS_STANDARD_COLORS?.[0]?.color}
+						color={calendar?.color?.color ?? CALENDARS_STANDARD_COLORS?.[0]?.color}
 					/>
 				</Container>
 				<TitleRow>
