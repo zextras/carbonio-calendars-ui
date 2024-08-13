@@ -31,7 +31,7 @@ import { EventActionsEnum, EventActionsId } from '../../types/enums/event-action
 import { EventType } from '../../types/event';
 import { TagType } from '../../types/tags';
 
-export type ReturnType = {
+export type ActionDescriptor = {
 	id: EventActionsId;
 	icon: string;
 	label: string;
@@ -44,17 +44,17 @@ export type ReturnType = {
 	}>;
 };
 
-export type ArgumentType = {
+export type ActionParams = {
 	createModal?: CreateModalFn;
 	closeModal?: CloseModalFn;
 	createSnackbar?: CreateSnackbarFn;
-	items?: ReturnType;
+	items?: ActionDescriptor;
 	tag?: ItemType;
 };
 
 const labelTag: string = t('label.tags', 'Tags');
 
-export const createTag = ({ createModal, closeModal }: ArgumentType): ReturnType => ({
+export const createTag = ({ createModal, closeModal }: ActionParams): ActionDescriptor => ({
 	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
@@ -84,7 +84,7 @@ export const createAndApplyTag = ({
 }: {
 	context: ActionsProps['context'];
 	event: EventType;
-}): ReturnType => ({
+}): ActionDescriptor => ({
 	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
@@ -107,7 +107,7 @@ export const createAndApplyTag = ({
 		);
 	}
 });
-export const editTag = ({ createModal, closeModal, tag }: ArgumentType): ReturnType => ({
+export const editTag = ({ createModal, closeModal, tag }: ActionParams): ActionDescriptor => ({
 	id: EventActionsEnum.EDIT_TAGS,
 	icon: 'Edit2Outline',
 	label: t('label.edit_tag', 'Edit Tag'),
@@ -130,7 +130,7 @@ export const editTag = ({ createModal, closeModal, tag }: ArgumentType): ReturnT
 	}
 });
 
-export const deleteTag = ({ createModal, closeModal, tag }: ArgumentType): ReturnType => ({
+export const deleteTag = ({ createModal, closeModal, tag }: ActionParams): ActionDescriptor => ({
 	id: EventActionsEnum.DELETE_TAG,
 	icon: 'Untag',
 	label: t('label.delete_tag', 'Delete Tag'),
@@ -309,7 +309,7 @@ export const applyTag = ({
 			};
 };
 
-export const useGetTagsActions = ({ tag }: ArgumentType): Array<ReturnType> => {
+export const useGetTagsActions = ({ tag }: ActionParams): Array<ActionDescriptor> => {
 	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
 	return useMemo(
