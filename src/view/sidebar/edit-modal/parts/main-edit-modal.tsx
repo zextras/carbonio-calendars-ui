@@ -23,7 +23,7 @@ import {
 	Tooltip,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import type { TFunction } from 'i18next';
 import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +31,7 @@ import styled, { DefaultTheme } from 'styled-components';
 
 import { GranteeChip } from './grantee-chip';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
+import { FOLDERS } from '../../../../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';

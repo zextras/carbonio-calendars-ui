@@ -8,13 +8,13 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 
+import { DisplayedParticipant } from './participants-displayer';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { PREFS_DEFAULTS } from '../../constants';
 import * as ParticipantDisplayerAction from '../../store/actions/participant-displayer-actions';
 import { reducers } from '../../store/redux';
-import { DisplayedParticipant } from './participants-displayer';
 
 jest.setTimeout(20000);
 
@@ -23,7 +23,6 @@ shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
 		...defaultSettings.prefs,
 		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
-		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID

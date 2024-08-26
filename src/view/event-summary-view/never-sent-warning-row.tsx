@@ -18,7 +18,7 @@ export const NeverSentWarningRow = ({ neverSent }: { neverSent: boolean }): Reac
 		{neverSent && (
 			<Row width="fill" mainAlignment="flex-start" padding={{ all: 'small' }}>
 				<Row padding={{ right: 'small' }}>
-					<Icon customColor="#D74942" icon="AlertCircleOutline" />
+					<Icon color="#D74942" icon="AlertCircleOutline" />
 				</Row>
 				<Row takeAvailableSpace mainAlignment="flex-start">
 					<WarningText overflow="break-word">

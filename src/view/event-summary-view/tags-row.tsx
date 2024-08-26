@@ -6,7 +6,7 @@
 import React, { FC, ReactElement, useCallback, useMemo } from 'react';
 
 import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
-import { useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
+import { useTags, runSearch } from '@zextras/carbonio-shell-ui';
 import { includes, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -14,6 +14,7 @@ import styled from 'styled-components';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 
+import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
 import { CALENDAR_ROUTE } from '../../constants';
 import { EventType } from '../../types/event';
 

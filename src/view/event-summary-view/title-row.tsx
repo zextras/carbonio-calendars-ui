@@ -6,10 +6,11 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import { Divider, Icon, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
-import { Tag, useTags, ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-shell-ui';
+import { Tag, useTags } from '@zextras/carbonio-shell-ui';
 import { reduce, includes } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
 import { EventType } from '../../types/event';
 
 export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
@@ -42,7 +43,7 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 				{event.resource.class === 'PRI' && (
 					<Row padding={{ all: 'small' }}>
 						<Icon
-							customColor={event.resource.calendar.color.color}
+							color={event.resource.calendar.color.color}
 							icon="LockOutline"
 							style={{ minWidth: '1rem' }}
 						/>

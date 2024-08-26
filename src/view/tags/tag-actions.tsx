@@ -9,6 +9,7 @@ import {
 	Button,
 	Checkbox,
 	CreateModalFn,
+	CloseModalFn,
 	CreateSnackbarFn,
 	Icon,
 	Padding,
@@ -30,7 +31,7 @@ import { EventActionsEnum, EventActionsId } from '../../types/enums/event-action
 import { EventType } from '../../types/event';
 import { TagType } from '../../types/tags';
 
-export type ReturnType = {
+export type ActionDescriptor = {
 	id: EventActionsId;
 	icon: string;
 	label: string;
@@ -43,16 +44,17 @@ export type ReturnType = {
 	}>;
 };
 
-export type ArgumentType = {
+export type ActionParams = {
 	createModal?: CreateModalFn;
+	closeModal?: CloseModalFn;
 	createSnackbar?: CreateSnackbarFn;
-	items?: ReturnType;
+	items?: ActionDescriptor;
 	tag?: ItemType;
 };
 
 const labelTag: string = t('label.tags', 'Tags');
 
-export const createTag = ({ createModal }: ArgumentType): ReturnType => ({
+export const createTag = ({ createModal, closeModal }: ActionParams): ActionDescriptor => ({
 	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
@@ -61,11 +63,13 @@ export const createTag = ({ createModal }: ArgumentType): ReturnType => ({
 			e.stopPropagation();
 		}
 
-		const closeModal = createModal?.(
+		const modalId = 'create-tag';
+		createModal?.(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<CreateUpdateTagModal onClose={(): void => closeModal?.()} />
+						<CreateUpdateTagModal onClose={(): void => closeModal?.(modalId)} />
 					</StoreProvider>
 				)
 			},
@@ -80,7 +84,7 @@ export const createAndApplyTag = ({
 }: {
 	context: ActionsProps['context'];
 	event: EventType;
-}): ReturnType => ({
+}): ActionDescriptor => ({
 	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
@@ -88,13 +92,14 @@ export const createAndApplyTag = ({
 		if (e) {
 			e.stopPropagation();
 		}
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		const closeModal = context.createModal(
+
+		const modalId = 'create-tag';
+		context.createModal(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<CreateUpdateTagModal onClose={(): void => closeModal()} event={event} />
+						<CreateUpdateTagModal onClose={(): void => context.closeModal(modalId)} event={event} />
 					</StoreProvider>
 				)
 			},
@@ -102,7 +107,7 @@ export const createAndApplyTag = ({
 		);
 	}
 });
-export const editTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
+export const editTag = ({ createModal, closeModal, tag }: ActionParams): ActionDescriptor => ({
 	id: EventActionsEnum.EDIT_TAGS,
 	icon: 'Edit2Outline',
 	label: t('label.edit_tag', 'Edit Tag'),
@@ -110,15 +115,13 @@ export const editTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 		if (e) {
 			e.stopPropagation();
 		}
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		const closeModal = createModal(
+		const modalId = 'create-tag';
+		createModal?.(
 			{
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<CreateUpdateTagModal onClose={(): void => closeModal()} tag={tag} editMode />
+						<CreateUpdateTagModal onClose={(): void => closeModal?.(modalId)} tag={tag} editMode />
 					</StoreProvider>
 				)
 			},
@@ -127,7 +130,7 @@ export const editTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 	}
 });
 
-export const deleteTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
+export const deleteTag = ({ createModal, closeModal, tag }: ActionParams): ActionDescriptor => ({
 	id: EventActionsEnum.DELETE_TAG,
 	icon: 'Untag',
 	label: t('label.delete_tag', 'Delete Tag'),
@@ -135,15 +138,13 @@ export const deleteTag = ({ createModal, tag }: ArgumentType): ReturnType => ({
 		if (e) {
 			e.stopPropagation();
 		}
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		const closeModal = createModal(
+		const modalId = 'delete-tag';
+		createModal?.(
 			{
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<DeleteTagModal onClose={(): void => closeModal()} tag={tag} />
+						<DeleteTagModal onClose={(): void => closeModal?.(modalId)} tag={tag} />
 					</StoreProvider>
 				)
 			},
@@ -308,16 +309,16 @@ export const applyTag = ({
 			};
 };
 
-export const useGetTagsActions = ({ tag }: ArgumentType): Array<ReturnType> => {
-	const createModal = useModal();
+export const useGetTagsActions = ({ tag }: ActionParams): Array<ActionDescriptor> => {
+	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
 	return useMemo(
 		() => [
-			createTag({ createModal }),
-			editTag({ createModal, tag }),
-			deleteTag({ tag, createSnackbar, createModal })
+			createTag({ createModal, closeModal }),
+			editTag({ createModal, closeModal, tag }),
+			deleteTag({ tag, createSnackbar, createModal, closeModal })
 		],
-		[createModal, createSnackbar, tag]
+		[closeModal, createModal, createSnackbar, tag]
 	);
 };
 

@@ -93,7 +93,7 @@ const CustomEventIcon = ({
 	) : null;
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 	const anchorRef = useRef(null);
 	const { action } = useParams<{ action: string }>();
 	const createSnackbar = useSnackbar();
@@ -130,13 +130,15 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				hideButton: true
 			});
 		} else if (event?.resource?.isRecurrent) {
-			const closeModal = createModal(
+			const modalId = 'modify-recurrent-appointment';
+			createModal(
 				{
+					id: modalId,
 					children: (
 						<StoreProvider>
 							<AppointmentTypeHandlingModal
 								event={event}
-								onClose={(): void => closeModal()}
+								onClose={(): void => closeModal(modalId)}
 								onSeries={onEntireSeries}
 								onInstance={onSingleInstance}
 							/>
@@ -150,7 +152,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
-	}, [event, createSnackbar, t, createModal, onEntireSeries, onSingleInstance]);
+	}, [event, createSnackbar, t, createModal, onEntireSeries, onSingleInstance, closeModal]);
 
 	const toggleOpen = useCallback(
 		(e): void => {
@@ -300,7 +302,9 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 															overflow: textOverflow
 														}}
 													>
-														{`${moment(event.start).format('LT')} - ${moment(event.end).format('LT')}`}
+														{`${moment(event.start).format('LT')} - ${moment(event.end).format(
+															'LT'
+														)}`}
 													</Text>
 													<Padding left="small" />
 													{eventDiff <= 15 && (

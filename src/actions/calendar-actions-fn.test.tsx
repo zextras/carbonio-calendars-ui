@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { act, waitFor } from '@testing-library/react';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { http, HttpResponse } from 'msw';
 
 import {
@@ -19,6 +18,7 @@ import {
 	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
+import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { getSetupServer } from '../carbonio-ui-commons/test/jest-setup';
 import mockedData from '../test/generators';
 
@@ -27,8 +27,9 @@ const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 describe('calendar-actions-fn', () => {
 	test('new calendar fn on click create modal is called once', () => {
 		const createModal = jest.fn();
+		const closeModal = jest.fn();
 		const item = { id: FOLDERS.CALENDAR };
-		const newCalendarFn = newCalendar({ createModal, item });
+		const newCalendarFn = newCalendar({ createModal, closeModal, item });
 		newCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
@@ -78,22 +79,25 @@ describe('calendar-actions-fn', () => {
 	});
 	test('empty trash fn', () => {
 		const createModal = jest.fn();
+		const closeModal = jest.fn();
 		const item = { id: FOLDERS.CALENDAR };
-		const emptyTrashFn = emptyTrash({ createModal, item });
+		const emptyTrashFn = emptyTrash({ createModal, closeModal, item });
 		emptyTrashFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('edit calendar fn', () => {
 		const createModal = jest.fn();
+		const closeModal = jest.fn();
 		const item = { id: FOLDERS.CALENDAR };
-		const editCalendarFn = editCalendar({ createModal, item });
+		const editCalendarFn = editCalendar({ createModal, closeModal, item });
 		editCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('delete calendar fn', () => {
 		const createModal = jest.fn();
+		const closeModal = jest.fn();
 		const item = mockedData.calendars.getCalendar();
-		const deleteCalendarFn = deleteCalendar({ createModal, item });
+		const deleteCalendarFn = deleteCalendar({ createModal, closeModal, item });
 		deleteCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
@@ -142,13 +146,15 @@ describe('calendar-actions-fn', () => {
 	describe('shares info fn', () => {
 		test('Characterization test - if response received does not contain links the creatModal is not called and no action is performed', () => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 			const item = { id: FOLDERS.CALENDAR };
-			const sharesInfoFn = sharesInfo({ createModal, item });
+			const sharesInfoFn = sharesInfo({ createModal, closeModal, item });
 			sharesInfoFn();
 			expect(createModal).toHaveBeenCalledTimes(0);
 		});
 		test('Characterization test - if request fails the creatModal is not called and no action is performed', () => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 			getSetupServer().use(
 				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
 					HttpResponse.json({
@@ -159,12 +165,13 @@ describe('calendar-actions-fn', () => {
 				)
 			);
 			const item = { id: FOLDERS.CALENDAR };
-			const sharesInfoFn = sharesInfo({ createModal, item });
+			const sharesInfoFn = sharesInfo({ createModal, closeModal, item });
 			sharesInfoFn();
 			expect(createModal).toHaveBeenCalledTimes(0);
 		});
 		test('when the request is successful it calls creatModal once', async () => {
 			const createModal = jest.fn();
+			const closeModal = jest.fn();
 			const item = { id: FOLDERS.CALENDAR };
 
 			getSetupServer().use(
@@ -179,7 +186,7 @@ describe('calendar-actions-fn', () => {
 				)
 			);
 
-			const sharesInfoFn = sharesInfo({ createModal, item });
+			const sharesInfoFn = sharesInfo({ createModal, closeModal, item });
 			await act(async () => sharesInfoFn());
 			await waitFor(() => {
 				expect(createModal).toHaveBeenCalledTimes(1);
@@ -189,21 +196,24 @@ describe('calendar-actions-fn', () => {
 	});
 	test('shares calendar fn on click create modal is called once', () => {
 		const createModal = jest.fn();
+		const closeModal = jest.fn();
 		const item = mockedData.calendars.getCalendar();
-		const shareCalendarFn = shareCalendar({ createModal, item });
+		const shareCalendarFn = shareCalendar({ createModal, closeModal, item });
 		shareCalendarFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('shares calendar url fn on click create modal is called once', () => {
 		const createModal = jest.fn();
+		const closeModal = jest.fn();
 		const item = { name: 'calendar' };
-		const shareCalendarUrlFn = shareCalendarUrl({ createModal, item });
+		const shareCalendarUrlFn = shareCalendarUrl({ createModal, closeModal, item });
 		shareCalendarUrlFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('find shares fn on click create modal is called once', async () => {
 		const createModal = jest.fn();
-		const findSharesFn = findShares({ createModal });
+		const closeModal = jest.fn();
+		const findSharesFn = findShares({ createModal, closeModal });
 		await act(async () => findSharesFn());
 		await waitFor(() => {
 			expect(createModal).toHaveBeenCalledTimes(1);
@@ -220,7 +230,8 @@ describe('calendar-actions-fn', () => {
 			)
 		);
 		const createModal = jest.fn();
-		const findSharesFn = findShares({ createModal });
+		const closeModal = jest.fn();
+		const findSharesFn = findShares({ createModal, closeModal });
 		findSharesFn();
 		await waitFor(() => {
 			expect(createModal).toHaveBeenCalledTimes(0);

@@ -13,7 +13,7 @@ import BoardEditPanel from './editor-board-wrapper';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
-import { PREFS_DEFAULTS } from '../../constants';
+import { CALENDAR_BOARD_ID, PREFS_DEFAULTS } from '../../constants';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { Editor } from '../../types/editor';
@@ -25,7 +25,7 @@ const initBoard = ({
 	editorId: string;
 	isNew: boolean;
 }): Board & { editor: Editor } => ({
-	url: 'calendars/',
+	boardViewId: CALENDAR_BOARD_ID,
 	title: 'Nuovo appuntamento',
 	id: editorId,
 	app: 'carbonio-calendars-ui',
@@ -84,7 +84,6 @@ shell.getUserSettings.mockImplementation(() => ({
 	prefs: {
 		...defaultSettings.prefs,
 		zimbraPrefUseTimeZoneListInCalendar: 'TRUE',
-		zimbraPrefTimeZoneId: 'Europe/Berlin',
 		zimbraPrefCalendarDefaultApptDuration: '60m',
 		zimbraPrefCalendarApptReminderWarningTime: '5',
 		zimbraPrefDefaultCalendarId: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID

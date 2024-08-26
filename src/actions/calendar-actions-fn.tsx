@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
+import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import moment from 'moment';
@@ -32,20 +32,24 @@ import { SharesModal } from '../view/sidebar/shares-modal';
 export const newCalendar =
 	({
 		createModal,
+		closeModal,
 		item
 	}: {
 		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
 		item: { id: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
 		}
-		const closeModal = createModal(
+		const modalId = 'new-calendar';
+		createModal(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<NewModal onClose={(): void => closeModal()} folderId={item.id} />
+						<NewModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
 					</StoreProvider>
 				)
 			},
@@ -99,24 +103,28 @@ export const moveToRoot =
 export const emptyTrash =
 	({
 		createModal,
+		closeModal,
 		item
 	}: {
 		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
 		item: { id: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
 		}
-		const closeModal = createModal(
+		const modalId = 'empty-trash';
+		createModal(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<EmptyModal onClose={(): void => closeModal()} folderId={item.id} />
+						<EmptyModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
 					</StoreProvider>
 				),
 				onClose: () => {
-					closeModal();
+					closeModal(modalId);
 				}
 			},
 			true
@@ -126,20 +134,24 @@ export const emptyTrash =
 export const editCalendar =
 	({
 		createModal,
+		closeModal,
 		item
 	}: {
 		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
 		item: { id: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
 		}
-		const closeModal = createModal(
+		const modalId = 'edit-calendar';
+		createModal(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<EditModal folderId={item.id} onClose={(): void => closeModal()} />
+						<EditModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
 				),
 				maxHeight: '70vh',
@@ -152,20 +164,24 @@ export const editCalendar =
 export const deleteCalendar =
 	({
 		createModal,
+		closeModal,
 		item
 	}: {
 		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
 		item: Folder;
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
 			e.stopPropagation();
 		}
-		const closeModal = createModal(
+		const modalId = 'delete-calendar';
+		createModal(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<DeleteModal folder={item} onClose={(): void => closeModal()} />
+						<DeleteModal folder={item} onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
 				)
 			},
@@ -211,10 +227,12 @@ export const removeFromList =
 export const sharesInfo =
 	({
 		item,
-		createModal
+		createModal,
+		closeModal
 	}: {
 		item: { id: string };
 		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
@@ -222,11 +240,13 @@ export const sharesInfo =
 		}
 		getFolderRequest({ id: item.id }).then((res) => {
 			if (!res.Fault && res.link) {
-				const closeModal = createModal(
+				const modalId = 'shares-info';
+				createModal(
 					{
+						id: modalId,
 						children: (
 							<StoreProvider>
-								<SharesInfoModal onClose={(): void => closeModal()} folder={res.link[0]} />
+								<SharesInfoModal onClose={(): void => closeModal(modalId)} folder={res.link[0]} />
 							</StoreProvider>
 						)
 					},
@@ -239,27 +259,31 @@ export const sharesInfo =
 export const shareCalendar =
 	({
 		item,
-		createModal
+		createModal,
+		closeModal
 	}: {
 		item: Folder;
 		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
 	}): ((e?: ActionsClick) => void) =>
 	() => {
-		const closeModal = createModal(
+		const modalId = 'share-calendar';
+		createModal(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
 						<ShareCalendarModal
 							folderName={item.name}
 							folderId={item.id}
-							closeFn={(): void => closeModal()}
+							closeFn={(): void => closeModal(modalId)}
 							grant={item?.acl?.grant ?? []}
 						/>
 					</StoreProvider>
 				),
 				maxHeight: '70vh',
 				onClose: () => {
-					closeModal();
+					closeModal(modalId);
 				}
 			},
 			true
@@ -269,17 +293,24 @@ export const shareCalendar =
 export const shareCalendarUrl =
 	({
 		item,
-		createModal
+		createModal,
+		closeModal
 	}: {
 		item: { name: string };
 		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
 	}): ((e?: ActionsClick) => void) =>
 	() => {
-		const closeModal = createModal(
+		const modalId = 'share-calendar-url';
+		createModal(
 			{
+				id: modalId,
 				children: (
 					<StoreProvider>
-						<ShareCalendarUrlModal folderName={item.name} onClose={(): void => closeModal()} />
+						<ShareCalendarUrlModal
+							folderName={item.name}
+							onClose={(): void => closeModal(modalId)}
+						/>
 					</StoreProvider>
 				),
 				maxHeight: '70vh',
@@ -290,7 +321,13 @@ export const shareCalendarUrl =
 	};
 
 export const findShares =
-	({ createModal }: { createModal: CreateModalFn }): ((e?: ActionsClick) => void) =>
+	({
+		createModal,
+		closeModal
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+	}): ((e?: ActionsClick) => void) =>
 	() => {
 		getShareInfoRequest().then((res) => {
 			const resCalendars: Array<ResFolder> = uniqWith(
@@ -298,11 +335,13 @@ export const findShares =
 				isEqual
 			);
 			if (res.isFulfilled) {
-				const closeModal = createModal(
+				const modalId = 'find-shares';
+				createModal(
 					{
+						id: modalId,
 						children: (
 							<StoreProvider>
-								<SharesModal calendars={resCalendars} onClose={(): void => closeModal()} />
+								<SharesModal calendars={resCalendars} onClose={(): void => closeModal(modalId)} />
 							</StoreProvider>
 						)
 					},

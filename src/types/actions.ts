@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import React from 'react';
 
 import { Tags } from '@zextras/carbonio-shell-ui';
@@ -21,8 +22,9 @@ export type ActionsContext = {
 	haveWriteAccess?: boolean;
 	isFromSearch?: boolean;
 	createAndApplyTag: (arg: any) => any;
-	createModal: any;
-	createSnackbar: unknown;
+	createModal: ReturnType<typeof useModal>['createModal'];
+	closeModal: ReturnType<typeof useModal>['closeModal'];
+	createSnackbar: ReturnType<typeof useSnackbar>;
 	dispatch: AppDispatch;
 	replaceHistory?: (arg: any) => void;
 	tags: Tags;

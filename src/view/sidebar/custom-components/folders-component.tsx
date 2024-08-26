@@ -22,10 +22,12 @@ import {
 	Divider,
 	Text
 } from '@zextras/carbonio-design-system';
-import { FOLDERS, ROOT_NAME, t, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { t, useUserAccount } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 
 import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
+import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
+import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { getRootAccountId, useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isRoot } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder } from '../../../carbonio-ui-commons/types/folder';
@@ -101,7 +103,7 @@ const RootChildren = ({
 	const query = useCheckedCalendarsQuery();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const createSnackbar = useSnackbar();
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 
 	const user = useUserAccount();
 	const rootAccountId = getRootAccountId(item.id);
@@ -178,8 +180,10 @@ const RootChildren = ({
 
 	const onFileInputChange = useCallback(() => {
 		if (inputRef?.current?.files) {
-			const closeModal = createModal(
+			const modalId = 'import-appointments';
+			createModal(
 				{
+					id: modalId,
 					size: 'small',
 					children: (
 						<>
@@ -187,7 +191,7 @@ const RootChildren = ({
 								title={t('import_appointments', 'Import appointments')}
 								showCloseIcon
 								onClose={(): void => {
-									closeModal();
+									closeModal(modalId);
 								}}
 							/>
 							<Divider />
@@ -204,24 +208,24 @@ const RootChildren = ({
 							<Divider />
 							<ModalFooter
 								onConfirm={(): void => {
-									closeModal();
+									closeModal(modalId);
 									confirmModal();
 								}}
 								onClose={(): void => {
-									closeModal();
+									closeModal(modalId);
 								}}
 								confirmLabel={t('import', 'Import')}
 							/>
 						</>
 					),
 					onClose: () => {
-						closeModal();
+						closeModal(modalId);
 					}
 				},
 				true
 			);
 		}
-	}, [confirmModal, createModal, item.name]);
+	}, [closeModal, confirmModal, createModal, item.name]);
 
 	return (
 		<>

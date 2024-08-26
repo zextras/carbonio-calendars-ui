@@ -14,10 +14,11 @@ import {
 	Tooltip,
 	useModal
 } from '@zextras/carbonio-design-system';
-import { t, useTags, ZIMBRA_STANDARD_COLORS, runSearch } from '@zextras/carbonio-shell-ui';
+import { t, useTags, runSearch } from '@zextras/carbonio-shell-ui';
 import { reduce } from 'lodash';
 
 import { createTag, useGetTagsActions } from './tag-actions';
+import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
 import { ItemType, TagsAccordionItems } from '../../carbonio-ui-commons/types/tags';
 
 type ItemProps = {
@@ -60,9 +61,14 @@ const CustomComp: FC<ItemProps> = (props) => {
 };
 
 export const TagLabel: FC<ItemType> = (props) => {
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 	return (
-		<Dropdown contextMenu display="block" width="fit" items={[createTag({ createModal })]}>
+		<Dropdown
+			contextMenu
+			display="block"
+			width="fit"
+			items={[createTag({ createModal, closeModal })]}
+		>
 			<Row mainAlignment="flex-start" padding={{ horizontal: 'large' }} takeAvailableSpace>
 				<Icon size="large" icon="TagsMoreOutline" /> <Padding right="large" />
 				<AccordionItem {...{ ...props, color: `${props.color}` }} height="2.5rem" />

@@ -16,7 +16,7 @@ import { useParams } from 'react-router-dom';
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
-import { CALENDAR_ROUTE } from '../constants';
+import { CALENDAR_BOARD_ID } from '../constants';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { StoreProvider } from '../store/redux';
@@ -43,7 +43,7 @@ export const useCalendarComponentUtils = (): {
 	const calendarDate = useCalendarDate();
 	const [date, setDate] = useState(calendarDate);
 	const [t] = useTranslation();
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
 
 	const dispatch = useAppDispatch();
@@ -147,17 +147,19 @@ export const useCalendarComponentUtils = (): {
 						invite.isOrganizer &&
 						!event.resource.inviteNeverSent
 					) {
-						const closeModal = createModal(
+						const modalId = 'modify-invite-message';
+						createModal(
 							{
+								id: modalId,
 								children: (
 									<StoreProvider>
 										<ModifyStandardMessageModal
 											title={t('label.edit')}
-											onClose={(): void => closeModal()}
+											onClose={(): void => closeModal(modalId)}
 											confirmLabel={t('action.send_edit', 'Send Edit')}
 											onConfirm={(context): void => {
 												onConfirm(false, context);
-												closeModal();
+												closeModal(modalId);
 											}}
 											invite={invite}
 											isEdited
@@ -173,7 +175,7 @@ export const useCalendarComponentUtils = (): {
 				}
 			});
 		},
-		[calendarFolders, createModal, createSnackbar, dispatch, getEnd, getStart, t]
+		[calendarFolders, closeModal, createModal, createSnackbar, dispatch, getEnd, getStart, t]
 	);
 
 	const onEventDropOrResize = useCallback(
@@ -206,13 +208,15 @@ export const useCalendarComponentUtils = (): {
 					onDropOrResizeFn({ start, end, event, isAllDay });
 				};
 				if (event.resource.isRecurrent) {
-					const closeModal = createModal(
+					const modalId = 'modify-recurrent-appointment';
+					createModal(
 						{
+							id: modalId,
 							children: (
 								<StoreProvider>
 									<AppointmentTypeHandlingModal
 										event={event}
-										onClose={(): void => closeModal()}
+										onClose={(): void => closeModal(modalId)}
 										onSeries={onEntireSeries}
 										onInstance={onSingleInstance}
 									/>
@@ -226,7 +230,7 @@ export const useCalendarComponentUtils = (): {
 				}
 			}
 		},
-		[createModal, createSnackbar, onDropOrResizeFn, t]
+		[closeModal, createModal, createSnackbar, onDropOrResizeFn, t]
 	);
 
 	const handleSelect = useCallback(
@@ -249,7 +253,7 @@ export const useCalendarComponentUtils = (): {
 					}
 				});
 				addBoard({
-					url: `${CALENDAR_ROUTE}/`,
+					boardViewId: CALENDAR_BOARD_ID,
 					title: editor?.title ?? '',
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore

@@ -34,7 +34,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 
 	const isNew = useAppSelector(selectEditorIsNew(editorId));
 	const editor = useAppSelector(selectEditor(editorId));
-	const createModal = useModal();
+	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
 
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
@@ -61,15 +61,17 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	);
 	const onClick = useCallback(() => {
 		if (editor.isSeries && !isNew && !editor.isInstance) {
-			const closeModal = createModal(
+			const modalId = 'series-edit-warning';
+			createModal(
 				{
+					id: modalId,
 					size: 'large',
 					children: (
 						<StoreProvider>
 							<SeriesEditWarningModal
 								action={onSend}
 								isSending
-								onClose={(): void => closeModal()}
+								onClose={(): void => closeModal(modalId)}
 								isNew={isNew}
 								editorId={editorId}
 								editor={editor}
@@ -77,7 +79,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 						</StoreProvider>
 					),
 					onClose: () => {
-						closeModal();
+						closeModal(modalId);
 					}
 				},
 				true
@@ -101,7 +103,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 					autoHideTimeout: 3000
 				});
 			});
-	}, [board, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
+	}, [board, closeModal, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
 
 	return (
 		<Button

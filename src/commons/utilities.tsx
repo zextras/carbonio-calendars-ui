@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { TextProps } from '@zextras/carbonio-design-system';
-import { FOLDERS, ROOT_NAME, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 import { find, forEach, isNil, map, reduce, some } from 'lodash';
 import moment from 'moment';
 
+import { ROOT_NAME } from '../carbonio-ui-commons/constants';
+import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import {
 	getFoldersMap,
 	getRoot,

@@ -7,10 +7,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { Container, Padding, Row, Shimmer } from '@zextras/carbonio-design-system';
-import { FOLDERS } from '@zextras/carbonio-shell-ui';
 import { filter, map, values } from 'lodash';
 
 import { AppointmentCard } from './appointment-card';
+import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { useFoldersMapByRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';

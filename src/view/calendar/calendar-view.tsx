@@ -9,6 +9,7 @@ import { Button, Container } from '@zextras/carbonio-design-system';
 import { noop } from 'lodash';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
+import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
 import { UPDATE_VIEW_EVENT } from '../../constants';
 import { NoOpRequest } from '../../soap/noop-request';
 import { EventActionsEnum } from '../../types/enums/event-actions-enum';
@@ -20,14 +21,7 @@ const CalendarComponent = lazy(
 
 export default function CalendarView(): ReactElement {
 	const { path } = useRouteMatch();
-
-	useEffect(() => {
-		window.addEventListener(UPDATE_VIEW_EVENT, NoOpRequest);
-
-		return () => {
-			window.removeEventListener(UPDATE_VIEW_EVENT, NoOpRequest);
-		};
-	}, []);
+	useUpdateView();
 
 	return (
 		<Container
