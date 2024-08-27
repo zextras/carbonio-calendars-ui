@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.4...v1.12.0) (2024-08-26)
+
+
+### Features
+
+* implement new update view ([a270b7a](https://github.com/zextras/carbonio-calendars-ui/commit/a270b7a2fd8f34e2752730e3cf894c97c1f3ddc7))
+* updated addBoard, addBoardView and SoapFault apis to latest shell BC ([#475](https://github.com/zextras/carbonio-calendars-ui/issues/475)) ([c86f5bc](https://github.com/zextras/carbonio-calendars-ui/commit/c86f5bcc2a7a7978971d4a2dae5ba3d6a4fb3ee5))
+
 ### [1.11.4](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.3...v1.11.4) (2024-07-10)
 
 
