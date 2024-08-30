@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useNotify } from '@zextras/carbonio-shell-ui';
 import { isEmpty, reduce, forEach, sortBy } from 'lodash';
@@ -86,7 +86,7 @@ function handleAppointmentDeletionNotify(notify, dispatch) {
 
 export const useSyncDataHandler = () => {
 	const notifyList = useNotify();
-	const [seq, setSeq] = useState(-1);
+	const seq = useRef(-1);
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
@@ -95,13 +95,13 @@ export const useSyncDataHandler = () => {
 	useEffect(() => {
 		if (notifyList.length <= 0) return;
 		forEach(sortBy(notifyList, 'seq'), (notify) => {
-			if (!isEmpty(notify) && (notify.seq > seq || (seq > 1 && notify.seq === 1))) {
+			if (!isEmpty(notify) && (notify.seq > seq.current || (seq.current > 1 && notify.seq === 1))) {
 				handleFoldersNotify(notifyList, notify, folderWorker, useFolderStore);
 				handleAppointmentCreationNotify(notify, dispatch, end, start, query);
 				handleAppointmentModifyNotify(notify, dispatch, end, start, query);
 				handleAppointmentDeletionNotify(notify, dispatch);
-				setSeq(notify.seq);
+				seq.current = notify.seq;
 			}
 		});
-	}, [dispatch, end, notifyList, query, seq, start]);
+	}, [dispatch, end, notifyList, query, start]);
 };
