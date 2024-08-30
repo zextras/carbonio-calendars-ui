@@ -19,6 +19,7 @@ import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/
 import { handleGetFolderRequest } from '../../../carbonio-ui-commons/test/mocks/network/msw/handle-get-folder';
 import { handleGetShareInfoRequest } from '../../../carbonio-ui-commons/test/mocks/network/msw/handle-get-share-info';
 import { folderWorker } from '../../../carbonio-ui-commons/worker';
+import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { reducers } from '../../../store/redux';
 import { useSyncDataHandler } from '../use-sync-data-handler';
 
@@ -56,17 +57,12 @@ function mockSoapDelete(mailboxNumber: number, deletedIds: Array<string>): void 
 	(useNotify as jest.Mock).mockReturnValue([soapNotify]);
 }
 
+
+
 describe('sync data handler', () => {
 	const mailboxNumber = 1000;
 
 	describe('folders', () => {
-		beforeEach(() => {
-			jest.mock('../../../hooks/use-checked-calendars-query', () => ({
-				...jest.requireActual('../../../hooks/use-checked-calendars-query'),
-				useCheckedCalendarsQuery: jest.fn().mockReturnValue('')
-			}));
-		});
-
 		test('it will invoke the folders worker when a folders related notify is received', async () => {
 			const folder = generateFolder({ id: '1', checked: true });
 			useFolderStore.setState({ folders: { [folder.id]: folder } });
@@ -78,6 +74,7 @@ describe('sync data handler', () => {
 				http.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest)
 			);
 
+			(useCheckedCalendarsQuery as jest.Mock).mockReturnValue('');
 			useNotify.mockReturnValueOnce([notify]);
 			renderHook(() => useSyncDataHandler(), {
 				wrapper: getWrapper()
