@@ -52,7 +52,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 
 	const initialPickerValue = useMemo(
 		() =>
-			until ? new Date(moment(until).valueOf()) : new Date(moment(start).valueOf()) ?? new Date(),
+			until ? new Date(moment(until).valueOf()) : (new Date(moment(start).valueOf()) ?? new Date()),
 		[start, until]
 	);
 

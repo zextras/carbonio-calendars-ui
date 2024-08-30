@@ -203,11 +203,11 @@ export const normalizeEditor = ({
 		);
 
 		const plainText = invite?.textDescription?.[0]?._content
-			? extractBody(invite?.textDescription?.[0]?._content) ?? ''
+			? (extractBody(invite?.textDescription?.[0]?._content) ?? '')
 			: '';
 
 		const richText = invite?.htmlDescription?.[0]?._content
-			? extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? ''
+			? (extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '')
 			: '';
 
 		const folder =
