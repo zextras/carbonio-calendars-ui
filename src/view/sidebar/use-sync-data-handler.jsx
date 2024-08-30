@@ -38,6 +38,52 @@ function handleFoldersNotify(notifyList, notify, worker, store) {
 	}
 }
 
+function handleAppointmentCreationNotify(notify, dispatch, end, start, query) {
+	if (notify.created && notify.created.appt) {
+		dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
+	}
+}
+
+function handleAppointmentModifyNotify(notify, dispatch, end, start, query) {
+	if (notify.modified && notify.modified.appt) {
+		// probably unnecessary
+		const apptToUpdate = reduce(
+			notify.modified.appt,
+			(acc, v) => {
+				if (v.l) {
+					return [...acc, v];
+				}
+				return acc;
+			},
+			[]
+		);
+		if (apptToUpdate?.length > 0) {
+			dispatch(handleModifiedAppointments(apptToUpdate));
+		}
+		dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
+
+		const invites = reduce(
+			notify.modified.appt,
+			(acc, v) => {
+				if (v?.inv?.length > 0) {
+					return [...acc, ...v.inv];
+				}
+				return acc;
+			},
+			[]
+		);
+		if (invites?.length > 0) {
+			dispatch(handleModifiedInvites(invites));
+		}
+	}
+}
+
+function handleAppointmentDeletionNotify(notify, dispatch) {
+	if (notify.deleted) {
+		dispatch(handleDeletedAppointments(notify.deleted));
+	}
+}
+
 export const useSyncDataHandler = () => {
 	const notifyList = useNotify();
 	const [seq, setSeq] = useState(-1);
@@ -48,48 +94,12 @@ export const useSyncDataHandler = () => {
 
 	useEffect(() => {
 		if (notifyList.length <= 0) return;
-
 		forEach(sortBy(notifyList, 'seq'), (notify) => {
 			if (!isEmpty(notify) && (notify.seq > seq || (seq > 1 && notify.seq === 1))) {
 				handleFoldersNotify(notifyList, notify, folderWorker, useFolderStore);
-
-				if (notify.created && notify.created.appt) {
-					dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
-				}
-				if (notify.modified && notify.modified.appt) {
-					// probably unnecessary
-					const apptToUpdate = reduce(
-						notify.modified.appt,
-						(acc, v) => {
-							if (v.l) {
-								return [...acc, v];
-							}
-							return acc;
-						},
-						[]
-					);
-					if (apptToUpdate?.length > 0) {
-						dispatch(handleModifiedAppointments(apptToUpdate));
-					}
-					dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
-
-					const invites = reduce(
-						notify.modified.appt,
-						(acc, v) => {
-							if (v?.inv?.length > 0) {
-								return [...acc, ...v.inv];
-							}
-							return acc;
-						},
-						[]
-					);
-					if (invites?.length > 0) {
-						dispatch(handleModifiedInvites(invites));
-					}
-				}
-				if (notify.deleted) {
-					dispatch(handleDeletedAppointments(notify.deleted));
-				}
+				handleAppointmentCreationNotify(notify, dispatch, end, start, query);
+				handleAppointmentModifyNotify(notify, dispatch, end, start, query);
+				handleAppointmentDeletionNotify(notify, dispatch);
 				setSeq(notify.seq);
 			}
 		});
