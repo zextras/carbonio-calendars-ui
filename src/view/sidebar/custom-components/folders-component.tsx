@@ -139,7 +139,7 @@ const RootChildren = ({
 	}, [item]);
 
 	const userMail = useMemo(
-		() => (root?.name === ROOT_NAME ? user.name : root?.name ?? user.name),
+		() => (root?.name === ROOT_NAME ? user.name : (root?.name ?? user.name)),
 		[root, user.name]
 	);
 
@@ -272,7 +272,7 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 				label:
 					item.id === FOLDERS.USER_ROOT
 						? displayName
-						: getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? '',
+						: (getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? ''),
 				icon: getFolderIcon({ item, checked: !!item.checked }),
 				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
 				textProps: { size: 'small' }

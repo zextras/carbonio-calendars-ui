@@ -49,8 +49,9 @@ export const buildMessagePart = ({
 
 	const dur = (fullInvite?.end?.u ?? parsedEnd) - (fullInvite?.start?.u ?? parsedStart);
 
-	const startToFormat = startAsString ? parsedStart : fullInvite.start.u ?? 0;
-	const endToFormat = endAsString && inst?.d ? parsedEnd + dur : parsedEnd ?? fullInvite.end.u ?? 0;
+	const startToFormat = startAsString ? parsedStart : (fullInvite.start.u ?? 0);
+	const endToFormat =
+		endAsString && inst?.d ? parsedEnd + dur : (parsedEnd ?? fullInvite.end.u ?? 0);
 
 	const date = formatAppointmentRange({
 		start: startToFormat,
@@ -123,9 +124,9 @@ function createMessageForDelete({
 	];
 	const participants = invite.neverSent
 		? organizer
-		: getParticipants(Object.entries(invite?.participants).flatMap(([_, value]) => value)).concat(
+		: (getParticipants(Object.entries(invite?.participants).flatMap(([_, value]) => value)).concat(
 				organizer
-			) ?? organizer;
+			) ?? organizer);
 	return {
 		e: participants,
 		su: `${t('label.cancelled', 'Cancelled')}: ${invite?.name ?? ''}`,

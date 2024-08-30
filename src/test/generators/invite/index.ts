@@ -35,7 +35,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 	});
 
 	const attendee =
-		event?.resource?.iAmAttendee ?? event?.resource?.hasOtherAttendees
+		(event?.resource?.iAmAttendee ?? event?.resource?.hasOtherAttendees)
 			? ({
 					a: attendeeEmail,
 					d: attendeeFullName,

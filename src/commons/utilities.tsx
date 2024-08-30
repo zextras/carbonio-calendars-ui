@@ -355,7 +355,7 @@ export const getFolderIconColor = (f: Folder): string => {
 	if (f?.color) {
 		return Number(f.color) < 10
 			? CALENDARS_STANDARD_COLORS[Number(f.color)].color
-			: f?.rgb ?? CALENDARS_STANDARD_COLORS[0].color;
+			: (f?.rgb ?? CALENDARS_STANDARD_COLORS[0].color);
 	}
 	return CALENDARS_STANDARD_COLORS[0].color;
 };
@@ -393,7 +393,7 @@ export function recursiveToggleCheck({
 	end,
 	query
 }: RecursiveToggleCheckProps): void {
-	const foldersToToggleIds: Array<string> = checkAllChildren([folder], checked);
+	const foldersToToggleIds = checkAllChildren([folder], checked);
 
 	const op = checked ? FOLDER_OPERATIONS.UNCHECK : FOLDER_OPERATIONS.CHECK;
 	const actions = map(foldersToToggleIds, (id) => ({
