@@ -29,10 +29,15 @@ function generateStore(): Store {
 	});
 }
 
-function getWrapper() {
-	return ({ children }: { children: ReactNode }): ReactElement => (
+function getWrapper(): {
+	({ children }: { children: ReactNode }): ReactElement;
+	displayName: string;
+} {
+	const Wrapper = ({ children }: { children: ReactNode }): ReactElement => (
 		<Provider store={generateStore()}>{children}</Provider>
 	);
+	Wrapper.displayName = 'Wrapper';
+	return Wrapper;
 }
 
 function mockSoapRefresh(mailbox: number): void {
@@ -57,7 +62,10 @@ function mockSoapDelete(mailboxNumber: number, deletedIds: Array<string>): void 
 	(useNotify as jest.Mock).mockReturnValue([soapNotify]);
 }
 
-
+jest.mock('../../../hooks/use-checked-calendars-query', () => ({
+	...jest.requireActual('../../../hooks/use-checked-calendars-query'),
+	useCheckedCalendarsQuery: jest.fn()
+}));
 
 describe('sync data handler', () => {
 	const mailboxNumber = 1000;
