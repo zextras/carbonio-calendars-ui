@@ -31,6 +31,7 @@ import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
+import { StoreProvider } from '../../store/redux';
 import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
@@ -42,7 +43,6 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 	foldersAccordionItems,
 	tagsAccordionItems
 }) => {
-	useInitializeFolders(FOLDER_VIEW.appointment);
 	const [selectedFolder, setSelectedFolder] = useState<string>('');
 
 	return (
@@ -109,6 +109,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 	);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
+	useInitializeFolders({ view: FOLDER_VIEW.message, StoreProvider });
 	const folders = useRootsArray();
 
 	const foldersAccordionItems = useMemo(() => addAllCalendarsItem(folders), [folders]);
