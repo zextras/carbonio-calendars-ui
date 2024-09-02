@@ -23,8 +23,6 @@ import {
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { useTranslation } from 'react-i18next';
 
-import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
-import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
 import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
@@ -166,7 +164,6 @@ const AppRegistrations = (): null => {
 };
 
 export default function App(): React.JSX.Element {
-	useInitializeFolders(FOLDER_VIEW.appointment);
 	return (
 		<StoreProvider>
 			<AppRegistrations />
