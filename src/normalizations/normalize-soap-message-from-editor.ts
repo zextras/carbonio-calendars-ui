@@ -285,12 +285,13 @@ const generateInvite = (editorData: Editor): any => {
 		sender: editorData.sender,
 		organizer: editorData.organizer
 	});
+
 	at.push(
 		...editorData.attendees.map((c: any) => ({
 			a: c?.email ?? c?.label,
 			d: c?.firstName && c?.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 			role: PARTICIPANT_ROLE.REQUIRED,
-			ptst: 'NE',
+			ptst: c?.ptst ? c.ptst : 'NE',
 			rsvp: '1'
 		}))
 	);
@@ -300,7 +301,7 @@ const generateInvite = (editorData: Editor): any => {
 				a: c?.email ?? c?.label,
 				d: c.firstName && c.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 				role: PARTICIPANT_ROLE.OPTIONAL,
-				ptst: 'NE',
+				ptst: c?.ptst ? c.ptst : 'NE',
 				rsvp: '1'
 			}))
 		);
