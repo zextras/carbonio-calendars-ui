@@ -290,7 +290,7 @@ const generateInvite = (editorData: Editor): any => {
 			a: c?.email ?? c?.label,
 			d: c?.firstName && c?.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 			role: PARTICIPANT_ROLE.REQUIRED,
-			ptst: 'NE',
+			ptst: c?.ptst ?? 'NE',
 			rsvp: '1'
 		}))
 	);
@@ -300,7 +300,7 @@ const generateInvite = (editorData: Editor): any => {
 				a: c?.email ?? c?.label,
 				d: c.firstName && c.lastname ? `${c.firstName} ${c.lastname}` : c.label,
 				role: PARTICIPANT_ROLE.OPTIONAL,
-				ptst: 'NE',
+				ptst: c?.ptst ?? 'NE',
 				rsvp: '1'
 			}))
 		);
