@@ -109,7 +109,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 	);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
-	useInitializeFolders({ view: FOLDER_VIEW.message, StoreProvider });
+	useInitializeFolders({ view: FOLDER_VIEW.appointment, StoreProvider });
 	const folders = useRootsArray();
 
 	const foldersAccordionItems = useMemo(() => addAllCalendarsItem(folders), [folders]);
