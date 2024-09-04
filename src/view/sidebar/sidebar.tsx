@@ -22,13 +22,16 @@ import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
 import { addAllCalendarsItem } from './utils';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
+import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
+import { useInitializeFolders } from '../../carbonio-ui-commons/hooks/use-initialize-folders';
 import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
+import { StoreProvider } from '../../store/redux';
 import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
@@ -106,6 +109,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 	);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
+	useInitializeFolders({ view: FOLDER_VIEW.message, StoreProvider });
 	const folders = useRootsArray();
 
 	const foldersAccordionItems = useMemo(() => addAllCalendarsItem(folders), [folders]);
