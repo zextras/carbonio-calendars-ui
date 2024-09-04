@@ -81,11 +81,22 @@ export const ParticipantsPart = ({
 						padding={{ left: 'small' }}
 					>
 						<Text>
-							<Trans
-								i18nKey="message.somebody_invited_you"
-								defaults="<strong>{{somebody}}</strong> invited you"
-								values={{ somebody: organizer.d || organizer.a || organizer.url }}
-							/>
+							{event.resource.calendar.owner ? (
+								<Trans
+									i18nKey="message.somebody_invited_owner"
+									defaults="<strong>{{somebody}}</strong> invited {{owner}}"
+									values={{
+										somebody: organizer.d || organizer.a || organizer.url,
+										owner: event.resource.calendar.owner
+									}}
+								/>
+							) : (
+								<Trans
+									i18nKey="message.somebody_invited_you"
+									defaults="<strong>{{somebody}}</strong> invited you"
+									values={{ somebody: organizer.d || organizer.a || organizer.url }}
+								/>
+							)}
 						</Text>
 						<Row
 							mainAlignment="flex-start"
