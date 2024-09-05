@@ -14,6 +14,7 @@ import {
 } from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
+import mockedData from '../test/generators';
 
 const mainAccount = createFakeIdentity();
 const identity = createFakeIdentity();
@@ -50,6 +51,55 @@ const addressPrefKey = 'zimbraPrefFromAddress';
 describe('normalize soap message from editor', () => {
 	describe('when the user is the organizer ', () => {
 		describe('and the appointment is inside his calendar ', () => {
+			test('when one of the attendee has changed appointment status(ptst), the ptst should be preserved in normalization', () => {
+				const userAccount = getMockedAccountItem({ identity1: mainAccount });
+				shell.getUserAccount.mockImplementation(() => userAccount);
+
+				const attendees = [
+					{
+						email: 'test@gmail.com',
+						fullName: 'test',
+						id: '1',
+						label: 'test',
+						ptst: 'AC'
+					}
+				];
+
+				const optionalAttendees = [
+					{
+						email: 'i_am_optional@gmail.com',
+						fullName: 'test',
+						id: '1',
+						label: 'test',
+						ptst: 'AC'
+					}
+				];
+
+				const folder = {
+					absFolderPath: '/Test',
+					id: '5',
+					l: '1',
+					name: 'Test',
+					view: 'appointment'
+				};
+				const event = mockedData.getEvent({ resource: { organizer: undefined, calendar: folder } });
+				const invite = mockedData.getInvite({
+					event
+				});
+
+				const editor = generateEditor({
+					context: {
+						attendees,
+						optionalAttendees,
+						folders: {},
+						dispatch: jest.fn(),
+						calendar: mainAccountEditorFolder
+					},
+					invite
+				});
+				const body = normalizeSoapMessageFromEditor(editor);
+				expect(body.m.inv.comp[0].at[0].ptst).toEqual('AC');
+			});
 			describe('and he is not using identities ', () => {
 				test('there wont be a sentBy parameter', () => {
 					const userAccount = getMockedAccountItem({ identity1: mainAccount, identity2: identity });
