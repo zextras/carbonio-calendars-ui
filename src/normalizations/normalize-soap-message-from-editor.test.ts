@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /*
  * SPDX-FileCopyrightText: 2023 Zextras <https://www.zextras.com>
  *
@@ -15,6 +16,8 @@ import {
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import mockedData from '../test/generators';
+import { ParticipationStatus } from '../types/store/invite';
+import { Editor } from '../types/editor';
 
 const mainAccount = createFakeIdentity();
 const identity = createFakeIdentity();
@@ -51,54 +54,66 @@ const addressPrefKey = 'zimbraPrefFromAddress';
 describe('normalize soap message from editor', () => {
 	describe('when the user is the organizer ', () => {
 		describe('and the appointment is inside his calendar ', () => {
-			test('when one of the attendee has changed appointment status(ptst), the ptst should be preserved in normalization', () => {
+			test('when one of the attendee/optionalAttendee has changed the appointment status(ptst), the ptst should be preserved in normalization', () => {
 				const userAccount = getMockedAccountItem({ identity1: mainAccount });
 				shell.getUserAccount.mockImplementation(() => userAccount);
-
 				const attendees = [
-					{
-						email: 'test@gmail.com',
-						fullName: 'test',
-						id: '1',
-						label: 'test',
-						ptst: 'AC'
-					}
+					generateAttendee({ email: 'accepted_attendee@gmail.com', participantStatus: 'AC' })
 				];
-
 				const optionalAttendees = [
-					{
-						email: 'i_am_optional@gmail.com',
-						fullName: 'test',
-						id: '1',
-						label: 'test',
-						ptst: 'AC'
-					}
+					generateAttendee({
+						email: 'accepted_optional_attendee@gmail.com',
+						participantStatus: 'AC'
+					})
 				];
-
-				const folder = {
-					absFolderPath: '/Test',
-					id: '5',
-					l: '1',
-					name: 'Test',
-					view: 'appointment'
-				};
-				const event = mockedData.getEvent({ resource: { organizer: undefined, calendar: folder } });
-				const invite = mockedData.getInvite({
-					event
-				});
-
 				const editor = generateEditor({
 					context: {
 						attendees,
 						optionalAttendees,
 						folders: {},
-						dispatch: jest.fn(),
-						calendar: mainAccountEditorFolder
-					},
-					invite
+						dispatch: jest.fn()
+					}
 				});
 				const body = normalizeSoapMessageFromEditor(editor);
-				expect(body.m.inv.comp[0].at[0].ptst).toEqual('AC');
+
+				expect(body.m.inv.comp[0].at.length).toBe(2);
+				expect(body.m.inv.comp[0].at[0]).toMatchObject({
+					a: 'accepted_attendee@gmail.com',
+					ptst: 'AC'
+				});
+				expect(body.m.inv.comp[0].at[1]).toMatchObject({
+					a: 'accepted_optional_attendee@gmail.com',
+					ptst: 'AC'
+				});
+			});
+			test('when attendee/optionalAttendee don`t have a status(ptst), the ptst should be set as NE', () => {
+				const userAccount = getMockedAccountItem({ identity1: mainAccount });
+				shell.getUserAccount.mockImplementation(() => userAccount);
+				const attendees = [generateAttendee({ email: 'attendee@gmail.com' })];
+				const optionalAttendees = [
+					generateAttendee({
+						email: 'optional_attendee@gmail.com'
+					})
+				];
+				const editor = generateEditor({
+					context: {
+						attendees,
+						optionalAttendees,
+						folders: {},
+						dispatch: jest.fn()
+					}
+				});
+				const body = normalizeSoapMessageFromEditor(editor);
+
+				expect(body.m.inv.comp[0].at.length).toBe(2);
+				expect(body.m.inv.comp[0].at[0]).toMatchObject({
+					a: 'attendee@gmail.com',
+					ptst: 'NE'
+				});
+				expect(body.m.inv.comp[0].at[1]).toMatchObject({
+					a: 'optional_attendee@gmail.com',
+					ptst: 'NE'
+				});
 			});
 			describe('and he is not using identities ', () => {
 				test('there wont be a sentBy parameter', () => {
@@ -748,3 +763,30 @@ describe('normalize soap message from editor', () => {
 		});
 	});
 });
+
+type EditorAttendee = {
+	email: string;
+	fullName: string;
+	id: string;
+	label: string;
+	ptst?: ParticipationStatus;
+};
+
+function generateAttendee({
+	email,
+	participantStatus
+}: {
+	email: string;
+	participantStatus?: ParticipationStatus;
+}): EditorAttendee {
+	const attendee: EditorAttendee = {
+		email,
+		fullName: `fullname ${email}`,
+		id: `id-${email}`,
+		label: `label ${email}`
+	};
+	if (participantStatus) {
+		attendee.ptst = participantStatus;
+	}
+	return attendee;
+}
