@@ -5,6 +5,8 @@
  */
 import { t } from '@zextras/carbonio-shell-ui';
 import { find, noop } from 'lodash';
+import React from 'react';
+import { StoreProvider } from '../store/redux';
 
 import {
 	acceptAsTentative,
@@ -212,7 +214,15 @@ export const forwardEventItem = ({
 	label: t('label.forward', 'Forward'),
 	disabled: false,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
-	onClick: noop
+	onClick: (): void => {
+		context.createModal(
+			{
+				id: EVENT_ACTIONS.FORWARD,
+				children: <StoreProvider></StoreProvider>
+			},
+			true
+		);
+	}
 });
 export const deleteEventItem = ({
 	invite,

@@ -3,26 +3,27 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
-
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
+import { CloseModalFn, CreateModalFn, useModal } from '@zextras/carbonio-design-system';
 import { find, indexOf } from 'lodash';
 import moment from 'moment';
-
-import { useEventActions } from './use-event-actions';
+import React from 'react';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../store/redux';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import mockedData from '../test/generators';
+import * as designSystem from '@zextras/carbonio-design-system';
 import { AppointmentActionsItems, InstanceActionsItems } from '../types/actions';
 import { EVENT_ACTIONS } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Appointment } from '../types/store/appointments';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
+
+import { useEventActions } from './use-event-actions';
 
 shell.getUserSettings.mockImplementation(() => defaultSettings);
 // the entire test suites is skipped because it is going to be removed once "IRIS-4483" will be completed
@@ -445,11 +446,26 @@ describe.skip('Delete event modal', () => {
 // 	useFoldersMap: jest.fn()
 // }));
 
+jest.mock('@zextras/carbonio-design-system', () => ({
+	...jest.requireActual('@zextras/carbonio-design-system'),
+	useModal: jest.fn()
+}));
+
 jest.mock('../store/redux/hooks', () => ({
 	...jest.requireActual('../store/redux/hooks'),
 	useAppSelector: jest.fn(),
 	useAppDispatch: jest.fn()
 }));
+
+function getActionByName(
+	actionsResult: Array<AppointmentActionsItems>,
+	forwardActionName: string
+): AppointmentActionsItems | undefined {
+	return find(
+		actionsResult as InstanceActionsItems,
+		(eventAction: { id: string }) => eventAction.id === forwardActionName
+	);
+}
 
 describe('useEventActions', () => {
 	it('should return undefined if no event is provided', () => {
@@ -463,12 +479,12 @@ describe('useEventActions', () => {
 		(useAppSelector as jest.Mock).mockImplementation(jest.fn());
 		(useAppDispatch as jest.Mock).mockImplementation(jest.fn());
 		const event = { resource: { calendar: { id: '55' } } } as EventType;
+
 		const { result } = renderHook(() => useEventActions({ event }));
-		const item = find(
-			result.current as InstanceActionsItems,
-			(eventAction: { id: string }) => eventAction.id === EVENT_ACTIONS.FORWARD
-		);
-		expect(item).toBeDefined();
+
+		const actionsResult = result.current as InstanceActionsItems;
+		const forwardAction = getActionByName(actionsResult, EVENT_ACTIONS.FORWARD);
+		expect(forwardAction).toBeDefined();
 	});
 
 	it('forward appointment action should be listed under copy action on a generic event', () => {
@@ -483,5 +499,30 @@ describe('useEventActions', () => {
 		const createCopyActionPosition = indexOf(actionIds, 'create_copy');
 		expect(actionsResult[createCopyActionPosition].id).toBe('create_copy');
 		expect(actionsResult[createCopyActionPosition + 1].id).toBe('forward');
+	});
+
+	it('forward appointment action should open forward modal on click', () => {
+		const mockCreateModal = jest.fn();
+		(useModal as jest.Mock).mockReturnValue({
+			createModal: mockCreateModal,
+			closeModal: jest.fn()
+		});
+		// (useAppSelector as jest.Mock).mockImplementation(jest.fn());
+		// (useAppDispatch as jest.Mock).mockImplementation(jest.fn());
+		const event = { resource: { calendar: { id: '55' } } } as EventType;
+		const { result } = renderHook(() => useEventActions({ event }));
+		const actionsResult = result.current as InstanceActionsItems;
+		const forwardAction = getActionByName(
+			actionsResult,
+			EVENT_ACTIONS.FORWARD
+		) as AppointmentActionsItems;
+
+		forwardAction?.onClick?.({} as KeyboardEvent);
+
+		expect(mockCreateModal).toBeCalledTimes(1);
+		expect(mockCreateModal).toBeCalledWith(
+			expect.objectContaining({ id: EVENT_ACTIONS.FORWARD }),
+			true
+		);
 	});
 });
