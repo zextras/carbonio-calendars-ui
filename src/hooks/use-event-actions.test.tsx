@@ -8,7 +8,7 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
-import { find } from 'lodash';
+import { find, indexOf } from 'lodash';
 import moment from 'moment';
 
 import { useEventActions } from './use-event-actions';
@@ -18,7 +18,7 @@ import { setupTest } from '../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../store/redux';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import mockedData from '../test/generators';
-import { AppointmentActionsItems } from '../types/actions';
+import { AppointmentActionsItems, InstanceActionsItems } from '../types/actions';
 import { EVENT_ACTIONS } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Appointment } from '../types/store/appointments';
@@ -465,7 +465,7 @@ describe('useEventActions', () => {
 		const event = { resource: { calendar: { id: '55' } } } as EventType;
 		const { result } = renderHook(() => useEventActions({ event }));
 		const item = find(
-			result?.current as unknown as AppointmentActionsItems,
+			result.current as InstanceActionsItems,
 			(eventAction: { id: string }) => eventAction.id === EVENT_ACTIONS.FORWARD
 		);
 		expect(item).toBeDefined();
@@ -475,11 +475,13 @@ describe('useEventActions', () => {
 		(useAppSelector as jest.Mock).mockImplementation(jest.fn());
 		(useAppDispatch as jest.Mock).mockImplementation(jest.fn());
 		const event = { resource: { calendar: { id: '55' } } } as EventType;
+
 		const { result } = renderHook(() => useEventActions({ event }));
-		const item = find(
-			result?.current as unknown as AppointmentActionsItems,
-			(eventAction: { id: string }) => eventAction.id === 'create_copy'
-		);
-		expect(item).toBeDefined();
+
+		const actionsResult = result.current as InstanceActionsItems;
+		const actionIds = actionsResult?.map((action) => action.id);
+		const createCopyActionPosition = indexOf(actionIds, 'create_copy');
+		expect(actionsResult[createCopyActionPosition].id).toBe('create_copy');
+		expect(actionsResult[createCopyActionPosition + 1].id).toBe('forward');
 	});
 });
