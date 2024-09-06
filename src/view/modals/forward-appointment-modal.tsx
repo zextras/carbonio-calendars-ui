@@ -8,12 +8,13 @@ import React, { useCallback, useState } from 'react';
 
 import { ChipInput, ChipItem, Container, Divider, Text } from '@zextras/carbonio-design-system';
 import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { noop } from 'lodash';
 
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { forwardAppointmentRequest } from '../../soap/forward-appointment-request';
 
 type ForwardAppointmentModalProps = {
+	eventId: string;
 	onClose: () => void;
 };
 
@@ -28,6 +29,7 @@ type ContactType = {
 };
 
 export const ForwardAppointmentModal = ({
+	eventId,
 	onClose
 }: ForwardAppointmentModalProps): React.JSX.Element => {
 	const [contacts, setContacts] = useState<ContactType[]>([]);
@@ -52,9 +54,14 @@ export const ForwardAppointmentModal = ({
 	}, []);
 	const onContactChange = useCallback((users: ContactType[]) => setContacts(users), []);
 	const disabled = false;
+
 	const onConfirm = useCallback(() => {
-		noop;
-	}, []);
+		forwardAppointmentRequest({
+			id: eventId,
+			attendees: contacts.map((contact) => contact.email)
+		});
+	}, [contacts, eventId]);
+
 	return (
 		<Container
 			padding={{ all: 'large' }}
