@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 import { TagIconComponent } from '../../../commons/tag-icon-component';
 import { CALENDAR_ROUTE } from '../../../constants';
-import { EventActionsEnum } from '../../../types/enums/event-actions-enum';
+import { EVENT_ACTIONS } from '../../../types/enums/event-actions-enum';
 import { EventType } from '../../../types/event';
 
 const useEventTimeString = (start: Moment | Date, end: Moment | Date, allDay: boolean): string => {
@@ -52,7 +52,7 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 	const onClick = useCallback(() => {
 		pushHistory({
 			route: CALENDAR_ROUTE,
-			path: `${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			path: `${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		});
 	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ]);
 
