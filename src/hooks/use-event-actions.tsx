@@ -92,6 +92,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				editEventItem({ event, invite, context }),
 				deleteEventItem({ event, invite, context }),
 				copyEventItem({ event, invite, context }),
+				forwardEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
 				answerToEventItem({ event, invite, context: contextOverride })
@@ -115,6 +116,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				deleteEventItem({ event: seriesEvent, invite, context }),
 				moveEventItem({ event: seriesEvent, context }),
 				copyEventItem({ event: seriesEvent, invite, context }),
+				forwardEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
 				answerToEventItem({ event: seriesEvent, invite, context }),
