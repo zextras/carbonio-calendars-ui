@@ -6,7 +6,14 @@
 
 import React, { useCallback, useState } from 'react';
 
-import { ChipInput, ChipItem, Container, Divider, Text } from '@zextras/carbonio-design-system';
+import {
+	ChipInput,
+	ChipItem,
+	Container,
+	Divider,
+	Text,
+	useSnackbar
+} from '@zextras/carbonio-design-system';
 import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
@@ -34,6 +41,7 @@ export const ForwardAppointmentModal = ({
 }: ForwardAppointmentModalProps): React.JSX.Element => {
 	const [contacts, setContacts] = useState<ContactType[]>([]);
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
+	const createSnackbar = useSnackbar();
 	const modalHeaderTitle = t('modal.forwardAppointment.title', 'Forward appointment');
 	const modalContent = t(
 		'modal.forwardAppointment.content',
@@ -54,13 +62,36 @@ export const ForwardAppointmentModal = ({
 	}, []);
 	const onContactChange = useCallback((users: ContactType[]) => setContacts(users), []);
 	const disabled = false;
+	const invokeErrorSnackbar = useCallback((): void => {
+		createSnackbar({
+			key: 'forward-appointment-error',
+			replace: true,
+			type: 'error',
+			label: t('label.error_try_again', 'Something went wrong, please try again'),
+			autoHideTimeout: 3000
+		});
+	}, [createSnackbar]);
 
-	const onConfirm = useCallback(() => {
-		forwardAppointmentRequest({
+	const onConfirm = useCallback(async () => {
+		const response = await forwardAppointmentRequest({
 			id: eventId,
 			attendees: contacts.map((contact) => contact.email)
+		}).catch(() => {
+			invokeErrorSnackbar();
 		});
-	}, [contacts, eventId]);
+		if (!response || 'Fault' in response) {
+			invokeErrorSnackbar();
+			return;
+		}
+		createSnackbar({
+			key: 'forward-appointment-success',
+			replace: true,
+			type: 'info',
+			hideButton: false,
+			label: t('snackbar.forwardAppointment.success', 'Appointment forwarded'),
+			autoHideTimeout: 3000
+		});
+	}, [contacts, createSnackbar, eventId, invokeErrorSnackbar]);
 
 	return (
 		<Container

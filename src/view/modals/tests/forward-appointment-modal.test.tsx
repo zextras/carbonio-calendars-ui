@@ -9,8 +9,10 @@ import { faker } from '@faker-js/faker';
 import { act, screen } from '@testing-library/react';
 import { noop } from 'lodash';
 
+import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import * as forwardAppointmentRequest from '../../../soap/forward-appointment-request';
+import { generateSoapErrorResponseBody } from '../../../test/generators/utils';
+import { ForwardAppointmentRequest } from '../../../types/soap/soap-actions';
 import { ForwardAppointmentModal } from '../forward-appointment-modal';
 
 describe('ForwardAppointmentModal', () => {
@@ -32,27 +34,55 @@ describe('ForwardAppointmentModal', () => {
 		expect(onClose).toHaveBeenCalled();
 	});
 
-	it('calls forwardAppointmentRequest with the correct parameters when the confirm button is clicked', async () => {
-		const { user } = setupTest(<ForwardAppointmentModal eventId="123" onClose={noop} />);
-		const input = await screen.findByTestId('forward-appointment-input');
-		const attendee = faker.internet.email();
-		await act(async () => {
-			await user.click(input);
-			await user.type(input, attendee);
-			await user.tab();
+	describe('when user clicks confirm', () => {
+		it('forwardAppointmentRequest is called with the correct parameters', async () => {
+			const interceptor = createSoapAPIInterceptor<ForwardAppointmentRequest>('ForwardAppointment');
+			const { user } = setupTest(<ForwardAppointmentModal eventId="123" onClose={noop} />);
+
+			const input = await screen.findByTestId('forward-appointment-input');
+			const attendee = faker.internet.email();
+			await act(async () => {
+				await user.click(input);
+				await user.type(input, attendee);
+				await user.tab();
+			});
+
+			const confirmButton = screen.getByRole('button', {
+				name: 'modal.buttonLabel.forward'
+			});
+			await act(async () => {
+				await user.click(confirmButton);
+			});
+
+			const request = await interceptor;
+
+			expect(request.id).toBe('123');
+			expect(request.m.e).toEqual([attendee]);
 		});
 
-		const confirmButton = screen.getByRole('button', {
-			name: 'modal.buttonLabel.forward'
+		it('should show an error snackbar when call fails with Fault', async () => {
+			const interceptor = createSoapAPIInterceptor(
+				'ForwardAppointment',
+				generateSoapErrorResponseBody()
+			);
+			const { user } = setupTest(<ForwardAppointmentModal eventId="123" onClose={noop} />);
+			const input = await screen.findByTestId('forward-appointment-input');
+			const attendee = faker.internet.email();
+			await act(async () => {
+				await user.click(input);
+				await user.type(input, attendee);
+				await user.tab();
+			});
+
+			const confirmButton = screen.getByRole('button', {
+				name: 'modal.buttonLabel.forward'
+			});
+			await act(async () => {
+				await user.click(confirmButton);
+			});
+			await interceptor;
+			const errorSnackbar = await screen.findByText('label.error_try_again');
+			expect(errorSnackbar).toBeVisible();
 		});
-		const forwardAppointmnetSpy = jest.spyOn(
-			forwardAppointmentRequest,
-			'forwardAppointmentRequest'
-		);
-		await act(async () => {
-			await user.click(confirmButton);
-		});
-		expect(forwardAppointmnetSpy).toHaveBeenCalledTimes(1);
-		expect(forwardAppointmnetSpy).toHaveBeenCalledWith({ id: '123', attendees: [attendee] });
 	});
 });

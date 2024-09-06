@@ -72,3 +72,9 @@ export type CreateMountpointRequest = GenericRequest & {
 };
 
 export type SoapRequests = FolderActionRequest | CreateMountpointRequest;
+
+type ZimbraRequest = {
+	_jsns: 'urn:zimbraMail';
+};
+
+export type ForwardAppointmentRequest = ZimbraRequest & { id: string; m: { e: Array<string> } };
