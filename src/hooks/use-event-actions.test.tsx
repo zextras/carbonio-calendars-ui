@@ -7,14 +7,20 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { find } from 'lodash';
 import moment from 'moment';
 
+import { useEventActions } from './use-event-actions';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../store/redux';
+import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import mockedData from '../test/generators';
+import { AppointmentActionsItems } from '../types/actions';
+import { EVENT_ACTIONS } from '../types/enums/event-actions-enum';
+import { EventType } from '../types/event';
 import { Appointment } from '../types/store/appointments';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 
@@ -427,5 +433,53 @@ describe.skip('Delete event modal', () => {
 			/Series successfully deleted. Attendees will receive the cancellation notification./i
 		);
 		expect(futureOccurrenciesSnackbar).toBeVisible();
+	});
+});
+//
+// jest.mock('../hooks', () => ({
+// 	useAppSelector: jest.fn(),
+// 	useAppDispatch: jest.fn(),
+// 	useModal: jest.fn(),
+// 	useTags: jest.fn(),
+// 	useSnackbar: jest.fn(),
+// 	useFoldersMap: jest.fn()
+// }));
+
+jest.mock('../store/redux/hooks', () => ({
+	...jest.requireActual('../store/redux/hooks'),
+	useAppSelector: jest.fn(),
+	useAppDispatch: jest.fn()
+}));
+
+describe('useEventActions', () => {
+	it('should return undefined if no event is provided', () => {
+		(useAppSelector as jest.Mock).mockImplementation(jest.fn());
+		(useAppDispatch as jest.Mock).mockImplementation(jest.fn());
+		const { result } = renderHook(() => useEventActions({}));
+		expect(result.current).toBeUndefined();
+	});
+
+	it('should include forward appointment action on a generic event', () => {
+		(useAppSelector as jest.Mock).mockImplementation(jest.fn());
+		(useAppDispatch as jest.Mock).mockImplementation(jest.fn());
+		const event = { resource: { calendar: { id: '55' } } } as EventType;
+		const { result } = renderHook(() => useEventActions({ event }));
+		const item = find(
+			result?.current as unknown as AppointmentActionsItems,
+			(eventAction: { id: string }) => eventAction.id === EVENT_ACTIONS.FORWARD
+		);
+		expect(item).toBeDefined();
+	});
+
+	it('forward appointment action should be listed under copy action on a generic event', () => {
+		(useAppSelector as jest.Mock).mockImplementation(jest.fn());
+		(useAppDispatch as jest.Mock).mockImplementation(jest.fn());
+		const event = { resource: { calendar: { id: '55' } } } as EventType;
+		const { result } = renderHook(() => useEventActions({ event }));
+		const item = find(
+			result?.current as unknown as AppointmentActionsItems,
+			(eventAction: { id: string }) => eventAction.id === 'create_copy'
+		);
+		expect(item).toBeDefined();
 	});
 });
