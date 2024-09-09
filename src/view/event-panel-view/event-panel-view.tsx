@@ -43,7 +43,7 @@ import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
 import { PanelView } from '../../types/actions';
-import { EVENT_ACTIONS } from '../../types/enums/event-actions-enum';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
 import { ExceptionReference } from '../../types/store/appointments';
@@ -76,13 +76,13 @@ const ActionButtons = ({
 	const primaryAction = useMemo(() => {
 		if (event) {
 			if (hasId(event.resource.calendar, FOLDERS.TRASH)) {
-				return find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.MOVE]);
+				return find(actions?.[0]?.items ?? actions, ['id', EventActionsEnum.MOVE]);
 			}
 			if (!event.resource.ridZ) {
 				// SERIES ACTIONS
-				const move = find(actions?.[1]?.items ?? actions, ['id', EVENT_ACTIONS.MOVE]);
-				const edit = find(actions?.[1]?.items ?? actions, ['id', EVENT_ACTIONS.EDIT]);
-				const copy = find(actions?.[1]?.items ?? actions, ['id', EVENT_ACTIONS.CREATE_COPY]);
+				const move = find(actions?.[1]?.items ?? actions, ['id', EventActionsEnum.MOVE]);
+				const edit = find(actions?.[1]?.items ?? actions, ['id', EventActionsEnum.EDIT]);
+				const copy = find(actions?.[1]?.items ?? actions, ['id', EventActionsEnum.CREATE_COPY]);
 				if (!event.resource.iAmOrganizer && !event.isShared) {
 					if (!edit.disabled) {
 						return edit;
@@ -95,9 +95,9 @@ const ActionButtons = ({
 				return copy;
 			}
 			// INSTANCE ACTIONS
-			const move = find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.MOVE]);
-			const edit = find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.EDIT]);
-			const copy = find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.CREATE_COPY]);
+			const move = find(actions?.[0]?.items ?? actions, ['id', EventActionsEnum.MOVE]);
+			const edit = find(actions?.[0]?.items ?? actions, ['id', EventActionsEnum.EDIT]);
+			const copy = find(actions?.[0]?.items ?? actions, ['id', EventActionsEnum.CREATE_COPY]);
 			if (!event.resource.iAmOrganizer && !event.isShared) {
 				if (!edit.disabled) {
 					return edit;
@@ -119,11 +119,11 @@ const ActionButtons = ({
 					actions?.[1]?.items ?? actions,
 					(a) =>
 						!a.disabled &&
-						a.id !== EVENT_ACTIONS.EXPAND &&
-						a.id !== EVENT_ACTIONS.ACCEPT &&
-						a.id !== EVENT_ACTIONS.TENTATIVE &&
-						a.id !== EVENT_ACTIONS.DECLINE &&
-						a.id !== EVENT_ACTIONS.PROPOSE_NEW_TIME &&
+						a.id !== EventActionsEnum.EXPAND &&
+						a.id !== EventActionsEnum.ACCEPT &&
+						a.id !== EventActionsEnum.TENTATIVE &&
+						a.id !== EventActionsEnum.DECLINE &&
+						a.id !== EventActionsEnum.PROPOSE_NEW_TIME &&
 						a.id !== primaryAction.id
 				);
 			}
@@ -131,11 +131,11 @@ const ActionButtons = ({
 				actions?.[0]?.items ?? actions,
 				(a) =>
 					!a.disabled &&
-					a.id !== EVENT_ACTIONS.EXPAND &&
-					a.id !== EVENT_ACTIONS.ACCEPT &&
-					a.id !== EVENT_ACTIONS.TENTATIVE &&
-					a.id !== EVENT_ACTIONS.DECLINE &&
-					a.id !== EVENT_ACTIONS.PROPOSE_NEW_TIME &&
+					a.id !== EventActionsEnum.EXPAND &&
+					a.id !== EventActionsEnum.ACCEPT &&
+					a.id !== EventActionsEnum.TENTATIVE &&
+					a.id !== EventActionsEnum.DECLINE &&
+					a.id !== EventActionsEnum.PROPOSE_NEW_TIME &&
 					a.id !== primaryAction.id
 			);
 		}

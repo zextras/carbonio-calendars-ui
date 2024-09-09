@@ -25,7 +25,7 @@ import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { StoreProvider } from '../store/redux';
 import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/actions';
-import { EVENT_ACTIONS } from '../types/enums/event-actions-enum';
+import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
@@ -38,7 +38,7 @@ export const openEventItem = ({
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.EXPAND,
+	id: EventActionsEnum.EXPAND,
 	icon: 'ExpandOutline',
 	disabled: false,
 	tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
@@ -58,7 +58,7 @@ export const acceptInvitationItem = ({
 	invite?: Invite;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.ACCEPT,
+	id: EventActionsEnum.ACCEPT,
 	icon: 'CheckmarkOutline',
 	label: t('event.action.accept', 'Accept'),
 	disabled: event?.resource?.participationStatus === 'AC',
@@ -75,7 +75,7 @@ export const declineInvitationItem = ({
 	invite?: Invite;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.DECLINE,
+	id: EventActionsEnum.DECLINE,
 	icon: 'CloseOutline',
 	label: t('event.action.decline', 'Decline'),
 	disabled: event?.resource?.participationStatus === 'DE',
@@ -92,7 +92,7 @@ export const acceptAsTentativeItem = ({
 	invite?: Invite;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.TENTATIVE,
+	id: EventActionsEnum.TENTATIVE,
 	icon: 'QuestionMarkOutline',
 	label: t('label.tentative', 'Tentative'),
 	disabled: event?.resource?.participationStatus === 'TE',
@@ -109,7 +109,7 @@ export const proposeNewTimeItem = ({
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.PROPOSE_NEW_TIME,
+	id: EventActionsEnum.PROPOSE_NEW_TIME,
 	icon: 'ClockOutline',
 	label: t('label.propose_new_time', 'Propose new time'),
 	disabled: false,
@@ -124,7 +124,7 @@ export const moveEventItem = ({
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.MOVE,
+	id: EventActionsEnum.MOVE,
 	icon: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'RestoreOutline' : 'MoveOutline',
 	label: hasId(event.resource.calendar, FOLDERS.TRASH)
 		? t('label.restore', 'Restore')
@@ -143,7 +143,7 @@ export const moveApptToTrashItem = ({
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.TRASH,
+	id: EventActionsEnum.TRASH,
 	icon: 'Trash2Outline',
 	label: t('label.delete', 'Delete'),
 	disabled: !event?.haveWriteAccess,
@@ -158,7 +158,7 @@ export const deletePermanentlyItem = ({
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.DELETE_PERMANENTLY,
+	id: EventActionsEnum.DELETE_PERMANENTLY,
 	icon: 'DeletePermanentlyOutline',
 	label: t('label.delete_permanently', 'Delete permanently'),
 	disabled: false,
@@ -177,7 +177,7 @@ export const editEventItem = ({
 }): AppointmentActionsItems => {
 	const absFolderPath = find(context.folders, ['id', event.resource.calendar.id])?.absFolderPath;
 	return {
-		id: EVENT_ACTIONS.EDIT,
+		id: EventActionsEnum.EDIT,
 		icon: 'Edit2Outline',
 		label: t('label.edit', 'Edit'),
 		disabled: !isOrganizerOrHaveEqualRights(event, absFolderPath),
@@ -194,7 +194,7 @@ export const copyEventItem = ({
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.CREATE_COPY,
+	id: EventActionsEnum.CREATE_COPY,
 	icon: 'Copy',
 	label: t('label.create_copy', 'Copy'),
 	disabled: false,
@@ -211,7 +211,7 @@ export const forwardEventItem = ({
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.FORWARD,
+	id: EventActionsEnum.FORWARD,
 	icon: 'Forward',
 	label: t('label.forward', 'Forward'),
 	disabled: false,
@@ -219,13 +219,13 @@ export const forwardEventItem = ({
 	onClick: (): void => {
 		context.createModal(
 			{
-				id: EVENT_ACTIONS.FORWARD,
+				id: EventActionsEnum.FORWARD,
 				children: (
 					<StoreProvider>
 						<ForwardAppointmentModal
 							eventId={event.resource.id}
 							onClose={(): void => {
-								context.closeModal(EVENT_ACTIONS.FORWARD);
+								context.closeModal(EventActionsEnum.FORWARD);
 							}}
 						/>
 					</StoreProvider>
@@ -246,7 +246,7 @@ export const deleteEventItem = ({
 }): AppointmentActionsItems =>
 	hasId(event.resource.calendar, FOLDERS.TRASH)
 		? {
-				id: EVENT_ACTIONS.DELETE_PERMANENTLY,
+				id: EventActionsEnum.DELETE_PERMANENTLY,
 				icon: 'DeletePermanentlyOutline',
 				label: t('label.delete_permanently', 'Delete permanently'),
 				disabled: !event?.haveWriteAccess,
@@ -254,7 +254,7 @@ export const deleteEventItem = ({
 				onClick: deletePermanently({ event, context })
 			}
 		: {
-				id: EVENT_ACTIONS.TRASH,
+				id: EventActionsEnum.TRASH,
 				icon: 'Trash2Outline',
 				label: t('action.delete', 'Delete'),
 				disabled: !event?.haveWriteAccess,
@@ -263,7 +263,7 @@ export const deleteEventItem = ({
 			};
 
 export const showOriginal = ({ event }: { event: EventType }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.SHOW_ORIGINAL,
+	id: EventActionsEnum.SHOW_ORIGINAL,
 	icon: 'CodeOutline',
 	label: t('action.show_original', 'Show original'),
 	disabled: false,
@@ -282,7 +282,7 @@ export const exportAppointmentICSItem = ({
 }: {
 	event: EventType;
 }): AppointmentActionsItems => ({
-	id: EVENT_ACTIONS.DOWNLOAD_ICS,
+	id: EventActionsEnum.DOWNLOAD_ICS,
 	icon: 'Download',
 	label: t('action.download_ics', 'Download ICS'),
 	disabled: false,
@@ -326,7 +326,7 @@ export const answerToEventItem = ({
 }): (AppointmentActionsItems & { items: Array<AppointmentActionsItems> }) | undefined =>
 	isAnInvite(event)
 		? {
-				id: EVENT_ACTIONS.ANSWER,
+				id: EventActionsEnum.ANSWER,
 				icon: 'ReplyAll',
 				items: getInviteActionsArray({ event, invite, context }),
 				label: t('action.answer', 'Answer'),

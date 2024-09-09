@@ -35,7 +35,7 @@ import {
 	PanelView,
 	SeriesActionsItems
 } from '../types/actions';
-import { EVENT_ACTIONS } from '../types/enums/event-actions-enum';
+import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 
@@ -76,7 +76,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 	const contextOverride = { ...context, isInstance: true };
 	return [
 		{
-			id: EVENT_ACTIONS.INSTANCE,
+			id: EventActionsEnum.INSTANCE,
 			icon: 'CalendarOutline',
 			label: t('label.instance', 'Instance'),
 			disabled: false,
@@ -99,7 +99,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 			])
 		},
 		{
-			id: EVENT_ACTIONS.SERIES,
+			id: EventActionsEnum.SERIES,
 			icon: 'CalendarOutline',
 			label: t('label.series', 'Series'),
 			disabled: false,

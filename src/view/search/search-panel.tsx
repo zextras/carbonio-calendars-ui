@@ -12,7 +12,7 @@ import styled from 'styled-components';
 
 import Displayer from './displayer';
 import { useSelectedEventFromArray } from '../../hooks/use-selected-event-from-array';
-import { EVENT_ACTIONS } from '../../types/enums/event-actions-enum';
+import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 
 const LargeIcon = styled(Icon)`
 	transform: scale(3.5);
@@ -23,7 +23,7 @@ const SearchPanel = ({ appointments }: ComponentProps<any>): ReactComponentEleme
 	const event = useSelectedEventFromArray(appointments);
 	return (
 		<Switch>
-			<Route path={`${path}/:action(${EVENT_ACTIONS.EXPAND})/:apptId/:ridZ?`}>
+			<Route path={`${path}/:action(${EventActionsEnum.EXPAND})/:apptId/:ridZ?`}>
 				<Displayer event={event} />
 			</Route>
 			<Route

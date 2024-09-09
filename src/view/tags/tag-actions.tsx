@@ -27,7 +27,7 @@ import { ItemType } from '../../carbonio-ui-commons/types/tags';
 import { itemActionRequest } from '../../soap/item-action-request';
 import { StoreProvider } from '../../store/redux';
 import { ActionsProps } from '../../types/actions';
-import { EVENT_ACTIONS, EventActionsId } from '../../types/enums/event-actions-enum';
+import { EventActionsEnum, EventActionsId } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { TagType } from '../../types/tags';
 
@@ -55,7 +55,7 @@ export type ActionParams = {
 const labelTag: string = t('label.tags', 'Tags');
 
 export const createTag = ({ createModal, closeModal }: ActionParams): ActionDescriptor => ({
-	id: EVENT_ACTIONS.NEW_TAG,
+	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
 	onClick: (e): void => {
@@ -85,7 +85,7 @@ export const createAndApplyTag = ({
 	context: ActionsProps['context'];
 	event: EventType;
 }): ActionDescriptor => ({
-	id: EVENT_ACTIONS.NEW_TAG,
+	id: EventActionsEnum.NEW_TAG,
 	icon: 'TagOutline',
 	label: t('label.create_tag', 'Create Tag'),
 	onClick: (e: SyntheticEvent<EventTarget> | KeyboardEvent): void => {
@@ -108,7 +108,7 @@ export const createAndApplyTag = ({
 	}
 });
 export const editTag = ({ createModal, closeModal, tag }: ActionParams): ActionDescriptor => ({
-	id: EVENT_ACTIONS.EDIT_TAGS,
+	id: EventActionsEnum.EDIT_TAGS,
 	icon: 'Edit2Outline',
 	label: t('label.edit_tag', 'Edit Tag'),
 	onClick: (e): void => {
@@ -131,7 +131,7 @@ export const editTag = ({ createModal, closeModal, tag }: ActionParams): ActionD
 });
 
 export const deleteTag = ({ createModal, closeModal, tag }: ActionParams): ActionDescriptor => ({
-	id: EVENT_ACTIONS.DELETE_TAG,
+	id: EventActionsEnum.DELETE_TAG,
 	icon: 'Untag',
 	label: t('label.delete_tag', 'Delete Tag'),
 	onClick: (e): void => {
@@ -278,7 +278,7 @@ export const applyTag = ({
 	});
 	return event.haveWriteAccess
 		? {
-				id: EVENT_ACTIONS.APPLY_TAG,
+				id: EventActionsEnum.APPLY_TAG,
 				items: tagItem,
 				onClick: noop,
 				icon: 'TagsMoreOutline',
@@ -299,7 +299,7 @@ export const applyTag = ({
 				)
 			}
 		: {
-				id: EVENT_ACTIONS.APPLY_TAG,
+				id: EventActionsEnum.APPLY_TAG,
 				items: [],
 				onClick: noop,
 				tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
