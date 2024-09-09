@@ -76,9 +76,13 @@ export const ForwardAppointmentModal = ({
 		const response = await forwardAppointmentRequest({
 			id: eventId,
 			attendees: contacts.map((contact) => contact.email)
-		}).catch(() => {
-			invokeErrorSnackbar();
-		});
+		})
+			.catch(() => {
+				invokeErrorSnackbar();
+			})
+			.finally(() => {
+				onClose();
+			});
 		if (!response || 'Fault' in response) {
 			invokeErrorSnackbar();
 			return;
@@ -91,7 +95,7 @@ export const ForwardAppointmentModal = ({
 			label: t('snackbar.forwardAppointment.success', 'Appointment forwarded'),
 			autoHideTimeout: 3000
 		});
-	}, [contacts, createSnackbar, eventId, invokeErrorSnackbar]);
+	}, [contacts, createSnackbar, eventId, invokeErrorSnackbar, onClose]);
 
 	return (
 		<Container

@@ -57,7 +57,30 @@ describe('ForwardAppointmentModal', () => {
 			const request = await interceptor;
 
 			expect(request.id).toBe('123');
-			expect(request.m.e).toEqual([attendee]);
+			expect(request.m.e).toEqual([{ a: attendee, t: 't' }]);
+		});
+
+		it('closes the modal', async () => {
+			const mockOnClose = jest.fn();
+			const interceptor = createSoapAPIInterceptor<ForwardAppointmentRequest>('ForwardAppointment');
+			const { user } = setupTest(<ForwardAppointmentModal eventId="123" onClose={mockOnClose} />);
+
+			const input = await screen.findByTestId('forward-appointment-input');
+			const attendee = faker.internet.email();
+			await act(async () => {
+				await user.click(input);
+				await user.type(input, attendee);
+				await user.tab();
+			});
+
+			const confirmButton = screen.getByRole('button', {
+				name: 'modal.buttonLabel.forward'
+			});
+			await act(async () => {
+				await user.click(confirmButton);
+			});
+			await interceptor;
+			expect(mockOnClose).toHaveBeenCalled();
 		});
 
 		it('should show an error snackbar when call fails with Fault', async () => {

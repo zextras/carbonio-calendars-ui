@@ -79,6 +79,9 @@ type ZimbraRequest = {
 	_jsns: 'urn:zimbraMail';
 };
 
-export type ForwardAppointmentRequest = ZimbraRequest & { id: string; m: { e: Array<string> } };
+export type ForwardAppointmentRequest = ZimbraRequest & {
+	id: string;
+	m: { e: Array<{ a: string; t: string }> };
+};
 
 export type ForwardAppointmentResponse = Record<string, never> | ErrorSoapResponse;

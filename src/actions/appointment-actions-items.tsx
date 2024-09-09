@@ -203,9 +203,11 @@ export const copyEventItem = ({
 });
 
 export const forwardEventItem = ({
+	invite,
 	event,
 	context
 }: {
+	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
@@ -221,7 +223,7 @@ export const forwardEventItem = ({
 				children: (
 					<StoreProvider>
 						<ForwardAppointmentModal
-							eventId={event.id}
+							eventId={event.resource.id}
 							onClose={(): void => {
 								context.closeModal(EVENT_ACTIONS.FORWARD);
 							}}

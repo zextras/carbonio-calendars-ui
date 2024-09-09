@@ -18,5 +18,5 @@ export const forwardAppointmentRequest = async ({
 		_jsns: 'urn:zimbraMail',
 
 		id,
-		m: { e: attendees }
+		m: { e: attendees.map((attendee) => ({ a: attendee, t: 't' })) }
 	});
