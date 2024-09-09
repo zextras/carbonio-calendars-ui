@@ -45,7 +45,7 @@ export const ForwardAppointmentModal = ({
 	const modalHeaderTitle = t('modal.forwardAppointment.title', 'Forward appointment');
 	const modalContent = t(
 		'modal.forwardAppointment.content',
-		'You are forwarding this appointment to another person who will receive an invitation to join the meeting.'
+		'You are forwarding this appointment to one or more attendees who will receive an invitation to join the meeting.'
 	);
 	const onConfirmButtonLabel = t('modal.buttonLabel.forward', 'Forward');
 	const inputPlaceholder = t('modal.forwardAppointment.placeholder', 'Add new attendees');
