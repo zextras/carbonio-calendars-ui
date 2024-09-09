@@ -61,7 +61,7 @@ export const ForwardAppointmentModal = ({
 		);
 	}, []);
 	const onContactChange = useCallback((users: ContactType[]) => setContacts(users), []);
-	const disabled = false;
+	const disabled = contacts.length === 0;
 	const invokeErrorSnackbar = useCallback((): void => {
 		createSnackbar({
 			key: 'forward-appointment-error',
