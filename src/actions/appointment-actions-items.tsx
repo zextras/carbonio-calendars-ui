@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { t } from '@zextras/carbonio-shell-ui';
-import { find, noop } from 'lodash';
 import React from 'react';
-import { StoreProvider } from '../store/redux';
+
+import { t } from '@zextras/carbonio-shell-ui';
+import { find } from 'lodash';
 
 import {
 	acceptAsTentative,
@@ -23,11 +23,13 @@ import {
 } from './appointment-actions-fn';
 import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
+import { StoreProvider } from '../store/redux';
 import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/actions';
 import { EVENT_ACTIONS } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
+import { ForwardAppointmentModal } from '../view/modals/forward-appointment-modal';
 
 export const openEventItem = ({
 	event,
@@ -201,11 +203,9 @@ export const copyEventItem = ({
 });
 
 export const forwardEventItem = ({
-	invite,
 	event,
 	context
 }: {
-	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
@@ -218,7 +218,16 @@ export const forwardEventItem = ({
 		context.createModal(
 			{
 				id: EVENT_ACTIONS.FORWARD,
-				children: <StoreProvider></StoreProvider>
+				children: (
+					<StoreProvider>
+						<ForwardAppointmentModal
+							eventId={event.id}
+							onClose={(): void => {
+								context.closeModal(EVENT_ACTIONS.FORWARD);
+							}}
+						/>
+					</StoreProvider>
+				)
 			},
 			true
 		);

@@ -9,6 +9,7 @@ import { useModal } from '@zextras/carbonio-design-system';
 import { find, indexOf } from 'lodash';
 
 import { useEventActions } from './use-event-actions';
+import { setupTest, screen } from '../carbonio-ui-commons/test/test-setup';
 import {
 	AppointmentActionsItems,
 	InstanceActionsItems,
@@ -112,7 +113,7 @@ describe('useEventActions', () => {
 			expect(actionsResult[createCopyActionPosition + 1].id).toBe('forward');
 		});
 
-		it('forward appointment action should open forward modal on click', () => {
+		it('forward appointment action should open forward modal on click', async () => {
 			const { result } = renderHook(() => useEventActions({ event }));
 			const actionsResult = result.current as InstanceActionsItems;
 			const forwardAction = getActionByName(
@@ -127,6 +128,9 @@ describe('useEventActions', () => {
 				expect.objectContaining({ id: EVENT_ACTIONS.FORWARD }),
 				true
 			);
+			const { children: modal } = mockCreateModal.mock.calls[0][0];
+			setupTest(modal);
+			expect(await screen.findByTestId('forward-appointment-modal')).toBeInTheDocument();
 		});
 	});
 });

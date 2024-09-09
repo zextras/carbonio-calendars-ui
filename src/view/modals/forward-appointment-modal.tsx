@@ -99,6 +99,7 @@ export const ForwardAppointmentModal = ({
 			mainAlignment="center"
 			crossAlignment="flex-start"
 			height="fit"
+			data-testid="forward-appointment-modal"
 		>
 			<ModalHeader onClose={onClose} title={modalHeaderTitle} />
 			<Container
