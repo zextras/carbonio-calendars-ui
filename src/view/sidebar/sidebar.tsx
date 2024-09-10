@@ -15,6 +15,7 @@ import {
 	ModalManager,
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { find, map, reject } from 'lodash';
 
 import { CollapsedSidebarItem } from './collapsed-sidebar-items';
@@ -103,12 +104,12 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 							children: [
 								{
 									id: 'calendars',
-									name: 'Calendars',
+									name: t('label.app_name', 'Calendars'),
 									children: [calendar, trash, ...others]
 								} as Folder,
 								{
 									id: 'groups',
-									name: 'Calendar Groups',
+									name: t('label.calendar_groups', 'Calendar Groups'),
 									children: [allCalendarFolder] as Folder[]
 								} as Folder
 							]
