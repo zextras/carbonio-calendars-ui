@@ -105,12 +105,14 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 								{
 									id: 'calendars',
 									name: t('label.app_name', 'Calendars'),
-									children: [calendar, trash, ...others]
+									children: [calendar, trash, ...others],
+									noIcon: true
 								} as Folder,
 								{
 									id: 'groups',
 									name: t('label.calendar_groups', 'Calendar Groups'),
-									children: [allCalendarFolder] as Folder[]
+									children: [allCalendarFolder] as Folder[],
+									noIcon: true
 								} as Folder
 							]
 						}
