@@ -100,7 +100,18 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 				return allCalendarFolder && calendar && trash
 					? {
 							...accountRoot,
-							children: [allCalendarFolder, calendar, trash, ...others]
+							children: [
+								{
+									id: 'calendars',
+									name: 'Calendars',
+									children: [calendar, trash, ...others]
+								} as Folder,
+								{
+									id: 'groups',
+									name: 'Calendar Groups',
+									children: [allCalendarFolder] as Folder[]
+								} as Folder
+							]
 						}
 					: accountRoot;
 			}),
