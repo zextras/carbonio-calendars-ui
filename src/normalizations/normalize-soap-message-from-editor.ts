@@ -278,36 +278,42 @@ const generateMp = (msg: Editor): { ct: string; mp: Array<{ ct: string; content:
 			]
 });
 
-const generateInvite = (editorData: Editor): any => {
+const generateInvite = (editor: Editor): any => {
 	const at = [];
 	const organizer = getOrganizer({
-		calendar: editorData?.calendar,
-		sender: editorData.sender,
-		organizer: editorData.organizer
+		calendar: editor?.calendar,
+		sender: editor.sender,
+		organizer: editor.organizer
 	});
 	at.push(
-		...editorData.attendees.map((c: any) => ({
-			a: c?.email ?? c?.label,
-			d: c?.firstName && c?.lastname ? `${c.firstName} ${c.lastname}` : c.label,
+		...editor.attendees.map((attendee: any) => ({
+			a: attendee?.email ?? attendee?.label,
+			d:
+				attendee?.firstName && attendee?.lastname
+					? `${attendee.firstName} ${attendee.lastname}`
+					: attendee.label,
 			role: PARTICIPANT_ROLE.REQUIRED,
-			ptst: 'NE',
+			ptst: attendee?.ptst ?? 'NE',
 			rsvp: '1'
 		}))
 	);
-	editorData?.optionalAttendees &&
+	editor?.optionalAttendees &&
 		at.push(
-			...editorData.optionalAttendees.map((c: any) => ({
-				a: c?.email ?? c?.label,
-				d: c.firstName && c.lastname ? `${c.firstName} ${c.lastname}` : c.label,
+			...editor.optionalAttendees.map((optionalAttendee: any) => ({
+				a: optionalAttendee?.email ?? optionalAttendee?.label,
+				d:
+					optionalAttendee.firstName && optionalAttendee.lastname
+						? `${optionalAttendee.firstName} ${optionalAttendee.lastname}`
+						: optionalAttendee.label,
 				role: PARTICIPANT_ROLE.OPTIONAL,
-				ptst: 'NE',
+				ptst: optionalAttendee?.ptst ?? 'NE',
 				rsvp: '1'
 			}))
 		);
 
-	editorData?.meetingRoom &&
+	editor?.meetingRoom &&
 		at.push(
-			...editorData.meetingRoom.map((c) => ({
+			...editor.meetingRoom.map((c) => ({
 				a: c?.email,
 				d: c.label,
 				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
@@ -318,9 +324,9 @@ const generateInvite = (editorData: Editor): any => {
 			}))
 		);
 
-	editorData?.equipment &&
+	editor?.equipment &&
 		at.push(
-			...editorData.equipment.map((c) => ({
+			...editor.equipment.map((c) => ({
 				a: c?.email,
 				d: c.label,
 				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
@@ -335,17 +341,17 @@ const generateInvite = (editorData: Editor): any => {
 		comp: [
 			{
 				alarm:
-					editorData?.reminder && editorData?.reminder !== '0'
+					editor?.reminder && editor?.reminder !== '0'
 						? [
 								{
 									action: 'DISPLAY',
 									trigger: {
-										rel: setAlarmValue(editorData.reminder)
+										rel: setAlarmValue(editor.reminder)
 									}
 								}
 							]
 						: undefined,
-				xprop: editorData?.room
+				xprop: editor?.room
 					? [
 							{
 								name: CRB_XPROPS.MEETING_ROOM,
@@ -353,21 +359,21 @@ const generateInvite = (editorData: Editor): any => {
 								xparam: [
 									{
 										name: CRB_XPARAMS.ROOM_LINK,
-										value: editorData.room.link
+										value: editor.room.link
 									},
 									{
 										name: CRB_XPARAMS.ROOM_NAME,
-										value: editorData.room.label
+										value: editor.room.label
 									}
 								]
 							}
 						]
 					: undefined,
 				at,
-				allDay: editorData.allDay ? '1' : '0',
-				fb: editorData.freeBusy,
-				loc: editorData.location,
-				name: editorData.title,
+				allDay: editor.allDay ? '1' : '0',
+				fb: editor.freeBusy,
+				loc: editor.location,
+				name: editor.title,
 				or: omitBy(
 					{
 						a: organizer.email,
@@ -377,26 +383,26 @@ const generateInvite = (editorData: Editor): any => {
 					isNil
 				),
 				recur:
-					(editorData?.isInstance && editorData?.isSeries) || editorData?.isException
+					(editor?.isInstance && editor?.isSeries) || editor?.isException
 						? undefined
-						: editorData?.recur,
+						: editor?.recur,
 				status: 'CONF',
 				s: setResourceDate({
-					time: editorData.start,
-					allDay: editorData?.allDay,
-					timezone: editorData?.timezone
+					time: editor.start,
+					allDay: editor?.allDay,
+					timezone: editor?.timezone
 				}),
 				e: setResourceDate({
-					time: editorData.end,
-					allDay: editorData?.allDay,
-					timezone: editorData?.timezone
+					time: editor.end,
+					allDay: editor?.allDay,
+					timezone: editor?.timezone
 				}),
-				exceptId: editorData.exceptId,
-				class: editorData.class,
-				draft: editorData.draft ? 1 : 0
+				exceptId: editor.exceptId,
+				class: editor.class,
+				draft: editor.draft ? 1 : 0
 			}
 		],
-		uid: editorData.uid
+		uid: editor.uid
 	};
 };
 
