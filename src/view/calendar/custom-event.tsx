@@ -39,7 +39,7 @@ import { useEventActions } from '../../hooks/use-event-actions';
 import { StoreProvider } from '../../store/redux';
 import { useSummaryView } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
+import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { EventType } from '../../types/event';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 
@@ -109,13 +109,13 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 
 	const onEntireSeries = useCallback((): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`
+			`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`
 		);
 	}, [event.resource.calendar.id, event.resource.id]);
 
 	const onSingleInstance = useCallback((): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
 
@@ -149,7 +149,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 			);
 		} else {
 			replaceHistory(
-				`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
 	}, [event, createSnackbar, t, createModal, onEntireSeries, onSingleInstance, closeModal]);
@@ -165,7 +165,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
-			} else if (e.detail === 1 && (action === EventActionsEnum.EXPAND || isNil(action))) {
+			} else if (e.detail === 1 && (action === EVENT_ACTIONS.EXPAND || isNil(action))) {
 				useAppStatusStore.setState({ summaryViewId: event.id });
 			}
 		},
