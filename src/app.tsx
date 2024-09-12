@@ -31,7 +31,7 @@ import { createAppointmentIntegration } from './shared/create-apppointment-integ
 import InviteResponseComp from './shared/invite-response/invite-response';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
-import { CalendarIntegrations } from './types/enums/event-actions-enum';
+import { CalendarIntegrations } from './constants/event-actions';
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';

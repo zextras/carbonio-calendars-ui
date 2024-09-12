@@ -23,7 +23,7 @@ import { StoreProvider } from '../store/redux';
 import { useAppDispatch } from '../store/redux/hooks';
 import { useCalendarDate, useIsSummaryViewOpen, useSetRange } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
-import { EventActionsEnum } from '../types/enums/event-actions-enum';
+import { EVENT_ACTIONS } from '../constants/event-actions';
 import { EventType } from '../types/event';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
 import { ModifyStandardMessageModal } from '../view/modals/modify-standard-message-modal';
@@ -51,11 +51,11 @@ export const useCalendarComponentUtils = (): {
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const setRange = useSetRange();
 	const { action } = useParams<{
-		action: typeof EventActionsEnum.EXPAND | typeof EventActionsEnum.EDIT | undefined;
+		action: typeof EVENT_ACTIONS.EXPAND | typeof EVENT_ACTIONS.EDIT | undefined;
 	}>();
 
 	useEffect(() => {
-		if (action && action !== EventActionsEnum.EXPAND) {
+		if (action && action !== EVENT_ACTIONS.EXPAND) {
 			replaceHistory('');
 		}
 	}, [action]);
