@@ -23,9 +23,9 @@ import {
 } from './appointment-actions-fn';
 import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
+import { EVENT_ACTIONS } from '../constants/event-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/actions';
-import { EVENT_ACTIONS } from '../constants/event-actions';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { isOrganizerOrHaveEqualRights } from '../utils/store/event';
@@ -203,15 +203,13 @@ export const copyEventItem = ({
 });
 
 export const forwardEventItem = ({
-	invite,
 	event,
 	context
 }: {
-	invite?: Invite;
 	event: EventType;
 	context: ActionsContext;
 }): AppointmentActionsItems => ({
-	id: EventActionsEnum.FORWARD,
+	id: EVENT_ACTIONS.FORWARD,
 	icon: 'Forward',
 	label: t('label.forward', 'Forward'),
 	disabled: false,
@@ -219,13 +217,13 @@ export const forwardEventItem = ({
 	onClick: (): void => {
 		context.createModal(
 			{
-				id: EventActionsEnum.FORWARD,
+				id: EVENT_ACTIONS.FORWARD,
 				children: (
 					<StoreProvider>
 						<ForwardAppointmentModal
 							eventId={event.resource.id}
 							onClose={(): void => {
-								context.closeModal(EventActionsEnum.FORWARD);
+								context.closeModal(EVENT_ACTIONS.FORWARD);
 							}}
 						/>
 					</StoreProvider>
