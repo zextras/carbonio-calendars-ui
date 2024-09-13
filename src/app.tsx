@@ -29,6 +29,7 @@ import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 import InviteResponseComp from './shared/invite-response/invite-response';
+import { getCalendarGroupsRequest } from './soap/get-calendar-groups-request';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
 import { CalendarIntegrations } from './types/enums/event-actions-enum';
@@ -159,6 +160,12 @@ const AppRegistrations = (): null => {
 			component: InviteResponseComp
 		});
 	}, [calendars, dispatch, onClickNewButton, t]);
+
+	useEffect(() => {
+		getCalendarGroupsRequest().then((res) => {
+			console.log(res);
+		});
+	}, []);
 
 	return null;
 };
