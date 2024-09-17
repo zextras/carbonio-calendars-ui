@@ -164,7 +164,6 @@ const AppRegistrations = (): null => {
 
 	useEffect(() => {
 		getCalendarGroupsRequest().then((res) => {
-			console.log(res);
 			updateGroups(res.group);
 		});
 	}, [updateGroups]);

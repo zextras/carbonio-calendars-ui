@@ -26,9 +26,9 @@ import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sideba
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useInitializeFolders } from '../../carbonio-ui-commons/hooks/use-initialize-folders';
-import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
+import { getCalendarGroups, useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
-import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { CalendarGroups, Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
@@ -60,6 +60,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 		</Container>
 	);
 };
+
 const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
 
 const addFindSharesItem = (foldersAccordionItems: Array<Folder>): Array<Folder> =>
@@ -81,7 +82,7 @@ const addFindSharesItem = (foldersAccordionItems: Array<Folder>): Array<Folder> 
 			]
 		: [];
 
-const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
+const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups): Array<Folder> =>
 	useMemo(
 		() =>
 			map(folders, (accountRoot) => {
@@ -126,23 +127,12 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 	useInitializeFolders(FOLDER_VIEW.appointment);
 
-	// 1. account's calendars list
 	const folders = useRootsArray();
-
-	// 2. add at index 0 the all calendars calendar
-	// TODO: stop adding AllCalendarsItem
-	const foldersAccordionItems = useMemo(() => addAllCalendarsItem(folders), [folders]);
-
-	// 3. add shared calendars
-	const folderAccordionItemsWithFindShares = useMemo(
-		() => addFindSharesItem(foldersAccordionItems),
-		[foldersAccordionItems]
-	);
+	const folderWithShares = useMemo(() => addFindSharesItem(folders), [folders]);
+	const calendarGroups = getCalendarGroups();
+	const fullFolderTree = useSidebarSortedFolders(folderWithShares, calendarGroups);
 
 	const tagsAccordionItems = useGetTagsAccordion();
-
-	// 4. sort calendars
-	const sortedFolders = useSidebarSortedFolders(folderAccordionItemsWithFindShares);
 
 	return (
 		<ModalManager>
@@ -150,11 +140,11 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 				<ThemeProvider theme={themeMui}>
 					{expanded ? (
 						<MemoSidebar
-							foldersAccordionItems={sortedFolders}
+							foldersAccordionItems={fullFolderTree}
 							tagsAccordionItems={tagsAccordionItems}
 						/>
 					) : (
-						foldersAccordionItems[0].children.map((folder) => (
+						folders[0].children.map((folder) => (
 							<CollapsedSidebarItem key={folder.id} item={folder} />
 						))
 					)}
