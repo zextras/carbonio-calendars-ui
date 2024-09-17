@@ -10,12 +10,12 @@ import { find, indexOf } from 'lodash';
 
 import { useEventActions } from './use-event-actions';
 import { setupTest, screen } from '../carbonio-ui-commons/test/test-setup';
+import { EVENT_ACTIONS } from '../constants/event-actions';
 import {
 	AppointmentActionsItems,
 	InstanceActionsItems,
 	SeriesActionsItems
 } from '../types/actions';
-import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 
 jest.mock('@zextras/carbonio-design-system', () => ({
@@ -57,10 +57,7 @@ describe('useEventActions', () => {
 				const { result } = renderHook(() => useEventActions({ event }));
 
 				const actionsResult = (result.current as SeriesActionsItems)[0].items;
-				const forwardActionInInstanceMenu = getActionByName(
-					actionsResult,
-					EventActionsEnum.FORWARD
-				);
+				const forwardActionInInstanceMenu = getActionByName(actionsResult, EVENT_ACTIONS.FORWARD);
 				expect(forwardActionInInstanceMenu).toBeDefined();
 			});
 
@@ -80,10 +77,7 @@ describe('useEventActions', () => {
 				const { result } = renderHook(() => useEventActions({ event }));
 
 				const actionsResult = (result.current as SeriesActionsItems)[1].items;
-				const forwardActionInInstanceMenu = getActionByName(
-					actionsResult,
-					EventActionsEnum.FORWARD
-				);
+				const forwardActionInInstanceMenu = getActionByName(actionsResult, EVENT_ACTIONS.FORWARD);
 				expect(forwardActionInInstanceMenu).toBeDefined();
 			});
 
@@ -105,7 +99,7 @@ describe('useEventActions', () => {
 			const { result } = renderHook(() => useEventActions({ event }));
 
 			const actionsResult = result.current as InstanceActionsItems;
-			const forwardAction = getActionByName(actionsResult, EventActionsEnum.FORWARD);
+			const forwardAction = getActionByName(actionsResult, EVENT_ACTIONS.FORWARD);
 			expect(forwardAction).toBeDefined();
 		});
 
@@ -124,14 +118,14 @@ describe('useEventActions', () => {
 			const actionsResult = result.current as InstanceActionsItems;
 			const forwardAction = getActionByName(
 				actionsResult,
-				EventActionsEnum.FORWARD
+				EVENT_ACTIONS.FORWARD
 			) as AppointmentActionsItems;
 
 			forwardAction.onClick?.({} as KeyboardEvent);
 
 			expect(mockCreateModal).toBeCalledTimes(1);
 			expect(mockCreateModal).toBeCalledWith(
-				expect.objectContaining({ id: EventActionsEnum.FORWARD }),
+				expect.objectContaining({ id: EVENT_ACTIONS.FORWARD }),
 				true
 			);
 			const { children: modal } = mockCreateModal.mock.calls[0][0];
