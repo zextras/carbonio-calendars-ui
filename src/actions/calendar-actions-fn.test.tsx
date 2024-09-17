@@ -52,6 +52,8 @@ describe('calendar-actions-fn', () => {
 			);
 		});
 		test('when the request fails, it creates an error snackbar', async () => {
+			// disable console.warn raised by soapFetch
+			jest.spyOn(console, 'warn').mockImplementation(jest.fn());
 			getSetupServer().use(
 				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
 					HttpResponse.json({
@@ -118,6 +120,8 @@ describe('calendar-actions-fn', () => {
 			);
 		});
 		test('when the request fails, it creates an error snackbar', async () => {
+			// disable console.warn raised by soapFetch
+			jest.spyOn(console, 'warn').mockImplementation(jest.fn());
 			getSetupServer().use(
 				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
 					HttpResponse.json({
