@@ -85,6 +85,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 	useMemo(
 		() =>
 			map(folders, (accountRoot) => {
+				// TODO: remove this implicit all calendars item
 				const allCalendarFolder = find(accountRoot.children, (child) =>
 					hasId(child, SIDEBAR_ITEMS.ALL_CALENDAR)
 				);
@@ -98,6 +99,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 						hasId(f, FOLDERS.TRASH) ||
 						(f as LinkFolder)?.broken === true
 				);
+
 				return allCalendarFolder && calendar && trash
 					? {
 							...accountRoot,
@@ -123,9 +125,15 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 	useInitializeFolders(FOLDER_VIEW.appointment);
+
+	// 1. account's calendars list
 	const folders = useRootsArray();
 
+	// 2. add at index 0 the all calendars calendar
+	// TODO: stop adding AllCalendarsItem
 	const foldersAccordionItems = useMemo(() => addAllCalendarsItem(folders), [folders]);
+
+	// 3. add shared calendars
 	const folderAccordionItemsWithFindShares = useMemo(
 		() => addFindSharesItem(foldersAccordionItems),
 		[foldersAccordionItems]
@@ -133,6 +141,7 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 
 	const tagsAccordionItems = useGetTagsAccordion();
 
+	// 4. sort calendars
 	const sortedFolders = useSidebarSortedFolders(folderAccordionItemsWithFindShares);
 
 	return (
