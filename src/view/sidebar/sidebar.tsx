@@ -21,7 +21,6 @@ import { find, map, reject } from 'lodash';
 import { CollapsedSidebarItem } from './collapsed-sidebar-items';
 import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
-import { addAllCalendarsItem } from './utils';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
@@ -86,9 +85,13 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 	useMemo(
 		() =>
 			map(folders, (accountRoot) => {
-				// TODO: remove this implicit all calendars item
-				const allCalendarFolder = find(accountRoot.children, (child) =>
-					hasId(child, SIDEBAR_ITEMS.ALL_CALENDAR)
+				const folderGroups = groups.map(
+					(x) =>
+						({
+							id: x.id,
+							name: x.name,
+							children: [] as Folder[]
+						}) as Folder
 				);
 				const calendar = find(accountRoot.children, (f) => hasId(f, FOLDERS.CALENDAR));
 				const trash = find(accountRoot.children, (f) => hasId(f, FOLDERS.TRASH));
@@ -101,7 +104,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 						(f as LinkFolder)?.broken === true
 				);
 
-				return allCalendarFolder && calendar && trash
+				return folderGroups && calendar && trash
 					? {
 							...accountRoot,
 							children: [
@@ -114,7 +117,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 								{
 									id: 'groups',
 									name: t('label.calendar_groups', 'Calendar Groups'),
-									children: [allCalendarFolder] as Folder[],
+									children: folderGroups,
 									noIcon: true
 								} as Folder
 							]
