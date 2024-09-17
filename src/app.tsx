@@ -23,7 +23,7 @@ import {
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { useTranslation } from 'react-i18next';
 
-import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMap, useUpdateGroups } from './carbonio-ui-commons/store/zustand/folder';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
@@ -108,6 +108,7 @@ const AppRegistrations = (): null => {
 	const calendars = useFoldersMap();
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
+	const updateGroups = useUpdateGroups();
 
 	useEffect(() => {
 		const appLabel = t('label.app_name', 'Calendars');
@@ -164,8 +165,9 @@ const AppRegistrations = (): null => {
 	useEffect(() => {
 		getCalendarGroupsRequest().then((res) => {
 			console.log(res);
+			updateGroups(res.group);
 		});
-	}, []);
+	}, [updateGroups]);
 
 	return null;
 };
