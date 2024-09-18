@@ -85,14 +85,17 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 	useMemo(
 		() =>
 			map(folders, (accountRoot) => {
-				const calendarGroups = groups.map(
-					(x) =>
-						({
-							id: x.id,
-							name: x.name,
-							children: [] as Folder[]
-						}) as Folder
-				);
+				const calendarGroups = groups.map((group) => {
+					const allCalendarsId = 'a970bb9528c94c40bd51bfede60fcb31';
+					const name =
+						group.id === allCalendarsId ? t('label.all_calendars', 'All calendars') : group.name;
+
+					return {
+						id: group.id,
+						name,
+						children: [] as Folder[]
+					} as Folder;
+				});
 				const calendar = find(accountRoot.children, (f) => hasId(f, FOLDERS.CALENDAR));
 				const trash = find(accountRoot.children, (f) => hasId(f, FOLDERS.TRASH));
 				const others = reject(
