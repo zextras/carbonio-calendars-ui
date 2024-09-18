@@ -4,21 +4,21 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { lazy, useEffect, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 
 import { ModalManager } from '@zextras/carbonio-design-system';
 import {
-	Spinner,
-	addRoute,
-	addSettingsView,
-	addSearchView,
+	ACTION_TYPES,
 	addBoardView,
+	addRoute,
+	addSearchView,
+	addSettingsView,
 	registerActions,
 	registerComponents,
-	ACTION_TYPES,
 	registerFunctions,
 	SearchViewProps,
-	SecondaryBarComponentProps
+	SecondaryBarComponentProps,
+	Spinner
 } from '@zextras/carbonio-shell-ui';
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { useTranslation } from 'react-i18next';
@@ -164,7 +164,12 @@ const AppRegistrations = (): null => {
 
 	useEffect(() => {
 		getCalendarGroupsRequest().then((res) => {
-			updateGroups(res.group);
+			updateGroups(
+				res.group.map((g) => ({
+					...g,
+					calendarId: g.calendarId.map((x) => x._content)
+				}))
+			);
 		});
 	}, [updateGroups]);
 

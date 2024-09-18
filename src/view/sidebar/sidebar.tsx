@@ -16,7 +16,7 @@ import {
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { find, map, reject } from 'lodash';
+import { every, find, map, reject } from 'lodash';
 
 import { CollapsedSidebarItem } from './collapsed-sidebar-items';
 import { FoldersComponent } from './custom-components/folders-component';
@@ -27,7 +27,7 @@ import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useInitializeFolders } from '../../carbonio-ui-commons/hooks/use-initialize-folders';
 import { getCalendarGroups, useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
-import { CalendarGroups, Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { CalendarGroups, Folder, LinkFolder } from '../../carbonio-ui-commons/types';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS } from '../../constants/sidebar';
@@ -90,10 +90,23 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 					const name =
 						group.id === allCalendarsId ? t('label.all_calendars', 'All calendars') : group.name;
 
+					const subItems = accountRoot.children.filter((folder) =>
+						group.calendarId.includes(folder.id)
+					);
+
 					return {
 						id: group.id,
 						name,
-						children: [] as Folder[]
+						children: subItems,
+						checked: every(subItems, ['checked', true]),
+						uuid: '',
+						activesyncdisabled: true,
+						recursive: false,
+						deletable: false,
+						isLink: false,
+						depth: 0,
+						reminder: false,
+						broken: false
 					} as Folder;
 				});
 				const calendar = find(accountRoot.children, (f) => hasId(f, FOLDERS.CALENDAR));
@@ -127,7 +140,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 						}
 					: accountRoot;
 			}),
-		[folders]
+		[folders, groups]
 	);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {

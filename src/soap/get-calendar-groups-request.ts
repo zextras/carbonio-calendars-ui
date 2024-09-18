@@ -5,7 +5,17 @@
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 
-export const getCalendarGroupsRequest = async (): Promise<any> =>
+export type GetCalendarGroupsResponse = {
+	group: [
+		{
+			id: string;
+			name: string;
+			calendarId: { _content: string }[];
+		}
+	];
+};
+
+export const getCalendarGroupsRequest = async (): Promise<GetCalendarGroupsResponse> =>
 	soapFetch('GetCalendarGroups', {
 		_jsns: 'urn:zimbraMail'
 	});
