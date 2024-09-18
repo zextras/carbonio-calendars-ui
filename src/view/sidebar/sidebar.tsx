@@ -106,7 +106,8 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 						isLink: false,
 						depth: 0,
 						reminder: false,
-						broken: false
+						broken: false,
+						noExpandChildren: true
 					} as Folder;
 				});
 				const calendar = find(accountRoot.children, (f) => hasId(f, FOLDERS.CALENDAR));
