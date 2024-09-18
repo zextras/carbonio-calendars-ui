@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { AppState, SetRange, useAppStatusStore } from './store';
+import { AppState, CalendarView, SetRange, useAppStatusStore } from './store';
 import { Resource } from '../../types/editor';
 
-export const useCalendarView = (): string => useAppStatusStore((s: AppState) => s.calendarView);
+export const useCalendarView = (): CalendarView | undefined => useAppStatusStore((s: AppState) => s.calendarView);
 export const useCalendarDate = (): Date => useAppStatusStore((s: AppState) => s.date);
 export const useSummaryView = (): string | undefined =>
 	useAppStatusStore((s: AppState) => s.summaryViewId);

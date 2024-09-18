@@ -14,8 +14,10 @@ export type CalendarRange = {
 	end: number;
 };
 
+export type CalendarView = 'week' | 'day' | 'month' | 'work_week'
+
 export type AppState = {
-	calendarView: string;
+	calendarView: CalendarView | undefined;
 	date: Date;
 	summaryViewId: string | undefined;
 	range: CalendarRange;
@@ -25,7 +27,7 @@ export type AppState = {
 };
 
 export const useAppStatusStore = create<AppState>((set) => ({
-	calendarView: '',
+	calendarView: undefined,
 	date: new Date(),
 	summaryViewId: undefined,
 	equipment: undefined,
