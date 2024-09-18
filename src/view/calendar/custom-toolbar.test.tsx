@@ -5,27 +5,33 @@
  */
 import React from 'react';
 
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { CalendarView, useAppStatusStore } from "../../store/zustand/store";
-import { act } from "@testing-library/react";
-import { setupTest } from "../../carbonio-ui-commons/test/test-setup";
-import { CustomToolbar } from "./custom-toolbar";
-import { reducers } from "../../store/redux";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { act } from '@testing-library/react';
 
-const setupAppStatusStore = (): void => {
-	useAppStatusStore.setState(() => ({ meetingRoom: undefined, equipment: undefined }));
-};
+import { CustomToolbar } from './custom-toolbar';
+import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { reducers } from '../../store/redux';
+import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
 
 describe('calendar toolbar', () => {
-	test("onView with proper calendarView value is called while rendering the component", async () => {
-		//setupAppStatusStore();
-        let onViewCalendarView: undefined | CalendarView = undefined;
+	test('onView with proper calendarView value is called while rendering the component', async () => {
+		let onViewCalendarView: undefined | CalendarView;
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		    await act(async () => {
-			setupTest(<CustomToolbar label="a label" onView={calendarView => { onViewCalendarView = calendarView }} onNavigate={() => {}} view="month" />, { store });
+		await act(async () => {
+			setupTest(
+				<CustomToolbar
+					label="a label"
+					onView={(calendarView) => {
+						onViewCalendarView = calendarView;
+					}}
+					onNavigate={() => {}}
+					view="month"
+				/>,
+				{ store }
+			);
 		});
 		const state = useAppStatusStore.getState();
-		expect(state.calendarView).toBe("month");
-        expect(onViewCalendarView).toBe("month")
+		expect(state.calendarView).toBe('month');
+		expect(onViewCalendarView).toBe('month');
 	});
-})
+});

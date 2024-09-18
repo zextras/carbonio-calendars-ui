@@ -63,16 +63,22 @@ export const CustomToolbar = ({
 	const today = useCallback(() => onNavigate('TODAY'), [onNavigate]);
 	const next = useCallback(() => onNavigate('NEXT'), [onNavigate]);
 	const prev = useCallback(() => onNavigate('PREV'), [onNavigate]);
-
-	const calendarViewCallback = (calendarView:CalendarView) => ():void => {
-		useAppStatusStore.setState({ calendarView });
-		onView(calendarView);
-	}
-
-	const week = useCallback(calendarViewCallback('week'), [onView]);
-	const day = useCallback(calendarViewCallback('day'), [onView]);
-	const month = useCallback(calendarViewCallback('month'), [onView]);
-	const workView = useCallback(calendarViewCallback('work_week'), [onView]);
+	const week = useCallback(() => {
+		useAppStatusStore.setState({ calendarView: 'week' });
+		return onView('week');
+	}, [onView]);
+	const day = useCallback(() => {
+		useAppStatusStore.setState({ calendarView: 'day' });
+		return onView('day');
+	}, [onView]);
+	const month = useCallback(() => {
+		useAppStatusStore.setState({ calendarView: 'month' });
+		return onView('month');
+	}, [onView]);
+	const workView = useCallback(() => {
+		useAppStatusStore.setState({ calendarView: 'work_week' });
+		return onView('work_week');
+	}, [onView]);
 
 	const leftClickLabel = useMemo(() => {
 		if (view === 'month') {
@@ -94,8 +100,10 @@ export const CustomToolbar = ({
 		return t('next_day', 'Next day');
 	}, [t, view]);
 
-	useEffect(calendarViewCallback(view), [view, onView])
-
+	useEffect(() => {
+		useAppStatusStore.setState({ calendarView: view });
+		onView(view);
+	});
 	return (
 		<Container width="fill" height="fit" padding={{ bottom: 'small' }}>
 			<Container
