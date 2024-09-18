@@ -19,6 +19,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { every, find, map, reject } from 'lodash';
 
 import { CollapsedSidebarItem } from './collapsed-sidebar-items';
+import { CreateGroupComponent } from './custom-components/create-group-component';
 import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
 import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
@@ -52,6 +53,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 				localStorageName="open_calendars_folders"
 				AccordionCustomComponent={FoldersComponent}
 				buttonFindShares={<SharesComponent key={'calendar-find-share'} />}
+				buttonCreateGroup={<CreateGroupComponent key={'calendar-create-group'} />}
 				setSelectedFolder={setSelectedFolder}
 			/>
 			<Divider />
@@ -134,7 +136,15 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 								{
 									id: 'groups',
 									name: t('label.calendar_groups', 'Calendar Groups'),
-									children: calendarGroups,
+									children: [
+										...calendarGroups,
+										{
+											id: 'create_group',
+											// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+											// @ts-ignore
+											disableHover: true
+										}
+									],
 									noIcon: true
 								} as Folder
 							]
