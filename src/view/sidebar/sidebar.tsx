@@ -85,7 +85,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 	useMemo(
 		() =>
 			map(folders, (accountRoot) => {
-				const folderGroups = groups.map(
+				const calendarGroups = groups.map(
 					(x) =>
 						({
 							id: x.id,
@@ -104,7 +104,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 						(f as LinkFolder)?.broken === true
 				);
 
-				return folderGroups && calendar && trash
+				return calendarGroups && calendar && trash
 					? {
 							...accountRoot,
 							children: [
@@ -117,7 +117,7 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 								{
 									id: 'groups',
 									name: t('label.calendar_groups', 'Calendar Groups'),
-									children: folderGroups,
+									children: calendarGroups,
 									noIcon: true
 								} as Folder
 							]
