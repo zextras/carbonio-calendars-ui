@@ -16,7 +16,7 @@ export const CreateGroupComponent = (): ReactElement => {
 	const label = useMemo(() => t('label.create_group', 'Create New Group'), []);
 
 	const onClick = (): void => {
-		createCalendarGroupRequest({ name: 'New Group', calendarIds: [] }).then((resp) => {
+		createCalendarGroupRequest({ name: 'New Group', calendarIds: ['1'] }).then((resp) => {
 			console.log('Group created', resp);
 		});
 	};
