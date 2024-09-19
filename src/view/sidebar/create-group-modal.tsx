@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { Container, Input, Padding } from '@zextras/carbonio-design-system';
+import { Container, Input, Padding, TextWithTooltip } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
@@ -56,6 +56,9 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 					setInputValue(e.target.value);
 				}}
 			/>
+			<TextWithTooltip size="extrasmall">
+				{t('label.newgroup.note', 'This group will appear in your personal account')}
+			</TextWithTooltip>
 			<Padding vertical="medium" />
 
 			<ModalFooter
