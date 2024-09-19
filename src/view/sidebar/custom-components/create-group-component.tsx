@@ -9,6 +9,7 @@ import React, { ReactElement, useMemo } from 'react';
 import { Button, Container, useModal } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
+import { createGroup } from '../../../actions/calendar-actions-fn';
 import {
 	useUpdateGroups,
 	getCalendarGroups
@@ -21,9 +22,13 @@ export const CreateGroupComponent = (): ReactElement => {
 	const updateGroups = useUpdateGroups();
 	const currentGroups = getCalendarGroups();
 
-	const onClick = (): void => {
+	const onClick = useMemo(
+		() => createGroup({ createModal, closeModal }),
+		[closeModal, createModal]
+	);
+
+	const oldOnClick = (): void => {
 		createCalendarGroupRequest({ name: 'New Group', calendarIds: ['1'] }).then((res) => {
-			console.log('Group created', res);
 			updateGroups([
 				...currentGroups,
 				{
