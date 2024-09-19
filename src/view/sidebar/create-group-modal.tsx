@@ -56,12 +56,12 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 					setInputValue(e.target.value);
 				}}
 			/>
-			<Text size="extrasmall" color="gray5">
+			<Text size="extrasmall" color="gray1">
 				{t('label.newgroup.note', 'This group will appear in your personal account')}
 			</Text>
 			<Padding vertical="medium" />
-
 			<Divider />
+			<Padding vertical="medium" />
 			<Text weight="bold" size="large">
 				{t('label.newgroup.calendars', 'Calendars in this group')}
 			</Text>
