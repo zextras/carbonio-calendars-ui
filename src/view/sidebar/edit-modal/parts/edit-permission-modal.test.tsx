@@ -6,13 +6,14 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { FolderView } from '@zextras/carbonio-shell-ui/lib/types/misc';
 
 import { EditPermissionModal } from './edit-permission-modal';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { EditModalContext } from '../../../../commons/edit-modal-context';
 import { reducers } from '../../../../store/redux';
+import userEvent from '@testing-library/user-event';
 
 const test1UserGrant = {
 	zid: '302e2e8b-676d-4c93-aaa4-21e47bd3eeb9',
@@ -58,10 +59,10 @@ const roleOptions = [
 ];
 
 const contextOptions = {
-	setModal: () => {},
-	onClose: () => {},
+	setModal: (): void => {},
+	onClose: (): void => {},
 	roleOptions,
-	setActiveGrant: () => {}
+	setActiveGrant: (): void => {}
 };
 
 describe('permission modal', () => {
@@ -80,9 +81,8 @@ describe('permission modal', () => {
 		const confirmButton = screen.getByText('Edit share');
 		expect(confirmButton).toBeVisible();
 
-		act(() => {
-			fireEvent.click(confirmButton);
-		});
+		// eslint-disable-next-line testing-library/prefer-user-event
+		fireEvent.click(confirmButton);
 
 		expect(closeFn).toBeCalledTimes(1);
 	});
@@ -102,9 +102,8 @@ describe('permission modal', () => {
 		const confirmButton = screen.getByText('Go back');
 		expect(confirmButton).toBeVisible();
 
-		act(() => {
-			fireEvent.click(confirmButton);
-		});
+		// eslint-disable-next-line testing-library/prefer-user-event
+		fireEvent.click(confirmButton);
 
 		expect(closeFn).toBeCalledTimes(1);
 	});
