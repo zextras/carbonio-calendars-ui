@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback, useMemo } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useMemo } from 'react';
 
 import {
 	Container,
@@ -17,7 +17,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import styled, { css, SimpleInterpolation } from 'styled-components';
 
-import { useAppStatusStore } from '../../store/zustand/store';
+import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
 
 const ButtonWrapper = styled.div`
 	min-width: fit-content;
@@ -48,9 +48,9 @@ const CustomButton: FC<ButtonProps> = (props: ButtonProps): ReactElement => (
 
 export interface CustomToolbarProps {
 	label: string;
-	onView: (arg: string) => void;
+	onView: (arg: CalendarView) => void;
 	onNavigate: (arg: string) => void;
-	view: string;
+	view: CalendarView;
 }
 
 export const CustomToolbar = ({
@@ -100,6 +100,10 @@ export const CustomToolbar = ({
 		return t('next_day', 'Next day');
 	}, [t, view]);
 
+	useEffect(() => {
+		useAppStatusStore.setState({ calendarView: view });
+		onView(view);
+	});
 	return (
 		<Container width="fill" height="fit" padding={{ bottom: 'small' }}>
 			<Container
