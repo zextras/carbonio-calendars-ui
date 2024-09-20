@@ -46,7 +46,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 
 	const onConfirm = (): void => {
 		const perm = `${shareWithUserRole}${allowToSeePrivateAppointment ? 'p' : ''}`;
-		const id = grant.d || grant.zid;
+		const id = grant.d ?? grant.zid;
 		if (id) {
 			grantFolderAccess({
 				folderId: folder.id,
