@@ -141,7 +141,7 @@ const UserShare = ({
 			perm,
 			grantees: contacts.map((contact) => contact.email)
 		}).then((res) => {
-			if (!res) {
+			if (res) {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
