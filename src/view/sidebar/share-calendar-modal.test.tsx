@@ -784,7 +784,7 @@ describe('the share calendar modal is composed by', () => {
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
 						expect.objectContaining({
-							grant: [expect.objectContaining({ gt: SHARE_USER_TYPE.USER })],
+							grant: expect.objectContaining({ gt: SHARE_USER_TYPE.USER }),
 							op: FOLDER_OPERATIONS.GRANT
 						})
 					);
@@ -829,7 +829,7 @@ describe('the share calendar modal is composed by', () => {
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
 						expect.objectContaining({
-							grant: [expect.objectContaining({ perm: expect.stringContaining('p') })]
+							grant: expect.objectContaining({ perm: expect.stringContaining('p') })
 						})
 					);
 				});
@@ -879,7 +879,7 @@ describe('the share calendar modal is composed by', () => {
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
 						expect.objectContaining({
-							grant: [expect.objectContaining({ perm: '' })]
+							grant: expect.objectContaining({ perm: '' })
 						})
 					);
 				});
@@ -929,7 +929,7 @@ describe('the share calendar modal is composed by', () => {
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
 						expect.objectContaining({
-							grant: [expect.objectContaining({ perm: 'r' })]
+							grant: expect.objectContaining({ perm: 'r' })
 						})
 					);
 				});
@@ -979,7 +979,7 @@ describe('the share calendar modal is composed by', () => {
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
 						expect.objectContaining({
-							grant: [expect.objectContaining({ perm: 'rwidxa' })]
+							grant: expect.objectContaining({ perm: 'rwidxa' })
 						})
 					);
 				});
@@ -1029,7 +1029,7 @@ describe('the share calendar modal is composed by', () => {
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
 						expect.objectContaining({
-							grant: [expect.objectContaining({ perm: 'rwidx' })]
+							grant: expect.objectContaining({ perm: 'rwidx' })
 						})
 					);
 				});
