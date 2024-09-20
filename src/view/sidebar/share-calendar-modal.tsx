@@ -32,7 +32,7 @@ import {
 	ShareCalendarWithOptions,
 	findLabel
 } from '../../settings/components/utils';
-import { folderAction } from '../../store/actions/calendar-actions';
+import { folderAction, grantFolderAccess } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
@@ -135,15 +135,13 @@ const UserShare = ({
 	);
 
 	const onConfirm = useCallback((): void => {
-		const granted = map(contacts, (contact) => ({
-			gt: SHARE_USER_TYPE.USER,
-			inh: '1',
-			d: contact.email,
-			perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
-			pw: ''
-		}));
-		folderAction({ id: folderId, op: FOLDER_OPERATIONS.GRANT, grant: granted }).then((res) => {
-			if (!res.Fault) {
+		const perm = `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`;
+		grantFolderAccess({
+			folderId,
+			perm,
+			grantees: contacts.map((contact) => contact.email)
+		}).then((res) => {
+			if (!res) {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,

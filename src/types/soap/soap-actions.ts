@@ -49,7 +49,7 @@ export type FolderAction = {
 	color?: string;
 	f?: string;
 	zid?: string;
-	grant?: Grant | Grant[];
+	grant?: Grant;
 	type?: string;
 };
 

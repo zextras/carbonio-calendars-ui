@@ -5,6 +5,8 @@
  */
 import { isArray, map } from 'lodash';
 
+import { SHARE_USER_TYPE } from '../../constants';
+import { FOLDER_OPERATIONS } from '../../constants/api';
 import { batchRequest } from '../../soap/batch-request';
 import { folderActionRequest } from '../../soap/folder-action-request';
 import { FolderAction, FolderActionRequest } from '../../types/soap/soap-actions';
@@ -23,4 +25,30 @@ export const folderAction = async (actions: Array<FolderAction> | FolderAction):
 		return batchRequest(body);
 	}
 	return folderActionRequest(actions);
+};
+
+type GrantFolderAccess = {
+	folderId: string;
+	perm: string;
+	grantees: Array<string>;
+};
+
+export const grantFolderAccess = async (req: GrantFolderAccess): Promise<boolean> => {
+	const responses = await Promise.all(
+		req.grantees.map((email) => {
+			const grant = {
+				gt: SHARE_USER_TYPE.USER,
+				inh: '1',
+				d: email,
+				perm: req.perm,
+				pw: ''
+			};
+			return folderAction({
+				id: req.folderId,
+				op: FOLDER_OPERATIONS.GRANT,
+				grant
+			});
+		})
+	);
+	return responses.every((r) => r.Fault === undefined);
 };

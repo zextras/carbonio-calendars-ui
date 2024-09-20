@@ -22,10 +22,8 @@ import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
-import { SHARE_USER_TYPE } from '../../../../constants';
-import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { findLabel } from '../../../../settings/components/utils';
-import { folderAction } from '../../../../store/actions/calendar-actions';
+import { grantFolderAccess } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
 
@@ -47,49 +45,48 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 	const [allowToSeePrivateAppointment, setAllowToSeePrivateAppointment] = useState(false);
 
 	const onConfirm = (): void => {
-		const grants = [
-			{
-				gt: SHARE_USER_TYPE.USER,
-				inh: '1',
-				d: grant.d || grant.zid,
-				perm: `${shareWithUserRole}${allowToSeePrivateAppointment ? 'p' : ''}`,
-				pw: ''
-			}
-		];
-		folderAction({ id: folder.id, op: FOLDER_OPERATIONS.GRANT, grant: grants }).then((res) => {
-			if (!res?.Fault) {
-				createSnackbar({
-					key: `folder-action-success`,
-					replace: true,
-					type: 'success',
-					hideButton: true,
-					label: t('label.calendar_shared', 'Calendar shared successfully'),
-					autoHideTimeout: 3000
-				});
-				sendNotification &&
-					dispatch(
-						sendShareCalendarNotification({
-							sendNotification,
-							standardMessage,
-							contacts: [{ email: grant.d || grant.zid }],
-							shareWithUserRole,
-							folder: folder.id,
-							accounts
-						})
-					).then((res2) => {
-						if (!res2.type.includes('fulfilled')) {
-							createSnackbar({
-								key: `folder-action-failed`,
-								replace: true,
-								type: 'error',
-								hideButton: true,
-								label: t('label.error_try_again', 'Something went wrong, please try again'),
-								autoHideTimeout: 3000
-							});
-						}
+		const perm = `${shareWithUserRole}${allowToSeePrivateAppointment ? 'p' : ''}`;
+		const id = grant.d || grant.zid;
+		if (id) {
+			grantFolderAccess({
+				folderId: folder.id,
+				perm,
+				grantees: [id]
+			}).then((res) => {
+				if (res) {
+					createSnackbar({
+						key: `folder-action-success`,
+						replace: true,
+						type: 'success',
+						hideButton: true,
+						label: t('label.calendar_shared', 'Calendar shared successfully'),
+						autoHideTimeout: 3000
 					});
-			}
-		});
+					sendNotification &&
+						dispatch(
+							sendShareCalendarNotification({
+								sendNotification,
+								standardMessage,
+								contacts: [{ email: grant.d || grant.zid }],
+								shareWithUserRole,
+								folder: folder.id,
+								accounts
+							})
+						).then((res2) => {
+							if (!res2.type.includes('fulfilled')) {
+								createSnackbar({
+									key: `folder-action-failed`,
+									replace: true,
+									type: 'error',
+									hideButton: true,
+									label: t('label.error_try_again', 'Something went wrong, please try again'),
+									autoHideTimeout: 3000
+								});
+							}
+						});
+				}
+			});
+		}
 		onGoBack();
 	};
 
