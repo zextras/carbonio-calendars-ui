@@ -36,6 +36,7 @@ import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
+import { FolderAction } from '../../types/soap/soap-actions';
 
 type SharePrivateCheckboxProps = {
 	allowToSeePrvtAppt: boolean;
@@ -135,14 +136,23 @@ const UserShare = ({
 	);
 
 	const onConfirm = useCallback((): void => {
-		const granted = map(contacts, (contact) => ({
-			gt: SHARE_USER_TYPE.USER,
-			inh: '1',
-			d: contact.email,
-			perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
-			pw: ''
+		const folderActionArr: FolderAction[] = map(contacts, (contact) => ({
+			id: folderId,
+			op: FOLDER_OPERATIONS.GRANT,
+			grant: [
+				{
+					gt: SHARE_USER_TYPE.USER,
+					inh: '1',
+					d: contact.email,
+					perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
+					pw: ''
+				}
+			]
 		}));
-		folderAction({ id: folderId, op: FOLDER_OPERATIONS.GRANT, grant: granted }).then((res) => {
+
+		const folderActionToSend = folderActionArr.length > 1 ? folderActionArr : folderActionArr[0];
+
+		folderAction(folderActionToSend).then((res) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,
