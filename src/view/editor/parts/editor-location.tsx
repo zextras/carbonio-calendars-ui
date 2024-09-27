@@ -5,20 +5,29 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { Input } from '@zextras/carbonio-design-system';
+import { Button, Container, Input, Row, Tooltip } from '@zextras/carbonio-design-system';
+import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { isNil, debounce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorDisabled, selectEditorLocation } from '../../../store/selectors/editor';
+import {
+	selectEditorDisabled,
+	selectEditorLocation,
+	selectEditorTitle
+} from '../../../store/selectors/editor';
 import { editEditorLocation } from '../../../store/slices/editor-slice';
 
 export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
+	const eventTitle = useAppSelector(selectEditorTitle(editorId));
 	const location = useAppSelector(selectEditorLocation(editorId));
 	const [value, setValue] = useState(location ?? '');
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
+	const [getLocation, isLocationProviderAvailable] = useIntegratedFunction(
+		'calendars-location-provider'
+	);
 
 	useEffect(() => {
 		if (location) {
@@ -49,14 +58,47 @@ export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement
 		[debounceInput]
 	);
 
+	const onLocationProviderRequest = useCallback(() => {
+		if (!isLocationProviderAvailable) {
+			return;
+		}
+		getLocation({
+			eventTitle,
+			onConfirm: (newLocation: string) => {
+				setValue(newLocation);
+				debounceInput(newLocation);
+			}
+		});
+	}, [debounceInput, eventTitle, getLocation, isLocationProviderAvailable]);
+
 	return !isNil(location) ? (
-		<Input
-			label={t('label.location', 'Location')}
-			value={value}
-			onChange={onChange}
-			disabled={disabled?.location}
-			backgroundColor="gray5"
-			data-testid="editor-location"
-		/>
+		<Container
+			orientation={'horizontal'}
+			gap={'0.5rem'}
+			width={'fill'}
+			mainAlignment={'flex-start'}
+		>
+			<Input
+				label={t('label.location', 'Location')}
+				value={value}
+				onChange={onChange}
+				disabled={disabled?.location}
+				backgroundColor="gray5"
+				data-testid="editor-location"
+			/>
+
+			{isLocationProviderAvailable && (
+				<Row>
+					<Tooltip label={t('label.location_provider', 'Location Provider')}>
+						<Button
+							type="ghost"
+							size={'extralarge'}
+							icon="PinOutline"
+							onClick={onLocationProviderRequest}
+						/>
+					</Tooltip>
+				</Row>
+			)}
+		</Container>
 	) : null;
 };
