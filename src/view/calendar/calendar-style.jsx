@@ -9,6 +9,9 @@ export default createGlobalStyle`
 	.rbc-addons-dnd-resizable{
 		width: 100%;
 	}
+	.rbc-addons-dnd.rbc-calendar {
+			width: 100%;
+	}
 	.rbc-calendar {
 		color: ${({ theme }) => theme.palette.text.regular};
 		font-family: ${({ theme }) => theme.fonts.default};
@@ -73,6 +76,7 @@ export default createGlobalStyle`
 		background: ${({ theme }) => theme.palette.gray5.regular}; }
 
 	.rbc-header {
+			min-width: 500px;
 		overflow: hidden;
 		flex: 1 0 0;
 		text-overflow: ellipsis;

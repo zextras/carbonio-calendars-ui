@@ -5,7 +5,8 @@
  */
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
-import { find, isEmpty, minBy } from 'lodash';
+import { Row, Text } from '@zextras/carbonio-design-system';
+import { find, isEmpty, minBy, map } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
@@ -21,6 +22,7 @@ import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { useCheckedFolders } from '../../hooks/use-checked-folders';
+import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
@@ -50,10 +52,21 @@ const CalendarSyncWithRange = () => {
 	return null;
 };
 
+const MyResourceHeader = (props) => {
+	const backgroundColor = setCalendarColor({
+		color: props.resource.color
+	});
+	return (
+		<Row key={props.id} background={backgroundColor.background}>
+			<Text color={backgroundColor.color}>{props.label}</Text>
+		</Row>
+	);
+};
 const customComponents = {
 	toolbar: CustomToolbar,
 	event: MemoCustomEvent,
-	eventWrapper: CustomEventWrapper
+	eventWrapper: CustomEventWrapper,
+	resourceHeader: MyResourceHeader
 };
 
 export default function CalendarComponent() {
@@ -158,6 +171,7 @@ export default function CalendarComponent() {
 	const dayPropGetter = useCallback(
 		(newDate) => ({
 			style: {
+				minWidth: '500px',
 				backgroundColor:
 					// eslint-disable-next-line no-nested-ternary
 					workingSchedule?.[newDate.getDay()]?.working
@@ -229,6 +243,13 @@ export default function CalendarComponent() {
 	);
 
 	const scrollToTime = useMemo(() => new Date(0, 0, 0, startHour, -15, 0), [startHour]);
+	const resources = useMemo(() => {
+		if (calendarView === 'day' || calendarView === 'month') {
+			return map(calendars, (c) => ({ id: c.id, title: c.name, color: c.color }));
+		}
+		return undefined;
+	}, [calendarView, calendars]);
+
 	return (
 		<>
 			{!isEmpty(calendars) && <CalendarSyncWithRange />}
@@ -242,11 +263,12 @@ export default function CalendarComponent() {
 				localizer={localizer}
 				defaultView={defaultView}
 				events={events}
+				resources={resources}
 				date={date}
 				onNavigate={onNavigate}
 				startAccessor="start"
 				endAccessor="end"
-				style={{ width: '100%' }}
+				style={{ minWidth: '100%' }}
 				components={customComponents}
 				views={views}
 				tooltipAccessor={null}
