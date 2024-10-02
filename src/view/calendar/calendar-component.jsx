@@ -16,7 +16,6 @@ import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
-import { MultiCalendarsView } from './multi-calendars-view';
 import { WorkView } from './work-view';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
@@ -37,13 +36,7 @@ import { workWeek } from '../../utils/work-week';
 
 const BigCalendar = withDragAndDrop(Calendar);
 
-const views = {
-	month: true,
-	week: true,
-	day: true,
-	work_week: WorkView,
-	multi_calendars: MultiCalendarsView
-};
+const views = { month: true, week: true, day: true, work_week: WorkView };
 
 const CalendarSyncWithRange = () => {
 	const dispatch = useAppDispatch();

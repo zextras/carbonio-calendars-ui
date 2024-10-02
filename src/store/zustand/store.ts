@@ -14,7 +14,7 @@ export type CalendarRange = {
 	end: number;
 };
 
-export type CalendarView = 'week' | 'day' | 'month' | 'work_week' | 'multi_calendars';
+export type CalendarView = 'week' | 'day' | 'month' | 'work_week';
 
 export type AppState = {
 	calendarView: CalendarView | undefined;
