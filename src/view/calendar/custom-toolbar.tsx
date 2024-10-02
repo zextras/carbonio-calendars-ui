@@ -79,6 +79,10 @@ export const CustomToolbar = ({
 		useAppStatusStore.setState({ calendarView: 'work_week' });
 		return onView('work_week');
 	}, [onView]);
+	const multiCalendarsView = useCallback(() => {
+		useAppStatusStore.setState({ calendarView: 'multi_calendars' });
+		return onView('multi_calendars');
+	}, [onView]);
 
 	const leftClickLabel = useMemo(() => {
 		if (view === 'month') {
@@ -182,6 +186,13 @@ export const CustomToolbar = ({
 						type="outlined"
 						onClick={workView}
 						data-testid="WorkWeekButton"
+					/>
+					<CustomButton
+						backgroundColor={view === 'multi_calendars' ? 'highlight' : undefined}
+						label={t('label.multi_calendars', 'multi calendars')}
+						type="outlined"
+						onClick={multiCalendarsView}
+						data-testid="MultiCalendarsButton"
 					/>
 				</Container>
 			</Container>
