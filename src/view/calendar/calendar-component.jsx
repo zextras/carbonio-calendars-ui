@@ -40,6 +40,8 @@ const BigCalendar = withDragAndDrop(Calendar);
 
 const views = { month: true, week: true, day: true, work_week: WorkView };
 
+const MULTI_CALENDARS_COLUMN_MIN_WIDTH = '16.75rem';
+
 const CalendarSyncWithRange = () => {
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
@@ -57,8 +59,14 @@ const MyResourceHeader = (props) => {
 		color: props.resource.color
 	});
 	return (
-		<Row key={props.id} background={backgroundColor.background}>
-			<Text color={backgroundColor.color}>{props.label}</Text>
+		<Row
+			key={props.id}
+			background={backgroundColor.background}
+			borderColor={backgroundColor.color}
+			height="2.25rem"
+			padding={'small'}
+		>
+			<Text weight={'bold'}>{props.label}</Text>
 		</Row>
 	);
 };
@@ -168,10 +176,17 @@ export default function CalendarComponent() {
 		[selectSlotBgColor, theme?.palette?.gray3?.regular]
 	);
 
+	const columnMinWidth = useMemo(() => {
+		if (calendarView === 'day') {
+			return MULTI_CALENDARS_COLUMN_MIN_WIDTH;
+		}
+		return undefined;
+	}, [calendarView]);
+
 	const dayPropGetter = useCallback(
 		(newDate) => ({
 			style: {
-				minWidth: '500px',
+				minWidth: columnMinWidth,
 				backgroundColor:
 					// eslint-disable-next-line no-nested-ternary
 					workingSchedule?.[newDate.getDay()]?.working
@@ -183,6 +198,7 @@ export default function CalendarComponent() {
 			}
 		}),
 		[
+			columnMinWidth,
 			slotDayBorderColor,
 			theme.palette.gray3.regular,
 			theme.palette.gray6.regular,
@@ -257,6 +273,7 @@ export default function CalendarComponent() {
 				primaryCalendar={primaryCalendar}
 				summaryViewOpen={summaryViewOpen}
 				action={action}
+				headerMinWidth={columnMinWidth}
 			/>
 			<BigCalendar
 				selectable

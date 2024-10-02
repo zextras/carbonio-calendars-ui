@@ -76,7 +76,6 @@ export default createGlobalStyle`
 		background: ${({ theme }) => theme.palette.gray5.regular}; }
 
 	.rbc-header {
-			min-width: 500px;
 		overflow: hidden;
 		flex: 1 0 0;
 		text-overflow: ellipsis;
@@ -390,8 +389,9 @@ export default createGlobalStyle`
 		overflow: hidden; }
 
 	.rbc-time-view-resources .rbc-time-header-content {
-		min-width: auto;
-		flex: 1 0 0; }
+		min-width: ${({ headerMinWidth }) => headerMinWidth};
+		flex: 1 0 0; 
+  }
 
 	.rbc-time-view-resources .rbc-time-header-cell-single-day {
 		display: none; }
@@ -508,7 +508,8 @@ export default createGlobalStyle`
 		.rbc-time-content > .rbc-day-slot {
 			width: 100%;
 			user-select: none;
-			-webkit-user-select: none; }
+			-webkit-user-select: none; 
+		}
 
 	.rbc-current-time-indicator {
 		position: absolute;
