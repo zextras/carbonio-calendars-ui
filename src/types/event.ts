@@ -107,6 +107,7 @@ export type EventType = {
 	start: Moment | Date;
 	end: Moment | Date;
 	resource: EventResource;
+	resourceId: string;
 	allDay: boolean;
 	isShared: boolean;
 	title: string;
