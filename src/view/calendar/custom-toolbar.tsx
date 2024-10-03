@@ -87,15 +87,16 @@ export const CustomToolbar = ({
 		return t('next_day', 'Next day');
 	}, [t, view]);
 
-	const splitViewTooltip = useMemo(
-		() =>
-			prefSplitViewEnabled
-				? t('label.disableSplitViewTooltip', 'Disabled split view')
-				: t('label.enableSplitViewTooltip', 'Enable split view'),
-		[prefSplitViewEnabled, t]
-	);
-
 	const isSplitViewDisabled = view !== 'day';
+
+	const splitViewTooltip = useMemo(() => {
+		if (isSplitViewDisabled) {
+			return t('label.splitViewDisabledTooltip', 'Split view is disabled in this view');
+		}
+		return prefSplitViewEnabled
+			? t('label.disableSplitViewTooltip', 'Disabled split view')
+			: t('label.enableSplitViewTooltip', 'Enable split view');
+	}, [isSplitViewDisabled, prefSplitViewEnabled, t]);
 
 	const splitViewButtonColor = useMemo(
 		() => (prefSplitViewEnabled && !isSplitViewDisabled ? 'highlight' : undefined),
@@ -110,6 +111,7 @@ export const CustomToolbar = ({
 		useAppStatusStore.setState({ calendarView: view });
 		onView(view);
 	});
+
 	return (
 		<Container width="fill" height="fit" padding={{ bottom: 'small' }}>
 			<Container
@@ -162,7 +164,7 @@ export const CustomToolbar = ({
 				</Container>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
 					<Padding right={'large'}>
-						<Tooltip label={splitViewTooltip} disabled={isSplitViewDisabled}>
+						<Tooltip label={splitViewTooltip}>
 							<Button
 								type="outlined"
 								icon={'WeekViewOutline'}
