@@ -5,7 +5,6 @@
  */
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
-import { Row, Text } from '@zextras/carbonio-design-system';
 import { find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -13,6 +12,7 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
 import { ThemeContext } from 'styled-components';
 
+import { CalendarResourceHeader } from './calendar-resource-header';
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
@@ -24,7 +24,6 @@ import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-ut
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { useCheckedFolders } from '../../hooks/use-checked-folders';
 import { useSplitViewPrefs } from '../../hooks/use-split-view-prefs';
-import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
@@ -56,28 +55,11 @@ const CalendarSyncWithRange = () => {
 	return null;
 };
 
-const MyResourceHeader = (props) => {
-	const backgroundColor = setCalendarColor({
-		color: props.resource.color
-	});
-	return (
-		<Row
-			key={props.id}
-			background={backgroundColor.background}
-			borderColor={backgroundColor.color}
-			height="2.25rem"
-			padding={'small'}
-		>
-			<Text weight={'bold'}>{props.label}</Text>
-		</Row>
-	);
-};
-
 const customComponents = {
 	toolbar: CustomToolbar,
 	event: MemoCustomEvent,
 	eventWrapper: CustomEventWrapper,
-	resourceHeader: MyResourceHeader
+	resourceHeader: CalendarResourceHeader
 };
 
 export default function CalendarComponent() {
