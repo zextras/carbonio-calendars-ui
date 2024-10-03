@@ -6,7 +6,7 @@
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { Row, Text } from '@zextras/carbonio-design-system';
-import { find, isEmpty, minBy, map } from 'lodash';
+import { find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
@@ -70,6 +70,7 @@ const MyResourceHeader = (props) => {
 		</Row>
 	);
 };
+
 const customComponents = {
 	toolbar: CustomToolbar,
 	event: MemoCustomEvent,
