@@ -12,11 +12,13 @@ import {
 	ButtonProps,
 	pseudoClasses,
 	Tooltip,
-	Padding
+	Padding,
+	useTheme
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import styled, { css, SimpleInterpolation } from 'styled-components';
 
+import { useSplitCalendarsViewPrefs } from '../../hooks/use-split-calendars-view-prefs';
 import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
 
 const ButtonWrapper = styled.div`
@@ -60,6 +62,11 @@ export const CustomToolbar = ({
 	view
 }: CustomToolbarProps): ReactElement => {
 	const [t] = useTranslation();
+	const [isSplitCalendarsViewEnabled, setIsSplitCalendarsViewEnabled] =
+		useSplitCalendarsViewPrefs();
+
+	const theme = useTheme();
+
 	const today = useCallback(() => onNavigate('TODAY'), [onNavigate]);
 	const next = useCallback(() => onNavigate('NEXT'), [onNavigate]);
 	const prev = useCallback(() => onNavigate('PREV'), [onNavigate]);
@@ -99,6 +106,32 @@ export const CustomToolbar = ({
 		}
 		return t('next_day', 'Next day');
 	}, [t, view]);
+
+	const calendarsSplitViewTooltip = useMemo(
+		() =>
+			isSplitCalendarsViewEnabled
+				? t('label.disableCalendarsSplitViewTooltip', 'Disabled calendars split view')
+				: t('label.enableCalendarsSplitViewTooltip', 'Enable calendars split view'),
+		[isSplitCalendarsViewEnabled, t]
+	);
+
+	const calendarsSplitViewButtonColor = useMemo(
+		() =>
+			isSplitCalendarsViewEnabled
+				? theme.palette.highlight.disabled
+				: theme.palette.transparent.active,
+		[
+			isSplitCalendarsViewEnabled,
+			theme.palette.highlight.disabled,
+			theme.palette.transparent.active
+		]
+	);
+
+	const onCalendarsSplitViewButtonClick = useCallback(() => {
+		setIsSplitCalendarsViewEnabled((prev) => !prev);
+	}, [setIsSplitCalendarsViewEnabled]);
+
+	const isCalendarsSplitViewDisabled = view !== 'day';
 
 	useEffect(() => {
 		useAppStatusStore.setState({ calendarView: view });
@@ -155,6 +188,17 @@ export const CustomToolbar = ({
 					/>
 				</Container>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
+					<Padding right={'large'}>
+						<Tooltip label={calendarsSplitViewTooltip} disabled={isCalendarsSplitViewDisabled}>
+							<Button
+								icon={'WeekViewOutline'}
+								color={calendarsSplitViewButtonColor}
+								disabled={isCalendarsSplitViewDisabled}
+								onClick={onCalendarsSplitViewButtonClick}
+							/>
+						</Tooltip>
+					</Padding>
+
 					<CustomButton
 						backgroundColor={view === 'month' ? 'highlight' : undefined}
 						label={t('label.month', 'month')}
