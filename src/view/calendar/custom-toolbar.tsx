@@ -11,13 +11,12 @@ import {
 	IconButton,
 	pseudoClasses,
 	Tooltip,
-	Padding,
-	useTheme
+	Padding
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import styled, { css, SimpleInterpolation } from 'styled-components';
 
-import { useSplitCalendarsViewPrefs } from '../../hooks/use-split-calendars-view-prefs';
+import { useSplitViewPrefs } from '../../hooks/use-split-view-prefs';
 import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
 
 const CustomContainer = styled(Container)`
@@ -46,10 +45,7 @@ export const CustomToolbar = ({
 	view
 }: CustomToolbarProps): ReactElement => {
 	const [t] = useTranslation();
-	const [prefSplitCalendarsViewEnabled, setPrefSplitCalendarsViewEnabled] =
-		useSplitCalendarsViewPrefs();
-
-	const theme = useTheme();
+	const [prefSplitViewEnabled, setPrefSplitViewEnabled] = useSplitViewPrefs();
 
 	const today = useCallback(() => onNavigate('TODAY'), [onNavigate]);
 	const next = useCallback(() => onNavigate('NEXT'), [onNavigate]);
@@ -91,25 +87,24 @@ export const CustomToolbar = ({
 		return t('next_day', 'Next day');
 	}, [t, view]);
 
-	const calendarsSplitViewTooltip = useMemo(
+	const splitViewTooltip = useMemo(
 		() =>
-			prefSplitCalendarsViewEnabled
-				? t('label.disableCalendarsSplitViewTooltip', 'Disabled calendars split view')
-				: t('label.enableCalendarsSplitViewTooltip', 'Enable calendars split view'),
-		[prefSplitCalendarsViewEnabled, t]
+			prefSplitViewEnabled
+				? t('label.disableSplitViewTooltip', 'Disabled split view')
+				: t('label.enableSplitViewTooltip', 'Enable split view'),
+		[prefSplitViewEnabled, t]
 	);
 
-	const isCalendarsSplitViewDisabled = view !== 'day';
+	const isSplitViewDisabled = view !== 'day';
 
-	const calendarsSplitViewButtonColor = useMemo(
-		() =>
-			prefSplitCalendarsViewEnabled && !isCalendarsSplitViewDisabled ? 'highlight' : undefined,
-		[isCalendarsSplitViewDisabled, prefSplitCalendarsViewEnabled]
+	const splitViewButtonColor = useMemo(
+		() => (prefSplitViewEnabled && !isSplitViewDisabled ? 'highlight' : undefined),
+		[isSplitViewDisabled, prefSplitViewEnabled]
 	);
 
-	const onCalendarsSplitViewButtonClick = useCallback(() => {
-		setPrefSplitCalendarsViewEnabled((prevValue) => !prevValue);
-	}, [setPrefSplitCalendarsViewEnabled]);
+	const onSplitViewButtonClick = useCallback(() => {
+		setPrefSplitViewEnabled((prevValue) => !prevValue);
+	}, [setPrefSplitViewEnabled]);
 
 	useEffect(() => {
 		useAppStatusStore.setState({ calendarView: view });
@@ -167,13 +162,13 @@ export const CustomToolbar = ({
 				</Container>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
 					<Padding right={'large'}>
-						<Tooltip label={calendarsSplitViewTooltip} disabled={isCalendarsSplitViewDisabled}>
+						<Tooltip label={splitViewTooltip} disabled={isSplitViewDisabled}>
 							<Button
 								type="outlined"
 								icon={'WeekViewOutline'}
-								backgroundColor={calendarsSplitViewButtonColor}
-								disabled={isCalendarsSplitViewDisabled}
-								onClick={onCalendarsSplitViewButtonClick}
+								backgroundColor={splitViewButtonColor}
+								disabled={isSplitViewDisabled}
+								onClick={onSplitViewButtonClick}
 							/>
 						</Tooltip>
 					</Padding>
