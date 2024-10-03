@@ -76,6 +76,7 @@ export default createGlobalStyle`
 		background: ${({ theme }) => theme.palette.gray5.regular}; }
 
 	.rbc-header {
+      min-width: ${({ headerMinWidth }) => headerMinWidth};
 		overflow: hidden;
 		flex: 1 0 0;
 		text-overflow: ellipsis;
@@ -389,7 +390,7 @@ export default createGlobalStyle`
 		overflow: hidden; }
 
 	.rbc-time-view-resources .rbc-time-header-content {
-		min-width: ${({ headerMinWidth }) => headerMinWidth};
+		min-width: auto;
 		flex: 1 0 0; 
   }
 
