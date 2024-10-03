@@ -14,16 +14,17 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
+import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_BOARD_ID } from '../constants';
+import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { StoreProvider } from '../store/redux';
 import { useAppDispatch } from '../store/redux/hooks';
 import { useCalendarDate, useIsSummaryViewOpen, useSetRange } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
-import { EVENT_ACTIONS } from '../constants/event-actions';
 import { EventType } from '../types/event';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
 import { ModifyStandardMessageModal } from '../view/modals/modify-standard-message-modal';
@@ -53,6 +54,7 @@ export const useCalendarComponentUtils = (): {
 	const { action } = useParams<{
 		action: typeof EVENT_ACTIONS.EXPAND | typeof EVENT_ACTIONS.EDIT | undefined;
 	}>();
+	const { zimbraPrefDefaultCalendarId } = usePrefs();
 
 	useEffect(() => {
 		if (action && action !== EVENT_ACTIONS.EXPAND) {
@@ -235,7 +237,9 @@ export const useCalendarComponentUtils = (): {
 
 	const handleSelect = useCallback(
 		(e) => {
-			if (!summaryViewOpen && !action) {
+			const isDefaultCalendar = e.resourceId ? e.resourceId === zimbraPrefDefaultCalendarId : true;
+
+			if (!summaryViewOpen && !action && isDefaultCalendar) {
 				const isAllDay =
 					moment(e.end).hours() === moment(e.start).hours() &&
 					moment(e.end).minutes() === moment(e.start).minutes() &&
