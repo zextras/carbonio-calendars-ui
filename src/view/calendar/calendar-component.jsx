@@ -18,6 +18,7 @@ import { MemoCustomEvent } from './custom-event';
 import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
+import { isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
@@ -259,6 +260,18 @@ export default function CalendarComponent() {
 		[calendars]
 	);
 
+	const onSelecting = useCallback(
+		(calendarSlot) => {
+			if (!calendarSlot.resourceId) return true;
+			const resCalendar = find(calendars, ['id', calendarSlot.resourceId]);
+			const absFolderPath = resCalendar?.absFolderPath;
+			const isTrashOrSubItem = isTrashOrNestedInIt({ id: calendarSlot.resourceId, absFolderPath });
+			const hasWritePermission = resCalendar.perm ? /w/.test(resCalendar.perm) : true;
+			return !summaryViewOpen && !action && !isTrashOrSubItem && hasWritePermission;
+		},
+		[action, calendars, summaryViewOpen]
+	);
+
 	const scrollToTime = useMemo(() => new Date(0, 0, 0, startHour, -15, 0), [startHour]);
 	const resources = useMemo(() => {
 		if (calendarView === 'day' || calendarView === 'month') {
@@ -302,7 +315,7 @@ export default function CalendarComponent() {
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
 				resizableAccessor={resizableAccessor}
-				onSelecting={() => !summaryViewOpen && !action}
+				onSelecting={onSelecting}
 				draggableAccessor={draggableAccessor}
 			/>
 		</>
