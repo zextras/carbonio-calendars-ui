@@ -250,10 +250,10 @@ export default function CalendarComponent() {
 			const resCalendar = find(calendars, ['id', calendarSlot.resourceId]);
 			const absFolderPath = resCalendar?.absFolderPath;
 			const isTrashOrSubItem = isTrashOrNestedInIt({ id: calendarSlot.resourceId, absFolderPath });
-			const hasWritePermission = resCalendar.perm ? /w/.test(resCalendar.perm) : true;
-			return !summaryViewOpen && !action && !isTrashOrSubItem && hasWritePermission;
+			const isDefaultCalendar = resCalendar?.id === prefs.zimbraPrefDefaultCalendarId;
+			return !summaryViewOpen && !action && !isTrashOrSubItem && isDefaultCalendar;
 		},
-		[action, calendars, summaryViewOpen]
+		[action, calendars, prefs.zimbraPrefDefaultCalendarId, summaryViewOpen]
 	);
 
 	const scrollToTime = useMemo(() => new Date(0, 0, 0, startHour, -15, 0), [startHour]);
