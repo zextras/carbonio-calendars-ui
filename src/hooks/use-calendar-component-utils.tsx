@@ -181,7 +181,12 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const onEventDropOrResize = useCallback(
-		({ start, end, event, isAllDay }) => {
+		({ start, end, event, isAllDay, resourceId }) => {
+			const isDefaultCalendar = resourceId ? resourceId === zimbraPrefDefaultCalendarId : true;
+			if (!isDefaultCalendar) {
+				return;
+			}
+
 			if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
 				createSnackbar({
 					key: `recurrent-moved-in-allDay`,
@@ -232,7 +237,7 @@ export const useCalendarComponentUtils = (): {
 				}
 			}
 		},
-		[closeModal, createModal, createSnackbar, onDropOrResizeFn, t]
+		[closeModal, createModal, createSnackbar, onDropOrResizeFn, t, zimbraPrefDefaultCalendarId]
 	);
 
 	const handleSelect = useCallback(
@@ -265,7 +270,7 @@ export const useCalendarComponentUtils = (): {
 				});
 			}
 		},
-		[action, calendarFolders, dispatch, summaryViewOpen]
+		[action, calendarFolders, dispatch, summaryViewOpen, zimbraPrefDefaultCalendarId]
 	);
 
 	const onRangeChange = useCallback(
