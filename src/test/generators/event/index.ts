@@ -30,6 +30,7 @@ const getDefaultEvent = (): EventType => {
 	return {
 		start: new Date(start),
 		end: new Date(getEndTime({ start: start.valueOf(), duration: '30m' })),
+		resourceId: '10',
 		resource: {
 			calendar: {
 				id: '10',
