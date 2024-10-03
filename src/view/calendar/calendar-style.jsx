@@ -81,7 +81,7 @@ export default createGlobalStyle`
 		flex: 1 0 0;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-		padding: 0 0.1875rem;
+		padding: 0 0.0625rem 0 0;
 		text-align: center;
 		vertical-align: middle;
 		font-weight: bold;
