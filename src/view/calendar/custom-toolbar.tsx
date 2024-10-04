@@ -21,6 +21,7 @@ import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
 
 const CustomContainer = styled(Container)`
 	border: 0.0625rem solid;
+	border-radius: 0.25rem;
 	height: fit-content;
 	${({ color = 'primary', theme }): SimpleInterpolation => css`
 		${pseudoClasses(theme, color, 'border-color')};
@@ -168,6 +169,7 @@ export const CustomToolbar = ({
 							<Button
 								type="outlined"
 								icon={'WeekViewOutline'}
+								size={'large'}
 								backgroundColor={splitLayoutButtonColor}
 								disabled={isSplitLayoutDisabled}
 								onClick={onSplitLayoutButtonClick}
