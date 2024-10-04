@@ -92,10 +92,13 @@ export const CustomToolbar = ({
 
 	const splitLayoutTooltip = useMemo(() => {
 		if (isSplitLayoutDisabled) {
-			return t('label.splitLayoutDisabledTooltip', 'Split layout is disabled in this view');
+			return t(
+				'label.splitLayoutDisabledTooltip',
+				'Split layout not available in the current view'
+			);
 		}
 		return prefSplitLayoutEnabled
-			? t('label.disableSplitLayoutTooltip', 'Disabled split layout')
+			? t('label.disableSplitLayoutTooltip', 'Disable split layout')
 			: t('label.enableSplitLayoutTooltip', 'Enable split layout');
 	}, [isSplitLayoutDisabled, prefSplitLayoutEnabled, t]);
 
