@@ -3,13 +3,12 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback, useEffect, useMemo } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo } from 'react';
 
 import {
 	Container,
 	Button,
 	IconButton,
-	ButtonProps,
 	pseudoClasses,
 	Tooltip,
 	Padding
@@ -17,34 +16,21 @@ import {
 import { useTranslation } from 'react-i18next';
 import styled, { css, SimpleInterpolation } from 'styled-components';
 
+import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
 import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
 
-const ButtonWrapper = styled.div`
-	min-width: fit-content;
+const CustomContainer = styled(Container)`
 	border: 0.0625rem solid;
+	border-radius: 0.25rem;
+	height: fit-content;
 	${({ color = 'primary', theme }): SimpleInterpolation => css`
 		${pseudoClasses(theme, color, 'border-color')};
 	`};
-	&:last-child {
-		border-left: none;
-		border-radius: 0 0.125rem 0.125rem 0;
-	}
-	&:first-child {
-		border-right: none;
-		border-radius: 0.125rem 0 0 0.125rem;
-	}
-	&:not(:first-child):not(:last-child) {
-		border-radius: 0;
-		border-right: none;
-		border-left: none;
-	}
 `;
 
-const CustomButton: FC<ButtonProps> = (props: ButtonProps): ReactElement => (
-	<ButtonWrapper>
-		<Button {...props} style={{ border: 0 }} />
-	</ButtonWrapper>
-);
+const CustomButton = styled(Button)`
+	border-radius: 0;
+`;
 
 export interface CustomToolbarProps {
 	label: string;
@@ -60,6 +46,8 @@ export const CustomToolbar = ({
 	view
 }: CustomToolbarProps): ReactElement => {
 	const [t] = useTranslation();
+	const [prefSplitLayoutEnabled, setPrefSplitLayoutEnabled] = useSplitLayoutPrefs();
+
 	const today = useCallback(() => onNavigate('TODAY'), [onNavigate]);
 	const next = useCallback(() => onNavigate('NEXT'), [onNavigate]);
 	const prev = useCallback(() => onNavigate('PREV'), [onNavigate]);
@@ -100,10 +88,31 @@ export const CustomToolbar = ({
 		return t('next_day', 'Next day');
 	}, [t, view]);
 
+	const isSplitLayoutDisabled = view !== 'day';
+
+	const splitLayoutTooltip = useMemo(() => {
+		if (isSplitLayoutDisabled) {
+			return t('label.splitLayoutDisabledTooltip', 'Split layout is disabled in this view');
+		}
+		return prefSplitLayoutEnabled
+			? t('label.disableSplitLayoutTooltip', 'Disabled split layout')
+			: t('label.enableSplitLayoutTooltip', 'Enable split layout');
+	}, [isSplitLayoutDisabled, prefSplitLayoutEnabled, t]);
+
+	const splitLayoutButtonColor = useMemo(
+		() => (prefSplitLayoutEnabled && !isSplitLayoutDisabled ? 'highlight' : undefined),
+		[isSplitLayoutDisabled, prefSplitLayoutEnabled]
+	);
+
+	const onSplitLayoutButtonClick = useCallback(() => {
+		setPrefSplitLayoutEnabled((prevValue) => !prevValue);
+	}, [setPrefSplitLayoutEnabled]);
+
 	useEffect(() => {
 		useAppStatusStore.setState({ calendarView: view });
 		onView(view);
 	});
+
 	return (
 		<Container width="fill" height="fit" padding={{ bottom: 'small' }}>
 			<Container
@@ -155,34 +164,53 @@ export const CustomToolbar = ({
 					/>
 				</Container>
 				<Container width="fit" orientation="horizontal" mainAlignment="flex-end">
-					<CustomButton
-						backgroundColor={view === 'month' ? 'highlight' : undefined}
-						label={t('label.month', 'month')}
-						type="outlined"
-						onClick={month}
-						data-testid="MonthButton"
-					/>
-					<CustomButton
-						backgroundColor={view === 'week' ? 'highlight' : undefined}
-						label={t('label.week', 'week')}
-						type="outlined"
-						onClick={week}
-						data-testid="WeekButton"
-					/>
-					<CustomButton
-						backgroundColor={view === 'day' ? 'highlight' : undefined}
-						label={t('label.day', 'day')}
-						type="outlined"
-						onClick={day}
-						data-testid="DayButton"
-					/>
-					<CustomButton
-						backgroundColor={view === 'work_week' ? 'highlight' : undefined}
-						label={t('label.work_week', 'work week')}
-						type="outlined"
-						onClick={workView}
-						data-testid="WorkWeekButton"
-					/>
+					<Padding right={'large'}>
+						<Tooltip label={splitLayoutTooltip}>
+							<Button
+								type="outlined"
+								icon={'WeekViewOutline'}
+								size={'large'}
+								backgroundColor={splitLayoutButtonColor}
+								disabled={isSplitLayoutDisabled}
+								onClick={onSplitLayoutButtonClick}
+							/>
+						</Tooltip>
+					</Padding>
+
+					<CustomContainer width="fit" orientation="horizontal" mainAlignment="flex-end">
+						<CustomButton
+							backgroundColor={view === 'month' ? 'highlight' : undefined}
+							label={t('label.month', 'month')}
+							type="ghost"
+							onClick={month}
+							data-testid="MonthButton"
+							minWidth={'fit-content'}
+						/>
+						<CustomButton
+							backgroundColor={view === 'week' ? 'highlight' : undefined}
+							label={t('label.week', 'week')}
+							type="ghost"
+							onClick={week}
+							data-testid="WeekButton"
+							minWidth={'fit-content'}
+						/>
+						<CustomButton
+							backgroundColor={view === 'day' ? 'highlight' : undefined}
+							label={t('label.day', 'day')}
+							type="ghost"
+							onClick={day}
+							data-testid="DayButton"
+							minWidth={'fit-content'}
+						/>
+						<CustomButton
+							backgroundColor={view === 'work_week' ? 'highlight' : undefined}
+							label={t('label.work_week', 'work week')}
+							type="ghost"
+							onClick={workView}
+							data-testid="WorkWeekButton"
+							minWidth={'fit-content'}
+						/>
+					</CustomContainer>
 				</Container>
 			</Container>
 		</Container>

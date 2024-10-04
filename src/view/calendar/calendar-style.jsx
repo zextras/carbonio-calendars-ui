@@ -9,6 +9,9 @@ export default createGlobalStyle`
 	.rbc-addons-dnd-resizable{
 		width: 100%;
 	}
+	.rbc-addons-dnd.rbc-calendar {
+			width: 100%;
+	}
 	.rbc-calendar {
 		color: ${({ theme }) => theme.palette.text.regular};
 		font-family: ${({ theme }) => theme.fonts.default};
@@ -73,11 +76,12 @@ export default createGlobalStyle`
 		background: ${({ theme }) => theme.palette.gray5.regular}; }
 
 	.rbc-header {
+      min-width: ${({ headerMinWidth }) => headerMinWidth};
 		overflow: hidden;
 		flex: 1 0 0;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-		padding: 0 0.1875rem;
+		padding: 0 0.0625rem 0 0;
 		text-align: center;
 		vertical-align: middle;
 		font-weight: bold;
@@ -387,7 +391,8 @@ export default createGlobalStyle`
 
 	.rbc-time-view-resources .rbc-time-header-content {
 		min-width: auto;
-		flex: 1 0 0; }
+		flex: 1 0 0; 
+  }
 
 	.rbc-time-view-resources .rbc-time-header-cell-single-day {
 		display: none; }
@@ -504,7 +509,8 @@ export default createGlobalStyle`
 		.rbc-time-content > .rbc-day-slot {
 			width: 100%;
 			user-select: none;
-			-webkit-user-select: none; }
+			-webkit-user-select: none; 
+		}
 
 	.rbc-current-time-indicator {
 		position: absolute;
