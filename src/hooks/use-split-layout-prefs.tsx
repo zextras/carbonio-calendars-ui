@@ -5,7 +5,7 @@
  */
 import { useLocalStorage } from '@zextras/carbonio-shell-ui';
 
-const LOCAL_STORAGE_KEY = 'calendars_split_view';
+const LOCAL_STORAGE_KEY = 'calendars_split_layout';
 
-export const useSplitViewPrefs = (): [boolean, ReturnType<typeof useLocalStorage<boolean>>[1]] =>
+export const useSplitLayoutPrefs = (): [boolean, ReturnType<typeof useLocalStorage<boolean>>[1]] =>
 	useLocalStorage<boolean>(LOCAL_STORAGE_KEY, false, { keepSyncedWithStorage: true });

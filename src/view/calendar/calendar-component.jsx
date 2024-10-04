@@ -23,7 +23,7 @@ import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { useCheckedFolders } from '../../hooks/use-checked-folders';
-import { useSplitViewPrefs } from '../../hooks/use-split-view-prefs';
+import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
@@ -74,7 +74,7 @@ export default function CalendarComponent() {
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
 	const { action } = useParams();
 
-	const [isSplitViewEnabled] = useSplitViewPrefs();
+	const [isSplitLayoutEnabled] = useSplitLayoutPrefs();
 	const { onEventDropOrResize, handleSelect, onRangeChange, onNavigate, date } =
 		useCalendarComponentUtils();
 
@@ -163,11 +163,11 @@ export default function CalendarComponent() {
 	);
 
 	const columnMinWidth = useMemo(() => {
-		if (calendarView === 'day' && isSplitViewEnabled) {
+		if (calendarView === 'day' && isSplitLayoutEnabled) {
 			return MULTI_CALENDARS_COLUMN_MIN_WIDTH;
 		}
 		return undefined;
-	}, [calendarView, isSplitViewEnabled]);
+	}, [calendarView, isSplitLayoutEnabled]);
 
 	const dayPropGetter = useCallback(
 		(newDate) => ({
@@ -258,11 +258,15 @@ export default function CalendarComponent() {
 
 	const scrollToTime = useMemo(() => new Date(0, 0, 0, startHour, -15, 0), [startHour]);
 	const resources = useMemo(() => {
-		if (calendarView === 'day' && isSplitViewEnabled) {
-			return map(calendars, (c) => ({ id: c.id, title: c.name, color: c.color }));
+		if (calendarView === 'day' && isSplitLayoutEnabled) {
+			return map(calendars, (calendar) => ({
+				id: calendar.id,
+				title: calendar.name,
+				color: calendar.color
+			}));
 		}
 		return undefined;
-	}, [calendarView, calendars, isSplitViewEnabled]);
+	}, [calendarView, calendars, isSplitLayoutEnabled]);
 
 	return (
 		<>
