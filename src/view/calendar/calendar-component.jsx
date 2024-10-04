@@ -15,7 +15,6 @@ import { ThemeContext } from 'styled-components';
 import { CalendarResourceHeader } from './calendar-resource-header';
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
-import CustomEventWrapper from './custom-event-wrapper';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
@@ -58,7 +57,6 @@ const CalendarSyncWithRange = () => {
 const customComponents = {
 	toolbar: CustomToolbar,
 	event: MemoCustomEvent,
-	eventWrapper: CustomEventWrapper,
 	resourceHeader: CalendarResourceHeader
 };
 
@@ -145,7 +143,14 @@ export default function CalendarComponent() {
 				backgroundColor: event.resource.calendar.color.background,
 				color: event.resource.calendar.color.color,
 				border: `0.0625rem solid ${event.resource.calendar.color.color}`,
-				padding: 0
+				padding:
+					moment(event.end).diff(event.start, 'minutes') >= 30
+						? '0.25rem 0.5rem'
+						: '0.0625rem 0.5rem 0.25rem 0.5rem !important',
+				borderRadius: '0.25rem',
+				transition: 'border 0.15s ease-in-out, background 0.15s ease-in-out',
+				boxShadow: '0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)',
+				cursor: 'pointer'
 			}
 		}),
 		[]
@@ -256,7 +261,7 @@ export default function CalendarComponent() {
 		[action, calendars, prefs.zimbraPrefDefaultCalendarId, summaryViewOpen]
 	);
 
-	const scrollToTime = useMemo(() => new Date(0, 0, 0, startHour, -15, 0), [startHour]);
+	const scrollToTime = useMemo(() => new Date().setHours(startHour), [startHour]);
 	const resources = useMemo(() => {
 		if (calendarView === 'day' && isSplitLayoutEnabled) {
 			return map(calendars, (calendar) => ({

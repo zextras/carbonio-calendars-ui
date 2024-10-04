@@ -460,7 +460,15 @@ export default createGlobalStyle`
 		.rbc-time-view .rbc-row {
 			box-sizing: border-box;
 			min-height: 1.25rem; }
-
+  .rbc-event-label {
+      display: none;
+  }
+	.rbc-button-link {
+			border: 0;
+			cursor: pointer;
+			background-color: transparent;
+			font-weight: bold;
+	}
 	.rbc-time-header {
 		display: flex;
 		flex: 0 0 auto;
