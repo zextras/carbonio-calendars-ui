@@ -145,8 +145,8 @@ export default function CalendarComponent() {
 				border: `0.0625rem solid ${event.resource.calendar.color.color}`,
 				padding:
 					moment(event.end).diff(event.start, 'minutes') >= 30
-						? '0.25rem 0.5rem'
-						: '0.0625rem 0.5rem 0.25rem 0.5rem !important',
+						? '0.25rem 0.25rem'
+						: '0.0625rem 0.25rem 0.25rem 0.25rem !important',
 				borderRadius: '0.25rem',
 				transition: 'border 0.15s ease-in-out, background 0.15s ease-in-out',
 				boxShadow: '0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)',
@@ -283,6 +283,7 @@ export default function CalendarComponent() {
 				headerMinWidth={columnMinWidth}
 			/>
 			<BigCalendar
+				dayLayoutAlgorithm="no-overlap"
 				selectable
 				localizer={localizer}
 				defaultView={defaultView}
