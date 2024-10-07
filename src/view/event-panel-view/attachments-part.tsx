@@ -20,24 +20,81 @@ import {
 	getColor
 } from '@zextras/carbonio-design-system';
 import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
-import { map, filter, reduce, uniqBy, find } from 'lodash';
+import { map, filter, reduce, uniqBy, find, includes } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { humanFileSize, previewType } from '../../commons/file-preview';
 import { getFileExtension, calcColor } from '../../commons/utilities';
 
-const getAttachmentsLink = (
-	messageId: string,
-	messageSubject: string,
-	attachments: Array<string>
-): string => {
-	if (attachments.length > 1) {
-		return `/service/home/~/?auth=co&id=${messageId}&filename=${messageSubject}&charset=UTF-8&part=${attachments.join(
+type GetAttachmentsLinkProps = {
+	messageId: string;
+	messageSubject: string;
+	attachments: Array<string | undefined>;
+	attachmentType?: string | undefined;
+};
+
+const getLocationOrigin = (): string => window.location.origin;
+
+const getAttachmentsDownloadLink = ({
+	messageId,
+	messageSubject,
+	attachments
+}: GetAttachmentsLinkProps): string => {
+	if (attachments?.length > 1) {
+		return `/service/home/~/?auth=co&id=${messageId}&filename=${encodeURIComponent(messageSubject)}&charset=UTF-8&part=${attachments.join(
 			','
 		)}&disp=a&fmt=zip`;
 	}
-	return `/service/home/~/?auth=co&id=${messageId}&part=${attachments.join(',')}&disp=a`;
+	return `/service/home/~/?auth=co&id=${messageId}&part=${attachments?.join(',')}&disp=a`;
+};
+
+export const getAttachmentsPreviewLink = ({
+	messageId,
+	messageSubject,
+	attachments,
+	attachmentType
+}: GetAttachmentsLinkProps): string => {
+	if (attachments.length > 1) {
+		return `${getLocationOrigin()}/service/home/~/?auth=co&id=${messageId}&filename=${messageSubject}&charset=UTF-8&part=${attachments.join(
+			','
+		)}&disp=a&fmt=zip`;
+	}
+	if (
+		includes(['image/gif', 'image/png', 'image/jpeg', 'image/jpg', 'image/tiff'], attachmentType)
+	) {
+		return `${getLocationOrigin()}/service/preview/image/${messageId}/${
+			attachments[0]
+		}/0x0/?quality=high`;
+	}
+	if (includes(['application/pdf'], attachmentType)) {
+		return `${getLocationOrigin()}/service/preview/pdf/${messageId}/${
+			attachments[0]
+		}/?first_page=1`;
+	}
+	if (
+		includes(
+			[
+				'text/csv',
+				'text/plain',
+				'application/msword',
+				'application/vnd.ms-excel',
+				'application/vnd.ms-powerpoint',
+				'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+				'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+				'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+				'application/vnd.oasis.opendocument.spreadsheet',
+				'application/vnd.oasis.opendocument.presentation',
+				'application/vnd.oasis.opendocument.text'
+			],
+			attachmentType
+		)
+	) {
+		return `${getLocationOrigin()}/service/preview/document/${messageId}/${attachments.join(',')}`;
+	}
+	return `${getLocationOrigin()}/service/home/~/?auth=co&id=${messageId}&part=${attachments.join(
+		','
+	)}&disp=a`;
 };
 
 const AttachmentHoverBarContainer = styled(Container)`
@@ -90,7 +147,7 @@ const AttachmentExtension = styled(Text)<
 `;
 
 type AttachmentProps = {
-	link?: string;
+	subject?: string;
 	id?: string;
 	part: string;
 	isEditor: boolean;
@@ -104,7 +161,7 @@ type AttachmentProps = {
 };
 
 const Attachment = ({
-	link,
+	subject,
 	id,
 	part,
 	isEditor,
@@ -125,13 +182,33 @@ const Attachment = ({
 		}
 	}, [inputRef]);
 
+	const downloadLink = useMemo(() => {
+		if (!id) return undefined;
+		return getAttachmentsDownloadLink({
+			messageId: id,
+			messageSubject: subject ?? '',
+			attachments: [att.name],
+			attachmentType: att.contentType
+		});
+	}, [id, subject, att.name, att.contentType]);
+
+	const attachmentPreviewLink = useMemo(() => {
+		if (!id) return undefined;
+		return getAttachmentsPreviewLink({
+			messageId: id,
+			messageSubject: subject ?? '',
+			attachments: [att.name],
+			attachmentType: att.contentType
+		});
+	}, [att.contentType, att.name, id, subject]);
+
 	const preview = useCallback(
 		(ev) => {
 			ev.preventDefault();
 			const pType = previewType(att.contentType);
-			if (pType && link) {
+			if (pType && attachmentPreviewLink) {
 				createPreview({
-					src: link,
+					src: attachmentPreviewLink,
 					previewType: pType,
 					/** Left Action for the preview */
 					closeAction: {
@@ -152,7 +229,7 @@ const Attachment = ({
 				inputRef2.current.click();
 			}
 		},
-		[att, createPreview, link, t]
+		[att.contentType, att.filename, att.size, attachmentPreviewLink, createPreview, t]
 	);
 	return (
 		<AttachmentContainer
@@ -225,7 +302,7 @@ const Attachment = ({
 					href={`/service/home/~/?auth=co&id=${id}&part=${part}`}
 				/>
 			)}
-			<AttachmentLink ref={inputRef} rel="noopener" target="_blank" href={link} />
+			<AttachmentLink ref={inputRef} rel="noopener" target="_blank" href={downloadLink} />
 		</AttachmentContainer>
 	);
 };
@@ -265,7 +342,13 @@ export const AttachmentsBlock = ({
 
 	const actionsDownloadLink = useMemo(() => {
 		const attachmentsParts = map(attachments, 'name');
-		return id ? getAttachmentsLink(id, subject, attachmentsParts) : undefined;
+		return id
+			? getAttachmentsDownloadLink({
+					messageId: id,
+					messageSubject: subject ?? '',
+					attachments: attachmentsParts
+				})
+			: undefined;
 	}, [attachments, id, subject]);
 
 	const removeAttachment = useCallback(
@@ -407,7 +490,7 @@ export const AttachmentsBlock = ({
 						{map(attachToVisualize, (att, index) => (
 							<Attachment
 								key={`att-${att.filename}-${index}`}
-								link={id ? getAttachmentsLink(id, subject, [att.name]) : undefined}
+								subject={subject}
 								id={id}
 								part={att.name ?? att.aid}
 								isEditor={isEditor}
