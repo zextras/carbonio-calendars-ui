@@ -19,6 +19,7 @@ export const getAttachmentsDownloadLink = ({
 	messageSubject,
 	attachments
 }: GetAttachmentsLinkProps): string => {
+	if (attachments?.length < 1) return '';
 	if (attachments?.length > 1) {
 		return `/service/home/~/?auth=co&id=${messageId}&filename=${encodeURIComponent(messageSubject)}&charset=UTF-8&part=${attachments.join(
 			','
@@ -29,15 +30,10 @@ export const getAttachmentsDownloadLink = ({
 
 export const getAttachmentsPreviewLink = ({
 	messageId,
-	messageSubject,
 	attachments,
 	attachmentType
 }: GetAttachmentsLinkProps): string => {
-	if (attachments.length > 1) {
-		return `${getLocationOrigin()}/service/home/~/?auth=co&id=${messageId}&filename=${messageSubject}&charset=UTF-8&part=${attachments.join(
-			','
-		)}&disp=a&fmt=zip`;
-	}
+	if (attachments.length < 1) return '';
 	if (
 		includes(['image/gif', 'image/png', 'image/jpeg', 'image/jpg', 'image/tiff'], attachmentType)
 	) {
