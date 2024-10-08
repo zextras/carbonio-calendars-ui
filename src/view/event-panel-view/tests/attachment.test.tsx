@@ -20,8 +20,6 @@ const setupFoldersStore = (): void => {
 	}));
 };
 
-const mockCreatePreview = jest.fn();
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderAttachment = (props: any): { user: UserEvent } & ReturnType<typeof render> => {
 	setupFoldersStore();
@@ -84,7 +82,35 @@ describe('Attachment', () => {
 		await waitFor(() => expect(windowOpenSpy).toHaveBeenCalledTimes(1));
 	});
 
-	test('calls createPreview when preview is clicked', async () => {
+	test('calls createPreview when a file is set to be viewed with the previer', async () => {
+		const spyOpen = jest.spyOn(window, 'open').mockImplementation(jest.fn());
+		const unsupportedAttachment = {
+			name: 'test-file.ts',
+			size: 1024,
+			contentType: 'application/ts',
+			filename: 'test-file.ts'
+		};
+		const props = {
+			...baseProps,
+			disabled: true,
+			editor: true,
+			attachment: unsupportedAttachment
+		};
+
+		const { user } = renderAttachment(props);
+		const previewButton = screen.getByText('test-file.ts');
+		await act(async () => {
+			await user.click(previewButton);
+		});
+
+		expect(previewContextMock.createPreview).toHaveBeenCalledTimes(0);
+		expect(spyOpen).toHaveBeenCalledWith(
+			'/service/home/~/?auth=co&id=1&part=test-file.ts&disp=a',
+			'_blank'
+		);
+	});
+
+	test('calls download service when a file is not set to be viewed with the previer', async () => {
 		const { user } = renderAttachment(baseProps);
 		const previewButton = screen.getByText('test-file.pdf');
 		await act(async () => {
