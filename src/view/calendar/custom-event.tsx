@@ -60,7 +60,7 @@ const CustomEventTitle = ({
 	title: CustomEventProps['title'];
 	overflow?: 'ellipsis' | 'visible' | 'break-word';
 }): ReactElement => (
-	<Text color="currentColor" style={{ overflow }} weight="bold">
+	<Text size={'small'} color="currentColor" style={{ overflow }}>
 		{title}
 	</Text>
 );
@@ -205,7 +205,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				placement="top"
 				disabled={event.resource.class === 'PRI' || isOuterTooltipDisabled}
 			>
-				<Container height="100%" data-testid="calendar-event" style={{ padding: '0.15rem 0.5rem' }}>
+				<Container
+					height="100%"
+					data-testid="calendar-event"
+					style={{ padding: '0.15rem 0.25rem' }}
+				>
 					<Dropdown
 						contextMenu
 						width="cal(min(100%,12.5rem))"
@@ -295,7 +299,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												>
 													<Text
 														color="currentColor"
-														weight="medium"
+														size={'small'}
 														style={{
 															overflow: textOverflow
 														}}
@@ -305,7 +309,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 														)}`}
 													</Text>
 													<Padding left="small" />
-													{eventDiff <= 15 && (
+													{eventDiff <= 29 && (
 														<>
 															{event.resource.isRecurrent && (
 																<CustomEventIcon
@@ -327,7 +331,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 									<TagIconComponent event={event} disableOuterTooltip={setIsOuterTooltipDisabled} />
 								</Row>
 							</Container>
-							{eventDiff >= 15 && event.resource.class !== 'PRI' && !event.allDay && (
+							{eventDiff >= 30 && event.resource.class !== 'PRI' && !event.allDay && (
 								<>
 									<Padding top="extrasmall" />
 									<Row wrap="nowrap">
