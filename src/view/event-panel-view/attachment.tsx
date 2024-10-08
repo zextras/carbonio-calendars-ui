@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useContext, useMemo, useRef } from 'react';
+import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
 
 import {
 	Button,
@@ -66,12 +66,6 @@ const AttachmentContainer = styled(Container)<ContainerProps & { disabled: boole
 	cursor: ${({ disabled }): string => (disabled ? 'default' : 'pointer')};
 `;
 
-const AttachmentLink = styled.a`
-	margin-bottom: ${({ theme }): string => theme.sizes.padding.small};
-	position: relative;
-	text-decoration: none;
-`;
-
 const AttachmentExtension = styled(Text)<
 	TextProps & { background?: { extension: string; color: string } }
 >`
@@ -129,8 +123,6 @@ export const Attachment = ({
 	const extension = getFileExtension(attachment);
 	const sizeLabel = useMemo(() => humanFileSize(attachment.size), [attachment.size]);
 	const [t] = useTranslation();
-	const inputRef = useRef<HTMLAnchorElement>(null);
-	const inputRef2 = useRef<HTMLAnchorElement>(null);
 
 	const downloadLink = useMemo(() => {
 		if (!id) return undefined;
@@ -173,8 +165,8 @@ export const Attachment = ({
 					filename: attachment.filename,
 					size: humanFileSize(attachment.size)
 				});
-			} else if (inputRef2.current) {
-				inputRef2.current.click();
+			} else {
+				window.open(downloadLink, '_blank');
 			}
 		},
 		[
@@ -183,6 +175,7 @@ export const Attachment = ({
 			attachment.size,
 			attachmentPreviewLink,
 			createPreview,
+			downloadLink,
 			t
 		]
 	);
@@ -248,14 +241,6 @@ export const Attachment = ({
 					</Tooltip>
 				</AttachmentHoverBarContainer>
 			</Row>
-			{!disabled && (
-				<AttachmentLink
-					rel="noopener"
-					ref={inputRef2}
-					target="_blank"
-					href={`/service/home/~/?auth=co&id=${id}&part=${part}`}
-				/>
-			)}
 		</AttachmentContainer>
 	);
 };
