@@ -6,11 +6,10 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, render, waitFor } from '@testing-library/react';
-import { HttpResponse } from 'msw';
+import { screen, render, waitFor, act } from '@testing-library/react';
 
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { createAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { previewContextMock } from '../../../carbonio-ui-commons/test/mocks/carbonio-ui-preview';
 import { setupTest, UserEvent } from '../../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../../store/redux';
 import { Attachment } from '../attachment';
@@ -65,6 +64,7 @@ describe('Attachment', () => {
 	});
 
 	test('calls download function when download button is clicked', async () => {
+		const windowOpenSpy = jest.spyOn(window, 'open').mockImplementation(jest.fn());
 		const props = {
 			...baseProps,
 			id: '1',
@@ -73,22 +73,26 @@ describe('Attachment', () => {
 			attachment: { ...mockAttachment }
 		};
 
-		const interceptor = createAPIInterceptor('get', '/service/home/', HttpResponse.json({}));
-
 		const { user } = renderAttachment(props);
 		const attachment = screen.getByText('test-file.pdf');
 		await user.hover(attachment);
-		const deleteButton = screen.getByRole('button');
-		await user.click(deleteButton);
+		const downloadButton = screen.getByRole('button');
+		await act(async () => {
+			await user.click(downloadButton);
+		});
 
-		await waitFor(() => expect(interceptor.getCalledTimes()).toBe(1));
+		await waitFor(() => expect(windowOpenSpy).toHaveBeenCalledTimes(1));
 	});
 
-	test('calls createPreview when preview is clicked', () => {
+	test('calls createPreview when preview is clicked', async () => {
 		const { user } = renderAttachment(baseProps);
 		const previewButton = screen.getByText('test-file.pdf');
-		user.click(previewButton);
-		expect(mockCreatePreview).toHaveBeenCalledWith(
+		await act(async () => {
+			await user.click(previewButton);
+		});
+
+		expect(previewContextMock.createPreview).toHaveBeenCalledTimes(1);
+		expect(previewContextMock.createPreview).toHaveBeenCalledWith(
 			expect.objectContaining({
 				src: expect.any(String),
 				previewType: expect.any(String),

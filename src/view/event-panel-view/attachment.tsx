@@ -130,12 +130,6 @@ export const Attachment = ({
 	const inputRef = useRef<HTMLAnchorElement>(null);
 	const inputRef2 = useRef<HTMLAnchorElement>(null);
 
-	const downloadAttachment = useCallback(() => {
-		if (inputRef?.current) {
-			inputRef.current.click();
-		}
-	}, [inputRef]);
-
 	const downloadLink = useMemo(() => {
 		if (!id) return undefined;
 		return getAttachmentsDownloadLink({
@@ -145,6 +139,10 @@ export const Attachment = ({
 			attachmentType: attachment.contentType
 		});
 	}, [id, subject, attachment.name, attachment.contentType]);
+
+	const downloadAttachment = useCallback(() => {
+		window.open(downloadLink, '_blank');
+	}, [downloadLink]);
 
 	const attachmentPreviewLink = useMemo(() => {
 		if (!id) return undefined;
@@ -256,7 +254,6 @@ export const Attachment = ({
 					href={`/service/home/~/?auth=co&id=${id}&part=${part}`}
 				/>
 			)}
-			<AttachmentLink ref={inputRef} rel="noopener" target="_blank" href={downloadLink} />
 		</AttachmentContainer>
 	);
 };
