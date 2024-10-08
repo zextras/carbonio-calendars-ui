@@ -211,7 +211,7 @@ export const AttachmentsBlock = ({
 								part={attachment.name ?? attachment.aid}
 								isEditor={isEditor}
 								removeAttachment={removeAttachment}
-								disabled={!attachment.name ?? disabled}
+								disabled={!attachment.name || !!disabled}
 								iconColors={iconColors}
 								attachment={attachment}
 							/>

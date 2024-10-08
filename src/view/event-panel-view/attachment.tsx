@@ -82,7 +82,9 @@ const AttachmentExtension = styled(Text)<
 	height: 2rem;
 	border-radius: ${({ theme }): string => theme.borderRadius};
 	background-color: ${({ theme, disabled, background }): string =>
-		disabled ? theme.palette.primary.disabled : background?.color || theme.palette.primary.regular};
+		disabled
+			? theme.palette.primary.disabled
+			: (background?.color ?? theme.palette.primary.regular)};
 	color: ${({ theme }): string => theme.palette.gray6.regular};
 	font-size: calc(${({ theme }): string => theme.sizes.font.small} - 0.125rem);
 	text-transform: uppercase;
