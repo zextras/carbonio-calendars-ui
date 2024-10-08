@@ -6,10 +6,10 @@
 import React, { ReactElement, useCallback, useContext, useMemo, useRef } from 'react';
 
 import {
+	Button,
 	Container,
 	ContainerProps,
 	getColor,
-	IconButton,
 	Padding,
 	Row,
 	Text,
@@ -17,6 +17,7 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
+import { TFunction } from 'i18next';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -36,7 +37,7 @@ type AttachmentProps = {
 		extension: string;
 		color: string;
 	}>;
-	att: any;
+	attachment: any;
 };
 
 const AttachmentHoverBarContainer = styled(Container)`
@@ -88,6 +89,30 @@ const AttachmentExtension = styled(Text)<
 	margin-right: ${({ theme }): string => theme.sizes.padding.small};
 `;
 
+const getTooltipKey = (disabled: boolean, isEditor: boolean, id: string): string => {
+	if (disabled) {
+		return `${id}-DeletePermanentlyOutline`;
+	}
+	if (isEditor) {
+		return `${id}-EditOutline`;
+	}
+	return `${id}-DeletePermanentlyOutline`;
+};
+
+const getButtonIcon = (disabled: boolean, isEditor: boolean): string => {
+	if (disabled || isEditor) {
+		return 'DeletePermanentlyOutline';
+	}
+	return 'DownloadOutline';
+};
+
+const getTooltipLabel = (disabled: boolean, isEditor: boolean, t: TFunction): string => {
+	if (disabled || isEditor) {
+		return t('label.delete', 'Delete');
+	}
+	return t('label.download', 'Download');
+};
+
 export const Attachment = ({
 	subject,
 	id,
@@ -96,14 +121,15 @@ export const Attachment = ({
 	removeAttachment,
 	disabled = false,
 	iconColors,
-	att
+	attachment
 }: AttachmentProps): ReactElement => {
 	const { createPreview } = useContext(PreviewsManagerContext);
-	const extension = getFileExtension(att);
-	const sizeLabel = useMemo(() => humanFileSize(att.size), [att.size]);
+	const extension = getFileExtension(attachment);
+	const sizeLabel = useMemo(() => humanFileSize(attachment.size), [attachment.size]);
 	const [t] = useTranslation();
 	const inputRef = useRef<HTMLAnchorElement>(null);
 	const inputRef2 = useRef<HTMLAnchorElement>(null);
+
 	const downloadAttachment = useCallback(() => {
 		if (inputRef?.current) {
 			inputRef.current.click();
@@ -115,50 +141,59 @@ export const Attachment = ({
 		return getAttachmentsDownloadLink({
 			messageId: id,
 			messageSubject: subject ?? '',
-			attachments: [att.name],
-			attachmentType: att.contentType
+			attachments: [attachment.name],
+			attachmentType: attachment.contentType
 		});
-	}, [id, subject, att.name, att.contentType]);
+	}, [id, subject, attachment.name, attachment.contentType]);
 
 	const attachmentPreviewLink = useMemo(() => {
 		if (!id) return undefined;
 		return getAttachmentsPreviewLink({
 			messageId: id,
 			messageSubject: subject ?? '',
-			attachments: [att.name],
-			attachmentType: att.contentType
+			attachments: [attachment.name],
+			attachmentType: attachment.contentType
 		});
-	}, [att.contentType, att.name, id, subject]);
+	}, [attachment.contentType, attachment.name, id, subject]);
 
 	const preview = useCallback(
 		(ev) => {
 			ev.preventDefault();
-			const pType = previewType(att.contentType);
+			const pType = previewType(attachment.contentType);
 			if (pType && attachmentPreviewLink) {
 				createPreview({
 					src: attachmentPreviewLink,
 					previewType: pType,
-					/** Left Action for the preview */
 					closeAction: {
 						id: 'close',
 						icon: 'ArrowBack',
 						tooltipLabel: t('preview.close', 'Close Preview')
 					},
-					/** Actions for the preview */
-					// actions: HeaderAction[],
-					/** Extension of the file, shown as info */
-					extension: att.filename.substring(att.filename.lastIndexOf('.') + 1),
-					/** Name of the file, shown as info */
-					filename: att.filename,
-					/** Size of the file, shown as info */
-					size: humanFileSize(att.size)
+					extension: attachment.filename.substring(attachment.filename.lastIndexOf('.') + 1),
+					filename: attachment.filename,
+					size: humanFileSize(attachment.size)
 				});
 			} else if (inputRef2.current) {
 				inputRef2.current.click();
 			}
 		},
-		[att.contentType, att.filename, att.size, attachmentPreviewLink, createPreview, t]
+		[
+			attachment.contentType,
+			attachment.filename,
+			attachment.size,
+			attachmentPreviewLink,
+			createPreview,
+			t
+		]
 	);
+
+	const getButtonOnClick = useCallback(() => {
+		if (disabled || isEditor) {
+			return removeAttachment(part);
+		}
+		return downloadAttachment();
+	}, [disabled, downloadAttachment, isEditor, part, removeAttachment]);
+
 	return (
 		<AttachmentContainer
 			orientation="horizontal"
@@ -190,7 +225,7 @@ export const Attachment = ({
 					</AttachmentExtension>
 					<Row orientation="vertical" crossAlignment="flex-start" takeAvailableSpace>
 						<Padding style={{ width: '100%' }} bottom="extrasmall">
-							<Text disabled={disabled}>{att.filename}</Text>
+							<Text disabled={disabled}>{attachment.filename}</Text>
 						</Padding>
 						<Text disabled={disabled} color="gray1" size="small">
 							{sizeLabel}
@@ -200,26 +235,17 @@ export const Attachment = ({
 			</Tooltip>
 			<Row orientation="horizontal" crossAlignment="center">
 				<AttachmentHoverBarContainer orientation="horizontal">
-					{disabled ? (
-						<Tooltip key={`${id}-DeletePermanentlyOutline`} label={t('label.delete', 'Delete')}>
-							<IconButton
-								size="medium"
-								icon={'DeletePermanentlyOutline'}
-								onClick={(): void => removeAttachment(part)}
-							/>
-						</Tooltip>
-					) : (
-						<Tooltip
-							key={isEditor ? `${id}-EditOutline` : `${id}-DeletePermanentlyOutline`}
-							label={isEditor ? t('label.delete', 'Delete') : t('label.download', 'Download')}
-						>
-							<IconButton
-								size="medium"
-								icon={isEditor ? 'DeletePermanentlyOutline' : 'DownloadOutline'}
-								onClick={isEditor ? (): void => removeAttachment(part) : downloadAttachment}
-							/>
-						</Tooltip>
-					)}
+					<Tooltip
+						key={getTooltipKey(disabled, isEditor, id ?? '')}
+						label={getTooltipLabel(disabled, isEditor, t)}
+					>
+						<Button
+							size="medium"
+							icon={getButtonIcon(disabled, isEditor)}
+							data-testid={'action-button'}
+							onClick={getButtonOnClick}
+						/>
+					</Tooltip>
 				</AttachmentHoverBarContainer>
 			</Row>
 			{!disabled && (

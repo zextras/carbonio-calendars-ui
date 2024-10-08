@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 /*
  * SPDX-FileCopyrightText: 2021 Zextras <https://www.zextras.com>
  *
@@ -21,15 +22,17 @@ import { Attachment } from './attachment';
 import { getAttachmentsDownloadLink } from './attachment-utils';
 import { getFileExtension, calcColor } from '../../commons/utilities';
 
+type Attachments = Array<{
+	part: any;
+	mid: string;
+	filename: string;
+	contentType: string;
+	name: string;
+	aid?: string;
+}>;
+
 type AttachmentsBlockProps = {
-	attachments: Array<{
-		part: any;
-		mid: string;
-		filename: string;
-		contentType: string;
-		name: string;
-		aid?: string;
-	}>;
+	attachments: Attachments;
 	id?: string;
 	subject: string;
 	onAttachmentsChange?: (
@@ -67,8 +70,8 @@ export const AttachmentsBlock = ({
 
 	const removeAttachment = useCallback(
 		(part) => {
-			const attachmentFiles = filter(attachments, (p) =>
-				p.name ? p.name !== part : !p.aid || p.aid !== part
+			const attachmentFiles = filter(attachments, (attachment) =>
+				attachment.name ? attachment.name !== part : !attachment.aid || attachment.aid !== part
 			);
 			if (onAttachmentsChange) {
 				onAttachmentsChange(
@@ -105,12 +108,11 @@ export const AttachmentsBlock = ({
 	const iconColors = useMemo(
 		() =>
 			uniqBy(
-				map(attachments, (att) => {
-					const fileExtn = getFileExtension(att);
-					const color = calcColor(att.contentType, theme);
-
+				map(attachments, (attachment) => {
+					const fileExtension = getFileExtension(attachment);
+					const color = calcColor(attachment.contentType, theme);
 					return {
-						extension: fileExtn,
+						extension: fileExtension,
 						color
 					};
 				}),
@@ -201,17 +203,17 @@ export const AttachmentsBlock = ({
 						crossAlignment="flex-start"
 						wrap="wrap"
 					>
-						{map(attachToVisualize, (att, index) => (
+						{map(attachToVisualize, (attachment, index) => (
 							<Attachment
-								key={`att-${att.filename}-${index}`}
+								key={`att-${attachment.filename}-${index}`}
 								subject={subject}
 								id={id}
-								part={att.name ?? att.aid}
+								part={attachment.name ?? attachment.aid}
 								isEditor={isEditor}
 								removeAttachment={removeAttachment}
-								disabled={!att.name ?? disabled}
+								disabled={!attachment.name ?? disabled}
 								iconColors={iconColors}
-								att={att}
+								attachment={attachment}
 							/>
 						))}
 					</Container>
