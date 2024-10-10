@@ -13,12 +13,14 @@ import {
 	Text,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
+import { noop } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { getCalendarGroups, useUpdateGroups } from '../../carbonio-ui-commons/store/zustand/folder';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
+import { MultiCalendarSelector } from '../editor/parts/multiple-calendar-selector';
 
 type CreateGroupModalProps = {
 	onClose: () => void;
@@ -109,7 +111,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 			<Text weight="bold" size="large">
 				{t('label.newgroup.calendars', 'Calendars in this group')}
 			</Text>
-
+			<MultiCalendarSelector onCalendarChange={noop} excludeTrash={false} />
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('folder.modal.creategroup.footer', 'Create Group')}

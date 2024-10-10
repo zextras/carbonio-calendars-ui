@@ -3,70 +3,49 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { Select, SelectItem } from '@zextras/carbonio-design-system';
+import { ChipInput, ChipItem } from '@zextras/carbonio-design-system';
 import { LinkFolder } from '@zextras/carbonio-shell-ui';
-import { filter, map, reject } from 'lodash';
+import { filter, map, reject, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { ItemFactory } from './select-label-factory';
 import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
-import {
-	getRootAccountId,
-	useFoldersMap,
-	useFoldersMapByRoot
-} from '../../../carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 
+type ChipInputItems = ChipItem<{ id: string; label: string }>[];
+
 type MultiCalendarSelectorProps = {
-	calendarIds: string[];
-	onCalendarChange: (selectedCalendars: string[]) => void;
-	label?: string;
-	showCalWithWritePerm?: boolean;
+	onCalendarChange: (selectedCalendars: ChipInputItems) => void;
 	excludeTrash?: boolean;
 	disabled?: boolean;
 };
 
 export const MultiCalendarSelector = ({
-	calendarIds,
 	onCalendarChange,
-	label,
-	showCalWithWritePerm = true,
 	excludeTrash = false,
 	disabled
 }: MultiCalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
-	const rootAccountId = getRootAccountId(calendarIds[0]);
+	const [selectedCalendars, setSelectedCalendars] = useState<ChipInputItems>([]);
 
-	const allCalendarsByRoot = useFoldersMapByRoot(rootAccountId ?? FOLDERS.USER_ROOT);
 	const allCalendars = useFoldersMap();
 
 	const calendars = reject(
-		rootAccountId?.includes(':') ? allCalendarsByRoot : allCalendars,
+		allCalendars,
 		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME
 	);
 
-	const calWithWritePerm = useMemo(
-		() =>
-			showCalWithWritePerm
-				? filter(calendars, (calendar) =>
-						calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
-					)
-				: calendars,
-		[calendars, showCalWithWritePerm]
+	const requiredCalendars = useMemo(
+		() => (excludeTrash ? filter(calendars, (cal) => !isTrashOrNestedInIt(cal)) : calendars),
+		[calendars, excludeTrash]
 	);
 
-	const requiredCalendars = useMemo(
-		() =>
-			excludeTrash
-				? filter(calWithWritePerm, (cal) => !isTrashOrNestedInIt(cal))
-				: calWithWritePerm,
-		[calWithWritePerm, excludeTrash]
-	);
 	const calendarItems = useMemo(
 		() =>
 			map(requiredCalendars, (cal) => {
@@ -75,7 +54,7 @@ export const MultiCalendarSelector = ({
 				return {
 					...cal,
 					label: labelName,
-					value: cal.id,
+					value: { id: cal.id, label: labelName },
 					color: color.color,
 					customComponent: (
 						<ItemFactory
@@ -93,35 +72,29 @@ export const MultiCalendarSelector = ({
 		[disabled, requiredCalendars, t]
 	);
 
-	const selectedItems: SelectItem[] = useMemo(
-		() =>
-			calendarIds.map((id) => ({
-				label: calendarItems.find((item) => item.value === id)?.label || id,
-				value: id
-			})),
-		[calendarIds, calendarItems]
-	);
+	const onSelectedCalendarsChange = useCallback((selected: ChipInputItems) => {
+		const selectedChips = uniqBy(selected, 'id');
+		setSelectedCalendars(selectedChips);
+	}, []);
 
-	const onSelectedCalendarsChange = useCallback(
-		(selectedValues: SelectItem<string>[]) => {
-			const selectedIds = selectedValues.map((item) => item.value);
-			onCalendarChange(selectedIds);
-		},
-		[onCalendarChange]
-	);
+	const onIconAction = useCallback(() => {
+		onCalendarChange(selectedCalendars);
+	}, [onCalendarChange, selectedCalendars]);
 
 	return (
-		<Select
-			itemIconSize={'medium'}
-			label={label || t('label.calendar', 'Calendar')}
+		<ChipInput
+			data-testid={'contact-group-contact-input'}
+			options={calendarItems}
+			disableOptions={false}
+			value={selectedCalendars}
 			onChange={onSelectedCalendarsChange}
-			items={calendarItems}
-			maxWidth={'fill'}
-			multiple
-			selection={selectedItems}
-			disabled={disabled}
-			disablePortal
-			showCheckbox
+			placeholder={t(
+				'board.newContactGroup.input.contact_input.placeholder',
+				'Type an address, click ‘+’ to add to the group'
+			)}
+			requireUniqueChips
+			icon={'Plus'}
+			iconAction={onIconAction}
 		/>
 	);
 };
