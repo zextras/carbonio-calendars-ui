@@ -12,7 +12,7 @@ import { extractBody } from '../../commons/body-message-renderer';
 import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
 import { useInvite } from '../../hooks/use-invite';
-import { AttachmentsBlock } from '../event-panel-view/attachments-part';
+import { AttachmentsBlock } from '../event-panel-view/attachments-block';
 import { DetailsPart } from '../event-panel-view/details-part';
 import { DisplayerHeader } from '../event-panel-view/event-panel-view';
 import { MessagePart } from '../event-panel-view/message-part';

@@ -24,7 +24,10 @@ import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { useTranslation } from 'react-i18next';
 
 import { useFoldersMap, useUpdateGroups } from './carbonio-ui-commons/store/zustand/folder';
+import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
+import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
+import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
@@ -32,7 +35,6 @@ import InviteResponseComp from './shared/invite-response/invite-response';
 import { getCalendarGroupsRequest } from './soap/get-calendar-groups-request';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
-import { CalendarIntegrations } from './types/enums/event-actions-enum';
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
@@ -109,6 +111,8 @@ const AppRegistrations = (): null => {
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const updateGroups = useUpdateGroups();
+
+	useInitializeFolders(FOLDER_VIEW.appointment);
 
 	useEffect(() => {
 		const appLabel = t('label.app_name', 'Calendars');

@@ -8,7 +8,7 @@ import React from 'react';
 
 import { Tags } from '@zextras/carbonio-shell-ui';
 
-import { EventActionsId } from './enums/event-actions-enum';
+import { EventActionsId } from '../constants/event-actions';
 import { EventType } from './event';
 import { Invite } from './store/invite';
 import { Folders } from '../carbonio-ui-commons/types/folder';

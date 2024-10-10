@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-export const EventActionsEnum = {
+export const EVENT_ACTIONS = {
 	EXPAND: 'expand',
 	TRASH: 'trash',
 	MOVE: 'move',
@@ -41,4 +41,4 @@ export const CalendarIntegrations = {
 export type ObjectValues<T> = T[keyof T];
 
 export type CalendarIntegrationId = ObjectValues<typeof CalendarIntegrations>;
-export type EventActionsId = ObjectValues<typeof EventActionsEnum>;
+export type EventActionsId = ObjectValues<typeof EVENT_ACTIONS>;

@@ -13,7 +13,7 @@ import {
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 import { editEditorAttachments } from '../../../store/slices/editor-slice';
-import { AttachmentsBlock } from '../../event-panel-view/attachments-part';
+import { AttachmentsBlock } from '../../event-panel-view/attachments-block';
 
 type EditorAttachmentsProps = {
 	editorId: string;

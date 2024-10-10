@@ -35,11 +35,11 @@ import styled from 'styled-components';
 
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { TagIconComponent } from '../../commons/tag-icon-component';
+import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { StoreProvider } from '../../store/redux';
 import { useSummaryView } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 
@@ -60,7 +60,7 @@ const CustomEventTitle = ({
 	title: CustomEventProps['title'];
 	overflow?: 'ellipsis' | 'visible' | 'break-word';
 }): ReactElement => (
-	<Text color="currentColor" style={{ overflow }} weight="bold">
+	<Text size={'small'} color="currentColor" style={{ overflow }}>
 		{title}
 	</Text>
 );
@@ -108,14 +108,12 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	);
 
 	const onEntireSeries = useCallback((): void => {
-		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`
-		);
+		replaceHistory(`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`);
 	}, [event.resource.calendar.id, event.resource.id]);
 
 	const onSingleInstance = useCallback((): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
 
@@ -149,7 +147,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 			);
 		} else {
 			replaceHistory(
-				`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
 	}, [event, createSnackbar, t, createModal, onEntireSeries, onSingleInstance, closeModal]);
@@ -165,7 +163,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
-			} else if (e.detail === 1 && (action === EventActionsEnum.EXPAND || isNil(action))) {
+			} else if (e.detail === 1 && (action === EVENT_ACTIONS.EXPAND || isNil(action))) {
 				useAppStatusStore.setState({ summaryViewId: event.id });
 			}
 		},
@@ -207,7 +205,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				placement="top"
 				disabled={event.resource.class === 'PRI' || isOuterTooltipDisabled}
 			>
-				<Container height="100%" data-testid="calendar-event" style={{ padding: '0.15rem 0.5rem' }}>
+				<Container
+					height="100%"
+					data-testid="calendar-event"
+					style={{ padding: '0.15rem 0.25rem' }}
+				>
 					<Dropdown
 						contextMenu
 						width="cal(min(100%,12.5rem))"
@@ -297,7 +299,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												>
 													<Text
 														color="currentColor"
-														weight="medium"
+														size={'small'}
 														style={{
 															overflow: textOverflow
 														}}
@@ -307,7 +309,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 														)}`}
 													</Text>
 													<Padding left="small" />
-													{eventDiff <= 15 && (
+													{eventDiff <= 29 && (
 														<>
 															{event.resource.isRecurrent && (
 																<CustomEventIcon
@@ -329,7 +331,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 									<TagIconComponent event={event} disableOuterTooltip={setIsOuterTooltipDisabled} />
 								</Row>
 							</Container>
-							{eventDiff >= 15 && event.resource.class !== 'PRI' && !event.allDay && (
+							{eventDiff >= 30 && event.resource.class !== 'PRI' && !event.allDay && (
 								<>
 									<Padding top="extrasmall" />
 									<Row wrap="nowrap">

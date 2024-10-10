@@ -129,6 +129,7 @@ export const normalizeCalendarEvent = ({
 						.valueOf()
 				)
 			: new Date(start + dur),
+		resourceId: calendar.id,
 		resource: normalizeEventResource({
 			appt: appointment,
 			iAmOrganizer: user?.name === appointment?.or?.a,

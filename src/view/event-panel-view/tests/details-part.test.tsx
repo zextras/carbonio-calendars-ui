@@ -9,12 +9,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { keyBy } from 'lodash';
 
-import { DetailsPart } from './details-part';
-import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
-import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
-import { reducers } from '../../store/redux';
-import mockedData from '../../test/generators';
+import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/roots-generator';
+import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { reducers } from '../../../store/redux';
+import mockedData from '../../../test/generators';
+import { DetailsPart } from '../details-part';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
