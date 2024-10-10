@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+ * SPDX-FileCopyrightText: 2024 Zextras <https://www.zextras.com>
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
@@ -14,7 +14,6 @@ import {
 	useUpdateGroups,
 	getCalendarGroups
 } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { createCalendarGroupRequest } from '../../../soap/create-calendar-group-request';
 
 export const CreateGroupComponent = (): ReactElement => {
 	const { createModal, closeModal } = useModal();
@@ -26,19 +25,6 @@ export const CreateGroupComponent = (): ReactElement => {
 		() => createGroup({ createModal, closeModal }),
 		[closeModal, createModal]
 	);
-
-	const oldOnClick = (): void => {
-		createCalendarGroupRequest({ name: 'New Group', calendarIds: ['1'] }).then((res) => {
-			updateGroups([
-				...currentGroups,
-				{
-					id: res.group.id,
-					name: res.group.name,
-					calendarId: res.group.calendarId.map((g) => g._content)
-				}
-			]);
-		});
-	};
 
 	return (
 		<Container padding={{ horizontal: 'medium', vertical: 'small' }}>
