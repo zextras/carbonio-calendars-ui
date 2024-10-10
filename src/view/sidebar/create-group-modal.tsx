@@ -13,7 +13,7 @@ import {
 	Text,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { noop } from 'lodash';
+import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { getCalendarGroups, useUpdateGroups } from '../../carbonio-ui-commons/store/zustand/folder';
@@ -32,9 +32,12 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 	const updateGroups = useUpdateGroups();
 	const currentGroups = getCalendarGroups();
 	const [inputValue, setInputValue] = useState('');
+	const [selectedCalendars, setSelectedCalendars] = useState<Array<{ id: string; label: string }>>(
+		[]
+	);
 	const disabled = useMemo(
-		() => inputValue.indexOf('/') > -1 || inputValue.length === 0,
-		[inputValue]
+		() => inputValue.indexOf('/') > -1 || inputValue.length === 0 || selectedCalendars.length === 0,
+		[inputValue, selectedCalendars.length]
 	);
 
 	const onCloseModal = useCallback(() => {
@@ -44,12 +47,17 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 
 	const placeholder = useMemo(() => t('label.type_group_name_here', 'Group Name'), [t]);
 
-	const onConfirm = (): void => {
+	const onMultipleSelectedCalendarChange = useCallback((selected) => {
+		setSelectedCalendars(selected);
+	}, []);
+
+	const onConfirm = useCallback((): void => {
 		if (!inputValue) {
 			return;
 		}
 
-		createCalendarGroupRequest({ name: inputValue, calendarIds: ['10'] })
+		const ids = map(selectedCalendars, (item) => item.id);
+		createCalendarGroupRequest({ name: inputValue, calendarIds: ids })
 			.then((res) => {
 				updateGroups([
 					...currentGroups,
@@ -81,7 +89,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 					hideButton: true
 				});
 			});
-	};
+	}, [createSnackbar, currentGroups, inputValue, onClose, selectedCalendars, t, updateGroups]);
 
 	return (
 		<Container
@@ -111,7 +119,10 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 			<Text weight="bold" size="large">
 				{t('label.newgroup.calendars', 'Calendars in this group')}
 			</Text>
-			<MultiCalendarSelector onCalendarChange={noop} excludeTrash={false} />
+			<MultiCalendarSelector
+				onCalendarChange={onMultipleSelectedCalendarChange}
+				excludeTrash={false}
+			/>
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('folder.modal.creategroup.footer', 'Create Group')}

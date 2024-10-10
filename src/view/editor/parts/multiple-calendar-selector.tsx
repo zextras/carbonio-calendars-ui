@@ -77,9 +77,14 @@ export const MultiCalendarSelector = ({
 		setSelectedCalendars(selectedChips);
 	}, []);
 
-	const onIconAction = useCallback(() => {
-		onCalendarChange(selectedCalendars);
-	}, [onCalendarChange, selectedCalendars]);
+	const onIconAction = useCallback(
+		(ev) => {
+			ev?.stopPropagation();
+			onCalendarChange(selectedCalendars);
+			setSelectedCalendars([]);
+		},
+		[onCalendarChange, selectedCalendars]
+	);
 
 	return (
 		<ChipInput
