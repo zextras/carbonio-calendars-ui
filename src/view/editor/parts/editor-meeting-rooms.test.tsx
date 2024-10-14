@@ -78,9 +78,7 @@ describe('Editor meeting rooms', () => {
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
-		await act(async () => {
-			await user.type(screen.getByText('Meeting room'), 'resource');
-		});
+		await user.type(screen.getByText('Meeting room'), 'resource');
 
 		act(() => {
 			jest.runOnlyPendingTimers();
@@ -124,9 +122,7 @@ describe('Editor meeting rooms', () => {
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
-		await act(async () => {
-			await user.click(within(dropdown).getByText(items[0].label));
-		});
+		await user.click(within(dropdown).getByText(items[0].label));
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
@@ -163,9 +159,7 @@ describe('Editor meeting rooms', () => {
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
-		await act(async () => {
-			await user.keyboard('[Enter]');
-		});
+		await user.keyboard('[Enter]');
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});

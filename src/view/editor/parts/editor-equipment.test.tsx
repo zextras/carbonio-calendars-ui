@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
+import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import moment from 'moment';
 import { http, HttpResponse } from 'msw';
@@ -80,9 +80,7 @@ describe('Editor equipment', () => {
 		);
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
-		await act(async () => {
-			await user.type(screen.getByText('Equipment'), 'resource');
-		});
+		await user.type(screen.getByText('Equipment'), 'resource');
 
 		act(() => {
 			jest.runOnlyPendingTimers();
@@ -126,9 +124,7 @@ describe('Editor equipment', () => {
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
-		await act(async () => {
-			await user.click(within(dropdown).getByText(items[0].label));
-		});
+		await user.click(within(dropdown).getByText(items[0].label));
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
@@ -168,9 +164,7 @@ describe('Editor equipment', () => {
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
-		await act(async () => {
-			await user.keyboard('[Enter]');
-		});
+		await user.keyboard('[Enter]');
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});

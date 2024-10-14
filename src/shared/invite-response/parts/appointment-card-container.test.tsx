@@ -89,9 +89,7 @@ describe('appointment card container component', () => {
 			store
 		});
 
-		await waitFor(() => {
-			expect(searchRequestHandler).toHaveBeenCalledTimes(1);
-		});
+		expect(searchRequestHandler).toHaveBeenCalledTimes(1);
 
 		const eventListContainer = screen.getByTestId('AppointmentCardContainer');
 		expect(eventListContainer).toBeVisible();
