@@ -18,13 +18,20 @@ export type GroupCalendarsListItemProps = {
 export const GroupCalendarsListItem = ({
 	calendar,
 	onRemove
-}: GroupCalendarsListItemProps): React.JSX.Element => (
-	<Container>
-		<Row>
-			<Square data-testid="colored-square" color={calendar.color.color} />
-		</Row>
-		<Row>
-			<Text>{calendar.name}</Text>
-		</Row>
-	</Container>
-);
+}: GroupCalendarsListItemProps): React.JSX.Element => {
+	const color = useMemo<string>(() => {
+		const colorIndex = calendar.color.color ? Number(calendar.color.color) : 0;
+		return ZIMBRA_STANDARD_COLORS[colorIndex].hex;
+	}, [calendar.color.color]);
+
+	return (
+		<Container>
+			<Row>
+				<Square data-testid="colored-square" color={color} />
+			</Row>
+			<Row>
+				<Text>{calendar.name}</Text>
+			</Row>
+		</Container>
+	);
+};

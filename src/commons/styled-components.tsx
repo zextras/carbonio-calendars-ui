@@ -6,7 +6,7 @@
 import { Container, Text } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 
-export const Square = styled.div`
+export const Square = styled.div<{ color?: string }>`
 	width: 1.125rem;
 	height: 1.125rem;
 	position: relative;
