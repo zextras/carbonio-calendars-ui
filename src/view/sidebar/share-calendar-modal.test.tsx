@@ -999,7 +999,10 @@ describe('the share calendar modal is composed by', () => {
 
 						await user.click(confirmButton);
 
-						expect(sendSpy).toHaveBeenCalledTimes(1);
+						await waitFor(() => {
+							expect(sendSpy).toHaveBeenCalledTimes(1);
+						});
+
 						expect(sendSpy).toHaveBeenCalledWith(expect.objectContaining({ standardMessage: '' }));
 					});
 					test('and a custom message is added it will send the share notification with the custom message', async () => {

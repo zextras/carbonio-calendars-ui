@@ -252,7 +252,7 @@ describe('delete event modal', () => {
 							}
 						);
 
-						user.click(
+						await user.click(
 							screen.getByRole('button', {
 								name: 'label.delete'
 							})
