@@ -10,7 +10,7 @@ import { act, screen, waitFor, within } from '@testing-library/react';
 
 import { ShareCalendarModal } from './share-calendar-modal';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
-import { Grant } from '../../carbonio-ui-commons/types/folder';
+import { Grant } from '../../carbonio-ui-commons/types';
 import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import { TEST_SELECTORS } from '../../constants/test-utils';
@@ -19,6 +19,12 @@ import * as SendShare from '../../store/actions/send-share-calendar-notification
 import { reducers } from '../../store/redux';
 
 const checkedIcon = 'icon: CheckmarkSquare';
+
+afterEach(async () => {
+	await act(async () => {
+		await jest.advanceTimersToNextTimerAsync();
+	});
+});
 
 describe('the share calendar modal is composed by', () => {
 	describe('the modal header. It is composed by', () => {
@@ -350,9 +356,7 @@ describe('the share calendar modal is composed by', () => {
 
 					expect(infoPrivateCheckbox).toBeVisible();
 
-					act(() => {
-						user.hover(infoPrivateCheckbox);
-					});
+					await user.hover(infoPrivateCheckbox);
 
 					const tooltipTextElement = await screen.findByText(/When sharing a calendar/i);
 
@@ -757,6 +761,8 @@ describe('the share calendar modal is composed by', () => {
 
 					const confirmButton = screen.getByText(/Share Calendar/i);
 
+					expect(confirmButton).toBeEnabled();
+
 					await user.click(confirmButton);
 
 					expect(spy).toHaveBeenCalledTimes(1);
@@ -995,13 +1001,19 @@ describe('the share calendar modal is composed by', () => {
 
 						await user.type(chipInput, 'user1');
 
-						const confirmButton = screen.getByText(/Share Calendar/i);
+						const confirmButton = screen.getByRole('button', { name: /Share Calendar/i });
+
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
+						});
 
 						await user.click(confirmButton);
 
-						await waitFor(() => {
-							expect(sendSpy).toHaveBeenCalledTimes(1);
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
 						});
+
+						expect(sendSpy).toHaveBeenCalledTimes(1);
 
 						expect(sendSpy).toHaveBeenCalledWith(expect.objectContaining({ standardMessage: '' }));
 					});
@@ -1034,11 +1046,20 @@ describe('the share calendar modal is composed by', () => {
 
 						await user.type(standardMessage, customMessage);
 
-						const confirmButton = screen.getByText(/Share Calendar/i);
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
+						});
+
+						const confirmButton = screen.getByRole('button', { name: /Share Calendar/i });
+
+						expect(confirmButton).toBeEnabled();
+
+						await user.click(confirmButton);
 
 						await act(async () => {
-							await user.click(confirmButton);
+							await jest.advanceTimersToNextTimerAsync();
 						});
+
 						expect(sendSpy).toHaveBeenCalledTimes(1);
 						expect(sendSpy).toHaveBeenCalledWith(
 							expect.objectContaining({ standardMessage: customMessage })
