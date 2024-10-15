@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { keyBy, values } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
@@ -87,6 +87,10 @@ describe('appointment card container component', () => {
 		setupFoldersStore();
 		setupTest(<AppointmentCardContainer start={start} end={end} rootId={rootsArray[1].id} />, {
 			store
+		});
+
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
 
 		expect(searchRequestHandler).toHaveBeenCalledTimes(1);
