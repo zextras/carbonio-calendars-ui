@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { Container, Row, Text } from '@zextras/carbonio-design-system';
 
+import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { Square } from '../../commons/styled-components';
 import { Calendar } from '../../types/store/calendars';
 

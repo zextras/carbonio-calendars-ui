@@ -9,6 +9,7 @@ import { ZIMBRA_STANDARD_COLORS } from '../../../carbonio-ui-commons/constants';
 import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { Calendar } from '../../../types/store/calendars';
 import { GroupCalendarsListItem } from '../group-calendars-list-item';
+import 'jest-styled-components';
 
 describe('Group calendars list item', () => {
 	it('should render the name of the calendar', () => {
@@ -38,7 +39,8 @@ describe('Group calendars list item', () => {
 
 		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={jest.fn()} />);
 
-		expect(screen.getByTestId('colored-square')).toHaveStyleRule(
+		const square = screen.getByTestId('colored-square');
+		expect(square).toHaveStyleRule(
 			'background',
 			ZIMBRA_STANDARD_COLORS[Number(calendar.color.color)].hex
 		);
