@@ -6,5 +6,5 @@
 describe('Group calendars list', () => {
 	it.todo('should render a placeholder text when there is no calendar');
 
-	it.todo('should render a list of calendars');
+	it.todo('should render the names of all given calendars');
 });
