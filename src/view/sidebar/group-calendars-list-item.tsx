@@ -5,6 +5,9 @@
  */
 import React from 'react';
 
+import { Container, Row, Text } from '@zextras/carbonio-design-system';
+
+import { Square } from '../../commons/styled-components';
 import { Calendar } from '../../types/store/calendars';
 
 export type GroupCalendarsListItemProps = {
@@ -15,4 +18,13 @@ export type GroupCalendarsListItemProps = {
 export const GroupCalendarsListItem = ({
 	calendar,
 	onRemove
-}: GroupCalendarsListItemProps): React.JSX.Element => <></>;
+}: GroupCalendarsListItemProps): React.JSX.Element => (
+	<Container>
+		<Row>
+			<Square data-testid="colored-square" color={calendar.color.color} />
+		</Row>
+		<Row>
+			<Text>{calendar.name}</Text>
+		</Row>
+	</Container>
+);
