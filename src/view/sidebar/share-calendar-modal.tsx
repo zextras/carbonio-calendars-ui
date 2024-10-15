@@ -157,7 +157,7 @@ const UserShare = ({
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'success',
+					severity: 'success',
 					hideButton: true,
 					label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
 					autoHideTimeout: 3000
@@ -178,7 +178,7 @@ const UserShare = ({
 							createSnackbar({
 								key: `folder-action-failed`,
 								replace: true,
-								type: 'error',
+								severity: 'error',
 								hideButton: true,
 								label: t('label.error_try_again', 'Something went wrong, please try again'),
 								autoHideTimeout: 3000
@@ -340,7 +340,7 @@ const PublicShare = ({
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'success',
+					severity: 'success',
 					hideButton: true,
 					label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
 					autoHideTimeout: 3000
