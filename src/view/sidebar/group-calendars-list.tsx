@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
@@ -14,14 +14,14 @@ import { Calendar } from '../../types/store/calendars';
 
 export type GroupCalendarsListProps = {
 	calendars: Array<Pick<Calendar, 'id' | 'name' | 'color'>>;
+	onCalendarRemove: (calendarId: string) => void;
 };
 
-export const GroupCalendarsList = ({ calendars }: GroupCalendarsListProps): React.JSX.Element => {
+export const GroupCalendarsList = ({
+	calendars,
+	onCalendarRemove
+}: GroupCalendarsListProps): React.JSX.Element => {
 	const [t] = useTranslation();
-
-	const onCalendarRemove = useCallback((calendarId: string) => {
-		console.log('Removing calendar', calendarId);
-	}, []);
 
 	const placeholderText = t(
 		'label.group_empty_calendars_list',

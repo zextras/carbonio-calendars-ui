@@ -13,7 +13,7 @@ import 'jest-styled-components';
 
 describe('Group calendars list', () => {
 	it('should render a placeholder text when there is no calendar', () => {
-		setupTest(<GroupCalendarsList calendars={[]} />);
+		setupTest(<GroupCalendarsList calendars={[]} onCalendarRemove={jest.fn()} />);
 
 		expect(
 			screen.getByText(
@@ -23,7 +23,7 @@ describe('Group calendars list', () => {
 	});
 
 	it('should render a gray colored placeholder text', () => {
-		setupTest(<GroupCalendarsList calendars={[]} />);
+		setupTest(<GroupCalendarsList calendars={[]} onCalendarRemove={jest.fn()} />);
 
 		const placeholderText = screen.getByText(
 			'There are no calendars in this group yet. Start typing the calendars in the input, then click “+” to add them to the group.'
@@ -44,7 +44,7 @@ describe('Group calendars list', () => {
 			}
 		];
 
-		setupTest(<GroupCalendarsList calendars={calendars} />);
+		setupTest(<GroupCalendarsList calendars={calendars} onCalendarRemove={jest.fn()} />);
 
 		expect(
 			screen.queryByText(
@@ -81,10 +81,33 @@ describe('Group calendars list', () => {
 			}
 		];
 
-		setupTest(<GroupCalendarsList calendars={calendars} />);
+		setupTest(<GroupCalendarsList calendars={calendars} onCalendarRemove={jest.fn()} />);
 
 		calendars.forEach((calendar) => {
 			expect(screen.getByText(calendar.name)).toBeVisible();
 		});
+	});
+
+	it('should call the onCalendarRemove callback when a calendar is removed', async () => {
+		const calendars = [
+			{
+				id: '1',
+				name: 'Calendar 1',
+				color: {
+					background: '#fff',
+					color: '4'
+				}
+			}
+		];
+
+		const onCalendarRemove = jest.fn();
+		const { user } = setupTest(
+			<GroupCalendarsList calendars={calendars} onCalendarRemove={onCalendarRemove} />
+		);
+		const removeButton = screen.getByRole('button', { name: /remove/i });
+
+		await user.click(removeButton);
+
+		expect(onCalendarRemove).toHaveBeenCalledWith('1');
 	});
 });
