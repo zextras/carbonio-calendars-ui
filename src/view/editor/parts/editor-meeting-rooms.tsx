@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { DropdownItem } from '@zextras/carbonio-design-system';
+import { ChipInputProps, DropdownItem } from '@zextras/carbonio-design-system';
 import { filter, map, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -66,7 +66,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 		() => t('attendee_room_unavailable', 'Room not available at the selected time of the event'),
 		[t]
 	);
-	const onInputType = useCallback((e) => {
+	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>((e) => {
 		if (e.textContent && e.textContent !== '') {
 			setOptions([
 				{

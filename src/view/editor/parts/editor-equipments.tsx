@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { DropdownItem } from '@zextras/carbonio-design-system';
+import { ChipInputProps, DropdownItem } from '@zextras/carbonio-design-system';
 import { filter, map, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -70,7 +70,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 		[t]
 	);
 
-	const onInputType = useCallback((e) => {
+	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>((e) => {
 		if (e.textContent && e.textContent !== '') {
 			setOptions([
 				{
