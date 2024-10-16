@@ -79,8 +79,7 @@ export const MoveModal = ({
 			}),
 		[currentFolder, folders, input]
 	);
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
+
 	const nestFilteredFolders = useCallback(
 		(items: Calendar[], calId, results: Calendar[]) =>
 			reduce(

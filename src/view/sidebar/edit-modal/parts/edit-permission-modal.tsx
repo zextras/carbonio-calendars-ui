@@ -11,6 +11,7 @@ import {
 	Input,
 	Row,
 	Select,
+	SingleSelectionOnChange,
 	Text,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
@@ -18,7 +19,7 @@ import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { GranteeChip } from './grantee-chip';
-import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
+import { Folder, Grant } from '../../../../carbonio-ui-commons/types';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';
@@ -93,8 +94,10 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 		onGoBack();
 	};
 
-	const onShareRoleChange = useCallback((shareRole) => {
-		setShareWithUserRole(shareRole);
+	const onShareRoleChange = useCallback<SingleSelectionOnChange>((shareRole) => {
+		if (shareRole) {
+			setShareWithUserRole(shareRole);
+		}
 	}, []);
 
 	const title = useMemo(() => t('label.edit_access', 'Edit access'), [t]);

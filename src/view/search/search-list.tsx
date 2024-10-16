@@ -3,15 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactComponentElement } from 'react';
+import React from 'react';
 
 import { Container, List, Row, Text, Padding } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { sortBy } from 'lodash';
 import moment from 'moment';
 import { useParams } from 'react-router-dom';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 
 import { AdvancedFilterButton } from './parts/advanced-filter-button';
 import SearchListItem from './search-list-item';
@@ -43,12 +41,13 @@ const SearchList = ({
 	setShowAdvanceFilters,
 	dateStart,
 	dateEnd
-}: SearchListProps): ReactComponentElement<any> => {
+}: SearchListProps): React.JSX.Element => {
 	const { apptId, ridZ } = useParams<RoutesParams>();
+	const items = sortBy(appointments ?? [], ['start']);
 
 	return (
 		<Container
-			background="gray6"
+			background={'gray6'}
 			width="25%"
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
@@ -76,11 +75,11 @@ const SearchList = ({
 				<ShimmerList />
 			) : (
 				<List
-					items={sortBy(appointments ?? [], ['start'])}
+					items={items}
 					ItemComponent={SearchListItem}
 					active={`${apptId}:${ridZ}`}
 					onListBottom={loadMore}
-					background="gray6"
+					background={'gray6'}
 					data-testid="SearchResultCalendarsContainer"
 				/>
 			)}

@@ -18,11 +18,12 @@ import {
 	useModal,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { ZIMBRA_STANDARD_COLORS, useTags, Tag, t } from '@zextras/carbonio-shell-ui';
+import { useTags, Tag, t } from '@zextras/carbonio-shell-ui';
 import { differenceBy, includes, noop, reduce } from 'lodash';
 
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from '../../carbonio-ui-commons/components/tags/delete-tag-modal';
+import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { ItemType } from '../../carbonio-ui-commons/types/tags';
 import { EVENT_ACTIONS, EventActionsId } from '../../constants/event-actions';
 import { itemActionRequest } from '../../soap/item-action-request';
@@ -159,7 +160,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 	const [checked, setChecked] = useState(includes(event.resource.tags, tag.id));
 	const [isHovering, setIsHovering] = useState(false);
 	const toggleCheck = useCallback(
-		(value) => {
+		(value: boolean) => {
 			setChecked((c) => !c);
 
 			itemActionRequest({

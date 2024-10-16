@@ -66,7 +66,7 @@ export const ForwardAppointmentModal = ({
 		createSnackbar({
 			key: 'forward-appointment-error',
 			replace: true,
-			type: 'error',
+			severity: 'error',
 			label: t('label.error_try_again', 'Something went wrong, please try again'),
 			autoHideTimeout: 3000
 		});
@@ -90,7 +90,7 @@ export const ForwardAppointmentModal = ({
 		createSnackbar({
 			key: 'forward-appointment-success',
 			replace: true,
-			type: 'info',
+			severity: 'info',
 			hideButton: false,
 			label: t('snackbar.forwardAppointment.success', 'Appointment forwarded'),
 			autoHideTimeout: 3000

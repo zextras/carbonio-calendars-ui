@@ -15,6 +15,7 @@ import {
 	Padding,
 	Row,
 	Select,
+	SingleSelectionOnChange,
 	Text,
 	Tooltip,
 	useSnackbar
@@ -122,15 +123,17 @@ const UserShare = ({
 	);
 
 	const onContactInputChange = useCallback(
-		(ev) => {
+		(ev: Contacts) => {
 			setContacts(ev);
 		},
 		[setContacts]
 	);
 
-	const onShareRoleChange = useCallback(
+	const onShareRoleChange = useCallback<SingleSelectionOnChange>(
 		(shareRole) => {
-			setshareWithUserRole(shareRole);
+			if (shareRole) {
+				setshareWithUserRole(shareRole);
+			}
 		},
 		[setshareWithUserRole]
 	);
@@ -213,8 +216,6 @@ const UserShare = ({
 			>
 				{integrationAvailable ? (
 					<ContactInput
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
 						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
 						onChange={onContactInputChange}
 						background={'gray5'}
@@ -375,8 +376,10 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 
 	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
 
-	const onShareWithChange = useCallback((shareWith) => {
-		setShareWithUserType(shareWith);
+	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr'>>((shareWith) => {
+		if (shareWith) {
+			setShareWithUserType(shareWith);
+		}
 	}, []);
 
 	return (

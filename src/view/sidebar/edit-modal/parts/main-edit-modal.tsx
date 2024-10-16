@@ -19,6 +19,7 @@ import {
 	Row,
 	Select,
 	SelectItem,
+	SingleSelectionOnChange,
 	Text,
 	Tooltip,
 	useSnackbar
@@ -33,7 +34,7 @@ import { GranteeChip } from './grantee-chip';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder, Grant } from '../../../../carbonio-ui-commons/types/folder';
+import { Folder, Grant } from '../../../../carbonio-ui-commons/types';
 import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../constants';
@@ -173,7 +174,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const toggleFreeBusy = useCallback(() => setFreeBusy((c) => !c), []);
 
 	const isNotACalendarFolderAndIsNotASystemFolder = useCallback(
-		(f) => f.view !== FOLDER_VIEW.appointment && parseInt(f.id, 10) > 16,
+		(f: Folder) => f.view !== FOLDER_VIEW.appointment && parseInt(f.id, 10) > 16,
 		[]
 	);
 
@@ -203,13 +204,15 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 
 	const [selectedColor, setSelectedColor] = useState<SelectItem>(defaultColor);
 
-	const onSelectedColorChange = useCallback(
+	const onSelectedColorChange = useCallback<SingleSelectionOnChange>(
 		(newColor) => {
-			const newResult = find(colors, {
-				label: setCalendarColor({ color: newColor }).label
-			});
-			if (newResult) {
-				setSelectedColor(newResult);
+			if (newColor) {
+				const newResult = find(colors, {
+					label: setCalendarColor({ color: parseInt(newColor, 10) }).label
+				});
+				if (newResult) {
+					setSelectedColor(newResult);
+				}
 			}
 		},
 		[colors]
@@ -278,7 +281,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	}, [setModal]);
 
 	const onRevoke = useCallback(
-		(item) => {
+		(item: Grant) => {
 			if (setActiveGrant) setActiveGrant(item);
 			setModal('revoke');
 		},
@@ -286,7 +289,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	);
 
 	const onResend = useCallback(
-		(item) => {
+		(item: Grant) => {
 			dispatch(
 				sendShareCalendarNotification({
 					contacts: [{ email: item.d }],
@@ -319,7 +322,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	);
 
 	const onEdit = useCallback(
-		(item) => {
+		(item: Grant) => {
 			if (setActiveGrant) setActiveGrant(item);
 			setModal('edit');
 		},

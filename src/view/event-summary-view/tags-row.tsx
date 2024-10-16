@@ -6,15 +6,12 @@
 import React, { FC, ReactElement, useCallback, useMemo } from 'react';
 
 import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
-import { useTags, runSearch } from '@zextras/carbonio-shell-ui';
+import { useTags, runSearch, Tag } from '@zextras/carbonio-shell-ui';
 import { includes, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-// ignored because shows warning for runSearch Not exported
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 
-import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
+import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { CALENDAR_ROUTE } from '../../constants';
 import { EventType } from '../../types/event';
 
@@ -34,29 +31,26 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 		() =>
 			reduce(
 				tagsFromStore,
-				(acc: any, v: any) => {
+				(acc, v) => {
 					if (includes(event?.resource?.tags, v.id))
 						acc.push({
 							...v,
-							color: ZIMBRA_STANDARD_COLORS[v.color ?? 0].hex,
-							label: v.name
+							color: ZIMBRA_STANDARD_COLORS[v.color ?? 0].zValue
 						});
 					return acc;
 				},
-				[]
+				[] as Array<Tag>
 			),
 		[event?.resource?.tags, tagsFromStore]
 	);
 	const tagLabel = useMemo(() => t('label.tags', 'Tags'), [t]);
 
 	const triggerSearch = useCallback(
-		(tagToSearch) =>
+		(tagToSearch: Tag) =>
 			runSearch(
 				[
 					{
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						avatarBackground: tagToSearch?.color,
+						avatarBackground: ZIMBRA_STANDARD_COLORS[tagToSearch?.color ?? 0].hex,
 						avatarIcon: 'Tag',
 						background: 'gray2',
 						hasAvatar: true,
@@ -90,8 +84,8 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 									<TagChip
 										key={tag.name}
 										label={tag.name}
-										avatarBackground={tag.color}
-										background="gray2"
+										avatarBackground={ZIMBRA_STANDARD_COLORS[tag?.color ?? 0].hex}
+										background={'gray2'}
 										hasAvatar
 										avatarIcon="Tag"
 										maxWidth="18.75rem"
@@ -105,8 +99,8 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 								{map(tags, (tag) => (
 									<TagChip
 										label={tag.name}
-										avatarBackground={tag.color}
-										background="gray2"
+										avatarBackground={ZIMBRA_STANDARD_COLORS[tag?.color ?? 0].hex}
+										background={'gray2'}
 										hasAvatar
 										avatarIcon="Tag"
 										maxWidth="18.75rem"
