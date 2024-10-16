@@ -10,10 +10,10 @@ import { useTranslation } from 'react-i18next';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { Square } from '../../commons/styled-components';
-import { Calendar } from '../../types/store/calendars';
+import { GroupCalendar } from '../../types/groups';
 
 export type GroupCalendarsListItemProps = {
-	calendar: Pick<Calendar, 'id' | 'name' | 'color'>;
+	calendar: GroupCalendar;
 	onRemove: (calendarId: string) => void;
 };
 

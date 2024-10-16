@@ -7,35 +7,21 @@ import React from 'react';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../../carbonio-ui-commons/constants';
 import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { Calendar } from '../../../types/store/calendars';
+import { generateGroupCalendar } from '../../../test/generators/group';
 import { GroupCalendarsListItem } from '../group-calendars-list-item';
 import 'jest-styled-components';
 
 describe('Group calendars list item', () => {
 	it('should render the name of the calendar', () => {
-		const calendar: Pick<Calendar, 'id' | 'name' | 'color'> = {
-			id: '1',
-			name: 'Calendar name',
-			color: {
-				background: '#fff',
-				color: '4'
-			}
-		};
+		const calendar = generateGroupCalendar();
 
 		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={jest.fn()} />);
 
-		expect(screen.getByText('Calendar name')).toBeVisible();
+		expect(screen.getByText(calendar.name)).toBeVisible();
 	});
 
 	it('should render the color of the calendar', () => {
-		const calendar: Pick<Calendar, 'id' | 'name' | 'color'> = {
-			id: '1',
-			name: 'Calendar name',
-			color: {
-				background: '#fff',
-				color: '4'
-			}
-		};
+		const calendar = generateGroupCalendar();
 
 		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={jest.fn()} />);
 
@@ -47,14 +33,7 @@ describe('Group calendars list item', () => {
 	});
 
 	it('should render a button to remove the calendar', () => {
-		const calendar: Pick<Calendar, 'id' | 'name' | 'color'> = {
-			id: '1',
-			name: 'Calendar name',
-			color: {
-				background: '#fff',
-				color: '4'
-			}
-		};
+		const calendar = generateGroupCalendar();
 
 		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={jest.fn()} />);
 
@@ -62,14 +41,7 @@ describe('Group calendars list item', () => {
 	});
 
 	it('should call the callback when the remove button is clicked', async () => {
-		const calendar: Pick<Calendar, 'id' | 'name' | 'color'> = {
-			id: '1',
-			name: 'Calendar name',
-			color: {
-				background: '#fff',
-				color: '4'
-			}
-		};
+		const calendar = generateGroupCalendar();
 		const onRemove = jest.fn();
 
 		const { user } = setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={onRemove} />);

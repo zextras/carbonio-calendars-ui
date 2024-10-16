@@ -5,4 +5,4 @@
  */
 import { Calendar } from './store/calendars';
 
-export type GroupCalendar = Array<Pick<Calendar, 'id' | 'name' | 'color'>>;
+export type GroupCalendar = Pick<Calendar, 'id' | 'name' | 'color'>;

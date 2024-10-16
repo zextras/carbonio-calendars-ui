@@ -6,8 +6,10 @@
 import React from 'react';
 
 import { screen } from '@testing-library/react';
+import { times } from 'lodash';
 
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { generateGroupCalendar } from '../../../test/generators/group';
 import { GroupCalendarsList } from '../group-calendars-list';
 import 'jest-styled-components';
 
@@ -33,16 +35,7 @@ describe('Group calendars list', () => {
 	});
 
 	it('should not render a placeholder text when there is at least one calendar', () => {
-		const calendars = [
-			{
-				id: '1',
-				name: 'Calendar 1',
-				color: {
-					background: '#fff',
-					color: '4'
-				}
-			}
-		];
+		const calendars = [generateGroupCalendar()];
 
 		setupTest(<GroupCalendarsList calendars={calendars} onCalendarRemove={jest.fn()} />);
 
@@ -54,32 +47,7 @@ describe('Group calendars list', () => {
 	});
 
 	it('should render the names of all given calendars', () => {
-		const calendars = [
-			{
-				id: '1',
-				name: 'Calendar 1',
-				color: {
-					background: '#fff',
-					color: '4'
-				}
-			},
-			{
-				id: '2',
-				name: 'Calendar 2',
-				color: {
-					background: '#fff',
-					color: '5'
-				}
-			},
-			{
-				id: '3',
-				name: 'Calendar 3',
-				color: {
-					background: '#fff',
-					color: '6'
-				}
-			}
-		];
+		const calendars = times(42, () => generateGroupCalendar());
 
 		setupTest(<GroupCalendarsList calendars={calendars} onCalendarRemove={jest.fn()} />);
 
@@ -89,16 +57,7 @@ describe('Group calendars list', () => {
 	});
 
 	it('should call the onCalendarRemove callback when a calendar is removed', async () => {
-		const calendars = [
-			{
-				id: '1',
-				name: 'Calendar 1',
-				color: {
-					background: '#fff',
-					color: '4'
-				}
-			}
-		];
+		const calendars = [generateGroupCalendar()];
 
 		const onCalendarRemove = jest.fn();
 		const { user } = setupTest(
@@ -108,6 +67,6 @@ describe('Group calendars list', () => {
 
 		await user.click(removeButton);
 
-		expect(onCalendarRemove).toHaveBeenCalledWith('1');
+		expect(onCalendarRemove).toHaveBeenCalledWith(calendars[0].id);
 	});
 });

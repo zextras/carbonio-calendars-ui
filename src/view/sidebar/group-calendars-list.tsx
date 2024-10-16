@@ -10,10 +10,10 @@ import { Container, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { GroupCalendarsListItem } from './group-calendars-list-item';
-import { Calendar } from '../../types/store/calendars';
+import { GroupCalendar } from '../../types/groups';
 
 export type GroupCalendarsListProps = {
-	calendars: Array<Pick<Calendar, 'id' | 'name' | 'color'>>;
+	calendars: Array<GroupCalendar>;
 	onCalendarRemove: (calendarId: string) => void;
 };
 
