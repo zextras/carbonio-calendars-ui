@@ -8,8 +8,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
-import { isEqual, isNil, omit, omitBy, size } from 'lodash';
-import moment from 'moment';
+import { isArray, isEqual, isNil, omit, omitBy, size } from 'lodash';
+import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -62,19 +62,48 @@ export const useCalendarComponentUtils = (): {
 		}
 	}, [action]);
 
-	const getStart = useCallback(({ isAllDay, dropStart, isSeries, inviteStart, eventStart }) => {
-		if (isAllDay) {
-			return dropStart.startOf('day').valueOf();
-		}
-		if (isSeries) {
-			const diff = dropStart.diff(eventStart);
-			return inviteStart.add(diff).valueOf();
-		}
-		return dropStart.valueOf();
-	}, []);
+	const getStart = useCallback(
+		({
+			isAllDay,
+			dropStart,
+			isSeries,
+			inviteStart,
+			eventStart
+		}: {
+			dropStart: Moment;
+			inviteStart: Moment;
+			eventStart: Moment;
+			isAllDay?: boolean;
+			isSeries?: boolean;
+		}) => {
+			if (isAllDay) {
+				return dropStart.startOf('day').valueOf();
+			}
+			if (isSeries) {
+				const diff = dropStart.diff(eventStart);
+				return inviteStart.add(diff).valueOf();
+			}
+			return dropStart.valueOf();
+		},
+		[]
+	);
 
 	const getEnd = useCallback(
-		({ isAllDay, dropEnd, isSeries, inviteEnd, eventEnd, eventAllDay }) => {
+		({
+			isAllDay,
+			dropEnd,
+			isSeries,
+			inviteEnd,
+			eventEnd,
+			eventAllDay
+		}: {
+			dropEnd: Moment;
+			inviteEnd: Moment;
+			eventEnd: Moment;
+			isAllDay?: boolean;
+			isSeries?: boolean;
+			eventAllDay: boolean;
+		}) => {
 			if (isAllDay || eventAllDay) {
 				return dropEnd.startOf('day').valueOf();
 			}
@@ -88,7 +117,19 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const onDropOrResizeFn = useCallback(
-		({ start, end, event, isAllDay, isSeries }) => {
+		({
+			start,
+			end,
+			event,
+			isAllDay,
+			isSeries
+		}: {
+			start: Date;
+			end: Date;
+			event: EventType;
+			isAllDay?: boolean;
+			isSeries?: boolean;
+		}) => {
 			dispatch(
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
 			).then(({ payload }) => {
@@ -110,7 +151,7 @@ export const useCalendarComponentUtils = (): {
 							folders: calendarFolders,
 							start: startTime,
 							end: endTime,
-							allDay: !!isAllDay,
+							allDay: isAllDay,
 							panel: false
 						};
 						const editor = generateEditor({
@@ -181,7 +222,19 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const onEventDropOrResize = useCallback(
-		({ start, end, event, isAllDay, resourceId }) => {
+		({
+			start,
+			end,
+			event,
+			isAllDay,
+			resourceId
+		}: {
+			start: Date;
+			end: Date;
+			event: EventType;
+			isAllDay?: boolean;
+			resourceId?: string;
+		}) => {
 			const isDefaultCalendar = resourceId ? resourceId === zimbraPrefDefaultCalendarId : true;
 			if (!isDefaultCalendar) {
 				return;
@@ -202,7 +255,7 @@ export const useCalendarComponentUtils = (): {
 			} else if (
 				!isEqual(event.start, start) ||
 				!isEqual(event.end, end) ||
-				(event.allDay !== !!isAllDay && moment(event.start).day() === moment(event.end).day())
+				(event.allDay !== isAllDay && moment(event.start).day() === moment(event.end).day())
 			) {
 				const onEntireSeries = (): void => {
 					const seriesEvent = {
@@ -241,7 +294,7 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const handleSelect = useCallback(
-		(e) => {
+		(e: { resourceId?: string; end: Date; start: Date }) => {
 			const isDefaultCalendar = e.resourceId ? e.resourceId === zimbraPrefDefaultCalendarId : true;
 
 			if (!summaryViewOpen && !action && isDefaultCalendar) {
@@ -274,14 +327,16 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const onRangeChange = useCallback(
-		(range) => {
-			if (range.length) {
-				const min = datesMin(...range);
-				const max = datesMax(...range);
-				setRange({
-					start: moment(min).startOf('day').valueOf(),
-					end: moment(max).endOf('day').valueOf()
-				});
+		(range: Array<Date> | { start: Date; end: Date }) => {
+			if (isArray(range)) {
+				if (range?.length) {
+					const min = datesMin(...range);
+					const max = datesMax(...range);
+					setRange({
+						start: moment(min).startOf('day').valueOf(),
+						end: moment(max).endOf('day').valueOf()
+					});
+				}
 			} else {
 				setRange({
 					start: moment(range.start).startOf('day').valueOf(),
@@ -293,7 +348,7 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const onNavigate = useCallback(
-		(newDate) => {
+		(newDate: Date) => {
 			useAppStatusStore.setState((s: AppState) => ({ ...s, date: newDate }));
 			return setDate(newDate);
 		},
