@@ -43,7 +43,7 @@ export const GroupCalendarsListItem = ({
 				<Text>{calendar.name}</Text>
 			</Row>
 			<Row width="fit">
-				<Button label={buttonLabel} onClick={onButtonClick} />
+				<Button label={buttonLabel} onClick={onButtonClick} icon="TrashOutline" />
 			</Row>
 		</Container>
 	);

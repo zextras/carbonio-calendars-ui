@@ -7,6 +7,7 @@ import React from 'react';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../../carbonio-ui-commons/constants';
 import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { generateGroupCalendar } from '../../../test/generators/group';
 import { GroupCalendarsListItem } from '../group-calendars-list-item';
 import 'jest-styled-components';
@@ -37,7 +38,9 @@ describe('Group calendars list item', () => {
 
 		setupTest(<GroupCalendarsListItem calendar={calendar} onRemove={jest.fn()} />);
 
-		expect(screen.getByRole('button', { name: /remove/i })).toBeVisible();
+		expect(
+			screen.getByRoleWithIcon('button', { name: /remove/i, icon: TEST_SELECTORS.ICONS.remove })
+		).toBeVisible();
 	});
 
 	it('should call the callback when the remove button is clicked', async () => {
