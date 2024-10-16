@@ -7,7 +7,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
 import { AvailabilityChecker } from './availability-checker';
@@ -86,6 +86,10 @@ describe('availability checker component', () => {
 					/>
 				);
 
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
+				});
+
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const appointment = screen.getByTestId(/icon: Appointment/i);
 
@@ -115,6 +119,11 @@ describe('availability checker component', () => {
 						rootId={'1'}
 					/>
 				);
+
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
+				});
+
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const greenIcon = screen.getByTestId(/icon: Appointment/i);
 
@@ -144,6 +153,11 @@ describe('availability checker component', () => {
 						rootId={'1'}
 					/>
 				);
+
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
+				});
+
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const string = screen.getByText(/You are available/i);
 
@@ -179,6 +193,10 @@ describe('availability checker component', () => {
 					/>
 				);
 
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
+				});
+
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const calendarWarning = screen.getByTestId(/icon: CalendarWarning/i);
 
@@ -211,6 +229,10 @@ describe('availability checker component', () => {
 						rootId={'1'}
 					/>
 				);
+
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
+				});
 
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const calendarWarning = screen.getByTestId(/icon: CalendarWarning/i);
@@ -245,6 +267,11 @@ describe('availability checker component', () => {
 						rootId={'1'}
 					/>
 				);
+
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
+				});
+
 				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const string = screen.getByText(/Check your availability/i);
 
@@ -279,6 +306,10 @@ describe('availability checker component', () => {
 						/>
 					);
 
+					await act(async () => {
+						await jest.advanceTimersToNextTimerAsync();
+					});
+
 					expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 					const chevronDownOutline = screen.getByTestId(/icon: ChevronDownOutline/i);
 
@@ -312,6 +343,10 @@ describe('availability checker component', () => {
 							/>,
 							{ store }
 						);
+
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
+						});
 
 						expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 						const chevronDownOutline = screen.getByTestId(/icon: ChevronDownOutline/i);
@@ -349,6 +384,10 @@ describe('availability checker component', () => {
 							/>,
 							{ store }
 						);
+
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
+						});
 
 						expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 
