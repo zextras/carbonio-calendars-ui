@@ -19,7 +19,7 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { Folder } from '../../../carbonio-ui-commons/types';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_BOARD_ID } from '../../../constants';
 import {
