@@ -27,7 +27,7 @@ export const EditorAttachments = ({ editorId }: EditorAttachmentsProps): ReactEl
 	const dispatch = useAppDispatch();
 
 	const onAttachmentsChange = useCallback(
-		(attach, attachments) => {
+		(attach: unknown, attachments: any[]) => {
 			dispatch(
 				editEditorAttachments({
 					id: editorId,

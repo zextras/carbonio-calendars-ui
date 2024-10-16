@@ -153,7 +153,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	}, [event, createSnackbar, t, createModal, onEntireSeries, onSingleInstance, closeModal]);
 
 	const toggleOpen = useCallback(
-		(e): void => {
+		(e: React.MouseEvent): void => {
 			if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
 				createSnackbar({
 					key: `private_appointment`,
