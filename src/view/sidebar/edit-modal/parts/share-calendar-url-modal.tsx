@@ -35,7 +35,7 @@ const ShareCalendarUrl: FC<ShareCalendarUrlProps> = ({
 			createSnackbar({
 				key: `folder-action-success`,
 				replace: true,
-				type: 'success',
+				severity: 'success',
 				hideButton: true,
 				label: t('snackbar.url_copied', { title, defaultValue: '{{title}} copied' }),
 				autoHideTimeout: 3000

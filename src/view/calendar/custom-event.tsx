@@ -122,7 +122,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 			createSnackbar({
 				key: `private_appointment`,
 				replace: true,
-				type: 'info',
+				severity: 'info',
 				label: t('label.appointment_is_private', 'The appointment is private.'),
 				autoHideTimeout: 3000,
 				hideButton: true
@@ -158,7 +158,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				createSnackbar({
 					key: `private_appointment`,
 					replace: true,
-					type: 'info',
+					severity: 'info',
 					label: t('label.appointment_is_private', 'The appointment is private.'),
 					autoHideTimeout: 3000,
 					hideButton: true

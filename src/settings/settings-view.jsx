@@ -313,7 +313,7 @@ export default function CalendarSettingsView() {
 				createSnackbar({
 					key: `new`,
 					replace: true,
-					type: 'success',
+					severity: 'success',
 					label: t('label.settings_saved', 'Settings saved'),
 					autoHideTimeout: 3000,
 					hideButton: true
@@ -331,7 +331,7 @@ export default function CalendarSettingsView() {
 				createSnackbar({
 					key: `new`,
 					replace: true,
-					type: 'error',
+					severity: 'error',
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000,
 					hideButton: true

@@ -240,7 +240,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
-						type: 'success',
+						severity: 'success',
 						hideButton: true,
 						label: t('label.changes_saved', 'Changes saved'),
 						autoHideTimeout: 3000
@@ -249,7 +249,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
-						type: 'error',
+						severity: 'error',
 						hideButton: true,
 						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000
@@ -298,7 +298,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
-						type: 'info',
+						severity: 'info',
 						hideButton: true,
 						label: t('share_invite_resent', 'Share invite resent'),
 						autoHideTimeout: 3000
@@ -307,7 +307,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					createSnackbar({
 						key: `folder-action-success`,
 						replace: true,
-						type: 'error',
+						severity: 'error',
 						hideButton: true,
 						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000

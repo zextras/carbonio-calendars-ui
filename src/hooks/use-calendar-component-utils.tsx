@@ -133,7 +133,7 @@ export const useCalendarComponentUtils = (): {
 								createSnackbar({
 									key: `calendar-moved-root`,
 									replace: true,
-									type: success ? 'info' : 'warning',
+									severity: success ? 'info' : 'warning',
 									hideButton: true,
 									label: !success
 										? t('label.error_try_again', 'Something went wrong, please try again')
@@ -191,7 +191,7 @@ export const useCalendarComponentUtils = (): {
 				createSnackbar({
 					key: `recurrent-moved-in-allDay`,
 					replace: true,
-					type: 'warning',
+					severity: 'warning',
 					hideButton: true,
 					label: t(
 						'recurrent_in_allday',

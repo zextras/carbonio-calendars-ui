@@ -61,7 +61,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'success',
+					severity: 'success',
 					hideButton: true,
 					label: t('label.calendar_shared', 'Calendar shared successfully'),
 					autoHideTimeout: 3000
@@ -81,7 +81,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 							createSnackbar({
 								key: `folder-action-failed`,
 								replace: true,
-								type: 'error',
+								severity: 'error',
 								hideButton: true,
 								label: t('label.error_try_again', 'Something went wrong, please try again'),
 								autoHideTimeout: 3000

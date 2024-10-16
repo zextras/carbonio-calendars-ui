@@ -24,10 +24,10 @@ import { differenceBy, includes, noop, reduce } from 'lodash';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from '../../carbonio-ui-commons/components/tags/delete-tag-modal';
 import { ItemType } from '../../carbonio-ui-commons/types/tags';
+import { EVENT_ACTIONS, EventActionsId } from '../../constants/event-actions';
 import { itemActionRequest } from '../../soap/item-action-request';
 import { StoreProvider } from '../../store/redux';
 import { ActionsProps } from '../../types/actions';
-import { EVENT_ACTIONS, EventActionsId } from '../../constants/event-actions';
 import { EventType } from '../../types/event';
 import { TagType } from '../../types/tags';
 
@@ -172,7 +172,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 						key: `tag`,
 						replace: true,
 						hideButton: true,
-						type: 'info',
+						severity: 'info',
 						label: value
 							? t('snackbar.tag_removed', { tag: tag.name, defaultValue: '"{{tag}}" tag removed' })
 							: t('snackbar.tag_applied', {
@@ -186,7 +186,7 @@ export const TagsDropdownItem = ({ tag, event }: { tag: Tag; event: EventType })
 					createSnackbar({
 						key: `tag`,
 						replace: true,
-						type: 'error',
+						severity: 'error',
 						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000,
 						hideButton: true

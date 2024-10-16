@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
-import { Folder, Folders } from '../carbonio-ui-commons/types/folder';
+import { Folders } from '../carbonio-ui-commons/types';
 import { generateEditor } from '../commons/editor-generator';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
@@ -51,7 +51,7 @@ const generateAppointmentDeletedSnackbar = (
 		createSnackbar({
 			key: 'send',
 			replace: true,
-			type: 'success',
+			severity: 'success',
 			label: snackbarLabel,
 			autoHideTimeout: 3000,
 			hideButton: true,
@@ -62,7 +62,7 @@ const generateAppointmentDeletedSnackbar = (
 		createSnackbar({
 			key: `delete`,
 			replace: true,
-			type: 'error',
+			severity: 'error',
 			label: t('label.error_try_again', 'Something went wrong, please try again'),
 			autoHideTimeout: 3000,
 			hideButton: true
@@ -79,7 +79,7 @@ const generateAppointmentRestoredSnackbar = (
 		createSnackbar({
 			key: 'send',
 			replace: true,
-			type: 'success',
+			severity: 'success',
 			label: t('appt_restored_successfully', 'Appointment restored successfully'),
 			autoHideTimeout: 3000,
 			hideButton: true
@@ -88,7 +88,7 @@ const generateAppointmentRestoredSnackbar = (
 		createSnackbar({
 			key: `delete`,
 			replace: true,
-			type: 'error',
+			severity: 'error',
 			label: t('label.error_try_again', 'Something went wrong, please try again'),
 			autoHideTimeout: 3000,
 			hideButton: true
