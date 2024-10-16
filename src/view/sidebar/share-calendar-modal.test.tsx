@@ -20,12 +20,6 @@ import { reducers } from '../../store/redux';
 
 const checkedIcon = 'icon: CheckmarkSquare';
 
-afterEach(async () => {
-	await act(async () => {
-		await jest.advanceTimersToNextTimerAsync();
-	});
-});
-
 describe('the share calendar modal is composed by', () => {
 	describe('the modal header. It is composed by', () => {
 		test('the title "Share" followed by the calendar name', () => {
@@ -703,6 +697,11 @@ describe('the share calendar modal is composed by', () => {
 		);
 		test.todo('check all the requests sent relative to the different cases');
 		describe('on click', () => {
+			afterEach(async () => {
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
+				});
+			});
 			test('when public is selected it will trigger a grant operation with grant type public', async () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = jest.fn();

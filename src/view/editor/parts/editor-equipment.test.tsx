@@ -82,8 +82,8 @@ describe('Editor equipment', () => {
 
 		await user.type(screen.getByText('Equipment'), 'resource');
 
-		act(() => {
-			jest.runOnlyPendingTimers();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
@@ -114,12 +114,10 @@ describe('Editor equipment', () => {
 		);
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
-		await act(async () => {
-			await user.type(screen.getByText('Equipment'), 'resource');
-		});
+		await user.type(screen.getByText('Equipment'), 'resource');
 
-		act(() => {
-			jest.runOnlyPendingTimers();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
@@ -154,12 +152,10 @@ describe('Editor equipment', () => {
 		);
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
-		await act(async () => {
-			await user.type(screen.getByText('Equipment'), 'resource');
-		});
+		await user.type(screen.getByText('Equipment'), 'resource');
 
-		act(() => {
-			jest.runOnlyPendingTimers();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);

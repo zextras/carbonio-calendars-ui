@@ -80,8 +80,8 @@ describe('Editor meeting rooms', () => {
 
 		await user.type(screen.getByText('Meeting room'), 'resource');
 
-		act(() => {
-			jest.runOnlyPendingTimers();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
@@ -112,12 +112,10 @@ describe('Editor meeting rooms', () => {
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
-		await act(async () => {
-			await user.type(screen.getByText('Meeting room'), 'resource');
-		});
+		await user.type(screen.getByText('Meeting room'), 'resource');
 
-		act(() => {
-			jest.runOnlyPendingTimers();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
@@ -149,12 +147,10 @@ describe('Editor meeting rooms', () => {
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
-		await act(async () => {
-			await user.type(screen.getByText('Meeting room'), 'resource');
-		});
+		await user.type(screen.getByText('Meeting room'), 'resource');
 
-		act(() => {
-			jest.runOnlyPendingTimers();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
