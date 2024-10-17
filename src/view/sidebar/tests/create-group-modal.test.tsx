@@ -5,8 +5,12 @@
  */
 import React from 'react';
 
+import { act } from '@testing-library/react';
+
+import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
 import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
+import calendarGenerators from '../../../test/generators/calendar';
 import { CreateGroupModal } from '../create-group-modal';
 
 describe('CreateGroupModal', () => {
@@ -57,42 +61,23 @@ describe('CreateGroupModal', () => {
 			expect(screen.getByText('Calendars in this group')).toBeVisible();
 		});
 
-		describe('calendars input', () => {
-			it('should render an input field with the correct placeholder', () => {
-				setupTest(<CreateGroupModal onClose={jest.fn()} />);
+		describe('calendars list', () => {
+			it('should render the list of all the newly added calendars', async () => {
+				const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+				populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 
-				expect(screen.getByRole('textbox', { name: 'Add Calendars' })).toBeVisible();
-			});
+				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+				const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
-			it.todo(
-				'when a calendar is selected, its chip, with the name and the color of the calendar, should be added to the input field'
-			);
+				await user.type(input, targetCalendar.name);
+				await act(async () => user.click(screen.getByText(targetCalendar.name)));
 
-			it.todo(
-				'when a calendar already on the input is selected, its chip should be displayed only once'
-			);
-
-			describe('add icon', () => {
-				it.todo('should render');
-
-				it.todo('should render a specific tooltip when the user hover the mouse on it');
-
-				it.todo('should be disabled when the input field is empty');
-
-				it.todo(
-					'should render a specific tooltip when the user hover the mouse on it and the icon is disabled'
+				await user.click(
+					screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar })
 				);
 
-				it.todo('should be enabled when the input field is not empty');
-
-				it.todo('should empty the input after the user clicks on it');
+				expect(screen.getByText(targetCalendar.name)).toBeVisible();
 			});
-		});
-
-		describe('calendars list', () => {
-			it.todo('should render a default empty list of calendars');
-
-			it.todo('should render the list of all the newly added calendars');
 
 			it.todo('should render an updated list of calendars when a new calendar is added');
 
