@@ -80,9 +80,15 @@ export const MultiCalendarSelector = ({
 	const onIconAction = useCallback(
 		(ev) => {
 			ev?.stopPropagation();
-			const selectedCalendars = selectedCalendarsChips.map(({ id }) =>
-				calendars.find((cal) => cal.id === id)
-			);
+
+			const selectedCalendars = selectedCalendarsChips.reduce((acc, { id }) => {
+				const calendar = calendars.find((cal) => cal.id === id);
+				if (calendar) {
+					acc.push(calendar);
+				}
+				return acc;
+			}, [] as Array<Folder>);
+
 			onCalendarChange(selectedCalendars);
 			setSelectedCalendarsChips([]);
 		},
