@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 
 import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { Trans, useTranslation } from 'react-i18next';
@@ -23,10 +23,34 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 
+	const restoreEvent = useCallback((): void => {
+		folderAction({ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }).then((res) => {
+			if (!res.Fault) {
+				createSnackbar({
+					key: 'send',
+					replace: true,
+					type: 'success',
+					label: t('message.snackbar.calendar_restored', 'Calendar restored successfully'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			} else {
+				createSnackbar({
+					key: 'send',
+					replace: true,
+					type: 'error',
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			}
+		});
+	}, [createSnackbar, folder.id, folder.l, t]);
+
 	function execute(
 		act: (folderAction: Array<FolderAction> | FolderAction) => Promise<any>,
-		restoreEvent: () => void
-	) {
+		op: typeof FOLDER_OPERATIONS.DELETE | typeof FOLDER_OPERATIONS.TRASH
+	): void {
 		act({
 			id: folder.id,
 			op: isNestedInTrash(folder) ? FOLDER_OPERATIONS.DELETE : FOLDER_OPERATIONS.TRASH
@@ -59,34 +83,14 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 
 	const onConfirm = (): void => {
 		onClose();
-		const restoreEvent = (): void => {
-			folderAction({ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }).then((res) => {
-				if (!res.Fault) {
-					createSnackbar({
-						key: 'send',
-						replace: true,
-						type: 'success',
-						label: t('message.snackbar.calendar_restored', 'Calendar restored successfully'),
-						autoHideTimeout: 3000,
-						hideButton: true
-					});
-				} else {
-					createSnackbar({
-						key: 'send',
-						replace: true,
-						type: 'error',
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000,
-						hideButton: true
-					});
-				}
-			});
-		};
+
 		isNestedInTrash(folder)
-			? execute(deleteCalendarAction, restoreEvent)
-			: execute(folderAction, restoreEvent);
+			? execute(deleteCalendarAction, FOLDER_OPERATIONS.DELETE)
+			: execute(folderAction, FOLDER_OPERATIONS.TRASH);
 	};
+
 	const title = useMemo(() => t('label.delete', 'Delete'), [t]);
+
 	return folder ? (
 		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader title={title} onClose={onClose} />
