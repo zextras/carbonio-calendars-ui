@@ -5,6 +5,8 @@
  */
 import React from 'react';
 
+import { times } from 'lodash';
+
 import {
 	MultiCalendarSelector,
 	MultiCalendarSelectorProps
@@ -34,21 +36,49 @@ describe('MultiCalendarSelector', () => {
 	});
 
 	it('when a calendar is selected, its chip, with the name and the color of the calendar, should be added to the input field', async () => {
-		const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome calendar' });
+		const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
 
 		populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 		const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
 		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
-		const calendarChipInput = screen.getByTestId(TEST_SELECTORS.CALENDARS_SELECTOR_INPUT);
 
-		await user.type(input, 'Calendar');
+		await user.type(input, targetCalendar.name);
 		await user.click(screen.getByText(targetCalendar.name));
-		within(calendarChipInput).getByTestId(TEST_SELECTORS.CHIP);
+		const chip = screen.getByTestId(TEST_SELECTORS.CHIP);
+
+		expect(within(chip).getByText(targetCalendar.name)).toBeVisible();
+		// TODO expect(within(chip).getByTestId('colored-square')).toBeVisible();
 	});
 
-	it.todo(
-		'when a calendar already on the input is selected, its chip should be displayed only once'
-	);
+	it('when a second calendar is selected, two chips should be rendered', async () => {
+		const targetCalendars = times(2, () => calendarGenerators.getCalendar());
+
+		populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+		const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
+
+		await user.type(input, targetCalendars[0].name);
+		await user.click(screen.getByText(targetCalendars[0].name));
+		await user.type(input, targetCalendars[1].name);
+		await user.click(screen.getByText(targetCalendars[1].name));
+		const chips = screen.getAllByTestId(TEST_SELECTORS.CHIP);
+
+		expect(chips).toHaveLength(2);
+	});
+
+	it('when a calendar already on the input is selected, its chip should be displayed only once', async () => {
+		const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+
+		populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
+		const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
+
+		await user.type(input, targetCalendar.name);
+		await user.click(screen.getByText(targetCalendar.name));
+		const chip = screen.getByTestId(TEST_SELECTORS.CHIP);
+
+		expect(within(chip).getByText(targetCalendar.name)).toBeVisible();
+	});
 
 	describe('add icon', () => {
 		it.todo('should render');
