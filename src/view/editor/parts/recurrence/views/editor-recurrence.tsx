@@ -5,7 +5,14 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { Icon, LabelFactoryProps, Row, Select, Text } from '@zextras/carbonio-design-system';
+import {
+	Icon,
+	LabelFactoryProps,
+	Row,
+	Select,
+	SingleSelectionOnChange,
+	Text
+} from '@zextras/carbonio-design-system';
 import { find, toUpper } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +37,7 @@ const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): Reac
 		crossAlignment="center"
 		mainAlignment="space-between"
 		borderRadius="half"
-		background="gray5"
+		background={'gray5'}
 		padding={{
 			all: 'small'
 		}}
@@ -109,7 +116,7 @@ export const EditorRecurrence = ({ editorId }: EditorProps): ReactElement | null
 
 	const [selected, setSelected] = useState(initialValue);
 
-	const onChange = useCallback(
+	const onChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
 			if (ev) {
 				const defaultValue = { freq: ev, interval: [{ ival: 1 }] };

@@ -85,12 +85,12 @@ const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null =
 
 	const [startValue, setStartValue] = useState(() => startValueInitialState(freq, byday, interval));
 
-	const [inputValue, setInputValue] = useState<number | ''>(
-		interval?.ival ?? defaultState?.interval?.ival
+	const [inputValue, setInputValue] = useState<string>(
+		`${interval?.ival ?? defaultState?.interval?.ival}`
 	);
 
 	const onChange = useCallback(
-		(ev) => {
+		(ev?: string) => {
 			switch (ev) {
 				case RADIO_VALUES.EVERYDAY:
 					setStartValue({
@@ -131,7 +131,7 @@ const DailyOptions = ({ editorId }: { editorId: string }): ReactElement | null =
 	);
 
 	const onInputChange = useCallback(
-		(ev) => {
+		(ev: number) => {
 			if (radioValue === RADIO_VALUES.EVERY_X_DAY) {
 				setStartValue({
 					interval: {
