@@ -29,7 +29,7 @@ describe('Group calendars list item', () => {
 		const square = screen.getByTestId('colored-square');
 		expect(square).toHaveStyleRule(
 			'background',
-			ZIMBRA_STANDARD_COLORS[Number(calendar.color.color)].hex
+			ZIMBRA_STANDARD_COLORS[Number(calendar.color)].hex
 		);
 	});
 

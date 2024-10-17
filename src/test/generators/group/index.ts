@@ -10,14 +10,11 @@ import { GroupCalendar } from '../../../types/groups';
 export const generateGroupCalendar = ({
 	id = faker.number.int().toString(),
 	name = faker.lorem.word(),
-	color = {
-		background: faker.internet.color(),
-		color: faker.number.int({ min: 0, max: 9 }).toString()
-	}
+	color = faker.number.int({ min: 0, max: 9 })
 }: {
 	id?: string;
 	name?: string;
-	color?: { background: string; color: string };
+	color?: number;
 } = {}): GroupCalendar => ({
 	id,
 	name,

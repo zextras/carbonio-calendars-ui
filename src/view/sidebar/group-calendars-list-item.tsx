@@ -24,9 +24,9 @@ export const GroupCalendarsListItem = ({
 	const [t] = useTranslation();
 
 	const color = useMemo<string>(() => {
-		const colorIndex = calendar.color.color ? Number(calendar.color.color) : 0;
+		const colorIndex = calendar.color ? Number(calendar.color) : 0;
 		return ZIMBRA_STANDARD_COLORS[colorIndex].hex;
-	}, [calendar.color.color]);
+	}, [calendar.color]);
 
 	const buttonLabel = t('label.remove', 'remove');
 

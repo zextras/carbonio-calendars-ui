@@ -17,7 +17,9 @@ import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { MultiCalendarSelector } from './custom-components/multiple-calendar-selector';
+import { GroupCalendarsList } from './group-calendars-list';
 import { getCalendarGroups, useUpdateGroups } from '../../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../../carbonio-ui-commons/types';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
@@ -32,9 +34,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 	const updateGroups = useUpdateGroups();
 	const currentGroups = getCalendarGroups();
 	const [inputValue, setInputValue] = useState('');
-	const [selectedCalendars, setSelectedCalendars] = useState<Array<{ id: string; label: string }>>(
-		[]
-	);
+	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
 	const disabled = useMemo(
 		() => inputValue.indexOf('/') > -1 || inputValue.length === 0 || selectedCalendars.length === 0,
 		[inputValue, selectedCalendars.length]
@@ -123,6 +123,9 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				onCalendarChange={onMultipleSelectedCalendarChange}
 				excludeTrash={false}
 			/>
+
+			<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={() => {}} />
+
 			<ModalFooter
 				onConfirm={onConfirm}
 				label={t('folder.modal.creategroup.footer', 'Create Group')}
