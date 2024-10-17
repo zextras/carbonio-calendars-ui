@@ -16,36 +16,18 @@ import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import { folderAction } from '../../store/actions/calendar-actions';
+import { deleteCalendarAction } from '../../store/actions/delete-calendar-action';
+import { FolderAction } from '../../types/soap/soap-actions';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
-	const onConfirm = (): void => {
-		onClose();
-		const restoreEvent = (): void => {
-			folderAction({ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }).then((res) => {
-				if (!res.Fault) {
-					createSnackbar({
-						key: 'send',
-						replace: true,
-						type: 'success',
-						label: t('message.snackbar.calendar_restored', 'Calendar restored successfully'),
-						autoHideTimeout: 3000,
-						hideButton: true
-					});
-				} else {
-					createSnackbar({
-						key: 'send',
-						replace: true,
-						type: 'error',
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000,
-						hideButton: true
-					});
-				}
-			});
-		};
-		folderAction({
+
+	function execute(
+		act: (folderAction: Array<FolderAction> | FolderAction) => Promise<any>,
+		restoreEvent: () => void
+	) {
+		act({
 			id: folder.id,
 			op: isNestedInTrash(folder) ? FOLDER_OPERATIONS.DELETE : FOLDER_OPERATIONS.TRASH
 		}).then((res) => {
@@ -73,6 +55,36 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				});
 			}
 		});
+	}
+
+	const onConfirm = (): void => {
+		onClose();
+		const restoreEvent = (): void => {
+			folderAction({ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }).then((res) => {
+				if (!res.Fault) {
+					createSnackbar({
+						key: 'send',
+						replace: true,
+						type: 'success',
+						label: t('message.snackbar.calendar_restored', 'Calendar restored successfully'),
+						autoHideTimeout: 3000,
+						hideButton: true
+					});
+				} else {
+					createSnackbar({
+						key: 'send',
+						replace: true,
+						type: 'error',
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000,
+						hideButton: true
+					});
+				}
+			});
+		};
+		isNestedInTrash(folder)
+			? execute(deleteCalendarAction, restoreEvent)
+			: execute(folderAction, restoreEvent);
 	};
 	const title = useMemo(() => t('label.delete', 'Delete'), [t]);
 	return folder ? (
