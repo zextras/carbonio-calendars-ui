@@ -15,7 +15,6 @@ type CalendarsArrayProps = {
 	folders?: Array<any>;
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const getCalendar = (calendar?: any): Folder => {
 	const calendarName = faker.commerce.product();
 	return {
