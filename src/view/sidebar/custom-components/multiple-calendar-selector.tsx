@@ -10,17 +10,17 @@ import { LinkFolder } from '@zextras/carbonio-shell-ui';
 import { filter, map, reject, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { ItemFactory } from './select-label-factory';
 import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
+import { ItemFactory } from '../../editor/parts/select-label-factory';
 
 type ChipInputItems = ChipItem<{ id: string; label: string }>[];
 
-type MultiCalendarSelectorProps = {
+export type MultiCalendarSelectorProps = {
 	onCalendarChange: (selectedCalendars: ChipInputItems) => void;
 	excludeTrash?: boolean;
 	disabled?: boolean;
@@ -88,15 +88,12 @@ export const MultiCalendarSelector = ({
 
 	return (
 		<ChipInput
-			data-testid={'contact-group-contact-input'}
+			data-testid={'calendar-selector-input'}
 			options={calendarItems}
 			disableOptions={false}
 			value={selectedCalendars}
 			onChange={onSelectedCalendarsChange}
-			placeholder={t(
-				'board.newContactGroup.input.contact_input.placeholder',
-				'Type an address, click ‘+’ to add to the group'
-			)}
+			placeholder={t('label.calendar_selector.placeholder', 'Add Calendars')}
 			requireUniqueChips
 			icon={'Plus'}
 			iconAction={onIconAction}

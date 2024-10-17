@@ -16,11 +16,11 @@ import {
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { MultiCalendarSelector } from './custom-components/multiple-calendar-selector';
 import { getCalendarGroups, useUpdateGroups } from '../../carbonio-ui-commons/store/zustand/folder';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
-import { MultiCalendarSelector } from '../editor/parts/multiple-calendar-selector';
 
 type CreateGroupModalProps = {
 	onClose: () => void;
@@ -111,7 +111,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				}}
 			/>
 			<Text size="extrasmall" color="gray1">
-				{t('label.newgroup.note', 'This group will appear in your personal account')}
+				{t('label.newgroup.note', 'This group will appear in your personal account.')}
 			</Text>
 			<Padding vertical="medium" />
 			<Divider />

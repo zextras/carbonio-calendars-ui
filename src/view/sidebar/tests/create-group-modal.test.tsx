@@ -3,26 +3,66 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
+import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { TEST_SELECTORS } from '../../../constants/test-utils';
+import { CreateGroupModal } from '../create-group-modal';
+
 describe('CreateGroupModal', () => {
-	it('should render the modal with a specific title', () => {});
+	it('should render the modal with a specific title', () => {
+		setupTest(<CreateGroupModal onClose={jest.fn()} />);
+
+		expect(screen.getByText('Create new Calendar Group')).toBeVisible();
+	});
 
 	describe('close icon', () => {
-		it.todo('should render icon');
+		it('should render icon', () => {
+			setupTest(<CreateGroupModal onClose={jest.fn()} />);
 
-		it.todo('should call the onClose callback when clicked');
+			expect(
+				screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeModal })
+			).toBeVisible();
+		});
+
+		it('should call the onClose callback when clicked', async () => {
+			const onClose = jest.fn();
+
+			const { user } = setupTest(<CreateGroupModal onClose={onClose} />);
+			const button = screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeModal });
+			await user.click(button);
+
+			expect(onClose).toHaveBeenCalledTimes(1);
+		});
 	});
 
 	describe('group name', () => {
-		it.todo('should render an input field with the correct placeholder');
+		it('should render an input field with the correct placeholder', () => {
+			setupTest(<CreateGroupModal onClose={jest.fn()} />);
 
-		it.todo('should render an helper text');
+			expect(screen.getByText('Group Name')).toBeVisible();
+		});
+
+		it('should render an helper text', () => {
+			setupTest(<CreateGroupModal onClose={jest.fn()} />);
+
+			expect(screen.getByText('This group will appear in your personal account.')).toBeVisible();
+		});
 	});
 
 	describe('calendars', () => {
-		it.todo('should render a specific title');
+		it('should render the section title', () => {
+			setupTest(<CreateGroupModal onClose={jest.fn()} />);
+
+			expect(screen.getByText('Calendars in this group')).toBeVisible();
+		});
 
 		describe('calendars input', () => {
-			it.todo('should render an input field with the correct placeholder');
+			it('should render an input field with the correct placeholder', () => {
+				setupTest(<CreateGroupModal onClose={jest.fn()} />);
+
+				expect(screen.getByRole('textbox', { name: 'Add Calendars' })).toBeVisible();
+			});
 
 			it.todo(
 				'when a calendar is selected, its chip, with the name and the color of the calendar, should be added to the input field'
