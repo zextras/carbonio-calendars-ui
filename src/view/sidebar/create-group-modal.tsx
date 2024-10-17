@@ -35,6 +35,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 	const currentGroups = getCalendarGroups();
 	const [inputValue, setInputValue] = useState('');
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
+
 	const disabled = useMemo(
 		() => inputValue.indexOf('/') > -1 || inputValue.length === 0 || selectedCalendars.length === 0,
 		[inputValue, selectedCalendars.length]
@@ -47,8 +48,8 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 
 	const placeholder = useMemo(() => t('label.type_group_name_here', 'Group Name'), [t]);
 
-	const onMultipleSelectedCalendarChange = useCallback((selected) => {
-		setSelectedCalendars(selected);
+	const onMultipleSelectedCalendarChange = useCallback((selected: Array<Folder>) => {
+		setSelectedCalendars((prev) => [...prev, ...selected]);
 	}, []);
 
 	const onConfirm = useCallback((): void => {
@@ -91,6 +92,10 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 			});
 	}, [createSnackbar, currentGroups, inputValue, onClose, selectedCalendars, t, updateGroups]);
 
+	const onCalendarRemove = useCallback((calendarId: string) => {
+		setSelectedCalendars((prev) => prev.filter((item) => item.id !== calendarId));
+	}, []);
+
 	return (
 		<Container
 			padding={{ all: 'small' }}
@@ -124,7 +129,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				excludeTrash={false}
 			/>
 
-			<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={() => {}} />
+			<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
 
 			<ModalFooter
 				onConfirm={onConfirm}
