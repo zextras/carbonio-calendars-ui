@@ -35,7 +35,7 @@ export const GroupCalendarsListItem = ({
 	}, [calendar.id, onRemove]);
 
 	return (
-		<Container>
+		<Container data-testid="group-calendars-list-item">
 			<Row width="fit">
 				<Square data-testid="colored-square" color={color} />
 			</Row>

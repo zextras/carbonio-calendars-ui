@@ -6,13 +6,23 @@
 import React from 'react';
 
 import { faker } from '@faker-js/faker';
-import { act } from '@testing-library/react';
+import { act, within } from '@testing-library/react';
+import { times } from 'lodash';
 
 import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
 import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
-import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { screen, setupTest, UserEvent } from '../../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { CreateGroupModal } from '../create-group-modal';
+
+const addCalendar = async (user: UserEvent, calendarName: string): Promise<void> => {
+	const input = screen.getByRole('textbox', { name: 'Add Calendars' });
+	await user.type(input, calendarName);
+	await act(async () => user.click(screen.getByText(calendarName)));
+	await act(async () =>
+		user.click(screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar }))
+	);
+};
 
 describe('CreateGroupModal', () => {
 	it('should render the modal with a specific title', () => {
@@ -71,21 +81,60 @@ describe('CreateGroupModal', () => {
 				populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 
 				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-				const input = screen.getByRole('textbox', { name: 'Add Calendars' });
-
-				await user.type(input, targetCalendar.name);
-				await act(async () => user.click(screen.getByText(targetCalendar.name)));
-
-				await act(async () =>
-					user.click(screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar }))
-				);
+				await addCalendar(user, targetCalendar.name);
 
 				expect(screen.getByText(targetCalendar.name)).toBeVisible();
 			});
 
-			it('should render an updated list of calendars when a new calendar is added');
+			it('should render an updated list of calendars when a new calendar is added', async () => {
+				const targetCalendars = times(2, (index) =>
+					generateFolder({
+						name: `Awesome${index}`,
+						color: faker.number.int({ max: 9 })
+					})
+				);
+				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
 
-			it.todo('should render an updated list of calendars when a calendar is removed');
+				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+				await addCalendar(user, targetCalendars[0].name);
+				await addCalendar(user, targetCalendars[1].name);
+
+				targetCalendars.forEach((calendar) => {
+					expect(screen.getByText(calendar.name)).toBeVisible();
+				});
+			});
+
+			it('should render an updated list of calendars when a calendar is removed', async () => {
+				const targetCalendars = times(2, (index) =>
+					generateFolder({
+						name: `Awesome${index}`
+					})
+				);
+				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+
+				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+				await addCalendar(user, targetCalendars[0].name);
+				await addCalendar(user, targetCalendars[1].name);
+
+				const listItems = screen.getAllByTestId('group-calendars-list-item');
+
+				const clickRemoveButton = (): (() => Promise<void>) => {
+					let result = (): Promise<void> => Promise.resolve();
+					listItems.forEach((listItem) => {
+						if (within(listItem).queryByText(targetCalendars[1].name)) {
+							result = (): Promise<void> =>
+								user.click(within(listItem).getByRole('button', { name: /remove/i }));
+						}
+					});
+
+					return result;
+				};
+
+				await act(clickRemoveButton());
+
+				expect(screen.getAllByTestId('group-calendars-list-item').length).toBe(1);
+				expect(screen.queryByText(targetCalendars[1].name)).not.toBeInTheDocument();
+			});
 		});
 	});
 
