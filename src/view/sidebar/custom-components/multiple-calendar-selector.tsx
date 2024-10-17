@@ -6,7 +6,6 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { ChipInput, ChipItem } from '@zextras/carbonio-design-system';
-import { LinkFolder } from '@zextras/carbonio-shell-ui';
 import { filter, map, reject, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +13,7 @@ import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
+import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { ItemFactory } from '../../editor/parts/select-label-factory';
@@ -21,7 +21,7 @@ import { ItemFactory } from '../../editor/parts/select-label-factory';
 type ChipInputItems = ChipItem<{ id: string; label: string }>[];
 
 export type MultiCalendarSelectorProps = {
-	onCalendarChange: (selectedCalendars: ChipInputItems) => void;
+	onCalendarChange: (selectedCalendars: Array<Folder>) => void;
 	excludeTrash?: boolean;
 	disabled?: boolean;
 };
@@ -32,7 +32,7 @@ export const MultiCalendarSelector = ({
 	disabled
 }: MultiCalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
-	const [selectedCalendars, setSelectedCalendars] = useState<ChipInputItems>([]);
+	const [selectedCalendarsChips, setSelectedCalendarsChips] = useState<ChipInputItems>([]);
 
 	const allCalendars = useFoldersMap();
 
@@ -52,7 +52,7 @@ export const MultiCalendarSelector = ({
 				const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
 				const labelName = hasId(cal, FOLDERS.CALENDAR) ? t('label.calendar', 'Calendar') : cal.name;
 				return {
-					...cal,
+					id: cal.id,
 					label: labelName,
 					value: { id: cal.id, label: labelName },
 					color: color.color,
@@ -74,16 +74,19 @@ export const MultiCalendarSelector = ({
 
 	const onSelectedCalendarsChange = useCallback((selected: ChipInputItems) => {
 		const selectedChips = uniqBy(selected, 'id');
-		setSelectedCalendars(selectedChips);
+		setSelectedCalendarsChips(selectedChips);
 	}, []);
 
 	const onIconAction = useCallback(
 		(ev) => {
 			ev?.stopPropagation();
+			const selectedCalendars = selectedCalendarsChips.map(({ id }) =>
+				calendars.find((cal) => cal.id === id)
+			);
 			onCalendarChange(selectedCalendars);
-			setSelectedCalendars([]);
+			setSelectedCalendarsChips([]);
 		},
-		[onCalendarChange, selectedCalendars]
+		[calendars, onCalendarChange, selectedCalendarsChips]
 	);
 
 	return (
@@ -91,7 +94,7 @@ export const MultiCalendarSelector = ({
 			data-testid={'calendar-selector-input'}
 			options={calendarItems}
 			disableOptions={false}
-			value={selectedCalendars}
+			value={selectedCalendarsChips}
 			onChange={onSelectedCalendarsChange}
 			placeholder={t('label.calendar_selector.placeholder', 'Add Calendars')}
 			requireUniqueChips

@@ -9,6 +9,7 @@ export const TEST_SELECTORS = {
 	CHIP: 'chip',
 	ICONS: {
 		remove: 'icon: TrashOutline',
-		closeModal: 'icon: CloseOutline'
+		closeModal: 'icon: CloseOutline',
+		addCalendar: 'icon: Plus'
 	}
 };

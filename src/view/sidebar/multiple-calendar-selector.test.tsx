@@ -86,19 +86,74 @@ describe('MultiCalendarSelector', () => {
 		it('should render', () => {
 			setupTest(<MultiCalendarSelector {...buildProps()} />);
 
-			expect(screen.getByTestId(TEST_SELECTORS.ICONS.add)).toBeVisible();
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar)).toBeVisible();
 		});
 
-		it.todo('should render a specific tooltip when the user hover the mouse on it');
+		it.skip('should render a specific tooltip when the user hover the mouse on it', async () => {
+			const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
 
-		it.todo('should be disabled when the input field is empty');
+			const icon = screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar);
+			await user.hover(icon);
+
+			expect(await screen.findByText('Add to the Group')).toBeVisible();
+		});
+
+		it('should be disabled when the input field is empty', async () => {
+			const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+
+			populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
+			setupTest(<MultiCalendarSelector {...buildProps()} />);
+
+			const icon = screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar);
+			expect(icon).toBeDisabled();
+		});
 
 		it.todo(
 			'should render a specific tooltip when the user hover the mouse on it and the icon is disabled'
 		);
 
-		it.todo('should be enabled when the input field is not empty');
+		it('should be enabled when the input field is not empty', async () => {
+			const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
 
-		it.todo('should empty the input after the user clicks on it');
+			populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
+			const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+			const input = screen.getByRole('textbox', { name: 'Add Calendars' });
+
+			await user.type(input, targetCalendar.name);
+			await act(() => user.click(screen.getByText(targetCalendar.name)));
+
+			const icon = screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar);
+			expect(icon).toBeEnabled();
+		});
+
+		it('should empty the input after the user clicks on it', () => {
+			const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+
+			populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
+			const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+			const input = screen.getByRole('textbox', { name: 'Add Calendars' });
+
+			user.type(input, targetCalendar.name);
+			user.click(screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar));
+
+			expect(input).toHaveValue('');
+		});
+	});
+
+	it('should call the onCalendarChange callback with the selected calendars when the user clicks on the add icon', async () => {
+		const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+
+		populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
+		const onCalendarChange = jest.fn();
+		const { user } = setupTest(<MultiCalendarSelector {...buildProps({ onCalendarChange })} />);
+		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
+
+		await user.type(input, targetCalendar.name);
+		await act(() => user.click(screen.getByText(targetCalendar.name)));
+		await user.click(
+			screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar })
+		);
+
+		expect(onCalendarChange).toHaveBeenCalledWith([targetCalendar]);
 	});
 });
