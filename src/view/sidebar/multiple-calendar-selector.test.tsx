@@ -5,6 +5,7 @@
  */
 import React from 'react';
 
+import { act } from '@testing-library/react';
 import { times } from 'lodash';
 
 import {
@@ -43,11 +44,12 @@ describe('MultiCalendarSelector', () => {
 		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
 		await user.type(input, targetCalendar.name);
-		await user.click(screen.getByText(targetCalendar.name));
+		await act(() => user.click(screen.getByText(targetCalendar.name)));
+
 		const chip = screen.getByTestId(TEST_SELECTORS.CHIP);
 
 		expect(within(chip).getByText(targetCalendar.name)).toBeVisible();
-		// TODO expect(within(chip).getByTestId('colored-square')).toBeVisible();
+		expect(within(chip).getByTestId('colored-square')).toBeVisible();
 	});
 
 	it('when a second calendar is selected, two chips should be rendered', async () => {
@@ -58,9 +60,9 @@ describe('MultiCalendarSelector', () => {
 		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
 		await user.type(input, targetCalendars[0].name);
-		await user.click(screen.getByText(targetCalendars[0].name));
+		await act(() => user.click(screen.getByText(targetCalendars[0].name)));
 		await user.type(input, targetCalendars[1].name);
-		await user.click(screen.getByText(targetCalendars[1].name));
+		await act(() => user.click(screen.getByText(targetCalendars[1].name)));
 		const chips = screen.getAllByTestId(TEST_SELECTORS.CHIP);
 
 		expect(chips).toHaveLength(2);
@@ -74,14 +76,18 @@ describe('MultiCalendarSelector', () => {
 		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
 		await user.type(input, targetCalendar.name);
-		await user.click(screen.getByText(targetCalendar.name));
+		await act(() => user.click(screen.getByText(targetCalendar.name)));
 		const chip = screen.getByTestId(TEST_SELECTORS.CHIP);
 
 		expect(within(chip).getByText(targetCalendar.name)).toBeVisible();
 	});
 
 	describe('add icon', () => {
-		it.todo('should render');
+		it('should render', () => {
+			setupTest(<MultiCalendarSelector {...buildProps()} />);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.add)).toBeVisible();
+		});
 
 		it.todo('should render a specific tooltip when the user hover the mouse on it');
 
