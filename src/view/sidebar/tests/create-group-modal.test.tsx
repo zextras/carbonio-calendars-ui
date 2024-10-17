@@ -5,12 +5,13 @@
  */
 import React from 'react';
 
+import { faker } from '@faker-js/faker';
 import { act } from '@testing-library/react';
 
+import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
 import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
 import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
-import calendarGenerators from '../../../test/generators/calendar';
 import { CreateGroupModal } from '../create-group-modal';
 
 describe('CreateGroupModal', () => {
@@ -63,7 +64,10 @@ describe('CreateGroupModal', () => {
 
 		describe('calendars list', () => {
 			it('should render the list of all the newly added calendars', async () => {
-				const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+				const targetCalendar = generateFolder({
+					name: 'Awesome',
+					color: faker.number.int({ max: 9 })
+				});
 				populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 
 				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
@@ -72,14 +76,14 @@ describe('CreateGroupModal', () => {
 				await user.type(input, targetCalendar.name);
 				await act(async () => user.click(screen.getByText(targetCalendar.name)));
 
-				await user.click(
-					screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar })
+				await act(async () =>
+					user.click(screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar }))
 				);
 
 				expect(screen.getByText(targetCalendar.name)).toBeVisible();
 			});
 
-			it.todo('should render an updated list of calendars when a new calendar is added');
+			it('should render an updated list of calendars when a new calendar is added');
 
 			it.todo('should render an updated list of calendars when a calendar is removed');
 		});
