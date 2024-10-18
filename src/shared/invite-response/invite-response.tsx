@@ -135,10 +135,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 			middleName: ''
 		};
 
-		mailToContact(obj)
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			?.onClick?.();
+		mailToContact(obj)?.execute();
 	};
 
 	const localTimezone = useMemo(() => moment.tz.guess(), []);

@@ -32,8 +32,5 @@ export const sendMsg = (email: string, name: string): void => {
 		firstName: name ?? email,
 		middleName: ''
 	};
-	mailToContact(obj)
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		?.onClick?.();
+	mailToContact(obj)?.execute();
 };
