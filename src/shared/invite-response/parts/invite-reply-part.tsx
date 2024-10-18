@@ -65,8 +65,7 @@ const normalizeEditorFromMailMessage = (
 	end: messageData.e[0].u ?? moment(messageData.e[0].d).valueOf(),
 	attendees: [
 		{
-			email: messageData.or.a ?? messageData.or.url,
-			id: messageData.or.a ?? messageData.or.url
+			email: messageData.or.a ?? messageData.or.url
 		}
 	]
 });

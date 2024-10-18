@@ -122,6 +122,9 @@ describe('Editor meeting rooms', () => {
 
 		await user.click(within(dropdown).getByText(items[0].label));
 		expect(dropdown).not.toBeInTheDocument();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
+		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
 
@@ -153,9 +156,14 @@ describe('Editor meeting rooms', () => {
 			await jest.advanceTimersToNextTimerAsync();
 		});
 
-		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		const dropdown = screen.getByTestId(TEST_SELECTORS.DROPDOWN);
 
 		await user.keyboard('[Enter]');
+
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
+		});
+
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});

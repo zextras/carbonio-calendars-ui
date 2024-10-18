@@ -124,6 +124,9 @@ describe('Editor equipment', () => {
 
 		await user.click(within(dropdown).getByText(items[0].label));
 		expect(dropdown).not.toBeInTheDocument();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
+		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
 

@@ -110,7 +110,7 @@ const UserShare = ({
 
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 
-	const [shareWithUserRole, setshareWithUserRole] = useState('r');
+	const [shareWithUserRole, setshareWithUserRole] = useState<string | null>('r');
 	const [sendNotification, setSendNotification] = useState(true);
 	const [standardMessage, setStandardMessage] = useState('');
 	const [contacts, setContacts] = useState<Contacts>([]);
@@ -129,11 +129,9 @@ const UserShare = ({
 		[setContacts]
 	);
 
-	const onShareRoleChange = useCallback<SingleSelectionOnChange>(
+	const onShareRoleChange = useCallback<SingleSelectionOnChange<string | null>>(
 		(shareRole) => {
-			if (shareRole) {
-				setshareWithUserRole(shareRole);
-			}
+			setshareWithUserRole(shareRole);
 		},
 		[setshareWithUserRole]
 	);
@@ -372,14 +370,12 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const [t] = useTranslation();
 	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(), []);
 
-	const [shareWithUserType, setShareWithUserType] = useState(SHARE_USER_TYPE.USER);
+	const [shareWithUserType, setShareWithUserType] = useState<'usr' | null>(SHARE_USER_TYPE.USER);
 
 	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
 
-	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr'>>((shareWith) => {
-		if (shareWith) {
-			setShareWithUserType(shareWith);
-		}
+	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr' | null>>((shareWith) => {
+		setShareWithUserType(shareWith);
 	}, []);
 
 	return (

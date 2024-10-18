@@ -382,8 +382,7 @@ export const proposeNewTimeFn =
 					isProposeNewTime: true,
 					attendees: [
 						{
-							email: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email,
-							id: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email
+							email: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email ?? ''
 						}
 					],
 					disabled: {
