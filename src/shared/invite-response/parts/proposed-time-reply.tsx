@@ -93,7 +93,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 							createSnackbar({
 								key: error ? 'proposedTimeDeclined' : 'proposedTimeAccepted',
 								replace: true,
-								type: error ? 'error' : 'success',
+								severity: error ? 'error' : 'success',
 								hideButton: true,
 								label: error
 									? t('label.error_try_again', 'Something went wrong, please try again')

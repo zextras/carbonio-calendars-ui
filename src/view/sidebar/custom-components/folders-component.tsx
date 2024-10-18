@@ -22,7 +22,8 @@ import {
 	Divider,
 	Text
 } from '@zextras/carbonio-design-system';
-import { t, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { useUserAccount } from '@zextras/carbonio-shell-ui';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
@@ -30,7 +31,7 @@ import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { getRootAccountId, useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isRoot } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { Folder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import {
 	getFolderIcon,
@@ -97,6 +98,7 @@ const RootChildren = ({
 	accordionItem: AccordionItemType;
 	item: Folder;
 }): React.JSX.Element => {
+	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
@@ -136,7 +138,7 @@ const RootChildren = ({
 			return RowWithIcon('Shared', 'shared', tooltipText);
 		}
 		return '';
-	}, [item]);
+	}, [item, t]);
 
 	const userMail = useMemo(
 		() => (root?.name === ROOT_NAME ? user.name : (root?.name ?? user.name)),
@@ -148,7 +150,7 @@ const RootChildren = ({
 			createSnackbar({
 				key: `import ongoing`,
 				replace: true,
-				type: 'info',
+				severity: 'info',
 				label: t('label.import_calendar_ongoing', 'Import into the selected calendar in progress.'),
 				hideButton: true
 			});
@@ -158,7 +160,7 @@ const RootChildren = ({
 						createSnackbar({
 							key: `import success`,
 							replace: true,
-							type: 'success',
+							severity: 'success',
 							label: t('label.import_calendar_success', 'Import successful'),
 							autoHideTimeout: 3000,
 							hideButton: true
@@ -168,7 +170,7 @@ const RootChildren = ({
 					createSnackbar({
 						key: `import failed`,
 						replace: true,
-						type: 'error',
+						severity: 'error',
 						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000,
 						hideButton: true
@@ -176,7 +178,7 @@ const RootChildren = ({
 				}
 			});
 		}
-	}, [createSnackbar, item.name, userMail]);
+	}, [createSnackbar, item.name, t, userMail]);
 
 	const onFileInputChange = useCallback(() => {
 		if (inputRef?.current?.files) {
@@ -225,7 +227,7 @@ const RootChildren = ({
 				true
 			);
 		}
-	}, [closeModal, confirmModal, createModal, item.name]);
+	}, [closeModal, confirmModal, createModal, item.name, t]);
 
 	return (
 		<>

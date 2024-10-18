@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC } from 'react';
+import React, { ReactNode } from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
@@ -26,6 +26,8 @@ const store = configureStore({
 	reducer: combineReducers(reducers)
 });
 
-export const StoreProvider: FC = ({ children }) => <Provider store={store}>{children}</Provider>;
+export const StoreProvider = ({ children }: { children: ReactNode }): React.JSX.Element => (
+	<Provider store={store}>{children}</Provider>
+);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

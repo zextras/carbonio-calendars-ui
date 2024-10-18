@@ -173,7 +173,7 @@ export const NewModal = ({
 					createSnackbar({
 						key: `new`,
 						replace: true,
-						type: 'success',
+						severity: 'success',
 						label: t('message.snackbar.new_calendar_created', 'New calendar created'),
 						autoHideTimeout: 3000,
 						hideButton: true
@@ -183,7 +183,7 @@ export const NewModal = ({
 					createSnackbar({
 						key: `move`,
 						replace: true,
-						type: 'error',
+						severity: 'error',
 						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000,
 						hideButton: true

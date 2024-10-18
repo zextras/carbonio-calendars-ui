@@ -19,7 +19,7 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { Folder } from '../../../carbonio-ui-commons/types';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_BOARD_ID } from '../../../constants';
 import {
@@ -65,8 +65,7 @@ const normalizeEditorFromMailMessage = (
 	end: messageData.e[0].u ?? moment(messageData.e[0].d).valueOf(),
 	attendees: [
 		{
-			email: messageData.or.a ?? messageData.or.url,
-			id: messageData.or.a ?? messageData.or.url
+			email: messageData.or.a ?? messageData.or.url
 		}
 	]
 });

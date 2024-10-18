@@ -19,7 +19,7 @@ export const EditorAllDayCheckbox = ({ editorId }: { editorId: string }): ReactE
 	const dispatch = useAppDispatch();
 
 	const onClick = useCallback(
-		(e) => {
+		(e: Event) => {
 			if (e) {
 				dispatch(editEditorAllDay({ id: editorId, allDay: !allDay }));
 			}

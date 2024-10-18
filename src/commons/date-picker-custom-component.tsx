@@ -11,7 +11,7 @@ import styled from 'styled-components';
 type CustomComponentProps = {
 	value: Date;
 	onClick: () => void;
-	onChange: (a: string) => unknown;
+	onChange: (a: React.ChangeEvent<HTMLInputElement>) => unknown;
 	label: string;
 	icon?: string;
 	testId?: string;
@@ -38,7 +38,7 @@ const DatePickerCustomComponent: FC<CustomComponentProps> = React.forwardRef(
 		const [timer, setTimer] = useState<null | ReturnType<typeof setTimeout>>(null);
 
 		const throttledOnChange = useCallback(
-			(data) => {
+			(data: React.ChangeEvent<HTMLInputElement>) => {
 				clearTimeout(timer as ReturnType<typeof setTimeout>);
 				const newTimer = setTimeout(() => {
 					onChange(data);
@@ -59,7 +59,7 @@ const DatePickerCustomComponent: FC<CustomComponentProps> = React.forwardRef(
 					<Input
 						label={label}
 						value={input}
-						onChange={(e: React.FormEvent<HTMLInputElement>): void => {
+						onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
 							setInput((e.target as HTMLInputElement).value);
 							throttledOnChange(e);
 						}}

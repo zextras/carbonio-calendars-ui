@@ -22,7 +22,7 @@ const YearlyOptions = (): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const [radioValue, setRadioValue] = useState(RADIO_VALUES.EVERY_YEAR_ON_MONTH_DAY);
 
-	const [moDayList, setMoDayList] = useState<number | ''>(1);
+	const [moDayList, setMoDayList] = useState('1');
 	const { weekOptions, ordinalNumbers, months } = useRecurrenceItems();
 
 	const [byMonthFirstSelectValue, setByMonthFirstSelectValue] = useState(months[0]);
@@ -30,13 +30,13 @@ const YearlyOptions = (): ReactElement | null => {
 
 	const [startValue, setStartValue] = useState<RecurrenceStartValue>({
 		bymonthday: {
-			modaylist: moDayList as number
+			modaylist: parseInt(moDayList, 10)
 		},
 		bymonth: { molist: byMonthFirstSelectValue?.value }
 	});
 
 	const onMoDayListChange = useCallback(
-		(ev) => {
+		(ev: number) => {
 			if (radioValue === RADIO_VALUES.EVERY_YEAR_ON_MONTH_DAY) {
 				setStartValue((prevValue) => ({
 					...prevValue,
@@ -50,7 +50,7 @@ const YearlyOptions = (): ReactElement | null => {
 	);
 
 	const onFirstMonthChange = useCallback(
-		(molist) => {
+		(molist: string) => {
 			if (molist && radioValue === RADIO_VALUES.EVERY_YEAR_ON_MONTH_DAY) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bymonth: { molist } }));
 			}
@@ -59,7 +59,7 @@ const YearlyOptions = (): ReactElement | null => {
 	);
 
 	const onSecondMonthChange = useCallback(
-		(molist) => {
+		(molist: string) => {
 			if (molist && radioValue === RADIO_VALUES.EVERY_YEAR_ON_CUSTOM_DAY) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bymonth: { molist } }));
 			}
@@ -70,7 +70,7 @@ const YearlyOptions = (): ReactElement | null => {
 	const [posListSelectValue, setPosListSelectValue] = useState(ordinalNumbers?.[0]);
 
 	const onBySetPosChange = useCallback(
-		(ev) => {
+		(ev: string) => {
 			if (ev && radioValue === RADIO_VALUES.EVERY_YEAR_ON_CUSTOM_DAY) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bysetpos: { poslist: ev } }));
 			}
@@ -81,7 +81,7 @@ const YearlyOptions = (): ReactElement | null => {
 	const [byDaySelectValue, setByDaySelectValue] = useState(weekOptions?.[0]);
 
 	const onByDayChange = useCallback(
-		(ev) => {
+		(ev: Array<{ day: string }>) => {
 			if (ev && radioValue === RADIO_VALUES.EVERY_YEAR_ON_CUSTOM_DAY) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: ev } }));
 			}
@@ -90,12 +90,12 @@ const YearlyOptions = (): ReactElement | null => {
 	);
 
 	const onRadioChange = useCallback(
-		(ev) => {
+		(ev?: string) => {
 			switch (ev) {
 				case RADIO_VALUES.EVERY_YEAR_ON_MONTH_DAY:
 					setStartValue({
 						bymonthday: {
-							modaylist: moDayList as number
+							modaylist: parseInt(moDayList, 10)
 						},
 						bymonth: { molist: byMonthFirstSelectValue?.value }
 					});

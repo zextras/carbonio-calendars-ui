@@ -10,7 +10,7 @@ import { act, screen, waitFor, within } from '@testing-library/react';
 
 import { ShareCalendarModal } from './share-calendar-modal';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
-import { Grant } from '../../carbonio-ui-commons/types/folder';
+import { Grant } from '../../carbonio-ui-commons/types';
 import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import { TEST_SELECTORS } from '../../constants/test-utils';
@@ -67,9 +67,7 @@ describe('the share calendar modal is composed by', () => {
 				'icon: CloseOutline'
 			);
 
-			await waitFor(() => {
-				user.click(closeBtn);
-			});
+			await user.click(closeBtn);
 
 			expect(closeFn).toHaveBeenCalledTimes(1);
 		});
@@ -176,17 +174,13 @@ describe('the share calendar modal is composed by', () => {
 				{ store }
 			);
 
-			await waitFor(() => {
-				user.click(screen.getByText(/share with/i));
-			});
+			await user.click(screen.getByText(/share with/i));
 
 			const dropdownPublicOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 				/share\.options\.share_calendar_with\.public/i
 			);
 
-			await waitFor(() => {
-				user.click(dropdownPublicOption);
-			});
+			await user.click(dropdownPublicOption);
 
 			const chipInput = screen.queryByRole('textbox', {
 				name: /Recipients e-mail addresses/i
@@ -325,9 +319,7 @@ describe('the share calendar modal is composed by', () => {
 						screen.getByTestId('privateCheckboxContainer')
 					).getByTestId('icon: Square');
 
-					await waitFor(() => {
-						user.click(uncheckedPrivate);
-					});
+					await user.click(uncheckedPrivate);
 
 					const checkedPrivate = within(screen.getByTestId('privateCheckboxContainer')).getByTestId(
 						checkedIcon
@@ -358,9 +350,7 @@ describe('the share calendar modal is composed by', () => {
 
 					expect(infoPrivateCheckbox).toBeVisible();
 
-					act(() => {
-						user.hover(infoPrivateCheckbox);
-					});
+					await user.hover(infoPrivateCheckbox);
 
 					const tooltipTextElement = await screen.findByText(/When sharing a calendar/i);
 
@@ -521,9 +511,7 @@ describe('the share calendar modal is composed by', () => {
 					).getByTestId(checkedIcon);
 
 					expect(sendNotificationCheckbox).toBeInTheDocument();
-					await waitFor(() => {
-						user.click(sendNotificationCheckbox);
-					});
+					await user.click(sendNotificationCheckbox);
 
 					const standardMessage = screen.getByRole('textbox', {
 						name: /Add a note to standard message/i
@@ -633,9 +621,7 @@ describe('the share calendar modal is composed by', () => {
 				{ store }
 			);
 
-			await waitFor(() => {
-				user.click(screen.getByText(/share with/i));
-			});
+			await user.click(screen.getByText(/share with/i));
 
 			const dropdownPublicOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 				/share\.options\.share_calendar_with\.public/i
@@ -711,6 +697,11 @@ describe('the share calendar modal is composed by', () => {
 		);
 		test.todo('check all the requests sent relative to the different cases');
 		describe('on click', () => {
+			afterEach(async () => {
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
+				});
+			});
 			test('when public is selected it will trigger a grant operation with grant type public', async () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = jest.fn();
@@ -726,22 +717,16 @@ describe('the share calendar modal is composed by', () => {
 					{ store }
 				);
 
-				await waitFor(() => {
-					user.click(screen.getByText(/share with/i));
-				});
+				await user.click(screen.getByText(/share with/i));
 
 				const dropdownPublicOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 					/share\.options\.share_calendar_with\.public/i
 				);
 
-				await waitFor(() => {
-					user.click(dropdownPublicOption);
-				});
+				await user.click(dropdownPublicOption);
 				const confirmButton = screen.getByText(/Share Calendar/i);
 
-				await waitFor(() => {
-					user.click(confirmButton);
-				});
+				await user.click(confirmButton);
 
 				expect(spy).toHaveBeenCalledTimes(1);
 				expect(spy).toHaveBeenCalledWith(
@@ -771,15 +756,13 @@ describe('the share calendar modal is composed by', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await waitFor(() => {
-						user.type(chipInput, 'user1');
-					});
+					await user.type(chipInput, 'user1');
 
 					const confirmButton = screen.getByText(/Share Calendar/i);
 
-					await waitFor(() => {
-						user.click(confirmButton);
-					});
+					expect(confirmButton).toBeEnabled();
+
+					await user.click(confirmButton);
 
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
@@ -808,23 +791,17 @@ describe('the share calendar modal is composed by', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await waitFor(() => {
-						user.type(chipInput, 'user1');
-					});
+					await user.type(chipInput, 'user1');
 
 					const privateCheckbox = screen.getByText(
 						/allow user\(s\) to see private appointments’ detail/i
 					);
 
-					await waitFor(() => {
-						user.click(privateCheckbox);
-					});
+					await user.click(privateCheckbox);
 
 					const confirmButton = screen.getByText(/Share Calendar/i);
 
-					await waitFor(() => {
-						user.click(confirmButton);
-					});
+					await user.click(confirmButton);
 
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
@@ -852,29 +829,21 @@ describe('the share calendar modal is composed by', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await waitFor(() => {
-						user.type(chipInput, 'user1');
-					});
+					await user.type(chipInput, 'user1');
 
 					const roleSelector = screen.getByText('Role');
 
-					await waitFor(() => {
-						user.click(roleSelector);
-					});
+					await user.click(roleSelector);
 
 					const noPermissionRoleOption = within(
 						screen.getByTestId(TEST_SELECTORS.DROPDOWN)
 					).getByText(/share\.options\.share_calendar_role\.none/i);
 
-					await waitFor(() => {
-						user.click(noPermissionRoleOption);
-					});
+					await user.click(noPermissionRoleOption);
 
 					const confirmButton = screen.getByText(/Share Calendar/i);
 
-					await waitFor(() => {
-						user.click(confirmButton);
-					});
+					await user.click(confirmButton);
 
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
@@ -902,29 +871,21 @@ describe('the share calendar modal is composed by', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await waitFor(() => {
-						user.type(chipInput, 'user1');
-					});
+					await user.type(chipInput, 'user1');
 
 					const roleSelector = screen.getByText('Role');
 
-					await waitFor(() => {
-						user.click(roleSelector);
-					});
+					await user.click(roleSelector);
 
 					const viewerRoleOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 						/share\.options\.share_calendar_role\.viewer/i
 					);
 
-					await waitFor(() => {
-						user.click(viewerRoleOption);
-					});
+					await user.click(viewerRoleOption);
 
 					const confirmButton = screen.getByText(/Share Calendar/i);
 
-					await waitFor(() => {
-						user.click(confirmButton);
-					});
+					await user.click(confirmButton);
 
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
@@ -952,29 +913,21 @@ describe('the share calendar modal is composed by', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await waitFor(() => {
-						user.type(chipInput, 'user1');
-					});
+					await user.type(chipInput, 'user1');
 
 					const roleSelector = screen.getByText('Role');
 
-					await waitFor(() => {
-						user.click(roleSelector);
-					});
+					await user.click(roleSelector);
 
 					const adminRoleOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 						/share\.options\.share_calendar_role\.admin/i
 					);
 
-					await waitFor(() => {
-						user.click(adminRoleOption);
-					});
+					await user.click(adminRoleOption);
 
 					const confirmButton = screen.getByText(/Share Calendar/i);
 
-					await waitFor(() => {
-						user.click(confirmButton);
-					});
+					await user.click(confirmButton);
 
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
@@ -1002,29 +955,21 @@ describe('the share calendar modal is composed by', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await waitFor(() => {
-						user.type(chipInput, 'user1');
-					});
+					await user.type(chipInput, 'user1');
 
 					const roleSelector = screen.getByText('Role');
 
-					await waitFor(() => {
-						user.click(roleSelector);
-					});
+					await user.click(roleSelector);
 
 					const managerRoleOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
 						/share\.options\.share_calendar_role\.manager/i
 					);
 
-					await waitFor(() => {
-						user.click(managerRoleOption);
-					});
+					await user.click(managerRoleOption);
 
 					const confirmButton = screen.getByText(/Share Calendar/i);
 
-					await waitFor(() => {
-						user.click(confirmButton);
-					});
+					await user.click(confirmButton);
 
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
@@ -1053,17 +998,22 @@ describe('the share calendar modal is composed by', () => {
 							name: /Recipients e-mail addresses/i
 						});
 
-						await waitFor(() => {
-							user.type(chipInput, 'user1');
+						await user.type(chipInput, 'user1');
+
+						const confirmButton = screen.getByRole('button', { name: /Share Calendar/i });
+
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
 						});
 
-						const confirmButton = screen.getByText(/Share Calendar/i);
+						await user.click(confirmButton);
 
-						await waitFor(() => {
-							user.click(confirmButton);
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
 						});
 
 						expect(sendSpy).toHaveBeenCalledTimes(1);
+
 						expect(sendSpy).toHaveBeenCalledWith(expect.objectContaining({ standardMessage: '' }));
 					});
 					test('and a custom message is added it will send the share notification with the custom message', async () => {
@@ -1085,9 +1035,7 @@ describe('the share calendar modal is composed by', () => {
 							name: /Recipients e-mail addresses/i
 						});
 
-						await waitFor(() => {
-							user.type(chipInput, 'user1');
-						});
+						await user.type(chipInput, 'user1');
 
 						const standardMessage = screen.getByRole('textbox', {
 							name: /Add a note to standard message/i
@@ -1095,14 +1043,20 @@ describe('the share calendar modal is composed by', () => {
 
 						const customMessage = 'custom Message';
 
-						await waitFor(() => {
-							user.type(standardMessage, customMessage);
+						await user.type(standardMessage, customMessage);
+
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
 						});
 
-						const confirmButton = screen.getByText(/Share Calendar/i);
+						const confirmButton = screen.getByRole('button', { name: /Share Calendar/i });
 
-						await waitFor(() => {
-							user.click(confirmButton);
+						expect(confirmButton).toBeEnabled();
+
+						await user.click(confirmButton);
+
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
 						});
 
 						expect(sendSpy).toHaveBeenCalledTimes(1);

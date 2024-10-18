@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { Select } from '@zextras/carbonio-design-system';
+import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { LinkFolder, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { filter, find, map, reject } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +19,7 @@ import {
 	useFoldersMapByRoot
 } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { Folder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { PREFS_DEFAULTS } from '../../../constants';
 import {
@@ -119,7 +119,7 @@ export const CalendarSelector = ({
 		return find(calendarItems, ['value', calendarId]) ?? defaultCalendar;
 	}, [requiredCalendars, zimbraPrefDefaultCalendarId, calendarItems, calendarId]);
 
-	const onSelectedCalendarChange = useCallback(
+	const onSelectedCalendarChange = useCallback<SingleSelectionOnChange>(
 		(id) => {
 			const calendar = find(calendars, ['id', id]) ?? requiredCalendars[0];
 			return onCalendarChange(calendar);

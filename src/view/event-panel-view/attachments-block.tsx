@@ -23,7 +23,7 @@ import { getAttachmentsDownloadLink } from './attachment-utils';
 import { getFileExtension, calcColor } from '../../commons/utilities';
 
 type Attachments = Array<{
-	part: any;
+	part: string;
 	mid: string;
 	filename: string;
 	contentType: string;
@@ -36,7 +36,7 @@ type AttachmentsBlockProps = {
 	id?: string;
 	subject: string;
 	onAttachmentsChange?: (
-		arg1: { aid?: string[]; mp: Array<{ part: any; mid: string }> },
+		arg1: { aid?: string[]; mp: Array<{ part: string; mid: string }> },
 		arg2: any
 	) => void;
 	isEditor?: boolean;
@@ -69,7 +69,7 @@ export const AttachmentsBlock = ({
 	}, [attachments, id, subject]);
 
 	const removeAttachment = useCallback(
-		(part) => {
+		(part: string) => {
 			const attachmentFiles = filter(attachments, (attachment) =>
 				attachment.name ? attachment.name !== part : !attachment.aid || attachment.aid !== part
 			);
@@ -84,7 +84,7 @@ export const AttachmentsBlock = ({
 						mp: reduce(
 							attachmentFiles,
 							(acc, item) => (item.name && id ? [...acc, { part: item.name, mid: id }] : acc),
-							[] as Array<{ part: any; mid: string }>
+							[] as Array<{ part: string; mid: string }>
 						)
 					},
 					attachmentFiles

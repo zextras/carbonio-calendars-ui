@@ -76,7 +76,7 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 		);
 		setOtherKeywords(updatedQuery);
 	}, [query, queryArray]);
-    
+
 
 
 	const resetFilters = useCallback(() => {
@@ -100,13 +100,6 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 		onClose();
 	}, [updateQuery, queryToBe, setDateStart, fromDate, setDateEnd, toDate, onClose]);
 
-	const keywordRowProps = useMemo(
-		() => ({
-			otherKeywords,
-			setOtherKeywords
-		}),
-		[otherKeywords]
-	);
 
 	return (
 		<CustomModal open={open} onClose={onClose} maxHeight="90vh" size="medium">
@@ -117,7 +110,7 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 				/>
 
 				<Container padding={{ horizontal: 'medium', vertical: 'small' }}>
-					<KeywordRow compProps={keywordRowProps} />
+					<KeywordRow otherKeywords={otherKeywords} setOtherKeywords={setOtherKeywords} />
 					<FromDateToDateRow
 						fromDate={fromDate}
 						setFromDate={setFromDate}

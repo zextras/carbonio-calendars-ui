@@ -42,7 +42,7 @@ export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement
 	);
 
 	const onChange = useCallback(
-		(e) => {
+		(e: React.ChangeEvent<HTMLInputElement>) => {
 			setValue(e.target.value);
 			debounceInput(e.target.value);
 		},

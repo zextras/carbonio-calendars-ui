@@ -5,7 +5,13 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { Container, Padding, Select, Text } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	Padding,
+	Select,
+	SingleSelectionOnChange,
+	Text
+} from '@zextras/carbonio-design-system';
 import type { TFunction } from 'i18next';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +20,7 @@ import LabelFactory, { Square } from './select-label-factory';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorFreeBusy } from '../../../store/selectors/editor';
 import { editEditorDisplayStatus } from '../../../store/slices/editor-slice';
+import { InviteFreeBusy } from '../../../types/store/invite';
 
 type ItemProps = {
 	label: string;
@@ -75,16 +82,18 @@ export const EditorFreeBusySelector = ({ editorId }: { editorId: string }): Reac
 	const dispatch = useAppDispatch();
 
 	const getNewSelection = useCallback(
-		(e) => find(statusItems, ['value', e]) ?? statusItems[0],
+		(e: InviteFreeBusy | undefined) => find(statusItems, ['value', e]) ?? statusItems[0],
 		[statusItems]
 	);
 
 	const [selected, setSelected] = useState(getNewSelection(freeBusy));
 
-	const onChange = useCallback(
+	const onChange = useCallback<SingleSelectionOnChange<InviteFreeBusy>>(
 		(value) => {
-			dispatch(editEditorDisplayStatus({ id: editorId, freeBusy: value }));
-			setSelected(getNewSelection(value));
+			if (value) {
+				dispatch(editEditorDisplayStatus({ id: editorId, freeBusy: value }));
+				setSelected(getNewSelection(value));
+			}
 		},
 		[dispatch, editorId, getNewSelection]
 	);
@@ -98,7 +107,7 @@ export const EditorFreeBusySelector = ({ editorId }: { editorId: string }): Reac
 	return selected ? (
 		<Select
 			items={statusItems}
-			background="gray5"
+			background={'gray5'}
 			label={t('label.display', 'Display')}
 			onChange={onChange}
 			selection={selected}

@@ -151,8 +151,8 @@ export const generateParticipantInformation = (resource: Editor): Array<Partial<
 					(attendee) => ({
 						a: attendee?.email ?? attendee?.label,
 						p:
-							attendee?.firstName && attendee?.lastname
-								? `${attendee.firstName} ${attendee.lastname}`
+							attendee?.firstName && attendee?.lastName
+								? `${attendee.firstName} ${attendee.lastName}`
 								: attendee.label,
 						t: 't'
 					})

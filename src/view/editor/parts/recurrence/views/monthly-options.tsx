@@ -21,16 +21,16 @@ import WeekdaySelect from '../components/weekday-select';
 const MonthlyOptions = (): ReactElement | null => {
 	const { frequency, setNewStartValue } = useContext(RecurrenceContext);
 	const [radioValue, setRadioValue] = useState(RADIO_VALUES.DAY_OF_MONTH);
-	const [moDayList, setMoDayList] = useState<number | ''>(1);
-	const [intervalFirstInput, setIntervalFirstInput] = useState<number | ''>(1);
-	const [intervalSecondInput, setIntervalSecondInput] = useState<number | ''>(1);
+	const [moDayList, setMoDayList] = useState('1');
+	const [intervalFirstInput, setIntervalFirstInput] = useState('1');
+	const [intervalSecondInput, setIntervalSecondInput] = useState('1');
 
 	const [startValue, setStartValue] = useState<RecurrenceStartValue>({
 		bymonthday: {
-			modaylist: moDayList as number
+			modaylist: parseInt(moDayList, 10)
 		},
 		interval: {
-			ival: intervalFirstInput as number
+			ival: parseInt(intervalFirstInput, 10)
 		}
 	});
 
@@ -40,15 +40,15 @@ const MonthlyOptions = (): ReactElement | null => {
 	const [byDaySelectValue, setByDaySelectValue] = useState(weekOptions?.[0]);
 
 	const onRadioChange = useCallback(
-		(ev) => {
+		(ev?: string) => {
 			switch (ev) {
 				case RADIO_VALUES.DAY_OF_MONTH:
 					setStartValue({
 						bymonthday: {
-							modaylist: moDayList as number
+							modaylist: parseInt(moDayList, 10)
 						},
 						interval: {
-							ival: intervalFirstInput as number
+							ival: parseInt(intervalFirstInput, 10)
 						}
 					});
 					setRadioValue(ev);
@@ -59,7 +59,7 @@ const MonthlyOptions = (): ReactElement | null => {
 						bysetpos: { poslist: posListSelectValue?.value },
 						byday: { wkday: map(byDaySelectValue?.value?.split?.(','), (day) => ({ day })) },
 						interval: {
-							ival: intervalSecondInput as number
+							ival: parseInt(intervalSecondInput, 10)
 						}
 					});
 					break;
@@ -78,7 +78,7 @@ const MonthlyOptions = (): ReactElement | null => {
 	);
 
 	const onMoDayListChange = useCallback(
-		(ev) => {
+		(ev: number) => {
 			if (ev && radioValue === RADIO_VALUES.DAY_OF_MONTH) {
 				setStartValue((prevValue) => ({
 					...(prevValue ?? {}),
@@ -92,7 +92,7 @@ const MonthlyOptions = (): ReactElement | null => {
 	);
 
 	const onFirstIntervalChange = useCallback(
-		(ev) => {
+		(ev: number) => {
 			if (radioValue === RADIO_VALUES.DAY_OF_MONTH) {
 				setStartValue((prevValue) => ({
 					...prevValue,
@@ -106,7 +106,7 @@ const MonthlyOptions = (): ReactElement | null => {
 	);
 
 	const onSecondIntervalChange = useCallback(
-		(ev) => {
+		(ev: number) => {
 			if (radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
 				setStartValue((prevValue) => ({
 					...prevValue,
@@ -120,7 +120,7 @@ const MonthlyOptions = (): ReactElement | null => {
 	);
 
 	const onBySetPosChange = useCallback(
-		(ev) => {
+		(ev: string) => {
 			if (ev && radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), bysetpos: { poslist: ev } }));
 			}
@@ -129,7 +129,7 @@ const MonthlyOptions = (): ReactElement | null => {
 	);
 
 	const onByDayChange = useCallback(
-		(ev) => {
+		(ev: Array<{ day: string }>) => {
 			if (ev && radioValue === RADIO_VALUES.MONTHLY_CUSTOMIZED) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: ev } }));
 			}

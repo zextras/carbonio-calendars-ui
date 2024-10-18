@@ -3,15 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Input } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNaN, isNumber } from 'lodash';
 
 type IntervalInputProps = {
-	value: number | '';
-	setValue: React.Dispatch<React.SetStateAction<number | ''>>;
+	value: string;
+	setValue: React.Dispatch<React.SetStateAction<string>>;
 	onChange: (ev: number) => void;
 	disabled: boolean;
 	testId?: string | undefined;
@@ -25,7 +25,7 @@ export const MonthlyDayInput = ({
 	testId
 }: IntervalInputProps): ReactElement => {
 	const onMonthChange = useCallback(
-		(ev) => {
+		(ev: React.ChangeEvent<HTMLInputElement>) => {
 			if (ev.target.value === '') {
 				onChange(1);
 				setValue(ev.target.value);
@@ -36,13 +36,21 @@ export const MonthlyDayInput = ({
 					!isNaN(convertedInputToNumber) &&
 					convertedInputToNumber >= 0
 				) {
-					setValue(convertedInputToNumber);
+					setValue(ev.target.value);
 					onChange(convertedInputToNumber);
 				}
 			}
 		},
 		[onChange, setValue]
 	);
+	const hasError = useMemo(() => {
+		const convertedValue = parseInt(value, 10);
+		if (!isNumber(convertedValue) || isNaN(convertedValue)) {
+			return true;
+		}
+		return convertedValue < 1 || convertedValue > 31;
+	}, [value]);
+
 	return (
 		<Input
 			backgroundColor="gray5"
@@ -50,7 +58,7 @@ export const MonthlyDayInput = ({
 			value={value}
 			onChange={onMonthChange}
 			disabled={disabled}
-			hasError={(isNumber(value) && !isNaN(value) && (value < 1 || value > 31)) || !isNumber(value)}
+			hasError={hasError}
 			data-testid={testId}
 		/>
 	);

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ComponentType, ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { useIntegratedComponent, t } from '@zextras/carbonio-shell-ui';
 import { debounce } from 'lodash';
@@ -101,7 +101,7 @@ const PlainComposer = ({ editorId }: { editorId: string }): JSX.Element => {
 	);
 
 	const onPlainTextChange = useCallback(
-		(e) => {
+		(e: React.ChangeEvent<HTMLTextAreaElement>) => {
 			setPlainTextValue(e.target.value);
 			debounceInput([e.target.value, e.target.value]);
 		},
@@ -124,8 +124,8 @@ const HtmlComposer = ({
 	editorId
 }: {
 	editorId: string;
-	Composer: ComponentType<unknown>;
-}): JSX.Element => {
+	Composer: React.FunctionComponent<Record<string, unknown>>;
+}): React.JSX.Element => {
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const richText = useAppSelector(selectEditorRichText(editorId));
 	const dispatch = useAppDispatch();
@@ -148,7 +148,7 @@ const HtmlComposer = ({
 	);
 
 	const onRichTextChange = useCallback(
-		(e) => {
+		(e: Array<string>) => {
 			setRichTextValue(e[1]);
 			debounceInput(e);
 		},
@@ -158,8 +158,6 @@ const HtmlComposer = ({
 	return (
 		<EditorWrapper>
 			<Composer
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
 				onEditorChange={onRichTextChange}
 				minHeight="12.5rem"
 				value={richTextValue}
