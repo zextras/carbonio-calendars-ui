@@ -20,7 +20,8 @@ import {
 	ModalFooter,
 	ModalBody,
 	Divider,
-	Text
+	Text,
+	DropdownItem
 } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +32,7 @@ import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { getRootAccountId, useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isRoot } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../../../carbonio-ui-commons/types';
+import { CalendarGroup, Folder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import {
 	getFolderIcon,
@@ -60,7 +61,7 @@ const FileInput = styled.input`
 	display: none;
 `;
 
-const ContextMenuItem = ({
+const CalendarContextMenuItem = ({
 	children,
 	inputRef,
 	item
@@ -69,8 +70,25 @@ const ContextMenuItem = ({
 	inputRef: React.RefObject<HTMLInputElement>;
 	item: Folder;
 }): React.JSX.Element => {
-	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
 	const items = useCalendarActions(item, inputRef);
+
+	return (
+		<Dropdown items={items} contextMenu width="100%" display="block">
+			{children}
+		</Dropdown>
+	);
+};
+
+const GroupContextMenuItem = ({
+	children,
+	item
+}: {
+	children: React.JSX.Element;
+	item: CalendarGroup;
+}): React.JSX.Element => {
+	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
+	// TODO: implement actions for groups
+	const items: DropdownItem[] = [];
 
 	return isAllCalendar ? (
 		children
@@ -80,6 +98,8 @@ const ContextMenuItem = ({
 		</Dropdown>
 	);
 };
+
+const isGroupType = (item: Folder | CalendarGroup): item is CalendarGroup => 'calendarId' in item;
 
 const RowWithIcon = (icon: string, color: string, tooltipText: string): React.JSX.Element => (
 	<Padding left="small">
@@ -104,7 +124,44 @@ const RootSubsection = ({
 	</Row>
 );
 
-const RootChildren = ({
+const RootGroupChildren = ({
+	accordionItem,
+	item
+}: {
+	accordionItem: AccordionItemType;
+	item: CalendarGroup;
+}): React.JSX.Element => {
+	const dispatch = useAppDispatch();
+	const start = useRangeStart();
+	const end = useRangeEnd();
+	const query = useCheckedCalendarsQuery();
+
+	const onClick = useCallback(
+		(): void =>
+			recursiveToggleCheck({
+				folder: item,
+				checked: !!item.checked,
+				dispatch,
+				start,
+				end,
+				query
+			}),
+		[dispatch, end, item, query, start]
+	);
+
+	return (
+		<GroupContextMenuItem item={item}>
+			<Row onClick={onClick}>
+				<Padding left="small" />
+				<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
+					<AccordionItem item={accordionItem} />
+				</Tooltip>
+			</Row>
+		</GroupContextMenuItem>
+	);
+};
+
+const RootCalendarChildren = ({
 	accordionItem,
 	item
 }: {
@@ -244,7 +301,7 @@ const RootChildren = ({
 
 	return (
 		<>
-			<ContextMenuItem item={item} inputRef={inputRef}>
+			<CalendarContextMenuItem item={item} inputRef={inputRef}>
 				<Row onClick={onClick}>
 					<Padding left="small" />
 					<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
@@ -252,7 +309,7 @@ const RootChildren = ({
 					</Tooltip>
 					{sharedStatusIcon}
 				</Row>
-			</ContextMenuItem>
+			</CalendarContextMenuItem>
 			<FileInput type="file" ref={inputRef} onChange={onFileInputChange} accept=".ics" />
 		</>
 	);
@@ -311,5 +368,8 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 		return <RootSubsection accordionItem={accordionItem} />;
 	}
 
-	return <RootChildren accordionItem={accordionItem} item={item} />;
+	if (isGroupType(item)) {
+		return <RootGroupChildren accordionItem={accordionItem} item={item} />;
+	}
+	return <RootCalendarChildren accordionItem={accordionItem} item={item} />;
 };
