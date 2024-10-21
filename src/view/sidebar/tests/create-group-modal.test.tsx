@@ -14,6 +14,7 @@ import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/st
 import { screen, setupTest, UserEvent } from '../../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { CreateGroupModal } from '../create-group-modal';
+import * as createGroupApi from '../../../soap/create-calendar-group-request';
 
 const addCalendar = async (user: UserEvent, calendarName: string): Promise<void> => {
 	const input = screen.getByRole('textbox', { name: 'Add Calendars' });
@@ -160,9 +161,39 @@ describe('CreateGroupModal', () => {
 			expect(screen.getByRole('button', { name: /Create group/i })).toBeEnabled();
 		});
 
-		it.todo('should call the API with the proper parameters when clicked');
+		it('should call the API with the proper parameters when clicked', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+			const createGroupApiSpy = jest.spyOn(createGroupApi, 'createCalendarGroupRequest');
+			const input = screen.getByRole('textbox', { name: 'Group Name' });
 
-		it.todo('should render a success snackbar when the API call is successful');
+			await user.type(input, 'Awesome Group');
+
+			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+
+			await user.click(confirmButton);
+
+			expect(createGroupApiSpy).toHaveBeenCalledTimes(1);
+		});
+
+		it('should render a success snackbar when the API call is successful', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+			const input = screen.getByRole('textbox', { name: 'Group Name' });
+
+			await user.type(input, 'Awesome Group');
+
+			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+
+			await user.click(confirmButton);
+
+			await act(async () => {
+				await jest.runOnlyPendingTimersAsync();
+			});
+
+			// TODO: create msw handler to receive a successful response
+			const successfulSnackbar = await screen.findByText(/New group created/i);
+
+			expect(successfulSnackbar).toBeVisible();
+		});
 
 		it.todo('should call the onClose callback when the API call is successful');
 
