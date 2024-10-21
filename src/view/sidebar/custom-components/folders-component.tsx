@@ -39,7 +39,7 @@ import {
 	isLinkChild,
 	recursiveToggleCheck
 } from '../../../commons/utilities';
-import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
+import { SIDEBAR_ITEMS, SIDEBAR_ROOT_SUBSECTION } from '../../../constants/sidebar';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
 import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
@@ -89,6 +89,19 @@ const RowWithIcon = (icon: string, color: string, tooltipText: string): React.JS
 			</Row>
 		</Tooltip>
 	</Padding>
+);
+
+const RootSubsection = ({
+	accordionItem
+}: {
+	accordionItem: AccordionItemType;
+}): React.JSX.Element => (
+	<Row>
+		<Padding left="small" />
+		<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
+			<AccordionItem item={accordionItem} />
+		</Tooltip>
+	</Row>
 );
 
 const RootChildren = ({
@@ -267,6 +280,9 @@ const RootAccount = ({
 export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 	const { displayName } = useUserAccount();
 	const isRootAccount = useMemo(() => isRoot(item), [item]);
+	const isRootSubSection =
+		item.id === SIDEBAR_ROOT_SUBSECTION.CALENDARS || item.id === SIDEBAR_ROOT_SUBSECTION.GROUPS;
+
 	const accordionItem = useMemo(
 		() =>
 			({
@@ -289,6 +305,10 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 
 	if (isRootAccount) {
 		return <RootAccount accordionItem={accordionItem} />;
+	}
+
+	if (isRootSubSection) {
+		return <RootSubsection accordionItem={accordionItem} />;
 	}
 
 	return <RootChildren accordionItem={accordionItem} item={item} />;
