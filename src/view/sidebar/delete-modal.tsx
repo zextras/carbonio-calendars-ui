@@ -12,7 +12,7 @@ import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-foote
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { isNestedInTrash } from '../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { Folder } from '../../carbonio-ui-commons/types';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -47,22 +47,23 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 		});
 	}, [createSnackbar, folder.id, folder.l, t]);
 
-	function execute(
+	function handleDeletion(
 		act: (folderAction: Array<FolderAction> | FolderAction) => Promise<any>,
-		op: typeof FOLDER_OPERATIONS.DELETE | typeof FOLDER_OPERATIONS.TRASH
+		operation: {
+			type: typeof FOLDER_OPERATIONS.DELETE | typeof FOLDER_OPERATIONS.TRASH;
+			label: string;
+		}
 	): void {
 		act({
 			id: folder.id,
-			op: isNestedInTrash(folder) ? FOLDER_OPERATIONS.DELETE : FOLDER_OPERATIONS.TRASH
+			op: operation.type
 		}).then((res) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: 'send',
 					replace: true,
 					type: 'info',
-					label: isNestedInTrash(folder)
-						? t('message.snackbar.calendar_permanently_deleted', 'Calendar permanently deleted')
-						: t('message.snackbar.calendar_moved_to_trash', 'Calendar moved to trash'),
+					label: operation.label,
 					autoHideTimeout: 5000,
 					hideButton: folder ? hasId(folder, FOLDERS.USER_ROOT) : true,
 					actionLabel: t('label.undo', 'Undo'),
@@ -85,8 +86,14 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 		onClose();
 
 		isNestedInTrash(folder)
-			? execute(deleteCalendarAction, FOLDER_OPERATIONS.DELETE)
-			: execute(folderAction, FOLDER_OPERATIONS.TRASH);
+			? handleDeletion(deleteCalendarAction, {
+					type: FOLDER_OPERATIONS.DELETE,
+					label: t('message.snackbar.calendar_permanently_deleted', 'Calendar permanently deleted')
+				})
+			: handleDeletion(folderAction, {
+					type: FOLDER_OPERATIONS.TRASH,
+					label: t('message.snackbar.calendar_moved_to_trash', 'Calendar moved to trash')
+				});
 	};
 
 	const title = useMemo(() => t('label.delete', 'Delete'), [t]);
