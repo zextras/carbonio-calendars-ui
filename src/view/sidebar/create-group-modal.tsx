@@ -33,32 +33,32 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 	const createSnackbar = useSnackbar();
 	const updateGroups = useUpdateGroups();
 	const currentGroups = getCalendarGroups();
-	const [inputValue, setInputValue] = useState('');
+	const [groupName, setGroupName] = useState('');
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
 
 	const disabled = useMemo(
-		() => inputValue.indexOf('/') > -1 || inputValue.length === 0 || selectedCalendars.length === 0,
-		[inputValue, selectedCalendars.length]
+		() => groupName.indexOf('/') > -1 || groupName.length === 0,
+		[groupName]
 	);
 
 	const onCloseModal = useCallback(() => {
-		setInputValue('');
+		setGroupName('');
 		onClose();
 	}, [onClose]);
 
-	const placeholder = useMemo(() => t('label.type_group_name_here', 'Group Name'), [t]);
+	const groupNameInputLabel = useMemo(() => t('label.type_group_name_here', 'Group Name'), [t]);
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Array<Folder>) => {
 		setSelectedCalendars((prev) => [...prev, ...selected]);
 	}, []);
 
 	const onConfirm = useCallback((): void => {
-		if (!inputValue) {
+		if (!groupName) {
 			return;
 		}
 
 		const ids = map(selectedCalendars, (item) => item.id);
-		createCalendarGroupRequest({ name: inputValue, calendarIds: ids })
+		createCalendarGroupRequest({ name: groupName, calendarIds: ids })
 			.then((res) => {
 				updateGroups([
 					...currentGroups,
@@ -80,7 +80,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 
 				onClose();
 			})
-			.catch((err) => {
+			.catch(() => {
 				createSnackbar({
 					key: `group-creation-failed`,
 					replace: true,
@@ -90,7 +90,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 					hideButton: true
 				});
 			});
-	}, [createSnackbar, currentGroups, inputValue, onClose, selectedCalendars, t, updateGroups]);
+	}, [createSnackbar, currentGroups, groupName, onClose, selectedCalendars, t, updateGroups]);
 
 	const onCalendarRemove = useCallback((calendarId: string) => {
 		setSelectedCalendars((prev) => prev.filter((item) => item.id !== calendarId));
@@ -108,11 +108,11 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				onClose={onCloseModal}
 			/>
 			<Input
-				label={placeholder}
+				label={groupNameInputLabel}
 				backgroundColor="gray5"
-				value={inputValue}
+				value={groupName}
 				onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-					setInputValue(e.target.value);
+					setGroupName(e.target.value);
 				}}
 			/>
 			<Text size="extrasmall" color="gray1">
