@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { InviteClass, InviteFreeBusy } from './store/invite';
+import { EditorChipAttendees, InviteClass, InviteFreeBusy } from './store/invite';
 
 export type CalendarEditor = {
 	id: string;
@@ -127,8 +127,8 @@ export type Editor = {
 		label: string;
 		link: string;
 	};
-	attendees: any[];
-	optionalAttendees: any[];
+	attendees: EditorChipAttendees[];
+	optionalAttendees: EditorChipAttendees[];
 	allDay?: boolean;
 	freeBusy?: InviteFreeBusy;
 	class?: InviteClass;

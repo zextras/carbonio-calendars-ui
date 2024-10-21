@@ -5,19 +5,24 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { AccordionItemType, Container, Input, Text } from '@zextras/carbonio-design-system';
+import {
+	AccordionDivider,
+	AccordionItemType,
+	Container,
+	Input,
+	Text
+} from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { filter, isEmpty, reduce, startsWith } from 'lodash';
+import { filter, isEmpty, map, reduce, startsWith } from 'lodash';
 
 import { FolderItem } from './folder-item';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { Folder, Folders } from '../../carbonio-ui-commons/types';
 import { getFolderTranslatedName } from '../../commons/utilities';
 import { EventType } from '../../types/event';
-import { Calendar } from '../../types/store/calendars';
 
 type ActionArgs = {
 	inviteId: string;
@@ -43,10 +48,10 @@ export const MoveModal = ({
 }: MoveModalProps): ReactElement => {
 	const folders = useFoldersMap();
 	const [input, setInput] = useState('');
-	const [folderDestination, setFolderDestination] = useState<Calendar>({} as Calendar);
+	const [folderDestination, setFolderDestination] = useState<Folder | undefined>();
 	const [isSameFolder, setIsSameFolder] = useState(false);
 	const onConfirm = useCallback(() => {
-		if (folderDestination?.id !== currentFolder.id) {
+		if (folderDestination && folderDestination?.id !== currentFolder.id) {
 			action({
 				inviteId: event.resource.inviteId,
 				l: folderDestination.id,
@@ -58,8 +63,7 @@ export const MoveModal = ({
 			setIsSameFolder(true);
 		}
 	}, [
-		folderDestination.id,
-		folderDestination.name,
+		folderDestination,
 		currentFolder.id,
 		action,
 		event.resource.inviteId,
@@ -79,28 +83,32 @@ export const MoveModal = ({
 			}),
 		[currentFolder, folders, input]
 	);
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
+
 	const nestFilteredFolders = useCallback(
-		(items: Calendar[], calId, results: Calendar[]) =>
+		(
+			items: Folders,
+			calId: string | undefined,
+			results: Array<Folder>
+		): (AccordionItemType | AccordionDivider)[] =>
 			reduce(
 				filter(items, (item) => item.parent === calId),
 				(acc, item) => {
 					const match = filter(results, (result) => result.id === item.id);
 					if (match && match.length) {
+						const folderItems = map(folders, (folder) => ({ id: folder.id, label: folder.name }));
 						return [
 							...acc,
 							{
 								divider: true
-							},
+							} satisfies AccordionDivider,
 							{
 								...item,
 								label: item.name,
-								items: folders,
+								items: folderItems,
 								onClick: () => setFolderDestination(item),
 								open: !!input.length,
-								background: folderDestination.id === item.id ? 'highlight' : undefined
-							}
+								background: folderDestination?.id === item.id ? 'highlight' : undefined
+							} satisfies AccordionItemType
 						];
 					}
 					if (match && !match.length) {
@@ -108,9 +116,9 @@ export const MoveModal = ({
 					}
 					return acc;
 				},
-				[] as Calendar[]
+				[] as (AccordionItemType | AccordionDivider)[]
 			),
-		[folderDestination.id, input.length, folders]
+		[folderDestination?.id, folders, input.length]
 	);
 
 	const nestedData = useMemo(
@@ -122,10 +130,10 @@ export const MoveModal = ({
 					level: 0,
 					open: true,
 					items: nestFilteredFolders(folders, '1', filterFromInput),
-					background: folderDestination.id === '1' ? 'highlight' : undefined
+					background: folderDestination?.id === '1' ? 'highlight' : undefined
 				}
-			] as AccordionItemType[],
-		[filterFromInput, folderDestination.id, folders, nestFilteredFolders]
+			] as (AccordionItemType | AccordionDivider)[],
+		[filterFromInput, folderDestination, folders, nestFilteredFolders]
 	);
 
 	return (
@@ -182,7 +190,10 @@ export const MoveModal = ({
 							? t('label.restore', 'Restore')
 							: t('label.move', 'Move')
 					}
-					disabled={!folderDestination.id || folderDestination.id === currentFolder.id}
+					disabled={
+						folderDestination &&
+						(!folderDestination.id || folderDestination.id === currentFolder.id)
+					}
 				/>
 			</Container>
 		</Container>

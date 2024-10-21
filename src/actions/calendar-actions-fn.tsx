@@ -12,7 +12,7 @@ import moment from 'moment';
 
 import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../carbonio-ui-commons/types/folder';
+import { Folder } from '../carbonio-ui-commons/types';
 import { ResFolder } from '../carbonio-ui-commons/utils';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { getFolderRequest } from '../soap/get-folder-request';
@@ -103,7 +103,7 @@ export const moveToRoot =
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
-						type: isTrashOrNestedInIt(item) ? 'success' : 'info',
+						severity: isTrashOrNestedInIt(item) ? 'success' : 'info',
 						hideButton: true,
 						label: isTrashOrNestedInIt(item)
 							? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
@@ -117,7 +117,7 @@ export const moveToRoot =
 					createSnackbar({
 						key: `calendar-moved-root-error`,
 						replace: true,
-						type: 'error',
+						severity: 'error',
 						hideButton: true,
 						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000
@@ -233,7 +233,7 @@ export const removeFromList =
 				createSnackbar({
 					key: `shared-calendar-removed`,
 					replace: true,
-					type: 'info',
+					severity: 'info',
 					hideButton: true,
 					label: t('message.snackbar.shared_calendar_removed', 'Calendar removed successfully'),
 					autoHideTimeout: 3000
@@ -242,7 +242,7 @@ export const removeFromList =
 				createSnackbar({
 					key: `shared-calendar-removed-error`,
 					replace: true,
-					type: 'error',
+					severity: 'error',
 					hideButton: true,
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000

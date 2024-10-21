@@ -149,7 +149,7 @@ export const Attachment = ({
 	}, [attachment.contentType, attachment.name, id, subject]);
 
 	const preview = useCallback(
-		(ev) => {
+		(ev: React.MouseEvent<HTMLDivElement>) => {
 			ev.preventDefault();
 			const pType = previewType(attachment.contentType);
 			if (pType && attachmentPreviewLink) {

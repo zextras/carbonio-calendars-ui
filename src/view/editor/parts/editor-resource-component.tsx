@@ -9,6 +9,7 @@ import React, { ReactElement, useCallback, useMemo, useRef } from 'react';
 import {
 	ChipInput,
 	ChipInputProps,
+	ChipItem,
 	Container,
 	DropdownItem,
 	KeyboardPresetObj,
@@ -31,6 +32,7 @@ import {
 } from '../../../store/selectors/editor';
 import { ChipResource, Resource } from '../../../types/editor';
 import { Contact } from '../../../types/soap/soap-actions';
+import { EditorChipAttendees } from '../../../types/store/invite';
 
 interface SkeletonTileProps {
 	width?: string;
@@ -94,7 +96,7 @@ export const EditorResourceComponent = ({
 	singleWarningLabel
 }: {
 	editorId: string;
-	onChange: (e: Array<Resource>) => void;
+	onChange: ChipInputProps<Resource>['onChange'];
 	onInputType: ChipInputProps['onInputType'];
 	placeholder: string;
 	resourcesValue: Array<ChipResource>;
@@ -113,21 +115,28 @@ export const EditorResourceComponent = ({
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
-	const onAdd = useCallback((valueToAdd) => {
-		if (typeof valueToAdd === 'string') {
-			return { label: valueToAdd };
-		}
-		const defaultLabel = {
-			label: 'no label'
-		};
-		if (valueToAdd !== null && typeof valueToAdd === 'object') {
-			return {
-				...defaultLabel,
-				...valueToAdd
-			};
-		}
-		return defaultLabel;
-	}, []);
+	const isValueToAddAnObjectWithLabelType = (
+		arg: unknown
+	): arg is { label: string } & Partial<EditorChipAttendees> =>
+		!!arg && typeof arg === 'object' && 'label' in arg;
+
+	const onAdd = useCallback<NonNullable<ChipInputProps<Resource>['onAdd']>>(
+		(valueToAdd): ChipItem<Resource> => {
+			if (valueToAdd) {
+				if (typeof valueToAdd === 'string') {
+					return { label: valueToAdd, value: { label: valueToAdd, email: valueToAdd } };
+				}
+				if (isValueToAddAnObjectWithLabelType(valueToAdd)) {
+					return {
+						...valueToAdd,
+						value: { ...valueToAdd, email: valueToAdd.email ?? valueToAdd.label }
+					};
+				}
+			}
+			throw new Error('invalid keywords received');
+		},
+		[]
+	);
 
 	const resourceAvailability = useMemo(() => {
 		if (!resourcesValue?.length) {
@@ -177,7 +186,14 @@ export const EditorResourceComponent = ({
 						// todo: ignoring cause dropdown can't receive value prop
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
-						onChange([...resourceAvailability, options[0].value]);
+						const { value } = options[0];
+						onChange([
+							...resourceAvailability,
+							{
+								...value,
+								value: { ...value, email: value.email ?? value.label }
+							}
+						]);
 						if (inputRef.current) {
 							inputRef.current.value = '';
 							setOptions([]);
@@ -205,9 +221,6 @@ export const EditorResourceComponent = ({
 					options={options}
 					onInputType={onInputType}
 					onAdd={onAdd}
-					// todo: fix chip value
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
 					onChange={onChange}
 					disabled={disabled}
 				/>

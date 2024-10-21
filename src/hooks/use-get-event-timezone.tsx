@@ -48,8 +48,8 @@ export const useGetEventTimezoneString = (
 	eventTimeString: string;
 	eventTimezoneString: string;
 	showTimezoneTooltip: boolean;
-	localTimezoneTooltip: JSX.Element;
-	eventTimezoneTooltip: JSX.Element;
+	localTimezoneTooltip: React.JSX.Element;
+	eventTimezoneTooltip: React.JSX.Element;
 } => {
 	const [t] = useTranslation();
 	const allDayLabel = t('label.all_day', 'All day');
@@ -62,7 +62,7 @@ export const useGetEventTimezoneString = (
 	const eventEnd = useMemo(() => getLocalTime(end, timezone), [end, timezone]);
 
 	const getTimeZoneString = useCallback(
-		(_start, _timezone) => {
+		(_start: number, _timezone?: string) => {
 			if (_timezone && !allDay) {
 				return `GMT ${moment(_start).startOf('year').tz(_timezone).format('Z')} ${_timezone}`;
 			}
@@ -72,7 +72,7 @@ export const useGetEventTimezoneString = (
 	);
 
 	const getTimezoneTooltip = useCallback(
-		(label, timeString, timezoneString) => (
+		(label: string, timeString: string, timezoneString: string) => (
 			<>
 				{label}
 				<br />

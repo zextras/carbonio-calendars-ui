@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback } from 'react';
 
-import { Select } from '@zextras/carbonio-design-system';
+import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual } from 'lodash';
 
@@ -14,7 +14,7 @@ import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items'
 type MonthSelectProps = {
 	value: { label: string; value: string };
 	setValue: React.Dispatch<React.SetStateAction<{ label: string; value: string }>>;
-	onChange: (ev: number) => void;
+	onChange: (ev: string) => void;
 	disabled: boolean;
 	testId?: string | undefined;
 };
@@ -28,10 +28,9 @@ export const MonthSelect = ({
 }: MonthSelectProps): ReactElement => {
 	const { months } = useRecurrenceItems();
 
-	const onMonthChange = useCallback(
+	const onMonthChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
 			if (ev) {
-				const molist = Number(ev);
 				const selectedValue = ev?.split?.(',');
 				const newValue =
 					find(months, (item) => {
@@ -39,7 +38,7 @@ export const MonthSelect = ({
 						return differenceWith(itemValue, selectedValue, isEqual).length === 0;
 					}) ?? months[0];
 				setValue(newValue);
-				onChange(molist);
+				onChange(ev);
 			}
 		},
 		[months, onChange, setValue]

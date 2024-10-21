@@ -29,7 +29,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				createSnackbar({
 					key: 'send',
 					replace: true,
-					type: 'success',
+					severity: 'success',
 					label: t('message.snackbar.calendar_restored', 'Calendar restored successfully'),
 					autoHideTimeout: 3000,
 					hideButton: true
@@ -38,7 +38,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				createSnackbar({
 					key: 'send',
 					replace: true,
-					type: 'error',
+					severity: 'error',
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000,
 					hideButton: true
@@ -62,7 +62,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				createSnackbar({
 					key: 'send',
 					replace: true,
-					type: 'info',
+					severity: 'info',
 					label: operation.label,
 					autoHideTimeout: 5000,
 					hideButton: folder ? hasId(folder, FOLDERS.USER_ROOT) : true,
@@ -73,7 +73,7 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				createSnackbar({
 					key: 'send',
 					replace: true,
-					type: 'error',
+					severity: 'error',
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000,
 					hideButton: true

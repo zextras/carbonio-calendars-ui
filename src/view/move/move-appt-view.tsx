@@ -38,7 +38,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 				createSnackbar({
 					key: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'restore' : 'move',
 					replace: true,
-					type: 'info',
+					severity: 'info',
 					hideButton: true,
 					label: hasId(event.resource.calendar, FOLDERS.TRASH)
 						? `${t('message.snackbar.appt_restored', 'Appointment restored successfully to')} ${
@@ -53,7 +53,7 @@ export const MoveApptModal = ({ onClose, event }: MoveAppointmentProps): ReactEl
 				createSnackbar({
 					key: hasId(event.resource.calendar, FOLDERS.TRASH) ? 'restore' : 'move',
 					replace: true,
-					type: 'error',
+					severity: 'error',
 					hideButton: true,
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000

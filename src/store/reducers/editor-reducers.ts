@@ -7,7 +7,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { isNil, union } from 'lodash';
 
 import type { CalendarEditor, Resource, IdentityItem, Editor, Room } from '../../types/editor';
-import type { Attendee, InviteClass, InviteFreeBusy } from '../../types/store/invite';
+import { EditorChipAttendees, InviteClass, InviteFreeBusy } from '../../types/store/invite';
 import type { EditorSlice } from '../../types/store/store';
 
 type SenderPayload = {
@@ -51,11 +51,11 @@ type AllDayPayload = {
 	allDay: boolean;
 };
 
-type AttendeePayload = { id: string; attendees: Attendee[] };
+type AttendeePayload = { id: string; attendees: EditorChipAttendees[] };
 
 type OptionalAttendeePayload = {
 	id: string;
-	optionalAttendees: Attendee[];
+	optionalAttendees: EditorChipAttendees[];
 };
 
 type FreeBusyPayload = {
