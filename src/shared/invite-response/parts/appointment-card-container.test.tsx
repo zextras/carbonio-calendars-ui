@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { keyBy, values } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
@@ -89,9 +89,11 @@ describe('appointment card container component', () => {
 			store
 		});
 
-		await waitFor(() => {
-			expect(searchRequestHandler).toHaveBeenCalledTimes(1);
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
+
+		expect(searchRequestHandler).toHaveBeenCalledTimes(1);
 
 		const eventListContainer = screen.getByTestId('AppointmentCardContainer');
 		expect(eventListContainer).toBeVisible();

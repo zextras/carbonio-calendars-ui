@@ -50,7 +50,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	}, [dispatch, id, key, removeReminder]);
 
 	const snoozeReminder = useCallback(
-		(time, isBefore = true) => {
+		(time: number, isBefore = true) => {
 			const untilForBefore = isRecurrent
 				? moment()
 						.set({

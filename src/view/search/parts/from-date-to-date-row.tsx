@@ -21,15 +21,19 @@ const FromDateToDateRow: FC<ComponentProps> = ({
 	setToDate
 }): ReactElement => {
 	const onFromDateChange = useCallback(
-		(date) => {
-			setFromDate(date);
+		(date: Date | null) => {
+			if (date) {
+				setFromDate(date);
+			}
 		},
 		[setFromDate]
 	);
 
 	const onToDateChange = useCallback(
-		(date) => {
-			setToDate(date);
+		(date: Date | null) => {
+			if (date) {
+				setToDate(date);
+			}
 		},
 		[setToDate]
 	);

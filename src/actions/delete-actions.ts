@@ -20,7 +20,7 @@ export const generateSnackbar = ({ res, t, createSnackbar }: any): any => {
 		createSnackbar({
 			key: `delete`,
 			replace: true,
-			type: 'error',
+			severity: 'error',
 			label: t('label.error_try_again', 'Something went wrong, please try again'),
 			autoHideTimeout: 3000
 		});

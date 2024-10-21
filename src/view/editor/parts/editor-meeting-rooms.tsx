@@ -5,8 +5,8 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { DropdownItem } from '@zextras/carbonio-design-system';
-import { filter, map, uniqBy } from 'lodash';
+import { ChipInputProps, ChipItem, DropdownItem } from '@zextras/carbonio-design-system';
+import { filter, map, reduce, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { EditorResourceComponent, Loader, normalizeResources } from './editor-resource-component';
@@ -44,9 +44,14 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 	const [options, setOptions] = useState<Array<DropdownItem>>([]);
 
 	const onChange = useCallback(
-		(e: Array<Resource>) => {
-			if (e) {
-				const newValue = e.length > 0 ? uniqBy(e, 'label') : [];
+		(chips: Array<ChipItem<Resource>>) => {
+			if (chips) {
+				const resourcesToSave = reduce(
+					chips,
+					(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
+					[] as Array<Resource>
+				);
+				const newValue = chips.length > 0 ? uniqBy(resourcesToSave, 'label') : [];
 				dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: newValue }));
 			}
 		},
@@ -66,7 +71,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 		() => t('attendee_room_unavailable', 'Room not available at the selected time of the event'),
 		[t]
 	);
-	const onInputType = useCallback((e) => {
+	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>((e) => {
 		if (e.textContent && e.textContent !== '') {
 			setOptions([
 				{

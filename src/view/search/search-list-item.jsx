@@ -20,7 +20,7 @@ import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 import { openAppointment } from '../../actions/appointment-actions-fn';
-import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
+import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { PANEL_VIEW } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
@@ -28,7 +28,7 @@ import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { useTagExist } from '../tags/tag-actions';
 
-const SearchListItem = ({ item, active }) => {
+const SearchListItem = ({ item }) => {
 	const isShared = item?.resource?.l?.includes(':');
 	const calendars = useFoldersMap();
 	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
@@ -122,7 +122,7 @@ const SearchListItem = ({ item, active }) => {
 	);
 
 	return (
-		<Container wrap="nowrap" style={{ cursor: 'default' }} onClick={onClick} active={active}>
+		<Container wrap="nowrap" style={{ cursor: 'default' }} onClick={onClick}>
 			<Row
 				wrap="nowrap"
 				width="fill"
