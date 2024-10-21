@@ -3,7 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { JSNS, soapFetch } from '@zextras/carbonio-shell-ui';
+
+export type CreateCalendarGroupRequest = {
+	name: string;
+	calendarId: { _content: string }[];
+	_jsns: typeof JSNS.mail;
+};
 
 export type CreateCalendarGroupResponse = {
 	group: {
@@ -11,14 +17,17 @@ export type CreateCalendarGroupResponse = {
 		name: string;
 		calendarId: { _content: string }[];
 	};
+	_jsns: typeof JSNS.mail;
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createCalendarGroupRequest = async ({
 	name,
 	calendarIds
-}: any): Promise<CreateCalendarGroupResponse> =>
-	soapFetch('CreateCalendarGroup', {
+}: {
+	name: string;
+	calendarIds: Array<string>;
+}): Promise<CreateCalendarGroupResponse> =>
+	soapFetch<CreateCalendarGroupRequest, CreateCalendarGroupResponse>('CreateCalendarGroup', {
 		_jsns: 'urn:zimbraMail',
 		name,
 		calendarId: calendarIds.map((id: string) => ({ _content: id }))
