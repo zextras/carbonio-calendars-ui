@@ -157,10 +157,6 @@ describe('CreateGroupModal', () => {
 			const input = screen.getByRole('textbox', { name: 'Group Name' });
 			await user.type(input, 'Awesome Group');
 
-			await act(async () => {
-				await jest.advanceTimersToNextTimerAsync();
-			});
-
 			expect(screen.getByRole('button', { name: /Create group/i })).toBeEnabled();
 		});
 
