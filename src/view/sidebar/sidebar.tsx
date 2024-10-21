@@ -31,7 +31,7 @@ import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
 import { CalendarGroups, Folder, LinkFolder } from '../../carbonio-ui-commons/types';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
-import { SIDEBAR_ITEMS } from '../../constants/sidebar';
+import { SIDEBAR_ITEMS, SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
 import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
@@ -128,13 +128,13 @@ const useSidebarSortedFolders = (folders: Array<Folder>, groups: CalendarGroups)
 							...accountRoot,
 							children: [
 								{
-									id: 'calendars',
+									id: SIDEBAR_ROOT_SUBSECTION.CALENDARS,
 									name: t('label.app_name', 'Calendars'),
 									children: [calendar, trash, ...others],
 									noIcon: true
 								} as Folder,
 								{
-									id: 'groups',
+									id: SIDEBAR_ROOT_SUBSECTION.GROUPS,
 									name: t('label.calendar_groups', 'Calendar Groups'),
 									children: [
 										...calendarGroups,

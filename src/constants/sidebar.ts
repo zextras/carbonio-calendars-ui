@@ -26,6 +26,11 @@ export enum SIDEBAR_ITEMS {
 	SHARES = 'shares'
 }
 
+export const SIDEBAR_ROOT_SUBSECTION = {
+	CALENDARS: 'calendars',
+	GROUPS: 'groups'
+};
+
 export type ObjectValues<T> = T[keyof T];
 
 export type CalendarActionsId = ObjectValues<typeof FOLDER_ACTIONS>;
