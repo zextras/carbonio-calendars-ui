@@ -139,11 +139,30 @@ describe('CreateGroupModal', () => {
 	});
 
 	describe('confirm button', () => {
-		it.todo('should render the button with the correct label');
+		it('should render the button with the correct label', () => {
+			setupTest(<CreateGroupModal onClose={jest.fn()} />);
 
-		it.todo('should be disabled when the group name is empty');
+			expect(screen.getByRole('button', { name: /Create group/i })).toBeVisible();
+		});
 
-		it.todo('should be enabled when the group name is not empty');
+		it('should be disabled when the group name is empty', () => {
+			setupTest(<CreateGroupModal onClose={jest.fn()} />);
+
+			expect(screen.getByRole('button', { name: /Create group/i })).toBeDisabled();
+		});
+
+		it('should be enabled when the group name is not empty', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+
+			const input = screen.getByRole('textbox', { name: 'Group Name' });
+			await user.type(input, 'Awesome Group');
+
+			await act(async () => {
+				await jest.advanceTimersToNextTimerAsync();
+			});
+
+			expect(screen.getByRole('button', { name: /Create group/i })).toBeEnabled();
+		});
 
 		it.todo('should call the API with the proper parameters when clicked');
 
