@@ -18,7 +18,7 @@ export type Contact = {
 };
 
 export type SidebarAccordionProps = {
-	accordions: Array<Folder>;
+	accordions: Array<AccordionType<Folder | CalendarGroup>>;
 	folderId: string;
 	localStorageName: string;
 	AccordionCustomComponent: ComponentType<{ item: AccordionType<Folder | CalendarGroup> }>;

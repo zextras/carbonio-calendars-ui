@@ -379,26 +379,31 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 		() => item.id === FOLDERS.USER_ROOT || (item as LinkFolder).oname === ROOT_NAME,
 		[item]
 	);
+
 	const isRootSubSection =
 		item.id === SIDEBAR_ROOT_SUBSECTION.CALENDARS || item.id === SIDEBAR_ROOT_SUBSECTION.GROUPS;
+
+	const isAGroup = isGroupType(item);
+
+	const isACalendar = isCalendarType(item);
 
 	// hide folders where a share was provided and subsequently removed
 	if ((item as LinkFolder).isLink && (item as LinkFolder).broken) {
 		return <></>;
 	}
 
-	if (isRootAccount && isCalendarType(item)) {
+	if (isRootAccount && isACalendar) {
 		return <RootAccount item={item} />;
 	}
 
-	if (isRootSubSection && isCalendarType(item)) {
+	if (isRootSubSection && isACalendar) {
 		return <RootSubsection item={item} />;
 	}
 
-	if (isGroupType(item)) {
+	if (isAGroup) {
 		return <RootGroupChildren item={item} />;
 	}
-	if (isCalendarType(item)) {
+	if (isACalendar) {
 		return <RootCalendarChildren item={item} />;
 	}
 	return null;

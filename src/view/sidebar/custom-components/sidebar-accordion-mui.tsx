@@ -11,8 +11,8 @@ import { Accordion, AccordionDetails, AccordionSummary, Container } from '@mui/m
 import { useLocalStorage } from '@zextras/carbonio-shell-ui';
 
 import { theme } from '../../../carbonio-ui-commons/theme/theme-mui';
-import { Folder } from '../../../carbonio-ui-commons/types';
-import { SidebarAccordionProps } from '../../../types/accordions';
+import { CalendarGroup, Folder } from '../../../carbonio-ui-commons/types';
+import { AccordionType, SidebarAccordionProps } from '../../../types/accordions';
 
 export const SidebarAccordionMui: FC<SidebarAccordionProps> = ({
 	accordions,
@@ -30,7 +30,13 @@ export const SidebarAccordionMui: FC<SidebarAccordionProps> = ({
 	);
 	const sidebarRef = useRef<HTMLInputElement>(null);
 	const onClick = useCallback(
-		({ accordion, expanded }: { accordion: Folder; expanded: boolean }): void => {
+		({
+			accordion,
+			expanded
+		}: {
+			accordion: AccordionType<Folder | CalendarGroup>;
+			expanded: boolean;
+		}): void => {
 			if (expanded) {
 				setOpenIds((state: Array<string>) =>
 					state.includes(accordion.id) ? state : [...state, accordion.id]
