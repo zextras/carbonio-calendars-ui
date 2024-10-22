@@ -19,10 +19,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { find, map, reject } from 'lodash';
 
 import { CollapsedSidebarItem } from './collapsed-sidebar-items';
-import { CreateGroupComponent } from './custom-components/create-group-component';
 import { FoldersComponent } from './custom-components/folders-component';
-import { SharesComponent } from './custom-components/shares-component';
-import { SidebarAccordionMui } from './custom-components/sidebar-accordion-mui';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useInitializeFolders } from '../../carbonio-ui-commons/hooks/use-initialize-folders';
@@ -47,7 +44,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 
 	return (
 		<Container orientation="vertical" height="fit" width="fill">
-			<SidebarAccordionMui
+			{/* <SidebarAccordionMui
 				accordions={foldersAccordionItems}
 				folderId={selectedFolder}
 				localStorageName="open_calendars_folders"
@@ -55,7 +52,8 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 				buttonFindShares={<SharesComponent key={'calendar-find-share'} />}
 				buttonCreateGroup={<CreateGroupComponent key={'calendar-create-group'} />}
 				setSelectedFolder={setSelectedFolder}
-			/>
+			/> */}
+			<Accordion items={foldersAccordionItems} />
 			<Divider />
 			<Accordion items={[tagsAccordionItems]} />
 		</Container>
@@ -97,6 +95,8 @@ const useSidebarSortedFolders = (
 
 					return {
 						...group,
+						items: [],
+						CustomComponent: FoldersComponent,
 						name
 					};
 				});
@@ -112,19 +112,22 @@ const useSidebarSortedFolders = (
 				);
 
 				return calendarGroups && calendar && trash
-					? {
+					? ({
 							...accountRoot,
-							children: [
+							label: accountRoot.name,
+							CustomComponent: FoldersComponent,
+							items: [
 								{
 									id: SIDEBAR_ROOT_SUBSECTION.CALENDARS,
-									name: t('label.app_name', 'Calendars'),
-									children: [calendar, trash, ...others],
-									noIcon: true
-								} as Folder,
+									label: t('label.app_name', 'Calendars'),
+									CustomComponent: FoldersComponent,
+									items: [{ ...calendar, CustomComponent: FoldersComponent }, trash, ...others]
+								},
 								{
 									id: SIDEBAR_ROOT_SUBSECTION.GROUPS,
-									name: t('label.calendar_groups', 'Calendar Groups'),
-									children: [
+									CustomComponent: FoldersComponent,
+									label: t('label.calendar_groups', 'Calendar Groups'),
+									items: [
 										...calendarGroups,
 										{
 											id: 'create_group',
@@ -132,11 +135,10 @@ const useSidebarSortedFolders = (
 											// @ts-ignore
 											disableHover: true
 										}
-									],
-									noIcon: true
-								} as Folder
+									]
+								}
 							]
-						}
+						} satisfies AccordionItemType)
 					: accountRoot;
 			}),
 		[folders, groups]
