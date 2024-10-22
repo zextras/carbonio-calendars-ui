@@ -22,7 +22,7 @@ import { CollapsedSidebarItem } from './collapsed-sidebar-items';
 import { CreateGroupComponent } from './custom-components/create-group-component';
 import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
-import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
+import { SidebarAccordionMui } from './custom-components/sidebar-accordion-mui';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useInitializeFolders } from '../../carbonio-ui-commons/hooks/use-initialize-folders';
