@@ -27,7 +27,7 @@ export const VirtualRoomRow = ({
 				<Row takeAvailableSpace mainAlignment="flex-start">
 					{showIcon && (
 						<Padding right="small">
-							<Icon icon="TeamOutline" size="medium" />
+							<Icon icon="VideoOutline" size="medium" />
 						</Padding>
 					)}
 					<Row takeAvailableSpace mainAlignment="flex-start">
