@@ -10,11 +10,16 @@ import { act, within } from '@testing-library/react';
 import { times } from 'lodash';
 
 import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
+import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
 import { screen, setupTest, UserEvent } from '../../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
-import { CreateGroupModal } from '../create-group-modal';
+import {
+	CreateCalendarGroupRequest,
+	CreateCalendarGroupResponse
+} from '../../../soap/create-calendar-group-request';
 import * as createGroupApi from '../../../soap/create-calendar-group-request';
+import { CreateGroupModal } from '../create-group-modal';
 
 const addCalendar = async (user: UserEvent, calendarName: string): Promise<void> => {
 	const input = screen.getByRole('textbox', { name: 'Add Calendars' });
@@ -162,34 +167,55 @@ describe('CreateGroupModal', () => {
 		});
 
 		it('should call the API with the proper parameters when clicked', async () => {
+			const groupName = faker.word.noun();
+			const apiResponse: CreateCalendarGroupResponse = {
+				group: {
+					id: faker.number.int().toString(),
+					name: groupName,
+					calendarId: [{ _content: faker.number.int().toString() }]
+				},
+				_jsns: 'urn:zimbraMail'
+			};
+
+			const apiCallInterceptor = createSoapAPIInterceptor<
+				CreateCalendarGroupRequest,
+				CreateCalendarGroupResponse
+			>('CreateCalendarGroup', apiResponse);
+
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
 			const createGroupApiSpy = jest.spyOn(createGroupApi, 'createCalendarGroupRequest');
 			const input = screen.getByRole('textbox', { name: 'Group Name' });
-
-			await user.type(input, 'Awesome Group');
-
+			await user.type(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Create group/i });
-
 			await user.click(confirmButton);
 
+			const apiParams = await apiCallInterceptor;
 			expect(createGroupApiSpy).toHaveBeenCalledTimes(1);
+			expect(apiParams).toEqual(expect.objectContaining({ name: groupName }));
 		});
 
 		it('should render a success snackbar when the API call is successful', async () => {
+			const groupName = faker.word.noun();
+			const apiResponse: CreateCalendarGroupResponse = {
+				group: {
+					id: faker.number.int().toString(),
+					name: groupName,
+					calendarId: [{ _content: faker.number.int().toString() }]
+				},
+				_jsns: 'urn:zimbraMail'
+			};
+
+			const apiCallInterceptor = createSoapAPIInterceptor<
+				CreateCalendarGroupRequest,
+				CreateCalendarGroupResponse
+			>('CreateCalendarGroup', apiResponse);
+
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
 			const input = screen.getByRole('textbox', { name: 'Group Name' });
-
-			await user.type(input, 'Awesome Group');
-
+			await user.type(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Create group/i });
-
 			await user.click(confirmButton);
-
-			await act(async () => {
-				await jest.runOnlyPendingTimersAsync();
-			});
-
-			// TODO: create msw handler to receive a successful response
+			await apiCallInterceptor;
 			const successfulSnackbar = await screen.findByText(/New group created/i);
 
 			expect(successfulSnackbar).toBeVisible();
@@ -197,7 +223,32 @@ describe('CreateGroupModal', () => {
 
 		it.todo('should call the onClose callback when the API call is successful');
 
-		it.todo('should render an error snackbar when the API call is unsuccessful');
+		it('should render an error snackbar when the API call is unsuccessful', async () => {
+			const groupName = faker.word.noun();
+			const apiResponse: CreateCalendarGroupResponse = {
+				group: {
+					id: faker.number.int().toString(),
+					name: groupName,
+					calendarId: [{ _content: faker.number.int().toString() }]
+				},
+				_jsns: 'urn:zimbraMail'
+			};
+
+			const apiCallInterceptor = createSoapAPIInterceptor<
+				CreateCalendarGroupRequest,
+				CreateCalendarGroupResponse
+			>('CreateCalendarGroup', apiResponse);
+
+			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+			const input = screen.getByRole('textbox', { name: 'Group Name' });
+			await user.type(input, groupName);
+			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+			await user.click(confirmButton);
+			await apiCallInterceptor;
+			const successfulSnackbar = await screen.findByText(/New group created/i);
+
+			expect(successfulSnackbar).toBeVisible();
+		});
 
 		it.todo('should not call the onClose callback when the API call is unsuccessful');
 	});
