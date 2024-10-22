@@ -8,8 +8,6 @@ import { ComponentType, ReactElement } from 'react';
 
 import { CalendarGroup, Folder } from '../carbonio-ui-commons/types';
 
-export type AccordionType<T> = T & { checked: boolean; children: Array<AccordionType<T>> };
-
 export type Contact = {
 	middleName: string;
 	firstName: string;
@@ -18,10 +16,10 @@ export type Contact = {
 };
 
 export type SidebarAccordionProps = {
-	accordions: Array<AccordionType<Folder | CalendarGroup>>;
+	accordions: Array<Folder | CalendarGroup>;
 	folderId: string;
 	localStorageName: string;
-	AccordionCustomComponent: ComponentType<{ item: AccordionType<Folder | CalendarGroup> }>;
+	AccordionCustomComponent: ComponentType<{ item: Folder | CalendarGroup }>;
 	setSelectedFolder?: (folderId: string) => void;
 	buttonFindShares?: ReactElement;
 	buttonCreateGroup?: ReactElement;
