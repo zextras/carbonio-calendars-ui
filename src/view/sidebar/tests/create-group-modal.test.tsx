@@ -42,7 +42,7 @@ const generateApiSuccessResponse = (
 	_jsns: 'urn:zimbraMail'
 });
 
-const generateApiErrorResponse = () => ({
+const generateApiErrorResponse = (): ErrorSoapBodyResponse => ({
 	Fault: {
 		Detail: {
 			Error: {
@@ -251,6 +251,7 @@ describe('CreateGroupModal', () => {
 			await user.type(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Create group/i });
 			await user.click(confirmButton);
+			await screen.findByText(/New group created/i);
 
 			expect(onClose).toHaveBeenCalledTimes(1);
 		});
