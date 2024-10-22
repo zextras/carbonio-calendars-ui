@@ -15,7 +15,7 @@ import {
 	getRoot,
 	getUpdateFolder
 } from '../carbonio-ui-commons/store/zustand/folder';
-import type { Folder } from '../carbonio-ui-commons/types/folder';
+import type { CalendarGroup, Folder } from '../carbonio-ui-commons/types/folder';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
@@ -24,6 +24,7 @@ import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
 import { searchAppointments } from '../store/actions/search-appointments';
 import { AppDispatch } from '../store/redux';
+import { AccordionType } from '../types/accordions';
 import { ReminderItem } from '../types/appointment-reminder';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
@@ -361,7 +362,7 @@ export const getFolderIconColor = (f: Folder): string => {
 };
 
 export type RecursiveToggleCheckProps = {
-	folder: Folder;
+	folder: AccordionType<Folder | CalendarGroup>;
 	checked: boolean;
 	start: number;
 	end: number;
@@ -369,7 +370,10 @@ export type RecursiveToggleCheckProps = {
 	query: string;
 };
 
-const checkAllChildren = (_folder: Array<Folder>, checked: boolean): Array<string> =>
+const checkAllChildren = (
+	_folder: Array<AccordionType<Folder | CalendarGroup>>,
+	checked: boolean
+): Array<string> =>
 	reduce(
 		_folder,
 		(acc, itemToCheck) => {

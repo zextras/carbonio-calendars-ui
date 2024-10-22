@@ -50,7 +50,7 @@ import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
 import { AccordionType } from '../../../types/accordions';
 
 type FoldersComponentProps = {
-	item: AccordionType;
+	item: AccordionType<Folder | CalendarGroup>;
 };
 
 const FittedRow = styled(Row)`
@@ -100,7 +100,13 @@ const GroupContextMenuItem = ({
 	);
 };
 
-const isGroupType = (item: Folder | CalendarGroup): item is CalendarGroup => 'calendarId' in item;
+const isGroupType = (
+	item: AccordionType<Folder | CalendarGroup>
+): item is AccordionType<CalendarGroup> => 'calendarId' in item;
+
+const isCalendarType = (
+	item: AccordionType<Folder | CalendarGroup>
+): item is AccordionType<Folder> => !isGroupType(item);
 
 const RowWithIcon = (icon: string, color: string, tooltipText: string): React.JSX.Element => (
 	<Padding left="small">
@@ -112,7 +118,7 @@ const RowWithIcon = (icon: string, color: string, tooltipText: string): React.JS
 	</Padding>
 );
 
-const RootSubsection = ({ item }: { item: Folder }): React.JSX.Element => {
+const RootSubsection = ({ item }: { item: AccordionType<Folder> }): React.JSX.Element => {
 	const accordionItem = useMemo(
 		() =>
 			({
@@ -132,7 +138,7 @@ const RootSubsection = ({ item }: { item: Folder }): React.JSX.Element => {
 	);
 };
 
-const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element => {
+const RootGroupChildren = ({ item }: { item: AccordionType<CalendarGroup> }): React.JSX.Element => {
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
 	const end = useRangeEnd();
@@ -142,7 +148,7 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 		(): void =>
 			recursiveToggleCheck({
 				folder: item,
-				checked: !!item.checked,
+				checked: item.checked,
 				dispatch,
 				start,
 				end,
@@ -156,7 +162,7 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 			({
 				...item,
 				label: item.name,
-				icon: getFolderIcon({ item, checked: !!item.checked }),
+				icon: item.checked ? 'Calendar2' : 'CalendarOutline',
 				iconColor: CALENDARS_STANDARD_COLORS[0].color,
 				textProps: { size: 'small' }
 			}) as AccordionItemType,
@@ -175,7 +181,7 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 	);
 };
 
-const RootCalendarChildren = ({ item }: { item: Folder }): React.JSX.Element => {
+const RootCalendarChildren = ({ item }: { item: AccordionType<Folder> }): React.JSX.Element => {
 	const { displayName } = useUserAccount();
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
@@ -194,7 +200,7 @@ const RootCalendarChildren = ({ item }: { item: Folder }): React.JSX.Element => 
 		(): void =>
 			recursiveToggleCheck({
 				folder: item,
-				checked: !!item.checked,
+				checked: item.checked,
 				dispatch,
 				start,
 				end,
@@ -211,7 +217,7 @@ const RootCalendarChildren = ({ item }: { item: Folder }): React.JSX.Element => 
 					item.id === FOLDERS.USER_ROOT
 						? displayName
 						: (getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? ''),
-				icon: getFolderIcon({ item, checked: !!item.checked }),
+				icon: getFolderIcon({ item, checked: item.checked }),
 				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
 				textProps: { size: 'small' }
 			}) as AccordionItemType,
@@ -381,16 +387,19 @@ export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
 		return <></>;
 	}
 
-	if (isRootAccount && !isGroupType(item)) {
+	if (isRootAccount && isCalendarType(item)) {
 		return <RootAccount item={item} />;
 	}
 
-	if (isRootSubSection && !isGroupType(item)) {
+	if (isRootSubSection && isCalendarType(item)) {
 		return <RootSubsection item={item} />;
 	}
 
 	if (isGroupType(item)) {
 		return <RootGroupChildren item={item} />;
 	}
-	return <RootCalendarChildren item={item} />;
+	if (isCalendarType(item)) {
+		return <RootCalendarChildren item={item} />;
+	}
+	return null;
 };
