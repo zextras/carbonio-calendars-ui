@@ -11,5 +11,5 @@
 /e2e/output/
 /junit.xml
 /coverage
-
+.DS_Store
 .tool-versions
