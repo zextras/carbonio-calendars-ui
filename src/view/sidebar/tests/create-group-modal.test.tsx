@@ -10,26 +10,19 @@ import { act, within } from '@testing-library/react';
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 import { times } from 'lodash';
 
+import { selectCalendarFromSelector } from './utils';
 import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
 import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
-import { screen, setupTest, UserEvent } from '../../../carbonio-ui-commons/test/test-setup';
+import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import {
 	CreateCalendarGroupRequest,
 	CreateCalendarGroupResponse
 } from '../../../soap/create-calendar-group-request';
 import * as createGroupApi from '../../../soap/create-calendar-group-request';
+import { generateApiErrorResponse } from '../../../test/generators/api';
 import { CreateGroupModal } from '../create-group-modal';
-
-const addCalendar = async (user: UserEvent, calendarName: string): Promise<void> => {
-	const input = screen.getByRole('textbox', { name: 'Add Calendars' });
-	await user.type(input, calendarName);
-	await act(async () => user.click(screen.getByText(calendarName)));
-	await act(async () =>
-		user.click(screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar }))
-	);
-};
 
 const generateApiSuccessResponse = (
 	groupName: string = faker.word.noun()
@@ -40,23 +33,6 @@ const generateApiSuccessResponse = (
 		calendarId: [{ _content: faker.number.int().toString() }]
 	},
 	_jsns: 'urn:zimbraMail'
-});
-
-const generateApiErrorResponse = (): ErrorSoapBodyResponse => ({
-	Fault: {
-		Detail: {
-			Error: {
-				Code: faker.string.alphanumeric(10),
-				Trace: faker.lorem.sentence()
-			}
-		},
-		Reason: {
-			Text: faker.lorem.sentence()
-		},
-		Code: {
-			Value: faker.string.alphanumeric(10)
-		}
-	}
 });
 
 describe('CreateGroupModal', () => {
@@ -116,7 +92,7 @@ describe('CreateGroupModal', () => {
 				populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 
 				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-				await addCalendar(user, targetCalendar.name);
+				await selectCalendarFromSelector(user, targetCalendar.name);
 
 				expect(screen.getByText(targetCalendar.name)).toBeVisible();
 			});
@@ -131,8 +107,8 @@ describe('CreateGroupModal', () => {
 				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
 
 				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-				await addCalendar(user, targetCalendars[0].name);
-				await addCalendar(user, targetCalendars[1].name);
+				await selectCalendarFromSelector(user, targetCalendars[0].name);
+				await selectCalendarFromSelector(user, targetCalendars[1].name);
 
 				targetCalendars.forEach((calendar) => {
 					expect(screen.getByText(calendar.name)).toBeVisible();
@@ -148,8 +124,8 @@ describe('CreateGroupModal', () => {
 				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
 
 				const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-				await addCalendar(user, targetCalendars[0].name);
-				await addCalendar(user, targetCalendars[1].name);
+				await selectCalendarFromSelector(user, targetCalendars[0].name);
+				await selectCalendarFromSelector(user, targetCalendars[1].name);
 
 				const listItems = screen.getAllByTestId('group-calendars-list-item');
 
