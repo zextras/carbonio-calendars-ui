@@ -49,6 +49,7 @@ import { FOLDER_OPERATIONS } from '../../../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
 import { SIDEBAR_ITEMS, SIDEBAR_ROOT_SUBSECTION } from '../../../constants/sidebar';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
+import { useCalendarGroupActions } from '../../../hooks/use-calendar-group-actions';
 import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { NoOpRequest } from '../../../soap/noop-request';
@@ -98,8 +99,7 @@ const GroupContextMenuItem = ({
 	item: CalendarGroup;
 }): React.JSX.Element => {
 	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
-	// TODO: implement actions for groups
-	const items: DropdownItem[] = [];
+	const items: DropdownItem[] = useCalendarGroupActions({ calendarGroup: item });
 
 	return isAllCalendar ? (
 		children
