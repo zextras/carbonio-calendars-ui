@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
 
 import { ChipInput, ChipItem } from '@zextras/carbonio-design-system';
 import { filter, map, reject, uniqBy } from 'lodash';
@@ -77,7 +77,7 @@ export const MultiCalendarSelector = ({
 		setSelectedCalendarsChips(selectedChips);
 	}, []);
 
-	const onIconAction = useCallback(
+	const onIconAction = useCallback<ReactEventHandler>(
 		(ev) => {
 			ev?.stopPropagation();
 

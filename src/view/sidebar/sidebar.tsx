@@ -121,6 +121,8 @@ const useSidebarSortedFolders = (
 									children: [calendar, trash, ...others],
 									noIcon: true
 								} as Folder,
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
 								{
 									id: SIDEBAR_ROOT_SUBSECTION.GROUPS,
 									name: t('label.calendar_groups', 'Calendar Groups'),

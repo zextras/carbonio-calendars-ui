@@ -57,6 +57,7 @@ import { getMiniCal } from '../../../store/actions/get-mini-cal';
 import { searchAppointments } from '../../../store/actions/search-appointments';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
+import { isCalendarType, isGroupType } from '../../../utils/tests';
 
 type FoldersComponentProps = {
 	item: Folder | CalendarGroup;
@@ -108,10 +109,6 @@ const GroupContextMenuItem = ({
 		</Dropdown>
 	);
 };
-
-const isGroupType = (item: Folder | CalendarGroup): item is CalendarGroup => 'calendarId' in item;
-
-const isCalendarType = (item: Folder | CalendarGroup): item is Folder => !isGroupType(item);
 
 const RowWithIcon = (icon: string, color: string, tooltipText: string): React.JSX.Element => (
 	<Padding left="small">
