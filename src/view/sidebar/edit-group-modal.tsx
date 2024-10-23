@@ -86,7 +86,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 					key: `group-creation-success`,
 					replace: true,
 					severity: 'success',
-					label: t('message.snackbar.new_group_created', 'New group created'),
+					label: t('message.snackbar.group_edited', 'Changes saved'),
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
@@ -158,7 +158,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 
 			<ModalFooter
 				onConfirm={onConfirm}
-				confirmLabel={t('folder.modal.creategroup.footer', 'Create Group')}
+				confirmLabel={t('folder.modal.editgroup.footer', 'Save changes')}
 				confirmDisabled={disabled}
 			/>
 		</Container>
