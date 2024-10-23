@@ -141,16 +141,27 @@ describe('EditGroupModal', () => {
 			});
 
 			it('should render the list of all the newly added calendars', async () => {
-				const targetCalendar = generateFolder({
-					name: 'Awesome',
-					color: faker.number.int({ max: 9 })
+				const targetCalendars = times(2, (index) =>
+					generateFolder({
+						name: `Awesome calendar ${index}`,
+						color: faker.number.int({ max: 9 })
+					})
+				);
+				const group: CalendarGroup = generateGroup({
+					calendarId: [targetCalendars[0].id]
 				});
-				populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 
-				const { user } = setupTest(<EditGroupModal {...buildProps()} />);
-				await selectCalendarFromSelector(user, targetCalendar.name);
+				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+				populateGroupsStore({
+					groups: [group]
+				});
 
-				expect(screen.getByText(targetCalendar.name)).toBeVisible();
+				const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+				await selectCalendarFromSelector(user, targetCalendars[1].name);
+
+				targetCalendars.forEach((calendar) => {
+					expect(screen.getByText(calendar.name)).toBeVisible();
+				});
 			});
 
 			it('should render an updated list of calendars when a new calendar is added', async () => {
