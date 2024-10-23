@@ -9,6 +9,8 @@ import {
 	Container,
 	Divider,
 	Input,
+	ModalFooter,
+	ModalHeader,
 	Padding,
 	Text,
 	useSnackbar
@@ -20,8 +22,6 @@ import { MultiCalendarSelector } from './custom-components/multiple-calendar-sel
 import { GroupCalendarsList } from './group-calendars-list';
 import { getCalendarGroups, useUpdateGroups } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types';
-import ModalFooter from '../../commons/modal-footer';
-import { ModalHeader } from '../../commons/modal-header';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
 
 type CreateGroupModalProps = {
@@ -105,6 +105,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 		>
 			<ModalHeader
 				title={t('folder.modal.creategroup.title', 'Create new Calendar Group')}
+				showCloseIcon
 				onClose={onCloseModal}
 			/>
 			<Input
@@ -133,8 +134,8 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 
 			<ModalFooter
 				onConfirm={onConfirm}
-				label={t('folder.modal.creategroup.footer', 'Create Group')}
-				disabled={disabled}
+				confirmLabel={t('folder.modal.creategroup.footer', 'Create Group')}
+				confirmDisabled={disabled}
 			/>
 		</Container>
 	);
