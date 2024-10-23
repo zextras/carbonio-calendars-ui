@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2021 Zextras <https://www.zextras.com>
+ * SPDX-FileCopyrightText: 2024 Zextras <https://www.zextras.com>
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, FC, useEffect } from 'react';
 
 import {
 	Container,
@@ -20,31 +20,44 @@ import { useTranslation } from 'react-i18next';
 
 import { MultiCalendarSelector } from './custom-components/multiple-calendar-selector';
 import { GroupCalendarsList } from './group-calendars-list';
-import { getCalendarGroups, useUpdateGroups } from '../../carbonio-ui-commons/store/zustand/folder';
+import {
+	getCalendarGroups,
+	useFoldersMap,
+	useUpdateGroups
+} from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
+import { useGroup } from '../../store/zustand/store';
 
-type CreateGroupModalProps = {
+export type EditGroupModalProps = {
+	groupId: string;
 	onClose: () => void;
 };
 
-export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactElement => {
+export const EditGroupModal: FC<EditGroupModalProps> = ({
+	groupId,
+	onClose
+}: EditGroupModalProps): React.JSX.Element => {
 	const [t] = useTranslation();
 	const createSnackbar = useSnackbar();
 	const updateGroups = useUpdateGroups();
 	const currentGroups = getCalendarGroups();
-	const [groupName, setGroupName] = useState('');
-	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
+	const folders = useFoldersMap();
+	const group = useGroup(groupId);
+	const [groupName, setGroupName] = useState(group?.name ?? '');
+	const groupCalendars = useMemo(() => {
+		if (!group) {
+			return [];
+		}
+
+		return group.calendarId.map((id) => folders[id]);
+	}, [folders, group]);
+	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>(groupCalendars);
 
 	const disabled = useMemo(
 		() => groupName.indexOf('/') > -1 || groupName.length === 0,
 		[groupName]
 	);
-
-	const onCloseModal = useCallback(() => {
-		setGroupName('');
-		onClose();
-	}, [onClose]);
 
 	const groupNameInputLabel = useMemo(() => t('label.type_group_name_here', 'Group Name'), [t]);
 
@@ -96,6 +109,20 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 		setSelectedCalendars((prev) => prev.filter((item) => item.id !== calendarId));
 	}, []);
 
+	useEffect(() => {
+		if (!group) {
+			createSnackbar({
+				key: `group-not-found`,
+				replace: true,
+				severity: 'error',
+				label: t('label.group_not_found', 'Group not found'),
+				autoHideTimeout: 3000,
+				hideButton: true
+			});
+			onClose();
+		}
+	}, [createSnackbar, group, onClose, t]);
+
 	return (
 		<Container
 			padding={{ all: 'small' }}
@@ -104,9 +131,9 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 			height="fit"
 		>
 			<ModalHeader
-				title={t('folder.modal.creategroup.title', 'Create new Calendar Group')}
+				title={t('folder.modal.editgroup.title', 'Edit Calendar Group')}
 				showCloseIcon
-				onClose={onCloseModal}
+				onClose={onClose}
 			/>
 			<Input
 				label={groupNameInputLabel}
@@ -116,9 +143,6 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 					setGroupName(e.target.value);
 				}}
 			/>
-			<Text size="extrasmall" color="gray1">
-				{t('label.newgroup.note', 'This group will appear in your personal account.')}
-			</Text>
 			<Padding vertical="medium" />
 			<Divider />
 			<Padding vertical="medium" />
