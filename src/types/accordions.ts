@@ -8,6 +8,11 @@ import { ComponentType, ReactElement } from 'react';
 
 import { CalendarGroup, Folder } from '../carbonio-ui-commons/types';
 
+export const isGroupType = (item: Folder | CalendarGroup): item is CalendarGroup =>
+	'calendarId' in item;
+
+export const isCalendarType = (item: Folder | CalendarGroup): item is Folder => !isGroupType(item);
+
 export type Contact = {
 	middleName: string;
 	firstName: string;

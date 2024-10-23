@@ -57,7 +57,7 @@ import { getMiniCal } from '../../../store/actions/get-mini-cal';
 import { searchAppointments } from '../../../store/actions/search-appointments';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
-import { isCalendarType, isGroupType } from '../../../utils/tests';
+import { isCalendarType, isGroupType } from '../../../types/accordions';
 
 type FoldersComponentProps = {
 	item: Folder | CalendarGroup;

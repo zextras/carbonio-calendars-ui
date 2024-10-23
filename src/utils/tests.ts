@@ -7,12 +7,6 @@ import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import { setupHook } from '../carbonio-ui-commons/test/test-setup';
-import { CalendarGroup, Folder } from '../carbonio-ui-commons/types';
-
-export const isGroupType = (item: Folder | CalendarGroup): item is CalendarGroup =>
-	'calendarId' in item;
-
-export const isCalendarType = (item: Folder | CalendarGroup): item is Folder => !isGroupType(item);
 
 export const setupTMock = (): TFunction => {
 	const {
