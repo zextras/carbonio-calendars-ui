@@ -24,9 +24,9 @@ import {
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { useTranslation } from 'react-i18next';
 
-import { useFoldersMap, useUpdateGroups } from './carbonio-ui-commons/store/zustand/folder';
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
+import { useFoldersMap, useUpdateGroups } from './carbonio-ui-commons/store/zustand/folder';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
@@ -90,7 +90,7 @@ const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
 			<ModalManager>
-				<LazySidebarView {...props} />{' '}
+				<LazySidebarView {...props} />
 			</ModalManager>
 		</StoreProvider>
 	</Suspense>
