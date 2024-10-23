@@ -6,6 +6,8 @@
 import moment from 'moment';
 import { create } from 'zustand';
 
+import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
+import { CalendarGroup } from '../../carbonio-ui-commons/types';
 import { Resource } from '../../types/editor';
 
 export type SetRange = ({ start, end }: { start: number; end: number }) => void;
@@ -61,3 +63,6 @@ export const useAppStatusStore = create<AppState>((set) => ({
 		});
 	}
 }));
+
+export const useGroup = (groupId: string): CalendarGroup | undefined =>
+	useFolderStore((state) => state.groups.find((group) => group.id === groupId));
