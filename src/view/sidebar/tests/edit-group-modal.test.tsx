@@ -15,7 +15,7 @@ import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/
 import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
 import { within, screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { CalendarGroup } from '../../../carbonio-ui-commons/types';
+import { CalendarGroup, Folder } from '../../../carbonio-ui-commons/types';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import * as createGroupApi from '../../../soap/create-calendar-group-request';
 import {
@@ -45,16 +45,38 @@ const buildProps = ({
 	onClose
 });
 
+const initializeStore = (
+	calendarsCount = 2
+): { calendars: Array<Folder>; group: CalendarGroup } => {
+	const targetCalendars = times(calendarsCount, (index) =>
+		generateFolder({
+			name: `Awesome${index}`
+		})
+	);
+	const group: CalendarGroup = generateGroup({
+		calendarId: targetCalendars.map((calendar) => calendar.id)
+	});
+
+	populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+	populateGroupsStore({
+		groups: [group]
+	});
+
+	return { calendars: targetCalendars, group };
+};
+
 describe('EditGroupModal', () => {
 	it('should render the modal with a specific title', () => {
-		setupTest(<EditGroupModal {...buildProps()} />);
+		const { group } = initializeStore();
+		setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 		expect(screen.getByText('Edit Calendar Group')).toBeVisible();
 	});
 
 	describe('close icon', () => {
 		it('should render icon', () => {
-			setupTest(<EditGroupModal {...buildProps()} />);
+			const { group } = initializeStore();
+			setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			expect(
 				screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeModal })
@@ -62,8 +84,7 @@ describe('EditGroupModal', () => {
 		});
 
 		it('should call the onClose callback when clicked', async () => {
-			const group: CalendarGroup = generateGroup();
-			populateGroupsStore({ groups: [group] });
+			const { group } = initializeStore();
 			const onClose = jest.fn();
 
 			const { user } = setupTest(
@@ -95,14 +116,14 @@ describe('EditGroupModal', () => {
 
 	describe('group name', () => {
 		it('should render an input field with the correct placeholder', () => {
-			setupTest(<EditGroupModal {...buildProps()} />);
+			const { group } = initializeStore();
+			setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			expect(screen.getByText('Group Name')).toBeVisible();
 		});
 
 		it('should render the group name inside the input field', () => {
-			const group: CalendarGroup = generateGroup();
-			populateGroupsStore({ groups: [group] });
+			const { group } = initializeStore();
 			setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			expect(screen.getByRole('textbox', { name: 'Group Name' })).toHaveValue(group.name);
@@ -111,28 +132,15 @@ describe('EditGroupModal', () => {
 
 	describe('calendars', () => {
 		it('should render the section title', () => {
-			setupTest(<EditGroupModal {...buildProps()} />);
+			const { group } = initializeStore();
+			setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			expect(screen.getByText('Calendars in this group')).toBeVisible();
 		});
 
 		describe('calendars list', () => {
 			it('should render the list of existing calendars in the group', async () => {
-				const targetCalendars = times(2, (index) =>
-					generateFolder({
-						name: `Awesome calendar ${index}`,
-						color: faker.number.int({ max: 9 })
-					})
-				);
-				const group: CalendarGroup = generateGroup({
-					calendarId: targetCalendars.map((calendar) => calendar.id)
-				});
-
-				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
-				populateGroupsStore({
-					groups: [group]
-				});
-
+				const { group, calendars: targetCalendars } = initializeStore();
 				setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 				targetCalendars.forEach((calendar) => {
@@ -140,30 +148,22 @@ describe('EditGroupModal', () => {
 				});
 			});
 
-			it('should render the list of all the newly added calendars', async () => {
-				const targetCalendar = generateFolder({
-					name: 'Awesome',
-					color: faker.number.int({ max: 9 })
-				});
-				populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
-
-				const { user } = setupTest(<EditGroupModal {...buildProps()} />);
-				await selectCalendarFromSelector(user, targetCalendar.name);
-
-				expect(screen.getByText(targetCalendar.name)).toBeVisible();
-			});
-
-			it('should render an updated list of calendars when a new calendar is added', async () => {
+			it('should render the list with the existing and the newly added calendars', async () => {
 				const targetCalendars = times(2, (index) =>
 					generateFolder({
-						name: `Awesome${index}`,
-						color: faker.number.int({ max: 9 })
+						name: `Awesome${index}`
 					})
 				);
-				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+				const group: CalendarGroup = generateGroup({
+					calendarId: [targetCalendars[0].id]
+				});
 
-				const { user } = setupTest(<EditGroupModal {...buildProps()} />);
-				await selectCalendarFromSelector(user, targetCalendars[0].name);
+				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+				populateGroupsStore({
+					groups: [group]
+				});
+
+				const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 				await selectCalendarFromSelector(user, targetCalendars[1].name);
 
 				targetCalendars.forEach((calendar) => {
@@ -172,16 +172,9 @@ describe('EditGroupModal', () => {
 			});
 
 			it('should render an updated list of calendars when a calendar is removed', async () => {
-				const targetCalendars = times(2, (index) =>
-					generateFolder({
-						name: `Awesome${index}`
-					})
-				);
-				populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
+				const { group, calendars: targetCalendars } = initializeStore(3);
 
-				const { user } = setupTest(<EditGroupModal {...buildProps()} />);
-				await selectCalendarFromSelector(user, targetCalendars[0].name);
-				await selectCalendarFromSelector(user, targetCalendars[1].name);
+				const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 				const listItems = screen.getAllByTestId('group-calendars-list-item');
 
@@ -199,7 +192,7 @@ describe('EditGroupModal', () => {
 
 				await act(clickRemoveButton());
 
-				expect(screen.getAllByTestId('group-calendars-list-item').length).toBe(1);
+				expect(screen.getAllByTestId('group-calendars-list-item').length).toBe(2);
 				expect(screen.queryByText(targetCalendars[1].name)).not.toBeInTheDocument();
 			});
 		});
@@ -207,45 +200,52 @@ describe('EditGroupModal', () => {
 
 	describe('confirm button', () => {
 		it('should render the button with the correct label', () => {
-			setupTest(<EditGroupModal {...buildProps()} />);
+			const { group } = initializeStore();
+			setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
-			expect(screen.getByRole('button', { name: /Create group/i })).toBeVisible();
+			expect(screen.getByRole('button', { name: /save changes/i })).toBeVisible();
 		});
 
 		it('should be disabled when the group name is empty', () => {
-			setupTest(<EditGroupModal {...buildProps()} />);
+			const { group } = initializeStore();
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
-			expect(screen.getByRole('button', { name: /Create group/i })).toBeDisabled();
+			const input = screen.getByRole('textbox', { name: 'Group Name' });
+			user.clear(input);
+
+			expect(screen.getByRole('button', { name: /Save changes/i })).toBeDisabled();
 		});
 
 		it('should be enabled when the group name is not empty', async () => {
-			const { user } = setupTest(<EditGroupModal {...buildProps()} />);
+			const { group } = initializeStore();
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			const input = screen.getByRole('textbox', { name: 'Group Name' });
-			await user.type(input, 'Awesome Group');
+			await user.type(input, 'Updated group name');
 
-			expect(screen.getByRole('button', { name: /Create group/i })).toBeEnabled();
+			expect(screen.getByRole('button', { name: /Save changes/i })).toBeEnabled();
 		});
 
 		it('should call the API with the proper parameters when clicked', async () => {
-			const groupName = faker.word.noun();
-			const apiResponse = generateApiSuccessResponse(groupName);
+			const { group } = initializeStore();
+			const apiResponse = generateApiSuccessResponse(group.name);
 
 			const apiCallInterceptor = createSoapAPIInterceptor<
 				CreateCalendarGroupRequest,
 				CreateCalendarGroupResponse
 			>('CreateCalendarGroup', apiResponse);
 
-			const { user } = setupTest(<EditGroupModal {...buildProps()} />);
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+
 			const createGroupApiSpy = jest.spyOn(createGroupApi, 'createCalendarGroupRequest');
 			const input = screen.getByRole('textbox', { name: 'Group Name' });
-			await user.type(input, groupName);
-			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+			await user.type(input, group.name);
+			const confirmButton = screen.getByRole('button', { name: /save changes/i });
 			await user.click(confirmButton);
 
 			const apiParams = await apiCallInterceptor;
 			expect(createGroupApiSpy).toHaveBeenCalledTimes(1);
-			expect(apiParams).toEqual(expect.objectContaining({ name: groupName }));
+			expect(apiParams).toEqual(expect.objectContaining({ name: group.name }));
 		});
 
 		it('should render a success snackbar when the API call is successful', async () => {
