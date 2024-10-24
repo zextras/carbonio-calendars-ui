@@ -126,7 +126,7 @@ describe('EditGroupModal', () => {
 		});
 	});
 
-	describe('Group Name*', () => {
+	describe('Group Name', () => {
 		it('should render an input field with the correct placeholder', () => {
 			const { group } = initializeStore();
 			setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
@@ -139,6 +139,36 @@ describe('EditGroupModal', () => {
 			setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			expect(screen.getByRole('textbox', { name: 'Group Name*' })).toHaveValue(group.name);
+		});
+
+		it('should render an error message when the group name is invalid', async () => {
+			const { group } = initializeStore();
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
+			await user.clear(input);
+
+			expect(screen.getByText('Type a group name to save changes')).toBeVisible();
+		});
+
+		it('should not render an error message when the group name is valid', async () => {
+			const { group } = initializeStore();
+			setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+
+			expect(screen.queryByText('Type a group name to save changes')).not.toBeInTheDocument();
+		});
+
+		it('should render the texts with a red foreground color when the group name is invalid', async () => {
+			const { group } = initializeStore();
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
+			await user.clear(input);
+
+			expect(screen.getByText('Group Name*')).toHaveStyle('color: rgb(215, 73, 66)');
+			expect(screen.getByText('Type a group name to save changes')).toHaveStyle(
+				'color: rgb(215, 73, 66)'
+			);
 		});
 	});
 
@@ -208,17 +238,38 @@ describe('EditGroupModal', () => {
 			expect(screen.getByRole('button', { name: /save changes/i })).toBeVisible();
 		});
 
-		it('should be disabled when the group name is empty', () => {
+		it('should be disabled when the group name is empty', async () => {
 			const { group } = initializeStore();
 			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
-			user.clear(input);
+			await user.clear(input);
 
 			expect(screen.getByRole('button', { name: /Save changes/i })).toBeDisabled();
 		});
 
-		it.todo('should be disabled when no group data is changed');
+		it('should be disabled when no group data is changed', () => {
+			const { group } = initializeStore();
+			setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+
+			expect(screen.getByRole('button', { name: /Save changes/i })).toBeDisabled();
+		});
+
+		it('should be disabled when group name is changed and then reset to the original value', async () => {
+			const { group } = initializeStore();
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
+			await user.type(input, 'altered group name');
+			await user.clear(input);
+			await user.type(input, group.name);
+
+			expect(screen.getByRole('button', { name: /Save changes/i })).toBeDisabled();
+		});
+
+		it.todo(
+			'should be disabled when calendar list is changed and then reset to the original value'
+		);
 
 		it('should be enabled when the group name is not empty', async () => {
 			const { group } = initializeStore();
@@ -236,6 +287,15 @@ describe('EditGroupModal', () => {
 
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, 'Updated group name');
+
+			expect(screen.getByRole('button', { name: /Save changes/i })).toBeEnabled();
+		});
+
+		it('should be enabled when the calendars list is changed', async () => {
+			const { group, otherCalendars } = initializeStore({ otherCalendarsCount: 1 });
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+
+			await selectCalendarFromSelector(user, otherCalendars[0].name);
 
 			expect(screen.getByRole('button', { name: /Save changes/i })).toBeEnabled();
 		});

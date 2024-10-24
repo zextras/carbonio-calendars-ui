@@ -54,14 +54,37 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 	}, [folders, group]);
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>(groupCalendars);
 
-	const disabled = useMemo(
-		() => groupName.indexOf('/') > -1 || groupName.length === 0,
+	const isDirty = useMemo(() => {
+		if (!group) {
+			return false;
+		}
+
+		return (
+			groupName !== group.name ||
+			selectedCalendars.length !== group.calendarId.length ||
+			selectedCalendars.some((item) => !group.calendarId.includes(item.id))
+		);
+	}, [group, groupName, selectedCalendars]);
+
+	const isGroupNameValid = useMemo(
+		() => groupName.indexOf('/') === -1 && groupName.length > 0,
 		[groupName]
+	);
+
+	const isConfirmDisabled = useMemo(
+		() => !isGroupNameValid || !isDirty,
+		[isGroupNameValid, isDirty]
 	);
 
 	const groupNameInputLabel = useMemo(
 		() => `${t('label.type_group_name_here', 'Group Name')}*`,
 		[t]
+	);
+
+	const groupNameDescription = useMemo(
+		() =>
+			isGroupNameValid ? '' : t('label.invalid_group_name', 'Type a group name to save changes'),
+		[isGroupNameValid, t]
 	);
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Array<Folder>) => {
@@ -96,7 +119,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 
 				onClose();
 			})
-			.catch((err) => {
+			.catch(() => {
 				createSnackbar({
 					key: `group-editing-failed`,
 					replace: true,
@@ -154,6 +177,8 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
 					setGroupName(e.target.value);
 				}}
+				hasError={!isGroupNameValid}
+				description={groupNameDescription}
 			/>
 			<Padding vertical="medium" />
 			<Divider />
@@ -171,7 +196,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 			<ModalFooter
 				onConfirm={onConfirm}
 				confirmLabel={t('folder.modal.editgroup.footer', 'Save changes')}
-				confirmDisabled={disabled}
+				confirmDisabled={isConfirmDisabled}
 			/>
 		</Container>
 	);
