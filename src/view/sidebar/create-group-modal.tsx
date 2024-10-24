@@ -20,9 +20,12 @@ import { useTranslation } from 'react-i18next';
 
 import { MultiCalendarSelector } from './custom-components/multiple-calendar-selector';
 import { GroupCalendarsList } from './group-calendars-list';
-import { getCalendarGroups, useUpdateGroups } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
+import {
+	getCalendarGroups,
+	updateCalendarGroupsStore
+} from '../../store/zustand/calendar-group-store';
 
 type CreateGroupModalProps = {
 	onClose: () => void;
@@ -31,7 +34,6 @@ type CreateGroupModalProps = {
 export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useSnackbar();
-	const updateGroups = useUpdateGroups();
 	const currentGroups = getCalendarGroups();
 	const [groupName, setGroupName] = useState('');
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
@@ -60,14 +62,12 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 		const ids = map(selectedCalendars, (item) => item.id);
 		createCalendarGroupRequest({ name: groupName, calendarIds: ids })
 			.then((res) => {
-				updateGroups([
-					...currentGroups,
-					{
-						id: res.group.id,
-						name: res.group.name,
-						calendarId: res.group.calendarId.map((g) => g._content)
-					}
-				]);
+				const group = {
+					id: res.group.id,
+					name: res.group.name,
+					calendarId: res.group.calendarId.map((g) => g._content)
+				};
+				updateCalendarGroupsStore([group]);
 
 				createSnackbar({
 					key: `group-creation-success`,
@@ -90,7 +90,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 					hideButton: true
 				});
 			});
-	}, [createSnackbar, currentGroups, groupName, onClose, selectedCalendars, t, updateGroups]);
+	}, [createSnackbar, currentGroups, groupName, onClose, selectedCalendars, t]);
 
 	const onCalendarRemove = useCallback((calendarId: string) => {
 		setSelectedCalendars((prev) => prev.filter((item) => item.id !== calendarId));

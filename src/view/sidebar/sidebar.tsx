@@ -26,12 +26,13 @@ import { SidebarAccordionMui } from './custom-components/sidebar-accordion-mui';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useInitializeFolders } from '../../carbonio-ui-commons/hooks/use-initialize-folders';
-import { getCalendarGroups, useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
-import { CalendarGroup, CalendarGroups, Folder, LinkFolder } from '../../carbonio-ui-commons/types';
+import { CalendarGroup, Folder, LinkFolder } from '../../carbonio-ui-commons/types';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS, SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
+import { getCalendarGroups } from '../../store/zustand/calendar-group-store';
 import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
@@ -85,12 +86,12 @@ const addFindSharesItem = (foldersAccordionItems: Array<Folder>): Array<Folder> 
 
 const useSidebarSortedFolders = (
 	folders: Array<Folder>,
-	groups: CalendarGroups
+	groups: Record<string, CalendarGroup>
 ): Array<Folder | CalendarGroup> =>
 	useMemo(
 		() =>
 			map(folders, (accountRoot) => {
-				const calendarGroups: CalendarGroups = groups.map((group) => {
+				const calendarGroups = map(groups, (group) => {
 					const name =
 						group.id === SIDEBAR_ITEMS.ALL_CALENDAR
 							? t('label.all_calendars', 'All calendars')
