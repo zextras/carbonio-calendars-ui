@@ -26,7 +26,7 @@ import {
 	useUpdateGroups
 } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types';
-import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
+import { modifyCalendarGroupRequest } from '../../soap/modify-calendar-group-request';
 import { useGroup } from '../../store/zustand/store';
 
 export type EditGroupModalProps = {
@@ -59,19 +59,22 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 		[groupName]
 	);
 
-	const groupNameInputLabel = useMemo(() => t('label.type_group_name_here', 'Group Name'), [t]);
+	const groupNameInputLabel = useMemo(
+		() => `${t('label.type_group_name_here', 'Group Name')}*`,
+		[t]
+	);
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Array<Folder>) => {
 		setSelectedCalendars((prev) => [...prev, ...selected]);
 	}, []);
 
 	const onConfirm = useCallback((): void => {
-		if (!groupName) {
+		if (!group) {
 			return;
 		}
 
 		const ids = map(selectedCalendars, (item) => item.id);
-		createCalendarGroupRequest({ name: groupName, calendarIds: ids })
+		modifyCalendarGroupRequest({ id: group.id, name: groupName, calendarIds: ids })
 			.then((res) => {
 				updateGroups([
 					...currentGroups,
@@ -83,7 +86,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				]);
 
 				createSnackbar({
-					key: `group-creation-success`,
+					key: `group-editing-success`,
 					replace: true,
 					severity: 'success',
 					label: t('message.snackbar.group_edited', 'Changes saved'),
@@ -95,7 +98,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 			})
 			.catch(() => {
 				createSnackbar({
-					key: `group-creation-failed`,
+					key: `group-editing-failed`,
 					replace: true,
 					severity: 'error',
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
@@ -103,7 +106,16 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 					hideButton: true
 				});
 			});
-	}, [createSnackbar, currentGroups, groupName, onClose, selectedCalendars, t, updateGroups]);
+	}, [
+		createSnackbar,
+		currentGroups,
+		group,
+		groupName,
+		onClose,
+		selectedCalendars,
+		t,
+		updateGroups
+	]);
 
 	const onCalendarRemove = useCallback((calendarId: string) => {
 		setSelectedCalendars((prev) => prev.filter((item) => item.id !== calendarId));
