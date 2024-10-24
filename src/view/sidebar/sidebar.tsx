@@ -91,9 +91,10 @@ const useSidebarSortedFolders = (
 		() =>
 			map(folders, (accountRoot) => {
 				const calendarGroups: CalendarGroups = groups.map((group) => {
-					const allCalendarsId = 'a970bb9528c94c40bd51bfede60fcb31';
 					const name =
-						group.id === allCalendarsId ? t('label.all_calendars', 'All calendars') : group.name;
+						group.id === SIDEBAR_ITEMS.ALL_CALENDAR
+							? t('label.all_calendars', 'All calendars')
+							: group.name;
 
 					return {
 						...group,

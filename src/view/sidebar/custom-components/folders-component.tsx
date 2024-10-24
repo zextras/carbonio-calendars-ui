@@ -20,8 +20,7 @@ import {
 	ModalFooter,
 	ModalBody,
 	Divider,
-	Text,
-	DropdownItem
+	Text
 } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { every, find, forEach, map, reduce } from 'lodash';
@@ -99,8 +98,9 @@ const GroupContextMenuItem = ({
 	item: CalendarGroup;
 }): React.JSX.Element => {
 	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
-	const items: DropdownItem[] = useCalendarGroupActions({ calendarGroup: item });
+	const { editGroup, deleteGroup } = useCalendarGroupActions(item.id);
 
+	const items = useMemo(() => [editGroup, deleteGroup], [deleteGroup, editGroup]);
 	return isAllCalendar ? (
 		children
 	) : (
