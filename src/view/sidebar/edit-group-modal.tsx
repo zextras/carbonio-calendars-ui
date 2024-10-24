@@ -96,7 +96,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 
 				onClose();
 			})
-			.catch(() => {
+			.catch((err) => {
 				createSnackbar({
 					key: `group-editing-failed`,
 					replace: true,

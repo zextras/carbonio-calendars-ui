@@ -35,5 +35,5 @@ export const generateGroupCalendar = ({
 });
 
 export const populateGroupsStore = ({ groups }: { groups: Array<CalendarGroup> }): void => {
-	useFolderStore.setState((state) => ({ ...state, groups }), true);
+	useFolderStore.setState((state) => ({ ...state, updateGroups: jest.fn(), groups }), true);
 };

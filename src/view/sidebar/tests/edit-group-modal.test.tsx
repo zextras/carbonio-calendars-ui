@@ -17,10 +17,7 @@ import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/st
 import { within, screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { CalendarGroup, Folder } from '../../../carbonio-ui-commons/types';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
-import {
-	CreateCalendarGroupRequest,
-	CreateCalendarGroupResponse
-} from '../../../soap/create-calendar-group-request';
+import { CreateCalendarGroupResponse } from '../../../soap/create-calendar-group-request';
 import {
 	ModifyCalendarGroupRequest,
 	ModifyCalendarGroupResponse
@@ -283,16 +280,18 @@ describe('EditGroupModal', () => {
 			const { group } = initializeStore({ otherCalendarsCount: 2 });
 			const apiResponse = generateApiSuccessResponse();
 
-			createSoapAPIInterceptor<ModifyCalendarGroupRequest, ModifyCalendarGroupResponse>(
-				'ModifyCalendarGroup',
-				apiResponse
-			);
+			const apiCallInterceptor = createSoapAPIInterceptor<
+				ModifyCalendarGroupRequest,
+				ModifyCalendarGroupResponse
+			>('ModifyCalendarGroup', apiResponse);
 
-			const { user } = setupTest(<EditGroupModal {...buildProps()} />);
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, `Updated ${group.name}`);
 			const confirmButton = screen.getByRole('button', { name: /Save changes/i });
-			await act(() => user.click(confirmButton));
+			await user.click(confirmButton);
+			await apiCallInterceptor;
+
 			const successfulSnackbar = await screen.findByText(/Changes saved/i);
 
 			expect(successfulSnackbar).toBeVisible();
@@ -302,34 +301,36 @@ describe('EditGroupModal', () => {
 			const { group } = initializeStore({ otherCalendarsCount: 2 });
 			const apiResponse = generateApiSuccessResponse();
 
-			createSoapAPIInterceptor<ModifyCalendarGroupRequest, ModifyCalendarGroupResponse>(
-				'ModifyCalendarGroup',
-				apiResponse
-			);
+			const apiCallInterceptor = createSoapAPIInterceptor<
+				ModifyCalendarGroupRequest,
+				ModifyCalendarGroupResponse
+			>('ModifyCalendarGroup', apiResponse);
 			const onClose = jest.fn();
 
-			const { user } = setupTest(<EditGroupModal {...buildProps({ onClose })} />);
+			const { user } = setupTest(
+				<EditGroupModal {...buildProps({ groupId: group.id, onClose })} />
+			);
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, `Updated ${group.name}`);
 			const confirmButton = screen.getByRole('button', { name: /Save changes/i });
 			await act(() => user.click(confirmButton));
+			await apiCallInterceptor;
 
 			expect(onClose).toHaveBeenCalledTimes(1);
 		});
 
 		it('should render an error snackbar when the API call is unsuccessful', async () => {
-			const groupName = faker.word.noun();
-			const apiResponse = generateApiErrorResponse();
+			const { group } = initializeStore({ otherCalendarsCount: 2 });
 
 			const apiCallInterceptor = createSoapAPIInterceptor<
-				CreateCalendarGroupRequest,
+				ModifyCalendarGroupRequest,
 				ErrorSoapBodyResponse
-			>('CreateCalendarGroup', apiResponse);
+			>('ModifyCalendarGroup', generateApiErrorResponse());
 
-			const { user } = setupTest(<EditGroupModal {...buildProps()} />);
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
-			await user.type(input, groupName);
-			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+			await user.type(input, `Updated ${group.name}`);
+			const confirmButton = screen.getByRole('button', { name: /Save changes/i });
 			await user.click(confirmButton);
 			await apiCallInterceptor;
 			const successfulSnackbar = await screen.findByText(/Something went wrong, please try again/i);
@@ -338,19 +339,22 @@ describe('EditGroupModal', () => {
 		});
 
 		it('should not call the onClose callback when the API call is unsuccessful', async () => {
+			const { group } = initializeStore({ otherCalendarsCount: 2 });
 			const groupName = faker.word.noun();
 			const apiResponse = generateApiErrorResponse();
 
-			createSoapAPIInterceptor<CreateCalendarGroupRequest, ErrorSoapBodyResponse>(
-				'CreateCalendarGroup',
+			createSoapAPIInterceptor<ModifyCalendarGroupRequest, ErrorSoapBodyResponse>(
+				'ModifyCalendarGroup',
 				apiResponse
 			);
 			const onClose = jest.fn();
 
-			const { user } = setupTest(<EditGroupModal {...buildProps({ onClose })} />);
+			const { user } = setupTest(
+				<EditGroupModal {...buildProps({ groupId: group.id, onClose })} />
+			);
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, groupName);
-			const confirmButton = screen.getByRole('button', { name: /Create group/i });
+			const confirmButton = screen.getByRole('button', { name: /Save changes/i });
 			await user.click(confirmButton);
 			await screen.findByText(/Something went wrong, please try again/i);
 
