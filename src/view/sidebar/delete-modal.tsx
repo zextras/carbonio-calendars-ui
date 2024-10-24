@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 
 import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { Trans, useTranslation } from 'react-i18next';
@@ -12,51 +12,58 @@ import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-foote
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { isNestedInTrash } from '../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../../carbonio-ui-commons/types/folder';
+import { Folder } from '../../carbonio-ui-commons/types';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import { folderAction } from '../../store/actions/calendar-actions';
+import { deleteCalendarAction } from '../../store/actions/delete-calendar-action';
+import { FolderAction } from '../../types/soap/soap-actions';
 
 export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folder, onClose }) => {
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
-	const onConfirm = (): void => {
-		onClose();
-		const restoreEvent = (): void => {
-			folderAction({ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }).then((res) => {
-				if (!res.Fault) {
-					createSnackbar({
-						key: 'send',
-						replace: true,
-						severity: 'success',
-						label: t('message.snackbar.calendar_restored', 'Calendar restored successfully'),
-						autoHideTimeout: 3000,
-						hideButton: true
-					});
-				} else {
-					createSnackbar({
-						key: 'send',
-						replace: true,
-						severity: 'error',
-						label: t('label.error_try_again', 'Something went wrong, please try again'),
-						autoHideTimeout: 3000,
-						hideButton: true
-					});
-				}
-			});
-		};
-		folderAction({
+
+	const restoreEvent = useCallback((): void => {
+		folderAction({ id: folder.id, op: FOLDER_OPERATIONS.MOVE, l: folder.l }).then((res) => {
+			if (!res.Fault) {
+				createSnackbar({
+					key: 'send',
+					replace: true,
+					severity: 'success',
+					label: t('message.snackbar.calendar_restored', 'Calendar restored successfully'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			} else {
+				createSnackbar({
+					key: 'send',
+					replace: true,
+					severity: 'error',
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			}
+		});
+	}, [createSnackbar, folder.id, folder.l, t]);
+
+	function handleDeletion(
+		act: (folderAction: Array<FolderAction> | FolderAction) => Promise<any>,
+		operation: {
+			type: typeof FOLDER_OPERATIONS.DELETE | typeof FOLDER_OPERATIONS.TRASH;
+			label: string;
+		}
+	): void {
+		act({
 			id: folder.id,
-			op: isNestedInTrash(folder) ? FOLDER_OPERATIONS.DELETE : FOLDER_OPERATIONS.TRASH
+			op: operation.type
 		}).then((res) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: 'send',
 					replace: true,
 					severity: 'info',
-					label: isNestedInTrash(folder)
-						? t('message.snackbar.calendar_permanently_deleted', 'Calendar permanently deleted')
-						: t('message.snackbar.calendar_moved_to_trash', 'Calendar moved to trash'),
+					label: operation.label,
 					autoHideTimeout: 5000,
 					hideButton: folder ? hasId(folder, FOLDERS.USER_ROOT) : true,
 					actionLabel: t('label.undo', 'Undo'),
@@ -73,8 +80,24 @@ export const DeleteModal: FC<{ folder: Folder; onClose: () => void }> = ({ folde
 				});
 			}
 		});
+	}
+
+	const onConfirm = (): void => {
+		onClose();
+
+		isNestedInTrash(folder)
+			? handleDeletion(deleteCalendarAction, {
+					type: FOLDER_OPERATIONS.DELETE,
+					label: t('message.snackbar.calendar_permanently_deleted', 'Calendar permanently deleted')
+				})
+			: handleDeletion(folderAction, {
+					type: FOLDER_OPERATIONS.TRASH,
+					label: t('message.snackbar.calendar_moved_to_trash', 'Calendar moved to trash')
+				});
 	};
+
 	const title = useMemo(() => t('label.delete', 'Delete'), [t]);
+
 	return folder ? (
 		<Container padding="0.5rem 0.5rem 1.5rem">
 			<ModalHeader title={title} onClose={onClose} />

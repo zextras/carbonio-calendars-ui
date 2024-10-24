@@ -21,6 +21,7 @@ import { folderAction } from '../store/actions/calendar-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick } from '../types/actions';
 import { NewModal } from '../view/move/new-calendar-modal';
+import { CreateGroupModal } from '../view/sidebar/create-group-modal';
 import { DeleteModal } from '../view/sidebar/delete-modal';
 import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
 import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
@@ -50,6 +51,32 @@ export const newCalendar =
 				children: (
 					<StoreProvider>
 						<NewModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
+					</StoreProvider>
+				)
+			},
+			true
+		);
+	};
+
+export const createGroup =
+	({
+		createModal,
+		closeModal
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+		const modalId = 'create-group';
+		createModal(
+			{
+				id: modalId,
+				children: (
+					<StoreProvider>
+						<CreateGroupModal onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
 				)
 			},

@@ -23,15 +23,20 @@ import {
 	Text
 } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
+import { every, find, forEach, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
 import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
-import { getRootAccountId, useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { isRoot } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../../../carbonio-ui-commons/types';
+import {
+	getRootAccountId,
+	getUpdateFolder,
+	useFoldersMap,
+	useRoot
+} from '../../../carbonio-ui-commons/store/zustand/folder';
+import { CalendarGroup, Folder, type LinkFolder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import {
 	getFolderIcon,
@@ -39,16 +44,23 @@ import {
 	isLinkChild,
 	recursiveToggleCheck
 } from '../../../commons/utilities';
-import { SIDEBAR_ITEMS } from '../../../constants/sidebar';
+import { FOLDER_OPERATIONS } from '../../../constants/api';
+import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
+import { SIDEBAR_ITEMS, SIDEBAR_ROOT_SUBSECTION } from '../../../constants/sidebar';
 import { useCalendarActions } from '../../../hooks/use-calendar-actions';
+import { useCalendarGroupActions } from '../../../hooks/use-calendar-group-actions';
 import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { NoOpRequest } from '../../../soap/noop-request';
+import { folderAction } from '../../../store/actions/calendar-actions';
+import { getMiniCal } from '../../../store/actions/get-mini-cal';
+import { searchAppointments } from '../../../store/actions/search-appointments';
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
+import { isCalendarType, isGroupType } from '../../../types/accordions';
 
 type FoldersComponentProps = {
-	item: Folder;
+	item: Folder | CalendarGroup;
 };
 
 const FittedRow = styled(Row)`
@@ -60,7 +72,7 @@ const FileInput = styled.input`
 	display: none;
 `;
 
-const ContextMenuItem = ({
+const CalendarContextMenuItem = ({
 	children,
 	inputRef,
 	item
@@ -69,9 +81,26 @@ const ContextMenuItem = ({
 	inputRef: React.RefObject<HTMLInputElement>;
 	item: Folder;
 }): React.JSX.Element => {
-	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
 	const items = useCalendarActions(item, inputRef);
 
+	return (
+		<Dropdown items={items} contextMenu width="100%" display="block">
+			{children}
+		</Dropdown>
+	);
+};
+
+const GroupContextMenuItem = ({
+	children,
+	item
+}: {
+	children: React.JSX.Element;
+	item: CalendarGroup;
+}): React.JSX.Element => {
+	const isAllCalendar = useMemo(() => hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR), [item]);
+	const { editGroup, deleteGroup } = useCalendarGroupActions(item.id);
+
+	const items = useMemo(() => [editGroup, deleteGroup], [deleteGroup, editGroup]);
 	return isAllCalendar ? (
 		children
 	) : (
@@ -91,13 +120,104 @@ const RowWithIcon = (icon: string, color: string, tooltipText: string): React.JS
 	</Padding>
 );
 
-const RootChildren = ({
-	accordionItem,
-	item
-}: {
-	accordionItem: AccordionItemType;
-	item: Folder;
-}): React.JSX.Element => {
+const RootSubsection = ({ item }: { item: Folder }): React.JSX.Element => {
+	const accordionItem = useMemo(
+		() =>
+			({
+				...item,
+				label: item.name,
+				textProps: { size: 'small' }
+			}) as AccordionItemType,
+		[item]
+	);
+	return (
+		<Row>
+			<Padding left="small" />
+			<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
+				<AccordionItem item={accordionItem} />
+			</Tooltip>
+		</Row>
+	);
+};
+
+const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element => {
+	const dispatch = useAppDispatch();
+	const start = useRangeStart();
+	const end = useRangeEnd();
+	const query = useCheckedCalendarsQuery();
+	const calendars = useFoldersMap();
+
+	const calendarsInGroup = useMemo(
+		() =>
+			reduce(
+				item.calendarId,
+				(acc, calendarId) => {
+					const calendarToAdd = find(calendars, (cal) => cal.id === calendarId);
+					if (calendarToAdd) {
+						return [...acc, calendarToAdd];
+					}
+					return acc;
+				},
+				[] as Array<Folder>
+			),
+		[calendars, item]
+	);
+
+	const checked = every(calendarsInGroup, (cal) => cal.checked);
+
+	const onClick = useCallback((): void => {
+		const op = checked ? FOLDER_OPERATIONS.UNCHECK : FOLDER_OPERATIONS.CHECK;
+		const actions = map(item.calendarId, (id) => ({
+			id,
+			op
+		}));
+		folderAction(actions).then((res) => {
+			if (op === FOLDER_OPERATIONS.CHECK && !res.Fault) {
+				dispatch(searchAppointments({ spanEnd: end, spanStart: start, query }));
+				dispatch(getMiniCal({ start, end })).then((response) => {
+					const updateFolder = getUpdateFolder();
+					// todo: remove ts ignore once getMiniCal is typed
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					if (response?.payload?.Fault) {
+						// todo: remove ts ignore once getMiniCal is typed
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						forEach(response?.payload?.Fault, ({ id }) => {
+							updateFolder(id, { broken: true });
+						});
+					}
+				});
+			}
+		});
+	}, [checked, dispatch, end, item.calendarId, query, start]);
+
+	const accordionItem = useMemo(
+		() =>
+			({
+				...item,
+				label: item.name,
+				icon: checked ? 'Calendar2' : 'CalendarOutline',
+				iconColor: CALENDARS_STANDARD_COLORS[0].color,
+				textProps: { size: 'small' }
+			}) as AccordionItemType,
+		[checked, item]
+	);
+
+	return (
+		<GroupContextMenuItem item={item}>
+			<Row onClick={onClick}>
+				<Padding left="small" />
+				<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
+					<AccordionItem item={accordionItem} />
+				</Tooltip>
+			</Row>
+		</GroupContextMenuItem>
+	);
+};
+
+const RootCalendarChildren = ({ item }: { item: Folder }): React.JSX.Element => {
+	const { displayName } = useUserAccount();
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();
@@ -115,13 +235,28 @@ const RootChildren = ({
 		(): void =>
 			recursiveToggleCheck({
 				folder: item,
-				checked: !!item.checked,
+				checked: item.checked ?? false,
 				dispatch,
 				start,
 				end,
 				query
 			}),
 		[dispatch, end, item, query, start]
+	);
+
+	const accordionItem = useMemo(
+		() =>
+			({
+				...item,
+				label:
+					item.id === FOLDERS.USER_ROOT
+						? displayName
+						: (getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? ''),
+				icon: getFolderIcon({ item, checked: item.checked ?? false }),
+				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
+				textProps: { size: 'small' }
+			}) as AccordionItemType,
+		[item, displayName]
 	);
 
 	const sharedStatusIcon = useMemo(() => {
@@ -231,7 +366,7 @@ const RootChildren = ({
 
 	return (
 		<>
-			<ContextMenuItem item={item} inputRef={inputRef}>
+			<CalendarContextMenuItem item={item} inputRef={inputRef}>
 				<Row onClick={onClick}>
 					<Padding left="small" />
 					<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
@@ -239,57 +374,72 @@ const RootChildren = ({
 					</Tooltip>
 					{sharedStatusIcon}
 				</Row>
-			</ContextMenuItem>
+			</CalendarContextMenuItem>
 			<FileInput type="file" ref={inputRef} onChange={onFileInputChange} accept=".ics" />
 		</>
 	);
 };
 
-const RootAccount = ({
-	accordionItem
-}: {
-	accordionItem: AccordionItemType;
-}): React.JSX.Element => (
-	<FittedRow>
-		<Padding left="small">
-			<Avatar
-				label={accordionItem.label ?? ''}
-				colorLabel={accordionItem.iconColor}
-				size="medium"
-			/>
-		</Padding>
-		<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
-			<AccordionItem item={accordionItem} />
-		</Tooltip>
-	</FittedRow>
-);
-
-export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
+const RootAccount = ({ item }: { item: Folder }): React.JSX.Element => {
 	const { displayName } = useUserAccount();
-	const isRootAccount = useMemo(() => isRoot(item), [item]);
 	const accordionItem = useMemo(
 		() =>
 			({
 				...item,
-				label:
-					item.id === FOLDERS.USER_ROOT
-						? displayName
-						: (getFolderTranslatedName({ folderId: item.id, folderName: item.name }) ?? ''),
+				label: displayName,
 				icon: getFolderIcon({ item, checked: !!item.checked }),
 				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
 				textProps: { size: 'small' }
 			}) as AccordionItemType,
 		[item, displayName]
 	);
+	return (
+		<FittedRow>
+			<Padding left="small">
+				<Avatar
+					label={accordionItem.label ?? ''}
+					colorLabel={accordionItem.iconColor}
+					size="medium"
+				/>
+			</Padding>
+			<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
+				<AccordionItem item={accordionItem} />
+			</Tooltip>
+		</FittedRow>
+	);
+};
+
+export const FoldersComponent: FC<FoldersComponentProps> = ({ item }) => {
+	const isRootAccount = useMemo(
+		() => item.id === FOLDERS.USER_ROOT || (item as LinkFolder).oname === ROOT_NAME,
+		[item]
+	);
+
+	const isRootSubSection =
+		item.id === SIDEBAR_ROOT_SUBSECTION.CALENDARS || item.id === SIDEBAR_ROOT_SUBSECTION.GROUPS;
+
+	const isAGroup = isGroupType(item);
+
+	const isACalendar = isCalendarType(item);
 
 	// hide folders where a share was provided and subsequently removed
-	if (item.isLink && item.broken) {
+	if ((item as LinkFolder).isLink && (item as LinkFolder).broken) {
 		return <></>;
 	}
 
-	if (isRootAccount) {
-		return <RootAccount accordionItem={accordionItem} />;
+	if (isRootAccount && isACalendar) {
+		return <RootAccount item={item} />;
 	}
 
-	return <RootChildren accordionItem={accordionItem} item={item} />;
+	if (isRootSubSection && isACalendar) {
+		return <RootSubsection item={item} />;
+	}
+
+	if (isAGroup) {
+		return <RootGroupChildren item={item} />;
+	}
+	if (isACalendar) {
+		return <RootCalendarChildren item={item} />;
+	}
+	return null;
 };

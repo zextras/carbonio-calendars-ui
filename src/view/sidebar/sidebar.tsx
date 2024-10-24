@@ -15,24 +15,28 @@ import {
 	ModalManager,
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 import { find, map, reject } from 'lodash';
 
 import { CollapsedSidebarItem } from './collapsed-sidebar-items';
+import { CreateGroupComponent } from './custom-components/create-group-component';
 import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
-import { addAllCalendarsItem } from './utils';
-import { SidebarAccordionMui } from '../../carbonio-ui-commons/components/sidebar/sidebar-accordion-mui';
+import { SidebarAccordionMui } from './custom-components/sidebar-accordion-mui';
+import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
+import { useInitializeFolders } from '../../carbonio-ui-commons/hooks/use-initialize-folders';
 import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
 import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
-import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { CalendarGroup, Folder, LinkFolder } from '../../carbonio-ui-commons/types';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
-import { SIDEBAR_ITEMS } from '../../constants/sidebar';
+import { SIDEBAR_ITEMS, SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
+import { getCalendarGroups } from '../../store/zustand/calendar-group-store';
 import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
-	foldersAccordionItems: Folder[];
+	foldersAccordionItems: Array<Folder | CalendarGroup>;
 	tagsAccordionItems: AccordionItemType;
 };
 
@@ -50,6 +54,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 				localStorageName="open_calendars_folders"
 				AccordionCustomComponent={FoldersComponent}
 				buttonFindShares={<SharesComponent key={'calendar-find-share'} />}
+				buttonCreateGroup={<CreateGroupComponent key={'calendar-create-group'} />}
 				setSelectedFolder={setSelectedFolder}
 			/>
 			<Divider />
@@ -57,6 +62,7 @@ const SidebarComponent: FC<SidebarComponentProps> = ({
 		</Container>
 	);
 };
+
 const MemoSidebar: FC<SidebarComponentProps> = React.memo(SidebarComponent);
 
 const addFindSharesItem = (foldersAccordionItems: Array<Folder>): Array<Folder> =>
@@ -78,13 +84,24 @@ const addFindSharesItem = (foldersAccordionItems: Array<Folder>): Array<Folder> 
 			]
 		: [];
 
-const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
+const useSidebarSortedFolders = (
+	folders: Array<Folder>,
+	groups: Record<string, CalendarGroup>
+): Array<Folder | CalendarGroup> =>
 	useMemo(
 		() =>
 			map(folders, (accountRoot) => {
-				const allCalendarFolder = find(accountRoot.children, (child) =>
-					hasId(child, SIDEBAR_ITEMS.ALL_CALENDAR)
-				);
+				const calendarGroups = map(groups, (group) => {
+					const name =
+						group.id === SIDEBAR_ITEMS.ALL_CALENDAR
+							? t('label.all_calendars', 'All calendars')
+							: group.name;
+
+					return {
+						...group,
+						name
+					};
+				});
 				const calendar = find(accountRoot.children, (f) => hasId(f, FOLDERS.CALENDAR));
 				const trash = find(accountRoot.children, (f) => hasId(f, FOLDERS.TRASH));
 				const others = reject(
@@ -95,28 +112,52 @@ const useSidebarSortedFolders = (folders: Array<Folder>): Array<Folder> =>
 						hasId(f, FOLDERS.TRASH) ||
 						(f as LinkFolder)?.broken === true
 				);
-				return allCalendarFolder && calendar && trash
+
+				return calendarGroups && calendar && trash
 					? {
 							...accountRoot,
-							children: [allCalendarFolder, calendar, trash, ...others]
+							children: [
+								{
+									id: SIDEBAR_ROOT_SUBSECTION.CALENDARS,
+									name: t('label.app_name', 'Calendars'),
+									children: [calendar, trash, ...others],
+									noIcon: true
+								} as Folder,
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								{
+									id: SIDEBAR_ROOT_SUBSECTION.GROUPS,
+									name: t('label.calendar_groups', 'Calendar Groups'),
+									children: [
+										...calendarGroups,
+										{
+											id: 'create_group',
+											// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+											// @ts-ignore
+											disableHover: true
+										}
+									],
+									noIcon: true
+								} as Folder
+							]
 						}
 					: accountRoot;
 			}),
-		[folders]
+		[folders, groups]
 	);
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
-	const folders = useRootsArray();
+	useInitializeFolders(FOLDER_VIEW.appointment);
 
-	const foldersAccordionItems = useMemo(() => addAllCalendarsItem(folders), [folders]);
-	const folderAccordionItemsWithFindShares = useMemo(
-		() => addFindSharesItem(foldersAccordionItems),
-		[foldersAccordionItems]
+	const folders = useRootsArray();
+	const folderWithShares = useMemo(() => addFindSharesItem(folders), [folders]);
+	const calendarGroups = getCalendarGroups();
+	const fullFolderTree: Array<Folder | CalendarGroup> = useSidebarSortedFolders(
+		folderWithShares,
+		calendarGroups
 	);
 
 	const tagsAccordionItems = useGetTagsAccordion();
-
-	const sortedFolders = useSidebarSortedFolders(folderAccordionItemsWithFindShares);
 
 	return (
 		<ModalManager>
@@ -124,11 +165,11 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 				<ThemeProvider theme={themeMui}>
 					{expanded ? (
 						<MemoSidebar
-							foldersAccordionItems={sortedFolders}
+							foldersAccordionItems={fullFolderTree}
 							tagsAccordionItems={tagsAccordionItems}
 						/>
 					) : (
-						foldersAccordionItems[0].children.map((folder) => (
+						folders[0].children.map((folder) => (
 							<CollapsedSidebarItem key={folder.id} item={folder} />
 						))
 					)}

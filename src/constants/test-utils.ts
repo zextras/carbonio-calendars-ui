@@ -4,5 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 export const TEST_SELECTORS = {
-	DROPDOWN: 'dropdown-popper-list'
+	DROPDOWN: 'dropdown-popper-list',
+	CALENDARS_SELECTOR_INPUT: 'calendar-selector-input',
+	CHIP: 'chip',
+	ICONS: {
+		remove: 'icon: TrashOutline',
+		closeModal: 'icon: Close',
+		addCalendar: 'icon: Plus'
+	}
 };
