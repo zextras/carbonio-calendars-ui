@@ -22,10 +22,7 @@ import { MultiCalendarSelector } from './custom-components/multiple-calendar-sel
 import { GroupCalendarsList } from './group-calendars-list';
 import { Folder } from '../../carbonio-ui-commons/types';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
-import {
-	getCalendarGroups,
-	updateCalendarGroupsStore
-} from '../../store/zustand/calendar-group-store';
+import { updateCalendarGroupsStore } from '../../store/zustand/calendar-group-store';
 
 type CreateGroupModalProps = {
 	onClose: () => void;
@@ -34,7 +31,6 @@ type CreateGroupModalProps = {
 export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useSnackbar();
-	const currentGroups = getCalendarGroups();
 	const [groupName, setGroupName] = useState('');
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
 
