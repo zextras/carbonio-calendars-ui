@@ -11,7 +11,8 @@ import { Accordion, AccordionDetails, AccordionSummary, Container } from '@mui/m
 import { useLocalStorage } from '@zextras/carbonio-shell-ui';
 
 import { theme } from '../../../carbonio-ui-commons/theme/theme-mui';
-import { CalendarGroup, Folder } from '../../../carbonio-ui-commons/types';
+import { Folder } from '../../../carbonio-ui-commons/types';
+import { CalendarGroup } from '../../../store/zustand/calendar-group-store';
 import { isCalendarType, SidebarAccordionProps } from '../../../types/accordions';
 
 export const SidebarAccordionMui: FC<SidebarAccordionProps> = ({

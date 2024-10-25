@@ -6,13 +6,18 @@
 import { keyBy } from 'lodash';
 import { create } from 'zustand';
 
-import { CalendarGroup, CalendarGroups } from '../../carbonio-ui-commons/types';
+export type CalendarGroup = {
+	id: string;
+	name: string;
+	calendarId: string[];
+};
+export type CalendarGroups = CalendarGroup[];
 
 export type CalendarGroupAppState = {
 	groups: Record<string, CalendarGroup>;
 };
 
-export const useCalendarGroupStore = create<CalendarGroupAppState>((set) => ({
+export const useCalendarGroupStore = create<CalendarGroupAppState>(() => ({
 	groups: {}
 }));
 
@@ -22,7 +27,7 @@ export const useGroupById = (groupId: string): CalendarGroup | undefined =>
 export const getCalendarGroups = (): Record<string, CalendarGroup> =>
 	useCalendarGroupStore.getState().groups;
 
-export const updateCalendarGroupsStore = (groups: CalendarGroups) => {
+export const updateCalendarGroupsStore = (groups: CalendarGroups): void => {
 	const groupsToAdd = keyBy(groups, 'id');
 	useCalendarGroupStore.setState((state) => ({
 		...state,

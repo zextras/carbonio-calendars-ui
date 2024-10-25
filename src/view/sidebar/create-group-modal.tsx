@@ -90,7 +90,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 					hideButton: true
 				});
 			});
-	}, [createSnackbar, currentGroups, groupName, onClose, selectedCalendars, t]);
+	}, [createSnackbar, groupName, onClose, selectedCalendars, t]);
 
 	const onCalendarRemove = useCallback((calendarId: string) => {
 		setSelectedCalendars((prev) => prev.filter((item) => item.id !== calendarId));

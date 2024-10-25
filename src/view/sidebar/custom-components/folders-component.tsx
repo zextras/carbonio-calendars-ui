@@ -36,7 +36,7 @@ import {
 	useFoldersMap,
 	useRoot
 } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { CalendarGroup, Folder, type LinkFolder } from '../../../carbonio-ui-commons/types';
+import { Folder, type LinkFolder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import {
 	getFolderIcon,
@@ -56,6 +56,7 @@ import { folderAction } from '../../../store/actions/calendar-actions';
 import { getMiniCal } from '../../../store/actions/get-mini-cal';
 import { searchAppointments } from '../../../store/actions/search-appointments';
 import { useAppDispatch } from '../../../store/redux/hooks';
+import { CalendarGroup } from '../../../store/zustand/calendar-group-store';
 import { useRangeEnd, useRangeStart } from '../../../store/zustand/hooks';
 import { isCalendarType, isGroupType } from '../../../types/accordions';
 

@@ -27,7 +27,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
-import { useFoldersMap, useUpdateGroups } from './carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
@@ -113,7 +113,6 @@ const AppRegistrations = (): null => {
 	const calendars = useFoldersMap();
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
-	const updateGroups = useUpdateGroups();
 
 	useInitializeFolders(FOLDER_VIEW.appointment);
 
@@ -182,7 +181,7 @@ const AppRegistrations = (): null => {
 			}));
 			updateCalendarGroupsStore(groups);
 		});
-	}, [updateGroups]);
+	}, []);
 
 	return null;
 };
