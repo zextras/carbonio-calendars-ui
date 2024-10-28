@@ -46,7 +46,7 @@ export const MultiCalendarSelector = ({
 		[calendars, excludeTrash]
 	);
 
-	const calendarItems = useMemo(
+	const calendarOptions = useMemo(
 		() =>
 			map(requiredCalendars, (cal) => {
 				const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
@@ -98,7 +98,7 @@ export const MultiCalendarSelector = ({
 	return (
 		<ChipInput
 			data-testid={'calendar-selector-input'}
-			options={calendarItems}
+			options={calendarOptions}
 			disableOptions={false}
 			value={selectedCalendarsChips}
 			onChange={onSelectedCalendarsChange}
