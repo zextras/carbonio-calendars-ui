@@ -9,6 +9,7 @@ import {
 	Container,
 	Divider,
 	Input,
+	ModalBody,
 	ModalFooter,
 	ModalHeader,
 	Padding,
@@ -153,29 +154,34 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				showCloseIcon
 				onClose={onClose}
 			/>
-			<Input
-				label={groupNameInputLabel}
-				backgroundColor="gray5"
-				value={groupName}
-				onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-					setGroupName(e.target.value);
-				}}
-				hasError={!isGroupNameValid}
-				description={groupNameDescription}
-			/>
-			<Padding vertical="medium" />
 			<Divider />
-			<Padding vertical="medium" />
-			<Text weight="bold" size="large">
-				{t('label.newgroup.calendars', 'Calendars in this group')}
-			</Text>
-			<MultiCalendarSelector
-				onCalendarChange={onMultipleSelectedCalendarChange}
-				excludeTrash={false}
-			/>
+			<ModalBody>
+				<Input
+					label={groupNameInputLabel}
+					backgroundColor="gray5"
+					value={groupName}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+						setGroupName(e.target.value);
+					}}
+					hasError={!isGroupNameValid}
+					description={groupNameDescription}
+				/>
+				<Padding vertical="medium" />
+				<Divider />
+				<Padding vertical="large">
+					<Text weight="bold" size="large">
+						{t('label.newgroup.calendars', 'Calendars in this group')}
+					</Text>
+				</Padding>
+				<MultiCalendarSelector
+					onCalendarChange={onMultipleSelectedCalendarChange}
+					excludeTrash={false}
+				/>
 
-			<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
-
+				<Padding vertical="medium" />
+				<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
+			</ModalBody>
+			<Divider />
 			<ModalFooter
 				onConfirm={onConfirm}
 				confirmLabel={t('folder.modal.editgroup.footer', 'Save changes')}

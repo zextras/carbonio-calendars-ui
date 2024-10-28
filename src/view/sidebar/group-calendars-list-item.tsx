@@ -5,7 +5,7 @@
  */
 import React, { useCallback, useMemo } from 'react';
 
-import { Button, Container, Row, Text } from '@zextras/carbonio-design-system';
+import { Button, Container, Row, TextWithTooltip } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
@@ -35,15 +35,22 @@ export const GroupCalendarsListItem = ({
 	}, [calendar.id, onRemove]);
 
 	return (
-		<Container data-testid="group-calendars-list-item">
+		<Container data-testid="group-calendars-list-item" orientation="horizontal" gap="0.5rem">
 			<Row width="fit">
 				<Square data-testid="colored-square" color={color} />
 			</Row>
-			<Row takeAvailableSpace>
-				<Text>{calendar.name}</Text>
+			<Row takeAvailableSpace mainAlignment="flex-start" padding={{ bottom: '0.2rem' }}>
+				<TextWithTooltip>{calendar.name}</TextWithTooltip>
 			</Row>
 			<Row width="fit">
-				<Button label={buttonLabel} onClick={onButtonClick} icon="TrashOutline" />
+				<Button
+					type="outlined"
+					color="error"
+					size="medium"
+					label={buttonLabel}
+					onClick={onButtonClick}
+					icon="TrashOutline"
+				/>
 			</Row>
 		</Container>
 	);

@@ -9,6 +9,7 @@ import {
 	Container,
 	Divider,
 	Input,
+	ModalBody,
 	ModalFooter,
 	ModalHeader,
 	Padding,
@@ -118,31 +119,37 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				showCloseIcon
 				onClose={onClose}
 			/>
-			<Input
-				label={groupNameInputLabel}
-				description={groupNameDescription}
-				hasError={!isGroupNameValid}
-				backgroundColor="gray5"
-				value={groupName}
-				onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-					setGroupName(e.target.value);
-				}}
-			/>
-			<Text size="extrasmall" color="gray1">
-				{t('label.newgroup.note', 'This group will appear in your personal account.')}
-			</Text>
-			<Padding vertical="medium" />
 			<Divider />
-			<Padding vertical="medium" />
-			<Text weight="bold" size="large">
-				{t('label.newgroup.calendars', 'Calendars in this group')}
-			</Text>
-			<MultiCalendarSelector
-				onCalendarChange={onMultipleSelectedCalendarChange}
-				excludeTrash={false}
-			/>
+			<ModalBody>
+				<Input
+					label={groupNameInputLabel}
+					description={groupNameDescription}
+					hasError={!isGroupNameValid}
+					backgroundColor="gray5"
+					value={groupName}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+						setGroupName(e.target.value);
+					}}
+				/>
+				<Text size="extrasmall" color="gray1">
+					{t('label.newgroup.note', 'This group will appear in your personal account.')}
+				</Text>
+				<Padding vertical="medium" />
+				<Divider />
+				<Padding vertical="large">
+					<Text weight="bold" size="large">
+						{t('label.newgroup.calendars', 'Calendars in this group')}
+					</Text>
+				</Padding>
+				<MultiCalendarSelector
+					onCalendarChange={onMultipleSelectedCalendarChange}
+					excludeTrash={false}
+				/>
+				<Padding vertical="medium" />
+				<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
+			</ModalBody>
 
-			<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
+			<Divider />
 
 			<ModalFooter
 				onConfirm={onConfirm}

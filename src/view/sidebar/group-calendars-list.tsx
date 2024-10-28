@@ -29,7 +29,7 @@ export const GroupCalendarsList = ({
 	);
 
 	return (
-		<Container>
+		<Container gap="0.5rem">
 			{calendars.length ? (
 				calendars.map((calendar) => (
 					<GroupCalendarsListItem
@@ -39,7 +39,9 @@ export const GroupCalendarsList = ({
 					/>
 				))
 			) : (
-				<Text color="gray1">{placeholderText}</Text>
+				<Text color="gray1" overflow="break-word">
+					{placeholderText}
+				</Text>
 			)}
 		</Container>
 	);
