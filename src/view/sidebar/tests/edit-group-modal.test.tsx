@@ -267,10 +267,6 @@ describe('EditGroupModal', () => {
 			expect(screen.getByRole('button', { name: /Save changes/i })).toBeDisabled();
 		});
 
-		it.todo(
-			'should be disabled when calendar list is changed and then reset to the original value'
-		);
-
 		it('should be enabled when the group name is not empty', async () => {
 			const { group } = initializeStore();
 			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
@@ -291,13 +287,38 @@ describe('EditGroupModal', () => {
 			expect(screen.getByRole('button', { name: /Save changes/i })).toBeEnabled();
 		});
 
-		it('should be enabled when the calendars list is changed', async () => {
+		it('should be enabled when a new calendar is added to the list', async () => {
 			const { group, otherCalendars } = initializeStore({ otherCalendarsCount: 1 });
 			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
 
 			await selectCalendarFromSelector(user, otherCalendars[0].name);
 
 			expect(screen.getByRole('button', { name: /Save changes/i })).toBeEnabled();
+		});
+
+		it('should be enabled when a calendar is removed from the list', async () => {
+			const { group } = initializeStore({ groupCalendarsCount: 2 });
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+
+			const removeButton = screen.getAllByRole('button', { name: /remove/i })[0];
+			await user.click(removeButton);
+
+			expect(screen.getByRole('button', { name: /Save changes/i })).toBeEnabled();
+		});
+
+		it('should be disabled when calendar list is changed and then reset to the original value', async () => {
+			const { group, otherCalendars } = initializeStore({
+				groupCalendarsCount: 0,
+				otherCalendarsCount: 1
+			});
+
+			const { user } = setupTest(<EditGroupModal {...buildProps({ groupId: group.id })} />);
+			await selectCalendarFromSelector(user, otherCalendars[0].name);
+
+			const removeButton = screen.getByRole('button', { name: /remove/i });
+			await user.click(removeButton);
+
+			expect(screen.getByRole('button', { name: /Save changes/i })).toBeDisabled();
 		});
 
 		it('should call the API with the proper parameters when clicked', async () => {
