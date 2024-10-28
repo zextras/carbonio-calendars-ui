@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 
-import { Container, Divider, Row } from '@zextras/carbonio-design-system';
+import { Button, Container, Divider, Row } from '@zextras/carbonio-design-system';
+import { isEmpty } from 'lodash';
 
 import { EditorActions } from './parts/editor-actions';
 import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
@@ -27,10 +28,28 @@ import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
 import { EditorRecurrence } from './parts/recurrence';
+import { useAppSelector } from '../../store/redux/hooks';
+import {
+	selectEditorEnd,
+	selectEditorRecurrence,
+	selectEditorStart
+} from '../../store/selectors/editor';
 import { EditorProps } from '../../types/editor';
 
-export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement | null =>
-	editorId ? (
+export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement | null => {
+	const [showDailyPlanner, setShowDailyPlanner] = useState(false);
+	const handleDailyPlannerButtonClick = (): void => {
+		setShowDailyPlanner((state) => !state);
+	};
+	const startDate = useAppSelector(selectEditorStart(editorId));
+	const endDate = useAppSelector(selectEditorEnd(editorId));
+	const recur = useAppSelector(selectEditorRecurrence(editorId));
+	const isSingleInstanceAppointment = isEmpty(recur);
+	console.log(startDate, endDate, recur, isSingleInstanceAppointment);
+
+	const dailyPlannerButtonDisabled =
+		isSingleInstanceAppointment && startDate && endDate && (endDate - startDate) / 1000 > 86400;
+	return editorId ? (
 		<Container
 			background={'gray5'}
 			padding={{ horizontal: 'large', bottom: 'large' }}
@@ -85,6 +104,13 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
 					<EditorAllDayCheckbox editorId={editorId} />
 				</Row>
+				{/* TODO: add daily planner button */}
+				<Button
+					onClick={handleDailyPlannerButtonClick}
+					disabled={dailyPlannerButtonDisabled}
+					data-testid={'daily-planner-button'}
+				/>
+				{showDailyPlanner && <div data-testid={'daily-planner-component'} />}
 				<Row height="fit" width="fill" padding={{ top: 'large' }}>
 					<EditorReminder editorId={editorId} />
 				</Row>
@@ -99,3 +125,4 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 			<EditorResourcesController editorId={editorId} />
 		</Container>
 	) : null;
+};

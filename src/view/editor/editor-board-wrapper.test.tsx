@@ -121,4 +121,41 @@ describe('Editor board wrapper', () => {
 
 		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
 	});
+
+	describe('daily planner button', () => {
+		it('it renders the button but not the daily planner itself', () => {
+			const isNew = true;
+			const editorId = mockedData.utils.getRandomEditorId(isNew);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			shell.getBridgedFunctions.mockImplementation(() => ({
+				createSnackbar: jest.fn()
+			}));
+
+			shell.useBoard.mockImplementation(() => initBoard({ editorId, isNew }));
+			setupTest(<BoardEditPanel />, { store });
+
+			expect(screen.getByTestId('daily-planner-button')).toBeInTheDocument();
+			expect(screen.queryByTestId('daily-planner-component')).not.toBeInTheDocument();
+		});
+
+		it('it shows the daily planner when user clicks the button', async () => {
+			const isNew = true;
+			const editorId = mockedData.utils.getRandomEditorId(isNew);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			shell.getBridgedFunctions.mockImplementation(() => ({
+				createSnackbar: jest.fn()
+			}));
+
+			shell.useBoard.mockImplementation(() => initBoard({ editorId, isNew }));
+			const { user } = setupTest(<BoardEditPanel />, { store });
+
+			const button = screen.getByTestId('daily-planner-button');
+			await act(async () => {
+				await user.click(button);
+			});
+			expect(screen.getByTestId('daily-planner-component')).toBeVisible();
+		});
+	});
 });
