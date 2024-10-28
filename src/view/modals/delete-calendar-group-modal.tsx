@@ -6,6 +6,7 @@
 import React, { useCallback } from 'react';
 
 import {
+	Divider,
 	ModalBody,
 	ModalFooter,
 	ModalHeader,
@@ -29,6 +30,10 @@ export const DeleteCalendarGroupModal: React.FC<DeleteCalendarGroupModalProps> =
 	const [t] = useTranslation();
 	const title = t('folder.modal.deletegroup.title', 'Delete group permanently?');
 	const confirmButtonLabel = t('folder.modal.deletegroup.confirm', 'Delete permanently');
+	const disclaimer = t(
+		'folder.modal.deletegroup.text',
+		'Are you sure you want to delete this group permanently? This action is irreversible and does not affect individual calendars.'
+	);
 
 	const onConfirm = useCallback(() => {
 		deleteCalendarGroupRequest({ id: groupId })
@@ -52,12 +57,12 @@ export const DeleteCalendarGroupModal: React.FC<DeleteCalendarGroupModalProps> =
 	return (
 		<>
 			<ModalHeader onClose={onClose} title={title} showCloseIcon />
+			<Divider />
 			<ModalBody>
-				<Text>
-					Are you sure you want to delete this calendar group? This action cannot be undone.
-				</Text>
+				<Text overflow={'break-word'}>{disclaimer}</Text>
 			</ModalBody>
-			<ModalFooter confirmLabel={confirmButtonLabel} onConfirm={onConfirm} />
+			<Divider />
+			<ModalFooter confirmLabel={confirmButtonLabel} confirmColor={'error'} onConfirm={onConfirm} />
 		</>
 	);
 };
