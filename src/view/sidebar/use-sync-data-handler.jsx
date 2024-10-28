@@ -28,7 +28,7 @@ import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 
 function handleCalendarGroupNotify(notify) {
 	if (notify.deleted) {
-		deleteCalendarGroupsFromStore();
+		deleteCalendarGroupsFromStore(notify.deleted);
 	}
 	if (notify?.modified?.folder) {
 		forEach(notify?.modified?.folder, (folder) => {

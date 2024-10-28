@@ -171,5 +171,29 @@ describe('sync data handler', () => {
 				expect(useCalendarGroupStore.getState().groups).toEqual({});
 			});
 		});
+		describe('deleted', () => {
+			test('it will remove the group from the store', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						134: {
+							name: 'test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					deleted: ['134'],
+					seq: 0
+				};
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({});
+			});
+		});
 	});
 });
