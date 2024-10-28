@@ -6,6 +6,7 @@
 import React from 'react';
 
 import { faker } from '@faker-js/faker';
+import { act } from '@testing-library/react';
 import { ErrorSoapBodyResponse, JSNS } from '@zextras/carbonio-shell-ui';
 
 import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
@@ -44,11 +45,22 @@ describe('DeleteCalendarGroupModal', () => {
 
 	it('should call onClose when the delete button is clicked', async () => {
 		const onClose = jest.fn();
+		const groupId = faker.number.int().toString();
+		const response = {
+			group: {
+				id: groupId
+			},
+			_jsns: JSNS.mail
+		};
 
-		const { user } = setupTest(<DeleteCalendarGroupModal groupId={'1'} onClose={onClose} />);
-		await user.click(screen.getByRole('button', { name: /delete permanently/i }));
+		createSoapAPIInterceptor<DeleteCalendarGroupRequest, DeleteCalendarGroupResponse>(
+			'DeleteCalendarGroup',
+			response
+		);
+		const { user } = setupTest(<DeleteCalendarGroupModal groupId={groupId} onClose={onClose} />);
+		await act(() => user.click(screen.getByRole('button', { name: /delete permanently/i })));
 
-		expect(onClose).toHaveBeenCalled();
+		expect(onClose).toHaveBeenCalledTimes(1);
 	});
 
 	it('should call the deletion API when the delete button is clicked', async () => {
