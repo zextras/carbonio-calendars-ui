@@ -66,13 +66,42 @@ describe('CreateGroupModal', () => {
 		it('should render an input field with the correct placeholder', () => {
 			setupTest(<CreateGroupModal onClose={jest.fn()} />);
 
-			expect(screen.getByText('Group Name')).toBeVisible();
+			expect(screen.getByText('Group Name*')).toBeVisible();
 		});
 
 		it('should render an helper text', () => {
 			setupTest(<CreateGroupModal onClose={jest.fn()} />);
 
 			expect(screen.getByText('This group will appear in your personal account.')).toBeVisible();
+		});
+
+		it('should render an error message when the group name is invalid', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
+			await user.clear(input);
+
+			expect(screen.getByText('Type a group name to save changes')).toBeVisible();
+		});
+
+		it('should not render an error message when the group name is valid', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
+			await user.type(input, faker.word.noun());
+
+			expect(screen.queryByText('Type a group name to save changes')).not.toBeInTheDocument();
+		});
+
+		it('should render the texts with a red foreground color when the group name is invalid', async () => {
+			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
+
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
+			await user.clear(input);
+
+			expect(screen.getByText('Group Name*')).toHaveStyle('color: rgb(215, 73, 66)');
+			expect(screen.getByText('Type a group name to save changes')).toHaveStyle(
+				'color: rgb(215, 73, 66)'
+			);
 		});
 	});
 
@@ -165,7 +194,7 @@ describe('CreateGroupModal', () => {
 		it('should be enabled when the group name is not empty', async () => {
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
 
-			const input = screen.getByRole('textbox', { name: 'Group Name' });
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, 'Awesome Group');
 
 			expect(screen.getByRole('button', { name: /Create group/i })).toBeEnabled();
@@ -182,7 +211,7 @@ describe('CreateGroupModal', () => {
 
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
 			const createGroupApiSpy = jest.spyOn(createGroupApi, 'createCalendarGroupRequest');
-			const input = screen.getByRole('textbox', { name: 'Group Name' });
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Create group/i });
 			await user.click(confirmButton);
@@ -202,7 +231,7 @@ describe('CreateGroupModal', () => {
 			>('CreateCalendarGroup', apiResponse);
 
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			const input = screen.getByRole('textbox', { name: 'Group Name' });
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Create group/i });
 			await act(() => user.click(confirmButton));
@@ -223,7 +252,7 @@ describe('CreateGroupModal', () => {
 			const onClose = jest.fn();
 
 			const { user } = setupTest(<CreateGroupModal onClose={onClose} />);
-			const input = screen.getByRole('textbox', { name: 'Group Name' });
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Create group/i });
 			await user.click(confirmButton);
@@ -242,7 +271,7 @@ describe('CreateGroupModal', () => {
 			>('CreateCalendarGroup', apiResponse);
 
 			const { user } = setupTest(<CreateGroupModal onClose={jest.fn()} />);
-			const input = screen.getByRole('textbox', { name: 'Group Name' });
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Create group/i });
 			await user.click(confirmButton);
@@ -263,7 +292,7 @@ describe('CreateGroupModal', () => {
 			const onClose = jest.fn();
 
 			const { user } = setupTest(<CreateGroupModal onClose={onClose} />);
-			const input = screen.getByRole('textbox', { name: 'Group Name' });
+			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Create group/i });
 			await user.click(confirmButton);
