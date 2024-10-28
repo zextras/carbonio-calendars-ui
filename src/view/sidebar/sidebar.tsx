@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { ThemeProvider } from '@mui/material';
 import {
@@ -32,7 +32,11 @@ import { Folder, LinkFolder } from '../../carbonio-ui-commons/types';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS, SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
-import { CalendarGroup, getCalendarGroups } from '../../store/zustand/calendar-group-store';
+import {
+	CalendarGroup,
+	getCalendarGroups,
+	useCalendarGroupStore
+} from '../../store/zustand/calendar-group-store';
 import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
@@ -148,7 +152,7 @@ const useSidebarSortedFolders = (
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 	useInitializeFolders(FOLDER_VIEW.appointment);
-
+	const store = useCalendarGroupStore();
 	const folders = useRootsArray();
 	const folderWithShares = useMemo(() => addFindSharesItem(folders), [folders]);
 	const calendarGroups = getCalendarGroups();
@@ -158,6 +162,10 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 	);
 
 	const tagsAccordionItems = useGetTagsAccordion();
+
+	useEffect(() => {
+		console.log('@@', store);
+	}, [store]);
 
 	return (
 		<ModalManager>

@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useNotify } from '@zextras/carbonio-shell-ui';
-import { isEmpty, reduce, forEach, sortBy } from 'lodash';
+import { isEmpty, reduce, forEach, sortBy, map, filter } from 'lodash';
 
 import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
 import { folderWorker } from '../../carbonio-ui-commons/worker';
@@ -18,9 +18,47 @@ import {
 	handleModifiedAppointments
 } from '../../store/slices/appointments-slice';
 import { handleModifiedInvites } from '../../store/slices/invites-slice';
+import {
+	deleteCalendarGroupsFromStore,
+	updateCalendarGroupIds,
+	updateCalendarGroupName,
+	updateCalendarGroupsStore
+} from '../../store/zustand/calendar-group-store';
 import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 
-function handleFoldersNotify(notifyList, notify, worker, store) {
+function handleCalendarGroupNotify(notify) {
+	if (notify.deleted) {
+		deleteCalendarGroupsFromStore();
+	}
+	if (notify?.modified?.folder) {
+		forEach(notify?.modified?.folder, (folder) => {
+			if (folder.id && folder.name) {
+				updateCalendarGroupName(folder.id, folder.name);
+			}
+			if (folder.id && folder?.meta?.[0]?._attrs?.cids) {
+				const groupIds = folder?.meta?.[0]?._attrs?.cids?.split('#') ?? [];
+				updateCalendarGroupIds(folder.id, groupIds);
+			}
+		});
+	}
+	if (notify?.created?.folder) {
+		const groupsToAdd = filter(
+			notify?.created?.folder,
+			(folder) => folder.view === 'calendar_group'
+		);
+		if (groupsToAdd.length) {
+			const groups = map(groupsToAdd, (group) => ({
+				id: group.id,
+				name: group.name,
+				calendarId: group?.meta?.[0]?._attrs?.cids?.split('#') ?? []
+			}));
+
+			updateCalendarGroupsStore(groups);
+		}
+	}
+}
+
+function handleFoldersNotify(notifyList, notify, worker) {
 	const isNotifyRelatedToFolders =
 		!isEmpty(notifyList) &&
 		(notify?.created?.folder ||
@@ -30,10 +68,11 @@ function handleFoldersNotify(notifyList, notify, worker, store) {
 			notify?.modified?.link);
 
 	if (isNotifyRelatedToFolders) {
+		handleCalendarGroupNotify(notify);
 		worker.postMessage({
 			op: 'notify',
 			notify,
-			state: store.getState().folders
+			state: useFolderStore.getState().folders
 		});
 	}
 }
@@ -96,7 +135,7 @@ export const useSyncDataHandler = () => {
 		if (notifyList.length <= 0) return;
 		forEach(sortBy(notifyList, 'seq'), (notify) => {
 			if (!isEmpty(notify) && (notify.seq > seq.current || (seq.current > 1 && notify.seq === 1))) {
-				handleFoldersNotify(notifyList, notify, folderWorker, useFolderStore);
+				handleFoldersNotify(notifyList, notify, folderWorker);
 				handleAppointmentCreationNotify(notify, dispatch, end, start, query);
 				handleAppointmentModifyNotify(notify, dispatch, end, start, query);
 				handleAppointmentDeletionNotify(notify, dispatch);
