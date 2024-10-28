@@ -148,7 +148,6 @@ const useSidebarSortedFolders = (
 
 const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 	useInitializeFolders(FOLDER_VIEW.appointment);
-
 	const folders = useRootsArray();
 	const folderWithShares = useMemo(() => addFindSharesItem(folders), [folders]);
 	const calendarGroups = getCalendarGroups();

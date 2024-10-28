@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { keyBy } from 'lodash';
+import { differenceBy, isEqual, keyBy, values } from 'lodash';
 import { create } from 'zustand';
 
 export type CalendarGroup = {
@@ -36,4 +36,43 @@ export const updateCalendarGroupsStore = (groups: CalendarGroups): void => {
 			...groupsToAdd
 		}
 	}));
+};
+
+export const deleteCalendarGroupsFromStore = (groupIds: Array<string>): void => {
+	useCalendarGroupStore.setState((state) => ({
+		...state,
+		groups: keyBy(differenceBy(values(state.groups), groupIds, 'id'), 'id')
+	}));
+};
+
+export const updateCalendarGroupIds = (groupId: string, groupIds: Array<string>): void => {
+	const state = useCalendarGroupStore.getState();
+	if (state.groups[groupId] && !isEqual(state.groups[groupId].calendarId, groupIds)) {
+		useCalendarGroupStore.setState((s) => ({
+			...s,
+			groups: {
+				...s.groups,
+				[groupId]: {
+					...s.groups[groupId],
+					calendarId: groupIds
+				}
+			}
+		}));
+	}
+};
+
+export const updateCalendarGroupName = (groupId: string, name: string): void => {
+	const state = useCalendarGroupStore.getState();
+	if (state.groups[groupId] && state.groups[groupId].name !== name) {
+		useCalendarGroupStore.setState((s) => ({
+			...s,
+			groups: {
+				...s.groups,
+				[groupId]: {
+					...s.groups[groupId],
+					name
+				}
+			}
+		}));
+	}
 };
