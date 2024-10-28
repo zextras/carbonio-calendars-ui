@@ -13,3 +13,5 @@ export const TEST_SELECTORS = {
 		addCalendar: 'icon: Plus'
 	}
 };
+
+export const MODAL_ANIMATION_DURATION = 10;

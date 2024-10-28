@@ -11,6 +11,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { GROUP_ACTIONS, GroupActionsId } from '../constants/event-actions';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';
 import { ActionsClick } from '../types/actions';
+import { DeleteCalendarGroupModal } from '../view/modals/delete-calendar-group-modal';
 import { EditGroupModal } from '../view/sidebar/edit-group-modal';
 
 export type GroupActionsItems = {
@@ -23,21 +24,23 @@ export type GroupActionsItems = {
 	tooltipLabel: string;
 };
 
-const useCalendarGroupDeleteActionFn = (calendarGroupId: string): (() => void) => {
+export const useCalendarGroupDeleteActionFn = (calendarGroupId: string): (() => void) => {
 	const { createModal, closeModal } = useModal();
 
-	return useCallback(
-		() =>
-			createModal(
-				{
-					id: GROUP_ACTIONS.EDIT,
-					// TODO: complete the modal with the correct component
-					children: <></>
-				},
-				true
-			),
-		[createModal]
-	);
+	return useCallback(() => {
+		createModal(
+			{
+				id: GROUP_ACTIONS.DELETE,
+				children: (
+					<DeleteCalendarGroupModal
+						groupId={calendarGroupId}
+						onClose={(): void => closeModal(GROUP_ACTIONS.DELETE)}
+					/>
+				)
+			},
+			true
+		);
+	}, [calendarGroupId, closeModal, createModal]);
 };
 
 const useCalendarGroupEditActionFn = (calendarGroupId: string): (() => void) => {
