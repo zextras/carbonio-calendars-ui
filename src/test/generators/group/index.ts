@@ -7,7 +7,7 @@ import { faker } from '@faker-js/faker';
 import { times } from 'lodash';
 
 import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { CalendarGroup } from '../../../carbonio-ui-commons/types';
+import { CalendarGroup } from '../../../store/zustand/calendar-group-store';
 import { GroupCalendar } from '../../../types/groups';
 
 export const generateGroup = ({

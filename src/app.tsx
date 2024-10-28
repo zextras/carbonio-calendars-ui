@@ -22,11 +22,12 @@ import {
 	NewAction
 } from '@zextras/carbonio-shell-ui';
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
+import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
-import { useFoldersMap, useUpdateGroups } from './carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
@@ -36,6 +37,7 @@ import InviteResponseComp from './shared/invite-response/invite-response';
 import { getCalendarGroupsRequest } from './soap/get-calendar-groups-request';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
+import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store';
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
@@ -111,7 +113,6 @@ const AppRegistrations = (): null => {
 	const calendars = useFoldersMap();
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
-	const updateGroups = useUpdateGroups();
 
 	useInitializeFolders(FOLDER_VIEW.appointment);
 
@@ -174,14 +175,13 @@ const AppRegistrations = (): null => {
 
 	useEffect(() => {
 		getCalendarGroupsRequest().then((res) => {
-			updateGroups(
-				res.group.map((g) => ({
-					...g,
-					calendarId: g.calendarId.map((x) => x._content)
-				}))
-			);
+			const groups = map(res.group, (group) => ({
+				...group,
+				calendarId: group.calendarId.map((x) => x._content)
+			}));
+			updateCalendarGroupsStore(groups);
 		});
-	}, [updateGroups]);
+	}, []);
 
 	return null;
 };

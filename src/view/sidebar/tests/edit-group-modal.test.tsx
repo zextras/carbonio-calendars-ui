@@ -15,7 +15,7 @@ import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/
 import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
 import { within, screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { CalendarGroup, Folder } from '../../../carbonio-ui-commons/types';
+import { Folder } from '../../../carbonio-ui-commons/types';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { CreateCalendarGroupResponse } from '../../../soap/create-calendar-group-request';
 import {
@@ -23,6 +23,7 @@ import {
 	ModifyCalendarGroupResponse
 } from '../../../soap/modify-calendar-group-request';
 import * as modifyGroupApi from '../../../soap/modify-calendar-group-request';
+import { CalendarGroup } from '../../../store/zustand/calendar-group-store';
 import { generateApiErrorResponse } from '../../../test/generators/api';
 import { generateGroup, populateGroupsStore } from '../../../test/generators/group';
 import { EditGroupModal, EditGroupModalProps } from '../edit-group-modal';
