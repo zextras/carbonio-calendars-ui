@@ -34,17 +34,31 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 	const [groupName, setGroupName] = useState('');
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
 
-	const disabled = useMemo(
-		() => groupName.indexOf('/') > -1 || groupName.length === 0,
+	const isDirty = useMemo(
+		() => groupName !== '' || selectedCalendars.length > 0,
+		[groupName, selectedCalendars]
+	);
+
+	const isGroupNameValid = useMemo(
+		() => groupName.indexOf('/') === -1 && groupName.length > 0,
 		[groupName]
 	);
 
-	const onCloseModal = useCallback(() => {
-		setGroupName('');
-		onClose();
-	}, [onClose]);
+	const isConfirmDisabled = useMemo(
+		() => !isGroupNameValid || !isDirty,
+		[isGroupNameValid, isDirty]
+	);
 
-	const groupNameInputLabel = useMemo(() => t('label.type_group_name_here', 'Group Name'), [t]);
+	const groupNameInputLabel = useMemo(
+		() => `${t('label.type_group_name_here', 'Group Name')}*`,
+		[t]
+	);
+
+	const groupNameDescription = useMemo(
+		() =>
+			isGroupNameValid ? '' : t('label.invalid_group_name', 'Type a group name to save changes'),
+		[isGroupNameValid, t]
+	);
 
 	const onMultipleSelectedCalendarChange = useCallback((selected: Array<Folder>) => {
 		setSelectedCalendars((prev) => [...prev, ...selected]);
@@ -102,10 +116,12 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 			<ModalHeader
 				title={t('folder.modal.creategroup.title', 'Create new Calendar Group')}
 				showCloseIcon
-				onClose={onCloseModal}
+				onClose={onClose}
 			/>
 			<Input
 				label={groupNameInputLabel}
+				description={groupNameDescription}
+				hasError={!isGroupNameValid}
 				backgroundColor="gray5"
 				value={groupName}
 				onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -131,7 +147,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 			<ModalFooter
 				onConfirm={onConfirm}
 				confirmLabel={t('folder.modal.creategroup.footer', 'Create Group')}
-				confirmDisabled={disabled}
+				confirmDisabled={isConfirmDisabled}
 			/>
 		</Container>
 	);
