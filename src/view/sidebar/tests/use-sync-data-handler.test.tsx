@@ -195,5 +195,166 @@ describe('sync data handler', () => {
 				expect(useCalendarGroupStore.getState().groups).toEqual({});
 			});
 		});
+		describe('modified', () => {
+			test('it wont replace the old store', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						150: {
+							id: '150',
+							name: 'test group 1',
+							calendarId: ['10', '20']
+						},
+						134: {
+							name: 'test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					modified: {
+						folder: [
+							{
+								id: '134',
+								name: 'new test group 1',
+								meta: [{ _attrs: { cids: '10#20' }, section: 'calendarIds' }]
+							} as unknown as SoapFolder
+						]
+					},
+					seq: 0
+				};
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual(
+					expect.objectContaining({
+						150: {
+							id: '150',
+							name: 'test group 1',
+							calendarId: ['10', '20']
+						}
+					})
+				);
+			});
+			test('it will rename the group', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						134: {
+							name: 'test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					modified: {
+						folder: [
+							{
+								id: '134',
+								name: 'new test group 1',
+								meta: [{ _attrs: { cids: '10#20' }, section: 'calendarIds' }]
+							} as unknown as SoapFolder
+						]
+					},
+					seq: 0
+				};
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					134: {
+						name: 'new test group 1',
+						calendarId: ['10', '20'],
+						id: '134'
+					}
+				});
+			});
+			test('it will change the calendarIds', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						134: {
+							name: 'test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					modified: {
+						folder: [
+							{
+								id: '134',
+								name: 'test group 1',
+								meta: [{ _attrs: { cids: '10#15' }, section: 'calendarIds' }]
+							} as unknown as SoapFolder
+						]
+					},
+					seq: 0
+				};
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					134: {
+						name: 'test group 1',
+						calendarId: ['10', '15'],
+						id: '134'
+					}
+				});
+			});
+			test('it will rename the group and change the calendarIds', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						134: {
+							name: 'new test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					modified: {
+						folder: [
+							{
+								id: '134',
+								name: 'new test group 1',
+								meta: [{ _attrs: { cids: '10#15' }, section: 'calendarIds' }]
+							} as unknown as SoapFolder
+						]
+					},
+					seq: 0
+				};
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					134: {
+						name: 'new test group 1',
+						calendarId: ['10', '15'],
+						id: '134'
+					}
+				});
+			});
+		});
 	});
 });
