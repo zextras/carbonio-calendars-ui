@@ -36,6 +36,12 @@ import {
 } from '../../store/selectors/editor';
 import { EditorProps } from '../../types/editor';
 
+function isLessThan24Hours(startDate: number, endDate: number): boolean {
+	const millisecondsInAnHour = 3600000; // 1000 ms * 60 s * 60 min
+	const differenceInHours = (endDate - startDate) / millisecondsInAnHour;
+	return differenceInHours < 24;
+}
+
 export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement | null => {
 	const [showDailyPlanner, setShowDailyPlanner] = useState(false);
 	const handleDailyPlannerButtonClick = (): void => {
@@ -45,10 +51,10 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 	const endDate = useAppSelector(selectEditorEnd(editorId));
 	const recur = useAppSelector(selectEditorRecurrence(editorId));
 	const isSingleInstanceAppointment = isEmpty(recur);
-	console.log(startDate, endDate, recur, isSingleInstanceAppointment);
+	const isWithinRange = isLessThan24Hours(startDate ?? 0, endDate ?? 0);
 
-	const dailyPlannerButtonDisabled =
-		isSingleInstanceAppointment && startDate && endDate && (endDate - startDate) / 1000 > 86400;
+	const dailyPlannerButtonDisabled = !isSingleInstanceAppointment || !isWithinRange;
+
 	return editorId ? (
 		<Container
 			background={'gray5'}
