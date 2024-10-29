@@ -38,10 +38,15 @@ import {
 } from '../../store/selectors/editor';
 import { EditorProps } from '../../types/editor';
 
-function isLessThan24Hours(startDate: number, endDate: number): boolean {
-	const millisecondsInAnHour = 3600000; // 1000 ms * 60 s * 60 min
-	const differenceInHours = (endDate - startDate) / millisecondsInAnHour;
-	return differenceInHours < 24;
+function getWithinSameDay(startDate: number, endDate: number): boolean {
+	const date1 = new Date(startDate);
+	const date2 = new Date(endDate);
+
+	return (
+		date1.getFullYear() === date2.getFullYear() &&
+		date1.getMonth() === date2.getMonth() &&
+		date1.getDate() === date2.getDate()
+	);
 }
 
 export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement | null => {
@@ -54,9 +59,9 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 	const recur = useAppSelector(selectEditorRecurrence(editorId));
 	const [t] = useTranslation();
 	const isSingleInstanceAppointment = isEmpty(recur);
-	const isWithinRange = isLessThan24Hours(startDate ?? 0, endDate ?? 0);
+	const isWithinSameDay = getWithinSameDay(startDate ?? 0, endDate ?? 0);
 
-	const dailyPlannerButtonDisabled = !isSingleInstanceAppointment || !isWithinRange;
+	const dailyPlannerButtonDisabled = !isSingleInstanceAppointment || !isWithinSameDay;
 	const dailyPlannerLabel = showDailyPlanner
 		? t('editor.daily_planner.button.hide', 'hide organizer tool')
 		: t('editor.daily_planner.button.show', 'show organizer tool');

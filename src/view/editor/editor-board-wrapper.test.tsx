@@ -13,9 +13,11 @@ import BoardEditPanel from './editor-board-wrapper';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_BOARD_ID, PREFS_DEFAULTS } from '../../constants';
 import { reducers } from '../../store/redux';
 import { createNewEditor } from '../../store/slices/editor-slice';
+import mockedData from '../../test/generators';
 import { Editor } from '../../types/editor';
 
 const defaultEditor: Editor = {
@@ -138,7 +140,7 @@ describe('Editor board wrapper', () => {
 			expect(screen.queryByTestId('daily-planner-component')).not.toBeInTheDocument();
 		});
 
-		it('it renders an enabled button when the event is singleOccurrence and the event lasts less than 1 day', () => {
+		it('it renders an enabled button when the event is singleOccurrence and occours within the same day', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			shell.getBridgedFunctions.mockImplementation(() => ({
@@ -149,8 +151,8 @@ describe('Editor board wrapper', () => {
 			store.dispatch(
 				createNewEditor({
 					...defaultEditor,
-					start: Date.now(),
-					end: Date.now() + millisecInAnHour * 23
+					start: new Date(2024, 1, 1).getTime() + millisecInAnHour * 23,
+					end: new Date(2024, 1, 1).getTime() + millisecInAnHour * 23.5
 				})
 			);
 			setupTest(<BoardEditPanel />, { store });
@@ -171,8 +173,8 @@ describe('Editor board wrapper', () => {
 			store.dispatch(
 				createNewEditor({
 					...defaultEditor,
-					start: Date.now(),
-					end: Date.now() + millisecInAnHour * 25
+					start: new Date(2024, 1, 1).getTime() + millisecInAnHour * 23,
+					end: new Date(2024, 1, 1).getTime() + millisecInAnHour * 24.5
 				})
 			);
 			setupTest(<BoardEditPanel />, { store });
@@ -208,26 +210,32 @@ describe('Editor board wrapper', () => {
 
 		it('it shows the daily planner when user clicks the button', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
+			const folder = {
+				absFolderPath: '/Test',
+				id: '5',
+				l: '1',
+				name: 'Test',
+				view: 'appointment'
+			};
+
+			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+			const context = { folders, dispatch: store.dispatch };
+			const editor = generateEditor({
+				context
+			});
 
 			shell.getBridgedFunctions.mockImplementation(() => ({
 				createSnackbar: jest.fn()
 			}));
 
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			store.dispatch(
-				createNewEditor({
-					...defaultEditor,
-					start: Date.now(),
-					end: Date.now() + millisecInAnHour * 23
-				})
-			);
+			shell.useBoard.mockImplementation(() => initBoard({ editorId: editor.id, isNew: true }));
 			const { user } = setupTest(<BoardEditPanel />, { store });
 			const button = screen.getByTestId('daily-planner-button');
 			await act(async () => {
 				await user.click(button);
 			});
 
-			expect(screen.getByTestId('daily-planner-component-1')).toBeVisible();
+			expect(screen.getByTestId(`daily-planner-component-${editor.id}`)).toBeInTheDocument();
 			expect(screen.getByText('hide organizer tool')).toBeInTheDocument();
 		});
 	});
