@@ -123,7 +123,7 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 					disabled={dailyPlannerButtonDisabled}
 					data-testid={'daily-planner-button'}
 				/>
-				{showDailyPlanner && <div data-testid={'daily-planner-component'} />}
+				{showDailyPlanner && <DailyPlanner editorId={editorId} />}
 				<Row height="fit" width="fill" padding={{ top: 'large' }}>
 					<EditorReminder editorId={editorId} />
 				</Row>

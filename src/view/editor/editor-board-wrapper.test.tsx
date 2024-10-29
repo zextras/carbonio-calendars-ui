@@ -227,7 +227,7 @@ describe('Editor board wrapper', () => {
 				await user.click(button);
 			});
 
-			expect(screen.getByTestId('daily-planner-component')).toBeVisible();
+			expect(screen.getByTestId('daily-planner-component-1')).toBeVisible();
 			expect(screen.getByText('hide organizer tool')).toBeInTheDocument();
 		});
 	});
