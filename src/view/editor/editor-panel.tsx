@@ -7,7 +7,9 @@ import React, { ReactElement, useState } from 'react';
 
 import { Button, Container, Divider, Row } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
+import { DailyPlanner } from './parts/daily-planner';
 import { EditorActions } from './parts/editor-actions';
 import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
 import { EditorAttachments } from './parts/editor-attachments';
@@ -50,10 +52,14 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 	const startDate = useAppSelector(selectEditorStart(editorId));
 	const endDate = useAppSelector(selectEditorEnd(editorId));
 	const recur = useAppSelector(selectEditorRecurrence(editorId));
+	const [t] = useTranslation();
 	const isSingleInstanceAppointment = isEmpty(recur);
 	const isWithinRange = isLessThan24Hours(startDate ?? 0, endDate ?? 0);
 
 	const dailyPlannerButtonDisabled = !isSingleInstanceAppointment || !isWithinRange;
+	const dailyPlannerLabel = showDailyPlanner
+		? t('editor.daily_planner.button.hide', 'hide organizer tool')
+		: t('editor.daily_planner.button.show', 'show organizer tool');
 
 	return editorId ? (
 		<Container
@@ -113,6 +119,7 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 				{/* TODO: add daily planner button */}
 				<Button
 					onClick={handleDailyPlannerButtonClick}
+					label={dailyPlannerLabel}
 					disabled={dailyPlannerButtonDisabled}
 					data-testid={'daily-planner-button'}
 				/>

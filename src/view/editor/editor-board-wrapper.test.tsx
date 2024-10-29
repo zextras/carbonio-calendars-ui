@@ -203,6 +203,7 @@ describe('Editor board wrapper', () => {
 
 			expect(button).toBeInTheDocument();
 			expect(button).toBeDisabled();
+			expect(screen.getByText('show organizer tool')).toBeInTheDocument();
 		});
 
 		it('it shows the daily planner when user clicks the button', async () => {
@@ -227,6 +228,7 @@ describe('Editor board wrapper', () => {
 			});
 
 			expect(screen.getByTestId('daily-planner-component')).toBeVisible();
+			expect(screen.getByText('hide organizer tool')).toBeInTheDocument();
 		});
 	});
 });
