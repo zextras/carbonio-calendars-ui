@@ -7,8 +7,8 @@ import React, { FC, useCallback } from 'react';
 
 import { Chip, ChipItem, ChipProps } from '@zextras/carbonio-design-system';
 
-import { ZIMBRA_STANDARD_COLORS } from '../../../carbonio-ui-commons/constants';
 import { useFolder } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
 
 export type CalendarChipInputItem = ChipItem<{
 	id: string;
@@ -22,7 +22,8 @@ export const CalendarChip: FC<CalendarChipInputItem> = ({ value }) => {
 	const calendar = useFolder(value?.id ?? '');
 
 	const label = calendar?.name ?? '';
-	const avatarColor = ZIMBRA_STANDARD_COLORS[calendar?.color ?? 0].hex;
+	const fgColor = CALENDARS_STANDARD_COLORS[calendar?.color ?? 0].color;
+	const bgColor = CALENDARS_STANDARD_COLORS[calendar?.color ?? 0].background;
 
 	const onChipClose = useCallback<NonNullable<ChipProps['onClose']>>(
 		(e): void => {
@@ -36,14 +37,19 @@ export const CalendarChip: FC<CalendarChipInputItem> = ({ value }) => {
 		[value]
 	);
 
-	return calendar && avatarColor ? (
+	return calendar && fgColor ? (
 		<Chip
 			key={value?.id}
 			label={label}
-			avatarColor={avatarColor}
+			avatarColor={fgColor}
 			avatarIcon={'Square2'}
 			avatarBackground="transparent"
 			size={'small'}
+			borderColor={fgColor}
+			// There is some type issue with the background prop, but it is working
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			background={bgColor}
 			onClose={onChipClose}
 		/>
 	) : null;
