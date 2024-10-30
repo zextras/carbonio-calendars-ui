@@ -6,7 +6,6 @@
 import React, { ReactElement, useState } from 'react';
 
 import { Button, Container, Divider, Row } from '@zextras/carbonio-design-system';
-import { expandBoards } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -54,7 +53,6 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 	const [showDailyPlanner, setShowDailyPlanner] = useState(false);
 	const handleDailyPlannerButtonClick = (): void => {
 		setShowDailyPlanner((state) => !state);
-		expandBoards();
 	};
 	const startDate = useAppSelector(selectEditorStart(editorId));
 	const endDate = useAppSelector(selectEditorEnd(editorId));
@@ -123,7 +121,6 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
 					<EditorAllDayCheckbox editorId={editorId} />
 				</Row>
-				{/* TODO: add daily planner button */}
 				<Button
 					onClick={handleDailyPlannerButtonClick}
 					label={dailyPlannerLabel}
