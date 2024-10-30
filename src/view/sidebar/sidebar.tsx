@@ -16,7 +16,7 @@ import {
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import { find, map, reject } from 'lodash';
+import { compact, find, map, reject, sortBy } from 'lodash';
 
 import { CollapsedSidebarItem } from './collapsed-sidebar-items';
 import { CreateGroupComponent } from './custom-components/create-group-component';
@@ -91,7 +91,10 @@ const useSidebarSortedFolders = (
 	useMemo(
 		() =>
 			map(folders, (accountRoot) => {
-				const calendarGroups = map(groups, (group) => {
+				const allCalendars = find(groups, ['id', SIDEBAR_ITEMS.ALL_CALENDAR]);
+				const otherGroups = reject(groups, ['id', SIDEBAR_ITEMS.ALL_CALENDAR]);
+				const sortedGroups = compact([allCalendars, ...sortBy(otherGroups, 'name')]);
+				const calendarGroups = map(sortedGroups, (group) => {
 					const name =
 						group.id === SIDEBAR_ITEMS.ALL_CALENDAR
 							? t('label.all_calendars', 'All calendars')

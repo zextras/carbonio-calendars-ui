@@ -6,7 +6,7 @@
 import React, { ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
 
 import { ChipInput } from '@zextras/carbonio-design-system';
-import { filter, map, reject, uniqBy } from 'lodash';
+import { compact, filter, find, map, reject, sortBy, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarChip, CalendarChipInputItem, CalendarChipInputItems } from './calendar-chips';
@@ -48,31 +48,46 @@ export const MultipleCalendarSelector = ({
 		[calendars, excludeTrash]
 	);
 
-	const calendarOptions = useMemo(
-		() =>
-			map(requiredCalendars, (cal) => {
-				const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
-				const labelName = hasId(cal, FOLDERS.CALENDAR) ? t('label.calendar', 'Calendar') : cal.name;
-				return {
-					id: cal.id,
-					label: labelName,
-					value: { id: cal.id, label: labelName },
-					color: color.color,
-					customComponent: (
-						<ItemFactory
-							disabled={disabled ?? false}
-							absFolderPath={cal.absFolderPath}
-							color={color.color}
-							isLink={cal.isLink}
-							label={labelName}
-							acl={cal.acl}
-							id={cal.id}
-						/>
-					)
-				};
-			}),
-		[disabled, requiredCalendars, t]
-	);
+	const calendarOptions = useMemo(() => {
+		const calendar = find(requiredCalendars, (f) => hasId(f, FOLDERS.CALENDAR));
+		const trash = find(requiredCalendars, (f) => hasId(f, FOLDERS.TRASH));
+		const othersPrimary = sortBy(
+			reject(
+				requiredCalendars,
+				(f) => hasId(f, FOLDERS.CALENDAR) || hasId(f, FOLDERS.TRASH) || f.isLink
+			),
+			'name'
+		);
+		const othersLink = sortBy(
+			reject(
+				requiredCalendars,
+				(f) => hasId(f, FOLDERS.CALENDAR) || hasId(f, FOLDERS.TRASH) || !f.isLink
+			),
+			'name'
+		);
+		const sortedCalendars = compact([calendar, trash, ...othersPrimary, ...othersLink]);
+		return map(sortedCalendars, (cal) => {
+			const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
+			const labelName = hasId(cal, FOLDERS.CALENDAR) ? t('label.calendar', 'Calendar') : cal.name;
+			return {
+				id: cal.id,
+				label: labelName,
+				value: { id: cal.id, label: labelName },
+				color: color.color,
+				customComponent: (
+					<ItemFactory
+						disabled={disabled ?? false}
+						absFolderPath={cal.absFolderPath}
+						color={color.color}
+						isLink={cal.isLink}
+						label={labelName}
+						acl={cal.acl}
+						id={cal.id}
+					/>
+				)
+			};
+		});
+	}, [disabled, requiredCalendars, t]);
 
 	const removeSelectedCalendarChip = useCallback(
 		(id: string): void => {
