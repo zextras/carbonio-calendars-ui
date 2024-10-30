@@ -10,7 +10,7 @@ import { Chip, Container, Table, THeaderProps, TRowProps } from '@zextras/carbon
 import styled from 'styled-components';
 
 import { useAppSelector } from '../../../store/redux/hooks';
-import { selectSender } from '../../../store/selectors/editor';
+import { selectEditorEnd, selectEditorStart, selectSender } from '../../../store/selectors/editor';
 
 const StyledTable = styled(Table)`
 	thead {
@@ -20,11 +20,18 @@ const StyledTable = styled(Table)`
 	}
 `;
 
+const START_DATE_LINE_COLOR = 'green';
+const END_DATE_LINE_COLOR = 'red';
+
 function getBorderWidth(index: number): string {
 	if (index < 2) return '0px';
 	if (index > 49) return '0px';
 	if (index % 2 === 0) return '1px 0 1px 1px';
 	return '1px 1px 1px 0';
+}
+
+function getBorderColor(): string {
+	return 'black';
 }
 
 const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
@@ -34,7 +41,7 @@ const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
 				key={index}
 				style={{
 					borderWidth: getBorderWidth(index),
-					borderColor: 'black',
+					borderColor: getBorderColor(),
 					borderStyle: 'solid',
 					borderRadius: 0,
 					padding: 0
@@ -66,6 +73,53 @@ const HeaderFactory = ({ headers }: THeaderProps): React.JSX.Element => (
 	</tr>
 );
 
+type GetParticipantColumnsProps = {
+	participantName: string;
+	startDate: number;
+	endDate: number;
+};
+
+function getParticipantColumns({
+	participantName,
+	startDate,
+	endDate
+}: GetParticipantColumnsProps): React.JSX.Element[] {
+	return [
+		<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />,
+		...Array.from({ length: 50 }, (_, slot) => {
+			// get start date hour
+			// startDate: epoch millis
+
+			if (slot !== 0 && slot !== 50) {
+				const startDateLocalTime = new Date(startDate);
+				const startHour = startDateLocalTime.getHours() + 1;
+				const startMinutes = startDateLocalTime.getMinutes();
+				const last30MinutesSlot = slot % 2 === 0;
+				// slot: 1-49
+				let currentHour;
+				if (last30MinutesSlot) {
+					currentHour = (slot * 30) / 60;
+				} else {
+					currentHour = ((slot + 1) * 30) / 60;
+				}
+
+				const inCurrentHour = startHour === currentHour;
+				const startDateMinutesInSecondSlot = startMinutes > 30;
+				if (inCurrentHour) {
+					if (last30MinutesSlot && startDateMinutesInSecondSlot) {
+						console.log(`CurrentHour: ${currentHour}`);
+						return <div key={startHour} style={{ height: '100px', backgroundColor: 'red' }} />;
+					}
+					if (!last30MinutesSlot && !startDateMinutesInSecondSlot) {
+						return <div key={startHour} style={{ height: '100px', backgroundColor: 'red' }} />;
+					}
+				}
+			}
+			return <div key={slot} />;
+		})
+	];
+}
+
 export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	const hours = [
 		'12',
@@ -76,21 +130,20 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 	];
 
 	const sender = useAppSelector(selectSender(editorId));
-	const columns = [
-		<Chip
-			maxWidth={'10rem'}
-			key={'organizer'}
-			label={`${
-				sender.fullName
-			}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
-		/>,
-		...Array.from({ length: 50 }, (_, index) => <div key={index} />)
-	];
+
+	const startDate = useAppSelector(selectEditorStart(editorId)) as number;
+	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
+
+	const organizerColumns = getParticipantColumns({
+		participantName: sender.fullName ?? '',
+		startDate,
+		endDate
+	});
 
 	const rows = [
 		{
 			id: 'organizer',
-			columns,
+			columns: organizerColumns,
 			highlight: false
 		}
 	];
