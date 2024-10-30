@@ -9,7 +9,6 @@ import {
 	Container,
 	Divider,
 	Input,
-	ModalBody,
 	ModalFooter,
 	ModalHeader,
 	Padding,
@@ -109,8 +108,9 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 
 	return (
 		<Container
+			style={{ overflowY: 'hidden' }}
 			padding={{ all: 'small' }}
-			mainAlignment="center"
+			mainAlignment="flex-start"
 			crossAlignment="flex-start"
 			height="fit"
 		>
@@ -120,7 +120,13 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				onClose={onClose}
 			/>
 			<Divider />
-			<ModalBody>
+			<Padding vertical="small" />
+			<Container
+				maxHeight="fit"
+				style={{ overflowY: 'hidden' }}
+				mainAlignment="flex-start"
+				crossAlignment="flex-start"
+			>
 				<Input
 					label={groupNameInputLabel}
 					description={groupNameDescription}
@@ -131,26 +137,28 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 						setGroupName(e.target.value);
 					}}
 				/>
+				<Padding top="small" />
 				<Text size="extrasmall" color="gray1">
 					{t('label.newgroup.note', 'This group will appear in your personal account.')}
 				</Text>
-				<Padding vertical="medium" />
+				<Padding vertical="small" />
 				<Divider />
-				<Padding vertical="large">
+				<Padding vertical="small" />
+				<Container crossAlignment="flex-start">
 					<Text weight="bold" size="large">
 						{t('label.newgroup.calendars', 'Calendars in this group')}
 					</Text>
-				</Padding>
+				</Container>
+				<Padding vertical="small" />
 				<MultipleCalendarSelector
 					onCalendarChange={onMultipleSelectedCalendarChange}
 					excludeTrash={false}
 				/>
-				<Padding vertical="medium" />
+				<Padding vertical="small" />
 				<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
-			</ModalBody>
-
+				<Padding vertical="small" />
+			</Container>
 			<Divider />
-
 			<ModalFooter
 				onConfirm={onConfirm}
 				confirmLabel={t('folder.modal.creategroup.footer', 'Create Group')}

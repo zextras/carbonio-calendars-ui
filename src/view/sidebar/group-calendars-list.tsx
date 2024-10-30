@@ -29,7 +29,12 @@ export const GroupCalendarsList = ({
 	);
 
 	return (
-		<Container gap="0.5rem">
+		<Container
+			gap="0.5rem"
+			style={{ overflowY: 'auto' }}
+			crossAlignment="flex-start"
+			mainAlignment="flex-start"
+		>
 			{calendars.length ? (
 				calendars.map((calendar) => (
 					<GroupCalendarsListItem

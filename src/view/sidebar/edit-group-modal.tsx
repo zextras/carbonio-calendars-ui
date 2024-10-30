@@ -9,7 +9,6 @@ import {
 	Container,
 	Divider,
 	Input,
-	ModalBody,
 	ModalFooter,
 	ModalHeader,
 	Padding,
@@ -78,7 +77,9 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 
 	const groupNameDescription = useMemo(
 		() =>
-			isGroupNameValid ? '' : t('label.invalid_group_name', 'Type a group name to save changes'),
+			isGroupNameValid
+				? undefined
+				: t('label.invalid_group_name', 'Type a group name to save changes'),
 		[isGroupNameValid, t]
 	);
 
@@ -145,8 +146,9 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 
 	return (
 		<Container
+			style={{ overflowY: 'hidden' }}
 			padding={{ all: 'small' }}
-			mainAlignment="center"
+			mainAlignment="flex-start"
 			crossAlignment="flex-start"
 			height="fit"
 		>
@@ -156,7 +158,8 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				onClose={onClose}
 			/>
 			<Divider />
-			<ModalBody>
+			<Container maxHeight="fit" style={{ overflowY: 'hidden' }} mainAlignment="flex-start">
+				<Padding vertical="medium" />
 				<Input
 					label={groupNameInputLabel}
 					backgroundColor="gray5"
@@ -167,21 +170,23 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 					hasError={!isGroupNameValid}
 					description={groupNameDescription}
 				/>
-				<Padding vertical="medium" />
+				<Padding vertical="small" />
 				<Divider />
-				<Padding vertical="large">
+				<Padding vertical="small" />
+				<Container crossAlignment="flex-start">
 					<Text weight="bold" size="large">
 						{t('label.newgroup.calendars', 'Calendars in this group')}
 					</Text>
-				</Padding>
+				</Container>
+				<Padding vertical="small" />
 				<MultipleCalendarSelector
 					onCalendarChange={onMultipleSelectedCalendarChange}
 					excludeTrash={false}
 				/>
-
-				<Padding vertical="medium" />
+				<Padding vertical="small" />
 				<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
-			</ModalBody>
+				<Padding vertical="small" />
+			</Container>
 			<Divider />
 			<ModalFooter
 				onConfirm={onConfirm}
