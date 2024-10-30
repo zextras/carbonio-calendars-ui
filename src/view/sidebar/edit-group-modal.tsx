@@ -45,7 +45,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 			return [];
 		}
 
-		return group.calendarId.map((id) => folders[id]);
+		return group.calendarId?.map((id) => folders[id]) ?? [];
 	}, [folders, group]);
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>(groupCalendars);
 
@@ -56,8 +56,8 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 
 		return (
 			groupName !== group.name ||
-			selectedCalendars.length !== group.calendarId.length ||
-			selectedCalendars.some((item) => !group.calendarId.includes(item.id))
+			selectedCalendars.length !== group.calendarId?.length ||
+			selectedCalendars.some((item) => !group.calendarId?.includes(item.id))
 		);
 	}, [group, groupName, selectedCalendars]);
 

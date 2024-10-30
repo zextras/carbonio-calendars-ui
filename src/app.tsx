@@ -177,7 +177,7 @@ const AppRegistrations = (): null => {
 		getCalendarGroupsRequest().then((res) => {
 			const groups = map(res.group, (group) => ({
 				...group,
-				calendarId: group.calendarId.map((x) => x._content)
+				calendarId: group.calendarId?.map((x) => x._content) ?? []
 			}));
 			updateCalendarGroupsStore(groups);
 		});

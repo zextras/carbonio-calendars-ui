@@ -9,7 +9,7 @@ import { create } from 'zustand';
 export type CalendarGroup = {
 	id: string;
 	name: string;
-	calendarId: string[];
+	calendarId?: string[];
 };
 export type CalendarGroups = CalendarGroup[];
 

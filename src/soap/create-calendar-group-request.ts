@@ -15,7 +15,7 @@ export type CreateCalendarGroupResponse = {
 	group: {
 		id: string;
 		name: string;
-		calendarId: { _content: string }[];
+		calendarId?: { _content: string }[];
 	};
 	_jsns: typeof JSNS.mail;
 };

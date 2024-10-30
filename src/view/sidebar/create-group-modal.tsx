@@ -76,7 +76,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				const group = {
 					id: res.group.id,
 					name: res.group.name,
-					calendarId: res.group.calendarId.map((g) => g._content)
+					calendarId: res.group.calendarId?.map((g) => g._content) ?? []
 				};
 				updateCalendarGroupsStore([group]);
 
