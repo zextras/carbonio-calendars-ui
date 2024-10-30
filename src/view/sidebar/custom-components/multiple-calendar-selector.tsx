@@ -3,14 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
 
-import { Chip, ChipInput, ChipItem, ChipProps } from '@zextras/carbonio-design-system';
-import { useFolder } from '@zextras/carbonio-shell-ui';
+import { ChipInput } from '@zextras/carbonio-design-system';
 import { filter, map, reject, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { ROOT_NAME, ZIMBRA_STANDARD_COLORS } from '../../../carbonio-ui-commons/constants';
+import { CalendarChip, CalendarChipInputItem, CalendarChipInputItems } from './calendar-chips';
+import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
@@ -18,45 +18,6 @@ import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { ItemFactory } from '../../editor/parts/select-label-factory';
-
-type CalendarChipInputItem = ChipItem<{
-	id: string;
-	label: string;
-	onCalendarRemove: (calendarId: string) => void;
-}>;
-
-type CalendarChipInputItems = Array<CalendarChipInputItem>;
-
-const CalendarChip: FC<CalendarChipInputItem> = ({ value }) => {
-	const calendar = useFolder(value?.id ?? '');
-
-	const label = calendar?.name ?? '';
-	const avatarColor = ZIMBRA_STANDARD_COLORS[calendar?.color ?? 0].hex;
-
-	const onChipClose = useCallback<NonNullable<ChipProps['onClose']>>(
-		(e): void => {
-			e.stopPropagation();
-			if (!value?.id) {
-				return;
-			}
-
-			value?.onCalendarRemove && value.onCalendarRemove(value?.id);
-		},
-		[value]
-	);
-
-	return calendar && avatarColor ? (
-		<Chip
-			key={value?.id}
-			label={label}
-			avatarColor={avatarColor}
-			avatarIcon={'Square2'}
-			avatarBackground="transparent"
-			size={'small'}
-			onClose={onChipClose}
-		/>
-	) : null;
-};
 
 export type MultiCalendarSelectorProps = {
 	onCalendarChange: (selectedCalendars: Array<Folder>) => void;
