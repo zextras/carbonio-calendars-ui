@@ -3,13 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
+import React, { FC, ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
 
-import { ChipInput, ChipItem } from '@zextras/carbonio-design-system';
+import { Chip, ChipInput, ChipItem, ChipProps } from '@zextras/carbonio-design-system';
+import { useFolder } from '@zextras/carbonio-shell-ui';
 import { filter, map, reject, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
+import { ROOT_NAME, ZIMBRA_STANDARD_COLORS } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
@@ -18,7 +19,44 @@ import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { ItemFactory } from '../../editor/parts/select-label-factory';
 
-type ChipInputItems = ChipItem<{ id: string; label: string }>[];
+type CalendarChipInputItem = ChipItem<{
+	id: string;
+	label: string;
+	onCalendarRemove: (calendarId: string) => void;
+}>;
+
+type CalendarChipInputItems = Array<CalendarChipInputItem>;
+
+const CalendarChip: FC<CalendarChipInputItem> = ({ value }) => {
+	const calendar = useFolder(value?.id ?? '');
+
+	const label = calendar?.name ?? '';
+	const avatarColor = ZIMBRA_STANDARD_COLORS[calendar?.color ?? 0].hex;
+
+	const onChipClose = useCallback<NonNullable<ChipProps['onClose']>>(
+		(e): void => {
+			e.stopPropagation();
+			if (!value?.id) {
+				return;
+			}
+
+			value?.onCalendarRemove && value.onCalendarRemove(value?.id);
+		},
+		[value]
+	);
+
+	return calendar && avatarColor ? (
+		<Chip
+			key={value?.id}
+			label={label}
+			avatarColor={avatarColor}
+			avatarIcon={'Square2'}
+			avatarBackground="transparent"
+			size={'small'}
+			onClose={onChipClose}
+		/>
+	) : null;
+};
 
 export type MultiCalendarSelectorProps = {
 	onCalendarChange: (selectedCalendars: Array<Folder>) => void;
@@ -26,13 +64,16 @@ export type MultiCalendarSelectorProps = {
 	disabled?: boolean;
 };
 
+const isCalendarItem = (value: unknown): value is { id: string; label: string } =>
+	!!value && typeof value === 'object' && 'id' in value && 'label' in value;
+
 export const MultiCalendarSelector = ({
 	onCalendarChange,
 	excludeTrash = false,
 	disabled
 }: MultiCalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
-	const [selectedCalendarsChips, setSelectedCalendarsChips] = useState<ChipInputItems>([]);
+	const [selectedCalendarsChips, setSelectedCalendarsChips] = useState<CalendarChipInputItems>([]);
 
 	const allCalendars = useFoldersMap();
 
@@ -72,8 +113,36 @@ export const MultiCalendarSelector = ({
 		[disabled, requiredCalendars, t]
 	);
 
-	const onSelectedCalendarsChange = useCallback((selected: ChipInputItems) => {
-		const selectedChips = uniqBy(selected, 'id');
+	const removeSelectedCalendarChip = useCallback(
+		(id: string): void => {
+			const remainingSelectedCalendarsChips = selectedCalendarsChips.filter(
+				(chip) => chip.value?.id !== id
+			);
+			setSelectedCalendarsChips(remainingSelectedCalendarsChips);
+		},
+		[selectedCalendarsChips]
+	);
+
+	const onSelectedCalendarsAdd = useCallback(
+		(value: unknown): CalendarChipInputItem => {
+			if (!isCalendarItem(value)) {
+				return { label: '' };
+			}
+
+			return {
+				label: value.label,
+				value: {
+					id: value.id,
+					label: value.label,
+					onCalendarRemove: () => removeSelectedCalendarChip(value.id)
+				}
+			};
+		},
+		[removeSelectedCalendarChip]
+	);
+
+	const onSelectedCalendarsChange = useCallback((selected: CalendarChipInputItems) => {
+		const selectedChips = uniqBy(selected, (chip) => chip.value?.id);
 		setSelectedCalendarsChips(selectedChips);
 	}, []);
 
@@ -81,8 +150,8 @@ export const MultiCalendarSelector = ({
 		(ev) => {
 			ev?.stopPropagation();
 
-			const selectedCalendars = selectedCalendarsChips.reduce((acc, { id }) => {
-				const calendar = calendars.find((cal) => cal.id === id);
+			const selectedCalendars = selectedCalendarsChips.reduce((acc, chipItem) => {
+				const calendar = calendars.find((cal) => cal.id === chipItem.value?.id);
 				if (calendar) {
 					acc.push(calendar);
 				}
@@ -101,11 +170,13 @@ export const MultiCalendarSelector = ({
 			options={calendarOptions}
 			disableOptions={false}
 			value={selectedCalendarsChips}
+			onAdd={onSelectedCalendarsAdd}
 			onChange={onSelectedCalendarsChange}
 			placeholder={t('label.calendar_selector.placeholder', 'Add Calendars')}
 			requireUniqueChips
 			icon={'Plus'}
 			iconAction={onIconAction}
+			ChipComponent={CalendarChip}
 		/>
 	);
 };
