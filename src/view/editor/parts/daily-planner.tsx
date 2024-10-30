@@ -6,11 +6,19 @@
 
 import React from 'react';
 
-import { Chip, Container, Table, TRowProps } from '@zextras/carbonio-design-system';
+import { Chip, Container, Table, THeaderProps, TRowProps } from '@zextras/carbonio-design-system';
+import styled from 'styled-components';
 
 import { useAppSelector } from '../../../store/redux/hooks';
 import { selectSender } from '../../../store/selectors/editor';
 
+const StyledTable = styled(Table)`{
+    thead {
+        th {
+            background-color: transparent;
+        }
+    }
+	}`;
 const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
 	<tr>
 		{row.columns.map((column, index) => (
@@ -24,8 +32,29 @@ const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
 					maxWidth: '5rem'
 				}}
 			>
-				<Container width={'fit'}>{column}</Container>
+				{column}
 			</td>
+		))}
+	</tr>
+);
+
+const HeaderFactory = ({ headers }: THeaderProps): React.JSX.Element => (
+	<tr>
+		{headers.map((header, index) => (
+			<th
+				colSpan={index === 0 ? 1 : 2}
+				key={index}
+				style={{
+					width: 'fit-content',
+					border: '0px',
+					padding: 0,
+					maxWidth: '5rem',
+					textAlign: 'center',
+					fontWeight: 'normal'
+				}}
+			>
+				{header.label}
+			</th>
 		))}
 	</tr>
 );
@@ -40,9 +69,10 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 	const sender = useAppSelector(selectSender(editorId));
 	return (
 		<Container data-testid={`daily-planner-component-${editorId}`}>
-			<Table
+			<StyledTable
 				RowFactory={RowFactory}
-				style={{ padding: 0, borderSpacing: 0 }}
+				HeaderFactory={HeaderFactory}
+				style={{ padding: 0, borderSpacing: 0, backgroundColor: 'transparent' }}
 				showCheckbox={false}
 				headers={[
 					{ id: 'organizer', label: '' },
@@ -55,11 +85,11 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 							<Chip
 								maxWidth={'fit-content'}
 								key={'organizer'}
-								label={sender.fullName.concat(
-									'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-								)}
+								label={`${
+									sender.fullName
+								}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
 							/>,
-							...Array.from({ length: 24 }, (_, index) => <div key={index} />)
+							...Array.from({ length: 48 }, (_, index) => <div key={index} />)
 						],
 						highlight: false
 					}
