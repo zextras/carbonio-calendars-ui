@@ -50,6 +50,7 @@ function getWithinSameDay(startDate: number, endDate: number): boolean {
 	);
 }
 
+expandBoards();
 export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement | null => {
 	const [showDailyPlanner, setShowDailyPlanner] = useState(false);
 	const handleDailyPlannerButtonClick = (): void => {
@@ -130,6 +131,7 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 					data-testid={'daily-planner-button'}
 				/>
 				{showDailyPlanner && <DailyPlanner editorId={editorId} />}
+				{<DailyPlanner editorId={editorId} />}
 				<Row height="fit" width="fill" padding={{ top: 'large' }}>
 					<EditorReminder editorId={editorId} />
 				</Row>

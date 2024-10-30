@@ -12,24 +12,32 @@ import styled from 'styled-components';
 import { useAppSelector } from '../../../store/redux/hooks';
 import { selectSender } from '../../../store/selectors/editor';
 
-const StyledTable = styled(Table)`{
-    thead {
-        th {
-            background-color: transparent;
-        }
-    }
-	}`;
+const StyledTable = styled(Table)`
+	thead {
+		&,
+		th {
+			background-color: transparent;
+	}
+`;
+
+function getBorderWidth(index: number): string {
+	if (index < 2) return '0px';
+	if (index > 49) return '0px';
+	if (index % 2 === 0) return '1px 0 1px 1px';
+	return '1px 1px 1px 0';
+}
+
 const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
 	<tr>
 		{row.columns.map((column, index) => (
 			<td
 				key={index}
 				style={{
-					width: 'fit-content',
-					border: '1px solid gray',
+					borderWidth: getBorderWidth(index),
+					borderColor: 'black',
+					borderStyle: 'solid',
 					borderRadius: 0,
-					padding: 0,
-					maxWidth: '5rem'
+					padding: 0
 				}}
 			>
 				{column}
@@ -45,10 +53,9 @@ const HeaderFactory = ({ headers }: THeaderProps): React.JSX.Element => (
 				colSpan={index === 0 ? 1 : 2}
 				key={index}
 				style={{
-					width: 'fit-content',
+					width: index < 1 ? '10rem' : 'fit-content',
 					border: '0px',
 					padding: 0,
-					maxWidth: '5rem',
 					textAlign: 'center',
 					fontWeight: 'normal'
 				}}
@@ -64,9 +71,29 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 		'12',
 		...Array.from({ length: 11 }, (_, i) => (i + 1).toString()),
 		'12',
-		...Array.from({ length: 11 }, (_, i) => (i + 1).toString())
+		...Array.from({ length: 11 }, (_, i) => (i + 1).toString()),
+		'12'
 	];
+
 	const sender = useAppSelector(selectSender(editorId));
+	const columns = [
+		<Chip
+			maxWidth={'10rem'}
+			key={'organizer'}
+			label={`${
+				sender.fullName
+			}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
+		/>,
+		...Array.from({ length: 50 }, (_, index) => <div key={index} />)
+	];
+
+	const rows = [
+		{
+			id: 'organizer',
+			columns,
+			highlight: false
+		}
+	];
 	return (
 		<Container data-testid={`daily-planner-component-${editorId}`}>
 			<StyledTable
@@ -78,22 +105,7 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 					{ id: 'organizer', label: '' },
 					...hours.map((hour) => ({ id: hour, label: hour, colSpan: 2 }))
 				]}
-				rows={[
-					{
-						id: 'organizer',
-						columns: [
-							<Chip
-								maxWidth={'fit-content'}
-								key={'organizer'}
-								label={`${
-									sender.fullName
-								}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`}
-							/>,
-							...Array.from({ length: 48 }, (_, index) => <div key={index} />)
-						],
-						highlight: false
-					}
-				]}
+				rows={rows}
 			/>
 		</Container>
 	);
