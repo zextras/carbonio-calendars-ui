@@ -19,7 +19,7 @@ import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { ItemFactory } from '../../editor/parts/select-label-factory';
 
-export type MultiCalendarSelectorProps = {
+export type MultipleCalendarSelectorProps = {
 	onCalendarChange: (selectedCalendars: Array<Folder>) => void;
 	excludeTrash?: boolean;
 	disabled?: boolean;
@@ -28,11 +28,11 @@ export type MultiCalendarSelectorProps = {
 const isCalendarItem = (value: unknown): value is { id: string; label: string } =>
 	!!value && typeof value === 'object' && 'id' in value && 'label' in value;
 
-export const MultiCalendarSelector = ({
+export const MultipleCalendarSelector = ({
 	onCalendarChange,
 	excludeTrash = false,
 	disabled
-}: MultiCalendarSelectorProps): ReactElement | null => {
+}: MultipleCalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const [selectedCalendarsChips, setSelectedCalendarsChips] = useState<CalendarChipInputItems>([]);
 

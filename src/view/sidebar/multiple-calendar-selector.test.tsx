@@ -9,8 +9,8 @@ import { act } from '@testing-library/react';
 import { times } from 'lodash';
 
 import {
-	MultiCalendarSelector,
-	MultiCalendarSelectorProps
+	MultipleCalendarSelector,
+	MultipleCalendarSelectorProps
 } from './custom-components/multiple-calendar-selector';
 import { populateFoldersStore } from '../../carbonio-ui-commons/test/mocks/store/folders';
 import { screen, setupTest, within } from '../../carbonio-ui-commons/test/test-setup';
@@ -22,7 +22,7 @@ const buildProps = ({
 	excludeTrash = false,
 	disabled = false,
 	...rest
-}: Partial<MultiCalendarSelectorProps> = {}): MultiCalendarSelectorProps => ({
+}: Partial<MultipleCalendarSelectorProps> = {}): MultipleCalendarSelectorProps => ({
 	onCalendarChange,
 	excludeTrash,
 	disabled,
@@ -31,7 +31,7 @@ const buildProps = ({
 
 describe('MultiCalendarSelector', () => {
 	it('should render an input field with the correct placeholder', () => {
-		setupTest(<MultiCalendarSelector {...buildProps()} />);
+		setupTest(<MultipleCalendarSelector {...buildProps()} />);
 
 		expect(screen.getByRole('textbox', { name: 'Add Calendars' })).toBeVisible();
 	});
@@ -40,7 +40,7 @@ describe('MultiCalendarSelector', () => {
 		const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
 
 		populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
-		const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+		const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
 		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
 		await user.type(input, targetCalendar.name);
@@ -56,7 +56,7 @@ describe('MultiCalendarSelector', () => {
 		const targetCalendars = times(2, () => calendarGenerators.getCalendar());
 
 		populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
-		const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+		const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
 		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
 		await user.type(input, targetCalendars[0].name);
@@ -72,7 +72,7 @@ describe('MultiCalendarSelector', () => {
 		const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
 
 		populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
-		const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+		const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
 		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
 		await user.type(input, targetCalendar.name);
@@ -84,13 +84,13 @@ describe('MultiCalendarSelector', () => {
 
 	describe('add icon', () => {
 		it('should render', () => {
-			setupTest(<MultiCalendarSelector {...buildProps()} />);
+			setupTest(<MultipleCalendarSelector {...buildProps()} />);
 
 			expect(screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar)).toBeVisible();
 		});
 
 		it.skip('should render a specific tooltip when the user hover the mouse on it', async () => {
-			const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+			const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
 
 			const icon = screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar);
 			await user.hover(icon);
@@ -102,7 +102,7 @@ describe('MultiCalendarSelector', () => {
 			const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
 
 			populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
-			setupTest(<MultiCalendarSelector {...buildProps()} />);
+			setupTest(<MultipleCalendarSelector {...buildProps()} />);
 
 			const icon = screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar);
 			expect(icon).toBeDisabled();
@@ -116,7 +116,7 @@ describe('MultiCalendarSelector', () => {
 			const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
 
 			populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
-			const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+			const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
 			const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
 			await user.type(input, targetCalendar.name);
@@ -130,7 +130,7 @@ describe('MultiCalendarSelector', () => {
 			const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
 
 			populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
-			const { user } = setupTest(<MultiCalendarSelector {...buildProps()} />);
+			const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
 			const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
 			user.type(input, targetCalendar.name);
@@ -145,7 +145,7 @@ describe('MultiCalendarSelector', () => {
 
 		populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 		const onCalendarChange = jest.fn();
-		const { user } = setupTest(<MultiCalendarSelector {...buildProps({ onCalendarChange })} />);
+		const { user } = setupTest(<MultipleCalendarSelector {...buildProps({ onCalendarChange })} />);
 		const input = screen.getByRole('textbox', { name: 'Add Calendars' });
 
 		await user.type(input, targetCalendar.name);

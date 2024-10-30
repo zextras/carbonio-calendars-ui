@@ -19,7 +19,7 @@ import {
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { MultiCalendarSelector } from './custom-components/multiple-calendar-selector';
+import { MultipleCalendarSelector } from './custom-components/multiple-calendar-selector';
 import { GroupCalendarsList } from './group-calendars-list';
 import { Folder } from '../../carbonio-ui-commons/types';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
@@ -141,7 +141,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 						{t('label.newgroup.calendars', 'Calendars in this group')}
 					</Text>
 				</Padding>
-				<MultiCalendarSelector
+				<MultipleCalendarSelector
 					onCalendarChange={onMultipleSelectedCalendarChange}
 					excludeTrash={false}
 				/>
