@@ -152,7 +152,7 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				<Padding vertical="small" />
 				<MultipleCalendarSelector
 					onCalendarChange={onMultipleSelectedCalendarChange}
-					excludeTrash={false}
+					excludeTrash
 				/>
 				<Padding vertical="small" />
 				<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />

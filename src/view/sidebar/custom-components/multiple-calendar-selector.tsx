@@ -50,6 +50,7 @@ export const MultipleCalendarSelector = ({
 
 	const calendarOptions = useMemo(() => {
 		const calendar = find(requiredCalendars, (f) => hasId(f, FOLDERS.CALENDAR));
+		const trash = find(requiredCalendars, (f) => hasId(f, FOLDERS.TRASH));
 		const othersPrimary = sortBy(
 			reject(
 				requiredCalendars,
@@ -64,7 +65,7 @@ export const MultipleCalendarSelector = ({
 			),
 			'name'
 		);
-		const sortedCalendars = compact([calendar, ...othersPrimary, ...othersLink]);
+		const sortedCalendars = compact([calendar, trash, ...othersPrimary, ...othersLink]);
 		return map(sortedCalendars, (cal) => {
 			const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
 			const labelName = hasId(cal, FOLDERS.CALENDAR) ? t('label.calendar', 'Calendar') : cal.name;
