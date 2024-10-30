@@ -74,6 +74,7 @@ export const createGroup =
 		createModal(
 			{
 				id: modalId,
+				maxHeight: '90vh',
 				children: (
 					<StoreProvider>
 						<CreateGroupModal onClose={(): void => closeModal(modalId)} />
