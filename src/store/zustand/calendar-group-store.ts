@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { differenceBy, isEqual, keyBy, values } from 'lodash';
+import { forEach, isEqual, keyBy } from 'lodash';
 import { create } from 'zustand';
 
 export type CalendarGroup = {
@@ -39,10 +39,12 @@ export const updateCalendarGroupsStore = (groups: CalendarGroups): void => {
 };
 
 export const deleteCalendarGroupsFromStore = (groupIds: Array<string>): void => {
-	useCalendarGroupStore.setState((state) => ({
-		...state,
-		groups: keyBy(differenceBy(values(state.groups), groupIds, 'id'), 'id')
-	}));
+	const state = useCalendarGroupStore.getState();
+	forEach(groupIds, (id) => {
+		if (state.groups[id]) {
+			delete state.groups[id];
+		}
+	});
 };
 
 export const updateCalendarGroupIds = (groupId: string, groupIds: Array<string>): void => {

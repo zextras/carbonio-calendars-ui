@@ -28,7 +28,7 @@ import { useRangeEnd, useRangeStart } from '../../store/zustand/hooks';
 
 function handleCalendarGroupNotify(notify) {
 	if (notify.deleted) {
-		deleteCalendarGroupsFromStore();
+		deleteCalendarGroupsFromStore(notify.deleted);
 	}
 	if (notify?.modified?.folder) {
 		forEach(notify?.modified?.folder, (folder) => {
@@ -58,21 +58,24 @@ function handleCalendarGroupNotify(notify) {
 	}
 }
 
-function handleFoldersNotify(notifyList, notify, worker) {
+function handleFoldersNotify(notifyList, notify) {
 	const isNotifyRelatedToFolders =
 		!isEmpty(notifyList) &&
-		(notify?.created?.folder ||
+		!!(
+			notify?.created?.folder ||
 			notify?.modified?.folder ||
 			notify.deleted ||
 			notify?.created?.link ||
-			notify?.modified?.link);
+			notify?.modified?.link
+		);
 
 	if (isNotifyRelatedToFolders) {
 		handleCalendarGroupNotify(notify);
-		worker.postMessage({
+		const state = useFolderStore.getState();
+		folderWorker.postMessage({
 			op: 'notify',
 			notify,
-			state: useFolderStore.getState().folders
+			state: state.folders
 		});
 	}
 }
@@ -135,7 +138,7 @@ export const useSyncDataHandler = () => {
 		if (notifyList.length <= 0) return;
 		forEach(sortBy(notifyList, 'seq'), (notify) => {
 			if (!isEmpty(notify) && (notify.seq > seq.current || (seq.current > 1 && notify.seq === 1))) {
-				handleFoldersNotify(notifyList, notify, folderWorker);
+				handleFoldersNotify(notifyList, notify);
 				handleAppointmentCreationNotify(notify, dispatch, end, start, query);
 				handleAppointmentModifyNotify(notify, dispatch, end, start, query);
 				handleAppointmentDeletionNotify(notify, dispatch);
