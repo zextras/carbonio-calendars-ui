@@ -11,6 +11,7 @@ import { times } from 'lodash';
 import { generateFolder } from '../../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
 import { populateFoldersStore } from '../../../../carbonio-ui-commons/test/mocks/store/folders';
 import { setupTest, screen, within } from '../../../../carbonio-ui-commons/test/test-setup';
+import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { MultipleCalendarSelector } from '../multiple-calendar-selector';
 
 describe('MultipleCalendarSelector', () => {
@@ -46,9 +47,36 @@ describe('MultipleCalendarSelector', () => {
 		});
 	});
 
-	it.todo('should render the selected calendar chip when a calendar is selected');
+	it('should render the selected calendar chip when a calendar is selected', async () => {
+		const calendar = generateFolder({ view: 'appointment' });
+		populateFoldersStore({ view: 'appointment', customFolders: [calendar] });
 
-	it.todo('should render the selected calendars chips when another calendar is selected');
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await user.click(screen.getByText(calendar.name));
+		const chip = screen.getByTestId(TEST_SELECTORS.CHIP);
+
+		expect(within(chip).getByText(calendar.name)).toBeVisible();
+	});
+
+	it('should render the selected calendars chips when another calendar is selected', async () => {
+		const calendars = times(faker.number.int({ min: 2, max: 42 }), (index) =>
+			generateFolder({ view: 'appointment', name: `Calendar ${index}` })
+		);
+		populateFoldersStore({ view: 'appointment', customFolders: calendars });
+
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		await Promise.all(
+			calendars.map(async (calendar) => {
+				await user.click(screen.getByPlaceholderText('Add Calendars'));
+				await user.click(screen.getByText(calendar.name));
+			})
+		);
+
+		calendars.forEach((calendar) => {
+			expect(screen.getByText(calendar.name)).toBeVisible();
+		});
+	});
 
 	it.todo('should remove the selected calendar chip when the chip is closed');
 
