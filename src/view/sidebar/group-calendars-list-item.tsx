@@ -35,7 +35,12 @@ export const GroupCalendarsListItem = ({
 	}, [calendar.id, onRemove]);
 
 	return (
-		<Container data-testid="group-calendars-list-item" orientation="horizontal" gap="0.5rem">
+		<Container
+			data-testid="group-calendars-list-item"
+			orientation="horizontal"
+			gap="0.5rem"
+			padding={{ right: '0.5rem' }}
+		>
 			<Row width="fit">
 				<Square data-testid="colored-square" color={color} />
 			</Row>
