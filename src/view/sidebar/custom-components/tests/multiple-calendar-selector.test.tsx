@@ -60,33 +60,100 @@ describe('MultipleCalendarSelector', () => {
 	});
 
 	it('should render the selected calendars chips when another calendar is selected', async () => {
-		const calendars = times(faker.number.int({ min: 2, max: 42 }), (index) =>
-			generateFolder({ view: 'appointment', name: `Calendar ${index}` })
-		);
+		const calendars = [
+			generateFolder({ view: 'appointment', name: 'Calendar 1' }),
+			generateFolder({ view: 'appointment', name: 'Calendar 2' })
+		];
 		populateFoldersStore({ view: 'appointment', customFolders: calendars });
 
 		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
-		await Promise.all(
-			calendars.map(async (calendar) => {
-				await user.click(screen.getByPlaceholderText('Add Calendars'));
-				await user.click(screen.getByText(calendar.name));
-			})
-		);
+		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await user.click(screen.getByText(calendars[0].name));
+		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await user.click(screen.getByText(calendars[1].name));
 
 		calendars.forEach((calendar) => {
 			expect(screen.getByText(calendar.name)).toBeVisible();
 		});
 	});
 
-	it.todo('should remove the selected calendar chip when the chip is closed');
+	it('should remove the selected calendar chip when the chip is closed', async () => {
+		const calendar = generateFolder({ view: 'appointment' });
+		populateFoldersStore({ view: 'appointment', customFolders: [calendar] });
 
-	it.todo('should remove only the first selected calendar chip when the first chip is closed');
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await user.click(screen.getByText(calendar.name));
+		await user.click(screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeChip }));
 
-	it.todo(
-		'should call the onCalendarChange callback with the proper parameters when a calendar is selected'
-	);
+		expect(screen.queryByTestId(TEST_SELECTORS.CHIP)).not.toBeInTheDocument();
+	});
 
-	it.todo(
-		'should call the onCalendarChange callback with the proper parameters when a calendar is removed'
-	);
+	it('should remove only the first selected calendar chip when the first chip is closed', async () => {
+		const calendars = [
+			generateFolder({ view: 'appointment', name: 'Calendar 1' }),
+			generateFolder({ view: 'appointment', name: 'Calendar 2' })
+		];
+		populateFoldersStore({ view: 'appointment', customFolders: calendars });
+
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await user.click(screen.getByText(calendars[0].name));
+		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await user.click(screen.getByText(calendars[1].name));
+		await user.click(
+			screen.getAllByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeChip })[0]
+		);
+
+		expect(screen.queryByText(calendars[0].name)).not.toBeInTheDocument();
+		expect(screen.getByText(calendars[1].name)).toBeVisible();
+	});
+
+	describe('Add Calendars Icon', () => {
+		it('should render with a specific icon', () => {
+			populateFoldersStore({ view: 'appointment' });
+
+			setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+
+			expect(screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar)).toBeVisible();
+		});
+
+		it('should call the onCalendarChange callback with the proper parameters when a calendar is selected', async () => {
+			const calendar = generateFolder({ view: 'appointment' });
+			populateFoldersStore({ view: 'appointment', customFolders: [calendar] });
+
+			const onCalendarChange = jest.fn();
+			const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={onCalendarChange} />);
+			await user.click(screen.getByPlaceholderText('Add Calendars'));
+			await user.click(screen.getByText(calendar.name));
+			await user.click(
+				screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar })
+			);
+
+			expect(onCalendarChange).toHaveBeenCalledWith([calendar]);
+		});
+
+		it('should call the onCalendarChange callback with the proper parameters when two calendars are added and one calendar is removed', async () => {
+			const calendars = [
+				generateFolder({ view: 'appointment', name: 'Calendar 1' }),
+				generateFolder({ view: 'appointment', name: 'Calendar 2' })
+			];
+			populateFoldersStore({ view: 'appointment', customFolders: calendars });
+
+			const onCalendarChange = jest.fn();
+			const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={onCalendarChange} />);
+			await user.click(screen.getByPlaceholderText('Add Calendars'));
+			await user.click(screen.getByText(calendars[0].name));
+			await user.click(screen.getByPlaceholderText('Add Calendars'));
+			await user.click(screen.getByText(calendars[1].name));
+			await user.click(
+				screen.getAllByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeChip })[0]
+			);
+			await user.click(
+				screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar })
+			);
+
+			expect(onCalendarChange).toHaveBeenCalledWith([calendars[1]]);
+		});
+	});
 });
