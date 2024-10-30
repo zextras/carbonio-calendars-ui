@@ -97,7 +97,8 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				const updatedGroup = {
 					id: res.group.id,
 					name: res.group.name,
-					calendarId: res.group.calendarId.map((calendarIdWrapper) => calendarIdWrapper._content)
+					calendarId:
+						res.group.calendarId?.map((calendarIdWrapper) => calendarIdWrapper._content) ?? []
 				};
 				updateCalendarGroupsStore([updatedGroup]);
 
