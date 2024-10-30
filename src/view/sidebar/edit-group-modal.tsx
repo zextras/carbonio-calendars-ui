@@ -94,12 +94,12 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 		const ids = map(selectedCalendars, (item) => item.id);
 		modifyCalendarGroupRequest({ id: group.id, name: groupName, calendarIds: ids })
 			.then((res) => {
-				const group = {
+				const updatedGroup = {
 					id: res.group.id,
 					name: res.group.name,
-					calendarId: res.group.calendarId.map((g) => g._content)
+					calendarId: res.group.calendarId.map((calendarIdWrapper) => calendarIdWrapper._content)
 				};
-				updateCalendarGroupsStore([group]);
+				updateCalendarGroupsStore([updatedGroup]);
 
 				createSnackbar({
 					key: `group-editing-success`,
