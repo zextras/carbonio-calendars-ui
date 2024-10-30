@@ -89,15 +89,11 @@ export const MultipleCalendarSelector = ({
 		});
 	}, [disabled, requiredCalendars, t]);
 
-	const removeSelectedCalendarChip = useCallback(
-		(id: string): void => {
-			const remainingSelectedCalendarsChips = selectedCalendarsChips.filter(
-				(chip) => chip.value?.id !== id
-			);
-			setSelectedCalendarsChips(remainingSelectedCalendarsChips);
-		},
-		[selectedCalendarsChips]
-	);
+	const removeSelectedCalendarChip = useCallback((id: string): void => {
+		setSelectedCalendarsChips((existingChips) =>
+			existingChips.filter((chip) => chip.value?.id !== id)
+		);
+	}, []);
 
 	const onSelectedCalendarsAdd = useCallback(
 		(value: unknown): CalendarChipInputItem => {
