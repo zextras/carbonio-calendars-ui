@@ -31,7 +31,9 @@ type CreateGroupModalProps = {
 export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactElement => {
 	const [t] = useTranslation();
 	const createSnackbar = useSnackbar();
-	const [groupName, setGroupName] = useState('');
+	const [groupName, setGroupName] = useState(
+		t('folder.modal.creategroup.default_group_name', 'New Calendar Group')
+	);
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
 
 	const isDirty = useMemo(
