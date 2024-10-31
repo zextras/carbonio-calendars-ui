@@ -27,50 +27,39 @@ const FakeWscIntegrationComponent = jest.fn(
 	(): React.JSX.Element => <div data-testid={wscIntegrationDataTestId} />
 );
 
+const spyUseIntegratedIntegration = (chatsIsEnabled: boolean, wscIsEnabled: boolean): void => {
+	jest.spyOn(shell, 'useIntegratedComponent').mockImplementation((id: string) => {
+		if (id === 'room-selector') return [FakeChatsIntegrationComponent, chatsIsEnabled];
+		if (id === 'wsc-room-selector') return [FakeWscIntegrationComponent, wscIsEnabled];
+		return [jest.fn(), false];
+	});
+};
+
 describe('Editor virtual rooms', () => {
 	test('If only ChatsRoomSelector is available, it should be rendered', () => {
-		jest
-			.spyOn(shell, 'useIntegratedComponent')
-			.mockReturnValueOnce([FakeChatsIntegrationComponent, true]);
-		jest
-			.spyOn(shell, 'useIntegratedComponent')
-			.mockReturnValueOnce([FakeWscIntegrationComponent, false]);
+		spyUseIntegratedIntegration(true, false);
 		setupTest(<EditorVirtualRoom editorId={'editorId'} />, { store });
 
 		expect(screen.getByTestId(chatsIntegrationDataTestId)).toBeInTheDocument();
 	});
 
 	test('If only WscRoomSelector is available, it should be rendered', () => {
-		jest
-			.spyOn(shell, 'useIntegratedComponent')
-			.mockReturnValueOnce([FakeChatsIntegrationComponent, false]);
-		jest
-			.spyOn(shell, 'useIntegratedComponent')
-			.mockReturnValueOnce([FakeWscIntegrationComponent, true]);
+		spyUseIntegratedIntegration(false, true);
 		setupTest(<EditorVirtualRoom editorId={'editorId'} />, { store });
 
 		expect(screen.getByTestId(wscIntegrationDataTestId)).toBeInTheDocument();
 	});
 
 	test('If ChatsRoomSelector and WscRoomSelector are both available, only ChatsRoomSelector should be rendered', () => {
-		jest
-			.spyOn(shell, 'useIntegratedComponent')
-			.mockReturnValueOnce([FakeChatsIntegrationComponent, true]);
-		jest
-			.spyOn(shell, 'useIntegratedComponent')
-			.mockReturnValueOnce([FakeWscIntegrationComponent, true]);
+		spyUseIntegratedIntegration(true, true);
 		setupTest(<EditorVirtualRoom editorId={'editorId'} />, { store });
 
 		expect(screen.getByTestId(chatsIntegrationDataTestId)).toBeInTheDocument();
+		expect(screen.queryByTestId(wscIntegrationDataTestId)).not.toBeInTheDocument();
 	});
 
 	test('If ChatsRoomSelector and WscRoomSelector are both unavailable, nothing should be rendered', () => {
-		jest
-			.spyOn(shell, 'useIntegratedComponent')
-			.mockReturnValueOnce([FakeChatsIntegrationComponent, false]);
-		jest
-			.spyOn(shell, 'useIntegratedComponent')
-			.mockReturnValueOnce([FakeWscIntegrationComponent, false]);
+		spyUseIntegratedIntegration(false, false);
 		setupTest(<EditorVirtualRoom editorId={'editorId'} />, { store });
 
 		expect(screen.queryByTestId(chatsIntegrationDataTestId)).not.toBeInTheDocument();
