@@ -78,6 +78,16 @@ type GetParticipantColumnsProps = {
 	startDate: number;
 	endDate: number;
 };
+function getIndexFromDateTime(dateTime: number): number {
+	const date = new Date(dateTime);
+	const hours = date.getHours();
+	const minutes = date.getMinutes();
+
+	// Calculate the index based on hours and minutes
+	// Each hour has 2 slots (0-29 minutes and 30-59 minutes)
+	// The first slot (index 0) and the last slot (index 49) are for esthetic reasons
+	return 1 + hours * 2 + (minutes >= 30 ? 1 : 0);
+}
 
 function getParticipantColumns({
 	participantName,
@@ -87,34 +97,9 @@ function getParticipantColumns({
 	return [
 		<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />,
 		...Array.from({ length: 50 }, (_, slot) => {
-			// get start date hour
-			// startDate: epoch millis
-
-			if (slot !== 0 && slot !== 50) {
-				const startDateLocalTime = new Date(startDate);
-				const startHour = startDateLocalTime.getHours() + 1;
-				const startMinutes = startDateLocalTime.getMinutes();
-				const last30MinutesSlot = slot % 2 === 0;
-				// slot: 1-49
-				let currentHour;
-				if (last30MinutesSlot) {
-					currentHour = (slot * 30) / 60;
-				} else {
-					currentHour = ((slot + 1) * 30) / 60;
-				}
-
-				const inCurrentHour = startHour === currentHour;
-				const startDateMinutesInSecondSlot = startMinutes > 30;
-				if (inCurrentHour) {
-					if (last30MinutesSlot && startDateMinutesInSecondSlot) {
-						console.log(`CurrentHour: ${currentHour}`);
-						return <div key={startHour} style={{ height: '100px', backgroundColor: 'red' }} />;
-					}
-					if (!last30MinutesSlot && !startDateMinutesInSecondSlot) {
-						return <div key={startHour} style={{ height: '100px', backgroundColor: 'red' }} />;
-					}
-				}
-			}
+			const index = getIndexFromDateTime(startDate);
+			if (slot === index)
+				return <div key={index} style={{ height: '100px', backgroundColor: 'red' }} />;
 			return <div key={slot} />;
 		})
 	];
