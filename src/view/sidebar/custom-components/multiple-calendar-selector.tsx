@@ -5,8 +5,8 @@
  */
 import React, { ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
 
-import { ChipInput } from '@zextras/carbonio-design-system';
-import { map, reject, sortBy, uniqBy } from 'lodash';
+import { ChipInput, ChipInputProps } from '@zextras/carbonio-design-system';
+import { filter, map, reject, sortBy, startsWith, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarChip, CalendarChipInputItem, CalendarChipInputItems } from './calendar-chips';
@@ -42,7 +42,6 @@ export const MultipleCalendarSelector = ({
 }: MultipleCalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const [selectedCalendarsChips, setSelectedCalendarsChips] = useState<CalendarChipInputItems>([]);
-
 	const allCalendars = useFoldersMap();
 
 	const calendars = reject(
@@ -51,7 +50,7 @@ export const MultipleCalendarSelector = ({
 			item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME || isTrash(item.id)
 	);
 
-	const calendarOptions = useMemo(() => {
+	const options = useMemo(() => {
 		const sortedCalendars = sortBy(calendars, sortCriteria);
 		return map(sortedCalendars, (cal) => {
 			const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
@@ -76,11 +75,25 @@ export const MultipleCalendarSelector = ({
 		});
 	}, [calendars, t]);
 
+	const [calendarOptions, setCalendarOptions] = useState(options);
+
 	const removeSelectedCalendarChip = useCallback((id: string): void => {
 		setSelectedCalendarsChips((existingChips) =>
 			existingChips.filter((chip) => chip.value?.id !== id)
 		);
 	}, []);
+
+	const createChip = useCallback(
+		({ label, id }: { label: string; id: string }) => ({
+			label,
+			value: {
+				id,
+				label,
+				onCalendarRemove: () => removeSelectedCalendarChip(id)
+			}
+		}),
+		[removeSelectedCalendarChip]
+	);
 
 	const onSelectedCalendarsAdd = useCallback(
 		(value: unknown): CalendarChipInputItem => {
@@ -88,16 +101,9 @@ export const MultipleCalendarSelector = ({
 				return { label: '' };
 			}
 
-			return {
-				label: value.label,
-				value: {
-					id: value.id,
-					label: value.label,
-					onCalendarRemove: () => removeSelectedCalendarChip(value.id)
-				}
-			};
+			return createChip(value);
 		},
-		[removeSelectedCalendarChip]
+		[createChip]
 	);
 
 	const onSelectedCalendarsChange = useCallback((selected: CalendarChipInputItems) => {
@@ -123,6 +129,24 @@ export const MultipleCalendarSelector = ({
 		[calendars, onCalendarChange, selectedCalendarsChips]
 	);
 
+	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>(
+		({ key, textContent }) => {
+			if (key === 'Enter') {
+				const option = calendarOptions[0];
+				if (option) {
+					const chip = createChip(option);
+					setSelectedCalendarsChips((prevValue) => [...prevValue, chip]);
+				}
+			} else if (textContent) {
+				const newOptions = filter(calendarOptions, (option) =>
+					startsWith(option.label, textContent)
+				);
+				setCalendarOptions(newOptions);
+			}
+		},
+		[calendarOptions, createChip]
+	);
+
 	return (
 		<ChipInput
 			data-testid={'calendar-selector-input'}
@@ -130,6 +154,7 @@ export const MultipleCalendarSelector = ({
 			disableOptions={false}
 			value={selectedCalendarsChips}
 			onAdd={onSelectedCalendarsAdd}
+			onInputType={onInputType}
 			onChange={onSelectedCalendarsChange}
 			placeholder={t('label.calendar_selector.placeholder', 'Add Calendars')}
 			requireUniqueChips
