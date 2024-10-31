@@ -5,6 +5,8 @@
  */
 import { ErrorSoapBodyResponse, JSNS, soapFetch } from '@zextras/carbonio-shell-ui';
 
+import { CreateCalendarGroupError } from './create-calendar-group-error';
+
 export type CreateCalendarGroupRequest = {
 	name: string;
 	calendarId: { _content: string }[];
@@ -36,7 +38,7 @@ export const createCalendarGroupRequest = async ({
 		}
 	).then((response) => {
 		if ('Fault' in response) {
-			throw new Error(response.Fault.Reason.Text, { cause: response.Fault });
+			throw new CreateCalendarGroupError(response.Fault);
 		}
 		return response;
 	});

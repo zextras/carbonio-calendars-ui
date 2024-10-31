@@ -22,6 +22,7 @@ import { MultipleCalendarSelector } from './custom-components/multiple-calendar-
 import { GroupCalendarsList } from './group-calendars-list';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types';
+import { ApiError } from '../../soap/api-error';
 import { modifyCalendarGroupRequest } from '../../soap/modify-calendar-group-request';
 import { updateCalendarGroupsStore, useGroupById } from '../../store/zustand/calendar-group-store';
 
@@ -114,12 +115,17 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 
 				onClose();
 			})
-			.catch(() => {
+			.catch((err) => {
+				const errorMessage =
+					err instanceof ApiError
+						? err.getLocalizedMessage(t)
+						: t('label.error_try_again', 'Something went wrong, please try again');
+
 				createSnackbar({
 					key: `group-editing-failed`,
 					replace: true,
 					severity: 'error',
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					label: errorMessage,
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
