@@ -200,11 +200,11 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 			mainAlignment={'flex-start'}
 			style={{ flexWrap: 'nowrap' }}
 		>
-			<Row orientation={'vertical'}>
+			<Row orientation={'vertical'} padding={{ right: '1rem', vertical: '1rem' }}>
 				<Padding top={'2rem'} />
 				<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />
 			</Row>
-			<Row orientation={'vertical'} width="fill">
+			<Row orientation={'vertical'} width="fill" padding={{ right: '1rem', vertical: '1rem' }}>
 				<TimetableHeader />
 				<TimeTable startDate={startDate} endDate={endDate} events={events} />
 			</Row>
