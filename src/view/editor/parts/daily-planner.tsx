@@ -9,7 +9,7 @@ import React from 'react';
 import {
 	Chip,
 	Container,
-	Text,
+	Padding,
 	Row,
 	THeaderProps,
 	TRowProps,
@@ -90,6 +90,26 @@ function parseEvent(event: Event): ParsedEvent {
 		end: getHourFromDateTime(event.endDate)
 	};
 }
+const HourLabel = ({
+	label,
+	atPosition
+}: {
+	atPosition: number;
+	label: string;
+}): React.JSX.Element => (
+	<Container
+		style={{
+			width: '3px',
+			height: '2rem',
+			borderRadius: 'none',
+			float: 'left',
+			position: 'absolute',
+			left: calculatePosition(atPosition)
+		}}
+	>
+		{label}
+	</Container>
+);
 
 const MinutesLine = ({
 	atPosition,
@@ -100,18 +120,19 @@ const MinutesLine = ({
 	color: string;
 	width?: string;
 }): React.JSX.Element => (
-	<Container
-		width={width}
-		background={color}
-		height={'2rem'}
-		borderRadius={'none'}
-		// style={{
-		// 	float: 'left',
-		// 	position: 'relative',
-		// 	left: calculatePosition(atPosition)
-		// }}
+	<div
+		style={{
+			width,
+			backgroundColor: color,
+			height: '2rem',
+			borderRadius: 'none',
+			float: 'left',
+			position: 'absolute',
+			left: calculatePosition(atPosition)
+		}}
 	/>
 );
+
 const TimetableHeader = (): React.JSX.Element => {
 	const hours = [
 		'12',
@@ -119,13 +140,11 @@ const TimetableHeader = (): React.JSX.Element => {
 		...Array.from({ length: 12 }, (_, i) => (i + 1).toString())
 	];
 	return (
-		<Row style={{ justifyContent: 'space-between' }} width="fill">
-			{hours.map((hour) => (
-				<Text key={hour} style={{ width: '2rem' }} textAlign="center">
-					{hour}
-				</Text>
+		<div style={{ width: '100%', position: 'relative', height: '2rem' }}>
+			{hours.map((label, hour) => (
+				<HourLabel key={hour} label={label} atPosition={60 * hour} />
 			))}
-		</Row>
+		</div>
 	);
 };
 
@@ -154,12 +173,14 @@ const TimeTable = ({ startDate, endDate, events }: TimeTableProps): React.JSX.El
 	));
 
 	return (
-		<Row style={{ justifyContent: 'space-between' }} width="fill">
+		<div
+			style={{ width: '100%', position: 'relative', height: '2rem', border: '1px solid #d3d3d3' }}
+		>
 			{hourTicks}
-			{/* {eventDivs} */}
-			{/* <MinutesLine atPosition={startPosition} color={START_DATE_LINE_COLOR} /> */}
-			{/* <MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} /> */}
-		</Row>
+			{eventDivs}
+			<MinutesLine atPosition={startPosition} color={START_DATE_LINE_COLOR} />
+			<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
+		</div>
 	);
 };
 
@@ -179,7 +200,10 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 			mainAlignment={'flex-start'}
 			style={{ flexWrap: 'nowrap' }}
 		>
-			<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />
+			<Row orientation={'vertical'}>
+				<Padding top={'2rem'} />
+				<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />
+			</Row>
 			<Row orientation={'vertical'} width="fill">
 				<TimetableHeader />
 				<TimeTable startDate={startDate} endDate={endDate} events={events} />
