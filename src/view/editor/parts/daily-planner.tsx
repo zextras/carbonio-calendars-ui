@@ -28,7 +28,7 @@ const StyledTable = styled(Table)`
 `;
 
 const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
-	<tr>
+	<tr style={{ height: '2rem' }}>
 		{row.columns.map((column, index) => (
 			<td
 				key={index}
@@ -75,10 +75,6 @@ function getHourFromDateTime(dateTime: number): { hours: number; minutes: number
 	return { hours: date.getHours(), minutes: date.getMinutes() };
 }
 
-function calculateWidth(minutes: number): string {
-	const width = (minutes * 100) / 60;
-	return `${width}%`;
-}
 function calculatePosition(minutes: number): string {
 	const width = (minutes * 100) / 60;
 	return `${width}%`;
@@ -100,12 +96,12 @@ function useParticipantColumns({
 			const matchesStartHour = hour === startHours;
 			const matchesEndHour = hour === endHours;
 			return (
-				<div key={startHours}>
+				<div style={{ height: '2rem' }} key={startHours}>
 					{matchesStartHour && (
 						<Container
 							width="3px"
 							background={START_DATE_LINE_COLOR}
-							height={'100px'}
+							height={'fill'}
 							borderRadius={'none'}
 							style={{
 								float: 'left',
@@ -119,7 +115,7 @@ function useParticipantColumns({
 							width="3px"
 							borderRadius={'none'}
 							background={END_DATE_LINE_COLOR}
-							height={'100px'}
+							height={'fill'}
 							style={{
 								float: 'left',
 								position: 'relative',
