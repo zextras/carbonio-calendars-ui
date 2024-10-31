@@ -23,26 +23,13 @@ const StyledTable = styled(Table)`
 const START_DATE_LINE_COLOR = 'green';
 const END_DATE_LINE_COLOR = 'red';
 
-function getBorderWidth(index: number): string {
-	if (index < 2) return '0px';
-	if (index > 49) return '0px';
-	if (index % 2 === 0) return '1px 0 1px 1px';
-	return '1px 1px 1px 0';
-}
-
-function getBorderColor(): string {
-	return 'black';
-}
-
 const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
 	<tr>
 		{row.columns.map((column, index) => (
 			<td
 				key={index}
 				style={{
-					borderWidth: getBorderWidth(index),
-					borderColor: getBorderColor(),
-					borderStyle: 'solid',
+					border: index > 0 ? '1px solid black' : '0px',
 					borderRadius: 0,
 					padding: 0
 				}}
@@ -57,9 +44,9 @@ const HeaderFactory = ({ headers }: THeaderProps): React.JSX.Element => (
 	<tr>
 		{headers.map((header, index) => (
 			<th
-				colSpan={index === 0 ? 1 : 2}
 				key={index}
 				style={{
+					transform: 'translateX(-50%)',
 					width: index < 1 ? '10rem' : 'fit-content',
 					border: '0px',
 					padding: 0,
@@ -78,15 +65,10 @@ type GetParticipantColumnsProps = {
 	startDate: number;
 	endDate: number;
 };
-function getIndexFromDateTime(dateTime: number): number {
-	const date = new Date(dateTime);
-	const hours = date.getHours();
-	const minutes = date.getMinutes();
 
-	// Calculate the index based on hours and minutes
-	// Each hour has 2 slots (0-29 minutes and 30-59 minutes)
-	// The first slot (index 0) and the last slot (index 49) are for esthetic reasons
-	return 1 + hours * 2 + (minutes >= 30 ? 1 : 0);
+function getHourFromDateTime(dateTime: number): number {
+	const date = new Date(dateTime);
+	return date.getHours();
 }
 
 function getParticipantColumns({
@@ -96,11 +78,10 @@ function getParticipantColumns({
 }: GetParticipantColumnsProps): React.JSX.Element[] {
 	return [
 		<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />,
-		...Array.from({ length: 50 }, (_, slot) => {
-			const index = getIndexFromDateTime(startDate);
-			if (slot === index)
-				return <div key={index} style={{ height: '100px', backgroundColor: 'red' }} />;
-			return <div key={slot} />;
+		...Array.from({ length: 25 }, (_, hour) => {
+			const startDateHour = getHourFromDateTime(startDate);
+			if (hour === startDateHour) return <div key={startDateHour}> </div>;
+			return <div key={hour} />;
 		})
 	];
 }
@@ -108,10 +89,8 @@ function getParticipantColumns({
 export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	const hours = [
 		'12',
-		...Array.from({ length: 11 }, (_, i) => (i + 1).toString()),
-		'12',
-		...Array.from({ length: 11 }, (_, i) => (i + 1).toString()),
-		'12'
+		...Array.from({ length: 12 }, (_, i) => (i + 1).toString()),
+		...Array.from({ length: 12 }, (_, i) => (i + 1).toString())
 	];
 
 	const sender = useAppSelector(selectSender(editorId));
@@ -141,7 +120,7 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 				showCheckbox={false}
 				headers={[
 					{ id: 'organizer', label: '' },
-					...hours.map((hour) => ({ id: hour, label: hour, colSpan: 2 }))
+					...hours.map((hour) => ({ id: hour, label: hour }))
 				]}
 				rows={rows}
 			/>
