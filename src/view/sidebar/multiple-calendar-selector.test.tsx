@@ -19,13 +19,9 @@ import calendarGenerators from '../../test/generators/calendar';
 
 const buildProps = ({
 	onCalendarChange = jest.fn(),
-	excludeTrash = false,
-	disabled = false,
 	...rest
 }: Partial<MultipleCalendarSelectorProps> = {}): MultipleCalendarSelectorProps => ({
 	onCalendarChange,
-	excludeTrash,
-	disabled,
 	...rest
 });
 

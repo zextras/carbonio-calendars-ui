@@ -6,14 +6,14 @@
 import React, { ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
 
 import { ChipInput } from '@zextras/carbonio-design-system';
-import { compact, filter, find, map, reject, sortBy, uniqBy } from 'lodash';
+import { map, reject, sortBy, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarChip, CalendarChipInputItem, CalendarChipInputItems } from './calendar-chips';
 import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
+import { isLink, isTrash } from '../../../carbonio-ui-commons/helpers/folders';
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
 import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
@@ -21,17 +21,24 @@ import { ItemFactory } from '../../editor/parts/select-label-factory';
 
 export type MultipleCalendarSelectorProps = {
 	onCalendarChange: (selectedCalendars: Array<Folder>) => void;
-	excludeTrash?: boolean;
-	disabled?: boolean;
 };
 
 const isCalendarItem = (value: unknown): value is { id: string; label: string } =>
 	!!value && typeof value === 'object' && 'id' in value && 'label' in value;
 
+const sortCriteria = (folder: Folder): string => {
+	if (isLink(folder)) {
+		return `3000-${folder.name.toLowerCase()}`;
+	}
+
+	if (folder.id === FOLDERS.CALENDAR) {
+		return '1000';
+	}
+	return `2000-${folder.name.toLowerCase()}`;
+};
+
 export const MultipleCalendarSelector = ({
-	onCalendarChange,
-	excludeTrash = false,
-	disabled
+	onCalendarChange
 }: MultipleCalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const [selectedCalendarsChips, setSelectedCalendarsChips] = useState<CalendarChipInputItems>([]);
@@ -40,32 +47,12 @@ export const MultipleCalendarSelector = ({
 
 	const calendars = reject(
 		allCalendars,
-		(item) => item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME
-	);
-
-	const requiredCalendars = useMemo(
-		() => (excludeTrash ? filter(calendars, (cal) => !isTrashOrNestedInIt(cal)) : calendars),
-		[calendars, excludeTrash]
+		(item) =>
+			item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME || isTrash(item.id)
 	);
 
 	const calendarOptions = useMemo(() => {
-		const calendar = find(requiredCalendars, (f) => hasId(f, FOLDERS.CALENDAR));
-		const trash = find(requiredCalendars, (f) => hasId(f, FOLDERS.TRASH));
-		const othersPrimary = sortBy(
-			reject(
-				requiredCalendars,
-				(f) => hasId(f, FOLDERS.CALENDAR) || hasId(f, FOLDERS.TRASH) || f.isLink
-			),
-			'name'
-		);
-		const othersLink = sortBy(
-			reject(
-				requiredCalendars,
-				(f) => hasId(f, FOLDERS.CALENDAR) || hasId(f, FOLDERS.TRASH) || !f.isLink
-			),
-			'name'
-		);
-		const sortedCalendars = compact([calendar, trash, ...othersPrimary, ...othersLink]);
+		const sortedCalendars = sortBy(calendars, sortCriteria);
 		return map(sortedCalendars, (cal) => {
 			const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
 			const labelName = hasId(cal, FOLDERS.CALENDAR) ? t('label.calendar', 'Calendar') : cal.name;
@@ -76,7 +63,7 @@ export const MultipleCalendarSelector = ({
 				color: color.color,
 				customComponent: (
 					<ItemFactory
-						disabled={disabled ?? false}
+						disabled={false}
 						absFolderPath={cal.absFolderPath}
 						color={color.color}
 						isLink={cal.isLink}
@@ -87,7 +74,7 @@ export const MultipleCalendarSelector = ({
 				)
 			};
 		});
-	}, [disabled, requiredCalendars, t]);
+	}, [calendars, t]);
 
 	const removeSelectedCalendarChip = useCallback((id: string): void => {
 		setSelectedCalendarsChips((existingChips) =>
