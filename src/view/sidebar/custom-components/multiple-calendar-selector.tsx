@@ -6,7 +6,17 @@
 import React, { ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
 
 import { ChipInput, ChipInputProps } from '@zextras/carbonio-design-system';
-import { filter, map, reject, sortBy, startsWith, uniqBy } from 'lodash';
+import {
+	differenceBy,
+	differenceWith,
+	filter,
+	isNil,
+	map,
+	reject,
+	sortBy,
+	startsWith,
+	uniqBy
+} from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarChip, CalendarChipInputItem, CalendarChipInputItems } from './calendar-chips';
@@ -21,6 +31,7 @@ import { ItemFactory } from '../../editor/parts/select-label-factory';
 
 export type MultipleCalendarSelectorProps = {
 	onCalendarChange: (selectedCalendars: Array<Folder>) => void;
+	calendarsToExclude?: Array<Folder>;
 };
 
 const isCalendarItem = (value: unknown): value is { id: string; label: string } =>
@@ -38,10 +49,12 @@ const sortCriteria = (folder: Folder): string => {
 };
 
 export const MultipleCalendarSelector = ({
-	onCalendarChange
+	onCalendarChange,
+	calendarsToExclude
 }: MultipleCalendarSelectorProps): ReactElement | null => {
 	const [t] = useTranslation();
 	const [selectedCalendarsChips, setSelectedCalendarsChips] = useState<CalendarChipInputItems>([]);
+	const [inputContent, setInputContent] = useState<string>('');
 	const allCalendars = useFoldersMap();
 
 	const calendars = reject(
@@ -51,31 +64,43 @@ export const MultipleCalendarSelector = ({
 	);
 
 	const options = useMemo(() => {
-		const sortedCalendars = sortBy(calendars, sortCriteria);
-		return map(sortedCalendars, (cal) => {
-			const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
-			const labelName = hasId(cal, FOLDERS.CALENDAR) ? t('label.calendar', 'Calendar') : cal.name;
-			return {
-				id: cal.id,
-				label: labelName,
-				value: { id: cal.id, label: labelName },
-				color: color.color,
-				customComponent: (
-					<ItemFactory
-						disabled={false}
-						absFolderPath={cal.absFolderPath}
-						color={color.color}
-						isLink={cal.isLink}
-						label={labelName}
-						acl={cal.acl}
-						id={cal.id}
-					/>
-				)
-			};
-		});
-	}, [calendars, t]);
+		const unselectedCalendars = differenceWith(
+			calendars,
+			selectedCalendarsChips,
+			(val1, val2) => val1?.id === val2?.value?.id
+		);
+		const calendarsNotInGroup = differenceBy(unselectedCalendars, calendarsToExclude ?? [], 'id');
+		const filteredByInput = filter(calendarsNotInGroup, (calendar) =>
+			startsWith(calendar.name.toLowerCase(), inputContent.toLowerCase())
+		);
+		const sortedCalendarOptions = sortBy(filteredByInput, sortCriteria);
 
-	const [calendarOptions, setCalendarOptions] = useState(options);
+		return sortedCalendarOptions.length
+			? map(sortedCalendarOptions, (cal) => {
+					const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
+					const labelName = hasId(cal, FOLDERS.CALENDAR)
+						? t('label.calendar', 'Calendar')
+						: cal.name;
+					return {
+						id: cal.id,
+						label: labelName,
+						value: { id: cal.id, label: labelName, isLink: cal.isLink },
+						color: color.color,
+						customComponent: (
+							<ItemFactory
+								disabled={false}
+								absFolderPath={cal.absFolderPath}
+								color={color.color}
+								isLink={cal.isLink}
+								label={labelName}
+								acl={cal.acl}
+								id={cal.id}
+							/>
+						)
+					};
+				})
+			: [{ id: 'no_options', label: 'no options available', disabled: true }];
+	}, [calendars, calendarsToExclude, inputContent, selectedCalendarsChips, t]);
 
 	const removeSelectedCalendarChip = useCallback((id: string): void => {
 		setSelectedCalendarsChips((existingChips) =>
@@ -132,25 +157,22 @@ export const MultipleCalendarSelector = ({
 	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>(
 		({ key, textContent }) => {
 			if (key === 'Enter') {
-				const option = calendarOptions[0];
-				if (option) {
-					const chip = createChip(option);
+				if (options[0]) {
+					const chip = createChip(options[0]);
 					setSelectedCalendarsChips((prevValue) => [...prevValue, chip]);
+					setInputContent('');
 				}
-			} else if (textContent) {
-				const newOptions = filter(calendarOptions, (option) =>
-					startsWith(option.label, textContent)
-				);
-				setCalendarOptions(newOptions);
+			} else if (!isNil(textContent)) {
+				setInputContent(textContent);
 			}
 		},
-		[calendarOptions, createChip]
+		[createChip, options]
 	);
 
 	return (
 		<ChipInput
 			data-testid={'calendar-selector-input'}
-			options={calendarOptions}
+			options={options}
 			disableOptions={false}
 			value={selectedCalendarsChips}
 			onAdd={onSelectedCalendarsAdd}
