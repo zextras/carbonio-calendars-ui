@@ -71,7 +71,16 @@ type GetParticipantColumnsProps = {
 	events: Event[];
 };
 
-function getHourFromDateTime(dateTime: number): { hours: number; minutes: number } {
+type EventType = 'free' | 'busy' | 'tentative' | 'out-of-office' | 'unknown';
+type Event = {
+	type: EventType;
+	startDate: number;
+	endDate: number;
+};
+type HoursMinutes = { hours: number; minutes: number };
+type ParsedEvent = { type: EventType; start: HoursMinutes; end: HoursMinutes };
+
+function getHourFromDateTime(dateTime: number): HoursMinutes {
 	const date = new Date(dateTime);
 	return { hours: date.getHours(), minutes: date.getMinutes() };
 }
@@ -80,6 +89,34 @@ function calculatePosition(minutes: number): string {
 	const width = (minutes * 100) / 60;
 	return `${width}%`;
 }
+
+function parseEvent(event: Event): ParsedEvent {
+	return {
+		type: event.type,
+		start: getHourFromDateTime(event.startDate),
+		end: getHourFromDateTime(event.endDate)
+	};
+}
+
+const MinutesLine = ({
+	atMinutes,
+	color
+}: {
+	atMinutes: number;
+	color: string;
+}): React.JSX.Element => (
+	<Container
+		width="3px"
+		background={color}
+		height={'fill'}
+		borderRadius={'none'}
+		style={{
+			float: 'left',
+			position: 'relative',
+			left: calculatePosition(atMinutes)
+		}}
+	/>
+);
 
 function useParticipantColumns({
 	participantName,
@@ -100,41 +137,15 @@ function useParticipantColumns({
 			return (
 				<div style={{ height: '2rem' }} key={startHours}>
 					{matchesStartHour && (
-						<Container
-							width="3px"
-							background={START_DATE_LINE_COLOR}
-							height={'fill'}
-							borderRadius={'none'}
-							style={{
-								float: 'left',
-								position: 'relative',
-								left: calculatePosition(startMinutes)
-							}}
-						/>
+						<MinutesLine atMinutes={startMinutes} color={START_DATE_LINE_COLOR} />
 					)}
-					{matchesEndHour && (
-						<Container
-							width="3px"
-							borderRadius={'none'}
-							background={END_DATE_LINE_COLOR}
-							height={'fill'}
-							style={{
-								float: 'left',
-								position: 'relative',
-								left: calculatePosition(endMinutes)
-							}}
-						/>
-					)}
+					{matchesEndHour && <MinutesLine atMinutes={endMinutes} color={END_DATE_LINE_COLOR} />}
 				</div>
 			);
 		})
 	];
 }
-type Event = {
-	type: 'free' | 'busy' | 'tentative' | 'out-of-office' | 'unknown';
-	startDate: number;
-	endDate: number;
-};
+
 export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	const hours = [
 		'12',
@@ -151,7 +162,8 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 		participantName: sender.fullName ?? '',
 		startDate,
 		endDate,
-		events: []
+		// 11:50 - 11:55 GMT
+		events: [{ startDate: 1730375433000, endDate: 1730375733000, type: 'busy' }]
 	});
 
 	const rows = [
