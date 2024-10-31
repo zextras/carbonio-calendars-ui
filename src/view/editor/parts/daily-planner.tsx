@@ -31,6 +31,7 @@ const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
 	<tr style={{ height: '2rem' }}>
 		{row.columns.map((column, index) => (
 			<td
+				colSpan={index > 0 ? 24 : 1}
 				key={index}
 				style={{
 					border: index > 0 ? '1px solid black' : '0px',
@@ -86,7 +87,7 @@ function getHourFromDateTime(dateTime: number): HoursMinutes {
 }
 
 function calculatePosition(minutes: number): string {
-	const width = (minutes * 100) / 60;
+	const width = (minutes * 100) / (60 * 24);
 	return `${width}%`;
 }
 
@@ -99,21 +100,23 @@ function parseEvent(event: Event): ParsedEvent {
 }
 
 const MinutesLine = ({
-	atMinutes,
-	color
+	atPosition,
+	color,
+	width = '3px'
 }: {
-	atMinutes: number;
+	atPosition: number;
 	color: string;
+	width?: string;
 }): React.JSX.Element => (
 	<Container
-		width="3px"
+		width={width}
 		background={color}
 		height={'fill'}
 		borderRadius={'none'}
 		style={{
 			float: 'left',
 			position: 'relative',
-			left: calculatePosition(atMinutes)
+			left: calculatePosition(atPosition)
 		}}
 	/>
 );
@@ -125,24 +128,36 @@ function useParticipantColumns({
 	events
 }: GetParticipantColumnsProps): Array<React.JSX.Element> {
 	const { hours: startHours, minutes: startMinutes } = getHourFromDateTime(startDate);
+	const startPosition = startHours * 60 + startMinutes;
 	const { hours: endHours, minutes: endMinutes } = getHourFromDateTime(endDate);
+	const endPosition = endHours * 60 + endMinutes;
 	const theme = useTheme();
 	const START_DATE_LINE_COLOR = theme.palette.success.regular;
 	const END_DATE_LINE_COLOR = theme.palette.error.regular;
+	const parsedEvents = events.map((event) => parseEvent(event));
+	const hourTicks = Array.from(
+		{ length: 25 },
+		(_, hour): React.JSX.Element => (
+			<MinutesLine key={hour} width={'1px'} atPosition={60 * hour} color={'#d3d3d3'}></MinutesLine>
+		)
+	);
+
+	const eventDivs = parsedEvents.map((parsedEvent) => (
+		<MinutesLine
+			key={parsedEvent.start.minutes}
+			atPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
+			color={'blue'}
+		/>
+	));
+
 	return [
 		<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />,
-		...Array.from({ length: 25 }, (_, hour) => {
-			const matchesStartHour = hour === startHours;
-			const matchesEndHour = hour === endHours;
-			return (
-				<div style={{ height: '2rem' }} key={startHours}>
-					{matchesStartHour && (
-						<MinutesLine atMinutes={startMinutes} color={START_DATE_LINE_COLOR} />
-					)}
-					{matchesEndHour && <MinutesLine atMinutes={endMinutes} color={END_DATE_LINE_COLOR} />}
-				</div>
-			);
-		})
+		<div key={'time-table'} style={{ height: '2rem' }}>
+			{hourTicks}
+			{eventDivs}
+			<MinutesLine atPosition={startPosition} color={START_DATE_LINE_COLOR} />
+			<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
+		</div>
 	];
 }
 
