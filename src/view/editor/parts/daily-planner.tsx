@@ -6,7 +6,14 @@
 
 import React from 'react';
 
-import { Chip, Container, Table, THeaderProps, TRowProps } from '@zextras/carbonio-design-system';
+import {
+	Chip,
+	Container,
+	Table,
+	THeaderProps,
+	TRowProps,
+	useTheme
+} from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 
 import { useAppSelector } from '../../../store/redux/hooks';
@@ -19,9 +26,6 @@ const StyledTable = styled(Table)`
 			background-color: transparent;
 	}
 `;
-
-const START_DATE_LINE_COLOR = 'green';
-const END_DATE_LINE_COLOR = 'red';
 
 const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
 	<tr>
@@ -75,29 +79,56 @@ function calculateWidth(minutes: number): string {
 	const width = (minutes * 100) / 60;
 	return `${width}%`;
 }
+function calculatePosition(minutes: number): string {
+	const width = (minutes * 100) / 60;
+	return `${width}%`;
+}
 
-function getParticipantColumns({
+function useParticipantColumns({
 	participantName,
 	startDate,
 	endDate
-}: GetParticipantColumnsProps): React.JSX.Element[] {
+}: GetParticipantColumnsProps): Array<React.JSX.Element> {
 	const { hours: startHours, minutes: startMinutes } = getHourFromDateTime(startDate);
+	const { hours: endHours, minutes: endMinutes } = getHourFromDateTime(endDate);
+	const theme = useTheme();
+	const START_DATE_LINE_COLOR = theme.palette.success.regular;
+	const END_DATE_LINE_COLOR = theme.palette.error.regular;
 	return [
 		<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />,
 		...Array.from({ length: 25 }, (_, hour) => {
-			if (hour === startHours)
-				return (
-					<div key={startHours}>
-						<div
+			const matchesStartHour = hour === startHours;
+			const matchesEndHour = hour === endHours;
+			return (
+				<div key={startHours}>
+					{matchesStartHour && (
+						<Container
+							width="3px"
+							background={START_DATE_LINE_COLOR}
+							height={'100px'}
+							borderRadius={'none'}
 							style={{
-								width: calculateWidth(startMinutes),
-								height: '100px',
-								borderLeft: `2px solid ${START_DATE_LINE_COLOR}`
+								float: 'left',
+								position: 'relative',
+								left: calculatePosition(startMinutes)
 							}}
 						/>
-					</div>
-				);
-			return <div key={hour} />;
+					)}
+					{matchesEndHour && (
+						<Container
+							width="3px"
+							borderRadius={'none'}
+							background={END_DATE_LINE_COLOR}
+							height={'100px'}
+							style={{
+								float: 'left',
+								position: 'relative',
+								left: calculatePosition(endMinutes)
+							}}
+						/>
+					)}
+				</div>
+			);
 		})
 	];
 }
@@ -114,7 +145,7 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 	const startDate = useAppSelector(selectEditorStart(editorId)) as number;
 	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
 
-	const organizerColumns = getParticipantColumns({
+	const organizerColumns = useParticipantColumns({
 		participantName: sender.fullName ?? '',
 		startDate,
 		endDate
