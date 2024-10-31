@@ -190,6 +190,7 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 	const startDate = useAppSelector(selectEditorStart(editorId)) as number;
 	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
 
+	// Test event at 12:50 - 12:55 CEST, 11:50 - 11:55 GMT
 	const events: Array<Event> = [{ startDate: 1730375433000, endDate: 1730375733000, type: 'busy' }];
 	const participantName = sender.fullName ?? '';
 

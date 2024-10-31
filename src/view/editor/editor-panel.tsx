@@ -124,12 +124,16 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
 					<EditorAllDayCheckbox editorId={editorId} />
 				</Row>
-				<Button
-					onClick={handleDailyPlannerButtonClick}
-					label={dailyPlannerLabel}
-					disabled={dailyPlannerButtonDisabled}
-					data-testid={'daily-planner-button'}
-				/>
+				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="center">
+					<Button
+						type={'outlined'}
+						width={'fill'}
+						onClick={handleDailyPlannerButtonClick}
+						label={dailyPlannerLabel}
+						disabled={dailyPlannerButtonDisabled}
+						data-testid={'daily-planner-button'}
+					/>
+				</Row>
 				{showDailyPlanner && <DailyPlanner editorId={editorId} />}
 				{<DailyPlanner editorId={editorId} />}
 				<Row height="fit" width="fill" padding={{ top: 'large' }}>
