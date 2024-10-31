@@ -147,6 +147,7 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 	const end = useRangeEnd();
 	const query = useCheckedCalendarsQuery();
 	const calendars = useFoldersMap();
+	const [t] = useTranslation();
 
 	const calendarsInGroup = useMemo(
 		() =>
@@ -165,8 +166,10 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 	);
 
 	const checked = every(calendarsInGroup, (cal) => cal.checked);
+	const isGroupEmpty = useMemo(() => !item.calendarId?.length, [item.calendarId?.length]);
 
 	const onClick = useCallback((): void => {
+		if (isGroupEmpty) return;
 		const op = checked ? FOLDER_OPERATIONS.UNCHECK : FOLDER_OPERATIONS.CHECK;
 		const actions = map(item.calendarId, (id) => ({
 			id,
@@ -191,7 +194,7 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 				});
 			}
 		});
-	}, [checked, dispatch, end, item.calendarId, query, start]);
+	}, [checked, dispatch, end, isGroupEmpty, item.calendarId, query, start]);
 
 	const accordionItem = useMemo(
 		() =>
@@ -205,6 +208,11 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 		[checked, item]
 	);
 
+	const emptyGroupIcon = useMemo(() => {
+		const tooltipText = t('label.group_is_empty', 'This group is empty');
+		return RowWithIcon('AlertCircleOutline', 'warning', tooltipText);
+	}, [t]);
+
 	return (
 		<GroupContextMenuItem item={item}>
 			<Row onClick={onClick}>
@@ -212,6 +220,7 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 				<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
 					<AccordionItem item={accordionItem} />
 				</Tooltip>
+				{isGroupEmpty && emptyGroupIcon}
 			</Row>
 		</GroupContextMenuItem>
 	);
