@@ -66,9 +66,14 @@ type GetParticipantColumnsProps = {
 	endDate: number;
 };
 
-function getHourFromDateTime(dateTime: number): number {
+function getHourFromDateTime(dateTime: number): { hours: number; minutes: number } {
 	const date = new Date(dateTime);
-	return date.getHours();
+	return { hours: date.getHours(), minutes: date.getMinutes() };
+}
+
+function calculateWidth(minutes: number): string {
+	const width = (minutes * 100) / 60;
+	return `${width}%`;
 }
 
 function getParticipantColumns({
@@ -76,11 +81,22 @@ function getParticipantColumns({
 	startDate,
 	endDate
 }: GetParticipantColumnsProps): React.JSX.Element[] {
+	const { hours: startHours, minutes: startMinutes } = getHourFromDateTime(startDate);
 	return [
 		<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />,
 		...Array.from({ length: 25 }, (_, hour) => {
-			const startDateHour = getHourFromDateTime(startDate);
-			if (hour === startDateHour) return <div key={startDateHour}> </div>;
+			if (hour === startHours)
+				return (
+					<div key={startHours}>
+						<div
+							style={{
+								width: calculateWidth(startMinutes),
+								height: '100px',
+								borderLeft: `2px solid ${START_DATE_LINE_COLOR}`
+							}}
+						/>
+					</div>
+				);
 			return <div key={hour} />;
 		})
 	];
