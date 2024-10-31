@@ -68,6 +68,7 @@ type GetParticipantColumnsProps = {
 	participantName: string;
 	startDate: number;
 	endDate: number;
+	events: Event[];
 };
 
 function getHourFromDateTime(dateTime: number): { hours: number; minutes: number } {
@@ -83,7 +84,8 @@ function calculatePosition(minutes: number): string {
 function useParticipantColumns({
 	participantName,
 	startDate,
-	endDate
+	endDate,
+	events
 }: GetParticipantColumnsProps): Array<React.JSX.Element> {
 	const { hours: startHours, minutes: startMinutes } = getHourFromDateTime(startDate);
 	const { hours: endHours, minutes: endMinutes } = getHourFromDateTime(endDate);
@@ -128,7 +130,11 @@ function useParticipantColumns({
 		})
 	];
 }
-
+type Event = {
+	type: 'free' | 'busy' | 'tentative' | 'out-of-office' | 'unknown';
+	startDate: number;
+	endDate: number;
+};
 export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	const hours = [
 		'12',
@@ -144,7 +150,8 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 	const organizerColumns = useParticipantColumns({
 		participantName: sender.fullName ?? '',
 		startDate,
-		endDate
+		endDate,
+		events: []
 	});
 
 	const rows = [
