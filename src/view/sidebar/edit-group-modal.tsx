@@ -179,7 +179,10 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 					</Text>
 				</Container>
 				<Padding vertical="small" />
-				<MultipleCalendarSelector onCalendarChange={onMultipleSelectedCalendarChange} />
+				<MultipleCalendarSelector
+					onCalendarChange={onMultipleSelectedCalendarChange}
+					calendarsToExclude={selectedCalendars}
+				/>
 				<Padding vertical="small" />
 				<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
 				<Padding vertical="small" />
