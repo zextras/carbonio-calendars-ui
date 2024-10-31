@@ -9,23 +9,15 @@ import React from 'react';
 import {
 	Chip,
 	Container,
-	Table,
+	Text,
+	Row,
 	THeaderProps,
 	TRowProps,
 	useTheme
 } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
 
 import { useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorEnd, selectEditorStart, selectSender } from '../../../store/selectors/editor';
-
-const StyledTable = styled(Table)`
-	thead {
-		&,
-		th {
-			background-color: transparent;
-	}
-`;
 
 const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
 	<tr style={{ height: '2rem' }}>
@@ -65,14 +57,14 @@ const HeaderFactory = ({ headers }: THeaderProps): React.JSX.Element => (
 	</tr>
 );
 
-type GetParticipantColumnsProps = {
-	participantName: string;
+type TimeTableProps = {
 	startDate: number;
 	endDate: number;
 	events: Event[];
 };
 
 type EventType = 'free' | 'busy' | 'tentative' | 'out-of-office' | 'unknown';
+
 type Event = {
 	type: EventType;
 	startDate: number;
@@ -111,22 +103,33 @@ const MinutesLine = ({
 	<Container
 		width={width}
 		background={color}
-		height={'fill'}
+		height={'2rem'}
 		borderRadius={'none'}
-		style={{
-			float: 'left',
-			position: 'relative',
-			left: calculatePosition(atPosition)
-		}}
+		// style={{
+		// 	float: 'left',
+		// 	position: 'relative',
+		// 	left: calculatePosition(atPosition)
+		// }}
 	/>
 );
+const TimetableHeader = (): React.JSX.Element => {
+	const hours = [
+		'12',
+		...Array.from({ length: 12 }, (_, i) => (i + 1).toString()),
+		...Array.from({ length: 12 }, (_, i) => (i + 1).toString())
+	];
+	return (
+		<Row style={{ justifyContent: 'space-between' }} width="fill">
+			{hours.map((hour) => (
+				<Text key={hour} style={{ width: '2rem' }} textAlign="center">
+					{hour}
+				</Text>
+			))}
+		</Row>
+	);
+};
 
-function useParticipantColumns({
-	participantName,
-	startDate,
-	endDate,
-	events
-}: GetParticipantColumnsProps): Array<React.JSX.Element> {
+const TimeTable = ({ startDate, endDate, events }: TimeTableProps): React.JSX.Element => {
 	const { hours: startHours, minutes: startMinutes } = getHourFromDateTime(startDate);
 	const startPosition = startHours * 60 + startMinutes;
 	const { hours: endHours, minutes: endMinutes } = getHourFromDateTime(endDate);
@@ -138,7 +141,7 @@ function useParticipantColumns({
 	const hourTicks = Array.from(
 		{ length: 25 },
 		(_, hour): React.JSX.Element => (
-			<MinutesLine key={hour} width={'1px'} atPosition={60 * hour} color={'#d3d3d3'}></MinutesLine>
+			<MinutesLine key={hour} width={'1px'} atPosition={60 * hour} color={'#d3d3d3'} />
 		)
 	);
 
@@ -150,57 +153,37 @@ function useParticipantColumns({
 		/>
 	));
 
-	return [
-		<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />,
-		<div key={'time-table'} style={{ height: '2rem' }}>
+	return (
+		<Row style={{ justifyContent: 'space-between' }} width="fill">
 			{hourTicks}
-			{eventDivs}
-			<MinutesLine atPosition={startPosition} color={START_DATE_LINE_COLOR} />
-			<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
-		</div>
-	];
-}
+			{/* {eventDivs} */}
+			{/* <MinutesLine atPosition={startPosition} color={START_DATE_LINE_COLOR} /> */}
+			{/* <MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} /> */}
+		</Row>
+	);
+};
 
 export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
-	const hours = [
-		'12',
-		...Array.from({ length: 12 }, (_, i) => (i + 1).toString()),
-		...Array.from({ length: 12 }, (_, i) => (i + 1).toString())
-	];
-
 	const sender = useAppSelector(selectSender(editorId));
 
 	const startDate = useAppSelector(selectEditorStart(editorId)) as number;
 	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
 
-	const organizerColumns = useParticipantColumns({
-		participantName: sender.fullName ?? '',
-		startDate,
-		endDate,
-		// 11:50 - 11:55 GMT
-		events: [{ startDate: 1730375433000, endDate: 1730375733000, type: 'busy' }]
-	});
+	const events: Array<Event> = [{ startDate: 1730375433000, endDate: 1730375733000, type: 'busy' }];
+	const participantName = sender.fullName ?? '';
 
-	const rows = [
-		{
-			id: 'organizer',
-			columns: organizerColumns,
-			highlight: false
-		}
-	];
 	return (
-		<Container data-testid={`daily-planner-component-${editorId}`}>
-			<StyledTable
-				RowFactory={RowFactory}
-				HeaderFactory={HeaderFactory}
-				style={{ padding: 0, borderSpacing: 0, backgroundColor: 'transparent' }}
-				showCheckbox={false}
-				headers={[
-					{ id: 'organizer', label: '' },
-					...hours.map((hour) => ({ id: hour, label: hour }))
-				]}
-				rows={rows}
-			/>
-		</Container>
+		<Row
+			orientation={'horizontal'}
+			width="fill"
+			mainAlignment={'flex-start'}
+			style={{ flexWrap: 'nowrap' }}
+		>
+			<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />
+			<Row orientation={'vertical'} width="fill">
+				<TimetableHeader />
+				<TimeTable startDate={startDate} endDate={endDate} events={events} />
+			</Row>
+		</Row>
 	);
 };
