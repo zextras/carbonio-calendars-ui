@@ -6,56 +6,10 @@
 
 import React from 'react';
 
-import {
-	Chip,
-	Container,
-	Padding,
-	Row,
-	THeaderProps,
-	TRowProps,
-	useTheme
-} from '@zextras/carbonio-design-system';
+import { Chip, Container, Padding, Row, useTheme } from '@zextras/carbonio-design-system';
 
 import { useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorEnd, selectEditorStart, selectSender } from '../../../store/selectors/editor';
-
-const RowFactory = ({ row }: TRowProps): React.JSX.Element => (
-	<tr style={{ height: '2rem' }}>
-		{row.columns.map((column, index) => (
-			<td
-				colSpan={index > 0 ? 24 : 1}
-				key={index}
-				style={{
-					border: index > 0 ? '1px solid black' : '0px',
-					borderRadius: 0,
-					padding: 0
-				}}
-			>
-				{column}
-			</td>
-		))}
-	</tr>
-);
-
-const HeaderFactory = ({ headers }: THeaderProps): React.JSX.Element => (
-	<tr>
-		{headers.map((header, index) => (
-			<th
-				key={index}
-				style={{
-					transform: 'translateX(-50%)',
-					width: index < 1 ? '10rem' : 'fit-content',
-					border: '0px',
-					padding: 0,
-					textAlign: 'center',
-					fontWeight: 'normal'
-				}}
-			>
-				{header.label}
-			</th>
-		))}
-	</tr>
-);
 
 type TimeTableProps = {
 	startDate: number;
@@ -79,6 +33,11 @@ function getHourFromDateTime(dateTime: number): HoursMinutes {
 }
 
 function calculatePosition(minutes: number): string {
+	const width = (minutes * 100) / (60 * 24);
+	return `${width}%`;
+}
+
+function calculateEventWidth(minutes: number): string {
 	const width = (minutes * 100) / (60 * 24);
 	return `${width}%`;
 }
@@ -133,6 +92,28 @@ const MinutesLine = ({
 	/>
 );
 
+const EventDiv = ({
+	startPosition,
+	eventTimeSpan,
+	color
+}: {
+	startPosition: number;
+	eventTimeSpan: number;
+	color: string;
+}): React.JSX.Element => (
+	<div
+		style={{
+			width: calculateEventWidth(eventTimeSpan),
+			backgroundColor: color,
+			height: '2rem',
+			// borderRadius: 'none',
+			float: 'left',
+			position: 'absolute',
+			left: calculatePosition(startPosition)
+		}}
+	/>
+);
+
 const TimetableHeader = (): React.JSX.Element => {
 	const hours = [
 		'12',
@@ -147,7 +128,14 @@ const TimetableHeader = (): React.JSX.Element => {
 		</div>
 	);
 };
-
+function getRandomColor(): string {
+	const letters = '0123456789ABCDEF';
+	let color = '#';
+	for (let i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+}
 const TimeTable = ({ startDate, endDate, events }: TimeTableProps): React.JSX.Element => {
 	const { hours: startHours, minutes: startMinutes } = getHourFromDateTime(startDate);
 	const startPosition = startHours * 60 + startMinutes;
@@ -165,10 +153,15 @@ const TimeTable = ({ startDate, endDate, events }: TimeTableProps): React.JSX.El
 	);
 
 	const eventDivs = parsedEvents.map((parsedEvent) => (
-		<MinutesLine
+		<EventDiv
 			key={parsedEvent.start.minutes}
-			atPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
-			color={'blue'}
+			startPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
+			eventTimeSpan={
+				parsedEvent.end.hours * 60 +
+				parsedEvent.end.minutes -
+				(parsedEvent.start.hours * 60 + parsedEvent.start.minutes)
+			}
+			color={getRandomColor()}
 		/>
 	));
 
@@ -191,7 +184,23 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
 
 	// Test event at 12:50 - 12:55 CEST, 11:50 - 11:55 GMT
-	const events: Array<Event> = [{ startDate: 1730375433000, endDate: 1730375733000, type: 'busy' }];
+	const events: Array<Event> = [
+		{
+			startDate: new Date(2024, 11, 4, 10, 0).getTime(),
+			endDate: new Date(2024, 11, 4, 11, 0).getTime(),
+			type: 'busy'
+		},
+		{
+			startDate: new Date(2024, 11, 4, 12, 0).getTime(),
+			endDate: new Date(2024, 11, 4, 12, 45).getTime(),
+			type: 'busy'
+		},
+		{
+			startDate: new Date(2024, 11, 4, 12, 15).getTime(),
+			endDate: new Date(2024, 11, 4, 12, 30).getTime(),
+			type: 'busy'
+		}
+	];
 	const participantName = sender.fullName ?? '';
 
 	return (
