@@ -12,7 +12,7 @@ import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { TimeTable } from '../time-table';
 
 describe('Time Table', () => {
-	it('should display email on first column', () => {
+	it('should display email on first column of a row', () => {
 		const rows = [
 			{
 				email: 'test@test.com',
@@ -22,6 +22,21 @@ describe('Time Table', () => {
 		setupTest(<TimeTable appointmentStartDate={0} appointmentEndDate={0} rows={rows} />);
 		const timeTable = screen.getByTestId('time-table');
 		const firstRow = within(timeTable).getByTestId('row-0');
-		expect(within(firstRow).getByText('test@test.com')).toBeVisible();
+		const firstColumn = within(firstRow).getByTestId('column-0');
+		expect(within(firstColumn).getByText('test@test.com')).toBeVisible();
+	});
+
+	it('should display start mark on a second column of a row', () => {
+		const rows = [
+			{
+				email: 'test@test.com',
+				freeBusy: []
+			}
+		];
+		setupTest(<TimeTable appointmentStartDate={0} appointmentEndDate={0} rows={rows} />);
+		const timeTable = screen.getByTestId('time-table');
+		const firstRow = within(timeTable).getByTestId('row-0');
+		const firstColumn = within(firstRow).getByTestId('column-1');
+		expect(within(firstColumn).getByTestId('start-mark')).toBeVisible();
 	});
 });

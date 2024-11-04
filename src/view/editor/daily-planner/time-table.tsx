@@ -6,11 +6,12 @@
 
 import React from 'react';
 
-import { useTheme } from '@zextras/carbonio-design-system';
+import { Chip, useTheme } from '@zextras/carbonio-design-system';
 
+import { EventDiv } from './parts/event-div';
 import { MinutesLine } from './parts/minutes-line';
 import { TimeTableProps } from './types';
-import { getHourFromDateTime } from './utils';
+import { getEventColor, getHourFromDateTime, parseEvent } from './utils';
 
 export const TimeTable = ({
 	appointmentStartDate,
@@ -31,40 +32,64 @@ export const TimeTable = ({
 		)
 	);
 
-	const rowDivs = rows.map((row, index) => (
-		<div key={`row-${index}`} data-testid={`row-${index}`}>
-			{row.email}
-		</div>
-	));
-
-	// const parsedEvents = rows?.[0]?.freeBusy?.map((event) => parseEvent(event));
-	// const eventDivs = parsedEvents?.map((parsedEvent) => (
-	// 	<EventDiv
-	// 		key={parsedEvent.start.minutes}
-	// 		startPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
-	// 		eventTimeSpan={
-	// 			parsedEvent.end.hours * 60 +
-	// 			parsedEvent.end.minutes -
-	// 			(parsedEvent.start.hours * 60 + parsedEvent.start.minutes)
-	// 		}
-	// 		color={getEventColor(parsedEvent.type, theme)}
-	// 	/>
-	// ));
+	const rowDivs = rows.map((row, index) => {
+		const parsedEvents = rows?.[0]?.freeBusy?.map((event) => parseEvent(event));
+		const eventDivs = parsedEvents?.map((parsedEvent) => (
+			<EventDiv
+				key={parsedEvent.start.minutes}
+				startPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
+				eventTimeSpan={
+					parsedEvent.end.hours * 60 +
+					parsedEvent.end.minutes -
+					(parsedEvent.start.hours * 60 + parsedEvent.start.minutes)
+				}
+				color={getEventColor(parsedEvent.type, theme)}
+			/>
+		));
+		return (
+			// TODO: consider using Row with orientation={'horizontal'}
+			// Then we need two rows with orientation 'vertical' (the two columns). The second column
+			// must include position relative in order to correctly draw hour and ticks
+			<div
+				key={`row-${index}`}
+				data-testid={`row-${index}`}
+				style={{
+					height: '2rem',
+					display: 'flex',
+					flexDirection: 'row',
+					flexWrap: 'nowrap',
+					border: '1px solid #d3d3d3'
+				}}
+			>
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center'
+					}}
+					data-testid={`column-0`}
+				>
+					<Chip maxWidth={'10rem'} key={'organizer'} label={`${row.email}`} />
+				</div>
+				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-1`}>
+					{eventDivs}
+					{hourTicks}
+					<MinutesLine
+						dataTestId={'start-mark'}
+						atPosition={startPosition}
+						color={START_DATE_LINE_COLOR}
+					/>
+					<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
+				</div>
+			</div>
+		);
+	});
 
 	return (
 		<div
-			style={{ width: '100%', position: 'relative', height: '2rem', border: '1px solid #d3d3d3' }}
+			style={{ width: '100%', position: 'relative', border: '1px solid #d3d3d3' }}
 			data-testid={'time-table'}
 		>
 			{rowDivs}
-			{hourTicks}
-			<MinutesLine
-				data-testid={'start-mark'}
-				atPosition={startPosition}
-				color={START_DATE_LINE_COLOR}
-			/>
-			<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
-			{hourTicks}
 		</div>
 	);
 };

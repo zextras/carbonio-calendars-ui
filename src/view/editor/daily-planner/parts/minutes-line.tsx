@@ -11,13 +11,16 @@ import { calculatePosition } from '../utils';
 export const MinutesLine = ({
 	atPosition,
 	color,
-	width = '3px'
+	width = '3px',
+	dataTestId
 }: {
 	atPosition: number;
 	color: string;
 	width?: string;
+	dataTestId?: string;
 }): React.JSX.Element => (
 	<div
+		data-testid={dataTestId}
 		style={{
 			width,
 			backgroundColor: color,

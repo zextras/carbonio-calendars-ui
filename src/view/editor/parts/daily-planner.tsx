@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { Chip, Padding, Row } from '@zextras/carbonio-design-system';
+import { Row } from '@zextras/carbonio-design-system';
 
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
@@ -49,7 +49,7 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
 	const allFreeBusy = useAttendeesAvailability(startDate, [senderWithEmail, ...attendees]);
 
-	const attendeesFB: DailyPlannerRow[] = allFreeBusy
+	const allParticipantsFB: DailyPlannerRow[] = allFreeBusy
 		? allFreeBusy.map((attendeeFb) => {
 				const eventsFree = attendeeFb.f.map((event) => ({
 					startDate: event.s,
@@ -73,8 +73,6 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 			})
 		: [];
 
-	const participantName = sender.fullName ?? '';
-
 	return (
 		<Row
 			orientation={'horizontal'}
@@ -82,18 +80,14 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 			mainAlignment={'flex-start'}
 			style={{ flexWrap: 'nowrap' }}
 		>
-			<Row orientation={'vertical'} padding={{ right: '1rem', vertical: '1rem' }}>
-				<Padding top={'2rem'} />
-				<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantName}`} />
-			</Row>
-			<Row orientation={'vertical'} width="fill" padding={{ right: '1rem', vertical: '1rem' }}>
+			<div style={{ width: '100%', position: 'relative' }}>
 				<TimetableHeader />
 				<TimeTable
 					appointmentStartDate={startDate}
 					appointmentEndDate={endDate}
-					rows={attendeesFB}
+					rows={allParticipantsFB}
 				/>
-			</Row>
+			</div>
 		</Row>
 	);
 };
