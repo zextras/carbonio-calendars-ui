@@ -6,15 +6,21 @@
 
 import React from 'react';
 
-import { Chip, Container, Padding, Row, useTheme } from '@zextras/carbonio-design-system';
+import { Chip, Container, Padding, Row, Theme, useTheme } from '@zextras/carbonio-design-system';
 
+import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorEnd, selectEditorStart, selectSender } from '../../../store/selectors/editor';
+import {
+	selectEditorAttendees,
+	selectEditorEnd,
+	selectEditorStart,
+	selectSender
+} from '../../../store/selectors/editor';
 
 type TimeTableProps = {
 	startDate: number;
 	endDate: number;
-	events: Event[];
+	attendeesFB: Array<AttendeeFreeBusy>;
 };
 
 type EventType = 'free' | 'busy' | 'tentative' | 'out-of-office' | 'unknown';
@@ -26,6 +32,8 @@ type Event = {
 };
 type HoursMinutes = { hours: number; minutes: number };
 type ParsedEvent = { type: EventType; start: HoursMinutes; end: HoursMinutes };
+
+type AttendeeFreeBusy = { attendee: string; events: Array<Event> };
 
 function getHourFromDateTime(dateTime: number): HoursMinutes {
 	const date = new Date(dateTime);
@@ -128,15 +136,25 @@ const TimetableHeader = (): React.JSX.Element => {
 		</div>
 	);
 };
-function getRandomColor(): string {
-	const letters = '0123456789ABCDEF';
-	let color = '#';
-	for (let i = 0; i < 6; i++) {
-		color += letters[Math.floor(Math.random() * 16)];
+
+function getEventColor(type: EventType, theme: Theme): string {
+	switch (type) {
+		case 'free':
+			return theme.palette.gray6.regular;
+		case 'busy':
+			return theme.palette.highlight.disabled;
+		case 'tentative':
+			return theme.palette.warning.regular;
+		case 'out-of-office':
+			return theme.palette.primary.active;
+		case 'unknown':
+			return theme.palette.gray4.disabled;
+		default:
+			return theme.palette.success.regular;
 	}
-	return color;
 }
-const TimeTable = ({ startDate, endDate, events }: TimeTableProps): React.JSX.Element => {
+
+const TimeTable = ({ startDate, endDate, attendeesFB }: TimeTableProps): React.JSX.Element => {
 	const { hours: startHours, minutes: startMinutes } = getHourFromDateTime(startDate);
 	const startPosition = startHours * 60 + startMinutes;
 	const { hours: endHours, minutes: endMinutes } = getHourFromDateTime(endDate);
@@ -144,7 +162,7 @@ const TimeTable = ({ startDate, endDate, events }: TimeTableProps): React.JSX.El
 	const theme = useTheme();
 	const START_DATE_LINE_COLOR = theme.palette.success.regular;
 	const END_DATE_LINE_COLOR = theme.palette.error.regular;
-	const parsedEvents = events.map((event) => parseEvent(event));
+	const parsedEvents = attendeesFB?.[0]?.events?.map((event) => parseEvent(event));
 	const hourTicks = Array.from(
 		{ length: 25 },
 		(_, hour): React.JSX.Element => (
@@ -152,7 +170,7 @@ const TimeTable = ({ startDate, endDate, events }: TimeTableProps): React.JSX.El
 		)
 	);
 
-	const eventDivs = parsedEvents.map((parsedEvent) => (
+	const eventDivs = parsedEvents?.map((parsedEvent) => (
 		<EventDiv
 			key={parsedEvent.start.minutes}
 			startPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
@@ -161,7 +179,7 @@ const TimeTable = ({ startDate, endDate, events }: TimeTableProps): React.JSX.El
 				parsedEvent.end.minutes -
 				(parsedEvent.start.hours * 60 + parsedEvent.start.minutes)
 			}
-			color={getRandomColor()}
+			color={getEventColor(parsedEvent.type, theme)}
 		/>
 	));
 
@@ -179,28 +197,39 @@ const TimeTable = ({ startDate, endDate, events }: TimeTableProps): React.JSX.El
 
 export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	const sender = useAppSelector(selectSender(editorId));
+	const senderWithEmail = {
+		...sender,
+		email: sender.address as string
+	};
+
+	const attendees = useAppSelector(selectEditorAttendees(editorId));
 
 	const startDate = useAppSelector(selectEditorStart(editorId)) as number;
 	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
+	const allFreeBusy = useAttendeesAvailability(startDate, [senderWithEmail, ...attendees]);
 
-	// Test event at 12:50 - 12:55 CEST, 11:50 - 11:55 GMT
-	const events: Array<Event> = [
-		{
-			startDate: new Date(2024, 11, 4, 10, 0).getTime(),
-			endDate: new Date(2024, 11, 4, 11, 0).getTime(),
-			type: 'busy'
-		},
-		{
-			startDate: new Date(2024, 11, 4, 12, 0).getTime(),
-			endDate: new Date(2024, 11, 4, 12, 45).getTime(),
-			type: 'busy'
-		},
-		{
-			startDate: new Date(2024, 11, 4, 12, 15).getTime(),
-			endDate: new Date(2024, 11, 4, 12, 30).getTime(),
-			type: 'busy'
-		}
-	];
+	const attendeesFB = allFreeBusy?.map((attendeeFb) => {
+		const eventsFree = attendeeFb.f.map((event) => ({
+			startDate: event.s,
+			endDate: event.e,
+			type: 'free' as EventType
+		}));
+		const eventsBusy = attendeeFb.b.map((event) => ({
+			startDate: event.s,
+			endDate: event.e,
+			type: 'busy' as EventType
+		}));
+		const eventsTentative = attendeeFb.t.map((event) => ({
+			startDate: event.s,
+			endDate: event.e,
+			type: 'tentative' as EventType
+		}));
+		return {
+			attendee: attendeeFb.email,
+			events: [...eventsFree, ...eventsBusy, ...eventsTentative]
+		};
+	});
+
 	const participantName = sender.fullName ?? '';
 
 	return (
@@ -216,7 +245,7 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 			</Row>
 			<Row orientation={'vertical'} width="fill" padding={{ right: '1rem', vertical: '1rem' }}>
 				<TimetableHeader />
-				<TimeTable startDate={startDate} endDate={endDate} events={events} />
+				<TimeTable startDate={startDate} endDate={endDate} attendeesFB={attendeesFB ?? []} />
 			</Row>
 		</Row>
 	);
