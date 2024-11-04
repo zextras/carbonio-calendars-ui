@@ -20,7 +20,8 @@ import {
 	ModalFooter,
 	ModalBody,
 	Divider,
-	Text
+	Text,
+	Container
 } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
 import { every, find, forEach, map, reduce } from 'lodash';
@@ -165,8 +166,8 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 		[calendars, item]
 	);
 
-	const checked = every(calendarsInGroup, (cal) => cal.checked);
 	const isGroupEmpty = useMemo(() => !item.calendarId?.length, [item.calendarId?.length]);
+	const checked = isGroupEmpty ? false : every(calendarsInGroup, (cal) => cal.checked);
 
 	const onClick = useCallback((): void => {
 		if (isGroupEmpty) return;
@@ -196,18 +197,6 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 		});
 	}, [checked, dispatch, end, isGroupEmpty, item.calendarId, query, start]);
 
-	const accordionItem = useMemo(
-		() =>
-			({
-				...item,
-				label: item.name,
-				icon: checked ? 'Calendar2' : 'CalendarOutline',
-				iconColor: CALENDARS_STANDARD_COLORS[0].color,
-				textProps: { size: 'small' }
-			}) as AccordionItemType,
-		[checked, item]
-	);
-
 	const emptyGroupIcon = useMemo(() => {
 		const tooltipText = t('label.group_is_empty', 'This group is empty');
 		return RowWithIcon('AlertCircleOutline', 'warning', tooltipText);
@@ -216,9 +205,25 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 	return (
 		<GroupContextMenuItem item={item}>
 			<Row onClick={onClick}>
-				<Padding left="small" />
-				<Tooltip label={accordionItem.label} placement="right" maxWidth="100%">
-					<AccordionItem item={accordionItem} />
+				<Tooltip label={item.name} placement="right" maxWidth="100%">
+					<Container
+						orientation="horizontal"
+						mainAlignment="flex-start"
+						padding={{ all: 'small' }}
+						height="2.5rem"
+						style={{ minWidth: 0, flexBasis: 0, flexGrow: 1 }}
+					>
+						<Padding left="small" />
+						<Padding right="small">
+							<Icon
+								icon={checked ? 'Calendar2' : 'CalendarOutline'}
+								color={CALENDARS_STANDARD_COLORS[0].color}
+								size="large"
+								disabled={isGroupEmpty}
+							/>
+						</Padding>
+						<Text size="small">{item.name}</Text>
+					</Container>
 				</Tooltip>
 				{isGroupEmpty && emptyGroupIcon}
 			</Row>
