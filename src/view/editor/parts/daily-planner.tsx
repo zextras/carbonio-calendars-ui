@@ -142,7 +142,7 @@ function getEventColor(type: EventType, theme: Theme): string {
 		case 'free':
 			return theme.palette.gray6.regular;
 		case 'busy':
-			return theme.palette.highlight.disabled;
+			return theme.palette.highlight.regular;
 		case 'tentative':
 			return theme.palette.warning.regular;
 		case 'out-of-office':
