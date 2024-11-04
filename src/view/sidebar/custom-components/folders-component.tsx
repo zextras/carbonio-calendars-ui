@@ -197,23 +197,24 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 		});
 	}, [checked, dispatch, end, isGroupEmpty, item.calendarId, query, start]);
 
-	const emptyGroupIcon = useMemo(() => {
-		const tooltipText = t('label.group_is_empty', 'This group is empty');
-		return RowWithIcon('AlertCircleOutline', 'warning', tooltipText);
-	}, [t]);
+	const emptyGroupTooltip = t('label.group_is_empty', 'This group is empty');
+	const emptyGroupIcon = useMemo(
+		() => RowWithIcon('AlertCircleOutline', 'warning', emptyGroupTooltip),
+		[emptyGroupTooltip]
+	);
 
 	return (
 		<GroupContextMenuItem item={item}>
 			<Row onClick={onClick}>
-				<Tooltip label={item.name} placement="right" maxWidth="100%">
-					<Container
-						orientation="horizontal"
-						mainAlignment="flex-start"
-						padding={{ all: 'small' }}
-						height="2.5rem"
-						style={{ minWidth: 0, flexBasis: 0, flexGrow: 1 }}
-					>
-						<Padding left="small" />
+				<Container
+					orientation="horizontal"
+					mainAlignment="flex-start"
+					padding={{ all: 'small' }}
+					height="2.5rem"
+					style={{ minWidth: 0, flexBasis: 0, flexGrow: 1 }}
+				>
+					<Padding left="small" />
+					<Tooltip label={isGroupEmpty ? emptyGroupTooltip : item.name}>
 						<Padding right="small">
 							<Icon
 								icon={checked ? 'Calendar2' : 'CalendarOutline'}
@@ -222,9 +223,13 @@ const RootGroupChildren = ({ item }: { item: CalendarGroup }): React.JSX.Element
 								disabled={isGroupEmpty}
 							/>
 						</Padding>
-						<Text size="small">{item.name}</Text>
-					</Container>
-				</Tooltip>
+					</Tooltip>
+					<Tooltip label={item.name} placement="right" maxWidth="100%">
+						<Container height="fill" width="fill" crossAlignment="flex-start">
+							<Text size="small">{item.name}</Text>
+						</Container>
+					</Tooltip>
+				</Container>
 				{isGroupEmpty && emptyGroupIcon}
 			</Row>
 		</GroupContextMenuItem>
