@@ -50,10 +50,11 @@ export const TimeTable = ({
 		<div
 			style={{ width: '100%', position: 'relative', height: '2rem', border: '1px solid #d3d3d3' }}
 		>
-			{hourTicks}
 			{eventDivs}
+			{hourTicks}
 			<MinutesLine atPosition={startPosition} color={START_DATE_LINE_COLOR} />
 			<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
+			{hourTicks}
 		</div>
 	);
 };
