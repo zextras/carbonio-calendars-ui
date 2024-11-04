@@ -8,10 +8,9 @@ import React from 'react';
 
 import { useTheme } from '@zextras/carbonio-design-system';
 
-import { EventDiv } from './parts/event-div';
 import { MinutesLine } from './parts/minutes-line';
 import { TimeTableProps } from './types';
-import { getEventColor, getHourFromDateTime, parseEvent } from './utils';
+import { getHourFromDateTime } from './utils';
 
 export const TimeTable = ({
 	appointmentStartDate,
@@ -25,7 +24,6 @@ export const TimeTable = ({
 	const theme = useTheme();
 	const START_DATE_LINE_COLOR = theme.palette.success.regular;
 	const END_DATE_LINE_COLOR = theme.palette.error.regular;
-	const parsedEvents = rows?.[0]?.freeBusy?.map((event) => parseEvent(event));
 	const hourTicks = Array.from(
 		{ length: 25 },
 		(_, hour): React.JSX.Element => (
@@ -33,26 +31,38 @@ export const TimeTable = ({
 		)
 	);
 
-	const eventDivs = parsedEvents?.map((parsedEvent) => (
-		<EventDiv
-			key={parsedEvent.start.minutes}
-			startPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
-			eventTimeSpan={
-				parsedEvent.end.hours * 60 +
-				parsedEvent.end.minutes -
-				(parsedEvent.start.hours * 60 + parsedEvent.start.minutes)
-			}
-			color={getEventColor(parsedEvent.type, theme)}
-		/>
+	const rowDivs = rows.map((row, index) => (
+		<div key={`row-${index}`} data-testid={`row-${index}`}>
+			{row.email}
+		</div>
 	));
+
+	// const parsedEvents = rows?.[0]?.freeBusy?.map((event) => parseEvent(event));
+	// const eventDivs = parsedEvents?.map((parsedEvent) => (
+	// 	<EventDiv
+	// 		key={parsedEvent.start.minutes}
+	// 		startPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
+	// 		eventTimeSpan={
+	// 			parsedEvent.end.hours * 60 +
+	// 			parsedEvent.end.minutes -
+	// 			(parsedEvent.start.hours * 60 + parsedEvent.start.minutes)
+	// 		}
+	// 		color={getEventColor(parsedEvent.type, theme)}
+	// 	/>
+	// ));
 
 	return (
 		<div
 			style={{ width: '100%', position: 'relative', height: '2rem', border: '1px solid #d3d3d3' }}
+			data-testid={'time-table'}
 		>
-			{eventDivs}
+			{rowDivs}
 			{hourTicks}
-			<MinutesLine atPosition={startPosition} color={START_DATE_LINE_COLOR} />
+			<MinutesLine
+				data-testid={'start-mark'}
+				atPosition={startPosition}
+				color={START_DATE_LINE_COLOR}
+			/>
 			<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
 			{hourTicks}
 		</div>
