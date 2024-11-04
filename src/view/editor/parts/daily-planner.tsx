@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { Chip, Container, Padding, Row, Theme, useTheme } from '@zextras/carbonio-design-system';
+import { Chip, Padding, Row } from '@zextras/carbonio-design-system';
 
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
@@ -16,111 +16,10 @@ import {
 	selectEditorStart,
 	selectSender
 } from '../../../store/selectors/editor';
-
-type TimeTableProps = {
-	startDate: number;
-	endDate: number;
-	attendeesFB: Array<AttendeeFreeBusy>;
-};
-
-type EventType = 'free' | 'busy' | 'tentative' | 'out-of-office' | 'unknown';
-
-type Event = {
-	type: EventType;
-	startDate: number;
-	endDate: number;
-};
-type HoursMinutes = { hours: number; minutes: number };
-type ParsedEvent = { type: EventType; start: HoursMinutes; end: HoursMinutes };
-
-type AttendeeFreeBusy = { attendee: string; events: Array<Event> };
-
-function getHourFromDateTime(dateTime: number): HoursMinutes {
-	const date = new Date(dateTime);
-	return { hours: date.getHours(), minutes: date.getMinutes() };
-}
-
-function calculatePosition(minutes: number): string {
-	const width = (minutes * 100) / (60 * 24);
-	return `${width}%`;
-}
-
-function calculateEventWidth(minutes: number): string {
-	const width = (minutes * 100) / (60 * 24);
-	return `${width}%`;
-}
-
-function parseEvent(event: Event): ParsedEvent {
-	return {
-		type: event.type,
-		start: getHourFromDateTime(event.startDate),
-		end: getHourFromDateTime(event.endDate)
-	};
-}
-const HourLabel = ({
-	label,
-	atPosition
-}: {
-	atPosition: number;
-	label: string;
-}): React.JSX.Element => (
-	<Container
-		style={{
-			width: '3px',
-			height: '2rem',
-			borderRadius: 'none',
-			float: 'left',
-			position: 'absolute',
-			left: calculatePosition(atPosition)
-		}}
-	>
-		{label}
-	</Container>
-);
-
-const MinutesLine = ({
-	atPosition,
-	color,
-	width = '3px'
-}: {
-	atPosition: number;
-	color: string;
-	width?: string;
-}): React.JSX.Element => (
-	<div
-		style={{
-			width,
-			backgroundColor: color,
-			height: '2rem',
-			borderRadius: 'none',
-			float: 'left',
-			position: 'absolute',
-			left: calculatePosition(atPosition)
-		}}
-	/>
-);
-
-const EventDiv = ({
-	startPosition,
-	eventTimeSpan,
-	color
-}: {
-	startPosition: number;
-	eventTimeSpan: number;
-	color: string;
-}): React.JSX.Element => (
-	<div
-		style={{
-			width: calculateEventWidth(eventTimeSpan),
-			backgroundColor: color,
-			height: '2rem',
-			// borderRadius: 'none',
-			float: 'left',
-			position: 'absolute',
-			left: calculatePosition(startPosition)
-		}}
-	/>
-);
+import { DAILY_PLANNER_FREE_BUSY_TYPE } from '../daily-planner/constants';
+import { HourLabel } from '../daily-planner/parts/hour-label';
+import { TimeTable } from '../daily-planner/time-table';
+import { DailyPlannerRow } from '../daily-planner/types';
 
 const TimetableHeader = (): React.JSX.Element => {
 	const hours = [
@@ -133,64 +32,6 @@ const TimetableHeader = (): React.JSX.Element => {
 			{hours.map((label, hour) => (
 				<HourLabel key={hour} label={label} atPosition={60 * hour} />
 			))}
-		</div>
-	);
-};
-
-function getEventColor(type: EventType, theme: Theme): string {
-	switch (type) {
-		case 'free':
-			return theme.palette.gray6.regular;
-		case 'busy':
-			return theme.palette.highlight.regular;
-		case 'tentative':
-			return theme.palette.warning.regular;
-		case 'out-of-office':
-			return theme.palette.primary.active;
-		case 'unknown':
-			return theme.palette.gray4.disabled;
-		default:
-			return theme.palette.success.regular;
-	}
-}
-
-const TimeTable = ({ startDate, endDate, attendeesFB }: TimeTableProps): React.JSX.Element => {
-	const { hours: startHours, minutes: startMinutes } = getHourFromDateTime(startDate);
-	const startPosition = startHours * 60 + startMinutes;
-	const { hours: endHours, minutes: endMinutes } = getHourFromDateTime(endDate);
-	const endPosition = endHours * 60 + endMinutes;
-	const theme = useTheme();
-	const START_DATE_LINE_COLOR = theme.palette.success.regular;
-	const END_DATE_LINE_COLOR = theme.palette.error.regular;
-	const parsedEvents = attendeesFB?.[0]?.events?.map((event) => parseEvent(event));
-	const hourTicks = Array.from(
-		{ length: 25 },
-		(_, hour): React.JSX.Element => (
-			<MinutesLine key={hour} width={'1px'} atPosition={60 * hour} color={'#d3d3d3'} />
-		)
-	);
-
-	const eventDivs = parsedEvents?.map((parsedEvent) => (
-		<EventDiv
-			key={parsedEvent.start.minutes}
-			startPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
-			eventTimeSpan={
-				parsedEvent.end.hours * 60 +
-				parsedEvent.end.minutes -
-				(parsedEvent.start.hours * 60 + parsedEvent.start.minutes)
-			}
-			color={getEventColor(parsedEvent.type, theme)}
-		/>
-	));
-
-	return (
-		<div
-			style={{ width: '100%', position: 'relative', height: '2rem', border: '1px solid #d3d3d3' }}
-		>
-			{hourTicks}
-			{eventDivs}
-			<MinutesLine atPosition={startPosition} color={START_DATE_LINE_COLOR} />
-			<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
 		</div>
 	);
 };
@@ -208,27 +49,29 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
 	const allFreeBusy = useAttendeesAvailability(startDate, [senderWithEmail, ...attendees]);
 
-	const attendeesFB = allFreeBusy?.map((attendeeFb) => {
-		const eventsFree = attendeeFb.f.map((event) => ({
-			startDate: event.s,
-			endDate: event.e,
-			type: 'free' as EventType
-		}));
-		const eventsBusy = attendeeFb.b.map((event) => ({
-			startDate: event.s,
-			endDate: event.e,
-			type: 'busy' as EventType
-		}));
-		const eventsTentative = attendeeFb.t.map((event) => ({
-			startDate: event.s,
-			endDate: event.e,
-			type: 'tentative' as EventType
-		}));
-		return {
-			attendee: attendeeFb.email,
-			events: [...eventsFree, ...eventsBusy, ...eventsTentative]
-		};
-	});
+	const attendeesFB: DailyPlannerRow[] = allFreeBusy
+		? allFreeBusy.map((attendeeFb) => {
+				const eventsFree = attendeeFb.f.map((event) => ({
+					startDate: event.s,
+					endDate: event.e,
+					type: DAILY_PLANNER_FREE_BUSY_TYPE.free
+				}));
+				const eventsBusy = attendeeFb.b.map((event) => ({
+					startDate: event.s,
+					endDate: event.e,
+					type: DAILY_PLANNER_FREE_BUSY_TYPE.busy
+				}));
+				const eventsTentative = attendeeFb.t.map((event) => ({
+					startDate: event.s,
+					endDate: event.e,
+					type: DAILY_PLANNER_FREE_BUSY_TYPE.tentative
+				}));
+				return {
+					email: attendeeFb.email,
+					freeBusy: [...eventsFree, ...eventsBusy, ...eventsTentative]
+				};
+			})
+		: [];
 
 	const participantName = sender.fullName ?? '';
 
@@ -245,7 +88,11 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 			</Row>
 			<Row orientation={'vertical'} width="fill" padding={{ right: '1rem', vertical: '1rem' }}>
 				<TimetableHeader />
-				<TimeTable startDate={startDate} endDate={endDate} attendeesFB={attendeesFB ?? []} />
+				<TimeTable
+					appointmentStartDate={startDate}
+					appointmentEndDate={endDate}
+					rows={attendeesFB}
+				/>
 			</Row>
 		</Row>
 	);
