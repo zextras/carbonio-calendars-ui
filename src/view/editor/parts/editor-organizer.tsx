@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { Select } from '@zextras/carbonio-design-system';
+import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { find, map, upperFirst } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -38,7 +38,7 @@ export const EditorOrganizer = ({ editorId }: EditorProps): ReactElement | null 
 		};
 	});
 
-	const onChange = useCallback(
+	const onChange = useCallback<SingleSelectionOnChange>(
 		(e) => {
 			const newValue = find(identities, ['value', e]) ?? sender;
 			dispatch(editSender({ id: editorId, sender: newValue }));

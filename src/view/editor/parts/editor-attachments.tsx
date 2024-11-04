@@ -13,7 +13,7 @@ import {
 	selectEditorTitle
 } from '../../../store/selectors/editor';
 import { editEditorAttachments } from '../../../store/slices/editor-slice';
-import { AttachmentsBlock } from '../../event-panel-view/attachments-part';
+import { AttachmentsBlock } from '../../event-panel-view/attachments-block';
 
 type EditorAttachmentsProps = {
 	editorId: string;
@@ -27,7 +27,7 @@ export const EditorAttachments = ({ editorId }: EditorAttachmentsProps): ReactEl
 	const dispatch = useAppDispatch();
 
 	const onAttachmentsChange = useCallback(
-		(attach, attachments) => {
+		(attach: unknown, attachments: any[]) => {
 			dispatch(
 				editEditorAttachments({
 					id: editorId,

@@ -3,15 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Input } from '@zextras/carbonio-design-system';
 import { isNaN, isNumber } from 'lodash';
 
 type IntervalInputProps = {
 	label: string;
-	value: number | '';
-	setValue: React.Dispatch<React.SetStateAction<number | ''>>;
+	value: string;
+	setValue: React.Dispatch<React.SetStateAction<string>>;
 	onChange: (ev: number) => void;
 	disabled: boolean;
 };
@@ -24,7 +24,7 @@ export const IntervalInput = ({
 	disabled
 }: IntervalInputProps): ReactElement => {
 	const onIntervalChange = useCallback(
-		(ev) => {
+		(ev: React.ChangeEvent<HTMLInputElement>) => {
 			if (ev.target.value === '') {
 				onChange(1);
 				setValue(ev.target.value);
@@ -35,13 +35,22 @@ export const IntervalInput = ({
 					!isNaN(convertedInputToNumber) &&
 					convertedInputToNumber >= 0
 				) {
-					setValue(convertedInputToNumber);
+					setValue(ev.target.value);
 					onChange(convertedInputToNumber);
 				}
 			}
 		},
 		[onChange, setValue]
 	);
+
+	const hasError = useMemo(() => {
+		const convertedValue = parseInt(value, 10);
+		if (!isNumber(convertedValue) || isNaN(convertedValue)) {
+			return true;
+		}
+		return convertedValue < 1 || convertedValue > 99;
+	}, [value]);
+
 	return (
 		<Input
 			label={label}
@@ -49,7 +58,7 @@ export const IntervalInput = ({
 			backgroundColor="gray5"
 			disabled={disabled}
 			value={value}
-			hasError={(isNumber(value) && !isNaN(value) && (value < 1 || value > 99)) || !isNumber(value)}
+			hasError={hasError}
 		/>
 	);
 };

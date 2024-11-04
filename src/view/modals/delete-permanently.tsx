@@ -50,7 +50,7 @@ export const DeletePermanently = ({
 					context.createSnackbar({
 						key: `delete-permanently`,
 						replace: true,
-						type: 'success',
+						severity: 'success',
 						hideButton: true,
 						label: t(
 							'message.snackbar.appointment_permanently_deleted_succesfully',
@@ -64,7 +64,7 @@ export const DeletePermanently = ({
 					context.createSnackbar({
 						key: `delete-permanently`,
 						replace: true,
-						type: 'error',
+						severity: 'error',
 						hideButton: true,
 						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000

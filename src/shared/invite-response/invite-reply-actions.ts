@@ -51,7 +51,7 @@ export const sendResponse = ({
 			createSnackbar({
 				key: `invite_${action}`,
 				replace: true,
-				type: 'info',
+				severity: 'info',
 				label: snackbarLabel,
 				autoHideTimeout: 3000
 			});
@@ -70,7 +70,7 @@ export const sendResponse = ({
 			createSnackbar({
 				key: `invite_${action}_error`,
 				replace: true,
-				type: 'error',
+				severity: 'error',
 				label: t('label.error_try_again', 'Something went wrong, please try again'),
 				autoHideTimeout: 3000
 			});

@@ -46,7 +46,7 @@ describe('calendar-actions-fn', () => {
 			});
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
-					type: 'info',
+					severity: 'info',
 					label: 'message.snackbar.calendar_moved_to_root_folder'
 				})
 			);
@@ -72,7 +72,7 @@ describe('calendar-actions-fn', () => {
 			});
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
-					type: 'error',
+					severity: 'error',
 					label: 'label.error_try_again'
 				})
 			);
@@ -114,7 +114,7 @@ describe('calendar-actions-fn', () => {
 			});
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
-					type: 'info',
+					severity: 'info',
 					label: 'message.snackbar.shared_calendar_removed'
 				})
 			);
@@ -140,7 +140,7 @@ describe('calendar-actions-fn', () => {
 			});
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
-					type: 'error',
+					severity: 'error',
 					label: 'label.error_try_again'
 				})
 			);

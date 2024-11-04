@@ -19,6 +19,7 @@ let schedule: WorkWeekDay[] = [];
 export interface WorkViewProps {
 	date: Date;
 	workingSchedule: WorkWeekDay[];
+	enableAutoScroll?: boolean;
 }
 
 export interface WorkWeekBounds {
@@ -36,8 +37,7 @@ export interface WorkViewComponent extends React.FC<WorkViewProps> {
 }
 
 export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement => {
-	const { date, workingSchedule } = props;
-
+	const { date, workingSchedule, enableAutoScroll = true } = props;
 	// Looks horrible but there is no other way to pass and sync the workingSchedule
 	schedule = useMemo(() => workingSchedule, [workingSchedule]);
 	const [min, max, range] = useMemo(
@@ -49,7 +49,9 @@ export const WorkView: WorkViewComponent = (props: WorkViewProps): ReactElement 
 		[date]
 	);
 
-	return <TimeGrid {...props} range={range} max={max} min={min} />;
+	return (
+		<TimeGrid {...props} range={range} max={max} min={min} enableAutoScroll={enableAutoScroll} />
+	);
 };
 
 // Called by BigCalendar on week change

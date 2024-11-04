@@ -59,7 +59,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 	const [pickerValue, setPickerValue] = useState(initialPickerValue);
 
 	const onInputValueChange = useCallback(
-		(ev) => {
+		(ev: React.ChangeEvent<HTMLInputElement>) => {
 			if (ev.target.value === '') {
 				setNewEndValue({
 					count: { num: 1 }
@@ -87,7 +87,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 	);
 
 	const onRadioValueChange = useCallback(
-		(ev) => {
+		(ev?: string) => {
 			switch (ev) {
 				case RADIO_VALUES.NO_END_DATE:
 					setNewEndValue(undefined);
@@ -124,10 +124,10 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 		[radioValue]
 	);
 	const onDateChange = useCallback(
-		(d) => {
-			if (!isDatePickerDisabled) {
+		(d: Date | null) => {
+			if (!isDatePickerDisabled && d) {
 				const fullData = moment(d.valueOf()).format('YYYYMMDD');
-				setPickerValue(d.valueOf());
+				setPickerValue(d);
 				setNewEndValue({ until: { d: fullData } });
 			}
 		},

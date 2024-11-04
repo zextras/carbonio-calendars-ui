@@ -6,6 +6,15 @@
 
 import { ParticipantRoleType } from '../../constants/api';
 
+// TODO: avoid using it as it is not following the correct implementation. The attendee editor field needs a refactor which will deprecate this type
+export type EditorChipAttendees = {
+	label?: string;
+	email: string;
+	firstName?: string;
+	lastName?: string;
+	ptst?: ParticipationStatus;
+};
+
 // role = CHAir, REQuired, OPTional, NON-participant (ie informational)
 export type ParticipationRoles = ParticipantRoleType;
 export type ParticipationStatus = 'TE' | 'AC' | 'DE' | 'NE' | 'DG' | 'CO' | 'IN' | 'WE' | 'DF';

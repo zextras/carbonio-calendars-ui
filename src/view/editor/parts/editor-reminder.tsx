@@ -5,7 +5,15 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { Select, Icon, Row, Container, Text, SelectProps } from '@zextras/carbonio-design-system';
+import {
+	Select,
+	Icon,
+	Row,
+	Container,
+	Text,
+	SelectProps,
+	SingleSelectionOnChange
+} from '@zextras/carbonio-design-system';
 import type { TFunction } from 'i18next';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -215,16 +223,18 @@ export const EditorReminder = ({ editorId }: { editorId: string }): ReactElement
 	const dispatch = useAppDispatch();
 
 	const getNewSelection = useCallback(
-		(e) => find(reminderItems, ['value', e]) ?? reminderItems[0],
+		(e: string | undefined) => find(reminderItems, ['value', e]) ?? reminderItems[0],
 		[reminderItems]
 	);
 
 	const [selected, setSelected] = useState<SelectValue>(undefined);
 
-	const onChange = useCallback(
+	const onChange = useCallback<SingleSelectionOnChange>(
 		(e) => {
-			dispatch(editEditorReminder({ id: editorId, reminder: e }));
-			setSelected(getNewSelection(e));
+			if (e) {
+				dispatch(editEditorReminder({ id: editorId, reminder: e }));
+				setSelected(getNewSelection(e));
+			}
 		},
 		[dispatch, editorId, getNewSelection]
 	);

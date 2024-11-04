@@ -97,7 +97,7 @@ export const SharesModal: FC<{ calendars: ResFolder[]; onClose: () => void }> = 
 				createSnackbar({
 					key: `mountpoint`,
 					replace: true,
-					type: 'success',
+					severity: 'success',
 					label: t(
 						'mountpoint_success',
 						'The share has been added successfully to the Shared Calendars section'
@@ -111,7 +111,7 @@ export const SharesModal: FC<{ calendars: ResFolder[]; onClose: () => void }> = 
 				createSnackbar({
 					key: `mountpoint`,
 					replace: true,
-					type: 'warning',
+					severity: 'warning',
 					label: t('mountpoint_warning', {
 						failed: failsLength,
 						total: totalLength,
@@ -125,7 +125,7 @@ export const SharesModal: FC<{ calendars: ResFolder[]; onClose: () => void }> = 
 				createSnackbar({
 					key: `mountpoint`,
 					replace: true,
-					type: 'error',
+					severity: 'error',
 					label: t(
 						'mountpoint_error',
 						"The share couldn't be added to the Shared Calendars section"

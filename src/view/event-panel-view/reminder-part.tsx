@@ -31,7 +31,7 @@ export const ReminderPart = ({
 	const [t] = useTranslation();
 
 	const getMinuteLabel = useCallback(
-		(count) =>
+		(count: number) =>
 			t('reminder.minute_before', {
 				count,
 				defaultValue_one: '{{count}} minute before',
@@ -41,7 +41,7 @@ export const ReminderPart = ({
 	);
 
 	const getHourLabel = useCallback(
-		(count) =>
+		(count: number) =>
 			t('reminder.hour_before', {
 				count,
 				defaultValue_one: '{{count}} hour before',
@@ -51,7 +51,7 @@ export const ReminderPart = ({
 	);
 
 	const getDayLabel = useCallback(
-		(count) =>
+		(count: number) =>
 			t('reminder.day_before', {
 				count,
 				defaultValue_one: '{{count}} day before',
@@ -61,7 +61,7 @@ export const ReminderPart = ({
 	);
 
 	const setSnooze = useCallback(
-		(time) => {
+		(time: string) => {
 			const editorInvite = {
 				...invite,
 				alarmValue: time

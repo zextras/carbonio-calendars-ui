@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useContext, useEffect, useMemo } from 'react';
 
-import { Select } from '@zextras/carbonio-design-system';
+import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -30,9 +30,11 @@ const FrequencySelect = (): ReactElement => {
 		}
 	}, [context, initialValue, repetitionItems]);
 
-	const onChange = useCallback(
+	const onChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
-			context?.setFrequency?.(ev);
+			if (ev) {
+				context?.setFrequency?.(ev);
+			}
 		},
 		[context]
 	);

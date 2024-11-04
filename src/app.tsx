@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { lazy, useEffect, Suspense } from 'react';
+import React, { lazy, useEffect, Suspense, useMemo } from 'react';
 
 import { ModalManager } from '@zextras/carbonio-design-system';
 import {
@@ -18,7 +18,8 @@ import {
 	ACTION_TYPES,
 	registerFunctions,
 	SearchViewProps,
-	SecondaryBarComponentProps
+	SecondaryBarComponentProps,
+	NewAction
 } from '@zextras/carbonio-shell-ui';
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { useTranslation } from 'react-i18next';
@@ -140,21 +141,26 @@ const AppRegistrations = (): null => {
 		});
 	}, [t]);
 
+	const newAction = useMemo(
+		(): NewAction => ({
+			id: 'new-appointment',
+			label: t('label.new_appointment', 'New Appointment'),
+			icon: 'CalendarModOutline',
+			execute: onClickNewButton,
+			disabled: false,
+			group: CALENDAR_APP_ID,
+			primary: true
+		}),
+		[onClickNewButton, t]
+	);
+
 	useEffect(() => {
 		registerFunctions({
 			id: CalendarIntegrations.CREATE_APPOINTMENT,
 			fn: createAppointmentIntegration(dispatch, calendars) as AnyFunction
 		});
-		registerActions({
-			action: () => ({
-				id: 'new-appointment',
-				label: t('label.new_appointment', 'New Appointment'),
-				icon: 'CalendarModOutline',
-				onClick: onClickNewButton,
-				disabled: false,
-				group: CALENDAR_APP_ID,
-				primary: true
-			}),
+		registerActions<NewAction>({
+			action: () => newAction,
 			id: 'new-appointment',
 			type: ACTION_TYPES.NEW
 		});
@@ -162,7 +168,7 @@ const AppRegistrations = (): null => {
 			id: 'invites-reply',
 			component: InviteResponseComp
 		});
-	}, [calendars, dispatch, onClickNewButton, t]);
+	}, [calendars, dispatch, newAction]);
 
 	return null;
 };

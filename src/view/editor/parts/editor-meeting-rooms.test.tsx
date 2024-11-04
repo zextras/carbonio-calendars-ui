@@ -78,12 +78,10 @@ describe('Editor meeting rooms', () => {
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
-		await act(async () => {
-			await user.type(screen.getByText('Meeting room'), 'resource');
-		});
+		await user.type(screen.getByText('Meeting room'), 'resource');
 
-		act(() => {
-			jest.runOnlyPendingTimers();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
@@ -114,20 +112,19 @@ describe('Editor meeting rooms', () => {
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
-		await act(async () => {
-			await user.type(screen.getByText('Meeting room'), 'resource');
-		});
+		await user.type(screen.getByText('Meeting room'), 'resource');
 
-		act(() => {
-			jest.runOnlyPendingTimers();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
 		});
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
-		await act(async () => {
-			await user.click(within(dropdown).getByText(items[0].label));
-		});
+		await user.click(within(dropdown).getByText(items[0].label));
 		expect(dropdown).not.toBeInTheDocument();
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
+		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
 
@@ -153,19 +150,20 @@ describe('Editor meeting rooms', () => {
 		);
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
-		await act(async () => {
-			await user.type(screen.getByText('Meeting room'), 'resource');
-		});
-
-		act(() => {
-			jest.runOnlyPendingTimers();
-		});
-
-		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await user.type(screen.getByText('Meeting room'), 'resource');
 
 		await act(async () => {
-			await user.keyboard('[Enter]');
+			await jest.advanceTimersToNextTimerAsync();
 		});
+
+		const dropdown = screen.getByTestId(TEST_SELECTORS.DROPDOWN);
+
+		await user.keyboard('[Enter]');
+
+		await act(async () => {
+			await jest.advanceTimersToNextTimerAsync();
+		});
+
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});

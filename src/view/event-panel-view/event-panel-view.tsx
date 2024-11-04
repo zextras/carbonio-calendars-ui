@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AttachmentsBlock } from './attachments-part';
+import { AttachmentsBlock } from './attachments-block';
 import { DetailsPart } from './details-part';
 import { MessagePart } from './message-part';
 import { ParticipantsPart } from './participants-part';
@@ -36,6 +36,7 @@ import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { extractBody } from '../../commons/body-message-renderer';
 import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
+import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
@@ -43,7 +44,6 @@ import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
 import { PanelView } from '../../types/actions';
-import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
 import { ExceptionReference } from '../../types/store/appointments';

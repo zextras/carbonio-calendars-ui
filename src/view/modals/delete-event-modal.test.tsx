@@ -7,7 +7,7 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 
 import { DeleteEventModal } from './delete-event-modal';
 import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
@@ -252,25 +252,23 @@ describe('delete event modal', () => {
 							}
 						);
 
-						user.click(
+						await user.click(
 							screen.getByRole('button', {
 								name: 'label.delete'
 							})
 						);
 
-						act(() => {
-							jest.advanceTimersByTime(6000);
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
 						});
 
-						await waitFor(() =>
-							expect(spy).toHaveBeenCalledWith(
-								'CancelAppointment',
-								expect.objectContaining({
-									m: expect.objectContaining({
-										e: [{ a: participantEmail, p: participantFirstName, t: 'f' }]
-									})
+						expect(spy).toHaveBeenCalledWith(
+							'CancelAppointment',
+							expect.objectContaining({
+								m: expect.objectContaining({
+									e: [{ a: participantEmail, p: participantFirstName, t: 'f' }]
 								})
-							)
+							})
 						);
 						jest.clearAllMocks();
 					});
@@ -334,13 +332,11 @@ describe('delete event modal', () => {
 					expect(composerSpy).toHaveBeenCalled();
 					expect(composerSpy).toHaveBeenCalledWith('compose');
 
-					await waitFor(() => {
-						user.click(
-							screen.getByRole('button', {
-								name: /action\.edit_message/i
-							})
-						);
-					});
+					await user.click(
+						screen.getByRole('button', {
+							name: /action\.edit_message/i
+						})
+					);
 
 					expect(composer).toHaveBeenCalled();
 				});
@@ -363,13 +359,11 @@ describe('delete event modal', () => {
 						{ store }
 					);
 
-					await waitFor(() => {
-						user.click(
-							screen.getByRole('button', {
-								name: /action\.send_cancellation/i
-							})
-						);
-					});
+					await user.click(
+						screen.getByRole('button', {
+							name: /action\.send_cancellation/i
+						})
+					);
 					expect(spy).toHaveBeenCalledWith(
 						'CancelAppointment',
 						expect.objectContaining({
@@ -440,13 +434,11 @@ describe('delete event modal', () => {
 						{ store }
 					);
 
-					await waitFor(() => {
-						user.click(
-							screen.getByRole('button', {
-								name: /label\.delete/i
-							})
-						);
-					});
+					await user.click(
+						screen.getByRole('button', {
+							name: /label\.delete/i
+						})
+					);
 
 					const newStore =
 						store.getState().appointments.appointments[singleEventAsOrganizer.resource.id];
@@ -506,17 +498,13 @@ describe('delete event modal', () => {
 					{ store }
 				);
 
-				await waitFor(() => {
-					user.click(screen.getByTestId('icon: Square'));
-				});
+				await user.click(screen.getByTestId('icon: Square'));
 
-				await waitFor(() => {
-					user.click(
-						screen.getByRole('button', {
-							name: /label\.delete/i
-						})
-					);
-				});
+				await user.click(
+					screen.getByRole('button', {
+						name: /label\.delete/i
+					})
+				);
 
 				expect(spy).toHaveBeenCalledWith(
 					'CancelAppointment',
@@ -556,23 +544,19 @@ describe('delete event modal', () => {
 					{ store }
 				);
 
-				await waitFor(() => {
-					user.click(screen.getByTestId('icon: Square'));
-				});
+				await user.click(screen.getByTestId('icon: Square'));
 
-				await waitFor(() => {
-					user.click(
-						screen.getByRole('button', {
-							name: /label\.delete/i
-						})
-					);
-				});
+				await user.click(
+					screen.getByRole('button', {
+						name: /label\.delete/i
+					})
+				);
 
 				jest.clearAllMocks();
-				act(() => {
-					jest.advanceTimersByTime(6000);
-				});
 
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
+				});
 				expect(spy).toHaveBeenCalledWith(
 					'SendInviteReply',
 					expect.objectContaining({
@@ -599,17 +583,15 @@ describe('delete event modal', () => {
 					{ store }
 				);
 
-				await waitFor(() => {
-					user.click(
-						screen.getByRole('button', {
-							name: /label\.delete/i
-						})
-					);
-				});
+				await user.click(
+					screen.getByRole('button', {
+						name: /label\.delete/i
+					})
+				);
 
 				jest.clearAllMocks();
-				act(() => {
-					jest.advanceTimersByTime(6000);
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
 				});
 
 				expect(spy).not.toHaveBeenCalledWith(
