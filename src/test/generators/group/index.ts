@@ -6,8 +6,7 @@
 import { faker } from '@faker-js/faker';
 import { times } from 'lodash';
 
-import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { CalendarGroup } from '../../../store/zustand/calendar-group-store';
+import { CalendarGroup, useCalendarGroupStore } from '../../../store/zustand/calendar-group-store';
 import { GroupCalendar } from '../../../types/groups';
 
 export const generateGroup = ({
@@ -35,5 +34,14 @@ export const generateGroupCalendar = ({
 });
 
 export const populateGroupsStore = ({ groups }: { groups: Array<CalendarGroup> }): void => {
-	useFolderStore.setState((state) => ({ ...state, updateGroups: jest.fn(), groups }), true);
+	useCalendarGroupStore.setState(
+		(state) => ({
+			...state,
+			groups: {
+				...state.groups,
+				...groups.reduce((acc, group) => ({ ...acc, [group.id]: group }), {})
+			}
+		}),
+		true
+	);
 };
