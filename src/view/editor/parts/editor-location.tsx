@@ -6,7 +6,7 @@
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Button, Container, Input, Row, Tooltip } from '@zextras/carbonio-design-system';
-import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
+import { Action, useActions } from '@zextras/carbonio-shell-ui';
 import { isNil, debounce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +18,10 @@ import {
 } from '../../../store/selectors/editor';
 import { editEditorLocation } from '../../../store/slices/editor-slice';
 
+interface EditorLocationExtension extends Action {
+	execute: (options: { eventTitle?: string; onConfirm: (newLocation: string) => void }) => void;
+}
+
 export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const [t] = useTranslation();
 	const eventTitle = useAppSelector(selectEditorTitle(editorId));
@@ -25,8 +29,13 @@ export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement
 	const [value, setValue] = useState(location ?? '');
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
-	const [getLocation, isLocationProviderAvailable] = useIntegratedFunction(
+	const locationExtensions = useActions<undefined, EditorLocationExtension>(
+		undefined,
 		'calendars-location-provider'
+	);
+	const extension = useMemo(
+		() => (locationExtensions.length > 0 ? locationExtensions[0] : null),
+		[locationExtensions]
 	);
 
 	useEffect(() => {
@@ -59,17 +68,18 @@ export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement
 	);
 
 	const onLocationProviderRequest = useCallback(() => {
-		if (!isLocationProviderAvailable) {
+		if (!extension) {
 			return;
 		}
-		getLocation({
+
+		extension.execute({
 			eventTitle,
 			onConfirm: (newLocation: string) => {
 				setValue(newLocation);
 				debounceInput(newLocation);
 			}
 		});
-	}, [debounceInput, eventTitle, getLocation, isLocationProviderAvailable]);
+	}, [debounceInput, eventTitle, extension]);
 
 	return !isNil(location) ? (
 		<Container
@@ -87,7 +97,7 @@ export const EditorLocation = ({ editorId }: { editorId: string }): ReactElement
 				data-testid="editor-location"
 			/>
 
-			{isLocationProviderAvailable && (
+			{extension && (
 				<Row>
 					<Tooltip label={t('label.location_provider', 'Location Provider')}>
 						<Button
