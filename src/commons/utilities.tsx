@@ -24,6 +24,7 @@ import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
 import { searchAppointments } from '../store/actions/search-appointments';
 import { AppDispatch } from '../store/redux';
+import { SidebarFolder } from '../types/accordions';
 import { ReminderItem } from '../types/appointment-reminder';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
@@ -421,7 +422,13 @@ export function recursiveToggleCheck({
 	});
 }
 
-export const getFolderIcon = ({ item, checked }: { item: Folder; checked: boolean }): string => {
+export const getFolderIcon = ({
+	item,
+	checked
+}: {
+	item: SidebarFolder;
+	checked: boolean;
+}): string => {
 	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME) || item.noIcon)
 		return '';
 	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';

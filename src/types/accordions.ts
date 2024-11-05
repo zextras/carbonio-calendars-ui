@@ -21,8 +21,15 @@ export type Contact = {
 	address: string;
 };
 
+export type SidebarFolder = Folder & {
+	// indicates whether this folder have an icon
+	noIcon?: boolean;
+	// indicates whether this folder should not be expandable
+	noExpandChildren?: boolean;
+};
+
 export type SidebarAccordionProps = {
-	accordions: Array<Folder | CalendarGroup>;
+	accordions: Array<SidebarFolder | CalendarGroup>;
 	folderId: string;
 	localStorageName: string;
 	AccordionCustomComponent: ComponentType<{ item: Folder | CalendarGroup }>;

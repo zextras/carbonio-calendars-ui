@@ -125,7 +125,7 @@ const useSidebarSortedFolders = (
 									name: t('label.app_name', 'Calendars'),
 									children: [calendar, trash, ...others],
 									noIcon: true
-								} as Folder,
+								},
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
 								{
