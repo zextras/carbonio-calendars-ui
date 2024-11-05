@@ -10,7 +10,7 @@ import { expandBoards } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { DailyPlanner } from './parts/daily-planner';
+import { DailyPlanner } from './daily-planner/daily-planner';
 import { EditorActions } from './parts/editor-actions';
 import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
 import { EditorAttachments } from './parts/editor-attachments';
@@ -124,12 +124,16 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
 					<EditorAllDayCheckbox editorId={editorId} />
 				</Row>
-				<Button
-					onClick={handleDailyPlannerButtonClick}
-					label={dailyPlannerLabel}
-					disabled={dailyPlannerButtonDisabled}
-					data-testid={'daily-planner-button'}
-				/>
+				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="center">
+					<Button
+						type={'outlined'}
+						width={'fill'}
+						onClick={handleDailyPlannerButtonClick}
+						label={dailyPlannerLabel}
+						disabled={dailyPlannerButtonDisabled}
+						data-testid={'daily-planner-button'}
+					/>
+				</Row>
 				{showDailyPlanner && <DailyPlanner editorId={editorId} />}
 				{<DailyPlanner editorId={editorId} />}
 				<Row height="fit" width="fill" padding={{ top: 'large' }}>
