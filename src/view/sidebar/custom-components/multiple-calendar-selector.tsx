@@ -102,6 +102,8 @@ export const MultipleCalendarSelector = ({
 			: [{ id: 'no_options', label: 'no options available', disabled: true }];
 	}, [calendars, calendarsToExclude, inputContent, selectedCalendarsChips, t]);
 
+	const isCalendarAddDisabled = selectedCalendarsChips.length === 0;
+
 	const removeSelectedCalendarChip = useCallback((id: string): void => {
 		setSelectedCalendarsChips((existingChips) =>
 			existingChips.filter((chip) => chip.value?.id !== id)
@@ -136,7 +138,7 @@ export const MultipleCalendarSelector = ({
 		setSelectedCalendarsChips(selectedChips);
 	}, []);
 
-	const onIconAction = useCallback<ReactEventHandler>(
+	const onCalendarsAdd = useCallback<ReactEventHandler>(
 		(ev) => {
 			ev?.stopPropagation();
 
@@ -181,7 +183,8 @@ export const MultipleCalendarSelector = ({
 			placeholder={t('label.calendar_selector.placeholder', 'Add Calendars')}
 			requireUniqueChips
 			icon={'Plus'}
-			iconAction={onIconAction}
+			iconDisabled={isCalendarAddDisabled}
+			iconAction={onCalendarsAdd}
 			ChipComponent={CalendarChip}
 		/>
 	);

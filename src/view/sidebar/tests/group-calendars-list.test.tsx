@@ -47,7 +47,7 @@ describe('Group calendars list', () => {
 	});
 
 	it('should render the names of all given calendars', () => {
-		const calendars = times(42, () => generateGroupCalendar());
+		const calendars = times(42, (index) => generateGroupCalendar({ name: `Calendar ${index}` }));
 
 		setupTest(<GroupCalendarsList calendars={calendars} onCalendarRemove={jest.fn()} />);
 

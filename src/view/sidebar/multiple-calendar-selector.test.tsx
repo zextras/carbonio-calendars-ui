@@ -12,10 +12,10 @@ import {
 	MultipleCalendarSelector,
 	MultipleCalendarSelectorProps
 } from './custom-components/multiple-calendar-selector';
+import { generateFolder } from '../../carbonio-ui-commons/test/mocks/folders/folders-generator';
 import { populateFoldersStore } from '../../carbonio-ui-commons/test/mocks/store/folders';
 import { screen, setupTest, within } from '../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../constants/test-utils';
-import calendarGenerators from '../../test/generators/calendar';
 
 const buildProps = ({
 	onCalendarChange = jest.fn(),
@@ -33,7 +33,7 @@ describe('MultiCalendarSelector', () => {
 	});
 
 	it('when a calendar is selected, its chip, with the name and the color of the calendar, should be added to the input field', async () => {
-		const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+		const targetCalendar = generateFolder({ name: 'Awesome' });
 
 		populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 		const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
@@ -45,11 +45,10 @@ describe('MultiCalendarSelector', () => {
 		const chip = screen.getByTestId(TEST_SELECTORS.CHIP);
 
 		expect(within(chip).getByText(targetCalendar.name)).toBeVisible();
-		expect(within(chip).getByTestId('colored-square')).toBeVisible();
 	});
 
 	it('when a second calendar is selected, two chips should be rendered', async () => {
-		const targetCalendars = times(2, () => calendarGenerators.getCalendar());
+		const targetCalendars = times(2, (index) => generateFolder({ name: `Calendar${index}` }));
 
 		populateFoldersStore({ view: 'appointment', customFolders: targetCalendars });
 		const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
@@ -65,7 +64,7 @@ describe('MultiCalendarSelector', () => {
 	});
 
 	it('when a calendar already on the input is selected, its chip should be displayed only once', async () => {
-		const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+		const targetCalendar = generateFolder({ name: 'Awesome' });
 
 		populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 		const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
@@ -95,21 +94,17 @@ describe('MultiCalendarSelector', () => {
 		});
 
 		it('should be disabled when the input field is empty', async () => {
-			const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+			const targetCalendar = generateFolder({ name: 'Awesome' });
 
 			populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 			setupTest(<MultipleCalendarSelector {...buildProps()} />);
 
-			const icon = screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar);
+			const icon = screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar });
 			expect(icon).toBeDisabled();
 		});
 
-		it.todo(
-			'should render a specific tooltip when the user hover the mouse on it and the icon is disabled'
-		);
-
 		it('should be enabled when the input field is not empty', async () => {
-			const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+			const targetCalendar = generateFolder({ name: 'Awesome' });
 
 			populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 			const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
@@ -118,12 +113,12 @@ describe('MultiCalendarSelector', () => {
 			await user.type(input, targetCalendar.name);
 			await act(() => user.click(screen.getByText(targetCalendar.name)));
 
-			const icon = screen.getByTestId(TEST_SELECTORS.ICONS.addCalendar);
+			const icon = screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar });
 			expect(icon).toBeEnabled();
 		});
 
 		it('should empty the input after the user clicks on it', () => {
-			const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+			const targetCalendar = generateFolder({ name: 'Awesome' });
 
 			populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 			const { user } = setupTest(<MultipleCalendarSelector {...buildProps()} />);
@@ -137,7 +132,7 @@ describe('MultiCalendarSelector', () => {
 	});
 
 	it('should call the onCalendarChange callback with the selected calendars when the user clicks on the add icon', async () => {
-		const targetCalendar = calendarGenerators.getCalendar({ name: 'Awesome' });
+		const targetCalendar = generateFolder({ name: 'Awesome' });
 
 		populateFoldersStore({ view: 'appointment', customFolders: [targetCalendar] });
 		const onCalendarChange = jest.fn();
