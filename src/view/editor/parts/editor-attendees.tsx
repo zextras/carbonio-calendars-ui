@@ -5,17 +5,9 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
-import {
-	Button,
-	ChipInput,
-	ChipInputProps,
-	ChipItem,
-	Container,
-	Row,
-	useSnackbar
-} from '@zextras/carbonio-design-system';
+import { Button, ChipInput, Container, Row, useSnackbar } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { find, map, reduce, reject, some } from 'lodash';
+import { find, map, reject, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
@@ -40,7 +32,6 @@ import {
 	editEditorAttendees,
 	editEditorOptionalAttendees
 } from '../../../store/slices/editor-slice';
-import { EditorChipAttendees } from '../../../types/store/invite';
 
 type EditorAttendeesProps = {
 	editorId: string;
@@ -103,58 +94,21 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			});
 	}, [createSnackbar, sender, t]);
 
-	const isValueToAddAnObjectWithLabelType = (
-		arg: unknown
-	): arg is { label: string } & Partial<EditorChipAttendees> =>
-		!!arg && typeof arg === 'object' && 'label' in arg;
-
-	const onAdd = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
-		(valueToAdd): ChipItem<EditorChipAttendees> => {
-			if (valueToAdd) {
-				if (typeof valueToAdd === 'string') {
-					return { label: valueToAdd, value: { email: valueToAdd } };
-				}
-				if (isValueToAddAnObjectWithLabelType(valueToAdd)) {
-					return {
-						value: { ...valueToAdd, email: valueToAdd.email ?? valueToAdd.label },
-						...valueToAdd
-					};
-				}
-			}
-			throw new Error('invalid keywords received');
-		},
-		[]
-	);
-
-	const onChange = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onChange']>>(
-		(chips) => {
-			const attendeesToSave = reduce(
-				chips,
-				(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
-				[] as Array<EditorChipAttendees>
-			);
+	const onChange = useCallback(
+		(value: any) => {
 			dispatch(
 				editEditorAttendees({
 					id: editorId,
-					attendees: attendeesToSave
+					attendees: value
 				})
 			);
 		},
 		[dispatch, editorId]
 	);
 
-	const onOptionalsChange = useCallback<
-		NonNullable<ChipInputProps<EditorChipAttendees>['onChange']>
-	>(
-		(chips) => {
-			const attendeesToSave = reduce(
-				chips,
-				(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
-				[] as Array<EditorChipAttendees>
-			);
-			if (attendeesToSave.length) {
-				dispatch(editEditorOptionalAttendees({ id: editorId, optionalAttendees: attendeesToSave }));
-			}
+	const onOptionalsChange = useCallback(
+		(value: any) => {
+			dispatch(editEditorOptionalAttendees({ id: editorId, optionalAttendees: value }));
 		},
 		[dispatch, editorId]
 	);
@@ -218,9 +172,10 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 					<Container background={'gray5'} style={{ overflow: 'hidden' }}>
 						{integrationAvailable ? (
 							<ContactInput
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
 								placeholder={t('label.attendees', 'Attendees')}
 								onChange={onChange}
-								onAdd={onAdd}
 								defaultValue={defaultValue}
 								disabled={disabled?.attendees}
 								dragAndDropEnabled
@@ -231,7 +186,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.attendees', 'Attendees')}
 								background={'gray5'}
 								onChange={onChange}
-								onAdd={onAdd}
 								defaultValue={defaultValue}
 								hasError={hasError}
 								description={hasError ? '' : undefined}
@@ -269,9 +223,10 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 					<AttendeesContainer>
 						{integrationAvailable ? (
 							<ContactInput
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
 								placeholder={t('label.optionals', 'Optionals')}
 								onChange={onOptionalsChange}
-								onAdd={onAdd}
 								defaultValue={optionalAttendees}
 								disabled={disabled?.optionalAttendees}
 								dragAndDropEnabled
@@ -282,7 +237,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.optionals', 'Optionals')}
 								background={'gray5'}
 								onChange={onOptionalsChange}
-								onAdd={onAdd}
 								defaultValue={optionalAttendees}
 								hasError={optionalHasError}
 								description={optionalHasError ? '' : undefined}
