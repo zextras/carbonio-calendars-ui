@@ -61,11 +61,10 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 	};
 
 	const equipment = useAppSelector(selectEditorEquipment(editorId)) ?? [];
-	const attendees = useAppSelector(selectEditorAttendees(editorId));
+	const attendees = useAppSelector(selectEditorAttendees(editorId)) ?? [];
 	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId)) ?? [];
 	const meetingRoom = useAppSelector(selectEditorMeetingRoom(editorId)) ?? [];
 
-	console.log({ attendees });
 	const allFreeBusy = useAttendeesAvailability(startDate, [
 		senderWithEmail,
 		...attendees,
@@ -74,7 +73,6 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		...optionalAttendees
 	]);
 
-	console.log('allFreeBusy', { allFreeBusy });
 	const allParticipantsFB = getAllParticipantsFreeBusy(allFreeBusy);
 
 	return (

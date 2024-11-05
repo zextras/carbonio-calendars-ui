@@ -17,7 +17,7 @@ export const TimetableHeader = (): React.JSX.Element => {
 	return (
 		<div style={{ width: '100%', position: 'relative', height: '2rem' }}>
 			{hours.map((label, hour) => (
-				<HourLabel key={hour} label={label} atPosition={60 * hour} />
+				<HourLabel key={label} label={label} atPosition={60 * hour} />
 			))}
 		</div>
 	);

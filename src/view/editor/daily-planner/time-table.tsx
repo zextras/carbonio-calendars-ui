@@ -70,7 +70,7 @@ export const TimeTable = ({
 			/>
 		));
 		return (
-			<TimeTableRow key={`row-${index}`} data-testid={`row-${index}`}>
+			<TimeTableRow key={row.email} data-testid={`row-${index}`}>
 				<EmailColumn data-testid={`column-0`}>
 					<Chip maxWidth={'10rem'} key={'organizer'} label={`${row.email}`} />
 				</EmailColumn>
