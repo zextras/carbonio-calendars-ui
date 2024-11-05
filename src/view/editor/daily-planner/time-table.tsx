@@ -13,7 +13,7 @@ import { EventDiv } from './parts/event-div';
 import { MinutesLine } from './parts/minutes-line';
 import { TimetableHeader } from './time-table-header';
 import { TimeTableProps } from './types';
-import { getEventColor, getHourFromDateTime, parseEvent } from './utils';
+import { getEventColor, getLocalHoursMinutesFromEpoch, parseEvent } from './utils';
 
 const TimeTableRow = styled.div`
 	height: 2rem;
@@ -39,9 +39,11 @@ export const TimeTable = ({
 	appointmentEndDate,
 	rows
 }: TimeTableProps): React.JSX.Element => {
-	const { hours: startHours, minutes: startMinutes } = getHourFromDateTime(appointmentStartDate);
+	const { hours: startHours, minutes: startMinutes } =
+		getLocalHoursMinutesFromEpoch(appointmentStartDate);
 	const startPosition = startHours * 60 + startMinutes;
-	const { hours: endHours, minutes: endMinutes } = getHourFromDateTime(appointmentEndDate);
+	const { hours: endHours, minutes: endMinutes } =
+		getLocalHoursMinutesFromEpoch(appointmentEndDate);
 	const endPosition = endHours * 60 + endMinutes;
 	const theme = useTheme();
 	const START_DATE_LINE_COLOR = theme.palette.success.regular;
@@ -68,9 +70,6 @@ export const TimeTable = ({
 			/>
 		));
 		return (
-			// TODO: consider using Row with orientation={'horizontal'}
-			// Then we need two rows with orientation 'vertical' (the two columns). The second column
-			// must include position relative in order to correctly draw hour and ticks
 			<TimeTableRow key={`row-${index}`} data-testid={`row-${index}`}>
 				<EmailColumn data-testid={`column-0`}>
 					<Chip maxWidth={'10rem'} key={'organizer'} label={`${row.email}`} />

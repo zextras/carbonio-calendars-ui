@@ -25,15 +25,16 @@ export function getEventColor(type: DailyPlannerFreeBusyType, theme: Theme): str
 	}
 }
 
-export function getHourFromDateTime(dateTime: number): HoursMinutes {
-	const date = new Date(dateTime);
+export function getLocalHoursMinutesFromEpoch(epochMillis: number): HoursMinutes {
+	const date = new Date(epochMillis);
 	return { hours: date.getHours(), minutes: date.getMinutes() };
 }
+
 export function parseEvent(event: DailyPlannerFreeBusy): ParsedEvent {
 	return {
 		type: event.type,
-		start: getHourFromDateTime(event.startDate),
-		end: getHourFromDateTime(event.endDate)
+		start: getLocalHoursMinutesFromEpoch(event.startDate),
+		end: getLocalHoursMinutesFromEpoch(event.endDate)
 	};
 }
 
