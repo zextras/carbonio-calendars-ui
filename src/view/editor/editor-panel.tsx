@@ -3,14 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 
-import { Button, Container, Divider, Row } from '@zextras/carbonio-design-system';
-import { expandBoards } from '@zextras/carbonio-shell-ui';
-import { isEmpty } from 'lodash';
-import { useTranslation } from 'react-i18next';
+import { Container, Divider, Row } from '@zextras/carbonio-design-system';
 
-import { DailyPlanner } from './daily-planner/daily-planner';
+import { EditorDailyPlanner } from './daily-planner/daily-planner';
 import { EditorActions } from './parts/editor-actions';
 import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
 import { EditorAttachments } from './parts/editor-attachments';
@@ -31,45 +28,10 @@ import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
 import { EditorRecurrence } from './parts/recurrence';
-import { useAppSelector } from '../../store/redux/hooks';
-import {
-	selectEditorEnd,
-	selectEditorRecurrence,
-	selectEditorStart
-} from '../../store/selectors/editor';
 import { EditorProps } from '../../types/editor';
 
-function getWithinSameDay(startDate: number, endDate: number): boolean {
-	const date1 = new Date(startDate);
-	const date2 = new Date(endDate);
-
-	return (
-		date1.getFullYear() === date2.getFullYear() &&
-		date1.getMonth() === date2.getMonth() &&
-		date1.getDate() === date2.getDate()
-	);
-}
-
-expandBoards();
-export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement | null => {
-	const [showDailyPlanner, setShowDailyPlanner] = useState(false);
-	const handleDailyPlannerButtonClick = (): void => {
-		setShowDailyPlanner((state) => !state);
-		expandBoards();
-	};
-	const startDate = useAppSelector(selectEditorStart(editorId));
-	const endDate = useAppSelector(selectEditorEnd(editorId));
-	const recur = useAppSelector(selectEditorRecurrence(editorId));
-	const [t] = useTranslation();
-	const isSingleInstanceAppointment = isEmpty(recur);
-	const isWithinSameDay = getWithinSameDay(startDate ?? 0, endDate ?? 0);
-
-	const dailyPlannerButtonDisabled = !isSingleInstanceAppointment || !isWithinSameDay;
-	const dailyPlannerLabel = showDailyPlanner
-		? t('editor.daily_planner.button.hide', 'hide organizer tool')
-		: t('editor.daily_planner.button.show', 'show organizer tool');
-
-	return editorId ? (
+export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement | null =>
+	editorId ? (
 		<Container
 			background={'gray5'}
 			padding={{ horizontal: 'large', bottom: 'large' }}
@@ -124,18 +86,7 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
 					<EditorAllDayCheckbox editorId={editorId} />
 				</Row>
-				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="center">
-					<Button
-						type={'outlined'}
-						width={'fill'}
-						onClick={handleDailyPlannerButtonClick}
-						label={dailyPlannerLabel}
-						disabled={dailyPlannerButtonDisabled}
-						data-testid={'daily-planner-button'}
-					/>
-				</Row>
-				{showDailyPlanner && <DailyPlanner editorId={editorId} />}
-				{<DailyPlanner editorId={editorId} />}
+				<EditorDailyPlanner editorId={editorId} />
 				<Row height="fit" width="fill" padding={{ top: 'large' }}>
 					<EditorReminder editorId={editorId} />
 				</Row>
@@ -150,4 +101,3 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement |
 			<EditorResourcesController editorId={editorId} />
 		</Container>
 	) : null;
-};

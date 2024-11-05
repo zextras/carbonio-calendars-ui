@@ -12,7 +12,7 @@ import { setupTest, screen } from '../../../../carbonio-ui-commons/test/test-set
 import { generateEditor } from '../../../../commons/editor-generator';
 import { reducers } from '../../../../store/redux';
 import mockedData from '../../../../test/generators';
-import { DailyPlanner } from '../daily-planner';
+import { EditorDailyPlanner } from '../daily-planner';
 
 const folder = {
 	absFolderPath: '/Test',
@@ -24,7 +24,7 @@ const folder = {
 
 const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
 
-describe('DailyPlanner', () => {
+describe('EditorDailyPlanner', () => {
 	it('should render the daily planner component', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const context = { folders, dispatch: store.dispatch };
@@ -32,7 +32,7 @@ describe('DailyPlanner', () => {
 			context
 		});
 
-		setupTest(<DailyPlanner editorId={editor.id} />, { store });
+		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
 		expect(screen.getByTestId(`daily-planner-component-${editor.id}`)).toBeInTheDocument();
 		expect(screen.getByText(editor.organizer.fullName)).toBeVisible();
 	});

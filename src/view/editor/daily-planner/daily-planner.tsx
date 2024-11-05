@@ -4,52 +4,106 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Row } from '@zextras/carbonio-design-system';
+import { Button, Row } from '@zextras/carbonio-design-system';
+import { isEmpty } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import { TimeTable } from './time-table';
-import { DailyPlannerRow } from './types';
 import { getAllParticipantsFreeBusy } from './utils';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttendees,
 	selectEditorEnd,
+	selectEditorEquipment,
+	selectEditorMeetingRoom,
+	selectEditorOptionalAttendees,
+	selectEditorRecurrence,
 	selectEditorStart,
 	selectSender
 } from '../../../store/selectors/editor';
 
-export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
+function getWithinSameDay(startDate: number, endDate: number): boolean {
+	const date1 = new Date(startDate);
+	const date2 = new Date(endDate);
+
+	return (
+		date1.getFullYear() === date2.getFullYear() &&
+		date1.getMonth() === date2.getMonth() &&
+		date1.getDate() === date2.getDate()
+	);
+}
+
+export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
+	// TODO set to false once implementation is done
+	const [showDailyPlanner, setShowDailyPlanner] = useState(true);
+	const handleDailyPlannerButtonClick = (): void => {
+		setShowDailyPlanner((state) => !state);
+	};
+	const startDate = useAppSelector(selectEditorStart(editorId)) ?? 0;
+	const endDate = useAppSelector(selectEditorEnd(editorId)) ?? 0;
+	const recur = useAppSelector(selectEditorRecurrence(editorId));
+	const [t] = useTranslation();
+	const isSingleInstanceAppointment = isEmpty(recur);
+	const isWithinSameDay = getWithinSameDay(startDate ?? 0, endDate ?? 0);
+
+	const dailyPlannerButtonDisabled = !isSingleInstanceAppointment || !isWithinSameDay;
+	const dailyPlannerLabel = showDailyPlanner
+		? t('editor.daily_planner.button.hide', 'hide organizer tool')
+		: t('editor.daily_planner.button.show', 'show organizer tool');
+
 	const sender = useAppSelector(selectSender(editorId));
 	const senderWithEmail = {
 		...sender,
-		email: sender.address as string
+		email: sender?.address ?? ''
 	};
 
+	const equipment = useAppSelector(selectEditorEquipment(editorId)) ?? [];
 	const attendees = useAppSelector(selectEditorAttendees(editorId));
+	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId)) ?? [];
+	const meetingRoom = useAppSelector(selectEditorMeetingRoom(editorId)) ?? [];
 
-	const startDate = useAppSelector(selectEditorStart(editorId)) as number;
-	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
-	const allFreeBusy = useAttendeesAvailability(startDate, [senderWithEmail, ...attendees]);
+	console.log({ attendees });
+	const allFreeBusy = useAttendeesAvailability(startDate, [
+		senderWithEmail,
+		...attendees,
+		...meetingRoom,
+		...equipment,
+		...optionalAttendees
+	]);
 
-	const allParticipantsFB: Array<DailyPlannerRow> = getAllParticipantsFreeBusy(allFreeBusy);
+	console.log('allFreeBusy', { allFreeBusy });
+	const allParticipantsFB = getAllParticipantsFreeBusy(allFreeBusy);
 
 	return (
-		<Row
-			orientation={'horizontal'}
-			width="fill"
-			mainAlignment={'flex-start'}
-			padding={{ right: '1rem', vertical: '1rem' }}
-			style={{ flexWrap: 'nowrap' }}
-		>
-			<div style={{ width: '100%', position: 'relative' }}>
-				<TimeTable
-					appointmentStartDate={startDate}
-					appointmentEndDate={endDate}
-					rows={allParticipantsFB}
+		<>
+			<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="center">
+				<Button
+					type={'outlined'}
+					width={'fill'}
+					onClick={handleDailyPlannerButtonClick}
+					label={dailyPlannerLabel}
+					disabled={dailyPlannerButtonDisabled}
+					data-testid={'daily-planner-button'}
 				/>
-			</div>
-		</Row>
+			</Row>
+			<Row
+				orientation={'horizontal'}
+				width="fill"
+				mainAlignment={'flex-start'}
+				padding={{ right: '1rem', vertical: '1rem' }}
+				style={{ flexWrap: 'nowrap' }}
+			>
+				<div style={{ width: '100%', position: 'relative' }}>
+					<TimeTable
+						appointmentStartDate={startDate}
+						appointmentEndDate={endDate}
+						rows={allParticipantsFB}
+					/>
+				</div>
+			</Row>
+		</>
 	);
 };
