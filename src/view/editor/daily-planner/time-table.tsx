@@ -9,9 +9,25 @@ import React from 'react';
 import { Chip, useTheme } from '@zextras/carbonio-design-system';
 
 import { EventDiv } from './parts/event-div';
+import { HourLabel } from './parts/hour-label';
 import { MinutesLine } from './parts/minutes-line';
 import { TimeTableProps } from './types';
 import { getEventColor, getHourFromDateTime, parseEvent } from './utils';
+
+const TimetableHeader = (): React.JSX.Element => {
+	const hours = [
+		'12',
+		...Array.from({ length: 12 }, (_, i) => (i + 1).toString()),
+		...Array.from({ length: 12 }, (_, i) => (i + 1).toString())
+	];
+	return (
+		<div style={{ width: '100%', position: 'relative', height: '2rem' }}>
+			{hours.map((label, hour) => (
+				<HourLabel key={hour} label={label} atPosition={60 * hour} />
+			))}
+		</div>
+	);
+};
 
 export const TimeTable = ({
 	appointmentStartDate,
@@ -33,7 +49,7 @@ export const TimeTable = ({
 	);
 
 	const rowDivs = rows.map((row, index) => {
-		const parsedEvents = rows?.[0]?.freeBusy?.map((event) => parseEvent(event));
+		const parsedEvents = row?.freeBusy?.map((event) => parseEvent(event));
 		const eventDivs = parsedEvents?.map((parsedEvent) => (
 			<EventDiv
 				key={parsedEvent.start.minutes}
@@ -64,7 +80,8 @@ export const TimeTable = ({
 				<div
 					style={{
 						display: 'flex',
-						alignItems: 'center'
+						alignItems: 'center',
+						minWidth: '10rem'
 					}}
 					data-testid={`column-0`}
 				>
@@ -85,10 +102,35 @@ export const TimeTable = ({
 	});
 
 	return (
-		<div
-			style={{ width: '100%', position: 'relative', border: '1px solid #d3d3d3' }}
-			data-testid={'time-table'}
-		>
+		<div style={{ width: '100%', position: 'relative' }} data-testid={'time-table'}>
+			<div
+				style={{
+					height: '2rem',
+					display: 'flex',
+					flexDirection: 'row',
+					flexWrap: 'nowrap'
+				}}
+			>
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center'
+					}}
+					data-testid={`column-0`}
+				>
+					<div
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							minWidth: '10rem'
+						}}
+						data-testid={`column-0`}
+					/>
+				</div>
+				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-1`}>
+					<TimetableHeader />
+				</div>
+			</div>
 			{rowDivs}
 		</div>
 	);

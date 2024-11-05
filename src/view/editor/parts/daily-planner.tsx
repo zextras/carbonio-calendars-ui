@@ -17,24 +17,8 @@ import {
 	selectSender
 } from '../../../store/selectors/editor';
 import { DAILY_PLANNER_FREE_BUSY_TYPE } from '../daily-planner/constants';
-import { HourLabel } from '../daily-planner/parts/hour-label';
 import { TimeTable } from '../daily-planner/time-table';
 import { DailyPlannerRow } from '../daily-planner/types';
-
-const TimetableHeader = (): React.JSX.Element => {
-	const hours = [
-		'12',
-		...Array.from({ length: 12 }, (_, i) => (i + 1).toString()),
-		...Array.from({ length: 12 }, (_, i) => (i + 1).toString())
-	];
-	return (
-		<div style={{ width: '100%', position: 'relative', height: '2rem' }}>
-			{hours.map((label, hour) => (
-				<HourLabel key={hour} label={label} atPosition={60 * hour} />
-			))}
-		</div>
-	);
-};
 
 export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	const sender = useAppSelector(selectSender(editorId));
@@ -81,7 +65,6 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 			style={{ flexWrap: 'nowrap' }}
 		>
 			<div style={{ width: '100%', position: 'relative' }}>
-				<TimetableHeader />
 				<TimeTable
 					appointmentStartDate={startDate}
 					appointmentEndDate={endDate}
