@@ -15,7 +15,7 @@ export type DailyPlannerFreeBusy = {
 	endDate: number;
 };
 export type HoursMinutes = { hours: number; minutes: number };
-export type ParsedEvent = {
+export type DailyPlannerFreeBusyEvent = {
 	type: DailyPlannerFreeBusyType;
 	start: HoursMinutes;
 	end: HoursMinutes;

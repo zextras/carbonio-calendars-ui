@@ -13,7 +13,7 @@ import { EventDiv } from './parts/event-div';
 import { MinutesLine } from './parts/minutes-line';
 import { TimetableHeader } from './time-table-header';
 import { TimeTableProps } from './types';
-import { getEventColor, getLocalHoursMinutesFromEpoch, parseEvent } from './utils';
+import { getEventColor, getLocalHoursMinutesFromEpoch, parseFreeBusyEvent } from './utils';
 
 const TimeTableRow = styled.div`
 	height: 2rem;
@@ -56,7 +56,7 @@ export const TimeTable = ({
 	);
 
 	const rowDivs = rows.map((row, index) => {
-		const parsedEvents = row?.freeBusy?.map((event) => parseEvent(event));
+		const parsedEvents = row?.freeBusy?.map((event) => parseFreeBusyEvent(event));
 		const eventDivs = parsedEvents?.map((parsedEvent) => (
 			<EventDiv
 				key={parsedEvent.start.minutes}

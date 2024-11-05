@@ -6,7 +6,12 @@
 
 import { Theme } from '@zextras/carbonio-design-system';
 
-import { DailyPlannerFreeBusy, DailyPlannerFreeBusyType, HoursMinutes, ParsedEvent } from './types';
+import {
+	DailyPlannerFreeBusy,
+	DailyPlannerFreeBusyType,
+	HoursMinutes,
+	DailyPlannerFreeBusyEvent
+} from './types';
 
 export function getEventColor(type: DailyPlannerFreeBusyType, theme: Theme): string {
 	switch (type) {
@@ -30,7 +35,7 @@ export function getLocalHoursMinutesFromEpoch(epochMillis: number): HoursMinutes
 	return { hours: date.getHours(), minutes: date.getMinutes() };
 }
 
-export function parseEvent(event: DailyPlannerFreeBusy): ParsedEvent {
+export function parseFreeBusyEvent(event: DailyPlannerFreeBusy): DailyPlannerFreeBusyEvent {
 	return {
 		type: event.type,
 		start: getLocalHoursMinutesFromEpoch(event.startDate),
