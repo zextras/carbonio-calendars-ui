@@ -8,9 +8,9 @@ import React from 'react';
 
 import { Row } from '@zextras/carbonio-design-system';
 
-import { DAILY_PLANNER_FREE_BUSY_TYPE } from './constants';
 import { TimeTable } from './time-table';
 import { DailyPlannerRow } from './types';
+import { getAllParticipantsFreeBusy } from './utils';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -33,29 +33,7 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 	const endDate = useAppSelector(selectEditorEnd(editorId)) as number;
 	const allFreeBusy = useAttendeesAvailability(startDate, [senderWithEmail, ...attendees]);
 
-	const allParticipantsFB: DailyPlannerRow[] = allFreeBusy
-		? allFreeBusy.map((attendeeFb) => {
-				const eventsFree = attendeeFb.f.map((event) => ({
-					startDate: event.s,
-					endDate: event.e,
-					type: DAILY_PLANNER_FREE_BUSY_TYPE.free
-				}));
-				const eventsBusy = attendeeFb.b.map((event) => ({
-					startDate: event.s,
-					endDate: event.e,
-					type: DAILY_PLANNER_FREE_BUSY_TYPE.busy
-				}));
-				const eventsTentative = attendeeFb.t.map((event) => ({
-					startDate: event.s,
-					endDate: event.e,
-					type: DAILY_PLANNER_FREE_BUSY_TYPE.tentative
-				}));
-				return {
-					email: attendeeFb.email,
-					freeBusy: [...eventsFree, ...eventsBusy, ...eventsTentative]
-				};
-			})
-		: [];
+	const allParticipantsFB: Array<DailyPlannerRow> = getAllParticipantsFreeBusy(allFreeBusy);
 
 	return (
 		<Row
