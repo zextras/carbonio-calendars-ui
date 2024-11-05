@@ -8,6 +8,9 @@ import React from 'react';
 
 import { Row } from '@zextras/carbonio-design-system';
 
+import { DAILY_PLANNER_FREE_BUSY_TYPE } from './constants';
+import { TimeTable } from './time-table';
+import { DailyPlannerRow } from './types';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -16,9 +19,6 @@ import {
 	selectEditorStart,
 	selectSender
 } from '../../../store/selectors/editor';
-import { DAILY_PLANNER_FREE_BUSY_TYPE } from '../daily-planner/constants';
-import { TimeTable } from '../daily-planner/time-table';
-import { DailyPlannerRow } from '../daily-planner/types';
 
 export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	const sender = useAppSelector(selectSender(editorId));
@@ -62,6 +62,7 @@ export const DailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Elem
 			orientation={'horizontal'}
 			width="fill"
 			mainAlignment={'flex-start'}
+			padding={{ right: '1rem', vertical: '1rem' }}
 			style={{ flexWrap: 'nowrap' }}
 		>
 			<div style={{ width: '100%', position: 'relative' }}>

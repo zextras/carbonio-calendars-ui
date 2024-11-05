@@ -10,7 +10,7 @@ import { expandBoards } from '@zextras/carbonio-shell-ui';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { DailyPlanner } from './parts/daily-planner';
+import { DailyPlanner } from './daily-planner/daily-planner';
 import { EditorActions } from './parts/editor-actions';
 import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
 import { EditorAttachments } from './parts/editor-attachments';

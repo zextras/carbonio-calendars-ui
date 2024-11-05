@@ -7,27 +7,32 @@
 import React from 'react';
 
 import { Chip, useTheme } from '@zextras/carbonio-design-system';
+import styled from 'styled-components';
 
 import { EventDiv } from './parts/event-div';
-import { HourLabel } from './parts/hour-label';
 import { MinutesLine } from './parts/minutes-line';
+import { TimetableHeader } from './time-table-header';
 import { TimeTableProps } from './types';
 import { getEventColor, getHourFromDateTime, parseEvent } from './utils';
 
-const TimetableHeader = (): React.JSX.Element => {
-	const hours = [
-		'12',
-		...Array.from({ length: 12 }, (_, i) => (i + 1).toString()),
-		...Array.from({ length: 12 }, (_, i) => (i + 1).toString())
-	];
-	return (
-		<div style={{ width: '100%', position: 'relative', height: '2rem' }}>
-			{hours.map((label, hour) => (
-				<HourLabel key={hour} label={label} atPosition={60 * hour} />
-			))}
-		</div>
-	);
-};
+const TimeTableRow = styled.div`
+	height: 2rem;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+`;
+const EmailColumn = styled.div`
+	display: flex;
+	align-items: center;
+	min-width: 10rem;
+	padding-right: 2rem;
+`;
+const FreeBusyColumn = styled.div`
+	width: 100%;
+	position: relative;
+	border: 1px solid #d3d3d3;
+	height: 2rem;
+`;
 
 export const TimeTable = ({
 	appointmentStartDate,
@@ -66,28 +71,11 @@ export const TimeTable = ({
 			// TODO: consider using Row with orientation={'horizontal'}
 			// Then we need two rows with orientation 'vertical' (the two columns). The second column
 			// must include position relative in order to correctly draw hour and ticks
-			<div
-				key={`row-${index}`}
-				data-testid={`row-${index}`}
-				style={{
-					height: '2rem',
-					display: 'flex',
-					flexDirection: 'row',
-					flexWrap: 'nowrap',
-					border: '1px solid #d3d3d3'
-				}}
-			>
-				<div
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						minWidth: '10rem'
-					}}
-					data-testid={`column-0`}
-				>
+			<TimeTableRow key={`row-${index}`} data-testid={`row-${index}`}>
+				<EmailColumn data-testid={`column-0`}>
 					<Chip maxWidth={'10rem'} key={'organizer'} label={`${row.email}`} />
-				</div>
-				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-1`}>
+				</EmailColumn>
+				<FreeBusyColumn data-testid={`column-1`}>
 					{eventDivs}
 					{hourTicks}
 					<MinutesLine
@@ -96,41 +84,19 @@ export const TimeTable = ({
 						color={START_DATE_LINE_COLOR}
 					/>
 					<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
-				</div>
-			</div>
+				</FreeBusyColumn>
+			</TimeTableRow>
 		);
 	});
 
 	return (
 		<div style={{ width: '100%', position: 'relative' }} data-testid={'time-table'}>
-			<div
-				style={{
-					height: '2rem',
-					display: 'flex',
-					flexDirection: 'row',
-					flexWrap: 'nowrap'
-				}}
-			>
-				<div
-					style={{
-						display: 'flex',
-						alignItems: 'center'
-					}}
-					data-testid={`column-0`}
-				>
-					<div
-						style={{
-							display: 'flex',
-							alignItems: 'center',
-							minWidth: '10rem'
-						}}
-						data-testid={`column-0`}
-					/>
-				</div>
-				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-1`}>
+			<TimeTableRow key={`row-header`} data-testid={`row-header`}>
+				<EmailColumn data-testid={`column-header-0`} />
+				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-header-1`}>
 					<TimetableHeader />
 				</div>
-			</div>
+			</TimeTableRow>
 			{rowDivs}
 		</div>
 	);
