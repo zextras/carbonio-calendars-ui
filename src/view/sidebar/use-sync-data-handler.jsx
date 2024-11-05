@@ -6,7 +6,7 @@
 import { useEffect, useRef } from 'react';
 
 import { useNotify } from '@zextras/carbonio-shell-ui';
-import { isEmpty, reduce, forEach, sortBy, map, filter } from 'lodash';
+import { isEmpty, reduce, forEach, sortBy, map, filter, isNil } from 'lodash';
 
 import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
 import { folderWorker } from '../../carbonio-ui-commons/worker';
@@ -35,8 +35,9 @@ function handleCalendarGroupNotify(notify) {
 			if (folder.id && folder.name) {
 				updateCalendarGroupName(folder.id, folder.name);
 			}
-			if (folder.id && folder?.meta?.[0]?._attrs?.cids) {
-				const groupIds = folder?.meta?.[0]?._attrs?.cids?.split('#') ?? [];
+			if (folder.id && !isNil(folder?.meta?.[0]?._attrs?.cids)) {
+				const ids = folder?.meta?.[0]?._attrs?.cids;
+				const groupIds = ids?.length ? ids?.split('#') : [];
 				updateCalendarGroupIds(folder.id, groupIds);
 			}
 		});
