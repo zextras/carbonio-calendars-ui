@@ -59,7 +59,9 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 
 	const groupNameDescription = useMemo(
 		() =>
-			isGroupNameValid ? '' : t('label.invalid_group_name', 'Type a group name to save changes'),
+			isGroupNameValid
+				? undefined
+				: t('label.invalid_group_name', 'Type a group name to save changes'),
 		[isGroupNameValid, t]
 	);
 
