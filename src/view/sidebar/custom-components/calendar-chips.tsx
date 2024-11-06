@@ -12,7 +12,7 @@ import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
 
 export type CalendarChipInputItem = ChipItem<{
 	id: string;
-	label: string;
+	label?: string;
 	onCalendarRemove: (calendarId: string) => void;
 }>;
 
