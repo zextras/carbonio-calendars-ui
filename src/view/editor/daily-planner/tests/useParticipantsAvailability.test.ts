@@ -6,6 +6,7 @@
 
 import { renderHook, waitFor } from '@testing-library/react';
 
+import * as getFreeBusyResponseHandler from '../../../../soap/get-free-busy-request';
 import { mockFreeBusyResponse } from '../../../../soap/test/mocks';
 import {
 	ParticipantAvailability,
@@ -73,5 +74,17 @@ describe('useParticipantsAvailability', () => {
 		expect(request.s).toBe(1000);
 		expect(request.e).toBe(2000);
 		expect(request.uid).toBe('test@test.com');
+	});
+
+	it('should not call GetFreeBusy API if no participants', async () => {
+		const getFreeBusyHandler = jest.spyOn(getFreeBusyResponseHandler, 'getFreeBusyRequest');
+		renderHook(() =>
+			useParticipantsAvailability({
+				participants: [],
+				startDateEpochMillis: 0,
+				endDateEpochMillis: 0
+			})
+		);
+		expect(getFreeBusyHandler).not.toHaveBeenCalled();
 	});
 });
