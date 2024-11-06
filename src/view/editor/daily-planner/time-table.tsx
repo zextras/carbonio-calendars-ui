@@ -93,9 +93,10 @@ export const TimeTable = ({
 		<div style={{ width: '100%', position: 'relative' }} data-testid={'time-table'}>
 			<TimeTableRow key={`row-header`} data-testid={`row-header`}>
 				<EmailColumn data-testid={`column-header-0`} />
-				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-header-1`}></div>
+				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-header-1`}>
+					<TimetableHeader />
+				</div>
 			</TimeTableRow>
-			<TimetableHeader />
 			{rowDivs}
 		</div>
 	);
