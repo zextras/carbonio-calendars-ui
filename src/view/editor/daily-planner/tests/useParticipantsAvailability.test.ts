@@ -5,7 +5,9 @@
  */
 
 import { renderHook, waitFor } from '@testing-library/react';
+import { HttpResponse } from 'msw';
 
+import { createAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import * as getFreeBusyResponseHandler from '../../../../soap/get-free-busy-request';
 import { mockFreeBusyResponse } from '../../../../soap/test/mocks';
 import {
@@ -86,5 +88,30 @@ describe('useParticipantsAvailability', () => {
 			})
 		);
 		expect(getFreeBusyHandler).not.toHaveBeenCalled();
+	});
+
+	it('should call GetFreeBusy API only once if participants do not changes', async () => {
+		const interceptor = createAPIInterceptor(
+			'post',
+			'/service/soap/GetFreeBusyRequest',
+			HttpResponse.json({
+				Body: {
+					GetFreeBusyResponse: {}
+				}
+			})
+		);
+		const participants = [{ email: '123@test.com' }];
+
+		const { rerender } = renderHook(() =>
+			useParticipantsAvailability({
+				participants,
+				startDateEpochMillis: 0,
+				endDateEpochMillis: 0
+			})
+		);
+		rerender();
+		await waitFor(() => {
+			expect(interceptor.getCalledTimes()).toBe(1);
+		});
 	});
 });
