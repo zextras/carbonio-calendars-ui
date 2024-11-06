@@ -65,6 +65,17 @@ function mapFreeBusyToDailyPlannerRow(
 		freeBusy: [...eventsFree, ...eventsBusy, ...eventsTentative]
 	};
 }
+function atMidnight(date: Date): Date {
+	const midnight = date;
+	midnight.setHours(0, 0, 0, 0);
+	return midnight;
+}
+
+function onNextDay(date: Date): Date {
+	const nextDay = new Date(date);
+	nextDay.setDate(nextDay.getDate() + 1);
+	return nextDay;
+}
 
 export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	// TODO set to false once implementation is done
@@ -110,10 +121,8 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		...equipment,
 		...optionalAttendees
 	];
-	const today = new Date(Date.now());
-	const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDay(), 0, 0, 0);
-	const endOfDay = new Date(startOfDay);
-	endOfDay.setDate(startOfDay.getDate() + 1);
+	const startOfDay = atMidnight(new Date(startDate));
+	const endOfDay = onNextDay(startOfDay);
 	const participantAvailabilities = useParticipantsAvailability({
 		participants,
 		startDateEpochMillis: startOfDay.getTime(),

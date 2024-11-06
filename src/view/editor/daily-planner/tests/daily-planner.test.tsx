@@ -68,7 +68,7 @@ describe('EditorDailyPlanner', () => {
 		expect(within(timeTable).getByText('meeting.room1@test.com')).toBeVisible();
 	});
 
-	it('should call GetFreeBusy API with correct participants and today - tomorrow dates', async () => {
+	it('should call GetFreeBusy API with correct participants', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const interceptor = mockFreeBusyResponse([]);
 
@@ -99,12 +99,38 @@ describe('EditorDailyPlanner', () => {
 		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
 
 		const freeBusyRequest = await interceptor;
-		const startStopDifference = freeBusyRequest.e - freeBusyRequest.s;
-		const oneDayMillis = 60 * 60 * 24 * 1000;
-		expect(startStopDifference).toBe(oneDayMillis);
 		expect(freeBusyRequest.uid).toBe(
 			'organizer@test.com,attendee1@test.com,attendee2@test.com,meeting.room1@test.com,companyCar@test.com,optionalAttendee1@test.com'
 		);
+	});
+
+	it('should call GetFreeBusy API with dates between current startDate midnight and next day midnight', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const interceptor = mockFreeBusyResponse([]);
+		const start = new Date();
+		const end = new Date(start);
+		end.setDate(start.getDate() + 1);
+
+		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
+		const editor = generateEditor({
+			context: {
+				start: start.getTime(),
+				end: end.getTime(),
+				sender: organizer,
+				folders,
+				dispatch: store.dispatch
+			}
+		});
+
+		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+
+		const freeBusyRequest = await interceptor;
+		const expectedStartDate = new Date(start);
+		expectedStartDate.setHours(0, 0, 0, 0);
+		const expectedEndDate = new Date(expectedStartDate);
+		expectedEndDate.setDate(expectedStartDate.getDate() + 1);
+		expect(freeBusyRequest.s).toBe(expectedStartDate.getTime());
+		expect(freeBusyRequest.e).toBe(expectedEndDate.getTime());
 	});
 
 	it('should display organizer busy status', async () => {
