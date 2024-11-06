@@ -46,26 +46,21 @@ export function useParticipantsAvailability({
 	const uids = participants.map((p) => p.email).join(',');
 	useEffect(() => {
 		if (participants.length > 0) {
+			const newAvailabilities: Record<Email, ParticipantAvailability> = {};
 			getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids }).then(
 				(response) => {
 					response?.usr?.forEach((user) => {
-						participantsAvailability[user.id] = {
+						newAvailabilities[user.id] = {
 							free: user.f?.map(mapFreeBusyToEvent) ?? [],
 							busy: user.b?.map(mapFreeBusyToEvent) ?? [],
 							tentative: user.t?.map(mapFreeBusyToEvent) ?? []
 						};
 					});
-					setParticipantsAvailability(participantsAvailability);
+					setParticipantsAvailability(newAvailabilities);
 				}
 			);
 		}
-	}, [
-		uids,
-		participantsAvailability,
-		startDateEpochMillis,
-		endDateEpochMillis,
-		participants.length
-	]);
+	}, [uids, startDateEpochMillis, endDateEpochMillis, participants.length]);
 
 	return participantsAvailability;
 }

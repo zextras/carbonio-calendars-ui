@@ -59,6 +59,7 @@ export const TimeTable = ({
 		const parsedEvents = row?.freeBusy?.map((event) => parseFreeBusyEvent(event));
 		const eventDivs = parsedEvents?.map((parsedEvent) => (
 			<EventDiv
+				dataTestId={parsedEvent.type}
 				key={parsedEvent.start.minutes}
 				startPosition={parsedEvent.start.hours * 60 + parsedEvent.start.minutes}
 				eventTimeSpan={

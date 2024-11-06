@@ -120,7 +120,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		endDateEpochMillis: endOfDay.getTime()
 	});
 
-	const allParticipantsFB = participants.map((participant) =>
+	const rowsToDisplay = participants.map((participant) =>
 		mapFreeBusyToDailyPlannerRow(
 			participant.email,
 			participantAvailabilities?.[participant.email] ?? { free: [], busy: [], tentative: [] }
@@ -150,7 +150,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 					<TimeTable
 						appointmentStartDate={startDate}
 						appointmentEndDate={endDate}
-						rows={allParticipantsFB}
+						rows={rowsToDisplay}
 					/>
 				</div>
 			</Row>

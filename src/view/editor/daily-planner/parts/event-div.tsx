@@ -11,13 +11,16 @@ import { calculateEventWidth, calculatePosition } from '../utils';
 export const EventDiv = ({
 	startPosition,
 	eventTimeSpan,
-	color
+	color,
+	dataTestId
 }: {
 	startPosition: number;
 	eventTimeSpan: number;
 	color: string;
+	dataTestId?: string;
 }): React.JSX.Element => (
 	<div
+		data-testid={dataTestId}
 		style={{
 			width: calculateEventWidth(eventTimeSpan),
 			backgroundColor: color,

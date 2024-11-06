@@ -106,4 +106,33 @@ describe('EditorDailyPlanner', () => {
 			'organizer@test.com,attendee1@test.com,attendee2@test.com,meeting.room1@test.com,companyCar@test.com,optionalAttendee1@test.com'
 		);
 	});
+
+	it('should display organizer busy status', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const today = Date.now();
+		const busyStart = new Date(today);
+		busyStart.setHours(10, 30);
+		const busyEnd = new Date(today);
+		busyStart.setHours(15, 55);
+		const freeBusyApiCall = mockFreeBusyResponse([
+			{ id: 'organizer@test.com', f: [], b: [{ s: busyStart.getTime(), e: busyEnd.getTime() }] }
+		]);
+
+		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
+		const editor = generateEditor({
+			context: {
+				sender: organizer,
+				folders,
+				dispatch: store.dispatch
+			}
+		});
+
+		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+		await freeBusyApiCall;
+
+		const firstRow = within(screen.getByTestId('time-table')).getByTestId('row-0');
+		const freeBusyColumn = within(firstRow).getByTestId('column-1');
+		expect(await within(freeBusyColumn).findByTestId('busy')).toBeVisible();
+		screen.logTestingPlaygroundURL();
+	});
 });
