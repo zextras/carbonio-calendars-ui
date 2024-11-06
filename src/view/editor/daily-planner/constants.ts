@@ -11,3 +11,11 @@ export const DAILY_PLANNER_FREE_BUSY_TYPE = {
 	outOfOffice: 'out-of-office',
 	unknown: 'unknown'
 } as const;
+
+export const DAILY_PLANNER_PARTICIPANT_TYPE = {
+	organizer: 'organizer',
+	attendee: 'attendee',
+	optionalAttendee: 'optionalAttendee',
+	meetingRoom: 'meetingRoom',
+	equipment: 'equipment'
+} as const;

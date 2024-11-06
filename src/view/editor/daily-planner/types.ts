@@ -4,10 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { DAILY_PLANNER_FREE_BUSY_TYPE } from './constants';
+import { DAILY_PLANNER_FREE_BUSY_TYPE, DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
 
 export type DailyPlannerFreeBusyType =
 	(typeof DAILY_PLANNER_FREE_BUSY_TYPE)[keyof typeof DAILY_PLANNER_FREE_BUSY_TYPE];
+
+export type DailyPlannerParticipantType =
+	(typeof DAILY_PLANNER_PARTICIPANT_TYPE)[keyof typeof DAILY_PLANNER_PARTICIPANT_TYPE];
 
 export type DailyPlannerFreeBusy = {
 	type: DailyPlannerFreeBusyType;
@@ -21,7 +24,12 @@ export type DailyPlannerFreeBusyEvent = {
 	end: HoursMinutes;
 };
 
-export type DailyPlannerRow = { email: string; freeBusy: DailyPlannerFreeBusy[] };
+// TODO: add participant type as required, we need it to display corect icon on daily planner
+export type DailyPlannerRow = {
+	email: string;
+	participantType?: DailyPlannerParticipantType;
+	freeBusy: DailyPlannerFreeBusy[];
+};
 
 export type TimeTableProps = {
 	appointmentStartDate: number;
