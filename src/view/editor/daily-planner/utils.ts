@@ -6,15 +6,12 @@
 
 import { Theme } from '@zextras/carbonio-design-system';
 
-import { DAILY_PLANNER_FREE_BUSY_TYPE } from './constants';
 import {
 	DailyPlannerFreeBusy,
 	DailyPlannerFreeBusyType,
 	HoursMinutes,
-	DailyPlannerFreeBusyEvent,
-	DailyPlannerRow
+	DailyPlannerFreeBusyEvent
 } from './types';
-import { AttendeesAvailabilityListType } from '../../../hooks/use-attendees-availability';
 
 export function getEventColor(type: DailyPlannerFreeBusyType, theme: Theme): string {
 	switch (type) {
@@ -54,32 +51,4 @@ export function calculatePosition(minutes: number): string {
 export function calculateEventWidth(minutes: number): string {
 	const width = (minutes * 100) / (60 * 24);
 	return `${width}%`;
-}
-
-export function getAllParticipantsFreeBusy(
-	allFreeBusy: AttendeesAvailabilityListType
-): Array<DailyPlannerRow> {
-	return allFreeBusy
-		? allFreeBusy.map((attendeeFb) => {
-				const eventsFree = attendeeFb.f.map((event) => ({
-					startDate: event.s,
-					endDate: event.e,
-					type: DAILY_PLANNER_FREE_BUSY_TYPE.free
-				}));
-				const eventsBusy = attendeeFb.b.map((event) => ({
-					startDate: event.s,
-					endDate: event.e,
-					type: DAILY_PLANNER_FREE_BUSY_TYPE.busy
-				}));
-				const eventsTentative = attendeeFb.t.map((event) => ({
-					startDate: event.s,
-					endDate: event.e,
-					type: DAILY_PLANNER_FREE_BUSY_TYPE.tentative
-				}));
-				return {
-					email: attendeeFb.email,
-					freeBusy: [...eventsFree, ...eventsBusy, ...eventsTentative]
-				};
-			})
-		: [];
 }
