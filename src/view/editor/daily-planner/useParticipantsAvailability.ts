@@ -13,11 +13,11 @@ type Event = {
 	endDateEpochMillis: number;
 };
 export type ParticipantAvailability = {
-	email: string;
 	free: Event[];
 	busy: Event[];
 	tentative: Event[];
 };
+type Email = string;
 
 function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
 	return {
@@ -29,37 +29,29 @@ export function useParticipantsAvailability({
 	participants
 }: {
 	participants: { email: string }[];
-}): ParticipantAvailability[] {
-	const initialAvailabilities: ParticipantAvailability[] = participants.map((participant) => ({
-		email: participant.email,
-		free: [],
-		tentative: [],
-		busy: []
-	}));
-
-	const [participantsAvailabilityList, setParticipantsAvailabilityList] =
-		useState<ParticipantAvailability[]>(initialAvailabilities);
+}): Record<Email, ParticipantAvailability> {
+	const [participantsAvailability, setParticipantsAvailability] = useState<
+		Record<Email, ParticipantAvailability>
+	>({});
+	const uids = participants.map((p) => p.email).join(',');
 	useEffect(() => {
 		const today = new Date();
 		const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDay(), 0, 0, 0);
 		const endOfDay = new Date(startOfDay.getDate() + 1);
-		const availabilitySoapResponseRecord: Record<string, ParticipantAvailability> = {};
-		getFreeBusyRequest({ s: startOfDay.getTime(), e: endOfDay.getTime(), uid: '1' }).then(
+
+		getFreeBusyRequest({ s: startOfDay.getTime(), e: endOfDay.getTime(), uid: uids }).then(
 			(response) => {
 				response?.usr?.forEach((user) => {
-					availabilitySoapResponseRecord[user.id] = {
-						email: user.id,
+					participantsAvailability[user.id] = {
 						free: user.f?.map(mapFreeBusyToEvent) ?? [],
 						busy: user.b?.map(mapFreeBusyToEvent) ?? [],
 						tentative: user.t?.map(mapFreeBusyToEvent) ?? []
 					};
 				});
+				setParticipantsAvailability(participantsAvailability);
 			}
 		);
-		participantsAvailabilityList.map(
-			(participant) => availabilitySoapResponseRecord?.[participant.email]
-		);
-	}, [participants, participantsAvailabilityList]);
+	}, [uids, participantsAvailability]);
 
-	return participantsAvailabilityList;
+	return participantsAvailability;
 }
