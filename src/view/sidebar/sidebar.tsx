@@ -93,7 +93,10 @@ const useSidebarSortedFolders = (
 			map(folders, (accountRoot) => {
 				const allCalendars = find(groups, ['id', SIDEBAR_ITEMS.ALL_CALENDAR]);
 				const otherGroups = reject(groups, ['id', SIDEBAR_ITEMS.ALL_CALENDAR]);
-				const sortedGroups = compact([allCalendars, ...sortBy(otherGroups, 'name')]);
+				const sortedGroups = compact([
+					allCalendars,
+					...sortBy(otherGroups, (group) => group.name.toLowerCase())
+				]);
 				const calendarGroups = map(sortedGroups, (group) => {
 					const name =
 						group.id === SIDEBAR_ITEMS.ALL_CALENDAR
