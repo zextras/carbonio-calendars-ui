@@ -50,8 +50,8 @@ export const TimeTable = ({
 	const END_DATE_LINE_COLOR = theme.palette.error.regular;
 	const hourTicks = Array.from(
 		{ length: 25 },
-		(_, hour): React.JSX.Element => (
-			<MinutesLine key={hour} width={'1px'} atPosition={60 * hour} color={'#d3d3d3'} />
+		(index, hour): React.JSX.Element => (
+			<MinutesLine key={`${hour}`} width={'1px'} atPosition={60 * hour} color={'#d3d3d3'} />
 		)
 	);
 
@@ -70,7 +70,7 @@ export const TimeTable = ({
 			/>
 		));
 		return (
-			<TimeTableRow key={row.email} data-testid={`row-${index}`}>
+			<TimeTableRow key={`row-${index}`} data-testid={`row-${index}`}>
 				<EmailColumn data-testid={`column-0`}>
 					<Chip maxWidth={'10rem'} key={'organizer'} label={`${row.email}`} />
 				</EmailColumn>
@@ -92,10 +92,9 @@ export const TimeTable = ({
 		<div style={{ width: '100%', position: 'relative' }} data-testid={'time-table'}>
 			<TimeTableRow key={`row-header`} data-testid={`row-header`}>
 				<EmailColumn data-testid={`column-header-0`} />
-				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-header-1`}>
-					<TimetableHeader />
-				</div>
+				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-header-1`}></div>
 			</TimeTableRow>
+			<TimetableHeader />
 			{rowDivs}
 		</div>
 	);

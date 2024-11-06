@@ -10,9 +10,14 @@ import { Button, Row } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { DAILY_PLANNER_FREE_BUSY_TYPE } from './constants';
 import { TimeTable } from './time-table';
-import { getAllParticipantsFreeBusy } from './utils';
-import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
+import { DailyPlannerRow } from './types';
+import {
+	Participant,
+	ParticipantAvailability,
+	useParticipantsAvailability
+} from './useParticipantsAvailability';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttendees,
@@ -36,6 +41,31 @@ function getWithinSameDay(startDate: number, endDate: number): boolean {
 	);
 }
 
+function mapFreeBusyToDailyPlannerRow(
+	email: string,
+	freeBusy: ParticipantAvailability
+): DailyPlannerRow {
+	const eventsFree = freeBusy.free.map((event) => ({
+		startDate: event.startDateEpochMillis,
+		endDate: event.endDateEpochMillis,
+		type: DAILY_PLANNER_FREE_BUSY_TYPE.free
+	}));
+	const eventsBusy = freeBusy.busy.map((event) => ({
+		startDate: event.startDateEpochMillis,
+		endDate: event.endDateEpochMillis,
+		type: DAILY_PLANNER_FREE_BUSY_TYPE.busy
+	}));
+	const eventsTentative = freeBusy.tentative.map((event) => ({
+		startDate: event.startDateEpochMillis,
+		endDate: event.endDateEpochMillis,
+		type: DAILY_PLANNER_FREE_BUSY_TYPE.tentative
+	}));
+	return {
+		email,
+		freeBusy: [...eventsFree, ...eventsBusy, ...eventsTentative]
+	};
+}
+
 export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JSX.Element => {
 	// TODO set to false once implementation is done
 	const [showDailyPlanner, setShowDailyPlanner] = useState(true);
@@ -55,25 +85,41 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		: t('editor.daily_planner.button.show', 'show organizer tool');
 
 	const sender = useAppSelector(selectSender(editorId));
-	const senderWithEmail = {
-		...sender,
-		email: sender?.address ?? ''
-	};
 
-	const equipment = useAppSelector(selectEditorEquipment(editorId)) ?? [];
-	const attendees = useAppSelector(selectEditorAttendees(editorId)) ?? [];
-	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId)) ?? [];
-	const meetingRoom = useAppSelector(selectEditorMeetingRoom(editorId)) ?? [];
+	const equipment = (useAppSelector(selectEditorEquipment(editorId)) ?? []).map((equipment) => ({
+		email: equipment.email
+	}));
+	const attendees: Participant[] = (useAppSelector(selectEditorAttendees(editorId)) ?? []).map(
+		(at) => ({
+			email: at.email
+		})
+	);
+	const optionalAttendees = (useAppSelector(selectEditorOptionalAttendees(editorId)) ?? []).map(
+		(at) => ({
+			email: at.email
+		})
+	);
+	const meetingRoom = (useAppSelector(selectEditorMeetingRoom(editorId)) ?? []).map((resource) => ({
+		email: resource.email
+	}));
 
-	const allFreeBusy = useAttendeesAvailability(startDate, [
-		senderWithEmail,
+	const participants = [
+		{ email: sender?.address ?? '' },
 		...attendees,
 		...meetingRoom,
 		...equipment,
 		...optionalAttendees
-	]);
+	];
+	const participantAvailabilities = useParticipantsAvailability({
+		participants
+	});
 
-	const allParticipantsFB = getAllParticipantsFreeBusy(allFreeBusy);
+	const allParticipantsFB = participants.map((participant) =>
+		mapFreeBusyToDailyPlannerRow(
+			participant.email,
+			participantAvailabilities?.[participant.email] ?? { free: [], busy: [], tentative: [] }
+		)
+	);
 
 	return (
 		<>

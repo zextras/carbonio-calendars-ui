@@ -12,12 +12,17 @@ type Event = {
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
 };
+
 export type ParticipantAvailability = {
 	free: Event[];
 	busy: Event[];
 	tentative: Event[];
 };
+
 type Email = string;
+export type Participant = {
+	email: string;
+};
 
 function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
 	return {
@@ -25,10 +30,11 @@ function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
 		endDateEpochMillis: freeBusy.e
 	};
 }
+
 export function useParticipantsAvailability({
 	participants
 }: {
-	participants: { email: string }[];
+	participants: Participant[];
 }): Record<Email, ParticipantAvailability> {
 	const [participantsAvailability, setParticipantsAvailability] = useState<
 		Record<Email, ParticipantAvailability>

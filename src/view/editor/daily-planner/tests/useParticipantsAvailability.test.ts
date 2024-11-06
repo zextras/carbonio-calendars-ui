@@ -5,29 +5,12 @@
  */
 
 import { renderHook, waitFor } from '@testing-library/react';
-import { http, HttpResponse } from 'msw';
 
-import { getSetupServer } from '../../../../carbonio-ui-commons/test/jest-setup';
-import { GetFreeBusyResponse } from '../../../../soap/get-free-busy-request';
+import { mockFreeBusyResponse } from '../../../../soap/test/mocks';
 import {
 	ParticipantAvailability,
 	useParticipantsAvailability
 } from '../useParticipantsAvailability';
-
-const mockFreeBusyResponse = (usersFreeBusy: GetFreeBusyResponse['usr']): void => {
-	getSetupServer().use(
-		http.post('/service/soap/GetFreeBusyRequest', async () =>
-			HttpResponse.json({
-				Body: {
-					GetFreeBusyResponse: {
-						usr: usersFreeBusy,
-						_jsns: 'urn:zimbraMail'
-					}
-				}
-			})
-		)
-	);
-};
 
 describe('useParticipantsAvailability', () => {
 	it('should return an empty object if no availability', () => {
