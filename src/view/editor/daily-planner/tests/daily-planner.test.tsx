@@ -29,7 +29,7 @@ const folder = {
 const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
 
 describe('EditorDailyPlanner', () => {
-	it('should render the daily planner component', () => {
+	it('should render the daily planner component participants even without freebusy information', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		mockFreeBusyResponse([]);
 
@@ -66,5 +66,39 @@ describe('EditorDailyPlanner', () => {
 		expect(within(timeTable).getByText('optionalAttendee1@test.com')).toBeVisible();
 		expect(within(timeTable).getByText('companyCar@test.com')).toBeVisible();
 		expect(within(timeTable).getByText('meeting.room1@test.com')).toBeVisible();
+	});
+
+	it('should call GetFreeBusy API with correct participants and today - tomorrow dates', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const interceptor = mockFreeBusyResponse([]);
+
+		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
+		const attendees: EditorChipAttendees[] = [
+			{ email: 'attendee1@test.com' },
+			{ email: 'attendee2@test.com' }
+		];
+		const optionalAttendees: EditorChipAttendees[] = [
+			{
+				email: 'optionalAttendee1@test.com'
+			}
+		];
+		const meetingRoom: Resource = { email: 'meeting.room1@test.com', label: 'Meeting Room 1' };
+		const equipment: Resource = { email: 'companyCar@test.com', label: 'Company Car' };
+		const editor = generateEditor({
+			context: {
+				attendees,
+				optionalAttendees,
+				sender: organizer,
+				meetingRoom: [meetingRoom],
+				equipment: [equipment],
+				folders,
+				dispatch: store.dispatch
+			}
+		});
+		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+		const freeBusyRequest = await interceptor;
+		const startStopDifference = freeBusyRequest.e - freeBusyRequest.s;
+		const oneDayMillis = 60 * 60 * 24 * 1000;
+		expect(startStopDifference).toBe(oneDayMillis);
 	});
 });

@@ -17,7 +17,9 @@ describe('useParticipantsAvailability', () => {
 		const participants = [{ email: 'test@test.com' }];
 		const { result } = renderHook(() =>
 			useParticipantsAvailability({
-				participants
+				participants,
+				startDateEpochMillis: 0,
+				endDateEpochMillis: 0
 			})
 		);
 		expect(result.current).toMatchObject({});
@@ -33,7 +35,9 @@ describe('useParticipantsAvailability', () => {
 		]);
 		const { result } = renderHook(() =>
 			useParticipantsAvailability({
-				participants
+				participants,
+				startDateEpochMillis: 0,
+				endDateEpochMillis: 0
 			})
 		);
 
@@ -46,5 +50,28 @@ describe('useParticipantsAvailability', () => {
 		await waitFor(() => {
 			expect(result.current[participantEmail]).toMatchObject(expected);
 		});
+	});
+
+	it('should call GetFreeBusy with correct parameters', async () => {
+		const participants = [{ email: 'test@test.com' }];
+		const mockRequest = mockFreeBusyResponse([
+			{
+				id: 'test@test.com',
+				f: [{ s: 100, e: 200 }]
+			}
+		]);
+
+		renderHook(() =>
+			useParticipantsAvailability({
+				participants,
+				startDateEpochMillis: 1000,
+				endDateEpochMillis: 2000
+			})
+		);
+
+		const request = await mockRequest;
+		expect(request.s).toBe(1000);
+		expect(request.e).toBe(2000);
+		expect(request.uid).toBe('test@test.com');
 	});
 });

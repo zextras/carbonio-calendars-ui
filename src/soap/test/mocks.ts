@@ -4,22 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { http, HttpResponse } from 'msw';
+import { createSoapAPIInterceptor } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { GetFreeBusyRequest, GetFreeBusyResponse } from '../get-free-busy-request';
 
-import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
-import { GetFreeBusyResponse } from '../get-free-busy-request';
-
-export const mockFreeBusyResponse = (usersFreeBusy: GetFreeBusyResponse['usr']): void => {
-	getSetupServer().use(
-		http.post('/service/soap/GetFreeBusyRequest', async () =>
-			HttpResponse.json({
-				Body: {
-					GetFreeBusyResponse: {
-						usr: usersFreeBusy,
-						_jsns: 'urn:zimbraMail'
-					}
-				}
-			})
-		)
-	);
-};
+export function mockFreeBusyResponse(
+	usersFreeBusy: GetFreeBusyResponse['usr']
+): Promise<GetFreeBusyRequest> {
+	return createSoapAPIInterceptor<GetFreeBusyRequest, GetFreeBusyResponse>('GetFreeBusy', {
+		usr: usersFreeBusy
+	});
+}

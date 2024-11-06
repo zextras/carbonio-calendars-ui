@@ -32,20 +32,20 @@ function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
 }
 
 export function useParticipantsAvailability({
-	participants
+	participants,
+	startDateEpochMillis,
+	endDateEpochMillis
 }: {
 	participants: Participant[];
+	startDateEpochMillis: number;
+	endDateEpochMillis: number;
 }): Record<Email, ParticipantAvailability> {
 	const [participantsAvailability, setParticipantsAvailability] = useState<
 		Record<Email, ParticipantAvailability>
 	>({});
 	const uids = participants.map((p) => p.email).join(',');
 	useEffect(() => {
-		const today = new Date();
-		const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDay(), 0, 0, 0);
-		const endOfDay = new Date(startOfDay.getDate() + 1);
-
-		getFreeBusyRequest({ s: startOfDay.getTime(), e: endOfDay.getTime(), uid: uids }).then(
+		getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids }).then(
 			(response) => {
 				response?.usr?.forEach((user) => {
 					participantsAvailability[user.id] = {
@@ -57,7 +57,7 @@ export function useParticipantsAvailability({
 				setParticipantsAvailability(participantsAvailability);
 			}
 		);
-	}, [uids, participantsAvailability]);
+	}, [uids, participantsAvailability, startDateEpochMillis, endDateEpochMillis]);
 
 	return participantsAvailability;
 }

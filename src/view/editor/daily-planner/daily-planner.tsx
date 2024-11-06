@@ -110,8 +110,14 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		...equipment,
 		...optionalAttendees
 	];
+	const today = new Date(Date.now());
+	const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDay(), 0, 0, 0);
+	const endOfDay = new Date(startOfDay);
+	endOfDay.setDate(startOfDay.getDate() + 1);
 	const participantAvailabilities = useParticipantsAvailability({
-		participants
+		participants,
+		startDateEpochMillis: startOfDay.getTime(),
+		endDateEpochMillis: endOfDay.getTime()
 	});
 
 	const allParticipantsFB = participants.map((participant) =>
