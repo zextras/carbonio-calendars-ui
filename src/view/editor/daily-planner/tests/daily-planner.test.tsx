@@ -95,10 +95,15 @@ describe('EditorDailyPlanner', () => {
 				dispatch: store.dispatch
 			}
 		});
+
 		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+
 		const freeBusyRequest = await interceptor;
 		const startStopDifference = freeBusyRequest.e - freeBusyRequest.s;
 		const oneDayMillis = 60 * 60 * 24 * 1000;
 		expect(startStopDifference).toBe(oneDayMillis);
+		expect(freeBusyRequest.uid).toBe(
+			'organizer@test.com,attendee1@test.com,attendee2@test.com,meeting.room1@test.com,companyCar@test.com,optionalAttendee1@test.com'
+		);
 	});
 });
