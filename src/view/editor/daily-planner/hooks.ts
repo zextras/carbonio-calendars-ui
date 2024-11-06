@@ -4,18 +4,27 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { FreeBusy, getFreeBusyRequest } from '../../../soap/get-free-busy-request';
 
 type Event = {
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
 };
-type ParticipantAvailability = {
+export type ParticipantAvailability = {
 	email: string;
 	free: Event[];
 	busy: Event[];
 	tentative: Event[];
 };
+
+function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
+	return {
+		startDateEpochMillis: freeBusy.s,
+		endDateEpochMillis: freeBusy.e
+	};
+}
 export function useParticipantsAvailability({
 	participants
 }: {
@@ -27,7 +36,30 @@ export function useParticipantsAvailability({
 		tentative: [],
 		busy: []
 	}));
+
 	const [participantsAvailabilityList, setParticipantsAvailabilityList] =
 		useState<ParticipantAvailability[]>(initialAvailabilities);
+	useEffect(() => {
+		const today = new Date();
+		const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDay(), 0, 0, 0);
+		const endOfDay = new Date(startOfDay.getDate() + 1);
+		const availabilitySoapResponseRecord: Record<string, ParticipantAvailability> = {};
+		getFreeBusyRequest({ s: startOfDay.getTime(), e: endOfDay.getTime(), uid: '1' }).then(
+			(response) => {
+				response?.usr?.forEach((user) => {
+					availabilitySoapResponseRecord[user.id] = {
+						email: user.id,
+						free: user.f?.map(mapFreeBusyToEvent) ?? [],
+						busy: user.b?.map(mapFreeBusyToEvent) ?? [],
+						tentative: user.t?.map(mapFreeBusyToEvent) ?? []
+					};
+				});
+			}
+		);
+		participantsAvailabilityList.map(
+			(participant) => availabilitySoapResponseRecord?.[participant.email]
+		);
+	}, [participants, participantsAvailabilityList]);
+
 	return participantsAvailabilityList;
 }
