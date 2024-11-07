@@ -34,6 +34,8 @@ export type MultipleCalendarSelectorProps = {
 	calendarsToExclude?: Array<Folder>;
 };
 
+const CHIP_INPUT_SEPARATORS = ['Enter', ',', 'Tab'];
+
 const isCalendarItem = (value: unknown): value is { id: string; label: string } =>
 	!!value && typeof value === 'object' && 'id' in value && 'label' in value;
 
@@ -163,7 +165,7 @@ export const MultipleCalendarSelector = ({
 
 	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>(
 		({ key, textContent }) => {
-			if (key === 'Enter') {
+			if (CHIP_INPUT_SEPARATORS.includes(key)) {
 				if (options?.[0]) {
 					const chip = createChip(options[0]);
 					setSelectedCalendarsChips((prevValue) => [...prevValue, chip]);
@@ -180,10 +182,6 @@ export const MultipleCalendarSelector = ({
 		setChipInputFocused((prev) => prev || true);
 	}, []);
 
-	const onBlur = useCallback(() => {
-		setChipInputFocused((prev) => (!prev ? prev : false));
-	}, []);
-
 	return (
 		<ChipInput
 			data-testid={'calendar-selector-input'}
@@ -194,6 +192,7 @@ export const MultipleCalendarSelector = ({
 			onInputType={onInputType}
 			onChange={onSelectedCalendarsChange}
 			placeholder={t('label.calendar_selector.placeholder', 'Add Calendars')}
+			separators={CHIP_INPUT_SEPARATORS.map((key) => ({ key, ctrlKey: false }))}
 			requireUniqueChips
 			icon={'Plus'}
 			iconDisabled={isCalendarAddDisabled}
