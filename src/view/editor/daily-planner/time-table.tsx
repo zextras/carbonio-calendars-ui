@@ -10,6 +10,7 @@ import { map } from 'lodash';
 import styled from 'styled-components';
 
 import { TimetableHeader } from './time-table-header';
+import { TimeTableLegend } from './time-table-legend';
 import { TimeTableParticipantRow } from './time-table-participant-row';
 import { TimeTableProps } from './types';
 import { getLocalHoursMinutesFromEpoch } from './utils';
@@ -21,6 +22,13 @@ const TimeTableRow = styled.div`
 	flex-wrap: nowrap;
 `;
 const EmailColumn = styled.div`
+	display: flex;
+	align-items: center;
+	min-width: 10rem;
+	padding-right: 2rem;
+`;
+
+const EmptyColumn = styled.div`
 	display: flex;
 	align-items: center;
 	min-width: 10rem;
@@ -46,6 +54,12 @@ export const TimeTable = ({
 			{map(rows, (row) => (
 				<TimeTableParticipantRow key={row.email} participantRow={row} start={start} end={end} />
 			))}
+			<TimeTableRow key={`row-header`} data-testid={`row-header`}>
+				<EmptyColumn data-testid={`column-legend-0`} />
+				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-legend-1`}>
+					<TimeTableLegend />
+				</div>
+			</TimeTableRow>
 		</div>
 	);
 };
