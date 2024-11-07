@@ -32,7 +32,7 @@ import { Folder, LinkFolder } from '../../carbonio-ui-commons/types';
 import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS, SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
-import { CalendarGroup, getCalendarGroups } from '../../store/zustand/calendar-group-store';
+import { CalendarGroup, useCalendarGroups } from '../../store/zustand/calendar-group-store';
 import useGetTagsAccordion from '../tags/use-get-tags-accordions';
 
 type SidebarComponentProps = {
@@ -156,7 +156,7 @@ const Sidebar: FC<SidebarProps> = ({ expanded }) => {
 	useInitializeFolders(FOLDER_VIEW.appointment);
 	const folders = useRootsArray();
 	const folderWithShares = useMemo(() => addFindSharesItem(folders), [folders]);
-	const calendarGroups = getCalendarGroups();
+	const calendarGroups = useCalendarGroups();
 	const fullFolderTree: Array<Folder | CalendarGroup> = useSidebarSortedFolders(
 		folderWithShares,
 		calendarGroups

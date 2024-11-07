@@ -3,31 +3,90 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { forEach, isEqual, keyBy } from 'lodash';
+import { forEach, isEqual, keyBy, some } from 'lodash';
 import { create } from 'zustand';
+
+import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { Folder } from '../../carbonio-ui-commons/types';
 
 export type CalendarGroup = {
 	id: string;
 	name: string;
 	calendarId?: string[];
 };
-export type CalendarGroups = CalendarGroup[];
+export type CalendarGroups = Record<string, CalendarGroup>;
 
 export type CalendarGroupAppState = {
-	groups: Record<string, CalendarGroup>;
+	groups: CalendarGroups;
 };
 
 export const useCalendarGroupStore = create<CalendarGroupAppState>(() => ({
 	groups: {}
 }));
 
-export const useGroupById = (groupId: string): CalendarGroup | undefined =>
-	useCalendarGroupStore((state) => state.groups[groupId]);
+/**
+ * Check if the group contains any non-existent calendars
+ * @param group
+ * @param folders
+ */
+const groupContainsNonExistentCalendars = (
+	group: CalendarGroup,
+	folders: Record<string, Folder>
+): boolean => (group.calendarId ? group.calendarId.some((id) => !folders[id]) : false);
 
-export const getCalendarGroups = (): Record<string, CalendarGroup> =>
-	useCalendarGroupStore.getState().groups;
+/**
+ * Check if any group contains a non-existent calendar
+ * @param groups
+ * @param folders
+ */
+const groupsContainNonExistentCalendars = (
+	groups: CalendarGroups,
+	folders: Record<string, Folder>
+): boolean => some(groups, (group) => groupContainsNonExistentCalendars(group, folders));
 
-export const updateCalendarGroupsStore = (groups: CalendarGroups): void => {
+/**
+ * Return the given group with non-existent calendars removed
+ * @param group
+ * @param folders
+ */
+const cleanupGroupFromNonExistentCalendars = (
+	group: CalendarGroup,
+	folders: Record<string, Folder>
+): CalendarGroup => {
+	if (!groupContainsNonExistentCalendars(group, folders)) {
+		return group;
+	}
+
+	const newGroup = { ...group };
+	if (newGroup.calendarId) {
+		newGroup.calendarId = newGroup.calendarId.filter((id) => folders[id]);
+	}
+	return newGroup;
+};
+
+export const useGroupById = (groupId: string): CalendarGroup | undefined => {
+	const folders = useFoldersMap();
+	const group = useCalendarGroupStore((state) => state.groups[groupId]);
+	return group ? cleanupGroupFromNonExistentCalendars(group, folders) : undefined;
+};
+
+export const useCalendarGroups = (): CalendarGroups => {
+	const folders = useFoldersMap();
+	return useCalendarGroupStore((state) => {
+		if (!groupsContainNonExistentCalendars(state.groups, folders)) {
+			return state.groups;
+		}
+
+		const newGroups = { ...state.groups };
+		forEach(newGroups, (group, id) => {
+			newGroups[id] = cleanupGroupFromNonExistentCalendars(group, folders);
+		});
+
+		return newGroups;
+	});
+};
+
+export const updateCalendarGroupsStore = (groups: Array<CalendarGroup>): void => {
 	const groupsToAdd = keyBy(groups, 'id');
 	useCalendarGroupStore.setState((state) => ({
 		...state,
