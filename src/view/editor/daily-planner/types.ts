@@ -24,10 +24,9 @@ export type DailyPlannerFreeBusyEvent = {
 	end: HoursMinutes;
 };
 
-// TODO: add participant type as required, we need it to display corect icon on daily planner
 export type DailyPlannerRow = {
 	email: string;
-	participantType?: DailyPlannerParticipantType;
+	participantType: DailyPlannerParticipantType;
 	freeBusy: DailyPlannerFreeBusy[];
 };
 

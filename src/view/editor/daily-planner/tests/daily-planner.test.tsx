@@ -160,4 +160,21 @@ describe('EditorDailyPlanner', () => {
 		const freeBusyColumn = within(firstRow).getByTestId('column-1');
 		expect(await within(freeBusyColumn).findByTestId('busy')).toBeVisible();
 	});
+
+	it('should display People icon for organizer', () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
+		const editor = generateEditor({
+			context: {
+				sender: organizer,
+				folders,
+				dispatch: store.dispatch
+			}
+		});
+		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+		const timeTable = screen.getByTestId('time-table');
+		const firstRow = within(timeTable).getByTestId('row-organizer@test.com');
+		const firstColumn = within(firstRow).getByTestId('column-0');
+		expect(within(firstColumn).getByTestId('icon: Person')).toBeVisible();
+	});
 });

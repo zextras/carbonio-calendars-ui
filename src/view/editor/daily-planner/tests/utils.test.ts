@@ -5,7 +5,7 @@
  */
 
 import { DailyPlannerFreeBusy, DailyPlannerFreeBusyEvent } from '../types';
-import { getLocalHoursMinutesFromEpoch, parseFreeBusyEvent } from '../utils';
+import { getLocalHoursMinutesFromEpoch, getParticipantIcon, parseFreeBusyEvent } from '../utils';
 
 describe('getLocalHoursMinutesFromEpoch', () => {
 	it('should correctly extract hours and minutes from a timestamp', () => {
@@ -108,5 +108,23 @@ describe('parseFreeBusyEvent', () => {
 
 		const result = parseFreeBusyEvent(mockEvent);
 		expect(result).toEqual(expectedParsedEvent);
+	});
+});
+
+describe('getParticipantIcon', () => {
+	it('should return Person for organizer', () => {
+		expect(getParticipantIcon('organizer')).toBe('Person');
+	});
+	it('should return Person for attendee', () => {
+		expect(getParticipantIcon('attendee')).toBe('Person');
+	});
+	it('should return Building for meeting room', () => {
+		expect(getParticipantIcon('meetingRoom')).toBe('Building');
+	});
+	it('should return Briefcase for equipment', () => {
+		expect(getParticipantIcon('equipment')).toBe('Briefcase');
+	});
+	it('should return PersonOutline for optional attendee', () => {
+		expect(getParticipantIcon('optionalAttendee')).toBe('PersonOutline');
 	});
 });

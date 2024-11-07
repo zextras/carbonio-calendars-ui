@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import { DAILY_PLANNER_FREE_BUSY_TYPE } from './constants';
 import { TimeTable } from './time-table';
-import { DailyPlannerRow } from './types';
+import { DailyPlannerParticipantType, DailyPlannerRow } from './types';
 import {
 	Participant,
 	ParticipantAvailability,
@@ -41,10 +41,16 @@ function getWithinSameDay(startDate: number, endDate: number): boolean {
 	);
 }
 
-function mapFreeBusyToDailyPlannerRow(
-	email: string,
-	freeBusy: ParticipantAvailability
-): DailyPlannerRow {
+function mapFreeBusyToDailyPlannerRow({
+	email,
+	participantType,
+	availabilities
+}: {
+	email: string;
+	participantType: DailyPlannerParticipantType;
+	availabilities: Record<string, ParticipantAvailability>;
+}): DailyPlannerRow {
+	const freeBusy = availabilities?.[email] ?? { free: [], busy: [], tentative: [] };
 	const eventsFree = freeBusy.free.map((event) => ({
 		startDate: event.startDateEpochMillis,
 		endDate: event.endDateEpochMillis,
@@ -62,6 +68,7 @@ function mapFreeBusyToDailyPlannerRow(
 	}));
 	return {
 		email,
+		participantType,
 		freeBusy: [...eventsFree, ...eventsBusy, ...eventsTentative]
 	};
 }
@@ -129,12 +136,41 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		endDateEpochMillis: endOfDay.getTime()
 	});
 
-	const participantRows = participants.map((participant) =>
-		mapFreeBusyToDailyPlannerRow(
-			participant.email,
-			participantAvailabilities?.[participant.email] ?? { free: [], busy: [], tentative: [] }
+	const participantRows = [
+		mapFreeBusyToDailyPlannerRow({
+			email: sender.address ?? '',
+			participantType: 'organizer',
+			availabilities: participantAvailabilities
+		}),
+		...attendees.map((attendee) =>
+			mapFreeBusyToDailyPlannerRow({
+				email: attendee.email,
+				participantType: 'attendee',
+				availabilities: participantAvailabilities
+			})
+		),
+		...meetingRoom.map((room) =>
+			mapFreeBusyToDailyPlannerRow({
+				email: room.email,
+				participantType: 'meetingRoom',
+				availabilities: participantAvailabilities
+			})
+		),
+		...equipment.map((equip) =>
+			mapFreeBusyToDailyPlannerRow({
+				email: equip.email,
+				participantType: 'equipment',
+				availabilities: participantAvailabilities
+			})
+		),
+		...optionalAttendees.map((optionalAttendee) =>
+			mapFreeBusyToDailyPlannerRow({
+				email: optionalAttendee.email,
+				participantType: 'optionalAttendee',
+				availabilities: participantAvailabilities
+			})
 		)
-	);
+	];
 
 	return (
 		<>

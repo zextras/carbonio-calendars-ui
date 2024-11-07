@@ -6,11 +6,13 @@
 
 import { Theme } from '@zextras/carbonio-design-system';
 
+import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
 import {
 	DailyPlannerFreeBusy,
 	DailyPlannerFreeBusyType,
 	HoursMinutes,
-	DailyPlannerFreeBusyEvent
+	DailyPlannerFreeBusyEvent,
+	DailyPlannerParticipantType
 } from './types';
 
 export function getEventColor(type: DailyPlannerFreeBusyType, theme: Theme): string {
@@ -27,6 +29,21 @@ export function getEventColor(type: DailyPlannerFreeBusyType, theme: Theme): str
 			return theme.palette.gray4.disabled;
 		default:
 			return theme.palette.success.regular;
+	}
+}
+
+export function getParticipantIcon(type: DailyPlannerParticipantType): string {
+	switch (type) {
+		case DAILY_PLANNER_PARTICIPANT_TYPE.organizer:
+		case DAILY_PLANNER_PARTICIPANT_TYPE.attendee:
+			return 'Person';
+		case DAILY_PLANNER_PARTICIPANT_TYPE.meetingRoom:
+			return 'Building';
+		case DAILY_PLANNER_PARTICIPANT_TYPE.equipment:
+			return 'Briefcase';
+		case DAILY_PLANNER_PARTICIPANT_TYPE.optionalAttendee:
+		default:
+			return 'PersonOutline';
 	}
 }
 

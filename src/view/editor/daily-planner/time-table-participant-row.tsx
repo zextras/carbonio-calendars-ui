@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { Chip, useTheme } from '@zextras/carbonio-design-system';
+import { Chip, Container, Icon, useTheme } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import styled from 'styled-components';
 
@@ -14,7 +14,7 @@ import { MinutesLine } from './parts/minutes-line';
 import { TimeTableEvent } from './time-table-event';
 import { TimeTableHourTicks } from './time-table-hour-ticks';
 import { DailyPlannerRow, HoursMinutes } from './types';
-import { parseFreeBusyEvent } from './utils';
+import { getParticipantIcon, parseFreeBusyEvent } from './utils';
 
 const TimeTableRow = styled.div`
 	height: 2rem;
@@ -55,6 +55,14 @@ export const TimeTableParticipantRow = ({
 	return (
 		<TimeTableRow data-testid={`row-${participantRow.email}`}>
 			<EmailColumn data-testid={`column-0`}>
+				<Container width={'2rem'} minWidth={'2rem'} maxWidth={'2rem'}>
+					<Icon
+						width={'2rem'}
+						size={'large'}
+						color={'primary'}
+						icon={getParticipantIcon(participantRow.participantType)}
+					/>
+				</Container>
 				<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantRow.email}`} />
 			</EmailColumn>
 			<FreeBusyColumn data-testid={`column-1`}>
