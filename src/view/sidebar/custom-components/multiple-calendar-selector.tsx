@@ -34,7 +34,7 @@ export type MultipleCalendarSelectorProps = {
 	calendarsToExclude?: Array<Folder>;
 };
 
-const CHIP_INPUT_SEPARATORS = ['Enter', ',', 'Tab'];
+const CHIP_INPUT_SEPARATORS = ['Enter', ','];
 
 const isCalendarItem = (value: unknown): value is { id: string; label: string } =>
 	!!value && typeof value === 'object' && 'id' in value && 'label' in value;
