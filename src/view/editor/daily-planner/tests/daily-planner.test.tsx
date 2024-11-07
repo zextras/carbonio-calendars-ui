@@ -159,6 +159,5 @@ describe('EditorDailyPlanner', () => {
 		const firstRow = within(screen.getByTestId('time-table')).getByTestId('row-0');
 		const freeBusyColumn = within(firstRow).getByTestId('column-1');
 		expect(await within(freeBusyColumn).findByTestId('busy')).toBeVisible();
-		screen.logTestingPlaygroundURL();
 	});
 });
