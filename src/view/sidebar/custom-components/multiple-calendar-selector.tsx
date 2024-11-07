@@ -3,7 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, ReactEventHandler, useCallback, useMemo, useState } from 'react';
+import React, {
+	ReactElement,
+	ReactEventHandler,
+	useCallback,
+	useMemo,
+	useRef,
+	useState
+} from 'react';
 
 import { ChipInput, ChipInputProps } from '@zextras/carbonio-design-system';
 import {
@@ -50,7 +57,7 @@ const sortCriteria = (folder: Folder): string => {
 	return `2000-${folder.name.toLowerCase()}`;
 };
 
-export const MultipleCalendarSelector = ({
+export const MultipleCalendarSelector2 = ({
 	onCalendarChange,
 	calendarsToExclude
 }: MultipleCalendarSelectorProps): ReactElement | null => {
@@ -199,6 +206,174 @@ export const MultipleCalendarSelector = ({
 			iconAction={onCalendarsAdd}
 			ChipComponent={CalendarChip}
 			onFocus={onFocus}
+		/>
+	);
+};
+
+export const MultipleCalendarSelector = ({
+	onCalendarChange,
+	calendarsToExclude
+}: MultipleCalendarSelectorProps): ReactElement | null => {
+	const [selectedCalendarsChips, setSelectedCalendarsChips] = useState<CalendarChipInputItems>([]);
+	const [options, setOptions] = useState<ChipInputProps['options']>();
+	const inputRef = useRef<HTMLInputElement>(null);
+	const allCalendars = useFoldersMap();
+	const [t] = useTranslation();
+
+	const calendars = reject(
+		allCalendars,
+		(item) =>
+			item.name === ROOT_NAME || (item as LinkFolder).oname === ROOT_NAME || isTrash(item.id)
+	);
+
+	const unselectedCalendars = useMemo(
+		() =>
+			differenceWith(
+				calendars,
+				selectedCalendarsChips,
+				(val1, val2) => val1?.id === val2?.value?.id
+			),
+		[calendars, selectedCalendarsChips]
+	);
+
+	const calendarOptions = useMemo(
+		() =>
+			calendars.length
+				? map(calendars, (cal) => {
+						const color = setCalendarColor({ color: cal.color, rgb: cal.rgb });
+						const labelName = hasId(cal, FOLDERS.CALENDAR)
+							? t('label.calendar', 'Calendar')
+							: cal.name;
+						return {
+							id: cal.id,
+							label: labelName,
+							value: { id: cal.id, label: labelName, isLink: cal.isLink },
+							color: color.color,
+							customComponent: (
+								<ItemFactory
+									disabled={false}
+									absFolderPath={cal.absFolderPath}
+									color={color.color}
+									isLink={cal.isLink}
+									label={labelName}
+									acl={cal.acl}
+									id={cal.id}
+								/>
+							)
+						};
+					})
+				: [{ id: 'no_options', label: 'no options available', disabled: true }],
+		[t, calendars]
+	);
+
+	const filterOptions = useCallback(
+		({ textContent }: { textContent: string | null }) => {
+			const selectedOptions = differenceBy(
+				calendarOptions,
+				selectedCalendarsChips,
+				(val) => val?.value?.id
+			);
+			const newOptions = selectedOptions?.filter(
+				(option) =>
+					!textContent || option?.label?.toLowerCase().startsWith(textContent.toLowerCase())
+			);
+			setOptions(newOptions);
+		},
+		[calendarOptions, selectedCalendarsChips]
+	);
+
+	const initOptions = useCallback(() => {
+		filterOptions({ textContent: inputRef.current?.value ?? '' });
+	}, [filterOptions]);
+
+	const removeSelectedCalendarChip = useCallback((id: string): void => {
+		setSelectedCalendarsChips((existingChips) =>
+			existingChips.filter((chip) => chip.value?.id !== id)
+		);
+	}, []);
+
+	const createChip = useCallback(
+		({ label, id }: { label?: string; id: string }) => ({
+			label,
+			value: {
+				id,
+				label,
+				onCalendarRemove: () => removeSelectedCalendarChip(id)
+			}
+		}),
+		[removeSelectedCalendarChip]
+	);
+
+	const onSelectedCalendarsAdd = useCallback(
+		(value: unknown): CalendarChipInputItem => {
+			if (!isCalendarItem(value)) {
+				return { label: '' };
+			}
+
+			return createChip(value);
+		},
+		[createChip]
+	);
+
+	const onCalendarsAdd = useCallback<ReactEventHandler>(
+		(ev) => {
+			ev?.stopPropagation();
+
+			const selectedCalendars = selectedCalendarsChips.reduce((acc, chipItem) => {
+				const calendar = calendars.find((cal) => cal.id === chipItem.value?.id);
+				if (calendar) {
+					acc.push(calendar);
+				}
+				return acc;
+			}, [] as Array<Folder>);
+
+			onCalendarChange(selectedCalendars);
+			setSelectedCalendarsChips([]);
+		},
+		[calendars, onCalendarChange, selectedCalendarsChips]
+	);
+
+	const onSelectedCalendarsChange = useCallback((selected: CalendarChipInputItems) => {
+		const selectedChips = uniqBy(selected, (chip) => chip.value?.id);
+		setSelectedCalendarsChips(selectedChips);
+	}, []);
+
+	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>(
+		({ key, textContent }) => {
+			if (CHIP_INPUT_SEPARATORS.includes(key)) {
+				if (options?.[0]) {
+					const chip = createChip(options[0]);
+					setSelectedCalendarsChips((prevValue) => [...prevValue, chip]);
+					const newOptions = calendarOptions.filter((opt) => opt.id !== options?.[0].id);
+					setOptions(newOptions);
+				}
+			} else {
+				filterOptions({ textContent });
+			}
+		},
+		[calendarOptions, createChip, filterOptions, options]
+	);
+
+	const isCalendarAddDisabled = selectedCalendarsChips.length === 0;
+
+	return (
+		<ChipInput
+			value={selectedCalendarsChips}
+			options={options}
+			onInputType={onInputType}
+			onChange={onSelectedCalendarsChange}
+			icon={'Plus'}
+			inputRef={inputRef}
+			separators={CHIP_INPUT_SEPARATORS.map((key) => ({ key, ctrlKey: false }))}
+			requireUniqueChips
+			onFocus={initOptions}
+			ChipComponent={CalendarChip}
+			onAdd={onSelectedCalendarsAdd}
+			iconAction={onCalendarsAdd}
+			data-testid={'calendar-selector-input'}
+			disableOptions
+			placeholder={t('label.calendar_selector.placeholder', 'Add Calendars')}
+			iconDisabled={isCalendarAddDisabled}
 		/>
 	);
 };
