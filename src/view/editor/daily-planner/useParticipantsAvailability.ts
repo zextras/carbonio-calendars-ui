@@ -19,7 +19,6 @@ export type ParticipantAvailability = {
 	tentative: Event[];
 };
 
-type Email = string;
 export type Participant = {
 	email: string;
 };
@@ -39,14 +38,14 @@ export function useParticipantsAvailability({
 	participants: Participant[];
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
-}): Record<Email, ParticipantAvailability> {
+}): Record<string, ParticipantAvailability> {
 	const [participantsAvailability, setParticipantsAvailability] = useState<
-		Record<Email, ParticipantAvailability>
+		Record<string, ParticipantAvailability>
 	>({});
 	const uids = participants.map((p) => p.email).join(',');
 	useEffect(() => {
 		if (participants.length > 0) {
-			const newAvailabilities: Record<Email, ParticipantAvailability> = {};
+			const newAvailabilities: Record<string, ParticipantAvailability> = {};
 			getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids }).then(
 				(response) => {
 					response?.usr?.forEach((user) => {

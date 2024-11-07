@@ -115,7 +115,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 	}));
 
 	const participants = [
-		{ email: sender?.address ?? '' },
+		{ email: sender.address },
 		...attendees,
 		...meetingRoom,
 		...equipment,
