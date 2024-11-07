@@ -129,7 +129,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		endDateEpochMillis: endOfDay.getTime()
 	});
 
-	const rowsToDisplay = participants.map((participant) =>
+	const participantRows = participants.map((participant) =>
 		mapFreeBusyToDailyPlannerRow(
 			participant.email,
 			participantAvailabilities?.[participant.email] ?? { free: [], busy: [], tentative: [] }
@@ -159,7 +159,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 					<TimeTable
 						appointmentStartDate={startDate}
 						appointmentEndDate={endDate}
-						rows={rowsToDisplay}
+						rows={participantRows}
 					/>
 				</div>
 			</Row>

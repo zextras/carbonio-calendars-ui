@@ -21,7 +21,7 @@ describe('Time Table', () => {
 		];
 		setupTest(<TimeTable appointmentStartDate={0} appointmentEndDate={0} rows={rows} />);
 		const timeTable = screen.getByTestId('time-table');
-		const firstRow = within(timeTable).getByTestId('row-0');
+		const firstRow = within(timeTable).getByTestId('row-test@test.com');
 		const firstColumn = within(firstRow).getByTestId('column-0');
 		expect(within(firstColumn).getByText('test@test.com')).toBeVisible();
 	});
@@ -35,7 +35,7 @@ describe('Time Table', () => {
 		];
 		setupTest(<TimeTable appointmentStartDate={0} appointmentEndDate={0} rows={rows} />);
 		const timeTable = screen.getByTestId('time-table');
-		const firstRow = within(timeTable).getByTestId('row-0');
+		const firstRow = within(timeTable).getByTestId('row-test@test.com');
 		const firstColumn = within(firstRow).getByTestId('column-1');
 		expect(within(firstColumn).getByTestId('start-mark')).toBeVisible();
 	});

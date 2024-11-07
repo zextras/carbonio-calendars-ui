@@ -156,7 +156,7 @@ describe('EditorDailyPlanner', () => {
 		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
 		await freeBusyApiCall;
 
-		const firstRow = within(screen.getByTestId('time-table')).getByTestId('row-0');
+		const firstRow = within(screen.getByTestId('time-table')).getByTestId('row-organizer@test.com');
 		const freeBusyColumn = within(firstRow).getByTestId('column-1');
 		expect(await within(freeBusyColumn).findByTestId('busy')).toBeVisible();
 	});
