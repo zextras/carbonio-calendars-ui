@@ -95,7 +95,7 @@ export const MultipleCalendarSelector = ({
 			value: {
 				id,
 				label,
-				onCalendarRemove: () => removeSelectedCalendarId(id)
+				onCalendarRemove: (calendarId: string) => removeSelectedCalendarId(calendarId)
 			}
 		}),
 		[removeSelectedCalendarId]
@@ -168,7 +168,6 @@ export const MultipleCalendarSelector = ({
 	const onSelectedCalendarsAdd = useCallback(
 		(value: unknown): CalendarChipInputItem => {
 			if (!isCalendarItem(value)) {
-				// TODO is it correct?
 				return { label: '' };
 			}
 
@@ -190,15 +189,15 @@ export const MultipleCalendarSelector = ({
 			ev?.stopPropagation();
 			onCalendarChange(selectedCalendars);
 			setSelectedCalendarsIds([]);
+			setOptions(createOptions());
 		},
-		[onCalendarChange, selectedCalendars]
+		[createOptions, onCalendarChange, selectedCalendars]
 	);
 
 	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>(
 		({ key, textContent }) => {
 			if (CHIP_INPUT_SEPARATORS.includes(key)) {
-				const updatedOptions = createOptions();
-				setOptions(updatedOptions);
+				setOptions(createOptions());
 
 				if (!options?.[0] || !options[0].value) {
 					return;
@@ -211,20 +210,14 @@ export const MultipleCalendarSelector = ({
 				const updatedSelectedCalendarsIds = [...selectedCalendarsIds, options[0].value.id];
 				setSelectedCalendarsIds(updatedSelectedCalendarsIds);
 			} else {
-				console.log('sono dentro onInputType - Whats the key?', { key, textContent });
-
-				setOptions(createOptions({ namePrefix: getNamePrefix() }));
+				setOptions(createOptions({ namePrefix: textContent ?? '' }));
 			}
 		},
-		[createOptions, getNamePrefix, options, selectedCalendarsIds]
+		[createOptions, options, selectedCalendarsIds]
 	);
 
 	const onFocus = useCallback(() => {
-		const updatedOptions = createOptions({ namePrefix: getNamePrefix() });
-		setOptions(updatedOptions);
-		console.log('sono dentro onFocus');
-		// 	updatedOptions
-		// });
+		setOptions(createOptions({ namePrefix: getNamePrefix() }));
 	}, [createOptions, getNamePrefix]);
 
 	return (

@@ -37,6 +37,11 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 	);
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>([]);
 
+	const selectedCalendarsIds = useMemo(
+		() => map(selectedCalendars, (item) => item.id),
+		[selectedCalendars]
+	);
+
 	const isDirty = useMemo(
 		() => groupName !== '' || selectedCalendars.length > 0,
 		[groupName, selectedCalendars]
@@ -160,7 +165,10 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 					</Text>
 				</Container>
 				<Padding vertical="small" />
-				<MultipleCalendarSelector onCalendarChange={onMultipleSelectedCalendarChange} />
+				<MultipleCalendarSelector
+					onCalendarChange={onMultipleSelectedCalendarChange}
+					excludedCalendarsIds={selectedCalendarsIds}
+				/>
 				<Padding vertical="small" />
 				<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
 				<Padding vertical="small" />
