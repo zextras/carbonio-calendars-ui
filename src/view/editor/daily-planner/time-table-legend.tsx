@@ -9,48 +9,9 @@ import React from 'react';
 import { Container, Padding, useTheme } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
+import { Circle } from './parts/circle';
+import { Dash } from './parts/dash';
 import { getDefaultLineColors, getEventColor } from './utils';
-
-const Circle = ({
-	borderColor,
-	backgroundColor
-}: {
-	borderColor?: string;
-	backgroundColor: string;
-}): React.JSX.Element => (
-	<div
-		style={{
-			width: '1rem',
-			height: '1rem',
-			borderRadius: '50%',
-			border: borderColor ? `1px solid ${borderColor}` : 'none',
-			backgroundColor
-		}}
-	/>
-);
-
-const Dash = ({
-	backgroundColor
-}: {
-	borderColor?: string;
-	backgroundColor: string;
-}): React.JSX.Element => (
-	<div
-		style={{
-			display: 'flex',
-			alignItems: 'center',
-			height: '100%'
-		}}
-	>
-		<div
-			style={{
-				width: '1rem',
-				height: '0.2rem',
-				backgroundColor
-			}}
-		/>
-	</div>
-);
 
 export const TimeTableLegend = (): React.JSX.Element => {
 	const theme = useTheme();
