@@ -49,6 +49,11 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 	}, [folders, group]);
 	const [selectedCalendars, setSelectedCalendars] = useState<Array<Folder>>(groupCalendars);
 
+	const selectedCalendarsIds = useMemo(
+		() => map(selectedCalendars, (item) => item.id),
+		[selectedCalendars]
+	);
+
 	const isDirty = useMemo(() => {
 		if (!group) {
 			return false;
@@ -187,7 +192,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				<Padding vertical="small" />
 				<MultipleCalendarSelector
 					onCalendarChange={onMultipleSelectedCalendarChange}
-					calendarsToExclude={selectedCalendars}
+					excludedCalendarsIds={selectedCalendarsIds}
 				/>
 				<Padding vertical="small" />
 				<GroupCalendarsList calendars={selectedCalendars} onCalendarRemove={onCalendarRemove} />
