@@ -191,7 +191,7 @@ export const MultipleCalendarSelector = ({
 			setSelectedCalendarsIds([]);
 			setOptions([]);
 		},
-		[createOptions, onCalendarChange, selectedCalendars]
+		[onCalendarChange, selectedCalendars]
 	);
 
 	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>(
