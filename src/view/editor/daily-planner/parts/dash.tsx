@@ -16,12 +16,12 @@ export const Dash = ({
 		style={{
 			display: 'flex',
 			alignItems: 'center',
-			height: '100%'
+			height: '0.5rem'
 		}}
 	>
 		<div
 			style={{
-				width: '1rem',
+				width: '0.5rem',
 				height: '0.2rem',
 				backgroundColor
 			}}

@@ -15,8 +15,8 @@ export const Circle = ({
 }): React.JSX.Element => (
 	<div
 		style={{
-			width: '1rem',
-			height: '1rem',
+			width: '0.5rem',
+			height: '0.5rem',
 			borderRadius: '50%',
 			border: borderColor ? `1px solid ${borderColor}` : 'none',
 			backgroundColor

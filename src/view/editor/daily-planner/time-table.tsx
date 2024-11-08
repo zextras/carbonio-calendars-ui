@@ -21,6 +21,13 @@ const TimeTableRow = styled.div`
 	flex-direction: row;
 	flex-wrap: nowrap;
 `;
+
+const TimeTableLegendRow = styled.div`
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+`;
+
 const EmailColumn = styled.div`
 	display: flex;
 	align-items: center;
@@ -54,12 +61,12 @@ export const TimeTable = ({
 			{map(rows, (row) => (
 				<TimeTableParticipantRow key={row.email} participantRow={row} start={start} end={end} />
 			))}
-			<TimeTableRow key={`row-legend`} data-testid={`row-legend`}>
+			<TimeTableLegendRow key={`row-legend`} data-testid={`row-legend`}>
 				<EmptyColumn data-testid={`column-legend-0`} />
 				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-legend-1`}>
 					<TimeTableLegend />
 				</div>
-			</TimeTableRow>
+			</TimeTableLegendRow>
 		</div>
 	);
 };

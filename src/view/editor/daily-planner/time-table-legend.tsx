@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { Container, Padding, useTheme } from '@zextras/carbonio-design-system';
+import { Container, Padding, useTheme, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { Circle } from './parts/circle';
@@ -23,58 +23,58 @@ export const TimeTableLegend = (): React.JSX.Element => {
 			style={{
 				width: '100%',
 				display: 'flex',
-				justifyContent: 'space-between',
-				height: '2rem',
+				justifyContent: 'flex-start',
+				flexWrap: 'wrap',
 				paddingTop: '1rem'
 			}}
 		>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
-					<Circle backgroundColor={getEventColor('unknown', theme)} />
+					<Circle backgroundColor={getEventColor('unknown', theme)} borderColor="black" />
 				</Padding>
-				{t('daily_planner.legend.unknown', 'Unknown')}
+				<Text size="extrasmall">{t('daily_planner.legend.unknown', 'Unknown')}</Text>
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
 					<Circle borderColor={'black'} backgroundColor={'white'} />
 				</Padding>
-				{t('daily_planner.legend.non-working', 'Non-working')}
+				<Text size="extrasmall">{t('daily_planner.legend.non-working', 'Non-working')}</Text>
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
 					<Circle borderColor={'black'} backgroundColor={getEventColor('free', theme)} />
 				</Padding>
-				{t('daily_planner.legend.free', 'Free')}
+				<Text size="extrasmall">{t('daily_planner.legend.free', 'Free')}</Text>
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
 					<Circle backgroundColor={getEventColor('busy', theme)} />
 				</Padding>
-				{t('daily_planner.legend.busy', 'Busy')}
+				<Text size="extrasmall">{t('daily_planner.legend.busy', 'Busy')}</Text>
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
 					<Circle backgroundColor={getEventColor('tentative', theme)} />
 				</Padding>
-				{t('daily_planner.legend.tentative', 'Tentative')}
+				<Text size="extrasmall">{t('daily_planner.legend.tentative', 'Tentative')}</Text>
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
 					<Circle backgroundColor={getEventColor('out-of-office', theme)} />
 				</Padding>
-				{t('daily_planner.legend.out-of-office', 'Out of office')}
+				<Text size="extrasmall">{t('daily_planner.legend.out-of-office', 'Out of office')}</Text>
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
 					<Dash backgroundColor={defaultLineColors.start} />
 				</Padding>
-				{t('daily_planner.legend.start_time', 'Start time')}
+				<Text size="extrasmall">{t('daily_planner.legend.start_time', 'Start time')}</Text>
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
 					<Dash backgroundColor={defaultLineColors.end} />
 				</Padding>
-				{t('daily_planner.legend.end_time', 'End time')}
+				<Text size="extrasmall">{t('daily_planner.legend.end_time', 'End time')}</Text>
 			</Container>
 		</div>
 	);
