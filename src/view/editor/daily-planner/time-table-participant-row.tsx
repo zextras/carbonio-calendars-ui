@@ -14,7 +14,7 @@ import { MinutesLine } from './parts/minutes-line';
 import { TimeTableEvent } from './time-table-event';
 import { TimeTableHourTicks } from './time-table-hour-ticks';
 import { DailyPlannerRow, HoursMinutes } from './types';
-import { getParticipantIcon, parseFreeBusyEvent } from './utils';
+import { getDefaultLineColors, getParticipantIcon, parseFreeBusyEvent } from './utils';
 
 const TimeTableRow = styled.div`
 	height: 2rem;
@@ -45,9 +45,7 @@ export const TimeTableParticipantRow = ({
 	end: HoursMinutes;
 }): React.JSX.Element => {
 	const theme = useTheme();
-	const START_DATE_LINE_COLOR = theme.palette.success.regular;
-	const END_DATE_LINE_COLOR = theme.palette.error.regular;
-
+	const defaultLineColors = getDefaultLineColors(theme);
 	const startPosition = start.hours * 60 + start.minutes;
 	const endPosition = end.hours * 60 + end.minutes;
 	const parsedEvents = participantRow?.freeBusy?.map((event) => parseFreeBusyEvent(event));
@@ -73,9 +71,9 @@ export const TimeTableParticipantRow = ({
 				<MinutesLine
 					dataTestId={'start-mark'}
 					atPosition={startPosition}
-					color={START_DATE_LINE_COLOR}
+					color={defaultLineColors.start}
 				/>
-				<MinutesLine atPosition={endPosition} color={END_DATE_LINE_COLOR} />
+				<MinutesLine atPosition={endPosition} color={defaultLineColors.end} />
 			</FreeBusyColumn>
 		</TimeTableRow>
 	);

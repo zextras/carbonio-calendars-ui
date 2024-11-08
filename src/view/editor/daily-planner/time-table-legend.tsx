@@ -8,7 +8,7 @@ import React from 'react';
 
 import { Container, Padding, useTheme } from '@zextras/carbonio-design-system';
 
-import { getEventColor } from './utils';
+import { getDefaultLineColors, getEventColor } from './utils';
 
 const Circle = ({
 	borderColor,
@@ -28,8 +28,33 @@ const Circle = ({
 	/>
 );
 
+const Dash = ({
+	backgroundColor
+}: {
+	borderColor?: string;
+	backgroundColor: string;
+}): React.JSX.Element => (
+	<div
+		style={{
+			display: 'flex',
+			alignItems: 'center',
+			height: '100%'
+		}}
+	>
+		<div
+			style={{
+				width: '1rem',
+				height: '0.2rem',
+				backgroundColor
+			}}
+		/>
+	</div>
+);
+
 export const TimeTableLegend = (): React.JSX.Element => {
 	const theme = useTheme();
+	const defaultLineColors = getDefaultLineColors(theme);
+
 	return (
 		<div
 			style={{
@@ -78,13 +103,13 @@ export const TimeTableLegend = (): React.JSX.Element => {
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
-					<Circle borderColor={'black'} backgroundColor={'white'} />
+					<Dash backgroundColor={defaultLineColors.start} />
 				</Padding>
 				Start time
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
-					<Circle borderColor={'black'} backgroundColor={'white'} />
+					<Dash backgroundColor={defaultLineColors.end} />
 				</Padding>
 				End time
 			</Container>

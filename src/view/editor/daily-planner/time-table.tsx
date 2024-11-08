@@ -54,7 +54,7 @@ export const TimeTable = ({
 			{map(rows, (row) => (
 				<TimeTableParticipantRow key={row.email} participantRow={row} start={start} end={end} />
 			))}
-			<TimeTableRow key={`row-header`} data-testid={`row-header`}>
+			<TimeTableRow key={`row-legend`} data-testid={`row-legend`}>
 				<EmptyColumn data-testid={`column-legend-0`} />
 				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-legend-1`}>
 					<TimeTableLegend />

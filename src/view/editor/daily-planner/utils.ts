@@ -69,3 +69,9 @@ export function calculateEventWidth(minutes: number): string {
 	const width = (minutes * 100) / (60 * 24);
 	return `${width}%`;
 }
+
+export function getDefaultLineColors(theme: Theme): { start: string; end: string } {
+	const start = theme.palette.success.regular;
+	const end = theme.palette.error.regular;
+	return { start, end };
+}
