@@ -8,8 +8,10 @@ import React from 'react';
 
 import { Chip, Container, Icon, useTheme } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
+import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
 import { MinutesLine } from './parts/minutes-line';
 import { TimeTableEvent } from './time-table-event';
 import { TimeTableHourTicks } from './time-table-hour-ticks';
@@ -44,11 +46,16 @@ export const TimeTableParticipantRow = ({
 	start: HoursMinutes;
 	end: HoursMinutes;
 }): React.JSX.Element => {
+	const [t] = useTranslation();
 	const theme = useTheme();
 	const defaultLineColors = getDefaultLineColors(theme);
 	const startPosition = start.hours * 60 + start.minutes;
 	const endPosition = end.hours * 60 + end.minutes;
 	const parsedEvents = participantRow?.freeBusy?.map((event) => parseFreeBusyEvent(event));
+	const chipLabel =
+		participantRow.participantType === DAILY_PLANNER_PARTICIPANT_TYPE.organizer
+			? `${t('daily_planner.organizer', 'Organizer')} - ${participantRow.email}`
+			: participantRow.email;
 
 	return (
 		<TimeTableRow data-testid={`row-${participantRow.email}`}>
@@ -61,7 +68,7 @@ export const TimeTableParticipantRow = ({
 						icon={getParticipantIcon(participantRow.participantType)}
 					/>
 				</Container>
-				<Chip maxWidth={'10rem'} key={'organizer'} label={`${participantRow.email}`} />
+				<Chip maxWidth={'10rem'} label={chipLabel} />
 			</EmailColumn>
 			<FreeBusyColumn data-testid={`column-1`}>
 				{map(parsedEvents, (event, index) => (

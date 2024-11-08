@@ -60,7 +60,7 @@ describe('EditorDailyPlanner', () => {
 		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
 		const timeTable = screen.getByTestId(`time-table`);
 		expect(timeTable).toBeInTheDocument();
-		expect(within(timeTable).getByText('organizer@test.com')).toBeVisible();
+		expect(within(timeTable).getByText('Organizer - organizer@test.com')).toBeVisible();
 		expect(within(timeTable).getByText('attendee1@test.com')).toBeVisible();
 		expect(within(timeTable).getByText('attendee2@test.com')).toBeVisible();
 		expect(within(timeTable).getByText('optionalAttendee1@test.com')).toBeVisible();
