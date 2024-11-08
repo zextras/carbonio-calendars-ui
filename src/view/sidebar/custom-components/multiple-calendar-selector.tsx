@@ -189,7 +189,7 @@ export const MultipleCalendarSelector = ({
 			ev?.stopPropagation();
 			onCalendarChange(selectedCalendars);
 			setSelectedCalendarsIds([]);
-			setOptions(createOptions());
+			setOptions([]);
 		},
 		[createOptions, onCalendarChange, selectedCalendars]
 	);
