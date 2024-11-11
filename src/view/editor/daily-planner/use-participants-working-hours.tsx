@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { FreeBusy } from '../../../soap/get-free-busy-request';
 import { getWorkingHoursRequest } from '../../../soap/get-working-hours-request';
@@ -38,9 +38,19 @@ export function useParticipantsWorkingHours({
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
 }): Record<string, WorkingHours> {
-	const participantsWorkingHours = useRef<Record<string, WorkingHours>>({});
+	const [participantsWorkingHours, setParticipantWorkingHours] = useState<
+		Record<string, WorkingHours>
+	>({});
+	const previousValue = useRef<string>('');
+	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
+
 	useEffect(() => {
-		if (participants.length > 0) {
+		if (participants.length > 0 && previousValue.current !== currentValue) {
+			previousValue.current = JSON.stringify({
+				participants,
+				startDateEpochMillis,
+				endDateEpochMillis
+			});
 			const newWorkingHours: Record<string, WorkingHours> = {};
 			getWorkingHoursRequest({
 				startEpochMillis: startDateEpochMillis,
@@ -52,10 +62,10 @@ export function useParticipantsWorkingHours({
 						workingHours: user.workingHours?.map(mapFreeBusyToEvent) ?? []
 					};
 				});
-				participantsWorkingHours.current = newWorkingHours;
+				setParticipantWorkingHours(newWorkingHours);
 			});
 		}
-	}, [endDateEpochMillis, participants, startDateEpochMillis, participants.length]);
+	}, [endDateEpochMillis, participants, startDateEpochMillis, participants.length, currentValue]);
 
-	return participantsWorkingHours.current;
+	return participantsWorkingHours;
 }

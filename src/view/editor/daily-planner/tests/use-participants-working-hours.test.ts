@@ -51,7 +51,6 @@ describe('useParticipantsWorkingHours', () => {
 
 		const participantEmail = 'test@test.com';
 		const expected = {
-			id: 'test@test.com',
 			workingHours: [{ startDateEpochMillis: 100, endDateEpochMillis: 200 }]
 		};
 		await waitFor(() => {
