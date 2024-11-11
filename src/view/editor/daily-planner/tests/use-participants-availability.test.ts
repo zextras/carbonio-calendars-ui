@@ -18,6 +18,11 @@ import {
 describe('useParticipantsAvailability', () => {
 	it('should return an empty object if no availability', () => {
 		const participants = [{ email: 'test@test.com' }];
+		mockFreeBusyResponse([
+			{
+				id: 'test@test.com'
+			}
+		]);
 		const { result } = renderHook(() =>
 			useParticipantsAvailability({
 				participants,

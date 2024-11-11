@@ -12,9 +12,16 @@ import * as getWorkingHoursResponseHandler from '../../../../soap/get-working-ho
 import { mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { useParticipantsWorkingHours } from '../use-participants-working-hours';
 
-describe('useParticipantsAvailability', () => {
+describe('useParticipantsWorkingHours', () => {
 	it('should return an empty object if no availability', () => {
 		const participants = [{ email: 'test@test.com' }];
+		mockWorkingHoursResponse([
+			{
+				id: 'test@test.com',
+				f: [],
+				u: []
+			}
+		]);
 		const { result } = renderHook(() =>
 			useParticipantsWorkingHours({
 				participants,
