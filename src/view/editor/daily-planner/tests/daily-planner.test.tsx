@@ -11,7 +11,7 @@ import { within } from '@testing-library/react';
 
 import { setupTest, screen } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
-import { mockFreeBusyResponse } from '../../../../soap/test/mocks';
+import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import mockedData from '../../../../test/generators';
 import { CalendarSender, Resource } from '../../../../types/editor';

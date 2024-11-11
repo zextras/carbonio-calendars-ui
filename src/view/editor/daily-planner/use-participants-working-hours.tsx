@@ -46,9 +46,9 @@ export function useParticipantsWorkingHours({
 		if (participants.length > 0) {
 			const workingHours: Record<string, WorkingHours> = {};
 			getWorkingHoursRequest({
-				s: startDateEpochMillis,
-				e: endDateEpochMillis,
-				name: participants.map((p) => p.email)
+				startEpochMillis: startDateEpochMillis,
+				endEpochMillis: endDateEpochMillis,
+				emails: participants.map((p) => p.email)
 			}).then((response) => {
 				response?.forEach((user) => {
 					workingHours[user.id] = {

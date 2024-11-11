@@ -9,11 +9,11 @@ import { HttpResponse } from 'msw';
 
 import { createAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import * as getFreeBusyResponseHandler from '../../../../soap/get-free-busy-request';
-import { mockFreeBusyResponse } from '../../../../soap/test/mocks';
+import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import {
 	ParticipantAvailability,
 	useParticipantsAvailability
-} from '../useParticipantsAvailability';
+} from '../use-participants-availability';
 
 describe('useParticipantsAvailability', () => {
 	it('should return an empty object if no availability', () => {

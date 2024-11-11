@@ -17,7 +17,7 @@ import {
 	Participant,
 	ParticipantAvailability,
 	useParticipantsAvailability
-} from './useParticipantsAvailability';
+} from './use-participants-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttendees,
