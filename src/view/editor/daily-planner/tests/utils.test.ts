@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { DailyPlannerFreeBusy, DailyPlannerFreeBusyEvent } from '../types';
+import { DailyPlannerEvents, DailyPlannerFreeBusyEvent } from '../types';
 import { getLocalHoursMinutesFromEpoch, getParticipantIcon, parseFreeBusyEvent } from '../utils';
 
 describe('getLocalHoursMinutesFromEpoch', () => {
@@ -43,7 +43,7 @@ describe('getLocalHoursMinutesFromEpoch', () => {
 
 describe('parseFreeBusyEvent', () => {
 	it('should correctly parse the event type, start time, and end time', () => {
-		const mockEvent: DailyPlannerFreeBusy = {
+		const mockEvent: DailyPlannerEvents = {
 			type: 'free',
 			startDate: new Date(2024, 1, 1, 10, 0).getTime(),
 			endDate: new Date(2024, 1, 1, 11, 0).getTime()
@@ -60,7 +60,7 @@ describe('parseFreeBusyEvent', () => {
 	});
 
 	it('should handle events that span multiple hours in the same day', () => {
-		const mockEvent: DailyPlannerFreeBusy = {
+		const mockEvent: DailyPlannerEvents = {
 			type: 'free',
 			startDate: new Date(2024, 1, 1, 10, 0).getTime(),
 			endDate: new Date(2024, 1, 1, 15, 0).getTime()
@@ -77,7 +77,7 @@ describe('parseFreeBusyEvent', () => {
 	});
 
 	it('should handle events that span multiple hours over multiple days', () => {
-		const mockEvent: DailyPlannerFreeBusy = {
+		const mockEvent: DailyPlannerEvents = {
 			type: 'free',
 			startDate: new Date(2024, 1, 1, 10, 0).getTime(),
 			endDate: new Date(2024, 2, 2, 15, 0).getTime()
@@ -94,7 +94,7 @@ describe('parseFreeBusyEvent', () => {
 	});
 
 	it('should handle events with non-zero minutes correctly', () => {
-		const mockEvent: DailyPlannerFreeBusy = {
+		const mockEvent: DailyPlannerEvents = {
 			type: 'free',
 			startDate: new Date(2024, 1, 1, 10, 30).getTime(),
 			endDate: new Date(2024, 1, 1, 15, 45).getTime()

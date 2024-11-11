@@ -8,14 +8,14 @@ import { Theme } from '@zextras/carbonio-design-system';
 
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
 import {
-	DailyPlannerFreeBusy,
-	DailyPlannerFreeBusyType,
+	DailyPlannerEvents,
+	DailyPlannerEventType,
 	HoursMinutes,
 	DailyPlannerFreeBusyEvent,
 	DailyPlannerParticipantType
 } from './types';
 
-export function getEventColor(type: DailyPlannerFreeBusyType, theme: Theme): string {
+export function getEventColor(type: DailyPlannerEventType, theme: Theme): string {
 	switch (type) {
 		case 'free':
 			return theme.palette.gray6.regular;
@@ -25,6 +25,8 @@ export function getEventColor(type: DailyPlannerFreeBusyType, theme: Theme): str
 			return theme.palette.warning.regular;
 		case 'out-of-office':
 			return theme.palette.primary.active;
+		case 'non-working':
+			return theme.palette.gray5.regular;
 		case 'unknown':
 			return theme.palette.gray4.disabled;
 		default:
@@ -52,7 +54,7 @@ export function getLocalHoursMinutesFromEpoch(epochMillis: number): HoursMinutes
 	return { hours: date.getHours(), minutes: date.getMinutes() };
 }
 
-export function parseFreeBusyEvent(event: DailyPlannerFreeBusy): DailyPlannerFreeBusyEvent {
+export function parseFreeBusyEvent(event: DailyPlannerEvents): DailyPlannerFreeBusyEvent {
 	return {
 		type: event.type,
 		start: getLocalHoursMinutesFromEpoch(event.startDate),

@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { Button, Row } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { DAILY_PLANNER_FREE_BUSY_TYPE } from './constants';
+import { DAILY_PLANNER_EVENT_TYPE } from './constants';
 import { TimeTable } from './time-table';
 import { DailyPlannerParticipantType, DailyPlannerRow } from './types';
 import {
@@ -18,6 +18,7 @@ import {
 	ParticipantAvailability,
 	useParticipantsAvailability
 } from './use-participants-availability';
+import { useParticipantsWorkingHours, WorkingHours } from './use-participants-working-hours';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttendees,
@@ -44,32 +45,39 @@ function getWithinSameDay(startDate: number, endDate: number): boolean {
 function mapFreeBusyToDailyPlannerRow({
 	email,
 	participantType,
-	availabilities
+	availabilities,
+	workingHours
 }: {
 	email: string;
 	participantType: DailyPlannerParticipantType;
 	availabilities: Record<string, ParticipantAvailability>;
+	workingHours: Record<string, WorkingHours>;
 }): DailyPlannerRow {
 	const freeBusy = availabilities?.[email] ?? { free: [], busy: [], tentative: [] };
+	const nonWorking = (workingHours?.[email]?.workingHours ?? []).map((event) => ({
+		startDate: event.startDateEpochMillis,
+		endDate: event.endDateEpochMillis,
+		type: DAILY_PLANNER_EVENT_TYPE.nonWorking
+	}));
 	const eventsFree = freeBusy.free.map((event) => ({
 		startDate: event.startDateEpochMillis,
 		endDate: event.endDateEpochMillis,
-		type: DAILY_PLANNER_FREE_BUSY_TYPE.free
+		type: DAILY_PLANNER_EVENT_TYPE.free
 	}));
 	const eventsBusy = freeBusy.busy.map((event) => ({
 		startDate: event.startDateEpochMillis,
 		endDate: event.endDateEpochMillis,
-		type: DAILY_PLANNER_FREE_BUSY_TYPE.busy
+		type: DAILY_PLANNER_EVENT_TYPE.busy
 	}));
 	const eventsTentative = freeBusy.tentative.map((event) => ({
 		startDate: event.startDateEpochMillis,
 		endDate: event.endDateEpochMillis,
-		type: DAILY_PLANNER_FREE_BUSY_TYPE.tentative
+		type: DAILY_PLANNER_EVENT_TYPE.tentative
 	}));
 	return {
 		email,
 		participantType,
-		freeBusy: [...eventsFree, ...eventsBusy, ...eventsTentative]
+		events: [...nonWorking, ...eventsBusy, ...eventsTentative, ...eventsFree]
 	};
 }
 function atMidnight(date: Date): Date {
@@ -121,53 +129,83 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		email: resource.email
 	}));
 
-	const participants = [
-		{ email: sender.address },
-		...attendees,
-		...meetingRoom,
-		...equipment,
-		...optionalAttendees
-	];
+	const participants = useMemo(
+		() => [
+			{ email: sender.address },
+			...attendees,
+			...meetingRoom,
+			...equipment,
+			...optionalAttendees
+		],
+		[attendees, equipment, meetingRoom, optionalAttendees, sender.address]
+	);
+	useEffect(() => {
+		console.log('attendees', attendees);
+	}, [attendees]);
+	useEffect(() => {
+		console.log('equipment', equipment);
+	}, [equipment]);
+	useEffect(() => {
+		console.log('sender', sender);
+	}, [sender]);
+	useEffect(() => {
+		console.log('optionalAttendees', optionalAttendees);
+	}, [optionalAttendees]);
+
 	const startOfDay = atMidnight(new Date(startDate));
 	const endOfDay = onNextDay(startOfDay);
+	const startDateEpochMillis = startOfDay.getTime();
+	const endDateEpochMillis = endOfDay.getTime();
+
 	const participantAvailabilities = useParticipantsAvailability({
 		participants,
-		startDateEpochMillis: startOfDay.getTime(),
-		endDateEpochMillis: endOfDay.getTime()
+		startDateEpochMillis,
+		endDateEpochMillis
+	});
+
+	const participantWorkingHours = useParticipantsWorkingHours({
+		participants,
+		startDateEpochMillis,
+		endDateEpochMillis
 	});
 
 	const participantRows = [
 		mapFreeBusyToDailyPlannerRow({
 			email: sender.address ?? '',
 			participantType: 'organizer',
-			availabilities: participantAvailabilities
+			availabilities: participantAvailabilities,
+			workingHours: participantWorkingHours
 		}),
 		...attendees.map((attendee) =>
 			mapFreeBusyToDailyPlannerRow({
 				email: attendee.email,
 				participantType: 'attendee',
-				availabilities: participantAvailabilities
+				availabilities: participantAvailabilities,
+				workingHours: participantWorkingHours
 			})
 		),
 		...meetingRoom.map((room) =>
 			mapFreeBusyToDailyPlannerRow({
 				email: room.email,
 				participantType: 'meetingRoom',
-				availabilities: participantAvailabilities
+				availabilities: participantAvailabilities,
+				workingHours: participantWorkingHours
 			})
 		),
 		...equipment.map((equip) =>
 			mapFreeBusyToDailyPlannerRow({
 				email: equip.email,
 				participantType: 'equipment',
-				availabilities: participantAvailabilities
+				availabilities: participantAvailabilities,
+				workingHours: participantWorkingHours
 			})
 		),
 		...optionalAttendees.map((optionalAttendee) =>
 			mapFreeBusyToDailyPlannerRow({
 				email: optionalAttendee.email,
 				participantType: 'optionalAttendee',
-				availabilities: participantAvailabilities
+				availabilities: participantAvailabilities,
+				workingHours: participantWorkingHours
 			})
 		)
 	];

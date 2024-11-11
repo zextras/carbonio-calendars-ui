@@ -4,22 +4,24 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { DAILY_PLANNER_FREE_BUSY_TYPE, DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
+import { DAILY_PLANNER_EVENT_TYPE, DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
 
-export type DailyPlannerFreeBusyType =
-	(typeof DAILY_PLANNER_FREE_BUSY_TYPE)[keyof typeof DAILY_PLANNER_FREE_BUSY_TYPE];
+export type DailyPlannerEventType =
+	(typeof DAILY_PLANNER_EVENT_TYPE)[keyof typeof DAILY_PLANNER_EVENT_TYPE];
 
 export type DailyPlannerParticipantType =
 	(typeof DAILY_PLANNER_PARTICIPANT_TYPE)[keyof typeof DAILY_PLANNER_PARTICIPANT_TYPE];
 
-export type DailyPlannerFreeBusy = {
-	type: DailyPlannerFreeBusyType;
+export type DailyPlannerEvents = {
+	type: DailyPlannerEventType;
 	startDate: number;
 	endDate: number;
 };
+
 export type HoursMinutes = { hours: number; minutes: number };
+
 export type DailyPlannerFreeBusyEvent = {
-	type: DailyPlannerFreeBusyType;
+	type: DailyPlannerEventType;
 	start: HoursMinutes;
 	end: HoursMinutes;
 };
@@ -27,7 +29,7 @@ export type DailyPlannerFreeBusyEvent = {
 export type DailyPlannerRow = {
 	email: string;
 	participantType: DailyPlannerParticipantType;
-	freeBusy: DailyPlannerFreeBusy[];
+	events: DailyPlannerEvents[];
 };
 
 export type TimeTableProps = {

@@ -11,7 +11,7 @@ import { within } from '@testing-library/react';
 
 import { setupTest, screen } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
-import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
+import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import mockedData from '../../../../test/generators';
 import { CalendarSender, Resource } from '../../../../types/editor';
@@ -32,6 +32,7 @@ describe('EditorDailyPlanner', () => {
 	it('should render the daily planner component participants even without freebusy information', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		mockFreeBusyResponse([]);
+		mockWorkingHoursResponse([]);
 
 		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
 		const attendees: EditorChipAttendees[] = [
@@ -71,6 +72,7 @@ describe('EditorDailyPlanner', () => {
 	it('should call GetFreeBusy API with correct participants', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const interceptor = mockFreeBusyResponse([]);
+		mockWorkingHoursResponse([]);
 
 		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
 		const attendees: EditorChipAttendees[] = [
@@ -107,6 +109,7 @@ describe('EditorDailyPlanner', () => {
 	it('should call GetFreeBusy API with dates between current startDate midnight and next day midnight', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const interceptor = mockFreeBusyResponse([]);
+		mockWorkingHoursResponse([]);
 		const start = new Date();
 		const end = new Date(start);
 		end.setDate(start.getDate() + 1);
@@ -139,9 +142,44 @@ describe('EditorDailyPlanner', () => {
 		const busyStart = new Date(today);
 		busyStart.setHours(10, 30);
 		const busyEnd = new Date(today);
-		busyStart.setHours(15, 55);
+		busyEnd.setHours(15, 55);
 		const freeBusyApiCall = mockFreeBusyResponse([
 			{ id: 'organizer@test.com', f: [], b: [{ s: busyStart.getTime(), e: busyEnd.getTime() }] }
+		]);
+		const workingHoursApiCall = mockWorkingHoursResponse([]);
+
+		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
+		const editor = generateEditor({
+			context: {
+				sender: organizer,
+				folders,
+				dispatch: store.dispatch
+			}
+		});
+
+		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+		await workingHoursApiCall;
+		await freeBusyApiCall;
+
+		const firstRow = within(screen.getByTestId('time-table')).getByTestId('row-organizer@test.com');
+		const freeBusyColumn = within(firstRow).getByTestId('column-1');
+		expect(await within(freeBusyColumn).findByTestId('busy')).toBeVisible();
+	});
+
+	it('should display organizer non-working hours', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const today = Date.now();
+		const nonWorkingHoursStart = new Date(today);
+		nonWorkingHoursStart.setHours(10, 0);
+		const nonWorkingHoursEnd = new Date(today);
+		nonWorkingHoursEnd.setHours(16, 0);
+		const freeBusyApiCall = mockFreeBusyResponse([]);
+		const workingHoursApiCall = mockWorkingHoursResponse([
+			{
+				id: 'organizer@test.com',
+				f: [],
+				u: [{ s: nonWorkingHoursStart.getTime(), e: nonWorkingHoursEnd.getTime() }]
+			}
 		]);
 
 		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
@@ -155,15 +193,18 @@ describe('EditorDailyPlanner', () => {
 
 		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
 		await freeBusyApiCall;
+		await workingHoursApiCall;
 
 		const firstRow = within(screen.getByTestId('time-table')).getByTestId('row-organizer@test.com');
-		const freeBusyColumn = within(firstRow).getByTestId('column-1');
-		expect(await within(freeBusyColumn).findByTestId('busy')).toBeVisible();
+		const eventsColumn = within(firstRow).getByTestId('column-1');
+		expect(await within(eventsColumn).findByTestId('non-working')).toBeVisible();
 	});
 
 	it('should display People icon for organizer', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
+		mockWorkingHoursResponse([]);
+		mockFreeBusyResponse([]);
 		const editor = generateEditor({
 			context: {
 				sender: organizer,

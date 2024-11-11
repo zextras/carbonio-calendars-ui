@@ -36,7 +36,7 @@ export const TimeTableLegend = (): React.JSX.Element => {
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
-					<Circle borderColor={'black'} backgroundColor={'white'} />
+					<Circle backgroundColor={getEventColor('non-working', theme)} />
 				</Padding>
 				<Text size="extrasmall">{t('daily_planner.legend.non-working', 'Non-working')}</Text>
 			</Container>

@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-export const DAILY_PLANNER_FREE_BUSY_TYPE = {
+export const DAILY_PLANNER_EVENT_TYPE = {
 	free: 'free',
 	busy: 'busy',
 	tentative: 'tentative',
 	outOfOffice: 'out-of-office',
+	nonWorking: 'non-working',
 	unknown: 'unknown'
 } as const;
 

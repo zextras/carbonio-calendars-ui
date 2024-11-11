@@ -12,9 +12,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
-import { MinutesLine } from './parts/minutes-line';
 import { TimeTableEvent } from './time-table-event';
-import { TimeTableHourTicks } from './time-table-hour-ticks';
 import { DailyPlannerRow, HoursMinutes } from './types';
 import { getDefaultLineColors, getParticipantIcon, parseFreeBusyEvent } from './utils';
 
@@ -51,7 +49,7 @@ export const TimeTableParticipantRow = ({
 	const defaultLineColors = getDefaultLineColors(theme);
 	const startPosition = start.hours * 60 + start.minutes;
 	const endPosition = end.hours * 60 + end.minutes;
-	const parsedEvents = participantRow?.freeBusy?.map((event) => parseFreeBusyEvent(event));
+	const parsedEvents = participantRow?.events?.map((event) => parseFreeBusyEvent(event));
 	const chipLabel =
 		participantRow.participantType === DAILY_PLANNER_PARTICIPANT_TYPE.organizer
 			? `${t('daily_planner.organizer', 'Organizer')} - ${participantRow.email}`
@@ -74,13 +72,13 @@ export const TimeTableParticipantRow = ({
 				{map(parsedEvents, (event, index) => (
 					<TimeTableEvent event={event} key={`${participantRow.email}-${event.type}-${index}`} />
 				))}
-				<TimeTableHourTicks />
-				<MinutesLine
-					dataTestId={'start-mark'}
-					atPosition={startPosition}
-					color={defaultLineColors.start}
-				/>
-				<MinutesLine atPosition={endPosition} color={defaultLineColors.end} />
+				{/* <TimeTableHourTicks /> */}
+				{/* <MinutesLine */}
+				{/*	dataTestId={'start-mark'} */}
+				{/*	atPosition={startPosition} */}
+				{/*	color={defaultLineColors.start} */}
+				{/* /> */}
+				{/* <MinutesLine atPosition={endPosition} color={defaultLineColors.end} /> */}
 			</FreeBusyColumn>
 		</TimeTableRow>
 	);

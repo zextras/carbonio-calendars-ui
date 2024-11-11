@@ -17,12 +17,12 @@ describe('Time Table', () => {
 		{
 			email: 'organizer@test.com',
 			participantType: 'organizer',
-			freeBusy: []
+			events: []
 		},
 		{
 			email: 'participant@test.com',
 			participantType: 'attendee',
-			freeBusy: []
+			events: []
 		}
 	];
 	it('should display organizer email on first column of a row', () => {
