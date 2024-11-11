@@ -10,8 +10,9 @@ import { Tag, useTags } from '@zextras/carbonio-shell-ui';
 import { reduce, includes } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
+import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { EventType } from '../../types/event';
+import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 
 export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 	const [t] = useTranslation();
@@ -37,6 +38,17 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 		() => (tagItems?.length === 1 ? tagItems?.[0]?.color : undefined),
 		[tagItems]
 	);
+	const title = useMemo(() => {
+		if (
+			event.resource.class !== 'PRI' ||
+			isOrganizerOrHaveEqualRights(event, event.resource.calendar.absFolderPath) ||
+			!event.resource.calendar.owner
+		) {
+			return event.title;
+		}
+		return t('label.private', 'Private');
+	}, [event, t]);
+
 	return (
 		<>
 			<Row width="fill" padding={{ bottom: 'small' }}>
@@ -51,7 +63,7 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 				)}
 				<Row takeAvailableSpace mainAlignment="flex-start">
 					<Text size="large" weight="bold">
-						{event.resource.class === 'PRI' ? 'Private' : event.title}
+						{title}
 					</Text>
 				</Row>
 				{event.resource.class !== 'PRI' && (
