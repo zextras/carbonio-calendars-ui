@@ -12,7 +12,9 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
+import { MinutesLine } from './parts/minutes-line';
 import { TimeTableEvent } from './time-table-event';
+import { TimeTableHourTicks } from './time-table-hour-ticks';
 import { DailyPlannerRow, HoursMinutes } from './types';
 import { getDefaultLineColors, getParticipantIcon, parseFreeBusyEvent } from './utils';
 
@@ -72,13 +74,13 @@ export const TimeTableParticipantRow = ({
 				{map(parsedEvents, (event, index) => (
 					<TimeTableEvent event={event} key={`${participantRow.email}-${event.type}-${index}`} />
 				))}
-				{/* <TimeTableHourTicks /> */}
-				{/* <MinutesLine */}
-				{/*	dataTestId={'start-mark'} */}
-				{/*	atPosition={startPosition} */}
-				{/*	color={defaultLineColors.start} */}
-				{/* /> */}
-				{/* <MinutesLine atPosition={endPosition} color={defaultLineColors.end} /> */}
+				<TimeTableHourTicks />
+				<MinutesLine
+					dataTestId={'start-mark'}
+					atPosition={startPosition}
+					color={defaultLineColors.start}
+				/>
+				<MinutesLine atPosition={endPosition} color={defaultLineColors.end} />
 			</FreeBusyColumn>
 		</TimeTableRow>
 	);
