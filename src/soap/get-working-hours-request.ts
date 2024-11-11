@@ -51,6 +51,6 @@ export const getWorkingHoursRequest = async ({
 			name: emails.join(',')
 		}
 	);
-	if (!response) return [];
+	if (!response?.usr) return [];
 	return normalizeResponse(response);
 };
