@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Button, Row } from '@zextras/carbonio-design-system';
 import { isEmpty } from 'lodash';
@@ -139,18 +139,6 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		],
 		[attendees, equipment, meetingRoom, optionalAttendees, sender.address]
 	);
-	useEffect(() => {
-		console.log('attendees', attendees);
-	}, [attendees]);
-	useEffect(() => {
-		console.log('equipment', equipment);
-	}, [equipment]);
-	useEffect(() => {
-		console.log('sender', sender);
-	}, [sender]);
-	useEffect(() => {
-		console.log('optionalAttendees', optionalAttendees);
-	}, [optionalAttendees]);
 
 	const startOfDay = atMidnight(new Date(startDate));
 	const endOfDay = onNextDay(startOfDay);
