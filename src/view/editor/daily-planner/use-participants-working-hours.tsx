@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { FreeBusy } from '../../../soap/get-free-busy-request';
 import { getWorkingHoursRequest } from '../../../soap/get-working-hours-request';
@@ -44,28 +44,22 @@ export function useParticipantsWorkingHours({
 	const previousValue = useRef<string>('');
 	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
 
-	useEffect(() => {
-		if (participants.length > 0 && previousValue.current !== currentValue) {
-			previousValue.current = JSON.stringify({
-				participants,
-				startDateEpochMillis,
-				endDateEpochMillis
+	if (participants.length > 0 && previousValue.current !== currentValue) {
+		previousValue.current = currentValue;
+		const newWorkingHours: Record<string, WorkingHours> = {};
+		getWorkingHoursRequest({
+			startEpochMillis: startDateEpochMillis,
+			endEpochMillis: endDateEpochMillis,
+			emails: participants.map((p) => p.email)
+		}).then((response) => {
+			response?.forEach((user) => {
+				newWorkingHours[user.id] = {
+					workingHours: user.workingHours?.map(mapFreeBusyToEvent) ?? []
+				};
 			});
-			const newWorkingHours: Record<string, WorkingHours> = {};
-			getWorkingHoursRequest({
-				startEpochMillis: startDateEpochMillis,
-				endEpochMillis: endDateEpochMillis,
-				emails: participants.map((p) => p.email)
-			}).then((response) => {
-				response?.forEach((user) => {
-					newWorkingHours[user.id] = {
-						workingHours: user.workingHours?.map(mapFreeBusyToEvent) ?? []
-					};
-				});
-				setParticipantWorkingHours(newWorkingHours);
-			});
-		}
-	}, [endDateEpochMillis, participants, startDateEpochMillis, participants.length, currentValue]);
+			setParticipantWorkingHours(newWorkingHours);
+		});
+	}
 
 	return participantsWorkingHours;
 }
