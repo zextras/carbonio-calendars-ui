@@ -15,6 +15,7 @@ import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/defau
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_BOARD_ID, PREFS_DEFAULTS } from '../../constants';
+import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../soap/tests/mocks';
 import { reducers } from '../../store/redux';
 import { createNewEditor } from '../../store/slices/editor-slice';
 import mockedData from '../../test/generators';
@@ -218,6 +219,8 @@ describe('Editor board wrapper', () => {
 		});
 
 		it('it shows the daily planner when user clicks the button', async () => {
+			mockFreeBusyResponse([]);
+			mockWorkingHoursResponse([]);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const folder = {
 				absFolderPath: '/Test',
