@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { CalendarChip, CalendarChipInputItem, CalendarChipInputItems } from './calendar-chips';
 import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
-import { isLink, isTrash } from '../../../carbonio-ui-commons/helpers/folders';
+import { isLink, isTrashed } from '../../../carbonio-ui-commons/helpers/folders';
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
@@ -66,7 +66,7 @@ export const MultipleCalendarSelector = ({
 			(item) =>
 				item.name === ROOT_NAME ||
 				(item as LinkFolder).oname === ROOT_NAME ||
-				isTrash(item.id) ||
+				isTrashed({ folderId: item.id }) ||
 				(excludedCalendarsIds !== undefined && excludedCalendarsIds.includes(item.id))
 		);
 
@@ -228,6 +228,7 @@ export const MultipleCalendarSelector = ({
 			value={selectedCalendarsChips}
 			onAdd={onSelectedCalendarsAdd}
 			inputRef={inputRef}
+			onInputTypeDebounce={0}
 			onInputType={onInputType}
 			onChange={onSelectedCalendarsChange}
 			placeholder={t('label.calendar_selector.placeholder', 'Add Calendars')}

@@ -6,8 +6,10 @@
 import React from 'react';
 
 import { faker } from '@faker-js/faker';
+import { act } from '@testing-library/react';
 import { times } from 'lodash';
 
+import { FOLDERS } from '../../../../carbonio-ui-commons/constants/folders';
 import { generateFolder } from '../../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
 import { populateFoldersStore } from '../../../../carbonio-ui-commons/test/mocks/store/folders';
 import { setupTest, screen, within } from '../../../../carbonio-ui-commons/test/test-setup';
@@ -27,19 +29,19 @@ describe('MultipleCalendarSelector', () => {
 		populateFoldersStore({ view: 'appointment' });
 
 		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
-		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
 
 		expect(screen.getByTestId('dropdown-popper-list')).toBeVisible();
 	});
 
-	it("should render all the calendars' name in the dropdown list when the user clicks on the ChipInput", async () => {
+	it("should render all calendars' name in the dropdown list when the user clicks on the ChipInput", async () => {
 		const calendars = times(faker.number.int({ min: 1, max: 42 }), (index) =>
 			generateFolder({ view: 'appointment', name: `Calendar ${index}` })
 		);
 		populateFoldersStore({ view: 'appointment', customFolders: calendars });
 
 		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
-		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
 
 		const dropdownList = screen.getByTestId('dropdown-popper-list');
 		calendars.forEach((calendar) => {
@@ -47,12 +49,39 @@ describe('MultipleCalendarSelector', () => {
 		});
 	});
 
+	it('should not render the trash calendar in the dropdown list when the user clicks on the ChipInput', async () => {
+		populateFoldersStore({ view: 'appointment' });
+
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
+
+		const dropdownList = screen.getByTestId('dropdown-popper-list');
+		expect(within(dropdownList).queryByText(/trash/i)).not.toBeInTheDocument();
+	});
+
+	it('should not render a trashed calendar in the dropdown list when the user clicks on the ChipInput', async () => {
+		const trashedCalendarName = faker.word.words();
+		const trashedCalendar = generateFolder({
+			view: 'appointment',
+			parent: FOLDERS.TRASH,
+			name: trashedCalendarName,
+			absFolderPath: `/trash/${trashedCalendarName}`
+		});
+		populateFoldersStore({ view: 'appointment', customFolders: [trashedCalendar] });
+
+		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
+		await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
+
+		const dropdownList = screen.getByTestId('dropdown-popper-list');
+		expect(within(dropdownList).queryByText(trashedCalendarName)).not.toBeInTheDocument();
+	});
+
 	it('should render the selected calendar chip when a calendar is selected', async () => {
 		const calendar = generateFolder({ view: 'appointment' });
 		populateFoldersStore({ view: 'appointment', customFolders: [calendar] });
 
 		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
-		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
 		await user.click(screen.getByText(calendar.name));
 		const chip = screen.getByTestId(TEST_SELECTORS.CHIP);
 
@@ -67,10 +96,11 @@ describe('MultipleCalendarSelector', () => {
 		populateFoldersStore({ view: 'appointment', customFolders: calendars });
 
 		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
-		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
 		await user.click(screen.getByText(calendars[0].name));
-		await user.click(screen.getByPlaceholderText('Add Calendars'));
 		await user.click(screen.getByText(calendars[1].name));
+		// This is a workaround to close the dropdown and that works only in test
+		await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
 
 		calendars.forEach((calendar) => {
 			expect(screen.getByText(calendar.name)).toBeVisible();
@@ -82,7 +112,7 @@ describe('MultipleCalendarSelector', () => {
 		populateFoldersStore({ view: 'appointment', customFolders: [calendar] });
 
 		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
-		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
 		await user.click(screen.getByText(calendar.name));
 		await user.click(screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeChip }));
 
@@ -97,16 +127,15 @@ describe('MultipleCalendarSelector', () => {
 		populateFoldersStore({ view: 'appointment', customFolders: calendars });
 
 		const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={jest.fn()} />);
-		await user.click(screen.getByPlaceholderText('Add Calendars'));
+		await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
 		await user.click(screen.getByText(calendars[0].name));
-		await user.click(screen.getByPlaceholderText('Add Calendars'));
 		await user.click(screen.getByText(calendars[1].name));
 		await user.click(
 			screen.getAllByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeChip })[0]
 		);
+		const chip = screen.getByTestId(TEST_SELECTORS.CHIP);
 
-		expect(screen.queryByText(calendars[0].name)).not.toBeInTheDocument();
-		expect(screen.getByText(calendars[1].name)).toBeVisible();
+		expect(within(chip).getByText(calendars[1].name)).toBeVisible();
 	});
 
 	describe('Add Calendars Icon', () => {
@@ -124,7 +153,7 @@ describe('MultipleCalendarSelector', () => {
 
 			const onCalendarChange = jest.fn();
 			const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={onCalendarChange} />);
-			await user.click(screen.getByPlaceholderText('Add Calendars'));
+			await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
 			await user.click(screen.getByText(calendar.name));
 			await user.click(
 				screen.getByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.addCalendar })
@@ -142,9 +171,8 @@ describe('MultipleCalendarSelector', () => {
 
 			const onCalendarChange = jest.fn();
 			const { user } = setupTest(<MultipleCalendarSelector onCalendarChange={onCalendarChange} />);
-			await user.click(screen.getByPlaceholderText('Add Calendars'));
+			await act(() => user.click(screen.getByPlaceholderText('Add Calendars')));
 			await user.click(screen.getByText(calendars[0].name));
-			await user.click(screen.getByPlaceholderText('Add Calendars'));
 			await user.click(screen.getByText(calendars[1].name));
 			await user.click(
 				screen.getAllByRoleWithIcon('button', { icon: TEST_SELECTORS.ICONS.closeChip })[0]
