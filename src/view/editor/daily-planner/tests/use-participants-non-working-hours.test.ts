@@ -8,11 +8,11 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse } from 'msw';
 
 import { createAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import * as getWorkingHoursResponseHandler from '../../../../soap/get-working-hours-request';
+import * as getNonWorkingHoursResponseHandler from '../../../../soap/get-non-working-hours-request';
 import { mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
-import { useParticipantsWorkingHours } from '../use-participants-working-hours';
+import { useParticipantsNonWorkingHours } from '../use-participants-non-working-hours';
 
-describe('useParticipantsWorkingHours', () => {
+describe('useParticipantsNonWorkingHours', () => {
 	it('should return an empty object if no availability', () => {
 		const participants = [{ email: 'test@test.com' }];
 		mockWorkingHoursResponse([
@@ -23,7 +23,7 @@ describe('useParticipantsWorkingHours', () => {
 			}
 		]);
 		const { result } = renderHook(() =>
-			useParticipantsWorkingHours({
+			useParticipantsNonWorkingHours({
 				participants,
 				startDateEpochMillis: 0,
 				endDateEpochMillis: 0
@@ -42,7 +42,7 @@ describe('useParticipantsWorkingHours', () => {
 			}
 		]);
 		const { result } = renderHook(() =>
-			useParticipantsWorkingHours({
+			useParticipantsNonWorkingHours({
 				participants,
 				startDateEpochMillis: 0,
 				endDateEpochMillis: 0
@@ -51,14 +51,14 @@ describe('useParticipantsWorkingHours', () => {
 
 		const participantEmail = 'test@test.com';
 		const expected = {
-			workingHours: [{ startDateEpochMillis: 100, endDateEpochMillis: 200 }]
+			nonWorkingHours: [{ startDateEpochMillis: 100, endDateEpochMillis: 200 }]
 		};
 		await waitFor(() => {
 			expect(result.current[participantEmail]).toEqual(expected);
 		});
 	});
 
-	it('should call GetWorkingHours with correct parameters', async () => {
+	it('should call GetNonWorkingHours with correct parameters', async () => {
 		const participants = [{ email: 'test@test.com' }];
 		const mockRequest = mockWorkingHoursResponse([
 			{
@@ -69,7 +69,7 @@ describe('useParticipantsWorkingHours', () => {
 		]);
 
 		renderHook(() =>
-			useParticipantsWorkingHours({
+			useParticipantsNonWorkingHours({
 				participants,
 				startDateEpochMillis: 1000,
 				endDateEpochMillis: 2000
@@ -82,10 +82,13 @@ describe('useParticipantsWorkingHours', () => {
 		expect(request.name).toBe('test@test.com');
 	});
 
-	it('should not call GetWorkingHours API if no participants', async () => {
-		const getWorkingHoursSpy = jest.spyOn(getWorkingHoursResponseHandler, 'getWorkingHoursRequest');
+	it('should not call GetNonWorkingHours API if no participants', async () => {
+		const getWorkingHoursSpy = jest.spyOn(
+			getNonWorkingHoursResponseHandler,
+			'getNonWorkingHoursRequest'
+		);
 		renderHook(() =>
-			useParticipantsWorkingHours({
+			useParticipantsNonWorkingHours({
 				participants: [],
 				startDateEpochMillis: 0,
 				endDateEpochMillis: 0
@@ -107,7 +110,7 @@ describe('useParticipantsWorkingHours', () => {
 		const participants = [{ email: '123@test.com' }];
 
 		const { rerender } = renderHook(() =>
-			useParticipantsWorkingHours({
+			useParticipantsNonWorkingHours({
 				participants,
 				startDateEpochMillis: 0,
 				endDateEpochMillis: 0
@@ -132,7 +135,7 @@ describe('useParticipantsWorkingHours', () => {
 		const participants = [{ email: '123@test.com' }];
 
 		const { result } = renderHook(() =>
-			useParticipantsWorkingHours({
+			useParticipantsNonWorkingHours({
 				participants,
 				startDateEpochMillis: 0,
 				endDateEpochMillis: 0

@@ -6,15 +6,15 @@
 
 import { createSoapAPIInterceptor } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import {
-	getWorkingHoursRequest,
-	GetWorkingHoursRequest,
+	getNonWorkingHoursRequest,
+	GetNonWorkingHoursRequest,
 	GetWorkingHoursSoapRequest,
 	GetWorkingHoursSoapResponse
-} from '../get-working-hours-request';
+} from '../get-non-working-hours-request';
 
-describe('getWorkingHoursRequest', () => {
+describe('getNonWorkingHoursRequest', () => {
 	it('should call soapFetch with correct parameters', async () => {
-		const request: GetWorkingHoursRequest = {
+		const request: GetNonWorkingHoursRequest = {
 			startEpochMillis: 1609459200,
 			endEpochMillis: 1609545600,
 			emails: ['user1@example.com', 'user2@example.com']
@@ -24,7 +24,7 @@ describe('getWorkingHoursRequest', () => {
 			GetWorkingHoursSoapRequest,
 			GetWorkingHoursSoapResponse
 		>('GetWorkingHours', { usr: [] });
-		getWorkingHoursRequest(request);
+		getNonWorkingHoursRequest(request);
 
 		const soapRequest = await interceptor;
 		expect(soapRequest).toMatchObject({
@@ -36,7 +36,7 @@ describe('getWorkingHoursRequest', () => {
 	});
 
 	it('should handle empty name array', async () => {
-		const request: GetWorkingHoursRequest = {
+		const request: GetNonWorkingHoursRequest = {
 			startEpochMillis: 1609459200,
 			endEpochMillis: 1609545600,
 			emails: []
@@ -46,7 +46,7 @@ describe('getWorkingHoursRequest', () => {
 			GetWorkingHoursSoapRequest,
 			GetWorkingHoursSoapResponse
 		>('GetWorkingHours', { usr: [] });
-		getWorkingHoursRequest(request);
+		getNonWorkingHoursRequest(request);
 
 		const soapRequest = await interceptor;
 		expect(soapRequest).toMatchObject({
@@ -55,7 +55,7 @@ describe('getWorkingHoursRequest', () => {
 	});
 
 	it('should return the correct working hours', async () => {
-		const request: GetWorkingHoursRequest = {
+		const request: GetNonWorkingHoursRequest = {
 			startEpochMillis: 1609459200,
 			endEpochMillis: 1609545600,
 			emails: ['user1@example.com', 'user2@example.com']
@@ -65,11 +65,13 @@ describe('getWorkingHoursRequest', () => {
 			GetWorkingHoursSoapRequest,
 			GetWorkingHoursSoapResponse
 		>('GetWorkingHours', { usr: [{ id: 'user1@example.com', u: [{ s: 123, e: 345 }], f: [] }] });
-		getWorkingHoursRequest(request);
+		getNonWorkingHoursRequest(request);
 
-		const response = await getWorkingHoursRequest(request);
+		const response = await getNonWorkingHoursRequest(request);
 
 		await interceptor;
-		expect(response).toEqual([{ id: 'user1@example.com', workingHours: [{ s: 123, e: 345 }] }]);
+		expect(response).toEqual([
+			{ email: 'user1@example.com', nonWorkingHours: [{ s: 123, e: 345 }] }
+		]);
 	});
 });

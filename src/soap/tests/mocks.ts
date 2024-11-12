@@ -9,7 +9,7 @@ import { GetFreeBusyRequest, GetFreeBusyResponse } from '../get-free-busy-reques
 import {
 	GetWorkingHoursSoapRequest,
 	GetWorkingHoursSoapResponse
-} from '../get-working-hours-request';
+} from '../get-non-working-hours-request';
 
 export function mockFreeBusyResponse(
 	usersFreeBusy: GetFreeBusyResponse['usr']

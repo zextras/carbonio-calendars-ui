@@ -18,9 +18,9 @@ export type GetWorkingHoursSoapResponse = {
 	}>;
 };
 
-export type GetWorkingHoursResponse = Array<{ id: string; workingHours: FreeBusy[] }>;
+export type GetNonWorkingHoursResponse = Array<{ email: string; nonWorkingHours: FreeBusy[] }>;
 
-export type GetWorkingHoursRequest = {
+export type GetNonWorkingHoursRequest = {
 	startEpochMillis: number;
 	endEpochMillis: number;
 	emails: Array<string>;
@@ -33,15 +33,15 @@ export type GetWorkingHoursSoapRequest = {
 	name: string;
 };
 
-function normalizeResponse(response: GetWorkingHoursSoapResponse): GetWorkingHoursResponse {
-	return response.usr.map((user) => ({ id: user.id, workingHours: user.u }));
+function normalizeResponse(response: GetWorkingHoursSoapResponse): GetNonWorkingHoursResponse {
+	return response.usr.map((user) => ({ email: user.id, nonWorkingHours: user.u }));
 }
 
-export const getWorkingHoursRequest = async ({
+export const getNonWorkingHoursRequest = async ({
 	startEpochMillis,
 	endEpochMillis,
 	emails
-}: GetWorkingHoursRequest): Promise<GetWorkingHoursResponse> => {
+}: GetNonWorkingHoursRequest): Promise<GetNonWorkingHoursResponse> => {
 	const response = await soapFetch<GetWorkingHoursSoapRequest, GetWorkingHoursSoapResponse>(
 		'GetWorkingHours',
 		{

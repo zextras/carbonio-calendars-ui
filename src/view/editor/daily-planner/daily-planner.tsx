@@ -23,7 +23,10 @@ import {
 	ParticipantAvailability,
 	useParticipantsAvailability
 } from './use-participants-availability';
-import { useParticipantsWorkingHours, WorkingHours } from './use-participants-working-hours';
+import {
+	useParticipantsNonWorkingHours,
+	NonWorkingHours
+} from './use-participants-non-working-hours';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAttendees,
@@ -64,16 +67,16 @@ function mapFreeBusyToDailyPlannerRow({
 	email,
 	participantType,
 	availabilities,
-	workingHours
+	nonWorkingHours
 }: {
 	email: string;
 	participantType: DailyPlannerParticipantType;
 	availabilities: Record<string, ParticipantAvailability>;
-	workingHours: Record<string, WorkingHours>;
+	nonWorkingHours: Record<string, NonWorkingHours>;
 }): DailyPlannerRow {
 	const freeBusy = availabilities?.[email] ?? { free: [], busy: [], tentative: [] };
 	const nonWorking = map(
-		(workingHours?.[email]?.workingHours ?? []).map((event) =>
+		(nonWorkingHours?.[email]?.nonWorkingHours ?? []).map((event) =>
 			mapEvent(event, DAILY_PLANNER_EVENT_TYPE.nonWorking)
 		)
 	);
@@ -159,7 +162,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		endDateEpochMillis
 	});
 
-	const participantWorkingHours = useParticipantsWorkingHours({
+	const participantWorkingHours = useParticipantsNonWorkingHours({
 		participants,
 		startDateEpochMillis,
 		endDateEpochMillis
@@ -170,14 +173,14 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 			email: sender.address ?? '',
 			participantType: 'organizer',
 			availabilities: participantAvailabilities,
-			workingHours: participantWorkingHours
+			nonWorkingHours: participantWorkingHours
 		}),
 		...attendees.map((attendee) =>
 			mapFreeBusyToDailyPlannerRow({
 				email: attendee.email,
 				participantType: 'attendee',
 				availabilities: participantAvailabilities,
-				workingHours: participantWorkingHours
+				nonWorkingHours: participantWorkingHours
 			})
 		),
 		...meetingRoom.map((room) =>
@@ -185,7 +188,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 				email: room.email,
 				participantType: 'meetingRoom',
 				availabilities: participantAvailabilities,
-				workingHours: participantWorkingHours
+				nonWorkingHours: participantWorkingHours
 			})
 		),
 		...equipment.map((equip) =>
@@ -193,7 +196,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 				email: equip.email,
 				participantType: 'equipment',
 				availabilities: participantAvailabilities,
-				workingHours: participantWorkingHours
+				nonWorkingHours: participantWorkingHours
 			})
 		),
 		...optionalAttendees.map((optionalAttendee) =>
@@ -201,7 +204,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 				email: optionalAttendee.email,
 				participantType: 'optionalAttendee',
 				availabilities: participantAvailabilities,
-				workingHours: participantWorkingHours
+				nonWorkingHours: participantWorkingHours
 			})
 		)
 	];

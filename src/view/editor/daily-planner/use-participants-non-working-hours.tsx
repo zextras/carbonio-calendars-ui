@@ -7,15 +7,15 @@
 import { useRef, useState } from 'react';
 
 import { FreeBusy } from '../../../soap/get-free-busy-request';
-import { getWorkingHoursRequest } from '../../../soap/get-working-hours-request';
+import { getNonWorkingHoursRequest } from '../../../soap/get-non-working-hours-request';
 
 type Event = {
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
 };
 
-export type WorkingHours = {
-	workingHours: Event[];
+export type NonWorkingHours = {
+	nonWorkingHours: Event[];
 };
 
 export type Participant = {
@@ -29,7 +29,7 @@ function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
 	};
 }
 
-export function useParticipantsWorkingHours({
+export function useParticipantsNonWorkingHours({
 	participants,
 	startDateEpochMillis,
 	endDateEpochMillis
@@ -37,29 +37,29 @@ export function useParticipantsWorkingHours({
 	participants: Participant[];
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
-}): Record<string, WorkingHours> {
-	const [participantsWorkingHours, setParticipantWorkingHours] = useState<
-		Record<string, WorkingHours>
+}): Record<string, NonWorkingHours> {
+	const [participantsNonWorkingHours, setParticipantsNonWorkingHours] = useState<
+		Record<string, NonWorkingHours>
 	>({});
 	const previousValue = useRef<string>('');
 	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
 
 	if (participants.length > 0 && previousValue.current !== currentValue) {
 		previousValue.current = currentValue;
-		const newWorkingHours: Record<string, WorkingHours> = {};
-		getWorkingHoursRequest({
+		const newNonWorkingHours: Record<string, NonWorkingHours> = {};
+		getNonWorkingHoursRequest({
 			startEpochMillis: startDateEpochMillis,
 			endEpochMillis: endDateEpochMillis,
 			emails: participants.map((p) => p.email)
 		}).then((response) => {
 			response?.forEach((user) => {
-				newWorkingHours[user.id] = {
-					workingHours: user.workingHours?.map(mapFreeBusyToEvent) ?? []
+				newNonWorkingHours[user.email] = {
+					nonWorkingHours: user.nonWorkingHours?.map(mapFreeBusyToEvent) ?? []
 				};
 			});
-			setParticipantWorkingHours(newWorkingHours);
+			setParticipantsNonWorkingHours(newNonWorkingHours);
 		});
 	}
 
-	return participantsWorkingHours;
+	return participantsNonWorkingHours;
 }
