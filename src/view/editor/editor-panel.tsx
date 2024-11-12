@@ -7,7 +7,7 @@ import React, { ReactElement } from 'react';
 
 import { Container, Divider, Row } from '@zextras/carbonio-design-system';
 
-import { EditorDailyPlanner } from './daily-planner/daily-planner';
+import { EditorDailyPlannerController } from './daily-planner/daily-planner-controller';
 import { EditorActions } from './parts/editor-actions';
 import { EditorAllDayCheckbox } from './parts/editor-allday-checkbox';
 import { EditorAttachments } from './parts/editor-attachments';
@@ -85,7 +85,7 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 			<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
 				<EditorAllDayCheckbox editorId={editorId} />
 			</Row>
-			<EditorDailyPlanner editorId={editorId} />
+			<EditorDailyPlannerController editorId={editorId} />
 			<Row height="fit" width="fill" padding={{ top: 'large' }}>
 				<EditorReminder editorId={editorId} />
 			</Row>

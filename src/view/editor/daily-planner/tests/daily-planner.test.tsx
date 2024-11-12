@@ -6,59 +6,47 @@
 
 import React from 'react';
 
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { within } from '@testing-library/react';
 
 import { setupTest, screen } from '../../../../carbonio-ui-commons/test/test-setup';
-import { generateEditor } from '../../../../commons/editor-generator';
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
-import { reducers } from '../../../../store/redux';
-import mockedData from '../../../../test/generators';
-import { CalendarSender, Resource } from '../../../../types/editor';
-import { EditorChipAttendees } from '../../../../types/store/invite';
+import { DAILY_PLANNER_PARTICIPANT_TYPE } from '../constants';
 import { EditorDailyPlanner } from '../daily-planner';
 
-const folder = {
-	absFolderPath: '/Test',
-	id: '5',
-	l: '1',
-	name: 'Test',
-	view: 'appointment'
+const organizer = {
+	email: 'organizer@test.com',
+	type: DAILY_PLANNER_PARTICIPANT_TYPE.organizer
+};
+const attendees = [
+	{ email: 'attendee1@test.com', type: DAILY_PLANNER_PARTICIPANT_TYPE.attendee },
+	{ email: 'attendee2@test.com', type: DAILY_PLANNER_PARTICIPANT_TYPE.attendee }
+];
+const optionalAttendees = {
+	email: 'optionalAttendee1@test.com',
+	type: DAILY_PLANNER_PARTICIPANT_TYPE.optionalAttendee
+};
+const meetingRoom = {
+	email: 'meeting.room1@test.com',
+	label: 'Meeting Room 1',
+	type: DAILY_PLANNER_PARTICIPANT_TYPE.meetingRoom
+};
+const equipment = {
+	email: 'companyCar@test.com',
+	label: 'Company Car',
+	type: DAILY_PLANNER_PARTICIPANT_TYPE.equipment
 };
 
-const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
+const participants = [organizer, ...attendees, meetingRoom, equipment, optionalAttendees];
 
 describe('EditorDailyPlanner', () => {
-	it('should render the daily planner component participants even without freebusy information', () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		mockFreeBusyResponse([]);
-		mockWorkingHoursResponse([]);
+	it('should render the daily planner component participants even without freebusy information', async () => {
+		const freeBusyInterceptor = mockFreeBusyResponse([]);
+		const workingHoursInterceptor = mockWorkingHoursResponse([]);
+		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
 
-		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
-		const attendees: EditorChipAttendees[] = [
-			{ email: 'attendee1@test.com' },
-			{ email: 'attendee2@test.com' }
-		];
-		const optionalAttendees: EditorChipAttendees[] = [
-			{
-				email: 'optionalAttendee1@test.com'
-			}
-		];
-		const meetingRoom: Resource = { email: 'meeting.room1@test.com', label: 'Meeting Room 1' };
-		const equipment: Resource = { email: 'companyCar@test.com', label: 'Company Car' };
-		const editor = generateEditor({
-			context: {
-				attendees,
-				optionalAttendees,
-				sender: organizer,
-				meetingRoom: [meetingRoom],
-				equipment: [equipment],
-				folders,
-				dispatch: store.dispatch
-			}
-		});
+		await freeBusyInterceptor;
+		await workingHoursInterceptor;
 
-		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
 		const timeTable = screen.getByTestId(`time-table`);
 		expect(timeTable).toBeInTheDocument();
 		expect(within(timeTable).getByText('Organizer - organizer@test.com')).toBeVisible();
@@ -70,36 +58,10 @@ describe('EditorDailyPlanner', () => {
 	});
 
 	it('should call GetFreeBusy API with correct participants', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
 		const interceptor = mockFreeBusyResponse([]);
 		mockWorkingHoursResponse([]);
 
-		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
-		const attendees: EditorChipAttendees[] = [
-			{ email: 'attendee1@test.com' },
-			{ email: 'attendee2@test.com' }
-		];
-		const optionalAttendees: EditorChipAttendees[] = [
-			{
-				email: 'optionalAttendee1@test.com'
-			}
-		];
-		const meetingRoom: Resource = { email: 'meeting.room1@test.com', label: 'Meeting Room 1' };
-		const equipment: Resource = { email: 'companyCar@test.com', label: 'Company Car' };
-		const editor = generateEditor({
-			context: {
-				attendees,
-				optionalAttendees,
-				sender: organizer,
-				meetingRoom: [meetingRoom],
-				equipment: [equipment],
-				folders,
-				dispatch: store.dispatch
-			}
-		});
-
-		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
-
+		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
 		const freeBusyRequest = await interceptor;
 		expect(freeBusyRequest.uid).toBe(
 			'organizer@test.com,attendee1@test.com,attendee2@test.com,meeting.room1@test.com,companyCar@test.com,optionalAttendee1@test.com'
@@ -107,25 +69,19 @@ describe('EditorDailyPlanner', () => {
 	});
 
 	it('should call GetFreeBusy API with dates between current startDate midnight and next day midnight', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
 		const interceptor = mockFreeBusyResponse([]);
 		mockWorkingHoursResponse([]);
 		const start = new Date();
 		const end = new Date(start);
 		end.setDate(start.getDate() + 1);
 
-		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
-		const editor = generateEditor({
-			context: {
-				start: start.getTime(),
-				end: end.getTime(),
-				sender: organizer,
-				folders,
-				dispatch: store.dispatch
-			}
-		});
-
-		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+		setupTest(
+			<EditorDailyPlanner
+				startDate={start.getTime()}
+				endDate={end.getTime()}
+				participants={participants}
+			/>
+		);
 
 		const freeBusyRequest = await interceptor;
 		const expectedStartDate = new Date(start);
@@ -137,7 +93,6 @@ describe('EditorDailyPlanner', () => {
 	});
 
 	it('should display organizer busy status', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
 		const today = Date.now();
 		const busyStart = new Date(today);
 		busyStart.setHours(10, 30);
@@ -148,16 +103,7 @@ describe('EditorDailyPlanner', () => {
 		]);
 		const workingHoursApiCall = mockWorkingHoursResponse([]);
 
-		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
-		const editor = generateEditor({
-			context: {
-				sender: organizer,
-				folders,
-				dispatch: store.dispatch
-			}
-		});
-
-		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
 		await workingHoursApiCall;
 		await freeBusyApiCall;
 
@@ -167,7 +113,6 @@ describe('EditorDailyPlanner', () => {
 	});
 
 	it('should display organizer non-working hours', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
 		const today = Date.now();
 		const nonWorkingHoursStart = new Date(today);
 		nonWorkingHoursStart.setHours(10, 0);
@@ -182,16 +127,7 @@ describe('EditorDailyPlanner', () => {
 			}
 		]);
 
-		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
-		const editor = generateEditor({
-			context: {
-				sender: organizer,
-				folders,
-				dispatch: store.dispatch
-			}
-		});
-
-		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
 		await freeBusyApiCall;
 		await workingHoursApiCall;
 
@@ -200,19 +136,14 @@ describe('EditorDailyPlanner', () => {
 		expect(await within(eventsColumn).findByTestId('non-working')).toBeVisible();
 	});
 
-	it('should display People icon for organizer', () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const organizer: CalendarSender = { address: 'organizer@test.com', fullName: 'Organizer' };
-		mockWorkingHoursResponse([]);
-		mockFreeBusyResponse([]);
-		const editor = generateEditor({
-			context: {
-				sender: organizer,
-				folders,
-				dispatch: store.dispatch
-			}
-		});
-		setupTest(<EditorDailyPlanner editorId={editor.id} />, { store });
+	it('should display People icon for organizer', async () => {
+		const freeBusyInterceptor = mockWorkingHoursResponse([]);
+		const workingHoursInterceptor = mockFreeBusyResponse([]);
+
+		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
+		await freeBusyInterceptor;
+		await workingHoursInterceptor;
+
 		const timeTable = screen.getByTestId('time-table');
 		const firstRow = within(timeTable).getByTestId('row-organizer@test.com');
 		const firstColumn = within(firstRow).getByTestId('column-0');

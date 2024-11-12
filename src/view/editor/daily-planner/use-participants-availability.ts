@@ -6,6 +6,7 @@
 
 import { useRef, useState } from 'react';
 
+import { DailyPlannerParticipantType } from './types';
 import { FreeBusy, getFreeBusyRequest } from '../../../soap/get-free-busy-request';
 
 type Event = {
@@ -24,6 +25,7 @@ export type ParticipantAvailability = {
 export type Participant = {
 	email: string;
 	fullName?: string;
+	type: DailyPlannerParticipantType;
 };
 
 function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
@@ -38,7 +40,7 @@ export function useParticipantsAvailability({
 	startDateEpochMillis,
 	endDateEpochMillis
 }: {
-	participants: Participant[];
+	participants: Array<{ email: string }>;
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
 }): Record<string, ParticipantAvailability> {

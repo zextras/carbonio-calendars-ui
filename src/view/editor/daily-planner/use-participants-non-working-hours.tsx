@@ -34,7 +34,7 @@ export function useParticipantsNonWorkingHours({
 	startDateEpochMillis,
 	endDateEpochMillis
 }: {
-	participants: Participant[];
+	participants: Array<{ email: string }>;
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
 }): Record<string, NonWorkingHours> {
