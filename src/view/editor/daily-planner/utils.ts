@@ -5,6 +5,7 @@
  */
 
 import { Theme } from '@zextras/carbonio-design-system';
+import { TFunction } from 'i18next';
 
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
 import { DailyPlannerEventType, HoursMinutes, DailyPlannerParticipantType } from './types';
@@ -25,6 +26,24 @@ export function getEventColor(type: DailyPlannerEventType, theme: Theme): string
 			return theme.palette.gray4.disabled;
 		default:
 			return theme.palette.success.regular;
+	}
+}
+
+export function getEventLabel(type: DailyPlannerEventType, t: TFunction): string {
+	switch (type) {
+		case 'free':
+			return t('daily_planner.free', 'Free');
+		case 'busy':
+			return t('daily_planner.busy', 'Busy');
+		case 'tentative':
+			return t('daily_planner.tentative', 'tentative');
+		case 'out-of-office':
+			return t('daily_planner.out-of-office', 'Out of office');
+		case 'non-working':
+			return t('daily_planner.non-working', 'Non-working');
+		case 'unknown':
+		default:
+			return t('daily_planner.unknown', 'Unknown');
 	}
 }
 
