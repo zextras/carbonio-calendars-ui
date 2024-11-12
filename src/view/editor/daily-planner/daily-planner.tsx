@@ -150,8 +150,8 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 	// FIXME: when you add an attendee to the editor it is added to the store even if already present, but only one chip is shown.
 	// We have to use uniqBy for this reason. It can be dropped once the editor/contact input has been fixed
 	const equipment: Participant[] = (useAppSelector(selectEditorEquipment(editorId)) ?? []).map(
-		(equipment) => ({
-			email: equipment.email
+		(equip) => ({
+			email: equip.email
 		})
 	);
 	const attendees: Participant[] = uniqByEmail(
