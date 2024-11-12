@@ -10,7 +10,7 @@ import { useTheme } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { EventDiv } from './parts/event-div';
-import { DailyPlannerEvents } from './types';
+import { DailyPlannerEvents, DailyPlannerEventType } from './types';
 import { getEventColor, getEventLabel, getLocalHoursMinutesFromEpoch } from './utils';
 
 function doubleDigitMinutes(minutes: number): string {
@@ -19,6 +19,17 @@ function doubleDigitMinutes(minutes: number): string {
 		return `0${minutes}`;
 	}
 	return asLabel;
+}
+
+function shouldShowHours(eventType: DailyPlannerEventType): boolean {
+	switch (eventType) {
+		case 'busy':
+		case 'tentative':
+		case 'out-of-office':
+			return true;
+		default:
+			return false;
+	}
 }
 
 export const TimeTableEvent = ({ event }: { event: DailyPlannerEvents }): React.JSX.Element => {
@@ -31,9 +42,12 @@ export const TimeTableEvent = ({ event }: { event: DailyPlannerEvents }): React.
 	const statusLabel = t('daily_planner.status', 'Status');
 	const fromLabel = t('daily_planner.from', 'from');
 	const toLabel = t('daily_planner.to', 'to');
-	const startHoursHuman = `${startHoursMinutes.hours}:${doubleDigitMinutes(startHoursMinutes.minutes)}`;
-	const endHoursHuman = `${endHoursMinutes.hours}:${doubleDigitMinutes(endHoursMinutes.minutes)}`;
-	const tooltipLabel = `${statusLabel}: ${getEventLabel(event.type, t)} ${fromLabel} ${startHoursHuman} ${toLabel} ${endHoursHuman}`;
+	let tooltipLabel = `${statusLabel}: ${getEventLabel(event.type, t)}`;
+	if (shouldShowHours(event.type)) {
+		const startHoursHuman = `${startHoursMinutes.hours}:${doubleDigitMinutes(startHoursMinutes.minutes)}`;
+		const endHoursHuman = `${endHoursMinutes.hours}:${doubleDigitMinutes(endHoursMinutes.minutes)}`;
+		tooltipLabel = `${statusLabel}: ${getEventLabel(event.type, t)} ${fromLabel} ${startHoursHuman} ${toLabel} ${endHoursHuman}`;
+	}
 
 	return (
 		<EventDiv
