@@ -7,47 +7,21 @@
 import React from 'react';
 
 import { useTheme } from '@zextras/carbonio-design-system';
+import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { EventDiv } from './parts/event-div';
-import { DailyPlannerEvents, DailyPlannerEventType } from './types';
-import { getEventColor, getEventLabel, getLocalHoursMinutesFromEpoch } from './utils';
-
-function doubleDigitMinutes(minutes: number): string {
-	const asLabel = `${minutes}`;
-	if (asLabel.length === 1) {
-		return `0${minutes}`;
-	}
-	return asLabel;
-}
-
-function shouldShowHours(eventType: DailyPlannerEventType): boolean {
-	switch (eventType) {
-		case 'busy':
-		case 'tentative':
-		case 'out-of-office':
-			return true;
-		default:
-			return false;
-	}
-}
+import { DailyPlannerEvents } from './types';
+import { getEventColor, getEventTooltipLabel, getLocalHoursMinutesFromEpoch } from './utils';
 
 export const TimeTableEvent = ({ event }: { event: DailyPlannerEvents }): React.JSX.Element => {
 	const theme = useTheme();
 	const startHoursMinutes = getLocalHoursMinutesFromEpoch(event.startDateEpochMillis);
-	const endHoursMinutes = getLocalHoursMinutesFromEpoch(event.endDateEpochMillis);
 	const timeSpan = (event.endDateEpochMillis - event.startDateEpochMillis) / (1000 * 60);
-
+	const locale = useUserSettings().prefs.zimbraPrefLocale ?? 'en-US';
 	const [t] = useTranslation();
-	const statusLabel = t('daily_planner.status', 'Status');
-	const fromLabel = t('daily_planner.from', 'from');
-	const toLabel = t('daily_planner.to', 'to');
-	let tooltipLabel = `${statusLabel}: ${getEventLabel(event.type, t)}`;
-	if (shouldShowHours(event.type)) {
-		const startHoursHuman = `${startHoursMinutes.hours}:${doubleDigitMinutes(startHoursMinutes.minutes)}`;
-		const endHoursHuman = `${endHoursMinutes.hours}:${doubleDigitMinutes(endHoursMinutes.minutes)}`;
-		tooltipLabel = `${statusLabel}: ${getEventLabel(event.type, t)} ${fromLabel} ${startHoursHuman} ${toLabel} ${endHoursHuman}`;
-	}
+
+	const tooltipLabel = getEventTooltipLabel(event, t, locale);
 
 	return (
 		<EventDiv

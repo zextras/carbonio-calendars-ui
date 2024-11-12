@@ -4,7 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { getHumanReadableHours, getLocalHoursMinutesFromEpoch, getParticipantIcon } from '../utils';
+import { DailyPlannerEvents } from '../types';
+import {
+	getEventTooltipLabel,
+	getHumanReadableHours,
+	getLocalHoursMinutesFromEpoch,
+	getParticipantIcon
+} from '../utils';
+
+const mockTranslation = jest.fn().mockImplementation((key: string, defaultValue: string) => key);
 
 describe('getLocalHoursMinutesFromEpoch', () => {
 	it('should correctly extract hours and minutes from a timestamp', () => {
@@ -95,5 +103,73 @@ describe('getHumanReadableHours', () => {
 		const timeEpochMillis = new Date('2024-11-12T14:30:00').getTime();
 		const result = getHumanReadableHours(timeEpochMillis, 'en-GB');
 		expect(result).toBe('14:30');
+	});
+});
+
+describe('getEventTooltipLabel', () => {
+	it('should not display event hours and minutes for non-working', () => {
+		const event: DailyPlannerEvents = {
+			type: 'non-working',
+			startDateEpochMillis: new Date(2024, 1, 1, 10).getTime(),
+			endDateEpochMillis: new Date(2024, 1, 1, 12).getTime()
+		};
+		const result = getEventTooltipLabel(event, mockTranslation, 'en-US');
+		expect(result).toBe('daily_planner.status: daily_planner.non-working');
+	});
+
+	it('should not display event hours and minutes for free', () => {
+		const event: DailyPlannerEvents = {
+			type: 'free',
+			startDateEpochMillis: new Date(2024, 1, 1, 10).getTime(),
+			endDateEpochMillis: new Date(2024, 1, 1, 12).getTime()
+		};
+		const result = getEventTooltipLabel(event, mockTranslation, 'en-US');
+		expect(result).toBe('daily_planner.status: daily_planner.free');
+	});
+
+	it('should not display event hours and minutes for unknown', () => {
+		const event: DailyPlannerEvents = {
+			type: 'unknown',
+			startDateEpochMillis: new Date(2024, 1, 1, 10).getTime(),
+			endDateEpochMillis: new Date(2024, 1, 1, 12).getTime()
+		};
+		const result = getEventTooltipLabel(event, mockTranslation, 'en-US');
+		expect(result).toBe('daily_planner.status: daily_planner.unknown');
+	});
+
+	it('should display event hours and minutes for busy', () => {
+		const event: DailyPlannerEvents = {
+			type: 'busy',
+			startDateEpochMillis: new Date(2024, 1, 1, 10).getTime(),
+			endDateEpochMillis: new Date(2024, 1, 1, 12).getTime()
+		};
+		const result = getEventTooltipLabel(event, mockTranslation, 'en-US');
+		expect(result).toBe(
+			'daily_planner.status: daily_planner.busy daily_planner.from 10:00 AM daily_planner.to 12:00 PM'
+		);
+	});
+
+	it('should display event hours and minutes for out-of-office', () => {
+		const event: DailyPlannerEvents = {
+			type: 'out-of-office',
+			startDateEpochMillis: new Date(2024, 1, 1, 14).getTime(),
+			endDateEpochMillis: new Date(2024, 1, 1, 16).getTime()
+		};
+		const result = getEventTooltipLabel(event, mockTranslation, 'en-US');
+		expect(result).toBe(
+			'daily_planner.status: daily_planner.out-of-office daily_planner.from 2:00 PM daily_planner.to 4:00 PM'
+		);
+	});
+
+	it('should display event hours and minutes for tentative', () => {
+		const event: DailyPlannerEvents = {
+			type: 'tentative',
+			startDateEpochMillis: new Date(2024, 1, 1, 14).getTime(),
+			endDateEpochMillis: new Date(2024, 1, 1, 16).getTime()
+		};
+		const result = getEventTooltipLabel(event, mockTranslation, 'en-US');
+		expect(result).toBe(
+			'daily_planner.status: daily_planner.tentative daily_planner.from 2:00 PM daily_planner.to 4:00 PM'
+		);
 	});
 });

@@ -8,7 +8,12 @@ import { Theme } from '@zextras/carbonio-design-system';
 import { TFunction } from 'i18next';
 
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
-import { DailyPlannerEventType, HoursMinutes, DailyPlannerParticipantType } from './types';
+import {
+	DailyPlannerEventType,
+	HoursMinutes,
+	DailyPlannerParticipantType,
+	DailyPlannerEvents
+} from './types';
 
 export function getEventColor(type: DailyPlannerEventType, theme: Theme): string {
 	switch (type) {
@@ -83,17 +88,36 @@ export function getDefaultLineColors(theme: Theme): { start: string; end: string
 	return { start, end };
 }
 
-function doubleDigitMinutes(minutes: number): string {
-	const asLabel = `${minutes}`;
-	if (asLabel.length === 1) {
-		return `0${minutes}`;
-	}
-	return asLabel;
-}
-
 export function getHumanReadableHours(timeEpochMillis: number, locale: string): string {
 	return new Intl.DateTimeFormat(locale, {
 		hour: 'numeric',
 		minute: 'numeric'
 	}).format(timeEpochMillis);
+}
+
+function shouldShowHours(eventType: DailyPlannerEventType): boolean {
+	switch (eventType) {
+		case 'busy':
+		case 'tentative':
+		case 'out-of-office':
+			return true;
+		default:
+			return false;
+	}
+}
+export function getEventTooltipLabel(
+	event: DailyPlannerEvents,
+	t: TFunction,
+	locale: string
+): string {
+	const statusLabel = t('daily_planner.status', 'Status');
+	const fromLabel = t('daily_planner.from', 'from');
+	const toLabel = t('daily_planner.to', 'to');
+	let tooltipLabel = `${statusLabel}: ${getEventLabel(event.type, t)}`;
+	if (shouldShowHours(event.type)) {
+		const startHoursHuman = getHumanReadableHours(event.startDateEpochMillis, locale);
+		const endHoursHuman = getHumanReadableHours(event.endDateEpochMillis, locale);
+		tooltipLabel = `${statusLabel}: ${getEventLabel(event.type, t)} ${fromLabel} ${startHoursHuman} ${toLabel} ${endHoursHuman}`;
+	}
+	return tooltipLabel;
 }
