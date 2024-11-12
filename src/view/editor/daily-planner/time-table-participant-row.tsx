@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { Chip, Container, Icon } from '@zextras/carbonio-design-system';
+import { Chip, Container, Icon, Tooltip } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -17,7 +17,7 @@ import { StartMark } from './parts/start-mark';
 import { TimeTableEvent } from './time-table-event';
 import { TimeTableHourTicks } from './time-table-hour-ticks';
 import { DailyPlannerRow } from './types';
-import { getParticipantIcon } from './utils';
+import { getParticipantIcon, getParticipantLabel } from './utils';
 
 const TimeTableRow = styled.div`
 	height: 2rem;
@@ -48,22 +48,26 @@ export const TimeTableParticipantRow = ({
 	endTimeEpochMillis: number;
 }): React.JSX.Element => {
 	const [t] = useTranslation();
+	const iconTooltipLabel = getParticipantLabel(participantRow.participantType, t);
+	const participantDisplayName = participantRow.fullName ?? participantRow.email;
 	const chipLabel =
 		participantRow.participantType === DAILY_PLANNER_PARTICIPANT_TYPE.organizer
-			? `${t('daily_planner.organizer', 'Organizer')} - ${participantRow.email}`
-			: participantRow.email;
+			? `${t('daily_planner.organizer', 'Organizer')} - ${participantDisplayName}`
+			: participantDisplayName;
 
 	return (
 		<TimeTableRow data-testid={`row-${participantRow.email}`}>
 			<EmailColumn data-testid={`column-0`}>
-				<Container width={'2rem'} minWidth={'2rem'} maxWidth={'2rem'}>
-					<Icon
-						width={'2rem'}
-						size={'large'}
-						color={'primary'}
-						icon={getParticipantIcon(participantRow.participantType)}
-					/>
-				</Container>
+				<Tooltip label={iconTooltipLabel}>
+					<Container width={'2rem'} minWidth={'2rem'} maxWidth={'2rem'}>
+						<Icon
+							width={'2rem'}
+							size={'large'}
+							color={'primary'}
+							icon={getParticipantIcon(participantRow.participantType)}
+						/>
+					</Container>
+				</Tooltip>
 				<Chip maxWidth={'10rem'} label={chipLabel} />
 			</EmailColumn>
 			<FreeBusyColumn data-testid={`column-1`}>

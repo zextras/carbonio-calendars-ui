@@ -23,6 +23,7 @@ export type ParticipantAvailability = {
 
 export type Participant = {
 	email: string;
+	fullName?: string;
 };
 
 function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {

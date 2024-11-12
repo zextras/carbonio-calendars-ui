@@ -24,6 +24,7 @@ export type DailyPlannerRow = {
 	email: string;
 	participantType: DailyPlannerParticipantType;
 	events: DailyPlannerEvents[];
+	fullName?: string;
 };
 
 export type TimeTableProps = {

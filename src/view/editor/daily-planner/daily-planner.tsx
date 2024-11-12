@@ -65,12 +65,14 @@ function mapEvent(
 
 function mapFreeBusyToDailyPlannerRow({
 	email,
+	fullName,
 	participantType,
 	availabilities,
 	nonWorkingHours
 }: {
 	email: string;
 	participantType: DailyPlannerParticipantType;
+	fullName?: string;
 	availabilities: Record<string, ParticipantAvailability>;
 	nonWorkingHours: Record<string, NonWorkingHours>;
 }): DailyPlannerRow {
@@ -100,6 +102,7 @@ function mapFreeBusyToDailyPlannerRow({
 	);
 	return {
 		email,
+		fullName,
 		participantType,
 		events: [
 			...eventsFree,
@@ -156,7 +159,8 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 	);
 	const attendees: Participant[] = uniqByEmail(
 		(useAppSelector(selectEditorAttendees(editorId)) ?? []).map((at) => ({
-			email: at.email
+			email: at.email,
+			fullName: at.fullName
 		}))
 	);
 	const optionalAttendees: Participant[] = uniqByEmail(
@@ -198,6 +202,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 	const participantRows = [
 		mapFreeBusyToDailyPlannerRow({
 			email: sender.address ?? '',
+			fullName: sender.fullName,
 			participantType: 'organizer',
 			availabilities: participantAvailabilities,
 			nonWorkingHours: participantWorkingHours
@@ -205,6 +210,7 @@ export const EditorDailyPlanner = ({ editorId }: { editorId: string }): React.JS
 		...attendees.map((attendee) =>
 			mapFreeBusyToDailyPlannerRow({
 				email: attendee.email,
+				fullName: attendee.fullName,
 				participantType: 'attendee',
 				availabilities: participantAvailabilities,
 				nonWorkingHours: participantWorkingHours

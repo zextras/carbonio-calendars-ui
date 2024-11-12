@@ -26,6 +26,12 @@ describe('Time Table', () => {
 			events: []
 		},
 		{
+			email: 'participant2@test.com',
+			fullName: 'John Doe',
+			participantType: 'attendee',
+			events: []
+		},
+		{
 			email: 'all_events@test.com',
 			participantType: 'attendee',
 			events: [
@@ -97,5 +103,13 @@ describe('Time Table', () => {
 		expect(within(secondColumn).getByTestId(DAILY_PLANNER_EVENT_TYPE.outOfOffice)).toBeVisible();
 		expect(within(secondColumn).getByTestId(DAILY_PLANNER_EVENT_TYPE.free)).toBeVisible();
 		expect(within(secondColumn).getByTestId(DAILY_PLANNER_EVENT_TYPE.unknown)).toBeVisible();
+	});
+
+	it('should display participant fullName when available', () => {
+		setupTest(<TimeTable appointmentStartDate={0} appointmentEndDate={0} rows={rows} />);
+		const timeTable = screen.getByTestId('time-table');
+		const secondRow = within(timeTable).getByTestId('row-participant2@test.com');
+		const firstColumn = within(secondRow).getByTestId('column-0');
+		expect(within(firstColumn).getByText('John Doe')).toBeVisible();
 	});
 });

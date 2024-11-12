@@ -67,6 +67,23 @@ export function getParticipantIcon(type: DailyPlannerParticipantType): string {
 	}
 }
 
+export function getParticipantLabel(type: DailyPlannerParticipantType, t: TFunction): string {
+	switch (type) {
+		case DAILY_PLANNER_PARTICIPANT_TYPE.organizer:
+			return t('daily_planner.participant.organizer', 'Organizer');
+		case DAILY_PLANNER_PARTICIPANT_TYPE.attendee:
+			return t('daily_planner.participant.attendee', 'Attendee');
+		case DAILY_PLANNER_PARTICIPANT_TYPE.meetingRoom:
+			return t('daily_planner.participant.meetingRoom', 'Meeting Room');
+		case DAILY_PLANNER_PARTICIPANT_TYPE.equipment:
+			return t('daily_planner.participant.equipment', 'Equipment');
+		case DAILY_PLANNER_PARTICIPANT_TYPE.optionalAttendee:
+			return t('daily_planner.participant.optionalAttendee', 'Optional Attendee');
+		default:
+			return t('daily_planner.participant.unknown', 'Unknown');
+	}
+}
+
 export function getLocalHoursMinutesFromEpoch(epochMillis: number): HoursMinutes {
 	const date = new Date(epochMillis);
 	return { hours: date.getHours(), minutes: date.getMinutes() };
