@@ -6,17 +6,18 @@
 
 import React from 'react';
 
-import { Chip, Container, Icon, useTheme } from '@zextras/carbonio-design-system';
+import { Chip, Container, Icon } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
-import { MinutesLine } from './parts/minutes-line';
+import { EndMark } from './parts/end-mark';
+import { StartMark } from './parts/start-mark';
 import { TimeTableEvent } from './time-table-event';
 import { TimeTableHourTicks } from './time-table-hour-ticks';
-import { DailyPlannerRow, HoursMinutes } from './types';
-import { getDefaultLineColors, getParticipantIcon } from './utils';
+import { DailyPlannerRow } from './types';
+import { getParticipantIcon } from './utils';
 
 const TimeTableRow = styled.div`
 	height: 2rem;
@@ -38,19 +39,15 @@ const FreeBusyColumn = styled.div`
 `;
 
 export const TimeTableParticipantRow = ({
-	start,
-	end,
+	startTimeEpochMillis,
+	endTimeEpochMillis,
 	participantRow
 }: {
 	participantRow: DailyPlannerRow;
-	start: HoursMinutes;
-	end: HoursMinutes;
+	startTimeEpochMillis: number;
+	endTimeEpochMillis: number;
 }): React.JSX.Element => {
 	const [t] = useTranslation();
-	const theme = useTheme();
-	const defaultLineColors = getDefaultLineColors(theme);
-	const startPosition = start.hours * 60 + start.minutes;
-	const endPosition = end.hours * 60 + end.minutes;
 	const chipLabel =
 		participantRow.participantType === DAILY_PLANNER_PARTICIPANT_TYPE.organizer
 			? `${t('daily_planner.organizer', 'Organizer')} - ${participantRow.email}`
@@ -74,12 +71,8 @@ export const TimeTableParticipantRow = ({
 					<TimeTableEvent event={event} key={`${participantRow.email}-${event.type}-${index}`} />
 				))}
 				<TimeTableHourTicks />
-				<MinutesLine
-					dataTestId={'start-mark'}
-					atPosition={startPosition}
-					color={defaultLineColors.start}
-				/>
-				<MinutesLine atPosition={endPosition} color={defaultLineColors.end} />
+				<StartMark startTimeEpochMillis={startTimeEpochMillis} />
+				<EndMark endTimeEpochMillis={endTimeEpochMillis} />
 			</FreeBusyColumn>
 		</TimeTableRow>
 	);

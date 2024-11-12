@@ -82,3 +82,18 @@ export function getDefaultLineColors(theme: Theme): { start: string; end: string
 	const end = theme.palette.error.regular;
 	return { start, end };
 }
+
+function doubleDigitMinutes(minutes: number): string {
+	const asLabel = `${minutes}`;
+	if (asLabel.length === 1) {
+		return `0${minutes}`;
+	}
+	return asLabel;
+}
+
+export function getHumanReadableHours(timeEpochMillis: number, locale: string): string {
+	return new Intl.DateTimeFormat(locale, {
+		hour: 'numeric',
+		minute: 'numeric'
+	}).format(timeEpochMillis);
+}

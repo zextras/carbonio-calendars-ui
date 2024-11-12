@@ -13,7 +13,6 @@ import { TimetableHeader } from './time-table-header';
 import { TimeTableLegend } from './time-table-legend';
 import { TimeTableParticipantRow } from './time-table-participant-row';
 import { TimeTableProps } from './types';
-import { getLocalHoursMinutesFromEpoch } from './utils';
 
 const TimeTableRow = styled.div`
 	height: 2rem;
@@ -46,27 +45,27 @@ export const TimeTable = ({
 	appointmentStartDate,
 	appointmentEndDate,
 	rows
-}: TimeTableProps): React.JSX.Element => {
-	const start = getLocalHoursMinutesFromEpoch(appointmentStartDate);
-	const end = getLocalHoursMinutesFromEpoch(appointmentEndDate);
-
-	return (
-		<div style={{ width: '100%', position: 'relative' }} data-testid={'time-table'}>
-			<TimeTableRow key={`row-header`} data-testid={`row-header`}>
-				<EmailColumn data-testid={`column-header-0`} />
-				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-header-1`}>
-					<TimetableHeader />
-				</div>
-			</TimeTableRow>
-			{map(rows, (row) => (
-				<TimeTableParticipantRow key={row.email} participantRow={row} start={start} end={end} />
-			))}
-			<TimeTableLegendRow key={`row-legend`} data-testid={`row-legend`}>
-				<EmptyColumn data-testid={`column-legend-0`} />
-				<div style={{ width: '100%', position: 'relative' }} data-testid={`column-legend-1`}>
-					<TimeTableLegend />
-				</div>
-			</TimeTableLegendRow>
-		</div>
-	);
-};
+}: TimeTableProps): React.JSX.Element => (
+	<div style={{ width: '100%', position: 'relative' }} data-testid={'time-table'}>
+		<TimeTableRow key={`row-header`} data-testid={`row-header`}>
+			<EmailColumn data-testid={`column-header-0`} />
+			<div style={{ width: '100%', position: 'relative' }} data-testid={`column-header-1`}>
+				<TimetableHeader />
+			</div>
+		</TimeTableRow>
+		{map(rows, (row) => (
+			<TimeTableParticipantRow
+				key={row.email}
+				participantRow={row}
+				startTimeEpochMillis={appointmentStartDate}
+				endTimeEpochMillis={appointmentEndDate}
+			/>
+		))}
+		<TimeTableLegendRow key={`row-legend`} data-testid={`row-legend`}>
+			<EmptyColumn data-testid={`column-legend-0`} />
+			<div style={{ width: '100%', position: 'relative' }} data-testid={`column-legend-1`}>
+				<TimeTableLegend />
+			</div>
+		</TimeTableLegendRow>
+	</div>
+);
