@@ -74,7 +74,13 @@ function mapFreeBusyToDailyPlannerRow({
 	availabilities: Record<string, ParticipantAvailability>;
 	nonWorkingHours: Record<string, NonWorkingHours>;
 }): DailyPlannerRow {
-	const freeBusy = availabilities?.[email] ?? { free: [], busy: [], tentative: [] };
+	const freeBusy = availabilities?.[email] ?? {
+		free: [],
+		busy: [],
+		tentative: [],
+		outOfOffice: [],
+		unknown: []
+	};
 	const nonWorking = map(
 		(nonWorkingHours?.[email]?.nonWorkingHours ?? []).map((event) =>
 			mapEvent(event, DAILY_PLANNER_EVENT_TYPE.nonWorking)
@@ -82,13 +88,27 @@ function mapFreeBusyToDailyPlannerRow({
 	);
 	const eventsFree = freeBusy.free.map((event) => mapEvent(event, DAILY_PLANNER_EVENT_TYPE.free));
 	const eventsBusy = freeBusy.busy.map((event) => mapEvent(event, DAILY_PLANNER_EVENT_TYPE.busy));
+	const outOfOffice = freeBusy.outOfOffice.map((event) =>
+		mapEvent(event, DAILY_PLANNER_EVENT_TYPE.outOfOffice)
+	);
+	const unknown = freeBusy.unknown.map((event) =>
+		mapEvent(event, DAILY_PLANNER_EVENT_TYPE.unknown)
+	);
+
 	const eventsTentative = freeBusy.tentative.map((event) =>
 		mapEvent(event, DAILY_PLANNER_EVENT_TYPE.tentative)
 	);
 	return {
 		email,
 		participantType,
-		events: [...eventsFree, ...nonWorking, ...eventsTentative, ...eventsBusy]
+		events: [
+			...eventsFree,
+			...nonWorking,
+			...unknown,
+			...eventsTentative,
+			...eventsBusy,
+			...outOfOffice
+		]
 	};
 }
 function atMidnight(date: Date): Date {

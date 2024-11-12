@@ -9,6 +9,7 @@ import React from 'react';
 import { screen, within } from '@testing-library/react';
 
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
+import { DAILY_PLANNER_EVENT_TYPE } from '../constants';
 import { TimeTable } from '../time-table';
 import { DailyPlannerRow } from '../types';
 
@@ -23,6 +24,42 @@ describe('Time Table', () => {
 			email: 'participant@test.com',
 			participantType: 'attendee',
 			events: []
+		},
+		{
+			email: 'all_events@test.com',
+			participantType: 'attendee',
+			events: [
+				{
+					type: DAILY_PLANNER_EVENT_TYPE.unknown,
+					startDateEpochMillis: 0,
+					endDateEpochMillis: 100
+				},
+				{
+					type: DAILY_PLANNER_EVENT_TYPE.outOfOffice,
+					startDateEpochMillis: 100,
+					endDateEpochMillis: 100
+				},
+				{
+					type: DAILY_PLANNER_EVENT_TYPE.busy,
+					startDateEpochMillis: 200,
+					endDateEpochMillis: 100
+				},
+				{
+					type: DAILY_PLANNER_EVENT_TYPE.free,
+					startDateEpochMillis: 300,
+					endDateEpochMillis: 100
+				},
+				{
+					type: DAILY_PLANNER_EVENT_TYPE.tentative,
+					startDateEpochMillis: 400,
+					endDateEpochMillis: 100
+				},
+				{
+					type: DAILY_PLANNER_EVENT_TYPE.nonWorking,
+					startDateEpochMillis: 500,
+					endDateEpochMillis: 100
+				}
+			]
 		}
 	];
 	it('should display organizer email on first column of a row', () => {
@@ -47,5 +84,18 @@ describe('Time Table', () => {
 		const firstRow = within(timeTable).getByTestId('row-organizer@test.com');
 		const secondColumn = within(firstRow).getByTestId('column-1');
 		expect(within(secondColumn).getByTestId('start-mark')).toBeVisible();
+	});
+
+	it('should display events correctly on the second column of a row', () => {
+		setupTest(<TimeTable appointmentStartDate={0} appointmentEndDate={0} rows={rows} />);
+		const timeTable = screen.getByTestId('time-table');
+		const firstRow = within(timeTable).getByTestId('row-all_events@test.com');
+		const secondColumn = within(firstRow).getByTestId('column-1');
+		expect(within(secondColumn).getByTestId(DAILY_PLANNER_EVENT_TYPE.nonWorking)).toBeVisible();
+		expect(within(secondColumn).getByTestId(DAILY_PLANNER_EVENT_TYPE.tentative)).toBeVisible();
+		expect(within(secondColumn).getByTestId(DAILY_PLANNER_EVENT_TYPE.busy)).toBeVisible();
+		expect(within(secondColumn).getByTestId(DAILY_PLANNER_EVENT_TYPE.outOfOffice)).toBeVisible();
+		expect(within(secondColumn).getByTestId(DAILY_PLANNER_EVENT_TYPE.free)).toBeVisible();
+		expect(within(secondColumn).getByTestId(DAILY_PLANNER_EVENT_TYPE.unknown)).toBeVisible();
 	});
 });

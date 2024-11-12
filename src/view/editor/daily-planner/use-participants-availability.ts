@@ -17,6 +17,8 @@ export type ParticipantAvailability = {
 	free: Event[];
 	busy: Event[];
 	tentative: Event[];
+	outOfOffice: Event[];
+	unknown: Event[];
 };
 
 export type Participant = {
@@ -54,7 +56,9 @@ export function useParticipantsAvailability({
 					newAvailabilities[user.id] = {
 						free: user.f?.map(mapFreeBusyToEvent) ?? [],
 						busy: user.b?.map(mapFreeBusyToEvent) ?? [],
-						tentative: user.t?.map(mapFreeBusyToEvent) ?? []
+						tentative: user.t?.map(mapFreeBusyToEvent) ?? [],
+						outOfOffice: user.u?.map(mapFreeBusyToEvent) ?? [],
+						unknown: user.n?.map(mapFreeBusyToEvent) ?? []
 					};
 				});
 				setParticipantsAvailability(newAvailabilities);

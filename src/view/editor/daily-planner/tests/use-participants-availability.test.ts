@@ -53,7 +53,9 @@ describe('useParticipantsAvailability', () => {
 		const expected: ParticipantAvailability = {
 			free: [{ startDateEpochMillis: 100, endDateEpochMillis: 200 }],
 			busy: [],
-			tentative: []
+			tentative: [],
+			outOfOffice: [],
+			unknown: []
 		};
 		await waitFor(() => {
 			expect(result.current[participantEmail]).toMatchObject(expected);
