@@ -14,17 +14,11 @@ export type DailyPlannerParticipantType =
 
 export type DailyPlannerEvents = {
 	type: DailyPlannerEventType;
-	startDate: number;
-	endDate: number;
+	startDateEpochMillis: number;
+	endDateEpochMillis: number;
 };
 
 export type HoursMinutes = { hours: number; minutes: number };
-
-export type DailyPlannerFreeBusyEvent = {
-	type: DailyPlannerEventType;
-	start: HoursMinutes;
-	end: HoursMinutes;
-};
 
 export type DailyPlannerRow = {
 	email: string;

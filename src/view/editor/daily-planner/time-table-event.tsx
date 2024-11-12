@@ -9,23 +9,18 @@ import React from 'react';
 import { useTheme } from '@zextras/carbonio-design-system';
 
 import { EventDiv } from './parts/event-div';
-import { DailyPlannerFreeBusyEvent } from './types';
-import { getEventColor } from './utils';
+import { DailyPlannerEvents } from './types';
+import { getEventColor, getLocalHoursMinutesFromEpoch } from './utils';
 
-export const TimeTableEvent = ({
-	event
-}: {
-	event: DailyPlannerFreeBusyEvent;
-}): React.JSX.Element => {
+export const TimeTableEvent = ({ event }: { event: DailyPlannerEvents }): React.JSX.Element => {
 	const theme = useTheme();
+	const startHoursMinutes = getLocalHoursMinutesFromEpoch(event.startDateEpochMillis);
+	const timeSpan = (event.endDateEpochMillis - event.startDateEpochMillis) / (1000 * 60);
 	return (
 		<EventDiv
 			dataTestId={event.type}
-			key={event.start.minutes}
-			startPosition={event.start.hours * 60 + event.start.minutes}
-			eventTimeSpan={
-				event.end.hours * 60 + event.end.minutes - (event.start.hours * 60 + event.start.minutes)
-			}
+			startPosition={startHoursMinutes.hours * 60 + startHoursMinutes.minutes}
+			eventTimeSpan={timeSpan}
 			color={getEventColor(event.type, theme)}
 		/>
 	);

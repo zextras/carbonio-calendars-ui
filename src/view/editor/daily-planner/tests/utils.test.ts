@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { DailyPlannerEvents, DailyPlannerFreeBusyEvent } from '../types';
-import { getLocalHoursMinutesFromEpoch, getParticipantIcon, parseFreeBusyEvent } from '../utils';
+import { getLocalHoursMinutesFromEpoch, getParticipantIcon } from '../utils';
 
 describe('getLocalHoursMinutesFromEpoch', () => {
 	it('should correctly extract hours and minutes from a timestamp', () => {
@@ -38,76 +37,6 @@ describe('getLocalHoursMinutesFromEpoch', () => {
 
 		const result = getLocalHoursMinutesFromEpoch(timestamp);
 		expect(result).toEqual(expected);
-	});
-});
-
-describe('parseFreeBusyEvent', () => {
-	it('should correctly parse the event type, start time, and end time', () => {
-		const mockEvent: DailyPlannerEvents = {
-			type: 'free',
-			startDate: new Date(2024, 1, 1, 10, 0).getTime(),
-			endDate: new Date(2024, 1, 1, 11, 0).getTime()
-		};
-
-		const expectedParsedEvent: DailyPlannerFreeBusyEvent = {
-			type: 'free',
-			start: { hours: 10, minutes: 0 },
-			end: { hours: 11, minutes: 0 }
-		};
-
-		const result = parseFreeBusyEvent(mockEvent);
-		expect(result).toEqual(expectedParsedEvent);
-	});
-
-	it('should handle events that span multiple hours in the same day', () => {
-		const mockEvent: DailyPlannerEvents = {
-			type: 'free',
-			startDate: new Date(2024, 1, 1, 10, 0).getTime(),
-			endDate: new Date(2024, 1, 1, 15, 0).getTime()
-		};
-
-		const expectedParsedEvent: DailyPlannerFreeBusyEvent = {
-			type: 'free',
-			start: { hours: 10, minutes: 0 },
-			end: { hours: 15, minutes: 0 }
-		};
-
-		const result = parseFreeBusyEvent(mockEvent);
-		expect(result).toEqual(expectedParsedEvent);
-	});
-
-	it('should handle events that span multiple hours over multiple days', () => {
-		const mockEvent: DailyPlannerEvents = {
-			type: 'free',
-			startDate: new Date(2024, 1, 1, 10, 0).getTime(),
-			endDate: new Date(2024, 2, 2, 15, 0).getTime()
-		};
-
-		const expectedParsedEvent: DailyPlannerFreeBusyEvent = {
-			type: 'free',
-			start: { hours: 10, minutes: 0 },
-			end: { hours: 15, minutes: 0 }
-		};
-
-		const result = parseFreeBusyEvent(mockEvent);
-		expect(result).toEqual(expectedParsedEvent);
-	});
-
-	it('should handle events with non-zero minutes correctly', () => {
-		const mockEvent: DailyPlannerEvents = {
-			type: 'free',
-			startDate: new Date(2024, 1, 1, 10, 30).getTime(),
-			endDate: new Date(2024, 1, 1, 15, 45).getTime()
-		};
-
-		const expectedParsedEvent: DailyPlannerFreeBusyEvent = {
-			type: 'free',
-			start: { hours: 10, minutes: 30 },
-			end: { hours: 15, minutes: 45 }
-		};
-
-		const result = parseFreeBusyEvent(mockEvent);
-		expect(result).toEqual(expectedParsedEvent);
 	});
 });
 

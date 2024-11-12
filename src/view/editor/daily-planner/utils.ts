@@ -7,13 +7,7 @@
 import { Theme } from '@zextras/carbonio-design-system';
 
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
-import {
-	DailyPlannerEvents,
-	DailyPlannerEventType,
-	HoursMinutes,
-	DailyPlannerFreeBusyEvent,
-	DailyPlannerParticipantType
-} from './types';
+import { DailyPlannerEventType, HoursMinutes, DailyPlannerParticipantType } from './types';
 
 export function getEventColor(type: DailyPlannerEventType, theme: Theme): string {
 	switch (type) {
@@ -52,14 +46,6 @@ export function getParticipantIcon(type: DailyPlannerParticipantType): string {
 export function getLocalHoursMinutesFromEpoch(epochMillis: number): HoursMinutes {
 	const date = new Date(epochMillis);
 	return { hours: date.getHours(), minutes: date.getMinutes() };
-}
-
-export function parseFreeBusyEvent(event: DailyPlannerEvents): DailyPlannerFreeBusyEvent {
-	return {
-		type: event.type,
-		start: getLocalHoursMinutesFromEpoch(event.startDate),
-		end: getLocalHoursMinutesFromEpoch(event.endDate)
-	};
 }
 
 export function calculatePosition(minutes: number): string {

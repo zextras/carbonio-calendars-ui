@@ -7,12 +7,17 @@
 import React, { useMemo, useState } from 'react';
 
 import { Button, Row } from '@zextras/carbonio-design-system';
-import { isEmpty } from 'lodash';
+import { isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { DAILY_PLANNER_EVENT_TYPE } from './constants';
 import { TimeTable } from './time-table';
-import { DailyPlannerParticipantType, DailyPlannerRow } from './types';
+import {
+	DailyPlannerEvents,
+	DailyPlannerEventType,
+	DailyPlannerParticipantType,
+	DailyPlannerRow
+} from './types';
 import {
 	Participant,
 	ParticipantAvailability,
@@ -42,6 +47,19 @@ function getWithinSameDay(startDate: number, endDate: number): boolean {
 	);
 }
 
+function mapEvent(
+	event: {
+		startDateEpochMillis: number;
+		endDateEpochMillis: number;
+	},
+	eventType: DailyPlannerEventType
+): DailyPlannerEvents {
+	return {
+		...event,
+		type: eventType
+	};
+}
+
 function mapFreeBusyToDailyPlannerRow({
 	email,
 	participantType,
@@ -54,30 +72,20 @@ function mapFreeBusyToDailyPlannerRow({
 	workingHours: Record<string, WorkingHours>;
 }): DailyPlannerRow {
 	const freeBusy = availabilities?.[email] ?? { free: [], busy: [], tentative: [] };
-	const nonWorking = (workingHours?.[email]?.workingHours ?? []).map((event) => ({
-		startDate: event.startDateEpochMillis,
-		endDate: event.endDateEpochMillis,
-		type: DAILY_PLANNER_EVENT_TYPE.nonWorking
-	}));
-	const eventsFree = freeBusy.free.map((event) => ({
-		startDate: event.startDateEpochMillis,
-		endDate: event.endDateEpochMillis,
-		type: DAILY_PLANNER_EVENT_TYPE.free
-	}));
-	const eventsBusy = freeBusy.busy.map((event) => ({
-		startDate: event.startDateEpochMillis,
-		endDate: event.endDateEpochMillis,
-		type: DAILY_PLANNER_EVENT_TYPE.busy
-	}));
-	const eventsTentative = freeBusy.tentative.map((event) => ({
-		startDate: event.startDateEpochMillis,
-		endDate: event.endDateEpochMillis,
-		type: DAILY_PLANNER_EVENT_TYPE.tentative
-	}));
+	const nonWorking = map(
+		(workingHours?.[email]?.workingHours ?? []).map((event) =>
+			mapEvent(event, DAILY_PLANNER_EVENT_TYPE.nonWorking)
+		)
+	);
+	const eventsFree = freeBusy.free.map((event) => mapEvent(event, DAILY_PLANNER_EVENT_TYPE.free));
+	const eventsBusy = freeBusy.busy.map((event) => mapEvent(event, DAILY_PLANNER_EVENT_TYPE.busy));
+	const eventsTentative = freeBusy.tentative.map((event) =>
+		mapEvent(event, DAILY_PLANNER_EVENT_TYPE.tentative)
+	);
 	return {
 		email,
 		participantType,
-		events: [...nonWorking, ...eventsBusy, ...eventsTentative, ...eventsFree]
+		events: [...eventsFree, ...nonWorking, ...eventsTentative, ...eventsBusy]
 	};
 }
 function atMidnight(date: Date): Date {

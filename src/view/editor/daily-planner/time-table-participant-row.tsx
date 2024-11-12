@@ -16,7 +16,7 @@ import { MinutesLine } from './parts/minutes-line';
 import { TimeTableEvent } from './time-table-event';
 import { TimeTableHourTicks } from './time-table-hour-ticks';
 import { DailyPlannerRow, HoursMinutes } from './types';
-import { getDefaultLineColors, getParticipantIcon, parseFreeBusyEvent } from './utils';
+import { getDefaultLineColors, getParticipantIcon } from './utils';
 
 const TimeTableRow = styled.div`
 	height: 2rem;
@@ -51,7 +51,6 @@ export const TimeTableParticipantRow = ({
 	const defaultLineColors = getDefaultLineColors(theme);
 	const startPosition = start.hours * 60 + start.minutes;
 	const endPosition = end.hours * 60 + end.minutes;
-	const parsedEvents = participantRow?.events?.map((event) => parseFreeBusyEvent(event));
 	const chipLabel =
 		participantRow.participantType === DAILY_PLANNER_PARTICIPANT_TYPE.organizer
 			? `${t('daily_planner.organizer', 'Organizer')} - ${participantRow.email}`
@@ -71,7 +70,7 @@ export const TimeTableParticipantRow = ({
 				<Chip maxWidth={'10rem'} label={chipLabel} />
 			</EmailColumn>
 			<FreeBusyColumn data-testid={`column-1`}>
-				{map(parsedEvents, (event, index) => (
+				{map(participantRow.events, (event, index) => (
 					<TimeTableEvent event={event} key={`${participantRow.email}-${event.type}-${index}`} />
 				))}
 				<TimeTableHourTicks />
