@@ -13,18 +13,34 @@ import { EventDiv } from './parts/event-div';
 import { DailyPlannerEvents } from './types';
 import { getEventColor, getEventLabel, getLocalHoursMinutesFromEpoch } from './utils';
 
+function doubleDigitMinutes(minutes: number): string {
+	const asLabel = `${minutes}`;
+	if (asLabel.length === 1) {
+		return `0${minutes}`;
+	}
+	return asLabel;
+}
+
 export const TimeTableEvent = ({ event }: { event: DailyPlannerEvents }): React.JSX.Element => {
 	const theme = useTheme();
 	const startHoursMinutes = getLocalHoursMinutesFromEpoch(event.startDateEpochMillis);
+	const endHoursMinutes = getLocalHoursMinutesFromEpoch(event.endDateEpochMillis);
 	const timeSpan = (event.endDateEpochMillis - event.startDateEpochMillis) / (1000 * 60);
+
 	const [t] = useTranslation();
 	const statusLabel = t('daily_planner.status', 'Status');
+	const fromLabel = t('daily_planner.from', 'from');
+	const toLabel = t('daily_planner.to', 'to');
+	const startHoursHuman = `${startHoursMinutes.hours}:${doubleDigitMinutes(startHoursMinutes.minutes)}`;
+	const endHoursHuman = `${endHoursMinutes.hours}:${doubleDigitMinutes(endHoursMinutes.minutes)}`;
+	const tooltipLabel = `${statusLabel}: ${getEventLabel(event.type, t)} ${fromLabel} ${startHoursHuman} ${toLabel} ${endHoursHuman}`;
+
 	return (
 		<EventDiv
 			dataTestId={event.type}
 			startPosition={startHoursMinutes.hours * 60 + startHoursMinutes.minutes}
 			eventTimeSpan={timeSpan}
-			tooltipLabel={`${statusLabel}: ${getEventLabel(event.type, t)}`}
+			tooltipLabel={tooltipLabel}
 			color={getEventColor(event.type, theme)}
 		/>
 	);
