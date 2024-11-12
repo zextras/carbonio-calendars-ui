@@ -29,7 +29,7 @@ type ItemProps = {
 
 const StatusItemComponent = ({ label, color }: ItemProps): ReactElement => (
 	<Container width="fit" mainAlignment="flex-start" orientation="horizontal">
-		<Square color={color} />
+		<Square $color={color} />
 		<Padding left="small">
 			<Text>{label}</Text>
 		</Padding>

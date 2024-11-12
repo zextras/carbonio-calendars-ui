@@ -9,7 +9,7 @@ import momentLocalizer from 'react-widgets-moment';
 import { Dispatch } from 'redux';
 
 import { getIdentityItems } from './get-identity-items';
-import { Folder, Folders, LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { Folders, LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { PREFS_DEFAULTS } from '../constants';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
@@ -17,7 +17,7 @@ import { createNewEditor } from '../store/slices/editor-slice';
 import { Editor } from '../types/editor';
 import { Invite } from '../types/store/invite';
 
-momentLocalizer(moment);
+momentLocalizer();
 
 let counter = 0;
 

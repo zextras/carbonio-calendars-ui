@@ -2,7 +2,8 @@
 	"extends": "@zextras/carbonio-ui-configs/rules/typescript.json",
 	"compilerOptions": {
 		"skipLibCheck": true,
-		"jsx": "react"
+		"jsx": "react",
+		"allowJs": true
 	},
 	"include": [
 		"src/**/*.ts",
@@ -11,5 +12,5 @@
 		"jest-setup.ts",
 		"src/view/sidebar/custom-components/folders-component.tsx"
 	],
-	"exclude": ["./node_modules/*", "./dist/*"]
+	"exclude": ["./node_modules/*", "./dist/*"],
 }

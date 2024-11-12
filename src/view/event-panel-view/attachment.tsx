@@ -8,12 +8,10 @@ import React, { ReactElement, useCallback, useContext, useMemo } from 'react';
 import {
 	Button,
 	Container,
-	ContainerProps,
 	getColor,
 	Padding,
 	Row,
 	Text,
-	TextProps,
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
@@ -45,7 +43,7 @@ const AttachmentHoverBarContainer = styled(Container)`
 	height: 0;
 `;
 
-const AttachmentContainer = styled(Container)<ContainerProps & { disabled: boolean }>`
+const AttachmentContainer = styled(Container)<{ $disabled: boolean }>`
 	border-radius: 0.125rem;
 	width: calc(50% - 0.5rem);
 	transition: 0.2s ease-out;
@@ -53,8 +51,8 @@ const AttachmentContainer = styled(Container)<ContainerProps & { disabled: boole
 	margin-right: ${({ theme }): string => theme.sizes.padding.small};
 	box-sizing: border-box;
 	&:hover {
-		background-color: ${({ theme, background = 'transparent', disabled }): string =>
-			disabled ? 'gray5' : getColor(`${background}.hover`, theme)};
+		background-color: ${({ theme, background = 'transparent', $disabled }): string =>
+			$disabled ? 'gray5' : getColor(`${background}.hover`, theme)};
 		& ${AttachmentHoverBarContainer} {
 			display: flex;
 		}
@@ -63,22 +61,20 @@ const AttachmentContainer = styled(Container)<ContainerProps & { disabled: boole
 		background-color: ${({ theme, background = 'transparent' }): string =>
 			getColor(`${background}.focus`, theme)};
 	}
-	cursor: ${({ disabled }): string => (disabled ? 'default' : 'pointer')};
+	cursor: ${({ $disabled }): string => ($disabled ? 'default' : 'pointer')};
 `;
 
-const AttachmentExtension = styled(Text)<
-	TextProps & { background?: { extension: string; color: string } }
->`
+const AttachmentExtension = styled(Text)<{ $background?: { color: string } }>`
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	width: 2rem;
 	height: 2rem;
 	border-radius: ${({ theme }): string => theme.borderRadius};
-	background-color: ${({ theme, disabled, background }): string =>
+	background-color: ${({ theme, disabled, $background }): string =>
 		disabled
 			? theme.palette.primary.disabled
-			: (background?.color ?? theme.palette.primary.regular)};
+			: ($background?.color ?? theme.palette.primary.regular)};
 	color: ${({ theme }): string => theme.palette.gray6.regular};
 	font-size: calc(${({ theme }): string => theme.sizes.font.small} - 0.125rem);
 	text-transform: uppercase;
@@ -193,7 +189,7 @@ export const Attachment = ({
 			mainAlignment="flex-start"
 			height="fit"
 			background={disabled ? 'gray5' : 'gray3'}
-			disabled={disabled}
+			$disabled={disabled}
 			padding={{ right: 'medium' }}
 		>
 			<Tooltip
@@ -211,7 +207,7 @@ export const Attachment = ({
 					takeAvailableSpace
 				>
 					<AttachmentExtension
-						background={find(iconColors, (ic) => ic.extension === extension)}
+						$background={find(iconColors, (ic) => ic.extension === extension)}
 						disabled={disabled}
 					>
 						{extension}

@@ -8,7 +8,6 @@ import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 import {
 	Checkbox,
 	ChipInput,
-	ChipItem,
 	Container,
 	Icon,
 	Input,
@@ -110,7 +109,7 @@ const UserShare = ({
 
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 
-	const [shareWithUserRole, setshareWithUserRole] = useState<string | null>('r');
+	const [shareWithUserRole, setShareWithUserRole] = useState<string | null>('r');
 	const [sendNotification, setSendNotification] = useState(true);
 	const [standardMessage, setStandardMessage] = useState('');
 	const [contacts, setContacts] = useState<Contacts>([]);
@@ -131,9 +130,9 @@ const UserShare = ({
 
 	const onShareRoleChange = useCallback<SingleSelectionOnChange<string | null>>(
 		(shareRole) => {
-			setshareWithUserRole(shareRole);
+			setShareWithUserRole(shareRole);
 		},
-		[setshareWithUserRole]
+		[setShareWithUserRole]
 	);
 
 	const onConfirm = useCallback((): void => {
@@ -224,10 +223,14 @@ const UserShare = ({
 						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
 						hasError
 						background={'gray4'}
-						onChange={(ev: ChipItem<any>[]): void => {
-							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-							// @ts-ignore
-							setContacts(map(ev, (contact) => ({ email: contact.address })));
+						onChange={(chips): void => {
+							// FIXME: this cannot work since address does not belong to the chip
+							setContacts(
+								map(chips, (chip) => ({
+									email:
+										('address' in chip && typeof chip.address === 'string' && chip.address) || ''
+								}))
+							);
 						}}
 					/>
 				)}
@@ -253,7 +256,7 @@ const UserShare = ({
 					placement={'bottom-start'}
 					defaultSelection={{
 						value: 'r',
-						label: findLabel(shareCalendarRoleOptions, 'r')
+						label: findLabel(shareCalendarRoleOptions, 'r') ?? ''
 					}}
 				/>
 			</Container>
@@ -370,11 +373,13 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const [t] = useTranslation();
 	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(), []);
 
-	const [shareWithUserType, setShareWithUserType] = useState<'usr' | null>(SHARE_USER_TYPE.USER);
+	const [shareWithUserType, setShareWithUserType] = useState<'usr' | 'pub' | null>(
+		SHARE_USER_TYPE.USER
+	);
 
 	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
 
-	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr' | null>>((shareWith) => {
+	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr' | 'pub'>>((shareWith) => {
 		setShareWithUserType(shareWith);
 	}, []);
 
@@ -391,7 +396,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				crossAlignment="flex-start"
 				height="fit"
 			>
-				<Select
+				<Select<'usr' | 'pub'>
 					items={shareCalendarWithOptions}
 					background={'gray5'}
 					label={t('label.share_with', 'Share with')}
@@ -399,7 +404,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					onChange={onShareWithChange}
 					defaultSelection={{
 						value: SHARE_USER_TYPE.USER,
-						label: findLabel(shareCalendarWithOptions, SHARE_USER_TYPE.USER)
+						label: findLabel(shareCalendarWithOptions, SHARE_USER_TYPE.USER) ?? ''
 					}}
 				/>
 			</Container>

@@ -11,20 +11,21 @@ import {
 	IconButton,
 	pseudoClasses,
 	Tooltip,
-	Padding
+	Padding,
+	AnyColor
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import styled, { css, SimpleInterpolation } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { useSplitLayoutPrefs } from '../../hooks/use-split-layout-prefs';
 import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
 
-const CustomContainer = styled(Container)`
+const CustomContainer = styled(Container)<{ $color?: AnyColor }>`
 	border: 0.0625rem solid;
 	border-radius: 0.25rem;
 	height: fit-content;
-	${({ color = 'primary', theme }): SimpleInterpolation => css`
-		${pseudoClasses(theme, color, 'border-color')};
+	${({ $color = 'primary', theme }): ReturnType<typeof css> => css`
+		${pseudoClasses(theme, $color, 'border-color')};
 	`};
 `;
 
@@ -182,33 +183,37 @@ export const CustomToolbar = ({
 
 					<CustomContainer width="fit" orientation="horizontal" mainAlignment="flex-end">
 						<CustomButton
-							backgroundColor={view === 'month' ? 'highlight' : undefined}
+							backgroundColor={view === 'month' ? 'highlight' : 'transparent'}
+							labelColor={'primary'}
 							label={t('label.month', 'month')}
-							type="ghost"
+							type="default"
 							onClick={month}
 							data-testid="MonthButton"
 							minWidth={'fit-content'}
 						/>
 						<CustomButton
-							backgroundColor={view === 'week' ? 'highlight' : undefined}
+							backgroundColor={view === 'week' ? 'highlight' : 'transparent'}
+							labelColor={'primary'}
 							label={t('label.week', 'week')}
-							type="ghost"
+							type="default"
 							onClick={week}
 							data-testid="WeekButton"
 							minWidth={'fit-content'}
 						/>
 						<CustomButton
-							backgroundColor={view === 'day' ? 'highlight' : undefined}
+							backgroundColor={view === 'day' ? 'highlight' : 'transparent'}
+							labelColor={'primary'}
 							label={t('label.day', 'day')}
-							type="ghost"
+							type="default"
 							onClick={day}
 							data-testid="DayButton"
 							minWidth={'fit-content'}
 						/>
 						<CustomButton
-							backgroundColor={view === 'work_week' ? 'highlight' : undefined}
+							backgroundColor={view === 'work_week' ? 'highlight' : 'transparent'}
+							labelColor={'primary'}
 							label={t('label.work_week', 'work week')}
-							type="ghost"
+							type="default"
 							onClick={workView}
 							data-testid="WorkWeekButton"
 							minWidth={'fit-content'}

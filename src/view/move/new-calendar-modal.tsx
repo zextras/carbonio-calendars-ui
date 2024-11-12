@@ -16,7 +16,8 @@ import {
 	Icon,
 	SelectItem,
 	SelectProps,
-	useSnackbar
+	useSnackbar,
+	AnyColor
 } from '@zextras/carbonio-design-system';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -31,13 +32,13 @@ import { CALENDARS_STANDARD_COLORS } from '../../constants/calendar';
 import { createCalendar } from '../../store/actions/create-calendar';
 import { EventType } from '../../types/event';
 
-const Square = styled.div`
+const Square = styled.div<{ $color?: AnyColor }>`
 	width: 1.125rem;
 	height: 1.125rem;
 	position: relative;
 	top: -0.1875rem;
 	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-	background: ${({ color }): string | undefined => color};
+	background: ${({ $color }): string | undefined => $color};
 	border-radius: 0.25rem;
 `;
 
@@ -78,7 +79,7 @@ const LabelFactory: SelectProps['LabelFactory'] = ({
 				<TextUpperCase>{selected?.[0].label}</TextUpperCase>
 			</Row>
 			<Padding right="small">
-				<Square color={CALENDARS_STANDARD_COLORS[Number(selected[0].value)].color} />
+				<Square $color={CALENDARS_STANDARD_COLORS[Number(selected[0].value)].color} />
 			</Padding>
 		</Row>
 		<Icon
@@ -100,7 +101,7 @@ const getStatusItems = (): SelectItem[] =>
 					<TextUpperCase>{el.label}</TextUpperCase>
 				</Padding>
 				<Padding right="small">
-					<Square color={el.color} />
+					<Square $color={el.color} />
 				</Padding>
 			</Container>
 		)

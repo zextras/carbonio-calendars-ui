@@ -6,6 +6,7 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 
 import {
+	AnyColor,
 	Button,
 	Checkbox,
 	Container,
@@ -28,7 +29,7 @@ import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import type { TFunction } from 'i18next';
 import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled, { DefaultTheme } from 'styled-components';
+import styled from 'styled-components';
 
 import { GranteeChip } from './grantee-chip';
 import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
@@ -45,20 +46,18 @@ import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
 
-const Square = styled.div`
+const Square = styled.div<{ $color: AnyColor }>`
 	width: 1.125rem;
 	height: 1.125rem;
 	position: relative;
 	top: -0.1875rem;
-	border: 0.0625rem solid
-		${({ theme }: { theme: DefaultTheme }): string => theme.palette.gray2.regular};
-	background: ${({ color }: { color: string }): string => color};
+	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
+	background: ${({ $color }): string => $color};
 	border-radius: 0.25rem;
 `;
 
 const ColorContainer = styled(Container)`
-	border-bottom: 0.0625rem solid
-		${({ theme }: { theme: DefaultTheme }): string => theme.palette.gray2.regular};
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 `;
 
 const StyledContainer = styled(Container)`
@@ -113,7 +112,7 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 					<TextUpperCase>{colorName}</TextUpperCase>
 				</Row>
 				<Padding right="small">
-					<Square color={squareColor ?? '0'} />
+					<Square $color={squareColor ?? '0'} />
 				</Padding>
 			</Row>
 			<Icon
@@ -135,7 +134,7 @@ const getStatusItems = (t: TFunction): Array<SelectItem> =>
 				<Padding left="small">
 					<TextUpperCase>{t(el.label ?? '')}</TextUpperCase>
 				</Padding>
-				<Square color={el.color} />
+				<Square $color={el.color} />
 			</Container>
 		)
 	}));

@@ -7,7 +7,6 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import {
 	Container,
-	ContainerProps,
 	Divider,
 	Dropdown,
 	Icon,
@@ -52,7 +51,7 @@ const BodyContainer = styled(Container)`
 	overflow-y: auto;
 `;
 
-const AppointmentCardContainer = styled(Container)<ContainerProps & { expanded?: boolean }>`
+const AppointmentCardContainer = styled(Container)`
 	z-index: 10;
 	position: absolute;
 	top: 1rem;
