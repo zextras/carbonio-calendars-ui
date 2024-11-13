@@ -6,12 +6,7 @@
 
 import React from 'react';
 
-export const Dash = ({
-	backgroundColor
-}: {
-	borderColor?: string;
-	backgroundColor: string;
-}): React.JSX.Element => (
+export const Dash = ({ backgroundColor }: { backgroundColor: string }): React.JSX.Element => (
 	<div
 		style={{
 			display: 'flex',
