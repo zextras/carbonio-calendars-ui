@@ -118,6 +118,28 @@ describe('EditorDailyPlannerController', () => {
 		expect(screen.getAllByTestId('row-test@test.com').length).toBe(1);
 	});
 
+	it('should correctly handle same attendee both in optional and attendee fields', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const freeBusyInterceptor = mockFreeBusyResponse([]);
+		const workingHoursInterceptor = mockWorkingHoursResponse([]);
+
+		const editor = generateEditor({
+			context: {
+				attendees: [{ email: 'test@test.com' }],
+				optionalAttendees: [{ email: 'test@test.com' }],
+				folders,
+				dispatch: store.dispatch
+			}
+		});
+
+		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
+		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
+		user.click(buttonShowOrganizer);
+		await freeBusyInterceptor;
+		await workingHoursInterceptor;
+		expect(screen.getAllByTestId('row-test@test.com').length).toBe(2);
+	});
+
 	it('should not make duplicate api calls', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		// const freeBusyInterceptor = mockFreeBusyResponse([]);

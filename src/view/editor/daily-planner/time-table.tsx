@@ -53,14 +53,17 @@ export const TimeTable = ({
 				<TimetableHeader />
 			</div>
 		</TimeTableRow>
-		{map(rows, (row) => (
-			<TimeTableParticipantRow
-				key={row.email}
-				participantRow={row}
-				startTimeEpochMillis={appointmentStartDate}
-				endTimeEpochMillis={appointmentEndDate}
-			/>
-		))}
+		{map(rows, (row, index) => {
+			const key = `row-${row.email}-${index}`;
+			return (
+				<TimeTableParticipantRow
+					key={key}
+					participantRow={row}
+					startTimeEpochMillis={appointmentStartDate}
+					endTimeEpochMillis={appointmentEndDate}
+				/>
+			);
+		})}
 		<TimeTableLegendRow key={`row-legend`} data-testid={`row-legend`}>
 			<EmptyColumn data-testid={`column-legend-0`} />
 			<div style={{ width: '100%', position: 'relative' }} data-testid={`column-legend-1`}>
