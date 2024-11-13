@@ -396,7 +396,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 				crossAlignment="flex-start"
 				height="fit"
 			>
-				<Select<'usr' | 'pub'>
+				<Select
 					items={shareCalendarWithOptions}
 					background={'gray5'}
 					label={t('label.share_with', 'Share with')}
