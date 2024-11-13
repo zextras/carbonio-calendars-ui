@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { FreeBusy } from '../../../soap/get-free-busy-request';
 import { getNonWorkingHoursRequest } from '../../../soap/get-non-working-hours-request';
@@ -41,12 +41,9 @@ export function useParticipantsNonWorkingHours({
 	const [participantsNonWorkingHours, setParticipantsNonWorkingHours] = useState<
 		Record<string, NonWorkingHours>
 	>({});
-	const previousValue = useRef<string>('');
-	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
 
 	useEffect(() => {
-		if (participants.length > 0 && previousValue.current !== currentValue) {
-			previousValue.current = currentValue;
+		if (participants.length > 0) {
 			const newNonWorkingHours: Record<string, NonWorkingHours> = {};
 			getNonWorkingHoursRequest({
 				startEpochMillis: startDateEpochMillis,
@@ -61,7 +58,7 @@ export function useParticipantsNonWorkingHours({
 				setParticipantsNonWorkingHours(newNonWorkingHours);
 			});
 		}
-	}, [participants, startDateEpochMillis, endDateEpochMillis, currentValue]);
+	}, [participants, startDateEpochMillis, endDateEpochMillis]);
 
 	return participantsNonWorkingHours;
 }
