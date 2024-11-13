@@ -41,7 +41,7 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 	const title = useMemo(() => {
 		if (
 			event.resource.class !== 'PRI' ||
-			isOrganizerOrHaveEqualRights(event, event.resource.calendar.absFolderPath) ||
+			(isOrganizerOrHaveEqualRights(event, event.resource.calendar.absFolderPath) && event.title) ||
 			!event.resource.calendar.owner
 		) {
 			return event.title;
