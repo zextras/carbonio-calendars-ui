@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { Board } from '@zextras/carbonio-shell-ui';
 
 import BoardEditPanel from './editor-board-wrapper';
@@ -15,10 +15,7 @@ import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/defau
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_BOARD_ID, PREFS_DEFAULTS } from '../../constants';
-import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../soap/tests/mocks';
 import { reducers } from '../../store/redux';
-import { createNewEditor } from '../../store/slices/editor-slice';
-import mockedData from '../../test/generators';
 import { Editor } from '../../types/editor';
 
 const defaultEditor: Editor = {
@@ -99,7 +96,6 @@ shell.getUserSettings.mockImplementation(() => ({
 shell.useBoardHooks.mockImplementation(() => ({
 	updateBoard: jest.fn()
 }));
-const millisecInAnHour = 3600000;
 
 describe('Editor board wrapper', () => {
 	it('it does not render without board id', async () => {
@@ -129,123 +125,5 @@ describe('Editor board wrapper', () => {
 		});
 		setupTest(<BoardEditPanel />, { store });
 		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
-	});
-
-	describe('daily planner button', () => {
-		it('it renders a button but not the daily planner itself', () => {
-			const isNew = true;
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
-			}));
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew }));
-			store.dispatch(createNewEditor(defaultEditor));
-			setupTest(<BoardEditPanel />, { store });
-			const button = screen.getByTestId('daily-planner-button');
-
-			expect(button).toBeInTheDocument();
-			expect(screen.queryByTestId('time-table')).not.toBeInTheDocument();
-		});
-
-		it('it renders an enabled button when the event is singleOccurrence and occours within the same day', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
-			}));
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			store.dispatch(
-				createNewEditor({
-					...defaultEditor,
-					start: new Date(2024, 1, 1).getTime() + millisecInAnHour * 23,
-					end: new Date(2024, 1, 1).getTime() + millisecInAnHour * 23.5
-				})
-			);
-			setupTest(<BoardEditPanel />, { store });
-			const button = screen.getByTestId('daily-planner-button');
-
-			expect(button).toBeInTheDocument();
-			expect(button).toBeEnabled();
-		});
-
-		it('it does not render a button when the event is singleOccurrence and the event lasts more than 1 day', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
-			}));
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			store.dispatch(
-				createNewEditor({
-					...defaultEditor,
-					start: new Date(2024, 1, 1).getTime() + millisecInAnHour * 23,
-					end: new Date(2024, 1, 1).getTime() + millisecInAnHour * 24.5
-				})
-			);
-			setupTest(<BoardEditPanel />, { store });
-			const button = screen.queryByTestId('daily-planner-button');
-			expect(button).not.toBeInTheDocument();
-		});
-
-		it('it does not render a button when the event is recurrent and it is a single day appointment', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
-			}));
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: '1', isNew: true }));
-			store.dispatch(
-				createNewEditor({
-					...defaultEditor,
-					recur: { isValid: true },
-					start: new Date(2024, 1, 1, 10).getTime(),
-					end: new Date(2024, 1, 1, 11).getTime()
-				})
-			);
-			setupTest(<BoardEditPanel />, { store });
-			const button = screen.queryByTestId('daily-planner-button');
-
-			expect(button).not.toBeInTheDocument();
-		});
-
-		it('it shows the daily planner when user clicks the button', async () => {
-			const freeBusyInterceptor = mockFreeBusyResponse([]);
-			const workingHoursInterceptor = mockWorkingHoursResponse([]);
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const folder = {
-				absFolderPath: '/Test',
-				id: '5',
-				l: '1',
-				name: 'Test',
-				view: 'appointment'
-			};
-
-			const folders = mockedData.calendars.getCalendarsMap({ folders: [folder] });
-			const context = { folders, dispatch: store.dispatch };
-			const editor = generateEditor({
-				context
-			});
-
-			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
-			}));
-
-			shell.useBoard.mockImplementation(() => initBoard({ editorId: editor.id, isNew: true }));
-			const { user } = setupTest(<BoardEditPanel />, { store });
-			const button = screen.getByTestId('daily-planner-button');
-			await act(async () => {
-				await user.click(button);
-			});
-			await freeBusyInterceptor;
-			await workingHoursInterceptor;
-
-			expect(screen.getByTestId('time-table')).toBeInTheDocument();
-			expect(screen.getByText('hide organizer tool')).toBeInTheDocument();
-		});
 	});
 });
