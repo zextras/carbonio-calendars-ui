@@ -4,18 +4,15 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React from 'react';
-
-import { Tooltip } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 
 import { calculatePosition } from '../utils';
 
-const MinutesLineDiv = styled.div.attrs(
-	({ width, color, left }: { width: string; color: string; left: string }) => ({
+export const MinutesLine = styled.div.attrs(
+	({ width = '3px', color, atPosition }: { width: string; color: string; atPosition: number }) => ({
 		width,
 		color,
-		left
+		atPosition
 	})
 )`
 	width: ${(props): string => props.width};
@@ -24,36 +21,5 @@ const MinutesLineDiv = styled.div.attrs(
 	border-radius: none;
 	float: left;
 	position: absolute;
-	left: ${(props): string => props.left};
+	left: ${(props): string => calculatePosition(props.atPosition)};
 `;
-
-export const MinutesLine = ({
-	atPosition,
-	color,
-	width = '3px',
-	tooltipLabel,
-	dataTestId
-}: {
-	atPosition: number;
-	color: string;
-	width?: string;
-	tooltipLabel?: string;
-	dataTestId?: string;
-}): React.JSX.Element =>
-	tooltipLabel ? (
-		<Tooltip label={tooltipLabel}>
-			<MinutesLineDiv
-				data-testid={dataTestId}
-				width={width}
-				color={color}
-				left={calculatePosition(atPosition)}
-			/>
-		</Tooltip>
-	) : (
-		<MinutesLineDiv
-			data-testid={dataTestId}
-			width={width}
-			color={color}
-			left={calculatePosition(atPosition)}
-		/>
-	);

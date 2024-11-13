@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { useTheme } from '@zextras/carbonio-design-system';
+import { Tooltip, useTheme } from '@zextras/carbonio-design-system';
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
@@ -30,11 +30,8 @@ export const EndMark = ({
 	const atPosition = hours * 60 + minutes;
 	const defaultLineColors = getDefaultLineColors(theme);
 	return (
-		<MinutesLine
-			tooltipLabel={tooltipLabel}
-			dataTestId={'end-mark'}
-			atPosition={atPosition}
-			color={defaultLineColors.end}
-		/>
+		<Tooltip label={tooltipLabel}>
+			<MinutesLine data-testid={'end-mark'} atPosition={atPosition} color={defaultLineColors.end} />
+		</Tooltip>
 	);
 };

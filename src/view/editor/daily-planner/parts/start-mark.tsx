@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { useTheme } from '@zextras/carbonio-design-system';
+import { Tooltip, useTheme } from '@zextras/carbonio-design-system';
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
@@ -30,11 +30,12 @@ export const StartMark = ({
 	const defaultLineColors = getDefaultLineColors(theme);
 	const tooltipLabel = `${t('daily_planner.start_time', 'Start time')}: ${getHumanReadableHours(startTimeEpochMillis, locale)}`;
 	return (
-		<MinutesLine
-			tooltipLabel={tooltipLabel}
-			dataTestId={'start-mark'}
-			atPosition={atPosition}
-			color={defaultLineColors.start}
-		/>
+		<Tooltip label={tooltipLabel}>
+			<MinutesLine
+				data-testid={'start-mark'}
+				atPosition={atPosition}
+				color={defaultLineColors.start}
+			/>
+		</Tooltip>
 	);
 };
