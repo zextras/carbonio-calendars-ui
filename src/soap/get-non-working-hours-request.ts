@@ -50,7 +50,9 @@ export const getNonWorkingHoursRequest = async ({
 			e: endEpochMillis,
 			name: emails.join(',')
 		}
-	);
+	).catch((reason) => ({
+		usr: []
+	}));
 	if (!response?.usr) return [];
 	return normalizeResponse(response);
 };

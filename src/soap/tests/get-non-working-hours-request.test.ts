@@ -4,7 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { createSoapAPIInterceptor } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { HttpResponse } from 'msw';
+
+import { getSoapFault } from './mocks';
+import {
+	createAPIInterceptor,
+	createSoapAPIInterceptor
+} from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import {
 	getNonWorkingHoursRequest,
 	GetNonWorkingHoursRequest,
@@ -65,7 +71,6 @@ describe('getNonWorkingHoursRequest', () => {
 			GetWorkingHoursSoapRequest,
 			GetWorkingHoursSoapResponse
 		>('GetWorkingHours', { usr: [{ id: 'user1@example.com', u: [{ s: 123, e: 345 }], f: [] }] });
-		getNonWorkingHoursRequest(request);
 
 		const response = await getNonWorkingHoursRequest(request);
 
@@ -73,5 +78,39 @@ describe('getNonWorkingHoursRequest', () => {
 		expect(response).toEqual([
 			{ email: 'user1@example.com', nonWorkingHours: [{ s: 123, e: 345 }] }
 		]);
+	});
+
+	it('should return empty array when working hours API return 500', async () => {
+		const request: GetNonWorkingHoursRequest = {
+			startEpochMillis: 1609459200,
+			endEpochMillis: 1609545600,
+			emails: ['user1@example.com', 'user2@example.com']
+		};
+
+		const interceptor = createAPIInterceptor(
+			'post',
+			'/service/soap/GetWorkingHoursRequest',
+			HttpResponse.error()
+		);
+
+		const response = await getNonWorkingHoursRequest(request);
+
+		await interceptor;
+		expect(response).toEqual([]);
+	});
+
+	it('should return empty array when working hours API returns Soap Fault', async () => {
+		const request: GetNonWorkingHoursRequest = {
+			startEpochMillis: 1609459200,
+			endEpochMillis: 1609545600,
+			emails: ['user1@example.com', 'user2@example.com']
+		};
+
+		const interceptor = createSoapAPIInterceptor('GetWorkingHours', getSoapFault());
+
+		const response = await getNonWorkingHoursRequest(request);
+
+		await interceptor;
+		expect(response).toEqual([]);
 	});
 });
