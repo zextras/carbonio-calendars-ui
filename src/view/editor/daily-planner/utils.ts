@@ -41,7 +41,7 @@ export function getEventLabel(type: DailyPlannerEventType, t: TFunction): string
 		case 'busy':
 			return t('daily_planner.busy', 'Busy');
 		case 'tentative':
-			return t('daily_planner.tentative', 'tentative');
+			return t('daily_planner.tentative', 'Tentative');
 		case 'out-of-office':
 			return t('daily_planner.out-of-office', 'Out of office');
 		case 'non-working':
