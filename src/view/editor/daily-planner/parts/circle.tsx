@@ -8,12 +8,7 @@ import React from 'react';
 
 import { useTheme } from '@zextras/carbonio-design-system';
 
-export const Circle = ({
-	backgroundColor
-}: {
-	borderColor?: string;
-	backgroundColor: string;
-}): React.JSX.Element => {
+export const Circle = ({ backgroundColor }: { backgroundColor: string }): React.JSX.Element => {
 	const theme = useTheme();
 	return (
 		<div
