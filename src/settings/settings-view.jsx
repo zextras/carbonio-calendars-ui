@@ -407,7 +407,7 @@ export default function CalendarSettingsView() {
 			<SettingsHeader title={title} onSave={saveChanges} onCancel={onClose} isDirty={!disabled} />
 			<Container
 				orientation="vertical"
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 				background={'gray5'}
 				style={{ overflowY: 'auto' }}

@@ -349,7 +349,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						<Tooltip
 							label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
 							placement="top"
-							maxWidth="fit"
+							maxWidth="fit-content"
 						>
 							<Input
 								label={placeholder}

@@ -270,7 +270,7 @@ export default function EventPanelView(): ReactElement | null {
 		<AppointmentCardContainer mainAlignment="flex-start">
 			<DisplayerHeader event={event} panelView={PANEL_VIEW.APP} />
 			<Container
-				padding={{ all: 'none' }}
+				padding={{ all: 0 }}
 				mainAlignment="flex-start"
 				height="calc(100% - 3rem)"
 				style={{ overflow: 'auto' }}

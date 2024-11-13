@@ -165,7 +165,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 					orientation="horizontal"
 					background={'gray5'}
 					style={{ overflow: 'hidden' }}
-					padding={{ all: 'none' }}
+					padding={{ all: 0 }}
 				>
 					<Container background={'gray5'} style={{ overflow: 'hidden' }}>
 						{integrationAvailable ? (

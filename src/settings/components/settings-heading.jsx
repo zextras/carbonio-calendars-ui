@@ -12,7 +12,7 @@ export default function Heading({ title }) {
 		<>
 			<Row
 				padding={{ all: 'small' }}
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 				width="100%"
 				background="gray4"

@@ -52,7 +52,7 @@ const AttachmentContainer = styled(Container)<{ $disabled: boolean }>`
 	box-sizing: border-box;
 	&:hover {
 		background-color: ${({ theme, background = 'transparent', $disabled }): string =>
-			$disabled ? 'gray5' : getColor(`${background}.hover`, theme)};
+			$disabled ? theme.palette.gray5.regular : getColor(`${background}.hover`, theme)};
 		& ${AttachmentHoverBarContainer} {
 			display: flex;
 		}

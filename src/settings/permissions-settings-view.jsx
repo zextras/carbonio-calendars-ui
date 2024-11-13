@@ -38,13 +38,13 @@ export default function PermisionsSettings({
 		<Container
 			padding={{ all: 'medium' }}
 			background="gray6"
-			mainAlignment="baseline"
+			mainAlignment="flex-start"
 			crossAlignment="baseline"
 		>
 			<Container
 				orientation="horizontal"
 				crossAlignment="baseline"
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				padding={{ all: 'small' }}
 			>
 				<Row padding={{ right: 'small' }}>
@@ -189,7 +189,7 @@ export default function PermisionsSettings({
 
 			<Row
 				orientation="vertical"
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 				padding={{ all: 'small' }}
 			>

@@ -15,7 +15,7 @@ export default function CreatingAppointmentSettings({ settingsObj, updateSetting
 		<Container
 			padding={{ all: 'medium' }}
 			background="gray6"
-			mainAlignment="baseline"
+			mainAlignment="flex-start"
 			crossAlignment="baseline"
 		>
 			<Row padding={{ all: 'small' }}>
@@ -47,7 +47,7 @@ export default function CreatingAppointmentSettings({ settingsObj, updateSetting
 			<Row
 				padding={{ horizontal: 'small', top: 'small' }}
 				orientation="vertical"
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 			>
 				<Text size="large" weight="bold">
