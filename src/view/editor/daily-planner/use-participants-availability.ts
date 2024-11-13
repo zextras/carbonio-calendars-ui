@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { DailyPlannerParticipantType } from './types';
 import { FreeBusy, getFreeBusyRequest } from '../../../soap/get-free-busy-request';
@@ -50,24 +50,26 @@ export function useParticipantsAvailability({
 	const previousValue = useRef<string>('');
 	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
 	const uids = participants.map((p) => p.email).join(',');
-	if (participants.length > 0 && previousValue.current !== currentValue) {
-		previousValue.current = currentValue;
-		const newAvailabilities: Record<string, ParticipantAvailability> = {};
-		getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids }).then(
-			(response) => {
-				response?.usr?.forEach((user) => {
-					newAvailabilities[user.id] = {
-						free: user.f?.map(mapFreeBusyToEvent) ?? [],
-						busy: user.b?.map(mapFreeBusyToEvent) ?? [],
-						tentative: user.t?.map(mapFreeBusyToEvent) ?? [],
-						outOfOffice: user.u?.map(mapFreeBusyToEvent) ?? [],
-						unknown: user.n?.map(mapFreeBusyToEvent) ?? []
-					};
-				});
-				setParticipantsAvailability(newAvailabilities);
-			}
-		);
-	}
+	useEffect(() => {
+		if (participants.length > 0 && previousValue.current !== currentValue) {
+			previousValue.current = currentValue;
+			const newAvailabilities: Record<string, ParticipantAvailability> = {};
+			getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids }).then(
+				(response) => {
+					response?.usr?.forEach((user) => {
+						newAvailabilities[user.id] = {
+							free: user.f?.map(mapFreeBusyToEvent) ?? [],
+							busy: user.b?.map(mapFreeBusyToEvent) ?? [],
+							tentative: user.t?.map(mapFreeBusyToEvent) ?? [],
+							outOfOffice: user.u?.map(mapFreeBusyToEvent) ?? [],
+							unknown: user.n?.map(mapFreeBusyToEvent) ?? []
+						};
+					});
+					setParticipantsAvailability(newAvailabilities);
+				}
+			);
+		}
+	}, [currentValue, endDateEpochMillis, participants.length, startDateEpochMillis, uids]);
 
 	return participantsAvailability;
 }
