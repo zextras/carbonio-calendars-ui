@@ -7,11 +7,13 @@
 import React from 'react';
 
 import { Container, Padding, useTheme, Text } from '@zextras/carbonio-design-system';
+import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { DAILY_PLANNER_EVENT_TYPE } from './constants';
 import { Circle } from './parts/circle';
 import { Dash } from './parts/dash';
-import { getDefaultLineColors, getEventColor } from './utils';
+import { getDefaultLineColors, getEventColor, getEventLabel } from './utils';
 
 export const TimeTableLegend = (): React.JSX.Element => {
 	const theme = useTheme();
@@ -28,53 +30,30 @@ export const TimeTableLegend = (): React.JSX.Element => {
 				paddingTop: '1rem'
 			}}
 		>
-			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
-				<Padding all={'small'}>
-					<Circle backgroundColor={getEventColor('unknown', theme)} borderColor="black" />
-				</Padding>
-				<Text size="extrasmall">{t('daily_planner.legend.unknown', 'Unknown')}</Text>
-			</Container>
-			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
-				<Padding all={'small'}>
-					<Circle backgroundColor={getEventColor('non-working', theme)} />
-				</Padding>
-				<Text size="extrasmall">{t('daily_planner.legend.non-working', 'Non-working')}</Text>
-			</Container>
-			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
-				<Padding all={'small'}>
-					<Circle borderColor={'black'} backgroundColor={getEventColor('free', theme)} />
-				</Padding>
-				<Text size="extrasmall">{t('daily_planner.legend.free', 'Free')}</Text>
-			</Container>
-			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
-				<Padding all={'small'}>
-					<Circle backgroundColor={getEventColor('busy', theme)} />
-				</Padding>
-				<Text size="extrasmall">{t('daily_planner.legend.busy', 'Busy')}</Text>
-			</Container>
-			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
-				<Padding all={'small'}>
-					<Circle backgroundColor={getEventColor('tentative', theme)} />
-				</Padding>
-				<Text size="extrasmall">{t('daily_planner.legend.tentative', 'Tentative')}</Text>
-			</Container>
-			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
-				<Padding all={'small'}>
-					<Circle backgroundColor={getEventColor('out-of-office', theme)} />
-				</Padding>
-				<Text size="extrasmall">{t('daily_planner.legend.out-of-office', 'Out of office')}</Text>
-			</Container>
+			{map(DAILY_PLANNER_EVENT_TYPE, (event) => (
+				<Container
+					width={'fit'}
+					mainAlignment={'flex-start'}
+					orientation={'horizontal'}
+					key={event}
+				>
+					<Padding all={'small'}>
+						<Circle backgroundColor={getEventColor(event, theme)} />
+					</Padding>
+					<Text size="extrasmall">{getEventLabel(event, t)}</Text>
+				</Container>
+			))}
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
 					<Dash backgroundColor={defaultLineColors.start} />
 				</Padding>
-				<Text size="extrasmall">{t('daily_planner.legend.start_time', 'Start time')}</Text>
+				<Text size="extrasmall">{t('daily_planner.start_time', 'Start time')}</Text>
 			</Container>
 			<Container width={'fit'} mainAlignment={'flex-start'} orientation={'horizontal'}>
 				<Padding all={'small'}>
 					<Dash backgroundColor={defaultLineColors.end} />
 				</Padding>
-				<Text size="extrasmall">{t('daily_planner.legend.end_time', 'End time')}</Text>
+				<Text size="extrasmall">{t('daily_planner.end_time', 'End time')}</Text>
 			</Container>
 		</div>
 	);

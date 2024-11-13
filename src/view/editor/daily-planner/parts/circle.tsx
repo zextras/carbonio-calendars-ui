@@ -6,20 +6,24 @@
 
 import React from 'react';
 
+import { useTheme } from '@zextras/carbonio-design-system';
+
 export const Circle = ({
-	borderColor,
 	backgroundColor
 }: {
 	borderColor?: string;
 	backgroundColor: string;
-}): React.JSX.Element => (
-	<div
-		style={{
-			width: '0.5rem',
-			height: '0.5rem',
-			borderRadius: '50%',
-			border: borderColor ? `1px solid ${borderColor}` : 'none',
-			backgroundColor
-		}}
-	/>
-);
+}): React.JSX.Element => {
+	const theme = useTheme();
+	return (
+		<div
+			style={{
+				width: '0.5rem',
+				height: '0.5rem',
+				borderRadius: '50%',
+				border: `1px solid ${theme.palette.gray1.regular}`,
+				backgroundColor
+			}}
+		/>
+	);
+};
