@@ -29,6 +29,7 @@ const EmailColumn = styled.div`
 	display: flex;
 	align-items: center;
 	min-width: 10rem;
+	max-width: 10rem;
 	padding-right: 2rem;
 `;
 const FreeBusyColumn = styled.div`
@@ -68,7 +69,7 @@ export const TimeTableParticipantRow = ({
 						/>
 					</Container>
 				</Tooltip>
-				<Chip minWidth={'10rem'} maxWidth={'10rem'} label={chipLabel} />
+				<Chip maxWidth={'10rem'} label={chipLabel} />
 			</EmailColumn>
 			<FreeBusyColumn data-testid={`column-1`}>
 				{map(participantRow.events, (event, index) => (
