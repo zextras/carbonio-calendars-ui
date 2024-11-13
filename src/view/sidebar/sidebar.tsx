@@ -125,7 +125,7 @@ const useSidebarSortedFolders = (
 							children: [
 								{
 									id: SIDEBAR_ROOT_SUBSECTION.CALENDARS,
-									name: t('label.app_name', 'Calendars'),
+									name: t('label.calendars', 'Calendars'),
 									children: [calendar, trash, ...others],
 									noIcon: true
 								},
@@ -133,7 +133,7 @@ const useSidebarSortedFolders = (
 								// @ts-ignore
 								{
 									id: SIDEBAR_ROOT_SUBSECTION.GROUPS,
-									name: t('label.calendar_groups', 'Calendar Groups'),
+									name: t('label.calendar_groups', ' '),
 									children: [
 										...calendarGroups,
 										{

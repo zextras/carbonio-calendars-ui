@@ -186,7 +186,7 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				<Padding vertical="small" />
 				<Container crossAlignment="flex-start">
 					<Text weight="bold" size="large">
-						{t('label.newgroup.calendars', 'Calendars in this group')}
+						{t('label.editgroup.calendars', 'Calendars in this group')}
 					</Text>
 				</Container>
 				<Padding vertical="small" />
