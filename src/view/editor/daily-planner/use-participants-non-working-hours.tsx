@@ -42,13 +42,14 @@ export function useParticipantsNonWorkingHours({
 		Record<string, NonWorkingHours>
 	>({});
 
+	const emails = participants.map((p) => p.email).join(',');
 	useEffect(() => {
-		if (participants.length > 0) {
+		if (emails.length > 0) {
 			const newNonWorkingHours: Record<string, NonWorkingHours> = {};
 			getNonWorkingHoursRequest({
 				startEpochMillis: startDateEpochMillis,
 				endEpochMillis: endDateEpochMillis,
-				emails: participants.map((p) => p.email)
+				emails: emails.split(',')
 			}).then((response) => {
 				response?.forEach((user) => {
 					newNonWorkingHours[user.email] = {
@@ -58,7 +59,7 @@ export function useParticipantsNonWorkingHours({
 				setParticipantsNonWorkingHours(newNonWorkingHours);
 			});
 		}
-	}, [participants, startDateEpochMillis, endDateEpochMillis]);
+	}, [emails, startDateEpochMillis, endDateEpochMillis]);
 
 	return participantsNonWorkingHours;
 }
