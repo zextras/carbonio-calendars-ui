@@ -94,4 +94,25 @@ describe('EditorDailyPlannerController', () => {
 		const button = screen.queryByRole('button', { name: /show organizer tool/ });
 		expect(button).not.toBeInTheDocument();
 	});
+
+	it('should filter out duplicate attendees', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const freeBusyInterceptor = mockFreeBusyResponse([]);
+		const workingHoursInterceptor = mockWorkingHoursResponse([]);
+
+		const editor = generateEditor({
+			context: {
+				attendees: [{ email: 'test@test.com' }, { email: 'test@test.com' }],
+				folders,
+				dispatch: store.dispatch
+			}
+		});
+
+		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
+		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
+		user.click(buttonShowOrganizer);
+		await freeBusyInterceptor;
+		await workingHoursInterceptor;
+		expect(screen.getAllByTestId('row-test@test.com').length).toBe(1);
+	});
 });
