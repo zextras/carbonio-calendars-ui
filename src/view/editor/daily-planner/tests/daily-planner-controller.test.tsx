@@ -6,8 +6,10 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import { HttpResponse } from 'msw';
 
+import { createAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
@@ -114,5 +116,40 @@ describe('EditorDailyPlannerController', () => {
 		await freeBusyInterceptor;
 		await workingHoursInterceptor;
 		expect(screen.getAllByTestId('row-test@test.com').length).toBe(1);
+	});
+
+	it('should not make duplicate api calls', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		// const freeBusyInterceptor = mockFreeBusyResponse([]);
+		const workingHoursInterceptor = mockWorkingHoursResponse([]);
+		const freeBusyInterceptor = createAPIInterceptor(
+			'post',
+			'/service/soap/GetFreeBusyRequest',
+			HttpResponse.json({
+				Body: {
+					GetFreeBusyResponse: {
+						usr: []
+					}
+				}
+			})
+		);
+
+		const editor = generateEditor({
+			context: {
+				attendees: [{ email: 'test@test.com' }, { email: 'test@test.com' }],
+				folders,
+				dispatch: store.dispatch
+			}
+		});
+
+		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
+		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
+		user.click(buttonShowOrganizer);
+		await workingHoursInterceptor;
+		await waitFor(async () => {
+			expect(screen.getByTestId('time-table')).toBeInTheDocument();
+		});
+
+		expect(freeBusyInterceptor.getCalledTimes()).toBe(1);
 	});
 });
