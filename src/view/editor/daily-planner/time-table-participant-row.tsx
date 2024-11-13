@@ -68,7 +68,7 @@ export const TimeTableParticipantRow = ({
 						/>
 					</Container>
 				</Tooltip>
-				<Chip maxWidth={'10rem'} label={chipLabel} />
+				<Chip minWidth={'10rem'} maxWidth={'10rem'} label={chipLabel} />
 			</EmailColumn>
 			<FreeBusyColumn data-testid={`column-1`}>
 				{map(participantRow.events, (event, index) => (
