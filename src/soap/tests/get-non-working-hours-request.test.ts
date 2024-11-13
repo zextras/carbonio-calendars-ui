@@ -6,16 +6,14 @@
 
 import { HttpResponse } from 'msw';
 
-import { getSoapFault } from './mocks';
+import { getSoapFault, mockWorkingHoursResponse } from './mocks';
 import {
 	createAPIInterceptor,
 	createSoapAPIInterceptor
 } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import {
 	getNonWorkingHoursRequest,
-	GetNonWorkingHoursRequest,
-	GetWorkingHoursSoapRequest,
-	GetWorkingHoursSoapResponse
+	GetNonWorkingHoursRequest
 } from '../get-non-working-hours-request';
 
 describe('getNonWorkingHoursRequest', () => {
@@ -26,10 +24,8 @@ describe('getNonWorkingHoursRequest', () => {
 			emails: ['user1@example.com', 'user2@example.com']
 		};
 
-		const interceptor = createSoapAPIInterceptor<
-			GetWorkingHoursSoapRequest,
-			GetWorkingHoursSoapResponse
-		>('GetWorkingHours', { usr: [] });
+		const interceptor = mockWorkingHoursResponse([]);
+
 		getNonWorkingHoursRequest(request);
 
 		const soapRequest = await interceptor;
@@ -48,10 +44,7 @@ describe('getNonWorkingHoursRequest', () => {
 			emails: []
 		};
 
-		const interceptor = createSoapAPIInterceptor<
-			GetWorkingHoursSoapRequest,
-			GetWorkingHoursSoapResponse
-		>('GetWorkingHours', { usr: [] });
+		const interceptor = mockWorkingHoursResponse([]);
 		getNonWorkingHoursRequest(request);
 
 		const soapRequest = await interceptor;
@@ -67,10 +60,9 @@ describe('getNonWorkingHoursRequest', () => {
 			emails: ['user1@example.com', 'user2@example.com']
 		};
 
-		const interceptor = createSoapAPIInterceptor<
-			GetWorkingHoursSoapRequest,
-			GetWorkingHoursSoapResponse
-		>('GetWorkingHours', { usr: [{ id: 'user1@example.com', u: [{ s: 123, e: 345 }], f: [] }] });
+		const interceptor = mockWorkingHoursResponse([
+			{ id: 'user1@example.com', u: [{ s: 123, e: 345 }], f: [] }
+		]);
 
 		const response = await getNonWorkingHoursRequest(request);
 
