@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { DailyPlannerParticipantType } from './types';
 import { FreeBusy, getFreeBusyRequest } from '../../../soap/get-free-busy-request';
@@ -47,12 +47,9 @@ export function useParticipantsAvailability({
 	const [participantsAvailability, setParticipantsAvailability] = useState<
 		Record<string, ParticipantAvailability>
 	>({});
-	const previousValue = useRef<string>('');
-	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
 	const uids = participants.map((p) => p.email).join(',');
 	useEffect(() => {
-		if (participants.length > 0 && previousValue.current !== currentValue) {
-			previousValue.current = currentValue;
+		if (uids.length > 0) {
 			const newAvailabilities: Record<string, ParticipantAvailability> = {};
 			getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids }).then(
 				(response) => {
@@ -69,7 +66,7 @@ export function useParticipantsAvailability({
 				}
 			);
 		}
-	}, [currentValue, endDateEpochMillis, participants.length, startDateEpochMillis, uids]);
+	}, [endDateEpochMillis, startDateEpochMillis, uids]);
 
 	return participantsAvailability;
 }
