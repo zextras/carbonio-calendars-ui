@@ -97,7 +97,7 @@ describe('useParticipantsNonWorkingHours', () => {
 		expect(getWorkingHoursSpy).not.toHaveBeenCalled();
 	});
 
-	it('should call GetFreeBusy API only once if participants do not changes', async () => {
+	it('should call GetNonWorkingHours API only once if participants do not changes', async () => {
 		const interceptor = createAPIInterceptor(
 			'post',
 			'/service/soap/GetWorkingHoursRequest',
