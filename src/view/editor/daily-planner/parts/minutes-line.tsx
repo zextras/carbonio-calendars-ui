@@ -7,8 +7,25 @@
 import React from 'react';
 
 import { Tooltip } from '@zextras/carbonio-design-system';
+import styled from 'styled-components';
 
 import { calculatePosition } from '../utils';
+
+const MinutesLineDiv = styled.div.attrs(
+	({ width, color, left }: { width: string; color: string; left: string }) => ({
+		width,
+		color,
+		left
+	})
+)`
+	width: ${(props): string => props.width};
+	background-color: ${(props): string => props.color};
+	height: 2rem;
+	border-radius: none;
+	float: left;
+	position: absolute;
+	left: ${(props): string => props.left};
+`;
 
 export const MinutesLine = ({
 	atPosition,
@@ -22,19 +39,21 @@ export const MinutesLine = ({
 	width?: string;
 	tooltipLabel?: string;
 	dataTestId?: string;
-}): React.JSX.Element => (
-	<Tooltip label={tooltipLabel}>
-		<div
+}): React.JSX.Element =>
+	tooltipLabel ? (
+		<Tooltip label={tooltipLabel}>
+			<MinutesLineDiv
+				data-testid={dataTestId}
+				width={width}
+				color={color}
+				left={calculatePosition(atPosition)}
+			/>
+		</Tooltip>
+	) : (
+		<MinutesLineDiv
 			data-testid={dataTestId}
-			style={{
-				width,
-				backgroundColor: color,
-				height: '2rem',
-				borderRadius: 'none',
-				float: 'left',
-				position: 'absolute',
-				left: calculatePosition(atPosition)
-			}}
+			width={width}
+			color={color}
+			left={calculatePosition(atPosition)}
 		/>
-	</Tooltip>
-);
+	);
