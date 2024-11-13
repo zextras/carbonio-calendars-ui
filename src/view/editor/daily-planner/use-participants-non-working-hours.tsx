@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { FreeBusy } from '../../../soap/get-free-busy-request';
 import { getNonWorkingHoursRequest } from '../../../soap/get-non-working-hours-request';
@@ -44,22 +44,24 @@ export function useParticipantsNonWorkingHours({
 	const previousValue = useRef<string>('');
 	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
 
-	if (participants.length > 0 && previousValue.current !== currentValue) {
-		previousValue.current = currentValue;
-		const newNonWorkingHours: Record<string, NonWorkingHours> = {};
-		getNonWorkingHoursRequest({
-			startEpochMillis: startDateEpochMillis,
-			endEpochMillis: endDateEpochMillis,
-			emails: participants.map((p) => p.email)
-		}).then((response) => {
-			response?.forEach((user) => {
-				newNonWorkingHours[user.email] = {
-					nonWorkingHours: user.nonWorkingHours?.map(mapFreeBusyToEvent) ?? []
-				};
+	useEffect(() => {
+		if (participants.length > 0 && previousValue.current !== currentValue) {
+			previousValue.current = currentValue;
+			const newNonWorkingHours: Record<string, NonWorkingHours> = {};
+			getNonWorkingHoursRequest({
+				startEpochMillis: startDateEpochMillis,
+				endEpochMillis: endDateEpochMillis,
+				emails: participants.map((p) => p.email)
+			}).then((response) => {
+				response?.forEach((user) => {
+					newNonWorkingHours[user.email] = {
+						nonWorkingHours: user.nonWorkingHours?.map(mapFreeBusyToEvent) ?? []
+					};
+				});
+				setParticipantsNonWorkingHours(newNonWorkingHours);
 			});
-			setParticipantsNonWorkingHours(newNonWorkingHours);
-		});
-	}
+		}
+	}, [participants, startDateEpochMillis, endDateEpochMillis, currentValue]);
 
 	return participantsNonWorkingHours;
 }
