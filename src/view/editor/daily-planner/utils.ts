@@ -6,14 +6,18 @@
 
 import { Theme } from '@zextras/carbonio-design-system';
 import { TFunction } from 'i18next';
+import { map } from 'lodash';
 
-import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
+import { DAILY_PLANNER_EVENT_TYPE, DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
 import {
 	DailyPlannerEventType,
 	HoursMinutes,
 	DailyPlannerParticipantType,
-	DailyPlannerEvents
+	DailyPlannerEvents,
+	DailyPlannerRow
 } from './types';
+import { ParticipantAvailability } from './use-participants-availability';
+import { NonWorkingHours } from './use-participants-non-working-hours';
 
 export function getEventColor(type: DailyPlannerEventType, theme: Theme): string {
 	switch (type) {
@@ -137,4 +141,92 @@ export function getEventTooltipLabel(
 		tooltipLabel = `${statusLabel}: ${getEventLabel(event.type, t)} ${fromLabel} ${startHoursHuman} ${toLabel} ${endHoursHuman}`;
 	}
 	return tooltipLabel;
+}
+
+export function getWithinSameDay(startDate: number, endDate: number): boolean {
+	const date1 = new Date(startDate);
+	const date2 = new Date(endDate);
+
+	return (
+		date1.getFullYear() === date2.getFullYear() &&
+		date1.getMonth() === date2.getMonth() &&
+		date1.getDate() === date2.getDate()
+	);
+}
+
+function mapEvent(
+	event: {
+		startDateEpochMillis: number;
+		endDateEpochMillis: number;
+	},
+	eventType: DailyPlannerEventType
+): DailyPlannerEvents {
+	return {
+		...event,
+		type: eventType
+	};
+}
+
+export function mapFreeBusyToDailyPlannerRow({
+	email,
+	fullName,
+	participantType,
+	availabilities,
+	nonWorkingHours
+}: {
+	email: string;
+	participantType: DailyPlannerParticipantType;
+	fullName?: string;
+	availabilities: Record<string, ParticipantAvailability>;
+	nonWorkingHours: Record<string, NonWorkingHours>;
+}): DailyPlannerRow {
+	const freeBusy = availabilities?.[email] ?? {
+		free: [],
+		busy: [],
+		tentative: [],
+		outOfOffice: [],
+		unknown: []
+	};
+	const nonWorking = map(
+		(nonWorkingHours?.[email]?.nonWorkingHours ?? []).map((event) =>
+			mapEvent(event, DAILY_PLANNER_EVENT_TYPE.nonWorking)
+		)
+	);
+	const eventsFree = freeBusy.free.map((event) => mapEvent(event, DAILY_PLANNER_EVENT_TYPE.free));
+	const eventsBusy = freeBusy.busy.map((event) => mapEvent(event, DAILY_PLANNER_EVENT_TYPE.busy));
+	const outOfOffice = freeBusy.outOfOffice.map((event) =>
+		mapEvent(event, DAILY_PLANNER_EVENT_TYPE.outOfOffice)
+	);
+	const unknown = freeBusy.unknown.map((event) =>
+		mapEvent(event, DAILY_PLANNER_EVENT_TYPE.unknown)
+	);
+
+	const eventsTentative = freeBusy.tentative.map((event) =>
+		mapEvent(event, DAILY_PLANNER_EVENT_TYPE.tentative)
+	);
+	return {
+		email,
+		fullName,
+		participantType,
+		events: [
+			...eventsFree,
+			...nonWorking,
+			...unknown,
+			...eventsTentative,
+			...eventsBusy,
+			...outOfOffice
+		]
+	};
+}
+
+export function atMidnight(date: Date): Date {
+	const midnight = date;
+	midnight.setHours(0, 0, 0, 0);
+	return midnight;
+}
+
+export function onNextDay(date: Date): Date {
+	const nextDay = new Date(date);
+	nextDay.setDate(nextDay.getDate() + 1);
+	return nextDay;
 }
