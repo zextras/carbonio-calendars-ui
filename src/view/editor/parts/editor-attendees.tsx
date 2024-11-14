@@ -184,6 +184,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 						) : (
 							<ChipInput
 								placeholder={t('label.attendees', 'Attendees')}
+								data-testid={'attendees-chip-input'}
 								background={'gray5'}
 								onChange={onChange}
 								defaultValue={defaultValue}
