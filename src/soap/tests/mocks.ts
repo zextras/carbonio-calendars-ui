@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
-
 import { createSoapAPIInterceptor } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { GetFreeBusyRequest, GetFreeBusyResponse } from '../get-free-busy-request';
 import {
@@ -30,16 +28,4 @@ export function mockWorkingHoursResponse(
 			usr: workingHours
 		}
 	);
-}
-
-export function getSoapFault(): ErrorSoapBodyResponse {
-	return {
-		Fault: {
-			Detail: { Error: { Code: '', Trace: '' } },
-			Reason: { Text: '' },
-			Code: {
-				Value: ''
-			}
-		}
-	};
 }

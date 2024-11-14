@@ -7,7 +7,11 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse } from 'msw';
 
-import { createAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import {
+	createAPIInterceptor,
+	createSoapAPIInterceptor
+} from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
 import * as getNonWorkingHoursResponseHandler from '../../../../soap/get-non-working-hours-request';
 import { mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { useParticipantsNonWorkingHours } from '../use-participants-non-working-hours';
@@ -34,7 +38,7 @@ describe('useParticipantsNonWorkingHours', () => {
 
 	it('should return correct working hours for participant', async () => {
 		const participants = [{ email: 'test@test.com' }];
-		mockWorkingHoursResponse([
+		const interceptor = mockWorkingHoursResponse([
 			{
 				id: 'test@test.com',
 				u: [{ s: 100, e: 200 }],
@@ -53,6 +57,7 @@ describe('useParticipantsNonWorkingHours', () => {
 		const expected = {
 			nonWorkingHours: [{ startDateEpochMillis: 100, endDateEpochMillis: 200 }]
 		};
+		await interceptor;
 		await waitFor(() => {
 			expect(result.current[participantEmail]).toEqual(expected);
 		});
@@ -119,6 +124,28 @@ describe('useParticipantsNonWorkingHours', () => {
 		rerender();
 		await waitFor(() => {
 			expect(interceptor.getCalledTimes()).toBe(1);
+		});
+	});
+
+	it('should not call GetNonWorkingHours API if previous call failed', async () => {
+		const workingHoursSpy = jest.spyOn(
+			getNonWorkingHoursResponseHandler,
+			'getNonWorkingHoursRequest'
+		);
+		const interceptor = createSoapAPIInterceptor('GetWorkingHours', buildSoapErrorResponseBody());
+		const participants = [{ email: '123@test.com' }];
+
+		const { rerender } = renderHook(() =>
+			useParticipantsNonWorkingHours({
+				participants,
+				startDateEpochMillis: 0,
+				endDateEpochMillis: 0
+			})
+		);
+		await interceptor;
+		rerender();
+		await waitFor(() => {
+			expect(workingHoursSpy).toHaveBeenCalledTimes(1);
 		});
 	});
 
