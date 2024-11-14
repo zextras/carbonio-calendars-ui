@@ -76,6 +76,7 @@ export function useParticipantsAvailability({
 				setParticipantsAvailability(newAvailabilities);
 			})
 			.catch(() => {
+				setParticipantsAvailability({});
 				createSnackbar({
 					key: 'get-non-working-hours',
 					replace: false,

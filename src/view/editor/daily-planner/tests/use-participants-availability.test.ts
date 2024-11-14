@@ -8,7 +8,11 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse } from 'msw';
 
 import { mockTranslation } from './mocks';
-import { createAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import {
+	createAPIInterceptor,
+	createSoapAPIInterceptor
+} from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
 import * as getFreeBusyResponseHandler from '../../../../soap/get-free-busy-request';
 import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import {
@@ -130,6 +134,65 @@ describe('useParticipantsAvailability', () => {
 		rerender();
 		await waitFor(() => {
 			expect(interceptor.getCalledTimes()).toBe(1);
+		});
+	});
+
+	it('should return an empty array if there are no results', async () => {
+		const interceptor = createAPIInterceptor(
+			'post',
+			'/service/soap/GetFreeBusyRequest',
+			HttpResponse.json({
+				Body: {
+					GetFreeBusyResponse: { usr: [] }
+				}
+			})
+		);
+		const participants = [{ email: '123@test.com' }];
+
+		const { result } = renderHook(() =>
+			useParticipantsAvailability({
+				participants,
+				startDateEpochMillis: 0,
+				endDateEpochMillis: 0
+			})
+		);
+		await waitFor(() => {
+			expect(interceptor.getCalledTimes()).toBe(1);
+		});
+		expect(result.current).toEqual({});
+	});
+
+	it('should update returned results even if API call fails', async () => {
+		const email = '123@test.com';
+		const startDateEpochMillis = 0;
+		const endDateEpochMillis = 0;
+		const participants = [{ email }];
+
+		const successFullInterceptor = mockFreeBusyResponse([{ id: email, f: [], u: [] }]);
+		const { result, rerender } = renderHook(useParticipantsAvailability, {
+			initialProps: {
+				participants,
+				startDateEpochMillis,
+				endDateEpochMillis
+			}
+		});
+		await successFullInterceptor;
+		await waitFor(() => {
+			expect(result.current).toMatchObject({
+				[email]: { free: [], outOfOffice: [], busy: [], tentative: [], unknown: [] }
+			});
+		});
+
+		const failingInterceptor = createSoapAPIInterceptor(
+			'GetFreeBusy',
+			buildSoapErrorResponseBody()
+		);
+		const newParticipants = [{ email }, { email: 'newAttendee@test.com' }];
+		rerender({ participants: newParticipants, startDateEpochMillis, endDateEpochMillis });
+
+		await failingInterceptor;
+		await waitFor(() => {
+			expect(result.current).toEqual({});
 		});
 	});
 });
