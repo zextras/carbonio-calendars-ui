@@ -173,4 +173,36 @@ describe('useParticipantsNonWorkingHours', () => {
 		});
 		expect(result.current).toEqual({});
 	});
+
+	it('should update returned results even if API call fails', async () => {
+		const email = '123@test.com';
+		const startDateEpochMillis = 0;
+		const endDateEpochMillis = 0;
+		const participants = [{ email }];
+
+		const successFullInterceptor = mockWorkingHoursResponse([{ id: email, f: [], u: [] }]);
+		const { result, rerender } = renderHook(useParticipantsNonWorkingHours, {
+			initialProps: {
+				participants,
+				startDateEpochMillis,
+				endDateEpochMillis
+			}
+		});
+		await successFullInterceptor;
+		await waitFor(() => {
+			expect(result.current).toEqual({ [email]: { nonWorkingHours: [] } });
+		});
+
+		const failingInterceptor = createSoapAPIInterceptor(
+			'GetWorkingHours',
+			buildSoapErrorResponseBody()
+		);
+		const newParticipants = [{ email }, { email: 'newAttendee@test.com' }];
+		rerender({ participants: newParticipants, startDateEpochMillis, endDateEpochMillis });
+
+		await failingInterceptor;
+		await waitFor(() => {
+			expect(result.current).toEqual({});
+		});
+	});
 });
