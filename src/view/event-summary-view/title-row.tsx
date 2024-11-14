@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { EventType } from '../../types/event';
-import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 
 export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 	const [t] = useTranslation();
@@ -39,14 +38,10 @@ export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 		[tagItems]
 	);
 	const title = useMemo(() => {
-		if (
-			event.resource.class !== 'PRI' ||
-			(isOrganizerOrHaveEqualRights(event, event.resource.calendar.absFolderPath) && event.title) ||
-			!event.resource.calendar.owner
-		) {
-			return event.title;
+		if (event.resource.class === 'PRI') {
+			return event.title || t('label.private', 'Private');
 		}
-		return t('label.private', 'Private');
+		return event.title;
 	}, [event, t]);
 
 	return (

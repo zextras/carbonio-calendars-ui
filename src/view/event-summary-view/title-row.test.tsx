@@ -55,8 +55,9 @@ describe('title-row', () => {
 				expect(screen.getByText(event.title)).toBeInTheDocument();
 			});
 		});
-		test('the title of the appointment wont be visible', () => {
+		test('the title of the appointment will show "private" label', () => {
 			const event = mockedData.getEvent({
+				title: '',
 				resource: {
 					iAmOrganizer: false,
 					iAmAttendee: false,
@@ -67,7 +68,7 @@ describe('title-row', () => {
 
 			setupTest(<TitleRow event={event} />);
 
-			expect(screen.queryByText(event.title)).not.toBeInTheDocument();
+			expect(screen.getByText(/private/i)).toBeInTheDocument();
 		});
 	});
 	describe('recurrent icon', () => {
