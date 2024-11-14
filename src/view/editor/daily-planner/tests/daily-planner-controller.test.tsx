@@ -81,7 +81,7 @@ describe('EditorDailyPlannerController', () => {
 		expect(button).not.toBeInTheDocument();
 	});
 
-	it('should not render the daily planner button if not within the same day', () => {
+	it('should not render the daily planner button if the event is recurrent', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
 		const editor = generateEditor({
