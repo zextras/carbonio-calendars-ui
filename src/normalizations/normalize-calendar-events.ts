@@ -51,14 +51,12 @@ const normalizeEventResource = ({
 	appt,
 	calendar,
 	inst,
-	invite,
-	iAmOrganizer
+	invite
 }: {
 	appt: Appointment;
 	calendar: Folder;
 	inst?: ExceptionReference;
 	invite?: Invite;
-	iAmOrganizer: boolean;
 }): EventResource => ({
 	id: appt.id,
 	inviteId: inst?.inviteId ?? appt.inviteId,
@@ -67,9 +65,9 @@ const normalizeEventResource = ({
 	calendar: getCalendarResource(calendar),
 	flags: appt.flags,
 	dur: inst?.dur ?? appt.dur,
-	iAmOrganizer,
-	iAmVisitor: !!(!iAmOrganizer && (calendar as LinkFolder)?.owner) ?? false, // todo: unused, can be removed
-	iAmAttendee: (!iAmOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
+	iAmOrganizer: appt.isOrg,
+	iAmVisitor: !!(!appt.isOrg && (calendar as LinkFolder)?.owner) ?? false, // todo: unused, can be removed
+	iAmAttendee: (!appt.isOrg && !(calendar as LinkFolder)?.owner) ?? false,
 	status: inst?.status ?? appt.status,
 	location: inst?.loc ?? appt.loc,
 	locationUrl: getLocationUrl(inst?.loc ?? appt.loc ?? ''),
@@ -132,7 +130,6 @@ export const normalizeCalendarEvent = ({
 		resourceId: calendar.id,
 		resource: normalizeEventResource({
 			appt: appointment,
-			iAmOrganizer: user?.name === appointment?.or?.a,
 			calendar,
 			inst: instance as ExceptionReference,
 			invite
