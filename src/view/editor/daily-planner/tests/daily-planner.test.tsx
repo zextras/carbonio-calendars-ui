@@ -8,6 +8,8 @@ import React from 'react';
 
 import { within } from '@testing-library/react';
 
+import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
 import { setupTest, screen } from '../../../../carbonio-ui-commons/test/test-setup';
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from '../constants';
@@ -137,8 +139,8 @@ describe('EditorDailyPlanner', () => {
 	});
 
 	it('should display People icon for organizer', async () => {
-		const freeBusyInterceptor = mockWorkingHoursResponse([]);
-		const workingHoursInterceptor = mockFreeBusyResponse([]);
+		const freeBusyInterceptor = mockFreeBusyResponse([]);
+		const workingHoursInterceptor = mockWorkingHoursResponse([]);
 
 		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
 		await freeBusyInterceptor;
@@ -148,5 +150,18 @@ describe('EditorDailyPlanner', () => {
 		const firstRow = within(timeTable).getByTestId('row-organizer@test.com');
 		const firstColumn = within(firstRow).getByTestId('column-0');
 		expect(within(firstColumn).getByTestId('icon: Person')).toBeVisible();
+	});
+
+	it('should display snackbar with error if working hours API fails', async () => {
+		const freeBusyInterceptor = mockFreeBusyResponse([]);
+		const failingInterceptor = createSoapAPIInterceptor(
+			'GetWorkingHours',
+			buildSoapErrorResponseBody()
+		);
+		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
+		await freeBusyInterceptor;
+		await failingInterceptor;
+		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
+		expect(errorSnackbar).toBeVisible();
 	});
 });

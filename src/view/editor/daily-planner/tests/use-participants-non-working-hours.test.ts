@@ -7,6 +7,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse } from 'msw';
 
+import { mockTranslation } from './mocks';
 import {
 	createAPIInterceptor,
 	createSoapAPIInterceptor
@@ -15,6 +16,16 @@ import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test
 import * as getNonWorkingHoursResponseHandler from '../../../../soap/get-non-working-hours-request';
 import { mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { useParticipantsNonWorkingHours } from '../use-participants-non-working-hours';
+
+jest.mock('@zextras/carbonio-design-system', () => ({
+	...jest.requireActual('@zextras/carbonio-design-system'),
+	useSnackbar: jest.fn().mockReturnValue(jest.fn())
+}));
+
+jest.mock('react-i18next', () => ({
+	...jest.requireActual('react-i18next'),
+	useTranslation: jest.fn().mockReturnValue([mockTranslation])
+}));
 
 describe('useParticipantsNonWorkingHours', () => {
 	it('should return an empty object if no availability', () => {

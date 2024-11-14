@@ -6,6 +6,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useSnackbar } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
+
 import { FreeBusy } from '../../../soap/get-free-busy-request';
 import { getNonWorkingHoursRequest } from '../../../soap/get-non-working-hours-request';
 
@@ -43,6 +46,8 @@ export function useParticipantsNonWorkingHours({
 	>({});
 	const previousValue = useRef<string>('');
 	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
+	const createSnackbar = useSnackbar();
+	const [t] = useTranslation();
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -70,12 +75,20 @@ export function useParticipantsNonWorkingHours({
 				.catch(() => {
 					setParticipantsNonWorkingHours({});
 					previousValue.current = '';
+					createSnackbar({
+						key: 'get-non-working-hours',
+						replace: false,
+						severity: 'error',
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000,
+						hideButton: true
+					});
 				});
 		}
 		return () => {
 			controller.abort();
 		};
-	}, [currentValue, endDateEpochMillis, participants, startDateEpochMillis]);
+	}, [createSnackbar, currentValue, endDateEpochMillis, participants, startDateEpochMillis, t]);
 
 	return participantsNonWorkingHours;
 }
