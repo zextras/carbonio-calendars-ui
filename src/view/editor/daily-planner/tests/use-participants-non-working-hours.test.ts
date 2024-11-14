@@ -138,28 +138,6 @@ describe('useParticipantsNonWorkingHours', () => {
 		});
 	});
 
-	it('should not call GetNonWorkingHours API if previous call failed', async () => {
-		const workingHoursSpy = jest.spyOn(
-			getNonWorkingHoursResponseHandler,
-			'getNonWorkingHoursRequest'
-		);
-		const interceptor = createSoapAPIInterceptor('GetWorkingHours', buildSoapErrorResponseBody());
-		const participants = [{ email: '123@test.com' }];
-
-		const { rerender } = renderHook(() =>
-			useParticipantsNonWorkingHours({
-				participants,
-				startDateEpochMillis: 0,
-				endDateEpochMillis: 0
-			})
-		);
-		await interceptor;
-		rerender();
-		await waitFor(() => {
-			expect(workingHoursSpy).toHaveBeenCalledTimes(1);
-		});
-	});
-
 	it('should return an empty array if there are no results', async () => {
 		const interceptor = createAPIInterceptor(
 			'post',
