@@ -6,9 +6,8 @@
 
 import React, { lazy, useEffect, Suspense, useMemo } from 'react';
 
-import { ModalManager } from '@zextras/carbonio-design-system';
+import { ModalManager, Spinner } from '@zextras/carbonio-design-system';
 import {
-	Spinner,
 	addRoute,
 	addSettingsView,
 	addSearchView,
@@ -57,7 +56,7 @@ const LazySearchView = lazy(
 );
 
 const CalendarView = (): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<Spinner color={'primary'} />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazyCalendarView />
@@ -67,7 +66,7 @@ const CalendarView = (): React.JSX.Element => (
 );
 
 const EditorView = (): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<Spinner color={'primary'} />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazyEditorView />
@@ -76,7 +75,7 @@ const EditorView = (): React.JSX.Element => (
 	</Suspense>
 );
 const SettingsView = (): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<Spinner color={'primary'} />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazySettingsView />
@@ -86,7 +85,7 @@ const SettingsView = (): React.JSX.Element => (
 );
 
 const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<Spinner color={'primary'} />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazySidebarView {...props} />{' '}
@@ -96,7 +95,7 @@ const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
 );
 
 const SearchView = (props: SearchViewProps): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<Spinner color={'primary'} />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazySearchView {...props} />{' '}
