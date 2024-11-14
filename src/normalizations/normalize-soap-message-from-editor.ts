@@ -28,16 +28,14 @@ type Participants = {
 	t: string;
 };
 
-const isEventSentFromOrganizer = (organizer: string, sender: { address: string }): boolean =>
-	organizer === sender.address;
+const isEventSentFromOrganizer = (organizer: string, sender: { email: string }): boolean =>
+	organizer === sender.email;
 
-const isTheSameIdentity = (
-	organizer: { identityName: string },
-	sender: { identityName: string }
-): boolean => organizer.identityName === sender.identityName;
+const isTheSameIdentity = (organizer: CalendarOrganizer, sender: CalendarSender): boolean =>
+	organizer.email === sender.email && organizer.fullName === sender.fullName;
 
-const isTheSameEmail = (organizer: string, sender: { address: string }): boolean =>
-	organizer === sender.address;
+const isTheSameEmail = (organizer: string, sender: { email: string }): boolean =>
+	organizer === sender.email;
 
 const setResourceDate = ({
 	time,
@@ -126,7 +124,7 @@ export const generateParticipantInformation = (resource: Editor): Array<Partial<
 
 	const sender = omitBy<Participants>(
 		{
-			a: resource?.sender?.address ?? resource?.sender?.label,
+			a: resource?.sender?.email ?? resource?.sender?.fullName,
 			p: resource?.sender?.fullName,
 			t: 's'
 		},
@@ -183,7 +181,7 @@ const getOrganizer = ({
 				{
 					email: user?.name,
 					name: organizer.fullName,
-					sentBy: isSameEmail ? undefined : sender.address
+					sentBy: isSameEmail ? undefined : sender.email
 				},
 				isNil
 			);
@@ -192,7 +190,7 @@ const getOrganizer = ({
 			{
 				email: user?.name,
 				name: sender.fullName,
-				sentBy: isSameEmail ? undefined : sender.address
+				sentBy: isSameEmail ? undefined : sender.email
 			},
 			isNil
 		);
@@ -205,7 +203,7 @@ const getOrganizer = ({
 	}
 	return {
 		email: calendar.owner,
-		sentBy: sender.address
+		sentBy: sender.email
 	};
 };
 

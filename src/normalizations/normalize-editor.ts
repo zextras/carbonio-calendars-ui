@@ -14,7 +14,7 @@ import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
-import { DateType } from '../types/event';
+import { DateType, EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -187,10 +187,14 @@ export const normalizeEditor = ({
 }: {
 	emptyEditor: Editor;
 	invite?: Invite;
-	event?: EventPropType;
+	event?: EventType;
 	context: any;
 }): Editor => {
 	if (event && invite) {
+		const organizer = {
+			email: event.resource.organizer?.email ?? '',
+			fullName: event.resource.organizer?.name
+		};
 		const isSeries = event?.resource?.isRecurrent;
 		const isInstance = context?.isInstance ?? !!event?.resource?.ridZ;
 		const isException = event?.resource?.isException ?? false;
@@ -228,6 +232,7 @@ export const normalizeEditor = ({
 				isInstance,
 				isSeries,
 				isException,
+				organizer,
 				exceptId: invite?.exceptId,
 				title: event?.title,
 				location: event?.resource?.location,

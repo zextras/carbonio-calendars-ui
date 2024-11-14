@@ -98,8 +98,8 @@ type DisabledField =
 	| 'equipment'
 	| 'meetingRoom';
 
-export type CalendarOrganizer = any;
-export type CalendarSender = any;
+export type CalendarOrganizer = { email: string; fullName?: string };
+export type CalendarSender = { email: string; fullName?: string };
 export type Editor = {
 	disabled: Partial<{
 		[k in DisabledField]: boolean;
@@ -117,8 +117,8 @@ export type Editor = {
 	attachmentFiles: any;
 	plainText: string;
 	richText: string;
-	organizer?: CalendarOrganizer;
-	sender?: CalendarSender;
+	organizer: CalendarOrganizer;
+	sender: CalendarSender;
 	title?: string;
 	location?: string;
 	meetingRoom?: Array<Resource> | undefined;
