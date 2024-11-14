@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { ErrorSoapBodyResponse, soapFetch } from '@zextras/carbonio-shell-ui';
 
 export type FreeBusy = {
 	s: number;
@@ -37,22 +37,27 @@ function normalizeResponse(response: GetWorkingHoursSoapResponse): GetNonWorking
 	return response.usr.map((user) => ({ email: user.id, nonWorkingHours: user.u }));
 }
 
-export const getNonWorkingHoursRequest = async ({
-	startEpochMillis,
-	endEpochMillis,
-	emails
-}: GetNonWorkingHoursRequest): Promise<GetNonWorkingHoursResponse> => {
-	const response = await soapFetch<GetWorkingHoursSoapRequest, GetWorkingHoursSoapResponse>(
+export async function getNonWorkingHoursRequest(
+	{ startEpochMillis, endEpochMillis, emails }: GetNonWorkingHoursRequest,
+	signal?: AbortSignal
+): Promise<GetNonWorkingHoursResponse> {
+	const response = await soapFetch<
+		GetWorkingHoursSoapRequest,
+		GetWorkingHoursSoapResponse | ErrorSoapBodyResponse
+	>(
 		'GetWorkingHours',
 		{
 			_jsns: 'urn:zimbraMail',
 			s: startEpochMillis,
 			e: endEpochMillis,
 			name: emails.join(',')
-		}
-	).catch((reason) => ({
-		usr: []
-	}));
+		},
+		undefined,
+		signal
+	);
+	if ('Fault' in response) {
+		throw new Error('Received a SOAP fault');
+	}
 	if (!response?.usr) return [];
 	return normalizeResponse(response);
-};
+}
