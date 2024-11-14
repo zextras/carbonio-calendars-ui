@@ -28,12 +28,10 @@ export type GetFreeBusyRequest = {
 	uid: string;
 	excludeUid?: string;
 };
-export const getFreeBusyRequest = async ({
-	s,
-	e,
-	uid,
-	excludeUid
-}: GetFreeBusyRequest): Promise<GetFreeBusyResponse> =>
+export const getFreeBusyRequest = async (
+	{ s, e, uid, excludeUid }: GetFreeBusyRequest,
+	signal?: AbortSignal
+): Promise<GetFreeBusyResponse> =>
 	soapFetch(
 		'GetFreeBusy',
 		omitBy(
@@ -45,5 +43,7 @@ export const getFreeBusyRequest = async ({
 				excludeUid
 			},
 			isNil
-		)
+		),
+		undefined,
+		signal
 	);

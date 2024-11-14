@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useSnackbar } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
@@ -54,39 +54,55 @@ export function useParticipantsAvailability({
 	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
-
 	const uids = participants.map((p) => p.email).join(',');
-	if (uids.length > 0 && previousValue.current !== currentValue) {
-		previousValue.current = currentValue;
-		const newAvailabilities: Record<string, ParticipantAvailability> = {};
-		getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids })
-			.then((response) => {
-				if ('Fault' in response) {
-					throw new Error('Error fetching free busy data');
-				}
-				response?.usr?.forEach((user) => {
-					newAvailabilities[user.id] = {
-						free: user.f?.map(mapFreeBusyToEvent) ?? [],
-						busy: user.b?.map(mapFreeBusyToEvent) ?? [],
-						tentative: user.t?.map(mapFreeBusyToEvent) ?? [],
-						outOfOffice: user.u?.map(mapFreeBusyToEvent) ?? [],
-						unknown: user.n?.map(mapFreeBusyToEvent) ?? []
-					};
+
+	useEffect(() => {
+		const controller = new AbortController();
+		const { signal } = controller;
+		if (uids.length > 0 && previousValue.current !== currentValue) {
+			previousValue.current = currentValue;
+			const newAvailabilities: Record<string, ParticipantAvailability> = {};
+			getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids }, signal)
+				.then((response) => {
+					if ('Fault' in response) {
+						throw new Error('Error fetching free busy data');
+					}
+					response?.usr?.forEach((user) => {
+						newAvailabilities[user.id] = {
+							free: user.f?.map(mapFreeBusyToEvent) ?? [],
+							busy: user.b?.map(mapFreeBusyToEvent) ?? [],
+							tentative: user.t?.map(mapFreeBusyToEvent) ?? [],
+							outOfOffice: user.u?.map(mapFreeBusyToEvent) ?? [],
+							unknown: user.n?.map(mapFreeBusyToEvent) ?? []
+						};
+					});
+					setParticipantsAvailability(newAvailabilities);
+				})
+				.catch(() => {
+					setParticipantsAvailability({});
+					createSnackbar({
+						key: 'get-non-working-hours',
+						replace: false,
+						severity: 'error',
+						label: t('label.error_try_again', 'Something went wrong, please try again'),
+						autoHideTimeout: 3000,
+						hideButton: true
+					});
 				});
-				setParticipantsAvailability(newAvailabilities);
-			})
-			.catch(() => {
-				setParticipantsAvailability({});
-				createSnackbar({
-					key: 'get-non-working-hours',
-					replace: false,
-					severity: 'error',
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
-					autoHideTimeout: 3000,
-					hideButton: true
-				});
-			});
-	}
+		}
+		return () => {
+			controller.abort();
+		};
+	}, [
+		participants,
+		startDateEpochMillis,
+		endDateEpochMillis,
+		participantsAvailability,
+		uids,
+		currentValue,
+		createSnackbar,
+		t
+	]);
 
 	return participantsAvailability;
 }
