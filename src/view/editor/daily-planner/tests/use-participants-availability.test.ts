@@ -7,6 +7,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse } from 'msw';
 
+import { mockTranslation } from './mocks';
 import { createAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import * as getFreeBusyResponseHandler from '../../../../soap/get-free-busy-request';
 import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
@@ -14,6 +15,16 @@ import {
 	ParticipantAvailability,
 	useParticipantsAvailability
 } from '../use-participants-availability';
+
+jest.mock('@zextras/carbonio-design-system', () => ({
+	...jest.requireActual('@zextras/carbonio-design-system'),
+	useSnackbar: jest.fn().mockReturnValue(jest.fn())
+}));
+
+jest.mock('react-i18next', () => ({
+	...jest.requireActual('react-i18next'),
+	useTranslation: jest.fn().mockReturnValue([mockTranslation])
+}));
 
 describe('useParticipantsAvailability', () => {
 	it('should return an empty object if no availability', () => {

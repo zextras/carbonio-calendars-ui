@@ -164,4 +164,17 @@ describe('EditorDailyPlanner', () => {
 		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
 		expect(errorSnackbar).toBeVisible();
 	});
+
+	it('should display snackbar with error if freebusy API fails', async () => {
+		const workingHoursInterceptor = mockWorkingHoursResponse([]);
+		const failingInterceptor = createSoapAPIInterceptor(
+			'GetFreeBusy',
+			buildSoapErrorResponseBody()
+		);
+		setupTest(<EditorDailyPlanner startDate={0} endDate={1} participants={participants} />);
+		await workingHoursInterceptor;
+		await failingInterceptor;
+		const errorSnackbar = await screen.findByText('Something went wrong, please try again');
+		expect(errorSnackbar).toBeVisible();
+	});
 });

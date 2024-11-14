@@ -6,6 +6,9 @@
 
 import { useRef, useState } from 'react';
 
+import { useSnackbar } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
+
 import { DailyPlannerParticipantType } from './types';
 import { FreeBusy, getFreeBusyRequest } from '../../../soap/get-free-busy-request';
 
@@ -49,12 +52,18 @@ export function useParticipantsAvailability({
 	>({});
 	const previousValue = useRef<string>('');
 	const currentValue = JSON.stringify({ participants, startDateEpochMillis, endDateEpochMillis });
+	const createSnackbar = useSnackbar();
+	const [t] = useTranslation();
+
 	const uids = participants.map((p) => p.email).join(',');
 	if (uids.length > 0 && previousValue.current !== currentValue) {
 		previousValue.current = currentValue;
 		const newAvailabilities: Record<string, ParticipantAvailability> = {};
-		getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids }).then(
-			(response) => {
+		getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids })
+			.then((response) => {
+				if ('Fault' in response) {
+					throw new Error('Error fetching free busy data');
+				}
 				response?.usr?.forEach((user) => {
 					newAvailabilities[user.id] = {
 						free: user.f?.map(mapFreeBusyToEvent) ?? [],
@@ -65,8 +74,17 @@ export function useParticipantsAvailability({
 					};
 				});
 				setParticipantsAvailability(newAvailabilities);
-			}
-		);
+			})
+			.catch(() => {
+				createSnackbar({
+					key: 'get-non-working-hours',
+					replace: false,
+					severity: 'error',
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			});
 	}
 
 	return participantsAvailability;
