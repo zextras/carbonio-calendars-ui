@@ -6,11 +6,12 @@
 
 import { HttpResponse } from 'msw';
 
-import { getSoapFault, mockWorkingHoursResponse } from './mocks';
+import { mockWorkingHoursResponse } from './mocks';
 import {
 	createAPIInterceptor,
 	createSoapAPIInterceptor
 } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '../../carbonio-ui-commons/test/mocks/utils/soap';
 import {
 	getNonWorkingHoursRequest,
 	GetNonWorkingHoursRequest
@@ -72,37 +73,28 @@ describe('getNonWorkingHoursRequest', () => {
 		]);
 	});
 
-	it('should return empty array when working hours API return 500', async () => {
+	it('should throw exception when working hours API return 500', async () => {
 		const request: GetNonWorkingHoursRequest = {
 			startEpochMillis: 1609459200,
 			endEpochMillis: 1609545600,
 			emails: ['user1@example.com', 'user2@example.com']
 		};
 
-		const interceptor = createAPIInterceptor(
-			'post',
-			'/service/soap/GetWorkingHoursRequest',
-			HttpResponse.error()
-		);
+		createAPIInterceptor('post', '/service/soap/GetWorkingHoursRequest', HttpResponse.error());
 
-		const response = await getNonWorkingHoursRequest(request);
-
-		await interceptor;
-		expect(response).toEqual([]);
+		await expect(getNonWorkingHoursRequest(request)).rejects.toThrow();
 	});
 
-	it('should return empty array when working hours API returns Soap Fault', async () => {
+	it('should throw an exception when working hours API returns Soap Fault', async () => {
 		const request: GetNonWorkingHoursRequest = {
 			startEpochMillis: 1609459200,
 			endEpochMillis: 1609545600,
 			emails: ['user1@example.com', 'user2@example.com']
 		};
 
-		const interceptor = createSoapAPIInterceptor('GetWorkingHours', getSoapFault());
+		const interceptor = createSoapAPIInterceptor('GetWorkingHours', buildSoapErrorResponseBody());
 
-		const response = await getNonWorkingHoursRequest(request);
-
+		await expect(getNonWorkingHoursRequest(request)).rejects.toThrow();
 		await interceptor;
-		expect(response).toEqual([]);
 	});
 });
