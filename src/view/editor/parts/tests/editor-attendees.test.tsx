@@ -110,6 +110,24 @@ describe('Editor Attendees', () => {
 	});
 
 	describe('Optional Attendees', () => {
+		it('should display optional attendees', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					optionalAttendees: [
+						{ email: 'email1@test.com', label: 'Optional Test 1' },
+						{ email: 'email1@test.com', label: 'Optional Test 2' }
+					]
+				}
+			});
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+			expect(screen.getByText('Optional Test 2')).toBeVisible();
+			expect(screen.getByText('Optional Test 1')).toBeVisible();
+		});
+
 		it('should not clear existing optional attendees after adding a new one', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
