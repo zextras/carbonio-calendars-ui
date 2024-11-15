@@ -23,7 +23,7 @@ import { CreateGroupComponent } from './custom-components/create-group-component
 import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
 import { SidebarAccordionMui } from './custom-components/sidebar-accordion-mui';
-import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
+import { FOLDER_VIEW, ROOT_NAME } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useInitializeFolders } from '../../carbonio-ui-commons/hooks/use-initialize-folders';
 import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
@@ -119,7 +119,7 @@ const useSidebarSortedFolders = (
 						(f as LinkFolder)?.broken === true
 				);
 
-				return calendarGroups && calendar && trash
+				return calendarGroups && calendar && trash && accountRoot.name === ROOT_NAME
 					? {
 							...accountRoot,
 							children: [
