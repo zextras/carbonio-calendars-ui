@@ -5,9 +5,17 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { Button, ChipInput, Container, Row, useSnackbar } from '@zextras/carbonio-design-system';
+import {
+	Button,
+	ChipInput,
+	ChipInputProps,
+	ChipItem,
+	Container,
+	Row,
+	useSnackbar
+} from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { find, map, reject, some } from 'lodash';
+import { find, map, reduce, reject, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
@@ -32,6 +40,7 @@ import {
 	editEditorAttendees,
 	editEditorOptionalAttendees
 } from '../../../store/slices/editor-slice';
+import { EditorChipAttendees } from '../../../types/store/invite';
 
 type EditorAttendeesProps = {
 	editorId: string;
@@ -94,34 +103,76 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			});
 	}, [createSnackbar, sender, t]);
 
-	const onChange = useCallback(
-		(value: any) => {
+	const isValueToAddAnObjectWithLabelType = (
+		arg: unknown
+	): arg is { label: string } & Partial<EditorChipAttendees> =>
+		!!arg && typeof arg === 'object' && 'label' in arg;
+
+	const onAdd = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
+		(valueToAdd): ChipItem<EditorChipAttendees> => {
+			if (valueToAdd) {
+				if (typeof valueToAdd === 'string') {
+					return { label: valueToAdd, value: { email: valueToAdd } };
+				}
+				if (isValueToAddAnObjectWithLabelType(valueToAdd)) {
+					return {
+						value: { ...valueToAdd, email: valueToAdd.email ?? valueToAdd.label },
+						...valueToAdd
+					};
+				}
+			}
+			throw new Error('invalid keywords received');
+		},
+		[]
+	);
+
+	const onChange = useCallback<(items: ChipItem<EditorChipAttendees>[]) => void>(
+		(chips) => {
+			const attendeesToSave = reduce(
+				chips,
+				(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
+				[] as Array<EditorChipAttendees>
+			);
 			dispatch(
 				editEditorAttendees({
 					id: editorId,
-					attendees: value
+					attendees: attendeesToSave
 				})
 			);
 		},
 		[dispatch, editorId]
 	);
 
-	const onOptionalsChange = useCallback(
-		(value: any) => {
-			dispatch(editEditorOptionalAttendees({ id: editorId, optionalAttendees: value }));
+	const onOptionalsChange = useCallback<
+		NonNullable<ChipInputProps<EditorChipAttendees>['onChange']>
+	>(
+		(chips) => {
+			const attendeesToSave = reduce(
+				chips,
+				(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
+				[] as Array<EditorChipAttendees>
+			);
+			if (attendeesToSave.length) {
+				dispatch(editEditorOptionalAttendees({ id: editorId, optionalAttendees: attendeesToSave }));
+			}
 		},
 		[dispatch, editorId]
 	);
 
-	const defaultValue = useMemo(() => {
+	const attendeesContactInputValues: ChipItem<EditorChipAttendees>[] = useMemo(() => {
 		if (attendees?.length > 0) {
-			return map(attendees, (chip) => {
-				const currentChipAvailability = find(attendeesAvailabilityList, ['email', chip.email]);
+			return map(attendees, (attendee) => {
+				const chipFromDs: ChipItem<EditorChipAttendees> = {
+					label: attendee.label ?? attendee.email,
+					value: attendee
+				};
+
+				const currentChipAvailability = find(attendeesAvailabilityList, ['email', attendee.email]);
 
 				const oldActions =
-					(chip.actions && !chip.error) || !chip.email
-						? reject(chip.actions, ['icon', 'EditOutline'])
-						: chip.actions;
+					(attendee.actions && !attendee.error) || !attendee.email
+						? reject(attendee.actions, ['icon', 'EditOutline'])
+						: attendee.actions;
 
 				if (currentChipAvailability) {
 					const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
@@ -149,12 +200,16 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								]
 							: oldActions;
 					return {
-						...chip,
-						error: !chip.email ? false : chip.error,
+						...chipFromDs,
+						error: !attendee.email ? false : attendee.error,
 						actions
 					};
 				}
-				return { ...chip, error: !chip.email ? false : chip.error, actions: oldActions };
+				return {
+					...chipFromDs,
+					error: !attendee.email ? false : attendee.error,
+					actions: oldActions
+				};
 			});
 		}
 		return [];
@@ -172,22 +227,22 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 					<Container background={'gray5'} style={{ overflow: 'hidden' }}>
 						{integrationAvailable ? (
 							<ContactInput
-								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-								// @ts-ignore
 								placeholder={t('label.attendees', 'Attendees')}
 								onChange={onChange}
-								defaultValue={defaultValue}
+								onAdd={onAdd}
+								defaultValue={attendeesContactInputValues}
 								disabled={disabled?.attendees}
 								dragAndDropEnabled
 								orderedAccountIds={orderedAccountIds}
 							/>
 						) : (
 							<ChipInput
-								placeholder={t('label.attendees', 'Attendees')}
 								data-testid={'attendees-chip-input'}
+								placeholder={t('label.attendees', 'Attendees')}
 								background={'gray5'}
 								onChange={onChange}
-								defaultValue={defaultValue}
+								onAdd={onAdd}
+								defaultValue={attendeesContactInputValues}
 								hasError={hasError}
 								description={hasError ? '' : undefined}
 								disabled={disabled?.attendees}
@@ -224,10 +279,9 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 					<AttendeesContainer>
 						{integrationAvailable ? (
 							<ContactInput
-								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-								// @ts-ignore
 								placeholder={t('label.optionals', 'Optionals')}
 								onChange={onOptionalsChange}
+								onAdd={onAdd}
 								defaultValue={optionalAttendees}
 								disabled={disabled?.optionalAttendees}
 								dragAndDropEnabled
@@ -238,6 +292,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.optionals', 'Optionals')}
 								background={'gray5'}
 								onChange={onOptionalsChange}
+								onAdd={onAdd}
 								defaultValue={optionalAttendees}
 								hasError={optionalHasError}
 								description={optionalHasError ? '' : undefined}
