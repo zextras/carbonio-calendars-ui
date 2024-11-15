@@ -12,6 +12,7 @@ import { combineReducers } from 'redux';
 
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
+import { mockFreeBusyResponse, mockGetShareInfo } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { EditorAttendees } from '../editor-attendees';
 
@@ -106,6 +107,45 @@ describe('Editor Attendees', () => {
 			expect(screen.getByText('email3@test.com')).toBeVisible();
 			expect(screen.getByText('Test 2')).toBeVisible();
 			expect(screen.getByText('Test 1')).toBeVisible();
+		});
+
+		it('should display attendee not available when already busy during current appointment', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const attendeeEmail = 'email1@test.com';
+			const appointmentStart = new Date(2024, 10, 1, 10, 30);
+			const appointmentEnd = new Date(2024, 10, 1, 12, 30);
+			const shareInfoInterceptor = mockGetShareInfo();
+			const freeBusyInterceptor = mockFreeBusyResponse([
+				{
+					id: attendeeEmail,
+					b: [
+						{
+							s: new Date(2024, 10, 1, 11, 0).getTime(),
+							e: new Date(2024, 10, 1, 11, 130).getTime()
+						}
+					]
+				}
+			]);
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					start: appointmentStart.getTime(),
+					end: appointmentEnd.getTime(),
+					attendees: [{ email: attendeeEmail }]
+				}
+			});
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+			await freeBusyInterceptor;
+			await shareInfoInterceptor;
+
+			expect(screen.getByText(attendeeEmail)).toBeVisible();
+			expect(
+				await screen.findByText(
+					'One or more attendees are not available at the selected time of the event'
+				)
+			).toBeVisible();
 		});
 	});
 
