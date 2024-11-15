@@ -23,7 +23,8 @@
 		"test:ci": "jest --testTimeout=10000 --maxWorkers=50%",
 		"test:dev": "jest --testTimeout=10000 --maxWorkers=2",
 		"test": "is-ci && npm run test:ci || npm run test:dev",
-		"build:dev": "sdk build --dev --pkgRel $(date +%s)"
+		"build:dev": "sdk build --dev --pkgRel $(date +%s)",
+		"dev-deploy": "sdk build && sdk deploy"
 	},
 	"keywords": [],
 	"author": "Zextras Crab Onions Team <https://www.zextras.com/carbonio/>",
@@ -84,7 +85,7 @@
 		"@types/webpack": "^5.28.2",
 		"@types/webpack-env": "^1.18.1",
 		"@zextras/carbonio-design-system": "^8.0.0",
-		"@zextras/carbonio-shell-ui": "8.0.3-devel.1729235939785",
+		"@zextras/carbonio-shell-ui": "devel",
 		"@zextras/carbonio-ui-preview": "^3.0.0",
 		"core-js": "^3.36.1",
 		"date-arithmetic": "^4.1.0",

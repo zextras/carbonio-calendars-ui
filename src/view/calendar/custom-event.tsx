@@ -59,7 +59,7 @@ const CustomEventTitle = ({
 	title: CustomEventProps['title'];
 	overflow?: 'ellipsis' | 'visible' | 'break-word';
 }): ReactElement => (
-	<Text size={'small'} color="currentColor" style={{ overflow }}>
+	<Text size={'small'} color="currentColor" style={{ overflow }} weight="bold">
 		{title}
 	</Text>
 );
