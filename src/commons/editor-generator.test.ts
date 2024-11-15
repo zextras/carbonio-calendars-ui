@@ -167,13 +167,8 @@ describe('Editor generator', () => {
 					}
 				],
 				organizer: {
-<<<<<<< HEAD
 					email: 'user.mail@mail.com',
 					fullName: 'user fullName'
-=======
-					email: 'francesco.gottardi@zextras.com',
-					fullName: 'Francesco Gottardi'
->>>>>>> 4b454df28cfe42fcdaebd0293030e87b5cce2eaf
 				},
 				title: 'Single istance',
 				location: 'Location',
