@@ -214,6 +214,11 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		}
 		return [];
 	}, [allDay, attendees, attendeesAvailabilityList, end, start, t]);
+	const optionalAttendeesContactInputValues: ChipItem<EditorChipAttendees>[] =
+		optionalAttendees.map((optionalAttendee) => ({
+			label: optionalAttendee.label ?? optionalAttendee.email,
+			value: optionalAttendee
+		}));
 
 	return (
 		<>
@@ -282,18 +287,19 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.optionals', 'Optionals')}
 								onChange={onOptionalsChange}
 								onAdd={onAdd}
-								defaultValue={optionalAttendees}
+								value={optionalAttendeesContactInputValues}
 								disabled={disabled?.optionalAttendees}
 								dragAndDropEnabled
 								orderedAccountIds={orderedAccountIds}
 							/>
 						) : (
 							<ChipInput
+								data-testid={'optional-attendees-chip-input'}
 								placeholder={t('label.optionals', 'Optionals')}
 								background={'gray5'}
 								onChange={onOptionalsChange}
 								onAdd={onAdd}
-								defaultValue={optionalAttendees}
+								value={optionalAttendeesContactInputValues}
 								hasError={optionalHasError}
 								description={optionalHasError ? '' : undefined}
 								disabled={disabled?.optionalAttendees}
