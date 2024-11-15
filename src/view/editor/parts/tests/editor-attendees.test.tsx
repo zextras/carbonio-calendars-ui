@@ -48,15 +48,14 @@ describe('Editor Attendees', () => {
 			}
 		});
 		const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-		const attendees = screen.getByText('Attendees');
+		const optionalsAttendeesInput = screen.getByText('Optionals');
 		const chipInput = await screen.findByTestId('attendees-chip-input');
 
 		await user.type(within(chipInput).getByRole('textbox'), 'email3@test.com');
-		await user.click(attendees);
+		await user.click(optionalsAttendeesInput);
 
-		expect(store.getState().editor.editors[editor.id].attendees).toHaveLength(3);
-		expect(screen.getByText('Test 1')).toBeVisible();
-		expect(screen.getByText('Test 2')).toBeVisible();
 		expect(screen.getByText('email3@test.com')).toBeVisible();
+		expect(screen.queryByText('Test 2')).not.toBeInTheDocument();
+		expect(screen.queryByText('Test 1')).not.toBeInTheDocument();
 	});
 });
