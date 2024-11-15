@@ -167,14 +167,14 @@ describe('Editor generator', () => {
 					}
 				],
 				organizer: {
-					email: 'francesco.gottardi@zextras.com',
-					fullName: 'Francesco Gottardi'
+					email: 'user.mail@mail.com',
+					fullName: 'user fullName'
 				},
 				title: 'Single istance',
 				location: 'Location',
 				room: {
 					label: 'Room name',
-					link: 'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'
+					link: 'https://room.link.com/meeting/meet-now/ZWFGRAOJ'
 				},
 				attendees: [],
 				optionalAttendees: [],
@@ -233,10 +233,7 @@ describe('Editor generator', () => {
 			expect(editor.location).toBe('Location');
 			expect(editor.room).toBeDefined();
 			expect(editor.room).toHaveProperty('label', 'Room name');
-			expect(editor.room).toHaveProperty(
-				'link',
-				'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'
-			);
+			expect(editor.room).toHaveProperty('link', 'https://room.link.com/meeting/meet-now/ZWFGRAOJ');
 			expect(editor.attendees).toStrictEqual([]);
 			expect(editor.optionalAttendees).toStrictEqual([]);
 			expect(editor.freeBusy).toBe('F');
