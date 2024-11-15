@@ -30,7 +30,7 @@ describe('Editor Attendees', () => {
 		expect(screen.getByText('email1@test.com')).toBeVisible();
 	});
 
-	it('should display attendee label in chip if available', () => {
+	it('should display attendee label in chip if label available', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
 		const editor = generateEditor({
@@ -62,7 +62,27 @@ describe('Editor Attendees', () => {
 		expect(screen.getByText('Test 2')).toBeVisible();
 	});
 
-	it('should add attendee to existing ones after typing in it', async () => {
+	it('should add a new attendee after typing in the contact input', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				attendees: []
+			}
+		});
+		const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
+		const optionalsAttendeesInput = screen.getByText('Optionals');
+		const chipInput = await screen.findByTestId('attendees-chip-input');
+
+		await user.type(within(chipInput).getByRole('textbox'), 'email3@test.com');
+		await user.click(optionalsAttendeesInput);
+
+		expect(screen.getByText('email3@test.com')).toBeVisible();
+	});
+
+	it('should not clear existing attendees after typing a new attendee in the contact input', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
 		const editor = generateEditor({
