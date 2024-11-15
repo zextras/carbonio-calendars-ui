@@ -163,8 +163,8 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		if (attendees?.length > 0) {
 			return map(attendees, (attendee) => {
 				const chipFromDs: ChipItem<EditorChipAttendees> = {
-					label: attendee.label ?? attendee.email
-					// value: attendee
+					label: attendee.label ?? attendee.email,
+					value: attendee
 				};
 
 				const currentChipAvailability = find(attendeesAvailabilityList, ['email', attendee.email]);

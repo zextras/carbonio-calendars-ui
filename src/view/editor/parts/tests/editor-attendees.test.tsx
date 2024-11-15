@@ -16,7 +16,35 @@ import { reducers } from '../../../../store/redux';
 import { EditorAttendees } from '../editor-attendees';
 
 describe('Editor Attendees', () => {
-	it('should display attendees', () => {
+	it('should display attendee email if attendee does not have a label', () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				attendees: [{ email: 'email1@test.com' }]
+			}
+		});
+		setupTest(<EditorAttendees editorId={editor.id} />, { store });
+		expect(screen.getByText('email1@test.com')).toBeVisible();
+	});
+
+	it('should display attendee label in chip if available', () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				attendees: [{ email: 'email1@test.com', label: 'Test 1' }]
+			}
+		});
+		setupTest(<EditorAttendees editorId={editor.id} />, { store });
+		expect(screen.getByText('Test 1')).toBeVisible();
+	});
+
+	it('should display multiple attendees', () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
 		const editor = generateEditor({
@@ -25,7 +53,7 @@ describe('Editor Attendees', () => {
 				folders: {},
 				attendees: [
 					{ email: 'email1@test.com', label: 'Test 1' },
-					{ email: 'email1@test.com', label: 'Test 2' }
+					{ email: 'email2@test.com', label: 'Test 2' }
 				]
 			}
 		});
@@ -55,7 +83,7 @@ describe('Editor Attendees', () => {
 		await user.click(optionalsAttendeesInput);
 
 		expect(screen.getByText('email3@test.com')).toBeVisible();
-		expect(screen.queryByText('Test 2')).not.toBeInTheDocument();
-		expect(screen.queryByText('Test 1')).not.toBeInTheDocument();
+		expect(screen.getByText('Test 2')).toBeVisible();
+		expect(screen.getByText('Test 1')).toBeVisible();
 	});
 });
