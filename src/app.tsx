@@ -4,24 +4,25 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { lazy, useEffect, Suspense, useMemo } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 
 import { ModalManager } from '@zextras/carbonio-design-system';
 import {
-	Spinner,
-	addRoute,
-	addSettingsView,
-	addSearchView,
+	ACTION_TYPES,
 	addBoardView,
+	addRoute,
+	addSearchView,
+	addSettingsView,
 	registerActions,
 	registerComponents,
-	ACTION_TYPES,
 	registerFunctions,
 	SearchViewProps,
 	SecondaryBarComponentProps,
+	Spinner,
 	NewAction
 } from '@zextras/carbonio-shell-ui';
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
+import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
@@ -33,8 +34,10 @@ import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 import InviteResponseComp from './shared/invite-response/invite-response';
+import { getCalendarGroupsRequest } from './soap/get-calendar-groups-request';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
+import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store';
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
@@ -89,7 +92,7 @@ const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
 			<ModalManager>
-				<LazySidebarView {...props} />{' '}
+				<LazySidebarView {...props} />
 			</ModalManager>
 		</StoreProvider>
 	</Suspense>
@@ -169,6 +172,16 @@ const AppRegistrations = (): null => {
 			component: InviteResponseComp
 		});
 	}, [calendars, dispatch, newAction]);
+
+	useEffect(() => {
+		getCalendarGroupsRequest().then((res) => {
+			const groups = map(res.group, (group) => ({
+				...group,
+				calendarId: group.calendarId?.map((x) => x._content) ?? []
+			}));
+			updateCalendarGroupsStore(groups);
+		});
+	}, []);
 
 	return null;
 };
