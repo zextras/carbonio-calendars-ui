@@ -230,7 +230,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.attendees', 'Attendees')}
 								onChange={onChange}
 								onAdd={onAdd}
-								defaultValue={attendeesContactInputValues}
+								value={attendeesContactInputValues}
 								disabled={disabled?.attendees}
 								dragAndDropEnabled
 								orderedAccountIds={orderedAccountIds}
