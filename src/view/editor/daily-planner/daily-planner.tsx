@@ -17,12 +17,12 @@ export const EditorDailyPlanner = ({
 	startDate,
 	endDate,
 	participants,
-	excludedAppointmentId
+	currentAppointmentAppointmentUid
 }: {
 	startDate: number;
 	endDate: number;
 	participants: Participant[];
-	excludedAppointmentId?: string;
+	currentAppointmentAppointmentUid?: string;
 }): React.JSX.Element => {
 	const startOfDay = atMidnight(new Date(startDate));
 	const endOfDay = onNextDay(startOfDay);
@@ -33,7 +33,7 @@ export const EditorDailyPlanner = ({
 		participants,
 		startDateEpochMillis,
 		endDateEpochMillis,
-		excludeAppointmentId: excludedAppointmentId
+		excludeAppointmentUid: currentAppointmentAppointmentUid
 	});
 
 	const participantWorkingHours = useParticipantsNonWorkingHours({

@@ -109,7 +109,7 @@ export const EditorDailyPlannerController = ({
 					startDate={startDate}
 					endDate={endDate}
 					participants={participants}
-					excludedAppointmentId={currentMeetingUid}
+					currentAppointmentAppointmentUid={currentMeetingUid}
 				/>
 			)}
 		</>

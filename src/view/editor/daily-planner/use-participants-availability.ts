@@ -42,12 +42,12 @@ export function useParticipantsAvailability({
 	participants,
 	startDateEpochMillis,
 	endDateEpochMillis,
-	excludeAppointmentId
+	excludeAppointmentUid
 }: {
 	participants: Array<{ email: string }>;
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
-	excludeAppointmentId?: string;
+	excludeAppointmentUid?: string;
 }): Record<string, ParticipantAvailability> {
 	const [participantsAvailability, setParticipantsAvailability] = useState<
 		Record<string, ParticipantAvailability>
@@ -69,7 +69,7 @@ export function useParticipantsAvailability({
 					s: startDateEpochMillis,
 					e: endDateEpochMillis,
 					uid: uids,
-					excludeUid: excludeAppointmentId
+					excludeUid: excludeAppointmentUid
 				},
 				signal
 			)
@@ -112,7 +112,7 @@ export function useParticipantsAvailability({
 		currentValue,
 		createSnackbar,
 		t,
-		excludeAppointmentId
+		excludeAppointmentUid
 	]);
 
 	return participantsAvailability;
