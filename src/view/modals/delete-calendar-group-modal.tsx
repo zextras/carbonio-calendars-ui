@@ -40,7 +40,7 @@ export const DeleteCalendarGroupModal: React.FC<DeleteCalendarGroupModalProps> =
 			.then(() => {
 				createSnackbar({
 					key: 'calendar-group-delete-success',
-					severity: 'error',
+					severity: 'success',
 					label: t('message.snackbar.group_deleted', 'Calendar group permanently deleted')
 				});
 				onClose();
