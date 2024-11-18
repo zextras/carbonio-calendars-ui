@@ -76,7 +76,7 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'info',
+					severity: 'info',
 					hideButton: true,
 					label: t('label.access_revoked', 'Access revoked'),
 					autoHideTimeout: 3000
@@ -85,7 +85,7 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'error',
+					severity: 'error',
 					hideButton: true,
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000

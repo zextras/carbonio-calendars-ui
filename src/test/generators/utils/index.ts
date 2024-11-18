@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { faker } from '@faker-js/faker';
+import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 
 import { createFakeIdentity } from '../../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import { IdentityItem } from '../../../types/editor';
@@ -143,6 +144,28 @@ const getInstanceEventFields = (context: any = {}): any => ({
 	ridZ: '20221215T083000Z',
 	...context
 });
+
+export function generateSoapErrorResponseBody({
+	code = faker.number.int().toString(),
+	detailCode = faker.word.noun().toUpperCase(),
+	reason = faker.word.preposition(),
+	trace = faker.word.preposition()
+}: {
+	code?: string;
+	detailCode?: string;
+	reason?: string;
+	trace?: string;
+} = {}): ErrorSoapBodyResponse {
+	return {
+		Fault: {
+			Detail: { Error: { Code: detailCode, Trace: trace } },
+			Reason: { Text: reason },
+			Code: {
+				Value: code
+			}
+		}
+	};
+}
 
 export default {
 	getRandomInRange,

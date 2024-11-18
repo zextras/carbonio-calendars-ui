@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useState } from 'react';
 
 import { Icon, IconButton, Row, Shimmer, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import { AppointmentCardContainer } from './appointment-card-container';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { getIsBusyAtTimeOfTheEvent } from '../../../view/editor/parts/editor-availability-warning-row';
 
-const RowContainer = ({ children }: JSX.ElementChildrenAttribute): JSX.Element => (
+const RowContainer = ({ children }: { children: ReactNode }): React.JSX.Element => (
 	<Row width="fill" mainAlignment="flex-start" padding={{ vertical: 'small' }}>
 		{children}
 	</Row>

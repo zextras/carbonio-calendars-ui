@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { Select, SelectItem } from '@zextras/carbonio-design-system';
+import { Select, SelectItem, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual, map } from 'lodash';
 
@@ -42,7 +42,7 @@ const WeekdaySelect = ({
 		[weekOptions, selection]
 	);
 
-	const onByDayChange = useCallback(
+	const onByDayChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
 			if (ev) {
 				const days = map(ev.split(','), (day) => ({ day }));

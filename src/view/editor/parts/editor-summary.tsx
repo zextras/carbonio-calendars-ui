@@ -70,19 +70,23 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 
 	const meetingRoomField = useMemo(() => {
-		if (meetingRoom && meetingRoom.length > 0) {
-			const res = map(meetingRoom, (roo) => roo.label);
-			return res.join(', ');
+		if (meetingRoom) {
+			if (meetingRoom.length > 0) {
+				const res = map(meetingRoom, (roo) => roo.label);
+				return res.join(', ');
+			}
 		}
-		return meetingRoom;
+		return '';
 	}, [meetingRoom]);
 
 	const equipmentsField = useMemo(() => {
-		if (equipments && equipments.length > 0) {
-			const res = map(equipments, (eq) => eq.label);
-			return res.join(', ');
+		if (equipments) {
+			if (equipments.length > 0) {
+				const res = map(equipments, (eq) => eq.label);
+				return res.join(', ');
+			}
 		}
-		return equipments;
+		return '';
 	}, [equipments]);
 
 	const virtualRoom = useMemo(() => room?.label, [room?.label]);

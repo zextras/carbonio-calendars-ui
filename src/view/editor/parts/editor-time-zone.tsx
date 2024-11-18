@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { Select } from '@zextras/carbonio-design-system';
+import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { usePrefs } from '../../../carbonio-ui-commons/utils/use-prefs';
@@ -48,7 +48,7 @@ export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement
 		return undefined;
 	});
 
-	const onChange = useCallback(
+	const onChange = useCallback<SingleSelectionOnChange>(
 		(item): void => {
 			if (item) {
 				const newTimezone = findLabel(timeZonesOptions, item);

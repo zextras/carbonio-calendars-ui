@@ -8,22 +8,23 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
-import { isEqual, isNil, omit, omitBy, size } from 'lodash';
-import moment from 'moment';
+import { isArray, isEqual, isNil, omit, omitBy, size } from 'lodash';
+import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
+import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_BOARD_ID } from '../constants';
+import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { StoreProvider } from '../store/redux';
 import { useAppDispatch } from '../store/redux/hooks';
 import { useCalendarDate, useIsSummaryViewOpen, useSetRange } from '../store/zustand/hooks';
 import { AppState, useAppStatusStore } from '../store/zustand/store';
-import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { AppointmentTypeHandlingModal } from '../view/calendar/appointment-type-handle-modal';
 import { ModifyStandardMessageModal } from '../view/modals/modify-standard-message-modal';
@@ -51,28 +52,58 @@ export const useCalendarComponentUtils = (): {
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const setRange = useSetRange();
 	const { action } = useParams<{
-		action: typeof EventActionsEnum.EXPAND | typeof EventActionsEnum.EDIT | undefined;
+		action: typeof EVENT_ACTIONS.EXPAND | typeof EVENT_ACTIONS.EDIT | undefined;
 	}>();
+	const { zimbraPrefDefaultCalendarId } = usePrefs();
 
 	useEffect(() => {
-		if (action && action !== EventActionsEnum.EXPAND) {
+		if (action && action !== EVENT_ACTIONS.EXPAND) {
 			replaceHistory('');
 		}
 	}, [action]);
 
-	const getStart = useCallback(({ isAllDay, dropStart, isSeries, inviteStart, eventStart }) => {
-		if (isAllDay) {
-			return dropStart.startOf('day').valueOf();
-		}
-		if (isSeries) {
-			const diff = dropStart.diff(eventStart);
-			return inviteStart.add(diff).valueOf();
-		}
-		return dropStart.valueOf();
-	}, []);
+	const getStart = useCallback(
+		({
+			isAllDay,
+			dropStart,
+			isSeries,
+			inviteStart,
+			eventStart
+		}: {
+			dropStart: Moment;
+			inviteStart: Moment;
+			eventStart: Moment;
+			isAllDay?: boolean;
+			isSeries?: boolean;
+		}) => {
+			if (isAllDay) {
+				return dropStart.startOf('day').valueOf();
+			}
+			if (isSeries) {
+				const diff = dropStart.diff(eventStart);
+				return inviteStart.add(diff).valueOf();
+			}
+			return dropStart.valueOf();
+		},
+		[]
+	);
 
 	const getEnd = useCallback(
-		({ isAllDay, dropEnd, isSeries, inviteEnd, eventEnd, eventAllDay }) => {
+		({
+			isAllDay,
+			dropEnd,
+			isSeries,
+			inviteEnd,
+			eventEnd,
+			eventAllDay
+		}: {
+			dropEnd: Moment;
+			inviteEnd: Moment;
+			eventEnd: Moment;
+			isAllDay?: boolean;
+			isSeries?: boolean;
+			eventAllDay: boolean;
+		}) => {
 			if (isAllDay || eventAllDay) {
 				return dropEnd.startOf('day').valueOf();
 			}
@@ -86,7 +117,19 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const onDropOrResizeFn = useCallback(
-		({ start, end, event, isAllDay, isSeries }) => {
+		({
+			start,
+			end,
+			event,
+			isAllDay,
+			isSeries
+		}: {
+			start: Date;
+			end: Date;
+			event: EventType;
+			isAllDay?: boolean;
+			isSeries?: boolean;
+		}) => {
 			dispatch(
 				getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ })
 			).then(({ payload }) => {
@@ -108,7 +151,7 @@ export const useCalendarComponentUtils = (): {
 							folders: calendarFolders,
 							start: startTime,
 							end: endTime,
-							allDay: !!isAllDay,
+							allDay: isAllDay,
 							panel: false
 						};
 						const editor = generateEditor({
@@ -131,7 +174,7 @@ export const useCalendarComponentUtils = (): {
 								createSnackbar({
 									key: `calendar-moved-root`,
 									replace: true,
-									type: success ? 'info' : 'warning',
+									severity: success ? 'info' : 'warning',
 									hideButton: true,
 									label: !success
 										? t('label.error_try_again', 'Something went wrong, please try again')
@@ -179,12 +222,29 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const onEventDropOrResize = useCallback(
-		({ start, end, event, isAllDay }) => {
+		({
+			start,
+			end,
+			event,
+			isAllDay,
+			resourceId
+		}: {
+			start: Date;
+			end: Date;
+			event: EventType;
+			isAllDay?: boolean;
+			resourceId?: string;
+		}) => {
+			const isDefaultCalendar = resourceId ? resourceId === zimbraPrefDefaultCalendarId : true;
+			if (!isDefaultCalendar) {
+				return;
+			}
+
 			if (isAllDay && event.resource.isRecurrent && !event.resource.isException) {
 				createSnackbar({
 					key: `recurrent-moved-in-allDay`,
 					replace: true,
-					type: 'warning',
+					severity: 'warning',
 					hideButton: true,
 					label: t(
 						'recurrent_in_allday',
@@ -195,7 +255,7 @@ export const useCalendarComponentUtils = (): {
 			} else if (
 				!isEqual(event.start, start) ||
 				!isEqual(event.end, end) ||
-				(event.allDay !== !!isAllDay && moment(event.start).day() === moment(event.end).day())
+				(event.allDay !== isAllDay && moment(event.start).day() === moment(event.end).day())
 			) {
 				const onEntireSeries = (): void => {
 					const seriesEvent = {
@@ -230,12 +290,14 @@ export const useCalendarComponentUtils = (): {
 				}
 			}
 		},
-		[closeModal, createModal, createSnackbar, onDropOrResizeFn, t]
+		[closeModal, createModal, createSnackbar, onDropOrResizeFn, t, zimbraPrefDefaultCalendarId]
 	);
 
 	const handleSelect = useCallback(
-		(e) => {
-			if (!summaryViewOpen && !action) {
+		(e: { resourceId?: string; end: Date; start: Date }) => {
+			const isDefaultCalendar = e.resourceId ? e.resourceId === zimbraPrefDefaultCalendarId : true;
+
+			if (!summaryViewOpen && !action && isDefaultCalendar) {
 				const isAllDay =
 					moment(e.end).hours() === moment(e.start).hours() &&
 					moment(e.end).minutes() === moment(e.start).minutes() &&
@@ -261,18 +323,20 @@ export const useCalendarComponentUtils = (): {
 				});
 			}
 		},
-		[action, calendarFolders, dispatch, summaryViewOpen]
+		[action, calendarFolders, dispatch, summaryViewOpen, zimbraPrefDefaultCalendarId]
 	);
 
 	const onRangeChange = useCallback(
-		(range) => {
-			if (range.length) {
-				const min = datesMin(...range);
-				const max = datesMax(...range);
-				setRange({
-					start: moment(min).startOf('day').valueOf(),
-					end: moment(max).endOf('day').valueOf()
-				});
+		(range: Array<Date> | { start: Date; end: Date }) => {
+			if (isArray(range)) {
+				if (range?.length) {
+					const min = datesMin(...range);
+					const max = datesMax(...range);
+					setRange({
+						start: moment(min).startOf('day').valueOf(),
+						end: moment(max).endOf('day').valueOf()
+					});
+				}
 			} else {
 				setRange({
 					start: moment(range.start).startOf('day').valueOf(),
@@ -284,7 +348,7 @@ export const useCalendarComponentUtils = (): {
 	);
 
 	const onNavigate = useCallback(
-		(newDate) => {
+		(newDate: Date) => {
 			useAppStatusStore.setState((s: AppState) => ({ ...s, date: newDate }));
 			return setDate(newDate);
 		},

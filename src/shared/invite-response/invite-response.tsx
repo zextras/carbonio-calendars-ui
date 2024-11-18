@@ -69,7 +69,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const rootAccountId = getRootAccountId(mailMsg.parent) ?? FOLDERS.USER_ROOT;
 	const root = useRoot(rootAccountId);
 	const email = useMemo(
-		() => (root?.name === ROOT_NAME ? account.name : root?.name ?? account.name),
+		() => (root?.name === ROOT_NAME ? account.name : (root?.name ?? account.name)),
 		[account.name, root?.name]
 	);
 	const isAttendee = useMemo(
@@ -135,10 +135,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 			middleName: ''
 		};
 
-		mailToContact(obj)
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			?.onClick?.();
+		mailToContact(obj)?.execute();
 	};
 
 	const localTimezone = useMemo(() => moment.tz.guess(), []);

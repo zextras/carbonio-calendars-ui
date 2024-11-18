@@ -62,7 +62,7 @@ export const SeriesEditWarningModal = ({
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
-						type: response ? 'info' : 'warning',
+						severity: response ? 'info' : 'warning',
 						hideButton: true,
 						label: !response
 							? t('label.error_try_again', 'Something went wrong, please try again')
@@ -80,7 +80,7 @@ export const SeriesEditWarningModal = ({
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
-						type: response ? 'info' : 'warning',
+						severity: response ? 'info' : 'warning',
 						hideButton: true,
 						label: !response
 							? t('label.error_try_again', 'Something went wrong, please try again')

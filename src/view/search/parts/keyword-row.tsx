@@ -3,34 +3,32 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback } from 'react';
+import React, { useCallback } from 'react';
 
-import { Container, ChipInput, ChipItem } from '@zextras/carbonio-design-system';
+import { Container, ChipInput, ChipItem, ChipInputProps } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
 type ComponentProps = {
-	compProps: {
-		otherKeywords: Array<any>;
-		setOtherKeywords: (arg: any) => void;
-	};
+	otherKeywords: Array<any>;
+	setOtherKeywords: (arg: any) => void;
 };
-const KeywordRow: FC<ComponentProps> = ({ compProps }): ReactElement => {
-	const { otherKeywords, setOtherKeywords } = compProps;
-	const onChange = useCallback((state, stateHandler) => {
-		stateHandler(state);
+const KeywordRow = ({ otherKeywords, setOtherKeywords }: ComponentProps): React.JSX.Element => {
+	const keywordChipOnAdd = useCallback<NonNullable<ChipInputProps['onAdd']>>((label) => {
+		if (typeof label === 'string') {
+			return {
+				label,
+				hasAvatar: false,
+				isGeneric: true
+			};
+		}
+		throw new Error('invalid keywords received');
 	}, []);
-	const keywordChipOnAdd = useCallback(
-		(label) => ({
-			label,
-			hasAvatar: false,
-			isGeneric: true
-		}),
-		[]
-	);
 
 	const keywordOnChange = useCallback(
-		(value: ChipItem[]): void => onChange(value, setOtherKeywords),
-		[onChange, setOtherKeywords]
+		(value: ChipItem[]): void => {
+			setOtherKeywords(value);
+		},
+		[setOtherKeywords]
 	);
 
 	return (
@@ -39,7 +37,7 @@ const KeywordRow: FC<ComponentProps> = ({ compProps }): ReactElement => {
 				<Container padding={{ right: 'extrasmall' }} maxWidth="100%">
 					<ChipInput
 						placeholder={t('label.keywords', 'Keywords')}
-						background="gray5"
+						background={'gray5'}
 						value={otherKeywords}
 						separators={[
 							{ key: 'Enter', ctrlKey: false },

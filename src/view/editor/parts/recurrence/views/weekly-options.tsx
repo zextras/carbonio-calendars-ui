@@ -127,7 +127,7 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 	const [radioValue, setRadioValue] = useState(() =>
 		radioInitialState(freq, interval, byday, workingSchedule)
 	);
-	const [inputValue, setInputValue] = useState<number | ''>(interval?.ival ?? 1);
+	const [inputValue, setInputValue] = useState<string>(`${interval?.ival ?? 1}`);
 	const [selectValue, setSelectValue] = useState(() => selectInitialValue(weekOptions, byday));
 	const [checkboxesValue, setCheckboxesValue] = useState(byday?.wkday ?? []);
 	const [startValue, setStartValue] = useState(() =>
@@ -135,7 +135,7 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 	);
 
 	const onByDayChange = useCallback(
-		(ev) => {
+		(ev: Array<{ day: string }>) => {
 			if (ev && radioValue === RADIO_VALUES.QUICK_OPTIONS) {
 				setStartValue((prevValue) => ({ ...(prevValue ?? {}), byday: { wkday: ev } }));
 			}
@@ -144,7 +144,7 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 	);
 
 	const onChange = useCallback(
-		(ev) => {
+		(ev?: string) => {
 			switch (ev) {
 				case RADIO_VALUES.QUICK_OPTIONS:
 					setStartValue({
@@ -155,7 +155,7 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 				case RADIO_VALUES.CUSTOM_OPTIONS:
 					setStartValue({
 						byday: { wkday: checkboxesValue },
-						interval: { ival: inputValue as number }
+						interval: { ival: parseInt(inputValue, 10) }
 					});
 					setRadioValue(ev);
 					break;
@@ -171,7 +171,7 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 	);
 
 	const onInputChange = useCallback(
-		(ev) => {
+		(ev: number) => {
 			if (radioValue === RADIO_VALUES.CUSTOM_OPTIONS) {
 				setStartValue((prevValue) => ({
 					...prevValue,
@@ -185,7 +185,7 @@ const WeeklyOptions = ({ editorId }: { editorId: string }): ReactElement | null 
 	);
 
 	const onCheckboxClick = useCallback(
-		(ev) => {
+		(ev: Array<{ day: string }>) => {
 			if (ev && radioValue === RADIO_VALUES.CUSTOM_OPTIONS) {
 				setStartValue((prevValue) => ({
 					...prevValue,

@@ -46,12 +46,14 @@ describe('calendar-actions-fn', () => {
 			});
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
-					type: 'info',
+					severity: 'info',
 					label: 'message.snackbar.calendar_moved_to_root_folder'
 				})
 			);
 		});
 		test('when the request fails, it creates an error snackbar', async () => {
+			// disable console.warn raised by soapFetch
+			jest.spyOn(console, 'warn').mockImplementation(jest.fn());
 			getSetupServer().use(
 				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
 					HttpResponse.json({
@@ -70,7 +72,7 @@ describe('calendar-actions-fn', () => {
 			});
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
-					type: 'error',
+					severity: 'error',
 					label: 'label.error_try_again'
 				})
 			);
@@ -112,12 +114,14 @@ describe('calendar-actions-fn', () => {
 			});
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
-					type: 'info',
+					severity: 'info',
 					label: 'message.snackbar.shared_calendar_removed'
 				})
 			);
 		});
 		test('when the request fails, it creates an error snackbar', async () => {
+			// disable console.warn raised by soapFetch
+			jest.spyOn(console, 'warn').mockImplementation(jest.fn());
 			getSetupServer().use(
 				http.post(FOLDER_ACTION_REQUEST_PATH, async () =>
 					HttpResponse.json({
@@ -136,7 +140,7 @@ describe('calendar-actions-fn', () => {
 			});
 			expect(createSnackbar).toHaveBeenCalledWith(
 				expect.objectContaining({
-					type: 'error',
+					severity: 'error',
 					label: 'label.error_try_again'
 				})
 			);

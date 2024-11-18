@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback } from 'react';
 
-import { Select } from '@zextras/carbonio-design-system';
+import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { differenceWith, find, isEqual } from 'lodash';
 
@@ -26,7 +26,7 @@ export const OrdinalNumberSelect = ({
 }: OrdinalNumberSelectProps): ReactElement => {
 	const { ordinalNumbers } = useRecurrenceItems();
 
-	const onBySetPosChange = useCallback(
+	const onBySetPosChange = useCallback<SingleSelectionOnChange>(
 		(ev) => {
 			if (ev) {
 				const selectedValue = ev?.split?.(',');

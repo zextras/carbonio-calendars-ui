@@ -44,7 +44,7 @@ configure({
 	asyncUtilTimeout: 2000
 });
 
-failOnConsole({ ...getFailOnConsoleDefaultConfig(), shouldFailOnWarn: false });
+failOnConsole({ ...getFailOnConsoleDefaultConfig() });
 
 beforeAll(() => {
 	const h = [

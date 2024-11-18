@@ -11,12 +11,12 @@ import { find, lowerCase, omit } from 'lodash';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import { CALENDAR_BOARD_ID, PANEL_VIEW } from '../constants';
+import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
 import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick, ActionsContext } from '../types/actions';
-import { EventActionsEnum } from '../types/enums/event-actions-enum';
 import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { getInstanceExceptionId } from '../utils/event';
@@ -249,14 +249,14 @@ export const openAppointment =
 		context?.onClose && context?.onClose();
 		if (context?.panelView === PANEL_VIEW.APP) {
 			const path = event.resource.ridZ
-				? `/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-				: `/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`;
+				? `/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				: `/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
 			replaceHistory(path);
 		}
 		if (context?.panelView === PANEL_VIEW.SEARCH) {
 			const path = event.resource.ridZ
-				? `/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-				: `/${EventActionsEnum.EXPAND}/${event.resource.id}`;
+				? `/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				: `/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
 			replaceHistory(path);
 		}
 	};
@@ -382,8 +382,7 @@ export const proposeNewTimeFn =
 					isProposeNewTime: true,
 					attendees: [
 						{
-							email: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email,
-							id: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email
+							email: event?.resource?.organizer?.email ?? event?.resource?.organizer?.email ?? ''
 						}
 					],
 					disabled: {

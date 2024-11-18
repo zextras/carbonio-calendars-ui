@@ -4,36 +4,40 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { lazy, useEffect, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 
 import { ModalManager } from '@zextras/carbonio-design-system';
 import {
-	Spinner,
-	addRoute,
-	addSettingsView,
-	addSearchView,
+	ACTION_TYPES,
 	addBoardView,
+	addRoute,
+	addSearchView,
+	addSettingsView,
 	registerActions,
 	registerComponents,
-	ACTION_TYPES,
 	registerFunctions,
 	SearchViewProps,
-	SecondaryBarComponentProps
+	SecondaryBarComponentProps,
+	Spinner,
+	NewAction
 } from '@zextras/carbonio-shell-ui';
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
+import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
-import { useFoldersController } from './carbonio-ui-commons/hooks/use-folders-controller';
+import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
 import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
+import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
 import InviteResponseComp from './shared/invite-response/invite-response';
+import { getCalendarGroupsRequest } from './soap/get-calendar-groups-request';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
-import { CalendarIntegrations } from './types/enums/event-actions-enum';
+import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store';
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
@@ -88,7 +92,7 @@ const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
 	<Suspense fallback={<Spinner />}>
 		<StoreProvider>
 			<ModalManager>
-				<LazySidebarView {...props} />{' '}
+				<LazySidebarView {...props} />
 			</ModalManager>
 		</StoreProvider>
 	</Suspense>
@@ -109,6 +113,8 @@ const AppRegistrations = (): null => {
 	const calendars = useFoldersMap();
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
+
+	useInitializeFolders(FOLDER_VIEW.appointment);
 
 	useEffect(() => {
 		const appLabel = t('label.app_name', 'Calendars');
@@ -138,21 +144,26 @@ const AppRegistrations = (): null => {
 		});
 	}, [t]);
 
+	const newAction = useMemo(
+		(): NewAction => ({
+			id: 'new-appointment',
+			label: t('label.new_appointment', 'New Appointment'),
+			icon: 'CalendarModOutline',
+			execute: onClickNewButton,
+			disabled: false,
+			group: CALENDAR_APP_ID,
+			primary: true
+		}),
+		[onClickNewButton, t]
+	);
+
 	useEffect(() => {
 		registerFunctions({
 			id: CalendarIntegrations.CREATE_APPOINTMENT,
 			fn: createAppointmentIntegration(dispatch, calendars) as AnyFunction
 		});
-		registerActions({
-			action: () => ({
-				id: 'new-appointment',
-				label: t('label.new_appointment', 'New Appointment'),
-				icon: 'CalendarModOutline',
-				onClick: onClickNewButton,
-				disabled: false,
-				group: CALENDAR_APP_ID,
-				primary: true
-			}),
+		registerActions<NewAction>({
+			action: () => newAction,
 			id: 'new-appointment',
 			type: ACTION_TYPES.NEW
 		});
@@ -160,13 +171,22 @@ const AppRegistrations = (): null => {
 			id: 'invites-reply',
 			component: InviteResponseComp
 		});
-	}, [calendars, dispatch, onClickNewButton, t]);
+	}, [calendars, dispatch, newAction]);
+
+	useEffect(() => {
+		getCalendarGroupsRequest().then((res) => {
+			const groups = map(res.group, (group) => ({
+				...group,
+				calendarId: group.calendarId?.map((x) => x._content) ?? []
+			}));
+			updateCalendarGroupsStore(groups);
+		});
+	}, []);
 
 	return null;
 };
 
 export default function App(): React.JSX.Element {
-	useFoldersController(FOLDER_VIEW.appointment);
 	return (
 		<StoreProvider>
 			<AppRegistrations />

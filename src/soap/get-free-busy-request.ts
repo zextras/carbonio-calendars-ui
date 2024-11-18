@@ -6,17 +6,32 @@
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 import { isNil, omitBy } from 'lodash';
 
-export const getFreeBusyRequest = async ({
-	s,
-	e,
-	uid,
-	excludeUid
-}: {
+export type FreeBusy = {
+	s: number;
+	e: number;
+};
+
+export type GetFreeBusyResponse = {
+	usr: Array<{
+		id: string;
+		f?: FreeBusy[];
+		b?: FreeBusy[];
+		t?: FreeBusy[];
+		u?: FreeBusy[];
+		n?: FreeBusy[];
+	}>;
+};
+
+export type GetFreeBusyRequest = {
 	s: number;
 	e: number;
 	uid: string;
 	excludeUid?: string;
-}): Promise<any> =>
+};
+export const getFreeBusyRequest = async (
+	{ s, e, uid, excludeUid }: GetFreeBusyRequest,
+	signal?: AbortSignal
+): Promise<GetFreeBusyResponse> =>
 	soapFetch(
 		'GetFreeBusy',
 		omitBy(
@@ -28,5 +43,7 @@ export const getFreeBusyRequest = async ({
 				excludeUid
 			},
 			isNil
-		)
+		),
+		undefined,
+		signal
 	);

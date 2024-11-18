@@ -86,7 +86,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 				createSnackbar({
 					key: `ordered-account-ids`,
 					replace: true,
-					type: 'error',
+					severity: 'error',
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000,
 					hideButton: true
@@ -95,7 +95,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	}, [createSnackbar, sender, t]);
 
 	const onChange = useCallback(
-		(value) => {
+		(value: any) => {
 			dispatch(
 				editEditorAttendees({
 					id: editorId,
@@ -107,7 +107,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	);
 
 	const onOptionalsChange = useCallback(
-		(value) => {
+		(value: any) => {
 			dispatch(editEditorOptionalAttendees({ id: editorId, optionalAttendees: value }));
 		},
 		[dispatch, editorId]

@@ -66,7 +66,8 @@ const getAttendees = (attendees: any[], role: string): any[] =>
 				label: at?.d,
 				lastName: undefined,
 				isGroup: at.isGroup,
-				exp: at.exp
+				exp: at.exp,
+				ptst: at?.ptst
 			},
 			isNil
 		)
@@ -203,11 +204,11 @@ export const normalizeEditor = ({
 		);
 
 		const plainText = invite?.textDescription?.[0]?._content
-			? extractBody(invite?.textDescription?.[0]?._content) ?? ''
+			? (extractBody(invite?.textDescription?.[0]?._content) ?? '')
 			: '';
 
 		const richText = invite?.htmlDescription?.[0]?._content
-			? extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? ''
+			? (extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '')
 			: '';
 
 		const folder =

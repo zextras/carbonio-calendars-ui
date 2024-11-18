@@ -12,7 +12,7 @@ import moment from 'moment';
 
 import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../carbonio-ui-commons/types/folder';
+import { Folder } from '../carbonio-ui-commons/types';
 import { ResFolder } from '../carbonio-ui-commons/utils';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { getFolderRequest } from '../soap/get-folder-request';
@@ -21,6 +21,7 @@ import { folderAction } from '../store/actions/calendar-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick } from '../types/actions';
 import { NewModal } from '../view/move/new-calendar-modal';
+import { CreateGroupModal } from '../view/sidebar/create-group-modal';
 import { DeleteModal } from '../view/sidebar/delete-modal';
 import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
 import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
@@ -57,6 +58,33 @@ export const newCalendar =
 		);
 	};
 
+export const createGroup =
+	({
+		createModal,
+		closeModal
+	}: {
+		createModal: CreateModalFn;
+		closeModal: CloseModalFn;
+	}): ((e?: ActionsClick) => void) =>
+	(e?: ActionsClick) => {
+		if (e) {
+			e.stopPropagation();
+		}
+		const modalId = 'create-group';
+		createModal(
+			{
+				id: modalId,
+				maxHeight: '90vh',
+				children: (
+					<StoreProvider>
+						<CreateGroupModal onClose={(): void => closeModal(modalId)} />
+					</StoreProvider>
+				)
+			},
+			true
+		);
+	};
+
 export const moveToRoot =
 	({
 		createSnackbar,
@@ -76,7 +104,7 @@ export const moveToRoot =
 					createSnackbar({
 						key: `calendar-moved-root`,
 						replace: true,
-						type: isTrashOrNestedInIt(item) ? 'success' : 'info',
+						severity: isTrashOrNestedInIt(item) ? 'success' : 'info',
 						hideButton: true,
 						label: isTrashOrNestedInIt(item)
 							? t('message.snackbar.calendar_restored', 'Calendar restored successfully')
@@ -90,7 +118,7 @@ export const moveToRoot =
 					createSnackbar({
 						key: `calendar-moved-root-error`,
 						replace: true,
-						type: 'error',
+						severity: 'error',
 						hideButton: true,
 						label: t('label.error_try_again', 'Something went wrong, please try again'),
 						autoHideTimeout: 3000
@@ -206,7 +234,7 @@ export const removeFromList =
 				createSnackbar({
 					key: `shared-calendar-removed`,
 					replace: true,
-					type: 'info',
+					severity: 'info',
 					hideButton: true,
 					label: t('message.snackbar.shared_calendar_removed', 'Calendar removed successfully'),
 					autoHideTimeout: 3000
@@ -215,7 +243,7 @@ export const removeFromList =
 				createSnackbar({
 					key: `shared-calendar-removed-error`,
 					replace: true,
-					type: 'error',
+					severity: 'error',
 					hideButton: true,
 					label: t('label.error_try_again', 'Something went wrong, please try again'),
 					autoHideTimeout: 3000

@@ -5,11 +5,15 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { Select } from '@zextras/carbonio-design-system';
-import { find, upperFirst } from 'lodash';
+import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
+import { find, map, upperFirst } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { useIdentityItems } from '../../../hooks/use-idenity-items';
+import {
+	getIdentitiesDescriptors,
+	getIdentityDescription
+} from '../../../carbonio-ui-commons/helpers/identities';
+import { IdentityDescriptor } from '../../../carbonio-ui-commons/types/identities';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectSender } from '../../../store/selectors/editor';
 import { editSender } from '../../../store/slices/editor-slice';
@@ -17,12 +21,24 @@ import { EditorProps } from '../../../types/editor';
 
 export const EditorOrganizer = ({ editorId }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
-	const identities = useIdentityItems();
 	const sender = useAppSelector(selectSender(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
+	const commonIdentities = useMemo<Array<IdentityDescriptor>>(() => getIdentitiesDescriptors(), []);
 
-	const onChange = useCallback(
+	const identities = map(commonIdentities, (item, idx) => {
+		const label = getIdentityDescription(item, t) ?? '';
+		return {
+			value: `${idx}`,
+			label,
+			address: item.fromAddress,
+			fullName: item.fromDisplay,
+			type: item.type,
+			identityName: item.identityName
+		};
+	});
+
+	const onChange = useCallback<SingleSelectionOnChange>(
 		(e) => {
 			const newValue = find(identities, ['value', e]) ?? sender;
 			dispatch(editSender({ id: editorId, sender: newValue }));

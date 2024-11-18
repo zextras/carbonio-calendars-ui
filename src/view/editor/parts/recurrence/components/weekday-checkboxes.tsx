@@ -28,7 +28,7 @@ export const WeekdayCheckboxes = ({
 	const { weekDays } = useRecurrenceItems();
 
 	const onCheckboxClick = useCallback(
-		(opt) => {
+		(opt: { value: string }) => {
 			const checkbox = find(value, { day: opt.value });
 			if (!checkbox) {
 				const newValue = [...value, { day: opt.value }];

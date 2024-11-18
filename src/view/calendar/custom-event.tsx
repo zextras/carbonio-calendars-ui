@@ -23,7 +23,6 @@ import {
 	Dropdown,
 	Popover,
 	useModal,
-	useSnackbar,
 	Padding
 } from '@zextras/carbonio-design-system';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
@@ -35,11 +34,11 @@ import styled from 'styled-components';
 
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { TagIconComponent } from '../../commons/tag-icon-component';
+import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { StoreProvider } from '../../store/redux';
 import { useSummaryView } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
-import { EventActionsEnum } from '../../types/enums/event-actions-enum';
 import { EventType } from '../../types/event';
 import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 
@@ -60,7 +59,7 @@ const CustomEventTitle = ({
 	title: CustomEventProps['title'];
 	overflow?: 'ellipsis' | 'visible' | 'break-word';
 }): ReactElement => (
-	<Text color="currentColor" style={{ overflow }} weight="bold">
+	<Text size={'small'} color="currentColor" style={{ overflow }} weight="bold">
 		{title}
 	</Text>
 );
@@ -96,7 +95,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const { createModal, closeModal } = useModal();
 	const anchorRef = useRef(null);
 	const { action } = useParams<{ action: string }>();
-	const createSnackbar = useSnackbar();
 	const summaryViewId = useSummaryView();
 	const [t] = useTranslation();
 	const [isOuterTooltipDisabled, setIsOuterTooltipDisabled] = useState(false);
@@ -108,28 +106,17 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	);
 
 	const onEntireSeries = useCallback((): void => {
-		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}`
-		);
+		replaceHistory(`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`);
 	}, [event.resource.calendar.id, event.resource.id]);
 
 	const onSingleInstance = useCallback((): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
 
 	const showPanelView = useCallback(() => {
-		if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
-			createSnackbar({
-				key: `private_appointment`,
-				replace: true,
-				type: 'info',
-				label: t('label.appointment_is_private', 'The appointment is private.'),
-				autoHideTimeout: 3000,
-				hideButton: true
-			});
-		} else if (event?.resource?.isRecurrent) {
+		if (event?.resource?.isRecurrent) {
 			const modalId = 'modify-recurrent-appointment';
 			createModal(
 				{
@@ -149,27 +136,18 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 			);
 		} else {
 			replaceHistory(
-				`/${event.resource.calendar.id}/${EventActionsEnum.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
-	}, [event, createSnackbar, t, createModal, onEntireSeries, onSingleInstance, closeModal]);
+	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal]);
 
 	const toggleOpen = useCallback(
-		(e): void => {
-			if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
-				createSnackbar({
-					key: `private_appointment`,
-					replace: true,
-					type: 'info',
-					label: t('label.appointment_is_private', 'The appointment is private.'),
-					autoHideTimeout: 3000,
-					hideButton: true
-				});
-			} else if (e.detail === 1 && (action === EventActionsEnum.EXPAND || isNil(action))) {
+		(e: React.MouseEvent): void => {
+			if (e.detail === 1 && (action === EVENT_ACTIONS.EXPAND || isNil(action))) {
 				useAppStatusStore.setState({ summaryViewId: event.id });
 			}
 		},
-		[event?.resource?.class, event?.haveWriteAccess, event.id, action, createSnackbar, t]
+		[event.id, action]
 	);
 
 	const onClose = useCallback(() => {
@@ -207,7 +185,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				placement="top"
 				disabled={event.resource.class === 'PRI' || isOuterTooltipDisabled}
 			>
-				<Container height="100%" data-testid="calendar-event" style={{ padding: '0.15rem 0.5rem' }}>
+				<Container
+					height="100%"
+					data-testid="calendar-event"
+					style={{ padding: '0.15rem 0.25rem' }}
+				>
 					<Dropdown
 						contextMenu
 						width="cal(min(100%,12.5rem))"
@@ -297,7 +279,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												>
 													<Text
 														color="currentColor"
-														weight="medium"
+														size={'small'}
 														style={{
 															overflow: textOverflow
 														}}
@@ -307,7 +289,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 														)}`}
 													</Text>
 													<Padding left="small" />
-													{eventDiff <= 15 && (
+													{eventDiff <= 29 && (
 														<>
 															{event.resource.isRecurrent && (
 																<CustomEventIcon
@@ -329,7 +311,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 									<TagIconComponent event={event} disableOuterTooltip={setIsOuterTooltipDisabled} />
 								</Row>
 							</Container>
-							{eventDiff >= 15 && event.resource.class !== 'PRI' && !event.allDay && (
+							{eventDiff >= 30 && event.resource.class !== 'PRI' && !event.allDay && (
 								<>
 									<Padding top="extrasmall" />
 									<Row wrap="nowrap">

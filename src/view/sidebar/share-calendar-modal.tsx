@@ -15,6 +15,7 @@ import {
 	Padding,
 	Row,
 	Select,
+	SingleSelectionOnChange,
 	Text,
 	Tooltip,
 	useSnackbar
@@ -36,6 +37,7 @@ import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { ShareCalendarModalProps } from '../../types/share-calendar';
+import { FolderAction } from '../../types/soap/soap-actions';
 
 type SharePrivateCheckboxProps = {
 	allowToSeePrvtAppt: boolean;
@@ -108,7 +110,7 @@ const UserShare = ({
 
 	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
 
-	const [shareWithUserRole, setshareWithUserRole] = useState('r');
+	const [shareWithUserRole, setshareWithUserRole] = useState<string | null>('r');
 	const [sendNotification, setSendNotification] = useState(true);
 	const [standardMessage, setStandardMessage] = useState('');
 	const [contacts, setContacts] = useState<Contacts>([]);
@@ -121,13 +123,13 @@ const UserShare = ({
 	);
 
 	const onContactInputChange = useCallback(
-		(ev) => {
+		(ev: Contacts) => {
 			setContacts(ev);
 		},
 		[setContacts]
 	);
 
-	const onShareRoleChange = useCallback(
+	const onShareRoleChange = useCallback<SingleSelectionOnChange<string | null>>(
 		(shareRole) => {
 			setshareWithUserRole(shareRole);
 		},
@@ -135,19 +137,28 @@ const UserShare = ({
 	);
 
 	const onConfirm = useCallback((): void => {
-		const granted = map(contacts, (contact) => ({
-			gt: SHARE_USER_TYPE.USER,
-			inh: '1',
-			d: contact.email,
-			perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
-			pw: ''
+		const folderActionArr: FolderAction[] = map(contacts, (contact) => ({
+			id: folderId,
+			op: FOLDER_OPERATIONS.GRANT,
+			grant: [
+				{
+					gt: SHARE_USER_TYPE.USER,
+					inh: '1',
+					d: contact.email,
+					perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
+					pw: ''
+				}
+			]
 		}));
-		folderAction({ id: folderId, op: FOLDER_OPERATIONS.GRANT, grant: granted }).then((res) => {
+
+		const folderActionToSend = folderActionArr.length > 1 ? folderActionArr : folderActionArr[0];
+
+		folderAction(folderActionToSend).then((res) => {
 			if (!res.Fault) {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'success',
+					severity: 'success',
 					hideButton: true,
 					label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
 					autoHideTimeout: 3000
@@ -168,7 +179,7 @@ const UserShare = ({
 							createSnackbar({
 								key: `folder-action-failed`,
 								replace: true,
-								type: 'error',
+								severity: 'error',
 								hideButton: true,
 								label: t('label.error_try_again', 'Something went wrong, please try again'),
 								autoHideTimeout: 3000
@@ -203,8 +214,6 @@ const UserShare = ({
 			>
 				{integrationAvailable ? (
 					<ContactInput
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
 						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
 						onChange={onContactInputChange}
 						background={'gray5'}
@@ -330,7 +339,7 @@ const PublicShare = ({
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,
-					type: 'success',
+					severity: 'success',
 					hideButton: true,
 					label: t('snackbar.share_folder_success', 'Calendar shared successfully'),
 					autoHideTimeout: 3000
@@ -361,11 +370,11 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const [t] = useTranslation();
 	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(), []);
 
-	const [shareWithUserType, setShareWithUserType] = useState(SHARE_USER_TYPE.USER);
+	const [shareWithUserType, setShareWithUserType] = useState<'usr' | null>(SHARE_USER_TYPE.USER);
 
 	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
 
-	const onShareWithChange = useCallback((shareWith) => {
+	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr' | null>>((shareWith) => {
 		setShareWithUserType(shareWith);
 	}, []);
 

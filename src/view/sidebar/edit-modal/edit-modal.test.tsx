@@ -640,6 +640,8 @@ describe('the edit calendar modal is composed by', () => {
 					});
 				});
 				test('if the user changes all of the above it will trigger all the operations in a batch', async () => {
+					// disable console.warn raised by soapFetch
+					jest.spyOn(console, 'warn').mockImplementation(jest.fn());
 					const spy = jest.spyOn(BatchAction, 'batchRequest');
 
 					const closeFn = jest.fn();

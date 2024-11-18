@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Input } from '@zextras/carbonio-design-system';
 import { useBoardHooks } from '@zextras/carbonio-shell-ui';
@@ -47,7 +47,7 @@ export const EditorTitle = ({ editorId }: { editorId: string }): ReactElement | 
 	);
 
 	const onChange = useCallback(
-		(e) => {
+		(e: ChangeEvent<HTMLInputElement>) => {
 			setValue(e.target.value);
 			debounceInput(e.target.value);
 		},

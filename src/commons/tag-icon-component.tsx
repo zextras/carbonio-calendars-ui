@@ -16,7 +16,7 @@ import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-d
 import { Tag, useTags } from '@zextras/carbonio-shell-ui';
 import { includes, reduce } from 'lodash';
 
-import { ZIMBRA_STANDARD_COLORS } from '../carbonio-ui-commons/constants/utils';
+import { ZIMBRA_STANDARD_COLORS } from '../carbonio-ui-commons/constants';
 import { EventType } from '../types/event';
 import { useTagExist } from '../view/tags/tag-actions';
 
@@ -33,7 +33,7 @@ export const TagIconComponent = ({
 	disableOuterTooltip: Dispatch<SetStateAction<boolean>>;
 }): React.JSX.Element => {
 	const [showDropdown, setShowDropdown] = useState(false);
-	const onIconClick = useCallback((ev) => {
+	const onIconClick = useCallback((ev: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
 		ev.stopPropagation();
 		setShowDropdown((o) => !o);
 	}, []);

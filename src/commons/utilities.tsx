@@ -24,6 +24,7 @@ import { folderAction } from '../store/actions/calendar-actions';
 import { getMiniCal } from '../store/actions/get-mini-cal';
 import { searchAppointments } from '../store/actions/search-appointments';
 import { AppDispatch } from '../store/redux';
+import { SidebarFolder } from '../types/accordions';
 import { ReminderItem } from '../types/appointment-reminder';
 
 const FileExtensionRegex = /^.+\.([^.]+)$/;
@@ -355,7 +356,7 @@ export const getFolderIconColor = (f: Folder): string => {
 	if (f?.color) {
 		return Number(f.color) < 10
 			? CALENDARS_STANDARD_COLORS[Number(f.color)].color
-			: f?.rgb ?? CALENDARS_STANDARD_COLORS[0].color;
+			: (f?.rgb ?? CALENDARS_STANDARD_COLORS[0].color);
 	}
 	return CALENDARS_STANDARD_COLORS[0].color;
 };
@@ -393,7 +394,7 @@ export function recursiveToggleCheck({
 	end,
 	query
 }: RecursiveToggleCheckProps): void {
-	const foldersToToggleIds: Array<string> = checkAllChildren([folder], checked);
+	const foldersToToggleIds = checkAllChildren([folder], checked);
 
 	const op = checked ? FOLDER_OPERATIONS.UNCHECK : FOLDER_OPERATIONS.CHECK;
 	const actions = map(foldersToToggleIds, (id) => ({
@@ -421,8 +422,15 @@ export function recursiveToggleCheck({
 	});
 }
 
-export const getFolderIcon = ({ item, checked }: { item: Folder; checked: boolean }): string => {
-	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME)) return '';
+export const getFolderIcon = ({
+	item,
+	checked
+}: {
+	item: SidebarFolder;
+	checked: boolean;
+}): string => {
+	if (item.id === FOLDERS.USER_ROOT || (item.isLink && item.oname === ROOT_NAME) || item.noIcon)
+		return '';
 	if (hasId(item, FOLDERS.TRASH)) return checked ? 'Trash2' : 'Trash2Outline';
 	if (hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)) return checked ? 'Calendar2' : 'CalendarOutline';
 	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';

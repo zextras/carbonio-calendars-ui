@@ -7,7 +7,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
 import { AvailabilityChecker } from './availability-checker';
@@ -86,9 +86,11 @@ describe('availability checker component', () => {
 					/>
 				);
 
-				await waitFor(() => {
-					expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
 				});
+
+				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const appointment = screen.getByTestId(/icon: Appointment/i);
 
 				expect(appointment).toBeVisible();
@@ -117,9 +119,12 @@ describe('availability checker component', () => {
 						rootId={'1'}
 					/>
 				);
-				await waitFor(() => {
-					expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
 				});
+
+				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const greenIcon = screen.getByTestId(/icon: Appointment/i);
 
 				expect(greenIcon).toHaveStyleRule('color', '#8bc34a');
@@ -148,9 +153,12 @@ describe('availability checker component', () => {
 						rootId={'1'}
 					/>
 				);
-				await waitFor(() => {
-					expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
 				});
+
+				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const string = screen.getByText(/You are available/i);
 
 				expect(string).toBeVisible();
@@ -185,9 +193,11 @@ describe('availability checker component', () => {
 					/>
 				);
 
-				await waitFor(() => {
-					expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
 				});
+
+				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const calendarWarning = screen.getByTestId(/icon: CalendarWarning/i);
 
 				expect(calendarWarning).toBeVisible();
@@ -220,9 +230,11 @@ describe('availability checker component', () => {
 					/>
 				);
 
-				await waitFor(() => {
-					expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
 				});
+
+				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const calendarWarning = screen.getByTestId(/icon: CalendarWarning/i);
 
 				expect(calendarWarning).toHaveStyleRule('color', '#ffc107');
@@ -255,9 +267,12 @@ describe('availability checker component', () => {
 						rootId={'1'}
 					/>
 				);
-				await waitFor(() => {
-					expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+
+				await act(async () => {
+					await jest.advanceTimersToNextTimerAsync();
 				});
+
+				expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 				const string = screen.getByText(/Check your availability/i);
 
 				expect(string).toBeVisible();
@@ -291,9 +306,11 @@ describe('availability checker component', () => {
 						/>
 					);
 
-					await waitFor(() => {
-						expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+					await act(async () => {
+						await jest.advanceTimersToNextTimerAsync();
 					});
+
+					expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 					const chevronDownOutline = screen.getByTestId(/icon: ChevronDownOutline/i);
 
 					expect(chevronDownOutline).toBeVisible();
@@ -327,9 +344,11 @@ describe('availability checker component', () => {
 							{ store }
 						);
 
-						await waitFor(() => {
-							expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
 						});
+
+						expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
 						const chevronDownOutline = screen.getByTestId(/icon: ChevronDownOutline/i);
 
 						await user.click(chevronDownOutline);
@@ -366,9 +385,12 @@ describe('availability checker component', () => {
 							{ store }
 						);
 
-						await waitFor(() => {
-							expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+						await act(async () => {
+							await jest.advanceTimersToNextTimerAsync();
 						});
+
+						expect(getFreeBusyHandler).toHaveBeenCalledTimes(1);
+
 						const chevronDownOutline = screen.getByTestId(/icon: ChevronDownOutline/i);
 
 						await user.click(chevronDownOutline);
