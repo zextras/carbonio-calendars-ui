@@ -16,11 +16,13 @@ import { atMidnight, mapFreeBusyToDailyPlannerRow, onNextDay } from './utils';
 export const EditorDailyPlanner = ({
 	startDate,
 	endDate,
-	participants
+	participants,
+	excludedAppointmentId
 }: {
 	startDate: number;
 	endDate: number;
 	participants: Participant[];
+	excludedAppointmentId?: string;
 }): React.JSX.Element => {
 	const startOfDay = atMidnight(new Date(startDate));
 	const endOfDay = onNextDay(startOfDay);
@@ -30,7 +32,8 @@ export const EditorDailyPlanner = ({
 	const participantAvailabilities = useParticipantsAvailability({
 		participants,
 		startDateEpochMillis,
-		endDateEpochMillis
+		endDateEpochMillis,
+		excludeAppointmentId: excludedAppointmentId
 	});
 
 	const participantWorkingHours = useParticipantsNonWorkingHours({

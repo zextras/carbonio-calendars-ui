@@ -41,11 +41,13 @@ function mapFreeBusyToEvent(freeBusy: FreeBusy): Event {
 export function useParticipantsAvailability({
 	participants,
 	startDateEpochMillis,
-	endDateEpochMillis
+	endDateEpochMillis,
+	excludeAppointmentId
 }: {
 	participants: Array<{ email: string }>;
 	startDateEpochMillis: number;
 	endDateEpochMillis: number;
+	excludeAppointmentId?: string;
 }): Record<string, ParticipantAvailability> {
 	const [participantsAvailability, setParticipantsAvailability] = useState<
 		Record<string, ParticipantAvailability>
@@ -62,7 +64,15 @@ export function useParticipantsAvailability({
 		if (uids.length > 0 && previousValue.current !== currentValue) {
 			previousValue.current = currentValue;
 			const newAvailabilities: Record<string, ParticipantAvailability> = {};
-			getFreeBusyRequest({ s: startDateEpochMillis, e: endDateEpochMillis, uid: uids }, signal)
+			getFreeBusyRequest(
+				{
+					s: startDateEpochMillis,
+					e: endDateEpochMillis,
+					uid: uids,
+					excludeUid: excludeAppointmentId
+				},
+				signal
+			)
 				.then((response) => {
 					if ('Fault' in response) {
 						throw new Error('Error fetching free busy data');
@@ -101,7 +111,8 @@ export function useParticipantsAvailability({
 		uids,
 		currentValue,
 		createSnackbar,
-		t
+		t,
+		excludeAppointmentId
 	]);
 
 	return participantsAvailability;
