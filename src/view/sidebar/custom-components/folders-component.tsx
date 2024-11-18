@@ -406,7 +406,7 @@ const RootAccount = ({ item }: { item: Folder }): React.JSX.Element => {
 		() =>
 			({
 				...item,
-				label: displayName,
+				label: item.name === ROOT_NAME ? displayName : item.name,
 				icon: getFolderIcon({ item, checked: !!item.checked }),
 				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
 				textProps: { size: 'small' }
