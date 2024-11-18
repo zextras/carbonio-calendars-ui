@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.12.0...v1.13.0) (2024-11-18)
+
+
+### Features
+
+* [CO-1077] calendar daily planner ([#511](https://github.com/zextras/carbonio-calendars-ui/issues/511)) ([38ab6aa](https://github.com/zextras/carbonio-calendars-ui/commit/38ab6aa64e806933c3dc319351a7f56f1afcc5a0))
+* [CO-1341] forward appointment action ([#490](https://github.com/zextras/carbonio-calendars-ui/issues/490)) ([63d23fb](https://github.com/zextras/carbonio-calendars-ui/commit/63d23fbe2b68b7c2995a625a694f6b1d81cd8b76))
+* [CO-1528] Add support for previewing attachments using preview service ([#505](https://github.com/zextras/carbonio-calendars-ui/issues/505)) ([355188a](https://github.com/zextras/carbonio-calendars-ui/commit/355188a4704c99be371b0d7650182e6ebb6cf546))
+* add the possibility to split the day view by calendars ([#500](https://github.com/zextras/carbonio-calendars-ui/issues/500)) ([d823500](https://github.com/zextras/carbonio-calendars-ui/commit/d823500ad4eaf13af23227cc5e8bbf34358e6ea3))
+* allow user to show hide groups of calendars ([16b9f85](https://github.com/zextras/carbonio-calendars-ui/commit/16b9f8547368975f1dac5b98fb4133e835e1c21e))
+* get location from extensions ([#513](https://github.com/zextras/carbonio-calendars-ui/issues/513)) ([ec091a0](https://github.com/zextras/carbonio-calendars-ui/commit/ec091a0175edb2e047f01a8b4901d7bfe15f053f))
+* integrate wsc virtual room field on calendar module  ([#507](https://github.com/zextras/carbonio-calendars-ui/issues/507)) ([c6812b9](https://github.com/zextras/carbonio-calendars-ui/commit/c6812b9f2d90780e398b3073bf7b6f3d992d3d14))
+* update calendar dependency and fixing style ([#504](https://github.com/zextras/carbonio-calendars-ui/issues/504)) ([4a51e14](https://github.com/zextras/carbonio-calendars-ui/commit/4a51e147a0f91d3755980beb2658e75cdcfb61c7))
+* upgrade react to v18 ([#506](https://github.com/zextras/carbonio-calendars-ui/issues/506)) ([8aeab23](https://github.com/zextras/carbonio-calendars-ui/commit/8aeab236e6b15afe3a44091347e5f28593f05d0e))
+
+
+### Bug Fixes
+
+* [CO-1315] avoid API call loop in case folder request fails ([#486](https://github.com/zextras/carbonio-calendars-ui/issues/486)) ([d6a853a](https://github.com/zextras/carbonio-calendars-ui/commit/d6a853af25d3cd0b54ac48f84a42b983f1e388f1))
+* add bold to appointment cards title ([be67d5b](https://github.com/zextras/carbonio-calendars-ui/commit/be67d5b6349a1df0732837b18446e7f578b200e9))
+* applying calendar groups only for primary accounts ([f7a148a](https://github.com/zextras/carbonio-calendars-ui/commit/f7a148a013819c1696136da197421c14083c0179))
+* invoke useInitializeFolders with the correct view ([#487](https://github.com/zextras/carbonio-calendars-ui/issues/487)) ([fff158d](https://github.com/zextras/carbonio-calendars-ui/commit/fff158d60ae38df7c414f8e03794f133637ad6a8))
+* linter complaints ([e14e359](https://github.com/zextras/carbonio-calendars-ui/commit/e14e3590d3800d16d3fad67ccb5d2d5f76a3e279))
+* move folders initialization to app.tsx ([#497](https://github.com/zextras/carbonio-calendars-ui/issues/497)) ([e956f61](https://github.com/zextras/carbonio-calendars-ui/commit/e956f619f4d8be46efc8560c1caa485963af7f9e))
+* rename eventActionsEnum to EVENT_ACTIONS ([#493](https://github.com/zextras/carbonio-calendars-ui/issues/493)) ([090ad93](https://github.com/zextras/carbonio-calendars-ui/commit/090ad931b377ebe24627a3c46e64ad68fc08853b))
+* render correct label text ([013ed52](https://github.com/zextras/carbonio-calendars-ui/commit/013ed52f511221b28bad0f78d8f1c5fe7340e385))
+* render correct label text for calendar groups section ([847250d](https://github.com/zextras/carbonio-calendars-ui/commit/847250d27a52a5d6a8ae8ce617d9a0acfe5bda23))
+* reviewed texts for tooltips ([#502](https://github.com/zextras/carbonio-calendars-ui/issues/502)) ([018896c](https://github.com/zextras/carbonio-calendars-ui/commit/018896cf16dca0547ef9f22e1b606e51c763cb6d))
+* sharing calendar to multiple user ([c9913a0](https://github.com/zextras/carbonio-calendars-ui/commit/c9913a09376b5d74258fc6e12e42bde664da9090))
+* show title in private appointments when available ([e1721d9](https://github.com/zextras/carbonio-calendars-ui/commit/e1721d9e504203b6815fc9ffa3c6541438ee6c2a))
+
 ## [1.12.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.11.4...v1.12.0) (2024-08-26)
 
 
