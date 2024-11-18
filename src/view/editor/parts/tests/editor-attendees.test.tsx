@@ -152,7 +152,6 @@ describe('Editor Attendees', () => {
 	describe('Optional Attendees', () => {
 		it('should display optional attendees', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -163,7 +162,9 @@ describe('Editor Attendees', () => {
 					]
 				}
 			});
+
 			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
 			expect(screen.getByText('Optional Test 2')).toBeVisible();
 			expect(screen.getByText('Optional Test 1')).toBeVisible();
 		});
@@ -191,6 +192,35 @@ describe('Editor Attendees', () => {
 			expect(await screen.findByText('email3@test.com')).toBeInTheDocument();
 			expect(screen.getByText('Test 2')).toBeVisible();
 			expect(screen.getByText('Test 1')).toBeVisible();
+		});
+
+		it('should display optional attendee label in chip if label available', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					optionalAttendees: [{ email: 'email1@test.com', label: 'Test 1' }]
+				}
+			});
+
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+			expect(screen.getByText('Test 1')).toBeVisible();
+		});
+
+		it('should display optional attendee email in chip if label not available', () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					optionalAttendees: [{ email: 'email1@test.com' }]
+				}
+			});
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+			expect(screen.getByText('email1@test.com')).toBeVisible();
 		});
 	});
 });
