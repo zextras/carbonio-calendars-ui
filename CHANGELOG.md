@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.13.0...v1.13.1) (2024-11-19)
+
+
+### Bug Fixes
+
+* [CO-1665] exclude current appointment from daily planner ([#524](https://github.com/zextras/carbonio-calendars-ui/issues/524)) ([9444a42](https://github.com/zextras/carbonio-calendars-ui/commit/9444a421241e6a21154c6e7c12d51808634e00ac))
+
 ## [1.13.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.12.0...v1.13.0) (2024-11-18)
 
 
