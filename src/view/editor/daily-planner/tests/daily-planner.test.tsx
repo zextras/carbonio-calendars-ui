@@ -165,7 +165,7 @@ describe('EditorDailyPlanner', () => {
 		expect(errorSnackbar).toBeVisible();
 	});
 
-	it('should display snackbar with error if freebusy API fails', async () => {
+	it('should display snackbar with error if FreeBusy API fails', async () => {
 		const workingHoursInterceptor = mockWorkingHoursResponse([]);
 		const failingInterceptor = createSoapAPIInterceptor(
 			'GetFreeBusy',
