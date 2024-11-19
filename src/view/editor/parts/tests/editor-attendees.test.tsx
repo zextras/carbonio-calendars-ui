@@ -4,19 +4,75 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, within } from '@testing-library/react';
+import * as shellUi from '@zextras/carbonio-shell-ui';
 import { combineReducers } from 'redux';
 
+import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { mockFreeBusyResponse, mockGetShareInfo } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { EditorAttendees } from '../editor-attendees';
 
+const spyOnAddReturnValue = jest.fn();
+
+const StringOnAddContactInput = (props: Record<string, any>): React.JSX.Element => {
+	useEffect(() => {
+		spyOnAddReturnValue(props.onAdd('test static'));
+	}, [props]);
+
+	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
+};
+
 describe('Editor Attendees', () => {
+	beforeEach(() => {
+		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([StringOnAddContactInput, false]);
+	});
+
+	it('should display error snackbar when failing to get account ids', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const shareInfoInterceptor = createSoapAPIInterceptor(
+			'GetShareInfo',
+			buildSoapErrorResponseBody()
+		);
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {}
+			}
+		});
+		setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+		await shareInfoInterceptor;
+		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
+	});
+
+	it('should use string value as label and email onAdd() receives a string', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([StringOnAddContactInput, true]);
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				start: 100,
+				end: 200,
+				attendees: []
+			}
+		});
+
+		setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+		expect(spyOnAddReturnValue).toHaveBeenCalledWith({
+			label: 'test static',
+			value: { email: 'test static' }
+		});
+	});
+
 	describe('Attendees', () => {
 		it('should display attendee email if attendee does not have a label', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
