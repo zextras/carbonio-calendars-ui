@@ -21,13 +21,13 @@ import { EditorAttendees } from '../editor-attendees';
 
 const spyOnAddReturnValue = jest.fn();
 
-const StringOnAddContactInput = (props: Record<string, any>): React.JSX.Element => {
+function ContactInput(props: Record<string, any>): React.JSX.Element {
 	useEffect(() => {
-		spyOnAddReturnValue(props.onAdd('test static'));
+		spyOnAddReturnValue(props.onAdd({ label: 'testZextras', email: 'test@zextras.it' }));
 	}, [props]);
 
 	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
-};
+}
 
 const EmptyOnAddContactInput = (props: Record<string, any>): React.JSX.Element => {
 	useEffect(() => {
@@ -39,7 +39,7 @@ const EmptyOnAddContactInput = (props: Record<string, any>): React.JSX.Element =
 
 describe('Editor Attendees', () => {
 	beforeEach(() => {
-		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([StringOnAddContactInput, false]);
+		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, false]);
 	});
 
 	it('should display error snackbar when failing to get account ids', async () => {
@@ -60,9 +60,9 @@ describe('Editor Attendees', () => {
 		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
 	});
 
-	it('should use string value as label and email onAdd() receives a string', async () => {
+	it('should handle values from Contact - label email', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([StringOnAddContactInput, true]);
+		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
 		const editor = generateEditor({
 			context: {
 				dispatch: store.dispatch,
@@ -76,8 +76,8 @@ describe('Editor Attendees', () => {
 		setupTest(<EditorAttendees editorId={editor.id} />, { store });
 
 		expect(spyOnAddReturnValue).toHaveBeenCalledWith({
-			label: 'test static',
-			value: { email: 'test static' }
+			label: 'testZextras',
+			value: { label: 'testZextras', email: 'test@zextras.it' }
 		});
 	});
 
@@ -177,7 +177,7 @@ describe('Editor Attendees', () => {
 					folders: {},
 					attendees: [
 						{ email: 'email1@test.com', label: 'Test 1' },
-						{ email: 'email1@test.com', label: 'Test 2' }
+						{ email: 'email2@test.com', label: 'Test 2' }
 					]
 				}
 			});

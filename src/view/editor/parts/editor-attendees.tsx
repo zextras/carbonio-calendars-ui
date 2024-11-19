@@ -15,7 +15,7 @@ import {
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { find, map, reduce, reject, some } from 'lodash';
+import { find, map, reduce, reject, some, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
@@ -103,21 +103,19 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			});
 	}, [createSnackbar, sender, t]);
 
-	const isValueToAddAnObjectWithLabelType = (
-		arg: unknown
-	): arg is { label: string } & Partial<EditorChipAttendees> =>
-		!!arg && typeof arg === 'object' && 'label' in arg;
+	const isValueToAddAContact = (arg: unknown): arg is { label: string; email: string } =>
+		!!arg && typeof arg === 'object' && 'label' in arg && 'email' in arg;
 
-	const onAdd = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
+	const onAddContactInput = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
 		(valueToAdd): ChipItem<EditorChipAttendees> => {
 			if (valueToAdd) {
 				if (typeof valueToAdd === 'string') {
 					return { label: valueToAdd, value: { email: valueToAdd } };
 				}
-				if (isValueToAddAnObjectWithLabelType(valueToAdd)) {
+				if (isValueToAddAContact(valueToAdd)) {
 					return {
-						value: { ...valueToAdd, email: valueToAdd.email ?? valueToAdd.label },
-						...valueToAdd
+						value: { ...valueToAdd },
+						label: valueToAdd.label
 					};
 				}
 			}
@@ -126,12 +124,25 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		[]
 	);
 
+	const onAddChipInput = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
+		(valueToAdd): ChipItem<EditorChipAttendees> => {
+			if (valueToAdd && typeof valueToAdd === 'string') {
+				return { label: valueToAdd, value: { email: valueToAdd } };
+			}
+			throw new Error('invalid keywords received');
+		},
+		[]
+	);
+
 	const onChange = useCallback<(items: ChipItem<EditorChipAttendees>[]) => void>(
 		(chips) => {
-			const attendeesToSave = reduce(
-				chips,
-				(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
-				[] as Array<EditorChipAttendees>
+			const attendeesToSave = uniqBy(
+				reduce(
+					chips,
+					(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
+					[] as Array<EditorChipAttendees>
+				),
+				'email'
 			);
 			dispatch(
 				editEditorAttendees({
@@ -234,7 +245,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							<ContactInput
 								placeholder={t('label.attendees', 'Attendees')}
 								onChange={onChange}
-								onAdd={onAdd}
+								onAdd={onAddContactInput}
 								value={attendeesContactInputValues}
 								disabled={disabled?.attendees}
 								dragAndDropEnabled
@@ -246,7 +257,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.attendees', 'Attendees')}
 								background={'gray5'}
 								onChange={onChange}
-								onAdd={onAdd}
+								onAdd={onAddChipInput}
 								value={attendeesContactInputValues}
 								hasError={hasError}
 								description={hasError ? '' : undefined}
@@ -286,7 +297,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							<ContactInput
 								placeholder={t('label.optionals', 'Optionals')}
 								onChange={onOptionalsChange}
-								onAdd={onAdd}
+								onAdd={onAddContactInput}
 								value={optionalAttendeesContactInputValues}
 								disabled={disabled?.optionalAttendees}
 								dragAndDropEnabled
@@ -298,7 +309,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.optionals', 'Optionals')}
 								background={'gray5'}
 								onChange={onOptionalsChange}
-								onAdd={onAdd}
+								onAdd={onAddChipInput}
 								value={optionalAttendeesContactInputValues}
 								hasError={optionalHasError}
 								description={optionalHasError ? '' : undefined}
