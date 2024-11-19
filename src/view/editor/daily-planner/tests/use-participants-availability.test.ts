@@ -90,7 +90,8 @@ describe('useParticipantsAvailability', () => {
 			useParticipantsAvailability({
 				participants,
 				startDateEpochMillis: 1000,
-				endDateEpochMillis: 2000
+				endDateEpochMillis: 2000,
+				excludeAppointmentUid: '123'
 			})
 		);
 
@@ -98,6 +99,22 @@ describe('useParticipantsAvailability', () => {
 		expect(request.s).toBe(1000);
 		expect(request.e).toBe(2000);
 		expect(request.uid).toBe('test@test.com');
+		expect(request.excludeUid).toBe('123');
+	});
+
+	it('should omit excludeUid from GetFreeBusy when exclude value not provided', async () => {
+		const mockRequest = mockFreeBusyResponse([]);
+
+		renderHook(() =>
+			useParticipantsAvailability({
+				participants: [{ email: 'aaa@test.com' }],
+				startDateEpochMillis: 1000,
+				endDateEpochMillis: 2000
+			})
+		);
+
+		const request = await mockRequest;
+		expect(request.excludeUid).toBeUndefined();
 	});
 
 	it('should not call GetFreeBusy API if no participants', async () => {
