@@ -114,7 +114,7 @@ describe('useParticipantsAvailability', () => {
 		);
 
 		const request = await mockRequest;
-		expect('excludeUid' in request).toEqual(false);
+		expect(request.excludeUid).toBeUndefined();
 	});
 
 	it('should not call GetFreeBusy API if no participants', async () => {
