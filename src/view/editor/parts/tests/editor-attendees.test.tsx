@@ -7,7 +7,7 @@
 import React, { useEffect } from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import * as shellUi from '@zextras/carbonio-shell-ui';
 import { combineReducers } from 'redux';
 
@@ -24,6 +24,14 @@ const spyOnAddReturnValue = jest.fn();
 const StringOnAddContactInput = (props: Record<string, any>): React.JSX.Element => {
 	useEffect(() => {
 		spyOnAddReturnValue(props.onAdd('test static'));
+	}, [props]);
+
+	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
+};
+
+const EmptyOnAddContactInput = (props: Record<string, any>): React.JSX.Element => {
+	useEffect(() => {
+		props.onAdd({});
 	}, [props]);
 
 	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
@@ -70,6 +78,26 @@ describe('Editor Attendees', () => {
 		expect(spyOnAddReturnValue).toHaveBeenCalledWith({
 			label: 'test static',
 			value: { email: 'test static' }
+		});
+	});
+
+	it('should throw when onAdd() receives an empty object', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([EmptyOnAddContactInput, true]);
+		jest.spyOn(console, 'error').mockImplementation(() => jest.fn());
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				start: 100,
+				end: 200
+			}
+		});
+
+		await waitFor(() => {
+			expect(() => setupTest(<EditorAttendees editorId={editor.id} />, { store })).toThrow(
+				'invalid keywords received'
+			);
 		});
 	});
 
