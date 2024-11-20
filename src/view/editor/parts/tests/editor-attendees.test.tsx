@@ -29,6 +29,14 @@ function ContactInput(props: Record<string, any>): React.JSX.Element {
 	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
 }
 
+function StringContactInput(props: Record<string, any>): React.JSX.Element {
+	useEffect(() => {
+		spyOnAddReturnValue(props.onAdd('external@externalDomain.com'));
+	}, [props]);
+
+	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
+}
+
 const EmptyOnAddContactInput = (props: Record<string, any>): React.JSX.Element => {
 	useEffect(() => {
 		props.onAdd({});
@@ -60,7 +68,7 @@ describe('Editor Attendees', () => {
 		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
 	});
 
-	it('should handle values from Contact - label email', async () => {
+	it('should handle values received from Contacts integration', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
 		const editor = generateEditor({
@@ -78,6 +86,26 @@ describe('Editor Attendees', () => {
 		expect(spyOnAddReturnValue).toHaveBeenCalledWith({
 			label: 'testZextras',
 			value: { label: 'testZextras', email: 'test@zextras.it' }
+		});
+	});
+
+	it('should handle string values received from Contacts integration', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([StringContactInput, true]);
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				start: 100,
+				end: 200
+			}
+		});
+
+		setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+		expect(spyOnAddReturnValue).toHaveBeenCalledWith({
+			label: 'external@externalDomain.com',
+			value: { email: 'external@externalDomain.com', label: 'external@externalDomain.com' }
 		});
 	});
 

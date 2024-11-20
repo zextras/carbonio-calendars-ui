@@ -110,7 +110,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		(valueToAdd): ChipItem<EditorChipAttendees> => {
 			if (valueToAdd) {
 				if (typeof valueToAdd === 'string') {
-					return { label: valueToAdd, value: { email: valueToAdd } };
+					return { label: valueToAdd, value: { email: valueToAdd, label: valueToAdd } };
 				}
 				if (isValueToAddAContact(valueToAdd)) {
 					return {
