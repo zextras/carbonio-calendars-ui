@@ -122,26 +122,26 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			});
 	}, [createSnackbar, sender, t]);
 
-	const isValueToAddAContact = (arg: unknown): arg is { label: string; email: string } =>
-		!!arg && typeof arg === 'object' && 'label' in arg && 'email' in arg;
+	// const isValueToAddAContact = (arg: unknown): arg is { label: string; email: string } =>
+	// 	!!arg && typeof arg === 'object' && 'label' in arg && 'email' in arg;
 
-	const onAddContactInput = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
-		(valueToAdd): ChipItem<EditorChipAttendees> => {
-			if (valueToAdd) {
-				if (typeof valueToAdd === 'string') {
-					return { label: valueToAdd, value: { email: valueToAdd, label: valueToAdd } };
-				}
-				if (isValueToAddAContact(valueToAdd)) {
-					return {
-						value: { ...valueToAdd },
-						label: valueToAdd.label
-					};
-				}
-			}
-			throw new Error('invalid keywords received');
-		},
-		[]
-	);
+	// const onAddContactInput = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
+	// 	(valueToAdd): ChipItem<EditorChipAttendees> => {
+	// 		if (valueToAdd) {
+	// 			if (typeof valueToAdd === 'string') {
+	// 				return { label: valueToAdd, value: { email: valueToAdd, label: valueToAdd } };
+	// 			}
+	// 			if (isValueToAddAContact(valueToAdd)) {
+	// 				return {
+	// 					value: { ...valueToAdd },
+	// 					label: valueToAdd.label
+	// 				};
+	// 			}
+	// 		}
+	// 		throw new Error('invalid keywords received');
+	// 	},
+	// 	[]
+	// );
 
 	const onAddChipInput = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
 		(valueToAdd): ChipItem<EditorChipAttendees> => {
@@ -226,11 +226,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const attendeesContactInputValues: Array<ContactInputItem> = useMemo(() => {
 		if (attendees?.length > 0) {
 			return map(attendees, (attendee) => {
-				const labelAndEmail = {
-					label: attendee.label ?? attendee.email,
-					email: attendee.email
-				};
-
 				const currentChipAvailability = find(attendeesAvailabilityList, ['email', attendee.email]);
 
 				const currentContactInput = contactsState[attendee.email];
@@ -265,13 +260,13 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								]
 							: oldActions;
 					return {
-						...labelAndEmail,
+						...currentContactInput,
 						error: !attendee.email ? false : currentContactInput?.error,
 						actions
 					};
 				}
 				return {
-					...labelAndEmail,
+					...currentContactInput,
 					error: !attendee.email ? false : currentContactInput?.error,
 					actions: oldActions
 				};
