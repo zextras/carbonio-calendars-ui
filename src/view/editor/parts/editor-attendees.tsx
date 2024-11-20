@@ -122,27 +122,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			});
 	}, [createSnackbar, sender, t]);
 
-	// const isValueToAddAContact = (arg: unknown): arg is { label: string; email: string } =>
-	// 	!!arg && typeof arg === 'object' && 'label' in arg && 'email' in arg;
-
-	// const onAddContactInput = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
-	// 	(valueToAdd): ChipItem<EditorChipAttendees> => {
-	// 		if (valueToAdd) {
-	// 			if (typeof valueToAdd === 'string') {
-	// 				return { label: valueToAdd, value: { email: valueToAdd, label: valueToAdd } };
-	// 			}
-	// 			if (isValueToAddAContact(valueToAdd)) {
-	// 				return {
-	// 					value: { ...valueToAdd },
-	// 					label: valueToAdd.label
-	// 				};
-	// 			}
-	// 		}
-	// 		throw new Error('invalid keywords received');
-	// 	},
-	// 	[]
-	// );
-
 	const onAddChipInput = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
 		(valueToAdd): ChipItem<EditorChipAttendees> => {
 			if (valueToAdd && typeof valueToAdd === 'string') {
