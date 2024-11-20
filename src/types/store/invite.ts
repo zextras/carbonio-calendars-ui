@@ -12,6 +12,7 @@ export type EditorChipAttendees = {
 	email: string;
 	firstName?: string;
 	lastName?: string;
+	fullName?: string;
 	ptst?: ParticipationStatus;
 };
 
