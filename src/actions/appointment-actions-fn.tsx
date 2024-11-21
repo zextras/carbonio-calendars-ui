@@ -6,8 +6,9 @@
 import React from 'react';
 
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
-import { find, lowerCase, omit } from 'lodash';
+import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
+import { LinkFolder } from '../carbonio-ui-commons/types';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import { CALENDAR_BOARD_ID, PANEL_VIEW } from '../constants';
@@ -45,11 +46,26 @@ export const createCopy =
 			const organizer = find(identities, ['identityName', 'DEFAULT']);
 			const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
 			const isInstance = !event?.resource?.isRecurrent && !!event?.resource?.ridZ;
+			/* const defaultCalendar = find(context.folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]); */
 			const editor = generateEditor({
 				event: eventToCopy,
 				invite,
 				context: {
-					folders: context.folders,
+					/* calendar: defaultCalendar
+						? {
+								id: defaultCalendar.id,
+								name: defaultCalendar.name,
+								rgb: defaultCalendar.rgb,
+								color: defaultCalendar.color,
+								owner: (defaultCalendar as LinkFolder)?.owner
+							}
+						: undefined, */
+					folders: keyBy(
+						filter(context.folders, (calendar) =>
+							calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
+						),
+						'id'
+					),
 					dispatch: context.dispatch,
 					panel: context.panel ?? true,
 					organizer,
