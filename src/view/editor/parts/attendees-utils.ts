@@ -28,7 +28,7 @@ export type ContactInputItem = {
 	error?: boolean;
 };
 
-function mapContactInputAttendees(contacts: ContactInputItem[]): EditorChipAttendees[] {
+export function mapContactInputAttendees(contacts: ContactInputItem[]): EditorChipAttendees[] {
 	return contacts.map((contact) => ({
 		label: contact.label,
 		fullName: contact.fullName,
@@ -36,29 +36,10 @@ function mapContactInputAttendees(contacts: ContactInputItem[]): EditorChipAtten
 	}));
 }
 
-export function handleContactsChange(
-	contacts: ContactInputItem[],
-	setterForState: (args: Record<string, ContactInputItem>) => void,
-	dispatchAction: (args: { attendees: EditorChipAttendees[] }) => any
-): void {
-	const attendeesToSave = mapContactInputAttendees(contacts);
-	const newContactsState: Record<string, ContactInputItem> = {};
-	contacts.forEach((contact) => {
-		if (contact.email) {
-			newContactsState[contact.email] = contact;
-		}
-	});
-	setterForState(newContactsState);
-	dispatchAction({
-		attendees: attendeesToSave
-	});
-}
-
-export function handleChipChange(
-	chips: ChipItem<EditorChipAttendees>[],
-	dispatchAction: (args: { attendees: EditorChipAttendees[] }) => any
-): void {
-	const attendeesToSave = uniqBy(
+export function filterValidChips(
+	chips: ChipItem<EditorChipAttendees>[]
+): Array<EditorChipAttendees> {
+	return uniqBy(
 		reduce(
 			chips,
 			(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
@@ -66,12 +47,9 @@ export function handleChipChange(
 		),
 		'email'
 	);
-	if (attendeesToSave.length) {
-		dispatchAction({ attendees: attendeesToSave });
-	}
 }
 
-export const onAddChipInput = (valueToAdd: unknown): ChipItem<EditorChipAttendees> => {
+export const validateChipInput = (valueToAdd: unknown): ChipItem<EditorChipAttendees> => {
 	if (valueToAdd && typeof valueToAdd === 'string') {
 		return { label: valueToAdd, value: { email: valueToAdd } };
 	}

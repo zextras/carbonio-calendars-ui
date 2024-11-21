@@ -20,9 +20,9 @@ import styled from 'styled-components';
 
 import {
 	ContactInputItem,
-	handleChipChange,
-	handleContactsChange,
-	onAddChipInput
+	filterValidChips,
+	mapContactInputAttendees,
+	validateChipInput
 } from './attendees-utils';
 import {
 	EditorAvailabilityWarningRow,
@@ -105,20 +105,26 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 
 	const onChangeAttendeeChip = useCallback<(items: ChipItem<EditorChipAttendees>[]) => void>(
 		(chips) => {
-			handleChipChange(chips, (args: { attendees: EditorChipAttendees[] }) => {
-				dispatch(editEditorAttendees({ id: editorId, attendees: args.attendees }));
-			});
+			const newAttendees = filterValidChips(chips);
+			dispatch(editEditorAttendees({ id: editorId, attendees: newAttendees }));
 		},
 		[dispatch, editorId]
 	);
 	const onChangeAttendeeContact = useCallback<(items: Array<ContactInputItem>) => void>(
 		(contacts) => {
-			handleContactsChange(
-				contacts,
-				setContactsState,
-				(args: { attendees: EditorChipAttendees[] }) => {
-					dispatch(editEditorAttendees({ id: editorId, attendees: args.attendees }));
+			const newContactsState: Record<string, ContactInputItem> = {};
+			contacts.forEach((contact) => {
+				if (contact.email) {
+					newContactsState[contact.email] = contact;
 				}
+			});
+			setContactsState(newContactsState);
+			const newAttendees = mapContactInputAttendees(contacts);
+			dispatch(
+				editEditorAttendees({
+					id: editorId,
+					attendees: newAttendees
+				})
 			);
 		},
 		[dispatch, editorId]
@@ -213,7 +219,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								placeholder={t('label.attendees', 'Attendees')}
 								background={'gray5'}
 								onChange={onChangeAttendeeChip}
-								onAdd={onAddChipInput}
+								onAdd={validateChipInput}
 								value={attendeesChipInputValues}
 								hasError={hasError}
 								description={hasError ? '' : undefined}

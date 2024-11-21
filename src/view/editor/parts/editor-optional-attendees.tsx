@@ -13,9 +13,9 @@ import { useTranslation } from 'react-i18next';
 
 import {
 	ContactInputItem,
-	handleChipChange,
-	handleContactsChange,
-	onAddChipInput
+	filterValidChips,
+	mapContactInputAttendees,
+	validateChipInput
 } from './attendees-utils';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -49,23 +49,27 @@ export const EditorOptionalAttendees = ({
 		NonNullable<ChipInputProps<EditorChipAttendees>['onChange']>
 	>(
 		(chips) => {
-			handleChipChange(chips, (args: { attendees: EditorChipAttendees[] }) => {
-				dispatch(editEditorOptionalAttendees({ id: editorId, optionalAttendees: args.attendees }));
-			});
+			const newAttendees = filterValidChips(chips);
+			dispatch(editEditorOptionalAttendees({ id: editorId, optionalAttendees: newAttendees }));
 		},
 		[dispatch, editorId]
 	);
 
 	const onChangeOptionalContact = useCallback<(items: Array<ContactInputItem>) => void>(
 		(contacts) => {
-			handleContactsChange(
-				contacts,
-				setOptionalContactsState,
-				(args: { attendees: EditorChipAttendees[] }) => {
-					dispatch(
-						editEditorOptionalAttendees({ id: editorId, optionalAttendees: args.attendees })
-					);
+			const newContactsState: Record<string, ContactInputItem> = {};
+			contacts.forEach((contact) => {
+				if (contact.email) {
+					newContactsState[contact.email] = contact;
 				}
+			});
+			setOptionalContactsState(newContactsState);
+			const newOptionalAttendees = mapContactInputAttendees(contacts);
+			dispatch(
+				editEditorOptionalAttendees({
+					id: editorId,
+					optionalAttendees: newOptionalAttendees
+				})
 			);
 		},
 		[dispatch, editorId]
@@ -120,7 +124,7 @@ export const EditorOptionalAttendees = ({
 					placeholder={t('label.optionals', 'Optionals')}
 					background={'gray5'}
 					onChange={onChangeOptionalChip}
-					onAdd={onAddChipInput}
+					onAdd={validateChipInput}
 					defaultValue={optionalAttendeesChipInputValues}
 					hasError={optionalHasError}
 					description={optionalHasError ? '' : undefined}
