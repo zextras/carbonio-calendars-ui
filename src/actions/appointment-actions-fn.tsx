@@ -46,7 +46,6 @@ export const createCopy =
 			const organizer = find(identities, ['identityName', 'DEFAULT']);
 			const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
 			const isInstance = !event?.resource?.isRecurrent && !!event?.resource?.ridZ;
-			/* const defaultCalendar = find(context.folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]); */
 			const editor = generateEditor({
 				event: eventToCopy,
 				invite,
