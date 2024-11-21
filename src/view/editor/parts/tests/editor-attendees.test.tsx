@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useEffect } from 'react';
+import React, { act, useEffect } from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
@@ -21,19 +21,17 @@ import { EditorAttendees } from '../editor-attendees';
 
 const spyOnAddReturnValue = jest.fn();
 
+const spyProps = jest.fn();
+
 function ContactInput(props: Record<string, any>): React.JSX.Element {
 	useEffect(() => {
-		spyOnAddReturnValue(props.onAdd({ label: 'testZextras', email: 'test@zextras.it' }));
-	}, [props]);
+		spyProps(props.defaultValue);
+	}, [props.defaultValue]);
 
 	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
 }
 
 function StringContactInput(props: Record<string, any>): React.JSX.Element {
-	useEffect(() => {
-		spyOnAddReturnValue(props.onAdd('external@externalDomain.com'));
-	}, [props]);
-
 	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
 }
 
@@ -333,6 +331,28 @@ describe('Editor Attendees', () => {
 			setupTest(<EditorAttendees editorId={editor.id} />, { store });
 
 			expect(screen.getByText('email1@test.com')).toBeVisible();
+		});
+		it.only('should not pass firstName, lastName to the ContactInput component', async () => {
+			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					attendees: [{ email: 'email1@test.com', fullName: 'Test 1' }]
+				}
+			});
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+			expect(spyProps).toHaveBeenCalledWith([
+				{
+					fullName: 'Test 1',
+					email: 'email1@test.com',
+					actions: undefined,
+					error: undefined,
+					id: undefined
+				}
+			]);
 		});
 	});
 });
