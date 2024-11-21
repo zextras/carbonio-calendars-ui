@@ -376,5 +376,82 @@ describe('Editor Attendees', () => {
 				expect(screen.getByText('email1@test.com')).toBeVisible();
 			});
 		});
+
+		describe('ContactInput', () => {
+			it('should display edit action when new value in ContactInput has an error', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInputError, true]);
+				const editor = generateEditor({
+					context: {
+						dispatch: store.dispatch,
+						folders: {},
+						optionalAttendees: [{ email: 'email1@test.com', label: 'Test 1' }]
+					}
+				});
+				const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
+				const testButton = await screen.findAllByTestId('test-button');
+				await user.click(testButton[1]);
+
+				await waitFor(() => {
+					expect(spyDefaultValue).toBeCalledWith(
+						expect.arrayContaining([
+							expect.objectContaining({
+								error: true,
+								actions: [editAction]
+							})
+						])
+					);
+				});
+			});
+
+			it('should not display edit action when new value in ContactInput has no errors', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
+				const editor = generateEditor({
+					context: {
+						dispatch: store.dispatch,
+						folders: {},
+						optionalAttendees: [{ email: 'email1@test.com', label: 'Test 1' }]
+					}
+				});
+				const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
+				const testButton = await screen.findAllByTestId('test-button');
+				await user.click(testButton[1]);
+
+				await waitFor(() => {
+					expect(spyDefaultValue).toBeCalledWith(
+						expect.arrayContaining([
+							expect.objectContaining({
+								error: false,
+								actions: []
+							})
+						])
+					);
+				});
+			});
+
+			it('should not pass firstName, lastName, label to the ContactInput component', async () => {
+				jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				const editor = generateEditor({
+					context: {
+						dispatch: store.dispatch,
+						folders: {},
+						optionalAttendees: [{ email: 'email1@test.com', fullName: 'Test 1' }]
+					}
+				});
+				setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+				expect(spyDefaultValue).toHaveBeenCalledWith([
+					{
+						fullName: 'Test 1',
+						email: 'email1@test.com',
+						actions: undefined,
+						error: undefined,
+						id: undefined
+					}
+				]);
+			});
+		});
 	});
 });
