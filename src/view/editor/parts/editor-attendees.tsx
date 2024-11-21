@@ -15,7 +15,7 @@ import {
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { find, map, reduce, some, uniqBy } from 'lodash';
+import { find, map, reduce, reject, some, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
@@ -208,10 +208,11 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 				const currentChipAvailability = find(attendeesAvailabilityList, ['email', attendee.email]);
 
 				const currentContactInput = contactsState[attendee.email];
-				const oldActions = currentContactInput?.actions;
-				// (attendee.actions && !attendee.error) || !attendee.email
-				// 	? reject(attendee.actions, ['icon', 'EditOutline'])
-				// 	: attendee.actions;
+				const oldActions =
+					(currentContactInput?.actions && !currentContactInput?.error) ||
+					!currentContactInput?.email
+						? reject(currentContactInput?.actions, ['icon', 'EditOutline'])
+						: currentContactInput?.actions;
 
 				if (currentChipAvailability) {
 					const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
@@ -240,12 +241,16 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							: oldActions;
 					return {
 						...currentContactInput,
+						label: attendee.label,
+						email: attendee.email,
 						error: !attendee.email ? false : currentContactInput?.error,
 						actions
 					};
 				}
 				return {
 					...currentContactInput,
+					label: attendee.label,
+					email: attendee.email,
 					error: !attendee.email ? false : currentContactInput?.error,
 					actions: oldActions
 				};
