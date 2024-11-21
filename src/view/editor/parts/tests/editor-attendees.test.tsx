@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { act, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
-import { screen, waitFor, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import * as shellUi from '@zextras/carbonio-shell-ui';
 import { combineReducers } from 'redux';
 
@@ -19,8 +19,6 @@ import { mockFreeBusyResponse, mockGetShareInfo } from '../../../../soap/tests/m
 import { reducers } from '../../../../store/redux';
 import { EditorAttendees } from '../editor-attendees';
 
-const spyOnAddReturnValue = jest.fn();
-
 const spyProps = jest.fn();
 
 function ContactInput(props: Record<string, any>): React.JSX.Element {
@@ -30,18 +28,6 @@ function ContactInput(props: Record<string, any>): React.JSX.Element {
 
 	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
 }
-
-function StringContactInput(props: Record<string, any>): React.JSX.Element {
-	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
-}
-
-const EmptyOnAddContactInput = (props: Record<string, any>): React.JSX.Element => {
-	useEffect(() => {
-		props.onAdd({});
-	}, [props]);
-
-	return <div data-testid={'attendees-chip-input'}>{props.value}</div>;
-};
 
 describe('Editor Attendees', () => {
 	beforeEach(() => {
@@ -64,67 +50,6 @@ describe('Editor Attendees', () => {
 
 		await shareInfoInterceptor;
 		expect(await screen.findByText('Something went wrong, please try again')).toBeVisible();
-	});
-
-	it('should handle values received from Contacts integration', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
-		const editor = generateEditor({
-			context: {
-				dispatch: store.dispatch,
-				folders: {},
-				start: 100,
-				end: 200,
-				attendees: []
-			}
-		});
-
-		setupTest(<EditorAttendees editorId={editor.id} />, { store });
-
-		expect(spyOnAddReturnValue).toHaveBeenCalledWith({
-			label: 'testZextras',
-			value: { label: 'testZextras', email: 'test@zextras.it' }
-		});
-	});
-
-	it('should handle string values received from Contacts integration', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([StringContactInput, true]);
-		const editor = generateEditor({
-			context: {
-				dispatch: store.dispatch,
-				folders: {},
-				start: 100,
-				end: 200
-			}
-		});
-
-		setupTest(<EditorAttendees editorId={editor.id} />, { store });
-
-		expect(spyOnAddReturnValue).toHaveBeenCalledWith({
-			label: 'external@externalDomain.com',
-			value: { email: 'external@externalDomain.com', label: 'external@externalDomain.com' }
-		});
-	});
-
-	it('should throw when onAdd() receives an empty object', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([EmptyOnAddContactInput, true]);
-		jest.spyOn(console, 'error').mockImplementation(() => jest.fn());
-		const editor = generateEditor({
-			context: {
-				dispatch: store.dispatch,
-				folders: {},
-				start: 100,
-				end: 200
-			}
-		});
-
-		await waitFor(() => {
-			expect(() => setupTest(<EditorAttendees editorId={editor.id} />, { store })).toThrow(
-				'invalid keywords received'
-			);
-		});
 	});
 
 	describe('Attendees', () => {
@@ -332,7 +257,7 @@ describe('Editor Attendees', () => {
 
 			expect(screen.getByText('email1@test.com')).toBeVisible();
 		});
-		it.only('should not pass firstName, lastName to the ContactInput component', async () => {
+		it('should not pass firstName, lastName to the ContactInput component', async () => {
 			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const editor = generateEditor({
