@@ -331,7 +331,7 @@ describe('Editor Attendees', () => {
 						folders: {},
 						optionalAttendees: [
 							{ email: 'email1@test.com', label: 'Test 1' },
-							{ email: 'email1@test.com', label: 'Test 2' }
+							{ email: 'email2@test.com', label: 'Test 2' }
 						]
 					}
 				});
