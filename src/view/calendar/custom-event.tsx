@@ -23,7 +23,6 @@ import {
 	Dropdown,
 	Popover,
 	useModal,
-	useSnackbar,
 	Padding
 } from '@zextras/carbonio-design-system';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
@@ -60,7 +59,7 @@ const CustomEventTitle = ({
 	title: CustomEventProps['title'];
 	overflow?: 'ellipsis' | 'visible' | 'break-word';
 }): ReactElement => (
-	<Text size={'small'} color="currentColor" style={{ overflow }}>
+	<Text size={'small'} color="currentColor" style={{ overflow }} weight="bold">
 		{title}
 	</Text>
 );
@@ -96,7 +95,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const { createModal, closeModal } = useModal();
 	const anchorRef = useRef(null);
 	const { action } = useParams<{ action: string }>();
-	const createSnackbar = useSnackbar();
 	const summaryViewId = useSummaryView();
 	const [t] = useTranslation();
 	const [isOuterTooltipDisabled, setIsOuterTooltipDisabled] = useState(false);
@@ -118,16 +116,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
 
 	const showPanelView = useCallback(() => {
-		if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
-			createSnackbar({
-				key: `private_appointment`,
-				replace: true,
-				severity: 'info',
-				label: t('label.appointment_is_private', 'The appointment is private.'),
-				autoHideTimeout: 3000,
-				hideButton: true
-			});
-		} else if (event?.resource?.isRecurrent) {
+		if (event?.resource?.isRecurrent) {
 			const modalId = 'modify-recurrent-appointment';
 			createModal(
 				{
@@ -150,24 +139,15 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
-	}, [event, createSnackbar, t, createModal, onEntireSeries, onSingleInstance, closeModal]);
+	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal]);
 
 	const toggleOpen = useCallback(
 		(e: React.MouseEvent): void => {
-			if (event?.resource?.class === 'PRI' && !event?.haveWriteAccess) {
-				createSnackbar({
-					key: `private_appointment`,
-					replace: true,
-					severity: 'info',
-					label: t('label.appointment_is_private', 'The appointment is private.'),
-					autoHideTimeout: 3000,
-					hideButton: true
-				});
-			} else if (e.detail === 1 && (action === EVENT_ACTIONS.EXPAND || isNil(action))) {
+			if (e.detail === 1 && (action === EVENT_ACTIONS.EXPAND || isNil(action))) {
 				useAppStatusStore.setState({ summaryViewId: event.id });
 			}
 		},
-		[event?.resource?.class, event?.haveWriteAccess, event.id, action, createSnackbar, t]
+		[event.id, action]
 	);
 
 	const onClose = useCallback(() => {

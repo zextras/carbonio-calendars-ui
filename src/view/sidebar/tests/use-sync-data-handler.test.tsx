@@ -3,95 +3,396 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, ReactNode } from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { renderHook } from '@testing-library/react';
-import { SoapNotify, useRefresh } from '@zextras/carbonio-shell-ui';
-import { http } from 'msw';
-import { Provider } from 'react-redux';
-import { Store } from 'redux';
+import { SoapFolder } from '@zextras/carbonio-shell-ui';
 
-import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
 import { useNotify } from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
-import { handleGetFolderRequest } from '../../../carbonio-ui-commons/test/mocks/network/msw/handle-get-folder';
-import { handleGetShareInfoRequest } from '../../../carbonio-ui-commons/test/mocks/network/msw/handle-get-share-info';
+import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
+import { setupHook } from '../../../carbonio-ui-commons/test/test-setup';
 import { folderWorker } from '../../../carbonio-ui-commons/worker';
-import { useCheckedCalendarsQuery } from '../../../hooks/use-checked-calendars-query';
 import { reducers } from '../../../store/redux';
+import { useCalendarGroupStore } from '../../../store/zustand/calendar-group-store';
+import mockedData from '../../../test/generators';
 import { useSyncDataHandler } from '../use-sync-data-handler';
 
-function generateStore(): Store {
-	return configureStore({
-		reducer: combineReducers(reducers)
-	});
-}
-
-function getWrapper(): {
-	({ children }: { children: ReactNode }): ReactElement;
-	displayName: string;
-} {
-	const Wrapper = ({ children }: { children: ReactNode }): ReactElement => (
-		<Provider store={generateStore()}>{children}</Provider>
-	);
-	Wrapper.displayName = 'Wrapper';
-	return Wrapper;
-}
-
-function mockSoapRefresh(mailbox: number): void {
-	(useRefresh as jest.Mock).mockReturnValue({
-		mbx: [{ s: mailbox }]
-	});
-}
-
-function generateSoapAction(partial?: Partial<SoapNotify>): SoapNotify {
-	return {
-		deleted: [],
-		seq: 0,
-		...partial
-	};
-}
-
-function mockSoapDelete(mailboxNumber: number, deletedIds: Array<string>): void {
-	mockSoapRefresh(mailboxNumber);
-	const soapNotify = generateSoapAction({
-		deleted: deletedIds
-	});
-	(useNotify as jest.Mock).mockReturnValue([soapNotify]);
-}
-
-jest.mock('../../../hooks/use-checked-calendars-query', () => ({
-	...jest.requireActual('../../../hooks/use-checked-calendars-query'),
-	useCheckedCalendarsQuery: jest.fn()
-}));
+jest.mock('../../../carbonio-ui-commons/worker');
 
 describe('sync data handler', () => {
-	const mailboxNumber = 1000;
-
 	describe('folders', () => {
 		test('it will invoke the folders worker when a folders related notify is received', async () => {
-			const folder = generateFolder({ id: '1', checked: true });
-			useFolderStore.setState({ folders: { [folder.id]: folder } });
-			const notify = { deleted: ['1'], seq: 0 };
-			const workerSpy = jest.spyOn(folderWorker, 'postMessage');
-			mockSoapDelete(mailboxNumber, ['1']);
-			getSetupServer().use(http.post('/service/soap/GetFolderRequest', handleGetFolderRequest));
-			getSetupServer().use(
-				http.post('/service/soap/GetShareInfoRequest', handleGetShareInfoRequest)
-			);
+			const store = configureStore({ reducer: combineReducers(reducers) });
 
-			(useCheckedCalendarsQuery as jest.Mock).mockReturnValue('');
+			populateFoldersStore();
+			const notify = { deleted: ['15'], seq: 0 };
+			const workerSpy = jest.spyOn(folderWorker, 'postMessage');
+
 			useNotify.mockReturnValueOnce([notify]);
-			renderHook(() => useSyncDataHandler(), {
-				wrapper: getWrapper()
-			});
+
+			setupHook(useSyncDataHandler, { store });
 
 			expect(workerSpy).toHaveBeenCalledTimes(1);
 			expect(workerSpy).toHaveBeenCalledWith(
 				expect.objectContaining({ op: 'notify', notify, state: expect.any(Object) })
 			);
+		});
+	});
+	describe('calendar groups', () => {
+		describe('created', () => {
+			test('it will add the new group to the store', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState((state) => state);
+				populateFoldersStore();
+				const notify = {
+					created: {
+						folder: [
+							{
+								view: 'calendar_group',
+								id: '134',
+								name: 'test group',
+								meta: [{ _attrs: { cids: '10#15' } }]
+							} as unknown as SoapFolder
+						]
+					},
+					deleted: [],
+					seq: 0
+				};
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					134: {
+						id: '134',
+						name: 'test group',
+						calendarId: ['10', '15']
+					}
+				});
+			});
+			test('it will add all the new groups to the store', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState((state) => state);
+				populateFoldersStore();
+				const notify = {
+					created: {
+						folder: [
+							{
+								view: 'calendar_group',
+								id: '150',
+								name: 'test group 1',
+								meta: [{ _attrs: { cids: '10#20' } }]
+							} as unknown as SoapFolder,
+							{
+								view: 'calendar_group',
+								id: '134',
+								name: 'test group',
+								meta: [{ _attrs: { cids: '10#15' } }]
+							} as unknown as SoapFolder
+						]
+					},
+					deleted: [],
+					seq: 0
+				};
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					150: {
+						id: '150',
+						name: 'test group 1',
+						calendarId: ['10', '20']
+					},
+					134: {
+						id: '134',
+						name: 'test group',
+						calendarId: ['10', '15']
+					}
+				});
+			});
+			test('it wont cancel the other groups', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						150: {
+							id: '150',
+							name: 'test group 1',
+							calendarId: ['10', '20']
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					created: {
+						folder: [
+							{
+								view: 'calendar_group',
+								id: '134',
+								name: 'test group 2',
+								meta: [{ _attrs: { cids: '10#15' } }]
+							} as unknown as SoapFolder
+						]
+					},
+					deleted: [],
+					seq: 0
+				};
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					150: {
+						id: '150',
+						name: 'test group 1',
+						calendarId: ['10', '20']
+					},
+					134: {
+						id: '134',
+						name: 'test group 2',
+						calendarId: ['10', '15']
+					}
+				});
+			});
+			test('it wont add folders to the groups', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState((state) => state);
+				populateFoldersStore();
+				const notify = {
+					created: {
+						folder: [mockedData.calendars.getCalendar()]
+					} as unknown as SoapFolder,
+					deleted: [],
+					seq: 0
+				};
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({});
+			});
+		});
+		describe('deleted', () => {
+			test('it will remove the group from the store', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						134: {
+							name: 'test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					deleted: ['134'],
+					seq: 0
+				};
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({});
+			});
+		});
+		describe('modified', () => {
+			test('it wont replace the old store', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						150: {
+							id: '150',
+							name: 'test group 1',
+							calendarId: ['10', '20']
+						},
+						134: {
+							name: 'test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					modified: {
+						folder: [
+							{
+								id: '134',
+								name: 'new test group 1',
+								meta: [{ _attrs: { cids: '10#20' }, section: 'calendarIds' }]
+							} as unknown as SoapFolder
+						]
+					},
+					seq: 0
+				};
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual(
+					expect.objectContaining({
+						150: {
+							id: '150',
+							name: 'test group 1',
+							calendarId: ['10', '20']
+						}
+					})
+				);
+			});
+			test('it will rename the group', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						134: {
+							name: 'test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					modified: {
+						folder: [
+							{
+								id: '134',
+								name: 'new test group 1',
+								meta: [{ _attrs: { cids: '10#20' }, section: 'calendarIds' }]
+							} as unknown as SoapFolder
+						]
+					},
+					seq: 0
+				};
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					134: {
+						name: 'new test group 1',
+						calendarId: ['10', '20'],
+						id: '134'
+					}
+				});
+			});
+			test('it will change the calendarIds', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						134: {
+							name: 'test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					modified: {
+						folder: [
+							{
+								id: '134',
+								name: 'test group 1',
+								meta: [{ _attrs: { cids: '10#15' }, section: 'calendarIds' }]
+							} as unknown as SoapFolder
+						]
+					},
+					seq: 0
+				};
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					134: {
+						name: 'test group 1',
+						calendarId: ['10', '15'],
+						id: '134'
+					}
+				});
+			});
+			test('it will change the calendarIds as empty array if empty string is received', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						134: {
+							name: 'test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					modified: {
+						folder: [
+							{
+								id: '134',
+								name: 'test group 1',
+								meta: [{ _attrs: { cids: '' }, section: 'calendarIds' }]
+							} as unknown as SoapFolder
+						]
+					},
+					seq: 0
+				};
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					134: {
+						name: 'test group 1',
+						calendarId: [],
+						id: '134'
+					}
+				});
+			});
+			test('it will rename the group and change the calendarIds', () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				useCalendarGroupStore.setState({
+					groups: {
+						134: {
+							name: 'new test group 1',
+							calendarId: ['10', '20'],
+							id: '134'
+						}
+					}
+				});
+				populateFoldersStore();
+				const notify = {
+					modified: {
+						folder: [
+							{
+								id: '134',
+								name: 'new test group 1',
+								meta: [{ _attrs: { cids: '10#15' }, section: 'calendarIds' }]
+							} as unknown as SoapFolder
+						]
+					},
+					seq: 0
+				};
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				useNotify.mockReturnValueOnce([notify]);
+
+				setupHook(useSyncDataHandler, { store });
+
+				expect(useCalendarGroupStore.getState().groups).toEqual({
+					134: {
+						name: 'new test group 1',
+						calendarId: ['10', '15'],
+						id: '134'
+					}
+				});
+			});
 		});
 	});
 });
