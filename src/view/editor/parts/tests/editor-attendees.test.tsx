@@ -298,6 +298,56 @@ describe('Editor Attendees', () => {
 					}
 				]);
 			});
+
+			it('should add attendee not available action when already busy during current appointment', async () => {
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
+				const attendeeEmail = 'email1@test.com';
+				const appointmentStart = new Date(2024, 10, 1, 10, 30);
+				const appointmentEnd = new Date(2024, 10, 1, 12, 30);
+				const shareInfoInterceptor = mockGetShareInfo();
+				const freeBusyInterceptor = mockFreeBusyResponse([
+					{
+						id: attendeeEmail,
+						b: [
+							{
+								s: new Date(2024, 10, 1, 11, 0).getTime(),
+								e: new Date(2024, 10, 1, 11, 130).getTime()
+							}
+						]
+					}
+				]);
+				const editor = generateEditor({
+					context: {
+						dispatch: store.dispatch,
+						folders: {},
+						start: appointmentStart.getTime(),
+						end: appointmentEnd.getTime(),
+						attendees: [{ email: attendeeEmail }]
+					}
+				});
+				setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+				await freeBusyInterceptor;
+				await shareInfoInterceptor;
+				await waitFor(() => {
+					expect(spyDefaultValue).toBeCalledWith(
+						expect.arrayContaining([
+							expect.objectContaining({
+								actions: [
+									{
+										id: 'unavailable',
+										label: 'Attendee not available at the selected time of the event',
+										color: 'error',
+										type: 'icon',
+										icon: 'AlertTriangle'
+									}
+								]
+							})
+						])
+					);
+				});
+			});
 		});
 	});
 
