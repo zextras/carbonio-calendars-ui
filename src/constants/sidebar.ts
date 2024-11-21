@@ -22,9 +22,14 @@ export enum FOLDER_ACTIONS {
 
 // eslint-disable-next-line no-shadow
 export enum SIDEBAR_ITEMS {
-	ALL_CALENDAR = 'all',
+	ALL_CALENDAR = 'a970bb9528c94c40bd51bfede60fcb31',
 	SHARES = 'shares'
 }
+
+export const SIDEBAR_ROOT_SUBSECTION = {
+	CALENDARS: 'calendars',
+	GROUPS: 'groups'
+};
 
 export type ObjectValues<T> = T[keyof T];
 

@@ -128,6 +128,14 @@ export const DetailsPart = ({
 			),
 		[invite.class, invite.location, invite.locationUrl]
 	);
+
+	const title = useMemo(() => {
+		if (event.resource.class === 'PRI') {
+			return subject || t('label.private', 'Private');
+		}
+		return subject;
+	}, [event.resource.class, subject, t]);
+
 	return calendar ? (
 		<Container
 			mainAlignment="flex-start"
@@ -144,7 +152,7 @@ export const DetailsPart = ({
 				<Padding right="large" />
 				<Row orientation="row" width="fill" takeAvailableSpace mainAlignment="flex-start">
 					<Container orientation="row" width="fill" mainAlignment="space-between">
-						<SubjectRow subject={subject} calendarColor={color.color} isPrivate={isPrivate} />
+						<SubjectRow subject={title} calendarColor={color.color} isPrivate={isPrivate} />
 						{event.resource.isRecurrent && (
 							<CustomIconInfo
 								tooltipLabel={t('label.recurrent', 'Recurrent appointment')}

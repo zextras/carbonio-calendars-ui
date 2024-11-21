@@ -1,6 +1,6 @@
 {
 	"name": "carbonio-calendars-ui",
-	"version": "1.12.0",
+	"version": "1.13.1",
 	"description": "Calendars module",
 	"main": "src/app.tsx",
 	"engines": {
@@ -23,7 +23,8 @@
 		"test:ci": "jest --testTimeout=10000 --maxWorkers=50%",
 		"test:dev": "jest --testTimeout=10000 --maxWorkers=2",
 		"test": "is-ci && npm run test:ci || npm run test:dev",
-		"build:dev": "sdk build --dev --pkgRel $(date +%s)"
+		"build:dev": "sdk build --dev --pkgRel $(date +%s)",
+		"dev-deploy": "sdk build && sdk deploy"
 	},
 	"keywords": [],
 	"author": "Zextras Crab Onions Team <https://www.zextras.com/carbonio/>",
@@ -56,7 +57,7 @@
 		"@types/react-router-dom": "^5.3.3",
 		"@types/styled-components": "^5.1.34",
 		"@zextras/carbonio-ui-configs": "^1.0.0",
-		"@zextras/carbonio-ui-sdk": "^1.7.7",
+		"@zextras/carbonio-ui-sdk": "^1.7.10",
 		"babel-plugin-styled-components": "^2.1.4",
 		"babel-plugin-transform-import-meta": "^2.2.1",
 		"eslint-plugin-jest-dom": "^4.0.3",
@@ -83,9 +84,9 @@
 		"@reduxjs/toolkit": "^1.9.7",
 		"@types/webpack": "^5.28.2",
 		"@types/webpack-env": "^1.18.1",
-		"@zextras/carbonio-design-system": "^8.0.0",
-		"@zextras/carbonio-shell-ui": "devel",
-		"@zextras/carbonio-ui-preview": "^3.0.0",
+		"@zextras/carbonio-design-system": "^8.1.0",
+		"@zextras/carbonio-shell-ui": "9.0.0",
+		"@zextras/carbonio-ui-preview": "^3.1.0",
 		"core-js": "^3.36.1",
 		"date-arithmetic": "^4.1.0",
 		"i18next": "^22.4.13",
