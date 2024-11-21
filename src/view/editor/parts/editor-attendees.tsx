@@ -57,6 +57,7 @@ type ContactInputAction = {
 };
 
 type ContactInputItem = {
+	id?: string;
 	email?: string;
 	label?: string;
 	fullName?: string;
@@ -207,7 +208,13 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			return map(attendees, (attendee) => {
 				const currentChipAvailability = find(attendeesAvailabilityList, ['email', attendee.email]);
 
-				const currentContactInput = contactsState[attendee.email];
+				const currentContactInput = {
+					email: attendee.email,
+					fullName: attendee.fullName,
+					id: contactsState[attendee.email]?.id,
+					actions: contactsState[attendee.email]?.actions,
+					error: contactsState[attendee.email]?.error
+				};
 				const oldActions =
 					(currentContactInput?.actions && !currentContactInput?.error) ||
 					!currentContactInput?.email
@@ -241,17 +248,11 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							: oldActions;
 					return {
 						...currentContactInput,
-						label: attendee.label,
-						email: attendee.email,
-						error: !attendee.email ? false : currentContactInput?.error,
 						actions
 					};
 				}
 				return {
 					...currentContactInput,
-					label: attendee.label,
-					email: attendee.email,
-					error: !attendee.email ? false : currentContactInput?.error,
 					actions: oldActions
 				};
 			});
