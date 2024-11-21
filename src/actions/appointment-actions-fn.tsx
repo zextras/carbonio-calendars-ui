@@ -51,15 +51,6 @@ export const createCopy =
 				event: eventToCopy,
 				invite,
 				context: {
-					/* calendar: defaultCalendar
-						? {
-								id: defaultCalendar.id,
-								name: defaultCalendar.name,
-								rgb: defaultCalendar.rgb,
-								color: defaultCalendar.color,
-								owner: (defaultCalendar as LinkFolder)?.owner
-							}
-						: undefined, */
 					folders: keyBy(
 						filter(context.folders, (calendar) =>
 							calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
