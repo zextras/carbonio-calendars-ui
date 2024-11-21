@@ -34,6 +34,12 @@ export const EVENT_ACTIONS = {
 	ANSWER: 'answer'
 } as const;
 
+export const GROUP_ACTIONS = {
+	NEW: 'new',
+	EDIT: 'edit',
+	DELETE: 'delete'
+};
+
 export const CalendarIntegrations = {
 	CREATE_APPOINTMENT: 'create_appointment'
 } as const;
@@ -42,3 +48,4 @@ export type ObjectValues<T> = T[keyof T];
 
 export type CalendarIntegrationId = ObjectValues<typeof CalendarIntegrations>;
 export type EventActionsId = ObjectValues<typeof EVENT_ACTIONS>;
+export type GroupActionsId = ObjectValues<typeof GROUP_ACTIONS>;

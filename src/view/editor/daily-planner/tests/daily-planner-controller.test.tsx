@@ -142,7 +142,6 @@ describe('EditorDailyPlannerController', () => {
 
 	it('should not make duplicate api calls', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
-		// const freeBusyInterceptor = mockFreeBusyResponse([]);
 		const workingHoursInterceptor = mockWorkingHoursResponse([]);
 		const freeBusyInterceptor = createAPIInterceptor(
 			'post',
@@ -173,5 +172,28 @@ describe('EditorDailyPlannerController', () => {
 		});
 
 		expect(freeBusyInterceptor.getCalledTimes()).toBe(1);
+	});
+
+	it('should pass current appointment uid to FreeBusy api call as element to exclude', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const workingHoursInterceptor = mockWorkingHoursResponse([]);
+		const freeBusyInterceptor = mockFreeBusyResponse([]);
+		const editor = generateEditor({
+			context: {
+				attendees: [{ email: 'test@test.com' }],
+				folders,
+				uid: '123',
+				dispatch: store.dispatch
+			}
+		});
+
+		const { user } = setupTest(<EditorDailyPlannerController editorId={editor.id} />, { store });
+		const buttonShowOrganizer = screen.getByRole('button', { name: /show organizer tool/ });
+		user.click(buttonShowOrganizer);
+
+		const freeBusyRequest = await freeBusyInterceptor;
+		await workingHoursInterceptor;
+
+		expect(freeBusyRequest.excludeUid).toBe('123');
 	});
 });
