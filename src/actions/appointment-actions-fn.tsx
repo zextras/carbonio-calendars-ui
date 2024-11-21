@@ -46,16 +46,17 @@ export const createCopy =
 			const organizer = find(identities, ['identityName', 'DEFAULT']);
 			const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
 			const isInstance = !event?.resource?.isRecurrent && !!event?.resource?.ridZ;
+			const availableFolders = keyBy(
+				filter(context.folders, (calendar) =>
+					calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
+				),
+				'id'
+			);
 			const editor = generateEditor({
 				event: eventToCopy,
 				invite,
 				context: {
-					folders: keyBy(
-						filter(context.folders, (calendar) =>
-							calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
-						),
-						'id'
-					),
+					folders: availableFolders,
 					dispatch: context.dispatch,
 					panel: context.panel ?? true,
 					organizer,
