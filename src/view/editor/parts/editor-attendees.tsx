@@ -46,6 +46,25 @@ type EditorAttendeesProps = {
 	editorId: string;
 };
 
+// TODO: use types from contact. Consider extracting them or create a @types module
+type ContactInputAction = {
+	id: string;
+	label: string;
+	icon: string;
+	type: string;
+	color?: string;
+	onClick?: () => void;
+};
+
+type ContactInputItem = {
+	id?: string;
+	email?: string;
+	label?: string;
+	fullName?: string;
+	actions?: Array<ContactInputAction>;
+	error?: boolean;
+};
+
 export const AttendeesContainer = styled.div`
 	width: calc(
 		100% - ${({ hasTooltip }: { hasTooltip?: boolean }): string => (hasTooltip ? `3rem` : '0rem')}
@@ -79,6 +98,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, attendees, uid);
+	const [contactsState, setContactsState] = useState<Record<string, ContactInputItem>>({});
 
 	const hasError = useMemo(() => some(attendees ?? [], { error: true }), [attendees]);
 	const optionalHasError = useMemo(
@@ -103,27 +123,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			});
 	}, [createSnackbar, sender, t]);
 
-	const isValueToAddAContact = (arg: unknown): arg is { label: string; email: string } =>
-		!!arg && typeof arg === 'object' && 'label' in arg && 'email' in arg;
-
-	const onAddContactInput = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
-		(valueToAdd): ChipItem<EditorChipAttendees> => {
-			if (valueToAdd) {
-				if (typeof valueToAdd === 'string') {
-					return { label: valueToAdd, value: { email: valueToAdd, label: valueToAdd } };
-				}
-				if (isValueToAddAContact(valueToAdd)) {
-					return {
-						value: { ...valueToAdd },
-						label: valueToAdd.label
-					};
-				}
-			}
-			throw new Error('invalid keywords received');
-		},
-		[]
-	);
-
 	const onAddChipInput = useCallback<NonNullable<ChipInputProps<EditorChipAttendees>['onAdd']>>(
 		(valueToAdd): ChipItem<EditorChipAttendees> => {
 			if (valueToAdd && typeof valueToAdd === 'string') {
@@ -134,7 +133,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		[]
 	);
 
-	const onChange = useCallback<(items: ChipItem<EditorChipAttendees>[]) => void>(
+	const onChangeChip = useCallback<(items: ChipItem<EditorChipAttendees>[]) => void>(
 		(chips) => {
 			const attendeesToSave = uniqBy(
 				reduce(
@@ -144,6 +143,30 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 				),
 				'email'
 			);
+			dispatch(
+				editEditorAttendees({
+					id: editorId,
+					attendees: attendeesToSave
+				})
+			);
+		},
+		[dispatch, editorId]
+	);
+
+	const onChangeContact = useCallback<(items: Array<ContactInputItem>) => void>(
+		(contacts) => {
+			const attendeesToSave = contacts.map((contact) => ({
+				label: contact.label,
+				fullName: contact.fullName,
+				email: contact.email ?? 'unknown'
+			}));
+			const newContactsState: Record<string, ContactInputItem> = {};
+			contacts.forEach((contact) => {
+				if (contact.email) {
+					newContactsState[contact.email] = contact;
+				}
+			});
+			setContactsState(newContactsState);
 			dispatch(
 				editEditorAttendees({
 					id: editorId,
@@ -170,20 +193,33 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		[dispatch, editorId]
 	);
 
-	const attendeesContactInputValues: ChipItem<EditorChipAttendees>[] = useMemo(() => {
+	const attendeesChipInputValues: ChipItem<EditorChipAttendees>[] = useMemo(() => {
+		if (attendees?.length > 0) {
+			return map(attendees, (attendee) => ({
+				label: attendee.label ?? attendee.email,
+				value: attendee
+			}));
+		}
+		return [];
+	}, [attendees]);
+
+	const attendeesContactInputValues: Array<ContactInputItem> = useMemo(() => {
 		if (attendees?.length > 0) {
 			return map(attendees, (attendee) => {
-				const chipFromDs: ChipItem<EditorChipAttendees> = {
-					label: attendee.label ?? attendee.email,
-					value: attendee
-				};
-
 				const currentChipAvailability = find(attendeesAvailabilityList, ['email', attendee.email]);
 
+				const currentContactInput = {
+					email: attendee.email,
+					fullName: attendee.fullName,
+					id: contactsState[attendee.email]?.id,
+					actions: contactsState[attendee.email]?.actions,
+					error: contactsState[attendee.email]?.error
+				};
 				const oldActions =
-					(attendee.actions && !attendee.error) || !attendee.email
-						? reject(attendee.actions, ['icon', 'EditOutline'])
-						: attendee.actions;
+					(currentContactInput?.actions && !currentContactInput?.error) ||
+					!currentContactInput?.email
+						? reject(currentContactInput?.actions, ['icon', 'EditOutline'])
+						: currentContactInput?.actions;
 
 				if (currentChipAvailability) {
 					const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
@@ -211,20 +247,18 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								]
 							: oldActions;
 					return {
-						...chipFromDs,
-						error: !attendee.email ? false : attendee.error,
+						...currentContactInput,
 						actions
 					};
 				}
 				return {
-					...chipFromDs,
-					error: !attendee.email ? false : attendee.error,
+					...currentContactInput,
 					actions: oldActions
 				};
 			});
 		}
 		return [];
-	}, [allDay, attendees, attendeesAvailabilityList, end, start, t]);
+	}, [allDay, attendees, attendeesAvailabilityList, contactsState, end, start, t]);
 	const optionalAttendeesContactInputValues: ChipItem<EditorChipAttendees>[] =
 		optionalAttendees.map((optionalAttendee) => ({
 			label: optionalAttendee.label ?? optionalAttendee.email,
@@ -244,9 +278,8 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 						{integrationAvailable ? (
 							<ContactInput
 								placeholder={t('label.attendees', 'Attendees')}
-								onChange={onChange}
-								onAdd={onAddContactInput}
-								value={attendeesContactInputValues}
+								onChange={onChangeContact}
+								defaultValue={attendeesContactInputValues}
 								disabled={disabled?.attendees}
 								dragAndDropEnabled
 								orderedAccountIds={orderedAccountIds}
@@ -256,9 +289,9 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 								data-testid={'attendees-chip-input'}
 								placeholder={t('label.attendees', 'Attendees')}
 								background={'gray5'}
-								onChange={onChange}
+								onChange={onChangeChip}
 								onAdd={onAddChipInput}
-								value={attendeesContactInputValues}
+								value={attendeesChipInputValues}
 								hasError={hasError}
 								description={hasError ? '' : undefined}
 								disabled={disabled?.attendees}
@@ -297,7 +330,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							<ContactInput
 								placeholder={t('label.optionals', 'Optionals')}
 								onChange={onOptionalsChange}
-								onAdd={onAddContactInput}
 								value={optionalAttendeesContactInputValues}
 								disabled={disabled?.optionalAttendees}
 								dragAndDropEnabled
