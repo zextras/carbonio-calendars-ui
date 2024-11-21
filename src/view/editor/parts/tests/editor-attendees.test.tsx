@@ -21,7 +21,7 @@ import { reducers } from '../../../../store/redux';
 import { EditorAttendees } from '../editor-attendees';
 
 const spyDefaultValue = jest.fn();
-const editAction = { icon: 'edit', id: 'edit', label: 'Edit', type: 'edit' };
+const editAction = { icon: 'EditOutline', id: 'edit', label: 'Edit', type: 'edit' };
 const valuesWithError = [
 	{
 		id: '123',
@@ -243,6 +243,31 @@ describe('Editor Attendees', () => {
 						expect.objectContaining({
 							error: true,
 							actions: [editAction]
+						})
+					])
+				);
+			});
+		});
+
+		it('should not show edit action when new value in ContactInput has no errors', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {}
+				}
+			});
+			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
+			const testButton = await screen.findByTestId('test-button');
+			await user.click(testButton);
+
+			await waitFor(() => {
+				expect(spyDefaultValue).toBeCalledWith(
+					expect.arrayContaining([
+						expect.objectContaining({
+							error: false,
+							actions: []
 						})
 					])
 				);
