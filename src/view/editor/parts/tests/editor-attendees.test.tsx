@@ -232,7 +232,7 @@ describe('Editor Attendees', () => {
 			});
 		});
 
-		it('should not pass firstName, lastName, label to the ContactInput component', async () => {
+		it('should pass firstName, lastName as undefined to the ContactInput component', async () => {
 			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const editor = generateEditor({
@@ -250,7 +250,9 @@ describe('Editor Attendees', () => {
 					email: 'email1@test.com',
 					actions: undefined,
 					error: undefined,
-					id: undefined
+					firstName: undefined,
+					lastName: undefined,
+					id: 'email1@test.com'
 				}
 			]);
 		});

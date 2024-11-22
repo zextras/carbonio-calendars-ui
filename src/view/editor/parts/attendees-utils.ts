@@ -5,7 +5,7 @@
  */
 
 import { ChipItem } from '@zextras/carbonio-design-system';
-import { reduce, uniqBy } from 'lodash';
+import { reduce, reject, uniqBy } from 'lodash';
 
 // TODO: use types from contact. Consider extracting them or create a @types module
 import { EditorChipAttendees } from '../../../types/store/invite';
@@ -24,6 +24,8 @@ export type ContactInputItem = {
 	email?: string;
 	label?: string;
 	fullName?: string;
+	firstName?: string;
+	lastName?: string;
 	actions?: Array<ContactInputAction>;
 	error?: boolean;
 	groupId?: string;
@@ -35,7 +37,7 @@ export function mapContactInputAttendees(contacts: ContactInputItem[]): EditorCh
 	return contacts.map((contact) => ({
 		label: contact.label,
 		fullName: contact.fullName,
-		email: contact.email ?? contact.id
+		email: getContactInputEmail(contact)
 	}));
 }
 
@@ -58,3 +60,27 @@ export const validateChipInput = (valueToAdd: unknown): ChipItem<EditorChipAtten
 	}
 	throw new Error('invalid keywords received');
 };
+
+export function getContactInputEmail(contact: ContactInputItem): string {
+	return contact.email ?? contact.id;
+}
+export function applyAttendeeToContactInputItem(
+	attendee: EditorChipAttendees,
+	contactInputValue: ContactInputItem | undefined
+): ContactInputItem {
+	const email = contactInputValue ? contactInputValue.email : attendee.email;
+	const currentContactInput = {
+		...contactInputValue,
+		email,
+		id: contactInputValue ? contactInputValue.id : attendee.email,
+		fullName: attendee.fullName,
+		// TODO: change the behaviour in the contactInput
+		firstName: undefined,
+		lastName: undefined
+	};
+	currentContactInput.actions =
+		currentContactInput?.actions && !currentContactInput?.error
+			? reject(currentContactInput?.actions, ['icon', 'EditOutline'])
+			: currentContactInput?.actions;
+	return currentContactInput;
+}

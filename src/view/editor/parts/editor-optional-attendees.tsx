@@ -8,10 +8,11 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import { ChipInput, ChipInputProps, ChipItem } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { map, reject, some } from 'lodash';
+import { map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import {
+	applyAttendeeToContactInputItem,
 	ContactInputItem,
 	filterValidChips,
 	mapContactInputAttendees,
@@ -85,25 +86,7 @@ export const EditorOptionalAttendees = ({
 		if (optionalAttendees?.length > 0) {
 			return map(optionalAttendees, (optionalAttendee) => {
 				const storedValue = optionalContactsState[optionalAttendee.email];
-				const email = storedValue ? storedValue.email : optionalAttendee.email;
-				const currentContactInput = {
-					...storedValue,
-					email,
-					fullName: optionalAttendee.fullName,
-					// TODO: change the behaviour in the contactInput
-					firstName: undefined,
-					lastName: undefined
-				};
-				const oldActions =
-					(currentContactInput?.actions && !currentContactInput?.error) ||
-					!currentContactInput?.email
-						? reject(currentContactInput?.actions, ['icon', 'EditOutline'])
-						: currentContactInput?.actions;
-
-				return {
-					...currentContactInput,
-					actions: oldActions
-				};
+				return applyAttendeeToContactInputItem(optionalAttendee, storedValue);
 			});
 		}
 		return [];

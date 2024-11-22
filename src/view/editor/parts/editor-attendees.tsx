@@ -14,13 +14,15 @@ import {
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import { find, map, reject, some } from 'lodash';
+import { find, map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import {
+	applyAttendeeToContactInputItem,
 	ContactInputItem,
 	filterValidChips,
+	getContactInputEmail,
 	mapContactInputAttendees,
 	validateChipInput
 } from './attendees-utils';
@@ -114,7 +116,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		(contacts) => {
 			const newContactsState: Record<string, ContactInputItem> = {};
 			contacts.forEach((contact) => {
-				newContactsState[contact?.email ?? contact.id] = contact;
+				newContactsState[getContactInputEmail(contact)] = contact;
 			});
 			setContactsState(newContactsState);
 			const newAttendees = mapContactInputAttendees(contacts);
@@ -140,20 +142,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			return map(attendees, (attendee) => {
 				const currentChipAvailability = find(attendeesAvailabilityList, ['email', attendee.email]);
 				const storedValue = contactsState[attendee.email];
-				const email = storedValue ? storedValue.email : attendee.email;
-				const currentContactInput = {
-					...storedValue,
-					email,
-					fullName: attendee.fullName,
-					// TODO: change the behaviour in the contactInput
-					firstName: undefined,
-					lastName: undefined
-				};
-				const oldActions =
-					(currentContactInput?.actions && !currentContactInput?.error) ||
-					!currentContactInput?.email
-						? reject(currentContactInput?.actions, ['icon', 'EditOutline'])
-						: currentContactInput?.actions;
+				const currentContactInput = applyAttendeeToContactInputItem(attendee, storedValue);
 
 				if (currentChipAvailability) {
 					const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
@@ -164,10 +153,10 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 						allDay
 					);
 
-					const actions =
-						isBusyAtTimeOfEvent && !find(oldActions, ['id', 'unavailable'])
+					currentContactInput.actions =
+						isBusyAtTimeOfEvent && !find(currentContactInput.actions, ['id', 'unavailable'])
 							? [
-									...(oldActions ?? []),
+									...(currentContactInput.actions ?? []),
 									{
 										id: 'unavailable',
 										label: t(
@@ -179,16 +168,9 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 										icon: 'AlertTriangle'
 									} as const
 								]
-							: oldActions;
-					return {
-						...currentContactInput,
-						actions
-					};
+							: currentContactInput.actions;
 				}
-				return {
-					...currentContactInput,
-					actions: oldActions
-				};
+				return currentContactInput;
 			});
 		}
 		return [];
