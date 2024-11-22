@@ -61,6 +61,23 @@ const valuesWithGroup = [
 	}
 ];
 
+const valuesWithDistributionList = [
+	{
+		company: undefined,
+		display: undefined,
+		email: 'prova@zextras.com',
+		error: false,
+		firstName: undefined,
+		fullName: 'DL di test',
+		groupId: undefined,
+		id: 'undefined prova@zextras.com',
+		isGroup: true,
+		label: 'prova@zextras.com',
+		lastName: undefined,
+		actions: [editAction]
+	}
+];
+
 function ContactInput(props: Record<string, any>): React.JSX.Element {
 	useEffect(() => {
 		spyDefaultValue(props.defaultValue);
@@ -78,6 +95,19 @@ function ContactInputGroup(props: Record<string, any>): React.JSX.Element {
 
 	return (
 		<Button onClick={(): void => props.onChange(valuesWithGroup)} data-testid={'test-button'} />
+	);
+}
+
+function ContactInputDistributionList(props: Record<string, any>): React.JSX.Element {
+	useEffect(() => {
+		spyDefaultValue(props.defaultValue);
+	}, [props.defaultValue]);
+
+	return (
+		<Button
+			onClick={(): void => props.onChange(valuesWithDistributionList)}
+			data-testid={'test-button'}
+		/>
 	);
 }
 
@@ -371,7 +401,7 @@ describe('Editor Attendees', () => {
 			});
 		});
 
-		it('should display a contactGroup', async () => {
+		it('should display a contact group', async () => {
 			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInputGroup, true]);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const editor = generateEditor({
@@ -396,6 +426,44 @@ describe('Editor Attendees', () => {
 							isGroup: true,
 							groupId: '456',
 							display: 'group 456'
+						})
+					])
+				);
+			});
+		});
+
+		it('should display a distribution list', async () => {
+			jest
+				.spyOn(shellUi, 'useIntegratedComponent')
+				.mockReturnValue([ContactInputDistributionList, true]);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {}
+				}
+			});
+			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+			const testButton = await screen.findByTestId('test-button');
+			await user.click(testButton);
+
+			await waitFor(() => {
+				expect(spyDefaultValue).toHaveBeenCalledWith(
+					expect.arrayContaining([
+						expect.objectContaining({
+							company: undefined,
+							display: undefined,
+							email: 'prova@zextras.com',
+							error: false,
+							firstName: undefined,
+							fullName: 'DL di test',
+							groupId: undefined,
+							id: 'undefined prova@zextras.com',
+							isGroup: true,
+							label: 'prova@zextras.com',
+							lastName: undefined,
+							actions: []
 						})
 					])
 				);
