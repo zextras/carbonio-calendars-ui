@@ -4,68 +4,18 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
-import { Button } from '@zextras/carbonio-design-system';
 import * as shellUi from '@zextras/carbonio-shell-ui';
 import { combineReducers } from 'redux';
 
+import { ContactInput, ContactInputError, EDIT_ACTION, spyDefaultValue } from './mocks';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { reducers } from '../../../../store/redux';
 import { EditorOptionalAttendees } from '../editor-optional-attendees';
-
-const spyDefaultValue = jest.fn();
-const editAction = { icon: 'EditOutline', id: 'edit', label: 'Edit', type: 'edit' };
-const valuesWithError = [
-	{
-		id: '123',
-		label: 'whatever',
-		email: 'newContact@test.com',
-		firstName: 'New',
-		lastName: 'Contact',
-		fullName: 'New Contact',
-		error: true,
-		actions: [editAction]
-	}
-];
-
-const valuesWithoutError = [
-	{
-		id: '123',
-		label: 'whatever',
-		email: 'newContact@test.com',
-		firstName: 'New',
-		lastName: 'Contact',
-		fullName: 'New Contact',
-		error: false,
-		actions: [editAction]
-	}
-];
-
-function ContactInput(props: Record<string, any>): React.JSX.Element {
-	useEffect(() => {
-		spyDefaultValue(props.defaultValue);
-	}, [props.defaultValue]);
-
-	return (
-		<Button onClick={(): void => props.onChange(valuesWithoutError)} data-testid={'test-button'} />
-	);
-}
-
-function ContactInputError(props: Record<string, any>): React.JSX.Element {
-	useEffect(() => {
-		spyDefaultValue(props.defaultValue);
-	}, [props.defaultValue]);
-
-	return (
-		<Button onClick={(): void => props.onChange(valuesWithError)} data-testid={'test-button'}>
-			{props.value}
-		</Button>
-	);
-}
 
 describe('Editor Optional Attendees', () => {
 	beforeEach(() => {
@@ -171,7 +121,7 @@ describe('Editor Optional Attendees', () => {
 					expect.arrayContaining([
 						expect.objectContaining({
 							error: true,
-							actions: [editAction]
+							actions: [EDIT_ACTION]
 						})
 					])
 				);
