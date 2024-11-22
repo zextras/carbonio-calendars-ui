@@ -59,9 +59,7 @@ export const EditorOptionalAttendees = ({
 		(contacts) => {
 			const newContactsState: Record<string, ContactInputItem> = {};
 			contacts.forEach((contact) => {
-				if (contact.email) {
-					newContactsState[contact.email] = contact;
-				}
+				newContactsState[contact?.email ?? contact.id] = contact;
 			});
 			setOptionalContactsState(newContactsState);
 			const newOptionalAttendees = mapContactInputAttendees(contacts);
@@ -82,15 +80,19 @@ export const EditorOptionalAttendees = ({
 			})),
 		[optionalAttendees]
 	);
+
 	const optionalAttendeesContactInputValues: Array<ContactInputItem> = useMemo(() => {
 		if (optionalAttendees?.length > 0) {
 			return map(optionalAttendees, (optionalAttendee) => {
+				const storedValue = optionalContactsState[optionalAttendee.email];
+				const email = storedValue ? storedValue.email : optionalAttendee.email;
 				const currentContactInput = {
-					email: optionalAttendee.email,
+					...storedValue,
+					email,
 					fullName: optionalAttendee.fullName,
-					id: optionalContactsState[optionalAttendee.email]?.id,
-					actions: optionalContactsState[optionalAttendee.email]?.actions,
-					error: optionalContactsState[optionalAttendee.email]?.error
+					// TODO: change the behaviour in the contactInput
+					firstName: undefined,
+					lastName: undefined
 				};
 				const oldActions =
 					(currentContactInput?.actions && !currentContactInput?.error) ||

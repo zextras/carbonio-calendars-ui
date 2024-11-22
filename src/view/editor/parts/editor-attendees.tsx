@@ -144,7 +144,10 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 				const currentContactInput = {
 					...storedValue,
 					email,
-					fullName: attendee.fullName
+					fullName: attendee.fullName,
+					// TODO: change the behaviour in the contactInput
+					firstName: undefined,
+					lastName: undefined
 				};
 				const oldActions =
 					(currentContactInput?.actions && !currentContactInput?.error) ||
