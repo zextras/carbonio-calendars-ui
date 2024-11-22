@@ -15,6 +15,7 @@ import {
 	applyAttendeeToContactInputItem,
 	ContactInputItem,
 	filterValidChips,
+	getContactInputEmail,
 	mapContactInputAttendees,
 	validateChipInput
 } from './attendees-utils';
@@ -60,7 +61,7 @@ export const EditorOptionalAttendees = ({
 		(contacts) => {
 			const newContactsState: Record<string, ContactInputItem> = {};
 			contacts.forEach((contact) => {
-				newContactsState[contact?.email ?? contact.id] = contact;
+				newContactsState[getContactInputEmail(contact)] = contact;
 			});
 			setOptionalContactsState(newContactsState);
 			const newOptionalAttendees = mapContactInputAttendees(contacts);
