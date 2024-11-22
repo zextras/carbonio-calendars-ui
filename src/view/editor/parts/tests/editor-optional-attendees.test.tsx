@@ -11,7 +11,14 @@ import { screen, waitFor, within } from '@testing-library/react';
 import * as shellUi from '@zextras/carbonio-shell-ui';
 import { combineReducers } from 'redux';
 
-import { ContactInput, ContactInputError, EDIT_ACTION, spyDefaultValue } from './mocks';
+import {
+	ContactInput,
+	ContactInputDistributionList,
+	ContactInputError,
+	ContactInputGroup,
+	EDIT_ACTION,
+	spyDefaultValue
+} from './mocks';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { reducers } from '../../../../store/redux';
@@ -180,6 +187,81 @@ describe('Editor Optional Attendees', () => {
 					id: undefined
 				}
 			]);
+		});
+
+		it('should display a contact group', async () => {
+			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInputGroup, true]);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {}
+				}
+			});
+			const { user } = setupTest(
+				<EditorOptionalAttendees orderedAccountIds={[]} editorId={editor.id} />,
+				{ store }
+			);
+
+			const testButton = await screen.findByTestId('test-button');
+			await user.click(testButton);
+
+			await waitFor(() => {
+				expect(spyDefaultValue).toHaveBeenCalledWith(
+					expect.arrayContaining([
+						expect.objectContaining({
+							id: '123',
+							email: undefined,
+							error: false,
+							actions: [],
+							isGroup: true,
+							groupId: '456',
+							display: 'group 456'
+						})
+					])
+				);
+			});
+		});
+
+		it('should display a distribution list', async () => {
+			jest
+				.spyOn(shellUi, 'useIntegratedComponent')
+				.mockReturnValue([ContactInputDistributionList, true]);
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {}
+				}
+			});
+			const { user } = setupTest(
+				<EditorOptionalAttendees orderedAccountIds={[]} editorId={editor.id} />,
+				{ store }
+			);
+
+			const testButton = await screen.findByTestId('test-button');
+			await user.click(testButton);
+
+			await waitFor(() => {
+				expect(spyDefaultValue).toHaveBeenCalledWith(
+					expect.arrayContaining([
+						expect.objectContaining({
+							company: undefined,
+							display: undefined,
+							email: 'prova@zextras.com',
+							error: false,
+							firstName: undefined,
+							fullName: 'DL di test',
+							groupId: undefined,
+							id: 'undefined prova@zextras.com',
+							isGroup: true,
+							label: 'prova@zextras.com',
+							lastName: undefined,
+							actions: []
+						})
+					])
+				);
+			});
 		});
 	});
 });
