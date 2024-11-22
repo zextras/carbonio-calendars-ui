@@ -20,19 +20,22 @@ export type ContactInputAction = {
 };
 
 export type ContactInputItem = {
-	id?: string;
+	id: string;
 	email?: string;
 	label?: string;
 	fullName?: string;
 	actions?: Array<ContactInputAction>;
 	error?: boolean;
+	groupId?: string;
+	isGroup?: boolean;
+	display?: string;
 };
 
 export function mapContactInputAttendees(contacts: ContactInputItem[]): EditorChipAttendees[] {
 	return contacts.map((contact) => ({
 		label: contact.label,
 		fullName: contact.fullName,
-		email: contact.email ?? 'unknown'
+		email: contact.email ?? contact.id
 	}));
 }
 
