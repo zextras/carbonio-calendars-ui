@@ -13,8 +13,10 @@ import { useTranslation } from 'react-i18next';
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from './constants';
 import { EditorDailyPlanner } from './daily-planner';
 import { Participant } from './use-participants-availability';
+import { getWithinSameDay } from './utils';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
+	selectEditor,
 	selectEditorAttendees,
 	selectEditorEnd,
 	selectEditorEquipment,
@@ -24,7 +26,6 @@ import {
 	selectEditorStart,
 	selectSender
 } from '../../../store/selectors/editor';
-import { getWithinSameDay } from './utils';
 
 function uniqByEmail<T>(elements: Array<T>): Array<T> {
 	return uniqBy(elements, 'email');
@@ -39,6 +40,7 @@ export const EditorDailyPlannerController = ({
 	const endDate = useAppSelector(selectEditorEnd(editorId)) ?? 0;
 	const recur = useAppSelector(selectEditorRecurrence(editorId));
 	const sender = useAppSelector(selectSender(editorId));
+	const currentAppointmentUid = useAppSelector(selectEditor(editorId)).uid;
 	const equipment = (useAppSelector(selectEditorEquipment(editorId)) ?? []).map((equip) => ({
 		email: equip.email,
 		type: DAILY_PLANNER_PARTICIPANT_TYPE.equipment,
@@ -103,7 +105,12 @@ export const EditorDailyPlannerController = ({
 				/>
 			</Row>
 			{showDailyPlanner && (
-				<EditorDailyPlanner startDate={startDate} endDate={endDate} participants={participants} />
+				<EditorDailyPlanner
+					startDate={startDate}
+					endDate={endDate}
+					participants={participants}
+					currentAppointmentUid={currentAppointmentUid}
+				/>
 			)}
 		</>
 	) : (
