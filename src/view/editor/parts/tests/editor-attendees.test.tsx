@@ -4,14 +4,21 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
-import { Button } from '@zextras/carbonio-design-system';
 import * as shellUi from '@zextras/carbonio-shell-ui';
 import { combineReducers } from 'redux';
 
+import {
+	ContactInput,
+	ContactInputDistributionList,
+	ContactInputError,
+	ContactInputGroup,
+	EDIT_ACTION,
+	spyDefaultValue
+} from './mocks';
 import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
@@ -19,109 +26,6 @@ import { generateEditor } from '../../../../commons/editor-generator';
 import { mockFreeBusyResponse, mockGetShareInfo } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { EditorAttendees } from '../editor-attendees';
-import { display } from '@mui/system';
-
-const spyDefaultValue = jest.fn();
-const editAction = { icon: 'EditOutline', id: 'edit', label: 'Edit', type: 'edit' };
-const valuesWithError = [
-	{
-		id: '123',
-		label: 'whatever',
-		email: 'newContact@test.com',
-		firstName: 'New',
-		lastName: 'Contact',
-		fullName: 'New Contact',
-		error: true,
-		actions: [editAction]
-	}
-];
-
-const valuesWithoutError = [
-	{
-		id: '123',
-		label: 'whatever',
-		email: 'newContact@test.com',
-		firstName: 'New',
-		lastName: 'Contact',
-		fullName: 'New Contact',
-		error: false,
-		actions: [editAction]
-	}
-];
-
-const valuesWithGroup = [
-	{
-		id: '123',
-		email: undefined,
-		error: false,
-		actions: [editAction],
-		isGroup: true,
-		groupId: '456',
-		display: 'group 456'
-	}
-];
-
-const valuesWithDistributionList = [
-	{
-		company: undefined,
-		display: undefined,
-		email: 'prova@zextras.com',
-		error: false,
-		firstName: undefined,
-		fullName: 'DL di test',
-		groupId: undefined,
-		id: 'undefined prova@zextras.com',
-		isGroup: true,
-		label: 'prova@zextras.com',
-		lastName: undefined,
-		actions: [editAction]
-	}
-];
-
-function ContactInput(props: Record<string, any>): React.JSX.Element {
-	useEffect(() => {
-		spyDefaultValue(props.defaultValue);
-	}, [props.defaultValue]);
-
-	return (
-		<Button onClick={(): void => props.onChange(valuesWithoutError)} data-testid={'test-button'} />
-	);
-}
-
-function ContactInputGroup(props: Record<string, any>): React.JSX.Element {
-	useEffect(() => {
-		spyDefaultValue(props.defaultValue);
-	}, [props.defaultValue]);
-
-	return (
-		<Button onClick={(): void => props.onChange(valuesWithGroup)} data-testid={'test-button'} />
-	);
-}
-
-function ContactInputDistributionList(props: Record<string, any>): React.JSX.Element {
-	useEffect(() => {
-		spyDefaultValue(props.defaultValue);
-	}, [props.defaultValue]);
-
-	return (
-		<Button
-			onClick={(): void => props.onChange(valuesWithDistributionList)}
-			data-testid={'test-button'}
-		/>
-	);
-}
-
-function ContactInputError(props: Record<string, any>): React.JSX.Element {
-	useEffect(() => {
-		spyDefaultValue(props.defaultValue);
-	}, [props.defaultValue]);
-
-	return (
-		<Button onClick={(): void => props.onChange(valuesWithError)} data-testid={'test-button'}>
-			{props.value}
-		</Button>
-	);
-}
 
 describe('Editor Attendees', () => {
 	beforeEach(() => {
@@ -296,7 +200,7 @@ describe('Editor Attendees', () => {
 					expect.arrayContaining([
 						expect.objectContaining({
 							error: true,
-							actions: [editAction]
+							actions: [EDIT_ACTION]
 						})
 					])
 				);
