@@ -33,6 +33,10 @@ export type ContactInputItem = {
 	display?: string;
 };
 
+export function getContactInputEmail(contact: ContactInputItem): string {
+	return contact.email ?? contact.id;
+}
+
 export function mapContactInputAttendees(contacts: ContactInputItem[]): EditorChipAttendees[] {
 	return contacts.map((contact) => ({
 		label: contact.label,
@@ -61,9 +65,6 @@ export const validateChipInput = (valueToAdd: unknown): ChipItem<EditorChipAtten
 	throw new Error('invalid keywords received');
 };
 
-export function getContactInputEmail(contact: ContactInputItem): string {
-	return contact.email ?? contact.id;
-}
 export function applyAttendeeToContactInputItem(
 	attendee: EditorChipAttendees,
 	contactInputValue: ContactInputItem | undefined
