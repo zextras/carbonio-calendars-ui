@@ -41,6 +41,7 @@ import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store'
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
+import { InitializeTags } from './view/tags/initialize-tags';
 
 const LazyCalendarView = lazy(
 	() => import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -191,6 +192,7 @@ export default function App(): React.JSX.Element {
 		<StoreProvider>
 			<AppRegistrations />
 			<AppointmentReminder />
+			<InitializeTags />
 			<SyncDataHandler />
 			<Notifications />
 		</StoreProvider>

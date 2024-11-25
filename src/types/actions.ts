@@ -3,15 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import React from 'react';
 
-import { Tags } from '@zextras/carbonio-shell-ui';
+import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 
-import { EventActionsId } from '../constants/event-actions';
 import { EventType } from './event';
 import { Invite } from './store/invite';
 import { Folders } from '../carbonio-ui-commons/types/folder';
+import { Tags } from '../carbonio-ui-commons/types/tags';
+import { EventActionsId } from '../constants/event-actions';
 import { AppDispatch } from '../store/redux';
 
 export type ActionsContext = {
