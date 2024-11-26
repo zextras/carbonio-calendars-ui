@@ -13,15 +13,11 @@ import {
 	addSearchView,
 	ACTION_TYPES,
 	addBoardView,
-	addRoute,
-	addSearchView,
-	addSettingsView,
 	registerActions,
 	registerComponents,
 	registerFunctions,
 	SearchViewProps,
 	SecondaryBarComponentProps,
-	Spinner,
 	NewAction
 } from '@zextras/carbonio-shell-ui';
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
