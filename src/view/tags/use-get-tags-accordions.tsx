@@ -14,11 +14,12 @@ import {
 	Tooltip,
 	useModal
 } from '@zextras/carbonio-design-system';
-import { t, useTags, runSearch } from '@zextras/carbonio-shell-ui';
+import { t, runSearch } from '@zextras/carbonio-shell-ui';
 import { reduce } from 'lodash';
 
 import { createTag, useGetTagsActions } from './tag-actions';
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
+import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
 import { ItemType, TagsAccordionItems } from '../../carbonio-ui-commons/types/tags';
 
 type ItemProps = {
