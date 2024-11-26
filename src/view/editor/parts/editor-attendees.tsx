@@ -116,7 +116,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		(contacts) => {
 			const newContactsState: Record<string, ContactInputItem> = {};
 			contacts.forEach((contact) => {
-				newContactsState[getContactInputEmail(contact)] = contact;
+				newContactsState[getContactInputEmail(contact.value)] = contact;
 			});
 			setContactsState(newContactsState);
 			const newAttendees = mapContactInputAttendees(contacts);
@@ -137,7 +137,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			})),
 		[attendees]
 	);
-	const attendeesContactInputValues: Array<ContactInputItem> = useMemo(() => {
+	const attendeesContactInputValues: ContactInputItem[] = useMemo(() => {
 		if (attendees?.length > 0) {
 			return map(attendees, (attendee) => {
 				const currentChipAvailability = find(attendeesAvailabilityList, ['email', attendee.email]);

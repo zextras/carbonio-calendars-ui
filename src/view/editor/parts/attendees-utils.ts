@@ -10,6 +10,47 @@ import { reduce, reject, uniqBy } from 'lodash';
 // TODO: use types from contact. Consider extracting them or create a @types module
 import { EditorChipAttendees } from '../../../types/store/invite';
 
+type USER_TYPES = {
+	GROUP: 'CONTACT_GROUP';
+	DISTRIBUTION_LIST: 'DISTRIBUTION_LIST';
+	CONTACT: 'CONTACT';
+};
+
+export const USER_TYPES: USER_TYPES = {
+	GROUP: 'CONTACT_GROUP',
+	DISTRIBUTION_LIST: 'DISTRIBUTION_LIST',
+	CONTACT: 'CONTACT'
+};
+
+export type UserContactGroup = {
+	id: string;
+	display: string;
+	groupId: string;
+	type: USER_TYPES['GROUP'];
+};
+
+export type UserDistributionList = {
+	id: string;
+	email: string;
+	type: USER_TYPES['DISTRIBUTION_LIST'];
+};
+
+export type UserContact = {
+	id: string;
+	firstName?: string;
+	middleName?: string;
+	lastName?: string;
+	fullName?: string;
+	company?: string;
+	email: string;
+	type: USER_TYPES['CONTACT'];
+};
+export type ContactInputItemValue = UserContactGroup | UserDistributionList | UserContact;
+
+export type ContactInputItem = ChipItem<ContactInputItemValue> &
+	Required<Pick<ChipItem<ContactInputItemValue>, 'label'>> &
+	Required<Pick<ChipItem<ContactInputItemValue>, 'value'>>;
+
 export type ContactInputAction = {
 	id: string;
 	label: string;
@@ -19,29 +60,29 @@ export type ContactInputAction = {
 	onClick?: () => void;
 };
 
-export type ContactInputItem = {
-	id: string;
-	email?: string;
-	label?: string;
-	fullName?: string;
-	firstName?: string;
-	lastName?: string;
-	actions?: Array<ContactInputAction>;
-	error?: boolean;
-	groupId?: string;
-	isGroup?: boolean;
-	display?: string;
-};
+// export type ContactInputItem = {
+// 	id: string;
+// 	email?: string;
+// 	label?: string;
+// 	fullName?: string;
+// 	firstName?: string;
+// 	lastName?: string;
+// 	actions?: Array<ContactInputAction>;
+// 	error?: boolean;
+// 	groupId?: string;
+// 	isGroup?: boolean;
+// 	display?: string;
+// };
 
-export function getContactInputEmail(contact: ContactInputItem): string {
-	return contact.email ?? contact.id;
+export function getContactInputEmail(contact: ContactInputItemValue): string {
+	return contact.type === USER_TYPES.GROUP ? contact.id : contact.email;
 }
 
 export function mapContactInputAttendees(contacts: ContactInputItem[]): EditorChipAttendees[] {
 	return contacts.map((contact) => ({
 		label: contact.label,
-		fullName: contact.fullName,
-		email: getContactInputEmail(contact)
+		fullName: contact?.value?.fullName,
+		email: getContactInputEmail(contact.value)
 	}));
 }
 
@@ -67,21 +108,19 @@ export const validateChipInput = (valueToAdd: unknown): ChipItem<EditorChipAtten
 
 export function applyAttendeeToContactInputItem(
 	attendee: EditorChipAttendees,
-	contactInputValue: ContactInputItem | undefined
+	chip: ContactInputItem
 ): ContactInputItem {
-	const email = contactInputValue ? contactInputValue.email : attendee.email;
-	const currentContactInput = {
-		...contactInputValue,
-		email,
-		id: contactInputValue ? contactInputValue.id : attendee.email,
-		fullName: attendee.fullName,
-		// TODO: change the behaviour in the contactInput
-		firstName: undefined,
-		lastName: undefined
+	const label = chip ? chip.label : attendee.email;
+	return {
+		...chip,
+		label,
+		value: chip?.value ?? {
+			email: attendee.email,
+			id: attendee.email,
+			type: USER_TYPES.CONTACT
+		},
+		id: attendee.email,
+		actions:
+			chip?.actions && !chip?.error ? reject(chip?.actions, ['icon', 'EditOutline']) : chip?.actions
 	};
-	currentContactInput.actions =
-		currentContactInput?.actions && !currentContactInput?.error
-			? reject(currentContactInput?.actions, ['icon', 'EditOutline'])
-			: currentContactInput?.actions;
-	return currentContactInput;
 }
