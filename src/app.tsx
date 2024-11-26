@@ -8,17 +8,16 @@ import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 
 import { ModalManager } from '@zextras/carbonio-design-system';
 import {
+	addRoute,
+	addSettingsView,
+	addSearchView,
 	ACTION_TYPES,
 	addBoardView,
-	addRoute,
-	addSearchView,
-	addSettingsView,
 	registerActions,
 	registerComponents,
 	registerFunctions,
 	SearchViewProps,
 	SecondaryBarComponentProps,
-	Spinner,
 	NewAction
 } from '@zextras/carbonio-shell-ui';
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
@@ -28,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
 import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
+import { CenteredSpinner } from './components/CenteredSpinner';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
@@ -61,7 +61,7 @@ const LazySearchView = lazy(
 );
 
 const CalendarView = (): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazyCalendarView />
@@ -71,7 +71,7 @@ const CalendarView = (): React.JSX.Element => (
 );
 
 const EditorView = (): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazyEditorView />
@@ -80,7 +80,7 @@ const EditorView = (): React.JSX.Element => (
 	</Suspense>
 );
 const SettingsView = (): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazySettingsView />
@@ -90,7 +90,7 @@ const SettingsView = (): React.JSX.Element => (
 );
 
 const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazySidebarView {...props} />
@@ -100,7 +100,7 @@ const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
 );
 
 const SearchView = (props: SearchViewProps): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazySearchView {...props} />{' '}
