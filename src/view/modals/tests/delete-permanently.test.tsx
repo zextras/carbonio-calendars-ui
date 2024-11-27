@@ -8,13 +8,14 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { useTheme } from '@zextras/carbonio-design-system';
+import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 
 import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '../../../carbonio-ui-commons/test/mocks/utils/soap';
 import { setupHook, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import * as itemAction from '../../../soap/item-action-request';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
-import { getItemActionRejectedResponse } from '../../../test/mocks/network/msw/handle-item-action';
 import { DeletePermanently } from '../delete-permanently';
 
 describe('delete-permanently', () => {
@@ -141,7 +142,10 @@ describe('delete-permanently', () => {
 		expect(await screen.findByText('Permanent deletion completed successfully')).toBeVisible();
 	});
 	it('on fail an error snackbar will appear', async () => {
-		const interceptor = createSoapAPIInterceptor('ItemAction', getItemActionRejectedResponse());
+		const interceptor = createSoapAPIInterceptor<unknown, ErrorSoapBodyResponse>(
+			'ItemAction',
+			buildSoapErrorResponseBody()
+		);
 
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const event = mockedData.getEvent();

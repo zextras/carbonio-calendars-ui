@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 
 import { AppointmentReminder } from './appointment-reminder';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -185,16 +185,16 @@ describe('appointment reminders', () => {
 
 		expect(screen.getByTestId('reminder-modal')).toBeInTheDocument();
 
-		await waitFor(() => {
-			store.dispatch(
+		await act(async () => {
+			await store.dispatch(
 				deleteAppointmentPermanent({
 					id: event2.resource.id
 				})
 			);
 		});
 
-		await waitFor(() => {
-			store.dispatch(
+		await act(async () => {
+			await store.dispatch(
 				deleteAppointmentPermanent({
 					id: event.resource.id
 				})

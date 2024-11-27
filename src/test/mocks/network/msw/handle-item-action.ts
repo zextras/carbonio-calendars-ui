@@ -23,24 +23,6 @@ const getSuccessfulResponse = (): SuccessSoapResponse<any> => ({
 	}
 });
 
-export const getItemActionRejectedResponse = () => ({
-	Fault: {
-		Code: {
-			Value: 'soap:Sender'
-		},
-		Reason: {
-			Text: 'invalid request: something is wrong'
-		},
-		Detail: {
-			Error: {
-				Code: 'service.INVALID_REQUEST',
-				Trace: 'Error trace detail',
-				_jsns: 'urn:zimbra'
-			}
-		}
-	}
-});
-
 export const handleItemActionRequest: HttpResponseResolver<
 	never,
 	CarbonioMailboxRestHandlerRequest<any>,
