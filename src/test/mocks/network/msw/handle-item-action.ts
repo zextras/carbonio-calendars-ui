@@ -9,7 +9,7 @@ import { HttpResponse, HttpResponseResolver } from 'msw';
 
 import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 
-const getResponse = (): SuccessSoapResponse<any> => ({
+const getSuccessfulResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
 		context: {
 			session: { id: 150973, _content: 150973 },
@@ -23,11 +23,29 @@ const getResponse = (): SuccessSoapResponse<any> => ({
 	}
 });
 
+export const getItemActionRejectedResponse = () => ({
+	Fault: {
+		Code: {
+			Value: 'soap:Sender'
+		},
+		Reason: {
+			Text: 'invalid request: something is wrong'
+		},
+		Detail: {
+			Error: {
+				Code: 'service.INVALID_REQUEST',
+				Trace: 'Error trace detail',
+				_jsns: 'urn:zimbra'
+			}
+		}
+	}
+});
+
 export const handleItemActionRequest: HttpResponseResolver<
 	never,
 	CarbonioMailboxRestHandlerRequest<any>,
 	SuccessSoapResponse<any>
 > = () => {
-	const response = getResponse();
+	const response = getSuccessfulResponse();
 	return HttpResponse.json(response);
 };
