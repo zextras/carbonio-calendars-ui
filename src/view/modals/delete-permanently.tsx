@@ -34,6 +34,20 @@ export const DeletePermanently = ({ onClose, event }: DeletePermanentlyProps): J
 	);
 
 	const label = useMemo(() => t('label.delete_permanently', 'Delete permanently'), [t]);
+
+	const description = useMemo(
+		() =>
+			event.resource.isRecurrent
+				? t(
+						'message.modal.delete.sure_delete_appointment_all_instances_permanently',
+						'This will delete all occurrences of this appointment and you will not be able to recover it again, continue?'
+					)
+				: t(
+						'message.modal.delete.sure_delete_appointment_permanently',
+						'By deleting permanently this appointment you will not be able to recover it anymore, continue?'
+					),
+		[event.resource.isRecurrent, t]
+	);
 	const onConfirm = useCallback(() => {
 		dispatch(
 			deleteAppointmentPermanent({
@@ -75,21 +89,7 @@ export const DeletePermanently = ({ onClose, event }: DeletePermanentlyProps): J
 		>
 			<ModalHeader title={title} onClose={onClose} />
 			<Container padding={{ top: 'large', bottom: 'large' }} crossAlignment="flex-start">
-				{event.resource.isRecurrent ? (
-					<Text overflow="break-word">
-						{t(
-							'message.modal.delete.sure_delete_appointment_all_instances_permanently',
-							'This will delete all occurrences of this appointment and you will not be able to recover it again, continue?'
-						)}
-					</Text>
-				) : (
-					<Text overflow="break-word">
-						{t(
-							'message.modal.delete.sure_delete_appointment_permanently',
-							'By deleting permanently this appointment you will not be able to recover it anymore, continue?'
-						)}
-					</Text>
-				)}
+				<Text overflow="break-word">{description}</Text>
 			</Container>
 			<ModalFooter onConfirm={onConfirm} label={label} color="error" />
 		</Container>
