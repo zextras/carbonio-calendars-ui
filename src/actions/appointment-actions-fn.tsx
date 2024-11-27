@@ -175,11 +175,7 @@ export const deletePermanently =
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<DeletePermanently
-							onClose={(): void => context.closeModal(modalId)}
-							event={event}
-							context={context}
-						/>
+						<DeletePermanently onClose={(): void => context.closeModal(modalId)} event={event} />
 					</StoreProvider>
 				),
 				onClose: () => {
