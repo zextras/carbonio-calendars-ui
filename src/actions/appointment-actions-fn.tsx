@@ -6,8 +6,9 @@
 import React from 'react';
 
 import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
-import { find, lowerCase, omit } from 'lodash';
+import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
+import { LinkFolder } from '../carbonio-ui-commons/types';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import { CALENDAR_BOARD_ID, PANEL_VIEW } from '../constants';
@@ -45,11 +46,17 @@ export const createCopy =
 			const organizer = find(identities, ['identityName', 'DEFAULT']);
 			const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
 			const isInstance = !event?.resource?.isRecurrent && !!event?.resource?.ridZ;
+			const availableFolders = keyBy(
+				filter(context.folders, (calendar) =>
+					calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
+				),
+				'id'
+			);
 			const editor = generateEditor({
 				event: eventToCopy,
 				invite,
 				context: {
-					folders: context.folders,
+					folders: availableFolders,
 					dispatch: context.dispatch,
 					panel: context.panel ?? true,
 					organizer,
