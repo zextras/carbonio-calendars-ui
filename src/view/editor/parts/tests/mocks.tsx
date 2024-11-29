@@ -21,7 +21,7 @@ export const EDIT_ACTION: ChipAction = {
 	type: 'button',
 	onClick: jest.fn()
 };
-const MOCK_VALUE = {
+export const MOCK_VALUE = {
 	id: '123',
 	label: 'whatever',
 	value: {
@@ -81,6 +81,28 @@ export function ContactInput(props: Record<string, any>): React.JSX.Element {
 	return mockContactInput(valuesWithoutError)(props);
 }
 
+type ContactInputBuilder = (props: Record<string, any>) => React.JSX.Element;
+
+function mockContactInputSpy(
+	newValues: ContactInputItem[]
+): (props: Record<string, any>) => React.JSX.Element {
+	// eslint-disable-next-line react/display-name
+	return (props: Record<string, any>): React.JSX.Element => {
+		useEffect(() => {
+			spyDefaultValue(props.defaultValue);
+		}, [props.defaultValue]);
+
+		return (
+			<Button
+				onClick={(): void => props.onChange([...props.defaultValue, ...newValues])}
+				data-testid={'test-button'}
+			/>
+		);
+	};
+}
+export function contactInputBuilder(onAdd: ContactInputItem[]): ContactInputBuilder {
+	return mockContactInputSpy(onAdd);
+}
 export function ContactInputDistributionList(props: Record<string, any>): React.JSX.Element {
 	return mockContactInput(valuesWithDistributionList)(props);
 }

@@ -13,9 +13,10 @@ import { combineReducers } from 'redux';
 
 import {
 	ContactInput,
-	ContactInputDistributionList,
+	contactInputBuilder,
 	ContactInputError,
 	EDIT_ACTION,
+	MOCK_VALUE,
 	spyDefaultValue
 } from './mocks';
 import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
@@ -281,10 +282,11 @@ describe('Editor Attendees', () => {
 			});
 		});
 
-		it.skip('should display a distribution list without edit chip after calling onChange', async () => {
+		it('should remove edit chip received from ContactInput if no error', async () => {
+			const newValueFromAutocomplete = { ...MOCK_VALUE, actions: [EDIT_ACTION], error: false };
 			jest
 				.spyOn(shellUi, 'useIntegratedComponent')
-				.mockReturnValue([ContactInputDistributionList, true]);
+				.mockReturnValue([contactInputBuilder([newValueFromAutocomplete]), true]);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const editor = generateEditor({
 				context: {
@@ -300,20 +302,7 @@ describe('Editor Attendees', () => {
 			await waitFor(() => {
 				expect(spyDefaultValue).toHaveBeenCalledWith(
 					expect.arrayContaining([
-						expect.objectContaining({
-							company: undefined,
-							display: undefined,
-							email: 'prova@zextras.com',
-							error: false,
-							firstName: undefined,
-							fullName: 'DL di test',
-							groupId: undefined,
-							id: 'undefined prova@zextras.com',
-							isGroup: true,
-							label: 'prova@zextras.com',
-							lastName: undefined,
-							actions: []
-						})
+						expect.objectContaining({ ...newValueFromAutocomplete, actions: [] })
 					])
 				);
 			});
