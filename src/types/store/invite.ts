@@ -7,12 +7,14 @@
 import { ParticipantRoleType } from '../../constants/api';
 
 // TODO: avoid using it as it is not following the correct implementation. The attendee editor field needs a refactor which will deprecate this type
+// Be careful as these fields are also stored as-is in the backend!!!
 export type EditorChipAttendees = {
 	label?: string;
 	email: string;
 	firstName?: string;
 	lastName?: string;
 	fullName?: string;
+	isGroup?: string;
 	ptst?: ParticipationStatus;
 };
 

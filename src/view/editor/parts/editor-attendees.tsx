@@ -20,7 +20,6 @@ import styled from 'styled-components';
 
 import {
 	applyAttendeeToContactInputItem,
-	ContactInputItem,
 	filterValidChips,
 	getContactInputEmail,
 	mapContactInputAttendees,
@@ -32,6 +31,7 @@ import {
 } from './editor-availability-warning-row';
 import { EditorOptionalAttendees } from './editor-optional-attendees';
 import { getOrderedAccountIds } from '../../../carbonio-ui-commons/helpers/identities';
+import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -84,7 +84,9 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, attendees, uid);
-	const [contactsState, setContactsState] = useState<Record<string, ContactInputItem>>({});
+	const [contactsState, setContactsState] = useState<Record<string, ContactInputItem | undefined>>(
+		{}
+	);
 
 	const hasError = useMemo(() => some(attendees ?? [], { error: true }), [attendees]);
 
@@ -116,7 +118,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		(contacts) => {
 			const newContactsState: Record<string, ContactInputItem> = {};
 			contacts.forEach((contact) => {
-				newContactsState[getContactInputEmail(contact.value)] = contact;
+				newContactsState[getContactInputEmail(contact)] = contact;
 			});
 			setContactsState(newContactsState);
 			const newAttendees = mapContactInputAttendees(contacts);

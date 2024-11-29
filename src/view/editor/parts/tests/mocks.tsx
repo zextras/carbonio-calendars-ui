@@ -3,66 +3,66 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Button } from '@zextras/carbonio-design-system';
 import React from 'react';
 import { useEffect } from 'react';
 
-export const EDIT_ACTION = { icon: 'EditOutline', id: 'edit', label: 'Edit', type: 'edit' };
+import { Button, ChipAction } from '@zextras/carbonio-design-system';
 
-const valuesWithError = [
-	{
+import {
+	EDIT_ACTION_ID,
+	USER_TYPES_CONST
+} from '../../../../carbonio-ui-commons/integrations/constants';
+import { ContactInputItem } from '../../../../carbonio-ui-commons/integrations/types';
+
+export const EDIT_ACTION: ChipAction = {
+	icon: 'EditOutline',
+	id: EDIT_ACTION_ID,
+	label: 'Edit',
+	type: 'button',
+	onClick: jest.fn()
+};
+const MOCK_VALUE = {
+	id: '123',
+	label: 'whatever',
+	value: {
 		id: '123',
-		label: 'whatever',
+		type: USER_TYPES_CONST.CONTACT,
 		email: 'newContact@test.com',
 		firstName: 'New',
 		lastName: 'Contact',
-		fullName: 'New Contact',
-		error: true,
-		actions: [EDIT_ACTION]
-	}
-];
+		fullName: 'New Contact'
+	},
+	error: true,
+	actions: [EDIT_ACTION]
+};
 
-const valuesWithoutError = [
-	{
+export const MOCK_DL = {
+	id: '123',
+	label: 'whatever',
+	value: {
 		id: '123',
-		label: 'whatever',
-		email: 'newContact@test.com',
-		firstName: 'New',
-		lastName: 'Contact',
-		fullName: 'New Contact',
-		error: false,
-		actions: [EDIT_ACTION]
+		type: USER_TYPES_CONST.DISTRIBUTION_LIST,
+		email: 'newContact@test.com'
+	},
+	error: false,
+	actions: [EDIT_ACTION]
+};
+
+const valuesWithError: ContactInputItem[] = [
+	{
+		...MOCK_VALUE,
+		error: true
 	}
 ];
 
-const valuesWithGroup = [
+const valuesWithoutError: ContactInputItem[] = [
 	{
-		id: '123',
-		email: undefined,
-		error: false,
-		actions: [EDIT_ACTION],
-		isGroup: true,
-		groupId: '456',
-		display: 'group 456'
+		...MOCK_VALUE,
+		error: false
 	}
 ];
 
-const valuesWithDistributionList = [
-	{
-		company: undefined,
-		display: undefined,
-		email: 'prova@zextras.com',
-		error: false,
-		firstName: undefined,
-		fullName: 'DL di test',
-		groupId: undefined,
-		id: 'undefined prova@zextras.com',
-		isGroup: true,
-		label: 'prova@zextras.com',
-		lastName: undefined,
-		actions: [EDIT_ACTION]
-	}
-];
+const valuesWithDistributionList = [MOCK_DL];
 
 export const spyDefaultValue = jest.fn();
 
@@ -79,10 +79,6 @@ function mockContactInput(values: any): (props: Record<string, any>) => React.JS
 
 export function ContactInput(props: Record<string, any>): React.JSX.Element {
 	return mockContactInput(valuesWithoutError)(props);
-}
-
-export function ContactInputGroup(props: Record<string, any>): React.JSX.Element {
-	return mockContactInput(valuesWithGroup)(props);
 }
 
 export function ContactInputDistributionList(props: Record<string, any>): React.JSX.Element {

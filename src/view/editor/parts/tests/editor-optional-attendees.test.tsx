@@ -15,8 +15,8 @@ import {
 	ContactInput,
 	ContactInputDistributionList,
 	ContactInputError,
-	ContactInputGroup,
 	EDIT_ACTION,
+	MOCK_DL,
 	spyDefaultValue
 } from './mocks';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
@@ -164,68 +164,7 @@ describe('Editor Optional Attendees', () => {
 			});
 		});
 
-		it('should pass firstName, lastName as undefined to the ContactInput component', async () => {
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const editor = generateEditor({
-				context: {
-					dispatch: store.dispatch,
-					folders: {},
-					optionalAttendees: [{ email: 'email1@test.com', fullName: 'Test 1' }]
-				}
-			});
-			setupTest(<EditorOptionalAttendees orderedAccountIds={[]} editorId={editor.id} />, {
-				store
-			});
-
-			expect(spyDefaultValue).toHaveBeenCalledWith([
-				{
-					fullName: 'Test 1',
-					email: 'email1@test.com',
-					firstName: undefined,
-					lastName: undefined,
-					actions: undefined,
-					error: undefined,
-					id: 'email1@test.com'
-				}
-			]);
-		});
-
-		it('should display a contact group', async () => {
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInputGroup, true]);
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const editor = generateEditor({
-				context: {
-					dispatch: store.dispatch,
-					folders: {}
-				}
-			});
-			const { user } = setupTest(
-				<EditorOptionalAttendees orderedAccountIds={[]} editorId={editor.id} />,
-				{ store }
-			);
-
-			const testButton = await screen.findByTestId('test-button');
-			await user.click(testButton);
-
-			await waitFor(() => {
-				expect(spyDefaultValue).toHaveBeenCalledWith(
-					expect.arrayContaining([
-						expect.objectContaining({
-							id: '123',
-							email: undefined,
-							error: false,
-							actions: [],
-							isGroup: true,
-							groupId: '456',
-							display: 'group 456'
-						})
-					])
-				);
-			});
-		});
-
-		it('should display a distribution list', async () => {
+		it('should call ContactInput with chip without edit action after being received in onChange', async () => {
 			jest
 				.spyOn(shellUi, 'useIntegratedComponent')
 				.mockReturnValue([ContactInputDistributionList, true]);
@@ -248,18 +187,9 @@ describe('Editor Optional Attendees', () => {
 				expect(spyDefaultValue).toHaveBeenCalledWith(
 					expect.arrayContaining([
 						expect.objectContaining({
-							company: undefined,
-							display: undefined,
-							email: 'prova@zextras.com',
-							error: false,
-							firstName: undefined,
-							fullName: 'DL di test',
-							groupId: undefined,
-							id: 'undefined prova@zextras.com',
-							isGroup: true,
-							label: 'prova@zextras.com',
-							lastName: undefined,
-							actions: []
+							...MOCK_DL,
+							actions: [],
+							error: false
 						})
 					])
 				);

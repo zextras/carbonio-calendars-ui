@@ -13,12 +13,12 @@ import { useTranslation } from 'react-i18next';
 
 import {
 	applyAttendeeToContactInputItem,
-	ContactInputItem,
 	filterValidChips,
 	getContactInputEmail,
 	mapContactInputAttendees,
 	validateChipInput
 } from './attendees-utils';
+import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorDisabled,
@@ -40,7 +40,7 @@ export const EditorOptionalAttendees = ({
 	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [optionalContactsState, setOptionalContactsState] = useState<
-		Record<string, ContactInputItem>
+		Record<string, ContactInputItem | undefined>
 	>({});
 
 	const optionalHasError = useMemo(
@@ -87,6 +87,7 @@ export const EditorOptionalAttendees = ({
 		if (optionalAttendees?.length > 0) {
 			return map(optionalAttendees, (optionalAttendee) => {
 				const storedValue = optionalContactsState[optionalAttendee.email];
+
 				return applyAttendeeToContactInputItem(optionalAttendee, storedValue);
 			});
 		}
