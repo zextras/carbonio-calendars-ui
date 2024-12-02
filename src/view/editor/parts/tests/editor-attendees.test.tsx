@@ -11,7 +11,6 @@ import { screen, waitFor, within } from '@testing-library/react';
 import { combineReducers } from 'redux';
 
 import {
-	ContactInput,
 	contactInputBuilder,
 	EDIT_ACTION,
 	MOCK_VALUE,
@@ -29,7 +28,9 @@ import { EditorAttendees } from '../editor-attendees';
 
 describe('Editor Attendees', () => {
 	beforeEach(() => {
-		jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue([ContactInput, false]);
+		jest
+			.spyOn(commonIntegrationHooks, 'useContactInput')
+			.mockReturnValue([contactInputBuilder(), false]);
 	});
 
 	it('should display error snackbar when failing to get account ids', async () => {
@@ -224,9 +225,11 @@ describe('Editor Attendees', () => {
 			});
 		});
 
-		it('should add attendee not available action when already busy during current appointment', async () => {
+		it('should dispaly attendee not available action when already busy during current appointment', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue([ContactInput, true]);
+			jest
+				.spyOn(commonIntegrationHooks, 'useContactInput')
+				.mockReturnValue([contactInputBuilder(), true]);
 			const attendeeEmail = 'email1@test.com';
 			const appointmentStart = new Date(2024, 10, 1, 10, 30);
 			const appointmentEnd = new Date(2024, 10, 1, 12, 30);

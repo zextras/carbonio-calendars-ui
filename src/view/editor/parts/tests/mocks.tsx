@@ -52,36 +52,7 @@ export const MOCK_DL = {
 	actions: [EDIT_ACTION]
 };
 
-const valuesWithError: ContactInputItem[] = [
-	{
-		...MOCK_VALUE,
-		error: true
-	}
-];
-
-const valuesWithoutError: ContactInputItem[] = [
-	{
-		...MOCK_VALUE,
-		error: false
-	}
-];
-
 export const spyDefaultValue = jest.fn();
-
-function mockContactInput(values: any): (props: ContactInputProps) => React.JSX.Element {
-	// eslint-disable-next-line react/display-name
-	return (props: Record<string, any>): React.JSX.Element => {
-		useEffect(() => {
-			spyDefaultValue(props.defaultValue);
-		}, [props.defaultValue]);
-
-		return <Button onClick={(): void => props.onChange(values)} data-testid={'test-button'} />;
-	};
-}
-
-export function ContactInput(props: ContactInputProps): React.JSX.Element {
-	return mockContactInput(valuesWithoutError)(props);
-}
 
 type ContactInputBuilder = (props: ContactInputProps) => React.JSX.Element;
 
@@ -103,15 +74,11 @@ function mockContactInputSpy(
 	};
 }
 export function contactInputBuilder({
-	valuesToAdd
+	valuesToAdd = []
 }: {
-	valuesToAdd: ContactInputItem[];
-}): ContactInputBuilder {
+	valuesToAdd?: ContactInputItem[];
+} = {}): ContactInputBuilder {
 	return mockContactInputSpy(valuesToAdd);
-}
-
-export function ContactInputError(props: ContactInputProps): React.JSX.Element {
-	return mockContactInput(valuesWithError)(props);
 }
 
 export async function triggerOnAdd(user: UserEvent): Promise<void> {

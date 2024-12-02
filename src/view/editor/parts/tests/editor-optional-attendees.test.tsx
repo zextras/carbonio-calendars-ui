@@ -11,9 +11,7 @@ import { screen, waitFor, within } from '@testing-library/react';
 import { combineReducers } from 'redux';
 
 import {
-	ContactInput,
 	contactInputBuilder,
-	ContactInputError,
 	EDIT_ACTION,
 	MOCK_VALUE,
 	spyDefaultValue,
@@ -27,7 +25,9 @@ import { EditorOptionalAttendees } from '../editor-optional-attendees';
 
 describe('Editor Optional Attendees', () => {
 	beforeEach(() => {
-		jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue([ContactInput, false]);
+		jest
+			.spyOn(commonIntegrationHooks, 'useContactInput')
+			.mockReturnValue([contactInputBuilder(), false]);
 	});
 	describe('ChipInput', () => {
 		it('should display optional attendees using email', async () => {
@@ -77,9 +77,10 @@ describe('Editor Optional Attendees', () => {
 	describe('ContactInput', () => {
 		it('should display edit action when new value in ContactInput has an error', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
+			const newValueWithError = { ...MOCK_VALUE, error: true };
 			jest
 				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue([ContactInputError, true]);
+				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueWithError] }), true]);
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -108,7 +109,10 @@ describe('Editor Optional Attendees', () => {
 
 		it('should remove edit action when new value in ContactInput has no errors', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue([ContactInput, true]);
+			const newValue = { ...MOCK_VALUE, error: false, actions: [EDIT_ACTION] };
+			jest
+				.spyOn(commonIntegrationHooks, 'useContactInput')
+				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValue] }), true]);
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -120,8 +124,7 @@ describe('Editor Optional Attendees', () => {
 				<EditorOptionalAttendees orderedAccountIds={[]} editorId={editor.id} />,
 				{ store }
 			);
-			const testButton = await screen.findByTestId('test-button');
-			await user.click(testButton);
+			await triggerOnAdd(user);
 
 			await waitFor(() => {
 				expect(spyDefaultValue).toBeCalledWith(
