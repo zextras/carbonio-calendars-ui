@@ -822,9 +822,11 @@ export const differenceObject = <
 	return changes(object, base);
 };
 
-export const validEmailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-
-export const validEmail = (email: string): boolean => validEmailRegex.test(email);
+export function isValidEmail(email: string): boolean {
+	// eslint-disable-next-line max-len, prettier/prettier, no-useless-escape
+	const validEmailRegex = /^(?!\.)[\p{L}\p{N}.+_\-]+@[\p{L}\p{N}.+-]+\.[\p{L}\p{N}]{2,}$/u;
+	return validEmailRegex.test(String(email).toLowerCase());
+}
 
 export const findLabel = <TValue>(list: SelectItem<TValue>[], value: unknown): string | undefined =>
 	find(list, (item) => item.value === value)?.label;

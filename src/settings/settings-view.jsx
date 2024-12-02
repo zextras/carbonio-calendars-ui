@@ -16,7 +16,7 @@ import { editSettings, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
 import { map, filter, isEqual, uniqBy } from 'lodash';
 
 import AppleICalSettings from './apple-ical-settings';
-import { differenceObject, validEmail } from './components/utils';
+import { differenceObject, isValidEmail } from './components/utils';
 import CreateAppSettings from './creating-app-settings-view';
 import CustomScheduleModal from './custom-schedule-modal';
 import GeneralSettingView from './general-settings-view';
@@ -254,7 +254,7 @@ export default function CalendarSettingsView() {
 
 	const saveChanges = useCallback(() => {
 		if (settingsToUpdate.zimbraPrefCalendarForwardInvitesTo) {
-			if (!validEmail(settingsToUpdate.zimbraPrefCalendarForwardInvitesTo)) {
+			if (!isValidEmail(settingsToUpdate.zimbraPrefCalendarForwardInvitesTo)) {
 				setisEmailNotValid(!isEmailNotValid);
 				return;
 			}
