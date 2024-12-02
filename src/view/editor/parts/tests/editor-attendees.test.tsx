@@ -89,33 +89,18 @@ describe('Editor Attendees', () => {
 	});
 
 	describe('ChipInput', () => {
-		it('should display attendee email if attendee does not have a label', () => {
+		it('should always display attendee email', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
 					folders: {},
-					attendees: [{ email: 'email1@test.com' }]
+					attendees: [{ email: 'email1@test.com', label: 'test label' }]
 				}
 			});
 			setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			expect(screen.getByText('email1@test.com')).toBeVisible();
-		});
-
-		// TODO: check if label can be removed on attendees store
-		it('should display attendee label in chip if label available', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			const editor = generateEditor({
-				context: {
-					dispatch: store.dispatch,
-					folders: {},
-					attendees: [{ email: 'email1@test.com', label: 'Test 1' }]
-				}
-			});
-			setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			expect(screen.getByText('Test 1')).toBeVisible();
+			expect(within(screen.getByTestId('chip')).getByText('email1@test.com')).toBeVisible();
 		});
 
 		it('should display multiple attendees', () => {
@@ -125,15 +110,15 @@ describe('Editor Attendees', () => {
 				context: {
 					dispatch: store.dispatch,
 					folders: {},
-					attendees: [
-						{ email: 'email1@test.com', label: 'Test 1' },
-						{ email: 'email2@test.com', label: 'Test 2' }
-					]
+					attendees: [{ email: 'email1@test.com' }, { email: 'email2@test.com' }]
 				}
 			});
 			setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			expect(screen.getByText('Test 1')).toBeVisible();
-			expect(screen.getByText('Test 2')).toBeVisible();
+
+			const chips = screen.getAllByTestId('chip');
+
+			expect(within(chips[0]).getByText('email1@test.com')).toBeVisible();
+			expect(within(chips[1]).getByText('email2@test.com')).toBeVisible();
 		});
 
 		it('should add a new attendee after typing in the chip input', async () => {
@@ -162,10 +147,7 @@ describe('Editor Attendees', () => {
 				context: {
 					dispatch: store.dispatch,
 					folders: {},
-					attendees: [
-						{ email: 'email1@test.com', label: 'Test 1' },
-						{ email: 'email2@test.com', label: 'Test 2' }
-					]
+					attendees: [{ email: 'email1@test.com' }, { email: 'email2@test.com' }]
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
@@ -176,8 +158,8 @@ describe('Editor Attendees', () => {
 
 			const chips = screen.getAllByTestId('chip');
 
-			expect(within(chips[0]).getByText('Test 1')).toBeVisible();
-			expect(within(chips[1]).getByText('Test 2')).toBeVisible();
+			expect(within(chips[0]).getByText('email1@test.com')).toBeVisible();
+			expect(within(chips[1]).getByText('email2@test.com')).toBeVisible();
 			expect(within(chips[2]).getByText('email3@test.com')).toBeVisible();
 		});
 	});

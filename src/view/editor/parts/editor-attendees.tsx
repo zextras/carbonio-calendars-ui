@@ -134,7 +134,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const attendeesChipInputValues: ChipItem<EditorChipAttendees>[] = useMemo(
 		() =>
 			map(attendees, (attendee) => ({
-				label: attendee.label ?? attendee.email,
+				label: attendee.email,
 				value: attendee
 			})),
 		[attendees]
