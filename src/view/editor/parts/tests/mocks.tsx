@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
+import { screen } from '@testing-library/react';
 import { Button, ChipAction } from '@zextras/carbonio-design-system';
 
 import {
@@ -13,6 +13,7 @@ import {
 	USER_TYPES_CONST
 } from '../../../../carbonio-ui-commons/integrations/constants';
 import { ContactInputItem } from '../../../../carbonio-ui-commons/integrations/types';
+import { UserEvent } from '../../../../carbonio-ui-commons/test/test-setup';
 
 export const EDIT_ACTION: ChipAction = {
 	icon: 'EditOutline',
@@ -100,8 +101,12 @@ function mockContactInputSpy(
 		);
 	};
 }
-export function contactInputBuilder(onAdd: ContactInputItem[]): ContactInputBuilder {
-	return mockContactInputSpy(onAdd);
+export function contactInputBuilder({
+	valuesToAdd
+}: {
+	valuesToAdd: ContactInputItem[];
+}): ContactInputBuilder {
+	return mockContactInputSpy(valuesToAdd);
 }
 export function ContactInputDistributionList(props: Record<string, any>): React.JSX.Element {
 	return mockContactInput(valuesWithDistributionList)(props);
@@ -109,4 +114,9 @@ export function ContactInputDistributionList(props: Record<string, any>): React.
 
 export function ContactInputError(props: Record<string, any>): React.JSX.Element {
 	return mockContactInput(valuesWithError)(props);
+}
+
+export async function triggerOnAdd(user: UserEvent): Promise<void> {
+	const testButton = await screen.findByTestId('test-button');
+	await user.click(testButton);
 }

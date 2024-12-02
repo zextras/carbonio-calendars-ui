@@ -14,10 +14,10 @@ import { combineReducers } from 'redux';
 import {
 	ContactInput,
 	contactInputBuilder,
-	ContactInputError,
 	EDIT_ACTION,
 	MOCK_VALUE,
-	spyDefaultValue
+	spyDefaultValue,
+	triggerOnAdd
 } from './mocks';
 import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
@@ -61,7 +61,7 @@ describe('Editor Attendees', () => {
 				b: [
 					{
 						s: new Date(2024, 10, 1, 11, 0).getTime(),
-						e: new Date(2024, 10, 1, 11, 130).getTime()
+						e: new Date(2024, 10, 1, 11, 30).getTime()
 					}
 				]
 			}
@@ -103,6 +103,7 @@ describe('Editor Attendees', () => {
 			expect(screen.getByText('email1@test.com')).toBeVisible();
 		});
 
+		// TODO: check if label can be removed on attendees store
 		it('should display attendee label in chip if label available', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -146,13 +147,12 @@ describe('Editor Attendees', () => {
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			const optionalsAttendeesInput = screen.getByText('Optionals');
 			const chipInput = await screen.findByTestId('attendees-chip-input');
 
 			await user.type(within(chipInput).getByRole('textbox'), 'email3@test.com');
-			await user.click(optionalsAttendeesInput);
+			await user.type(within(chipInput).getByRole('textbox'), '[Enter]');
 
-			expect(screen.getByText('email3@test.com')).toBeVisible();
+			expect(within(screen.getByTestId('chip')).getByText('email3@test.com')).toBeVisible();
 		});
 
 		it('should not clear existing attendees after adding a new one', async () => {
@@ -169,22 +169,28 @@ describe('Editor Attendees', () => {
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			const optionalsAttendeesInput = screen.getByText('Optionals');
 			const chipInput = await screen.findByTestId('attendees-chip-input');
 
 			await user.type(within(chipInput).getByRole('textbox'), 'email3@test.com');
-			await user.click(optionalsAttendeesInput);
+			await user.type(within(chipInput).getByRole('textbox'), '[Enter]');
 
-			expect(screen.getByText('email3@test.com')).toBeVisible();
-			expect(screen.getByText('Test 2')).toBeVisible();
-			expect(screen.getByText('Test 1')).toBeVisible();
+			const chips = screen.getAllByTestId('chip');
+
+			expect(within(chips[0]).getByText('Test 1')).toBeVisible();
+			expect(within(chips[1]).getByText('Test 2')).toBeVisible();
+			expect(within(chips[2]).getByText('email3@test.com')).toBeVisible();
 		});
 	});
 
 	describe('ContactInput', () => {
 		it('should display edit action when new value in ContactInput has an error', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInputError, true]);
+
+			const newValueFromAutocomplete = { ...MOCK_VALUE, actions: [EDIT_ACTION], error: true };
+
+			jest
+				.spyOn(shellUi, 'useIntegratedComponent')
+				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -192,8 +198,8 @@ describe('Editor Attendees', () => {
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			const testButton = await screen.findByTestId('test-button');
-			await user.click(testButton);
+
+			await triggerOnAdd(user);
 
 			await waitFor(() => {
 				expect(spyDefaultValue).toHaveBeenCalledWith(
@@ -207,9 +213,13 @@ describe('Editor Attendees', () => {
 			});
 		});
 
-		it('should not display edit action when new value in ContactInput has no errors', async () => {
+		it('should remove edit action when new value in ContactInput has no errors', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
+			const newValueFromAutocomplete = { ...MOCK_VALUE, actions: [EDIT_ACTION], error: false };
+
+			jest
+				.spyOn(shellUi, 'useIntegratedComponent')
+				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -217,8 +227,8 @@ describe('Editor Attendees', () => {
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			const testButton = await screen.findByTestId('test-button');
-			await user.click(testButton);
+
+			await triggerOnAdd(user);
 
 			await waitFor(() => {
 				expect(spyDefaultValue).toHaveBeenCalledWith(
@@ -277,32 +287,6 @@ describe('Editor Attendees', () => {
 								}
 							]
 						})
-					])
-				);
-			});
-		});
-
-		it('should remove edit chip received from ContactInput if no error', async () => {
-			const newValueFromAutocomplete = { ...MOCK_VALUE, actions: [EDIT_ACTION], error: false };
-			jest
-				.spyOn(shellUi, 'useIntegratedComponent')
-				.mockReturnValue([contactInputBuilder([newValueFromAutocomplete]), true]);
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const editor = generateEditor({
-				context: {
-					dispatch: store.dispatch,
-					folders: {}
-				}
-			});
-			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-
-			const testButton = await screen.findByTestId('test-button');
-			await user.click(testButton);
-
-			await waitFor(() => {
-				expect(spyDefaultValue).toHaveBeenCalledWith(
-					expect.arrayContaining([
-						expect.objectContaining({ ...newValueFromAutocomplete, actions: [] })
 					])
 				);
 			});
