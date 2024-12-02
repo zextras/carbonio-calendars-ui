@@ -14,7 +14,7 @@ export type EditorChipAttendees = {
 	firstName?: string;
 	lastName?: string;
 	fullName?: string;
-	isGroup?: string;
+	isGroup?: boolean;
 	ptst?: ParticipationStatus;
 };
 

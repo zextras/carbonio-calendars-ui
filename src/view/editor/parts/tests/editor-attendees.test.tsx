@@ -17,6 +17,7 @@ import {
 	spyDefaultValue,
 	triggerOnAdd
 } from './mocks';
+import { USER_TYPES_CONST } from '../../../../carbonio-ui-commons/integrations/constants';
 import * as commonIntegrationHooks from '../../../../carbonio-ui-commons/integrations/hooks';
 import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
@@ -304,6 +305,39 @@ describe('Editor Attendees', () => {
 			]);
 
 			expect(store.getState().editor.editors[editor.id].attendees[0].ptst).toBe('AC');
+		});
+
+		it('should display a distribution list from store as distribution list', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			jest
+				.spyOn(commonIntegrationHooks, 'useContactInput')
+				.mockReturnValue([contactInputBuilder(), true]);
+			const dlEmail = 'dl1@test.com';
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					attendees: [{ email: dlEmail, isGroup: true }]
+				}
+			});
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+			await waitFor(() => {
+				expect(spyDefaultValue).toHaveBeenCalledWith(
+					expect.arrayContaining([
+						expect.objectContaining({
+							id: dlEmail,
+							label: dlEmail,
+							value: {
+								id: dlEmail,
+								email: dlEmail,
+								type: USER_TYPES_CONST.DISTRIBUTION_LIST
+							}
+						})
+					])
+				);
+			});
 		});
 	});
 });
