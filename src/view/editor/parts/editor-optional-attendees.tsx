@@ -7,7 +7,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
 import { ChipInput, ChipInputProps, ChipItem } from '@zextras/carbonio-design-system';
-import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +17,7 @@ import {
 	getContactInputEmail,
 	validateChipInput
 } from './attendees-utils';
+import { useContactInput } from '../../../carbonio-ui-commons/integrations/hooks';
 import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -35,7 +35,7 @@ export const EditorOptionalAttendees = ({
 	orderedAccountIds: Array<string>;
 }): React.JSX.Element => {
 	const [t] = useTranslation();
-	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
+	const [ContactInput, integrationAvailable] = useContactInput();
 	const dispatch = useAppDispatch();
 	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
@@ -77,7 +77,7 @@ export const EditorOptionalAttendees = ({
 				})
 			);
 		},
-		[dispatch, editorId]
+		[dispatch, editorId, optionalAttendees]
 	);
 	const optionalAttendeesChipInputValues: ChipItem<EditorChipAttendees>[] = useMemo(
 		() =>

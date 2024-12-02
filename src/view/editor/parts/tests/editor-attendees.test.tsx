@@ -8,7 +8,6 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
-import * as shellUi from '@zextras/carbonio-shell-ui';
 import { combineReducers } from 'redux';
 
 import {
@@ -19,6 +18,7 @@ import {
 	spyDefaultValue,
 	triggerOnAdd
 } from './mocks';
+import * as commonIntegrationHooks from '../../../../carbonio-ui-commons/integrations/hooks';
 import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
@@ -29,7 +29,7 @@ import { EditorAttendees } from '../editor-attendees';
 
 describe('Editor Attendees', () => {
 	beforeEach(() => {
-		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, false]);
+		jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue([ContactInput, false]);
 	});
 
 	it('should display error snackbar when failing to get account ids', async () => {
@@ -171,7 +171,7 @@ describe('Editor Attendees', () => {
 			const newValueFromAutocomplete = { ...MOCK_VALUE, actions: [EDIT_ACTION], error: true };
 
 			jest
-				.spyOn(shellUi, 'useIntegratedComponent')
+				.spyOn(commonIntegrationHooks, 'useContactInput')
 				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
 			const editor = generateEditor({
 				context: {
@@ -200,7 +200,7 @@ describe('Editor Attendees', () => {
 			const newValueFromAutocomplete = { ...MOCK_VALUE, actions: [EDIT_ACTION], error: false };
 
 			jest
-				.spyOn(shellUi, 'useIntegratedComponent')
+				.spyOn(commonIntegrationHooks, 'useContactInput')
 				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
 			const editor = generateEditor({
 				context: {
@@ -226,7 +226,7 @@ describe('Editor Attendees', () => {
 
 		it('should add attendee not available action when already busy during current appointment', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
+			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue([ContactInput, true]);
 			const attendeeEmail = 'email1@test.com';
 			const appointmentStart = new Date(2024, 10, 1, 10, 30);
 			const appointmentEnd = new Date(2024, 10, 1, 12, 30);
@@ -281,7 +281,7 @@ describe('Editor Attendees', () => {
 			const newValueFromAutocomplete = { ...MOCK_VALUE, label: 'test label' };
 
 			jest
-				.spyOn(shellUi, 'useIntegratedComponent')
+				.spyOn(commonIntegrationHooks, 'useContactInput')
 				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
 
 			const editor = generateEditor({

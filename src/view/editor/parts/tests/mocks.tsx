@@ -12,7 +12,10 @@ import {
 	EDIT_ACTION_ID,
 	USER_TYPES_CONST
 } from '../../../../carbonio-ui-commons/integrations/constants';
-import { ContactInputItem } from '../../../../carbonio-ui-commons/integrations/types';
+import {
+	ContactInputItem,
+	ContactInputProps
+} from '../../../../carbonio-ui-commons/integrations/types';
 import { UserEvent } from '../../../../carbonio-ui-commons/test/test-setup';
 
 export const EDIT_ACTION: ChipAction = {
@@ -63,11 +66,9 @@ const valuesWithoutError: ContactInputItem[] = [
 	}
 ];
 
-const valuesWithDistributionList = [MOCK_DL];
-
 export const spyDefaultValue = jest.fn();
 
-function mockContactInput(values: any): (props: Record<string, any>) => React.JSX.Element {
+function mockContactInput(values: any): (props: ContactInputProps) => React.JSX.Element {
 	// eslint-disable-next-line react/display-name
 	return (props: Record<string, any>): React.JSX.Element => {
 		useEffect(() => {
@@ -78,11 +79,11 @@ function mockContactInput(values: any): (props: Record<string, any>) => React.JS
 	};
 }
 
-export function ContactInput(props: Record<string, any>): React.JSX.Element {
+export function ContactInput(props: ContactInputProps): React.JSX.Element {
 	return mockContactInput(valuesWithoutError)(props);
 }
 
-type ContactInputBuilder = (props: Record<string, any>) => React.JSX.Element;
+type ContactInputBuilder = (props: ContactInputProps) => React.JSX.Element;
 
 function mockContactInputSpy(
 	newValues: ContactInputItem[]
@@ -108,11 +109,8 @@ export function contactInputBuilder({
 }): ContactInputBuilder {
 	return mockContactInputSpy(valuesToAdd);
 }
-export function ContactInputDistributionList(props: Record<string, any>): React.JSX.Element {
-	return mockContactInput(valuesWithDistributionList)(props);
-}
 
-export function ContactInputError(props: Record<string, any>): React.JSX.Element {
+export function ContactInputError(props: ContactInputProps): React.JSX.Element {
 	return mockContactInput(valuesWithError)(props);
 }
 

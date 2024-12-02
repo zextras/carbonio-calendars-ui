@@ -13,7 +13,6 @@ import {
 	Row,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import { find, map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -31,6 +30,7 @@ import {
 } from './editor-availability-warning-row';
 import { EditorOptionalAttendees } from './editor-optional-attendees';
 import { getOrderedAccountIds } from '../../../carbonio-ui-commons/helpers/identities';
+import { useContactInput } from '../../../carbonio-ui-commons/integrations/hooks';
 import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
@@ -67,7 +67,7 @@ export const AttendeesContainer = styled.div`
 
 export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElement => {
 	const [t] = useTranslation();
-	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
+	const [ContactInput, integrationAvailable] = useContactInput();
 	const dispatch = useAppDispatch();
 	const attendees = useAppSelector(selectEditorAttendees(editorId));
 	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
