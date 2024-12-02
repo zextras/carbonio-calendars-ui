@@ -17,19 +17,14 @@ export function getContactInputEmail(contact: ContactInputItem): string {
 	return contact.value.email;
 }
 
-export function mapContactInputToEditorAttendee(contact: ContactInputItem): EditorChipAttendees {
-	const commonFields = { label: contact.label, email: getContactInputEmail(contact) };
-	if (contact.value.type === USER_TYPES_CONST.DISTRIBUTION_LIST) {
-		return commonFields;
-	}
-	return {
-		...commonFields,
-		fullName: contact.value.fullName
-	};
+export function createEditorAttendeeFromContactInput(
+	contact: ContactInputItem
+): EditorChipAttendees {
+	return { label: contact.label, email: getContactInputEmail(contact) };
 }
 
 export function mapContactInputAttendees(contacts: ContactInputItem[]): EditorChipAttendees[] {
-	return contacts.map(mapContactInputToEditorAttendee);
+	return contacts.map(createEditorAttendeeFromContactInput);
 }
 
 export function filterValidChips(

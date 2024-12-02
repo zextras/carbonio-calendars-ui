@@ -13,9 +13,9 @@ import { useTranslation } from 'react-i18next';
 
 import {
 	applyAttendeeToContactInputItem,
+	createEditorAttendeeFromContactInput,
 	filterValidChips,
 	getContactInputEmail,
-	mapContactInputAttendees,
 	validateChipInput
 } from './attendees-utils';
 import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
@@ -64,7 +64,12 @@ export const EditorOptionalAttendees = ({
 				newContactsState[getContactInputEmail(contact)] = contact;
 			});
 			setOptionalContactsState(newContactsState);
-			const newOptionalAttendees = mapContactInputAttendees(contacts);
+			const newOptionalAttendees = contacts.map((contact) => {
+				const currentAttendee = optionalAttendees.find(
+					(attendee) => attendee.email === contact.value.email
+				);
+				return currentAttendee || createEditorAttendeeFromContactInput(contact);
+			});
 			dispatch(
 				editEditorOptionalAttendees({
 					id: editorId,
@@ -77,7 +82,7 @@ export const EditorOptionalAttendees = ({
 	const optionalAttendeesChipInputValues: ChipItem<EditorChipAttendees>[] = useMemo(
 		() =>
 			map(optionalAttendees, (optionalAttendee) => ({
-				label: optionalAttendee.label ?? optionalAttendee.email,
+				label: optionalAttendee.email,
 				value: optionalAttendee
 			})),
 		[optionalAttendees]

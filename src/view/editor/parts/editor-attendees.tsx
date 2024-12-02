@@ -22,7 +22,7 @@ import {
 	applyAttendeeToContactInputItem,
 	filterValidChips,
 	getContactInputEmail,
-	mapContactInputToEditorAttendee,
+	createEditorAttendeeFromContactInput,
 	validateChipInput
 } from './attendees-utils';
 import {
@@ -125,7 +125,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 				const currentAttendee = attendees.find(
 					(attendee) => attendee.email === contact.value.email
 				);
-				return currentAttendee || mapContactInputToEditorAttendee(contact);
+				return currentAttendee || createEditorAttendeeFromContactInput(contact);
 			});
 			dispatch(
 				editEditorAttendees({
