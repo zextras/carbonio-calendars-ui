@@ -273,5 +273,34 @@ describe('Editor Attendees', () => {
 				);
 			});
 		});
+
+		it('should keep the attendee participation status after updating the attendees', async () => {
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			const attendeeEmail = 'email1@test.com';
+
+			const newValueFromAutocomplete = { ...MOCK_VALUE, label: 'test label' };
+
+			jest
+				.spyOn(shellUi, 'useIntegratedComponent')
+				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
+
+			const editor = generateEditor({
+				context: {
+					dispatch: store.dispatch,
+					folders: {},
+					attendees: [{ email: attendeeEmail, ptst: 'AC' }]
+				}
+			});
+			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
+
+			await triggerOnAdd(user);
+
+			expect(spyDefaultValue).toHaveBeenCalledWith([
+				expect.objectContaining({ label: attendeeEmail }),
+				expect.objectContaining({ label: 'test label' })
+			]);
+
+			expect(store.getState().editor.editors[editor.id].attendees[0].ptst).toBe('AC');
+		});
 	});
 });
