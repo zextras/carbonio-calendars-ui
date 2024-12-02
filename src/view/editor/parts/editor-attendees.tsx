@@ -22,7 +22,7 @@ import {
 	applyAttendeeToContactInputItem,
 	filterValidChips,
 	getContactInputEmail,
-	mapContactInputAttendees,
+	mapContactInputToEditorAttendee,
 	validateChipInput
 } from './attendees-utils';
 import {
@@ -121,7 +121,12 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 				newContactsState[getContactInputEmail(contact)] = contact;
 			});
 			setContactsState(newContactsState);
-			const newAttendees = mapContactInputAttendees(contacts);
+			const newAttendees = contacts.map((contact) => {
+				const currentAttendee = attendees.find(
+					(attendee) => attendee.email === contact.value.email
+				);
+				return currentAttendee || mapContactInputToEditorAttendee(contact);
+			});
 			dispatch(
 				editEditorAttendees({
 					id: editorId,
@@ -129,7 +134,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 				})
 			);
 		},
-		[dispatch, editorId]
+		[attendees, dispatch, editorId]
 	);
 	const attendeesChipInputValues: ChipItem<EditorChipAttendees>[] = useMemo(
 		() =>

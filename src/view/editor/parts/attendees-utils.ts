@@ -17,7 +17,7 @@ export function getContactInputEmail(contact: ContactInputItem): string {
 	return contact.value.email;
 }
 
-function mapContactInputToEditorAttendee(contact: ContactInputItem): EditorChipAttendees {
+export function mapContactInputToEditorAttendee(contact: ContactInputItem): EditorChipAttendees {
 	const commonFields = { label: contact.label, email: getContactInputEmail(contact) };
 	if (contact.value.type === USER_TYPES_CONST.DISTRIBUTION_LIST) {
 		return commonFields;
