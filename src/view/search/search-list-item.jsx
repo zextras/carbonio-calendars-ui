@@ -14,7 +14,6 @@ import {
 	Padding,
 	Tooltip
 } from '@zextras/carbonio-design-system';
-import { useTags } from '@zextras/carbonio-shell-ui';
 import { find, reduce, includes } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { openAppointment } from '../../actions/appointment-actions-fn';
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
 import { PANEL_VIEW } from '../../constants';
 import { getInvite } from '../../store/actions/get-invite';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
