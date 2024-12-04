@@ -20,9 +20,9 @@ import { ShareCalendarModal } from '../share-calendar-modal';
 
 const checkedIcon = 'icon: CheckmarkSquare';
 
-describe('the share calendar modal is composed by', () => {
-	describe('the modal header. It is composed by', () => {
-		test('the title "Share" followed by the calendar name', () => {
+describe('Shared Calendar modal', () => {
+	describe('Modal header', () => {
+		it('should display the title "Share" followed by the calendar name', () => {
 			const closeFn = jest.fn();
 			const grant = [
 				{
@@ -44,7 +44,7 @@ describe('the share calendar modal is composed by', () => {
 			);
 			expect(screen.getByText(`Share ${title}`)).toBeVisible();
 		});
-		test('the close button, on click will call the modal onclose', async () => {
+		it('should display the close button and on click will call the modal onclose', async () => {
 			const closeFn = jest.fn();
 			const grant = [
 				{
@@ -72,8 +72,8 @@ describe('the share calendar modal is composed by', () => {
 			expect(closeFn).toHaveBeenCalledTimes(1);
 		});
 	});
-	describe('the modal body. It is composed by', () => {
-		describe('"share with" selector which allow the user to specify the share type', () => {
+	describe('Modal body', () => {
+		describe('"share with" selector', () => {
 			test('has the label "Share with"', () => {
 				const closeFn = jest.fn();
 				const grant = [
@@ -129,7 +129,7 @@ describe('the share calendar modal is composed by', () => {
 				expect(dropdownInternalOption).toBeVisible();
 				expect(dropdownPublicOption).toBeVisible();
 			});
-			test('internal is selected by default', async () => {
+			test('has "internal" share type selected by default', async () => {
 				const closeFn = jest.fn();
 				const grant = [
 					{
@@ -154,7 +154,7 @@ describe('the share calendar modal is composed by', () => {
 				).toBeVisible();
 			});
 		});
-		test('when public is selected there is not any other field in the modal', async () => {
+		it('should display no field when public share type is selected', async () => {
 			const closeFn = jest.fn();
 			const grant = [
 				{
@@ -201,8 +201,8 @@ describe('the share calendar modal is composed by', () => {
 			expect(standardMessage).not.toBeInTheDocument();
 			expect(shareNotes).not.toBeInTheDocument();
 		});
-		describe('when internal is selected there are also the following fields', () => {
-			test('when share with internals is selected, other fields are rendered', async () => {
+		describe('when internal is selected', () => {
+			it('should render other fields', async () => {
 				const closeFn = jest.fn();
 				const grant = [
 					{
@@ -241,35 +241,33 @@ describe('the share calendar modal is composed by', () => {
 				expect(standardMessage).toBeVisible();
 				expect(shareNotes).toBeVisible();
 			});
-			describe('the "recipients e-mail addresses" input', () => {
-				test('chipInput is empty by default', async () => {
-					const closeFn = jest.fn();
-					const grant = [
-						{
-							zid: '1',
-							gt: 'usr',
-							perm: 'r'
-						} as const
-					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
-					setupTest(
-						<ShareCalendarModal
-							folderName={'testName'}
-							folderId={'testId1'}
-							closeFn={closeFn}
-							grant={grant}
-						/>,
-						{ store }
-					);
-					const chipInput = screen.getByRole('textbox', {
-						name: /Recipients e-mail addresses/i
-					});
-
-					expect(chipInput).toHaveValue('');
+			test('the "recipients e-mail addresses" input is empty by default', async () => {
+				const closeFn = jest.fn();
+				const grant = [
+					{
+						zid: '1',
+						gt: 'usr',
+						perm: 'r'
+					} as const
+				];
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				setupTest(
+					<ShareCalendarModal
+						folderName={'testName'}
+						folderId={'testId1'}
+						closeFn={closeFn}
+						grant={grant}
+					/>,
+					{ store }
+				);
+				const chipInput = screen.getByRole('textbox', {
+					name: /Recipients e-mail addresses/i
 				});
+
+				expect(chipInput).toHaveValue('');
 			});
 			describe('the field to enable users to see private appointments', () => {
-				test('it is not checked by default', () => {
+				test('is not checked by default', () => {
 					const closeFn = jest.fn();
 					const grant = [
 						{
@@ -295,7 +293,7 @@ describe('the share calendar modal is composed by', () => {
 
 					expect(uncheckedPrivate).toBeVisible();
 				});
-				test('is checked on click', async () => {
+				test('checked on click', async () => {
 					const closeFn = jest.fn();
 					const grant = [
 						{
@@ -327,7 +325,7 @@ describe('the share calendar modal is composed by', () => {
 
 					expect(checkedPrivate).toBeVisible();
 				});
-				test('it has an info icon with tooltip', async () => {
+				test('has an info icon with tooltip', async () => {
 					const closeFn = jest.fn();
 					const grant = [
 						{
@@ -600,8 +598,8 @@ describe('the share calendar modal is composed by', () => {
 			});
 		});
 	});
-	describe('the modal footer with the "share calendar" button', () => {
-		test('when share publicly is selected confirm button is enabled', async () => {
+	describe('Modal footer', () => {
+		it('should have the confirm button enabled when share publicly is selected', async () => {
 			const closeFn = jest.fn();
 			const grant = [
 				{
@@ -635,7 +633,7 @@ describe('the share calendar modal is composed by', () => {
 
 			expect(confirmButton).toBeEnabled();
 		});
-		test('when share with internals is selected and the user did not interact with the modal, the confirm button is disabled', async () => {
+		it('should have the confirm button is disabled when share with internals is selected and the user did not interact with the modal', async () => {
 			const closeFn = jest.fn();
 			const grant = [
 				{
@@ -661,7 +659,7 @@ describe('the share calendar modal is composed by', () => {
 
 			expect(confirmButton).toBeDisabled();
 		});
-		test('when share with internals is selected and at least a chip is inserted without errors, the confirm button is enabled', async () => {
+		it('should have the confirm button enabled when share with internals is selected and at least a chip is inserted without errors', async () => {
 			const closeFn = jest.fn();
 			const grant = [
 				{
