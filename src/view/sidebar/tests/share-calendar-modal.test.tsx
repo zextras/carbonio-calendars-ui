@@ -977,11 +977,12 @@ describe('Shared Calendar modal', () => {
 					);
 				});
 				describe('if send notification about this share is checked', () => {
-					test('it will send a share notification', async () => {
+					test('it will send a share notification to recipients', async () => {
 						const sendSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
 						const closeFn = jest.fn();
 						const grant: Grant[] | undefined = [];
 						const store = configureStore({ reducer: combineReducers(reducers) });
+
 						const { user } = setupTest(
 							<ShareCalendarModal
 								folderName={'testName'}
@@ -991,34 +992,26 @@ describe('Shared Calendar modal', () => {
 							/>,
 							{ store }
 						);
-
 						const chipInput = screen.getByRole('textbox', {
 							name: /Recipients e-mail addresses/i
 						});
-
 						await user.type(chipInput, 'user1');
-
 						const confirmButton = screen.getByRole('button', { name: /Share Calendar/i });
-
-						await act(async () => {
-							await jest.advanceTimersToNextTimerAsync();
-						});
-
 						await user.click(confirmButton);
 
-						await act(async () => {
-							await jest.advanceTimersToNextTimerAsync();
+						await waitFor(() => {
+							expect(sendSpy).toHaveBeenCalledTimes(1);
 						});
-
-						expect(sendSpy).toHaveBeenCalledTimes(1);
-
-						expect(sendSpy).toHaveBeenCalledWith(expect.objectContaining({ standardMessage: '' }));
+						expect(sendSpy).toHaveBeenCalledWith(
+							expect.objectContaining({ contacts: [{ email: 'user1' }] })
+						);
 					});
 					test('and a custom message is added it will send the share notification with the custom message', async () => {
 						const sendSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
 						const closeFn = jest.fn();
 						const grant: Grant[] | undefined = [];
 						const store = configureStore({ reducer: combineReducers(reducers) });
+
 						const { user } = setupTest(
 							<ShareCalendarModal
 								folderName={'testName'}
@@ -1028,36 +1021,22 @@ describe('Shared Calendar modal', () => {
 							/>,
 							{ store }
 						);
-
 						const chipInput = screen.getByRole('textbox', {
 							name: /Recipients e-mail addresses/i
 						});
-
 						await user.type(chipInput, 'user1');
-
 						const standardMessage = screen.getByRole('textbox', {
 							name: /Add a note to standard message/i
 						});
-
 						const customMessage = 'custom Message';
-
 						await user.type(standardMessage, customMessage);
-
-						await act(async () => {
-							await jest.advanceTimersToNextTimerAsync();
-						});
-
 						const confirmButton = screen.getByRole('button', { name: /Share Calendar/i });
-
 						expect(confirmButton).toBeEnabled();
-
 						await user.click(confirmButton);
 
-						await act(async () => {
-							await jest.advanceTimersToNextTimerAsync();
+						await waitFor(() => {
+							expect(sendSpy).toHaveBeenCalledTimes(1);
 						});
-
-						expect(sendSpy).toHaveBeenCalledTimes(1);
 						expect(sendSpy).toHaveBeenCalledWith(
 							expect.objectContaining({ standardMessage: customMessage })
 						);
