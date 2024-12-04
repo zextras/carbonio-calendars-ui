@@ -66,9 +66,8 @@ export const ShareRevokeModal: FC<ShareRevokeModalProps> = ({
 				sendNotification &&
 					dispatch(
 						sendShareCalendarNotification({
-							sendNotification,
 							standardMessage,
-							contacts: [{ email: grant.d }],
+							contacts: [{ email: grant.d as string }],
 							folder: folder.id,
 							accounts
 						})
