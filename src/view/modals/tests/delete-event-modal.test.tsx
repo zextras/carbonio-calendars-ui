@@ -291,13 +291,15 @@ describe('delete event modal', () => {
 						{ store }
 					);
 
-					expect(screen.getByText(/message\.want_to_edit_cancellation_msg/i)).toBeInTheDocument();
+					expect(
+						screen.getByText(/Do you want to edit the appointment cancellation message?/i)
+					).toBeInTheDocument();
 					expect(
 						screen.queryByText(/message\.sure_to_delete_appointment/i)
 					).not.toBeInTheDocument();
 					expect(
 						screen.getByRole('button', {
-							name: /action\.edit_message/i
+							name: /Edit Message/i
 						})
 					).toBeInTheDocument();
 					expect(
@@ -334,7 +336,7 @@ describe('delete event modal', () => {
 
 					await user.click(
 						screen.getByRole('button', {
-							name: /action\.edit_message/i
+							name: /Edit Message/i
 						})
 					);
 
