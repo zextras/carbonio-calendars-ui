@@ -18,6 +18,7 @@ import {
 	triggerOnAdd
 } from './mocks';
 import { USER_TYPES_CONST } from '../../../../carbonio-ui-commons/integrations/constants';
+import { DefaultContactInput } from '../../../../carbonio-ui-commons/integrations/default-contact-input';
 import * as commonIntegrationHooks from '../../../../carbonio-ui-commons/integrations/hooks';
 import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
@@ -29,9 +30,7 @@ import { EditorAttendees } from '../editor-attendees';
 
 describe('Editor Attendees', () => {
 	beforeEach(() => {
-		jest
-			.spyOn(commonIntegrationHooks, 'useContactInput')
-			.mockReturnValue([contactInputBuilder(), false]);
+		jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue(DefaultContactInput);
 	});
 
 	it('should display error snackbar when failing to get account ids', async () => {
@@ -174,7 +173,7 @@ describe('Editor Attendees', () => {
 
 			jest
 				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
+				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }));
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -203,7 +202,7 @@ describe('Editor Attendees', () => {
 
 			jest
 				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
+				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }));
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -228,9 +227,7 @@ describe('Editor Attendees', () => {
 
 		it('should dispaly attendee not available action when already busy during current appointment', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			jest
-				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue([contactInputBuilder(), true]);
+			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue(contactInputBuilder());
 			const attendeeEmail = 'email1@test.com';
 			const appointmentStart = new Date(2024, 10, 1, 10, 30);
 			const appointmentEnd = new Date(2024, 10, 1, 12, 30);
@@ -286,7 +283,7 @@ describe('Editor Attendees', () => {
 
 			jest
 				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
+				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }));
 
 			const editor = generateEditor({
 				context: {
@@ -310,9 +307,7 @@ describe('Editor Attendees', () => {
 		it('should display a distribution list from store as distribution list', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
-			jest
-				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue([contactInputBuilder(), true]);
+			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue(contactInputBuilder());
 			const dlEmail = 'dl1@test.com';
 			const editor = generateEditor({
 				context: {

@@ -6,16 +6,13 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { ChipInput, ChipInputProps, ChipItem } from '@zextras/carbonio-design-system';
-import { map, some } from 'lodash';
+import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import {
 	applyAttendeeToContactInputItem,
 	createEditorAttendeeFromContactInput,
-	filterValidChips,
-	getContactInputEmail,
-	validateChipInput
+	getContactInputEmail
 } from './attendees-utils';
 import { useContactInput } from '../../../carbonio-ui-commons/integrations/hooks';
 import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
@@ -25,7 +22,6 @@ import {
 	selectEditorOptionalAttendees
 } from '../../../store/selectors/editor';
 import { editEditorOptionalAttendees } from '../../../store/slices/editor-slice';
-import { EditorChipAttendees } from '../../../types/store/invite';
 
 export const EditorOptionalAttendees = ({
 	editorId,
@@ -35,27 +31,13 @@ export const EditorOptionalAttendees = ({
 	orderedAccountIds: Array<string>;
 }): React.JSX.Element => {
 	const [t] = useTranslation();
-	const [ContactInput, integrationAvailable] = useContactInput();
+	const ContactInput = useContactInput();
 	const dispatch = useAppDispatch();
 	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const [optionalContactsState, setOptionalContactsState] = useState<
 		Record<string, ContactInputItem | undefined>
 	>({});
-
-	const optionalHasError = useMemo(
-		() => some(optionalAttendees ?? [], { error: true }),
-		[optionalAttendees]
-	);
-	const onChangeOptionalChip = useCallback<
-		NonNullable<ChipInputProps<EditorChipAttendees>['onChange']>
-	>(
-		(chips) => {
-			const newAttendees = filterValidChips(chips);
-			dispatch(editEditorOptionalAttendees({ id: editorId, optionalAttendees: newAttendees }));
-		},
-		[dispatch, editorId]
-	);
 
 	const onChangeOptionalContact = useCallback<(items: Array<ContactInputItem>) => void>(
 		(contacts) => {
@@ -79,14 +61,6 @@ export const EditorOptionalAttendees = ({
 		},
 		[dispatch, editorId, optionalAttendees]
 	);
-	const optionalAttendeesChipInputValues: ChipItem<EditorChipAttendees>[] = useMemo(
-		() =>
-			map(optionalAttendees, (optionalAttendee) => ({
-				label: optionalAttendee.email,
-				value: optionalAttendee
-			})),
-		[optionalAttendees]
-	);
 
 	const optionalAttendeesContactInputValues: Array<ContactInputItem> = useMemo(() => {
 		if (optionalAttendees?.length > 0) {
@@ -100,29 +74,14 @@ export const EditorOptionalAttendees = ({
 	}, [optionalContactsState, optionalAttendees]);
 
 	return (
-		<>
-			{integrationAvailable ? (
-				<ContactInput
-					placeholder={t('label.optionals', 'Optionals')}
-					onChange={onChangeOptionalContact}
-					defaultValue={optionalAttendeesContactInputValues}
-					disabled={disabled?.optionalAttendees}
-					dragAndDropEnabled
-					orderedAccountIds={orderedAccountIds}
-				/>
-			) : (
-				<ChipInput
-					data-testid={'optional-attendees-chip-input'}
-					placeholder={t('label.optionals', 'Optionals')}
-					background={'gray5'}
-					onChange={onChangeOptionalChip}
-					onAdd={validateChipInput}
-					defaultValue={optionalAttendeesChipInputValues}
-					hasError={optionalHasError}
-					description={optionalHasError ? '' : undefined}
-					disabled={disabled?.optionalAttendees}
-				/>
-			)}
-		</>
+		<ContactInput
+			data-testid={'optional-attendees-chip-input'}
+			placeholder={t('label.optionals', 'Optionals')}
+			onChange={onChangeOptionalContact}
+			defaultValue={optionalAttendeesContactInputValues}
+			disabled={disabled?.optionalAttendees}
+			dragAndDropEnabled
+			orderedAccountIds={orderedAccountIds}
+		/>
 	);
 };

@@ -17,6 +17,7 @@ import {
 	spyDefaultValue,
 	triggerOnAdd
 } from './mocks';
+import { DefaultContactInput } from '../../../../carbonio-ui-commons/integrations/default-contact-input';
 import * as commonIntegrationHooks from '../../../../carbonio-ui-commons/integrations/hooks';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
@@ -24,13 +25,11 @@ import { reducers } from '../../../../store/redux';
 import { EditorOptionalAttendees } from '../editor-optional-attendees';
 
 describe('Editor Optional Attendees', () => {
-	beforeEach(() => {
-		jest
-			.spyOn(commonIntegrationHooks, 'useContactInput')
-			.mockReturnValue([contactInputBuilder(), false]);
-	});
 	describe('ChipInput', () => {
-		it('should display optional attendees using email', async () => {
+		beforeEach(() => {
+			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue(DefaultContactInput);
+		});
+		it('should display optional attendees using email in store', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const editor = generateEditor({
 				context: {
@@ -80,7 +79,7 @@ describe('Editor Optional Attendees', () => {
 			const newValueWithError = { ...MOCK_VALUE, error: true };
 			jest
 				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueWithError] }), true]);
+				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueWithError] }));
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -112,7 +111,7 @@ describe('Editor Optional Attendees', () => {
 			const newValue = { ...MOCK_VALUE, error: false, actions: [EDIT_ACTION] };
 			jest
 				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValue] }), true]);
+				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValue] }));
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -146,7 +145,7 @@ describe('Editor Optional Attendees', () => {
 
 			jest
 				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue([contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }), true]);
+				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }));
 
 			const editor = generateEditor({
 				context: {

@@ -5,14 +5,7 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
-import {
-	Button,
-	ChipInput,
-	ChipItem,
-	Container,
-	Row,
-	useSnackbar
-} from '@zextras/carbonio-design-system';
+import { Button, ChipItem, Container, Row, useSnackbar } from '@zextras/carbonio-design-system';
 import { find, map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -21,8 +14,7 @@ import {
 	applyAttendeeToContactInputItem,
 	filterValidChips,
 	getContactInputEmail,
-	createEditorAttendeeFromContactInput,
-	validateChipInput
+	createEditorAttendeeFromContactInput
 } from './attendees-utils';
 import {
 	EditorAvailabilityWarningRow,
@@ -67,7 +59,7 @@ export const AttendeesContainer = styled.div`
 
 export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElement => {
 	const [t] = useTranslation();
-	const [ContactInput, integrationAvailable] = useContactInput();
+	const ContactInput = useContactInput();
 	const dispatch = useAppDispatch();
 	const attendees = useAppSelector(selectEditorAttendees(editorId));
 	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
@@ -193,28 +185,15 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 					padding={{ all: 'none' }}
 				>
 					<Container background={'gray5'} style={{ overflow: 'hidden' }}>
-						{integrationAvailable ? (
-							<ContactInput
-								placeholder={t('label.attendees', 'Attendees')}
-								onChange={onChangeAttendeeContact}
-								defaultValue={attendeesContactInputValues}
-								disabled={disabled?.attendees}
-								dragAndDropEnabled
-								orderedAccountIds={orderedAccountIds}
-							/>
-						) : (
-							<ChipInput
-								data-testid={'attendees-chip-input'}
-								placeholder={t('label.attendees', 'Attendees')}
-								background={'gray5'}
-								onChange={onChangeAttendeeChip}
-								onAdd={validateChipInput}
-								defaultValue={attendeesChipInputValues}
-								hasError={hasError}
-								description={hasError ? '' : undefined}
-								disabled={disabled?.attendees}
-							/>
-						)}
+						<ContactInput
+							data-testid={'attendees-chip-input'}
+							placeholder={t('label.attendees', 'Attendees')}
+							onChange={onChangeAttendeeContact}
+							defaultValue={attendeesContactInputValues}
+							disabled={disabled?.attendees}
+							dragAndDropEnabled
+							orderedAccountIds={orderedAccountIds}
+						/>
 					</Container>
 					<Container
 						width="fit"
