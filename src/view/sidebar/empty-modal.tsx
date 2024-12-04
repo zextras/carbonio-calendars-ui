@@ -5,31 +5,19 @@
  */
 import React from 'react';
 
-import { Text, Container, Padding, useSnackbar } from '@zextras/carbonio-design-system';
+import { Container, Padding, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
-import { FOLDER_OPERATIONS } from '../../constants/api';
-import { folderAction } from '../../store/actions/calendar-actions';
+import { emptyCalendarTrash } from '../../store/actions/empty-calendar-trash';
 
-export const EmptyModal = ({
-	onClose,
-	folderId
-}: {
-	onClose: () => void;
-	folderId: string;
-}): JSX.Element => {
+export const EmptyModal = ({ onClose }: { onClose: () => void }): JSX.Element => {
 	const createSnackbar = useSnackbar();
 	const [t] = useTranslation();
 
 	const onConfirm = (): void => {
-		folderAction({
-			id: folderId,
-			op: FOLDER_OPERATIONS.EMPTY,
-			recursive: true,
-			type: 'appointments'
-		}).then((res) => {
+		emptyCalendarTrash().then((res) => {
 			onClose();
 			if (!res.Fault) {
 				createSnackbar({
