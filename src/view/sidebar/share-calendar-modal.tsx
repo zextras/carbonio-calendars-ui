@@ -7,8 +7,6 @@ import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 
 import {
 	Checkbox,
-	ChipInput,
-	ChipItem,
 	Container,
 	Icon,
 	Input,
@@ -26,7 +24,6 @@ import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { USER_TYPES_CONST } from '../../carbonio-ui-commons/integrations/constants';
 import { useContactInput } from '../../carbonio-ui-commons/integrations/hooks';
 import { ContactInputItem } from '../../carbonio-ui-commons/integrations/types';
 import { SHARE_USER_TYPE } from '../../constants';
@@ -89,7 +86,6 @@ export const SharePrivateCheckbox: FC<SharePrivateCheckboxProps> = ({
 };
 
 const UserShare = ({
-	shareWithUserType,
 	grant,
 	folderId,
 	onGoBack,
@@ -104,7 +100,7 @@ const UserShare = ({
 	const dispatch = useAppDispatch();
 	const createSnackbar = useSnackbar();
 
-	const [ContactInput, integrationAvailable] = useContactInput();
+	const ContactInput = useContactInput();
 
 	const [shareWithUserRole, setshareWithUserRole] = useState<string | null>('r');
 	const [sendNotification, setSendNotification] = useState(true);
@@ -207,32 +203,12 @@ const UserShare = ({
 				crossAlignment="flex-start"
 				height="fit"
 			>
-				{integrationAvailable ? (
-					<ContactInput
-						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
-						onChange={onContactInputChange}
-						background={'gray5'}
-						defaultValue={contacts}
-					/>
-				) : (
-					<ChipInput
-						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
-						background={'gray4'}
-						onChange={(items: ChipItem<string>[]): void => {
-							setContacts(
-								map(items, (item) => ({
-									id: item.value as string,
-									label: item.value as string,
-									value: {
-										id: item.value as string,
-										email: item.value as string,
-										type: USER_TYPES_CONST.CONTACT
-									}
-								}))
-							);
-						}}
-					/>
-				)}
+				<ContactInput
+					placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
+					onChange={onContactInputChange}
+					background={'gray5'}
+					defaultValue={contacts}
+				/>
 			</Container>
 			<SharePrivateCheckbox
 				allowToSeePrvtAppt={allowToSeePrvtAppt}
