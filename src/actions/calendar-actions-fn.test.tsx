@@ -82,8 +82,7 @@ describe('calendar-actions-fn', () => {
 	test('empty trash fn', () => {
 		const createModal = jest.fn();
 		const closeModal = jest.fn();
-		const item = { id: FOLDERS.CALENDAR };
-		const emptyTrashFn = emptyTrash({ createModal, closeModal, item });
+		const emptyTrashFn = emptyTrash({ createModal, closeModal });
 		emptyTrashFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
