@@ -684,9 +684,9 @@ describe('Shared Calendar modal', () => {
 			const confirmButton = screen.getByRole('button', {
 				name: /Share Calendar/i
 			});
-			await user.type(chipInput, 'ale');
+			await user.type(chipInput, 'ale@test.com');
 			await user.tab();
-			expect(screen.getByText('ale')).toBeInTheDocument();
+			expect(screen.getByText('ale@test.com')).toBeInTheDocument();
 			expect(confirmButton).toBeEnabled();
 		});
 		// this corner case is currently not testable as integration components can't be tested and the fallback component does not cover this case
@@ -754,7 +754,7 @@ describe('Shared Calendar modal', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await user.type(chipInput, 'user1');
+					await user.type(chipInput, 'user1@email.it');
 
 					const confirmButton = screen.getByText(/Share Calendar/i);
 
@@ -789,7 +789,7 @@ describe('Shared Calendar modal', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await user.type(chipInput, 'user1');
+					await user.type(chipInput, 'user1@email.it');
 
 					const privateCheckbox = screen.getByText(
 						/allow user\(s\) to see private appointments’ detail/i
@@ -827,7 +827,7 @@ describe('Shared Calendar modal', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await user.type(chipInput, 'user1');
+					await user.type(chipInput, 'user1@email.it');
 
 					const roleSelector = screen.getByText('Role');
 
@@ -869,7 +869,7 @@ describe('Shared Calendar modal', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await user.type(chipInput, 'user1');
+					await user.type(chipInput, 'user1@email.it');
 
 					const roleSelector = screen.getByText('Role');
 
@@ -911,7 +911,7 @@ describe('Shared Calendar modal', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await user.type(chipInput, 'user1');
+					await user.type(chipInput, 'user1@email.it');
 
 					const roleSelector = screen.getByText('Role');
 
@@ -953,7 +953,7 @@ describe('Shared Calendar modal', () => {
 						name: /Recipients e-mail addresses/i
 					});
 
-					await user.type(chipInput, 'user1');
+					await user.type(chipInput, 'user1@email.it');
 
 					const roleSelector = screen.getByText('Role');
 
@@ -995,7 +995,7 @@ describe('Shared Calendar modal', () => {
 						const chipInput = screen.getByRole('textbox', {
 							name: /Recipients e-mail addresses/i
 						});
-						await user.type(chipInput, 'user1');
+						await user.type(chipInput, 'user1@email.it');
 						const confirmButton = screen.getByRole('button', { name: /Share Calendar/i });
 						await user.click(confirmButton);
 
@@ -1003,7 +1003,7 @@ describe('Shared Calendar modal', () => {
 							expect(sendSpy).toHaveBeenCalledTimes(1);
 						});
 						expect(sendSpy).toHaveBeenCalledWith(
-							expect.objectContaining({ contacts: [{ email: 'user1' }] })
+							expect.objectContaining({ contacts: [{ email: 'user1@email.it' }] })
 						);
 					});
 					test('and a custom message is added it will send the share notification with the custom message', async () => {
@@ -1024,7 +1024,7 @@ describe('Shared Calendar modal', () => {
 						const chipInput = screen.getByRole('textbox', {
 							name: /Recipients e-mail addresses/i
 						});
-						await user.type(chipInput, 'user1');
+						await user.type(chipInput, 'user1@email.it');
 						const standardMessage = screen.getByRole('textbox', {
 							name: /Add a note to standard message/i
 						});
