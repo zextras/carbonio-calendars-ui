@@ -71,7 +71,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 					dispatch(
 						sendShareCalendarNotification({
 							standardMessage,
-							contacts: [{ email: grant.d || (grant.zid as string) }],
+							contacts: [{ email: grant.d ?? (grant.zid as string) }],
 							folder: folder.id,
 							accounts
 						})
