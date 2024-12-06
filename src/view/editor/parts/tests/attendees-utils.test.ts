@@ -9,7 +9,7 @@ import { ChipAction } from '@zextras/carbonio-design-system';
 import { EDIT_ACTION } from './mocks';
 import { CONTACT_TYPES } from '../../../../carbonio-ui-commons/integrations/constants';
 import { ContactInputItem } from '../../../../carbonio-ui-commons/integrations/types';
-import { applyAttendeeToContactInputItem, validateChipInput } from '../attendees-utils';
+import { applyAttendeeToContactInputItem } from '../attendees-utils';
 
 const createUserChip = ({
 	email = 'test@test.com',
@@ -43,17 +43,6 @@ const createUserChip = ({
 });
 
 describe('attendee utils', () => {
-	describe('validateChipInput', () => {
-		it('should return an object with label and value.email equal to the provided input', () => {
-			const input = 'test_string';
-			expect(validateChipInput(input)).toEqual({ label: input, value: { email: input } });
-		});
-
-		test('should throw an error when input is not a string', () => {
-			expect(() => validateChipInput({})).toThrow('invalid keywords received');
-		});
-	});
-
 	describe('applyAttendeeToContactInputItem', () => {
 		const attendee = { email: 'test@test.com', fullName: 'Test' };
 

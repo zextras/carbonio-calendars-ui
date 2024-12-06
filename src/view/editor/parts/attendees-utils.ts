@@ -40,13 +40,6 @@ export function filterValidChips(
 	);
 }
 
-export const validateChipInput = (valueToAdd: unknown): ChipItem<EditorChipAttendees> => {
-	if (valueToAdd && typeof valueToAdd === 'string') {
-		return { label: valueToAdd, value: { email: valueToAdd } };
-	}
-	throw new Error('invalid keywords received');
-};
-
 const defaultContactChip = (attendee: EditorChipAttendees): ContactInputItem => ({
 	id: attendee.email,
 	label: attendee.email,
