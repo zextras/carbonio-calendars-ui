@@ -3,24 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 
 import { Button, Container, Row, useSnackbar } from '@zextras/carbonio-design-system';
-import { find, map } from 'lodash';
+import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import {
-	applyAttendeeToContactInputItem,
-	createEditorAttendeeFromContactInput
-} from './attendees-utils';
+import { AttendeesContactInput } from './attendees-contact-input';
 import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
 import { EditorOptionalAttendees } from './editor-optional-attendees';
 import { getOrderedAccountIds } from '../../../carbonio-ui-commons/helpers/identities';
-import { useContactInput } from '../../../carbonio-ui-commons/integrations/hooks';
 import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
@@ -35,6 +31,7 @@ import {
 	selectSender
 } from '../../../store/selectors/editor';
 import { editEditorAttendees } from '../../../store/slices/editor-slice';
+import { EditorChipAttendees } from '../../../types/store/invite';
 
 type EditorAttendeesProps = {
 	editorId: string;
@@ -56,7 +53,6 @@ export const AttendeesContainer = styled.div`
 
 export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElement => {
 	const [t] = useTranslation();
-	const ContactInput = useContactInput();
 	const dispatch = useAppDispatch();
 	const attendees = useAppSelector(selectEditorAttendees(editorId));
 	const optionalAttendees = useAppSelector(selectEditorOptionalAttendees(editorId));
@@ -73,9 +69,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const toggleOptionals = useCallback(() => setShowOptional((show) => !show), []);
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, attendees, uid);
-	const [contactsState, setContactsState] = useState<Record<string, ContactInputItem | undefined>>(
-		{}
-	);
 
 	useEffect(() => {
 		getOrderedAccountIds(sender ? sender.address : '')
@@ -94,66 +87,55 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			});
 	}, [createSnackbar, sender, t]);
 
-	const onChangeAttendeeContact = useCallback<(items: Array<ContactInputItem>) => void>(
-		(contacts) => {
-			const newContactsState: Record<string, ContactInputItem> = {};
-			contacts.forEach((contact) => {
-				newContactsState[contact.value.email] = contact;
-			});
-			setContactsState(newContactsState);
-			const newAttendees = contacts.map((contact) => {
-				const currentAttendee = attendees.find(
-					(attendee) => attendee.email === contact.value.email
-				);
-				return currentAttendee || createEditorAttendeeFromContactInput(contact);
-			});
+	const onChangeAttendeeContact = useCallback<
+		(updatedAttendees: Array<EditorChipAttendees>) => void
+	>(
+		(updatedAttendees) => {
 			dispatch(
 				editEditorAttendees({
 					id: editorId,
-					attendees: newAttendees
+					attendees: updatedAttendees
 				})
 			);
 		},
-		[attendees, dispatch, editorId]
+		[dispatch, editorId]
 	);
-	const attendeesContactInputValues: ContactInputItem[] = useMemo(() => {
-		if (attendees?.length > 0) {
-			return map(attendees, (attendee) => {
-				const currentChipAvailability = find(attendeesAvailabilityList, ['email', attendee.email]);
-				const storedValue = contactsState[attendee.email];
-				const currentContactInput = applyAttendeeToContactInputItem(attendee, storedValue);
-
-				if (currentChipAvailability) {
-					const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
-						currentChipAvailability,
-						start,
-						end,
-						attendeesAvailabilityList,
-						allDay
-					);
-
-					currentContactInput.actions =
-						isBusyAtTimeOfEvent && !find(currentContactInput.actions, ['id', 'unavailable'])
-							? [
-									...(currentContactInput.actions ?? []),
-									{
-										id: 'unavailable',
-										label: t(
-											'attendee_unavailable',
-											'Attendee not available at the selected time of the event'
-										),
-										color: 'error',
-										type: 'icon',
-										icon: 'AlertTriangle'
-									} as const
-								]
-							: currentContactInput.actions;
-				}
-				return currentContactInput;
-			});
-		}
-		return [];
-	}, [allDay, attendees, attendeesAvailabilityList, contactsState, end, start, t]);
+	const customDisplayAttendeeInput = useCallback(
+		(attendeeChip: ContactInputItem): ContactInputItem => {
+			const transformedChip = attendeeChip;
+			const currentChipAvailability = find(attendeesAvailabilityList, [
+				'email',
+				attendeeChip.value.email
+			]);
+			if (currentChipAvailability) {
+				const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
+					currentChipAvailability,
+					start,
+					end,
+					attendeesAvailabilityList,
+					allDay
+				);
+				transformedChip.actions =
+					isBusyAtTimeOfEvent && !find(attendeeChip.actions, ['id', 'unavailable'])
+						? [
+								...(attendeeChip.actions ?? []),
+								{
+									id: 'unavailable',
+									label: t(
+										'attendee_unavailable',
+										'Attendee not available at the selected time of the event'
+									),
+									color: 'error',
+									type: 'icon',
+									icon: 'AlertTriangle'
+								} as const
+							]
+						: attendeeChip.actions;
+			}
+			return transformedChip;
+		},
+		[allDay, attendeesAvailabilityList, end, start, t]
+	);
 
 	return (
 		<>
@@ -165,14 +147,14 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 					padding={{ all: 'none' }}
 				>
 					<Container background={'gray5'} style={{ overflow: 'hidden' }}>
-						<ContactInput
+						<AttendeesContactInput
 							data-testid={'attendees-chip-input'}
 							placeholder={t('label.attendees', 'Attendees')}
+							attendees={attendees}
 							onChange={onChangeAttendeeContact}
-							defaultValue={attendeesContactInputValues}
 							disabled={disabled?.attendees}
-							dragAndDropEnabled
 							orderedAccountIds={orderedAccountIds}
+							customDisplayAttendeeChip={customDisplayAttendeeInput}
 						/>
 					</Container>
 					<Container

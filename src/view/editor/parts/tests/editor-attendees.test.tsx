@@ -196,36 +196,7 @@ describe('Editor Attendees', () => {
 			});
 		});
 
-		it('should remove edit action when new value in ContactInput has no errors', async () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const newValueFromAutocomplete = { ...MOCK_VALUE, actions: [EDIT_ACTION], error: false };
-
-			jest
-				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }));
-			const editor = generateEditor({
-				context: {
-					dispatch: store.dispatch,
-					folders: {}
-				}
-			});
-			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-
-			await triggerOnAdd(user);
-
-			await waitFor(() => {
-				expect(spyDefaultValue).toHaveBeenCalledWith(
-					expect.arrayContaining([
-						expect.objectContaining({
-							error: false,
-							actions: []
-						})
-					])
-				);
-			});
-		});
-
-		it('should dispaly attendee not available action when already busy during current appointment', async () => {
+		it('should display attendee not available action when already busy during current appointment', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue(contactInputBuilder());
 			const attendeeEmail = 'email1@test.com';
