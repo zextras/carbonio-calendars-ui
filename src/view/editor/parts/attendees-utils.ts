@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { ChipItem } from '@zextras/carbonio-design-system';
-import { reduce, reject, uniqBy } from 'lodash';
+import { reject } from 'lodash';
 
 import { CONTACT_TYPES } from '../../../carbonio-ui-commons/integrations/constants';
 import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
@@ -13,34 +12,13 @@ import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/type
 // TODO: use types from contact. Consider extracting them or create a @types module
 import { EditorChipAttendees } from '../../../types/store/invite';
 
-export function getContactInputEmail(contact: ContactInputItem): string {
-	return contact.value.email;
-}
-
 export function createEditorAttendeeFromContactInput(
 	contact: ContactInputItem
 ): EditorChipAttendees {
-	return { label: contact.label, email: getContactInputEmail(contact) };
+	return { label: contact.label, email: contact.value.email };
 }
 
-export function mapContactInputAttendees(contacts: ContactInputItem[]): EditorChipAttendees[] {
-	return contacts.map(createEditorAttendeeFromContactInput);
-}
-
-export function filterValidChips(
-	chips: ChipItem<EditorChipAttendees>[]
-): Array<EditorChipAttendees> {
-	return uniqBy(
-		reduce(
-			chips,
-			(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
-			[] as Array<EditorChipAttendees>
-		),
-		'email'
-	);
-}
-
-const defaultContactChip = (attendee: EditorChipAttendees): ContactInputItem => ({
+const createContactChip = (attendee: EditorChipAttendees): ContactInputItem => ({
 	id: attendee.email,
 	label: attendee.email,
 	value: {
@@ -55,7 +33,7 @@ export function applyAttendeeToContactInputItem(
 	chip: ContactInputItem | undefined
 ): ContactInputItem {
 	if (!chip) {
-		return defaultContactChip(attendee);
+		return createContactChip(attendee);
 	}
 	return {
 		...chip,

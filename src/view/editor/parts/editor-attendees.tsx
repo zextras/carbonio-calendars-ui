@@ -5,15 +5,13 @@
  */
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { Button, ChipItem, Container, Row, useSnackbar } from '@zextras/carbonio-design-system';
-import { find, map, some } from 'lodash';
+import { Button, Container, Row, useSnackbar } from '@zextras/carbonio-design-system';
+import { find, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import {
 	applyAttendeeToContactInputItem,
-	filterValidChips,
-	getContactInputEmail,
 	createEditorAttendeeFromContactInput
 } from './attendees-utils';
 import {
@@ -37,7 +35,6 @@ import {
 	selectSender
 } from '../../../store/selectors/editor';
 import { editEditorAttendees } from '../../../store/slices/editor-slice';
-import { EditorChipAttendees } from '../../../types/store/invite';
 
 type EditorAttendeesProps = {
 	editorId: string;
@@ -80,8 +77,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 		{}
 	);
 
-	const hasError = useMemo(() => some(attendees ?? [], { error: true }), [attendees]);
-
 	useEffect(() => {
 		getOrderedAccountIds(sender ? sender.address : '')
 			.then((ids) => {
@@ -99,18 +94,11 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			});
 	}, [createSnackbar, sender, t]);
 
-	const onChangeAttendeeChip = useCallback<(items: ChipItem<EditorChipAttendees>[]) => void>(
-		(chips) => {
-			const newAttendees = filterValidChips(chips);
-			dispatch(editEditorAttendees({ id: editorId, attendees: newAttendees }));
-		},
-		[dispatch, editorId]
-	);
 	const onChangeAttendeeContact = useCallback<(items: Array<ContactInputItem>) => void>(
 		(contacts) => {
 			const newContactsState: Record<string, ContactInputItem> = {};
 			contacts.forEach((contact) => {
-				newContactsState[getContactInputEmail(contact)] = contact;
+				newContactsState[contact.value.email] = contact;
 			});
 			setContactsState(newContactsState);
 			const newAttendees = contacts.map((contact) => {
@@ -127,14 +115,6 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 			);
 		},
 		[attendees, dispatch, editorId]
-	);
-	const attendeesChipInputValues: ChipItem<EditorChipAttendees>[] = useMemo(
-		() =>
-			map(attendees, (attendee) => ({
-				label: attendee.email,
-				value: attendee
-			})),
-		[attendees]
 	);
 	const attendeesContactInputValues: ContactInputItem[] = useMemo(() => {
 		if (attendees?.length > 0) {

@@ -11,8 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
 	applyAttendeeToContactInputItem,
-	createEditorAttendeeFromContactInput,
-	getContactInputEmail
+	createEditorAttendeeFromContactInput
 } from './attendees-utils';
 import { useContactInput } from '../../../carbonio-ui-commons/integrations/hooks';
 import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
@@ -43,7 +42,7 @@ export const EditorOptionalAttendees = ({
 		(contacts) => {
 			const newContactsState: Record<string, ContactInputItem> = {};
 			contacts.forEach((contact) => {
-				newContactsState[getContactInputEmail(contact)] = contact;
+				newContactsState[contact.value.email] = contact;
 			});
 			setOptionalContactsState(newContactsState);
 			const newOptionalAttendees = contacts.map((contact) => {
