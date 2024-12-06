@@ -17,7 +17,7 @@ import {
 	spyDefaultValue,
 	triggerOnAdd
 } from './mocks';
-import { USER_TYPES_CONST } from '../../../../carbonio-ui-commons/integrations/constants';
+import { CONTACT_TYPES } from '../../../../carbonio-ui-commons/integrations/constants';
 import { DefaultContactInput } from '../../../../carbonio-ui-commons/integrations/default-contact-input';
 import * as commonIntegrationHooks from '../../../../carbonio-ui-commons/integrations/hooks';
 import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
@@ -327,7 +327,7 @@ describe('Editor Attendees', () => {
 							value: {
 								id: dlEmail,
 								email: dlEmail,
-								type: USER_TYPES_CONST.DISTRIBUTION_LIST
+								type: CONTACT_TYPES.DISTRIBUTION_LIST
 							}
 						})
 					])

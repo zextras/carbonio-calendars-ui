@@ -7,7 +7,7 @@
 import { ChipItem } from '@zextras/carbonio-design-system';
 import { reduce, reject, uniqBy } from 'lodash';
 
-import { USER_TYPES_CONST } from '../../../carbonio-ui-commons/integrations/constants';
+import { CONTACT_TYPES } from '../../../carbonio-ui-commons/integrations/constants';
 import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
 
 // TODO: use types from contact. Consider extracting them or create a @types module
@@ -53,7 +53,7 @@ const defaultContactChip = (attendee: EditorChipAttendees): ContactInputItem => 
 	value: {
 		id: attendee.email,
 		email: attendee.email,
-		type: attendee.isGroup ? USER_TYPES_CONST.DISTRIBUTION_LIST : USER_TYPES_CONST.CONTACT
+		type: attendee.isGroup ? CONTACT_TYPES.DISTRIBUTION_LIST : CONTACT_TYPES.CONTACT
 	}
 });
 

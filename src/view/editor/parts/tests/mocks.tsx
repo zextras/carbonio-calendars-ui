@@ -9,8 +9,8 @@ import { screen } from '@testing-library/react';
 import { Button, ChipAction } from '@zextras/carbonio-design-system';
 
 import {
-	EDIT_ACTION_ID,
-	USER_TYPES_CONST
+	CONTACT_TYPES,
+	EDIT_ACTION_ID
 } from '../../../../carbonio-ui-commons/integrations/constants';
 import {
 	ContactInputItem,
@@ -30,7 +30,7 @@ export const MOCK_VALUE = {
 	label: 'whatever',
 	value: {
 		id: '123',
-		type: USER_TYPES_CONST.CONTACT,
+		type: CONTACT_TYPES.CONTACT,
 		email: 'newContact@test.com',
 		firstName: 'New',
 		lastName: 'Contact',
@@ -45,7 +45,7 @@ export const MOCK_DL = {
 	label: 'whatever',
 	value: {
 		id: '123',
-		type: USER_TYPES_CONST.DISTRIBUTION_LIST,
+		type: CONTACT_TYPES.DISTRIBUTION_LIST,
 		email: 'newContact@test.com'
 	},
 	error: false,

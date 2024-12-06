@@ -7,7 +7,7 @@
 import { ChipAction } from '@zextras/carbonio-design-system';
 
 import { EDIT_ACTION } from './mocks';
-import { USER_TYPES_CONST } from '../../../../carbonio-ui-commons/integrations/constants';
+import { CONTACT_TYPES } from '../../../../carbonio-ui-commons/integrations/constants';
 import { ContactInputItem } from '../../../../carbonio-ui-commons/integrations/types';
 import { applyAttendeeToContactInputItem, validateChipInput } from '../attendees-utils';
 
@@ -37,7 +37,7 @@ const createUserChip = ({
 		fullName,
 		firstName,
 		lastName,
-		type: USER_TYPES_CONST.CONTACT
+		type: CONTACT_TYPES.CONTACT
 	},
 	actions
 });
