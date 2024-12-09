@@ -36,13 +36,7 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	return start && end ? (
 		<>
 			<Row takeAvailableSpace>
-				<StartDatePicker
-					start={new Date(start)}
-					onChange={onChange}
-					diff={diff}
-					allDay={allDay}
-					disabled={disabled?.datePicker}
-				/>
+				<StartDatePicker start={new Date(start)} onChange={onChange} diff={diff} allDay={allDay} />
 			</Row>
 			<Padding left="small" />
 			<Row takeAvailableSpace>
@@ -52,7 +46,6 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 					onChange={onChange}
 					diff={diff}
 					allDay={allDay}
-					disabled={disabled?.datePicker}
 				/>
 			</Row>
 		</>

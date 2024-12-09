@@ -370,13 +370,18 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const [t] = useTranslation();
 	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(), []);
 
-	const [shareWithUserType, setShareWithUserType] = useState<'usr' | null>(SHARE_USER_TYPE.USER);
+	const [shareWithUserType, setShareWithUserType] = useState<'usr' | 'pub' | null>(
+		SHARE_USER_TYPE.USER
+	);
 
 	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
 
-	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr' | null>>((shareWith) => {
-		setShareWithUserType(shareWith);
-	}, []);
+	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr' | 'pub' | null>>(
+		(shareWith) => {
+			setShareWithUserType(shareWith);
+		},
+		[]
+	);
 
 	return (
 		<Container

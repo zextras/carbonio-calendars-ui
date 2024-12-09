@@ -7,6 +7,7 @@ import React from 'react';
 
 import { Container, Divider, Text, Row, IconButton } from '@zextras/carbonio-design-system';
 
+/** @type { (props: { title: string; onClose?: () => void }) => React.JSX.Element } */
 export const ModalHeader = ({ title, onClose }) => (
 	<>
 		<Row

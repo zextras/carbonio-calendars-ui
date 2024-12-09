@@ -182,33 +182,33 @@ export const CustomToolbar = ({
 
 					<CustomContainer width="fit" orientation="horizontal" mainAlignment="flex-end">
 						<CustomButton
-							backgroundColor={view === 'month' ? 'highlight' : undefined}
+							backgroundColor={view === 'month' ? 'highlight' : 'transparent'}
 							label={t('label.month', 'month')}
-							type="ghost"
+							type="default"
 							onClick={month}
 							data-testid="MonthButton"
 							minWidth={'fit-content'}
 						/>
 						<CustomButton
-							backgroundColor={view === 'week' ? 'highlight' : undefined}
+							backgroundColor={view === 'week' ? 'highlight' : 'primary'}
 							label={t('label.week', 'week')}
-							type="ghost"
+							type="default"
 							onClick={week}
 							data-testid="WeekButton"
 							minWidth={'fit-content'}
 						/>
 						<CustomButton
-							backgroundColor={view === 'day' ? 'highlight' : undefined}
+							backgroundColor={view === 'day' ? 'highlight' : 'transparent'}
 							label={t('label.day', 'day')}
-							type="ghost"
+							type="default"
 							onClick={day}
 							data-testid="DayButton"
 							minWidth={'fit-content'}
 						/>
 						<CustomButton
-							backgroundColor={view === 'work_week' ? 'highlight' : undefined}
+							backgroundColor={view === 'work_week' ? 'highlight' : 'transparent'}
 							label={t('label.work_week', 'work week')}
-							type="ghost"
+							type="default"
 							onClick={workView}
 							data-testid="WorkWeekButton"
 							minWidth={'fit-content'}

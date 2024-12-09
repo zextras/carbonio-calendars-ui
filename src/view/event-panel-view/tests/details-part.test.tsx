@@ -49,7 +49,7 @@ describe('title-row', () => {
 				event={event}
 				invite={invite}
 				inviteNeverSent={invite.neverSent}
-				isPrivate={event.resource.class === 'PRI' ?? false}
+				isPrivate={event.resource.class === 'PRI'}
 				subject={event.title}
 			/>,
 			{ store }
@@ -77,7 +77,7 @@ describe('title-row', () => {
 				event={event}
 				invite={invite}
 				inviteNeverSent={invite.neverSent}
-				isPrivate={event.resource.class === 'PRI' ?? false}
+				isPrivate={event.resource.class === 'PRI'}
 				subject={event.title}
 			/>,
 			{ store }

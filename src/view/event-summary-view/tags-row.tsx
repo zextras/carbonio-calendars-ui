@@ -6,12 +6,12 @@
 import React, { FC, ReactElement, useCallback, useMemo } from 'react';
 
 import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
-import { runSearch } from '@zextras/carbonio-shell-ui';
 import { includes, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
+import { useRunSearchIntegration } from '../../carbonio-ui-commons/integrations/search/use-run-search';
 import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
 import { Tag } from '../../carbonio-ui-commons/types/tags';
 import { CALENDAR_ROUTE } from '../../constants';
@@ -47,9 +47,11 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 	);
 	const tagLabel = useMemo(() => t('label.tags', 'Tags'), [t]);
 
+	const runSearch = useRunSearchIntegration();
+
 	const triggerSearch = useCallback(
 		(tagToSearch: Tag) =>
-			runSearch(
+			runSearch?.(
 				[
 					{
 						avatarBackground: ZIMBRA_STANDARD_COLORS[tagToSearch?.color ?? 0].hex,
@@ -62,7 +64,7 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 				],
 				CALENDAR_ROUTE
 			),
-		[]
+		[runSearch]
 	);
 	return (
 		<Row

@@ -764,6 +764,7 @@ export const getWeekDay = (day) => {
 	}
 };
 
+/** @type { () => { label: string; value: 'usr' | 'pub' }[] } */
 export const ShareCalendarWithOptions = () => [
 	{
 		label: t('share.options.share_calendar_with.internal_users_groups', 'Internal Users or Groups'),

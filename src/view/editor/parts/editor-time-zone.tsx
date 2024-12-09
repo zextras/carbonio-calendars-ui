@@ -33,7 +33,7 @@ export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 
 	const { zimbraPrefUseTimeZoneListInCalendar } = usePrefs();
-	const timeZonesOptions = useMemo(() => TimeZonesOptions(t), [t]);
+	const timeZonesOptions = useMemo(() => TimeZonesOptions(), []);
 	const timezoneLabel = t('timezones', 'Timezones');
 	const [value, setValue] = useState<SelectValue>(() => {
 		if (timezone && zimbraPrefUseTimeZoneListInCalendar === 'TRUE') {

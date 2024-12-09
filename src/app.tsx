@@ -7,20 +7,19 @@
 import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 
 import { ModalManager } from '@zextras/carbonio-design-system';
+import type * as SearchUI from '@zextras/carbonio-search-ui';
 import {
 	addRoute,
 	addSettingsView,
-	addSearchView,
 	ACTION_TYPES,
 	addBoardView,
 	registerActions,
 	registerComponents,
 	registerFunctions,
-	SearchViewProps,
 	SecondaryBarComponentProps,
-	NewAction
+	NewAction,
+	useIntegratedFunction
 } from '@zextras/carbonio-shell-ui';
-import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -99,7 +98,7 @@ const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
 	</Suspense>
 );
 
-const SearchView = (props: SearchViewProps): React.JSX.Element => (
+const SearchView = (props: SearchUI.SearchViewProps): React.JSX.Element => (
 	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
@@ -116,9 +115,9 @@ const AppRegistrations = (): null => {
 	const [t] = useTranslation();
 
 	useInitializeFolders(FOLDER_VIEW.appointment);
+	const appLabel = t('label.app_name', 'Calendars');
 
 	useEffect(() => {
-		const appLabel = t('label.app_name', 'Calendars');
 		addRoute({
 			route: CALENDAR_ROUTE,
 			position: 200,
@@ -134,16 +133,42 @@ const AppRegistrations = (): null => {
 			component: SettingsView,
 			subSections: getSettingsSubSections()
 		});
-		addSearchView({
-			route: CALENDAR_ROUTE,
-			label: appLabel,
-			component: SearchView
-		});
 		addBoardView({
 			id: CALENDAR_BOARD_ID,
 			component: EditorView
 		});
-	}, [t]);
+	}, [appLabel, t]);
+
+	const [addSearchView, isAddSearchViewAvailable] =
+		useIntegratedFunction<typeof SearchUI.addSearchView>('search-add-view');
+	const [removeSearchView, isRemoveSearchViewAvailable] =
+		useIntegratedFunction<typeof SearchUI.removeSearchView>('search-remove-view');
+
+	useEffect(() => {
+		if (isAddSearchViewAvailable) {
+			addSearchView({
+				id: CALENDAR_APP_ID,
+				app: CALENDAR_APP_ID,
+				route: CALENDAR_ROUTE,
+				label: appLabel,
+				component: SearchView,
+				position: 200,
+				icon: 'CalendarModOutline'
+			});
+		}
+
+		return () => {
+			if (isRemoveSearchViewAvailable) {
+				removeSearchView(CALENDAR_APP_ID);
+			}
+		};
+	}, [
+		addSearchView,
+		appLabel,
+		isAddSearchViewAvailable,
+		isRemoveSearchViewAvailable,
+		removeSearchView
+	]);
 
 	const newAction = useMemo(
 		(): NewAction => ({
@@ -161,7 +186,7 @@ const AppRegistrations = (): null => {
 	useEffect(() => {
 		registerFunctions({
 			id: CalendarIntegrations.CREATE_APPOINTMENT,
-			fn: createAppointmentIntegration(dispatch, calendars) as AnyFunction
+			fn: createAppointmentIntegration(dispatch, calendars)
 		});
 		registerActions<NewAction>({
 			action: () => newAction,

@@ -6,7 +6,7 @@
 import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
-import { QueryChip, SearchViewProps } from '@zextras/carbonio-shell-ui';
+import type { QueryChip, SearchViewProps } from '@zextras/carbonio-search-ui';
 import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
@@ -15,6 +15,7 @@ import AdvancedFilterModal from './advance-filter-modal';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
+import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
@@ -23,7 +24,6 @@ import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-fi
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
-import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
 
 export type SearchResults = {
 	appointments: Record<string, string[]>;
