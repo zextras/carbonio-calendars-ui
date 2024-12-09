@@ -66,7 +66,7 @@ export const AttendeesContactInput = ({
 	const attendeesChips: Array<ContactInputItem> = useMemo(() => {
 		const chipsToDisplay = attendees.map((attendee) => {
 			const existingChip = inputState[attendee.email];
-			return existingChip || createContactChip(attendee);
+			return existingChip ?? createContactChip(attendee);
 		});
 		return customDisplayAttendeeChip
 			? chipsToDisplay.map(customDisplayAttendeeChip)
