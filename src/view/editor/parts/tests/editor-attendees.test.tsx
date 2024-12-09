@@ -8,17 +8,18 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
-import * as shellUi from '@zextras/carbonio-shell-ui';
 import { combineReducers } from 'redux';
 
 import {
-	ContactInput,
-	ContactInputDistributionList,
-	ContactInputError,
-	ContactInputGroup,
+	contactInputBuilder,
 	EDIT_ACTION,
-	spyDefaultValue
+	MOCK_VALUE,
+	spyDefaultValue,
+	triggerOnAdd
 } from './mocks';
+import { CONTACT_TYPES } from '../../../../carbonio-ui-commons/integrations/constants';
+import { DefaultContactInput } from '../../../../carbonio-ui-commons/integrations/default-contact-input';
+import * as commonIntegrationHooks from '../../../../carbonio-ui-commons/integrations/hooks';
 import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
@@ -29,7 +30,7 @@ import { EditorAttendees } from '../editor-attendees';
 
 describe('Editor Attendees', () => {
 	beforeEach(() => {
-		jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, false]);
+		jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue(DefaultContactInput);
 	});
 
 	it('should display error snackbar when failing to get account ids', async () => {
@@ -61,7 +62,7 @@ describe('Editor Attendees', () => {
 				b: [
 					{
 						s: new Date(2024, 10, 1, 11, 0).getTime(),
-						e: new Date(2024, 10, 1, 11, 130).getTime()
+						e: new Date(2024, 10, 1, 11, 30).getTime()
 					}
 				]
 			}
@@ -89,32 +90,18 @@ describe('Editor Attendees', () => {
 	});
 
 	describe('ChipInput', () => {
-		it('should display attendee email if attendee does not have a label', () => {
+		it('should always display attendee email', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
 					folders: {},
-					attendees: [{ email: 'email1@test.com' }]
+					attendees: [{ email: 'email1@test.com', label: 'test label' }]
 				}
 			});
 			setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			expect(screen.getByText('email1@test.com')).toBeVisible();
-		});
-
-		it('should display attendee label in chip if label available', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			const editor = generateEditor({
-				context: {
-					dispatch: store.dispatch,
-					folders: {},
-					attendees: [{ email: 'email1@test.com', label: 'Test 1' }]
-				}
-			});
-			setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			expect(screen.getByText('Test 1')).toBeVisible();
+			expect(within(screen.getByTestId('chip')).getByText('email1@test.com')).toBeVisible();
 		});
 
 		it('should display multiple attendees', () => {
@@ -124,15 +111,15 @@ describe('Editor Attendees', () => {
 				context: {
 					dispatch: store.dispatch,
 					folders: {},
-					attendees: [
-						{ email: 'email1@test.com', label: 'Test 1' },
-						{ email: 'email2@test.com', label: 'Test 2' }
-					]
+					attendees: [{ email: 'email1@test.com' }, { email: 'email2@test.com' }]
 				}
 			});
 			setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			expect(screen.getByText('Test 1')).toBeVisible();
-			expect(screen.getByText('Test 2')).toBeVisible();
+
+			const chips = screen.getAllByTestId('chip');
+
+			expect(within(chips[0]).getByText('email1@test.com')).toBeVisible();
+			expect(within(chips[1]).getByText('email2@test.com')).toBeVisible();
 		});
 
 		it('should add a new attendee after typing in the chip input', async () => {
@@ -146,13 +133,12 @@ describe('Editor Attendees', () => {
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			const optionalsAttendeesInput = screen.getByText('Optionals');
 			const chipInput = await screen.findByTestId('attendees-chip-input');
 
 			await user.type(within(chipInput).getByRole('textbox'), 'email3@test.com');
-			await user.click(optionalsAttendeesInput);
+			await user.type(within(chipInput).getByRole('textbox'), '[Enter]');
 
-			expect(screen.getByText('email3@test.com')).toBeVisible();
+			expect(within(screen.getByTestId('chip')).getByText('email3@test.com')).toBeVisible();
 		});
 
 		it('should not clear existing attendees after adding a new one', async () => {
@@ -162,29 +148,32 @@ describe('Editor Attendees', () => {
 				context: {
 					dispatch: store.dispatch,
 					folders: {},
-					attendees: [
-						{ email: 'email1@test.com', label: 'Test 1' },
-						{ email: 'email2@test.com', label: 'Test 2' }
-					]
+					attendees: [{ email: 'email1@test.com' }, { email: 'email2@test.com' }]
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			const optionalsAttendeesInput = screen.getByText('Optionals');
 			const chipInput = await screen.findByTestId('attendees-chip-input');
 
 			await user.type(within(chipInput).getByRole('textbox'), 'email3@test.com');
-			await user.click(optionalsAttendeesInput);
+			await user.type(within(chipInput).getByRole('textbox'), '[Enter]');
 
-			expect(screen.getByText('email3@test.com')).toBeVisible();
-			expect(screen.getByText('Test 2')).toBeVisible();
-			expect(screen.getByText('Test 1')).toBeVisible();
+			const chips = screen.getAllByTestId('chip');
+
+			expect(within(chips[0]).getByText('email1@test.com')).toBeVisible();
+			expect(within(chips[1]).getByText('email2@test.com')).toBeVisible();
+			expect(within(chips[2]).getByText('email3@test.com')).toBeVisible();
 		});
 	});
 
 	describe('ContactInput', () => {
 		it('should display edit action when new value in ContactInput has an error', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInputError, true]);
+
+			const newValueFromAutocomplete = { ...MOCK_VALUE, actions: [EDIT_ACTION], error: true };
+
+			jest
+				.spyOn(commonIntegrationHooks, 'useContactInput')
+				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }));
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -192,8 +181,8 @@ describe('Editor Attendees', () => {
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			const testButton = await screen.findByTestId('test-button');
-			await user.click(testButton);
+
+			await triggerOnAdd(user);
 
 			await waitFor(() => {
 				expect(spyDefaultValue).toHaveBeenCalledWith(
@@ -207,59 +196,9 @@ describe('Editor Attendees', () => {
 			});
 		});
 
-		it('should not display edit action when new value in ContactInput has no errors', async () => {
+		it('should display attendee not available action when already busy during current appointment', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
-			const editor = generateEditor({
-				context: {
-					dispatch: store.dispatch,
-					folders: {}
-				}
-			});
-			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-			const testButton = await screen.findByTestId('test-button');
-			await user.click(testButton);
-
-			await waitFor(() => {
-				expect(spyDefaultValue).toHaveBeenCalledWith(
-					expect.arrayContaining([
-						expect.objectContaining({
-							error: false,
-							actions: []
-						})
-					])
-				);
-			});
-		});
-
-		it('should pass firstName, lastName as undefined to the ContactInput component', async () => {
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const editor = generateEditor({
-				context: {
-					dispatch: store.dispatch,
-					folders: {},
-					attendees: [{ email: 'email1@test.com', fullName: 'Test 1' }]
-				}
-			});
-			setupTest(<EditorAttendees editorId={editor.id} />, { store });
-
-			expect(spyDefaultValue).toHaveBeenCalledWith([
-				{
-					fullName: 'Test 1',
-					email: 'email1@test.com',
-					actions: undefined,
-					error: undefined,
-					firstName: undefined,
-					lastName: undefined,
-					id: 'email1@test.com'
-				}
-			]);
-		});
-
-		it('should add attendee not available action when already busy during current appointment', async () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInput, true]);
+			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue(contactInputBuilder());
 			const attendeeEmail = 'email1@test.com';
 			const appointmentStart = new Date(2024, 10, 1, 10, 30);
 			const appointmentEnd = new Date(2024, 10, 1, 12, 30);
@@ -307,69 +246,60 @@ describe('Editor Attendees', () => {
 			});
 		});
 
-		it('should display a contact group', async () => {
-			jest.spyOn(shellUi, 'useIntegratedComponent').mockReturnValue([ContactInputGroup, true]);
+		it('should keep the attendee participation status after updating the attendees', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
+			const attendeeEmail = 'email1@test.com';
+
+			const newValueFromAutocomplete = { ...MOCK_VALUE, label: 'test label' };
+
+			jest
+				.spyOn(commonIntegrationHooks, 'useContactInput')
+				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }));
+
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
-					folders: {}
+					folders: {},
+					attendees: [{ email: attendeeEmail, ptst: 'AC' }]
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
 
-			const testButton = await screen.findByTestId('test-button');
-			await user.click(testButton);
+			await triggerOnAdd(user);
 
-			await waitFor(() => {
-				expect(spyDefaultValue).toHaveBeenCalledWith(
-					expect.arrayContaining([
-						expect.objectContaining({
-							id: '123',
-							email: undefined,
-							error: false,
-							actions: [],
-							isGroup: true,
-							groupId: '456',
-							display: 'group 456'
-						})
-					])
-				);
-			});
+			expect(spyDefaultValue).toHaveBeenCalledWith([
+				expect.objectContaining({ label: attendeeEmail }),
+				expect.objectContaining({ label: 'test label' })
+			]);
+
+			expect(store.getState().editor.editors[editor.id].attendees[0].ptst).toBe('AC');
 		});
 
-		it('should display a distribution list', async () => {
-			jest
-				.spyOn(shellUi, 'useIntegratedComponent')
-				.mockReturnValue([ContactInputDistributionList, true]);
+		it('should display a distribution list from store as distribution list', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
+
+			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue(contactInputBuilder());
+			const dlEmail = 'dl1@test.com';
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
-					folders: {}
+					folders: {},
+					attendees: [{ email: dlEmail, isGroup: true }]
 				}
 			});
-			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
-
-			const testButton = await screen.findByTestId('test-button');
-			await user.click(testButton);
+			setupTest(<EditorAttendees editorId={editor.id} />, { store });
 
 			await waitFor(() => {
 				expect(spyDefaultValue).toHaveBeenCalledWith(
 					expect.arrayContaining([
 						expect.objectContaining({
-							company: undefined,
-							display: undefined,
-							email: 'prova@zextras.com',
-							error: false,
-							firstName: undefined,
-							fullName: 'DL di test',
-							groupId: undefined,
-							id: 'undefined prova@zextras.com',
-							isGroup: true,
-							label: 'prova@zextras.com',
-							lastName: undefined,
-							actions: []
+							id: dlEmail,
+							label: dlEmail,
+							value: {
+								id: dlEmail,
+								email: dlEmail,
+								type: CONTACT_TYPES.DISTRIBUTION_LIST
+							}
 						})
 					])
 				);
