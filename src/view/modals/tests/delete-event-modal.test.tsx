@@ -9,14 +9,14 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 
-import { DeleteEventModal } from './delete-event-modal';
-import { FOLDER_VIEW } from '../../carbonio-ui-commons/constants';
-import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { populateFoldersStore } from '../../carbonio-ui-commons/test/mocks/store/folders';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
-import { PARTICIPANT_ROLE } from '../../constants/api';
-import { reducers } from '../../store/redux';
-import mockedData from '../../test/generators';
+import { FOLDER_VIEW } from '../../../carbonio-ui-commons/constants';
+import * as shell from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
+import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { PARTICIPANT_ROLE } from '../../../constants/api';
+import { reducers } from '../../../store/redux';
+import mockedData from '../../../test/generators';
+import { DeleteEventModal } from '../delete-event-modal';
 
 describe('delete event modal', () => {
 	const participantFirstName = faker.person.firstName();
@@ -291,13 +291,15 @@ describe('delete event modal', () => {
 						{ store }
 					);
 
-					expect(screen.getByText(/message\.want_to_edit_cancellation_msg/i)).toBeInTheDocument();
+					expect(
+						screen.getByText(/Do you want to edit the appointment cancellation message?/i)
+					).toBeInTheDocument();
 					expect(
 						screen.queryByText(/message\.sure_to_delete_appointment/i)
 					).not.toBeInTheDocument();
 					expect(
 						screen.getByRole('button', {
-							name: /action\.edit_message/i
+							name: /Edit Message/i
 						})
 					).toBeInTheDocument();
 					expect(
@@ -334,7 +336,7 @@ describe('delete event modal', () => {
 
 					await user.click(
 						screen.getByRole('button', {
-							name: /action\.edit_message/i
+							name: /Edit Message/i
 						})
 					);
 

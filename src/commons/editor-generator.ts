@@ -9,22 +9,16 @@ import momentLocalizer from 'react-widgets-moment';
 import { Dispatch } from 'redux';
 
 import { getIdentityItems } from './get-identity-items';
-import { Folder, Folders, LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { Folders, LinkFolder } from '../carbonio-ui-commons/types';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { PREFS_DEFAULTS } from '../constants';
 import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
 import { createNewEditor } from '../store/slices/editor-slice';
 import { Editor } from '../types/editor';
 import { Invite } from '../types/store/invite';
+import { getNewId } from '../utils/event';
 
 momentLocalizer(moment);
-
-let counter = 0;
-
-export const getNewEditId = (id?: string): string => {
-	counter += 1;
-	return `${id ?? 'new'}-${counter}`;
-};
 
 export const getEndTime = ({ start, duration }: { start: number; duration: string }): number => {
 	const now = moment(start);
@@ -171,7 +165,7 @@ export const generateEditor = ({
 	invite?: Invite;
 	context: EditorContext;
 }): Editor => {
-	const id = getNewEditId(event?.resource?.id);
+	const id = getNewId(event?.resource?.id);
 	const emptyEditor = createEmptyEditor(id, context.folders);
 
 	const compiledEditor = normalizeEditor({
