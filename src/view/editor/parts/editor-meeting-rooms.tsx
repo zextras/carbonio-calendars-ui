@@ -76,7 +76,6 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 					useAppStatusStore.setState({ meetingRoom: uniqBy(remoteResources, 'label') });
 					return res;
 				}
-				// TODO: what should happen when API fails? Test and check behavior
 				throw new Error('API failed');
 			}),
 		[]
