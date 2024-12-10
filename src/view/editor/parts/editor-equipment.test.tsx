@@ -215,7 +215,6 @@ describe('Editor equipment', () => {
 		const selectedEquipmentLabel = items[0].label;
 		await user.click(within(dropdown).getByText(selectedEquipmentLabel));
 
-		// screen.logTestingPlaygroundURL();
 		expect(screen.getByText(equipment1.label)).toBeVisible();
 		expect(screen.getByText(selectedEquipmentLabel)).toBeVisible();
 	});

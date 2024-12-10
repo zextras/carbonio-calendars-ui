@@ -28,7 +28,7 @@ const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ meetingRoom: [] }));
 };
 
-const setupBackendResponse = (items: Resource[]): void => {
+const setupFreeBusyResponse = (items: Resource[]): void => {
 	const freeBusyArrayItems = map(items, (item) => ({
 		id: item.email,
 		f: [
@@ -52,11 +52,25 @@ describe('Editor meeting rooms', () => {
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		setupEmptyAppStatusStore();
-		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
-		await waitFor(() => {
-			user.click(screen.getByText('Meeting room'));
-		});
+		setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
+
 		expect(screen.getByText('Meeting room')).toBeInTheDocument();
+	});
+	test('should render the meeting room already present in the store', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const meetingRoom1 = {
+			label: 'meeting room 1',
+			email: 'meeting@room1.test'
+		};
+
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [meetingRoom1] }
+		});
+
+		setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
+
+		expect(screen.getByText(meetingRoom1.label)).toBeVisible();
 	});
 
 	test('On type options are visible on screen', async () => {
@@ -105,7 +119,7 @@ describe('Editor meeting rooms', () => {
 		});
 		const soapResponse = getCustomResources(items);
 
-		setupBackendResponse([items[0]]);
+		setupFreeBusyResponse([items[0]]);
 
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(soapResponse))
@@ -143,7 +157,7 @@ describe('Editor meeting rooms', () => {
 		});
 		const soapResponse = getCustomResources(items);
 
-		setupBackendResponse([items[0]]);
+		setupFreeBusyResponse([items[0]]);
 
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(soapResponse))
@@ -166,5 +180,41 @@ describe('Editor meeting rooms', () => {
 
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
+	});
+
+	test('adding a new meeting room should not remove the already existing chips', async () => {
+		const meetinRoom1 = {
+			label: 'meeting room 1',
+			email: 'meeting@room1.test'
+		};
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [meetinRoom1] }
+		});
+		const items = map({ length: 3 }, (_, index) => {
+			const label = `location ${index}`;
+			return {
+				id: faker.string.uuid(),
+				label,
+				value: label,
+				email: faker.internet.email(),
+				type: 'Location'
+			};
+		});
+		const handler = getCustomResources(items);
+		setupFreeBusyResponse([items[0], meetinRoom1]);
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
+		);
+
+		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
+
+		await user.type(screen.getByText('Meeting room'), 'location');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		const selectedMeetingRoomLabel = items[0].label;
+		await user.click(within(dropdown).getByText(selectedMeetingRoomLabel));
+
+		expect(screen.getByText(meetinRoom1.label)).toBeVisible();
+		expect(screen.getByText(selectedMeetingRoomLabel)).toBeVisible();
 	});
 });
