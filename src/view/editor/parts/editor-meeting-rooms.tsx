@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorMeetingRoom } from '../../../store/selectors/editor';
 import { editEditorMeetingRoom } from '../../../store/slices/editor-slice';
 import { useAppStatusStore } from '../../../store/zustand/store';
-import { Resource } from '../../../types/editor';
+import { ChipResource, Resource } from '../../../types/editor';
 
 export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const dispatch = useAppDispatch();
@@ -24,34 +24,25 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 
 	const meetingRoomsValue = useAppSelector(selectEditorMeetingRoom(editorId));
 
-	const meetingRoomsChipValue = useMemo(
+	const meetingRoomsChipValue: Array<ChipResource> = useMemo(
 		() =>
-			map(
-				meetingRoomsValue,
-				(result) =>
-					({
-						id: result.id,
-						label: result.label,
-						email: result.email,
-						avatarIcon: 'BuildingOutline',
-						avatarBackground: 'transparent',
-						avatarColor: 'gray0'
-					}) as const
-			),
+			map(meetingRoomsValue, (result) => ({
+				id: result.id,
+				label: result.label,
+				email: result.email,
+				avatarIcon: 'BuildingOutline',
+				avatarBackground: 'transparent',
+				avatarColor: 'gray0'
+			})),
 		[meetingRoomsValue]
 	);
 
 	const [options, setOptions] = useState<Array<DropdownItem>>([]);
 
 	const onChange = useCallback(
-		(chips: Array<ChipItem<Resource>>) => {
+		(chips: Array<ChipResource>) => {
 			if (chips) {
-				const resourcesToSave = reduce(
-					chips,
-					(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
-					[] as Array<Resource>
-				);
-				const newValue = chips.length > 0 ? uniqBy(resourcesToSave, 'label') : [];
+				const newValue = chips.length > 0 ? uniqBy(chips, 'label') : [];
 				dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: newValue }));
 			}
 		},
@@ -71,7 +62,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 		() => t('attendee_room_unavailable', 'Room not available at the selected time of the event'),
 		[t]
 	);
-	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>((e) => {
+	const onInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>((e) => {
 		if (e.textContent && e.textContent !== '') {
 			setOptions([
 				{

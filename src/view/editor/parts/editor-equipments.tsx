@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorEquipment } from '../../../store/selectors/editor';
 import { editEditorEquipment } from '../../../store/slices/editor-slice';
 import { useAppStatusStore } from '../../../store/zustand/store';
-import { Resource } from '../../../types/editor';
+import { ChipResource, Resource } from '../../../types/editor';
 
 export const EditorEquipments = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const dispatch = useAppDispatch();
@@ -23,34 +23,25 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const equipmentValue = useAppSelector(selectEditorEquipment(editorId));
 
-	const equipmentChipValue = useMemo(
+	const equipmentChipValue: Array<ChipResource> = useMemo(
 		() =>
-			map(
-				equipmentValue,
-				(result) =>
-					({
-						id: result.id,
-						label: result.label,
-						email: result.email,
-						avatarIcon: 'BriefcaseOutline',
-						avatarBackground: 'transparent',
-						avatarColor: 'gray0'
-					}) as const
-			),
+			map(equipmentValue, (resource) => ({
+				id: resource.id,
+				label: resource.label,
+				email: resource.email,
+				avatarIcon: 'BriefcaseOutline',
+				avatarBackground: 'transparent',
+				avatarColor: 'gray0'
+			})),
 		[equipmentValue]
 	);
 
 	const [options, setOptions] = useState<Array<DropdownItem>>([]);
 
 	const onChange = useCallback(
-		(chips: Array<ChipItem<Resource>>) => {
+		(chips: Array<ChipResource>) => {
 			if (chips) {
-				const resourcesToSave = reduce(
-					chips,
-					(acc, chip) => (chip.value ? [...acc, chip.value] : acc),
-					[] as Array<Resource>
-				);
-				const newValue = resourcesToSave.length > 0 ? uniqBy(resourcesToSave, 'label') : [];
+				const newValue = chips.length > 0 ? uniqBy(chips, 'label') : [];
 				dispatch(editEditorEquipment({ id: editorId, equipment: newValue }));
 			}
 		},
@@ -75,7 +66,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 		[t]
 	);
 
-	const onInputType = useCallback<NonNullable<ChipInputProps['onInputType']>>((e) => {
+	const onInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>((e) => {
 		if (e.textContent && e.textContent !== '') {
 			setOptions([
 				{

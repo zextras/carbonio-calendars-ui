@@ -15,7 +15,7 @@ import {
 	KeyboardPresetObj,
 	useKeyboard
 } from '@zextras/carbonio-design-system';
-import { find, map } from 'lodash';
+import { find, map, reduce } from 'lodash';
 import styled, { DefaultTheme } from 'styled-components';
 
 import {
@@ -96,8 +96,8 @@ export const EditorResourceComponent = ({
 	singleWarningLabel
 }: {
 	editorId: string;
-	onChange: ChipInputProps<Resource>['onChange'];
-	onInputType: ChipInputProps['onInputType'];
+	onChange: (items: ChipResource[]) => void;
+	onInputType: ChipInputProps<Resource>['onInputType'];
 	placeholder: string;
 	resourcesValue: Array<ChipResource>;
 	options: Array<DropdownItem>;
@@ -138,13 +138,32 @@ export const EditorResourceComponent = ({
 		[]
 	);
 
-	const resourceAvailability = useMemo(() => {
+	const onInternalChange = useCallback(
+		(items: ChipItem<Resource>[]) => {
+			const itemsWithValue = reduce(
+				items,
+				(acc, item) => {
+					const { value, label } = item;
+					if (label && value) {
+						acc.push({ label, email: value.email });
+					}
+					return acc;
+				},
+				[] as ChipResource[]
+			);
+
+			onChange(itemsWithValue);
+		},
+		[onChange]
+	);
+
+	const resourceAvailability: ChipItem<Resource>[] = useMemo(() => {
 		if (!resourcesValue?.length) {
 			return [];
 		}
 		return map(resourcesValue, (room) => {
 			const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
-
+			const chipRoom = { ...room, value: room };
 			if (roomInList) {
 				const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
 					roomInList,
@@ -165,12 +184,12 @@ export const EditorResourceComponent = ({
 						} as const
 					];
 					return {
-						...room,
+						...chipRoom,
 						actions
 					};
 				}
 			}
-			return room;
+			return chipRoom;
 		});
 	}, [allDay, attendeesAvailabilityList, end, resourcesValue, singleWarningLabel, start]);
 
@@ -221,7 +240,7 @@ export const EditorResourceComponent = ({
 					options={options}
 					onInputType={onInputType}
 					onAdd={onAdd}
-					onChange={onChange}
+					onChange={onInternalChange}
 					disabled={disabled}
 				/>
 			</Container>

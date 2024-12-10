@@ -30,7 +30,7 @@ const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ equipment: [] }));
 };
 
-const setupBackendResponse = (items: Resource[]): void => {
+const setupFreeBusyResponse = (items: Resource[]): void => {
 	const freeBusyArrayItems = map(items, (item) => ({
 		id: item.email,
 		f: [
@@ -54,11 +54,26 @@ describe('Editor equipment', () => {
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
 		setupEmptyAppStatusStore();
-		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
-		await waitFor(() => {
-			user.click(screen.getByText('Equipment'));
-		});
+		setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
 		expect(screen.getByText('Equipment')).toBeInTheDocument();
+	});
+
+	test('should render the chip already present in the store', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const equipment1 = {
+			label: 'automobile 1',
+			email: 'auto1@equipment.test'
+		};
+
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, equipment: [equipment1] }
+		});
+
+		setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
+		expect(screen.getByText(/automobile 1/i)).toBeVisible();
 	});
 
 	test('On type options are visible on screen', async () => {
@@ -107,7 +122,7 @@ describe('Editor equipment', () => {
 		});
 		const handler = getCustomResources(items);
 
-		setupBackendResponse([items[0]]);
+		setupFreeBusyResponse([items[0]]);
 
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
@@ -145,7 +160,7 @@ describe('Editor equipment', () => {
 		});
 		const handler = getCustomResources(items);
 
-		setupBackendResponse([items[0]]);
+		setupFreeBusyResponse([items[0]]);
 
 		getSetupServer().use(
 			http.post<never, CarbonioMailboxRestHandlerRequest<any>, SuccessSoapResponse<any>>(
@@ -166,5 +181,41 @@ describe('Editor equipment', () => {
 		await user.keyboard('[Enter]');
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
+	});
+
+	test('adding a new equipment should not remove the already existing chips', async () => {
+		const equipment1 = {
+			label: 'automobile 1',
+			email: 'auto1@equipment.test'
+		};
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, equipment: [equipment1] }
+		});
+		const items = map({ length: 3 }, (_, index) => {
+			const label = `resource ${index}`;
+			return {
+				id: faker.string.uuid(),
+				label,
+				value: label,
+				email: faker.internet.email(),
+				type: 'Equipment'
+			};
+		});
+		const handler = getCustomResources(items);
+		setupFreeBusyResponse([items[0], equipment1]);
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
+		);
+
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
+		await user.type(screen.getByText('Equipment'), 'resource');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		const selectedEquipmentLabel = items[0].label;
+		await user.click(within(dropdown).getByText(selectedEquipmentLabel));
+
+		expect(screen.getByText(equipment1.label)).toBeVisible();
+		expect(screen.getByText(selectedEquipmentLabel)).toBeVisible();
 	});
 });
