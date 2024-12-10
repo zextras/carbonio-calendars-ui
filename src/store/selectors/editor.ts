@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { Editor, Resource } from '../../types/editor';
-import { InviteFreeBusy } from '../../types/store/invite';
+import { EditorChipAttendees, InviteFreeBusy } from '../../types/store/invite';
 import type { RootState } from '../redux';
 
 export const selectEditor =
@@ -48,7 +48,7 @@ export const selectEditorRoom =
 
 export const selectEditorAttendees =
 	(id: string) =>
-	(state: RootState): Array<any> =>
+	(state: RootState): Array<EditorChipAttendees> =>
 		state?.editor?.editors?.[id]?.attendees;
 
 export const selectEditorUid =

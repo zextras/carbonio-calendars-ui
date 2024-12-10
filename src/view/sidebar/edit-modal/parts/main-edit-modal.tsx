@@ -292,7 +292,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		(item: Grant) => {
 			dispatch(
 				sendShareCalendarNotification({
-					contacts: [{ email: item.d }],
+					contacts: [{ email: item.d as string }],
 					folder: folder.id,
 					accounts
 				})
