@@ -78,7 +78,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	);
 
 	useEffect(() => {
-		getOrderedAccountIds(sender ? sender.address : '')
+		getOrderedAccountIds(sender ? sender.email : '')
 			.then((ids) => {
 				setOrderedAccountIds(ids);
 			})
