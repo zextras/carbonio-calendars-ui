@@ -76,8 +76,7 @@ export const ReminderModal = ({
 								invite,
 								context: {
 									dispatch,
-									folders: calendarFolders,
-									panel: false
+									folders: calendarFolders
 								}
 							});
 							addBoard({
