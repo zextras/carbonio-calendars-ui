@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { ReactElement, useCallback, useMemo, useRef } from 'react';
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 
 import {
 	ChipInput,
@@ -88,20 +88,16 @@ export const EditorResourceComponent = ({
 	onChange,
 	placeholder,
 	resourcesValue,
-	onInputType,
-	options,
-	setOptions,
+	onSearchOptions,
 	warningLabel,
 	disabled,
 	singleWarningLabel
 }: {
 	editorId: string;
 	onChange: (items: ChipResource[]) => void;
-	onInputType: ChipInputProps<Resource>['onInputType'];
+	onSearchOptions: (stringToSearch: string) => Promise<Array<DropdownItem>>;
 	placeholder: string;
 	resourcesValue: Array<ChipResource>;
-	options: Array<DropdownItem>;
-	setOptions: (e: Array<DropdownItem>) => void;
 	warningLabel: string;
 	disabled?: boolean;
 	singleWarningLabel: string;
@@ -112,6 +108,8 @@ export const EditorResourceComponent = ({
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const uid = useAppSelector(selectEditorUid(editorId));
+
+	const [options, setOptions] = useState<Array<DropdownItem>>([]);
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
@@ -136,6 +134,25 @@ export const EditorResourceComponent = ({
 			throw new Error('invalid keywords received');
 		},
 		[]
+	);
+
+	const onInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
+		(e) => {
+			if (e.textContent && e.textContent !== '') {
+				setOptions([
+					{
+						id: 'loading',
+						label: 'loading',
+						customComponent: <Loader />,
+						disabled: true
+					}
+				]);
+				onSearchOptions(e.textContent).then((receivedOptions) => {
+					setOptions(receivedOptions);
+				});
+			}
+		},
+		[onSearchOptions]
 	);
 
 	const onInternalChange = useCallback(
