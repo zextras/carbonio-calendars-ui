@@ -25,6 +25,7 @@ import { useAppStatusStore } from '../../../store/zustand/store';
 import { getCustomResources } from '../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { handleGetFreeBusyCustomResponse } from '../../../test/mocks/network/msw/handle-get-free-busy';
 import { Resource } from '../../../types/editor';
+import { searchResources } from '../../../soap/search-resources';
 
 const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ equipment: [] }));
@@ -248,5 +249,20 @@ describe('Editor equipment', () => {
 		await user.click(within(dropdown).getByText(selectedEquipment.label));
 
 		expect((await screen.findAllByText(selectedEquipment.label)).length).toBe(1);
+	});
+
+	test('should throw Error when call to AutoCompleteGal api fails', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [] }
+		});
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.error())
+		);
+
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
+		await user.type(screen.getByText('Equipment'), 'resource');
+
+		await expect(searchResources('resource')).rejects.toThrow('Failed to fetch');
 	});
 });

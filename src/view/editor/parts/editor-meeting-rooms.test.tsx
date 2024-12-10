@@ -23,6 +23,7 @@ import { useAppStatusStore } from '../../../store/zustand/store';
 import { getCustomResources } from '../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { handleGetFreeBusyCustomResponse } from '../../../test/mocks/network/msw/handle-get-free-busy';
 import { Resource } from '../../../types/editor';
+import { searchResources } from '../../../soap/search-resources';
 
 const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ meetingRoom: [] }));
@@ -246,5 +247,20 @@ describe('Editor meeting rooms', () => {
 		await user.click(within(dropdown).getByText(selectedMeetingRoom.label));
 
 		expect((await screen.findAllByText(selectedMeetingRoom.label)).length).toBe(1);
+	});
+
+	test('should throw Error when call to AutoCompleteGal api fails', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [] }
+		});
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.error())
+		);
+
+		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
+		await user.type(screen.getByText('Meeting room'), 'location');
+
+		await expect(searchResources('location')).rejects.toThrow('Failed to fetch');
 	});
 });
