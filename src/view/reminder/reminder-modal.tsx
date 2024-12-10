@@ -7,15 +7,18 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Container, CustomModal } from '@zextras/carbonio-design-system';
 import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
-import { isEmpty, map, omit } from 'lodash';
+import { find, isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
+import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../../commons/editor-generator';
+import { getAppointment, normalizeFromGetAppointment } from '../../commons/get-appointment';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
+import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { dismissApptReminder } from '../../store/actions/dismiss-appointment-reminder';
 import { getInvite } from '../../store/actions/get-invite';
@@ -60,38 +63,32 @@ export const ReminderModal = ({
 		if (activeReminder) {
 			dispatch(getInvite({ inviteId: activeReminder.inviteId })).then(({ payload }) => {
 				if (payload) {
-					const invite = normalizeInvite(payload.m?.[0]);
-					const event = {
-						resource: {
-							calendar: activeReminder.calendar,
-							isRecurrent: activeReminder.isRecurrent,
-							isException: !!activeReminder.isException,
-							location: activeReminder.location,
-							inviteId: activeReminder.inviteId,
-							id: activeReminder.id
-						},
-						title: activeReminder.name,
-						allDay: activeReminder.allDay,
-						start: activeReminder.start,
-						end: activeReminder.end
-					};
-					const editor = generateEditor({
-						event,
-						invite,
-						context: {
-							dispatch,
-							folders: calendarFolders,
-							panel: false
+					getAppointment(activeReminder.id).then((res) => {
+						const appointment = normalizeFromGetAppointment(res?.appt[0]);
+						const invite = normalizeInvite(payload.m?.[0]);
+						const folderId = invite.ciFolder;
+						const calendar = find(calendarFolders, ['id', folderId ?? FOLDERS.CALENDAR]);
+						if (calendar) {
+							const event = normalizeCalendarEvent({ appointment, invite, calendar });
+							const editor = generateEditor({
+								event,
+								invite,
+								context: {
+									dispatch,
+									folders: calendarFolders,
+									panel: false
+								}
+							});
+							addBoard({
+								boardViewId: 'CALENDAR_BOARD_ID',
+								title: editor?.title ?? '',
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								editor
+							} as unknown as Board);
+							dismissAll();
 						}
 					});
-					addBoard({
-						boardViewId: 'CALENDAR_BOARD_ID',
-						title: editor?.title ?? '',
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						editor
-					} as unknown as Board);
-					dismissAll();
 				}
 			});
 		}
