@@ -38,7 +38,6 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 
 	const onChange = useCallback(
 		(chips: Array<ChipResource>) => {
-			// TODO: test uniqueness of chips based on label
 			const newValue = uniqBy(chips, 'label');
 			dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: newValue }));
 		},

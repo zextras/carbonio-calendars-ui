@@ -217,4 +217,34 @@ describe('Editor meeting rooms', () => {
 		expect(screen.getByText(meetinRoom1.label)).toBeVisible();
 		expect(screen.getByText(selectedMeetingRoomLabel)).toBeVisible();
 	});
+	test('adding an already existing meeting room should display it only once', async () => {
+		const items = map({ length: 3 }, (_, index) => {
+			const label = `location ${index}`;
+			return {
+				id: faker.string.uuid(),
+				label,
+				value: label,
+				email: faker.internet.email(),
+				type: 'Location'
+			};
+		});
+		const selectedMeetingRoom = items[0];
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [selectedMeetingRoom] }
+		});
+		const handler = getCustomResources(items);
+		setupFreeBusyResponse([items[0]]);
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
+		);
+
+		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
+
+		await user.type(screen.getByText('Meeting room'), 'location');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await user.click(within(dropdown).getByText(selectedMeetingRoom.label));
+
+		expect((await screen.findAllByText(selectedMeetingRoom.label)).length).toBe(1);
+	});
 });

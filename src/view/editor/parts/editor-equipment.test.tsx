@@ -218,4 +218,35 @@ describe('Editor equipment', () => {
 		expect(screen.getByText(equipment1.label)).toBeVisible();
 		expect(screen.getByText(selectedEquipmentLabel)).toBeVisible();
 	});
+
+	test('adding an already existing equipment should display it only once', async () => {
+		const items = map({ length: 3 }, (_, index) => {
+			const label = `resource ${index}`;
+			return {
+				id: faker.string.uuid(),
+				label,
+				value: label,
+				email: faker.internet.email(),
+				type: 'Equipment'
+			};
+		});
+		const selectedEquipment = items[0];
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, equipment: [selectedEquipment] }
+		});
+		const handler = getCustomResources(items);
+		setupFreeBusyResponse([items[0]]);
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
+		);
+
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
+		await user.type(screen.getByText('Equipment'), 'resource');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await user.click(within(dropdown).getByText(selectedEquipment.label));
+
+		expect((await screen.findAllByText(selectedEquipment.label)).length).toBe(1);
+	});
 });
