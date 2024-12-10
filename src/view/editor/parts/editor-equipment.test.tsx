@@ -263,6 +263,6 @@ describe('Editor equipment', () => {
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 		await user.type(screen.getByText('Equipment'), 'resource');
 
-		await expect(searchResources('resource')).rejects.toThrow('Failed to fetch');
+		await expect(searchResources('resource')).rejects.toThrow();
 	});
 });

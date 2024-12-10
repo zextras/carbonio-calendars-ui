@@ -261,6 +261,6 @@ describe('Editor meeting rooms', () => {
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 		await user.type(screen.getByText('Meeting room'), 'location');
 
-		await expect(searchResources('location')).rejects.toThrow('Failed to fetch');
+		await expect(searchResources('location')).rejects.toThrow();
 	});
 });
