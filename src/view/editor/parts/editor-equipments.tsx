@@ -37,10 +37,8 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 
 	const onChange = useCallback(
 		(chips: Array<ChipResource>) => {
-			if (chips) {
-				const newValue = chips.length > 0 ? uniqBy(chips, 'label') : [];
-				dispatch(editEditorEquipment({ id: editorId, equipment: newValue }));
-			}
+			const newValue = uniqBy(chips, 'label');
+			dispatch(editEditorEquipment({ id: editorId, equipment: newValue }));
 		},
 		[dispatch, editorId]
 	);

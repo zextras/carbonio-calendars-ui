@@ -38,10 +38,9 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 
 	const onChange = useCallback(
 		(chips: Array<ChipResource>) => {
-			if (chips) {
-				const newValue = chips.length > 0 ? uniqBy(chips, 'label') : [];
-				dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: newValue }));
-			}
+			// TODO: test uniqueness of chips based on label
+			const newValue = uniqBy(chips, 'label');
+			dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: newValue }));
 		},
 		[dispatch, editorId]
 	);
@@ -78,6 +77,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 					useAppStatusStore.setState({ meetingRoom: uniqBy(remoteResources, 'label') });
 					return res;
 				}
+				// TODO: what should happen when API fails? Test and check behavior
 				throw new Error('API failed');
 			}),
 		[]
