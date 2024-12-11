@@ -52,6 +52,12 @@ const SkeletonTile = styled.div<SkeletonTileProps>`
 	background: ${({ theme }): string => theme.palette.gray2.regular};
 `;
 
+const addOption = (optionValue: Resource): ChipItem<Resource> => ({
+	id: optionValue.id,
+	label: optionValue.label,
+	value: optionValue
+});
+
 const Loader = (): ReactElement => (
 	<Container
 		data-testid={'dropdown-options-loader'}
@@ -113,11 +119,7 @@ export const EditorResourceComponent = ({
 
 	const onAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
 		const resourceFromOptions = valueToAdd as Resource;
-		return {
-			id: resourceFromOptions.id,
-			label: resourceFromOptions.label,
-			value: resourceFromOptions
-		};
+		return addOption(resourceFromOptions);
 	}, []);
 
 	const onInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
@@ -205,13 +207,7 @@ export const EditorResourceComponent = ({
 				callback: (): void => {
 					if (options?.[0]?.value && onInternalChange && options?.[0]?.id !== 'loading') {
 						const { value } = options[0];
-						onInternalChange([
-							...resourceAvailability,
-							{
-								...value,
-								value: { ...value, email: value.email ?? value.label }
-							}
-						]);
+						onInternalChange([addOption(value)]);
 						if (inputRef.current) {
 							inputRef.current.value = '';
 							setOptions([]);
@@ -222,7 +218,7 @@ export const EditorResourceComponent = ({
 				haveToPreventDefault: true
 			}
 		],
-		[onInternalChange, options, resourceAvailability]
+		[onInternalChange, options]
 	);
 
 	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
