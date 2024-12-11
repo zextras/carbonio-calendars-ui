@@ -8,7 +8,7 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import { map } from 'lodash';
 import moment from 'moment';
 import { http, HttpResponse } from 'msw';
@@ -23,7 +23,6 @@ import { useAppStatusStore } from '../../../store/zustand/store';
 import { getCustomResources } from '../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { handleGetFreeBusyCustomResponse } from '../../../test/mocks/network/msw/handle-get-free-busy';
 import { Resource } from '../../../types/editor';
-import { searchResources } from '../../../soap/search-resources';
 
 const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ meetingRoom: [] }));
@@ -249,18 +248,20 @@ describe('Editor meeting rooms', () => {
 		expect((await screen.findAllByText(selectedMeetingRoom.label)).length).toBe(1);
 	});
 
-	test('should throw Error when call to AutoCompleteGal api fails', async () => {
+	test('should leave dropdown options with loader open when call to AutoCompleteGal api fails', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({
 			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [] }
 		});
+
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.error())
 		);
 
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 		await user.type(screen.getByText('Meeting room'), 'location');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
-		await expect(searchResources('location')).rejects.toThrow();
+		expect(within(dropdown).getByTestId('dropdown-options-loader')).toBeVisible();
 	});
 });

@@ -52,8 +52,9 @@ const SkeletonTile = styled.div<SkeletonTileProps>`
 	background: ${({ theme }): string => theme.palette.gray2.regular};
 `;
 
-export const Loader = (): ReactElement => (
+const Loader = (): ReactElement => (
 	<Container
+		data-testid={'dropdown-options-loader'}
 		orientation="horizontal"
 		mainAlignment="flex-start"
 		crossAlignment="center"
@@ -147,9 +148,13 @@ export const EditorResourceComponent = ({
 						disabled: true
 					}
 				]);
-				onSearchOptions(e.textContent).then((receivedOptions) => {
-					setOptions(receivedOptions);
-				});
+				onSearchOptions(e.textContent)
+					.then((receivedOptions) => {
+						setOptions(receivedOptions);
+					})
+					.catch(() => {
+						// ignore
+					});
 			}
 		},
 		[onSearchOptions]
