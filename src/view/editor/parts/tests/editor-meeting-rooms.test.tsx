@@ -10,7 +10,6 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, within } from '@testing-library/react';
 import { map } from 'lodash';
-import moment from 'moment';
 import { http, HttpResponse } from 'msw';
 
 import { getSetupServer } from '../../../../carbonio-ui-commons/test/jest-setup';
@@ -23,30 +22,10 @@ import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
-import { handleGetFreeBusyCustomResponse } from '../../../../test/mocks/network/msw/handle-get-free-busy';
-import { Resource } from '../../../../types/editor';
 import { EditorMeetingRooms } from '../editor-meeting-rooms';
 
 const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ meetingRoom: [] }));
-};
-
-const setupFreeBusyResponse = (items: Resource[]): void => {
-	const freeBusyArrayItems = map(items, (item) => ({
-		id: item.email,
-		f: [
-			{
-				s: moment().startOf('day').valueOf(),
-				e: moment().endOf('day').valueOf()
-			}
-		]
-	}));
-
-	const response = handleGetFreeBusyCustomResponse(freeBusyArrayItems);
-
-	getSetupServer().use(
-		http.post('/service/soap/GetFreeBusyRequest', () => HttpResponse.json(response))
-	);
 };
 
 describe('Editor meeting rooms', () => {
@@ -149,9 +128,7 @@ describe('Editor meeting rooms', () => {
 			};
 		});
 		const soapResponse = getCustomResources(items);
-
-		setupFreeBusyResponse([items[0]]);
-
+		mockFreeBusyResponse([]);
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(soapResponse))
 		);
@@ -186,8 +163,7 @@ describe('Editor meeting rooms', () => {
 			};
 		});
 		const soapResponse = getCustomResources(items);
-
-		setupFreeBusyResponse([items[0]]);
+		mockFreeBusyResponse([]);
 
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(soapResponse))
@@ -231,7 +207,7 @@ describe('Editor meeting rooms', () => {
 			};
 		});
 		const handler = getCustomResources(items);
-		setupFreeBusyResponse([items[0], meetinRoom1]);
+		mockFreeBusyResponse([]);
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
 		);
@@ -263,7 +239,7 @@ describe('Editor meeting rooms', () => {
 			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [selectedMeetingRoom] }
 		});
 		const handler = getCustomResources(items);
-		setupFreeBusyResponse([items[0]]);
+		mockFreeBusyResponse([]);
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
 		);

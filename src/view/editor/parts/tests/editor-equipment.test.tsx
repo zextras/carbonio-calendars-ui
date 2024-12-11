@@ -11,7 +11,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, within } from '@testing-library/react';
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
-import moment from 'moment';
 import { http, HttpResponse } from 'msw';
 
 import { getSetupServer } from '../../../../carbonio-ui-commons/test/jest-setup';
@@ -25,30 +24,10 @@ import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
-import { handleGetFreeBusyCustomResponse } from '../../../../test/mocks/network/msw/handle-get-free-busy';
-import { Resource } from '../../../../types/editor';
 import { EditorEquipments } from '../editor-equipments';
 
 const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ equipment: [] }));
-};
-
-const setupFreeBusyResponse = (items: Resource[]): void => {
-	const freeBusyArrayItems = map(items, (item) => ({
-		id: item.email,
-		f: [
-			{
-				s: moment().startOf('day').valueOf(),
-				e: moment().endOf('day').valueOf()
-			}
-		]
-	}));
-
-	const response = handleGetFreeBusyCustomResponse(freeBusyArrayItems);
-
-	getSetupServer().use(
-		http.post('/service/soap/GetFreeBusyRequest', () => HttpResponse.json(response))
-	);
 };
 
 describe('Editor equipment', () => {
@@ -153,8 +132,7 @@ describe('Editor equipment', () => {
 			};
 		});
 		const handler = getCustomResources(items);
-
-		setupFreeBusyResponse([items[0]]);
+		mockFreeBusyResponse([]);
 
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
@@ -191,8 +169,7 @@ describe('Editor equipment', () => {
 			};
 		});
 		const handler = getCustomResources(items);
-
-		setupFreeBusyResponse([items[0]]);
+		mockFreeBusyResponse([]);
 
 		getSetupServer().use(
 			http.post<never, CarbonioMailboxRestHandlerRequest<any>, SuccessSoapResponse<any>>(
@@ -235,7 +212,7 @@ describe('Editor equipment', () => {
 			};
 		});
 		const handler = getCustomResources(items);
-		setupFreeBusyResponse([items[0], equipment1]);
+		mockFreeBusyResponse([]);
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
 		);
@@ -268,7 +245,7 @@ describe('Editor equipment', () => {
 			context: { dispatch: store.dispatch, folders: {}, equipment: [selectedEquipment] }
 		});
 		const handler = getCustomResources(items);
-		setupFreeBusyResponse([items[0]]);
+		mockFreeBusyResponse([]);
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
 		);
