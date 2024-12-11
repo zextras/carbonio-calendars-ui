@@ -52,7 +52,7 @@ const SkeletonTile = styled.div<SkeletonTileProps>`
 	background: ${({ theme }): string => theme.palette.gray2.regular};
 `;
 
-const addOption = (optionValue: Resource): ChipItem<Resource> => ({
+const createChipFromResource = (optionValue: Resource): ChipItem<Resource> => ({
 	id: optionValue.id,
 	label: optionValue.label,
 	value: optionValue
@@ -119,7 +119,7 @@ export const EditorResourceComponent = ({
 
 	const onAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
 		const resourceFromOptions = valueToAdd as Resource;
-		return addOption(resourceFromOptions);
+		return createChipFromResource(resourceFromOptions);
 	}, []);
 
 	const onInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
@@ -207,7 +207,7 @@ export const EditorResourceComponent = ({
 				callback: (): void => {
 					if (options?.[0]?.value && onInternalChange && options?.[0]?.id !== 'loading') {
 						const { value } = options[0];
-						onInternalChange([addOption(value)]);
+						onInternalChange([...resourceAvailability, createChipFromResource(value)]);
 						if (inputRef.current) {
 							inputRef.current.value = '';
 							setOptions([]);
@@ -218,7 +218,7 @@ export const EditorResourceComponent = ({
 				haveToPreventDefault: true
 			}
 		],
-		[onInternalChange, options]
+		[onInternalChange, options, resourceAvailability]
 	);
 
 	useKeyboard(inputRef, onPressingEnterSelectFirstOption);

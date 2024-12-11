@@ -24,7 +24,7 @@ function mockSearchOptions(textValue: string): Promise<Array<DropdownItem & { va
 			label: 'First Option',
 			value: {
 				label: 'My resource',
-				email: 'myresource@test.com'
+				email: 'mynewresource@test.com'
 			}
 		}
 	]);
@@ -54,5 +54,37 @@ describe('EditorResourceComponent', () => {
 
 		expect(dropdown).not.toBeInTheDocument();
 		expect(resourceInput).toHaveValue('');
+	});
+
+	it('should not remove current chips after selecting the first option with Enter', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+		const onChangeMock = jest.fn();
+		const resource1 = {
+			label: 'My resource',
+			email: 'myresource@test.com'
+		};
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder={'Test'}
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={mockSearchOptions}
+				resourcesValue={[resource1]}
+				warningLabel={''}
+				singleWarningLabel={''}
+			/>,
+			{ store }
+		);
+
+		const resourceInput = screen.getByRole('textbox', { name: 'Test' });
+		await user.type(resourceInput, 'aaaaaa');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await user.keyboard('[Enter]');
+		expect(dropdown).not.toBeInTheDocument();
+		expect(onChangeMock).toHaveBeenCalledWith([
+			resource1,
+			expect.objectContaining({ email: 'mynewresource@test.com' })
+		]);
 	});
 });
