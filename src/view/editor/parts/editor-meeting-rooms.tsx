@@ -23,40 +23,26 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 
 	const meetingRoomsValue = useAppSelector(selectEditorMeetingRoom(editorId));
 
-	const meetingRoomsChipValue: Array<ChipResource> = useMemo(
+	const meetingRoomsChipValue = useMemo(
 		() =>
 			map(meetingRoomsValue, (result) => ({
 				id: result.id,
 				label: result.label,
 				email: result.email,
-				avatarIcon: 'BuildingOutline',
-				avatarBackground: 'transparent',
-				avatarColor: 'gray0'
+				avatarIcon: 'BuildingOutline' as const,
+				avatarBackground: 'transparent' as const,
+				avatarColor: 'gray0' as const
 			})),
 		[meetingRoomsValue]
 	);
 
 	const onChange = useCallback(
 		(chips: Array<ChipResource>) => {
-			const newValue = uniqBy(chips, 'label');
-			dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: newValue }));
+			dispatch(editEditorMeetingRoom({ id: editorId, meetingRoom: chips }));
 		},
 		[dispatch, editorId]
 	);
 
-	const placeholder = useMemo(() => t('label.meeting_room', 'Meeting room'), [t]);
-	const warningLabel = useMemo(
-		() =>
-			t(
-				'attendees_rooms_unavailable',
-				'One or more Meeting Rooms are not available at the selected time of the event'
-			),
-		[t]
-	);
-	const singleWarningLabel = useMemo(
-		() => t('attendee_room_unavailable', 'Room not available at the selected time of the event'),
-		[t]
-	);
 	const onSearchOptions = useCallback(
 		(searchedValue: string) =>
 			searchResources(searchedValue).then((response) => {
@@ -86,11 +72,17 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 			onChange={onChange}
 			editorId={editorId}
 			onSearchOptions={onSearchOptions}
-			placeholder={placeholder}
+			placeholder={t('label.meeting_room', 'Meeting room')}
 			resourcesValue={meetingRoomsChipValue ?? []}
-			warningLabel={warningLabel}
+			warningLabel={t(
+				'attendees_rooms_unavailable',
+				'One or more Meeting Rooms are not available at the selected time of the event'
+			)}
 			disabled={disabled?.equipment}
-			singleWarningLabel={singleWarningLabel}
+			singleWarningLabel={t(
+				'attendee_room_unavailable',
+				'Room not available at the selected time of the event'
+			)}
 		/>
 	);
 };

@@ -17,7 +17,7 @@ import { reducers } from '../../../../store/redux';
 import { Resource } from '../../../../types/editor';
 import { EditorResourceComponent } from '../editor-resource-component';
 
-function mockSearchOptions(textValue: string): Promise<Array<DropdownItem & { value?: Resource }>> {
+function mockSearchOptions(): Promise<Array<DropdownItem & { value?: Resource }>> {
 	return Promise.resolve([
 		{
 			id: '1',
@@ -61,7 +61,7 @@ describe('EditorResourceComponent', () => {
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 		const onChangeMock = jest.fn();
 		const resource1 = {
-			label: 'My resource',
+			label: 'My resource 1',
 			email: 'myresource@test.com'
 		};
 		const { user } = setupTest(

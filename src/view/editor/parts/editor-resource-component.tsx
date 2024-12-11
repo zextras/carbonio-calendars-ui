@@ -15,7 +15,7 @@ import {
 	KeyboardPresetObj,
 	useKeyboard
 } from '@zextras/carbonio-design-system';
-import { find, map, reduce } from 'lodash';
+import { find, map, reduce, uniqWith } from 'lodash';
 import styled, { DefaultTheme } from 'styled-components';
 
 import {
@@ -159,7 +159,12 @@ export const EditorResourceComponent = ({
 				[] as ChipResource[]
 			);
 
-			onChange(itemsWithValue);
+			const filterdItems = uniqWith(
+				itemsWithValue,
+				(item1, item2) => item1.email === item2.email || item1.label === item2.label
+			);
+
+			onChange(filterdItems);
 		},
 		[onChange]
 	);

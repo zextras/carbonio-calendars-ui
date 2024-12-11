@@ -22,43 +22,24 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const equipmentValue = useAppSelector(selectEditorEquipment(editorId));
 
-	const equipmentChipValue: Array<ChipResource> = useMemo(
+	const equipmentChipValue = useMemo(
 		() =>
 			map(equipmentValue, (resource) => ({
 				id: resource.id,
 				label: resource.label,
 				email: resource.email,
-				avatarIcon: 'BriefcaseOutline',
-				avatarBackground: 'transparent',
-				avatarColor: 'gray0'
+				avatarIcon: 'BriefcaseOutline' as const,
+				avatarBackground: 'transparent' as const,
+				avatarColor: 'gray0' as const
 			})),
 		[equipmentValue]
 	);
 
 	const onChange = useCallback(
 		(chips: Array<ChipResource>) => {
-			const newValue = uniqBy(chips, 'label');
-			dispatch(editEditorEquipment({ id: editorId, equipment: newValue }));
+			dispatch(editEditorEquipment({ id: editorId, equipment: chips }));
 		},
 		[dispatch, editorId]
-	);
-
-	const placeholder = useMemo(() => t('label.equipment', 'Equipment'), [t]);
-	const warningLabel = useMemo(
-		() =>
-			t(
-				'attendees_equipments_unavailable',
-				'One or more Equipments are not available at the selected time of the event'
-			),
-		[t]
-	);
-	const singleWarningLabel = useMemo(
-		() =>
-			t(
-				'attendee_equipment_unavailable',
-				'Equipment not available at the selected time of the event'
-			),
-		[t]
 	);
 
 	const onSearchOptions = useCallback(
@@ -89,11 +70,17 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 			onChange={onChange}
 			editorId={editorId}
 			onSearchOptions={onSearchOptions}
-			placeholder={placeholder}
-			resourcesValue={equipmentChipValue ?? []}
-			warningLabel={warningLabel}
+			placeholder={t('label.equipment', 'Equipment')}
+			resourcesValue={equipmentChipValue}
+			warningLabel={t(
+				'attendees_equipments_unavailable',
+				'One or more Equipments are not available at the selected time of the event'
+			)}
 			disabled={disabled?.equipment}
-			singleWarningLabel={singleWarningLabel}
+			singleWarningLabel={t(
+				'attendee_equipment_unavailable',
+				'Equipment not available at the selected time of the event'
+			)}
 		/>
 	);
 };

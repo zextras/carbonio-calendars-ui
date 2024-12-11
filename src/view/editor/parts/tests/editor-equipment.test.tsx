@@ -219,6 +219,71 @@ describe('Editor equipment', () => {
 		expect(screen.getByText(equipment1.label)).toBeVisible();
 		expect(screen.getByText(selectedEquipmentLabel)).toBeVisible();
 	});
+	it('should not add a new chip that have the same label', async () => {
+		const label = `resource 1`;
+		const itemFromAutoComplete = {
+			id: faker.string.uuid(),
+			label,
+			value: label,
+			email: 'resource1@test.it',
+			type: 'Equipment'
+		};
+		const storedItem = {
+			label,
+			email: 'differentresource@test.it'
+		};
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, equipment: [storedItem] }
+		});
+		const handler = getCustomResources([itemFromAutoComplete]);
+		mockFreeBusyResponse([]);
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
+		);
+
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
+		await user.type(screen.getByText('Equipment'), 'resource');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await user.click(within(dropdown).getByText(itemFromAutoComplete.label));
+
+		expect((await screen.findAllByText(label)).length).toBe(1);
+	});
+	it('should not display multiple chips with the same email', async () => {
+		const email = `same@email.it`;
+		const itemFromAutoComplete = {
+			id: faker.string.uuid(),
+			value: 'resource autocomplete',
+			label: 'resource autocomplete',
+			email,
+			type: 'Equipment'
+		};
+		const storedItem = {
+			label: 'resource store',
+			email
+		};
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, equipment: [storedItem] }
+		});
+		const handler = getCustomResources([itemFromAutoComplete]);
+		mockFreeBusyResponse([]);
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
+		);
+
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
+		await user.type(screen.getByText('Equipment'), 'resource');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await user.click(within(dropdown).getByText(itemFromAutoComplete.label));
+
+		expect(dropdown).not.toBeInTheDocument();
+
+		expect((await screen.findAllByText(storedItem.label)).length).toBe(1);
+		expect(screen.queryAllByText(itemFromAutoComplete.label).length).toBe(0);
+	});
 	it('should not add a new chip that already exists', async () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;

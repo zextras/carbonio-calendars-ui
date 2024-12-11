@@ -222,23 +222,24 @@ describe('Editor meeting rooms', () => {
 		expect(screen.getByText(meetinRoom1.label)).toBeVisible();
 		expect(screen.getByText(selectedMeetingRoomLabel)).toBeVisible();
 	});
-	it('should not add a new chip that already exists', async () => {
-		const items = map({ length: 3 }, (_, index) => {
-			const label = `location ${index}`;
-			return {
-				id: faker.string.uuid(),
-				label,
-				value: label,
-				email: faker.internet.email(),
-				type: 'Location'
-			};
-		});
-		const selectedMeetingRoom = items[0];
+	it('should not add a new chip that have the same label', async () => {
+		const label = `location 1`;
+		const itemFromAutoComplete = {
+			id: faker.string.uuid(),
+			label,
+			value: label,
+			email: 'location1@test.it',
+			type: 'Location'
+		};
+		const storedItem = {
+			label,
+			email: 'differentlocation@test.it'
+		};
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({
-			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [selectedMeetingRoom] }
+			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [storedItem] }
 		});
-		const handler = getCustomResources(items);
+		const handler = getCustomResources([itemFromAutoComplete]);
 		mockFreeBusyResponse([]);
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
@@ -248,9 +249,43 @@ describe('Editor meeting rooms', () => {
 
 		await user.type(screen.getByText('Meeting room'), 'location');
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-		await user.click(within(dropdown).getByText(selectedMeetingRoom.label));
+		await user.click(within(dropdown).getByText(itemFromAutoComplete.label));
 
-		expect((await screen.findAllByText(selectedMeetingRoom.label)).length).toBe(1);
+		expect((await screen.findAllByText(label)).length).toBe(1);
+	});
+	it('should not display multiple chips with the same email', async () => {
+		const email = `same@email.it`;
+		const itemFromAutoComplete = {
+			id: faker.string.uuid(),
+			label: 'meeting room 1',
+			value: 'meeting room 1',
+			email,
+			type: 'Location'
+		};
+		const storedItem = {
+			label: 'meeting room 2',
+			email
+		};
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [storedItem] }
+		});
+		const handler = getCustomResources([itemFromAutoComplete]);
+		mockFreeBusyResponse([]);
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
+		);
+
+		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
+
+		await user.type(screen.getByText('Meeting room'), 'meeting');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await user.click(within(dropdown).getByText(itemFromAutoComplete.label));
+
+		expect(dropdown).not.toBeInTheDocument();
+
+		expect((await screen.findAllByText(storedItem.label)).length).toBe(1);
+		expect(screen.queryAllByText(itemFromAutoComplete.label).length).toBe(0);
 	});
 	it('should leave options dropdown open with loader when call to AutoCompleteGal api fails with generic 500', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
