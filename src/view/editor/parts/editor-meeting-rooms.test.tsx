@@ -15,6 +15,8 @@ import { http, HttpResponse } from 'msw';
 
 import { EditorMeetingRooms } from './editor-meeting-rooms';
 import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
+import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '../../../carbonio-ui-commons/test/mocks/utils/soap';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
@@ -248,7 +250,7 @@ describe('Editor meeting rooms', () => {
 		expect((await screen.findAllByText(selectedMeetingRoom.label)).length).toBe(1);
 	});
 
-	test('should leave dropdown options with loader open when call to AutoCompleteGal api fails', async () => {
+	test('should leave dropdown options with loader open when call to AutoCompleteGal api fails with generic 500', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({
 			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [] }
@@ -261,6 +263,22 @@ describe('Editor meeting rooms', () => {
 		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 		await user.type(screen.getByText('Meeting room'), 'location');
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+
+		expect(within(dropdown).getByTestId('dropdown-options-loader')).toBeVisible();
+	});
+
+	test('should leave dropdown options with loader open when call to AutoCompleteGal api fails with Soap Fault', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [] }
+		});
+
+		const interceptor = createSoapAPIInterceptor('AutoCompleteGal', buildSoapErrorResponseBody());
+
+		const { user } = setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
+		await user.type(screen.getByText('Meeting room'), 'location');
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await interceptor;
 
 		expect(within(dropdown).getByTestId('dropdown-options-loader')).toBeVisible();
 	});
