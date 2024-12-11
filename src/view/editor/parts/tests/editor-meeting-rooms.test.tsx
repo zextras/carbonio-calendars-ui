@@ -19,6 +19,7 @@ import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
+import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
@@ -74,7 +75,36 @@ describe('Editor meeting rooms', () => {
 
 		expect(screen.getByText(meetingRoom1.label)).toBeVisible();
 	});
+	test('should display meeting room busy when is already booked', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const meetingRoom1 = {
+			label: 'meeting room 1',
+			email: 'meeting@room1.test'
+		};
+		const start = new Date(2024, 1, 10, 11, 0).getTime();
+		const end = new Date(2024, 1, 10, 12, 0).getTime();
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				start,
+				end,
+				meetingRoom: [meetingRoom1]
+			}
+		});
+		const freeBusyInterceptor = mockFreeBusyResponse([
+			{
+				id: meetingRoom1.email,
+				b: [{ s: start, e: end }]
+			}
+		]);
 
+		setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
+		await freeBusyInterceptor;
+
+		expect(screen.getByText(meetingRoom1.label)).toBeVisible();
+		expect(await screen.findByTestId('icon: AlertTriangle')).toBeVisible();
+	});
 	test('On type options are visible on screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -105,7 +135,6 @@ describe('Editor meeting rooms', () => {
 		expect(within(dropdown).getByText(items[1].label)).toBeVisible();
 		expect(within(dropdown).getByText(items[2].label)).toBeVisible();
 	});
-
 	test('Clicking on the option will update the editor', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -143,7 +172,6 @@ describe('Editor meeting rooms', () => {
 		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
-
 	test('Pressing enter will select the first option', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -183,7 +211,6 @@ describe('Editor meeting rooms', () => {
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
-
 	test('adding a new meeting room should not remove the already existing chips', async () => {
 		const meetinRoom1 = {
 			label: 'meeting room 1',
@@ -249,7 +276,6 @@ describe('Editor meeting rooms', () => {
 
 		expect((await screen.findAllByText(selectedMeetingRoom.label)).length).toBe(1);
 	});
-
 	test('should leave dropdown options with loader open when call to AutoCompleteGal api fails with generic 500', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({
@@ -266,7 +292,6 @@ describe('Editor meeting rooms', () => {
 
 		expect(within(dropdown).getByTestId('dropdown-options-loader')).toBeVisible();
 	});
-
 	test('should leave dropdown options with loader open when call to AutoCompleteGal api fails with Soap Fault', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({

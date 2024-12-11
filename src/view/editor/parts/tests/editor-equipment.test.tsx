@@ -21,6 +21,7 @@ import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
+import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
@@ -77,7 +78,36 @@ describe('Editor equipment', () => {
 
 		expect(screen.getByText(/automobile 1/i)).toBeVisible();
 	});
+	test('should display equipment busy when is already booked', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const equipment1 = {
+			label: 'equipment 1',
+			email: 'equipment1@test.com'
+		};
+		const start = new Date(2024, 1, 10, 11, 0).getTime();
+		const end = new Date(2024, 1, 10, 12, 0).getTime();
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				start,
+				end,
+				equipment: [equipment1]
+			}
+		});
+		const freeBusyInterceptor = mockFreeBusyResponse([
+			{
+				id: equipment1.email,
+				b: [{ s: start, e: end }]
+			}
+		]);
 
+		setupTest(<EditorEquipments editorId={editor.id} />, { store });
+		await freeBusyInterceptor;
+
+		expect(screen.getByText(equipment1.label)).toBeVisible();
+		expect(await screen.findByTestId('icon: AlertTriangle')).toBeVisible();
+	});
 	test('On type options are visible on screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });

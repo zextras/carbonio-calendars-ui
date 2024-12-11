@@ -114,11 +114,9 @@ export const EditorResourceComponent = ({
 	const onAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
 		const resourceFromOptions = valueToAdd as Resource;
 		return {
-			...resourceFromOptions,
-			value: {
-				...resourceFromOptions,
-				email: resourceFromOptions.email ?? resourceFromOptions.label
-			}
+			id: resourceFromOptions.id,
+			label: resourceFromOptions.label,
+			value: resourceFromOptions
 		};
 	}, []);
 
