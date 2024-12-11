@@ -67,14 +67,14 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 					);
 					const remoteResources = map(meetingResources, (result) => normalizeResources(result));
 
-					const res = map(meetingResources, (result) => ({
+					const meetingRoomOptions = map(meetingResources, (result) => ({
 						id: result.fileAsStr,
 						label: result.fileAsStr,
 						icon: 'BuildingOutline',
 						value: normalizeResources(result)
 					}));
 					useAppStatusStore.setState({ meetingRoom: uniqBy(remoteResources, 'label') });
-					return res;
+					return meetingRoomOptions;
 				}
 				throw new Error('API failed');
 			}),

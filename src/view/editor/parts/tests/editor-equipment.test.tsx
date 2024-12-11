@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2023 Zextras <https://www.zextras.com>
+ * SPDX-FileCopyrightText: 2024 Zextras <https://www.zextras.com>
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
@@ -14,19 +14,19 @@ import { map } from 'lodash';
 import moment from 'moment';
 import { http, HttpResponse } from 'msw';
 
-import { EditorEquipments } from './editor-equipments';
-import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
-import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { CarbonioMailboxRestHandlerRequest } from '../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
-import { buildSoapErrorResponseBody } from '../../../carbonio-ui-commons/test/mocks/utils/soap';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { generateEditor } from '../../../commons/editor-generator';
-import { TEST_SELECTORS } from '../../../constants/test-utils';
-import { reducers } from '../../../store/redux';
-import { useAppStatusStore } from '../../../store/zustand/store';
-import { getCustomResources } from '../../../test/mocks/network/msw/handle-autocomplete-gal-request';
-import { handleGetFreeBusyCustomResponse } from '../../../test/mocks/network/msw/handle-get-free-busy';
-import { Resource } from '../../../types/editor';
+import { getSetupServer } from '../../../../carbonio-ui-commons/test/jest-setup';
+import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
+import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
+import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
+import { generateEditor } from '../../../../commons/editor-generator';
+import { TEST_SELECTORS } from '../../../../constants/test-utils';
+import { reducers } from '../../../../store/redux';
+import { useAppStatusStore } from '../../../../store/zustand/store';
+import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
+import { handleGetFreeBusyCustomResponse } from '../../../../test/mocks/network/msw/handle-get-free-busy';
+import { Resource } from '../../../../types/editor';
+import { EditorEquipments } from '../editor-equipments';
 
 const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ equipment: [] }));
@@ -147,7 +147,7 @@ describe('Editor equipment', () => {
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
 
-	test('Pressing enter will update the editor', async () => {
+	test('Pressing enter will select the first option', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 		const items = map({ length: 3 }, (_, index) => {

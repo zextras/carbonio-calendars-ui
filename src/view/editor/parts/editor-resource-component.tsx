@@ -32,7 +32,6 @@ import {
 } from '../../../store/selectors/editor';
 import { ChipResource, Resource } from '../../../types/editor';
 import { Contact } from '../../../types/soap/soap-actions';
-import { EditorChipAttendees } from '../../../types/store/invite';
 
 interface SkeletonTileProps {
 	width?: string;
@@ -40,6 +39,7 @@ interface SkeletonTileProps {
 	radius?: string;
 	theme: DefaultTheme;
 }
+type ResourceInputOption = DropdownItem & { value?: Resource };
 
 const SkeletonTile = styled.div<SkeletonTileProps>`
 	width: ${({ width }): string => width ?? '1rem'};
@@ -74,12 +74,9 @@ const Loader = (): ReactElement => (
 	</Container>
 );
 
-export const normalizeResources = (
-	r: Contact
-): { id: string; label: string; value: string; email: string; type: string } => ({
+export const normalizeResources = (r: Contact): Resource => ({
 	id: r.id,
 	label: r.fileAsStr,
-	value: r.fileAsStr,
 	email: r._attrs.email,
 	type: r._attrs.zimbraCalResType
 });
@@ -96,7 +93,7 @@ export const EditorResourceComponent = ({
 }: {
 	editorId: string;
 	onChange: (items: ChipResource[]) => void;
-	onSearchOptions: (stringToSearch: string) => Promise<Array<DropdownItem>>;
+	onSearchOptions: (stringToSearch: string) => Promise<Array<ResourceInputOption>>;
 	placeholder: string;
 	resourcesValue: Array<ChipResource>;
 	warningLabel: string;
@@ -110,32 +107,20 @@ export const EditorResourceComponent = ({
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const uid = useAppSelector(selectEditorUid(editorId));
 
-	const [options, setOptions] = useState<Array<DropdownItem>>([]);
+	const [options, setOptions] = useState<Array<ResourceInputOption>>([]);
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
-	const isValueToAddAnObjectWithLabelType = (
-		arg: unknown
-	): arg is { label: string } & Partial<EditorChipAttendees> =>
-		!!arg && typeof arg === 'object' && 'label' in arg;
-
-	const onAdd = useCallback<NonNullable<ChipInputProps<Resource>['onAdd']>>(
-		(valueToAdd): ChipItem<Resource> => {
-			if (valueToAdd) {
-				if (typeof valueToAdd === 'string') {
-					return { label: valueToAdd, value: { label: valueToAdd, email: valueToAdd } };
-				}
-				if (isValueToAddAnObjectWithLabelType(valueToAdd)) {
-					return {
-						...valueToAdd,
-						value: { ...valueToAdd, email: valueToAdd.email ?? valueToAdd.label }
-					};
-				}
+	const onAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
+		const resourceFromOptions = valueToAdd as Resource;
+		return {
+			...resourceFromOptions,
+			value: {
+				...resourceFromOptions,
+				email: resourceFromOptions.email ?? resourceFromOptions.label
 			}
-			throw new Error('invalid keywords received');
-		},
-		[]
-	);
+		};
+	}, []);
 
 	const onInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
 		(e) => {
@@ -215,20 +200,14 @@ export const EditorResourceComponent = ({
 		});
 	}, [allDay, attendeesAvailabilityList, end, resourcesValue, singleWarningLabel, start]);
 
-	const backspaceEvent = useMemo<KeyboardPresetObj[]>(
+	const onPressingEnterSelectFirstOption = useMemo<KeyboardPresetObj[]>(
 		() => [
 			{
 				type: 'keydown',
 				callback: (): void => {
-					// todo: ignoring cause dropdown can't receive value prop
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					if (options?.[0]?.value && onChange && options?.[0]?.id !== 'loading') {
-						// todo: ignoring cause dropdown can't receive value prop
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
+					if (options?.[0]?.value && onInternalChange && options?.[0]?.id !== 'loading') {
 						const { value } = options[0];
-						onChange([
+						onInternalChange([
 							...resourceAvailability,
 							{
 								...value,
@@ -245,10 +224,10 @@ export const EditorResourceComponent = ({
 				haveToPreventDefault: true
 			}
 		],
-		[onChange, options, resourceAvailability, setOptions]
+		[onInternalChange, options, resourceAvailability]
 	);
 
-	useKeyboard(inputRef, backspaceEvent);
+	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
 
 	return (
 		<>
