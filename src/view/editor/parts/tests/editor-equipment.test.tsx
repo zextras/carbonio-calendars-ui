@@ -31,7 +31,7 @@ const setupEmptyAppStatusStore = (): void => {
 };
 
 describe('Editor equipment', () => {
-	test('The component is visible on screen', async () => {
+	it('should display the Equipment input on the screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
@@ -40,8 +40,7 @@ describe('Editor equipment', () => {
 
 		expect(screen.getByText('Equipment')).toBeInTheDocument();
 	});
-
-	test('should render the chip already present in the store', async () => {
+	it('should render the chip when present in the store', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
 		const equipment1 = {
@@ -57,7 +56,7 @@ describe('Editor equipment', () => {
 
 		expect(screen.getByText(/automobile 1/i)).toBeVisible();
 	});
-	test('should display equipment busy when is already booked', async () => {
+	it('should display equipment busy when is already booked', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const equipment1 = {
 			label: 'equipment 1',
@@ -87,7 +86,7 @@ describe('Editor equipment', () => {
 		expect(screen.getByText(equipment1.label)).toBeVisible();
 		expect(await screen.findByTestId('icon: AlertTriangle')).toBeVisible();
 	});
-	test('On type options are visible on screen', async () => {
+	it('should display options on screen when typing', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 		const items = map({ length: 3 }, (_, index) => {
@@ -117,8 +116,7 @@ describe('Editor equipment', () => {
 		expect(within(dropdown).getByText(items[1].label)).toBeVisible();
 		expect(within(dropdown).getByText(items[2].label)).toBeVisible();
 	});
-
-	test('Clicking on the option will update the editor', async () => {
+	it('should add a chip when selecting an option', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 		const items = map({ length: 3 }, (_, index) => {
@@ -133,18 +131,14 @@ describe('Editor equipment', () => {
 		});
 		const handler = getCustomResources(items);
 		mockFreeBusyResponse([]);
-
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.json(handler))
 		);
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
-
 		await user.type(screen.getByText('Equipment'), 'resource');
-
 		await act(async () => {
 			await jest.advanceTimersToNextTimerAsync();
 		});
-
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
 		await user.click(within(dropdown).getByText(items[0].label));
@@ -154,8 +148,7 @@ describe('Editor equipment', () => {
 		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
-
-	test('Pressing enter will select the first option', async () => {
+	it('should select the first option when pressing enter', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 		const items = map({ length: 3 }, (_, index) => {
@@ -191,8 +184,7 @@ describe('Editor equipment', () => {
 		expect(dropdown).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
-
-	test('adding a new equipment should not remove the already existing chips', async () => {
+	it('should not remove the already existing chips when adding a new one', async () => {
 		const equipment1 = {
 			label: 'automobile 1',
 			email: 'auto1@equipment.test'
@@ -227,8 +219,7 @@ describe('Editor equipment', () => {
 		expect(screen.getByText(equipment1.label)).toBeVisible();
 		expect(screen.getByText(selectedEquipmentLabel)).toBeVisible();
 	});
-
-	test('adding an already existing equipment should display it only once', async () => {
+	it('should not add a new chip that already exists', async () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
@@ -258,8 +249,7 @@ describe('Editor equipment', () => {
 
 		expect((await screen.findAllByText(selectedEquipment.label)).length).toBe(1);
 	});
-
-	test('should leave dropdown options with loader open when call to AutoCompleteGal api fails with generic 500', async () => {
+	it('should leave options dropdown open with loader when call to AutoCompleteGal api fails with generic 500', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({
 			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [] }
@@ -275,8 +265,7 @@ describe('Editor equipment', () => {
 
 		expect(within(dropdown).getByTestId('dropdown-options-loader')).toBeVisible();
 	});
-
-	test('should leave dropdown options with loader open when call to AutoCompleteGal api fails with Soap Fault', async () => {
+	it('should leave options dropdown open with loader when call to AutoCompleteGal api fails with Soap Fault', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({
 			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [] }
