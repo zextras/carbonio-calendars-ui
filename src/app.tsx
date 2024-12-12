@@ -191,7 +191,9 @@ export default function App(): React.JSX.Element {
 	return (
 		<AuthGuard>
 			<StoreProvider>
-				<AppRegistrations />
+				<ModalManager>
+					<AppRegistrations />
+				</ModalManager>
 				<AppointmentReminder />
 				<SyncDataHandler />
 				<Notifications />
