@@ -5,14 +5,7 @@
  */
 import React, { useCallback, useState } from 'react';
 
-import {
-	Container,
-	Icon,
-	Row,
-	Tooltip,
-	Padding,
-	TextWithTooltip
-} from '@zextras/carbonio-design-system';
+import { Container, Icon, Row, Tooltip, Padding, Text } from '@zextras/carbonio-design-system';
 import { pushHistory } from '@zextras/carbonio-shell-ui';
 import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -104,13 +97,11 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 						wrap={'nowrap'}
 						style={{ overflowX: 'hidden' }}
 					>
-						<TextWithTooltip
-							size="medium"
-							color={event.resource.calendar.color.color}
-							overflow={'ellipsis'}
-						>
-							{eventTimeString}
-						</TextWithTooltip>
+						<Tooltip label={eventTimeString} overflowTooltip>
+							<Text size="medium" color={event.resource.calendar.color.color} overflow={'ellipsis'}>
+								{eventTimeString}
+							</Text>
+						</Tooltip>
 						<Row mainAlignment="flex-end" style={{ overflowX: 'visible' }} wrap={'nowrap'}>
 							{event.resource.class === 'PRI' && (
 								<Tooltip label={t('label.private', 'Private')} placement="top">
@@ -175,13 +166,11 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 						wrap={'nowrap'}
 						style={{ overflowX: 'hidden' }}
 					>
-						<TextWithTooltip
-							size="medium"
-							weight="bold"
-							color={event.resource.calendar.color.color}
-						>
-							{event.title}
-						</TextWithTooltip>
+						<Tooltip label={event.title} overflowTooltip>
+							<Text size="medium" weight="bold" color={event.resource.calendar.color.color}>
+								{event.title}
+							</Text>
+						</Tooltip>
 					</Row>
 				</Container>
 			</Container>
