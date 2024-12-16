@@ -9,12 +9,12 @@ import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-sys
 import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { size } from 'lodash';
 import styled from 'styled-components';
-import { CenteredSpinner } from '../../components/CenteredSpinner';
 
 import { ModifyStandardMessageModal } from './modify-standard-message-modal';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
+import { CenteredSpinner } from '../../components/CenteredSpinner';
 import { useDeleteActions, UseDeleteActionsType } from '../../hooks/use-delete-actions';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
