@@ -45,7 +45,7 @@ export const handleGetFreeBusyCustomResponse = (
 	},
 	Body: {
 		GetFreeBusyResponse: {
-			usr: arg ?? getEmptyResponse().Body.GetFreeBusyResponse.usr,
+			usr: arg ?? [],
 			_jsns: 'urn:zimbraMail'
 		}
 	},

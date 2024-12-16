@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { ReactElement, useCallback, useMemo, useRef } from 'react';
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 
 import {
 	ChipInput,
@@ -15,7 +15,7 @@ import {
 	KeyboardPresetObj,
 	useKeyboard
 } from '@zextras/carbonio-design-system';
-import { find, map } from 'lodash';
+import { find, map, reduce, uniqWith } from 'lodash';
 import styled, { DefaultTheme } from 'styled-components';
 
 import {
@@ -32,7 +32,6 @@ import {
 } from '../../../store/selectors/editor';
 import { ChipResource, Resource } from '../../../types/editor';
 import { Contact } from '../../../types/soap/soap-actions';
-import { EditorChipAttendees } from '../../../types/store/invite';
 
 interface SkeletonTileProps {
 	width?: string;
@@ -40,6 +39,7 @@ interface SkeletonTileProps {
 	radius?: string;
 	theme: DefaultTheme;
 }
+type ResourceInputOption = DropdownItem & { value?: Resource };
 
 const SkeletonTile = styled.div<SkeletonTileProps>`
 	width: ${({ width }): string => width ?? '1rem'};
@@ -52,8 +52,15 @@ const SkeletonTile = styled.div<SkeletonTileProps>`
 	background: ${({ theme }): string => theme.palette.gray2.regular};
 `;
 
-export const Loader = (): ReactElement => (
+const createChipFromResource = (optionValue: Resource): ChipItem<Resource> => ({
+	id: optionValue.id,
+	label: optionValue.label,
+	value: optionValue
+});
+
+const Loader = (): ReactElement => (
 	<Container
+		data-testid={'dropdown-options-loader'}
 		orientation="horizontal"
 		mainAlignment="flex-start"
 		crossAlignment="center"
@@ -73,12 +80,9 @@ export const Loader = (): ReactElement => (
 	</Container>
 );
 
-export const normalizeResources = (
-	r: Contact
-): { id: string; label: string; value: string; email: string; type: string } => ({
+export const normalizeResources = (r: Contact): Resource => ({
 	id: r.id,
 	label: r.fileAsStr,
-	value: r.fileAsStr,
 	email: r._attrs.email,
 	type: r._attrs.zimbraCalResType
 });
@@ -88,20 +92,16 @@ export const EditorResourceComponent = ({
 	onChange,
 	placeholder,
 	resourcesValue,
-	onInputType,
-	options,
-	setOptions,
+	onSearchOptions,
 	warningLabel,
 	disabled,
 	singleWarningLabel
 }: {
 	editorId: string;
-	onChange: ChipInputProps<Resource>['onChange'];
-	onInputType: ChipInputProps['onInputType'];
+	onChange: (items: ChipResource[]) => void;
+	onSearchOptions: (stringToSearch: string) => Promise<Array<ResourceInputOption>>;
 	placeholder: string;
 	resourcesValue: Array<ChipResource>;
-	options: Array<DropdownItem>;
-	setOptions: (e: Array<DropdownItem>) => void;
 	warningLabel: string;
 	disabled?: boolean;
 	singleWarningLabel: string;
@@ -113,38 +113,69 @@ export const EditorResourceComponent = ({
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const uid = useAppSelector(selectEditorUid(editorId));
 
+	const [options, setOptions] = useState<Array<ResourceInputOption>>([]);
+
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
-	const isValueToAddAnObjectWithLabelType = (
-		arg: unknown
-	): arg is { label: string } & Partial<EditorChipAttendees> =>
-		!!arg && typeof arg === 'object' && 'label' in arg;
+	const onAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
+		const resourceFromOptions = valueToAdd as Resource;
+		return createChipFromResource(resourceFromOptions);
+	}, []);
 
-	const onAdd = useCallback<NonNullable<ChipInputProps<Resource>['onAdd']>>(
-		(valueToAdd): ChipItem<Resource> => {
-			if (valueToAdd) {
-				if (typeof valueToAdd === 'string') {
-					return { label: valueToAdd, value: { label: valueToAdd, email: valueToAdd } };
-				}
-				if (isValueToAddAnObjectWithLabelType(valueToAdd)) {
-					return {
-						...valueToAdd,
-						value: { ...valueToAdd, email: valueToAdd.email ?? valueToAdd.label }
-					};
-				}
+	const onInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
+		(e) => {
+			if (e.textContent && e.textContent !== '') {
+				setOptions([
+					{
+						id: 'loading',
+						label: 'loading',
+						customComponent: <Loader />,
+						disabled: true
+					}
+				]);
+				onSearchOptions(e.textContent)
+					.then((receivedOptions) => {
+						setOptions(receivedOptions);
+					})
+					.catch(() => {
+						// ignore
+					});
 			}
-			throw new Error('invalid keywords received');
 		},
-		[]
+		[onSearchOptions]
 	);
 
-	const resourceAvailability = useMemo(() => {
+	const onInternalChange = useCallback(
+		(items: ChipItem<Resource>[]) => {
+			const itemsWithValue = reduce(
+				items,
+				(acc, item) => {
+					const { value, label } = item;
+					if (label && value) {
+						acc.push({ label, email: value.email });
+					}
+					return acc;
+				},
+				[] as ChipResource[]
+			);
+
+			const filterdItems = uniqWith(
+				itemsWithValue,
+				(item1, item2) => item1.email === item2.email || item1.label === item2.label
+			);
+
+			onChange(filterdItems);
+		},
+		[onChange]
+	);
+
+	const resourceAvailability: ChipItem<Resource>[] = useMemo(() => {
 		if (!resourcesValue?.length) {
 			return [];
 		}
 		return map(resourcesValue, (room) => {
 			const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
-
+			const chipRoom = { ...room, value: room };
 			if (roomInList) {
 				const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
 					roomInList,
@@ -165,35 +196,23 @@ export const EditorResourceComponent = ({
 						} as const
 					];
 					return {
-						...room,
+						...chipRoom,
 						actions
 					};
 				}
 			}
-			return room;
+			return chipRoom;
 		});
 	}, [allDay, attendeesAvailabilityList, end, resourcesValue, singleWarningLabel, start]);
 
-	const backspaceEvent = useMemo<KeyboardPresetObj[]>(
+	const onPressingEnterSelectFirstOption = useMemo<KeyboardPresetObj[]>(
 		() => [
 			{
 				type: 'keydown',
 				callback: (): void => {
-					// todo: ignoring cause dropdown can't receive value prop
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					if (options?.[0]?.value && onChange && options?.[0]?.id !== 'loading') {
-						// todo: ignoring cause dropdown can't receive value prop
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
+					if (options?.[0]?.value && onInternalChange && options?.[0]?.id !== 'loading') {
 						const { value } = options[0];
-						onChange([
-							...resourceAvailability,
-							{
-								...value,
-								value: { ...value, email: value.email ?? value.label }
-							}
-						]);
+						onInternalChange([...resourceAvailability, createChipFromResource(value)]);
 						if (inputRef.current) {
 							inputRef.current.value = '';
 							setOptions([]);
@@ -204,10 +223,10 @@ export const EditorResourceComponent = ({
 				haveToPreventDefault: true
 			}
 		],
-		[onChange, options, resourceAvailability, setOptions]
+		[onInternalChange, options, resourceAvailability]
 	);
 
-	useKeyboard(inputRef, backspaceEvent);
+	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
 
 	return (
 		<>
@@ -221,7 +240,7 @@ export const EditorResourceComponent = ({
 					options={options}
 					onInputType={onInputType}
 					onAdd={onAdd}
-					onChange={onChange}
+					onChange={onInternalChange}
 					disabled={disabled}
 				/>
 			</Container>
