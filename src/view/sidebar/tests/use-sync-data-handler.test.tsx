@@ -16,7 +16,14 @@ import { useCalendarGroupStore } from '../../../store/zustand/calendar-group-sto
 import mockedData from '../../../test/generators';
 import { useSyncDataHandler } from '../use-sync-data-handler';
 
-jest.mock('../../../carbonio-ui-commons/worker');
+jest.mock('../../../carbonio-ui-commons/worker', () => ({
+	folderWorker: {
+		postMessage: jest.fn()
+	},
+	tagsWorker: {
+		postMessage: jest.fn()
+	}
+}));
 
 describe('sync data handler', () => {
 	describe('folders', () => {

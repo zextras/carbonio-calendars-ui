@@ -6,9 +6,10 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
-import { Spinner, replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { size } from 'lodash';
 import styled from 'styled-components';
+import { CenteredSpinner } from '../../components/CenteredSpinner';
 
 import { ModifyStandardMessageModal } from './modify-standard-message-modal';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
@@ -230,6 +231,6 @@ export const DeleteEventModal = ({
 			)}
 		</Container>
 	) : (
-		<Spinner />
+		<CenteredSpinner />
 	);
 };

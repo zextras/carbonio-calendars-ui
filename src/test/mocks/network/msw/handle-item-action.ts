@@ -9,7 +9,7 @@ import { HttpResponse, HttpResponseResolver } from 'msw';
 
 import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 
-const getResponse = (): SuccessSoapResponse<any> => ({
+const getSuccessfulResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
 		context: {
 			session: { id: 150973, _content: 150973 },
@@ -28,6 +28,6 @@ export const handleItemActionRequest: HttpResponseResolver<
 	CarbonioMailboxRestHandlerRequest<any>,
 	SuccessSoapResponse<any>
 > = () => {
-	const response = getResponse();
+	const response = getSuccessfulResponse();
 	return HttpResponse.json(response);
 };

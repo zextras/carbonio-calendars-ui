@@ -13,10 +13,11 @@ import React, {
 } from 'react';
 
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
-import { Tag, useTags } from '@zextras/carbonio-shell-ui';
 import { includes, reduce } from 'lodash';
 
 import { ZIMBRA_STANDARD_COLORS } from '../carbonio-ui-commons/constants';
+import { useTags } from '../carbonio-ui-commons/store/zustand/tags';
+import { Tag } from '../carbonio-ui-commons/types/tags';
 import { EventType } from '../types/event';
 import { useTagExist } from '../view/tags/tag-actions';
 
