@@ -8,18 +8,12 @@ import styled from 'styled-components';
 
 import { calculatePosition } from '../utils';
 
-export const MinutesLine = styled.div.attrs(
-	({ width = '3px', color, atPosition }: { width: string; color: string; atPosition: number }) => ({
-		width,
-		color,
-		atPosition
-	})
-)`
-	width: ${(props): string => props.width};
-	background-color: ${(props): string => props.color};
+export const MinutesLine = styled.div<{ $width?: string; $color: string; $atPosition: number }>`
+	width: ${(props): string => props.$width ?? '3px'};
+	background-color: ${(props): string | undefined => props.$color};
 	height: 2rem;
 	border-radius: none;
 	float: left;
 	position: absolute;
-	left: ${(props): string => calculatePosition(props.atPosition)};
+	left: ${(props): string => calculatePosition(props.$atPosition)};
 `;

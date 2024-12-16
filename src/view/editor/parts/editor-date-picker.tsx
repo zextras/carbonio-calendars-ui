@@ -13,7 +13,6 @@ import StartDatePicker from '../../../commons/start-date-picker';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
-	selectEditorDisabled,
 	selectEditorEnd,
 	selectEditorStart
 } from '../../../store/selectors/editor';
@@ -24,7 +23,6 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
-	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
 	const onChange = useCallback(
 		({ start: newStartValue, end: newEndValue }: { start: number; end: number }) => {

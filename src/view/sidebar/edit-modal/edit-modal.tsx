@@ -75,36 +75,23 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 	}, [folderId]);
 
 	return (
-		<>
-			<EditModalContext.Provider value={{ setModal, onClose, roleOptions, setActiveGrant }}>
-				{modal === 'main' && folder && (
-					<MainEditModal folder={folder} totalAppointments={folder?.n ?? 0} grant={grant ?? []} />
-				)}
+		<EditModalContext.Provider value={{ setModal, onClose, roleOptions, setActiveGrant }}>
+			{modal === 'main' && folder && (
+				<MainEditModal folder={folder} totalAppointments={folder?.n ?? 0} grant={grant ?? []} />
+			)}
 
-				{(modal === 'share' && folder && (
-					<ShareCalendarModal
-						folderName={folder.name}
-						folderId={folderId}
-						closeFn={onClose}
-						onGoBack={onGoBack}
-						secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
-						grant={grant}
-					/>
-				)) ||
-					(modal === 'revoke' && folder && (
-						<ShareRevokeModal
-							folder={folder}
-							grant={
-								Object.keys(activeGrant).length > 0
-									? (activeGrant as Grant)
-									: (folder?.acl?.grant[0] as Grant)
-							}
-							onGoBack={onGoBack}
-						/>
-					))}
-
-				{modal === 'edit' && folder && (
-					<EditPermissionModal
+			{(modal === 'share' && folder && (
+				<ShareCalendarModal
+					folderName={folder.name}
+					folderId={folderId}
+					closeFn={onClose}
+					onGoBack={onGoBack}
+					secondaryLabel={t('folder.modal.footer.go_back', 'Go back')}
+					grant={grant}
+				/>
+			)) ||
+				(modal === 'revoke' && folder && (
+					<ShareRevokeModal
 						folder={folder}
 						grant={
 							Object.keys(activeGrant).length > 0
@@ -113,8 +100,19 @@ export const EditModal: FC<EditModalProps> = ({ onClose, folderId }) => {
 						}
 						onGoBack={onGoBack}
 					/>
-				)}
-			</EditModalContext.Provider>
-		</>
+				))}
+
+			{modal === 'edit' && folder && (
+				<EditPermissionModal
+					folder={folder}
+					grant={
+						Object.keys(activeGrant).length > 0
+							? (activeGrant as Grant)
+							: (folder?.acl?.grant[0] as Grant)
+					}
+					onGoBack={onGoBack}
+				/>
+			)}
+		</EditModalContext.Provider>
 	);
 };

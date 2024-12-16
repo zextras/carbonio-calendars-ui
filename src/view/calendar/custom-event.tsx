@@ -192,7 +192,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				>
 					<Dropdown
 						contextMenu
-						width="cal(min(100%,12.5rem))"
+						width="min(100%,12.5rem)"
 						style={{ width: '100%', height: '100%' }}
 						items={actions ?? []}
 						display="block"
