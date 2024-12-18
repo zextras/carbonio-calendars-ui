@@ -5,14 +5,7 @@
  */
 import React, { ReactElement } from 'react';
 
-import {
-	Icon,
-	Padding,
-	Row,
-	Tooltip,
-	Text,
-	TextWithTooltip
-} from '@zextras/carbonio-design-system';
+import { Icon, Padding, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
 import moment, { Moment } from 'moment';
 
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
@@ -61,9 +54,11 @@ export const TimeInfoRow = ({
 						crossAlignment="flex-start"
 						takeAvailableSpace
 					>
-						<TextWithTooltip overflow="ellipsis" weight="bold" size="small" color="gray1">
-							{localTimeString}
-						</TextWithTooltip>
+						<Tooltip label={localTimeString} overflowTooltip>
+							<Text overflow="ellipsis" weight="bold" size="small" color="gray1">
+								{localTimeString}
+							</Text>
+						</Tooltip>
 					</Row>
 					<Padding right="small" />
 					{showTimezoneTooltip && (

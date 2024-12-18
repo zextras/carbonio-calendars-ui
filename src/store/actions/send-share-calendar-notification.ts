@@ -6,10 +6,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { map } from 'lodash';
 
+type SendShareCalendarNotification = {
+	contacts: {
+		email: string;
+	}[];
+	accounts: { name: string }[];
+	folder: string;
+	standardMessage?: string;
+};
+
 // todo: this thunk is not using redux! convert to regular async function
 export const sendShareCalendarNotification = createAsyncThunk(
 	'calendar/sendShareCalendarNotification',
-	async (data: any) =>
+	async (data: SendShareCalendarNotification) =>
 		Promise.all(
 			map(data.contacts, (contact) =>
 				fetch('/service/soap/SendShareNotificationRequest', {
@@ -30,7 +39,7 @@ export const sendShareCalendarNotification = createAsyncThunk(
                            <item id="${data.folder}"/>
                            <e a="${contact.email}"/>
                            ${
-															data?.standardMessage?.length > 0
+															data?.standardMessage && data?.standardMessage?.length > 0
 																? `<notes>${data.standardMessage}</notes>`
 																: ''
 														}

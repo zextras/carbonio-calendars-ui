@@ -5,7 +5,7 @@
  */
 import { ErrorSoapBodyResponse, JSNS, soapFetch } from '@zextras/carbonio-shell-ui';
 
-import { CreateCalendarGroupError } from './create-calendar-group-error';
+import { CreateCalendarGroupError } from './errors/create-calendar-group-error';
 
 export type CreateCalendarGroupRequest = {
 	name: string;
