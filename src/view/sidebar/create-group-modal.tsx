@@ -20,8 +20,8 @@ import { useTranslation } from 'react-i18next';
 
 import { MultipleCalendarSelector } from './custom-components/multiple-calendar-selector';
 import { GroupCalendarsList } from './group-calendars-list';
+import { getErrorMessage } from '../../carbonio-ui-commons/helpers/errors';
 import { Folder } from '../../carbonio-ui-commons/types';
-import { ApiError } from '../../soap/api-error';
 import { createCalendarGroupRequest } from '../../soap/create-calendar-group-request';
 import { updateCalendarGroupsStore } from '../../store/zustand/calendar-group-store';
 
@@ -101,16 +101,11 @@ export const CreateGroupModal = ({ onClose }: CreateGroupModalProps): ReactEleme
 				onClose();
 			})
 			.catch((err) => {
-				const errorMessage =
-					err instanceof ApiError
-						? err.getLocalizedMessage(t)
-						: t('label.error_try_again', 'Something went wrong, please try again');
-
 				createSnackbar({
 					key: `group-creation-failed`,
 					replace: true,
 					severity: 'error',
-					label: errorMessage,
+					label: getErrorMessage(err, t),
 					autoHideTimeout: 3000,
 					hideButton: true
 				});
