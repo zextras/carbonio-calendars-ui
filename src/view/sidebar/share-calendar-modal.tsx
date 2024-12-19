@@ -7,7 +7,6 @@ import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 
 import {
 	Checkbox,
-	ChipInput,
 	Container,
 	Icon,
 	Input,
@@ -19,12 +18,14 @@ import {
 	Tooltip,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { useIntegratedComponent, useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { useContactInput } from '../../carbonio-ui-commons/integrations/hooks';
+import { ContactInputItem } from '../../carbonio-ui-commons/integrations/types';
 import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import {
@@ -42,13 +43,6 @@ type SharePrivateCheckboxProps = {
 	allowToSeePrvtAppt: boolean;
 	setAllowToSeePrvtAppt: React.Dispatch<React.SetStateAction<boolean>>;
 };
-type Contact = {
-	email: string;
-	error?: boolean;
-};
-
-type Contacts = Array<Contact>;
-
 export type ShareUserType = (typeof SHARE_USER_TYPE)[keyof typeof SHARE_USER_TYPE];
 
 export const SharePrivateCheckbox: FC<SharePrivateCheckboxProps> = ({
@@ -92,7 +86,6 @@ export const SharePrivateCheckbox: FC<SharePrivateCheckboxProps> = ({
 };
 
 const UserShare = ({
-	shareWithUserType,
 	grant,
 	folderId,
 	onGoBack,
@@ -107,12 +100,13 @@ const UserShare = ({
 	const dispatch = useAppDispatch();
 	const createSnackbar = useSnackbar();
 
-	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
+	const ContactInput = useContactInput();
 
 	const [shareWithUserRole, setShareWithUserRole] = useState<string | null>('r');
 	const [sendNotification, setSendNotification] = useState(true);
 	const [standardMessage, setStandardMessage] = useState('');
-	const [contacts, setContacts] = useState<Contacts>([]);
+	const [contacts, setContacts] = useState<ContactInputItem[]>([]);
+
 	const [allowToSeePrvtAppt, setAllowToSeePrvtAppt] = useState(false);
 	const disabled = useMemo(() => !contacts.length || some(contacts, 'error'), [contacts]);
 
@@ -122,7 +116,7 @@ const UserShare = ({
 	);
 
 	const onContactInputChange = useCallback(
-		(ev: Contacts) => {
+		(ev: Array<ContactInputItem>) => {
 			setContacts(ev);
 		},
 		[setContacts]
@@ -136,14 +130,14 @@ const UserShare = ({
 	);
 
 	const onConfirm = useCallback((): void => {
-		const folderActionArr: FolderAction[] = map(contacts, (contact) => ({
+		const folderActionArr: FolderAction[] = map(contacts, (contactInputItem) => ({
 			id: folderId,
 			op: FOLDER_OPERATIONS.GRANT,
 			grant: [
 				{
 					gt: SHARE_USER_TYPE.USER,
 					inh: '1',
-					d: contact.email,
+					d: contactInputItem.value.email,
 					perm: `${shareWithUserRole}${allowToSeePrvtAppt ? 'p' : ''}`,
 					pw: ''
 				}
@@ -165,11 +159,10 @@ const UserShare = ({
 				sendNotification &&
 					dispatch(
 						sendShareCalendarNotification({
-							sendNotification,
 							standardMessage,
-							contacts,
-							shareWithUserType,
-							shareWithUserRole,
+							contacts: contacts.map((contact) => ({
+								email: contact.value.email
+							})),
 							folder: folderId,
 							accounts
 						})
@@ -198,7 +191,6 @@ const UserShare = ({
 		folderId,
 		sendNotification,
 		shareWithUserRole,
-		shareWithUserType,
 		standardMessage,
 		t
 	]);
@@ -211,29 +203,12 @@ const UserShare = ({
 				crossAlignment="flex-start"
 				height="fit"
 			>
-				{integrationAvailable ? (
-					<ContactInput
-						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
-						onChange={onContactInputChange}
-						background={'gray5'}
-						defaultValue={contacts}
-					/>
-				) : (
-					<ChipInput
-						placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
-						hasError
-						background={'gray4'}
-						onChange={(chips): void => {
-							// FIXME: this cannot work since address does not belong to the chip
-							setContacts(
-								map(chips, (chip) => ({
-									email:
-										('address' in chip && typeof chip.address === 'string' && chip.address) || ''
-								}))
-							);
-						}}
-					/>
-				)}
+				<ContactInput
+					placeholder={t('share.placeholder.recipients_address', 'Recipients e-mail addresses')}
+					onChange={onContactInputChange}
+					background={'gray5'}
+					defaultValue={contacts}
+				/>
 			</Container>
 			<SharePrivateCheckbox
 				allowToSeePrvtAppt={allowToSeePrvtAppt}
