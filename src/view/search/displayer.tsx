@@ -36,7 +36,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 			padding={{ bottom: 'medium' }}
 		>
 			{event && (
-				<Container padding={{ all: 'none' }} mainAlignment="flex-start">
+				<Container padding={{ all: 0 }} mainAlignment="flex-start">
 					<DisplayerHeader event={event} panelView={PANEL_VIEW.SEARCH} />
 					<BodyContainer
 						mainAlignment="flex-start"

@@ -42,7 +42,7 @@ export const GroupCalendarsListItem = ({
 			padding={{ right: '0.5rem' }}
 		>
 			<Row width="fit">
-				<Square data-testid="colored-square" color={color} />
+				<Square data-testid="colored-square" $color={color} />
 			</Row>
 			<Row takeAvailableSpace mainAlignment="flex-start" padding={{ bottom: '0.2rem' }}>
 				<TextWithTooltip>{calendar.name}</TextWithTooltip>

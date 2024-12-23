@@ -29,7 +29,7 @@ export default function WorkWeekSettings({
 	toggleModal
 }) {
 	return (
-		<Container padding={{ all: 'medium' }} mainAlignment="baseline" crossAlignment="baseline">
+		<Container padding={{ all: 'medium' }} mainAlignment="flex-start" crossAlignment="baseline">
 			{map(workingSchedule, (s, index) => (
 				<Row key={`week_day_${index}`}>
 					<Checkbox
