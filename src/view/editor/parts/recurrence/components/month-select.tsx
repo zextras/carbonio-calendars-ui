@@ -49,7 +49,7 @@ export const MonthSelect = ({
 			label={t('label.month', 'Month')}
 			onChange={onMonthChange}
 			disablePortal
-			width="fit"
+			width="fit-content"
 			disabled={disabled}
 			selection={value}
 			data-testid={testId}

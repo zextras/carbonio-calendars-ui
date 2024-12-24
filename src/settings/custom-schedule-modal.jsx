@@ -43,7 +43,7 @@ export default function CustomScheduleModal({
 				height="fit"
 			>
 				<ModalHeader title={title} onClose={toggleModal} />
-				<Container mainAlignment="baseline" crossAlignment="baseline">
+				<Container mainAlignment="flex-start" crossAlignment="baseline">
 					<Row padding={{ all: 'small' }}>
 						<Text size="large" weight="bold">
 							{t('label.work_hour', 'Work hour')}
@@ -51,7 +51,7 @@ export default function CustomScheduleModal({
 					</Row>
 					<Container
 						orientation="vertical"
-						mainAlignment="baseline"
+						mainAlignment="flex-start"
 						crossAlignment="baseline"
 						maxHeight="60vh"
 						style={{ overflowY: 'auto' }}
@@ -61,16 +61,16 @@ export default function CustomScheduleModal({
 								width="95%"
 								key={`week_day_${index}`}
 								orientation="horizontal"
-								mainAlignment="baseline"
+								mainAlignment="flex-start"
 							>
-								<Row width="35%" mainAlignment="baseline" crossAlignment="flex-start">
+								<Row width="35%" mainAlignment="flex-start" crossAlignment="flex-start">
 									<Checkbox
 										value={s.working}
 										onClick={handelDaysClicked(s.day)}
 										label={getWeekDay(`${Number(s.day) - 1}`, t)}
 									/>
 								</Row>
-								<Row width="65%" mainAlignment="baseline" crossAlignment="flex-start">
+								<Row width="65%" mainAlignment="flex-start" crossAlignment="flex-start">
 									<TimePicker
 										start={s.start}
 										disabled={!s.working}

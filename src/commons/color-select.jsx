@@ -35,7 +35,7 @@ const LabelFactory = ({ selected, label, open, focus }) => (
 				<TextUpperCase>{selected[0].label}</TextUpperCase>
 			</Row>
 			<Padding right="small">
-				<Square color={ZIMBRA_STANDARD_COLORS[Number(selected[0].value)].hex} />
+				<Square $color={ZIMBRA_STANDARD_COLORS[Number(selected[0].value)].hex} />
 			</Padding>
 		</Row>
 		<Icon
@@ -62,7 +62,7 @@ const getStatusItems = (t) =>
 				<Padding left="small">
 					<TextUpperCase>{t(el.zLabel)}</TextUpperCase>
 				</Padding>
-				<Square color={el.hex} />
+				<Square $color={el.hex} />
 			</Container>
 		)
 	}));

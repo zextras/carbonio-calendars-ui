@@ -78,7 +78,7 @@ const DeleteEventModalContent = ({
 			<ModalHeader title={title} onClose={onClose} />
 			<Container
 				padding={{ vertical: 'medium' }}
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 			>
 				<Text overflow="break-word">{displayMessage}</Text>

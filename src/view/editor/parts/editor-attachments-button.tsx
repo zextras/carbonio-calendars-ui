@@ -170,7 +170,12 @@ export const EditorAttachmentsButton = ({ editorId }: EditorProps): ReactElement
 	return (
 		<>
 			<Tooltip label={t('tooltip.add_attachments', 'Add attachments')}>
-				<Dropdown items={attachmentsItems} display="inline-block" width="fit" forceOpen={openDD}>
+				<Dropdown
+					items={attachmentsItems}
+					display="inline-block"
+					width="fit-content"
+					forceOpen={openDD}
+				>
 					<ResizedIconCheckbox
 						onChange={(): null => null}
 						icon="AttachOutline"

@@ -13,13 +13,13 @@ export default function AppleIcalSettings({ settingsObj, updateSettings }) {
 		<Container
 			padding={{ all: 'medium' }}
 			background="gray6"
-			mainAlignment="baseline"
+			mainAlignment="flex-start"
 			crossAlignment="baseline"
 		>
 			<Container
 				orientation="horizontal"
 				crossAlignment="baseline"
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				padding={{ all: 'small' }}
 			>
 				<Row padding={{ right: 'small' }}>

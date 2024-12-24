@@ -140,7 +140,7 @@ export const EditPermissionModal: FC<EditPermissionModalProps> = ({ folder, gran
 					disablePortal
 					defaultSelection={{
 						value: grant.perm,
-						label: findLabel(roleOptions, grant.perm)
+						label: findLabel(roleOptions, grant.perm) ?? ''
 					}}
 				/>
 			</Container>

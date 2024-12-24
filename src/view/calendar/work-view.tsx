@@ -62,7 +62,7 @@ WorkView.range = (rangeDate: Date): Date[] => {
 		schedule,
 		(acc: Date[], day: WorkWeekDay, i: number) => {
 			if (day.working) {
-				acc.push(datesAdd(d, i - current, 'day'));
+				acc.push(datesAdd(d.toDate(), i - current, 'day'));
 			}
 			return acc;
 		},
@@ -101,7 +101,7 @@ WorkView.weekBounds = (week: WorkWeekDay[]): WorkWeekBounds => {
 WorkView.title = (titleDate: Date): string => {
 	const { start, end } = WorkView.weekBounds(schedule);
 	const startDate = moment(titleDate).day(start);
-	const endDate = datesAdd(startDate, end - start, 'day');
+	const endDate = datesAdd(startDate.toDate(), end - start, 'day');
 	const isMonthSame = moment(startDate).format('MMMM') === moment(endDate).format('MMMM');
 	return isMonthSame
 		? `${moment(startDate).format('MMMM DD')} - ${moment(endDate).format('DD')}`

@@ -16,7 +16,7 @@ export const TimeTableHourTicks = (): React.JSX.Element => {
 	const hourTicks = Array.from(
 		{ length: 25 },
 		(_, hour): React.JSX.Element => (
-			<MinutesLine key={`${hour}`} width={'1px'} atPosition={60 * hour} color={color} />
+			<MinutesLine key={`${hour}`} $width={'1px'} $atPosition={60 * hour} $color={color} />
 		)
 	);
 	return <>{hourTicks}</>;
