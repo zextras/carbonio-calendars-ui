@@ -18,7 +18,8 @@ import {
 	registerFunctions,
 	SearchViewProps,
 	SecondaryBarComponentProps,
-	NewAction
+	NewAction,
+	upsertApp
 } from '@zextras/carbonio-shell-ui';
 import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { map } from 'lodash';
@@ -142,6 +143,11 @@ const AppRegistrations = (): null => {
 		addBoardView({
 			id: CALENDAR_BOARD_ID,
 			component: EditorView
+		});
+
+		upsertApp({
+			name: CALENDAR_APP_ID,
+			display: appLabel
 		});
 	}, [t]);
 
