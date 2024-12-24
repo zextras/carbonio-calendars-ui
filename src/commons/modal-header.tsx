@@ -5,9 +5,21 @@
  */
 import React from 'react';
 
-import { Container, Divider, Text, Row, IconButton } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	Divider,
+	Text,
+	Row,
+	IconButton,
+	ButtonProps
+} from '@zextras/carbonio-design-system';
 
-export const ModalHeader = ({ title, onClose }) => (
+interface ModalHeaderProps {
+	title: string;
+	onClose?: ButtonProps['onClick'];
+}
+
+export const ModalHeader = ({ title, onClose }: ModalHeaderProps): React.JSX.Element => (
 	<>
 		<Row
 			orientation="horizontal"
@@ -20,12 +32,7 @@ export const ModalHeader = ({ title, onClose }) => (
 				{title}
 			</Text>
 			{onClose && (
-				<IconButton
-					size="medium"
-					style={{ padding: { all: 'small' }, margin: 0 }}
-					onClick={onClose}
-					icon="CloseOutline"
-				/>
+				<IconButton size="medium" style={{ margin: 0 }} onClick={onClose} icon="CloseOutline" />
 			)}
 		</Row>
 		<Container padding={{ top: 'small', bottom: 'small' }}>

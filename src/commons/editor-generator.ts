@@ -20,7 +20,7 @@ import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
 import { getNewId } from '../utils/event';
 
-momentLocalizer(moment);
+momentLocalizer();
 
 export const getEndTime = ({ start, duration }: { start: number; duration: string }): number => {
 	const now = moment(start);

@@ -58,7 +58,6 @@ export type EditorProps = {
 export type Resource = {
 	id?: string;
 	label: string;
-	value?: string;
 	email: string;
 	type?: string;
 };

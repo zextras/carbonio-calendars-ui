@@ -6,7 +6,7 @@
 import { Container } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 
-const Styler = styled(Container)`
+const Styler = styled(Container)<{ $allDay?: boolean }>`
 	.rw-btn,
 	.rw-input-reset,
 	.rw-input,
@@ -55,17 +55,6 @@ const Styler = styled(Container)`
 		box-sizing: border-box;
 		padding: 0;
 	}
-	${
-		/* @font-face {
-	font-family: "RwWidgets";
-	font-weight: normal;
-	font-style: normal;
-	${/* src: url("../fonts/rw-widgets.eot?v=4.1.0");
-	src: url("../fonts/rw-widgets.eot?#iefix&v=4.1.0") format("embedded-opentype"),
-	url("../fonts/rw-widgets.woff?v=4.1.0") format("woff"),
-	url("../fonts/rw-widgets.ttf?v=4.1.0") format("truetype"),
-		url("../fonts/rw-widgets.svg?v=4.1.0#fontawesomeregular") format("svg"); */ ''
-	};
 	.rw-i {
 		display: inline-block;
 		color: inherit;
@@ -171,15 +160,15 @@ const Styler = styled(Container)`
 		margin: 0;
 	}
 	.rw-widget-container {
-		background-color: ${({ theme }) => theme.palette.gray5.regular};
-		border-bottom: ${({ theme }) => theme.palette.gray2.regular} 0.0625rem solid;
+		background-color: ${({ theme }): string => theme.palette.gray5.regular};
+		border-bottom: ${({ theme }): string => theme.palette.gray2.regular} 0.0625rem solid;
 	}
 	.rw-widget-container.rw-state-focus,
 	.rw-state-focus > .rw-widget-container,
 	.rw-widget-container.rw-state-focus:hover,
 	.rw-state-focus > .rw-widget-container:hover {
-		background-color: ${({ theme }) => theme.palette.gray5.focus};
-		border-bottom: ${({ theme }) => theme.palette.primary.regular} 0.0625rem solid;
+		background-color: ${({ theme }): string => theme.palette.gray5.focus};
+		border-bottom: ${({ theme }): string => theme.palette.primary.regular} 0.0625rem solid;
 	}
 	.rw-widget-container.rw-state-readonly,
 	.rw-state-readonly > .rw-widget-container {
@@ -217,7 +206,7 @@ const Styler = styled(Container)`
 		display: table-cell;
 	}
 	.rw-widget-picker > .rw-select {
-		width: ${({ $allDay }) => ($allDay ? '2.125rem' : '4.25rem')};
+		width: ${({ $allDay }): string => ($allDay ? '2.125rem' : '4.25rem')};
 		white-space: nowrap;
 	}
 	.rw-open > .rw-widget-picker {
@@ -843,10 +832,10 @@ const Styler = styled(Container)`
 		cursor: not-allowed;
 	}
 
-	color: ${({ theme }) => theme.palette.text.regular};
-	font-family: ${({ theme }) => theme.fonts.default};
-	font-size: ${({ theme }) => theme.sizes.font.medium};
-	font-weight: ${({ theme }) => theme.fonts.weight.regular};
+	color: ${({ theme }): string => theme.palette.text.regular};
+	font-family: ${({ theme }): string => theme.fonts.default};
+	font-size: ${({ theme }): string => theme.sizes.font.medium};
+	font-weight: ${({ theme }): number => theme.fonts.weight.regular};
 `;
 
 export default Styler;

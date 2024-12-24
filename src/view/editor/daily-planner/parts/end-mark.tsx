@@ -31,7 +31,11 @@ export const EndMark = ({
 	const defaultLineColors = getDefaultLineColors(theme);
 	return (
 		<Tooltip label={tooltipLabel}>
-			<MinutesLine data-testid={'end-mark'} atPosition={atPosition} color={defaultLineColors.end} />
+			<MinutesLine
+				data-testid={'end-mark'}
+				$atPosition={atPosition}
+				$color={defaultLineColors.end}
+			/>
 		</Tooltip>
 	);
 };

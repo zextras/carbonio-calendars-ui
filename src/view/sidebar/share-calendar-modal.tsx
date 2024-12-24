@@ -102,7 +102,7 @@ const UserShare = ({
 
 	const ContactInput = useContactInput();
 
-	const [shareWithUserRole, setshareWithUserRole] = useState<string | null>('r');
+	const [shareWithUserRole, setShareWithUserRole] = useState<string | null>('r');
 	const [sendNotification, setSendNotification] = useState(true);
 	const [standardMessage, setStandardMessage] = useState('');
 	const [contacts, setContacts] = useState<ContactInputItem[]>([]);
@@ -124,9 +124,9 @@ const UserShare = ({
 
 	const onShareRoleChange = useCallback<SingleSelectionOnChange<string | null>>(
 		(shareRole) => {
-			setshareWithUserRole(shareRole);
+			setShareWithUserRole(shareRole);
 		},
-		[setshareWithUserRole]
+		[setShareWithUserRole]
 	);
 
 	const onConfirm = useCallback((): void => {
@@ -231,7 +231,7 @@ const UserShare = ({
 					placement={'bottom-start'}
 					defaultSelection={{
 						value: 'r',
-						label: findLabel(shareCalendarRoleOptions, 'r')
+						label: findLabel(shareCalendarRoleOptions, 'r') ?? ''
 					}}
 				/>
 			</Container>
@@ -348,11 +348,13 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	const [t] = useTranslation();
 	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(), []);
 
-	const [shareWithUserType, setShareWithUserType] = useState<'usr' | null>(SHARE_USER_TYPE.USER);
+	const [shareWithUserType, setShareWithUserType] = useState<'usr' | 'pub' | null>(
+		SHARE_USER_TYPE.USER
+	);
 
 	const title = useMemo(() => `${t('label.share', 'Share')} ${folderName}`, [folderName, t]);
 
-	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr' | null>>((shareWith) => {
+	const onShareWithChange = useCallback<SingleSelectionOnChange<'usr' | 'pub'>>((shareWith) => {
 		setShareWithUserType(shareWith);
 	}, []);
 
@@ -377,7 +379,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 					onChange={onShareWithChange}
 					defaultSelection={{
 						value: SHARE_USER_TYPE.USER,
-						label: findLabel(shareCalendarWithOptions, SHARE_USER_TYPE.USER)
+						label: findLabel(shareCalendarWithOptions, SHARE_USER_TYPE.USER) ?? ''
 					}}
 				/>
 			</Container>

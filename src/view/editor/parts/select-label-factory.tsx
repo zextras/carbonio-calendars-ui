@@ -11,11 +11,10 @@ import {
 	Text,
 	Row,
 	Icon,
-	TextProps,
-	IconProps,
 	SelectItem,
 	LabelFactoryProps,
-	Tooltip
+	Tooltip,
+	AnyColor
 } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -25,12 +24,12 @@ import { useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { Grant } from '../../../carbonio-ui-commons/types/folder';
 import { isLinkChild } from '../../../commons/utilities';
 
-export const Square = styled.div`
+export const Square = styled.div<{ $color?: AnyColor; $disabled?: boolean }>`
 	width: 1rem;
 	height: 1rem;
-	background: ${({ color }): string | undefined => color};
+	background: ${({ $color }): string | undefined => $color};
 	border-radius: 0.25rem;
-	opacity: ${({ disabled }: { disabled?: boolean }): number => (disabled ? 0.5 : 1)};
+	opacity: ${({ $disabled }): number => ($disabled ? 0.5 : 1)};
 `;
 
 export const ColorContainer = styled(Container)`
@@ -41,31 +40,16 @@ export const TextUpperCase = styled(Text)`
 	text-transform: capitalize;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	color: ${({ theme, disabled, color }): string => {
-		if (color) {
-			return disabled ? theme.palette.text.disabled : color;
-		}
-		return disabled ? theme.palette.text.disabled : theme.palette.text.regular;
-	}};
+	color: ${({ theme, disabled, color }): string =>
+		(disabled && theme.palette.text.disabled) || color || theme.palette.text.regular};
 `;
 
-export const LabelText = styled(Text)<TextProps & { $showPrimary?: boolean }>`
-color: ${({ theme, disabled, $showPrimary }): string =>
-	// eslint-disable-next-line no-nested-ternary
-	disabled
-		? theme.palette.text.disabled
-		: $showPrimary
-			? theme.palette.primary.regular
-			: theme.palette.secondary.regular}};`;
-
-export const StyledIcon = styled(Icon)<IconProps & { $showPrimary?: boolean }>`
-color: ${({ theme, disabled, $showPrimary }): string =>
-	// eslint-disable-next-line no-nested-ternary
-	disabled
-		? theme.palette.text.disabled
-		: $showPrimary
-			? theme.palette.primary.regular
-			: theme.palette.secondary.regular}};`;
+export const LabelText = styled(Text)<{ $showPrimary?: boolean }>`
+	color: ${({ theme, disabled, $showPrimary }): string =>
+		(disabled && theme.palette.text.disabled) ||
+		($showPrimary && theme.palette.primary.regular) ||
+		theme.palette.secondary.regular};
+`;
 
 interface CustomSelectItem extends SelectItem {
 	id?: string;
@@ -134,7 +118,7 @@ export const ItemFactory = ({
 	return (
 		<Row wrap={'nowrap'}>
 			<Padding right="small">
-				<Square color={color} disabled={disabled} />
+				<Square $color={color} $disabled={disabled} />
 			</Padding>
 			<TextUpperCase disabled={disabled}>{label}</TextUpperCase>
 			{sharedStatusIcon}
@@ -187,12 +171,12 @@ const LabelFactory = (item: CustomLabelFactoryProps): ReactElement => {
 					)}
 				</Row>
 			</Row>
-			<StyledIcon
+			<Icon
 				size="large"
 				icon={open ? 'ChevronUpOutline' : 'ChevronDownOutline'}
 				disabled={disabled}
-				$showPrimary={open || focus}
 				style={{ alignSelf: 'center' }}
+				color={(disabled && 'text') || ((open || focus) && 'primary') || 'secondary'}
 			/>
 		</ColorContainer>
 	);

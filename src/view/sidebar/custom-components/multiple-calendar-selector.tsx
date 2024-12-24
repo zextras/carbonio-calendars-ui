@@ -184,8 +184,8 @@ export const MultipleCalendarSelector = ({
 		setSelectedCalendarsIds(updatedSelectedIds);
 	}, []);
 
-	const onCalendarsAdd = useCallback<ReactEventHandler>(
-		(ev) => {
+	const onCalendarsAdd = useCallback(
+		(ev: KeyboardEvent | React.SyntheticEvent) => {
 			ev?.stopPropagation();
 			onCalendarChange(selectedCalendars);
 			setSelectedCalendarsIds([]);

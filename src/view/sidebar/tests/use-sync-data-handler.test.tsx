@@ -5,7 +5,7 @@
  */
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { SoapFolder } from '@zextras/carbonio-shell-ui';
+import { SoapNotify } from '@zextras/carbonio-shell-ui';
 
 import { useNotify } from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
@@ -58,12 +58,12 @@ describe('sync data handler', () => {
 								id: '134',
 								name: 'test group',
 								meta: [{ _attrs: { cids: '10#15' } }]
-							} as unknown as SoapFolder
+							}
 						]
 					},
 					deleted: [],
 					seq: 0
-				};
+				} as unknown as SoapNotify;
 				useNotify.mockReturnValueOnce([notify]);
 
 				setupHook(useSyncDataHandler, { store });
@@ -88,18 +88,18 @@ describe('sync data handler', () => {
 								id: '150',
 								name: 'test group 1',
 								meta: [{ _attrs: { cids: '10#20' } }]
-							} as unknown as SoapFolder,
+							},
 							{
 								view: 'calendar_group',
 								id: '134',
 								name: 'test group',
 								meta: [{ _attrs: { cids: '10#15' } }]
-							} as unknown as SoapFolder
+							}
 						]
 					},
 					deleted: [],
 					seq: 0
-				};
+				} as unknown as SoapNotify;
 				useNotify.mockReturnValueOnce([notify]);
 
 				setupHook(useSyncDataHandler, { store });
@@ -137,12 +137,12 @@ describe('sync data handler', () => {
 								id: '134',
 								name: 'test group 2',
 								meta: [{ _attrs: { cids: '10#15' } }]
-							} as unknown as SoapFolder
+							}
 						]
 					},
 					deleted: [],
 					seq: 0
-				};
+				} as unknown as SoapNotify;
 				useNotify.mockReturnValueOnce([notify]);
 
 				setupHook(useSyncDataHandler, { store });
@@ -167,10 +167,10 @@ describe('sync data handler', () => {
 				const notify = {
 					created: {
 						folder: [mockedData.calendars.getCalendar()]
-					} as unknown as SoapFolder,
+					},
 					deleted: [],
 					seq: 0
-				};
+				} as unknown as SoapNotify;
 				useNotify.mockReturnValueOnce([notify]);
 
 				setupHook(useSyncDataHandler, { store });
@@ -227,13 +227,11 @@ describe('sync data handler', () => {
 								id: '134',
 								name: 'new test group 1',
 								meta: [{ _attrs: { cids: '10#20' }, section: 'calendarIds' }]
-							} as unknown as SoapFolder
+							}
 						]
 					},
 					seq: 0
-				};
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
+				} as unknown as SoapNotify;
 				useNotify.mockReturnValueOnce([notify]);
 
 				setupHook(useSyncDataHandler, { store });
@@ -267,13 +265,11 @@ describe('sync data handler', () => {
 								id: '134',
 								name: 'new test group 1',
 								meta: [{ _attrs: { cids: '10#20' }, section: 'calendarIds' }]
-							} as unknown as SoapFolder
+							}
 						]
 					},
 					seq: 0
-				};
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
+				} as unknown as SoapNotify;
 				useNotify.mockReturnValueOnce([notify]);
 
 				setupHook(useSyncDataHandler, { store });
@@ -305,13 +301,11 @@ describe('sync data handler', () => {
 								id: '134',
 								name: 'test group 1',
 								meta: [{ _attrs: { cids: '10#15' }, section: 'calendarIds' }]
-							} as unknown as SoapFolder
+							}
 						]
 					},
 					seq: 0
-				};
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
+				} as unknown as SoapNotify;
 				useNotify.mockReturnValueOnce([notify]);
 
 				setupHook(useSyncDataHandler, { store });
@@ -343,13 +337,11 @@ describe('sync data handler', () => {
 								id: '134',
 								name: 'test group 1',
 								meta: [{ _attrs: { cids: '' }, section: 'calendarIds' }]
-							} as unknown as SoapFolder
+							}
 						]
 					},
 					seq: 0
-				};
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
+				} as unknown as SoapNotify;
 				useNotify.mockReturnValueOnce([notify]);
 
 				setupHook(useSyncDataHandler, { store });
@@ -381,13 +373,11 @@ describe('sync data handler', () => {
 								id: '134',
 								name: 'new test group 1',
 								meta: [{ _attrs: { cids: '10#15' }, section: 'calendarIds' }]
-							} as unknown as SoapFolder
+							}
 						]
 					},
 					seq: 0
-				};
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
+				} as unknown as SoapNotify;
 				useNotify.mockReturnValueOnce([notify]);
 
 				setupHook(useSyncDataHandler, { store });

@@ -37,10 +37,8 @@ type EditorAttendeesProps = {
 	editorId: string;
 };
 
-export const AttendeesContainer = styled.div`
-	width: calc(
-		100% - ${({ hasTooltip }: { hasTooltip?: boolean }): string => (hasTooltip ? `3rem` : '0rem')}
-	);
+export const AttendeesContainer = styled.div<{ $hasTooltip?: boolean }>`
+	width: calc(100% - ${({ $hasTooltip }): string => ($hasTooltip ? `3rem` : '0rem')});
 	height: fit-content;
 	background: ${({ theme }): string => theme.palette.gray5.regular};
 	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
@@ -144,7 +142,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 					orientation="horizontal"
 					background={'gray5'}
 					style={{ overflow: 'hidden' }}
-					padding={{ all: 'none' }}
+					padding={{ all: 0 }}
 				>
 					<Container background={'gray5'} style={{ overflow: 'hidden' }}>
 						<AttendeesContactInput

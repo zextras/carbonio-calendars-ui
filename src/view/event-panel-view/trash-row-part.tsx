@@ -62,7 +62,7 @@ export const TrashRow = ({ event }: { event: EventType }): ReactElement => {
 				<Row
 					width="5%"
 					orientation="horizontal"
-					mainAlignment="baseline"
+					mainAlignment="flex-start"
 					padding={{ horizontal: 'large' }}
 				>
 					<Icon icon="Pricetags" color={event.resource.calendar.color.color} />
