@@ -18,7 +18,8 @@ import {
 	registerFunctions,
 	SecondaryBarComponentProps,
 	NewAction,
-	useIntegratedFunction
+	useIntegratedFunction,
+	upsertApp
 } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -137,7 +138,12 @@ const AppRegistrations = (): null => {
 			id: CALENDAR_BOARD_ID,
 			component: EditorView
 		});
-	}, [appLabel, t]);
+
+		upsertApp({
+			name: CALENDAR_APP_ID,
+			display: appLabel
+		});
+	}, [appLabel]);
 
 	const [addSearchView, isAddSearchViewAvailable] =
 		useIntegratedFunction<typeof SearchUI.addSearchView>('search-add-view');

@@ -15,8 +15,8 @@ import {
 	KeyboardPresetObj,
 	useKeyboard
 } from '@zextras/carbonio-design-system';
-import { find, map, reduce, uniqWith } from 'lodash';
 import styled from 'styled-components';
+import { find, map, reduce, uniqWith } from 'lodash';
 
 import {
 	EditorAvailabilityWarningRow,
