@@ -10,7 +10,7 @@ import { GenericSoapApiError } from '../../carbonio-ui-commons/soap/errors/gener
 export class CreateCalendarGroupError extends GenericSoapApiError {
 	private static GROUP_NAME_ALREADY_EXISTS = 'calendargroup.GROUP_NAME_ALREADY_EXIST';
 
-	getLocalizedMessage(t: TFunction): string {
+	override getLocalizedMessage(t: TFunction): string {
 		if (this.fault.Detail.Error.Code === CreateCalendarGroupError.GROUP_NAME_ALREADY_EXISTS) {
 			return t(
 				'api.error.CreateCalendarGroup.group_name_already_exists',

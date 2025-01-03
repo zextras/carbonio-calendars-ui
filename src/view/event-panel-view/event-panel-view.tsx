@@ -286,7 +286,7 @@ export default function EventPanelView(): ReactElement | null {
 					<DetailsPart
 						event={event}
 						subject={event.title}
-						isPrivate={event.resource.class === 'PRI' ?? false}
+						isPrivate={event.resource.class === 'PRI'}
 						inviteNeverSent={invite.neverSent}
 						invite={invite}
 					/>
