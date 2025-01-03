@@ -5,7 +5,7 @@
  */
 import React, { useCallback, useMemo } from 'react';
 
-import { Button, Container, Row, TextWithTooltip } from '@zextras/carbonio-design-system';
+import { Button, Container, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
@@ -45,7 +45,9 @@ export const GroupCalendarsListItem = ({
 				<Square data-testid="colored-square" $color={color} />
 			</Row>
 			<Row takeAvailableSpace mainAlignment="flex-start" padding={{ bottom: '0.2rem' }}>
-				<TextWithTooltip>{calendar.name}</TextWithTooltip>
+				<Tooltip overflowTooltip label={calendar.name}>
+					<Text>{calendar.name}</Text>
+				</Tooltip>
 			</Row>
 			<Row width="fit">
 				<Button

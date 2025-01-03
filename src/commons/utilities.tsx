@@ -40,7 +40,7 @@ export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
 
 export const isMainRootChild = (item: { id: string }): boolean => {
 	const root = getRoot(item.id);
-	return root?.id === FOLDERS.USER_ROOT ?? false;
+	return root?.id === FOLDERS.USER_ROOT;
 };
 
 export const calcColor = (label: string, theme: unknown): string => {
