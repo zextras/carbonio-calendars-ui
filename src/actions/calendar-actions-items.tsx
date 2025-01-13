@@ -109,7 +109,7 @@ export const emptyTrashItem = ({
 		item.children.length < 1
 			? t('action.Trash_already_empty', 'trash is already empty')
 			: noPermissionLabel,
-	onClick: emptyTrash({ createModal, closeModal, item }),
+	onClick: emptyTrash({ createModal, closeModal }),
 	disabled:
 		!hasId(item, FOLDERS.TRASH) ||
 		(hasId(item, FOLDERS.TRASH) &&
