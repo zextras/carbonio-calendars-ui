@@ -184,7 +184,7 @@ export const AttachmentsBlock = ({
 							disabled={disabled}
 						>
 							{isEditor
-								? t('label.delete', {
+								? t('label.delete_attachment', {
 										count: attachmentsCount,
 										defaultValue_one: 'Delete',
 										defaultValue_other: 'Delete all'
