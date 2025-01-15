@@ -24,6 +24,7 @@ import {
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
+import { AuthGuard } from './auth-guard';
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
 import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
@@ -220,12 +221,16 @@ const AppRegistrations = (): null => {
 
 export default function App(): React.JSX.Element {
 	return (
-		<StoreProvider>
-			<AppRegistrations />
-			<AppointmentReminder />
-			<InitializeTags />
-			<SyncDataHandler />
-			<Notifications />
-		</StoreProvider>
+		<AuthGuard>
+			<StoreProvider>
+				<ModalManager>
+					<AppRegistrations />
+				</ModalManager>
+				<AppointmentReminder />
+				<InitializeTags />
+				<SyncDataHandler />
+				<Notifications />
+			</StoreProvider>
+		</AuthGuard>
 	);
 }

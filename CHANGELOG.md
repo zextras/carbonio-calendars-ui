@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.14.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.14.0...v1.14.1) (2024-12-12)
+
+## [1.14.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.13.1...v1.14.0) (2024-12-04)
+
+
+### Features
+
+* use EmptyCalendarTrashRequest instead of FolderAction ([d27b8a2](https://github.com/zextras/carbonio-calendars-ui/commit/d27b8a2814a19433f2552d0950198287a24bc699))
+
 ### [1.13.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.13.0...v1.13.1) (2024-11-19)
 
 

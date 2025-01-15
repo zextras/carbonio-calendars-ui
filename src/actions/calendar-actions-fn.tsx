@@ -131,12 +131,10 @@ export const moveToRoot =
 export const emptyTrash =
 	({
 		createModal,
-		closeModal,
-		item
+		closeModal
 	}: {
 		createModal: CreateModalFn;
 		closeModal: CloseModalFn;
-		item: { id: string };
 	}): ((e?: ActionsClick) => void) =>
 	(e?: ActionsClick) => {
 		if (e) {
@@ -148,7 +146,7 @@ export const emptyTrash =
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<EmptyModal onClose={(): void => closeModal(modalId)} folderId={item.id} />
+						<EmptyModal onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
 				),
 				onClose: () => {
