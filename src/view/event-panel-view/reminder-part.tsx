@@ -70,8 +70,14 @@ export const ReminderPart = ({
 				event,
 				invite: editorInvite,
 				context: {
-					organizer: event.resource.organizer,
-					sender: event.resource.organizer,
+					organizer: {
+						email: event.resource.organizer?.email ?? '',
+						fullName: event.resource.organizer?.name ?? ''
+					},
+					sender: {
+						email: event.resource.organizer?.email ?? '',
+						fullName: event.resource.organizer?.name ?? ''
+					},
 					dispatch,
 					folders: calendarFolders,
 					panel: true

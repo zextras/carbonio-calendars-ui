@@ -47,7 +47,7 @@ export const counterAppointmentRequest = async ({
 							d: moment(moment(appt.end)).format('YYYYMMDDTHHmm00')
 						},
 						exceptId: appt.exceptId,
-						or: { a: appt.organizer?.address },
+						or: { a: appt.organizer?.email },
 						s: {
 							tz: appt?.timezone,
 							d: moment(moment(appt.start)).format('YYYYMMDDTHHmm00')

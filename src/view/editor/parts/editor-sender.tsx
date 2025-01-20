@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { find, map, upperFirst } from 'lodash';
@@ -15,21 +15,20 @@ import {
 } from '../../../carbonio-ui-commons/helpers/identities';
 import { IdentityDescriptor } from '../../../carbonio-ui-commons/types/identities';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorDisabled, selectSender } from '../../../store/selectors/editor';
+import { selectEditorDisabled } from '../../../store/selectors/editor';
 import { editSender } from '../../../store/slices/editor-slice';
-import { EditorProps } from '../../../types/editor';
+import { EditorProps, IdentityItem } from '../../../types/editor';
 
-export const EditorOrganizer = ({ editorId }: EditorProps): ReactElement | null => {
+export const EditorSender = ({ editorId }: EditorProps): ReactElement | null => {
 	const [t] = useTranslation();
-	const sender = useAppSelector(selectSender(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const dispatch = useAppDispatch();
 	const commonIdentities = useMemo<Array<IdentityDescriptor>>(() => getIdentitiesDescriptors(), []);
 
-	const identities = map(commonIdentities, (item, idx) => {
+	const identities = map(commonIdentities, (item) => {
 		const label = getIdentityDescription(item, t) ?? '';
 		return {
-			value: `${idx}`,
+			value: item.identityName,
 			label,
 			address: item.fromAddress,
 			fullName: item.fromDisplay,
@@ -37,21 +36,34 @@ export const EditorOrganizer = ({ editorId }: EditorProps): ReactElement | null 
 			identityName: item.identityName
 		};
 	});
+	const selectIdentity = useCallback(
+		(identityName: string) => find(identities, ['identityName', identityName]) ?? identities[0],
+		[identities]
+	);
+	const [selection, setSelection] = useState<IdentityItem>(selectIdentity('DEFAULT'));
 
 	const onChange = useCallback<SingleSelectionOnChange>(
 		(e) => {
-			const newValue = find(identities, ['value', e]) ?? sender;
-			dispatch(editSender({ id: editorId, sender: newValue }));
+			if (e) {
+				const newValue = selectIdentity(e);
+				setSelection(newValue);
+				dispatch(
+					editSender({
+						id: editorId,
+						sender: { email: newValue.address, fullName: newValue.fullName }
+					})
+				);
+			}
 		},
-		[identities, sender, dispatch, editorId]
+		[selectIdentity, dispatch, editorId]
 	);
 
 	const fromLabel = useMemo(() => upperFirst(t('label.from', 'From')), [t]);
-	return sender ? (
+	return selection ? (
 		<Select
 			items={identities}
 			label={fromLabel}
-			selection={sender}
+			selection={selection}
 			onChange={onChange}
 			disabled={disabled?.organizer}
 		/>

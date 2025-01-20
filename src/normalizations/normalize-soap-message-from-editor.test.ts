@@ -15,9 +15,7 @@ import {
 } from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
-import mockedData from '../test/generators';
 import { ParticipationStatus } from '../types/store/invite';
-import { Editor } from '../types/editor';
 
 const mainAccount = createFakeIdentity();
 const identity = createFakeIdentity();
@@ -197,7 +195,7 @@ describe('normalize soap message from editor', () => {
 								folders: {},
 								dispatch: jest.fn(),
 								calendar: mainAccountEditorFolder,
-								sender: identities[1]
+								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
 						});
 						const body = normalizeSoapMessageFromEditor(editor);
@@ -232,7 +230,7 @@ describe('normalize soap message from editor', () => {
 								folders: {},
 								dispatch: jest.fn(),
 								calendar: mainAccountEditorFolder,
-								sender: identities[1]
+								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
 						});
 						const body = normalizeSoapMessageFromEditor(editor);
@@ -277,7 +275,7 @@ describe('normalize soap message from editor', () => {
 								folders: {},
 								dispatch: jest.fn(),
 								calendar: mainAccountEditorFolder,
-								sender: identities[1]
+								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
 						});
 						const body = normalizeSoapMessageFromEditor(editor);
@@ -315,7 +313,7 @@ describe('normalize soap message from editor', () => {
 								folders: {},
 								dispatch: jest.fn(),
 								calendar: mainAccountEditorFolder,
-								sender: identities[1]
+								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
 						});
 						const body = normalizeSoapMessageFromEditor(editor);
@@ -415,7 +413,7 @@ describe('normalize soap message from editor', () => {
 								folders: {},
 								dispatch: jest.fn(),
 								calendar: sharedEditorFolder,
-								sender: identities[1]
+								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
 						});
 						const body = normalizeSoapMessageFromEditor(editor);
@@ -449,7 +447,7 @@ describe('normalize soap message from editor', () => {
 								folders: {},
 								dispatch: jest.fn(),
 								calendar: sharedEditorFolder,
-								sender: identities[1]
+								sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 							}
 						});
 						const body = normalizeSoapMessageFromEditor(editor);
@@ -486,7 +484,7 @@ describe('normalize soap message from editor', () => {
 							folders: {},
 							dispatch: jest.fn(),
 							calendar: sharedEditorFolder,
-							sender: identities[1]
+							sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 						}
 					});
 					const body = normalizeSoapMessageFromEditor(editor);
@@ -525,7 +523,7 @@ describe('normalize soap message from editor', () => {
 						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedEditorFolder,
-						sender: identities[0]
+						sender: { email: identities[0].address ?? '', fullName: identities[0].fullName }
 					}
 				});
 				const body = normalizeSoapMessageFromEditor(editor);
@@ -558,7 +556,7 @@ describe('normalize soap message from editor', () => {
 						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedEditorFolder,
-						sender: identities[0]
+						sender: { email: identities[0].address ?? '', fullName: identities[0].fullName }
 					}
 				});
 				const body = normalizeSoapMessageFromEditor(editor);
@@ -591,7 +589,7 @@ describe('normalize soap message from editor', () => {
 						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedEditorFolder,
-						sender: identities[1]
+						sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 					}
 				});
 				const body = normalizeSoapMessageFromEditor(editor);
@@ -686,7 +684,7 @@ describe('normalize soap message from editor', () => {
 						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedAccountEditorFolder,
-						sender: identities[1]
+						sender: { email: identities[1].address ?? '', fullName: identities[1].fullName }
 					}
 				});
 				const body = normalizeSoapMessageFromEditor(editor);
@@ -720,7 +718,7 @@ describe('normalize soap message from editor', () => {
 						folders: {},
 						dispatch: jest.fn(),
 						calendar: sharedAccountEditorFolder,
-						sender: identities[2]
+						sender: { email: identities[2].address ?? '', fullName: identities[2].fullName }
 					}
 				});
 				const body = normalizeSoapMessageFromEditor(editor);

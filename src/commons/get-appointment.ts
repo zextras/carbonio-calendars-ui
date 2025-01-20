@@ -55,7 +55,7 @@ export const getAppointmentAndInvite = async ({
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const normalizeFromGetAppointment = (appt: any): Appointment => <Appointment>omitBy(
 		{
-			id: appt?.apptId,
+			id: appt?.id,
 			l: appt.ciFolder,
 			alarm: appt?.inv?.[0]?.comp?.[0]?.alarm,
 			alarmData: appt?.inv?.[0]?.comp?.[0]?.alarmData,

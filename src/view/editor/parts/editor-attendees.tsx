@@ -69,7 +69,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 	const attendeesAvailabilityList = useAttendeesAvailability(start, attendees, uid);
 
 	useEffect(() => {
-		getOrderedAccountIds(sender ? sender.address : '')
+		getOrderedAccountIds(sender ? sender.email : '')
 			.then((ids) => {
 				setOrderedAccountIds(ids);
 			})

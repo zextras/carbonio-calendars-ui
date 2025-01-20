@@ -59,7 +59,7 @@ export const createCopy =
 					folders: availableFolders,
 					dispatch: context.dispatch,
 					panel: context.panel ?? true,
-					organizer,
+					organizer: { email: organizer?.address ?? '', fullName: organizer?.fullName ?? '' },
 					recur: isSeries ? invite.recurrenceRule : undefined,
 					exceptId: undefined,
 					isInstance,
