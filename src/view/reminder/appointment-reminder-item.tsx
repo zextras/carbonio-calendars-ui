@@ -37,7 +37,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const [now, setNow] = useState(moment().valueOf());
-
+	const [expanded, setExpanded] = useState(false);
 	const locationUrl = useMemo(() => getLocationUrl(location), [location]);
 
 	const dismissReminder = useCallback(() => {
@@ -129,13 +129,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 					</Row>
 				</Row>
 			</Row>
-			<Row
-				width="35%"
-				mainAlignment="flex-end"
-				crossAlignment="center"
-				orientation="horizontal"
-				padding={{ horizontal: 'large' }}
-			>
+			<Row width="35%" mainAlignment="flex-end" crossAlignment="center" orientation="horizontal">
 				<Row>
 					{(moment(start).valueOf() < moment().valueOf() ||
 						moment(alarmData[0].alarmInstStart).valueOf() < moment().valueOf()) &&
@@ -160,6 +154,11 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 					<Tooltip placement="top" label={t('label.dismiss', 'Dismiss').toUpperCase()}>
 						<IconButton icon="BellOffOutline" size="large" onClick={dismissReminder} />
 					</Tooltip>
+				</Row>
+				<Row onClick={(): void => setExpanded(false)} style={{ cursor: 'pointer' }}>
+					<Text color="primary" size="small">
+						show event details
+					</Text>
 				</Row>
 			</Row>
 		</Container>
