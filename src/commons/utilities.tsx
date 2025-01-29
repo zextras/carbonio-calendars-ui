@@ -285,21 +285,21 @@ export const getTimeToDisplayData = (
 	if (start.valueOf() < currentTime && end.valueOf() > currentTime) {
 		return {
 			color: 'info',
-			size: 'large',
+			size: 'medium',
 			text: t('label.ongoing', 'Ongoing')
 		};
 	}
 	if (start.valueOf() === currentTime) {
 		return {
 			color: 'info',
-			size: 'large',
+			size: 'medium',
 			text: t('label.now', 'Now')
 		};
 	}
 	if (start.valueOf() < currentTime) {
 		return {
 			color: 'error',
-			size: 'large',
+			size: 'medium',
 			text: moment(start).from(moment())
 		};
 	}
@@ -310,21 +310,21 @@ export const getTimeToDisplayData = (
 		) {
 			return {
 				color: 'info',
-				size: 'large',
+				size: 'medium',
 				text: t('label.ongoing', 'Ongoing')
 			};
 		}
 		if (alarmData[0].alarmInstStart < currentTime) {
 			return {
 				color: 'error',
-				size: 'large',
+				size: 'medium',
 				text: moment(alarmData[0].alarmInstStart).fromNow()
 			};
 		}
 	}
 	return {
 		color: 'info',
-		size: 'large',
+		size: 'medium',
 		text: moment(alarmData[0].alarmInstStart).fromNow()
 	};
 };

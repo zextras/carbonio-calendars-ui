@@ -37,8 +37,22 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const [now, setNow] = useState(moment().valueOf());
-	const [expanded, setExpanded] = useState(false);
+	const [isDetailsExpanded, setDetailsExpanded] = useState(false);
 	const locationUrl = useMemo(() => getLocationUrl(location), [location]);
+
+	// TODO add more fields to the reminder to check if there are details to show
+	const hasDetailsToShow = useMemo(
+		() => reminderItem.location && reminderItem.location.trim() > '',
+		[reminderItem.location]
+	);
+
+	const labelShowEventDetails = useMemo(
+		() =>
+			isDetailsExpanded
+				? t('label.hide_event_details', 'Hide event details')
+				: t('label.show_event_details', 'Show event details'),
+		[isDetailsExpanded, t]
+	);
 
 	const dismissReminder = useCallback(() => {
 		dispatch(
@@ -48,6 +62,8 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 		);
 		removeReminder(key);
 	}, [dispatch, id, key, removeReminder]);
+
+	const toggleDetailsExpanded = useCallback(() => setDetailsExpanded((expanded) => !expanded), []);
 
 	const snoozeReminder = useCallback(
 		(time: number, isBefore = true) => {
@@ -91,7 +107,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 		<Container
 			padding={{ vertical: 'small' }}
 			mainAlignment="space-between"
-			crossAlignment="center"
+			crossAlignment="flex-start"
 			orientation="horizontal"
 		>
 			<Row
@@ -105,7 +121,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 				</Row>
 				<Row width="80%" mainAlignment="center" crossAlignment="baseline" orientation="vertical">
 					<Row>
-						<Text size="large">{name}</Text>
+						<Text weight="bold">{name}</Text>
 					</Row>
 					{locationUrl && (
 						<Row>
@@ -122,14 +138,14 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 						</Row>
 					)}
 					<Row padding={{ top: 'extrasmall' }} wrap="nowrap">
-						<Text size="large">
+						<Text>
 							{moment(start).format('HH:mm')} - {moment(end).format('HH:mm')}
 						</Text>
 						<Padding left="small">{timeToDisplay}</Padding>
 					</Row>
 				</Row>
 			</Row>
-			<Row width="35%" mainAlignment="flex-end" crossAlignment="center" orientation="horizontal">
+			<Row width="35%" crossAlignment="flex-end" orientation="vertical">
 				<Row>
 					{(moment(start).valueOf() < moment().valueOf() ||
 						moment(alarmData[0].alarmInstStart).valueOf() < moment().valueOf()) &&
@@ -155,11 +171,12 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 						<IconButton icon="BellOffOutline" size="large" onClick={dismissReminder} />
 					</Tooltip>
 				</Row>
-				<Row onClick={(): void => setExpanded(false)} style={{ cursor: 'pointer' }}>
-					<Text color="primary" size="small">
-						show event details
-					</Text>
-				</Row>
+
+				{hasDetailsToShow && (
+					<Row onClick={toggleDetailsExpanded} style={{ cursor: 'pointer' }}>
+						<Text color="info">{labelShowEventDetails}</Text>
+					</Row>
+				)}
 			</Row>
 		</Container>
 	);
