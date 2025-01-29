@@ -43,10 +43,11 @@ export const generateReminderItem = (model: Partial<ReminderItem> = {}): Reminde
 	const now = new Date();
 	const startDate = new Date(now.getTime() + 60 * 60 * 1000);
 	const endDate = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+
 	return {
 		allDay: model.allDay ?? false,
 		calendar: model.calendar ?? { id: FOLDERS.CALENDAR },
-		inviteId: model.inviteId ?? '',
+		inviteId: model.inviteId ?? `${faker.number.int()}-${faker.number.int()}`,
 		isException: model.isException ?? false,
 		id: model.id ?? faker.number.int().toString(),
 		name: model.name ?? faker.lorem.word(),

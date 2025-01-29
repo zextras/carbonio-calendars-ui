@@ -5,13 +5,14 @@
  */
 import React from 'react';
 
+import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
-import { AlarmType } from '../../types/event';
+import { generateReminderItem } from '../../test/generators/reminder';
 /* - aggiungere nel reminder di un appuntamento una stringa:
   - la stringa recita "show event details"
   - la stringa è underlined
@@ -25,61 +26,45 @@ import { AlarmType } from '../../types/event';
 - il container dei dati da mostrare ha una max height specifica */
 
 describe('Appointment Reminder Item', () => {
-	test('There is a "show event details" string', () => {
-		const reminderItem = {
-			start: new Date(),
-			id: '1',
-			inviteId: '1-2',
-			calendar: {
-				id: '10'
-			},
-			allDay: false,
-			isRecurrent: false,
-			end: new Date(),
-			location: '',
-			name: 'reminder item',
-			isOrg: true,
-			key: '123',
-			alarmData: [
-				{
-					nextAlarm: new Date().getTime(),
-					alarmInstStart: new Date().getTime(),
-					invId: 1322,
-					compNum: 0,
-					name: '',
-					loc: '',
-					alarm: [
-						{
-							action: 'DISPLAY',
-							trigger: [
-								{
-									rel: [
-										{
-											neg: 'true',
-											m: 10,
-											related: 'START'
-										}
-									]
-								}
-							],
-							desc: {
-								description: ''
-							}
-						}
-					]
-				} as AlarmType
-			]
-		};
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		setupTest(
-			<AppointmentReminderItem
-				reminderItem={reminderItem}
-				toggleModal={jest.fn}
-				removeReminder={jest.fn}
-				setActiveReminder={jest.fn}
-			/>,
-			{ store }
-		);
-		expect(screen.getByText('show event details')).toBeVisible();
+	describe('Details expansion link', () => {
+		it('shouldn\'t show a "Show event details" string if the appointment has no details to show', () => {
+			const reminderItem = generateReminderItem({ location: '' });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(
+				<AppointmentReminderItem
+					reminderItem={reminderItem}
+					toggleModal={jest.fn}
+					removeReminder={jest.fn}
+					setActiveReminder={jest.fn}
+				/>,
+				{ store }
+			);
+			expect(screen.queryByText(/show event details/i)).not.toBeInTheDocument();
+		});
+
+		it('should show a "Show event details" string if the appointment has details to show', () => {
+			const reminderItem = generateReminderItem({ location: faker.word.words() });
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(
+				<AppointmentReminderItem
+					reminderItem={reminderItem}
+					toggleModal={jest.fn}
+					removeReminder={jest.fn}
+					setActiveReminder={jest.fn}
+				/>,
+				{ store }
+			);
+			expect(screen.getByText(/show event details/i)).toBeVisible();
+		});
+
+		it.todo('should render the text with a specific color');
+
+		it.todo('should render the text with underline');
+
+		it.todo('should render a pointer cursor on hover');
+
+		it.todo('should change the "Show event details" string to "Hide event details" when clicked');
+
+		it.todo('');
 	});
 });
