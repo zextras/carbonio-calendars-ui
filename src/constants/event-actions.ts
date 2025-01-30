@@ -12,6 +12,7 @@ export const EVENT_ACTIONS = {
 	PRINT: 'print',
 	REPLY_ALL: 'reply_all',
 	FORWARD: 'forward',
+	EMAIL_ATTEENDEES: 'email_attendees',
 	SHOW_ORIGNAL: 'show_orignal',
 	CREATE_COPY: 'create_copy',
 	REINVITE_ATT: 'reinvite_attendees',

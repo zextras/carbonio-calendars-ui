@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
 import { LinkFolder } from '../carbonio-ui-commons/types';
@@ -24,6 +24,50 @@ import { getInstanceExceptionId } from '../utils/event';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
+
+export const emailAttendees = (
+	e: ActionsClick,
+	{
+		event,
+		invite: _invite,
+		context
+	}: {
+		event: EventType;
+		invite?: Invite;
+		context: Omit<
+			ActionsContext,
+			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
+		>;
+	}
+): void => {
+	const sendMail = (invite: Invite): void => {
+		const contacts = invite.attendees.map((attendee) => ({
+			email: { email: { mail: attendee.a } },
+			firstName: attendee.d,
+			lastName: '',
+			middleName: ''
+		}));
+		const [mailTo, available] = getAction('contact-list', 'mail-to', contacts);
+		if (!available || !mailTo) {
+			return;
+		}
+		const { execute } = mailTo;
+		execute(e);
+	};
+	if (!_invite) {
+		context
+			.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
+			.then((res) => {
+				if (res.payload) {
+					const invite = normalizeInvite(res.payload.m[0]);
+					return sendMail(invite);
+				}
+				return undefined;
+			});
+	} else {
+		sendMail(_invite);
+	}
+};
 
 export const createCopy =
 	({

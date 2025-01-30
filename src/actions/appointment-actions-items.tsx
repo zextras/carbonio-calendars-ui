@@ -15,6 +15,7 @@ import {
 	declineInvitation,
 	deletePermanently,
 	editAppointment,
+	emailAttendees,
 	exportAppointmentICSFn,
 	moveAppointment,
 	moveToTrash,
@@ -232,6 +233,22 @@ export const forwardEventItem = ({
 			true
 		);
 	}
+});
+export const emailAttendeesEventItem = ({
+	event,
+	invite,
+	context
+}: {
+	invite?: Invite;
+	event: EventType;
+	context: ActionsContext;
+}): AppointmentActionsItems => ({
+	id: EVENT_ACTIONS.EMAIL_ATTEENDEES,
+	icon: 'MailModOutline',
+	label: t('label.email_attendees', 'Email attendees'),
+	disabled: false,
+	tooltipLabel: t('label.email_attendees', 'Email attendees'),
+	onClick: (e) => emailAttendees(e, { event, invite, context })
 });
 export const deleteEventItem = ({
 	invite,
