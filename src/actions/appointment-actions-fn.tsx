@@ -41,13 +41,13 @@ export const emailAttendees = (
 	}
 ): void => {
 	const sendMail = (invite: Invite): void => {
-		const contacts = invite.attendees.map((attendee) => ({
+		const recipients = invite.attendees.map((attendee) => ({
 			email: attendee.a,
 			name: attendee.d,
 			carbonCopy: attendee.role === 'OPT'
 		}));
-		const [mailTo, available] = getAction('contact-list', 'mail-to-receivers', {
-			receivers: contacts,
+		const [mailTo, available] = getAction('recipients', 'mail-to', {
+			recipients,
 			subject: event.title
 		});
 		if (!available || !mailTo) {
