@@ -10,6 +10,7 @@ import {
 	Dropdown,
 	Icon,
 	IconButton,
+	Link,
 	Padding,
 	Row,
 	Text,
@@ -41,10 +42,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const locationUrl = useMemo(() => getLocationUrl(location), [location]);
 
 	// TODO add more fields to the reminder to check if there are details to show
-	const hasDetailsToShow = useMemo(
-		() => reminderItem.location && reminderItem.location.trim() > '',
-		[reminderItem.location]
-	);
+	const hasDetailsToShow = useMemo(() => locationUrl !== undefined, [locationUrl]);
 
 	const labelShowEventDetails = useMemo(
 		() =>
@@ -123,20 +121,20 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 					<Row>
 						<Text weight="bold">{name}</Text>
 					</Row>
-					{locationUrl && (
-						<Row>
-							<Text>
-								<a
-									target="_blank"
-									href={locationUrl}
-									rel="noreferrer"
-									onClick={(e): void => e.stopPropagation()}
-								>
-									{locationUrl}
-								</a>
-							</Text>
-						</Row>
-					)}
+					{/* {locationUrl && ( */}
+					{/*	<Row> */}
+					{/*		<Text> */}
+					{/*			<a */}
+					{/*				target="_blank" */}
+					{/*				href={locationUrl} */}
+					{/*				rel="noreferrer" */}
+					{/*				onClick={(e): void => e.stopPropagation()} */}
+					{/*			> */}
+					{/*				{locationUrl} */}
+					{/*			</a> */}
+					{/*		</Text> */}
+					{/*	</Row> */}
+					{/* )} */}
 					<Row padding={{ top: 'extrasmall' }} wrap="nowrap">
 						<Text>
 							{moment(start).format('HH:mm')} - {moment(end).format('HH:mm')}
@@ -173,9 +171,9 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 				</Row>
 
 				{hasDetailsToShow && (
-					<Row onClick={toggleDetailsExpanded} style={{ cursor: 'pointer' }}>
-						<Text color="info">{labelShowEventDetails}</Text>
-					</Row>
+					<Link color="info" underlined onClick={toggleDetailsExpanded}>
+						{labelShowEventDetails}
+					</Link>
 				)}
 			</Row>
 		</Container>
