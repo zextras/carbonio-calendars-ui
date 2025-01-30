@@ -42,12 +42,14 @@ export const emailAttendees = (
 ): void => {
 	const sendMail = (invite: Invite): void => {
 		const contacts = invite.attendees.map((attendee) => ({
-			email: { email: { mail: attendee.a } },
-			firstName: attendee.d,
-			lastName: '',
-			middleName: ''
+			email: attendee.a,
+			name: attendee.d,
+			carbonCopy: attendee.role === 'OPT'
 		}));
-		const [mailTo, available] = getAction('contact-list', 'mail-to', contacts);
+		const [mailTo, available] = getAction('contact-list', 'mail-to-receivers', {
+			receivers: contacts,
+			subject: event.title
+		});
 		if (!available || !mailTo) {
 			return;
 		}
