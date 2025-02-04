@@ -44,7 +44,8 @@ export const emailAttendees = (
 	},
 	e?: ActionsClick
 ): void => {
-	const sendMail = (invite: Invite): void => {
+	const identities = getIdentityItems().map((identity) => identity.address ?? '');
+	const sendMail = (invite: Invite, mySelf: Array<string>): void => {
 		const inviteRecipients = invite.attendees.map((attendee) => ({
 			email: attendee.a,
 			name: attendee.d,
@@ -57,7 +58,7 @@ export const emailAttendees = (
 				name: event?.resource?.organizer?.name ?? '',
 				carbonCopy: false
 			}
-		];
+		].filter((attendee) => !mySelf.includes(attendee.email));
 		const [mailTo, available] = getAction('recipients', 'mail-to', {
 			recipients,
 			subject: event.title
@@ -74,12 +75,12 @@ export const emailAttendees = (
 			.then((res) => {
 				if (res.payload) {
 					const invite = normalizeInvite(res.payload.m[0]);
-					return sendMail(invite);
+					return sendMail(invite, identities);
 				}
 				return undefined;
 			});
 	} else {
-		sendMail(_invite);
+		sendMail(_invite, identities);
 	}
 };
 
