@@ -70,34 +70,42 @@ const AppointmentCardContainer = styled(Container)`
 	padding: 0;
 `;
 
-function isSeriesItems(
-	actions: SeriesActionsItems | InstanceActionsItems | undefined
-): actions is SeriesActionsItems {
+function isSeriesItems(actions: ActionItems): actions is SeriesActionsItems {
 	return !!actions && (actions?.length ?? 0) === 2 && !!actions[1] && 'items' in actions[1];
 }
 
-function getSeriesActionItems(
-	event: EventType,
-	actions: SeriesActionsItems | InstanceActionsItems | undefined
-): AppointmentActionsItems[] {
+function getSeriesActionItems(event: EventType, actions: ActionItems): AppointmentActionsItems[] {
 	if (isSeriesItems(actions)) {
 		return actions[1].items;
 	}
 	return [];
 }
 
-function getInstanceActionItems(
-	event: EventType,
-	actions: SeriesActionsItems | InstanceActionsItems | undefined
-): AppointmentActionsItems[] {
+function getInstanceActionItems(event: EventType, actions: ActionItems): AppointmentActionsItems[] {
 	if (isSeriesItems(actions)) {
 		return actions[0].items;
 	}
 	return actions ?? [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-function emptyHandler(): void {}
+function getPreferredAction(
+	event: EventType,
+	items: AppointmentActionsItems[]
+): AppointmentActionsItems | undefined {
+	const move = find(items, ['id', EVENT_ACTIONS.MOVE]);
+	const edit = find(items, ['id', EVENT_ACTIONS.EDIT]);
+	const copy = find(items, ['id', EVENT_ACTIONS.CREATE_COPY]);
+	if (!event.resource.iAmOrganizer && !event.isShared) {
+		if (edit && !edit.disabled) {
+			return edit;
+		}
+		return move;
+	}
+	if (edit && !edit.disabled) {
+		return edit;
+	}
+	return copy;
+}
 
 function getPrimaryAction(
 	event: EventType,
@@ -109,44 +117,20 @@ function getPrimaryAction(
 			return find(instanceItems, ['id', EVENT_ACTIONS.MOVE]);
 		}
 		if (!event.resource.ridZ) {
-			// SERIES ACTIONS
-			const move = find(seriesItems, ['id', EVENT_ACTIONS.MOVE]);
-			const edit = find(seriesItems, ['id', EVENT_ACTIONS.EDIT]);
-			const copy = find(seriesItems, ['id', EVENT_ACTIONS.CREATE_COPY]);
-			if (!event.resource.iAmOrganizer && !event.isShared) {
-				if (edit && !edit.disabled) {
-					return edit;
-				}
-				return move;
-			}
-			if (edit && !edit.disabled) {
-				return edit;
-			}
-			return copy;
+			return getPreferredAction(event, seriesItems);
 		}
-		// INSTANCE ACTIONS
-		const move = find(instanceItems, ['id', EVENT_ACTIONS.MOVE]);
-		const edit = find(instanceItems, ['id', EVENT_ACTIONS.EDIT]);
-		const copy = find(instanceItems, ['id', EVENT_ACTIONS.CREATE_COPY]);
-		if (!event.resource.iAmOrganizer && !event.isShared) {
-			if (edit && !edit.disabled) {
-				return edit;
-			}
-			return move ?? copy;
-		}
-		if (edit && !edit.disabled) {
-			return edit;
-		}
-		return copy;
+		return getPreferredAction(event, instanceItems);
 	}
 	return undefined;
 }
+
+type ActionItems = SeriesActionsItems | InstanceActionsItems | undefined;
 
 const ActionButtons = ({
 	actions,
 	event
 }: {
-	actions: SeriesActionsItems | InstanceActionsItems | undefined;
+	actions: ActionItems;
 	event: EventType;
 }): ReactElement | null => {
 	const seriesItems = getSeriesActionItems(event, actions);
@@ -192,7 +176,7 @@ const ActionButtons = ({
 						<IconButton
 							key={primaryAction.id}
 							icon={primaryAction.icon}
-							onClick={primaryAction.onClick ?? emptyHandler}
+							onClick={primaryAction.onClick ?? noop}
 						/>
 					</Tooltip>
 				) : null}
@@ -201,7 +185,7 @@ const ActionButtons = ({
 						<IconButton
 							key={secondaryAction.id}
 							icon={secondaryAction.icon}
-							onClick={secondaryAction.onClick ?? emptyHandler}
+							onClick={secondaryAction.onClick ?? noop}
 						/>
 					</Tooltip>
 				)}
@@ -219,7 +203,7 @@ const ActionButtons = ({
 							<IconButton
 								key={otherActions?.[0]?.id}
 								icon={otherActions?.[0]?.icon}
-								onClick={otherActions?.[0]?.onClick ?? emptyHandler}
+								onClick={otherActions?.[0]?.onClick ?? noop}
 							/>
 						</Tooltip>
 					)}
