@@ -111,6 +111,15 @@ const ActionButtons = ({
 		return undefined;
 	}, [actions, event]);
 
+	const additionalAction = useMemo(() => {
+		if (event) {
+			if (event.resource.hasOtherAttendees) {
+				return find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.EMAIL_ATTEENDEES]);
+			}
+		}
+		return undefined;
+	}, [actions, event]);
+
 	const otherActions = useMemo(() => {
 		if (event && primaryAction) {
 			if (!event.resource.ridZ) {
@@ -118,6 +127,7 @@ const ActionButtons = ({
 					actions?.[1]?.items ?? actions,
 					(a) =>
 						!a.disabled &&
+						a.id !== EVENT_ACTIONS.EMAIL_ATTEENDEES &&
 						a.id !== EVENT_ACTIONS.EXPAND &&
 						a.id !== EVENT_ACTIONS.ACCEPT &&
 						a.id !== EVENT_ACTIONS.TENTATIVE &&
@@ -130,6 +140,7 @@ const ActionButtons = ({
 				actions?.[0]?.items ?? actions,
 				(a) =>
 					!a.disabled &&
+					a.id !== EVENT_ACTIONS.EMAIL_ATTEENDEES &&
 					a.id !== EVENT_ACTIONS.EXPAND &&
 					a.id !== EVENT_ACTIONS.ACCEPT &&
 					a.id !== EVENT_ACTIONS.TENTATIVE &&
@@ -158,6 +169,15 @@ const ActionButtons = ({
 							key={primaryAction.id}
 							icon={primaryAction.icon}
 							onClick={primaryAction.onClick}
+						/>
+					</Tooltip>
+				)}
+				{additionalAction && !additionalAction.disabled && (
+					<Tooltip placement="top" label={additionalAction.label}>
+						<IconButton
+							key={additionalAction.id}
+							icon={additionalAction.icon}
+							onClick={additionalAction.onClick}
 						/>
 					</Tooltip>
 				)}
