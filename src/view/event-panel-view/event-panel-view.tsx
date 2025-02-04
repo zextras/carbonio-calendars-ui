@@ -99,6 +99,49 @@ function getInstanceActionItems(
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 function emptyHandler(): void {}
 
+function getPrimaryAction(
+	event: EventType,
+	seriesItems: AppointmentActionsItems[],
+	instanceItems: AppointmentActionsItems[]
+): AppointmentActionsItems | undefined {
+	if (event) {
+		if (hasId(event.resource.calendar, FOLDERS.TRASH)) {
+			return find(instanceItems, ['id', EVENT_ACTIONS.MOVE]);
+		}
+		if (!event.resource.ridZ) {
+			// SERIES ACTIONS
+			const move = find(seriesItems, ['id', EVENT_ACTIONS.MOVE]);
+			const edit = find(seriesItems, ['id', EVENT_ACTIONS.EDIT]);
+			const copy = find(seriesItems, ['id', EVENT_ACTIONS.CREATE_COPY]);
+			if (!event.resource.iAmOrganizer && !event.isShared) {
+				if (edit && !edit.disabled) {
+					return edit;
+				}
+				return move;
+			}
+			if (edit && !edit.disabled) {
+				return edit;
+			}
+			return copy;
+		}
+		// INSTANCE ACTIONS
+		const move = find(instanceItems, ['id', EVENT_ACTIONS.MOVE]);
+		const edit = find(instanceItems, ['id', EVENT_ACTIONS.EDIT]);
+		const copy = find(instanceItems, ['id', EVENT_ACTIONS.CREATE_COPY]);
+		if (!event.resource.iAmOrganizer && !event.isShared) {
+			if (edit && !edit.disabled) {
+				return edit;
+			}
+			return move ?? copy;
+		}
+		if (edit && !edit.disabled) {
+			return edit;
+		}
+		return copy;
+	}
+	return undefined;
+}
+
 const ActionButtons = ({
 	actions,
 	event
@@ -108,44 +151,10 @@ const ActionButtons = ({
 }): ReactElement | null => {
 	const seriesItems = getSeriesActionItems(event, actions);
 	const instanceItems = getInstanceActionItems(event, actions);
-	const primaryAction = useMemo(() => {
-		if (event) {
-			if (hasId(event.resource.calendar, FOLDERS.TRASH)) {
-				return find(instanceItems, ['id', EVENT_ACTIONS.MOVE]);
-			}
-			if (!event.resource.ridZ) {
-				// SERIES ACTIONS
-				const move = find(seriesItems, ['id', EVENT_ACTIONS.MOVE]);
-				const edit = find(seriesItems, ['id', EVENT_ACTIONS.EDIT]);
-				const copy = find(seriesItems, ['id', EVENT_ACTIONS.CREATE_COPY]);
-				if (!event.resource.iAmOrganizer && !event.isShared) {
-					if (edit && !edit.disabled) {
-						return edit;
-					}
-					return move;
-				}
-				if (edit && !edit.disabled) {
-					return edit;
-				}
-				return copy;
-			}
-			// INSTANCE ACTIONS
-			const move = find(instanceItems, ['id', EVENT_ACTIONS.MOVE]);
-			const edit = find(instanceItems, ['id', EVENT_ACTIONS.EDIT]);
-			const copy = find(instanceItems, ['id', EVENT_ACTIONS.CREATE_COPY]);
-			if (!event.resource.iAmOrganizer && !event.isShared) {
-				if (edit && !edit.disabled) {
-					return edit;
-				}
-				return move ?? copy;
-			}
-			if (edit && !edit.disabled) {
-				return edit;
-			}
-			return copy;
-		}
-		return undefined;
-	}, [seriesItems, instanceItems, event]);
+	const primaryAction = useMemo(
+		() => getPrimaryAction(event, seriesItems, instanceItems),
+		[seriesItems, instanceItems, event]
+	);
 
 	const secondaryAction = useMemo(() => {
 		if (event?.resource?.hasOtherAttendees) {
@@ -161,13 +170,15 @@ const ActionButtons = ({
 				event.resource.ridZ ? instanceItems : seriesItems,
 				(a) =>
 					!a.disabled &&
-					a.id !== EVENT_ACTIONS.EXPAND &&
-					a.id !== EVENT_ACTIONS.ACCEPT &&
-					a.id !== EVENT_ACTIONS.TENTATIVE &&
-					a.id !== EVENT_ACTIONS.DECLINE &&
-					a.id !== EVENT_ACTIONS.PROPOSE_NEW_TIME &&
-					a.id !== primaryAction.id &&
-					a.id !== secondaryAction?.id
+					![
+						primaryAction.id,
+						secondaryAction?.id,
+						EVENT_ACTIONS.EXPAND,
+						EVENT_ACTIONS.ACCEPT,
+						EVENT_ACTIONS.TENTATIVE,
+						EVENT_ACTIONS.DECLINE,
+						EVENT_ACTIONS.PROPOSE_NEW_TIME
+					].includes(a.id)
 			);
 		}
 		return undefined;
