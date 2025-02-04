@@ -42,7 +42,12 @@ import { getAlarmToString } from '../../normalizations/normalizations-utils';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
-import { PanelView } from '../../types/actions';
+import {
+	AppointmentActionsItems,
+	InstanceActionsItems,
+	PanelView,
+	SeriesActionsItems
+} from '../../types/actions';
 import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
 import { ExceptionReference } from '../../types/store/appointments';
@@ -65,118 +70,127 @@ const AppointmentCardContainer = styled(Container)`
 	padding: 0;
 `;
 
+function isSeriesItems(
+	actions: SeriesActionsItems | InstanceActionsItems | undefined
+): actions is SeriesActionsItems {
+	return !!actions && (actions?.length ?? 0) === 2 && !!actions[1] && 'items' in actions[1];
+}
+
+function getSeriesActionItems(
+	event: EventType,
+	actions: SeriesActionsItems | InstanceActionsItems | undefined
+): AppointmentActionsItems[] {
+	if (isSeriesItems(actions)) {
+		return actions[1].items;
+	}
+	return [];
+}
+
+function getInstanceActionItems(
+	event: EventType,
+	actions: SeriesActionsItems | InstanceActionsItems | undefined
+): AppointmentActionsItems[] {
+	if (isSeriesItems(actions)) {
+		return actions[0].items;
+	}
+	return actions ?? [];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+function emptyHandler(): void {}
+
 const ActionButtons = ({
 	actions,
 	event
 }: {
-	actions: Array<any>;
+	actions: SeriesActionsItems | InstanceActionsItems | undefined;
 	event: EventType;
 }): ReactElement | null => {
+	const seriesItems = getSeriesActionItems(event, actions);
+	const instanceItems = getInstanceActionItems(event, actions);
 	const primaryAction = useMemo(() => {
 		if (event) {
 			if (hasId(event.resource.calendar, FOLDERS.TRASH)) {
-				return find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.MOVE]);
+				return find(instanceItems, ['id', EVENT_ACTIONS.MOVE]);
 			}
 			if (!event.resource.ridZ) {
 				// SERIES ACTIONS
-				const move = find(actions?.[1]?.items ?? actions, ['id', EVENT_ACTIONS.MOVE]);
-				const edit = find(actions?.[1]?.items ?? actions, ['id', EVENT_ACTIONS.EDIT]);
-				const copy = find(actions?.[1]?.items ?? actions, ['id', EVENT_ACTIONS.CREATE_COPY]);
+				const move = find(seriesItems, ['id', EVENT_ACTIONS.MOVE]);
+				const edit = find(seriesItems, ['id', EVENT_ACTIONS.EDIT]);
+				const copy = find(seriesItems, ['id', EVENT_ACTIONS.CREATE_COPY]);
 				if (!event.resource.iAmOrganizer && !event.isShared) {
-					if (!edit.disabled) {
+					if (edit && !edit.disabled) {
 						return edit;
 					}
 					return move;
 				}
-				if (!edit.disabled) {
+				if (edit && !edit.disabled) {
 					return edit;
 				}
 				return copy;
 			}
 			// INSTANCE ACTIONS
-			const move = find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.MOVE]);
-			const edit = find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.EDIT]);
-			const copy = find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.CREATE_COPY]);
+			const move = find(instanceItems, ['id', EVENT_ACTIONS.MOVE]);
+			const edit = find(instanceItems, ['id', EVENT_ACTIONS.EDIT]);
+			const copy = find(instanceItems, ['id', EVENT_ACTIONS.CREATE_COPY]);
 			if (!event.resource.iAmOrganizer && !event.isShared) {
-				if (!edit.disabled) {
+				if (edit && !edit.disabled) {
 					return edit;
 				}
 				return move ?? copy;
 			}
-			if (!edit.disabled) {
+			if (edit && !edit.disabled) {
 				return edit;
 			}
 			return copy;
 		}
 		return undefined;
-	}, [actions, event]);
+	}, [seriesItems, instanceItems, event]);
 
-	const additionalAction = useMemo(() => {
+	const secondaryAction = useMemo(() => {
 		if (event?.resource?.hasOtherAttendees) {
-			return find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.EMAIL_ATTEENDEES]);
+			return find(instanceItems, ['id', EVENT_ACTIONS.EMAIL_ATTEENDEES]);
 		}
 
 		return undefined;
-	}, [actions, event]);
+	}, [instanceItems, event]);
 
 	const otherActions = useMemo(() => {
 		if (event && primaryAction) {
-			if (!event.resource.ridZ) {
-				return filter(
-					actions?.[1]?.items ?? actions,
-					(a) =>
-						!a.disabled &&
-						a.id !== EVENT_ACTIONS.EMAIL_ATTEENDEES &&
-						a.id !== EVENT_ACTIONS.EXPAND &&
-						a.id !== EVENT_ACTIONS.ACCEPT &&
-						a.id !== EVENT_ACTIONS.TENTATIVE &&
-						a.id !== EVENT_ACTIONS.DECLINE &&
-						a.id !== EVENT_ACTIONS.PROPOSE_NEW_TIME &&
-						a.id !== primaryAction.id
-				);
-			}
 			return filter(
-				actions?.[0]?.items ?? actions,
+				event.resource.ridZ ? instanceItems : seriesItems,
 				(a) =>
 					!a.disabled &&
-					a.id !== EVENT_ACTIONS.EMAIL_ATTEENDEES &&
 					a.id !== EVENT_ACTIONS.EXPAND &&
 					a.id !== EVENT_ACTIONS.ACCEPT &&
 					a.id !== EVENT_ACTIONS.TENTATIVE &&
 					a.id !== EVENT_ACTIONS.DECLINE &&
 					a.id !== EVENT_ACTIONS.PROPOSE_NEW_TIME &&
-					a.id !== primaryAction.id
+					a.id !== primaryAction.id &&
+					a.id !== secondaryAction?.id
 			);
 		}
 		return undefined;
-	}, [actions, event, primaryAction]);
+	}, [instanceItems, seriesItems, event, primaryAction, secondaryAction]);
 
 	return primaryAction ? (
 		<Row wrap="nowrap" height="100%" mainAlignment="flex-end" style={{ maxWidth: '10rem' }}>
 			<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
-				{primaryAction && primaryAction?.items ? (
-					<Dropdown items={primaryAction.items} key={`button ${primaryAction.id}`}>
-						<Row takeAvailableSpace>
-							<Tooltip placement="top" label={primaryAction.label}>
-								<IconButton icon="TagsMoreOutline" onClick={noop} />
-							</Tooltip>
-						</Row>
-					</Dropdown>
-				) : (
+				{primaryAction ? (
 					<Tooltip placement="top" label={primaryAction.label}>
 						<IconButton
 							key={primaryAction.id}
 							icon={primaryAction.icon}
-							onClick={primaryAction.onClick}
+							onClick={primaryAction.onClick ?? emptyHandler}
 						/>
 					</Tooltip>
-				)}
-				{additionalAction && !additionalAction.disabled && (
-					<Tooltip placement="top" label={additionalAction.label}>
+				) : null}
+				{secondaryAction && !secondaryAction.disabled && (
+					<Tooltip placement="top" label={secondaryAction.label}>
 						<IconButton
-							key={additionalAction.id}
-							icon={additionalAction.icon}
-							onClick={additionalAction.onClick}
+							key={secondaryAction.id}
+							icon={secondaryAction.icon}
+							onClick={secondaryAction.onClick ?? emptyHandler}
 						/>
 					</Tooltip>
 				)}
@@ -194,7 +208,7 @@ const ActionButtons = ({
 							<IconButton
 								key={otherActions?.[0]?.id}
 								icon={otherActions?.[0]?.icon}
-								onClick={otherActions?.[0]?.onClick}
+								onClick={otherActions?.[0]?.onClick ?? emptyHandler}
 							/>
 						</Tooltip>
 					)}
