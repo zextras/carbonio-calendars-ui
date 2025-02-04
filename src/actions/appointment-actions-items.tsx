@@ -248,7 +248,7 @@ export const emailAttendeesEventItem = ({
 	label: t('label.email_attendees', 'Email attendees'),
 	disabled: false,
 	tooltipLabel: t('label.email_attendees', 'Email attendees'),
-	onClick: (e) => emailAttendees(e, { event, invite, context })
+	onClick: (e) => emailAttendees({ event, invite, context }, e)
 });
 export const deleteEventItem = ({
 	invite,

@@ -5,12 +5,14 @@
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import { createCopy } from './appointment-actions-fn';
+import { createCopy, emailAttendees } from './appointment-actions-fn';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
+import { PARTICIPANT_ROLE } from '../constants/api';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
+import { Invite } from '../types/store/invite';
 import * as editorUtils from '../utils/event';
 
 shell.getUserSettings.mockImplementation(() => ({
@@ -222,6 +224,58 @@ describe('actions', () => {
 			const storeState = store.getState();
 			const editor = storeState.editor.editors[editorId];
 			expect(editor?.calendar?.id).toBe(foldersArray[0].id);
+		});
+	});
+
+	describe('emailAttendees', () => {
+		test('email sento to all attendees and organizer', async () => {
+			const getActionSpy = jest.spyOn(shell, 'getAction');
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+			const event = {
+				...mockedData.getEvent(),
+				resource: {
+					...mockedData.getEvent().resource,
+					organizer: {
+						email: 'organizer@zextras.com',
+						name: 'Organizer'
+					}
+				}
+			};
+
+			const invite: Invite = {
+				...mockedData.getInvite({ event }),
+				attendees: [
+					{
+						a: 'attendee1@zextras.com',
+						d: 'Attendee 1',
+						cutype: '',
+						ptst: 'AC',
+						role: PARTICIPANT_ROLE.REQUIRED,
+						rsvp: false,
+						url: ''
+					}
+				]
+			};
+			const context = {
+				folders: {},
+				dispatch: store.dispatch,
+				onClose: jest.fn()
+			};
+			emailAttendees({ event, invite, context });
+			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
+				recipients: expect.arrayContaining([
+					{
+						carbonCopy: false,
+						email: 'organizer@zextras.com',
+						name: 'Organizer'
+					},
+					{ carbonCopy: false, email: 'attendee1@zextras.com', name: 'Attendee 1' }
+				]),
+				subject: event.title
+			});
 		});
 	});
 });

@@ -33,7 +33,6 @@ type ActionsContextIgnored =
 	| 'tags';
 
 export const emailAttendees = (
-	e: ActionsClick,
 	{
 		event,
 		invite: _invite,
@@ -42,14 +41,23 @@ export const emailAttendees = (
 		event: EventType;
 		invite?: Invite;
 		context: Omit<ActionsContext, ActionsContextIgnored>;
-	}
+	},
+	e?: ActionsClick
 ): void => {
 	const sendMail = (invite: Invite): void => {
-		const recipients = invite.attendees.map((attendee) => ({
+		const inviteRecipients = invite.attendees.map((attendee) => ({
 			email: attendee.a,
 			name: attendee.d,
 			carbonCopy: attendee.role === 'OPT'
 		}));
+		const recipients = [
+			...inviteRecipients,
+			{
+				email: event?.resource?.organizer?.email ?? '',
+				name: event?.resource?.organizer?.name ?? '',
+				carbonCopy: false
+			}
+		];
 		const [mailTo, available] = getAction('recipients', 'mail-to', {
 			recipients,
 			subject: event.title
