@@ -6,7 +6,7 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import {
-	Button,
+	IconButton,
 	Container,
 	Divider,
 	Dropdown,
@@ -112,11 +112,10 @@ const ActionButtons = ({
 	}, [actions, event]);
 
 	const additionalAction = useMemo(() => {
-		if (event) {
-			if (event.resource.hasOtherAttendees) {
-				return find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.EMAIL_ATTEENDEES]);
-			}
+		if (event?.resource?.hasOtherAttendees) {
+			return find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.EMAIL_ATTEENDEES]);
 		}
+
 		return undefined;
 	}, [actions, event]);
 
@@ -159,13 +158,13 @@ const ActionButtons = ({
 					<Dropdown items={primaryAction.items} key={`button ${primaryAction.id}`}>
 						<Row takeAvailableSpace>
 							<Tooltip placement="top" label={primaryAction.label}>
-								<Button icon="TagsMoreOutline" onClick={noop} />
+								<IconButton icon="TagsMoreOutline" onClick={noop} />
 							</Tooltip>
 						</Row>
 					</Dropdown>
 				) : (
 					<Tooltip placement="top" label={primaryAction.label}>
-						<Button
+						<IconButton
 							key={primaryAction.id}
 							icon={primaryAction.icon}
 							onClick={primaryAction.onClick}
@@ -174,7 +173,7 @@ const ActionButtons = ({
 				)}
 				{additionalAction && !additionalAction.disabled && (
 					<Tooltip placement="top" label={additionalAction.label}>
-						<Button
+						<IconButton
 							key={additionalAction.id}
 							icon={additionalAction.icon}
 							onClick={additionalAction.onClick}
@@ -187,12 +186,12 @@ const ActionButtons = ({
 					{otherActions.length > 1 ? (
 						<Dropdown items={otherActions}>
 							<Row takeAvailableSpace>
-								<Button icon="MoreVertical" onClick={noop} />
+								<IconButton icon="MoreVertical" onClick={noop} />
 							</Row>
 						</Dropdown>
 					) : (
 						<Tooltip placement="top" label={otherActions?.[0]?.label}>
-							<Button
+							<IconButton
 								key={otherActions?.[0]?.id}
 								icon={otherActions?.[0]?.icon}
 								onClick={otherActions?.[0]?.onClick}
@@ -238,7 +237,7 @@ export const DisplayerHeader = ({
 					</Text>
 				</Row>
 				<Row padding={{ right: 'extrasmall' }}>
-					<Button size="medium" icon="CloseOutline" onClick={close} />
+					<IconButton size="medium" icon="CloseOutline" onClick={close} />
 				</Row>
 			</Row>
 			<Divider />

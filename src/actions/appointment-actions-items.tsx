@@ -246,7 +246,7 @@ export const emailAttendeesEventItem = ({
 	id: EVENT_ACTIONS.EMAIL_ATTEENDEES,
 	icon: 'MailModOutline',
 	label: t('label.email_attendees', 'Email attendees'),
-	disabled: false,
+	disabled: !event?.resource?.hasOtherAttendees,
 	tooltipLabel: t('label.email_attendees', 'Email attendees'),
 	onClick: (e) => emailAttendees({ event, invite, context }, e)
 });
