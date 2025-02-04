@@ -6,14 +6,14 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import {
-	IconButton,
 	Container,
 	Divider,
 	Dropdown,
 	Icon,
 	Row,
 	Text,
-	Tooltip
+	Tooltip,
+	Button
 } from '@zextras/carbonio-design-system';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { filter, find, noop } from 'lodash';
@@ -173,7 +173,9 @@ const ActionButtons = ({
 			<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
 				{primaryAction ? (
 					<Tooltip placement="top" label={primaryAction.label}>
-						<IconButton
+						<Button
+							type="ghost"
+							color="text"
 							key={primaryAction.id}
 							icon={primaryAction.icon}
 							onClick={primaryAction.onClick ?? noop}
@@ -182,7 +184,9 @@ const ActionButtons = ({
 				) : null}
 				{secondaryAction && !secondaryAction.disabled && (
 					<Tooltip placement="top" label={secondaryAction.label}>
-						<IconButton
+						<Button
+							type="ghost"
+							color="text"
 							key={secondaryAction.id}
 							icon={secondaryAction.icon}
 							onClick={secondaryAction.onClick ?? noop}
@@ -195,12 +199,14 @@ const ActionButtons = ({
 					{otherActions.length > 1 ? (
 						<Dropdown items={otherActions}>
 							<Row takeAvailableSpace>
-								<IconButton icon="MoreVertical" onClick={noop} />
+								<Button type="ghost" color="text" icon="MoreVertical" onClick={noop} />
 							</Row>
 						</Dropdown>
 					) : (
 						<Tooltip placement="top" label={otherActions?.[0]?.label}>
-							<IconButton
+							<Button
+								type="ghost"
+								color="text"
 								key={otherActions?.[0]?.id}
 								icon={otherActions?.[0]?.icon}
 								onClick={otherActions?.[0]?.onClick ?? noop}
@@ -246,7 +252,7 @@ export const DisplayerHeader = ({
 					</Text>
 				</Row>
 				<Row padding={{ right: 'extrasmall' }}>
-					<IconButton size="medium" icon="CloseOutline" onClick={close} />
+					<Button type="ghost" color="text" size="medium" icon="CloseOutline" onClick={close} />
 				</Row>
 			</Row>
 			<Divider />
