@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { waitFor } from '@testing-library/react';
 
 import { createCopy, emailAttendees } from './appointment-actions-fn';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
@@ -352,6 +353,39 @@ describe('actions', () => {
 					{ carbonCopy: true, email: 'attendee1@zextras.com', name: 'Attendee 1' }
 				]),
 				subject: event.title
+			});
+		});
+
+		test('null invite is fetched remotely', async () => {
+			const getActionSpy = jest.spyOn(shell, 'getAction');
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+			const event = {
+				...mockedData.getEvent(),
+				resource: {
+					...mockedData.getEvent().resource,
+					organizer: ORGANIZER
+				}
+			};
+
+			const context = {
+				folders: {},
+				dispatch: store.dispatch,
+				onClose: jest.fn()
+			};
+			emailAttendees({ event, context });
+			await waitFor(() => {
+				expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
+					recipients: expect.arrayContaining([
+						{
+							carbonCopy: false,
+							...ORGANIZER
+						}
+					]),
+					subject: event.title
+				});
 			});
 		});
 	});

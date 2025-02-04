@@ -19,7 +19,7 @@ import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventType } from '../types/event';
-import { Invite } from '../types/store/invite';
+import { Attendee, Invite } from '../types/store/invite';
 import { getInstanceExceptionId } from '../utils/event';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
@@ -31,6 +31,28 @@ type ActionsContextIgnored =
 	| 'closeModal'
 	| 'createSnackbar'
 	| 'tags';
+
+type Recipient = {
+	email: string;
+	name: string;
+	carbonCopy: boolean;
+};
+
+function getRecipientFromOrganizer(organizer: EventType['resource']['organizer']): Recipient {
+	return {
+		email: organizer?.email ?? '',
+		name: organizer?.name ?? '',
+		carbonCopy: false
+	};
+}
+
+function getRecipientFromAttendee(attendee: Attendee): Recipient {
+	return {
+		email: attendee.a,
+		name: attendee.d,
+		carbonCopy: attendee.role === 'OPT'
+	};
+}
 
 export const emailAttendees = (
 	{
@@ -46,18 +68,9 @@ export const emailAttendees = (
 ): void => {
 	const identities = getIdentityItems().map((identity) => identity.address ?? '');
 	const sendMail = (invite: Invite, mySelf: Array<string>): void => {
-		const inviteRecipients = invite.attendees.map((attendee) => ({
-			email: attendee.a,
-			name: attendee.d,
-			carbonCopy: attendee.role === 'OPT'
-		}));
 		const recipients = [
-			...inviteRecipients,
-			{
-				email: event?.resource?.organizer?.email ?? '',
-				name: event?.resource?.organizer?.name ?? '',
-				carbonCopy: false
-			}
+			...invite.attendees.map(getRecipientFromAttendee),
+			getRecipientFromOrganizer(event.resource.organizer)
 		].filter((attendee) => !mySelf.includes(attendee.email));
 		const [mailTo, available] = getAction('recipients', 'mail-to', {
 			recipients,
