@@ -246,7 +246,7 @@ describe('actions', () => {
 			};
 		}
 
-		test('email sento to all attendees and organizer', async () => {
+		test('email sent to all attendees and organizer', async () => {
 			const getActionSpy = jest.spyOn(shell, 'getAction');
 
 			const store = configureStore({
@@ -312,6 +312,44 @@ describe('actions', () => {
 			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
 				recipients: expect.not.arrayContaining([
 					{ carbonCopy: false, email: mySelf.name, name: 'Attendee 1' }
+				]),
+				subject: event.title
+			});
+		});
+
+		test('cc optional attendees', async () => {
+			const getActionSpy = jest.spyOn(shell, 'getAction');
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+			const event = {
+				...mockedData.getEvent(),
+				resource: {
+					...mockedData.getEvent().resource,
+					organizer: ORGANIZER
+				}
+			};
+
+			const invite: Invite = {
+				...mockedData.getInvite({ event }),
+				attendees: [
+					createAttendee('attendee1@zextras.com', 'Attendee 1', PARTICIPANT_ROLE.OPTIONAL)
+				]
+			};
+			const context = {
+				folders: {},
+				dispatch: store.dispatch,
+				onClose: jest.fn()
+			};
+			emailAttendees({ event, invite, context });
+			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
+				recipients: expect.arrayContaining([
+					{
+						carbonCopy: false,
+						...ORGANIZER
+					},
+					{ carbonCopy: true, email: 'attendee1@zextras.com', name: 'Attendee 1' }
 				]),
 				subject: event.title
 			});
