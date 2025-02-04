@@ -6,11 +6,11 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import {
+	Button,
 	Container,
 	Divider,
 	Dropdown,
 	Icon,
-	IconButton,
 	Row,
 	Text,
 	Tooltip
@@ -159,13 +159,13 @@ const ActionButtons = ({
 					<Dropdown items={primaryAction.items} key={`button ${primaryAction.id}`}>
 						<Row takeAvailableSpace>
 							<Tooltip placement="top" label={primaryAction.label}>
-								<IconButton icon="TagsMoreOutline" onClick={noop} />
+								<Button icon="TagsMoreOutline" onClick={noop} />
 							</Tooltip>
 						</Row>
 					</Dropdown>
 				) : (
 					<Tooltip placement="top" label={primaryAction.label}>
-						<IconButton
+						<Button
 							key={primaryAction.id}
 							icon={primaryAction.icon}
 							onClick={primaryAction.onClick}
@@ -174,7 +174,7 @@ const ActionButtons = ({
 				)}
 				{additionalAction && !additionalAction.disabled && (
 					<Tooltip placement="top" label={additionalAction.label}>
-						<IconButton
+						<Button
 							key={additionalAction.id}
 							icon={additionalAction.icon}
 							onClick={additionalAction.onClick}
@@ -187,12 +187,12 @@ const ActionButtons = ({
 					{otherActions.length > 1 ? (
 						<Dropdown items={otherActions}>
 							<Row takeAvailableSpace>
-								<IconButton icon="MoreVertical" onClick={noop} />
+								<Button icon="MoreVertical" onClick={noop} />
 							</Row>
 						</Dropdown>
 					) : (
 						<Tooltip placement="top" label={otherActions?.[0]?.label}>
-							<IconButton
+							<Button
 								key={otherActions?.[0]?.id}
 								icon={otherActions?.[0]?.icon}
 								onClick={otherActions?.[0]?.onClick}
@@ -238,7 +238,7 @@ export const DisplayerHeader = ({
 					</Text>
 				</Row>
 				<Row padding={{ right: 'extrasmall' }}>
-					<IconButton size="medium" icon="CloseOutline" onClick={close} />
+					<Button size="medium" icon="CloseOutline" onClick={close} />
 				</Row>
 			</Row>
 			<Divider />
