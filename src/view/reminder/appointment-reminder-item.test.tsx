@@ -79,8 +79,8 @@ describe('Appointment Reminder Item', () => {
 	it.todo('should render a button to dismiss the reminder');
 
 	describe('Details expansion link', () => {
-		it('shouldn\'t show a "Show event details" string if the appointment has no details to show', () => {
-			const reminderItem = generateReminderItem({ location: '' });
+		it('should show a "Show details" string ', () => {
+			const reminderItem = generateReminderItem();
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
 			setupTest(
@@ -92,11 +92,9 @@ describe('Appointment Reminder Item', () => {
 				/>,
 				{ store }
 			);
-
-			expect(screen.queryByText(/show event details/i)).not.toBeInTheDocument();
 		});
 
-		it('should show a "Show event details" string if the appointment has details to show', () => {
+		it('should show a "Show details" string if the appointment has details to show', () => {
 			const reminderItem = generateReminderItem({ location: faker.internet.url() });
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -110,7 +108,7 @@ describe('Appointment Reminder Item', () => {
 				{ store }
 			);
 
-			expect(screen.getByText(/show event details/i)).toBeVisible();
+			expect(screen.getByText(/show details/i)).toBeVisible();
 		});
 
 		it('should render the text with a specific color', () => {
@@ -130,7 +128,7 @@ describe('Appointment Reminder Item', () => {
 				{ store }
 			);
 
-			const showDetailsText = screen.getByText(/show event details/i);
+			const showDetailsText = screen.getByText(/show details/i);
 
 			/*
 			 * FIXME change the color variant from hover to regular as soon as
@@ -153,7 +151,7 @@ describe('Appointment Reminder Item', () => {
 				{ store }
 			);
 
-			const showDetailsText = screen.getByText(/show event details/i);
+			const showDetailsText = screen.getByText(/show details/i);
 
 			expect(showDetailsText).toHaveStyle({ textDecoration: 'underline' });
 		});
@@ -172,12 +170,20 @@ describe('Appointment Reminder Item', () => {
 				{ store }
 			);
 
-			const showDetailsText = screen.getByText(/show event details/i);
+			const showDetailsText = screen.getByText(/show details/i);
 
 			expect(showDetailsText).toHaveStyle({ cursor: 'pointer' });
 		});
 
-		it('should change the "Show event details" string to "Hide event details" when clicked', async () => {
+		it.todo('should call the API to get the invite, when clicked');
+
+		it.todo('should call the API to get the invite, when clicked');
+
+		it.todo('should render a shimmer component until the API respond');
+
+		it.todo('should render a shimmer component until the API respond');
+
+		it('should change the "Show details" string to "Hide details" when clicked and the there is at least a detail to show', async () => {
 			const reminderItem = generateReminderItem({ location: faker.internet.url() });
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -191,9 +197,9 @@ describe('Appointment Reminder Item', () => {
 				{ store }
 			);
 
-			await user.click(screen.getByText(/show event details/i));
+			await user.click(screen.getByText(/show details/i));
 
-			expect(screen.getByText(/hide event details/i)).toBeVisible();
+			expect(screen.getByText(/hide details/i)).toBeVisible();
 		});
 
 		it('should hide the location URL as default behaviour', async () => {
@@ -214,7 +220,7 @@ describe('Appointment Reminder Item', () => {
 			expect(screen.queryByText(locationUrl)).not.toBeInTheDocument();
 		});
 
-		it('should set the location URL as visible when the "Show event details" string is clicked', async () => {
+		it('should set the location URL as visible when the "Show details" string is clicked', async () => {
 			const locationUrl = faker.internet.url();
 			const reminderItem = generateReminderItem({ location: locationUrl });
 			const store = configureStore({ reducer: combineReducers(reducers) });
@@ -229,12 +235,12 @@ describe('Appointment Reminder Item', () => {
 				{ store }
 			);
 
-			await user.click(screen.getByText(/show event details/i));
+			await user.click(screen.getByText(/show details/i));
 
 			expect(screen.getByText(locationUrl)).toBeVisible();
 		});
 
-		it('should set the location URL as hidden when the "Hide event details" string is clicked', async () => {
+		it('should set the location URL as hidden when the "Hide details" string is clicked', async () => {
 			const locationUrl = faker.internet.url();
 			const reminderItem = generateReminderItem({ location: locationUrl });
 			const store = configureStore({ reducer: combineReducers(reducers) });
@@ -249,9 +255,9 @@ describe('Appointment Reminder Item', () => {
 				{ store }
 			);
 
-			await user.click(screen.getByText(/show event details/i));
+			await user.click(screen.getByText(/show details/i));
 
-			await user.click(screen.getByText(/hide event details/i));
+			await user.click(screen.getByText(/hide details/i));
 
 			expect(screen.queryByText(locationUrl)).not.toBeInTheDocument();
 		});

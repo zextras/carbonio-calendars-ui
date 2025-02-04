@@ -1,0 +1,120 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Zextras <https://www.zextras.com>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+import React from 'react';
+
+import { faker } from '@faker-js/faker';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+import { AppointmentReminderItemDetails } from './appointment-reminder-item-details';
+import { setupTest, screen } from '../../carbonio-ui-commons/test/test-setup';
+import { reducers } from '../../store/redux';
+import mockedData from '../../test/generators';
+import generateAppointment from '../../test/generators/appointment';
+import generateInvite from '../../test/generators/invite';
+import { generateReminderItem } from '../../test/generators/reminder';
+import { Appointment } from '../../types/store/appointments';
+import { Invite } from '../../types/store/invite';
+import { AppointmentsSlice, InvitesSlice } from '../../types/store/store';
+
+const initializeMockedStore = ({
+	invite,
+	appointment
+}: {
+	invite?: Invite;
+	appointment?: Appointment;
+}): ReturnType<typeof configureStore> => {
+	const mockedInviteSlice: Partial<InvitesSlice> = {
+		invites: invite ? { [invite.id]: invite } : {}
+	};
+
+	const mockedAppointmentSlice: Partial<AppointmentsSlice> = {
+		appointments: appointment ? { [appointment.id]: appointment } : {}
+	};
+
+	const mockedStore = mockedData.store.mockReduxStore({
+		invites: mockedInviteSlice,
+		appointments: mockedAppointmentSlice
+	});
+
+	return configureStore({
+		reducer: combineReducers(reducers),
+		preloadedState: mockedStore
+	});
+};
+
+describe('Appointment Reminder Item Details', () => {
+	it('should display the shimmer components if the invite is not available', () => {
+		const reminderItem = generateReminderItem();
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+		expect(
+			screen.getAllByTestId(/appointment-reminder-item-details-shimmer-row-\d+/).length
+		).toBeGreaterThan(0);
+	});
+
+	it('should not display a shimmer component if the invite is available', () => {
+		const invite = generateInvite();
+		const appointment = generateAppointment({ appointment: { inviteId: invite.id } });
+		const reminderItem = generateReminderItem({ inviteId: invite.id, id: appointment.id });
+
+		const store = initializeMockedStore({ invite, appointment });
+
+		setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+		expect(
+			screen.queryAllByTestId(/appointment-reminder-item-details-shimmer-row-\d+/).length
+		).toBe(0);
+	});
+
+	describe('details', () => {
+		it('should render the location fields if it set in the appointment', () => {
+			const location = faker.internet.url();
+			const appointment = generateAppointment({ appointment: { loc: location } });
+			const invite = generateInvite();
+			const reminderItem = generateReminderItem({ inviteId: invite.id, id: appointment.id });
+
+			const store = initializeMockedStore({ invite, appointment });
+
+			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+			expect(screen.getByText(location)).toBeVisible();
+			expect(screen.getByTestId('icon: PinOutline')).toBeVisible();
+		});
+
+		it("shouldn't render the location fields if it's not set in the appointment", () => {
+			const location = '';
+			const appointment = generateAppointment({ appointment: { loc: location } });
+			const invite = generateInvite();
+			const reminderItem = generateReminderItem({ inviteId: invite.id, id: appointment.id });
+
+			const store = initializeMockedStore({ invite, appointment });
+
+			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+			expect(screen.queryByTestId('icon: PinOutline')).not.toBeInTheDocument();
+		});
+
+		it.todo('should render the meeting room if set in the invite');
+
+		it.todo("shouldn't render the meeting room if it's not set in the invite");
+
+		it.todo('should render the equipment if set in the invite');
+
+		it.todo("shouldn't render the equipment if it's not set in the invite");
+
+		it.todo('should render the virtual room if set in the invite');
+
+		it.todo("shouldn't render the virtual room if it's not set in the invite");
+
+		it.todo('should render the organizer');
+
+		it.todo('should render the description if set in the invite');
+
+		it.todo("shouldn't render the description if it's not set in the invite");
+	});
+});
