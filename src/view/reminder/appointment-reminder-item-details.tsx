@@ -8,6 +8,7 @@ import React, { useMemo } from 'react';
 import { Container, Row, Shimmer } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, times } from 'lodash';
 
+import { LinkFolder } from '../../carbonio-ui-commons/types';
 import { useInvite } from '../../hooks/use-invite';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
@@ -76,10 +77,17 @@ export const AppointmentReminderItemDetails = ({
 				{invite && <MeetingRoomsRow invite={invite} showIcon />}
 				{invite && <EquipmentsRow invite={invite} showIcon />}
 				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
-				{invite && <OrganizerPart invite={invite} organizer={invite.organizer} isSummary />}
+				{invite && (
+					<OrganizerPart
+						invite={invite}
+						organizer={invite.organizer}
+						calendarOwner={(reminderItem.calendar as LinkFolder).owner}
+						isSummary
+					/>
+				)}
 			</>
 		),
-		[invite, locationData]
+		[invite, locationData, reminderItem.calendar]
 	);
 
 	return (
