@@ -12,6 +12,7 @@ import { AppointmentReminderItemDetails } from './appointment-reminder-item-deta
 import { setupTest, screen } from '../../carbonio-ui-commons/test/test-setup';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { PARTICIPANT_ROLE } from '../../constants/api';
+import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import generateAppointment from '../../test/generators/appointment';
@@ -204,11 +205,67 @@ describe('Appointment Reminder Item Details', () => {
 			expect(screen.queryByTestId('icon: BriefcaseOutline')).not.toBeInTheDocument();
 		});
 
-		it.todo('should render the virtual room if set in the invite');
+		it('should render the virtual room if set in the invite', () => {
+			const inviteId = faker.string.uuid();
+			const roomName = faker.word.noun();
+			const roomLink = faker.internet.url();
+			const invite = generateInvite({
+				context: { id: inviteId }
+			});
 
-		it.todo("shouldn't render the virtual room if it's not set in the invite");
+			invite.xprop = [
+				{
+					name: CRB_XPROPS.MEETING_ROOM,
+					value: 'MEETING_ROOM',
+					xparam: [
+						{ name: CRB_XPARAMS.ROOM_NAME, value: roomName },
+						{ name: CRB_XPARAMS.ROOM_LINK, value: roomLink }
+					]
+				}
+			];
 
-		it.todo('should render the organizer');
+			const appointment = generateAppointment({ appointment: { inviteId } });
+			const reminderItem = generateReminderItem({ inviteId, id: appointment.id });
+
+			const store = initializeMockedStore({ invite, appointment });
+
+			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+			expect(screen.getByText(roomName)).toBeVisible();
+			expect(screen.getByTestId('icon: VideoOutline')).toBeVisible();
+		});
+
+		it("shouldn't render the virtual room if it's not set in the invite", () => {
+			const inviteId = faker.string.uuid();
+			const invite = generateInvite({
+				context: { id: inviteId }
+			});
+
+			const appointment = generateAppointment({ appointment: { inviteId } });
+			const reminderItem = generateReminderItem({ inviteId, id: appointment.id });
+
+			const store = initializeMockedStore({ invite, appointment });
+
+			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+			expect(screen.queryByTestId('icon: VideoOutline')).not.toBeInTheDocument();
+		});
+
+		it('should render the organizer', () => {
+			const inviteId = faker.string.uuid();
+			const invite = generateInvite({
+				context: { id: inviteId }
+			});
+
+			const appointment = generateAppointment({ appointment: { inviteId } });
+			const reminderItem = generateReminderItem({ inviteId, id: appointment.id });
+
+			const store = initializeMockedStore({ invite, appointment });
+
+			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+			expect(screen.queryByTestId('icon: VideoOutline')).not.toBeInTheDocument();
+		});
 
 		it.todo('should render the description if set in the invite');
 

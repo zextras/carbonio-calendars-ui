@@ -15,6 +15,7 @@ import { ReminderItem } from '../../types/appointment-reminder';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { LocationRow } from '../event-summary-view/location-row';
 import { MeetingRoomsRow } from '../event-summary-view/meeting-rooms-row';
+import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
 
 export type AppointmentReminderItemDetailsProps = {
 	reminderItem: ReminderItem;
@@ -73,6 +74,7 @@ export const AppointmentReminderItemDetails = ({
 				{locationData && <LocationRow locationData={locationData} showIcon />}
 				{invite && <MeetingRoomsRow invite={invite} showIcon />}
 				{invite && <EquipmentsRow invite={invite} showIcon />}
+				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
 			</>
 		),
 		[invite, locationData]
