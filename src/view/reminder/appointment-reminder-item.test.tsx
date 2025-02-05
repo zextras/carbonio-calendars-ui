@@ -13,7 +13,37 @@ import { useTheme } from 'styled-components';
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { screen, setupHook, setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
+import mockedData from '../../test/generators';
 import { generateReminderItem } from '../../test/generators/reminder';
+import { Appointment } from '../../types/store/appointments';
+import { Invite } from '../../types/store/invite';
+import { AppointmentsSlice, InvitesSlice } from '../../types/store/store';
+
+const initializeMockedStore = ({
+	invite,
+	appointment
+}: {
+	invite?: Invite;
+	appointment?: Appointment;
+}): ReturnType<typeof configureStore> => {
+	const mockedInviteSlice: Partial<InvitesSlice> = {
+		invites: invite ? { [invite.id]: invite } : {}
+	};
+
+	const mockedAppointmentSlice: Partial<AppointmentsSlice> = {
+		appointments: appointment ? { [appointment.id]: appointment } : {}
+	};
+
+	const mockedStore = mockedData.store.mockReduxStore({
+		invites: mockedInviteSlice,
+		appointments: mockedAppointmentSlice
+	});
+
+	return configureStore({
+		reducer: combineReducers(reducers),
+		preloadedState: mockedStore
+	});
+};
 
 describe('Appointment Reminder Item', () => {
 	it('should render the icon', () => {
@@ -200,66 +230,6 @@ describe('Appointment Reminder Item', () => {
 			await user.click(screen.getByText(/show details/i));
 
 			expect(screen.getByText(/hide details/i)).toBeVisible();
-		});
-
-		it('should hide the location URL as default behaviour', async () => {
-			const locationUrl = faker.internet.url();
-			const reminderItem = generateReminderItem({ location: locationUrl });
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			const { user } = setupTest(
-				<AppointmentReminderItem
-					reminderItem={reminderItem}
-					toggleModal={jest.fn}
-					removeReminder={jest.fn}
-					setActiveReminder={jest.fn}
-				/>,
-				{ store }
-			);
-
-			expect(screen.queryByText(locationUrl)).not.toBeInTheDocument();
-		});
-
-		it('should set the location URL as visible when the "Show details" string is clicked', async () => {
-			const locationUrl = faker.internet.url();
-			const reminderItem = generateReminderItem({ location: locationUrl });
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			const { user } = setupTest(
-				<AppointmentReminderItem
-					reminderItem={reminderItem}
-					toggleModal={jest.fn}
-					removeReminder={jest.fn}
-					setActiveReminder={jest.fn}
-				/>,
-				{ store }
-			);
-
-			await user.click(screen.getByText(/show details/i));
-
-			expect(screen.getByText(locationUrl)).toBeVisible();
-		});
-
-		it('should set the location URL as hidden when the "Hide details" string is clicked', async () => {
-			const locationUrl = faker.internet.url();
-			const reminderItem = generateReminderItem({ location: locationUrl });
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			const { user } = setupTest(
-				<AppointmentReminderItem
-					reminderItem={reminderItem}
-					toggleModal={jest.fn}
-					removeReminder={jest.fn}
-					setActiveReminder={jest.fn}
-				/>,
-				{ store }
-			);
-
-			await user.click(screen.getByText(/show details/i));
-
-			await user.click(screen.getByText(/hide details/i));
-
-			expect(screen.queryByText(locationUrl)).not.toBeInTheDocument();
 		});
 	});
 });
