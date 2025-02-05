@@ -12,6 +12,7 @@ import { useInvite } from '../../hooks/use-invite';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
 import { ReminderItem } from '../../types/appointment-reminder';
+import { OrganizerPart } from '../event-panel-view/organizer-part';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { LocationRow } from '../event-summary-view/location-row';
 import { MeetingRoomsRow } from '../event-summary-view/meeting-rooms-row';
@@ -75,6 +76,7 @@ export const AppointmentReminderItemDetails = ({
 				{invite && <MeetingRoomsRow invite={invite} showIcon />}
 				{invite && <EquipmentsRow invite={invite} showIcon />}
 				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
+				{invite && <OrganizerPart invite={invite} organizer={invite.organizer} isSummary />}
 			</>
 		),
 		[invite, locationData]

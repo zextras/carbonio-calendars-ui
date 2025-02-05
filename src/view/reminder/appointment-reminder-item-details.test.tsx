@@ -264,7 +264,7 @@ describe('Appointment Reminder Item Details', () => {
 
 			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
 
-			expect(screen.queryByTestId('icon: VideoOutline')).not.toBeInTheDocument();
+			expect(screen.getByText(invite.organizer.d)).toBeVisible();
 		});
 
 		it.todo('should render the description if set in the invite');
