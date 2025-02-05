@@ -5,7 +5,15 @@
  */
 import React, { ReactElement, useMemo } from 'react';
 
-import { Avatar, Container, Row, Text, Chip, useSnackbar } from '@zextras/carbonio-design-system';
+import {
+	Avatar,
+	Container,
+	Row,
+	Text,
+	Chip,
+	useSnackbar,
+	Theme
+} from '@zextras/carbonio-design-system';
 import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
 import { Trans } from 'react-i18next';
 
@@ -19,13 +27,15 @@ type OrganizerPartProps = {
 	calendarOwner?: string;
 	organizer: InviteOrganizer;
 	isSummary?: boolean;
+	fontSize?: keyof typeof Theme.sizes.font;
 };
 
 export const OrganizerPart = ({
 	invite,
 	calendarOwner,
 	organizer,
-	isSummary
+	isSummary,
+	fontSize = 'medium'
 }: OrganizerPartProps): ReactElement | null => {
 	const account = useUserAccount();
 	const calendar = useFolder(invite.ciFolder);
@@ -41,7 +51,7 @@ export const OrganizerPart = ({
 			crossAlignment="flex-start"
 			width="fill"
 			height="fit"
-			padding={isSummary ? { vertical: 'small' } : { horizontal: 'large', vertical: 'medium' }}
+			padding={isSummary ? { top: 'small' } : { horizontal: 'large', vertical: 'medium' }}
 			background={'gray6'}
 		>
 			{invite?.organizer?.a === account.name && (
@@ -50,13 +60,13 @@ export const OrganizerPart = ({
 						size={isSummary ? 'small' : 'large'}
 						label={account.name ?? account.displayName ?? ''}
 					/>
-					<Text style={{ padding: '0 0.5rem' }}>
+					<Text style={{ padding: '0 0.5rem' }} size={fontSize}>
 						<Trans
 							i18nKey="message.you_are_organizer"
 							defaults="<Row><Text> <BoldText> You  </BoldText> are the organizer </Text></Row>"
 							components={{
 								Row: <Row />,
-								Text: <Text color="secondary" />,
+								Text: <Text color="secondary" size={fontSize} />,
 								BoldText: <span style={{ fontWeight: 'bold', color: '#333333' }} />
 							}}
 						/>
@@ -75,7 +85,7 @@ export const OrganizerPart = ({
 						takeAvailableSpace
 						padding={{ left: 'small' }}
 					>
-						<Text>
+						<Text size={fontSize}>
 							{calendarOwner ? (
 								<Trans
 									i18nKey="message.somebody_invited_owner"
@@ -132,7 +142,7 @@ export const OrganizerPart = ({
 							size={isSummary ? 'small' : 'large'}
 							label={organizer.d ?? organizer.a ?? organizer.url ?? ''}
 						/>
-						<Text style={{ padding: '0 0.5rem' }}>
+						<Text style={{ padding: '0 0.5rem' }} size={fontSize}>
 							<Trans
 								i18nKey="message.somebody_is_organizer"
 								defaults="<strong>{{somebody}}</strong> is the organizer"

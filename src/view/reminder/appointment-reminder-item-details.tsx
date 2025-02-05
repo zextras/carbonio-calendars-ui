@@ -6,18 +6,22 @@
 import React, { useMemo } from 'react';
 
 import { Container, Row, Shimmer } from '@zextras/carbonio-design-system';
-import { isNil, omitBy, times } from 'lodash';
+import { isNil, omitBy, startsWith, times } from 'lodash';
 
 import { LinkFolder } from '../../carbonio-ui-commons/types';
+import { ROOM_DIVIDER } from '../../constants';
 import { useInvite } from '../../hooks/use-invite';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
 import { ReminderItem } from '../../types/appointment-reminder';
 import { OrganizerPart } from '../event-panel-view/organizer-part';
+import { DescriptionFragmentRow } from '../event-summary-view/description-fragment-row';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { LocationRow } from '../event-summary-view/location-row';
 import { MeetingRoomsRow } from '../event-summary-view/meeting-rooms-row';
 import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
+
+const DETAILS_FONT_SIZE = 'medium';
 
 export type AppointmentReminderItemDetailsProps = {
 	reminderItem: ReminderItem;
@@ -28,6 +32,11 @@ export const AppointmentReminderItemDetails = ({
 }: AppointmentReminderItemDetailsProps): React.JSX.Element => {
 	const appointment = useAppSelector(selectAppointment(reminderItem.id));
 	const invite = useInvite(appointment?.inviteId);
+
+	const calendarOwner = useMemo(
+		() => (reminderItem.calendar as LinkFolder).owner,
+		[reminderItem.calendar]
+	);
 
 	const locationData = useMemo(
 		() =>
@@ -73,21 +82,33 @@ export const AppointmentReminderItemDetails = ({
 	const detailRows = useMemo(
 		() => (
 			<>
-				{locationData && <LocationRow locationData={locationData} showIcon />}
-				{invite && <MeetingRoomsRow invite={invite} showIcon />}
-				{invite && <EquipmentsRow invite={invite} showIcon />}
-				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
+				{locationData && (
+					<LocationRow locationData={locationData} showIcon fontSize={DETAILS_FONT_SIZE} />
+				)}
+				{invite && <MeetingRoomsRow invite={invite} showIcon fontSize={DETAILS_FONT_SIZE} />}
+				{invite && <EquipmentsRow invite={invite} showIcon fontSize={DETAILS_FONT_SIZE} />}
+				{invite?.xprop && (
+					<VirtualRoomRow xprop={invite?.xprop} showIcon fontSize={DETAILS_FONT_SIZE} />
+				)}
 				{invite && (
 					<OrganizerPart
 						invite={invite}
 						organizer={invite.organizer}
-						calendarOwner={(reminderItem.calendar as LinkFolder).owner}
+						calendarOwner={calendarOwner}
 						isSummary
+						fontSize={DETAILS_FONT_SIZE}
+					/>
+				)}
+				{invite && !startsWith(invite.fragment ?? '', ROOM_DIVIDER) && (
+					<DescriptionFragmentRow
+						invite={invite}
+						calendarOwner={calendarOwner}
+						fontSize={DETAILS_FONT_SIZE}
 					/>
 				)}
 			</>
 		),
-		[invite, locationData, reminderItem.calendar]
+		[calendarOwner, invite, locationData]
 	);
 
 	return (
@@ -97,7 +118,7 @@ export const AppointmentReminderItemDetails = ({
 				orientation="vertical"
 				mainAlignment="flex-start"
 				crossAlignment="flex-start"
-				gap="0.5rem"
+				gap="0.25rem"
 			>
 				{isInviteNotLoadedYet ? shimmerRows : detailRows}
 			</Row>

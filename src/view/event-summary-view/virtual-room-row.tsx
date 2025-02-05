@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useMemo } from 'react';
 
-import { Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
+import { Icon, Padding, Row, Text, Theme, Tooltip } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -14,10 +14,12 @@ import { XPropProps } from '../../types/store/invite';
 
 export const VirtualRoomRow = ({
 	xprop,
-	showIcon = false
+	showIcon = false,
+	fontSize = 'small'
 }: {
 	xprop: XPropProps;
 	showIcon?: boolean;
+	fontSize?: keyof typeof Theme.sizes.font;
 }): ReactElement | null => {
 	const [t] = useTranslation();
 	const tooltipLabel = t('appointment.virtualRoom.displayerLink', 'Join the virtual room');
@@ -37,7 +39,7 @@ export const VirtualRoomRow = ({
 							</Padding>
 						)}
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<Text color="gray1" size="small">
+							<Text color="gray1" size={fontSize}>
 								<a href={roomLink} target="_blank" rel="noreferrer">
 									{roomName}
 								</a>
