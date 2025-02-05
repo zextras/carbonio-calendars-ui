@@ -34,7 +34,7 @@ export const AppointmentReminderItemDetails = ({
 	const invite = useInvite(appointment?.inviteId);
 
 	const calendarOwner = useMemo(
-		() => (reminderItem.calendar as LinkFolder).owner,
+		() => (reminderItem.calendar as LinkFolder)?.owner,
 		[reminderItem.calendar]
 	);
 
