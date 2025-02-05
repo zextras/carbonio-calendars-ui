@@ -18,7 +18,7 @@ import {
 } from '../../types/actions';
 import { EventType } from '../../types/event';
 
-type ActionItems = SeriesActionsItems | InstanceActionsItems | undefined;
+export type ActionItems = SeriesActionsItems | InstanceActionsItems | undefined;
 
 function isSeriesItems(actions: ActionItems): actions is SeriesActionsItems {
 	return !!actions && (actions?.length ?? 0) === 2 && !!actions[1] && 'items' in actions[1];
