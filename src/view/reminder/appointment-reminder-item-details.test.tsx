@@ -267,8 +267,38 @@ describe('Appointment Reminder Item Details', () => {
 			expect(screen.getByText(invite.organizer.d)).toBeVisible();
 		});
 
-		it.todo('should render the description if set in the invite');
+		it('should render the description if set in the invite', () => {
+			const inviteId = faker.string.uuid();
+			const description = faker.lorem.paragraphs(2);
+			const invite = generateInvite({
+				context: { id: inviteId, fragment: description }
+			});
 
-		it.todo("shouldn't render the description if it's not set in the invite");
+			const appointment = generateAppointment({ appointment: { inviteId } });
+			const reminderItem = generateReminderItem({ inviteId, id: appointment.id });
+
+			const store = initializeMockedStore({ invite, appointment });
+
+			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+			expect(screen.getByText(description)).toBeVisible();
+			expect(screen.getByTestId('icon: MessageSquareOutline')).toBeVisible();
+		});
+
+		it("shouldn't render the description if it's not set in the invite", () => {
+			const inviteId = faker.string.uuid();
+			const invite = generateInvite({
+				context: { id: inviteId }
+			});
+
+			const appointment = generateAppointment({ appointment: { inviteId } });
+			const reminderItem = generateReminderItem({ inviteId, id: appointment.id });
+
+			const store = initializeMockedStore({ invite, appointment });
+
+			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+			expect(screen.queryByTestId('icon: MessageSquareOutline')).not.toBeInTheDocument();
+		});
 	});
 });
