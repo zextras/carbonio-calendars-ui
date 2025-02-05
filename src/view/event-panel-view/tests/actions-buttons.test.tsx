@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { noop } from 'lodash';
 
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
@@ -14,7 +14,7 @@ import { EVENT_ACTIONS } from '../../../constants/event-actions';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { InstanceActionsItems, SeriesActionsItems } from '../../../types/actions';
-import ActionButtons from '../actions-buttons';
+import ActionButtons, { EXCLUDED_ACTIONS } from '../actions-buttons';
 
 const instanceActions: InstanceActionsItems = [
 	{
@@ -381,5 +381,93 @@ describe('actions-buttons secondary action', () => {
 
 		setupTest(<ActionButtons actions={seriesActions} event={event} />, { store });
 		expect(screen.queryByTestId('icon: email_attendees')).not.toBeInTheDocument();
+	});
+});
+
+describe('actions-buttons other actions', () => {
+	test('other actions do not include primary action', async () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				iAmOrganizer: true
+			}
+		};
+
+		const { user } = setupTest(<ActionButtons actions={instanceActions} event={event} />, {
+			store
+		});
+		const otherMenu = screen.getByTestId('icon: MoreVertical');
+		expect(otherMenu).toBeInTheDocument();
+		await act(async () => {
+			await user.click(otherMenu);
+		});
+		expect(screen.queryAllByTestId('icon: email_attendees').length).toBe(1);
+		expect(screen.getByTestId('icon: forward')).toBeInTheDocument();
+	});
+
+	test('other actions do not include secondary action', async () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				hasOtherAttendees: true
+			}
+		};
+
+		const { user } = setupTest(<ActionButtons actions={instanceActions} event={event} />, {
+			store
+		});
+		const otherMenu = screen.getByTestId('icon: MoreVertical');
+		expect(otherMenu).toBeInTheDocument();
+		await act(async () => {
+			await user.click(otherMenu);
+		});
+		expect(screen.queryAllByTestId('icon: email_attendees').length).toBe(1);
+		expect(screen.getByTestId('icon: forward')).toBeInTheDocument();
+	});
+
+	test('other actions exclude some actions', async () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = mockedData.getEvent();
+
+		const actions = [
+			...instanceActions,
+			...EXCLUDED_ACTIONS.map((id) => ({
+				id,
+				disabled: false,
+				icon: id,
+				label: '',
+				tooltipLabel: ''
+			}))
+		];
+
+		const { user } = setupTest(<ActionButtons actions={actions} event={event} />, {
+			store
+		});
+		const otherMenu = screen.getByTestId('icon: MoreVertical');
+		expect(otherMenu).toBeInTheDocument();
+		await act(async () => {
+			await user.click(otherMenu);
+		});
+		expect(screen.queryByTestId(`icon: ${EVENT_ACTIONS.EXPAND}`)).not.toBeInTheDocument();
+		expect(screen.queryByTestId(`icon: ${EVENT_ACTIONS.ACCEPT}`)).not.toBeInTheDocument();
+		expect(screen.queryByTestId(`icon: ${EVENT_ACTIONS.TENTATIVE}`)).not.toBeInTheDocument();
+		expect(screen.queryByTestId(`icon: ${EVENT_ACTIONS.DECLINE}`)).not.toBeInTheDocument();
+		expect(screen.queryByTestId(`icon: ${EVENT_ACTIONS.PROPOSE_NEW_TIME}`)).not.toBeInTheDocument();
 	});
 });

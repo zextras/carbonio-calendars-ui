@@ -74,6 +74,14 @@ function getPrimaryAction(
 	return undefined;
 }
 
+export const EXCLUDED_ACTIONS = [
+	EVENT_ACTIONS.EXPAND,
+	EVENT_ACTIONS.ACCEPT,
+	EVENT_ACTIONS.TENTATIVE,
+	EVENT_ACTIONS.DECLINE,
+	EVENT_ACTIONS.PROPOSE_NEW_TIME
+];
+
 export default function ActionButtons({
 	actions,
 	event
@@ -105,15 +113,7 @@ export default function ActionButtons({
 				event.resource.ridZ ? instanceItems : seriesItems,
 				(a) =>
 					!a.disabled &&
-					![
-						primaryAction.id,
-						secondaryAction?.id,
-						EVENT_ACTIONS.EXPAND,
-						EVENT_ACTIONS.ACCEPT,
-						EVENT_ACTIONS.TENTATIVE,
-						EVENT_ACTIONS.DECLINE,
-						EVENT_ACTIONS.PROPOSE_NEW_TIME
-					].includes(a.id)
+					![primaryAction.id, secondaryAction?.id, ...EXCLUDED_ACTIONS].includes(a.id)
 			);
 		}
 		return undefined;
