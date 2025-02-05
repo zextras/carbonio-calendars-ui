@@ -7,14 +7,16 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
+import { noop } from 'lodash';
 
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { EVENT_ACTIONS } from '../../../constants/event-actions';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
-import ActionButtons, { ActionItems } from '../actions-buttons';
+import { InstanceActionsItems, SeriesActionsItems } from '../../../types/actions';
+import ActionButtons from '../actions-buttons';
 
-const actions: ActionItems = [
+const instanceActions: InstanceActionsItems = [
 	{
 		id: 'move',
 		disabled: false,
@@ -52,7 +54,28 @@ const actions: ActionItems = [
 	}
 ];
 
-describe('actions-buttons', () => {
+const seriesActions: SeriesActionsItems = [
+	{
+		id: 'instance',
+		icon: 'CalendarOutline',
+		label: '',
+		disabled: false,
+		tooltipLabel: '',
+		onClick: noop,
+		items: instanceActions
+	},
+	{
+		id: 'series',
+		icon: 'CalendarOutline',
+		label: '',
+		disabled: false,
+		tooltipLabel: '',
+		onClick: noop,
+		items: instanceActions
+	}
+];
+
+describe('actions-buttons instance primary action', () => {
 	test('primary instance action for organizer is edit (if available)', () => {
 		const store = configureStore({
 			reducer: combineReducers(reducers),
@@ -67,7 +90,7 @@ describe('actions-buttons', () => {
 			}
 		};
 
-		setupTest(<ActionButtons actions={actions} event={event} />, { store });
+		setupTest(<ActionButtons actions={instanceActions} event={event} />, { store });
 		expect(screen.getByTestId('icon: edit')).toBeVisible();
 	});
 
@@ -85,7 +108,10 @@ describe('actions-buttons', () => {
 			}
 		};
 		setupTest(
-			<ActionButtons actions={actions.filter((a) => a.id !== EVENT_ACTIONS.EDIT)} event={event} />,
+			<ActionButtons
+				actions={instanceActions.filter((a) => a.id !== EVENT_ACTIONS.EDIT)}
+				event={event}
+			/>,
 			{ store }
 		);
 		expect(screen.getByTestId('icon: copy')).toBeVisible();
@@ -105,7 +131,7 @@ describe('actions-buttons', () => {
 			}
 		};
 
-		setupTest(<ActionButtons actions={actions} event={event} />, { store });
+		setupTest(<ActionButtons actions={instanceActions} event={event} />, { store });
 		expect(screen.getByTestId('icon: edit')).toBeVisible();
 	});
 
@@ -124,7 +150,10 @@ describe('actions-buttons', () => {
 		};
 
 		setupTest(
-			<ActionButtons actions={actions.filter((a) => a.id !== EVENT_ACTIONS.EDIT)} event={event} />,
+			<ActionButtons
+				actions={instanceActions.filter((a) => a.id !== EVENT_ACTIONS.EDIT)}
+				event={event}
+			/>,
 			{ store }
 		);
 		expect(screen.getByTestId('icon: move')).toBeVisible();
@@ -141,7 +170,7 @@ describe('actions-buttons', () => {
 			isShared: true
 		};
 
-		setupTest(<ActionButtons actions={actions} event={event} />, { store });
+		setupTest(<ActionButtons actions={instanceActions} event={event} />, { store });
 		expect(screen.getByTestId('icon: edit')).toBeVisible();
 	});
 
@@ -157,9 +186,143 @@ describe('actions-buttons', () => {
 		};
 
 		setupTest(
-			<ActionButtons actions={actions.filter((a) => a.id !== EVENT_ACTIONS.EDIT)} event={event} />,
+			<ActionButtons
+				actions={instanceActions.filter((a) => a.id !== EVENT_ACTIONS.EDIT)}
+				event={event}
+			/>,
 			{ store }
 		);
+		expect(screen.getByTestId('icon: copy')).toBeVisible();
+	});
+});
+
+describe('actions-buttons series primary action', () => {
+	test('primary series action for organizer is edit (if available)', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				iAmOrganizer: true
+			}
+		};
+
+		setupTest(<ActionButtons actions={seriesActions} event={event} />, { store });
+		expect(screen.getByTestId('icon: edit')).toBeVisible();
+	});
+
+	test('primary series action for organizer is copy if edit is not available', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				iAmOrganizer: true
+			}
+		};
+		const actions = [
+			{
+				...seriesActions[0],
+				items: seriesActions[0].items.filter((a) => a.id !== EVENT_ACTIONS.EDIT)
+			},
+			{
+				...seriesActions[1],
+				items: seriesActions[0].items.filter((a) => a.id !== EVENT_ACTIONS.EDIT)
+			}
+		];
+		setupTest(<ActionButtons actions={actions} event={event} />, { store });
+		expect(screen.getByTestId('icon: copy')).toBeVisible();
+	});
+
+	test('primary series action for attendee is edit (if available)', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				iAmOrganizer: false
+			}
+		};
+
+		setupTest(<ActionButtons actions={seriesActions} event={event} />, { store });
+		expect(screen.getByTestId('icon: edit')).toBeVisible();
+	});
+
+	test('primary series action for attendee is move if edit is not available', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				iAmOrganizer: false
+			}
+		};
+		const actions = [
+			{
+				...seriesActions[0],
+				items: seriesActions[0].items.filter((a) => a.id !== EVENT_ACTIONS.EDIT)
+			},
+			{
+				...seriesActions[1],
+				items: seriesActions[0].items.filter((a) => a.id !== EVENT_ACTIONS.EDIT)
+			}
+		];
+		setupTest(<ActionButtons actions={actions} event={event} />, { store });
+		expect(screen.getByTestId('icon: move')).toBeVisible();
+	});
+
+	test('primary series action for shared is edit (if available)', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			isShared: true
+		};
+
+		setupTest(<ActionButtons actions={seriesActions} event={event} />, { store });
+		expect(screen.getByTestId('icon: edit')).toBeVisible();
+	});
+
+	test('primary series action for shared is copy if edit is not available', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			isShared: true
+		};
+		const actions = [
+			{
+				...seriesActions[0],
+				items: seriesActions[0].items.filter((a) => a.id !== EVENT_ACTIONS.EDIT)
+			},
+			{
+				...seriesActions[1],
+				items: seriesActions[0].items.filter((a) => a.id !== EVENT_ACTIONS.EDIT)
+			}
+		];
+		setupTest(<ActionButtons actions={actions} event={event} />, { store });
 		expect(screen.getByTestId('icon: copy')).toBeVisible();
 	});
 });
