@@ -90,11 +90,14 @@ export default function ActionButtons({
 
 	const secondaryAction = useMemo(() => {
 		if (event?.resource?.hasOtherAttendees) {
-			return find(instanceItems, ['id', EVENT_ACTIONS.EMAIL_ATTEENDEES]);
+			return find(event.resource.ridZ ? instanceItems : seriesItems, [
+				'id',
+				EVENT_ACTIONS.EMAIL_ATTEENDEES
+			]);
 		}
 
 		return undefined;
-	}, [instanceItems, event]);
+	}, [instanceItems, seriesItems, event]);
 
 	const otherActions = useMemo(() => {
 		if (event && primaryAction) {

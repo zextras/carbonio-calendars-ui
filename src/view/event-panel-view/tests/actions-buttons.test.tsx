@@ -71,7 +71,7 @@ const seriesActions: SeriesActionsItems = [
 		disabled: false,
 		tooltipLabel: '',
 		onClick: noop,
-		items: instanceActions
+		items: instanceActions.filter((i) => i.id !== EVENT_ACTIONS.EMAIL_ATTEENDEES)
 	}
 ];
 
@@ -324,5 +324,62 @@ describe('actions-buttons series primary action', () => {
 		];
 		setupTest(<ActionButtons actions={actions} event={event} />, { store });
 		expect(screen.getByTestId('icon: copy')).toBeVisible();
+	});
+});
+
+describe('actions-buttons secondary action', () => {
+	test('secondary action if other attendees is emailAttendees', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				hasOtherAttendees: true
+			}
+		};
+
+		setupTest(<ActionButtons actions={instanceActions} event={event} />, { store });
+		expect(screen.getByTestId('icon: email_attendees')).toBeVisible();
+	});
+
+	test('no secondary action if no other attendees', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				hasOtherAttendees: false
+			}
+		};
+
+		setupTest(<ActionButtons actions={instanceActions} event={event} />, { store });
+		expect(screen.queryByTestId('icon: email_attendees')).not.toBeInTheDocument();
+	});
+
+	test('no secondary action for series', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				ridZ: undefined,
+				hasOtherAttendees: true
+			}
+		};
+
+		setupTest(<ActionButtons actions={seriesActions} event={event} />, { store });
+		expect(screen.queryByTestId('icon: email_attendees')).not.toBeInTheDocument();
 	});
 });
