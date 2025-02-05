@@ -12,7 +12,9 @@ import { useInvite } from '../../hooks/use-invite';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
 import { ReminderItem } from '../../types/appointment-reminder';
+import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { LocationRow } from '../event-summary-view/location-row';
+import { MeetingRoomsRow } from '../event-summary-view/meeting-rooms-row';
 
 export type AppointmentReminderItemDetailsProps = {
 	reminderItem: ReminderItem;
@@ -65,6 +67,17 @@ export const AppointmentReminderItemDetails = ({
 		[]
 	);
 
+	const detailRows = useMemo(
+		() => (
+			<>
+				{locationData && <LocationRow locationData={locationData} showIcon />}
+				{invite && <MeetingRoomsRow invite={invite} showIcon />}
+				{invite && <EquipmentsRow invite={invite} showIcon />}
+			</>
+		),
+		[invite, locationData]
+	);
+
 	return (
 		<Container>
 			<Row
@@ -74,74 +87,8 @@ export const AppointmentReminderItemDetails = ({
 				crossAlignment="flex-start"
 				gap="0.5rem"
 			>
-				{isInviteNotLoadedYet
-					? shimmerRows
-					: locationData && <LocationRow locationData={locationData} showIcon />}
+				{isInviteNotLoadedYet ? shimmerRows : detailRows}
 			</Row>
 		</Container>
 	);
-
-	/*
-	<Container gap="0.5rem">
-					{location && (
-						<Row width="fill" padding={{ left: '2.5rem' }} mainAlignment="flex-start">
-							<Padding right="small">
-								<Icon icon="PinOutline" />
-							</Padding>
-							{locationUrl !== undefined ? (
-								<Link target="_blank" href={locationUrl}>
-									{locationUrl}
-								</Link>
-							) : (
-								<Text>{location}</Text>
-							)}
-						</Row>
-					)}
-
-					{appointment.meetingRoom && (
-						<Row width="fill" padding={{ left: '2.5rem' }} mainAlignment="flex-start">
-							<Padding right="small">
-								<Icon icon="PinOutline" />
-							</Padding>
-							<Text>{meetingRoom}</Text>
-						</Row>
-					)}
-
-					{equipment && (
-						<Row width="fill" padding={{ left: '2.5rem' }} mainAlignment="flex-start">
-							<Padding right="small">
-								<Icon icon="PinOutline" />
-							</Padding>
-							<Text>{equipment}</Text>
-						</Row>
-					)}
-
-					{virtualRoom && (
-						<Row width="fill" padding={{ left: '2.5rem' }} mainAlignment="flex-start">
-							<Padding right="small">
-								<Icon icon="PinOutline" />
-							</Padding>
-							<Text>{virtualRoom}</Text>
-						</Row>
-					)}
-
-					{organizer && (
-						<Row width="fill" padding={{ left: '2.5rem' }} mainAlignment="flex-start">
-							<Padding right="small">
-								<Avatar size="medium" label={organizer} />
-							</Padding>
-							<Text>{Organizer}</Text>
-						</Row>
-					)}
-
-					{description && (
-						<Row width="fill" padding={{ left: '2.5rem' }} mainAlignment="flex-start">
-							<Padding right="small">
-								<Icon icon="PinOutline" />
-							</Padding>
-							<Text>{description}</Text>
-						</Row>
-					)}
-				</Container>
-	 */
 };
