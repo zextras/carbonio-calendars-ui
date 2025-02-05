@@ -31,6 +31,8 @@ import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
 import { ApptReminderCardProps } from '../../types/appointment-reminder';
 
+const FONT_SIZE = 'medium';
+
 // TODO reduce the fields in the reminderItem field, because this component will read the needed fields on demand
 export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	reminderItem,
@@ -113,9 +115,9 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const reminderItems = useGetReminderItems(snoozeReminder, alarmData);
 
 	const timeToDisplay = useMemo(() => {
-		const { color, size, text } = getTimeToDisplayData(reminderItem, now);
+		const { color, text } = getTimeToDisplayData(reminderItem, now);
 		return (
-			<Text color={color} size={size}>
+			<Text color={color} size={FONT_SIZE}>
 				{text}
 			</Text>
 		);
@@ -132,7 +134,9 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 				<Icon icon="PhoneCallOutline" size="large" />
 				<Padding left="large"></Padding>
 				<Row takeAvailableSpace mainAlignment={'flex-start'}>
-					<Text weight="bold">{title}</Text>
+					<Text weight="bold" size={FONT_SIZE}>
+						{title}
+					</Text>
 				</Row>
 				<Row mainAlignment="flex-end" width="fit">
 					{isSetNewTimeAllowed ? (
@@ -166,14 +170,14 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 
 			<Row width="fill" padding={{ left: '2.5rem', bottom: 'small' }} mainAlignment="space-between">
 				<Row mainAlignment="flex-start">
-					<Text>
+					<Text size={FONT_SIZE}>
 						{moment(start).format('HH:mm')} - {moment(end).format('HH:mm')}
 					</Text>
 					<Padding left="small">{timeToDisplay}</Padding>
 				</Row>
 
 				<Row>
-					<Link color="info" underlined onClick={toggleDetailsExpanded}>
+					<Link color="info" underlined onClick={toggleDetailsExpanded} size={FONT_SIZE}>
 						{labelShowEventDetails}
 					</Link>
 				</Row>
@@ -188,7 +192,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"
 					>
-						<AppointmentReminderItemDetails reminderItem={reminderItem} />
+						<AppointmentReminderItemDetails reminderItem={reminderItem} fontSize={FONT_SIZE} />
 					</Row>
 				</Row>
 			</Collapse>

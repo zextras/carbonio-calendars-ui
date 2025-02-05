@@ -5,7 +5,7 @@
  */
 import React, { useMemo } from 'react';
 
-import { Container, Row, Shimmer } from '@zextras/carbonio-design-system';
+import { Container, Row, Shimmer, Theme } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith, times } from 'lodash';
 
 import { LinkFolder } from '../../carbonio-ui-commons/types';
@@ -21,14 +21,14 @@ import { LocationRow } from '../event-summary-view/location-row';
 import { MeetingRoomsRow } from '../event-summary-view/meeting-rooms-row';
 import { VirtualRoomRow } from '../event-summary-view/virtual-room-row';
 
-const DETAILS_FONT_SIZE = 'medium';
-
 export type AppointmentReminderItemDetailsProps = {
 	reminderItem: ReminderItem;
+	fontSize?: keyof typeof Theme.sizes.font;
 };
 
 export const AppointmentReminderItemDetails = ({
-	reminderItem
+	reminderItem,
+	fontSize = 'medium'
 }: AppointmentReminderItemDetailsProps): React.JSX.Element => {
 	const appointment = useAppSelector(selectAppointment(reminderItem.id));
 	const invite = useInvite(appointment?.inviteId);
@@ -82,28 +82,24 @@ export const AppointmentReminderItemDetails = ({
 	const detailRows = useMemo(
 		() => (
 			<>
-				{locationData && (
-					<LocationRow locationData={locationData} showIcon fontSize={DETAILS_FONT_SIZE} />
-				)}
-				{invite && <MeetingRoomsRow invite={invite} showIcon fontSize={DETAILS_FONT_SIZE} />}
-				{invite && <EquipmentsRow invite={invite} showIcon fontSize={DETAILS_FONT_SIZE} />}
-				{invite?.xprop && (
-					<VirtualRoomRow xprop={invite?.xprop} showIcon fontSize={DETAILS_FONT_SIZE} />
-				)}
+				{locationData && <LocationRow locationData={locationData} showIcon fontSize={fontSize} />}
+				{invite && <MeetingRoomsRow invite={invite} showIcon fontSize={fontSize} />}
+				{invite && <EquipmentsRow invite={invite} showIcon fontSize={fontSize} />}
+				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon fontSize={fontSize} />}
 				{invite && (
 					<OrganizerPart
 						invite={invite}
 						organizer={invite.organizer}
 						calendarOwner={calendarOwner}
 						isSummary
-						fontSize={DETAILS_FONT_SIZE}
+						fontSize={fontSize}
 					/>
 				)}
 				{invite && !startsWith(invite.fragment ?? '', ROOM_DIVIDER) && (
 					<DescriptionFragmentRow
 						invite={invite}
 						calendarOwner={calendarOwner}
-						fontSize={DETAILS_FONT_SIZE}
+						fontSize={fontSize}
 					/>
 				)}
 			</>
