@@ -5,22 +5,13 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import {
-	Container,
-	Divider,
-	Dropdown,
-	Icon,
-	Row,
-	Text,
-	Tooltip,
-	Button
-} from '@zextras/carbonio-design-system';
+import { Container, Divider, Icon, Row, Text, Button } from '@zextras/carbonio-design-system';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
-import { filter, find, noop } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
+import ActionButtons from './actions-buttons';
 import { AttachmentsBlock } from './attachments-block';
 import { DetailsPart } from './details-part';
 import { MessagePart } from './message-part';
@@ -28,26 +19,18 @@ import { ParticipantsPart } from './participants-part';
 import { ReminderPart } from './reminder-part';
 import { ReplyButtonsPart } from './reply-buttons-part';
 import { isAnInvite } from '../../actions/appointment-actions-items';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { extractBody } from '../../commons/body-message-renderer';
 import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
-import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
 import { normalizeCalendarEvent } from '../../normalizations/normalize-calendar-events';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment, selectAppointmentInstance } from '../../store/selectors/appointments';
-import {
-	AppointmentActionsItems,
-	InstanceActionsItems,
-	PanelView,
-	SeriesActionsItems
-} from '../../types/actions';
+import { PanelView } from '../../types/actions';
 import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
 import { ExceptionReference } from '../../types/store/appointments';
@@ -69,155 +52,6 @@ const AppointmentCardContainer = styled(Container)`
 	max-height: 100%;
 	padding: 0;
 `;
-
-function isSeriesItems(actions: ActionItems): actions is SeriesActionsItems {
-	return !!actions && (actions?.length ?? 0) === 2 && !!actions[1] && 'items' in actions[1];
-}
-
-function getSeriesActionItems(event: EventType, actions: ActionItems): AppointmentActionsItems[] {
-	if (isSeriesItems(actions)) {
-		return actions[1].items;
-	}
-	return [];
-}
-
-function getInstanceActionItems(event: EventType, actions: ActionItems): AppointmentActionsItems[] {
-	if (isSeriesItems(actions)) {
-		return actions[0].items;
-	}
-	return actions ?? [];
-}
-
-function getPreferredAction(
-	event: EventType,
-	items: AppointmentActionsItems[]
-): AppointmentActionsItems | undefined {
-	const move = find(items, ['id', EVENT_ACTIONS.MOVE]);
-	const edit = find(items, ['id', EVENT_ACTIONS.EDIT]);
-	const copy = find(items, ['id', EVENT_ACTIONS.CREATE_COPY]);
-	if (!event.resource.iAmOrganizer && !event.isShared) {
-		if (edit && !edit.disabled) {
-			return edit;
-		}
-		return move;
-	}
-	if (edit && !edit.disabled) {
-		return edit;
-	}
-	return copy;
-}
-
-function getPrimaryAction(
-	event: EventType,
-	seriesItems: AppointmentActionsItems[],
-	instanceItems: AppointmentActionsItems[]
-): AppointmentActionsItems | undefined {
-	if (event) {
-		if (hasId(event.resource.calendar, FOLDERS.TRASH)) {
-			return find(instanceItems, ['id', EVENT_ACTIONS.MOVE]);
-		}
-		if (!event.resource.ridZ) {
-			return getPreferredAction(event, seriesItems);
-		}
-		return getPreferredAction(event, instanceItems);
-	}
-	return undefined;
-}
-
-type ActionItems = SeriesActionsItems | InstanceActionsItems | undefined;
-
-const ActionButtons = ({
-	actions,
-	event
-}: {
-	actions: ActionItems;
-	event: EventType;
-}): ReactElement | null => {
-	const seriesItems = getSeriesActionItems(event, actions);
-	const instanceItems = getInstanceActionItems(event, actions);
-	const primaryAction = useMemo(
-		() => getPrimaryAction(event, seriesItems, instanceItems),
-		[seriesItems, instanceItems, event]
-	);
-
-	const secondaryAction = useMemo(() => {
-		if (event?.resource?.hasOtherAttendees) {
-			return find(instanceItems, ['id', EVENT_ACTIONS.EMAIL_ATTEENDEES]);
-		}
-
-		return undefined;
-	}, [instanceItems, event]);
-
-	const otherActions = useMemo(() => {
-		if (event && primaryAction) {
-			return filter(
-				event.resource.ridZ ? instanceItems : seriesItems,
-				(a) =>
-					!a.disabled &&
-					![
-						primaryAction.id,
-						secondaryAction?.id,
-						EVENT_ACTIONS.EXPAND,
-						EVENT_ACTIONS.ACCEPT,
-						EVENT_ACTIONS.TENTATIVE,
-						EVENT_ACTIONS.DECLINE,
-						EVENT_ACTIONS.PROPOSE_NEW_TIME
-					].includes(a.id)
-			);
-		}
-		return undefined;
-	}, [instanceItems, seriesItems, event, primaryAction, secondaryAction]);
-
-	return primaryAction ? (
-		<Row wrap="nowrap" height="100%" mainAlignment="flex-end" style={{ maxWidth: '10rem' }}>
-			<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
-				{primaryAction ? (
-					<Tooltip placement="top" label={primaryAction.label}>
-						<Button
-							type="ghost"
-							color="text"
-							key={primaryAction.id}
-							icon={primaryAction.icon}
-							onClick={primaryAction.onClick ?? noop}
-						/>
-					</Tooltip>
-				) : null}
-				{secondaryAction && !secondaryAction.disabled && (
-					<Tooltip placement="top" label={secondaryAction.label}>
-						<Button
-							type="ghost"
-							color="text"
-							key={secondaryAction.id}
-							icon={secondaryAction.icon}
-							onClick={secondaryAction.onClick ?? noop}
-						/>
-					</Tooltip>
-				)}
-			</Row>
-			{otherActions && otherActions?.length > 0 && (
-				<>
-					{otherActions.length > 1 ? (
-						<Dropdown items={otherActions}>
-							<Row takeAvailableSpace>
-								<Button type="ghost" color="text" icon="MoreVertical" onClick={noop} />
-							</Row>
-						</Dropdown>
-					) : (
-						<Tooltip placement="top" label={otherActions?.[0]?.label}>
-							<Button
-								type="ghost"
-								color="text"
-								key={otherActions?.[0]?.id}
-								icon={otherActions?.[0]?.icon}
-								onClick={otherActions?.[0]?.onClick ?? noop}
-							/>
-						</Tooltip>
-					)}
-				</>
-			)}
-		</Row>
-	) : null;
-};
 
 export const DisplayerHeader = ({
 	event,
