@@ -82,8 +82,8 @@ export const EventSummaryView = ({
 			{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon />}
 			{invite && <ParticipantsRow event={event} invite={invite} />}
 			{event?.resource?.tags?.length > 0 && <TagsRow event={event} />}
-			{!startsWith(event?.resource?.fragment ?? '', ROOM_DIVIDER) && (
-				<DescriptionFragmentRow event={event} />
+			{invite && !startsWith(invite.fragment ?? '', ROOM_DIVIDER) && (
+				<DescriptionFragmentRow invite={invite} calendarOwner={event.resource.calendar.owner} />
 			)}
 			<Divider />
 			<ActionsButtonsRow onClose={onClose} event={event} />
