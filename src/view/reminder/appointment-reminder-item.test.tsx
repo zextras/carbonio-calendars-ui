@@ -205,14 +205,6 @@ describe('Appointment Reminder Item', () => {
 			expect(showDetailsText).toHaveStyle({ cursor: 'pointer' });
 		});
 
-		it.todo('should call the API to get the invite, when clicked');
-
-		it.todo('should call the API to get the invite, when clicked');
-
-		it.todo('should render a shimmer component until the API respond');
-
-		it.todo('should render a shimmer component until the API respond');
-
 		it('should change the "Show details" string to "Hide details" when clicked and the there is at least a detail to show', async () => {
 			const reminderItem = generateReminderItem({ location: faker.internet.url() });
 			const store = configureStore({ reducer: combineReducers(reducers) });

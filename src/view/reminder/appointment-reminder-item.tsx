@@ -15,7 +15,8 @@ import {
 	Padding,
 	Row,
 	Text,
-	Tooltip
+	Tooltip,
+	TextProps
 } from '@zextras/carbonio-design-system';
 import { noop } from 'lodash';
 import moment from 'moment';
@@ -31,7 +32,9 @@ import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
 import { ApptReminderCardProps } from '../../types/appointment-reminder';
 
-const FONT_SIZE = 'medium';
+const DEFAULT_FONT_SIZE = 'medium';
+const TITLE_FONT_SIZE = 'large';
+const TITLE_FONT_WEIGHT: TextProps['weight'] = 'medium';
 
 // TODO reduce the fields in the reminderItem field, because this component will read the needed fields on demand
 export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
@@ -117,7 +120,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const timeToDisplay = useMemo(() => {
 		const { color, text } = getTimeToDisplayData(reminderItem, now);
 		return (
-			<Text color={color} size={FONT_SIZE}>
+			<Text color={color} size={DEFAULT_FONT_SIZE}>
 				{text}
 			</Text>
 		);
@@ -134,7 +137,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 				<Icon icon="PhoneCallOutline" size="large" />
 				<Padding left="large"></Padding>
 				<Row takeAvailableSpace mainAlignment={'flex-start'}>
-					<Text weight="bold" size={FONT_SIZE}>
+					<Text weight={TITLE_FONT_WEIGHT} size={TITLE_FONT_SIZE}>
 						{title}
 					</Text>
 				</Row>
@@ -170,14 +173,14 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 
 			<Row width="fill" padding={{ left: '2.5rem', bottom: 'small' }} mainAlignment="space-between">
 				<Row mainAlignment="flex-start">
-					<Text size={FONT_SIZE}>
+					<Text size={DEFAULT_FONT_SIZE}>
 						{moment(start).format('HH:mm')} - {moment(end).format('HH:mm')}
 					</Text>
 					<Padding left="small">{timeToDisplay}</Padding>
 				</Row>
 
 				<Row>
-					<Link color="info" underlined onClick={toggleDetailsExpanded} size={FONT_SIZE}>
+					<Link color="info" underlined onClick={toggleDetailsExpanded} size={DEFAULT_FONT_SIZE}>
 						{labelShowEventDetails}
 					</Link>
 				</Row>
@@ -192,7 +195,10 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 						mainAlignment="flex-start"
 						crossAlignment="flex-start"
 					>
-						<AppointmentReminderItemDetails reminderItem={reminderItem} fontSize={FONT_SIZE} />
+						<AppointmentReminderItemDetails
+							reminderItem={reminderItem}
+							fontSize={DEFAULT_FONT_SIZE}
+						/>
 					</Row>
 				</Row>
 			</Collapse>

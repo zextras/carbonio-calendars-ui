@@ -124,15 +124,13 @@ export const ReminderModal = ({
 			{showNewTimeModal ? (
 				<SetNewAppointmentTimeModal toggleModal={toggleModal} setNewTime={setNewTime} />
 			) : (
-				<Container
-					padding={{ all: 'small' }}
-					mainAlignment="center"
-					crossAlignment="flex-start"
-					height="fit"
-					width="100%"
-				>
+				<Container mainAlignment="center" crossAlignment="flex-start" height="fit" width="100%">
 					<ModalHeader title={headerLabel} />
-					<Container maxHeight="20rem" style={{ overflow: 'auto', display: 'block' }}>
+					<Container
+						maxHeight="20rem"
+						style={{ overflow: 'auto', display: 'block' }}
+						padding={{ right: 'small' }}
+					>
 						{map(reminders, (reminder) => (
 							<AppointmentReminderItem
 								reminderItem={reminder}

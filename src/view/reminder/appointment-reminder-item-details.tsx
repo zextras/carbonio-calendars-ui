@@ -5,17 +5,17 @@
  */
 import React, { useMemo } from 'react';
 
-import { Container, Row, Shimmer, Theme } from '@zextras/carbonio-design-system';
+import { Container, Icon, Padding, Row, Shimmer, Theme } from '@zextras/carbonio-design-system';
 import { isNil, omitBy, startsWith, times } from 'lodash';
 
 import { LinkFolder } from '../../carbonio-ui-commons/types';
+import BodyMessageRenderer from '../../commons/body-message-renderer';
 import { ROOM_DIVIDER } from '../../constants';
 import { useInvite } from '../../hooks/use-invite';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
 import { ReminderItem } from '../../types/appointment-reminder';
 import { OrganizerPart } from '../event-panel-view/organizer-part';
-import { DescriptionFragmentRow } from '../event-summary-view/description-fragment-row';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { LocationRow } from '../event-summary-view/location-row';
 import { MeetingRoomsRow } from '../event-summary-view/meeting-rooms-row';
@@ -96,15 +96,25 @@ export const AppointmentReminderItemDetails = ({
 					/>
 				)}
 				{invite && !startsWith(invite.fragment ?? '', ROOM_DIVIDER) && (
-					<DescriptionFragmentRow
-						invite={invite}
-						calendarOwner={calendarOwner}
-						fontSize={fontSize}
-					/>
+					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
+						<Row width="fill" mainAlignment="flex-start" crossAlignment="flex-start">
+							<Padding right="small">
+								<Icon icon="MessageSquareOutline" size="medium" />
+							</Padding>
+							<Row takeAvailableSpace mainAlignment="flex-start">
+								<BodyMessageRenderer
+									fullInvite={invite}
+									inviteId={invite?.id}
+									parts={invite?.parts}
+									fontSize={fontSize}
+								/>
+							</Row>
+						</Row>
+					</Row>
 				)}
 			</>
 		),
-		[calendarOwner, invite, locationData]
+		[calendarOwner, fontSize, invite, locationData]
 	);
 
 	return (
