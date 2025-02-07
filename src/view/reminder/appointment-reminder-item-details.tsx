@@ -6,11 +6,10 @@
 import React, { useMemo } from 'react';
 
 import { Container, Icon, Padding, Row, Shimmer, Theme } from '@zextras/carbonio-design-system';
-import { isNil, omitBy, startsWith, times } from 'lodash';
+import { isNil, omitBy, times } from 'lodash';
 
 import { LinkFolder } from '../../carbonio-ui-commons/types';
 import BodyMessageRenderer from '../../commons/body-message-renderer';
-import { ROOM_DIVIDER } from '../../constants';
 import { useInvite } from '../../hooks/use-invite';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
@@ -95,7 +94,7 @@ export const AppointmentReminderItemDetails = ({
 						fontSize={fontSize}
 					/>
 				)}
-				{invite && !startsWith(invite.fragment ?? '', ROOM_DIVIDER) && (
+				{invite && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 						<Row width="fill" mainAlignment="flex-start" crossAlignment="flex-start">
 							<Padding right="small">
