@@ -14,6 +14,7 @@ import {
 	copyEventItem,
 	deleteEventItem,
 	editEventItem,
+	emailAttendeesEventItem,
 	exportAppointmentICSItem,
 	forwardEventItem,
 	moveEventItem,
@@ -66,6 +67,7 @@ const getInstanceActionsItems = ({ event, invite, context }: ActionsProps): Inst
 		moveEventItem({ event, context }),
 		copyEventItem({ event, invite, context }),
 		forwardEventItem({ event, context }),
+		emailAttendeesEventItem({ event, invite, context }),
 		showOriginal({ event }),
 		applyTag({ event, context }),
 		answerToEventItem({ event, invite, context }),
@@ -94,6 +96,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				deleteEventItem({ event, invite, context }),
 				copyEventItem({ event, invite, context }),
 				forwardEventItem({ event, context }),
+				emailAttendeesEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
 				answerToEventItem({ event, invite, context: contextOverride })
