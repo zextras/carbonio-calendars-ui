@@ -160,7 +160,7 @@ export function extractHtmlBody(body) {
 	return htmlBody;
 }
 
-export default function BodyMessageRenderer({ fullInvite, inviteId, parts, fontSize }) {
+export default function BodyMessageRenderer({ fullInvite, inviteId, parts, fontSize = undefined }) {
 	if (!fullInvite) return null;
 	if (typeof fullInvite.fragment === 'undefined' || fullInvite.fragment === '') {
 		return <EmptyBody />;
@@ -170,14 +170,14 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts, fontS
 		const originalHtml = fullInvite?.htmlDescription?.[0]?._content ?? '';
 		const roomHtmlDesc = roomValidationRegEx?.exec(originalHtml)?.[0];
 		const htmlContent = roomHtmlDesc ? replace(originalHtml, roomHtmlDesc, '') : originalHtml;
-		return (
+		return htmlContent ? (
 			<HtmlMessageRenderer
 				msgId={inviteId}
 				body={extractHtmlBody(htmlContent)}
 				parts={parts}
 				fontSize={fontSize}
 			/>
-		);
+		) : null;
 	}
 	const originalText = fullInvite?.textDescription?.[0]?._content ?? '';
 	const roomTextDesc = roomValidationRegEx?.exec(originalText)?.[0];
