@@ -4,13 +4,17 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { waitFor } from '@testing-library/react';
 
-import { createCopy } from './appointment-actions-fn';
+import { createCopy, emailAttendees } from './appointment-actions-fn';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
+import { PARTICIPANT_ROLE, ParticipantRoleType } from '../constants/api';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
+import { EventType } from '../types/event';
+import { Attendee, Invite } from '../types/store/invite';
 import * as editorUtils from '../utils/event';
 
 shell.getUserSettings.mockImplementation(() => ({
@@ -222,6 +226,167 @@ describe('actions', () => {
 			const storeState = store.getState();
 			const editor = storeState.editor.editors[editorId];
 			expect(editor?.calendar?.id).toBe(foldersArray[0].id);
+		});
+	});
+
+	describe('emailAttendees', () => {
+		const ORGANIZER: EventType['resource']['organizer'] = {
+			email: 'organizer@zextras.com',
+			name: 'Organizer'
+		};
+
+		function createAttendee(email: string, name: string, role: ParticipantRoleType): Attendee {
+			return {
+				a: email,
+				d: name,
+				cutype: '',
+				ptst: 'AC',
+				role,
+				rsvp: false,
+				url: ''
+			};
+		}
+
+		test('email sent to all attendees and organizer', async () => {
+			const getActionSpy = jest.spyOn(shell, 'getAction');
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+			const event = {
+				...mockedData.getEvent(),
+				resource: {
+					...mockedData.getEvent().resource,
+					organizer: ORGANIZER
+				}
+			};
+
+			const invite: Invite = {
+				...mockedData.getInvite({ event }),
+				attendees: [
+					createAttendee('attendee1@zextras.com', 'Attendee 1', PARTICIPANT_ROLE.REQUIRED)
+				]
+			};
+			const context = {
+				folders: {},
+				dispatch: store.dispatch,
+				onClose: jest.fn()
+			};
+			emailAttendees({ event, invite, context });
+			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
+				recipients: expect.arrayContaining([
+					{
+						carbonCopy: false,
+						...ORGANIZER
+					},
+					{ carbonCopy: false, email: 'attendee1@zextras.com', name: 'Attendee 1' }
+				]),
+				subject: event.title
+			});
+		});
+
+		test('exclude yourself from recipients', async () => {
+			const mySelf = shell.mockedAccount;
+			const getActionSpy = jest.spyOn(shell, 'getAction');
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+			const event = {
+				...mockedData.getEvent(),
+				resource: {
+					...mockedData.getEvent().resource,
+					organizer: ORGANIZER
+				}
+			};
+
+			const invite: Invite = {
+				...mockedData.getInvite({ event }),
+				attendees: [createAttendee(mySelf.name, 'Attendee 1', PARTICIPANT_ROLE.REQUIRED)]
+			};
+			const context = {
+				folders: {},
+				dispatch: store.dispatch,
+				onClose: jest.fn()
+			};
+			emailAttendees({ event, invite, context });
+			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
+				recipients: expect.not.arrayContaining([
+					{ carbonCopy: false, email: mySelf.name, name: 'Attendee 1' }
+				]),
+				subject: event.title
+			});
+		});
+
+		test('cc optional attendees', async () => {
+			const getActionSpy = jest.spyOn(shell, 'getAction');
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+			const event = {
+				...mockedData.getEvent(),
+				resource: {
+					...mockedData.getEvent().resource,
+					organizer: ORGANIZER
+				}
+			};
+
+			const invite: Invite = {
+				...mockedData.getInvite({ event }),
+				attendees: [
+					createAttendee('attendee1@zextras.com', 'Attendee 1', PARTICIPANT_ROLE.OPTIONAL)
+				]
+			};
+			const context = {
+				folders: {},
+				dispatch: store.dispatch,
+				onClose: jest.fn()
+			};
+			emailAttendees({ event, invite, context });
+			expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
+				recipients: expect.arrayContaining([
+					{
+						carbonCopy: false,
+						...ORGANIZER
+					},
+					{ carbonCopy: true, email: 'attendee1@zextras.com', name: 'Attendee 1' }
+				]),
+				subject: event.title
+			});
+		});
+
+		test('null invite is fetched remotely', async () => {
+			const getActionSpy = jest.spyOn(shell, 'getAction');
+
+			const store = configureStore({
+				reducer: combineReducers(reducers)
+			});
+			const event = {
+				...mockedData.getEvent(),
+				resource: {
+					...mockedData.getEvent().resource,
+					organizer: ORGANIZER
+				}
+			};
+
+			const context = {
+				folders: {},
+				dispatch: store.dispatch,
+				onClose: jest.fn()
+			};
+			emailAttendees({ event, context });
+			await waitFor(() => {
+				expect(getActionSpy).toHaveBeenCalledWith('recipients', 'mail-to', {
+					recipients: expect.arrayContaining([
+						{
+							carbonCopy: false,
+							...ORGANIZER
+						}
+					]),
+					subject: event.title
+				});
+			});
 		});
 	});
 });
