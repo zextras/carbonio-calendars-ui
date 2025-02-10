@@ -5,6 +5,7 @@
  */
 import { faker } from '@faker-js/faker';
 
+import { ROOM_DIVIDER } from '../constants';
 import { hasDescription } from './invite';
 import generateInvite from '../test/generators/invite';
 
@@ -41,12 +42,26 @@ describe('hasDescription', () => {
 		expect(hasDescription(invite)).toBe(false);
 	});
 
+	it('should return false if the invite has a description with only the reference to a meeting room', () => {
+		const invite = generateInvite({
+			context: {
+				textDescription: [
+					{ _content: `${ROOM_DIVIDER}${faker.lorem.paragraph()}${ROOM_DIVIDER}\n` }
+				]
+			}
+		});
+
+		expect(hasDescription(invite)).toBe(false);
+	});
+
 	/**
 	 * This corner case is an issue in the current implementation of the module.
 	 */
 	it('should return false if the invite has a description with only a double quote', () => {
 		const invite = generateInvite({
-			context: { textDescription: [{ _content: '"' }] }
+			context: {
+				textDescription: [{ _content: '"' }]
+			}
 		});
 
 		expect(hasDescription(invite)).toBe(false);

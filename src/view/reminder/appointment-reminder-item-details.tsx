@@ -14,6 +14,7 @@ import { useInvite } from '../../hooks/use-invite';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
 import { ReminderItem } from '../../types/appointment-reminder';
+import { hasDescription } from '../../utils/invite';
 import { OrganizerPart } from '../event-panel-view/organizer-part';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
 import { LocationRow } from '../event-summary-view/location-row';
@@ -94,7 +95,7 @@ export const AppointmentReminderItemDetails = ({
 						fontSize={fontSize}
 					/>
 				)}
-				{invite && (
+				{invite && hasDescription(invite) && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'small' }}>
 						<Row width="fill" mainAlignment="flex-start" crossAlignment="flex-start">
 							<Padding right="small">
