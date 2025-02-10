@@ -122,7 +122,7 @@ function HtmlMessageRenderer({ msgId, body, parts, fontSize = 'small' }) {
 		divRef.current && resizeObserver.observe(divRef.current);
 
 		return () => resizeObserver.disconnect();
-	}, [calculateHeight, msgId, parts, updatedBody]);
+	}, [calculateHeight, msgId, parts, remFontSize, updatedBody]);
 
 	return (
 		<div ref={divRef} className="force-white-bg" style={{ width: '100%' }}>
@@ -130,7 +130,7 @@ function HtmlMessageRenderer({ msgId, body, parts, fontSize = 'small' }) {
 				title={msgId}
 				ref={iframeRef}
 				onLoad={calculateHeight}
-				style={{ border: 'none', width: '100%' }}
+				style={{ border: 'none', width: '100%', height: '0' }}
 			/>
 		</div>
 	);
