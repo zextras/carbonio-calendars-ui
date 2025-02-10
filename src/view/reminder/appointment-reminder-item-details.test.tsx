@@ -269,9 +269,13 @@ describe('Appointment Reminder Item Details', () => {
 
 		it('should render the description if set in the invite', () => {
 			const inviteId = faker.string.uuid();
-			const description = faker.lorem.paragraphs(5);
+			const description = faker.lorem.paragraph();
 			const invite = generateInvite({
-				context: { id: inviteId, fragment: description }
+				context: {
+					id: inviteId,
+					fragment: description.substring(0, 100),
+					textDescription: [{ _content: description }]
+				}
 			});
 
 			const appointment = generateAppointment({ appointment: { inviteId } });
