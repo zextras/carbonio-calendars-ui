@@ -6,4 +6,6 @@
 import { Invite } from '../types/store/invite';
 
 export const hasDescription = (invite: Invite): boolean =>
-	invite?.textDescription?.[0]?._content?.trim() !== '';
+	invite?.textDescription?.[0]?._content !== undefined &&
+	invite?.textDescription?.[0]?._content?.trim() !== '' &&
+	invite?.textDescription?.[0]?._content?.trim() !== '"';
