@@ -49,7 +49,7 @@ function getPreferredAction(
 		if (edit && !edit.disabled) {
 			return edit;
 		}
-		return move;
+		return move ?? copy;
 	}
 	if (edit && !edit.disabled) {
 		return edit;

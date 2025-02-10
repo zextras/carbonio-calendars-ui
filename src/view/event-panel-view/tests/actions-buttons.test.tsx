@@ -159,6 +159,32 @@ describe('actions-buttons instance primary action', () => {
 		expect(screen.getByTestId('icon: move')).toBeVisible();
 	});
 
+	test('primary instance action for attendee is copy if edit and move are not available', () => {
+		const store = configureStore({
+			reducer: combineReducers(reducers),
+			preloadedState: {}
+		});
+
+		const event = {
+			...mockedData.getEvent(),
+			resource: {
+				...mockedData.getEvent().resource,
+				iAmOrganizer: false
+			}
+		};
+
+		setupTest(
+			<ActionButtons
+				actions={instanceActions.filter(
+					(a) => a.id !== EVENT_ACTIONS.EDIT && a.id !== EVENT_ACTIONS.MOVE
+				)}
+				event={event}
+			/>,
+			{ store }
+		);
+		expect(screen.getByTestId('icon: copy')).toBeVisible();
+	});
+
 	test('primary instance action for shared is edit (if available)', () => {
 		const store = configureStore({
 			reducer: combineReducers(reducers),
