@@ -129,7 +129,7 @@ export const ReminderModal = ({
 					<Container
 						maxHeight="20rem"
 						style={{ overflow: 'auto', display: 'block' }}
-						padding={{ right: 'small' }}
+						padding={{ vertical: 'small', right: 'small' }}
 					>
 						{map(reminders, (reminder) => (
 							<AppointmentReminderItem

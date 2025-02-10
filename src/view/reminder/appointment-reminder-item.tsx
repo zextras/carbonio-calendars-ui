@@ -132,7 +132,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	}, []);
 
 	return (
-		<Container padding={{ vertical: 'small' }} orientation="vertical" crossAlignment="flex-start">
+		<Container orientation="vertical" crossAlignment="flex-start">
 			<Row width={'fill'}>
 				<Icon icon="PhoneCallOutline" size="large" />
 				<Padding left="large"></Padding>
