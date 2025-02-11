@@ -28,7 +28,7 @@ import ProposedTimeReply from './parts/proposed-time-reply';
 import { ROOT_NAME } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { getRootAccountId, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
-import BodyMessageRenderer, { extractBody } from '../../commons/body-message-renderer';
+import BodyMessageRenderer from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
@@ -37,6 +37,7 @@ import { getLocalTime } from '../../normalizations/normalize-editor';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
+import { hasDescription } from '../../utils/invite';
 
 export function mailToContact(contact: object): Action | undefined {
 	const [mailTo, available] = getAction('contact-list', 'mail-to', [contact]);
@@ -159,12 +160,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
 		useGetEventTimezoneString(localStart, localEnd, invite.allDay, invite.tz);
 
-	const messageHasABody = useMemo(() => {
-		const body = extractBody(invite?.textDescription?.[0]?._content);
-		/* TODO: appointments descriptions needs a refactor. Currently appointments descriptions are created with a double
-		    quotes inside breaking the first condition */
-		return body?.length > 0 && body !== '"';
-	}, [invite?.textDescription]);
+	const messageHasABody = useMemo(() => hasDescription(invite), [invite]);
 
 	const inviteId =
 		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
@@ -472,7 +468,12 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							<Icon size="large" icon="MessageSquareOutline" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<BodyMessageRenderer fullInvite={invite} inviteId={inviteId} parts={invite?.parts} />
+							<BodyMessageRenderer
+								fullInvite={invite}
+								inviteId={inviteId}
+								parts={invite?.parts}
+								fontSize={undefined}
+							/>
 						</Row>
 					</Row>
 				)}

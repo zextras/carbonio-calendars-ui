@@ -5,17 +5,23 @@
  */
 import React, { ReactElement } from 'react';
 
-import { Icon, Row, Text } from '@zextras/carbonio-design-system';
+import { Icon, Row, Text, Theme } from '@zextras/carbonio-design-system';
 
-import { EventType } from '../../types/event';
+import { Invite } from '../../types/store/invite';
 
-export const DescriptionFragmentRow = ({ event }: { event: EventType }): ReactElement => (
+export const DescriptionFragmentRow = ({
+	invite,
+	calendarOwner,
+	fontSize = 'medium'
+}: {
+	invite: Invite;
+	calendarOwner?: string;
+	fontSize?: keyof typeof Theme.sizes.font;
+}): ReactElement => (
 	<>
-		{event.resource.class === 'PRI' &&
-		!event?.resource?.iAmOrganizer &&
-		!event?.resource?.calendar?.owner ? null : (
+		{invite.class === 'PRI' && !invite.isOrganizer && !calendarOwner ? null : (
 			<>
-				{event.resource.fragment && event.resource.fragment.length > 0 && (
+				{invite.fragment && invite.fragment.length > 0 && (
 					<Row
 						width="fill"
 						crossAlignment="flex-start"
@@ -26,7 +32,9 @@ export const DescriptionFragmentRow = ({ event }: { event: EventType }): ReactEl
 							<Icon icon="MessageSquareOutline" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<Text overflow="break-word">{event.resource.fragment}</Text>
+							<Text overflow="break-word" size={fontSize}>
+								{invite.fragment}
+							</Text>
 						</Row>
 					</Row>
 				)}

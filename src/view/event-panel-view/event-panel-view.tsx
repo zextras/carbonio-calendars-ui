@@ -20,8 +20,7 @@ import { ReminderPart } from './reminder-part';
 import { ReplyButtonsPart } from './reply-buttons-part';
 import { isAnInvite } from '../../actions/appointment-actions-items';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
-import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
-import { extractBody } from '../../commons/body-message-renderer';
+import { LinkFolder } from '../../carbonio-ui-commons/types';
 import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
 import { useEventActions } from '../../hooks/use-event-actions';
@@ -34,6 +33,7 @@ import { PanelView } from '../../types/actions';
 import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
 import { ExceptionReference } from '../../types/store/appointments';
+import { hasDescription } from '../../utils/invite';
 
 const BodyContainer = styled(Container)`
 	overflow-y: auto;
@@ -123,12 +123,7 @@ export default function EventPanelView(): ReactElement | null {
 		[event?.resource?.alarmData]
 	);
 
-	const messageHasABody = useMemo(() => {
-		const body = extractBody(invite?.textDescription?.[0]?._content ?? '');
-		/* TODO: appointments descriptions needs a refactor. Currently appointments descriptions are created with a double
-		    quotes inside breaking the first condition */
-		return body?.length > 0 && body !== '"';
-	}, [invite?.textDescription]);
+	const messageHasABody = useMemo(() => (invite ? hasDescription(invite) : false), [invite]);
 
 	if (!event || !invite) {
 		return null;
