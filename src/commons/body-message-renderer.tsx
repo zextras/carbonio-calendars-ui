@@ -5,18 +5,20 @@
  */
 import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 
-import { Container, Text } from '@zextras/carbonio-design-system';
+import { Container, Text, Theme, useTheme } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNull, replace } from 'lodash';
 
 import { ROOM_DIVIDER } from '../constants';
+import type { Invite, Parts } from '../types/store/invite';
 
 export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER}`, 's');
 
-const replaceLinkToAnchor = (content) => {
+const replaceLinkToAnchor = (content: string): string => {
 	if (content === '' || content === undefined) {
 		return '';
 	}
+
 	return content.replace(
 		/(?:https?:\/\/|www\.)+(?![^\s]*?")([\w.,@?!^=%&amp;:()/~+#-]*[\w@?!^=%&amp;()/~+#-])?/gi,
 		(url) => {
@@ -36,13 +38,38 @@ const replaceLinkToAnchor = (content) => {
 	);
 };
 
-const plainTextToHTML = (str) => {
+const plainTextToHTML = (str: string): string => {
 	if (str !== undefined && str !== null) {
 		return str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
 	}
 	return '';
 };
-function TextMessageRenderer({ text }) {
+
+export const extractBody = (body: string): string => {
+	if (body) {
+		const defaultMessage = roomValidationRegEx.exec(body)?.[0];
+		const stripDefaultRoomMessage = defaultMessage ? replace(body, defaultMessage, '') : body;
+		return stripDefaultRoomMessage.trim();
+	}
+	return '';
+};
+
+export const extractHtmlBody = (body: string): string => {
+	let htmlBody = extractBody(body);
+	if (htmlBody.startsWith('</div>')) {
+		htmlBody = `<html>${htmlBody.slice(12)}`;
+	}
+
+	return htmlBody;
+};
+
+const TextMessageRenderer = ({
+	text,
+	fontSize = 'medium'
+}: {
+	text: string;
+	fontSize?: keyof typeof Theme.sizes.font;
+}): React.JSX.Element => {
 	const convertedHTML = useMemo(() => replaceLinkToAnchor(plainTextToHTML(text)), [text]);
 	return (
 		<Text
@@ -50,28 +77,37 @@ function TextMessageRenderer({ text }) {
 				__html: convertedHTML
 			}}
 			overflow="break-word"
+			size={fontSize}
 		/>
 	);
-}
+};
 
-function HtmlMessageRenderer({ msgId, body, parts }) {
-	const iframeRef = useRef();
-	const divRef = useRef();
+const HtmlMessageRenderer = ({
+	msgId,
+	body,
+	parts,
+	fontSize = 'small'
+}: {
+	msgId: string;
+	body: string;
+	parts: Parts;
+	fontSize?: keyof typeof Theme.sizes.font;
+}): React.JSX.Element => {
+	const iframeRef = useRef<HTMLIFrameElement>(null);
+	const divRef = useRef<HTMLDivElement>(null);
 
-	const convertInRem = useCallback((px, base = 16) => {
-		let tempPx = px;
-		if (typeof px === 'string' || px instanceof String) tempPx = tempPx.replace('px', '');
+	const remFontSize = useTheme().sizes.font?.[fontSize] ?? '0.875rem';
 
-		tempPx = parseInt(tempPx, 10);
-		return `${(1 / base) * tempPx}rem`;
-	}, []);
+	const convertInRem = useCallback((px: number) => `${(1 / 16) * px}rem`, []);
 
 	const calculateHeight = useCallback(() => {
-		if (!isNull(iframeRef.current)) {
-			const scrollHeight = iframeRef.current.contentDocument.querySelector('html')?.scrollHeight;
-			iframeRef.current.style.height = '0';
-			iframeRef.current.style.height = convertInRem(scrollHeight ?? '0');
+		if (isNull(iframeRef?.current) || isNull(iframeRef.current.contentDocument)) {
+			return;
 		}
+
+		const scrollHeight = iframeRef.current.contentDocument.querySelector('html')?.scrollHeight;
+		iframeRef.current.style.height = '0';
+		iframeRef.current.style.height = convertInRem(scrollHeight ?? 0);
 	}, [convertInRem]);
 
 	const updatedBody = useMemo(() => replaceLinkToAnchor(body), [body]);
@@ -84,13 +120,12 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		}
 		const styleTag = document.createElement('style');
 		styleTag.textContent = `
-			max-width: 100% !important;
 			body {
 				max-width: 100% !important;
 				margin: 0;
 				overflow-y: hidden;
 				font-family: Roboto, sans-serif;
-				font-size: 0.875rem;
+				font-size: ${remFontSize};
 				background-color: #ffffff;
 			}
 			body pre, body pre * {
@@ -119,7 +154,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		divRef.current && resizeObserver.observe(divRef.current);
 
 		return () => resizeObserver.disconnect();
-	}, [calculateHeight, msgId, parts, updatedBody]);
+	}, [calculateHeight, msgId, parts, remFontSize, updatedBody]);
 
 	return (
 		<div ref={divRef} className="force-white-bg" style={{ width: '100%' }}>
@@ -127,39 +162,34 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 				title={msgId}
 				ref={iframeRef}
 				onLoad={calculateHeight}
-				style={{ border: 'none', width: '100%' }}
+				style={{ border: 'none', width: '100%', height: '0' }}
 			/>
 		</div>
 	);
-}
+};
 
-const EmptyBody = () => (
+const EmptyBody = (): React.JSX.Element => (
 	<Container padding={{ bottom: 'medium' }}>
 		<Text>{`(${t('message.invite_has_no_message', 'This invite has no text message')}.)`}</Text>
 	</Container>
 );
 
-export function extractBody(body) {
-	if (body) {
-		const defaultMessage = roomValidationRegEx.exec(body)?.[0];
-		const stripDefaultRoomMessage = defaultMessage ? replace(body, defaultMessage, '') : body;
-		return stripDefaultRoomMessage.trim();
+const BodyMessageRenderer = ({
+	fullInvite,
+	inviteId,
+	parts,
+	fontSize
+}: {
+	fullInvite: Invite;
+	inviteId: string;
+	parts: Parts;
+	fontSize?: keyof typeof Theme.sizes.font;
+}): React.JSX.Element | null => {
+	if (!fullInvite) {
+		return null;
 	}
-	return '';
-}
 
-export function extractHtmlBody(body) {
-	let htmlBody = extractBody(body);
-	if (htmlBody.startsWith('</div>')) {
-		htmlBody = `<html>${htmlBody.slice(12)}`;
-	}
-
-	return htmlBody;
-}
-
-export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
-	if (!fullInvite) return null;
-	if (typeof fullInvite.fragment === 'undefined' || fullInvite.fragment === '') {
+	if (fullInvite.fragment === undefined || fullInvite.fragment === '') {
 		return <EmptyBody />;
 	}
 
@@ -168,11 +198,18 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 		const roomHtmlDesc = roomValidationRegEx?.exec(originalHtml)?.[0];
 		const htmlContent = roomHtmlDesc ? replace(originalHtml, roomHtmlDesc, '') : originalHtml;
 		return (
-			<HtmlMessageRenderer msgId={inviteId} body={extractHtmlBody(htmlContent)} parts={parts} />
+			<HtmlMessageRenderer
+				msgId={inviteId}
+				body={extractHtmlBody(htmlContent)}
+				parts={parts}
+				fontSize={fontSize}
+			/>
 		);
 	}
 	const originalText = fullInvite?.textDescription?.[0]?._content ?? '';
 	const roomTextDesc = roomValidationRegEx?.exec(originalText)?.[0];
 	const textContent = roomTextDesc ? replace(originalText, roomTextDesc, '') : originalText;
-	return <TextMessageRenderer text={extractBody(textContent)} />;
-}
+	return <TextMessageRenderer text={extractBody(textContent)} fontSize={fontSize} />;
+};
+
+export default BodyMessageRenderer;

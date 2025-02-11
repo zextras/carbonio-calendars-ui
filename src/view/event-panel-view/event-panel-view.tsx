@@ -124,7 +124,7 @@ export default function EventPanelView(): ReactElement | null {
 	);
 
 	const messageHasABody = useMemo(() => {
-		const body = extractBody(invite?.textDescription?.[0]?._content);
+		const body = extractBody(invite?.textDescription?.[0]?._content ?? '');
 		/* TODO: appointments descriptions needs a refactor. Currently appointments descriptions are created with a double
 		    quotes inside breaking the first condition */
 		return body?.length > 0 && body !== '"';
