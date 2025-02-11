@@ -3,16 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Container, Text } from '@zextras/carbonio-design-system';
+import { AnyColor, Container, Text } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
 
-export const Square = styled.div<{ color?: string }>`
+export const Square = styled.div<{ $color: AnyColor }>`
 	width: 1.125rem;
 	height: 1.125rem;
 	position: relative;
 	top: -0.1875rem;
 	border: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
-	background: ${({ color }): string | undefined => color};
+	background: ${({ $color }): string | undefined => $color};
 	border-radius: 0.25rem;
 `;
 export const ColorContainer = styled(Container)`

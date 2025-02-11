@@ -6,18 +6,13 @@
 
 import React, { useCallback, useState } from 'react';
 
-import {
-	ChipInput,
-	ChipItem,
-	Container,
-	Divider,
-	Text,
-	useSnackbar
-} from '@zextras/carbonio-design-system';
-import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
+import { Container, Divider, Text, useSnackbar } from '@zextras/carbonio-design-system';
+import { t } from '@zextras/carbonio-shell-ui';
 
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
+import { useContactInput } from '../../carbonio-ui-commons/integrations/hooks';
+import { ContactInputItem } from '../../carbonio-ui-commons/integrations/types';
 import { forwardAppointmentRequest } from '../../soap/forward-appointment-request';
 
 type ForwardAppointmentModalProps = {
@@ -25,22 +20,12 @@ type ForwardAppointmentModalProps = {
 	onClose: () => void;
 };
 
-type ContactType = {
-	company?: string;
-	email: string;
-	firstName?: string;
-	fullName?: string;
-	id?: string;
-	label?: string;
-	lastName?: string;
-};
-
 export const ForwardAppointmentModal = ({
 	eventId,
 	onClose
 }: ForwardAppointmentModalProps): React.JSX.Element => {
-	const [contacts, setContacts] = useState<ContactType[]>([]);
-	const [ContactInput, integrationAvailable] = useIntegratedComponent('contact-input');
+	const [contacts, setContacts] = useState<ContactInputItem[]>([]);
+	const ContactInput = useContactInput();
 	const createSnackbar = useSnackbar();
 	const modalHeaderTitle = t('modal.forwardAppointment.title', 'Forward appointment');
 	const modalContent = t(
@@ -49,18 +34,7 @@ export const ForwardAppointmentModal = ({
 	);
 	const onConfirmButtonLabel = t('modal.buttonLabel.forward', 'Forward');
 	const inputPlaceholder = t('modal.forwardAppointment.placeholder', 'Add new attendees');
-	const onChipInputChange = useCallback((items: ChipItem[]) => {
-		setContacts(
-			items.map<ContactType>(
-				(item) =>
-					({
-						address: item.label,
-						email: item.label
-					}) as ContactType
-			)
-		);
-	}, []);
-	const onContactChange = useCallback((users: ContactType[]) => setContacts(users), []);
+	const onContactChange = useCallback((users: ContactInputItem[]) => setContacts(users), []);
 	const disabled = contacts.length === 0;
 	const invokeErrorSnackbar = useCallback((): void => {
 		createSnackbar({
@@ -75,7 +49,7 @@ export const ForwardAppointmentModal = ({
 	const onConfirm = useCallback(async () => {
 		const response = await forwardAppointmentRequest({
 			id: eventId,
-			attendees: contacts.map((contact) => contact.email)
+			attendees: contacts.map((contact) => contact.value.email)
 		})
 			.catch(() => {
 				invokeErrorSnackbar();
@@ -115,22 +89,12 @@ export const ForwardAppointmentModal = ({
 				<Container>
 					<Text overflow="break-word">{modalContent}</Text>
 					<Container height="fit" padding={{ top: 'medium' }}>
-						{integrationAvailable ? (
-							<ContactInput
-								data-testid={'forward-appointment-contact-input'}
-								placeholder={inputPlaceholder}
-								onChange={onContactChange}
-								defaultValue={contacts}
-								disablePortal
-							/>
-						) : (
-							<ChipInput
-								data-testid={'forward-appointment-input'}
-								placeholder={inputPlaceholder}
-								onChange={onChipInputChange}
-								defaultValue={contacts}
-							/>
-						)}
+						<ContactInput
+							data-testid={'forward-appointment-input'}
+							placeholder={inputPlaceholder}
+							onChange={onContactChange}
+							defaultValue={contacts}
+						/>
 					</Container>
 					<Divider color="primary" />
 					<ModalFooter onConfirm={onConfirm} label={onConfirmButtonLabel} disabled={disabled} />

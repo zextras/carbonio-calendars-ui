@@ -6,7 +6,7 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
-import { Spinner, replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { size } from 'lodash';
 import styled from 'styled-components';
 
@@ -14,6 +14,7 @@ import { ModifyStandardMessageModal } from './modify-standard-message-modal';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
+import { CenteredSpinner } from '../../components/CenteredSpinner';
 import { useDeleteActions, UseDeleteActionsType } from '../../hooks/use-delete-actions';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
@@ -77,7 +78,7 @@ const DeleteEventModalContent = ({
 			<ModalHeader title={title} onClose={onClose} />
 			<Container
 				padding={{ vertical: 'medium' }}
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 			>
 				<Text overflow="break-word">{displayMessage}</Text>
@@ -230,6 +231,6 @@ export const DeleteEventModal = ({
 			)}
 		</Container>
 	) : (
-		<Spinner />
+		<CenteredSpinner />
 	);
 };

@@ -35,7 +35,12 @@ export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): Reac
 			height="fit"
 			padding={{ left: 'small' }}
 		>
-			<BodyMessageRenderer fullInvite={fullInvite} inviteId={inviteId} parts={parts} />
+			<BodyMessageRenderer
+				fullInvite={fullInvite}
+				inviteId={inviteId}
+				parts={parts}
+				fontSize={undefined}
+			/>
 		</Container>
 	</Container>
 );

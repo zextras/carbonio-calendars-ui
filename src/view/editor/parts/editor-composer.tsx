@@ -124,7 +124,7 @@ const HtmlComposer = ({
 	editorId
 }: {
 	editorId: string;
-	Composer: React.FunctionComponent<Record<string, unknown>>;
+	Composer: React.ComponentType<Record<string, unknown>>;
 }): React.JSX.Element => {
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const richText = useAppSelector(selectEditorRichText(editorId));

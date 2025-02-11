@@ -5,23 +5,13 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import {
-	Container,
-	ContainerProps,
-	Divider,
-	Dropdown,
-	Icon,
-	IconButton,
-	Row,
-	Text,
-	Tooltip
-} from '@zextras/carbonio-design-system';
+import { Container, Divider, Icon, Row, Text, Button } from '@zextras/carbonio-design-system';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
-import { filter, find, noop } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
+import ActionButtons from './actions-buttons';
 import { AttachmentsBlock } from './attachments-block';
 import { DetailsPart } from './details-part';
 import { MessagePart } from './message-part';
@@ -29,14 +19,10 @@ import { ParticipantsPart } from './participants-part';
 import { ReminderPart } from './reminder-part';
 import { ReplyButtonsPart } from './reply-buttons-part';
 import { isAnInvite } from '../../actions/appointment-actions-items';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
-import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
-import { extractBody } from '../../commons/body-message-renderer';
+import { LinkFolder } from '../../carbonio-ui-commons/types';
 import StyledDivider from '../../commons/styled-divider';
 import { PANEL_VIEW } from '../../constants';
-import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
@@ -47,12 +33,13 @@ import { PanelView } from '../../types/actions';
 import { EventType } from '../../types/event';
 import { RouteParams } from '../../types/route-params';
 import { ExceptionReference } from '../../types/store/appointments';
+import { hasDescription } from '../../utils/invite';
 
 const BodyContainer = styled(Container)`
 	overflow-y: auto;
 `;
 
-const AppointmentCardContainer = styled(Container)<ContainerProps & { expanded?: boolean }>`
+const AppointmentCardContainer = styled(Container)`
 	z-index: 10;
 	position: absolute;
 	top: 1rem;
@@ -65,126 +52,6 @@ const AppointmentCardContainer = styled(Container)<ContainerProps & { expanded?:
 	max-height: 100%;
 	padding: 0;
 `;
-
-const ActionButtons = ({
-	actions,
-	event
-}: {
-	actions: Array<any>;
-	event: EventType;
-}): ReactElement | null => {
-	const primaryAction = useMemo(() => {
-		if (event) {
-			if (hasId(event.resource.calendar, FOLDERS.TRASH)) {
-				return find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.MOVE]);
-			}
-			if (!event.resource.ridZ) {
-				// SERIES ACTIONS
-				const move = find(actions?.[1]?.items ?? actions, ['id', EVENT_ACTIONS.MOVE]);
-				const edit = find(actions?.[1]?.items ?? actions, ['id', EVENT_ACTIONS.EDIT]);
-				const copy = find(actions?.[1]?.items ?? actions, ['id', EVENT_ACTIONS.CREATE_COPY]);
-				if (!event.resource.iAmOrganizer && !event.isShared) {
-					if (!edit.disabled) {
-						return edit;
-					}
-					return move;
-				}
-				if (!edit.disabled) {
-					return edit;
-				}
-				return copy;
-			}
-			// INSTANCE ACTIONS
-			const move = find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.MOVE]);
-			const edit = find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.EDIT]);
-			const copy = find(actions?.[0]?.items ?? actions, ['id', EVENT_ACTIONS.CREATE_COPY]);
-			if (!event.resource.iAmOrganizer && !event.isShared) {
-				if (!edit.disabled) {
-					return edit;
-				}
-				return move ?? copy;
-			}
-			if (!edit.disabled) {
-				return edit;
-			}
-			return copy;
-		}
-		return undefined;
-	}, [actions, event]);
-
-	const otherActions = useMemo(() => {
-		if (event && primaryAction) {
-			if (!event.resource.ridZ) {
-				return filter(
-					actions?.[1]?.items ?? actions,
-					(a) =>
-						!a.disabled &&
-						a.id !== EVENT_ACTIONS.EXPAND &&
-						a.id !== EVENT_ACTIONS.ACCEPT &&
-						a.id !== EVENT_ACTIONS.TENTATIVE &&
-						a.id !== EVENT_ACTIONS.DECLINE &&
-						a.id !== EVENT_ACTIONS.PROPOSE_NEW_TIME &&
-						a.id !== primaryAction.id
-				);
-			}
-			return filter(
-				actions?.[0]?.items ?? actions,
-				(a) =>
-					!a.disabled &&
-					a.id !== EVENT_ACTIONS.EXPAND &&
-					a.id !== EVENT_ACTIONS.ACCEPT &&
-					a.id !== EVENT_ACTIONS.TENTATIVE &&
-					a.id !== EVENT_ACTIONS.DECLINE &&
-					a.id !== EVENT_ACTIONS.PROPOSE_NEW_TIME &&
-					a.id !== primaryAction.id
-			);
-		}
-		return undefined;
-	}, [actions, event, primaryAction]);
-
-	return primaryAction ? (
-		<Row wrap="nowrap" height="100%" mainAlignment="flex-end" style={{ maxWidth: '10rem' }}>
-			<Row height="2.5rem" mainAlignment="flex-start" style={{ overflow: 'hidden' }}>
-				{primaryAction && primaryAction?.items ? (
-					<Dropdown items={primaryAction.items} key={`button ${primaryAction.id}`}>
-						<Row takeAvailableSpace>
-							<Tooltip placement="top" label={primaryAction.label}>
-								<IconButton icon="TagsMoreOutline" onClick={noop} />
-							</Tooltip>
-						</Row>
-					</Dropdown>
-				) : (
-					<Tooltip placement="top" label={primaryAction.label}>
-						<IconButton
-							key={primaryAction.id}
-							icon={primaryAction.icon}
-							onClick={primaryAction.onClick}
-						/>
-					</Tooltip>
-				)}
-			</Row>
-			{otherActions && otherActions?.length > 0 && (
-				<>
-					{otherActions.length > 1 ? (
-						<Dropdown items={otherActions}>
-							<Row takeAvailableSpace>
-								<IconButton icon="MoreVertical" onClick={noop} />
-							</Row>
-						</Dropdown>
-					) : (
-						<Tooltip placement="top" label={otherActions?.[0]?.label}>
-							<IconButton
-								key={otherActions?.[0]?.id}
-								icon={otherActions?.[0]?.icon}
-								onClick={otherActions?.[0]?.onClick}
-							/>
-						</Tooltip>
-					)}
-				</>
-			)}
-		</Row>
-	) : null;
-};
 
 export const DisplayerHeader = ({
 	event,
@@ -219,7 +86,7 @@ export const DisplayerHeader = ({
 					</Text>
 				</Row>
 				<Row padding={{ right: 'extrasmall' }}>
-					<IconButton size="medium" icon="CloseOutline" onClick={close} />
+					<Button type="ghost" color="text" size="medium" icon="CloseOutline" onClick={close} />
 				</Row>
 			</Row>
 			<Divider />
@@ -256,12 +123,7 @@ export default function EventPanelView(): ReactElement | null {
 		[event?.resource?.alarmData]
 	);
 
-	const messageHasABody = useMemo(() => {
-		const body = extractBody(invite?.textDescription?.[0]?._content);
-		/* TODO: appointments descriptions needs a refactor. Currently appointments descriptions are created with a double
-		    quotes inside breaking the first condition */
-		return body?.length > 0 && body !== '"';
-	}, [invite?.textDescription]);
+	const messageHasABody = useMemo(() => (invite ? hasDescription(invite) : false), [invite]);
 
 	if (!event || !invite) {
 		return null;
@@ -271,7 +133,7 @@ export default function EventPanelView(): ReactElement | null {
 		<AppointmentCardContainer mainAlignment="flex-start">
 			<DisplayerHeader event={event} panelView={PANEL_VIEW.APP} />
 			<Container
-				padding={{ all: 'none' }}
+				padding={{ all: 0 }}
 				mainAlignment="flex-start"
 				height="calc(100% - 3rem)"
 				style={{ overflow: 'auto' }}
@@ -287,7 +149,7 @@ export default function EventPanelView(): ReactElement | null {
 					<DetailsPart
 						event={event}
 						subject={event.title}
-						isPrivate={event.resource.class === 'PRI' ?? false}
+						isPrivate={event.resource.class === 'PRI'}
 						inviteNeverSent={invite.neverSent}
 						invite={invite}
 					/>

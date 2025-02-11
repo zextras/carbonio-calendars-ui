@@ -6,7 +6,7 @@
 import { useMemo } from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
-import { replaceHistory, t, useTags } from '@zextras/carbonio-shell-ui';
+import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { compact, find, omit } from 'lodash';
 
 import {
@@ -14,6 +14,7 @@ import {
 	copyEventItem,
 	deleteEventItem,
 	editEventItem,
+	emailAttendeesEventItem,
 	exportAppointmentICSItem,
 	forwardEventItem,
 	moveEventItem,
@@ -22,8 +23,10 @@ import {
 } from '../actions/appointment-actions-items';
 import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
+import { useTags } from '../carbonio-ui-commons/store/zustand/tags';
 import { LinkFolder } from '../carbonio-ui-commons/types/folder';
 import { isLinkChild } from '../commons/utilities';
+import { EVENT_ACTIONS } from '../constants/event-actions';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
 import { selectInstanceInvite } from '../store/selectors/invites';
 import {
@@ -35,7 +38,6 @@ import {
 	PanelView,
 	SeriesActionsItems
 } from '../types/actions';
-import { EVENT_ACTIONS } from '../constants/event-actions';
 import { EventType } from '../types/event';
 import { applyTag, createAndApplyTag } from '../view/tags/tag-actions';
 
@@ -65,6 +67,7 @@ const getInstanceActionsItems = ({ event, invite, context }: ActionsProps): Inst
 		moveEventItem({ event, context }),
 		copyEventItem({ event, invite, context }),
 		forwardEventItem({ event, context }),
+		emailAttendeesEventItem({ event, invite, context }),
 		showOriginal({ event }),
 		applyTag({ event, context }),
 		answerToEventItem({ event, invite, context }),
@@ -93,6 +96,7 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 				deleteEventItem({ event, invite, context }),
 				copyEventItem({ event, invite, context }),
 				forwardEventItem({ event, context }),
+				emailAttendeesEventItem({ event, invite, context }),
 				showOriginal({ event }),
 				applyTag({ event, context }),
 				answerToEventItem({ event, invite, context: contextOverride })

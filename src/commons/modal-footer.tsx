@@ -3,9 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable import/extensions */
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 
 import { Button, Container, Divider, Padding, Tooltip } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
@@ -33,78 +31,101 @@ const ModalFooter: FC<ModalFooterProps> = ({
 	additionalBtnType = 'outlined',
 	additionalColor = 'secondary',
 	additionalLabel = t('label.cancel', 'cancel')
-}): ReactElement => (
-	<Container mainAlignment={mainAlignment} crossAlignment={crossAlignment}>
-		{showDivider && (
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="center"
-				crossAlignment="flex-start"
-				orientation="horizontal"
-				height="fit"
-			>
-				<Divider />
-			</Container>
-		)}
-		<Container orientation="horizontal" mainAlignment="space-between">
-			{additionalAction && (
-				<Container orientation="horizontal" width="fit">
-					<Button
-						color={additionalColor}
-						type={additionalBtnType}
-						onClick={additionalAction}
-						label={additionalLabel}
-						width="fit"
-					/>
-					<Padding horizontal="extrasmall" />
+}): ReactElement => {
+	const secondaryButtonTypeAndColor = useMemo(() => {
+		if (secondaryBtnType === 'ghost') {
+			return { type: secondaryBtnType, color: secondaryColor };
+		}
+		if (secondaryBtnType === 'default') {
+			return {
+				type: secondaryBtnType,
+				backgroundColor: secondaryColor || secondarybackground
+			};
+		}
+		return {
+			type: secondaryBtnType,
+			labelColor: secondaryColor,
+			backgroundColor: secondarybackground
+		};
+	}, [secondaryBtnType, secondaryColor, secondarybackground]);
+
+	const primaryButtonTypeAndColor = useMemo(() => {
+		if (primaryBtnType === 'ghost') {
+			return { type: primaryBtnType, color };
+		}
+		if (primaryBtnType === 'default') {
+			return { type: primaryBtnType, backgroundColor: color || background };
+		}
+		return { type: primaryBtnType, labelColor: color, backgroundColor: background };
+	}, [background, color, primaryBtnType]);
+
+	return (
+		<Container mainAlignment={mainAlignment} crossAlignment={crossAlignment}>
+			{showDivider && (
+				<Container
+					padding={{ top: 'small', bottom: 'small' }}
+					mainAlignment="center"
+					crossAlignment="flex-start"
+					orientation="horizontal"
+					height="fit"
+				>
+					<Divider />
 				</Container>
 			)}
-			<Container
-				padding={{ top: 'small', bottom: 'small' }}
-				mainAlignment="flex-end"
-				crossAlignment="flex-start"
-				orientation="horizontal"
-				height="fit"
-			>
-				{secondaryAction && (
-					<>
+			<Container orientation="horizontal" mainAlignment="space-between">
+				{additionalAction && (
+					<Container orientation="horizontal" width="fit">
 						<Button
-							backgroundColor={secondarybackground}
-							color={secondaryColor}
-							type={secondaryBtnType}
-							onClick={secondaryAction}
-							label={secondaryLabel}
-							disabled={secondaryDisabled}
+							color={additionalColor}
+							type={additionalBtnType}
+							onClick={additionalAction}
+							label={additionalLabel}
 							width="fit"
 						/>
 						<Padding horizontal="extrasmall" />
-					</>
+					</Container>
 				)}
-				{tooltip ? (
-					<Tooltip label={tooltip} placement="top" maxWidth="fit">
+				<Container
+					padding={{ top: 'small', bottom: 'small' }}
+					mainAlignment="flex-end"
+					crossAlignment="flex-start"
+					orientation="horizontal"
+					height="fit"
+				>
+					{secondaryAction && (
+						<>
+							<Button
+								{...secondaryButtonTypeAndColor}
+								onClick={secondaryAction}
+								label={secondaryLabel}
+								disabled={secondaryDisabled}
+								width="fit"
+							/>
+							<Padding horizontal="extrasmall" />
+						</>
+					)}
+					{tooltip ? (
+						<Tooltip label={tooltip} placement="top" maxWidth="fit">
+							<Button
+								width="fit"
+								onClick={onConfirm}
+								label={label}
+								disabled={disabled}
+								{...primaryButtonTypeAndColor}
+							/>
+						</Tooltip>
+					) : (
 						<Button
 							width="fit"
-							color={color}
 							onClick={onConfirm}
 							label={label}
-							type={primaryBtnType}
 							disabled={disabled}
-							backgroundColor={color || background}
+							{...primaryButtonTypeAndColor}
 						/>
-					</Tooltip>
-				) : (
-					<Button
-						width="fit"
-						color={color}
-						onClick={onConfirm}
-						label={label}
-						type={primaryBtnType}
-						disabled={disabled}
-						backgroundColor={color || background}
-					/>
-				)}
+					)}
+				</Container>
 			</Container>
 		</Container>
-	</Container>
-);
+	);
+};
 export default ModalFooter;

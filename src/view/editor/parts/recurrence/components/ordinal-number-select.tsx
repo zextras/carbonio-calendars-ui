@@ -48,7 +48,7 @@ export const OrdinalNumberSelect = ({
 			label={t('label.number', 'Number')}
 			onChange={onBySetPosChange}
 			disablePortal
-			width="fit"
+			width="fit-content"
 			disabled={disabled}
 			selection={value}
 		/>

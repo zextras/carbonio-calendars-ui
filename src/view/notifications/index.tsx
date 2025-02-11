@@ -5,6 +5,13 @@
  */
 import React, { ReactElement, FC, useEffect } from 'react';
 
+declare global {
+	interface NotificationOptions {
+		// experimental feature, see https://developer.mozilla.org/en-US/docs/Web/API/Notification/vibrate
+		vibrate?: number[];
+	}
+}
+
 export const showNotification = (title: string, body: string): void => {
 	// eslint-disable-next-line no-new
 	new Notification(title, {

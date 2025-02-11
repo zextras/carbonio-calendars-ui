@@ -83,7 +83,7 @@ export const EditorDailyPlannerController = ({
 
 	const participants = [
 		{
-			email: sender.address ?? '',
+			email: sender.email ?? '',
 			type: DAILY_PLANNER_PARTICIPANT_TYPE.organizer,
 			fullName: sender.fullName
 		},

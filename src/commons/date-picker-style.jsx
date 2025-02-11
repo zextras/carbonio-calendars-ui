@@ -217,7 +217,7 @@ const Styler = styled(Container)`
 		display: table-cell;
 	}
 	.rw-widget-picker > .rw-select {
-		width: ${({ allDay }) => (allDay ? '2.125rem' : '4.25rem')};
+		width: ${({ $allDay }) => ($allDay ? '2.125rem' : '4.25rem')};
 		white-space: nowrap;
 	}
 	.rw-open > .rw-widget-picker {

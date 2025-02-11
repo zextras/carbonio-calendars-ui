@@ -5,12 +5,12 @@
  */
 import { TFunction } from 'i18next';
 
-import { ApiError } from './api-error';
+import { GenericSoapApiError } from '../../carbonio-ui-commons/soap/errors/generic-soap-api-error';
 
-export class ModifyCalendarGroupError extends ApiError {
+export class ModifyCalendarGroupError extends GenericSoapApiError {
 	private static GROUP_NAME_ALREADY_EXISTS = 'calendargroup.GROUP_NAME_ALREADY_EXIST';
 
-	getLocalizedMessage(t: TFunction): string {
+	override getLocalizedMessage(t: TFunction): string {
 		if (this.fault.Detail.Error.Code === ModifyCalendarGroupError.GROUP_NAME_ALREADY_EXISTS) {
 			return t(
 				'api.error.ModifyCalendarGroup.group_name_already_exists',
@@ -18,6 +18,6 @@ export class ModifyCalendarGroupError extends ApiError {
 			);
 		}
 
-		return ApiError.getDefaultLocalizedMessage(t);
+		return super.getLocalizedMessage(t);
 	}
 }

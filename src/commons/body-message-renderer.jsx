@@ -8,6 +8,7 @@ import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isNull, replace } from 'lodash';
+import { useTheme } from 'styled-components';
 
 import { ROOM_DIVIDER } from '../constants';
 
@@ -42,7 +43,7 @@ const plainTextToHTML = (str) => {
 	}
 	return '';
 };
-function TextMessageRenderer({ text }) {
+function TextMessageRenderer({ text, fontSize = 'medium' }) {
 	const convertedHTML = useMemo(() => replaceLinkToAnchor(plainTextToHTML(text)), [text]);
 	return (
 		<Text
@@ -50,13 +51,16 @@ function TextMessageRenderer({ text }) {
 				__html: convertedHTML
 			}}
 			overflow="break-word"
+			size={fontSize}
 		/>
 	);
 }
 
-function HtmlMessageRenderer({ msgId, body, parts }) {
+function HtmlMessageRenderer({ msgId, body, parts, fontSize = 'small' }) {
 	const iframeRef = useRef();
 	const divRef = useRef();
+
+	const remFontSize = useTheme().sizes.font?.[fontSize] ?? '0.875rem';
 
 	const convertInRem = useCallback((px, base = 16) => {
 		let tempPx = px;
@@ -84,13 +88,12 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		}
 		const styleTag = document.createElement('style');
 		styleTag.textContent = `
-			max-width: 100% !important;
 			body {
 				max-width: 100% !important;
 				margin: 0;
 				overflow-y: hidden;
 				font-family: Roboto, sans-serif;
-				font-size: 0.875rem;
+				font-size: ${remFontSize};
 				background-color: #ffffff;
 			}
 			body pre, body pre * {
@@ -119,7 +122,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 		divRef.current && resizeObserver.observe(divRef.current);
 
 		return () => resizeObserver.disconnect();
-	}, [calculateHeight, msgId, parts, updatedBody]);
+	}, [calculateHeight, msgId, parts, remFontSize, updatedBody]);
 
 	return (
 		<div ref={divRef} className="force-white-bg" style={{ width: '100%' }}>
@@ -127,7 +130,7 @@ function HtmlMessageRenderer({ msgId, body, parts }) {
 				title={msgId}
 				ref={iframeRef}
 				onLoad={calculateHeight}
-				style={{ border: 'none', width: '100%' }}
+				style={{ border: 'none', width: '100%', height: '0' }}
 			/>
 		</div>
 	);
@@ -157,7 +160,7 @@ export function extractHtmlBody(body) {
 	return htmlBody;
 }
 
-export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
+export default function BodyMessageRenderer({ fullInvite, inviteId, parts, fontSize }) {
 	if (!fullInvite) return null;
 	if (typeof fullInvite.fragment === 'undefined' || fullInvite.fragment === '') {
 		return <EmptyBody />;
@@ -168,11 +171,16 @@ export default function BodyMessageRenderer({ fullInvite, inviteId, parts }) {
 		const roomHtmlDesc = roomValidationRegEx?.exec(originalHtml)?.[0];
 		const htmlContent = roomHtmlDesc ? replace(originalHtml, roomHtmlDesc, '') : originalHtml;
 		return (
-			<HtmlMessageRenderer msgId={inviteId} body={extractHtmlBody(htmlContent)} parts={parts} />
+			<HtmlMessageRenderer
+				msgId={inviteId}
+				body={extractHtmlBody(htmlContent)}
+				parts={parts}
+				fontSize={fontSize}
+			/>
 		);
 	}
 	const originalText = fullInvite?.textDescription?.[0]?._content ?? '';
 	const roomTextDesc = roomValidationRegEx?.exec(originalText)?.[0];
 	const textContent = roomTextDesc ? replace(originalText, roomTextDesc, '') : originalText;
-	return <TextMessageRenderer text={extractBody(textContent)} />;
+	return <TextMessageRenderer text={extractBody(textContent)} fontSize={fontSize} />;
 }

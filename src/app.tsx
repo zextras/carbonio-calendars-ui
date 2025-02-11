@@ -7,21 +7,20 @@
 import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 
 import { ModalManager } from '@zextras/carbonio-design-system';
+import type * as SearchUI from '@zextras/carbonio-search-ui';
 import {
+	addRoute,
+	addSettingsView,
 	ACTION_TYPES,
 	addBoardView,
-	addRoute,
-	addSearchView,
-	addSettingsView,
 	registerActions,
 	registerComponents,
 	registerFunctions,
-	SearchViewProps,
 	SecondaryBarComponentProps,
-	Spinner,
-	NewAction
+	NewAction,
+	useIntegratedFunction,
+	upsertApp
 } from '@zextras/carbonio-shell-ui';
-import { AnyFunction } from '@zextras/carbonio-shell-ui/lib/utils/typeUtils';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -29,6 +28,7 @@ import { AuthGuard } from './auth-guard';
 import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
 import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
 import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
+import { CenteredSpinner } from './components/CenteredSpinner';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
@@ -42,6 +42,7 @@ import { updateCalendarGroupsStore } from './store/zustand/calendar-group-store'
 import Notifications from './view/notifications';
 import { AppointmentReminder } from './view/reminder/appointment-reminder';
 import { SyncDataHandler } from './view/sidebar/sync-data-handler';
+import { InitializeTags } from './view/tags/initialize-tags';
 
 const LazyCalendarView = lazy(
 	() => import(/* webpackChunkName: "calendar-view" */ './view/calendar/calendar-view')
@@ -61,7 +62,7 @@ const LazySearchView = lazy(
 );
 
 const CalendarView = (): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazyCalendarView />
@@ -71,7 +72,7 @@ const CalendarView = (): React.JSX.Element => (
 );
 
 const EditorView = (): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazyEditorView />
@@ -80,7 +81,7 @@ const EditorView = (): React.JSX.Element => (
 	</Suspense>
 );
 const SettingsView = (): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazySettingsView />
@@ -90,7 +91,7 @@ const SettingsView = (): React.JSX.Element => (
 );
 
 const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazySidebarView {...props} />
@@ -99,8 +100,8 @@ const SidebarView = (props: SecondaryBarComponentProps): React.JSX.Element => (
 	</Suspense>
 );
 
-const SearchView = (props: SearchViewProps): React.JSX.Element => (
-	<Suspense fallback={<Spinner />}>
+const SearchView = (props: SearchUI.SearchViewProps): React.JSX.Element => (
+	<Suspense fallback={<CenteredSpinner />}>
 		<StoreProvider>
 			<ModalManager>
 				<LazySearchView {...props} />{' '}
@@ -116,9 +117,9 @@ const AppRegistrations = (): null => {
 	const [t] = useTranslation();
 
 	useInitializeFolders(FOLDER_VIEW.appointment);
+	const appLabel = t('label.app_name', 'Calendars');
 
 	useEffect(() => {
-		const appLabel = t('label.app_name', 'Calendars');
 		addRoute({
 			route: CALENDAR_ROUTE,
 			position: 200,
@@ -134,16 +135,47 @@ const AppRegistrations = (): null => {
 			component: SettingsView,
 			subSections: getSettingsSubSections()
 		});
-		addSearchView({
-			route: CALENDAR_ROUTE,
-			label: appLabel,
-			component: SearchView
-		});
 		addBoardView({
 			id: CALENDAR_BOARD_ID,
 			component: EditorView
 		});
-	}, [t]);
+
+		upsertApp({
+			name: CALENDAR_APP_ID,
+			display: appLabel
+		});
+	}, [appLabel]);
+
+	const [addSearchView, isAddSearchViewAvailable] =
+		useIntegratedFunction<typeof SearchUI.addSearchView>('search-add-view');
+	const [removeSearchView, isRemoveSearchViewAvailable] =
+		useIntegratedFunction<typeof SearchUI.removeSearchView>('search-remove-view');
+
+	useEffect(() => {
+		if (isAddSearchViewAvailable) {
+			addSearchView({
+				id: CALENDAR_APP_ID,
+				app: CALENDAR_APP_ID,
+				route: CALENDAR_ROUTE,
+				label: appLabel,
+				component: SearchView,
+				position: 200,
+				icon: 'CalendarModOutline'
+			});
+		}
+
+		return () => {
+			if (isRemoveSearchViewAvailable) {
+				removeSearchView(CALENDAR_APP_ID);
+			}
+		};
+	}, [
+		addSearchView,
+		appLabel,
+		isAddSearchViewAvailable,
+		isRemoveSearchViewAvailable,
+		removeSearchView
+	]);
 
 	const newAction = useMemo(
 		(): NewAction => ({
@@ -161,7 +193,7 @@ const AppRegistrations = (): null => {
 	useEffect(() => {
 		registerFunctions({
 			id: CalendarIntegrations.CREATE_APPOINTMENT,
-			fn: createAppointmentIntegration(dispatch, calendars) as AnyFunction
+			fn: createAppointmentIntegration(dispatch, calendars)
 		});
 		registerActions<NewAction>({
 			action: () => newAction,
@@ -195,6 +227,7 @@ export default function App(): React.JSX.Element {
 					<AppRegistrations />
 				</ModalManager>
 				<AppointmentReminder />
+				<InitializeTags />
 				<SyncDataHandler />
 				<Notifications />
 			</StoreProvider>

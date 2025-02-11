@@ -40,7 +40,7 @@ export const isLinkChild = (item: { absFolderPath?: string }): boolean => {
 
 export const isMainRootChild = (item: { id: string }): boolean => {
 	const root = getRoot(item.id);
-	return root?.id === FOLDERS.USER_ROOT ?? false;
+	return root?.id === FOLDERS.USER_ROOT;
 };
 
 export const calcColor = (label: string, theme: unknown): string => {
@@ -277,7 +277,6 @@ export const getTimeToDisplayData = (
 	currentTime: number
 ): {
 	color: TextProps['color'];
-	size: TextProps['size'];
 	text: string;
 } => {
 	const { start, end, alarmData } = reminder;
@@ -285,21 +284,18 @@ export const getTimeToDisplayData = (
 	if (start.valueOf() < currentTime && end.valueOf() > currentTime) {
 		return {
 			color: 'info',
-			size: 'large',
 			text: t('label.ongoing', 'Ongoing')
 		};
 	}
 	if (start.valueOf() === currentTime) {
 		return {
 			color: 'info',
-			size: 'large',
 			text: t('label.now', 'Now')
 		};
 	}
 	if (start.valueOf() < currentTime) {
 		return {
 			color: 'error',
-			size: 'large',
 			text: moment(start).from(moment())
 		};
 	}
@@ -310,21 +306,18 @@ export const getTimeToDisplayData = (
 		) {
 			return {
 				color: 'info',
-				size: 'large',
 				text: t('label.ongoing', 'Ongoing')
 			};
 		}
 		if (alarmData[0].alarmInstStart < currentTime) {
 			return {
 				color: 'error',
-				size: 'large',
 				text: moment(alarmData[0].alarmInstStart).fromNow()
 			};
 		}
 	}
 	return {
 		color: 'info',
-		size: 'large',
 		text: moment(alarmData[0].alarmInstStart).fromNow()
 	};
 };

@@ -6,12 +6,14 @@
 import React, { FC, ReactElement, useCallback, useMemo } from 'react';
 
 import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
-import { useTags, runSearch, Tag } from '@zextras/carbonio-shell-ui';
 import { includes, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
+import { useRunSearchIntegration } from '../../carbonio-ui-commons/integrations/search/use-run-search';
+import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
+import { Tag } from '../../carbonio-ui-commons/types/tags';
 import { CALENDAR_ROUTE } from '../../constants';
 import { EventType } from '../../types/event';
 
@@ -45,9 +47,11 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 	);
 	const tagLabel = useMemo(() => t('label.tags', 'Tags'), [t]);
 
+	const runSearch = useRunSearchIntegration();
+
 	const triggerSearch = useCallback(
 		(tagToSearch: Tag) =>
-			runSearch(
+			runSearch?.(
 				[
 					{
 						avatarBackground: ZIMBRA_STANDARD_COLORS[tagToSearch?.color ?? 0].hex,
@@ -60,59 +64,57 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 				],
 				CALENDAR_ROUTE
 			),
-		[]
+		[runSearch]
 	);
 	return (
-		<>
-			<Row
-				width="fill"
-				crossAlignment="flex-start"
-				mainAlignment="flex-start"
-				padding={{ vertical: 'small' }}
-			>
-				{!hideIcon && (
-					<Row padding={{ right: 'small' }}>
-						<Icon icon="TagsMoreOutline" size="medium" />
-					</Row>
-				)}
+		<Row
+			width="fill"
+			crossAlignment="flex-start"
+			mainAlignment="flex-start"
+			padding={{ vertical: 'small' }}
+		>
+			{!hideIcon && (
+				<Row padding={{ right: 'small' }}>
+					<Icon icon="TagsMoreOutline" size="medium" />
+				</Row>
+			)}
 
-				{event?.resource?.tags?.length > 0 && (
-					<Row takeAvailableSpace mainAlignment="flex-start">
-						{!hideIcon ? (
-							<Text color="secondary" size="small" overflow="break-word">
-								{map(tags, (tag) => (
-									<TagChip
-										key={tag.name}
-										label={tag.name}
-										avatarBackground={ZIMBRA_STANDARD_COLORS[tag?.color ?? 0].hex}
-										background={'gray2'}
-										hasAvatar
-										avatarIcon="Tag"
-										maxWidth="18.75rem"
-										onClick={(): void => triggerSearch(tag)}
-									/>
-								))}
-							</Text>
-						) : (
-							<Text color="secondary" size="small" overflow="break-word">
-								{tagLabel}:
-								{map(tags, (tag) => (
-									<TagChip
-										label={tag.name}
-										avatarBackground={ZIMBRA_STANDARD_COLORS[tag?.color ?? 0].hex}
-										background={'gray2'}
-										hasAvatar
-										avatarIcon="Tag"
-										maxWidth="18.75rem"
-										onClick={(): void => triggerSearch(tag)}
-									/>
-								))}
-							</Text>
-						)}
-					</Row>
-				)}
-			</Row>
-		</>
+			{event?.resource?.tags?.length > 0 && (
+				<Row takeAvailableSpace mainAlignment="flex-start">
+					{!hideIcon ? (
+						<Text color="secondary" size="small" overflow="break-word">
+							{map(tags, (tag) => (
+								<TagChip
+									key={tag.name}
+									label={tag.name}
+									avatarBackground={ZIMBRA_STANDARD_COLORS[tag?.color ?? 0].hex}
+									background={'gray2'}
+									hasAvatar
+									avatarIcon="Tag"
+									maxWidth="18.75rem"
+									onClick={(): void => triggerSearch(tag)}
+								/>
+							))}
+						</Text>
+					) : (
+						<Text color="secondary" size="small" overflow="break-word">
+							{tagLabel}:
+							{map(tags, (tag) => (
+								<TagChip
+									label={tag.name}
+									avatarBackground={ZIMBRA_STANDARD_COLORS[tag?.color ?? 0].hex}
+									background={'gray2'}
+									hasAvatar
+									avatarIcon="Tag"
+									maxWidth="18.75rem"
+									onClick={(): void => triggerSearch(tag)}
+								/>
+							))}
+						</Text>
+					)}
+				</Row>
+			)}
+		</Row>
 	);
 };
 

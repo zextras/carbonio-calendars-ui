@@ -65,10 +65,8 @@ describe('Editor generator', () => {
 			// expect a default calendar is selected
 			expect(editor.calendar).toBeDefined();
 
-			// expect organizer to be defined and to be the default
 			expect(editor.organizer).toBeDefined();
 			expect(editor.organizer.fullName).toBe(identity1.fullName);
-			expect(editor.organizer.identityName).toBe('DEFAULT');
 
 			// all parameters are the default ones
 			expect(editor.allDay).toBe(false);
@@ -169,18 +167,14 @@ describe('Editor generator', () => {
 					}
 				],
 				organizer: {
-					address: 'francesco.gottardi@zextras.com',
-					fullName: 'Francesco Gottardi',
-					identityName: 'DEFAULT',
-					label: 'DEFAULT Francesco Gottardi (<francesco.gottardi@zextras.com>) ',
-					type: undefined,
-					value: '0'
+					email: 'user.mail@mail.com',
+					fullName: 'user fullName'
 				},
 				title: 'Single istance',
 				location: 'Location',
 				room: {
 					label: 'Room name',
-					link: 'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'
+					link: 'https://room.link.com/meeting/meet-now/ZWFGRAOJ'
 				},
 				attendees: [],
 				optionalAttendees: [],
@@ -235,18 +229,11 @@ describe('Editor generator', () => {
 			expect(editor.plainText).toBe('test content');
 			expect(editor.richText).toBe('<p>test content</p>');
 			expect(editor.organizer).toBeDefined();
-			expect(editor.organizer).toHaveProperty(
-				'label',
-				'DEFAULT Francesco Gottardi (<francesco.gottardi@zextras.com>) '
-			);
 			expect(editor.title).toBe('Single istance');
 			expect(editor.location).toBe('Location');
 			expect(editor.room).toBeDefined();
 			expect(editor.room).toHaveProperty('label', 'Room name');
-			expect(editor.room).toHaveProperty(
-				'link',
-				'https://mail.zextras.com/meeting/meet-now/ZWFGRAOJ'
-			);
+			expect(editor.room).toHaveProperty('link', 'https://room.link.com/meeting/meet-now/ZWFGRAOJ');
 			expect(editor.attendees).toStrictEqual([]);
 			expect(editor.optionalAttendees).toStrictEqual([]);
 			expect(editor.freeBusy).toBe('F');
@@ -264,28 +251,6 @@ describe('Editor generator', () => {
 			expect(editor.attachmentFiles[0].name).toBe('2');
 			expect(editor.attachmentFiles[0].filename).toBe('filename_1.gif');
 			expect(editor.attachmentFiles[0].disposition).toBe('attachment');
-		});
-	});
-	describe('Edit event', () => {
-		test('event without organizer has the calendar owner as default', () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			const event = mockedData.getEvent({
-				resource: {
-					organizer: undefined,
-					calendar: folder
-				}
-			});
-			const invite = mockedData.getInvite({ event });
-
-			const context = { folders, dispatch: store.dispatch };
-			const editor = generateEditor({
-				context,
-				invite,
-				event
-			});
-			expect(editor.organizer.address).toBe(identity1.email);
-			expect(editor.organizer.fullName).toBe(identity1.fullName);
 		});
 	});
 });

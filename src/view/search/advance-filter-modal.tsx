@@ -7,7 +7,8 @@
 import React, { FC, ReactElement, useState, useCallback, useMemo, useEffect } from 'react';
 
 import { CustomModal, Container, ChipProps } from '@zextras/carbonio-design-system';
-import { QueryChip, t } from '@zextras/carbonio-shell-ui';
+import type { QueryChip } from '@zextras/carbonio-search-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 import { concat, filter, includes, map } from 'lodash';
 
 import FromDateToDateRow from './parts/from-date-to-date-row';
