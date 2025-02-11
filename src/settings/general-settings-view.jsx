@@ -41,7 +41,7 @@ export default function GeneralSettings({
 	const defaultApptVisibiltyOptions = useMemo(() => DefaultApptVisibiltyOptions(), []);
 
 	return (
-		<Container padding={{ all: 'small' }} mainAlignment="baseline" crossAlignment="baseline">
+		<Container padding={{ all: 'small' }} mainAlignment="flex-start" crossAlignment="baseline">
 			<Row
 				padding={{ all: 'small' }}
 				mainAlignment="space-between"
@@ -110,7 +110,7 @@ export default function GeneralSettings({
 			<Row
 				padding={{ all: 'small' }}
 				orientation="vertical"
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 			>
 				<Checkbox
@@ -146,7 +146,7 @@ export default function GeneralSettings({
 			<Row
 				padding={{ horizontal: 'small', top: 'small' }}
 				orientation="vertical"
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 			>
 				<Text size="large" weight="bold">
@@ -171,7 +171,7 @@ export default function GeneralSettings({
 					{t('settings.label.forward_invites', 'Forward Invites')}
 				</Text>
 			</Row>
-			<Row width="100%" mainAlignment="baseline" padding={{ horizontal: 'small' }}>
+			<Row width="100%" mainAlignment="flex-start" padding={{ horizontal: 'small' }}>
 				<Input
 					hasError={isEmailNotValid}
 					label={t('settings.label.enter_email', 'Enter e-mail address')}
@@ -225,7 +225,7 @@ export default function GeneralSettings({
 			</Row>
 			<Row
 				orientation="vertical"
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 				padding={{ all: 'small' }}
 			>

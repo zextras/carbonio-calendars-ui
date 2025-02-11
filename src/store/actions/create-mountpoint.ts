@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { JSNS } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 
 import { batchRequest } from '../../soap/batch-request';
@@ -21,9 +22,9 @@ export const createMountpoint = createAsyncThunk(
 					view: 'appointment',
 					zid: link.ownerId
 				},
-				_jsns: 'urn:zimbraMail'
+				_jsns: JSNS.mail
 			})),
-			_jsns: 'urn:zimbra'
+			_jsns: JSNS.all
 		};
 		return batchRequest(body);
 	}

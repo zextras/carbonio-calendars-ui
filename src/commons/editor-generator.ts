@@ -3,28 +3,24 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { getUserAccount } from '@zextras/carbonio-shell-ui';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { Dispatch } from 'redux';
 
 import { getIdentityItems } from './get-identity-items';
-import { Folder, Folders, LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { Folders, LinkFolder } from '../carbonio-ui-commons/types';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { PREFS_DEFAULTS } from '../constants';
-import { EventPropType, normalizeEditor } from '../normalizations/normalize-editor';
+import { normalizeEditor } from '../normalizations/normalize-editor';
 import { createNewEditor } from '../store/slices/editor-slice';
 import { Editor } from '../types/editor';
+import { EventType } from '../types/event';
 import { Invite } from '../types/store/invite';
+import { getNewId } from '../utils/event';
 
-momentLocalizer(moment);
-
-let counter = 0;
-
-export const getNewEditId = (id?: string): string => {
-	counter += 1;
-	return `${id ?? 'new'}-${counter}`;
-};
+momentLocalizer();
 
 export const getEndTime = ({ start, duration }: { start: number; duration: string }): number => {
 	const now = moment(start);
@@ -70,7 +66,12 @@ export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 		zimbraPrefCalendarApptReminderWarningTime,
 		zimbraPrefDefaultCalendarId
 	} = getPrefs();
-	const defaultOrganizer = find(identities, ['identityName', 'DEFAULT']);
+	const account = getUserAccount();
+	const defaultOrganizerIdentity = find(identities, ['identityName', 'DEFAULT']);
+	const defaultOrganizer = {
+		email: defaultOrganizerIdentity?.address ?? account?.name ?? '',
+		fullName: defaultOrganizerIdentity?.fullName
+	};
 	const defaultCalendar = find(folders, [
 		'id',
 		zimbraPrefDefaultCalendarId ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID
@@ -134,7 +135,7 @@ export const applyContextToEditor = ({
 	context
 }: {
 	editor: Editor;
-	context: any;
+	context: EditorContext;
 }): Editor => {
 	const contextObj = omit(context, ['disabled', 'folders', 'dispatch']);
 	let editorWithContext = { ...editor };
@@ -167,11 +168,11 @@ export const generateEditor = ({
 	invite,
 	context
 }: {
-	event?: EventPropType;
+	event?: EventType;
 	invite?: Invite;
 	context: EditorContext;
 }): Editor => {
-	const id = getNewEditId(event?.resource?.id);
+	const id = getNewId(event?.resource?.id);
 	const emptyEditor = createEmptyEditor(id, context.folders);
 
 	const compiledEditor = normalizeEditor({

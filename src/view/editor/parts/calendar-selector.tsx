@@ -6,7 +6,7 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
-import { LinkFolder, useUserSettings } from '@zextras/carbonio-shell-ui';
+import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { filter, find, map, reject } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +19,7 @@ import {
 	useFoldersMapByRoot
 } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../../../carbonio-ui-commons/types';
+import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { PREFS_DEFAULTS } from '../../../constants';
 import {

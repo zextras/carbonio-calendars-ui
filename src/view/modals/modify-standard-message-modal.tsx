@@ -6,8 +6,9 @@
 import React, { useCallback, useMemo } from 'react';
 
 import { Container, Text } from '@zextras/carbonio-design-system';
-import { t, useIntegratedFunction } from '@zextras/carbonio-shell-ui';
+import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { map, reduce } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
@@ -31,7 +32,7 @@ export const ModifyStandardMessageModal = ({
 	isEdited
 }: MessageModalProps): React.ReactElement => {
 	const [openComposer, available] = useIntegratedFunction('compose');
-
+	const [t] = useTranslation();
 	const onEditMessage = useCallback(() => {
 		onClose();
 		const text = isEdited
@@ -51,7 +52,7 @@ export const ModifyStandardMessageModal = ({
 					[]
 				)
 			});
-	}, [onClose, isEdited, invite.name, invite?.participants, available, openComposer, onConfirm]);
+	}, [onClose, isEdited, t, invite.name, invite?.participants, available, openComposer, onConfirm]);
 
 	const bodyText = useMemo(
 		() =>
@@ -64,7 +65,7 @@ export const ModifyStandardMessageModal = ({
 						'message.want_to_edit_cancellation_msg',
 						'Do you want to edit the appointment cancellation message?'
 					),
-		[isEdited]
+		[isEdited, t]
 	);
 
 	return (
@@ -72,7 +73,7 @@ export const ModifyStandardMessageModal = ({
 			<ModalHeader title={title} onClose={onClose} />
 			<Container
 				padding={{ vertical: 'medium' }}
-				mainAlignment="baseline"
+				mainAlignment="flex-start"
 				crossAlignment="baseline"
 			>
 				<Text overflow="break-word">{bodyText}</Text>

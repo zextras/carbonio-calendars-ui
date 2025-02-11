@@ -19,10 +19,10 @@ import { EditorEquipments } from './parts/editor-equipments';
 import { EditorFreeBusySelector } from './parts/editor-free-busy-selector';
 import { EditorLocation } from './parts/editor-location';
 import { EditorMeetingRooms } from './parts/editor-meeting-rooms';
-import { EditorOrganizer } from './parts/editor-organizer';
 import { EditorPrivateCheckbox } from './parts/editor-private-checkbox';
 import { EditorReminder } from './parts/editor-reminder';
 import { EditorResourcesController } from './parts/editor-resources-controller';
+import { EditorSender } from './parts/editor-sender';
 import { EditorSummary } from './parts/editor-summary';
 import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
@@ -52,7 +52,7 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 				overflowY: 'auto'
 			}}
 		>
-			<EditorOrganizer editorId={editorId} />
+			<EditorSender editorId={editorId} />
 			<Row height="fit" width="fill" padding={{ top: 'large' }}>
 				<EditorTitle editorId={editorId} />
 			</Row>

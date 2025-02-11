@@ -46,7 +46,7 @@ const FromDateToDateRow: FC<ComponentProps> = ({
 					enableChips
 					chipProps={{ avatarBackground: 'gray1', avatarIcon: 'CalendarOutline' }}
 					dateFormat="dd/MM/yyyy"
-					includeTime={false}
+					showTimeSelect={false}
 					defaultValue={fromDate}
 					onChange={onFromDateChange}
 				/>
@@ -58,7 +58,7 @@ const FromDateToDateRow: FC<ComponentProps> = ({
 					enableChips
 					chipProps={{ avatarBackground: 'gray1', avatarIcon: 'CalendarOutline' }}
 					dateFormat="dd/MM/yyyy"
-					includeTime={false}
+					showTimeSelect={false}
 					defaultValue={toDate}
 					onChange={onToDateChange}
 				/>

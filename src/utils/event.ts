@@ -11,6 +11,13 @@ import { Invite } from '../types/store/invite';
 
 export type InstanceExceptionId = { d: string; tz: string | undefined };
 
+let counter = 0;
+
+export const getNewId = (id?: string): string => {
+	counter += 1;
+	return `${id ?? 'new'}-${counter}`;
+};
+
 export const getInstanceExceptionId = ({
 	start,
 	tz,

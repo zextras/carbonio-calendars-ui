@@ -188,7 +188,7 @@ const RecurrenceEndOptions = ({ editorId }: { editorId: string }): ReactElement 
 							<Container crossAlignment="flex-start" style={{ maxWidth: '31.25rem' }}>
 								<DateTimePicker
 									label={endAfterString}
-									includeTime={false}
+									showTimeSelect={false}
 									defaultValue={initialPickerValue}
 									onChange={onDateChange}
 									disabled={isDatePickerDisabled}

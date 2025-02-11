@@ -14,11 +14,13 @@ import {
 	Tooltip,
 	useModal
 } from '@zextras/carbonio-design-system';
-import { t, useTags, runSearch } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
 import { reduce } from 'lodash';
 
 import { createTag, useGetTagsActions } from './tag-actions';
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
+import { useRunSearchIntegration } from '../../carbonio-ui-commons/integrations/search/use-run-search';
+import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
 import { ItemType, TagsAccordionItems } from '../../carbonio-ui-commons/types/tags';
 
 type ItemProps = {
@@ -28,9 +30,11 @@ type ItemProps = {
 const CustomComp: FC<ItemProps> = (props) => {
 	const actions = useGetTagsActions({ tag: props?.item });
 
+	const runSearch = useRunSearchIntegration();
+
 	const triggerSearch = useCallback(
 		() =>
-			runSearch(
+			runSearch?.(
 				[
 					{
 						avatarBackground: ZIMBRA_STANDARD_COLORS[props?.item?.color || 0].hex,
@@ -43,11 +47,17 @@ const CustomComp: FC<ItemProps> = (props) => {
 				],
 				'mails'
 			),
-		[props?.item?.color, props?.item?.name]
+		[props?.item?.color, props?.item?.name, runSearch]
 	);
 
 	return (
-		<Dropdown contextMenu items={actions} display="block" width="fit" onClick={triggerSearch}>
+		<Dropdown
+			contextMenu
+			items={actions}
+			display="block"
+			width="fit-content"
+			onClick={triggerSearch}
+		>
 			<Row mainAlignment="flex-start" height="fit" padding={{ left: 'large' }} takeAvailableSpace>
 				<Icon size="large" icon="Tag" color={ZIMBRA_STANDARD_COLORS[props?.item?.color ?? 0].hex} />
 

@@ -9,7 +9,8 @@ import { useNotify } from '@zextras/carbonio-shell-ui';
 import { isEmpty, reduce, forEach, sortBy, map, filter, isNil } from 'lodash';
 
 import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
-import { folderWorker } from '../../carbonio-ui-commons/worker';
+import { useTagStore } from '../../carbonio-ui-commons/store/zustand/tags';
+import { folderWorker, tagsWorker } from '../../carbonio-ui-commons/worker';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch } from '../../store/redux/hooks';
@@ -140,6 +141,11 @@ export const useSyncDataHandler = () => {
 		forEach(sortBy(notifyList, 'seq'), (notify) => {
 			if (!isEmpty(notify) && (notify.seq > seq.current || (seq.current > 1 && notify.seq === 1))) {
 				handleFoldersNotify(notifyList, notify);
+				tagsWorker.postMessage({
+					op: 'notify',
+					notify,
+					state: useTagStore.getState().tags
+				});
 				handleAppointmentCreationNotify(notify, dispatch, end, start, query);
 				handleAppointmentModifyNotify(notify, dispatch, end, start, query);
 				handleAppointmentDeletionNotify(notify, dispatch);

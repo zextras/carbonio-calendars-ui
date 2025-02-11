@@ -65,7 +65,7 @@ const WeekdaySelect = ({
 			label={t('label.day', 'Day')}
 			onChange={onByDayChange}
 			disablePortal
-			width="fit"
+			width="fit-content"
 			disabled={disabled}
 			selection={daySelection}
 		/>

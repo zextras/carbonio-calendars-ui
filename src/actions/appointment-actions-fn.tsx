@@ -5,9 +5,10 @@
  */
 import React from 'react';
 
-import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
-import { find, lowerCase, omit } from 'lodash';
+import { addBoard, getAction, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
+import { LinkFolder } from '../carbonio-ui-commons/types';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import { CALENDAR_BOARD_ID, PANEL_VIEW } from '../constants';
@@ -18,11 +19,83 @@ import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventType } from '../types/event';
-import { Invite } from '../types/store/invite';
+import { Attendee, Invite } from '../types/store/invite';
 import { getInstanceExceptionId } from '../utils/event';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
+
+type ActionsContextIgnored =
+	| 'createAndApplyTag'
+	| 'createModal'
+	| 'closeModal'
+	| 'createSnackbar'
+	| 'tags';
+
+type Recipient = {
+	email: string;
+	name: string;
+	carbonCopy: boolean;
+};
+
+function getRecipientFromOrganizer(organizer: EventType['resource']['organizer']): Recipient {
+	return {
+		email: organizer?.email ?? '',
+		name: organizer?.name ?? '',
+		carbonCopy: false
+	};
+}
+
+function getRecipientFromAttendee(attendee: Attendee): Recipient {
+	return {
+		email: attendee.a,
+		name: attendee.d,
+		carbonCopy: attendee.role === 'OPT'
+	};
+}
+
+export const emailAttendees = (
+	{
+		event,
+		invite: _invite,
+		context
+	}: {
+		event: EventType;
+		invite?: Invite;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
+	},
+	e?: ActionsClick
+): void => {
+	const identities = getIdentityItems().map((identity) => identity.address ?? '');
+	const sendMail = (invite: Invite, mySelf: Array<string>): void => {
+		const recipients = [
+			...invite.attendees.map(getRecipientFromAttendee),
+			getRecipientFromOrganizer(event.resource.organizer)
+		].filter((attendee) => !mySelf.includes(attendee.email));
+		const [mailTo, available] = getAction('recipients', 'mail-to', {
+			recipients,
+			subject: event.title
+		});
+		if (!available || !mailTo) {
+			return;
+		}
+		const { execute } = mailTo;
+		execute(e);
+	};
+	if (!_invite) {
+		context
+			.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
+			.then((res) => {
+				if (res.payload) {
+					const invite = normalizeInvite(res.payload.m[0]);
+					return sendMail(invite, identities);
+				}
+				return undefined;
+			});
+	} else {
+		sendMail(_invite, identities);
+	}
+};
 
 export const createCopy =
 	({
@@ -32,10 +105,7 @@ export const createCopy =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const copy = (invite: Invite): void => {
@@ -45,14 +115,20 @@ export const createCopy =
 			const organizer = find(identities, ['identityName', 'DEFAULT']);
 			const isSeries = event?.resource?.isRecurrent && !event?.resource?.ridZ;
 			const isInstance = !event?.resource?.isRecurrent && !!event?.resource?.ridZ;
+			const availableFolders = keyBy(
+				filter(context.folders, (calendar) =>
+					calendar.perm ? /w/.test(calendar.perm) : !(calendar as LinkFolder).owner
+				),
+				'id'
+			);
 			const editor = generateEditor({
 				event: eventToCopy,
 				invite,
 				context: {
-					folders: context.folders,
+					folders: availableFolders,
 					dispatch: context.dispatch,
 					panel: context.panel ?? true,
-					organizer,
+					organizer: { email: organizer?.address ?? '', fullName: organizer?.fullName ?? '' },
 					recur: isSeries ? invite.recurrenceRule : undefined,
 					exceptId: undefined,
 					isInstance,
@@ -90,10 +166,7 @@ export const editAppointment =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const edit = (invite: Invite): void => {
@@ -175,11 +248,7 @@ export const deletePermanently =
 				id: modalId,
 				children: (
 					<StoreProvider>
-						<DeletePermanently
-							onClose={(): void => context.closeModal(modalId)}
-							event={event}
-							context={context}
-						/>
+						<DeletePermanently onClose={(): void => context.closeModal(modalId)} event={event} />
 					</StoreProvider>
 				),
 				onClose: () => {
@@ -268,10 +337,7 @@ export const acceptInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -301,10 +367,7 @@ export const declineInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -333,10 +396,7 @@ export const acceptAsTentative =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -365,10 +425,7 @@ export const proposeNewTimeFn =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const proposeTime = (invite: Invite): void => {

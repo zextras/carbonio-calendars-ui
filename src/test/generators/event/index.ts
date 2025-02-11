@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { getEndTime } from '../../../commons/editor-generator';
+import { PREFS_DEFAULTS } from '../../../constants';
 import { EventResource, EventResourceCalendar, EventType } from '../../../types/event';
 import utils from '../utils';
 
@@ -33,7 +34,7 @@ const getDefaultEvent = (): EventType => {
 		resourceId: '10',
 		resource: {
 			calendar: {
-				id: '10',
+				id: PREFS_DEFAULTS.DEFAULT_CALENDAR_ID,
 				name: 'calendar',
 				color: { color: '#000000', background: '#E6E9ED', label: 'black' }
 			},

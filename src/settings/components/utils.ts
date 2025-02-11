@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { SelectItem } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { isEqual, transform, isObject, find } from 'lodash';
 
-export const ShowReminderOptions = () => [
+export const ShowReminderOptions = (): SelectItem<`${number}`>[] => [
 	{ label: t('reminder.never', 'Never'), value: '0' },
 	{ label: t('reminder.all_time', 'All time of the event'), value: '-1' },
 	{
@@ -147,18 +148,18 @@ export const ShowReminderOptions = () => [
 	}
 ];
 
-export const DefaultViewOptions = () => [
+export const DefaultViewOptions = (): SelectItem[] => [
 	{ label: t('settings.options.default_view.month', 'Month View'), value: 'month' },
 	{ label: t('settings.options.default_view.week', 'Week View'), value: 'week' },
 	{ label: t('settings.options.default_view.day', 'Day View'), value: 'day' },
 	{ label: t('settings.options.default_view.work_week', 'Work Week View'), value: 'workWeek' },
 	{ label: t('settings.options.default_view.list', 'List View'), value: 'list' }
 ];
-export const DefaultCalendarOptions = () => [
+export const DefaultCalendarOptions = (): SelectItem[] => [
 	{ label: t('label.calendar', 'Calendar'), value: 'calendar' }
 ];
 
-export const TimeZonesOptions = () => [
+export const TimeZonesOptions = (): SelectItem[] => [
 	{
 		value: 'Etc/GMT+12',
 		label: t('timezone.dateline', { value: 'GMT -12:00', defaultValue: '{{value}} Dateline' })
@@ -631,7 +632,7 @@ export const TimeZonesOptions = () => [
 		})
 	}
 ];
-export const FreeBusyOptions = () => [
+export const FreeBusyOptions = (): SelectItem[] => [
 	{
 		label: t(
 			'settings.options.free_busy_opts.allow_all',
@@ -669,7 +670,7 @@ export const FreeBusyOptions = () => [
 	}
 ];
 
-export const InvitesOptions = () => [
+export const InvitesOptions = (): SelectItem[] => [
 	{
 		label: t(
 			'settings.options.invt_opts.allow_all',
@@ -696,7 +697,7 @@ export const InvitesOptions = () => [
 		value: 'v4'
 	}
 ];
-export const StartWeekOfOptions = () => [
+export const StartWeekOfOptions = (): SelectItem<`${number}`>[] => [
 	{ label: t('label.week_day.sunday', 'Sunday'), value: '0' },
 	{ label: t('label.week_day.monday', 'Monday'), value: '1' },
 	{ label: t('label.week_day.tuesday', 'Tuesday'), value: '2' },
@@ -706,11 +707,11 @@ export const StartWeekOfOptions = () => [
 	{ label: t('label.week_day.saturday', 'Saturday'), value: '6' }
 ];
 
-export const DefaultApptVisibiltyOptions = () => [
+export const DefaultApptVisibiltyOptions = (): SelectItem<'public' | 'private'>[] => [
 	{ label: t('settings.options.dflt_vsblty_opt.public', 'Public'), value: 'public' },
 	{ label: t('label.private', 'Private'), value: 'private' }
 ];
-export const SpanTimeOptions = (isMinutesFormat) => [
+export const SpanTimeOptions = (isMinutesFormat: boolean): SelectItem[] => [
 	{
 		label: t('reminder.minute_before', {
 			count: 30,
@@ -745,7 +746,7 @@ export const SpanTimeOptions = (isMinutesFormat) => [
 	}
 ];
 
-export const getWeekDay = (day) => {
+export const getWeekDay = (day: `${number}`): string => {
 	switch (day) {
 		case '1':
 			return t('label.week_day.monday', 'Monday');
@@ -764,7 +765,7 @@ export const getWeekDay = (day) => {
 	}
 };
 
-export const ShareCalendarWithOptions = () => [
+export const ShareCalendarWithOptions = (): SelectItem<'usr' | 'pub'>[] => [
 	{
 		label: t('share.options.share_calendar_with.internal_users_groups', 'Internal Users or Groups'),
 		value: 'usr'
@@ -778,7 +779,7 @@ export const ShareCalendarWithOptions = () => [
 	}
 ];
 
-export const ShareCalendarRoleOptions = (canViewPrvtAppt) => [
+export const ShareCalendarRoleOptions = (canViewPrvtAppt: boolean | undefined): SelectItem[] => [
 	{ label: t('share.options.share_calendar_role.none', 'None'), value: '' },
 	{
 		label: t('share.options.share_calendar_role.viewer', 'Viewer'),
@@ -794,21 +795,38 @@ export const ShareCalendarRoleOptions = (canViewPrvtAppt) => [
 	}
 ];
 
-export const differenceObject = (object, base) => {
-	// eslint-disable-next-line no-shadow
-	function changes(object, base) {
-		return transform(object, (result, value, key) => {
-			if (!isEqual(value, base[key])) {
+export const differenceObject = <
+	TObj extends Record<string, unknown>,
+	TBase extends Record<string, unknown>
+>(
+	object: TObj,
+	base: TBase
+): Record<keyof TObj, unknown> => {
+	function changes<
+		TInnerObj extends Record<string, unknown>,
+		TInnerBase extends Record<string, unknown>
+	>(innerObject: TInnerObj, innerBase: TInnerBase): Record<keyof TInnerObj, unknown> {
+		return transform(innerObject, (result, value, key: keyof TInnerObj) => {
+			if (!isEqual(value, innerBase[key as keyof TInnerBase])) {
 				// eslint-disable-next-line no-param-reassign
-				result[key] = isObject(value) && isObject(base[key]) ? changes(value, base[key]) : value;
+				result[key] =
+					isObject(value) && isObject(innerBase[key as keyof TInnerBase])
+						? changes(
+								value as Record<string, unknown>,
+								innerBase[key as keyof TInnerBase] as Record<string, unknown>
+							)
+						: value;
 			}
 		});
 	}
 	return changes(object, base);
 };
 
-export const validEmailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+export function isValidEmail(email: string): boolean {
+	// eslint-disable-next-line max-len, prettier/prettier, no-useless-escape
+	const validEmailRegex = /^(?!\.)[\p{L}\p{N}.+_\-]+@[\p{L}\p{N}.+-]+\.[\p{L}\p{N}]{2,}$/u;
+	return validEmailRegex.test(String(email).toLowerCase());
+}
 
-export const validEmail = (email) => !!validEmailRegex.test(email);
-
-export const findLabel = (list, value) => find(list, (item) => item.value === value)?.label;
+export const findLabel = <TValue>(list: SelectItem<TValue>[], value: unknown): string | undefined =>
+	find(list, (item) => item.value === value)?.label;

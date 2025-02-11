@@ -20,9 +20,9 @@ import { useTranslation } from 'react-i18next';
 
 import { MultipleCalendarSelector } from './custom-components/multiple-calendar-selector';
 import { GroupCalendarsList } from './group-calendars-list';
+import { getErrorMessage } from '../../carbonio-ui-commons/helpers/errors';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types';
-import { ApiError } from '../../soap/api-error';
 import { modifyCalendarGroupRequest } from '../../soap/modify-calendar-group-request';
 import { updateCalendarGroupsStore, useGroupById } from '../../store/zustand/calendar-group-store';
 
@@ -121,16 +121,11 @@ export const EditGroupModal: FC<EditGroupModalProps> = ({
 				onClose();
 			})
 			.catch((err) => {
-				const errorMessage =
-					err instanceof ApiError
-						? err.getLocalizedMessage(t)
-						: t('label.error_try_again', 'Something went wrong, please try again');
-
 				createSnackbar({
 					key: `group-editing-failed`,
 					replace: true,
 					severity: 'error',
-					label: errorMessage,
+					label: getErrorMessage(err, t),
 					autoHideTimeout: 3000,
 					hideButton: true
 				});

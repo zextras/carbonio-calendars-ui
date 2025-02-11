@@ -33,8 +33,8 @@ export const StartMark = ({
 		<Tooltip label={tooltipLabel}>
 			<MinutesLine
 				data-testid={'start-mark'}
-				atPosition={atPosition}
-				color={defaultLineColors.start}
+				$atPosition={atPosition}
+				$color={defaultLineColors.start}
 			/>
 		</Tooltip>
 	);

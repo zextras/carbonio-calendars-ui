@@ -6,13 +6,13 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { isNil, union } from 'lodash';
 
-import type { CalendarEditor, Resource, IdentityItem, Editor, Room } from '../../types/editor';
+import { CalendarEditor, Resource, Editor, Room, CalendarSender } from '../../types/editor';
 import { EditorChipAttendees, InviteClass, InviteFreeBusy } from '../../types/store/invite';
 import type { EditorSlice } from '../../types/store/store';
 
 type SenderPayload = {
 	id: string | undefined;
-	sender: IdentityItem;
+	sender: CalendarSender;
 };
 
 type TitlePayload = {

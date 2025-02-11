@@ -13,11 +13,7 @@ import { moveAppointmentRequest } from '../actions/move-appointment';
 import { moveAppointmentToTrash } from '../actions/move-appointment-to-trash';
 import { searchAppointments } from '../actions/search-appointments';
 import { snoozeApptReminder } from '../actions/snooze-appointment-reminder';
-import {
-	deleteAppointmentPermanentlyFulfilled,
-	deleteAppointmentPermanentlyPending,
-	deleteAppointmentPermanentlyRejected
-} from '../reducers/delete-appointment-permanently';
+import { deleteAppointmentPermanentlyFulfilled } from '../reducers/delete-appointment-permanently';
 import {
 	dismissAppointmentFulfilled,
 	dismissAppointmentPending,
@@ -61,9 +57,7 @@ export const appointmentsSlice = createSlice({
 		builder.addCase(moveAppointmentToTrash.rejected, moveAppointmentToTrashRejected);
 		builder.addCase(moveAppointmentToTrash.fulfilled, moveAppointmentToTrashFulfilled);
 		builder.addCase(moveAppointmentRequest.fulfilled, moveAppointmentFulfilled);
-		builder.addCase(deleteAppointmentPermanent.pending, deleteAppointmentPermanentlyPending);
 		builder.addCase(deleteAppointmentPermanent.fulfilled, deleteAppointmentPermanentlyFulfilled);
-		builder.addCase(deleteAppointmentPermanent.rejected, deleteAppointmentPermanentlyRejected);
 		builder.addCase(dismissApptReminder.pending, dismissAppointmentPending);
 		builder.addCase(dismissApptReminder.fulfilled, dismissAppointmentFulfilled);
 		builder.addCase(dismissApptReminder.rejected, dismissAppointmentRejected);
