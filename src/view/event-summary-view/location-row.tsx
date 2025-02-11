@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useMemo } from 'react';
 
-import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
+import { Icon, Padding, Row, Text, Theme } from '@zextras/carbonio-design-system';
 
 type LocationProps = {
 	location?: string;
@@ -19,10 +19,12 @@ type LocationProps = {
 
 export const LocationRow = ({
 	locationData,
-	showIcon = false
+	showIcon = false,
+	fontSize = 'small'
 }: {
 	locationData: LocationProps;
 	showIcon?: boolean;
+	fontSize?: keyof typeof Theme.sizes.font;
 }): ReactElement => {
 	const location = useMemo(() => {
 		const regex = /\bhttps?:\/\/\S+/g;
@@ -40,7 +42,7 @@ export const LocationRow = ({
 							</Padding>
 						)}
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<Text color="gray1" size="small">
+							<Text color="gray1" size={fontSize}>
 								{locationData?.locationUrl && (
 									<a href={locationData.locationUrl} target="_blank" rel="noreferrer">
 										{locationData.locationUrl}
