@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useMemo } from 'react';
 
-import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
+import { Icon, Padding, Row, Text, Theme } from '@zextras/carbonio-design-system';
 import { filter, map } from 'lodash';
 
 import { CALENDAR_RESOURCES } from '../../constants';
@@ -13,10 +13,12 @@ import { Invite } from '../../types/store/invite';
 
 export const EquipmentsRow = ({
 	invite,
-	showIcon
+	showIcon,
+	fontSize = 'small'
 }: {
 	invite: Invite;
 	showIcon?: boolean;
+	fontSize?: keyof typeof Theme.sizes.font;
 }): ReactElement | null => {
 	const equipments = useMemo(
 		() => filter(invite.attendees, ['cutype', CALENDAR_RESOURCES.RESOURCE]),
@@ -35,7 +37,7 @@ export const EquipmentsRow = ({
 					</Padding>
 				)}
 				<Row takeAvailableSpace mainAlignment="flex-start">
-					<Text color="gray1" size="small">
+					<Text color="gray1" size={fontSize}>
 						{equipmentsLabels}
 					</Text>
 				</Row>

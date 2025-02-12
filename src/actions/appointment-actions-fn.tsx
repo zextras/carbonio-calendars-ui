@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction, replaceHistory } from '@zextras/carbonio-shell-ui';
 import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
 import { LinkFolder } from '../carbonio-ui-commons/types';
@@ -19,11 +19,83 @@ import { sendInviteResponse } from '../store/actions/send-invite-response';
 import { StoreProvider } from '../store/redux';
 import { ActionsClick, ActionsContext } from '../types/actions';
 import { EventType } from '../types/event';
-import { Invite } from '../types/store/invite';
+import { Attendee, Invite } from '../types/store/invite';
 import { getInstanceExceptionId } from '../utils/event';
 import { DeleteEventModal } from '../view/modals/delete-event-modal';
 import { DeletePermanently } from '../view/modals/delete-permanently';
 import { MoveApptModal } from '../view/move/move-appt-view';
+
+type ActionsContextIgnored =
+	| 'createAndApplyTag'
+	| 'createModal'
+	| 'closeModal'
+	| 'createSnackbar'
+	| 'tags';
+
+type Recipient = {
+	email: string;
+	name: string;
+	carbonCopy: boolean;
+};
+
+function getRecipientFromOrganizer(organizer: EventType['resource']['organizer']): Recipient {
+	return {
+		email: organizer?.email ?? '',
+		name: organizer?.name ?? '',
+		carbonCopy: false
+	};
+}
+
+function getRecipientFromAttendee(attendee: Attendee): Recipient {
+	return {
+		email: attendee.a,
+		name: attendee.d,
+		carbonCopy: attendee.role === 'OPT'
+	};
+}
+
+export const emailAttendees = (
+	{
+		event,
+		invite: _invite,
+		context
+	}: {
+		event: EventType;
+		invite?: Invite;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
+	},
+	e?: ActionsClick
+): void => {
+	const identities = getIdentityItems().map((identity) => identity.address ?? '');
+	const sendMail = (invite: Invite, mySelf: Array<string>): void => {
+		const recipients = [
+			...invite.attendees.map(getRecipientFromAttendee),
+			getRecipientFromOrganizer(event.resource.organizer)
+		].filter((attendee) => !mySelf.includes(attendee.email));
+		const [mailTo, available] = getAction('recipients', 'mail-to', {
+			recipients,
+			subject: event.title
+		});
+		if (!available || !mailTo) {
+			return;
+		}
+		const { execute } = mailTo;
+		execute(e);
+	};
+	if (!_invite) {
+		context
+			.dispatch(getInvite({ inviteId: event?.resource?.inviteId, ridZ: event?.resource?.ridZ }))
+			.then((res) => {
+				if (res.payload) {
+					const invite = normalizeInvite(res.payload.m[0]);
+					return sendMail(invite, identities);
+				}
+				return undefined;
+			});
+	} else {
+		sendMail(_invite, identities);
+	}
+};
 
 export const createCopy =
 	({
@@ -33,10 +105,7 @@ export const createCopy =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const copy = (invite: Invite): void => {
@@ -97,10 +166,7 @@ export const editAppointment =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const edit = (invite: Invite): void => {
@@ -271,10 +337,7 @@ export const acceptInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -304,10 +367,7 @@ export const declineInvitation =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -336,10 +396,7 @@ export const acceptAsTentative =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e: ActionsClick) => void) =>
 	(): void => {
 		const exceptId =
@@ -368,10 +425,7 @@ export const proposeNewTimeFn =
 	}: {
 		event: EventType;
 		invite?: Invite;
-		context: Omit<
-			ActionsContext,
-			'createAndApplyTag' | 'createModal' | 'closeModal' | 'createSnackbar' | 'tags'
-		>;
+		context: Omit<ActionsContext, ActionsContextIgnored>;
 	}): ((e?: ActionsClick) => void) =>
 	(): void => {
 		const proposeTime = (invite: Invite): void => {
