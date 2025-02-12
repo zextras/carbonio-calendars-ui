@@ -76,6 +76,7 @@ const normalizeEventResource = ({
 	fragment: (inst as ExceptionReference)?.fr ?? appt.fr,
 	class: inst?.class ?? appt.class,
 	freeBusy: inst?.fb ?? appt.fb,
+	freeBusyActual: inst?.fba ?? appt.fba,
 	hasChangesNotNotified: inst?.draft ?? appt.draft ?? false,
 	inviteNeverSent: inst?.neverSent ?? appt.neverSent ?? false,
 	hasOtherAttendees: inst?.otherAtt ?? appt.otherAtt ?? false,
