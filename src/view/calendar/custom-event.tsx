@@ -191,36 +191,32 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 
 	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
 	const outerContainerBackgroundColor = useMemo(() => {
-		if (event.resource.freeBusy === 'F') {
-			if (event.resource.participationStatus === 'TE') {
-				return `repeating-linear-gradient(45deg,
-				'white',
-				'white' 8px,
-				${event.resource.calendar.color.background},
-				${event.resource.calendar.color.background} 10px)`;
-			}
+		const startingLineHeight = 8;
+		const endLineHeight = 10;
+		if (event.resource.freeBusyActual === 'F') {
 			return 'white';
 		}
-		if (event.resource.freeBusy === 'B') {
-			if (event.resource.participationStatus === 'TE') {
-				return `repeating-linear-gradient(45deg,
-				${event.resource.calendar.color.color},
-				${event.resource.calendar.color.color} 8px,
-				${event.resource.calendar.color.background},
-				${event.resource.calendar.color.background} 10px)`;
-			}
+		if (event.resource.freeBusyActual === 'B') {
 			return event.resource.calendar.color.color;
 		}
-		if (event.resource.freeBusy === 'U') {
-			return theme.palette.gray6.regular;
+		if (event.resource.freeBusyActual === 'O') {
+			return theme.palette.gray2.regular;
+		}
+		if (event.resource.freeBusyActual === 'T') {
+			const mainColor = event.resource.calendar.color.color;
+			const backgroundColor = event.resource.calendar.color.background;
+			return `repeating-linear-gradient(45deg,
+				${mainColor},
+				${mainColor} ${startingLineHeight}px,
+				${backgroundColor},
+				${backgroundColor} ${endLineHeight}px)`;
 		}
 		return event.resource.calendar.color.color;
 	}, [
 		event.resource.calendar.color.background,
 		event.resource.calendar.color.color,
-		event.resource.freeBusy,
-		event.resource.participationStatus,
-		theme.palette.gray6.regular
+		event.resource.freeBusyActual,
+		theme.palette.gray2.regular
 	]);
 
 	const textDecoration = useMemo(
@@ -249,16 +245,17 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 						borderRadius: '0.25rem',
 						boxShadow: '0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)',
 						border: `0.0625rem solid ${event.resource.calendar.color.color}`,
-						borderLeft: 0,
 						transition: 'border 0.15s ease-in-out, background 0.15s ease-in-out',
 						cursor: 'pointer',
-						color: `${event.resource.calendar.color.color}`,
-						opacity: `${event.resource.participationStatus === 'DE' ? '0.6' : '1'}`
+						color: `${event.resource.calendar.color.color}`
 					}}
 				>
 					<Container
 						height="100%"
-						style={{ padding: innerContainerPadding }}
+						style={{
+							padding: innerContainerPadding,
+							borderLeft: `0.0625rem solid ${event.resource.calendar.color.color}`
+						}}
 						background={event.resource.calendar.color.background}
 					>
 						<Dropdown
