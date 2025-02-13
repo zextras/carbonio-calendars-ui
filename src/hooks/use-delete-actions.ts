@@ -10,10 +10,10 @@ import { TFunction } from 'i18next';
 import { size } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { Dispatch } from 'redux';
 
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
+import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
 import { Folders } from '../carbonio-ui-commons/types';
 import { generateEditor } from '../commons/editor-generator';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
@@ -120,7 +120,7 @@ export const useDeleteActions = (
 	context: AccountContext
 ): UseDeleteActionsType => {
 	const [t] = useTranslation();
-	const navigate = useNavigate();
+	const { replaceHistory } = useHistoryNavigation();
 	const dispatch = useAppDispatch();
 	const createSnackbar = useSnackbar();
 	const [deleteAll, setDeleteAll] = useState(true);
@@ -147,7 +147,7 @@ export const useDeleteActions = (
 				generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 			});
 		};
-		navigate('/');
+		replaceHistory('');
 		const ctxt = {
 			dispatch,
 			t,
@@ -166,7 +166,7 @@ export const useDeleteActions = (
 					}
 				}, 5000);
 			});
-	}, [context, navigate, dispatch, t, createSnackbar, event, notifyOrganizer]);
+	}, [context, replaceHistory, dispatch, t, createSnackbar, event, notifyOrganizer]);
 
 	const deleteRecurrentSerie = useCallback(() => {
 		context?.onClose && context?.onClose();

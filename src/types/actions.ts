@@ -7,11 +7,11 @@ import React from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { TFunction } from 'i18next';
-import { useNavigate } from 'react-router-dom';
 
 import { EventType } from './event';
 import { Invite } from './store/invite';
-import { Folders } from '../carbonio-ui-commons/types/folder';
+import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
+import { Folders } from '../carbonio-ui-commons/types';
 import { Tags } from '../carbonio-ui-commons/types/tags';
 import { EventActionsId } from '../constants/event-actions';
 import { AppDispatch } from '../store/redux';
@@ -28,7 +28,7 @@ export type ActionsContext = {
 	closeModal: ReturnType<typeof useModal>['closeModal'];
 	createSnackbar: ReturnType<typeof useSnackbar>;
 	dispatch: AppDispatch;
-	navigate: ReturnType<typeof useNavigate>;
+	replaceHistory: ReturnType<typeof useHistoryNavigation>['replaceHistory'];
 	t: TFunction;
 	tags: Tags;
 	onClose?: () => void;

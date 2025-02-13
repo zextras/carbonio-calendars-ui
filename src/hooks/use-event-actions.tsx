@@ -8,7 +8,6 @@ import { useMemo } from 'react';
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { compact, find, omit } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import {
 	answerToEventItem,
@@ -23,6 +22,7 @@ import {
 	showOriginal
 } from '../actions/appointment-actions-items';
 import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
+import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { useTags } from '../carbonio-ui-commons/store/zustand/tags';
 import { LinkFolder } from '../carbonio-ui-commons/types';
@@ -164,7 +164,7 @@ export const useEventActions = ({
 	context?: { panelView: PanelView };
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
 	const [t] = useTranslation();
-	const navigate = useNavigate();
+	const { replaceHistory } = useHistoryNavigation();
 	const invite = useAppSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useAppDispatch();
 	const { createModal, closeModal } = useModal();
@@ -176,7 +176,7 @@ export const useEventActions = ({
 			tags,
 			folders: calendarFolders,
 			createAndApplyTag,
-			navigate,
+			replaceHistory,
 			t,
 			createModal,
 			closeModal,
@@ -193,7 +193,7 @@ export const useEventActions = ({
 			createModal,
 			createSnackbar,
 			dispatch,
-			navigate,
+			replaceHistory,
 			onClose,
 			t,
 			tags
