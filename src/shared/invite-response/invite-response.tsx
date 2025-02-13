@@ -59,6 +59,10 @@ const LinkText = styled(Text)`
 	}
 `;
 
+function endOfDay(day: any): number {
+	return moment(day).endOf('day').valueOf();
+}
+
 export const InviteResponse: FC<InviteResponseArguments> = ({
 	mailMsg,
 	moveToTrash
@@ -211,7 +215,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						email={email}
 						rootId={root.id}
 						start={invite?.start?.u ?? moment(mailMsg.invite[0].comp[0].s[0].d).valueOf()}
-						end={invite?.end?.u ?? moment(mailMsg.invite[0].comp[0].e[0].d).valueOf()}
+						end={invite?.end?.u ?? endOfDay(mailMsg.invite[0].comp[0].e[0].d)}
 						allDay={invite.allDay ?? false}
 						uid={invite.uid}
 					/>
