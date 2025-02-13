@@ -6,9 +6,8 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Container, Divider, Icon, Row, Text, Button } from '@zextras/carbonio-design-system';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import ActionButtons from './actions-buttons';
@@ -60,10 +59,11 @@ export const DisplayerHeader = ({
 	event: EventType;
 	panelView: PanelView;
 }): ReactElement => {
+	const navigate = useNavigate();
 	const [t] = useTranslation();
 	const close = useCallback(() => {
-		replaceHistory('');
-	}, []);
+		navigate('/');
+	}, [navigate]);
 	const actions = useEventActions({ onClose: close, event, context: { panelView } });
 
 	return (
@@ -107,7 +107,7 @@ export const DisplayerHeader = ({
 
 export default function EventPanelView(): ReactElement | null {
 	const { calendarId, apptId, ridZ } = useParams<RouteParams>();
-	const calendar = useFolder(calendarId);
+	const calendar = useFolder(calendarId ?? '');
 	const appointment = useAppSelector(selectAppointment(apptId));
 	const instance = useAppSelector(selectAppointmentInstance(apptId, ridZ));
 	const invite = useInvite((instance as ExceptionReference)?.inviteId ?? appointment?.inviteId);

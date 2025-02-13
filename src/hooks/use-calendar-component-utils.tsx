@@ -6,12 +6,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
-import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { addBoard } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isArray, isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
@@ -48,6 +48,7 @@ export const useCalendarComponentUtils = (): {
 	const createSnackbar = useSnackbar();
 
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
 	const calendarFolders = useFoldersMap();
 	const summaryViewOpen = useIsSummaryViewOpen();
 	const setRange = useSetRange();
@@ -58,9 +59,9 @@ export const useCalendarComponentUtils = (): {
 
 	useEffect(() => {
 		if (action && action !== EVENT_ACTIONS.EXPAND) {
-			replaceHistory('');
+			navigate('/');
 		}
-	}, [action]);
+	}, [action, navigate]);
 
 	const getStart = useCallback(
 		({

@@ -6,12 +6,11 @@
 import React, { useCallback, useState } from 'react';
 
 import { Container, Icon, Row, Tooltip, Padding, Text } from '@zextras/carbonio-design-system';
-import { pushHistory } from '@zextras/carbonio-shell-ui';
 import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { TagIconComponent } from '../../../commons/tag-icon-component';
-import { CALENDAR_ROUTE } from '../../../constants';
 import { EVENT_ACTIONS } from '../../../constants/event-actions';
 import { EventType } from '../../../types/event';
 
@@ -40,14 +39,14 @@ const useEventTimeString = (start: Moment | Date, end: Moment | Date, allDay: bo
 
 export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element => {
 	const [t] = useTranslation();
+	const navigate = useNavigate();
 	const [tooltipVisible, setTooltipVisible] = useState(false);
 
 	const onClick = useCallback(() => {
-		pushHistory({
-			route: CALENDAR_ROUTE,
-			path: `${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-		});
-	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ]);
+		navigate(
+			`${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+		);
+	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ, navigate]);
 
 	const eventTimeString = useEventTimeString(event.start, event.end, event.allDay);
 

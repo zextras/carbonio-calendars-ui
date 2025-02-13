@@ -10,6 +10,7 @@ import { TFunction } from 'i18next';
 import { size } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Dispatch } from 'redux';
 
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
@@ -99,7 +100,6 @@ const generateAppointmentRestoredSnackbar = (
 type AccountContext = {
 	isSingleInstance?: boolean;
 	dispatch: Dispatch;
-	replaceHistory: (a: string) => void;
 	onClose: () => void;
 	folders: Folders;
 };
@@ -120,6 +120,7 @@ export const useDeleteActions = (
 	context: AccountContext
 ): UseDeleteActionsType => {
 	const [t] = useTranslation();
+	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const createSnackbar = useSnackbar();
 	const [deleteAll, setDeleteAll] = useState(true);
@@ -146,7 +147,7 @@ export const useDeleteActions = (
 				generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 			});
 		};
-		context.replaceHistory('');
+		navigate('/');
 		const ctxt = {
 			dispatch,
 			t,
@@ -165,7 +166,7 @@ export const useDeleteActions = (
 					}
 				}, 5000);
 			});
-	}, [event, context, createSnackbar, dispatch, notifyOrganizer, t]);
+	}, [context, navigate, dispatch, t, createSnackbar, event, notifyOrganizer]);
 
 	const deleteRecurrentSerie = useCallback(() => {
 		context?.onClose && context?.onClose();
@@ -181,7 +182,7 @@ export const useDeleteActions = (
 				generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 			});
 		};
-		context.replaceHistory('');
+		navigate('/');
 		const ctxt = {
 			dispatch,
 			t,
@@ -247,12 +248,12 @@ export const useDeleteActions = (
 					}
 				}, 5000)
 			);
-	}, [event, context, createSnackbar, deleteAll, dispatch, invite, notifyOrganizer, t]);
+	}, [context, navigate, dispatch, t, createSnackbar, event, invite, deleteAll, notifyOrganizer]);
 
 	const deleteRecurrentInstance = useCallback(() => {
 		context.onClose();
 		const isCanceled = false;
-		context.replaceHistory('');
+		navigate('/');
 		const ctxt = {
 			dispatch,
 			t,
@@ -277,7 +278,7 @@ export const useDeleteActions = (
 					}
 				}, 5000)
 			);
-	}, [event, context, createSnackbar, dispatch, invite?.start?.tz, notifyOrganizer, t]);
+	}, [context, navigate, dispatch, t, createSnackbar, event, invite?.start?.tz, notifyOrganizer]);
 
 	return useMemo(
 		() => ({

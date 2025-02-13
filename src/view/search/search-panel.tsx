@@ -3,32 +3,37 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ComponentProps, ReactComponentElement } from 'react';
+import React from 'react';
 
 import { Container, Icon, Padding, Text } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
-import { useRouteMatch, Switch, Route } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Displayer from './displayer';
-import { useSelectedEventFromArray } from '../../hooks/use-selected-event-from-array';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
+import { useSelectedEventFromArray } from '../../hooks/use-selected-event-from-array';
+import { EventType } from '../../types/event';
 
 const LargeIcon = styled(Icon)`
 	transform: scale(3.5);
 `;
 
-const SearchPanel = ({ appointments }: ComponentProps<any>): ReactComponentElement<any> => {
-	const { path } = useRouteMatch();
+type SearchPanelProps = {
+	appointments: Array<EventType>;
+};
+
+const SearchPanel = ({ appointments }: SearchPanelProps): React.JSX.Element => {
+	const [t] = useTranslation();
 	const event = useSelectedEventFromArray(appointments);
 	return (
-		<Switch>
-			<Route path={`${path}/:action(${EVENT_ACTIONS.EXPAND})/:apptId/:ridZ?`}>
-				<Displayer event={event} />
-			</Route>
+		<Routes>
 			<Route
-				path={path}
-				render={(): ReactComponentElement<any> => (
+				path={`:action(${EVENT_ACTIONS.EXPAND})/:apptId/:ridZ?`}
+				element={<Displayer event={event} />}
+			/>
+			<Route
+				element={
 					<Container background={'gray5'} mainAlignment="center">
 						<LargeIcon icon="SearchOutline" color="secondary" />
 						<Padding top="medium" />
@@ -39,9 +44,9 @@ const SearchPanel = ({ appointments }: ComponentProps<any>): ReactComponentEleme
 						<Padding top="medium" />
 						<Text color="secondary">{t(`message.search_hints`)}</Text>
 					</Container>
-				)}
+				}
 			/>
-		</Switch>
+		</Routes>
 	);
 };
 

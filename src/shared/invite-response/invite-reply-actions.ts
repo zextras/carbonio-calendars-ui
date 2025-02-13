@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
-import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { TFunction } from 'i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { Folder, LinkFolder } from '../../carbonio-ui-commons/types';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { AppDispatch } from '../../store/redux';
@@ -17,6 +18,8 @@ type ResponseAction = {
 	notifyOrganizer: boolean;
 	action: string;
 	dispatch: AppDispatch;
+	navigate: ReturnType<typeof useNavigate>;
+	t: TFunction;
 	activeCalendar: Folder | null;
 	createSnackbar: CreateSnackbarFn;
 	parent: string;
@@ -26,6 +29,8 @@ export const sendResponse = ({
 	notifyOrganizer,
 	action,
 	dispatch,
+	navigate,
+	t,
 	activeCalendar,
 	createSnackbar,
 	parent
@@ -39,7 +44,7 @@ export const sendResponse = ({
 	).then((res): void => {
 		if (res.type.includes('fulfilled')) {
 			if (parent) {
-				replaceHistory(`/folder/${parent}`);
+				navigate(`/folder/${parent}`);
 			}
 			const snackbarLabel =
 				// eslint-disable-next-line no-nested-ternary

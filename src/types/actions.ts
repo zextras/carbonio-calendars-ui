@@ -6,6 +6,8 @@
 import React from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
+import { TFunction } from 'i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { EventType } from './event';
 import { Invite } from './store/invite';
@@ -26,7 +28,8 @@ export type ActionsContext = {
 	closeModal: ReturnType<typeof useModal>['closeModal'];
 	createSnackbar: ReturnType<typeof useSnackbar>;
 	dispatch: AppDispatch;
-	replaceHistory?: (arg: any) => void;
+	navigate: ReturnType<typeof useNavigate>;
+	t: TFunction;
 	tags: Tags;
 	onClose?: () => void;
 	panel?: boolean;

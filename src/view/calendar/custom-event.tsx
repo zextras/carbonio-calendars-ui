@@ -25,11 +25,10 @@ import {
 	useModal,
 	Padding
 } from '@zextras/carbonio-design-system';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
@@ -99,6 +98,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const [t] = useTranslation();
 	const [isOuterTooltipDisabled, setIsOuterTooltipDisabled] = useState(false);
 	const recurrentLabel = t('label.recurrent', 'Recurrent appointment');
+	const navigate = useNavigate();
 
 	const eventDiff = useMemo(
 		() => moment(event.end).diff(event.start, 'minutes'),
@@ -106,14 +106,14 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	);
 
 	const onEntireSeries = useCallback((): void => {
-		replaceHistory(`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`);
-	}, [event.resource.calendar.id, event.resource.id]);
+		navigate(`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`);
+	}, [event.resource.calendar.id, event.resource.id, navigate]);
 
 	const onSingleInstance = useCallback((): void => {
-		replaceHistory(
+		navigate(
 			`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
-	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
+	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ, navigate]);
 
 	const showPanelView = useCallback(() => {
 		if (event?.resource?.isRecurrent) {
@@ -135,11 +135,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				true
 			);
 		} else {
-			replaceHistory(
+			navigate(
 				`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
-	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal]);
+	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal, navigate]);
 
 	const toggleOpen = useCallback(
 		(e: React.MouseEvent): void => {
