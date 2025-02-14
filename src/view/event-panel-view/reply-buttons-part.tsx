@@ -14,6 +14,7 @@ import {
 	declineInvitation,
 	proposeNewTimeFn
 } from '../../actions/appointment-actions-fn';
+import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
@@ -26,15 +27,18 @@ type ReplyButtonProps = {
 
 export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElement => {
 	const [t] = useTranslation();
+	const { replaceHistory } = useHistoryNavigation();
 	const dispatch = useAppDispatch();
 	const folders = useFoldersMap();
 	const context = useMemo(
 		() => ({
 			dispatch,
 			folders,
+			t,
+			replaceHistory,
 			isInstance: !!event.resource.ridZ
 		}),
-		[dispatch, event.resource.ridZ, folders]
+		[dispatch, event.resource.ridZ, folders, replaceHistory, t]
 	);
 
 	return (

@@ -5,7 +5,7 @@
  */
 import React from 'react';
 
-import { addBoard, getAction, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction } from '@zextras/carbonio-shell-ui';
 import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
 import { LinkFolder } from '../carbonio-ui-commons/types';
@@ -320,13 +320,13 @@ export const openAppointment =
 			const path = event.resource.ridZ
 				? `/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 				: `/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
-			replaceHistory(path);
+			context.replaceHistory(path);
 		}
 		if (context?.panelView === PANEL_VIEW.SEARCH) {
 			const path = event.resource.ridZ
 				? `/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 				: `/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
-			replaceHistory(path);
+			context.replaceHistory(path);
 		}
 	};
 export const acceptInvitation =

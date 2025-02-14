@@ -105,7 +105,18 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 					autoHideTimeout: 3000
 				});
 			});
-	}, [board, closeModal, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
+	}, [
+		board,
+		closeModal,
+		createModal,
+		createSnackbar,
+		dispatch,
+		editor,
+		editorId,
+		isNew,
+		replaceHistory,
+		t
+	]);
 
 	return (
 		<Button
