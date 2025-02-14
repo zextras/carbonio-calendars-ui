@@ -182,7 +182,7 @@ export const useDeleteActions = (
 				generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 			});
 		};
-		navigate('/');
+		replaceHistory('');
 		const ctxt = {
 			dispatch,
 			t,
@@ -248,12 +248,22 @@ export const useDeleteActions = (
 					}
 				}, 5000)
 			);
-	}, [context, navigate, dispatch, t, createSnackbar, event, invite, deleteAll, notifyOrganizer]);
+	}, [
+		context,
+		replaceHistory,
+		dispatch,
+		t,
+		createSnackbar,
+		event,
+		invite,
+		deleteAll,
+		notifyOrganizer
+	]);
 
 	const deleteRecurrentInstance = useCallback(() => {
 		context.onClose();
 		const isCanceled = false;
-		navigate('/');
+		replaceHistory('');
 		const ctxt = {
 			dispatch,
 			t,
@@ -278,7 +288,16 @@ export const useDeleteActions = (
 					}
 				}, 5000)
 			);
-	}, [context, navigate, dispatch, t, createSnackbar, event, invite?.start?.tz, notifyOrganizer]);
+	}, [
+		context,
+		replaceHistory,
+		dispatch,
+		t,
+		createSnackbar,
+		event,
+		invite?.start?.tz,
+		notifyOrganizer
+	]);
 
 	return useMemo(
 		() => ({

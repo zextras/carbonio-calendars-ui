@@ -8,8 +8,8 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 import { Button, useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { closeBoard, useBoard } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
+import { useHistoryNavigation } from '../../../carbonio-ui-commons/helpers/use-history-navigation';
 import { onSend } from '../../../commons/editor-save-send-fns';
 import { StoreProvider } from '../../../store/redux';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
@@ -42,7 +42,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const [t] = useTranslation();
 	const board = useBoard();
 	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
+	const { replaceHistory } = useHistoryNavigation();
 
 	const isDisabled = useMemo(
 		() =>
@@ -89,7 +89,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 		} else
 			onSend({ isNew, editor, dispatch }).then(({ response }) => {
 				if (editor?.panel && response) {
-					navigate('/');
+					replaceHistory('');
 				}
 				if (board && response) {
 					closeBoard(board?.id);

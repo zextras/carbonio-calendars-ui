@@ -17,8 +17,8 @@ import {
 import { addBoard, Board } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
+import { useHistoryNavigation } from '../../../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../../carbonio-ui-commons/types';
 import { generateEditor } from '../../../commons/editor-generator';
@@ -78,7 +78,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const calendarFolders = useFoldersMap();
-	const navigate = useNavigate();
+	const { replaceHistory } = useHistoryNavigation();
 
 	const proposeNewTimeCb = useCallback(() => {
 		const messageData = message.invite[0].comp[0];
@@ -135,14 +135,14 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 					notifyOrganizer,
 					activeCalendar,
 					dispatch,
-					navigate,
+					replaceHistory,
 					t,
 					parent: message.parent
 				});
 			},
 		[
 			t,
-			navigate,
+			replaceHistory,
 			createSnackbar,
 			inviteId,
 			notifyOrganizer,

@@ -7,7 +7,7 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Container, Divider, Icon, Row, Text, Button } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import ActionButtons from './actions-buttons';
@@ -18,6 +18,7 @@ import { ParticipantsPart } from './participants-part';
 import { ReminderPart } from './reminder-part';
 import { ReplyButtonsPart } from './reply-buttons-part';
 import { isAnInvite } from '../../actions/appointment-actions-items';
+import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../carbonio-ui-commons/types';
 import StyledDivider from '../../commons/styled-divider';
@@ -59,11 +60,11 @@ export const DisplayerHeader = ({
 	event: EventType;
 	panelView: PanelView;
 }): ReactElement => {
-	const navigate = useNavigate();
+	const { replaceHistory } = useHistoryNavigation();
 	const [t] = useTranslation();
 	const close = useCallback(() => {
-		navigate('/');
-	}, [navigate]);
+		replaceHistory('');
+	}, [replaceHistory]);
 	const actions = useEventActions({ onClose: close, event, context: { panelView } });
 
 	return (

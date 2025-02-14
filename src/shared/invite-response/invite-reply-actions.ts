@@ -5,9 +5,9 @@
  */
 import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { TFunction } from 'i18next';
-import { useNavigate } from 'react-router-dom';
 
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
+import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
 import { Folder, LinkFolder } from '../../carbonio-ui-commons/types';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
@@ -18,7 +18,7 @@ type ResponseAction = {
 	notifyOrganizer: boolean;
 	action: string;
 	dispatch: AppDispatch;
-	navigate: ReturnType<typeof useNavigate>;
+	replaceHistory: ReturnType<typeof useHistoryNavigation>['replaceHistory'];
 	t: TFunction;
 	activeCalendar: Folder | null;
 	createSnackbar: CreateSnackbarFn;
@@ -29,7 +29,7 @@ export const sendResponse = ({
 	notifyOrganizer,
 	action,
 	dispatch,
-	navigate,
+	replaceHistory,
 	t,
 	activeCalendar,
 	createSnackbar,
@@ -44,7 +44,7 @@ export const sendResponse = ({
 	).then((res): void => {
 		if (res.type.includes('fulfilled')) {
 			if (parent) {
-				navigate(`/folder/${parent}`);
+				replaceHistory(`/folder/${parent}`);
 			}
 			const snackbarLabel =
 				// eslint-disable-next-line no-nested-ternary
