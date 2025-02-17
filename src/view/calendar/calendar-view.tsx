@@ -3,15 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { Suspense, lazy, ReactElement } from 'react';
+import React, { lazy, ReactElement, Suspense } from 'react';
 
 import { Button, Container } from '@zextras/carbonio-design-system';
 import { noop } from 'lodash';
 import { Routes, Route } from 'react-router-dom';
 
 import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
-import { EVENT_ACTIONS } from '../../constants/event-actions';
-import EventPanelView from '../event-panel-view/event-panel-view';
 
 const CalendarComponent = lazy(
 	() => import(/* webpackChunkName: "calendar-component" */ './calendar-component')
@@ -28,20 +26,22 @@ export default function CalendarView(): ReactElement {
 			data-testid="MainCalendarContainer"
 		>
 			<Routes>
-				<Route path={`:calendarId?/:action?/:apptId?/:ridZ?`}>
-					<Suspense
-						fallback={
-							<Container height="50%" mainAlignment="center" crossAlignment="center">
-								<Button loading disabled label="" type="ghost" onClick={noop} />
-							</Container>
-						}
-					>
-						<CalendarComponent />
-					</Suspense>
-					<Route path={`:calendarId/:action(${EVENT_ACTIONS.EXPAND})/:apptId/:ridZ?`}>
-						<EventPanelView />
-					</Route>
-				</Route>
+				<Route
+					path={`:calendarId?/:action?/:apptId?/:ridZ?`}
+					element={
+						<>
+							<Suspense
+								fallback={
+									<Container height="50%" mainAlignment="center" crossAlignment="center">
+										<Button loading disabled label="" type="ghost" onClick={noop} />
+									</Container>
+								}
+							>
+								<CalendarComponent />
+							</Suspense>
+						</>
+					}
+				/>
 			</Routes>
 		</Container>
 	);

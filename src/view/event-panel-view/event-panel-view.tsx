@@ -22,7 +22,7 @@ import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-hist
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../carbonio-ui-commons/types';
 import StyledDivider from '../../commons/styled-divider';
-import { PANEL_VIEW } from '../../constants';
+import { CALENDAR_ROUTE, PANEL_VIEW } from '../../constants';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
@@ -63,7 +63,7 @@ export const DisplayerHeader = ({
 	const { replaceHistory } = useHistoryNavigation();
 	const [t] = useTranslation();
 	const close = useCallback(() => {
-		replaceHistory('');
+		replaceHistory(`/${CALENDAR_ROUTE}`);
 	}, [replaceHistory]);
 	const actions = useEventActions({ onClose: close, event, context: { panelView } });
 

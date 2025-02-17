@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useHistoryNavigation } from '../../../carbonio-ui-commons/helpers/use-history-navigation';
 import { onSend } from '../../../commons/editor-save-send-fns';
+import { CALENDAR_ROUTE } from '../../../constants';
 import { StoreProvider } from '../../../store/redux';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -89,7 +90,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 		} else
 			onSend({ isNew, editor, dispatch }).then(({ response }) => {
 				if (editor?.panel && response) {
-					replaceHistory('');
+					replaceHistory(`/${CALENDAR_ROUTE}`);
 				}
 				if (board && response) {
 					closeBoard(board?.id);

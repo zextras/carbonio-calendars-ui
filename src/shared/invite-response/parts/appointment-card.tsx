@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useHistoryNavigation } from '../../../carbonio-ui-commons/helpers/use-history-navigation';
 import { TagIconComponent } from '../../../commons/tag-icon-component';
+import { CALENDAR_ROUTE } from '../../../constants';
 import { EVENT_ACTIONS } from '../../../constants/event-actions';
 import { EventType } from '../../../types/event';
 
@@ -44,7 +45,7 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 
 	const onClick = useCallback(() => {
 		pushHistory(
-			`${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
 	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ, pushHistory]);
 

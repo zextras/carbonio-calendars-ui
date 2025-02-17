@@ -16,6 +16,7 @@ import { deleteEvent, sendResponse } from '../actions/delete-actions';
 import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
 import { Folders } from '../carbonio-ui-commons/types';
 import { generateEditor } from '../commons/editor-generator';
+import { CALENDAR_ROUTE } from '../constants';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../store/redux/hooks';
@@ -147,7 +148,7 @@ export const useDeleteActions = (
 				generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 			});
 		};
-		replaceHistory('');
+		replaceHistory(`/${CALENDAR_ROUTE}`);
 		const ctxt = {
 			dispatch,
 			t,
@@ -182,7 +183,7 @@ export const useDeleteActions = (
 				generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 			});
 		};
-		replaceHistory('');
+		replaceHistory(`/${CALENDAR_ROUTE}`);
 		const ctxt = {
 			dispatch,
 			t,
@@ -263,7 +264,7 @@ export const useDeleteActions = (
 	const deleteRecurrentInstance = useCallback(() => {
 		context.onClose();
 		const isCanceled = false;
-		replaceHistory('');
+		replaceHistory(`/${CALENDAR_ROUTE}`);
 		const ctxt = {
 			dispatch,
 			t,

@@ -36,6 +36,7 @@ export const sendResponse = ({
 	parent
 }: ResponseAction): void => {
 	dispatch(
+		// WHAT!?
 		sendInviteResponse({
 			inviteId,
 			updateOrganizer: notifyOrganizer,
@@ -44,7 +45,8 @@ export const sendResponse = ({
 	).then((res): void => {
 		if (res.type.includes('fulfilled')) {
 			if (parent) {
-				replaceHistory(`/folder/${parent}`);
+				// FIXME: this is a workaround until CO-1823 and CO-1825 will be completed
+				replaceHistory(`/mails/folder/${parent}`);
 			}
 			const snackbarLabel =
 				// eslint-disable-next-line no-nested-ternary

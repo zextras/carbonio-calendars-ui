@@ -18,7 +18,7 @@ import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
-import { CALENDAR_BOARD_ID } from '../constants';
+import { CALENDAR_BOARD_ID, CALENDAR_ROUTE } from '../constants';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
@@ -60,7 +60,7 @@ export const useCalendarComponentUtils = (): {
 
 	useEffect(() => {
 		if (action && action !== EVENT_ACTIONS.EXPAND) {
-			replaceHistory('');
+			replaceHistory(`/${CALENDAR_ROUTE}`);
 		}
 	}, [action, replaceHistory]);
 
