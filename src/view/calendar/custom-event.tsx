@@ -23,8 +23,7 @@ import {
 	Dropdown,
 	Popover,
 	useModal,
-	Padding,
-	useTheme
+	Padding
 } from '@zextras/carbonio-design-system';
 import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
@@ -34,6 +33,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
+import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
 import { TagIconComponent } from '../../commons/tag-icon-component';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
@@ -109,7 +109,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const [t] = useTranslation();
 	const [isOuterTooltipDisabled, setIsOuterTooltipDisabled] = useState(false);
 	const recurrentLabel = t('label.recurrent', 'Recurrent appointment');
-	const theme = useTheme();
 
 	const eventDiff = useMemo(
 		() => moment(event.end).diff(event.start, 'minutes'),
@@ -190,34 +189,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	);
 
 	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
-	const outerContainerBackgroundColor = useMemo(() => {
-		const startingLineHeight = 8;
-		const endLineHeight = 10;
-		if (event.resource.freeBusyActual === 'F') {
-			return 'white';
-		}
-		if (event.resource.freeBusyActual === 'B') {
-			return event.resource.calendar.color.color;
-		}
-		if (event.resource.freeBusyActual === 'O') {
-			return theme.palette.gray2.regular;
-		}
-		if (event.resource.freeBusyActual === 'T') {
-			const mainColor = event.resource.calendar.color.color;
-			const backgroundColor = event.resource.calendar.color.background;
-			return `repeating-linear-gradient(45deg,
-				${mainColor},
-				${mainColor} ${startingLineHeight}px,
-				${backgroundColor},
-				${backgroundColor} ${endLineHeight}px)`;
-		}
-		return event.resource.calendar.color.color;
-	}, [
-		event.resource.calendar.color.background,
-		event.resource.calendar.color.color,
-		event.resource.freeBusyActual,
-		theme.palette.gray2.regular
-	]);
 
 	const textDecoration = useMemo(
 		() => (event.resource.participationStatus === 'DE' ? 'line-through' : 'none'),
@@ -236,19 +207,10 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				placement="top"
 				disabled={event.resource.class === 'PRI' || isOuterTooltipDisabled}
 			>
-				<Container
-					height="100%"
-					data-testid="calendar-event"
-					style={{
-						paddingLeft: '0.5rem',
-						background: outerContainerBackgroundColor,
-						borderRadius: '0.25rem',
-						boxShadow: '0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)',
-						border: `0.0625rem solid ${event.resource.calendar.color.color}`,
-						transition: 'border 0.15s ease-in-out, background 0.15s ease-in-out',
-						cursor: 'pointer',
-						color: `${event.resource.calendar.color.color}`
-					}}
+				<CustomEventFreeBusyStatus
+					color={event.resource.calendar.color.color}
+					background={event.resource.calendar.color.background}
+					freeBusyActual={event.resource.freeBusyActual}
 				>
 					<Container
 						height="100%"
@@ -419,7 +381,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 							</Container>
 						</Dropdown>
 					</Container>
-				</Container>
+				</CustomEventFreeBusyStatus>
 			</Tooltip>
 			<Popover
 				anchorEl={anchorRef}
