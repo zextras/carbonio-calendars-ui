@@ -55,21 +55,12 @@ const AlignedIcon = styled(Icon)`
 
 const CustomEventTitle = ({
 	title,
-	overflow = 'break-word',
-	textDecoration = 'none',
-	textDecorationThickness
+	overflow = 'break-word'
 }: {
 	title: CustomEventProps['title'];
 	overflow?: 'ellipsis' | 'visible' | 'break-word';
-	textDecoration?: string;
-	textDecorationThickness?: string;
 }): ReactElement => (
-	<Text
-		size={'small'}
-		color="currentColor"
-		style={{ overflow, textDecoration, textDecorationThickness }}
-		weight="bold"
-	>
+	<Text size={'small'} color="currentColor" style={{ overflow }} weight="bold">
 		{title}
 	</Text>
 );
@@ -190,16 +181,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 
 	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
 
-	const textDecoration = useMemo(
-		() => (event.resource.participationStatus === 'DE' ? 'line-through' : 'none'),
-		[event.resource.participationStatus]
-	);
-
-	const textDecorationThickness = useMemo(
-		() => (event.resource.participationStatus === 'DE' ? '0.125rem' : undefined),
-		[event.resource.participationStatus]
-	);
-
 	return (
 		<>
 			<Tooltip
@@ -311,9 +292,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 															color="currentColor"
 															size={'small'}
 															style={{
-																overflow: textOverflow,
-																textDecoration,
-																textDecorationThickness
+																overflow: textOverflow
 															}}
 														>
 															{`${moment(event.start).format('LT')} - ${moment(event.end).format(
@@ -332,23 +311,12 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 																		disableOuterTooltip={setIsOuterTooltipDisabled}
 																	/>
 																)}
-																<CustomEventTitle
-																	title={title}
-																	textDecoration={textDecoration}
-																	textDecorationThickness={textDecorationThickness}
-																/>
+																<CustomEventTitle title={title} />
 															</>
 														)}
 													</Row>
 												)}
-												{event.allDay && (
-													<CustomEventTitle
-														title={title}
-														overflow={textOverflow}
-														textDecoration={textDecoration}
-														textDecorationThickness={textDecorationThickness}
-													/>
-												)}
+												{event.allDay && <CustomEventTitle title={title} overflow={textOverflow} />}
 											</>
 										</Row>
 										<TagIconComponent
@@ -370,11 +338,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 													disableOuterTooltip={setIsOuterTooltipDisabled}
 												/>
 											)}
-											<CustomEventTitle
-												title={title}
-												textDecoration={textDecoration}
-												textDecorationThickness={textDecorationThickness}
-											/>
+											<CustomEventTitle title={title} />
 										</Row>
 									</>
 								)}
