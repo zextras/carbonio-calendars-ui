@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
 	AnyColor,
@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { ColorContainer, LabelText, TextUpperCase } from './select-label-factory';
+import { ObjectValues } from '../../../constants/event-actions';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -31,18 +32,20 @@ import {
 import { editEditorDisplayStatus } from '../../../store/slices/editor-slice';
 import { InviteFreeBusy } from '../../../types/store/invite';
 
-interface CustomSelectItem extends SelectItem {
-	backgroundColor: string;
-	borderColor: string;
+interface CustomSelectItem extends SelectItem<StatusItemValueType> {
+	customComponent?: React.JSX.Element;
+	label: string;
+	value: StatusItemValueType;
 }
 
-export interface CustomLabelFactoryProps extends LabelFactoryProps {
+export interface CustomLabelFactoryProps extends LabelFactoryProps<StatusItemValueType> {
 	selected: CustomSelectItem[];
 }
 
 const FreeBusyIconItem = styled.div<{ color?: AnyColor; border?: AnyColor }>`
-	width: 1rem;
-	height: 1rem;
+	width: 0.875rem;
+	height: 0.875rem;
+	margin: -1px;
 	background: ${({ color }): string | undefined => color};
 	border: ${({ border }): string | undefined => `1px solid ${border}`};
 	border-radius: 0.25rem;
@@ -92,9 +95,9 @@ const FreeBusyLabelFactory = (item: CustomLabelFactoryProps): React.JSX.Element 
 					</LabelText>
 					{selected?.[0] && (
 						<FreeBusyItemFactory
-							backgroundColor={selected[0].backgroundColor}
+							backgroundColor={selected[0].value.backgroundColor}
 							label={selected[0].label}
-							borderColor={selected[0].borderColor}
+							borderColor={selected[0].value.borderColor}
 						/>
 					)}
 				</Row>
@@ -115,9 +118,21 @@ const STATUS_VALUES = {
 	TENTATIVE: 'T',
 	BUSY: 'B',
 	OUT_OF_OFFICE: 'O'
+} as const;
+
+type DisplayStatusType = ObjectValues<typeof STATUS_VALUES>;
+type StatusItemValueType = {
+	type: DisplayStatusType;
+	backgroundColor: string;
+	borderColor: string;
+};
+type StatusItemType = {
+	label: string;
+	value: StatusItemValueType;
+	customComponent: React.JSX.Element;
 };
 
-const useGetStatusItems = (editorId: string): Array<any> => {
+const useGetStatusItems = (editorId: string): Array<StatusItemType> => {
 	const [t] = useTranslation();
 	const calendar = useAppSelector(selectEditorCalendar(editorId));
 	const calendarColor = setCalendarColor({ color: calendar.color }).color;
@@ -133,9 +148,11 @@ const useGetStatusItems = (editorId: string): Array<any> => {
 		() => [
 			{
 				label: t('label.free', 'Free'),
-				value: STATUS_VALUES.FREE,
-				backgroundColor: theme.palette.white.regular,
-				borderColor: calendarColor,
+				value: {
+					type: STATUS_VALUES.FREE,
+					backgroundColor: theme.palette.white.regular,
+					borderColor: calendarColor
+				},
 				customComponent: (
 					<FreeBusyItemFactory
 						backgroundColor={theme.palette.white.regular}
@@ -146,9 +163,11 @@ const useGetStatusItems = (editorId: string): Array<any> => {
 			},
 			{
 				label: t('label.tentative', 'Tentative'),
-				value: STATUS_VALUES.TENTATIVE,
-				backgroundColor: tentativeBackgroundGradient,
-				borderColor: calendarColor,
+				value: {
+					type: STATUS_VALUES.TENTATIVE,
+					backgroundColor: tentativeBackgroundGradient,
+					borderColor: calendarColor
+				},
 				customComponent: (
 					<FreeBusyItemFactory
 						backgroundColor={tentativeBackgroundGradient}
@@ -159,9 +178,11 @@ const useGetStatusItems = (editorId: string): Array<any> => {
 			},
 			{
 				label: t('label.busy', 'Busy'),
-				value: STATUS_VALUES.BUSY,
-				backgroundColor: calendarColor,
-				borderColor: calendarColor,
+				value: {
+					type: STATUS_VALUES.BUSY,
+					backgroundColor: calendarColor,
+					borderColor: calendarColor
+				},
 				customComponent: (
 					<FreeBusyItemFactory
 						backgroundColor={calendarColor}
@@ -172,9 +193,11 @@ const useGetStatusItems = (editorId: string): Array<any> => {
 			},
 			{
 				label: t('label.out_of_office', 'Out of office'),
-				value: STATUS_VALUES.OUT_OF_OFFICE,
-				borderColor: calendarColor,
-				backgroundColor: theme.palette.gray2.regular,
+				value: {
+					type: STATUS_VALUES.OUT_OF_OFFICE,
+					borderColor: calendarColor,
+					backgroundColor: theme.palette.gray2.regular
+				},
 				customComponent: (
 					<FreeBusyItemFactory
 						backgroundColor={theme.palette.gray2.regular}
@@ -194,7 +217,11 @@ const useGetStatusItems = (editorId: string): Array<any> => {
 	);
 };
 
-export const EditorFreeBusySelector = ({ editorId }: { editorId: string }): ReactElement | null => {
+export const EditorFreeBusySelector = ({
+	editorId
+}: {
+	editorId: string;
+}): React.JSX.Element | null => {
 	const [t] = useTranslation();
 	const statusItems = useGetStatusItems(editorId);
 	const freeBusy = useAppSelector(selectEditorFreeBusy(editorId));
@@ -202,17 +229,18 @@ export const EditorFreeBusySelector = ({ editorId }: { editorId: string }): Reac
 	const dispatch = useAppDispatch();
 
 	const getNewSelection = useCallback(
-		(e: InviteFreeBusy | undefined) => find(statusItems, ['value', e]) ?? statusItems[0],
+		(e: InviteFreeBusy | undefined) =>
+			find(statusItems, (item) => item.value.type === e) ?? statusItems[0],
 		[statusItems]
 	);
 
 	const [selected, setSelected] = useState(getNewSelection(freeBusy));
 
-	const onChange = useCallback<SingleSelectionOnChange<InviteFreeBusy>>(
+	const onChange = useCallback<SingleSelectionOnChange<StatusItemValueType>>(
 		(value) => {
 			if (value) {
-				dispatch(editEditorDisplayStatus({ id: editorId, freeBusy: value }));
-				setSelected(getNewSelection(value));
+				dispatch(editEditorDisplayStatus({ id: editorId, freeBusy: value.type }));
+				setSelected(getNewSelection(value.type));
 			}
 		},
 		[dispatch, editorId, getNewSelection]
