@@ -3,11 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import { Container, Icon, Padding, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
-import { Route, Routes } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Displayer from './displayer';
@@ -23,30 +23,24 @@ type SearchPanelProps = {
 	appointments: Array<EventType>;
 };
 
-const SearchPanel = ({ appointments }: SearchPanelProps): React.JSX.Element => {
+const SearchPanel = ({ appointments }: SearchPanelProps): ReactNode => {
 	const [t] = useTranslation();
 	const event = useSelectedEventFromArray(appointments);
+	const { action } = useParams<{ action: string }>();
 	return (
-		<Routes>
-			<Route
-				path={`:action(${EVENT_ACTIONS.EXPAND})/:apptId/:ridZ?`}
-				element={<Displayer event={event} />}
-			/>
-			<Route
-				element={
-					<Container background={'gray5'} mainAlignment="center">
-						<LargeIcon icon="SearchOutline" color="secondary" />
-						<Padding top="medium" />
-						<Padding top="extralarge" />
-						<Text color="secondary" size="large" weight="bold">
-							{t(`label.search_hint`)}
-						</Text>
-						<Padding top="medium" />
-						<Text color="secondary">{t(`message.search_hints`)}</Text>
-					</Container>
-				}
-			/>
-		</Routes>
+		<>
+			{action === EVENT_ACTIONS.EXPAND && <Displayer event={event} />}
+			<Container background={'gray5'} mainAlignment="center">
+				<LargeIcon icon="SearchOutline" color="secondary" />
+				<Padding top="medium" />
+				<Padding top="extralarge" />
+				<Text color="secondary" size="large" weight="bold">
+					{t(`label.search_hint`)}
+				</Text>
+				<Padding top="medium" />
+				<Text color="secondary">{t(`message.search_hints`)}</Text>
+			</Container>
+		</>
 	);
 };
 

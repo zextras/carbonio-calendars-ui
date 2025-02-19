@@ -173,6 +173,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	const appointments = useAppSelector((state) =>
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
 	);
+
 	return (
 		<>
 			<Container style={{ whiteSpace: 'nowrap' }}>
