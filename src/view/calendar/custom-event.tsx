@@ -263,13 +263,58 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										event.resource?.participationStatus === 'NE' && (
 											<CustomEventIcon
 												iconColor={'primary'}
-												iconName={'CalendarWarning'}
+												iconName={'AlertCircleOutline'}
 												isIconVisible={
 													!event?.resource?.calendar?.owner &&
 													!event?.resource?.iAmOrganizer &&
 													event.resource?.participationStatus === 'NE'
 												}
-												tooltipLabel={t('event.action.needs_action', 'Needs action')}
+												tooltipLabel={"You didn't answer"}
+												disableOuterTooltip={setIsOuterTooltipDisabled}
+											/>
+										)}
+									{!event?.resource?.calendar?.owner &&
+										!event?.resource?.iAmOrganizer &&
+										event.resource?.participationStatus === 'AC' && (
+											<CustomEventIcon
+												iconColor={'success'}
+												iconName={'CheckmarkCircle2Outline'}
+												isIconVisible={
+													!event?.resource?.calendar?.owner &&
+													!event?.resource?.iAmOrganizer &&
+													event.resource?.participationStatus === 'AC'
+												}
+												tooltipLabel={'You accepted'}
+												disableOuterTooltip={setIsOuterTooltipDisabled}
+											/>
+										)}
+									{!event?.resource?.calendar?.owner &&
+										!event?.resource?.iAmOrganizer &&
+										event.resource?.participationStatus === 'DE' && (
+											<CustomEventIcon
+												iconColor={'error'}
+												iconName={'CloseCircleOutline'}
+												isIconVisible={
+													!event?.resource?.calendar?.owner &&
+													!event?.resource?.iAmOrganizer &&
+													event.resource?.participationStatus === 'DE'
+												}
+												tooltipLabel={'You declined'}
+												disableOuterTooltip={setIsOuterTooltipDisabled}
+											/>
+										)}
+									{!event?.resource?.calendar?.owner &&
+										!event?.resource?.iAmOrganizer &&
+										event.resource?.participationStatus === 'TE' && (
+											<CustomEventIcon
+												iconColor={'warning'}
+												iconName={'QuestionMarkCircleOutline'}
+												isIconVisible={
+													!event?.resource?.calendar?.owner &&
+													!event?.resource?.iAmOrganizer &&
+													event.resource?.participationStatus === 'TE'
+												}
+												tooltipLabel={'You accepted as tentative'}
 												disableOuterTooltip={setIsOuterTooltipDisabled}
 											/>
 										)}
