@@ -59,10 +59,6 @@ const LinkText = styled(Text)`
 	}
 `;
 
-function endOfDay(day: any): number {
-	return moment(day).endOf('day').valueOf();
-}
-
 export const InviteResponse: FC<InviteResponseArguments> = ({
 	mailMsg,
 	moveToTrash
@@ -160,6 +156,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 			getLocalTime(moment(invite.end?.d ?? invite.end.u).valueOf() ?? 0, localTimezone, invite.tz),
 		[invite.end?.d, invite.end.u, invite.tz, localTimezone]
 	);
+
+	const endOfDay = (day: any): number => moment(day).endOf('day').valueOf();
 
 	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
 		useGetEventTimezoneString(localStart, localEnd, invite.allDay, invite.tz);
