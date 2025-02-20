@@ -21,11 +21,13 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { ColorContainer, LabelText, TextUpperCase } from './select-label-factory';
+import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
+import { useFolder } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { ObjectValues } from '../../../constants/event-actions';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
-	selectEditorCalendar,
+	selectEditorCalendarId,
 	selectEditorDisabled,
 	selectEditorFreeBusy
 } from '../../../store/selectors/editor';
@@ -134,9 +136,10 @@ type StatusItemType = {
 
 const useGetStatusItems = (editorId: string): Array<StatusItemType> => {
 	const [t] = useTranslation();
-	const calendar = useAppSelector(selectEditorCalendar(editorId));
-	const calendarColor = setCalendarColor({ color: calendar.color }).color;
-	const backgroundColor = setCalendarColor({ color: calendar.color }).background;
+	const calendarId = useAppSelector(selectEditorCalendarId(editorId));
+	const calendar = useFolder(calendarId ?? FOLDERS.CALENDAR);
+	const calendarColor = setCalendarColor({ color: calendar?.color }).color;
+	const backgroundColor = setCalendarColor({ color: calendar?.color }).background;
 	const theme = useTheme();
 	const tentativeBackgroundGradient = `repeating-linear-gradient(45deg,
 				${calendarColor},
