@@ -3,13 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
 import type { QueryChip, SearchViewProps } from '@zextras/carbonio-search-ui';
 import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import AdvancedFilterModal from './advance-filter-modal';
 import SearchList from './search-list';
@@ -20,7 +20,7 @@ import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
-import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
+import { DEFAULT_DATE_END, DEFAULT_DATE_START } from '../../constants/advance-filter-modal';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
@@ -92,8 +92,15 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		(queryStr: QueryChip[], reset: boolean) => {
 			setResultLabel(defaultResultLabel);
 			setLoading(true);
+
+			const chipToString = (c: QueryChip) => {
+				const chipString = (c.value ? c.value : c.label) ?? '';
+				const thereAreAnySpaces = chipString?.indexOf(' ') >= 0;
+				return thereAreAnySpaces ? `"${chipString}"` : `${chipString}`;
+			};
+
 			const queryMap = `${queryStr
-				.map((c) => c.value ?? c.label)
+				.map((c) => chipToString(c))
 				.join(' ')} ${foldersToSearchInQuery}`;
 			dispatch(
 				searchAppointments({
