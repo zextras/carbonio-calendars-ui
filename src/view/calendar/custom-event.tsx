@@ -92,6 +92,77 @@ const CustomEventIcon = ({
 		</Tooltip>
 	) : null;
 
+const CustomEventReplyIcons = ({
+	event,
+	setIsOuterTooltipDisabled
+}: {
+	event: EventType;
+	setIsOuterTooltipDisabled: Dispatch<SetStateAction<boolean>>;
+}): React.JSX.Element => (
+	<>
+		{!event?.resource?.calendar?.owner &&
+			!event?.resource?.iAmOrganizer &&
+			event.resource?.participationStatus === 'NE' && (
+				<CustomEventIcon
+					iconColor={'primary'}
+					iconName={'AlertCircleOutline'}
+					isIconVisible={
+						!event?.resource?.calendar?.owner &&
+						!event?.resource?.iAmOrganizer &&
+						event.resource?.participationStatus === 'NE'
+					}
+					tooltipLabel={"You didn't answer"}
+					disableOuterTooltip={setIsOuterTooltipDisabled}
+				/>
+			)}
+		{!event?.resource?.calendar?.owner &&
+			!event?.resource?.iAmOrganizer &&
+			event.resource?.participationStatus === 'AC' && (
+				<CustomEventIcon
+					iconColor={'success'}
+					iconName={'CheckmarkCircle2Outline'}
+					isIconVisible={
+						!event?.resource?.calendar?.owner &&
+						!event?.resource?.iAmOrganizer &&
+						event.resource?.participationStatus === 'AC'
+					}
+					tooltipLabel={'You accepted'}
+					disableOuterTooltip={setIsOuterTooltipDisabled}
+				/>
+			)}
+		{!event?.resource?.calendar?.owner &&
+			!event?.resource?.iAmOrganizer &&
+			event.resource?.participationStatus === 'DE' && (
+				<CustomEventIcon
+					iconColor={'error'}
+					iconName={'CloseCircleOutline'}
+					isIconVisible={
+						!event?.resource?.calendar?.owner &&
+						!event?.resource?.iAmOrganizer &&
+						event.resource?.participationStatus === 'DE'
+					}
+					tooltipLabel={'You declined'}
+					disableOuterTooltip={setIsOuterTooltipDisabled}
+				/>
+			)}
+		{!event?.resource?.calendar?.owner &&
+			!event?.resource?.iAmOrganizer &&
+			event.resource?.participationStatus === 'TE' && (
+				<CustomEventIcon
+					iconColor={'warning'}
+					iconName={'QuestionMarkCircleOutline'}
+					isIconVisible={
+						!event?.resource?.calendar?.owner &&
+						!event?.resource?.iAmOrganizer &&
+						event.resource?.participationStatus === 'TE'
+					}
+					tooltipLabel={'You accepted as tentative'}
+					disableOuterTooltip={setIsOuterTooltipDisabled}
+				/>
+			)}
+	</>
+);
+
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const { createModal, closeModal } = useModal();
 	const anchorRef = useRef(null);
@@ -258,66 +329,10 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 											disableOuterTooltip={setIsOuterTooltipDisabled}
 										/>
 									)}
-									{!event?.resource?.calendar?.owner &&
-										!event?.resource?.iAmOrganizer &&
-										event.resource?.participationStatus === 'NE' && (
-											<CustomEventIcon
-												iconColor={'primary'}
-												iconName={'AlertCircleOutline'}
-												isIconVisible={
-													!event?.resource?.calendar?.owner &&
-													!event?.resource?.iAmOrganizer &&
-													event.resource?.participationStatus === 'NE'
-												}
-												tooltipLabel={"You didn't answer"}
-												disableOuterTooltip={setIsOuterTooltipDisabled}
-											/>
-										)}
-									{!event?.resource?.calendar?.owner &&
-										!event?.resource?.iAmOrganizer &&
-										event.resource?.participationStatus === 'AC' && (
-											<CustomEventIcon
-												iconColor={'success'}
-												iconName={'CheckmarkCircle2Outline'}
-												isIconVisible={
-													!event?.resource?.calendar?.owner &&
-													!event?.resource?.iAmOrganizer &&
-													event.resource?.participationStatus === 'AC'
-												}
-												tooltipLabel={'You accepted'}
-												disableOuterTooltip={setIsOuterTooltipDisabled}
-											/>
-										)}
-									{!event?.resource?.calendar?.owner &&
-										!event?.resource?.iAmOrganizer &&
-										event.resource?.participationStatus === 'DE' && (
-											<CustomEventIcon
-												iconColor={'error'}
-												iconName={'CloseCircleOutline'}
-												isIconVisible={
-													!event?.resource?.calendar?.owner &&
-													!event?.resource?.iAmOrganizer &&
-													event.resource?.participationStatus === 'DE'
-												}
-												tooltipLabel={'You declined'}
-												disableOuterTooltip={setIsOuterTooltipDisabled}
-											/>
-										)}
-									{!event?.resource?.calendar?.owner &&
-										!event?.resource?.iAmOrganizer &&
-										event.resource?.participationStatus === 'TE' && (
-											<CustomEventIcon
-												iconColor={'warning'}
-												iconName={'QuestionMarkCircleOutline'}
-												isIconVisible={
-													!event?.resource?.calendar?.owner &&
-													!event?.resource?.iAmOrganizer &&
-													event.resource?.participationStatus === 'TE'
-												}
-												tooltipLabel={'You accepted as tentative'}
-												disableOuterTooltip={setIsOuterTooltipDisabled}
-											/>
-										)}
+									<CustomEventReplyIcons
+										event={event}
+										setIsOuterTooltipDisabled={setIsOuterTooltipDisabled}
+									/>
 									<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
 										<Row
 											ref={anchorRef}
@@ -325,44 +340,42 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 											mainAlignment="space-between"
 											takeAvailableSpace
 										>
-											<>
-												{!event.allDay && (
-													<Row
-														takeAvailableSpace
-														crossAlignment="flex-start"
-														mainAlignment="flex-start"
-														wrap="nowrap"
+											{!event.allDay && (
+												<Row
+													takeAvailableSpace
+													crossAlignment="flex-start"
+													mainAlignment="flex-start"
+													wrap="nowrap"
+												>
+													<Text
+														color="currentColor"
+														size={'small'}
+														style={{
+															overflow: textOverflow
+														}}
 													>
-														<Text
-															color="currentColor"
-															size={'small'}
-															style={{
-																overflow: textOverflow
-															}}
-														>
-															{`${moment(event.start).format('LT')} - ${moment(event.end).format(
-																'LT'
-															)}`}
-														</Text>
-														<Padding left="small" />
-														{eventDiff <= 29 && (
-															<>
-																{event.resource.isRecurrent && (
-																	<CustomEventIcon
-																		iconName={'Repeat'}
-																		iconColor={'currentColor'}
-																		isIconVisible={event.resource.isRecurrent}
-																		tooltipLabel={recurrentLabel}
-																		disableOuterTooltip={setIsOuterTooltipDisabled}
-																	/>
-																)}
-																<CustomEventTitle title={title} />
-															</>
-														)}
-													</Row>
-												)}
-												{event.allDay && <CustomEventTitle title={title} overflow={textOverflow} />}
-											</>
+														{`${moment(event.start).format('LT')} - ${moment(event.end).format(
+															'LT'
+														)}`}
+													</Text>
+													<Padding left="small" />
+													{eventDiff <= 29 && (
+														<>
+															{event.resource.isRecurrent && (
+																<CustomEventIcon
+																	iconName={'Repeat'}
+																	iconColor={'currentColor'}
+																	isIconVisible={event.resource.isRecurrent}
+																	tooltipLabel={recurrentLabel}
+																	disableOuterTooltip={setIsOuterTooltipDisabled}
+																/>
+															)}
+															<CustomEventTitle title={title} />
+														</>
+													)}
+												</Row>
+											)}
+											{event.allDay && <CustomEventTitle title={title} overflow={textOverflow} />}
 										</Row>
 										<TagIconComponent
 											event={event}
