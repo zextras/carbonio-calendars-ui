@@ -324,8 +324,8 @@ export const openAppointment =
 		}
 		if (context?.panelView === PANEL_VIEW.SEARCH) {
 			const path = event.resource.ridZ
-				? `/search/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-				: `/search/${CALENDAR_ROUTE}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
+				? `../${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				: `../${CALENDAR_ROUTE}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
 			context.replaceHistory(path);
 		}
 	};

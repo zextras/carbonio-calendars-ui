@@ -140,7 +140,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 			);
 		} else {
 			replaceHistory(
-				`${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
 	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal, replaceHistory]);
