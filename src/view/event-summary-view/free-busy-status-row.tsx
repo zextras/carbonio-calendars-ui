@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 
 import { Container, Padding, Row, Text, Theme } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
+import { toLower } from 'lodash';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { EventType } from '../../types/event';
@@ -33,20 +34,21 @@ export const FreeBusyStatusRowComponent = ({
 
 	const status = useMemo(() => {
 		if (event.resource.freeBusy === 'F') {
-			return t('label.free', 'Free');
+			return toLower(t('label.free', 'Free'));
 		}
 		if (event.resource.freeBusy === 'T') {
-			return t('label.tentative', 'Tentative');
+			return toLower(t('label.tentative', 'Tentative'));
 		}
 		if (event.resource.freeBusy === 'O') {
-			return t('label.out_of_office', 'Out of office');
+			return toLower(t('label.out_of_office', 'Out of office'));
 		}
-		return t('label.busy', 'Busy');
+		return toLower(t('label.busy', 'Busy'));
 	}, [event.resource.freeBusy, t]);
+
 	return (
 		<Trans
 			i18nKey="message.the_organizer_set_this"
-			defaults="<Row><Text> <strong> {{whoSetThis}}  </strong> set this appointment as {{status}} </Text></Row>"
+			defaults="<Row><Text>{{whoSetThis}} set this appointment as <strong>{{status}}</strong></Text></Row>"
 			components={{
 				Row: <Row />,
 				Text: <Text color="secondary" size={fontSize} />

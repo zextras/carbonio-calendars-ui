@@ -17,7 +17,7 @@ export const CustomEventFreeBusyStatus = React.forwardRef(
 			color,
 			background
 		}: {
-			children: ReactNode;
+			children?: ReactNode;
 			color: string;
 			background: string;
 			freeBusyActual?: InviteFreeBusy;
