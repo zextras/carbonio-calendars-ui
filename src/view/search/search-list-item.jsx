@@ -120,7 +120,7 @@ const SearchListItem = ({ item }) => {
 				open(ev);
 			}
 		},
-		[dispatch, invite, item]
+		[dispatch, invite, item, replaceHistory]
 	);
 
 	return (
