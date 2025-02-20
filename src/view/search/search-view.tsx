@@ -82,7 +82,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 
 	const foldersToSearchInQuery = useMemo(() => {
 		const folderString = map(searchInFolders, (folder) => `inid:"${folder}"`).join(' OR ');
-		return `( ${folderString})`;
+		return `(${folderString})`;
 	}, [searchInFolders]);
 
 	const [spanStart, setSpanStart] = useState(() => DEFAULT_DATE_START);
@@ -93,15 +93,14 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			setResultLabel(defaultResultLabel);
 			setLoading(true);
 
-			const chipToString = (c: QueryChip) => {
+			const chipToString = (c: QueryChip): string => {
 				const chipString = (c.value ? c.value : c.label) ?? '';
 				const thereAreAnySpaces = chipString?.indexOf(' ') >= 0;
 				return thereAreAnySpaces ? `"${chipString}"` : `${chipString}`;
 			};
 
-			const queryMap = `${queryStr
-				.map((c) => chipToString(c))
-				.join(' ')} ${foldersToSearchInQuery}`;
+			const queryString = queryStr.map((c) => chipToString(c)).join(' ');
+			const queryMap = `(${queryString}) ${foldersToSearchInQuery}`;
 			dispatch(
 				searchAppointments({
 					spanStart,
