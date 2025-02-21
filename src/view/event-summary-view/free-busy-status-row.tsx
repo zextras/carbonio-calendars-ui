@@ -44,15 +44,15 @@ export const FreeBusyStatusRowComponent = ({
 	}, [freeBusy, t]);
 
 	return (
-		<Trans
-			i18nKey="message.who_set_this"
-			defaults="<Row><Text>{{whoSetThis}} set this appointment as <strong>{{status}}</strong></Text></Row>"
-			components={{
-				Row: <Row />,
-				Text: <Text color="secondary" size={'small'} />
-			}}
-			values={{ whoSetThis, status }}
-		/>
+		<Row>
+			<Text color="secondary" size={'small'}>
+				<Trans
+					i18nKey="message.who_set_this"
+					defaults="{{whoSetThis}} set this appointment as <strong>{{status}}</strong>"
+					values={{ whoSetThis, status }}
+				/>
+			</Text>
+		</Row>
 	);
 };
 
