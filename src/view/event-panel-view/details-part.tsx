@@ -171,7 +171,12 @@ export const DetailsPart = ({
 					<MeetingRoomsRow invite={invite} />
 					<EquipmentsRow invite={invite} />
 					{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} />}
-					{invite && <FreeBusyStatusRowComponent event={event} invite={invite} />}
+					{invite && (
+						<FreeBusyStatusRowComponent
+							freeBusy={event.resource.freeBusy}
+							organizerName={invite?.organizer?.a}
+						/>
+					)}
 					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
 				</Row>
 			</Row>

@@ -45,7 +45,12 @@ export const ParticipantsPart = ({
 				calendarOwner={event.resource.calendar.owner}
 				isSummary={isSummary}
 			/>
-			{isSummary && <FreeBusyStatusRow event={event} invite={invite} isSummary={isSummary} />}
+			{isSummary && (
+				<FreeBusyStatusRow
+					freeBusy={event.resource.freeBusy}
+					organizerName={invite?.organizer?.a}
+				/>
+			)}
 			{isSummary ? (
 				<ParticipantsDisplayerSmall participants={participants} event={event} />
 			) : (
