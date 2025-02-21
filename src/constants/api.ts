@@ -31,6 +31,13 @@ export const PARTICIPATION_STATUS = {
 	TENTATIVE: 'TE'
 } as const;
 
+export const EVENT_DISPLAY_STATUS = {
+	FREE: 'F',
+	BUSY: 'B',
+	TENTATIVE: 'T',
+	OUT_OF_OFFICE: 'O'
+} as const;
+
 export const MESSAGE_METHOD = {
 	COUNTER: 'COUNTER',
 	REQUEST: 'REQUEST'
