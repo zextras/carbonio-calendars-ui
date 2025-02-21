@@ -5,6 +5,8 @@
  */
 import React, { Dispatch, SetStateAction } from 'react';
 
+import { useTranslation } from 'react-i18next';
+
 import { CustomEventIcon } from './custom-event-icon';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { ParticipationStatus } from '../../types/store/invite';
@@ -17,15 +19,20 @@ export const CustomEventReplyIcons = ({
 	iAmAttendee: boolean;
 	setIsOuterTooltipDisabled: Dispatch<SetStateAction<boolean>>;
 	participationStatus: ParticipationStatus;
-}): React.JSX.Element | null =>
-	iAmAttendee ? (
+}): React.JSX.Element | null => {
+	const [t] = useTranslation();
+
+	if (!iAmAttendee) {
+		return null;
+	}
+	return (
 		<>
 			{participationStatus === PARTICIPATION_STATUS.NEED_ACTION && (
 				<CustomEventIcon
 					iconColor={'primary'}
 					iconName={'AlertCircleOutline'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.NEED_ACTION}
-					tooltipLabel={"You didn't answer"}
+					tooltipLabel={t('message.you_did_not_answer', "You didn't answer")}
 					disableOuterTooltip={setIsOuterTooltipDisabled}
 				/>
 			)}
@@ -34,7 +41,7 @@ export const CustomEventReplyIcons = ({
 					iconColor={'success'}
 					iconName={'CheckmarkCircle2Outline'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.ACCEPTED}
-					tooltipLabel={'You accepted'}
+					tooltipLabel={t('message.you_accepted', 'You accepted')}
 					disableOuterTooltip={setIsOuterTooltipDisabled}
 				/>
 			)}
@@ -43,7 +50,7 @@ export const CustomEventReplyIcons = ({
 					iconColor={'error'}
 					iconName={'CloseCircleOutline'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.DECLINED}
-					tooltipLabel={'You declined'}
+					tooltipLabel={t('message.you_declined', 'You declined')}
 					disableOuterTooltip={setIsOuterTooltipDisabled}
 				/>
 			)}
@@ -52,9 +59,10 @@ export const CustomEventReplyIcons = ({
 					iconColor={'warning'}
 					iconName={'QuestionMarkCircleOutline'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.TENTATIVE}
-					tooltipLabel={'You accepted as tentative'}
+					tooltipLabel={t('message.you_accepted_as_tentative', 'You accepted as tentative')}
 					disableOuterTooltip={setIsOuterTooltipDisabled}
 				/>
 			)}
 		</>
-	) : null;
+	);
+};

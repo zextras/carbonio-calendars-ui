@@ -45,7 +45,7 @@ export const FreeBusyStatusRowComponent = ({
 
 	return (
 		<Trans
-			i18nKey="message.the_organizer_set_this"
+			i18nKey="message.who_set_this"
 			defaults="<Row><Text>{{whoSetThis}} set this appointment as <strong>{{status}}</strong></Text></Row>"
 			components={{
 				Row: <Row />,
