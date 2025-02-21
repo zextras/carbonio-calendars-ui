@@ -6,7 +6,7 @@
 import { http, HttpResponse } from 'msw';
 
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
-import { MESSAGE_METHOD, PARTICIPATION_STATUS } from '../../constants/api';
+import { EVENT_DISPLAY_STATUS, MESSAGE_METHOD, PARTICIPATION_STATUS } from '../../constants/api';
 import { ObjectValues } from '../../constants/sidebar';
 import { InviteResponseArguments, MailMsg } from '../../types/integrations';
 
@@ -119,7 +119,7 @@ export const buildMailMessageType = (
 						noBlob: true,
 						desc: [{ _content: 'test description' }],
 						descHtml: [],
-						fb: 'B',
+						fb: EVENT_DISPLAY_STATUS.BUSY,
 						transp: 'O',
 						or: {
 							a: senderMail,

@@ -9,6 +9,7 @@ import { HttpResponse, HttpResponseResolver } from 'msw';
 
 import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { ROOM_DIVIDER } from '../../../../constants';
+import { EVENT_DISPLAY_STATUS } from '../../../../constants/api';
 
 const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
@@ -80,8 +81,8 @@ const getResponse = (): SuccessSoapResponse<any> => ({
 													_content: `<html><body id="htmlmode">${ROOM_DIVIDER}<h3>Carbonio Admin have invited you to a new meeting!</h3><p>Subject: New appointment</p><p>Organizer: Carbonio Admin</p><p>Location: </p><p>Time: Monday, November 7, 2022 5:27 PM - 5:27 PM</p><p>Invitees: </p><br />${ROOM_DIVIDER}</body></html>`
 												}
 											],
-											fba: 'B',
-											fb: 'B',
+											fba: EVENT_DISPLAY_STATUS.BUSY,
+											fb: EVENT_DISPLAY_STATUS.BUSY,
 											transp: 'O',
 											or: {
 												a: 'carbonio@admin.io',

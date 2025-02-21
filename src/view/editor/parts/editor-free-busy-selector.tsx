@@ -23,6 +23,7 @@ import styled from 'styled-components';
 import { ColorContainer, LabelText, TextUpperCase } from './select-label-factory';
 import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { useFolder } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { EVENT_DISPLAY_STATUS } from '../../../constants/api';
 import { ObjectValues } from '../../../constants/event-actions';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
@@ -115,14 +116,7 @@ const FreeBusyLabelFactory = (item: CustomLabelFactoryProps): React.JSX.Element 
 	);
 };
 
-const STATUS_VALUES = {
-	FREE: 'F',
-	TENTATIVE: 'T',
-	BUSY: 'B',
-	OUT_OF_OFFICE: 'O'
-} as const;
-
-type DisplayStatusType = ObjectValues<typeof STATUS_VALUES>;
+type DisplayStatusType = ObjectValues<typeof EVENT_DISPLAY_STATUS>;
 type StatusItemValueType = {
 	type: DisplayStatusType;
 	backgroundColor: string;
@@ -152,7 +146,7 @@ const useGetStatusItems = (editorId: string): Array<StatusItemType> => {
 			{
 				label: t('label.free', 'Free'),
 				value: {
-					type: STATUS_VALUES.FREE,
+					type: EVENT_DISPLAY_STATUS.FREE,
 					backgroundColor: theme.palette.white.regular,
 					borderColor: calendarColor
 				},
@@ -167,7 +161,7 @@ const useGetStatusItems = (editorId: string): Array<StatusItemType> => {
 			{
 				label: t('label.tentative', 'Tentative'),
 				value: {
-					type: STATUS_VALUES.TENTATIVE,
+					type: EVENT_DISPLAY_STATUS.TENTATIVE,
 					backgroundColor: tentativeBackgroundGradient,
 					borderColor: calendarColor
 				},
@@ -182,7 +176,7 @@ const useGetStatusItems = (editorId: string): Array<StatusItemType> => {
 			{
 				label: t('label.busy', 'Busy'),
 				value: {
-					type: STATUS_VALUES.BUSY,
+					type: EVENT_DISPLAY_STATUS.BUSY,
 					backgroundColor: calendarColor,
 					borderColor: calendarColor
 				},
@@ -197,7 +191,7 @@ const useGetStatusItems = (editorId: string): Array<StatusItemType> => {
 			{
 				label: t('label.out_of_office', 'Out of office'),
 				value: {
-					type: STATUS_VALUES.OUT_OF_OFFICE,
+					type: EVENT_DISPLAY_STATUS.OUT_OF_OFFICE,
 					borderColor: calendarColor,
 					backgroundColor: theme.palette.gray2.regular
 				},

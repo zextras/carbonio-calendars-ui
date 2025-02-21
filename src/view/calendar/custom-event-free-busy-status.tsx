@@ -7,6 +7,7 @@ import React, { ForwardedRef, ReactNode, useMemo } from 'react';
 
 import { Container, useTheme } from '@zextras/carbonio-design-system';
 
+import { EVENT_DISPLAY_STATUS } from '../../constants/api';
 import type { InviteFreeBusy } from '../../types/store/invite';
 
 export const CustomEventFreeBusyStatus = React.forwardRef(
@@ -29,16 +30,16 @@ export const CustomEventFreeBusyStatus = React.forwardRef(
 		const outerContainerBackgroundColor = useMemo(() => {
 			const startingLineHeight = 8;
 			const endLineHeight = 10;
-			if (freeBusyActual === 'F') {
+			if (freeBusyActual === EVENT_DISPLAY_STATUS.FREE) {
 				return theme.palette.white.regular;
 			}
-			if (freeBusyActual === 'B') {
+			if (freeBusyActual === EVENT_DISPLAY_STATUS.BUSY) {
 				return color;
 			}
-			if (freeBusyActual === 'O') {
+			if (freeBusyActual === EVENT_DISPLAY_STATUS.OUT_OF_OFFICE) {
 				return theme.palette.gray2.regular;
 			}
-			if (freeBusyActual === 'T') {
+			if (freeBusyActual === EVENT_DISPLAY_STATUS.TENTATIVE) {
 				return `repeating-linear-gradient(45deg,
 				${color},
 				${color} ${startingLineHeight}px,

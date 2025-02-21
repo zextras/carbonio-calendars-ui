@@ -10,7 +10,7 @@ import { act, screen } from '@testing-library/react';
 
 import { AppointmentReminder } from './appointment-reminder';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
-import { PARTICIPATION_STATUS } from '../../constants/api';
+import { EVENT_DISPLAY_STATUS, PARTICIPATION_STATUS } from '../../constants/api';
 import { deleteAppointmentPermanent } from '../../store/actions/delete-appointment-permanent';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
@@ -60,10 +60,10 @@ describe('appointment reminders', () => {
 							}
 						],
 						hasEx: false,
-						fb: 'F',
+						fb: EVENT_DISPLAY_STATUS.FREE,
 						fr: '',
 						d: 1234,
-						fba: 'F',
+						fba: EVENT_DISPLAY_STATUS.FREE,
 						md: 0,
 						ms: 0,
 						ptst: PARTICIPATION_STATUS.ACCEPTED,
@@ -129,8 +129,8 @@ describe('appointment reminders', () => {
 							}
 						],
 						hasEx: false,
-						fb: 'F',
-						fba: 'F',
+						fb: EVENT_DISPLAY_STATUS.FREE,
+						fba: EVENT_DISPLAY_STATUS.FREE,
 						fr: '',
 						d: 1234,
 						md: 0,

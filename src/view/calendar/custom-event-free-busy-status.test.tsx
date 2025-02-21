@@ -10,6 +10,7 @@ import { useTheme } from 'styled-components';
 
 import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
 import { setupHook, setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { EVENT_DISPLAY_STATUS } from '../../constants/api';
 
 describe('CustomEventFreeBusyStatus', () => {
 	const { result } = setupHook(useTheme);
@@ -22,12 +23,12 @@ describe('CustomEventFreeBusyStatus', () => {
 				${backgroundColor} 10px)`;
 
 	test.each`
-		freeBusyActual | background
-		${'F'}         | ${result.current.palette.white.regular}
-		${'B'}         | ${calendarColor}
-		${'O'}         | ${result.current.palette.gray2.regular}
-		${'T'}         | ${repeatingGradientColor}
-		${undefined}   | ${calendarColor}
+		freeBusyActual                        | background
+		${EVENT_DISPLAY_STATUS.FREE}          | ${result.current.palette.white.regular}
+		${EVENT_DISPLAY_STATUS.BUSY}          | ${calendarColor}
+		${EVENT_DISPLAY_STATUS.OUT_OF_OFFICE} | ${result.current.palette.gray2.regular}
+		${EVENT_DISPLAY_STATUS.TENTATIVE}     | ${repeatingGradientColor}
+		${undefined}                          | ${calendarColor}
 	`(
 		'it should render a different style depending on its freeBusyActual status',
 		({ freeBusyActual, background }) => {
