@@ -3,21 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, {
-	Dispatch,
-	ReactElement,
-	SetStateAction,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState
-} from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
 	Container,
 	Text,
-	Icon,
 	Row,
 	Tooltip,
 	Dropdown,
@@ -30,10 +20,11 @@ import { isNil } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
 import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
+import { CustomEventIcon } from './custom-event-icon';
+import { CustomEventReplyIcons } from './custom-event-reply-icons';
 import { TagIconComponent } from '../../commons/tag-icon-component';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
@@ -48,11 +39,6 @@ type CustomEventProps = {
 	title: string;
 };
 
-const AlignedIcon = styled(Icon)`
-	position: relative;
-	top: -0.0625rem;
-`;
-
 const CustomEventTitle = ({
 	title,
 	overflow = 'break-word'
@@ -63,104 +49,6 @@ const CustomEventTitle = ({
 	<Text size={'small'} color="currentColor" style={{ overflow }} weight="bold">
 		{title}
 	</Text>
-);
-
-const CustomEventIcon = ({
-	isIconVisible,
-	tooltipLabel,
-	iconColor,
-	iconName,
-	disableOuterTooltip
-}: {
-	isIconVisible: boolean;
-	tooltipLabel: string;
-	iconColor?: string;
-	iconName: string;
-	disableOuterTooltip: Dispatch<SetStateAction<boolean>>;
-}): ReactElement | null =>
-	isIconVisible ? (
-		<Tooltip label={tooltipLabel} placement="top">
-			<Row
-				padding={{ right: 'extrasmall' }}
-				onMouseEnter={(): void => disableOuterTooltip(true)}
-				onMouseLeave={(): void => disableOuterTooltip(false)}
-				onFocus={(): void => disableOuterTooltip(true)}
-				onBlur={(): void => disableOuterTooltip(false)}
-			>
-				<AlignedIcon color={iconColor} icon={iconName} style={{ minWidth: '1rem' }} />
-			</Row>
-		</Tooltip>
-	) : null;
-
-const CustomEventReplyIcons = ({
-	event,
-	setIsOuterTooltipDisabled
-}: {
-	event: EventType;
-	setIsOuterTooltipDisabled: Dispatch<SetStateAction<boolean>>;
-}): React.JSX.Element => (
-	<>
-		{!event?.resource?.calendar?.owner &&
-			!event?.resource?.iAmOrganizer &&
-			event.resource?.participationStatus === 'NE' && (
-				<CustomEventIcon
-					iconColor={'primary'}
-					iconName={'AlertCircleOutline'}
-					isIconVisible={
-						!event?.resource?.calendar?.owner &&
-						!event?.resource?.iAmOrganizer &&
-						event.resource?.participationStatus === 'NE'
-					}
-					tooltipLabel={"You didn't answer"}
-					disableOuterTooltip={setIsOuterTooltipDisabled}
-				/>
-			)}
-		{!event?.resource?.calendar?.owner &&
-			!event?.resource?.iAmOrganizer &&
-			event.resource?.participationStatus === 'AC' && (
-				<CustomEventIcon
-					iconColor={'success'}
-					iconName={'CheckmarkCircle2Outline'}
-					isIconVisible={
-						!event?.resource?.calendar?.owner &&
-						!event?.resource?.iAmOrganizer &&
-						event.resource?.participationStatus === 'AC'
-					}
-					tooltipLabel={'You accepted'}
-					disableOuterTooltip={setIsOuterTooltipDisabled}
-				/>
-			)}
-		{!event?.resource?.calendar?.owner &&
-			!event?.resource?.iAmOrganizer &&
-			event.resource?.participationStatus === 'DE' && (
-				<CustomEventIcon
-					iconColor={'error'}
-					iconName={'CloseCircleOutline'}
-					isIconVisible={
-						!event?.resource?.calendar?.owner &&
-						!event?.resource?.iAmOrganizer &&
-						event.resource?.participationStatus === 'DE'
-					}
-					tooltipLabel={'You declined'}
-					disableOuterTooltip={setIsOuterTooltipDisabled}
-				/>
-			)}
-		{!event?.resource?.calendar?.owner &&
-			!event?.resource?.iAmOrganizer &&
-			event.resource?.participationStatus === 'TE' && (
-				<CustomEventIcon
-					iconColor={'warning'}
-					iconName={'QuestionMarkCircleOutline'}
-					isIconVisible={
-						!event?.resource?.calendar?.owner &&
-						!event?.resource?.iAmOrganizer &&
-						event.resource?.participationStatus === 'TE'
-					}
-					tooltipLabel={'You accepted as tentative'}
-					disableOuterTooltip={setIsOuterTooltipDisabled}
-				/>
-			)}
-	</>
 );
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
@@ -252,6 +140,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 
 	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
 
+	const iAmAttendee = !event?.resource?.calendar?.owner && !event?.resource?.iAmOrganizer;
 	return (
 		<>
 			<Tooltip
@@ -330,7 +219,8 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										/>
 									)}
 									<CustomEventReplyIcons
-										event={event}
+										iAmAttendee={iAmAttendee}
+										participationStatus={event.resource.participationStatus}
 										setIsOuterTooltipDisabled={setIsOuterTooltipDisabled}
 									/>
 									<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
