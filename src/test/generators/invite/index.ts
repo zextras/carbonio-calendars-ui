@@ -6,7 +6,7 @@
 import { faker } from '@faker-js/faker';
 import moment from 'moment';
 
-import { PARTICIPANT_ROLE } from '../../../constants/api';
+import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';
 import { getAlarmToString } from '../../../normalizations/normalizations-utils';
 import { EventResource, EventResourceCalendar, EventType } from '../../../types/event';
 import { Invite, ParticipationStatus } from '../../../types/store/invite';
@@ -40,7 +40,7 @@ const getDefaultInvite = (event?: GetEventProps): Invite => {
 					a: attendeeEmail,
 					d: attendeeFullName,
 					cutype: '',
-					ptst: 'AC',
+					ptst: PARTICIPATION_STATUS.ACCEPTED,
 					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
 					url: attendeeEmail

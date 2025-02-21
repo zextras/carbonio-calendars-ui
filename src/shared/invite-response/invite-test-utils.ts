@@ -6,7 +6,7 @@
 import { http, HttpResponse } from 'msw';
 
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
-import { MESSAGE_METHOD } from '../../constants/api';
+import { MESSAGE_METHOD, PARTICIPATION_STATUS } from '../../constants/api';
 import { ObjectValues } from '../../constants/sidebar';
 import { InviteResponseArguments, MailMsg } from '../../types/integrations';
 
@@ -102,7 +102,7 @@ export const buildMailMessageType = (
 								url: receiverMail,
 								d: 'receiver fullName',
 								role: 'REQ',
-								ptst: 'NE',
+								ptst: PARTICIPATION_STATUS.NEED_ACTION,
 								rsvp: true
 							},
 							{
@@ -110,7 +110,7 @@ export const buildMailMessageType = (
 								url: receiver2Mail,
 								d: 'receiver2 fullName',
 								role: 'OPT',
-								ptst: 'NE',
+								ptst: PARTICIPATION_STATUS.NEED_ACTION,
 								rsvp: true
 							}
 						],

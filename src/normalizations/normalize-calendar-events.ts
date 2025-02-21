@@ -10,6 +10,7 @@ import moment from 'moment';
 import { setCalendarColor } from './normalizations-utils';
 import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
 import { Folder, Folders, LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { PARTICIPATION_STATUS } from '../constants/api';
 import { EventResource, EventType } from '../types/event';
 import { Appointment, ExceptionReference, InstanceReference } from '../types/store/appointments';
 import { CalendarsColorType } from '../types/store/calendars';
@@ -98,7 +99,7 @@ const normalizeEventResource = ({
 	uid: appt.uid,
 	tags: appt.tags ?? [],
 	neverSent: inst?.neverSent ?? appt.neverSent ?? false,
-	isRespRequested: (inst?.ptst ?? appt.ptst) === 'NE'
+	isRespRequested: (inst?.ptst ?? appt.ptst) === PARTICIPATION_STATUS.NEED_ACTION
 });
 
 export const normalizeCalendarEvent = ({

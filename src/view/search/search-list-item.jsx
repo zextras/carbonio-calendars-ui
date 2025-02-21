@@ -23,6 +23,7 @@ import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
 import { PANEL_VIEW } from '../../constants';
+import { PARTICIPATION_STATUS } from '../../constants/api';
 import { getInvite } from '../../store/actions/get-invite';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectInstanceInvite } from '../../store/selectors/invites';
@@ -41,14 +42,19 @@ const SearchListItem = ({ item }) => {
 
 	const hasAttachments = useMemo(() => item.resource?.flags?.includes('a'), [item.resource?.flags]);
 	const showPtstIcon = useMemo(
-		() => ['TE', 'DE', 'AC'].includes(item.resource?.ptst),
+		() =>
+			[
+				PARTICIPATION_STATUS.TENTATIVE,
+				PARTICIPATION_STATUS.DECLINED,
+				PARTICIPATION_STATUS.ACCEPTED
+			].includes(item.resource?.ptst),
 		[item.resource?.ptst]
 	);
 	const [color, icon] = useMemo(() => {
-		if (item.resource?.ptst === 'TE') {
+		if (item.resource?.ptst === PARTICIPATION_STATUS.TENTATIVE) {
 			return ['warning', 'QuestionMarkOutline'];
 		}
-		if (item.resource?.ptst === 'DE') {
+		if (item.resource?.ptst === PARTICIPATION_STATUS.DECLINED) {
 			return ['error', 'CloseOutline'];
 		}
 		return ['success', 'CheckmarkOutline'];

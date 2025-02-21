@@ -8,14 +8,10 @@ import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
 
 import { ROOM_DIVIDER } from '../../../constants';
+import { PARTICIPATION_STATUS } from '../../../constants/api';
 import { EventType } from '../../../types/event';
 import { Appointment } from '../../../types/store/appointments';
-import {
-	InviteClass,
-	InviteFreeBusy,
-	InviteStatus,
-	ParticipationStatus
-} from '../../../types/store/invite';
+import { InviteClass, InviteFreeBusy, InviteStatus } from '../../../types/store/invite';
 
 type GetAppointmentProps = {
 	event?: EventType;
@@ -41,7 +37,7 @@ const getDefaultAppointment = (): Appointment => {
 		fba: 'B' as InviteFreeBusy,
 		md: 0,
 		ms: 0,
-		ptst: 'AC' as ParticipationStatus,
+		ptst: PARTICIPATION_STATUS.ACCEPTED,
 		rev: 0,
 		status: 'CONF' as InviteStatus,
 		transp: '',

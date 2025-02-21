@@ -8,6 +8,7 @@ import { HttpResponse, HttpResponseResolver } from 'msw';
 
 import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { ROOM_DIVIDER } from '../../../../constants';
+import { PARTICIPATION_STATUS } from '../../../../constants/api';
 
 const uid = '71c5949a-69e2-48e7-b4c2-3765f6a4eaed';
 const senderMail = 'sender@mail.com';
@@ -44,7 +45,7 @@ export const singleGetMsgResponse = {
 									url: receiverMail,
 									d: 'receiver fullName',
 									role: 'REQ',
-									ptst: 'NE',
+									ptst: PARTICIPATION_STATUS.NEED_ACTION,
 									rsvp: true
 								}
 							],
