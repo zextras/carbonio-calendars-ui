@@ -74,6 +74,7 @@ export type EventResource = {
 	neverSent: boolean;
 	class: InviteClass;
 	freeBusy: InviteFreeBusy;
+	freeBusyActual?: InviteFreeBusy;
 	hasChangesNotNotified: boolean;
 	inviteNeverSent: boolean;
 	hasOtherAttendees: boolean;

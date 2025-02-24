@@ -24,6 +24,20 @@ export const PARTICIPANT_ROLE = {
 	NON_PARTICIPANT: 'NON'
 } as const;
 
+export const PARTICIPATION_STATUS = {
+	NEED_ACTION: 'NE',
+	ACCEPTED: 'AC',
+	DECLINED: 'DE',
+	TENTATIVE: 'TE'
+} as const;
+
+export const EVENT_DISPLAY_STATUS = {
+	FREE: 'F',
+	BUSY: 'B',
+	TENTATIVE: 'T',
+	OUT_OF_OFFICE: 'O'
+} as const;
+
 export const MESSAGE_METHOD = {
 	COUNTER: 'COUNTER',
 	REQUEST: 'REQUEST'

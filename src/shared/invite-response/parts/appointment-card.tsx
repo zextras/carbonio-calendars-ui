@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import { TagIconComponent } from '../../../commons/tag-icon-component';
 import { CALENDAR_ROUTE } from '../../../constants';
+import { PARTICIPATION_STATUS } from '../../../constants/api';
 import { EVENT_ACTIONS } from '../../../constants/event-actions';
 import { EventType } from '../../../types/event';
 
@@ -141,7 +142,7 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 							)}
 							{!event?.resource?.calendar?.owner &&
 								!event?.resource?.iAmOrganizer &&
-								event.resource?.participationStatus === 'NE' && (
+								event.resource?.participationStatus === PARTICIPATION_STATUS.NEED_ACTION && (
 									<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
 										<Padding left="extrasmall">
 											<Icon

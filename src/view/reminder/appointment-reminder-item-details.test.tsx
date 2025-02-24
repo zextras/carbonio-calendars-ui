@@ -11,7 +11,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { AppointmentReminderItemDetails } from './appointment-reminder-item-details';
 import { setupTest, screen } from '../../carbonio-ui-commons/test/test-setup';
 import { CALENDAR_RESOURCES } from '../../constants';
-import { PARTICIPANT_ROLE } from '../../constants/api';
+import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
@@ -124,7 +124,7 @@ describe('Appointment Reminder Item Details', () => {
 					a: meetingRoomEmail,
 					url: '',
 					rsvp: true,
-					ptst: 'AC',
+					ptst: PARTICIPATION_STATUS.ACCEPTED,
 					cutype: CALENDAR_RESOURCES.ROOM,
 					role: PARTICIPANT_ROLE.REQUIRED
 				} satisfies Attendee
@@ -172,7 +172,7 @@ describe('Appointment Reminder Item Details', () => {
 					a: equipmentEmail,
 					url: '',
 					rsvp: true,
-					ptst: 'AC',
+					ptst: PARTICIPATION_STATUS.ACCEPTED,
 					cutype: CALENDAR_RESOURCES.RESOURCE,
 					role: PARTICIPANT_ROLE.REQUIRED
 				} satisfies Attendee

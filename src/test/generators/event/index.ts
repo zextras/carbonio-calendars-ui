@@ -5,6 +5,7 @@
  */
 import { getEndTime } from '../../../commons/editor-generator';
 import { PREFS_DEFAULTS } from '../../../constants';
+import { EVENT_DISPLAY_STATUS, PARTICIPATION_STATUS } from '../../../constants/api';
 import { EventResource, EventResourceCalendar, EventType } from '../../../types/event';
 import utils from '../utils';
 
@@ -76,13 +77,13 @@ const getDefaultEvent = (): EventType => {
 			locationUrl: '',
 			fragment: '',
 			class: 'PUB',
-			freeBusy: 'F',
+			freeBusy: EVENT_DISPLAY_STATUS.FREE,
 			hasChangesNotNotified: false,
 			inviteNeverSent: false,
 			hasOtherAttendees: false,
 			isRecurrent: false,
 			isException: false,
-			participationStatus: 'AC',
+			participationStatus: PARTICIPATION_STATUS.ACCEPTED,
 			compNum: 0,
 			apptStart: 123456789,
 			uid: '',
