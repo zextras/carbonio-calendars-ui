@@ -288,6 +288,7 @@ export default function CalendarComponent() {
 				onEventResize={onEventDropOrResize}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
+				showMultiDayTimes
 				resizableAccessor={resizableAccessor}
 				onSelecting={onSelecting}
 				draggableAccessor={draggableAccessor}
