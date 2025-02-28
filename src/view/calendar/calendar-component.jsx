@@ -5,6 +5,7 @@
  */
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
+import { Popover } from '@zextras/carbonio-design-system';
 import { find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -28,13 +29,16 @@ import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
+	useAnchorElement,
 	useCalendarView,
 	useIsSummaryViewOpen,
 	useRangeEnd,
 	useRangeStart
 } from '../../store/zustand/hooks';
+import { useAppStatusStore } from '../../store/zustand/store';
 import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 import { workWeek } from '../../utils/work-week';
+import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 
 const BigCalendar = withDragAndDrop(Calendar);
 
@@ -67,6 +71,7 @@ export default function CalendarComponent() {
 	const prefs = usePrefs();
 	const calendarView = useCalendarView();
 	const summaryViewOpen = useIsSummaryViewOpen();
+	const anchorElement = useAnchorElement();
 	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
@@ -263,6 +268,24 @@ export default function CalendarComponent() {
 				action={action}
 				headerMinWidth={columnMinWidth}
 			/>
+			{anchorElement && (
+				<Popover
+					anchorEl={anchorElement}
+					open={summaryViewOpen}
+					styleAsModal
+					placement="left"
+					onClose={() => {
+						useAppStatusStore.setState({ summaryViewId: undefined });
+					}}
+				>
+					<MemoEventSummaryView
+						events={events}
+						onClose={() => {
+							useAppStatusStore.setState({ summaryViewId: undefined });
+						}}
+					/>
+				</Popover>
+			)}
 			<BigCalendar
 				dayLayoutAlgorithm="no-overlap"
 				selectable

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { MutableRefObject } from 'react';
+
 import { AppState, CalendarView, SetRange, useAppStatusStore } from './store';
 import { Resource } from '../../types/editor';
 
@@ -18,7 +20,8 @@ export const useEquipments = (): Array<Resource> | undefined =>
 	useAppStatusStore((s: AppState) => s.equipment);
 export const useIsSummaryViewOpen = (): boolean =>
 	useAppStatusStore((s: AppState) => !!s.summaryViewId);
-
+export const useAnchorElement = (): MutableRefObject<HTMLDivElement> | null =>
+	useAppStatusStore((s: AppState) => s.anchorElement);
 // range hooks
 export const useSetRange = (): SetRange => useAppStatusStore((s: AppState) => s.setRange);
 export const useRangeStart = (): number => useAppStatusStore((s: AppState) => s.range.start);
