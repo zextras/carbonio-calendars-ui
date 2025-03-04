@@ -29,7 +29,7 @@ import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
-	useAnchorElement,
+	useSummaryViewRef,
 	useCalendarView,
 	useIsSummaryViewOpen,
 	useRangeEnd,
@@ -71,7 +71,7 @@ export default function CalendarComponent() {
 	const prefs = usePrefs();
 	const calendarView = useCalendarView();
 	const summaryViewOpen = useIsSummaryViewOpen();
-	const anchorElement = useAnchorElement();
+	const anchorElement = useSummaryViewRef();
 	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);

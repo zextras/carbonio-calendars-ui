@@ -29,17 +29,12 @@ import { EventType } from '../../types/event';
 type EventSummaryProps = {
 	events: EventType[];
 	onClose: () => void;
-	inviteId: string | undefined;
 };
 
-export const EventSummaryView = ({
-	events,
-	onClose,
-	inviteId
-}: EventSummaryProps): ReactElement | null => {
+export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactElement | null => {
 	const eventId = useSummaryView();
 	const event = events.find((item) => item.id === eventId);
-	const invite = useInvite(inviteId);
+	const invite = useInvite(event?.resource.inviteId);
 
 	const timeData = useMemo(
 		() => ({
