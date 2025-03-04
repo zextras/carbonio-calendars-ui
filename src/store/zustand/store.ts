@@ -26,7 +26,7 @@ export type AppState = {
 	setRange: SetRange;
 	equipment: Array<Resource> | undefined;
 	meetingRoom: Array<Resource> | undefined;
-	anchorElement: React.MutableRefObject<HTMLDivElement> | null;
+	summaryViewRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 export const useAppStatusStore = create<AppState>((set) => ({
@@ -35,7 +35,7 @@ export const useAppStatusStore = create<AppState>((set) => ({
 	summaryViewId: undefined,
 	equipment: undefined,
 	meetingRoom: undefined,
-	anchorElement: null,
+	summaryViewRef: React.createRef(),
 	range: {
 		start: moment().subtract('7', 'days').valueOf(),
 		end: moment().add('15', 'days').valueOf()

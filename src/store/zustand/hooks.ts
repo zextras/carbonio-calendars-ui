@@ -20,8 +20,8 @@ export const useEquipments = (): Array<Resource> | undefined =>
 	useAppStatusStore((s: AppState) => s.equipment);
 export const useIsSummaryViewOpen = (): boolean =>
 	useAppStatusStore((s: AppState) => !!s.summaryViewId);
-export const useAnchorElement = (): MutableRefObject<HTMLDivElement> | null =>
-	useAppStatusStore((s: AppState) => s.anchorElement);
+export const useSummaryViewRef = (): MutableRefObject<HTMLDivElement | null> =>
+	useAppStatusStore((s: AppState) => s.summaryViewRef);
 // range hooks
 export const useSetRange = (): SetRange => useAppStatusStore((s: AppState) => s.setRange);
 export const useRangeStart = (): number => useAppStatusStore((s: AppState) => s.range.start);
