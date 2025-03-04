@@ -57,10 +57,10 @@ const CustomDate = ({
 	start: moment.Moment;
 	end: moment.Moment;
 }): React.JSX.Element => {
-	const diffInDays = useMemo(() => end.diff(start, 'days'), [start, end]);
-	const diffInMonths = useMemo(() => end.diff(start, 'months'), [start, end]);
-	const diffInYears = useMemo(() => end.diff(start, 'years'), [start, end]);
 	const timeToDisplay = useMemo(() => {
+		const diffInDays = end.diff(start, 'days');
+		const diffInMonths = end.diff(start, 'months');
+		const diffInYears = end.diff(start, 'years');
 		if (diffInYears > 0) {
 			return {
 				start: start.format('Y/MM/DD, LT'),
@@ -80,7 +80,7 @@ const CustomDate = ({
 			};
 		}
 		return { start: `${start.format('LT')} - ${end.format('LT')}`, end: undefined };
-	}, [diffInDays, diffInMonths, diffInYears, end, start]);
+	}, [end, start]);
 
 	return (
 		<Container crossAlignment={'flex-start'}>
@@ -164,7 +164,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 		(e: React.MouseEvent): void => {
 			if (e.detail === 1 && (action === EVENT_ACTIONS.EXPAND || isNil(action))) {
 				useAppStatusStore.setState({ summaryViewId: event.id });
-				useAppStatusStore.setState({ anchorElement: anchorRef });
+				useAppStatusStore.setState({ summaryViewRef: anchorRef });
 			}
 		},
 		[event.id, action]
