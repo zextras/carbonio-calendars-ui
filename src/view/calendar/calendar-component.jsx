@@ -202,6 +202,11 @@ export default function CalendarComponent() {
 
 	const draggableAccessor = useCallback(
 		(calendarEvent) => {
+			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
+
+			if (!isSameDay) {
+				return false;
+			}
 			if (calendarEvent) {
 				const absFolderPath = find(calendars, [
 					'id',
@@ -216,6 +221,11 @@ export default function CalendarComponent() {
 
 	const resizableAccessor = useCallback(
 		(calendarEvent) => {
+			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
+
+			if (!isSameDay) {
+				return false;
+			}
 			if (calendarEvent) {
 				const absFolderPath = find(calendars, [
 					'id',
