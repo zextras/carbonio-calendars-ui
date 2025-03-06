@@ -59,28 +59,19 @@ const CustomDate = ({
 }): React.JSX.Element => {
 	const timeToDisplay = useMemo(() => {
 		const isSameDay = moment(start).isSame(moment(end), 'day');
-		const diffInDays = end.diff(start, 'days');
-		const diffInMonths = end.diff(start, 'months');
-		const diffInYears = end.diff(start, 'years');
-		if (diffInYears > 0) {
-			return {
-				start: start.format('Y/MM/DD, LT'),
-				end: end.format('Y/MM/DD, LT')
-			};
+		const isSameMonth = moment(start).isSame(moment(end), 'month');
+		const isSameYear = moment(start).isSame(moment(end), 'year');
+
+		if (!isSameYear) {
+			return `${start.format('Y/MM/DD, LT')} - ${end.format('Y/MM/DD, LT')}`;
 		}
-		if (diffInMonths > 0) {
-			return {
-				start: start.format('ddd MM/DD, LT'),
-				end: end.format('ddd MM/DD, LT')
-			};
+		if (!isSameMonth) {
+			return `${start.format('ddd MM/DD, LT')} - ${end.format('ddd MM/DD, LT')}`;
 		}
-		if (diffInDays > 0 || !isSameDay) {
-			return {
-				start: start.format('ddd DD, LT'),
-				end: end.format('ddd DD, LT')
-			};
+		if (!isSameDay) {
+			return `${start.format('ddd DD, LT')} - ${end.format('ddd DD, LT')}`;
 		}
-		return { start: `${start.format('LT')} - ${end.format('LT')}`, end: undefined };
+		return `${start.format('LT')} - ${end.format('LT')}`;
 	}, [end, start]);
 
 	return (
@@ -92,22 +83,8 @@ const CustomDate = ({
 					overflow: textOverflow
 				}}
 			>
-				{timeToDisplay.start}
+				{timeToDisplay}
 			</Text>
-			{timeToDisplay.end && (
-				<>
-					<Padding top="extrasmall" />
-					<Text
-						color="currentColor"
-						size={'small'}
-						style={{
-							overflow: textOverflow
-						}}
-					>
-						{timeToDisplay.end}
-					</Text>
-				</>
-			)}
 		</Container>
 	);
 };

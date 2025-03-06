@@ -247,6 +247,15 @@ export default function CalendarComponent() {
 		[calendars]
 	);
 
+	const allDayAccessor = useCallback((calendarEvent) => {
+		const diffInDays = moment(calendarEvent.end).diff(calendarEvent.start, 'days');
+
+		if (diffInDays > 0 || calendarEvent.allDay) {
+			return true;
+		}
+		return false;
+	}, []);
+
 	const onSelecting = useCallback(
 		(calendarSlot) => {
 			if (!calendarSlot.resourceId) return true;
@@ -325,6 +334,7 @@ export default function CalendarComponent() {
 				resizable
 				showMultiDayTimes
 				resizableAccessor={resizableAccessor}
+				allDayAccessor={allDayAccessor}
 				onSelecting={onSelecting}
 				draggableAccessor={draggableAccessor}
 			/>
