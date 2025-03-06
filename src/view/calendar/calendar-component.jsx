@@ -205,6 +205,7 @@ export default function CalendarComponent() {
 			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
 
 			if (!isSameDay) {
+				/* Drag is disabled for events that span over multiple days due to an issue with the library */
 				return false;
 			}
 			if (calendarEvent) {
@@ -224,6 +225,7 @@ export default function CalendarComponent() {
 			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
 
 			if (!isSameDay) {
+				/* Resize is disabled for events that span over multiple days due to an issue with the library */
 				return false;
 			}
 			if (calendarEvent) {
