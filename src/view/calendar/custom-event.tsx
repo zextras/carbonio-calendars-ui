@@ -58,6 +58,7 @@ const CustomDate = ({
 	end: moment.Moment;
 }): React.JSX.Element => {
 	const timeToDisplay = useMemo(() => {
+		const isSameDay = moment(start).isSame(moment(end), 'day');
 		const diffInDays = end.diff(start, 'days');
 		const diffInMonths = end.diff(start, 'months');
 		const diffInYears = end.diff(start, 'years');
@@ -73,7 +74,7 @@ const CustomDate = ({
 				end: end.format('ddd MM/DD, LT')
 			};
 		}
-		if (diffInDays > 0) {
+		if (diffInDays > 0 || !isSameDay) {
 			return {
 				start: start.format('ddd DD, LT'),
 				end: end.format('ddd DD, LT')
