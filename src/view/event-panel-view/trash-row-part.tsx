@@ -10,6 +10,7 @@ import { reduce } from 'lodash';
 import moment from 'moment';
 import styled from 'styled-components';
 
+import { PARTICIPATION_STATUS } from '../../constants/api';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectInstanceInvite } from '../../store/selectors/invites';
 import { EventType } from '../../types/event';
@@ -79,9 +80,13 @@ export const TrashRow = ({ event }: { event: EventType }): ReactElement => {
 					)}
 				</Row>
 				<Row width="5%" orientation="horizontal">
-					{participationStatus === 'AC' && <Icon icon="CheckmarkOutline" />}
-					{participationStatus === 'TE' && <Icon icon="QuestionMarkOutline" />}
-					{participationStatus === 'DE' && <Icon icon="CloseOutline" />}
+					{participationStatus === PARTICIPATION_STATUS.ACCEPTED && (
+						<Icon icon="CheckmarkOutline" />
+					)}
+					{participationStatus === PARTICIPATION_STATUS.TENTATIVE && (
+						<Icon icon="QuestionMarkOutline" />
+					)}
+					{participationStatus === PARTICIPATION_STATUS.DECLINED && <Icon icon="CloseOutline" />}
 				</Row>
 			</Row>
 			<Divider />

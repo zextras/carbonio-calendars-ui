@@ -23,6 +23,7 @@ import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder
 import { Folder } from '../../../carbonio-ui-commons/types';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_BOARD_ID } from '../../../constants';
+import { PARTICIPATION_STATUS } from '../../../constants/api';
 import {
 	getEquipments,
 	getMeetingRooms,
@@ -195,7 +196,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 						icon="CheckmarkOutline"
 						color="success"
 						onClick={onAction('ACCEPT')}
-						disabled={participationStatus === 'AC'}
+						disabled={participationStatus === PARTICIPATION_STATUS.ACCEPTED}
 					/>
 				</Padding>
 				<Padding right="small" vertical="medium">
@@ -205,7 +206,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 						icon="QuestionMarkOutline"
 						color="warning"
 						onClick={onAction('TENTATIVE')}
-						disabled={participationStatus === 'TE'}
+						disabled={participationStatus === PARTICIPATION_STATUS.TENTATIVE}
 					/>
 				</Padding>
 				<Padding right="small" vertical="medium">
@@ -215,7 +216,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 						icon="CloseOutline"
 						color="error"
 						onClick={onAction('DECLINE')}
-						disabled={participationStatus === 'DE'}
+						disabled={participationStatus === PARTICIPATION_STATUS.DECLINED}
 					/>
 				</Padding>
 				<Padding right="small" vertical="large">

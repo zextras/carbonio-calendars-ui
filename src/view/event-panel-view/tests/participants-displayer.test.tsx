@@ -12,6 +12,7 @@ import * as shell from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-u
 import defaultSettings from '../../../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { PREFS_DEFAULTS } from '../../../constants';
+import { PARTICIPATION_STATUS } from '../../../constants/api';
 import * as ParticipantDisplayerAction from '../../../store/actions/participant-displayer-actions';
 import { reducers } from '../../../store/redux';
 import { DisplayedParticipant } from '../participants-displayer';
@@ -39,7 +40,7 @@ describe('participants displayer', () => {
 					name: 'test',
 					email: 'test@test.it',
 					isOptional: false,
-					response: 'AC'
+					response: PARTICIPATION_STATUS.ACCEPTED
 				}}
 			/>,
 			{ store }
@@ -63,7 +64,7 @@ describe('participants displayer', () => {
 					name: 'test',
 					email: 'test@test.it',
 					isOptional: false,
-					response: 'AC'
+					response: PARTICIPATION_STATUS.ACCEPTED
 				}}
 			/>,
 			{ store }

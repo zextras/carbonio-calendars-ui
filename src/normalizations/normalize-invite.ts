@@ -14,6 +14,7 @@ import {
 	getAlarmValueInMinutes
 } from './normalizations-utils';
 import { getLocationUrl } from './normalize-calendar-events';
+import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { Invite } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -35,8 +36,8 @@ export const normalizeInvite = (m: any): Invite => ({
 	textDescription: m?.inv?.[0]?.comp?.[0]?.desc, // todo: normalize
 	htmlDescription: m?.inv?.[0]?.comp?.[0]?.descHtml,
 	end: m?.inv?.[0]?.comp?.[0]?.e[0], // todo: normalize
-	freeBusy: m?.inv?.[0]?.comp?.[0]?.fb ?? 'B',
-	freeBusyActualStatus: m?.inv?.[0]?.comp?.[0]?.fba ?? 'B',
+	freeBusy: m?.inv?.[0]?.comp?.[0]?.fb ?? EVENT_DISPLAY_STATUS.BUSY,
+	freeBusyActualStatus: m?.inv?.[0]?.comp?.[0]?.fba ?? EVENT_DISPLAY_STATUS.BUSY,
 	fragment: m?.inv?.[0]?.comp?.[0]?.fr,
 	isOrganizer: m?.inv?.[0]?.comp?.[0]?.isOrg ?? false,
 	location: m?.inv?.[0]?.comp?.[0]?.loc ?? '',

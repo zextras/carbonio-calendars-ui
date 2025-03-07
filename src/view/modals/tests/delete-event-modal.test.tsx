@@ -14,7 +14,7 @@ import * as shell from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-u
 import { mockUseHistoryNavigation } from '../../../carbonio-ui-commons/test/mocks/routing/use-history-navigation-mock';
 import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { PARTICIPANT_ROLE } from '../../../constants/api';
+import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { DeleteEventModal } from '../delete-event-modal';
@@ -70,7 +70,7 @@ describe('delete event modal', () => {
 				{
 					a: participantEmail,
 					d: participantFullName,
-					ptst: 'AC',
+					ptst: PARTICIPATION_STATUS.ACCEPTED,
 					cutype: '',
 					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
@@ -83,7 +83,7 @@ describe('delete event modal', () => {
 						name: participantFirstName,
 						email: participantEmail,
 						isOptional: false,
-						response: 'AC'
+						response: PARTICIPATION_STATUS.ACCEPTED
 					}
 				]
 			}
@@ -97,7 +97,7 @@ describe('delete event modal', () => {
 				{
 					a: participantEmail,
 					d: participantFullName,
-					ptst: 'AC',
+					ptst: PARTICIPATION_STATUS.ACCEPTED,
 					cutype: '',
 					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
@@ -110,7 +110,7 @@ describe('delete event modal', () => {
 						name: participantFirstName,
 						email: participantEmail,
 						isOptional: false,
-						response: 'AC'
+						response: PARTICIPATION_STATUS.ACCEPTED
 					}
 				]
 			}

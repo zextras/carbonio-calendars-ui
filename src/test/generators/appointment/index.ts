@@ -8,14 +8,10 @@ import { isNil, omitBy } from 'lodash';
 import moment from 'moment';
 
 import { ROOM_DIVIDER } from '../../../constants';
+import { EVENT_DISPLAY_STATUS, PARTICIPATION_STATUS } from '../../../constants/api';
 import { EventType } from '../../../types/event';
 import { Appointment } from '../../../types/store/appointments';
-import {
-	InviteClass,
-	InviteFreeBusy,
-	InviteStatus,
-	ParticipationStatus
-} from '../../../types/store/invite';
+import { InviteClass, InviteStatus } from '../../../types/store/invite';
 
 type GetAppointmentProps = {
 	event?: EventType;
@@ -35,13 +31,13 @@ const getDefaultAppointment = (): Appointment => {
 		class: 'PUB' as InviteClass,
 		flags: '',
 		alarm: false,
-		fb: 'B' as InviteFreeBusy,
+		fb: EVENT_DISPLAY_STATUS.BUSY,
 		fr: `${ROOM_DIVIDER} ${organizerFirstName} ${organizerLastName} have invited you to a new meeting! Subject: ...`,
 		d: moment().valueOf(),
-		fba: 'B' as InviteFreeBusy,
+		fba: EVENT_DISPLAY_STATUS.BUSY,
 		md: 0,
 		ms: 0,
-		ptst: 'AC' as ParticipationStatus,
+		ptst: PARTICIPATION_STATUS.ACCEPTED,
 		rev: 0,
 		status: 'CONF' as InviteStatus,
 		transp: '',

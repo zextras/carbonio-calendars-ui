@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
 import type { QueryChip, SearchViewProps } from '@zextras/carbonio-search-ui';
@@ -20,7 +20,7 @@ import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
-import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
+import { DEFAULT_DATE_END, DEFAULT_DATE_START } from '../../constants/advance-filter-modal';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
@@ -81,7 +81,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 
 	const foldersToSearchInQuery = useMemo(() => {
 		const folderString = map(searchInFolders, (folder) => `inid:"${folder}"`).join(' OR ');
-		return `( ${folderString})`;
+		return `(${folderString})`;
 	}, [searchInFolders]);
 
 	const [spanStart, setSpanStart] = useState(() => DEFAULT_DATE_START);
@@ -91,9 +91,15 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		(queryStr: QueryChip[], reset: boolean) => {
 			setResultLabel(defaultResultLabel);
 			setLoading(true);
-			const queryMap = `${queryStr
-				.map((c) => c.value ?? c.label)
-				.join(' ')} ${foldersToSearchInQuery}`;
+
+			const chipToString = (c: QueryChip): string => {
+				const chipString = (c.value ? c.value : c.label) ?? '';
+				const thereAreAnySpaces = chipString?.indexOf(' ') >= 0;
+				return thereAreAnySpaces ? `"${chipString}"` : `${chipString}`;
+			};
+
+			const queryString = queryStr.map((c) => chipToString(c)).join(' ');
+			const queryMap = `(${queryString}) ${foldersToSearchInQuery}`;
 			dispatch(
 				searchAppointments({
 					spanStart,

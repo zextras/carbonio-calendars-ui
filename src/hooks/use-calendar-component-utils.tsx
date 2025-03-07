@@ -19,6 +19,7 @@ import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_BOARD_ID, CALENDAR_ROUTE } from '../constants';
+import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
@@ -312,7 +313,7 @@ export const useCalendarComponentUtils = (): {
 						start: moment(e.start).valueOf(),
 						end: end.valueOf(),
 						allDay: isAllDay ?? false,
-						freeBusy: isAllDay ? 'F' : 'B',
+						freeBusy: isAllDay ? EVENT_DISPLAY_STATUS.FREE : EVENT_DISPLAY_STATUS.BUSY,
 						panel: false
 					}
 				});

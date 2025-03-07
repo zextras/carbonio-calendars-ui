@@ -8,6 +8,7 @@ import { HttpResponse, HttpResponseResolver } from 'msw';
 
 import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { ROOM_DIVIDER } from '../../../../constants';
+import { EVENT_DISPLAY_STATUS, PARTICIPATION_STATUS } from '../../../../constants/api';
 
 const uid = '71c5949a-69e2-48e7-b4c2-3765f6a4eaed';
 const senderMail = 'sender@mail.com';
@@ -44,7 +45,7 @@ export const singleGetMsgResponse = {
 									url: receiverMail,
 									d: 'receiver fullName',
 									role: 'REQ',
-									ptst: 'NE',
+									ptst: PARTICIPATION_STATUS.NEED_ACTION,
 									rsvp: true
 								}
 							],
@@ -77,8 +78,8 @@ export const singleGetMsgResponse = {
 									_content: ''
 								}
 							],
-							fba: 'B',
-							fb: 'B',
+							fba: EVENT_DISPLAY_STATUS.BUSY,
+							fb: EVENT_DISPLAY_STATUS.BUSY,
 							transp: 'O',
 							or: {
 								a: senderMail,
@@ -285,8 +286,8 @@ const getSoapInvite = ({ context }: { context: { id: string } }): any => ({
 							_content: `<html><body id="htmlmode">${ROOM_DIVIDER}<h3>mail fullname have invited you to a new meeting!</h3><p>Subject: test</p><p>Organizer: mail fullname</p><p>Location: </p><p>Time: Monday, December 5, 2022 12:30 PM - 1:00 PM</p><p>Invitees: </p><br />${ROOM_DIVIDER}</body></html><html><body id="htmlmode"></body></html><html><body id="htmlmode"></body></html><html><body id="htmlmode"></body></html>`
 						}
 					],
-					fba: 'B',
-					fb: 'B',
+					fba: EVENT_DISPLAY_STATUS.BUSY,
+					fb: EVENT_DISPLAY_STATUS.BUSY,
 					transp: 'O',
 					or: {
 						a: 'mail@fullname.com',
