@@ -6,10 +6,12 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Button, useModal, useSnackbar } from '@zextras/carbonio-design-system';
-import { closeBoard, replaceHistory, useBoard } from '@zextras/carbonio-shell-ui';
+import { closeBoard, useBoard } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
+import { useHistoryNavigation } from '../../../carbonio-ui-commons/helpers/use-history-navigation';
 import { onSend } from '../../../commons/editor-save-send-fns';
+import { CALENDAR_ROUTE } from '../../../constants';
 import { StoreProvider } from '../../../store/redux';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -41,6 +43,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const [t] = useTranslation();
 	const board = useBoard();
 	const dispatch = useAppDispatch();
+	const { replaceHistory } = useHistoryNavigation();
 
 	const isDisabled = useMemo(
 		() =>
@@ -87,7 +90,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 		} else
 			onSend({ isNew, editor, dispatch }).then(({ response }) => {
 				if (editor?.panel && response) {
-					replaceHistory('');
+					replaceHistory(`/${CALENDAR_ROUTE}`);
 				}
 				if (board && response) {
 					closeBoard(board?.id);
@@ -103,7 +106,18 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 					autoHideTimeout: 3000
 				});
 			});
-	}, [board, closeModal, createModal, createSnackbar, dispatch, editor, editorId, isNew, t]);
+	}, [
+		board,
+		closeModal,
+		createModal,
+		createSnackbar,
+		dispatch,
+		editor,
+		editorId,
+		isNew,
+		replaceHistory,
+		t
+	]);
 
 	return (
 		<Button

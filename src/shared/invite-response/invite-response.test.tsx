@@ -20,6 +20,7 @@ import {
 import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
+import { mockUseHistoryNavigation } from '../../carbonio-ui-commons/test/mocks/routing/use-history-navigation-mock';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import * as handler from '../../commons/get-appointment';
 import * as getFreeBusyResponseHandler from '../../soap/get-free-busy-request';
@@ -66,6 +67,8 @@ afterEach(() => {
 });
 
 describe('invite response component', () => {
+	mockUseHistoryNavigation();
+
 	describe('case invitation email', () => {
 		test('have a container with border of 0.0625rem solid regular', () => {
 			setupFoldersStore();

@@ -18,6 +18,7 @@ import { addBoard, Board } from '@zextras/carbonio-shell-ui';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
+import { useHistoryNavigation } from '../../../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../../carbonio-ui-commons/types';
 import { generateEditor } from '../../../commons/editor-generator';
@@ -78,6 +79,7 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 	const [t] = useTranslation();
 	const dispatch = useAppDispatch();
 	const calendarFolders = useFoldersMap();
+	const { replaceHistory } = useHistoryNavigation();
 
 	const proposeNewTimeCb = useCallback(() => {
 		const messageData = message.invite[0].comp[0];
@@ -134,10 +136,21 @@ const InviteReplyPart: FC<InviteReplyPartArguments> = ({ inviteId, message }): R
 					notifyOrganizer,
 					activeCalendar,
 					dispatch,
+					replaceHistory,
+					t,
 					parent: message.parent
 				});
 			},
-		[createSnackbar, inviteId, notifyOrganizer, activeCalendar, dispatch, message.parent]
+		[
+			t,
+			replaceHistory,
+			createSnackbar,
+			inviteId,
+			notifyOrganizer,
+			activeCalendar,
+			dispatch,
+			message.parent
+		]
 	);
 
 	// TODO: find a more readable and descriptive way to handle this data

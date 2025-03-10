@@ -7,6 +7,7 @@ export const TEST_SELECTORS = {
 	DROPDOWN: 'dropdown-popper-list',
 	CALENDARS_SELECTOR_INPUT: 'calendar-selector-input',
 	CHIP: 'chip',
+	AVATAR_WRAPPER: 'avatar_box',
 	ICONS: {
 		remove: 'icon: TrashOutline',
 		closeModal: 'icon: Close',

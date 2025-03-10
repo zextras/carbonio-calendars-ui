@@ -86,7 +86,7 @@ export const AppointmentReminderItemDetails = ({
 				{invite && <MeetingRoomsRow invite={invite} showIcon fontSize={fontSize} />}
 				{invite && <EquipmentsRow invite={invite} showIcon fontSize={fontSize} />}
 				{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} showIcon fontSize={fontSize} />}
-				{invite && (
+				{invite?.organizer && (
 					<OrganizerPart
 						invite={invite}
 						organizer={invite.organizer}

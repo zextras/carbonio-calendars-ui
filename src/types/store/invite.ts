@@ -163,7 +163,7 @@ export type Invite = {
 	location: string;
 	name: string;
 	noBlob: boolean;
-	organizer: InviteOrganizer;
+	organizer: InviteOrganizer; // FIXME: this actually can be undefined (see CO-1885)
 	recurrenceRule: any;
 	isRespRequested: boolean;
 	start: InviteDateFormat;

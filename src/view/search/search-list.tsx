@@ -9,7 +9,6 @@ import { Container, List, Row, Text, Padding, ListItem } from '@zextras/carbonio
 import { t } from '@zextras/carbonio-shell-ui';
 import { map, sortBy } from 'lodash';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';
 
 import { AdvancedFilterButton } from './parts/advanced-filter-button';
 import SearchListItem from './search-list-item';
@@ -26,12 +25,6 @@ type SearchListProps = {
 	dateEnd: number;
 };
 
-export type RoutesParams = {
-	action: 'view' | 'edit';
-	apptId: string;
-	ridZ: string;
-};
-
 const SearchList = ({
 	appointments,
 	loadMore,
@@ -42,7 +35,6 @@ const SearchList = ({
 	dateStart,
 	dateEnd
 }: SearchListProps): React.JSX.Element => {
-	const { apptId, ridZ } = useParams<RoutesParams>();
 	const items = useMemo(
 		() =>
 			map(sortBy(appointments ?? [], ['start']), (item) => (
