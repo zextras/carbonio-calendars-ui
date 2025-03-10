@@ -9,7 +9,7 @@ import moment from 'moment';
 
 import { Rel } from './normalizations-utils';
 import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../constants';
-import { PARTICIPANT_ROLE } from '../constants/api';
+import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { getTimeString } from '../hooks/use-get-event-timezone';
 import { CalendarEditor, CalendarOrganizer, CalendarSender, Editor } from '../types/editor';
@@ -291,7 +291,7 @@ const generateInvite = (editor: Editor): any => {
 					? `${attendee.firstName} ${attendee.lastname}`
 					: attendee.label,
 			role: PARTICIPANT_ROLE.REQUIRED,
-			ptst: attendee?.ptst ?? 'NE',
+			ptst: attendee?.ptst ?? PARTICIPATION_STATUS.NEED_ACTION,
 			rsvp: '1'
 		}))
 	);
@@ -304,7 +304,7 @@ const generateInvite = (editor: Editor): any => {
 						? `${optionalAttendee.firstName} ${optionalAttendee.lastname}`
 						: optionalAttendee.label,
 				role: PARTICIPANT_ROLE.OPTIONAL,
-				ptst: optionalAttendee?.ptst ?? 'NE',
+				ptst: optionalAttendee?.ptst ?? PARTICIPATION_STATUS.NEED_ACTION,
 				rsvp: '1'
 			}))
 		);
@@ -315,7 +315,7 @@ const generateInvite = (editor: Editor): any => {
 				a: c?.email,
 				d: c.label,
 				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
-				ptst: 'NE',
+				ptst: PARTICIPATION_STATUS.NEED_ACTION,
 				rsvp: true,
 				url: c?.email,
 				cutype: CALENDAR_RESOURCES.ROOM
@@ -328,7 +328,7 @@ const generateInvite = (editor: Editor): any => {
 				a: c?.email,
 				d: c.label,
 				role: PARTICIPANT_ROLE.NON_PARTICIPANT,
-				ptst: 'NE',
+				ptst: PARTICIPATION_STATUS.NEED_ACTION,
 				rsvp: true,
 				url: c?.email,
 				cutype: CALENDAR_RESOURCES.RESOURCE

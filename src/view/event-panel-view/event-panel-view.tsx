@@ -6,7 +6,6 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Container, Divider, Icon, Row, Text, Button } from '@zextras/carbonio-design-system';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -19,10 +18,11 @@ import { ParticipantsPart } from './participants-part';
 import { ReminderPart } from './reminder-part';
 import { ReplyButtonsPart } from './reply-buttons-part';
 import { isAnInvite } from '../../actions/appointment-actions-items';
+import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../carbonio-ui-commons/types';
 import StyledDivider from '../../commons/styled-divider';
-import { PANEL_VIEW } from '../../constants';
+import { CALENDAR_ROUTE, PANEL_VIEW } from '../../constants';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { useInvite } from '../../hooks/use-invite';
 import { getAlarmToString } from '../../normalizations/normalizations-utils';
@@ -60,10 +60,11 @@ export const DisplayerHeader = ({
 	event: EventType;
 	panelView: PanelView;
 }): ReactElement => {
+	const { replaceHistory } = useHistoryNavigation();
 	const [t] = useTranslation();
 	const close = useCallback(() => {
-		replaceHistory('');
-	}, []);
+		replaceHistory(`/${CALENDAR_ROUTE}`);
+	}, [replaceHistory]);
 	const actions = useEventActions({ onClose: close, event, context: { panelView } });
 
 	return (
@@ -107,7 +108,7 @@ export const DisplayerHeader = ({
 
 export default function EventPanelView(): ReactElement | null {
 	const { calendarId, apptId, ridZ } = useParams<RouteParams>();
-	const calendar = useFolder(calendarId);
+	const calendar = useFolder(calendarId ?? '');
 	const appointment = useAppSelector(selectAppointment(apptId));
 	const instance = useAppSelector(selectAppointmentInstance(apptId, ridZ));
 	const invite = useInvite((instance as ExceptionReference)?.inviteId ?? appointment?.inviteId);

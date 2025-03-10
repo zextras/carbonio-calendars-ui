@@ -133,7 +133,7 @@ export const CalendarSelector = ({
 			onChange={onSelectedCalendarChange}
 			items={calendarItems}
 			maxWidth={'fill'}
-			defaultSelection={defaultCalendarSelection}
+			selection={defaultCalendarSelection}
 			disablePortal
 			disabled={disabled}
 			LabelFactory={LabelFactory}

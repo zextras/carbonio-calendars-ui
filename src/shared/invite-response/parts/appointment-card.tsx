@@ -6,12 +6,13 @@
 import React, { useCallback, useState } from 'react';
 
 import { Container, Icon, Row, Tooltip, Padding, Text } from '@zextras/carbonio-design-system';
-import { pushHistory } from '@zextras/carbonio-shell-ui';
 import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
 
+import { useHistoryNavigation } from '../../../carbonio-ui-commons/helpers/use-history-navigation';
 import { TagIconComponent } from '../../../commons/tag-icon-component';
 import { CALENDAR_ROUTE } from '../../../constants';
+import { PARTICIPATION_STATUS } from '../../../constants/api';
 import { EVENT_ACTIONS } from '../../../constants/event-actions';
 import { EventType } from '../../../types/event';
 
@@ -40,14 +41,14 @@ const useEventTimeString = (start: Moment | Date, end: Moment | Date, allDay: bo
 
 export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element => {
 	const [t] = useTranslation();
+	const { pushHistory } = useHistoryNavigation();
 	const [tooltipVisible, setTooltipVisible] = useState(false);
 
 	const onClick = useCallback(() => {
-		pushHistory({
-			route: CALENDAR_ROUTE,
-			path: `${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-		});
-	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ]);
+		pushHistory(
+			`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+		);
+	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ, pushHistory]);
 
 	const eventTimeString = useEventTimeString(event.start, event.end, event.allDay);
 
@@ -141,7 +142,7 @@ export const AppointmentCard = ({ event }: { event: EventType }): JSX.Element =>
 							)}
 							{!event?.resource?.calendar?.owner &&
 								!event?.resource?.iAmOrganizer &&
-								event.resource?.participationStatus === 'NE' && (
+								event.resource?.participationStatus === PARTICIPATION_STATUS.NEED_ACTION && (
 									<Tooltip placement="top" label={t('event.action.needs_action', 'Needs action')}>
 										<Padding left="extrasmall">
 											<Icon

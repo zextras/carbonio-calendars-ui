@@ -13,7 +13,7 @@ import { setCalendarColor } from '../../normalizations/normalizations-utils';
 
 export const CalendarInfoRow = (): ReactElement => {
 	const { calendarId } = useParams<{ calendarId: string }>();
-	const calendar = useFolder(calendarId);
+	const calendar = useFolder(calendarId ?? '');
 	const color = setCalendarColor({ color: calendar?.color, rgb: calendar?.rgb });
 	return (
 		<>

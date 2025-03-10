@@ -4,12 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { renderHook } from '@testing-library/react';
 import { useModal } from '@zextras/carbonio-design-system';
 import { find, indexOf } from 'lodash';
 
 import { useEventActions } from './use-event-actions';
-import { setupTest, screen } from '../carbonio-ui-commons/test/test-setup';
+import { setupTest, screen, setupHook } from '../carbonio-ui-commons/test/test-setup';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import {
 	AppointmentActionsItems,
@@ -46,7 +45,7 @@ const mockCreateModal = jest.fn();
 
 describe('useEventActions', () => {
 	it('should return undefined if no event is provided', () => {
-		const { result } = renderHook(() => useEventActions({}));
+		const { result } = setupHook(useEventActions, { initialProps: [{}] });
 		expect(result.current).toBeUndefined();
 	});
 
@@ -54,7 +53,7 @@ describe('useEventActions', () => {
 		describe('single instance menu', () => {
 			const event = { resource: { calendar: { id: '55' }, isRecurrent: true } } as EventType;
 			it('should include forward appointment action', () => {
-				const { result } = renderHook(() => useEventActions({ event }));
+				const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
 
 				const actionsResult = (result.current as SeriesActionsItems)[0].items;
 				const forwardActionInInstanceMenu = getActionByName(actionsResult, EVENT_ACTIONS.FORWARD);
@@ -62,7 +61,7 @@ describe('useEventActions', () => {
 			});
 
 			it('forward appointment action should be listed under copy action', () => {
-				const { result } = renderHook(() => useEventActions({ event }));
+				const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
 
 				const actionsResult = (result.current as SeriesActionsItems)[0].items;
 				const actionIds = actionsResult?.map((action) => action.id);
@@ -74,7 +73,7 @@ describe('useEventActions', () => {
 		describe('series menu', () => {
 			const event = { resource: { calendar: { id: '55' }, isRecurrent: true } } as EventType;
 			it('should include forward appointment action', () => {
-				const { result } = renderHook(() => useEventActions({ event }));
+				const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
 
 				const actionsResult = (result.current as SeriesActionsItems)[1].items;
 				const forwardActionInInstanceMenu = getActionByName(actionsResult, EVENT_ACTIONS.FORWARD);
@@ -82,7 +81,7 @@ describe('useEventActions', () => {
 			});
 
 			it('forward appointment action should be listed under copy action', () => {
-				const { result } = renderHook(() => useEventActions({ event }));
+				const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
 
 				const actionsResult = (result.current as SeriesActionsItems)[1].items;
 				const actionIds = actionsResult?.map((action) => action.id);
@@ -96,7 +95,7 @@ describe('useEventActions', () => {
 	describe('single instance event', () => {
 		const event = { resource: { calendar: { id: '55' }, isRecurrent: false } } as EventType;
 		it('should include forward appointment action', () => {
-			const { result } = renderHook(() => useEventActions({ event }));
+			const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
 
 			const actionsResult = result.current as InstanceActionsItems;
 			const forwardAction = getActionByName(actionsResult, EVENT_ACTIONS.FORWARD);
@@ -104,7 +103,7 @@ describe('useEventActions', () => {
 		});
 
 		it('forward appointment action should be listed under copy action on a generic event', () => {
-			const { result } = renderHook(() => useEventActions({ event }));
+			const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
 
 			const actionsResult = result.current as InstanceActionsItems;
 			const actionIds = actionsResult?.map((action) => action.id);
@@ -114,7 +113,7 @@ describe('useEventActions', () => {
 		});
 
 		it('forward appointment action should open forward modal on click', async () => {
-			const { result } = renderHook(() => useEventActions({ event }));
+			const { result } = setupHook(useEventActions, { initialProps: [{ event }] });
 			const actionsResult = result.current as InstanceActionsItems;
 			const forwardAction = getActionByName(
 				actionsResult,

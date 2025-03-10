@@ -14,6 +14,7 @@ import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
 import { useFoldersMapByRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
 import { LinkFolder } from '../../../carbonio-ui-commons/types/folder';
 import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
+import { EVENT_DISPLAY_STATUS } from '../../../constants/api';
 import { normalizeAppointments } from '../../../normalizations/normalize-appointments';
 import { normalizeCalendarEvents } from '../../../normalizations/normalize-calendar-events';
 import { searchAppointments } from '../../../store/actions/search-appointments';
@@ -57,7 +58,7 @@ const useAppointmentsInRange = (
 				if (response?.payload?.appt?.length) {
 					const toNormalize = filter(
 						response.payload.appt,
-						(appt) => appt.fb !== 'F' && appt.uid !== uid
+						(appt) => appt.fb !== EVENT_DISPLAY_STATUS.FREE && appt.uid !== uid
 					);
 					if (toNormalize.length) {
 						const appointments = values(normalizeAppointments(toNormalize));

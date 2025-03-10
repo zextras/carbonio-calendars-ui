@@ -11,14 +11,17 @@ import { act, screen } from '@testing-library/react';
 
 import { FOLDER_VIEW } from '../../../carbonio-ui-commons/constants';
 import * as shell from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import { mockUseHistoryNavigation } from '../../../carbonio-ui-commons/test/mocks/routing/use-history-navigation-mock';
 import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { PARTICIPANT_ROLE } from '../../../constants/api';
+import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { DeleteEventModal } from '../delete-event-modal';
 
 describe('delete event modal', () => {
+	mockUseHistoryNavigation();
+
 	const participantFirstName = faker.person.firstName();
 	const participantLastName = faker.person.lastName();
 	const participantFullName = faker.person.fullName({
@@ -67,7 +70,7 @@ describe('delete event modal', () => {
 				{
 					a: participantEmail,
 					d: participantFullName,
-					ptst: 'AC',
+					ptst: PARTICIPATION_STATUS.ACCEPTED,
 					cutype: '',
 					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
@@ -80,7 +83,7 @@ describe('delete event modal', () => {
 						name: participantFirstName,
 						email: participantEmail,
 						isOptional: false,
-						response: 'AC'
+						response: PARTICIPATION_STATUS.ACCEPTED
 					}
 				]
 			}
@@ -94,7 +97,7 @@ describe('delete event modal', () => {
 				{
 					a: participantEmail,
 					d: participantFullName,
-					ptst: 'AC',
+					ptst: PARTICIPATION_STATUS.ACCEPTED,
 					cutype: '',
 					role: PARTICIPANT_ROLE.REQUIRED,
 					rsvp: true,
@@ -107,7 +110,7 @@ describe('delete event modal', () => {
 						name: participantFirstName,
 						email: participantEmail,
 						isOptional: false,
-						response: 'AC'
+						response: PARTICIPATION_STATUS.ACCEPTED
 					}
 				]
 			}
@@ -194,7 +197,7 @@ describe('delete event modal', () => {
 				);
 
 				expect(screen.queryByTestId('icon: Square')).not.toBeInTheDocument();
-				expect(screen.queryByText(/label\.notify_organizer/i)).not.toBeInTheDocument();
+				expect(screen.queryByText(/notify organizer/i)).not.toBeInTheDocument();
 			});
 			describe('there is a participant', () => {
 				describe('deleting a draft', () => {
@@ -218,15 +221,17 @@ describe('delete event modal', () => {
 						);
 						expect(
 							screen.queryByRole('button', {
-								name: /action\.send_cancellation/i
+								name: /Send Cancellation/i
 							})
 						).not.toBeInTheDocument();
 
-						expect(screen.getByText('label.delete new-event-1')).toBeInTheDocument();
-						expect(screen.getByText(/message\.sure_to_delete_appointment/i)).toBeInTheDocument();
+						expect(screen.getByText('Delete new-event-1')).toBeInTheDocument();
+						expect(
+							screen.getByText(/Are you sure you want to delete the appointment ?/i)
+						).toBeInTheDocument();
 						expect(
 							screen.getByRole('button', {
-								name: 'label.delete'
+								name: 'Delete'
 							})
 						).toBeInTheDocument();
 					});
@@ -254,7 +259,7 @@ describe('delete event modal', () => {
 
 						await user.click(
 							screen.getByRole('button', {
-								name: 'label.delete'
+								name: 'Delete'
 							})
 						);
 
@@ -295,7 +300,7 @@ describe('delete event modal', () => {
 						screen.getByText(/Do you want to edit the appointment cancellation message?/i)
 					).toBeInTheDocument();
 					expect(
-						screen.queryByText(/message\.sure_to_delete_appointment/i)
+						screen.queryByText(/Are you sure you want to delete the appointment ?/i)
 					).not.toBeInTheDocument();
 					expect(
 						screen.getByRole('button', {
@@ -304,10 +309,10 @@ describe('delete event modal', () => {
 					).toBeInTheDocument();
 					expect(
 						screen.getByRole('button', {
-							name: /action\.send_cancellation/i
+							name: /Send Cancellation/i
 						})
 					).toBeInTheDocument();
-					expect(screen.getByText('label.delete new-event-1')).toBeInTheDocument();
+					expect(screen.getByText('Delete new-event-1')).toBeInTheDocument();
 				});
 				test('if the organizer want to send a custom cancellation message a composer will be opened', async () => {
 					const store = configureStore({
@@ -363,7 +368,7 @@ describe('delete event modal', () => {
 
 					await user.click(
 						screen.getByRole('button', {
-							name: /action\.send_cancellation/i
+							name: /send cancellation/i
 						})
 					);
 					expect(spy).toHaveBeenCalledWith(
@@ -410,11 +415,13 @@ describe('delete event modal', () => {
 						{ store }
 					);
 
-					expect(screen.getByText('label.delete new-event-1')).toBeInTheDocument();
-					expect(screen.getByText(/message\.sure_to_delete_appointment/i)).toBeInTheDocument();
+					expect(screen.getByText('Delete new-event-1')).toBeInTheDocument();
+					expect(
+						screen.getByText(/Are you sure you want to delete the appointment ?/i)
+					).toBeInTheDocument();
 					expect(
 						screen.getByRole('button', {
-							name: 'label.delete'
+							name: 'Delete'
 						})
 					).toBeInTheDocument();
 				});
@@ -438,7 +445,7 @@ describe('delete event modal', () => {
 
 					await user.click(
 						screen.getByRole('button', {
-							name: /label\.delete/i
+							name: /delete/i
 						})
 					);
 
@@ -470,14 +477,16 @@ describe('delete event modal', () => {
 					{ store }
 				);
 
-				expect(screen.getByText('label.delete new-event-1')).toBeInTheDocument();
-				expect(screen.getByText(/message\.sure_to_delete_appointment/i)).toBeInTheDocument();
+				expect(screen.getByText('Delete new-event-1')).toBeInTheDocument();
+				expect(
+					screen.getByText(/Are you sure you want to delete the appointment ?/i)
+				).toBeInTheDocument();
 				expect(screen.getByTestId('icon: Square')).toBeInTheDocument();
-				expect(screen.getByText(/label\.notify_organizer/i)).toBeInTheDocument();
+				expect(screen.getByText(/notify organizer/i)).toBeInTheDocument();
 
 				expect(
 					screen.getByRole('button', {
-						name: /label\.delete/i
+						name: /delete/i
 					})
 				).toBeInTheDocument();
 			});
@@ -504,7 +513,7 @@ describe('delete event modal', () => {
 
 				await user.click(
 					screen.getByRole('button', {
-						name: /label\.delete/i
+						name: /delete/i
 					})
 				);
 
@@ -550,7 +559,7 @@ describe('delete event modal', () => {
 
 				await user.click(
 					screen.getByRole('button', {
-						name: /label\.delete/i
+						name: /delete/i
 					})
 				);
 
@@ -587,7 +596,7 @@ describe('delete event modal', () => {
 
 				await user.click(
 					screen.getByRole('button', {
-						name: /label\.delete/i
+						name: /delete/i
 					})
 				);
 

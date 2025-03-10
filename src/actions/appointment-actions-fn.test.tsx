@@ -10,7 +10,7 @@ import { createCopy, emailAttendees } from './appointment-actions-fn';
 import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
-import { PARTICIPANT_ROLE, ParticipantRoleType } from '../constants/api';
+import { PARTICIPANT_ROLE, ParticipantRoleType, PARTICIPATION_STATUS } from '../constants/api';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
 import { EventType } from '../types/event';
@@ -55,6 +55,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -82,6 +84,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -123,6 +127,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -171,6 +177,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -219,6 +227,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -240,7 +250,7 @@ describe('actions', () => {
 				a: email,
 				d: name,
 				cutype: '',
-				ptst: 'AC',
+				ptst: PARTICIPATION_STATUS.ACCEPTED,
 				role,
 				rsvp: false,
 				url: ''
@@ -270,6 +280,8 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose: jest.fn()
 			};
 			emailAttendees({ event, invite, context });
@@ -307,6 +319,8 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose: jest.fn()
 			};
 			emailAttendees({ event, invite, context });
@@ -341,6 +355,8 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose: jest.fn()
 			};
 			emailAttendees({ event, invite, context });
@@ -373,6 +389,8 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose: jest.fn()
 			};
 			emailAttendees({ event, context });

@@ -24,6 +24,7 @@ import {
 } from './appointment-actions-fn';
 import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { hasId } from '../carbonio-ui-commons/worker/handle-message';
+import { PARTICIPATION_STATUS } from '../constants/api';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { StoreProvider } from '../store/redux';
 import { ActionsContext, ActionsProps, AppointmentActionsItems } from '../types/actions';
@@ -62,7 +63,7 @@ export const acceptInvitationItem = ({
 	id: EVENT_ACTIONS.ACCEPT,
 	icon: 'CheckmarkOutline',
 	label: t('event.action.accept', 'Accept'),
-	disabled: event?.resource?.participationStatus === 'AC',
+	disabled: event?.resource?.participationStatus === PARTICIPATION_STATUS.ACCEPTED,
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
 	onClick: acceptInvitation({ event, context, invite })
 });
@@ -79,7 +80,7 @@ export const declineInvitationItem = ({
 	id: EVENT_ACTIONS.DECLINE,
 	icon: 'CloseOutline',
 	label: t('event.action.decline', 'Decline'),
-	disabled: event?.resource?.participationStatus === 'DE',
+	disabled: event?.resource?.participationStatus === PARTICIPATION_STATUS.DECLINED,
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
 	onClick: declineInvitation({ event, context, invite })
 });
@@ -96,7 +97,7 @@ export const acceptAsTentativeItem = ({
 	id: EVENT_ACTIONS.TENTATIVE,
 	icon: 'QuestionMarkOutline',
 	label: t('label.tentative', 'Tentative'),
-	disabled: event?.resource?.participationStatus === 'TE',
+	disabled: event?.resource?.participationStatus === PARTICIPATION_STATUS.TENTATIVE,
 	tooltipLabel: t('label.action_performed', 'You already performed this action'),
 	onClick: acceptAsTentative({ event, context, invite })
 });
