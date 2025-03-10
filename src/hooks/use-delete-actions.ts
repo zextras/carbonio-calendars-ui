@@ -13,8 +13,10 @@ import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
+import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
 import { Folders } from '../carbonio-ui-commons/types';
 import { generateEditor } from '../commons/editor-generator';
+import { CALENDAR_ROUTE } from '../constants';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';
 import { modifyAppointment } from '../store/actions/new-modify-appointment';
 import { useAppDispatch } from '../store/redux/hooks';
@@ -99,7 +101,6 @@ const generateAppointmentRestoredSnackbar = (
 type AccountContext = {
 	isSingleInstance?: boolean;
 	dispatch: Dispatch;
-	replaceHistory: (a: string) => void;
 	onClose: () => void;
 	folders: Folders;
 };
@@ -120,6 +121,7 @@ export const useDeleteActions = (
 	context: AccountContext
 ): UseDeleteActionsType => {
 	const [t] = useTranslation();
+	const { replaceHistory } = useHistoryNavigation();
 	const dispatch = useAppDispatch();
 	const createSnackbar = useSnackbar();
 	const [deleteAll, setDeleteAll] = useState(true);
@@ -146,7 +148,7 @@ export const useDeleteActions = (
 				generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 			});
 		};
-		context.replaceHistory('');
+		replaceHistory(`/${CALENDAR_ROUTE}`);
 		const ctxt = {
 			dispatch,
 			t,
@@ -165,7 +167,7 @@ export const useDeleteActions = (
 					}
 				}, 5000);
 			});
-	}, [event, context, createSnackbar, dispatch, notifyOrganizer, t]);
+	}, [context, replaceHistory, dispatch, t, createSnackbar, event, notifyOrganizer]);
 
 	const deleteRecurrentSerie = useCallback(() => {
 		context?.onClose && context?.onClose();
@@ -181,7 +183,7 @@ export const useDeleteActions = (
 				generateAppointmentRestoredSnackbar(res, t, createSnackbar);
 			});
 		};
-		context.replaceHistory('');
+		replaceHistory(`/${CALENDAR_ROUTE}`);
 		const ctxt = {
 			dispatch,
 			t,
@@ -247,12 +249,22 @@ export const useDeleteActions = (
 					}
 				}, 5000)
 			);
-	}, [event, context, createSnackbar, deleteAll, dispatch, invite, notifyOrganizer, t]);
+	}, [
+		context,
+		replaceHistory,
+		dispatch,
+		t,
+		createSnackbar,
+		event,
+		invite,
+		deleteAll,
+		notifyOrganizer
+	]);
 
 	const deleteRecurrentInstance = useCallback(() => {
 		context.onClose();
 		const isCanceled = false;
-		context.replaceHistory('');
+		replaceHistory(`/${CALENDAR_ROUTE}`);
 		const ctxt = {
 			dispatch,
 			t,
@@ -277,7 +289,16 @@ export const useDeleteActions = (
 					}
 				}, 5000)
 			);
-	}, [event, context, createSnackbar, dispatch, invite?.start?.tz, notifyOrganizer, t]);
+	}, [
+		context,
+		replaceHistory,
+		dispatch,
+		t,
+		createSnackbar,
+		event,
+		invite?.start?.tz,
+		notifyOrganizer
+	]);
 
 	return useMemo(
 		() => ({

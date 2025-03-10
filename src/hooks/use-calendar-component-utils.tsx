@@ -6,18 +6,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
-import { addBoard, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { addBoard } from '@zextras/carbonio-shell-ui';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isArray, isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
+import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
-import { CALENDAR_BOARD_ID } from '../constants';
+import { CALENDAR_BOARD_ID, CALENDAR_ROUTE } from '../constants';
 import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeInvite } from '../normalizations/normalize-invite';
@@ -47,6 +48,7 @@ export const useCalendarComponentUtils = (): {
 	const [t] = useTranslation();
 	const { createModal, closeModal } = useModal();
 	const createSnackbar = useSnackbar();
+	const { replaceHistory } = useHistoryNavigation();
 
 	const dispatch = useAppDispatch();
 	const calendarFolders = useFoldersMap();
@@ -59,9 +61,9 @@ export const useCalendarComponentUtils = (): {
 
 	useEffect(() => {
 		if (action && action !== EVENT_ACTIONS.EXPAND) {
-			replaceHistory('');
+			replaceHistory(`/${CALENDAR_ROUTE}`);
 		}
-	}, [action]);
+	}, [action, replaceHistory]);
 
 	const getStart = useCallback(
 		({
