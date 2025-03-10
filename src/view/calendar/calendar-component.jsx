@@ -19,6 +19,7 @@ import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
+import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { useCheckedFolders } from '../../hooks/use-checked-folders';
@@ -35,6 +36,7 @@ import {
 } from '../../store/zustand/hooks';
 import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 import { workWeek } from '../../utils/work-week';
+import EventPanelView from '../event-panel-view/event-panel-view';
 
 const BigCalendar = withDragAndDrop(Calendar);
 
@@ -292,6 +294,7 @@ export default function CalendarComponent() {
 				onSelecting={onSelecting}
 				draggableAccessor={draggableAccessor}
 			/>
+			{action === EVENT_ACTIONS.EXPAND && <EventPanelView />}
 		</>
 	);
 }

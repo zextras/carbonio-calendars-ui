@@ -15,17 +15,18 @@ import {
 	useModal,
 	Padding
 } from '@zextras/carbonio-design-system';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
+import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
 import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
 import { CustomEventIcon } from './custom-event-icon';
 import { CustomEventReplyIcons } from './custom-event-reply-icons';
 import { TagIconComponent } from '../../commons/tag-icon-component';
+import { CALENDAR_ROUTE } from '../../constants';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { StoreProvider } from '../../store/redux';
@@ -59,6 +60,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const [t] = useTranslation();
 	const [isOuterTooltipDisabled, setIsOuterTooltipDisabled] = useState(false);
 	const recurrentLabel = t('label.recurrent', 'Recurrent appointment');
+	const { replaceHistory } = useHistoryNavigation();
 
 	const eventDiff = useMemo(
 		() => moment(event.end).diff(event.start, 'minutes'),
@@ -66,14 +68,16 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	);
 
 	const onEntireSeries = useCallback((): void => {
-		replaceHistory(`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`);
-	}, [event.resource.calendar.id, event.resource.id]);
+		replaceHistory(
+			`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`
+		);
+	}, [event.resource.calendar.id, event.resource.id, replaceHistory]);
 
 	const onSingleInstance = useCallback((): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
-	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
+	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ, replaceHistory]);
 
 	const showPanelView = useCallback(() => {
 		if (event?.resource?.isRecurrent) {
@@ -96,10 +100,10 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 			);
 		} else {
 			replaceHistory(
-				`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
-	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal]);
+	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal, replaceHistory]);
 
 	const toggleOpen = useCallback(
 		(e: React.MouseEvent): void => {

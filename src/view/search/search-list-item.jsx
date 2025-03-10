@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 import { openAppointment } from '../../actions/appointment-actions-fn';
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
+import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
 import { PANEL_VIEW } from '../../constants';
@@ -34,6 +35,7 @@ const SearchListItem = ({ item }) => {
 	const calendars = useFoldersMap();
 	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
 	const dispatch = useAppDispatch();
+	const { replaceHistory } = useHistoryNavigation();
 
 	const cal = isShared
 		? find(calendars, (f) => `${f.zid}:${f.rid}` === item.resource?.l)
@@ -114,7 +116,7 @@ const SearchListItem = ({ item }) => {
 		(ev) => {
 			const open = openAppointment({
 				event: item,
-				context: { panelView: PANEL_VIEW.SEARCH }
+				context: { panelView: PANEL_VIEW.SEARCH, replaceHistory }
 			});
 			if (!invite) {
 				dispatch(getInvite({ inviteId: item.resource.inviteId })).then(() => {
@@ -124,7 +126,7 @@ const SearchListItem = ({ item }) => {
 				open(ev);
 			}
 		},
-		[dispatch, invite, item]
+		[dispatch, invite, item, replaceHistory]
 	);
 
 	return (
