@@ -3,21 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, {
-	Dispatch,
-	ReactElement,
-	SetStateAction,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState
-} from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
 	Container,
 	Text,
-	Icon,
 	Row,
 	Tooltip,
 	Dropdown,
@@ -30,9 +20,11 @@ import { isNil } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
+import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
+import { CustomEventIcon } from './custom-event-icon';
+import { CustomEventReplyIcons } from './custom-event-reply-icons';
 import { TagIconComponent } from '../../commons/tag-icon-component';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
@@ -47,11 +39,6 @@ type CustomEventProps = {
 	title: string;
 };
 
-const AlignedIcon = styled(Icon)`
-	position: relative;
-	top: -0.0625rem;
-`;
-
 const CustomEventTitle = ({
 	title,
 	overflow = 'break-word'
@@ -63,33 +50,6 @@ const CustomEventTitle = ({
 		{title}
 	</Text>
 );
-
-const CustomEventIcon = ({
-	isIconVisible,
-	tooltipLabel,
-	iconColor,
-	iconName,
-	disableOuterTooltip
-}: {
-	isIconVisible: boolean;
-	tooltipLabel: string;
-	iconColor?: string;
-	iconName: string;
-	disableOuterTooltip: Dispatch<SetStateAction<boolean>>;
-}): ReactElement | null =>
-	isIconVisible ? (
-		<Tooltip label={tooltipLabel} placement="top">
-			<Row
-				padding={{ right: 'extrasmall' }}
-				onMouseEnter={(): void => disableOuterTooltip(true)}
-				onMouseLeave={(): void => disableOuterTooltip(false)}
-				onFocus={(): void => disableOuterTooltip(true)}
-				onBlur={(): void => disableOuterTooltip(false)}
-			>
-				<AlignedIcon color={iconColor} icon={iconName} style={{ minWidth: '1rem' }} />
-			</Row>
-		</Tooltip>
-	) : null;
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const { createModal, closeModal } = useModal();
@@ -178,6 +138,9 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 		[event.resource.isRecurrent, hasTags]
 	);
 
+	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
+
+	const iAmAttendee = !event?.resource?.calendar?.owner && !event?.resource?.iAmOrganizer;
 	return (
 		<>
 			<Tooltip
@@ -185,91 +148,88 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 				placement="top"
 				disabled={event.resource.class === 'PRI' || isOuterTooltipDisabled}
 			>
-				<Container
-					height="100%"
-					data-testid="calendar-event"
-					style={{ padding: '0.15rem 0.25rem' }}
+				<CustomEventFreeBusyStatus
+					color={event.resource.calendar.color.color}
+					background={event.resource.calendar.color.background}
+					freeBusyActual={event.resource.freeBusyActual}
 				>
-					<Dropdown
-						contextMenu
-						width="min(100%,12.5rem)"
-						style={{ width: '100%', height: '100%' }}
-						items={actions ?? []}
-						display="block"
-						onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
-							if (e) (e as Event)?.stopImmediatePropagation?.();
+					<Container
+						height="100%"
+						style={{
+							padding: innerContainerPadding,
+							borderLeft: `0.0625rem solid ${event.resource.calendar.color.color}`
 						}}
+						background={event.resource.calendar.color.background}
 					>
-						<Container
-							width="fill"
-							height="fill"
-							background={'transparent'}
-							mainAlignment="flex-start"
-							crossAlignment="flex-start"
-							onDoubleClick={showPanelView}
-							onClick={toggleOpen}
-							data-testid="calendar-event-inner-container"
+						<Dropdown
+							contextMenu
+							width="min(100%,12.5rem)"
+							style={{ width: '100%', height: '100%' }}
+							items={actions ?? []}
+							display="block"
+							onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent> | Event): void => {
+								if (e) (e as Event)?.stopImmediatePropagation?.();
+							}}
 						>
 							<Container
-								orientation="horizontal"
 								width="fill"
-								height="fit"
-								crossAlignment="center"
-								mainAlignment="center"
+								height="fill"
+								background={'transparent'}
+								mainAlignment="flex-start"
+								crossAlignment="flex-start"
+								onDoubleClick={showPanelView}
+								onClick={toggleOpen}
+								data-testid="calendar-event-inner-container"
 							>
-								{event.allDay && event.resource.isRecurrent && (
-									<CustomEventIcon
-										iconName={'Repeat'}
-										iconColor={'currentColor'}
-										isIconVisible={event.resource.isRecurrent}
-										tooltipLabel={recurrentLabel}
-										disableOuterTooltip={setIsOuterTooltipDisabled}
-									/>
-								)}
-								{event.resource.inviteNeverSent && (
-									<CustomEventIcon
-										tooltipLabel={t(
-											'event.action.invitation_not_sent_yet',
-											'The invitation has not been sent yet'
-										)}
-										isIconVisible={event.resource.inviteNeverSent}
-										iconColor={'error'}
-										iconName={'AlertCircleOutline'}
-										disableOuterTooltip={setIsOuterTooltipDisabled}
-									/>
-								)}
-								{event.resource.class === 'PRI' && (
-									<CustomEventIcon
-										tooltipLabel={t('label.private', 'Private')}
-										isIconVisible={event.resource.class === 'PRI'}
-										iconColor={'currentColor'}
-										iconName={'Lock'}
-										disableOuterTooltip={setIsOuterTooltipDisabled}
-									/>
-								)}
-								{!event?.resource?.calendar?.owner &&
-									!event?.resource?.iAmOrganizer &&
-									event.resource?.participationStatus === 'NE' && (
+								<Container
+									orientation="horizontal"
+									width="fill"
+									height="fit"
+									crossAlignment="center"
+									mainAlignment="center"
+								>
+									{event.allDay && event.resource.isRecurrent && (
 										<CustomEventIcon
-											iconColor={'primary'}
-											iconName={'CalendarWarning'}
-											isIconVisible={
-												!event?.resource?.calendar?.owner &&
-												!event?.resource?.iAmOrganizer &&
-												event.resource?.participationStatus === 'NE'
-											}
-											tooltipLabel={t('event.action.needs_action', 'Needs action')}
+											iconName={'Repeat'}
+											iconColor={'currentColor'}
+											isIconVisible={event.resource.isRecurrent}
+											tooltipLabel={recurrentLabel}
 											disableOuterTooltip={setIsOuterTooltipDisabled}
 										/>
 									)}
-								<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
-									<Row
-										ref={anchorRef}
-										crossAlignment="flex-start"
-										mainAlignment="space-between"
-										takeAvailableSpace
-									>
-										<>
+									{event.resource.inviteNeverSent && (
+										<CustomEventIcon
+											tooltipLabel={t(
+												'event.action.invitation_not_sent_yet',
+												'The invitation has not been sent yet'
+											)}
+											isIconVisible={event.resource.inviteNeverSent}
+											iconColor={'error'}
+											iconName={'AlertCircleOutline'}
+											disableOuterTooltip={setIsOuterTooltipDisabled}
+										/>
+									)}
+									{event.resource.class === 'PRI' && (
+										<CustomEventIcon
+											tooltipLabel={t('label.private', 'Private')}
+											isIconVisible={event.resource.class === 'PRI'}
+											iconColor={'currentColor'}
+											iconName={'Lock'}
+											disableOuterTooltip={setIsOuterTooltipDisabled}
+										/>
+									)}
+									<CustomEventReplyIcons
+										iAmAttendee={iAmAttendee}
+										participationStatus={event.resource.participationStatus}
+										setIsOuterTooltipDisabled={setIsOuterTooltipDisabled}
+									/>
+									<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
+										<Row
+											ref={anchorRef}
+											crossAlignment="flex-start"
+											mainAlignment="space-between"
+											takeAvailableSpace
+										>
 											{!event.allDay && (
 												<Row
 													takeAvailableSpace
@@ -306,31 +266,34 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												</Row>
 											)}
 											{event.allDay && <CustomEventTitle title={title} overflow={textOverflow} />}
-										</>
+										</Row>
+										<TagIconComponent
+											event={event}
+											disableOuterTooltip={setIsOuterTooltipDisabled}
+										/>
 									</Row>
-									<TagIconComponent event={event} disableOuterTooltip={setIsOuterTooltipDisabled} />
-								</Row>
+								</Container>
+								{eventDiff >= 30 && event.resource.class !== 'PRI' && !event.allDay && (
+									<>
+										{eventDiff >= 45 && <Padding top="extrasmall" />}
+										<Row wrap="nowrap">
+											{event.resource.isRecurrent && (
+												<CustomEventIcon
+													iconName={'Repeat'}
+													iconColor={'currentColor'}
+													isIconVisible={event.resource.isRecurrent}
+													tooltipLabel={recurrentLabel}
+													disableOuterTooltip={setIsOuterTooltipDisabled}
+												/>
+											)}
+											<CustomEventTitle title={title} />
+										</Row>
+									</>
+								)}
 							</Container>
-							{eventDiff >= 30 && event.resource.class !== 'PRI' && !event.allDay && (
-								<>
-									<Padding top="extrasmall" />
-									<Row wrap="nowrap">
-										{event.resource.isRecurrent && (
-											<CustomEventIcon
-												iconName={'Repeat'}
-												iconColor={'currentColor'}
-												isIconVisible={event.resource.isRecurrent}
-												tooltipLabel={recurrentLabel}
-												disableOuterTooltip={setIsOuterTooltipDisabled}
-											/>
-										)}
-										<CustomEventTitle title={title} />
-									</Row>
-								</>
-							)}
-						</Container>
-					</Dropdown>
-				</Container>
+						</Dropdown>
+					</Container>
+				</CustomEventFreeBusyStatus>
 			</Tooltip>
 			<Popover
 				anchorEl={anchorRef}

@@ -157,6 +157,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		[invite.end?.d, invite.end.u, invite.tz, localTimezone]
 	);
 
+	const endOfDay = (day: any): number => moment(day).endOf('day').valueOf();
+
 	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
 		useGetEventTimezoneString(localStart, localEnd, invite.allDay, invite.tz);
 
@@ -211,7 +213,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						email={email}
 						rootId={root.id}
 						start={invite?.start?.u ?? moment(mailMsg.invite[0].comp[0].s[0].d).valueOf()}
-						end={invite?.end?.u ?? moment(mailMsg.invite[0].comp[0].e[0].d).valueOf()}
+						end={invite?.end?.u ?? endOfDay(mailMsg.invite[0].comp[0].e[0].d)}
 						allDay={invite.allDay ?? false}
 						uid={invite.uid}
 					/>

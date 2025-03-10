@@ -15,6 +15,7 @@ import {
 	proposeNewTimeFn
 } from '../../actions/appointment-actions-fn';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { PARTICIPATION_STATUS } from '../../constants/api';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
@@ -53,7 +54,7 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 				icon="CheckmarkOutline"
 				color="success"
 				onClick={acceptInvitation({ event, invite, context })}
-				disabled={event.resource.participationStatus === 'AC'}
+				disabled={event.resource.participationStatus === PARTICIPATION_STATUS.ACCEPTED}
 			/>
 			<Padding horizontal="small" />
 			<Button
@@ -62,7 +63,7 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 				icon="QuestionMarkOutline"
 				color="warning"
 				onClick={acceptAsTentative({ event, invite, context })}
-				disabled={event.resource.participationStatus === 'TE'}
+				disabled={event.resource.participationStatus === PARTICIPATION_STATUS.TENTATIVE}
 			/>
 			<Padding horizontal="small" />
 			<Button
@@ -71,7 +72,7 @@ export const ReplyButtonsPart = ({ event, invite }: ReplyButtonProps): ReactElem
 				icon="CloseOutline"
 				color="error"
 				onClick={declineInvitation({ event, invite, context })}
-				disabled={event.resource.participationStatus === 'DE'}
+				disabled={event.resource.participationStatus === PARTICIPATION_STATUS.DECLINED}
 			/>
 			<Padding horizontal="small" />
 			<Button

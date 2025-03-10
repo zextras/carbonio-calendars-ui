@@ -15,6 +15,7 @@ import {
 } from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
+import { PARTICIPATION_STATUS } from '../constants/api';
 import { ParticipationStatus } from '../types/store/invite';
 
 const mainAccount = createFakeIdentity();
@@ -56,12 +57,15 @@ describe('normalize soap message from editor', () => {
 				const userAccount = getMockedAccountItem({ identity1: mainAccount });
 				shell.getUserAccount.mockImplementation(() => userAccount);
 				const attendees = [
-					generateAttendee({ email: 'accepted_attendee@gmail.com', participantStatus: 'AC' })
+					generateAttendee({
+						email: 'accepted_attendee@gmail.com',
+						participantStatus: PARTICIPATION_STATUS.ACCEPTED
+					})
 				];
 				const optionalAttendees = [
 					generateAttendee({
 						email: 'accepted_optional_attendee@gmail.com',
-						participantStatus: 'AC'
+						participantStatus: PARTICIPATION_STATUS.ACCEPTED
 					})
 				];
 				const editor = generateEditor({
@@ -77,11 +81,11 @@ describe('normalize soap message from editor', () => {
 				expect(body.m.inv.comp[0].at.length).toBe(2);
 				expect(body.m.inv.comp[0].at[0]).toMatchObject({
 					a: 'accepted_attendee@gmail.com',
-					ptst: 'AC'
+					ptst: PARTICIPATION_STATUS.ACCEPTED
 				});
 				expect(body.m.inv.comp[0].at[1]).toMatchObject({
 					a: 'accepted_optional_attendee@gmail.com',
-					ptst: 'AC'
+					ptst: PARTICIPATION_STATUS.ACCEPTED
 				});
 			});
 			test('when attendee/optionalAttendee don`t have a status(ptst), the ptst should be set as NE', () => {
@@ -106,11 +110,11 @@ describe('normalize soap message from editor', () => {
 				expect(body.m.inv.comp[0].at.length).toBe(2);
 				expect(body.m.inv.comp[0].at[0]).toMatchObject({
 					a: 'attendee@gmail.com',
-					ptst: 'NE'
+					ptst: PARTICIPATION_STATUS.NEED_ACTION
 				});
 				expect(body.m.inv.comp[0].at[1]).toMatchObject({
 					a: 'optional_attendee@gmail.com',
-					ptst: 'NE'
+					ptst: PARTICIPATION_STATUS.NEED_ACTION
 				});
 			});
 			describe('and he is not using identities ', () => {

@@ -32,6 +32,7 @@ export type ExceptionReference = SingleReference & {
 	hasEx?: boolean;
 	status?: InviteStatus;
 	fb?: InviteFreeBusy;
+	fba?: InviteFreeBusy;
 	ptst?: ParticipationStatus;
 	tzo?: number;
 };
@@ -49,7 +50,7 @@ export type Appointment = {
 	draft: boolean;
 	dur: number;
 	fb: InviteFreeBusy;
-	fba: string;
+	fba: InviteFreeBusy;
 	fr?: string;
 	hasEx?: boolean;
 	id: string;
