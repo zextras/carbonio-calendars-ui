@@ -6,8 +6,8 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Checkbox, Container, Padding, Text } from '@zextras/carbonio-design-system';
-import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { size } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { ModifyStandardMessageModal } from './modify-standard-message-modal';
@@ -53,6 +53,7 @@ const DeleteEventModalContent = ({
 	onClose,
 	isSeries
 }: DeleteEventModalContentProps): ReactElement => {
+	const [t] = useTranslation();
 	const { name, isOrganizer } = invite;
 	const displayMessage = useMemo(() => {
 		if (isSingleInstance || isException) {
@@ -72,7 +73,7 @@ const DeleteEventModalContent = ({
 			'message.sure_to_delete_all_occurences_appointment',
 			'Are you sure you want to delete all occurrences of this appointment?'
 		);
-	}, [isSingleInstance, isException, isInstanceOfSeries, name]);
+	}, [isSingleInstance, isException, isInstanceOfSeries, name, t]);
 	return (
 		<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
 			<ModalHeader title={title} onClose={onClose} />
@@ -136,6 +137,7 @@ export const DeleteEventModal = ({
 	invite,
 	onClose
 }: DeleteEventModalProps): ReactElement => {
+	const [t] = useTranslation();
 	const { isOrganizer, isException, participants } = invite;
 	const participantsSize = useMemo(() => size(participants), [participants]);
 	const dispatch = useAppDispatch();
@@ -160,7 +162,6 @@ export const DeleteEventModal = ({
 
 	const actions = useDeleteActions(event, invite, {
 		isSingleInstance: isException || isInstanceOfSeries || false,
-		replaceHistory,
 		onClose,
 		dispatch,
 		folders: calendarFolders
@@ -200,7 +201,7 @@ export const DeleteEventModal = ({
 		toggleAskConfirmation
 	]);
 
-	const title = useMemo(() => `${t('label.delete', 'Delete')} ${event.title}`, [event.title]);
+	const title = useMemo(() => `${t('label.delete', 'Delete')} ${event.title}`, [event.title, t]);
 	return invite ? (
 		<Container
 			mainAlignment="center"

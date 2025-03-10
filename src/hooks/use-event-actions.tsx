@@ -6,8 +6,8 @@
 import { useMemo } from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
-import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
 import { compact, find, omit } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import {
 	answerToEventItem,
@@ -22,9 +22,10 @@ import {
 	showOriginal
 } from '../actions/appointment-actions-items';
 import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
+import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
 import { useTags } from '../carbonio-ui-commons/store/zustand/tags';
-import { LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { LinkFolder } from '../carbonio-ui-commons/types';
 import { isLinkChild } from '../commons/utilities';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';
@@ -81,9 +82,12 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 		{
 			id: EVENT_ACTIONS.INSTANCE,
 			icon: 'CalendarOutline',
-			label: t('label.instance', 'Instance'),
+			label: context.t('label.instance', 'Instance'),
 			disabled: false,
-			tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+			tooltipLabel: context.t(
+				'label.no_rights',
+				'You do not have permission to perform this action'
+			),
 			onClick: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},
@@ -105,9 +109,12 @@ const getRecurrentActionsItems = ({ event, invite, context }: ActionsProps): Ser
 		{
 			id: EVENT_ACTIONS.SERIES,
 			icon: 'CalendarOutline',
-			label: t('label.series', 'Series'),
+			label: context.t('label.series', 'Series'),
 			disabled: false,
-			tooltipLabel: t('label.no_rights', 'You do not have permission to perform this action'),
+			tooltipLabel: context.t(
+				'label.no_rights',
+				'You do not have permission to perform this action'
+			),
 			onClick: (ev: ActionsClick): void => {
 				if (ev) ev.preventDefault();
 			},
@@ -156,6 +163,8 @@ export const useEventActions = ({
 	event?: EventType;
 	context?: { panelView: PanelView };
 }): InstanceActionsItems | SeriesActionsItems | undefined => {
+	const [t] = useTranslation();
+	const { replaceHistory } = useHistoryNavigation();
 	const invite = useAppSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useAppDispatch();
 	const { createModal, closeModal } = useModal();
@@ -168,6 +177,7 @@ export const useEventActions = ({
 			folders: calendarFolders,
 			createAndApplyTag,
 			replaceHistory,
+			t,
 			createModal,
 			closeModal,
 			panelView: 'app' as PanelView,
@@ -176,7 +186,18 @@ export const useEventActions = ({
 			onClose,
 			...context
 		}),
-		[calendarFolders, closeModal, context, createModal, createSnackbar, dispatch, onClose, tags]
+		[
+			calendarFolders,
+			closeModal,
+			context,
+			createModal,
+			createSnackbar,
+			dispatch,
+			replaceHistory,
+			onClose,
+			t,
+			tags
+		]
 	);
 	return useMemo(() => {
 		if (!event) return undefined;

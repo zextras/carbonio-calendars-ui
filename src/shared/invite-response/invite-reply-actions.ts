@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
-import { replaceHistory, t } from '@zextras/carbonio-shell-ui';
+import { TFunction } from 'i18next';
 
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { Folder, LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
+import { Folder, LinkFolder } from '../../carbonio-ui-commons/types';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { AppDispatch } from '../../store/redux';
@@ -17,6 +18,8 @@ type ResponseAction = {
 	notifyOrganizer: boolean;
 	action: string;
 	dispatch: AppDispatch;
+	replaceHistory: ReturnType<typeof useHistoryNavigation>['replaceHistory'];
+	t: TFunction;
 	activeCalendar: Folder | null;
 	createSnackbar: CreateSnackbarFn;
 	parent: string;
@@ -26,11 +29,14 @@ export const sendResponse = ({
 	notifyOrganizer,
 	action,
 	dispatch,
+	replaceHistory,
+	t,
 	activeCalendar,
 	createSnackbar,
 	parent
 }: ResponseAction): void => {
 	dispatch(
+		// WHAT!?
 		sendInviteResponse({
 			inviteId,
 			updateOrganizer: notifyOrganizer,
@@ -39,7 +45,8 @@ export const sendResponse = ({
 	).then((res): void => {
 		if (res.type.includes('fulfilled')) {
 			if (parent) {
-				replaceHistory(`/folder/${parent}`);
+				// FIXME: this is a workaround until CO-1823 and CO-1825 will be completed
+				replaceHistory(`/mails/folder/${parent}`);
 			}
 			const snackbarLabel =
 				// eslint-disable-next-line no-nested-ternary

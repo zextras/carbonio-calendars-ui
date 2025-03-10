@@ -55,6 +55,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -82,6 +84,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -123,6 +127,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -171,6 +177,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -219,6 +227,8 @@ describe('actions', () => {
 			const context = {
 				folders,
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose
 			};
 			const action = createCopy({ event, invite, context });
@@ -270,6 +280,8 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose: jest.fn()
 			};
 			emailAttendees({ event, invite, context });
@@ -307,6 +319,8 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose: jest.fn()
 			};
 			emailAttendees({ event, invite, context });
@@ -341,6 +355,8 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose: jest.fn()
 			};
 			emailAttendees({ event, invite, context });
@@ -373,6 +389,8 @@ describe('actions', () => {
 			const context = {
 				folders: {},
 				dispatch: store.dispatch,
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
 				onClose: jest.fn()
 			};
 			emailAttendees({ event, context });
