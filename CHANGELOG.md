@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.15.0...v1.15.1) (2025-03-10)
+
+
+### Bug Fixes
+
+* avoid rendering organizer's details if the organizer is not set in the invite ([75e8c82](https://github.com/zextras/carbonio-calendars-ui/commit/75e8c8212f6560bee0691a4535ddea65a335526b))
+
 ## [1.15.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.14.1...v1.15.0) (2025-02-11)
 
 

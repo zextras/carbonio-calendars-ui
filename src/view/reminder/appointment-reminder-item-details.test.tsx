@@ -12,6 +12,7 @@ import { AppointmentReminderItemDetails } from './appointment-reminder-item-deta
 import { setupTest, screen } from '../../carbonio-ui-commons/test/test-setup';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../constants/api';
+import { TEST_SELECTORS } from '../../constants/test-utils';
 import { CRB_XPARAMS, CRB_XPROPS } from '../../constants/xprops';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
@@ -251,7 +252,7 @@ describe('Appointment Reminder Item Details', () => {
 			expect(screen.queryByTestId('icon: VideoOutline')).not.toBeInTheDocument();
 		});
 
-		it('should render the organizer', () => {
+		it('should render the organizer if set in the invite', () => {
 			const inviteId = faker.string.uuid();
 			const invite = generateInvite({
 				context: { id: inviteId }
@@ -265,6 +266,26 @@ describe('Appointment Reminder Item Details', () => {
 			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
 
 			expect(screen.getByText(invite.organizer.d)).toBeVisible();
+		});
+
+		it("shouldn't render the organizer if it's not set in the invite", () => {
+			const inviteId = faker.string.uuid();
+			const invite = generateInvite({
+				context: { id: inviteId }
+			});
+			// The organizer actually can be undefined as it was proved in production.
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			invite.organizer = undefined;
+
+			const appointment = generateAppointment({ appointment: { inviteId } });
+			const reminderItem = generateReminderItem({ inviteId, id: appointment.id });
+
+			const store = initializeMockedStore({ invite, appointment });
+
+			setupTest(<AppointmentReminderItemDetails reminderItem={reminderItem} />, { store });
+
+			expect(screen.queryByTestId(TEST_SELECTORS.AVATAR_WRAPPER)).not.toBeInTheDocument();
 		});
 
 		it('should render the description if set in the invite', () => {
