@@ -3,17 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 
 import { Icon, Padding, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
-import moment, { Moment } from 'moment';
+import { useTranslation } from 'react-i18next';
 
 import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
 
 type TimeInfoProps = {
 	allDay?: boolean;
-	start?: Date | Moment;
-	end?: Date | Moment;
+	start?: number;
+	end?: number;
 	timezone: string;
 };
 
@@ -24,13 +24,35 @@ export const TimeInfoRow = ({
 	timeInfoData: TimeInfoProps;
 	showIcon?: boolean;
 }): ReactElement => {
-	const { localTimeString, localTimezoneString, localTimezoneTooltip, showTimezoneTooltip } =
-		useGetEventTimezoneString(
-			timeInfoData.start ?? moment(),
-			timeInfoData.end ?? moment(),
-			timeInfoData.allDay,
-			timeInfoData.timezone
-		);
+	const {
+		originalTimeString,
+		originalTimezoneString,
+		timezoneStringConvertedToLocal,
+		timeStringConvertedToLocal
+	} = useGetEventTimezoneString(timeInfoData.start ?? 0, timeInfoData.end ?? 0, {
+		allDay: timeInfoData.allDay,
+		timeZone: timeInfoData.timezone
+	});
+	const [t] = useTranslation();
+
+	const convertedDateTooltip = useMemo(
+		() => (
+			<>
+				{t('creation_timezone_tooltip', 'Date and time on creation timezone:')}
+				<br />
+				{timeStringConvertedToLocal ?? originalTimeString}
+				<br />
+				{timezoneStringConvertedToLocal ?? originalTimezoneString}
+			</>
+		),
+		[
+			originalTimeString,
+			originalTimezoneString,
+			t,
+			timeStringConvertedToLocal,
+			timezoneStringConvertedToLocal
+		]
+	);
 
 	return (
 		<Row
@@ -54,16 +76,16 @@ export const TimeInfoRow = ({
 						crossAlignment="flex-start"
 						takeAvailableSpace
 					>
-						<Tooltip label={localTimeString} overflowTooltip>
+						<Tooltip label={originalTimeString} overflowTooltip>
 							<Text overflow="ellipsis" weight="bold" size="small" color="gray1">
-								{localTimeString}
+								{originalTimeString}
 							</Text>
 						</Tooltip>
 					</Row>
 					<Padding right="small" />
-					{showTimezoneTooltip && (
+					{timeStringConvertedToLocal && (
 						<Row mainAlignment="flex-start" crossAlignment="flex-start" width="fit">
-							<Tooltip label={localTimezoneTooltip}>
+							<Tooltip label={convertedDateTooltip}>
 								<Row>
 									<Icon icon="GlobeOutline" color="gray1" />
 								</Row>
@@ -73,7 +95,7 @@ export const TimeInfoRow = ({
 				</Row>
 				<Row width="fill" mainAlignment="flex-start">
 					<Text overflow="break-word" weight="bold" size="small" color="gray1">
-						{localTimezoneString}
+						{originalTimezoneString}
 					</Text>
 				</Row>
 			</Row>

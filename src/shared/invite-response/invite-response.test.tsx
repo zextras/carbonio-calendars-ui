@@ -134,7 +134,8 @@ describe('invite response component', () => {
 					store
 				});
 
-				const localTimeString = screen.getByText(/tuesday, 30 january, 2024 09:00 - 09:30/i);
+				// eslint-disable-next-line no-irregular-whitespace
+				const localTimeString = screen.getByText(/Tuesday, January 30, 2024/i);
 
 				expect(localTimeString).toBeVisible();
 			});
@@ -146,7 +147,7 @@ describe('invite response component', () => {
 					store
 				});
 
-				const localTimezoneString = screen.getByText(/gmt \+01:00 europe\/berlin/i);
+				const localTimezoneString = screen.getByText('GMT+01:00 Europe/Berlin');
 
 				expect(localTimezoneString).toBeVisible();
 			});
@@ -183,19 +184,19 @@ describe('invite response component', () => {
 					store
 				});
 
-				const localTimeString = screen.getByText(
-					/Sunday, 28 January, 2024 09:00 - Tuesday, 30 January, 2024 09:30/i
-				);
+				const localTimeString = screen.getByText(/Sunday, January 28, 2024/i);
 
 				expect(localTimeString).toBeVisible();
 			});
-			// skipped, there is a bug to fix first
-			test.skip('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
-				const currentTimezone = 'Asia/Kolkata';
-				moment.tz.guess = jest.fn().mockImplementation(() => currentTimezone);
-				moment.tz.setDefault(currentTimezone);
+			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				setupFoldersStore();
-				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
+					invite: [
+						{
+							tz: [{ id: 'Asia/Kolkata' }]
+						}
+					]
+				});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
@@ -210,10 +211,11 @@ describe('invite response component', () => {
 				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
 
 				const tooltipLocalTime = await screen.findByText(
-					/tuesday, 30 january, 2024 09:00 - 09:30/i
+					'Tuesday, January 30, 2024, 9:00 – 9:30 AM',
+					{ collapseWhitespace: false }
 				);
 
-				const tooltipLocalTimeZone = await screen.findByText(/GMT \+01:00 Europe\/Berlin/i);
+				const tooltipLocalTimeZone = await screen.findByText('GMT+01:00 Europe/Berlin');
 
 				expect(tooltipTitleString).toBeVisible();
 				expect(tooltipLocalTime).toBeVisible();
@@ -1045,7 +1047,7 @@ describe('invite response component', () => {
 					store
 				});
 
-				const localTimeString = screen.getByText(/tuesday, 30 january, 2024 09:00 - 09:30/i);
+				const localTimeString = screen.getByText(/Tuesday, January 30, 2024/i);
 
 				expect(localTimeString).toBeVisible();
 			});
@@ -1057,17 +1059,19 @@ describe('invite response component', () => {
 					store
 				});
 
-				const localTimezoneString = screen.getByText(/gmt \+01:00 europe\/berlin/i);
+				const localTimezoneString = screen.getByText('GMT+01:00 Europe/Berlin');
 
 				expect(localTimezoneString).toBeVisible();
 			});
-			// skipped, there is a bug to fix first
-			test.skip('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
-				const currentTimezone = 'Asia/Kolkata';
-				moment.tz.guess = jest.fn().mockImplementation(() => currentTimezone);
-				moment.tz.setDefault(currentTimezone);
+			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				setupFoldersStore();
-				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false, {
+					invite: [
+						{
+							tz: [{ id: 'Asia/Kolkata' }]
+						}
+					]
+				});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
@@ -1082,10 +1086,11 @@ describe('invite response component', () => {
 				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
 
 				const tooltipLocalTime = await screen.findByText(
-					/tuesday, 30 january, 2024 09:00 - 09:30/i
+					'Tuesday, January 30, 2024, 9:00 – 9:30 AM',
+					{ collapseWhitespace: false }
 				);
 
-				const tooltipLocalTimeZone = await screen.findByText(/GMT \+01:00 Europe\/Berlin/i);
+				const tooltipLocalTimeZone = await screen.findByText('GMT+01:00 Europe/Berlin');
 
 				expect(tooltipTitleString).toBeVisible();
 				expect(tooltipLocalTime).toBeVisible();

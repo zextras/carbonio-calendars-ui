@@ -109,8 +109,8 @@ export const getLocalTime = (
 	return dateValueOf;
 };
 
-export const isTimezoneDifferentFromLocal = (date: number | DateType, timezone: string): boolean =>
-	moment(date).tz(timezone).utcOffset() !== moment(date).utcOffset();
+export const isTimezoneDifferentFromLocal = (timezone: string): boolean =>
+	timezone !== Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 const setEditorDate = ({
 	editorType,
@@ -131,7 +131,7 @@ const setEditorDate = ({
 			const end = invite?.end?.u ?? moment(invite?.end?.d);
 			const convertedStartDate = getLocalTime(start, invite?.tz);
 			const convertedEndDate = getLocalTime(end, invite?.tz);
-			if (invite.tz && isTimezoneDifferentFromLocal(start, invite.tz)) {
+			if (invite.tz && isTimezoneDifferentFromLocal(invite.tz)) {
 				return {
 					start: event?.allDay
 						? moment(convertedStartDate)?.startOf('date').valueOf()
@@ -146,7 +146,7 @@ const setEditorDate = ({
 		}
 		const convertedStartDate = getLocalTime(event.start, invite?.tz);
 		const convertedEndDate = getLocalTime(event.end, invite?.tz);
-		return invite?.tz && isTimezoneDifferentFromLocal(event.start, invite.tz)
+		return invite?.tz && isTimezoneDifferentFromLocal(invite.tz)
 			? {
 					start: event?.allDay
 						? moment(convertedStartDate)?.startOf('date').valueOf()

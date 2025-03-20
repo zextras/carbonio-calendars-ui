@@ -15,13 +15,11 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
-import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
 import { useGetEventTimezoneString } from '../../../hooks/use-get-event-timezone';
-import { getLocalTime } from '../../../normalizations/normalize-editor';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
@@ -70,41 +68,48 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 
 	const meetingRoomField = useMemo(() => {
-		if (meetingRoom) {
-			if (meetingRoom.length > 0) {
-				const res = map(meetingRoom, (roo) => roo.label);
-				return res.join(', ');
-			}
+		if (meetingRoom && meetingRoom.length > 0) {
+			const res = map(meetingRoom, (roo) => roo.label);
+			return res.join(', ');
 		}
 		return '';
 	}, [meetingRoom]);
 
 	const equipmentsField = useMemo(() => {
-		if (equipments) {
-			if (equipments.length > 0) {
-				const res = map(equipments, (eq) => eq.label);
-				return res.join(', ');
-			}
+		if (equipments && equipments.length > 0) {
+			const res = map(equipments, (eq) => eq.label);
+			return res.join(', ');
 		}
 		return '';
 	}, [equipments]);
 
 	const virtualRoom = useMemo(() => room?.label, [room?.label]);
 
-	const localTimezone = useMemo(() => moment.tz.guess(), []);
+	const {
+		originalTimeString,
+		originalTimezoneString,
+		timeStringConvertedToLocal,
+		timezoneStringConvertedToLocal
+	} = useGetEventTimezoneString(start ?? 0, end ?? 0, { timeZone: timezone, allDay });
 
-	/* start and end value are already converted to the creation timezone value, so to convert it back to the local timezone we need to convert it again to local */
-	const localStart = useMemo(
-		() => getLocalTime(start ?? 0, localTimezone, timezone),
-		[localTimezone, start, timezone]
+	const convertedDateTooltip = useMemo(
+		() => (
+			<>
+				{t('creation_timezone_tooltip', 'Date and time on creation timezone:')}
+				<br />
+				{timeStringConvertedToLocal ?? originalTimeString}
+				<br />
+				{timezoneStringConvertedToLocal ?? originalTimezoneString}
+			</>
+		),
+		[
+			originalTimeString,
+			originalTimezoneString,
+			t,
+			timeStringConvertedToLocal,
+			timezoneStringConvertedToLocal
+		]
 	);
-	const localEnd = useMemo(
-		() => getLocalTime(end ?? 0, localTimezone, timezone),
-		[end, localTimezone, timezone]
-	);
-
-	const { eventTimeString, eventTimezoneString, showTimezoneTooltip, eventTimezoneTooltip } =
-		useGetEventTimezoneString(localStart, localEnd, allDay, timezone);
 
 	return (
 		<Row
@@ -142,10 +147,10 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 				<TitleRow>
 					<>
 						<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-							{eventTimeString}
+							{originalTimeString}
 						</Text>
-						{showTimezoneTooltip && (
-							<Tooltip label={eventTimezoneTooltip}>
+						{timeStringConvertedToLocal && (
+							<Tooltip label={convertedDateTooltip}>
 								<Padding left="small">
 									<Icon icon="GlobeOutline" color="gray1" />
 								</Padding>
@@ -155,7 +160,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 				</TitleRow>
 				<TitleRow>
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{eventTimezoneString}
+						{originalTimezoneString}
 					</Text>
 				</TitleRow>
 				<TitleRow>

@@ -8,48 +8,153 @@ import moment from 'moment';
 import { useGetEventTimezoneString } from './use-get-event-timezone';
 import { setupHook } from '../carbonio-ui-commons/test/test-setup';
 
+/* The useGetEventTimezone function is a utility hook which receive a start and end date with their relative timezone as parameters to convert them into local dates.
+ * The output will be the original date range, the converted value into local, a boolean to indicates if a tooltip is needed and the relative tooltip to show.
+ * Local and original dates parameters will be of type number, representing the unix timestamp in milliseconds.
+ * Local and original dates output will be of type string, representing a human-readable date.
+ * The tooltip will be shown only when local and original dates differs.
+ * Tooltip will be returned into two different parameters, localTimezoneTooltip and eventTimezoneTooltip, depending if they are showing their local or original date */
+
+const setDate = ({
+	hours,
+	minutes,
+	days
+}: {
+	hours?: number;
+	minutes?: number;
+	days?: number;
+}): number => {
+	const date = new Date();
+	if (days) {
+		date.setDate(days);
+	}
+	if (hours) {
+		date.setHours(hours);
+	}
+	if (minutes) {
+		date.setMinutes(minutes);
+	}
+	return date.getTime();
+};
+
 describe('useGetEventTimezone', () => {
-	const europeBerlinGMT = 'GMT +01:00 Europe/Berlin';
-	test('When creation timezone is the same as local', () => {
-		const { result } = setupHook(useGetEventTimezoneString, {
-			initialProps: [
-				moment().valueOf(),
-				moment().add('30', 'minutes').valueOf(),
-				false,
-				moment.tz.guess()
-			]
-		});
+	const differentTimezone = 'Asia/Bangkok';
+	const localTimezone = moment.tz.guess();
+	describe('The human-readable date (both original or converted)', () => {
+		test('it will contain "all Day" if referring to an allDay event', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
 
-		expect(result.current).toStrictEqual(expect.objectContaining({ showTimezoneTooltip: false }));
-		expect(result.current.localTimeString).toStrictEqual(result.current.eventTimeString);
-		expect(result.current.localTimezoneString).toStrictEqual(result.current.eventTimezoneString);
+			const { result } = setupHook(useGetEventTimezoneString, {
+				initialProps: [eventStart, eventEnd, { allDay: true, timeZone: localTimezone }]
+			});
+			expect(result.current.originalTimeString).toMatch(/all Day/i);
+		});
+		test('the human-readable date of the original date it will be defined', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
+
+			const { result } = setupHook(useGetEventTimezoneString, {
+				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+			});
+			expect(result.current.originalTimeString).toBeDefined();
+		});
+		test('the timezone string of the original date will be defined', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
+
+			const { result } = setupHook(useGetEventTimezoneString, {
+				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+			});
+			expect(result.current.originalTimezoneString).toBeDefined();
+		});
+		describe('it will be formatted differently depending from the range difference between start and end', () => {
+			test('minutes or hours range difference', () => {
+				const eventStart = setDate({ hours: 2 });
+				const eventEnd = setDate({ hours: 2, minutes: 30 });
+
+				const { result } = setupHook(useGetEventTimezoneString, {
+					initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+				});
+				/* it is not depending on our code */
+				// eslint-disable-next-line no-irregular-whitespace
+				expect(result.current.originalTimeString).toMatch(
+					'Saturday, January 01, 2022, 2:00 – 2:30 AM'
+				);
+			});
+			test('days or more (weeks, months, years) range difference', () => {
+				const eventStart = setDate({ days: 2 });
+				const eventEnd = setDate({ days: 3 });
+
+				const { result } = setupHook(useGetEventTimezoneString, {
+					initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+				});
+				/* it is not depending on our code */
+				// eslint-disable-next-line no-irregular-whitespace
+				expect(result.current.originalTimeString).toMatch(
+					'Sunday, January 02, 2022 at 1:00 AM – Monday, January 03, 2022 at 1:00 AM'
+				);
+			});
+		});
 	});
+	describe('When the original timezone is equal to local timezone', () => {
+		test('the timezone string of the original date will show the offSet from UTC in GMT for the original date', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
 
-	test('When creation timezone is different from local', () => {
-		const { result } = setupHook(useGetEventTimezoneString, {
-			initialProps: [1695146400000, 1695148200000, false, 'Asia/Bangkok']
+			const { result } = setupHook(useGetEventTimezoneString, {
+				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+			});
+			expect(result.current.originalTimezoneString).toMatch('GMT+01:00 Europe/Berlin');
+			expect(result.current.timezoneStringConvertedToLocal).toBeUndefined();
 		});
+		test('the human-readable date different from the original will be undefined', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
 
-		expect(result.current).toStrictEqual(expect.objectContaining({ showTimezoneTooltip: true }));
-		expect(result.current.localTimeString).toStrictEqual(
-			'Tuesday, 19 September, 2023 21:00 - 21:30'
-		);
-		expect(result.current.localTimezoneString).toStrictEqual(europeBerlinGMT);
-		expect(result.current.eventTimeString).toStrictEqual(
-			'Wednesday, 20 September, 2023 02:00 - 02:30'
-		);
-		expect(result.current.eventTimezoneString).toStrictEqual('GMT +07:00 Asia/Bangkok');
+			const { result } = setupHook(useGetEventTimezoneString, {
+				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+			});
+			expect(result.current.timeStringConvertedToLocal).toBeUndefined();
+		});
+		test('the human-readable timezone string different from the original will be undefined', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
+
+			const { result } = setupHook(useGetEventTimezoneString, {
+				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+			});
+			expect(result.current.timezoneStringConvertedToLocal).toBeUndefined();
+		});
 	});
+	describe('When the original timezone is different from the local timezone', () => {
+		test('the human-readable date different from the original will be defined', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
 
-	test('When creation timezone is different from local and it is all day', () => {
-		const { result } = setupHook(useGetEventTimezoneString, {
-			initialProps: [1695146400000, 1695148200000, true, 'Asia/Bangkok']
+			const { result } = setupHook(useGetEventTimezoneString, {
+				initialProps: [eventStart, eventEnd, { timeZone: differentTimezone }]
+			});
+			expect(result.current.timeStringConvertedToLocal).toBeDefined();
 		});
+		test('the human-readable timezone string different from the original will be defined', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
 
-		expect(result.current).toStrictEqual(expect.objectContaining({ showTimezoneTooltip: true }));
-		expect(result.current.localTimeString).toStrictEqual('Tuesday, 19 September, 2023 - All day');
-		expect(result.current.localTimezoneString).toStrictEqual(europeBerlinGMT);
-		expect(result.current.eventTimeString).toStrictEqual('Wednesday, 20 September, 2023 - All day');
-		expect(result.current.eventTimezoneString).toStrictEqual(europeBerlinGMT);
+			const { result } = setupHook(useGetEventTimezoneString, {
+				initialProps: [eventStart, eventEnd, { timeZone: differentTimezone }]
+			});
+			expect(result.current.timezoneStringConvertedToLocal).toBeDefined();
+		});
+		test('the timezone string of the converted date will show the offSet from UTC in GMT of the local date', () => {
+			const eventStart = setDate({ hours: 2 });
+			const eventEnd = setDate({ hours: 3 });
+
+			const { result } = setupHook(useGetEventTimezoneString, {
+				initialProps: [eventStart, eventEnd, { timeZone: differentTimezone }]
+			});
+			expect(result.current.timezoneStringConvertedToLocal).toMatch('GMT+01:00 Europe/Berlin');
+			expect(result.current.originalTimezoneString).toMatch('GMT+07:00 Asia/Bangkok');
+		});
 	});
 });

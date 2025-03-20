@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { omit } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
@@ -89,7 +90,7 @@ export const buildMailMessageType = (
 		invite: [
 			{
 				type: 'appt',
-				tz: [],
+				tz: [...(context?.invite?.[0].tz ?? [])],
 				comp: [
 					{
 						method,
@@ -157,7 +158,7 @@ export const buildMailMessageType = (
 		isInvite: true,
 		isReplied: false,
 		isReadReceiptRequested: true,
-		...(context ?? {})
+		...(omit(context, 'invite') ?? {})
 	};
 	if (type === MESSAGE_TYPE.SINGLE) {
 		return singleEventMessageRequest;
