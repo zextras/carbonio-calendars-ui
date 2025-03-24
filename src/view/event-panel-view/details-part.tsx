@@ -17,6 +17,7 @@ import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';
 import { EquipmentsRow } from '../event-summary-view/equipments-row';
+import { FreeBusyStatusRowComponent } from '../event-summary-view/free-busy-status-row';
 import { LocationRow } from '../event-summary-view/location-row';
 import { MeetingRoomsRow } from '../event-summary-view/meeting-rooms-row';
 import TagsRow from '../event-summary-view/tags-row';
@@ -170,6 +171,12 @@ export const DetailsPart = ({
 					<MeetingRoomsRow invite={invite} />
 					<EquipmentsRow invite={invite} />
 					{invite?.xprop && <VirtualRoomRow xprop={invite?.xprop} />}
+					{invite && (
+						<FreeBusyStatusRowComponent
+							freeBusy={event.resource.freeBusy}
+							organizerName={invite?.organizer?.a}
+						/>
+					)}
 					{event?.resource?.tags?.length > 0 && <TagsRow event={event} hideIcon />}
 				</Row>
 			</Row>

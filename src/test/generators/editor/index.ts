@@ -12,6 +12,7 @@ import { getPrefs } from '../../../carbonio-ui-commons/utils/get-prefs';
 import { disabledFields, getEndTime } from '../../../commons/editor-generator';
 import { getIdentityItems } from '../../../commons/get-identity-items';
 import { PREFS_DEFAULTS } from '../../../constants';
+import { EVENT_DISPLAY_STATUS } from '../../../constants/api';
 import { Editor, IdentityItem } from '../../../types/editor';
 import utils from '../utils';
 
@@ -53,7 +54,7 @@ const getDefaultEditor = ({
 		attendees: [],
 		optionalAttendees: [],
 		allDay: false,
-		freeBusy: 'B',
+		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
 		originalStart: moment().valueOf(),
 		originalEnd: getEndTime({
@@ -156,7 +157,7 @@ const getEditor = ({
 		attendees: [],
 		optionalAttendees: [],
 		allDay: false,
-		freeBusy: 'B',
+		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
 		originalStart: moment().valueOf(),
 		originalEnd: getEndTime({

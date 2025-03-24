@@ -260,9 +260,9 @@ export default createGlobalStyle<{
 					!$summaryViewOpen && !$action && $primaryCalendar?.color?.background
 						? $primaryCalendar.color.background
 						: 'inherit'} !important;
-        border: ${({ $primaryCalendar, $summaryViewOpen, $action }): string =>
+        border: 0.0625rem solid ${({ $primaryCalendar, $summaryViewOpen, $action }): string =>
 					!$summaryViewOpen && !$action && $primaryCalendar?.color?.color
-						? `0.0625rem solid ${$primaryCalendar.color.color}`
+						? $primaryCalendar.color.color
 						: 'inherit'} !important;
     }
 

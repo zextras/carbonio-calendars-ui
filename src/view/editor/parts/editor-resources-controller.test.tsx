@@ -12,7 +12,7 @@ import { EditorResourcesController } from './editor-resources-controller';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_RESOURCES } from '../../../constants';
-import { PARTICIPANT_ROLE } from '../../../constants/api';
+import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';
 import * as searchResourcesHandler from '../../../soap/search-calendar-resources-request';
 import { reducers } from '../../../store/redux';
 import { useAppStatusStore } from '../../../store/zustand/store';
@@ -56,7 +56,7 @@ describe('editor resources controller', () => {
 						a: location,
 						d: 'location',
 						cutype: CALENDAR_RESOURCES.ROOM,
-						ptst: 'NE',
+						ptst: PARTICIPATION_STATUS.NEED_ACTION,
 						role: PARTICIPANT_ROLE.NON_PARTICIPANT,
 						rsvp: true,
 						url: location
@@ -68,7 +68,7 @@ describe('editor resources controller', () => {
 							name: 'location',
 							email: location,
 							isOptional: false,
-							response: 'NE',
+							response: PARTICIPATION_STATUS.NEED_ACTION,
 							cutype: CALENDAR_RESOURCES.ROOM
 						}
 					]
@@ -107,7 +107,7 @@ describe('editor resources controller', () => {
 						a: equipment,
 						d: 'equipment',
 						cutype: CALENDAR_RESOURCES.RESOURCE,
-						ptst: 'NE',
+						ptst: PARTICIPATION_STATUS.NEED_ACTION,
 						role: PARTICIPANT_ROLE.NON_PARTICIPANT,
 						rsvp: true,
 						url: equipment
@@ -119,7 +119,7 @@ describe('editor resources controller', () => {
 							name: 'equipment',
 							email: equipment,
 							isOptional: false,
-							response: 'NE',
+							response: PARTICIPATION_STATUS.NEED_ACTION,
 							cutype: CALENDAR_RESOURCES.RESOURCE
 						}
 					]
@@ -159,7 +159,7 @@ describe('editor resources controller', () => {
 						a: location,
 						d: 'location',
 						cutype: CALENDAR_RESOURCES.ROOM,
-						ptst: 'NE',
+						ptst: PARTICIPATION_STATUS.NEED_ACTION,
 						role: PARTICIPANT_ROLE.NON_PARTICIPANT,
 						rsvp: true,
 						url: location
@@ -168,7 +168,7 @@ describe('editor resources controller', () => {
 						a: equipment,
 						d: 'equipment',
 						cutype: CALENDAR_RESOURCES.RESOURCE,
-						ptst: 'NE',
+						ptst: PARTICIPATION_STATUS.NEED_ACTION,
 						role: PARTICIPANT_ROLE.NON_PARTICIPANT,
 						rsvp: true,
 						url: equipment
@@ -180,14 +180,14 @@ describe('editor resources controller', () => {
 							name: 'location',
 							email: location,
 							isOptional: false,
-							response: 'NE',
+							response: PARTICIPATION_STATUS.NEED_ACTION,
 							cutype: CALENDAR_RESOURCES.ROOM
 						},
 						{
 							name: 'equipment',
 							email: equipment,
 							isOptional: false,
-							response: 'NE',
+							response: PARTICIPATION_STATUS.NEED_ACTION,
 							cutype: CALENDAR_RESOURCES.RESOURCE
 						}
 					]

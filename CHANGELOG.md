@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.15.0...v1.15.1) (2025-03-10)
+
+
+### Bug Fixes
+
+* avoid rendering organizer's details if the organizer is not set in the invite ([75e8c82](https://github.com/zextras/carbonio-calendars-ui/commit/75e8c8212f6560bee0691a4535ddea65a335526b))
+
+## [1.15.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.14.1...v1.15.0) (2025-02-11)
+
+
+### Features
+
+* allow sending an email to all the attendees of a meeting ([69e747c](https://github.com/zextras/carbonio-calendars-ui/commit/69e747cb745d963c67822c5f94227c4e775eb250))
+* display appointment additional details on the reminder modal ([ecc20fa](https://github.com/zextras/carbonio-calendars-ui/commit/ecc20fa3a33a0b16d025f16db9c70778bc5ce855)), closes [#546](https://github.com/zextras/carbonio-calendars-ui/issues/546)
+
+
+### Bug Fixes
+
+* [CO-1620] apply types on editor attendees and add value to attendees ([#519](https://github.com/zextras/carbonio-calendars-ui/issues/519)) ([4fa4966](https://github.com/zextras/carbonio-calendars-ui/commit/4fa4966a2f79233b9835852c57d56092aa884768)), closes [#529](https://github.com/zextras/carbonio-calendars-ui/issues/529)
+* [CO-1692] Editor equipment and meeting room chip behaviour ([#539](https://github.com/zextras/carbonio-calendars-ui/issues/539)) ([c36cd74](https://github.com/zextras/carbonio-calendars-ui/commit/c36cd74f46b39f68414931bebfb0e4ad51ea3927))
+* copy of appointments select the correct calendar destination ([3ab2b45](https://github.com/zextras/carbonio-calendars-ui/commit/3ab2b459ae672cb3bb741595c87f984ad75e2abf))
+* update email validator regex ([114ad32](https://github.com/zextras/carbonio-calendars-ui/commit/114ad3295ac6cecb646a4dd97f3362ea641e0403))
+* use copy as a fallback of move if move is not available in actions-buttons ([#547](https://github.com/zextras/carbonio-calendars-ui/issues/547)) ([cf7bb3d](https://github.com/zextras/carbonio-calendars-ui/commit/cf7bb3d12d888956b7f0a86705dd1c9ae9738230))
+
 ### [1.14.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.14.0...v1.14.1) (2024-12-12)
 
 ## [1.14.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.13.1...v1.14.0) (2024-12-04)

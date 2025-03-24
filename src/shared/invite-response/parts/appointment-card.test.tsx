@@ -13,6 +13,7 @@ import { AppointmentCard } from './appointment-card';
 import { useTags } from '../../../carbonio-ui-commons/store/zustand/tags';
 import { tags } from '../../../carbonio-ui-commons/test/mocks/tags/tags';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { PARTICIPATION_STATUS } from '../../../constants/api';
 import mockedData from '../../../test/generators';
 import 'jest-styled-components';
 
@@ -120,7 +121,7 @@ describe('appointment card component', () => {
 			});
 			test('answer is needed', () => {
 				const event = mockedData.getEvent({
-					resource: { iAmOrganizer: false, participationStatus: 'NE' }
+					resource: { iAmOrganizer: false, participationStatus: PARTICIPATION_STATUS.NEED_ACTION }
 				});
 				setupTest(<AppointmentCard event={event} />);
 
@@ -131,7 +132,7 @@ describe('appointment card component', () => {
 				const event = mockedData.getEvent({
 					resource: {
 						iAmOrganizer: false,
-						participationStatus: 'NE',
+						participationStatus: PARTICIPATION_STATUS.NEED_ACTION,
 						tags: [values(tags)[0].id],
 						class: 'PRI'
 					}

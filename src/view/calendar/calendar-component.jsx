@@ -19,6 +19,7 @@ import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
+import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { useCheckedFolders } from '../../hooks/use-checked-folders';
@@ -35,6 +36,7 @@ import {
 } from '../../store/zustand/hooks';
 import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 import { workWeek } from '../../utils/work-week';
+import EventPanelView from '../event-panel-view/event-panel-view';
 
 const BigCalendar = withDragAndDrop(Calendar);
 
@@ -137,25 +139,6 @@ export default function CalendarComponent() {
 		[theme?.palette?.gray3?.regular, theme?.palette?.gray6?.regular, workingSchedule]
 	);
 
-	const eventPropGetter = useCallback(
-		(event) => ({
-			style: {
-				backgroundColor: event.resource.calendar.color.background,
-				color: event.resource.calendar.color.color,
-				border: `0.0625rem solid ${event.resource.calendar.color.color}`,
-				padding:
-					moment(event.end).diff(event.start, 'minutes') >= 30
-						? '0.25rem 0.25rem'
-						: '0.0625rem 0.25rem 0.25rem 0.25rem !important',
-				borderRadius: '0.25rem',
-				transition: 'border 0.15s ease-in-out, background 0.15s ease-in-out',
-				boxShadow: '0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)',
-				cursor: 'pointer'
-			}
-		}),
-		[]
-	);
-
 	const slotPropGetter = useCallback(
 		(newDate) => ({
 			style: {
@@ -175,19 +158,26 @@ export default function CalendarComponent() {
 	}, [calendarView, isSplitLayoutEnabled]);
 
 	const dayPropGetter = useCallback(
-		(newDate) => ({
-			style: {
-				minWidth: columnMinWidth,
-				backgroundColor:
-					// eslint-disable-next-line no-nested-ternary
-					workingSchedule?.[newDate.getDay()]?.working
-						? new Date().getDay() === newDate.getDay()
-							? theme.palette.highlight.regular
-							: theme.palette.gray6.regular
-						: theme.palette.gray3.regular,
-				borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`
+		(newDate) => {
+			const isToday =
+				newDate.getDate() === new Date().getDate() &&
+				newDate.getMonth() === new Date().getMonth() &&
+				newDate.getFullYear() === new Date().getFullYear();
+
+			let backgroundColor = theme.palette.gray3.regular;
+
+			if (workingSchedule?.[newDate.getDay()]?.working) {
+				backgroundColor = isToday ? theme.palette.highlight.regular : theme.palette.gray6.regular;
 			}
-		}),
+
+			return {
+				style: {
+					minWidth: columnMinWidth,
+					backgroundColor,
+					borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`
+				}
+			};
+		},
 		[
 			columnMinWidth,
 			slotDayBorderColor,
@@ -300,7 +290,6 @@ export default function CalendarComponent() {
 				onRangeChange={onRangeChange}
 				dayPropGetter={dayPropGetter}
 				slotPropGetter={slotPropGetter}
-				eventPropGetter={eventPropGetter}
 				workingSchedule={workingSchedule}
 				onSelectSlot={handleSelect}
 				scrollToTime={scrollToTime}
@@ -312,6 +301,7 @@ export default function CalendarComponent() {
 				onSelecting={onSelecting}
 				draggableAccessor={draggableAccessor}
 			/>
+			{action === EVENT_ACTIONS.EXPAND && <EventPanelView />}
 		</>
 	);
 }

@@ -15,6 +15,7 @@ import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/defau
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_BOARD_ID, PREFS_DEFAULTS } from '../../constants';
+import { EVENT_DISPLAY_STATUS } from '../../constants/api';
 import { reducers } from '../../store/redux';
 import { Editor } from '../../types/editor';
 
@@ -34,7 +35,7 @@ const defaultEditor: Editor = {
 	attendees: [],
 	optionalAttendees: [],
 	allDay: false,
-	freeBusy: 'B',
+	freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 	class: 'PUB',
 	originalStart: 1667834497505,
 	originalEnd: 1667834497505,

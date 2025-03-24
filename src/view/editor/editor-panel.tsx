@@ -69,10 +69,10 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 			<Row height="fit" width="fill" padding={{ top: 'large' }}>
 				<EditorAttendees editorId={editorId} />
 			</Row>
+			<EditorCalendarSelector editorId={editorId} />
 			<Row height="fit" width="fill" padding={{ top: 'large' }}>
 				<EditorFreeBusySelector editorId={editorId} />
 			</Row>
-			<EditorCalendarSelector editorId={editorId} />
 			<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
 				<EditorPrivateCheckbox editorId={editorId} />
 			</Row>
