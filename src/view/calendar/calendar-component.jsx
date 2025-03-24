@@ -270,7 +270,7 @@ export default function CalendarComponent() {
 				primaryCalendar={primaryCalendar}
 				summaryViewOpen={summaryViewOpen}
 				action={action}
-				headerMinWidth={columnMinWidth}
+				$headerMinWidth={columnMinWidth}
 			/>
 			<BigCalendar
 				dayLayoutAlgorithm="no-overlap"
