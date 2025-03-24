@@ -158,19 +158,26 @@ export default function CalendarComponent() {
 	}, [calendarView, isSplitLayoutEnabled]);
 
 	const dayPropGetter = useCallback(
-		(newDate) => ({
-			style: {
-				minWidth: columnMinWidth,
-				backgroundColor:
-					// eslint-disable-next-line no-nested-ternary
-					workingSchedule?.[newDate.getDay()]?.working
-						? new Date().getDay() === newDate.getDay()
-							? theme.palette.highlight.regular
-							: theme.palette.gray6.regular
-						: theme.palette.gray3.regular,
-				borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`
+		(newDate) => {
+			const isToday =
+				newDate.getDate() === new Date().getDate() &&
+				newDate.getMonth() === new Date().getMonth() &&
+				newDate.getFullYear() === new Date().getFullYear();
+
+			let backgroundColor = theme.palette.gray3.regular;
+
+			if (workingSchedule?.[newDate.getDay()]?.working) {
+				backgroundColor = isToday ? theme.palette.highlight.regular : theme.palette.gray6.regular;
 			}
-		}),
+
+			return {
+				style: {
+					minWidth: columnMinWidth,
+					backgroundColor,
+					borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`
+				}
+			};
+		},
 		[
 			columnMinWidth,
 			slotDayBorderColor,
