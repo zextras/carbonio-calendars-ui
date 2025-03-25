@@ -75,8 +75,8 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 				});
 				/* it is not depending on our code */
 				// eslint-disable-next-line no-irregular-whitespace
-				expect(result.current).toMatch(
-					'Sunday, January 02, 2022 at 1:00 AM GMT+01:00 – Monday, January 03, 2022 at 1:00 AM GMT+01:00'
+				expect(result.current).toEqual(
+					'Sunday, January 02, 2022 at 1:00 AM – Monday, January 03, 2022 at 1:00 AM GMT+01:00 Europe/Berlin'
 				);
 			});
 		});
@@ -113,7 +113,7 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 				initialProps: [eventStart, eventEnd]
 			});
 			expect(result.current).toMatch(
-				'domenica 02 gennaio 2022 alle ore 01:00 GMT+01:00 – lunedì 03 gennaio 2022 alle ore 01:00 GMT+01:00 Europe/Berlin'
+				'domenica 02 gennaio 2022 alle ore 01:00 – lunedì 03 gennaio 2022 alle ore 01:00 GMT+01:00 Europe/Berlin'
 			);
 		});
 		it('will be localized following browser settings if user preferences are not available', () => {
@@ -134,7 +134,7 @@ describe('useGetDateRangeConvertedToTimezone', () => {
 				initialProps: [eventStart, eventEnd]
 			});
 			expect(result.current).toMatch(
-				'Sonntag, 02. Januar 2022 um 01:00 GMT+01:00 – Montag, 03. Januar 2022 um 01:00 GMT+01:00 Europe/Berlin'
+				'Sonntag, 02. Januar 2022 um 01:00 – Montag, 03. Januar 2022 um 01:00 GMT+01:00 Europe/Berlin'
 			);
 		});
 	});

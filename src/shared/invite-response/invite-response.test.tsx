@@ -134,22 +134,11 @@ describe('invite response component', () => {
 					store
 				});
 
-				// eslint-disable-next-line no-irregular-whitespace
-				const localTimeString = screen.getByText(/Tuesday, January 30, 2024/i);
+				const localTimeString = screen.getByText(
+					'Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+				);
 
 				expect(localTimeString).toBeVisible();
-			});
-			test('a string with the user local timezone of the event', () => {
-				setupFoldersStore();
-				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
-				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
-					store
-				});
-
-				const localTimezoneString = screen.getByText('GMT+01:00 Europe/Berlin');
-
-				expect(localTimezoneString).toBeVisible();
 			});
 			test('if the event lasts multiple days non all day there will be the complete format for both start and end time', async () => {
 				setupFoldersStore();
@@ -211,15 +200,11 @@ describe('invite response component', () => {
 				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
 
 				const tooltipLocalTime = await screen.findByText(
-					'Tuesday, January 30, 2024, 9:00 – 9:30 AM',
-					{ collapseWhitespace: false }
+					'Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT+05:30 Asia/Kolkata'
 				);
-
-				const tooltipLocalTimeZone = await screen.findByText('GMT+01:00 Europe/Berlin');
 
 				expect(tooltipTitleString).toBeVisible();
 				expect(tooltipLocalTime).toBeVisible();
-				expect(tooltipLocalTimeZone).toBeVisible();
 			});
 			describe('a row which inform the user about his availability', () => {
 				test('if the appointment is received by the primary account, it will be the one used', async () => {
@@ -1047,21 +1032,11 @@ describe('invite response component', () => {
 					store
 				});
 
-				const localTimeString = screen.getByText(/Tuesday, January 30, 2024/i);
+				const localTimeString = screen.getByText(
+					'Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+				);
 
 				expect(localTimeString).toBeVisible();
-			});
-			test('a string with the user local timezone of the event', () => {
-				setupFoldersStore();
-				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
-				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
-					store
-				});
-
-				const localTimezoneString = screen.getByText('GMT+01:00 Europe/Berlin');
-
-				expect(localTimezoneString).toBeVisible();
 			});
 			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				setupFoldersStore();
@@ -1086,15 +1061,11 @@ describe('invite response component', () => {
 				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
 
 				const tooltipLocalTime = await screen.findByText(
-					'Tuesday, January 30, 2024, 9:00 – 9:30 AM',
-					{ collapseWhitespace: false }
+					'Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT+05:30 Asia/Kolkata'
 				);
-
-				const tooltipLocalTimeZone = await screen.findByText('GMT+01:00 Europe/Berlin');
 
 				expect(tooltipTitleString).toBeVisible();
 				expect(tooltipLocalTime).toBeVisible();
-				expect(tooltipLocalTimeZone).toBeVisible();
 			});
 			describe('two different buttons to reply to the counter appointment: ', () => {
 				describe('a button to accept the counter appointment', () => {

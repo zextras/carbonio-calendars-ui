@@ -26,23 +26,33 @@ type TimeStringsType = {
 };
 
 export const getTimeStrings = ({ start, end, options }: TimeStringsType): string => {
-	const dateTimeFormat = new Intl.DateTimeFormat(options.locale, {
+	const rangeOptions = {
 		weekday: 'long',
 		month: 'long',
 		day: '2-digit',
 		year: 'numeric',
 		minute: options?.allDay ? undefined : '2-digit',
 		timeZone: options?.timeZone,
-		timeZoneName: options?.allDay ? undefined : 'longOffset',
 		second: undefined,
 		hour: options?.allDay ? undefined : '2-digit'
-	});
+	} as const;
+
+	const gmtOptions = {
+		timeZone: options?.timeZone,
+		timeZoneName: 'longOffset'
+	} as const;
+
+	const dateTimeFormat = new Intl.DateTimeFormat(options.locale, rangeOptions);
+	const dateGmtTimeFormat = new Intl.DateTimeFormat(options.locale, gmtOptions);
 
 	const formattedRange = dateTimeFormat.formatRange(start, end);
+	const formatParts = dateGmtTimeFormat.formatToParts(start);
+
+	const timezoneGmt = formatParts.find((part) => part.type === 'timeZoneName')?.value;
 
 	const timezoneString = options?.allDay ? undefined : options?.timeZone;
 
-	return compact([formattedRange, timezoneString, options?.allDayLabel]).join(' ');
+	return compact([formattedRange, timezoneGmt, timezoneString, options?.allDayLabel]).join(' ');
 };
 
 export const useGetDateRangeConvertedToTimezone = (
