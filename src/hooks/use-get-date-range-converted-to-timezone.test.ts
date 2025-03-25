@@ -3,17 +3,22 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import moment from 'moment';
-
-import { useGetRangeDateConvertedToTimezone } from './use-get-date-range-converted-to-timezone';
+import { useGetDateRangeConvertedToTimezone } from './use-get-date-range-converted-to-timezone';
+import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
+import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { setupHook } from '../carbonio-ui-commons/test/test-setup';
 
-/* The useGetEventTimezone function is a utility hook which receive a start and end date with their relative timezone as parameters to convert them into local dates.
- * The output will be the original date range, the converted value into local, a boolean to indicates if a tooltip is needed and the relative tooltip to show.
- * Local and original dates parameters will be of type number, representing the unix timestamp in milliseconds.
- * Local and original dates output will be of type string, representing a human-readable date.
- * The tooltip will be shown only when local and original dates differs.
- * Tooltip will be returned into two different parameters, localTimezoneTooltip and eventTimezoneTooltip, depending if they are showing their local or original date */
+/*
+ * useGetDateRangeConvertedToTimezone is a utility hook which converts a date range to a given timezone.
+ *
+ * It receives start and end dates in number format as arguments. It can also optionally receive a timezone or a boolean
+ * to indicates if it is related to an all day.
+ *
+ * It will return a string representing the date converted to the given timezone. It will convert it to the local
+ * timezone by default if no timezone argument is passed.
+ *
+ * The string will be localized following the locale setting of the user or the browser language as fallback
+ */
 
 const setDate = ({
 	hours,
@@ -37,44 +42,25 @@ const setDate = ({
 	return date.getTime();
 };
 
-describe('useGetEventTimezone', () => {
+describe('useGetDateRangeConvertedToTimezone', () => {
 	const differentTimezone = 'Asia/Bangkok';
-	const localTimezone = moment.tz.guess();
-	describe('The human-readable date (both original or converted)', () => {
-		test('it will contain "all Day" if referring to an allDay event', () => {
+	describe('The output string', () => {
+		it('will contain "all Day" if referring to an allDay event', () => {
 			const eventStart = setDate({ hours: 2 });
 			const eventEnd = setDate({ hours: 3 });
 
-			const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-				initialProps: [eventStart, eventEnd, { allDay: true, timeZone: localTimezone }]
+			const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
+				initialProps: [eventStart, eventEnd, { allDay: true }]
 			});
 			expect(result.current).toMatch(/all Day/i);
 		});
-		test('the human-readable date of the original date it will be defined', () => {
-			const eventStart = setDate({ hours: 2 });
-			const eventEnd = setDate({ hours: 3 });
-
-			const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
-			});
-			expect(result.current).toBeDefined();
-		});
-		test('the timezone string of the original date will be defined', () => {
-			const eventStart = setDate({ hours: 2 });
-			const eventEnd = setDate({ hours: 3 });
-
-			const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
-			});
-			expect(result.current).toBeDefined();
-		});
-		describe('it will be formatted differently depending from the range difference between start and end', () => {
+		describe('will be formatted differently depending from the range difference between start and end', () => {
 			test('minutes or hours range difference', () => {
 				const eventStart = setDate({ hours: 2 });
 				const eventEnd = setDate({ hours: 2, minutes: 30 });
 
-				const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-					initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+				const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
+					initialProps: [eventStart, eventEnd]
 				});
 				/* it is not depending on our code */
 				// eslint-disable-next-line no-irregular-whitespace
@@ -84,75 +70,72 @@ describe('useGetEventTimezone', () => {
 				const eventStart = setDate({ days: 2 });
 				const eventEnd = setDate({ days: 3 });
 
-				const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-					initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+				const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
+					initialProps: [eventStart, eventEnd]
 				});
 				/* it is not depending on our code */
 				// eslint-disable-next-line no-irregular-whitespace
 				expect(result.current).toMatch(
-					'Sunday, January 02, 2022 at 1:00 AM – Monday, January 03, 2022 at 1:00 AM'
+					'Sunday, January 02, 2022 at 1:00 AM GMT+01:00 – Monday, January 03, 2022 at 1:00 AM GMT+01:00'
 				);
 			});
 		});
-	});
-	describe('When the original timezone is equal to local timezone', () => {
-		test('the timezone string of the original date will show the offSet from UTC in GMT for the original date', () => {
+		it('will use the local timezone if no timezone option is passed', () => {
 			const eventStart = setDate({ hours: 2 });
 			const eventEnd = setDate({ hours: 3 });
 
-			const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
+			const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
+				initialProps: [eventStart, eventEnd]
 			});
-			expect(result.current).toMatch('GMT+01:00 Europe/Berlin');
-			expect(result.current).toBeUndefined();
+			expect(result.current).toMatch(/Europe\/Berlin/i);
 		});
-		test('the human-readable date different from the original will be undefined', () => {
+		it('will use the timezone when it is passed', () => {
 			const eventStart = setDate({ hours: 2 });
 			const eventEnd = setDate({ hours: 3 });
 
-			const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
-			});
-			expect(result.current).toBeUndefined();
-		});
-		test('the human-readable timezone string different from the original will be undefined', () => {
-			const eventStart = setDate({ hours: 2 });
-			const eventEnd = setDate({ hours: 3 });
-
-			const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-				initialProps: [eventStart, eventEnd, { timeZone: localTimezone }]
-			});
-			expect(result.current).toBeUndefined();
-		});
-	});
-	describe('When the original timezone is different from the local timezone', () => {
-		test('the human-readable date different from the original will be defined', () => {
-			const eventStart = setDate({ hours: 2 });
-			const eventEnd = setDate({ hours: 3 });
-
-			const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
+			const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
 				initialProps: [eventStart, eventEnd, { timeZone: differentTimezone }]
 			});
-			expect(result.current).toBeDefined();
+			expect(result.current).toMatch(/Asia\/Bangkok/i);
 		});
-		test('the human-readable timezone string different from the original will be defined', () => {
-			const eventStart = setDate({ hours: 2 });
-			const eventEnd = setDate({ hours: 3 });
-
-			const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-				initialProps: [eventStart, eventEnd, { timeZone: differentTimezone }]
+		it('will be localized following user preference', () => {
+			shell.useUserSettings.mockReturnValueOnce({
+				...defaultSettings,
+				prefs: {
+					...defaultSettings.prefs,
+					zimbraPrefLocale: 'it'
+				}
 			});
-			expect(result.current).toBeDefined();
+			const eventStart = setDate({ days: 2 });
+			const eventEnd = setDate({ days: 3 });
+
+			const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
+				initialProps: [eventStart, eventEnd]
+			});
+			expect(result.current).toMatch(
+				'domenica 02 gennaio 2022 alle ore 01:00 GMT+01:00 – lunedì 03 gennaio 2022 alle ore 01:00 GMT+01:00 Europe/Berlin'
+			);
 		});
-		test('the timezone string of the converted date will show the offSet from UTC in GMT of the local date', () => {
-			const eventStart = setDate({ hours: 2 });
-			const eventEnd = setDate({ hours: 3 });
-
-			const { result } = setupHook(useGetRangeDateConvertedToTimezone, {
-				initialProps: [eventStart, eventEnd, { timeZone: differentTimezone }]
+		it('will be localized following browser settings if user preferences are not available', () => {
+			shell.useUserSettings.mockReturnValueOnce({
+				...defaultSettings,
+				prefs: {
+					...defaultSettings.prefs,
+					zimbraPrefLocale: undefined
+				}
 			});
-			expect(result.current).toMatch('GMT+01:00 Europe/Berlin');
-			expect(result.current).toMatch('GMT+07:00 Asia/Bangkok');
+			const browserLanguageGetter = jest.spyOn(window.navigator, 'language', 'get');
+			browserLanguageGetter.mockReturnValueOnce('de');
+
+			const eventStart = setDate({ days: 2 });
+			const eventEnd = setDate({ days: 3 });
+
+			const { result } = setupHook(useGetDateRangeConvertedToTimezone, {
+				initialProps: [eventStart, eventEnd]
+			});
+			expect(result.current).toMatch(
+				'Sonntag, 02. Januar 2022 um 01:00 GMT+01:00 – Montag, 03. Januar 2022 um 01:00 GMT+01:00 Europe/Berlin'
+			);
 		});
 	});
 });

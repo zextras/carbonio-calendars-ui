@@ -8,7 +8,7 @@ import React, { ReactElement, useMemo } from 'react';
 import { Icon, Padding, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
+import { useGetDateRangeConvertedToTimezone } from '../../hooks/use-get-date-range-converted-to-timezone';
 
 type TimeInfoProps = {
 	allDay?: boolean;
@@ -24,15 +24,21 @@ export const TimeInfoRow = ({
 	timeInfoData: TimeInfoProps;
 	showIcon?: boolean;
 }): ReactElement => {
-	const {
-		originalTimeString,
-		originalTimezoneString,
-		timezoneStringConvertedToLocal,
-		timeStringConvertedToLocal
-	} = useGetEventTimezoneString(timeInfoData.start ?? 0, timeInfoData.end ?? 0, {
-		allDay: timeInfoData.allDay,
-		timeZone: timeInfoData.timezone
-	});
+	const originalDate = useGetDateRangeConvertedToTimezone(
+		timeInfoData.start ?? 0,
+		timeInfoData.end ?? 0,
+		{
+			allDay: timeInfoData.allDay,
+			timeZone: timeInfoData.timezone
+		}
+	);
+	const localDate = useGetDateRangeConvertedToTimezone(
+		timeInfoData.start ?? 0,
+		timeInfoData.end ?? 0,
+		{
+			allDay: timeInfoData.allDay
+		}
+	);
 	const [t] = useTranslation();
 
 	const convertedDateTooltip = useMemo(
@@ -40,18 +46,10 @@ export const TimeInfoRow = ({
 			<>
 				{t('creation_timezone_tooltip', 'Date and time on creation timezone:')}
 				<br />
-				{timeStringConvertedToLocal ?? originalTimeString}
-				<br />
-				{timezoneStringConvertedToLocal ?? originalTimezoneString}
+				{originalDate}
 			</>
 		),
-		[
-			originalTimeString,
-			originalTimezoneString,
-			t,
-			timeStringConvertedToLocal,
-			timezoneStringConvertedToLocal
-		]
+		[originalDate, t]
 	);
 
 	return (
@@ -76,14 +74,14 @@ export const TimeInfoRow = ({
 						crossAlignment="flex-start"
 						takeAvailableSpace
 					>
-						<Tooltip label={originalTimeString} overflowTooltip>
-							<Text overflow="ellipsis" weight="bold" size="small" color="gray1">
-								{originalTimeString}
+						<Tooltip label={localDate} overflowTooltip>
+							<Text overflow="break-word" weight="bold" size="small" color="gray1">
+								{localDate}
 							</Text>
 						</Tooltip>
 					</Row>
 					<Padding right="small" />
-					{timeStringConvertedToLocal && (
+					{localDate !== originalDate && (
 						<Row mainAlignment="flex-start" crossAlignment="flex-start" width="fit">
 							<Tooltip label={convertedDateTooltip}>
 								<Row>
@@ -92,11 +90,6 @@ export const TimeInfoRow = ({
 							</Tooltip>
 						</Row>
 					)}
-				</Row>
-				<Row width="fill" mainAlignment="flex-start">
-					<Text overflow="break-word" weight="bold" size="small" color="gray1">
-						{originalTimezoneString}
-					</Text>
 				</Row>
 			</Row>
 		</Row>

@@ -127,40 +127,55 @@ const setEditorDate = ({
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
-			const start = invite?.start?.u ?? moment(invite?.start?.d);
-			const end = invite?.end?.u ?? moment(invite?.end?.d);
-			const convertedStartDate = getLocalTime(start, invite?.tz);
-			const convertedEndDate = getLocalTime(end, invite?.tz);
-			if (invite.tz && isTimezoneDifferentFromLocal(invite.tz)) {
-				return {
-					start: event?.allDay
-						? moment(convertedStartDate)?.startOf('date').valueOf()
-						: convertedStartDate,
-					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
-				};
-			}
+			const start = invite?.start?.u ?? moment(invite?.start?.d).valueOf();
+			const end = invite?.end?.u ?? moment(invite?.end?.d).valueOf();
+
+			const currentStartDate = new Date(start);
+			const currentStartDateInTimezone = new Date(
+				currentStartDate.toLocaleString('en-US', {
+					timeZone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
+				})
+			);
+
+			const currentEndDate = new Date(end);
+			const currentEndDateInTimezone = new Date(
+				currentEndDate.toLocaleString('en-US', {
+					timeZone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
+				})
+			);
+
 			return {
-				start: event?.allDay ? moment(start)?.startOf('date').valueOf() : moment(start).valueOf(),
-				end: event?.allDay ? moment(end)?.endOf('date').valueOf() : moment(end).valueOf()
+				start: event?.allDay
+					? moment(currentStartDateInTimezone)?.startOf('date').valueOf()
+					: currentStartDateInTimezone.getTime(),
+				end: event?.allDay
+					? moment(currentEndDateInTimezone)?.endOf('date').valueOf()
+					: currentEndDateInTimezone.getTime()
 			};
 		}
-		const convertedStartDate = getLocalTime(event.start, invite?.tz);
-		const convertedEndDate = getLocalTime(event.end, invite?.tz);
-		return invite?.tz && isTimezoneDifferentFromLocal(invite.tz)
-			? {
-					start: event?.allDay
-						? moment(convertedStartDate)?.startOf('date').valueOf()
-						: convertedStartDate,
-					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
-				}
-			: {
-					start: event?.allDay
-						? moment(event?.start)?.startOf('date').valueOf()
-						: moment(event?.start).valueOf(),
-					end: event?.allDay
-						? moment(event?.end)?.endOf('date').valueOf()
-						: moment(event?.end).valueOf()
-				};
+
+		const currentStartDate = new Date(moment(event?.start).valueOf());
+		const currentStartDateInTimezone = new Date(
+			currentStartDate.toLocaleString('en-US', {
+				timeZone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
+			})
+		);
+
+		const currentEndDate = new Date(moment(event?.end).valueOf());
+		const currentEndDateInTimezone = new Date(
+			currentEndDate.toLocaleString('en-US', {
+				timeZone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
+			})
+		);
+
+		return {
+			start: event?.allDay
+				? moment(currentStartDateInTimezone)?.startOf('date').valueOf()
+				: moment(currentStartDateInTimezone).valueOf(),
+			end: event?.allDay
+				? moment(currentEndDateInTimezone)?.endOf('date').valueOf()
+				: moment(currentEndDateInTimezone).valueOf()
+		};
 	}
 	return {
 		start: moment().set('second', 0).set('millisecond', 0).valueOf(),

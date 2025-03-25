@@ -32,7 +32,7 @@ import BodyMessageRenderer from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
-import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
+import { useGetDateRangeConvertedToTimezone } from '../../hooks/use-get-date-range-converted-to-timezone';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
@@ -149,14 +149,13 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 
 	const endOfDay = (day: any): number => moment(day).endOf('day').valueOf();
 
-	const {
-		originalTimeString,
-		originalTimezoneString,
-		timeStringConvertedToLocal,
-		timezoneStringConvertedToLocal
-	} = useGetEventTimezoneString(localStart, localEnd, {
+	const originalDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
 		allDay: invite.allDay,
 		timeZone: invite.tz
+	});
+
+	const convertedDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
+		allDay: invite.allDay
 	});
 
 	const messageHasABody = useMemo(() => hasDescription(invite), [invite]);
@@ -170,18 +169,10 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 			<>
 				{t('creation_timezone_tooltip', 'Date and time on creation timezone:')}
 				<br />
-				{timeStringConvertedToLocal ?? originalTimeString}
-				<br />
-				{timezoneStringConvertedToLocal ?? originalTimezoneString}
+				{originalDate}
 			</>
 		),
-		[
-			originalTimeString,
-			originalTimezoneString,
-			t,
-			timeStringConvertedToLocal,
-			timezoneStringConvertedToLocal
-		]
+		[originalDate, t]
 	);
 	return (
 		<InviteContainer data-testid={'invite-response'}>
@@ -208,20 +199,15 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{timeStringConvertedToLocal ?? originalTimeString}
+						{originalDate}
 					</Text>
-					{timeStringConvertedToLocal && (
+					{convertedDate !== originalDate && (
 						<Tooltip label={convertedDateTooltip}>
 							<Padding left="small">
 								<Icon icon="GlobeOutline" color="gray1" />
 							</Padding>
 						</Tooltip>
 					)}
-				</Row>
-				<Row width="100%" mainAlignment="flex-start">
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{timezoneStringConvertedToLocal ?? originalTimezoneString}
-					</Text>
 				</Row>
 				{method === MESSAGE_METHOD.REQUEST && root && (
 					<AvailabilityChecker

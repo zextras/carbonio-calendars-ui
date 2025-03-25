@@ -6,42 +6,46 @@
 import { useMemo } from 'react';
 
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
-import { toLower } from 'lodash';
-import moment from 'moment';
+import { compact, toLower } from 'lodash';
 import { useTranslation } from 'react-i18next';
-
-export const getTimeString = (
-	_start: number | undefined,
-	_end: number | undefined,
-	allDay: boolean | undefined,
-	allDayLabel: string
-): string => {
-	const startEvent = moment(_start);
-	const endEvent = moment(_end);
-	const dayFormat = 'dddd, DD MMMM, YYYY';
-	const timeFormat = 'HH:mm';
-	const completeFormat = `${dayFormat} ${timeFormat}`;
-	const diff = endEvent.diff(startEvent, 'days');
-	const allDayString =
-		diff > 0
-			? `${startEvent.format(dayFormat)} -
-	           ${endEvent.format(dayFormat)} - ${allDayLabel}`
-			: `${startEvent.format(dayFormat)} - ${allDayLabel}`;
-
-	const notAllDayString =
-		diff > 0
-			? `${startEvent.format(completeFormat)} - ${endEvent.format(completeFormat)}`
-			: `${startEvent.format(completeFormat)} - ${endEvent.format(timeFormat)}`;
-
-	return allDay ? allDayString : notAllDayString;
-};
 
 type EventTimeOptions = {
 	allDay?: boolean;
 	timeZone?: string;
 };
 
-export const useGetRangeDateConvertedToTimezone = (
+type TimeStringsType = {
+	start: number;
+	end: number;
+	options: {
+		timeZone?: string;
+		allDay?: boolean;
+		allDayLabel?: string;
+		locale: string;
+	};
+};
+
+export const getTimeStrings = ({ start, end, options }: TimeStringsType): string => {
+	const dateTimeFormat = new Intl.DateTimeFormat(options.locale, {
+		weekday: 'long',
+		month: 'long',
+		day: '2-digit',
+		year: 'numeric',
+		minute: options?.allDay ? undefined : '2-digit',
+		timeZone: options?.timeZone,
+		timeZoneName: options?.allDay ? undefined : 'longOffset',
+		second: undefined,
+		hour: options?.allDay ? undefined : '2-digit'
+	});
+
+	const formattedRange = dateTimeFormat.formatRange(start, end);
+
+	const timezoneString = options?.allDay ? undefined : options?.timeZone;
+
+	return compact([formattedRange, timezoneString, options?.allDayLabel]).join(' ');
+};
+
+export const useGetDateRangeConvertedToTimezone = (
 	start: number,
 	end: number,
 	options: EventTimeOptions | undefined = {}
@@ -49,30 +53,15 @@ export const useGetRangeDateConvertedToTimezone = (
 	const { allDay = false, timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone } =
 		options;
 	const [t] = useTranslation();
-	const allDayLabel = useMemo(() => (allDay ? t('label.all_day', 'All day') : ''), [allDay, t]);
-	const locale = useUserSettings().prefs.zimbraPrefLocale ?? navigator.language ?? 'en-US';
-
-	const formatOptions = useMemo(
-		() =>
-			({
-				weekday: 'long',
-				month: 'long',
-				day: '2-digit',
-				year: 'numeric',
-				minute: '2-digit',
-				timeZoneName: 'longOffset',
-				hour: allDay ? undefined : '2-digit'
-			}) as const,
-		[allDay]
+	const allDayLabel = useMemo(
+		() => (allDay ? toLower(t('label.all_day', 'All day')) : ''),
+		[allDay, t]
 	);
+	const userSetting = useUserSettings().prefs.zimbraPrefLocale;
+	const locale = useMemo(() => userSetting ?? navigator.language, [userSetting]);
 
-	return useMemo(() => {
-		const dateTimeFormat = new Intl.DateTimeFormat(locale, {
-			...formatOptions,
-			timeZone
-		});
-
-		const formattedRange = dateTimeFormat.formatRange(start, end);
-		return allDay ? `${formattedRange}, ${toLower(allDayLabel)}` : formattedRange;
-	}, [allDay, allDayLabel, end, formatOptions, locale, start, timeZone]);
+	return useMemo(
+		() => getTimeStrings({ start, end, options: { allDay, allDayLabel, locale, timeZone } }),
+		[allDay, allDayLabel, end, locale, start, timeZone]
+	);
 };

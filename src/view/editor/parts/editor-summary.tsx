@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
-import { useGetEventTimezoneString } from '../../../hooks/use-get-event-timezone';
+import { useGetDateRangeConvertedToTimezone } from '../../../hooks/use-get-date-range-converted-to-timezone';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
@@ -85,30 +85,21 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 
 	const virtualRoom = useMemo(() => room?.label, [room?.label]);
 
-	const {
-		originalTimeString,
-		originalTimezoneString,
-		timeStringConvertedToLocal,
-		timezoneStringConvertedToLocal
-	} = useGetEventTimezoneString(start ?? 0, end ?? 0, { timeZone: timezone, allDay });
+	const originalDate = useGetDateRangeConvertedToTimezone(start ?? 0, end ?? 0, {
+		timeZone: timezone,
+		allDay
+	});
+	const convertedDate = useGetDateRangeConvertedToTimezone(start ?? 0, end ?? 0, { allDay });
 
 	const convertedDateTooltip = useMemo(
 		() => (
 			<>
-				{t('creation_timezone_tooltip', 'Date and time on creation timezone:')}
+				{t('local_timezone_tooltip', 'Date and time on local timezone:')}
 				<br />
-				{timeStringConvertedToLocal ?? originalTimeString}
-				<br />
-				{timezoneStringConvertedToLocal ?? originalTimezoneString}
+				{convertedDate}
 			</>
 		),
-		[
-			originalTimeString,
-			originalTimezoneString,
-			t,
-			timeStringConvertedToLocal,
-			timezoneStringConvertedToLocal
-		]
+		[t, convertedDate]
 	);
 
 	return (
@@ -147,9 +138,9 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 				<TitleRow>
 					<>
 						<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-							{originalTimeString}
+							{originalDate}
 						</Text>
-						{timeStringConvertedToLocal && (
+						{originalDate !== convertedDate && (
 							<Tooltip label={convertedDateTooltip}>
 								<Padding left="small">
 									<Icon icon="GlobeOutline" color="gray1" />
@@ -157,11 +148,6 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 							</Tooltip>
 						)}
 					</>
-				</TitleRow>
-				<TitleRow>
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{originalTimezoneString}
-					</Text>
 				</TitleRow>
 				<TitleRow>
 					<Text overflow="ellipsis" color="secondary" size="small">

@@ -14,7 +14,8 @@ import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
 	selectEditorEnd,
-	selectEditorStart
+	selectEditorStart,
+	selectEditorTimezone
 } from '../../../store/selectors/editor';
 import { editEditorDate } from '../../../store/slices/editor-slice';
 
@@ -22,25 +23,47 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
+	const timezone = useAppSelector(selectEditorTimezone(editorId));
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
 	const dispatch = useAppDispatch();
+
 	const onChange = useCallback(
 		({ start: newStartValue, end: newEndValue }: { start: number; end: number }) => {
 			dispatch(editEditorDate({ id: editorId, start: newStartValue, end: newEndValue }));
 		},
 		[dispatch, editorId]
 	);
+	/*
+	const changeTimezone = useCallback(
+		(date = 0) => {
+			const currentDate = new Date(date);
+			const dateInTimezone = new Date(
+				currentDate.toLocaleString('en-US', {
+					timeZone: timezone
+				})
+			);
+			console.log('@@ ', currentDate.getTime(), dateInTimezone.getTime());
+			return dateInTimezone;
+		},
+		[timezone]
+	);
 
-	return start && end ? (
+	const startValue = useMemo(() => changeTimezone(start), [changeTimezone, start]);
+	const endValue = useMemo(() => changeTimezone(end), [changeTimezone, end]); */
+
+	const startValue = useMemo(() => new Date(start), [start]);
+	const endValue = useMemo(() => new Date(end), [end]);
+
+	return startValue && endValue ? (
 		<>
 			<Row takeAvailableSpace>
-				<StartDatePicker start={new Date(start)} onChange={onChange} diff={diff} allDay={allDay} />
+				<StartDatePicker start={startValue} onChange={onChange} diff={diff} allDay={allDay} />
 			</Row>
 			<Padding left="small" />
 			<Row takeAvailableSpace>
 				<EndDatePicker
-					start={start}
-					end={new Date(end)}
+					start={startValue}
+					end={endValue}
 					onChange={onChange}
 					diff={diff}
 					allDay={allDay}

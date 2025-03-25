@@ -40,15 +40,10 @@ export const EventSummaryView = ({
 
 	const timeData = useMemo(
 		() => ({
-			...omitBy(
-				{
-					allDay: event.allDay,
-					start: event.start,
-					end: event.end
-				},
-				isNil
-			),
-			...{ timezone: invite?.tz ?? moment.tz.guess() }
+			allDay: event.allDay,
+			start: moment(event.start).valueOf(),
+			end: moment(event.end).valueOf(),
+			timezone: invite?.tz ?? moment.tz.guess()
 		}),
 		[event.allDay, event.end, event.start, invite?.tz]
 	);
