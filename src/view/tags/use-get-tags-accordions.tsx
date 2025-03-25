@@ -22,6 +22,7 @@ import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/util
 import { useRunSearchIntegration } from '../../carbonio-ui-commons/integrations/search/use-run-search';
 import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
 import { ItemType, TagsAccordionItems } from '../../carbonio-ui-commons/types/tags';
+import { CALENDAR_ROUTE } from '../../constants';
 
 type ItemProps = {
 	item: ItemType;
@@ -45,7 +46,7 @@ const CustomComp: FC<ItemProps> = (props) => {
 						value: `tag:"${props?.item?.name}"`
 					}
 				],
-				'mails'
+				CALENDAR_ROUTE
 			),
 		[props?.item?.color, props?.item?.name, runSearch]
 	);
