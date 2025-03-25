@@ -14,7 +14,7 @@ import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
-import { DateType, EventType } from '../types/event';
+import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -90,7 +90,7 @@ export type EventPropType = {
 };
 
 export const getLocalTime = (
-	date: number | DateType,
+	date: number | Date,
 	timezone?: string,
 	localTimezone?: string
 ): number => {
