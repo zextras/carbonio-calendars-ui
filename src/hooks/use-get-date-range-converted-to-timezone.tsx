@@ -10,8 +10,6 @@ import { toLower } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
-import { isTimezoneDifferentFromLocal } from '../normalizations/normalize-editor';
-
 export const getTimeString = (
 	_start: number | undefined,
 	_end: number | undefined,
@@ -43,22 +41,16 @@ type EventTimeOptions = {
 	timeZone?: string;
 };
 
-export const useGetEventTimezoneString = (
+export const useGetRangeDateConvertedToTimezone = (
 	start: number,
 	end: number,
 	options: EventTimeOptions | undefined = {}
-): {
-	timeStringConvertedToLocal?: string;
-	timezoneStringConvertedToLocal?: string;
-	originalTimeString?: string;
-	originalTimezoneString?: string;
-} => {
+): string => {
 	const { allDay = false, timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone } =
 		options;
 	const [t] = useTranslation();
 	const allDayLabel = useMemo(() => (allDay ? t('label.all_day', 'All day') : ''), [allDay, t]);
-	const locale = useUserSettings().prefs.zimbraPrefLocale ?? 'en-US';
-	const localTimezone = useMemo(() => moment.tz.guess(), []);
+	const locale = useUserSettings().prefs.zimbraPrefLocale ?? navigator.language ?? 'en-US';
 
 	const formatOptions = useMemo(
 		() =>
@@ -68,12 +60,13 @@ export const useGetEventTimezoneString = (
 				day: '2-digit',
 				year: 'numeric',
 				minute: '2-digit',
+				timeZoneName: 'longOffset',
 				hour: allDay ? undefined : '2-digit'
 			}) as const,
 		[allDay]
 	);
 
-	const originalTimeString = useMemo(() => {
+	return useMemo(() => {
 		const dateTimeFormat = new Intl.DateTimeFormat(locale, {
 			...formatOptions,
 			timeZone
@@ -82,51 +75,4 @@ export const useGetEventTimezoneString = (
 		const formattedRange = dateTimeFormat.formatRange(start, end);
 		return allDay ? `${formattedRange}, ${toLower(allDayLabel)}` : formattedRange;
 	}, [allDay, allDayLabel, end, formatOptions, locale, start, timeZone]);
-
-	const originalTimezoneString = useMemo(
-		() =>
-			`${
-				new Intl.DateTimeFormat(locale, {
-					timeZone,
-					timeZoneName: 'longOffset'
-				})
-					.format(start)
-					.split(', ')[1]
-			} ${timeZone}`,
-		[locale, start, timeZone]
-	);
-
-	const timeStringConvertedToLocal = useMemo(() => {
-		if (!isTimezoneDifferentFromLocal(timeZone)) {
-			return undefined;
-		}
-		const dateTimeFormat = new Intl.DateTimeFormat(locale, {
-			...formatOptions,
-			timeZone: localTimezone
-		});
-
-		const formattedRange = dateTimeFormat.formatRange(start, end);
-		return allDay ? `${formattedRange}, ${toLower(allDayLabel)}` : formattedRange;
-	}, [allDay, allDayLabel, end, formatOptions, localTimezone, locale, start, timeZone]);
-
-	const timezoneStringConvertedToLocal = useMemo(() => {
-		if (!isTimezoneDifferentFromLocal(timeZone)) {
-			return undefined;
-		}
-		return `${
-			new Intl.DateTimeFormat(locale, {
-				timeZone: localTimezone,
-				timeZoneName: 'longOffset'
-			})
-				.format(start)
-				.split(', ')[1]
-		} ${localTimezone}`;
-	}, [localTimezone, locale, start, timeZone]);
-
-	return {
-		originalTimeString,
-		originalTimezoneString,
-		timeStringConvertedToLocal,
-		timezoneStringConvertedToLocal
-	};
 };
