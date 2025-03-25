@@ -51,8 +51,8 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	const startValue = useMemo(() => changeTimezone(start), [changeTimezone, start]);
 	const endValue = useMemo(() => changeTimezone(end), [changeTimezone, end]); */
 
-	const startValue = useMemo(() => new Date(start), [start]);
-	const endValue = useMemo(() => new Date(end), [end]);
+	const startValue = useMemo(() => new Date(start ?? 0), [start]);
+	const endValue = useMemo(() => new Date(end ?? 0), [end]);
 
 	return startValue && endValue ? (
 		<>
