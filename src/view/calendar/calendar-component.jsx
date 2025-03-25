@@ -252,10 +252,7 @@ export default function CalendarComponent() {
 	const allDayAccessor = useCallback((calendarEvent) => {
 		const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
 
-		if (!isSameDay || calendarEvent.allDay) {
-			return true;
-		}
-		return false;
+		return !isSameDay || calendarEvent.allDay;
 	}, []);
 
 	const onSelecting = useCallback(
