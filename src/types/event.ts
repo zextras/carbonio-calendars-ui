@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Moment } from 'moment';
 
 import { CalendarsColorType } from './store/calendars';
 import {
@@ -103,8 +102,8 @@ export type EventResource = {
 };
 
 export type EventType = {
-	start: Moment | Date;
-	end: Moment | Date;
+	start: Date;
+	end: Date;
 	resource: EventResource;
 	resourceId: string;
 	allDay: boolean;
