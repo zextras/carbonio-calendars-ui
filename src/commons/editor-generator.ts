@@ -110,14 +110,16 @@ export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 		allDay: false,
 		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
-		originalStart: moment().set('second', 0).set('millisecond', 0).valueOf(),
-		originalEnd: getEndTime({
-			start: moment().set('second', 0).set('millisecond', 0).valueOf(),
-			duration: zimbraPrefCalendarDefaultApptDuration as string
-		}),
-		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
+		originalStart: new Date(new Date().setSeconds(0, 0)).toString(),
+		originalEnd: new Date(
+			getEndTime({
+				start: new Date(new Date().setSeconds(0, 0)).getTime(),
+				duration: zimbraPrefCalendarDefaultApptDuration as string
+			})
+		).toString(),
+		start: new Date(new Date().setSeconds(0, 0)).getTime(),
 		end: getEndTime({
-			start: moment().set('second', 0).set('millisecond', 0).valueOf(),
+			start: new Date(new Date().setSeconds(0, 0)).getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration as string
 		}),
 		inviteId: undefined,

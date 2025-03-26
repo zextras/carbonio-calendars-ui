@@ -131,8 +131,8 @@ export type Editor = {
 	allDay?: boolean;
 	freeBusy?: InviteFreeBusy;
 	class?: InviteClass;
-	originalStart: number;
-	originalEnd: number;
+	originalStart: string;
+	originalEnd: string;
 	start?: number;
 	end?: number;
 	inviteId?: string | undefined;

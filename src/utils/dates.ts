@@ -31,14 +31,14 @@ export const getTimezoneOffsetFromUtc = (timeZone?: string, date?: Date): number
 	return 0;
 };
 
-export const convertDateToLocal = (date: Date, timezone?: string): Date => {
+export const convertDateToTimezone = (date: Date, timezone?: string): Date => {
 	const utcOffset = getTimezoneOffsetFromUtc(timezone, date);
 	const offset = timezone ? utcOffset - date.getTimezoneOffset() : 0;
 
 	return new Date(date.getTime() + 60000 * offset);
 };
 
-export const parseDateFromICS = (icsString: string, timezone?: string): Date => {
+export const parseDateFromICS = (icsString: string): string => {
 	const strYear = parseInt(icsString.substring(0, 4), 10);
 	const strMonth = parseInt(icsString.substring(4, 6), 10) - 1;
 	const strDay = parseInt(icsString.substring(6, 8), 10);
@@ -50,9 +50,22 @@ export const parseDateFromICS = (icsString: string, timezone?: string): Date => 
 	const strMin = isNaN(strMinTest) ? 0 : strMinTest;
 	const strSec = isNaN(strSecTest) ? 0 : strSecTest;
 
-	const dateReceived = new Date(strYear, strMonth, strDay, strHour, strMin, strSec);
+	const isUTC = icsString.substring(15, 16) === 'Z';
 
-	return convertDateToLocal(dateReceived, timezone);
+	const date = new Date(strYear, strMonth, strDay, strHour, strMin, strSec);
+
+	return isUTC
+		? new Date(
+				Date.UTC(
+					date.getUTCFullYear(),
+					date.getUTCMonth(),
+					date.getUTCDate(),
+					date.getUTCHours(),
+					date.getUTCMinutes(),
+					date.getUTCSeconds()
+				)
+			).toUTCString()
+		: date.toString();
 };
 
 const dateTimeFormat = ({

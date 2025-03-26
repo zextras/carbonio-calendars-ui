@@ -5,7 +5,6 @@
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { soapFetch } from '@zextras/carbonio-shell-ui';
-import moment from 'moment';
 
 import {
 	findAttachments,
@@ -13,7 +12,7 @@ import {
 } from '../../normalizations/normalizations-utils';
 import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-soap-message-from-editor';
 import { Editor } from '../../types/editor';
-import { convertDateToLocal } from '../../utils/dates';
+import { convertDateToTimezone } from '../../utils/dates';
 import { getInstanceExceptionId } from '../../utils/event';
 
 export type ModifyAppointmentReturnType = { res: { calItemId: string; echo: any }; editor: Editor };
@@ -31,7 +30,7 @@ export const modifyAppointment = createAsyncThunk<
 				const exceptId =
 					editor?.exceptId ??
 					getInstanceExceptionId({
-						start: convertDateToLocal(new Date(editor.originalStart), editor.timezone),
+						start: convertDateToTimezone(new Date(editor.originalStart), editor.timezone),
 						allDay: editor.allDay,
 						tz: editor.timezone
 					});

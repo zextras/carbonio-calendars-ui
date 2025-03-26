@@ -14,7 +14,7 @@ import {
 } from '../../soap/cancel-appointment-request';
 import { Invite } from '../../types/store/invite';
 import { AppointmentsSlice } from '../../types/store/store';
-import { formatAppointmentRange, parseDateFromICS } from '../../utils/dates';
+import { convertDateToTimezone, formatAppointmentRange, parseDateFromICS } from '../../utils/dates';
 import { InstanceExceptionId } from '../../utils/event';
 import type { RootState } from '../redux';
 
@@ -44,14 +44,23 @@ export const buildMessagePart = ({
 	const startAsString = inst?.d ?? fullInvite.start.d;
 	const endAsString = inst?.d ?? fullInvite.end.d;
 
-	const parsedStart = parseDateFromICS(startAsString, inst?.tz ?? fullInvite?.end?.tz).valueOf();
-	const parsedEnd = parseDateFromICS(endAsString, inst?.tz ?? fullInvite?.end?.tz).valueOf();
+	const parsedStart = convertDateToTimezone(
+		new Date(parseDateFromICS(startAsString)),
+		inst?.tz ?? fullInvite?.end?.tz
+	);
+	const parsedEnd = convertDateToTimezone(
+		new Date(parseDateFromICS(endAsString)),
+		inst?.tz ?? fullInvite?.end?.tz
+	);
 
-	const dur = (fullInvite?.end?.u ?? parsedEnd) - (fullInvite?.start?.u ?? parsedStart);
+	const dur =
+		(fullInvite?.end?.u ?? parsedEnd.getTime()) - (fullInvite?.start?.u ?? parsedStart.getTime());
 
-	const startToFormat = startAsString ? parsedStart : (fullInvite.start.u ?? 0);
+	const startToFormat = startAsString ? parsedStart.getTime() : (fullInvite.start.u ?? 0);
 	const endToFormat =
-		endAsString && inst?.d ? parsedEnd + dur : (parsedEnd ?? fullInvite.end.u ?? 0);
+		endAsString && inst?.d
+			? parsedEnd.getTime() + dur
+			: (parsedEnd.getTime() ?? fullInvite.end.u ?? 0);
 
 	const date = formatAppointmentRange({
 		start: startToFormat,
