@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Padding, Row } from '@zextras/carbonio-design-system';
 import moment from 'moment';
@@ -27,7 +27,6 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
 	const dispatch = useAppDispatch();
 
-	const [isConvertedToTimezone, setIsConvertedToTimezone] = useState(false);
 	const onChange = useCallback(
 		({ start: newStartValue, end: newEndValue }: { start: number; end: number }) => {
 			const dateGmtTimeFormat = new Intl.DateTimeFormat('en-US', {
