@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Padding, Row } from '@zextras/carbonio-design-system';
 import moment from 'moment';
@@ -27,32 +27,52 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 	const diff = useMemo(() => moment(end).diff(moment(start)), [end, start]);
 	const dispatch = useAppDispatch();
 
+	const [isConvertedToTimezone, setIsConvertedToTimezone] = useState(false);
 	const onChange = useCallback(
 		({ start: newStartValue, end: newEndValue }: { start: number; end: number }) => {
-			dispatch(editEditorDate({ id: editorId, start: newStartValue, end: newEndValue }));
+			const dateGmtTimeFormat = new Intl.DateTimeFormat('en-US', {
+				timeZone: timezone,
+				timeZoneName: 'longOffset'
+			});
+			const formatParts = dateGmtTimeFormat.formatToParts(start);
+			const timezoneGmt = formatParts.find((part) => part.type === 'timeZoneName')?.value;
+
+			const startDate = new Date(newStartValue ?? 0)
+				.toString()
+				.split('GMT')[0]
+				.concat(` ${timezoneGmt}`);
+			const endDate = new Date(newEndValue ?? 0)
+				.toString()
+				.split('GMT')[0]
+				.concat(` ${timezoneGmt}`);
+			const startinLocal = new Date(startDate).toLocaleString('en-US');
+			const endinLocal = new Date(endDate ?? 0).toLocaleString('en-US');
+			const anotherStartValue = new Date(startinLocal).getTime();
+			const anotherEndValue = new Date(endinLocal).getTime();
+			dispatch(editEditorDate({ id: editorId, start: anotherStartValue, end: anotherEndValue }));
 		},
-		[dispatch, editorId]
+		[dispatch, editorId, start, timezone]
 	);
-	/*
-	const changeTimezone = useCallback(
-		(date = 0) => {
-			const currentDate = new Date(date);
-			const dateInTimezone = new Date(
-				currentDate.toLocaleString('en-US', {
+
+	const startValue = useMemo(
+		() =>
+			new Date(
+				new Date(start ?? 0).toLocaleString('en-US', {
 					timeZone: timezone
 				})
-			);
-			console.log('@@ ', currentDate.getTime(), dateInTimezone.getTime());
-			return dateInTimezone;
-		},
-		[timezone]
+			),
+		[start, timezone]
 	);
 
-	const startValue = useMemo(() => changeTimezone(start), [changeTimezone, start]);
-	const endValue = useMemo(() => changeTimezone(end), [changeTimezone, end]); */
-
-	const startValue = useMemo(() => new Date(start ?? 0), [start]);
-	const endValue = useMemo(() => new Date(end ?? 0), [end]);
+	const endValue = useMemo(
+		() =>
+			new Date(
+				new Date(end ?? 0).toLocaleString('en-US', {
+					timeZone: timezone
+				})
+			),
+		[end, timezone]
+	);
 
 	return startValue && endValue ? (
 		<>

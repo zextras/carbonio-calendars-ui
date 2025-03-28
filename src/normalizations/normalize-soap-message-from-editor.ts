@@ -51,13 +51,17 @@ const setResourceDate = ({
 			d: moment(time).startOf('day').format('YYYYMMDD')
 		};
 	}
+	const startInLocal = new Date(time ?? 0).toLocaleString('en-US', {
+		timeZone: timezone
+	});
+
 	return timezone
 		? {
-				d: moment(time).format('YYYYMMDD[T]HHmmss'),
+				d: moment(startInLocal).format('YYYYMMDD[T]HHmmss'),
 				tz: timezone
 			}
 		: {
-				d: moment(time).utc().format('YYYYMMDD[T]HHmmss[Z]')
+				d: moment(startInLocal).utc().format('YYYYMMDD[T]HHmmss[Z]')
 			};
 };
 

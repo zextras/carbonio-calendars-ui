@@ -131,50 +131,28 @@ const setEditorDate = ({
 			const end = invite?.end?.u ?? moment(invite?.end?.d).valueOf();
 
 			const currentStartDate = new Date(start);
-			const currentStartDateInTimezone = new Date(
-				currentStartDate.toLocaleString('en-US', {
-					timeZone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
-				})
-			);
-
 			const currentEndDate = new Date(end);
-			const currentEndDateInTimezone = new Date(
-				currentEndDate.toLocaleString('en-US', {
-					timeZone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
-				})
-			);
 
 			return {
 				start: event?.allDay
-					? moment(currentStartDateInTimezone)?.startOf('date').valueOf()
-					: currentStartDateInTimezone.getTime(),
+					? moment(currentStartDate)?.startOf('date').valueOf()
+					: currentStartDate.getTime(),
 				end: event?.allDay
-					? moment(currentEndDateInTimezone)?.endOf('date').valueOf()
-					: currentEndDateInTimezone.getTime()
+					? moment(currentEndDate)?.endOf('date').valueOf()
+					: currentEndDate.getTime()
 			};
 		}
 
 		const currentStartDate = new Date(moment(event?.start).valueOf());
-		const currentStartDateInTimezone = new Date(
-			currentStartDate.toLocaleString('en-US', {
-				timeZone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
-			})
-		);
-
 		const currentEndDate = new Date(moment(event?.end).valueOf());
-		const currentEndDateInTimezone = new Date(
-			currentEndDate.toLocaleString('en-US', {
-				timeZone: invite?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
-			})
-		);
 
 		return {
 			start: event?.allDay
-				? moment(currentStartDateInTimezone)?.startOf('date').valueOf()
-				: moment(currentStartDateInTimezone).valueOf(),
+				? moment(currentStartDate)?.startOf('date').valueOf()
+				: moment(currentStartDate).valueOf(),
 			end: event?.allDay
-				? moment(currentEndDateInTimezone)?.endOf('date').valueOf()
-				: moment(currentEndDateInTimezone).valueOf()
+				? moment(currentEndDate)?.endOf('date').valueOf()
+				: moment(currentEndDate).valueOf()
 		};
 	}
 	return {
