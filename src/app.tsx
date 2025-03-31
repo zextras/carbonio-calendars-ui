@@ -11,7 +11,6 @@ import type * as SearchUI from '@zextras/carbonio-search-ui';
 import {
 	addRoute,
 	addSettingsView,
-	ACTION_TYPES,
 	addBoardView,
 	registerActions,
 	registerComponents,
@@ -198,7 +197,7 @@ const AppRegistrations = (): null => {
 		registerActions<NewAction>({
 			action: () => newAction,
 			id: 'new-appointment',
-			type: ACTION_TYPES.NEW
+			type: 'new'
 		});
 		registerComponents({
 			id: 'invites-reply',
