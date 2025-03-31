@@ -18,6 +18,7 @@ import {
 	selectEditorTimezone
 } from '../../../store/selectors/editor';
 import { editEditorDate } from '../../../store/slices/editor-slice';
+import { applyTimezoneToLocalDate } from '../../../utils/dates';
 
 export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
@@ -29,30 +30,34 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 
 	const onChange = useCallback(
 		({ start: newStartValue, end: newEndValue }: { start: number; end: number }) => {
-			dispatch(editEditorDate({ id: editorId, start: newStartValue, end: newEndValue }));
+			const startDate = applyTimezoneToLocalDate(new Date(newStartValue ?? 0), timezone);
+			const endDate = applyTimezoneToLocalDate(new Date(newEndValue ?? 0), timezone);
+			dispatch(
+				editEditorDate({ id: editorId, start: startDate.getTime(), end: endDate.getTime() })
+			);
 		},
-		[dispatch, editorId]
+		[dispatch, editorId, timezone]
 	);
-	/*
-	const changeTimezone = useCallback(
-		(date = 0) => {
-			const currentDate = new Date(date);
-			const dateInTimezone = new Date(
-				currentDate.toLocaleString('en-US', {
+
+	const startValue = useMemo(
+		() =>
+			new Date(
+				new Date(start ?? 0).toLocaleString('en-US', {
 					timeZone: timezone
 				})
-			);
-			console.log('@@ ', currentDate.getTime(), dateInTimezone.getTime());
-			return dateInTimezone;
-		},
-		[timezone]
+			),
+		[start, timezone]
 	);
 
-	const startValue = useMemo(() => changeTimezone(start), [changeTimezone, start]);
-	const endValue = useMemo(() => changeTimezone(end), [changeTimezone, end]); */
-
-	const startValue = useMemo(() => new Date(start), [start]);
-	const endValue = useMemo(() => new Date(end), [end]);
+	const endValue = useMemo(
+		() =>
+			new Date(
+				new Date(end ?? 0).toLocaleString('en-US', {
+					timeZone: timezone
+				})
+			),
+		[end, timezone]
+	);
 
 	return startValue && endValue ? (
 		<>

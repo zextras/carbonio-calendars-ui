@@ -14,9 +14,12 @@ import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
 	selectEditorDisabled,
+	selectEditorEnd,
+	selectEditorStart,
 	selectEditorTimezone
 } from '../../../store/selectors/editor';
-import { editEditorTimezone } from '../../../store/slices/editor-slice';
+import { editEditorDate, editEditorTimezone } from '../../../store/slices/editor-slice';
+import { applyTimezoneToLocalDate } from '../../../utils/dates';
 
 type SelectValue =
 	| {
@@ -31,6 +34,8 @@ export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const dispatch = useAppDispatch();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const start = useAppSelector(selectEditorStart(editorId));
+	const end = useAppSelector(selectEditorEnd(editorId));
 
 	const { zimbraPrefUseTimeZoneListInCalendar } = usePrefs();
 	const timeZonesOptions = useMemo(() => TimeZonesOptions(), []);
@@ -55,10 +60,32 @@ export const EditorTimezone = ({ editorId }: { editorId: string }): ReactElement
 				if (newTimezone) {
 					setValue({ label: newTimezone, value: item });
 				}
+				const initialStart = new Date(start ?? 0);
+				const initialToOriginalStart = new Date(
+					initialStart.toLocaleString('en-US', {
+						timeZone: timezone
+					})
+				);
+				const originalToNewStartTimezone = applyTimezoneToLocalDate(initialToOriginalStart, item);
+
+				const initialEnd = new Date(end ?? 0);
+				const initialToOriginalEnd = new Date(
+					initialEnd.toLocaleString('en-US', {
+						timeZone: timezone
+					})
+				);
+				const originalToNewEndTimezone = applyTimezoneToLocalDate(initialToOriginalEnd, item);
+				dispatch(
+					editEditorDate({
+						id: editorId,
+						start: originalToNewStartTimezone.getTime(),
+						end: originalToNewEndTimezone.getTime()
+					})
+				);
 				dispatch(editEditorTimezone({ id: editorId, timezone: item }));
 			}
 		},
-		[dispatch, editorId, timeZonesOptions]
+		[dispatch, editorId, end, start, timeZonesOptions, timezone]
 	);
 
 	return zimbraPrefUseTimeZoneListInCalendar === 'TRUE' && !allDay ? (

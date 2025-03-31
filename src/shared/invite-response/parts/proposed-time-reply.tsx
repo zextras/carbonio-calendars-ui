@@ -8,7 +8,7 @@ import React, { FC, ReactElement, useCallback } from 'react';
 import { Container, Padding, Button, Divider, useSnackbar } from '@zextras/carbonio-design-system';
 import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { find, map } from 'lodash';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { useTranslation } from 'react-i18next';
 
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';

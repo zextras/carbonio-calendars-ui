@@ -114,7 +114,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 				size="large"
 				icon="Calendar2"
 				style={{
-					background: calendar?.color?.color ?? CALENDARS_STANDARD_COLORS?.[0]?.color
+					background: CALENDARS_STANDARD_COLORS?.[calendar?.color ?? 0]?.color
 				}}
 				label=""
 			/>
@@ -130,10 +130,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 					<Text overflow="ellipsis" weight="bold" size="small">
 						{title || t('label.subject', 'Subject')}
 					</Text>
-					<Icon
-						icon="Calendar2"
-						color={calendar?.color?.color ?? CALENDARS_STANDARD_COLORS?.[0]?.color}
-					/>
+					<Icon icon="Calendar2" color={CALENDARS_STANDARD_COLORS?.[calendar?.color ?? 0]?.color} />
 				</Container>
 				<TitleRow>
 					<>

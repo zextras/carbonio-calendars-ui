@@ -217,7 +217,7 @@ function generateHtmlBodyRequest(app: Editor): string {
 	const date = getTimeStrings({
 		start: app.start ?? 0,
 		end: app.end ?? 0,
-		options: { allDay: app.allDay, allDayLabel: 'allDay', locale: navigator.language }
+		options: { allDay: app.allDay, allDayLabel: 'allDay' }
 	});
 
 	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} have invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
@@ -242,7 +242,7 @@ function generateBodyRequest(app: Editor): string {
 	const date = getTimeStrings({
 		start: app.start ?? 0,
 		end: app.end ?? 0,
-		options: { allDay: app.allDay, allDayLabel: 'allDay', locale: navigator.language }
+		options: { allDay: app.allDay, allDayLabel: 'allDay' }
 	});
 
 	const virtualRoomMessage = app?.room?.label
