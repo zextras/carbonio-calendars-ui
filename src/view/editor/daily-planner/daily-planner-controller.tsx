@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Button, Row } from '@zextras/carbonio-design-system';
 import { isEmpty, uniqBy } from 'lodash';
@@ -24,6 +24,7 @@ import {
 	selectEditorOptionalAttendees,
 	selectEditorRecurrence,
 	selectEditorStart,
+	selectEditorTimezone,
 	selectSender
 } from '../../../store/selectors/editor';
 
@@ -36,8 +37,9 @@ export const EditorDailyPlannerController = ({
 }: {
 	editorId: string;
 }): React.JSX.Element => {
-	const startDate = useAppSelector(selectEditorStart(editorId)) ?? 0;
-	const endDate = useAppSelector(selectEditorEnd(editorId)) ?? 0;
+	const start = useAppSelector(selectEditorStart(editorId)) ?? 0;
+	const end = useAppSelector(selectEditorEnd(editorId)) ?? 0;
+	const timezone = useAppSelector(selectEditorTimezone(editorId));
 	const recur = useAppSelector(selectEditorRecurrence(editorId));
 	const sender = useAppSelector(selectSender(editorId));
 	const currentAppointmentUid = useAppSelector(selectEditor(editorId)).uid;
@@ -47,6 +49,26 @@ export const EditorDailyPlannerController = ({
 		fullName: equip.label
 	}));
 	const isSingleInstanceAppointment = isEmpty(recur);
+	const startDate = useMemo(
+		() =>
+			new Date(
+				new Date(start ?? 0).toLocaleString('en-US', {
+					timeZone: timezone
+				})
+			).getTime(),
+		[start, timezone]
+	);
+
+	const endDate = useMemo(
+		() =>
+			new Date(
+				new Date(end ?? 0).toLocaleString('en-US', {
+					timeZone: timezone
+				})
+			).getTime(),
+		[end, timezone]
+	);
+
 	const isWithinSameDay = getWithinSameDay(startDate ?? 0, endDate ?? 0);
 
 	const dailyPlannerEnabled = isSingleInstanceAppointment && isWithinSameDay;
