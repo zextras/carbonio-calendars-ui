@@ -21,7 +21,7 @@ type TimeStringsType = {
 		timeZone?: string;
 		allDay?: boolean;
 		allDayLabel?: string;
-		locale: string;
+		locale?: string;
 	};
 };
 
@@ -42,8 +42,14 @@ export const getTimeStrings = ({ start, end, options }: TimeStringsType): string
 		timeZoneName: 'longOffset'
 	} as const;
 
-	const dateTimeFormat = new Intl.DateTimeFormat(options.locale, rangeOptions);
-	const dateGmtTimeFormat = new Intl.DateTimeFormat(options.locale, gmtOptions);
+	const dateTimeFormat = new Intl.DateTimeFormat(
+		options.locale ?? navigator.language,
+		rangeOptions
+	);
+	const dateGmtTimeFormat = new Intl.DateTimeFormat(
+		options.locale ?? navigator.language,
+		gmtOptions
+	);
 
 	const formattedRange = dateTimeFormat.formatRange(start, end);
 	const formatParts = dateGmtTimeFormat.formatToParts(start);

@@ -7,6 +7,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TFunction } from 'i18next';
 import { compact, lowerCase } from 'lodash';
 
+import { getTimeStrings } from '../../hooks/use-get-date-range-converted-to-timezone';
 import {
 	CancelAppointmentRejectedType,
 	cancelAppointmentRequest,
@@ -14,7 +15,7 @@ import {
 } from '../../soap/cancel-appointment-request';
 import { Invite } from '../../types/store/invite';
 import { AppointmentsSlice } from '../../types/store/store';
-import { convertDateToTimezone, formatAppointmentRange, parseDateFromICS } from '../../utils/dates';
+import { applyTimezoneToLocalDate, parseDateFromICS } from '../../utils/dates';
 import { InstanceExceptionId } from '../../utils/event';
 import type { RootState } from '../redux';
 
@@ -44,11 +45,11 @@ export const buildMessagePart = ({
 	const startAsString = inst?.d ?? fullInvite.start.d;
 	const endAsString = inst?.d ?? fullInvite.end.d;
 
-	const parsedStart = convertDateToTimezone(
+	const parsedStart = applyTimezoneToLocalDate(
 		new Date(parseDateFromICS(startAsString)),
 		inst?.tz ?? fullInvite?.end?.tz
 	);
-	const parsedEnd = convertDateToTimezone(
+	const parsedEnd = applyTimezoneToLocalDate(
 		new Date(parseDateFromICS(endAsString)),
 		inst?.tz ?? fullInvite?.end?.tz
 	);
@@ -62,12 +63,14 @@ export const buildMessagePart = ({
 			? parsedEnd.getTime() + dur
 			: (parsedEnd.getTime() ?? fullInvite.end.u ?? 0);
 
-	const date = formatAppointmentRange({
+	const date = getTimeStrings({
 		start: startToFormat,
 		end: endToFormat,
-		allDay: fullInvite.allDay ?? false,
-		allDayLabel,
-		timezone: inst?.tz ?? fullInvite?.tz
+		options: {
+			allDay: fullInvite.allDay ?? false,
+			allDayLabel,
+			timeZone: inst?.tz ?? fullInvite?.tz
+		}
 	});
 	const instance =
 		!fullInvite.recurrenceRule || deleteSingleInstance

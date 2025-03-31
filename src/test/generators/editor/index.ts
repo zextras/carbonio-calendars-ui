@@ -55,13 +55,11 @@ const getDefaultEditor = ({
 		allDay: false,
 		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
-		originalStart: new Date().toString(),
-		originalEnd: new Date(
-			getEndTime({
-				start: new Date().getTime(),
-				duration: zimbraPrefCalendarDefaultApptDuration
-			})
-		).toString(),
+		originalStart: new Date().getTime(),
+		originalEnd: getEndTime({
+			start: new Date().getTime(),
+			duration: zimbraPrefCalendarDefaultApptDuration
+		}),
 		start: new Date().getTime(),
 		end: getEndTime({
 			start: new Date().getTime(),
@@ -160,13 +158,11 @@ const getEditor = ({
 		allDay: false,
 		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
-		originalStart: new Date().toString(),
-		originalEnd: new Date(
-			getEndTime({
-				start: new Date().getTime(),
-				duration: zimbraPrefCalendarDefaultApptDuration
-			})
-		).toString(),
+		originalStart: new Date().getTime(),
+		originalEnd: getEndTime({
+			start: new Date().getTime(),
+			duration: zimbraPrefCalendarDefaultApptDuration
+		}),
 		start: new Date().getTime(),
 		end: getEndTime({
 			start: new Date().getTime(),

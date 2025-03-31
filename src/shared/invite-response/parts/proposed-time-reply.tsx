@@ -8,6 +8,7 @@ import React, { FC, ReactElement, useCallback } from 'react';
 import { Container, Padding, Button, Divider, useSnackbar } from '@zextras/carbonio-design-system';
 import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
 import { find, map } from 'lodash';
+import moment from 'moment-timezone';
 import { useTranslation } from 'react-i18next';
 
 import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
@@ -20,7 +21,6 @@ import { modifyAppointment } from '../../../store/actions/new-modify-appointment
 import { useAppDispatch } from '../../../store/redux/hooks';
 import { updateEditor } from '../../../store/slices/editor-slice';
 import { ProposedTimeReplyArguments } from '../../../types/integrations';
-import { parseDateFromICS } from '../../../utils/dates';
 
 const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 	id,
@@ -66,22 +66,16 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 						const invite = normalizeInvite(res2?.payload.m[0]);
 						const appointment = normalizeFromGetAppointment(appointmentToNormalize);
 						const event = normalizeCalendarEvent({ appointment, invite, calendar });
-
-						const originalStart = parseDateFromICS(
-							appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d
-						);
-						const originalEnd = parseDateFromICS(
-							appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d
-						);
-
 						const editor = generateEditor({
 							event,
 							invite,
 							context: {
 								attendees: map(invite.attendees, (attendee) => ({ email: attendee.a })),
 								isInstance: !!ridZ,
-								originalStart: originalStart ?? start,
-								originalEnd: originalEnd ?? end,
+								originalStart:
+									moment(appointmentToNormalize?.inv?.[0]?.comp?.[0].s?.[0]?.d).valueOf() ?? start,
+								originalEnd:
+									moment(appointmentToNormalize?.inv?.[0]?.comp?.[0].e?.[0]?.d).valueOf() ?? end,
 								exceptId: msg?.invite?.[0]?.comp?.[0]?.exceptId,
 								start,
 								end,

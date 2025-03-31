@@ -18,6 +18,7 @@ import {
 	selectEditorTimezone
 } from '../../../store/selectors/editor';
 import { editEditorDate } from '../../../store/slices/editor-slice';
+import { applyTimezoneToLocalDate } from '../../../utils/dates';
 
 export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
@@ -29,28 +30,13 @@ export const EditorDatePicker = ({ editorId }: { editorId: string }): ReactEleme
 
 	const onChange = useCallback(
 		({ start: newStartValue, end: newEndValue }: { start: number; end: number }) => {
-			const dateGmtTimeFormat = new Intl.DateTimeFormat('en-US', {
-				timeZone: timezone,
-				timeZoneName: 'longOffset'
-			});
-			const formatParts = dateGmtTimeFormat.formatToParts(start);
-			const timezoneGmt = formatParts.find((part) => part.type === 'timeZoneName')?.value;
-
-			const startDate = new Date(newStartValue ?? 0)
-				.toString()
-				.split('GMT')[0]
-				.concat(` ${timezoneGmt}`);
-			const endDate = new Date(newEndValue ?? 0)
-				.toString()
-				.split('GMT')[0]
-				.concat(` ${timezoneGmt}`);
-			const startinLocal = new Date(startDate).toLocaleString('en-US');
-			const endinLocal = new Date(endDate ?? 0).toLocaleString('en-US');
-			const anotherStartValue = new Date(startinLocal).getTime();
-			const anotherEndValue = new Date(endinLocal).getTime();
-			dispatch(editEditorDate({ id: editorId, start: anotherStartValue, end: anotherEndValue }));
+			const startDate = applyTimezoneToLocalDate(new Date(newStartValue ?? 0), timezone);
+			const endDate = applyTimezoneToLocalDate(new Date(newEndValue ?? 0), timezone);
+			dispatch(
+				editEditorDate({ id: editorId, start: startDate.getTime(), end: endDate.getTime() })
+			);
 		},
-		[dispatch, editorId, start, timezone]
+		[dispatch, editorId, timezone]
 	);
 
 	const startValue = useMemo(
