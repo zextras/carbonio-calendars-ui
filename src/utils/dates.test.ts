@@ -5,13 +5,14 @@
  */
 import { applyTimezoneToLocalDate, parseDateFromICS, parseDateToICS } from './dates';
 
+beforeEach(() => {});
+
 describe('dates utils', () => {
 	describe('parseDateFromICS', () => {
 		test('if icsString has length > 8 it will also parse hours, minutes and seconds', () => {
+			jest.spyOn(window.navigator, 'language', 'get').mockReturnValue('de');
 			const result = parseDateFromICS('20241203T140342');
-			expect(result).toEqual(
-				'Tue Dec 03 2024 14:03:42 GMT+0100 (Ora standard dell’Europa centrale)'
-			);
+			expect(result).toEqual(expect.stringContaining('Tue Dec 03 2024 14:03:42 GMT+0100'));
 		});
 		test('if icsString has Z it will be converted in UTC date', () => {
 			const result = parseDateFromICS('20241203T140342Z');
@@ -19,16 +20,12 @@ describe('dates utils', () => {
 		});
 		test('if icsString has length < 8 it wont parse hours, minutes and seconds and value them as 0', () => {
 			const result = parseDateFromICS('20241203');
-			expect(result).toEqual(
-				'Tue Dec 03 2024 00:00:00 GMT+0100 (Ora standard dell’Europa centrale)'
-			);
+			expect(result).toEqual(expect.stringContaining('Tue Dec 03 2024 00:00:00 GMT+0100'));
 		});
 	});
 	describe('parseDateToICS', () => {
 		test('it will parse hours, minutes and seconds', () => {
-			const result = parseDateToICS(
-				'Tue Dec 03 2024 14:03:42 GMT+0100 (Ora standard dell’Europa centrale)'
-			);
+			const result = parseDateToICS('Tue Dec 03 2024 14:03:42 GMT+0100');
 			expect(result).toEqual('20241203T140342');
 		});
 		test('if date is UTC it will have Z', () => {
@@ -39,17 +36,17 @@ describe('dates utils', () => {
 	});
 	describe('applyTimezoneToLocalDate', () => {
 		test('if a timezone is provided it will convert the date according to the given timezone', () => {
-			const dateFromICS = 'Tue Dec 03 2024 14:03:42 GMT+0100 (Ora standard dell’Europa centrale)';
+			const dateFromICS = 'Tue Dec 03 2024 14:03:42 GMT+0100';
 			const convertedToTimezone = applyTimezoneToLocalDate(new Date(dateFromICS), 'Asia/Bangkok');
 			expect(convertedToTimezone.toString()).toEqual(
-				'Tue Dec 03 2024 08:03:42 GMT+0100 (Ora standard dell’Europa centrale)'
+				expect.stringContaining('Tue Dec 03 2024 08:03:42 GMT+0100')
 			);
 		});
 		test('if a timezone is not provided it will keep the date unchanged according to the local timezone', () => {
-			const dateFromICS = 'Tue Dec 03 2024 14:03:42 GMT+0100 (Ora standard dell’Europa centrale)';
+			const dateFromICS = 'Tue Dec 03 2024 14:03:42 GMT+0100';
 			const convertedToTimezone = applyTimezoneToLocalDate(new Date(dateFromICS));
 			expect(convertedToTimezone.toString()).toEqual(
-				'Tue Dec 03 2024 14:03:42 GMT+0100 (Ora standard dell’Europa centrale)'
+				expect.stringContaining('Tue Dec 03 2024 14:03:42 GMT+0100')
 			);
 		});
 	});
