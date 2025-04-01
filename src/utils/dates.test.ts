@@ -5,8 +5,6 @@
  */
 import { applyTimezoneToLocalDate, parseDateFromICS, parseDateToICS } from './dates';
 
-beforeEach(() => {});
-
 describe('dates utils', () => {
 	describe('parseDateFromICS', () => {
 		test('if icsString has length > 8 it will also parse hours, minutes and seconds', () => {
