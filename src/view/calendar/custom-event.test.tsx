@@ -11,6 +11,7 @@ import { act, screen } from '@testing-library/react';
 import { MemoCustomEvent } from './custom-event';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
+import { useAppStatusStore } from '../../store/zustand/store';
 import mockedData from '../../test/generators';
 
 jest.setTimeout(10000);
@@ -52,7 +53,7 @@ describe('custom-event', () => {
 		});
 		expect(screen.getByTestId('icon: Repeat')).toBeVisible();
 	});
-	test('single click over the event will open the summary view', async () => {
+	test('single click over the event will save the anchor element to the store', async () => {
 		const event = mockedData.getEvent();
 		const invite = mockedData.getInvite({ event });
 		const mockedInviteSlice = {
@@ -74,8 +75,6 @@ describe('custom-event', () => {
 		act(() => {
 			jest.advanceTimersByTime(250);
 		});
-
-		// this means the summary view is open
-		expect(screen.getByRole('button', { name: /instance/i })).toBeInTheDocument();
+		expect(useAppStatusStore.getState().summaryViewRef.current).toBeInTheDocument();
 	});
 });
