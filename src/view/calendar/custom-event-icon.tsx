@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement } from 'react';
+import React, { Dispatch, ReactElement, SetStateAction } from 'react';
 
 import { Icon, Row, Tooltip } from '@zextras/carbonio-design-system';
 import styled from 'styled-components';
@@ -17,16 +17,24 @@ export const CustomEventIcon = ({
 	isIconVisible,
 	tooltipLabel,
 	iconColor,
-	iconName
+	iconName,
+	disableOuterTooltip
 }: {
 	isIconVisible: boolean;
 	tooltipLabel: string;
 	iconColor?: string;
 	iconName: string;
+	disableOuterTooltip: Dispatch<SetStateAction<boolean>>;
 }): ReactElement | null =>
 	isIconVisible ? (
 		<Tooltip label={tooltipLabel} placement="top">
-			<Row padding={{ right: 'extrasmall' }}>
+			<Row
+				padding={{ right: 'extrasmall' }}
+				onMouseEnter={(): void => disableOuterTooltip(true)}
+				onMouseLeave={(): void => disableOuterTooltip(false)}
+				onFocus={(): void => disableOuterTooltip(true)}
+				onBlur={(): void => disableOuterTooltip(false)}
+			>
 				<AlignedIcon color={iconColor} icon={iconName} style={{ minWidth: '1rem' }} />
 			</Row>
 		</Tooltip>

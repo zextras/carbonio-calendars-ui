@@ -3,7 +3,14 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, {
+	Dispatch,
+	ReactElement,
+	SetStateAction,
+	useCallback,
+	useMemo,
+	useState
+} from 'react';
 
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { includes, reduce } from 'lodash';
@@ -19,7 +26,13 @@ export type TagItems = Tag & {
 	label: string;
 };
 
-export const TagIconComponent = ({ event }: { event: EventType }): React.JSX.Element => {
+export const TagIconComponent = ({
+	event,
+	disableOuterTooltip
+}: {
+	event: EventType;
+	disableOuterTooltip: Dispatch<SetStateAction<boolean>>;
+}): React.JSX.Element => {
 	const [showDropdown, setShowDropdown] = useState(false);
 	const onIconClick = useCallback((ev: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
 		ev.stopPropagation();
@@ -108,7 +121,16 @@ export const TagIconComponent = ({ event }: { event: EventType }): React.JSX.Ele
 			{showTagIcon && (
 				<Tooltip placement="top" label={tagName}>
 					<Padding left="extrasmall">
-						<Icon size="medium" data-testid="TagSingleIcon" icon={tagIcon} color={tagIconColor} />
+						<Icon
+							size="medium"
+							data-testid="TagSingleIcon"
+							icon={tagIcon}
+							color={tagIconColor}
+							onMouseEnter={(): void => disableOuterTooltip(true)}
+							onMouseLeave={(): void => disableOuterTooltip(false)}
+							onFocus={(): void => disableOuterTooltip(true)}
+							onBlur={(): void => disableOuterTooltip(false)}
+						/>
 					</Padding>
 				</Tooltip>
 			)}
@@ -121,6 +143,10 @@ export const TagIconComponent = ({ event }: { event: EventType }): React.JSX.Ele
 							icon={tagIcon}
 							onClick={onIconClick}
 							color={tagIconColor}
+							onMouseEnter={(): void => disableOuterTooltip(true)}
+							onMouseLeave={(): void => disableOuterTooltip(false)}
+							onFocus={(): void => disableOuterTooltip(true)}
+							onBlur={(): void => disableOuterTooltip(false)}
 						/>
 					</Padding>
 				</Dropdown>
