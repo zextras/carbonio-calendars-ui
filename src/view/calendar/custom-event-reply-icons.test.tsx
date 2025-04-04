@@ -16,7 +16,6 @@ describe('CustomEventReplyIcons', () => {
 		setupTest(
 			<CustomEventReplyIcons
 				participationStatus={PARTICIPATION_STATUS.NEED_ACTION}
-				setIsOuterTooltipDisabled={jest.fn()}
 				iAmAttendee={false}
 			/>
 		);
@@ -33,11 +32,7 @@ describe('CustomEventReplyIcons', () => {
 		'it should render a different icon depending on participationStatusValue',
 		({ participationStatusValue, icon }) => {
 			setupTest(
-				<CustomEventReplyIcons
-					participationStatus={participationStatusValue}
-					setIsOuterTooltipDisabled={jest.fn()}
-					iAmAttendee
-				/>
+				<CustomEventReplyIcons participationStatus={participationStatusValue} iAmAttendee />
 			);
 
 			expect(screen.getByTestId(`icon: ${icon}`)).toBeVisible();

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import {
 	Container,
@@ -95,7 +95,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const anchorRef = useRef<HTMLDivElement | null>(null);
 	const { action } = useParams<{ action: string }>();
 	const [t] = useTranslation();
-	const [isOuterTooltipDisabled, setIsOuterTooltipDisabled] = useState(false);
 	const recurrentLabel = t('label.recurrent', 'Recurrent appointment');
 	const { replaceHistory } = useHistoryNavigation();
 
@@ -184,16 +183,12 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 
 	const iAmAttendee = !event?.resource?.calendar?.owner && !event?.resource?.iAmOrganizer;
 	return (
-		<Tooltip
-			label={title}
-			placement="top"
-			disabled={event.resource.class === 'PRI' || isOuterTooltipDisabled}
+		<CustomEventFreeBusyStatus
+			color={event.resource.calendar.color.color}
+			background={event.resource.calendar.color.background}
+			freeBusyActual={event.resource.freeBusyActual}
 		>
-			<CustomEventFreeBusyStatus
-				color={event.resource.calendar.color.color}
-				background={event.resource.calendar.color.background}
-				freeBusyActual={event.resource.freeBusyActual}
-			>
+			<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
 				<Container
 					height="100%"
 					style={{
@@ -236,7 +231,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										iconColor={'currentColor'}
 										isIconVisible={event.resource.isRecurrent}
 										tooltipLabel={recurrentLabel}
-										disableOuterTooltip={setIsOuterTooltipDisabled}
 									/>
 								)}
 								{event.resource.inviteNeverSent && (
@@ -248,7 +242,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										isIconVisible={event.resource.inviteNeverSent}
 										iconColor={'error'}
 										iconName={'AlertCircleOutline'}
-										disableOuterTooltip={setIsOuterTooltipDisabled}
 									/>
 								)}
 								{event.resource.class === 'PRI' && (
@@ -257,13 +250,11 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										isIconVisible={event.resource.class === 'PRI'}
 										iconColor={'currentColor'}
 										iconName={'Lock'}
-										disableOuterTooltip={setIsOuterTooltipDisabled}
 									/>
 								)}
 								<CustomEventReplyIcons
 									iAmAttendee={iAmAttendee}
 									participationStatus={event.resource.participationStatus}
-									setIsOuterTooltipDisabled={setIsOuterTooltipDisabled}
 								/>
 								<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
 									<Row crossAlignment="flex-start" mainAlignment="space-between" takeAvailableSpace>
@@ -288,7 +279,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 																iconColor={'currentColor'}
 																isIconVisible={event.resource.isRecurrent}
 																tooltipLabel={recurrentLabel}
-																disableOuterTooltip={setIsOuterTooltipDisabled}
 															/>
 														)}
 														<CustomEventTitle title={title} />
@@ -298,7 +288,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										)}
 										{event.allDay && <CustomEventTitle title={title} overflow={textOverflow} />}
 									</Row>
-									<TagIconComponent event={event} disableOuterTooltip={setIsOuterTooltipDisabled} />
+									<TagIconComponent event={event} />
 								</Row>
 							</Container>
 							{eventDiff >= 30 && event.resource.class !== 'PRI' && !event.allDay && (
@@ -311,7 +301,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												iconColor={'currentColor'}
 												isIconVisible={event.resource.isRecurrent}
 												tooltipLabel={recurrentLabel}
-												disableOuterTooltip={setIsOuterTooltipDisabled}
 											/>
 										)}
 										<CustomEventTitle title={title} />
@@ -321,8 +310,8 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 						</Container>
 					</Dropdown>
 				</Container>
-			</CustomEventFreeBusyStatus>
-		</Tooltip>
+			</Tooltip>
+		</CustomEventFreeBusyStatus>
 	);
 };
 
