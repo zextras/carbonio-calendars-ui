@@ -3,38 +3,38 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
+import {
+	Text,
+	Row,
+	Checkbox,
+	FormSection,
+	FormSubSection,
+	Container
+} from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
+import { iCalSubSection } from './sub-sections';
+
 export default function AppleIcalSettings({ settingsObj, updateSettings }) {
+	const sectionTitleAppleCal = useMemo(() => iCalSubSection(), []);
 	return (
-		<Container
-			padding={{ all: 'medium' }}
-			background="gray6"
-			mainAlignment="flex-start"
-			crossAlignment="baseline"
-		>
-			<Container
-				orientation="horizontal"
-				crossAlignment="baseline"
-				mainAlignment="flex-start"
-				padding={{ all: 'small' }}
-			>
-				<Row padding={{ right: 'small' }}>
-					<Text weight="bold">Note:</Text>
-				</Row>
-				<Row>
-					<Text overflow="break-word">
-						{t(
-							'settings.ical_note',
-							"Apple iCal can be configured to access your Calendars using the CalDAV protocol.When this preference is enabled,shared calendars are displayed in the ical account's Delegation tab so you can delegate access to your Calendars to other users."
-						)}
-					</Text>
-				</Row>
-			</Container>
-			<Row padding="small">
+		<FormSection id={sectionTitleAppleCal.id} label={sectionTitleAppleCal.label}>
+			<FormSubSection>
+				<Container orientation="horizontal" crossAlignment="baseline" mainAlignment="flex-start">
+					<Row padding={{ right: 'small' }}>
+						<Text weight="bold">Note:</Text>
+					</Row>
+					<Row>
+						<Text overflow="break-word">
+							{t(
+								'settings.ical_note',
+								"Apple iCal can be configured to access your Calendars using the CalDAV protocol.When this preference is enabled,shared calendars are displayed in the ical account's Delegation tab so you can delegate access to your Calendars to other users."
+							)}
+						</Text>
+					</Row>
+				</Container>
 				<Checkbox
 					value={settingsObj.zimbraPrefAppleIcalDelegationEnabled === 'TRUE'}
 					label={t('label.enable_dlgtn_for_ical', 'Enable delegation for Apple iCal CalDAV Client')}
@@ -48,7 +48,7 @@ export default function AppleIcalSettings({ settingsObj, updateSettings }) {
 						})
 					}
 				/>
-			</Row>
-		</Container>
+			</FormSubSection>
+		</FormSection>
 	);
 }

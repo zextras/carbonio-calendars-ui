@@ -3,22 +3,22 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import {
-	Container,
-	Padding,
 	Text,
 	Button,
 	Row,
-	Divider,
-	Checkbox
+	Checkbox,
+	FormSubSection,
+	FormSection
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 
 import TimePicker from './components/time-picker';
 import { getWeekDay } from './components/utils';
+import { workWeekSubSection } from './sub-sections';
 
 export default function WorkWeekSettings({
 	workingSchedule,
@@ -28,37 +28,27 @@ export default function WorkWeekSettings({
 	calculateRegularSchedule,
 	toggleModal
 }) {
-	return (
-		<Container padding={{ all: 'medium' }} mainAlignment="flex-start" crossAlignment="baseline">
-			{map(workingSchedule, (s, index) => (
-				<Row key={`week_day_${index}`}>
-					<Checkbox
-						value={s.working}
-						onClick={handelDaysClicked(s.day)}
-						label={getWeekDay(`${Number(s.day) - 1}`)}
-					/>
-				</Row>
-			))}
+	const sectionTitleWorkWeek = useMemo(() => workWeekSubSection(), []);
 
-			<Row padding={{ all: 'small' }}>
-				<Text size="large" weight="bold">
-					{t('label.work_hour', 'Work hour')}
-				</Text>
-			</Row>
-			<Row>
+	return (
+		<FormSection id={sectionTitleWorkWeek.id} label={sectionTitleWorkWeek.label}>
+			<FormSubSection>
+				{map(workingSchedule, (s, index) => (
+					<Row key={`week_day_${index}`}>
+						<Checkbox
+							value={s.working}
+							onClick={handelDaysClicked(s.day)}
+							label={getWeekDay(`${Number(s.day) - 1}`)}
+						/>
+					</Row>
+				))}
+			</FormSubSection>
+			<FormSubSection label={t('label.work_hour', 'Work hour')}>
 				<Checkbox
 					value={isRegular}
 					onClick={() => setIsRegular(!isRegular)}
 					label={t('label.regular', 'Regular')}
 				/>
-			</Row>
-			<Row
-				padding={{ all: 'small' }}
-				mainAlignment="space-between"
-				crossAlignment="baseline"
-				orientation="horizontal"
-				width="100%"
-			>
 				<TimePicker
 					start={workingSchedule[1]?.start}
 					disabled={!isRegular}
@@ -66,16 +56,11 @@ export default function WorkWeekSettings({
 					onChange={calculateRegularSchedule}
 					day="1"
 				/>
-			</Row>
-
-			<Row>
 				<Checkbox
 					value={!isRegular}
 					onClick={() => setIsRegular(!isRegular)}
 					label={t('label.custom', 'Custom')}
 				/>
-			</Row>
-			<Row width="100%" padding={{ all: 'small' }}>
 				<Button
 					width="fill"
 					type="outlined"
@@ -84,20 +69,20 @@ export default function WorkWeekSettings({
 					disabled={isRegular}
 					onClick={toggleModal}
 				/>
-			</Row>
-			<Row orientation="vertical" mainAlignment="flex-start" crossAlignment="flex-start">
-				<Text>{t('label.timezone_pref_msg', 'The timings follow your timezone preferences.')}</Text>
-				<Text>
-					<i>
-						{t(
-							'label.your_pref_timezone_msg',
-							'Your preferred timezone is: GMT +01:00 Amsterdam, Berlin, Bern, Rome, Stockholm,Vienna.'
-						)}
-					</i>
-				</Text>
-			</Row>
-			<Padding vertical="small" />
-			<Divider />
-		</Container>
+				<Row orientation="vertical" mainAlignment="flex-start" crossAlignment="flex-start">
+					<Text>
+						{t('label.timezone_pref_msg', 'The timings follow your timezone preferences.')}
+					</Text>
+					<Text>
+						<i>
+							{t(
+								'label.your_pref_timezone_msg',
+								'Your preferred timezone is: GMT +01:00 Amsterdam, Berlin, Bern, Rome, Stockholm,Vienna.'
+							)}
+						</i>
+					</Text>
+				</Row>
+			</FormSubSection>
+		</FormSection>
 	);
 }

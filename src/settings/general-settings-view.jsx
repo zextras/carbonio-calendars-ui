@@ -6,13 +6,12 @@
 import React, { useMemo } from 'react';
 
 import {
-	Container,
-	Padding,
 	Text,
-	Row,
 	Checkbox,
 	Select,
-	Input
+	Input,
+	FormSubSection,
+	FormSection
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
@@ -24,6 +23,7 @@ import {
 	SpanTimeOptions,
 	findLabel
 } from './components/utils';
+import { generalSubSection } from './sub-sections';
 
 export default function GeneralSettings({
 	settingsObj,
@@ -31,6 +31,7 @@ export default function GeneralSettings({
 	isEmailNotValid,
 	setisEmailNotValid
 }) {
+	const sectionTitleGeneral = useMemo(() => generalSubSection(), []);
 	const showReminderOptions = useMemo(() => ShowReminderOptions(), []);
 	const defaultViewOptions = useMemo(() => DefaultViewOptions(), []);
 	const startWeekOfOptions = useMemo(() => StartWeekOfOptions(), []);
@@ -41,14 +42,8 @@ export default function GeneralSettings({
 	const defaultApptVisibiltyOptions = useMemo(() => DefaultApptVisibiltyOptions(), []);
 
 	return (
-		<Container padding={{ all: 'small' }} mainAlignment="flex-start" crossAlignment="baseline">
-			<Row
-				padding={{ all: 'small' }}
-				mainAlignment="space-between"
-				crossAlignment="baseline"
-				orientation="horizontal"
-				width="100%"
-			>
+		<FormSection id={sectionTitleGeneral.id} label={sectionTitleGeneral.label}>
+			<FormSubSection>
 				<Select
 					label={t('label.default_view', 'Default view')}
 					items={defaultViewOptions}
@@ -60,14 +55,6 @@ export default function GeneralSettings({
 						value: settingsObj.zimbraPrefCalendarInitialView
 					}}
 				/>
-			</Row>
-			<Row
-				padding={{ all: 'small' }}
-				mainAlignment="space-between"
-				crossAlignment="baseline"
-				orientation="horizontal"
-				width="100%"
-			>
 				<Select
 					label={t('label.start_week_on', 'Start week on')}
 					items={startWeekOfOptions}
@@ -81,14 +68,6 @@ export default function GeneralSettings({
 						value: settingsObj.zimbraPrefCalendarFirstDayOfWeek
 					}}
 				/>
-			</Row>
-			<Row
-				padding={{ all: 'small' }}
-				mainAlignment="space-between"
-				crossAlignment="baseline"
-				orientation="horizontal"
-				width="100%"
-			>
 				<Select
 					label={t('label.default_appt_vsblty', 'Default appointment visibility')}
 					items={defaultApptVisibiltyOptions}
@@ -105,14 +84,6 @@ export default function GeneralSettings({
 						value: settingsObj.zimbraPrefCalendarApptVisibility
 					}}
 				/>
-			</Row>
-
-			<Row
-				padding={{ all: 'small' }}
-				orientation="vertical"
-				mainAlignment="flex-start"
-				crossAlignment="baseline"
-			>
 				<Checkbox
 					value={settingsObj.zimbraPrefCalendarAutoAddInvites === 'TRUE'}
 					label={t(
@@ -141,18 +112,8 @@ export default function GeneralSettings({
 					}
 					label={t('label.show_declined_meetings', 'Show declined meetings')}
 				/>
-			</Row>
-
-			<Row
-				padding={{ horizontal: 'small', top: 'small' }}
-				orientation="vertical"
-				mainAlignment="flex-start"
-				crossAlignment="baseline"
-			>
-				<Text size="large" weight="bold">
-					{t('settings.label.invitation_response', 'Invitation Response')}
-				</Text>
-				<Padding top="small" />
+			</FormSubSection>
+			<FormSubSection label={t('settings.label.invitation_response', 'Invitation Response')}>
 				<Checkbox
 					value={settingsObj.zimbraPrefDeleteInviteOnReply === 'TRUE'}
 					onClick={() =>
@@ -165,13 +126,8 @@ export default function GeneralSettings({
 					}
 					label={t('settings.label.delete_invt_on_rply', 'Delete invite on reply')}
 				/>
-			</Row>
-			<Row padding={{ horizontal: 'small', top: 'small' }} orientation="vertical">
-				<Text size="large" weight="bold">
-					{t('settings.label.forward_invites', 'Forward Invites')}
-				</Text>
-			</Row>
-			<Row width="100%" mainAlignment="flex-start" padding={{ horizontal: 'small' }}>
+			</FormSubSection>
+			<FormSubSection label={t('settings.label.forward_invites', 'Forward Invites')}>
 				<Input
 					hasError={isEmailNotValid}
 					label={t('settings.label.enter_email', 'Enter e-mail address')}
@@ -186,26 +142,13 @@ export default function GeneralSettings({
 					}}
 					value={settingsObj.zimbraPrefCalendarForwardInvitesTo || ''}
 				/>
-				<Padding all="small">
-					{isEmailNotValid && (
-						<Text size="small" color="error">
-							{t('settings.invalid_email', 'Not a valid e-mail')}
-						</Text>
-					)}
-				</Padding>
-			</Row>
-			<Row padding={{ all: 'small' }}>
-				<Text size="large" weight="bold">
-					{t('settings.label.show_reminders', 'Show Reminders')}
-				</Text>
-			</Row>
-			<Row
-				padding={{ horizontal: 'small' }}
-				mainAlignment="space-between"
-				crossAlignment="baseline"
-				orientation="horizontal"
-				width="100%"
-			>
+				{isEmailNotValid && (
+					<Text size="small" color="error">
+						{t('settings.invalid_email', 'Not a valid e-mail')}
+					</Text>
+				)}
+			</FormSubSection>
+			<FormSubSection label={t('settings.label.show_reminders', 'Show Reminders')}>
 				<Select
 					label={t('settings.label.span_time', 'Span time')}
 					items={showReminderOptions}
@@ -222,13 +165,6 @@ export default function GeneralSettings({
 						value: settingsObj.zimbraPrefCalendarApptReminderWarningTime
 					}}
 				/>
-			</Row>
-			<Row
-				orientation="vertical"
-				mainAlignment="flex-start"
-				crossAlignment="baseline"
-				padding={{ all: 'small' }}
-			>
 				<Checkbox
 					value={settingsObj.zimbraPrefCalendarShowPastDueReminders === 'TRUE'}
 					onClick={() =>
@@ -285,19 +221,8 @@ export default function GeneralSettings({
 						})
 					}
 				/>
-			</Row>
-			<Row padding={{ all: 'small' }}>
-				<Text size="large" weight="bold">
-					{t('settings.label.default_appt_dur', 'Default appointment duration')}
-				</Text>
-			</Row>
-			<Row
-				padding={{ horizontal: 'small', bottom: 'small' }}
-				mainAlignment="space-between"
-				crossAlignment="baseline"
-				orientation="horizontal"
-				width="100%"
-			>
+			</FormSubSection>
+			<FormSubSection label={t('settings.label.default_appt_dur', 'Default appointment duration')}>
 				<Select
 					label={t('settings.label.span_time', 'Span time')}
 					items={spanTimeOptions}
@@ -311,7 +236,7 @@ export default function GeneralSettings({
 						value: settingsObj.zimbraPrefCalendarDefaultApptDuration
 					}}
 				/>
-			</Row>
-		</Container>
+			</FormSubSection>
+		</FormSection>
 	);
 }

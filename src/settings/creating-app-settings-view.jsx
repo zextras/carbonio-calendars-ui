@@ -3,33 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { Container, Padding, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
+import { Checkbox, FormSection, FormSubSection } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
+import { creatingAppointmentsSubSection } from './sub-sections';
 import { CalendarSelector } from '../view/editor/parts/calendar-selector';
 
 export default function CreatingAppointmentSettings({ settingsObj, updateSettings }) {
+	const sectionTitleAppointments = useMemo(() => creatingAppointmentsSubSection(), []);
+
 	return (
-		<Container
-			padding={{ all: 'medium' }}
-			background="gray6"
-			mainAlignment="flex-start"
-			crossAlignment="baseline"
-		>
-			<Row padding={{ all: 'small' }}>
-				<Text size="large" weight="bold">
-					{t('settings.label.default_calendar', 'Default calendar')}
-				</Text>
-			</Row>
-			<Row
-				padding={{ horizontal: 'small', bottom: 'small' }}
-				mainAlignment="space-between"
-				crossAlignment="baseline"
-				orientation="horizontal"
-				width="100%"
-			>
+		<FormSection id={sectionTitleAppointments.id} label={sectionTitleAppointments.label}>
+			<FormSubSection label={t('settings.label.default_calendar', 'Default calendar')}>
 				<CalendarSelector
 					calendarId={settingsObj.zimbraPrefDefaultCalendarId}
 					onCalendarChange={(cal) => {
@@ -42,18 +29,8 @@ export default function CreatingAppointmentSettings({ settingsObj, updateSetting
 					}}
 					excludeTrash
 				/>
-			</Row>
-
-			<Row
-				padding={{ horizontal: 'small', top: 'small' }}
-				orientation="vertical"
-				mainAlignment="flex-start"
-				crossAlignment="baseline"
-			>
-				<Text size="large" weight="bold">
-					{t('label.time_zones', 'Time zones')}
-				</Text>
-				<Padding top="small" />
+			</FormSubSection>
+			<FormSubSection label={t('label.time_zones', 'Time zones')}>
 				<Checkbox
 					value={settingsObj.zimbraPrefUseTimeZoneListInCalendar === 'TRUE'}
 					label={t(
@@ -69,7 +46,7 @@ export default function CreatingAppointmentSettings({ settingsObj, updateSetting
 						})
 					}
 				/>
-			</Row>
-		</Container>
+			</FormSubSection>
+		</FormSection>
 	);
 }

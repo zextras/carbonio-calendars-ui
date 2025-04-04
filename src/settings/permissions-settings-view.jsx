@@ -3,11 +3,20 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { Container, Text, Row, Checkbox } from '@zextras/carbonio-design-system';
+import {
+	Container,
+	Text,
+	Row,
+	Checkbox,
+	FormSection,
+	FormSubSection
+} from '@zextras/carbonio-design-system';
 import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
+
+import { permissionsSubSection } from './sub-sections';
 
 const AttendeesContainer = styled.div`
 	width: calc(100% - ${({ $hasTooltip }) => ($hasTooltip ? `3rem` : '0rem')});
@@ -34,42 +43,26 @@ export default function PermisionsSettings({
 	defaultSelectedInviteContacts
 }) {
 	const [ContactInput] = useIntegratedComponent('contact-input');
+	const sectionTitlePermissions = useMemo(() => permissionsSubSection(), []);
+
 	return (
-		<Container
-			padding={{ all: 'medium' }}
-			background="gray6"
-			mainAlignment="flex-start"
-			crossAlignment="baseline"
-		>
-			<Container
-				orientation="horizontal"
-				crossAlignment="baseline"
-				mainAlignment="flex-start"
-				padding={{ all: 'small' }}
-			>
-				<Row padding={{ right: 'small' }}>
-					<Text weight="bold">Note:</Text>
-				</Row>
-				<Row>
-					<Text overflow="break-word">
-						{t(
-							'settings.permissions_note',
-							'Users provide below must be on this mail system (zextras.com). You may use the full e-mail address or just the username.'
-						)}
-					</Text>
-				</Row>
-			</Container>
-			<Row padding={{ horizontal: 'small', top: 'small' }}>
-				<Text size="large" weight="bold">
-					{t('label.free_busy', 'Free/Busy')}
-				</Text>
-			</Row>
-			<Container
-				padding={{ all: 'small' }}
-				mainAlignment="space-between"
-				crossAlignment="baseline"
-				width="100%"
-			>
+		<FormSection label={sectionTitlePermissions.label} id={sectionTitlePermissions.id}>
+			<FormSubSection>
+				<Container orientation="horizontal" crossAlignment="baseline" mainAlignment="flex-start">
+					<Row padding={{ right: 'small' }}>
+						<Text weight="bold">Note:</Text>
+					</Row>
+					<Row>
+						<Text overflow="break-word">
+							{t(
+								'settings.permissions_note',
+								'Users provide below must be on this mail system (zextras.com). You may use the full e-mail address or just the username.'
+							)}
+						</Text>
+					</Row>
+				</Container>
+			</FormSubSection>
+			<FormSubSection label={t('label.free_busy', 'Free/Busy')}>
 				<Checkbox
 					value={activeFreeBusyOptn === 'allowInternalExternal'}
 					onClick={handlePermissionChange('allowInternalExternal')}
@@ -125,19 +118,8 @@ export default function PermisionsSettings({
 						</Container>
 					</Container>
 				)}
-			</Container>
-
-			<Row padding={{ horizontal: 'small', top: 'small' }}>
-				<Text size="large" weight="bold">
-					{t('label.invites', 'Invites')}
-				</Text>
-			</Row>
-			<Container
-				padding={{ all: 'small' }}
-				mainAlignment="space-between"
-				crossAlignment="baseline"
-				width="100%"
-			>
+			</FormSubSection>
+			<FormSubSection label={t('label.invites', 'Invites')}>
 				<Checkbox
 					value={activeInviteOptn === 'allowInternalExternal'}
 					onClick={handleInviteRightChange('allowInternalExternal')}
@@ -185,33 +167,28 @@ export default function PermisionsSettings({
 						</Container>
 					</Container>
 				)}
-			</Container>
 
-			<Row
-				orientation="vertical"
-				mainAlignment="flex-start"
-				crossAlignment="baseline"
-				padding={{ all: 'small' }}
-			>
-				<Checkbox
-					value={settingsObj.zimbraPrefCalendarSendInviteDeniedAutoReply === 'TRUE'}
-					onClick={() =>
-						updateSettings({
-							target: {
-								name: 'zimbraPrefCalendarSendInviteDeniedAutoReply',
-								value:
-									settingsObj.zimbraPrefCalendarSendInviteDeniedAutoReply === 'TRUE'
-										? 'FALSE'
-										: 'TRUE'
-							}
-						})
-					}
-					label={t(
-						'settings.label.snd_autorply_users',
-						'Send auto-reply to users who are not allowed to invite me'
-					)}
-				/>
-			</Row>
-		</Container>
+				<Row orientation="vertical" mainAlignment="flex-start" crossAlignment="baseline">
+					<Checkbox
+						value={settingsObj.zimbraPrefCalendarSendInviteDeniedAutoReply === 'TRUE'}
+						onClick={() =>
+							updateSettings({
+								target: {
+									name: 'zimbraPrefCalendarSendInviteDeniedAutoReply',
+									value:
+										settingsObj.zimbraPrefCalendarSendInviteDeniedAutoReply === 'TRUE'
+											? 'FALSE'
+											: 'TRUE'
+								}
+							})
+						}
+						label={t(
+							'settings.label.snd_autorply_users',
+							'Send auto-reply to users who are not allowed to invite me'
+						)}
+					/>
+				</Row>
+			</FormSubSection>
+		</FormSection>
 	);
 }
