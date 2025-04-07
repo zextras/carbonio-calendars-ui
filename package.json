@@ -87,11 +87,7 @@
 		"@reduxjs/toolkit": "^1.9.7",
 		"@types/webpack": "^5.28.5",
 		"@types/webpack-env": "^1.18.5",
-<<<<<<< Updated upstream
 		"@zextras/carbonio-design-system": "9.0.0",
-=======
-		"@zextras/carbonio-design-system": "devel",
->>>>>>> Stashed changes
 		"@zextras/carbonio-shell-ui": "10.0.0",
 		"@zextras/carbonio-ui-preview": "3.1.1",
 		"core-js": "^3.39.0",
