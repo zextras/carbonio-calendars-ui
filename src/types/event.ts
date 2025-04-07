@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import moment, { Moment } from 'moment';
 
 import { CalendarsColorType } from './store/calendars';
 import {
@@ -87,7 +86,7 @@ export type EventResource = {
 		  }
 		| undefined;
 	room?: any;
-	start?: DateType;
+	start?: Date;
 	uid?: string;
 	idx?: number;
 	changesNotNotified?: boolean;
@@ -102,11 +101,9 @@ export type EventResource = {
 	isRespRequested: boolean;
 };
 
-export type DateType = moment.Moment | Date | number;
-
 export type EventType = {
-	start: Moment | Date;
-	end: Moment | Date;
+	start: Date;
+	end: Date;
 	resource: EventResource;
 	resourceId: string;
 	allDay: boolean;

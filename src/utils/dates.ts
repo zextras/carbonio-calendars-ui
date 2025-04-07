@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { getUserSettings } from '@zextras/carbonio-shell-ui';
 import { isNaN } from 'lodash';
 
 export const getTimezoneOffsetFromUtc = (timeZone?: string, date?: Date): number => {
@@ -31,14 +30,14 @@ export const getTimezoneOffsetFromUtc = (timeZone?: string, date?: Date): number
 	return 0;
 };
 
-export const convertDateToLocal = (date: Date, timezone?: string): Date => {
+export const applyTimezoneToLocalDate = (date: Date, timezone?: string): Date => {
 	const utcOffset = getTimezoneOffsetFromUtc(timezone, date);
 	const offset = timezone ? utcOffset - date.getTimezoneOffset() : 0;
 
 	return new Date(date.getTime() + 60000 * offset);
 };
 
-export const parseDateFromICS = (icsString: string, timezone?: string): Date => {
+export const parseDateFromICS = (icsString: string): string => {
 	const strYear = parseInt(icsString.substring(0, 4), 10);
 	const strMonth = parseInt(icsString.substring(4, 6), 10) - 1;
 	const strDay = parseInt(icsString.substring(6, 8), 10);
@@ -50,66 +49,37 @@ export const parseDateFromICS = (icsString: string, timezone?: string): Date => 
 	const strMin = isNaN(strMinTest) ? 0 : strMinTest;
 	const strSec = isNaN(strSecTest) ? 0 : strSecTest;
 
-	const dateReceived = new Date(strYear, strMonth, strDay, strHour, strMin, strSec);
+	const isUTC = icsString.substring(15, 16) === 'Z';
 
-	return convertDateToLocal(dateReceived, timezone);
+	const date = new Date(strYear, strMonth, strDay, strHour, strMin, strSec);
+
+	return isUTC
+		? new Date(
+				Date.UTC(
+					date.getUTCFullYear(),
+					date.getUTCMonth(),
+					date.getUTCDate(),
+					date.getUTCHours(),
+					date.getUTCMinutes(),
+					date.getUTCSeconds()
+				)
+			).toUTCString()
+		: date.toString();
 };
 
-const dateTimeFormat = ({
-	locale,
-	timezone,
-	allDay,
-	intlOptions
-}: {
-	locale?: string;
-	timezone?: string;
-	allDay: boolean;
-	intlOptions?: Partial<Intl.DateTimeFormatOptions>;
-}): Intl.DateTimeFormat => {
-	const localToApply =
-		locale ??
-		getUserSettings().prefs.zimbraPrefLocale ??
-		Intl.NumberFormat().resolvedOptions().locale;
+export const parseDateToICS = (stringToParse: string): string => {
+	const date = new Date(stringToParse);
 
-	const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	const pad0Start = (number: number): string =>
+		`${number}`.length > 1 ? `${number}` : `0${number}`;
 
-	const timezoneToApply = timezone ?? localTimezone;
+	const year = date.getFullYear();
+	const month = pad0Start(date.getMonth() + 1);
+	const day = pad0Start(date.getDate());
+	const hour = pad0Start(date.getHours());
+	const minute = pad0Start(date.getMinutes());
+	const second = pad0Start(date.getSeconds());
 
-	const options = {
-		weekday: 'long',
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric',
-		hour: allDay ? undefined : 'numeric',
-		minute: allDay ? undefined : 'numeric',
-		timeZone: timezoneToApply,
-		timeZoneName: allDay ? undefined : 'short',
-		...intlOptions
-	} as const;
-
-	return new Intl.DateTimeFormat(localToApply, options);
-};
-
-export const formatAppointmentRange = ({
-	start,
-	end,
-	locale,
-	allDay,
-	allDayLabel,
-	timezone,
-	intlOptions
-}: {
-	start: number;
-	end: number;
-	locale?: string;
-	allDay: boolean;
-	allDayLabel: string;
-	timezone?: string;
-	intlOptions?: Partial<Intl.DateTimeFormatOptions>;
-}): string => {
-	const formattedRange = dateTimeFormat({ locale, timezone, allDay, intlOptions }).formatRange(
-		start,
-		end
-	);
-	return allDay ? `${formattedRange} - ${allDayLabel}` : formattedRange;
+	const isNotUTC = /GMT[+-]/.test(stringToParse);
+	return `${year}${month}${day}T${hour}${minute}${second}${isNotUTC ? '' : 'Z'}`;
 };

@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { find, map, startsWith } from 'lodash';
-import moment from 'moment';
 
 import { createFakeIdentity } from '../../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types/folder';
@@ -56,14 +55,14 @@ const getDefaultEditor = ({
 		allDay: false,
 		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
-		originalStart: moment().valueOf(),
+		originalStart: new Date().getTime(),
 		originalEnd: getEndTime({
-			start: moment().valueOf(),
+			start: new Date().getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
-		start: moment().valueOf(),
+		start: new Date().getTime(),
 		end: getEndTime({
-			start: moment().valueOf(),
+			start: new Date().getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
 		inviteId: undefined,
@@ -159,14 +158,14 @@ const getEditor = ({
 		allDay: false,
 		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
-		originalStart: moment().valueOf(),
+		originalStart: new Date().getTime(),
 		originalEnd: getEndTime({
-			start: moment().valueOf(),
+			start: new Date().getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
-		start: moment().valueOf(),
+		start: new Date().getTime(),
 		end: getEndTime({
-			start: moment().valueOf(),
+			start: new Date().getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
 		inviteId: undefined,
