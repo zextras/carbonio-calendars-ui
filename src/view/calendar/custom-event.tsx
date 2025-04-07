@@ -175,8 +175,8 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	);
 
 	const textOverflow = useMemo(
-		() => (hasTags || event.resource.isRecurrent ? 'ellipsis' : 'visible'),
-		[event.resource.isRecurrent, hasTags]
+		() => (hasTags || event.resource.isRecurrent || event.allDay ? 'ellipsis' : 'visible'),
+		[event.allDay, event.resource.isRecurrent, hasTags]
 	);
 
 	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
