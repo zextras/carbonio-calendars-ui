@@ -127,7 +127,7 @@ function createMessageForDelete({
 	newMessage: string;
 	inst: InstanceExceptionId;
 }): { e: any; su: string; mp: MessagePart } {
-	const hasValidOrganizer = invite?.organizer?.a && invite?.organizer?.d;
+	const hasValidOrganizer = invite?.organizer?.a;
 	const organizer = hasValidOrganizer
 		? [
 				{
