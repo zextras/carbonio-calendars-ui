@@ -30,7 +30,7 @@ export const CustomEventReplyIcons = ({
 			{participationStatus === PARTICIPATION_STATUS.NEED_ACTION && (
 				<CustomEventIcon
 					iconColor={'primary'}
-					iconName={'AlertCircleOutline'}
+					iconName={'CalendarWarning'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.NEED_ACTION}
 					tooltipLabel={t('message.you_did_not_answer', "You didn't answer")}
 					disableOuterTooltip={setIsOuterTooltipDisabled}
@@ -39,7 +39,7 @@ export const CustomEventReplyIcons = ({
 			{participationStatus === PARTICIPATION_STATUS.ACCEPTED && (
 				<CustomEventIcon
 					iconColor={'success'}
-					iconName={'CheckmarkCircle2Outline'}
+					iconName={'StatusAccept'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.ACCEPTED}
 					tooltipLabel={t('message.you_accepted', 'You accepted')}
 					disableOuterTooltip={setIsOuterTooltipDisabled}
@@ -48,7 +48,7 @@ export const CustomEventReplyIcons = ({
 			{participationStatus === PARTICIPATION_STATUS.DECLINED && (
 				<CustomEventIcon
 					iconColor={'error'}
-					iconName={'CloseCircleOutline'}
+					iconName={'StatusDenied'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.DECLINED}
 					tooltipLabel={t('message.you_declined', 'You declined')}
 					disableOuterTooltip={setIsOuterTooltipDisabled}
@@ -57,7 +57,7 @@ export const CustomEventReplyIcons = ({
 			{participationStatus === PARTICIPATION_STATUS.TENTATIVE && (
 				<CustomEventIcon
 					iconColor={'warning'}
-					iconName={'QuestionMarkCircleOutline'}
+					iconName={'StatusMaybe'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.TENTATIVE}
 					tooltipLabel={t('message.you_accepted_as_tentative', 'You accepted as tentative')}
 					disableOuterTooltip={setIsOuterTooltipDisabled}
