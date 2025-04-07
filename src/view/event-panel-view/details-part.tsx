@@ -102,13 +102,18 @@ export const DetailsPart = ({
 		[calendar?.color, calendar?.rgb]
 	);
 
-	const timeData = useMemo(
+	const timeData = useMemo<{
+		allDay?: boolean;
+		start?: number;
+		end?: number;
+		timezone: string;
+	}>(
 		() => ({
 			...omitBy(
 				{
 					allDay: event.allDay,
-					start: event.start,
-					end: event.end
+					start: moment(event.start).valueOf(),
+					end: moment(event.end).valueOf()
 				},
 				isNil
 			),

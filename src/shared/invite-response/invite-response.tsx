@@ -32,8 +32,7 @@ import BodyMessageRenderer from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
-import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
-import { getLocalTime } from '../../normalizations/normalize-editor';
+import { useGetDateRangeConvertedToTimezone } from '../../hooks/use-get-date-range-converted-to-timezone';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
@@ -139,28 +138,25 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		mailToContact(obj)?.execute();
 	};
 
-	const localTimezone = useMemo(() => moment.tz.guess(), []);
-
-	/* start and end value are already converted to the creation timezone value, so to convert it back to the local timezone we need to convert it again to local */
 	const localStart = useMemo(
-		() =>
-			getLocalTime(
-				moment(invite.start?.d ?? invite.start.u).valueOf() ?? 0,
-				localTimezone,
-				invite.tz
-			),
-		[invite.start?.d, invite.start.u, invite.tz, localTimezone]
+		() => moment(invite.start?.d ?? invite.start.u).valueOf(),
+		[invite.start?.d, invite.start.u]
 	);
 	const localEnd = useMemo(
-		() =>
-			getLocalTime(moment(invite.end?.d ?? invite.end.u).valueOf() ?? 0, localTimezone, invite.tz),
-		[invite.end?.d, invite.end.u, invite.tz, localTimezone]
+		() => moment(invite.end?.d ?? invite.end.u).valueOf(),
+		[invite.end?.d, invite.end.u]
 	);
 
 	const endOfDay = (day: any): number => moment(day).endOf('day').valueOf();
 
-	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
-		useGetEventTimezoneString(localStart, localEnd, invite.allDay, invite.tz);
+	const originalDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
+		allDay: invite.allDay,
+		timeZone: invite.tz
+	});
+
+	const convertedDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
+		allDay: invite.allDay
+	});
 
 	const messageHasABody = useMemo(() => hasDescription(invite), [invite]);
 
@@ -168,6 +164,16 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
 
 	const requiredSlice = requiredParticipants.slice(0, maxReqParticipantsToShow);
+	const convertedDateTooltip = useMemo(
+		() => (
+			<>
+				{t('creation_timezone_tooltip', 'Date and time on creation timezone:')}
+				<br />
+				{originalDate}
+			</>
+		),
+		[originalDate, t]
+	);
 	return (
 		<InviteContainer data-testid={'invite-response'}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
@@ -193,20 +199,15 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{localTimeString}
+						{originalDate}
 					</Text>
-					{showTimezoneTooltip && (
-						<Tooltip label={localTimezoneTooltip}>
+					{convertedDate !== originalDate && (
+						<Tooltip label={convertedDateTooltip}>
 							<Padding left="small">
 								<Icon icon="GlobeOutline" color="gray1" />
 							</Padding>
 						</Tooltip>
 					)}
-				</Row>
-				<Row width="100%" mainAlignment="flex-start">
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{localTimezoneString}
-					</Text>{' '}
 				</Row>
 				{method === MESSAGE_METHOD.REQUEST && root && (
 					<AvailabilityChecker

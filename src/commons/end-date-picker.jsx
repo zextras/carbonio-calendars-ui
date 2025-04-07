@@ -7,16 +7,21 @@ import React, { useCallback, useMemo } from 'react';
 
 import { DateTimePicker } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-import moment from 'moment';
 
 export default function EndDatePicker({ start, end, allDay, diff, onChange }) {
 	const onEndChange = useCallback(
-		(d) =>
-			onChange({
-				end: moment(d).valueOf(),
-				start: moment(d).valueOf() > start ? start : moment(d).valueOf() - diff
-			}),
-		[onChange, start, diff]
+		(d) => {
+			const newEndValue = d.getTime();
+			const prevEndValue = end.getTime();
+			const prevStartValue = start.getTime();
+			if (newEndValue !== prevEndValue) {
+				onChange({
+					end: newEndValue,
+					start: newEndValue > prevStartValue ? prevStartValue : newEndValue - diff
+				});
+			}
+		},
+		[end, onChange, start, diff]
 	);
 	const dateFormat = useMemo(() => (allDay ? 'dd/MM/yyyy' : 'dd/MM/yyyy HH:mm'), [allDay]);
 	const label = useMemo(

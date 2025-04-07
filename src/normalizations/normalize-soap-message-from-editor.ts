@@ -11,7 +11,7 @@ import { Rel } from './normalizations-utils';
 import { CALENDAR_RESOURCES, HTML_CLOSING_TAG, HTML_OPENING_TAG, ROOM_DIVIDER } from '../constants';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
-import { getTimeString } from '../hooks/use-get-event-timezone';
+import { getTimeStrings } from '../hooks/use-get-date-range-converted-to-timezone';
 import { CalendarEditor, CalendarOrganizer, CalendarSender, Editor } from '../types/editor';
 import {
 	isDaysInMinutes,
@@ -48,12 +48,15 @@ const setResourceDate = ({
 }): { d: string; tz?: string } => {
 	if (allDay) {
 		return {
-			d: moment(time).startOf('day').format('YYYYMMDD')
+			d: moment(time)
+				.tz(timezone ?? new Intl.DateTimeFormat().resolvedOptions().timeZone)
+				.startOf('day')
+				.format('YYYYMMDD')
 		};
 	}
 	return timezone
 		? {
-				d: moment(time).format('YYYYMMDD[T]HHmmss'),
+				d: moment(time).tz(timezone).format('YYYYMMDD[T]HHmmss'),
 				tz: timezone
 			}
 		: {
@@ -214,7 +217,11 @@ function generateHtmlBodyRequest(app: Editor): string {
 		sender: app.sender,
 		organizer: app.organizer
 	});
-	const date = getTimeString(app.start, app.end, app.allDay, 'allDay');
+	const date = getTimeStrings({
+		start: app.start ?? 0,
+		end: app.end ?? 0,
+		options: { allDay: app.allDay, allDayLabel: 'allDay' }
+	});
 
 	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} have invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
 	const virtualRoomHtml = app?.room?.label
@@ -234,7 +241,12 @@ function generateBodyRequest(app: Editor): string {
 		sender: app.sender,
 		organizer: app.organizer
 	});
-	const date = getTimeString(app.start, app.end, app.allDay, 'allDay');
+
+	const date = getTimeStrings({
+		start: app.start ?? 0,
+		end: app.end ?? 0,
+		options: { allDay: app.allDay, allDayLabel: 'allDay' }
+	});
 
 	const virtualRoomMessage = app?.room?.label
 		? `${ROOM_DIVIDER}\n${

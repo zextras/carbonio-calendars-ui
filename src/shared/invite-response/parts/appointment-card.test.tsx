@@ -73,7 +73,9 @@ describe('appointment card component', () => {
 				expect(timeString).toBeVisible();
 			});
 			test('if it is a multi day non all day it will show start and end including the days', () => {
-				const event = mockedData.getEvent({ start: moment(), end: moment().add(2, 'day') });
+				const start = new Date();
+				const end = new Date(new Date(start.valueOf()).setDate(start.getDate() + 2));
+				const event = mockedData.getEvent({ start, end });
 				setupTest(<AppointmentCard event={event} />);
 
 				const timeString = screen.getByText(
@@ -84,9 +86,12 @@ describe('appointment card component', () => {
 				expect(timeString).toBeVisible();
 			});
 			test('if it is a multi day all day it will show start and end including the days and all day', () => {
+				const start = new Date();
+				const end = new Date(new Date(start.valueOf()).setDate(start.getDate() + 2));
+
 				const event = mockedData.getEvent({
-					start: moment(),
-					end: moment().add(2, 'day'),
+					start,
+					end,
 					allDay: true
 				});
 				setupTest(<AppointmentCard event={event} />);
