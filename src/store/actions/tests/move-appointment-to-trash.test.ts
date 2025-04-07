@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import {
-	cancelAppointmentRequest,
-	CancelAppointmentReturnType
-} from '../../../soap/cancel-appointment-request';
+import { cancelAppointmentRequest } from '../../../soap/cancel-appointment-request';
 import mockedData from '../../../test/generators';
 import { InviteOrganizer } from '../../../types/store/invite';
 import { setupTMock } from '../../../utils/tests';
@@ -16,20 +13,25 @@ import { moveAppointmentToTrash } from '../move-appointment-to-trash';
 
 jest.mock('../../../soap/cancel-appointment-request');
 
+const mockTFunction = setupTMock();
+
 const mockCancelAppointmentRequest = cancelAppointmentRequest as jest.MockedFunction<
 	typeof cancelAppointmentRequest
 >;
 
 describe('moveAppointmentToTrash', () => {
-	const mockTFunction = setupTMock();
-
-	it('should call CancelAppointmentRequest with empty organizer when invite has no organizer', async () => {
+	it('should call CancelAppointmentRequest with organizer when invite has valid organizer', async () => {
 		const mockState: Partial<RootState> = {
 			invites: {
 				invites: {
 					'test-invite-id': {
 						...mockedData.getInvite(),
-						organizer: {} as InviteOrganizer, // No organizer
+						// Valid organizer
+						organizer: {
+							a: 'organizer@test.com',
+							d: 'Test Organizer',
+							url: ''
+						},
 						participants: {
 							AC: [
 								{
@@ -46,13 +48,70 @@ describe('moveAppointmentToTrash', () => {
 			}
 		};
 
-		const mockResponse: CancelAppointmentReturnType = {
-			Fault: undefined,
-			error: false,
-			m: undefined
-		};
+		const mockDispatch = jest.fn();
+		const mockGetState = jest.fn(() => mockState as RootState);
+		const mockRejectWithValue = jest.fn();
 
-		mockCancelAppointmentRequest.mockResolvedValue(mockResponse);
+		const inviteId = 'test-invite-id';
+		const thunk = moveAppointmentToTrash({
+			inviteId,
+			t: mockTFunction,
+			isOrganizer: true,
+			deleteSingleInstance: true,
+			inst: { d: '20230102T100000Z', tz: 'America/New_York' },
+			s: 123,
+			newMessage: '',
+			ridZ: '',
+			recur: false,
+			isRecurrent: true,
+			id: inviteId
+		});
+
+		await thunk(mockDispatch, mockGetState, { rejectWithValue: mockRejectWithValue });
+
+		expect(mockCancelAppointmentRequest).toHaveBeenCalledWith({
+			deleteSingleInstance: true,
+			id: inviteId,
+			inst: { d: '20230102T100000Z', tz: 'America/New_York' },
+			isOrganizer: true,
+			m: expect.objectContaining({
+				e: expect.arrayContaining([
+					// Should include organizer
+					expect.objectContaining({
+						a: 'organizer@test.com',
+						p: 'Test Organizer',
+						t: 'f'
+					}),
+					// Should include regular participant
+					expect.objectContaining({
+						a: 'participant1@test.com',
+						p: 'Participant 1',
+						t: 't'
+					})
+				]),
+				su: expect.stringContaining('Cancelled:'),
+				mp: expect.objectContaining({
+					ct: 'multipart/alternative',
+					mp: expect.any(Array)
+				})
+			}),
+			s: 123
+		});
+	});
+
+	it('should call CancelAppointmentRequest with empty organizer when invite has no organizer', async () => {
+		const mockState: Partial<RootState> = {
+			invites: {
+				invites: {
+					'test-invite-id': {
+						...mockedData.getInvite(),
+						organizer: {} as InviteOrganizer, // No valid organizer
+						participants: {}
+					}
+				},
+				status: ''
+			}
+		};
 
 		const mockDispatch = jest.fn();
 		const mockGetState = jest.fn(() => mockState as RootState);
@@ -64,7 +123,7 @@ describe('moveAppointmentToTrash', () => {
 			isOrganizer: true,
 			deleteSingleInstance: true,
 			inst: { d: '20230102T100000Z', tz: 'America/New_York' },
-			s: 123456789,
+			s: 123,
 			newMessage: '',
 			ridZ: '',
 			recur: false,
@@ -91,7 +150,7 @@ describe('moveAppointmentToTrash', () => {
 					mp: expect.any(Array)
 				})
 			}),
-			s: 123456789
+			s: 123
 		});
 	});
 });
