@@ -48,25 +48,26 @@ const generateMockState = ({
 });
 
 describe('moveAppointmentToTrash', () => {
+	const moveAppointmentToTrashParam = {
+		inviteId: defaultInviteId,
+		t: mockTFunction,
+		isOrganizer: true,
+		deleteSingleInstance: true,
+		inst: { d: '20230102T100000Z', tz: 'America/New_York' },
+		s: 123,
+		newMessage: '',
+		ridZ: '',
+		recur: false,
+		isRecurrent: true,
+		id: defaultInviteId
+	};
 	it('should call CancelAppointmentRequest with organizer when invite has valid organizer', async () => {
 		const mockDispatch = jest.fn();
 		const mockState = generateMockState({});
 		const mockGetState = jest.fn(() => mockState as RootState);
 		const mockRejectWithValue = jest.fn();
 
-		const thunk = moveAppointmentToTrash({
-			inviteId: defaultInviteId,
-			t: mockTFunction,
-			isOrganizer: true,
-			deleteSingleInstance: true,
-			inst: { d: '20230102T100000Z', tz: 'America/New_York' },
-			s: 123,
-			newMessage: '',
-			ridZ: '',
-			recur: false,
-			isRecurrent: true,
-			id: defaultInviteId
-		});
+		const thunk = moveAppointmentToTrash(moveAppointmentToTrashParam);
 
 		const cancelAppointmentAPIInterceptor = createSoapAPIInterceptor('CancelAppointment', {});
 
@@ -96,32 +97,19 @@ describe('moveAppointmentToTrash', () => {
 
 	it('should call CancelAppointmentRequest with empty organizer when invite has no organizer', async () => {
 		const mockStateWithNoOrganizer: Partial<RootState> = generateMockState({
-			organizer: {} as InviteOrganizer
+			organizer: {} as InviteOrganizer // No valid organizer
 		});
 		const mockDispatch = jest.fn();
 		const mockGetState = jest.fn(() => mockStateWithNoOrganizer as RootState);
 
-		const inviteId = 'test-invite-id';
-		const thunk = moveAppointmentToTrash({
-			inviteId,
-			t: mockTFunction,
-			isOrganizer: true,
-			deleteSingleInstance: true,
-			inst: { d: '20230102T100000Z', tz: 'America/New_York' },
-			s: 123,
-			newMessage: '',
-			ridZ: '',
-			recur: false,
-			isRecurrent: true,
-			id: inviteId
-		});
+		const thunk = moveAppointmentToTrash(moveAppointmentToTrashParam);
 
 		const cancelAppointmentAPIInterceptor = createSoapAPIInterceptor('CancelAppointment', {});
 		await thunk(mockDispatch, mockGetState, undefined);
 		const request = await cancelAppointmentAPIInterceptor;
 		expect(request).toEqual(
 			expect.objectContaining({
-				id: inviteId,
+				id: defaultInviteId,
 				m: expect.objectContaining({
 					e: [
 						{
