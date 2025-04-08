@@ -4,57 +4,58 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { cancelAppointmentRequest } from '../../../soap/cancel-appointment-request';
+import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import mockedData from '../../../test/generators';
-import { InviteOrganizer } from '../../../types/store/invite';
+import { InviteOrganizer, InviteParticipant } from '../../../types/store/invite';
 import { setupTMock } from '../../../utils/tests';
 import { RootState } from '../../redux';
 import { moveAppointmentToTrash } from '../move-appointment-to-trash';
 
-jest.mock('../../../soap/cancel-appointment-request');
-
 const mockTFunction = setupTMock();
 
-const mockCancelAppointmentRequest = cancelAppointmentRequest as jest.MockedFunction<
-	typeof cancelAppointmentRequest
->;
+const defaultOrganizer: InviteOrganizer = {
+	a: 'organizer@test.com',
+	d: 'Test Organizer',
+	url: 'https://test.com'
+};
+
+const defaultInviteId = 'test-invite-id';
+
+const defaultParticipant: InviteParticipant = {
+	email: 'participant1@test.com',
+	name: 'Participant 1',
+	isOptional: false,
+	response: 'TE'
+};
+
+const generateMockState = ({
+	organizer = defaultOrganizer
+}: {
+	organizer?: InviteOrganizer;
+}): Partial<RootState> => ({
+	invites: {
+		invites: {
+			'test-invite-id': {
+				...mockedData.getInvite(),
+				organizer,
+				participants: {
+					AC: [defaultParticipant]
+				}
+			}
+		},
+		status: ''
+	}
+});
 
 describe('moveAppointmentToTrash', () => {
 	it('should call CancelAppointmentRequest with organizer when invite has valid organizer', async () => {
-		const mockState: Partial<RootState> = {
-			invites: {
-				invites: {
-					'test-invite-id': {
-						...mockedData.getInvite(),
-						// Valid organizer
-						organizer: {
-							a: 'organizer@test.com',
-							d: 'Test Organizer',
-							url: ''
-						},
-						participants: {
-							AC: [
-								{
-									email: 'participant1@test.com',
-									name: 'Participant 1',
-									isOptional: false,
-									response: 'TE'
-								}
-							]
-						}
-					}
-				},
-				status: ''
-			}
-		};
-
 		const mockDispatch = jest.fn();
+		const mockState = generateMockState({});
 		const mockGetState = jest.fn(() => mockState as RootState);
 		const mockRejectWithValue = jest.fn();
 
-		const inviteId = 'test-invite-id';
 		const thunk = moveAppointmentToTrash({
-			inviteId,
+			inviteId: defaultInviteId,
 			t: mockTFunction,
 			isOrganizer: true,
 			deleteSingleInstance: true,
@@ -64,57 +65,41 @@ describe('moveAppointmentToTrash', () => {
 			ridZ: '',
 			recur: false,
 			isRecurrent: true,
-			id: inviteId
+			id: defaultInviteId
 		});
+
+		const cancelAppointmentAPIInterceptor = createSoapAPIInterceptor('CancelAppointment', {});
 
 		await thunk(mockDispatch, mockGetState, { rejectWithValue: mockRejectWithValue });
 
-		expect(mockCancelAppointmentRequest).toHaveBeenCalledWith({
-			deleteSingleInstance: true,
-			id: inviteId,
-			inst: { d: '20230102T100000Z', tz: 'America/New_York' },
-			isOrganizer: true,
-			m: expect.objectContaining({
-				e: expect.arrayContaining([
-					// Should include organizer
-					expect.objectContaining({
-						a: 'organizer@test.com',
-						p: 'Test Organizer',
-						t: 'f'
-					}),
-					// Should include regular participant
-					expect.objectContaining({
-						a: 'participant1@test.com',
-						p: 'Participant 1',
-						t: 't'
-					})
-				]),
-				su: expect.stringContaining('Cancelled:'),
-				mp: expect.objectContaining({
-					ct: 'multipart/alternative',
-					mp: expect.any(Array)
+		const request = await cancelAppointmentAPIInterceptor;
+		expect(request).toEqual(
+			expect.objectContaining({
+				id: defaultInviteId,
+				m: expect.objectContaining({
+					e: [
+						{
+							a: defaultParticipant.email,
+							p: defaultParticipant.name,
+							t: 't'
+						},
+						{
+							a: 'organizer@test.com',
+							p: 'Test Organizer',
+							t: 'f'
+						}
+					]
 				})
-			}),
-			s: 123
-		});
+			})
+		);
 	});
 
 	it('should call CancelAppointmentRequest with empty organizer when invite has no organizer', async () => {
-		const mockState: Partial<RootState> = {
-			invites: {
-				invites: {
-					'test-invite-id': {
-						...mockedData.getInvite(),
-						organizer: {} as InviteOrganizer, // No valid organizer
-						participants: {}
-					}
-				},
-				status: ''
-			}
-		};
-
+		const mockStateWithNoOrganizer: Partial<RootState> = generateMockState({
+			organizer: {} as InviteOrganizer
+		});
 		const mockDispatch = jest.fn();
-		const mockGetState = jest.fn(() => mockState as RootState);
+		const mockGetState = jest.fn(() => mockStateWithNoOrganizer as RootState);
 
 		const inviteId = 'test-invite-id';
 		const thunk = moveAppointmentToTrash({
@@ -131,26 +116,22 @@ describe('moveAppointmentToTrash', () => {
 			id: inviteId
 		});
 
+		const cancelAppointmentAPIInterceptor = createSoapAPIInterceptor('CancelAppointment', {});
 		await thunk(mockDispatch, mockGetState, undefined);
-
-		expect(mockCancelAppointmentRequest).toHaveBeenCalledWith({
-			deleteSingleInstance: true,
-			id: inviteId,
-			inst: { d: '20230102T100000Z', tz: 'America/New_York' },
-			isOrganizer: true,
-			m: expect.objectContaining({
-				e: expect.not.arrayContaining([
-					expect.objectContaining({
-						t: 'f'
-					})
-				]),
-				su: expect.stringContaining('Cancelled:'),
-				mp: expect.objectContaining({
-					ct: 'multipart/alternative',
-					mp: expect.any(Array)
+		const request = await cancelAppointmentAPIInterceptor;
+		expect(request).toEqual(
+			expect.objectContaining({
+				id: inviteId,
+				m: expect.objectContaining({
+					e: [
+						{
+							a: defaultParticipant.email,
+							p: defaultParticipant.name,
+							t: 't'
+						}
+					]
 				})
-			}),
-			s: 123
-		});
+			})
+		);
 	});
 });
