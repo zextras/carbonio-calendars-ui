@@ -97,6 +97,7 @@ describe('moveAppointmentToTrash', () => {
 
 	it('should call CancelAppointmentRequest with empty organizer when invite has no organizer', async () => {
 		const mockStateWithNoOrganizer: Partial<RootState> = generateMockState({
+			// TODO: see CO-1885 The type of organizer is not correct in this case the organizer can be undefined
 			organizer: {} as InviteOrganizer // No valid organizer
 		});
 		const mockDispatch = jest.fn();
