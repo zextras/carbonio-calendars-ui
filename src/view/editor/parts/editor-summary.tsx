@@ -15,13 +15,11 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { map } from 'lodash';
-import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { CALENDARS_STANDARD_COLORS } from '../../../constants/calendar';
-import { useGetEventTimezoneString } from '../../../hooks/use-get-event-timezone';
-import { getLocalTime } from '../../../normalizations/normalize-editor';
+import { useGetDateRangeConvertedToTimezone } from '../../../hooks/use-get-date-range-converted-to-timezone';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
 	selectEditorAllDay,
@@ -70,41 +68,39 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 
 	const meetingRoomField = useMemo(() => {
-		if (meetingRoom) {
-			if (meetingRoom.length > 0) {
-				const res = map(meetingRoom, (roo) => roo.label);
-				return res.join(', ');
-			}
+		if (meetingRoom && meetingRoom.length > 0) {
+			const res = map(meetingRoom, (roo) => roo.label);
+			return res.join(', ');
 		}
 		return '';
 	}, [meetingRoom]);
 
 	const equipmentsField = useMemo(() => {
-		if (equipments) {
-			if (equipments.length > 0) {
-				const res = map(equipments, (eq) => eq.label);
-				return res.join(', ');
-			}
+		if (equipments && equipments.length > 0) {
+			const res = map(equipments, (eq) => eq.label);
+			return res.join(', ');
 		}
 		return '';
 	}, [equipments]);
 
 	const virtualRoom = useMemo(() => room?.label, [room?.label]);
 
-	const localTimezone = useMemo(() => moment.tz.guess(), []);
+	const originalDate = useGetDateRangeConvertedToTimezone(start ?? 0, end ?? 0, {
+		timeZone: timezone,
+		allDay
+	});
+	const convertedDate = useGetDateRangeConvertedToTimezone(start ?? 0, end ?? 0, { allDay });
 
-	/* start and end value are already converted to the creation timezone value, so to convert it back to the local timezone we need to convert it again to local */
-	const localStart = useMemo(
-		() => getLocalTime(start ?? 0, localTimezone, timezone),
-		[localTimezone, start, timezone]
+	const convertedDateTooltip = useMemo(
+		() => (
+			<>
+				{t('local_timezone_tooltip', 'Date and time on local timezone:')}
+				<br />
+				{convertedDate}
+			</>
+		),
+		[t, convertedDate]
 	);
-	const localEnd = useMemo(
-		() => getLocalTime(end ?? 0, localTimezone, timezone),
-		[end, localTimezone, timezone]
-	);
-
-	const { eventTimeString, eventTimezoneString, showTimezoneTooltip, eventTimezoneTooltip } =
-		useGetEventTimezoneString(localStart, localEnd, allDay, timezone);
 
 	return (
 		<Row
@@ -118,7 +114,7 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 				size="large"
 				icon="Calendar2"
 				style={{
-					background: calendar?.color?.color ?? CALENDARS_STANDARD_COLORS?.[0]?.color
+					background: CALENDARS_STANDARD_COLORS?.[calendar?.color ?? 0]?.color
 				}}
 				label=""
 			/>
@@ -134,29 +130,21 @@ export const EditorSummary = ({ editorId }: { editorId: string }): ReactElement 
 					<Text overflow="ellipsis" weight="bold" size="small">
 						{title || t('label.subject', 'Subject')}
 					</Text>
-					<Icon
-						icon="Calendar2"
-						color={calendar?.color?.color ?? CALENDARS_STANDARD_COLORS?.[0]?.color}
-					/>
+					<Icon icon="Calendar2" color={CALENDARS_STANDARD_COLORS?.[calendar?.color ?? 0]?.color} />
 				</Container>
 				<TitleRow>
 					<>
 						<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-							{eventTimeString}
+							{originalDate}
 						</Text>
-						{showTimezoneTooltip && (
-							<Tooltip label={eventTimezoneTooltip}>
+						{originalDate !== convertedDate && (
+							<Tooltip label={convertedDateTooltip}>
 								<Padding left="small">
 									<Icon icon="GlobeOutline" color="gray1" />
 								</Padding>
 							</Tooltip>
 						)}
 					</>
-				</TitleRow>
-				<TitleRow>
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{eventTimezoneString}
-					</Text>
 				</TitleRow>
 				<TitleRow>
 					<Text overflow="ellipsis" color="secondary" size="small">

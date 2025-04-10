@@ -3,14 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, {
-	ReactElement,
-	ReactEventHandler,
-	useCallback,
-	useMemo,
-	useRef,
-	useState
-} from 'react';
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 
 import { ChipInput, ChipInputProps, DropdownItem } from '@zextras/carbonio-design-system';
 import { differenceWith, map, reject, sortBy, uniqBy } from 'lodash';

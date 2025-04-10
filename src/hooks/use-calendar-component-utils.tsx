@@ -86,6 +86,7 @@ export const useCalendarComponentUtils = (): {
 				const diff = dropStart.diff(eventStart);
 				return inviteStart.add(diff).valueOf();
 			}
+
 			return dropStart.valueOf();
 		},
 		[]
@@ -144,9 +145,22 @@ export const useCalendarComponentUtils = (): {
 					const eventEnd = moment(event.end);
 					const dropEnd = moment(end);
 					const eventAllDay = event.allDay;
-					const startTime = getStart({ isSeries, dropStart, isAllDay, inviteStart, eventStart });
-					const endTime = getEnd({ isSeries, dropEnd, isAllDay, inviteEnd, eventEnd, eventAllDay });
 					const invite = normalizeInvite(payload.m[0]);
+					const startTime = getStart({
+						isSeries,
+						dropStart,
+						isAllDay,
+						inviteStart,
+						eventStart
+					});
+					const endTime = getEnd({
+						isSeries,
+						dropEnd,
+						isAllDay,
+						inviteEnd,
+						eventEnd,
+						eventAllDay
+					});
 
 					const onConfirm = (draft: boolean, context?: { text: Array<string> }): void => {
 						const contextObj = {

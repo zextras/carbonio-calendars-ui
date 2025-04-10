@@ -38,15 +38,10 @@ export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactE
 
 	const timeData = useMemo(
 		() => ({
-			...omitBy(
-				{
-					allDay: event?.allDay,
-					start: event?.start,
-					end: event?.end
-				},
-				isNil
-			),
-			...{ timezone: invite?.tz ?? moment.tz.guess() }
+			allDay: event?.allDay,
+			start: event?.start?.getTime(),
+			end: event?.end?.getTime(),
+			timezone: invite?.tz ?? moment.tz.guess()
 		}),
 		[event?.allDay, event?.end, event?.start, invite?.tz]
 	);

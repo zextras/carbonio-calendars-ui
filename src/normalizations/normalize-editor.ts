@@ -14,7 +14,7 @@ import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
 import { CalendarEditor, Editor } from '../types/editor';
-import { DateType, EventType } from '../types/event';
+import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -90,7 +90,7 @@ export type EventPropType = {
 };
 
 export const getLocalTime = (
-	date: number | DateType,
+	date: number | Date,
 	timezone?: string,
 	localTimezone?: string
 ): number => {
@@ -109,8 +109,8 @@ export const getLocalTime = (
 	return dateValueOf;
 };
 
-export const isTimezoneDifferentFromLocal = (date: number | DateType, timezone: string): boolean =>
-	moment(date).tz(timezone).utcOffset() !== moment(date).utcOffset();
+export const isTimezoneDifferentFromLocal = (timezone: string): boolean =>
+	timezone !== Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 const setEditorDate = ({
 	editorType,
@@ -127,40 +127,33 @@ const setEditorDate = ({
 		: parseInt(zimbraPrefCalendarDefaultApptDuration as string, 10) * 1000;
 	if (event && invite?.start && invite?.end) {
 		if (editorType.isSeries && !editorType.isInstance && !editorType.isException && invite) {
-			const start = invite?.start?.u ?? moment(invite?.start?.d);
-			const end = invite?.end?.u ?? moment(invite?.end?.d);
-			const convertedStartDate = getLocalTime(start, invite?.tz);
-			const convertedEndDate = getLocalTime(end, invite?.tz);
-			if (invite.tz && isTimezoneDifferentFromLocal(start, invite.tz)) {
-				return {
-					start: event?.allDay
-						? moment(convertedStartDate)?.startOf('date').valueOf()
-						: convertedStartDate,
-					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
-				};
-			}
+			const start = invite?.start?.u ?? moment(invite?.start?.d).valueOf();
+			const end = invite?.end?.u ?? moment(invite?.end?.d).valueOf();
+
+			const currentStartDate = new Date(start);
+			const currentEndDate = new Date(end);
+
 			return {
-				start: event?.allDay ? moment(start)?.startOf('date').valueOf() : moment(start).valueOf(),
-				end: event?.allDay ? moment(end)?.endOf('date').valueOf() : moment(end).valueOf()
+				start: event?.allDay
+					? moment(currentStartDate)?.startOf('date').valueOf()
+					: currentStartDate.getTime(),
+				end: event?.allDay
+					? moment(currentEndDate)?.endOf('date').valueOf()
+					: currentEndDate.getTime()
 			};
 		}
-		const convertedStartDate = getLocalTime(event.start, invite?.tz);
-		const convertedEndDate = getLocalTime(event.end, invite?.tz);
-		return invite?.tz && isTimezoneDifferentFromLocal(event.start, invite.tz)
-			? {
-					start: event?.allDay
-						? moment(convertedStartDate)?.startOf('date').valueOf()
-						: convertedStartDate,
-					end: event?.allDay ? moment(convertedEndDate)?.endOf('date').valueOf() : convertedEndDate
-				}
-			: {
-					start: event?.allDay
-						? moment(event?.start)?.startOf('date').valueOf()
-						: moment(event?.start).valueOf(),
-					end: event?.allDay
-						? moment(event?.end)?.endOf('date').valueOf()
-						: moment(event?.end).valueOf()
-				};
+
+		const currentStartDate = new Date(moment(event?.start).valueOf());
+		const currentEndDate = new Date(moment(event?.end).valueOf());
+
+		return {
+			start: event?.allDay
+				? moment(currentStartDate)?.startOf('date').valueOf()
+				: moment(currentStartDate).valueOf(),
+			end: event?.allDay
+				? moment(currentEndDate)?.endOf('date').valueOf()
+				: moment(currentEndDate).valueOf()
+		};
 	}
 	return {
 		start: moment().set('second', 0).set('millisecond', 0).valueOf(),

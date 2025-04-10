@@ -87,14 +87,8 @@ describe('move appointment to trash', () => {
 				inst
 			});
 
-			expect(result).toStrictEqual(
-				expect.objectContaining({
-					mp: expect.arrayContaining([
-						expect.objectContaining({
-							content: expect.stringMatching(/instance, Thursday, March 21, 2024 - All day/i)
-						})
-					])
-				})
+			expect(result.mp[0].content).toEqual(
+				expect.stringContaining('"test" instance, Thursday, March 21, 2024 GMT+01:00 All day')
 			);
 		});
 		test('if the date of the instance has a different timezone from local, creation timezone will be used', async () => {
@@ -115,16 +109,10 @@ describe('move appointment to trash', () => {
 				inst
 			});
 
-			expect(result).toStrictEqual(
-				expect.objectContaining({
-					mp: expect.arrayContaining([
-						expect.objectContaining({
-							content: expect.stringMatching(
-								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+5:30/i
-							)
-						})
-					])
-				})
+			expect(result.mp[0].content).toEqual(
+				expect.stringContaining(
+					'"test" instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+05:30 Asia/Kolkata All day'
+				)
 			);
 		});
 		test('if the date of the appointment has a different timezone from local, creation timezone will be used', async () => {
@@ -144,16 +132,10 @@ describe('move appointment to trash', () => {
 				fullInvite
 			});
 
-			expect(result).toStrictEqual(
-				expect.objectContaining({
-					mp: expect.arrayContaining([
-						expect.objectContaining({
-							content: expect.stringMatching(
-								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+5:30/i
-							)
-						})
-					])
-				})
+			expect(result.mp[0].content).toEqual(
+				expect.stringContaining(
+					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+05:30 Asia/Kolkata All day'
+				)
 			);
 		});
 		test('if the date of the instance has the same timezone as the local, local timezone will be used', async () => {
@@ -174,16 +156,10 @@ describe('move appointment to trash', () => {
 				inst
 			});
 
-			expect(result).toStrictEqual(
-				expect.objectContaining({
-					mp: expect.arrayContaining([
-						expect.objectContaining({
-							content: expect.stringMatching(
-								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+2/i
-							)
-						})
-					])
-				})
+			expect(result.mp[0].content).toStrictEqual(
+				expect.stringContaining(
+					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00 Europe/Berlin All day'
+				)
 			);
 		});
 		test('if the date of the appointment has the same timezone as the local, local timezone will be used', async () => {
@@ -203,16 +179,10 @@ describe('move appointment to trash', () => {
 				fullInvite
 			});
 
-			expect(result).toStrictEqual(
-				expect.objectContaining({
-					mp: expect.arrayContaining([
-						expect.objectContaining({
-							content: expect.stringMatching(
-								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+2/i
-							)
-						})
-					])
-				})
+			expect(result.mp[0].content).toStrictEqual(
+				expect.stringContaining(
+					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00 Europe/Berlin All day'
+				)
 			);
 		});
 		test('if the date of the instance has no timezone, local timezone will be used', async () => {
@@ -232,16 +202,10 @@ describe('move appointment to trash', () => {
 				inst
 			});
 
-			expect(result).toStrictEqual(
-				expect.objectContaining({
-					mp: expect.arrayContaining([
-						expect.objectContaining({
-							content: expect.stringMatching(
-								/instance, Saturday, June 15, 2024, 8:30\u2009–\u20099:00\u202fAM GMT\+2/i
-							)
-						})
-					])
-				})
+			expect(result.mp[0].content).toStrictEqual(
+				expect.stringContaining(
+					'instance, Saturday, June 15, 2024, 8:30 – 9:00 AM GMT+02:00 All day'
+				)
 			);
 		});
 		test('if the date of the event is all day, the date will have all day at the end', async () => {
@@ -260,14 +224,8 @@ describe('move appointment to trash', () => {
 				fullInvite
 			});
 
-			expect(result).toStrictEqual(
-				expect.objectContaining({
-					mp: expect.arrayContaining([
-						expect.objectContaining({
-							content: expect.stringMatching(/instance, Monday, March 18, 2024 - All day/i)
-						})
-					])
-				})
+			expect(result.mp[0].content).toStrictEqual(
+				expect.stringContaining('instance, Monday, March 18, 2024 GMT+01:00 All day')
 			);
 		});
 		test('if the message does not have rich text, it will return plain content', async () => {

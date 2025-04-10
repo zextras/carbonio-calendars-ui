@@ -80,7 +80,7 @@ export const AppointmentReminderItem: FC<ApptReminderCardProps> = ({
 	const dismissReminder = useCallback(() => {
 		dispatch(
 			dismissApptReminder({
-				dismissItems: [{ id, dismissedAt: moment().valueOf() }]
+				dismissItems: [{ id, dismissedAt: new Date().getTime() }]
 			})
 		);
 		removeReminder(key);
