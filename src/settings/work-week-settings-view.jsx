@@ -11,7 +11,8 @@ import {
 	Row,
 	Checkbox,
 	FormSubSection,
-	FormSection
+	FormSection,
+	Container
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
@@ -33,15 +34,17 @@ export default function WorkWeekSettings({
 	return (
 		<FormSection id={sectionTitleWorkWeek.id} label={sectionTitleWorkWeek.label}>
 			<FormSubSection>
-				{map(workingSchedule, (s, index) => (
-					<Row key={`week_day_${index}`}>
-						<Checkbox
-							value={s.working}
-							onClick={handelDaysClicked(s.day)}
-							label={getWeekDay(`${Number(s.day) - 1}`)}
-						/>
-					</Row>
-				))}
+				<Container gap={'0.5rem'} mainAlignment={'flex-start'} crossAlignment={'flex-start'}>
+					{map(workingSchedule, (s, index) => (
+						<Row key={`week_day_${index}`}>
+							<Checkbox
+								value={s.working}
+								onClick={handelDaysClicked(s.day)}
+								label={getWeekDay(`${Number(s.day) - 1}`)}
+							/>
+						</Row>
+					))}
+				</Container>
 			</FormSubSection>
 			<FormSubSection label={t('label.work_hour', 'Work hour')}>
 				<Checkbox

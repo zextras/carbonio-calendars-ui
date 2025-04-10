@@ -11,7 +11,8 @@ import {
 	Select,
 	Input,
 	FormSubSection,
-	FormSection
+	FormSection,
+	Container
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
@@ -44,74 +45,78 @@ export default function GeneralSettings({
 	return (
 		<FormSection id={sectionTitleGeneral.id} label={sectionTitleGeneral.label}>
 			<FormSubSection>
-				<Select
-					label={t('label.default_view', 'Default view')}
-					items={defaultViewOptions}
-					onChange={(view) =>
-						updateSettings({ target: { name: 'zimbraPrefCalendarInitialView', value: view } })
-					}
-					defaultSelection={{
-						label: findLabel(defaultViewOptions, settingsObj.zimbraPrefCalendarInitialView),
-						value: settingsObj.zimbraPrefCalendarInitialView
-					}}
-				/>
-				<Select
-					label={t('label.start_week_on', 'Start week on')}
-					items={startWeekOfOptions}
-					onChange={(day) =>
-						updateSettings({
-							target: { name: 'zimbraPrefCalendarFirstDayOfWeek', value: day }
-						})
-					}
-					defaultSelection={{
-						label: findLabel(startWeekOfOptions, settingsObj.zimbraPrefCalendarFirstDayOfWeek),
-						value: settingsObj.zimbraPrefCalendarFirstDayOfWeek
-					}}
-				/>
-				<Select
-					label={t('label.default_appt_vsblty', 'Default appointment visibility')}
-					items={defaultApptVisibiltyOptions}
-					onChange={(mode) =>
-						updateSettings({
-							target: { name: 'zimbraPrefCalendarApptVisibility', value: mode }
-						})
-					}
-					defaultSelection={{
-						label: findLabel(
-							defaultApptVisibiltyOptions,
-							settingsObj.zimbraPrefCalendarApptVisibility
-						),
-						value: settingsObj.zimbraPrefCalendarApptVisibility
-					}}
-				/>
-				<Checkbox
-					value={settingsObj.zimbraPrefCalendarAutoAddInvites === 'TRUE'}
-					label={t(
-						'label.auto_add_rcvd_app',
-						'Automatically add received appointments to calendar'
-					)}
-					onClick={() =>
-						updateSettings({
-							target: {
-								name: 'zimbraPrefCalendarAutoAddInvites',
-								value: settingsObj.zimbraPrefCalendarAutoAddInvites === 'TRUE' ? 'FALSE' : 'TRUE'
-							}
-						})
-					}
-				/>
-				<Checkbox
-					value={settingsObj.zimbraPrefCalendarShowDeclinedMeetings === 'TRUE'}
-					onClick={() =>
-						updateSettings({
-							target: {
-								name: 'zimbraPrefCalendarShowDeclinedMeetings',
-								value:
-									settingsObj.zimbraPrefCalendarShowDeclinedMeetings === 'TRUE' ? 'FALSE' : 'TRUE'
-							}
-						})
-					}
-					label={t('label.show_declined_meetings', 'Show declined meetings')}
-				/>
+				<Container gap={'0.5rem'} mainAlignment={'flex-start'} crossAlignment={'flex-start'}>
+					<Select
+						label={t('label.default_view', 'Default view')}
+						items={defaultViewOptions}
+						onChange={(view) =>
+							updateSettings({ target: { name: 'zimbraPrefCalendarInitialView', value: view } })
+						}
+						defaultSelection={{
+							label: findLabel(defaultViewOptions, settingsObj.zimbraPrefCalendarInitialView),
+							value: settingsObj.zimbraPrefCalendarInitialView
+						}}
+					/>
+					<Select
+						label={t('label.start_week_on', 'Start week on')}
+						items={startWeekOfOptions}
+						onChange={(day) =>
+							updateSettings({
+								target: { name: 'zimbraPrefCalendarFirstDayOfWeek', value: day }
+							})
+						}
+						defaultSelection={{
+							label: findLabel(startWeekOfOptions, settingsObj.zimbraPrefCalendarFirstDayOfWeek),
+							value: settingsObj.zimbraPrefCalendarFirstDayOfWeek
+						}}
+					/>
+					<Select
+						label={t('label.default_appt_vsblty', 'Default appointment visibility')}
+						items={defaultApptVisibiltyOptions}
+						onChange={(mode) =>
+							updateSettings({
+								target: { name: 'zimbraPrefCalendarApptVisibility', value: mode }
+							})
+						}
+						defaultSelection={{
+							label: findLabel(
+								defaultApptVisibiltyOptions,
+								settingsObj.zimbraPrefCalendarApptVisibility
+							),
+							value: settingsObj.zimbraPrefCalendarApptVisibility
+						}}
+					/>
+				</Container>
+				<Container gap={'0.5rem'} mainAlignment={'flex-start'} crossAlignment={'flex-start'}>
+					<Checkbox
+						value={settingsObj.zimbraPrefCalendarAutoAddInvites === 'TRUE'}
+						label={t(
+							'label.auto_add_rcvd_app',
+							'Automatically add received appointments to calendar'
+						)}
+						onClick={() =>
+							updateSettings({
+								target: {
+									name: 'zimbraPrefCalendarAutoAddInvites',
+									value: settingsObj.zimbraPrefCalendarAutoAddInvites === 'TRUE' ? 'FALSE' : 'TRUE'
+								}
+							})
+						}
+					/>
+					<Checkbox
+						value={settingsObj.zimbraPrefCalendarShowDeclinedMeetings === 'TRUE'}
+						onClick={() =>
+							updateSettings({
+								target: {
+									name: 'zimbraPrefCalendarShowDeclinedMeetings',
+									value:
+										settingsObj.zimbraPrefCalendarShowDeclinedMeetings === 'TRUE' ? 'FALSE' : 'TRUE'
+								}
+							})
+						}
+						label={t('label.show_declined_meetings', 'Show declined meetings')}
+					/>
+				</Container>
 			</FormSubSection>
 			<FormSubSection label={t('settings.label.invitation_response', 'Invitation Response')}>
 				<Checkbox
@@ -149,78 +154,87 @@ export default function GeneralSettings({
 				)}
 			</FormSubSection>
 			<FormSubSection label={t('settings.label.show_reminders', 'Show Reminders')}>
-				<Select
-					label={t('settings.label.span_time', 'Span time')}
-					items={showReminderOptions}
-					onChange={(time) =>
-						updateSettings({
-							target: { name: 'zimbraPrefCalendarApptReminderWarningTime', value: time }
-						})
-					}
-					defaultSelection={{
-						label: findLabel(
-							showReminderOptions,
-							settingsObj.zimbraPrefCalendarApptReminderWarningTime
-						),
-						value: settingsObj.zimbraPrefCalendarApptReminderWarningTime
-					}}
-				/>
-				<Checkbox
-					value={settingsObj.zimbraPrefCalendarShowPastDueReminders === 'TRUE'}
-					onClick={() =>
-						updateSettings({
-							target: {
-								name: 'zimbraPrefCalendarShowPastDueReminders',
-								value:
-									settingsObj.zimbraPrefCalendarShowPastDueReminders === 'TRUE' ? 'FALSE' : 'TRUE'
+				<Container gap={'1rem'}>
+					<Select
+						label={t('settings.label.span_time', 'Span time')}
+						items={showReminderOptions}
+						onChange={(time) =>
+							updateSettings({
+								target: { name: 'zimbraPrefCalendarApptReminderWarningTime', value: time }
+							})
+						}
+						defaultSelection={{
+							label: findLabel(
+								showReminderOptions,
+								settingsObj.zimbraPrefCalendarApptReminderWarningTime
+							),
+							value: settingsObj.zimbraPrefCalendarApptReminderWarningTime
+						}}
+					/>
+					<Container gap={'0.5rem'} mainAlignment={'flex-start'} crossAlignment={'flex-start'}>
+						<Checkbox
+							value={settingsObj.zimbraPrefCalendarShowPastDueReminders === 'TRUE'}
+							onClick={() =>
+								updateSettings({
+									target: {
+										name: 'zimbraPrefCalendarShowPastDueReminders',
+										value:
+											settingsObj.zimbraPrefCalendarShowPastDueReminders === 'TRUE'
+												? 'FALSE'
+												: 'TRUE'
+									}
+								})
 							}
-						})
-					}
-					label={t(
-						'settings.label.show_rmndr_past_due_meetings',
-						'Show reminders for past-due meetings'
-					)}
-				/>
-				<Checkbox
-					value={settingsObj.zimbraPrefCalendarReminderSoundsEnabled === 'TRUE'}
-					onClick={() =>
-						updateSettings({
-							target: {
-								name: 'zimbraPrefCalendarReminderSoundsEnabled',
-								value:
-									settingsObj.zimbraPrefCalendarReminderSoundsEnabled === 'TRUE' ? 'FALSE' : 'TRUE'
+							label={t(
+								'settings.label.show_rmndr_past_due_meetings',
+								'Show reminders for past-due meetings'
+							)}
+						/>
+						<Checkbox
+							value={settingsObj.zimbraPrefCalendarReminderSoundsEnabled === 'TRUE'}
+							onClick={() =>
+								updateSettings({
+									target: {
+										name: 'zimbraPrefCalendarReminderSoundsEnabled',
+										value:
+											settingsObj.zimbraPrefCalendarReminderSoundsEnabled === 'TRUE'
+												? 'FALSE'
+												: 'TRUE'
+									}
+								})
 							}
-						})
-					}
-					label={t(
-						'settings.label.enable_reminder_sound',
-						'Play a sound (requires QuickTime or Windows Media plugin)'
-					)}
-				/>
-				<Checkbox
-					value={settingsObj.zimbraPrefMailFlashTitle === 'TRUE'}
-					onClick={() =>
-						updateSettings({
-							target: {
-								name: 'zimbraPrefMailFlashTitle',
-								value: settingsObj.zimbraPrefMailFlashTitle === 'TRUE' ? 'FALSE' : 'TRUE'
+							label={t(
+								'settings.label.enable_reminder_sound',
+								'Play a sound (requires QuickTime or Windows Media plugin)'
+							)}
+						/>
+						<Checkbox
+							value={settingsObj.zimbraPrefMailFlashTitle === 'TRUE'}
+							onClick={() =>
+								updateSettings({
+									target: {
+										name: 'zimbraPrefMailFlashTitle',
+										value: settingsObj.zimbraPrefMailFlashTitle === 'TRUE' ? 'FALSE' : 'TRUE'
+									}
+								})
 							}
-						})
-					}
-					label={t('settings.label.flash_browser_title', 'Flash the browser title')}
-				/>
-				<Checkbox
-					label={t('settings.label.show_popup_notification', 'Show a popup notification')}
-					value={settingsObj.zimbraPrefCalendarToasterEnabled === 'TRUE'}
-					onClick={() =>
-						updateSettings({
-							target: {
-								name: 'zimbraPrefCalendarToasterEnabled',
-								value: settingsObj.zimbraPrefCalendarToasterEnabled === 'TRUE' ? 'FALSE' : 'TRUE'
+							label={t('settings.label.flash_browser_title', 'Flash the browser title')}
+						/>
+						<Checkbox
+							label={t('settings.label.show_popup_notification', 'Show a popup notification')}
+							value={settingsObj.zimbraPrefCalendarToasterEnabled === 'TRUE'}
+							onClick={() =>
+								updateSettings({
+									target: {
+										name: 'zimbraPrefCalendarToasterEnabled',
+										value:
+											settingsObj.zimbraPrefCalendarToasterEnabled === 'TRUE' ? 'FALSE' : 'TRUE'
+									}
+								})
 							}
-						})
-					}
-				/>
+						/>
+					</Container>
+				</Container>
 			</FormSubSection>
 			<FormSubSection label={t('settings.label.default_appt_dur', 'Default appointment duration')}>
 				<Select
