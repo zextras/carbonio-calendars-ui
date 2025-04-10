@@ -23,48 +23,50 @@ import { TitleRow } from './title-row';
 import { VirtualRoomRow } from './virtual-room-row';
 import { ROOM_DIVIDER } from '../../constants';
 import { useInvite } from '../../hooks/use-invite';
+import { useSummaryView } from '../../store/zustand/hooks';
 import { EventType } from '../../types/event';
 
 type EventSummaryProps = {
-	event: EventType;
+	events: EventType[];
 	onClose: () => void;
-	inviteId: string | undefined;
 };
 
-export const EventSummaryView = ({
-	event,
-	onClose,
-	inviteId
-}: EventSummaryProps): ReactElement | null => {
-	const invite = useInvite(inviteId);
+export const EventSummaryView = ({ events, onClose }: EventSummaryProps): ReactElement | null => {
+	const eventId = useSummaryView();
+	const event = events.find((item) => item.id === eventId);
+	const invite = useInvite(event?.resource.inviteId);
 
 	const timeData = useMemo(
 		() => ({
 			...omitBy(
 				{
-					allDay: event.allDay,
-					start: event.start,
-					end: event.end
+					allDay: event?.allDay,
+					start: event?.start,
+					end: event?.end
 				},
 				isNil
 			),
 			...{ timezone: invite?.tz ?? moment.tz.guess() }
 		}),
-		[event.allDay, event.end, event.start, invite?.tz]
+		[event?.allDay, event?.end, event?.start, invite?.tz]
 	);
 
 	const locationData = useMemo(
 		() =>
 			omitBy(
 				{
-					class: event.resource.class,
-					location: event.resource.location,
-					locationUrl: event.resource.locationUrl
+					class: event?.resource.class,
+					location: event?.resource.location,
+					locationUrl: event?.resource.locationUrl
 				},
 				isNil
 			),
 		[event?.resource?.class, event?.resource?.location, event?.resource?.locationUrl]
 	);
+
+	if (!event) {
+		return null;
+	}
 
 	return (
 		<Container

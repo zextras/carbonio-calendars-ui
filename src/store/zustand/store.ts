@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import moment from 'moment';
 import { create } from 'zustand';
 
@@ -24,6 +26,7 @@ export type AppState = {
 	setRange: SetRange;
 	equipment: Array<Resource> | undefined;
 	meetingRoom: Array<Resource> | undefined;
+	summaryViewRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 export const useAppStatusStore = create<AppState>((set) => ({
@@ -32,6 +35,7 @@ export const useAppStatusStore = create<AppState>((set) => ({
 	summaryViewId: undefined,
 	equipment: undefined,
 	meetingRoom: undefined,
+	summaryViewRef: React.createRef(),
 	range: {
 		start: moment().subtract('7', 'days').valueOf(),
 		end: moment().add('15', 'days').valueOf()
