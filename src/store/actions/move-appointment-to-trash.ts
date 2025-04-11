@@ -127,13 +127,16 @@ function createMessageForDelete({
 	newMessage: string;
 	inst: InstanceExceptionId;
 }): { e: any; su: string; mp: MessagePart } {
-	const organizer = [
-		{
-			a: invite?.organizer?.a,
-			p: invite?.organizer?.d,
-			t: 'f'
-		}
-	];
+	const hasValidOrganizer = invite?.organizer?.a;
+	const organizer = hasValidOrganizer
+		? [
+				{
+					a: invite?.organizer?.a,
+					p: invite?.organizer?.d,
+					t: 'f'
+				}
+			]
+		: [];
 	const participants = invite.neverSent
 		? organizer
 		: (getParticipants(Object.entries(invite?.participants).flatMap(([_, value]) => value)).concat(
