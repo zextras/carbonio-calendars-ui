@@ -118,13 +118,11 @@
 		"not dead"
 	],
 	"carbonio": {
-		"translations_repository": "git@github.com:Zextras/carbonio-calendars-ui-i18n.git",
 		"name": "carbonio-calendars-ui",
 		"priority": 6,
 		"attrKey": "zimbraFeatureCalendarEnabled",
 		"type": "carbonio",
 		"display": "Calendars",
-		"icon": "CalendarModOutline",
-		"sentryDsn": "https://dfa8afc4c2d9489a94a7e77fd8c70e36@feedback.zextras.tools/9"
+		"icon": "CalendarModOutline"
 	}
 }
