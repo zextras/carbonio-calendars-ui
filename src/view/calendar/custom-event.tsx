@@ -188,14 +188,18 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 			background={event.resource.calendar.color.background}
 			freeBusyActual={event.resource.freeBusyActual}
 		>
-			<Tooltip label={title} placement="top" disabled={event.resource.class === 'PRI'}>
+			<Tooltip
+				label={title}
+				placement="top"
+				disabled={event.resource.class === 'PRI'}
+				triggerRef={anchorRef}
+			>
 				<Container
 					height="100%"
 					style={{
 						padding: innerContainerPadding,
 						borderLeft: `0.0625rem solid ${event.resource.calendar.color.color}`
 					}}
-					ref={anchorRef}
 					background={event.resource.calendar.color.background}
 				>
 					<Dropdown
