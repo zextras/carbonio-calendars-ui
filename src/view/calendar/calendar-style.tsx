@@ -521,6 +521,7 @@ export default createGlobalStyle<{
 
     .rbc-time-view-resources .rbc-time-header-content {
         flex: 1 0 0;
+        min-width: ${({ $headerMinWidth }): string | undefined => $headerMinWidth};
     }
 
     .rbc-time-view-resources .rbc-time-header-cell-single-day {
