@@ -5,7 +5,8 @@
  */
 import React, { ForwardedRef, ReactNode, useMemo } from 'react';
 
-import { Container, useTheme } from '@zextras/carbonio-design-system';
+import { Container, Tooltip, useTheme } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
 
 import { EVENT_DISPLAY_STATUS } from '../../constants/api';
 import type { InviteFreeBusy } from '../../types/store/invite';
@@ -26,6 +27,7 @@ export const CustomEventFreeBusyStatus = React.forwardRef(
 		ref: ForwardedRef<HTMLDivElement>
 	): React.JSX.Element => {
 		const theme = useTheme();
+		const [t] = useTranslation();
 
 		const outerContainerBackgroundColor = useMemo(() => {
 			const startingLineHeight = 8;
@@ -55,24 +57,42 @@ export const CustomEventFreeBusyStatus = React.forwardRef(
 			theme.palette.white.regular
 		]);
 
+		const tooltipLabel = useMemo(() => {
+			if (freeBusyActual === EVENT_DISPLAY_STATUS.FREE) {
+				return t('tooltip.free_appointment', 'Free appointment');
+			}
+			if (freeBusyActual === EVENT_DISPLAY_STATUS.BUSY) {
+				return t('tooltip.busy_appointment', 'Busy appointment');
+			}
+			if (freeBusyActual === EVENT_DISPLAY_STATUS.OUT_OF_OFFICE) {
+				return t('tooltip.out_of_office_appointment', 'Out of office appointment');
+			}
+			if (freeBusyActual === EVENT_DISPLAY_STATUS.TENTATIVE) {
+				return t('tooltip.tentative_appointment', 'Tentative appointment');
+			}
+			return color;
+		}, [color, freeBusyActual, t]);
+
 		return (
-			<Container
-				height="100%"
-				data-testid="calendar-event"
-				ref={ref}
-				style={{
-					paddingLeft: '0.5rem',
-					background: outerContainerBackgroundColor,
-					borderRadius: '0.25rem',
-					boxShadow: '0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)',
-					border: `0.0625rem solid ${color}`,
-					transition: 'border 0.15s ease-in-out, background 0.15s ease-in-out',
-					cursor: 'pointer',
-					color
-				}}
-			>
-				{children}
-			</Container>
+			<Tooltip label={tooltipLabel}>
+				<Container
+					height="100%"
+					data-testid="calendar-event"
+					ref={ref}
+					style={{
+						paddingLeft: '0.5rem',
+						background: outerContainerBackgroundColor,
+						borderRadius: '0.25rem',
+						boxShadow: '0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)',
+						border: `0.0625rem solid ${color}`,
+						transition: 'border 0.15s ease-in-out, background 0.15s ease-in-out',
+						cursor: 'pointer',
+						color
+					}}
+				>
+					{children}
+				</Container>
+			</Tooltip>
 		);
 	}
 );

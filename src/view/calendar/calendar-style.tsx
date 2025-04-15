@@ -520,7 +520,6 @@ export default createGlobalStyle<{
     }
 
     .rbc-time-view-resources .rbc-time-header-content {
-        min-width: auto;
         flex: 1 0 0;
     }
 

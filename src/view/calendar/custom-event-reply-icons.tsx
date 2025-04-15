@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 
 import { useTranslation } from 'react-i18next';
 
@@ -12,12 +12,10 @@ import { PARTICIPATION_STATUS } from '../../constants/api';
 import { ParticipationStatus } from '../../types/store/invite';
 
 export const CustomEventReplyIcons = ({
-	setIsOuterTooltipDisabled,
 	iAmAttendee,
 	participationStatus
 }: {
 	iAmAttendee: boolean;
-	setIsOuterTooltipDisabled: Dispatch<SetStateAction<boolean>>;
 	participationStatus: ParticipationStatus;
 }): React.JSX.Element | null => {
 	const [t] = useTranslation();
@@ -33,7 +31,6 @@ export const CustomEventReplyIcons = ({
 					iconName={'CalendarWarning'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.NEED_ACTION}
 					tooltipLabel={t('message.you_did_not_answer', "You didn't answer")}
-					disableOuterTooltip={setIsOuterTooltipDisabled}
 				/>
 			)}
 			{participationStatus === PARTICIPATION_STATUS.ACCEPTED && (
@@ -42,7 +39,6 @@ export const CustomEventReplyIcons = ({
 					iconName={'StatusAccept'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.ACCEPTED}
 					tooltipLabel={t('message.you_accepted', 'You accepted')}
-					disableOuterTooltip={setIsOuterTooltipDisabled}
 				/>
 			)}
 			{participationStatus === PARTICIPATION_STATUS.DECLINED && (
@@ -51,7 +47,6 @@ export const CustomEventReplyIcons = ({
 					iconName={'StatusDenied'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.DECLINED}
 					tooltipLabel={t('message.you_declined', 'You declined')}
-					disableOuterTooltip={setIsOuterTooltipDisabled}
 				/>
 			)}
 			{participationStatus === PARTICIPATION_STATUS.TENTATIVE && (
@@ -60,7 +55,6 @@ export const CustomEventReplyIcons = ({
 					iconName={'StatusMaybe'}
 					isIconVisible={participationStatus === PARTICIPATION_STATUS.TENTATIVE}
 					tooltipLabel={t('message.you_accepted_as_tentative', 'You accepted as tentative')}
-					disableOuterTooltip={setIsOuterTooltipDisabled}
 				/>
 			)}
 		</>
