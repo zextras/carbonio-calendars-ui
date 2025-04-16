@@ -16,28 +16,23 @@ describe('CustomEventReplyIcons', () => {
 		setupTest(
 			<CustomEventReplyIcons
 				participationStatus={PARTICIPATION_STATUS.NEED_ACTION}
-				setIsOuterTooltipDisabled={jest.fn()}
 				iAmAttendee={false}
 			/>
 		);
 
-		expect(screen.queryByTestId(`icon: AlertCircleOutline`)).not.toBeInTheDocument();
+		expect(screen.queryByTestId(`icon: CalendarWarning`)).not.toBeInTheDocument();
 	});
 	test.each`
 		participationStatusValue            | icon
-		${PARTICIPATION_STATUS.NEED_ACTION} | ${'AlertCircleOutline'}
-		${PARTICIPATION_STATUS.ACCEPTED}    | ${'CheckmarkCircle2Outline'}
-		${PARTICIPATION_STATUS.DECLINED}    | ${'CloseCircleOutline'}
-		${PARTICIPATION_STATUS.TENTATIVE}   | ${'QuestionMarkCircleOutline'}
+		${PARTICIPATION_STATUS.NEED_ACTION} | ${'CalendarWarning'}
+		${PARTICIPATION_STATUS.ACCEPTED}    | ${'StatusAccept'}
+		${PARTICIPATION_STATUS.DECLINED}    | ${'StatusDenied'}
+		${PARTICIPATION_STATUS.TENTATIVE}   | ${'StatusMaybe'}
 	`(
 		'it should render a different icon depending on participationStatusValue',
 		({ participationStatusValue, icon }) => {
 			setupTest(
-				<CustomEventReplyIcons
-					participationStatus={participationStatusValue}
-					setIsOuterTooltipDisabled={jest.fn()}
-					iAmAttendee
-				/>
+				<CustomEventReplyIcons participationStatus={participationStatusValue} iAmAttendee />
 			);
 
 			expect(screen.getByTestId(`icon: ${icon}`)).toBeVisible();

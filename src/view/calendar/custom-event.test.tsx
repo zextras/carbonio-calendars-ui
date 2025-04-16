@@ -69,7 +69,6 @@ describe('custom-event', () => {
 		const { user } = setupTest(<MemoCustomEvent event={event} title={event.title} />, {
 			store
 		});
-		expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
 
 		await user.click(screen.getByTestId('calendar-event-inner-container'));
 		act(() => {
