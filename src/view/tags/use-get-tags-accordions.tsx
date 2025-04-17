@@ -20,7 +20,7 @@ import { reduce } from 'lodash';
 import { createTag, useGetTagsActions } from './tag-actions';
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants/utils';
 import { useRunSearchIntegration } from '../../carbonio-ui-commons/integrations/search/use-run-search';
-import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
+import { useSortedTagsArray } from '../../carbonio-ui-commons/store/zustand/tags';
 import { ItemType, TagsAccordionItems } from '../../carbonio-ui-commons/types/tags';
 import { CALENDAR_ROUTE } from '../../constants';
 
@@ -89,7 +89,7 @@ export const TagLabel: FC<ItemType> = (props) => {
 };
 
 const useGetTagsAccordion = (): TagsAccordionItems => {
-	const tagsFromStore = useTags();
+	const tagsFromStore = useSortedTagsArray();
 
 	return useMemo(
 		() => ({
