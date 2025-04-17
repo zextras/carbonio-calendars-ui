@@ -24,7 +24,7 @@ import {
 import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
 import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
-import { useTags } from '../carbonio-ui-commons/store/zustand/tags';
+import { useSortedTagsArray } from '../carbonio-ui-commons/store/zustand/tags';
 import { LinkFolder } from '../carbonio-ui-commons/types';
 import { isLinkChild } from '../commons/utilities';
 import { EVENT_ACTIONS } from '../constants/event-actions';
@@ -168,7 +168,7 @@ export const useEventActions = ({
 	const invite = useAppSelector(selectInstanceInvite(event?.resource?.inviteId));
 	const dispatch = useAppDispatch();
 	const { createModal, closeModal } = useModal();
-	const tags = useTags();
+	const tags = useSortedTagsArray();
 	const createSnackbar = useSnackbar();
 	const calendarFolders = useFoldersMap();
 	const _context = useMemo<ActionsContext>(

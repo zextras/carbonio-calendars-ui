@@ -10,18 +10,17 @@ import { map, values } from 'lodash';
 import moment from 'moment';
 
 import { AppointmentCard } from './appointment-card';
-import { useTags } from '../../../carbonio-ui-commons/store/zustand/tags';
+import { useTagStore } from '../../../carbonio-ui-commons/store/zustand/tags';
 import { tags } from '../../../carbonio-ui-commons/test/mocks/tags/tags';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
 import mockedData from '../../../test/generators';
 import 'jest-styled-components';
 
-jest.mock('../../../carbonio-ui-commons/store/zustand/tags', () => ({
-	useTags: jest.fn()
-}));
-
 describe('appointment card component', () => {
+	beforeEach(() => {
+		useTagStore.setState({ tags });
+	});
 	test.todo('on click it will change view and show the calendar event panel');
 	test('it will have the background color of the calendar', () => {
 		const event = mockedData.getEvent();
@@ -112,7 +111,6 @@ describe('appointment card component', () => {
 				expect(privateIcon).toBeVisible();
 			});
 			test('tagged with single tag', () => {
-				(useTags as jest.Mock).mockReturnValue(tags);
 				const event = mockedData.getEvent({ resource: { tags: [values(tags)[0].id] } });
 				setupTest(<AppointmentCard event={event} />);
 				const singleTagIcon = screen.getByTestId('TagSingleIcon');

@@ -9,7 +9,7 @@ import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-d
 import { includes, reduce } from 'lodash';
 
 import { ZIMBRA_STANDARD_COLORS } from '../carbonio-ui-commons/constants';
-import { useTags } from '../carbonio-ui-commons/store/zustand/tags';
+import { useSortedTagsArray } from '../carbonio-ui-commons/store/zustand/tags';
 import { Tag } from '../carbonio-ui-commons/types/tags';
 import { EventType } from '../types/event';
 import { useTagExist } from '../view/tags/tag-actions';
@@ -30,7 +30,7 @@ export const TagIconComponent = ({ event }: { event: EventType }): React.JSX.Ele
 		setShowDropdown(false);
 	}, []);
 
-	const tags = useTags();
+	const tags = useSortedTagsArray();
 
 	const tagItems = useMemo(
 		() =>

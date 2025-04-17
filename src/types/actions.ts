@@ -12,7 +12,7 @@ import { EventType } from './event';
 import { Invite } from './store/invite';
 import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
 import { Folders } from '../carbonio-ui-commons/types';
-import { Tags } from '../carbonio-ui-commons/types/tags';
+import { Tag } from '../carbonio-ui-commons/types/tags';
 import { EventActionsId } from '../constants/event-actions';
 import { AppDispatch } from '../store/redux';
 
@@ -30,7 +30,7 @@ export type ActionsContext = {
 	dispatch: AppDispatch;
 	replaceHistory: ReturnType<typeof useHistoryNavigation>['replaceHistory'];
 	t: TFunction;
-	tags: Tags;
+	tags: Array<Tag>;
 	onClose?: () => void;
 	panel?: boolean;
 	searchPanel?: boolean;

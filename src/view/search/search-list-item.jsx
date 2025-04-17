@@ -22,7 +22,7 @@ import { openAppointment } from '../../actions/appointment-actions-fn';
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
+import { useSortedTagsArray } from '../../carbonio-ui-commons/store/zustand/tags';
 import { PANEL_VIEW } from '../../constants';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { getInvite } from '../../store/actions/get-invite';
@@ -84,7 +84,7 @@ const SearchListItem = ({ item }) => {
 		[hasAttachments, item.resource?.class, item.resource?.isRecurrent, item.resource?.location]
 	);
 
-	const tagsFromStore = useTags();
+	const tagsFromStore = useSortedTagsArray();
 	const tags = useMemo(
 		() =>
 			reduce(
