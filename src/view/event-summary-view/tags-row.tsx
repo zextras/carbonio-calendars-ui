@@ -12,7 +12,7 @@ import styled from 'styled-components';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
 import { useRunSearchIntegration } from '../../carbonio-ui-commons/integrations/search/use-run-search';
-import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
+import { useSortedTagsArray } from '../../carbonio-ui-commons/store/zustand/tags';
 import { Tag } from '../../carbonio-ui-commons/types/tags';
 import { CALENDAR_ROUTE } from '../../constants';
 import { EventType } from '../../types/event';
@@ -28,7 +28,7 @@ const TagsRow: FC<{ hideIcon?: boolean; event: EventType }> = ({
 	hideIcon = false
 }): ReactElement => {
 	const [t] = useTranslation();
-	const tagsFromStore = useTags();
+	const tagsFromStore = useSortedTagsArray();
 	const tags = useMemo(
 		() =>
 			reduce(

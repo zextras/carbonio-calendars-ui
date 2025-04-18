@@ -34,12 +34,12 @@ describe('edit event item', () => {
 			dispatch: jest.fn(),
 			t: jest.fn(),
 			replaceHistory: jest.fn(),
-			tags: {
-				0: {
+			tags: [
+				{
 					id: '1',
 					name: 'one'
 				}
-			},
+			],
 			folders
 		};
 		const editAction = editEventItem({ invite, event, context });
@@ -71,12 +71,12 @@ describe('edit event item', () => {
 				dispatch: jest.fn(),
 				t: jest.fn(),
 				replaceHistory: jest.fn(),
-				tags: {
-					0: {
+				tags: [
+					{
 						id: '1',
 						name: 'one'
 					}
-				},
+				],
 				folders
 			};
 			const editAction = editEventItem({ invite, event, context });
@@ -116,12 +116,12 @@ describe('edit event item', () => {
 				dispatch: jest.fn(),
 				t: jest.fn(),
 				replaceHistory: jest.fn(),
-				tags: {
-					0: {
+				tags: [
+					{
 						id: '1',
 						name: 'one'
 					}
-				},
+				],
 				folders
 			};
 			const editAction = editEventItem({ invite, event, context });
@@ -153,12 +153,12 @@ describe('edit event item', () => {
 				dispatch: jest.fn(),
 				t: jest.fn(),
 				replaceHistory: jest.fn(),
-				tags: {
-					0: {
+				tags: [
+					{
 						id: '1',
 						name: 'one'
 					}
-				},
+				],
 				folders
 			};
 			const editAction = editEventItem({ invite, event, context });
@@ -195,12 +195,12 @@ describe('edit event item', () => {
 				dispatch: jest.fn(),
 				t: jest.fn(),
 				replaceHistory: jest.fn(),
-				tags: {
-					0: {
+				tags: [
+					{
 						id: '1',
 						name: 'one'
 					}
-				},
+				],
 				folders
 			};
 			const editAction = editEventItem({ invite, event, context });

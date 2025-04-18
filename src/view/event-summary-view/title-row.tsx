@@ -10,14 +10,14 @@ import { reduce, includes } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
-import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
+import { useSortedTagsArray } from '../../carbonio-ui-commons/store/zustand/tags';
 import { Tag } from '../../carbonio-ui-commons/types/tags';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { EventType } from '../../types/event';
 
 export const TitleRow = ({ event }: { event: EventType }): ReactElement => {
 	const [t] = useTranslation();
-	const tags = useTags();
+	const tags = useSortedTagsArray();
 	const tagItems = useMemo(
 		() =>
 			reduce(

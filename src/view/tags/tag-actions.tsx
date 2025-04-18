@@ -24,7 +24,7 @@ import { differenceBy, includes, noop, reduce } from 'lodash';
 import CreateUpdateTagModal from './create-update-tag-modal';
 import DeleteTagModal from '../../carbonio-ui-commons/components/tags/delete-tag-modal';
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
-import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
+import { useSortedTagsArray } from '../../carbonio-ui-commons/store/zustand/tags';
 import { ItemType, Tag } from '../../carbonio-ui-commons/types/tags';
 import { EVENT_ACTIONS, EventActionsId } from '../../constants/event-actions';
 import { itemActionRequest } from '../../soap/item-action-request';
@@ -325,7 +325,7 @@ export const useGetTagsActions = ({ tag }: ActionParams): Array<ActionDescriptor
 };
 
 export const useTagsArrayFromStore = (): Array<TagType> => {
-	const tagsFromStore = useTags();
+	const tagsFromStore = useSortedTagsArray();
 	return useMemo(
 		() =>
 			reduce(
