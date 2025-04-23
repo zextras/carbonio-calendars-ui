@@ -173,6 +173,13 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			setIsInvalidQuery(false);
 			setFilterCount(0);
 			setResultLabel(defaultResultLabel);
+			setSearchResults({
+				appointments: {},
+				more: false,
+				offset: 0,
+				sortBy: 'none',
+				query: []
+			});
 		}
 	}, [query, search, searchResults.query, isInvalidQuery, t, defaultResultLabel]);
 
@@ -183,7 +190,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	return (
 		<>
 			<Container style={{ whiteSpace: 'nowrap' }}>
-				<ResultsHeader label={resultLabel} />
+				<ResultsHeader label={query.length > 0 ? resultLabel : ''} />
 				<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
 					<Routes>
 						<Route
