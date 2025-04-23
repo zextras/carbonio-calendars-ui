@@ -156,7 +156,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			t
 		]
 	);
-	const [filterCount, setFilterCount] = useState(0);
 
 	const loadMore = useCallback(() => {
 		if (!loading && searchResults && !isEmpty(searchResults.appointments) && searchResults.more) {
@@ -167,11 +166,9 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	useEffect(() => {
 		if (query && query.length > 0 && query !== searchResults.query && !isInvalidQuery) {
 			search(query, true);
-			setFilterCount(1);
 		}
 		if (query && query.length === 0) {
 			setIsInvalidQuery(false);
-			setFilterCount(0);
 			setResultLabel(defaultResultLabel);
 			setSearchResults({
 				appointments: {},
@@ -201,7 +198,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 										loadMore={loadMore}
 										appointments={appointments}
 										loading={loading}
-										filterCount={filterCount}
 										setShowAdvanceFilters={setShowAdvanceFilters}
 										searchDisabled={false}
 										dateStart={spanStart}
