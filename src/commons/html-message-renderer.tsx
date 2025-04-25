@@ -6,7 +6,6 @@
 
 import React, { useMemo } from 'react';
 
-import { Theme } from '@zextras/carbonio-design-system';
 import { useTheme } from 'styled-components';
 
 import { ShadowDomWrapper } from './shadow-dom-wrapper';
@@ -16,7 +15,6 @@ export const HtmlMessageRenderer = ({
 	htmlContent
 }: {
 	htmlContent: string;
-	fontSize?: keyof typeof Theme.sizes.font;
 }): React.JSX.Element => {
 	const remFontSize = useTheme().sizes.font?.small ?? '0.875rem';
 	const updatedBody = useMemo(() => replaceLinkToAnchor(htmlContent), [htmlContent]);
