@@ -10,13 +10,18 @@ import { Row, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { CalendarSelector } from './calendar-selector';
 import { normalizeCalendarEditor } from '../../../normalizations/normalize-editor';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorCalendarId, selectEditorDisabled } from '../../../store/selectors/editor';
+import {
+	selectEditorCalendarId,
+	selectEditorDisabled,
+	selectEditorIsDraft
+} from '../../../store/selectors/editor';
 import { editEditorCalendar } from '../../../store/slices/editor-slice';
 import { CalendarEditor } from '../../../types/editor';
 
 export const EditorCalendarSelector = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const calendarId = useAppSelector(selectEditorCalendarId(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const isDraft = useAppSelector(selectEditorIsDraft(editorId));
 	const dispatch = useAppDispatch();
 
 	const onChange = useCallback<SingleSelectionOnChange<CalendarEditor>>(
@@ -38,7 +43,7 @@ export const EditorCalendarSelector = ({ editorId }: { editorId: string }): Reac
 			<CalendarSelector
 				calendarId={calendarId}
 				onCalendarChange={onChange}
-				disabled={disabled?.calendar}
+				disabled={disabled?.calendar || isDraft}
 				excludeTrash
 			/>
 		</Row>
