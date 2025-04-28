@@ -34,15 +34,16 @@ export type SearchResults = {
 };
 
 const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
-	const [query, updateQuery] = useQuery();
-	const [t] = useTranslation();
-	const [searchResults, setSearchResults] = useState<SearchResults>({
+	const initialSearchResults = {
 		appointments: {},
 		more: false,
 		offset: 0,
 		sortBy: 'none',
 		query: []
-	});
+	};
+	const [query, updateQuery] = useQuery();
+	const [t] = useTranslation();
+	const [searchResults, setSearchResults] = useState<SearchResults>(initialSearchResults);
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
 	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
@@ -170,13 +171,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		if (query && query.length === 0) {
 			setIsInvalidQuery(false);
 			setResultLabel(defaultResultLabel);
-			setSearchResults({
-				appointments: {},
-				more: false,
-				offset: 0,
-				sortBy: 'none',
-				query: []
-			});
+			setSearchResults(initialSearchResults);
 		}
 	}, [query, search, searchResults.query, isInvalidQuery, t, defaultResultLabel]);
 
