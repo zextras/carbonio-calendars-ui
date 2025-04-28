@@ -34,13 +34,16 @@ export type SearchResults = {
 };
 
 const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
-	const initialSearchResults = {
-		appointments: {},
-		more: false,
-		offset: 0,
-		sortBy: 'none',
-		query: []
-	};
+	const initialSearchResults = useMemo(
+		() => ({
+			appointments: {},
+			more: false,
+			offset: 0,
+			sortBy: 'none',
+			query: []
+		}),
+		[]
+	);
 	const [query, updateQuery] = useQuery();
 	const [t] = useTranslation();
 	const [searchResults, setSearchResults] = useState<SearchResults>(initialSearchResults);
@@ -173,7 +176,15 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			setResultLabel(defaultResultLabel);
 			setSearchResults(initialSearchResults);
 		}
-	}, [query, search, searchResults.query, isInvalidQuery, t, defaultResultLabel]);
+	}, [
+		query,
+		search,
+		searchResults.query,
+		isInvalidQuery,
+		t,
+		defaultResultLabel,
+		initialSearchResults
+	]);
 
 	const appointments = useAppSelector((state) =>
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
