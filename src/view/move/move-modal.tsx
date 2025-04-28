@@ -89,11 +89,12 @@ export const MoveModal = ({
 					</Text>
 				</Container>
 				<FolderSelector
+					selectedFolderId={folderDestination?.id}
 					onFolderSelected={(folder: Folder): void => {
 						setFolderDestination(folder);
 					}}
 					showSharedAccounts
-					allowRootSelection
+					allowRootSelection={false}
 				/>
 
 				<Container padding={{ all: 'medium' }} mainAlignment="center" crossAlignment="flex-start">
