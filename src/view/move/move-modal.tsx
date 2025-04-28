@@ -12,6 +12,7 @@ import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-foote
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { FolderSelector } from '../../carbonio-ui-commons/components/select/flatten-folders/folder-selector';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
+import { isTrash } from '../../carbonio-ui-commons/helpers/folders';
 import { Folder } from '../../carbonio-ui-commons/types';
 import { EventType } from '../../types/event';
 
@@ -95,6 +96,7 @@ export const MoveModal = ({
 					}}
 					showSharedAccounts
 					allowRootSelection={false}
+					filterChildren={(folder: Folder): boolean => !isTrash(folder.id)}
 				/>
 
 				<Container padding={{ all: 'medium' }} mainAlignment="center" crossAlignment="flex-start">
