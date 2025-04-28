@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback } from 'react';
 
-import { Row, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
+import { Row, SingleSelectionOnChange, Tooltip } from '@zextras/carbonio-design-system';
 
 import { CalendarSelector } from './calendar-selector';
 import { normalizeCalendarEditor } from '../../../normalizations/normalize-editor';
@@ -39,13 +39,28 @@ export const EditorCalendarSelector = ({ editorId }: { editorId: string }): Reac
 	);
 
 	return calendarId ? (
-		<Row height="fit" width="fill" padding={{ top: 'large' }}>
-			<CalendarSelector
-				calendarId={calendarId}
-				onCalendarChange={onChange}
-				disabled={disabled?.calendar || isDraft}
-				excludeTrash
-			/>
-		</Row>
+		<>
+			{isDraft ? (
+				<Tooltip label={'Use move option to move event to a different calendar'}>
+					<Row height="fit" width="fill" padding={{ top: 'large' }}>
+						<CalendarSelector
+							calendarId={calendarId}
+							onCalendarChange={onChange}
+							disabled
+							excludeTrash
+						/>
+					</Row>
+				</Tooltip>
+			) : (
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<CalendarSelector
+						calendarId={calendarId}
+						onCalendarChange={onChange}
+						disabled={disabled?.calendar}
+						excludeTrash
+					/>
+				</Row>
+			)}
+		</>
 	) : null;
 };
