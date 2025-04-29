@@ -11,7 +11,6 @@ import { t } from '@zextras/carbonio-shell-ui';
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
 import { FolderSelector } from '../../carbonio-ui-commons/components/select/flatten-folders/folder-selector';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { isTrash } from '../../carbonio-ui-commons/helpers/folders';
 import { Folder } from '../../carbonio-ui-commons/types';
 import { EventType } from '../../types/event';
@@ -76,7 +75,7 @@ export const MoveModal = ({
 		>
 			<ModalHeader
 				title={`${
-					event.resource.calendar.id === FOLDERS.TRASH
+					isTrash(event.resource.calendar.id)
 						? t('label.restore', 'Restore')
 						: t('label.move', 'Move')
 				} ${event.title}`}
@@ -140,7 +139,7 @@ export const MoveModal = ({
 				secondaryColor="primary"
 				secondaryLabel={t('label.new_calendar', 'New Calendar')}
 				label={
-					event.resource.calendar.id === FOLDERS.TRASH
+					isTrash(event.resource.calendar.id)
 						? t('label.restore', 'Restore')
 						: t('label.move', 'Move')
 				}
