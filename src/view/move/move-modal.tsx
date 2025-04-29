@@ -58,6 +58,10 @@ export const MoveModal = ({
 		onClose
 	]);
 
+	const isInvalidDestination = !folderDestination || !folderDestination.id;
+	const isInvalidCurrent = !currentFolder || !currentFolder.id;
+	const isSameFolder = folderDestination?.id === currentFolder?.id;
+
 	return (
 		<Container
 			padding={{ all: 'small' }}
@@ -143,9 +147,7 @@ export const MoveModal = ({
 						? t('label.restore', 'Restore')
 						: t('label.move', 'Move')
 				}
-				disabled={
-					folderDestination && (!folderDestination.id || folderDestination.id === currentFolder.id)
-				}
+				disabled={isInvalidDestination || isInvalidCurrent || isSameFolder}
 			/>
 		</Container>
 	);
