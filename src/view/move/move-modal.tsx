@@ -39,7 +39,7 @@ export const MoveModal = ({
 	action
 }: MoveModalProps): ReactElement => {
 	const [folderDestination, setFolderDestination] = useState<Folder | undefined>();
-	const [isSameFolder, setIsSameFolder] = useState(false);
+
 	const onConfirm = useCallback(() => {
 		if (folderDestination && folderDestination?.id !== currentFolder.id) {
 			action({
@@ -49,8 +49,6 @@ export const MoveModal = ({
 				destinationCalendarName: folderDestination.name
 			});
 			onClose();
-		} else {
-			setIsSameFolder(true);
 		}
 	}, [
 		folderDestination,
@@ -67,6 +65,14 @@ export const MoveModal = ({
 			mainAlignment="center"
 			crossAlignment="flex-start"
 			height="fit"
+			width="fill"
+			style={{
+				maxWidth: '100%',
+				boxSizing: 'border-box',
+				display: 'flex',
+				flexDirection: 'column',
+				minHeight: 0
+			}}
 		>
 			<ModalHeader
 				title={`${
@@ -76,11 +82,26 @@ export const MoveModal = ({
 				} ${event.title}`}
 				onClose={onClose}
 			/>
-			<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
+
+			<Container
+				mainAlignment="flex-start"
+				crossAlignment="flex-start"
+				height="fit"
+				width="fill"
+				padding={{ bottom: 'small' }}
+				style={{
+					flex: 1,
+					minHeight: 0,
+					overflow: 'hidden',
+					display: 'flex',
+					flexDirection: 'column'
+				}}
+			>
 				<Container
 					padding={{ vertical: 'small' }}
 					mainAlignment="center"
 					crossAlignment="flex-start"
+					width="fill"
 				>
 					<Text overflow="break-word">
 						{t(
@@ -89,36 +110,44 @@ export const MoveModal = ({
 						)}
 					</Text>
 				</Container>
-				<FolderSelector
-					selectedFolderId={folderDestination?.id}
-					onFolderSelected={(folder: Folder): void => {
-						setFolderDestination(folder);
-					}}
-					showSharedAccounts
-					allowRootSelection={false}
-					filterChildren={(folder: Folder): boolean => !isTrash(folder.id)}
-				/>
 
-				<Container padding={{ all: 'medium' }} mainAlignment="center" crossAlignment="flex-start">
-					{isSameFolder && <Text color="error">Cannot move to same folder</Text>}
+				<Container
+					width="fill"
+					padding={{ bottom: 'small' }}
+					style={{
+						flex: 1,
+						minHeight: 0,
+						display: 'flex',
+						flexDirection: 'column'
+					}}
+				>
+					<FolderSelector
+						selectedFolderId={folderDestination?.id}
+						onFolderSelected={(folder: Folder): void => {
+							setFolderDestination(folder);
+						}}
+						showSharedAccounts
+						allowRootSelection={false}
+						filterChildren={(folder: Folder): boolean => !isTrash(folder.id)}
+					/>
 				</Container>
-				<ModalFooter
-					onConfirm={onConfirm}
-					secondaryAction={toggleModal}
-					secondaryBtnType="outlined"
-					secondaryColor="primary"
-					secondaryLabel={t('label.new_calendar', 'New Calendar')}
-					label={
-						event.resource.calendar.id === FOLDERS.TRASH
-							? t('label.restore', 'Restore')
-							: t('label.move', 'Move')
-					}
-					disabled={
-						folderDestination &&
-						(!folderDestination.id || folderDestination.id === currentFolder.id)
-					}
-				/>
 			</Container>
+
+			<ModalFooter
+				onConfirm={onConfirm}
+				secondaryAction={toggleModal}
+				secondaryBtnType="outlined"
+				secondaryColor="primary"
+				secondaryLabel={t('label.new_calendar', 'New Calendar')}
+				label={
+					event.resource.calendar.id === FOLDERS.TRASH
+						? t('label.restore', 'Restore')
+						: t('label.move', 'Move')
+				}
+				disabled={
+					folderDestination && (!folderDestination.id || folderDestination.id === currentFolder.id)
+				}
+			/>
 		</Container>
 	);
 };
