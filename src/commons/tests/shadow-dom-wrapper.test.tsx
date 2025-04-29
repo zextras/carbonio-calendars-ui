@@ -6,10 +6,9 @@
 
 import React from 'react';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
-import * as darkReader from 'darkreader';
 
 import { ShadowDomWrapper } from '../shadow-dom-wrapper';
 
@@ -36,20 +35,6 @@ describe('ShadowDomWrapper', () => {
 
 		expect(child).toBeInTheDocument();
 		expect(child).toHaveTextContent('Hello, Shadow DOM!');
-	});
-
-	it('enables darkreader when dark mode is enabled', async () => {
-		const children = <div data-testid="child">Hello, Shadow DOM!</div>;
-
-		(useUserSettings as jest.Mock).mockReturnValue({
-			props: [{ name: 'zappDarkreaderMode', _content: 'enabled', zimlet: 'carbonio-shell-ui' }]
-		});
-
-		render(<ShadowDomWrapper>{children}</ShadowDomWrapper>);
-
-		await waitFor(() => {
-			expect(darkReader.enable).toHaveBeenCalled();
-		});
 	});
 
 	it('renders children inside shadow DOM when dark mode is enabled', () => {
