@@ -10,7 +10,7 @@ import { t } from '@zextras/carbonio-shell-ui';
 
 import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
 import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { FolderSelector } from '../../carbonio-ui-commons/components/select/flatten-folders/folder-selector';
+import { FolderSelector } from '../../carbonio-ui-commons/components/select/folders/folder-selector';
 import { isTrash } from '../../carbonio-ui-commons/helpers/folders';
 import { Folder } from '../../carbonio-ui-commons/types';
 import { EventType } from '../../types/event';
