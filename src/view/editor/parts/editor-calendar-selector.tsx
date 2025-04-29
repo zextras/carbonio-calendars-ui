@@ -6,6 +6,7 @@
 import React, { ReactElement, useCallback } from 'react';
 
 import { Row, SingleSelectionOnChange, Tooltip } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
 
 import { CalendarSelector } from './calendar-selector';
 import { normalizeCalendarEditor } from '../../../normalizations/normalize-editor';
@@ -19,6 +20,8 @@ import { editEditorCalendar } from '../../../store/slices/editor-slice';
 import { CalendarEditor } from '../../../types/editor';
 
 export const EditorCalendarSelector = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const [t] = useTranslation();
+
 	const calendarId = useAppSelector(selectEditorCalendarId(editorId));
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const isDraft = useAppSelector(selectEditorIsDraft(editorId));
@@ -38,10 +41,15 @@ export const EditorCalendarSelector = ({ editorId }: { editorId: string }): Reac
 		[dispatch, editorId]
 	);
 
+	const disabledCalendarTooltipLabel = t(
+		'tooltip.calendarSelector.disabled',
+		"To move this event to another calendar use the 'Move' option"
+	);
+
 	return calendarId ? (
 		<>
 			{isDraft ? (
-				<Tooltip label={'Use move option to move event to a different calendar'}>
+				<Tooltip label={disabledCalendarTooltipLabel}>
 					<Row height="fit" width="fill" padding={{ top: 'large' }}>
 						<CalendarSelector
 							calendarId={calendarId}
