@@ -15,6 +15,15 @@ process.env.TZ = JEST_DEFAULT_TIMEZONE;
 const config: Config = {
 	...defaultConfig,
 	collectCoverage: true,
-	coverageReporters: ['lcov', 'html']
+	coverageReporters: ['lcov', 'html'],
+	collectCoverageFrom: [
+		'src/**/*.{js,ts}(x)?',
+		'!**/__mocks__/**', // Exclude mock files
+		'!**/__tests__/**', // Exclude test files
+		'!**/*.test.{js,jsx,ts,tsx}', // Exclude test files
+		'!**/*.spec.{js,jsx,ts,tsx}', // Exclude test files
+		'!src/tests/**', // Exclude test files from src/tests
+		'!src/**/test/mocks/**' // Exclude test files from src/**/test/mocks
+	]
 };
 export default config;
