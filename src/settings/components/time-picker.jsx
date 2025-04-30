@@ -5,11 +5,10 @@
  */
 import React from 'react';
 
+import { Container } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import momentLocalizer from 'react-widgets-moment';
 
-import Styler from './date-picker-style';
-// import EndDatePicker from './end-date-picker';
 import StartTimePicker from './start-time-picker';
 
 momentLocalizer();
@@ -17,7 +16,7 @@ momentLocalizer();
 export default function DatePicker({ start, end, onChange, day, disabled }) {
 	return (
 		<>
-			<Styler orientation="horizontal" allDay height="fit" mainAlignment="flex-start" gap="1rem">
+			<Container orientation="horizontal" height="fit" mainAlignment="flex-start" gap="1rem">
 				<StartTimePicker
 					disabled={disabled}
 					start={start}
@@ -34,7 +33,7 @@ export default function DatePicker({ start, end, onChange, day, disabled }) {
 					onChange={onChange}
 					day={day}
 				/>
-			</Styler>
+			</Container>
 		</>
 	);
 }
