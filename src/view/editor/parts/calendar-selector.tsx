@@ -129,6 +129,7 @@ export const CalendarSelector = ({
 
 	return calendars && defaultCalendarSelection ? (
 		<Select
+			data-testid={'calendar-selector'}
 			label={label || t('label.calendar', 'Calendar')}
 			onChange={onSelectedCalendarChange}
 			items={calendarItems}

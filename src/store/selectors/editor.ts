@@ -174,6 +174,18 @@ export const selectEditorAttachmentAid =
 	(state: RootState): Array<string> =>
 		state?.editor?.editors?.[id]?.attach?.aid;
 
+export const selectEditorIsDraft =
+	(id: string) =>
+	(state: RootState): boolean => {
+		const editor = state?.editor?.editors?.[id];
+
+		if (editor?.draft === true || editor?.isNew === false) {
+			return true;
+		}
+
+		return editor?.draft === undefined && editor?.isNew === undefined;
+	};
+
 export const selectEditorAttach =
 	(id: string) =>
 	(state: RootState): Array<any> =>
