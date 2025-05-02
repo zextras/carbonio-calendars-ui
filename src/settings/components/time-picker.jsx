@@ -15,25 +15,23 @@ momentLocalizer();
 
 export default function DatePicker({ start, end, onChange, day, disabled }) {
 	return (
-		<>
-			<Container orientation="horizontal" height="fit" mainAlignment="flex-start" gap="1rem">
-				<StartTimePicker
-					disabled={disabled}
-					start={start}
-					showEnd={false}
-					onChange={onChange}
-					day={day}
-					label={t('label.from', 'from')}
-				/>
-				<StartTimePicker
-					label={t('label.to', 'to')}
-					disabled={disabled}
-					start={end}
-					showEnd
-					onChange={onChange}
-					day={day}
-				/>
-			</Container>
-		</>
+		<Container orientation="horizontal" height="fit" mainAlignment="flex-start" gap="1rem">
+			<StartTimePicker
+				disabled={disabled}
+				start={start}
+				showEnd={false}
+				onChange={onChange}
+				day={day}
+				label={t('label.from', 'from')}
+			/>
+			<StartTimePicker
+				label={t('label.to', 'to')}
+				disabled={disabled}
+				start={end}
+				showEnd
+				onChange={onChange}
+				day={day}
+			/>
+		</Container>
 	);
 }
