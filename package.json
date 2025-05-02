@@ -109,7 +109,8 @@
 		"react-widgets-moment": "4.0.30",
 		"redux": "4.2.1",
 		"styled-components": "^6.1.13",
-		"zustand": "^4.5.5"
+		"zustand": "^4.5.5",
+		"darkreader": "^4.9.79"
 	},
 	"browserslist": [
 		">1%",

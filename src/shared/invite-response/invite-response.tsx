@@ -467,7 +467,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						<Row width="100%" padding={{ vertical: 'medium' }}>
 							<Divider />
 						</Row>
-						<Row padding={{ right: 'small' }}>
+						<Row padding={{ right: 'small', top: 'small' }}>
 							<Icon size="large" icon="MessageSquareOutline" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
