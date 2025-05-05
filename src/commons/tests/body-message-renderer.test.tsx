@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 
 import '@testing-library/jest-dom';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -19,7 +19,7 @@ const mockInvite = mockedData.getInvite();
 
 describe('BodyMessageRenderer', () => {
 	it('returns null when fullInvite is undefined', () => {
-		const { container } = render(
+		const { container } = setupTest(
 			<BodyMessageRenderer fullInvite={undefined as unknown as Invite} />
 		);
 		expect(container).toBeEmptyDOMElement();
@@ -70,25 +70,43 @@ describe('BodyMessageRenderer', () => {
 
 	it('renders TextMessageRenderer when only textDescription is present', () => {
 		const textContent = 'This is plain text';
-		render(
-			<BodyMessageRenderer fullInvite={mockInvite({ text: textContent })} inviteId="1" parts={{}} />
+		setupTest(
+			<BodyMessageRenderer
+				fullInvite={{
+					...mockInvite,
+					fragment: 'some fragment',
+					textDescription: [{ _content: textContent }]
+				}}
+			/>
 		);
 		expect(screen.getByText(/This is plain text/)).toBeInTheDocument();
 	});
 
 	it('converts line breaks in plain text to <br/>', () => {
 		const textContent = 'Line1\nLine2';
-		render(
-			<BodyMessageRenderer fullInvite={mockInvite({ text: textContent })} inviteId="1" parts={{}} />
+		setupTest(
+			<BodyMessageRenderer
+				fullInvite={{
+					...mockInvite,
+					fragment: 'some fragment',
+					textDescription: [{ _content: textContent }]
+				}}
+			/>
 		);
 		expect(screen.getByText(/Line1/)).toBeInTheDocument();
 		expect(screen.getByText(/Line2/)).toBeInTheDocument();
 	});
 
 	it('removes ROOM_DIVIDER content from textDescription', () => {
-		const textContent = `xxROOM_DIVIDERxxshould be removedxxROOM_DIVIDERxxText visible`;
-		render(
-			<BodyMessageRenderer fullInvite={mockInvite({ text: textContent })} inviteId="1" parts={{}} />
+		const textContent = `${ROOM_DIVIDER}ROOM_DIVIDERxxshould be removed${ROOM_DIVIDER}Text visible`;
+		setupTest(
+			<BodyMessageRenderer
+				fullInvite={{
+					...mockInvite,
+					fragment: 'some fragment',
+					textDescription: [{ _content: textContent }]
+				}}
+			/>
 		);
 		expect(screen.queryByText(/should be removed/)).not.toBeInTheDocument();
 		expect(screen.getByText(/Text visible/)).toBeInTheDocument();
@@ -96,11 +114,13 @@ describe('BodyMessageRenderer', () => {
 
 	it('renders with provided fontSize', () => {
 		const textContent = 'Font size test';
-		render(
+		setupTest(
 			<BodyMessageRenderer
-				fullInvite={mockInvite({ text: textContent })}
-				inviteId="1"
-				parts={{}}
+				fullInvite={{
+					...mockInvite,
+					fragment: 'some fragment',
+					textDescription: [{ _content: textContent }]
+				}}
 				fontSize="large"
 			/>
 		);
