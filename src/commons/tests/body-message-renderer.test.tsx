@@ -6,6 +6,7 @@
 
 import React from 'react';
 
+import { faker } from '@faker-js/faker';
 import { screen } from '@testing-library/react';
 
 import '@testing-library/jest-dom';
@@ -125,5 +126,34 @@ describe('BodyMessageRenderer', () => {
 			/>
 		);
 		expect(screen.getByText(/Font size test/)).toBeInTheDocument();
+	});
+
+	it('renders large htmlDescription', () => {
+		function generateFakeDivs(count: number): string {
+			let html = '';
+			// eslint-disable-next-line no-plusplus
+			for (let i = 0; i < count; i++) {
+				html += `<div>${faker.lorem.sentences(3)}</div>\n`;
+			}
+			return html;
+		}
+
+		const htmlContent = `<div>a1b1c1</div>${generateFakeDivs(2000)}<div>x1y1z1</div>`;
+		setupTest(
+			<BodyMessageRenderer
+				fullInvite={{
+					...mockInvite,
+					fragment: 'some fragment',
+					htmlDescription: [{ _content: htmlContent }]
+				}}
+				fontSize="large"
+			/>
+		);
+		const shadowDomWrapper = screen.getByTestId('shadow-dom-wrapper');
+		expect(shadowDomWrapper).toBeInTheDocument();
+		const { shadowRoot } = shadowDomWrapper;
+		const renderedHtml = shadowRoot?.innerHTML.toString();
+		expect(renderedHtml).toContain('a1b1c1');
+		expect(renderedHtml).toContain('x1y1z1');
 	});
 });
