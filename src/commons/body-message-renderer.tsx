@@ -66,10 +66,8 @@ const EmptyBody = (): React.JSX.Element => (
 	</Container>
 );
 
-const BodyMessageRenderer = ({
+export const BodyMessageRenderer = ({
 	fullInvite,
-	inviteId,
-	parts,
 	fontSize
 }: {
 	fullInvite: Invite;
@@ -96,5 +94,3 @@ const BodyMessageRenderer = ({
 	const textContent = roomTextDesc ? replace(originalText, roomTextDesc, '') : originalText;
 	return <TextMessageRenderer text={extractBody(textContent)} fontSize={fontSize} />;
 };
-
-export default BodyMessageRenderer;
