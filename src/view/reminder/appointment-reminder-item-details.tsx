@@ -102,12 +102,7 @@ export const AppointmentReminderItemDetails = ({
 								<Icon icon="MessageSquareOutline" size="medium" />
 							</Padding>
 							<Row takeAvailableSpace mainAlignment="flex-start">
-								<BodyMessageRenderer
-									fullInvite={invite}
-									inviteId={invite?.id}
-									parts={invite?.parts}
-									fontSize={fontSize}
-								/>
+								<BodyMessageRenderer fullInvite={invite} fontSize={fontSize} />
 							</Row>
 						</Row>
 					</Row>

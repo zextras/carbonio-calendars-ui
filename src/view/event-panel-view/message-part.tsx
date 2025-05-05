@@ -12,11 +12,9 @@ import { Invite } from '../../types/store/invite';
 
 type MessageProps = {
 	fullInvite: Invite;
-	inviteId: string;
-	parts: any;
 };
 
-export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): ReactElement => (
+export const MessagePart = ({ fullInvite }: MessageProps): ReactElement => (
 	<Container
 		orientation="horizontal"
 		mainAlignment="flex-start"
@@ -35,7 +33,7 @@ export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): Reac
 			height="fit"
 			padding={{ left: 'small' }}
 		>
-			<BodyMessageRenderer fullInvite={fullInvite} inviteId={inviteId} parts={parts} />
+			<BodyMessageRenderer fullInvite={fullInvite} />
 		</Container>
 	</Container>
 );

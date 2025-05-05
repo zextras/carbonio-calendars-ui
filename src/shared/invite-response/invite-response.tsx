@@ -471,7 +471,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							<Icon size="large" icon="MessageSquareOutline" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<BodyMessageRenderer fullInvite={invite} inviteId={inviteId} parts={invite?.parts} />
+							<BodyMessageRenderer fullInvite={invite} />
 						</Row>
 					</Row>
 				)}
