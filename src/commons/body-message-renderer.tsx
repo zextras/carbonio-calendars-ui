@@ -12,7 +12,7 @@ import { replace } from 'lodash';
 import { ROOM_DIVIDER } from '../constants';
 import { HtmlMessageRenderer } from './html-message-renderer';
 import { replaceLinkToAnchor } from './utilities';
-import type { Invite, Parts } from '../types/store/invite';
+import type { Invite } from '../types/store/invite';
 
 export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER}`, 's');
 
@@ -66,15 +66,15 @@ const EmptyBody = (): React.JSX.Element => (
 	</Container>
 );
 
+type BodyMessageRendererProps = {
+	fullInvite: Invite;
+	fontSize?: keyof typeof Theme.sizes.font;
+};
+
 export const BodyMessageRenderer = ({
 	fullInvite,
 	fontSize
-}: {
-	fullInvite: Invite;
-	inviteId: string;
-	parts: Parts;
-	fontSize?: keyof typeof Theme.sizes.font;
-}): React.JSX.Element | null => {
+}: BodyMessageRendererProps): React.JSX.Element | null => {
 	if (!fullInvite) {
 		return null;
 	}
