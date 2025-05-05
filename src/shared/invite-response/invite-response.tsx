@@ -480,9 +480,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	);
 };
 
-const InviteResponseComp: FC<InviteResponseArguments> = (props) => (
+export const InviteResponseComp: FC<InviteResponseArguments> = (props) => (
 	<StoreProvider>
 		<InviteResponse {...props} />
 	</StoreProvider>
 );
-export default InviteResponseComp;
