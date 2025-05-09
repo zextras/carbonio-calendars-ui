@@ -401,17 +401,18 @@ const RootCalendarChildren = ({ item }: { item: Folder }): React.JSX.Element => 
 };
 
 const RootAccount = ({ item }: { item: Folder }): React.JSX.Element => {
-	const { displayName } = useUserAccount();
+	const { displayName, name } = useUserAccount();
+	const accountName = name ?? displayName;
 	const accordionItem = useMemo(
 		() =>
 			({
 				...item,
-				label: item.name === ROOT_NAME ? displayName : item.name,
+				label: item.name === ROOT_NAME ? accountName : item.name,
 				icon: getFolderIcon({ item, checked: !!item.checked }),
 				iconColor: setCalendarColor({ color: item.color, rgb: item.rgb }).color,
 				textProps: { size: 'small' }
 			}) as AccordionItemType,
-		[item, displayName]
+		[item, accountName]
 	);
 	return (
 		<FittedRow>
