@@ -69,7 +69,7 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 
 	useEffect(() => {
 		if (!open) return;
-		
+
 		const updatedQuery = map(
 			filter(
 				query,
@@ -96,7 +96,7 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 
 	const secondaryDisabled = useMemo(
 		() => queryToBe.length === 0 && fromDate === DEFAULT_DATE_START && toDate === DEFAULT_DATE_END,
-		[queryToBe.length, fromDate, toDate, DEFAULT_DATE_START, DEFAULT_DATE_END]
+		[queryToBe.length, fromDate, toDate]
 	);
 
 	const onConfirm = useCallback(() => {
