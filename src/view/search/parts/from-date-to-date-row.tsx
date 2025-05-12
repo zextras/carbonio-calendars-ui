@@ -9,8 +9,8 @@ import { Container, DateTimePicker } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
 type ComponentProps = {
-	fromDate: Date;
-	setFromDate: (arg: Date) => void;
+	fromDate: Date | null;
+	setFromDate: (arg: Date | null) => void;
 	toDate: Date;
 	setToDate: (arg: Date) => void;
 };
@@ -22,18 +22,14 @@ const FromDateToDateRow: FC<ComponentProps> = ({
 }): ReactElement => {
 	const onFromDateChange = useCallback(
 		(date: Date | null) => {
-			if (date) {
-				setFromDate(date);
-			}
+			setFromDate(date);
 		},
 		[setFromDate]
 	);
 
 	const onToDateChange = useCallback(
 		(date: Date | null) => {
-			if (date) {
-				setToDate(date);
-			}
+			setToDate(date);
 		},
 		[setToDate]
 	);

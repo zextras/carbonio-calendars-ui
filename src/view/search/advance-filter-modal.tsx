@@ -71,14 +71,10 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 		if (!open) return;
 
 		const updatedQuery = map(
-			filter(
-				query,
-				(v) => !v.isQueryFilter
-			),
+			filter(query, (v) => !v.isQueryFilter),
 			(q) => ({ ...q, hasAvatar: false })
 		);
 		setOtherKeywords(updatedQuery);
-
 	}, [query, open]);
 
 	const resetFilters = useCallback(() => {
@@ -87,20 +83,17 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 		setOtherKeywords([]);
 	}, [setDateEnd, setDateStart, updateQuery]);
 
-	const queryToBe = useMemo<Array<QueryChip>>(
-		() => concat(otherKeywords),
-		[otherKeywords]
-	);
+	const queryToBe = useMemo<Array<QueryChip>>(() => concat(otherKeywords), [otherKeywords]);
 
 	const secondaryDisabled = useMemo(
 		() => queryToBe.length === 0 && fromDate === DEFAULT_DATE_START && toDate === DEFAULT_DATE_END,
 		[queryToBe.length, fromDate, toDate]
 	);
 
-	const confirmDisabled = useMemo(
-		() => queryToBe.length === 0,
-		[queryToBe.length]
-	);
+	const confirmDisabled = useMemo(() => {
+		console.log('Validation state:', { queryToBe, fromDate, toDate });
+		return queryToBe.length === 0 || toDate === null;
+	}, [queryToBe.length, fromDate, toDate]);
 
 	const onConfirm = useCallback(() => {
 		updateQuery(queryToBe);
