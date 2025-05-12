@@ -83,10 +83,8 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 
 	const resetFilters = useCallback(() => {
 		setFromDate(DEFAULT_DATE_START);
-		setDateStart(DEFAULT_DATE_START);
 		setToDate(DEFAULT_DATE_END);
-		setDateEnd(DEFAULT_DATE_END);
-		updateQuery([]);
+		setOtherKeywords([]);
 	}, [setDateEnd, setDateStart, updateQuery]);
 
 	const queryToBe = useMemo<Array<QueryChip>>(
@@ -97,6 +95,11 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 	const secondaryDisabled = useMemo(
 		() => queryToBe.length === 0 && fromDate === DEFAULT_DATE_START && toDate === DEFAULT_DATE_END,
 		[queryToBe.length, fromDate, toDate]
+	);
+
+	const confirmDisabled = useMemo(
+		() => queryToBe.length === 0,
+		[queryToBe.length]
 	);
 
 	const onConfirm = useCallback(() => {
@@ -127,6 +130,7 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 			<ModalFooter
 				onConfirm={onConfirm}
 				confirmLabel={t('action.search', 'Search')}
+				confirmDisabled={confirmDisabled}
 				secondaryActionLabel={t('action.reset', 'Reset filters')}
 				onSecondaryAction={resetFilters}
 				secondaryActionDisabled={secondaryDisabled}
