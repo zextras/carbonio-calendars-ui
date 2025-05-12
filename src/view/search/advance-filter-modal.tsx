@@ -16,8 +16,8 @@ import {
 } from '@zextras/carbonio-design-system';
 import type { QueryChip } from '@zextras/carbonio-search-ui';
 import { t } from '@zextras/carbonio-shell-ui';
-import { concat, filter, map } from 'lodash';
 
+import { concat, filter, map } from 'lodash';
 import FromDateToDateRow from './parts/from-date-to-date-row';
 import KeywordRow from './parts/keyword-row';
 
@@ -36,7 +36,7 @@ type KeywordState = Array<{
 	error?: boolean;
 }>;
 
-type AdvancedFilterModalProps = {
+export type AdvancedFilterModalProps = {
 	open: boolean;
 	dateStart: number;
 	dateEnd: number;
@@ -53,7 +53,7 @@ type AdvancedFilterModalProps = {
 	updateQuery: (arg: Array<QueryChip>) => void;
 };
 
-const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
+export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 	open,
 	onClose,
 	query,
@@ -72,7 +72,12 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 
 		const updatedQuery = map(
 			filter(query, (v) => !v.isQueryFilter),
-			(q) => ({ ...q, hasAvatar: false })
+			({ id, label, value }) => ({
+				id,
+				label,
+				value,
+				hasAvatar: false
+			})
 		);
 		setOtherKeywords(updatedQuery);
 	}, [query, open]);
