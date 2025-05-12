@@ -11,8 +11,8 @@ import { t } from '@zextras/carbonio-shell-ui';
 type ComponentProps = {
 	fromDate: Date | null;
 	setFromDate: (arg: Date | null) => void;
-	toDate: Date | null ;
-	setToDate: (arg: Date | null ) => void;
+	toDate: Date | null;
+	setToDate: (arg: Date | null) => void;
 };
 const FromDateToDateRow: FC<ComponentProps> = ({
 	fromDate,
@@ -20,14 +20,14 @@ const FromDateToDateRow: FC<ComponentProps> = ({
 	toDate,
 	setToDate
 }): ReactElement => {
-	const onFromDateChange = (date: Date | null) => {
+	const onFromDateChange = (date: Date | null): void => {
 		setFromDate(date);
-	  };
-	  
-	  const onToDateChange = (date: Date | null) => {
+	};
+
+	const onToDateChange = (date: Date | null): void => {
 		setToDate(date);
-	  };
-	  
+	};
+
 	return (
 		<Container padding={{ bottom: 'small', top: 'medium' }} orientation="horizontal">
 			<Container padding={{ right: 'extrasmall' }}>

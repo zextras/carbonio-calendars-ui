@@ -81,7 +81,7 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 		setFromDate(DEFAULT_DATE_START);
 		setToDate(DEFAULT_DATE_END);
 		setOtherKeywords([]);
-	}, [setDateEnd, setDateStart, updateQuery]);
+	}, [setFromDate, setToDate]);
 
 	const queryToBe = useMemo<Array<QueryChip>>(() => concat(otherKeywords), [otherKeywords]);
 
