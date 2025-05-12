@@ -90,10 +90,10 @@ const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 		[queryToBe.length, fromDate, toDate]
 	);
 
-	const confirmDisabled = useMemo(() => {
-		console.log('Validation state:', { queryToBe, fromDate, toDate });
-		return queryToBe.length === 0 || toDate === null;
-	}, [queryToBe.length, fromDate, toDate]);
+	const confirmDisabled = useMemo(
+		() => queryToBe.length === 0 || fromDate === null || toDate === null,
+		[queryToBe.length, fromDate, toDate]
+	);
 
 	const onConfirm = useCallback(() => {
 		updateQuery(queryToBe);
