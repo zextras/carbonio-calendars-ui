@@ -6,6 +6,7 @@
 import React, { useMemo } from 'react';
 
 import { Container, List, Row, Text, Padding, ListItem } from '@zextras/carbonio-design-system';
+import { QueryChip } from '@zextras/carbonio-search-ui';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map, sortBy } from 'lodash';
 import moment from 'moment';
@@ -22,6 +23,7 @@ type SearchListProps = {
 	setShowAdvanceFilters: (show: boolean) => void;
 	dateStart: number;
 	dateEnd: number;
+	query: Array<QueryChip>;
 };
 
 const SearchList = ({
@@ -31,7 +33,8 @@ const SearchList = ({
 	searchDisabled,
 	setShowAdvanceFilters,
 	dateStart,
-	dateEnd
+	dateEnd,
+	query
 }: SearchListProps): React.JSX.Element => {
 	const items = useMemo(
 		() =>
@@ -49,6 +52,13 @@ const SearchList = ({
 		[appointments]
 	);
 
+	const dateStartValue = moment(dateStart).format('DD/MM/YYYY');
+
+	const dateStartString = useMemo(
+		() => t('search.from_date', 'From Date') + dateStartValue,
+		[dateStartValue]
+	);
+
 	return (
 		<Container
 			background={'gray6'}
@@ -63,7 +73,7 @@ const SearchList = ({
 				mainAlignment="flex-start"
 			>
 				<Text size="medium" color="secondary">
-					{t('search.from_date', 'From Date')} {moment(dateStart).format('DD/MM/YYYY')}
+					{query.length > 0 ? dateStartString : ''}
 				</Text>
 				<Padding left="medium" />
 				<Text size="medium" color="secondary">

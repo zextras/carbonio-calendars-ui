@@ -201,6 +201,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 							element={
 								<>
 									<SearchList
+										query={query}
 										loadMore={loadMore}
 										appointments={appointments}
 										loading={loading}
