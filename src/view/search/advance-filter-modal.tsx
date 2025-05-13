@@ -16,11 +16,10 @@ import {
 } from '@zextras/carbonio-design-system';
 import type { QueryChip } from '@zextras/carbonio-search-ui';
 import { t } from '@zextras/carbonio-shell-ui';
-
 import { concat, filter, map } from 'lodash';
+
 import FromDateToDateRow from './parts/from-date-to-date-row';
 import KeywordRow from './parts/keyword-row';
-
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
 type KeywordState = Array<{
@@ -66,6 +65,13 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 	const [otherKeywords, setOtherKeywords] = useState<KeywordState>([]);
 	const [fromDate, setFromDate] = useState<any>(dateStart);
 	const [toDate, setToDate] = useState<any>(dateEnd);
+
+	useEffect(() => {
+		if (query.length === 0) {
+			setFromDate(DEFAULT_DATE_START);
+			setToDate(DEFAULT_DATE_END);
+		}
+	}, [query.length]);
 
 	useEffect(() => {
 		if (!open) return;
