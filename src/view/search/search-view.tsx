@@ -176,7 +176,15 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			setResultLabel(defaultResultLabel);
 			setSearchResults(initialSearchResults);
 		}
-	}, [query, search, searchResults.query, isInvalidQuery, t, defaultResultLabel, initialSearchResults]);
+	}, [
+		query,
+		search,
+		searchResults.query,
+		isInvalidQuery,
+		t,
+		defaultResultLabel,
+		initialSearchResults
+	]);
 
 	const appointments = useAppSelector((state) =>
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
