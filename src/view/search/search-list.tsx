@@ -55,15 +55,15 @@ const SearchList = ({
 	const dateStartValue = moment(dateStart).format('DD/MM/YYYY');
 
 	const dateStartString = useMemo(
-		() => t('search.from_date', 'From Date') + ' ' + dateStartValue,
+		() => `${t('search.from_date', 'From Date')} ${dateStartValue}`,
 		[dateStartValue]
 	);
 
 	const dateEndValue = moment(dateEnd).format('DD/MM/YYYY');
 
 	const dateEndString = useMemo(
-		() => t('search.to_date', 'to Date') + ' ' + dateEndValue,
-		[dateStartValue]
+		() => `${t('search.to_date', 'to Date')} ${dateEndValue}`,
+		[dateEndValue]
 	);
 
 	return (
