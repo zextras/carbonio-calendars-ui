@@ -19,7 +19,6 @@ type SearchListProps = {
 	loadMore: () => any;
 	loading: boolean;
 	searchDisabled: boolean;
-	filterCount: number;
 	setShowAdvanceFilters: (show: boolean) => void;
 	dateStart: number;
 	dateEnd: number;
@@ -30,7 +29,6 @@ const SearchList = ({
 	loadMore,
 	loading,
 	searchDisabled,
-	filterCount,
 	setShowAdvanceFilters,
 	dateStart,
 	dateEnd
@@ -74,7 +72,6 @@ const SearchList = ({
 			</Row>
 			<AdvancedFilterButton
 				setShowAdvanceFilters={setShowAdvanceFilters}
-				filterCount={filterCount}
 				searchDisabled={searchDisabled}
 			/>
 			{loading ? (
