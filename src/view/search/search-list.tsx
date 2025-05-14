@@ -55,7 +55,14 @@ const SearchList = ({
 	const dateStartValue = moment(dateStart).format('DD/MM/YYYY');
 
 	const dateStartString = useMemo(
-		() => t('search.from_date', 'From Date') + dateStartValue,
+		() => t('search.from_date', 'From Date') + ' ' + dateStartValue,
+		[dateStartValue]
+	);
+
+	const dateEndValue = moment(dateEnd).format('DD/MM/YYYY');
+
+	const dateEndString = useMemo(
+		() => t('search.to_date', 'to Date') + ' ' + dateEndValue,
 		[dateStartValue]
 	);
 
@@ -77,7 +84,7 @@ const SearchList = ({
 				</Text>
 				<Padding left="medium" />
 				<Text size="medium" color="secondary">
-					{t('search.to_date', 'to Date')} {moment(dateEnd).format('DD/MM/YYYY')}
+					{query.length > 0 ? dateEndString : ''}
 				</Text>
 			</Row>
 			<AdvancedFilterButton
