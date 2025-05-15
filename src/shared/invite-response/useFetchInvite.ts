@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
-import { getAppointment } from '../../commons/get-appointment';
+import { getAppointment, getAppointmentIncludeContentFlag } from '../../commons/get-appointment';
 import { MailMsg } from '../../types/integrations';
 import { Invite } from '../../types/store/invite';
 
@@ -26,7 +26,10 @@ export const useFetchInvite: (mailMsg: MailMsg) => {
 			setLoading(true);
 			try {
 				const appointmentId = invite.apptId ?? mailMsg?.invite?.[0]?.comp?.[0]?.apptId;
-				const response = await getAppointment(appointmentId);
+				const response = await getAppointment(
+					appointmentId,
+					getAppointmentIncludeContentFlag(false)
+				);
 				if (response?.appt[0]?.inv) {
 					setInvite(response.appt[0].inv);
 				}
