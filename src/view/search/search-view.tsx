@@ -34,15 +34,19 @@ export type SearchResults = {
 };
 
 const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
+	const initialSearchResults = useMemo(
+		() => ({
+			appointments: {},
+			more: false,
+			offset: 0,
+			sortBy: 'none',
+			query: []
+		}),
+		[]
+	);
 	const [query, updateQuery] = useQuery();
 	const [t] = useTranslation();
-	const [searchResults, setSearchResults] = useState<SearchResults>({
-		appointments: {},
-		more: false,
-		offset: 0,
-		sortBy: 'none',
-		query: []
-	});
+	const [searchResults, setSearchResults] = useState<SearchResults>(initialSearchResults);
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
 	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
@@ -170,8 +174,17 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		if (query && query.length === 0) {
 			setIsInvalidQuery(false);
 			setResultLabel(defaultResultLabel);
+			setSearchResults(initialSearchResults);
 		}
-	}, [query, search, searchResults.query, isInvalidQuery, t, defaultResultLabel]);
+	}, [
+		query,
+		search,
+		searchResults.query,
+		isInvalidQuery,
+		t,
+		defaultResultLabel,
+		initialSearchResults
+	]);
 
 	const appointments = useAppSelector((state) =>
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
@@ -180,7 +193,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	return (
 		<>
 			<Container style={{ whiteSpace: 'nowrap' }}>
-				<ResultsHeader label={resultLabel} />
+				<ResultsHeader label={query.length > 0 ? resultLabel : ''} />
 				<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
 					<Routes>
 						<Route
@@ -188,6 +201,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 							element={
 								<>
 									<SearchList
+										query={query}
 										loadMore={loadMore}
 										appointments={appointments}
 										loading={loading}
