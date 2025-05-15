@@ -71,7 +71,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		invite: fetchedInv,
 		loading: fetchingInvite,
 		error: inviteFetchError
-	} = useFetchInvite(mailMsg);
+	} = useFetchInvite(mailMsg, false);
 
 	const invite = normalizeInvite({ ...mailMsg, inv: fetchedInv });
 

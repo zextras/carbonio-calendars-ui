@@ -11,11 +11,14 @@ import { getAppointment, getAppointmentIncludeContentFlag } from '../../commons/
 import { MailMsg } from '../../types/integrations';
 import { Invite } from '../../types/store/invite';
 
-export const useFetchInvite: (mailMsg: MailMsg) => {
+export const useFetchInvite: (
+	mailMsg: MailMsg,
+	includeContent?: boolean
+) => {
 	invite: Invite;
 	loading: boolean;
 	error: string | null;
-} = (mailMsg: MailMsg) => {
+} = (mailMsg: MailMsg, includeContent = false) => {
 	const { t } = useTranslation();
 	const [invite, setInvite] = useState<Invite>(mailMsg.invite || null);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -28,7 +31,7 @@ export const useFetchInvite: (mailMsg: MailMsg) => {
 				const appointmentId = invite.apptId ?? mailMsg?.invite?.[0]?.comp?.[0]?.apptId;
 				const response = await getAppointment(
 					appointmentId,
-					getAppointmentIncludeContentFlag(false)
+					getAppointmentIncludeContentFlag(includeContent)
 				);
 				if (response?.appt[0]?.inv) {
 					setInvite(response.appt[0].inv);
@@ -41,7 +44,7 @@ export const useFetchInvite: (mailMsg: MailMsg) => {
 		};
 
 		fetchInvite();
-	}, [invite.apptId, mailMsg, t]);
+	}, [includeContent, invite.apptId, mailMsg, t]);
 
 	return { invite, loading, error };
 };
