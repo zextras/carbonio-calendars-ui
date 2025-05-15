@@ -72,14 +72,9 @@ describe('AdvancedFilterModal', () => {
 		const fieldLabel = screen.getByText(/Advanced Filters/i);
 		expect(fieldLabel).toBeInTheDocument();
 
-		const fromDateContainer = screen
-			.getByLabelText(/From Date/i)
-			.closest('.react-datepicker-wrapper');
-		expect(fromDateContainer).toBeInTheDocument();
-
-		const datePickerButton = fromDateContainer?.querySelector('button');
-		expect(datePickerButton).toBeInTheDocument();
-		await user.click(datePickerButton!);
+		// Find and click the calendar icon button for From Date
+		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		await user.click(calendarButtons[0]);
 
 		const dateToSelect = screen.getByRole('option', { name: /Choose Monday, April 14th, 2025/i });
 		expect(dateToSelect).toBeInTheDocument();
@@ -105,12 +100,9 @@ describe('AdvancedFilterModal', () => {
 		const fieldLabel = screen.getByText(/Advanced Filters/i);
 		expect(fieldLabel).toBeInTheDocument();
 
-		const toDateContainer = screen.getByLabelText(/To Date/i).closest('.react-datepicker-wrapper');
-		expect(toDateContainer).toBeInTheDocument();
-
-		const datePickerButton = toDateContainer?.querySelector('button');
-		expect(datePickerButton).toBeInTheDocument();
-		await user.click(datePickerButton!);
+		// Find and click the calendar icon button for To Date
+		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		await user.click(calendarButtons[1]);
 
 		const dateToSelect = screen.getByRole('option', { name: /Choose Monday, April 14th, 2025/i });
 		expect(dateToSelect).toBeInTheDocument();
