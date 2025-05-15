@@ -35,9 +35,7 @@ export const useFetchInvite: (
 				);
 				if ('Fault' in response) {
 					setError(t('label.error_try_again', 'Something went wrong, please try again'));
-					return;
-				}
-				if (response?.appt?.[0]?.inv) {
+				} else if (response?.appt?.[0]?.inv) {
 					setInvite(response.appt[0].inv);
 				}
 			} catch (err) {
