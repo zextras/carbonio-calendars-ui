@@ -38,7 +38,7 @@ export const useFetchInvite: (mailMsg: MailMsg) => {
 		};
 
 		fetchInvite();
-	}, [invite.apptId, mailMsg]);
+	}, [invite.apptId, mailMsg, t]);
 
 	return { invite, loading, error };
 };
