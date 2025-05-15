@@ -25,10 +25,11 @@ import 'moment-timezone';
 import { AvailabilityChecker } from './parts/availability-checker';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
+import { useFetchInvite } from './useFetchInvite';
 import { ROOT_NAME } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { getRootAccountId, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
-import BodyMessageRenderer from '../../commons/body-message-renderer';
+import { BodyMessageRendererv2 } from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
@@ -63,8 +64,13 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	moveToTrash
 }): ReactElement => {
 	const account = useUserAccount();
-	const invite = normalizeInvite({ ...mailMsg, inv: mailMsg.invite });
 	const [t] = useTranslation();
+
+	// const invite = normalizeInvite({ ...mailMsg, inv: mailMsg.invite });
+
+	const { invite: inv } = useFetchInvite(mailMsg);
+
+	const invite = normalizeInvite({ ...mailMsg, inv });
 
 	const rootAccountId = getRootAccountId(mailMsg.parent) ?? FOLDERS.USER_ROOT;
 	const root = useRoot(rootAccountId);
@@ -471,7 +477,11 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							<Icon size="large" icon="MessageSquareOutline" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<BodyMessageRenderer fullInvite={invite} inviteId={inviteId} parts={invite?.parts} />
+							<BodyMessageRendererv2
+								fragment={invite.fragment}
+								htmlDescription={invite.htmlDescription}
+								textDescription={invite.textDescription}
+							/>
 						</Row>
 					</Row>
 				)}
