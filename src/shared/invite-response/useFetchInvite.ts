@@ -33,10 +33,11 @@ export const useFetchInvite: (
 					appointmentId,
 					getAppointmentIncludeContentFlag(includeContent)
 				);
-				if (response?.appt[0]?.inv) {
+				if (response?.appt?.[0]?.inv) {
 					setInvite(response.appt[0].inv);
 				}
 			} catch (err) {
+				console.log(err);
 				setError(t('label.error_try_again', 'Something went wrong, please try again'));
 			} finally {
 				setLoading(false);
