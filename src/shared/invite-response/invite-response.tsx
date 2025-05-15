@@ -13,7 +13,8 @@ import {
 	Divider,
 	Tooltip,
 	Chip,
-	Padding
+	Padding,
+	Spinner
 } from '@zextras/carbonio-design-system';
 import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { filter, find, includes, map } from 'lodash';
@@ -29,11 +30,12 @@ import { useFetchInvite } from './useFetchInvite';
 import { ROOT_NAME } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { getRootAccountId, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
-import { BodyMessageRendererv2 } from '../../commons/body-message-renderer';
+import { BodyMessageRenderer } from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useGetDateRangeConvertedToTimezone } from '../../hooks/use-get-date-range-converted-to-timezone';
+import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
 import { hasDescription } from '../../utils/invite';
@@ -65,7 +67,13 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const account = useUserAccount();
 	const [t] = useTranslation();
 
-	const { invite } = useFetchInvite(mailMsg);
+	const {
+		invite: fetchedInv,
+		loading: fetchingInvite,
+		error: inviteFetchError
+	} = useFetchInvite(mailMsg);
+
+	const invite = normalizeInvite({ ...mailMsg, inv: fetchedInv });
 
 	const rootAccountId = getRootAccountId(mailMsg.parent) ?? FOLDERS.USER_ROOT;
 	const root = useRoot(rootAccountId);
@@ -175,6 +183,26 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		),
 		[originalDate, t]
 	);
+	if (fetchingInvite) {
+		return (
+			<InviteContainer data-testid={'invite-response'}>
+				<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
+					<Spinner color={'primary'} />
+				</Container>
+			</InviteContainer>
+		);
+	}
+
+	if (inviteFetchError) {
+		return (
+			<InviteContainer data-testid="invite-response">
+				<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
+					<p style={{ color: 'red' }}>{inviteFetchError}</p>
+				</Container>
+			</InviteContainer>
+		);
+	}
+
 	return (
 		<InviteContainer data-testid={'invite-response'}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
@@ -400,7 +428,9 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 									<LinkText
 										color="primary"
 										size="medium"
-										onClick={(): void => setMaxReqParticipantsToShow(requiredParticipants.length)}
+										onClick={(): void => {
+											setMaxReqParticipantsToShow(requiredParticipants.length);
+										}}
 										overflow="break-word"
 									>
 										{t('message.more', 'More...')}
@@ -468,11 +498,11 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						<Row width="100%" padding={{ vertical: 'medium' }}>
 							<Divider />
 						</Row>
-						<Row padding={{ right: 'small', top: 'small' }}>
+						<Row padding={{ right: 'small' }}>
 							<Icon size="large" icon="MessageSquareOutline" />
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
-							<BodyMessageRendererv2
+							<BodyMessageRenderer
 								fragment={invite.fragment}
 								htmlDescription={invite.htmlDescription}
 								textDescription={invite.textDescription}

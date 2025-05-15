@@ -9,7 +9,7 @@ import { Container, Icon, Padding, Row, Shimmer, Theme } from '@zextras/carbonio
 import { isNil, omitBy, times } from 'lodash';
 
 import { LinkFolder } from '../../carbonio-ui-commons/types';
-import BodyMessageRenderer from '../../commons/body-message-renderer';
+import { BodyMessageRenderer } from '../../commons/body-message-renderer';
 import { useInvite } from '../../hooks/use-invite';
 import { useAppSelector } from '../../store/redux/hooks';
 import { selectAppointment } from '../../store/selectors/appointments';
@@ -103,10 +103,10 @@ export const AppointmentReminderItemDetails = ({
 							</Padding>
 							<Row takeAvailableSpace mainAlignment="flex-start">
 								<BodyMessageRenderer
-									fullInvite={invite}
-									inviteId={invite?.id}
-									parts={invite?.parts}
 									fontSize={fontSize}
+									fragment={invite.fragment}
+									htmlDescription={invite.htmlDescription}
+									textDescription={invite.textDescription}
 								/>
 							</Row>
 						</Row>
