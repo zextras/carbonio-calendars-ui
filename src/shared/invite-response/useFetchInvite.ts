@@ -5,8 +5,9 @@
  */
 import { useState, useEffect } from 'react';
 
+import { useTranslation } from 'react-i18next';
+
 import { getAppointment } from '../../commons/get-appointment';
-import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { MailMsg } from '../../types/integrations';
 import { Invite } from '../../types/store/invite';
 
@@ -15,6 +16,7 @@ export const useFetchInvite: (mailMsg: MailMsg) => {
 	loading: boolean;
 	error: string | null;
 } = (mailMsg: MailMsg) => {
+	const { t } = useTranslation();
 	const [invite, setInvite] = useState<Invite>(mailMsg.invite || null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
@@ -23,20 +25,20 @@ export const useFetchInvite: (mailMsg: MailMsg) => {
 		const fetchInvite: () => Promise<void> = async () => {
 			setLoading(true);
 			try {
-				const appointmentId = mailMsg?.inv?.[0]?.comp?.[0]?.apptId;
+				const appointmentId = invite.apptId ?? mailMsg?.invite?.[0]?.comp?.[0]?.apptId;
 				const response = await getAppointment(appointmentId);
-				if (response?.appt[0]) {
-					setInvite(normalizeInvite(response.appt[0]));
+				if (response?.appt[0]?.inv) {
+					setInvite(response.appt[0].inv);
 				}
 			} catch (err) {
-				setError('Failed to fetch invite details');
+				setError(t('label.error_try_again', 'Something went wrong, please try again'));
 			} finally {
 				setLoading(false);
 			}
 		};
 
 		fetchInvite();
-	}, [mailMsg]);
+	}, [invite.apptId, mailMsg]);
 
 	return { invite, loading, error };
 };

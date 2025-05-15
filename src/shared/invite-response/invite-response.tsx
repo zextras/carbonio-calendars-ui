@@ -34,7 +34,6 @@ import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
 import { useGetDateRangeConvertedToTimezone } from '../../hooks/use-get-date-range-converted-to-timezone';
-import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
 import { hasDescription } from '../../utils/invite';
@@ -66,11 +65,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const account = useUserAccount();
 	const [t] = useTranslation();
 
-	// const invite = normalizeInvite({ ...mailMsg, inv: mailMsg.invite });
-
-	const { invite: inv } = useFetchInvite(mailMsg);
-
-	const invite = normalizeInvite({ ...mailMsg, inv });
+	const { invite } = useFetchInvite(mailMsg);
 
 	const rootAccountId = getRootAccountId(mailMsg.parent) ?? FOLDERS.USER_ROOT;
 	const root = useRoot(rootAccountId);
