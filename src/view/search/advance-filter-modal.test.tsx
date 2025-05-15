@@ -72,7 +72,6 @@ describe('AdvancedFilterModal', () => {
 		const fieldLabel = screen.getByText(/Advanced Filters/i);
 		expect(fieldLabel).toBeInTheDocument();
 
-		// Find and click the calendar icon button for From Date
 		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
 		await user.click(calendarButtons[0]);
 
@@ -100,7 +99,6 @@ describe('AdvancedFilterModal', () => {
 		const fieldLabel = screen.getByText(/Advanced Filters/i);
 		expect(fieldLabel).toBeInTheDocument();
 
-		// Find and click the calendar icon button for To Date
 		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
 		await user.click(calendarButtons[1]);
 
@@ -184,4 +182,3 @@ describe('AdvancedFilterModal', () => {
 		expect(toDateChipAfterReset).toHaveAttribute('value', DEFAULT_DATE_END.toString());
 	});
 });
-
