@@ -14,9 +14,9 @@ jest.mock('../../constants/advance-filter-modal', () => ({
 import React from 'react';
 
 import { screen } from '@testing-library/react';
+
 import { AdvancedFilterModal, AdvancedFilterModalProps } from './advance-filter-modal';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
-
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
 const MOCKED_NOW = new Date('2025-05-01T00:00:00Z');
@@ -57,44 +57,54 @@ describe('AdvancedFilterModal', () => {
 	});
 
 	it('reset filters button should be enabled if dateStart is different from default', async () => {
-		const FIXED_TIMESTAMP = 1744409900000;
-
-		const properties: AdvancedFilterModalProps = {
-			open: true,
-			onClose: jest.fn(),
-			query: [],
-			updateQuery: jest.fn(),
-			dateStart: FIXED_TIMESTAMP,
-			dateEnd: DEFAULT_DATE_END,
-			setDateStart: jest.fn(),
-			setDateEnd: jest.fn()
-		};
-		setupTest(<AdvancedFilterModal {...properties} />);
-
-		const fieldLabel = screen.getByText(/Advanced Filters/i);
-		expect(fieldLabel).toBeInTheDocument();
-
-		const resetButton = await screen.findByRole('button', { name: /reset filters/i });
-		expect(resetButton).toBeEnabled();
-	});
-
-	it('reset filters button should be enabled if dateEnd is different from default', async () => {
-		const FIXED_TIMESTAMP = 1744408800000;
-
 		const properties: AdvancedFilterModalProps = {
 			open: true,
 			onClose: jest.fn(),
 			query: [],
 			updateQuery: jest.fn(),
 			dateStart: DEFAULT_DATE_START,
-			dateEnd: FIXED_TIMESTAMP,
+			dateEnd: DEFAULT_DATE_END,
 			setDateStart: jest.fn(),
 			setDateEnd: jest.fn()
 		};
-		setupTest(<AdvancedFilterModal {...properties} />);
+		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
 
 		const fieldLabel = screen.getByText(/Advanced Filters/i);
 		expect(fieldLabel).toBeInTheDocument();
+
+		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		await user.click(calendarButtons[0]);
+
+		const dateToSelect = screen.getByRole('option', { name: /Choose Monday, April 14th, 2025/i });
+		expect(dateToSelect).toBeInTheDocument();
+		await user.click(dateToSelect);
+
+		const resetButton = await screen.findByRole('button', { name: /reset filters/i });
+		expect(resetButton).toBeEnabled();
+	});
+
+	it('reset filters button should be enabled if dateEnd is different from default', async () => {
+		const properties: AdvancedFilterModalProps = {
+			open: true,
+			onClose: jest.fn(),
+			query: [],
+			updateQuery: jest.fn(),
+			dateStart: DEFAULT_DATE_START,
+			dateEnd: DEFAULT_DATE_END,
+			setDateStart: jest.fn(),
+			setDateEnd: jest.fn()
+		};
+		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
+
+		const fieldLabel = screen.getByText(/Advanced Filters/i);
+		expect(fieldLabel).toBeInTheDocument();
+
+		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		await user.click(calendarButtons[1]);
+
+		const dateToSelect = screen.getByRole('option', { name: /Choose Monday, April 14th, 2025/i });
+		expect(dateToSelect).toBeInTheDocument();
+		await user.click(dateToSelect);
 
 		const resetButton = await screen.findByRole('button', { name: /reset filters/i });
 		expect(resetButton).toBeEnabled();
