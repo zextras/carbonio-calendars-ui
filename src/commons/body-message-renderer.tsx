@@ -75,7 +75,7 @@ export const BodyMessageRenderer = ({
 	htmlDescription: { _content: string }[] | undefined;
 	textDescription: { _content: string }[] | undefined;
 	fontSize?: keyof typeof Theme.sizes.font;
-}): React.JSX.Element | null => {
+}): React.JSX.Element => {
 	if (!fragment) {
 		return <EmptyBody />;
 	}
