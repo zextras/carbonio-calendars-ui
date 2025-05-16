@@ -12,7 +12,6 @@ import { replace } from 'lodash';
 import { ROOM_DIVIDER } from '../constants';
 import { HtmlMessageRenderer } from './html-message-renderer';
 import { replaceLinkToAnchor } from './utilities';
-import type { Invite, Parts } from '../types/store/invite';
 
 export const roomValidationRegEx = new RegExp(`${ROOM_DIVIDER}(.*)${ROOM_DIVIDER}`, 's');
 
@@ -66,35 +65,30 @@ const EmptyBody = (): React.JSX.Element => (
 	</Container>
 );
 
-const BodyMessageRenderer = ({
-	fullInvite,
-	inviteId,
-	parts,
+export const BodyMessageRenderer = ({
+	fragment,
+	htmlDescription,
+	textDescription,
 	fontSize
 }: {
-	fullInvite: Invite;
-	inviteId: string;
-	parts: Parts;
+	fragment: string | undefined;
+	htmlDescription: { _content: string }[] | undefined;
+	textDescription: { _content: string }[] | undefined;
 	fontSize?: keyof typeof Theme.sizes.font;
-}): React.JSX.Element | null => {
-	if (!fullInvite) {
-		return null;
-	}
-
-	if (fullInvite.fragment === undefined || fullInvite.fragment === '') {
+}): React.JSX.Element => {
+	if (!fragment) {
 		return <EmptyBody />;
 	}
 
-	if (fullInvite?.htmlDescription?.[0]?._content) {
-		const originalHtml = fullInvite?.htmlDescription?.[0]?._content ?? '';
+	if (htmlDescription?.[0]?._content) {
+		const originalHtml = htmlDescription[0]._content;
 		const roomHtmlDesc = roomValidationRegEx?.exec(originalHtml)?.[0];
 		const htmlContent = roomHtmlDesc ? replace(originalHtml, roomHtmlDesc, '') : originalHtml;
 		return <HtmlMessageRenderer htmlContent={extractHtmlBody(htmlContent)} />;
 	}
-	const originalText = fullInvite?.textDescription?.[0]?._content ?? '';
+
+	const originalText = textDescription?.[0]?._content ?? '';
 	const roomTextDesc = roomValidationRegEx?.exec(originalText)?.[0];
 	const textContent = roomTextDesc ? replace(originalText, roomTextDesc, '') : originalText;
 	return <TextMessageRenderer text={extractBody(textContent)} fontSize={fontSize} />;
 };
-
-export default BodyMessageRenderer;
