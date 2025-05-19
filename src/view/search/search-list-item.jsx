@@ -20,9 +20,11 @@ import { useTranslation } from 'react-i18next';
 
 import { openAppointment } from '../../actions/appointment-actions-fn';
 import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
+import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { useTags } from '../../carbonio-ui-commons/store/zustand/tags';
+import { useSortedTagsArray } from '../../carbonio-ui-commons/store/zustand/tags';
 import { PANEL_VIEW } from '../../constants';
+import { PARTICIPATION_STATUS } from '../../constants/api';
 import { getInvite } from '../../store/actions/get-invite';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectInstanceInvite } from '../../store/selectors/invites';
@@ -33,6 +35,7 @@ const SearchListItem = ({ item }) => {
 	const calendars = useFoldersMap();
 	const invite = useAppSelector(selectInstanceInvite(item?.resource?.inviteId));
 	const dispatch = useAppDispatch();
+	const { replaceHistory } = useHistoryNavigation();
 
 	const cal = isShared
 		? find(calendars, (f) => `${f.zid}:${f.rid}` === item.resource?.l)
@@ -41,14 +44,19 @@ const SearchListItem = ({ item }) => {
 
 	const hasAttachments = useMemo(() => item.resource?.flags?.includes('a'), [item.resource?.flags]);
 	const showPtstIcon = useMemo(
-		() => ['TE', 'DE', 'AC'].includes(item.resource?.ptst),
+		() =>
+			[
+				PARTICIPATION_STATUS.TENTATIVE,
+				PARTICIPATION_STATUS.DECLINED,
+				PARTICIPATION_STATUS.ACCEPTED
+			].includes(item.resource?.ptst),
 		[item.resource?.ptst]
 	);
 	const [color, icon] = useMemo(() => {
-		if (item.resource?.ptst === 'TE') {
+		if (item.resource?.ptst === PARTICIPATION_STATUS.TENTATIVE) {
 			return ['warning', 'QuestionMarkOutline'];
 		}
-		if (item.resource?.ptst === 'DE') {
+		if (item.resource?.ptst === PARTICIPATION_STATUS.DECLINED) {
 			return ['error', 'CloseOutline'];
 		}
 		return ['success', 'CheckmarkOutline'];
@@ -76,7 +84,7 @@ const SearchListItem = ({ item }) => {
 		[hasAttachments, item.resource?.class, item.resource?.isRecurrent, item.resource?.location]
 	);
 
-	const tagsFromStore = useTags();
+	const tagsFromStore = useSortedTagsArray();
 	const tags = useMemo(
 		() =>
 			reduce(
@@ -108,7 +116,7 @@ const SearchListItem = ({ item }) => {
 		(ev) => {
 			const open = openAppointment({
 				event: item,
-				context: { panelView: PANEL_VIEW.SEARCH }
+				context: { panelView: PANEL_VIEW.SEARCH, replaceHistory }
 			});
 			if (!invite) {
 				dispatch(getInvite({ inviteId: item.resource.inviteId })).then(() => {
@@ -118,7 +126,7 @@ const SearchListItem = ({ item }) => {
 				open(ev);
 			}
 		},
-		[dispatch, invite, item]
+		[dispatch, invite, item, replaceHistory]
 	);
 
 	return (

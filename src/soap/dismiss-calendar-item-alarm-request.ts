@@ -5,9 +5,7 @@
  */
 import { soapFetch } from '@zextras/carbonio-shell-ui';
 
-import { DateType } from '../types/event';
-
-export type DismissItem = Array<{ id: string; dismissedAt: DateType }>;
+export type DismissItem = Array<{ id: string; dismissedAt: number }>;
 
 export type DismissCalendarItemAlarmRejectedType = { error: boolean; m?: never; Fault: any };
 export type DismissCalendarItemAlarmFulfilledType = { m: any; Fault?: never; error?: never };

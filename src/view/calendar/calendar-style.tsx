@@ -260,9 +260,9 @@ export default createGlobalStyle<{
 					!$summaryViewOpen && !$action && $primaryCalendar?.color?.background
 						? $primaryCalendar.color.background
 						: 'inherit'} !important;
-        border: ${({ $primaryCalendar, $summaryViewOpen, $action }): string =>
+        border: 0.0625rem solid ${({ $primaryCalendar, $summaryViewOpen, $action }): string =>
 					!$summaryViewOpen && !$action && $primaryCalendar?.color?.color
-						? `0.0625rem solid ${$primaryCalendar.color.color}`
+						? $primaryCalendar.color.color
 						: 'inherit'} !important;
     }
 
@@ -520,8 +520,8 @@ export default createGlobalStyle<{
     }
 
     .rbc-time-view-resources .rbc-time-header-content {
-        min-width: auto;
         flex: 1 0 0;
+        min-width: ${({ $headerMinWidth }): string | undefined => $headerMinWidth};
     }
 
     .rbc-time-view-resources .rbc-time-header-cell-single-day {

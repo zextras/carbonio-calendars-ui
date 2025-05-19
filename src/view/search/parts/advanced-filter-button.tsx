@@ -16,14 +16,12 @@ const BorderContainer = styled(Container)`
 
 type AdvancedFilterButtonProps = {
 	searchDisabled: boolean;
-	filterCount: number;
 	setShowAdvanceFilters: (arg: boolean) => void;
 };
 
 export const AdvancedFilterButton: FC<AdvancedFilterButtonProps> = ({
 	setShowAdvanceFilters,
-	searchDisabled,
-	filterCount
+	searchDisabled
 }) => {
 	const [t] = useTranslation();
 
@@ -43,17 +41,9 @@ export const AdvancedFilterButton: FC<AdvancedFilterButtonProps> = ({
 			>
 				<Button
 					onClick={(): void => setShowAdvanceFilters(true)}
-					type={filterCount > 0 ? 'default' : 'outlined'}
+					type="default"
 					width="fill"
-					label={
-						filterCount === 0
-							? t('label.single_advanced_filter', 'Advanced Filters')
-							: t('label.advanced_filters', {
-									count: filterCount,
-									defaultValue_one: '{{count}} Advanced Filter',
-									defaultValue_other: '{{count}} Advanced Filters'
-								})
-					}
+					label={t('label.single_advanced_filter', 'Advanced Filters')}
 					disabled={searchDisabled}
 					icon="Options2Outline"
 				/>

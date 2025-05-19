@@ -13,7 +13,8 @@ import {
 	Divider,
 	Tooltip,
 	Chip,
-	Padding
+	Padding,
+	Spinner
 } from '@zextras/carbonio-design-system';
 import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
 import { filter, find, includes, map } from 'lodash';
@@ -25,15 +26,15 @@ import 'moment-timezone';
 import { AvailabilityChecker } from './parts/availability-checker';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
+import { useFetchInvite } from './useFetchInvite';
 import { ROOT_NAME } from '../../carbonio-ui-commons/constants';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
 import { getRootAccountId, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
-import BodyMessageRenderer from '../../commons/body-message-renderer';
+import { BodyMessageRenderer } from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
 import { CRB_XPROPS, CRB_XPARAMS } from '../../constants/xprops';
-import { useGetEventTimezoneString } from '../../hooks/use-get-event-timezone';
-import { getLocalTime } from '../../normalizations/normalize-editor';
+import { useGetDateRangeConvertedToTimezone } from '../../hooks/use-get-date-range-converted-to-timezone';
 import { normalizeInvite } from '../../normalizations/normalize-invite';
 import { StoreProvider } from '../../store/redux';
 import type { InviteResponseArguments } from '../../types/integrations';
@@ -64,8 +65,15 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	moveToTrash
 }): ReactElement => {
 	const account = useUserAccount();
-	const invite = normalizeInvite({ ...mailMsg, inv: mailMsg.invite });
 	const [t] = useTranslation();
+
+	const {
+		invite: fetchedInv,
+		loading: fetchingInvite,
+		error: inviteFetchError
+	} = useFetchInvite(mailMsg, false);
+
+	const invite = normalizeInvite({ ...mailMsg, inv: fetchedInv });
 
 	const rootAccountId = getRootAccountId(mailMsg.parent) ?? FOLDERS.USER_ROOT;
 	const root = useRoot(rootAccountId);
@@ -139,26 +147,25 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		mailToContact(obj)?.execute();
 	};
 
-	const localTimezone = useMemo(() => moment.tz.guess(), []);
-
-	/* start and end value are already converted to the creation timezone value, so to convert it back to the local timezone we need to convert it again to local */
 	const localStart = useMemo(
-		() =>
-			getLocalTime(
-				moment(invite.start?.d ?? invite.start.u).valueOf() ?? 0,
-				localTimezone,
-				invite.tz
-			),
-		[invite.start?.d, invite.start.u, invite.tz, localTimezone]
+		() => moment(invite.start?.d ?? invite.start.u).valueOf(),
+		[invite.start?.d, invite.start.u]
 	);
 	const localEnd = useMemo(
-		() =>
-			getLocalTime(moment(invite.end?.d ?? invite.end.u).valueOf() ?? 0, localTimezone, invite.tz),
-		[invite.end?.d, invite.end.u, invite.tz, localTimezone]
+		() => moment(invite.end?.d ?? invite.end.u).valueOf(),
+		[invite.end?.d, invite.end.u]
 	);
 
-	const { localTimeString, localTimezoneString, showTimezoneTooltip, localTimezoneTooltip } =
-		useGetEventTimezoneString(localStart, localEnd, invite.allDay, invite.tz);
+	const endOfDay = (day: any): number => moment(day).endOf('day').valueOf();
+
+	const originalDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
+		allDay: invite.allDay,
+		timeZone: invite.tz
+	});
+
+	const convertedDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
+		allDay: invite.allDay
+	});
 
 	const messageHasABody = useMemo(() => hasDescription(invite), [invite]);
 
@@ -166,6 +173,36 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		invite.apptId && !includes(invite.id, ':') ? `${invite.apptId}-${invite.id}` : invite.id;
 
 	const requiredSlice = requiredParticipants.slice(0, maxReqParticipantsToShow);
+	const convertedDateTooltip = useMemo(
+		() => (
+			<>
+				{t('creation_timezone_tooltip', 'Date and time on creation timezone:')}
+				<br />
+				{originalDate}
+			</>
+		),
+		[originalDate, t]
+	);
+	if (fetchingInvite) {
+		return (
+			<InviteContainer data-testid={'invite-response'}>
+				<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
+					<Spinner color={'primary'} />
+				</Container>
+			</InviteContainer>
+		);
+	}
+
+	if (inviteFetchError) {
+		return (
+			<InviteContainer data-testid="invite-response">
+				<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
+					<p style={{ color: 'red' }}>{inviteFetchError}</p>
+				</Container>
+			</InviteContainer>
+		);
+	}
+
 	return (
 		<InviteContainer data-testid={'invite-response'}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
@@ -191,27 +228,22 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
 					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{localTimeString}
+						{originalDate}
 					</Text>
-					{showTimezoneTooltip && (
-						<Tooltip label={localTimezoneTooltip}>
+					{convertedDate !== originalDate && (
+						<Tooltip label={convertedDateTooltip}>
 							<Padding left="small">
 								<Icon icon="GlobeOutline" color="gray1" />
 							</Padding>
 						</Tooltip>
 					)}
 				</Row>
-				<Row width="100%" mainAlignment="flex-start">
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{localTimezoneString}
-					</Text>{' '}
-				</Row>
 				{method === MESSAGE_METHOD.REQUEST && root && (
 					<AvailabilityChecker
 						email={email}
 						rootId={root.id}
 						start={invite?.start?.u ?? moment(mailMsg.invite[0].comp[0].s[0].d).valueOf()}
-						end={invite?.end?.u ?? moment(mailMsg.invite[0].comp[0].e[0].d).valueOf()}
+						end={invite?.end?.u ?? endOfDay(mailMsg.invite[0].comp[0].e[0].d)}
 						allDay={invite.allDay ?? false}
 						uid={invite.uid}
 					/>
@@ -396,7 +428,9 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 									<LinkText
 										color="primary"
 										size="medium"
-										onClick={(): void => setMaxReqParticipantsToShow(requiredParticipants.length)}
+										onClick={(): void => {
+											setMaxReqParticipantsToShow(requiredParticipants.length);
+										}}
 										overflow="break-word"
 									>
 										{t('message.more', 'More...')}
@@ -469,10 +503,9 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Row>
 						<Row takeAvailableSpace mainAlignment="flex-start">
 							<BodyMessageRenderer
-								fullInvite={invite}
-								inviteId={inviteId}
-								parts={invite?.parts}
-								fontSize={undefined}
+								fragment={invite.fragment}
+								htmlDescription={invite.htmlDescription}
+								textDescription={invite.textDescription}
 							/>
 						</Row>
 					</Row>
@@ -482,9 +515,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	);
 };
 
-const InviteResponseComp: FC<InviteResponseArguments> = (props) => (
+export const InviteResponseComp: FC<InviteResponseArguments> = (props) => (
 	<StoreProvider>
 		<InviteResponse {...props} />
 	</StoreProvider>
 );
-export default InviteResponseComp;

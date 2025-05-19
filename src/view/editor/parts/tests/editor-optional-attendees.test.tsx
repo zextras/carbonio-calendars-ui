@@ -21,6 +21,7 @@ import { DefaultContactInput } from '../../../../carbonio-ui-commons/integration
 import * as commonIntegrationHooks from '../../../../carbonio-ui-commons/integrations/hooks';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
+import { PARTICIPATION_STATUS } from '../../../../constants/api';
 import { reducers } from '../../../../store/redux';
 import { EditorOptionalAttendees } from '../editor-optional-attendees';
 
@@ -120,7 +121,7 @@ describe('Editor Optional Attendees', () => {
 				context: {
 					dispatch: store.dispatch,
 					folders: {},
-					optionalAttendees: [{ email: attendeeEmail, ptst: 'AC' }]
+					optionalAttendees: [{ email: attendeeEmail, ptst: PARTICIPATION_STATUS.ACCEPTED }]
 				}
 			});
 			const { user } = setupTest(
@@ -135,7 +136,9 @@ describe('Editor Optional Attendees', () => {
 				expect.objectContaining({ label: 'test label' })
 			]);
 
-			expect(store.getState().editor.editors[editor.id].optionalAttendees[0].ptst).toBe('AC');
+			expect(store.getState().editor.editors[editor.id].optionalAttendees[0].ptst).toBe(
+				PARTICIPATION_STATUS.ACCEPTED
+			);
 		});
 	});
 });

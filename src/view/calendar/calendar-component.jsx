@@ -5,7 +5,8 @@
  */
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
-import { find, isEmpty, map, minBy } from 'lodash';
+import { Popover } from '@zextras/carbonio-design-system';
+import { filter, find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
@@ -19,6 +20,8 @@ import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
+import { PARTICIPATION_STATUS } from '../../constants/api';
+import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { useCheckedFolders } from '../../hooks/use-checked-folders';
@@ -28,13 +31,17 @@ import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { selectAppointmentsArray } from '../../store/selectors/appointments';
 import {
+	useSummaryViewRef,
 	useCalendarView,
 	useIsSummaryViewOpen,
 	useRangeEnd,
 	useRangeStart
 } from '../../store/zustand/hooks';
+import { useAppStatusStore } from '../../store/zustand/store';
 import { isOrganizerOrHaveEqualRights } from '../../utils/store/event';
 import { workWeek } from '../../utils/work-week';
+import EventPanelView from '../event-panel-view/event-panel-view';
+import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 
 const BigCalendar = withDragAndDrop(Calendar);
 
@@ -67,6 +74,7 @@ export default function CalendarComponent() {
 	const prefs = usePrefs();
 	const calendarView = useCalendarView();
 	const summaryViewOpen = useIsSummaryViewOpen();
+	const anchorElement = useSummaryViewRef();
 	const firstDayOfWeek = prefs.zimbraPrefCalendarFirstDayOfWeek ?? 0;
 	const localizer = momentLocalizer(moment);
 	const primaryCalendar = useMemo(() => calendars?.[10] ?? {}, [calendars]);
@@ -89,10 +97,20 @@ export default function CalendarComponent() {
 		[prefs?.zimbraPrefCalendarWorkingHours]
 	);
 
-	const events = useMemo(
-		() => normalizeCalendarEvents(appointments, calendars),
-		[appointments, calendars]
-	);
+	/**
+	 * Memoized list of calendar events, filtered by declined meetings preference.
+	 *
+	 * @type {Array<Object>}
+	 * @description List of normalized calendar events, with declined meetings removed if preference is set to FALSE.
+	 */
+	const events = useMemo(() => {
+		const eventsList = normalizeCalendarEvents(appointments, calendars);
+		if (prefs.zimbraPrefCalendarShowDeclinedMeetings === 'TRUE') return eventsList;
+		return filter(
+			eventsList,
+			(event) => event.resource.participationStatus !== PARTICIPATION_STATUS.DECLINED
+		);
+	}, [appointments, calendars, prefs.zimbraPrefCalendarShowDeclinedMeetings]);
 
 	const startHour = useMemo(
 		() =>
@@ -137,25 +155,6 @@ export default function CalendarComponent() {
 		[theme?.palette?.gray3?.regular, theme?.palette?.gray6?.regular, workingSchedule]
 	);
 
-	const eventPropGetter = useCallback(
-		(event) => ({
-			style: {
-				backgroundColor: event.resource.calendar.color.background,
-				color: event.resource.calendar.color.color,
-				border: `0.0625rem solid ${event.resource.calendar.color.color}`,
-				padding:
-					moment(event.end).diff(event.start, 'minutes') >= 30
-						? '0.25rem 0.25rem'
-						: '0.0625rem 0.25rem 0.25rem 0.25rem !important',
-				borderRadius: '0.25rem',
-				transition: 'border 0.15s ease-in-out, background 0.15s ease-in-out',
-				boxShadow: '0 0 0.875rem -0.5rem rgba(0, 0, 0, 0.5)',
-				cursor: 'pointer'
-			}
-		}),
-		[]
-	);
-
 	const slotPropGetter = useCallback(
 		(newDate) => ({
 			style: {
@@ -175,19 +174,26 @@ export default function CalendarComponent() {
 	}, [calendarView, isSplitLayoutEnabled]);
 
 	const dayPropGetter = useCallback(
-		(newDate) => ({
-			style: {
-				minWidth: columnMinWidth,
-				backgroundColor:
-					// eslint-disable-next-line no-nested-ternary
-					workingSchedule?.[newDate.getDay()]?.working
-						? new Date().getDay() === newDate.getDay()
-							? theme.palette.highlight.regular
-							: theme.palette.gray6.regular
-						: theme.palette.gray3.regular,
-				borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`
+		(newDate) => {
+			const isToday =
+				newDate.getDate() === new Date().getDate() &&
+				newDate.getMonth() === new Date().getMonth() &&
+				newDate.getFullYear() === new Date().getFullYear();
+
+			let backgroundColor = theme.palette.gray3.regular;
+
+			if (workingSchedule?.[newDate.getDay()]?.working) {
+				backgroundColor = isToday ? theme.palette.highlight.regular : theme.palette.gray6.regular;
 			}
-		}),
+
+			return {
+				style: {
+					minWidth: columnMinWidth,
+					backgroundColor,
+					borderBottom: `0.0625rem solid ${slotDayBorderColor(newDate)}`
+				}
+			};
+		},
 		[
 			columnMinWidth,
 			slotDayBorderColor,
@@ -216,6 +222,12 @@ export default function CalendarComponent() {
 
 	const draggableAccessor = useCallback(
 		(calendarEvent) => {
+			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
+
+			if (!isSameDay) {
+				/* Drag is disabled for events that span over multiple days due to an issue with the library */
+				return false;
+			}
 			if (calendarEvent) {
 				const absFolderPath = find(calendars, [
 					'id',
@@ -230,6 +242,12 @@ export default function CalendarComponent() {
 
 	const resizableAccessor = useCallback(
 		(calendarEvent) => {
+			const isSameDay = moment(calendarEvent.start).isSame(moment(calendarEvent.end), 'day');
+
+			if (!isSameDay) {
+				/* Resize is disabled for events that span over multiple days due to an issue with the library */
+				return false;
+			}
 			if (calendarEvent) {
 				const absFolderPath = find(calendars, [
 					'id',
@@ -248,6 +266,12 @@ export default function CalendarComponent() {
 		},
 		[calendars]
 	);
+
+	const allDayAccessor = useCallback((calendarEvent) => {
+		const diffInDays = moment(calendarEvent.end).diff(calendarEvent.start, 'days');
+
+		return diffInDays > 0 || calendarEvent.allDay;
+	}, []);
 
 	const onSelecting = useCallback(
 		(calendarSlot) => {
@@ -282,6 +306,24 @@ export default function CalendarComponent() {
 				action={action}
 				$headerMinWidth={columnMinWidth}
 			/>
+			{anchorElement && (
+				<Popover
+					anchorEl={anchorElement}
+					open={summaryViewOpen}
+					styleAsModal
+					placement="left"
+					onClose={() => {
+						useAppStatusStore.setState({ summaryViewId: undefined });
+					}}
+				>
+					<MemoEventSummaryView
+						events={events}
+						onClose={() => {
+							useAppStatusStore.setState({ summaryViewId: undefined });
+						}}
+					/>
+				</Popover>
+			)}
 			<BigCalendar
 				dayLayoutAlgorithm="no-overlap"
 				selectable
@@ -300,7 +342,6 @@ export default function CalendarComponent() {
 				onRangeChange={onRangeChange}
 				dayPropGetter={dayPropGetter}
 				slotPropGetter={slotPropGetter}
-				eventPropGetter={eventPropGetter}
 				workingSchedule={workingSchedule}
 				onSelectSlot={handleSelect}
 				scrollToTime={scrollToTime}
@@ -308,10 +349,13 @@ export default function CalendarComponent() {
 				onEventResize={onEventDropOrResize}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
+				showMultiDayTimes
 				resizableAccessor={resizableAccessor}
+				allDayAccessor={allDayAccessor}
 				onSelecting={onSelecting}
 				draggableAccessor={draggableAccessor}
 			/>
+			{action === EVENT_ACTIONS.EXPAND && <EventPanelView />}
 		</>
 	);
 }

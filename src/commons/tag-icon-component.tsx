@@ -3,20 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, {
-	Dispatch,
-	ReactElement,
-	SetStateAction,
-	useCallback,
-	useMemo,
-	useState
-} from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
 import { includes, reduce } from 'lodash';
 
 import { ZIMBRA_STANDARD_COLORS } from '../carbonio-ui-commons/constants';
-import { useTags } from '../carbonio-ui-commons/store/zustand/tags';
+import { useSortedTagsArray } from '../carbonio-ui-commons/store/zustand/tags';
 import { Tag } from '../carbonio-ui-commons/types/tags';
 import { EventType } from '../types/event';
 import { useTagExist } from '../view/tags/tag-actions';
@@ -26,13 +19,7 @@ export type TagItems = Tag & {
 	label: string;
 };
 
-export const TagIconComponent = ({
-	event,
-	disableOuterTooltip
-}: {
-	event: EventType;
-	disableOuterTooltip: Dispatch<SetStateAction<boolean>>;
-}): React.JSX.Element => {
+export const TagIconComponent = ({ event }: { event: EventType }): React.JSX.Element => {
 	const [showDropdown, setShowDropdown] = useState(false);
 	const onIconClick = useCallback((ev: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
 		ev.stopPropagation();
@@ -43,7 +30,7 @@ export const TagIconComponent = ({
 		setShowDropdown(false);
 	}, []);
 
-	const tags = useTags();
+	const tags = useSortedTagsArray();
 
 	const tagItems = useMemo(
 		() =>
@@ -121,16 +108,7 @@ export const TagIconComponent = ({
 			{showTagIcon && (
 				<Tooltip placement="top" label={tagName}>
 					<Padding left="extrasmall">
-						<Icon
-							size="medium"
-							data-testid="TagSingleIcon"
-							icon={tagIcon}
-							color={tagIconColor}
-							onMouseEnter={(): void => disableOuterTooltip(true)}
-							onMouseLeave={(): void => disableOuterTooltip(false)}
-							onFocus={(): void => disableOuterTooltip(true)}
-							onBlur={(): void => disableOuterTooltip(false)}
-						/>
+						<Icon size="medium" data-testid="TagSingleIcon" icon={tagIcon} color={tagIconColor} />
 					</Padding>
 				</Tooltip>
 			)}
@@ -143,10 +121,6 @@ export const TagIconComponent = ({
 							icon={tagIcon}
 							onClick={onIconClick}
 							color={tagIconColor}
-							onMouseEnter={(): void => disableOuterTooltip(true)}
-							onMouseLeave={(): void => disableOuterTooltip(false)}
-							onFocus={(): void => disableOuterTooltip(true)}
-							onBlur={(): void => disableOuterTooltip(false)}
 						/>
 					</Padding>
 				</Dropdown>

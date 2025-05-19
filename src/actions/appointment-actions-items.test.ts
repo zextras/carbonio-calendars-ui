@@ -32,12 +32,14 @@ describe('edit event item', () => {
 			closeModal: jest.fn(),
 			createSnackbar: jest.fn(),
 			dispatch: jest.fn(),
-			tags: {
-				0: {
+			t: jest.fn(),
+			replaceHistory: jest.fn(),
+			tags: [
+				{
 					id: '1',
 					name: 'one'
 				}
-			},
+			],
 			folders
 		};
 		const editAction = editEventItem({ invite, event, context });
@@ -67,12 +69,14 @@ describe('edit event item', () => {
 				closeModal: jest.fn(),
 				createSnackbar: jest.fn(),
 				dispatch: jest.fn(),
-				tags: {
-					0: {
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
+				tags: [
+					{
 						id: '1',
 						name: 'one'
 					}
-				},
+				],
 				folders
 			};
 			const editAction = editEventItem({ invite, event, context });
@@ -110,12 +114,14 @@ describe('edit event item', () => {
 				closeModal: jest.fn(),
 				createSnackbar: jest.fn(),
 				dispatch: jest.fn(),
-				tags: {
-					0: {
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
+				tags: [
+					{
 						id: '1',
 						name: 'one'
 					}
-				},
+				],
 				folders
 			};
 			const editAction = editEventItem({ invite, event, context });
@@ -145,12 +151,14 @@ describe('edit event item', () => {
 				closeModal: jest.fn(),
 				createSnackbar: jest.fn(),
 				dispatch: jest.fn(),
-				tags: {
-					0: {
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
+				tags: [
+					{
 						id: '1',
 						name: 'one'
 					}
-				},
+				],
 				folders
 			};
 			const editAction = editEventItem({ invite, event, context });
@@ -185,12 +193,14 @@ describe('edit event item', () => {
 				closeModal: jest.fn(),
 				createSnackbar: jest.fn(),
 				dispatch: jest.fn(),
-				tags: {
-					0: {
+				t: jest.fn(),
+				replaceHistory: jest.fn(),
+				tags: [
+					{
 						id: '1',
 						name: 'one'
 					}
-				},
+				],
 				folders
 			};
 			const editAction = editEventItem({ invite, event, context });

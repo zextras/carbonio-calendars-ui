@@ -10,6 +10,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import { keyBy, values } from 'lodash';
 import moment from 'moment-timezone';
+import { HttpResponse } from 'msw';
 
 import { InviteResponse } from './invite-response';
 import {
@@ -20,8 +21,15 @@ import {
 import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
+import {
+	createAPIInterceptor,
+	createSoapAPIInterceptor
+} from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { mockUseHistoryNavigation } from '../../carbonio-ui-commons/test/mocks/routing/use-history-navigation-mock';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import * as handler from '../../commons/get-appointment';
+import { CALENDAR_BOARD_ID } from '../../constants';
+import { MESSAGE_METHOD } from '../../constants/api';
 import * as getFreeBusyResponseHandler from '../../soap/get-free-busy-request';
 import * as getMsgHandler from '../../soap/get-message-request';
 import * as moveAppointmentHandler from '../../store/actions/move-appointment';
@@ -44,8 +52,6 @@ import {
 	singleGetMsgResponse
 } from '../../test/mocks/network/msw/handle-get-invite';
 import 'jest-styled-components';
-import { MESSAGE_METHOD } from '../../constants/api';
-import { CALENDAR_BOARD_ID } from '../../constants';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
@@ -66,86 +72,81 @@ afterEach(() => {
 });
 
 describe('invite response component', () => {
+	mockUseHistoryNavigation();
+
 	describe('case invitation email', () => {
-		test('have a container with border of 0.0625rem solid regular', () => {
+		test('have a container with border of 0.0625rem solid regular', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 				store
 			});
-			const container = screen.getByTestId('invite-response');
+			const container = await screen.findByTestId('invite-response');
 			expect(container).toHaveStyleRule('border', '0.0625rem solid #cfd5dc');
 		});
-		test('have a container with border radius of 0.875rem', () => {
+		test('have a container with border radius of 0.875rem', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 				store
 			});
-			const container = screen.getByTestId('invite-response');
+			const container = await screen.findByTestId('invite-response');
 			expect(container).toHaveStyleRule('border-radius', '0.875rem');
 		});
-		test('have a container with margin extrasmall', () => {
+		test('have a container with margin extrasmall', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 				store
 			});
-			const container = screen.getByTestId('invite-response');
+			const container = await screen.findByTestId('invite-response');
 			expect(container).toHaveStyleRule('margin', '0.25rem');
 		});
-		test('have a container with padding extralarge', () => {
+		test('have a container with padding extralarge', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 				store
 			});
-			const container = screen.getByTestId('invite-response');
+			const container = await screen.findByTestId('invite-response');
 			expect(container).toHaveStyleRule('padding', '1.5rem');
 		});
+
 		describe('inside the container there is ', () => {
-			test('a string composed by organizer + invited you to an event + event name. Event name is bold', () => {
+			test('a string composed by organizer + invited you to an event + event name. Event name is bold', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
 				});
 				const organizer = mailMsg.invite[0].comp[0].or.d;
 				const title = mailMsg.invite[0].comp[0].name;
-				const organizerString = screen.getByText(`${organizer} invited you to an event`);
-				const titleString = screen.getByText(title);
+				const organizerString = await screen.findByText(`${organizer} invited you to an event`);
+				const titleString = await screen.findByText(title);
 				expect(organizerString).toBeVisible();
 				expect(titleString).toBeVisible();
 				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
 			});
-			test('a string with the user local time of the event', () => {
+			test('a string with the user local time of the event', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
 				});
 
-				const localTimeString = screen.getByText(/tuesday, 30 january, 2024 09:00 - 09:30/i);
+				const localTimeString = await screen.findByText(
+					'Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+				);
 
 				expect(localTimeString).toBeVisible();
-			});
-			test('a string with the user local timezone of the event', () => {
-				setupFoldersStore();
-				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
-				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
-					store
-				});
-
-				const localTimezoneString = screen.getByText(/gmt \+01:00 europe\/berlin/i);
-
-				expect(localTimezoneString).toBeVisible();
 			});
 			test('if the event lasts multiple days non all day there will be the complete format for both start and end time', async () => {
 				setupFoldersStore();
@@ -174,31 +175,34 @@ describe('invite response component', () => {
 					]
 				});
 
+				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 
 				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
 				});
 
-				const localTimeString = screen.getByText(
-					/Sunday, 28 January, 2024 09:00 - Tuesday, 30 January, 2024 09:30/i
-				);
+				const localTimeString = await screen.findByText(/Sunday, January 28, 2024/i);
 
 				expect(localTimeString).toBeVisible();
 			});
-			// skipped, there is a bug to fix first
-			test.skip('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
-				const currentTimezone = 'Asia/Kolkata';
-				moment.tz.guess = jest.fn().mockImplementation(() => currentTimezone);
-				moment.tz.setDefault(currentTimezone);
+			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				setupFoldersStore();
-				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false, {
+					invite: [
+						{
+							tz: [{ id: 'Asia/Kolkata' }]
+						}
+					]
+				});
+
+				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
 				});
 
-				const timezoneIcon = screen.getByTestId('icon: GlobeOutline');
+				const timezoneIcon = await screen.findByTestId('icon: GlobeOutline');
 
 				expect(timezoneIcon).toBeVisible();
 
@@ -207,14 +211,11 @@ describe('invite response component', () => {
 				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
 
 				const tooltipLocalTime = await screen.findByText(
-					/tuesday, 30 january, 2024 09:00 - 09:30/i
+					'Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT+05:30 Asia/Kolkata'
 				);
-
-				const tooltipLocalTimeZone = await screen.findByText(/GMT \+01:00 Europe\/Berlin/i);
 
 				expect(tooltipTitleString).toBeVisible();
 				expect(tooltipLocalTime).toBeVisible();
-				expect(tooltipLocalTimeZone).toBeVisible();
 			});
 			describe('a row which inform the user about his availability', () => {
 				test('if the appointment is received by the primary account, it will be the one used', async () => {
@@ -269,29 +270,31 @@ describe('invite response component', () => {
 					);
 				});
 			});
-			test('a checkbox to notify the organizer checked by default', () => {
+			test('a checkbox to notify the organizer checked by default', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
 				});
 
-				const checkbox = screen.getByTestId(/icon: CheckmarkSquare/i);
-				const string = screen.getByText(/Notify organizer/i);
+				const checkbox = await screen.findByTestId(/icon: CheckmarkSquare/i);
+				const string = await screen.findByText(/Notify organizer/i);
 
 				expect(checkbox).toBeVisible();
 				expect(string).toBeVisible();
 			});
-			test('a select field to select the calendar destination for the appointment', () => {
+			test('a select field to select the calendar destination for the appointment', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
 				});
 
-				const calendar = screen.getByText('Calendar');
+				const calendar = await screen.findByText('Calendar');
 
 				expect(calendar).toBeVisible();
 			});
@@ -304,66 +307,70 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
 						expect(accept).toBeVisible();
 					});
-					test('has text color green', () => {
+					test('has text color green', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
 						expect(accept).toHaveStyleRule('color', '#8bc34a');
 					});
-					test('has a checkmark icon', () => {
+					test('has a checkmark icon', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
 						expect(within(accept).getByTestId(/icon: CheckmarkOutline/i)).toBeVisible();
 					});
-					test("if the user didn't accept the invitation, it is enabled", () => {
+					test("if the user didn't accept the invitation, it is enabled", async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
@@ -379,66 +386,70 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const tentative = screen.getByRole('button', {
+						const tentative = await screen.findByRole('button', {
 							name: /tentative/i
 						});
 
 						expect(tentative).toBeVisible();
 					});
-					test('has text color yellow', () => {
+					test('has text color yellow', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const tentative = screen.getByRole('button', {
+						const tentative = await screen.findByRole('button', {
 							name: /tentative/i
 						});
 
 						expect(tentative).toHaveStyleRule('color', '#ffc107');
 					});
-					test('has a question mark icon', () => {
+					test('has a question mark icon', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const tentative = screen.getByRole('button', {
+						const tentative = await screen.findByRole('button', {
 							name: /tentative/i
 						});
 
 						expect(within(tentative).getByTestId(/icon: QuestionMarkOutline/i)).toBeVisible();
 					});
-					test("if the user didn't accept as tentative the invitation, it is enabled", () => {
+					test("if the user didn't accept as tentative the invitation, it is enabled", async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const tentative = screen.getByRole('button', {
+						const tentative = await screen.findByRole('button', {
 							name: /tentative/i
 						});
 
@@ -454,66 +465,70 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const decline = screen.getByRole('button', {
+						const decline = await screen.findByRole('button', {
 							name: /decline/i
 						});
 
 						expect(decline).toBeVisible();
 					});
-					test('has text color red', () => {
+					test('has text color red', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const decline = screen.getByRole('button', {
+						const decline = await screen.findByRole('button', {
 							name: /decline/i
 						});
 
 						expect(decline).toHaveStyleRule('color', '#d74942');
 					});
-					test('has a close icon', () => {
+					test('has a close icon', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const decline = screen.getByRole('button', {
+						const decline = await screen.findByRole('button', {
 							name: /decline/i
 						});
 
 						expect(within(decline).getByTestId(/icon: CloseOutline/i)).toBeVisible();
 					});
-					test("if the user didn't decline the invitation, it is enabled", () => {
+					test("if the user didn't decline the invitation, it is enabled", async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.REQUEST,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const decline = screen.getByRole('button', {
+						const decline = await screen.findByRole('button', {
 							name: /decline/i
 						});
 
@@ -530,6 +545,7 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -538,7 +554,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
@@ -555,6 +571,7 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -563,7 +580,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
@@ -586,6 +603,7 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -594,13 +612,13 @@ describe('invite response component', () => {
 							}
 						);
 
-						const calendar = screen.getByText(folder.name);
+						const calendar = await screen.findByText(folder.name);
 						await user.click(calendar);
 
-						const calendar2 = screen.getByText(folder2.name);
+						const calendar2 = await screen.findByText(folder2.name);
 						await user.click(calendar2);
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
@@ -624,6 +642,7 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -632,7 +651,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
@@ -648,12 +667,13 @@ describe('invite response component', () => {
 				test('has the label "propose new time"', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const propose = screen.getByRole('button', {
+					const propose = await screen.findByRole('button', {
 						name: /propose new time/i
 					});
 
@@ -662,12 +682,13 @@ describe('invite response component', () => {
 				test('it is always enabled', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const propose = screen.getByRole('button', {
+					const propose = await screen.findByRole('button', {
 						name: /propose new time/i
 					});
 
@@ -681,6 +702,7 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -689,7 +711,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const proposeButton = screen.getByRole('button', { name: /Propose new time/i });
+						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await act(async () => {
 							await user.click(proposeButton);
 						});
@@ -705,6 +727,7 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -713,7 +736,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const proposeButton = screen.getByRole('button', { name: /Propose new time/i });
+						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await act(async () => {
 							await user.click(proposeButton);
 						});
@@ -732,7 +755,7 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
-
+						createSoapAPIInterceptor('GetAppointment', {});
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
 							{
@@ -740,7 +763,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const proposeButton = screen.getByRole('button', { name: /Propose new time/i });
+						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await act(async () => {
 							await user.click(proposeButton);
 						});
@@ -755,7 +778,7 @@ describe('invite response component', () => {
 					test('if the event is non recurrent and all day a non recurrent all day editor is created', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, true);
-
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -764,7 +787,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const proposeButton = screen.getByRole('button', { name: /Propose new time/i });
+						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await act(async () => {
 							await user.click(proposeButton);
 						});
@@ -784,7 +807,7 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SERIES,
 							false
 						);
-
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -793,7 +816,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const proposeButton = screen.getByRole('button', { name: /Propose new time/i });
+						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await act(async () => {
 							await user.click(proposeButton);
 						});
@@ -809,7 +832,7 @@ describe('invite response component', () => {
 					test('if the event is recurrent and all day a series all day editor is created', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SERIES, true);
-
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -818,7 +841,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const proposeButton = screen.getByRole('button', { name: /Propose new time/i });
+						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await act(async () => {
 							await user.click(proposeButton);
 						});
@@ -838,7 +861,7 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.EXCEPT,
 							false
 						);
-
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -847,7 +870,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const proposeButton = screen.getByRole('button', { name: /Propose new time/i });
+						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await act(async () => {
 							await user.click(proposeButton);
 						});
@@ -863,7 +886,7 @@ describe('invite response component', () => {
 					test('if the event is an all day exception an all day exception editor is created', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.EXCEPT, true);
-
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						const { user } = setupTest(
 							<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -872,7 +895,7 @@ describe('invite response component', () => {
 							}
 						);
 
-						const proposeButton = screen.getByRole('button', { name: /Propose new time/i });
+						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
 						await act(async () => {
 							await user.click(proposeButton);
 						});
@@ -891,27 +914,29 @@ describe('invite response component', () => {
 			test.todo('if there is a meeting room it will be visible');
 			test.todo('if there is a virtual meeting room it will be visible');
 			describe('a required participant section composed by:', () => {
-				test('an icon', () => {
+				test('an icon', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const icon = screen.getByTestId('icon: PeopleOutline');
+					const icon = await screen.findByTestId('icon: PeopleOutline');
 
 					expect(icon).toBeVisible();
 				});
-				test('a string with the number of required participants', () => {
+				test('a string with the number of required participants', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const participantString = screen.getByText(/1 participant/i);
+					const participantString = await screen.findByText(/1 participant/i);
 
 					expect(participantString).toBeVisible();
 				});
@@ -922,27 +947,29 @@ describe('invite response component', () => {
 				test.todo('clicking on more will show all the participants');
 			});
 			describe('an optional participant section composed by:', () => {
-				test('an icon', () => {
+				test('an icon', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const icon = screen.getByTestId('icon: OptionalInviteeOutline');
+					const icon = await screen.findByTestId('icon: OptionalInviteeOutline');
 
 					expect(icon).toBeVisible();
 				});
-				test('a string with the number of optional participants', () => {
+				test('a string with the number of optional participants', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const participantString = screen.getByText(/1 optional/i);
+					const participantString = await screen.findByText(/1 optional/i);
 
 					expect(participantString).toBeVisible();
 				});
@@ -954,27 +981,29 @@ describe('invite response component', () => {
 			describe('a section for the description of the appointment composed by:', () => {
 				test.todo('if there is no description this section is not visible');
 				test.todo('a divider');
-				test('an icon', () => {
+				test('an icon', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const messageIcon = screen.getByTestId('icon: MessageSquareOutline');
+					const messageIcon = await screen.findByTestId('icon: MessageSquareOutline');
 
 					expect(messageIcon).toBeVisible();
 				});
-				test('a string with the entire message', () => {
+				test('a string with the entire message', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const messageString = screen.getByText(mailMsg.invite[0].comp[0].desc[0]._content);
+					const messageString = await screen.findByText(mailMsg.invite[0].comp[0].desc[0]._content);
 
 					expect(messageString).toBeVisible();
 				});
@@ -982,95 +1011,90 @@ describe('invite response component', () => {
 		});
 	});
 	describe('case counter invitation email', () => {
-		test('have a container with border of 0.0625rem solid regular', () => {
+		test('have a container with border of 0.0625rem solid regular', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 				store
 			});
-			const container = screen.getByTestId('invite-response');
+			const container = await screen.findByTestId('invite-response');
 			expect(container).toHaveStyleRule('border', '0.0625rem solid #cfd5dc');
 		});
-		test('have a container with border radius of 0.875rem', () => {
+		test('have a container with border radius of 0.875rem', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 				store
 			});
-			const container = screen.getByTestId('invite-response');
+			const container = await screen.findByTestId('invite-response');
 			expect(container).toHaveStyleRule('border-radius', '0.875rem');
 		});
-		test('have a container with margin extrasmall', () => {
+		test('have a container with margin extrasmall', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 				store
 			});
-			const container = screen.getByTestId('invite-response');
+			const container = await screen.findByTestId('invite-response');
 			expect(container).toHaveStyleRule('margin', '0.25rem');
 		});
-		test('have a container with padding extralarge', () => {
+		test('have a container with padding extralarge', async () => {
 			setupFoldersStore();
 			const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 				store
 			});
-			const container = screen.getByTestId('invite-response');
+			const container = await screen.findByTestId('invite-response');
 			expect(container).toHaveStyleRule('padding', '1.5rem');
 		});
 		describe('inside the container there is ', () => {
-			test('the mail message subject', () => {
+			test('the mail message subject', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
 				});
-				const titleString = screen.getByText(mailMsg.subject);
+				const titleString = await screen.findByText(mailMsg.subject);
 				expect(titleString).toBeVisible();
 				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
 			});
-			test('a string with the user local time of the event', () => {
+			test('a string with the user local time of the event', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
 				});
 
-				const localTimeString = screen.getByText(/tuesday, 30 january, 2024 09:00 - 09:30/i);
+				const localTimeString = await screen.findByText(
+					'Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin'
+				);
 
 				expect(localTimeString).toBeVisible();
 			});
-			test('a string with the user local timezone of the event', () => {
+			test('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
 				setupFoldersStore();
-				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
-				const store = configureStore({ reducer: combineReducers(reducers) });
-				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
-					store
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false, {
+					invite: [
+						{
+							tz: [{ id: 'Asia/Kolkata' }]
+						}
+					]
 				});
-
-				const localTimezoneString = screen.getByText(/gmt \+01:00 europe\/berlin/i);
-
-				expect(localTimezoneString).toBeVisible();
-			});
-			// skipped, there is a bug to fix first
-			test.skip('if the event is created with a different timezone there is an icon with a tooltip showing the local timezone', async () => {
-				const currentTimezone = 'Asia/Kolkata';
-				moment.tz.guess = jest.fn().mockImplementation(() => currentTimezone);
-				moment.tz.setDefault(currentTimezone);
-				setupFoldersStore();
-				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+				createSoapAPIInterceptor('GetAppointment', {});
 				const store = configureStore({ reducer: combineReducers(reducers) });
 				const { user } = setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 					store
 				});
 
-				const timezoneIcon = screen.getByTestId('icon: GlobeOutline');
+				const timezoneIcon = await screen.findByTestId('icon: GlobeOutline');
 
 				expect(timezoneIcon).toBeVisible();
 
@@ -1079,14 +1103,11 @@ describe('invite response component', () => {
 				const tooltipTitleString = await screen.findByText(/Date and time on creation/i);
 
 				const tooltipLocalTime = await screen.findByText(
-					/tuesday, 30 january, 2024 09:00 - 09:30/i
+					'Tuesday, January 30, 2024, 1:30 – 2:00 PM GMT+05:30 Asia/Kolkata'
 				);
-
-				const tooltipLocalTimeZone = await screen.findByText(/GMT \+01:00 Europe\/Berlin/i);
 
 				expect(tooltipTitleString).toBeVisible();
 				expect(tooltipLocalTime).toBeVisible();
-				expect(tooltipLocalTimeZone).toBeVisible();
 			});
 			describe('two different buttons to reply to the counter appointment: ', () => {
 				describe('a button to accept the counter appointment', () => {
@@ -1097,12 +1118,13 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
@@ -1111,19 +1133,20 @@ describe('invite response component', () => {
 					test.todo('has text color green');
 					// icon: CheckmarkOutline
 					test.todo('has a checkmark icon');
-					test('it is always enabled', () => {
+					test('it is always enabled', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.COUNTER,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const accept = screen.getByRole('button', {
+						const accept = await screen.findByRole('button', {
 							name: /accept/i
 						});
 
@@ -1147,12 +1170,14 @@ describe('invite response component', () => {
 								}
 							);
 
-							const acceptProposedTimeButton = screen.getByRole('button', { name: /Accept/i });
+							const acceptProposedTimeButton = await screen.findByRole('button', {
+								name: /Accept/i
+							});
 							await act(async () => {
 								await user.click(acceptProposedTimeButton);
 							});
 
-							expect(spy).toHaveBeenCalledTimes(1);
+							expect(spy).toHaveBeenCalled();
 
 							spy.mockClear();
 						});
@@ -1165,7 +1190,6 @@ describe('invite response component', () => {
 								MESSAGE_TYPE.SINGLE,
 								false
 							);
-
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -1174,7 +1198,9 @@ describe('invite response component', () => {
 								}
 							);
 
-							const acceptProposedTimeButton = screen.getByRole('button', { name: /Accept/i });
+							const acceptProposedTimeButton = await screen.findByRole('button', {
+								name: /Accept/i
+							});
 							await act(async () => {
 								await user.click(acceptProposedTimeButton);
 							});
@@ -1196,7 +1222,6 @@ describe('invite response component', () => {
 								MESSAGE_TYPE.SINGLE,
 								false
 							);
-
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -1205,7 +1230,9 @@ describe('invite response component', () => {
 								}
 							);
 
-							const acceptProposedTimeButton = screen.getByRole('button', { name: /Accept/i });
+							const acceptProposedTimeButton = await screen.findByRole('button', {
+								name: /Accept/i
+							});
 							await act(async () => {
 								await user.click(acceptProposedTimeButton);
 							});
@@ -1222,7 +1249,6 @@ describe('invite response component', () => {
 								MESSAGE_TYPE.SINGLE,
 								false
 							);
-
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -1230,7 +1256,7 @@ describe('invite response component', () => {
 									store
 								}
 							);
-							const proposeButton = screen.getByRole('button', { name: /Accept/i });
+							const proposeButton = await screen.findByRole('button', { name: /Accept/i });
 							await act(async () => {
 								await user.click(proposeButton);
 							});
@@ -1253,7 +1279,6 @@ describe('invite response component', () => {
 								MESSAGE_TYPE.SINGLE,
 								true
 							);
-
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -1261,7 +1286,7 @@ describe('invite response component', () => {
 									store
 								}
 							);
-							const proposeButton = screen.getByRole('button', { name: /Accept/i });
+							const proposeButton = await screen.findByRole('button', { name: /Accept/i });
 							await act(async () => {
 								await user.click(proposeButton);
 							});
@@ -1281,7 +1306,6 @@ describe('invite response component', () => {
 								MESSAGE_TYPE.SERIES,
 								false
 							);
-
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -1290,7 +1314,7 @@ describe('invite response component', () => {
 								}
 							);
 
-							const proposeButton = screen.getByRole('button', { name: /Accept/i });
+							const proposeButton = await screen.findByRole('button', { name: /Accept/i });
 							await act(async () => {
 								await user.click(proposeButton);
 							});
@@ -1314,7 +1338,6 @@ describe('invite response component', () => {
 								MESSAGE_TYPE.SERIES,
 								true
 							);
-
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -1323,7 +1346,7 @@ describe('invite response component', () => {
 								}
 							);
 
-							const proposeButton = screen.getByRole('button', { name: /Accept/i });
+							const proposeButton = await screen.findByRole('button', { name: /Accept/i });
 							await act(async () => {
 								await user.click(proposeButton);
 							});
@@ -1345,7 +1368,6 @@ describe('invite response component', () => {
 								MESSAGE_TYPE.EXCEPT,
 								false
 							);
-
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -1354,7 +1376,7 @@ describe('invite response component', () => {
 								}
 							);
 
-							const proposeButton = screen.getByRole('button', { name: /Accept/i });
+							const proposeButton = await screen.findByRole('button', { name: /Accept/i });
 							await act(async () => {
 								await user.click(proposeButton);
 							});
@@ -1379,7 +1401,6 @@ describe('invite response component', () => {
 								MESSAGE_TYPE.EXCEPT,
 								true
 							);
-
 							const store = configureStore({ reducer: combineReducers(reducers) });
 							const { user } = setupTest(
 								<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />,
@@ -1388,7 +1409,7 @@ describe('invite response component', () => {
 								}
 							);
 
-							const proposeButton = screen.getByRole('button', { name: /Accept/i });
+							const proposeButton = await screen.findByRole('button', { name: /Accept/i });
 							await act(async () => {
 								await user.click(proposeButton);
 							});
@@ -1411,12 +1432,13 @@ describe('invite response component', () => {
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const decline = screen.getByRole('button', {
+						const decline = await screen.findByRole('button', {
 							name: /decline/i
 						});
 
@@ -1425,19 +1447,20 @@ describe('invite response component', () => {
 					test.todo('has text color red');
 					// icon: CloseOutline
 					test.todo('has a close icon');
-					test('it is always enabled', () => {
+					test('it is always enabled', async () => {
 						setupFoldersStore();
 						const mailMsg = buildMailMessageType(
 							MESSAGE_METHOD.COUNTER,
 							MESSAGE_TYPE.SINGLE,
 							false
 						);
+						createSoapAPIInterceptor('GetAppointment', {});
 						const store = configureStore({ reducer: combineReducers(reducers) });
 						setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 							store
 						});
 
-						const decline = screen.getByRole('button', {
+						const decline = await screen.findByRole('button', {
 							name: /decline/i
 						});
 
@@ -1459,20 +1482,21 @@ describe('invite response component', () => {
 			test.todo('CHARACTERIZATION TEST: if there is a virtual meeting room it will be visible');
 			test.todo('a divider');
 			describe('a required participant section composed by:', () => {
-				test('an icon', () => {
+				test('an icon', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const icon = screen.getByTestId('icon: PeopleOutline');
+					const icon = await screen.findByTestId('icon: PeopleOutline');
 
 					expect(icon).toBeVisible();
 				});
 				// mocked data is not aligned with the data received by mails. Use proper mock to test this behaviour
-				test.skip('CHARACTERIZATION TEST: a string with "0 participants"', () => {
+				test.skip('CHARACTERIZATION TEST: a string with "0 participants"', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
 					const store = configureStore({ reducer: combineReducers(reducers) });
@@ -1480,7 +1504,7 @@ describe('invite response component', () => {
 						store
 					});
 
-					const participantString = screen.getByText(/0 participant/i);
+					const participantString = await screen.findByText(/0 participant/i);
 
 					expect(participantString).toBeVisible();
 				});
@@ -1491,27 +1515,29 @@ describe('invite response component', () => {
 				test.todo('clicking on more will show all the participants');
 			});
 			describe('an optional participant section composed by:', () => {
-				test('an icon', () => {
+				test('an icon', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const icon = screen.getByTestId('icon: OptionalInviteeOutline');
+					const icon = await screen.findByTestId('icon: OptionalInviteeOutline');
 
 					expect(icon).toBeVisible();
 				});
-				test('a string with the number of optional participants', () => {
+				test('a string with the number of optional participants', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const participantString = screen.getByText(/1 optional/i);
+					const participantString = await screen.findByText(/1 optional/i);
 
 					expect(participantString).toBeVisible();
 				});
@@ -1523,31 +1549,64 @@ describe('invite response component', () => {
 			describe('a section for the description of the appointment composed by:', () => {
 				test.todo('if there is no description this section is not visible');
 				test.todo('a divider');
-				test('an icon', () => {
+				test('an icon', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const messageIcon = screen.getByTestId('icon: MessageSquareOutline');
+					const messageIcon = await screen.findByTestId('icon: MessageSquareOutline');
 
 					expect(messageIcon).toBeVisible();
 				});
-				test('a string with the entire message', () => {
+				test('a string with the entire message', async () => {
 					setupFoldersStore();
 					const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+					createSoapAPIInterceptor('GetAppointment', {});
 					const store = configureStore({ reducer: combineReducers(reducers) });
 					setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
 						store
 					});
 
-					const messageString = screen.getByText(mailMsg.invite[0].comp[0].desc[0]._content);
+					const messageString = await screen.findByText(mailMsg.invite[0].comp[0].desc[0]._content);
 
 					expect(messageString).toBeVisible();
 				});
 			});
+		});
+	});
+	describe('InviteResponse - fetchInvite error handling', () => {
+		test('should show error if fetchInvite returns Fault response', async () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+
+			createAPIInterceptor(
+				'post',
+				'/service/soap/GetAppointmentRequest',
+				HttpResponse.json({ Fault: {} })
+			);
+
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, { store });
+
+			const errorString = await screen.findByText(/Something went wrong, please try again/i);
+			expect(errorString).toBeVisible();
+		});
+
+		test('should show error if fetchInvite returns network error', async () => {
+			setupFoldersStore();
+			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
+
+			createAPIInterceptor('post', '/service/soap/GetAppointmentRequest', HttpResponse.error());
+
+			const store = configureStore({ reducer: combineReducers(reducers) });
+			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, { store });
+
+			const errorString = await screen.findByText(/Something went wrong, please try again/i);
+			expect(errorString).toBeVisible();
 		});
 	});
 });

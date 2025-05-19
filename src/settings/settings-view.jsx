@@ -5,13 +5,7 @@
  */
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
-import {
-	Container,
-	FormSection,
-	FormSubSection,
-	Shimmer,
-	useSnackbar
-} from '@zextras/carbonio-design-system';
+import { Container, Shimmer, useSnackbar } from '@zextras/carbonio-design-system';
 import { editSettings, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
 import { map, filter, isEqual, uniqBy } from 'lodash';
 
@@ -21,13 +15,6 @@ import CreateAppSettings from './creating-app-settings-view';
 import CustomScheduleModal from './custom-schedule-modal';
 import GeneralSettingView from './general-settings-view';
 import PermissionSettings from './permissions-settings-view';
-import {
-	creatingAppointmentsSubSection,
-	generalSubSection,
-	iCalSubSection,
-	permissionsSubSection,
-	workWeekSubSection
-} from './sub-sections';
 import WorkWeekSettingsView from './work-week-settings-view';
 import { useUpdateView } from '../carbonio-ui-commons/hooks/use-update-view';
 import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
@@ -385,11 +372,6 @@ export default function CalendarSettingsView() {
 	);
 
 	const title = useMemo(() => t('label.calendar_setting', 'Calendar Settings'), []);
-	const sectionTitleGeneral = useMemo(() => generalSubSection(), []);
-	const sectionTitleWorkWeek = useMemo(() => workWeekSubSection(), []);
-	const sectionTitleAppointments = useMemo(() => creatingAppointmentsSubSection(), []);
-	const sectionTitleAppleCal = useMemo(() => iCalSubSection(), []);
-	const sectionTitlePermissions = useMemo(() => permissionsSubSection(), []);
 
 	return loading ? (
 		<Container
@@ -410,58 +392,48 @@ export default function CalendarSettingsView() {
 				mainAlignment="flex-start"
 				crossAlignment="baseline"
 				background={'gray5'}
+				gap="1rem"
+				padding={{ all: 'medium' }}
 				style={{ overflowY: 'auto' }}
 			>
-				<FormSection width="50%" minWidth="calc(min(100%, 32rem))">
-					<FormSubSection id={sectionTitleGeneral.id} label={sectionTitleGeneral.label}>
-						<GeneralSettingView
-							settings={settings}
-							settingsObj={settingsObj}
-							updateSettings={updateSettings}
-							isEmailNotValid={isEmailNotValid}
-							setisEmailNotValid={setisEmailNotValid}
-						/>
-					</FormSubSection>
-					<FormSubSection id={sectionTitleWorkWeek.id} label={sectionTitleWorkWeek.label}>
-						<WorkWeekSettingsView
-							settingsObj={settingsObj}
-							workingSchedule={workingSchedule}
-							isRegular={isRegular}
-							handelDaysClicked={handelDaysClicked}
-							setIsRegular={setIsRegular}
-							calculateRegularSchedule={calculateRegularSchedule}
-							toggleModal={toggleModal}
-						/>
-					</FormSubSection>
-					<FormSubSection id={sectionTitleAppointments.id} label={sectionTitleAppointments.label}>
-						<CreateAppSettings
-							settings={settings}
-							settingsObj={settingsObj}
-							updateSettings={updateSettings}
-						/>
-					</FormSubSection>
-					<FormSubSection id={sectionTitleAppleCal.id} label={sectionTitleAppleCal.label}>
-						<AppleICalSettings
-							settings={settings}
-							settingsObj={settingsObj}
-							updateSettings={updateSettings}
-						/>
-					</FormSubSection>
-					<FormSubSection label={sectionTitlePermissions.label} id={sectionTitlePermissions.id}>
-						<PermissionSettings
-							activeFreeBusyOptn={activeFreeBusyOptn}
-							activeInviteOptn={activeInviteOptn}
-							handleInviteRightChange={handleInviteRightChange}
-							handlePermissionChange={handlePermissionChange}
-							setAllowedFBUsers={setAllowedFBUsers}
-							setAllowedInivteUsers={setAllowedInivteUsers}
-							settingsObj={settingsObj}
-							updateSettings={updateSettings}
-							defaultSelectedFreeBusyContacts={defaultSelectedFreeBusyContacts}
-							defaultSelectedInviteContacts={defaultSelectedInviteContacts}
-						/>
-					</FormSubSection>
-				</FormSection>
+				<GeneralSettingView
+					settings={settings}
+					settingsObj={settingsObj}
+					updateSettings={updateSettings}
+					isEmailNotValid={isEmailNotValid}
+					setisEmailNotValid={setisEmailNotValid}
+				/>
+				<WorkWeekSettingsView
+					settingsObj={settingsObj}
+					workingSchedule={workingSchedule}
+					isRegular={isRegular}
+					handelDaysClicked={handelDaysClicked}
+					setIsRegular={setIsRegular}
+					calculateRegularSchedule={calculateRegularSchedule}
+					toggleModal={toggleModal}
+				/>
+				<CreateAppSettings
+					settings={settings}
+					settingsObj={settingsObj}
+					updateSettings={updateSettings}
+				/>
+				<AppleICalSettings
+					settings={settings}
+					settingsObj={settingsObj}
+					updateSettings={updateSettings}
+				/>
+				<PermissionSettings
+					activeFreeBusyOptn={activeFreeBusyOptn}
+					activeInviteOptn={activeInviteOptn}
+					handleInviteRightChange={handleInviteRightChange}
+					handlePermissionChange={handlePermissionChange}
+					setAllowedFBUsers={setAllowedFBUsers}
+					setAllowedInivteUsers={setAllowedInivteUsers}
+					settingsObj={settingsObj}
+					updateSettings={updateSettings}
+					defaultSelectedFreeBusyContacts={defaultSelectedFreeBusyContacts}
+					defaultSelectedInviteContacts={defaultSelectedInviteContacts}
+				/>
 			</Container>
 			<CustomScheduleModal
 				open={open}

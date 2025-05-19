@@ -3,24 +3,25 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, useState, useCallback, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
 import type { QueryChip, SearchViewProps } from '@zextras/carbonio-search-ui';
 import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import AdvancedFilterModal from './advance-filter-modal';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
+import { convertSearchChipToString } from '../../carbonio-ui-commons/helpers/search';
 import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
-import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
+import { DEFAULT_DATE_END, DEFAULT_DATE_START } from '../../constants/advance-filter-modal';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
 import { getSelectedEvents } from '../../store/selectors/appointments';
@@ -34,19 +35,22 @@ export type SearchResults = {
 };
 
 const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
+	const initialSearchResults = useMemo(
+		() => ({
+			appointments: {},
+			more: false,
+			offset: 0,
+			sortBy: 'none',
+			query: []
+		}),
+		[]
+	);
 	const [query, updateQuery] = useQuery();
 	const [t] = useTranslation();
-	const [searchResults, setSearchResults] = useState<SearchResults>({
-		appointments: {},
-		more: false,
-		offset: 0,
-		sortBy: 'none',
-		query: []
-	});
+	const [searchResults, setSearchResults] = useState<SearchResults>(initialSearchResults);
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
 	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
-	const { path } = useRouteMatch();
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
 	const defaultResultLabel = useMemo(() => t('label.results_for', 'Results for: '), [t]);
 	const [resultLabel, setResultLabel] = useState<string>(defaultResultLabel);
@@ -82,7 +86,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 
 	const foldersToSearchInQuery = useMemo(() => {
 		const folderString = map(searchInFolders, (folder) => `inid:"${folder}"`).join(' OR ');
-		return `( ${folderString})`;
+		return `(${folderString})`;
 	}, [searchInFolders]);
 
 	const [spanStart, setSpanStart] = useState(() => DEFAULT_DATE_START);
@@ -92,9 +96,9 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		(queryStr: QueryChip[], reset: boolean) => {
 			setResultLabel(defaultResultLabel);
 			setLoading(true);
-			const queryMap = `${queryStr
-				.map((c) => c.value ?? c.label)
-				.join(' ')} ${foldersToSearchInQuery}`;
+
+			const queryString = queryStr.map((c) => convertSearchChipToString(c)).join(' ');
+			const queryMap = `(${queryString}) ${foldersToSearchInQuery}`;
 			dispatch(
 				searchAppointments({
 					spanStart,
@@ -151,7 +155,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			t
 		]
 	);
-	const [filterCount, setFilterCount] = useState(0);
 
 	const loadMore = useCallback(() => {
 		if (!loading && searchResults && !isEmpty(searchResults.appointments) && searchResults.more) {
@@ -162,40 +165,53 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	useEffect(() => {
 		if (query && query.length > 0 && query !== searchResults.query && !isInvalidQuery) {
 			search(query, true);
-			setFilterCount(1);
 		}
 		if (query && query.length === 0) {
 			setIsInvalidQuery(false);
-			setFilterCount(0);
 			setResultLabel(defaultResultLabel);
+			setSearchResults(initialSearchResults);
 		}
-	}, [query, search, searchResults.query, isInvalidQuery, t, defaultResultLabel]);
+	}, [
+		query,
+		search,
+		searchResults.query,
+		isInvalidQuery,
+		t,
+		defaultResultLabel,
+		initialSearchResults
+	]);
 
 	const appointments = useAppSelector((state) =>
 		getSelectedEvents(state, searchResults.appointments ?? [], calendars)
 	);
+
 	return (
 		<>
 			<Container style={{ whiteSpace: 'nowrap' }}>
-				<ResultsHeader label={resultLabel} />
+				<ResultsHeader label={query.length > 0 ? resultLabel : ''} />
 				<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
-					<Switch>
-						<Route path={`${path}/:action?/:apptId?/:ridZ?`}>
-							<SearchList
-								loadMore={loadMore}
-								appointments={appointments}
-								loading={loading}
-								filterCount={filterCount}
-								setShowAdvanceFilters={setShowAdvanceFilters}
-								searchDisabled={false}
-								dateStart={spanStart}
-								dateEnd={spanEnd}
-							/>
-							<Container background={'gray5'} width="75%" mainAlignment="center">
-								<SearchPanel appointments={appointments} />
-							</Container>
-						</Route>
-					</Switch>
+					<Routes>
+						<Route
+							path={`:action?/:apptId?/:ridZ?`}
+							element={
+								<>
+									<SearchList
+										query={query}
+										loadMore={loadMore}
+										appointments={appointments}
+										loading={loading}
+										setShowAdvanceFilters={setShowAdvanceFilters}
+										searchDisabled={false}
+										dateStart={spanStart}
+										dateEnd={spanEnd}
+									/>
+									<Container background={'gray5'} width="75%" mainAlignment="center">
+										<SearchPanel appointments={appointments} />
+									</Container>
+								</>
+							}
+						/>
+					</Routes>
 				</Container>
 			</Container>
 			<AdvancedFilterModal

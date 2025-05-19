@@ -3,8 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Editor, Resource } from '../../types/editor';
-import { EditorChipAttendees, InviteFreeBusy } from '../../types/store/invite';
+import { Editor } from '../../types/editor';
 import type { RootState } from '../redux';
 
 export const selectEditor =
@@ -18,7 +17,7 @@ export function selectEditors(state: RootState): Record<string, Editor> {
 
 export const selectEditorIsRichText =
 	(id: string) =>
-	(state: RootState): boolean | undefined =>
+	(state: RootState): Editor['isRichText'] =>
 		state?.editor?.editors?.[id]?.isRichText;
 
 export const selectOrganizer =
@@ -33,12 +32,12 @@ export const selectSender =
 
 export const selectEditorTitle =
 	(id: string) =>
-	(state: RootState): string | undefined =>
+	(state: RootState): Editor['title'] =>
 		state?.editor?.editors?.[id]?.title;
 
 export const selectEditorLocation =
 	(id: string) =>
-	(state: RootState): string | undefined =>
+	(state: RootState): Editor['location'] =>
 		state?.editor?.editors?.[id]?.location;
 
 export const selectEditorRoom =
@@ -48,42 +47,42 @@ export const selectEditorRoom =
 
 export const selectEditorAttendees =
 	(id: string) =>
-	(state: RootState): Array<EditorChipAttendees> =>
+	(state: RootState): Editor['attendees'] =>
 		state?.editor?.editors?.[id]?.attendees;
 
 export const selectEditorUid =
 	(id: string) =>
-	(state: RootState): string | undefined =>
+	(state: RootState): Editor['uid'] =>
 		state?.editor?.editors?.[id]?.uid;
 
 export const selectEditorOptionalAttendees =
 	(id: string) =>
-	(state: RootState): Array<any> =>
+	(state: RootState): Editor['optionalAttendees'] =>
 		state?.editor?.editors?.[id]?.optionalAttendees;
 
 export const selectEditorAllDay =
 	(id: string) =>
-	(state: RootState): boolean | undefined =>
+	(state: RootState): Editor['allDay'] =>
 		state?.editor?.editors?.[id]?.allDay;
 
 export const selectEditorFreeBusy =
 	(id: string) =>
-	(state: RootState): InviteFreeBusy | undefined =>
+	(state: RootState): Editor['freeBusy'] =>
 		state?.editor?.editors?.[id]?.freeBusy;
 
 export const selectEditorClass =
 	(id: string) =>
-	(state: RootState): string | undefined =>
+	(state: RootState): Editor['class'] =>
 		state?.editor?.editors?.[id]?.class;
 
 export const selectEditorStart =
 	(id: string) =>
-	(state: RootState): number | undefined =>
+	(state: RootState): Editor['start'] =>
 		state?.editor?.editors?.[id]?.start;
 
 export const selectEditorEnd =
 	(id: string) =>
-	(state: RootState): number | undefined =>
+	(state: RootState): Editor['end'] =>
 		state?.editor?.editors?.[id]?.end;
 
 export const selectEditorRichText =
@@ -93,22 +92,22 @@ export const selectEditorRichText =
 
 export const selectEditorPlainText =
 	(id: string) =>
-	(state: RootState): string =>
+	(state: RootState): Editor['plainText'] =>
 		state?.editor?.editors?.[id]?.plainText;
 
 export const selectEditorTimezone =
 	(id: string) =>
-	(state: RootState): string | undefined =>
+	(state: RootState): Editor['timezone'] =>
 		state?.editor?.editors?.[id]?.timezone;
 
 export const selectEditorReminder =
 	(id: string) =>
-	(state: RootState): string | undefined =>
+	(state: RootState): Editor['reminder'] =>
 		state?.editor?.editors?.[id]?.reminder;
 
 export const selectEditorRecurrence =
 	(id: string) =>
-	(state: RootState): any =>
+	(state: RootState): Editor['recur'] =>
 		state?.editor?.editors?.[id]?.recur;
 
 export const selectEditorRecurrenceFrequency =
@@ -147,7 +146,7 @@ export const selectEditorRecurrenceCount =
 
 export const selectEditorCalendar =
 	(id: string) =>
-	(state: RootState): any =>
+	(state: RootState): Editor['calendar'] =>
 		state?.editor?.editors?.[id]?.calendar;
 
 export const selectEditorCalendarId =
@@ -157,23 +156,35 @@ export const selectEditorCalendarId =
 
 export const selectEditorIsNew =
 	(id: string) =>
-	(state: RootState): boolean =>
+	(state: RootState): Editor['isNew'] =>
 		state?.editor?.editors?.[id]?.isNew;
 
 export const selectEditorInviteId =
 	(id: string) =>
-	(state: RootState): string | undefined =>
+	(state: RootState): Editor['inviteId'] =>
 		state?.editor?.editors?.[id]?.inviteId;
 
 export const selectEditorAttachmentFiles =
 	(id: string) =>
-	(state: RootState): Array<any> =>
+	(state: RootState): Editor['attachmentFiles'] =>
 		state?.editor?.editors?.[id]?.attachmentFiles;
 
 export const selectEditorAttachmentAid =
 	(id: string) =>
 	(state: RootState): Array<string> =>
 		state?.editor?.editors?.[id]?.attach?.aid;
+
+export const selectEditorIsDraft =
+	(id: string) =>
+	(state: RootState): boolean => {
+		const editor = state?.editor?.editors?.[id];
+
+		if (editor?.draft === true || editor?.isNew === false) {
+			return true;
+		}
+
+		return editor?.draft === undefined && editor?.isNew === undefined;
+	};
 
 export const selectEditorAttach =
 	(id: string) =>
@@ -182,30 +193,30 @@ export const selectEditorAttach =
 
 export const selectEditorDisabled =
 	(id: string) =>
-	(state: RootState): Record<string, boolean> =>
+	(state: RootState): Editor['disabled'] =>
 		state?.editor?.editors?.[id]?.disabled;
 
 export const selectEditorMeetingRoom =
 	(id: string) =>
-	(state: RootState): Array<Resource> | undefined =>
+	(state: RootState): Editor['meetingRoom'] =>
 		state?.editor?.editors?.[id]?.meetingRoom;
 
 export const selectEditorEquipment =
 	(id: string) =>
-	(state: RootState): Array<Resource> | undefined =>
+	(state: RootState): Editor['equipment'] =>
 		state?.editor?.editors?.[id]?.equipment;
 
 export const selectIsInstance =
 	(id: string) =>
-	(state: RootState): boolean =>
+	(state: RootState): Editor['isInstance'] =>
 		state?.editor?.editors?.[id]?.isInstance;
 
 export const selectIsSeries =
 	(id: string) =>
-	(state: RootState): boolean =>
+	(state: RootState): Editor['isSeries'] =>
 		state?.editor?.editors?.[id]?.isSeries;
 
 export const selectIsException =
 	(id: string) =>
-	(state: RootState): boolean =>
+	(state: RootState): Editor['isException'] =>
 		state?.editor?.editors?.[id]?.isException;

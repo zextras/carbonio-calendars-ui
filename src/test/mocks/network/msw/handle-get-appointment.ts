@@ -7,6 +7,7 @@ import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { HttpResponse, HttpResponseResolver } from 'msw';
 
 import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
+import { EVENT_DISPLAY_STATUS, PARTICIPATION_STATUS } from '../../../../constants/api';
 
 const uid = '71c5949a-69e2-48e7-b4c2-3765f6a4eaed';
 const senderMail = 'sender@mail.com';
@@ -41,7 +42,7 @@ export const singleAppointmentResponse = {
 									url: receiverMail,
 									d: 'receiver fullName',
 									role: 'REQ',
-									ptst: 'NE',
+									ptst: PARTICIPATION_STATUS.NEED_ACTION,
 									rsvp: true
 								}
 							],
@@ -74,8 +75,8 @@ export const singleAppointmentResponse = {
 									_content: ''
 								}
 							],
-							fba: 'B',
-							fb: 'B',
+							fba: EVENT_DISPLAY_STATUS.BUSY,
+							fb: EVENT_DISPLAY_STATUS.BUSY,
 							transp: 'O',
 							or: {
 								a: senderMail,

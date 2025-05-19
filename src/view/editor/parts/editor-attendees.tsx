@@ -150,7 +150,7 @@ export const EditorAttendees = ({ editorId }: EditorAttendeesProps): ReactElemen
 							placeholder={t('label.attendees', 'Attendees')}
 							attendees={attendees}
 							onChange={onChangeAttendeeContact}
-							disabled={disabled?.attendees}
+							disabled={disabled?.attendees ?? false}
 							orderedAccountIds={orderedAccountIds}
 							customDisplayAttendeeChip={customDisplayAttendeeInput}
 						/>

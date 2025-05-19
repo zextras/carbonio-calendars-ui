@@ -10,17 +10,17 @@ import { map, values } from 'lodash';
 import moment from 'moment';
 
 import { AppointmentCard } from './appointment-card';
-import { useTags } from '../../../carbonio-ui-commons/store/zustand/tags';
+import { useTagStore } from '../../../carbonio-ui-commons/store/zustand/tags';
 import { tags } from '../../../carbonio-ui-commons/test/mocks/tags/tags';
 import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { PARTICIPATION_STATUS } from '../../../constants/api';
 import mockedData from '../../../test/generators';
 import 'jest-styled-components';
 
-jest.mock('../../../carbonio-ui-commons/store/zustand/tags', () => ({
-	useTags: jest.fn()
-}));
-
 describe('appointment card component', () => {
+	beforeEach(() => {
+		useTagStore.setState({ tags });
+	});
 	test.todo('on click it will change view and show the calendar event panel');
 	test('it will have the background color of the calendar', () => {
 		const event = mockedData.getEvent();
@@ -72,7 +72,9 @@ describe('appointment card component', () => {
 				expect(timeString).toBeVisible();
 			});
 			test('if it is a multi day non all day it will show start and end including the days', () => {
-				const event = mockedData.getEvent({ start: moment(), end: moment().add(2, 'day') });
+				const start = new Date();
+				const end = new Date(new Date(start.valueOf()).setDate(start.getDate() + 2));
+				const event = mockedData.getEvent({ start, end });
 				setupTest(<AppointmentCard event={event} />);
 
 				const timeString = screen.getByText(
@@ -83,9 +85,12 @@ describe('appointment card component', () => {
 				expect(timeString).toBeVisible();
 			});
 			test('if it is a multi day all day it will show start and end including the days and all day', () => {
+				const start = new Date();
+				const end = new Date(new Date(start.valueOf()).setDate(start.getDate() + 2));
+
 				const event = mockedData.getEvent({
-					start: moment(),
-					end: moment().add(2, 'day'),
+					start,
+					end,
 					allDay: true
 				});
 				setupTest(<AppointmentCard event={event} />);
@@ -106,7 +111,6 @@ describe('appointment card component', () => {
 				expect(privateIcon).toBeVisible();
 			});
 			test('tagged with single tag', () => {
-				(useTags as jest.Mock).mockReturnValue(tags);
 				const event = mockedData.getEvent({ resource: { tags: [values(tags)[0].id] } });
 				setupTest(<AppointmentCard event={event} />);
 				const singleTagIcon = screen.getByTestId('TagSingleIcon');
@@ -120,7 +124,7 @@ describe('appointment card component', () => {
 			});
 			test('answer is needed', () => {
 				const event = mockedData.getEvent({
-					resource: { iAmOrganizer: false, participationStatus: 'NE' }
+					resource: { iAmOrganizer: false, participationStatus: PARTICIPATION_STATUS.NEED_ACTION }
 				});
 				setupTest(<AppointmentCard event={event} />);
 
@@ -131,7 +135,7 @@ describe('appointment card component', () => {
 				const event = mockedData.getEvent({
 					resource: {
 						iAmOrganizer: false,
-						participationStatus: 'NE',
+						participationStatus: PARTICIPATION_STATUS.NEED_ACTION,
 						tags: [values(tags)[0].id],
 						class: 'PRI'
 					}

@@ -6,11 +6,13 @@
 import React from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
+import { TFunction } from 'i18next';
 
 import { EventType } from './event';
 import { Invite } from './store/invite';
-import { Folders } from '../carbonio-ui-commons/types/folder';
-import { Tags } from '../carbonio-ui-commons/types/tags';
+import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
+import { Folders } from '../carbonio-ui-commons/types';
+import { Tag } from '../carbonio-ui-commons/types/tags';
 import { EventActionsId } from '../constants/event-actions';
 import { AppDispatch } from '../store/redux';
 
@@ -26,8 +28,9 @@ export type ActionsContext = {
 	closeModal: ReturnType<typeof useModal>['closeModal'];
 	createSnackbar: ReturnType<typeof useSnackbar>;
 	dispatch: AppDispatch;
-	replaceHistory?: (arg: any) => void;
-	tags: Tags;
+	replaceHistory: ReturnType<typeof useHistoryNavigation>['replaceHistory'];
+	t: TFunction;
+	tags: Array<Tag>;
 	onClose?: () => void;
 	panel?: boolean;
 	searchPanel?: boolean;

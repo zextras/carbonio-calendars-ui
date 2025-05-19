@@ -6,10 +6,10 @@
 import React, { useMemo } from 'react';
 
 import { Container, List, Row, Text, Padding, ListItem } from '@zextras/carbonio-design-system';
+import { QueryChip } from '@zextras/carbonio-search-ui';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map, sortBy } from 'lodash';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';
 
 import { AdvancedFilterButton } from './parts/advanced-filter-button';
 import SearchListItem from './search-list-item';
@@ -20,16 +20,10 @@ type SearchListProps = {
 	loadMore: () => any;
 	loading: boolean;
 	searchDisabled: boolean;
-	filterCount: number;
 	setShowAdvanceFilters: (show: boolean) => void;
 	dateStart: number;
 	dateEnd: number;
-};
-
-export type RoutesParams = {
-	action: 'view' | 'edit';
-	apptId: string;
-	ridZ: string;
+	query: Array<QueryChip>;
 };
 
 const SearchList = ({
@@ -37,12 +31,11 @@ const SearchList = ({
 	loadMore,
 	loading,
 	searchDisabled,
-	filterCount,
 	setShowAdvanceFilters,
 	dateStart,
-	dateEnd
+	dateEnd,
+	query
 }: SearchListProps): React.JSX.Element => {
-	const { apptId, ridZ } = useParams<RoutesParams>();
 	const items = useMemo(
 		() =>
 			map(sortBy(appointments ?? [], ['start']), (item) => (
@@ -59,6 +52,20 @@ const SearchList = ({
 		[appointments]
 	);
 
+	const dateStartValue = moment(dateStart).format('DD/MM/YYYY');
+
+	const dateStartString = useMemo(
+		() => `${t('search.from_date', 'From Date')} ${dateStartValue}`,
+		[dateStartValue]
+	);
+
+	const dateEndValue = moment(dateEnd).format('DD/MM/YYYY');
+
+	const dateEndString = useMemo(
+		() => `${t('search.to_date', 'to Date')} ${dateEndValue}`,
+		[dateEndValue]
+	);
+
 	return (
 		<Container
 			background={'gray6'}
@@ -73,16 +80,15 @@ const SearchList = ({
 				mainAlignment="flex-start"
 			>
 				<Text size="medium" color="secondary">
-					{t('search.from_date', 'From Date')} {moment(dateStart).format('DD/MM/YYYY')}
+					{query.length > 0 ? dateStartString : ''}
 				</Text>
 				<Padding left="medium" />
 				<Text size="medium" color="secondary">
-					{t('search.to_date', 'to Date')} {moment(dateEnd).format('DD/MM/YYYY')}
+					{query.length > 0 ? dateEndString : ''}
 				</Text>
 			</Row>
 			<AdvancedFilterButton
 				setShowAdvanceFilters={setShowAdvanceFilters}
-				filterCount={filterCount}
 				searchDisabled={searchDisabled}
 			/>
 			{loading ? (

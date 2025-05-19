@@ -75,11 +75,7 @@ const Displayer = ({ event }: ComponentProps<any>): ReactComponentElement<any> |
 						)}
 						{invite && hasDescription(invite) && (
 							<Container>
-								<MessagePart
-									fullInvite={invite}
-									inviteId={event?.resource?.inviteId}
-									parts={invite?.parts}
-								/>
+								<MessagePart fullInvite={invite} />
 								<StyledDivider />
 							</Container>
 						)}

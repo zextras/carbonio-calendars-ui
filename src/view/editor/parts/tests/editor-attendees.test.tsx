@@ -24,6 +24,7 @@ import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/m
 import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
 import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
+import { PARTICIPATION_STATUS } from '../../../../constants/api';
 import { mockFreeBusyResponse, mockGetShareInfo } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { EditorAttendees } from '../editor-attendees';
@@ -260,7 +261,7 @@ describe('Editor Attendees', () => {
 				context: {
 					dispatch: store.dispatch,
 					folders: {},
-					attendees: [{ email: attendeeEmail, ptst: 'AC' }]
+					attendees: [{ email: attendeeEmail, ptst: PARTICIPATION_STATUS.ACCEPTED }]
 				}
 			});
 			const { user } = setupTest(<EditorAttendees editorId={editor.id} />, { store });
@@ -272,7 +273,9 @@ describe('Editor Attendees', () => {
 				expect.objectContaining({ label: 'test label' })
 			]);
 
-			expect(store.getState().editor.editors[editor.id].attendees[0].ptst).toBe('AC');
+			expect(store.getState().editor.editors[editor.id].attendees[0].ptst).toBe(
+				PARTICIPATION_STATUS.ACCEPTED
+			);
 		});
 
 		it('should display a distribution list from store as distribution list', async () => {

@@ -7,16 +7,14 @@ import React, { ReactElement } from 'react';
 
 import { Container, Icon } from '@zextras/carbonio-design-system';
 
-import BodyMessageRenderer from '../../commons/body-message-renderer';
+import { BodyMessageRenderer } from '../../commons/body-message-renderer';
 import { Invite } from '../../types/store/invite';
 
 type MessageProps = {
 	fullInvite: Invite;
-	inviteId: string;
-	parts: any;
 };
 
-export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): ReactElement => (
+export const MessagePart = ({ fullInvite }: MessageProps): ReactElement => (
 	<Container
 		orientation="horizontal"
 		mainAlignment="flex-start"
@@ -36,10 +34,9 @@ export const MessagePart = ({ fullInvite, inviteId, parts }: MessageProps): Reac
 			padding={{ left: 'small' }}
 		>
 			<BodyMessageRenderer
-				fullInvite={fullInvite}
-				inviteId={inviteId}
-				parts={parts}
-				fontSize={undefined}
+				fragment={fullInvite.fragment}
+				htmlDescription={fullInvite.htmlDescription}
+				textDescription={fullInvite.textDescription}
 			/>
 		</Container>
 	</Container>

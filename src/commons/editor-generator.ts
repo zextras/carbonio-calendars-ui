@@ -13,6 +13,7 @@ import { getIdentityItems } from './get-identity-items';
 import { Folders, LinkFolder } from '../carbonio-ui-commons/types';
 import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { PREFS_DEFAULTS } from '../constants';
+import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { normalizeEditor } from '../normalizations/normalize-editor';
 import { createNewEditor } from '../store/slices/editor-slice';
 import { Editor } from '../types/editor';
@@ -107,16 +108,16 @@ export const createEmptyEditor = (id: string, folders: Folders): Editor => {
 		attendees: [],
 		optionalAttendees: [],
 		allDay: false,
-		freeBusy: 'B',
+		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
-		originalStart: moment().set('second', 0).set('millisecond', 0).valueOf(),
+		originalStart: new Date(new Date().setSeconds(0, 0)).getTime(),
 		originalEnd: getEndTime({
-			start: moment().set('second', 0).set('millisecond', 0).valueOf(),
+			start: new Date(new Date().setSeconds(0, 0)).getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration as string
 		}),
-		start: moment().set('second', 0).set('millisecond', 0).valueOf(),
+		start: new Date(new Date().setSeconds(0, 0)).getTime(),
 		end: getEndTime({
-			start: moment().set('second', 0).set('millisecond', 0).valueOf(),
+			start: new Date(new Date().setSeconds(0, 0)).getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration as string
 		}),
 		inviteId: undefined,

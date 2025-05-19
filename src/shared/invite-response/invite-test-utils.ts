@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { omit } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
 import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
-import { MESSAGE_METHOD } from '../../constants/api';
+import { EVENT_DISPLAY_STATUS, MESSAGE_METHOD, PARTICIPATION_STATUS } from '../../constants/api';
 import { ObjectValues } from '../../constants/sidebar';
 import { InviteResponseArguments, MailMsg } from '../../types/integrations';
 
@@ -89,7 +90,7 @@ export const buildMailMessageType = (
 		invite: [
 			{
 				type: 'appt',
-				tz: [],
+				tz: [...(context?.invite?.[0].tz ?? [])],
 				comp: [
 					{
 						method,
@@ -102,7 +103,7 @@ export const buildMailMessageType = (
 								url: receiverMail,
 								d: 'receiver fullName',
 								role: 'REQ',
-								ptst: 'NE',
+								ptst: PARTICIPATION_STATUS.NEED_ACTION,
 								rsvp: true
 							},
 							{
@@ -110,7 +111,7 @@ export const buildMailMessageType = (
 								url: receiver2Mail,
 								d: 'receiver2 fullName',
 								role: 'OPT',
-								ptst: 'NE',
+								ptst: PARTICIPATION_STATUS.NEED_ACTION,
 								rsvp: true
 							}
 						],
@@ -119,7 +120,7 @@ export const buildMailMessageType = (
 						noBlob: true,
 						desc: [{ _content: 'test description' }],
 						descHtml: [],
-						fb: 'B',
+						fb: EVENT_DISPLAY_STATUS.BUSY,
 						transp: 'O',
 						or: {
 							a: senderMail,
@@ -157,7 +158,7 @@ export const buildMailMessageType = (
 		isInvite: true,
 		isReplied: false,
 		isReadReceiptRequested: true,
-		...(context ?? {})
+		...(omit(context, 'invite') ?? {})
 	};
 	if (type === MESSAGE_TYPE.SINGLE) {
 		return singleEventMessageRequest;

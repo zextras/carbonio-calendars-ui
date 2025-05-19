@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { find, map, startsWith } from 'lodash';
-import moment from 'moment';
 
 import { createFakeIdentity } from '../../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types/folder';
@@ -12,6 +11,7 @@ import { getPrefs } from '../../../carbonio-ui-commons/utils/get-prefs';
 import { disabledFields, getEndTime } from '../../../commons/editor-generator';
 import { getIdentityItems } from '../../../commons/get-identity-items';
 import { PREFS_DEFAULTS } from '../../../constants';
+import { EVENT_DISPLAY_STATUS } from '../../../constants/api';
 import { Editor, IdentityItem } from '../../../types/editor';
 import utils from '../utils';
 
@@ -53,16 +53,16 @@ const getDefaultEditor = ({
 		attendees: [],
 		optionalAttendees: [],
 		allDay: false,
-		freeBusy: 'B',
+		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
-		originalStart: moment().valueOf(),
+		originalStart: new Date().getTime(),
 		originalEnd: getEndTime({
-			start: moment().valueOf(),
+			start: new Date().getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
-		start: moment().valueOf(),
+		start: new Date().getTime(),
 		end: getEndTime({
-			start: moment().valueOf(),
+			start: new Date().getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
 		inviteId: undefined,
@@ -156,16 +156,16 @@ const getEditor = ({
 		attendees: [],
 		optionalAttendees: [],
 		allDay: false,
-		freeBusy: 'B',
+		freeBusy: EVENT_DISPLAY_STATUS.BUSY,
 		class: 'PUB',
-		originalStart: moment().valueOf(),
+		originalStart: new Date().getTime(),
 		originalEnd: getEndTime({
-			start: moment().valueOf(),
+			start: new Date().getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
-		start: moment().valueOf(),
+		start: new Date().getTime(),
 		end: getEndTime({
-			start: moment().valueOf(),
+			start: new Date().getTime(),
 			duration: zimbraPrefCalendarDefaultApptDuration
 		}),
 		inviteId: undefined,

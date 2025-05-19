@@ -5,13 +5,13 @@
  */
 import React from 'react';
 
-import { addBoard, getAction, replaceHistory } from '@zextras/carbonio-shell-ui';
+import { addBoard, getAction } from '@zextras/carbonio-shell-ui';
 import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
 import { LinkFolder } from '../carbonio-ui-commons/types';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
-import { CALENDAR_BOARD_ID, PANEL_VIEW } from '../constants';
+import { CALENDAR_BOARD_ID, CALENDAR_ROUTE, PANEL_VIEW } from '../constants';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { normalizeInvite } from '../normalizations/normalize-invite';
 import { getInvite } from '../store/actions/get-invite';
@@ -318,15 +318,15 @@ export const openAppointment =
 		context?.onClose && context?.onClose();
 		if (context?.panelView === PANEL_VIEW.APP) {
 			const path = event.resource.ridZ
-				? `/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-				: `/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
-			replaceHistory(path);
+				? `/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				: `/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
+			context.replaceHistory(path);
 		}
 		if (context?.panelView === PANEL_VIEW.SEARCH) {
 			const path = event.resource.ridZ
-				? `/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
-				: `/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
-			replaceHistory(path);
+				? `../${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				: `../${CALENDAR_ROUTE}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`;
+			context.replaceHistory(path);
 		}
 	};
 export const acceptInvitation =

@@ -11,7 +11,6 @@ import type * as SearchUI from '@zextras/carbonio-search-ui';
 import {
 	addRoute,
 	addSettingsView,
-	ACTION_TYPES,
 	addBoardView,
 	registerActions,
 	registerComponents,
@@ -34,7 +33,7 @@ import { CalendarIntegrations } from './constants/event-actions';
 import { useOnClickNewButton } from './hooks/on-click-new-button';
 import { getSettingsSubSections } from './settings/sub-sections';
 import { createAppointmentIntegration } from './shared/create-apppointment-integration';
-import InviteResponseComp from './shared/invite-response/invite-response';
+import { InviteResponseComp } from './shared/invite-response/invite-response';
 import { getCalendarGroupsRequest } from './soap/get-calendar-groups-request';
 import { StoreProvider } from './store/redux';
 import { useAppDispatch } from './store/redux/hooks';
@@ -198,7 +197,7 @@ const AppRegistrations = (): null => {
 		registerActions<NewAction>({
 			action: () => newAction,
 			id: 'new-appointment',
-			type: ACTION_TYPES.NEW
+			type: 'new'
 		});
 		registerComponents({
 			id: 'invites-reply',

@@ -3,54 +3,39 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, {
-	Dispatch,
-	ReactElement,
-	SetStateAction,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState
-} from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import {
 	Container,
 	Text,
-	Icon,
 	Row,
 	Tooltip,
 	Dropdown,
-	Popover,
 	useModal,
 	Padding
 } from '@zextras/carbonio-design-system';
-import { replaceHistory } from '@zextras/carbonio-shell-ui';
 import { isNil } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { AppointmentTypeHandlingModal } from './appointment-type-handle-modal';
+import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
+import { CustomEventIcon } from './custom-event-icon';
+import { CustomEventReplyIcons } from './custom-event-reply-icons';
+import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
 import { TagIconComponent } from '../../commons/tag-icon-component';
+import { CALENDAR_ROUTE } from '../../constants';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useEventActions } from '../../hooks/use-event-actions';
 import { StoreProvider } from '../../store/redux';
-import { useSummaryView } from '../../store/zustand/hooks';
 import { useAppStatusStore } from '../../store/zustand/store';
 import { EventType } from '../../types/event';
-import { MemoEventSummaryView } from '../event-summary-view/event-summary-view';
 
 type CustomEventProps = {
 	event: EventType;
 	title: string;
 };
-
-const AlignedIcon = styled(Icon)`
-	position: relative;
-	top: -0.0625rem;
-`;
 
 const CustomEventTitle = ({
 	title,
@@ -64,41 +49,54 @@ const CustomEventTitle = ({
 	</Text>
 );
 
-const CustomEventIcon = ({
-	isIconVisible,
-	tooltipLabel,
-	iconColor,
-	iconName,
-	disableOuterTooltip
+const CustomDate = ({
+	textOverflow,
+	start,
+	end
 }: {
-	isIconVisible: boolean;
-	tooltipLabel: string;
-	iconColor?: string;
-	iconName: string;
-	disableOuterTooltip: Dispatch<SetStateAction<boolean>>;
-}): ReactElement | null =>
-	isIconVisible ? (
-		<Tooltip label={tooltipLabel} placement="top">
-			<Row
-				padding={{ right: 'extrasmall' }}
-				onMouseEnter={(): void => disableOuterTooltip(true)}
-				onMouseLeave={(): void => disableOuterTooltip(false)}
-				onFocus={(): void => disableOuterTooltip(true)}
-				onBlur={(): void => disableOuterTooltip(false)}
+	textOverflow: string;
+	start: moment.Moment;
+	end: moment.Moment;
+}): React.JSX.Element => {
+	const timeToDisplay = useMemo(() => {
+		const isSameDay = moment(start).isSame(moment(end), 'day');
+		const isSameMonth = moment(start).isSame(moment(end), 'month');
+		const isSameYear = moment(start).isSame(moment(end), 'year');
+
+		if (!isSameYear) {
+			return `${start.format('Y/MM/DD, LT')} - ${end.format('Y/MM/DD, LT')}`;
+		}
+		if (!isSameMonth) {
+			return `${start.format('ddd MM/DD, LT')} - ${end.format('ddd MM/DD, LT')}`;
+		}
+		if (!isSameDay) {
+			return `${start.format('ddd DD, LT')} - ${end.format('ddd DD, LT')}`;
+		}
+		return `${start.format('LT')} - ${end.format('LT')}`;
+	}, [end, start]);
+
+	return (
+		<Container crossAlignment={'flex-start'}>
+			<Text
+				color="currentColor"
+				size={'small'}
+				style={{
+					overflow: textOverflow
+				}}
 			>
-				<AlignedIcon color={iconColor} icon={iconName} style={{ minWidth: '1rem' }} />
-			</Row>
-		</Tooltip>
-	) : null;
+				{timeToDisplay}
+			</Text>
+		</Container>
+	);
+};
 
 const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	const { createModal, closeModal } = useModal();
-	const anchorRef = useRef(null);
+	const anchorRef = useRef<HTMLDivElement | null>(null);
 	const { action } = useParams<{ action: string }>();
-	const summaryViewId = useSummaryView();
 	const [t] = useTranslation();
-	const [isOuterTooltipDisabled, setIsOuterTooltipDisabled] = useState(false);
 	const recurrentLabel = t('label.recurrent', 'Recurrent appointment');
+	const { replaceHistory } = useHistoryNavigation();
 
 	const eventDiff = useMemo(
 		() => moment(event.end).diff(event.start, 'minutes'),
@@ -106,14 +104,16 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	);
 
 	const onEntireSeries = useCallback((): void => {
-		replaceHistory(`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`);
-	}, [event.resource.calendar.id, event.resource.id]);
+		replaceHistory(
+			`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}`
+		);
+	}, [event.resource.calendar.id, event.resource.id, replaceHistory]);
 
 	const onSingleInstance = useCallback((): void => {
 		replaceHistory(
-			`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+			`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 		);
-	}, [event?.resource?.calendar?.id, event?.resource?.id, event?.resource?.ridZ]);
+	}, [event.resource.calendar.id, event.resource.id, event.resource.ridZ, replaceHistory]);
 
 	const showPanelView = useCallback(() => {
 		if (event?.resource?.isRecurrent) {
@@ -136,15 +136,16 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 			);
 		} else {
 			replaceHistory(
-				`/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
+				`/${CALENDAR_ROUTE}/${event.resource.calendar.id}/${EVENT_ACTIONS.EXPAND}/${event.resource.id}/${event.resource.ridZ}`
 			);
 		}
-	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal]);
+	}, [event, createModal, onEntireSeries, onSingleInstance, closeModal, replaceHistory]);
 
 	const toggleOpen = useCallback(
 		(e: React.MouseEvent): void => {
 			if (e.detail === 1 && (action === EVENT_ACTIONS.EXPAND || isNil(action))) {
 				useAppStatusStore.setState({ summaryViewId: event.id });
+				useAppStatusStore.setState({ summaryViewRef: anchorRef });
 			}
 		},
 		[event.id, action]
@@ -174,21 +175,32 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 	);
 
 	const textOverflow = useMemo(
-		() => (hasTags || event.resource.isRecurrent ? 'ellipsis' : 'visible'),
-		[event.resource.isRecurrent, hasTags]
+		() => (hasTags || event.resource.isRecurrent || event.allDay ? 'ellipsis' : 'visible'),
+		[event.allDay, event.resource.isRecurrent, hasTags]
 	);
 
+	const innerContainerPadding = eventDiff >= 30 ? '0.25rem 0.25rem' : '0 0.125rem';
+
+	const iAmAttendee = !event?.resource?.calendar?.owner && !event?.resource?.iAmOrganizer;
 	return (
-		<>
+		<CustomEventFreeBusyStatus
+			color={event.resource.calendar.color.color}
+			background={event.resource.calendar.color.background}
+			freeBusyActual={event.resource.freeBusyActual}
+		>
 			<Tooltip
 				label={title}
 				placement="top"
-				disabled={event.resource.class === 'PRI' || isOuterTooltipDisabled}
+				disabled={event.resource.class === 'PRI'}
+				triggerRef={anchorRef}
 			>
 				<Container
 					height="100%"
-					data-testid="calendar-event"
-					style={{ padding: '0.15rem 0.25rem' }}
+					style={{
+						padding: innerContainerPadding,
+						borderLeft: `0.0625rem solid ${event.resource.calendar.color.color}`
+					}}
+					background={event.resource.calendar.color.background}
 				>
 					<Dropdown
 						contextMenu
@@ -223,7 +235,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										iconColor={'currentColor'}
 										isIconVisible={event.resource.isRecurrent}
 										tooltipLabel={recurrentLabel}
-										disableOuterTooltip={setIsOuterTooltipDisabled}
 									/>
 								)}
 								{event.resource.inviteNeverSent && (
@@ -235,7 +246,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										isIconVisible={event.resource.inviteNeverSent}
 										iconColor={'error'}
 										iconName={'AlertCircleOutline'}
-										disableOuterTooltip={setIsOuterTooltipDisabled}
 									/>
 								)}
 								{event.resource.class === 'PRI' && (
@@ -244,76 +254,50 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 										isIconVisible={event.resource.class === 'PRI'}
 										iconColor={'currentColor'}
 										iconName={'Lock'}
-										disableOuterTooltip={setIsOuterTooltipDisabled}
 									/>
 								)}
-								{!event?.resource?.calendar?.owner &&
-									!event?.resource?.iAmOrganizer &&
-									event.resource?.participationStatus === 'NE' && (
-										<CustomEventIcon
-											iconColor={'primary'}
-											iconName={'CalendarWarning'}
-											isIconVisible={
-												!event?.resource?.calendar?.owner &&
-												!event?.resource?.iAmOrganizer &&
-												event.resource?.participationStatus === 'NE'
-											}
-											tooltipLabel={t('event.action.needs_action', 'Needs action')}
-											disableOuterTooltip={setIsOuterTooltipDisabled}
-										/>
-									)}
+								<CustomEventReplyIcons
+									iAmAttendee={iAmAttendee}
+									participationStatus={event.resource.participationStatus}
+								/>
 								<Row takeAvailableSpace mainAlignment="flex-start" wrap="nowrap">
-									<Row
-										ref={anchorRef}
-										crossAlignment="flex-start"
-										mainAlignment="space-between"
-										takeAvailableSpace
-									>
-										<>
-											{!event.allDay && (
-												<Row
-													takeAvailableSpace
-													crossAlignment="flex-start"
-													mainAlignment="flex-start"
-													wrap="nowrap"
-												>
-													<Text
-														color="currentColor"
-														size={'small'}
-														style={{
-															overflow: textOverflow
-														}}
-													>
-														{`${moment(event.start).format('LT')} - ${moment(event.end).format(
-															'LT'
-														)}`}
-													</Text>
-													<Padding left="small" />
-													{eventDiff <= 29 && (
-														<>
-															{event.resource.isRecurrent && (
-																<CustomEventIcon
-																	iconName={'Repeat'}
-																	iconColor={'currentColor'}
-																	isIconVisible={event.resource.isRecurrent}
-																	tooltipLabel={recurrentLabel}
-																	disableOuterTooltip={setIsOuterTooltipDisabled}
-																/>
-															)}
-															<CustomEventTitle title={title} />
-														</>
-													)}
-												</Row>
-											)}
-											{event.allDay && <CustomEventTitle title={title} overflow={textOverflow} />}
-										</>
+									<Row crossAlignment="flex-start" mainAlignment="space-between" takeAvailableSpace>
+										{!event.allDay && (
+											<Row
+												takeAvailableSpace
+												crossAlignment="flex-start"
+												mainAlignment="flex-start"
+												wrap="nowrap"
+											>
+												<CustomDate
+													start={moment(event.start)}
+													end={moment(event.end)}
+													textOverflow={textOverflow}
+												/>
+												<Padding left="small" />
+												{eventDiff <= 29 && (
+													<>
+														{event.resource.isRecurrent && (
+															<CustomEventIcon
+																iconName={'Repeat'}
+																iconColor={'currentColor'}
+																isIconVisible={event.resource.isRecurrent}
+																tooltipLabel={recurrentLabel}
+															/>
+														)}
+														<CustomEventTitle title={title} />
+													</>
+												)}
+											</Row>
+										)}
+										{event.allDay && <CustomEventTitle title={title} overflow={textOverflow} />}
 									</Row>
-									<TagIconComponent event={event} disableOuterTooltip={setIsOuterTooltipDisabled} />
+									<TagIconComponent event={event} />
 								</Row>
 							</Container>
 							{eventDiff >= 30 && event.resource.class !== 'PRI' && !event.allDay && (
 								<>
-									<Padding top="extrasmall" />
+									{eventDiff >= 45 && <Padding top="extrasmall" />}
 									<Row wrap="nowrap">
 										{event.resource.isRecurrent && (
 											<CustomEventIcon
@@ -321,7 +305,6 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 												iconColor={'currentColor'}
 												isIconVisible={event.resource.isRecurrent}
 												tooltipLabel={recurrentLabel}
-												disableOuterTooltip={setIsOuterTooltipDisabled}
 											/>
 										)}
 										<CustomEventTitle title={title} />
@@ -332,16 +315,7 @@ const CustomEvent = ({ event, title }: CustomEventProps): ReactElement => {
 					</Dropdown>
 				</Container>
 			</Tooltip>
-			<Popover
-				anchorEl={anchorRef}
-				open={summaryViewId === event.id}
-				styleAsModal
-				placement="left"
-				onClose={onClose}
-			>
-				<MemoEventSummaryView event={event} onClose={onClose} inviteId={event.resource.inviteId} />
-			</Popover>
-		</>
+		</CustomEventFreeBusyStatus>
 	);
 };
 

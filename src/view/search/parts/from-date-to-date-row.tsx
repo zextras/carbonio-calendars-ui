@@ -3,16 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { FC, ReactElement, useCallback } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 import { Container, DateTimePicker } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
 type ComponentProps = {
-	fromDate: Date;
-	setFromDate: (arg: Date) => void;
-	toDate: Date;
-	setToDate: (arg: Date) => void;
+	fromDate: Date | null;
+	setFromDate: (arg: Date | null) => void;
+	toDate: Date | null;
+	setToDate: (arg: Date | null) => void;
 };
 const FromDateToDateRow: FC<ComponentProps> = ({
 	fromDate,
@@ -20,23 +20,14 @@ const FromDateToDateRow: FC<ComponentProps> = ({
 	toDate,
 	setToDate
 }): ReactElement => {
-	const onFromDateChange = useCallback(
-		(date: Date | null) => {
-			if (date) {
-				setFromDate(date);
-			}
-		},
-		[setFromDate]
-	);
+	const onFromDateChange = (date: Date | null): void => {
+		setFromDate(date);
+	};
 
-	const onToDateChange = useCallback(
-		(date: Date | null) => {
-			if (date) {
-				setToDate(date);
-			}
-		},
-		[setToDate]
-	);
+	const onToDateChange = (date: Date | null): void => {
+		setToDate(date);
+	};
+
 	return (
 		<Container padding={{ bottom: 'small', top: 'medium' }} orientation="horizontal">
 			<Container padding={{ right: 'extrasmall' }}>

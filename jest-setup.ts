@@ -18,6 +18,7 @@ import {
 } from './src/carbonio-ui-commons/test/jest-setup';
 import { handleGetShareInfoRequest } from './src/carbonio-ui-commons/test/mocks/network/msw/handle-get-share-info';
 import { registerRestHandler } from './src/carbonio-ui-commons/test/mocks/network/msw/handlers';
+import { JEST_DEFAULT_TIMEZONE, JEST_SYSTEM_TIME_DATE } from './src/constants/test-environment';
 import { handleAutoCompleteGalRequest } from './src/test/mocks/network/msw/handle-autocomplete-gal-request';
 import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
 import { handleCreateAppointmentRequest } from './src/test/mocks/network/msw/handle-create-appointment';
@@ -74,15 +75,15 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-	moment.tz.setDefault('Europe/Berlin');
-	moment.tz.guess = jest.fn().mockImplementation(() => 'Europe/Berlin');
+	moment.tz.setDefault(JEST_DEFAULT_TIMEZONE);
+	moment.tz.guess = jest.fn().mockImplementation(() => JEST_DEFAULT_TIMEZONE);
 	const originalDateResolvedOptions = new Intl.DateTimeFormat().resolvedOptions();
 
 	jest.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockReturnValue({
 		...originalDateResolvedOptions,
-		timeZone: 'Europe/Berlin'
+		timeZone: JEST_DEFAULT_TIMEZONE
 	});
-	jest.setSystemTime(new Date('2022-01-01'));
+	jest.setSystemTime(new Date(JEST_SYSTEM_TIME_DATE));
 	defaultBeforeEachTest();
 });
 
@@ -92,4 +93,10 @@ afterEach(() => {
 
 afterAll(() => {
 	defaultAfterAllTests();
+});
+
+// mock a simplified crypto
+Object.defineProperty(window.crypto, 'randomUUID', {
+	writable: true,
+	value: jest.fn(() => Math.random().toString())
 });

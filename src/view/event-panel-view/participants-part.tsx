@@ -3,18 +3,16 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement, useMemo } from 'react';
+import React, { ReactElement } from 'react';
 
-import { Container, useSnackbar } from '@zextras/carbonio-design-system';
-import { useUserAccount } from '@zextras/carbonio-shell-ui';
+import { Container } from '@zextras/carbonio-design-system';
 
 import { OrganizerPart } from './organizer-part';
 import { ParticipantsDisplayer } from './participants-displayer';
 import { ParticipantsDisplayerSmall } from './participants-displayer-small';
-import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
-import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
 import { EventType } from '../../types/event';
 import { Invite, InviteOrganizer, InviteParticipants } from '../../types/store/invite';
+import { FreeBusyStatusRow } from '../event-summary-view/free-busy-status-row';
 
 type ParticipantProps = {
 	invite: Invite;
@@ -30,15 +28,8 @@ export const ParticipantsPart = ({
 	organizer,
 	participants,
 	isSummary
-}: ParticipantProps): ReactElement | null => {
-	const account = useUserAccount();
-	const calendar = useFolder(invite.ciFolder);
-	const createSnackbar = useSnackbar();
-	const iAmAttendee = useMemo(
-		() => (!invite.isOrganizer && !(calendar as LinkFolder)?.owner) ?? false,
-		[calendar, invite.isOrganizer]
-	);
-	return organizer ? (
+}: ParticipantProps): ReactElement | null =>
+	organizer ? (
 		<Container
 			orientation="vertical"
 			mainAlignment="flex-start"
@@ -54,6 +45,12 @@ export const ParticipantsPart = ({
 				calendarOwner={event.resource.calendar.owner}
 				isSummary={isSummary}
 			/>
+			{isSummary && (
+				<FreeBusyStatusRow
+					freeBusy={event.resource.freeBusy}
+					organizerName={invite?.organizer?.a}
+				/>
+			)}
 			{isSummary ? (
 				<ParticipantsDisplayerSmall participants={participants} event={event} />
 			) : (
@@ -61,4 +58,3 @@ export const ParticipantsPart = ({
 			)}
 		</Container>
 	) : null;
-};

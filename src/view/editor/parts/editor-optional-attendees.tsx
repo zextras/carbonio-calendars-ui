@@ -48,7 +48,7 @@ export const EditorOptionalAttendees = ({
 			data-testid={'optional-attendees-chip-input'}
 			placeholder={t('label.optionals', 'Optionals')}
 			onChange={onChangeOptionalContact}
-			disabled={disabled?.optionalAttendees}
+			disabled={disabled?.optionalAttendees ?? false}
 			attendees={optionalAttendees}
 			orderedAccountIds={orderedAccountIds}
 		/>

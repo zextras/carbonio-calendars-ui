@@ -14,6 +14,7 @@ import {
 } from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
+import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { reducers } from '../store/redux';
 import mockedData from '../test/generators';
 
@@ -76,7 +77,7 @@ describe('Editor generator', () => {
 			expect(editor.class).toBe('PUB');
 			expect(editor.end).toBe(moment(editor.start).add('60', 'minutes').valueOf());
 			expect(editor.exceptId).toBeUndefined();
-			expect(editor.freeBusy).toBe('B');
+			expect(editor.freeBusy).toBe(EVENT_DISPLAY_STATUS.BUSY);
 			expect(editor.id).toBe('new-1');
 			expect(editor.inviteId).toBeUndefined();
 			expect(editor.isException).toBe(false);
@@ -179,7 +180,7 @@ describe('Editor generator', () => {
 				attendees: [],
 				optionalAttendees: [],
 				allDay: true,
-				freeBusy: 'F',
+				freeBusy: EVENT_DISPLAY_STATUS.FREE,
 				class: 'PRI',
 				start: new Date().valueOf(),
 				end: new Date().valueOf(),
@@ -236,7 +237,7 @@ describe('Editor generator', () => {
 			expect(editor.room).toHaveProperty('link', 'https://room.link.com/meeting/meet-now/ZWFGRAOJ');
 			expect(editor.attendees).toStrictEqual([]);
 			expect(editor.optionalAttendees).toStrictEqual([]);
-			expect(editor.freeBusy).toBe('F');
+			expect(editor.freeBusy).toBe(EVENT_DISPLAY_STATUS.FREE);
 			expect(editor.start).toBeLessThanOrEqual(new Date().valueOf());
 			expect(editor.end).toBe(moment(editor.start).valueOf());
 			expect(editor.allDay).toBe(true);
