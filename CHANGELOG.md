@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.16.0](https://github.com/zextras/carbonio-calendars-ui/compare/v1.15.2...v1.16.0) (2025-05-19)
+
+
+### Features
+
+* [CO-1976] prevent changing calendar while editing draft/saved event ([#576](https://github.com/zextras/carbonio-calendars-ui/issues/576)) ([4fbfe92](https://github.com/zextras/carbonio-calendars-ui/commit/4fbfe92633b8d3f3802548c149ef27912b65ef28))
+* [CO-2026] order tags by name ([#574](https://github.com/zextras/carbonio-calendars-ui/issues/574)) ([a8643ee](https://github.com/zextras/carbonio-calendars-ui/commit/a8643eef8ed6e3c71441b0a848183f89a38d2a4b))
+* adding tooltip to custom event free busy style ([#568](https://github.com/zextras/carbonio-calendars-ui/issues/568)) ([a543a0c](https://github.com/zextras/carbonio-calendars-ui/commit/a543a0cf7ee7a44f1c9d8dc5c6ebaa8475acd4be))
+* appointment cards style will help users understand the appointment status ([27d33f8](https://github.com/zextras/carbonio-calendars-ui/commit/27d33f82a2c3fe0defbaa0974b4bf7b059c71d41))
+* Events spanning multiple days but less than 24 hours will be displayed inside the calendar grid ([248e438](https://github.com/zextras/carbonio-calendars-ui/commit/248e43812ea1c4abd1d4a43c24a8ee6ee2dbf9be))
+* update calendar appointment replies icons ([9606f7d](https://github.com/zextras/carbonio-calendars-ui/commit/9606f7d7e38d635e690ba7f021c00907978b555f))
+
+
+### Bug Fixes
+
+* [CO-1974] allow deleting appointments with no organizer ([#571](https://github.com/zextras/carbonio-calendars-ui/issues/571)) ([d4e2e35](https://github.com/zextras/carbonio-calendars-ui/commit/d4e2e350ad1407bfdcfd3c369385d0e636fb49d7))
+* [CO-2011] "Reset Filters" Button with conditional enablement and modal reset logic ([#584](https://github.com/zextras/carbonio-calendars-ui/issues/584)) ([c9f6c8b](https://github.com/zextras/carbonio-calendars-ui/commit/c9f6c8bff7b104b78ea4ed932aa4cc6737e00607))
+* [CO-2046] clearing of search results when 'CLEAR SEARCH' button is clicked ([#585](https://github.com/zextras/carbonio-calendars-ui/issues/585)) ([ea72371](https://github.com/zextras/carbonio-calendars-ui/commit/ea723716c5e36271df0d0d809dd3bef8465f02bd))
+* [CO-2056] email appointment displays cropped content and long empty scroll ([#577](https://github.com/zextras/carbonio-calendars-ui/issues/577)) ([d84d50c](https://github.com/zextras/carbonio-calendars-ui/commit/d84d50cf0103b6214c157d510fd6532ca81390d1))
+* [CO-2064] Invite Mails with long description are not rendered ([#586](https://github.com/zextras/carbonio-calendars-ui/issues/586)) ([5f3d9b5](https://github.com/zextras/carbonio-calendars-ui/commit/5f3d9b5c86c0cf8ad330be46d3a059e973987036))
+* **app:** replace constant with string in action type ([#564](https://github.com/zextras/carbonio-calendars-ui/issues/564)) ([ede97f9](https://github.com/zextras/carbonio-calendars-ui/commit/ede97f9ae8fb86718df61a05ff11b5e0d542969e))
+* availability checker endDate for all day events ([#552](https://github.com/zextras/carbonio-calendars-ui/issues/552)) ([dab4f13](https://github.com/zextras/carbonio-calendars-ui/commit/dab4f13e6f303ecbc825f2ff05a55c8affa74dc2))
+* calendar today highlighted fixed ([c1f65d6](https://github.com/zextras/carbonio-calendars-ui/commit/c1f65d6df2ffdf71e5c8ddf70c6a303182dd6e60))
+* calendar ui issue fixed ([#579](https://github.com/zextras/carbonio-calendars-ui/issues/579)) ([6eb63ed](https://github.com/zextras/carbonio-calendars-ui/commit/6eb63edca6fabe1ab9dfcfa7df4cad279aa980a4))
+* **CO-1458:** quote query chip in case of phrase ([#555](https://github.com/zextras/carbonio-calendars-ui/issues/555)) ([7258289](https://github.com/zextras/carbonio-calendars-ui/commit/7258289ab0aa970e3ff0a5a766152bb7917ce1bb))
+* enable search by tags with 2 or more words description ([05c8f32](https://github.com/zextras/carbonio-calendars-ui/commit/05c8f328c0c94104d760043714421bc8c639afcf)), closes [#588](https://github.com/zextras/carbonio-calendars-ui/issues/588)
+* event dates are  updated properly during daylight saving ([d782e77](https://github.com/zextras/carbonio-calendars-ui/commit/d782e77dbe6aade262bbe4e0b42ca757b7955696))
+* fix calendar allday accessor ([ccc300f](https://github.com/zextras/carbonio-calendars-ui/commit/ccc300fd204f4fb4f2e3341d4708e339474e0320))
+* remove declined appointments based on user pref setting ([ae3cdda](https://github.com/zextras/carbonio-calendars-ui/commit/ae3cdda73efee4e033f86c3438f60a7e1be76d08))
+* standardise email display in zapp ([64c5d39](https://github.com/zextras/carbonio-calendars-ui/commit/64c5d39bb5f1fcfeda56b0ff49dd216429e51bb4))
+* start Calendars search when user clicks on secondary bar tags ([#557](https://github.com/zextras/carbonio-calendars-ui/issues/557)) ([81ea081](https://github.com/zextras/carbonio-calendars-ui/commit/81ea08106ebcab72b3e562eb371610bba8668fd4))
+
 ### [1.15.2](https://github.com/zextras/carbonio-calendars-ui/compare/v1.15.1...v1.15.2) (2025-03-10)
 
 ### [1.15.1](https://github.com/zextras/carbonio-calendars-ui/compare/v1.15.0...v1.15.1) (2025-03-10)
