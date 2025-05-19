@@ -40,7 +40,7 @@ const ProposedTimeReply: FC<ProposedTimeReplyArguments> = ({
 
 	const acceptProposedTime = useCallback(() => {
 		getAppointment(id).then((res) => {
-			if (res?.appt[0]) {
+			if (res?.appt?.[0]) {
 				const inviteToNormalize =
 					find(
 						res.appt[0]?.inv,

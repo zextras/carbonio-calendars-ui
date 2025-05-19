@@ -177,7 +177,7 @@ export default function EventPanelView(): ReactElement | null {
 					)}
 					{messageHasABody && (
 						<>
-							<MessagePart fullInvite={invite} inviteId={invite.id} parts={invite.parts} />
+							<MessagePart fullInvite={invite} />
 							<StyledDivider />
 						</>
 					)}
