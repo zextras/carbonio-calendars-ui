@@ -6,7 +6,7 @@
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { Popover } from '@zextras/carbonio-design-system';
-import { find, isEmpty, map, minBy } from 'lodash';
+import { filter, find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
@@ -20,6 +20,7 @@ import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
 import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
+import { PARTICIPATION_STATUS } from '../../constants/api';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
@@ -96,10 +97,20 @@ export default function CalendarComponent() {
 		[prefs?.zimbraPrefCalendarWorkingHours]
 	);
 
-	const events = useMemo(
-		() => normalizeCalendarEvents(appointments, calendars),
-		[appointments, calendars]
-	);
+	/**
+	 * Memoized list of calendar events, filtered by declined meetings preference.
+	 *
+	 * @type {Array<Object>}
+	 * @description List of normalized calendar events, with declined meetings removed if preference is set to FALSE.
+	 */
+	const events = useMemo(() => {
+		const eventsList = normalizeCalendarEvents(appointments, calendars);
+		if (prefs.zimbraPrefCalendarShowDeclinedMeetings === 'TRUE') return eventsList;
+		return filter(
+			eventsList,
+			(event) => event.resource.participationStatus !== PARTICIPATION_STATUS.DECLINED
+		);
+	}, [appointments, calendars, prefs.zimbraPrefCalendarShowDeclinedMeetings]);
 
 	const startHour = useMemo(
 		() =>

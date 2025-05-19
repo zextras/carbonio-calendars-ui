@@ -429,3 +429,27 @@ export const getFolderIcon = ({
 	if (item.isLink || isLinkChild(item)) return checked ? 'SharedCalendar' : 'SharedCalendarOutline';
 	return checked ? 'Calendar2' : 'CalendarOutline';
 };
+
+export const replaceLinkToAnchor = (content: string): string => {
+	if (content === '' || content === undefined) {
+		return '';
+	}
+
+	return content.replace(
+		/(?:https?:\/\/|www\.)+(?![^\s]*?")([\w.,@?!^=%&amp;:()/~+#-]*[\w@?!^=%&amp;()/~+#-])?/gi,
+		(url) => {
+			const wrap = document.createElement('div');
+			const anchor = document.createElement('a');
+			let href = url.replace(/&amp;/g, '&');
+			if (!url.startsWith('http') && !url.startsWith('https')) {
+				href = `http://${url}`;
+			}
+			anchor.href = href.replace(/&#64;/g, '@').replace(/&#61;/g, '=');
+			anchor.target = '_blank';
+			anchor.innerHTML = url;
+
+			wrap.appendChild(anchor);
+			return wrap.innerHTML.trim();
+		}
+	);
+};

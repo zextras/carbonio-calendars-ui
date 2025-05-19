@@ -93,9 +93,22 @@ export const normalizeFromGetAppointment = (appt: any): Appointment => <Appointm
 		isNil
 	);
 
-export const getAppointment = async (id: string): Promise<any> =>
+/**
+ * Get the appointment include content flag.
+ * @param include `true` to include content (MimePart), `false` to exclude content (MimePart)
+ */
+export const getAppointmentIncludeContentFlag = (include: boolean): '0' | '1' =>
+	include ? '1' : '0';
+
+/**
+ * Fetch appointment.
+ *
+ * @param id appointment ID
+ * @param includeContent `getAppointmentIncludeContentFlag(true|false)`
+ */
+export const getAppointment = async (id: string, includeContent: '0' | '1' = '1'): Promise<any> =>
 	soapFetch('GetAppointment', {
 		id,
-		includeContent: '1',
+		includeContent,
 		_jsns: 'urn:zimbraMail'
 	});
