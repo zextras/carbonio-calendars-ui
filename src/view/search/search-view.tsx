@@ -15,6 +15,7 @@ import AdvancedFilterModal from './advance-filter-modal';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
+import { convertSearchChipToString } from '../../carbonio-ui-commons/helpers/search';
 import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
 import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { Folder } from '../../carbonio-ui-commons/types/folder';
@@ -96,13 +97,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			setResultLabel(defaultResultLabel);
 			setLoading(true);
 
-			const chipToString = (c: QueryChip): string => {
-				const chipString = (c.value ? c.value : c.label) ?? '';
-				const thereAreAnySpaces = chipString?.indexOf(' ') >= 0;
-				return thereAreAnySpaces ? `"${chipString}"` : `${chipString}`;
-			};
-
-			const queryString = queryStr.map((c) => chipToString(c)).join(' ');
+			const queryString = queryStr.map((c) => convertSearchChipToString(c)).join(' ');
 			const queryMap = `(${queryString}) ${foldersToSearchInQuery}`;
 			dispatch(
 				searchAppointments({
