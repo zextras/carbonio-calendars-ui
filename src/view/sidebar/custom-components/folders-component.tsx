@@ -285,9 +285,9 @@ const RootCalendarChildren = ({ item }: { item: Folder }): React.JSX.Element => 
 			return RowWithIcon('Linked', 'linked', tooltipText);
 		}
 		if (item.acl?.grant) {
-			const tooltipText = t('tooltip.calendar_sharing_status', {
-				count: item?.acl?.grant?.length,
-				defaultValue_one: 'Shared with 1 person',
+			const tooltipText = t('tooltip.folder_sharing_status', {
+				count: item.acl.grant.length,
+				defaultValue_one: 'Shared with {{count}} person',
 				defaultValue: 'Shared with {{count}} people'
 			});
 			return RowWithIcon('Shared', 'shared', tooltipText);
