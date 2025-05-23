@@ -17,6 +17,7 @@ import {
 import { t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 
+import { WorkWeekDay } from '../utils/work-week';
 import TimePicker from './components/time-picker';
 import { getWeekDay } from './components/utils';
 import { workWeekSubSection } from './sub-sections';
@@ -28,7 +29,19 @@ export default function WorkWeekSettings({
 	setIsRegular,
 	calculateRegularSchedule,
 	toggleModal
-}) {
+}: {
+	workingSchedule: Array<WorkWeekDay>;
+	isRegular: boolean;
+	handelDaysClicked: (arg: string) => () => void;
+	setIsRegular: (arg: boolean) => void;
+	calculateRegularSchedule: (arg: {
+		start: string;
+		hour: string;
+		minute: string;
+		day: string;
+	}) => void;
+	toggleModal: () => void;
+}): React.JSX.Element {
 	const sectionTitleWorkWeek = useMemo(() => workWeekSubSection(), []);
 
 	return (
@@ -49,7 +62,7 @@ export default function WorkWeekSettings({
 			<FormSubSection label={t('label.work_hour', 'Work hour')}>
 				<Checkbox
 					value={isRegular}
-					onClick={() => setIsRegular(!isRegular)}
+					onClick={(): void => setIsRegular(!isRegular)}
 					label={t('label.regular', 'Regular')}
 				/>
 				<TimePicker
@@ -61,7 +74,7 @@ export default function WorkWeekSettings({
 				/>
 				<Checkbox
 					value={!isRegular}
-					onClick={() => setIsRegular(!isRegular)}
+					onClick={(): void => setIsRegular(!isRegular)}
 					label={t('label.custom', 'Custom')}
 				/>
 				<Button
