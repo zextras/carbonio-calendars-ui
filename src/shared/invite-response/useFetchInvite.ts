@@ -11,7 +11,8 @@ import { getAppointment, getAppointmentIncludeContentFlag } from '../../commons/
 import { MailMsg } from '../../types/integrations';
 import { Invite } from '../../types/store/invite';
 
-type UseFetchInviteError = 'MISSING_APPOINTMENT_ID' | string | null;
+type KnownErrors = 'MISSING_APPOINTMENT_ID';
+type UseFetchInviteError = KnownErrors | Exclude<string, KnownErrors> | null;
 
 interface UseFetchInviteResult {
 	invite: Invite;
