@@ -66,7 +66,6 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 	const [tempFromDate, setTempFromDate] = useState<Date | null>(new Date(dateStart));
 	const [tempToDate, setTempToDate] = useState<Date | null>(new Date(dateEnd));
 
-	// Reset temporary dates when modal opens
 	useEffect(() => {
 		if (open) {
 			setTempFromDate(new Date(dateStart));
