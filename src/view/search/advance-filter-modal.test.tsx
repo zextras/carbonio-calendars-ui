@@ -132,6 +132,7 @@ describe('AdvancedFilterModal', () => {
 
 	it('should reset filters when reset filters button is clicked', async () => {
 		const FIXED_TIMESTAMP = 1744405500000;
+		const FIXED_DATE = new Date(FIXED_TIMESTAMP);
 
 		const properties: AdvancedFilterModalProps = {
 			open: true,
@@ -161,11 +162,11 @@ describe('AdvancedFilterModal', () => {
 
 		const fromDateChipBeforeReset = chipsBeforeReset[1];
 		// eslint-disable-next-line jest-dom/prefer-to-have-value
-		expect(fromDateChipBeforeReset).toHaveAttribute('value', FIXED_TIMESTAMP.toString());
+		expect(fromDateChipBeforeReset).toHaveAttribute('value', FIXED_DATE.toString());
 
 		const toDateChipBeforeReset = chipsBeforeReset[2];
 		// eslint-disable-next-line jest-dom/prefer-to-have-value
-		expect(toDateChipBeforeReset).toHaveAttribute('value', FIXED_TIMESTAMP.toString());
+		expect(toDateChipBeforeReset).toHaveAttribute('value', FIXED_DATE.toString());
 
 		const resetButton = await screen.findByRole('button', { name: /reset filters/i });
 		expect(resetButton).toBeEnabled();
@@ -175,10 +176,13 @@ describe('AdvancedFilterModal', () => {
 		expect(chipsAfterReset).toHaveLength(2);
 		const fromDateChipAfterReset = chipsAfterReset[0];
 		// eslint-disable-next-line jest-dom/prefer-to-have-value
-		expect(fromDateChipAfterReset).toHaveAttribute('value', DEFAULT_DATE_START.toString());
+		expect(fromDateChipAfterReset).toHaveAttribute(
+			'value',
+			new Date(DEFAULT_DATE_START).toString()
+		);
 
 		const toDateChipAfterReset = chipsAfterReset[1];
 		// eslint-disable-next-line jest-dom/prefer-to-have-value
-		expect(toDateChipAfterReset).toHaveAttribute('value', DEFAULT_DATE_END.toString());
+		expect(toDateChipAfterReset).toHaveAttribute('value', new Date(DEFAULT_DATE_END).toString());
 	});
 });
