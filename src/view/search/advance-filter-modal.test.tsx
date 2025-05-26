@@ -7,19 +7,19 @@ jest.mock('@zextras/carbonio-shell-ui', () => ({
 	t: (key: string, fallback?: string): string => fallback ?? key
 }));
 jest.mock('../../constants/advance-filter-modal', () => ({
-	DEFAULT_DATE_START: 1744408800000,
-	DEFAULT_DATE_END: 1744409900000
+	DEFAULT_DATE_START: 1744329600000, // 1744329600000 = April 11, 2025, 00:00:00 UTC
+	DEFAULT_DATE_END: 1745539200000 // 1745539200000 = April 25, 2025, 00:00:00 UTC
 }));
 
 import React from 'react';
 
-import { screen } from '@testing-library/react';
+import { screen, fireEvent, within } from '@testing-library/react';
 
 import { AdvancedFilterModal, AdvancedFilterModalProps } from './advance-filter-modal';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
-const MOCKED_NOW = new Date('2025-05-01T00:00:00Z');
+const MOCKED_NOW = new Date('2025-04-18T00:00:00Z');
 
 beforeAll(() => {
 	jest.useFakeTimers().setSystemTime(MOCKED_NOW);
@@ -184,5 +184,84 @@ describe('AdvancedFilterModal', () => {
 		const toDateChipAfterReset = chipsAfterReset[1];
 		// eslint-disable-next-line jest-dom/prefer-to-have-value
 		expect(toDateChipAfterReset).toHaveAttribute('value', new Date(DEFAULT_DATE_END).toString());
+	});
+
+	it('should set queryToBe when Search button is pressed', async () => {
+		jest.spyOn(console, 'error').mockImplementation();
+		const properties: AdvancedFilterModalProps = {
+			open: true,
+			onClose: jest.fn(),
+			query: [],
+			updateQuery: jest.fn(),
+			dateStart: DEFAULT_DATE_START,
+			dateEnd: DEFAULT_DATE_END,
+			setDateStart: jest.fn(),
+			setDateEnd: jest.fn()
+		};
+
+		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
+
+		const keywordInputEle = screen.getByPlaceholderText('Keywords');
+		await user.type(keywordInputEle, 'test');
+		await user.type(keywordInputEle, '[Enter]');
+
+		// Click the Search button
+		const searchButton = screen.getByRole('button', { name: /search/i });
+		await user.click(searchButton);
+
+		// Verify that updateQuery was called with the correct query
+		expect(properties.updateQuery).toHaveBeenCalledWith([
+			expect.objectContaining({
+				label: 'test'
+			})
+		]);
+	});
+
+	it('should update from date and call onConfirm when date is selected and search button is clicked', async () => {
+		jest.spyOn(console, 'error').mockImplementation();
+		const updateQuery = jest.fn();
+		const setDateStart = jest.fn();
+		const setDateEnd = jest.fn();
+		const onClose = jest.fn();
+
+		const properties: AdvancedFilterModalProps = {
+			open: true,
+			onClose,
+			query: [{ 
+				id: '1',
+				label: 'Test Query'
+			}],
+			updateQuery,
+			dateStart: DEFAULT_DATE_START,
+			dateEnd: DEFAULT_DATE_END,
+			setDateStart,
+			setDateEnd
+		};
+
+		const { user, getByRole } = setupTest(<AdvancedFilterModal {...properties} />);
+
+		// Simulate setting tempFromDate using calendar UI
+		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
+		await user.click(calendarButtons[0]);
+		const fromDateToSelect = screen.getByRole('option', { name: /Choose Saturday, April 12th, 2025/i });
+		await user.click(fromDateToSelect);
+
+		// Call onConfirm
+		const searchButton = getByRole('button', { name: /search/i });
+		fireEvent.click(searchButton);
+
+		// Compare date part (YYYY-MM-DD)
+		const startCall = setDateStart.mock.calls[0][0];
+		const startDateString = new Date(startCall).toISOString().slice(0, 10);
+		expect(startDateString).toBe('2025-04-12');
+
+		// Verify that updateQuery and onClose were called
+		expect(updateQuery).toHaveBeenCalledWith([
+			expect.objectContaining({
+				id: '1',
+				label: 'Test Query'
+			})
+		]);
+		expect(onClose).toHaveBeenCalled();
 	});
 });
