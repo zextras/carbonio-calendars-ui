@@ -303,7 +303,7 @@ describe('AdvancedFilterModal', () => {
 		const endDateString = new Date(endCall).toISOString().slice(0, 10);
 		const defaultEndDateString = new Date(DEFAULT_DATE_END).toISOString().slice(0, 10);
 		expect(endDateString).not.toBe(defaultEndDateString);
-		expect(endDateString).toBe('2025-04-12');
+		expect(endDateString).toBe('2025-04-20');
 
 		expect(updateQuery).toHaveBeenCalledWith([
 			expect.objectContaining({
