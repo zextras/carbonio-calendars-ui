@@ -13,7 +13,7 @@ jest.mock('../../constants/advance-filter-modal', () => ({
 
 import React from 'react';
 
-import { screen, fireEvent, within } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 
 import { AdvancedFilterModal, AdvancedFilterModalProps } from './advance-filter-modal';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
@@ -225,10 +225,12 @@ describe('AdvancedFilterModal', () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
 			onClose,
-			query: [{ 
-				id: '1',
-				label: 'Test Query'
-			}],
+			query: [
+				{
+					id: '1',
+					label: 'Test Query'
+				}
+			],
 			updateQuery,
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
@@ -240,11 +242,13 @@ describe('AdvancedFilterModal', () => {
 
 		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
 		await user.click(calendarButtons[0]);
-		const fromDateToSelect = screen.getByRole('option', { name: /Choose Saturday, April 12th, 2025/i });
+		const fromDateToSelect = screen.getByRole('option', {
+			name: /Choose Saturday, April 12th, 2025/i
+		});
 		await user.click(fromDateToSelect);
 
 		const searchButton = getByRole('button', { name: /search/i });
-		fireEvent.click(searchButton);
+		await user.click(searchButton);
 
 		const startCall = setDateStart.mock.calls[0][0];
 		const startDateString = new Date(startCall).toISOString().slice(0, 10);
@@ -269,10 +273,12 @@ describe('AdvancedFilterModal', () => {
 		const properties: AdvancedFilterModalProps = {
 			open: true,
 			onClose,
-			query: [{ 
-				id: '1',
-				label: 'Test Query'
-			}],
+			query: [
+				{
+					id: '1',
+					label: 'Test Query'
+				}
+			],
 			updateQuery,
 			dateStart: DEFAULT_DATE_START,
 			dateEnd: DEFAULT_DATE_END,
@@ -289,11 +295,11 @@ describe('AdvancedFilterModal', () => {
 		await user.click(toDateToSelect);
 
 		const searchButton = getByRole('button', { name: /search/i });
-		fireEvent.click(searchButton);
+		await user.click(searchButton);
 
-		const endCall = setDateEnd.mock.calls[0][0];
-		const endDateString = new Date(endCall).toISOString().slice(0, 10);
-		console.log('Actual end date:', endDateString);
+		// const endCall = setDateEnd.mock.calls[0][0];
+		// const endDateString = new Date(endCall).toISOString().slice(0, 10);
+		// console.log('Actual end date:', endDateString);
 		// const defaultEndDateString = new Date(DEFAULT_DATE_END).toISOString().slice(0, 10);
 		// expect(endDateString).not.toBe(defaultEndDateString);
 
