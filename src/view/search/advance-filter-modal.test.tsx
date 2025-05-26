@@ -252,6 +252,8 @@ describe('AdvancedFilterModal', () => {
 
 		const startCall = setDateStart.mock.calls[0][0];
 		const startDateString = new Date(startCall).toISOString().slice(0, 10);
+		const defaultStartDateString = new Date(DEFAULT_DATE_START).toISOString().slice(0, 10);
+		expect(startDateString).not.toBe(defaultStartDateString);
 		expect(startDateString).toBe('2025-04-12');
 
 		expect(updateQuery).toHaveBeenCalledWith([
@@ -289,7 +291,7 @@ describe('AdvancedFilterModal', () => {
 		const { user, getByRole } = setupTest(<AdvancedFilterModal {...properties} />);
 
 		const calendarButtons = screen.getAllByTestId('icon: CalendarOutline');
-		await user.click(calendarButtons[1]);
+		await user.click(calendarButtons[2]);
 		const toDateToSelect = screen.getByRole('option', { name: /Choose Sunday, April 20th, 2025/i });
 		expect(toDateToSelect).toBeInTheDocument();
 		await user.click(toDateToSelect);
@@ -297,11 +299,11 @@ describe('AdvancedFilterModal', () => {
 		const searchButton = getByRole('button', { name: /search/i });
 		await user.click(searchButton);
 
-		// const endCall = setDateEnd.mock.calls[0][0];
-		// const endDateString = new Date(endCall).toISOString().slice(0, 10);
-		// console.log('Actual end date:', endDateString);
-		// const defaultEndDateString = new Date(DEFAULT_DATE_END).toISOString().slice(0, 10);
-		// expect(endDateString).not.toBe(defaultEndDateString);
+		const endCall = setDateEnd.mock.calls[0][0];
+		const endDateString = new Date(endCall).toISOString().slice(0, 10);
+		const defaultEndDateString = new Date(DEFAULT_DATE_END).toISOString().slice(0, 10);
+		expect(endDateString).not.toBe(defaultEndDateString);
+		expect(endDateString).toBe('2025-04-12');
 
 		expect(updateQuery).toHaveBeenCalledWith([
 			expect.objectContaining({
