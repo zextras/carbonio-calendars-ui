@@ -63,20 +63,20 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 	setDateEnd
 }): ReactElement => {
 	const [otherKeywords, setOtherKeywords] = useState<KeywordState>([]);
-	const [tempFromDate, setTempFromDate] = useState<Date | null>(new Date(dateStart));
-	const [tempToDate, setTempToDate] = useState<Date | null>(new Date(dateEnd));
+	const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(new Date(dateStart));
+	const [selectedToDate, setSelectedToDate] = useState<Date | null>(new Date(dateEnd));
 
 	useEffect(() => {
 		if (open) {
-			setTempFromDate(new Date(dateStart));
-			setTempToDate(new Date(dateEnd));
+			setSelectedFromDate(new Date(dateStart));
+			setSelectedToDate(new Date(dateEnd));
 		}
 	}, [open, dateStart, dateEnd]);
 
 	useEffect(() => {
 		if (query.length === 0) {
-			setTempFromDate(new Date(DEFAULT_DATE_START));
-			setTempToDate(new Date(DEFAULT_DATE_END));
+			setSelectedFromDate(new Date(DEFAULT_DATE_START));
+			setSelectedToDate(new Date(DEFAULT_DATE_END));
 		}
 	}, [query.length]);
 
@@ -96,8 +96,8 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 	}, [query, open]);
 
 	const resetFilters = useCallback(() => {
-		setTempFromDate(new Date(DEFAULT_DATE_START));
-		setTempToDate(new Date(DEFAULT_DATE_END));
+		setSelectedFromDate(new Date(DEFAULT_DATE_START));
+		setSelectedToDate(new Date(DEFAULT_DATE_END));
 		setOtherKeywords([]);
 	}, []);
 
@@ -106,22 +106,22 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 	const secondaryDisabled = useMemo(
 		() =>
 			queryToBe.length === 0 &&
-			tempFromDate?.getTime() === DEFAULT_DATE_START &&
-			tempToDate?.getTime() === DEFAULT_DATE_END,
-		[queryToBe.length, tempFromDate, tempToDate]
+			selectedFromDate?.getTime() === DEFAULT_DATE_START &&
+			selectedToDate?.getTime() === DEFAULT_DATE_END,
+		[queryToBe.length, selectedFromDate, selectedToDate]
 	);
 
 	const confirmDisabled = useMemo(
-		() => queryToBe.length === 0 || tempFromDate === null || tempToDate === null,
-		[queryToBe.length, tempFromDate, tempToDate]
+		() => queryToBe.length === 0 || selectedFromDate === null || selectedToDate === null,
+		[queryToBe.length, selectedFromDate, selectedToDate]
 	);
 
 	const onConfirm = useCallback(() => {
 		updateQuery(queryToBe);
-		setDateStart(tempFromDate?.getTime() ?? DEFAULT_DATE_START);
-		setDateEnd(tempToDate?.getTime() ?? DEFAULT_DATE_END);
+		setDateStart(selectedFromDate?.getTime() ?? DEFAULT_DATE_START);
+		setDateEnd(selectedToDate?.getTime() ?? DEFAULT_DATE_END);
 		onClose();
-	}, [updateQuery, queryToBe, setDateStart, tempFromDate, setDateEnd, tempToDate, onClose]);
+	}, [updateQuery, queryToBe, setDateStart, selectedFromDate, setDateEnd, selectedToDate, onClose]);
 
 	return (
 		<CustomModal open={open} onClose={onClose} maxHeight="90vh" size="medium">
@@ -134,10 +134,10 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 			<Container padding={{ horizontal: 'medium', vertical: 'small' }}>
 				<KeywordRow otherKeywords={otherKeywords} setOtherKeywords={setOtherKeywords} />
 				<FromDateToDateRow
-					fromDate={tempFromDate}
-					setFromDate={setTempFromDate}
-					toDate={tempToDate}
-					setToDate={setTempToDate}
+					fromDate={selectedFromDate}
+					setFromDate={setSelectedFromDate}
+					toDate={selectedToDate}
+					setToDate={setSelectedToDate}
 				/>
 			</Container>
 			<Divider />
