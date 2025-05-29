@@ -40,7 +40,6 @@ import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../../../../constants/calendar';
-import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
