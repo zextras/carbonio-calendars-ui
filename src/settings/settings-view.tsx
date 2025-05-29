@@ -344,7 +344,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			newFreeBusy || newInviteRight ? { ...permissionsFreeBusy, ...permissionsInviteRight } : {};
 		const newValue = {
 			...(Object.keys(settingsToUpdate).length > 0 && { prefs: settingsToUpdate }),
-			...permissions
+			permissions
 		};
 
 		editSettings(newValue).then((res) => {
