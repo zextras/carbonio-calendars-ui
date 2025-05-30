@@ -6,8 +6,8 @@
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { HttpResponse, HttpResponseResolver } from 'msw';
 
-import { CarbonioMailboxRestHandlerRequest } from '@zextras/carbonio-ui-commons';
 import mockedData from '../../../generators';
+import { CarbonioMailboxRestHandlerRequest } from '@test-utils/network/msw/handlers';
 
 export const filledSearchResponse = (): SuccessSoapResponse<any> => ({
 	Header: {

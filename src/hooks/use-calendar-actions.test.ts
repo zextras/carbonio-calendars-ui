@@ -5,14 +5,12 @@
  */
 import { faker } from '@faker-js/faker';
 import { t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useFolderStore, Folder, FolderView } from '@zextras/carbonio-ui-commons';
 
 import { useCalendarActions } from './use-calendar-actions';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { useFolderStore } from '@zextras/carbonio-ui-commons';
-import { generateRoots } from '@zextras/carbonio-ui-commons';
-import { setupHook } from '@zextras/carbonio-ui-commons';
-import { Folder, FolderView } from '@zextras/carbonio-ui-commons';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
+import { setupHook } from '@test-setup';
+import { generateRoots } from '@test-utils/folders/roots-generator';
 
 const randomUUID = faker.string.uuid();
 const roots = generateRoots();

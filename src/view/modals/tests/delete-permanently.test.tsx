@@ -9,13 +9,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { useTheme } from '@zextras/carbonio-design-system';
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
+import { createSoapAPIInterceptor, setupHook, setupTest } from '@zextras/carbonio-ui-commons';
 
 import * as itemAction from '../../../soap/item-action-request';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { DeletePermanently } from '../delete-permanently';
-import { setupTest, setupHook } from '@test-setup';
-import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 describe('delete-permanently', () => {

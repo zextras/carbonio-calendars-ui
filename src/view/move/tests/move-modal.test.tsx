@@ -7,15 +7,14 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { screen } from '@testing-library/react';
+import { FOLDER_VIEW, FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { FOLDER_VIEW } from '@zextras/carbonio-ui-commons';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { generateFolder } from '@zextras/carbonio-ui-commons';
-import { populateFoldersStore } from '@zextras/carbonio-ui-commons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
 import mockedData from '../../../test/generators';
 import { EventType } from '../../../types/event';
 import { MoveModal } from '../move-modal';
+import { setupTest } from '@test-setup';
+import { generateFolder } from '@test-utils/folders/folders-generator';
+import { populateFoldersStore } from '@test-utils/store/folders';
 
 const mockToggleModal = jest.fn();
 const mockOnClose = jest.fn();

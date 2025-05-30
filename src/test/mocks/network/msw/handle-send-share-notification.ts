@@ -7,7 +7,7 @@
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { HttpResponse, HttpResponseResolver } from 'msw';
 
-import { CarbonioMailboxRestHandlerRequest } from '@zextras/carbonio-ui-commons';
+import { CarbonioMailboxRestHandlerRequest } from '@test-utils/network/msw/handlers';
 
 const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: { context: { change: { token: 15778 } } },

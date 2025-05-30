@@ -7,10 +7,14 @@ import React, { useEffect } from 'react';
 
 import { screen } from '@testing-library/react';
 import { Button, ChipAction } from '@zextras/carbonio-design-system';
+import {
+	CONTACT_TYPES,
+	EDIT_ACTION_ID,
+	ContactInputItem,
+	ContactInputProps
+} from '@zextras/carbonio-ui-commons';
 
-import { CONTACT_TYPES, EDIT_ACTION_ID } from '@zextras/carbonio-ui-commons';
-import { ContactInputItem, ContactInputProps } from '@zextras/carbonio-ui-commons';
-import { UserEvent } from '@zextras/carbonio-ui-commons';
+import { UserEvent } from '@test-setup';
 
 export const EDIT_ACTION: ChipAction = {
 	icon: 'EditOutline',

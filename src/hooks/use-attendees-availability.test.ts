@@ -8,9 +8,9 @@ import { map } from 'lodash';
 import moment from 'moment';
 
 import { useAttendeesAvailability } from './use-attendees-availability';
-import { setupHook } from '@zextras/carbonio-ui-commons';
 import * as handler from '../soap/get-free-busy-request';
 import mockedData from '../test/generators';
+import { setupHook } from '@test-setup';
 
 describe('use attendees availability', () => {
 	describe('no user interaction - pre-populated editor', () => {

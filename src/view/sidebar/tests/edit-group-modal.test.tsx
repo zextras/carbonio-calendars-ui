@@ -8,14 +8,17 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { act } from '@testing-library/react';
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
+import {
+	generateFolder,
+	populateFoldersStore,
+	within,
+	screen,
+	setupTest,
+	Folder
+} from '@zextras/carbonio-ui-commons';
 import { times } from 'lodash';
 
 import { selectCalendarFromSelector } from './utils';
-import { generateFolder } from '@zextras/carbonio-ui-commons';
-import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
-import { populateFoldersStore } from '@zextras/carbonio-ui-commons';
-import { within, screen, setupTest } from '@zextras/carbonio-ui-commons';
-import { Folder } from '@zextras/carbonio-ui-commons';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { CreateCalendarGroupResponse } from '../../../soap/create-calendar-group-request';
 import {
@@ -27,6 +30,7 @@ import { CalendarGroup } from '../../../store/zustand/calendar-group-store';
 import { generateApiErrorResponse } from '../../../test/generators/api';
 import { generateGroup, populateGroupsStore } from '../../../test/generators/group';
 import { EditGroupModal, EditGroupModalProps } from '../edit-group-modal';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 const generateApiSuccessResponse = (): CreateCalendarGroupResponse => ({
 	group: {

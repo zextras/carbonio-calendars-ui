@@ -8,6 +8,8 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
+import { DefaultContactInput } from '@zextras/carbonio-ui-commons';
+import * as commonIntegrationHooks from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
 
 import {
@@ -17,13 +19,11 @@ import {
 	spyDefaultValue,
 	triggerOnAdd
 } from './mocks';
-import { DefaultContactInput } from '@zextras/carbonio-ui-commons';
-import * as commonIntegrationHooks from '@zextras/carbonio-ui-commons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { PARTICIPATION_STATUS } from '../../../../constants/api';
 import { reducers } from '../../../../store/redux';
 import { EditorOptionalAttendees } from '../editor-optional-attendees';
+import { setupTest } from '@test-setup';
 
 describe('Editor Optional Attendees', () => {
 	describe('ChipInput', () => {

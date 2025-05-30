@@ -15,10 +15,10 @@ import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
-import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_RESOURCES } from '../../../constants';
 import { reducers } from '../../../store/redux';
+import { setupTest } from '@test-setup';
 
 const dateFormat = 'YYYY/MM/DD';
 

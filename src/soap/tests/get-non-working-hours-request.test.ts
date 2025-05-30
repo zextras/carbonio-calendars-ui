@@ -7,12 +7,15 @@
 import { HttpResponse } from 'msw';
 
 import { mockWorkingHoursResponse } from './mocks';
-import { createAPIInterceptor, createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
-import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
 import {
 	getNonWorkingHoursRequest,
 	GetNonWorkingHoursRequest
 } from '../get-non-working-hours-request';
+import {
+	createAPIInterceptor,
+	createSoapAPIInterceptor
+} from '@test-utils/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 describe('getNonWorkingHoursRequest', () => {
 	it('should call soapFetch with correct parameters', async () => {

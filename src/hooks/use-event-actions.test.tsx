@@ -8,7 +8,6 @@ import { useModal } from '@zextras/carbonio-design-system';
 import { find, indexOf } from 'lodash';
 
 import { useEventActions } from './use-event-actions';
-import { setupTest, screen, setupHook } from '@zextras/carbonio-ui-commons';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import {
 	AppointmentActionsItems,
@@ -16,6 +15,7 @@ import {
 	SeriesActionsItems
 } from '../types/actions';
 import { EventType } from '../types/event';
+import { setupHook, setupTest, screen } from '@test-setup';
 
 jest.mock('@zextras/carbonio-design-system', () => ({
 	...jest.requireActual('@zextras/carbonio-design-system'),

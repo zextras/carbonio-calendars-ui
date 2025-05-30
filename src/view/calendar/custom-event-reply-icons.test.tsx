@@ -8,8 +8,8 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 
 import { CustomEventReplyIcons } from './custom-event-reply-icons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
 import { PARTICIPATION_STATUS } from '../../constants/api';
+import { setupTest } from '@test-setup';
 
 describe('CustomEventReplyIcons', () => {
 	test('it wont render anything if iAmAttendee is false', () => {

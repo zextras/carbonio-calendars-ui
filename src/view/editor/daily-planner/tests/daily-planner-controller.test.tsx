@@ -7,15 +7,15 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
+import { createAPIInterceptor } from '@zextras/carbonio-ui-commons';
 import { HttpResponse } from 'msw';
 
-import { createAPIInterceptor } from '@zextras/carbonio-ui-commons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import mockedData from '../../../../test/generators';
 import { EditorDailyPlannerController } from '../daily-planner-controller';
+import { setupTest } from '@test-setup';
 
 const folder = {
 	absFolderPath: '/Test',

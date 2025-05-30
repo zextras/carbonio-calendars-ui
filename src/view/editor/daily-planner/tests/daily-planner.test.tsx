@@ -7,13 +7,12 @@
 import React from 'react';
 
 import { within } from '@testing-library/react';
+import { createSoapAPIInterceptor, setupTest, screen } from '@zextras/carbonio-ui-commons';
 
-import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
-import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
-import { setupTest, screen } from '@zextras/carbonio-ui-commons';
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from '../constants';
 import { EditorDailyPlanner } from '../daily-planner';
+import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 const organizer = {
 	email: 'organizer@test.com',

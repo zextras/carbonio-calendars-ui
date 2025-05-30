@@ -8,7 +8,7 @@ import { faker } from '@faker-js/faker';
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { HttpResponse, HttpResponseResolver } from 'msw';
 
-import { CarbonioMailboxRestHandlerRequest } from '@zextras/carbonio-ui-commons';
+import { CarbonioMailboxRestHandlerRequest } from '@test-utils/network/msw/handlers';
 
 const getLocationResponse = (): SuccessSoapResponse<any> => ({
 	Header: {

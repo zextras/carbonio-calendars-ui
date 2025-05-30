@@ -8,6 +8,8 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
+import { CONTACT_TYPES, DefaultContactInput } from '@zextras/carbonio-ui-commons';
+import * as commonIntegrationHooks from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
 
 import {
@@ -17,17 +19,14 @@ import {
 	spyDefaultValue,
 	triggerOnAdd
 } from './mocks';
-import { CONTACT_TYPES } from '@zextras/carbonio-ui-commons';
-import { DefaultContactInput } from '@zextras/carbonio-ui-commons';
-import * as commonIntegrationHooks from '@zextras/carbonio-ui-commons';
-import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
-import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { PARTICIPATION_STATUS } from '../../../../constants/api';
 import { mockFreeBusyResponse, mockGetShareInfo } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
 import { EditorAttendees } from '../editor-attendees';
+import { setupTest } from '@test-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 describe('Editor Attendees', () => {
 	beforeEach(() => {

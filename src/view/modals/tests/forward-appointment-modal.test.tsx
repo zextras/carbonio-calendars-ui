@@ -7,12 +7,12 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { act, screen } from '@testing-library/react';
+import { setupTest, UserEvent } from '@zextras/carbonio-ui-commons';
 import { noop } from 'lodash';
 
 import { generateSoapErrorResponseBody } from '../../../test/generators/utils';
 import { ForwardAppointmentRequest } from '../../../types/soap/soap-actions';
 import { ForwardAppointmentModal } from '../forward-appointment-modal';
-import { UserEvent, setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 async function inputAttendee(user: UserEvent, input: HTMLElement, attendee: string): Promise<void> {

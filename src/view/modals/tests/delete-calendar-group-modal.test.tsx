@@ -9,8 +9,6 @@ import { faker } from '@faker-js/faker';
 import { act } from '@testing-library/react';
 import { ErrorSoapBodyResponse, JSNS } from '@zextras/carbonio-shell-ui';
 
-import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
-import { screen, setupTest } from '@zextras/carbonio-ui-commons';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import {
 	DeleteCalendarGroupRequest,
@@ -18,6 +16,8 @@ import {
 } from '../../../soap/delete-calendar-group-request';
 import { generateSoapErrorResponseBody } from '../../../test/generators/utils';
 import { DeleteCalendarGroupModal } from '../delete-calendar-group-modal';
+import { setupTest, screen } from '@test-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 describe('DeleteCalendarGroupModal', () => {
 	it('should render the specific title ', () => {

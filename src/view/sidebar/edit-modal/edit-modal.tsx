@@ -6,15 +6,13 @@
 import React, { FC, useCallback, useMemo, useState, useEffect } from 'react';
 
 import { Grant } from '@zextras/carbonio-shell-ui';
+import { getFolderRequest, useFolder, getUpdateFolder, Folder } from '@zextras/carbonio-ui-commons';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import { EditPermissionModal } from './parts/edit-permission-modal';
 import { MainEditModal } from './parts/main-edit-modal';
 import { ShareRevokeModal } from './parts/revoke-modal';
-import { getFolderRequest } from '@zextras/carbonio-ui-commons';
-import { useFolder, getUpdateFolder } from '@zextras/carbonio-ui-commons';
-import { Folder } from '@zextras/carbonio-ui-commons';
 import { EditModalContext } from '../../../commons/edit-modal-context';
 import { ShareCalendarModal } from '../share-calendar-modal';
 

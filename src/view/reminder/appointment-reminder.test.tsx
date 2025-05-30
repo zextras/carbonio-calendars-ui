@@ -9,12 +9,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 
 import { AppointmentReminder } from './appointment-reminder';
-import { setupTest } from '@zextras/carbonio-ui-commons';
 import { EVENT_DISPLAY_STATUS, PARTICIPATION_STATUS } from '../../constants/api';
 import { deleteAppointmentPermanent } from '../../store/actions/delete-appointment-permanent';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { Appointment } from '../../types/store/appointments';
+import { setupTest } from '@test-setup';
 
 jest.setTimeout(40000);
 

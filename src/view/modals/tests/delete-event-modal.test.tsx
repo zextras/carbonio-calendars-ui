@@ -8,16 +8,18 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
-
-import { FOLDER_VIEW } from '@zextras/carbonio-ui-commons';
+import {
+	FOLDER_VIEW,
+	mockUseHistoryNavigation,
+	populateFoldersStore
+} from '@zextras/carbonio-ui-commons';
 import * as shell from '@zextras/carbonio-ui-commons';
-import { mockUseHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import { populateFoldersStore } from '@zextras/carbonio-ui-commons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
+
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { DeleteEventModal } from '../delete-event-modal';
+import { setupTest } from '@test-setup';
 
 describe('delete event modal', () => {
 	mockUseHistoryNavigation();

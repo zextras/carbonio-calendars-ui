@@ -9,7 +9,7 @@ import { screen } from '@testing-library/react';
 import moment from 'moment';
 
 import SearchList from './search-list';
-import { setupTest } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@test-setup';
 
 describe('SearchList', () => {
 	const defaultProps = {

@@ -7,20 +7,18 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within, act } from '@testing-library/react';
+import { FolderView, getSetupServer, Grant, useFolderStore } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
 
 import { EditModal } from './edit-modal';
-import { useFolderStore } from '@zextras/carbonio-ui-commons';
-import { getSetupServer } from '@zextras/carbonio-ui-commons';
-import { generateRoots } from '@zextras/carbonio-ui-commons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
-import type { FolderView, Grant } from '@zextras/carbonio-ui-commons';
 import { FOLDER_OPERATIONS } from '../../../constants/api';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import * as BatchAction from '../../../soap/batch-request';
 import * as FolderAction from '../../../soap/folder-action-request';
 import * as SendShare from '../../../store/actions/send-share-calendar-notification';
 import { reducers } from '../../../store/redux';
+import { setupTest } from '@test-setup';
+import { generateRoots } from '@test-utils/folders/roots-generator';
 
 const grants: Array<Grant> = [
 	{

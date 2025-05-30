@@ -9,13 +9,10 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, within } from '@testing-library/react';
+import { getSetupServer } from '@zextras/carbonio-ui-commons';
 import { map } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
-import { getSetupServer } from '@zextras/carbonio-ui-commons';
-import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
-import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
@@ -23,6 +20,9 @@ import { reducers } from '../../../../store/redux';
 import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { EditorMeetingRooms } from '../editor-meeting-rooms';
+import { setupTest } from '@test-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ meetingRoom: [] }));

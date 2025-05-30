@@ -10,14 +10,15 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, within } from '@testing-library/react';
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
+import {
+	getSetupServer,
+	createSoapAPIInterceptor,
+	CarbonioMailboxRestHandlerRequest,
+	setupTest
+} from '@zextras/carbonio-ui-commons';
 import { map } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
-import { getSetupServer } from '@zextras/carbonio-ui-commons';
-import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
-import { CarbonioMailboxRestHandlerRequest } from '@zextras/carbonio-ui-commons';
-import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
@@ -25,6 +26,7 @@ import { reducers } from '../../../../store/redux';
 import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { EditorEquipments } from '../editor-equipments';
+import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ equipment: [] }));

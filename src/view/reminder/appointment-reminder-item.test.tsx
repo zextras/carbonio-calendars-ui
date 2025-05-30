@@ -11,13 +11,13 @@ import moment from 'moment-timezone';
 import { useTheme } from 'styled-components';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
-import { screen, setupHook, setupTest } from '@zextras/carbonio-ui-commons';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { generateReminderItem } from '../../test/generators/reminder';
 import { Appointment } from '../../types/store/appointments';
 import { Invite } from '../../types/store/invite';
 import { AppointmentsSlice, InvitesSlice } from '../../types/store/store';
+import { setupHook, setupTest, screen } from '@test-setup';
 
 const initializeMockedStore = ({
 	invite,

@@ -5,13 +5,13 @@
  */
 import { ErrorSoapBodyResponse, JSNS } from '@zextras/carbonio-shell-ui';
 
-import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
 import { generateApiErrorResponse } from '../../test/generators/api';
 import {
 	DeleteCalendarGroupRequest,
 	deleteCalendarGroupRequest,
 	DeleteCalendarGroupResponse
 } from '../delete-calendar-group-request';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 describe('DeleteCalendarGroupRequest', () => {
 	it('should call the deletion API with the correct parameters', async () => {

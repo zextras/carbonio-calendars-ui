@@ -7,9 +7,9 @@ import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { some } from 'lodash';
 import { HttpResponse, HttpResponseResolver } from 'msw';
 
-import { CarbonioMailboxRestHandlerRequest } from '@zextras/carbonio-ui-commons';
 import { ROOM_DIVIDER } from '../../../../constants';
 import { EVENT_DISPLAY_STATUS } from '../../../../constants/api';
+import { CarbonioMailboxRestHandlerRequest } from '@test-utils/network/msw/handlers';
 
 const getResponse = (): SuccessSoapResponse<any> => ({
 	Header: {
