@@ -8,6 +8,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { keyBy, values } from 'lodash';
 import moment from 'moment-timezone';
 
@@ -17,12 +18,7 @@ import {
 	MESSAGE_TYPE,
 	setupServerSingleEventResponse
 } from './invite-test-utils';
-import { useFolderStore } from '@zextras/carbonio-ui-commons';
-import * as shell from '@zextras/carbonio-ui-commons';
-import { generateRoots } from '@zextras/carbonio-ui-commons';
-import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
-import { mockUseHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import { setupTest } from '@zextras/carbonio-ui-commons';
+import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import * as handler from '../../commons/get-appointment';
 import { CALENDAR_BOARD_ID } from '../../constants';
 import { MESSAGE_METHOD } from '../../constants/api';
@@ -48,6 +44,10 @@ import {
 	singleGetMsgResponse
 } from '../../test/mocks/network/msw/handle-get-invite';
 import 'jest-styled-components';
+import { setupTest } from '@test-setup';
+import { generateRoots } from '@test-utils/folders/roots-generator';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { mockUseHistoryNavigation } from '@test-utils/routing/use-history-navigation-mock';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
