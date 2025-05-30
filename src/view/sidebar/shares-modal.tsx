@@ -18,6 +18,13 @@ import {
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import {
+	FOLDERS,
+	SidebarCustomItem,
+	ResFolder,
+	ModalHeader,
+	ModalFooter
+} from '@zextras/carbonio-ui-commons';
+import {
 	filter,
 	groupBy,
 	isEmpty,
@@ -34,11 +41,6 @@ import {
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 
-import ModalFooter from '@zextras/carbonio-ui-commons';
-import ModalHeader from '@zextras/carbonio-ui-commons';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { SidebarCustomItem } from '@zextras/carbonio-ui-commons';
-import { ResFolder } from '@zextras/carbonio-ui-commons';
 import { getFolderTranslatedName } from '../../commons/utilities';
 import { createMountpoint } from '../../store/actions/create-mountpoint';
 import { useAppDispatch } from '../../store/redux/hooks';

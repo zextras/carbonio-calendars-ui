@@ -6,6 +6,8 @@
 
 import { DefaultBodyType, http, HttpResponse, StrictRequest } from 'msw';
 
+import { getSetupServer } from '@jest-setup';
+
 type HandlerRequest<T> = DefaultBodyType & {
 	Body: Record<string, T>;
 };
