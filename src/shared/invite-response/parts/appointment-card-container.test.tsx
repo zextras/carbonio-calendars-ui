@@ -7,7 +7,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor } from '@testing-library/react';
-import { useFolderStore, getSetupServer } from '@zextras/carbonio-ui-commons';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { keyBy, values } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
@@ -16,6 +16,7 @@ import * as getSearchRequestHandler from '../../../soap/search-request';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { filledSearchResponse } from '../../../test/mocks/network/msw/handle-search-request';
+import { getSetupServer } from '@jest-setup';
 import { setupTest } from '@test-setup';
 import { generateRoots } from '@test-utils/folders/roots-generator';
 

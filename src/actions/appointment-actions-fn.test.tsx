@@ -7,8 +7,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { waitFor } from '@testing-library/react';
 
 import { createCopy, emailAttendees } from './appointment-actions-fn';
-import * as shell from '@zextras/carbonio-ui-commons';
-import defaultSettings from '@zextras/carbonio-ui-commons';
 import { PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE, ParticipantRoleType, PARTICIPATION_STATUS } from '../constants/api';
 import { reducers } from '../store/redux';
@@ -16,6 +14,8 @@ import mockedData from '../test/generators';
 import { EventType } from '../types/event';
 import { Attendee, Invite } from '../types/store/invite';
 import * as editorUtils from '../utils/event';
+import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
+import defaultSettings from '@test-utils/settings/default-settings';
 
 shell.getUserSettings.mockImplementation(() => ({
 	...defaultSettings,

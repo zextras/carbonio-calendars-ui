@@ -5,6 +5,7 @@
  */
 import { faker } from '@faker-js/faker';
 import { t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useFolderStore, Folder, FolderView } from '@zextras/carbonio-ui-commons';
 
 import {
 	deleteCalendarItem,
@@ -18,12 +19,9 @@ import {
 	shareCalendarUrlItem,
 	sharesInfoItem
 } from './calendar-actions-items';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { useFolderStore } from '@zextras/carbonio-ui-commons';
-import { generateRoots } from '@zextras/carbonio-ui-commons';
-import { Folder, FolderView } from '@zextras/carbonio-ui-commons';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import mockedData from '../test/generators';
+import { generateRoots } from '@test-utils/folders/roots-generator';
 
 const randomUUID = faker.string.uuid();
 const TRASH_SUB_FOLDER_PATH = '/Trash/subFolder';

@@ -8,13 +8,13 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor } from '@testing-library/react';
-import { getSetupServer } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
 
 import { AvailabilityChecker } from './availability-checker';
 import * as getFreeBusyResponseHandler from '../../../soap/get-free-busy-request';
 import { reducers } from '../../../store/redux';
 import { AvailabilitySlots } from '../../../test/mocks/network/msw/handle-get-free-busy';
+import { getSetupServer } from '@jest-setup';
 import { setupTest } from '@test-setup';
 import 'jest-styled-components';
 

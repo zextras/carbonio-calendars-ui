@@ -8,11 +8,11 @@ import React from 'react';
 import '@testing-library/jest-dom';
 
 import { render, screen, waitFor } from '@testing-library/react';
-import { useUserSettings } from '@zextras/carbonio-ui-commons';
 import { enable as enableDarkReader } from 'darkreader';
 
 import { ShadowDomWrapper } from '../shadow-dom-wrapper';
 import { setupTest } from '@test-setup';
+import { useUserSettings } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 
 jest.mock('@zextras/carbonio-shell-ui', () => ({
 	useUserSettings: jest.fn()
