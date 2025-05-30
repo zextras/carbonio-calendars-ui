@@ -9,10 +9,10 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act } from '@testing-library/react';
 
 import { CustomToolbar } from './custom-toolbar';
-import { useLocalStorage } from '@zextras/carbonio-ui-commons';
-import { setupTest, screen } from '@zextras/carbonio-ui-commons';
+import { useLocalStorage } from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import { reducers } from '../../store/redux';
 import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
+import { setupTest, screen } from '@test-setup';
 
 describe('calendar toolbar', () => {
 	test('onView with proper calendarView value is called while rendering the component', async () => {

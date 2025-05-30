@@ -5,12 +5,13 @@
  */
 
 import { GetShareInfoRequest, GetShareInfoResponse } from '@zextras/carbonio-ui-commons';
-import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+
 import { GetFreeBusyRequest, GetFreeBusyResponse } from '../get-free-busy-request';
 import {
 	GetWorkingHoursSoapRequest,
 	GetWorkingHoursSoapResponse
 } from '../get-non-working-hours-request';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 export function mockFreeBusyResponse(
 	usersFreeBusy: GetFreeBusyResponse['usr']
