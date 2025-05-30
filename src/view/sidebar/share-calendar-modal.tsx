@@ -11,8 +11,6 @@ import {
 	Container,
 	Icon,
 	Input,
-	ModalFooter,
-	ModalHeader,
 	Padding,
 	Row,
 	Select,
@@ -22,7 +20,12 @@ import {
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
-import { useContactInput, ContactInputItem } from '@zextras/carbonio-ui-commons';
+import {
+	useContactInput,
+	ContactInputItem,
+	ModalFooter,
+	ModalHeader
+} from '@zextras/carbonio-ui-commons';
 import { map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 

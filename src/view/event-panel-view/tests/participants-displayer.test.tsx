@@ -7,8 +7,6 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
-import * as shell from '@zextras/carbonio-ui-commons';
-import defaultSettings from '@zextras/carbonio-ui-commons';
 
 import { PREFS_DEFAULTS } from '../../../constants';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
@@ -16,6 +14,8 @@ import * as ParticipantDisplayerAction from '../../../store/actions/participant-
 import { reducers } from '../../../store/redux';
 import { DisplayedParticipant } from '../participants-displayer';
 import { setupTest } from '@test-setup';
+import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
+import defaultSettings from '@test-utils/settings/default-settings';
 
 jest.setTimeout(20000);
 

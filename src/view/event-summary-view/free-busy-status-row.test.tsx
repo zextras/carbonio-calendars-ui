@@ -7,11 +7,11 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { screen } from '@testing-library/react';
-import * as shell from '@zextras/carbonio-ui-commons';
 
 import { FreeBusyStatusRow } from './free-busy-status-row';
 import { EVENT_DISPLAY_STATUS } from '../../constants/api';
 import { setupTest } from '@test-setup';
+import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 
 describe('free busy status row', () => {
 	test.each`

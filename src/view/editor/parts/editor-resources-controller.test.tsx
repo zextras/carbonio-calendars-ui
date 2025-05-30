@@ -30,7 +30,7 @@ describe('editor resources controller', () => {
 		const context = { folders: {}, dispatch: store.dispatch };
 		const editor = generateEditor({ context });
 		await act(async () => {
-			await setupTest(<EditorResourcesController editorId={editor.id} />, { store });
+			setupTest(<EditorResourcesController editorId={editor.id} />, { store });
 		});
 		const state = useAppStatusStore.getState();
 		expect(state.meetingRoom).toBeUndefined();

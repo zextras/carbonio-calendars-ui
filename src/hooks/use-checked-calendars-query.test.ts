@@ -3,11 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { setupHook } from '@test-setup';
 import { useFolderStore, Folder } from '@zextras/carbonio-ui-commons';
 
 import { useCheckedCalendarsQuery } from './use-checked-calendars-query';
 import mockedData from '../test/generators';
+import { setupHook } from '@test-setup';
 
 const acceptedFolder = mockedData.calendars.getCalendar({ checked: true });
 const brokenFolder = mockedData.calendars.getCalendar({ broken: true, checked: true });

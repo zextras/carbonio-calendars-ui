@@ -10,12 +10,6 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, within } from '@testing-library/react';
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
-import {
-	getSetupServer,
-	createSoapAPIInterceptor,
-	CarbonioMailboxRestHandlerRequest,
-	setupTest
-} from '@zextras/carbonio-ui-commons';
 import { map } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
@@ -26,6 +20,9 @@ import { reducers } from '../../../../store/redux';
 import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { EditorEquipments } from '../editor-equipments';
+import { setupTest } from '@test-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { CarbonioMailboxRestHandlerRequest } from '@test-utils/network/msw/handlers';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 const setupEmptyAppStatusStore = (): void => {

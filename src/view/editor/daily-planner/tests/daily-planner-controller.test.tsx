@@ -7,7 +7,6 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
-import { createAPIInterceptor } from '@zextras/carbonio-ui-commons';
 import { HttpResponse } from 'msw';
 
 import { generateEditor } from '../../../../commons/editor-generator';
@@ -16,6 +15,7 @@ import { reducers } from '../../../../store/redux';
 import mockedData from '../../../../test/generators';
 import { EditorDailyPlannerController } from '../daily-planner-controller';
 import { setupTest } from '@test-setup';
+import { createAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 const folder = {
 	absFolderPath: '/Test',

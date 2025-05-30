@@ -6,16 +6,9 @@
 import React from 'react';
 
 import { faker } from '@faker-js/faker';
-import { act } from '@testing-library/react';
+import { act, within } from '@testing-library/react';
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
-import {
-	generateFolder,
-	populateFoldersStore,
-	within,
-	screen,
-	setupTest,
-	Folder
-} from '@zextras/carbonio-ui-commons';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { times } from 'lodash';
 
 import { selectCalendarFromSelector } from './utils';
@@ -30,7 +23,10 @@ import { CalendarGroup } from '../../../store/zustand/calendar-group-store';
 import { generateApiErrorResponse } from '../../../test/generators/api';
 import { generateGroup, populateGroupsStore } from '../../../test/generators/group';
 import { EditGroupModal, EditGroupModalProps } from '../edit-group-modal';
+import { setupTest, screen } from '@test-setup';
+import { generateFolder } from '@test-utils/folders/folders-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { populateFoldersStore } from '@test-utils/store/folders';
 
 const generateApiSuccessResponse = (): CreateCalendarGroupResponse => ({
 	group: {
