@@ -7,7 +7,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, within, act } from '@testing-library/react';
-import { FolderView, getSetupServer, Grant, useFolderStore } from '@zextras/carbonio-ui-commons';
+import { FolderView, Grant, useFolderStore } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
 
 import { EditModal } from './edit-modal';
@@ -17,6 +17,7 @@ import * as BatchAction from '../../../soap/batch-request';
 import * as FolderAction from '../../../soap/folder-action-request';
 import * as SendShare from '../../../store/actions/send-share-calendar-notification';
 import { reducers } from '../../../store/redux';
+import { getSetupServer } from '@jest-setup';
 import { setupTest } from '@test-setup';
 import { generateRoots } from '@test-utils/folders/roots-generator';
 

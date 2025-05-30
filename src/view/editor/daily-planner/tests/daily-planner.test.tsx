@@ -7,11 +7,12 @@
 import React from 'react';
 
 import { within } from '@testing-library/react';
-import { createSoapAPIInterceptor, setupTest, screen } from '@zextras/carbonio-ui-commons';
 
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from '../constants';
 import { EditorDailyPlanner } from '../daily-planner';
+import { setupTest, screen } from '@test-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 const organizer = {

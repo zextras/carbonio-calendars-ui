@@ -7,12 +7,14 @@ import React, { ReactElement, useCallback, useState } from 'react';
 
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import {
+	ModalFooter,
+	ModalHeader,
+	FolderSelector,
+	isTrash,
+	Folder
+} from '@zextras/carbonio-ui-commons';
 
-import ModalFooter from '@zextras/carbonio-ui-commons';
-import ModalHeader from '@zextras/carbonio-ui-commons';
-import { FolderSelector } from '@zextras/carbonio-ui-commons';
-import { isTrash } from '@zextras/carbonio-ui-commons';
-import { Folder } from '@zextras/carbonio-ui-commons';
 import { EventType } from '../../types/event';
 
 type ActionArgs = {

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useMemo } from 'react';
+import React, { SyntheticEvent, useCallback, useMemo } from 'react';
 
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
@@ -17,7 +17,7 @@ import { Invite } from '../../types/store/invite';
 type MessageModalProps = {
 	title: string;
 	onClose: () => void;
-	onConfirm: (arg?: { text: Array<string> }) => void;
+	onConfirm: (e?: SyntheticEvent<Element, Event> | KeyboardEvent) => void;
 	invite: Invite;
 	confirmLabel: string;
 	isEdited?: boolean;
