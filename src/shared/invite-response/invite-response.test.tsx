@@ -10,7 +10,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import { keyBy, values } from 'lodash';
 import moment from 'moment-timezone';
-import { HttpResponse } from 'msw';
 
 import { InviteResponse } from './invite-response';
 import {
@@ -21,10 +20,7 @@ import {
 import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
 import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
 import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import {
-	createAPIInterceptor,
-	createSoapAPIInterceptor
-} from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { createSoapAPIInterceptor } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import { mockUseHistoryNavigation } from '../../carbonio-ui-commons/test/mocks/routing/use-history-navigation-mock';
 import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import * as handler from '../../commons/get-appointment';
@@ -1576,37 +1572,6 @@ describe('invite response component', () => {
 					expect(messageString).toBeVisible();
 				});
 			});
-		});
-	});
-	describe('InviteResponse - fetchInvite error handling', () => {
-		test('should show error if fetchInvite returns Fault response', async () => {
-			setupFoldersStore();
-			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
-
-			createAPIInterceptor(
-				'post',
-				'/service/soap/GetAppointmentRequest',
-				HttpResponse.json({ Fault: {} })
-			);
-
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, { store });
-
-			const errorString = await screen.findByText(/Something went wrong, please try again/i);
-			expect(errorString).toBeVisible();
-		});
-
-		test('should show error if fetchInvite returns network error', async () => {
-			setupFoldersStore();
-			const mailMsg = buildMailMessageType(MESSAGE_METHOD.REQUEST, MESSAGE_TYPE.SINGLE, false);
-
-			createAPIInterceptor('post', '/service/soap/GetAppointmentRequest', HttpResponse.error());
-
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, { store });
-
-			const errorString = await screen.findByText(/Something went wrong, please try again/i);
-			expect(errorString).toBeVisible();
 		});
 	});
 });

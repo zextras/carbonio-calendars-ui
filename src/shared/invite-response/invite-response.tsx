@@ -67,11 +67,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	const account = useUserAccount();
 	const [t] = useTranslation();
 
-	const {
-		invite: fetchedInv,
-		loading: fetchingInvite,
-		error: inviteFetchError
-	} = useFetchInvite(mailMsg, false);
+	const { invite: fetchedInv, loading: fetchingInvite } = useFetchInvite(mailMsg, false);
 
 	const invite = normalizeInvite({ ...mailMsg, inv: fetchedInv });
 
@@ -188,16 +184,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 			<InviteContainer data-testid={'invite-response'}>
 				<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
 					<Spinner color={'primary'} />
-				</Container>
-			</InviteContainer>
-		);
-	}
-
-	if (inviteFetchError) {
-		return (
-			<InviteContainer data-testid="invite-response">
-				<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
-					<p style={{ color: 'red' }}>{inviteFetchError}</p>
 				</Container>
 			</InviteContainer>
 		);

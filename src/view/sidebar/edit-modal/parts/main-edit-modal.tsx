@@ -26,7 +26,6 @@ import {
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
-import type { TFunction } from 'i18next';
 import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -41,7 +40,6 @@ import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../../../../constants/calendar';
-import { setCalendarColor } from '../../../../normalizations/normalizations-utils';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
@@ -125,19 +123,24 @@ const LabelFactory: FC<LabelFactoryProps> = ({ selected, label, open, focus }) =
 	);
 };
 
-const getStatusItems = (t: TFunction): Array<SelectItem> =>
-	CALENDARS_STANDARD_COLORS.map((el, index) => ({
-		label: t(el.label ?? ''),
-		value: index.toString(),
-		customComponent: (
-			<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
-				<Padding left="small">
-					<TextUpperCase>{t(el.label ?? '')}</TextUpperCase>
-				</Padding>
-				<Square $color={el.color} />
-			</Container>
-		)
-	}));
+const useGetStatusItems = (): Array<SelectItem> => {
+	const [t] = useTranslation();
+	return CALENDARS_STANDARD_COLORS.map((el, index) => {
+		const colorLabel = t(`colors.${el.label}`);
+		return {
+			label: colorLabel,
+			value: index.toString(),
+			customComponent: (
+				<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
+					<Padding left="small">
+						<TextUpperCase>{colorLabel}</TextUpperCase>
+					</Padding>
+					<Square $color={el.color} />
+				</Container>
+			)
+		};
+	});
+};
 
 type MainEditModalProps = {
 	folder: Folder;
@@ -154,17 +157,15 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const dispatch = useAppDispatch();
 	const { setModal, onClose, setActiveGrant } = useEditModalContext();
 
-	const colors = useMemo(() => getStatusItems(t), [t]);
+	const colors = useGetStatusItems();
 
 	const defaultFreeBusy = /b/.test(folder.f ?? '');
 	const defaultFolderName = folder.name || '';
+
 	const defaultColor = useMemo(
 		() =>
-			find(colors, { label: setCalendarColor({ color: folder.color, rgb: folder.rgb }).label }) ?? {
-				label: '',
-				value: ''
-			},
-		[colors, folder?.color, folder?.rgb]
+			find(colors, (color) => color.value === folder.color?.toString()) ?? { label: '', value: '' },
+		[colors, folder.color]
 	);
 
 	const [folderName, setFolderName] = useState(defaultFolderName);
@@ -206,9 +207,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const onSelectedColorChange = useCallback<SingleSelectionOnChange>(
 		(newColor) => {
 			if (newColor) {
-				const newResult = find(colors, {
-					label: setCalendarColor({ color: parseInt(newColor, 10) }).label
-				});
+				const newResult = find(colors, (color) => color.value === newColor);
 				if (newResult) {
 					setSelectedColor(newResult);
 				}
