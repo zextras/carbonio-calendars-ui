@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 
 import {
@@ -10,6 +11,8 @@ import {
 	Container,
 	Icon,
 	Input,
+	ModalFooter,
+	ModalHeader,
 	Padding,
 	Row,
 	Select,
@@ -19,13 +22,10 @@ import {
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { useContactInput, ContactInputItem } from '@zextras/carbonio-ui-commons';
 import { map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import ModalFooter from '@zextras/carbonio-ui-commons';
-import ModalHeader from '@zextras/carbonio-ui-commons';
-import { useContactInput } from '@zextras/carbonio-ui-commons';
-import { ContactInputItem } from '@zextras/carbonio-ui-commons';
 import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import {
