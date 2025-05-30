@@ -16,8 +16,8 @@ import {
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
 import { EditorOptionalAttendees } from './editor-optional-attendees';
-import { getOrderedAccountIds } from '../../../carbonio-ui-commons/helpers/identities';
-import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
+import { getOrderedAccountIds } from '@zextras/carbonio-ui-commons';
+import { ContactInputItem } from '@zextras/carbonio-ui-commons';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {

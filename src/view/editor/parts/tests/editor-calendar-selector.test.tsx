@@ -9,7 +9,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import {
 	disabledFields,
 	EditorContext,

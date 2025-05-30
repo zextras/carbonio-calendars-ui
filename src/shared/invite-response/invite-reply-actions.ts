@@ -6,9 +6,9 @@
 import { CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { TFunction } from 'i18next';
 
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
-import { Folder, LinkFolder } from '../../carbonio-ui-commons/types';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
+import { Folder, LinkFolder } from '@zextras/carbonio-ui-commons';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { sendInviteResponse } from '../../store/actions/send-invite-response';
 import { AppDispatch } from '../../store/redux';

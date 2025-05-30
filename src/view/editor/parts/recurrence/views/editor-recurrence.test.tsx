@@ -9,7 +9,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, act, within } from '@testing-library/react';
 
 import { EditorRecurrence } from './editor-recurrence';
-import { setupTest } from '../../../../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../../constants/test-utils';
 import { reducers } from '../../../../../store/redux';

@@ -29,16 +29,16 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
-import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
-import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
+import { ROOT_NAME } from '@zextras/carbonio-ui-commons';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import {
 	getRootAccountId,
 	getUpdateFolder,
 	useFoldersMap,
 	useRoot
-} from '../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder, type LinkFolder } from '../../../carbonio-ui-commons/types';
-import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
+} from '@zextras/carbonio-ui-commons';
+import { Folder, type LinkFolder } from '@zextras/carbonio-ui-commons';
+import { hasId } from '@zextras/carbonio-ui-commons';
 import {
 	getFolderIcon,
 	getFolderTranslatedName,

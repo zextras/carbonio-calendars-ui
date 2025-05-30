@@ -7,7 +7,7 @@ import { addBoard } from '@zextras/carbonio-shell-ui';
 import { pick } from 'lodash';
 import { Dispatch } from 'redux';
 
-import { Folders } from '../../carbonio-ui-commons/types/folder';
+import { Folders } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_BOARD_ID } from '../../constants';
 import { Editor } from '../../types/editor';

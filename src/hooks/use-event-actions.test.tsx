@@ -8,7 +8,7 @@ import { useModal } from '@zextras/carbonio-design-system';
 import { find, indexOf } from 'lodash';
 
 import { useEventActions } from './use-event-actions';
-import { setupTest, screen, setupHook } from '../carbonio-ui-commons/test/test-setup';
+import { setupTest, screen, setupHook } from '@zextras/carbonio-ui-commons';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import {
 	AppointmentActionsItems,

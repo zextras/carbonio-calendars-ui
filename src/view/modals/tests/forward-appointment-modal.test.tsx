@@ -8,8 +8,8 @@ import { act, screen } from '@testing-library/react';
 import { noop } from 'lodash';
 import React from 'react';
 
-import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { setupTest, UserEvent } from '../../../carbonio-ui-commons/test/test-setup';
+import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { setupTest, UserEvent } from '@zextras/carbonio-ui-commons';
 import { generateSoapErrorResponseBody } from '../../../test/generators/utils';
 import { ForwardAppointmentRequest } from '../../../types/soap/soap-actions';
 import { ForwardAppointmentModal } from '../forward-appointment-modal';

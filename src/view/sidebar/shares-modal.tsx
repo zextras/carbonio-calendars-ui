@@ -34,11 +34,11 @@ import {
 import { Trans } from 'react-i18next';
 import styled from 'styled-components';
 
-import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
-import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { SidebarCustomItem } from '../../carbonio-ui-commons/types/sidebar';
-import { ResFolder } from '../../carbonio-ui-commons/utils';
+import ModalFooter from '@zextras/carbonio-ui-commons';
+import ModalHeader from '@zextras/carbonio-ui-commons';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { SidebarCustomItem } from '@zextras/carbonio-ui-commons';
+import { ResFolder } from '@zextras/carbonio-ui-commons';
 import { getFolderTranslatedName } from '../../commons/utilities';
 import { createMountpoint } from '../../store/actions/create-mountpoint';
 import { useAppDispatch } from '../../store/redux/hooks';

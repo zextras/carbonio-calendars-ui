@@ -10,9 +10,9 @@ import { t } from '@zextras/carbonio-shell-ui';
 
 import { MoveModal } from './move-modal';
 import { NewModal } from './new-calendar-modal';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { useFolder } from '@zextras/carbonio-ui-commons';
+import { hasId } from '@zextras/carbonio-ui-commons';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';

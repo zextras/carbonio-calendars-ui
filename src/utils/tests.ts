@@ -6,7 +6,7 @@
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
-import { setupHook } from '../carbonio-ui-commons/test/test-setup';
+import { setupHook } from '@zextras/carbonio-ui-commons';
 
 export const setupTMock = (): TFunction => {
 	const {

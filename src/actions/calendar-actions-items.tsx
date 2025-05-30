@@ -22,13 +22,10 @@ import {
 	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
-import {
-	isNestedInTrash,
-	isTrashOrNestedInIt
-} from '../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder, LinkFolder } from '../carbonio-ui-commons/types/folder';
-import { hasId } from '../carbonio-ui-commons/worker/handle-message';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { isNestedInTrash, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
+import { Folder, LinkFolder } from '@zextras/carbonio-ui-commons';
+import { hasId } from '@zextras/carbonio-ui-commons';
 import { isLinkChild, isMainRootChild } from '../commons/utilities';
 import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 

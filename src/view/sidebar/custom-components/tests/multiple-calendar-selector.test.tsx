@@ -9,10 +9,10 @@ import { faker } from '@faker-js/faker';
 import { act } from '@testing-library/react';
 import { times } from 'lodash';
 
-import { FOLDERS } from '../../../../carbonio-ui-commons/constants/folders';
-import { generateFolder } from '../../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
-import { populateFoldersStore } from '../../../../carbonio-ui-commons/test/mocks/store/folders';
-import { setupTest, screen, within } from '../../../../carbonio-ui-commons/test/test-setup';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { generateFolder } from '@zextras/carbonio-ui-commons';
+import { populateFoldersStore } from '@zextras/carbonio-ui-commons';
+import { setupTest, screen, within } from '@zextras/carbonio-ui-commons';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { MultipleCalendarSelector } from '../multiple-calendar-selector';
 

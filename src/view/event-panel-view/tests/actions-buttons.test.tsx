@@ -9,7 +9,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 import { noop } from 'lodash';
 
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { EVENT_ACTIONS } from '../../../constants/event-actions';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';

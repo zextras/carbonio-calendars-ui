@@ -6,8 +6,8 @@
 import { forEach, isEqual, keyBy, some } from 'lodash';
 import { create } from 'zustand';
 
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../carbonio-ui-commons/types';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
+import { Folder } from '@zextras/carbonio-ui-commons';
 
 export type CalendarGroup = {
 	id: string;

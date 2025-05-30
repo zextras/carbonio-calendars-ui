@@ -22,8 +22,8 @@ import {
 	openAppointment,
 	proposeNewTimeFn
 } from './appointment-actions-fn';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
-import { hasId } from '../carbonio-ui-commons/worker/handle-message';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { hasId } from '@zextras/carbonio-ui-commons';
 import { PARTICIPATION_STATUS } from '../constants/api';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { StoreProvider } from '../store/redux';

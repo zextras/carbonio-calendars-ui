@@ -7,8 +7,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { waitFor } from '@testing-library/react';
 
 import { createCopy, emailAttendees } from './appointment-actions-fn';
-import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
+import * as shell from '@zextras/carbonio-ui-commons';
+import defaultSettings from '@zextras/carbonio-ui-commons';
 import { PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE, ParticipantRoleType, PARTICIPATION_STATUS } from '../constants/api';
 import { reducers } from '../store/redux';

@@ -11,16 +11,12 @@ import { filter, find, map, reject } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import LabelFactory, { ItemFactory } from './select-label-factory';
-import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
-import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
-import {
-	getRootAccountId,
-	useFoldersMap,
-	useFoldersMapByRoot
-} from '../../../carbonio-ui-commons/store/zustand/folder';
-import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types';
-import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
+import { ROOT_NAME } from '@zextras/carbonio-ui-commons';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { getRootAccountId, useFoldersMap, useFoldersMapByRoot } from '@zextras/carbonio-ui-commons';
+import { isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
+import { Folder, LinkFolder } from '@zextras/carbonio-ui-commons';
+import { hasId } from '@zextras/carbonio-ui-commons';
 import { PREFS_DEFAULTS } from '../../../constants';
 import {
 	setCalendarColor,

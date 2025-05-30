@@ -10,11 +10,11 @@ import { screen, within, act } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
 import { EditModal } from './edit-modal';
-import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
-import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import type { FolderView, Grant } from '../../../carbonio-ui-commons/types/folder';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import { getSetupServer } from '@zextras/carbonio-ui-commons';
+import { generateRoots } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
+import type { FolderView, Grant } from '@zextras/carbonio-ui-commons';
 import { FOLDER_OPERATIONS } from '../../../constants/api';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import * as BatchAction from '../../../soap/batch-request';

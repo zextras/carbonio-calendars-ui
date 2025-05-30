@@ -24,9 +24,9 @@ import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { AuthGuard } from './auth-guard';
-import { FOLDER_VIEW } from './carbonio-ui-commons/constants';
-import { useInitializeFolders } from './carbonio-ui-commons/hooks/use-initialize-folders';
-import { useFoldersMap } from './carbonio-ui-commons/store/zustand/folder';
+import { FOLDER_VIEW } from '@zextras/carbonio-ui-commons';
+import { useInitializeFolders } from '@zextras/carbonio-ui-commons';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { CenteredSpinner } from './components/CenteredSpinner';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { CalendarIntegrations } from './constants/event-actions';

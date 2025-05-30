@@ -6,9 +6,9 @@
 import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 
-import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
-import { LinkFolder } from '../carbonio-ui-commons/types/folder';
-import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
+import { getRoot } from '@zextras/carbonio-ui-commons';
+import { LinkFolder } from '@zextras/carbonio-ui-commons';
+import { getPrefs } from '@zextras/carbonio-ui-commons';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';

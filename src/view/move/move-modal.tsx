@@ -8,11 +8,11 @@ import React, { ReactElement, useCallback, useState } from 'react';
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 
-import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
-import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { FolderSelector } from '../../carbonio-ui-commons/components/select/folders/folder-selector';
-import { isTrash } from '../../carbonio-ui-commons/helpers/folders';
-import { Folder } from '../../carbonio-ui-commons/types';
+import ModalFooter from '@zextras/carbonio-ui-commons';
+import ModalHeader from '@zextras/carbonio-ui-commons';
+import { FolderSelector } from '@zextras/carbonio-ui-commons';
+import { isTrash } from '@zextras/carbonio-ui-commons';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { EventType } from '../../types/event';
 
 type ActionArgs = {

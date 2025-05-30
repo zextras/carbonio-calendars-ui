@@ -9,10 +9,7 @@ import {
 	setAlarmValue
 } from './normalize-soap-message-from-editor';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
-import {
-	createFakeIdentity,
-	getMockedAccountItem
-} from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
+import { createFakeIdentity, getMockedAccountItem } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import { PARTICIPATION_STATUS } from '../constants/api';

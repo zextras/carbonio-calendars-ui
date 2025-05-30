@@ -12,8 +12,8 @@ import moment from 'moment';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../commons/get-appointment';
 import ModalFooter from '../../commons/modal-footer';

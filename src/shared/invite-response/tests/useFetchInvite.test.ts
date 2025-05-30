@@ -8,10 +8,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse } from 'msw';
 
-import {
-	createAPIInterceptor,
-	createSoapAPIInterceptor
-} from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { createAPIInterceptor, createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
 import mockedData from '../../../test/generators';
 import { MailMsg } from '../../../types/integrations';
 import { Invite } from '../../../types/store/invite';

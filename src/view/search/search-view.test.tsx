@@ -11,7 +11,7 @@ import type { QueryChip } from '@zextras/carbonio-search-ui';
 import { combineReducers } from 'redux';
 
 import SearchView from './search-view';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import appointmentsSliceReducer from '../../store/slices/appointments-slice';
 import editorSliceReducer from '../../store/slices/editor-slice';
 import invitesSliceReducer from '../../store/slices/invites-slice';

@@ -9,8 +9,8 @@ import { faker } from '@faker-js/faker';
 import { screen } from '@testing-library/react';
 
 import { FreeBusyStatusRow } from './free-busy-status-row';
-import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import * as shell from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { EVENT_DISPLAY_STATUS } from '../../constants/api';
 
 describe('free busy status row', () => {

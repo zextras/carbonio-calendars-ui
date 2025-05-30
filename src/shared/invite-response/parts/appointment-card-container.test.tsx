@@ -11,10 +11,10 @@ import { keyBy, values } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
 import { AppointmentCardContainer } from './appointment-card-container';
-import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
-import { generateRoots } from '../../../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import { getSetupServer } from '@zextras/carbonio-ui-commons';
+import { generateRoots } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import * as getSearchRequestHandler from '../../../soap/search-request';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';

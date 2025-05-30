@@ -17,12 +17,12 @@ import {
 	spyDefaultValue,
 	triggerOnAdd
 } from './mocks';
-import { CONTACT_TYPES } from '../../../../carbonio-ui-commons/integrations/constants';
-import { DefaultContactInput } from '../../../../carbonio-ui-commons/integrations/default-contact-input';
-import * as commonIntegrationHooks from '../../../../carbonio-ui-commons/integrations/hooks';
-import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
+import { CONTACT_TYPES } from '@zextras/carbonio-ui-commons';
+import { DefaultContactInput } from '@zextras/carbonio-ui-commons';
+import * as commonIntegrationHooks from '@zextras/carbonio-ui-commons';
+import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { PARTICIPATION_STATUS } from '../../../../constants/api';
 import { mockFreeBusyResponse, mockGetShareInfo } from '../../../../soap/tests/mocks';

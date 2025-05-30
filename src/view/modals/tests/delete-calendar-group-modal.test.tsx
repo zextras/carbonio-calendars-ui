@@ -9,8 +9,8 @@ import { faker } from '@faker-js/faker';
 import { act } from '@testing-library/react';
 import { ErrorSoapBodyResponse, JSNS } from '@zextras/carbonio-shell-ui';
 
-import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { screen, setupTest } from '@zextras/carbonio-ui-commons';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import {
 	DeleteCalendarGroupRequest,

@@ -10,12 +10,12 @@ import { differenceWith, map, reject, sortBy, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarChip, CalendarChipInputItem, CalendarChipInputItems } from './calendar-chips';
-import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
-import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
-import { isLink, isTrashed } from '../../../carbonio-ui-commons/helpers/folders';
-import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types';
-import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
+import { ROOT_NAME } from '@zextras/carbonio-ui-commons';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { isLink, isTrashed } from '@zextras/carbonio-ui-commons';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
+import { Folder, LinkFolder } from '@zextras/carbonio-ui-commons';
+import { hasId } from '@zextras/carbonio-ui-commons';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { ItemFactory } from '../../editor/parts/select-label-factory';
 

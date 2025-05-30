@@ -17,9 +17,9 @@ import {
 	spyDefaultValue,
 	triggerOnAdd
 } from './mocks';
-import { DefaultContactInput } from '../../../../carbonio-ui-commons/integrations/default-contact-input';
-import * as commonIntegrationHooks from '../../../../carbonio-ui-commons/integrations/hooks';
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
+import { DefaultContactInput } from '@zextras/carbonio-ui-commons';
+import * as commonIntegrationHooks from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { PARTICIPATION_STATUS } from '../../../../constants/api';
 import { reducers } from '../../../../store/redux';

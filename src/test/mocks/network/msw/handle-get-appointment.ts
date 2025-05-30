@@ -6,7 +6,7 @@
 import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { HttpResponse, HttpResponseResolver } from 'msw';
 
-import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
+import { CarbonioMailboxRestHandlerRequest } from '@zextras/carbonio-ui-commons';
 import { EVENT_DISPLAY_STATUS, PARTICIPATION_STATUS } from '../../../../constants/api';
 
 const uid = '71c5949a-69e2-48e7-b4c2-3765f6a4eaed';

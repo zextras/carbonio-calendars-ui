@@ -11,11 +11,11 @@ import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 import { times } from 'lodash';
 
 import { selectCalendarFromSelector } from './utils';
-import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
-import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
-import { within, screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { Folder } from '../../../carbonio-ui-commons/types';
+import { generateFolder } from '@zextras/carbonio-ui-commons';
+import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { populateFoldersStore } from '@zextras/carbonio-ui-commons';
+import { within, screen, setupTest } from '@zextras/carbonio-ui-commons';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { CreateCalendarGroupResponse } from '../../../soap/create-calendar-group-request';
 import {

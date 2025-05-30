@@ -21,11 +21,11 @@ import {
 	openEventItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
-import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
-import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
-import { useSortedTagsArray } from '../carbonio-ui-commons/store/zustand/tags';
-import { LinkFolder } from '../carbonio-ui-commons/types';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
+import { useSortedTagsArray } from '@zextras/carbonio-ui-commons';
+import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { isLinkChild } from '../commons/utilities';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';

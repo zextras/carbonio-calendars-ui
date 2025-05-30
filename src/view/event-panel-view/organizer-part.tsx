@@ -17,8 +17,8 @@ import {
 import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
 import { Trans } from 'react-i18next';
 
-import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
-import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { useFolder } from '@zextras/carbonio-ui-commons';
+import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
 import { Invite, InviteOrganizer } from '../../types/store/invite';
 

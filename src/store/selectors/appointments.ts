@@ -6,7 +6,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { find, values, reduce, filter } from 'lodash';
 
-import { Folder, Folders } from '../../carbonio-ui-commons/types/folder';
+import { Folder, Folders } from '@zextras/carbonio-ui-commons';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { EventType } from '../../types/event';
 import { Appointment, InstanceReference } from '../../types/store/appointments';

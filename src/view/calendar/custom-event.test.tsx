@@ -9,7 +9,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 
 import { MemoCustomEvent } from './custom-event';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { reducers } from '../../store/redux';
 import { useAppStatusStore } from '../../store/zustand/store';
 import mockedData from '../../test/generators';

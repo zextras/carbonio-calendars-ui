@@ -17,12 +17,12 @@ import {
 	MESSAGE_TYPE,
 	setupServerSingleEventResponse
 } from './invite-test-utils';
-import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
-import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import { createSoapAPIInterceptor } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { mockUseHistoryNavigation } from '../../carbonio-ui-commons/test/mocks/routing/use-history-navigation-mock';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import * as shell from '@zextras/carbonio-ui-commons';
+import { generateRoots } from '@zextras/carbonio-ui-commons';
+import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { mockUseHistoryNavigation } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import * as handler from '../../commons/get-appointment';
 import { CALENDAR_BOARD_ID } from '../../constants';
 import { MESSAGE_METHOD } from '../../constants/api';

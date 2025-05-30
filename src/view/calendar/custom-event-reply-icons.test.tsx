@@ -8,7 +8,7 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 
 import { CustomEventReplyIcons } from './custom-event-reply-icons';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 
 describe('CustomEventReplyIcons', () => {

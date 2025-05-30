@@ -6,7 +6,7 @@
 import { omit } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
-import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
+import { getSetupServer } from '@zextras/carbonio-ui-commons';
 import { EVENT_DISPLAY_STATUS, MESSAGE_METHOD, PARTICIPATION_STATUS } from '../../constants/api';
 import { ObjectValues } from '../../constants/sidebar';
 import { InviteResponseArguments, MailMsg } from '../../types/integrations';

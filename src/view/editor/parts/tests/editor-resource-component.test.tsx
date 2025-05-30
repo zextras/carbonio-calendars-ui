@@ -10,7 +10,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { DropdownItem } from '@zextras/carbonio-design-system';
 
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { reducers } from '../../../../store/redux';

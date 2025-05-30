@@ -13,8 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
-import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
-import { Folders } from '../carbonio-ui-commons/types';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
+import { Folders } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';

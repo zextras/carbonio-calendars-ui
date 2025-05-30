@@ -10,8 +10,8 @@ import momentLocalizer from 'react-widgets-moment';
 import { Dispatch } from 'redux';
 
 import { getIdentityItems } from './get-identity-items';
-import { Folders, LinkFolder } from '../carbonio-ui-commons/types';
-import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
+import { Folders, LinkFolder } from '@zextras/carbonio-ui-commons';
+import { getPrefs } from '@zextras/carbonio-ui-commons';
 import { PREFS_DEFAULTS } from '../constants';
 import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { normalizeEditor } from '../normalizations/normalize-editor';

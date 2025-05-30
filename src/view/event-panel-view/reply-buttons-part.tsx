@@ -14,8 +14,8 @@ import {
 	declineInvitation,
 	proposeNewTimeFn
 } from '../../actions/appointment-actions-fn';
-import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';

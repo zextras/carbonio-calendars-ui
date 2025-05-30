@@ -8,8 +8,8 @@ import React, { FC } from 'react';
 import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { Folder } from '../../carbonio-ui-commons/types/folder';
+import ModalHeader from '@zextras/carbonio-ui-commons';
+import { Folder } from '@zextras/carbonio-ui-commons';
 
 export const ShareInfoRow: FC<{
 	icon: string;

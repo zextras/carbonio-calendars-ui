@@ -10,9 +10,9 @@ import moment from 'moment';
 
 import { ReminderModal } from './reminder-modal';
 import sound from '../../assets/notification.mp3';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { LinkFolder } from '../../carbonio-ui-commons/types/folder';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
+import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { getTimeToDisplayData } from '../../commons/utilities';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { normalizeReminderItem } from '../../normalizations/normalize-reminder';

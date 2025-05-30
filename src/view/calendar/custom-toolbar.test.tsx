@@ -9,8 +9,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act } from '@testing-library/react';
 
 import { CustomToolbar } from './custom-toolbar';
-import { useLocalStorage } from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { setupTest, screen } from '../../carbonio-ui-commons/test/test-setup';
+import { useLocalStorage } from '@zextras/carbonio-ui-commons';
+import { setupTest, screen } from '@zextras/carbonio-ui-commons';
 import { reducers } from '../../store/redux';
 import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
 

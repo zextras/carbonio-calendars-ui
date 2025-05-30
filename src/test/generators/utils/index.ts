@@ -6,7 +6,7 @@
 import { faker } from '@faker-js/faker';
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 
-import { createFakeIdentity } from '../../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
+import { createFakeIdentity } from '@zextras/carbonio-ui-commons';
 import { IdentityItem } from '../../../types/editor';
 
 const getRandomInRange = ({ min = 1, max = 3 }: { min?: number; max?: number } = {}): number =>

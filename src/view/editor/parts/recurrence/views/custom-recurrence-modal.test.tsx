@@ -10,7 +10,7 @@ import { act, screen, within } from '@testing-library/react';
 import { find, values } from 'lodash';
 
 import { CustomRecurrenceModal } from './custom-recurrence-modal';
-import { setupTest } from '../../../../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../../commons/editor-generator';
 import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import { reducers } from '../../../../../store/redux';

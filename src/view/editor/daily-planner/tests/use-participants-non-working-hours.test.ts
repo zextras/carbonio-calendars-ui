@@ -8,11 +8,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse } from 'msw';
 
 import { mockTranslation } from './mocks';
-import {
-	createAPIInterceptor,
-	createSoapAPIInterceptor
-} from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
+import { createAPIInterceptor, createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
 import * as getNonWorkingHoursResponseHandler from '../../../../soap/get-non-working-hours-request';
 import { mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { useParticipantsNonWorkingHours } from '../use-participants-non-working-hours';

@@ -12,9 +12,9 @@ import { useTranslation } from 'react-i18next';
 import { EditPermissionModal } from './parts/edit-permission-modal';
 import { MainEditModal } from './parts/main-edit-modal';
 import { ShareRevokeModal } from './parts/revoke-modal';
-import { getFolderRequest } from '../../../carbonio-ui-commons/soap/get-folder';
-import { useFolder, getUpdateFolder } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../../carbonio-ui-commons/types/folder';
+import { getFolderRequest } from '@zextras/carbonio-ui-commons';
+import { useFolder, getUpdateFolder } from '@zextras/carbonio-ui-commons';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { EditModalContext } from '../../../commons/edit-modal-context';
 import { ShareCalendarModal } from '../share-calendar-modal';
 

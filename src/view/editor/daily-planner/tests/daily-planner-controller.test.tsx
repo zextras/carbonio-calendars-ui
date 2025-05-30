@@ -9,8 +9,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor } from '@testing-library/react';
 import { HttpResponse } from 'msw';
 
-import { createAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
+import { createAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';

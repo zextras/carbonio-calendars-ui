@@ -11,7 +11,7 @@ import moment from 'moment-timezone';
 import { useTheme } from 'styled-components';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
-import { screen, setupHook, setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { screen, setupHook, setupTest } from '@zextras/carbonio-ui-commons';
 import { reducers } from '../../store/redux';
 import mockedData from '../../test/generators';
 import { generateReminderItem } from '../../test/generators/reminder';

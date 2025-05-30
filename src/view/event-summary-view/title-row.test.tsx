@@ -8,7 +8,7 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 
 import { TitleRow } from './title-row';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import mockedData from '../../test/generators';
 import { EventResourceCalendar } from '../../types/event';
 

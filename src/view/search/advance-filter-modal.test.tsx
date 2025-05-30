@@ -16,7 +16,7 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 
 import { AdvancedFilterModal, AdvancedFilterModalProps } from './advance-filter-modal';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
 
 const MOCKED_NOW = new Date('2025-04-18T00:00:00Z');

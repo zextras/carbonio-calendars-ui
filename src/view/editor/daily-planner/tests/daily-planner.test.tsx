@@ -8,9 +8,9 @@ import React from 'react';
 
 import { within } from '@testing-library/react';
 
-import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
-import { setupTest, screen } from '../../../../carbonio-ui-commons/test/test-setup';
+import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
+import { setupTest, screen } from '@zextras/carbonio-ui-commons';
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from '../constants';
 import { EditorDailyPlanner } from '../daily-planner';

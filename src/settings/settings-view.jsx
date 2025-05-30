@@ -16,8 +16,8 @@ import CustomScheduleModal from './custom-schedule-modal';
 import GeneralSettingView from './general-settings-view';
 import PermissionSettings from './permissions-settings-view';
 import WorkWeekSettingsView from './work-week-settings-view';
-import { useUpdateView } from '../carbonio-ui-commons/hooks/use-update-view';
-import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
+import { useUpdateView } from '@zextras/carbonio-ui-commons';
+import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { getRightsRequest } from '../soap/get-rights-request';
 
 export default function CalendarSettingsView() {

@@ -22,10 +22,10 @@ import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
-import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { useContactInput } from '../../carbonio-ui-commons/integrations/hooks';
-import { ContactInputItem } from '../../carbonio-ui-commons/integrations/types';
+import ModalFooter from '@zextras/carbonio-ui-commons';
+import ModalHeader from '@zextras/carbonio-ui-commons';
+import { useContactInput } from '@zextras/carbonio-ui-commons';
+import { ContactInputItem } from '@zextras/carbonio-ui-commons';
 import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import {

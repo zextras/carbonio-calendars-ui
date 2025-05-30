@@ -7,11 +7,11 @@ import { faker } from '@faker-js/faker';
 import { t } from '@zextras/carbonio-shell-ui';
 
 import { useCalendarActions } from './use-calendar-actions';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
-import { useFolderStore } from '../carbonio-ui-commons/store/zustand/folder';
-import { generateRoots } from '../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import { setupHook } from '../carbonio-ui-commons/test/test-setup';
-import { Folder, FolderView } from '../carbonio-ui-commons/types/folder';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
+import { generateRoots } from '@zextras/carbonio-ui-commons';
+import { setupHook } from '@zextras/carbonio-ui-commons';
+import { Folder, FolderView } from '@zextras/carbonio-ui-commons';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 
 const randomUUID = faker.string.uuid();

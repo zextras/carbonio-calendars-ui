@@ -9,7 +9,7 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { AppointmentReminderItemDetails } from './appointment-reminder-item-details';
-import { setupTest, screen } from '../../carbonio-ui-commons/test/test-setup';
+import { setupTest, screen } from '@zextras/carbonio-ui-commons';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../constants/api';
 import { TEST_SELECTORS } from '../../constants/test-utils';

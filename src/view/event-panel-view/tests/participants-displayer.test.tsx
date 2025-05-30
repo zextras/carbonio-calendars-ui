@@ -8,9 +8,9 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 
-import * as shell from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import defaultSettings from '../../../carbonio-ui-commons/test/mocks/settings/default-settings';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import * as shell from '@zextras/carbonio-ui-commons';
+import defaultSettings from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { PREFS_DEFAULTS } from '../../../constants';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
 import * as ParticipantDisplayerAction from '../../../store/actions/participant-displayer-actions';

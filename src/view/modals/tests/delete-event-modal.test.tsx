@@ -9,11 +9,11 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 
-import { FOLDER_VIEW } from '../../../carbonio-ui-commons/constants';
-import * as shell from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { mockUseHistoryNavigation } from '../../../carbonio-ui-commons/test/mocks/routing/use-history-navigation-mock';
-import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { FOLDER_VIEW } from '@zextras/carbonio-ui-commons';
+import * as shell from '@zextras/carbonio-ui-commons';
+import { mockUseHistoryNavigation } from '@zextras/carbonio-ui-commons';
+import { populateFoldersStore } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';

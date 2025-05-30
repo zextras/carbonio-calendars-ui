@@ -21,8 +21,8 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { ColorContainer, LabelText, TextUpperCase } from './select-label-factory';
-import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
-import { useFolder } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { useFolder } from '@zextras/carbonio-ui-commons';
 import { EVENT_DISPLAY_STATUS } from '../../../constants/api';
 import { ObjectValues } from '../../../constants/event-actions';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';

@@ -11,8 +11,8 @@ import { Board } from '@zextras/carbonio-shell-ui';
 
 import BoardEditPanel from './editor-board-wrapper';
 import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
-import defaultSettings from '../../carbonio-ui-commons/test/mocks/settings/default-settings';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import defaultSettings from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../commons/editor-generator';
 import { CALENDAR_BOARD_ID, PREFS_DEFAULTS } from '../../constants';
 import { EVENT_DISPLAY_STATUS } from '../../constants/api';

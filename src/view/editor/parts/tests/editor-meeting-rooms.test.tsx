@@ -12,10 +12,10 @@ import { act, screen, within } from '@testing-library/react';
 import { map } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
-import { getSetupServer } from '../../../../carbonio-ui-commons/test/jest-setup';
-import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
+import { getSetupServer } from '@zextras/carbonio-ui-commons';
+import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';

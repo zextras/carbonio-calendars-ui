@@ -18,8 +18,8 @@ import {
 	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
-import { getSetupServer } from '../carbonio-ui-commons/test/jest-setup';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { getSetupServer } from '@zextras/carbonio-ui-commons';
 import mockedData from '../test/generators';
 
 const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';

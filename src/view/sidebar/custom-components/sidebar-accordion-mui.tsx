@@ -10,8 +10,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Accordion, AccordionDetails, AccordionSummary, Container } from '@mui/material';
 import { useLocalStorage } from '@zextras/carbonio-shell-ui';
 
-import { theme } from '../../../carbonio-ui-commons/theme/theme-mui';
-import { Folder } from '../../../carbonio-ui-commons/types';
+import { theme } from '@zextras/carbonio-ui-commons';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { CalendarGroup } from '../../../store/zustand/calendar-group-store';
 import { isCalendarType, SidebarAccordionProps } from '../../../types/accordions';
 

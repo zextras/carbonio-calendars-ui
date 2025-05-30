@@ -19,9 +19,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
-import { useRoot } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { Grant } from '../../../carbonio-ui-commons/types/folder';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { useRoot } from '@zextras/carbonio-ui-commons';
+import { Grant } from '@zextras/carbonio-ui-commons';
 import { isLinkChild } from '../../../commons/utilities';
 
 export const Square = styled.div<{ $color?: AnyColor; $disabled?: boolean }>`

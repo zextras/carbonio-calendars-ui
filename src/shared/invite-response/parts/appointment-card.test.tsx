@@ -10,9 +10,9 @@ import { map, values } from 'lodash';
 import moment from 'moment';
 
 import { AppointmentCard } from './appointment-card';
-import { useTagStore } from '../../../carbonio-ui-commons/store/zustand/tags';
-import { tags } from '../../../carbonio-ui-commons/test/mocks/tags/tags';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { useTagStore } from '@zextras/carbonio-ui-commons';
+import { tags } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
 import mockedData from '../../../test/generators';
 import 'jest-styled-components';

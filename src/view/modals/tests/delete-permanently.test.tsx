@@ -10,9 +10,9 @@ import { screen } from '@testing-library/react';
 import { useTheme } from '@zextras/carbonio-design-system';
 import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 
-import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { buildSoapErrorResponseBody } from '../../../carbonio-ui-commons/test/mocks/utils/soap';
-import { setupHook, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
+import { buildSoapErrorResponseBody } from '@zextras/carbonio-ui-commons';
+import { setupHook, setupTest } from '@zextras/carbonio-ui-commons';
 import * as itemAction from '../../../soap/item-action-request';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';

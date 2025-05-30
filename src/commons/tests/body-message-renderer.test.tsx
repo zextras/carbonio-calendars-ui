@@ -10,7 +10,7 @@ import { faker } from '@faker-js/faker';
 import { screen } from '@testing-library/react';
 
 import '@testing-library/jest-dom';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { ROOM_DIVIDER } from '../../constants';
 import mockedData from '../../test/generators';
 import { BodyMessageRenderer } from '../body-message-renderer';

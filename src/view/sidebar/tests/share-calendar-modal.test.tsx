@@ -8,8 +8,8 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
 
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { Grant } from '../../../carbonio-ui-commons/types';
+import { setupTest } from '@zextras/carbonio-ui-commons';
+import { Grant } from '@zextras/carbonio-ui-commons';
 import { SHARE_USER_TYPE } from '../../../constants';
 import { FOLDER_OPERATIONS } from '../../../constants/api';
 import { TEST_SELECTORS } from '../../../constants/test-utils';

@@ -8,11 +8,11 @@ import React from 'react';
 import { faker } from '@faker-js/faker';
 import { screen } from '@testing-library/react';
 
-import { FOLDER_VIEW } from '../../../carbonio-ui-commons/constants';
-import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
-import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
-import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { FOLDER_VIEW } from '@zextras/carbonio-ui-commons';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
+import { generateFolder } from '@zextras/carbonio-ui-commons';
+import { populateFoldersStore } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import mockedData from '../../../test/generators';
 import { EventType } from '../../../types/event';
 import { MoveModal } from '../move-modal';

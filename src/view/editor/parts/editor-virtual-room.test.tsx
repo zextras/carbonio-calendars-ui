@@ -10,8 +10,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 
 import { EditorVirtualRoom } from './editor-virtual-room';
-import * as shell from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import * as shell from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { reducers } from '../../../store/redux';
 
 const store = configureStore({ reducer: combineReducers(reducers) });

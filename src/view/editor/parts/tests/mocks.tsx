@@ -8,15 +8,9 @@ import React, { useEffect } from 'react';
 import { screen } from '@testing-library/react';
 import { Button, ChipAction } from '@zextras/carbonio-design-system';
 
-import {
-	CONTACT_TYPES,
-	EDIT_ACTION_ID
-} from '../../../../carbonio-ui-commons/integrations/constants';
-import {
-	ContactInputItem,
-	ContactInputProps
-} from '../../../../carbonio-ui-commons/integrations/types';
-import { UserEvent } from '../../../../carbonio-ui-commons/test/test-setup';
+import { CONTACT_TYPES, EDIT_ACTION_ID } from '@zextras/carbonio-ui-commons';
+import { ContactInputItem, ContactInputProps } from '@zextras/carbonio-ui-commons';
+import { UserEvent } from '@zextras/carbonio-ui-commons';
 
 export const EDIT_ACTION: ChipAction = {
 	icon: 'EditOutline',

@@ -7,10 +7,10 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 
-import { ZIMBRA_STANDARD_COLORS } from '../../../../carbonio-ui-commons/constants';
-import { generateFolder } from '../../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
-import { populateFoldersStore } from '../../../../carbonio-ui-commons/test/mocks/store/folders';
-import { setupTest, screen } from '../../../../carbonio-ui-commons/test/test-setup';
+import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
+import { generateFolder } from '@zextras/carbonio-ui-commons';
+import { populateFoldersStore } from '@zextras/carbonio-ui-commons';
+import { setupTest, screen } from '@zextras/carbonio-ui-commons';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { CalendarChip } from '../calendar-chips';
 

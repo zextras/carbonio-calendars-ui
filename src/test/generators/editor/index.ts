@@ -5,9 +5,9 @@
  */
 import { find, map, startsWith } from 'lodash';
 
-import { createFakeIdentity } from '../../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
-import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types/folder';
-import { getPrefs } from '../../../carbonio-ui-commons/utils/get-prefs';
+import { createFakeIdentity } from '@zextras/carbonio-ui-commons';
+import { Folder, LinkFolder } from '@zextras/carbonio-ui-commons';
+import { getPrefs } from '@zextras/carbonio-ui-commons';
 import { disabledFields, getEndTime } from '../../../commons/editor-generator';
 import { getIdentityItems } from '../../../commons/get-identity-items';
 import { PREFS_DEFAULTS } from '../../../constants';

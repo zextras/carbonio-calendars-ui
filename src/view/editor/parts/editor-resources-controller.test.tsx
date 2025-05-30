@@ -9,7 +9,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act } from '@testing-library/react';
 
 import { EditorResourcesController } from './editor-resources-controller';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_RESOURCES } from '../../../constants';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';

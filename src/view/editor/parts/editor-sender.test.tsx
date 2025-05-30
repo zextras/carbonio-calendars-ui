@@ -9,8 +9,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 
 import { EditorSender } from './editor-sender';
-import { getMocksContext } from '../../../carbonio-ui-commons/test/mocks/utils/mocks-context';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { getMocksContext } from '@zextras/carbonio-ui-commons';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { reducers } from '../../../store/redux';
 
 describe('editor-sender', () => {

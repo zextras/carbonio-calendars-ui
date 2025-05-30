@@ -9,9 +9,9 @@ import { Divider, Icon, Row, Text, Tooltip } from '@zextras/carbonio-design-syst
 import { reduce, includes } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
-import { useSortedTagsArray } from '../../carbonio-ui-commons/store/zustand/tags';
-import { Tag } from '../../carbonio-ui-commons/types/tags';
+import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
+import { useSortedTagsArray } from '@zextras/carbonio-ui-commons';
+import { Tag } from '@zextras/carbonio-ui-commons';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { EventType } from '../../types/event';
 

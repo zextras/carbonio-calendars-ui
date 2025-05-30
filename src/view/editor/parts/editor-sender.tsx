@@ -9,11 +9,8 @@ import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system
 import { find, map, upperFirst } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import {
-	getIdentitiesDescriptors,
-	getIdentityDescription
-} from '../../../carbonio-ui-commons/helpers/identities';
-import { IdentityDescriptor } from '../../../carbonio-ui-commons/types/identities';
+import { getIdentitiesDescriptors, getIdentityDescription } from '@zextras/carbonio-ui-commons';
+import { IdentityDescriptor } from '@zextras/carbonio-ui-commons';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled } from '../../../store/selectors/editor';
 import { editSender } from '../../../store/slices/editor-slice';

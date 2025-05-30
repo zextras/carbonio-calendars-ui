@@ -8,7 +8,7 @@ import React from 'react';
 
 import { screen, within } from '@testing-library/react';
 
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { DAILY_PLANNER_EVENT_TYPE } from '../constants';
 import { TimeTable } from '../time-table';
 import { DailyPlannerRow } from '../types';

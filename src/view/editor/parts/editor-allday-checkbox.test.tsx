@@ -9,7 +9,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 
 import { EditorAllDayCheckbox } from './editor-allday-checkbox';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../commons/editor-generator';
 import { reducers } from '../../../store/redux';
 

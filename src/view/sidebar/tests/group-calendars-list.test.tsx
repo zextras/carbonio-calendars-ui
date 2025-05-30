@@ -8,7 +8,7 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 import { times } from 'lodash';
 
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { setupTest } from '@zextras/carbonio-ui-commons';
 import { generateGroupCalendar } from '../../../test/generators/group';
 import { GroupCalendarsList } from '../group-calendars-list';
 import 'jest-styled-components';

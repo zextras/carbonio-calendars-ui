@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { screen, UserEvent } from '../../../carbonio-ui-commons/test/test-setup';
+import { screen, UserEvent } from '@zextras/carbonio-ui-commons';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 
 export const selectCalendarFromSelector = async (

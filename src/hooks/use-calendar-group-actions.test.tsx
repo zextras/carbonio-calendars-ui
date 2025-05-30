@@ -7,7 +7,7 @@ import { faker } from '@faker-js/faker';
 import { act } from '@testing-library/react';
 
 import { useCalendarGroupDeleteActionFn } from './use-calendar-group-actions';
-import { screen, setupHook } from '../carbonio-ui-commons/test/test-setup';
+import { screen, setupHook } from '@zextras/carbonio-ui-commons';
 import { MODAL_ANIMATION_DURATION } from '../constants/test-utils';
 
 describe('useCalendarGroupActions', () => {

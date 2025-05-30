@@ -10,10 +10,10 @@ import { t } from '@zextras/carbonio-shell-ui';
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import moment from 'moment';
 
-import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
-import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../carbonio-ui-commons/types';
-import { ResFolder } from '../carbonio-ui-commons/utils';
+import { getRoot } from '@zextras/carbonio-ui-commons';
+import { isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
+import { Folder } from '@zextras/carbonio-ui-commons';
+import { ResFolder } from '@zextras/carbonio-ui-commons';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { getFolderRequest } from '../soap/get-folder-request';
 import { getShareInfoRequest } from '../soap/get-share-info-request';

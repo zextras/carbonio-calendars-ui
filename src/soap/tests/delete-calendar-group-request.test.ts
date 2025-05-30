@@ -5,7 +5,7 @@
  */
 import { ErrorSoapBodyResponse, JSNS } from '@zextras/carbonio-shell-ui';
 
-import { createSoapAPIInterceptor } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
+import { createSoapAPIInterceptor } from '@zextras/carbonio-ui-commons';
 import { generateApiErrorResponse } from '../../test/generators/api';
 import {
 	DeleteCalendarGroupRequest,
