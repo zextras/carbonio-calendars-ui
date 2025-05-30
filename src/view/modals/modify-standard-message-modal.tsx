@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { SyntheticEvent, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { Container, Text } from '@zextras/carbonio-design-system';
 import { useIntegratedFunction } from '@zextras/carbonio-shell-ui';
@@ -17,7 +17,7 @@ import { Invite } from '../../types/store/invite';
 type MessageModalProps = {
 	title: string;
 	onClose: () => void;
-	onConfirm: (e?: SyntheticEvent<Element, Event> | KeyboardEvent) => void;
+	onConfirm: (arg?: { text: Array<string> }) => void;
 	invite: Invite;
 	confirmLabel: string;
 	isEdited?: boolean;
@@ -79,6 +79,9 @@ export const ModifyStandardMessageModal = ({
 				<Text overflow="break-word">{bodyText}</Text>
 			</Container>
 			<ModalFooter
+				// TODO: CO-2067 fix type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				onConfirm={onConfirm}
 				label={confirmLabel}
 				secondaryColor="primary"
