@@ -70,7 +70,6 @@ export const defaultBeforeAllTests = (
 };
 
 beforeAll(() => {
-	defaultBeforeAllTests();
 	useLocalStorage.mockReturnValue([jest.fn(), jest.fn()]);
 	const h = [
 		http.post('/service/soap/SendInviteReplyRequest', handleSendInviteReplyRequest),
@@ -95,6 +94,7 @@ beforeAll(() => {
 		http.post('/service/soap/GetAppointmentRequest', handleGetAppointmentRequest)
 	];
 	registerRestHandler(...h);
+	defaultBeforeAllTests();
 });
 
 beforeEach(() => {
@@ -129,7 +129,7 @@ configure({
 
 failOnConsole({
 	shouldFailOnError: true,
-	shouldFailOnWarn: false
+	shouldFailOnWarn: true
 });
 
 // Mock matchMedia
