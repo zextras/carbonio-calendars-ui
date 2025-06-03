@@ -5,11 +5,11 @@
  */
 import { configure } from '@testing-library/react';
 import failOnConsole from 'jest-fail-on-console';
-import { noop } from 'lodash';
 import moment from 'moment-timezone';
 import { http } from 'msw';
 import { setupServer, SetupServer } from 'msw/node';
 
+import { useLocalStorage } from './__mocks__/@zextras/carbonio-shell-ui';
 import { JEST_DEFAULT_TIMEZONE, JEST_SYSTEM_TIME_DATE } from './src/constants/test-environment';
 import { handleAutoCompleteGalRequest } from './src/test/mocks/network/msw/handle-autocomplete-gal-request';
 import { handleCancelAppointmentRequest } from './src/test/mocks/network/msw/handle-cancel-appointment';
@@ -24,12 +24,11 @@ import { handleGetInvite } from './src/test/mocks/network/msw/handle-get-invite'
 import { handleItemActionRequest } from './src/test/mocks/network/msw/handle-item-action';
 import { handleModifyAppointmentRequest } from './src/test/mocks/network/msw/handle-modify-appointment';
 import { handleSearchCalendarResourcesRequest } from './src/test/mocks/network/msw/handle-search-calendar-resoruces';
-import { handleSearchRequest } from './src/test/mocks/network/msw/handle-search-request';
 import { handleSendInviteReplyRequest } from './src/test/mocks/network/msw/handle-send-invite-reply';
 import { handleSendShareNotificationRequest } from './src/test/mocks/network/msw/handle-send-share-notification';
-import { useLocalStorage } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { handleGetShareInfoRequest } from '@test-utils/network/msw/handle-get-share-info';
 import { getRestHandlers, registerRestHandler } from '@test-utils/network/msw/handlers';
+import { handleSearchRequest } from 'test/mocks/network/msw/handle-search-request';
 
 let server: SetupServer;
 
@@ -43,9 +42,6 @@ type DefaultBeforeAllTestsProps = {
 export const defaultBeforeAllTests = (
 	{ onUnhandledRequest }: DefaultBeforeAllTestsProps = { onUnhandledRequest: 'warn' }
 ): void => {
-	// Do not useFakeTimers with `whatwg-fetch` if using mocked server
-	// https://github.com/mswjs/msw/issues/448
-
 	// mock a simplified Intersection Observer
 	Object.defineProperty(window, 'IntersectionObserver', {
 		writable: true,
@@ -72,38 +68,6 @@ export const defaultBeforeAllTests = (
 };
 
 beforeAll(() => {
-	defaultBeforeAllTests();
-	useLocalStorage.mockReturnValue([jest.fn(), jest.fn()]);
-});
-
-beforeEach(noop);
-
-afterEach(() => {
-	jest.clearAllTimers();
-});
-
-afterAll(() => {
-	server.resetHandlers();
-	server.close();
-});
-
-export const getSetupServer = (): SetupServer => server;
-
-global.Notification = jest.fn() as unknown as jest.Mocked<typeof Notification>;
-global.Audio = jest.fn().mockImplementation(() => ({
-	play: jest.fn()
-}));
-
-configure({
-	asyncUtilTimeout: 2000
-});
-
-failOnConsole({
-	shouldFailOnError: true,
-	shouldFailOnWarn: true
-});
-
-beforeAll(() => {
 	const h = [
 		http.post('/service/soap/SendInviteReplyRequest', handleSendInviteReplyRequest),
 		http.post('/service/soap/ItemActionRequest', handleItemActionRequest),
@@ -128,6 +92,7 @@ beforeAll(() => {
 	];
 	registerRestHandler(...h);
 	defaultBeforeAllTests();
+	useLocalStorage.mockReturnValue([jest.fn(), jest.fn()]);
 });
 
 beforeEach(() => {
@@ -150,6 +115,21 @@ afterAll(() => {
 	server.resetHandlers();
 	server.close();
 });
+
+global.Notification = jest.fn() as unknown as jest.Mocked<typeof Notification>;
+global.Audio = jest.fn().mockImplementation(() => ({
+	play: jest.fn()
+}));
+
+configure({
+	asyncUtilTimeout: 2000
+});
+
+failOnConsole({
+	shouldFailOnError: true,
+	shouldFailOnWarn: true
+});
+
 // Mock matchMedia
 // see: https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 Object.defineProperty(window, 'matchMedia', {
@@ -177,38 +157,13 @@ Object.defineProperty(window.crypto, 'randomUUID', {
 	value: jest.fn(() => Math.random().toString())
 });
 
-/**
- * Mocks the Worker class
- */
-
-type MessageHandler = (msg: string) => void;
-
-class Worker {
-	url: string;
-
-	onmessage: MessageHandler;
-
-	constructor(stringUrl: string) {
-		this.url = stringUrl;
-		this.onmessage = noop;
-	}
-
-	postMessage(msg: string): void {
-		this.onmessage(msg);
-	}
-}
-
-Object.defineProperty(window, 'Worker', {
-	writable: true,
-	value: Worker
-});
-
 window.ResizeObserver = jest.fn().mockImplementation(() => ({
 	observe: jest.fn(),
 	unobserve: jest.fn(),
 	disconnect: jest.fn()
 }));
 
+export const getSetupServer = (): SetupServer => server;
 // mock a simplified crypto
 Object.defineProperty(window.crypto, 'randomUUID', {
 	writable: true,

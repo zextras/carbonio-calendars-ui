@@ -13,7 +13,7 @@ import { JEST_DEFAULT_TIMEZONE } from './src/constants/test-environment';
 process.env.TZ = JEST_DEFAULT_TIMEZONE;
 const config: Config = {
 	testEnvironment: '<rootDir>/src/__test__/jsdom-extended.ts',
-	setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
+	setupFilesAfterEnv: ['<rootDir>/jest-setup-worker.ts', '<rootDir>/jest-setup.ts'],
 	clearMocks: true,
 	collectCoverage: true,
 	collectCoverageFrom: [
