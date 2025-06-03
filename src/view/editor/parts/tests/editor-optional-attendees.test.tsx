@@ -8,8 +8,7 @@ import React from 'react';
 
 import { configureStore } from '@reduxjs/toolkit';
 import { screen, waitFor, within } from '@testing-library/react';
-import { DefaultContactInput } from '@zextras/carbonio-ui-commons';
-import * as commonIntegrationHooks from '@zextras/carbonio-ui-commons';
+import { DefaultContactInput, useContactInput } from '@zextras/carbonio-ui-commons';
 import { combineReducers } from 'redux';
 
 import {
@@ -25,10 +24,14 @@ import { reducers } from '../../../../store/redux';
 import { EditorOptionalAttendees } from '../editor-optional-attendees';
 import { setupTest } from '@test-setup';
 
+jest.mock('@zextras/carbonio-ui-commons', () => ({
+	...jest.requireActual('@zextras/carbonio-ui-commons'),
+	useContactInput: jest.fn()
+}));
 describe('Editor Optional Attendees', () => {
 	describe('ChipInput', () => {
 		beforeEach(() => {
-			jest.spyOn(commonIntegrationHooks, 'useContactInput').mockReturnValue(DefaultContactInput);
+			(useContactInput as jest.Mock).mockReturnValue(DefaultContactInput);
 		});
 		it('should display optional attendees using email in store', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
@@ -78,9 +81,9 @@ describe('Editor Optional Attendees', () => {
 		it('should display edit action when new value in ContactInput has an error', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 			const newValueWithError = { ...MOCK_VALUE, error: true };
-			jest
-				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueWithError] }));
+			(useContactInput as jest.Mock).mockReturnValue(
+				contactInputBuilder({ valuesToAdd: [newValueWithError] })
+			);
 			const editor = generateEditor({
 				context: {
 					dispatch: store.dispatch,
@@ -113,9 +116,9 @@ describe('Editor Optional Attendees', () => {
 
 			const newValueFromAutocomplete = { ...MOCK_VALUE, label: 'test label' };
 
-			jest
-				.spyOn(commonIntegrationHooks, 'useContactInput')
-				.mockReturnValue(contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] }));
+			(useContactInput as jest.Mock).mockReturnValue(
+				contactInputBuilder({ valuesToAdd: [newValueFromAutocomplete] })
+			);
 
 			const editor = generateEditor({
 				context: {

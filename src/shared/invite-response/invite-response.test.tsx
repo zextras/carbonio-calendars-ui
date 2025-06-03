@@ -47,7 +47,6 @@ import 'jest-styled-components';
 import { setupTest } from '@test-setup';
 import { generateRoots } from '@test-utils/folders/roots-generator';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
-import { mockUseHistoryNavigation } from '@test-utils/routing/use-history-navigation-mock';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
@@ -68,7 +67,6 @@ afterEach(() => {
 });
 
 describe('invite response component', () => {
-
 	describe('case invitation email', () => {
 		test('have a container with border of 0.0625rem solid regular', async () => {
 			setupFoldersStore();
