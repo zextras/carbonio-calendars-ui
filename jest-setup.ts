@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import '@testing-library/jest-dom';
+
 import { configure } from '@testing-library/react';
 import failOnConsole from 'jest-fail-on-console';
 import moment from 'moment-timezone';
@@ -68,6 +70,8 @@ export const defaultBeforeAllTests = (
 };
 
 beforeAll(() => {
+	defaultBeforeAllTests();
+	useLocalStorage.mockReturnValue([jest.fn(), jest.fn()]);
 	const h = [
 		http.post('/service/soap/SendInviteReplyRequest', handleSendInviteReplyRequest),
 		http.post('/service/soap/ItemActionRequest', handleItemActionRequest),
@@ -91,8 +95,6 @@ beforeAll(() => {
 		http.post('/service/soap/GetAppointmentRequest', handleGetAppointmentRequest)
 	];
 	registerRestHandler(...h);
-	defaultBeforeAllTests();
-	useLocalStorage.mockReturnValue([jest.fn(), jest.fn()]);
 });
 
 beforeEach(() => {
