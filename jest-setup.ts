@@ -8,7 +8,7 @@ import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
 import failOnConsole from 'jest-fail-on-console';
 import moment from 'moment-timezone';
-import { http } from 'msw';
+import { http, RequestHandler } from 'msw';
 import { setupServer, SetupServer } from 'msw/node';
 
 import { useLocalStorage } from './__mocks__/@zextras/carbonio-shell-ui';
@@ -29,7 +29,6 @@ import { handleSearchCalendarResourcesRequest } from './src/test/mocks/network/m
 import { handleSendInviteReplyRequest } from './src/test/mocks/network/msw/handle-send-invite-reply';
 import { handleSendShareNotificationRequest } from './src/test/mocks/network/msw/handle-send-share-notification';
 import { handleGetShareInfoRequest } from '@test-utils/network/msw/handle-get-share-info';
-import { getRestHandlers, registerRestHandler } from '@test-utils/network/msw/handlers';
 import { handleSearchRequest } from 'test/mocks/network/msw/handle-search-request';
 
 let server: SetupServer;
@@ -41,37 +40,9 @@ type DefaultBeforeAllTestsProps = {
 	onUnhandledRequest: 'warn' | 'error';
 };
 
-export const defaultBeforeAllTests = (
-	{ onUnhandledRequest }: DefaultBeforeAllTestsProps = { onUnhandledRequest: 'warn' }
-): void => {
-	// mock a simplified Intersection Observer
-	Object.defineProperty(window, 'IntersectionObserver', {
-		writable: true,
-		value: jest.fn(function intersectionObserverMock(
-			callback: IntersectionObserverCallback,
-			options: IntersectionObserverInit
-		) {
-			return {
-				thresholds: options.threshold,
-				root: options.root,
-				rootMargin: options.rootMargin,
-				observe: jest.fn(),
-				unobserve: jest.fn(),
-				disconnect: jest.fn()
-			};
-		})
-	});
-
-	server?.close();
-
-	server = setupServer(...getRestHandlers());
-
-	server.listen({ onUnhandledRequest });
-};
-
 beforeAll(() => {
 	useLocalStorage.mockReturnValue([jest.fn(), jest.fn()]);
-	const h = [
+	const handlers: Array<RequestHandler> = [
 		http.post('/service/soap/SendInviteReplyRequest', handleSendInviteReplyRequest),
 		http.post('/service/soap/ItemActionRequest', handleItemActionRequest),
 		http.post('/service/soap/GetFreeBusyRequest', handleGetFreeBusy),
@@ -93,8 +64,29 @@ beforeAll(() => {
 		http.post('/service/soap/SearchCalendarResourcesRequest', handleSearchCalendarResourcesRequest),
 		http.post('/service/soap/GetAppointmentRequest', handleGetAppointmentRequest)
 	];
-	registerRestHandler(...h);
-	defaultBeforeAllTests();
+	// mock a simplified Intersection Observer
+	Object.defineProperty(window, 'IntersectionObserver', {
+		writable: true,
+		value: jest.fn(function intersectionObserverMock(
+			callback: IntersectionObserverCallback,
+			options: IntersectionObserverInit
+		) {
+			return {
+				thresholds: options.threshold,
+				root: options.root,
+				rootMargin: options.rootMargin,
+				observe: jest.fn(),
+				unobserve: jest.fn(),
+				disconnect: jest.fn()
+			};
+		})
+	});
+
+	server?.close();
+
+	server = setupServer(...handlers);
+
+	server.listen({ onUnhandledRequest: 'warn' });
 });
 
 beforeEach(() => {
