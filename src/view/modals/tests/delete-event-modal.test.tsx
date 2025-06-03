@@ -16,11 +16,9 @@ import mockedData from '../../../test/generators';
 import { DeleteEventModal } from '../delete-event-modal';
 import { setupTest } from '@test-setup';
 import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
-import { mockUseHistoryNavigation } from '@test-utils/routing/use-history-navigation-mock';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
 describe('delete event modal', () => {
-	mockUseHistoryNavigation();
 
 	const participantFirstName = faker.person.firstName();
 	const participantLastName = faker.person.lastName();

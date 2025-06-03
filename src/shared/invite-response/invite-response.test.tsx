@@ -68,7 +68,6 @@ afterEach(() => {
 });
 
 describe('invite response component', () => {
-	mockUseHistoryNavigation();
 
 	describe('case invitation email', () => {
 		test('have a container with border of 0.0625rem solid regular', async () => {
