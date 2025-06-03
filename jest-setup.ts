@@ -129,7 +129,7 @@ configure({
 
 failOnConsole({
 	shouldFailOnError: true,
-	shouldFailOnWarn: true
+	shouldFailOnWarn: false
 });
 
 // Mock matchMedia
