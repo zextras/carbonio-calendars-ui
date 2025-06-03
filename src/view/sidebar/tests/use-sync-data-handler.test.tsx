@@ -17,6 +17,7 @@ import { useNotify } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
 jest.mock('@zextras/carbonio-ui-commons', () => ({
+	...jest.requireActual('@zextras/carbonio-ui-commons'),
 	folderWorker: {
 		postMessage: jest.fn()
 	},
