@@ -24,21 +24,21 @@ import {
 	Container
 } from '@zextras/carbonio-design-system';
 import { useUserAccount } from '@zextras/carbonio-shell-ui';
+import {
+	ROOT_NAME,
+	FOLDERS,
+	getRootAccountId,
+	getUpdateFolder,
+	useFoldersMap,
+	useRoot,
+	hasId
+} from '@zextras/carbonio-ui-commons';
+import { Folder, type LinkFolder } from '@zextras/carbonio-ui-commons';
 import { every, find, forEach, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { importCalendarICSFn } from '../../../actions/calendar-actions-fn';
-import { ROOT_NAME } from '@zextras/carbonio-ui-commons';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import {
-	getRootAccountId,
-	getUpdateFolder,
-	useFoldersMap,
-	useRoot
-} from '@zextras/carbonio-ui-commons';
-import { Folder, type LinkFolder } from '@zextras/carbonio-ui-commons';
-import { hasId } from '@zextras/carbonio-ui-commons';
 import {
 	getFolderIcon,
 	getFolderTranslatedName,

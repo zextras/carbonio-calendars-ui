@@ -6,16 +6,20 @@
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 
 import { ChipInput, ChipInputProps, DropdownItem } from '@zextras/carbonio-design-system';
+import {
+	ROOT_NAME,
+	FOLDERS,
+	isLink,
+	isTrashed,
+	useFoldersMap,
+	Folder,
+	LinkFolder,
+	hasId
+} from '@zextras/carbonio-ui-commons';
 import { differenceWith, map, reject, sortBy, uniqBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { CalendarChip, CalendarChipInputItem, CalendarChipInputItems } from './calendar-chips';
-import { ROOT_NAME } from '@zextras/carbonio-ui-commons';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { isLink, isTrashed } from '@zextras/carbonio-ui-commons';
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
-import { Folder, LinkFolder } from '@zextras/carbonio-ui-commons';
-import { hasId } from '@zextras/carbonio-ui-commons';
 import { setCalendarColor } from '../../../normalizations/normalizations-utils';
 import { ItemFactory } from '../../editor/parts/select-label-factory';
 

@@ -15,14 +15,12 @@ import {
 	Text,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
+import { getErrorMessage, useFoldersMap, Folder } from '@zextras/carbonio-ui-commons';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { MultipleCalendarSelector } from './custom-components/multiple-calendar-selector';
 import { GroupCalendarsList } from './group-calendars-list';
-import { getErrorMessage } from '@zextras/carbonio-ui-commons';
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
-import { Folder } from '@zextras/carbonio-ui-commons';
 import { modifyCalendarGroupRequest } from '../../soap/modify-calendar-group-request';
 import { updateCalendarGroupsStore, useGroupById } from '../../store/zustand/calendar-group-store';
 
