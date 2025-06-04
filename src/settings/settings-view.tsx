@@ -6,7 +6,12 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 import { Container, Shimmer, useSnackbar } from '@zextras/carbonio-design-system';
-import { AccountSettingsPrefs, editSettings, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
+import {
+	AccountSettingsPrefs,
+	getUserAccount,
+	SettingsHeader,
+	t
+} from '@zextras/carbonio-shell-ui';
 import { map, filter, isEqual, uniqBy } from 'lodash';
 
 import AppleICalSettings from './apple-ical-settings';
@@ -15,6 +20,7 @@ import CreateAppSettings from './creating-app-settings-view';
 import CustomScheduleModal from './custom-schedule-modal';
 import GeneralSettingView from './general-settings-view';
 import PermissionSettings from './permissions-settings-view';
+import { saveSettings } from './save-settings';
 import WorkWeekSettingsView from './work-week-settings-view';
 import { useUpdateView } from '../carbonio-ui-commons/hooks/use-update-view';
 import { ContactInputProps } from '../carbonio-ui-commons/integrations/types';
@@ -30,7 +36,7 @@ import { WorkWeekDay } from '../utils/work-week';
 type GranteeType = 'usr' | 'grp' | 'egp' | 'all' | 'dom' | 'edom' | 'gst' | 'key' | 'pub' | 'email';
 type Right = 'invite' | 'loginAs' | 'sendAs' | 'sendOnBehalfOf' | 'viewFreeBusy';
 
-type AccountACEInfo = {
+export type AccountACEInfo = {
 	zid?: string;
 	gt: GranteeType;
 	right: Right;
@@ -130,7 +136,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 		if (
 			freeBusy.length === 1 &&
 			freeBusy[0].gt === GRANTEE_TYPES.DOM &&
-			freeBusy[0].d === window.location.hostname
+			freeBusy[0].d === getUserAccount()?.name.split('@')[1]
 		) {
 			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
 			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
@@ -291,6 +297,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			(activeFreeBusyOptn === USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING &&
 				!isEqual(defaultSelectedFreeBusyContacts.current, allowedFBUsers))
 		) {
+			const domain = getUserAccount()?.name.split('@')[1];
 			switch (activeFreeBusyOptn) {
 				case USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL:
 					newFreeBusy = { gt: GRANTEE_TYPES.PUB, deny: false };
@@ -299,7 +306,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 					newFreeBusy = { gt: GRANTEE_TYPES.ALL, deny: false };
 					break;
 				case USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS:
-					newFreeBusy = { gt: GRANTEE_TYPES.DOM, deny: false, d: window.location.hostname };
+					newFreeBusy = { gt: GRANTEE_TYPES.DOM, deny: false, d: domain };
 					break;
 				case USERS_PERMISSIONS_RIGHTS.ALLOW_NONE:
 					newFreeBusy = { gt: GRANTEE_TYPES.ALL, deny: true };
@@ -347,8 +354,17 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			permissions
 		};
 
-		editSettings(newValue).then((res) => {
-			if (res.type.includes('fulfilled')) {
+		saveSettings(newValue).then((res) => {
+			if ('Fault' in res) {
+				createSnackbar({
+					key: `new`,
+					replace: true,
+					severity: 'error',
+					label: t('label.error_try_again', 'Something went wrong, please try again'),
+					autoHideTimeout: 3000,
+					hideButton: true
+				});
+			} else {
 				createSnackbar({
 					key: `new`,
 					replace: true,
@@ -366,15 +382,6 @@ export default function CalendarSettingsView(): React.JSX.Element {
 				if (settingsToUpdate.zimbraPrefCalendarWorkingHours) {
 					setOpen(false);
 				}
-			} else {
-				createSnackbar({
-					key: `new`,
-					replace: true,
-					severity: 'error',
-					label: t('label.error_try_again', 'Something went wrong, please try again'),
-					autoHideTimeout: 3000,
-					hideButton: true
-				});
 			}
 		});
 	}, [
@@ -445,8 +452,8 @@ export default function CalendarSettingsView(): React.JSX.Element {
 		<>
 			<SettingsHeader
 				title={title}
-				/* TODO: settings need to be updated as they are using deprecated API, saveChanges can't be typed properly */
-				/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+				// TODO: settings need a major refactor before being able to type it properly
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				onSave={saveChanges}
 				onCancel={onClose}
