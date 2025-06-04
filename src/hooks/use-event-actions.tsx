@@ -6,6 +6,13 @@
 import { useMemo } from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
+import {
+	FOLDERS,
+	useHistoryNavigation,
+	useFoldersMap,
+	useSortedTagsArray,
+	LinkFolder
+} from '@zextras/carbonio-ui-commons';
 import { compact, find, omit } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -21,11 +28,6 @@ import {
 	openEventItem,
 	showOriginal
 } from '../actions/appointment-actions-items';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
-import { useSortedTagsArray } from '@zextras/carbonio-ui-commons';
-import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { isLinkChild } from '../commons/utilities';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { useAppDispatch, useAppSelector } from '../store/redux/hooks';

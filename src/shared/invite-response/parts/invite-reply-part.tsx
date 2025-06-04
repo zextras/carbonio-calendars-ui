@@ -15,12 +15,10 @@ import {
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { addBoard, Board } from '@zextras/carbonio-shell-ui';
+import { useHistoryNavigation, useFoldersMap, Folder } from '@zextras/carbonio-ui-commons';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
-import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
-import { Folder } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_BOARD_ID } from '../../../constants';
 import { PARTICIPATION_STATUS } from '../../../constants/api';

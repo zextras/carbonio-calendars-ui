@@ -20,13 +20,11 @@ import {
 	useIntegratedFunction,
 	upsertApp
 } from '@zextras/carbonio-shell-ui';
+import { FOLDER_VIEW, useInitializeFolders, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { AuthGuard } from './auth-guard';
-import { FOLDER_VIEW } from '@zextras/carbonio-ui-commons';
-import { useInitializeFolders } from '@zextras/carbonio-ui-commons';
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { CenteredSpinner } from './components/CenteredSpinner';
 import { CALENDAR_APP_ID, CALENDAR_BOARD_ID, CALENDAR_ROUTE } from './constants';
 import { CalendarIntegrations } from './constants/event-actions';

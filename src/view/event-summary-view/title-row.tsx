@@ -6,12 +6,10 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import { Divider, Icon, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
+import { ZIMBRA_STANDARD_COLORS, useSortedTagsArray, Tag } from '@zextras/carbonio-ui-commons';
 import { reduce, includes } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
-import { useSortedTagsArray } from '@zextras/carbonio-ui-commons';
-import { Tag } from '@zextras/carbonio-ui-commons';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { EventType } from '../../types/event';
 

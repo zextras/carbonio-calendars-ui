@@ -15,10 +15,9 @@ import {
 	Theme
 } from '@zextras/carbonio-design-system';
 import { useUserAccount, t } from '@zextras/carbonio-shell-ui';
+import { useFolder, LinkFolder } from '@zextras/carbonio-ui-commons';
 import { Trans } from 'react-i18next';
 
-import { useFolder } from '@zextras/carbonio-ui-commons';
-import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { copyEmailToClipboard, sendMsg } from '../../store/actions/participant-displayer-actions';
 import { Invite, InviteOrganizer } from '../../types/store/invite';
 

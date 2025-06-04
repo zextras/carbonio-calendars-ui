@@ -7,12 +7,10 @@ import React, { useState, useCallback, ReactElement } from 'react';
 
 import { useSnackbar } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useFolder, hasId } from '@zextras/carbonio-ui-commons';
 
 import { MoveModal } from './move-modal';
 import { NewModal } from './new-calendar-modal';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { useFolder } from '@zextras/carbonio-ui-commons';
-import { hasId } from '@zextras/carbonio-ui-commons';
 import { moveAppointmentRequest } from '../../store/actions/move-appointment';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';

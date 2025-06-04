@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
+import { getRoot, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
 import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 
-import { getRoot } from '@zextras/carbonio-ui-commons';
-import { LinkFolder } from '@zextras/carbonio-ui-commons';
-import { getPrefs } from '@zextras/carbonio-ui-commons';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
 import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';

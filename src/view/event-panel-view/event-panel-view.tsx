@@ -6,6 +6,7 @@
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Container, Divider, Icon, Row, Text, Button } from '@zextras/carbonio-design-system';
+import { useHistoryNavigation, useFolder, LinkFolder } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -18,9 +19,6 @@ import { ParticipantsPart } from './participants-part';
 import { ReminderPart } from './reminder-part';
 import { ReplyButtonsPart } from './reply-buttons-part';
 import { isAnInvite } from '../../actions/appointment-actions-items';
-import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
-import { useFolder } from '@zextras/carbonio-ui-commons';
-import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import StyledDivider from '../../commons/styled-divider';
 import { CALENDAR_ROUTE, PANEL_VIEW } from '../../constants';
 import { useEventActions } from '../../hooks/use-event-actions';

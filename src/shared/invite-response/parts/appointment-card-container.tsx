@@ -7,13 +7,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { Container, Padding, Row, Shimmer } from '@zextras/carbonio-design-system';
+import { FOLDERS, useFoldersMapByRoot, LinkFolder, hasId } from '@zextras/carbonio-ui-commons';
 import { filter, map, values } from 'lodash';
 
 import { AppointmentCard } from './appointment-card';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { useFoldersMapByRoot } from '@zextras/carbonio-ui-commons';
-import { LinkFolder } from '@zextras/carbonio-ui-commons';
-import { hasId } from '@zextras/carbonio-ui-commons';
 import { EVENT_DISPLAY_STATUS } from '../../../constants/api';
 import { normalizeAppointments } from '../../../normalizations/normalize-appointments';
 import { normalizeCalendarEvents } from '../../../normalizations/normalize-calendar-events';

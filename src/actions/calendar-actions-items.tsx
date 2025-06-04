@@ -7,6 +7,14 @@ import React from 'react';
 
 import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import {
+	FOLDERS,
+	isNestedInTrash,
+	isTrashOrNestedInIt,
+	Folder,
+	LinkFolder,
+	hasId
+} from '@zextras/carbonio-ui-commons';
 import { isNil } from 'lodash';
 
 import {
@@ -22,10 +30,6 @@ import {
 	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { isNestedInTrash, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
-import { Folder, LinkFolder } from '@zextras/carbonio-ui-commons';
-import { hasId } from '@zextras/carbonio-ui-commons';
 import { isLinkChild, isMainRootChild } from '../commons/utilities';
 import { CalendarActionsId, FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 

@@ -6,6 +6,7 @@
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { Popover } from '@zextras/carbonio-design-system';
+import { usePrefs, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
 import { filter, find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -18,8 +19,6 @@ import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
-import { isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
-import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';

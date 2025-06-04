@@ -17,6 +17,7 @@ import {
 	Spinner
 } from '@zextras/carbonio-design-system';
 import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio-ui-commons';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -27,9 +28,6 @@ import { AvailabilityChecker } from './parts/availability-checker';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { useFetchInvite } from './useFetchInvite';
-import { ROOT_NAME } from '@zextras/carbonio-ui-commons';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { getRootAccountId, useRoot } from '@zextras/carbonio-ui-commons';
 import { BodyMessageRenderer } from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';

@@ -5,14 +5,12 @@
  */
 import React, { ReactElement, useState, useEffect, useMemo } from 'react';
 
+import { FOLDERS, useFoldersMap, LinkFolder } from '@zextras/carbonio-ui-commons';
 import { compact, filter, find, forEach, includes, isEmpty, map, reduce } from 'lodash';
 import moment from 'moment';
 
 import { ReminderModal } from './reminder-modal';
 import sound from '../../assets/notification.mp3';
-import { FOLDERS } from '@zextras/carbonio-ui-commons';
-import { useFoldersMap } from '@zextras/carbonio-ui-commons';
-import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { getTimeToDisplayData } from '../../commons/utilities';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { normalizeReminderItem } from '../../normalizations/normalize-reminder';
