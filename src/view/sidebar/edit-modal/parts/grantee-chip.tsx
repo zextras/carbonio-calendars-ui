@@ -9,7 +9,7 @@ import { Chip } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import { Grant } from '../../../../carbonio-ui-commons/types/folder';
+import { Grant } from '@zextras/carbonio-ui-commons';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../constants';
 

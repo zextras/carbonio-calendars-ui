@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
+import { isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
 import { EventType } from '../../types/event';
 
 export const isOrganizerOrHaveEqualRights = (

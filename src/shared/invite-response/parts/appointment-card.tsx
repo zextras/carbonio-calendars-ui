@@ -9,7 +9,7 @@ import { Container, Icon, Row, Tooltip, Padding, Text } from '@zextras/carbonio-
 import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
 
-import { useHistoryNavigation } from '../../../carbonio-ui-commons/helpers/use-history-navigation';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { TagIconComponent } from '../../../commons/tag-icon-component';
 import { CALENDAR_ROUTE } from '../../../constants';
 import { PARTICIPATION_STATUS } from '../../../constants/api';

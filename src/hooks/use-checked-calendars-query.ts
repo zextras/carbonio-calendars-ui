@@ -6,7 +6,7 @@
 import { filter, map } from 'lodash';
 
 import { useCheckedFolders } from './use-checked-folders';
-import { LinkFolder } from '../carbonio-ui-commons/types/folder';
+import { LinkFolder } from '@zextras/carbonio-ui-commons';
 
 export const useCheckedCalendarsQuery = (): string => {
 	const calendars = useCheckedFolders();

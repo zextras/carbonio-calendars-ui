@@ -7,12 +7,12 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen, render, waitFor, act } from '@testing-library/react';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 
-import { useFolderStore } from '../../../carbonio-ui-commons/store/zustand/folder';
-import { previewContextMock } from '../../../carbonio-ui-commons/test/mocks/carbonio-ui-preview';
-import { setupTest, UserEvent } from '../../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../../store/redux';
 import { Attachment } from '../attachment';
+import { setupTest, UserEvent } from '@test-setup';
+import { previewContextMock } from '@test-utils/carbonio-ui-preview';
 
 const setupFoldersStore = (): void => {
 	useFolderStore.setState(() => ({

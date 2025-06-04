@@ -7,13 +7,12 @@ import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Container, CustomModal } from '@zextras/carbonio-design-system';
 import { addBoard, Board, t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { find, isEmpty, map, omit } from 'lodash';
 import moment from 'moment';
 
 import { AppointmentReminderItem } from './appointment-reminder-item';
 import { SetNewAppointmentTimeModal } from './set-new-appointment-time-modal';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { generateEditor } from '../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../commons/get-appointment';
 import ModalFooter from '../../commons/modal-footer';

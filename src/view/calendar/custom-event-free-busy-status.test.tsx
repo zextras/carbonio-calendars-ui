@@ -9,8 +9,8 @@ import { screen } from '@testing-library/react';
 import { useTheme } from 'styled-components';
 
 import { CustomEventFreeBusyStatus } from './custom-event-free-busy-status';
-import { setupHook, setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { EVENT_DISPLAY_STATUS } from '../../constants/api';
+import { setupHook, setupTest } from '@test-setup';
 
 describe('CustomEventFreeBusyStatus', () => {
 	const { result } = setupHook(useTheme);

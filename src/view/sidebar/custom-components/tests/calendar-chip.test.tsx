@@ -6,13 +6,13 @@
 import React from 'react';
 
 import { faker } from '@faker-js/faker';
+import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
 
-import { ZIMBRA_STANDARD_COLORS } from '../../../../carbonio-ui-commons/constants';
-import { generateFolder } from '../../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
-import { populateFoldersStore } from '../../../../carbonio-ui-commons/test/mocks/store/folders';
-import { setupTest, screen } from '../../../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { CalendarChip } from '../calendar-chips';
+import { setupTest, screen } from '@test-setup';
+import { generateFolder } from '@test-utils/folders/folders-generator';
+import { populateFoldersStore } from '@test-utils/store/folders';
 
 describe('CalendarChip', () => {
 	const calendar = generateFolder({

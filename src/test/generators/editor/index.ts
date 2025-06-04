@@ -3,17 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
+import { Folder, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
 import { find, map, startsWith } from 'lodash';
 
-import { createFakeIdentity } from '../../../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
-import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types/folder';
-import { getPrefs } from '../../../carbonio-ui-commons/utils/get-prefs';
 import { disabledFields, getEndTime } from '../../../commons/editor-generator';
 import { getIdentityItems } from '../../../commons/get-identity-items';
 import { PREFS_DEFAULTS } from '../../../constants';
 import { EVENT_DISPLAY_STATUS } from '../../../constants/api';
 import { Editor, IdentityItem } from '../../../types/editor';
 import utils from '../utils';
+import { createFakeIdentity } from '@test-utils/accounts/fakeAccounts';
 
 const getDefaultEditor = ({
 	folders,

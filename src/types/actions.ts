@@ -10,9 +10,9 @@ import { TFunction } from 'i18next';
 
 import { EventType } from './event';
 import { Invite } from './store/invite';
-import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
-import { Folders } from '../carbonio-ui-commons/types';
-import { Tag } from '../carbonio-ui-commons/types/tags';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
+import { Folders } from '@zextras/carbonio-ui-commons';
+import { Tag } from '@zextras/carbonio-ui-commons';
 import { EventActionsId } from '../constants/event-actions';
 import { AppDispatch } from '../store/redux';
 

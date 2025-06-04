@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Folder } from '../carbonio-ui-commons/types';
+import { Folder } from '@zextras/carbonio-ui-commons';
 
 export type GroupCalendar = Pick<Folder, 'id' | 'name' | 'color'>;

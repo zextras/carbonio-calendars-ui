@@ -8,7 +8,7 @@ import React, { ReactElement } from 'react';
 import { Icon, Padding, Row, Text } from '@zextras/carbonio-design-system';
 import { useParams } from 'react-router-dom';
 
-import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useFolder } from '@zextras/carbonio-ui-commons';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 
 export const CalendarInfoRow = (): ReactElement => {

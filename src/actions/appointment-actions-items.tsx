@@ -6,6 +6,7 @@
 import React from 'react';
 
 import { t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, hasId } from '@zextras/carbonio-ui-commons';
 import { find } from 'lodash';
 
 import {
@@ -22,8 +23,6 @@ import {
 	openAppointment,
 	proposeNewTimeFn
 } from './appointment-actions-fn';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
-import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { PARTICIPATION_STATUS } from '../constants/api';
 import { EVENT_ACTIONS } from '../constants/event-actions';
 import { StoreProvider } from '../store/redux';

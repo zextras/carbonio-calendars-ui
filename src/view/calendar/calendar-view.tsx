@@ -9,7 +9,7 @@ import { Button, Container } from '@zextras/carbonio-design-system';
 import { noop } from 'lodash';
 import { Routes, Route } from 'react-router-dom';
 
-import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
+import { useUpdateView } from '@zextras/carbonio-ui-commons';
 
 const CalendarComponent = lazy(
 	() => import(/* webpackChunkName: "calendar-component" */ './calendar-component')

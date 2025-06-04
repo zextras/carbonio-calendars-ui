@@ -7,9 +7,8 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
+import { Grant } from '@zextras/carbonio-ui-commons';
 
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
-import { Grant } from '../../../carbonio-ui-commons/types';
 import { SHARE_USER_TYPE } from '../../../constants';
 import { FOLDER_OPERATIONS } from '../../../constants/api';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
@@ -17,6 +16,7 @@ import * as FolderAction from '../../../soap/folder-action-request';
 import * as SendShare from '../../../store/actions/send-share-calendar-notification';
 import { reducers } from '../../../store/redux';
 import { ShareCalendarModal } from '../share-calendar-modal';
+import { setupTest } from '@test-setup';
 
 const checkedIcon = 'icon: CheckmarkSquare';
 

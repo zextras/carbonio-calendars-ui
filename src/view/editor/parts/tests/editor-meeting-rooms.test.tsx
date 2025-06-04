@@ -12,10 +12,6 @@ import { act, screen, within } from '@testing-library/react';
 import { map } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
-import { getSetupServer } from '../../../../carbonio-ui-commons/test/jest-setup';
-import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
@@ -23,6 +19,10 @@ import { reducers } from '../../../../store/redux';
 import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { EditorMeetingRooms } from '../editor-meeting-rooms';
+import { getSetupServer } from '@jest-setup';
+import { setupTest } from '@test-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 const setupEmptyAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ meetingRoom: [] }));

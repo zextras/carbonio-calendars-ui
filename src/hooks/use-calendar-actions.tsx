@@ -19,7 +19,7 @@ import {
 	shareCalendarUrlItem,
 	sharesInfoItem
 } from '../actions/calendar-actions-items';
-import { Folder } from '../carbonio-ui-commons/types/folder';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { ActionsClick } from '../types/actions';
 
 type CalendarActionsProps = {

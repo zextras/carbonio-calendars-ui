@@ -6,6 +6,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { CreateSnackbarFn, useSnackbar } from '@zextras/carbonio-design-system';
+import { useHistoryNavigation, Folders } from '@zextras/carbonio-ui-commons';
 import { TFunction } from 'i18next';
 import { size } from 'lodash';
 import moment from 'moment';
@@ -13,8 +14,6 @@ import { useTranslation } from 'react-i18next';
 import { Dispatch } from 'redux';
 
 import { deleteEvent, sendResponse } from '../actions/delete-actions';
-import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
-import { Folders } from '../carbonio-ui-commons/types';
 import { generateEditor } from '../commons/editor-generator';
 import { CALENDAR_ROUTE } from '../constants';
 import { moveAppointmentRequest } from '../store/actions/move-appointment';

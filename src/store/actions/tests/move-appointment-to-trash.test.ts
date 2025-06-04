@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
 import mockedData from '../../../test/generators';
 import { InviteOrganizer, InviteParticipant } from '../../../types/store/invite';
 import { setupTMock } from '../../../utils/tests';
 import { RootState } from '../../redux';
 import { moveAppointmentToTrash } from '../move-appointment-to-trash';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 const mockTFunction = setupTMock();
 

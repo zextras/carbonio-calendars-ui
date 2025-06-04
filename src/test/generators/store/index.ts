@@ -6,7 +6,7 @@
 import { faker } from '@faker-js/faker';
 import { isNil, reduce, values } from 'lodash';
 
-import { Folder } from '../../../carbonio-ui-commons/types';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { Editor, IdentityItem } from '../../../types/editor';
 import { AppointmentsSlice, EditorSlice, InvitesSlice } from '../../../types/store/store';
 import cals from '../calendar';
