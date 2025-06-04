@@ -347,6 +347,9 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			permissions
 		};
 
+		// todo: it will be fixed in the next PR
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		editSettings(newValue).then((res) => {
 			if (res.type.includes('fulfilled')) {
 				createSnackbar({
