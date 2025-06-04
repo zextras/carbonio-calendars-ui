@@ -11,7 +11,7 @@ import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Routes, Route } from 'react-router-dom';
 
-import AdvancedFilterModal from './advance-filter-modal';
+import { AdvancedFilterModal } from './advance-filter-modal';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
 import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
@@ -170,6 +170,8 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			setIsInvalidQuery(false);
 			setResultLabel(defaultResultLabel);
 			setSearchResults(initialSearchResults);
+			setSpanStart(DEFAULT_DATE_START);
+			setSpanEnd(DEFAULT_DATE_END);
 		}
 	}, [
 		query,
@@ -178,7 +180,9 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		isInvalidQuery,
 		t,
 		defaultResultLabel,
-		initialSearchResults
+		initialSearchResults,
+		setSpanStart,
+		setSpanEnd
 	]);
 
 	const appointments = useAppSelector((state) =>
