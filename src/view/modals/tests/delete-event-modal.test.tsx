@@ -19,7 +19,6 @@ import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { populateFoldersStore } from '@test-utils/store/folders';
 
 describe('delete event modal', () => {
-
 	const participantFirstName = faker.person.firstName();
 	const participantLastName = faker.person.lastName();
 	const participantFullName = faker.person.fullName({
