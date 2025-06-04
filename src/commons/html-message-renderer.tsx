@@ -25,6 +25,9 @@ export const HtmlMessageRenderer = ({
 					font-family: Roboto, sans-serif;
 					font-size: ${remFontSize};
 				}
+				p{
+					margin-top: 0;
+				}
 			</style>
 			<div>${updatedBody}</div>
 		`,
