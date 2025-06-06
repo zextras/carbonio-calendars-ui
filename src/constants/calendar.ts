@@ -28,3 +28,8 @@ export const CALENDARS_STANDARD_COLORS: Array<CalendarsColorType> = [
 	{ color: '#8E8E93', background: '#F5F6F8', label: 'grey' },
 	{ color: '#FF9500', background: '#FFF0EC', label: 'orange' }
 ];
+
+export const CALENDARS_SHARE_LINK_TYPES = {
+	ics: 'ics',
+	outlook: 'outlook'
+};
