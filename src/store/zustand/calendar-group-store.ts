@@ -3,11 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { Folder, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { forEach, isEqual, keyBy, some } from 'lodash';
 import { create } from 'zustand';
-
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../carbonio-ui-commons/types';
 
 export type CalendarGroup = {
 	id: string;

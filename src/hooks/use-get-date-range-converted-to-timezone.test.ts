@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 import { useGetDateRangeConvertedToTimezone } from './use-get-date-range-converted-to-timezone';
-import * as shell from '../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
-import { setupHook } from '../carbonio-ui-commons/test/test-setup';
+import { setupHook } from '@test-setup';
+import * as shell from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
+import defaultSettings from '@test-utils/settings/default-settings';
 
 /*
  * useGetDateRangeConvertedToTimezone is a utility hook which converts a date range to a given timezone.

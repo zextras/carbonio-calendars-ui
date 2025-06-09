@@ -26,16 +26,19 @@ import {
 	useSnackbar
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import {
+	FOLDER_VIEW,
+	FOLDERS,
+	useFoldersMap,
+	Folder,
+	Grant,
+	hasId
+} from '@zextras/carbonio-ui-commons';
 import { compact, find, includes, isEmpty, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { GranteeChip } from './grantee-chip';
-import { FOLDER_VIEW } from '../../../../carbonio-ui-commons/constants';
-import { FOLDERS } from '../../../../carbonio-ui-commons/constants/folders';
-import { useFoldersMap } from '../../../../carbonio-ui-commons/store/zustand/folder';
-import { Folder, Grant } from '../../../../carbonio-ui-commons/types';
-import { hasId } from '../../../../carbonio-ui-commons/worker/handle-message';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';

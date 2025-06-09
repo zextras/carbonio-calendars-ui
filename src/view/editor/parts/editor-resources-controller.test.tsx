@@ -9,7 +9,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act } from '@testing-library/react';
 
 import { EditorResourcesController } from './editor-resources-controller';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../commons/editor-generator';
 import { CALENDAR_RESOURCES } from '../../../constants';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../../constants/api';
@@ -17,6 +16,7 @@ import * as searchResourcesHandler from '../../../soap/search-calendar-resources
 import { reducers } from '../../../store/redux';
 import { useAppStatusStore } from '../../../store/zustand/store';
 import mockedData from '../../../test/generators';
+import { setupTest } from '@test-setup';
 
 const setupAppStatusStore = (): void => {
 	useAppStatusStore.setState(() => ({ meetingRoom: undefined, equipment: undefined }));
@@ -30,7 +30,7 @@ describe('editor resources controller', () => {
 		const context = { folders: {}, dispatch: store.dispatch };
 		const editor = generateEditor({ context });
 		await act(async () => {
-			await setupTest(<EditorResourcesController editorId={editor.id} />, { store });
+			setupTest(<EditorResourcesController editorId={editor.id} />, { store });
 		});
 		const state = useAppStatusStore.getState();
 		expect(state.meetingRoom).toBeUndefined();

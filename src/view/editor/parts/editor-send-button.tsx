@@ -9,7 +9,7 @@ import { Button, useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { closeBoard, useBoard } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
-import { useHistoryNavigation } from '../../../carbonio-ui-commons/helpers/use-history-navigation';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { onSend } from '../../../commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from '../../../constants';
 import { StoreProvider } from '../../../store/redux';

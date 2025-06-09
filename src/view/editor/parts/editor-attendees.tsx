@@ -6,6 +6,7 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 
 import { Button, Container, Row, useSnackbar } from '@zextras/carbonio-design-system';
+import { getOrderedAccountIds, ContactInputItem } from '@zextras/carbonio-ui-commons';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -16,8 +17,6 @@ import {
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
 import { EditorOptionalAttendees } from './editor-optional-attendees';
-import { getOrderedAccountIds } from '../../../carbonio-ui-commons/helpers/identities';
-import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import {

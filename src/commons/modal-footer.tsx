@@ -7,8 +7,7 @@ import React, { FC, ReactElement, useMemo } from 'react';
 
 import { Button, Container, Divider, Padding, Tooltip } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
-
-import { ModalFooterProps } from '../carbonio-ui-commons/types';
+import { ModalFooterProps } from '@zextras/carbonio-ui-commons';
 
 const ModalFooter: FC<ModalFooterProps> = ({
 	mainAlignment = 'center',
