@@ -39,6 +39,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { GranteeChip } from './grantee-chip';
+import { ShareCalendarUrls } from './share-calendar-urls';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import { SHARE_USER_TYPE } from '../../../../constants';
 import { FOLDER_OPERATIONS } from '../../../../constants/api';
@@ -532,6 +533,9 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 						</>
 					</>
 				)}
+
+				{/* Shared access links */}
+				<ShareCalendarUrls calendarName={folder.name} />
 			</ModalBody>
 			<Divider />
 			<ModalFooter

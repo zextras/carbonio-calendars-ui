@@ -31,5 +31,6 @@ export const CALENDARS_STANDARD_COLORS: Array<CalendarsColorType> = [
 
 export const CALENDARS_SHARE_LINK_TYPES = {
 	ics: 'ics',
-	outlook: 'outlook'
-};
+	webcal: 'webcal',
+	caldav: 'caldav'
+} as const;
