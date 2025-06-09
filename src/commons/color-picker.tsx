@@ -5,12 +5,28 @@
  */
 import React, { useMemo } from 'react';
 
-import { Row, Select, Text, Padding, Icon, Container } from '@zextras/carbonio-design-system';
+import {
+	Row,
+	Select,
+	Text,
+	Padding,
+	Icon,
+	Container,
+	SingleSelectionOnChange
+} from '@zextras/carbonio-design-system';
+import { TFunction } from 'i18next';
 
 import { ColorContainer, Square, TextUpperCase } from './styled-components';
 import { ZIMBRA_STANDARD_COLORS } from '../carbonio-ui-commons/constants/utils';
 
-const LabelFactory = ({ selected, label, open, focus }) => (
+type LabelFactoryProps = {
+	selected: Array<{ label: string; value: string }>;
+	open: boolean;
+	focus: boolean;
+	label?: string;
+};
+
+const LabelFactory = ({ selected, label, open, focus }: LabelFactoryProps): React.JSX.Element => (
 	<ColorContainer
 		orientation="horizontal"
 		width="fill"
@@ -47,20 +63,16 @@ const LabelFactory = ({ selected, label, open, focus }) => (
 	</ColorContainer>
 );
 
-const getStatusItems = (t) =>
+const getStatusItems = (
+	t: TFunction
+): { label: string; value: string; customComponent: React.JSX.Element }[] =>
 	ZIMBRA_STANDARD_COLORS.map((el, index) => {
 		const tagColorLabel = t(`colors.${el.zLabel}`, el.zLabel);
 		return {
 			label: tagColorLabel,
 			value: index.toString(),
 			customComponent: (
-				<Container
-					width="100%"
-					takeAvailableSpace
-					mainAlignment="space-between"
-					orientation="horizontal"
-					height="fit"
-				>
+				<Container width="100%" mainAlignment="space-between" orientation="horizontal" height="fit">
 					<Padding left="small">
 						<TextUpperCase>{tagColorLabel}</TextUpperCase>
 					</Padding>
@@ -70,7 +82,18 @@ const getStatusItems = (t) =>
 		};
 	});
 
-export default function ColorSelect({ t, onChange, defaultColor = 0, label }) {
+type ColorPickerProps = {
+	t: TFunction;
+	onChange: SingleSelectionOnChange;
+	defaultColor?: number;
+	label?: string;
+};
+export const ColorPicker = ({
+	t,
+	onChange,
+	defaultColor = 0,
+	label
+}: ColorPickerProps): React.JSX.Element => {
 	const colors = useMemo(() => getStatusItems(t), [t]);
 	const defaultSelection = useMemo(() => colors[defaultColor], [colors, defaultColor]);
 	return (
@@ -82,4 +105,4 @@ export default function ColorSelect({ t, onChange, defaultColor = 0, label }) {
 			LabelFactory={LabelFactory}
 		/>
 	);
-}
+};
