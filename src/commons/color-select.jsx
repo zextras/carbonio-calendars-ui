@@ -48,24 +48,27 @@ const LabelFactory = ({ selected, label, open, focus }) => (
 );
 
 const getStatusItems = (t) =>
-	ZIMBRA_STANDARD_COLORS.map((el, index) => ({
-		label: t(el.zLabel),
-		value: index.toString(),
-		customComponent: (
-			<Container
-				width="100%"
-				takeAvailableSpace
-				mainAlignment="space-between"
-				orientation="horizontal"
-				height="fit"
-			>
-				<Padding left="small">
-					<TextUpperCase>{t(el.zLabel)}</TextUpperCase>
-				</Padding>
-				<Square $color={el.hex} />
-			</Container>
-		)
-	}));
+	ZIMBRA_STANDARD_COLORS.map((el, index) => {
+		const tagColorLabel = t(`colors.${el.zLabel}`, el.zLabel);
+		return {
+			label: tagColorLabel,
+			value: index.toString(),
+			customComponent: (
+				<Container
+					width="100%"
+					takeAvailableSpace
+					mainAlignment="space-between"
+					orientation="horizontal"
+					height="fit"
+				>
+					<Padding left="small">
+						<TextUpperCase>{tagColorLabel}</TextUpperCase>
+					</Padding>
+					<Square $color={el.hex} />
+				</Container>
+			)
+		};
+	});
 
 export default function ColorSelect({ t, onChange, defaultColor = 0, label }) {
 	const colors = useMemo(() => getStatusItems(t), [t]);
