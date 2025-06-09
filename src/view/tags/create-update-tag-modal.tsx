@@ -17,10 +17,6 @@ import {
 	ItemType
 } from '@zextras/carbonio-ui-commons';
 
-import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
-import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { changeTagColor, createTag, renameTag } from '../../carbonio-ui-commons/soap/tags';
-import { ItemType } from '../../carbonio-ui-commons/types/tags';
 import { ColorPicker } from '../../commons/color-picker';
 import { itemActionRequest } from '../../soap/item-action-request';
 import { EventType } from '../../types/event';
