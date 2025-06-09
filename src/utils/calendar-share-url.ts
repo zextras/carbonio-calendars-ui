@@ -1,4 +1,4 @@
-import { CALENDARS_SHARE_LINK_TYPES } from 'constants/calendar';
+import { CALENDARS_SHARE_LINK_TYPES } from '../constants/calendar';
 
 /*
  * SPDX-FileCopyrightText: 2025 Zextras <https://www.zextras.com>

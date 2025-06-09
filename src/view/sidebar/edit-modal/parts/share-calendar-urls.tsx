@@ -10,8 +10,8 @@ import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { CALENDARS_SHARE_LINK_TYPES } from '../../../../constants/calendar';
-import { createCalendarShareURL } from 'utils/calendar-share-url';
-import { getCarbonioDomain } from 'utils/domain';
+import { createCalendarShareURL } from '../../../../utils/calendar-share-url';
+import { getCarbonioDomain } from '../../../../utils/domain';
 
 type ShareCalendarUrlsProps = {
 	calendarName: string;
@@ -58,15 +58,14 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 	);
 
 	return (
-		<>
-			<Container
-				padding={{ vertical: 'small' }}
-				mainAlignment="flex-start"
-				crossAlignment="flex-start"
-				orientation="horizontal"
-			>
-				<Text weight="bold">{title}</Text>
-			</Container>
+		<Container
+			mainAlignment="flex-start"
+			crossAlignment="flex-start"
+			orientation="vertical"
+			gap="0.5rem"
+		>
+			<Text weight="bold">{title}</Text>
+
 			<Container gap="1rem" mainAlignment="flex-start" crossAlignment="flex-start">
 				<Text overflow="break-word">
 					{t('message.share_calendar_url_msg', {
@@ -114,6 +113,6 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 					)}
 				</Text>
 			</Container>
-		</>
+		</Container>
 	);
 };

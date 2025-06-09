@@ -339,15 +339,17 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 
 	return (
-		<Container
-			data-testid="MainEditModal"
-			padding="0.5rem 0.5rem 1.5rem"
-			style={{ overflowY: 'auto' }}
-		>
+		<Container data-testid="MainEditModal" style={{ overflowY: 'auto' }}>
 			<ModalHeader onClose={onClose} title={title} showCloseIcon />
 			<Divider />
-			<ModalBody style={{ padding: '0.5rem' }}>
-				<Container mainAlignment="center" crossAlignment="flex-start" height="fit">
+			<ModalBody>
+				<Container
+					mainAlignment="flex-start"
+					crossAlignment="flex-start"
+					orientation="vertical"
+					gap="1rem"
+				>
+					{/* Calendar name */}
 					{hasId(folder, FOLDERS.CALENDAR) ? (
 						<Tooltip
 							label={t('cannot_edit_name', 'You cannot edit the name of a system calendar')}
@@ -367,66 +369,61 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					) : (
 						<Input
 							label={placeholder}
-							backgroundColor="gray5"
+							background="gray5"
+							hasError={showDupWarning}
+							description={
+								showDupWarning
+									? t(
+											'folder.modal.new.duplicate_warning',
+											'Calendar with the same name already exists'
+										)
+									: undefined
+							}
 							defaultValue={folderName}
 							onChange={(e): void => {
 								setFolderName(e.target.value);
 							}}
 						/>
 					)}
-				</Container>
-				{showDupWarning && (
-					<Padding all="small">
-						<Text size="small" color="error">
-							{t(
-								'folder.modal.new.duplicate_warning',
-								'Calendar with the same name already exists'
-							)}
-						</Text>
-					</Padding>
-				)}
-				<Container
-					padding={{ top: 'small', bottom: 'small' }}
-					mainAlignment="center"
-					crossAlignment="flex-start"
-					orientation="horizontal"
-					height="fit"
-				>
-					<Row orientation="vertical" width="50%" crossAlignment="flex-start">
-						<Text size="small" color="secondary">
-							{t('type', 'Type')}
-						</Text>
-						<Text>{t('label.calendar', 'Calendar')}</Text>
-					</Row>
-					<Row orientation="vertical" width="50%" crossAlignment="flex-start">
-						<Text size="small" color="secondary">
-							{t('appointments', 'Appointments')}
-						</Text>
-						<Text>{totalAppointments}</Text>
-					</Row>
-				</Container>
-				<Container
-					padding={{ top: 'small', bottom: 'small' }}
-					mainAlignment="center"
-					crossAlignment="flex-start"
-					orientation="horizontal"
-					height="fit"
-				>
-					<Select
-						label={t('label.calendar_color', 'Calendar color')}
-						onChange={onSelectedColorChange}
-						items={colors}
-						defaultSelection={selectedColor}
-						LabelFactory={LabelFactory}
-					/>
-				</Container>
-				<Container
-					padding={{ top: 'small', bottom: 'small' }}
-					mainAlignment="flex-start"
-					crossAlignment="flex-start"
-					orientation="horizontal"
-					height="fit"
-				>
+
+					{/* Type and number of appointments */}
+					<Container
+						mainAlignment="flex-start"
+						crossAlignment="flex-start"
+						orientation="horizontal"
+						height="fit"
+						gap="1.5rem"
+					>
+						<Row orientation="vertical" width="50%" crossAlignment="flex-start" gap="0.25rem">
+							<Text size="small" color="secondary">
+								{t('type', 'Type')}
+							</Text>
+							<Text>{t('label.calendar', 'Calendar')}</Text>
+						</Row>
+						<Row orientation="vertical" width="50%" crossAlignment="flex-start" gap="0.25rem">
+							<Text size="small" color="secondary">
+								{t('appointments', 'Appointments')}
+							</Text>
+							<Text>{totalAppointments}</Text>
+						</Row>
+					</Container>
+
+					{/* Calendar color */}
+					<Container
+						mainAlignment="flex-start"
+						crossAlignment="flex-start"
+						orientation="horizontal"
+						height="fit"
+					>
+						<Select
+							label={t('label.calendar_color', 'Calendar color')}
+							onChange={onSelectedColorChange}
+							items={colors}
+							defaultSelection={selectedColor}
+							LabelFactory={LabelFactory}
+						/>
+					</Container>
+
 					<Checkbox
 						value={freeBusy}
 						defaultChecked={defaultFreeBusy}
@@ -436,28 +433,21 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 							'Exclude this calendar when reporting the free/busy times'
 						)}
 					/>
-				</Container>
-				{!isEmpty(folder?.acl) && !(folder.isLink && folder.owner) && (
-					<>
+
+					{/* Calendar sharing */}
+					{!isEmpty(folder?.acl) && !(folder.isLink && folder.owner) && (
 						<Container
-							padding={{ top: 'small', bottom: 'small' }}
-							mainAlignment="center"
-							crossAlignment="flex-start"
-							orientation="horizontal"
-						>
-							<Divider />
-						</Container>
-						<Container
-							padding={{ top: 'small', bottom: 'small' }}
 							mainAlignment="flex-start"
 							crossAlignment="flex-start"
-							orientation="horizontal"
+							orientation="vertical"
+							gap="1rem"
 						>
+							<Divider />
+
 							<Text weight="bold">
 								{t('label.sharing_of_this_folder', 'Sharing of this folder')}
 							</Text>
-						</Container>
-						<>
+
 							{grant && grant.length > 0 && (
 								<Container
 									style={{ overflowY: 'auto' }}
@@ -467,12 +457,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									padding={{ right: 'small' }}
 								>
 									{map(grant, (item, index) => (
-										<Container
-											orientation="horizontal"
-											mainAlignment="flex-end"
-											padding={{ bottom: 'small' }}
-											key={index}
-										>
+										<Container orientation="horizontal" mainAlignment="flex-end" key={index}>
 											<StyledContainer crossAlignment="flex-start">
 												<GranteeChip grant={item} />
 											</StyledContainer>
@@ -530,12 +515,12 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 									))}
 								</Container>
 							)}
-						</>
-					</>
-				)}
+						</Container>
+					)}
 
-				{/* Shared access links */}
-				<ShareCalendarUrls calendarName={folder.name} />
+					{/* Shared access links */}
+					<ShareCalendarUrls calendarName={folder.name} />
+				</Container>
 			</ModalBody>
 			<Divider />
 			<ModalFooter
