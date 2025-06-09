@@ -45,6 +45,7 @@ const KeywordRow = ({ otherKeywords, setOtherKeywords }: ComponentProps): React.
 						]}
 						onChange={keywordOnChange}
 						onAdd={keywordChipOnAdd}
+						requireUniqueChips
 					/>
 				</Container>
 			</Container>
