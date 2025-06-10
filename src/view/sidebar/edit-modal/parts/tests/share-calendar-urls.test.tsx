@@ -6,9 +6,9 @@
 import React from 'react';
 
 import { faker } from '@faker-js/faker';
-import { setupTest, screen } from '@zextras/carbonio-ui-commons';
 
 import { ShareCalendarUrls } from '../share-calendar-urls';
+import { setupTest, screen } from '@test-setup';
 
 describe('ShareCalendarUrl', () => {
 	it('should render the title', () => {
