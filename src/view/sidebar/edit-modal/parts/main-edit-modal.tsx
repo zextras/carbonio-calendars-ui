@@ -47,6 +47,7 @@ import { CALENDARS_STANDARD_COLORS } from '../../../../constants/calendar';
 import { folderAction } from '../../../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../../../store/actions/send-share-calendar-notification';
 import { useAppDispatch } from '../../../../store/redux/hooks';
+import { containPublicShareGrant } from '../../../../utils/calendars-share';
 
 const Square = styled.div<{ $color: AnyColor }>`
 	width: 1.125rem;
@@ -171,6 +172,8 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 			find(colors, (color) => color.value === folder.color?.toString()) ?? { label: '', value: '' },
 		[colors, folder.color]
 	);
+
+	const isCalendarPubliclyShared = useMemo(() => containPublicShareGrant(grant), [grant]);
 
 	const [folderName, setFolderName] = useState(defaultFolderName);
 	const [freeBusy, setFreeBusy] = useState(defaultFreeBusy);
@@ -452,9 +455,10 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 								<Container
 									style={{ overflowY: 'auto' }}
 									mainAlignment="flex-start"
-									minHeight={grant.length === 1 ? '2rem' : '4rem'}
-									maxHeight={'4rem'}
+									height={grant.length === 1 ? '1.375rem' : '3.25rem'}
+									maxHeight={'3.25rem'}
 									padding={{ right: 'small' }}
+									gap="0.5rem"
 								>
 									{map(grant, (item, index) => (
 										<Container orientation="horizontal" mainAlignment="flex-end" key={index}>
@@ -519,7 +523,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 					)}
 
 					{/* Shared access links */}
-					<ShareCalendarUrls calendarName={folder.name} />
+					{isCalendarPubliclyShared && <ShareCalendarUrls calendarName={folder.name} />}
 				</Container>
 			</ModalBody>
 			<Divider />
