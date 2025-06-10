@@ -10,7 +10,7 @@ import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { CALENDARS_SHARE_LINK_TYPES } from '../../../../constants/calendar';
-import { createCalendarShareURL } from '../../../../utils/calendar-share-url';
+import { createCalendarShareURL } from '../../../../utils/calendars-share';
 import { getCarbonioDomain } from '../../../../utils/domain';
 
 type ShareCalendarUrlsProps = {
@@ -26,11 +26,10 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 	const domain = useMemo(() => getCarbonioDomain(), []);
 	const title = useMemo(
 		() =>
-			t('label.share_calendar_url', {
-				title: calendarName,
-				defaultValue: '{{title}} access share'
+			t('label.public_share_urls', {
+				defaultValue: 'Public share URLS'
 			}),
-		[calendarName, t]
+		[t]
 	);
 	const icsLinkLabel = useMemo(() => t('label.ics_url', 'ICS URL'), [t]);
 	const webcalLinkLabel = useMemo(() => t('label.webcal_url', 'WebCAL URL'), [t]);
