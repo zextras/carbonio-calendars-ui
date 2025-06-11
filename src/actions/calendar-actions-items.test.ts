@@ -275,7 +275,7 @@ describe('calendar actions items', () => {
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.EDIT,
 					icon: 'Edit2Outline',
-					label: t('action.edit_calendar_properties', 'Edit calendar properties'),
+					label: t('action.edit_and_share_calendar', 'Edit and share calendar'),
 					tooltipLabel: noPermissionLabel,
 					onClick: expect.any(Function),
 					disabled: false

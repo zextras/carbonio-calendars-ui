@@ -334,10 +334,7 @@ export const MainEditModal: FC<MainEditModalProps> = ({ folder, totalAppointment
 		[setModal, setActiveGrant]
 	);
 
-	const title = useMemo(
-		() => t('action.edit_calendar_properties', 'Edit calendar properties'),
-		[t]
-	);
+	const title = useMemo(() => t('action.edit_and_share_calendar', 'Edit and share calendar'), [t]);
 
 	const placeholder = useMemo(() => t('label.type_name_here', 'Calendar name'), [t]);
 

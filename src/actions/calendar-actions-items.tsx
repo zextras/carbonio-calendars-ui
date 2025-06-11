@@ -130,7 +130,7 @@ export const editCalendarItem = ({
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EDIT,
 	icon: 'Edit2Outline',
-	label: t('action.edit_calendar_properties', 'Edit calendar properties'),
+	label: t('action.edit_and_share_calendar', 'Edit and share calendar'),
 	tooltipLabel: noPermissionLabel,
 	onClick: editCalendar({ createModal, closeModal, item }),
 	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
