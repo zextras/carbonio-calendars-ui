@@ -313,4 +313,31 @@ describe('AdvancedFilterModal', () => {
 		]);
 		expect(onClose).toHaveBeenCalled();
 	});
+
+	it('should not add duplicate keywords to the query', async () => {
+		const properties: AdvancedFilterModalProps = {
+			open: true,
+			onClose: jest.fn(),
+			query: [
+				{
+					id: '1',
+					label: 'test',
+					value: 'test'
+				}
+			],
+			updateQuery: jest.fn(),
+			dateStart: DEFAULT_DATE_START,
+			dateEnd: DEFAULT_DATE_END,
+			setDateStart: jest.fn(),
+			setDateEnd: jest.fn()
+		};
+
+		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
+
+		const keywordInputEle = screen.getByPlaceholderText('Keywords');
+		await user.type(keywordInputEle, 'test');
+		await user.type(keywordInputEle, '[Enter]');
+
+		expect(properties.updateQuery).not.toHaveBeenCalled();
+	});
 });
