@@ -7,6 +7,7 @@ import React, { FC, ReactElement, useCallback, useMemo } from 'react';
 
 import { Container, Text, useSnackbar, Tooltip, Button } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { copyToClipboard } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
 import { CALENDARS_SHARE_LINK_TYPES } from '../../../../constants/calendar';
@@ -42,7 +43,7 @@ export const ShareCalendarUrls: FC<ShareCalendarUrlsProps> = ({ calendarName }):
 				user,
 				domain
 			});
-			navigator.clipboard.writeText(url).then(() => {
+			copyToClipboard(url).then(() => {
 				createSnackbar({
 					key: `folder-action-success`,
 					replace: true,

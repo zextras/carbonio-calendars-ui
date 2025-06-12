@@ -147,7 +147,7 @@ const useGetStatusItems = (): Array<SelectItem> => {
 	});
 };
 
-type MainEditModalProps = {
+export type MainEditModalProps = {
 	folder: Folder;
 	totalAppointments: number;
 	grant: Grant[];
