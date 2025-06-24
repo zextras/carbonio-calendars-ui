@@ -17,7 +17,7 @@ import {
 	ItemType
 } from '@zextras/carbonio-ui-commons';
 
-import ColorPicker from '../../commons/color-select';
+import { ColorPicker } from '../../commons/color-picker';
 import { itemActionRequest } from '../../soap/item-action-request';
 import { EventType } from '../../types/event';
 
@@ -36,7 +36,9 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 }): ReactElement => {
 	const createSnackbar = useSnackbar();
 	const [name, setName] = useState(tag?.name || '');
-	const [color, setColor] = useState(tag?.color || 0);
+
+	// TODO: remove any cast when tag.color is properly typed
+	const [color, setColor] = useState((tag?.color as any) || 0);
 	const title = useMemo(
 		() =>
 			editMode
@@ -45,7 +47,7 @@ const CreateUpdateTagModal: FC<ComponentProps> = ({
 		[editMode, tag?.name]
 	);
 	const label = useMemo(() => t('label.tag_name', 'Tag name'), []);
-	const handleColorChange = useCallback((c: number) => setColor(c), []);
+	const handleColorChange = useCallback((c: string | null) => setColor(c), []);
 	const handleNameChange = useCallback(
 		(ev: React.ChangeEvent<HTMLInputElement>) => setName(ev.target.value),
 		[]

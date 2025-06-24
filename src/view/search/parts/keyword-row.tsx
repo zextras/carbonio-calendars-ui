@@ -32,23 +32,22 @@ const KeywordRow = ({ otherKeywords, setOtherKeywords }: ComponentProps): React.
 	);
 
 	return (
-		<React.Fragment>
-			<Container padding={{ bottom: 'small', top: 'medium' }} orientation="horizontal">
-				<Container padding={{ right: 'extrasmall' }} maxWidth="100%">
-					<ChipInput
-						placeholder={t('label.keywords', 'Keywords')}
-						background={'gray5'}
-						value={otherKeywords}
-						separators={[
-							{ key: 'Enter', ctrlKey: false },
-							{ key: ',', ctrlKey: false }
-						]}
-						onChange={keywordOnChange}
-						onAdd={keywordChipOnAdd}
-					/>
-				</Container>
+		<Container padding={{ bottom: 'small', top: 'medium' }} orientation="horizontal">
+			<Container padding={{ right: 'extrasmall' }} maxWidth="100%">
+				<ChipInput
+					placeholder={t('label.keywords', 'Keywords')}
+					background={'gray5'}
+					value={otherKeywords}
+					separators={[
+						{ key: 'Enter', ctrlKey: false },
+						{ key: ',', ctrlKey: false }
+					]}
+					onChange={keywordOnChange}
+					onAdd={keywordChipOnAdd}
+					requireUniqueChips
+				/>
 			</Container>
-		</React.Fragment>
+		</Container>
 	);
 };
 
