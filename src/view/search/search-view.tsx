@@ -36,6 +36,8 @@ export type SearchResults = {
 	query: QueryChip[];
 };
 
+const specialChars = ["~","'","!","#","$","%","^","&","(",")","_","?","/","{","}","[","]",";",":","-","+","<",">"];
+
 const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	const initialSearchResults = useMemo(
 		() => ({
@@ -55,7 +57,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
 	const defaultResultLabel = useMemo(() => t('label.results_for', 'Results for: '), [t]);
-	const [resultLabel, setResultLabel] = useState<string>(defaultResultLabel);
 	const [isInvalidQuery, setIsInvalidQuery] = useState<boolean>(false);
 	const [includeTrash, includeSharedFolders] = useMemo(
 		() => [
@@ -64,6 +65,27 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		],
 		[zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch]
 	);
+
+	const invalidQueryTooltip = useMemo(
+		() => t('label.invalid_query', 'Special characters like :, ", -, !, etc., are ignored in the search. This may lead to unexpected results.'),
+		[t]
+	);
+
+	const containsSpecialCharacter = useMemo(() => {
+		if (!query || query.length === 0) return false;
+		
+		const queryString = query.map((c) => convertSearchChipToString(c)).join(' ');
+		return specialChars.some(char => queryString.includes(char));
+	}, [query]);
+
+	const resultLabelType = containsSpecialCharacter ? 'warning' : undefined;
+
+	const resultLabel = useMemo(() => {
+		if (containsSpecialCharacter) {
+			return invalidQueryTooltip;
+		}
+		return defaultResultLabel;
+	}, [containsSpecialCharacter, invalidQueryTooltip, defaultResultLabel]);
 
 	const calendars = useFoldersMap();
 	useUpdateView();
@@ -96,7 +118,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 
 	const search = useCallback(
 		(queryStr: QueryChip[], reset: boolean) => {
-			setResultLabel(defaultResultLabel);
 			setLoading(true);
 
 			const queryString = queryStr.map((c) => convertSearchChipToString(c)).join(' ');
@@ -111,7 +132,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 				})
 			)
 				.then(({ payload }) => {
-					setLoading(true);
+					setLoading(false);
 					if (payload) {
 						const ids = reduce(
 							payload.appt,
@@ -126,7 +147,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 							sortBy: payload.sortBy ?? 'none'
 						});
 					}
-					setLoading(false);
 				})
 
 				.catch(() => {
@@ -140,9 +160,9 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 					updateQuery(newQueryStr);
 					setIsInvalidQuery(true);
 
-					setResultLabel(
-						t('label.results_for_error', 'Unable to start the search, clear it and retry: ')
-					);
+					setSearchResults(initialSearchResults);
+					setSpanStart(DEFAULT_DATE_START);
+					setSpanEnd(DEFAULT_DATE_END);
 				});
 		},
 		[
@@ -154,7 +174,8 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			searchResults.offset,
 			searchResults.sortBy,
 			updateQuery,
-			t
+			t,
+			initialSearchResults
 		]
 	);
 
@@ -170,7 +191,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		}
 		if (query && query.length === 0) {
 			setIsInvalidQuery(false);
-			setResultLabel(defaultResultLabel);
 			setSearchResults(initialSearchResults);
 			setSpanStart(DEFAULT_DATE_START);
 			setSpanEnd(DEFAULT_DATE_END);
