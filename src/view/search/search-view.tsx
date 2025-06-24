@@ -214,7 +214,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	return (
 		<>
 			<Container style={{ whiteSpace: 'nowrap' }}>
-				<ResultsHeader label={query.length > 0 ? resultLabel : ''} />
+				<ResultsHeader label={query.length > 0 ? resultLabel : ''} labelType={resultLabelType} />
 				<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
 					<Routes>
 						<Route
