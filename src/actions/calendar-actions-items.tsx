@@ -27,7 +27,6 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
-	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
 import { isLinkChild, isMainRootChild } from '../commons/utilities';
@@ -131,7 +130,7 @@ export const editCalendarItem = ({
 }): CalendarActionsItems => ({
 	id: FOLDER_ACTIONS.EDIT,
 	icon: 'Edit2Outline',
-	label: t('action.edit_calendar_properties', 'Edit calendar properties'),
+	label: t('action.edit_and_share_calendar', 'Edit and share calendar'),
 	tooltipLabel: noPermissionLabel,
 	onClick: editCalendar({ createModal, closeModal, item }),
 	disabled: hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) || isTrashOrNestedInIt(item)
@@ -220,26 +219,6 @@ export const shareCalendarItem = ({
 		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR) ||
 		isTrashOrNestedInIt(item) ||
 		(item.perm ? !/w/.test(item.perm) : false)
-});
-
-export const shareCalendarUrlItem = ({
-	createModal,
-	closeModal,
-	item
-}: {
-	item: { name: string; id: string; absFolderPath?: string };
-	createModal: CreateModalFn;
-	closeModal: CloseModalFn;
-}): CalendarActionsItems => ({
-	id: FOLDER_ACTIONS.SHARE_URL,
-	icon: 'Copy',
-	label: t('action.calendar_access_share', 'Calendar access share'),
-	tooltipLabel: noPermissionLabel,
-	onClick: shareCalendarUrl({ createModal, closeModal, item }),
-	disabled:
-		(item as LinkFolder).isLink ||
-		isTrashOrNestedInIt(item) ||
-		hasId(item, SIDEBAR_ITEMS.ALL_CALENDAR)
 });
 
 export const findSharesItem = ({

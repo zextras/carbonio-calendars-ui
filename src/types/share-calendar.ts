@@ -14,16 +14,3 @@ export type ShareCalendarModalProps = {
 	isFromEditModal?: boolean;
 	grant?: Array<Grant>;
 };
-
-export type ShareCalendarUrlProps = {
-	folderName: string;
-	onClose: () => void;
-	isFromEditModal?: boolean;
-};
-
-export type UrlColumnProps = {
-	label: string;
-	tooltip: string;
-	onUrlCopied: (label: string, type: string) => () => void;
-	type: string;
-};
