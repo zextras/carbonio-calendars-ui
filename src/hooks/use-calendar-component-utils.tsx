@@ -7,15 +7,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { addBoard } from '@zextras/carbonio-shell-ui';
+import { useHistoryNavigation, useFoldersMap, usePrefs } from '@zextras/carbonio-ui-commons';
 import { max as datesMax, min as datesMin } from 'date-arithmetic';
 import { isArray, isEqual, isNil, omit, omitBy, size } from 'lodash';
 import moment, { Moment } from 'moment';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import { useHistoryNavigation } from '../carbonio-ui-commons/helpers/use-history-navigation';
-import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
-import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
 import { generateEditor } from '../commons/editor-generator';
 import { onSave } from '../commons/editor-save-send-fns';
 import { CALENDAR_BOARD_ID, CALENDAR_ROUTE } from '../constants';

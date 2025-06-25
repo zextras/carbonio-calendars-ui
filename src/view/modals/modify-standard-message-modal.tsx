@@ -79,6 +79,9 @@ export const ModifyStandardMessageModal = ({
 				<Text overflow="break-word">{bodyText}</Text>
 			</Container>
 			<ModalFooter
+				// TODO: CO-2067 fix type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				onConfirm={onConfirm}
 				label={confirmLabel}
 				secondaryColor="primary"

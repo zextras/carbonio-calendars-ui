@@ -17,8 +17,8 @@ import { AccountSettingsPrefs, t, useIntegratedComponent } from '@zextras/carbon
 import styled from 'styled-components';
 
 import { permissionsSubSection } from './sub-sections';
-import { ContactInputProps } from '../carbonio-ui-commons/integrations/types';
 import { PermissionsRightsOptions } from '../constants/api';
+import { ContactInputProps } from '@zextras/carbonio-ui-commons';
 
 const AttendeesContainer = styled.div`
 	width: 100%;

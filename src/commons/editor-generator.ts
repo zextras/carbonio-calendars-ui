@@ -4,14 +4,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
+import { Folders, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
 import { find, isEmpty, isNaN, omit, startsWith } from 'lodash';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { Dispatch } from 'redux';
 
 import { getIdentityItems } from './get-identity-items';
-import { Folders, LinkFolder } from '../carbonio-ui-commons/types';
-import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { PREFS_DEFAULTS } from '../constants';
 import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { normalizeEditor } from '../normalizations/normalize-editor';

@@ -6,12 +6,8 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 import { Container, Shimmer, useSnackbar } from '@zextras/carbonio-design-system';
-import {
-	AccountSettingsPrefs,
-	getUserAccount,
-	SettingsHeader,
-	t
-} from '@zextras/carbonio-shell-ui';
+import { AccountSettingsPrefs, getUserAccount, SettingsHeader, t } from "@zextras/carbonio-shell-ui";
+import { ContactInputProps, usePrefs, useUpdateView } from '@zextras/carbonio-ui-commons';
 import { map, filter, isEqual, uniqBy } from 'lodash';
 
 import AppleICalSettings from './apple-ical-settings';
@@ -22,9 +18,6 @@ import GeneralSettingView from './general-settings-view';
 import PermissionSettings from './permissions-settings-view';
 import { saveSettings } from './save-settings';
 import WorkWeekSettingsView from './work-week-settings-view';
-import { useUpdateView } from '../carbonio-ui-commons/hooks/use-update-view';
-import { ContactInputProps } from '../carbonio-ui-commons/integrations/types';
-import { usePrefs } from '../carbonio-ui-commons/utils/use-prefs';
 import {
 	GRANTEE_TYPES,
 	PermissionsRightsOptions,

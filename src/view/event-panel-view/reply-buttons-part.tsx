@@ -6,6 +6,7 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import { Button, Container, Padding } from '@zextras/carbonio-design-system';
+import { useHistoryNavigation, useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -14,8 +15,6 @@ import {
 	declineInvitation,
 	proposeNewTimeFn
 } from '../../actions/appointment-actions-fn';
-import { useHistoryNavigation } from '../../carbonio-ui-commons/helpers/use-history-navigation';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { useAppDispatch } from '../../store/redux/hooks';
 import { EventType } from '../../types/event';

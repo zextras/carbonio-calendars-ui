@@ -16,8 +16,8 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 
 import { AdvancedFilterModal, AdvancedFilterModalProps } from './advance-filter-modal';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
+import { setupTest } from '@test-setup';
 
 const MOCKED_NOW = new Date('2025-04-18T00:00:00Z');
 
@@ -312,5 +312,32 @@ describe('AdvancedFilterModal', () => {
 			})
 		]);
 		expect(onClose).toHaveBeenCalled();
+	});
+
+	it('should not add duplicate keywords to the query', async () => {
+		const properties: AdvancedFilterModalProps = {
+			open: true,
+			onClose: jest.fn(),
+			query: [
+				{
+					id: '1',
+					label: 'test',
+					value: 'test'
+				}
+			],
+			updateQuery: jest.fn(),
+			dateStart: DEFAULT_DATE_START,
+			dateEnd: DEFAULT_DATE_END,
+			setDateStart: jest.fn(),
+			setDateEnd: jest.fn()
+		};
+
+		const { user } = setupTest(<AdvancedFilterModal {...properties} />);
+
+		const keywordInputEle = screen.getByPlaceholderText('Keywords');
+		await user.type(keywordInputEle, 'test');
+		await user.type(keywordInputEle, '[Enter]');
+
+		expect(properties.updateQuery).not.toHaveBeenCalled();
 	});
 });

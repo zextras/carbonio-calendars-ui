@@ -8,10 +8,10 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 import { useTheme } from 'styled-components';
 
-import * as shell from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { setupHook, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import mockedData from '../../../test/generators';
 import { ModifyStandardMessageModal } from '../modify-standard-message-modal';
+import { setupTest, setupHook } from '@test-setup';
 
 describe('modify standard message modal', () => {
 	describe('modal header', () => {

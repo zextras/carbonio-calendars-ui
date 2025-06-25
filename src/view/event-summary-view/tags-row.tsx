@@ -6,14 +6,16 @@
 import React, { FC, ReactElement, useCallback, useMemo } from 'react';
 
 import { Row, Icon, Text, Chip } from '@zextras/carbonio-design-system';
+import {
+	ZIMBRA_STANDARD_COLORS,
+	useRunSearchIntegration,
+	useSortedTagsArray,
+	Tag
+} from '@zextras/carbonio-ui-commons';
 import { includes, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
-import { useRunSearchIntegration } from '../../carbonio-ui-commons/integrations/search/use-run-search';
-import { useSortedTagsArray } from '../../carbonio-ui-commons/store/zustand/tags';
-import { Tag } from '../../carbonio-ui-commons/types/tags';
 import { CALENDAR_ROUTE } from '../../constants';
 import { EventType } from '../../types/event';
 

@@ -11,11 +11,11 @@ import { act, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 
 import { AvailabilityChecker } from './availability-checker';
-import { getSetupServer } from '../../../carbonio-ui-commons/test/jest-setup';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import * as getFreeBusyResponseHandler from '../../../soap/get-free-busy-request';
 import { reducers } from '../../../store/redux';
 import { AvailabilitySlots } from '../../../test/mocks/network/msw/handle-get-free-busy';
+import { getSetupServer } from '@jest-setup';
+import { setupTest } from '@test-setup';
 import 'jest-styled-components';
 
 const handleGetFreeBusy = (customResponse: Array<AvailabilitySlots>): void => {

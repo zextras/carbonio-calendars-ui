@@ -5,18 +5,18 @@
  */
 import { TextProps } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import type { Folder } from '@zextras/carbonio-ui-commons';
+import {
+	ROOT_NAME,
+	FOLDERS,
+	getFoldersMap,
+	getRoot,
+	getUpdateFolder,
+	hasId
+} from '@zextras/carbonio-ui-commons';
 import { find, forEach, isNil, map, reduce, some } from 'lodash';
 import moment from 'moment';
 
-import { ROOT_NAME } from '../carbonio-ui-commons/constants';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
-import {
-	getFoldersMap,
-	getRoot,
-	getUpdateFolder
-} from '../carbonio-ui-commons/store/zustand/folder';
-import type { Folder } from '../carbonio-ui-commons/types/folder';
-import { hasId } from '../carbonio-ui-commons/worker/handle-message';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { CALENDARS_STANDARD_COLORS } from '../constants/calendar';
 import { SIDEBAR_ITEMS } from '../constants/sidebar';

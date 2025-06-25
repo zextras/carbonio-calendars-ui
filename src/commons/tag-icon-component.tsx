@@ -6,11 +6,9 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Dropdown, Icon, Padding, Row, Text, Tooltip } from '@zextras/carbonio-design-system';
+import { ZIMBRA_STANDARD_COLORS, useSortedTagsArray, Tag } from '@zextras/carbonio-ui-commons';
 import { includes, reduce } from 'lodash';
 
-import { ZIMBRA_STANDARD_COLORS } from '../carbonio-ui-commons/constants';
-import { useSortedTagsArray } from '../carbonio-ui-commons/store/zustand/tags';
-import { Tag } from '../carbonio-ui-commons/types/tags';
 import { EventType } from '../types/event';
 import { useTagExist } from '../view/tags/tag-actions';
 

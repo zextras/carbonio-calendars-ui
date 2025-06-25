@@ -8,11 +8,8 @@ import moment from 'moment';
 
 import { disabledFields, EditorContext, generateEditor } from './editor-generator';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
-import {
-	createFakeIdentity,
-	getMockedAccountItem
-} from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
-import defaultSettings from '../carbonio-ui-commons/test/mocks/settings/default-settings';
+import { createFakeIdentity, getMockedAccountItem } from '../__test__/mocks/accounts/fakeAccounts';
+import defaultSettings from '../__test__/mocks/settings/default-settings';
 import { PREFS_DEFAULTS } from '../constants';
 import { EVENT_DISPLAY_STATUS } from '../constants/api';
 import { reducers } from '../store/redux';

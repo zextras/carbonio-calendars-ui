@@ -8,11 +8,13 @@ import React, { useCallback, useState } from 'react';
 
 import { Container, Divider, Text, useSnackbar } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import {
+	ModalHeader,
+	ModalFooter,
+	useContactInput,
+	ContactInputItem
+} from '@zextras/carbonio-ui-commons';
 
-import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
-import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { useContactInput } from '../../carbonio-ui-commons/integrations/hooks';
-import { ContactInputItem } from '../../carbonio-ui-commons/integrations/types';
 import { forwardAppointmentRequest } from '../../soap/forward-appointment-request';
 
 type ForwardAppointmentModalProps = {
