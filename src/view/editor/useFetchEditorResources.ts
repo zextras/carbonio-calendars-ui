@@ -7,21 +7,16 @@
 import { useEffect, useState } from 'react';
 
 import { searchCalendarMultipleResourcesRequest } from '../../soap/search-calendar-resources-request';
-import { useAppStatusStore } from '../../store/zustand/store';
-import { Contact } from '../../types/soap/soap-actions';
 
-const normalizeResources = (
-	r: Contact
-): { id: string; label: string; value: string; email: string; type: string } => ({
-	id: r.id,
-	label: r._attrs.fullName,
-	value: r._attrs.fullName,
-	email: r._attrs.email,
-	type: r._attrs.zimbraCalResType
-});
-
-export const useFetchEditorResources: () => { loadingResources: boolean } = () => {
+export const useFetchEditorResources: () => {
+	loadingResources: boolean;
+	hasEquipment: boolean;
+	hasMeetingRoom: boolean;
+} = () => {
 	const [loadingResources, setLoadingResources] = useState(true);
+
+	const [hasEquipment, setHasEquipment] = useState(false);
+	const [hasMeetingRoom, setHasMeetingRoom] = useState(false);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -34,10 +29,8 @@ export const useFetchEditorResources: () => { loadingResources: boolean } = () =
 			const equipmentResources =
 				res.calresource?.filter((r) => r._attrs.zimbraCalResType === 'Equipment') ?? [];
 
-			useAppStatusStore.setState({
-				meetingRoom: locationResources.map(normalizeResources),
-				equipment: equipmentResources.map(normalizeResources)
-			});
+			setHasEquipment(equipmentResources.length > 0);
+			setHasMeetingRoom(locationResources.length > 0);
 
 			setLoadingResources(false);
 		});
@@ -47,5 +40,5 @@ export const useFetchEditorResources: () => { loadingResources: boolean } = () =
 		};
 	}, []);
 
-	return { loadingResources };
+	return { loadingResources, hasEquipment, hasMeetingRoom };
 };

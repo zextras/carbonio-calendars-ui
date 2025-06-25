@@ -31,7 +31,7 @@ import { useFetchEditorResources } from './useFetchEditorResources';
 import { EditorProps } from '../../types/editor';
 
 export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement => {
-	const { loadingResources } = useFetchEditorResources();
+	const { loadingResources, hasMeetingRoom, hasEquipment } = useFetchEditorResources();
 
 	if (loadingResources) {
 		return (
@@ -76,8 +76,16 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 				<Row height="fit" width="fill" padding={{ top: 'large' }}>
 					<EditorLocation editorId={editorId} />
 				</Row>
-				<EditorMeetingRooms editorId={editorId} />
-				<EditorEquipments editorId={editorId} />
+				{hasMeetingRoom && (
+					<Row height="fit" width="fill" padding={{ top: 'large' }}>
+						<EditorMeetingRooms editorId={editorId} />
+					</Row>
+				)}
+				{hasEquipment && (
+					<Row height="fit" width="fill" padding={{ top: 'large' }}>
+						<EditorEquipments editorId={editorId} />
+					</Row>
+				)}
 				<EditorVirtualRoom editorId={editorId} />
 				<Row height="fit" width="fill" padding={{ top: 'large' }}>
 					<EditorAttendees editorId={editorId} />

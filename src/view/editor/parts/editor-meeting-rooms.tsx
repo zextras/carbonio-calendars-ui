@@ -5,7 +5,6 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { Row } from '@zextras/carbonio-design-system';
 import { filter, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -14,14 +13,12 @@ import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorMeetingRoom } from '../../../store/selectors/editor';
 import { editEditorMeetingRoom } from '../../../store/slices/editor-slice';
-import { useAppStatusStore } from '../../../store/zustand/store';
 import { ChipResource } from '../../../types/editor';
 
 export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
-	const hasMeetingRooms = useAppStatusStore((state) => state.meetingRoom ?? []).length > 0;
 
 	const meetingRoomsValue = useAppSelector(selectEditorMeetingRoom(editorId));
 
@@ -65,26 +62,22 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 		[]
 	);
 
-	return !hasMeetingRooms ? (
-		<></>
-	) : (
-		<Row height="fit" width="fill" padding={{ top: 'large' }}>
-			<EditorResourceComponent
-				onChange={onChange}
-				editorId={editorId}
-				onSearchOptions={onSearchOptions}
-				placeholder={t('label.meeting_room', 'Meeting room')}
-				resourcesValue={meetingRoomsChipValue ?? []}
-				warningLabel={t(
-					'attendees_rooms_unavailable',
-					'One or more Meeting Rooms are not available at the selected time of the event'
-				)}
-				disabled={disabled?.equipment}
-				singleWarningLabel={t(
-					'attendee_room_unavailable',
-					'Room not available at the selected time of the event'
-				)}
-			/>
-		</Row>
+	return (
+		<EditorResourceComponent
+			onChange={onChange}
+			editorId={editorId}
+			onSearchOptions={onSearchOptions}
+			placeholder={t('label.meeting_room', 'Meeting room')}
+			resourcesValue={meetingRoomsChipValue ?? []}
+			warningLabel={t(
+				'attendees_rooms_unavailable',
+				'One or more Meeting Rooms are not available at the selected time of the event'
+			)}
+			disabled={disabled?.equipment}
+			singleWarningLabel={t(
+				'attendee_room_unavailable',
+				'Room not available at the selected time of the event'
+			)}
+		/>
 	);
 };

@@ -5,7 +5,6 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { Row } from '@zextras/carbonio-design-system';
 import { filter, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +13,6 @@ import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorEquipment } from '../../../store/selectors/editor';
 import { editEditorEquipment } from '../../../store/slices/editor-slice';
-import { useAppStatusStore } from '../../../store/zustand/store';
 import { ChipResource } from '../../../types/editor';
 
 export const EditorEquipments = ({ editorId }: { editorId: string }): ReactElement | null => {
@@ -22,7 +20,6 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 	const [t] = useTranslation();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const equipmentValue = useAppSelector(selectEditorEquipment(editorId));
-	const hasEquipments = useAppStatusStore((state) => state.equipment ?? []).length > 0;
 
 	const equipmentChipValue = useMemo(
 		() =>
@@ -64,26 +61,22 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 		[]
 	);
 
-	return !hasEquipments ? (
-		<></>
-	) : (
-		<Row height="fit" width="fill" padding={{ top: 'large' }}>
-			<EditorResourceComponent
-				onChange={onChange}
-				editorId={editorId}
-				onSearchOptions={onSearchOptions}
-				placeholder={t('label.equipment', 'Equipment')}
-				resourcesValue={equipmentChipValue}
-				warningLabel={t(
-					'attendees_equipments_unavailable',
-					'One or more Equipments are not available at the selected time of the event'
-				)}
-				disabled={disabled?.equipment}
-				singleWarningLabel={t(
-					'attendee_equipment_unavailable',
-					'Equipment not available at the selected time of the event'
-				)}
-			/>
-		</Row>
+	return (
+		<EditorResourceComponent
+			onChange={onChange}
+			editorId={editorId}
+			onSearchOptions={onSearchOptions}
+			placeholder={t('label.equipment', 'Equipment')}
+			resourcesValue={equipmentChipValue}
+			warningLabel={t(
+				'attendees_equipments_unavailable',
+				'One or more Equipments are not available at the selected time of the event'
+			)}
+			disabled={disabled?.equipment}
+			singleWarningLabel={t(
+				'attendee_equipment_unavailable',
+				'Equipment not available at the selected time of the event'
+			)}
+		/>
 	);
 };
