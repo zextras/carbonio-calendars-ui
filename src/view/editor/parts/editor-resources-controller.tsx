@@ -32,7 +32,8 @@ export const EditorResourcesController = (): null => {
 
 				useAppStatusStore.setState({
 					meetingRoom: locationResources.map(normalizeResources),
-					equipment: equipmentResources.map(normalizeResources)
+					equipment: equipmentResources.map(normalizeResources),
+					resourcesLoaded: true
 				});
 
 				setIsLoading(true);

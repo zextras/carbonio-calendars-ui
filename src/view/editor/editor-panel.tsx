@@ -5,7 +5,7 @@
  */
 import React, { ReactElement } from 'react';
 
-import { Container, Divider, Row } from '@zextras/carbonio-design-system';
+import { Container, Divider, Row, Spinner } from '@zextras/carbonio-design-system';
 
 import { EditorDailyPlannerController } from './daily-planner/daily-planner-controller';
 import { EditorActions } from './parts/editor-actions';
@@ -28,71 +28,90 @@ import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
 import { EditorRecurrence } from './parts/recurrence';
+import { useAppStatusStore } from '../../store/zustand/store';
 import { EditorProps } from '../../types/editor';
 
-export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement => (
-	<Container
-		background={'gray5'}
-		padding={{ horizontal: 'large', bottom: 'large' }}
-		mainAlignment="flex-start"
-		crossAlignment="flex-start"
-		style={{ overflow: 'auto' }}
-		data-testid="EditorPanel"
-	>
-		<EditorActions editorId={editorId} />
-		<EditorSummary editorId={editorId} />
-		<Divider />
+export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement => {
+	const resourcesLoaded = useAppStatusStore((s) => s.resourcesLoaded);
+
+	if (!resourcesLoaded) {
+		return (
+			<Container
+				height="100%"
+				width="100%"
+				mainAlignment="center"
+				crossAlignment="center"
+				background={'gray5'}
+			>
+				<EditorResourcesController />;
+				<Spinner color={'primary'} />
+			</Container>
+		);
+	}
+
+	return (
 		<Container
-			height="fit"
-			background={'gray6'}
+			background={'gray5'}
+			padding={{ horizontal: 'large', bottom: 'large' }}
 			mainAlignment="flex-start"
 			crossAlignment="flex-start"
-			padding={{ all: 'large', bottom: 'extralarge' }}
-			style={{
-				overflowY: 'auto'
-			}}
+			style={{ overflow: 'auto' }}
+			data-testid="EditorPanel"
 		>
-			<EditorSender editorId={editorId} />
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorTitle editorId={editorId} />
-			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorLocation editorId={editorId} />
-			</Row>
-			<EditorMeetingRooms editorId={editorId} />
-			<EditorEquipments editorId={editorId} />
-			<EditorVirtualRoom editorId={editorId} />
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorAttendees editorId={editorId} />
-			</Row>
-			<EditorCalendarSelector editorId={editorId} />
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorFreeBusySelector editorId={editorId} />
-			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
-				<EditorPrivateCheckbox editorId={editorId} />
-			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorDatePicker editorId={editorId} />
-			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorTimezone editorId={editorId} />
-			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
-				<EditorAllDayCheckbox editorId={editorId} />
-			</Row>
-			<EditorDailyPlannerController editorId={editorId} />
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorReminder editorId={editorId} />
-			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorRecurrence editorId={editorId} expanded={expanded} />
-			</Row>
-			<EditorAttachments editorId={editorId} expanded={expanded} />
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorComposer editorId={editorId} />
-			</Row>
+			<EditorActions editorId={editorId} />
+			<EditorSummary editorId={editorId} />
+			<Divider />
+			<Container
+				height="fit"
+				background={'gray6'}
+				mainAlignment="flex-start"
+				crossAlignment="flex-start"
+				padding={{ all: 'large', bottom: 'extralarge' }}
+				style={{
+					overflowY: 'auto'
+				}}
+			>
+				<EditorSender editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorTitle editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorLocation editorId={editorId} />
+				</Row>
+				<EditorMeetingRooms editorId={editorId} />
+				<EditorEquipments editorId={editorId} />
+				<EditorVirtualRoom editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorAttendees editorId={editorId} />
+				</Row>
+				<EditorCalendarSelector editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorFreeBusySelector editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
+					<EditorPrivateCheckbox editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorDatePicker editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorTimezone editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
+					<EditorAllDayCheckbox editorId={editorId} />
+				</Row>
+				<EditorDailyPlannerController editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorReminder editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorRecurrence editorId={editorId} expanded={expanded} />
+				</Row>
+				<EditorAttachments editorId={editorId} expanded={expanded} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorComposer editorId={editorId} />
+				</Row>
+			</Container>
 		</Container>
-		<EditorResourcesController />
-	</Container>
-);
+	);
+};
