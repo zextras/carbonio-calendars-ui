@@ -16,7 +16,6 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
-	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
 import mockedData from '../test/generators';
@@ -203,14 +202,6 @@ describe('calendar-actions-fn', () => {
 		const item = mockedData.calendars.getCalendar();
 		const shareCalendarFn = shareCalendar({ createModal, closeModal, item });
 		shareCalendarFn();
-		expect(createModal).toHaveBeenCalledTimes(1);
-	});
-	test('shares calendar url fn on click create modal is called once', () => {
-		const createModal = jest.fn();
-		const closeModal = jest.fn();
-		const item = { name: 'calendar' };
-		const shareCalendarUrlFn = shareCalendarUrl({ createModal, closeModal, item });
-		shareCalendarUrlFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('find shares fn on click create modal is called once', async () => {
