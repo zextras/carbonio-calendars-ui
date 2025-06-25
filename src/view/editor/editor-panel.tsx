@@ -21,99 +21,95 @@ import { EditorLocation } from './parts/editor-location';
 import { EditorMeetingRooms } from './parts/editor-meeting-rooms';
 import { EditorPrivateCheckbox } from './parts/editor-private-checkbox';
 import { EditorReminder } from './parts/editor-reminder';
-import { EditorResourcesController } from './parts/editor-resources-controller';
 import { EditorSender } from './parts/editor-sender';
 import { EditorSummary } from './parts/editor-summary';
 import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
 import { EditorRecurrence } from './parts/recurrence';
-import { useAppStatusStore } from '../../store/zustand/store';
+import { useFetchEditorResources } from './useFetchEditorResources';
 import { EditorProps } from '../../types/editor';
 
 export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement => {
-	const resourcesLoaded = useAppStatusStore((s) => s.resourcesLoaded);
+	const { loading } = useFetchEditorResources();
 
-	if (!resourcesLoaded) {
+	if (loading) {
 		return (
 			<Container
 				height="100%"
 				width="100%"
 				mainAlignment="center"
 				crossAlignment="center"
-				background={'gray5'}
+				background="gray5"
 			>
-				<Spinner color={'primary'} />
+				<Spinner color="primary" />
 			</Container>
 		);
 	}
 
 	return (
-		<>
-			<EditorResourcesController />
+		<Container
+			background={'gray5'}
+			padding={{ horizontal: 'large', bottom: 'large' }}
+			mainAlignment="flex-start"
+			crossAlignment="flex-start"
+			style={{ overflow: 'auto' }}
+			data-testid="EditorPanel"
+		>
+			<EditorActions editorId={editorId} />
+			<EditorSummary editorId={editorId} />
+			<Divider />
 			<Container
-				background={'gray5'}
-				padding={{ horizontal: 'large', bottom: 'large' }}
+				height="fit"
+				background={'gray6'}
 				mainAlignment="flex-start"
 				crossAlignment="flex-start"
-				style={{ overflow: 'auto' }}
-				data-testid="EditorPanel"
+				padding={{ all: 'large', bottom: 'extralarge' }}
+				style={{
+					overflowY: 'auto'
+				}}
 			>
-				<EditorActions editorId={editorId} />
-				<EditorSummary editorId={editorId} />
-				<Divider />
-				<Container
-					height="fit"
-					background={'gray6'}
-					mainAlignment="flex-start"
-					crossAlignment="flex-start"
-					padding={{ all: 'large', bottom: 'extralarge' }}
-					style={{
-						overflowY: 'auto'
-					}}
-				>
-					<EditorSender editorId={editorId} />
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorTitle editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorLocation editorId={editorId} />
-					</Row>
-					<EditorMeetingRooms editorId={editorId} />
-					<EditorEquipments editorId={editorId} />
-					<EditorVirtualRoom editorId={editorId} />
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorAttendees editorId={editorId} />
-					</Row>
-					<EditorCalendarSelector editorId={editorId} />
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorFreeBusySelector editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
-						<EditorPrivateCheckbox editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorDatePicker editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorTimezone editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
-						<EditorAllDayCheckbox editorId={editorId} />
-					</Row>
-					<EditorDailyPlannerController editorId={editorId} />
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorReminder editorId={editorId} />
-					</Row>
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorRecurrence editorId={editorId} expanded={expanded} />
-					</Row>
-					<EditorAttachments editorId={editorId} expanded={expanded} />
-					<Row height="fit" width="fill" padding={{ top: 'large' }}>
-						<EditorComposer editorId={editorId} />
-					</Row>
-				</Container>
+				<EditorSender editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorTitle editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorLocation editorId={editorId} />
+				</Row>
+				<EditorMeetingRooms editorId={editorId} />
+				<EditorEquipments editorId={editorId} />
+				<EditorVirtualRoom editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorAttendees editorId={editorId} />
+				</Row>
+				<EditorCalendarSelector editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorFreeBusySelector editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
+					<EditorPrivateCheckbox editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorDatePicker editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorTimezone editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }} mainAlignment="flex-start">
+					<EditorAllDayCheckbox editorId={editorId} />
+				</Row>
+				<EditorDailyPlannerController editorId={editorId} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorReminder editorId={editorId} />
+				</Row>
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorRecurrence editorId={editorId} expanded={expanded} />
+				</Row>
+				<EditorAttachments editorId={editorId} expanded={expanded} />
+				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+					<EditorComposer editorId={editorId} />
+				</Row>
 			</Container>
-		</>
+		</Container>
 	);
 };
