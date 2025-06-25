@@ -36,7 +36,31 @@ export type SearchResults = {
 	query: QueryChip[];
 };
 
-const specialChars = ["~","'","!","#","$","%","^","&","(",")","_","?","/","{","}","[","]",";",":","-","+","<",">"];
+const specialChars = [
+	'~',
+	"'",
+	'!',
+	'#',
+	'$',
+	'%',
+	'^',
+	'&',
+	'(',
+	')',
+	'_',
+	'?',
+	'/',
+	'{',
+	'}',
+	'[',
+	']',
+	';',
+	':',
+	'-',
+	'+',
+	'<',
+	'>'
+];
 
 const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	const initialSearchResults = useMemo(
@@ -67,15 +91,19 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	);
 
 	const invalidQueryTooltip = useMemo(
-		() => t('label.invalid_query', 'Special characters like :, ", -, !, etc., are ignored in the search. This may lead to unexpected results.'),
+		() =>
+			t(
+				'label.invalid_query',
+				'Special characters like :, ", -, !, etc., are ignored in the search. This may lead to unexpected results.'
+			),
 		[t]
 	);
 
 	const containsSpecialCharacter = useMemo(() => {
 		if (!query || query.length === 0) return false;
-		
+
 		const queryString = query.map((c) => convertSearchChipToString(c)).join(' ');
-		return specialChars.some(char => queryString.includes(char));
+		return specialChars.some((char) => queryString.includes(char));
 	}, [query]);
 
 	const resultLabelType = containsSpecialCharacter ? 'warning' : undefined;
@@ -166,7 +194,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 				});
 		},
 		[
-			defaultResultLabel,
 			foldersToSearchInQuery,
 			dispatch,
 			spanStart,
@@ -174,7 +201,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			searchResults.offset,
 			searchResults.sortBy,
 			updateQuery,
-			t,
 			initialSearchResults
 		]
 	);
