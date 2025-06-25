@@ -6,7 +6,12 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 import { Container, Shimmer, useSnackbar } from '@zextras/carbonio-design-system';
-import { AccountSettingsPrefs, getUserAccount, SettingsHeader, t } from "@zextras/carbonio-shell-ui";
+import {
+	AccountSettingsPrefs,
+	getUserAccount,
+	SettingsHeader,
+	t
+} from '@zextras/carbonio-shell-ui';
 import { ContactInputProps, usePrefs, useUpdateView } from '@zextras/carbonio-ui-commons';
 import { map, filter, isEqual, uniqBy } from 'lodash';
 
