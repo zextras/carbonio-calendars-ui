@@ -13,7 +13,8 @@ export const TEST_SELECTORS = {
 		closeModal: 'icon: Close',
 		closeChip: 'icon: Close',
 		addCalendar: 'icon: Plus',
-		calendarChipAvatar: 'icon: Square2'
+		calendarChipAvatar: 'icon: Square2',
+		shareUrlButton: 'icon: Copy'
 	}
 };
 

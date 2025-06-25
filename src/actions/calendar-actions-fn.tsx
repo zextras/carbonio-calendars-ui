@@ -21,7 +21,6 @@ import { NewModal } from '../view/move/new-calendar-modal';
 import { CreateGroupModal } from '../view/sidebar/create-group-modal';
 import { DeleteModal } from '../view/sidebar/delete-modal';
 import { EditModal } from '../view/sidebar/edit-modal/edit-modal';
-import ShareCalendarUrlModal from '../view/sidebar/edit-modal/parts/share-calendar-url-modal';
 import { EmptyModal } from '../view/sidebar/empty-modal';
 import { ShareCalendarModal } from '../view/sidebar/share-calendar-modal';
 import { SharesInfoModal } from '../view/sidebar/shares-info-modal';
@@ -177,7 +176,7 @@ export const editCalendar =
 						<EditModal folderId={item.id} onClose={(): void => closeModal(modalId)} />
 					</StoreProvider>
 				),
-				maxHeight: '70vh',
+				maxHeight: '90vh',
 				size: 'medium'
 			},
 			true
@@ -308,36 +307,6 @@ export const shareCalendar =
 				onClose: () => {
 					closeModal(modalId);
 				}
-			},
-			true
-		);
-	};
-
-export const shareCalendarUrl =
-	({
-		item,
-		createModal,
-		closeModal
-	}: {
-		item: { name: string };
-		createModal: CreateModalFn;
-		closeModal: CloseModalFn;
-	}): ((e?: ActionsClick) => void) =>
-	() => {
-		const modalId = 'share-calendar-url';
-		createModal(
-			{
-				id: modalId,
-				children: (
-					<StoreProvider>
-						<ShareCalendarUrlModal
-							folderName={item.name}
-							onClose={(): void => closeModal(modalId)}
-						/>
-					</StoreProvider>
-				),
-				maxHeight: '70vh',
-				size: 'medium'
 			},
 			true
 		);
