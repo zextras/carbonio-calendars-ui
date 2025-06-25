@@ -5,7 +5,8 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { filter, map, uniqBy } from 'lodash';
+import { Row } from '@zextras/carbonio-design-system';
+import { filter, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { EditorResourceComponent, normalizeResources } from './editor-resource-component';
@@ -21,6 +22,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 	const [t] = useTranslation();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
 	const equipmentValue = useAppSelector(selectEditorEquipment(editorId));
+	const hasEquipments = useAppStatusStore((state) => state.equipment ?? []).length > 0;
 
 	const equipmentChipValue = useMemo(
 		() =>
@@ -50,37 +52,38 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 						response.cn,
 						(cn) => cn._attrs.zimbraCalResType === 'Equipment'
 					);
-					const remoteResources = map(equipmentResource, (result) => normalizeResources(result));
-					const searchOptions = map(equipmentResource, (result) => ({
+					return map(equipmentResource, (result) => ({
 						id: result.fileAsStr,
 						label: result.fileAsStr,
 						icon: 'BriefcaseOutline',
 						value: normalizeResources(result)
 					}));
-					useAppStatusStore.setState({ equipment: uniqBy(remoteResources, 'label') });
-					return searchOptions;
 				}
 				throw new Error('received error from API');
 			}),
 		[]
 	);
 
-	return (
-		<EditorResourceComponent
-			onChange={onChange}
-			editorId={editorId}
-			onSearchOptions={onSearchOptions}
-			placeholder={t('label.equipment', 'Equipment')}
-			resourcesValue={equipmentChipValue}
-			warningLabel={t(
-				'attendees_equipments_unavailable',
-				'One or more Equipments are not available at the selected time of the event'
-			)}
-			disabled={disabled?.equipment}
-			singleWarningLabel={t(
-				'attendee_equipment_unavailable',
-				'Equipment not available at the selected time of the event'
-			)}
-		/>
+	return !hasEquipments ? (
+		<></>
+	) : (
+		<Row height="fit" width="fill" padding={{ top: 'large' }}>
+			<EditorResourceComponent
+				onChange={onChange}
+				editorId={editorId}
+				onSearchOptions={onSearchOptions}
+				placeholder={t('label.equipment', 'Equipment')}
+				resourcesValue={equipmentChipValue}
+				warningLabel={t(
+					'attendees_equipments_unavailable',
+					'One or more Equipments are not available at the selected time of the event'
+				)}
+				disabled={disabled?.equipment}
+				singleWarningLabel={t(
+					'attendee_equipment_unavailable',
+					'Equipment not available at the selected time of the event'
+				)}
+			/>
+		</Row>
 	);
 };
