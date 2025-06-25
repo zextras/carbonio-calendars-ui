@@ -9,9 +9,9 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 
 import { EditorAllDayCheckbox } from './editor-allday-checkbox';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../commons/editor-generator';
 import { reducers } from '../../../store/redux';
+import { setupTest } from '@test-setup';
 
 describe('editor all day checkbox', () => {
 	test('on click editor inside store will have all day option set as true', async () => {

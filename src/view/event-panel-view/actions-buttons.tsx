@@ -6,10 +6,9 @@
 import React, { ReactElement, useMemo } from 'react';
 
 import { Button, Dropdown, Row, Tooltip } from '@zextras/carbonio-design-system';
+import { FOLDERS, hasId } from '@zextras/carbonio-ui-commons';
 import { filter, find, noop } from 'lodash';
 
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import {
 	AppointmentActionsItems,

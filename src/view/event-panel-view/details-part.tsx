@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { ImageAndIconPart } from './image-and-icon-part';
-import { useFolder } from '../../carbonio-ui-commons/store/zustand/folder';
+import { useFolder } from '@zextras/carbonio-ui-commons';
 import { setCalendarColor } from '../../normalizations/normalizations-utils';
 import { EventType } from '../../types/event';
 import { Invite } from '../../types/store/invite';

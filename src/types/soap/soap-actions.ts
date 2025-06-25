@@ -5,7 +5,7 @@
  */
 import { ErrorSoapResponse } from '@zextras/carbonio-shell-ui';
 
-import { Grant } from '../../carbonio-ui-commons/types/folder';
+import { Grant } from '@zextras/carbonio-ui-commons';
 
 export type Contact = {
 	id: string;

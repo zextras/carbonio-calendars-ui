@@ -17,7 +17,7 @@ import { useUserAccounts, Grant } from '@zextras/carbonio-shell-ui';
 import { useTranslation } from 'react-i18next';
 
 import { GranteeChip } from './grantee-chip';
-import { Folder } from '../../../../carbonio-ui-commons/types/folder';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { useEditModalContext } from '../../../../commons/edit-modal-context';
 import ModalFooter from '../../../../commons/modal-footer';
 import { ModalHeader } from '../../../../commons/modal-header';

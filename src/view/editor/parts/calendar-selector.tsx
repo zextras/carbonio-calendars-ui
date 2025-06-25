@@ -7,20 +7,21 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
+import {
+	ROOT_NAME,
+	FOLDERS,
+	getRootAccountId,
+	useFoldersMap,
+	useFoldersMapByRoot,
+	isTrashOrNestedInIt,
+	Folder,
+	LinkFolder,
+	hasId
+} from '@zextras/carbonio-ui-commons';
 import { filter, find, map, reject } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import LabelFactory, { ItemFactory } from './select-label-factory';
-import { ROOT_NAME } from '../../../carbonio-ui-commons/constants';
-import { FOLDERS } from '../../../carbonio-ui-commons/constants/folders';
-import {
-	getRootAccountId,
-	useFoldersMap,
-	useFoldersMapByRoot
-} from '../../../carbonio-ui-commons/store/zustand/folder';
-import { isTrashOrNestedInIt } from '../../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder, LinkFolder } from '../../../carbonio-ui-commons/types';
-import { hasId } from '../../../carbonio-ui-commons/worker/handle-message';
 import { PREFS_DEFAULTS } from '../../../constants';
 import {
 	setCalendarColor,

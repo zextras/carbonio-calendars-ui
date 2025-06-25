@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createSelector } from '@reduxjs/toolkit';
+import { Folders } from '@zextras/carbonio-ui-commons';
 import { find, values, reduce, filter } from 'lodash';
 
-import { Folder, Folders } from '../../carbonio-ui-commons/types/folder';
 import { normalizeCalendarEvents } from '../../normalizations/normalize-calendar-events';
 import { EventType } from '../../types/event';
 import { Appointment, InstanceReference } from '../../types/store/appointments';

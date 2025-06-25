@@ -7,13 +7,10 @@ import React from 'react';
 
 import { CloseModalFn, CreateModalFn, CreateSnackbarFn } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import { getRoot, isTrashOrNestedInIt, Folder, ResFolder } from '@zextras/carbonio-ui-commons';
 import { filter, isEqual, lowerCase, map, uniqWith } from 'lodash';
 import moment from 'moment';
 
-import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
-import { isTrashOrNestedInIt } from '../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../carbonio-ui-commons/types';
-import { ResFolder } from '../carbonio-ui-commons/utils';
 import { FOLDER_OPERATIONS } from '../constants/api';
 import { getFolderRequest } from '../soap/get-folder-request';
 import { getShareInfoRequest } from '../soap/get-share-info-request';

@@ -8,7 +8,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Button, Container, Row, Tooltip, Text } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import { ZIMBRA_STANDARD_COLORS } from '../../carbonio-ui-commons/constants';
+import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
 import { Square } from '../../commons/styled-components';
 import { GroupCalendar } from '../../types/groups';
 

@@ -7,6 +7,15 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
 import type { QueryChip, SearchViewProps } from '@zextras/carbonio-search-ui';
+import {
+	FOLDERS,
+	convertSearchChipToString,
+	useUpdateView,
+	useFoldersMap,
+	Folder,
+	usePrefs,
+	hasId
+} from '@zextras/carbonio-ui-commons';
 import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Routes, Route } from 'react-router-dom';
@@ -14,13 +23,6 @@ import { Routes, Route } from 'react-router-dom';
 import { AdvancedFilterModal } from './advance-filter-modal';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { convertSearchChipToString } from '../../carbonio-ui-commons/helpers/search';
-import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../carbonio-ui-commons/types/folder';
-import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { DEFAULT_DATE_END, DEFAULT_DATE_START } from '../../constants/advance-filter-modal';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';

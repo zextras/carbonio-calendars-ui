@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Grant } from '../carbonio-ui-commons/types/folder';
+import { Grant } from '@zextras/carbonio-ui-commons';
 
 export type ShareCalendarModalProps = {
 	folderName: string;

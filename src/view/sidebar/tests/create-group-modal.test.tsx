@@ -11,10 +11,6 @@ import { ErrorSoapBodyResponse } from '@zextras/carbonio-shell-ui';
 import { times } from 'lodash';
 
 import { selectCalendarFromSelector } from './utils';
-import { generateFolder } from '../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
-import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
-import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import {
 	CreateCalendarGroupRequest,
@@ -23,6 +19,10 @@ import {
 import * as createGroupApi from '../../../soap/create-calendar-group-request';
 import { generateApiErrorResponse } from '../../../test/generators/api';
 import { CreateGroupModal } from '../create-group-modal';
+import { setupTest, screen } from '@test-setup';
+import { generateFolder } from '@test-utils/folders/folders-generator';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { populateFoldersStore } from '@test-utils/store/folders';
 
 const generateApiSuccessResponse = (
 	groupName: string = faker.word.noun()
