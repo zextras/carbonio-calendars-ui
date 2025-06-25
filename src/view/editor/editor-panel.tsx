@@ -59,12 +59,8 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 			<Row height="fit" width="fill" padding={{ top: 'large' }}>
 				<EditorLocation editorId={editorId} />
 			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorMeetingRooms editorId={editorId} />
-			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorEquipments editorId={editorId} />
-			</Row>
+			<EditorMeetingRooms editorId={editorId} />
+			<EditorEquipments editorId={editorId} />
 			<EditorVirtualRoom editorId={editorId} />
 			<Row height="fit" width="fill" padding={{ top: 'large' }}>
 				<EditorAttendees editorId={editorId} />
@@ -97,6 +93,6 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 				<EditorComposer editorId={editorId} />
 			</Row>
 		</Container>
-		<EditorResourcesController editorId={editorId} />
+		<EditorResourcesController />
 	</Container>
 );
