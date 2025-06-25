@@ -27,7 +27,7 @@ import { EditorTimezone } from './parts/editor-time-zone';
 import { EditorTitle } from './parts/editor-title';
 import { EditorVirtualRoom } from './parts/editor-virtual-room';
 import { EditorRecurrence } from './parts/recurrence';
-import { useFetchEditorResources } from './useFetchEditorResources';
+import { useFetchEditorResources } from './use-fetch-editor-resources';
 import { EditorProps } from '../../types/editor';
 
 export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement => {
