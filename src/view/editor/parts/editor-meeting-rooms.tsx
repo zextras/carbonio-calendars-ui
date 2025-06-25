@@ -5,7 +5,8 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { filter, map, uniqBy } from 'lodash';
+import { Row } from '@zextras/carbonio-design-system';
+import { filter, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { EditorResourceComponent, normalizeResources } from './editor-resource-component';
@@ -20,6 +21,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
+	const hasMeetingRooms = useAppStatusStore((state) => state.meetingRoom ?? []).length > 0;
 
 	const meetingRoomsValue = useAppSelector(selectEditorMeetingRoom(editorId));
 
@@ -51,38 +53,38 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 						response.cn,
 						(cn) => cn._attrs.zimbraCalResType === 'Location'
 					);
-					const remoteResources = map(meetingResources, (result) => normalizeResources(result));
-
-					const meetingRoomOptions = map(meetingResources, (result) => ({
+					return map(meetingResources, (result) => ({
 						id: result.fileAsStr,
 						label: result.fileAsStr,
 						icon: 'BuildingOutline',
 						value: normalizeResources(result)
 					}));
-					useAppStatusStore.setState({ meetingRoom: uniqBy(remoteResources, 'label') });
-					return meetingRoomOptions;
 				}
 				throw new Error('API failed');
 			}),
 		[]
 	);
 
-	return (
-		<EditorResourceComponent
-			onChange={onChange}
-			editorId={editorId}
-			onSearchOptions={onSearchOptions}
-			placeholder={t('label.meeting_room', 'Meeting room')}
-			resourcesValue={meetingRoomsChipValue ?? []}
-			warningLabel={t(
-				'attendees_rooms_unavailable',
-				'One or more Meeting Rooms are not available at the selected time of the event'
-			)}
-			disabled={disabled?.equipment}
-			singleWarningLabel={t(
-				'attendee_room_unavailable',
-				'Room not available at the selected time of the event'
-			)}
-		/>
+	return !hasMeetingRooms ? (
+		<></>
+	) : (
+		<Row height="fit" width="fill" padding={{ top: 'large' }}>
+			<EditorResourceComponent
+				onChange={onChange}
+				editorId={editorId}
+				onSearchOptions={onSearchOptions}
+				placeholder={t('label.meeting_room', 'Meeting room')}
+				resourcesValue={meetingRoomsChipValue ?? []}
+				warningLabel={t(
+					'attendees_rooms_unavailable',
+					'One or more Meeting Rooms are not available at the selected time of the event'
+				)}
+				disabled={disabled?.equipment}
+				singleWarningLabel={t(
+					'attendee_room_unavailable',
+					'Room not available at the selected time of the event'
+				)}
+			/>
+		</Row>
 	);
 };
