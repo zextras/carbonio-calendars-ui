@@ -126,6 +126,6 @@ describe('Editor board wrapper', () => {
 			}
 		});
 		setupTest(<BoardEditPanel />, { store });
-		expect(screen.getByTestId('EditorPanel')).toBeInTheDocument();
+		expect(await screen.findByTestId('EditorPanel')).toBeInTheDocument();
 	});
 });
