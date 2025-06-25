@@ -5,11 +5,7 @@
  */
 import { useEffect, useState } from 'react';
 
-import { map } from 'lodash';
-
-import { searchCalendarResourcesRequest } from '../../../soap/search-calendar-resources-request';
-import { useAppSelector } from '../../../store/redux/hooks';
-import { selectEditorEquipment, selectEditorMeetingRoom } from '../../../store/selectors/editor';
+import { searchCalendarMultipleResourcesRequest } from '../../../soap/search-calendar-resources-request';
 import { useAppStatusStore } from '../../../store/zustand/store';
 import { Contact } from '../../../types/soap/soap-actions';
 
@@ -23,35 +19,26 @@ const normalizeResources = (
 	type: r._attrs.zimbraCalResType
 });
 
-export const EditorResourcesController = ({ editorId }: { editorId: string }): null => {
-	const meetingRoomsValue = useAppSelector(selectEditorMeetingRoom(editorId));
-	const equipmentsValue = useAppSelector(selectEditorEquipment(editorId));
-
+export const EditorResourcesController = (): null => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (!isLoading) {
-			if (meetingRoomsValue) {
-				searchCalendarResourcesRequest('Location').then((res) => {
-					setIsLoading(true);
-					useAppStatusStore.setState({
-						meetingRoom: res.calresource
-							? map(res.calresource, (r) => normalizeResources(r))
-							: undefined
-					});
+			searchCalendarMultipleResourcesRequest(['Location', 'Equipment']).then((res) => {
+				const locationResources =
+					res.calresource?.filter((r) => r._attrs.zimbraCalResType === 'Location') ?? [];
+				const equipmentResources =
+					res.calresource?.filter((r) => r._attrs.zimbraCalResType === 'Equipment') ?? [];
+
+				useAppStatusStore.setState({
+					meetingRoom: locationResources.map(normalizeResources),
+					equipment: equipmentResources.map(normalizeResources)
 				});
-			}
-			if (equipmentsValue) {
-				searchCalendarResourcesRequest('Equipment').then((res) => {
-					setIsLoading(true);
-					useAppStatusStore.setState({
-						equipment: res.calresource
-							? map(res.calresource, (r) => normalizeResources(r))
-							: undefined
-					});
-				});
-			}
+
+				setIsLoading(true);
+			});
 		}
-	}, [equipmentsValue, isLoading, meetingRoomsValue, setIsLoading]);
+	}, [isLoading, setIsLoading]);
+
 	return null;
 };
