@@ -20,8 +20,8 @@ const normalizeResources = (
 	type: r._attrs.zimbraCalResType
 });
 
-export const useFetchEditorResources: () => { loading: boolean } = () => {
-	const [loading, setLoading] = useState(true);
+export const useFetchEditorResources: () => { loadingResources: boolean } = () => {
+	const [loadingResources, setLoadingResources] = useState(true);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -39,7 +39,7 @@ export const useFetchEditorResources: () => { loading: boolean } = () => {
 				equipment: equipmentResources.map(normalizeResources)
 			});
 
-			setLoading(false);
+			setLoadingResources(false);
 		});
 
 		return () => {
@@ -47,5 +47,5 @@ export const useFetchEditorResources: () => { loading: boolean } = () => {
 		};
 	}, []);
 
-	return { loading };
+	return { loadingResources };
 };

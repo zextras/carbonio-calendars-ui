@@ -31,9 +31,9 @@ import { useFetchEditorResources } from './useFetchEditorResources';
 import { EditorProps } from '../../types/editor';
 
 export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement => {
-	const { loading } = useFetchEditorResources();
+	const { loadingResources } = useFetchEditorResources();
 
-	if (loading) {
+	if (loadingResources) {
 		return (
 			<Container
 				height="100%"
