@@ -13,19 +13,21 @@ import {
 	FormSection,
 	FormSubSection
 } from '@zextras/carbonio-design-system';
-import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
+import { AccountSettingsPrefs, t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
 import styled from 'styled-components';
 
 import { permissionsSubSection } from './sub-sections';
+import { PermissionsRightsOptions } from '../constants/api';
+import { ContactInputProps } from '@zextras/carbonio-ui-commons';
 
 const AttendeesContainer = styled.div`
-	width: calc(100% - ${({ $hasTooltip }) => ($hasTooltip ? `3rem` : '0rem')});
+	width: 100%;
 	height: fit-content;
-	background: ${({ theme }) => theme.palette.gray5.regular};
-	border-bottom: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
+	background: ${({ theme }): string => theme.palette.gray5.regular};
+	border-bottom: 0.0625rem solid ${({ theme }): string => theme.palette.gray2.regular};
 	[class^='Chip__ChipComp'] {
 		[class^='Text__Comp'] {
-			color: ${({ theme }) => theme.palette.text.regular};
+			color: ${({ theme }): string => theme.palette.text.regular};
 		}
 	}
 `;
@@ -39,9 +41,25 @@ export default function PermisionsSettings({
 	setAllowedInivteUsers,
 	settingsObj,
 	updateSettings,
-	defaultSelectedFreeBusyContacts,
-	defaultSelectedInviteContacts
-}) {
+	allowedFBUsers,
+	allowedInivteUsers
+}: {
+	activeFreeBusyOptn: PermissionsRightsOptions;
+	activeInviteOptn: PermissionsRightsOptions;
+	setAllowedFBUsers: React.Dispatch<React.SetStateAction<ContactInputProps['defaultValue']>>;
+	handlePermissionChange: (permission: PermissionsRightsOptions) => () => void;
+	handleInviteRightChange: (right: PermissionsRightsOptions) => () => void;
+	setAllowedInivteUsers: React.Dispatch<React.SetStateAction<ContactInputProps['defaultValue']>>;
+	settingsObj: AccountSettingsPrefs;
+	updateSettings: (e: {
+		target: {
+			name: string;
+			value: string;
+		};
+	}) => void;
+	allowedFBUsers: ContactInputProps['defaultValue'];
+	allowedInivteUsers: ContactInputProps['defaultValue'];
+}): React.JSX.Element {
 	const [ContactInput] = useIntegratedComponent('contact-input');
 	const sectionTitlePermissions = useMemo(() => permissionsSubSection(), []);
 
@@ -113,10 +131,8 @@ export default function PermisionsSettings({
 						<AttendeesContainer>
 							<ContactInput
 								placeholder={t('label.email_input_message', 'Enter e-mail addresses')}
-								onChange={(users) => {
-									setAllowedFBUsers(users);
-								}}
-								defaultValue={defaultSelectedFreeBusyContacts}
+								onChange={setAllowedFBUsers}
+								defaultValue={allowedFBUsers}
 							/>
 						</AttendeesContainer>
 					)}
@@ -165,10 +181,8 @@ export default function PermisionsSettings({
 						<AttendeesContainer>
 							<ContactInput
 								placeholder={t('label.email_input_message', 'Enter e-mail addresses')}
-								onChange={(users) => {
-									setAllowedInivteUsers(users);
-								}}
-								defaultValue={defaultSelectedInviteContacts}
+								onChange={setAllowedInivteUsers}
+								defaultValue={allowedInivteUsers}
 							/>
 						</AttendeesContainer>
 					)}
@@ -176,7 +190,7 @@ export default function PermisionsSettings({
 					<Row orientation="vertical" mainAlignment="flex-start" crossAlignment="baseline">
 						<Checkbox
 							value={settingsObj.zimbraPrefCalendarSendInviteDeniedAutoReply === 'TRUE'}
-							onClick={() =>
+							onClick={(): void =>
 								updateSettings({
 									target: {
 										name: 'zimbraPrefCalendarSendInviteDeniedAutoReply',
