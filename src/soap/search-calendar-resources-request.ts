@@ -29,7 +29,7 @@ export type searchCalendarFulfilledType = {
 export type searchCalendarReturnType = searchCalendarFulfilledType | searchCalendarRejectedType;
 
 export const searchCalendarMultipleResourcesRequest = async (
-	values: Array<string>,
+	resourceTypes: Array<string>,
 	signal?: AbortSignal
 ): Promise<searchCalendarReturnType> => {
 	const response: searchCalendarReturnType = await soapFetch(
@@ -39,7 +39,7 @@ export const searchCalendarMultipleResourcesRequest = async (
 			searchFilter: {
 				conds: {
 					or: '1',
-					cond: values.map((value) => ({
+					cond: resourceTypes.map((value) => ({
 						attr: SEARCH_RESOURCES_ATTRS.CAL_RES_TYPE,
 						op: SEARCH_RESOURCE_OP.EQUAL,
 						value
