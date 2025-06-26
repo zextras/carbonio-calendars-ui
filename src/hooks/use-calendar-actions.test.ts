@@ -200,11 +200,10 @@ describe('use calendar actions', () => {
 			initialProps: [calendarItem]
 		});
 
-		expect(result.current.length).toBe(6);
+		expect(result.current.length).toBe(5);
 		expect(result.current).toStrictEqual([
 			expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
-			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.UPLOAD })
@@ -230,11 +229,10 @@ describe('use calendar actions', () => {
 			initialProps: [calendarItem]
 		});
 
-		expect(result.current.length).toBe(5);
+		expect(result.current.length).toBe(4);
 		expect(result.current).toStrictEqual([
 			expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
-			expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS }),
 			expect.objectContaining({ id: FOLDER_ACTIONS.UPLOAD })
 		]);
@@ -369,12 +367,11 @@ describe('use calendar actions', () => {
 				initialProps: [customItem]
 			});
 
-			expect(result.current.length).toBe(7);
+			expect(result.current.length).toBe(6);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.UPLOAD })
@@ -401,12 +398,11 @@ describe('use calendar actions', () => {
 				initialProps: [trashedItem]
 			});
 
-			expect(result.current.length).toBe(6);
+			expect(result.current.length).toBe(5);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.UPLOAD })
 			]);
@@ -455,13 +451,12 @@ describe('use calendar actions', () => {
 				initialProps: [customNestedItem]
 			});
 
-			expect(result.current.length).toBe(8);
+			expect(result.current.length).toBe(7);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.UPLOAD })
@@ -488,13 +483,12 @@ describe('use calendar actions', () => {
 				initialProps: [customNestedItem]
 			});
 
-			expect(result.current.length).toBe(7);
+			expect(result.current.length).toBe(6);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.MOVE_TO_ROOT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EXPORT_ICS }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.UPLOAD })
 			]);
@@ -642,12 +636,11 @@ describe('use calendar actions', () => {
 				initialProps: [mainChildFolder]
 			});
 
-			expect(result.current.length).toBe(5);
+			expect(result.current.length).toBe(4);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.FIND_SHARES })
 			]);
 		});
@@ -658,12 +651,11 @@ describe('use calendar actions', () => {
 				initialProps: [sharedChildFolder]
 			});
 
-			expect(result.current.length).toBe(4);
+			expect(result.current.length).toBe(3);
 			expect(result.current).toStrictEqual([
 				expect.objectContaining({ id: FOLDER_ACTIONS.NEW }),
 				expect.objectContaining({ id: FOLDER_ACTIONS.EDIT }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE }),
-				expect.objectContaining({ id: FOLDER_ACTIONS.SHARE_URL })
+				expect.objectContaining({ id: FOLDER_ACTIONS.DELETE })
 			]);
 		});
 	});

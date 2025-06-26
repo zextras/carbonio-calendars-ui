@@ -128,7 +128,7 @@ describe('the edit calendar modal is composed by', () => {
 	});
 
 	describe('the modal header. It is composed by', () => {
-		test('the title "edit calendar properties" which is the same for every folder', () => {
+		test('the title "edit and share calendar" which is the same for every folder', () => {
 			setupFoldersStore();
 			const closeFn = jest.fn();
 			const store = configureStore({ reducer: combineReducers(reducers) });
@@ -136,7 +136,7 @@ describe('the edit calendar modal is composed by', () => {
 				store
 			});
 
-			expect(screen.getByText('Edit calendar properties')).toBeVisible();
+			expect(screen.getByText('Edit and share calendar')).toBeVisible();
 		});
 		test('the close button, on click will call the modal onclose', async () => {
 			setupFoldersStore();
