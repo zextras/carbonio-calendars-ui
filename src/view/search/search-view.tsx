@@ -94,7 +94,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		() =>
 			t(
 				'label.invalid_query',
-				'Special characters like :, ", -, !, etc., are ignored in the search. This may lead to unexpected results.'
+				'Special characters like :, ", -, !, etc., are ignored in the search. This may lead to unexpected results for:'
 			),
 		[t]
 	);
