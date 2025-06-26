@@ -66,6 +66,16 @@ const SearchList = ({
 		[dateEndValue]
 	);
 
+	const displayerTitle = useMemo(() => {
+		if (appointments.length === 0 && query.length > 0) {
+			return t(
+				'displayer.search_list_title1',
+				'It looks like there are no results. Keep searching!'
+			);
+		}
+		return null;
+	}, [appointments.length, query.length]);
+
 	return (
 		<Container
 			background={'gray6'}
@@ -95,13 +105,29 @@ const SearchList = ({
 				<ShimmerList />
 			) : (
 				<Container style={{ overflow: 'hidden' }}>
-					<List
-						onListBottom={loadMore}
-						background={'gray6'}
-						data-testid="SearchResultCalendarsContainer"
-					>
-						{items}
-					</List>
+					{appointments.length > 0 ? (
+						<List
+							onListBottom={loadMore}
+							background={'gray6'}
+							data-testid="SearchResultCalendarsContainer"
+						>
+							{items}
+						</List>
+					) : (
+						<Container>
+							<Padding top="medium">
+								<Text
+									data-testid="displayer-title"
+									color="gray1"
+									overflow="break-word"
+									size="small"
+									style={{ whiteSpace: 'pre-line', textAlign: 'center' }}
+								>
+									{displayerTitle}
+								</Text>
+							</Padding>
+						</Container>
+					)}
 				</Container>
 			)}
 		</Container>
