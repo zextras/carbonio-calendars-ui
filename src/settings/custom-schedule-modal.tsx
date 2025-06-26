@@ -3,12 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { Container, Text, CustomModal, Row, Checkbox } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 
+import { WorkWeekDay } from '../utils/work-week';
 import TimePicker from './components/time-picker';
 import { getWeekDay } from './components/utils';
 import ModalFooter from '../commons/modal-footer';
@@ -18,24 +19,53 @@ export default function CustomScheduleModal({
 	open,
 	toggleModal,
 	workingSchedule,
-	onFromChange,
+	setWorkingSchedule,
 	saveChanges,
 	handelDaysClicked,
 	disabled
-}) {
+}: {
+	open: boolean;
+	toggleModal: () => void;
+	setWorkingSchedule: React.Dispatch<React.SetStateAction<WorkWeekDay[]>>;
+	saveChanges: () => void;
+	handelDaysClicked: (arg: WorkWeekDay['day']) => () => void;
+	disabled: boolean;
+	workingSchedule: Array<WorkWeekDay>;
+}): React.JSX.Element {
 	const title = useMemo(
 		() => t('calendar.modal.custom_schedule.title', 'Customize working hours'),
 		[]
 	);
 
+	const onFromChange = useCallback(
+		(data: { start: string; hour: string; minute: string; day: string }): void => {
+			data.start
+				? setWorkingSchedule(
+						workingSchedule.map((schedule) =>
+							schedule.day === data.day
+								? {
+										...schedule,
+										end: `${data.hour}${data.minute}`
+									}
+								: schedule
+						)
+					)
+				: setWorkingSchedule(
+						workingSchedule.map((schedule) =>
+							schedule.day === data.day
+								? {
+										...schedule,
+										start: `${data.hour}${data.minute}`
+									}
+								: schedule
+						)
+					);
+		},
+		[setWorkingSchedule, workingSchedule]
+	);
+
 	return (
-		<CustomModal
-			title="Title_bold_dark"
-			maxHeight="90vh"
-			size="medium"
-			open={open}
-			onClose={toggleModal}
-		>
+		<CustomModal maxHeight="90vh" size="medium" open={open} onClose={toggleModal}>
 			<Container
 				padding={{ all: 'large' }}
 				mainAlignment="center"
@@ -67,7 +97,7 @@ export default function CustomScheduleModal({
 									<Checkbox
 										value={s.working}
 										onClick={handelDaysClicked(s.day)}
-										label={getWeekDay(`${Number(s.day) - 1}`, t)}
+										label={getWeekDay(`${Number(s.day) - 1}`)}
 									/>
 								</Row>
 								<Row width="65%" mainAlignment="flex-start" crossAlignment="flex-start">
@@ -83,12 +113,7 @@ export default function CustomScheduleModal({
 						))}
 					</Container>
 				</Container>
-				<ModalFooter
-					onConfirm={saveChanges}
-					onClose={toggleModal}
-					label={t('label.edit', 'Edit')}
-					disabled={disabled}
-				/>
+				<ModalFooter onConfirm={saveChanges} label={t('label.edit', 'Edit')} disabled={disabled} />
 			</Container>
 		</CustomModal>
 	);

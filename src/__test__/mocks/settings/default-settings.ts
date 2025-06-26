@@ -390,7 +390,8 @@ export default {
 		zimbraPrefReadingPaneLocation: 'right',
 		zimbraPrefOutOfOfficeSuppressExternalReply: 'TRUE',
 		zimbraPrefCalendarSendInviteDeniedAutoReply: 'FALSE',
-		zimbraPrefCalenderScaling: '30'
+		zimbraPrefCalenderScaling: '30',
+		zimbraPrefCalendarForwardInvitesTo: ''
 	},
 	props: [
 		{

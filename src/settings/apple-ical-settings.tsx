@@ -13,11 +13,22 @@ import {
 	FormSubSection,
 	Container
 } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
+import { AccountSettingsPrefs, t } from '@zextras/carbonio-shell-ui';
 
 import { iCalSubSection } from './sub-sections';
 
-export default function AppleIcalSettings({ settingsObj, updateSettings }) {
+export default function AppleIcalSettings({
+	settingsObj,
+	updateSettings
+}: {
+	settingsObj: AccountSettingsPrefs;
+	updateSettings: (e: {
+		target: {
+			name: string;
+			value: string;
+		};
+	}) => void;
+}): React.JSX.Element {
 	const sectionTitleAppleCal = useMemo(() => iCalSubSection(), []);
 	return (
 		<FormSection id={sectionTitleAppleCal.id} label={sectionTitleAppleCal.label}>
@@ -38,7 +49,7 @@ export default function AppleIcalSettings({ settingsObj, updateSettings }) {
 				<Checkbox
 					value={settingsObj.zimbraPrefAppleIcalDelegationEnabled === 'TRUE'}
 					label={t('label.enable_dlgtn_for_ical', 'Enable delegation for Apple iCal CalDAV Client')}
-					onClick={() =>
+					onClick={(): void =>
 						updateSettings({
 							target: {
 								name: 'zimbraPrefAppleIcalDelegationEnabled',
