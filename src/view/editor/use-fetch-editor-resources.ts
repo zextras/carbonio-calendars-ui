@@ -9,36 +9,39 @@ import { useEffect, useState } from 'react';
 import { searchCalendarMultipleResourcesRequest } from '../../soap/search-calendar-resources-request';
 
 export const useFetchEditorResources: () => {
-	loadingResources: boolean;
+	resourcesLoaded: boolean;
 	hasEquipment: boolean;
 	hasMeetingRoom: boolean;
 } = () => {
-	const [loadingResources, setLoadingResources] = useState(true);
+	const [resourcesLoaded, setResourcesLoaded] = useState(false);
 
 	const [hasEquipment, setHasEquipment] = useState(false);
 	const [hasMeetingRoom, setHasMeetingRoom] = useState(false);
 
 	useEffect(() => {
-		let cancelled = false;
+		const abortController = new AbortController();
+		const { signal } = abortController;
 
-		searchCalendarMultipleResourcesRequest(['Location', 'Equipment']).then((res) => {
-			if (cancelled) return;
+		searchCalendarMultipleResourcesRequest(['Location', 'Equipment'], signal)
+			.then((res) => {
+				const locationResources =
+					res.calresource?.filter((r) => r._attrs.zimbraCalResType === 'Location') ?? [];
+				const equipmentResources =
+					res.calresource?.filter((r) => r._attrs.zimbraCalResType === 'Equipment') ?? [];
 
-			const locationResources =
-				res.calresource?.filter((r) => r._attrs.zimbraCalResType === 'Location') ?? [];
-			const equipmentResources =
-				res.calresource?.filter((r) => r._attrs.zimbraCalResType === 'Equipment') ?? [];
+				setHasEquipment(equipmentResources.length > 0);
+				setHasMeetingRoom(locationResources.length > 0);
 
-			setHasEquipment(equipmentResources.length > 0);
-			setHasMeetingRoom(locationResources.length > 0);
-
-			setLoadingResources(false);
-		});
+				setResourcesLoaded(true);
+			})
+			.catch((_error) => {
+				setResourcesLoaded(false);
+			});
 
 		return () => {
-			cancelled = true;
+			abortController.abort();
 		};
 	}, []);
 
-	return { loadingResources, hasEquipment, hasMeetingRoom };
+	return { resourcesLoaded, hasEquipment, hasMeetingRoom };
 };
