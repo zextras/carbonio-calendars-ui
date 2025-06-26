@@ -99,24 +99,6 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			defaultSelectedFreeBusyContacts.current = defaultFreeBusyValue;
 			setAllowedFBUsers(defaultFreeBusyValue);
 		}
-		if (invite.length > 0 && defaultSelectedInviteContacts?.current) {
-			const defaultInviteValue =
-				filter(invite, (fb) => fb.gt === GRANTEE_TYPES.USR).length > 0
-					? map(
-							filter(invite, (fb) => fb.gt === GRANTEE_TYPES.USR),
-							(r) =>
-								({
-									id: r.d,
-									email: r.d,
-									type: 'CONTACT',
-									value: { id: r.d, label: r.d, type: 'CONTACT', email: r.d },
-									label: r.d
-								}) as const
-						)
-					: [];
-			defaultSelectedInviteContacts.current = defaultInviteValue;
-			setAllowedInivteUsers(defaultInviteValue);
-		}
 		if (freeBusy.length === 1 && freeBusy[0].gt === GRANTEE_TYPES.PUB) {
 			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
 			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
@@ -141,6 +123,27 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING);
 			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING);
 		}
+	}, [freeBusy]);
+
+	useEffect(() => {
+		if (invite.length > 0 && defaultSelectedInviteContacts?.current) {
+			const defaultInviteValue =
+				filter(invite, (fb) => fb.gt === GRANTEE_TYPES.USR).length > 0
+					? map(
+							filter(invite, (fb) => fb.gt === GRANTEE_TYPES.USR),
+							(r) =>
+								({
+									id: r.d,
+									email: r.d,
+									type: 'CONTACT',
+									value: { id: r.d, label: r.d, type: 'CONTACT', email: r.d },
+									label: r.d
+								}) as const
+						)
+					: [];
+			defaultSelectedInviteContacts.current = defaultInviteValue;
+			setAllowedInivteUsers(defaultInviteValue);
+		}
 		if (invite.length === 1 && invite[0].gt === GRANTEE_TYPES.PUB) {
 			setActiveInviteOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
 			setCurrentInvite(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
@@ -162,7 +165,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			defaultSelectedFreeBusyContacts.current = [];
 			defaultSelectedInviteContacts.current = [];
 		};
-	}, [freeBusy, invite]);
+	}, [invite]);
 
 	const handlePermissionChange = useCallback(
 		(permission: PermissionsRightsOptions) => () => {
