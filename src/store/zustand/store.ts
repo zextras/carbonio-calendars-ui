@@ -22,7 +22,6 @@ export type AppState = {
 	summaryViewId: string | undefined;
 	range: CalendarRange;
 	setRange: SetRange;
-	resourcesLoaded: boolean;
 	summaryViewRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
@@ -30,7 +29,6 @@ export const useAppStatusStore = create<AppState>((set) => ({
 	calendarView: undefined,
 	date: new Date(),
 	summaryViewId: undefined,
-	resourcesLoaded: false,
 	summaryViewRef: React.createRef(),
 	range: {
 		start: moment().subtract('7', 'days').valueOf(),
