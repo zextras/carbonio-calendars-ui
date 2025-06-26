@@ -7,6 +7,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, render, screen, within } from '@testing-library/react';
+import { HttpResponse } from 'msw';
 
 import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import { generateEditor } from '../../../commons/editor-generator';
@@ -14,7 +15,10 @@ import { reducers } from '../../../store/redux';
 import { EditorPanel } from '../editor-panel';
 import { defaultEditor } from './common';
 import { setupTest, UserEvent } from '@test-setup';
-import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import {
+	createAPIInterceptor,
+	createSoapAPIInterceptor
+} from '@test-utils/network/msw/create-api-interceptor';
 
 describe('Editor panel', () => {
 	describe('cleanup', () => {
@@ -242,5 +246,35 @@ describe('Editor panel', () => {
 				})
 			).not.toBeInTheDocument();
 		});
+	});
+
+	it('should show error message if the fetch resources fails', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		shell.getBridgedFunctions.mockImplementation(() => ({
+			createSnackbar: jest.fn()
+		}));
+
+		generateEditor({
+			context: {
+				folders: {},
+				dispatch: store.dispatch,
+				...defaultEditor
+			}
+		});
+
+		createAPIInterceptor(
+			'post',
+			'/service/soap/SearchCalendarResourcesRequest',
+			HttpResponse.error()
+		);
+
+		await act(async () => {
+			setupTest(<EditorPanel editorId={defaultEditor.id} />, { store });
+		});
+
+		expect(
+			screen.getByText('Error loading resources. Please try again later.')
+		).toBeInTheDocument();
 	});
 });

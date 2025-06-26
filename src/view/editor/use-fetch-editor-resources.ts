@@ -8,11 +8,15 @@ import { useEffect, useState } from 'react';
 
 import { searchCalendarMultipleResourcesRequest } from '../../soap/search-calendar-resources-request';
 
-export const useFetchEditorResources: () => {
+type FetchEditorResourcesProps = {
+	onFailure?: () => void;
+};
+
+export const useFetchEditorResources = ({ onFailure }: FetchEditorResourcesProps = {}): {
 	resourcesLoaded: boolean;
 	hasEquipment: boolean;
 	hasMeetingRoom: boolean;
-} = () => {
+} => {
 	const [resourcesLoaded, setResourcesLoaded] = useState(false);
 
 	const [hasEquipment, setHasEquipment] = useState(false);
@@ -35,13 +39,14 @@ export const useFetchEditorResources: () => {
 				setResourcesLoaded(true);
 			})
 			.catch((_error) => {
-				setResourcesLoaded(false);
+				onFailure?.();
+				setResourcesLoaded(true);
 			});
 
 		return () => {
 			abortController.abort();
 		};
-	}, []);
+	}, [onFailure]);
 
 	return { resourcesLoaded, hasEquipment, hasMeetingRoom };
 };

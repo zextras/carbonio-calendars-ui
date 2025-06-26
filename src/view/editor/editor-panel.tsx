@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 
 import { Container, Divider, Row, Spinner } from '@zextras/carbonio-design-system';
 
@@ -31,9 +31,16 @@ import { useFetchEditorResources } from './use-fetch-editor-resources';
 import { EditorProps } from '../../types/editor';
 
 export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement => {
-	const { resourcesLoaded, hasMeetingRoom, hasEquipment } = useFetchEditorResources();
+	const [error, setError] = useState<boolean>(false);
+	const onResourceFetchFailure = useCallback(() => {
+		setError(true);
+	}, []);
 
-	if (!resourcesLoaded) {
+	const { resourcesLoaded, hasMeetingRoom, hasEquipment } = useFetchEditorResources({
+		onFailure: onResourceFetchFailure
+	});
+
+	if (!resourcesLoaded && !error) {
 		return (
 			<Container
 				height="100%"
@@ -43,6 +50,20 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 				background="gray5"
 			>
 				<Spinner color="primary" />
+			</Container>
+		);
+	}
+
+	if (error) {
+		return (
+			<Container
+				height="100%"
+				width="100%"
+				mainAlignment="center"
+				crossAlignment="center"
+				background="gray5"
+			>
+				<p>Error loading resources. Please try again later.</p>
 			</Container>
 		);
 	}

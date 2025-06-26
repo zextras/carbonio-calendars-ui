@@ -104,4 +104,16 @@ describe('useFetchEditorResources', () => {
 		expect(result.current.hasEquipment).toBe(false);
 		expect(result.current.hasMeetingRoom).toBe(false);
 	});
+
+	it('calls onFailure callback when the request fails', async () => {
+		const onFailureMock = jest.fn();
+		mockSearchCalendarMultipleResourcesRequest.mockRejectedValueOnce(new Error('Network error'));
+
+		const { result } = renderHook(() => useFetchEditorResources({ onFailure: onFailureMock }));
+
+		await waitFor(async () => {
+			expect(result.current.resourcesLoaded).toBe(false);
+		});
+		expect(onFailureMock).toHaveBeenCalled();
+	});
 });
