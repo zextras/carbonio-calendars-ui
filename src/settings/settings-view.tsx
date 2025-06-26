@@ -105,6 +105,33 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			defaultSelectedFreeBusyContacts.current = defaultFreeBusyValue;
 			setAllowedFBUsers(defaultFreeBusyValue);
 		}
+		if (freeBusy.length === 1 && freeBusy[0].gt === GRANTEE_TYPES.PUB) {
+			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
+			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
+		}
+		if (freeBusy.length === 1 && freeBusy[0].gt === GRANTEE_TYPES.ALL && !freeBusy[0].deny) {
+			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL);
+			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL);
+		}
+		if (
+			freeBusy.length === 1 &&
+			freeBusy[0].gt === GRANTEE_TYPES.DOM &&
+			freeBusy[0].d === window.location.hostname
+		) {
+			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
+			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
+		}
+		if (freeBusy.length === 1 && freeBusy[0].gt === GRANTEE_TYPES.ALL && freeBusy[0].deny) {
+			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_NONE);
+			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_NONE);
+		}
+		if (freeBusy.length >= 1 && freeBusy[0].gt === GRANTEE_TYPES.USR) {
+			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING);
+			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING);
+		}
+	}, [freeBusy]);
+
+	useEffect(() => {
 		if (invite.length > 0 && defaultSelectedInviteContacts?.current) {
 			const defaultInviteValue =
 				filter(invite, (fb) => fb.gt === GRANTEE_TYPES.USR).length > 0
@@ -122,30 +149,6 @@ export default function CalendarSettingsView(): React.JSX.Element {
 					: [];
 			defaultSelectedInviteContacts.current = defaultInviteValue;
 			setAllowedInivteUsers(defaultInviteValue);
-		}
-		if (freeBusy.length === 1 && freeBusy[0].gt === GRANTEE_TYPES.PUB) {
-			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
-			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
-		}
-		if (freeBusy.length === 1 && freeBusy[0].gt === GRANTEE_TYPES.ALL && !freeBusy[0].deny) {
-			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL);
-			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL);
-		}
-		if (
-			freeBusy.length === 1 &&
-			freeBusy[0].gt === GRANTEE_TYPES.DOM &&
-			freeBusy[0].d === getUserAccount()?.name.split('@')[1]
-		) {
-			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
-			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
-		}
-		if (freeBusy.length === 1 && freeBusy[0].gt === GRANTEE_TYPES.ALL && freeBusy[0].deny) {
-			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_NONE);
-			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_NONE);
-		}
-		if (freeBusy.length >= 1 && freeBusy[0].gt === GRANTEE_TYPES.USR) {
-			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING);
-			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING);
 		}
 		if (invite.length === 1 && invite[0].gt === GRANTEE_TYPES.PUB) {
 			setActiveInviteOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
@@ -168,7 +171,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			defaultSelectedFreeBusyContacts.current = [];
 			defaultSelectedInviteContacts.current = [];
 		};
-	}, [freeBusy, invite]);
+	}, [invite]);
 
 	const handlePermissionChange = useCallback(
 		(permission: PermissionsRightsOptions) => () => {
