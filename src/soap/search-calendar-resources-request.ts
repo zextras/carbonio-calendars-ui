@@ -29,21 +29,27 @@ export type searchCalendarFulfilledType = {
 export type searchCalendarReturnType = searchCalendarFulfilledType | searchCalendarRejectedType;
 
 export const searchCalendarMultipleResourcesRequest = async (
-	values: Array<string>
+	values: Array<string>,
+	signal?: AbortSignal
 ): Promise<searchCalendarReturnType> => {
-	const response: searchCalendarReturnType = await soapFetch('SearchCalendarResources', {
-		attrs: `${SEARCH_RESOURCES_ATTRS.EMAIL},${SEARCH_RESOURCES_ATTRS.CAL_RES_TYPE},${SEARCH_RESOURCES_ATTRS.FULL_NAME}`,
-		searchFilter: {
-			conds: {
-				or: '1',
-				cond: values.map((value) => ({
-					attr: SEARCH_RESOURCES_ATTRS.CAL_RES_TYPE,
-					op: SEARCH_RESOURCE_OP.EQUAL,
-					value
-				}))
-			}
+	const response: searchCalendarReturnType = await soapFetch(
+		'SearchCalendarResources',
+		{
+			attrs: `${SEARCH_RESOURCES_ATTRS.EMAIL},${SEARCH_RESOURCES_ATTRS.CAL_RES_TYPE},${SEARCH_RESOURCES_ATTRS.FULL_NAME}`,
+			searchFilter: {
+				conds: {
+					or: '1',
+					cond: values.map((value) => ({
+						attr: SEARCH_RESOURCES_ATTRS.CAL_RES_TYPE,
+						op: SEARCH_RESOURCE_OP.EQUAL,
+						value
+					}))
+				}
+			},
+			_jsns: 'urn:zimbraAccount'
 		},
-		_jsns: 'urn:zimbraAccount'
-	});
+		undefined,
+		signal
+	);
 	return response?.Fault ? { ...response.Fault, error: true } : response;
 };
