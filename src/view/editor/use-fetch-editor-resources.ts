@@ -39,8 +39,10 @@ export const useFetchEditorResources = ({ onFailure }: FetchEditorResourcesProps
 				setResourcesLoaded(true);
 			})
 			.catch((_error) => {
-				onFailure?.();
-				setResourcesLoaded(true);
+				if (!signal.aborted) {
+					setResourcesLoaded(true);
+					onFailure?.();
+				}
 			});
 
 		return () => {

@@ -54,7 +54,7 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 		);
 	}
 
-	if (error) {
+	if (resourcesLoaded && error) {
 		return (
 			<Container
 				height="100%"
