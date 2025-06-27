@@ -40,7 +40,8 @@ export const EditorResources = ({ editorId }: { editorId: string }): ReactElemen
 				takeAvailableSpace
 				mainAlignment="flex-start"
 				gap={'0.5rem'}
-				style={{ padding: '8px', alignItems: 'center' }}
+				padding={{ top: 'large' }}
+				style={{ alignItems: 'center' }}
 			>
 				<Icon icon="LoaderOutline" color={'gray1'} />
 				<Text color={'gray1'} size={'medium'}>
@@ -56,7 +57,8 @@ export const EditorResources = ({ editorId }: { editorId: string }): ReactElemen
 				takeAvailableSpace
 				mainAlignment="flex-start"
 				gap={'0.5rem'}
-				style={{ padding: '8px', alignItems: 'center' }}
+				padding={{ top: 'large' }}
+				style={{ alignItems: 'center' }}
 			>
 				<Icon icon={'AlertTriangleOutline'} color={'error'} />
 				<Text color={'error'} size={'medium'}>
