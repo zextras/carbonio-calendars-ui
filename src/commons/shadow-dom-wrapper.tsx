@@ -37,17 +37,16 @@ export const ShadowDomWrapper = ({ children }: ShadowDomWrapperProps): React.JSX
 		}
 	}, []);
 
-	const { props: userSettings } = useUserSettings();
+	const { prefs: { carbonioPrefDarkMode } } = useUserSettings();
 
 	const darkModeEnabled = useCallback(() => {
-		const darkModeUserPref = find(userSettings, { name: 'zappDarkreaderMode' })?._content;
 		return (
-			darkModeUserPref === 'enabled' ||
-			(darkModeUserPref === 'auto' &&
+			carbonioPrefDarkMode === 'enabled' ||
+			(carbonioPrefDarkMode === 'auto' &&
 				window.matchMedia &&
 				window.matchMedia('(prefers-color-scheme: dark)').matches)
 		);
-	}, [userSettings]);
+	}, [carbonioPrefDarkMode]);
 
 	useEffect(() => {
 		if (containerRef.current && !shadowRootRef.current) {
