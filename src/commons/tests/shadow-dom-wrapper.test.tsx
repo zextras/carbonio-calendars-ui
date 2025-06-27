@@ -21,7 +21,7 @@ jest.mock('@zextras/carbonio-shell-ui', () => ({
 describe('ShadowDomWrapper', () => {
 	it('renders children inside shadow DOM when dark mode is disabled', () => {
 		(useUserSettings as jest.Mock).mockReturnValue({
-			props: [{ name: 'zappDarkreaderMode', _content: 'disabled', zimlet: 'carbonio-shell-ui' }]
+			prefs: { carbonioPrefDarkMode: 'disabled' }
 		});
 
 		const children = <div data-testid="child">Hello, Shadow DOM!</div>;
@@ -38,7 +38,7 @@ describe('ShadowDomWrapper', () => {
 
 	it('enables darkreader when dark mode is enabled', async () => {
 		(useUserSettings as jest.Mock).mockReturnValue({
-			props: [{ name: 'zappDarkreaderMode', _content: 'enabled', zimlet: 'carbonio-shell-ui' }]
+			prefs: { carbonioPrefDarkMode: 'enabled' }
 		});
 		const enableDarkReaderFn = jest.fn();
 		(enableDarkReader as jest.Mock).mockImplementation(enableDarkReaderFn);
@@ -53,7 +53,7 @@ describe('ShadowDomWrapper', () => {
 
 	it('renders children inside shadow DOM when dark mode is enabled', () => {
 		(useUserSettings as jest.Mock).mockReturnValue({
-			props: [{ name: 'zappDarkreaderMode', _content: 'enabled', zimlet: 'carbonio-shell-ui' }]
+			prefs: { carbonioPrefDarkMode: 'enabled' }
 		});
 
 		const children = <div data-testid="child">Hello, Shadow DOM!</div>;
