@@ -25,12 +25,12 @@ export const EditorResources = ({ editorId }: { editorId: string }): ReactElemen
 	});
 
 	const loadingLabel = t(
-		'loading_resources',
+		'label.loading_resources',
 		'Loading “Meeting room” and “Equipment”, please wait...'
 	);
 
 	const errorLabel = t(
-		'resources_load_error',
+		'label.resources_load_error',
 		"Couldn't load “Meeting room” and “Equipment”. Try closing and reopening the board."
 	);
 
