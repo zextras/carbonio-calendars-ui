@@ -66,28 +66,6 @@ describe('Editor panel', () => {
 	});
 
 	describe('resource handling', () => {
-		it('should show loading spinner on first render', async () => {
-			const store = configureStore({ reducer: combineReducers(reducers) });
-
-			shell.getBridgedFunctions.mockImplementation(() => ({
-				createSnackbar: jest.fn()
-			}));
-
-			generateEditor({
-				context: {
-					folders: {},
-					dispatch: store.dispatch,
-					...defaultEditor
-				}
-			});
-
-			// not awaiting the response to simulate the loading state
-			createSoapAPIInterceptor('SearchCalendarResources', {});
-			setupTest(<EditorPanel editorId={defaultEditor.id} />, { store });
-
-			expect(screen.getByTestId('spinner')).toBeInTheDocument();
-		});
-
 		it('should show the loading spinner when equipments are being fetched', async () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -103,12 +81,20 @@ describe('Editor panel', () => {
 				}
 			});
 
-			const soapAPIInterceptor = createSoapAPIInterceptor('SearchCalendarResources', {});
+			createSoapAPIInterceptor('SearchCalendarResources', {
+				paginationSupported: true,
+				calresource: [],
+				sortBy: 'dateDesc',
+				offset: 0,
+				more: false,
+				_jsns: 'urn:zimbraAccount'
+			});
+
 			setupTest(<EditorPanel editorId={defaultEditor.id} />, { store });
 
-			await soapAPIInterceptor;
-
-			expect(await screen.findByTestId('spinner')).toBeInTheDocument();
+			expect(
+				screen.getByText(/Loading “Meeting room” and “Equipment”, please wait.../i)
+			).toBeInTheDocument();
 		});
 
 		it('shows the equipments input field when API returns valid equipments resource', async () => {
@@ -274,7 +260,9 @@ describe('Editor panel', () => {
 		});
 
 		expect(
-			screen.getByText('Error loading resources. Please try again later.')
+			screen.getByText(
+				"Couldn't load “Meeting room” and “Equipment”. Try closing and reopening the board."
+			)
 		).toBeInTheDocument();
 	});
 });
