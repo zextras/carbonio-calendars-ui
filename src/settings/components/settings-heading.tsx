@@ -7,7 +7,7 @@ import React from 'react';
 
 import { Padding, Row, Text } from '@zextras/carbonio-design-system';
 
-export default function Heading({ title }) {
+export default function Heading({ title }: { title: string }): React.JSX.Element {
 	return (
 		<>
 			<Row
@@ -15,7 +15,7 @@ export default function Heading({ title }) {
 				mainAlignment="flex-start"
 				crossAlignment="baseline"
 				width="100%"
-				background="gray4"
+				background={'gray4'}
 			>
 				<Text size="large" weight="bold">
 					{title}
