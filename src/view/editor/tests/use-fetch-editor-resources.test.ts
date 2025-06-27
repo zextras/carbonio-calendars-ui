@@ -116,4 +116,23 @@ describe('useFetchEditorResources', () => {
 		});
 		expect(onFailureMock).toHaveBeenCalled();
 	});
+
+	it('does not call onFailure if the request is aborted', async () => {
+		const onFailureMock = jest.fn();
+		const abortError = new Error('Aborted');
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(abortError as any).name = 'AbortError';
+		mockSearchCalendarMultipleResourcesRequest.mockImplementationOnce((_types, signal) => {
+			// Simulate aborting before the promise settles
+			Object.defineProperty(signal, 'aborted', { value: true });
+			return Promise.reject(abortError);
+		});
+
+		const { result } = renderHook(() => useFetchEditorResources({ onFailure: onFailureMock }));
+
+		await waitFor(() => {
+			expect(result.current.resourcesLoaded).toBe(false);
+		});
+		expect(onFailureMock).not.toHaveBeenCalled();
+	});
 });
