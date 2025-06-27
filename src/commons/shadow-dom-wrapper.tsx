@@ -7,7 +7,6 @@ import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'reac
 
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
 import { enable as enableDarkReader, exportGeneratedCSS } from 'darkreader';
-import { find } from 'lodash';
 import { createPortal } from 'react-dom';
 
 type ShadowDomWrapperProps = {
@@ -37,16 +36,18 @@ export const ShadowDomWrapper = ({ children }: ShadowDomWrapperProps): React.JSX
 		}
 	}, []);
 
-	const { prefs: { carbonioPrefDarkMode } } = useUserSettings();
+	const {
+		prefs: { carbonioPrefDarkMode }
+	} = useUserSettings();
 
-	const darkModeEnabled = useCallback(() => {
-		return (
+	const darkModeEnabled = useCallback(
+		() =>
 			carbonioPrefDarkMode === 'enabled' ||
 			(carbonioPrefDarkMode === 'auto' &&
 				window.matchMedia &&
-				window.matchMedia('(prefers-color-scheme: dark)').matches)
-		);
-	}, [carbonioPrefDarkMode]);
+				window.matchMedia('(prefers-color-scheme: dark)').matches),
+		[carbonioPrefDarkMode]
+	);
 
 	useEffect(() => {
 		if (containerRef.current && !shadowRootRef.current) {
