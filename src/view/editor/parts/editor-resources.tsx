@@ -58,7 +58,7 @@ export const EditorResources = ({ editorId }: { editorId: string }): ReactElemen
 				gap={'0.5rem'}
 				style={{ padding: '8px', alignItems: 'center' }}
 			>
-				<Icon icon="AlertCircleOutline" color="error" />
+				<Icon icon={'AlertTriangleOutline'} color={'error'} />
 				<Text color={'error'} size={'medium'}>
 					{errorLabel}
 				</Text>
@@ -69,12 +69,12 @@ export const EditorResources = ({ editorId }: { editorId: string }): ReactElemen
 	return (
 		<>
 			{hasMeetingRoom && (
-				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+				<Row height={'fit'} width={'fill'} padding={{ top: 'large' }}>
 					<EditorMeetingRooms editorId={editorId} />
 				</Row>
 			)}
 			{hasEquipment && (
-				<Row height="fit" width="fill" padding={{ top: 'large' }}>
+				<Row height={'fit'} width={'fill'} padding={{ top: 'large' }}>
 					<EditorEquipments editorId={editorId} />
 				</Row>
 			)}
