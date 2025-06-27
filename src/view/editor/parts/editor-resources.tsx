@@ -6,13 +6,15 @@
 
 import React, { ReactElement, useCallback, useState } from 'react';
 
-import { Container, Icon, Row, Text } from '@zextras/carbonio-design-system';
+import { Icon, Row, Text } from '@zextras/carbonio-design-system';
+import { useTranslation } from 'react-i18next';
 
 import { EditorEquipments } from './editor-equipments';
 import { EditorMeetingRooms } from './editor-meeting-rooms';
 import { useFetchEditorResources } from '../use-fetch-editor-resources';
 
 export const EditorResources = ({ editorId }: { editorId: string }): ReactElement | null => {
+	const [t] = useTranslation();
 	const [error, setError] = useState<boolean>(false);
 	const onResourceFetchFailure = useCallback(() => {
 		setError(true);
@@ -22,17 +24,27 @@ export const EditorResources = ({ editorId }: { editorId: string }): ReactElemen
 		onFailure: onResourceFetchFailure
 	});
 
+	const loadingLabel = t(
+		'loading_resources',
+		'Loading “Meeting room” and “Equipment”, please wait...'
+	);
+
+	const errorLabel = t(
+		'resources_load_error',
+		"Couldn't load “Meeting room” and “Equipment”. Try closing and reopening the board."
+	);
+
 	if (!resourcesLoaded && !error) {
 		return (
 			<Row
 				takeAvailableSpace
 				mainAlignment="flex-start"
-				gap={'small'}
+				gap={'0.5rem'}
 				style={{ padding: '8px', alignItems: 'center' }}
 			>
 				<Icon icon="LoaderOutline" />
 				<Text color={'gray1'} size={'medium'}>
-					Loading “Meeting room” and “Equipment”, please wait...
+					{loadingLabel}
 				</Text>
 			</Row>
 		);
@@ -40,15 +52,17 @@ export const EditorResources = ({ editorId }: { editorId: string }): ReactElemen
 
 	if (resourcesLoaded && error) {
 		return (
-			<Container
-				height="100%"
-				width="100%"
-				mainAlignment="center"
-				crossAlignment="center"
-				background="gray5"
+			<Row
+				takeAvailableSpace
+				mainAlignment="flex-start"
+				gap={'0.5rem'}
+				style={{ padding: '8px', alignItems: 'center' }}
 			>
-				<p>Error loading resources. Please try again later.</p>
-			</Container>
+				<Icon icon="AlertCircleOutline" color="error" />
+				<Text color={'error'} size={'medium'}>
+					{errorLabel}
+				</Text>
+			</Row>
 		);
 	}
 
