@@ -42,7 +42,7 @@ export const EditorResources = ({ editorId }: { editorId: string }): ReactElemen
 				gap={'0.5rem'}
 				style={{ padding: '8px', alignItems: 'center' }}
 			>
-				<Icon icon="LoaderOutline" />
+				<Icon icon="LoaderOutline" color={'gray1'} />
 				<Text color={'gray1'} size={'medium'}>
 					{loadingLabel}
 				</Text>
