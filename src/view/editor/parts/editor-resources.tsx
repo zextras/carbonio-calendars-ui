@@ -24,9 +24,16 @@ export const EditorResources = ({ editorId }: { editorId: string }): ReactElemen
 
 	if (!resourcesLoaded && !error) {
 		return (
-			<Row takeAvailableSpace mainAlignment="flex-start" gap={'small'}>
+			<Row
+				takeAvailableSpace
+				mainAlignment="flex-start"
+				gap={'small'}
+				style={{ padding: '8px', alignItems: 'center' }}
+			>
 				<Icon icon="LoaderOutline" />
-				<Text>Loading “Meeting room” and “Equipment”, please wait...</Text>
+				<Text color={'gray1'} size={'medium'}>
+					Loading “Meeting room” and “Equipment”, please wait...
+				</Text>
 			</Row>
 		);
 	}
