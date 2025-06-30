@@ -56,10 +56,12 @@ export const useIsCarbonioCE: jest.Mock<ReturnType<typeof shell.useIsCarbonioCE>
 
 export * from '../network/fetch';
 export const soapFetch = getSoapFetch('test-environment');
+export const xmlSoapFetch = getSoapFetch('test-environment');
 export const useNotify: jest.Mock<ReturnType<typeof shell.useNotify>> = jest.fn(() => []);
 export const useLocalStorage = jest.fn();
 export const AppLink: FC<{ children: ReactNode }> = ({ children }) => <>{children}</>;
 export const editSettings = jest.fn(() => Promise.resolve({ data: {} }));
+export const updateSettings = jest.fn();
 export const registerComponents: typeof shell.registerComponents = jest.fn();
 export const registerActions: typeof shell.registerActions = jest.fn();
 export const useRefresh: typeof shell.useRefresh = jest.fn();
