@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { filter, map, uniqBy } from 'lodash';
+import { filter, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { EditorResourceComponent, normalizeResources } from './editor-resource-component';
@@ -13,7 +13,6 @@ import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorEquipment } from '../../../store/selectors/editor';
 import { editEditorEquipment } from '../../../store/slices/editor-slice';
-import { useAppStatusStore } from '../../../store/zustand/store';
 import { ChipResource } from '../../../types/editor';
 
 export const EditorEquipments = ({ editorId }: { editorId: string }): ReactElement | null => {
@@ -50,15 +49,12 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 						response.cn,
 						(cn) => cn._attrs.zimbraCalResType === 'Equipment'
 					);
-					const remoteResources = map(equipmentResource, (result) => normalizeResources(result));
-					const searchOptions = map(equipmentResource, (result) => ({
+					return map(equipmentResource, (result) => ({
 						id: result.fileAsStr,
 						label: result.fileAsStr,
 						icon: 'BriefcaseOutline',
 						value: normalizeResources(result)
 					}));
-					useAppStatusStore.setState({ equipment: uniqBy(remoteResources, 'label') });
-					return searchOptions;
 				}
 				throw new Error('received error from API');
 			}),

@@ -15,8 +15,8 @@ import {
 	KeyboardPresetObj,
 	useKeyboard
 } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
 import { find, map, reduce, uniqWith } from 'lodash';
+import styled from 'styled-components';
 
 import {
 	EditorAvailabilityWarningRow,
@@ -236,7 +236,7 @@ export const EditorResourceComponent = ({
 			<Container width="100%" height="100%">
 				<ChipInput
 					inputRef={inputRef}
-					confirmChipOnBlur={false}
+					confirmChipOnBlur
 					placeholder={placeholder}
 					separators={[]}
 					value={resourceAvailability}

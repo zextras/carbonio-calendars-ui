@@ -17,7 +17,6 @@ import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
-import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { EditorEquipments } from '../editor-equipments';
 import { getSetupServer } from '@jest-setup';
@@ -26,16 +25,11 @@ import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-int
 import { CarbonioMailboxRestHandlerRequest } from '@test-utils/network/msw/handlers';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
-const setupEmptyAppStatusStore = (): void => {
-	useAppStatusStore.setState(() => ({ equipment: [] }));
-};
-
 describe('Editor equipment', () => {
 	it('should display the Equipment input on the screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
-		setupEmptyAppStatusStore();
 		setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
 		expect(screen.getByText('Equipment')).toBeInTheDocument();

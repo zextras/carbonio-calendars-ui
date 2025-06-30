@@ -7,17 +7,12 @@
 import { MutableRefObject } from 'react';
 
 import { AppState, CalendarView, SetRange, useAppStatusStore } from './store';
-import { Resource } from '../../types/editor';
 
 export const useCalendarView = (): CalendarView | undefined =>
 	useAppStatusStore((s: AppState) => s.calendarView);
 export const useCalendarDate = (): Date => useAppStatusStore((s: AppState) => s.date);
 export const useSummaryView = (): string | undefined =>
 	useAppStatusStore((s: AppState) => s.summaryViewId);
-export const useMeetingRooms = (): Array<Resource> | undefined =>
-	useAppStatusStore((s: AppState) => s.meetingRoom);
-export const useEquipments = (): Array<Resource> | undefined =>
-	useAppStatusStore((s: AppState) => s.equipment);
 export const useIsSummaryViewOpen = (): boolean =>
 	useAppStatusStore((s: AppState) => !!s.summaryViewId);
 export const useSummaryViewRef = (): MutableRefObject<HTMLDivElement | null> =>
