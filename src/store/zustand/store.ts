@@ -8,8 +8,6 @@ import React from 'react';
 import moment from 'moment';
 import { create } from 'zustand';
 
-import { Resource } from '../../types/editor';
-
 export type SetRange = ({ start, end }: { start: number; end: number }) => void;
 export type CalendarRange = {
 	start: number;
@@ -24,8 +22,6 @@ export type AppState = {
 	summaryViewId: string | undefined;
 	range: CalendarRange;
 	setRange: SetRange;
-	equipment: Array<Resource> | undefined;
-	meetingRoom: Array<Resource> | undefined;
 	summaryViewRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
@@ -33,8 +29,6 @@ export const useAppStatusStore = create<AppState>((set) => ({
 	calendarView: undefined,
 	date: new Date(),
 	summaryViewId: undefined,
-	equipment: undefined,
-	meetingRoom: undefined,
 	summaryViewRef: React.createRef(),
 	range: {
 		start: moment().subtract('7', 'days').valueOf(),

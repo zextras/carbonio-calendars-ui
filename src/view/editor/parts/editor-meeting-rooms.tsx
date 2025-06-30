@@ -5,7 +5,7 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { filter, map, uniqBy } from 'lodash';
+import { filter, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { EditorResourceComponent, normalizeResources } from './editor-resource-component';
@@ -13,7 +13,6 @@ import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorMeetingRoom } from '../../../store/selectors/editor';
 import { editEditorMeetingRoom } from '../../../store/slices/editor-slice';
-import { useAppStatusStore } from '../../../store/zustand/store';
 import { ChipResource } from '../../../types/editor';
 
 export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactElement | null => {
@@ -51,16 +50,12 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 						response.cn,
 						(cn) => cn._attrs.zimbraCalResType === 'Location'
 					);
-					const remoteResources = map(meetingResources, (result) => normalizeResources(result));
-
-					const meetingRoomOptions = map(meetingResources, (result) => ({
+					return map(meetingResources, (result) => ({
 						id: result.fileAsStr,
 						label: result.fileAsStr,
 						icon: 'BuildingOutline',
 						value: normalizeResources(result)
 					}));
-					useAppStatusStore.setState({ meetingRoom: uniqBy(remoteResources, 'label') });
-					return meetingRoomOptions;
 				}
 				throw new Error('API failed');
 			}),

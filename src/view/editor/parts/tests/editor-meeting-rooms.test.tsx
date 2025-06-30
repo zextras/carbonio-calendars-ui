@@ -16,7 +16,6 @@ import { generateEditor } from '../../../../commons/editor-generator';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import { reducers } from '../../../../store/redux';
-import { useAppStatusStore } from '../../../../store/zustand/store';
 import { getCustomResources } from '../../../../test/mocks/network/msw/handle-autocomplete-gal-request';
 import { EditorMeetingRooms } from '../editor-meeting-rooms';
 import { getSetupServer } from '@jest-setup';
@@ -24,16 +23,11 @@ import { setupTest } from '@test-setup';
 import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
-const setupEmptyAppStatusStore = (): void => {
-	useAppStatusStore.setState(() => ({ meetingRoom: [] }));
-};
-
 describe('Editor meeting rooms', () => {
 	it('should display the Meeting room input on the screen', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
 
-		setupEmptyAppStatusStore();
 		setupTest(<EditorMeetingRooms editorId={editor.id} />, { store });
 
 		expect(screen.getByText('Meeting room')).toBeInTheDocument();
