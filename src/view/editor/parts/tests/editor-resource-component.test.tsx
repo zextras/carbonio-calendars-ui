@@ -43,6 +43,7 @@ describe('EditorResourceComponent', () => {
 				resourcesValue={[]}
 				warningLabel={''}
 				singleWarningLabel={''}
+				invalidInputErrorLabel={'Invalid input'}
 			/>,
 			{ store }
 		);
@@ -73,6 +74,7 @@ describe('EditorResourceComponent', () => {
 				resourcesValue={[resource1]}
 				warningLabel={''}
 				singleWarningLabel={''}
+				invalidInputErrorLabel={'Invalid input'}
 			/>,
 			{ store }
 		);

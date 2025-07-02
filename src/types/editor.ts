@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 import { EditorChipAttendees, InviteClass, InviteFreeBusy } from './store/invite';
 
 export type CalendarEditor = {

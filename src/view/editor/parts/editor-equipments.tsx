@@ -19,6 +19,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
+
 	const equipmentValue = useAppSelector(selectEditorEquipment(editorId));
 
 	const equipmentChipValue = useMemo(
@@ -27,9 +28,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 				id: resource.id,
 				label: resource.label,
 				email: resource.email,
-				avatarIcon: 'BriefcaseOutline' as const,
-				avatarBackground: 'transparent' as const,
-				avatarColor: 'gray0' as const
+				avatarIcon: 'BriefcaseOutline' as const
 			})),
 		[equipmentValue]
 	);
@@ -56,7 +55,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 						value: normalizeResources(result)
 					}));
 				}
-				throw new Error('received error from API');
+				throw new Error('API failed');
 			}),
 		[]
 	);
@@ -76,6 +75,10 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 			singleWarningLabel={t(
 				'attendee_equipment_unavailable',
 				'Equipment not available at the selected time of the event'
+			)}
+			invalidInputErrorLabel={t(
+				'attendees_equipments_invalid',
+				'One or more Equipments are invalid'
 			)}
 		/>
 	);

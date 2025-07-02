@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import {
 	ChipInput,
@@ -12,10 +12,9 @@ import {
 	ChipItem,
 	Container,
 	DropdownItem,
-	KeyboardPresetObj,
-	useKeyboard
+	Theme
 } from '@zextras/carbonio-design-system';
-import { find, map, reduce, uniqWith } from 'lodash';
+import { find, uniqBy } from 'lodash';
 import styled from 'styled-components';
 
 import {
@@ -30,7 +29,7 @@ import {
 	selectEditorStart,
 	selectEditorUid
 } from '../../../store/selectors/editor';
-import { ChipResource, Resource } from '../../../types/editor';
+import { Resource } from '../../../types/editor';
 import { Contact } from '../../../types/soap/soap-actions';
 
 interface SkeletonTileProps {
@@ -50,12 +49,6 @@ const SkeletonTile = styled.div<SkeletonTileProps>`
 	border-radius: ${({ $radius }): string => $radius ?? '0.125rem'};
 	background: ${({ theme }): string => theme.palette.gray2.regular};
 `;
-
-const createChipFromResource = (optionValue: Resource): ChipItem<Resource> => ({
-	id: optionValue.id,
-	label: optionValue.label,
-	value: optionValue
-});
 
 const Loader = (): ReactElement => (
 	<Container
@@ -98,34 +91,67 @@ export const EditorResourceComponent = ({
 	onSearchOptions,
 	warningLabel,
 	disabled,
-	singleWarningLabel
+	singleWarningLabel,
+	invalidInputErrorLabel
 }: {
 	editorId: string;
-	onChange: (items: ChipResource[]) => void;
+	onChange: (items: Array<Resource>) => void;
 	onSearchOptions: (stringToSearch: string) => Promise<Array<ResourceInputOption>>;
 	placeholder: string;
-	resourcesValue: Array<ChipResource>;
+	resourcesValue: Array<Resource>;
 	warningLabel: string;
 	disabled?: boolean;
 	singleWarningLabel: string;
+	invalidInputErrorLabel: string;
 }): JSX.Element | null => {
-	const inputRef = useRef<HTMLInputElement>(null);
-
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const uid = useAppSelector(selectEditorUid(editorId));
-
 	const [options, setOptions] = useState<Array<ResourceInputOption>>([]);
+	const [hasError, setHasError] = useState(false);
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
-	const onAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
-		const resourceFromOptions = valueToAdd as Resource;
-		return createChipFromResource(resourceFromOptions);
+	const isValidResource = (resource: Resource | undefined): boolean =>
+		!!resource?.label?.trim() && !!resource?.email?.trim();
+
+	const handleAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
+		const isResourceOption = (obj: unknown): obj is Resource =>
+			typeof obj === 'object' &&
+			obj !== null &&
+			'id' in obj &&
+			'label' in obj &&
+			'email' in obj &&
+			'type' in obj;
+
+		const isStringInput = (input: unknown): input is string =>
+			typeof input === 'string' && input.trim() !== '';
+
+		let label: string;
+		let resource: Resource;
+
+		if (isResourceOption(valueToAdd)) {
+			resource = valueToAdd;
+			label = resource.label;
+		} else if (isStringInput(valueToAdd)) {
+			label = valueToAdd.trim();
+			resource = { email: '', label };
+		} else {
+			label = 'Invalid input';
+			resource = { email: '', label };
+		}
+
+		const isValid = isValidResource(resource);
+
+		return {
+			label,
+			value: resource,
+			...(isValid ? {} : { background: 'error', hasError: true })
+		};
 	}, []);
 
-	const onInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
+	const handleInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
 		(e) => {
 			if (e.textContent && e.textContent !== '') {
 				setOptions([
@@ -148,39 +174,49 @@ export const EditorResourceComponent = ({
 		[onSearchOptions]
 	);
 
-	const onInternalChange = useCallback(
-		(items: ChipItem<Resource>[]) => {
-			const itemsWithValue = reduce(
-				items,
-				(acc, item) => {
-					const { value, label } = item;
-					if (label && value) {
-						acc.push({ label, email: value.email });
-					}
-					return acc;
-				},
-				[] as ChipResource[]
-			);
+	const handleChange: (newChips: ChipItem<Resource>[]) => void = useCallback(
+		(newChips: ChipItem<Resource>[]) => {
+			if (!onChange) return;
 
-			const filterdItems = uniqWith(
-				itemsWithValue,
-				(item1, item2) => item1.email === item2.email || item1.label === item2.label
-			);
-
-			onChange(filterdItems);
+			const uniqueItems = uniqBy(newChips, 'label');
+			setHasError(uniqueItems.some((item) => !isValidResource(item.value)));
+			onChange(uniqueItems.map((chip) => chip.value as Resource));
 		},
 		[onChange]
 	);
 
 	const resourceAvailability: ChipItem<Resource>[] = useMemo(() => {
-		if (!resourcesValue?.length) {
-			return [];
-		}
-		return map(resourcesValue, (room) => {
+		if (!resourcesValue?.length) return [];
+
+		return resourcesValue.map((room) => {
 			const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
-			const chipRoom = { ...room, value: room };
+			const resourceIsValid = isValidResource(room);
+
+			let avatarIcon: keyof Theme['icons'];
+			let avatarBackground: keyof Theme['palette'];
+			if (!resourceIsValid) {
+				avatarIcon = 'AlertCircleOutline';
+				avatarBackground = 'error';
+			} else if (room.type === 'Location') {
+				avatarIcon = 'BuildingOutline';
+				avatarBackground = 'transparent';
+			} else {
+				avatarIcon = 'BriefcaseOutline';
+				avatarBackground = 'transparent';
+			}
+
+			const baseChip: ChipItem<Resource> = {
+				...room,
+				value: room,
+				background: resourceIsValid ? 'gray3' : 'error',
+				avatarIcon,
+				avatarBackground,
+				avatarColor: resourceIsValid ? 'gray0' : 'gray6',
+				color: resourceIsValid ? 'text' : 'gray6'
+			};
+
 			if (roomInList) {
-				const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
+				const isBusy = getIsBusyAtTimeOfTheEvent(
 					roomInList,
 					start,
 					end,
@@ -188,63 +224,43 @@ export const EditorResourceComponent = ({
 					allDay
 				);
 
-				if (isBusyAtTimeOfEvent) {
-					const actions = [
-						{
-							id: 'unavailable',
-							label: singleWarningLabel,
-							color: 'error',
-							type: 'icon',
-							icon: 'AlertTriangle'
-						} as const
-					];
+				if (isBusy) {
 					return {
-						...chipRoom,
-						actions
+						...baseChip,
+						actions: [
+							{
+								id: 'unavailable',
+								label: singleWarningLabel,
+								color: 'error',
+								type: 'icon',
+								icon: 'AlertTriangle'
+							}
+						]
 					};
 				}
 			}
-			return chipRoom;
+
+			return baseChip;
 		});
 	}, [allDay, attendeesAvailabilityList, end, resourcesValue, singleWarningLabel, start]);
-
-	const onPressingEnterSelectFirstOption = useMemo<KeyboardPresetObj[]>(
-		() => [
-			{
-				type: 'keydown',
-				callback: (): void => {
-					if (options?.[0]?.value && onInternalChange && options?.[0]?.id !== 'loading') {
-						const { value } = options[0];
-						onInternalChange([...resourceAvailability, createChipFromResource(value)]);
-						if (inputRef.current) {
-							inputRef.current.value = '';
-							setOptions([]);
-						}
-					}
-				},
-				keys: [{ key: 'Enter', ctrlKey: false }],
-				haveToPreventDefault: true
-			}
-		],
-		[onInternalChange, options, resourceAvailability]
-	);
-
-	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
 
 	return (
 		<>
 			<Container width="100%" height="100%">
 				<ChipInput
-					inputRef={inputRef}
+					disabled={disabled}
 					confirmChipOnBlur
+					createChipOnPaste={false}
+					disableOptions={false}
+					separators={[{ key: 'Enter', ctrlKey: false }]}
 					placeholder={placeholder}
-					separators={[]}
 					value={resourceAvailability}
 					options={options}
-					onInputType={onInputType}
-					onAdd={onAdd}
-					onChange={onInternalChange}
-					disabled={disabled}
+					onChange={handleChange}
+					onAdd={handleAdd}
+					onInputType={handleInputType}
+					hasError={hasError}
+					description={hasError ? invalidInputErrorLabel : undefined}
 				/>
 			</Container>
 			<EditorAvailabilityWarningRow

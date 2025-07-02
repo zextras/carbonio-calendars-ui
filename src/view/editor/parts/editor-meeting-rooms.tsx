@@ -24,10 +24,10 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 
 	const meetingRoomsChipValue = useMemo(
 		() =>
-			map(meetingRoomsValue, (result) => ({
-				id: result.id,
-				label: result.label,
-				email: result.email,
+			map(meetingRoomsValue, (resource) => ({
+				id: resource.id,
+				label: resource.label,
+				email: resource.email,
 				avatarIcon: 'BuildingOutline' as const,
 				avatarBackground: 'transparent' as const,
 				avatarColor: 'gray0' as const
@@ -78,6 +78,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 				'attendee_room_unavailable',
 				'Room not available at the selected time of the event'
 			)}
+			invalidInputErrorLabel={t('attendees_rooms_invalid', 'One or more Meeting Rooms are invalid')}
 		/>
 	);
 };
