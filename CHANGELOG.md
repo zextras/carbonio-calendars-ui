@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 1.16.5 (2025-06-27)
+
+
+### Bug Fixes
+
+* avoid enabling darkmode when old preference still exists ([0c543a1](https://github.com/zextras/carbonio-calendars-ui/commit/0c543a1b129be3c60882c08bd4f84f773260174a))
+
 ### 1.16.4 (2025-06-09)
 
 ### 1.16.3 (2025-05-30)
