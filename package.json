@@ -17,6 +17,7 @@
 		"type-check:watch": "npm run type-check -- --watch",
 		"lint": "eslint --ext .js,.jsx,.ts,.tsx --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
 		"lint-errors": "eslint --ext .js,.jsx,.ts,.tsx --quiet --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
+		"lint-fix": "eslint --fix --ext .js,.jsx,.ts,.tsx --quiet --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs",
 		"lint-check": "npm run lint-errors; npm run type-check",
 		"lint-stats": "eslint --ext .js,.jsx,.ts,.tsx --format node_modules/eslint-stats/byErrorAndWarningStacked --resolve-plugins-relative-to node_modules/@zextras/carbonio-ui-configs src",
 		"sdk-setup": "npm ci --prefix sdk",
@@ -89,8 +90,10 @@
 		"@types/webpack-env": "^1.18.5",
 		"@zextras/carbonio-design-system": "^10.1.1",
 		"@zextras/carbonio-shell-ui": "^11.0.1",
+		"@zextras/carbonio-ui-commons": "1.1.0-devel.1",
 		"@zextras/carbonio-ui-preview": "^3.2.1",
 		"core-js": "^3.39.0",
+		"darkreader": "^4.9.79",
 		"date-arithmetic": "^4.1.0",
 		"i18next": "^22.5.1",
 		"immer": "^9.0.21",
@@ -109,8 +112,7 @@
 		"react-widgets-moment": "4.0.30",
 		"redux": "4.2.1",
 		"styled-components": "^6.1.13",
-		"zustand": "^4.5.5",
-		"darkreader": "^4.9.79"
+		"zustand": "^4.5.5"
 	},
 	"browserslist": [
 		">1%",
@@ -127,3 +129,4 @@
 		"icon": "CalendarModOutline"
 	}
 }
+pchange

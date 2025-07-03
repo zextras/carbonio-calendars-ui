@@ -53,6 +53,29 @@ export const SEARCH_RESOURCE_OP = {
 	EQUAL: 'eq'
 } as const;
 
+export const USERS_PERMISSIONS_RIGHTS = {
+	ALLOW_INTERNAL_EXTERNAL: 'allowInternalExternal',
+	ALLOW_INTERNAL: 'allowInternal',
+	ALLOW_DOMAIN_USERS: 'allowDomainUsers',
+	ALLOW_NONE: 'allowNone',
+	ALLOW_FOLLOWING: 'allowFollowing'
+} as const;
+
+export const GRANTEE_TYPES = {
+	USR: 'usr',
+	GRP: 'grp',
+	EGP: 'egp',
+	ALL: 'all',
+	DOM: 'dom',
+	EDOM: 'edom',
+	GST: 'gst',
+	KEY: 'key',
+	PUB: 'pub',
+	EMAIL: 'email'
+};
+
 type ObjectValues<T> = T[keyof T];
 
 export type ParticipantRoleType = ObjectValues<typeof PARTICIPANT_ROLE>;
+export type PermissionsRightsOptions = ObjectValues<typeof USERS_PERMISSIONS_RIGHTS> | null;
+export type Granteetypes = ObjectValues<typeof USERS_PERMISSIONS_RIGHTS> | null;

@@ -6,17 +6,18 @@
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { SoapNotify } from '@zextras/carbonio-shell-ui';
+import { folderWorker } from '@zextras/carbonio-ui-commons';
 
-import { useNotify } from '../../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { populateFoldersStore } from '../../../carbonio-ui-commons/test/mocks/store/folders';
-import { setupHook } from '../../../carbonio-ui-commons/test/test-setup';
-import { folderWorker } from '../../../carbonio-ui-commons/worker';
 import { reducers } from '../../../store/redux';
 import { useCalendarGroupStore } from '../../../store/zustand/calendar-group-store';
 import mockedData from '../../../test/generators';
 import { useSyncDataHandler } from '../use-sync-data-handler';
+import { setupHook } from '@test-setup';
+import { useNotify } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
+import { populateFoldersStore } from '@test-utils/store/folders';
 
-jest.mock('../../../carbonio-ui-commons/worker', () => ({
+jest.mock('@zextras/carbonio-ui-commons', () => ({
+	...jest.requireActual('@zextras/carbonio-ui-commons'),
 	folderWorker: {
 		postMessage: jest.fn()
 	},

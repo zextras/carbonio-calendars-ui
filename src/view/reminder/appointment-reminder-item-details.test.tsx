@@ -9,7 +9,6 @@ import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { AppointmentReminderItemDetails } from './appointment-reminder-item-details';
-import { setupTest, screen } from '../../carbonio-ui-commons/test/test-setup';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { PARTICIPANT_ROLE, PARTICIPATION_STATUS } from '../../constants/api';
 import { TEST_SELECTORS } from '../../constants/test-utils';
@@ -22,6 +21,7 @@ import { generateReminderItem } from '../../test/generators/reminder';
 import { Appointment } from '../../types/store/appointments';
 import { Attendee, Invite } from '../../types/store/invite';
 import { AppointmentsSlice, InvitesSlice } from '../../types/store/store';
+import { setupTest, screen } from '@test-setup';
 
 const initializeMockedStore = ({
 	invite,

@@ -6,10 +6,10 @@
 import { omit } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
-import { getSetupServer } from '../../carbonio-ui-commons/test/jest-setup';
 import { EVENT_DISPLAY_STATUS, MESSAGE_METHOD, PARTICIPATION_STATUS } from '../../constants/api';
 import { ObjectValues } from '../../constants/sidebar';
 import { InviteResponseArguments, MailMsg } from '../../types/integrations';
+import { getSetupServer } from '@jest-setup';
 
 const senderMail = 'sender@mail.com';
 const receiverMail = 'receiver@mail.com';

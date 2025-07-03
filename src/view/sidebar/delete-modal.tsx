@@ -6,14 +6,16 @@
 import React, { FC, useCallback, useMemo } from 'react';
 
 import { Container, Text, useSnackbar } from '@zextras/carbonio-design-system';
+import {
+	FOLDERS,
+	isNestedInTrash,
+	Folder,
+	hasId,
+	ModalFooter,
+	ModalHeader
+} from '@zextras/carbonio-ui-commons';
 import { Trans, useTranslation } from 'react-i18next';
 
-import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
-import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { isNestedInTrash } from '../../carbonio-ui-commons/store/zustand/folder/utils';
-import { Folder } from '../../carbonio-ui-commons/types';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { deleteCalendarAction } from '../../store/actions/delete-calendar-action';

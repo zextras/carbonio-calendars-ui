@@ -8,7 +8,7 @@ import React from 'react';
 import { addBoard, getAction } from '@zextras/carbonio-shell-ui';
 import { filter, find, keyBy, lowerCase, omit } from 'lodash';
 
-import { LinkFolder } from '../carbonio-ui-commons/types';
+import { LinkFolder } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import { CALENDAR_BOARD_ID, CALENDAR_ROUTE, PANEL_VIEW } from '../constants';

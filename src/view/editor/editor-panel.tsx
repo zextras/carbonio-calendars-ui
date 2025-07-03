@@ -15,13 +15,11 @@ import { EditorAttendees } from './parts/editor-attendees';
 import { EditorCalendarSelector } from './parts/editor-calendar-selector';
 import { EditorComposer } from './parts/editor-composer';
 import { EditorDatePicker } from './parts/editor-date-picker';
-import { EditorEquipments } from './parts/editor-equipments';
 import { EditorFreeBusySelector } from './parts/editor-free-busy-selector';
 import { EditorLocation } from './parts/editor-location';
-import { EditorMeetingRooms } from './parts/editor-meeting-rooms';
 import { EditorPrivateCheckbox } from './parts/editor-private-checkbox';
 import { EditorReminder } from './parts/editor-reminder';
-import { EditorResourcesController } from './parts/editor-resources-controller';
+import { EditorResources } from './parts/editor-resources';
 import { EditorSender } from './parts/editor-sender';
 import { EditorSummary } from './parts/editor-summary';
 import { EditorTimezone } from './parts/editor-time-zone';
@@ -59,12 +57,7 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 			<Row height="fit" width="fill" padding={{ top: 'large' }}>
 				<EditorLocation editorId={editorId} />
 			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorMeetingRooms editorId={editorId} />
-			</Row>
-			<Row height="fit" width="fill" padding={{ top: 'large' }}>
-				<EditorEquipments editorId={editorId} />
-			</Row>
+			<EditorResources editorId={editorId} />
 			<EditorVirtualRoom editorId={editorId} />
 			<Row height="fit" width="fill" padding={{ top: 'large' }}>
 				<EditorAttendees editorId={editorId} />
@@ -97,6 +90,5 @@ export const EditorPanel = ({ editorId, expanded }: EditorProps): ReactElement =
 				<EditorComposer editorId={editorId} />
 			</Row>
 		</Container>
-		<EditorResourcesController editorId={editorId} />
 	</Container>
 );

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { editEventItem } from './appointment-actions-items';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import mockedData from '../test/generators';
 
 describe('edit event item', () => {

@@ -6,15 +6,15 @@
 import React from 'react';
 
 import { faker } from '@faker-js/faker';
-import { act } from '@testing-library/react';
+import { act, within } from '@testing-library/react';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { times } from 'lodash';
 
-import { FOLDERS } from '../../../../carbonio-ui-commons/constants/folders';
-import { generateFolder } from '../../../../carbonio-ui-commons/test/mocks/folders/folders-generator';
-import { populateFoldersStore } from '../../../../carbonio-ui-commons/test/mocks/store/folders';
-import { setupTest, screen, within } from '../../../../carbonio-ui-commons/test/test-setup';
 import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { MultipleCalendarSelector } from '../multiple-calendar-selector';
+import { screen, setupTest } from '@test-setup';
+import { generateFolder } from '@test-utils/folders/folders-generator';
+import { populateFoldersStore } from '@test-utils/store/folders';
 
 describe('MultipleCalendarSelector', () => {
 	it('should render the MultipleCalendarSelector with the correct placeholder', () => {

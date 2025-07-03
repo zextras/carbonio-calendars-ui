@@ -5,6 +5,7 @@
  */
 import { faker } from '@faker-js/faker';
 import { t } from '@zextras/carbonio-shell-ui';
+import { FOLDERS, useFolderStore, Folder, FolderView } from '@zextras/carbonio-ui-commons';
 
 import {
 	deleteCalendarItem,
@@ -15,15 +16,11 @@ import {
 	noPermissionLabel,
 	removeFromListItem,
 	shareCalendarItem,
-	shareCalendarUrlItem,
 	sharesInfoItem
 } from './calendar-actions-items';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
-import { useFolderStore } from '../carbonio-ui-commons/store/zustand/folder';
-import { generateRoots } from '../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import { Folder, FolderView } from '../carbonio-ui-commons/types/folder';
 import { FOLDER_ACTIONS, SIDEBAR_ITEMS } from '../constants/sidebar';
 import mockedData from '../test/generators';
+import { generateRoots } from '@test-utils/folders/roots-generator';
 
 const randomUUID = faker.string.uuid();
 const TRASH_SUB_FOLDER_PATH = '/Trash/subFolder';
@@ -278,7 +275,7 @@ describe('calendar actions items', () => {
 				expect.objectContaining({
 					id: FOLDER_ACTIONS.EDIT,
 					icon: 'Edit2Outline',
-					label: t('action.edit_calendar_properties', 'Edit calendar properties'),
+					label: t('action.edit_and_share_calendar', 'Edit and share calendar'),
 					tooltipLabel: noPermissionLabel,
 					onClick: expect.any(Function),
 					disabled: false
@@ -496,51 +493,6 @@ describe('calendar actions items', () => {
 			setupFoldersStore();
 			const shareCalendar = shareCalendarItem({ createModal, closeModal, item });
 			expect(shareCalendar).toStrictEqual(
-				expect.objectContaining({
-					disabled: true
-				})
-			);
-		});
-	});
-	describe('shareCalendarUrlItem', () => {
-		test(genericTestItemTitleForIconItem, () => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
-			setupFoldersStore();
-
-			const item = { name: 'random Folder', id: '154' };
-			const shareCalendarUrl = shareCalendarUrlItem({ createModal, closeModal, item });
-			expect(shareCalendarUrl).toStrictEqual(
-				expect.objectContaining({
-					id: FOLDER_ACTIONS.SHARE_URL,
-					icon: 'Copy',
-					label: 'action.calendar_access_share',
-					tooltipLabel: noPermissionLabel,
-					onClick: expect.any(Function),
-					disabled: false
-				})
-			);
-		});
-		test.each([
-			{
-				...mockedData.calendars.getCalendar(),
-				id: `${FOLDERS.USER_ROOT}:${SIDEBAR_ITEMS.ALL_CALENDAR}`
-			},
-			{ ...mockedData.calendars.getCalendar(), id: FOLDERS.TRASH },
-			{ ...mockedData.calendars.getCalendar(), id: `153`, absFolderPath: TRASH_SUB_FOLDER_PATH },
-			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${SIDEBAR_ITEMS.ALL_CALENDAR}` },
-			{ ...mockedData.calendars.getCalendar(), id: `${randomUUID}:${FOLDERS.TRASH}` },
-			{
-				...mockedData.calendars.getCalendar(),
-				id: `${randomUUID}:153`,
-				absFolderPath: TRASH_SUB_FOLDER_PATH
-			}
-		])(genericTestTitleForEachCases, (item) => {
-			const createModal = jest.fn();
-			const closeModal = jest.fn();
-
-			const shareCalendarUrl = shareCalendarUrlItem({ createModal, closeModal, item });
-			expect(shareCalendarUrl).toStrictEqual(
 				expect.objectContaining({
 					disabled: true
 				})

@@ -9,7 +9,7 @@ import { Container, Radio, RadioGroup, Row, Text, Padding } from '@zextras/carbo
 import { t } from '@zextras/carbonio-shell-ui';
 import { find, differenceWith, map, isEqual, filter, omitBy, isNil } from 'lodash';
 
-import { usePrefs } from '../../../../../carbonio-ui-commons/utils/use-prefs';
+import { usePrefs } from '@zextras/carbonio-ui-commons';
 import { RecurrenceContext } from '../../../../../commons/recurrence-context';
 import { useRecurrenceItems } from '../../../../../commons/use-recurrence-items';
 import { WEEK_SCHEDULE } from '../../../../../constants/calendar';

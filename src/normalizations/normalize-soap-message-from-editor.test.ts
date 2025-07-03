@@ -9,14 +9,11 @@ import {
 	setAlarmValue
 } from './normalize-soap-message-from-editor';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
-import {
-	createFakeIdentity,
-	getMockedAccountItem
-} from '../carbonio-ui-commons/test/mocks/accounts/fakeAccounts';
 import { generateEditor } from '../commons/editor-generator';
 import { getIdentityItems } from '../commons/get-identity-items';
 import { PARTICIPATION_STATUS } from '../constants/api';
 import { ParticipationStatus } from '../types/store/invite';
+import { createFakeIdentity, getMockedAccountItem } from '@test-utils/accounts/fakeAccounts';
 
 const mainAccount = createFakeIdentity();
 const identity = createFakeIdentity();

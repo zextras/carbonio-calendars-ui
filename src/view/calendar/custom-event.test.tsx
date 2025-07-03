@@ -9,10 +9,10 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen } from '@testing-library/react';
 
 import { MemoCustomEvent } from './custom-event';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import { reducers } from '../../store/redux';
 import { useAppStatusStore } from '../../store/zustand/store';
 import mockedData from '../../test/generators';
+import { setupTest } from '@test-setup';
 
 jest.setTimeout(10000);
 

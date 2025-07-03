@@ -6,11 +6,14 @@
 import { useEffect, useRef } from 'react';
 
 import { useNotify } from '@zextras/carbonio-shell-ui';
+import {
+	useFolderStore,
+	useTagStore,
+	folderWorker,
+	tagsWorker
+} from '@zextras/carbonio-ui-commons';
 import { isEmpty, reduce, forEach, sortBy, map, filter, isNil } from 'lodash';
 
-import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
-import { useTagStore } from '../../carbonio-ui-commons/store/zustand/tags';
-import { folderWorker, tagsWorker } from '../../carbonio-ui-commons/worker';
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch } from '../../store/redux/hooks';

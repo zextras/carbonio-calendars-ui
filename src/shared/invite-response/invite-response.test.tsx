@@ -8,6 +8,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { keyBy, values } from 'lodash';
 import moment from 'moment-timezone';
 
@@ -17,12 +18,7 @@ import {
 	MESSAGE_TYPE,
 	setupServerSingleEventResponse
 } from './invite-test-utils';
-import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
-import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import { createSoapAPIInterceptor } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { mockUseHistoryNavigation } from '../../carbonio-ui-commons/test/mocks/routing/use-history-navigation-mock';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import * as handler from '../../commons/get-appointment';
 import { CALENDAR_BOARD_ID } from '../../constants';
 import { MESSAGE_METHOD } from '../../constants/api';
@@ -48,6 +44,9 @@ import {
 	singleGetMsgResponse
 } from '../../test/mocks/network/msw/handle-get-invite';
 import 'jest-styled-components';
+import { setupTest } from '@test-setup';
+import { generateRoots } from '@test-utils/folders/roots-generator';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
@@ -68,8 +67,6 @@ afterEach(() => {
 });
 
 describe('invite response component', () => {
-	mockUseHistoryNavigation();
-
 	describe('case invitation email', () => {
 		test('have a container with border of 0.0625rem solid regular', async () => {
 			setupFoldersStore();

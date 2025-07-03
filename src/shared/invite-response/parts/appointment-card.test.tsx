@@ -6,16 +6,16 @@
 import React from 'react';
 
 import { screen } from '@testing-library/react';
+import { useTagStore } from '@zextras/carbonio-ui-commons';
 import { map, values } from 'lodash';
 import moment from 'moment';
 
 import { AppointmentCard } from './appointment-card';
-import { useTagStore } from '../../../carbonio-ui-commons/store/zustand/tags';
-import { tags } from '../../../carbonio-ui-commons/test/mocks/tags/tags';
-import { setupTest } from '../../../carbonio-ui-commons/test/test-setup';
 import { PARTICIPATION_STATUS } from '../../../constants/api';
 import mockedData from '../../../test/generators';
+import { setupTest } from '@test-setup';
 import 'jest-styled-components';
+import { tags } from '@test-utils/tags/tags';
 
 describe('appointment card component', () => {
 	beforeEach(() => {

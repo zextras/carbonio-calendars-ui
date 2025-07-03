@@ -8,12 +8,12 @@ import React from 'react';
 
 import { within } from '@testing-library/react';
 
-import { createSoapAPIInterceptor } from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
-import { setupTest, screen } from '../../../../carbonio-ui-commons/test/test-setup';
 import { mockFreeBusyResponse, mockWorkingHoursResponse } from '../../../../soap/tests/mocks';
 import { DAILY_PLANNER_PARTICIPANT_TYPE } from '../constants';
 import { EditorDailyPlanner } from '../daily-planner';
+import { setupTest, screen } from '@test-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 const organizer = {
 	email: 'organizer@test.com',
