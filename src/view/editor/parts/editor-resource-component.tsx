@@ -180,9 +180,10 @@ export const EditorResourceComponent = ({
 		(newChips: ChipItem<Resource>[]) => {
 			if (!onChange) return;
 
-			const uniqueItems = uniqWith(
-				newChips,
-				(item1, item2) => item1?.value?.email === item2?.value?.email || item1.label === item2.label
+			const uniqueItems = uniqWith(newChips, (item1, item2) =>
+				item1?.value?.email && item2?.value?.email
+					? item1.value.email === item2.value.email
+					: item1.label === item2.label
 			);
 			setHasError(uniqueItems.some((item) => !isValidResource(item.value)));
 			onChange(uniqueItems.map((chip) => chip.value as Resource));
