@@ -215,7 +215,7 @@ describe('Editor meeting rooms', () => {
 			id: faker.string.uuid(),
 			label,
 			value: label,
-			email: 'location1@test.it',
+			email: '',
 			type: 'Location'
 		};
 		const storedItem = {
@@ -238,6 +238,7 @@ describe('Editor meeting rooms', () => {
 
 		const dropdown = await screen.findByTestId('dropdown-item');
 		await user.click(within(dropdown).getByText(itemFromAutoComplete.label));
+		expect(dropdown).not.toBeInTheDocument();
 
 		expect((await screen.findAllByText(label)).length).toBe(1);
 	});

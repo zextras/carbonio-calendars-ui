@@ -173,6 +173,7 @@ describe('Editor equipment', () => {
 		expect(dropDownItems[0]).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
+
 	it('should not remove the already existing chips when adding a new one', async () => {
 		const equipment1 = {
 			label: 'automobile 1',
@@ -209,13 +210,14 @@ describe('Editor equipment', () => {
 		expect(screen.getByText(equipment1.label)).toBeVisible();
 		expect(screen.getByText(selectedEquipmentLabel)).toBeVisible();
 	});
+
 	it('should not add a new chip that have the same label', async () => {
 		const label = `resource 1`;
 		const itemFromAutoComplete = {
 			id: faker.string.uuid(),
 			label,
 			value: label,
-			email: 'resource1@test.it',
+			email: '',
 			type: 'Equipment'
 		};
 		const storedItem = {
