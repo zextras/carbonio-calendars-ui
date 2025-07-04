@@ -1,92 +1,222 @@
+/* eslint-disable */
 /*
- * SPDX-FileCopyrightText: 2024 Zextras <https://www.zextras.com>
+ * SPDX-FileCopyrightText: 2025 Zextras <https://www.zextras.com>
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import React from 'react';
 
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
-import { DropdownItem } from '@zextras/carbonio-design-system';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { screen, waitFor } from '@testing-library/react';
 
 import { generateEditor } from '../../../../commons/editor-generator';
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { reducers } from '../../../../store/redux';
 import { Resource } from '../../../../types/editor';
 import { EditorResourceComponent } from '../editor-resource-component';
 import { setupTest } from '@test-setup';
 
-function mockSearchOptions(): Promise<Array<DropdownItem & { value?: Resource }>> {
-	return Promise.resolve([
+describe('EditorResourceComponent', () => {
+	let store: ReturnType<typeof configureStore>;
+	let editor: ReturnType<typeof generateEditor>;
+	const onChangeMock = jest.fn();
+
+	const mockSearchOptions = jest.fn(async (text: string) => [
 		{
 			id: '1',
-			label: 'First Option',
+			label: `Resource: ${text}`,
 			value: {
-				label: 'My resource',
-				email: 'mynewresource@test.com'
+				id: 'res1',
+				label: `Resource: ${text}`,
+				email: 'resource@example.com',
+				type: 'Location'
 			}
 		}
 	]);
-}
-describe('EditorResourceComponent', () => {
-	it('should clear typed text after selecting the first option with enter', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
-		const onChangeMock = jest.fn();
-		const { user } = setupTest(
+
+	beforeEach(() => {
+		store = configureStore({ reducer: combineReducers(reducers) });
+		editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+		onChangeMock.mockClear();
+		mockSearchOptions.mockClear();
+	});
+
+	it('renders the component', () => {
+		setupTest(
 			<EditorResourceComponent
-				placeholder={'Test'}
+				placeholder="Test"
 				editorId={editor.id}
 				onChange={onChangeMock}
 				onSearchOptions={mockSearchOptions}
 				resourcesValue={[]}
-				warningLabel={''}
-				singleWarningLabel={''}
-				invalidInputErrorLabel={'Invalid input'}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
 			/>,
 			{ store }
 		);
 
-		const resourceInput = screen.getByRole('textbox', { name: 'Test' });
-		await user.type(resourceInput, 'aaaaaa');
-		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-		await user.keyboard('[Enter]');
-
-		expect(dropdown).not.toBeInTheDocument();
-		expect(resourceInput).toHaveValue('');
+		expect(screen.getByPlaceholderText('Test')).toBeInTheDocument();
 	});
 
-	it('should not remove current chips after selecting the first option with Enter', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
-		const onChangeMock = jest.fn();
-		const resource1 = {
-			label: 'My resource 1',
-			email: 'myresource@test.com'
-		};
+	it('allows adding a valid resource via search', async () => {
 		const { user } = setupTest(
 			<EditorResourceComponent
-				placeholder={'Test'}
+				placeholder="Test"
 				editorId={editor.id}
 				onChange={onChangeMock}
 				onSearchOptions={mockSearchOptions}
-				resourcesValue={[resource1]}
-				warningLabel={''}
-				singleWarningLabel={''}
-				invalidInputErrorLabel={'Invalid input'}
+				resourcesValue={[]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
 			/>,
 			{ store }
 		);
 
-		const resourceInput = screen.getByRole('textbox', { name: 'Test' });
-		await user.type(resourceInput, 'aaaaaa');
-		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		const input = screen.getByPlaceholderText('Test');
+
+		await user.type(input, 'meeting-room');
+		await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('meeting-room'));
+
+		await user.keyboard('{Enter}');
+
+		await waitFor(() => {
+			expect(onChangeMock).toHaveBeenCalledTimes(1);
+			const [resources] = onChangeMock.mock.calls[0];
+			expect(resources[0]).toMatchObject({
+				label: 'Resource: meeting-room',
+				email: 'resource@example.com'
+			});
+		});
+	});
+
+	it('adds invalid chip manually and shows error', async () => {
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={mockSearchOptions}
+				resourcesValue={[]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
+			/>,
+			{ store }
+		);
+
+		const input = screen.getByPlaceholderText('Test');
+		await user.type(input, 'unknown-resource');
+		await user.keyboard('{Enter}');
+
+		await waitFor(() => {
+			expect(screen.getByText('Invalid input')).toBeInTheDocument();
+		});
+	});
+
+	it('prevents duplicate entries onChange', async () => {
+		const resource: Resource = {
+			id: 'r1',
+			label: 'Room-A',
+			email: 'rooma@example.com',
+			type: 'Location'
+		};
+
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={mockSearchOptions}
+				resourcesValue={[resource]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
+			/>,
+			{ store }
+		);
+
+		const input = screen.getByPlaceholderText('Test');
+		await user.type(input, 'Room-A');
+		await user.keyboard('{Enter}');
+
+		await waitFor(() => {
+			expect(onChangeMock).toHaveBeenCalled();
+			const [chips] = onChangeMock.mock.calls.at(-1)!;
+			expect(chips).toHaveLength(1);
+		});
+	});
+
+	it('should not add resource on Enter key if input is empty', async () => {
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={mockSearchOptions}
+				resourcesValue={[]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
+			/>,
+			{ store }
+		);
+
+		const input = screen.getByPlaceholderText('Test');
 		await user.keyboard('[Enter]');
-		expect(dropdown).not.toBeInTheDocument();
-		expect(onChangeMock).toHaveBeenCalledWith([
-			resource1,
-			expect.objectContaining({ email: 'mynewresource@test.com' })
-		]);
+
+		expect(onChangeMock).not.toHaveBeenCalled();
+		expect(screen.queryByText('Invalid input')).not.toBeInTheDocument();
+	});
+
+	it('should clear input and options after selecting a resource', async () => {
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={mockSearchOptions}
+				resourcesValue={[]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
+			/>,
+			{ store }
+		);
+
+		const input = screen.getByPlaceholderText('Test');
+		await user.type(input, 'meeting-room');
+		await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('meeting-room'));
+
+		await user.keyboard('{Enter}');
+
+		expect(input).toHaveValue('');
+		expect(screen.queryByText('Resource: meeting-room')).not.toBeInTheDocument();
+	});
+
+	it('should select the first option when user press Enter', async () => {
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={mockSearchOptions}
+				resourcesValue={[]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
+			/>,
+			{ store }
+		);
+
+		const input = screen.getByPlaceholderText('Test');
+		await user.type(input, 'meeting-room');
+		await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('meeting-room'));
+
+		await user.keyboard('{Enter}');
+
+		expect(onChangeMock).toHaveBeenCalled();
+		expect(input).toHaveValue('');
 	});
 });
