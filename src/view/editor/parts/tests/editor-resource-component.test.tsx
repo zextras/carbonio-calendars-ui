@@ -256,4 +256,27 @@ describe('EditorResourceComponent', () => {
 			});
 		});
 	});
+
+	it('shows loader while searching for options', async () => {
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={() => new Promise((resolve) => setTimeout(() => resolve([]), 1000))}
+				resourcesValue={[]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
+			/>,
+			{ store }
+		);
+
+		const input = screen.getByPlaceholderText('Test');
+		await user.type(input, 'Meeting Room');
+
+		await waitFor(() => {
+			expect(screen.getByTestId('dropdown-options-loader')).toBeInTheDocument();
+		});
+	});
 });
