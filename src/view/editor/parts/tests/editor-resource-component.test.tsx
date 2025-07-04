@@ -21,16 +21,17 @@ describe('EditorResourceComponent', () => {
 	let editor: ReturnType<typeof generateEditor>;
 	const onChangeMock = jest.fn();
 
-	const mockSearchOptions = jest.fn(async (text: string) => [
+	const defaultResource: Resource = {
+		id: 'r1',
+		label: 'DefaultResource',
+		email: 'default@example.com',
+		type: 'Location'
+	};
+	const mockSearchOptions = jest.fn(async (_text: string) => [
 		{
 			id: '1',
-			label: `Resource: ${text}`,
-			value: {
-				id: 'res1',
-				label: `Resource: ${text}`,
-				email: 'resource@example.com',
-				type: 'Location'
-			}
+			label: 'DefaultResource',
+			value: defaultResource
 		}
 	]);
 
@@ -41,14 +42,14 @@ describe('EditorResourceComponent', () => {
 		mockSearchOptions.mockClear();
 	});
 
-	it('renders the component', () => {
+	it('renders the component with provided resources', () => {
 		setupTest(
 			<EditorResourceComponent
 				placeholder="Test"
 				editorId={editor.id}
 				onChange={onChangeMock}
-				onSearchOptions={mockSearchOptions}
-				resourcesValue={[]}
+				onSearchOptions={() => Promise.resolve([])}
+				resourcesValue={[defaultResource]}
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
@@ -57,6 +58,8 @@ describe('EditorResourceComponent', () => {
 		);
 
 		expect(screen.getByPlaceholderText('Test')).toBeInTheDocument();
+		const chip = screen.getByTestId('chip');
+		expect(chip).toHaveTextContent('DefaultResource');
 	});
 
 	it('allows adding a valid resource via search', async () => {
@@ -75,19 +78,21 @@ describe('EditorResourceComponent', () => {
 		);
 
 		const input = screen.getByPlaceholderText('Test');
+		await user.type(input, 'DefaultResource');
+		await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('DefaultResource'));
 
-		await user.type(input, 'meeting-room');
-		await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('meeting-room'));
-
+		const dropDownItem = await screen.findByTestId('dropdown-item');
+		expect(dropDownItem).toHaveTextContent('DefaultResource');
 		await user.keyboard('{Enter}');
 
-		await waitFor(() => {
+		await waitFor(async () => {
 			expect(onChangeMock).toHaveBeenCalledTimes(1);
 			const [resources] = onChangeMock.mock.calls[0];
 			expect(resources[0]).toMatchObject({
-				label: 'Resource: meeting-room',
-				email: 'resource@example.com'
+				label: 'DefaultResource',
+				email: 'default@example.com'
 			});
+			expect(dropDownItem).not.toBeInTheDocument();
 		});
 	});
 
@@ -116,20 +121,13 @@ describe('EditorResourceComponent', () => {
 	});
 
 	it('prevents duplicate entries onChange', async () => {
-		const resource: Resource = {
-			id: 'r1',
-			label: 'Room-A',
-			email: 'rooma@example.com',
-			type: 'Location'
-		};
-
 		const { user } = setupTest(
 			<EditorResourceComponent
 				placeholder="Test"
 				editorId={editor.id}
 				onChange={onChangeMock}
 				onSearchOptions={mockSearchOptions}
-				resourcesValue={[resource]}
+				resourcesValue={[defaultResource]}
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
@@ -137,14 +135,24 @@ describe('EditorResourceComponent', () => {
 			{ store }
 		);
 
+		// existing default resource chip
+		const chip = screen.getByTestId('chip');
+		expect(chip).toHaveTextContent('DefaultResource');
+
+		// try to add the same resource again
 		const input = screen.getByPlaceholderText('Test');
-		await user.type(input, 'Room-A');
+		await user.type(input, 'DefaultResource');
+
+		const dropDownItem = await screen.findByTestId('dropdown-item');
+		expect(dropDownItem).toHaveTextContent('DefaultResource');
+
 		await user.keyboard('{Enter}');
 
 		await waitFor(() => {
 			expect(onChangeMock).toHaveBeenCalled();
 			const [chips] = onChangeMock.mock.calls.at(-1)!;
 			expect(chips).toHaveLength(1);
+			expect(dropDownItem).not.toBeInTheDocument();
 		});
 	});
 
@@ -163,14 +171,13 @@ describe('EditorResourceComponent', () => {
 			{ store }
 		);
 
-		const input = screen.getByPlaceholderText('Test');
 		await user.keyboard('[Enter]');
 
 		expect(onChangeMock).not.toHaveBeenCalled();
 		expect(screen.queryByText('Invalid input')).not.toBeInTheDocument();
 	});
 
-	it('should clear input and options after selecting a resource', async () => {
+	it('should clear options after selecting a resource', async () => {
 		const { user } = setupTest(
 			<EditorResourceComponent
 				placeholder="Test"
@@ -186,22 +193,44 @@ describe('EditorResourceComponent', () => {
 		);
 
 		const input = screen.getByPlaceholderText('Test');
-		await user.type(input, 'meeting-room');
-		await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('meeting-room'));
+		await user.type(input, 'DefaultResource');
+		await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('DefaultResource'));
+
+		const dropDownItem = await screen.findByTestId('dropdown-item');
+		expect(dropDownItem).toHaveTextContent('DefaultResource');
 
 		await user.keyboard('{Enter}');
 
-		expect(input).toHaveValue('');
-		expect(screen.queryByText('Resource: meeting-room')).not.toBeInTheDocument();
+		expect(dropDownItem).not.toBeInTheDocument();
 	});
 
 	it('should select the first option when user press Enter', async () => {
+		const resource2: Resource = {
+			id: 'r2',
+			label: 'Room-B',
+			email: 'roomb@example.com',
+			type: 'Location'
+		};
+
+		const mockSearchOptions2 = jest.fn(async (_text: string) => [
+			{
+				id: '1',
+				label: 'DefaultResource',
+				value: defaultResource
+			},
+			{
+				id: '2',
+				label: 'Resource2',
+				value: resource2
+			}
+		]);
+
 		const { user } = setupTest(
 			<EditorResourceComponent
 				placeholder="Test"
 				editorId={editor.id}
 				onChange={onChangeMock}
-				onSearchOptions={mockSearchOptions}
+				onSearchOptions={mockSearchOptions2}
 				resourcesValue={[]}
 				warningLabel=""
 				singleWarningLabel=""
@@ -211,12 +240,20 @@ describe('EditorResourceComponent', () => {
 		);
 
 		const input = screen.getByPlaceholderText('Test');
-		await user.type(input, 'meeting-room');
-		await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('meeting-room'));
+		await user.type(input, 'Resource');
+
+		const dropDownItems = await screen.findAllByTestId('dropdown-item');
+		expect(dropDownItems).toHaveLength(2);
 
 		await user.keyboard('{Enter}');
 
-		expect(onChangeMock).toHaveBeenCalled();
-		expect(input).toHaveValue('');
+		await waitFor(async () => {
+			expect(onChangeMock).toHaveBeenCalledTimes(1);
+			const [resources] = onChangeMock.mock.calls[0];
+			expect(resources[0]).toMatchObject({
+				label: defaultResource.label,
+				email: defaultResource.email
+			});
+		});
 	});
 });
