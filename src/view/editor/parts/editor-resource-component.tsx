@@ -266,7 +266,7 @@ export const EditorResourceComponent = ({
 						}
 					}
 				},
-				keys: [{ key: 'Enter', ctrlKey: false }],
+				keys: [{ key: 'Enter', ctrlKey: true }],
 				haveToPreventDefault: true
 			}
 		],
