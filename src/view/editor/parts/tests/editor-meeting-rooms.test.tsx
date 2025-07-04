@@ -238,6 +238,7 @@ describe('Editor meeting rooms', () => {
 
 		const dropdown = await screen.findByTestId('dropdown-item');
 		await user.click(within(dropdown).getByText(itemFromAutoComplete.label));
+
 		expect((await screen.findAllByText(label)).length).toBe(1);
 	});
 	it('should not display multiple chips with the same email', async () => {
