@@ -80,7 +80,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 			)}
 			invalidInputErrorLabel={t(
 				'attendees_equipments_invalid',
-				'One or more Equipments are invalid'
+				'One or more Equipments are invalid. Try editing them or entering a new one.'
 			)}
 		/>
 	);

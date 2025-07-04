@@ -78,7 +78,10 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 				'attendee_room_unavailable',
 				'Room not available at the selected time of the event'
 			)}
-			invalidInputErrorLabel={t('attendees_rooms_invalid', 'One or more Meeting Rooms are invalid')}
+			invalidInputErrorLabel={t(
+				'attendees_rooms_invalid',
+				'One or more Meeting rooms are invalid. Try editing them or entering a new one.'
+			)}
 		/>
 	);
 };
