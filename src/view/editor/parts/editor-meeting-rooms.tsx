@@ -45,7 +45,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 	const onSearchOptions = useCallback(
 		(searchedValue: string) =>
 			searchResources(searchedValue).then((response) => {
-				if (!response.error) {
+				if (response && !response.error) {
 					const meetingResources = filter(
 						response.cn,
 						(cn) => cn._attrs.zimbraCalResType === 'Location'

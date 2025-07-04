@@ -45,7 +45,7 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 	const onSearchOptions = useCallback(
 		(searchedValued: string) =>
 			searchResources(searchedValued).then((response) => {
-				if (!response.error) {
+				if (response && !response.error) {
 					const equipmentResource = filter(
 						response.cn,
 						(cn) => cn._attrs.zimbraCalResType === 'Equipment'

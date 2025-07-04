@@ -8,7 +8,7 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import { ErrorSoapBodyResponse, SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import { http, HttpResponse } from 'msw';
@@ -313,7 +313,7 @@ describe('Editor equipment', () => {
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => {
 				await new Promise((resolve) => {
-					setTimeout(resolve, 1000);
+					setTimeout(resolve, 500);
 				});
 				return new HttpResponse(null, { status: 500 });
 			})
@@ -334,7 +334,7 @@ describe('Editor equipment', () => {
 		getSetupServer().use(
 			http.post('/service/soap/AutoCompleteGalRequest', async () => {
 				await new Promise((resolve) => {
-					setTimeout(resolve, 1000);
+					setTimeout(resolve, 500);
 				});
 				return HttpResponse.json<ErrorSoapBodyResponse>(buildSoapErrorResponseBody());
 			})
@@ -344,5 +344,32 @@ describe('Editor equipment', () => {
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 
 		expect(await within(dropdown).findByTestId('dropdown-options-loader')).toBeVisible();
+	});
+
+	it('should handle API failure when searching for equipment', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {} }
+		});
+
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () =>
+				HttpResponse.json(buildSoapErrorResponseBody())
+			)
+		);
+
+		const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
+		await user.type(screen.getByText('Equipment'), 'test');
+
+		await waitFor(() => {
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					message: 'API failed'
+				})
+			);
+		});
+		consoleSpy.mockRestore();
 	});
 });

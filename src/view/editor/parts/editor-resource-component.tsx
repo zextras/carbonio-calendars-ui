@@ -168,8 +168,8 @@ export const EditorResourceComponent = ({
 					.then((receivedOptions) => {
 						setOptions(receivedOptions);
 					})
-					.catch(() => {
-						// ignore
+					.catch((reason) => {
+						console.warn(reason.error || reason);
 					});
 			}
 		},
