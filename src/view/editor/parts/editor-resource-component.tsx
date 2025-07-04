@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 
 import {
 	ChipInput,
@@ -12,7 +12,9 @@ import {
 	ChipItem,
 	Container,
 	DropdownItem,
-	Theme
+	KeyboardPresetObj,
+	Theme,
+	useKeyboard
 } from '@zextras/carbonio-design-system';
 import { find, uniqBy } from 'lodash';
 import styled from 'styled-components';
@@ -185,69 +187,99 @@ export const EditorResourceComponent = ({
 		[onChange]
 	);
 
+	const buildResourceChipItem = useCallback((room: Resource): ChipItem<Resource> => {
+		const isValid = isValidResource(room);
+
+		let avatarIcon: keyof Theme['icons'];
+		if (!isValid) {
+			avatarIcon = 'AlertCircleOutline';
+		} else if (room.type === 'Location') {
+			avatarIcon = 'BuildingOutline';
+		} else {
+			avatarIcon = 'BriefcaseOutline';
+		}
+
+		const avatarBackground: keyof Theme['palette'] = isValid ? 'transparent' : 'error';
+
+		return {
+			...room,
+			value: room,
+			background: isValid ? 'gray3' : 'error',
+			color: isValid ? 'text' : 'gray6',
+			avatarColor: isValid ? 'gray0' : 'gray6',
+			avatarIcon,
+			avatarBackground
+		};
+	}, []);
+
 	const resourceAvailability: ChipItem<Resource>[] = useMemo(() => {
 		if (!resourcesValue?.length) return [];
 
 		return resourcesValue.map((room) => {
+			const chip = buildResourceChipItem(room);
+
 			const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
-			const resourceIsValid = isValidResource(room);
+			const isBusy =
+				roomInList &&
+				getIsBusyAtTimeOfTheEvent(roomInList, start, end, attendeesAvailabilityList, allDay);
 
-			let avatarIcon: keyof Theme['icons'];
-			let avatarBackground: keyof Theme['palette'];
-			if (!resourceIsValid) {
-				avatarIcon = 'AlertCircleOutline';
-				avatarBackground = 'error';
-			} else if (room.type === 'Location') {
-				avatarIcon = 'BuildingOutline';
-				avatarBackground = 'transparent';
-			} else {
-				avatarIcon = 'BriefcaseOutline';
-				avatarBackground = 'transparent';
+			if (isBusy) {
+				return {
+					...chip,
+					actions: [
+						{
+							id: 'unavailable',
+							label: singleWarningLabel,
+							color: 'error',
+							type: 'icon',
+							icon: 'AlertTriangle'
+						}
+					]
+				};
 			}
 
-			const baseChip: ChipItem<Resource> = {
-				...room,
-				value: room,
-				background: resourceIsValid ? 'gray3' : 'error',
-				avatarIcon,
-				avatarBackground,
-				avatarColor: resourceIsValid ? 'gray0' : 'gray6',
-				color: resourceIsValid ? 'text' : 'gray6'
-			};
-
-			if (roomInList) {
-				const isBusy = getIsBusyAtTimeOfTheEvent(
-					roomInList,
-					start,
-					end,
-					attendeesAvailabilityList,
-					allDay
-				);
-
-				if (isBusy) {
-					return {
-						...baseChip,
-						actions: [
-							{
-								id: 'unavailable',
-								label: singleWarningLabel,
-								color: 'error',
-								type: 'icon',
-								icon: 'AlertTriangle'
-							}
-						]
-					};
-				}
-			}
-
-			return baseChip;
+			return chip;
 		});
-	}, [allDay, attendeesAvailabilityList, end, resourcesValue, singleWarningLabel, start]);
+	}, [
+		allDay,
+		attendeesAvailabilityList,
+		buildResourceChipItem,
+		end,
+		resourcesValue,
+		singleWarningLabel,
+		start
+	]);
+
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	const onPressingEnterSelectFirstOption = useMemo<KeyboardPresetObj[]>(
+		() => [
+			{
+				type: 'keydown',
+				callback: (): void => {
+					if (options?.[0]?.value && handleChange && options?.[0]?.id !== 'loading') {
+						const { value } = options[0];
+						handleChange([...resourceAvailability, buildResourceChipItem(value)]);
+						if (inputRef.current) {
+							inputRef.current.value = '';
+							setOptions([]);
+						}
+					}
+				},
+				keys: [{ key: 'Enter', ctrlKey: false }],
+				haveToPreventDefault: true
+			}
+		],
+		[buildResourceChipItem, handleChange, options, resourceAvailability]
+	);
+
+	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
 
 	return (
 		<>
 			<Container width="100%" height="100%">
 				<ChipInput
+					inputRef={inputRef}
 					disabled={disabled}
 					confirmChipOnBlur
 					createChipOnPaste={false}

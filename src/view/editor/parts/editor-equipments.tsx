@@ -28,7 +28,9 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 				id: resource.id,
 				label: resource.label,
 				email: resource.email,
-				avatarIcon: 'BriefcaseOutline' as const
+				avatarIcon: 'BriefcaseOutline' as const,
+				avatarBackground: 'transparent' as const,
+				avatarColor: 'gray0' as const
 			})),
 		[equipmentValue]
 	);
