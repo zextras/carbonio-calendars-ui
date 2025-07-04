@@ -266,7 +266,7 @@ export const EditorResourceComponent = ({
 						}
 					}
 				},
-				keys: [{ key: 'Enter', ctrlKey: true }],
+				keys: [{ key: 'Enter', ctrlKey: false }],
 				haveToPreventDefault: true
 			}
 		],
@@ -284,7 +284,6 @@ export const EditorResourceComponent = ({
 					confirmChipOnBlur
 					createChipOnPaste={false}
 					disableOptions={false}
-					separators={[{ key: 'Enter', ctrlKey: false }]}
 					placeholder={placeholder}
 					value={resourceAvailability}
 					options={options}
