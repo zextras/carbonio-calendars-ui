@@ -8,7 +8,7 @@
 import React from 'react';
 
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 
 import { generateEditor } from '../../../../commons/editor-generator';
 import { reducers } from '../../../../store/redux';
@@ -60,6 +60,33 @@ describe('EditorResourceComponent', () => {
 		expect(screen.getByPlaceholderText('Test')).toBeInTheDocument();
 		const chip = screen.getByTestId('chip');
 		expect(chip).toHaveTextContent('DefaultResource');
+	});
+
+	it('renders an invalid resource chip with error styles', async () => {
+		setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={jest.fn()}
+				onSearchOptions={jest.fn()}
+				resourcesValue={[
+					{
+						id: '123',
+						label: 'error-resource',
+						email: '',
+						type: 'Location'
+					}
+				]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel=""
+			/>,
+			{ store }
+		);
+
+		const chip = await screen.findByTestId('chip');
+		expect(chip).toHaveTextContent('error-resource');
+		expect(await within(chip).findByTestId('icon: AlertCircleOutline')).toBeInTheDocument();
 	});
 
 	it('allows adding a valid resource via search', async () => {
