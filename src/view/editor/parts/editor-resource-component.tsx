@@ -24,6 +24,7 @@ import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
+import { generateResourceId } from './utils';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -112,21 +113,19 @@ export const EditorResourceComponent = ({
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const uid = useAppSelector(selectEditorUid(editorId));
 	const [options, setOptions] = useState<Array<ResourceInputOption>>([]);
-	const [hasError, setHasError] = useState(false);
-
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [editingResource, setEditingResource] = useState<Resource | null>(null);
-
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
 	const isValidResource = (resource: Resource | undefined): boolean =>
 		!!resource?.label?.trim() && !!resource?.email?.trim();
 
-	const generateResourceId = (resource: Resource): string => {
-		if (resource.email?.trim()) return resource.email.trim();
-		if (resource.id?.trim()) return resource.id.trim();
-		return `manual-${resource.label?.trim() ?? 'unknown'}`;
-	};
+	const resourcesAreValid = useMemo(
+		() => resourcesValue.every((resource) => isValidResource(resource)),
+		[resourcesValue]
+	);
+
+	const [hasError, setHasError] = useState(!resourcesAreValid);
 
 	const handleAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
 		setEditingResource(null);
@@ -144,7 +143,6 @@ export const EditorResourceComponent = ({
 
 		let label: string;
 		let resource: Resource;
-
 		if (isResourceOption(valueToAdd)) {
 			resource = valueToAdd;
 			label = resource.label;
@@ -156,11 +154,15 @@ export const EditorResourceComponent = ({
 			resource = { email: '', label };
 		}
 
+		const resourceId = resource.id ?? generateResourceId(resource);
+
+		resource = { ...resource, id: resourceId };
+
 		const isValid = isValidResource(resource);
 
 		return {
 			label,
-			id: resource.id ?? generateResourceId(resource),
+			id: resourceId,
 			value: resource,
 			...(isValid ? {} : { background: 'error', hasError: true })
 		};
@@ -209,6 +211,9 @@ export const EditorResourceComponent = ({
 
 		if (inputRef.current) {
 			inputRef.current.value = resource.label;
+			inputRef.current.style.width = inputRef.current.value
+				? `${inputRef.current.scrollWidth}px`
+				: '';
 			inputRef.current.focus();
 		}
 	}, []);
@@ -233,7 +238,7 @@ export const EditorResourceComponent = ({
 				icon: 'EditOutline',
 				type: 'button',
 				label: 'Edit',
-				color: 'error',
+				color: isValid ? 'text' : 'error',
 				onClick: (event) => {
 					event.stopPropagation();
 					handleEditResource(resource);
