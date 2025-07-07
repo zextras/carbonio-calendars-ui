@@ -7,6 +7,7 @@
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 
 import {
+	ChipAction,
 	ChipInput,
 	ChipInputProps,
 	ChipItem,
@@ -205,6 +206,17 @@ export const EditorResourceComponent = ({
 
 		const avatarBackground: keyof Theme['palette'] = isValid ? 'transparent' : 'error';
 
+		const editChipAction: ChipAction = {
+			id: 'edit',
+			icon: 'EditOutline',
+			type: 'button',
+			label: 'Edit',
+			color: 'primary',
+			onClick: (event) => {
+				console.log('edit', event);
+			}
+		};
+
 		return {
 			...room,
 			value: room,
@@ -212,7 +224,8 @@ export const EditorResourceComponent = ({
 			color: isValid ? 'text' : 'gray6',
 			avatarColor: isValid ? 'gray0' : 'gray6',
 			avatarIcon,
-			avatarBackground
+			avatarBackground,
+			actions: [editChipAction]
 		};
 	}, []);
 
