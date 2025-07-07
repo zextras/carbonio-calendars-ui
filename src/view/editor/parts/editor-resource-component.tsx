@@ -123,6 +123,8 @@ export const EditorResourceComponent = ({
 		!!resource?.label?.trim() && !!resource?.email?.trim();
 
 	const handleAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
+		setChipIdToRemove(null);
+
 		const isResourceOption = (obj: unknown): obj is Resource =>
 			typeof obj === 'object' &&
 			obj !== null &&
