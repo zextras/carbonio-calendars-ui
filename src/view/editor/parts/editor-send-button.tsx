@@ -7,9 +7,9 @@ import React, { ReactElement, useCallback, useMemo } from 'react';
 
 import { Button, useModal, useSnackbar } from '@zextras/carbonio-design-system';
 import { closeBoard, useBoard } from '@zextras/carbonio-shell-ui';
+import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { useTranslation } from 'react-i18next';
 
-import { useHistoryNavigation } from '@zextras/carbonio-ui-commons';
 import { onSend } from '../../../commons/editor-save-send-fns';
 import { CALENDAR_ROUTE } from '../../../constants';
 import { StoreProvider } from '../../../store/redux';
@@ -45,23 +45,29 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 	const dispatch = useAppDispatch();
 	const { replaceHistory } = useHistoryNavigation();
 
-	const isDisabled = useMemo(
-		() =>
+	const isDisabled = useMemo(() => {
+		const hasInvalidMeetingRoom = meetingRooms?.some((room) => !room?.email?.trim());
+		const hasInvalidEquipment = equipments?.some((eq) => !eq?.email?.trim());
+
+		return (
 			disabled?.sendButton ||
 			(!attendees?.length &&
 				!optionalAttendees?.length &&
 				!meetingRooms?.length &&
 				!equipments?.length) ||
-			!title?.length,
-		[
-			attendees?.length,
-			disabled?.sendButton,
-			equipments?.length,
-			meetingRooms?.length,
-			optionalAttendees?.length,
-			title?.length
-		]
-	);
+			!title?.trim() ||
+			hasInvalidMeetingRoom ||
+			hasInvalidEquipment
+		);
+	}, [
+		attendees?.length,
+		optionalAttendees?.length,
+		meetingRooms,
+		equipments,
+		disabled?.sendButton,
+		title
+	]);
+
 	const onClick = useCallback(() => {
 		if (editor.isSeries && !isNew && !editor.isInstance) {
 			const modalId = 'series-edit-warning';
