@@ -114,6 +114,9 @@ export const EditorResourceComponent = ({
 	const [options, setOptions] = useState<Array<ResourceInputOption>>([]);
 	const [hasError, setHasError] = useState(false);
 
+	const inputRef = useRef<HTMLInputElement>(null);
+	const [chipIdToRemove, setChipIdToRemove] = useState<string | null>(null);
+
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
 	const isValidResource = (resource: Resource | undefined): boolean =>
@@ -192,82 +195,96 @@ export const EditorResourceComponent = ({
 		[onChange]
 	);
 
-	const buildResourceChipItem = useCallback((room: Resource): ChipItem<Resource> => {
-		const isValid = isValidResource(room);
+	const handleEditResource = useCallback((text: string, id: string) => {
+		setChipIdToRemove(id);
 
-		let avatarIcon: keyof Theme['icons'];
-		if (!isValid) {
-			avatarIcon = 'AlertCircleOutline';
-		} else if (room.type === 'Location') {
-			avatarIcon = 'BuildingOutline';
-		} else {
-			avatarIcon = 'BriefcaseOutline';
+		if (inputRef.current) {
+			inputRef.current.value = text;
+			inputRef.current.focus();
 		}
-
-		const avatarBackground: keyof Theme['palette'] = isValid ? 'transparent' : 'error';
-
-		const editChipAction: ChipAction = {
-			id: 'edit',
-			icon: 'EditOutline',
-			type: 'button',
-			label: 'Edit',
-			color: 'primary',
-			onClick: (event) => {
-				console.log('edit', event);
-			}
-		};
-
-		return {
-			...room,
-			value: room,
-			background: isValid ? 'gray3' : 'error',
-			color: isValid ? 'text' : 'gray6',
-			avatarColor: isValid ? 'gray0' : 'gray6',
-			avatarIcon,
-			avatarBackground,
-			actions: [editChipAction]
-		};
 	}, []);
+
+	const buildResourceChipItem = useCallback(
+		(resource: Resource): ChipItem<Resource> => {
+			const isValid = isValidResource(resource);
+
+			let avatarIcon: keyof Theme['icons'];
+			if (!isValid) {
+				avatarIcon = 'AlertCircleOutline';
+			} else if (resource.type === 'Location') {
+				avatarIcon = 'BuildingOutline';
+			} else {
+				avatarIcon = 'BriefcaseOutline';
+			}
+
+			const avatarBackground: keyof Theme['palette'] = isValid ? 'transparent' : 'error';
+
+			const editChipAction: ChipAction = {
+				id: 'edit',
+				icon: 'EditOutline',
+				type: 'button',
+				label: 'Edit',
+				color: 'error',
+				onClick: (event) => {
+					event.stopPropagation();
+					handleEditResource(resource.label, resource.id || resource.email);
+				}
+			};
+
+			return {
+				...resource,
+				value: resource,
+				background: isValid ? 'gray3' : 'error',
+				color: isValid ? 'text' : 'gray6',
+				avatarColor: isValid ? 'gray0' : 'gray6',
+				avatarIcon,
+				avatarBackground,
+				actions: [editChipAction]
+			};
+		},
+		[handleEditResource]
+	);
 
 	const resourceAvailability: ChipItem<Resource>[] = useMemo(() => {
 		if (!resourcesValue?.length) return [];
 
-		return resourcesValue.map((room) => {
-			const chip = buildResourceChipItem(room);
+		return resourcesValue
+			.filter((r) => r.id !== chipIdToRemove)
+			.map((resource) => {
+				const chip = buildResourceChipItem(resource);
 
-			const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
-			const isBusy =
-				roomInList &&
-				getIsBusyAtTimeOfTheEvent(roomInList, start, end, attendeesAvailabilityList, allDay);
+				const roomInList = find(attendeesAvailabilityList, ['email', resource.email]);
+				const isBusy =
+					roomInList &&
+					getIsBusyAtTimeOfTheEvent(roomInList, start, end, attendeesAvailabilityList, allDay);
 
-			if (isBusy) {
-				return {
-					...chip,
-					actions: [
-						{
-							id: 'unavailable',
-							label: singleWarningLabel,
-							color: 'error',
-							type: 'icon',
-							icon: 'AlertTriangle'
-						}
-					]
-				};
-			}
+				if (isBusy) {
+					return {
+						...chip,
+						actions: [
+							{
+								id: 'unavailable',
+								label: singleWarningLabel,
+								color: 'error',
+								type: 'icon',
+								icon: 'AlertTriangle'
+							}
+						]
+					};
+				}
 
-			return chip;
-		});
+				return chip;
+			});
 	}, [
 		allDay,
 		attendeesAvailabilityList,
 		buildResourceChipItem,
+		chipIdToRemove,
 		end,
 		resourcesValue,
 		singleWarningLabel,
 		start
 	]);
-
-	const inputRef = useRef<HTMLInputElement>(null);
 
 	const onPressingEnterSelectFirstOption = useMemo<KeyboardPresetObj[]>(
 		() => [
