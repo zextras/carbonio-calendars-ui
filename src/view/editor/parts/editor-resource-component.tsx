@@ -169,7 +169,7 @@ export const EditorResourceComponent = ({
 						setOptions(receivedOptions);
 					})
 					.catch((reason) => {
-						console.warn(reason.error || reason);
+						console.warn(reason.error ?? reason);
 					});
 			}
 		},
