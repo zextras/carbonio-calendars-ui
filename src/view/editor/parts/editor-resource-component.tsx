@@ -115,15 +115,21 @@ export const EditorResourceComponent = ({
 	const [hasError, setHasError] = useState(false);
 
 	const inputRef = useRef<HTMLInputElement>(null);
-	const [chipIdToRemove, setChipIdToRemove] = useState<string | null>(null);
+	const [editingResource, setEditingResource] = useState<Resource | null>(null);
 
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
 	const isValidResource = (resource: Resource | undefined): boolean =>
 		!!resource?.label?.trim() && !!resource?.email?.trim();
 
+	const generateResourceId = (resource: Resource): string => {
+		if (resource.email?.trim()) return resource.email.trim();
+		if (resource.id?.trim()) return resource.id.trim();
+		return `manual-${resource.label?.trim() ?? 'unknown'}`;
+	};
+
 	const handleAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
-		setChipIdToRemove(null);
+		setEditingResource(null);
 
 		const isResourceOption = (obj: unknown): obj is Resource =>
 			typeof obj === 'object' &&
@@ -154,6 +160,7 @@ export const EditorResourceComponent = ({
 
 		return {
 			label,
+			id: resource.id ?? generateResourceId(resource),
 			value: resource,
 			...(isValid ? {} : { background: 'error', hasError: true })
 		};
@@ -197,11 +204,11 @@ export const EditorResourceComponent = ({
 		[onChange]
 	);
 
-	const handleEditResource = useCallback((text: string, id: string) => {
-		setChipIdToRemove(id);
+	const handleEditResource = useCallback((resource: Resource) => {
+		setEditingResource(resource);
 
 		if (inputRef.current) {
-			inputRef.current.value = text;
+			inputRef.current.value = resource.label;
 			inputRef.current.focus();
 		}
 	}, []);
@@ -229,12 +236,13 @@ export const EditorResourceComponent = ({
 				color: 'error',
 				onClick: (event) => {
 					event.stopPropagation();
-					handleEditResource(resource.label, resource.id || resource.email);
+					handleEditResource(resource);
 				}
 			};
 
 			return {
 				...resource,
+				id: resource.id ?? generateResourceId(resource),
 				value: resource,
 				background: isValid ? 'gray3' : 'error',
 				color: isValid ? 'text' : 'gray6',
@@ -251,7 +259,7 @@ export const EditorResourceComponent = ({
 		if (!resourcesValue?.length) return [];
 
 		return resourcesValue
-			.filter((r) => r.id !== chipIdToRemove)
+			.filter((r) => !editingResource || r.id !== editingResource.id)
 			.map((resource) => {
 				const chip = buildResourceChipItem(resource);
 
@@ -281,7 +289,7 @@ export const EditorResourceComponent = ({
 		allDay,
 		attendeesAvailabilityList,
 		buildResourceChipItem,
-		chipIdToRemove,
+		editingResource,
 		end,
 		resourcesValue,
 		singleWarningLabel,
