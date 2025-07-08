@@ -306,4 +306,68 @@ describe('EditorResourceComponent', () => {
 			expect(screen.getByTestId('dropdown-options-loader')).toBeInTheDocument();
 		});
 	});
+
+	it('shows edit action in added chip', async () => {
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={mockSearchOptions}
+				resourcesValue={[defaultResource]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
+			/>,
+			{ store }
+		);
+
+		const chip = screen.getByTestId('chip');
+		expect(chip).toHaveTextContent('DefaultResource');
+
+		const editButton = within(chip).getByTestId('icon: EditOutline');
+		expect(editButton).toBeInTheDocument();
+
+		await user.click(editButton);
+		expect(onChangeMock).toHaveBeenCalledTimes(0); // No change on edit click
+	});
+
+	it('triggers onChange when user commit edit using edit chip action', async () => {
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={mockSearchOptions}
+				resourcesValue={[defaultResource]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
+			/>,
+			{ store }
+		);
+
+		const chip = screen.getByTestId('chip');
+		expect(chip).toHaveTextContent('DefaultResource');
+
+		const editButton = within(chip).getByTestId('icon: EditOutline');
+		expect(editButton).toBeInTheDocument();
+
+		await user.click(editButton);
+		expect(onChangeMock).toHaveBeenCalledTimes(0);
+
+		const input = screen.getByPlaceholderText('Test');
+
+		await user.clear(input);
+		await user.type(input, 'UpdatedResource');
+		await user.keyboard('{Enter}');
+		await waitFor(() => {
+			expect(onChangeMock).toHaveBeenCalledTimes(1);
+			const [resources] = onChangeMock.mock.calls[0];
+			expect(resources[0]).toMatchObject({
+				label: 'UpdatedResource',
+				email: ''
+			});
+		});
+	});
 });
