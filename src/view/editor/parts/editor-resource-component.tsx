@@ -246,13 +246,13 @@ export const EditorResourceComponent = ({
 					onChange={onInternalChange}
 					disabled={disabled}
 				/>
+				<EditorAvailabilityWarningRow
+					label={warningLabel}
+					list={attendeesAvailabilityList}
+					items={resourceAvailability}
+					editorId={editorId}
+				/>
 			</Container>
-			<EditorAvailabilityWarningRow
-				label={warningLabel}
-				list={attendeesAvailabilityList}
-				items={resourceAvailability}
-				editorId={editorId}
-			/>
 		</>
 	);
 };
