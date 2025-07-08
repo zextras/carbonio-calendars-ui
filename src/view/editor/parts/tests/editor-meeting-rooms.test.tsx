@@ -32,6 +32,7 @@ describe('Editor meeting rooms', () => {
 
 		expect(screen.getByText('Meeting room')).toBeInTheDocument();
 	});
+
 	it('should render the chip when present in the store', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -48,6 +49,7 @@ describe('Editor meeting rooms', () => {
 
 		expect(screen.getByText(meetingRoom1.label)).toBeVisible();
 	});
+
 	it('should display meeting room busy when is already booked', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const meetingRoom1 = {
@@ -78,6 +80,7 @@ describe('Editor meeting rooms', () => {
 		expect(screen.getByText(meetingRoom1.label)).toBeVisible();
 		expect(await screen.findByTestId('icon: AlertTriangle')).toBeVisible();
 	});
+
 	it('should display options on screen when typing', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -108,6 +111,7 @@ describe('Editor meeting rooms', () => {
 		expect(within(dropdown).getByText(items[1].label)).toBeVisible();
 		expect(within(dropdown).getByText(items[2].label)).toBeVisible();
 	});
+
 	it('should add a chip when selecting an option', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -143,6 +147,7 @@ describe('Editor meeting rooms', () => {
 		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
+
 	it('should select the first option when pressing enter', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -173,6 +178,7 @@ describe('Editor meeting rooms', () => {
 		expect(dropDownItems[0]).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
+
 	it('should not remove the already existing chips when adding a new one', async () => {
 		const meetinRoom1 = {
 			label: 'meeting room 1',
@@ -209,6 +215,7 @@ describe('Editor meeting rooms', () => {
 		expect(screen.getByText(meetinRoom1.label)).toBeVisible();
 		expect(screen.getByText(selectedMeetingRoomLabel)).toBeVisible();
 	});
+
 	it('should allow adding a new chip that have the same label', async () => {
 		const label = `location 1`;
 		const itemFromAutoComplete = {

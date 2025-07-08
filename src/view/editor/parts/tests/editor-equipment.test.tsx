@@ -33,6 +33,7 @@ describe('Editor equipment', () => {
 
 		expect(screen.getByText('Equipment')).toBeInTheDocument();
 	});
+
 	it('should render the chip when present in the store', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -49,6 +50,7 @@ describe('Editor equipment', () => {
 
 		expect(screen.getByText(/automobile 1/i)).toBeVisible();
 	});
+
 	it('should display equipment busy when is already booked', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const equipment1 = {
@@ -79,6 +81,7 @@ describe('Editor equipment', () => {
 		expect(screen.getByText(equipment1.label)).toBeVisible();
 		expect(await screen.findByTestId('icon: AlertTriangle')).toBeVisible();
 	});
+
 	it('should display options on screen when typing', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -109,6 +112,7 @@ describe('Editor equipment', () => {
 		expect(within(dropdown).getByText(items[1].label)).toBeVisible();
 		expect(within(dropdown).getByText(items[2].label)).toBeVisible();
 	});
+
 	it('should add a chip when selecting an option', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -141,6 +145,7 @@ describe('Editor equipment', () => {
 		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
+
 	it('should select the first option when pressing enter', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -330,6 +335,7 @@ describe('Editor equipment', () => {
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 		expect(await within(dropdown).findByTestId('dropdown-options-loader')).toBeVisible();
 	});
+
 	it('should leave options dropdown open with loader when call to AutoCompleteGal api fails with Soap Fault', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({
