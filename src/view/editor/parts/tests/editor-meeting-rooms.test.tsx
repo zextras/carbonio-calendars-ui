@@ -209,7 +209,7 @@ describe('Editor meeting rooms', () => {
 		expect(screen.getByText(meetinRoom1.label)).toBeVisible();
 		expect(screen.getByText(selectedMeetingRoomLabel)).toBeVisible();
 	});
-	it('should not add a new chip that have the same label', async () => {
+	it('should allow adding a new chip that have the same label', async () => {
 		const label = `location 1`;
 		const itemFromAutoComplete = {
 			id: faker.string.uuid(),
@@ -240,9 +240,10 @@ describe('Editor meeting rooms', () => {
 		await user.click(within(dropdown).getByText(itemFromAutoComplete.label));
 		expect(dropdown).not.toBeInTheDocument();
 
-		expect((await screen.findAllByText(label)).length).toBe(1);
+		expect((await screen.findAllByText(label)).length).toBe(2);
 	});
-	it('should not display multiple chips with the same email', async () => {
+
+	it('should allow adding multiple chips with the same email', async () => {
 		const email = `same@email.it`;
 		const itemFromAutoComplete = {
 			id: faker.string.uuid(),
@@ -275,8 +276,9 @@ describe('Editor meeting rooms', () => {
 		expect(dropDownItem).not.toBeInTheDocument();
 
 		expect((await screen.findAllByText(storedItem.label)).length).toBe(1);
-		expect(screen.queryAllByText(itemFromAutoComplete.label).length).toBe(0);
+		expect(screen.queryAllByText(itemFromAutoComplete.label).length).toBe(1);
 	});
+
 	it('should leave options dropdown open with loader when AutoCompleteGal api fails with 500', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({

@@ -211,7 +211,7 @@ describe('Editor equipment', () => {
 		expect(screen.getByText(selectedEquipmentLabel)).toBeVisible();
 	});
 
-	it('should not add a new chip that have the same label', async () => {
+	it('should allow adding a new chip that have the same label', async () => {
 		const label = `resource 1`;
 		const itemFromAutoComplete = {
 			id: faker.string.uuid(),
@@ -241,9 +241,10 @@ describe('Editor equipment', () => {
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 		await user.click(await within(dropdown).findByText(itemFromAutoComplete.label));
 
-		expect((await screen.findAllByText(label)).length).toBe(1);
+		expect((await screen.findAllByText(label)).length).toBe(2);
 	});
-	it('should not display multiple chips with the same email', async () => {
+
+	it('should allow adding multiple chips with the same email', async () => {
 		const email = `same@email.it`;
 		const itemFromAutoComplete = {
 			id: faker.string.uuid(),
@@ -275,9 +276,10 @@ describe('Editor equipment', () => {
 		expect(dropdown).not.toBeInTheDocument();
 
 		expect((await screen.findAllByText(storedItem.label)).length).toBe(1);
-		expect(screen.queryAllByText(itemFromAutoComplete.label).length).toBe(0);
+		expect(screen.queryAllByText(itemFromAutoComplete.label).length).toBe(1);
 	});
-	it('should not add a new chip that already exists', async () => {
+
+	it('should allow add a new chip that already exists', async () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
@@ -305,8 +307,9 @@ describe('Editor equipment', () => {
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
 		await user.click(await within(dropdown).findByText(selectedEquipment.label));
 
-		expect((await screen.findAllByText(selectedEquipment.label)).length).toBe(1);
+		expect((await screen.findAllByText(selectedEquipment.label)).length).toBe(2);
 	});
+
 	it('should leave options dropdown open with loader when call to AutoCompleteGal api fails with generic 500', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({

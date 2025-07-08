@@ -147,7 +147,7 @@ describe('EditorResourceComponent', () => {
 		});
 	});
 
-	it('prevents duplicate entries onChange', async () => {
+	it('allows duplicate entries onChange', async () => {
 		const { user } = setupTest(
 			<EditorResourceComponent
 				placeholder="Test"
@@ -178,7 +178,7 @@ describe('EditorResourceComponent', () => {
 		await waitFor(() => {
 			expect(onChangeMock).toHaveBeenCalled();
 			const [chips] = onChangeMock.mock.calls.at(-1)!;
-			expect(chips).toHaveLength(1);
+			expect(chips).toHaveLength(2);
 			expect(dropDownItem).not.toBeInTheDocument();
 		});
 	});

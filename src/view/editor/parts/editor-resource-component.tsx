@@ -17,7 +17,7 @@ import {
 	Theme,
 	useKeyboard
 } from '@zextras/carbonio-design-system';
-import { find, uniqWith } from 'lodash';
+import { find } from 'lodash';
 import styled from 'styled-components';
 
 import {
@@ -209,13 +209,8 @@ export const EditorResourceComponent = ({
 		(newChips: ChipItem<Resource>[]): void => {
 			if (!onChange) return;
 
-			const uniqueItems = uniqWith(newChips, (item1, item2) =>
-				item1?.value?.email && item2?.value?.email
-					? item1.value.email === item2.value.email
-					: item1.label === item2.label
-			);
-			setHasError(uniqueItems.some((item) => !isValidResource(item.value)));
-			onChange(uniqueItems.map((chip) => chip.value as Resource));
+			setHasError(newChips.some((item) => !isValidResource(item.value)));
+			onChange(newChips.map((chip) => chip.value as Resource));
 		},
 		[onChange, isValidResource]
 	);
