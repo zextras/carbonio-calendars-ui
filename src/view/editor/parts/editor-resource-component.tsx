@@ -198,8 +198,11 @@ export const EditorResourceComponent = ({
 						setOptions(receivedOptions);
 					})
 					.catch((reason) => {
+						setOptions([]);
 						console.warn(reason.error ?? reason);
 					});
+			} else {
+				setOptions([]);
 			}
 		},
 		[onSearchOptions]
