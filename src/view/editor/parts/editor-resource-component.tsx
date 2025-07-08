@@ -87,6 +87,18 @@ export const normalizeResources = (r: Contact): Resource => ({
 	type: r._attrs.zimbraCalResType
 });
 
+interface EditorResourceComponentProps {
+	editorId: string;
+	onChange: (items: Array<Resource>) => void;
+	onSearchOptions: (stringToSearch: string) => Promise<Array<ResourceInputOption>>;
+	placeholder: string;
+	resourcesValue: Array<Resource>;
+	warningLabel: string;
+	disabled?: boolean;
+	singleWarningLabel: string;
+	invalidInputErrorLabel: string;
+}
+
 export const EditorResourceComponent = ({
 	editorId,
 	onChange,
@@ -97,17 +109,7 @@ export const EditorResourceComponent = ({
 	disabled,
 	singleWarningLabel,
 	invalidInputErrorLabel
-}: {
-	editorId: string;
-	onChange: (items: Array<Resource>) => void;
-	onSearchOptions: (stringToSearch: string) => Promise<Array<ResourceInputOption>>;
-	placeholder: string;
-	resourcesValue: Array<Resource>;
-	warningLabel: string;
-	disabled?: boolean;
-	singleWarningLabel: string;
-	invalidInputErrorLabel: string;
-}): JSX.Element | null => {
+}: EditorResourceComponentProps): JSX.Element | null => {
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
