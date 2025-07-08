@@ -349,7 +349,7 @@ export const EditorResourceComponent = ({
 					disabled={disabled}
 					confirmChipOnBlur
 					createChipOnPaste={false}
-					disableOptions={false}
+					disableOptions
 					placeholder={placeholder}
 					value={resourceAvailability}
 					options={options}
