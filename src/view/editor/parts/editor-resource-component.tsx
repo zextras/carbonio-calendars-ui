@@ -182,17 +182,22 @@ export const EditorResourceComponent = ({
 		[isValidResource]
 	);
 
+	const loadingOption = useMemo(
+		() => [
+			{
+				id: 'loading',
+				label: 'loading',
+				customComponent: <Loader />,
+				disabled: true
+			}
+		],
+		[]
+	);
+
 	const handleInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
 		(e) => {
 			if (e.textContent && e.textContent !== '') {
-				setOptions([
-					{
-						id: 'loading',
-						label: 'loading',
-						customComponent: <Loader />,
-						disabled: true
-					}
-				]);
+				setOptions(loadingOption);
 				onSearchOptions(e.textContent)
 					.then((receivedOptions) => {
 						setOptions(receivedOptions);
@@ -205,7 +210,7 @@ export const EditorResourceComponent = ({
 				setOptions([]);
 			}
 		},
-		[onSearchOptions]
+		[loadingOption, onSearchOptions]
 	);
 
 	const handleChange = useCallback(
