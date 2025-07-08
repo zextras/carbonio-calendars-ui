@@ -173,7 +173,7 @@ describe('Editor equipment', () => {
 		await user.type(screen.getByText('Equipment'), 'resource');
 		const dropDownItems = await screen.findAllByTestId('dropdown-item');
 
-		await user.keyboard('{Enter}');
+		await user.keyboard('{Control>}{Enter}{/Control}');
 
 		expect(dropDownItems[0]).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();

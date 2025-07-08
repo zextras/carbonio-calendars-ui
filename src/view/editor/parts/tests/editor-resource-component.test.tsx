@@ -83,7 +83,7 @@ describe('EditorResourceComponent', () => {
 
 		const dropDownItem = await screen.findByTestId('dropdown-item');
 		expect(dropDownItem).toHaveTextContent('DefaultResource');
-		await user.keyboard('{Enter}');
+		await user.keyboard('{Control>}{Enter}{/Control}');
 
 		await waitFor(async () => {
 			expect(onChangeMock).toHaveBeenCalledTimes(1);
@@ -199,7 +199,7 @@ describe('EditorResourceComponent', () => {
 		const dropDownItem = await screen.findByTestId('dropdown-item');
 		expect(dropDownItem).toHaveTextContent('DefaultResource');
 
-		await user.keyboard('{Enter}');
+		await user.keyboard('{Control>}{Enter}{/Control}');
 
 		expect(dropDownItem).not.toBeInTheDocument();
 	});
@@ -245,7 +245,7 @@ describe('EditorResourceComponent', () => {
 		const dropDownItems = await screen.findAllByTestId('dropdown-item');
 		expect(dropDownItems).toHaveLength(2);
 
-		await user.keyboard('{Enter}');
+		await user.keyboard('{Control>}{Enter}{/Control}');
 
 		await waitFor(async () => {
 			expect(onChangeMock).toHaveBeenCalledTimes(1);
