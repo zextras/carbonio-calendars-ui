@@ -99,6 +99,12 @@ interface EditorResourceComponentProps {
 	invalidInputErrorLabel: string;
 }
 
+type ResourceChipItem = ChipItem<Resource> & {
+	avatarIcon?: keyof Theme['icons'];
+	avatarBackground?: keyof Theme['palette'];
+	avatarColor?: string;
+};
+
 export const EditorResourceComponent = ({
 	editorId,
 	onChange,
@@ -119,56 +125,62 @@ export const EditorResourceComponent = ({
 	const [editingResource, setEditingResource] = useState<Resource | null>(null);
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
-	const isValidResource = (resource: Resource | undefined): boolean =>
-		!!resource?.label?.trim() && !!resource?.email?.trim();
+	const isValidResource = useCallback(
+		(resource: Resource | undefined): boolean =>
+			!!resource?.label?.trim() && !!resource?.email?.trim(),
+		[]
+	);
 
 	const resourcesAreValid = useMemo(
 		() => resourcesValue.every((resource) => isValidResource(resource)),
-		[resourcesValue]
+		[isValidResource, resourcesValue]
 	);
 
 	const [hasError, setHasError] = useState(!resourcesAreValid);
 
-	const handleAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
-		setEditingResource(null);
+	const handleAdd = useCallback(
+		(valueToAdd: unknown): ResourceChipItem => {
+			setEditingResource(null);
 
-		const isResourceOption = (obj: unknown): obj is Resource =>
-			typeof obj === 'object' &&
-			obj !== null &&
-			'id' in obj &&
-			'label' in obj &&
-			'email' in obj &&
-			'type' in obj;
+			const isResourceOption = (obj: unknown): obj is Resource =>
+				typeof obj === 'object' &&
+				obj !== null &&
+				'id' in obj &&
+				'label' in obj &&
+				'email' in obj &&
+				'type' in obj;
 
-		const isStringInput = (input: unknown): input is string =>
-			typeof input === 'string' && input.trim() !== '';
+			const isStringInput = (input: unknown): input is string =>
+				typeof input === 'string' && input.trim() !== '';
 
-		let label: string;
-		let resource: Resource;
-		if (isResourceOption(valueToAdd)) {
-			resource = valueToAdd;
-			label = resource.label;
-		} else if (isStringInput(valueToAdd)) {
-			label = valueToAdd.trim();
-			resource = { email: '', label };
-		} else {
-			label = 'Invalid input';
-			resource = { email: '', label };
-		}
+			let label: string;
+			let resource: Resource;
+			if (isResourceOption(valueToAdd)) {
+				resource = valueToAdd;
+				label = resource.label;
+			} else if (isStringInput(valueToAdd)) {
+				label = valueToAdd.trim();
+				resource = { email: '', label };
+			} else {
+				label = 'Invalid input';
+				resource = { email: '', label };
+			}
 
-		const resourceId = resource.id ?? generateResourceId(resource);
+			const resourceId = resource.id ?? generateResourceId(resource);
 
-		resource = { ...resource, id: resourceId };
+			resource = { ...resource, id: resourceId };
 
-		const isValid = isValidResource(resource);
+			const isValid = isValidResource(resource);
 
-		return {
-			label,
-			id: resourceId,
-			value: resource,
-			...(isValid ? {} : { background: 'error', hasError: true })
-		};
-	}, []);
+			return {
+				label,
+				id: resourceId,
+				value: resource,
+				...(isValid ? {} : { background: 'error', hasError: true })
+			};
+		},
+		[isValidResource]
+	);
 
 	const handleInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
 		(e) => {
@@ -193,8 +205,8 @@ export const EditorResourceComponent = ({
 		[onSearchOptions]
 	);
 
-	const handleChange: (newChips: ChipItem<Resource>[]) => void = useCallback(
-		(newChips: ChipItem<Resource>[]) => {
+	const handleChange = useCallback(
+		(newChips: ChipItem<Resource>[]): void => {
 			if (!onChange) return;
 
 			const uniqueItems = uniqWith(newChips, (item1, item2) =>
@@ -205,7 +217,7 @@ export const EditorResourceComponent = ({
 			setHasError(uniqueItems.some((item) => !isValidResource(item.value)));
 			onChange(uniqueItems.map((chip) => chip.value as Resource));
 		},
-		[onChange]
+		[onChange, isValidResource]
 	);
 
 	const handleEditResource = useCallback((resource: Resource) => {
@@ -221,7 +233,7 @@ export const EditorResourceComponent = ({
 	}, []);
 
 	const buildResourceChipItem = useCallback(
-		(resource: Resource): ChipItem<Resource> => {
+		(resource: Resource): ResourceChipItem => {
 			const isValid = isValidResource(resource);
 
 			let avatarIcon: keyof Theme['icons'];
@@ -259,10 +271,10 @@ export const EditorResourceComponent = ({
 				actions: [editChipAction]
 			};
 		},
-		[handleEditResource]
+		[handleEditResource, isValidResource]
 	);
 
-	const resourceAvailability: ChipItem<Resource>[] = useMemo(() => {
+	const resourceAvailability: ResourceChipItem[] = useMemo(() => {
 		if (!resourcesValue?.length) return [];
 
 		return resourcesValue
