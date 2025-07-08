@@ -9,6 +9,7 @@ import { filter, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { EditorResourceComponent, normalizeResources } from './editor-resource-component';
+import { generateResourceId } from './utils';
 import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorMeetingRoom } from '../../../store/selectors/editor';
@@ -25,7 +26,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 	const meetingRoomsChipValue = useMemo(
 		() =>
 			map(meetingRoomsValue, (resource) => ({
-				id: resource.id,
+				id: resource.id ?? generateResourceId(resource),
 				label: resource.label,
 				email: resource.email,
 				avatarIcon: 'BuildingOutline' as const,
