@@ -11,3 +11,6 @@ export const generateResourceId = (resource: Resource): string => {
 	if (resource.id?.trim()) return resource.id.trim();
 	return `${resource.label?.trim() ?? 'unknown'}-${Date.now()}`;
 };
+
+export const isValidResource = (resource: Resource | undefined): boolean =>
+	!!resource?.label?.trim() && !!resource?.email?.trim();

@@ -24,7 +24,7 @@ import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
-import { generateResourceId } from './utils';
+import { generateResourceId, isValidResource } from './utils';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -103,6 +103,7 @@ type ResourceChipItem = ChipItem<Resource> & {
 	avatarIcon?: keyof Theme['icons'];
 	avatarBackground?: keyof Theme['palette'];
 	avatarColor?: string;
+	error?: boolean;
 };
 
 export const EditorResourceComponent = ({
@@ -125,62 +126,50 @@ export const EditorResourceComponent = ({
 	const [editingResource, setEditingResource] = useState<Resource | null>(null);
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
-	const isValidResource = useCallback(
-		(resource: Resource | undefined): boolean =>
-			!!resource?.label?.trim() && !!resource?.email?.trim(),
-		[]
-	);
-
 	const resourcesAreValid = useMemo(
 		() => resourcesValue.every((resource) => isValidResource(resource)),
-		[isValidResource, resourcesValue]
+		[resourcesValue]
 	);
 
 	const [hasError, setHasError] = useState(!resourcesAreValid);
 
-	const handleAdd = useCallback(
-		(valueToAdd: unknown): ResourceChipItem => {
-			setEditingResource(null);
+	const handleAdd = useCallback((valueToAdd: unknown): ResourceChipItem => {
+		setEditingResource(null);
 
-			const isResourceOption = (obj: unknown): obj is Resource =>
-				typeof obj === 'object' &&
-				obj !== null &&
-				'id' in obj &&
-				'label' in obj &&
-				'email' in obj &&
-				'type' in obj;
+		const isResourceOption = (obj: unknown): obj is Resource =>
+			typeof obj === 'object' &&
+			obj !== null &&
+			'id' in obj &&
+			'label' in obj &&
+			'email' in obj &&
+			'type' in obj;
 
-			const isStringInput = (input: unknown): input is string =>
-				typeof input === 'string' && input.trim() !== '';
+		const isStringInput = (input: unknown): input is string =>
+			typeof input === 'string' && input.trim() !== '';
 
-			let label: string;
-			let resource: Resource;
-			if (isResourceOption(valueToAdd)) {
-				resource = valueToAdd;
-				label = resource.label;
-			} else if (isStringInput(valueToAdd)) {
-				label = valueToAdd.trim();
-				resource = { email: '', label };
-			} else {
-				label = 'Invalid input';
-				resource = { email: '', label };
-			}
+		let label: string;
+		let resource: Resource;
+		if (isResourceOption(valueToAdd)) {
+			resource = valueToAdd;
+			label = resource.label;
+		} else if (isStringInput(valueToAdd)) {
+			label = valueToAdd.trim();
+			resource = { email: '', label };
+		} else {
+			label = 'Invalid input';
+			resource = { email: '', label };
+		}
+		const resourceId = resource.id ?? generateResourceId(resource);
+		resource = { ...resource, id: resourceId };
+		const isValid = isValidResource(resource);
 
-			const resourceId = resource.id ?? generateResourceId(resource);
-
-			resource = { ...resource, id: resourceId };
-
-			const isValid = isValidResource(resource);
-
-			return {
-				label,
-				id: resourceId,
-				value: resource,
-				...(isValid ? {} : { background: 'error', hasError: true })
-			};
-		},
-		[isValidResource]
-	);
+		return {
+			label,
+			id: resourceId,
+			value: resource,
+			...(isValid ? {} : { background: 'error', error: true })
+		};
+	}, []);
 
 	const loadingOption = useMemo(
 		() => [
@@ -220,7 +209,7 @@ export const EditorResourceComponent = ({
 			setHasError(newChips.some((item) => !isValidResource(item.value)));
 			onChange(newChips.map((chip) => chip.value as Resource));
 		},
-		[onChange, isValidResource]
+		[onChange]
 	);
 
 	const handleEditResource = useCallback((resource: Resource) => {
@@ -239,23 +228,11 @@ export const EditorResourceComponent = ({
 		(resource: Resource): ResourceChipItem => {
 			const isValid = isValidResource(resource);
 
-			let avatarIcon: keyof Theme['icons'];
-			if (!isValid) {
-				avatarIcon = 'AlertCircleOutline';
-			} else if (resource.type === 'Location') {
-				avatarIcon = 'BuildingOutline';
-			} else {
-				avatarIcon = 'BriefcaseOutline';
-			}
-
-			const avatarBackground: keyof Theme['palette'] = isValid ? 'transparent' : 'error';
-
 			const editChipAction: ChipAction = {
 				id: 'edit',
 				icon: 'EditOutline',
 				type: 'button',
 				label: 'Edit',
-				color: isValid ? 'text' : 'error',
 				onClick: (event) => {
 					event.stopPropagation();
 					handleEditResource(resource);
@@ -269,12 +246,12 @@ export const EditorResourceComponent = ({
 				background: isValid ? 'gray3' : 'error',
 				color: isValid ? 'text' : 'gray6',
 				avatarColor: isValid ? 'gray0' : 'gray6',
-				avatarIcon,
-				avatarBackground,
-				actions: [editChipAction]
+				avatarBackground: isValid ? 'transparent' : 'error',
+				actions: [editChipAction],
+				error: !isValid
 			};
 		},
-		[handleEditResource, isValidResource]
+		[handleEditResource]
 	);
 
 	const resourceAvailability: ResourceChipItem[] = useMemo(() => {
