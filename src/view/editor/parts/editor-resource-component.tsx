@@ -293,17 +293,19 @@ export const EditorResourceComponent = ({
 					getIsBusyAtTimeOfTheEvent(roomInList, start, end, attendeesAvailabilityList, allDay);
 
 				if (isBusy) {
+					const actions: ChipAction[] = [...(chip.actions ?? [])];
+
+					actions.unshift({
+						id: 'unavailable',
+						label: singleWarningLabel,
+						color: 'error',
+						type: 'icon',
+						icon: 'AlertTriangle'
+					});
+
 					return {
 						...chip,
-						actions: [
-							{
-								id: 'unavailable',
-								label: singleWarningLabel,
-								color: 'error',
-								type: 'icon',
-								icon: 'AlertTriangle'
-							}
-						]
+						actions
 					};
 				}
 
