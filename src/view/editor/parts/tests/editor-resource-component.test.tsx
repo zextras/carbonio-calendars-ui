@@ -8,7 +8,7 @@
 import React from 'react';
 
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 
 import { generateEditor } from '../../../../commons/editor-generator';
 import { reducers } from '../../../../store/redux';
@@ -53,6 +53,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -73,6 +74,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -107,6 +109,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -132,6 +135,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -168,6 +172,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -189,6 +194,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -236,6 +242,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -269,6 +276,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -292,6 +300,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -317,6 +326,7 @@ describe('EditorResourceComponent', () => {
 				warningLabel=""
 				singleWarningLabel=""
 				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
 			/>,
 			{ store }
 		);
@@ -340,6 +350,41 @@ describe('EditorResourceComponent', () => {
 			const [resources] = onChangeMock.mock.calls[0];
 			expect(resources[0]).toMatchObject({
 				label: 'UpdatedResource',
+				email: ''
+			});
+		});
+	});
+
+	it('should add resource chip when user presses NumberPadEnter after typing', async () => {
+		const { user } = setupTest(
+			<EditorResourceComponent
+				placeholder="Test"
+				editorId={editor.id}
+				onChange={onChangeMock}
+				onSearchOptions={mockSearchOptions}
+				resourcesValue={[]}
+				warningLabel=""
+				singleWarningLabel=""
+				invalidInputErrorLabel="Invalid input"
+				duplicateChipsErrorLabel={'Duplicate input'}
+			/>,
+			{ store }
+		);
+
+		const input = screen.getByPlaceholderText('Test');
+		await user.type(input, 'DefaultResource');
+		await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('DefaultResource'));
+
+		const dropDownItem = await screen.findByTestId('dropdown-item');
+		expect(dropDownItem).toHaveTextContent('DefaultResource');
+
+		fireEvent.keyDown(input, { code: 'NumpadEnter' });
+
+		await waitFor(async () => {
+			expect(onChangeMock).toHaveBeenCalledTimes(1);
+			const [resources] = onChangeMock.mock.calls[0];
+			expect(resources[0]).toMatchObject({
+				label: 'DefaultResource',
 				email: ''
 			});
 		});
