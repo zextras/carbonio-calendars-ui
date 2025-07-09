@@ -24,7 +24,7 @@ import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
-import { generateResourceId, isValidResource } from './utils';
+import { generateResourceId, getDuplicateResourceIds, isValidResource } from './utils';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -224,20 +224,39 @@ export const EditorResourceComponent = ({
 		}
 	}, []);
 
+	const duplicateResourceIds = useMemo(
+		() => getDuplicateResourceIds(resourcesValue),
+		[resourcesValue]
+	);
+
 	const buildResourceChipItem = useCallback(
 		(resource: Resource): ResourceChipItem => {
 			const isValid = isValidResource(resource);
+			const key = resource.id || resource.email;
+			const isDuplicate = isValid && duplicateResourceIds.has(key);
 
-			const editChipAction: ChipAction = {
-				id: 'edit',
-				icon: 'EditOutline',
-				type: 'button',
-				label: 'Edit',
-				onClick: (event) => {
-					event.stopPropagation();
-					handleEditResource(resource);
+			const actions: ChipAction[] = [
+				{
+					id: 'edit',
+					icon: 'EditOutline',
+					type: 'button',
+					label: 'Edit',
+					onClick: (event): void => {
+						event.stopPropagation();
+						handleEditResource(resource);
+					}
 				}
-			};
+			];
+
+			if (isDuplicate) {
+				actions.unshift({
+					id: 'duplicate',
+					label: 'Duplicate resource',
+					color: 'warning',
+					type: 'icon',
+					icon: 'AlertTriangle'
+				});
+			}
 
 			return {
 				...resource,
@@ -247,11 +266,11 @@ export const EditorResourceComponent = ({
 				color: isValid ? 'text' : 'gray6',
 				avatarColor: isValid ? 'gray0' : 'gray6',
 				avatarBackground: isValid ? 'transparent' : 'error',
-				actions: [editChipAction],
+				actions,
 				error: !isValid
 			};
 		},
-		[handleEditResource]
+		[duplicateResourceIds, handleEditResource]
 	);
 
 	const resourceAvailability: ResourceChipItem[] = useMemo(() => {

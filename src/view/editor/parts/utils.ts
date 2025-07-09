@@ -14,3 +14,18 @@ export const generateResourceId = (resource: Resource): string => {
 
 export const isValidResource = (resource: Resource | undefined): boolean =>
 	!!resource?.label?.trim() && !!resource?.email?.trim();
+
+export const getDuplicateResourceIds = (resources: Resource[]): Set<string> => {
+	const seen = new Map<string, number>();
+	resources.forEach((r) => {
+		if (isValidResource(r)) {
+			const key = r.id || r.email;
+			seen.set(key, (seen.get(key) || 0) + 1);
+		}
+	});
+	return new Set(
+		Array.from(seen.entries())
+			.filter(([, count]) => count > 1)
+			.map(([key]) => key)
+	);
+};
