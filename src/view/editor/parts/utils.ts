@@ -19,7 +19,7 @@ export const getDuplicateResourceIds = (resources: Resource[]): Set<string> => {
 	const seen = new Map<string, number>();
 	resources.forEach((r) => {
 		if (isValidResource(r)) {
-			const key = r.id ?? r.email;
+			const key = r.id?.trim() || r.email?.trim();
 			seen.set(key, (seen.get(key) ?? 0) + 1);
 		}
 	});
