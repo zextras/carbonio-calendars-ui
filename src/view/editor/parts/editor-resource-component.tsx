@@ -354,34 +354,32 @@ export const EditorResourceComponent = ({
 	}, [hasError, hasDuplicateValidChips, invalidInputErrorLabel, duplicateChipsErrorLabel]);
 
 	return (
-		<>
-			<Container width="100%" height="100%">
-				<ChipInput
-					inputRef={inputRef}
-					disabled={disabled}
-					confirmChipOnBlur
-					createChipOnPaste={false}
-					disableOptions
-					placeholder={placeholder}
-					value={resourceAvailability}
-					options={options}
-					onChange={handleChange}
-					onAdd={handleAdd}
-					separators={[
-						{ code: 'Enter', ctrlKey: false },
-						{ code: 'NumpadEnter', ctrlKey: false }
-					]}
-					onInputType={handleInputType}
-					hasError={hasError}
-					description={chipInputDescription}
-				/>
-			</Container>
+		<Container width="100%" height="100%">
+			<ChipInput
+				inputRef={inputRef}
+				disabled={disabled}
+				confirmChipOnBlur
+				createChipOnPaste={false}
+				disableOptions
+				placeholder={placeholder}
+				value={resourceAvailability}
+				options={options}
+				onChange={handleChange}
+				onAdd={handleAdd}
+				separators={[
+					{ code: 'Enter', ctrlKey: false },
+					{ code: 'NumpadEnter', ctrlKey: false }
+				]}
+				onInputType={handleInputType}
+				hasError={hasError}
+				description={chipInputDescription}
+			/>
 			<EditorAvailabilityWarningRow
 				label={warningLabel}
 				list={attendeesAvailabilityList}
 				items={resourceAvailability}
 				editorId={editorId}
 			/>
-		</>
+		</Container>
 	);
 };
