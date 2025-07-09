@@ -86,6 +86,10 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 				'attendees_equipments_invalid',
 				'One or more items of equipment are invalid. Try editing them or entering a new one.'
 			)}
+			duplicateChipsErrorLabel={t(
+				'duplicate_attendees_equipments_error',
+				'One or more items of equipment were selected multiple times. Consider removing the duplicates.'
+			)}
 		/>
 	);
 };

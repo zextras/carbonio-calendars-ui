@@ -97,6 +97,7 @@ interface EditorResourceComponentProps {
 	disabled?: boolean;
 	singleWarningLabel: string;
 	invalidInputErrorLabel: string;
+	duplicateChipsErrorLabel: string;
 }
 
 type ResourceChipItem = ChipItem<Resource> & {
@@ -115,7 +116,8 @@ export const EditorResourceComponent = ({
 	warningLabel,
 	disabled,
 	singleWarningLabel,
-	invalidInputErrorLabel
+	invalidInputErrorLabel,
+	duplicateChipsErrorLabel
 }: EditorResourceComponentProps): JSX.Element | null => {
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
@@ -131,7 +133,15 @@ export const EditorResourceComponent = ({
 		[resourcesValue]
 	);
 
+	const duplicateResourceIds = useMemo(
+		() => getDuplicateResourceIds(resourcesValue),
+		[resourcesValue]
+	);
+
 	const [hasError, setHasError] = useState(!resourcesAreValid);
+	const [hasDuplicateValidChips, setHasDuplicateValidChips] = useState(
+		duplicateResourceIds.size > 0
+	);
 
 	const handleAdd = useCallback((valueToAdd: unknown): ResourceChipItem => {
 		setEditingResource(null);
@@ -224,16 +234,12 @@ export const EditorResourceComponent = ({
 		}
 	}, []);
 
-	const duplicateResourceIds = useMemo(
-		() => getDuplicateResourceIds(resourcesValue),
-		[resourcesValue]
-	);
-
 	const buildResourceChipItem = useCallback(
 		(resource: Resource): ResourceChipItem => {
 			const isValid = isValidResource(resource);
 			const key = resource.id || resource.email;
 			const isDuplicate = isValid && duplicateResourceIds.has(key);
+			setHasDuplicateValidChips(isDuplicate);
 
 			const actions: ChipAction[] = [
 				{
@@ -337,6 +343,16 @@ export const EditorResourceComponent = ({
 
 	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
 
+	const chipInputDescription = useMemo(() => {
+		if (hasError) {
+			return invalidInputErrorLabel;
+		}
+		if (hasDuplicateValidChips) {
+			return duplicateChipsErrorLabel;
+		}
+		return undefined;
+	}, [hasError, hasDuplicateValidChips, invalidInputErrorLabel, duplicateChipsErrorLabel]);
+
 	return (
 		<>
 			<Container width="100%" height="100%">
@@ -357,7 +373,7 @@ export const EditorResourceComponent = ({
 					]}
 					onInputType={handleInputType}
 					hasError={hasError}
-					description={hasError ? invalidInputErrorLabel : undefined}
+					description={chipInputDescription}
 				/>
 			</Container>
 			<EditorAvailabilityWarningRow
