@@ -232,27 +232,25 @@ export const EditorResourceComponent = ({
 	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
 
 	return (
-		<>
-			<Container width="100%" height="100%">
-				<ChipInput
-					inputRef={inputRef}
-					confirmChipOnBlur
-					placeholder={placeholder}
-					separators={[]}
-					value={resourceAvailability}
-					options={options}
-					onInputType={onInputType}
-					onAdd={onAdd}
-					onChange={onInternalChange}
-					disabled={disabled}
-				/>
-			</Container>
+		<Container width="100%" height="100%">
+			<ChipInput
+				inputRef={inputRef}
+				confirmChipOnBlur
+				placeholder={placeholder}
+				separators={[]}
+				value={resourceAvailability}
+				options={options}
+				onInputType={onInputType}
+				onAdd={onAdd}
+				onChange={onInternalChange}
+				disabled={disabled}
+			/>
 			<EditorAvailabilityWarningRow
 				label={warningLabel}
 				list={attendeesAvailabilityList}
 				items={resourceAvailability}
 				editorId={editorId}
 			/>
-		</>
+		</Container>
 	);
 };
