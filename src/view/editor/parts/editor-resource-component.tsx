@@ -237,7 +237,7 @@ export const EditorResourceComponent = ({
 	const buildResourceChipItem = useCallback(
 		(resource: Resource): ResourceChipItem => {
 			const isValid = isValidResource(resource);
-			const key = resource.id || resource.email;
+			const key = resource.id ?? resource.email;
 			const isDuplicate = isValid && duplicateResourceIds.has(key);
 			setHasDuplicateValidChips(isDuplicate);
 
