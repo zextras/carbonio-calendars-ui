@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { generateResourceId, isValidResource } from '../utils';
+import { generateResourceId, getDuplicateResourceIds, isValidResource } from '../utils';
 
 describe('Utils', () => {
 	describe('generateResourceId', () => {
@@ -72,6 +72,45 @@ describe('Utils', () => {
 				type: 'Location'
 			};
 			expect(isValidResource(resource)).toBe(true);
+		});
+	});
+
+	describe('getDuplicateResourceIds', () => {
+		it('returns an empty set when given an empty array', () => {
+			expect(getDuplicateResourceIds([])).toEqual(new Set());
+		});
+
+		it('returns an empty set when all resources are unique', () => {
+			const resources = [
+				{ label: 'Room1', email: 'room1@example.com', id: '1', type: 'Location' },
+				{ label: 'Room2', email: 'room2@example.com', id: '2', type: 'Location' }
+			];
+			expect(getDuplicateResourceIds(resources)).toEqual(new Set());
+		});
+
+		it('returns a set with duplicate ids when resources share the same id', () => {
+			const resources = [
+				{ label: 'Room1', email: 'room1@example.com', id: '1', type: 'Location' },
+				{ label: 'Room2', email: 'room2@example.com', id: '1', type: 'Location' }
+			];
+			expect(getDuplicateResourceIds(resources)).toEqual(new Set(['1']));
+		});
+
+		it('returns a set with duplicate emails when resources share the same email and no id', () => {
+			const resources = [
+				{ label: 'Room1', email: 'room@example.com', id: '', type: 'Location' },
+				{ label: 'Room2', email: 'room@example.com', id: '', type: 'Location' }
+			];
+			expect(getDuplicateResourceIds(resources)).toEqual(new Set(['room@example.com']));
+		});
+
+		it('ignores invalid resources when checking for duplicates', () => {
+			const resources = [
+				{ label: '', email: 'room@example.com', id: '1', type: 'Location' },
+				{ label: 'Room2', email: 'room2@example.com', id: '2', type: 'Location' },
+				{ label: 'Room2', email: 'room2@example.com', id: '2', type: 'Location' }
+			];
+			expect(getDuplicateResourceIds(resources)).toEqual(new Set(['2']));
 		});
 	});
 });
