@@ -332,7 +332,10 @@ export const EditorResourceComponent = ({
 					options={options}
 					onChange={handleChange}
 					onAdd={handleAdd}
-					separators={[{ code: 'Enter', ctrlKey: false }]}
+					separators={[
+						{ code: 'Enter', ctrlKey: false },
+						{ code: 'NumpadEnter', ctrlKey: false }
+					]}
 					onInputType={handleInputType}
 					hasError={hasError}
 					description={hasError ? invalidInputErrorLabel : undefined}

@@ -110,6 +110,7 @@ describe('EditorResourceComponent', () => {
 			/>,
 			{ store }
 		);
+		expect(screen.queryByText('Invalid input')).not.toBeInTheDocument();
 
 		const input = screen.getByPlaceholderText('Test');
 		await user.type(input, 'unknown-resource');
@@ -204,7 +205,7 @@ describe('EditorResourceComponent', () => {
 		expect(dropDownItem).not.toBeInTheDocument();
 	});
 
-	it('should select the first option when user press Enter', async () => {
+	it('should select the first option when user press Control+Enter', async () => {
 		const resource2: Resource = {
 			id: 'r2',
 			label: 'Room-B',
