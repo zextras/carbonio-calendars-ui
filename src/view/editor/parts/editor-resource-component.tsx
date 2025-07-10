@@ -224,16 +224,13 @@ export const EditorResourceComponent = ({
 				}
 			}
 
-			let label: string;
-			let resource: Resource;
+			let label = 'Invalid input';
+			let resource: Resource = { email: '', label };
 			if (isResourceOption(valueToAdd)) {
 				resource = valueToAdd;
 				label = resource.label;
 			} else if (isStringInput(valueToAdd)) {
 				label = valueToAdd.trim();
-				resource = { email: '', label };
-			} else {
-				label = 'Invalid input';
 				resource = { email: '', label };
 			}
 			const resourceId = resource.id ?? generateResourceId(resource);
