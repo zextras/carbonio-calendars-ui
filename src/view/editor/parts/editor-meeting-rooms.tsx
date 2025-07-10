@@ -83,12 +83,12 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 				'Room not available at the selected time of the event'
 			)}
 			invalidInputErrorLabel={t(
-				'attendees_rooms_invalid',
+				'rooms_invalid',
 				'One or more Meeting rooms are invalid. Try editing them or entering a new one.'
 			)}
 			duplicateChipsErrorLabel={t(
-				'duplicate_attendees_rooms_error',
-				'One or more items of Meeting rooms were selected multiple times. Consider removing the duplicates.'
+				'duplicate_rooms_error',
+				'One or more Meeting rooms were selected multiple times. Consider removing the duplicates.'
 			)}
 		/>
 	);

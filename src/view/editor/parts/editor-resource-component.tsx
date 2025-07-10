@@ -18,6 +18,7 @@ import {
 	useKeyboard
 } from '@zextras/carbonio-design-system';
 import { find } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import {
@@ -119,6 +120,8 @@ export const EditorResourceComponent = ({
 	invalidInputErrorLabel,
 	duplicateChipsErrorLabel
 }: EditorResourceComponentProps): JSX.Element | null => {
+	const [t] = useTranslation();
+
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
@@ -167,7 +170,7 @@ export const EditorResourceComponent = ({
 					id: 'edit',
 					icon: 'EditOutline',
 					type: 'button',
-					label: 'Edit',
+					label: t('label.edit', 'Edit'),
 					onClick: (event): void => {
 						event.stopPropagation();
 						handleEditResource(resource);
@@ -178,7 +181,7 @@ export const EditorResourceComponent = ({
 			if (isDuplicate) {
 				actions.unshift({
 					id: 'duplicate',
-					label: 'Duplicate resource',
+					label: t('label.duplicate_resource', 'This resource was selected multiple times'),
 					color: 'warning',
 					type: 'icon',
 					icon: 'AlertTriangle'
@@ -197,7 +200,7 @@ export const EditorResourceComponent = ({
 				error: !isValid
 			};
 		},
-		[duplicateResourceIds, handleEditResource]
+		[duplicateResourceIds, handleEditResource, t]
 	);
 
 	const handleAdd = useCallback(

@@ -83,11 +83,11 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 				'Equipment not available at the selected time of the event'
 			)}
 			invalidInputErrorLabel={t(
-				'attendees_equipments_invalid',
+				'equipment_invalid',
 				'One or more items of equipment are invalid. Try editing them or entering a new one.'
 			)}
 			duplicateChipsErrorLabel={t(
-				'duplicate_attendees_equipments_error',
+				'duplicate_equipment_error',
 				'One or more items of equipment were selected multiple times. Consider removing the duplicates.'
 			)}
 		/>
