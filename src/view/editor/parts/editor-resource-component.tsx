@@ -373,7 +373,7 @@ export const EditorResourceComponent = ({
 					{ code: 'NumpadEnter', ctrlKey: false }
 				]}
 				onInputType={handleInputType}
-				hasError={hasError}
+				hasError={hasError || hasDuplicateValidChips}
 				description={chipInputDescription}
 			/>
 			<EditorAvailabilityWarningRow
