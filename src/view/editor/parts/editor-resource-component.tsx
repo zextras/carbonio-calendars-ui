@@ -143,85 +143,6 @@ export const EditorResourceComponent = ({
 		duplicateResourceIds.size > 0
 	);
 
-	const handleAdd = useCallback((valueToAdd: unknown): ResourceChipItem => {
-		setEditingResource(null);
-
-		const isResourceOption = (obj: unknown): obj is Resource =>
-			typeof obj === 'object' &&
-			obj !== null &&
-			'id' in obj &&
-			'label' in obj &&
-			'email' in obj &&
-			'type' in obj;
-
-		const isStringInput = (input: unknown): input is string =>
-			typeof input === 'string' && input.trim() !== '';
-
-		let label: string;
-		let resource: Resource;
-		if (isResourceOption(valueToAdd)) {
-			resource = valueToAdd;
-			label = resource.label;
-		} else if (isStringInput(valueToAdd)) {
-			label = valueToAdd.trim();
-			resource = { email: '', label };
-		} else {
-			label = 'Invalid input';
-			resource = { email: '', label };
-		}
-		const resourceId = resource.id ?? generateResourceId(resource);
-		resource = { ...resource, id: resourceId };
-		const isValid = isValidResource(resource);
-
-		return {
-			label,
-			id: resourceId,
-			value: resource,
-			...(isValid ? {} : { background: 'error', error: true })
-		};
-	}, []);
-
-	const loadingOption = useMemo(
-		() => [
-			{
-				id: 'loading',
-				label: 'loading',
-				customComponent: <Loader />,
-				disabled: true
-			}
-		],
-		[]
-	);
-
-	const handleInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
-		(e) => {
-			if (e.textContent && e.textContent !== '') {
-				setOptions(loadingOption);
-				onSearchOptions(e.textContent)
-					.then((receivedOptions) => {
-						setOptions(receivedOptions);
-					})
-					.catch((reason) => {
-						setOptions([]);
-						console.warn(reason.error ?? reason);
-					});
-			} else {
-				setOptions([]);
-			}
-		},
-		[loadingOption, onSearchOptions]
-	);
-
-	const handleChange = useCallback(
-		(newChips: ChipItem<Resource>[]): void => {
-			if (!onChange) return;
-
-			setHasError(newChips.some((item) => !isValidResource(item.value)));
-			onChange(newChips.map((chip) => chip.value as Resource));
-		},
-		[onChange]
-	);
-
 	const handleEditResource = useCallback((resource: Resource) => {
 		setEditingResource(resource);
 
@@ -277,6 +198,97 @@ export const EditorResourceComponent = ({
 			};
 		},
 		[duplicateResourceIds, handleEditResource]
+	);
+
+	const handleAdd = useCallback(
+		(valueToAdd: unknown): ResourceChipItem => {
+			setEditingResource(null);
+
+			const isResourceOption = (obj: unknown): obj is Resource =>
+				typeof obj === 'object' &&
+				obj !== null &&
+				'id' in obj &&
+				'label' in obj &&
+				'email' in obj &&
+				'type' in obj;
+
+			const isStringInput = (input: unknown): input is string =>
+				typeof input === 'string' && input.trim() !== '';
+
+			if (isStringInput(valueToAdd)) {
+				const exactMatch = options.find(
+					(opt) => opt.label?.toLowerCase() === valueToAdd.trim().toLowerCase()
+				);
+				if (exactMatch && exactMatch.value) {
+					return buildResourceChipItem(exactMatch.value);
+				}
+			}
+
+			let label: string;
+			let resource: Resource;
+			if (isResourceOption(valueToAdd)) {
+				resource = valueToAdd;
+				label = resource.label;
+			} else if (isStringInput(valueToAdd)) {
+				label = valueToAdd.trim();
+				resource = { email: '', label };
+			} else {
+				label = 'Invalid input';
+				resource = { email: '', label };
+			}
+			const resourceId = resource.id ?? generateResourceId(resource);
+			resource = { ...resource, id: resourceId };
+			const isValid = isValidResource(resource);
+
+			return {
+				label,
+				id: resourceId,
+				value: resource,
+				...(isValid ? {} : { background: 'error', error: true })
+			};
+		},
+		[buildResourceChipItem, options]
+	);
+
+	const loadingOption = useMemo(
+		() => [
+			{
+				id: 'loading',
+				label: 'loading',
+				customComponent: <Loader />,
+				disabled: true
+			}
+		],
+		[]
+	);
+
+	const handleInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
+		(e) => {
+			if (e.textContent && e.textContent !== '') {
+				setOptions(loadingOption);
+				onSearchOptions(e.textContent)
+					.then((receivedOptions) => {
+						setOptions(receivedOptions);
+					})
+					.catch((reason) => {
+						setOptions([]);
+						console.warn(reason.error ?? reason);
+					});
+			} else {
+				setOptions([]);
+			}
+		},
+		[loadingOption, onSearchOptions]
+	);
+
+	const handleChange = useCallback(
+		(newChips: ChipItem<Resource>[]): void => {
+			if (!onChange) return;
+
+			setHasError(newChips.some((item) => !isValidResource(item.value)));
+			onChange(newChips.map((chip) => chip.value as Resource));
+		},
+		[onChange]
 	);
 
 	const resourceAvailability: ResourceChipItem[] = useMemo(() => {
