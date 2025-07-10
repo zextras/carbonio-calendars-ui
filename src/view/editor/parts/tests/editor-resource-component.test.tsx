@@ -318,6 +318,36 @@ describe('EditorResourceComponent', () => {
 					placeholder="Test"
 					editorId={editor.id}
 					onChange={onChangeMock}
+					onSearchOptions={() => Promise.resolve([])}
+					resourcesValue={[]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			const input = screen.getByPlaceholderText('Test');
+			await user.type(input, 'resource1');
+
+			fireEvent.keyDown(input, { code: 'NumpadEnter' });
+
+			await waitFor(async () => {
+				expect(onChangeMock).toHaveBeenCalledTimes(1);
+				const [resources] = onChangeMock.mock.calls[0];
+				expect(resources[0]).toMatchObject({
+					label: 'resource1',
+					email: ''
+				});
+			});
+		});
+		it('should add resource chip when user presses Enter after typing exact match', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
 					warningLabel=""
@@ -330,19 +360,18 @@ describe('EditorResourceComponent', () => {
 
 			const input = screen.getByPlaceholderText('Test');
 			await user.type(input, 'DefaultResource');
-			await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('DefaultResource'));
 
 			const dropDownItem = await screen.findByTestId('dropdown-item');
 			expect(dropDownItem).toHaveTextContent('DefaultResource');
 
-			fireEvent.keyDown(input, { code: 'NumpadEnter' });
+			await user.keyboard('{Enter}');
 
 			await waitFor(async () => {
 				expect(onChangeMock).toHaveBeenCalledTimes(1);
 				const [resources] = onChangeMock.mock.calls[0];
 				expect(resources[0]).toMatchObject({
 					label: 'DefaultResource',
-					email: ''
+					email: defaultResource.email // Ensure email is included
 				});
 			});
 		});
