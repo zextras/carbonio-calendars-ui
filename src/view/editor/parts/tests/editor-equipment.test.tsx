@@ -8,8 +8,8 @@ import React from 'react';
 
 import { faker } from '@faker-js/faker';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, within } from '@testing-library/react';
-import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
+import { act, screen, waitFor, within } from '@testing-library/react';
+import { ErrorSoapBodyResponse, SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { map } from 'lodash';
 import { http, HttpResponse } from 'msw';
 
@@ -21,7 +21,6 @@ import { getCustomResources } from '../../../../test/mocks/network/msw/handle-au
 import { EditorEquipments } from '../editor-equipments';
 import { getSetupServer } from '@jest-setup';
 import { setupTest } from '@test-setup';
-import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 import { CarbonioMailboxRestHandlerRequest } from '@test-utils/network/msw/handlers';
 import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
@@ -34,6 +33,7 @@ describe('Editor equipment', () => {
 
 		expect(screen.getByText('Equipment')).toBeInTheDocument();
 	});
+
 	it('should render the chip when present in the store', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 
@@ -50,6 +50,7 @@ describe('Editor equipment', () => {
 
 		expect(screen.getByText(/automobile 1/i)).toBeVisible();
 	});
+
 	it('should display equipment busy when is already booked', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const equipment1 = {
@@ -80,6 +81,7 @@ describe('Editor equipment', () => {
 		expect(screen.getByText(equipment1.label)).toBeVisible();
 		expect(await screen.findByTestId('icon: AlertTriangle')).toBeVisible();
 	});
+
 	it('should display options on screen when typing', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -110,6 +112,7 @@ describe('Editor equipment', () => {
 		expect(within(dropdown).getByText(items[1].label)).toBeVisible();
 		expect(within(dropdown).getByText(items[2].label)).toBeVisible();
 	});
+
 	it('should add a chip when selecting an option', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -142,6 +145,7 @@ describe('Editor equipment', () => {
 		});
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
+
 	it('should select the first option when pressing enter', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -167,17 +171,14 @@ describe('Editor equipment', () => {
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
 		await user.type(screen.getByText('Equipment'), 'resource');
+		const dropDownItems = await screen.findAllByTestId('dropdown-item');
 
-		await act(async () => {
-			await jest.advanceTimersToNextTimerAsync();
-		});
+		await user.keyboard('{Control>}{Enter}{/Control}');
 
-		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-
-		await user.keyboard('[Enter]');
-		expect(dropdown).not.toBeInTheDocument();
+		expect(dropDownItems[0]).not.toBeInTheDocument();
 		expect(screen.getByText(/resource 0/i)).toBeVisible();
 	});
+
 	it('should not remove the already existing chips when adding a new one', async () => {
 		const equipment1 = {
 			label: 'automobile 1',
@@ -206,20 +207,22 @@ describe('Editor equipment', () => {
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
 		await user.type(screen.getByText('Equipment'), 'resource');
-		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		const dropDownItems = await screen.findAllByTestId('dropdown-item');
+
 		const selectedEquipmentLabel = items[0].label;
-		await user.click(within(dropdown).getByText(selectedEquipmentLabel));
+		await user.click(within(dropDownItems[0]).getByText(selectedEquipmentLabel));
 
 		expect(screen.getByText(equipment1.label)).toBeVisible();
 		expect(screen.getByText(selectedEquipmentLabel)).toBeVisible();
 	});
-	it('should not add a new chip that have the same label', async () => {
+
+	it('should allow adding a new chip that have the same label', async () => {
 		const label = `resource 1`;
 		const itemFromAutoComplete = {
 			id: faker.string.uuid(),
 			label,
 			value: label,
-			email: 'resource1@test.it',
+			email: '',
 			type: 'Equipment'
 		};
 		const storedItem = {
@@ -239,12 +242,14 @@ describe('Editor equipment', () => {
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 
 		await user.type(screen.getByText('Equipment'), 'resource');
-		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-		await user.click(within(dropdown).getByText(itemFromAutoComplete.label));
 
-		expect((await screen.findAllByText(label)).length).toBe(1);
+		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
+		await user.click(await within(dropdown).findByText(itemFromAutoComplete.label));
+
+		expect((await screen.findAllByText(label)).length).toBe(2);
 	});
-	it('should not display multiple chips with the same email', async () => {
+
+	it('should allow adding multiple chips with the same email', async () => {
 		const email = `same@email.it`;
 		const itemFromAutoComplete = {
 			id: faker.string.uuid(),
@@ -271,14 +276,15 @@ describe('Editor equipment', () => {
 
 		await user.type(screen.getByText('Equipment'), 'resource');
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-		await user.click(within(dropdown).getByText(itemFromAutoComplete.label));
+		await user.click(await within(dropdown).findByText(itemFromAutoComplete.label));
 
 		expect(dropdown).not.toBeInTheDocument();
 
 		expect((await screen.findAllByText(storedItem.label)).length).toBe(1);
-		expect(screen.queryAllByText(itemFromAutoComplete.label).length).toBe(0);
+		expect(screen.queryAllByText(itemFromAutoComplete.label).length).toBe(1);
 	});
-	it('should not add a new chip that already exists', async () => {
+
+	it('should allow add a new chip that already exists', async () => {
 		const items = map({ length: 3 }, (_, index) => {
 			const label = `resource ${index}`;
 			return {
@@ -304,39 +310,77 @@ describe('Editor equipment', () => {
 
 		await user.type(screen.getByText('Equipment'), 'resource');
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-		await user.click(within(dropdown).getByText(selectedEquipment.label));
+		await user.click(await within(dropdown).findByText(selectedEquipment.label));
 
-		expect((await screen.findAllByText(selectedEquipment.label)).length).toBe(1);
+		expect((await screen.findAllByText(selectedEquipment.label)).length).toBe(2);
 	});
+
 	it('should leave options dropdown open with loader when call to AutoCompleteGal api fails with generic 500', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({
 			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [] }
 		});
 		getSetupServer().use(
-			http.post('/service/soap/AutoCompleteGalRequest', async () => HttpResponse.error())
+			http.post('/service/soap/AutoCompleteGalRequest', async () => {
+				await new Promise((resolve) => {
+					setTimeout(resolve, 500);
+				});
+				return new HttpResponse(null, { status: 500 });
+			})
 		);
 
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 		await user.type(screen.getByText('Equipment'), 'resource');
 
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-
-		expect(within(dropdown).getByTestId('dropdown-options-loader')).toBeVisible();
+		expect(await within(dropdown).findByTestId('dropdown-options-loader')).toBeVisible();
 	});
+
 	it('should leave options dropdown open with loader when call to AutoCompleteGal api fails with Soap Fault', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({
 			context: { dispatch: store.dispatch, folders: {}, meetingRoom: [] }
 		});
 
-		const interceptor = createSoapAPIInterceptor('AutoCompleteGal', buildSoapErrorResponseBody());
-
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () => {
+				await new Promise((resolve) => {
+					setTimeout(resolve, 500);
+				});
+				return HttpResponse.json<ErrorSoapBodyResponse>(buildSoapErrorResponseBody());
+			})
+		);
 		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
 		await user.type(screen.getByText('Equipment'), 'resource');
 		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-		await interceptor;
 
-		expect(within(dropdown).getByTestId('dropdown-options-loader')).toBeVisible();
+		expect(await within(dropdown).findByTestId('dropdown-options-loader')).toBeVisible();
+	});
+
+	it('should handle API failure when searching for equipment', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+		const editor = generateEditor({
+			context: { dispatch: store.dispatch, folders: {} }
+		});
+
+		getSetupServer().use(
+			http.post('/service/soap/AutoCompleteGalRequest', async () =>
+				HttpResponse.json(buildSoapErrorResponseBody())
+			)
+		);
+
+		const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+		const { user } = setupTest(<EditorEquipments editorId={editor.id} />, { store });
+
+		await user.type(screen.getByText('Equipment'), 'test');
+
+		await waitFor(() => {
+			expect(consoleSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					message: 'API failed'
+				})
+			);
+		});
+		consoleSpy.mockRestore();
 	});
 });

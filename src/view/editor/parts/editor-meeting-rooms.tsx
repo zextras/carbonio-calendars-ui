@@ -9,6 +9,7 @@ import { filter, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { EditorResourceComponent, normalizeResources } from './editor-resource-component';
+import { generateResourceId, isValidResource } from './utils';
 import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorMeetingRoom } from '../../../store/selectors/editor';
@@ -24,14 +25,17 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 
 	const meetingRoomsChipValue = useMemo(
 		() =>
-			map(meetingRoomsValue, (result) => ({
-				id: result.id,
-				label: result.label,
-				email: result.email,
-				avatarIcon: 'BuildingOutline' as const,
-				avatarBackground: 'transparent' as const,
-				avatarColor: 'gray0' as const
-			})),
+			map(meetingRoomsValue, (resource) => {
+				const isValid = isValidResource(resource);
+				return {
+					id: resource.id ?? generateResourceId(resource),
+					label: resource.label,
+					email: resource.email,
+					avatarIcon: isValid ? 'BuildingOutline' : 'AlertCircleOutline',
+					avatarBackground: 'transparent' as const,
+					avatarColor: 'gray0' as const
+				};
+			}),
 		[meetingRoomsValue]
 	);
 
@@ -45,7 +49,7 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 	const onSearchOptions = useCallback(
 		(searchedValue: string) =>
 			searchResources(searchedValue).then((response) => {
-				if (!response.error) {
+				if (response && !response.error) {
 					const meetingResources = filter(
 						response.cn,
 						(cn) => cn._attrs.zimbraCalResType === 'Location'
@@ -77,6 +81,14 @@ export const EditorMeetingRooms = ({ editorId }: { editorId: string }): ReactEle
 			singleWarningLabel={t(
 				'attendee_room_unavailable',
 				'Room not available at the selected time of the event'
+			)}
+			invalidInputErrorLabel={t(
+				'rooms_invalid',
+				'One or more Meeting rooms are invalid. Try editing them or entering a new one.'
+			)}
+			duplicateChipsErrorLabel={t(
+				'duplicate_rooms_error',
+				'One or more Meeting rooms were selected multiple times. Consider removing the duplicates.'
 			)}
 		/>
 	);
