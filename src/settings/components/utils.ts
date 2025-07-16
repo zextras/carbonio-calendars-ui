@@ -765,7 +765,7 @@ export const getWeekDay = (day: `${number}`): string => {
 	}
 };
 
-export const ShareCalendarWithOptions = (): SelectItem<'usr' | 'pub'>[] => [
+export const getShareCalendarWithOptions = (): SelectItem<'usr' | 'pub'>[] => [
 	{
 		label: t('share.options.share_calendar_with.internal_users_groups', 'Internal Users or Groups'),
 		value: 'usr'

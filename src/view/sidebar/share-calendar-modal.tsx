@@ -33,7 +33,7 @@ import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import {
 	ShareCalendarRoleOptions,
-	ShareCalendarWithOptions,
+	getShareCalendarWithOptions,
 	findLabel
 } from '../../settings/components/utils';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -349,7 +349,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	grant
 }): ReactElement => {
 	const [t] = useTranslation();
-	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(), []);
+	const shareCalendarWithOptions = useMemo(() => getShareCalendarWithOptions(), []);
 
 	const [shareWithUserType, setShareWithUserType] = useState<'usr' | 'pub' | null>(
 		SHARE_USER_TYPE.USER
