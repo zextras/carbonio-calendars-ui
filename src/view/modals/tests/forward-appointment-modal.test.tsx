@@ -40,9 +40,7 @@ describe('ForwardAppointmentModal', () => {
 		const onClose = jest.fn();
 		const { user } = setupTest(<ForwardAppointmentModal eventId="" onClose={onClose} />);
 		const closeIcon = await screen.findByTestId('icon: CloseOutline');
-		await act(async () => {
-			await user.click(closeIcon);
-		});
+		await user.click(closeIcon);
 		expect(onClose).toHaveBeenCalled();
 	});
 
@@ -70,9 +68,7 @@ describe('ForwardAppointmentModal', () => {
 			const confirmButton = screen.getByRole('button', {
 				name: 'modal.buttonLabel.forward'
 			});
-			await act(async () => {
-				await user.click(confirmButton);
-			});
+			await user.click(confirmButton);
 
 			const request = await interceptor;
 
@@ -88,7 +84,7 @@ describe('ForwardAppointmentModal', () => {
 			const input = await screen.findByTestId('forward-appointment-input');
 			await inputAttendee(user, input, faker.internet.email());
 
-			const confirmButton = screen.getByRole('button', {
+			const confirmButton = await screen.findByRole('button', {
 				name: 'modal.buttonLabel.forward'
 			});
 			await act(async () => {
@@ -107,12 +103,10 @@ describe('ForwardAppointmentModal', () => {
 			const input = await screen.findByTestId('forward-appointment-input');
 			await inputAttendee(user, input, faker.internet.email());
 
-			const confirmButton = screen.getByRole('button', {
+			const confirmButton = await screen.findByRole('button', {
 				name: 'modal.buttonLabel.forward'
 			});
-			await act(async () => {
-				await user.click(confirmButton);
-			});
+			await user.click(confirmButton);
 			await interceptor;
 			const errorSnackbar = await screen.findByText('label.error_try_again');
 			expect(errorSnackbar).toBeVisible();

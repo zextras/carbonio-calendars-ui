@@ -9,7 +9,7 @@ import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-int
 describe('saveSettings', () => {
 	test('if mods are empty it will create an empty BatchRequest', async () => {
 		const mods = {};
-		const BatchRequestInterceptor = createSoapAPIInterceptor<any, string>('Batch');
+		const BatchRequestInterceptor = createSoapAPIInterceptor('Batch');
 		await saveSettings(mods);
 		const request = await BatchRequestInterceptor;
 		expect(request).toContain('<BatchRequest xmlns="urn:zimbra" onerror="stop"></BatchRequest>');

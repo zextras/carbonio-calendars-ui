@@ -7,15 +7,13 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 
 import { EditorAttachments } from './editor-attachments';
 import { generateEditor } from '../../../commons/editor-generator';
 import { reducers } from '../../../store/redux';
 import mockedData from '../../../test/generators';
 import { setupTest } from '@test-setup';
-
-jest.setTimeout(50000);
 
 const folder = {
 	absFolderPath: '/Test',
@@ -56,9 +54,7 @@ describe('editor attachments', () => {
 		expect(editor.attach).toBe(attach);
 		expect(editor.attachmentFiles).toBe(attachmentFiles);
 		expect(screen.getByText(/download.jpeg/i)).toBeInTheDocument();
-		await act(async () => {
-			await user.click(screen.getByTestId('icon: DeletePermanentlyOutline'));
-		});
+		await user.click(screen.getByTestId('icon: DeletePermanentlyOutline'));
 		expect(screen.queryByText(/download.jpeg/i)).not.toBeInTheDocument();
 	});
 });

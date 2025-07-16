@@ -31,10 +31,6 @@ describe('CalendarChip', () => {
 		populateFoldersStore({ view: 'appointment', customFolders: [calendar] });
 	});
 
-	afterEach(() => {
-		jest.clearAllMocks();
-	});
-
 	it('renders the CalendarChip with the correct label and color', () => {
 		setupTest(<CalendarChip value={value} />);
 

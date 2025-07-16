@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen, within, act } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { FolderView, Grant, useFolderStore } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
 
@@ -406,10 +406,8 @@ describe('the edit calendar modal is composed by', () => {
 
 						await user.click(screen.getAllByRole('button', { name: /revoke/i })[0]);
 						expect(screen.getByTestId('RevokeModal')).toBeInTheDocument();
-						await act(async () => {
-							await user.click(within(screen.getByTestId('RevokeModal')).getByText('Revoke'));
-						});
-						expect(screen.getByTestId('MainEditModal')).toBeInTheDocument();
+						await user.click(within(screen.getByTestId('RevokeModal')).getByText('Revoke'));
+						expect(await screen.findByTestId('MainEditModal')).toBeInTheDocument();
 						expect(spy).toHaveBeenCalledTimes(1);
 						expect(spy).toHaveBeenCalledWith({
 							id: folder.id,
@@ -440,9 +438,7 @@ describe('the edit calendar modal is composed by', () => {
 							store
 						});
 
-						await act(async () => {
-							await user.click(screen.getAllByRole('button', { name: /resend/i })[0]);
-						});
+						await user.click(screen.getAllByRole('button', { name: /resend/i })[0]);
 						expect(sendAgainSpy).toHaveBeenCalledTimes(1);
 						expect(sendAgainSpy).toHaveBeenCalledWith(
 							expect.objectContaining({ contacts: [{ email: grants[0].d }] })
@@ -509,9 +505,7 @@ describe('the edit calendar modal is composed by', () => {
 
 						await user.clear(title);
 						await user.type(title, newCalendarName);
-						await act(async () => {
-							await user.click(screen.getByText('OK'));
-						});
+						await user.click(screen.getByText('OK'));
 
 						expect(spy).toHaveBeenCalledTimes(1);
 						expect(spy).toHaveBeenCalledWith({
@@ -557,9 +551,7 @@ describe('the edit calendar modal is composed by', () => {
 						});
 						await user.click(screen.getByText(/black/i));
 						await user.click(screen.getByText(/red/i));
-						await act(async () => {
-							await user.click(screen.getByText('OK'));
-						});
+						await user.click(screen.getByText('OK'));
 
 						expect(spy).toHaveBeenCalledTimes(1);
 						expect(spy).toHaveBeenCalledWith({
@@ -601,12 +593,8 @@ describe('the edit calendar modal is composed by', () => {
 							store
 						});
 
-						await act(async () => {
-							await user.click(screen.getByTestId('icon: CheckmarkSquare'));
-						});
-						await act(async () => {
-							await user.click(screen.getByText('OK'));
-						});
+						await user.click(screen.getByTestId('icon: CheckmarkSquare'));
+						await user.click(screen.getByText('OK'));
 
 						expect(spy).toHaveBeenCalledTimes(1);
 						expect(spy).toHaveBeenCalledWith({
@@ -627,12 +615,8 @@ describe('the edit calendar modal is composed by', () => {
 							store
 						});
 
-						await act(async () => {
-							await user.click(screen.getByTestId('icon: CheckmarkSquare'));
-						});
-						await act(async () => {
-							await user.click(screen.getByTestId('icon: Square'));
-						});
+						await user.click(screen.getByTestId('icon: CheckmarkSquare'));
+						await user.click(screen.getByTestId('icon: Square'));
 						await user.click(screen.getByText('OK'));
 
 						expect(spy).not.toHaveBeenCalled();
@@ -662,12 +646,8 @@ describe('the edit calendar modal is composed by', () => {
 					await user.click(screen.getByText(/black/i));
 					await user.click(screen.getByText(/red/i));
 
-					await act(async () => {
-						await user.click(screen.getByTestId('icon: Square'));
-					});
-					await act(async () => {
-						await user.click(screen.getByText('OK'));
-					});
+					await user.click(screen.getByTestId('icon: Square'));
+					await user.click(screen.getByText('OK'));
 
 					expect(spy).toHaveBeenCalledTimes(1);
 					expect(spy).toHaveBeenCalledWith(
