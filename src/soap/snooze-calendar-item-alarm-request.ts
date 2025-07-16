@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 export type SnoozeCalendarItemAlarmRejectedType = { error: boolean; Fault: any };
 export type SnoozeCalendarItemAlarmFulfilledType = { Fault?: never; error?: never };
@@ -18,9 +18,12 @@ export const snoozeCalendarItemAlarmRequest = async ({
 	id: string;
 	until: number;
 }): Promise<SnoozeCalendarItemAlarmReturnType> => {
-	const response: SnoozeCalendarItemAlarmReturnType = await soapFetch('SnoozeCalendarItemAlarm', {
-		_jsns: 'urn:zimbraMail',
-		appt: [{ id, until }]
-	});
+	const response: SnoozeCalendarItemAlarmReturnType = await legacySoapFetch(
+		'SnoozeCalendarItemAlarm',
+		{
+			_jsns: 'urn:zimbraMail',
+			appt: [{ id, until }]
+		}
+	);
 	return response?.Fault ? { ...response.Fault, error: true } : response;
 };

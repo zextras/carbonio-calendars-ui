@@ -9,10 +9,10 @@ import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-int
 describe('saveSettings', () => {
 	test('if mods are empty it will create an empty BatchRequest', async () => {
 		const mods = {};
-		const BatchRequestInterceptor = createSoapAPIInterceptor('Batch');
+		const BatchRequestInterceptor = createSoapAPIInterceptor<any, string>('Batch');
 		await saveSettings(mods);
 		const request = await BatchRequestInterceptor;
-		expect(request).toEqual('<BatchRequest xmlns="urn:zimbra" onerror="stop"></BatchRequest>');
+		expect(request).toContain('<BatchRequest xmlns="urn:zimbra" onerror="stop"></BatchRequest>');
 	});
 	test.each([
 		{ zimbraPrefCalendarInitialView: 'day' },

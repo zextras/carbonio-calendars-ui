@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 import { isNil, omitBy } from 'lodash';
 
 export type GetMessageRejectedType = { error: boolean; m?: never; Fault: any };
@@ -17,7 +17,7 @@ export const getMessageRequest = async ({
 	inviteId: string;
 	ridZ?: string;
 }): Promise<GetMessageReturnType> => {
-	const response: GetMessageReturnType = await soapFetch('GetMsg', {
+	const response: GetMessageReturnType = await legacySoapFetch('GetMsg', {
 		_jsns: 'urn:zimbraMail',
 		m: omitBy(
 			{

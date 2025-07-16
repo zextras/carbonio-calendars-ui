@@ -16,7 +16,7 @@ export const createSoapAPIInterceptor = <RequestParamsType, ResponseType = never
 	apiAction: string,
 	response?: ResponseType
 ): Promise<RequestParamsType> =>
-	new Promise<RequestParamsType>((resolve, reject) => {
+	new Promise((resolve, reject) => {
 		getSetupServer().use(
 			http.post<never, HandlerRequest<RequestParamsType>>(
 				`/service/soap/${apiAction}Request`,
@@ -32,10 +32,18 @@ export const createSoapAPIInterceptor = <RequestParamsType, ResponseType = never
 						);
 					}
 
-					const reqActionParamWrapper = `${apiAction}Request`;
-					const requestContent = await request.json();
-					const params = requestContent?.Body?.[reqActionParamWrapper];
-					resolve(params);
+					if (
+						apiAction === 'Batch' &&
+						request.headers.get('content-type') === 'application/soap+xml'
+					) {
+						const requestContent = await request.text();
+						resolve(requestContent as RequestParamsType);
+					} else {
+						const reqActionParamWrapper = `${apiAction}Request`;
+						const requestContent = await request.json();
+						const params = requestContent?.Body?.[reqActionParamWrapper];
+						resolve(params);
+					}
 
 					return HttpResponse.json({
 						Body: {
@@ -51,6 +59,7 @@ export type APIInterceptor = {
 	getLastRequest: () => StrictRequest<DefaultBodyType>;
 	getCalledTimes: () => number;
 };
+
 export const createAPIInterceptor = (
 	method: 'get' | 'post',
 	url: string,

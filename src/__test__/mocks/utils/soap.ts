@@ -5,6 +5,7 @@
  */
 import { faker } from '@faker-js/faker';
 import { ErrorSoapBodyResponse, SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
+import { SoapNotify, useSync } from '@zextras/carbonio-ui-soap-lib';
 
 export const buildSoapResponse = <T>(responseData: Record<string, T>): SuccessSoapResponse<T> => ({
 	Header: {
@@ -32,3 +33,7 @@ export const buildSoapErrorResponseBody = ({
 		}
 	}
 });
+
+export const mockSoapSync = (notify: Array<SoapNotify>): void => {
+	jest.mocked(useSync).mockReturnValue(notify);
+};

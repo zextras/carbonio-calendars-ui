@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createFolderRequest = async ({
@@ -12,7 +12,7 @@ export const createFolderRequest = async ({
 	color,
 	excludeFreeBusy
 }: any): Promise<any> =>
-	soapFetch('CreateFolder', {
+	legacySoapFetch('CreateFolder', {
 		_jsns: 'urn:zimbraMail',
 		folder: {
 			color,

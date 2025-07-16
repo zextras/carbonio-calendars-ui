@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 type GetMiniCalRequestProps = {
 	start: number;
@@ -16,7 +16,7 @@ export const getMiniCalRequest = async ({
 	end,
 	folder
 }: GetMiniCalRequestProps): Promise<any> =>
-	soapFetch('GetMiniCal', {
+	legacySoapFetch('GetMiniCal', {
 		_jsns: 'urn:zimbraMail',
 		e: end,
 		s: start,

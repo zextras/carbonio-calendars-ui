@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 export type GetCalendarGroupsResponse = {
 	group: [
@@ -16,6 +16,6 @@ export type GetCalendarGroupsResponse = {
 };
 
 export const getCalendarGroupsRequest = async (): Promise<GetCalendarGroupsResponse> =>
-	soapFetch('GetCalendarGroups', {
+	legacySoapFetch('GetCalendarGroups', {
 		_jsns: 'urn:zimbraMail'
 	});

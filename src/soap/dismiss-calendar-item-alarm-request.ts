@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 export type DismissItem = Array<{ id: string; dismissedAt: number }>;
 
@@ -18,9 +18,12 @@ export const dismissCalendarItemAlarmRequest = async ({
 }: {
 	items: DismissItem;
 }): Promise<DismissCalendarItemAlarmReturnType> => {
-	const response: DismissCalendarItemAlarmReturnType = await soapFetch('DismissCalendarItemAlarm', {
-		_jsns: 'urn:zimbraMail',
-		appt: items
-	});
+	const response: DismissCalendarItemAlarmReturnType = await legacySoapFetch(
+		'DismissCalendarItemAlarm',
+		{
+			_jsns: 'urn:zimbraMail',
+			appt: items
+		}
+	);
 	return response?.Fault ? { ...response.Fault, error: true } : response;
 };

@@ -6,13 +6,9 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 import { Container, Shimmer, useSnackbar } from '@zextras/carbonio-design-system';
-import {
-	AccountSettingsPrefs,
-	getUserAccount,
-	SettingsHeader,
-	t
-} from '@zextras/carbonio-shell-ui';
+import { getUserAccount, SettingsHeader, t } from '@zextras/carbonio-shell-ui';
 import { ContactInputProps, usePrefs, useUpdateView } from '@zextras/carbonio-ui-commons';
+import { AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
 import { map, filter, isEqual, uniqBy } from 'lodash';
 
 import AppleICalSettings from './apple-ical-settings';
@@ -54,19 +50,20 @@ export default function CalendarSettingsView(): React.JSX.Element {
 	const [settingsObj, setSettingsObj] = useState({ ...settings });
 	const [updatedSettings, setUpdatedSettings] = useState<Partial<AccountSettingsPrefs>>({});
 	const [notFirstLoad, setNotFirstLoad] = useState(false);
-	const [isEmailNotValid, setisEmailNotValid] = useState(false);
+	const [isEmailNotValid, setIsEmailNotValid] = useState(false);
 	const [userRights, setUserRights] = useState<GrantRightsResponse>({});
 	const [activeFreeBusyOptn, setActiveFreeBusyOptn] = useState<PermissionsRightsOptions>(null);
 	const [activeInviteOptn, setActiveInviteOptn] = useState<PermissionsRightsOptions>(null);
 	const [currentFreeBusy, setCurrentFreeBusy] = useState<PermissionsRightsOptions>(null);
 	const [currentInvite, setCurrentInvite] = useState<PermissionsRightsOptions>(null);
+	const [allowedFBUsers, setAllowedFBUsers] = useState<ContactInputProps['defaultValue']>([]);
+	const [allowedInviteUsers, setAllowedInviteUsers] = useState<ContactInputProps['defaultValue']>(
+		[]
+	);
+
 	const defaultSelectedFreeBusyContacts = useRef<ContactInputProps['defaultValue']>([]);
 	const defaultSelectedInviteContacts = useRef<ContactInputProps['defaultValue']>([]);
 
-	const [allowedFBUsers, setAllowedFBUsers] = useState<ContactInputProps['defaultValue']>([]);
-	const [allowedInivteUsers, setAllowedInivteUsers] = useState<ContactInputProps['defaultValue']>(
-		[]
-	);
 	const createSnackbar = useSnackbar();
 	useUpdateView();
 
@@ -148,7 +145,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 						)
 					: [];
 			defaultSelectedInviteContacts.current = defaultInviteValue;
-			setAllowedInivteUsers(defaultInviteValue);
+			setAllowedInviteUsers(defaultInviteValue);
 		}
 		if (invite.length === 1 && invite[0].gt === GRANTEE_TYPES.PUB) {
 			setActiveInviteOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL);
@@ -188,11 +185,11 @@ export default function CalendarSettingsView(): React.JSX.Element {
 
 	const isContactChanged = useMemo(
 		() =>
-			isEqual(defaultSelectedInviteContacts.current, allowedInivteUsers) &&
+			isEqual(defaultSelectedInviteContacts.current, allowedInviteUsers) &&
 			isEqual(defaultSelectedFreeBusyContacts.current, allowedFBUsers),
 		[
 			defaultSelectedInviteContacts,
-			allowedInivteUsers,
+			allowedInviteUsers,
 			defaultSelectedFreeBusyContacts,
 			allowedFBUsers
 		]
@@ -287,7 +284,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			isString(settingsToUpdate.zimbraPrefCalendarForwardInvitesTo) &&
 			!isValidEmail(settingsToUpdate.zimbraPrefCalendarForwardInvitesTo)
 		) {
-			setisEmailNotValid(!isEmailNotValid);
+			setIsEmailNotValid(!isEmailNotValid);
 			return;
 		}
 		let newFreeBusy = null;
@@ -335,7 +332,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 					newInviteRight = {
 						gt: GRANTEE_TYPES.USR,
 						deny: false,
-						d: map(allowedInivteUsers, (u) => ({ email: u.value.email }))
+						d: map(allowedInviteUsers, (u) => ({ email: u.value.email }))
 					};
 			}
 		}
@@ -395,7 +392,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 		invite,
 		isEmailNotValid,
 		allowedFBUsers,
-		allowedInivteUsers,
+		allowedInviteUsers,
 		createSnackbar
 	]);
 
@@ -473,7 +470,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 					settingsObj={settingsObj}
 					updateSettings={updateSettings}
 					isEmailNotValid={isEmailNotValid}
-					setisEmailNotValid={setisEmailNotValid}
+					setIsEmailNotValid={setIsEmailNotValid}
 				/>
 				<WorkWeekSettingsView
 					workingSchedule={workingSchedule}
@@ -491,11 +488,11 @@ export default function CalendarSettingsView(): React.JSX.Element {
 					handleInviteRightChange={handleInviteRightChange}
 					handlePermissionChange={handlePermissionChange}
 					setAllowedFBUsers={setAllowedFBUsers}
-					setAllowedInivteUsers={setAllowedInivteUsers}
+					setAllowedInviteUsers={setAllowedInviteUsers}
 					settingsObj={settingsObj}
 					updateSettings={updateSettings}
 					allowedFBUsers={allowedFBUsers}
-					allowedInivteUsers={allowedInivteUsers}
+					allowedInviteUsers={allowedInviteUsers}
 				/>
 			</Container>
 			<CustomScheduleModal

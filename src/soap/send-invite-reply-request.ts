@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 import { InstanceExceptionId } from '../utils/event';
 
@@ -48,7 +48,7 @@ export const sendInviteReplyRequest = async ({
 	updateOrganizer: boolean;
 	exceptId: InstanceExceptionId | undefined;
 }): Promise<SendInviteReplyReturnType> => {
-	const response: SendInviteReplyReturnType = await soapFetch('SendInviteReply', {
+	const response: SendInviteReplyReturnType = await legacySoapFetch('SendInviteReply', {
 		_jsns: 'urn:zimbraMail',
 		id,
 		compNum: 0,
