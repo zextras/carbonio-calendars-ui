@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SelectItem } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
+import { t, useUserSettings } from '@zextras/carbonio-shell-ui';
 import { isEqual, transform, isObject, find } from 'lodash';
 
 export const ShowReminderOptions = (): SelectItem<`${number}`>[] => [
@@ -765,19 +765,30 @@ export const getWeekDay = (day: `${number}`): string => {
 	}
 };
 
-export const getShareCalendarWithOptions = (): SelectItem<'usr' | 'pub'>[] => [
-	{
-		label: t('share.options.share_calendar_with.internal_users_groups', 'Internal Users or Groups'),
-		value: 'usr'
-	},
-	{
-		label: t(
-			'share.options.share_calendar_with.public',
-			'Public (view only, no password required)'
-		),
-		value: 'pub'
-	}
-];
+export const useShareCalendarWithOptions = (): SelectItem<'usr' | 'pub'>[] => {
+	const accountSettings = useUserSettings();
+	const publicSharingEnabled =
+		(accountSettings.attrs.zimbraPublicSharingEnabled as string) === 'TRUE';
+
+	const defaultOptions = [
+		{
+			label: t(
+				'share.options.share_calendar_with.internal_users_groups',
+				'Internal Users or Groups'
+			),
+			value: 'usr' as const
+		}
+	];
+	return publicSharingEnabled
+		? [
+				...defaultOptions,
+				{
+					label: t('share.options.share_calendar_with.public', 'Public'),
+					value: 'pub' as const
+				}
+			]
+		: defaultOptions;
+};
 
 export const ShareCalendarRoleOptions = (canViewPrvtAppt: boolean | undefined): SelectItem[] => [
 	{ label: t('share.options.share_calendar_role.none', 'None'), value: '' },

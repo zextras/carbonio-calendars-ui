@@ -21,10 +21,10 @@ import {
 } from '@zextras/carbonio-design-system';
 import { useUserAccounts } from '@zextras/carbonio-shell-ui';
 import {
-	useContactInput,
 	ContactInputItem,
 	ModalFooter,
-	ModalHeader
+	ModalHeader,
+	useContactInput
 } from '@zextras/carbonio-ui-commons';
 import { map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -32,9 +32,9 @@ import { useTranslation } from 'react-i18next';
 import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import {
-	ShareCalendarRoleOptions,
-	getShareCalendarWithOptions,
-	findLabel
+	findLabel,
+	useShareCalendarWithOptions,
+	ShareCalendarRoleOptions
 } from '../../settings/components/utils';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
@@ -349,7 +349,7 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	grant
 }): ReactElement => {
 	const [t] = useTranslation();
-	const shareCalendarWithOptions = useMemo(() => getShareCalendarWithOptions(), []);
+	const shareCalendarWithOptions = useShareCalendarWithOptions();
 
 	const [shareWithUserType, setShareWithUserType] = useState<'usr' | 'pub' | null>(
 		SHARE_USER_TYPE.USER
