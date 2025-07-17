@@ -3,17 +3,20 @@ import defaultSettings from '@test-utils/settings/default-settings';
 
 describe('Utils', () => {
   describe('getShareCalendarWithOptions', () => {
-    test('returns public sharing option if publicSharingEnabled TRUE', () =>{
+
+    test('returns public and internal sharing options if publicSharingEnabled TRUE', () =>{
       let shareCalendarWithOptions = getShareCalendarWithOptions({
         ...defaultSettings,
         attrs: {
           zimbraPublicSharingEnabled: 'TRUE',
         }
       });
+      expect(shareCalendarWithOptions).toHaveLength(2);
+      expect(shareCalendarWithOptions[0].value).toEqual('usr');
       expect(shareCalendarWithOptions[1].value).toEqual('pub');
     });
 
-    test('does not return public sharing option if publicSharingEnabled FALSE', () =>{
+    test('returns only internal sharing option if publicSharingEnabled FALSE', () =>{
       let shareCalendarWithOptions = getShareCalendarWithOptions({
         ...defaultSettings,
         attrs: {
