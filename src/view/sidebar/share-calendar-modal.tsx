@@ -19,7 +19,7 @@ import {
 	Tooltip,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import {useUserAccounts, useUserSettings} from '@zextras/carbonio-shell-ui';
 import {
 	ContactInputItem,
 	ModalFooter,
@@ -33,7 +33,7 @@ import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import {
 	findLabel,
-	useShareCalendarWithOptions,
+	getShareCalendarWithOptions,
 	ShareCalendarRoleOptions
 } from '../../settings/components/utils';
 import { folderAction } from '../../store/actions/calendar-actions';
@@ -349,7 +349,8 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	grant
 }): ReactElement => {
 	const [t] = useTranslation();
-	const shareCalendarWithOptions = useShareCalendarWithOptions();
+	const accountSettings = useUserSettings();
+	const shareCalendarWithOptions = useMemo(() => getShareCalendarWithOptions(accountSettings), [accountSettings]);
 
 	const [shareWithUserType, setShareWithUserType] = useState<'usr' | 'pub' | null>(
 		SHARE_USER_TYPE.USER

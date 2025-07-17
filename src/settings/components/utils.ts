@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { SelectItem } from '@zextras/carbonio-design-system';
-import { t, useUserSettings } from '@zextras/carbonio-shell-ui';
+import {AccountSettings, t, useUserSettings} from '@zextras/carbonio-shell-ui';
 import { isEqual, transform, isObject, find } from 'lodash';
 
 export const ShowReminderOptions = (): SelectItem<`${number}`>[] => [
@@ -765,10 +765,9 @@ export const getWeekDay = (day: `${number}`): string => {
 	}
 };
 
-export const useShareCalendarWithOptions = (): SelectItem<'usr' | 'pub'>[] => {
-	const accountSettings = useUserSettings();
+export const getShareCalendarWithOptions = (accountSettings: AccountSettings): SelectItem<'usr' | 'pub'>[] => {
 	const publicSharingEnabled =
-		(accountSettings.attrs.zimbraPublicSharingEnabled as string) === 'TRUE';
+			(accountSettings.attrs.zimbraPublicSharingEnabled as string) === 'TRUE';
 
 	const defaultOptions = [
 		{
