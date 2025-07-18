@@ -16,7 +16,6 @@ import editorSliceReducer from '../../store/slices/editor-slice';
 import invitesSliceReducer from '../../store/slices/invites-slice';
 import { setupTest } from '@test-setup';
 
-// Mock the convertSearchChipToString function
 jest.mock('@zextras/carbonio-ui-commons', () => ({
 	...jest.requireActual('@zextras/carbonio-ui-commons'),
 	convertSearchChipToString: jest.fn((chip) => chip.label || chip.value || '')
@@ -46,9 +45,7 @@ describe('SearchView', () => {
 	};
 
 	beforeEach(() => {
-		jest.spyOn(console, 'warn').mockImplementation(() => {
-			// Mock implementation
-		});
+		jest.spyOn(console, 'warn').mockImplementation(() => {});
 	});
 
 	afterEach(() => {
@@ -142,16 +139,16 @@ describe('SearchView', () => {
 
 		it('should detect special characters in mixed query with both regular and advanced chips', (): void => {
 			const mockQuery = [
-				{ id: '1', label: 'regular:keyword' }, // Should trigger warning
+				{ id: '1', label: 'regular:keyword' },
 				{
 					id: '2',
 					label: 'flagged:true',
-					queryChipsToAdvancedFiltersValue: { flagged: true } // Should NOT trigger warning
+					queryChipsToAdvancedFiltersValue: { flagged: true }
 				},
 				{
 					id: '3',
 					label: 'invalid:query',
-					isQueryFilter: true // Should NOT trigger warning
+					isQueryFilter: true
 				}
 			];
 			const mockUpdateQuery = jest.fn();
