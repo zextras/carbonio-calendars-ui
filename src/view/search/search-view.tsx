@@ -102,7 +102,16 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	const containsSpecialCharacter = useMemo(() => {
 		if (!query || query.length === 0) return false;
 
-		const queryString = query.map((c) => convertSearchChipToString(c)).join(' ');
+		// Фильтруем только релевантные для calendars токены
+		const relevantQuery = query.filter((chip: any) => {
+			// Исключаем AdvancedSearchChip с queryChipsToAdvancedFiltersValue
+			if ('queryChipsToAdvancedFiltersValue' in chip) return false;
+			// Исключаем isQueryFilter
+			if (chip.isQueryFilter) return false;
+			return true;
+		});
+
+		const queryString = relevantQuery.map((c) => convertSearchChipToString(c)).join(' ');
 		return specialChars.some((char) => queryString.includes(char));
 	}, [query]);
 
