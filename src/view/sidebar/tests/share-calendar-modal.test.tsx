@@ -7,6 +7,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
+import * as shell from '@zextras/carbonio-shell-ui';
 import { Grant } from '@zextras/carbonio-ui-commons';
 
 import { SHARE_USER_TYPE } from '../../../constants';
@@ -17,10 +18,17 @@ import * as SendShare from '../../../store/actions/send-share-calendar-notificat
 import { reducers } from '../../../store/redux';
 import { ShareCalendarModal } from '../share-calendar-modal';
 import { setupTest } from '@test-setup';
+import defaultSettings from '@test-utils/settings/default-settings';
 
 const checkedIcon = 'icon: CheckmarkSquare';
 
 describe('Shared Calendar modal', () => {
+	beforeEach(() => {
+		jest.spyOn(shell, 'useUserSettings').mockReturnValue(defaultSettings);
+	});
+
+	const store = configureStore({ reducer: combineReducers(reducers) });
+
 	describe('Modal header', () => {
 		it('should display the title "Share" followed by the calendar name', () => {
 			const closeFn = jest.fn();
@@ -31,7 +39,7 @@ describe('Shared Calendar modal', () => {
 					perm: 'r'
 				} as const
 			];
-			const store = configureStore({ reducer: combineReducers(reducers) });
+
 			const title = 'testName';
 			setupTest(
 				<ShareCalendarModal
@@ -53,7 +61,6 @@ describe('Shared Calendar modal', () => {
 					perm: 'r'
 				} as const
 			];
-			const store = configureStore({ reducer: combineReducers(reducers) });
 			const { user } = setupTest(
 				<ShareCalendarModal
 					folderName={'testName'}
@@ -74,6 +81,53 @@ describe('Shared Calendar modal', () => {
 	});
 	describe('Modal body', () => {
 		describe('"share with" selector', () => {
+			it('should display no field when public share type is selected', async () => {
+				const closeFn = jest.fn();
+				const grant = [
+					{
+						zid: '1',
+						gt: 'usr',
+						perm: 'r'
+					} as const
+				];
+
+				const { user } = setupTest(
+					<ShareCalendarModal
+						folderName={'testName'}
+						folderId={'testId1'}
+						closeFn={closeFn}
+						grant={grant}
+					/>,
+					{ store }
+				);
+
+				await user.click(screen.getByText(/share with/i));
+
+				const dropdownPublicOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
+					/share\.options\.share_calendar_with\.public/i
+				);
+
+				await user.click(dropdownPublicOption);
+
+				const chipInput = screen.queryByRole('textbox', {
+					name: /Recipients e-mail addresses/i
+				});
+				const privateCheckbox = screen.queryByText(
+					/allow user\(s\) to see private appointments’ detail/i
+				);
+				const roleSelector = screen.queryByText('Role');
+				const notificationCheckbox = screen.queryByText(/send notification about this share/i);
+				const standardMessage = screen.queryByRole('textbox', {
+					name: /Add a note to standard message/i
+				});
+				const shareNotes = screen.queryByText(/note:/i);
+				expect(chipInput).not.toBeInTheDocument();
+				expect(privateCheckbox).not.toBeInTheDocument();
+				expect(roleSelector).not.toBeInTheDocument();
+				expect(notificationCheckbox).not.toBeInTheDocument();
+				expect(standardMessage).not.toBeInTheDocument();
+				expect(shareNotes).not.toBeInTheDocument();
+			});
 			test('has the label "Share with"', () => {
 				const closeFn = jest.fn();
 				const grant = [
@@ -83,7 +137,7 @@ describe('Shared Calendar modal', () => {
 						perm: 'r'
 					} as const
 				];
-				const store = configureStore({ reducer: combineReducers(reducers) });
+
 				setupTest(
 					<ShareCalendarModal
 						folderName={'testName'}
@@ -105,7 +159,7 @@ describe('Shared Calendar modal', () => {
 						perm: 'r'
 					} as const
 				];
-				const store = configureStore({ reducer: combineReducers(reducers) });
+
 				const { user } = setupTest(
 					<ShareCalendarModal
 						folderName={'testName'}
@@ -138,7 +192,7 @@ describe('Shared Calendar modal', () => {
 						perm: 'r'
 					} as const
 				];
-				const store = configureStore({ reducer: combineReducers(reducers) });
+
 				setupTest(
 					<ShareCalendarModal
 						folderName={'testName'}
@@ -153,54 +207,29 @@ describe('Shared Calendar modal', () => {
 					screen.getByText(/share\.options\.share_calendar_with\.internal_users_groups/i)
 				).toBeVisible();
 			});
-		});
-		it('should display no field when public share type is selected', async () => {
-			const closeFn = jest.fn();
-			const grant = [
-				{
-					zid: '1',
-					gt: 'usr',
-					perm: 'r'
-				} as const
-			];
-			const store = configureStore({ reducer: combineReducers(reducers) });
-			const { user } = setupTest(
-				<ShareCalendarModal
-					folderName={'testName'}
-					folderId={'testId1'}
-					closeFn={closeFn}
-					grant={grant}
-				/>,
-				{ store }
-			);
 
-			await user.click(screen.getByText(/share with/i));
+			test('when zimbraPublicSharingEnabled is FALSE the option "public" is not displayed', async () => {
+				jest.spyOn(shell, 'useUserSettings').mockReturnValue({
+					...defaultSettings,
+					attrs: { zimbraPublicSharingEnabled: 'FALSE' }
+				});
 
-			const dropdownPublicOption = within(screen.getByTestId(TEST_SELECTORS.DROPDOWN)).getByText(
-				/share\.options\.share_calendar_with\.public/i
-			);
+				const { user } = setupTest(
+					<ShareCalendarModal folderName={'testName'} folderId={'testId1'} />,
+					{ store }
+				);
 
-			await user.click(dropdownPublicOption);
+				const selector = await screen.findByText(/share with/i);
+				await user.click(selector);
 
-			const chipInput = screen.queryByRole('textbox', {
-				name: /Recipients e-mail addresses/i
+				const dropdownPublicOption = within(
+					screen.getByTestId(TEST_SELECTORS.DROPDOWN)
+				).queryByText(/share\.options\.share_calendar_with\.public/i);
+
+				expect(dropdownPublicOption).not.toBeInTheDocument();
 			});
-			const privateCheckbox = screen.queryByText(
-				/allow user\(s\) to see private appointments’ detail/i
-			);
-			const roleSelector = screen.queryByText('Role');
-			const notificationCheckbox = screen.queryByText(/send notification about this share/i);
-			const standardMessage = screen.queryByRole('textbox', {
-				name: /Add a note to standard message/i
-			});
-			const shareNotes = screen.queryByText(/note:/i);
-			expect(chipInput).not.toBeInTheDocument();
-			expect(privateCheckbox).not.toBeInTheDocument();
-			expect(roleSelector).not.toBeInTheDocument();
-			expect(notificationCheckbox).not.toBeInTheDocument();
-			expect(standardMessage).not.toBeInTheDocument();
-			expect(shareNotes).not.toBeInTheDocument();
 		});
+
 		describe('when internal is selected', () => {
 			it('should render other fields', async () => {
 				const closeFn = jest.fn();
@@ -211,7 +240,7 @@ describe('Shared Calendar modal', () => {
 						perm: 'r'
 					} as const
 				];
-				const store = configureStore({ reducer: combineReducers(reducers) });
+
 				setupTest(
 					<ShareCalendarModal
 						folderName={'testName'}
@@ -250,7 +279,7 @@ describe('Shared Calendar modal', () => {
 						perm: 'r'
 					} as const
 				];
-				const store = configureStore({ reducer: combineReducers(reducers) });
+
 				setupTest(
 					<ShareCalendarModal
 						folderName={'testName'}
@@ -276,7 +305,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -302,7 +331,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -334,7 +363,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -365,7 +394,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -386,7 +415,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -434,7 +463,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -460,7 +489,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -493,7 +522,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -528,7 +557,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -554,7 +583,7 @@ describe('Shared Calendar modal', () => {
 							perm: 'r'
 						} as const
 					];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -581,7 +610,7 @@ describe('Shared Calendar modal', () => {
 						perm: 'r'
 					} as const
 				];
-				const store = configureStore({ reducer: combineReducers(reducers) });
+
 				setupTest(
 					<ShareCalendarModal
 						folderName={'testName'}
@@ -608,7 +637,7 @@ describe('Shared Calendar modal', () => {
 					perm: 'r'
 				} as const
 			];
-			const store = configureStore({ reducer: combineReducers(reducers) });
+
 			const { user } = setupTest(
 				<ShareCalendarModal
 					folderName={'testName'}
@@ -640,7 +669,7 @@ describe('Shared Calendar modal', () => {
 					perm: 'r'
 				} as const
 			];
-			const store = configureStore({ reducer: combineReducers(reducers) });
+
 			setupTest(
 				<ShareCalendarModal
 					folderName={'testName'}
@@ -666,7 +695,7 @@ describe('Shared Calendar modal', () => {
 					perm: 'r'
 				} as const
 			];
-			const store = configureStore({ reducer: combineReducers(reducers) });
+
 			const { user } = setupTest(
 				<ShareCalendarModal
 					folderName={'testName'}
@@ -702,7 +731,7 @@ describe('Shared Calendar modal', () => {
 				const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 				const closeFn = jest.fn();
 				const grant: Grant[] | undefined = [];
-				const store = configureStore({ reducer: combineReducers(reducers) });
+
 				const { user } = setupTest(
 					<ShareCalendarModal
 						folderName={'testName'}
@@ -737,7 +766,7 @@ describe('Shared Calendar modal', () => {
 					const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 					const closeFn = jest.fn();
 					const grant: Grant[] | undefined = [];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -772,7 +801,7 @@ describe('Shared Calendar modal', () => {
 					const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 					const closeFn = jest.fn();
 					const grant: Grant[] | undefined = [];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -810,7 +839,7 @@ describe('Shared Calendar modal', () => {
 					const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 					const closeFn = jest.fn();
 					const grant: Grant[] | undefined = [];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -852,7 +881,7 @@ describe('Shared Calendar modal', () => {
 					const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 					const closeFn = jest.fn();
 					const grant: Grant[] | undefined = [];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -894,7 +923,7 @@ describe('Shared Calendar modal', () => {
 					const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 					const closeFn = jest.fn();
 					const grant: Grant[] | undefined = [];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -936,7 +965,7 @@ describe('Shared Calendar modal', () => {
 					const spy = jest.spyOn(FolderAction, 'folderActionRequest');
 					const closeFn = jest.fn();
 					const grant: Grant[] | undefined = [];
-					const store = configureStore({ reducer: combineReducers(reducers) });
+
 					const { user } = setupTest(
 						<ShareCalendarModal
 							folderName={'testName'}
@@ -979,7 +1008,6 @@ describe('Shared Calendar modal', () => {
 						const sendSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
 						const closeFn = jest.fn();
 						const grant: Grant[] | undefined = [];
-						const store = configureStore({ reducer: combineReducers(reducers) });
 
 						const { user } = setupTest(
 							<ShareCalendarModal
@@ -1008,7 +1036,6 @@ describe('Shared Calendar modal', () => {
 						const sendSpy = jest.spyOn(SendShare, 'sendShareCalendarNotification');
 						const closeFn = jest.fn();
 						const grant: Grant[] | undefined = [];
-						const store = configureStore({ reducer: combineReducers(reducers) });
 
 						const { user } = setupTest(
 							<ShareCalendarModal
