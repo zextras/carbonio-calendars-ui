@@ -14,15 +14,15 @@ import {
 	FormSection,
 	Container
 } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
+import { AccountSettingsPrefs, t } from '@zextras/carbonio-shell-ui';
+import { find } from 'lodash';
 
 import {
 	ShowReminderOptions,
 	DefaultViewOptions,
 	StartWeekOfOptions,
 	DefaultApptVisibiltyOptions,
-	SpanTimeOptions,
-	findLabel
+	SpanTimeOptions
 } from './components/utils';
 import { generalSubSection } from './sub-sections';
 
@@ -31,7 +31,17 @@ export default function GeneralSettings({
 	updateSettings,
 	isEmailNotValid,
 	setisEmailNotValid
-}) {
+}: {
+	settingsObj: AccountSettingsPrefs;
+	updateSettings: (e: {
+		target: {
+			name: string;
+			value: string;
+		};
+	}) => void;
+	isEmailNotValid: boolean;
+	setisEmailNotValid: React.Dispatch<React.SetStateAction<boolean>>;
+}): React.JSX.Element {
 	const sectionTitleGeneral = useMemo(() => generalSubSection(), []);
 	const showReminderOptions = useMemo(() => ShowReminderOptions(), []);
 	const defaultViewOptions = useMemo(() => DefaultViewOptions(), []);
@@ -42,6 +52,46 @@ export default function GeneralSettings({
 	);
 	const defaultApptVisibiltyOptions = useMemo(() => DefaultApptVisibiltyOptions(), []);
 
+	const defaultViewSelection = useMemo(
+		() =>
+			find(defaultViewOptions, (item) => item.value === settingsObj.zimbraPrefCalendarInitialView),
+		[defaultViewOptions, settingsObj.zimbraPrefCalendarInitialView]
+	);
+
+	const startWeekSelection = useMemo(
+		() =>
+			find(
+				startWeekOfOptions,
+				(item) => item.value === settingsObj.zimbraPrefCalendarFirstDayOfWeek
+			),
+		[startWeekOfOptions, settingsObj.zimbraPrefCalendarFirstDayOfWeek]
+	);
+
+	const defaultApptVisibiltySelection = useMemo(
+		() =>
+			find(
+				defaultApptVisibiltyOptions,
+				(item) => item.value === settingsObj.zimbraPrefCalendarApptVisibility
+			),
+		[defaultApptVisibiltyOptions, settingsObj.zimbraPrefCalendarApptVisibility]
+	);
+	const showReminderSelection = useMemo(
+		() =>
+			find(
+				showReminderOptions,
+				(item) => item.value === settingsObj.zimbraPrefCalendarApptReminderWarningTime
+			),
+		[settingsObj.zimbraPrefCalendarApptReminderWarningTime, showReminderOptions]
+	);
+	const spanTimeSelection = useMemo(
+		() =>
+			find(
+				spanTimeOptions,
+				(item) => item.value === settingsObj.zimbraPrefCalendarDefaultApptDuration
+			),
+		[settingsObj.zimbraPrefCalendarDefaultApptDuration, spanTimeOptions]
+	);
+
 	return (
 		<FormSection id={sectionTitleGeneral.id} label={sectionTitleGeneral.label}>
 			<FormSubSection>
@@ -49,42 +99,36 @@ export default function GeneralSettings({
 					<Select
 						label={t('label.default_view', 'Default view')}
 						items={defaultViewOptions}
-						onChange={(view) =>
-							updateSettings({ target: { name: 'zimbraPrefCalendarInitialView', value: view } })
-						}
-						defaultSelection={{
-							label: findLabel(defaultViewOptions, settingsObj.zimbraPrefCalendarInitialView),
-							value: settingsObj.zimbraPrefCalendarInitialView
+						onChange={(view): void => {
+							if (view) {
+								updateSettings({ target: { name: 'zimbraPrefCalendarInitialView', value: view } });
+							}
 						}}
+						defaultSelection={defaultViewSelection}
 					/>
 					<Select
 						label={t('label.start_week_on', 'Start week on')}
 						items={startWeekOfOptions}
-						onChange={(day) =>
-							updateSettings({
-								target: { name: 'zimbraPrefCalendarFirstDayOfWeek', value: day }
-							})
-						}
-						defaultSelection={{
-							label: findLabel(startWeekOfOptions, settingsObj.zimbraPrefCalendarFirstDayOfWeek),
-							value: settingsObj.zimbraPrefCalendarFirstDayOfWeek
+						onChange={(day): void => {
+							if (day) {
+								updateSettings({
+									target: { name: 'zimbraPrefCalendarFirstDayOfWeek', value: day }
+								});
+							}
 						}}
+						defaultSelection={startWeekSelection}
 					/>
 					<Select
 						label={t('label.default_appt_vsblty', 'Default appointment visibility')}
 						items={defaultApptVisibiltyOptions}
-						onChange={(mode) =>
-							updateSettings({
-								target: { name: 'zimbraPrefCalendarApptVisibility', value: mode }
-							})
-						}
-						defaultSelection={{
-							label: findLabel(
-								defaultApptVisibiltyOptions,
-								settingsObj.zimbraPrefCalendarApptVisibility
-							),
-							value: settingsObj.zimbraPrefCalendarApptVisibility
+						onChange={(mode): void => {
+							if (mode) {
+								updateSettings({
+									target: { name: 'zimbraPrefCalendarApptVisibility', value: mode }
+								});
+							}
 						}}
+						defaultSelection={defaultApptVisibiltySelection}
 					/>
 				</Container>
 				<Container gap={'0.5rem'} mainAlignment={'flex-start'} crossAlignment={'flex-start'}>
@@ -94,7 +138,7 @@ export default function GeneralSettings({
 							'label.auto_add_rcvd_app',
 							'Automatically add received appointments to calendar'
 						)}
-						onClick={() =>
+						onClick={(): void =>
 							updateSettings({
 								target: {
 									name: 'zimbraPrefCalendarAutoAddInvites',
@@ -105,7 +149,7 @@ export default function GeneralSettings({
 					/>
 					<Checkbox
 						value={settingsObj.zimbraPrefCalendarShowDeclinedMeetings === 'TRUE'}
-						onClick={() =>
+						onClick={(): void =>
 							updateSettings({
 								target: {
 									name: 'zimbraPrefCalendarShowDeclinedMeetings',
@@ -121,7 +165,7 @@ export default function GeneralSettings({
 			<FormSubSection label={t('settings.label.invitation_response', 'Invitation Response')}>
 				<Checkbox
 					value={settingsObj.zimbraPrefDeleteInviteOnReply === 'TRUE'}
-					onClick={() =>
+					onClick={(): void =>
 						updateSettings({
 							target: {
 								name: 'zimbraPrefDeleteInviteOnReply',
@@ -136,7 +180,7 @@ export default function GeneralSettings({
 				<Input
 					hasError={isEmailNotValid}
 					label={t('settings.label.enter_email', 'Enter e-mail address')}
-					onChange={(e) => {
+					onChange={(e): void => {
 						if (isEmailNotValid) setisEmailNotValid(false);
 						updateSettings({
 							target: {
@@ -158,23 +202,19 @@ export default function GeneralSettings({
 					<Select
 						label={t('settings.label.span_time', 'Span time')}
 						items={showReminderOptions}
-						onChange={(time) =>
-							updateSettings({
-								target: { name: 'zimbraPrefCalendarApptReminderWarningTime', value: time }
-							})
-						}
-						defaultSelection={{
-							label: findLabel(
-								showReminderOptions,
-								settingsObj.zimbraPrefCalendarApptReminderWarningTime
-							),
-							value: settingsObj.zimbraPrefCalendarApptReminderWarningTime
+						onChange={(time): void => {
+							if (time) {
+								updateSettings({
+									target: { name: 'zimbraPrefCalendarApptReminderWarningTime', value: time }
+								});
+							}
 						}}
+						defaultSelection={showReminderSelection}
 					/>
 					<Container gap={'0.5rem'} mainAlignment={'flex-start'} crossAlignment={'flex-start'}>
 						<Checkbox
 							value={settingsObj.zimbraPrefCalendarShowPastDueReminders === 'TRUE'}
-							onClick={() =>
+							onClick={(): void =>
 								updateSettings({
 									target: {
 										name: 'zimbraPrefCalendarShowPastDueReminders',
@@ -192,7 +232,7 @@ export default function GeneralSettings({
 						/>
 						<Checkbox
 							value={settingsObj.zimbraPrefCalendarReminderSoundsEnabled === 'TRUE'}
-							onClick={() =>
+							onClick={(): void =>
 								updateSettings({
 									target: {
 										name: 'zimbraPrefCalendarReminderSoundsEnabled',
@@ -210,7 +250,7 @@ export default function GeneralSettings({
 						/>
 						<Checkbox
 							value={settingsObj.zimbraPrefMailFlashTitle === 'TRUE'}
-							onClick={() =>
+							onClick={(): void =>
 								updateSettings({
 									target: {
 										name: 'zimbraPrefMailFlashTitle',
@@ -223,7 +263,7 @@ export default function GeneralSettings({
 						<Checkbox
 							label={t('settings.label.show_popup_notification', 'Show a popup notification')}
 							value={settingsObj.zimbraPrefCalendarToasterEnabled === 'TRUE'}
-							onClick={() =>
+							onClick={(): void =>
 								updateSettings({
 									target: {
 										name: 'zimbraPrefCalendarToasterEnabled',
@@ -240,15 +280,14 @@ export default function GeneralSettings({
 				<Select
 					label={t('settings.label.span_time', 'Span time')}
 					items={spanTimeOptions}
-					onChange={(dur) =>
-						updateSettings({
-							target: { name: 'zimbraPrefCalendarDefaultApptDuration', value: dur }
-						})
-					}
-					defaultSelection={{
-						label: findLabel(spanTimeOptions, settingsObj.zimbraPrefCalendarDefaultApptDuration),
-						value: settingsObj.zimbraPrefCalendarDefaultApptDuration
+					onChange={(dur): void => {
+						if (dur) {
+							updateSettings({
+								target: { name: 'zimbraPrefCalendarDefaultApptDuration', value: dur }
+							});
+						}
 					}}
+					defaultSelection={spanTimeSelection}
 				/>
 			</FormSubSection>
 		</FormSection>

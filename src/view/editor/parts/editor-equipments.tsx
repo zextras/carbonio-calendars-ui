@@ -5,33 +5,37 @@
  */
 import React, { ReactElement, useCallback, useMemo } from 'react';
 
-import { filter, map, uniqBy } from 'lodash';
+import { filter, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 import { EditorResourceComponent, normalizeResources } from './editor-resource-component';
+import { generateResourceId, isValidResource } from './utils';
 import { searchResources } from '../../../soap/search-resources';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled, selectEditorEquipment } from '../../../store/selectors/editor';
 import { editEditorEquipment } from '../../../store/slices/editor-slice';
-import { useAppStatusStore } from '../../../store/zustand/store';
 import { ChipResource } from '../../../types/editor';
 
 export const EditorEquipments = ({ editorId }: { editorId: string }): ReactElement | null => {
 	const dispatch = useAppDispatch();
 	const [t] = useTranslation();
 	const disabled = useAppSelector(selectEditorDisabled(editorId));
+
 	const equipmentValue = useAppSelector(selectEditorEquipment(editorId));
 
 	const equipmentChipValue = useMemo(
 		() =>
-			map(equipmentValue, (resource) => ({
-				id: resource.id,
-				label: resource.label,
-				email: resource.email,
-				avatarIcon: 'BriefcaseOutline' as const,
-				avatarBackground: 'transparent' as const,
-				avatarColor: 'gray0' as const
-			})),
+			map(equipmentValue, (resource) => {
+				const isValid = isValidResource(resource);
+				return {
+					id: resource.id ?? generateResourceId(resource),
+					label: resource.label,
+					email: resource.email,
+					avatarIcon: isValid ? 'BriefcaseOutline' : 'AlertCircleOutline',
+					avatarBackground: 'transparent' as const,
+					avatarColor: 'gray0' as const
+				};
+			}),
 		[equipmentValue]
 	);
 
@@ -45,22 +49,19 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 	const onSearchOptions = useCallback(
 		(searchedValued: string) =>
 			searchResources(searchedValued).then((response) => {
-				if (!response.error) {
+				if (response && !response.error) {
 					const equipmentResource = filter(
 						response.cn,
 						(cn) => cn._attrs.zimbraCalResType === 'Equipment'
 					);
-					const remoteResources = map(equipmentResource, (result) => normalizeResources(result));
-					const searchOptions = map(equipmentResource, (result) => ({
+					return map(equipmentResource, (result) => ({
 						id: result.fileAsStr,
 						label: result.fileAsStr,
 						icon: 'BriefcaseOutline',
 						value: normalizeResources(result)
 					}));
-					useAppStatusStore.setState({ equipment: uniqBy(remoteResources, 'label') });
-					return searchOptions;
 				}
-				throw new Error('received error from API');
+				throw new Error('API failed');
 			}),
 		[]
 	);
@@ -80,6 +81,14 @@ export const EditorEquipments = ({ editorId }: { editorId: string }): ReactEleme
 			singleWarningLabel={t(
 				'attendee_equipment_unavailable',
 				'Equipment not available at the selected time of the event'
+			)}
+			invalidInputErrorLabel={t(
+				'equipment_invalid',
+				'One or more items of equipment are invalid. Try editing them or entering a new one.'
+			)}
+			duplicateChipsErrorLabel={t(
+				'duplicate_equipment_error',
+				'One or more items of equipment were selected multiple times. Consider removing the duplicates.'
 			)}
 		/>
 	);

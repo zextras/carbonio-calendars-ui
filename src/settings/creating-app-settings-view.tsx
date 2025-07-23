@@ -6,12 +6,23 @@
 import React, { useMemo } from 'react';
 
 import { Checkbox, FormSection, FormSubSection } from '@zextras/carbonio-design-system';
-import { t } from '@zextras/carbonio-shell-ui';
+import { AccountSettingsPrefs, t } from '@zextras/carbonio-shell-ui';
 
 import { creatingAppointmentsSubSection } from './sub-sections';
 import { CalendarSelector } from '../view/editor/parts/calendar-selector';
 
-export default function CreatingAppointmentSettings({ settingsObj, updateSettings }) {
+export default function CreatingAppointmentSettings({
+	settingsObj,
+	updateSettings
+}: {
+	settingsObj: AccountSettingsPrefs;
+	updateSettings: (e: {
+		target: {
+			name: string;
+			value: string;
+		};
+	}) => void;
+}): React.JSX.Element {
 	const sectionTitleAppointments = useMemo(() => creatingAppointmentsSubSection(), []);
 
 	return (
@@ -19,7 +30,7 @@ export default function CreatingAppointmentSettings({ settingsObj, updateSetting
 			<FormSubSection label={t('settings.label.default_calendar', 'Default calendar')}>
 				<CalendarSelector
 					calendarId={settingsObj.zimbraPrefDefaultCalendarId}
-					onCalendarChange={(cal) => {
+					onCalendarChange={(cal): void => {
 						updateSettings({
 							target: {
 								name: 'zimbraPrefDefaultCalendarId',
@@ -37,7 +48,7 @@ export default function CreatingAppointmentSettings({ settingsObj, updateSetting
 						'settings.label.show_timezones',
 						'Show time zone while creating new appointment'
 					)}
-					onClick={() =>
+					onClick={(): void =>
 						updateSettings({
 							target: {
 								name: 'zimbraPrefUseTimeZoneListInCalendar',

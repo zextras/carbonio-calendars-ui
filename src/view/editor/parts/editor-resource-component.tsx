@@ -7,21 +7,25 @@
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 
 import {
+	ChipAction,
 	ChipInput,
 	ChipInputProps,
 	ChipItem,
 	Container,
 	DropdownItem,
 	KeyboardPresetObj,
+	Theme,
 	useKeyboard
 } from '@zextras/carbonio-design-system';
+import { find } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
-import { find, map, reduce, uniqWith } from 'lodash';
 
 import {
 	EditorAvailabilityWarningRow,
 	getIsBusyAtTimeOfTheEvent
 } from './editor-availability-warning-row';
+import { generateResourceId, getDuplicateResourceIds, isValidResource } from './utils';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
 import {
@@ -30,7 +34,7 @@ import {
 	selectEditorStart,
 	selectEditorUid
 } from '../../../store/selectors/editor';
-import { ChipResource, Resource } from '../../../types/editor';
+import { Resource } from '../../../types/editor';
 import { Contact } from '../../../types/soap/soap-actions';
 
 interface SkeletonTileProps {
@@ -50,12 +54,6 @@ const SkeletonTile = styled.div<SkeletonTileProps>`
 	border-radius: ${({ $radius }): string => $radius ?? '0.125rem'};
 	background: ${({ theme }): string => theme.palette.gray2.regular};
 `;
-
-const createChipFromResource = (optionValue: Resource): ChipItem<Resource> => ({
-	id: optionValue.id,
-	label: optionValue.label,
-	value: optionValue
-});
 
 const Loader = (): ReactElement => (
 	<Container
@@ -90,6 +88,26 @@ export const normalizeResources = (r: Contact): Resource => ({
 	type: r._attrs.zimbraCalResType
 });
 
+interface EditorResourceComponentProps {
+	editorId: string;
+	onChange: (items: Array<Resource>) => void;
+	onSearchOptions: (stringToSearch: string) => Promise<Array<ResourceInputOption>>;
+	placeholder: string;
+	resourcesValue: Array<Resource>;
+	warningLabel: string;
+	disabled?: boolean;
+	singleWarningLabel: string;
+	invalidInputErrorLabel: string;
+	duplicateChipsErrorLabel: string;
+}
+
+type ResourceChipItem = ChipItem<Resource> & {
+	avatarIcon?: keyof Theme['icons'];
+	avatarBackground?: keyof Theme['palette'];
+	avatarColor?: string;
+	error?: boolean;
+};
+
 export const EditorResourceComponent = ({
 	editorId,
 	onChange,
@@ -98,161 +116,284 @@ export const EditorResourceComponent = ({
 	onSearchOptions,
 	warningLabel,
 	disabled,
-	singleWarningLabel
-}: {
-	editorId: string;
-	onChange: (items: ChipResource[]) => void;
-	onSearchOptions: (stringToSearch: string) => Promise<Array<ResourceInputOption>>;
-	placeholder: string;
-	resourcesValue: Array<ChipResource>;
-	warningLabel: string;
-	disabled?: boolean;
-	singleWarningLabel: string;
-}): JSX.Element | null => {
-	const inputRef = useRef<HTMLInputElement>(null);
+	singleWarningLabel,
+	invalidInputErrorLabel,
+	duplicateChipsErrorLabel
+}: EditorResourceComponentProps): JSX.Element | null => {
+	const [t] = useTranslation();
 
 	const start = useAppSelector(selectEditorStart(editorId));
 	const end = useAppSelector(selectEditorEnd(editorId));
 	const allDay = useAppSelector(selectEditorAllDay(editorId));
 	const uid = useAppSelector(selectEditorUid(editorId));
-
 	const [options, setOptions] = useState<Array<ResourceInputOption>>([]);
-
+	const inputRef = useRef<HTMLInputElement>(null);
+	const [editingResource, setEditingResource] = useState<Resource | null>(null);
 	const attendeesAvailabilityList = useAttendeesAvailability(start, resourcesValue, uid);
 
-	const onAdd = useCallback((valueToAdd: unknown): ChipItem<Resource> => {
-		const resourceFromOptions = valueToAdd as Resource;
-		return createChipFromResource(resourceFromOptions);
+	const resourcesAreValid = useMemo(
+		() => resourcesValue.every((resource) => isValidResource(resource)),
+		[resourcesValue]
+	);
+
+	const duplicateResourceIds = useMemo(
+		() => getDuplicateResourceIds(resourcesValue),
+		[resourcesValue]
+	);
+
+	const [hasError, setHasError] = useState(!resourcesAreValid);
+	const [hasDuplicateValidChips, setHasDuplicateValidChips] = useState(
+		duplicateResourceIds.size > 0
+	);
+
+	const handleEditResource = useCallback((resource: Resource) => {
+		setEditingResource(resource);
+
+		if (inputRef.current) {
+			inputRef.current.value = resource.label;
+			inputRef.current.style.width = inputRef.current.value
+				? `${inputRef.current.scrollWidth}px`
+				: '';
+			inputRef.current.focus();
+		}
 	}, []);
 
-	const onInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
+	const buildResourceChipItem = useCallback(
+		(resource: Resource): ResourceChipItem => {
+			const isValid = isValidResource(resource);
+			const key = resource.id ?? resource.email;
+			const isDuplicate = isValid && duplicateResourceIds.has(key);
+			setHasDuplicateValidChips(isDuplicate);
+
+			const actions: ChipAction[] = [
+				{
+					id: 'edit',
+					icon: 'EditOutline',
+					type: 'button',
+					label: t('label.edit', 'Edit'),
+					onClick: (event): void => {
+						event.stopPropagation();
+						handleEditResource(resource);
+					}
+				}
+			];
+
+			if (isDuplicate) {
+				actions.unshift({
+					id: 'duplicate',
+					label: t('label.duplicate_resource', 'This resource was selected multiple times'),
+					color: 'warning',
+					type: 'icon',
+					icon: 'AlertTriangle'
+				});
+			}
+
+			return {
+				...resource,
+				id: resource.id ?? generateResourceId(resource),
+				value: resource,
+				background: isValid ? 'gray3' : 'error',
+				color: isValid ? 'text' : 'gray6',
+				avatarColor: isValid ? 'gray0' : 'gray6',
+				avatarBackground: isValid ? 'transparent' : 'error',
+				actions,
+				error: !isValid
+			};
+		},
+		[duplicateResourceIds, handleEditResource, t]
+	);
+
+	const handleAdd = useCallback(
+		(valueToAdd: unknown): ResourceChipItem => {
+			setEditingResource(null);
+
+			const isResourceOption = (obj: unknown): obj is Resource =>
+				typeof obj === 'object' &&
+				obj !== null &&
+				'id' in obj &&
+				'label' in obj &&
+				'email' in obj &&
+				'type' in obj;
+
+			const isStringInput = (input: unknown): input is string =>
+				typeof input === 'string' && input.trim() !== '';
+
+			if (isStringInput(valueToAdd)) {
+				const exactMatch = options.find(
+					(opt) => opt.label?.toLowerCase() === valueToAdd.trim().toLowerCase()
+				);
+				if (exactMatch && exactMatch.value) {
+					return buildResourceChipItem(exactMatch.value);
+				}
+			}
+
+			let label = 'Invalid input';
+			let resource: Resource = { email: '', label };
+			if (isResourceOption(valueToAdd)) {
+				resource = valueToAdd;
+				label = resource.label;
+			} else if (isStringInput(valueToAdd)) {
+				label = valueToAdd.trim();
+				resource = { email: '', label };
+			}
+			const resourceId = resource.id ?? generateResourceId(resource);
+			resource = { ...resource, id: resourceId };
+			const isValid = isValidResource(resource);
+
+			return {
+				label,
+				id: resourceId,
+				value: resource,
+				...(isValid ? {} : { background: 'error', error: true })
+			};
+		},
+		[buildResourceChipItem, options]
+	);
+
+	const loadingOption = useMemo(
+		() => [
+			{
+				id: 'loading',
+				label: 'loading',
+				customComponent: <Loader />,
+				disabled: true
+			}
+		],
+		[]
+	);
+
+	const handleInputType = useCallback<NonNullable<ChipInputProps<Resource>['onInputType']>>(
 		(e) => {
 			if (e.textContent && e.textContent !== '') {
-				setOptions([
-					{
-						id: 'loading',
-						label: 'loading',
-						customComponent: <Loader />,
-						disabled: true
-					}
-				]);
+				setOptions(loadingOption);
 				onSearchOptions(e.textContent)
 					.then((receivedOptions) => {
 						setOptions(receivedOptions);
 					})
-					.catch(() => {
-						// ignore
+					.catch((reason) => {
+						setOptions([]);
+						console.warn(reason.error ?? reason);
 					});
+			} else {
+				setOptions([]);
 			}
 		},
-		[onSearchOptions]
+		[loadingOption, onSearchOptions]
 	);
 
-	const onInternalChange = useCallback(
-		(items: ChipItem<Resource>[]) => {
-			const itemsWithValue = reduce(
-				items,
-				(acc, item) => {
-					const { value, label } = item;
-					if (label && value) {
-						acc.push({ label, email: value.email });
-					}
-					return acc;
-				},
-				[] as ChipResource[]
-			);
+	const handleChange = useCallback(
+		(newChips: ChipItem<Resource>[]): void => {
+			if (!onChange) return;
 
-			const filterdItems = uniqWith(
-				itemsWithValue,
-				(item1, item2) => item1.email === item2.email || item1.label === item2.label
-			);
-
-			onChange(filterdItems);
+			setHasError(newChips.some((item) => !isValidResource(item.value)));
+			onChange(newChips.map((chip) => chip.value as Resource));
 		},
 		[onChange]
 	);
 
-	const resourceAvailability: ChipItem<Resource>[] = useMemo(() => {
-		if (!resourcesValue?.length) {
-			return [];
-		}
-		return map(resourcesValue, (room) => {
-			const roomInList = find(attendeesAvailabilityList, ['email', room.email]);
-			const chipRoom = { ...room, value: room };
-			if (roomInList) {
-				const isBusyAtTimeOfEvent = getIsBusyAtTimeOfTheEvent(
-					roomInList,
-					start,
-					end,
-					attendeesAvailabilityList,
-					allDay
-				);
+	const resourceAvailability: ResourceChipItem[] = useMemo(() => {
+		if (!resourcesValue?.length) return [];
 
-				if (isBusyAtTimeOfEvent) {
-					const actions = [
-						{
-							id: 'unavailable',
-							label: singleWarningLabel,
-							color: 'error',
-							type: 'icon',
-							icon: 'AlertTriangle'
-						} as const
-					];
+		return resourcesValue
+			.filter((r) => !editingResource || r.id !== editingResource.id)
+			.map((resource) => {
+				const chip = buildResourceChipItem(resource);
+
+				const roomInList = find(attendeesAvailabilityList, ['email', resource.email]);
+				const isBusy =
+					roomInList &&
+					getIsBusyAtTimeOfTheEvent(roomInList, start, end, attendeesAvailabilityList, allDay);
+
+				if (isBusy) {
+					const actions: ChipAction[] = [...(chip.actions ?? [])];
+
+					actions.unshift({
+						id: 'unavailable',
+						label: singleWarningLabel,
+						color: 'error',
+						type: 'icon',
+						icon: 'AlertTriangle'
+					});
+
 					return {
-						...chipRoom,
+						...chip,
 						actions
 					};
 				}
-			}
-			return chipRoom;
-		});
-	}, [allDay, attendeesAvailabilityList, end, resourcesValue, singleWarningLabel, start]);
+
+				return chip;
+			});
+	}, [
+		allDay,
+		attendeesAvailabilityList,
+		buildResourceChipItem,
+		editingResource,
+		end,
+		resourcesValue,
+		singleWarningLabel,
+		start
+	]);
 
 	const onPressingEnterSelectFirstOption = useMemo<KeyboardPresetObj[]>(
 		() => [
 			{
 				type: 'keydown',
 				callback: (): void => {
-					if (options?.[0]?.value && onInternalChange && options?.[0]?.id !== 'loading') {
+					if (options?.[0]?.value && handleChange && options?.[0]?.id !== 'loading') {
 						const { value } = options[0];
-						onInternalChange([...resourceAvailability, createChipFromResource(value)]);
+						handleChange([...resourceAvailability, buildResourceChipItem(value)]);
 						if (inputRef.current) {
 							inputRef.current.value = '';
 							setOptions([]);
 						}
 					}
 				},
-				keys: [{ key: 'Enter', ctrlKey: false }],
+				keys: [{ key: 'Enter', ctrlKey: true }],
 				haveToPreventDefault: true
 			}
 		],
-		[onInternalChange, options, resourceAvailability]
+		[buildResourceChipItem, handleChange, options, resourceAvailability]
 	);
 
 	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
 
+	const chipInputDescription = useMemo(() => {
+		if (hasError) {
+			return invalidInputErrorLabel;
+		}
+		if (hasDuplicateValidChips) {
+			return duplicateChipsErrorLabel;
+		}
+		return undefined;
+	}, [hasError, hasDuplicateValidChips, invalidInputErrorLabel, duplicateChipsErrorLabel]);
+
 	return (
-		<>
-			<Container width="100%" height="100%">
-				<ChipInput
-					inputRef={inputRef}
-					confirmChipOnBlur={false}
-					placeholder={placeholder}
-					separators={[]}
-					value={resourceAvailability}
-					options={options}
-					onInputType={onInputType}
-					onAdd={onAdd}
-					onChange={onInternalChange}
-					disabled={disabled}
-				/>
-			</Container>
+		<Container width="100%" height="100%">
+			<ChipInput
+				inputRef={inputRef}
+				disabled={disabled}
+				confirmChipOnBlur
+				createChipOnPaste={false}
+				disableOptions
+				placeholder={placeholder}
+				value={resourceAvailability}
+				options={options}
+				onChange={handleChange}
+				onAdd={handleAdd}
+				separators={[
+					{ code: 'Enter', ctrlKey: false },
+					{ code: 'NumpadEnter', ctrlKey: false }
+				]}
+				onInputType={handleInputType}
+				hasError={hasError || hasDuplicateValidChips}
+				description={chipInputDescription}
+			/>
 			<EditorAvailabilityWarningRow
 				label={warningLabel}
 				list={attendeesAvailabilityList}
 				items={resourceAvailability}
 				editorId={editorId}
 			/>
-		</>
+		</Container>
 	);
 };
