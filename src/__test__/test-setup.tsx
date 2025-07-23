@@ -21,6 +21,7 @@ import {
 	renderHook,
 	RenderHookOptions
 } from '@testing-library/react';
+import { matchers } from '@emotion/jest';
 import userEvent, { UserEvent as RTLUserEvent } from '@testing-library/user-event';
 import { ModalManager, SnackbarManager, ThemeProvider } from '@zextras/carbonio-design-system';
 import { I18nextProvider } from 'react-i18next';
@@ -77,6 +78,7 @@ const customQueries = {
 	findByRoleWithIcon
 };
 
+expect.extend(matchers);
 
 const queriesExtended = { ...queries, ...customQueries };
 
