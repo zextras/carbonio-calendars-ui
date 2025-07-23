@@ -31,6 +31,7 @@ import { Store } from 'redux';
 
 import { getAppI18n } from './i18n/i18n-test-factory';
 import { previewContextMock, PreviewsManagerContext } from '@test-utils/carbonio-ui-preview';
+import { themeMuiExtension } from '@zextras/carbonio-ui-commons';
 
 type ByRoleWithIconOptions = ByRoleOptions & {
 	icon: string | RegExp;
@@ -113,7 +114,7 @@ export const ProvidersWrapper = ({
 	const i18n = useMemo(() => getAppI18n(), []);
 
 	return (
-		<ThemeProvider>
+		<ThemeProvider extension={themeMuiExtension}>
 			<MemoryRouter
 				future={{ v7_startTransition: false, v7_relativeSplatPath: false }}
 				initialEntries={initialEntries}
