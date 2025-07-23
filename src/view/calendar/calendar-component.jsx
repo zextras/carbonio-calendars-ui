@@ -3,16 +3,15 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
-import { Popover } from '@zextras/carbonio-design-system';
+import { Popover, useTheme } from '@zextras/carbonio-design-system';
 import { usePrefs, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
 import { filter, find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import { useParams } from 'react-router-dom';
-import { ThemeContext } from 'styled-components';
 
 import { CalendarResourceHeader } from './calendar-resource-header';
 import CalendarStyle from './calendar-style';
@@ -69,7 +68,7 @@ const customComponents = {
 export default function CalendarComponent() {
 	const appointments = useAppSelector(selectAppointmentsArray);
 	const calendars = useCheckedFolders();
-	const theme = useContext(ThemeContext);
+	const theme = useTheme();
 	const prefs = usePrefs();
 	const calendarView = useCalendarView();
 	const summaryViewOpen = useIsSummaryViewOpen();
