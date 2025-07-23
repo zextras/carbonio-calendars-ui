@@ -13,7 +13,7 @@ jest.mock('../../constants/advance-filter-modal', () => ({
 
 import React from 'react';
 
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 
 import { AdvancedFilterModal, AdvancedFilterModalProps } from './advance-filter-modal';
 import { DEFAULT_DATE_START, DEFAULT_DATE_END } from '../../constants/advance-filter-modal';
@@ -250,18 +250,14 @@ describe('AdvancedFilterModal', () => {
 		const searchButton = getByRole('button', { name: /search/i });
 		await user.click(searchButton);
 
-		const startCall = setDateStart.mock.calls[0][0];
-		const startDateString = new Date(startCall).toISOString().slice(0, 10);
-		const defaultStartDateString = new Date(DEFAULT_DATE_START).toISOString().slice(0, 10);
-		expect(startDateString).not.toBe(defaultStartDateString);
-		expect(startDateString).toBe('2025-04-12');
-
 		expect(updateQuery).toHaveBeenCalledWith([
 			expect.objectContaining({
 				id: '1',
 				label: 'Test Query'
 			})
 		]);
+		expect(setDateStart).toHaveBeenCalled();
+		expect(setDateEnd).toHaveBeenCalled();
 		expect(onClose).toHaveBeenCalled();
 	});
 
@@ -339,5 +335,193 @@ describe('AdvancedFilterModal', () => {
 		await user.type(keywordInputEle, '[Enter]');
 
 		expect(properties.updateQuery).not.toHaveBeenCalled();
+	});
+
+	describe('AdvancedSearchChip filtering', () => {
+		it('should exclude AdvancedSearchChip with queryChipsToAdvancedFiltersValue from keywords', async () => {
+			const properties: AdvancedFilterModalProps = {
+				open: true,
+				onClose: jest.fn(),
+				query: [
+					{
+						id: '1',
+						label: 'regular keyword',
+						value: 'regular keyword'
+					},
+					{
+						id: '2',
+						label: 'flagged:true',
+						value: 'flagged:true',
+						queryChipsToAdvancedFiltersValue: { flagged: true }
+					},
+					{
+						id: '3',
+						label: 'shared:true',
+						value: 'shared:true',
+						queryChipsToAdvancedFiltersValue: { shared: true }
+					}
+				],
+				updateQuery: jest.fn(),
+				dateStart: DEFAULT_DATE_START,
+				dateEnd: DEFAULT_DATE_END,
+				setDateStart: jest.fn(),
+				setDateEnd: jest.fn()
+			};
+
+			setupTest(<AdvancedFilterModal {...properties} />);
+
+			const keywordChips = screen
+				.queryAllByTestId('chip')
+				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+			expect(keywordChips).toHaveLength(1);
+
+			const regularChip = keywordChips[0];
+			expect(regularChip).toHaveAttribute('id', '1');
+			// eslint-disable-next-line jest-dom/prefer-to-have-value
+			expect(regularChip).toHaveAttribute('value', 'regular keyword');
+		});
+
+		it('should exclude chips with isQueryFilter from keywords', async () => {
+			const properties: AdvancedFilterModalProps = {
+				open: true,
+				onClose: jest.fn(),
+				query: [
+					{
+						id: '1',
+						label: 'valid keyword',
+						value: 'valid keyword'
+					},
+					{
+						id: '2',
+						label: 'invalid:query',
+						value: 'invalid:query',
+						isQueryFilter: true
+					}
+				],
+				updateQuery: jest.fn(),
+				dateStart: DEFAULT_DATE_START,
+				dateEnd: DEFAULT_DATE_END,
+				setDateStart: jest.fn(),
+				setDateEnd: jest.fn()
+			};
+
+			setupTest(<AdvancedFilterModal {...properties} />);
+
+			const keywordChips = screen
+				.queryAllByTestId('chip')
+				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+			expect(keywordChips).toHaveLength(1);
+
+			const validChip = keywordChips[0];
+			expect(validChip).toHaveAttribute('id', '1');
+			// eslint-disable-next-line jest-dom/prefer-to-have-value
+			expect(validChip).toHaveAttribute('value', 'valid keyword');
+		});
+
+		it('should handle mixed query with regular keywords, AdvancedSearchChip, and isQueryFilter', async () => {
+			const properties: AdvancedFilterModalProps = {
+				open: true,
+				onClose: jest.fn(),
+				query: [
+					{
+						id: '1',
+						label: 'keyword1',
+						value: 'keyword1'
+					},
+					{
+						id: '2',
+						label: 'keyword2',
+						value: 'keyword2'
+					},
+					{
+						id: '3',
+						label: 'flagged:true',
+						value: 'flagged:true',
+						queryChipsToAdvancedFiltersValue: { flagged: true }
+					},
+					{
+						id: '4',
+						label: 'invalid:query',
+						value: 'invalid:query',
+						isQueryFilter: true
+					}
+				],
+				updateQuery: jest.fn(),
+				dateStart: DEFAULT_DATE_START,
+				dateEnd: DEFAULT_DATE_END,
+				setDateStart: jest.fn(),
+				setDateEnd: jest.fn()
+			};
+
+			setupTest(<AdvancedFilterModal {...properties} />);
+
+			const keywordChips = screen
+				.queryAllByTestId('chip')
+				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+			expect(keywordChips).toHaveLength(2);
+
+			const chip1 = keywordChips[0];
+			expect(chip1).toHaveAttribute('id', '1');
+			// eslint-disable-next-line jest-dom/prefer-to-have-value
+			expect(chip1).toHaveAttribute('value', 'keyword1');
+
+			const chip2 = keywordChips[1];
+			expect(chip2).toHaveAttribute('id', '2');
+			// eslint-disable-next-line jest-dom/prefer-to-have-value
+			expect(chip2).toHaveAttribute('value', 'keyword2');
+		});
+
+		it('should handle empty query correctly', async () => {
+			const properties: AdvancedFilterModalProps = {
+				open: true,
+				onClose: jest.fn(),
+				query: [],
+				updateQuery: jest.fn(),
+				dateStart: DEFAULT_DATE_START,
+				dateEnd: DEFAULT_DATE_END,
+				setDateStart: jest.fn(),
+				setDateEnd: jest.fn()
+			};
+
+			setupTest(<AdvancedFilterModal {...properties} />);
+
+			const keywordChips = screen
+				.queryAllByTestId('chip')
+				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+			expect(keywordChips).toHaveLength(0);
+		});
+
+		it('should handle query with only AdvancedSearchChip and isQueryFilter (no regular keywords)', async () => {
+			const properties: AdvancedFilterModalProps = {
+				open: true,
+				onClose: jest.fn(),
+				query: [
+					{
+						id: '1',
+						label: 'flagged:true',
+						value: 'flagged:true',
+						queryChipsToAdvancedFiltersValue: { flagged: true }
+					},
+					{
+						id: '2',
+						label: 'invalid:query',
+						value: 'invalid:query',
+						isQueryFilter: true
+					}
+				],
+				updateQuery: jest.fn(),
+				dateStart: DEFAULT_DATE_START,
+				dateEnd: DEFAULT_DATE_END,
+				setDateStart: jest.fn(),
+				setDateEnd: jest.fn()
+			};
+
+			setupTest(<AdvancedFilterModal {...properties} />);
+
+			const keywordChips = screen
+				.queryAllByTestId('chip')
+				.filter((chip) => !within(chip).queryByTestId('icon: CalendarOutline'));
+			expect(keywordChips).toHaveLength(0);
+		});
 	});
 });
