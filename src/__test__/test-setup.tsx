@@ -77,6 +77,7 @@ const customQueries = {
 	findByRoleWithIcon
 };
 
+
 const queriesExtended = { ...queries, ...customQueries };
 
 export function within(

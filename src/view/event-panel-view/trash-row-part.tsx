@@ -8,7 +8,7 @@ import React, { ReactElement, useMemo } from 'react';
 import { Container, Text, Icon, Divider, Row, Padding } from '@zextras/carbonio-design-system';
 import { reduce } from 'lodash';
 import moment from 'moment';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { useAppSelector } from '../../store/redux/hooks';

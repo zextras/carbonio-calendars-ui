@@ -18,7 +18,7 @@ import { PreviewsManagerContext } from '@zextras/carbonio-ui-preview';
 import { TFunction } from 'i18next';
 import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { getAttachmentsDownloadLink, getAttachmentsPreviewLink } from './attachment-utils';
 import { humanFileSize, previewType } from '../../commons/file-preview';

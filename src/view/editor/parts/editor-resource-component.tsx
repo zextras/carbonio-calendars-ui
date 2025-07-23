@@ -15,7 +15,7 @@ import {
 	KeyboardPresetObj,
 	useKeyboard
 } from '@zextras/carbonio-design-system';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { find, map, reduce, uniqWith } from 'lodash';
 
 import {

@@ -14,18 +14,18 @@ import {
 	FormSubSection
 } from '@zextras/carbonio-design-system';
 import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { permissionsSubSection } from './sub-sections';
 
 const AttendeesContainer = styled.div`
-	width: calc(100% - ${({ $hasTooltip }) => ($hasTooltip ? `3rem` : '0rem')});
+	width: calc(100% - ${(props) => (props.$hasTooltip ? `3rem` : '0rem')});
 	height: fit-content;
-	background: ${({ theme }) => theme.palette.gray5.regular};
-	border-bottom: 0.0625rem solid ${({ theme }) => theme.palette.gray2.regular};
+	background: ${(props) => props.theme.palette.gray5.regular};
+	border-bottom: 0.0625rem solid ${(props) => props.theme.palette.gray2.regular};
 	[class^='Chip__ChipComp'] {
 		[class^='Text__Comp'] {
-			color: ${({ theme }) => theme.palette.text.regular};
+			color: ${(props) => props.theme.palette.text.regular};
 		}
 	}
 `;

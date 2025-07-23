@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { screen } from '@testing-library/react';
-import { useTheme } from 'styled-components';
+import { useTheme } from '@zextras/carbonio-design-system';
 
 import * as shell from '../../../../__mocks__/@zextras/carbonio-shell-ui';
 import mockedData from '../../../test/generators';
