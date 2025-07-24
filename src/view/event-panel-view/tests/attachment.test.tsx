@@ -72,9 +72,7 @@ describe('Attachment', () => {
 		};
 
 		const { user } = renderAttachment(props);
-		const attachment = screen.getByText('test-file.pdf');
-		await user.hover(attachment);
-		const downloadButton = screen.getByRole('button');
+		const downloadButton = screen.getByTestId('action-button');
 		await act(async () => {
 			await user.click(downloadButton);
 		});
@@ -137,9 +135,7 @@ describe('Attachment', () => {
 		};
 
 		const { user } = renderAttachment(props);
-		const attachment = screen.getByText('test-file.pdf');
-		await user.hover(attachment);
-		const deleteButton = screen.getByRole('button');
+		const deleteButton = screen.getByTestId('action-button');
 		await user.click(deleteButton);
 		await waitFor(() => {
 			expect(props.removeAttachment).toHaveBeenCalledWith('part1');
