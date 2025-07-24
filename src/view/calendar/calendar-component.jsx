@@ -17,6 +17,8 @@ import { ThemeContext } from 'styled-components';
 import { CalendarResourceHeader } from './calendar-resource-header';
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
+import { CustomMonthEvent } from './custom-month-event';
+import { CustomShowMoreButton } from './custom-show-more-button';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { PARTICIPATION_STATUS } from '../../constants/api';
@@ -63,7 +65,11 @@ const CalendarSyncWithRange = () => {
 const customComponents = {
 	toolbar: CustomToolbar,
 	event: MemoCustomEvent,
-	resourceHeader: CalendarResourceHeader
+	resourceHeader: CalendarResourceHeader,
+	showMore: CustomShowMoreButton,
+	month: {
+		event: CustomMonthEvent
+	}
 };
 
 export default function CalendarComponent() {
@@ -324,6 +330,7 @@ export default function CalendarComponent() {
 				</Popover>
 			)}
 			<BigCalendar
+				popup
 				dayLayoutAlgorithm="no-overlap"
 				selectable
 				localizer={localizer}
