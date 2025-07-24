@@ -25,9 +25,8 @@ const CustomContainer = styled(Container)<{ $color?: AnyColor }>`
 	border: 0.0625rem solid;
 	border-radius: 0.25rem;
 	height: fit-content;
-	${({ $color = 'primary', theme }): ReturnType<typeof css> => css`
-		${pseudoClasses(theme, $color, 'border-color')};
-	`};
+	${({ $color = 'primary', theme }): ReturnType<typeof css> =>
+		pseudoClasses(theme, $color, 'border-color')};
 `;
 
 const CustomButton = styled(Button)`
