@@ -82,6 +82,9 @@ export default createGlobalStyle<{
         white-space: nowrap;
     }
 
+		.rbc-allday-cell .rbc-row-segment {
+			padding-bottom: 0.0625rem;
+		}
     .rbc-rtl {
         direction: rtl;
     }
@@ -252,7 +255,7 @@ export default createGlobalStyle<{
     }
 
     .rbc-row-segment {
-        padding: 0 0.0625rem 0.0625rem 0.0625rem;
+        padding: 0 0.25rem 0.5rem 0.0625rem;
     }
 
     .rbc-day-bg.rbc-selected-cell {
@@ -267,12 +270,7 @@ export default createGlobalStyle<{
     }
 
     .rbc-show-more {
-        background-color: ${({ theme }): string => theme.palette.transparent.active};
-        z-index: 4;
-        font-weight: bold;
-        font-size: 85%;
-        height: auto;
-        line-height: normal;
+        text-transform: lowercase;
     }
 
     .rbc-month-view {
