@@ -73,11 +73,9 @@ describe('Attachment', () => {
 
 		const { user } = renderAttachment(props);
 		const downloadButton = screen.getByTestId('action-button');
-		await act(async () => {
-			await user.click(downloadButton);
-		});
+		await user.click(downloadButton);
 
-		await waitFor(() => expect(windowOpenSpy).toHaveBeenCalledTimes(1));
+		expect(windowOpenSpy).toHaveBeenCalledTimes(1);
 	});
 
 	test('calls createPreview when a file is set to be viewed with the previer', async () => {
@@ -97,9 +95,7 @@ describe('Attachment', () => {
 
 		const { user } = renderAttachment(props);
 		const previewButton = screen.getByText('test-file.ts');
-		await act(async () => {
-			await user.click(previewButton);
-		});
+		await user.click(previewButton);
 
 		expect(previewContextMock.createPreview).toHaveBeenCalledTimes(0);
 		expect(spyOpen).toHaveBeenCalledWith(
@@ -111,9 +107,7 @@ describe('Attachment', () => {
 	test('calls download service when a file is not set to be viewed with the previer', async () => {
 		const { user } = renderAttachment(baseProps);
 		const previewButton = screen.getByText('test-file.pdf');
-		await act(async () => {
-			await user.click(previewButton);
-		});
+		await user.click(previewButton);
 
 		expect(previewContextMock.createPreview).toHaveBeenCalledTimes(1);
 		expect(previewContextMock.createPreview).toHaveBeenCalledWith(
@@ -137,8 +131,7 @@ describe('Attachment', () => {
 		const { user } = renderAttachment(props);
 		const deleteButton = screen.getByTestId('action-button');
 		await user.click(deleteButton);
-		await waitFor(() => {
-			expect(props.removeAttachment).toHaveBeenCalledWith('part1');
-		});
+
+		expect(props.removeAttachment).toHaveBeenCalledWith('part1');
 	});
 });
