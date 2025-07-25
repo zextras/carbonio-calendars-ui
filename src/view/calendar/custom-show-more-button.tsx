@@ -56,15 +56,18 @@ export const ShowMorePopover = ({
 					</Tooltip>
 				</Row>
 				<Divider />
-				<Container
-					style={{ maxHeight: '100%', overflowY: 'auto', padding: '0.5rem 1rem 1rem 0' }}
-					mainAlignment={'flex-start'}
-				>
-					{events.map((event) => (
-						<Padding key={event.id} top={'0.5rem'} width={'100%'}>
-							<MemoCustomEvent event={event} title={event.title} />
-						</Padding>
-					))}
+				<Container style={{ padding: '1rem 0' }}>
+					<Container
+						style={{ maxHeight: '100%', overflowY: 'auto', paddingRight: '1rem' }}
+						mainAlignment={'flex-start'}
+					>
+						{events.map((event, index) => (
+							<>
+								<MemoCustomEvent event={event} title={event.title} />
+								{index !== events.length - 1 && <Padding top={'0.5rem'} />}
+							</>
+						))}
+					</Container>
 				</Container>
 			</Container>
 		</Popover>
