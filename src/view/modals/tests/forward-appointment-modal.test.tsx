@@ -84,7 +84,7 @@ describe('ForwardAppointmentModal', () => {
 			const input = await screen.findByTestId('forward-appointment-input');
 			await inputAttendee(user, input, faker.internet.email());
 
-			const confirmButton = await screen.findByRole('button', {
+			const confirmButton = screen.getByRole('button', {
 				name: 'modal.buttonLabel.forward'
 			});
 			await act(async () => {
@@ -103,7 +103,7 @@ describe('ForwardAppointmentModal', () => {
 			const input = await screen.findByTestId('forward-appointment-input');
 			await inputAttendee(user, input, faker.internet.email());
 
-			const confirmButton = await screen.findByRole('button', {
+			const confirmButton = screen.getByRole('button', {
 				name: 'modal.buttonLabel.forward'
 			});
 			await user.click(confirmButton);
