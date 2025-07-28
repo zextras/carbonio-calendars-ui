@@ -21,7 +21,7 @@ const response = {
 };
 
 describe('deleteCalendarRequest', () => {
-	it('should call the create folder API with the correct parameters', async () => {
+	it('should call the delete calendar API with the correct parameters', async () => {
 		const apiCallInterceptor = createSoapAPIInterceptor('DeleteCalendar', response);
 
 		await deleteCalendarRequest(reqActionParams);

@@ -6,6 +6,15 @@
 import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 export const emptyCalendarTrashRequest = async (): Promise<any> =>
-	legacySoapFetch('EmptyCalendarTrash', {
+	legacySoapFetch<any, any>('EmptyCalendarTrash', {
 		_jsns: 'urn:zimbraMail'
-	});
+	})
+		.then((response) => {
+			if ('Fault' in response) {
+				throw new Error(response.Fault.Reason.Text, { cause: response.Fault });
+			}
+			return response;
+		})
+		.catch((error) => {
+			throw new Error(error);
+		});

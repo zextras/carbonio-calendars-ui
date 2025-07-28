@@ -21,8 +21,8 @@ const reqActionParams = {
 	items: [{ id: 'item1', dismissedAt: 1700000000 }]
 };
 
-describe('createFolderRequest', () => {
-	it('should call the create folder API with the correct parameters', async () => {
+describe('dismissCalendarItemAlarmRequest', () => {
+	it('should call dismiss calendar item API with the correct parameters', async () => {
 		const apiCallInterceptor = createSoapAPIInterceptor<
 			DismissCalendarItemAlarmRequest,
 			DismissCalendarItemAlarmReturnType
