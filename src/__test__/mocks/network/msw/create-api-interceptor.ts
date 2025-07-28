@@ -32,10 +32,7 @@ export const createSoapAPIInterceptor = <RequestParamsType, ResponseType = never
 						);
 					}
 
-					if (
-						apiAction === 'Batch' &&
-						request.headers.get('content-type') === 'application/soap+xml'
-					) {
+					if (request.headers.get('content-type') === 'application/soap+xml') {
 						const requestContent = await request.text();
 						resolve(requestContent as RequestParamsType);
 					} else {
