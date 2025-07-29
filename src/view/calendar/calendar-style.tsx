@@ -130,6 +130,7 @@ export default createGlobalStyle<{
         position: relative;
         user-select: none;
         -webkit-user-select: none;
+				overflow: hidden;
         z-index: 4;
     }
 
@@ -254,8 +255,13 @@ export default createGlobalStyle<{
         flex-direction: row;
     }
 
+		/* This min-height is used by the showMore button to calculate the number of visible events */
+		.rbc-month-view .rbc-event {
+			min-height: 2.5rem;	
+		}
+		
     .rbc-row-segment {
-        padding: 0 0.25rem 0.5rem 0.0625rem;
+        padding: 0 0 0.25rem;
     }
 
     .rbc-day-bg.rbc-selected-cell {
@@ -295,9 +301,7 @@ export default createGlobalStyle<{
         position: relative;
         flex-direction: column;
         flex: 1 0 0;
-        flex-basis: 0;
         overflow: hidden;
-        height: 100%;
     }
 
     .rbc-month-row + .rbc-month-row {
