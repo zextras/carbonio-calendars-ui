@@ -4,15 +4,18 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { JSNS } from '@zextras/carbonio-shell-ui';
-import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
+import { ErrorSoapBodyResponse, legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
-import { CreateFolderRequest, RequestFolder } from 'types/soap/createFolder';
+import { CreateFolderRequest, CreateFolderResponse, RequestFolder } from 'types/soap/createFolder';
 
-export const createFolderRequest = async (params: RequestFolder): Promise<any> =>
-	legacySoapFetch<CreateFolderRequest, any>('CreateFolder', {
-		_jsns: JSNS.mail,
-		folder: { ...params }
-	})
+export const createFolderRequest = async (params: RequestFolder): Promise<CreateFolderResponse> =>
+	legacySoapFetch<CreateFolderRequest, CreateFolderResponse | ErrorSoapBodyResponse>(
+		'CreateFolder',
+		{
+			_jsns: JSNS.mail,
+			folder: { ...params }
+		}
+	)
 		.then((response) => {
 			if ('Fault' in response) {
 				throw new Error(response.Fault.Reason.Text, { cause: response.Fault });

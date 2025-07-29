@@ -15,19 +15,17 @@ const reqActionParams = {
 	op: 'delete'
 };
 
-const response = {
-	action: reqActionParams,
-	_jsns: JSNS.mail
-};
-
 describe('deleteCalendarRequest', () => {
 	it('should call the delete calendar API with the correct parameters', async () => {
-		const apiCallInterceptor = createSoapAPIInterceptor('DeleteCalendar', response);
+		const apiCallInterceptor = createSoapAPIInterceptor('DeleteCalendar');
 
 		await deleteCalendarRequest(reqActionParams);
 		const apiParams = await apiCallInterceptor;
 
-		expect(apiParams).toEqual(response);
+		expect(apiParams).toEqual({
+			action: reqActionParams,
+			_jsns: JSNS.mail
+		});
 	});
 
 	it('should raise an error if the API call fails', async () => {
