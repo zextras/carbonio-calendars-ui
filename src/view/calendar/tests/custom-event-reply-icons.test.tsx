@@ -7,8 +7,8 @@ import React from 'react';
 
 import { screen } from '@testing-library/react';
 
-import { CustomEventReplyIcons } from './custom-event-reply-icons';
-import { PARTICIPATION_STATUS } from '../../constants/api';
+import { PARTICIPATION_STATUS } from '../../../constants/api';
+import { CustomEventReplyIcons } from '../custom-event-reply-icons';
 import { setupTest } from '@test-setup';
 
 describe('CustomEventReplyIcons', () => {
