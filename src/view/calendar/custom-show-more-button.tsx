@@ -56,7 +56,7 @@ export const ShowMorePopover = ({
 					</Tooltip>
 				</Row>
 				<Divider />
-				<Container style={{ padding: '1rem 0' }}>
+				<Container style={{ padding: '1rem 0', overflowY: 'hidden' }}>
 					<Container
 						style={{ maxHeight: '100%', overflowY: 'auto', paddingRight: '1rem' }}
 						mainAlignment={'flex-start'}
