@@ -313,6 +313,9 @@ export default function CalendarComponent() {
 			/>
 			{anchorElement && (
 				<Popover
+					onClick={(e) => {
+						e.stopPropagation();
+					}}
 					anchorEl={anchorElement}
 					open={summaryViewOpen}
 					styleAsModal
