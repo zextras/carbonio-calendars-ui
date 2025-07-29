@@ -98,7 +98,7 @@ export const CustomShowMoreButton = ({
 	return (
 		<>
 			<Tooltip label={'Show all events for this day'} placement="top">
-				<Padding all={'0 .5rem .5rem .5rem'}>
+				<Padding all={'.0625rem'}>
 					<Button
 						className={'rbc-show-more'}
 						type="ghost"
