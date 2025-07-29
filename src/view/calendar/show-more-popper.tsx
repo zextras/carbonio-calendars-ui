@@ -10,7 +10,6 @@ import {
 	Button,
 	Container,
 	Divider,
-	Padding,
 	Popover,
 	Row,
 	Text,
@@ -60,12 +59,10 @@ export const ShowMorePopover = ({
 					<Container
 						style={{ maxHeight: '100%', overflowY: 'auto', paddingRight: '1rem' }}
 						mainAlignment={'flex-start'}
+						gap={'0.5rem'}
 					>
 						{events.map((event, index) => (
-							<>
-								<MemoCustomEvent event={event} title={event.title} />
-								{index !== events.length - 1 && <Padding top={'0.5rem'} />}
-							</>
+							<MemoCustomEvent key={event.id} event={event} title={event.title} />
 						))}
 					</Container>
 				</Container>

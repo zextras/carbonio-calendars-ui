@@ -5,7 +5,7 @@
  */
 import React, { useCallback, useRef, useState } from 'react';
 
-import { Button, Padding, Tooltip } from '@zextras/carbonio-design-system';
+import { Button, Tooltip } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
 import { ShowMorePopover } from './show-more-popper';
@@ -21,7 +21,7 @@ export const CustomShowMoreButton = ({
 	events: Array<EventType>;
 }): React.JSX.Element => {
 	const [t] = useTranslation();
-	const anchorRef = useRef<HTMLDivElement | null>(null);
+	const anchorRef = useRef<HTMLButtonElement | null>(null);
 	const [open, setOpen] = useState(false);
 
 	const onClick = useCallback(() => {
@@ -32,24 +32,23 @@ export const CustomShowMoreButton = ({
 		setOpen(false);
 	}, []);
 
+	const tooltipLabel = t('label.show_all_events', 'Show all events for this day');
+	const buttonLabel = t('label.show_more', '+ {{count}} more', {
+		count: remainingEvents.length
+	});
+
 	return (
 		<>
-			<Tooltip label={'Show all events for this day'} placement="top">
-				<Padding all={'.0625rem'}>
-					<Button
-						className={'rbc-show-more'}
-						type="ghost"
-						label={t('label.show_more', {
-							count: remainingEvents.length,
-							defaultValue_one: '+ {{count}} more',
-							defaultValue: '+ {{count}} more'
-						})}
-						color="primary"
-						size={'small'}
-						onClick={onClick}
-						ref={anchorRef}
-					/>
-				</Padding>
+			<Tooltip label={tooltipLabel} placement="top">
+				<Button
+					className={'rbc-show-more'}
+					type="ghost"
+					label={buttonLabel}
+					color="primary"
+					size={'small'}
+					onClick={onClick}
+					buttonRef={anchorRef}
+				/>
 			</Tooltip>
 			{open && (
 				<ShowMorePopover
