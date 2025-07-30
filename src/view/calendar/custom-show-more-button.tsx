@@ -8,7 +8,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Button, Tooltip } from '@zextras/carbonio-design-system';
 import { useTranslation } from 'react-i18next';
 
-import { ShowMorePopover } from './show-more-popper';
+import { ShowMorePopover } from './show-more-popover';
 import { EventType } from '../../types/event';
 
 export const CustomShowMoreButton = ({

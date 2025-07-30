@@ -16,6 +16,7 @@ import {
 	Tooltip
 } from '@zextras/carbonio-design-system';
 import { useUserSettings } from '@zextras/carbonio-shell-ui';
+import { useTranslation } from 'react-i18next';
 
 import { MemoCustomEvent } from './custom-event';
 import { EventType } from '../../types/event';
@@ -35,33 +36,46 @@ export const ShowMorePopover = ({
 }): React.JSX.Element => {
 	const userSetting = useUserSettings().prefs.zimbraPrefLocale;
 	const locale = useMemo(() => userSetting ?? navigator.language, [userSetting]);
+	const [t] = useTranslation();
+
+	const title = useMemo(
+		() =>
+			new Intl.DateTimeFormat(locale, {
+				weekday: 'short',
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric'
+			}).format(date),
+		[date, locale]
+	);
+
 	return (
 		<Popover anchorEl={anchorRef} open={open} styleAsModal placement="left" onClose={onClose}>
 			<Container
 				width="25rem"
-				style={{ zIndex: 3, maxHeight: '35vh', height: '35vh', padding: '0.5rem' }}
+				maxHeight="35vh"
+				height="35vh"
+				padding="0.5rem"
+				style={{ zIndex: 3 }}
 			>
 				<Row width={'fill'} mainAlignment={'space-between'}>
 					<Text weight={'bold'} size={'medium'}>
-						{new Intl.DateTimeFormat(locale, {
-							weekday: 'short',
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric'
-						}).format(date)}
+						{title}
 					</Text>
-					<Tooltip label={'Close'}>
+					<Tooltip label={t('label.close', 'Close')}>
 						<Button icon="Close" size="large" type={'ghost'} color={'text'} onClick={onClose} />
 					</Tooltip>
 				</Row>
 				<Divider />
-				<Container style={{ padding: '1rem 0', overflowY: 'hidden' }}>
+				<Container padding="1rem 0" style={{ overflowY: 'hidden' }}>
 					<Container
-						style={{ maxHeight: '100%', overflowY: 'auto', paddingRight: '1rem' }}
+						maxHeight="100%"
+						padding={{ right: '1rem' }}
+						style={{ overflowY: 'auto' }}
 						mainAlignment={'flex-start'}
 						gap={'0.5rem'}
 					>
-						{events.map((event, index) => (
+						{events.map((event) => (
 							<MemoCustomEvent key={event.id} event={event} title={event.title} />
 						))}
 					</Container>
