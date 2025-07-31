@@ -14,7 +14,8 @@ import {
 	FormSection,
 	Container
 } from '@zextras/carbonio-design-system';
-import { AccountSettingsPrefs, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
+import { AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
 import { find } from 'lodash';
 
 import {
@@ -30,7 +31,7 @@ export default function GeneralSettings({
 	settingsObj,
 	updateSettings,
 	isEmailNotValid,
-	setisEmailNotValid
+	setIsEmailNotValid
 }: {
 	settingsObj: AccountSettingsPrefs;
 	updateSettings: (e: {
@@ -40,7 +41,7 @@ export default function GeneralSettings({
 		};
 	}) => void;
 	isEmailNotValid: boolean;
-	setisEmailNotValid: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsEmailNotValid: React.Dispatch<React.SetStateAction<boolean>>;
 }): React.JSX.Element {
 	const sectionTitleGeneral = useMemo(() => generalSubSection(), []);
 	const showReminderOptions = useMemo(() => ShowReminderOptions(), []);
@@ -181,7 +182,7 @@ export default function GeneralSettings({
 					hasError={isEmailNotValid}
 					label={t('settings.label.enter_email', 'Enter e-mail address')}
 					onChange={(e): void => {
-						if (isEmailNotValid) setisEmailNotValid(false);
+						if (isEmailNotValid) setIsEmailNotValid(false);
 						updateSettings({
 							target: {
 								name: 'zimbraPrefCalendarForwardInvitesTo',

@@ -654,9 +654,7 @@ describe('Shared Calendar modal', () => {
 				/share\.options\.share_calendar_with\.public/i
 			);
 
-			await waitFor(() => {
-				user.click(dropdownPublicOption);
-			});
+			await user.click(dropdownPublicOption);
 
 			const confirmButton = screen.getByText(/Share Calendar/i);
 

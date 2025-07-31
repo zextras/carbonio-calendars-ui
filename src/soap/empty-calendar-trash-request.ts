@@ -3,9 +3,18 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 export const emptyCalendarTrashRequest = async (): Promise<any> =>
-	soapFetch('EmptyCalendarTrash', {
+	legacySoapFetch<any, any>('EmptyCalendarTrash', {
 		_jsns: 'urn:zimbraMail'
-	});
+	})
+		.then((response) => {
+			if ('Fault' in response) {
+				throw new Error(response.Fault.Reason.Text, { cause: response.Fault });
+			}
+			return response;
+		})
+		.catch((error) => {
+			throw new Error(error);
+		});

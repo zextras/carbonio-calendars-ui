@@ -13,12 +13,13 @@ import {
 	FormSection,
 	FormSubSection
 } from '@zextras/carbonio-design-system';
-import { AccountSettingsPrefs, t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
+import { t, useIntegratedComponent } from '@zextras/carbonio-shell-ui';
+import { ContactInputProps } from '@zextras/carbonio-ui-commons';
+import { AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
 import styled from 'styled-components';
 
 import { permissionsSubSection } from './sub-sections';
 import { PermissionsRightsOptions } from '../constants/api';
-import { ContactInputProps } from '@zextras/carbonio-ui-commons';
 
 const AttendeesContainer = styled.div`
 	width: 100%;
@@ -32,24 +33,24 @@ const AttendeesContainer = styled.div`
 	}
 `;
 
-export default function PermisionsSettings({
+export default function PermissionsSettings({
 	activeFreeBusyOptn,
 	activeInviteOptn,
 	setAllowedFBUsers,
 	handlePermissionChange,
 	handleInviteRightChange,
-	setAllowedInivteUsers,
+	setAllowedInviteUsers,
 	settingsObj,
 	updateSettings,
 	allowedFBUsers,
-	allowedInivteUsers
+	allowedInviteUsers
 }: {
 	activeFreeBusyOptn: PermissionsRightsOptions;
 	activeInviteOptn: PermissionsRightsOptions;
 	setAllowedFBUsers: React.Dispatch<React.SetStateAction<ContactInputProps['defaultValue']>>;
 	handlePermissionChange: (permission: PermissionsRightsOptions) => () => void;
 	handleInviteRightChange: (right: PermissionsRightsOptions) => () => void;
-	setAllowedInivteUsers: React.Dispatch<React.SetStateAction<ContactInputProps['defaultValue']>>;
+	setAllowedInviteUsers: React.Dispatch<React.SetStateAction<ContactInputProps['defaultValue']>>;
 	settingsObj: AccountSettingsPrefs;
 	updateSettings: (e: {
 		target: {
@@ -58,7 +59,7 @@ export default function PermisionsSettings({
 		};
 	}) => void;
 	allowedFBUsers: ContactInputProps['defaultValue'];
-	allowedInivteUsers: ContactInputProps['defaultValue'];
+	allowedInviteUsers: ContactInputProps['defaultValue'];
 }): React.JSX.Element {
 	const [ContactInput] = useIntegratedComponent('contact-input');
 	const sectionTitlePermissions = useMemo(() => permissionsSubSection(), []);
@@ -181,8 +182,8 @@ export default function PermisionsSettings({
 						<AttendeesContainer>
 							<ContactInput
 								placeholder={t('label.email_input_message', 'Enter e-mail addresses')}
-								onChange={setAllowedInivteUsers}
-								defaultValue={allowedInivteUsers}
+								onChange={setAllowedInviteUsers}
+								defaultValue={allowedInviteUsers}
 							/>
 						</AttendeesContainer>
 					)}

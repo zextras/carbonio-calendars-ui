@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { xmlSoapFetch, updateSettings, AccountSettingsPrefs } from '@zextras/carbonio-shell-ui';
+import { updateSettings } from '@zextras/carbonio-shell-ui';
+import { AccountSettingsPrefs, legacyXmlSoapFetch } from '@zextras/carbonio-ui-soap-lib';
 import { map } from 'lodash';
 
 import type { AccountACEInfo } from './settings-view';
@@ -118,7 +119,7 @@ function getRequestForMods(mods: Mods): string {
 }
 
 export const saveSettings = (mods: Mods): Promise<SaveSettingsResponse> =>
-	xmlSoapFetch<string, SaveSettingsResponse>(
+	legacyXmlSoapFetch<string, SaveSettingsResponse>(
 		'Batch',
 		`<BatchRequest xmlns="urn:zimbra" onerror="stop">${getRequestForMods(mods)}</BatchRequest>`
 	).then((resp) => {

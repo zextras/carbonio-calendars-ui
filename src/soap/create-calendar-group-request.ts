@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { ErrorSoapBodyResponse, JSNS, soapFetch } from '@zextras/carbonio-shell-ui';
+import { JSNS } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch, ErrorSoapBodyResponse } from '@zextras/carbonio-ui-soap-lib';
 
 import { CreateCalendarGroupError } from './errors/create-calendar-group-error';
 
@@ -29,7 +30,7 @@ export const createCalendarGroupRequest = async ({
 	name: string;
 	calendarIds: Array<string>;
 }): Promise<CreateCalendarGroupResponse> =>
-	soapFetch<CreateCalendarGroupRequest, CreateCalendarGroupResponse | ErrorSoapBodyResponse>(
+	legacySoapFetch<CreateCalendarGroupRequest, CreateCalendarGroupResponse | ErrorSoapBodyResponse>(
 		'CreateCalendarGroup',
 		{
 			_jsns: 'urn:zimbraMail',
