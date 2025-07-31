@@ -351,6 +351,7 @@ export default function CalendarComponent() {
 				onSelectSlot={handleSelect}
 				scrollToTime={scrollToTime}
 				onEventDrop={onEventDropOrResize}
+				allDayMaxRows={3}
 				onEventResize={onEventDropOrResize}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable
