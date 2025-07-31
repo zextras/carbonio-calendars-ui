@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 import { isNil, omitBy } from 'lodash';
 
 import { Appointment } from '../types/store/appointments';
@@ -64,7 +64,7 @@ export const getAppointmentIncludeContentFlag = (include: boolean): '0' | '1' =>
  * @param includeContent `getAppointmentIncludeContentFlag(true|false)`
  */
 export const getAppointment = async (id: string, includeContent: '0' | '1' = '1'): Promise<any> =>
-	soapFetch('GetAppointment', {
+	legacySoapFetch('GetAppointment', {
 		id,
 		includeContent,
 		_jsns: 'urn:zimbraMail'

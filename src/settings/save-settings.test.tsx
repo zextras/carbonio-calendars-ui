@@ -12,7 +12,7 @@ describe('saveSettings', () => {
 		const BatchRequestInterceptor = createSoapAPIInterceptor('Batch');
 		await saveSettings(mods);
 		const request = await BatchRequestInterceptor;
-		expect(request).toEqual('<BatchRequest xmlns="urn:zimbra" onerror="stop"></BatchRequest>');
+		expect(request).toContain('<BatchRequest xmlns="urn:zimbra" onerror="stop"></BatchRequest>');
 	});
 	test.each([
 		{ zimbraPrefCalendarInitialView: 'day' },

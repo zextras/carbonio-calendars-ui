@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { ErrorSoapResponse, soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch, ErrorSoapResponse } from '@zextras/carbonio-ui-soap-lib';
 
 import { ForwardAppointmentRequest, ForwardAppointmentResponse } from '../types/soap/soap-actions';
 
@@ -14,7 +14,7 @@ export const forwardAppointmentRequest = async ({
 	id: string;
 	attendees: Array<string>;
 }): Promise<ForwardAppointmentResponse | ErrorSoapResponse> =>
-	soapFetch<ForwardAppointmentRequest, ForwardAppointmentResponse>('ForwardAppointment', {
+	legacySoapFetch<ForwardAppointmentRequest, ForwardAppointmentResponse>('ForwardAppointment', {
 		_jsns: 'urn:zimbraMail',
 
 		id,

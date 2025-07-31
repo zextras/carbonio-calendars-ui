@@ -6,7 +6,7 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 
 import { EditorAllDayCheckbox } from './editor-allday-checkbox';
 import { generateEditor } from '../../../commons/editor-generator';
@@ -25,11 +25,9 @@ describe('editor all day checkbox', () => {
 		expect(previousEditor.allDay).toEqual(false);
 
 		const allDayCheckbox = screen.getByTestId('icon: Square');
-		await act(async () => {
-			await user.click(allDayCheckbox);
-		});
+		await user.click(allDayCheckbox);
 
 		const updatedEditor = store.getState().editor.editors[editor.id];
 		expect(updatedEditor.allDay).toEqual(true);
-	}, 10000);
+	});
 });

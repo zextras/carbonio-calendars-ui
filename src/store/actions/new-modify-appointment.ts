@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 import {
 	findAttachments,
@@ -34,7 +34,7 @@ export const modifyAppointment = createAsyncThunk<
 						tz: editor.timezone
 					});
 				const body = normalizeSoapMessageFromEditor({ ...editor, draft, exceptId });
-				const res: { calItemId: string; invId: string } = await soapFetch(
+				const res: { calItemId: string; invId: string } = await legacySoapFetch(
 					'CreateAppointmentException',
 					body
 				);
@@ -55,7 +55,10 @@ export const modifyAppointment = createAsyncThunk<
 				return { response, editor: updatedEditor };
 			}
 			const body = normalizeSoapMessageFromEditor({ ...editor, draft });
-			const res: { calItemId: string; echo: any } = await soapFetch('ModifyAppointment', body);
+			const res: { calItemId: string; echo: any } = await legacySoapFetch(
+				'ModifyAppointment',
+				body
+			);
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			const response = res?.Fault ? { ...res.Fault, error: true } : res;

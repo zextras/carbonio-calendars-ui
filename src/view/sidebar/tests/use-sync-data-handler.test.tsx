@@ -13,8 +13,8 @@ import { useCalendarGroupStore } from '../../../store/zustand/calendar-group-sto
 import mockedData from '../../../test/generators';
 import { useSyncDataHandler } from '../use-sync-data-handler';
 import { setupHook } from '@test-setup';
-import { useNotify } from '@test-utils/carbonio-shell-ui/carbonio-shell-ui';
 import { populateFoldersStore } from '@test-utils/store/folders';
+import { mockSoapSync } from '@test-utils/utils/soap';
 
 jest.mock('@zextras/carbonio-ui-commons', () => ({
 	...jest.requireActual('@zextras/carbonio-ui-commons'),
@@ -35,7 +35,7 @@ describe('sync data handler', () => {
 			const notify = { deleted: ['15'], seq: 0 };
 			const workerSpy = jest.spyOn(folderWorker, 'postMessage');
 
-			useNotify.mockReturnValueOnce([notify]);
+			mockSoapSync([notify]);
 
 			setupHook(useSyncDataHandler, { store });
 
@@ -65,7 +65,7 @@ describe('sync data handler', () => {
 					deleted: [],
 					seq: 0
 				} as unknown as SoapNotify;
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 
@@ -101,7 +101,7 @@ describe('sync data handler', () => {
 					deleted: [],
 					seq: 0
 				} as unknown as SoapNotify;
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 
@@ -144,7 +144,7 @@ describe('sync data handler', () => {
 					deleted: [],
 					seq: 0
 				} as unknown as SoapNotify;
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 
@@ -172,7 +172,7 @@ describe('sync data handler', () => {
 					deleted: [],
 					seq: 0
 				} as unknown as SoapNotify;
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 
@@ -196,7 +196,7 @@ describe('sync data handler', () => {
 					deleted: ['134'],
 					seq: 0
 				};
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 
@@ -233,7 +233,7 @@ describe('sync data handler', () => {
 					},
 					seq: 0
 				} as unknown as SoapNotify;
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 
@@ -271,7 +271,7 @@ describe('sync data handler', () => {
 					},
 					seq: 0
 				} as unknown as SoapNotify;
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 
@@ -307,7 +307,7 @@ describe('sync data handler', () => {
 					},
 					seq: 0
 				} as unknown as SoapNotify;
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 
@@ -343,7 +343,7 @@ describe('sync data handler', () => {
 					},
 					seq: 0
 				} as unknown as SoapNotify;
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 
@@ -379,7 +379,7 @@ describe('sync data handler', () => {
 					},
 					seq: 0
 				} as unknown as SoapNotify;
-				useNotify.mockReturnValueOnce([notify]);
+				mockSoapSync([notify]);
 
 				setupHook(useSyncDataHandler, { store });
 

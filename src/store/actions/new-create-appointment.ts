@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 import { normalizeSoapMessageFromEditor } from '../../normalizations/normalize-soap-message-from-editor';
 
@@ -14,7 +14,10 @@ export const createAppointment = createAsyncThunk(
 	async ({ draft, editor }: any, { rejectWithValue }: any): Promise<any> => {
 		if (editor) {
 			const body = normalizeSoapMessageFromEditor({ ...editor, draft });
-			const res: { calItemId: string; invId: string } = await soapFetch('CreateAppointment', body);
+			const res: { calItemId: string; invId: string } = await legacySoapFetch(
+				'CreateAppointment',
+				body
+			);
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			const response = res?.Fault ? { ...res.Fault, error: true } : res;
