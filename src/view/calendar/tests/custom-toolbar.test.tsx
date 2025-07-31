@@ -8,10 +8,10 @@ import React from 'react';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act } from '@testing-library/react';
 
-import { CustomToolbar } from './custom-toolbar';
-import { useLocalStorage } from '../../../__mocks__/@zextras/carbonio-shell-ui';
-import { reducers } from '../../store/redux';
-import { CalendarView, useAppStatusStore } from '../../store/zustand/store';
+import { useLocalStorage } from '../../../../__mocks__/@zextras/carbonio-shell-ui';
+import { reducers } from '../../../store/redux';
+import { CalendarView, useAppStatusStore } from '../../../store/zustand/store';
+import { CustomToolbar } from '../custom-toolbar';
 import { setupTest, screen } from '@test-setup';
 
 describe('calendar toolbar', () => {
