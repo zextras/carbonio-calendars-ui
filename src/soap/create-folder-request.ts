@@ -3,22 +3,25 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { JSNS } from '@zextras/carbonio-shell-ui';
+import { ErrorSoapBodyResponse, legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const createFolderRequest = async ({
-	name,
-	parent,
-	color,
-	excludeFreeBusy
-}: any): Promise<any> =>
-	soapFetch('CreateFolder', {
-		_jsns: 'urn:zimbraMail',
-		folder: {
-			color,
-			f: excludeFreeBusy ? 'b#' : '#',
-			l: parent,
-			name,
-			view: 'appointment'
+import { CreateFolderRequest, CreateFolderResponse, RequestFolder } from 'types/soap/createFolder';
+
+export const createFolderRequest = async (params: RequestFolder): Promise<CreateFolderResponse> =>
+	legacySoapFetch<CreateFolderRequest, CreateFolderResponse | ErrorSoapBodyResponse>(
+		'CreateFolder',
+		{
+			_jsns: JSNS.mail,
+			folder: { ...params }
 		}
-	});
+	)
+		.then((response) => {
+			if ('Fault' in response) {
+				throw new Error(response.Fault.Reason.Text, { cause: response.Fault });
+			}
+			return response;
+		})
+		.catch((error) => {
+			throw new Error(error);
+		});

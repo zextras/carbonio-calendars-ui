@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 import { SearchReturnType } from './search-request';
 
@@ -12,7 +12,7 @@ export const searchResources = async (
 	offset = 0,
 	limit = 20
 ): Promise<SearchReturnType> => {
-	const response: SearchReturnType = await soapFetch('AutoCompleteGal', {
+	const response: SearchReturnType = await legacySoapFetch('AutoCompleteGal', {
 		name,
 		limit,
 		needExp: 1,

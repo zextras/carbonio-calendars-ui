@@ -5,14 +5,13 @@
  */
 
 import { faker } from '@faker-js/faker';
+import { Account, IS_FOCUS_MODE } from '@zextras/carbonio-shell-ui';
 import {
-	Account,
 	ErrorSoapBodyResponse,
 	ErrorSoapResponse,
-	IS_FOCUS_MODE,
 	SoapContext,
 	SoapResponse
-} from '@zextras/carbonio-shell-ui';
+} from '@zextras/carbonio-ui-soap-lib';
 import { find, map, maxBy } from 'lodash';
 
 import { getMocksContext } from '@test-utils/utils/mocks-context';
@@ -59,25 +58,6 @@ const useAccountStore = {
 	}),
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	setState: (state: any): void => {}
-};
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const handleSync = (context: any): void => {};
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const goToLogin = (): void => {};
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/explicit-function-return-type
-const report = (app: any) => (e: any) => {};
-
-export const noOp = (): void => {
-	// // eslint-disable-next-line @typescript-eslint/no-use-before-define
-	// getSoapFetch(SHELL_APP_ID)(
-	// 	'NoOp',
-	// 	useNetworkStore.getState().pollingInterval === 500
-	// 		? { _jsns: 'urn:zimbraMail', limitToOneBlocked: 1, wait: 1 }
-	// 		: { _jsns: 'urn:zimbraMail' }
-	// );
 };
 
 const getAccount = (
@@ -154,8 +134,6 @@ const handleResponse = <R>(api: string, res: SoapResponse<R>): R | ErrorSoapBody
 		) {
 			if (IS_FOCUS_MODE) {
 				useAccountStore.setState({ authenticated: false });
-			} else {
-				goToLogin();
 			}
 		}
 		console.warn(
@@ -172,7 +150,6 @@ const handleResponse = <R>(api: string, res: SoapResponse<R>): R | ErrorSoapBody
 			res.Header.context?.notify?.[0]?.modified?.mbx?.[0]?.s;
 		const _context = normalizeContext(res.Header.context);
 		const seq = maxBy(_context.notify, 'seq')?.seq ?? 0;
-		handleSync(_context);
 		useAccountStore.setState({
 			usedQuota: responseUsedQuota ?? usedQuota
 		});
@@ -180,7 +157,7 @@ const handleResponse = <R>(api: string, res: SoapResponse<R>): R | ErrorSoapBody
 			? 10000
 			: pollingInterval;
 		useNetworkStore.setState({
-			noOpTimeout: setTimeout(() => noOp(), nextPollingInterval),
+			noOpTimeout: setTimeout(() => null, nextPollingInterval),
 			pollingInterval: nextPollingInterval,
 			seq,
 			..._context
@@ -193,8 +170,9 @@ const handleResponse = <R>(api: string, res: SoapResponse<R>): R | ErrorSoapBody
 			// @ts-ignore
 			(res?.Body?.[`${api}Response`] as R);
 };
+
 export const getSoapFetch =
-	(app: string) =>
+	() =>
 	<Request, Response>(api: string, body: Request, otherAccount?: string): Promise<Response> => {
 		const { zimbraVersion, account } = useAccountStore.getState();
 		const { notify, session } = useNetworkStore.getState();
@@ -231,13 +209,12 @@ export const getSoapFetch =
 			.then((res) => res?.json())
 			.then((res: SoapResponse<Response>) => handleResponse(api, res))
 			.catch((e) => {
-				report(app)(e);
 				throw e;
 			}) as Promise<Response>;
 	};
 
 export const getXmlSoapFetch =
-	(app: string) =>
+	() =>
 	<Request, Response>(api: string, body: Request, otherAccount?: string): Promise<Response> => {
 		const { zimbraVersion, account } = useAccountStore.getState();
 		return fetch(`/service/soap/${api}Request`, {
@@ -257,7 +234,6 @@ export const getXmlSoapFetch =
 			.then((res) => res?.json())
 			.then((res: SoapResponse<Response>) => handleResponse(api, res))
 			.catch((e) => {
-				report(app)(e);
 				throw e;
 			}) as Promise<Response>;
 	};

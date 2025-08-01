@@ -155,7 +155,7 @@ export const NewModal = ({
 	const onConfirm = (): void => {
 		if (inputValue) {
 			createCalendar({
-				parent: root?.id ?? '1',
+				parent: (root?.id as '1') ?? '1',
 				name: inputValue,
 				color: selectedColor,
 				excludeFreeBusy: freeBusy

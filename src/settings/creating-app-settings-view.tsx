@@ -6,7 +6,8 @@
 import React, { useMemo } from 'react';
 
 import { Checkbox, FormSection, FormSubSection } from '@zextras/carbonio-design-system';
-import { AccountSettingsPrefs, t } from '@zextras/carbonio-shell-ui';
+import { t } from '@zextras/carbonio-shell-ui';
+import { AccountSettingsPrefs } from '@zextras/carbonio-ui-soap-lib';
 
 import { creatingAppointmentsSubSection } from './sub-sections';
 import { CalendarSelector } from '../view/editor/parts/calendar-selector';

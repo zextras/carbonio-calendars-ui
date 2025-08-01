@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import '@zextras/carbonio-shell-ui';
+import '@zextras/carbonio-ui-soap-lib';
 
-declare module '@zextras/carbonio-shell-ui' {
+declare module '@zextras/carbonio-ui-soap-lib' {
 	interface AccountSettingsPrefs {
 		zimbraPrefDefaultCalendarId: string;
 		zimbraPrefCalendarDefaultApptDuration: string;

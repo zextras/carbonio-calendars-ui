@@ -16,6 +16,7 @@ import { useParams } from 'react-router-dom';
 import { CalendarResourceHeader } from './calendar-resource-header';
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
+import { CustomShowMoreButton } from './custom-show-more-button';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
 import { PARTICIPATION_STATUS } from '../../constants/api';
@@ -62,7 +63,8 @@ const CalendarSyncWithRange = () => {
 const customComponents = {
 	toolbar: CustomToolbar,
 	event: MemoCustomEvent,
-	resourceHeader: CalendarResourceHeader
+	resourceHeader: CalendarResourceHeader,
+	showMore: CustomShowMoreButton
 };
 
 export default function CalendarComponent() {
@@ -306,6 +308,9 @@ export default function CalendarComponent() {
 			/>
 			{anchorElement && (
 				<Popover
+					onClick={(e) => {
+						e.stopPropagation();
+					}}
 					anchorEl={anchorElement}
 					open={summaryViewOpen}
 					styleAsModal
@@ -323,6 +328,7 @@ export default function CalendarComponent() {
 				</Popover>
 			)}
 			<BigCalendar
+				popup
 				dayLayoutAlgorithm="no-overlap"
 				selectable
 				localizer={localizer}
@@ -344,6 +350,7 @@ export default function CalendarComponent() {
 				onSelectSlot={handleSelect}
 				scrollToTime={scrollToTime}
 				onEventDrop={onEventDropOrResize}
+				allDayMaxRows={3}
 				onEventResize={onEventDropOrResize}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable

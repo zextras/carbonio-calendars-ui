@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import React from 'react';
+
 import { Global, css } from '@emotion/react';
 import { useTheme } from '@zextras/carbonio-design-system';
 
@@ -100,6 +101,9 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 					white-space: nowrap;
 				}
 
+				.rbc-allday-cell .rbc-row-segment {
+					padding-bottom: 0.0625rem;
+				}
 				.rbc-rtl {
 					direction: rtl;
 				}
@@ -147,6 +151,7 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 					position: relative;
 					user-select: none;
 					-webkit-user-select: none;
+					overflow: hidden;
 					z-index: 4;
 				}
 
@@ -273,8 +278,13 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 					flex-direction: row;
 				}
 
+				/* This min-height is used by the showMore button to calculate the number of visible events */
+				.rbc-month-view .rbc-event {
+					min-height: 2.5rem;
+				}
+
 				.rbc-row-segment {
-					padding: 0 0.0625rem 0.0625rem 0.0625rem;
+					padding: 0 0 0.25rem;
 				}
 
 				.rbc-day-bg.rbc-selected-cell {
@@ -288,12 +298,7 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 				}
 
 				.rbc-show-more {
-					background-color: ${theme.palette.transparent.active};
-					z-index: 4;
-					font-weight: bold;
-					font-size: 85%;
-					height: auto;
-					line-height: normal;
+					text-transform: lowercase;
 				}
 
 				.rbc-month-view {
@@ -318,9 +323,7 @@ const CalendarStyle: React.FC<CalendarStyleProps> = ({
 					position: relative;
 					flex-direction: column;
 					flex: 1 0 0;
-					flex-basis: 0;
 					overflow: hidden;
-					height: 100%;
 				}
 
 				.rbc-month-row + .rbc-month-row {

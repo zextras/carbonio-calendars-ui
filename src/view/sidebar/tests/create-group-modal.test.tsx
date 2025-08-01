@@ -245,7 +245,7 @@ describe('CreateGroupModal', () => {
 			const input = screen.getByRole('textbox', { name: 'Group Name*' });
 			await user.type(input, groupName);
 			const confirmButton = screen.getByRole('button', { name: /Create group/i });
-			await act(() => user.click(confirmButton));
+			await user.click(confirmButton);
 			await apiCallInterceptor;
 			const successfulSnackbar = await screen.findByText(/New group created/i);
 

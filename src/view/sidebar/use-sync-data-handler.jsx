@@ -5,13 +5,13 @@
  */
 import { useEffect, useRef } from 'react';
 
-import { useNotify } from '@zextras/carbonio-shell-ui';
 import {
 	useFolderStore,
 	useTagStore,
 	folderWorker,
 	tagsWorker
 } from '@zextras/carbonio-ui-commons';
+import { useSync } from '@zextras/carbonio-ui-soap-lib';
 import { isEmpty, reduce, forEach, sortBy, map, filter, isNil } from 'lodash';
 
 import { useCheckedCalendarsQuery } from '../../hooks/use-checked-calendars-query';
@@ -132,7 +132,7 @@ function handleAppointmentDeletionNotify(notify, dispatch) {
 }
 
 export const useSyncDataHandler = () => {
-	const notifyList = useNotify();
+	const notifyList = useSync();
 	const seq = useRef(-1);
 	const dispatch = useAppDispatch();
 	const start = useRangeStart();

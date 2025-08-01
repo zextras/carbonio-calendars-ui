@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 import { Cn, SearchRequestProps } from '../types/soap/soap-actions';
 
@@ -34,7 +34,7 @@ export const searchRequest = async ({
 	sortBy,
 	content
 }: SearchRequestProps): Promise<SearchReturnType> => {
-	const response: SearchReturnType = await soapFetch('Search', {
+	const response: SearchReturnType = await legacySoapFetch('Search', {
 		_jsns: 'urn:zimbraMail',
 		limit: '500',
 		calExpandInstEnd: end,

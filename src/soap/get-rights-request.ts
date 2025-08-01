@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 export const getRightsRequest = async (): Promise<any> =>
-	soapFetch('GetRights', {
+	legacySoapFetch('GetRights', {
 		_jsns: 'urn:zimbraAccount'
 	});

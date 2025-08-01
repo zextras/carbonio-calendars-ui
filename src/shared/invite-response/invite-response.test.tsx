@@ -62,10 +62,6 @@ const setupFoldersStore = (): void => {
 	}));
 };
 
-afterEach(() => {
-	jest.clearAllMocks();
-});
-
 describe('invite response component', () => {
 	describe('case invitation email', () => {
 		test('have a container with border of 0.0625rem solid regular', async () => {
@@ -551,9 +547,7 @@ describe('invite response component', () => {
 							name: /accept/i
 						});
 
-						await act(async () => {
-							await user.click(accept);
-						});
+						await user.click(accept);
 						expect(sendInviteSpy).toHaveBeenCalled();
 					});
 					test('if the "notify organizer" checkbox is checked, it will set updateOrganizer as true', async () => {
@@ -577,9 +571,7 @@ describe('invite response component', () => {
 							name: /accept/i
 						});
 
-						await act(async () => {
-							await user.click(accept);
-						});
+						await user.click(accept);
 						expect(sendInviteSpy).toHaveBeenCalledTimes(1);
 						expect(sendInviteSpy).toHaveBeenCalledWith(
 							expect.objectContaining({
@@ -648,9 +640,7 @@ describe('invite response component', () => {
 							name: /accept/i
 						});
 
-						await act(async () => {
-							await user.click(accept);
-						});
+						await user.click(accept);
 
 						expect(moveAppointmentSpy).not.toHaveBeenCalled();
 					});
@@ -705,9 +695,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						expect(store.getState().editor.editors['new-1']).toBeDefined();
 					});
 					test('a board is opened', async () => {
@@ -730,9 +718,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						expect(boardSpy).toHaveBeenCalled();
 						expect(boardSpy).toHaveBeenCalledTimes(1);
 						expect(boardSpy).toHaveBeenCalledWith(
@@ -757,9 +743,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 						expect(editor.isException).toBe(false);
 						expect(editor.isInstance).toBe(true);
@@ -781,9 +765,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(false);
@@ -810,9 +792,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(false);
@@ -835,9 +815,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(false);
@@ -864,9 +842,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(true);
@@ -889,9 +865,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(true);
@@ -1166,9 +1140,7 @@ describe('invite response component', () => {
 							const acceptProposedTimeButton = await screen.findByRole('button', {
 								name: /Accept/i
 							});
-							await act(async () => {
-								await user.click(acceptProposedTimeButton);
-							});
+							await user.click(acceptProposedTimeButton);
 
 							expect(spy).toHaveBeenCalled();
 

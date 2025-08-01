@@ -48,6 +48,7 @@ export type AdvancedFilterModalProps = {
 		value?: string;
 		isGeneric?: boolean;
 		isQueryFilter?: boolean;
+		queryChipsToAdvancedFiltersValue?: any;
 	}>;
 	updateQuery: (arg: Array<QueryChip>) => void;
 };
@@ -84,7 +85,11 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 		if (!open) return;
 
 		const updatedQuery = map(
-			filter(query, (v) => !v.isQueryFilter),
+			filter(query, (v) => {
+				if (v.isQueryFilter) return false;
+				if ('queryChipsToAdvancedFiltersValue' in v) return false;
+				return true;
+			}),
 			({ id, label, value }) => ({
 				id,
 				label,
