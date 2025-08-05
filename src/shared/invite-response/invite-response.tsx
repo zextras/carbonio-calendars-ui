@@ -157,6 +157,15 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		timeZone: invite.tz
 	});
 
+	const counterDate = useGetDateRangeConvertedToTimezone(
+		moment(mailMsg.invite[0].comp[0].e[0].d).valueOf(),
+		moment(mailMsg.invite[0].comp[0].s[0].d).valueOf(),
+		{
+			allDay: invite.allDay,
+			timeZone: invite.tz
+		}
+	);
+
 	const convertedDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
 		allDay: invite.allDay
 	});
@@ -211,9 +220,18 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					)}
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{originalDate}
-					</Text>
+					{method === 'COUNTER' ? (
+						mailMsg.parent !== '5' && (
+							<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
+								{counterDate}
+							</Text>
+						)
+					) : (
+						<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
+							{originalDate}
+						</Text>
+					)}
+
 					{convertedDate !== originalDate && (
 						<Tooltip label={convertedDateTooltip}>
 							<Padding left="small">
@@ -237,8 +255,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							// eslint-disable-next-line react/jsx-indent
 							<ProposedTimeReply
 								id={invite?.apptId}
-								start={invite?.start?.u ?? moment(mailMsg.invite[0].comp[0].s[0].d).valueOf()}
-								end={invite?.end?.u ?? moment(mailMsg.invite[0].comp[0].e[0].d).valueOf()}
+								start={moment(mailMsg.invite[0].comp[0].s[0].d).valueOf() ?? invite?.start?.u}
+								end={moment(mailMsg.invite[0].comp[0].e[0].d).valueOf() ?? invite?.end?.u}
 								moveToTrash={moveToTrash}
 								title={mailMsg.subject}
 								to={to}
