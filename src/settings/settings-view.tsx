@@ -111,11 +111,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL);
 			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL);
 		}
-		if (
-			freeBusy.length === 1 &&
-			freeBusy[0].gt === GRANTEE_TYPES.DOM &&
-			freeBusy[0].d === domain
-		) {
+		if (freeBusy.length === 1 && freeBusy[0].gt === GRANTEE_TYPES.DOM && freeBusy[0].d === domain) {
 			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
 			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
 		}
