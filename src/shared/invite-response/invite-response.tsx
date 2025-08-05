@@ -158,8 +158,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 	});
 
 	const counterDate = useGetDateRangeConvertedToTimezone(
-		moment(mailMsg.invite[0].comp[0].e[0].d).valueOf(),
 		moment(mailMsg.invite[0].comp[0].s[0].d).valueOf(),
+		moment(mailMsg.invite[0].comp[0].e[0].d).valueOf(),
 		{
 			allDay: invite.allDay,
 			timeZone: invite.tz
