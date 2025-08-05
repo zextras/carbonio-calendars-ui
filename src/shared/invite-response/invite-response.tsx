@@ -200,7 +200,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		<InviteContainer data-testid={'invite-response'}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
 				<Row width="fill" mainAlignment="flex-start" padding={{ bottom: 'extrasmall' }}>
-					{method === 'COUNTER' ? (
+					{method === MESSAGE_METHOD.COUNTER ? (
 						<Text weight="light" size="large">
 							{mailMsg.subject}
 						</Text>
@@ -220,8 +220,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					)}
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
-					{method === 'COUNTER' ? (
-						mailMsg.parent !== '5' && (
+					{method === MESSAGE_METHOD.COUNTER ? (
+						mailMsg.parent !== FOLDERS.SENT && (
 							<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
 								{counterDate}
 							</Text>
@@ -250,8 +250,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						uid={invite.uid}
 					/>
 				)}
-				{method === 'COUNTER'
-					? mailMsg.parent !== '5' && (
+				{method === MESSAGE_METHOD
+					? mailMsg.parent !== FOLDERS.SENT && (
 							// eslint-disable-next-line react/jsx-indent
 							<ProposedTimeReply
 								id={invite?.apptId}
