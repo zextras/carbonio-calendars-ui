@@ -47,6 +47,7 @@ export type GrantRightsResponse = {
 
 export default function CalendarSettingsView(): React.JSX.Element {
 	const settings = usePrefs();
+	const domain = getUserAccount()?.name.split('@')?.[1];
 	const [settingsObj, setSettingsObj] = useState({ ...settings });
 	const [updatedSettings, setUpdatedSettings] = useState<Partial<AccountSettingsPrefs>>({});
 	const [notFirstLoad, setNotFirstLoad] = useState(false);
@@ -113,7 +114,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 		if (
 			freeBusy.length === 1 &&
 			freeBusy[0].gt === GRANTEE_TYPES.DOM &&
-			freeBusy[0].d === window.location.hostname
+			freeBusy[0].d === domain
 		) {
 			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
 			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_DOMAIN_USERS);
@@ -126,7 +127,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			setActiveFreeBusyOptn(USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING);
 			setCurrentFreeBusy(USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING);
 		}
-	}, [freeBusy]);
+	}, [domain, freeBusy]);
 
 	useEffect(() => {
 		if (invite.length > 0 && defaultSelectedInviteContacts?.current) {
@@ -295,7 +296,6 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			(activeFreeBusyOptn === USERS_PERMISSIONS_RIGHTS.ALLOW_FOLLOWING &&
 				!isEqual(defaultSelectedFreeBusyContacts.current, allowedFBUsers))
 		) {
-			const domain = getUserAccount()?.name.split('@')[1];
 			switch (activeFreeBusyOptn) {
 				case USERS_PERMISSIONS_RIGHTS.ALLOW_INTERNAL_EXTERNAL:
 					newFreeBusy = { gt: GRANTEE_TYPES.PUB, deny: false };
@@ -383,6 +383,7 @@ export default function CalendarSettingsView(): React.JSX.Element {
 			}
 		});
 	}, [
+		domain,
 		settingsToUpdate,
 		currentFreeBusy,
 		activeFreeBusyOptn,
