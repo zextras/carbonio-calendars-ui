@@ -250,7 +250,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						uid={invite.uid}
 					/>
 				)}
-				{method === MESSAGE_METHOD
+				{method === MESSAGE_METHOD.COUNTER
 					? mailMsg.parent !== FOLDERS.SENT && (
 							// eslint-disable-next-line react/jsx-indent
 							<ProposedTimeReply
