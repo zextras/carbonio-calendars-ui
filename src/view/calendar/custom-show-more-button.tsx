@@ -32,7 +32,7 @@ export const CustomShowMoreButton = ({
 		setOpen(false);
 	}, []);
 
-	const tooltipLabel = t('label.show_all_events', 'Show all events for this day');
+	const tooltipLabel = t('label.show_all_events', 'Show all events');
 	const buttonLabel = t('label.show_more', '+ {{count}} more', {
 		count: remainingEvents.length
 	});
