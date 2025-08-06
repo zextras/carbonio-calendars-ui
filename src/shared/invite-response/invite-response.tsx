@@ -258,7 +258,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							// eslint-disable-next-line react/jsx-indent
 							<ProposedTimeReply
 								id={invite?.apptId}
-								start={moment(proposedStartTime).valueOf() ?? invite?.start?.u}
+								start={proposedStartTime ? moment(proposedStartTime).valueOf() : invite?.start?.u}
 								end={moment(proposedEndTime).valueOf() ?? invite?.end?.u}
 								moveToTrash={moveToTrash}
 								title={mailMsg.subject}
