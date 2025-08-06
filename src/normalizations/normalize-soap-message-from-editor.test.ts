@@ -4,9 +4,11 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 import {
 	normalizeSoapMessageFromEditor,
-	setAlarmValue
+	setAlarmValue,
+	generateBodyRequest
 } from './normalize-soap-message-from-editor';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
 import { generateEditor } from '../commons/editor-generator';
@@ -46,6 +48,11 @@ const sharedAccountEditorFolder = {
 };
 
 const addressPrefKey = 'zimbraPrefFromAddress';
+
+// Mock getTimeStrings before importing the module that uses it
+jest.mock('../hooks/use-get-date-range-converted-to-timezone', () => ({
+	getTimeStrings: jest.fn(() => 'Jan 1, 2024 10:00 AM - 11:00 AM')
+}));
 
 describe('normalize soap message from editor', () => {
 	describe('when the user is the organizer ', () => {
@@ -759,6 +766,209 @@ describe('normalize soap message from editor', () => {
 			const reminder = '-1';
 			const result = setAlarmValue(reminder);
 			expect(result).toStrictEqual(expect.objectContaining({ m: 0 }));
+		});
+	});
+	describe('generateBodyRequest', () => {
+		beforeEach(() => {
+			jest.clearAllMocks();
+		});
+
+		test('should generate plain text message for regular meeting with attendees', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [
+				generateAttendee({ email: 'attendee1@example.com' }),
+				generateAttendee({ email: 'attendee2@example.com' })
+			];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					title: 'Test Meeting',
+					location: 'Conference Room',
+					plainText: 'Meeting description',
+					start: 1704110400000,
+					end: 1704114000000,
+					allDay: false
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).toContain('invited you to a new meeting!');
+			expect(result).toContain('Test Meeting');
+			expect(result).toContain('attendee1@example.com, attendee2@example.com');
+			expect(result).toContain('Meeting description');
+		});
+
+		test('should generate virtual room message when room is present', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					room: {
+						label: 'Virtual Room',
+						link: 'https://meet.example.com/room123'
+					},
+					plainText: 'Virtual meeting description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).toContain('invited you to a virtual meeting on Carbonio Chats!');
+			expect(result).toContain('Virtual Room');
+			expect(result).toContain('https://meet.example.com/room123');
+			expect(result).toContain('Virtual meeting description');
+		});
+
+		test('should return only plain text when no attendees', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: {
+					attendees: [],
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					plainText: 'Just the description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).toBe('Just the description');
+			expect(result).not.toContain('invited you to');
+		});
+
+		test('should include optional attendees in the attendees list', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'required@example.com' })];
+			const optionalAttendees = [generateAttendee({ email: 'optional@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees,
+					folders: {},
+					dispatch: jest.fn(),
+					plainText: 'Meeting with optional attendees'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).toContain('required@example.com, optional@example.com');
+		});
+
+		test('should handle organizer from shared calendar', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					calendar: sharedEditorFolder,
+					plainText: 'Shared calendar meeting'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).toContain('invited you to a new meeting!');
+		});
+
+		test('should handle undefined organizer name gracefully', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					organizer: { email: 'organizer@example.com', fullName: undefined },
+					plainText: 'Meeting with undefined organizer name'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).toContain('invited you to a new meeting!');
+		});
+
+		test('should prefer virtual room message over meeting message when room exists', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					room: {
+						label: 'Test Room',
+						link: 'https://example.com/room'
+					},
+					plainText: 'Description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).toContain('virtual meeting on Carbonio Chats!');
+			expect(result).not.toContain('invited you to a new meeting!');
+		});
+
+		test('should handle empty room label', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					room: {
+						label: '',
+						link: 'https://example.com/room'
+					},
+					plainText: 'Description'
+				}
+			});
+
+			const result = generateBodyRequest(editor);
+
+			expect(result).toContain('invited you to a new meeting!');
+			expect(result).not.toContain('virtual meeting on Carbonio Chats!');
 		});
 	});
 });

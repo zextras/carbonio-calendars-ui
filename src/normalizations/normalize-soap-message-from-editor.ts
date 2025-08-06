@@ -234,7 +234,7 @@ function generateHtmlBodyRequest(app: Editor): string {
 		: app.richText;
 }
 
-function generateBodyRequest(app: Editor): string {
+export function generateBodyRequest(app: Editor): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 	const organizer = getOrganizer({
 		calendar: app?.calendar,
