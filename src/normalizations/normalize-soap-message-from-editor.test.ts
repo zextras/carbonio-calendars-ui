@@ -1012,6 +1012,8 @@ describe('normalize soap message from editor', () => {
 			expect(result).toContain('Invitees: attendee1@example.com, attendee2@example.com');
 			expect(result).toContain('<b>Meeting description</b>');
 			expect(result).toContain('<html>');
+			expect(result).toContain('<p>');
+			expect(result).toContain('</p>');
 			expect(result).toContain('</html>');
 			expect(result).toContain('Jan 1, 2024 10:00 AM - 11:00 AM');
 		});

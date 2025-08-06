@@ -222,10 +222,9 @@ export function generateHtmlBodyRequest(app: Editor): string {
 		end: app.end ?? 0,
 		options: { allDay: app.allDay, allDayLabel: 'allDay' }
 	});
-
 	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
 	const virtualRoomHtml = app?.room?.label
-		? `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a virtual meeting on Carbonio Chats.</h3><p>Join here when it's time: <a href="${app.room.link}">${app.room.label}</a><br/>${ROOM_DIVIDER}`
+		? `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a virtual meeting on Carbonio Chats.</h3><p>Join here when it's time: <a href="${app.room.link}">${app.room.label}</a></p><br/>${ROOM_DIVIDER}`
 		: '';
 	const defaultMessage =
 		app?.room && !includes(app.richText, ROOM_DIVIDER) ? virtualRoomHtml : meetingHtml;
