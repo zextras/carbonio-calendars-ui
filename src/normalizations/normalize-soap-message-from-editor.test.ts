@@ -50,7 +50,6 @@ const sharedAccountEditorFolder = {
 
 const addressPrefKey = 'zimbraPrefFromAddress';
 
-// Mock getTimeStrings before importing the module that uses it
 jest.mock('../hooks/use-get-date-range-converted-to-timezone', () => ({
 	getTimeStrings: jest.fn(() => 'Jan 1, 2024 10:00 AM - 11:00 AM')
 }));
