@@ -259,7 +259,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							<ProposedTimeReply
 								id={invite?.apptId}
 								start={proposedStartTime ? moment(proposedStartTime).valueOf() : invite?.start?.u}
-								end={moment(proposedEndTime).valueOf() ?? invite?.end?.u}
+								end={proposedEndTime ? moment(proposedEndTime).valueOf() : invite?.end?.u}
 								moveToTrash={moveToTrash}
 								title={mailMsg.subject}
 								to={to}
