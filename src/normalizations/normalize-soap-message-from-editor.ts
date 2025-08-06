@@ -250,7 +250,7 @@ export function generateBodyRequest(app: Editor): string {
 	const virtualRoomMessage = app?.room?.label
 		? `${ROOM_DIVIDER}\n${
 				organizer.name ?? ''
-			} invited you to a virtual meeting on Carbonio Chats!\n\nJoin here when it's time:${
+			} invited you to a virtual meeting on Carbonio Chats!\n\nJoin here when it's time: ${
 				app.room.label
 			}\n\n${app.room.link} \n\n${ROOM_DIVIDER}\n`
 		: '';
