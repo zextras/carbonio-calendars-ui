@@ -157,13 +157,17 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		timeZone: invite.tz
 	});
 
-	const proposedStartTime = moment(mailMsg.invite[0]?.comp?.[0]?.s?.[0]?.d).valueOf();
-	const proposedEndTime = moment(mailMsg.invite[0]?.comp?.[0]?.e?.[0]?.d).valueOf();
+	const proposedStartTime = mailMsg.invite[0]?.comp?.[0]?.s?.[0]?.d;
+	const proposedEndTime = mailMsg.invite[0]?.comp?.[0]?.e?.[0]?.d;
 
-	const counterDate = useGetDateRangeConvertedToTimezone(proposedStartTime, proposedEndTime, {
-		allDay: invite.allDay,
-		timeZone: invite.tz
-	});
+	const counterDate = useGetDateRangeConvertedToTimezone(
+		moment(proposedStartTime).valueOf(),
+		moment(proposedEndTime).valueOf(),
+		{
+			allDay: invite.allDay,
+			timeZone: invite.tz
+		}
+	);
 
 	const convertedDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
 		allDay: invite.allDay
@@ -243,8 +247,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					<AvailabilityChecker
 						email={email}
 						rootId={root.id}
-						start={invite?.start?.u ?? proposedStartTime}
-						end={invite?.end?.u ?? endOfDay(mailMsg.invite[0].comp[0].e[0].d)}
+						start={invite?.start?.u ?? moment(proposedStartTime).valueOf()}
+						end={invite?.end?.u ?? endOfDay(proposedEndTime)}
 						allDay={invite.allDay ?? false}
 						uid={invite.uid}
 					/>
@@ -254,8 +258,8 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 							// eslint-disable-next-line react/jsx-indent
 							<ProposedTimeReply
 								id={invite?.apptId}
-								start={proposedStartTime ?? invite?.start?.u}
-								end={proposedEndTime ?? invite?.end?.u}
+								start={moment(proposedStartTime).valueOf() ?? invite?.start?.u}
+								end={moment(proposedEndTime).valueOf() ?? invite?.end?.u}
 								moveToTrash={moveToTrash}
 								title={mailMsg.subject}
 								to={to}
