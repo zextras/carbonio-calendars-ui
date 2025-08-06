@@ -48,7 +48,7 @@ describe('Custom show more', () => {
 			jest.advanceTimersByTime(3000);
 		});
 
-		expect(screen.getByText(/Show all events for this day/i)).toBeVisible();
+		expect(screen.getByText(/Show all events/i)).toBeVisible();
 	});
 
 	test('onClick will open the show more popover', async () => {
