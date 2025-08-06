@@ -8,7 +8,8 @@
 import {
 	normalizeSoapMessageFromEditor,
 	setAlarmValue,
-	generateBodyRequest
+	generateBodyRequest,
+	generateHtmlBodyRequest
 } from './normalize-soap-message-from-editor';
 import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
 import { generateEditor } from '../commons/editor-generator';
@@ -970,6 +971,122 @@ describe('normalize soap message from editor', () => {
 
 			expect(result).toContain('invited you to a new meeting!');
 			expect(result).not.toContain('virtual meeting on Carbonio Chats!');
+		});
+	});
+
+	describe('generateHtmlBodyRequest', () => {
+		beforeEach(() => {
+			jest.clearAllMocks();
+		});
+
+		test('should generate HTML message for regular meeting with attendees', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [
+				generateAttendee({ email: 'attendee1@example.com' }),
+				generateAttendee({ email: 'attendee2@example.com' })
+			];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					title: 'Test Meeting',
+					location: 'Conference Room',
+					richText: '<b>Meeting description</b>',
+					start: 1704110400000,
+					end: 1704114000000,
+					allDay: false
+				}
+			});
+
+			const result = generateHtmlBodyRequest(editor);
+
+			expect(result).toContain('<h3>');
+			expect(result).toContain('invited you to a new meeting!');
+			expect(result).toContain('Subject: Test Meeting');
+			expect(result).toContain('Organizer:');
+			expect(result).toContain('Location: Conference Room');
+			expect(result).toContain('Invitees: attendee1@example.com, attendee2@example.com');
+			expect(result).toContain('<b>Meeting description</b>');
+			expect(result).toContain('<html>');
+			expect(result).toContain('</html>');
+			expect(result).toContain('Jan 1, 2024 10:00 AM - 11:00 AM');
+		});
+
+		test('should generate HTML message for virtual room', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'attendee1@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					room: {
+						label: 'Virtual Room',
+						link: 'https://meet.example.com/room123'
+					},
+					richText: '<i>Virtual meeting description</i>'
+				}
+			});
+
+			const result = generateHtmlBodyRequest(editor);
+
+			expect(result).toContain('invited you to a virtual meeting on Carbonio Chats.');
+			expect(result).toContain('Virtual Room');
+			expect(result).toContain('https://meet.example.com/room123');
+			expect(result).toContain('<i>Virtual meeting description</i>');
+			expect(result).toContain('<html>');
+			expect(result).toContain('</html>');
+		});
+
+		test('should return only richText when no attendees', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const editor = generateEditor({
+				context: {
+					attendees: [],
+					optionalAttendees: [],
+					folders: {},
+					dispatch: jest.fn(),
+					richText: '<p>Just the description</p>'
+				}
+			});
+
+			const result = generateHtmlBodyRequest(editor);
+
+			expect(result).toBe('<p>Just the description</p>');
+		});
+
+		test('should include optional attendees in the attendees list', () => {
+			const userAccount = getMockedAccountItem({ identity1: mainAccount });
+			shell.getUserAccount.mockImplementation(() => userAccount);
+
+			const attendees = [generateAttendee({ email: 'required@example.com' })];
+			const optionalAttendees = [generateAttendee({ email: 'optional@example.com' })];
+
+			const editor = generateEditor({
+				context: {
+					attendees,
+					optionalAttendees,
+					folders: {},
+					dispatch: jest.fn(),
+					richText: '<p>Meeting with optional attendees</p>'
+				}
+			});
+
+			const result = generateHtmlBodyRequest(editor);
+
+			expect(result).toContain('required@example.com, optional@example.com');
+			expect(result).toContain('<p>Meeting with optional attendees</p>');
 		});
 	});
 });

@@ -210,7 +210,7 @@ const getOrganizer = ({
 	};
 };
 
-function generateHtmlBodyRequest(app: Editor): string {
+export function generateHtmlBodyRequest(app: Editor): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 	const organizer = getOrganizer({
 		calendar: app?.calendar,
