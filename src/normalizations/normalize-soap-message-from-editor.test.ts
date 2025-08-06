@@ -829,6 +829,7 @@ describe('normalize soap message from editor', () => {
 
 			expect(result).toContain('invited you to a virtual meeting on Carbonio Chats!');
 			expect(result).toContain('Virtual Room');
+			expect(result).toContain("Join here when it's time");
 			expect(result).toContain('https://meet.example.com/room123');
 			expect(result).toContain('Virtual meeting description');
 		});
