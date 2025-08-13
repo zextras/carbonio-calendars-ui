@@ -6,14 +6,14 @@
 
 import React, { FC, useMemo, useState } from 'react';
 
-import { ThemeProvider } from '@zextras/carbonio-design-system';
 import {
 	Accordion,
 	AccordionItemType,
 	Container,
 	Divider,
 	ModalManager,
-	SnackbarManager
+	SnackbarManager,
+	ThemeProvider
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
 import {

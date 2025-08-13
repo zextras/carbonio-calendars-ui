@@ -39,7 +39,6 @@ export const MoveModal = ({
 	currentFolder,
 	action
 }: MoveModalProps): ReactElement => {
-	const theme = useTheme();
 	const [folderDestination, setFolderDestination] = useState<Folder | undefined>();
 
 	const onConfirm = useCallback(() => {
