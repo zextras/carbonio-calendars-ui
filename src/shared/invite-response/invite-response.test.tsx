@@ -1031,6 +1031,22 @@ describe('invite response component', () => {
 				expect(titleString).toBeVisible();
 				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
 			});
+			test('should show the correct start and end time', async () => {
+				setupFoldersStore();
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+				createSoapAPIInterceptor('GetAppointment', {});
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					store
+				});
+				const titleString = await screen.findByText(mailMsg.subject);
+				expect(titleString).toBeVisible();
+				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
+
+				expect(
+					screen.getByText('Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin')
+				).toBeVisible();
+			});
 			test('a string with the user local time of the event', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
