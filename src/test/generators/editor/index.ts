@@ -31,6 +31,7 @@ const getDefaultEditor = ({
 	const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 	return {
 		attach: undefined,
+		compNum: 0,
 		calendar: editorCalendar
 			? {
 					id: editorCalendar.id,
@@ -146,6 +147,7 @@ const getEditor = ({
 		panel: false,
 		exceptId: undefined,
 		isRichText: true,
+		compNum: 0,
 		isNew: startsWith(id, 'new'),
 		attachmentFiles: [],
 		organizer: { email: editorOrganizer?.address ?? '', fullName: editorOrganizer?.fullName ?? '' },
