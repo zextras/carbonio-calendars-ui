@@ -144,4 +144,5 @@ export type Editor = {
 	panel: boolean;
 	attach?: any;
 	isProposeNewTime?: boolean;
+	compNum: number;
 };
