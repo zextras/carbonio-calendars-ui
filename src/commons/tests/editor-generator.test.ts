@@ -6,14 +6,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import moment from 'moment';
 
-import { disabledFields, EditorContext, generateEditor } from './editor-generator';
-import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
-import { createFakeIdentity, getMockedAccountItem } from '../__test__/mocks/accounts/fakeAccounts';
-import defaultSettings from '../__test__/mocks/settings/default-settings';
-import { PREFS_DEFAULTS } from '../constants';
-import { EVENT_DISPLAY_STATUS } from '../constants/api';
-import { reducers } from '../store/redux';
-import mockedData from '../test/generators';
+import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
+import { PREFS_DEFAULTS } from '../../constants';
+import { EVENT_DISPLAY_STATUS } from '../../constants/api';
+import { reducers } from '../../store/redux';
+import mockedData from '../../test/generators';
+import { disabledFields, EditorContext, generateEditor } from '../editor-generator';
+import { createFakeIdentity, getMockedAccountItem } from '@test-utils/accounts/fakeAccounts';
+import defaultSettings from '@test-utils/settings/default-settings';
 
 const identity1 = createFakeIdentity();
 
@@ -92,6 +92,7 @@ describe('Editor generator', () => {
 			expect(editor.start).toBeLessThanOrEqual(new Date().valueOf());
 			expect(editor.timezone).toBe('Europe/Berlin');
 			expect(editor.title).toBe('');
+			expect(editor.compNum).toBe(0);
 		});
 		test('series appointment', () => {
 			const store = configureStore({ reducer: combineReducers(reducers) });
@@ -152,6 +153,7 @@ describe('Editor generator', () => {
 				isInstance: true,
 				isSeries: false,
 				isNew: true,
+				compNum: 2,
 				isRichText: false,
 				plainText: 'test content',
 				richText: '<p>test content</p>',
@@ -220,6 +222,7 @@ describe('Editor generator', () => {
 
 			// editor props check
 			expect(editor.isException).toBe(false);
+			expect(editor.compNum).toBe(2);
 			expect(editor.isInstance).toBe(true);
 			expect(editor.isNew).toBe(true);
 			expect(editor.isSeries).toBe(false);

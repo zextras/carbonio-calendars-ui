@@ -185,7 +185,8 @@ export const normalizeEditor = ({
 			? (extractHtmlBody(invite?.htmlDescription?.[0]?._content) ?? '')
 			: '';
 
-		const folder = context?.folders[calendarId ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID];
+		const folder =
+			context?.folders[calendarId] ?? context?.folders[PREFS_DEFAULTS.DEFAULT_CALENDAR_ID];
 
 		const calendar = normalizeCalendarEditor(folder);
 
