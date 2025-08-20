@@ -407,8 +407,7 @@ const generateInvite = (editor: Editor): any => {
 				}),
 				exceptId: editor.exceptId,
 				class: editor.class,
-				draft: editor.draft ? 1 : 0,
-				compNum: editor.compNum
+				draft: editor.draft ? 1 : 0
 			}
 		],
 		uid: editor.uid
@@ -420,6 +419,7 @@ export const normalizeSoapMessageFromEditor = (msg: Editor): any =>
 		{
 			echo: '1',
 			id: msg?.inviteId,
+			comp: msg?.compNum,
 			m: omitBy(
 				{
 					attach: msg?.attach

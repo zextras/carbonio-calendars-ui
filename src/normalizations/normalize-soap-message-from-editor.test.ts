@@ -55,6 +55,21 @@ jest.mock('../hooks/use-get-date-range-converted-to-timezone', () => ({
 }));
 
 describe('normalize soap message from editor', () => {
+	test('should set comp properly', () => {
+		const userAccount = getMockedAccountItem({ identity1: mainAccount });
+		shell.getUserAccount.mockImplementation(() => userAccount);
+
+		const editor = generateEditor({
+			context: {
+				compNum: 4,
+				folders: {},
+				dispatch: jest.fn()
+			}
+		});
+		const body = normalizeSoapMessageFromEditor(editor);
+
+		expect(body.comp).toBe(4);
+	});
 	describe('when the user is the organizer ', () => {
 		describe('and the appointment is inside his calendar ', () => {
 			test('when one of the attendee/optionalAttendee has changed the appointment status(ptst), the ptst should be preserved in normalization', () => {
