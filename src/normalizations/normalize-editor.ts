@@ -203,7 +203,7 @@ export const normalizeEditor = ({
 				isSeries,
 				isException,
 				organizer,
-				exceptId: invite?.exceptId,
+				exceptId: invite.exceptId,
 				title: event?.title,
 				location: event?.resource?.location,
 				meetingRoom: getMeetingRooms(invite.attendees),
@@ -218,17 +218,17 @@ export const normalizeEditor = ({
 				originalEnd: end,
 				start,
 				end,
-				timezone: invite?.start?.tz,
+				timezone: invite.start?.tz,
 				inviteId: event?.resource?.inviteId,
-				reminder: invite?.alarmValue,
+				reminder: invite.alarmValue,
 				recur: !isInstance ? invite.recurrenceRule : undefined,
 				richText,
 				plainText,
 				isRichText,
-				uid: invite?.uid,
-				ms: invite?.ms,
-				rev: invite?.rev,
-				compNum: invite?.compNum ?? event.resource.compNum ?? 0
+				uid: invite.uid,
+				ms: invite.ms,
+				rev: invite.rev,
+				compNum: invite.compNum ?? 0
 			},
 			isNil
 		);

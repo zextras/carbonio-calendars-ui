@@ -26,6 +26,7 @@ describe('normalizeEditor', () => {
 			resource: { compNum: 3, location: faker.location.country() }
 		});
 		const invite = mockedData.getInvite({ event });
+
 		const result = normalizeEditor({
 			invite,
 			event,
@@ -33,9 +34,78 @@ describe('normalizeEditor', () => {
 			context: { folders, dispatch: jest.fn() }
 		});
 
-		expect(result.title).toEqual(event.title);
-		expect(result.compNum).toEqual(event.resource.compNum);
-		expect(result.location).toEqual(event.resource.location);
+		const expectedResult = {
+			allDay: false,
+			attach: {
+				mp: []
+			},
+			attachmentFiles: [],
+			attendees: [],
+			calendar: expect.objectContaining({ id: event.resource.calendar.id }),
+			class: invite.class,
+			compNum: invite.compNum,
+			disabled: {
+				allDay: false,
+				attachments: false,
+				attachmentsButton: false,
+				attendees: false,
+				calendarSelector: false,
+				composer: false,
+				datePicker: false,
+				equipment: false,
+				freeBusySelector: false,
+				location: false,
+				meetingRoom: false,
+				optionalAttendees: false,
+				organizer: false,
+				private: false,
+				recurrence: false,
+				reminder: false,
+				richTextButton: false,
+				saveButton: false,
+				sendButton: false,
+				timezone: false,
+				title: false,
+				virtualRoom: false
+			},
+			end: event.end.valueOf(),
+			freeBusy: invite.freeBusy,
+			id: emptyEditor.id,
+			recur: undefined,
+			room: undefined,
+			inviteId: event.resource.inviteId,
+			isException: false,
+			isInstance: true,
+			isNew: false,
+			isRichText: true,
+			isSeries: false,
+			location: event.resource.location,
+			ms: 1,
+			optionalAttendees: [],
+			organizer: {
+				email: event.resource.organizer?.email,
+				fullName: event.resource.organizer?.name
+			},
+			originalEnd: event.end.valueOf(),
+			originalStart: event.start.valueOf(),
+			panel: false,
+			parts: [],
+			equipment: undefined,
+			exceptId: undefined,
+			meetingRoom: undefined,
+			plainText: '',
+			reminder: invite.alarmValue,
+			rev: 1,
+			richText: '',
+			ridZ: '1234',
+			sender: emptyEditor.sender,
+			start: event.start.valueOf(),
+			timezone: emptyEditor.timezone,
+			title: event.title,
+			uid: ''
+		};
+
+		expect(result).toStrictEqual(expectedResult);
 	});
 	describe('normalize calendar property', () => {
 		test('if calendarId is undefined it will refer to default calendar', () => {
@@ -174,6 +244,26 @@ describe('normalizeEditor', () => {
 			});
 
 			expect(result.isInstance).toBe(false);
+		});
+	});
+	describe('compNum property', () => {
+		test('if it is undefined it will default to 0', () => {
+			const folders = mockedData.calendars.getCalendarsMap();
+			const emptyEditor = createEmptyEditor('1', folders);
+			const event = mockedData.getEvent({
+				resource: {
+					compNum: undefined
+				}
+			});
+			const invite = mockedData.getInvite({ event });
+			const result = normalizeEditor({
+				invite,
+				event,
+				emptyEditor,
+				context: { folders, dispatch: jest.fn() }
+			});
+
+			expect(result.compNum).toBe(0);
 		});
 	});
 });
