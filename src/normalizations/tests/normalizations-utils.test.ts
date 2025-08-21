@@ -5,7 +5,7 @@
  */
 import { forEach } from 'lodash';
 
-import { getAlarmValueInMinutes } from './normalizations-utils';
+import { getAlarmValueInMinutes } from '../normalizations-utils';
 
 describe('NormalizationsUtils', () => {
 	describe('getAlarmValueInMinutes', () => {

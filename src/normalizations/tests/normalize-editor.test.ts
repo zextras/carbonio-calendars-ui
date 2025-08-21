@@ -7,9 +7,9 @@
 import { faker } from '@faker-js/faker';
 import { FOLDERS } from '@zextras/carbonio-ui-commons';
 
-import { normalizeEditor } from './normalize-editor';
-import { createEmptyEditor } from '../commons/editor-generator';
-import mockedData from '../test/generators';
+import { createEmptyEditor } from '../../commons/editor-generator';
+import mockedData from '../../test/generators';
+import { normalizeEditor } from '../normalize-editor';
 
 describe('normalizeEditor', () => {
 	test('If event and invite are not available, it will return empty editor', () => {
