@@ -166,16 +166,17 @@ export const normalizeEditor = ({
 			fullName: event.resource.organizer?.name
 		};
 		const isSeries = event?.resource?.isRecurrent;
-		const isInstance = context?.isInstance ?? !!event?.resource?.ridZ;
+		const isInstance = context.isInstance ?? !!event?.resource?.ridZ;
 		const isException = event?.resource?.isException ?? false;
 		const calendarId = event.resource.calendar.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID;
 		const editorType = { isSeries, isInstance, isException };
 
 		const { start, end } = setEditorDate({ editorType, event, invite });
 
-		const isRichText = !(
-			invite?.textDescription?.[0]?._content && !invite?.htmlDescription?.[0]?._content
-		);
+		const isPlainText =
+			invite?.textDescription?.[0]?._content && !invite?.htmlDescription?.[0]?._content;
+
+		const isRichText = !isPlainText;
 
 		const plainText = invite?.textDescription?.[0]?._content
 			? (extractBody(invite?.textDescription?.[0]?._content) ?? '')
@@ -186,7 +187,7 @@ export const normalizeEditor = ({
 			: '';
 
 		const folder =
-			context?.folders[calendarId] ?? context?.folders[PREFS_DEFAULTS.DEFAULT_CALENDAR_ID];
+			context.folders[calendarId] ?? context.folders[PREFS_DEFAULTS.DEFAULT_CALENDAR_ID];
 
 		const calendar = normalizeCalendarEditor(folder);
 
