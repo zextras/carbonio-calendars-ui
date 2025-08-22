@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 import moment from 'moment';
 
 import { HTML_OPENING_TAG } from '../constants';
@@ -29,7 +29,7 @@ export const counterAppointmentRequest = async ({
 }: {
 	appt: Editor;
 }): Promise<CounterAppointmentReturnType> => {
-	const res: CounterAppointmentReturnType = await soapFetch('CounterAppointment', {
+	const res: CounterAppointmentReturnType = await legacySoapFetch('CounterAppointment', {
 		_jsns: 'urn:zimbraMail',
 		comp: '0',
 		id: appt.inviteId?.includes('-') ? appt.inviteId : undefined,

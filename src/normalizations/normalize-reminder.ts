@@ -5,7 +5,7 @@
  */
 import { getUserAccount } from '@zextras/carbonio-shell-ui';
 
-import { Folder } from '../carbonio-ui-commons/types/folder';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { ReminderItem } from '../types/appointment-reminder';
 import { Appointment } from '../types/store/appointments';
 

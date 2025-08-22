@@ -8,6 +8,7 @@ import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { act, screen, waitFor, within } from '@testing-library/react';
+import { useFolderStore } from '@zextras/carbonio-ui-commons';
 import { keyBy, values } from 'lodash';
 import moment from 'moment-timezone';
 
@@ -17,12 +18,7 @@ import {
 	MESSAGE_TYPE,
 	setupServerSingleEventResponse
 } from './invite-test-utils';
-import { useFolderStore } from '../../carbonio-ui-commons/store/zustand/folder';
-import * as shell from '../../carbonio-ui-commons/test/mocks/carbonio-shell-ui';
-import { generateRoots } from '../../carbonio-ui-commons/test/mocks/folders/roots-generator';
-import { createSoapAPIInterceptor } from '../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { mockUseHistoryNavigation } from '../../carbonio-ui-commons/test/mocks/routing/use-history-navigation-mock';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
+import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
 import * as handler from '../../commons/get-appointment';
 import { CALENDAR_BOARD_ID } from '../../constants';
 import { MESSAGE_METHOD } from '../../constants/api';
@@ -48,6 +44,9 @@ import {
 	singleGetMsgResponse
 } from '../../test/mocks/network/msw/handle-get-invite';
 import 'jest-styled-components';
+import { setupTest } from '@test-setup';
+import { generateRoots } from '@test-utils/folders/roots-generator';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 const roots = generateRoots();
 const folder = mockedData.calendars.defaultCalendar;
@@ -63,13 +62,7 @@ const setupFoldersStore = (): void => {
 	}));
 };
 
-afterEach(() => {
-	jest.clearAllMocks();
-});
-
 describe('invite response component', () => {
-	mockUseHistoryNavigation();
-
 	describe('case invitation email', () => {
 		test('have a container with border of 0.0625rem solid regular', async () => {
 			setupFoldersStore();
@@ -554,9 +547,7 @@ describe('invite response component', () => {
 							name: /accept/i
 						});
 
-						await act(async () => {
-							await user.click(accept);
-						});
+						await user.click(accept);
 						expect(sendInviteSpy).toHaveBeenCalled();
 					});
 					test('if the "notify organizer" checkbox is checked, it will set updateOrganizer as true', async () => {
@@ -580,9 +571,7 @@ describe('invite response component', () => {
 							name: /accept/i
 						});
 
-						await act(async () => {
-							await user.click(accept);
-						});
+						await user.click(accept);
 						expect(sendInviteSpy).toHaveBeenCalledTimes(1);
 						expect(sendInviteSpy).toHaveBeenCalledWith(
 							expect.objectContaining({
@@ -651,9 +640,7 @@ describe('invite response component', () => {
 							name: /accept/i
 						});
 
-						await act(async () => {
-							await user.click(accept);
-						});
+						await user.click(accept);
 
 						expect(moveAppointmentSpy).not.toHaveBeenCalled();
 					});
@@ -708,9 +695,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						expect(store.getState().editor.editors['new-1']).toBeDefined();
 					});
 					test('a board is opened', async () => {
@@ -733,9 +718,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						expect(boardSpy).toHaveBeenCalled();
 						expect(boardSpy).toHaveBeenCalledTimes(1);
 						expect(boardSpy).toHaveBeenCalledWith(
@@ -760,9 +743,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 						expect(editor.isException).toBe(false);
 						expect(editor.isInstance).toBe(true);
@@ -784,9 +765,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(false);
@@ -813,9 +792,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(false);
@@ -838,9 +815,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(false);
@@ -867,9 +842,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(true);
@@ -892,9 +865,7 @@ describe('invite response component', () => {
 						);
 
 						const proposeButton = await screen.findByRole('button', { name: /Propose new time/i });
-						await act(async () => {
-							await user.click(proposeButton);
-						});
+						await user.click(proposeButton);
 						const editor = Object.values(store.getState().editor.editors)[0];
 
 						expect(editor.isException).toBe(true);
@@ -1060,6 +1031,22 @@ describe('invite response component', () => {
 				expect(titleString).toBeVisible();
 				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
 			});
+			test('should show the correct start and end time', async () => {
+				setupFoldersStore();
+				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
+				createSoapAPIInterceptor('GetAppointment', {});
+				const store = configureStore({ reducer: combineReducers(reducers) });
+				setupTest(<InviteResponse mailMsg={mailMsg} moveToTrash={jest.fn()} />, {
+					store
+				});
+				const titleString = await screen.findByText(mailMsg.subject);
+				expect(titleString).toBeVisible();
+				expect(titleString).toHaveStyleRule('font-size', '1.125rem');
+
+				expect(
+					screen.getByText('Tuesday, January 30, 2024, 9:00 – 9:30 AM GMT+01:00 Europe/Berlin')
+				).toBeVisible();
+			});
 			test('a string with the user local time of the event', async () => {
 				setupFoldersStore();
 				const mailMsg = buildMailMessageType(MESSAGE_METHOD.COUNTER, MESSAGE_TYPE.SINGLE, false);
@@ -1169,9 +1156,7 @@ describe('invite response component', () => {
 							const acceptProposedTimeButton = await screen.findByRole('button', {
 								name: /Accept/i
 							});
-							await act(async () => {
-								await user.click(acceptProposedTimeButton);
-							});
+							await user.click(acceptProposedTimeButton);
 
 							expect(spy).toHaveBeenCalled();
 

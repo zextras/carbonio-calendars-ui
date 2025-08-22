@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 
 import {
@@ -18,20 +19,22 @@ import {
 	Tooltip,
 	useSnackbar
 } from '@zextras/carbonio-design-system';
-import { useUserAccounts } from '@zextras/carbonio-shell-ui';
+import { useUserAccounts, useUserSettings } from '@zextras/carbonio-shell-ui';
+import {
+	ContactInputItem,
+	ModalFooter,
+	ModalHeader,
+	useContactInput
+} from '@zextras/carbonio-ui-commons';
 import { map, some } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import ModalFooter from '../../carbonio-ui-commons/components/modals/modal-footer';
-import ModalHeader from '../../carbonio-ui-commons/components/modals/modal-header';
-import { useContactInput } from '../../carbonio-ui-commons/integrations/hooks';
-import { ContactInputItem } from '../../carbonio-ui-commons/integrations/types';
 import { SHARE_USER_TYPE } from '../../constants';
 import { FOLDER_OPERATIONS } from '../../constants/api';
 import {
-	ShareCalendarRoleOptions,
-	ShareCalendarWithOptions,
-	findLabel
+	findLabel,
+	getShareCalendarWithOptions,
+	ShareCalendarRoleOptions
 } from '../../settings/components/utils';
 import { folderAction } from '../../store/actions/calendar-actions';
 import { sendShareCalendarNotification } from '../../store/actions/send-share-calendar-notification';
@@ -346,7 +349,11 @@ export const ShareCalendarModal: FC<ShareCalendarModalProps> = ({
 	grant
 }): ReactElement => {
 	const [t] = useTranslation();
-	const shareCalendarWithOptions = useMemo(() => ShareCalendarWithOptions(), []);
+	const accountSettings = useUserSettings();
+	const shareCalendarWithOptions = useMemo(
+		() => getShareCalendarWithOptions(accountSettings),
+		[accountSettings]
+	);
 
 	const [shareWithUserType, setShareWithUserType] = useState<'usr' | 'pub' | null>(
 		SHARE_USER_TYPE.USER

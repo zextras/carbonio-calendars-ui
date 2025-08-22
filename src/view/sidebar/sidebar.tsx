@@ -16,6 +16,18 @@ import {
 	SnackbarManager
 } from '@zextras/carbonio-design-system';
 import { t } from '@zextras/carbonio-shell-ui';
+import {
+	FOLDER_VIEW,
+	ROOT_NAME,
+	FOLDERS,
+	useInitializeFolders,
+	useRootsArray,
+	themeMui,
+	Folder,
+	LinkFolder,
+	SidebarProps,
+	hasId
+} from '@zextras/carbonio-ui-commons';
 import { compact, find, map, reject, sortBy } from 'lodash';
 
 import { CollapsedSidebarItem } from './collapsed-sidebar-items';
@@ -23,14 +35,6 @@ import { CreateGroupComponent } from './custom-components/create-group-component
 import { FoldersComponent } from './custom-components/folders-component';
 import { SharesComponent } from './custom-components/shares-component';
 import { SidebarAccordionMui } from './custom-components/sidebar-accordion-mui';
-import { FOLDER_VIEW, ROOT_NAME } from '../../carbonio-ui-commons/constants';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { useInitializeFolders } from '../../carbonio-ui-commons/hooks/use-initialize-folders';
-import { useRootsArray } from '../../carbonio-ui-commons/store/zustand/folder';
-import { themeMui } from '../../carbonio-ui-commons/theme/theme-mui';
-import { Folder, LinkFolder } from '../../carbonio-ui-commons/types';
-import { SidebarProps } from '../../carbonio-ui-commons/types/sidebar';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { SIDEBAR_ITEMS, SIDEBAR_ROOT_SUBSECTION } from '../../constants/sidebar';
 import { CalendarGroup, useCalendarGroups } from '../../store/zustand/calendar-group-store';
 import useGetTagsAccordion from '../tags/use-get-tags-accordions';

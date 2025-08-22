@@ -3,13 +3,13 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
+import { getRoot, LinkFolder, getPrefs } from '@zextras/carbonio-ui-commons';
 import { filter, find, isNil, map, omitBy } from 'lodash';
 import moment, { Moment } from 'moment';
 
-import { getRoot } from '../carbonio-ui-commons/store/zustand/folder';
-import { LinkFolder } from '../carbonio-ui-commons/types/folder';
-import { getPrefs } from '../carbonio-ui-commons/utils/get-prefs';
 import { extractBody, extractHtmlBody } from '../commons/body-message-renderer';
+import type { EditorContext } from '../commons/editor-generator';
 import { CALENDAR_RESOURCES, PREFS_DEFAULTS } from '../constants';
 import { PARTICIPANT_ROLE } from '../constants/api';
 import { CRB_XPARAMS, CRB_XPROPS } from '../constants/xprops';
@@ -89,29 +89,6 @@ export type EventPropType = {
 	end: Date | Moment;
 };
 
-export const getLocalTime = (
-	date: number | Date,
-	timezone?: string,
-	localTimezone?: string
-): number => {
-	const dateValueOf = moment(date).valueOf();
-
-	if (timezone) {
-		const dateInTimezone = moment(date).tz(timezone);
-		const localOffset = localTimezone
-			? moment().tz(localTimezone).utcOffset()
-			: moment().utcOffset();
-		const appointmentOffset = dateInTimezone.utcOffset();
-		const offSetFromUTC = appointmentOffset - localOffset;
-		const offSet = offSetFromUTC * 60_000;
-		return dateValueOf + offSet;
-	}
-	return dateValueOf;
-};
-
-export const isTimezoneDifferentFromLocal = (timezone: string): boolean =>
-	timezone !== Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 const setEditorDate = ({
 	editorType,
 	invite,
@@ -181,7 +158,7 @@ export const normalizeEditor = ({
 	emptyEditor: Editor;
 	invite?: Invite;
 	event?: EventType;
-	context: any;
+	context: EditorContext;
 }): Editor => {
 	if (event && invite) {
 		const organizer = {
@@ -189,16 +166,17 @@ export const normalizeEditor = ({
 			fullName: event.resource.organizer?.name
 		};
 		const isSeries = event?.resource?.isRecurrent;
-		const isInstance = context?.isInstance ?? !!event?.resource?.ridZ;
+		const isInstance = context.isInstance ?? !!event?.resource?.ridZ;
 		const isException = event?.resource?.isException ?? false;
 		const calendarId = event.resource.calendar.id ?? PREFS_DEFAULTS.DEFAULT_CALENDAR_ID;
 		const editorType = { isSeries, isInstance, isException };
 
 		const { start, end } = setEditorDate({ editorType, event, invite });
 
-		const isRichText = !(
-			invite?.textDescription?.[0]?._content && !invite?.htmlDescription?.[0]?._content
-		);
+		const isPlainText =
+			invite?.textDescription?.[0]?._content && !invite?.htmlDescription?.[0]?._content;
+
+		const isRichText = !isPlainText;
 
 		const plainText = invite?.textDescription?.[0]?._content
 			? (extractBody(invite?.textDescription?.[0]?._content) ?? '')
@@ -209,12 +187,11 @@ export const normalizeEditor = ({
 			: '';
 
 		const folder =
-			find(context?.folders, ['id', calendarId]) ??
-			find(context?.folders, ['id', PREFS_DEFAULTS.DEFAULT_CALENDAR_ID]);
+			context.folders[calendarId] ?? context.folders[PREFS_DEFAULTS.DEFAULT_CALENDAR_ID];
 
 		const calendar = normalizeCalendarEditor(folder);
 
-		const compiledEditor = omitBy(
+		const compiledEditor: Partial<Editor> = omitBy(
 			{
 				calendar,
 				id: emptyEditor.id,
@@ -226,7 +203,7 @@ export const normalizeEditor = ({
 				isSeries,
 				isException,
 				organizer,
-				exceptId: invite?.exceptId,
+				exceptId: invite.exceptId,
 				title: event?.title,
 				location: event?.resource?.location,
 				meetingRoom: getMeetingRooms(invite.attendees),
@@ -241,16 +218,17 @@ export const normalizeEditor = ({
 				originalEnd: end,
 				start,
 				end,
-				timezone: invite?.start?.tz,
+				timezone: invite.start?.tz,
 				inviteId: event?.resource?.inviteId,
-				reminder: invite?.alarmValue,
+				reminder: invite.alarmValue,
 				recur: !isInstance ? invite.recurrenceRule : undefined,
 				richText,
 				plainText,
 				isRichText,
-				uid: invite?.uid,
-				ms: invite?.ms,
-				rev: invite?.rev
+				uid: invite.uid,
+				ms: invite.ms,
+				rev: invite.rev,
+				compNum: invite.compNum ?? 0
 			},
 			isNil
 		);

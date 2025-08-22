@@ -48,6 +48,7 @@ export type AdvancedFilterModalProps = {
 		value?: string;
 		isGeneric?: boolean;
 		isQueryFilter?: boolean;
+		queryChipsToAdvancedFiltersValue?: any;
 	}>;
 	updateQuery: (arg: Array<QueryChip>) => void;
 };
@@ -63,13 +64,20 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 	setDateEnd
 }): ReactElement => {
 	const [otherKeywords, setOtherKeywords] = useState<KeywordState>([]);
-	const [fromDate, setFromDate] = useState<any>(dateStart);
-	const [toDate, setToDate] = useState<any>(dateEnd);
+	const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(new Date(dateStart));
+	const [selectedToDate, setSelectedToDate] = useState<Date | null>(new Date(dateEnd));
+
+	useEffect(() => {
+		if (open) {
+			setSelectedFromDate(new Date(dateStart));
+			setSelectedToDate(new Date(dateEnd));
+		}
+	}, [open, dateStart, dateEnd]);
 
 	useEffect(() => {
 		if (query.length === 0) {
-			setFromDate(DEFAULT_DATE_START);
-			setToDate(DEFAULT_DATE_END);
+			setSelectedFromDate(new Date(DEFAULT_DATE_START));
+			setSelectedToDate(new Date(DEFAULT_DATE_END));
 		}
 	}, [query.length]);
 
@@ -77,7 +85,11 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 		if (!open) return;
 
 		const updatedQuery = map(
-			filter(query, (v) => !v.isQueryFilter),
+			filter(query, (v) => {
+				if (v.isQueryFilter) return false;
+				if ('queryChipsToAdvancedFiltersValue' in v) return false;
+				return true;
+			}),
 			({ id, label, value }) => ({
 				id,
 				label,
@@ -89,29 +101,32 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 	}, [query, open]);
 
 	const resetFilters = useCallback(() => {
-		setFromDate(DEFAULT_DATE_START);
-		setToDate(DEFAULT_DATE_END);
+		setSelectedFromDate(new Date(DEFAULT_DATE_START));
+		setSelectedToDate(new Date(DEFAULT_DATE_END));
 		setOtherKeywords([]);
-	}, [setFromDate, setToDate]);
+	}, []);
 
 	const queryToBe = useMemo<Array<QueryChip>>(() => concat(otherKeywords), [otherKeywords]);
 
 	const secondaryDisabled = useMemo(
-		() => queryToBe.length === 0 && fromDate === DEFAULT_DATE_START && toDate === DEFAULT_DATE_END,
-		[queryToBe.length, fromDate, toDate]
+		() =>
+			queryToBe.length === 0 &&
+			selectedFromDate?.getTime() === DEFAULT_DATE_START &&
+			selectedToDate?.getTime() === DEFAULT_DATE_END,
+		[queryToBe.length, selectedFromDate, selectedToDate]
 	);
 
 	const confirmDisabled = useMemo(
-		() => queryToBe.length === 0 || fromDate === null || toDate === null,
-		[queryToBe.length, fromDate, toDate]
+		() => queryToBe.length === 0 || selectedFromDate === null || selectedToDate === null,
+		[queryToBe.length, selectedFromDate, selectedToDate]
 	);
 
 	const onConfirm = useCallback(() => {
 		updateQuery(queryToBe);
-		setDateStart(fromDate.valueOf());
-		setDateEnd(toDate.valueOf());
+		setDateStart(selectedFromDate?.getTime() ?? DEFAULT_DATE_START);
+		setDateEnd(selectedToDate?.getTime() ?? DEFAULT_DATE_END);
 		onClose();
-	}, [updateQuery, queryToBe, setDateStart, fromDate, setDateEnd, toDate, onClose]);
+	}, [updateQuery, queryToBe, setDateStart, selectedFromDate, setDateEnd, selectedToDate, onClose]);
 
 	return (
 		<CustomModal open={open} onClose={onClose} maxHeight="90vh" size="medium">
@@ -124,10 +139,10 @@ export const AdvancedFilterModal: FC<AdvancedFilterModalProps> = ({
 			<Container padding={{ horizontal: 'medium', vertical: 'small' }}>
 				<KeywordRow otherKeywords={otherKeywords} setOtherKeywords={setOtherKeywords} />
 				<FromDateToDateRow
-					fromDate={fromDate}
-					setFromDate={setFromDate}
-					toDate={toDate}
-					setToDate={setToDate}
+					fromDate={selectedFromDate}
+					setFromDate={setSelectedFromDate}
+					toDate={selectedToDate}
+					setToDate={setSelectedToDate}
 				/>
 			</Container>
 			<Divider />

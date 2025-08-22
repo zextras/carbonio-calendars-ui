@@ -5,7 +5,7 @@
  */
 import React, { useContext } from 'react';
 
-import { Grant } from '../carbonio-ui-commons/types/folder';
+import { Grant } from '@zextras/carbonio-ui-commons';
 
 export type EditModalContextType = {
 	setModal: (modal: string) => void;

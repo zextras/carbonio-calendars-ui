@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { useModal, useSnackbar } from '@zextras/carbonio-design-system';
+import { Folder } from '@zextras/carbonio-ui-commons';
 import { filter } from 'lodash';
 
 import {
@@ -16,10 +17,8 @@ import {
 	moveToRootItem,
 	newCalendarItem,
 	removeFromListItem,
-	shareCalendarUrlItem,
 	sharesInfoItem
 } from '../actions/calendar-actions-items';
-import { Folder } from '../carbonio-ui-commons/types/folder';
 import { ActionsClick } from '../types/actions';
 
 type CalendarActionsProps = {
@@ -45,7 +44,6 @@ export const useCalendarActions = (
 		editCalendarItem({ createModal, closeModal, item }),
 		deleteCalendarItem({ createModal, closeModal, item }),
 		removeFromListItem({ item, createSnackbar }),
-		shareCalendarUrlItem({ createModal, closeModal, item }),
 		findSharesItem({ createModal, closeModal, item }),
 		sharesInfoItem({ item, createModal, closeModal }),
 		exportAppointmentICSItem({ item }),

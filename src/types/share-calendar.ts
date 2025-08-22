@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Grant } from '../carbonio-ui-commons/types/folder';
+import { Grant } from '@zextras/carbonio-ui-commons';
 
 export type ShareCalendarModalProps = {
 	folderName: string;
@@ -13,17 +13,4 @@ export type ShareCalendarModalProps = {
 	secondaryLabel?: string;
 	isFromEditModal?: boolean;
 	grant?: Array<Grant>;
-};
-
-export type ShareCalendarUrlProps = {
-	folderName: string;
-	onClose: () => void;
-	isFromEditModal?: boolean;
-};
-
-export type UrlColumnProps = {
-	label: string;
-	tooltip: string;
-	onUrlCopied: (label: string, type: string) => () => void;
-	type: string;
 };

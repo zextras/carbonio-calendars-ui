@@ -9,7 +9,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import {
 	disabledFields,
 	EditorContext,
@@ -19,6 +18,7 @@ import { reducers } from '../../../../store/redux';
 import mockedData from '../../../../test/generators';
 import { Editor } from '../../../../types/editor';
 import { EditorCalendarSelector } from '../editor-calendar-selector';
+import { setupTest } from '@test-setup';
 
 describe('EditorCalendarSelector', () => {
 	it('renders null if calendarId is missing', async () => {

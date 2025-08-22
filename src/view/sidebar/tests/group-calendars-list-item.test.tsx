@@ -5,11 +5,12 @@
  */
 import React from 'react';
 
-import { ZIMBRA_STANDARD_COLORS } from '../../../carbonio-ui-commons/constants';
-import { screen, setupTest } from '../../../carbonio-ui-commons/test/test-setup';
+import { ZIMBRA_STANDARD_COLORS } from '@zextras/carbonio-ui-commons';
+
 import { TEST_SELECTORS } from '../../../constants/test-utils';
 import { generateGroupCalendar } from '../../../test/generators/group';
 import { GroupCalendarsListItem } from '../group-calendars-list-item';
+import { setupTest, screen } from '@test-setup';
 import 'jest-styled-components';
 
 describe('Group calendars list item', () => {

@@ -8,8 +8,8 @@ import { SuccessSoapResponse } from '@zextras/carbonio-shell-ui';
 import { isNull, map, omitBy } from 'lodash';
 import { HttpResponse, HttpResponseResolver } from 'msw';
 
-import { CarbonioMailboxRestHandlerRequest } from '../../../../carbonio-ui-commons/test/mocks/network/msw/handlers';
 import { Resource } from '../../../../types/editor';
+import { CarbonioMailboxRestHandlerRequest } from '@test-utils/network/msw/handlers';
 
 export const getCustomResources = (resources?: Array<Resource>): SuccessSoapResponse<any> => ({
 	Header: {

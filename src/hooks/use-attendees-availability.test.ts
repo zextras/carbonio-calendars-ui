@@ -8,9 +8,9 @@ import { map } from 'lodash';
 import moment from 'moment';
 
 import { useAttendeesAvailability } from './use-attendees-availability';
-import { setupHook } from '../carbonio-ui-commons/test/test-setup';
 import * as handler from '../soap/get-free-busy-request';
 import mockedData from '../test/generators';
+import { setupHook } from '@test-setup';
 
 describe('use attendees availability', () => {
 	describe('no user interaction - pre-populated editor', () => {
@@ -22,8 +22,6 @@ describe('use attendees availability', () => {
 			});
 
 			expect(spy).not.toHaveBeenCalled();
-
-			spy.mockClear();
 		});
 		test('if there is at least one participant the request is sent to the server once', async () => {
 			const attendees = mockedData.editor.getRandomAttendees({ length: 1 });
@@ -36,18 +34,15 @@ describe('use attendees availability', () => {
 			const rangeStart = moment().startOf('day').valueOf();
 			const rangeEnd = moment().endOf('day').valueOf();
 
-			setupHook(useAttendeesAvailability, {
-				initialProps: [rangeStart, attendees]
-			});
-
 			await waitFor(() => {
-				expect(spy).toHaveBeenCalled();
+				setupHook(useAttendeesAvailability, {
+					initialProps: [rangeStart, attendees]
+				});
 			});
 
+			expect(spy).toHaveBeenCalled();
 			expect(spy).toHaveBeenCalledTimes(1);
 			expect(spy).toHaveBeenCalledWith({ s: rangeStart, e: rangeEnd, uid });
-
-			spy.mockClear();
 		});
 		test('if there are multiple participants the request is sent to the server once, containing all the participants', async () => {
 			const attendees = mockedData.editor.getRandomAttendees({ length: 2 });
@@ -62,17 +57,15 @@ describe('use attendees availability', () => {
 			const rangeStart = moment().startOf('day').valueOf();
 			const rangeEnd = moment().endOf('day').valueOf();
 
-			setupHook(useAttendeesAvailability, {
-				initialProps: [rangeStart, attendees]
+			await waitFor(() => {
+				setupHook(useAttendeesAvailability, {
+					initialProps: [rangeStart, attendees]
+				});
 			});
 
-			await waitFor(() => {
-				expect(spy).toHaveBeenCalled();
-			});
+			expect(spy).toHaveBeenCalled();
 			expect(spy).toHaveBeenCalledTimes(1);
 			expect(spy).toHaveBeenCalledWith({ s: rangeStart, e: rangeEnd, uid });
-
-			spy.mockClear();
 		});
 		test('if on rerender start, end, attendees does not change, only the first request is sent', async () => {
 			const attendees = mockedData.editor.getRandomAttendees({ length: 1 });
@@ -95,8 +88,6 @@ describe('use attendees availability', () => {
 			});
 			expect(spy).toHaveBeenCalledTimes(1);
 			expect(spy).toHaveBeenCalledWith({ s: rangeStart, e: rangeEnd, uid });
-
-			spy.mockClear();
 		});
 	});
 	describe('user interaction - filling editor', () => {

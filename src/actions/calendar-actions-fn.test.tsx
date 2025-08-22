@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 import { act, waitFor } from '@testing-library/react';
+import { FOLDERS } from '@zextras/carbonio-ui-commons';
 import { http, HttpResponse } from 'msw';
 
 import {
@@ -15,12 +16,10 @@ import {
 	newCalendar,
 	removeFromList,
 	shareCalendar,
-	shareCalendarUrl,
 	sharesInfo
 } from './calendar-actions-fn';
-import { FOLDERS } from '../carbonio-ui-commons/constants/folders';
-import { getSetupServer } from '../carbonio-ui-commons/test/jest-setup';
 import mockedData from '../test/generators';
+import { getSetupServer } from '@jest-setup';
 
 const FOLDER_ACTION_REQUEST_PATH = '/service/soap/FolderActionRequest';
 
@@ -203,14 +202,6 @@ describe('calendar-actions-fn', () => {
 		const item = mockedData.calendars.getCalendar();
 		const shareCalendarFn = shareCalendar({ createModal, closeModal, item });
 		shareCalendarFn();
-		expect(createModal).toHaveBeenCalledTimes(1);
-	});
-	test('shares calendar url fn on click create modal is called once', () => {
-		const createModal = jest.fn();
-		const closeModal = jest.fn();
-		const item = { name: 'calendar' };
-		const shareCalendarUrlFn = shareCalendarUrl({ createModal, closeModal, item });
-		shareCalendarUrlFn();
 		expect(createModal).toHaveBeenCalledTimes(1);
 	});
 	test('find shares fn on click create modal is called once', async () => {

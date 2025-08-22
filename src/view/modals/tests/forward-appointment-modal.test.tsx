@@ -3,16 +3,17 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import React from 'react';
+
 import { faker } from '@faker-js/faker';
 import { act, screen } from '@testing-library/react';
 import { noop } from 'lodash';
-import React from 'react';
 
-import { createSoapAPIInterceptor } from '../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { setupTest, UserEvent } from '../../../carbonio-ui-commons/test/test-setup';
 import { generateSoapErrorResponseBody } from '../../../test/generators/utils';
 import { ForwardAppointmentRequest } from '../../../types/soap/soap-actions';
 import { ForwardAppointmentModal } from '../forward-appointment-modal';
+import { UserEvent, setupTest } from '@test-setup';
+import { createSoapAPIInterceptor } from '@test-utils/network/msw/create-api-interceptor';
 
 async function inputAttendee(user: UserEvent, input: HTMLElement, attendee: string): Promise<void> {
 	await act(async () => {
@@ -39,9 +40,7 @@ describe('ForwardAppointmentModal', () => {
 		const onClose = jest.fn();
 		const { user } = setupTest(<ForwardAppointmentModal eventId="" onClose={onClose} />);
 		const closeIcon = await screen.findByTestId('icon: CloseOutline');
-		await act(async () => {
-			await user.click(closeIcon);
-		});
+		await user.click(closeIcon);
 		expect(onClose).toHaveBeenCalled();
 	});
 
@@ -69,9 +68,7 @@ describe('ForwardAppointmentModal', () => {
 			const confirmButton = screen.getByRole('button', {
 				name: 'modal.buttonLabel.forward'
 			});
-			await act(async () => {
-				await user.click(confirmButton);
-			});
+			await user.click(confirmButton);
 
 			const request = await interceptor;
 
@@ -109,9 +106,7 @@ describe('ForwardAppointmentModal', () => {
 			const confirmButton = screen.getByRole('button', {
 				name: 'modal.buttonLabel.forward'
 			});
-			await act(async () => {
-				await user.click(confirmButton);
-			});
+			await user.click(confirmButton);
 			await interceptor;
 			const errorSnackbar = await screen.findByText('label.error_try_again');
 			expect(errorSnackbar).toBeVisible();

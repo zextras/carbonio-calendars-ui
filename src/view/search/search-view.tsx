@@ -7,20 +7,22 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Container } from '@zextras/carbonio-design-system';
 import type { QueryChip, SearchViewProps } from '@zextras/carbonio-search-ui';
+import {
+	FOLDERS,
+	convertSearchChipToString,
+	useUpdateView,
+	useFoldersMap,
+	Folder,
+	usePrefs,
+	hasId
+} from '@zextras/carbonio-ui-commons';
 import { isEmpty, map, reduce } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Routes, Route } from 'react-router-dom';
 
-import AdvancedFilterModal from './advance-filter-modal';
+import { AdvancedFilterModal } from './advance-filter-modal';
 import SearchList from './search-list';
 import SearchPanel from './search-panel';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { convertSearchChipToString } from '../../carbonio-ui-commons/helpers/search';
-import { useUpdateView } from '../../carbonio-ui-commons/hooks/use-update-view';
-import { useFoldersMap } from '../../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../../carbonio-ui-commons/types/folder';
-import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import { DEFAULT_DATE_END, DEFAULT_DATE_START } from '../../constants/advance-filter-modal';
 import { searchAppointments } from '../../store/actions/search-appointments';
 import { useAppDispatch, useAppSelector } from '../../store/redux/hooks';
@@ -33,6 +35,32 @@ export type SearchResults = {
 	sortBy: string;
 	query: QueryChip[];
 };
+
+const specialChars = [
+	'~',
+	"'",
+	'!',
+	'#',
+	'$',
+	'%',
+	'^',
+	'&',
+	'(',
+	')',
+	'_',
+	'?',
+	'/',
+	'{',
+	'}',
+	'[',
+	']',
+	';',
+	':',
+	'-',
+	'+',
+	'<',
+	'>'
+];
 
 const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	const initialSearchResults = useMemo(
@@ -53,7 +81,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	const [showAdvanceFilters, setShowAdvanceFilters] = useState(false);
 	const { zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch } = usePrefs();
 	const defaultResultLabel = useMemo(() => t('label.results_for', 'Results for: '), [t]);
-	const [resultLabel, setResultLabel] = useState<string>(defaultResultLabel);
 	const [isInvalidQuery, setIsInvalidQuery] = useState<boolean>(false);
 	const [includeTrash, includeSharedFolders] = useMemo(
 		() => [
@@ -62,6 +89,37 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		],
 		[zimbraPrefIncludeTrashInSearch, zimbraPrefIncludeSharedItemsInSearch]
 	);
+
+	const invalidQueryTooltip = useMemo(
+		() =>
+			t(
+				'label.invalid_query',
+				'Special characters like :, ", -, !, etc., are ignored in the search. This may lead to unexpected results for:'
+			),
+		[t]
+	);
+
+	const containsSpecialCharacter = useMemo(() => {
+		if (!query || query.length === 0) return false;
+
+		const relevantQuery = query.filter((chip: any) => {
+			if ('queryChipsToAdvancedFiltersValue' in chip) return false;
+			if (chip.isQueryFilter) return false;
+			return true;
+		});
+
+		const queryString = relevantQuery.map((c) => convertSearchChipToString(c)).join(' ');
+		return specialChars.some((char) => queryString.includes(char));
+	}, [query]);
+
+	const resultLabelType = containsSpecialCharacter ? 'warning' : undefined;
+
+	const resultLabel = useMemo(() => {
+		if (containsSpecialCharacter) {
+			return invalidQueryTooltip;
+		}
+		return defaultResultLabel;
+	}, [containsSpecialCharacter, invalidQueryTooltip, defaultResultLabel]);
 
 	const calendars = useFoldersMap();
 	useUpdateView();
@@ -94,7 +152,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 
 	const search = useCallback(
 		(queryStr: QueryChip[], reset: boolean) => {
-			setResultLabel(defaultResultLabel);
 			setLoading(true);
 
 			const queryString = queryStr.map((c) => convertSearchChipToString(c)).join(' ');
@@ -109,7 +166,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 				})
 			)
 				.then(({ payload }) => {
-					setLoading(true);
+					setLoading(false);
 					if (payload) {
 						const ids = reduce(
 							payload.appt,
@@ -124,7 +181,6 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 							sortBy: payload.sortBy ?? 'none'
 						});
 					}
-					setLoading(false);
 				})
 
 				.catch(() => {
@@ -138,13 +194,12 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 					updateQuery(newQueryStr);
 					setIsInvalidQuery(true);
 
-					setResultLabel(
-						t('label.results_for_error', 'Unable to start the search, clear it and retry: ')
-					);
+					setSearchResults(initialSearchResults);
+					setSpanStart(DEFAULT_DATE_START);
+					setSpanEnd(DEFAULT_DATE_END);
 				});
 		},
 		[
-			defaultResultLabel,
 			foldersToSearchInQuery,
 			dispatch,
 			spanStart,
@@ -152,7 +207,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 			searchResults.offset,
 			searchResults.sortBy,
 			updateQuery,
-			t
+			initialSearchResults
 		]
 	);
 
@@ -168,8 +223,9 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		}
 		if (query && query.length === 0) {
 			setIsInvalidQuery(false);
-			setResultLabel(defaultResultLabel);
 			setSearchResults(initialSearchResults);
+			setSpanStart(DEFAULT_DATE_START);
+			setSpanEnd(DEFAULT_DATE_END);
 		}
 	}, [
 		query,
@@ -178,7 +234,9 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 		isInvalidQuery,
 		t,
 		defaultResultLabel,
-		initialSearchResults
+		initialSearchResults,
+		setSpanStart,
+		setSpanEnd
 	]);
 
 	const appointments = useAppSelector((state) =>
@@ -188,7 +246,7 @@ const SearchView: FC<SearchViewProps> = ({ useQuery, ResultsHeader }) => {
 	return (
 		<>
 			<Container style={{ whiteSpace: 'nowrap' }}>
-				<ResultsHeader label={query.length > 0 ? resultLabel : ''} />
+				<ResultsHeader label={query.length > 0 ? resultLabel : ''} labelType={resultLabelType} />
 				<Container orientation="horizontal" style={{ minHeight: '0' }} mainAlignment="flex-start">
 					<Routes>
 						<Route

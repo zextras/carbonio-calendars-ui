@@ -210,7 +210,7 @@ const getOrganizer = ({
 	};
 };
 
-function generateHtmlBodyRequest(app: Editor): string {
+export function generateHtmlBodyRequest(app: Editor): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 	const organizer = getOrganizer({
 		calendar: app?.calendar,
@@ -222,10 +222,9 @@ function generateHtmlBodyRequest(app: Editor): string {
 		end: app.end ?? 0,
 		options: { allDay: app.allDay, allDayLabel: 'allDay' }
 	});
-
-	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} have invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
+	const meetingHtml = `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a new meeting!</h3><p>Subject: ${app.title}</p><p>Organizer: ${organizer.name}</p><p>Location: ${app.location}</p><p>Time: ${date}</p><p>Invitees: ${attendees}</p><br/>${ROOM_DIVIDER}`;
 	const virtualRoomHtml = app?.room?.label
-		? `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a virtual meeting on Carbonio Chats system.</h3><p>Join the meeting now on <a href="${app.room.link}">${app.room.label}</a></p><p>You can join the meeting via Web or by using native applications:</p><a href="https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US">https://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US</a><br/><a href="https://apps.apple.com/it/app/zextras-team/id1459844854">https://apps.apple.com/it/app/zextras-team/id1459844854</a><br/>${ROOM_DIVIDER}`
+		? `${ROOM_DIVIDER}<h3>${organizer.name} invited you to a virtual meeting on Carbonio Chats.</h3><p>Join here when it's time: <a href="${app.room.link}">${app.room.label}</a></p><br/>${ROOM_DIVIDER}`
 		: '';
 	const defaultMessage =
 		app?.room && !includes(app.richText, ROOM_DIVIDER) ? virtualRoomHtml : meetingHtml;
@@ -234,7 +233,7 @@ function generateHtmlBodyRequest(app: Editor): string {
 		: app.richText;
 }
 
-function generateBodyRequest(app: Editor): string {
+export function generateBodyRequest(app: Editor): string {
 	const attendees = [...app.attendees, ...app.optionalAttendees].map((a) => a.email).join(', ');
 	const organizer = getOrganizer({
 		calendar: app?.calendar,
@@ -251,15 +250,14 @@ function generateBodyRequest(app: Editor): string {
 	const virtualRoomMessage = app?.room?.label
 		? `${ROOM_DIVIDER}\n${
 				organizer.name ?? ''
-			} have invited you to a virtual meeting on Carbonio Chats system!\n\nJoin the meeting now on ${
+			} invited you to a virtual meeting on Carbonio Chats!\n\nJoin here when it's time: ${
 				app.room.label
-			}\n\n${
-				app.room.link
-			} \n\nYou can join the meeting via Web or by using native applications:\n\nhttps://play.google.com/store/apps/details?id=com.zextras.team&hl=it&gl=US\n\nhttps://apps.apple.com/it/app/zextras-team/id1459844854\n\n${ROOM_DIVIDER}\n`
+			}\n\n${app.room.link} \n\n${ROOM_DIVIDER}\n`
 		: '';
+
 	const meetingMessage = `${ROOM_DIVIDER}\n${
 		organizer.name ?? ''
-	} have invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: "${
+	} invited you to a new meeting!\n\nSubject: ${app.title} \nOrganizer: "${
 		organizer.name
 	} \n\nTime: ${date}\n \nInvitees: ${attendees} \n\n\n${ROOM_DIVIDER}`;
 	const defaultMessage = app?.room?.label ? virtualRoomMessage : meetingMessage;
@@ -421,7 +419,7 @@ export const normalizeSoapMessageFromEditor = (msg: Editor): any =>
 		{
 			echo: '1',
 			id: msg?.inviteId,
-			comp: '0',
+			comp: msg?.compNum,
 			m: omitBy(
 				{
 					attach: msg?.attach

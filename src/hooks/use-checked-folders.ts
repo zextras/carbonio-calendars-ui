@@ -5,10 +5,8 @@
  */
 import { useMemo } from 'react';
 
+import { useFoldersMap, Folder } from '@zextras/carbonio-ui-commons';
 import { filter } from 'lodash';
-
-import { useFoldersMap } from '../carbonio-ui-commons/store/zustand/folder';
-import { Folder } from '../carbonio-ui-commons/types/folder';
 
 export const useCheckedFolders = (): Array<Folder> => {
 	const calendars = useFoldersMap();

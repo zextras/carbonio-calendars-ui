@@ -1,90 +1,477 @@
+/* eslint-disable */
 /*
- * SPDX-FileCopyrightText: 2024 Zextras <https://www.zextras.com>
+ * SPDX-FileCopyrightText: 2025 Zextras <https://www.zextras.com>
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import React from 'react';
 
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { screen } from '@testing-library/react';
-import { DropdownItem } from '@zextras/carbonio-design-system';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 
-import { setupTest } from '../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../commons/editor-generator';
-import { TEST_SELECTORS } from '../../../../constants/test-utils';
 import { reducers } from '../../../../store/redux';
 import { Resource } from '../../../../types/editor';
 import { EditorResourceComponent } from '../editor-resource-component';
+import { setupTest } from '@test-setup';
 
-function mockSearchOptions(): Promise<Array<DropdownItem & { value?: Resource }>> {
-	return Promise.resolve([
+describe('EditorResourceComponent', () => {
+	let store: ReturnType<typeof configureStore>;
+	let editor: ReturnType<typeof generateEditor>;
+	const onChangeMock = jest.fn();
+
+	const defaultResource: Resource = {
+		id: 'r1',
+		label: 'DefaultResource',
+		email: 'default@example.com',
+		type: 'Location'
+	};
+	const mockSearchOptions = jest.fn(async (_text: string) => [
 		{
 			id: '1',
-			label: 'First Option',
-			value: {
-				label: 'My resource',
-				email: 'mynewresource@test.com'
-			}
+			label: 'DefaultResource',
+			value: defaultResource
 		}
 	]);
-}
-describe('EditorResourceComponent', () => {
-	it('should clear typed text after selecting the first option with enter', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
-		const onChangeMock = jest.fn();
-		const { user } = setupTest(
-			<EditorResourceComponent
-				placeholder={'Test'}
-				editorId={editor.id}
-				onChange={onChangeMock}
-				onSearchOptions={mockSearchOptions}
-				resourcesValue={[]}
-				warningLabel={''}
-				singleWarningLabel={''}
-			/>,
-			{ store }
-		);
 
-		const resourceInput = screen.getByRole('textbox', { name: 'Test' });
-		await user.type(resourceInput, 'aaaaaa');
-		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-		await user.keyboard('[Enter]');
-
-		expect(dropdown).not.toBeInTheDocument();
-		expect(resourceInput).toHaveValue('');
+	beforeEach(() => {
+		store = configureStore({ reducer: combineReducers(reducers) });
+		editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
+		onChangeMock.mockClear();
+		mockSearchOptions.mockClear();
 	});
 
-	it('should not remove current chips after selecting the first option with Enter', async () => {
-		const store = configureStore({ reducer: combineReducers(reducers) });
-		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
-		const onChangeMock = jest.fn();
-		const resource1 = {
-			label: 'My resource 1',
-			email: 'myresource@test.com'
-		};
-		const { user } = setupTest(
-			<EditorResourceComponent
-				placeholder={'Test'}
-				editorId={editor.id}
-				onChange={onChangeMock}
-				onSearchOptions={mockSearchOptions}
-				resourcesValue={[resource1]}
-				warningLabel={''}
-				singleWarningLabel={''}
-			/>,
-			{ store }
-		);
+	describe('Initial Rendering', () => {
+		it('renders the component with provided resources', () => {
+			setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={() => Promise.resolve([])}
+					resourcesValue={[defaultResource]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
 
-		const resourceInput = screen.getByRole('textbox', { name: 'Test' });
-		await user.type(resourceInput, 'aaaaaa');
-		const dropdown = await screen.findByTestId(TEST_SELECTORS.DROPDOWN);
-		await user.keyboard('[Enter]');
-		expect(dropdown).not.toBeInTheDocument();
-		expect(onChangeMock).toHaveBeenCalledWith([
-			resource1,
-			expect.objectContaining({ email: 'mynewresource@test.com' })
-		]);
+			expect(screen.getByPlaceholderText('Test')).toBeInTheDocument();
+			const chip = screen.getByTestId('chip');
+			expect(chip).toHaveTextContent('DefaultResource');
+		});
+	});
+
+	describe('Resource Selection', () => {
+		it('allows adding a valid resource via search', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			const input = screen.getByPlaceholderText('Test');
+			await user.type(input, 'DefaultResource');
+			await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('DefaultResource'));
+
+			const dropDownItem = await screen.findByTestId('dropdown-item');
+			expect(dropDownItem).toHaveTextContent('DefaultResource');
+			await user.keyboard('{Control>}{Enter}{/Control}');
+
+			await waitFor(async () => {
+				expect(onChangeMock).toHaveBeenCalledTimes(1);
+				const [resources] = onChangeMock.mock.calls[0];
+				expect(resources[0]).toMatchObject({
+					label: 'DefaultResource',
+					email: 'default@example.com'
+				});
+				expect(dropDownItem).not.toBeInTheDocument();
+			});
+		});
+
+		it('should select the first option when user press Control+Enter', async () => {
+			const resource2: Resource = {
+				id: 'r2',
+				label: 'Room-B',
+				email: 'roomb@example.com',
+				type: 'Location'
+			};
+
+			const mockSearchOptions2 = jest.fn(async (_text: string) => [
+				{
+					id: '1',
+					label: 'DefaultResource',
+					value: defaultResource
+				},
+				{
+					id: '2',
+					label: 'Resource2',
+					value: resource2
+				}
+			]);
+
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions2}
+					resourcesValue={[]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			const input = screen.getByPlaceholderText('Test');
+			await user.type(input, 'Resource');
+
+			const dropDownItems = await screen.findAllByTestId('dropdown-item');
+			expect(dropDownItems).toHaveLength(2);
+
+			await user.keyboard('{Control>}{Enter}{/Control}');
+
+			await waitFor(async () => {
+				expect(onChangeMock).toHaveBeenCalledTimes(1);
+				const [resources] = onChangeMock.mock.calls[0];
+				expect(resources[0]).toMatchObject({
+					label: defaultResource.label,
+					email: defaultResource.email
+				});
+			});
+		});
+
+		it('shows loader while searching for options', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={() => new Promise((resolve) => setTimeout(() => resolve([]), 1000))}
+					resourcesValue={[]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			const input = screen.getByPlaceholderText('Test');
+			await user.type(input, 'Meeting Room');
+
+			await waitFor(() => {
+				expect(screen.getByTestId('dropdown-options-loader')).toBeInTheDocument();
+			});
+		});
+	});
+
+	describe('Input Validation', () => {
+		it('adds invalid chip manually and shows error', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+			expect(screen.queryByText('Invalid input')).not.toBeInTheDocument();
+
+			const input = screen.getByPlaceholderText('Test');
+			await user.type(input, 'unknown-resource');
+			await user.keyboard('{Enter}');
+
+			await waitFor(() => {
+				expect(screen.getByText('Invalid input')).toBeInTheDocument();
+			});
+		});
+
+		it('should not add resource on Enter key if input is empty', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			await user.keyboard('[Enter]');
+
+			expect(onChangeMock).not.toHaveBeenCalled();
+			expect(screen.queryByText('Invalid input')).not.toBeInTheDocument();
+		});
+
+		it('shows duplicate error when adding a resource with the same id', async () => {
+			setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[defaultResource, defaultResource]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			await waitFor(async () => {
+				expect(screen.getByText('Duplicate input')).toBeInTheDocument();
+			});
+		});
+
+		it('shows invalid input error when there is at least one invalid input and multiple duplicate resource with the same id', async () => {
+			setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[{ label: 'chip101', email: '' }, defaultResource, defaultResource]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			await waitFor(() => {
+				expect(screen.getByText('Invalid input')).toBeInTheDocument();
+			});
+		});
+	});
+
+	describe('Duplicate Handling', () => {
+		it('allows duplicate entries onChange', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[defaultResource]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			// existing default resource chip
+			const chip = screen.getByTestId('chip');
+			expect(chip).toHaveTextContent('DefaultResource');
+
+			// try to add the same resource again
+			const input = screen.getByPlaceholderText('Test');
+			await user.type(input, 'DefaultResource');
+
+			const dropDownItem = await screen.findByTestId('dropdown-item');
+			expect(dropDownItem).toHaveTextContent('DefaultResource');
+
+			await user.keyboard('{Enter}');
+
+			await waitFor(() => {
+				expect(onChangeMock).toHaveBeenCalled();
+				const [chips] = onChangeMock.mock.calls.at(-1)!;
+				expect(chips).toHaveLength(2);
+				expect(dropDownItem).not.toBeInTheDocument();
+			});
+		});
+	});
+
+	describe('Keyboard Interactions', () => {
+		it('should add resource chip when user presses NumberPadEnter after typing', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={() => Promise.resolve([])}
+					resourcesValue={[]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			const input = screen.getByPlaceholderText('Test');
+			await user.type(input, 'resource1');
+
+			fireEvent.keyDown(input, { code: 'NumpadEnter' });
+
+			await waitFor(async () => {
+				expect(onChangeMock).toHaveBeenCalledTimes(1);
+				const [resources] = onChangeMock.mock.calls[0];
+				expect(resources[0]).toMatchObject({
+					label: 'resource1',
+					email: ''
+				});
+			});
+		});
+		it('should add resource chip when user presses Enter after typing exact match', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			const input = screen.getByPlaceholderText('Test');
+			await user.type(input, 'DefaultResource');
+
+			const dropDownItem = await screen.findByTestId('dropdown-item');
+			expect(dropDownItem).toHaveTextContent('DefaultResource');
+
+			await user.keyboard('{Enter}');
+
+			await waitFor(async () => {
+				expect(onChangeMock).toHaveBeenCalledTimes(1);
+				const [resources] = onChangeMock.mock.calls[0];
+				expect(resources[0]).toMatchObject({
+					label: 'DefaultResource',
+					email: defaultResource.email // Ensure email is included
+				});
+			});
+		});
+	});
+
+	describe('Chip Editing', () => {
+		it('shows edit action in added chip', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[defaultResource]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			const chip = screen.getByTestId('chip');
+			expect(chip).toHaveTextContent('DefaultResource');
+
+			const editButton = within(chip).getByTestId('icon: EditOutline');
+			expect(editButton).toBeInTheDocument();
+
+			await user.click(editButton);
+			expect(onChangeMock).toHaveBeenCalledTimes(0); // No change on edit click
+		});
+
+		it('triggers onChange when user commit edit using edit chip action', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[defaultResource]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			const chip = screen.getByTestId('chip');
+			expect(chip).toHaveTextContent('DefaultResource');
+
+			const editButton = within(chip).getByTestId('icon: EditOutline');
+			expect(editButton).toBeInTheDocument();
+
+			await user.click(editButton);
+			expect(onChangeMock).toHaveBeenCalledTimes(0);
+
+			const input = screen.getByPlaceholderText('Test');
+
+			await user.clear(input);
+			await user.type(input, 'UpdatedResource');
+			await user.keyboard('{Enter}');
+			await waitFor(() => {
+				expect(onChangeMock).toHaveBeenCalledTimes(1);
+				const [resources] = onChangeMock.mock.calls[0];
+				expect(resources[0]).toMatchObject({
+					label: 'UpdatedResource',
+					email: ''
+				});
+			});
+		});
+	});
+
+	describe('Options Management', () => {
+		it('should clear options after selecting a resource', async () => {
+			const { user } = setupTest(
+				<EditorResourceComponent
+					placeholder="Test"
+					editorId={editor.id}
+					onChange={onChangeMock}
+					onSearchOptions={mockSearchOptions}
+					resourcesValue={[]}
+					warningLabel=""
+					singleWarningLabel=""
+					invalidInputErrorLabel="Invalid input"
+					duplicateChipsErrorLabel={'Duplicate input'}
+				/>,
+				{ store }
+			);
+
+			const input = screen.getByPlaceholderText('Test');
+			await user.type(input, 'DefaultResource');
+			await waitFor(() => expect(mockSearchOptions).toHaveBeenCalledWith('DefaultResource'));
+
+			const dropDownItem = await screen.findByTestId('dropdown-item');
+			expect(dropDownItem).toHaveTextContent('DefaultResource');
+
+			await user.keyboard('{Control>}{Enter}{/Control}');
+
+			expect(dropDownItem).not.toBeInTheDocument();
+		});
 	});
 });

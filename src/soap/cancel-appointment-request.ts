@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 
 type Props = {
 	deleteSingleInstance: boolean;
@@ -43,6 +43,6 @@ export const cancelAppointmentRequest = async ({
 				comp: '0',
 				m: isOrganizer ? m : { ...m, e: [] }
 			};
-	const response: CancelAppointmentReturnType = await soapFetch('CancelAppointment', body);
+	const response: CancelAppointmentReturnType = await legacySoapFetch('CancelAppointment', body);
 	return response?.Fault ? { ...response.Fault, error: true } : response;
 };

@@ -11,10 +11,15 @@ import type { QueryChip } from '@zextras/carbonio-search-ui';
 import { combineReducers } from 'redux';
 
 import SearchView from './search-view';
-import { setupTest } from '../../carbonio-ui-commons/test/test-setup';
 import appointmentsSliceReducer from '../../store/slices/appointments-slice';
 import editorSliceReducer from '../../store/slices/editor-slice';
 import invitesSliceReducer from '../../store/slices/invites-slice';
+import { setupTest } from '@test-setup';
+
+jest.mock('@zextras/carbonio-ui-commons', () => ({
+	...jest.requireActual('@zextras/carbonio-ui-commons'),
+	convertSearchChipToString: jest.fn((chip) => chip.label || chip.value || '')
+}));
 
 describe('SearchView', () => {
 	const RESULTS_HEADER_TEST_ID = 'results-header';
@@ -31,16 +36,16 @@ describe('SearchView', () => {
 			QueryChip[],
 			(query: QueryChip[] | ((q: QueryChip[]) => QueryChip[])) => void
 		] => [[], jest.fn()],
-		ResultsHeader: ({ label }: { label: string }): JSX.Element => (
-			<div data-testid={RESULTS_HEADER_TEST_ID}>{label}</div>
+		ResultsHeader: ({ label, labelType }: { label: string; labelType?: string }): JSX.Element => (
+			<div data-testid={RESULTS_HEADER_TEST_ID} data-label-type={labelType}>
+				{label}
+			</div>
 		),
 		useDisableSearch: (): [boolean, (searchDisabled: boolean) => void] => [false, jest.fn()]
 	};
 
 	beforeEach(() => {
-		jest.spyOn(console, 'warn').mockImplementation(() => {
-			// Mock implementation
-		});
+		jest.spyOn(console, 'warn').mockImplementation(() => {});
 	});
 
 	afterEach(() => {
@@ -69,5 +74,130 @@ describe('SearchView', () => {
 		};
 		setupTest(<SearchView {...props} />, { store: mockStore });
 		expect(screen.getByTestId(RESULTS_HEADER_TEST_ID)).toHaveTextContent('Results for:');
+	});
+
+	describe('Special characters detection', () => {
+		it('should detect special characters in regular keywords', (): void => {
+			const mockQuery = [{ id: '1', label: 'test:query' }];
+			const mockUpdateQuery = jest.fn();
+			const props = {
+				...defaultProps,
+				useQuery: (): [
+					QueryChip[],
+					(query: QueryChip[] | ((q: QueryChip[]) => QueryChip[])) => void
+				] => [mockQuery, mockUpdateQuery]
+			};
+			setupTest(<SearchView {...props} />, { store: mockStore });
+
+			const resultsHeader = screen.getByTestId(RESULTS_HEADER_TEST_ID);
+			expect(resultsHeader).toHaveAttribute('data-label-type', 'warning');
+		});
+
+		it('should NOT detect special characters in AdvancedSearchChip with queryChipsToAdvancedFiltersValue', (): void => {
+			const mockQuery = [
+				{
+					id: '1',
+					label: 'flagged:true',
+					queryChipsToAdvancedFiltersValue: { flagged: true }
+				}
+			];
+			const mockUpdateQuery = jest.fn();
+			const props = {
+				...defaultProps,
+				useQuery: (): [
+					QueryChip[],
+					(query: QueryChip[] | ((q: QueryChip[]) => QueryChip[])) => void
+				] => [mockQuery, mockUpdateQuery]
+			};
+			setupTest(<SearchView {...props} />, { store: mockStore });
+
+			const resultsHeader = screen.getByTestId(RESULTS_HEADER_TEST_ID);
+			expect(resultsHeader).not.toHaveAttribute('data-label-type', 'warning');
+		});
+
+		it('should NOT detect special characters in chips with isQueryFilter', (): void => {
+			const mockQuery = [
+				{
+					id: '1',
+					label: 'invalid:query',
+					isQueryFilter: true
+				}
+			];
+			const mockUpdateQuery = jest.fn();
+			const props = {
+				...defaultProps,
+				useQuery: (): [
+					QueryChip[],
+					(query: QueryChip[] | ((q: QueryChip[]) => QueryChip[])) => void
+				] => [mockQuery, mockUpdateQuery]
+			};
+			setupTest(<SearchView {...props} />, { store: mockStore });
+
+			const resultsHeader = screen.getByTestId(RESULTS_HEADER_TEST_ID);
+			expect(resultsHeader).not.toHaveAttribute('data-label-type', 'warning');
+		});
+
+		it('should detect special characters in mixed query with both regular and advanced chips', (): void => {
+			const mockQuery = [
+				{ id: '1', label: 'regular:keyword' },
+				{
+					id: '2',
+					label: 'flagged:true',
+					queryChipsToAdvancedFiltersValue: { flagged: true }
+				},
+				{
+					id: '3',
+					label: 'invalid:query',
+					isQueryFilter: true
+				}
+			];
+			const mockUpdateQuery = jest.fn();
+			const props = {
+				...defaultProps,
+				useQuery: (): [
+					QueryChip[],
+					(query: QueryChip[] | ((q: QueryChip[]) => QueryChip[])) => void
+				] => [mockQuery, mockUpdateQuery]
+			};
+			setupTest(<SearchView {...props} />, { store: mockStore });
+
+			const resultsHeader = screen.getByTestId(RESULTS_HEADER_TEST_ID);
+			expect(resultsHeader).toHaveAttribute('data-label-type', 'warning');
+		});
+
+		it('should NOT detect special characters when query is empty', (): void => {
+			const mockQuery: any[] = [];
+			const mockUpdateQuery = jest.fn();
+			const props = {
+				...defaultProps,
+				useQuery: (): [
+					QueryChip[],
+					(query: QueryChip[] | ((q: QueryChip[]) => QueryChip[])) => void
+				] => [mockQuery, mockUpdateQuery]
+			};
+			setupTest(<SearchView {...props} />, { store: mockStore });
+
+			const resultsHeader = screen.getByTestId(RESULTS_HEADER_TEST_ID);
+			expect(resultsHeader).not.toHaveAttribute('data-label-type', 'warning');
+		});
+
+		it('should detect multiple special characters in keywords', (): void => {
+			const mockQuery = [
+				{ id: '1', label: 'test!query' },
+				{ id: '2', label: 'another#query' }
+			];
+			const mockUpdateQuery = jest.fn();
+			const props = {
+				...defaultProps,
+				useQuery: (): [
+					QueryChip[],
+					(query: QueryChip[] | ((q: QueryChip[]) => QueryChip[])) => void
+				] => [mockQuery, mockUpdateQuery]
+			};
+			setupTest(<SearchView {...props} />, { store: mockStore });
+
+			const resultsHeader = screen.getByTestId(RESULTS_HEADER_TEST_ID);
+			expect(resultsHeader).toHaveAttribute('data-label-type', 'warning');
+		});
 	});
 });

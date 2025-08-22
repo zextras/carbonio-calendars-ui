@@ -6,14 +6,14 @@
 import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { Select, SingleSelectionOnChange } from '@zextras/carbonio-design-system';
+import {
+	getIdentitiesDescriptors,
+	getIdentityDescription,
+	IdentityDescriptor
+} from '@zextras/carbonio-ui-commons';
 import { find, map, upperFirst } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
-import {
-	getIdentitiesDescriptors,
-	getIdentityDescription
-} from '../../../carbonio-ui-commons/helpers/identities';
-import { IdentityDescriptor } from '../../../carbonio-ui-commons/types/identities';
 import { useAppDispatch, useAppSelector } from '../../../store/redux/hooks';
 import { selectEditorDisabled } from '../../../store/selectors/editor';
 import { editSender } from '../../../store/slices/editor-slice';

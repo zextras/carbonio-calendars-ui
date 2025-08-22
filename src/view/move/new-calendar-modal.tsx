@@ -19,13 +19,11 @@ import {
 	useSnackbar,
 	AnyColor
 } from '@zextras/carbonio-design-system';
+import { FOLDERS, useFoldersMapByRoot, useRoot, hasId } from '@zextras/carbonio-ui-commons';
 import { includes, map } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { useFoldersMapByRoot, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
-import { hasId } from '../../carbonio-ui-commons/worker/handle-message';
 import ModalFooter from '../../commons/modal-footer';
 import { ModalHeader } from '../../commons/modal-header';
 import { CALENDARS_STANDARD_COLORS } from '../../constants/calendar';
@@ -157,7 +155,7 @@ export const NewModal = ({
 	const onConfirm = (): void => {
 		if (inputValue) {
 			createCalendar({
-				parent: root?.id ?? '1',
+				parent: (root?.id as '1') ?? '1',
 				name: inputValue,
 				color: selectedColor,
 				excludeFreeBusy: freeBusy

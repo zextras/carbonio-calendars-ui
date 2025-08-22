@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { ErrorSoapBodyResponse, soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch, ErrorSoapBodyResponse } from '@zextras/carbonio-ui-soap-lib';
 
 export type FreeBusy = {
 	s: number;
@@ -41,7 +41,7 @@ export async function getNonWorkingHoursRequest(
 	{ startEpochMillis, endEpochMillis, emails }: GetNonWorkingHoursRequest,
 	signal?: AbortSignal
 ): Promise<GetNonWorkingHoursResponse> {
-	const response = await soapFetch<
+	const response = await legacySoapFetch<
 		GetWorkingHoursSoapRequest,
 		GetWorkingHoursSoapResponse | ErrorSoapBodyResponse
 	>(

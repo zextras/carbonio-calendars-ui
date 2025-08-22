@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { soapFetch } from '@zextras/carbonio-shell-ui';
+import { legacySoapFetch } from '@zextras/carbonio-ui-soap-lib';
 import { isNil, omitBy } from 'lodash';
 
 export type FreeBusy = {
@@ -32,7 +32,7 @@ export const getFreeBusyRequest = async (
 	{ s, e, uid, excludeUid }: GetFreeBusyRequest,
 	signal?: AbortSignal
 ): Promise<GetFreeBusyResponse> =>
-	soapFetch(
+	legacySoapFetch(
 		'GetFreeBusy',
 		omitBy(
 			{

@@ -11,7 +11,7 @@ import { find, map } from 'lodash';
 import moment from 'moment-timezone';
 import { useTranslation } from 'react-i18next';
 
-import { useFoldersMap } from '../../../carbonio-ui-commons/store/zustand/folder';
+import { useFoldersMap } from '@zextras/carbonio-ui-commons';
 import { generateEditor } from '../../../commons/editor-generator';
 import { getAppointment, normalizeFromGetAppointment } from '../../../commons/get-appointment';
 import { normalizeCalendarEvent } from '../../../normalizations/normalize-calendar-events';

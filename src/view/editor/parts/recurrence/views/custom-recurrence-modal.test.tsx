@@ -6,16 +6,14 @@
 import React from 'react';
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { act, screen, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { find, values } from 'lodash';
 
 import { CustomRecurrenceModal } from './custom-recurrence-modal';
-import { setupTest } from '../../../../../carbonio-ui-commons/test/test-setup';
 import { generateEditor } from '../../../../../commons/editor-generator';
 import { RADIO_VALUES, RECURRENCE_FREQUENCY } from '../../../../../constants/recurrence';
 import { reducers } from '../../../../../store/redux';
-
-jest.setTimeout(10000);
+import { setupTest } from '@test-setup';
 
 describe('custom recurrence modal', () => {
 	test('“daily” selection, “every day” option, “no end date” is selected by default', async () => {
@@ -43,23 +41,15 @@ describe('custom recurrence modal', () => {
 			store
 		});
 
-		await act(async () => {
-			await user.click(screen.getByText(/daily/i));
-		});
-		await act(async () => {
-			await user.click(screen.getByText(/weekly/i));
-		});
+		await user.click(screen.getByText(/daily/i));
+		await user.click(screen.getByText(/weekly/i));
 
 		const allRatios = screen.getAllByRole('radio');
 		const everyDayRadio = find(allRatios, ['value', RADIO_VALUES.QUICK_OPTIONS]);
 		const daySelectOption = screen.getByText(/label.day/i);
 
-		await act(async () => {
-			await user.click(screen.getByText(/label.day/i));
-		});
-		await act(async () => {
-			await user.click(screen.getByText(/weekend day/i));
-		});
+		await user.click(screen.getByText(/label.day/i));
+		await user.click(screen.getByText(/weekend day/i));
 
 		expect(everyDayRadio).toBeChecked();
 		expect(daySelectOption).toBeVisible();
@@ -72,12 +62,8 @@ describe('custom recurrence modal', () => {
 			store
 		});
 
-		await act(async () => {
-			await user.click(screen.getByText(/daily/i));
-		});
-		await act(async () => {
-			await user.click(screen.getByText(/monthly/i));
-		});
+		await user.click(screen.getByText(/daily/i));
+		await user.click(screen.getByText(/monthly/i));
 
 		const allRatios = screen.getAllByRole('radio');
 		const dayRadio = find(allRatios, ['value', RADIO_VALUES.DAY_OF_MONTH]);
@@ -96,12 +82,8 @@ describe('custom recurrence modal', () => {
 			store
 		});
 
-		await act(async () => {
-			await user.click(screen.getByText(/daily/i));
-		});
-		await act(async () => {
-			await user.click(screen.getByText(/yearly/i));
-		});
+		await user.click(screen.getByText(/daily/i));
+		await user.click(screen.getByText(/yearly/i));
 
 		const allRatios = screen.getAllByRole('radio');
 		const everyYearOnRadio = find(allRatios, ['value', RADIO_VALUES.EVERY_YEAR_ON_MONTH_DAY]);
@@ -127,9 +109,7 @@ describe('On modal confirmation, the editor should have the selected values', ()
 			store
 		});
 
-		await act(async () => {
-			await user.click(screen.getByText(/customize/i));
-		});
+		await user.click(screen.getByText(/customize/i));
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
 
@@ -145,16 +125,9 @@ describe('On modal confirmation, the editor should have the selected values', ()
 			store
 		});
 
-		await act(async () => {
-			await user.click(screen.getByText(/daily/i));
-		});
-		await act(async () => {
-			await user.click(screen.getByText(/weekly/i));
-		});
-
-		await act(async () => {
-			await user.click(screen.getByText(/customize/i));
-		});
+		await user.click(screen.getByText(/daily/i));
+		await user.click(screen.getByText(/weekly/i));
+		await user.click(screen.getByText(/customize/i));
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
 
@@ -170,16 +143,9 @@ describe('On modal confirmation, the editor should have the selected values', ()
 			store
 		});
 
-		await act(async () => {
-			await user.click(screen.getByText(/daily/i));
-		});
-		await act(async () => {
-			await user.click(screen.getByText(/monthly/i));
-		});
-
-		await act(async () => {
-			await user.click(screen.getByText(/customize/i));
-		});
+		await user.click(screen.getByText(/daily/i));
+		await user.click(screen.getByText(/monthly/i));
+		await user.click(screen.getByText(/customize/i));
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
 
@@ -197,6 +163,7 @@ describe('On modal confirmation, the editor should have the selected values', ()
 			}
 		});
 	});
+
 	test('yearly option default customization', async () => {
 		const store = configureStore({ reducer: combineReducers(reducers) });
 		const editor = generateEditor({ context: { dispatch: store.dispatch, folders: {} } });
@@ -205,15 +172,9 @@ describe('On modal confirmation, the editor should have the selected values', ()
 			store
 		});
 
-		await act(async () => {
-			await user.click(screen.getByText(/daily/i));
-		});
-		await act(async () => {
-			await user.click(screen.getByText(/yearly/i));
-		});
-		await act(async () => {
-			await user.click(screen.getByText(/customize/i));
-		});
+		await user.click(screen.getByText(/daily/i));
+		await user.click(screen.getByText(/yearly/i));
+		await user.click(screen.getByText(/customize/i));
 
 		const updatedEditor = values(store.getState().editor.editors)[0];
 

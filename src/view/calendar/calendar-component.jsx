@@ -6,6 +6,7 @@
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { Popover } from '@zextras/carbonio-design-system';
+import { usePrefs, isTrashOrNestedInIt } from '@zextras/carbonio-ui-commons';
 import { filter, find, isEmpty, map, minBy } from 'lodash';
 import moment from 'moment-timezone';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -16,10 +17,9 @@ import { ThemeContext } from 'styled-components';
 import { CalendarResourceHeader } from './calendar-resource-header';
 import CalendarStyle from './calendar-style';
 import { MemoCustomEvent } from './custom-event';
+import { CustomShowMoreButton } from './custom-show-more-button';
 import { CustomToolbar } from './custom-toolbar';
 import { WorkView } from './work-view';
-import { isTrashOrNestedInIt } from '../../carbonio-ui-commons/store/zustand/folder/utils';
-import { usePrefs } from '../../carbonio-ui-commons/utils/use-prefs';
 import { PARTICIPATION_STATUS } from '../../constants/api';
 import { EVENT_ACTIONS } from '../../constants/event-actions';
 import { useCalendarComponentUtils } from '../../hooks/use-calendar-component-utils';
@@ -64,7 +64,8 @@ const CalendarSyncWithRange = () => {
 const customComponents = {
 	toolbar: CustomToolbar,
 	event: MemoCustomEvent,
-	resourceHeader: CalendarResourceHeader
+	resourceHeader: CalendarResourceHeader,
+	showMore: CustomShowMoreButton
 };
 
 export default function CalendarComponent() {
@@ -308,6 +309,9 @@ export default function CalendarComponent() {
 			/>
 			{anchorElement && (
 				<Popover
+					onClick={(e) => {
+						e.stopPropagation();
+					}}
 					anchorEl={anchorElement}
 					open={summaryViewOpen}
 					styleAsModal
@@ -325,6 +329,7 @@ export default function CalendarComponent() {
 				</Popover>
 			)}
 			<BigCalendar
+				popup
 				dayLayoutAlgorithm="no-overlap"
 				selectable
 				localizer={localizer}
@@ -346,6 +351,7 @@ export default function CalendarComponent() {
 				onSelectSlot={handleSelect}
 				scrollToTime={scrollToTime}
 				onEventDrop={onEventDropOrResize}
+				allDayMaxRows={3}
 				onEventResize={onEventDropOrResize}
 				formats={{ eventTimeRangeFormat: () => '' }}
 				resizable

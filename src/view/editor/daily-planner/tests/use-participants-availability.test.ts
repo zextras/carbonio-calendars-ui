@@ -8,17 +8,17 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { HttpResponse } from 'msw';
 
 import { mockTranslation } from './mocks';
-import {
-	createAPIInterceptor,
-	createSoapAPIInterceptor
-} from '../../../../carbonio-ui-commons/test/mocks/network/msw/create-api-interceptor';
-import { buildSoapErrorResponseBody } from '../../../../carbonio-ui-commons/test/mocks/utils/soap';
 import * as getFreeBusyResponseHandler from '../../../../soap/get-free-busy-request';
 import { mockFreeBusyResponse } from '../../../../soap/tests/mocks';
 import {
 	ParticipantAvailability,
 	useParticipantsAvailability
 } from '../use-participants-availability';
+import {
+	createAPIInterceptor,
+	createSoapAPIInterceptor
+} from '@test-utils/network/msw/create-api-interceptor';
+import { buildSoapErrorResponseBody } from '@test-utils/utils/soap';
 
 jest.mock('@zextras/carbonio-design-system', () => ({
 	...jest.requireActual('@zextras/carbonio-design-system'),

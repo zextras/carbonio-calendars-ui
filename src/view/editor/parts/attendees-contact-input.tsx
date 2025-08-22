@@ -6,9 +6,8 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { CONTACT_TYPES } from '../../../carbonio-ui-commons/integrations/constants';
-import { useContactInput } from '../../../carbonio-ui-commons/integrations/hooks';
-import { ContactInputItem } from '../../../carbonio-ui-commons/integrations/types';
+import { CONTACT_TYPES, useContactInput, ContactInputItem } from '@zextras/carbonio-ui-commons';
+
 import { EditorChipAttendees } from '../../../types/store/invite';
 
 type AttendeeContactInputProps = {

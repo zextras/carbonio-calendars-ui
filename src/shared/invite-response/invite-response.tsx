@@ -17,6 +17,7 @@ import {
 	Spinner
 } from '@zextras/carbonio-design-system';
 import { getAction, Action, useUserAccount } from '@zextras/carbonio-shell-ui';
+import { ROOT_NAME, FOLDERS, getRootAccountId, useRoot } from '@zextras/carbonio-ui-commons';
 import { filter, find, includes, map } from 'lodash';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
@@ -27,9 +28,6 @@ import { AvailabilityChecker } from './parts/availability-checker';
 import InviteReplyPart from './parts/invite-reply-part';
 import ProposedTimeReply from './parts/proposed-time-reply';
 import { useFetchInvite } from './useFetchInvite';
-import { ROOT_NAME } from '../../carbonio-ui-commons/constants';
-import { FOLDERS } from '../../carbonio-ui-commons/constants/folders';
-import { getRootAccountId, useRoot } from '../../carbonio-ui-commons/store/zustand/folder';
 import { BodyMessageRenderer } from '../../commons/body-message-renderer';
 import { CALENDAR_RESOURCES } from '../../constants';
 import { MESSAGE_METHOD, PARTICIPANT_ROLE } from '../../constants/api';
@@ -159,6 +157,18 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		timeZone: invite.tz
 	});
 
+	const proposedStartTime = mailMsg.invite[0]?.comp?.[0]?.s?.[0]?.d;
+	const proposedEndTime = mailMsg.invite[0]?.comp?.[0]?.e?.[0]?.d;
+
+	const counterDate = useGetDateRangeConvertedToTimezone(
+		moment(proposedStartTime).valueOf(),
+		moment(proposedEndTime).valueOf(),
+		{
+			allDay: invite.allDay,
+			timeZone: invite.tz
+		}
+	);
+
 	const convertedDate = useGetDateRangeConvertedToTimezone(localStart, localEnd, {
 		allDay: invite.allDay
 	});
@@ -193,11 +203,12 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 		<InviteContainer data-testid={'invite-response'}>
 			<Container padding={{ horizontal: 'small', vertical: 'large' }} width="100%">
 				<Row width="fill" mainAlignment="flex-start" padding={{ bottom: 'extrasmall' }}>
-					{method === 'COUNTER' ? (
+					{method === MESSAGE_METHOD.COUNTER && (
 						<Text weight="light" size="large">
 							{mailMsg.subject}
 						</Text>
-					) : (
+					)}
+					{method !== MESSAGE_METHOD.COUNTER && (
 						<>
 							<Text weight="regular" size="large" style={{ fontSize: '1.125rem' }}>
 								{`${invite.organizer?.d ?? invite.organizer?.a} ${t(
@@ -205,7 +216,7 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 									'invited you to an event'
 								)}`}
 							</Text>
-							&nbsp;
+							<br />
 							<Text weight="bold" size="large" style={{ fontSize: '1.125rem' }}>
 								{mailMsg.subject ? mailMsg.subject : invite?.name}
 							</Text>
@@ -213,9 +224,17 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					)}
 				</Row>
 				<Row width="100%" mainAlignment="flex-start">
-					<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
-						{originalDate}
-					</Text>
+					{method === MESSAGE_METHOD.COUNTER && mailMsg.parent !== FOLDERS.SENT && (
+						<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
+							{counterDate}
+						</Text>
+					)}
+					{method !== MESSAGE_METHOD.COUNTER && (
+						<Text overflow="ellipsis" color="secondary" weight="bold" size="small">
+							{originalDate}
+						</Text>
+					)}
+
 					{convertedDate !== originalDate && (
 						<Tooltip label={convertedDateTooltip}>
 							<Padding left="small">
@@ -228,27 +247,30 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 					<AvailabilityChecker
 						email={email}
 						rootId={root.id}
-						start={invite?.start?.u ?? moment(mailMsg.invite[0].comp[0].s[0].d).valueOf()}
-						end={invite?.end?.u ?? endOfDay(mailMsg.invite[0].comp[0].e[0].d)}
+						start={invite?.start?.u ?? moment(proposedStartTime).valueOf()}
+						end={invite?.end?.u ?? endOfDay(proposedEndTime)}
 						allDay={invite.allDay ?? false}
 						uid={invite.uid}
 					/>
 				)}
-				{method === 'COUNTER'
-					? mailMsg.parent !== '5' && (
-							// eslint-disable-next-line react/jsx-indent
-							<ProposedTimeReply
-								id={invite?.apptId}
-								start={invite?.start?.u ?? moment(mailMsg.invite[0].comp[0].s[0].d).valueOf()}
-								end={invite?.end?.u ?? moment(mailMsg.invite[0].comp[0].e[0].d).valueOf()}
-								moveToTrash={moveToTrash}
-								title={mailMsg.subject}
-								to={to}
-								msg={mailMsg}
-								fragment={invite?.fragment}
-							/>
-						)
-					: isAttendee && <InviteReplyPart inviteId={inviteId} message={mailMsg} />}
+
+				{method === MESSAGE_METHOD.COUNTER && mailMsg.parent !== FOLDERS.SENT && (
+					<ProposedTimeReply
+						id={invite?.apptId}
+						start={
+							proposedStartTime ? moment(proposedStartTime).valueOf() : (invite?.start?.u ?? 0)
+						}
+						end={proposedEndTime ? moment(proposedEndTime).valueOf() : (invite?.end?.u ?? 0)}
+						moveToTrash={moveToTrash}
+						title={mailMsg.subject}
+						to={to}
+						msg={mailMsg}
+						fragment={invite?.fragment}
+					/>
+				)}
+				{method !== MESSAGE_METHOD.COUNTER && isAttendee && (
+					<InviteReplyPart inviteId={inviteId} message={mailMsg} />
+				)}
 
 				{invite?.location && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large' }}>
@@ -267,7 +289,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Row>
 					</Row>
 				)}
-
 				{roomName && roomLink && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large' }}>
 						<Tooltip placement="top" label={t('tooltip.virtual_room', 'Virtual room')}>
@@ -286,7 +307,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Row>
 					</Row>
 				)}
-
 				{meetingRooms && meetingRooms?.length > 0 && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large', bottom: 'small' }}>
 						<Tooltip placement="left" label={t('tooltip.meetingRooms', 'MeetingRooms')}>
@@ -303,7 +323,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Row>
 					</Row>
 				)}
-
 				{equipments && equipments.length > 0 && (
 					<Row width="fill" mainAlignment="flex-start" padding={{ top: 'large', bottom: 'small' }}>
 						<Tooltip placement="left" label={t('tooltip.equipment', 'Equipment')}>
@@ -320,7 +339,6 @@ export const InviteResponse: FC<InviteResponseArguments> = ({
 						</Row>
 					</Row>
 				)}
-
 				<Row
 					width="100%"
 					mainAlignment="flex-start"

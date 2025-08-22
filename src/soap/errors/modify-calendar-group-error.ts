@@ -3,9 +3,8 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+import { GenericSoapApiError } from '@zextras/carbonio-ui-commons';
 import { TFunction } from 'i18next';
-
-import { GenericSoapApiError } from '../../carbonio-ui-commons/soap/errors/generic-soap-api-error';
 
 export class ModifyCalendarGroupError extends GenericSoapApiError {
 	private static GROUP_NAME_ALREADY_EXISTS = 'calendargroup.GROUP_NAME_ALREADY_EXIST';
