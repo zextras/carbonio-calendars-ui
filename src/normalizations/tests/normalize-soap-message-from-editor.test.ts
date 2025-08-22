@@ -5,17 +5,17 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import * as shell from '../../../__mocks__/@zextras/carbonio-shell-ui';
+import { generateEditor } from '../../commons/editor-generator';
+import { getIdentityItems } from '../../commons/get-identity-items';
+import { PARTICIPATION_STATUS } from '../../constants/api';
+import { ParticipationStatus } from '../../types/store/invite';
 import {
 	normalizeSoapMessageFromEditor,
 	setAlarmValue,
 	generateBodyRequest,
 	generateHtmlBodyRequest
-} from './normalize-soap-message-from-editor';
-import * as shell from '../../__mocks__/@zextras/carbonio-shell-ui';
-import { generateEditor } from '../commons/editor-generator';
-import { getIdentityItems } from '../commons/get-identity-items';
-import { PARTICIPATION_STATUS } from '../constants/api';
-import { ParticipationStatus } from '../types/store/invite';
+} from '../normalize-soap-message-from-editor';
 import { createFakeIdentity, getMockedAccountItem } from '@test-utils/accounts/fakeAccounts';
 
 const mainAccount = createFakeIdentity();
@@ -50,11 +50,26 @@ const sharedAccountEditorFolder = {
 
 const addressPrefKey = 'zimbraPrefFromAddress';
 
-jest.mock('../hooks/use-get-date-range-converted-to-timezone', () => ({
+jest.mock('../../hooks/use-get-date-range-converted-to-timezone', () => ({
 	getTimeStrings: jest.fn(() => 'Jan 1, 2024 10:00 AM - 11:00 AM')
 }));
 
 describe('normalize soap message from editor', () => {
+	test('should set comp properly', () => {
+		const userAccount = getMockedAccountItem({ identity1: mainAccount });
+		shell.getUserAccount.mockImplementation(() => userAccount);
+
+		const editor = generateEditor({
+			context: {
+				compNum: 4,
+				folders: {},
+				dispatch: jest.fn()
+			}
+		});
+		const body = normalizeSoapMessageFromEditor(editor);
+
+		expect(body.comp).toBe(4);
+	});
 	describe('when the user is the organizer ', () => {
 		describe('and the appointment is inside his calendar ', () => {
 			test('when one of the attendee/optionalAttendee has changed the appointment status(ptst), the ptst should be preserved in normalization', () => {

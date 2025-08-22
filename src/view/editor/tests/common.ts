@@ -33,6 +33,7 @@ export const defaultEditor: Editor = {
 	reminder: '5',
 	richText: '',
 	plainText: '',
+	compNum: 0,
 	disabled: {
 		richTextButton: false,
 		attachmentsButton: false,
