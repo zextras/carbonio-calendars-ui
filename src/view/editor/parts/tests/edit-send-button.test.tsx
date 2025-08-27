@@ -83,4 +83,26 @@ describe('EditorSendButton', () => {
 			expect(onSend).toHaveBeenCalled();
 		});
 	});
+	it('should show disabled tooltip when sendButton is disabled', async () => {
+		const store = configureStore({ reducer: combineReducers(reducers) });
+
+		const editor = generateEditor({
+			context: {
+				dispatch: store.dispatch,
+				folders: {},
+				title: 'Team Meeting',
+				attendees: [DEFAULT_ATTENDEE],
+				disabled: { sendButton: true }
+			}
+		});
+
+		const { user } = setupTest(<EditorSendButton editorId={editor.id} />, { store });
+
+		const button = screen.getByRole('button', { name: /send/i });
+		expect(button).toBeDisabled();
+
+		await user.hover(button);
+
+		expect(await screen.findByText('Sending is disabled for this event')).toBeInTheDocument();
+	});
 });
