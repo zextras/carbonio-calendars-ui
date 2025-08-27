@@ -97,10 +97,7 @@ export const EditorSaveButton = ({ editorId }: EditorProps): ReactElement => {
 	]);
 
 	return (
-		<Tooltip
-			label={t('label.missing_title', 'Appointment title is missing')}
-			disabled={!isSaveDisabled}
-		>
+		<Tooltip label={t('label.missing_title', 'Add event title to save')} disabled={!isSaveDisabled}>
 			<Button
 				label={t('label.save', 'Save')}
 				icon="SaveOutline"

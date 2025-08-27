@@ -56,7 +56,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 		if (!title?.length) {
 			return {
 				isSendDisabled: true,
-				disabledTooltipLabel: t('label.missing_title', 'Appointment title is missing')
+				disabledTooltipLabel: t('label.missing_title', 'Add event title to send')
 			};
 		}
 
@@ -68,10 +68,7 @@ export const EditorSendButton = ({ editorId }: EditorProps): ReactElement => {
 		) {
 			return {
 				isSendDisabled: true,
-				disabledTooltipLabel: t(
-					'label.no_recipients',
-					'At least one attendee, room or equipment is required'
-				)
+				disabledTooltipLabel: t('label.no_recipients', 'Add event attendees or resources to send')
 			};
 		}
 
