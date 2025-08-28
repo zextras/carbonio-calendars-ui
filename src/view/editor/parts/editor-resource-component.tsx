@@ -21,10 +21,7 @@ import { find } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import {
-	EditorAvailabilityWarningRow,
-	getIsBusyAtTimeOfTheEvent
-} from './editor-availability-warning-row';
+import { getIsBusyAtTimeOfTheEvent } from './editor-availability-warning-row';
 import { generateResourceId, getDuplicateResourceIds, isValidResource } from './utils';
 import { useAttendeesAvailability } from '../../../hooks/use-attendees-availability';
 import { useAppSelector } from '../../../store/redux/hooks';
@@ -357,6 +354,18 @@ export const EditorResourceComponent = ({
 
 	useKeyboard(inputRef, onPressingEnterSelectFirstOption);
 
+	const hasUnavailableResources = useMemo(() => {
+		if (!resourcesValue?.length || !attendeesAvailabilityList) return false;
+
+		return resourcesValue.some((resource) => {
+			const roomInList = find(attendeesAvailabilityList, ['email', resource.email]);
+			return (
+				roomInList &&
+				getIsBusyAtTimeOfTheEvent(roomInList, start, end, attendeesAvailabilityList, allDay)
+			);
+		});
+	}, [resourcesValue, attendeesAvailabilityList, start, end, allDay]);
+
 	const chipInputDescription = useMemo(() => {
 		if (hasError) {
 			return invalidInputErrorLabel;
@@ -364,8 +373,20 @@ export const EditorResourceComponent = ({
 		if (hasDuplicateValidChips) {
 			return duplicateChipsErrorLabel;
 		}
+		if (hasUnavailableResources) {
+			return resourcesValue.length === 1 ? singleWarningLabel : warningLabel;
+		}
 		return undefined;
-	}, [hasError, hasDuplicateValidChips, invalidInputErrorLabel, duplicateChipsErrorLabel]);
+	}, [
+		hasError,
+		hasDuplicateValidChips,
+		hasUnavailableResources,
+		invalidInputErrorLabel,
+		duplicateChipsErrorLabel,
+		singleWarningLabel,
+		warningLabel,
+		resourcesValue.length
+	]);
 
 	return (
 		<Container width="100%" height="100%">
@@ -385,14 +406,8 @@ export const EditorResourceComponent = ({
 					{ code: 'NumpadEnter', ctrlKey: false }
 				]}
 				onInputType={handleInputType}
-				hasError={hasError || hasDuplicateValidChips}
+				hasError={hasError || hasDuplicateValidChips || hasUnavailableResources}
 				description={chipInputDescription}
-			/>
-			<EditorAvailabilityWarningRow
-				label={warningLabel}
-				list={attendeesAvailabilityList}
-				items={resourceAvailability}
-				editorId={editorId}
 			/>
 		</Container>
 	);
