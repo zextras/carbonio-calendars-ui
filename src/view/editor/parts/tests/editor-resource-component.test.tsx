@@ -36,7 +36,7 @@ describe('EditorResourceComponent', () => {
 		}
 	]);
 
-	const defaultErrorLabels = {
+	const errorLabelsForTesting = {
 		singleResourceUnavailable: 'Resource unavailable',
 		multipleResourcesUnavailable: 'Multiple resources unavailable',
 		invalidResource: 'Invalid input',
@@ -59,7 +59,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={() => Promise.resolve([])}
 					resourcesValue={[defaultResource]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -79,7 +79,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -131,7 +131,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions2}
 					resourcesValue={[]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -162,7 +162,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={() => new Promise((resolve) => setTimeout(() => resolve([]), 1000))}
 					resourcesValue={[]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -185,7 +185,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -208,7 +208,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -227,7 +227,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[defaultResource, defaultResource]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -245,7 +245,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[{ label: 'chip101', email: '' }, defaultResource, defaultResource]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -265,7 +265,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[defaultResource]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -301,7 +301,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={() => Promise.resolve([])}
 					resourcesValue={[]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -328,7 +328,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -361,7 +361,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[defaultResource]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -384,7 +384,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[defaultResource]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
@@ -423,7 +423,7 @@ describe('EditorResourceComponent', () => {
 					onChange={onChangeMock}
 					onSearchOptions={mockSearchOptions}
 					resourcesValue={[]}
-					errorLabels={defaultErrorLabels}
+					errorLabels={errorLabelsForTesting}
 				/>,
 				{ store }
 			);
